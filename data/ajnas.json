@@ -1,0 +1,158 @@
+[
+  {
+    "name": "jins rāst",
+    "noteNames": [
+      "rāst",
+      "dogāh",
+      "segāh",
+      "chahargāh"
+    ]
+  },
+  {
+    "name": "jins bayāt",
+    "noteNames": [
+      "dogāh",
+      "segāh",
+      "chahargāh",
+      "nawā"
+    ]
+  },
+  {
+    "name": "jins segāh",
+    "noteNames": [
+      "segāh",
+      "chahargāh",
+      "nawā"
+    ]
+  },
+  {
+    "name": "jins ṣabā",
+    "noteNames": [
+      "dogāh",
+      "segāh",
+      "chahargāh",
+      "ḥijāz"
+    ]
+  },
+  {
+    "name": "jins ʿajam",
+    "noteNames": [
+      "rāst",
+      "dogāh",
+      "buselīk/ʿushshāq",
+      "chahargāh"
+    ]
+  },
+  {
+    "name": "jins nahāwand",
+    "noteNames": [
+      "rāst",
+      "dogāh",
+      "kurdī",
+      "chahargāh"
+    ]
+  },
+  {
+    "name": "jins kurd",
+    "noteNames": [
+      "dogāh",
+      "kurdī",
+      "chahargāh",
+      "nawā"
+    ]
+  },
+  {
+    "name": "jins ḥijāz",
+    "noteNames": [
+      "dogāh",
+      "kurdī",
+      "ḥijāz",
+      "nawā"
+    ]
+  },
+  {
+    "name": "jins ṣabā zamzam",
+    "noteNames": [
+      "dogāh",
+      "kurdī",
+      "chahargāh",
+      "ḥijāz"
+    ]
+  },
+  {
+    "name": "jins chahargāh",
+    "noteNames": [
+      "chahargāh",
+      "nawā",
+      "nīm ḥuseinī",
+      "ʿajam"
+    ]
+  },
+  {
+    "name": "jins athar kurd",
+    "noteNames": [
+      "dogāh",
+      "kurdī",
+      "chahargāh",
+      "ḥiṣār",
+      "ḥuseinī"
+    ]
+  },
+  {
+    "name": "jins ʿirāq",
+    "noteNames": [
+      "ʿirāq",
+      "rāst",
+      "dogāh"
+    ]
+  },
+  {
+    "name": "jins mustaʿār",
+    "noteNames": [
+      "ʿirāq",
+      "zirguleh",
+      "dogāh",
+      "buselīk/ʿushshāq"
+    ]
+  },
+  {
+    "name": "jins segāh baladī",
+    "noteNames": [
+      "nawā",
+      "tīk ḥiṣār",
+      "awj",
+      "kurdān"
+    ]
+  },
+  {
+    "name": "jins nikrīz",
+    "noteNames": [
+      "rāst",
+      "dogāh",
+      "kurdī",
+      "ḥijāz"
+    ]
+  },
+  {
+    "name": "jins rāst nīm buselīk",
+    "noteNames": [
+      "rāst",
+      "dogāh",
+      "nīm buselīk",
+      "chahargāh"
+    ]
+  },
+  {
+    "name": "jins bayāt yegāh",
+    "noteNames": [
+      "yegāh",
+      "qarār tīk ḥiṣār",
+      "ʿajam ʿushayrān",
+      "rāst"
+    ]
+  },
+  {
+    "name": "jins test",
+    "noteNames": []
+  }
+]
