@@ -481,6 +481,45 @@
       "dogāh",
       "rāst",
       "ʿirāq"
+    ],
+    "suyur": [
+      {
+        "author": "Al-Shawwā, Sāmī",
+        "publication": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
+        "year": 1946,
+        "page": 36,
+        "comments": "Starts with ḥijāz dūgāh, followed by rāst nawā. Descending it uses buselīk nawā, followed by ḥijāz dūgāh and ends on 'irāq",
+        "seir": [
+          {
+            "type": "jins",
+            "value": "jins ḥijāz",
+            "startingNote": "dogāh",
+            "direction": "none"
+          },
+          {
+            "type": "jins",
+            "value": "jins rāst",
+            "startingNote": "nawā",
+            "direction": "none"
+          },
+          {
+            "type": "jins",
+            "value": "jins nahāwand",
+            "startingNote": "nawā",
+            "direction": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "jins ḥijāz",
+            "startingNote": "dogāh",
+            "direction": "descending"
+          },
+          {
+            "type": "note",
+            "value": "ʿirāq"
+          }
+        ]
+      }
     ]
   },
   {
@@ -504,29 +543,6 @@
       "nīm ḥijāz",
       "buselīk/ʿushshāq",
       "dogāh"
-    ]
-  },
-  {
-    "name": "maqām rāst nawā",
-    "ascending": [
-      "nawā",
-      "ḥuseinī",
-      "awj",
-      "kurdān",
-      "muḥayyar",
-      "jawāb buselīk",
-      "jawāb nīm ḥijāz",
-      "saham/ramal tūtī"
-    ],
-    "descending": [
-      "saham/ramal tūtī",
-      "mahurān",
-      "jawāb buselīk",
-      "muḥayyar",
-      "kurdān",
-      "awj",
-      "ḥuseinī",
-      "nawā"
     ]
   },
   {
@@ -596,6 +612,45 @@
       "dogāh",
       "rāst",
       "ʿirāq"
+    ],
+    "suyur": [
+      {
+        "author": "Al-Shawwā, Sāmī",
+        "publication": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
+        "year": 1946,
+        "page": 33,
+        "comments": "Starts on 'iraq or dūgāh descending until yegāh, then bayāt dūgāh until nawā then rāst nawā and descends to the qarār which is 'irāq",
+        "seir": [
+          {
+            "type": "note",
+            "value": "ʿirāq"
+          },
+          {
+            "type": "note",
+            "value": "yegāh"
+          },
+          {
+            "type": "jins",
+            "value": "jins bayāt",
+            "startingNote": "dogāh",
+            "direction": "none"
+          },
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "jins rāst",
+            "startingNote": "nawā",
+            "direction": "descending"
+          },
+          {
+            "type": "note",
+            "value": "ʿirāq"
+          }
+        ]
+      }
     ]
   },
   {
@@ -645,29 +700,1293 @@
     ]
   },
   {
-    "name": "!test ascending descending for playback",
+    "name": "maqām yegāh",
     "ascending": [
-      "nīm shahnāz",
-      "muḥayyar",
-      "buzurk"
+      "yegāh",
+      "ʿushayrān",
+      "ʿirāq",
+      "rāst",
+      "dogāh",
+      "nīm buselīk",
+      "nīm ḥijāz",
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "author": "Al-Shawwā, Sāmī",
+        "publication": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
+        "year": 1946,
+        "page": 17,
+        "comments": "Sayr can start from chahārgāh or nawā, ascends and then descends until the qarār. Ascent is not defined, so it is assumed that it will be in jins rāst al-nawā following the construction of the maqām.",
+        "seir": [
+          {
+            "type": "note",
+            "value": "chahargāh"
+          },
+          {
+            "type": "jins",
+            "value": "jins rāst",
+            "startingNote": "nawā",
+            "direction": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "jins rāst",
+            "startingNote": "nawā",
+            "direction": "descending"
+          },
+          {
+            "type": "note",
+            "value": "chahargāh"
+          },
+          {
+            "type": "note",
+            "value": "segāh"
+          },
+          {
+            "type": "note",
+            "value": "dogāh"
+          },
+          {
+            "type": "note",
+            "value": "ʿirāq"
+          },
+          {
+            "type": "note",
+            "value": "ʿushayrān"
+          },
+          {
+            "type": "note",
+            "value": "yegāh"
+          }
+        ]
+      }
     ],
     "descending": [
-      "jawāb tīk zirguleh",
-      "māhūr",
-      "awj"
+      "nawā",
+      "chahargāh",
+      "segāh",
+      "dogāh",
+      "rāst",
+      "ʿirāq",
+      "ʿushayrān",
+      "yegāh"
     ]
   },
   {
-    "name": "maqām bayāt nawā",
+    "name": "maqām faraḥfazza",
     "ascending": [
+      "yegāh",
+      "ʿushayrān",
+      "ʿajam ʿushayrān",
+      "rāst",
+      "dogāh",
+      "kurdī",
+      "chahargāh",
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "author": "Al-Shawwā, Sāmī",
+        "publication": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
+        "year": 1946,
+        "page": 19,
+        "comments": "Begins on nawā, then ḥuseinī and 'ajam until muḥayyar ascending and descending, then descends from nawā until yegāh with a touch of qarār ḥijāz before ending on its qarār, yegāh. Therefore it is assumed that the initial ascents and descents are in jins nahāwand nawā as per the construction of the maqām. Also the note qarār ḥijāz does not exist in the list of note names provided by Shawwā in his book.",
+        "seir": [
+          {
+            "type": "jins",
+            "value": "jins nahāwand",
+            "startingNote": "nawā",
+            "direction": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "jins nahāwand",
+            "startingNote": "nawā",
+            "direction": "descending"
+          },
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "note",
+            "value": "chahargāh"
+          },
+          {
+            "type": "note",
+            "value": "kurdī"
+          },
+          {
+            "type": "note",
+            "value": "dogāh"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "ʿajam ʿushayrān"
+          },
+          {
+            "type": "note",
+            "value": "ʿushayrān"
+          },
+          {
+            "type": "note",
+            "value": "ḥijāz"
+          },
+          {
+            "type": "note",
+            "value": "yegāh"
+          }
+        ]
+      }
+    ],
+    "descending": [
       "nawā",
-      "tīk ḥiṣār",
+      "ḥijāz",
+      "kurdī",
+      "dogāh",
+      "rāst",
+      "ʿajam ʿushayrān",
+      "ʿushayrān",
+      "yegāh"
+    ]
+  },
+  {
+    "name": "maqām shad ʿarabān",
+    "ascending": [
+      "yegāh",
+      "qarār ḥiṣār",
+      "nīm kawasht/rahāwī",
+      "rāst",
+      "dogāh",
+      "kurdī",
+      "ḥijāz",
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "author": "Al-Shawwā, Sāmī",
+        "publication": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
+        "year": 1946,
+        "page": 20,
+        "comments": "",
+        "seir": [
+          {
+            "type": "note",
+            "value": "ḥijāz"
+          },
+          {
+            "type": "jins",
+            "value": "jins ḥijāz",
+            "startingNote": "nawā",
+            "direction": "none"
+          },
+          {
+            "type": "note",
+            "value": "chahargāh"
+          },
+          {
+            "type": "note",
+            "value": "kurdī"
+          },
+          {
+            "type": "note",
+            "value": "dogāh"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "nīm kawasht/rahāwī"
+          },
+          {
+            "type": "note",
+            "value": "qarār ḥiṣār"
+          },
+          {
+            "type": "note",
+            "value": "yegāh"
+          }
+        ]
+      }
+    ],
+    "descending": [
+      "nawā",
+      "chahargāh",
+      "kurdī",
+      "dogāh",
+      "rāst",
+      "nīm kawasht/rahāwī",
+      "qarār ḥiṣār",
+      "yegāh"
+    ]
+  },
+  {
+    "name": "maqām sulṭānī yegāh",
+    "ascending": [
+      "yegāh",
+      "ʿushayrān",
+      "ʿajam ʿushayrān",
+      "rāst",
+      "dogāh",
+      "kurdī",
+      "ḥijāz",
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "author": "Al-Shawwā, Sāmī",
+        "publication": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
+        "year": 1946,
+        "page": 21,
+        "comments": "nahāwand nawā, followed by ḥijāz dogāh then the qarār, yegāh, with a touch of qarār ḥijāz",
+        "seir": [
+          {
+            "type": "jins",
+            "value": "jins nahāwand",
+            "startingNote": "nawā",
+            "direction": "none"
+          },
+          {
+            "type": "jins",
+            "value": "jins ḥijāz",
+            "startingNote": "dogāh",
+            "direction": "none"
+          },
+          {
+            "type": "note",
+            "value": "ḥijāz"
+          },
+          {
+            "type": "note",
+            "value": "yegāh"
+          }
+        ]
+      }
+    ],
+    "descending": [
+      "nawā",
+      "ḥijāz",
+      "kurdī",
+      "dogāh",
+      "rāst",
+      "ʿajam ʿushayrān",
+      "ʿushayrān",
+      "yegāh"
+    ]
+  },
+  {
+    "name": "maqām majlis afrūz",
+    "ascending": [
+      "ʿirāq",
+      "rāst",
+      "dogāh",
+      "segāh",
+      "chahargāh",
+      "nawā",
+      "ḥuseinī",
+      "awj"
+    ],
+    "suyur": [
+      {
+        "author": "Al-Shawwā, Sāmī",
+        "publication": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
+        "year": 1946,
+        "page": 22,
+        "comments": "Start with jins bayāt on dogāh, ending on 'irāq. Then ascend and descend ending on note 'ushayrān. Repeat jins bayāt on dogāh, and descend to end on the qarār which is yegāh. This maqām name corresponds with a Persian Gushe also called Majlis Afrooz in the Dastgah Mahūr and Dastgāh Shūr. In Mahūr it bears no melodic or intervallic resemblance, but in Shūr the jins bayāt is prominent.",
+        "seir": [
+          {
+            "type": "jins",
+            "value": "jins bayāt",
+            "startingNote": "dogāh",
+            "direction": "none"
+          },
+          {
+            "type": "note",
+            "value": "ʿirāq"
+          },
+          {
+            "type": "jins",
+            "value": "jins ʿirāq",
+            "startingNote": "ʿirāq",
+            "direction": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "jins ʿirāq",
+            "startingNote": "ʿirāq",
+            "direction": "descending"
+          },
+          {
+            "type": "note",
+            "value": "ʿushayrān"
+          },
+          {
+            "type": "jins",
+            "value": "jins bayāt",
+            "startingNote": "dogāh",
+            "direction": "none"
+          },
+          {
+            "type": "jins",
+            "value": "jins bayāt",
+            "startingNote": "dogāh",
+            "direction": "descending"
+          },
+          {
+            "type": "note",
+            "value": "yegāh"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "maqām dilkeshīda",
+    "ascending": [
+      "yegāh",
+      "ʿushayrān",
+      "ʿajam ʿushayrān",
+      "rāst",
+      "dogāh",
+      "segāh",
+      "ḥijāz",
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "author": "Al-Shawwā, Sāmī",
+        "publication": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
+        "year": 1946,
+        "page": 23,
+        "comments": "Start on nawā to huseinī and what's above it (jins kurd huseinī), then jins bayāt on dogāh. After it's descent ascend bayat dogāh and during the descent use the note kurdī instead of segāh (i.e. jins kurd on dogāh) and descend to end on yegāh using a touch of qarār ḥijāz. This maqām is Ottoman and not really utilised in Arabic music but Shawwā listed it either way.",
+        "seir": [
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "jins kurd",
+            "startingNote": "ḥuseinī",
+            "direction": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "jins bayāt",
+            "startingNote": "dogāh",
+            "direction": "none"
+          },
+          {
+            "type": "jins",
+            "value": "jins bayāt",
+            "startingNote": "dogāh",
+            "direction": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "jins bayāt",
+            "startingNote": "dogāh",
+            "direction": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "jins kurd",
+            "startingNote": "dogāh",
+            "direction": "descending"
+          },
+          {
+            "type": "note",
+            "value": "qarār ḥijāz"
+          },
+          {
+            "type": "note",
+            "value": "yegāh"
+          }
+        ]
+      }
+    ],
+    "descending": [
+      "nawā",
+      "chahargāh",
+      "segāh",
+      "dogāh",
+      "rāst",
+      "ʿajam ʿushayrān",
+      "ʿushayrān",
+      "yegāh"
+    ]
+  },
+  {
+    "name": "maqām ʿushayrān",
+    "ascending": [
+      "ʿushayrān",
+      "ʿirāq",
+      "rāst",
+      "dogāh",
+      "segāh",
+      "chahargāh",
+      "nawā",
+      "ḥuseinī"
+    ],
+    "suyur": [
+      {
+        "author": "Al-Shawwā, Sāmī",
+        "publication": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
+        "year": 1946,
+        "page": 24,
+        "comments": "Begins on nawā to develop bayāt on dogāh, then bayāt 'ushayran and upon reaching muḥayyar in the ascent, it descends until dogāh using 'ajam instead of awj (jins kurd ḥuseinī) and its qarār is 'ushayrān.",
+        "seir": [
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "jins bayāt",
+            "startingNote": "dogāh",
+            "direction": "none"
+          },
+          {
+            "type": "jins",
+            "value": "jins bayāt",
+            "startingNote": "ʿushayrān",
+            "direction": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "jins bayāt",
+            "startingNote": "dogāh",
+            "direction": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "jins bayāt",
+            "startingNote": "ḥuseinī",
+            "direction": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "muḥayyar"
+          },
+          {
+            "type": "jins",
+            "value": "jins kurd",
+            "startingNote": "ḥuseinī",
+            "direction": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "jins bayāt",
+            "startingNote": "dogāh",
+            "direction": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "jins bayāt",
+            "startingNote": "ʿushayrān",
+            "direction": "descending"
+          },
+          {
+            "type": "note",
+            "value": "ʿushayrān"
+          }
+        ]
+      }
+    ],
+    "descending": [
+      "ḥuseinī",
+      "nawā",
+      "chahargāh",
+      "nīm buselīk",
+      "dogāh",
+      "rāst",
+      "ʿirāq",
+      "ʿushayrān"
+    ]
+  },
+  {
+    "name": "maqām bayāt ʿushayrān",
+    "ascending": [
+      "ʿushayrān",
+      "ʿirāq",
+      "rāst",
+      "dogāh",
+      "segāh",
+      "chahargāh",
+      "nawā",
+      "ḥuseinī",
       "ʿajam",
+      "kurdān",
+      "muḥayyar"
+    ],
+    "suyur": [
+      {
+        "author": "Al-Shawwā, Sāmī",
+        "publication": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
+        "year": 1946,
+        "page": 30,
+        "comments": "Starts on nawā to render maqām bayāt al-dogāh and descends to ʿushayrān to render maqām bayāt al-ḥuseinī and descends stepwise until it's qarār ʿushayrān.",
+        "seir": [
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "jins bayāt",
+            "startingNote": "dogāh",
+            "direction": "descending"
+          },
+          {
+            "type": "note",
+            "value": "ʿushayrān"
+          },
+          {
+            "type": "jins",
+            "value": "jins bayāt",
+            "startingNote": "ḥuseinī",
+            "direction": "descending"
+          },
+          {
+            "type": "note",
+            "value": "muḥayyar"
+          },
+          {
+            "type": "note",
+            "value": "kurdān"
+          },
+          {
+            "type": "note",
+            "value": "awj"
+          },
+          {
+            "type": "note",
+            "value": "ḥuseinī"
+          },
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "note",
+            "value": "chahargāh"
+          },
+          {
+            "type": "note",
+            "value": "nīm buselīk"
+          },
+          {
+            "type": "note",
+            "value": "dogāh"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "ʿirāq"
+          },
+          {
+            "type": "note",
+            "value": "ʿushayrān"
+          }
+        ]
+      }
+    ],
+    "descending": [
+      "muḥayyar",
+      "kurdān",
+      "awj",
+      "ḥuseinī",
+      "nawā",
+      "chahargāh",
+      "nīm buselīk",
+      "dogāh",
+      "rāst",
+      "ʿirāq",
+      "ʿushayrān"
+    ]
+  },
+  {
+    "name": "maqām ḥuseinī ʿushayrān",
+    "ascending": [
+      "ʿushayrān",
+      "ʿirāq",
+      "rāst",
+      "dogāh",
+      "segāh",
+      "chahargāh",
+      "nawā",
+      "ḥuseinī"
+    ],
+    "suyur": [
+      {
+        "author": "Al-Shawwā, Sāmī",
+        "publication": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
+        "year": 1946,
+        "page": 26,
+        "comments": "Starts with bayāt on ḥuseinī followed by nikrīz on rast and returns to bayāt al-ḥuseinī so it's tonal centre is ḥuseinī but they have today made it's qarār ʿushayrān",
+        "seir": [
+          {
+            "type": "jins",
+            "value": "jins bayāt",
+            "startingNote": "ḥuseinī",
+            "direction": "none"
+          },
+          {
+            "type": "jins",
+            "value": "jins nikrīz",
+            "startingNote": "rāst",
+            "direction": "none"
+          },
+          {
+            "type": "jins",
+            "value": "jins bayāt",
+            "startingNote": "ḥuseinī",
+            "direction": "none"
+          }
+        ]
+      }
+    ],
+    "descending": [
+      "ḥuseinī",
+      "nawā",
+      "ḥijāz",
+      "kurdī",
+      "dogāh",
+      "rāst",
+      "ʿirāq",
+      "ʿushayrān"
+    ]
+  },
+  {
+    "name": "maqām sūzdāl",
+    "ascending": [
+      "ʿushayrān",
+      "ʿajam ʿushayrān",
+      "zirguleh",
+      "dogāh",
+      "nīm buselīk",
+      "chahargāh",
+      "ḥiṣār",
+      "ḥuseinī",
+      "ʿajam",
+      "shahnāz",
+      "muḥayyar"
+    ],
+    "suyur": [
+      {
+        "author": "Al-Shawwā, Sāmī",
+        "publication": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
+        "year": 1946,
+        "page": 27,
+        "comments": "Starts on ḥiṣār to render ḥijāz  on ḥuseinī followed by maqām nawā athar al-dugāh then ḥijāz on ʿushayrān and it ends on its qarār ʿushayrān",
+        "seir": [
+          {
+            "type": "note",
+            "value": "ḥiṣār"
+          },
+          {
+            "type": "jins",
+            "value": "jins ḥijāz",
+            "startingNote": "ḥuseinī",
+            "direction": "none"
+          },
+          {
+            "type": "jins",
+            "value": "jins nikrīz",
+            "startingNote": "dogāh",
+            "direction": "none"
+          },
+          {
+            "type": "jins",
+            "value": "jins ḥijāz",
+            "startingNote": "ʿushayrān",
+            "direction": "none"
+          },
+          {
+            "type": "note",
+            "value": "ʿushayrān"
+          }
+        ]
+      }
+    ],
+    "descending": [
+      "muḥayyar",
+      "shahnāz",
+      "ʿajam",
+      "ḥuseinī",
+      "ḥiṣār",
+      "chahargāh",
+      "nīm buselīk",
+      "dogāh",
+      "zirguleh",
+      "ʿajam ʿushayrān",
+      "ʿushayrān"
+    ]
+  },
+  {
+    "name": "maqām shawq ṭarab",
+    "ascending": [
+      "ʿushayrān",
+      "ʿajam ʿushayrān",
+      "rāst",
+      "dogāh",
+      "segāh",
+      "chahargāh",
+      "ḥijāz",
+      "ḥuseinī",
+      "ʿajam",
+      "kurdān",
+      "shahnāz",
+      "jawāb nīm buselīk",
+      "mahurān"
+    ],
+    "suyur": [
+      {
+        "author": "Al-Shawwā, Sāmī",
+        "publication": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
+        "year": 1946,
+        "page": 28,
+        "comments": "Starts on chahargāh to render maqām ṣabā on dugāh with a highlighting of maqām ḥijāz on chahargāh, then ascending to render bayāt on muḥayyar followed by a descent in nahāwand on nawā followed by kurdī on dugāh and it ends on its qarār with a rendering of maqām kurdī on ʿushayrān. In modern Turkish it is known as makam Şevkutarab.",
+        "seir": [
+          {
+            "type": "note",
+            "value": "chahargāh"
+          },
+          {
+            "type": "jins",
+            "value": "jins ṣabā",
+            "startingNote": "dogāh",
+            "direction": "none"
+          },
+          {
+            "type": "jins",
+            "value": "jins ḥijāz",
+            "startingNote": "chahargāh",
+            "direction": "none"
+          },
+          {
+            "type": "jins",
+            "value": "jins bayāt",
+            "startingNote": "muḥayyar",
+            "direction": "none"
+          },
+          {
+            "type": "jins",
+            "value": "jins nahāwand",
+            "startingNote": "nawā",
+            "direction": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "jins kurd",
+            "startingNote": "dogāh",
+            "direction": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "jins kurd",
+            "startingNote": "ʿushayrān",
+            "direction": "none"
+          },
+          {
+            "type": "note",
+            "value": "ʿushayrān"
+          }
+        ]
+      }
+    ],
+    "descending": [
+      "mahurān",
+      "buzurk",
+      "muḥayyar",
+      "kurdān",
+      "ʿajam",
+      "ḥuseinī",
+      "nawā",
+      "chahargāh",
+      "kurdī",
+      "dogāh",
+      "rāst",
+      "ʿajam ʿushayrān",
+      "ʿushayrān"
+    ]
+  },
+  {
+    "name": "maqām nuhuft",
+    "ascending": [
+      "ʿushayrān",
+      "ʿirāq",
+      "rāst",
+      "dogāh",
+      "nīm buselīk",
+      "nīm ḥijāz",
+      "nawā",
+      "ḥuseinī",
+      "awj",
       "kurdān",
       "muḥayyar",
       "buzurk",
+      "mahurān"
+    ],
+    "suyur": [
+      {
+        "author": "Al-Shawwā, Sāmī",
+        "publication": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
+        "year": 1946,
+        "page": 29,
+        "comments": "There is a discrepancy in Shawwā's representation of this maqām. In the \"rules\" section it says: Starts on ḥijaz to render rast al-dugāh then ascends to muḥayyar and during the descent 'ajam is used to render bayāt dugāh then kurd on dugāh then ḥijaz on dugāh and it ends on 'ushayrān. But in the \"analysis\" section it says: First, jins bayāt 'ushayrān, second, jins rāst dugāh, third, bayāt ḥuseinī. Then ascend to render bayāt muḥayyar and descend to render rast nawā, followed by kurdī or ḥijāz dugāh, then nikrīz rāst and ends with bayāt 'ushayran. Rāst dogāh does not render in most tuning systems, and the note ḥijāz doesn't comply with it's jins. Needs to be researched",
+        "seir": [
+          {
+            "type": "note",
+            "value": "ḥijāz"
+          },
+          {
+            "type": "jins",
+            "value": "jins rāst",
+            "startingNote": "dogāh",
+            "direction": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "muḥayyar"
+          },
+          {
+            "type": "jins",
+            "value": "jins bayāt",
+            "startingNote": "ḥuseinī",
+            "direction": "none"
+          },
+          {
+            "type": "jins",
+            "value": "jins kurd",
+            "startingNote": "dogāh",
+            "direction": "none"
+          },
+          {
+            "type": "jins",
+            "value": "jins ḥijāz",
+            "startingNote": "dogāh",
+            "direction": "none"
+          },
+          {
+            "type": "jins",
+            "value": "jins nikrīz",
+            "startingNote": "rāst",
+            "direction": "none"
+          },
+          {
+            "type": "jins",
+            "value": "jins bayāt",
+            "startingNote": "ʿushayrān",
+            "direction": "none"
+          }
+        ]
+      }
+    ],
+    "descending": [
+      "mahurān",
+      "buzurk",
+      "muḥayyar",
+      "kurdān",
+      "awj",
+      "ḥuseinī",
+      "nawā",
+      "ḥijāz",
+      "kurdī",
+      "dogāh",
+      "rāst",
+      "ʿirāq",
+      "ʿushayrān"
+    ]
+  },
+  {
+    "name": "maqām shawq afzā",
+    "ascending": [
+      "ʿajam ʿushayrān",
+      "rāst",
+      "dogāh",
+      "segāh",
+      "chahargāh",
+      "ḥijāz",
+      "ḥuseinī",
+      "ʿajam",
+      "kurdān",
+      "muḥayyar",
+      "sunbuleh/zawāl",
+      "mahurān"
+    ],
+    "suyur": [
+      {
+        "author": "Al-Shawwā, Sāmī",
+        "publication": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
+        "year": 1946,
+        "page": 31,
+        "comments": "Starts on chahargāh ascending to kurdān and above to render ḥijāz chahargāh, then descends from chahargāh until it's qarār 'ajam 'ushayrān",
+        "seir": [
+          {
+            "type": "jins",
+            "value": "jins ḥijāz",
+            "startingNote": "chahargāh",
+            "direction": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "kurdān"
+          },
+          {
+            "type": "note",
+            "value": "chahargāh"
+          },
+          {
+            "type": "jins",
+            "value": "jins ṣabā",
+            "startingNote": "dogāh",
+            "direction": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "jins ʿajam",
+            "startingNote": "ʿajam ʿushayrān",
+            "direction": "descending"
+          }
+        ]
+      }
+    ],
+    "descending": [
+      "mahurān",
+      "jawāb nīm buselīk",
+      "shahnāz",
+      "kurdān",
+      "ʿajam",
+      "ḥuseinī",
+      "ḥijāz",
+      "chahargāh",
+      "kurdī",
+      "dogāh",
+      "rāst",
+      "ʿajam ʿushayrān"
+    ]
+  },
+  {
+    "name": "maqām shawq āwr",
+    "ascending": [
+      "ʿajam ʿushayrān",
+      "rāst",
+      "dogāh",
+      "nīm buselīk",
+      "nīm ḥijāz",
+      "nawā",
+      "ḥuseinī",
+      "ʿajam",
+      "kurdān",
+      "muḥayyar",
+      "sunbuleh/zawāl",
+      "mahurān"
+    ],
+    "suyur": [
+      {
+        "author": "Al-Shawwā, Sāmī",
+        "publication": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
+        "year": 1946,
+        "page": 32,
+        "comments": "Starts on kurdān ascending to jawāb nawā (saham/ramal tuti) then descends from nawā to its qarār using chahargāh and kurdī. In the \"analysis\" it states that one must descend at the end to qarār ḥijāz before ending on 'ajam 'ushayrān.",
+        "seir": [
+          {
+            "type": "note",
+            "value": "kurdān"
+          },
+          {
+            "type": "note",
+            "value": "saham/ramal tūtī"
+          },
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "note",
+            "value": "chahargāh"
+          },
+          {
+            "type": "note",
+            "value": "kurdī"
+          },
+          {
+            "type": "jins",
+            "value": "jins nahāwand",
+            "startingNote": "dogāh",
+            "direction": "descending"
+          },
+          {
+            "type": "note",
+            "value": "ḥijāz"
+          },
+          {
+            "type": "note",
+            "value": "ʿajam ʿushayrān"
+          }
+        ]
+      }
+    ],
+    "descending": [
+      "mahurān",
+      "sunbuleh/zawāl",
+      "muḥayyar",
+      "kurdān",
+      "ʿajam",
+      "ḥiṣār",
+      "nawā",
+      "chahargāh",
+      "kurdī",
+      "dogāh",
+      "rāst",
+      "ʿajam ʿushayrān"
+    ]
+  },
+  {
+    "name": "maqām awj",
+    "ascending": [
+      "ʿirāq",
+      "rāst",
+      "dogāh",
+      "segāh",
+      "chahargāh",
+      "nawā",
+      "ḥuseinī",
+      "awj"
+    ],
+    "suyur": [
+      {
+        "author": "Al-Shawwā, Sāmī",
+        "publication": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
+        "year": 1946,
+        "page": 34,
+        "comments": "Starts on chahargāh until nawā to render bayāt dūgāh, followed by rāst nawā, followed by bayāt muḥayyar, then descends to render rāst nawā, followed by nahāwand nawā, followed by bayāt dūgāh and from dūgāh descends until the qarār which is 'irāq.",
+        "seir": [
+          {
+            "type": "note",
+            "value": "chahargāh"
+          },
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "jins bayāt",
+            "startingNote": "dogāh",
+            "direction": "none"
+          },
+          {
+            "type": "jins",
+            "value": "jins rāst",
+            "startingNote": "nawā",
+            "direction": "none"
+          },
+          {
+            "type": "jins",
+            "value": "jins bayāt",
+            "startingNote": "muḥayyar",
+            "direction": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "jins rāst",
+            "startingNote": "nawā",
+            "direction": "none"
+          },
+          {
+            "type": "jins",
+            "value": "jins nahāwand",
+            "startingNote": "nawā",
+            "direction": "none"
+          },
+          {
+            "type": "jins",
+            "value": "jins bayāt",
+            "startingNote": "dogāh",
+            "direction": "descending"
+          },
+          {
+            "type": "note",
+            "value": "ʿirāq"
+          }
+        ]
+      }
+    ],
+    "descending": [
+      "ʿajam",
+      "ḥuseinī",
+      "nawā",
+      "chahargāh",
+      "segāh",
+      "dogāh",
+      "rāst",
+      "ʿirāq"
+    ]
+  },
+  {
+    "name": "maqām farḥanak",
+    "ascending": [
+      "ʿirāq",
+      "rāst",
+      "dogāh",
+      "nīm buselīk",
+      "nīm ḥijāz",
+      "nawā",
+      "ḥuseinī",
+      "awj"
+    ],
+    "suyur": [
+      {
+        "author": "Al-Shawwā, Sāmī",
+        "publication": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
+        "year": 1946,
+        "page": 35,
+        "comments": "\"Rules\": Starts with rāst on dūgāh then descends to 'irāq and from there descends to yegāh and then ends on the qarār, 'irāq. Note: maqām bayāt muḥayyar should be rendered during the ascent. An alternative sayr is to start on awj to render rāst kurdān, then 'irāq on awj, then descending until its qarār, 'irāq.\n\n\"Analysis\": jins segah on 'irāq, jins rāst on dūgāh, jins bayat on muhayyar, then descends until 'irāq.\n\nSlightly conflicting directions. Must be clarified.",
+        "seir": [
+          {
+            "type": "jins",
+            "value": "jins rāst",
+            "startingNote": "dogāh",
+            "direction": "none"
+          },
+          {
+            "type": "jins",
+            "value": "jins bayāt",
+            "startingNote": "muḥayyar",
+            "direction": "descending"
+          },
+          {
+            "type": "note",
+            "value": "ʿirāq"
+          },
+          {
+            "type": "note",
+            "value": "yegāh"
+          },
+          {
+            "type": "note",
+            "value": "ʿirāq"
+          }
+        ]
+      }
+    ],
+    "descending": [
+      "ʿajam",
+      "ḥuseinī",
+      "nawā",
+      "nīm ḥijāz",
+      "nīm buselīk",
+      "dogāh",
+      "rāst",
+      "ʿirāq"
+    ]
+  },
+  {
+    "name": "!rast inverted",
+    "ascending": [
+      "rāst",
+      "tīk zirguleh",
+      "kurdī",
+      "chahargāh",
+      "nawā",
+      "nīm ḥuseinī",
+      "ʿajam",
+      "kurdān"
+    ],
+    "suyur": [],
+    "descending": [
+      "kurdān",
+      "ʿajam",
+      "nīm ḥuseinī",
+      "nawā",
+      "chahargāh",
+      "kurdī",
+      "tīk zirguleh",
+      "rāst"
+    ]
+  },
+  {
+    "name": "!rast inverted on fifth",
+    "ascending": [
+      "yegāh",
+      "nīm ʿushayrān",
+      "ʿajam ʿushayrān",
+      "rāst",
+      "dogāh",
+      "nīm buselīk",
+      "chahargāh",
+      "nawā"
+    ],
+    "suyur": [],
+    "descending": [
+      "nawā",
+      "chahargāh",
+      "nīm buselīk",
+      "dogāh",
+      "rāst",
+      "ʿajam ʿushayrān",
+      "nīm ʿushayrān",
+      "yegāh"
+    ]
+  },
+  {
+    "name": "!nahawand Inverted",
+    "ascending": [
+      "nawā",
+      "ḥuseinī",
+      "māhūr",
+      "kurdān",
+      "muḥayyar",
+      "jawāb buselīk",
       "mahurān",
       "saham/ramal tūtī"
+    ],
+    "suyur": [],
+    "descending": [
+      "saham/ramal tūtī",
+      "mahurān",
+      "jawāb buselīk",
+      "muḥayyar",
+      "kurdān",
+      "māhūr",
+      "ḥuseinī",
+      "nawā"
+    ]
+  },
+  {
+    "name": "!hijaz inverted",
+    "ascending": [
+      "dogāh",
+      "buselīk/ʿushshāq",
+      "nīm ḥijāz",
+      "nawā",
+      "ḥuseinī",
+      "ʿajam",
+      "jawāb tīk zirguleh",
+      "muḥayyar"
+    ],
+    "suyur": [],
+    "descending": [
+      "muḥayyar",
+      "jawāb tīk zirguleh",
+      "ʿajam",
+      "ḥuseinī",
+      "nawā",
+      "nīm ḥijāz",
+      "buselīk/ʿushshāq",
+      "dogāh"
     ]
   }
 ]
