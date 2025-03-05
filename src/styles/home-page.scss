@@ -7,5 +7,10 @@
   overflow: auto;
   color: $text;
   text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-  padding: 10px;
+  padding: 100px;
+
+  &__title {
+    font-size: 50px;
+    margin-bottom: 20px;
+  }
 }

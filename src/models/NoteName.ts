@@ -167,6 +167,6 @@ export const allNotes = [
   ]),
 ] as const;
 
-type NoteName = typeof allNotes[number];
+type TransliteratedNoteName = typeof allNotes[number];
 
-export default NoteName;
+export default TransliteratedNoteName;

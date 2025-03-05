@@ -1,8 +1,15 @@
 [
   {
     "id": "1a1e4eac-8815-4d5d-ba55-6ae7c2cfbeb5",
-    "title": "Modernist Arabic Tuning",
-    "notes": [
+    "titleEnglish": "Modernist Arabic Tuning",
+    "titleArabic": "",
+    "year": "1904",
+    "sourceEnglish": "Al-Khul’ī, Kāmil Mohammad. Kitāb Al-Musiqā Al-Sharqī. Hindawi Foundation for Education and Culture, 2011. pp. 55-56",
+    "sourceArabic": "",
+    "creator": "Louis Ronzevalle",
+    "commentsEnglish": "Also in: Shawqi, Youssef. Qiyās Al-Sullam Al-Mūsīqī Al-'Arabī. Dar Al-Kutub, Cairo, 1969. pp. 32-33\t\t\t\t\t\t\t\t\t",
+    "commentsArabic": "",
+    "pitchClasses": [
       "3600",
       "3498",
       "3399",
@@ -28,12 +35,6 @@
       "1907",
       "1852"
     ],
-    "year": "1904",
-    "source": "Al-Khul’ī, Kāmil Mohammad. Kitāb Al-Musiqā Al-Sharqī. Hindawi Foundation for Education and Culture, 2011. pp. 55-56",
-    "comments": "Also in: Shawqi, Youssef. Qiyās Al-Sullam Al-Mūsīqī Al-'Arabī. Dar Al-Kutub, Cairo, 1969. pp. 32-33\t\t\t\t\t\t\t\t\t",
-    "stringLength": "3600",
-    "referenceFrequency": "195.998",
-    "creator": "Louis Ronzevalle",
     "noteNames": [
       "yegāh",
       "qarār nīm ḥiṣār",
@@ -83,25 +84,21 @@
       "jawāb nīm ḥijāz",
       "jawāb ḥijāz",
       "jawāb tīk ḥijāz"
-    ]
+    ],
+    "stringLength": 3600,
+    "referenceFrequency": 195.998
   },
   {
     "id": "f7f2de93-1368-44ca-817a-e72cb07cf694",
-    "title": "",
-    "notes": [
-      "1/1",
-      "256/243",
-      "9/8",
-      "32/27",
-      "81/64",
-      "4/3",
-      "1024/729",
-      "3/2",
-      "128/81",
-      "27/16",
-      "16/9",
-      "4096/2187"
-    ],
+    "titleEnglish": "",
+    "titleArabic": "",
+    "year": "874",
+    "sourceEnglish": "Farmer, H.G. (1937) ‘The Lute Scale of Avicenna’, The Journal of the Royal Asiatic Society of Great Britain and Ireland, 2, pp. 248.",
+    "sourceArabic": "",
+    "creator": "Al-Kindī",
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "pitchClasses": ["1/1", "256/243", "9/8", "32/27", "81/64", "4/3", "1024/729", "3/2", "128/81", "27/16", "16/9", "4096/2187"],
     "noteNames": [
       "ʿushayrān",
       "ʿajam ʿushayrān",
@@ -128,62 +125,20 @@
       "saham/ramal tūtī",
       "jawāb ḥiṣār"
     ],
-    "abjadNames": [
-      "آ",
-      "ب",
-      "ج",
-      "د",
-      "ه",
-      "و",
-      "ز",
-      "ح",
-      "ط",
-      "ي",
-      "ك",
-      "ل",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none"
-    ],
-    "year": "874",
-    "source": "Farmer, H.G. (1937) ‘The Lute Scale of Avicenna’, The Journal of the Royal Asiatic Society of Great Britain and Ireland, 2, pp. 248.",
-    "comments": "",
-    "stringLength": "1000",
-    "referenceFrequency": "220",
-    "creator": "Al-Kindī"
+    "stringLength": 1000,
+    "referenceFrequency": 220
   },
   {
     "id": "ac9f7121-727f-4d58-bc76-e1b196a87101",
-    "title": "12-EDO",
-    "notes": [
-      "0",
-      "100",
-      "200",
-      "300",
-      "400",
-      "500",
-      "600",
-      "700",
-      "800",
-      "900",
-      "1000",
-      "1100"
-    ],
+    "titleEnglish": "12-EDO",
+    "titleArabic": "",
     "year": "",
-    "source": "",
-    "comments": "",
-    "stringLength": "1000",
-    "referenceFrequency": "220",
+    "sourceEnglish": "",
+    "sourceArabic": "",
     "creator": "Anglo-European",
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "pitchClasses": ["0", "100", "200", "300", "400", "500", "600", "700", "800", "900", "1000", "1100"],
     "noteNames": [
       "ʿushayrān",
       "ʿajam ʿushayrān",
@@ -209,12 +164,21 @@
       "jawāb ḥijāz",
       "saham/ramal tūtī",
       "jawāb ḥiṣār"
-    ]
+    ],
+    "stringLength": 1000,
+    "referenceFrequency": 220
   },
   {
     "id": "1d4d2389-98ca-4d08-a58e-13153a12017b",
-    "title": "Al-Sullam Al-Fārsī or Al-'Arabī",
-    "notes": [
+    "titleEnglish": "Al-Sullam Al-Fārsī or Al-'Arabī",
+    "titleArabic": "",
+    "year": "1926",
+    "sourceEnglish": "Shawqi, Youssef. Qiyās Al-Sullam Al-Mūsīqī Al-'Arabī. Dar Al-Kutub, Cairo, 1969. pp. 43.",
+    "sourceArabic": "",
+    "creator": "Aḥmad Amīn Al-Dīk",
+    "commentsEnglish": "Numbers for string length are given as 1,0000, 0,9716. They are used here as 10000, 9716 etc... for clarity.\n\nTypo in Shawqī lists the second pitch class as 0.7916. Most likely it is supposed to be 0.9716 and that is what is used here.\n\nNote names for the string length divisions aren't mentioned in Shawqī and therefore presumably not in Al-Dīk's original (NEED TO VERIFY), but in Shawqī's reproduction of a table from another publication by Al-Dīk (ملحق في ذبذبات طبقة شيرقية) the text by Al-Dīk which refers to his calculations of frequency pitchClasses for his tuning system, he mentions that he considered the Arabic note name dogāh equivalent to La/A at 435 Hz. This is in line with the Ottoman (and the modern Turkish convention) which names the fourth string on the oud, dogāh, but tunes it to the Anglo-European La/A at 220Hz, and the Arabic convention of naming the fourth string of the oud as nawā (the higher octave of yegāh). Therefore this tuning system is placed according to yegāh at 1/1.",
+    "commentsArabic": "",
+    "pitchClasses": [
       "10000",
       "9716",
       "9439",
@@ -240,12 +204,6 @@
       "5298",
       "5147"
     ],
-    "year": "1926",
-    "source": "Shawqi, Youssef. Qiyās Al-Sullam Al-Mūsīqī Al-'Arabī. Dar Al-Kutub, Cairo, 1969. pp. 43.",
-    "comments": "Numbers for string length are given as 1,0000, 0,9716. They are used here as 10000, 9716 etc... for clarity.\n\nTypo in Shawqī lists the second pitch class as 0.7916. Most likely it is supposed to be 0.9716 and that is what is used here.\n\nNote names for the string length divisions aren't mentioned in Shawqī and therefore presumably not in Al-Dīk's original (NEED TO VERIFY), but in Shawqī's reproduction of a table from another publication by Al-Dīk (ملحق في ذبذبات طبقة شيرقية) the text by Al-Dīk which refers to his calculations of frequency notes for his tuning system, he mentions that he considered the Arabic note name dogāh equivalent to La/A at 435 Hz. This is in line with the Ottoman (and the modern Turkish convention) which names the fourth string on the oud, dogāh, but tunes it to the Anglo-European La/A at 220Hz, and the Arabic convention of naming the fourth string of the oud as nawā (the higher octave of yegāh). Therefore this tuning system is placed according to yegāh at 1/1.",
-    "stringLength": "10000",
-    "referenceFrequency": "195.998",
-    "creator": "Aḥmad Amīn Al-Dīk",
     "noteNames": [
       "yegāh",
       "qarār nīm ḥiṣār",
@@ -295,12 +253,21 @@
       "jawāb nīm ḥijāz",
       "jawāb ḥijāz",
       "jawāb tīk ḥijāz"
-    ]
+    ],
+    "stringLength": 10000,
+    "referenceFrequency": 195.998
   },
   {
     "id": "c93f1a2f-067f-4d11-92d2-1858e4eee1ba",
-    "title": "Al-Sullam Al-'Arabī Al-Qadīm",
-    "notes": [
+    "titleEnglish": "Al-Sullam Al-'Arabī Al-Qadīm",
+    "titleArabic": "",
+    "year": "1926",
+    "sourceEnglish": "Shawqi, Youssef. Qiyās Al-Sullam Al-Mūsīqī Al-'Arabī. Dar Al-Kutub, Cairo, 1969. pp. 41.",
+    "sourceArabic": "",
+    "creator": "Aḥmad Amīn Al-Dīk",
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "pitchClasses": [
       "10000",
       "9600",
       "9214",
@@ -319,12 +286,6 @@
       "5413",
       "5196"
     ],
-    "year": "1926",
-    "source": "Shawqi, Youssef. Qiyās Al-Sullam Al-Mūsīqī Al-'Arabī. Dar Al-Kutub, Cairo, 1969. pp. 41.",
-    "comments": "",
-    "stringLength": "10000",
-    "referenceFrequency": "195.998",
-    "creator": "Aḥmad Amīn Al-Dīk",
     "noteNames": [
       "yegāh",
       "qarār ḥiṣār",
@@ -360,12 +321,21 @@
       "mahurān",
       "jawāb ḥijāz",
       "jawāb tīk ḥijāz"
-    ]
+    ],
+    "stringLength": 10000,
+    "referenceFrequency": 195.998
   },
   {
     "id": "62c3f1e0-152c-4983-8b4f-ce3526860fb3",
-    "title": "Egyptian Tuning",
-    "notes": [
+    "titleEnglish": "Egyptian Tuning",
+    "titleArabic": "",
+    "year": "1932",
+    "sourceEnglish": "",
+    "sourceArabic": "",
+    "creator": "Cairo Congress Tuning Committee",
+    "commentsEnglish": "CONGRESS DOCUMENTATION PP. 599 (FRENCH)",
+    "commentsArabic": "",
+    "pitchClasses": [
       "10000",
       "9712",
       "9478",
@@ -447,17 +417,20 @@
       "jawāb ḥijāz",
       "jawāb tīk ḥijāz"
     ],
-    "year": "1932",
-    "source": "",
-    "comments": "CONGRESS DOCUMENTATION PP. 599 (FRENCH)",
-    "stringLength": "10000",
-    "referenceFrequency": "195.998",
-    "creator": "Cairo Congress Tuning Committee"
+    "stringLength": 10000,
+    "referenceFrequency": 195.998
   },
   {
     "id": "c5c3127a-1b69-49e7-9dba-50a54dbe6761",
-    "title": "Ancient Intervals",
-    "notes": [
+    "titleEnglish": "Ancient Intervals",
+    "titleArabic": "",
+    "year": "1932",
+    "sourceEnglish": "",
+    "sourceArabic": "",
+    "creator": "Cairo Congress Tuning Committee",
+    "commentsEnglish": "CONGRESS DOCUMENTATION PP. 599 (FRENCH)",
+    "commentsArabic": "",
+    "pitchClasses": [
       "10000",
       "9724",
       "9492",
@@ -533,17 +506,20 @@
       "jawāb ḥijāz",
       "jawāb tīk ḥijāz"
     ],
-    "year": "1932",
-    "source": "",
-    "comments": "CONGRESS DOCUMENTATION PP. 599 (FRENCH)",
-    "stringLength": "10000",
-    "referenceFrequency": "195.998",
-    "creator": "Cairo Congress Tuning Committee"
+    "stringLength": 10000,
+    "referenceFrequency": 195.998
   },
   {
     "id": "6fa5f03c-4839-4e8f-93fd-4a1666d7bafa",
-    "title": "Arab Intervals according to M. El. Dik",
-    "notes": [
+    "titleEnglish": "Arab Intervals according to M. El. Dik",
+    "titleArabic": "",
+    "year": "1932",
+    "sourceEnglish": "",
+    "sourceArabic": "",
+    "creator": "Cairo Congress Tuning Committee",
+    "commentsEnglish": "CONGRESS DOCUMENTATION PP. 599 (FRENCH)",
+    "commentsArabic": "",
+    "pitchClasses": [
       "1/1",
       "1053/1024",
       "256/243",
@@ -619,17 +595,20 @@
       "jawāb ḥijāz",
       "jawāb tīk ḥijāz"
     ],
-    "year": "1932",
-    "source": "",
-    "comments": "CONGRESS DOCUMENTATION PP. 599 (FRENCH)",
-    "stringLength": "1000",
-    "referenceFrequency": "195.998",
-    "creator": "Cairo Congress Tuning Committee"
+    "stringLength": 1000,
+    "referenceFrequency": 195.998
   },
   {
     "id": "09085f50-3aa3-492b-b707-fe90527e93f6",
-    "title": "",
-    "notes": [
+    "titleEnglish": "",
+    "titleArabic": "",
+    "year": "1495",
+    "sourceEnglish": "Allāh Wīrdī, Mīkhāʼīl Khalīl. Falsafat Al-Mūsīqá al-Sharqīyah Fī Asrār al-Fann. Maṭbaʻat Ibn Zaydūn, 1949. pp. 163-164.",
+    "sourceArabic": "",
+    "creator": "Al-Lādhiqī",
+    "commentsEnglish": "Rejab (gives the names for the pitch classes 12, 13, 14 as nīm ḥijāz (128/81), ḥijāz (32768/19683) and ḥijāz + (27/16) as opposed to chahārgāh (128/81), nīm ḥijāz (32768/19683) and ḥijāz (27/16).\n\nThis doesn't make sense to me because the interval distance between 32/27 (rāst) and 128/81 is a 4/3 perfect forth, and both the ratios 32/27 and 128/81 are the main intervals derived from a sequence of successive fourths 4:3 + 4:3 (16/9) + 4:3 (32:27) + 4:3 (128:81). Therefore 128/81 should be labeled chahārgāh as in the modern Arab-Persian-Ottoman naming convention.(",
+    "commentsArabic": "",
+    "pitchClasses": [
       "1/1",
       "256/243",
       "65536/59049",
@@ -648,12 +627,6 @@
       "4096/2187",
       "1048576/531441"
     ],
-    "year": "1495",
-    "source": "Allāh Wīrdī, Mīkhāʼīl Khalīl. Falsafat Al-Mūsīqá al-Sharqīyah Fī Asrār al-Fann. Maṭbaʻat Ibn Zaydūn, 1949. pp. 163-164.",
-    "comments": "Rejab (gives the names for the pitch classes 12, 13, 14 as nīm ḥijāz (128/81), ḥijāz (32768/19683) and ḥijāz + (27/16) as opposed to chahārgāh (128/81), nīm ḥijāz (32768/19683) and ḥijāz (27/16).\n\nThis doesn't make sense to me because the interval distance between 32/27 (rāst) and 128/81 is a 4/3 perfect forth, and both the ratios 32/27 and 128/81 are the main intervals derived from a sequence of successive fourths 4:3 + 4:3 (16/9) + 4:3 (32:27) + 4:3 (128:81). Therefore 128/81 should be labeled chahārgāh as in the modern Arab-Persian-Ottoman naming convention.(",
-    "stringLength": "1000",
-    "referenceFrequency": "220",
-    "creator": "Al-Lādhiqī",
     "noteNames": [
       "ʿushayrān",
       "ʿajam ʿushayrān",
@@ -689,12 +662,21 @@
       "saham/ramal tūtī",
       "jawāb ḥiṣār",
       "jawāb tīk ḥiṣār"
-    ]
+    ],
+    "stringLength": 1000,
+    "referenceFrequency": 220
   },
   {
     "id": "9086",
-    "title": "Al-Kindi with Al-Farabi's 22/27",
-    "notes": [
+    "titleEnglish": "Al-Kindi with Al-Farabi's 22/27",
+    "titleArabic": "",
+    "year": "2022",
+    "sourceEnglish": "Allami, Khyam (2022) Échos-monde: Towards a hybrid repertoire of contemporary and experimental acoustic, electroacoustic and electronic Arabic music. Doctoral thesis, Birmingham City University.",
+    "sourceArabic": "",
+    "creator": "Khyam Allami",
+    "commentsEnglish": "Created using Al-Kindi's 12-tone system and adding Al-Farabi's 27:22 to each chromatic interval creating a \"segāh\" for each note",
+    "commentsArabic": "",
+    "pitchClasses": [
       "1/1",
       "729/704",
       "256/243",
@@ -720,12 +702,6 @@
       "243/128",
       "64/33"
     ],
-    "year": "2022",
-    "source": "Allami, Khyam (2022) Échos-monde: Towards a hybrid repertoire of contemporary and experimental acoustic, electroacoustic and electronic Arabic music. Doctoral thesis, Birmingham City University.",
-    "comments": "Created using Al-Kindi's 12-tone system and adding Al-Farabi's 27:22 to each chromatic interval creating a \"segāh\" for each note",
-    "stringLength": "1000",
-    "referenceFrequency": "220",
-    "creator": "Khyam Allami",
     "noteNames": [
       "ʿushayrān",
       "nīm ʿajam ʿushayrān",
@@ -775,12 +751,21 @@
       "jawāb nīm ḥiṣār",
       "jawāb ḥiṣār",
       "jawāb tīk ḥiṣār"
-    ]
+    ],
+    "stringLength": 1000,
+    "referenceFrequency": 220
   },
   {
     "id": "9087",
-    "title": "24-EDO",
-    "notes": [
+    "titleEnglish": "24-EDO",
+    "titleArabic": "",
+    "year": "",
+    "sourceEnglish": "",
+    "sourceArabic": "",
+    "creator": "Anglo-European",
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "pitchClasses": [
       "0",
       "50",
       "100",
@@ -806,12 +791,6 @@
       "1100",
       "1150"
     ],
-    "year": "",
-    "source": "",
-    "comments": "",
-    "stringLength": "1000",
-    "referenceFrequency": "195.998",
-    "creator": "Anglo-European",
     "noteNames": [
       "yegāh",
       "qarār nīm ḥiṣār",
@@ -861,12 +840,21 @@
       "jawāb nīm ḥijāz",
       "jawāb ḥijāz",
       "jawāb tīk ḥijāz"
-    ]
+    ],
+    "stringLength": 1000,
+    "referenceFrequency": 195.998
   },
   {
     "id": "9088",
-    "title": "10-Fret Oud",
-    "notes": [
+    "titleEnglish": "10-Fret Oud",
+    "titleArabic": "",
+    "year": "950",
+    "sourceEnglish": "Farmer, H.G. (1937) ‘The Lute Scale of Avicenna’, The Journal of the Royal Asiatic Society of Great Britain and Ireland, 2, pp. 249.",
+    "sourceArabic": "",
+    "creator": "Al-Fārābī",
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "pitchClasses": [
       "1/1",
       "256/243",
       "162/149",
@@ -936,76 +924,20 @@
       "jawāb tīk ḥiṣār",
       "jawāb ḥuseinī"
     ],
-    "abjadNames": [
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none"
-    ],
-    "year": "950",
-    "source": "Farmer, H.G. (1937) ‘The Lute Scale of Avicenna’, The Journal of the Royal Asiatic Society of Great Britain and Ireland, 2, pp. 249.",
-    "comments": "",
-    "stringLength": "1000",
-    "referenceFrequency": "220",
-    "creator": "Al-Fārābī"
+    "stringLength": 1000,
+    "referenceFrequency": 220
   },
   {
     "id": "9089",
-    "title": "",
-    "notes": [
-      "1/1",
-      "256/243",
-      "9/8",
-      "32/27",
-      "81/64",
-      "4/3",
-      "1024/729",
-      "3/2",
-      "128/81",
-      "27/16",
-      "16/9",
-      "4096/2187"
-    ],
+    "titleEnglish": "",
+    "titleArabic": "",
+    "year": "874",
+    "sourceEnglish": "Farmer, H.G. (1937) ‘The Lute Scale of Avicenna’, The Journal of the Royal Asiatic Society of Great Britain and Ireland, 2, pp. 248.",
+    "sourceArabic": "",
+    "creator": "Al-Kindī",
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "pitchClasses": ["1/1", "256/243", "9/8", "32/27", "81/64", "4/3", "1024/729", "3/2", "128/81", "27/16", "16/9", "4096/2187"],
     "noteNames": [
       "yegāh",
       "qarār ḥiṣār",
@@ -1032,43 +964,20 @@
       "mahurān",
       "jawāb ḥijāz"
     ],
-    "abjadNames": [
-      "آ",
-      "ب",
-      "ج",
-      "د",
-      "ه",
-      "و",
-      "ز",
-      "ح",
-      "ط",
-      "ي",
-      "ك",
-      "ل",
-      "آ",
-      "ب",
-      "ج",
-      "د",
-      "ه",
-      "و",
-      "ز",
-      "ح",
-      "ط",
-      "ي",
-      "ك",
-      "ل"
-    ],
-    "year": "874",
-    "source": "Farmer, H.G. (1937) ‘The Lute Scale of Avicenna’, The Journal of the Royal Asiatic Society of Great Britain and Ireland, 2, pp. 248.",
-    "comments": "",
-    "stringLength": "1000",
-    "referenceFrequency": "195.998",
-    "creator": "Al-Kindī"
+    "stringLength": 1000,
+    "referenceFrequency": 195.998
   },
   {
     "id": "9091",
-    "title": "10-Fret Oud",
-    "notes": [
+    "titleEnglish": "10-Fret Oud",
+    "titleArabic": "",
+    "year": "950",
+    "sourceEnglish": "Farmer, H.G. (1937) ‘The Lute Scale of Avicenna’, The Journal of the Royal Asiatic Society of Great Britain and Ireland, 2, pp. 249.",
+    "sourceArabic": "",
+    "creator": "Al-Fārābī",
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "pitchClasses": [
       "1/1",
       "256/243",
       "162/149",
@@ -1092,12 +1001,6 @@
       "288/149",
       "96/49"
     ],
-    "year": "950",
-    "source": "Farmer, H.G. (1937) ‘The Lute Scale of Avicenna’, The Journal of the Royal Asiatic Society of Great Britain and Ireland, 2, pp. 249.",
-    "comments": "",
-    "stringLength": "1000",
-    "referenceFrequency": "195.998",
-    "creator": "Al-Fārābī",
     "noteNames": [
       "yegāh",
       "qarār ḥiṣār",
@@ -1143,12 +1046,21 @@
       "jawāb ḥijāz",
       "jawāb tīk ḥijāz",
       "nīm saham/ramal tūtī"
-    ]
+    ],
+    "stringLength": 1000,
+    "referenceFrequency": 195.998
   },
   {
     "id": "9092",
-    "title": "",
-    "notes": [
+    "titleEnglish": "",
+    "titleArabic": "",
+    "year": "950",
+    "sourceEnglish": "Farmer, H.G. (1937) ‘The Lute Scale of Avicenna’, The Journal of the Royal Asiatic Society of Great Britain and Ireland, pp. 249.",
+    "sourceArabic": "",
+    "creator": "Ibn Sīnā ",
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "pitchClasses": [
       "1/1",
       "273/256",
       "13/12",
@@ -1167,12 +1079,6 @@
       "91/48",
       "52/27"
     ],
-    "year": "950",
-    "source": "Farmer, H.G. (1937) ‘The Lute Scale of Avicenna’, The Journal of the Royal Asiatic Society of Great Britain and Ireland, pp. 249.",
-    "comments": "",
-    "stringLength": "1000",
-    "referenceFrequency": "195.998",
-    "creator": "Ibn Sīnā ",
     "noteNames": [
       "yegāh",
       "qarār ḥiṣār",
@@ -1208,12 +1114,21 @@
       "mahurān",
       "jawāb nīm ḥijāz",
       "jawāb ḥijāz"
-    ]
+    ],
+    "stringLength": 1000,
+    "referenceFrequency": 195.998
   },
   {
     "id": "9093",
-    "title": "",
-    "notes": [
+    "titleEnglish": "",
+    "titleArabic": "",
+    "year": "950",
+    "sourceEnglish": "Farmer, H.G. (1937) ‘The Lute Scale of Avicenna’, The Journal of the Royal Asiatic Society of Great Britain and Ireland, pp. 249.",
+    "sourceArabic": "",
+    "creator": "Ibn Sīnā",
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "pitchClasses": [
       "1/1",
       "273/256",
       "13/12",
@@ -1268,53 +1183,20 @@
       "jawāb ḥiṣār",
       "jawāb tīk ḥiṣār"
     ],
-    "abjadNames": [
-      "آ",
-      "ب",
-      "ج",
-      "د",
-      "ه",
-      "و",
-      "ز",
-      "ح",
-      "ط",
-      "ي",
-      "يا",
-      "يب",
-      "يج",
-      "يد",
-      "يه",
-      "يو",
-      "يز",
-      "آ",
-      "ب",
-      "ج",
-      "د",
-      "ه",
-      "و",
-      "ز",
-      "ح",
-      "ط",
-      "ي",
-      "يا",
-      "يب",
-      "يج",
-      "يد",
-      "يه",
-      "يو",
-      "يز"
-    ],
-    "year": "950",
-    "source": "Farmer, H.G. (1937) ‘The Lute Scale of Avicenna’, The Journal of the Royal Asiatic Society of Great Britain and Ireland, pp. 249.",
-    "comments": "",
-    "stringLength": "1000",
-    "referenceFrequency": "220",
-    "creator": "Ibn Sīnā"
+    "stringLength": 1000,
+    "referenceFrequency": 220
   },
   {
     "id": "9094",
-    "title": "Al-Kindi with Al-Farabi's 22/27",
-    "notes": [
+    "titleEnglish": "Al-Kindi with Al-Farabi's 22/27",
+    "titleArabic": "",
+    "year": "2022",
+    "sourceEnglish": "Allami, Khyam (2022) Échos-monde: Towards a hybrid repertoire of contemporary and experimental acoustic, electroacoustic and electronic Arabic music. Doctoral thesis, Birmingham City University.",
+    "sourceArabic": "",
+    "creator": "Khyam Allami",
+    "commentsEnglish": "Created using Al-Kindi's 12-tone system and adding Al-Farabi's 27:22 to each chromatic interval creating a \"segāh\" for each note",
+    "commentsArabic": "",
+    "pitchClasses": [
       "1/1",
       "729/704",
       "256/243",
@@ -1340,12 +1222,6 @@
       "243/128",
       "64/33"
     ],
-    "year": "2022",
-    "source": "Allami, Khyam (2022) Échos-monde: Towards a hybrid repertoire of contemporary and experimental acoustic, electroacoustic and electronic Arabic music. Doctoral thesis, Birmingham City University.",
-    "comments": "Created using Al-Kindi's 12-tone system and adding Al-Farabi's 27:22 to each chromatic interval creating a \"segāh\" for each note",
-    "stringLength": "1000",
-    "referenceFrequency": "195.998",
-    "creator": "Khyam Allami",
     "noteNames": [
       "yegāh",
       "qarār nīm ḥiṣār",
@@ -1395,12 +1271,21 @@
       "jawāb nīm ḥijāz",
       "jawāb ḥijāz",
       "jawāb tīk ḥijāz"
-    ]
+    ],
+    "stringLength": 1000,
+    "referenceFrequency": 195.998
   },
   {
     "id": "9095",
-    "title": "",
-    "notes": [
+    "titleEnglish": "",
+    "titleArabic": "",
+    "year": "1495",
+    "sourceEnglish": "Allāh Wīrdī, Mīkhāʼīl Khalīl. Falsafat Al-Mūsīqá al-Sharqīyah Fī Asrār al-Fann. Maṭbaʻat Ibn Zaydūn, 1949. pp. 163-164.",
+    "sourceArabic": "",
+    "creator": "Al-Lādhiqī",
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "pitchClasses": [
       "1/1",
       "256/243",
       "65536/59049",
@@ -1419,12 +1304,6 @@
       "4096/2187",
       "1048576/531441"
     ],
-    "year": "1495",
-    "source": "Allāh Wīrdī, Mīkhāʼīl Khalīl. Falsafat Al-Mūsīqá al-Sharqīyah Fī Asrār al-Fann. Maṭbaʻat Ibn Zaydūn, 1949. pp. 163-164.",
-    "comments": "",
-    "stringLength": "1000",
-    "referenceFrequency": "195.998",
-    "creator": "Al-Lādhiqī",
     "noteNames": [
       "yegāh",
       "qarār ḥiṣār",
@@ -1460,22 +1339,21 @@
       "mahurān",
       "jawāb ḥijāz",
       "jawāb tīk ḥijāz"
-    ]
+    ],
+    "stringLength": 1000,
+    "referenceFrequency": 195.998
   },
   {
     "id": "9096",
-    "title": "",
-    "notes": [
-      "1/1",
-      "9/8",
-      "32/27",
-      "81/64",
-      "4/3",
-      "3/2",
-      "128/81",
-      "27/16",
-      "16/9"
-    ],
+    "titleEnglish": "",
+    "titleArabic": "",
+    "year": "850",
+    "sourceEnglish": "Farmer, H.G. (1937) ‘The Lute Scale of Avicenna’, The Journal of the Royal Asiatic Society of Great Britain and Ireland, 2, pp. 247.",
+    "sourceArabic": "",
+    "creator": "Isḥāq Al-Mawṣilī",
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "pitchClasses": ["1/1", "9/8", "32/27", "81/64", "4/3", "3/2", "128/81", "27/16", "16/9"],
     "noteNames": [
       "ʿushayrān",
       "kawasht",
@@ -1496,37 +1374,20 @@
       "jawāb ḥijāz",
       "saham/ramal tūtī"
     ],
-    "abjadNames": [
-      "آ",
-      "ب",
-      "ج",
-      "د",
-      "ه",
-      "و",
-      "ز",
-      "ح",
-      "ط",
-      "آ",
-      "ب",
-      "ج",
-      "د",
-      "ه",
-      "و",
-      "ز",
-      "ح",
-      "ط"
-    ],
-    "year": "850",
-    "source": "Farmer, H.G. (1937) ‘The Lute Scale of Avicenna’, The Journal of the Royal Asiatic Society of Great Britain and Ireland, 2, pp. 247.",
-    "comments": "",
-    "stringLength": "1000",
-    "referenceFrequency": "220",
-    "creator": "Isḥāq Al-Mawṣilī"
+    "stringLength": 1000,
+    "referenceFrequency": 220
   },
   {
     "id": "9097",
-    "title": "Sonometer Measurements",
-    "notes": [
+    "titleEnglish": "Sonometer Measurements",
+    "titleArabic": "",
+    "year": "1929",
+    "sourceEnglish": "Shawqi, Youssef. Qiyās Al-Sullam Al-Mūsīqī Al-'Arabī. Dar Al-Kutub, Cairo, 1969. pp. 48-49.",
+    "sourceArabic": "",
+    "creator": "Cairo Congress Tuning Committee",
+    "commentsEnglish": "\"This committee was put together before the congress to undertake these measurements in preparation for the congress and consisted of the members: Muṣtafā Riḍā, Najīb Naḥḥās, Ṣafar 'Ali, Muḥammad Al-'Aqqād, Aḥmad Amīn Al-Dīk, Muṣtafā Al-'Aqqād, Kantonā, Muḥammad 'Abd Al-Wahāb, Darwīsh Al-Ḥarīrī, Kostakī, Armanāk, Muḥammad Fatḥī, Ya'qūb 'Abd Al-Wahāb and Maḥmūd Zakī.\n\nThese measurements were obtained by asking Muṣtafā Riḍā and Muḥammad Al-'Aqād to separately tune their qanūns to a tuning fork resonating at the frequency of the note \"\"rāst\"\". The committee then measured both of their qanūns with a sonometer and only found a differencof 1/10 cm (1 mm) only between the commentsEnglish dogāh, nawā and ḥuseinī.\" Shawqi (1969:48).\n\nThe tuning system in this table has been moved down from the note rāst to yegāh, making the difference between the two qanūns on the commentsEnglish 'ushayrān, rāst and dogāh.\n\nNeither Shawqi nor the original Congress text mention if the 1mm difference was higher or lower in pitch. By analysing the string length measurements and comparing them to pitchClasses produced by using ratios, the difference is indeed negligible. For reference, on a string of 1000 mm, 1 mm equals 0.173 cents.\n\n'ushayrān - 9/8 - 8888.9 mm\nrāst - 4/3 - 750 mm\ndogāh - 3/2 - 6666.6 mm\n\nShawqi (1969: 52) further commentsEnglish that according to Badrān (1957:157) the measurements that the committee of the 1932 Congress documented amounted to a difference of 18/100 of a centimeter (1 4/5 of a mm) for the commentsEnglish segāh and awj, and between 6/100 and 9/100 of a centimeter for all the other commentsEnglish except rāst and kurdān - the octave of rāst. Though again whether the differences were higher or lower is not mentioned.\n\nBadrān, Muḥammad Tawfīq Muṣtafa (1959)\nhttps://search.worldcat.org/search?q=ti=H%CC%A3alqah%20...%20li-Bah%CC%A3th%20al-Mu%CC%84si%CC%84qa%CC%81%20al-%CA%BBArabi%CC%84yah\t\t\t\t\t\t\t\t\t",
+    "commentsArabic": "",
+    "pitchClasses": [
       "10000",
       "9724",
       "9492",
@@ -1552,12 +1413,6 @@
       "5333",
       "5142"
     ],
-    "year": "1929",
-    "source": "Shawqi, Youssef. Qiyās Al-Sullam Al-Mūsīqī Al-'Arabī. Dar Al-Kutub, Cairo, 1969. pp. 48-49.",
-    "comments": "\"This committee was put together before the congress to undertake these measurements in preparation for the congress and consisted of the members: Muṣtafā Riḍā, Najīb Naḥḥās, Ṣafar 'Ali, Muḥammad Al-'Aqqād, Aḥmad Amīn Al-Dīk, Muṣtafā Al-'Aqqād, Kantonā, Muḥammad 'Abd Al-Wahāb, Darwīsh Al-Ḥarīrī, Kostakī, Armanāk, Muḥammad Fatḥī, Ya'qūb 'Abd Al-Wahāb and Maḥmūd Zakī.\n\nThese measurements were obtained by asking Muṣtafā Riḍā and Muḥammad Al-'Aqād to separately tune their qanūns to a tuning fork resonating at the frequency of the note \"\"rāst\"\". The committee then measured both of their qanūns with a sonometer and only found a differencof 1/10 cm (1 mm) only between the comments dogāh, nawā and ḥuseinī.\" Shawqi (1969:48).\n\nThe tuning system in this table has been moved down from the note rāst to yegāh, making the difference between the two qanūns on the comments 'ushayrān, rāst and dogāh.\n\nNeither Shawqi nor the original Congress text mention if the 1mm difference was higher or lower in pitch. By analysing the string length measurements and comparing them to notes produced by using ratios, the difference is indeed negligible. For reference, on a string of 1000 mm, 1 mm equals 0.173 cents.\n\n'ushayrān - 9/8 - 8888.9 mm\nrāst - 4/3 - 750 mm\ndogāh - 3/2 - 6666.6 mm\n\nShawqi (1969: 52) further comments that according to Badrān (1957:157) the measurements that the committee of the 1932 Congress documented amounted to a difference of 18/100 of a centimeter (1 4/5 of a mm) for the comments segāh and awj, and between 6/100 and 9/100 of a centimeter for all the other comments except rāst and kurdān - the octave of rāst. Though again whether the differences were higher or lower is not mentioned.\n\nBadrān, Muḥammad Tawfīq Muṣtafa (1959)\nhttps://search.worldcat.org/search?q=ti=H%CC%A3alqah%20...%20li-Bah%CC%A3th%20al-Mu%CC%84si%CC%84qa%CC%81%20al-%CA%BBArabi%CC%84yah\t\t\t\t\t\t\t\t\t",
-    "stringLength": "10000",
-    "referenceFrequency": "261.6256",
-    "creator": "Cairo Congress Tuning Committee",
     "noteNames": [
       "rāst",
       "nīm zirguleh",
@@ -1607,12 +1462,21 @@
       "jawāb awj",
       "jawāb māhūr",
       "jawāb tīk māhūr"
-    ]
+    ],
+    "stringLength": 10000,
+    "referenceFrequency": 261.6256
   },
   {
     "id": "9098",
-    "title": "",
-    "notes": [
+    "titleEnglish": "",
+    "titleArabic": "",
+    "year": "1904",
+    "sourceEnglish": "Al-Khul’ī, Kāmil Mohammad. (2011) Kitāb Al-Musiqā Al-Sharqī. Hindawi Foundation for Education and Culture. pp. 51-52.",
+    "sourceArabic": "",
+    "creator": "Kamil Al-Khul'ī and Idrīs Rāgheb",
+    "commentsEnglish": "Also in Shawqi, Youssef. Qiyās Al-Sullam Al-Mūsīqī Al-'Arabī. Dar Al-Kutub, Cairo, 1969. pp. 28-29.\n\nShawqi says that whole tone (888 mm) doesn't add up to 10:9 or 9:8 as one would expect (1969:29) but the descrepency is only -1.732 cents and is infact the same as the descrepency between the perfect fourth (750 mm / 4:3) and the perfect fifth (666 mm / 3:2) which he states are correct in Khulī's measurements.",
+    "commentsArabic": "",
+    "pitchClasses": [
       "1000",
       "969",
       "931",
@@ -1688,78 +1552,20 @@
       "jawāb ḥijāz",
       "jawāb tīk ḥijāz"
     ],
-    "abjadNames": [
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none",
-      "none"
-    ],
-    "year": "1904",
-    "source": "Al-Khul’ī, Kāmil Mohammad. (2011) Kitāb Al-Musiqā Al-Sharqī. Hindawi Foundation for Education and Culture. pp. 51-52.",
-    "comments": "Also in Shawqi, Youssef. Qiyās Al-Sullam Al-Mūsīqī Al-'Arabī. Dar Al-Kutub, Cairo, 1969. pp. 28-29.\n\nShawqi says that whole tone (888 mm) doesn't add up to 10:9 or 9:8 as one would expect (1969:29) but the descrepency is only -1.732 cents and is infact the same as the descrepency between the perfect fourth (750 mm / 4:3) and the perfect fifth (666 mm / 3:2) which he states are correct in Khulī's measurements.",
-    "stringLength": "1000",
-    "referenceFrequency": "195.998",
-    "creator": "Kamil Al-Khul'ī and Idrīs Rāgheb"
+    "stringLength": 1000,
+    "referenceFrequency": 195.998
   },
   {
     "id": "9100",
-    "title": "",
-    "notes": [
-      "1/1",
-      "9/8",
-      "32/27",
-      "81/64",
-      "4/3",
-      "3/2",
-      "128/81",
-      "27/16",
-      "16/9",
-      "243/128"
-    ],
+    "titleEnglish": "",
+    "titleArabic": "",
+    "year": "912",
+    "sourceEnglish": "",
+    "sourceArabic": "",
+    "creator": "Ibn Munajjim",
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "pitchClasses": ["1/1", "9/8", "32/27", "81/64", "4/3", "3/2", "128/81", "27/16", "16/9", "243/128"],
     "noteNames": [
       "yegāh",
       "ʿushayrān",
@@ -1782,39 +1588,20 @@
       "mahurān",
       "jawāb ḥijāz"
     ],
-    "abjadNames": [
-      "آ",
-      "ب",
-      "ج",
-      "د",
-      "ه",
-      "و",
-      "ز",
-      "ح",
-      "ط",
-      "ي",
-      "آ",
-      "ب",
-      "ج",
-      "د",
-      "ه",
-      "و",
-      "ز",
-      "ح",
-      "ط",
-      "ي"
-    ],
-    "year": "912",
-    "source": "",
-    "comments": "",
-    "stringLength": "1000",
-    "referenceFrequency": "220",
-    "creator": "Ibn Munajjim"
+    "stringLength": 1000,
+    "referenceFrequency": 220
   },
   {
     "id": "9101",
-    "title": "24-EDO",
-    "notes": [
+    "titleEnglish": "24-EDO",
+    "titleArabic": "",
+    "year": "",
+    "sourceEnglish": "",
+    "sourceArabic": "",
+    "creator": "Anglo-European",
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "pitchClasses": [
       "0",
       "50",
       "100",
@@ -1840,12 +1627,6 @@
       "1100",
       "1150"
     ],
-    "year": "",
-    "source": "",
-    "comments": "",
-    "stringLength": "1000",
-    "referenceFrequency": "220",
-    "creator": "Anglo-European",
     "noteNames": [
       "ʿushayrān",
       "nīm ʿajam ʿushayrān",
@@ -1895,12 +1676,21 @@
       "jawāb nīm ḥiṣār",
       "jawāb ḥiṣār",
       "jawāb tīk ḥiṣār"
-    ]
+    ],
+    "stringLength": 1000,
+    "referenceFrequency": 220
   },
   {
     "id": "9103",
-    "title": "Al-Kindi with Ibn Sina's 39/32",
-    "notes": [
+    "titleEnglish": "Al-Kindi with Ibn Sina's 39/32",
+    "titleArabic": "",
+    "year": "2024",
+    "sourceEnglish": "Khyam Allami",
+    "sourceArabic": "",
+    "creator": "Khyam Allami",
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "pitchClasses": [
       "1/1",
       "1053/1024",
       "256/243",
@@ -1926,12 +1716,6 @@
       "4096/2187",
       "52/27"
     ],
-    "year": "2024",
-    "source": "Khyam Allami",
-    "comments": "",
-    "stringLength": "",
-    "referenceFrequency": "220",
-    "creator": "Khyam Allami",
     "noteNames": [
       "ʿushayrān",
       "nīm ʿajam ʿushayrān",
@@ -1981,12 +1765,21 @@
       "jawāb nīm ḥiṣār",
       "jawāb ḥiṣār",
       "jawāb tīk ḥiṣār"
-    ]
+    ],
+    "stringLength": 0,
+    "referenceFrequency": 220
   },
   {
     "id": "9104",
-    "title": "10-Fret Oud NEW",
-    "notes": [
+    "titleEnglish": "10-Fret Oud NEW",
+    "titleArabic": "",
+    "year": "950",
+    "sourceEnglish": "Farmer, H.G. (1937) ‘The Lute Scale of Avicenna’, The Journal of the Royal Asiatic Society of Great Britain and Ireland, 2, pp. 249.",
+    "sourceArabic": "",
+    "creator": "Al-Fārābī",
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "pitchClasses": [
       "1/1",
       "256/243",
       "18/17",
@@ -2059,59 +1852,7 @@
       "jawāb tīk ḥiṣār",
       "jawāb ḥuseinī"
     ],
-    "abjadNames": [
-      "آ",
-      "يج",
-      "يط",
-      "كد",
-      "كح",
-      "ز",
-      "ق",
-      "ث",
-      "ظ",
-      "ك",
-      "ج",
-      "يه",
-      "كا",
-      "كه",
-      "كط",
-      "ح",
-      "خ",
-      "غ",
-      "ل",
-      "د",
-      "كب",
-      "كو",
-      "آ",
-      "آ",
-      "يج",
-      "يط",
-      "كد",
-      "كح",
-      "ز",
-      "ق",
-      "ث",
-      "ظ",
-      "ك",
-      "ج",
-      "يه",
-      "كا",
-      "كه",
-      "كط",
-      "ح",
-      "خ",
-      "غ",
-      "ل",
-      "د",
-      "كب",
-      "كو",
-      "آ"
-    ],
-    "year": "950",
-    "source": "Farmer, H.G. (1937) ‘The Lute Scale of Avicenna’, The Journal of the Royal Asiatic Society of Great Britain and Ireland, 2, pp. 249.",
-    "comments": "",
-    "stringLength": "1000",
-    "referenceFrequency": "220",
-    "creator": "Al-Fārābī"
+    "stringLength": 1000,
+    "referenceFrequency": 220
   }
 ]

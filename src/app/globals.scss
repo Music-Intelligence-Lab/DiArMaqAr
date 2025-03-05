@@ -25,6 +25,7 @@ $hovered-disabled: darken($disabled, 10%);
 $main-gradient: linear-gradient(0deg, $secondary, $tertiary);
 
 @import "../styles/home-page.scss";
+@import "../styles/tuning-system-manager.scss";
 
 :root {
   display: flex;
