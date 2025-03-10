@@ -7,7 +7,8 @@ export default class TuningSystem {
   private year: string;
   private sourceEnglish: string;
   private sourceArabic: string;
-  private creator: string;
+  private creatorEnglish: string;
+  private creatorArabic: string;
   private commentsEnglish: string;
   private commentsArabic: string;
   private pitchClasses: string[];
@@ -22,7 +23,8 @@ export default class TuningSystem {
     year: string,
     sourceEnglish: string,
     sourceArabic: string,
-    creator: string,
+    creatorEnglish: string,
+    creatorArabic: string,
     commentsEnglish: string,
     commentsArabic: string,
     notes: string[],
@@ -36,7 +38,8 @@ export default class TuningSystem {
     this.year = year;
     this.sourceEnglish = sourceEnglish;
     this.sourceArabic = sourceArabic;
-    this.creator = creator;
+    this.creatorEnglish = creatorEnglish;
+    this.creatorArabic = creatorArabic;
     this.commentsEnglish = commentsEnglish;
     this.commentsArabic = commentsArabic;
     this.pitchClasses = notes;
@@ -69,8 +72,12 @@ export default class TuningSystem {
     return this.sourceArabic;
   }
 
-  getCreator(): string {
-    return this.creator;
+  getCreatorEnglish(): string {
+    return this.creatorEnglish;
+  }
+
+  getCreatorArabic(): string {
+    return this.creatorArabic;
   }
 
   getCommentsEnglish(): string {
