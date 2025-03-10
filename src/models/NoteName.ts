@@ -47,7 +47,7 @@ export const OctaveOneNoteNames = [
   "kurdān",
 ] as const;
 
-export const octaveZeroNotesNames = [
+export const octaveZeroNoteNames = [
   "qarār yegāh",
   "qarār qarār nīm ḥiṣār",
   "qarār shūrī",
@@ -161,7 +161,7 @@ export const octaveThreeNoteNames = [
 export const allNotes = [
   ...new Set([
     ...OctaveOneNoteNames,
-    ...octaveZeroNotesNames,
+    ...octaveZeroNoteNames,
     ...octaveTwoNoteNames,
     ...octaveThreeNoteNames,
   ]),
