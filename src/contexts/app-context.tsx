@@ -35,6 +35,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         data.commentsArabic,
         data.pitchClasses,
         data.noteNames as TransliteratedNoteName[],
+        data.abjadNames,
         Number(data.stringLength),
         Number(data.referenceFrequency)
       );

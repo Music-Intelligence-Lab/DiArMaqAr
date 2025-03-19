@@ -3,7 +3,7 @@
     "name": "maqām rāst",
     "ascending": [
       "rāst",
-      "dogāh",
+      "dūgāh",
       "segāh",
       "chahargāh",
       "nawā",
@@ -18,14 +18,14 @@
       "nawā",
       "chahargāh",
       "segāh",
-      "dogāh",
+      "dūgāh",
       "rāst"
     ]
   },
   {
     "name": "maqām ḥijāz",
     "ascending": [
-      "dogāh",
+      "dūgāh",
       "kurdī",
       "ḥijāz",
       "nawā",
@@ -42,13 +42,13 @@
       "nawā",
       "ḥijāz",
       "kurdī",
-      "dogāh"
+      "dūgāh"
     ]
   },
   {
     "name": "maqām kurd",
     "ascending": [
-      "dogāh",
+      "dūgāh",
       "kurdī",
       "chahargāh",
       "nawā",
@@ -65,7 +65,7 @@
       "nawā",
       "chahargāh",
       "kurdī",
-      "dogāh"
+      "dūgāh"
     ],
     "suyur": []
   },
@@ -96,7 +96,7 @@
     "name": "maqām nikrīz",
     "ascending": [
       "rāst",
-      "dogāh",
+      "dūgāh",
       "kurdī",
       "ḥijāz",
       "nawā",
@@ -111,7 +111,7 @@
       "nawā",
       "ḥijāz",
       "kurdī",
-      "dogāh",
+      "dūgāh",
       "rāst"
     ]
   },
@@ -119,7 +119,7 @@
     "name": "maqām nawā athar",
     "ascending": [
       "rāst",
-      "dogāh",
+      "dūgāh",
       "kurdī",
       "ḥijāz",
       "nawā",
@@ -134,14 +134,14 @@
       "nawā",
       "ḥijāz",
       "kurdī",
-      "dogāh",
+      "dūgāh",
       "rāst"
     ]
   },
   {
     "name": "maqām bayāt",
     "ascending": [
-      "dogāh",
+      "dūgāh",
       "segāh",
       "chahargāh",
       "nawā",
@@ -158,13 +158,13 @@
       "nawā",
       "chahargāh",
       "segāh",
-      "dogāh"
+      "dūgāh"
     ]
   },
   {
     "name": "maqām bayātayn",
     "ascending": [
-      "dogāh",
+      "dūgāh",
       "segāh",
       "chahargāh",
       "nawā",
@@ -181,13 +181,13 @@
       "nawā",
       "chahargāh",
       "segāh",
-      "dogāh"
+      "dūgāh"
     ]
   },
   {
     "name": "maqām lāmī",
     "ascending": [
-      "dogāh",
+      "dūgāh",
       "kurdī",
       "chahargāh",
       "nawā",
@@ -204,14 +204,14 @@
       "nawā",
       "chahargāh",
       "kurdī",
-      "dogāh"
+      "dūgāh"
     ]
   },
   {
     "name": "maqām nahāwand",
     "ascending": [
       "rāst",
-      "dogāh",
+      "dūgāh",
       "kurdī",
       "chahargāh",
       "nawā",
@@ -226,7 +226,7 @@
       "nawā",
       "chahargāh",
       "kurdī",
-      "dogāh",
+      "dūgāh",
       "rāst"
     ]
   },
@@ -234,7 +234,7 @@
     "name": "maqām nahāwand kabīr",
     "ascending": [
       "rāst",
-      "dogāh",
+      "dūgāh",
       "kurdī",
       "chahargāh",
       "nawā",
@@ -249,14 +249,14 @@
       "nawā",
       "chahargāh",
       "kurdī",
-      "dogāh",
+      "dūgāh",
       "rāst"
     ]
   },
   {
     "name": "maqām athar kurd",
     "ascending": [
-      "dogāh",
+      "dūgāh",
       "kurdī",
       "chahargāh",
       "ḥiṣār",
@@ -273,13 +273,13 @@
       "ḥiṣār",
       "chahargāh",
       "kurdī",
-      "dogāh"
+      "dūgāh"
     ]
   },
   {
     "name": "maqām bayāt shūrī",
     "ascending": [
-      "dogāh",
+      "dūgāh",
       "segāh",
       "chahargāh",
       "nawā",
@@ -296,7 +296,7 @@
       "nawā",
       "chahargāh",
       "segāh",
-      "dogāh"
+      "dūgāh"
     ]
   },
   {
@@ -304,7 +304,7 @@
     "ascending": [
       "rāst",
       "tīk zirguleh",
-      "buselīk/ʿushshāq",
+      "buselīk/’ushshāq",
       "chahargāh",
       "nawā",
       "tīk ḥiṣār",
@@ -317,7 +317,7 @@
       "ḥiṣār",
       "nawā",
       "chahargāh",
-      "buselīk/ʿushshāq",
+      "buselīk/’ushshāq",
       "tīk zirguleh",
       "rāst"
     ]
@@ -325,7 +325,7 @@
   {
     "name": "maqām ṣabā",
     "ascending": [
-      "dogāh",
+      "dūgāh",
       "segāh",
       "chahargāh",
       "ḥijāz",
@@ -342,13 +342,13 @@
       "ḥijāz",
       "chahargāh",
       "segāh",
-      "dogāh"
+      "dūgāh"
     ]
   },
   {
     "name": "maqām ṣabā zamzam",
     "ascending": [
-      "dogāh",
+      "dūgāh",
       "kurdī",
       "chahargāh",
       "ḥijāz",
@@ -365,15 +365,15 @@
       "ḥijāz",
       "chahargāh",
       "kurdī",
-      "dogāh"
+      "dūgāh"
     ]
   },
   {
     "name": "maqām ʿajam ʿushayrān",
     "ascending": [
-      "ʿajam ʿushayrān",
+      "‘ajam ‘ushayrān",
       "rāst",
-      "dogāh",
+      "dūgāh",
       "kurdī",
       "chahargāh",
       "nawā",
@@ -386,16 +386,16 @@
       "nawā",
       "chahargāh",
       "kurdī",
-      "dogāh",
+      "dūgāh",
       "rāst",
-      "ʿajam ʿushayrān"
+      "‘ajam ‘ushayrān"
     ]
   },
   {
     "name": "maqām nairūz",
     "ascending": [
       "rāst",
-      "dogāh",
+      "dūgāh",
       "segāh",
       "chahargāh",
       "nawā",
@@ -410,7 +410,7 @@
       "nawā",
       "chahargāh",
       "segāh",
-      "dogāh",
+      "dūgāh",
       "rāst"
     ]
   },
@@ -440,9 +440,9 @@
   {
     "name": "maqām huzām",
     "ascending": [
-      "ʿirāq",
+      "‘irāq",
       "rāst",
-      "dogāh",
+      "dūgāh",
       "kurdī",
       "ḥijāz",
       "nawā",
@@ -455,17 +455,17 @@
       "nawā",
       "ḥijāz",
       "kurdī",
-      "dogāh",
+      "dūgāh",
       "rāst",
-      "ʿirāq"
+      "‘irāq"
     ]
   },
   {
     "name": "maqām rāḥat al-arwāḥ",
     "ascending": [
-      "ʿirāq",
+      "‘irāq",
       "rāst",
-      "dogāh",
+      "dūgāh",
       "kurdī",
       "ḥijāz",
       "nawā",
@@ -478,9 +478,9 @@
       "nawā",
       "ḥijāz",
       "kurdī",
-      "dogāh",
+      "dūgāh",
       "rāst",
-      "ʿirāq"
+      "‘irāq"
     ],
     "suyur": [
       {
@@ -493,7 +493,7 @@
           {
             "type": "jins",
             "value": "jins ḥijāz",
-            "startingNote": "dogāh",
+            "startingNote": "dūgāh",
             "direction": "none"
           },
           {
@@ -511,12 +511,12 @@
           {
             "type": "jins",
             "value": "jins ḥijāz",
-            "startingNote": "dogāh",
+            "startingNote": "dūgāh",
             "direction": "descending"
           },
           {
             "type": "note",
-            "value": "ʿirāq"
+            "value": "‘irāq"
           }
         ]
       }
@@ -525,8 +525,8 @@
   {
     "name": "maqām rast dogāh",
     "ascending": [
-      "dogāh",
-      "buselīk/ʿushshāq",
+      "dūgāh",
+      "buselīk/’ushshāq",
       "nīm ḥijāz",
       "nawā",
       "ḥuseinī",
@@ -541,18 +541,18 @@
       "ḥuseinī",
       "nawā",
       "nīm ḥijāz",
-      "buselīk/ʿushshāq",
-      "dogāh"
+      "buselīk/’ushshāq",
+      "dūgāh"
     ]
   },
   {
     "name": "maqām bayāt ḥuseinī",
     "ascending": [
-      "ʿushayrān",
-      "ʿirāq",
+      "‘ushayrān",
+      "‘irāq",
       "rāst",
-      "dogāh",
-      "buselīk/ʿushshāq",
+      "dūgāh",
+      "buselīk/’ushshāq",
       "nīm ḥijāz",
       "nawā",
       "ḥuseinī"
@@ -561,11 +561,11 @@
       "ḥuseinī",
       "nawā",
       "chahargāh",
-      "buselīk/ʿushshāq",
-      "dogāh",
+      "buselīk/’ushshāq",
+      "dūgāh",
       "rāst",
-      "ʿirāq",
-      "ʿushayrān"
+      "‘irāq",
+      "‘ushayrān"
     ]
   },
   {
@@ -594,9 +594,9 @@
   {
     "name": "maqām ʿirāq",
     "ascending": [
-      "ʿirāq",
+      "‘irāq",
       "rāst",
-      "dogāh",
+      "dūgāh",
       "segāh",
       "chahargāh",
       "nawā",
@@ -609,9 +609,9 @@
       "nawā",
       "chahargāh",
       "segāh",
-      "dogāh",
+      "dūgāh",
       "rāst",
-      "ʿirāq"
+      "‘irāq"
     ],
     "suyur": [
       {
@@ -623,7 +623,7 @@
         "seir": [
           {
             "type": "note",
-            "value": "ʿirāq"
+            "value": "‘irāq"
           },
           {
             "type": "note",
@@ -632,7 +632,7 @@
           {
             "type": "jins",
             "value": "jins bayāt",
-            "startingNote": "dogāh",
+            "startingNote": "dūgāh",
             "direction": "none"
           },
           {
@@ -647,7 +647,7 @@
           },
           {
             "type": "note",
-            "value": "ʿirāq"
+            "value": "‘irāq"
           }
         ]
       }
@@ -656,11 +656,11 @@
   {
     "name": "maqām ḥijāz ḥuseinī",
     "ascending": [
-      "ʿushayrān",
-      "ʿajam ʿushayrān",
+      "‘ushayrān",
+      "‘ajam ‘ushayrān",
       "zirguleh",
-      "dogāh",
-      "buselīk/ʿushshāq",
+      "dūgāh",
+      "buselīk/’ushshāq",
       "nīm ḥijāz",
       "nawā",
       "ḥuseinī"
@@ -669,11 +669,11 @@
       "ḥuseinī",
       "nawā",
       "chahargāh",
-      "buselīk/ʿushshāq",
-      "dogāh",
+      "buselīk/’ushshāq",
+      "dūgāh",
       "zirguleh",
-      "ʿajam ʿushayrān",
-      "ʿushayrān"
+      "‘ajam ‘ushayrān",
+      "‘ushayrān"
     ]
   },
   {
@@ -703,10 +703,10 @@
     "name": "maqām yegāh",
     "ascending": [
       "yegāh",
-      "ʿushayrān",
-      "ʿirāq",
+      "‘ushayrān",
+      "‘irāq",
       "rāst",
-      "dogāh",
+      "dūgāh",
       "nīm buselīk",
       "nīm ḥijāz",
       "nawā"
@@ -745,15 +745,15 @@
           },
           {
             "type": "note",
-            "value": "dogāh"
+            "value": "dūgāh"
           },
           {
             "type": "note",
-            "value": "ʿirāq"
+            "value": "‘irāq"
           },
           {
             "type": "note",
-            "value": "ʿushayrān"
+            "value": "‘ushayrān"
           },
           {
             "type": "note",
@@ -766,10 +766,10 @@
       "nawā",
       "chahargāh",
       "segāh",
-      "dogāh",
+      "dūgāh",
       "rāst",
-      "ʿirāq",
-      "ʿushayrān",
+      "‘irāq",
+      "‘ushayrān",
       "yegāh"
     ]
   },
@@ -777,10 +777,10 @@
     "name": "maqām faraḥfazza",
     "ascending": [
       "yegāh",
-      "ʿushayrān",
-      "ʿajam ʿushayrān",
+      "‘ushayrān",
+      "‘ajam ‘ushayrān",
       "rāst",
-      "dogāh",
+      "dūgāh",
       "kurdī",
       "chahargāh",
       "nawā"
@@ -819,7 +819,7 @@
           },
           {
             "type": "note",
-            "value": "dogāh"
+            "value": "dūgāh"
           },
           {
             "type": "note",
@@ -827,11 +827,11 @@
           },
           {
             "type": "note",
-            "value": "ʿajam ʿushayrān"
+            "value": "‘ajam ‘ushayrān"
           },
           {
             "type": "note",
-            "value": "ʿushayrān"
+            "value": "‘ushayrān"
           },
           {
             "type": "note",
@@ -848,10 +848,10 @@
       "nawā",
       "ḥijāz",
       "kurdī",
-      "dogāh",
+      "dūgāh",
       "rāst",
-      "ʿajam ʿushayrān",
-      "ʿushayrān",
+      "‘ajam ‘ushayrān",
+      "‘ushayrān",
       "yegāh"
     ]
   },
@@ -862,7 +862,7 @@
       "qarār ḥiṣār",
       "nīm kawasht/rahāwī",
       "rāst",
-      "dogāh",
+      "dūgāh",
       "kurdī",
       "ḥijāz",
       "nawā"
@@ -895,7 +895,7 @@
           },
           {
             "type": "note",
-            "value": "dogāh"
+            "value": "dūgāh"
           },
           {
             "type": "note",
@@ -920,7 +920,7 @@
       "nawā",
       "chahargāh",
       "kurdī",
-      "dogāh",
+      "dūgāh",
       "rāst",
       "nīm kawasht/rahāwī",
       "qarār ḥiṣār",
@@ -931,10 +931,10 @@
     "name": "maqām sulṭānī yegāh",
     "ascending": [
       "yegāh",
-      "ʿushayrān",
-      "ʿajam ʿushayrān",
+      "‘ushayrān",
+      "‘ajam ‘ushayrān",
       "rāst",
-      "dogāh",
+      "dūgāh",
       "kurdī",
       "ḥijāz",
       "nawā"
@@ -956,7 +956,7 @@
           {
             "type": "jins",
             "value": "jins ḥijāz",
-            "startingNote": "dogāh",
+            "startingNote": "dūgāh",
             "direction": "none"
           },
           {
@@ -974,19 +974,19 @@
       "nawā",
       "ḥijāz",
       "kurdī",
-      "dogāh",
+      "dūgāh",
       "rāst",
-      "ʿajam ʿushayrān",
-      "ʿushayrān",
+      "‘ajam ‘ushayrān",
+      "‘ushayrān",
       "yegāh"
     ]
   },
   {
     "name": "maqām majlis afrūz",
     "ascending": [
-      "ʿirāq",
+      "‘irāq",
       "rāst",
-      "dogāh",
+      "dūgāh",
       "segāh",
       "chahargāh",
       "nawā",
@@ -1004,39 +1004,39 @@
           {
             "type": "jins",
             "value": "jins bayāt",
-            "startingNote": "dogāh",
+            "startingNote": "dūgāh",
             "direction": "none"
           },
           {
             "type": "note",
-            "value": "ʿirāq"
+            "value": "‘irāq"
           },
           {
             "type": "jins",
             "value": "jins ʿirāq",
-            "startingNote": "ʿirāq",
+            "startingNote": "‘irāq",
             "direction": "ascending"
           },
           {
             "type": "jins",
             "value": "jins ʿirāq",
-            "startingNote": "ʿirāq",
+            "startingNote": "‘irāq",
             "direction": "descending"
           },
           {
             "type": "note",
-            "value": "ʿushayrān"
+            "value": "‘ushayrān"
           },
           {
             "type": "jins",
             "value": "jins bayāt",
-            "startingNote": "dogāh",
+            "startingNote": "dūgāh",
             "direction": "none"
           },
           {
             "type": "jins",
             "value": "jins bayāt",
-            "startingNote": "dogāh",
+            "startingNote": "dūgāh",
             "direction": "descending"
           },
           {
@@ -1051,10 +1051,10 @@
     "name": "maqām dilkeshīda",
     "ascending": [
       "yegāh",
-      "ʿushayrān",
-      "ʿajam ʿushayrān",
+      "‘ushayrān",
+      "‘ajam ‘ushayrān",
       "rāst",
-      "dogāh",
+      "dūgāh",
       "segāh",
       "ḥijāz",
       "nawā"
@@ -1080,25 +1080,25 @@
           {
             "type": "jins",
             "value": "jins bayāt",
-            "startingNote": "dogāh",
+            "startingNote": "dūgāh",
             "direction": "none"
           },
           {
             "type": "jins",
             "value": "jins bayāt",
-            "startingNote": "dogāh",
+            "startingNote": "dūgāh",
             "direction": "descending"
           },
           {
             "type": "jins",
             "value": "jins bayāt",
-            "startingNote": "dogāh",
+            "startingNote": "dūgāh",
             "direction": "ascending"
           },
           {
             "type": "jins",
             "value": "jins kurd",
-            "startingNote": "dogāh",
+            "startingNote": "dūgāh",
             "direction": "descending"
           },
           {
@@ -1116,20 +1116,20 @@
       "nawā",
       "chahargāh",
       "segāh",
-      "dogāh",
+      "dūgāh",
       "rāst",
-      "ʿajam ʿushayrān",
-      "ʿushayrān",
+      "‘ajam ‘ushayrān",
+      "‘ushayrān",
       "yegāh"
     ]
   },
   {
     "name": "maqām ʿushayrān",
     "ascending": [
-      "ʿushayrān",
-      "ʿirāq",
+      "‘ushayrān",
+      "‘irāq",
       "rāst",
-      "dogāh",
+      "dūgāh",
       "segāh",
       "chahargāh",
       "nawā",
@@ -1150,19 +1150,19 @@
           {
             "type": "jins",
             "value": "jins bayāt",
-            "startingNote": "dogāh",
+            "startingNote": "dūgāh",
             "direction": "none"
           },
           {
             "type": "jins",
             "value": "jins bayāt",
-            "startingNote": "ʿushayrān",
+            "startingNote": "‘ushayrān",
             "direction": "ascending"
           },
           {
             "type": "jins",
             "value": "jins bayāt",
-            "startingNote": "dogāh",
+            "startingNote": "dūgāh",
             "direction": "ascending"
           },
           {
@@ -1184,18 +1184,18 @@
           {
             "type": "jins",
             "value": "jins bayāt",
-            "startingNote": "dogāh",
+            "startingNote": "dūgāh",
             "direction": "descending"
           },
           {
             "type": "jins",
             "value": "jins bayāt",
-            "startingNote": "ʿushayrān",
+            "startingNote": "‘ushayrān",
             "direction": "descending"
           },
           {
             "type": "note",
-            "value": "ʿushayrān"
+            "value": "‘ushayrān"
           }
         ]
       }
@@ -1205,19 +1205,19 @@
       "nawā",
       "chahargāh",
       "nīm buselīk",
-      "dogāh",
+      "dūgāh",
       "rāst",
-      "ʿirāq",
-      "ʿushayrān"
+      "‘irāq",
+      "‘ushayrān"
     ]
   },
   {
     "name": "maqām bayāt ʿushayrān",
     "ascending": [
-      "ʿushayrān",
-      "ʿirāq",
+      "‘ushayrān",
+      "‘irāq",
       "rāst",
-      "dogāh",
+      "dūgāh",
       "segāh",
       "chahargāh",
       "nawā",
@@ -1241,12 +1241,12 @@
           {
             "type": "jins",
             "value": "jins bayāt",
-            "startingNote": "dogāh",
+            "startingNote": "dūgāh",
             "direction": "descending"
           },
           {
             "type": "note",
-            "value": "ʿushayrān"
+            "value": "‘ushayrān"
           },
           {
             "type": "jins",
@@ -1284,7 +1284,7 @@
           },
           {
             "type": "note",
-            "value": "dogāh"
+            "value": "dūgāh"
           },
           {
             "type": "note",
@@ -1292,11 +1292,11 @@
           },
           {
             "type": "note",
-            "value": "ʿirāq"
+            "value": "‘irāq"
           },
           {
             "type": "note",
-            "value": "ʿushayrān"
+            "value": "‘ushayrān"
           }
         ]
       }
@@ -1309,19 +1309,19 @@
       "nawā",
       "chahargāh",
       "nīm buselīk",
-      "dogāh",
+      "dūgāh",
       "rāst",
-      "ʿirāq",
-      "ʿushayrān"
+      "‘irāq",
+      "‘ushayrān"
     ]
   },
   {
     "name": "maqām ḥuseinī ʿushayrān",
     "ascending": [
-      "ʿushayrān",
-      "ʿirāq",
+      "‘ushayrān",
+      "‘irāq",
       "rāst",
-      "dogāh",
+      "dūgāh",
       "segāh",
       "chahargāh",
       "nawā",
@@ -1361,19 +1361,19 @@
       "nawā",
       "ḥijāz",
       "kurdī",
-      "dogāh",
+      "dūgāh",
       "rāst",
-      "ʿirāq",
-      "ʿushayrān"
+      "‘irāq",
+      "‘ushayrān"
     ]
   },
   {
     "name": "maqām sūzdāl",
     "ascending": [
-      "ʿushayrān",
-      "ʿajam ʿushayrān",
+      "‘ushayrān",
+      "‘ajam ‘ushayrān",
       "zirguleh",
-      "dogāh",
+      "dūgāh",
       "nīm buselīk",
       "chahargāh",
       "ḥiṣār",
@@ -1403,18 +1403,18 @@
           {
             "type": "jins",
             "value": "jins nikrīz",
-            "startingNote": "dogāh",
+            "startingNote": "dūgāh",
             "direction": "none"
           },
           {
             "type": "jins",
             "value": "jins ḥijāz",
-            "startingNote": "ʿushayrān",
+            "startingNote": "‘ushayrān",
             "direction": "none"
           },
           {
             "type": "note",
-            "value": "ʿushayrān"
+            "value": "‘ushayrān"
           }
         ]
       }
@@ -1427,19 +1427,19 @@
       "ḥiṣār",
       "chahargāh",
       "nīm buselīk",
-      "dogāh",
+      "dūgāh",
       "zirguleh",
-      "ʿajam ʿushayrān",
-      "ʿushayrān"
+      "‘ajam ‘ushayrān",
+      "‘ushayrān"
     ]
   },
   {
     "name": "maqām shawq ṭarab",
     "ascending": [
-      "ʿushayrān",
-      "ʿajam ʿushayrān",
+      "‘ushayrān",
+      "‘ajam ‘ushayrān",
       "rāst",
-      "dogāh",
+      "dūgāh",
       "segāh",
       "chahargāh",
       "ḥijāz",
@@ -1465,7 +1465,7 @@
           {
             "type": "jins",
             "value": "jins ṣabā",
-            "startingNote": "dogāh",
+            "startingNote": "dūgāh",
             "direction": "none"
           },
           {
@@ -1489,18 +1489,18 @@
           {
             "type": "jins",
             "value": "jins kurd",
-            "startingNote": "dogāh",
+            "startingNote": "dūgāh",
             "direction": "ascending"
           },
           {
             "type": "jins",
             "value": "jins kurd",
-            "startingNote": "ʿushayrān",
+            "startingNote": "‘ushayrān",
             "direction": "none"
           },
           {
             "type": "note",
-            "value": "ʿushayrān"
+            "value": "‘ushayrān"
           }
         ]
       }
@@ -1515,19 +1515,19 @@
       "nawā",
       "chahargāh",
       "kurdī",
-      "dogāh",
+      "dūgāh",
       "rāst",
-      "ʿajam ʿushayrān",
-      "ʿushayrān"
+      "‘ajam ‘ushayrān",
+      "‘ushayrān"
     ]
   },
   {
     "name": "maqām nuhuft",
     "ascending": [
-      "ʿushayrān",
-      "ʿirāq",
+      "‘ushayrān",
+      "‘irāq",
       "rāst",
-      "dogāh",
+      "dūgāh",
       "nīm buselīk",
       "nīm ḥijāz",
       "nawā",
@@ -1553,7 +1553,7 @@
           {
             "type": "jins",
             "value": "jins rāst",
-            "startingNote": "dogāh",
+            "startingNote": "dūgāh",
             "direction": "ascending"
           },
           {
@@ -1569,13 +1569,13 @@
           {
             "type": "jins",
             "value": "jins kurd",
-            "startingNote": "dogāh",
+            "startingNote": "dūgāh",
             "direction": "none"
           },
           {
             "type": "jins",
             "value": "jins ḥijāz",
-            "startingNote": "dogāh",
+            "startingNote": "dūgāh",
             "direction": "none"
           },
           {
@@ -1587,7 +1587,7 @@
           {
             "type": "jins",
             "value": "jins bayāt",
-            "startingNote": "ʿushayrān",
+            "startingNote": "‘ushayrān",
             "direction": "none"
           }
         ]
@@ -1603,18 +1603,18 @@
       "nawā",
       "ḥijāz",
       "kurdī",
-      "dogāh",
+      "dūgāh",
       "rāst",
-      "ʿirāq",
-      "ʿushayrān"
+      "‘irāq",
+      "‘ushayrān"
     ]
   },
   {
     "name": "maqām shawq afzā",
     "ascending": [
-      "ʿajam ʿushayrān",
+      "‘ajam ‘ushayrān",
       "rāst",
-      "dogāh",
+      "dūgāh",
       "segāh",
       "chahargāh",
       "ḥijāz",
@@ -1650,13 +1650,13 @@
           {
             "type": "jins",
             "value": "jins ṣabā",
-            "startingNote": "dogāh",
+            "startingNote": "dūgāh",
             "direction": "descending"
           },
           {
             "type": "jins",
             "value": "jins ʿajam",
-            "startingNote": "ʿajam ʿushayrān",
+            "startingNote": "‘ajam ‘ushayrān",
             "direction": "descending"
           }
         ]
@@ -1672,17 +1672,17 @@
       "ḥijāz",
       "chahargāh",
       "kurdī",
-      "dogāh",
+      "dūgāh",
       "rāst",
-      "ʿajam ʿushayrān"
+      "‘ajam ‘ushayrān"
     ]
   },
   {
     "name": "maqām shawq āwr",
     "ascending": [
-      "ʿajam ʿushayrān",
+      "‘ajam ‘ushayrān",
       "rāst",
-      "dogāh",
+      "dūgāh",
       "nīm buselīk",
       "nīm ḥijāz",
       "nawā",
@@ -1724,7 +1724,7 @@
           {
             "type": "jins",
             "value": "jins nahāwand",
-            "startingNote": "dogāh",
+            "startingNote": "dūgāh",
             "direction": "descending"
           },
           {
@@ -1733,7 +1733,7 @@
           },
           {
             "type": "note",
-            "value": "ʿajam ʿushayrān"
+            "value": "‘ajam ‘ushayrān"
           }
         ]
       }
@@ -1748,17 +1748,17 @@
       "nawā",
       "chahargāh",
       "kurdī",
-      "dogāh",
+      "dūgāh",
       "rāst",
-      "ʿajam ʿushayrān"
+      "‘ajam ‘ushayrān"
     ]
   },
   {
     "name": "maqām awj",
     "ascending": [
-      "ʿirāq",
+      "‘irāq",
       "rāst",
-      "dogāh",
+      "dūgāh",
       "segāh",
       "chahargāh",
       "nawā",
@@ -1784,7 +1784,7 @@
           {
             "type": "jins",
             "value": "jins bayāt",
-            "startingNote": "dogāh",
+            "startingNote": "dūgāh",
             "direction": "none"
           },
           {
@@ -1814,12 +1814,12 @@
           {
             "type": "jins",
             "value": "jins bayāt",
-            "startingNote": "dogāh",
+            "startingNote": "dūgāh",
             "direction": "descending"
           },
           {
             "type": "note",
-            "value": "ʿirāq"
+            "value": "‘irāq"
           }
         ]
       }
@@ -1830,17 +1830,17 @@
       "nawā",
       "chahargāh",
       "segāh",
-      "dogāh",
+      "dūgāh",
       "rāst",
-      "ʿirāq"
+      "‘irāq"
     ]
   },
   {
     "name": "maqām farḥanak",
     "ascending": [
-      "ʿirāq",
+      "‘irāq",
       "rāst",
-      "dogāh",
+      "dūgāh",
       "nīm buselīk",
       "nīm ḥijāz",
       "nawā",
@@ -1858,7 +1858,7 @@
           {
             "type": "jins",
             "value": "jins rāst",
-            "startingNote": "dogāh",
+            "startingNote": "dūgāh",
             "direction": "none"
           },
           {
@@ -1869,7 +1869,7 @@
           },
           {
             "type": "note",
-            "value": "ʿirāq"
+            "value": "‘irāq"
           },
           {
             "type": "note",
@@ -1877,7 +1877,7 @@
           },
           {
             "type": "note",
-            "value": "ʿirāq"
+            "value": "‘irāq"
           }
         ]
       }
@@ -1888,9 +1888,9 @@
       "nawā",
       "nīm ḥijāz",
       "nīm buselīk",
-      "dogāh",
+      "dūgāh",
       "rāst",
-      "ʿirāq"
+      "‘irāq"
     ]
   },
   {
@@ -1922,9 +1922,9 @@
     "ascending": [
       "yegāh",
       "nīm ʿushayrān",
-      "ʿajam ʿushayrān",
+      "‘ajam ‘ushayrān",
       "rāst",
-      "dogāh",
+      "dūgāh",
       "nīm buselīk",
       "chahargāh",
       "nawā"
@@ -1934,9 +1934,9 @@
       "nawā",
       "chahargāh",
       "nīm buselīk",
-      "dogāh",
+      "dūgāh",
       "rāst",
-      "ʿajam ʿushayrān",
+      "‘ajam ‘ushayrān",
       "nīm ʿushayrān",
       "yegāh"
     ]
@@ -1968,8 +1968,8 @@
   {
     "name": "!hijaz inverted",
     "ascending": [
-      "dogāh",
-      "buselīk/ʿushshāq",
+      "dūgāh",
+      "buselīk/’ushshāq",
       "nīm ḥijāz",
       "nawā",
       "ḥuseinī",
@@ -1985,8 +1985,8 @@
       "ḥuseinī",
       "nawā",
       "nīm ḥijāz",
-      "buselīk/ʿushshāq",
-      "dogāh"
+      "buselīk/’ushshāq",
+      "dūgāh"
     ]
   }
 ]

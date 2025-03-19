@@ -3,7 +3,7 @@
     "name": "jins rāst",
     "noteNames": [
       "rāst",
-      "dogāh",
+      "dūgāh",
       "segāh",
       "chahargāh"
     ]
@@ -11,7 +11,7 @@
   {
     "name": "jins bayāt",
     "noteNames": [
-      "dogāh",
+      "dūgāh",
       "segāh",
       "chahargāh",
       "nawā"
@@ -28,7 +28,7 @@
   {
     "name": "jins ṣabā",
     "noteNames": [
-      "dogāh",
+      "dūgāh",
       "segāh",
       "chahargāh",
       "ḥijāz"
@@ -38,8 +38,8 @@
     "name": "jins ʿajam",
     "noteNames": [
       "rāst",
-      "dogāh",
-      "buselīk/ʿushshāq",
+      "dūgāh",
+      "buselīk/’ushshāq",
       "chahargāh"
     ]
   },
@@ -47,7 +47,7 @@
     "name": "jins nahāwand",
     "noteNames": [
       "rāst",
-      "dogāh",
+      "dūgāh",
       "kurdī",
       "chahargāh"
     ]
@@ -55,7 +55,7 @@
   {
     "name": "jins kurd",
     "noteNames": [
-      "dogāh",
+      "dūgāh",
       "kurdī",
       "chahargāh",
       "nawā"
@@ -64,7 +64,7 @@
   {
     "name": "jins ḥijāz",
     "noteNames": [
-      "dogāh",
+      "dūgāh",
       "kurdī",
       "ḥijāz",
       "nawā"
@@ -73,7 +73,7 @@
   {
     "name": "jins ṣabā zamzam",
     "noteNames": [
-      "dogāh",
+      "dūgāh",
       "kurdī",
       "chahargāh",
       "ḥijāz"
@@ -91,7 +91,7 @@
   {
     "name": "jins athar kurd",
     "noteNames": [
-      "dogāh",
+      "dūgāh",
       "kurdī",
       "chahargāh",
       "ḥiṣār",
@@ -101,18 +101,18 @@
   {
     "name": "jins ʿirāq",
     "noteNames": [
-      "ʿirāq",
+      "‘irāq",
       "rāst",
-      "dogāh"
+      "dūgāh"
     ]
   },
   {
     "name": "jins mustaʿār",
     "noteNames": [
-      "ʿirāq",
+      "‘irāq",
       "zirguleh",
-      "dogāh",
-      "buselīk/ʿushshāq"
+      "dūgāh",
+      "buselīk/’ushshāq"
     ]
   },
   {
@@ -128,7 +128,7 @@
     "name": "jins nikrīz",
     "noteNames": [
       "rāst",
-      "dogāh",
+      "dūgāh",
       "kurdī",
       "ḥijāz"
     ]
@@ -137,7 +137,7 @@
     "name": "jins rāst nīm buselīk",
     "noteNames": [
       "rāst",
-      "dogāh",
+      "dūgāh",
       "nīm buselīk",
       "chahargāh"
     ]
@@ -146,8 +146,8 @@
     "name": "jins bayāt yegāh",
     "noteNames": [
       "yegāh",
-      "qarār tīk ḥiṣār",
-      "ʿajam ʿushayrān",
+      "qarār tīk ḥiṣār/shūrī",
+      "‘ajam ‘ushayrān",
       "rāst"
     ]
   },
