@@ -13,6 +13,7 @@ export default class TuningSystem {
   private commentsArabic: string;
   private pitchClasses: string[];
   private transliteratedNoteNames: TransliteratedNoteName[];
+  private abjadNames: string[];
   private stringLength: number;
   private referenceFrequency: number;
 
@@ -29,6 +30,7 @@ export default class TuningSystem {
     commentsArabic: string,
     notes: string[],
     transliteratedNoteNames: TransliteratedNoteName[],
+    abjadNames: string[],
     stringLength: number,
     referenceFrequency: number
   ) {
@@ -44,6 +46,7 @@ export default class TuningSystem {
     this.commentsArabic = commentsArabic;
     this.pitchClasses = notes;
     this.transliteratedNoteNames = transliteratedNoteNames;
+    this.abjadNames = abjadNames;
     this.stringLength = stringLength;
     this.referenceFrequency = referenceFrequency;
   }
@@ -94,6 +97,10 @@ export default class TuningSystem {
 
   getNoteNames(): TransliteratedNoteName[] {
     return this.transliteratedNoteNames;
+  }
+
+  getAbjadNames(): string[] {
+    return this.abjadNames;
   }
 
   getStringLength(): number {
