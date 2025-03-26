@@ -21,7 +21,7 @@ import { getEnglishNoteName, firstOctaveAbjadNames, secondOctaveAbjadNames } fro
 //todo: transfer all abjad names to new tuningSystems.json
 
 export default function TuningSystemManager() {
-  const { tuningSystems, selectedTuningSystem, setSelectedTuningSystem, updateAllTuningSystems } = useAppContext();
+  const { tuningSystems, selectedTuningSystem, setSelectedTuningSystem, updateAllTuningSystems, playNoteFrequency } = useAppContext();
 
   // Local state that mirrors the selected or “new” system’s fields
   const [id, setId] = useState("");
@@ -568,9 +568,9 @@ export default function TuningSystemManager() {
             {/* Row 10: "Play" */}
             <tr>
               <td>{rowLabels[9]}</td>
-              {pitchClassesArr.map((_, colIndex) => (
+              {pitchClassesArr.map((basePc, colIndex) => (
                 <td key={colIndex}>
-                  <button type="button" onClick={() => alert("Play placeholder")}>
+                  <button type="button" className="tuning-system-manager__play-button" onClick={() => playNoteFrequency(parseInt(renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "frequency")))}>
                     Play
                   </button>
                 </td>
@@ -820,7 +820,7 @@ export default function TuningSystemManager() {
         </div>
       </form>
 
-      {pitchClassesArr.length && <div className="tuning-system-manager__starting-note-container">
+      {pitchClassesArr.length !== 0 && <div className="tuning-system-manager__starting-note-container">
         <div className="tuning-system-manager__starting-note-left">
           Choose Which Note Name To Start On:
           {noteNames.map((notes, index) => {
