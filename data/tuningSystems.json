@@ -36,7 +36,7 @@
       "1907",
       "1852"
     ],
-    "noteNames": [
+    "noteNames": [[
       "yegāh",
       "qarār nīm ḥiṣār",
       "qarār ḥiṣār",
@@ -85,7 +85,56 @@
       "jawāb nīm ḥijāz",
       "jawāb ḥijāz",
       "jawāb tīk ḥijāz"
-    ],
+    ],[
+      "‘ushayrān",
+      "qarār nīm ḥiṣār",
+      "qarār ḥiṣār",
+      "qarār tīk ḥiṣār/shūrī",
+      "‘ushayrān",
+      "nīm ‘ajam ‘ushayrān",
+      "‘ajam ‘ushayrān",
+      "‘irāq",
+      "kawasht",
+      "tīk kawasht",
+      "rāst",
+      "nīm zirguleh",
+      "zirguleh",
+      "tīk zirguleh",
+      "dūgāh",
+      "nīm kurdī/nahāwand",
+      "kurdī",
+      "segāh",
+      "buselīk/’ushshāq",
+      "tīk buselīk",
+      "chahargāh",
+      "nīm ḥijāz",
+      "ḥijāz",
+      "tīk ḥijāz/ṣabā",
+      "nawā",
+      "nīm ḥiṣār",
+      "ḥiṣār",
+      "tīk ḥiṣār",
+      "ḥuseinī",
+      "nīm ʿajam",
+      "ʿajam",
+      "awj",
+      "māhūr",
+      "tīk māhūr",
+      "kurdān",
+      "nīm shahnāz",
+      "shahnāz",
+      "jawāb tīk zirguleh",
+      "muḥayyar",
+      "nīm sunbuleh",
+      "sunbuleh/zawāl",
+      "buzurk",
+      "jawāb buselīk",
+      "jawāb tīk buselīk",
+      "mahurān",
+      "jawāb nīm ḥijāz",
+      "jawāb ḥijāz",
+      "jawāb tīk ḥijāz"
+    ]],
     "abjadNames": [],
     "stringLength": 3600,
     "referenceFrequency": 195.998
@@ -102,7 +151,7 @@
     "commentsEnglish": "",
     "commentsArabic": "",
     "pitchClasses": ["1/1", "256/243", "9/8", "32/27", "81/64", "4/3", "1024/729", "3/2", "128/81", "27/16", "16/9", "4096/2187"],
-    "noteNames": [
+    "noteNames": [[
       "‘ushayrān",
       "‘ajam ‘ushayrān",
       "kawasht",
@@ -127,7 +176,7 @@
       "jawāb ḥijāz",
       "saham/ramal tūtī",
       "jawāb ḥiṣār"
-    ],
+    ]],
     "abjadNames": [
       "آ",
       "ب",
@@ -169,7 +218,7 @@
     "commentsEnglish": "",
     "commentsArabic": "",
     "pitchClasses": ["0", "100", "200", "300", "400", "500", "600", "700", "800", "900", "1000", "1100"],
-    "noteNames": [
+    "noteNames": [[
       "‘ushayrān",
       "‘ajam ‘ushayrān",
       "kawasht",
@@ -194,7 +243,7 @@
       "jawāb ḥijāz",
       "saham/ramal tūtī",
       "jawāb ḥiṣār"
-    ],
+    ]],
     "abjadNames": [],
     "stringLength": 1000,
     "referenceFrequency": 220
@@ -236,7 +285,7 @@
       "5298",
       "5147"
     ],
-    "noteNames": [
+    "noteNames": [[
       "yegāh",
       "qarār nīm ḥiṣār",
       "qarār ḥiṣār",
@@ -285,7 +334,7 @@
       "jawāb nīm ḥijāz",
       "jawāb ḥijāz",
       "jawāb tīk ḥijāz"
-    ],
+    ]],
     "abjadNames": [],
     "stringLength": 10000,
     "referenceFrequency": 195.998
@@ -320,7 +369,7 @@
       "5413",
       "5196"
     ],
-    "noteNames": [
+    "noteNames": [[
       "yegāh",
       "qarār ḥiṣār",
       "qarār tīk ḥiṣār/shūrī",
@@ -355,7 +404,7 @@
       "mahurān",
       "jawāb ḥijāz",
       "jawāb tīk ḥijāz"
-    ],
+    ]],
     "abjadNames": [],
     "stringLength": 10000,
     "referenceFrequency": 195.998
@@ -399,7 +448,7 @@
       "5320",
       "5120"
     ],
-    "noteNames": [
+    "noteNames": [[
       "yegāh",
       "qarār nīm ḥiṣār",
       "qarār ḥiṣār",
@@ -452,7 +501,7 @@
       "jawāb nīm ḥijāz",
       "jawāb ḥijāz",
       "jawāb tīk ḥijāz"
-    ],
+    ]],
     "abjadNames": [],
     "stringLength": 10000,
     "referenceFrequency": 195.998
@@ -494,7 +543,7 @@
       "5333",
       "5142"
     ],
-    "noteNames": [
+    "noteNames": [[
       "yegāh",
       "qarār nīm ḥiṣār",
       "qarār ḥiṣār",
@@ -543,7 +592,7 @@
       "jawāb nīm ḥijāz",
       "jawāb ḥijāz",
       "jawāb tīk ḥijāz"
-    ],
+    ]],
     "abjadNames": [],
     "stringLength": 10000,
     "referenceFrequency": 195.998
@@ -585,7 +634,7 @@
       "15/8",
       "35/18"
     ],
-    "noteNames": [
+    "noteNames": [[
       "yegāh",
       "qarār nīm ḥiṣār",
       "qarār ḥiṣār",
@@ -634,7 +683,7 @@
       "jawāb nīm ḥijāz",
       "jawāb ḥijāz",
       "jawāb tīk ḥijāz"
-    ],
+    ]],
     "abjadNames": [],
     "stringLength": 1000,
     "referenceFrequency": 195.998
@@ -669,7 +718,7 @@
       "4096/2187",
       "1048576/531441"
     ],
-    "noteNames": [
+    "noteNames": [[
       "‘ushayrān",
       "‘ajam ‘ushayrān",
       "‘irāq",
@@ -704,7 +753,7 @@
       "saham/ramal tūtī",
       "jawāb ḥiṣār",
       "jawāb tīk ḥiṣār"
-    ],
+    ]],
     "abjadNames": [],
     "stringLength": 1000,
     "referenceFrequency": 220
@@ -746,7 +795,7 @@
       "243/128",
       "64/33"
     ],
-    "noteNames": [
+    "noteNames": [[
       "‘ushayrān",
       "nīm ‘ajam ‘ushayrān",
       "‘ajam ‘ushayrān",
@@ -795,7 +844,7 @@
       "jawāb nīm ḥiṣār",
       "jawāb ḥiṣār",
       "jawāb tīk ḥiṣār"
-    ],
+    ]],
     "abjadNames": [],
     "stringLength": 1000,
     "referenceFrequency": 220
@@ -837,7 +886,7 @@
       "1100",
       "1150"
     ],
-    "noteNames": [
+    "noteNames": [[
       "yegāh",
       "qarār nīm ḥiṣār",
       "qarār ḥiṣār",
@@ -886,7 +935,7 @@
       "jawāb nīm ḥijāz",
       "jawāb ḥijāz",
       "jawāb tīk ḥijāz"
-    ],
+    ]],
     "abjadNames": [],
     "stringLength": 1000,
     "referenceFrequency": 195.998
@@ -926,7 +975,7 @@
       "288/149",
       "96/49"
     ],
-    "noteNames": [
+    "noteNames": [[
       "‘ushayrān",
       "‘ajam ‘ushayrān",
       "‘irāq",
@@ -971,7 +1020,7 @@
       "jawāb ḥiṣār",
       "jawāb tīk ḥiṣār",
       "jawāb ḥuseinī"
-    ],
+    ]],
     "abjadNames": [],
     "stringLength": 1000,
     "referenceFrequency": 220
@@ -988,7 +1037,7 @@
     "commentsEnglish": "",
     "commentsArabic": "",
     "pitchClasses": ["1/1", "256/243", "9/8", "32/27", "81/64", "4/3", "1024/729", "3/2", "128/81", "27/16", "16/9", "4096/2187"],
-    "noteNames": [
+    "noteNames": [[
       "yegāh",
       "qarār ḥiṣār",
       "‘ushayrān",
@@ -1013,7 +1062,7 @@
       "jawāb buselīk",
       "mahurān",
       "jawāb ḥijāz"
-    ],
+    ]],
     "abjadNames": [],
     "stringLength": 1000,
     "referenceFrequency": 195.998
@@ -1053,7 +1102,7 @@
       "288/149",
       "96/49"
     ],
-    "noteNames": [
+    "noteNames": [[
       "yegāh",
       "qarār ḥiṣār",
       "qarār tīk ḥiṣār/shūrī",
@@ -1098,7 +1147,7 @@
       "jawāb ḥijāz",
       "jawāb tīk ḥijāz",
       "nīm saham/ramal tūtī"
-    ],
+    ]],
     "abjadNames": [],
     "stringLength": 1000,
     "referenceFrequency": 195.998
@@ -1133,7 +1182,7 @@
       "91/48",
       "52/27"
     ],
-    "noteNames": [
+    "noteNames": [[
       "yegāh",
       "qarār ḥiṣār",
       "qarār tīk ḥiṣār/shūrī",
@@ -1168,7 +1217,7 @@
       "mahurān",
       "jawāb nīm ḥijāz",
       "jawāb ḥijāz"
-    ],
+    ]],
     "abjadNames": [],
     "stringLength": 1000,
     "referenceFrequency": 195.998
@@ -1203,7 +1252,7 @@
       "91/48",
       "52/27"
     ],
-    "noteNames": [
+    "noteNames": [[
       "‘ushayrān",
       "‘ajam ‘ushayrān",
       "‘irāq",
@@ -1238,7 +1287,7 @@
       "saham/ramal tūtī",
       "jawāb ḥiṣār",
       "jawāb tīk ḥiṣār"
-    ],
+    ]],
     "abjadNames": [],
     "stringLength": 1000,
     "referenceFrequency": 220
@@ -1280,7 +1329,7 @@
       "243/128",
       "64/33"
     ],
-    "noteNames": [
+    "noteNames": [[
       "yegāh",
       "qarār nīm ḥiṣār",
       "qarār ḥiṣār",
@@ -1329,7 +1378,7 @@
       "jawāb nīm ḥijāz",
       "jawāb ḥijāz",
       "jawāb tīk ḥijāz"
-    ],
+    ]],
     "abjadNames": [],
     "stringLength": 1000,
     "referenceFrequency": 195.998
@@ -1364,7 +1413,7 @@
       "4096/2187",
       "1048576/531441"
     ],
-    "noteNames": [
+    "noteNames": [[
       "yegāh",
       "qarār ḥiṣār",
       "qarār tīk ḥiṣār/shūrī",
@@ -1399,7 +1448,7 @@
       "mahurān",
       "jawāb ḥijāz",
       "jawāb tīk ḥijāz"
-    ],
+    ]],
     "abjadNames": [],
     "stringLength": 1000,
     "referenceFrequency": 195.998
@@ -1416,7 +1465,7 @@
     "commentsEnglish": "",
     "commentsArabic": "",
     "pitchClasses": ["1/1", "9/8", "32/27", "81/64", "4/3", "3/2", "128/81", "27/16", "16/9"],
-    "noteNames": [
+    "noteNames": [[
       "‘ushayrān",
       "kawasht",
       "rāst",
@@ -1435,7 +1484,7 @@
       "mahurān",
       "jawāb ḥijāz",
       "saham/ramal tūtī"
-    ],
+    ]],
     "abjadNames": [],
     "stringLength": 1000,
     "referenceFrequency": 220
@@ -1477,7 +1526,7 @@
       "5333",
       "5142"
     ],
-    "noteNames": [
+    "noteNames": [[
       "rāst",
       "nīm zirguleh",
       "zirguleh",
@@ -1526,7 +1575,7 @@
       "jawāb awj",
       "jawāb māhūr",
       "jawāb tīk māhūr"
-    ],
+    ]],
     "abjadNames": [],
     "stringLength": 10000,
     "referenceFrequency": 261.6256
@@ -1568,7 +1617,7 @@
       "537",
       "520"
     ],
-    "noteNames": [
+    "noteNames": [[
       "yegāh",
       "qarār nīm ḥiṣār",
       "qarār ḥiṣār",
@@ -1617,7 +1666,7 @@
       "jawāb nīm ḥijāz",
       "jawāb ḥijāz",
       "jawāb tīk ḥijāz"
-    ],
+    ]],
     "abjadNames": [],
     "stringLength": 1000,
     "referenceFrequency": 195.998
@@ -1634,7 +1683,7 @@
     "commentsEnglish": "",
     "commentsArabic": "",
     "pitchClasses": ["1/1", "9/8", "32/27", "81/64", "4/3", "3/2", "128/81", "27/16", "16/9", "243/128"],
-    "noteNames": [
+    "noteNames": [[
       "yegāh",
       "‘ushayrān",
       "‘ajam ‘ushayrān",
@@ -1655,7 +1704,7 @@
       "jawāb buselīk",
       "mahurān",
       "jawāb ḥijāz"
-    ],
+    ]],
     "abjadNames": [],
     "stringLength": 1000,
     "referenceFrequency": 220
@@ -1697,7 +1746,7 @@
       "1100",
       "1150"
     ],
-    "noteNames": [
+    "noteNames": [[
       "‘ushayrān",
       "nīm ‘ajam ‘ushayrān",
       "‘ajam ‘ushayrān",
@@ -1746,7 +1795,7 @@
       "jawāb nīm ḥiṣār",
       "jawāb ḥiṣār",
       "jawāb tīk ḥiṣār"
-    ],
+    ]],
     "abjadNames": [],
     "stringLength": 1000,
     "referenceFrequency": 220
@@ -1788,7 +1837,7 @@
       "4096/2187",
       "52/27"
     ],
-    "noteNames": [
+    "noteNames": [[
       "‘ushayrān",
       "nīm ‘ajam ‘ushayrān",
       "‘ajam ‘ushayrān",
@@ -1837,7 +1886,7 @@
       "jawāb nīm ḥiṣār",
       "jawāb ḥiṣār",
       "jawāb tīk ḥiṣār"
-    ],
+    ]],
     "abjadNames": [],
     "stringLength": 0,
     "referenceFrequency": 220
@@ -1878,7 +1927,7 @@
       "288/149",
       "96/49"
     ],
-    "noteNames": [
+    "noteNames": [[
       "‘ushayrān",
       "nīm ‘ajam ‘ushayrān",
       "‘ajam ‘ushayrān",
@@ -1925,26 +1974,9 @@
       "jawāb ḥiṣār",
       "jawāb tīk ḥiṣār",
       "jawāb ḥuseinī"
-    ],
+    ]],
     "abjadNames": [],
     "stringLength": 1000,
     "referenceFrequency": 220
-  },
-  {
-    "id": "",
-    "titleEnglish": "",
-    "titleArabic": "",
-    "year": "",
-    "sourceEnglish": "",
-    "sourceArabic": "",
-    "creatorEnglish": "",
-    "creatorArabic": "",
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "pitchClasses": [],
-    "noteNames": [],
-    "abjadNames": [],
-    "stringLength": 0,
-    "referenceFrequency": 0
   }
 ]

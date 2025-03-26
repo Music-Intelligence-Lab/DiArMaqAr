@@ -4,7 +4,7 @@ import { useAppContext } from "@/contexts/app-context"; // Update import path as
 import TuningSystem from "@/models/TuningSystem";
 import detectPitchClassType from "@/functions/detectPitchClassType";
 import convertPitchClass, { shiftPitchClass } from "@/functions/convertPitchClass";
-import {
+import TransliteratedNoteName, {
   octaveZeroNoteNames,
   octaveOneNoteNames,
   octaveTwoNoteNames,
@@ -17,7 +17,6 @@ import {
 
 import { getEnglishNoteName, firstOctaveAbjadNames, secondOctaveAbjadNames } from "@/functions/noteNameMappings";
 
-//todo: make octaves hideable
 //todo: save different starting notes for the same tuning system
 //todo: sound settings card
 //todo: transfer all abjad names to new tuningSystems.json
@@ -37,6 +36,7 @@ export default function TuningSystemManager() {
   const [commentsEnglish, setCommentsEnglish] = useState("");
   const [commentsArabic, setCommentsArabic] = useState("");
   const [pitchClasses, setPitchClasses] = useState("");
+  const [noteNames, setNoteNames] = useState<TransliteratedNoteName[][]>([]);
   const [stringLength, setStringLength] = useState<number>(0);
   const [referenceFrequency, setReferenceFrequency] = useState<number>(0);
 
@@ -67,8 +67,12 @@ export default function TuningSystemManager() {
       setReferenceFrequency(selectedTuningSystem.getReferenceFrequency());
 
       const pitchArr = selectedTuningSystem.getNotes() || [];
-      const loadedNames = selectedTuningSystem.getNoteNames(); // array of strings from JSON
-      const mappedIndices = loadedNames.map((arabicName) => {
+      const loadedNames = selectedTuningSystem.getSetsOfNoteNames(); // array of strings from JSON
+      setNoteNames(loadedNames);
+
+      const firstSetOfNotes = loadedNames[0] ?? [];
+
+      const mappedIndices = firstSetOfNotes.map((arabicName) => {
         const idx = octaveOneNoteNames.indexOf(arabicName as TransliteratedNoteNameOctaveOne);
         return idx >= 0 ? idx : -1;
       });
@@ -150,7 +154,7 @@ export default function TuningSystemManager() {
         commentsEnglish,
         commentsArabic,
         pitchClassesArr,
-        savedNoteNames,
+        noteNames,
         selectedAbjadOct1,
         Number(stringLength),
         Number(referenceFrequency)
@@ -175,7 +179,7 @@ export default function TuningSystemManager() {
         commentsEnglish,
         commentsArabic,
         pitchClassesArr,
-        savedNoteNames,
+        noteNames,
         selectedAbjadOct1,
         Number(stringLength),
         Number(referenceFrequency)
@@ -199,6 +203,10 @@ export default function TuningSystemManager() {
       resetFormForNewSystem();
     }
   };
+
+  const handleStartNoteNameChange = (startingNoteName: string) => {
+    console.log("CHANGE THE NOTE HERE")
+  }
 
   // ----------------------------------------------------------------------------------
   // 4-Octave Note Name Grid
@@ -355,171 +363,169 @@ export default function TuningSystemManager() {
     const rowLabels = ["Index", "Note Name", "Abjad", "English", "Fraction", "Decimal", "Cents", "String Length", "Frequency", "Play", "Select"];
 
     return (
-      <table className="tuning-system-manager__octave-table" border={1} cellPadding={4}>
-        <thead>
-          <tr>
-            <th colSpan={pitchClassesArr.length + 1}>
-              Octave {octave} ({pitchClassType !== "unknown" ? pitchClassType : "?"})
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {/* Row 1: "Index" */}
-          <tr>
-            <td>{rowLabels[0]}</td>
-            {pitchClassesArr.map((_, colIndex) => (
-              <td key={colIndex}>{colIndex}</td>
-            ))}
-          </tr>
+      <details className="tuning-system-manager__octave-details" open>
+        <summary className="tuning-system-manager__octave-summary">Octave {octave}</summary>
+        <table className="tuning-system-manager__octave-table" border={1} cellPadding={4}>
+          <tbody>
+            {/* Row 1: "Index" */}
+            <tr>
+              <td>{rowLabels[0]}</td>
+              {pitchClassesArr.map((_, colIndex) => (
+                <td key={colIndex}>{colIndex}</td>
+              ))}
+            </tr>
 
-          {/* Row 2: "Note Name" */}
-          <tr>
-            <td>{rowLabels[1]}</td>
-            {pitchClassesArr.map((_, colIndex) => {
-              const currentVal = getOctaveNoteName(octave, colIndex);
-              let nameArray: ReadonlyArray<string> = [];
-              if (octave === 0) nameArray = octaveZeroNoteNames;
-              else if (octave === 1) nameArray = octaveOneNoteNames;
-              else if (octave === 2) nameArray = octaveTwoNoteNames;
-              else nameArray = octaveThreeNoteNames;
+            {/* Row 2: "Note Name" */}
+            <tr>
+              <td>{rowLabels[1]}</td>
+              {pitchClassesArr.map((_, colIndex) => {
+                const currentVal = getOctaveNoteName(octave, colIndex);
+                let nameArray: ReadonlyArray<string> = [];
+                if (octave === 0) nameArray = octaveZeroNoteNames;
+                else if (octave === 1) nameArray = octaveOneNoteNames;
+                else if (octave === 2) nameArray = octaveTwoNoteNames;
+                else nameArray = octaveThreeNoteNames;
 
-              return (
-                <td key={colIndex}>
-                  <select
-                    className="tuning-system-manager__select-note"
-                    value={currentVal ?? ""}
-                    onChange={(e) => handleSelectOctaveNote(octave, colIndex, e.target.value)}
-                  >
-                    <option value="none">(none)</option>
-                    {nameArray.map((nm) => (
-                      <option key={nm} value={nm}>
-                        {nm}
-                      </option>
-                    ))}
-                  </select>
-                </td>
-              );
-            })}
-          </tr>
-
-          <tr>
-            <td>Abjad</td>
-            {pitchClassesArr.map((_, colIndex) => {
-              if (octave === 1) {
-                // Show a <select> from firstOctaveAbjadNames
                 return (
                   <td key={colIndex}>
                     <select
-                      value={selectedAbjadOct1[colIndex] ?? ""}
-                      className="tuning-system-manager__select-abjad"
-                      onChange={(e) => handleAbjadSelect(1, colIndex, e.target.value)}
+                      className="tuning-system-manager__select-note"
+                      value={currentVal ?? ""}
+                      onChange={(e) => handleSelectOctaveNote(octave, colIndex, e.target.value)}
                     >
-                      <option value="">(none)</option>
-                      {firstOctaveAbjadNames.map((name) => (
-                        <option key={name} value={name}>
-                          {name}
+                      <option value="none">(none)</option>
+                      {nameArray.map((nm) => (
+                        <option key={nm} value={nm}>
+                          {nm}
                         </option>
                       ))}
                     </select>
                   </td>
                 );
-              } else if (octave === 2) {
-                // Show a <select> from secondOctaveAbjadNames
-                return (
-                  <td key={colIndex}>
-                    <select value={selectedAbjadOct2[colIndex] ?? ""}
-                    className="tuning-system-manager__select-abjad"
-                    onChange={(e) => handleAbjadSelect(2, colIndex, e.target.value)}>
-                      <option value="">(none)</option>
-                      {secondOctaveAbjadNames.map((name) => (
-                        <option key={name} value={name}>
-                          {name}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
-                );
-              } else {
-                // For octaves 0 and 3, we just show “-” or blank
-                return <td key={colIndex}>-</td>;
-              }
-            })}
-          </tr>
+              })}
+            </tr>
 
-          <tr>
-            <td>English</td>
-            {pitchClassesArr.map((_, colIndex) => {
-              // get the Arabic name that the user chose in “Note Name”
-              const arabicName = getOctaveNoteName(octave, colIndex);
-              // Now map it to English
-              const english = getEnglishNoteName(arabicName);
-              return <td key={colIndex}>{english}</td>;
-            })}
-          </tr>
+            <tr>
+              <td>Abjad</td>
+              {pitchClassesArr.map((_, colIndex) => {
+                if (octave === 1) {
+                  // Show a <select> from firstOctaveAbjadNames
+                  return (
+                    <td key={colIndex}>
+                      <select
+                        value={selectedAbjadOct1[colIndex] ?? ""}
+                        className="tuning-system-manager__select-abjad"
+                        onChange={(e) => handleAbjadSelect(1, colIndex, e.target.value)}
+                      >
+                        <option value="">(none)</option>
+                        {firstOctaveAbjadNames.map((name) => (
+                          <option key={name} value={name}>
+                            {name}
+                          </option>
+                        ))}
+                      </select>
+                    </td>
+                  );
+                } else if (octave === 2) {
+                  // Show a <select> from secondOctaveAbjadNames
+                  return (
+                    <td key={colIndex}>
+                      <select
+                        value={selectedAbjadOct2[colIndex] ?? ""}
+                        className="tuning-system-manager__select-abjad"
+                        onChange={(e) => handleAbjadSelect(2, colIndex, e.target.value)}
+                      >
+                        <option value="">(none)</option>
+                        {secondOctaveAbjadNames.map((name) => (
+                          <option key={name} value={name}>
+                            {name}
+                          </option>
+                        ))}
+                      </select>
+                    </td>
+                  );
+                } else {
+                  // For octaves 0 and 3, we just show “-” or blank
+                  return <td key={colIndex}>-</td>;
+                }
+              })}
+            </tr>
 
-          {/* Row 5: "Fraction" */}
-          <tr>
-            <td>{rowLabels[4]}</td>
-            {pitchClassesArr.map((basePc, colIndex) => (
-              <td key={colIndex}>{renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "fraction")}</td>
-            ))}
-          </tr>
+            <tr>
+              <td>English</td>
+              {pitchClassesArr.map((_, colIndex) => {
+                // get the Arabic name that the user chose in “Note Name”
+                const arabicName = getOctaveNoteName(octave, colIndex);
+                // Now map it to English
+                const english = getEnglishNoteName(arabicName);
+                return <td key={colIndex}>{english}</td>;
+              })}
+            </tr>
 
-          {/* Row 6: "Decimal" */}
-          <tr>
-            <td>{rowLabels[5]}</td>
-            {pitchClassesArr.map((basePc, colIndex) => (
-              <td key={colIndex}>{renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "decimal")}</td>
-            ))}
-          </tr>
+            {/* Row 5: "Fraction" */}
+            <tr>
+              <td>{rowLabels[4]}</td>
+              {pitchClassesArr.map((basePc, colIndex) => (
+                <td key={colIndex}>{renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "fraction")}</td>
+              ))}
+            </tr>
 
-          {/* Row 7: "Cents" */}
-          <tr>
-            <td>{rowLabels[6]}</td>
-            {pitchClassesArr.map((basePc, colIndex) => (
-              <td key={colIndex}>{renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "cents")}</td>
-            ))}
-          </tr>
+            {/* Row 6: "Decimal" */}
+            <tr>
+              <td>{rowLabels[5]}</td>
+              {pitchClassesArr.map((basePc, colIndex) => (
+                <td key={colIndex}>{renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "decimal")}</td>
+              ))}
+            </tr>
 
-          {/* Row 8: "String Length" */}
-          <tr>
-            <td>{rowLabels[7]}</td>
-            {pitchClassesArr.map((basePc, colIndex) => (
-              <td key={colIndex}>{renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "stringLength")}</td>
-            ))}
-          </tr>
+            {/* Row 7: "Cents" */}
+            <tr>
+              <td>{rowLabels[6]}</td>
+              {pitchClassesArr.map((basePc, colIndex) => (
+                <td key={colIndex}>{renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "cents")}</td>
+              ))}
+            </tr>
 
-          {/* Row 9: "Frequency" */}
-          <tr>
-            <td>{rowLabels[8]}</td>
-            {pitchClassesArr.map((basePc, colIndex) => (
-              <td key={colIndex}>{renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "frequency")}</td>
-            ))}
-          </tr>
+            {/* Row 8: "String Length" */}
+            <tr>
+              <td>{rowLabels[7]}</td>
+              {pitchClassesArr.map((basePc, colIndex) => (
+                <td key={colIndex}>{renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "stringLength")}</td>
+              ))}
+            </tr>
 
-          {/* Row 10: "Play" */}
-          <tr>
-            <td>{rowLabels[9]}</td>
-            {pitchClassesArr.map((_, colIndex) => (
-              <td key={colIndex}>
-                <button type="button" onClick={() => alert("Play placeholder")}>
-                  Play
-                </button>
-              </td>
-            ))}
-          </tr>
+            {/* Row 9: "Frequency" */}
+            <tr>
+              <td>{rowLabels[8]}</td>
+              {pitchClassesArr.map((basePc, colIndex) => (
+                <td key={colIndex}>{renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "frequency")}</td>
+              ))}
+            </tr>
 
-          {/* Row 11: "Select" (checkbox) */}
-          <tr>
-            <td>{rowLabels[10]}</td>
-            {pitchClassesArr.map((_, colIndex) => (
-              <td key={colIndex}>
-                <input type="checkbox" className="tuning-system-manager__checkbox" />
-              </td>
-            ))}
-          </tr>
-        </tbody>
-      </table>
+            {/* Row 10: "Play" */}
+            <tr>
+              <td>{rowLabels[9]}</td>
+              {pitchClassesArr.map((_, colIndex) => (
+                <td key={colIndex}>
+                  <button type="button" onClick={() => alert("Play placeholder")}>
+                    Play
+                  </button>
+                </td>
+              ))}
+            </tr>
+
+            {/* Row 11: "Select" (checkbox) */}
+            <tr>
+              <td>{rowLabels[10]}</td>
+              {pitchClassesArr.map((_, colIndex) => (
+                <td key={colIndex}>
+                  <input type="checkbox" className="tuning-system-manager__checkbox" />
+                </td>
+              ))}
+            </tr>
+          </tbody>
+        </table>
+      </details>
     );
   }
 
@@ -738,6 +744,18 @@ export default function TuningSystemManager() {
           )}
         </div>
       </form>
+
+      <div className="tuning-system-manager__starting-note-names">
+        Choose Which Name To Start On:
+        {noteNames.map((notes, index) => {
+          const startingNote = notes[0];
+          return (
+            <button key={index} className="tuning-system-manager__starting-note" onClick={() => handleStartNoteNameChange(startingNote)}>
+              {startingNote}
+            </button>
+          );
+        })}
+      </div>
 
       <div className="tuning-system-manager__grid-wrapper">{renderNoteNameGrid()}</div>
     </div>
