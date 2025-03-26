@@ -70,19 +70,66 @@
     font-style: italic;
   }
 
-  &__starting-note-names {
+  &__starting-note-container {
     display: flex;
     align-items: center;
-    gap: 10px;  
+    justify-content: space-evenly;
+    gap: 10px;
+  }
+
+  &__starting-note-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
 
   &__starting-note {
     padding: 10px;
-    background-color: rgba(255, 255, 255, 0.158);
+    background-color: rgba(0, 0, 0, 0.3);
     border-radius: 10px;
-    border: none;
     color: $text;
     cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    transition: 0.3s;
+
+    &_selected {
+      background-color: $secondary;
+    }
+  }
+
+  &__starting-note-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &__starting-note-button {
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    color: $text;
+    cursor: pointer;
+    transition: 0.3s;
+
+    &_reset {
+      background-color: $primary;
+    }
+
+    &_save {
+      background-color: $secondary;
+
+      &:disabled {
+        background-color: rgba(0, 0, 0, 0.3);
+      }
+    }
+
+    &_delete {
+      background-color: $delete;
+
+      &:disabled {
+        background-color: rgba(0, 0, 0, 0.3);
+      }
+    }
   }
 
   &__grid-wrapper {

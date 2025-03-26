@@ -17,7 +17,6 @@ import TransliteratedNoteName, {
 
 import { getEnglishNoteName, firstOctaveAbjadNames, secondOctaveAbjadNames } from "@/functions/noteNameMappings";
 
-//todo: save different starting notes for the same tuning system
 //todo: sound settings card
 //todo: transfer all abjad names to new tuningSystems.json
 
@@ -46,6 +45,7 @@ export default function TuningSystemManager() {
    * If the user picks “none”, we store -1 in that slot.
    */
   const [selectedIndices, setSelectedIndices] = useState<number[]>([]);
+  const [originalIndices, setOriginalIndices] = useState<number[]>([]);
   const [selectedAbjadOct1, setSelectedAbjadOct1] = useState<string[]>([]);
   const [selectedAbjadOct2, setSelectedAbjadOct2] = useState<string[]>([]);
 
@@ -86,6 +86,7 @@ export default function TuningSystemManager() {
 
       // 5) Update the selectedIndices state
       setSelectedIndices(mappedIndices);
+      setOriginalIndices([...mappedIndices]);
     } else {
       // If user selects "new", reset everything
       resetFormForNewSystem();
@@ -132,13 +133,6 @@ export default function TuningSystemManager() {
       .split("\n")
       .map((p) => p.trim())
       .filter((p) => p.length > 0);
-
-    const savedNoteNames = selectedIndices.map((idx) => {
-      if (idx >= 0 && idx < octaveOneNoteNames.length) {
-        return octaveOneNoteNames[idx];
-      }
-      return "none"; // or "" or however you want to handle unselected
-    });
 
     if (selectedTuningSystem) {
       // Editing an existing TuningSystem
@@ -204,9 +198,59 @@ export default function TuningSystemManager() {
     }
   };
 
+  const haveIndicesChanged = () => {
+    return JSON.stringify(originalIndices) !== JSON.stringify(selectedIndices);
+  };
+
+  const handleSaveStartingNoteConfiguration = () => {
+    if (haveIndicesChanged()) {
+      const newNoteSet = selectedIndices.map((idx) => (idx >= 0 ? octaveOneNoteNames[idx] : "none"));
+      const firstNote = newNoteSet[0];
+
+      const newNoteNames = [...noteNames.filter((setOfNotes) => setOfNotes[0] !== firstNote)];
+      newNoteNames.push(newNoteSet);
+      setNoteNames(newNoteNames);
+
+      setOriginalIndices(selectedIndices);
+    }
+  };
+
+  const handleDeleteStartingNoteConfiguration = () => {
+    const newNoteSet = selectedIndices.map((idx) => (idx >= 0 ? octaveOneNoteNames[idx] : "none"));
+    const firstNote = newNoteSet[0];
+
+    if (firstNote === "none") return;
+
+    const newNoteNames = [...noteNames.filter((setOfNotes) => setOfNotes[0] !== firstNote)];
+    setNoteNames(newNoteNames);
+
+    setSelectedIndices(Array(selectedIndices.length).fill(-1));
+    setOriginalIndices(Array(selectedIndices.length).fill(-1));
+  };
+
   const handleStartNoteNameChange = (startingNoteName: string) => {
-    console.log("CHANGE THE NOTE HERE")
-  }
+    for (const setOfNotes of noteNames) {
+      if (setOfNotes[0] === startingNoteName) {
+        const mappedIndices = setOfNotes.map((arabicName) => {
+          const idx = octaveOneNoteNames.indexOf(arabicName as TransliteratedNoteNameOctaveOne);
+          return idx >= 0 ? idx : -1;
+        });
+
+        while (mappedIndices.length < selectedIndices.length) {
+          mappedIndices.push(-1);
+        }
+        if (mappedIndices.length > selectedIndices.length) {
+          mappedIndices.length = selectedIndices.length;
+        }
+
+        setSelectedIndices(mappedIndices);
+        setOriginalIndices([...mappedIndices]);
+        return;
+      }
+    }
+
+    setSelectedIndices(Array(selectedIndices.length).fill(-1));
+  };
 
   // ----------------------------------------------------------------------------------
   // 4-Octave Note Name Grid
@@ -283,6 +327,25 @@ export default function TuningSystemManager() {
       if (chosenName === "none") {
         newArr[colIndex] = -1;
         return newArr;
+      }
+
+      if (colIndex === 0) {
+        const existingConfig = noteNames.find((config) => config[0] === chosenName);
+        if (existingConfig) {
+          // Build mapping from the saved configuration
+          const newMapping = existingConfig.map((arabicName) => {
+            const idx = octaveOneNoteNames.indexOf(arabicName as TransliteratedNoteNameOctaveOne);
+            return idx >= 0 ? idx : -1;
+          });
+          // Ensure the mapping array has the same length as the current one
+          while (newMapping.length < old.length) {
+            newMapping.push(-1);
+          }
+          if (newMapping.length > old.length) {
+            newMapping.length = old.length;
+          }
+          return newMapping;
+        }
       }
 
       // 1) Find the first-octave index for this chosenName
@@ -532,7 +595,7 @@ export default function TuningSystemManager() {
   // We can either display all 4 octaves in separate tables, or combine them.
   // Here, we do separate calls:
   function renderNoteNameGrid() {
-    if (!pitchClassesArr.length) return <div>No pitch classes entered yet.</div>;
+    if (!pitchClassesArr.length) return null;
 
     return (
       <div className="tuning-system-manager__grid">
@@ -543,6 +606,18 @@ export default function TuningSystemManager() {
       </div>
     );
   }
+
+  function getFirstNoteName() {
+    const idx = selectedIndices[0];
+    if (idx < 0) return "none";
+    return octaveOneNoteNames[idx];
+  }
+
+  const isCurrentConfigurationNew = () => {
+    const currentFirst = getFirstNoteName();
+    if (currentFirst === "none") return false;
+    return !noteNames.some((config) => config[0] === currentFirst);
+  };
 
   return (
     <div className="tuning-system-manager">
@@ -745,17 +820,60 @@ export default function TuningSystemManager() {
         </div>
       </form>
 
-      <div className="tuning-system-manager__starting-note-names">
-        Choose Which Name To Start On:
-        {noteNames.map((notes, index) => {
-          const startingNote = notes[0];
-          return (
-            <button key={index} className="tuning-system-manager__starting-note" onClick={() => handleStartNoteNameChange(startingNote)}>
-              {startingNote}
+      {pitchClassesArr.length && <div className="tuning-system-manager__starting-note-container">
+        <div className="tuning-system-manager__starting-note-left">
+          Choose Which Note Name To Start On:
+          {noteNames.map((notes, index) => {
+            const startingNote = notes[0];
+            return (
+              <button
+                key={index}
+                className={
+                  "tuning-system-manager__starting-note " +
+                  (getFirstNoteName() === startingNote ? "tuning-system-manager__starting-note_selected" : "")
+                }
+                onClick={() => handleStartNoteNameChange(startingNote)}
+              >
+                {startingNote}
+              </button>
+            );
+          })}
+          {isCurrentConfigurationNew() && (
+            <button
+              className={"tuning-system-manager__starting-note tuning-system-manager__starting-note_unsaved"}
+              // Optionally, you can provide an onClick if you want to re-select it.
+              onClick={() => {
+                // For an unsaved config, you might just leave it as is or perform additional logic.
+                console.log("New unsaved configuration selected:", getFirstNoteName());
+              }}
+            >
+              {getFirstNoteName()} (unsaved)
             </button>
-          );
-        })}
-      </div>
+          )}
+          <button
+            className={"tuning-system-manager__starting-note-button tuning-system-manager__starting-note-button_reset"}
+            onClick={() => handleStartNoteNameChange("none")}
+          >
+            Reset
+          </button>
+        </div>
+        <div className="tuning-system-manager__starting-note-right">
+          <button
+            className="tuning-system-manager__starting-note-button tuning-system-manager__starting-note-button_save"
+            onClick={handleSaveStartingNoteConfiguration}
+            disabled={!haveIndicesChanged() || getFirstNoteName() === "none"}
+          >
+            Save
+          </button>
+          <button
+            className="tuning-system-manager__starting-note-button tuning-system-manager__starting-note-button_delete"
+            onClick={handleDeleteStartingNoteConfiguration}
+            disabled={getFirstNoteName() === "none"}
+          >
+            Delete
+          </button>
+        </div>
+      </div>}
 
       <div className="tuning-system-manager__grid-wrapper">{renderNoteNameGrid()}</div>
     </div>

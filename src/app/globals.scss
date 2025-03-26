@@ -13,7 +13,7 @@ $quaternary: #4569b6;
 $text: #F9E6CF;
 $success: #28a745;
 $delete: #e74c3c;
-$disabled: #F9E6CF;
+$disabled: #3b3b3b;
 
 $hovered-primary: lighten($primary, 10%);
 $hovered-secondary: darken($secondary, 10%);
@@ -50,4 +50,8 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+button {
+  border: none;
 }
