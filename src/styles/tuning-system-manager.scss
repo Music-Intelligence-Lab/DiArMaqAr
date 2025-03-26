@@ -70,6 +70,21 @@
     font-style: italic;
   }
 
+  &__starting-note-names {
+    display: flex;
+    align-items: center;
+    gap: 10px;  
+  }
+
+  &__starting-note {
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.158);
+    border-radius: 10px;
+    border: none;
+    color: $text;
+    cursor: pointer;
+  }
+
   &__grid-wrapper {
     margin-top: 20px;
     width: 100%;
@@ -83,6 +98,31 @@
     overflow: auto;
     font-size: 14px;
     font-weight: 500;
+    padding-bottom: 20px;
+
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: #F9E6CF;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  }
+
+  &__octave-details {
+    min-width: 100%;
+    width: fit-content;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.075);
+    border-radius: 10px;
+  }
+
+  &__octave-summary {
+    font-size: 24px;
+    margin-bottom: 10px;
+    cursor: pointer;
   }
 
   &__octave-table {
