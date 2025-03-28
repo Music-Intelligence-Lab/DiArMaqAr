@@ -15,6 +15,7 @@ import TransliteratedNoteName, {
   TransliteratedNoteNameOctaveZero,
 } from "@/models/NoteName";
 
+import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import { getEnglishNoteName, firstOctaveAbjadNames, secondOctaveAbjadNames } from "@/functions/noteNameMappings";
 
 //todo: sound settings card
@@ -423,12 +424,12 @@ export default function TuningSystemManager() {
   function renderOctaveDetails(octave: number) {
     if (!pitchClassesArr.length) return null;
 
-    const rowLabels = ["Index", "Note Name", "Abjad", "English", "Fraction", "Decimal", "Cents", "String Length", "Frequency", "Play", "Select"];
+    const rowLabels = ["Pitch Classes", "Note Name", "Abjad", "English", "Fraction", "Decimal", "Cents", "String Length", "Frequency", "Play", "Select"];
 
     return (
-      <details className="tuning-system-manager__octave-details" open>
+      <details className="tuning-system-manager__octave-details" open={octave !== 0}>
         <summary className="tuning-system-manager__octave-summary">Octave {octave}</summary>
-        <table className="tuning-system-manager__octave-table" border={1} cellPadding={4}>
+        <table className="tuning-system-manager__octave-table" border={1}>
           <tbody>
             {/* Row 1: "Index" */}
             <tr>
@@ -571,7 +572,7 @@ export default function TuningSystemManager() {
               {pitchClassesArr.map((basePc, colIndex) => (
                 <td key={colIndex}>
                   <button type="button" className="tuning-system-manager__play-button" onClick={() => playNoteFrequency(parseInt(renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "frequency")))}>
-                    Play
+                    <PlayCircleIcon />
                   </button>
                 </td>
               ))}
