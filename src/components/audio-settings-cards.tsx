@@ -6,7 +6,7 @@ import React, { useState } from "react";
 const AudioSettingsCard = () => {
   const { envelopeParams, setEnvelopeParams, playNoteFrequency } = useAppContext();
   const [frequency, setFrequency] = useState<number>(440);
-
+ 
   const handleEnvelopeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setEnvelopeParams((prev) => ({
