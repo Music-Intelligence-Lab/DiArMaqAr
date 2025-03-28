@@ -6,3 +6,12 @@
 - remove all stylisation from CSS to make things cleaner and more compact 
 - change "Index" to "Pitch Class"
 - Arabic note name dropdown menu only needs to be present for octave 1. For other octaves it can just display without dropdown. Also the dropdown needs to contain all names from Octave 1 and 2. For example, when starting a tuning system from 'ushayran, some note names from octave 2 are needed, and at the moment they are not displaying.
+- Abjad is necessary for octave 1 and octave 2 but not for 0 or 3
+- Change play button text "Play" to icon
+- Tuning systems that have two different starting notes:
+Al-Kindi
+Al-Farabi 10 Fret 
+Ibn Sina
+Khyam Allami 2022
+
+- create sidebar with audio controls
