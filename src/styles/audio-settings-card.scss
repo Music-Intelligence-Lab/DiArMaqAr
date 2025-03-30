@@ -1,0 +1,62 @@
+/* 
+  Main “Open” button that’s always visible on the left edge
+  (only displayed when the panel is closed).
+*/
+.audio-settings-open-button {
+  position: fixed;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  background-color: #0070f3;
+  color: #ffffff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  z-index: 10000; // ensures it's on top
+}
+
+/* The side panel container */
+.audio-settings-card {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 300px;
+  background-color: #f8f8f8;
+  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.1);
+
+  /* By default, slide off-screen to the left. */
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 9999;
+
+  /* When panel is open, slide into view. */
+  &--open {
+    transform: translateX(0);
+  }
+
+  &__close-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: #0070f3;
+    color: #ffffff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  &__content {
+    /* Add some top padding so it doesn't run into the close button */
+    margin-top: 70px;
+    padding: 20px;
+    color: black;
+  }
+
+  &__title {
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+  }
+}
