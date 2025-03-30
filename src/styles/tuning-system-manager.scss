@@ -7,20 +7,6 @@
     font-weight: bold;
   }
 
-  &__selection {
-    margin-bottom: 1.5rem;
-
-    label {
-      margin-right: 0.5rem;
-      font-weight: bold;
-    }
-
-    select {
-      padding: 0.4rem;
-      font-size: 1rem;
-    }
-  }
-
   &__form {
     display: flex;
     flex-direction: column;
@@ -46,7 +32,8 @@
   }
 
   &__input,
-  &__textarea {
+  &__textarea,
+  &__select {
     padding: 0.4rem;
     font-size: 1rem;
     border: 1px solid #ccc;
@@ -54,15 +41,38 @@
     resize: vertical;
   }
 
+  &__select {
+    margin-bottom: 1.5rem;
+    padding: 0.4rem;
+    font-size: 1rem;
+  }
+
   &__buttons {
     margin-top: 1rem;
+  }
 
-    button {
-      margin-right: 1rem;
-      padding: 0.4rem 0.8rem;
-      font-size: 1rem;
-      cursor: pointer;
+  &__save-button,
+  &__delete-button {
+    margin-right: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    color: white;
+
+    &:hover {
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     }
+  }
+
+  &__save-button {
+    background-color: $secondary;
+  }
+
+  &__delete-button {
+    background-color: $delete;
   }
 
   &__pitch-class-type {
@@ -152,7 +162,7 @@
     }
 
     &::-webkit-scrollbar-thumb {
-      background-color: #F9E6CF;
+      background-color: #f9e6cf;
       border-radius: 4px;
       cursor: pointer;
     }
@@ -184,14 +194,17 @@
     }
 
     td {
+      font-size: 12px;
       padding: 5px 0;
       text-align: center;
       vertical-align: middle;
       width: 70px;
+      max-width: 70px;
       border-top: none;
       border-bottom: none;
       border-left: none;
       white-space: nowrap;
+      overflow: hidden;
     }
   }
 
@@ -200,6 +213,7 @@
     border: none;
     border-radius: 4px;
     width: 70px;
+    font-size: 12px;
   }
 
   &__play-button {

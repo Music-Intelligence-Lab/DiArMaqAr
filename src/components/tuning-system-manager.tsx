@@ -9,21 +9,24 @@ import TransliteratedNoteName, {
   octaveOneNoteNames,
   octaveTwoNoteNames,
   octaveThreeNoteNames,
+  octaveFourNoteNames,
   TransliteratedNoteNameOctaveOne,
   TransliteratedNoteNameOctaveTwo,
-  TransliteratedNoteNameOctaveThree,
-  TransliteratedNoteNameOctaveZero,
 } from "@/models/NoteName";
 
-import PlayCircleIcon from '@mui/icons-material/PlayCircle';
+import { useRouter } from "next/navigation";
+import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { getEnglishNoteName, firstOctaveAbjadNames, secondOctaveAbjadNames } from "@/functions/noteNameMappings";
 
 //todo: sound settings card
 //todo: transfer all abjad names to new tuningSystems.json
 
-export default function TuningSystemManager() {
+export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSystemId: string | null }) {
   const { tuningSystems, selectedTuningSystem, setSelectedTuningSystem, updateAllTuningSystems, playNoteFrequency } = useAppContext();
 
+  const [sortOption, setSortOption] = useState<"id" | "creatorEnglish" | "year">("id");
+
+  // MARK: States
   // Local state that mirrors the selected or “new” system’s fields
   const [id, setId] = useState("");
   const [titleEnglish, setTitleEnglish] = useState("");
@@ -50,7 +53,19 @@ export default function TuningSystemManager() {
   const [selectedAbjadOct1, setSelectedAbjadOct1] = useState<string[]>([]);
   const [selectedAbjadOct2, setSelectedAbjadOct2] = useState<string[]>([]);
 
-  // Populate local state with the selected tuning system’s data:
+  const router = useRouter();
+
+  useEffect(() => {
+    // If there's a param in the URL AND we currently don't have a selected system,
+    // OR we have a different system selected, attempt to match the param.
+    if (urlTuningSystemId) {
+      const found = tuningSystems.find((ts) => ts.getId() === urlTuningSystemId);
+      if (found) {
+        setSelectedTuningSystem(found);
+      }
+    }
+  }, [urlTuningSystemId, tuningSystems, setSelectedTuningSystem]);
+
   useEffect(() => {
     if (selectedTuningSystem) {
       setId(selectedTuningSystem.getId());
@@ -67,15 +82,32 @@ export default function TuningSystemManager() {
       setSelectedAbjadOct1(selectedTuningSystem.getAbjadNames());
       setReferenceFrequency(selectedTuningSystem.getReferenceFrequency());
 
+      console.log(selectedTuningSystem.getAbjadNames());
+
       const pitchArr = selectedTuningSystem.getNotes() || [];
       const loadedNames = selectedTuningSystem.getSetsOfNoteNames(); // array of strings from JSON
       setNoteNames(loadedNames);
 
       const firstSetOfNotes = loadedNames[0] ?? [];
 
+      // Suppose octaveOneNoteNames.length == 34
+      const O1_LEN = octaveOneNoteNames.length;
+
       const mappedIndices = firstSetOfNotes.map((arabicName) => {
-        const idx = octaveOneNoteNames.indexOf(arabicName as TransliteratedNoteNameOctaveOne);
-        return idx >= 0 ? idx : -1;
+        // 1) Try octaveOne
+        const i1 = octaveOneNoteNames.indexOf(arabicName as TransliteratedNoteNameOctaveOne);
+        if (i1 >= 0) {
+          return i1; // it's in the first array
+        }
+
+        // 2) Try octaveTwo
+        const i2 = octaveTwoNoteNames.indexOf(arabicName as TransliteratedNoteNameOctaveTwo);
+        if (i2 >= 0) {
+          return O1_LEN + i2; // offset by the size of the first array
+        }
+
+        // 3) If not found in either, fallback to -1
+        return -1;
       });
 
       while (mappedIndices.length < pitchArr.length) {
@@ -93,6 +125,27 @@ export default function TuningSystemManager() {
       resetFormForNewSystem();
     }
   }, [selectedTuningSystem]);
+
+  // Sort the tuning systems according to sortOption
+  // so our dropdown is neatly sorted:
+  const sortedTuningSystems = [...tuningSystems].sort((a, b) => {
+    switch (sortOption) {
+      case "creatorEnglish":
+        return a.getCreatorEnglish().localeCompare(b.getCreatorEnglish());
+
+      case "year": {
+        const yearA = parseInt(a.getYear()) || 0;
+        const yearB = parseInt(b.getYear()) || 0;
+        return yearA - yearB;
+      }
+
+      case "id":
+      default:
+        return a.getId().localeCompare(b.getId());
+    }
+  });
+
+  // MARK: Tuning System Function Handlers
 
   // Clears the form for creating a new TuningSystem:
   const resetFormForNewSystem = () => {
@@ -115,12 +168,17 @@ export default function TuningSystemManager() {
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
     if (value === "new") {
+      // If "new," you can remove `tuningSystem` from the URL or set it to something else
+      router.replace("/", { scroll: false });
       setSelectedTuningSystem(null);
       resetFormForNewSystem();
     } else {
       const chosen = tuningSystems.find((ts) => ts.getId() === value);
       if (chosen) {
+        // set the chosen system
         setSelectedTuningSystem(chosen);
+        // update query param
+        router.replace(`/?tuningSystem=${encodeURIComponent(chosen.getId())}`, { scroll: false });
       }
     }
   };
@@ -158,8 +216,6 @@ export default function TuningSystemManager() {
       updateAllTuningSystems(updatedList);
       setSelectedTuningSystem(updated);
 
-      // Persist changes if needed
-      console.log("Edited TuningSystem saved:", updated);
     } else {
       // Creating a new TuningSystem
       const newSystem = new TuningSystem(
@@ -199,13 +255,24 @@ export default function TuningSystemManager() {
     }
   };
 
+  // MARK: Note Names Function Handlers
+
   const haveIndicesChanged = () => {
     return JSON.stringify(originalIndices) !== JSON.stringify(selectedIndices);
   };
 
   const handleSaveStartingNoteConfiguration = () => {
     if (haveIndicesChanged()) {
-      const newNoteSet = selectedIndices.map((idx) => (idx >= 0 ? octaveOneNoteNames[idx] : "none"));
+      const newNoteSet = selectedIndices.map((idx) => {
+        if (idx < 0) return "none";
+        const O1_LEN = octaveOneNoteNames.length;
+        if (idx < O1_LEN) {
+          return octaveOneNoteNames[idx];
+        } else {
+          return octaveTwoNoteNames[idx - O1_LEN];
+        }
+      });
+
       const firstNote = newNoteSet[0];
 
       const newNoteNames = [...noteNames.filter((setOfNotes) => setOfNotes[0] !== firstNote)];
@@ -232,9 +299,15 @@ export default function TuningSystemManager() {
   const handleStartNoteNameChange = (startingNoteName: string) => {
     for (const setOfNotes of noteNames) {
       if (setOfNotes[0] === startingNoteName) {
+        const O1_LEN = octaveOneNoteNames.length;
         const mappedIndices = setOfNotes.map((arabicName) => {
-          const idx = octaveOneNoteNames.indexOf(arabicName as TransliteratedNoteNameOctaveOne);
-          return idx >= 0 ? idx : -1;
+          const i1 = octaveOneNoteNames.indexOf(arabicName as TransliteratedNoteNameOctaveOne);
+          if (i1 >= 0) return i1;
+
+          const i2 = octaveTwoNoteNames.indexOf(arabicName as TransliteratedNoteNameOctaveTwo);
+          if (i2 >= 0) return O1_LEN + i2;
+
+          return -1;
         });
 
         while (mappedIndices.length < selectedIndices.length) {
@@ -250,6 +323,7 @@ export default function TuningSystemManager() {
       }
     }
 
+    // If no config found, fallback:
     setSelectedIndices(Array(selectedIndices.length).fill(-1));
   };
 
@@ -312,33 +386,92 @@ export default function TuningSystemManager() {
   function getOctaveNoteName(octave: number, colIndex: number) {
     const idx = selectedIndices[colIndex];
     if (idx < 0) return "none";
-    if (octave === 0 && idx < octaveZeroNoteNames.length) return octaveZeroNoteNames[idx];
-    if (octave === 1 && idx < octaveOneNoteNames.length) return octaveOneNoteNames[idx];
-    if (octave === 2 && idx < octaveTwoNoteNames.length) return octaveTwoNoteNames[idx];
-    if (octave === 3 && idx < octaveThreeNoteNames.length) return octaveThreeNoteNames[idx];
-    return "none";
+
+    // The length of octaveOneNoteNames. For example, if it's 34,
+    // then any idx >= 34 means it's from the "octaveTwoNoteNames" portion.
+    const O1_LEN = octaveOneNoteNames.length;
+
+    // Decide whether idx points into octaveOne or octaveTwo
+    let localIndex = idx;
+    let isFromOctaveOne = true;
+    if (idx >= O1_LEN) {
+      // It's from the "octaveTwo" segment
+      isFromOctaveOne = false;
+      localIndex = idx - O1_LEN;
+    }
+
+    // Now localIndex is the position within whichever segment
+    // (octaveOne or octaveTwo), and we do the same old logic
+    // but picking from the correct array depending on isFromOctaveOne.
+
+    if (isFromOctaveOne) {
+      // The user originally picked something in the "octaveOne" half
+      if (octave === 0 && localIndex < octaveZeroNoteNames.length) {
+        return octaveZeroNoteNames[localIndex];
+      }
+      if (octave === 1 && localIndex < octaveOneNoteNames.length) {
+        return octaveOneNoteNames[localIndex];
+      }
+      if (octave === 2 && localIndex < octaveTwoNoteNames.length) {
+        return octaveTwoNoteNames[localIndex];
+      }
+      if (octave === 3 && localIndex < octaveThreeNoteNames.length) {
+        return octaveThreeNoteNames[localIndex];
+      }
+      return "none";
+    } else {
+      // The user originally picked something in the "octaveTwo" half
+      // so localIndex is an index into the octaveTwoNoteNames array.
+      if (octave === 0 && localIndex < octaveZeroNoteNames.length) {
+        return octaveOneNoteNames[localIndex];
+      }
+      if (octave === 1 && localIndex < octaveOneNoteNames.length) {
+        return octaveTwoNoteNames[localIndex];
+      }
+      if (octave === 2 && localIndex < octaveTwoNoteNames.length) {
+        return octaveThreeNoteNames[localIndex];
+      }
+      if (octave === 3 && localIndex < octaveThreeNoteNames.length) {
+        return octaveFourNoteNames[localIndex];
+      }
+      return "none";
+    }
   }
 
   // If user changes a note in a certain octave, find that note's index in that octave’s array, update the “first-octave” index.
-  function handleSelectOctaveNote(octave: number, colIndex: number, chosenName: string) {
+  function handleSelectOctaveNote(colIndex: number, chosenName: string) {
     setSelectedIndices((old) => {
       const newArr = [...old];
 
-      // If user picked 'none', just set this one to -1 and stop:
+      // 1) If user picked '(none)', just set -1 in this column:
       if (chosenName === "none") {
         newArr[colIndex] = -1;
         return newArr;
       }
 
+      // 2) If this is the *first column*, try to see if there's an existing config
+      //    whose FIRST note is chosenName. If yes, we load that config in full.
       if (colIndex === 0) {
         const existingConfig = noteNames.find((config) => config[0] === chosenName);
         if (existingConfig) {
-          // Build mapping from the saved configuration
+          // Convert each note in existingConfig to its *combined* index:
           const newMapping = existingConfig.map((arabicName) => {
-            const idx = octaveOneNoteNames.indexOf(arabicName as TransliteratedNoteNameOctaveOne);
-            return idx >= 0 ? idx : -1;
+            // See if arabicName is in octaveOne or octaveTwo:
+            const idxInOct1 = octaveOneNoteNames.indexOf(arabicName as TransliteratedNoteNameOctaveOne);
+            if (idxInOct1 >= 0) {
+              return idxInOct1;
+            } else {
+              const idxInOct2 = octaveTwoNoteNames.indexOf(arabicName as TransliteratedNoteNameOctaveTwo);
+              if (idxInOct2 >= 0) {
+                // Offset by length of octaveOne array to point into octaveTwo portion
+                return octaveOneNoteNames.length + idxInOct2;
+              } else {
+                return -1;
+              }
+            }
           });
-          // Ensure the mapping array has the same length as the current one
+
+          // Make sure newMapping matches current length:
           while (newMapping.length < old.length) {
             newMapping.push(-1);
           }
@@ -349,44 +482,38 @@ export default function TuningSystemManager() {
         }
       }
 
-      // 1) Find the first-octave index for this chosenName
+      // 3) Otherwise, we directly find chosenName in either octaveOne or octaveTwo
       let foundIndex = -1;
-      if (octave === 0) {
-        foundIndex = octaveZeroNoteNames.indexOf(chosenName as TransliteratedNoteNameOctaveZero);
-      } else if (octave === 1) {
-        foundIndex = octaveOneNoteNames.indexOf(chosenName as TransliteratedNoteNameOctaveOne);
-      } else if (octave === 2) {
-        foundIndex = octaveTwoNoteNames.indexOf(chosenName as TransliteratedNoteNameOctaveTwo);
+      const idxInOct1 = octaveOneNoteNames.indexOf(chosenName as TransliteratedNoteNameOctaveOne);
+      if (idxInOct1 >= 0) {
+        foundIndex = idxInOct1;
       } else {
-        foundIndex = octaveThreeNoteNames.indexOf(chosenName as TransliteratedNoteNameOctaveThree);
+        const idxInOct2 = octaveTwoNoteNames.indexOf(chosenName as TransliteratedNoteNameOctaveTwo);
+        if (idxInOct2 >= 0) {
+          // Offset by the size of the first array
+          foundIndex = octaveOneNoteNames.length + idxInOct2;
+        }
       }
 
-      // If not found, treat as none:
       if (foundIndex === -1) {
+        // Not found in either array => treat as none
         newArr[colIndex] = -1;
         return newArr;
       }
 
-      // 2) Set the chosen column’s index
+      // 4) Put foundIndex into the chosen column
       newArr[colIndex] = foundIndex;
 
-      // 3) Cascade fill for all columns to the right
-      //    i.e. colIndex+1, colIndex+2, ... until we run out of columns or name array
-      //    For each column c, we want to use foundIndex + (c - colIndex).
+      // 5) Cascade fill for columns to the right
+      const totalRow1Length = octaveOneNoteNames.length + octaveTwoNoteNames.length;
       for (let c = colIndex + 1; c < newArr.length; c++) {
-        const nextVal = foundIndex + (c - colIndex); // increment index
-        // if nextVal is still within the note-name array bounds, fill it; otherwise stop
-        let nameArray: ReadonlyArray<string> = [];
-        if (octave === 0) nameArray = octaveZeroNoteNames;
-        else if (octave === 1) nameArray = octaveOneNoteNames;
-        else if (octave === 2) nameArray = octaveTwoNoteNames;
-        else nameArray = octaveThreeNoteNames;
-
-        if (nextVal < 0 || nextVal >= nameArray.length) {
-          break; // we've run out of valid note names
+        const offset = c - colIndex; // increment for each column
+        const nextVal = foundIndex + offset;
+        if (nextVal >= totalRow1Length) {
+          newArr[c] = -1; // or leave as -1 if out-of-bounds
+        } else {
+          newArr[c] = nextVal;
         }
-
-        newArr[c] = nextVal;
       }
 
       return newArr;
@@ -408,6 +535,8 @@ export default function TuningSystemManager() {
     return conv[field] ?? "-";
   }
 
+  // MARK: Octaves Grid Component
+
   /**
    * Render a single octave's table, with each column showing:
    *  1) pitch class index
@@ -424,7 +553,19 @@ export default function TuningSystemManager() {
   function renderOctaveDetails(octave: number) {
     if (!pitchClassesArr.length) return null;
 
-    const rowLabels = ["Pitch Classes", "Note Name", "Abjad", "English", "Fraction", "Decimal", "Cents", "String Length", "Frequency", "Play", "Select"];
+    const rowLabels = [
+      "Pitch Classes",
+      "Note Name",
+      "Abjad",
+      "English",
+      "Fraction",
+      "Decimal",
+      "Cents",
+      "String Length",
+      "Frequency",
+      "Play",
+      "Select",
+    ];
 
     return (
       <details className="tuning-system-manager__octave-details" open={octave !== 0}>
@@ -444,31 +585,39 @@ export default function TuningSystemManager() {
               <td>{rowLabels[1]}</td>
               {pitchClassesArr.map((_, colIndex) => {
                 const currentVal = getOctaveNoteName(octave, colIndex);
-                let nameArray: ReadonlyArray<string> = [];
-                if (octave === 0) nameArray = octaveZeroNoteNames;
-                else if (octave === 1) nameArray = octaveOneNoteNames;
-                else if (octave === 2) nameArray = octaveTwoNoteNames;
-                else nameArray = octaveThreeNoteNames;
 
-                return (
-                  <td key={colIndex}>
-                    <select
-                      className="tuning-system-manager__select-note"
-                      value={currentVal ?? ""}
-                      onChange={(e) => handleSelectOctaveNote(octave, colIndex, e.target.value)}
-                    >
-                      <option value="none">(none)</option>
-                      {nameArray.map((nm) => (
-                        <option key={nm} value={nm}>
-                          {nm}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
-                );
+                if (octave === 1) {
+                  return (
+                    <td key={colIndex}>
+                      <select
+                        className="tuning-system-manager__select-note"
+                        value={currentVal ?? ""}
+                        onChange={(e) => handleSelectOctaveNote(colIndex, e.target.value)}
+                      >
+                        <option value="none">(none)</option>
+                        {octaveOneNoteNames.map((nm) => (
+                          <option key={nm} value={nm}>
+                            {nm}
+                          </option>
+                        ))}
+                        {colIndex !== 0 && (
+                          <>
+                            <option value="none">---</option>
+                            {octaveTwoNoteNames.map((nm) => (
+                              <option key={nm} value={nm}>
+                                {nm}
+                              </option>
+                            ))}
+                          </>
+                        )}
+                      </select>
+                    </td>
+                  );
+                } else {
+                  return <td key={colIndex}>{currentVal === "none" ? "(none)" : currentVal}</td>;
+                }
               })}
             </tr>
-
             <tr>
               <td>Abjad</td>
               {pitchClassesArr.map((_, colIndex) => {
@@ -571,7 +720,11 @@ export default function TuningSystemManager() {
               <td>{rowLabels[9]}</td>
               {pitchClassesArr.map((basePc, colIndex) => (
                 <td key={colIndex}>
-                  <button type="button" className="tuning-system-manager__play-button" onClick={() => playNoteFrequency(parseInt(renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "frequency")))}>
+                  <button
+                    type="button"
+                    className="tuning-system-manager__play-button"
+                    onClick={() => playNoteFrequency(parseInt(renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "frequency")))}
+                  >
                     <PlayCircleIcon />
                   </button>
                 </td>
@@ -620,20 +773,46 @@ export default function TuningSystemManager() {
     return !noteNames.some((config) => config[0] === currentFirst);
   };
 
+  // MARK: Render Main Component
+
   return (
     <div className="tuning-system-manager">
       <h2 className="tuning-system-manager__header">Tuning System Manager</h2>
 
-      <div className="tuning-system-manager__selection">
-        <label htmlFor="tuningSystemSelect">Select Tuning System or Create New:</label>
-        <select id="tuningSystemSelect" onChange={handleSelectChange} value={selectedTuningSystem ? selectedTuningSystem.getId() : "new"}>
-          <option value="new">-- Create New System --</option>
-          {tuningSystems.map((system) => (
-            <option key={system.getId()} value={system.getId()}>
-              {system.getCreatorEnglish()} ({system.getYear()}) {system.getTitleEnglish()}
-            </option>
-          ))}
-        </select>
+      <div className="tuning-system-manager__group">
+        <div className="tuning-system-manager__input-container">
+          <label className="tuning-system-manager__label" htmlFor="tuningSystemSelect">
+            Select Tuning System or Create New:
+          </label>
+          <select
+            className="tuning-system-manager__select"
+            id="tuningSystemSelect"
+            onChange={handleSelectChange}
+            value={selectedTuningSystem ? selectedTuningSystem.getId() : "new"}
+          >
+            <option value="new">-- Create New System --</option>
+            {sortedTuningSystems.map((system) => (
+              <option key={system.getId()} value={system.getId()}>
+                {system.getCreatorEnglish()} ({system.getYear() ? system.getYear() : "NA"}) {system.getTitleEnglish()}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="tuning-system-manager__input-container">
+          <label className="tuning-system-manager__label" htmlFor="sortOptionSelect" style={{ marginRight: "8px" }}>
+            Sort By:
+          </label>
+          <select
+            className="tuning-system-manager__select"
+            id="sortOptionSelect"
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value as "id" | "creatorEnglish" | "year")}
+          >
+            <option value="id">ID</option>
+            <option value="creatorEnglish">Creator (English)</option>
+            <option value="year">Year</option>
+          </select>
+        </div>
       </div>
 
       <form className="tuning-system-manager__form" onSubmit={handleSave}>
@@ -812,69 +991,73 @@ export default function TuningSystemManager() {
 
         {/* Buttons */}
         <div className="tuning-system-manager__buttons">
-          <button type="submit">{selectedTuningSystem ? "Save Changes" : "Create New System"}</button>
+          <button className="tuning-system-manager__save-button" type="submit">
+            {selectedTuningSystem ? "Save Tuning System Changes" : "Create New Tuning System"}
+          </button>
           {selectedTuningSystem && (
-            <button type="button" onClick={handleDelete}>
+            <button className="tuning-system-manager__delete-button" type="button" onClick={handleDelete}>
               Delete
             </button>
           )}
         </div>
       </form>
 
-      {pitchClassesArr.length !== 0 && <div className="tuning-system-manager__starting-note-container">
-        <div className="tuning-system-manager__starting-note-left">
-          Choose Which Note Name To Start On:
-          {noteNames.map((notes, index) => {
-            const startingNote = notes[0];
-            return (
+      {pitchClassesArr.length !== 0 && (
+        <div className="tuning-system-manager__starting-note-container">
+          <div className="tuning-system-manager__starting-note-left">
+            Choose Which Note Name To Start On:
+            {noteNames.map((notes, index) => {
+              const startingNote = notes[0];
+              return (
+                <button
+                  key={index}
+                  className={
+                    "tuning-system-manager__starting-note " +
+                    (getFirstNoteName() === startingNote ? "tuning-system-manager__starting-note_selected" : "")
+                  }
+                  onClick={() => handleStartNoteNameChange(startingNote)}
+                >
+                  {startingNote}
+                </button>
+              );
+            })}
+            {isCurrentConfigurationNew() && (
               <button
-                key={index}
-                className={
-                  "tuning-system-manager__starting-note " +
-                  (getFirstNoteName() === startingNote ? "tuning-system-manager__starting-note_selected" : "")
-                }
-                onClick={() => handleStartNoteNameChange(startingNote)}
+                className={"tuning-system-manager__starting-note tuning-system-manager__starting-note_unsaved"}
+                // Optionally, you can provide an onClick if you want to re-select it.
+                onClick={() => {
+                  // For an unsaved config, you might just leave it as is or perform additional logic.
+                  console.log("New unsaved configuration selected:", getFirstNoteName());
+                }}
               >
-                {startingNote}
+                {getFirstNoteName()} (unsaved)
               </button>
-            );
-          })}
-          {isCurrentConfigurationNew() && (
+            )}
             <button
-              className={"tuning-system-manager__starting-note tuning-system-manager__starting-note_unsaved"}
-              // Optionally, you can provide an onClick if you want to re-select it.
-              onClick={() => {
-                // For an unsaved config, you might just leave it as is or perform additional logic.
-                console.log("New unsaved configuration selected:", getFirstNoteName());
-              }}
+              className={"tuning-system-manager__starting-note-button tuning-system-manager__starting-note-button_reset"}
+              onClick={() => handleStartNoteNameChange("none")}
             >
-              {getFirstNoteName()} (unsaved)
+              Reset
             </button>
-          )}
-          <button
-            className={"tuning-system-manager__starting-note-button tuning-system-manager__starting-note-button_reset"}
-            onClick={() => handleStartNoteNameChange("none")}
-          >
-            Reset
-          </button>
+          </div>
+          <div className="tuning-system-manager__starting-note-right">
+            <button
+              className="tuning-system-manager__starting-note-button tuning-system-manager__starting-note-button_save"
+              onClick={handleSaveStartingNoteConfiguration}
+              disabled={!haveIndicesChanged() || getFirstNoteName() === "none"}
+            >
+              Save
+            </button>
+            <button
+              className="tuning-system-manager__starting-note-button tuning-system-manager__starting-note-button_delete"
+              onClick={handleDeleteStartingNoteConfiguration}
+              disabled={getFirstNoteName() === "none"}
+            >
+              Delete
+            </button>
+          </div>
         </div>
-        <div className="tuning-system-manager__starting-note-right">
-          <button
-            className="tuning-system-manager__starting-note-button tuning-system-manager__starting-note-button_save"
-            onClick={handleSaveStartingNoteConfiguration}
-            disabled={!haveIndicesChanged() || getFirstNoteName() === "none"}
-          >
-            Save
-          </button>
-          <button
-            className="tuning-system-manager__starting-note-button tuning-system-manager__starting-note-button_delete"
-            onClick={handleDeleteStartingNoteConfiguration}
-            disabled={getFirstNoteName() === "none"}
-          >
-            Delete
-          </button>
-        </div>
-      </div>}
+      )}
 
       <div className="tuning-system-manager__grid-wrapper">{renderNoteNameGrid()}</div>
     </div>

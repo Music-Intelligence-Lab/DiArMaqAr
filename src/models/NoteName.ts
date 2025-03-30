@@ -143,12 +143,50 @@ export const octaveThreeNoteNames = [
   "jawāb jawāb tīk ḥijāz",
 ];
 
+export const octaveFourNoteNames = [
+  "jawāb saham/ramal tūtī",
+  "jawāb jawāb nīm ḥiṣār",
+  "jawāb jawāb jawāb shūrī",
+  "jawāb jawāb ḥiṣār",
+  "jawāb jawāb tīk ḥiṣār",
+  "jawāb jawāb nīm ḥuseinī",
+  "jawāb jawāb ḥuseinī",
+  "jawāb jawāb nīm ‘ajam",
+  "jawāb jawāb ‘ajam",
+  "jawāb jawāb jawāb nairūz",
+  "jawāb jawāb tīk ’ajam",
+  "jawāb jawāb ’awj",
+  "jawāb jawāb jawāb rahāwī",
+  "jawāb jawāb nīm māhūr",
+  "jawāb jawāb māhūr",
+  "jawāb jawāb tīk māhūr",
+  "jawāb jawāb kurdān",
+  "jawāb jawāb nīm shahnāz",
+  "jawāb jawāb shahnāz",
+  "jawāb jawāb jawāb tīk zirguleh",
+  "jawāb jawāb muḥayyar",
+  "jawāb jawāb nīm sunbuleh",
+  "jawāb jawāb jawāb nahāwand",
+  "jawāb jawāb sunbuleh/zawāl",
+  "jawāb jawāb jawāb tīk kūrdī",
+  "jawāb jawāb buzurk",
+  "jawāb jawāb jawāb nīm buselīk",
+  "jawāb jawāb jawāb buselīk",
+  "jawāb jawāb jawāb tīk buselīk",
+  "jawāb jawāb mahurān",
+  "jawāb jawāb jawāb nīm ḥijāz",
+  "jawāb jawāb jawāb ṣabā",
+  "jawāb jawāb jawāb ḥijāz",
+  "jawāb jawāb jawāb tīk ḥijāz",
+]
+
 export const allNotes = [
   ...new Set([
     ...octaveZeroNoteNames,
     ...octaveOneNoteNames,
     ...octaveTwoNoteNames,
     ...octaveThreeNoteNames,
+    ...octaveFourNoteNames,
   ]),
 ] as const;
 
@@ -158,3 +196,4 @@ export type TransliteratedNoteNameOctaveOne = typeof octaveOneNoteNames[number];
 export type TransliteratedNoteNameOctaveZero = typeof octaveZeroNoteNames[number];
 export type TransliteratedNoteNameOctaveTwo = typeof octaveTwoNoteNames[number];
 export type TransliteratedNoteNameOctaveThree = typeof octaveThreeNoteNames[number];
+export type TransliteratedNoteNameOctaveFour = typeof octaveFourNoteNames[number];
