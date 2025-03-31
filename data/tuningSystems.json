@@ -141,7 +141,7 @@
       ""
     ],
     "stringLength": 3600,
-    "referenceFrequency": 195.998
+    "referenceFrequency": 220
   },
   {
     "id": "f7f2de93-1368-44ca-817a-e72cb07cf694",
@@ -1714,9 +1714,32 @@
         "jawāb buselīk",
         "mahurān",
         "jawāb ḥijāz"
+      ],
+      [
+        "ʿushayrān",
+        "ʿajam ʿushayrān",
+        "kawasht",
+        "rāst",
+        "dūgāh",
+        "kurdī",
+        "buselīk/ʿushshāq",
+        "chahargāh",
+        "ḥijāz",
+        "nawā"
       ]
     ],
-    "abjadNames": [],
+    "abjadNames": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
     "stringLength": 1000,
     "referenceFrequency": 220
   },
