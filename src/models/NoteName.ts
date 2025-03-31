@@ -19,7 +19,7 @@ export const octaveZeroNoteNames = [
   "qarār nīm zirguleh",
   "qarār zirguleh",
   "qarār tīk zirguleh",
-  "qarār dogāh",
+  "qarār dūgāh",
   "qarār nīm kurdī/nahāwand",
   "qarār nahāwand",
   "qarār kurdī",

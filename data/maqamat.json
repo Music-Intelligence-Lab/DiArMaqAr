@@ -523,7 +523,7 @@
     ]
   },
   {
-    "name": "maqām rast dogāh",
+    "name": "maqām rast dūgāh",
     "ascending": [
       "dūgāh",
       "buselīk/ʿushshāq",
@@ -945,7 +945,7 @@
         "publication": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
         "year": 1946,
         "page": 21,
-        "comments": "nahāwand nawā, followed by ḥijāz dogāh then the qarār, yegāh, with a touch of qarār ḥijāz",
+        "comments": "nahāwand nawā, followed by ḥijāz dūgāh then the qarār, yegāh, with a touch of qarār ḥijāz",
         "seir": [
           {
             "type": "jins",
@@ -999,7 +999,7 @@
         "publication": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
         "year": 1946,
         "page": 22,
-        "comments": "Start with jins bayāt on dogāh, ending on 'irāq. Then ascend and descend ending on note 'ushayrān. Repeat jins bayāt on dogāh, and descend to end on the qarār which is yegāh. This maqām name corresponds with a Persian Gushe also called Majlis Afrooz in the Dastgah Mahūr and Dastgāh Shūr. In Mahūr it bears no melodic or intervallic resemblance, but in Shūr the jins bayāt is prominent.",
+        "comments": "Start with jins bayāt on dūgāh, ending on 'irāq. Then ascend and descend ending on note 'ushayrān. Repeat jins bayāt on dūgāh, and descend to end on the qarār which is yegāh. This maqām name corresponds with a Persian Gushe also called Majlis Afrooz in the Dastgah Mahūr and Dastgāh Shūr. In Mahūr it bears no melodic or intervallic resemblance, but in Shūr the jins bayāt is prominent.",
         "seir": [
           {
             "type": "jins",
@@ -1065,7 +1065,7 @@
         "publication": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
         "year": 1946,
         "page": 23,
-        "comments": "Start on nawā to huseinī and what's above it (jins kurd huseinī), then jins bayāt on dogāh. After it's descent ascend bayat dogāh and during the descent use the note kurdī instead of segāh (i.e. jins kurd on dogāh) and descend to end on yegāh using a touch of qarār ḥijāz. This maqām is Ottoman and not really utilised in Arabic music but Shawwā listed it either way.",
+        "comments": "Start on nawā to huseinī and what's above it (jins kurd huseinī), then jins bayāt on dūgāh. After it's descent ascend bayat dūgāh and during the descent use the note kurdī instead of segāh (i.e. jins kurd on dūgāh) and descend to end on yegāh using a touch of qarār ḥijāz. This maqām is Ottoman and not really utilised in Arabic music but Shawwā listed it either way.",
         "seir": [
           {
             "type": "note",
@@ -1141,7 +1141,7 @@
         "publication": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
         "year": 1946,
         "page": 24,
-        "comments": "Begins on nawā to develop bayāt on dogāh, then bayāt 'ushayran and upon reaching muḥayyar in the ascent, it descends until dogāh using 'ajam instead of awj (jins kurd ḥuseinī) and its qarār is 'ushayrān.",
+        "comments": "Begins on nawā to develop bayāt on dūgāh, then bayāt 'ushayran and upon reaching muḥayyar in the ascent, it descends until dūgāh using 'ajam instead of awj (jins kurd ḥuseinī) and its qarār is 'ushayrān.",
         "seir": [
           {
             "type": "note",
@@ -1232,7 +1232,7 @@
         "publication": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
         "year": 1946,
         "page": 30,
-        "comments": "Starts on nawā to render maqām bayāt al-dogāh and descends to ʿushayrān to render maqām bayāt al-ḥuseinī and descends stepwise until it's qarār ʿushayrān.",
+        "comments": "Starts on nawā to render maqām bayāt al-dūgāh and descends to ʿushayrān to render maqām bayāt al-ḥuseinī and descends stepwise until it's qarār ʿushayrān.",
         "seir": [
           {
             "type": "note",
@@ -1544,7 +1544,7 @@
         "publication": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
         "year": 1946,
         "page": 29,
-        "comments": "There is a discrepancy in Shawwā's representation of this maqām. In the \"rules\" section it says: Starts on ḥijaz to render rast al-dugāh then ascends to muḥayyar and during the descent 'ajam is used to render bayāt dugāh then kurd on dugāh then ḥijaz on dugāh and it ends on 'ushayrān. But in the \"analysis\" section it says: First, jins bayāt 'ushayrān, second, jins rāst dugāh, third, bayāt ḥuseinī. Then ascend to render bayāt muḥayyar and descend to render rast nawā, followed by kurdī or ḥijāz dugāh, then nikrīz rāst and ends with bayāt 'ushayran. Rāst dogāh does not render in most tuning systems, and the note ḥijāz doesn't comply with it's jins. Needs to be researched",
+        "comments": "There is a discrepancy in Shawwā's representation of this maqām. In the \"rules\" section it says: Starts on ḥijaz to render rast al-dugāh then ascends to muḥayyar and during the descent 'ajam is used to render bayāt dugāh then kurd on dugāh then ḥijaz on dugāh and it ends on 'ushayrān. But in the \"analysis\" section it says: First, jins bayāt 'ushayrān, second, jins rāst dugāh, third, bayāt ḥuseinī. Then ascend to render bayāt muḥayyar and descend to render rast nawā, followed by kurdī or ḥijāz dugāh, then nikrīz rāst and ends with bayāt 'ushayran. Rāst dūgāh does not render in most tuning systems, and the note ḥijāz doesn't comply with it's jins. Needs to be researched",
         "seir": [
           {
             "type": "note",
