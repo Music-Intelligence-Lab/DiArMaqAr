@@ -1418,7 +1418,7 @@
     "sourceEnglish": "Farmer, H.G. (1937) ‘The Lute Scale of Avicenna’, The Journal of the Royal Asiatic Society of Great Britain and Ireland, 2, pp. 247.",
     "sourceArabic": "",
     "creatorEnglish": "Isḥāq Al-Mawṣilī",
-    "creatorArabic": "",
+    "creatorArabic": "اسحاق الموصلي",
     "commentsEnglish": "",
     "commentsArabic": "",
     "pitchClasses": [
@@ -1454,7 +1454,17 @@
         "saham/ramal tūtī"
       ]
     ],
-    "abjadNames": [],
+    "abjadNames": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
     "stringLength": 1000,
     "referenceFrequency": 220
   },
