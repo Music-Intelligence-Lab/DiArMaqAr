@@ -24,7 +24,7 @@ import { getEnglishNoteName, firstOctaveAbjadNames, secondOctaveAbjadNames } fro
 export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSystemId: string | null }) {
   const { tuningSystems, selectedTuningSystem, setSelectedTuningSystem, updateAllTuningSystems, playNoteFrequency } = useAppContext();
 
-  const [sortOption, setSortOption] = useState<"id" | "creatorEnglish" | "year">("id");
+  const [sortOption, setSortOption] = useState<"id" | "creatorEnglish" | "year">("year");
 
   // MARK: States
   // Local state that mirrors the selected or “new” system’s fields
