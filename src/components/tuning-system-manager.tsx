@@ -18,11 +18,11 @@ import { useRouter } from "next/navigation";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { getEnglishNoteName, firstOctaveAbjadNames, secondOctaveAbjadNames } from "@/functions/noteNameMappings";
 
-//todo: sound settings card
 //todo: transfer all abjad names to new tuningSystems.json
 
 export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSystemId: string | null }) {
-  const { tuningSystems, selectedTuningSystem, setSelectedTuningSystem, updateAllTuningSystems, playNoteFrequency } = useAppContext();
+  const { tuningSystems, selectedTuningSystem, setSelectedTuningSystem, updateAllTuningSystems, playNoteFrequency, selectedCells, setSelectedCells, selectedIndices, setSelectedIndices } =
+    useAppContext();
 
   const [sortOption, setSortOption] = useState<"id" | "creatorEnglish" | "year">("year");
 
@@ -48,12 +48,63 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
    * For example, if selectedIndices[i] = 5, that means the user has chosen the 5th element in octaveOneNoteNames.
    * If the user picks “none”, we store -1 in that slot.
    */
-  const [selectedIndices, setSelectedIndices] = useState<number[]>([]);
   const [originalIndices, setOriginalIndices] = useState<number[]>([]);
+  const [cascade, setCascade] = useState(false);
   const [selectedAbjadOct1, setSelectedAbjadOct1] = useState<string[]>([]);
   const [selectedAbjadOct2, setSelectedAbjadOct2] = useState<string[]>([]);
 
   const router = useRouter();
+
+  const defaultStartingNoteNames = [
+    "yegāh",
+    "qarār nīm ḥiṣār",
+    "qarār ḥiṣār",
+    "qarār tīk ḥiṣār/shūrī",
+    "ʿushayrān",
+    "nīm ʿajam ʿushayrān",
+    "ʿajam ʿushayrān",
+    "ʿirāq",
+    "kawasht",
+    "tīk kawasht",
+    "rāst",
+    "nīm zirguleh",
+    "zirguleh",
+    "tīk zirguleh",
+    "dūgāh",
+    "nīm kurdī/nahāwand",
+    "kurdī",
+    "segāh",
+    "buselīk/ʿushshāq",
+    "tīk buselīk",
+    "chahargāh",
+    "nīm ḥijāz",
+    "ḥijāz",
+    "tīk ḥijāz/ṣabā",
+    "nawā",
+    "nīm ḥiṣār",
+    "ḥiṣār",
+    "tīk ḥiṣār",
+    "ḥuseinī",
+    "nīm ʿajam",
+    "ʿajam",
+    "awj",
+    "māhūr",
+    "tīk māhūr",
+    "kurdān",
+    "nīm shahnāz",
+    "shahnāz",
+    "jawāb tīk zirguleh",
+    "muḥayyar",
+    "nīm sunbuleh",
+    "sunbuleh/zawāl",
+    "buzurk",
+    "jawāb buselīk",
+    "jawāb tīk buselīk",
+    "mahurān",
+    "jawāb nīm ḥijāz",
+    "jawāb ḥijāz",
+    "jawāb tīk ḥijāz",
+  ];
 
   useEffect(() => {
     // If there's a param in the URL AND we currently don't have a selected system,
@@ -81,8 +132,6 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
       setStringLength(selectedTuningSystem.getStringLength());
       setSelectedAbjadOct1(selectedTuningSystem.getAbjadNames());
       setReferenceFrequency(selectedTuningSystem.getReferenceFrequency());
-
-      console.log(selectedTuningSystem.getAbjadNames());
 
       const pitchArr = selectedTuningSystem.getNotes() || [];
       const loadedNames = selectedTuningSystem.getSetsOfNoteNames(); // array of strings from JSON
@@ -162,6 +211,45 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
     setStringLength(0);
     setReferenceFrequency(0);
     setSelectedIndices([]);
+
+    const loadedNames = [defaultStartingNoteNames];
+
+    const defaultStartingLength = defaultStartingNoteNames.length;
+
+    setNoteNames(loadedNames);
+
+    const firstSetOfNotes = loadedNames[0] ?? [];
+
+    // Suppose octaveOneNoteNames.length == 34
+    const O1_LEN = octaveOneNoteNames.length;
+
+    const mappedIndices = firstSetOfNotes.map((arabicName) => {
+      // 1) Try octaveOne
+      const i1 = octaveOneNoteNames.indexOf(arabicName as TransliteratedNoteNameOctaveOne);
+      if (i1 >= 0) {
+        return i1; // it's in the first array
+      }
+
+      // 2) Try octaveTwo
+      const i2 = octaveTwoNoteNames.indexOf(arabicName as TransliteratedNoteNameOctaveTwo);
+      if (i2 >= 0) {
+        return O1_LEN + i2; // offset by the size of the first array
+      }
+
+      // 3) If not found in either, fallback to -1
+      return -1;
+    });
+
+    while (mappedIndices.length < defaultStartingLength) {
+      mappedIndices.push(-1);
+    }
+    if (mappedIndices.length > defaultStartingLength) {
+      mappedIndices.length = defaultStartingLength; // or keep them if you want
+    }
+
+    // 5) Update the selectedIndices state
+    setSelectedIndices(mappedIndices);
+    setOriginalIndices([...mappedIndices]);
   };
 
   // When user changes the dropdown (overall TuningSystem):
@@ -215,7 +303,6 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
       const updatedList = tuningSystems.map((ts) => (ts.getId() === selectedTuningSystem.getId() ? updated : ts));
       updateAllTuningSystems(updatedList);
       setSelectedTuningSystem(updated);
-
     } else {
       // Creating a new TuningSystem
       const newSystem = new TuningSystem(
@@ -238,9 +325,6 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
       const updatedList = [...tuningSystems, newSystem];
       updateAllTuningSystems(updatedList);
       setSelectedTuningSystem(newSystem);
-
-      // Persist new item if needed
-      console.log("New TuningSystem created:", newSystem);
     }
   };
 
@@ -325,6 +409,24 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
 
     // If no config found, fallback:
     setSelectedIndices(Array(selectedIndices.length).fill(-1));
+  };
+
+  // MARK: Cell Checkbox Handlers
+
+  // Given an octave and a column index, check if that cell is already selected.
+  const isCellSelected = (octave: number, colIndex: number) => selectedCells.some((cell) => cell.octave === octave && cell.index === colIndex);
+
+  // When a checkbox is toggled, update the selectedCells accordingly.
+  const handleCheckboxChange = (octave: number, colIndex: number, checked: boolean) => {
+    setSelectedCells((prevCells) => {
+      // Remove any existing instance of this cell.
+      const newCells = prevCells.filter((cell) => !(cell.octave === octave && cell.index === colIndex));
+      // If the checkbox is now checked, add the cell.
+      if (checked) newCells.push({ octave, index: colIndex });
+      // Always sort the cells first by octave then by index.
+      newCells.sort((a, b) => (a.octave === b.octave ? a.index - b.index : a.octave - b.octave));
+      return newCells;
+    });
   };
 
   // ----------------------------------------------------------------------------------
@@ -505,14 +607,16 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
       newArr[colIndex] = foundIndex;
 
       // 5) Cascade fill for columns to the right
-      const totalRow1Length = octaveOneNoteNames.length + octaveTwoNoteNames.length;
-      for (let c = colIndex + 1; c < newArr.length; c++) {
-        const offset = c - colIndex; // increment for each column
-        const nextVal = foundIndex + offset;
-        if (nextVal >= totalRow1Length) {
-          newArr[c] = -1; // or leave as -1 if out-of-bounds
-        } else {
-          newArr[c] = nextVal;
+      if (cascade) {
+        const totalRow1Length = octaveOneNoteNames.length + octaveTwoNoteNames.length;
+        for (let c = colIndex + 1; c < newArr.length; c++) {
+          const offset = c - colIndex; // increment for each column
+          const nextVal = foundIndex + offset;
+          if (nextVal >= totalRow1Length) {
+            newArr[c] = -1; // or leave as -1 if out-of-bounds
+          } else {
+            newArr[c] = nextVal;
+          }
         }
       }
 
@@ -569,7 +673,14 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
 
     return (
       <details className="tuning-system-manager__octave-details" open={octave !== 0}>
-        <summary className="tuning-system-manager__octave-summary">Octave {octave}</summary>
+        <summary className="tuning-system-manager__octave-summary">
+          Octave {octave}{" "}
+          {octave === 1 && (
+            <button className="tuning-system-manager__octave-cascade-button" onClick={() => setCascade((prevCascade) => !prevCascade)}>
+              {cascade ? "Cascade Enabled" : "Cascade Disabled"}
+            </button>
+          )}
+        </summary>
         <table className="tuning-system-manager__octave-table" border={1}>
           <tbody>
             {/* Row 1: "Index" */}
@@ -736,7 +847,12 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
               <td>{rowLabels[10]}</td>
               {pitchClassesArr.map((_, colIndex) => (
                 <td key={colIndex}>
-                  <input type="checkbox" className="tuning-system-manager__checkbox" />
+                  <input
+                    type="checkbox"
+                    className="tuning-system-manager__checkbox"
+                    checked={isCellSelected(octave, colIndex)}
+                    onChange={(e) => handleCheckboxChange(octave, colIndex, e.target.checked)}
+                  />
                 </td>
               ))}
             </tr>

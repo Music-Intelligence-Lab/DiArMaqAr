@@ -4,14 +4,14 @@
 */
 .audio-settings-open-button {
   position: fixed;
-  top: 50%;
-  left: 0;
+  top: 20px;
+  left: 5px;
   transform: translateY(-50%);
-  background-color: #0070f3;
+  background-color: $primary;
   color: #ffffff;
   border: none;
   padding: 10px 16px;
-  border-radius: 0 4px 4px 0;
+  border-radius: 10px;
   cursor: pointer;
   z-index: 10000; // ensures it's on top
 }
@@ -34,18 +34,6 @@
   /* When panel is open, slide into view. */
   &--open {
     transform: translateX(0);
-  }
-
-  &__close-button {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background-color: #0070f3;
-    color: #ffffff;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
-    cursor: pointer;
   }
 
   &__content {

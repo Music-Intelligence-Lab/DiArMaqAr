@@ -1,0 +1,96 @@
+.jins-manager {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  &__list {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 10px;
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    max-width: 200px;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    color: $text;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    transition: 0.3s;
+
+    &_active {
+      background-color: $primary;
+    }
+
+    &_selected {
+      background-color: $secondary;
+    }
+  }
+
+  &__create-new-jins-button {
+    width: fit-content;
+    margin: 20px auto;
+    font-size: 20px;
+    padding: 10px;
+    background-color: $secondary;
+    border-radius: 10px;
+    color: $text;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    transition: 0.3s;
+
+    &:hover {
+      background-color: $primary;
+    }
+  }
+
+  &__jins-form {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+    font-size: 20px;
+  }
+
+  &__jins-input {
+    padding: 0.4rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  &__save-button,
+  &__delete-button, &__clear-button {
+    margin-right: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    color: white;
+
+    &:hover {
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  &__save-button {
+    background-color: $secondary;
+  }
+
+  &__delete-button {
+    background-color: $delete;
+  }
+
+  &__clear-button {
+    background-color: $primary;
+  }
+}
