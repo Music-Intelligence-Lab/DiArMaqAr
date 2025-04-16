@@ -14,39 +14,24 @@ const AudioSettingsCard = () => {
   const togglePanel = () => setIsOpen(!isOpen);
 
   // A helper function to update envelope parameters via MUI Slider
-  const handleEnvelopeChange =
-    (paramName: string) => (event: Event, newValue: number | number[]) => {
-      if (typeof newValue === "number") {
-        setEnvelopeParams((prev) => ({
-          ...prev,
-          [paramName]: newValue,
-        }));
-      }
-    };
+  const handleEnvelopeChange = (paramName: string) => (event: Event, newValue: number | number[]) => {
+    if (typeof newValue === "number") {
+      setEnvelopeParams((prev) => ({
+        ...prev,
+        [paramName]: newValue,
+      }));
+    }
+  };
 
   return (
     <>
       {/* The "Open" button (only shown when panel is closed) */}
-      {!isOpen && (
-        <button className="audio-settings-open-button" onClick={togglePanel}>
-          Open
-        </button>
-      )}
+      <button className="audio-settings-open-button" onClick={togglePanel}>
+        {isOpen ? "Close":"Open"}
+      </button>
 
-      <div
-        className={`audio-settings-card ${
-          isOpen ? "audio-settings-card--open" : ""
-        }`}
-      >
+      <div className={`audio-settings-card ${isOpen ? "audio-settings-card--open" : ""}`}>
         {/* The "Close" button (only shown when panel is open) */}
-        {isOpen && (
-          <button
-            className="audio-settings-card__close-button"
-            onClick={togglePanel}
-          >
-            Close
-          </button>
-        )}
 
         <div className="audio-settings-card__content">
           <h3 className="audio-settings-card__title">Audio Settings</h3>
