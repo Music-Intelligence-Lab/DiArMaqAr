@@ -1967,18 +1967,18 @@
     "noteNames": [
       [
         "ʿushayrān",
-        "nīm ʿajam ʿushayrān",
         "ʿajam ʿushayrān",
         "tīk ʿajam ʿushayrān",
         "ʿirāq",
+        "nīm kawasht",
         "kawasht",
         "rāst",
         "nīm zirguleh",
         "zirguleh",
         "tīk zirguleh",
         "dūgāh",
-        "nīm kurdī/nahāwand",
         "kurdī",
+        "tīk kūrdī",
         "segāh",
         "nīm buselīk",
         "buselīk/ʿushshāq",
@@ -1987,10 +1987,10 @@
         "ḥijāz",
         "tīk ḥijāz/ṣabā",
         "nawā",
-        "nīm ḥiṣār",
-        "jawāb shūrī",
         "ḥiṣār",
-        "tīk ḥiṣār"
+        "tīk ḥiṣār",
+        "none",
+        "none"
       ]
     ],
     "abjadNames": [
