@@ -12,3 +12,4 @@
 - Add different waveforms for audio playback 
 - Make current selection plus ajnas and maqam analysis and transpositions into separate components that display in the same space
 - Data of analysis and transpositions table should include following rows: AR note names, EN note names, pitch class input type values and intervals, cents values and intervals.
+- Saving abjad in octave two not working - only octave one is saved
