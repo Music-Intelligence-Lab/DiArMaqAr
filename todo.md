@@ -3,7 +3,8 @@
 
 17 Apr 2025
 - Reset tuning table checkboxes on change of tuning system, jins or maqam
-- Add IDand URL parameters for ajnas and maqamat
+- Add ID and URL parameters for ajnas and maqamat
+- Add URL parameter for starting note name yegāh or 'ushayran. If jins selected and starting note name changed the jins selection doesn't update. By adding this to the URL parameters it should work
 - Add reset checkboxes button
 - Add cascade Abjad and apply disable cascade button and add button to Octave 2
 - Make Octave 3 table closed by default
@@ -13,3 +14,4 @@
 - Make current selection plus ajnas and maqam analysis and transpositions into separate components that display in the same space
 - Data of analysis and transpositions table should include following rows: AR note names, EN note names, pitch class input type values and intervals, cents values and intervals.
 - Saving abjad in octave two not working - only octave one is saved
+- 
