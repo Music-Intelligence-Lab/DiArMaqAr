@@ -109,13 +109,21 @@ export function shiftPitchClass(
 
   try {
     if (inputType === "fraction") {
-      // fraction => "3/2" => numeric ratio, then multiply by 2^(octaveSteps)
       const [num, den] = baseValue.split(/[:/]/).map(Number);
-      if (!den) return baseValue; // fallback if invalid
-      // ratio = (num / den) * 2^(octaveSteps)
-      const ratio = (num / den) * Math.pow(2, octaveSteps);
-      // Return in fraction form
-      return decimalToFraction(ratio);
+      if (!den || isNaN(num) || isNaN(den)) return baseValue;
+
+      let newNum = num * Math.pow(2, octaveSteps);
+      let newDen = den;
+
+      // Ensure values are integers (handle negative octaveSteps with division)
+      if (octaveSteps < 0) {
+        const divisor = Math.pow(2, -octaveSteps);
+        newDen = den * divisor;
+        newNum = num;
+      }
+
+      const g = gcd(newNum, newDen);
+      return `${newNum / g}/${newDen / g}`;
     } else if (inputType === "decimal") {
       // decimal => just multiply by 2^(octaveSteps)
       const dec = parseFloat(baseValue);
