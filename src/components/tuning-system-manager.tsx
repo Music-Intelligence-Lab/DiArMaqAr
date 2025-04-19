@@ -223,6 +223,8 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
     setReferenceFrequency(0);
     setSelectedIndices([]);
 
+    clearSelections();
+
     const loadedNames = [defaultStartingNoteNames];
 
     const defaultStartingLength = defaultStartingNoteNames.length;
@@ -363,6 +365,7 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
   };
 
   const handleSaveStartingNoteConfiguration = () => {
+    clearSelections();
     if (haveIndicesChanged()) {
       const newNoteSet = selectedIndices.map((idx) => {
         if (idx < 0) return "none";
@@ -385,6 +388,7 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
   };
 
   const handleDeleteStartingNoteConfiguration = () => {
+    clearSelections();
     const newNoteSet = selectedIndices.map((idx) => (idx >= 0 ? octaveOneNoteNames[idx] : "none"));
     const firstNote = newNoteSet[0];
 
@@ -398,6 +402,8 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
   };
 
   const handleStartNoteNameChange = (startingNoteName: string) => {
+    clearSelections();
+
     for (const setOfNotes of noteNames) {
       if (setOfNotes[0] === startingNoteName) {
         const O1_LEN = octaveOneNoteNames.length;

@@ -4,7 +4,7 @@
     "name": "maqām rāst",
     "ascending": [
       "rāst",
-      "dūgāh",
+      "dogāh",
       "segāh",
       "chahargāh",
       "nawā",
@@ -19,15 +19,16 @@
       "nawā",
       "chahargāh",
       "segāh",
-      "dūgāh",
+      "dogāh",
       "rāst"
-    ]
+    ],
+    "suyur": []
   },
   {
     "id": 2,
     "name": "maqām ḥijāz",
     "ascending": [
-      "dūgāh",
+      "dogāh",
       "kurdī",
       "ḥijāz",
       "nawā",
@@ -39,19 +40,20 @@
     "descending": [
       "muḥayyar",
       "kurdān",
-      "ʿajam",
+      "awj",
       "ḥuseinī",
       "nawā",
       "ḥijāz",
       "kurdī",
-      "dūgāh"
-    ]
+      "dogāh"
+    ],
+    "suyur": []
   },
   {
     "id": 3,
     "name": "maqām kurd",
     "ascending": [
-      "dūgāh",
+      "dogāh",
       "kurdī",
       "chahargāh",
       "nawā",
@@ -68,7 +70,7 @@
       "nawā",
       "chahargāh",
       "kurdī",
-      "dūgāh"
+      "dogāh"
     ],
     "suyur": []
   },
@@ -94,14 +96,15 @@
       "kurdī",
       "tīk zirguleh",
       "rāst"
-    ]
+    ],
+    "suyur": []
   },
   {
     "id": 5,
     "name": "maqām nikrīz",
     "ascending": [
       "rāst",
-      "dūgāh",
+      "dogāh",
       "kurdī",
       "ḥijāz",
       "nawā",
@@ -116,16 +119,17 @@
       "nawā",
       "ḥijāz",
       "kurdī",
-      "dūgāh",
+      "dogāh",
       "rāst"
-    ]
+    ],
+    "suyur": []
   },
   {
     "id": 6,
     "name": "maqām nawā athar",
     "ascending": [
       "rāst",
-      "dūgāh",
+      "dogāh",
       "kurdī",
       "ḥijāz",
       "nawā",
@@ -140,15 +144,16 @@
       "nawā",
       "ḥijāz",
       "kurdī",
-      "dūgāh",
+      "dogāh",
       "rāst"
-    ]
+    ],
+    "suyur": []
   },
   {
     "id": 7,
     "name": "maqām bayāt",
     "ascending": [
-      "dūgāh",
+      "dogāh",
       "segāh",
       "chahargāh",
       "nawā",
@@ -165,14 +170,15 @@
       "nawā",
       "chahargāh",
       "segāh",
-      "dūgāh"
-    ]
+      "dogāh"
+    ],
+    "suyur": []
   },
   {
     "id": 8,
     "name": "maqām bayātayn",
     "ascending": [
-      "dūgāh",
+      "dogāh",
       "segāh",
       "chahargāh",
       "nawā",
@@ -189,14 +195,15 @@
       "nawā",
       "chahargāh",
       "segāh",
-      "dūgāh"
-    ]
+      "dogāh"
+    ],
+    "suyur": []
   },
   {
     "id": 9,
     "name": "maqām lāmī",
     "ascending": [
-      "dūgāh",
+      "dogāh",
       "kurdī",
       "chahargāh",
       "nawā",
@@ -213,15 +220,16 @@
       "nawā",
       "chahargāh",
       "kurdī",
-      "dūgāh"
-    ]
+      "dogāh"
+    ],
+    "suyur": []
   },
   {
     "id": 10,
     "name": "maqām nahāwand",
     "ascending": [
       "rāst",
-      "dūgāh",
+      "dogāh",
       "kurdī",
       "chahargāh",
       "nawā",
@@ -236,8 +244,459 @@
       "nawā",
       "chahargāh",
       "kurdī",
-      "dūgāh",
+      "dogāh",
       "rāst"
-    ]
+    ],
+    "suyur": []
+  },
+  {
+    "id": 11,
+    "name": "maqām nahāwand kabīr",
+    "ascending": [
+      "rāst",
+      "dogāh",
+      "kurdī",
+      "chahargāh",
+      "nawā",
+      "ḥiṣār",
+      "māhūr",
+      "kurdān"
+    ],
+    "descending": [
+      "kurdān",
+      "ʿajam",
+      "ḥiṣār",
+      "nawā",
+      "chahargāh",
+      "kurdī",
+      "dogāh",
+      "rāst"
+    ],
+    "suyur": []
+  },
+  {
+    "id": 12,
+    "name": "maqām athar kurd",
+    "ascending": [
+      "dogāh",
+      "kurdī",
+      "chahargāh",
+      "ḥiṣār",
+      "ḥuseinī",
+      "ʿajam",
+      "shahnāz",
+      "muḥayyar"
+    ],
+    "descending": [
+      "muḥayyar",
+      "shahnāz",
+      "ʿajam",
+      "ḥuseinī",
+      "ḥiṣār",
+      "chahargāh",
+      "kurdī",
+      "dogāh"
+    ],
+    "suyur": []
+  },
+  {
+    "id": 13,
+    "name": "maqām bayāt shūrī",
+    "ascending": [
+      "dogāh",
+      "segāh",
+      "chahargāh",
+      "nawā",
+      "ḥiṣār",
+      "māhūr",
+      "kurdān",
+      "muḥayyar"
+    ],
+    "descending": [
+      "muḥayyar",
+      "kurdān",
+      "māhūr",
+      "ḥiṣār",
+      "nawā",
+      "chahargāh",
+      "segāh",
+      "dogāh"
+    ],
+    "suyur": []
+  },
+  {
+    "id": 14,
+    "name": "maqām ḥijāz binṣir",
+    "ascending": [
+      "rāst",
+      "tīk zirguleh",
+      "buselīk/ʿushshāq",
+      "chahargāh",
+      "nawā",
+      "tīk ḥiṣār",
+      "ʿajam",
+      "kurdān"
+    ],
+    "descending": [
+      "kurdān",
+      "ʿajam",
+      "ḥiṣār",
+      "nawā",
+      "chahargāh",
+      "buselīk/ʿushshāq",
+      "tīk zirguleh",
+      "rāst"
+    ],
+    "suyur": []
+  },
+  {
+    "id": 15,
+    "name": "maqām ṣabā",
+    "ascending": [
+      "dogāh",
+      "segāh",
+      "chahargāh",
+      "ḥijāz",
+      "ḥuseinī",
+      "ʿajam",
+      "kurdān",
+      "muḥayyar"
+    ],
+    "descending": [
+      "muḥayyar",
+      "kurdān",
+      "ʿajam",
+      "ḥuseinī",
+      "ḥijāz",
+      "chahargāh",
+      "segāh",
+      "dogāh"
+    ],
+    "suyur": []
+  },
+  {
+    "id": 16,
+    "name": "maqām ṣabā zamzam",
+    "ascending": [
+      "dogāh",
+      "kurdī",
+      "chahargāh",
+      "ḥijāz",
+      "ḥuseinī",
+      "ʿajam",
+      "kurdān",
+      "muḥayyar"
+    ],
+    "descending": [
+      "muḥayyar",
+      "kurdān",
+      "ʿajam",
+      "ḥuseinī",
+      "ḥijāz",
+      "chahargāh",
+      "kurdī",
+      "dogāh"
+    ],
+    "suyur": []
+  },
+  {
+    "id": 17,
+    "name": "maqām ʿajam ʿushayrān",
+    "ascending": [
+      "ʿajam ʿushayrān",
+      "rāst",
+      "dogāh",
+      "kurdī",
+      "chahargāh",
+      "nawā",
+      "ḥuseinī",
+      "ʿajam"
+    ],
+    "descending": [
+      "ʿajam",
+      "ḥuseinī",
+      "nawā",
+      "chahargāh",
+      "kurdī",
+      "dogāh",
+      "rāst",
+      "ʿajam ʿushayrān"
+    ],
+    "suyur": []
+  },
+  {
+    "id": 18,
+    "name": "maqām nairūz",
+    "ascending": [
+      "rāst",
+      "dogāh",
+      "segāh",
+      "chahargāh",
+      "nawā",
+      "tīk ḥiṣār",
+      "ʿajam",
+      "kurdān"
+    ],
+    "descending": [
+      "kurdān",
+      "ʿajam",
+      "tīk ḥiṣār",
+      "nawā",
+      "chahargāh",
+      "segāh",
+      "dogāh",
+      "rāst"
+    ],
+    "suyur": []
+  },
+  {
+    "id": 19,
+    "name": "maqām segāh",
+    "ascending": [
+      "segāh",
+      "chahargāh",
+      "nawā",
+      "ḥuseinī",
+      "awj",
+      "kurdān",
+      "muḥayyar",
+      "buzurk"
+    ],
+    "descending": [
+      "buzurk",
+      "muḥayyar",
+      "kurdān",
+      "awj",
+      "ḥuseinī",
+      "nawā",
+      "chahargāh",
+      "segāh"
+    ],
+    "suyur": []
+  },
+  {
+    "id": 20,
+    "name": "maqām huzām",
+    "ascending": [
+      "ʿirāq",
+      "rāst",
+      "dogāh",
+      "kurdī",
+      "ḥijāz",
+      "nawā",
+      "ḥuseinī",
+      "awj"
+    ],
+    "descending": [
+      "awj",
+      "ḥuseinī",
+      "nawā",
+      "ḥijāz",
+      "kurdī",
+      "dogāh",
+      "rāst",
+      "ʿirāq"
+    ],
+    "suyur": []
+  },
+  {
+    "id": 21,
+    "name": "maqām rāḥat al-arwāḥ",
+    "ascending": [
+      "ʿirāq",
+      "rāst",
+      "dogāh",
+      "kurdī",
+      "ḥijāz",
+      "nawā",
+      "ḥuseinī",
+      "awj"
+    ],
+    "descending": [
+      "awj",
+      "ḥuseinī",
+      "nawā",
+      "ḥijāz",
+      "kurdī",
+      "dogāh",
+      "rāst",
+      "ʿirāq"
+    ],
+    "suyur": []
+  },
+  {
+    "id": 22,
+    "name": "maqām rast dogāh",
+    "ascending": [
+      "dogāh",
+      "buselīk/ʿushshāq",
+      "nīm ḥijāz",
+      "nawā",
+      "ḥuseinī",
+      "māhūr",
+      "shahnāz",
+      "muḥayyar"
+    ],
+    "descending": [
+      "muḥayyar",
+      "shahnāz",
+      "māhūr",
+      "ḥuseinī",
+      "nawā",
+      "nīm ḥijāz",
+      "buselīk/ʿushshāq",
+      "dogāh"
+    ],
+    "suyur": []
+  },
+  {
+    "id": 23,
+    "name": "maqām rāst nawā",
+    "ascending": [
+      "nawā",
+      "ḥuseinī",
+      "awj",
+      "kurdān",
+      "muḥayyar",
+      "jawāb buselīk",
+      "jawāb nīm ḥijāz",
+      "saham/ramal tūtī"
+    ],
+    "descending": [
+      "saham/ramal tūtī",
+      "mahurān",
+      "jawāb buselīk",
+      "muḥayyar",
+      "kurdān",
+      "awj",
+      "ḥuseinī",
+      "nawā"
+    ],
+    "suyur": []
+  },
+  {
+    "id": 24,
+    "name": "maqām bayāt ḥuseinī",
+    "ascending": [
+      "ʿushayrān",
+      "ʿirāq",
+      "rāst",
+      "dogāh",
+      "buselīk/ʿushshāq",
+      "nīm ḥijāz",
+      "nawā",
+      "ḥuseinī"
+    ],
+    "descending": [
+      "ḥuseinī",
+      "nawā",
+      "chahargāh",
+      "buselīk/ʿushshāq",
+      "dogāh",
+      "rāst",
+      "ʿirāq",
+      "ʿushayrān"
+    ],
+    "suyur": []
+  },
+  {
+    "id": 25,
+    "name": "maqām mustaʿār",
+    "ascending": [
+      "segāh",
+      "ḥijāz",
+      "nawā",
+      "ḥuseinī",
+      "awj",
+      "kurdān",
+      "muḥayyar",
+      "buzurk"
+    ],
+    "descending": [
+      "buzurk",
+      "muḥayyar",
+      "kurdān",
+      "awj",
+      "ḥuseinī",
+      "nawā",
+      "ḥijāz",
+      "segāh"
+    ],
+    "suyur": []
+  },
+  {
+    "id": 26,
+    "name": "maqām ʿirāq",
+    "ascending": [
+      "ʿirāq",
+      "rāst",
+      "dogāh",
+      "segāh",
+      "chahargāh",
+      "nawā",
+      "ḥuseinī",
+      "awj"
+    ],
+    "descending": [
+      "awj",
+      "ḥuseinī",
+      "nawā",
+      "chahargāh",
+      "segāh",
+      "dogāh",
+      "rāst",
+      "ʿirāq"
+    ],
+    "suyur": []
+  },
+  {
+    "id": 27,
+    "name": "maqām ḥijāz ḥuseinī",
+    "ascending": [
+      "ʿushayrān",
+      "ʿajam ʿushayrān",
+      "zirguleh",
+      "dogāh",
+      "buselīk/ʿushshāq",
+      "nīm ḥijāz",
+      "nawā",
+      "ḥuseinī"
+    ],
+    "descending": [
+      "ḥuseinī",
+      "nawā",
+      "chahargāh",
+      "buselīk/ʿushshāq",
+      "dogāh",
+      "zirguleh",
+      "ʿajam ʿushayrān",
+      "ʿushayrān"
+    ],
+    "suyur": []
+  },
+  {
+    "id": 28,
+    "name": "maqām bayāt rāst",
+    "ascending": [
+      "rāst",
+      "tīk zirguleh",
+      "kurdī",
+      "chahargāh",
+      "nawā",
+      "tīk ḥiṣār",
+      "ʿajam",
+      "kurdān"
+    ],
+    "descending": [
+      "kurdān",
+      "ʿajam",
+      "tīk ḥiṣār",
+      "nawā",
+      "chahargāh",
+      "kurdī",
+      "tīk zirguleh",
+      "rāst"
+    ],
+    "suyur": []
   }
 ]
