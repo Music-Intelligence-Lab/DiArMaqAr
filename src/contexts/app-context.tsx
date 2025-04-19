@@ -234,7 +234,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     if (!selectedTuningSystem) return [];
 
     const noteNames = [];
-    const baseLength = 34;
+    const baseLength = 36;
 
     for (let octave = 0; octave < 4; octave++) {
       for (const index of selectedIndices) {
