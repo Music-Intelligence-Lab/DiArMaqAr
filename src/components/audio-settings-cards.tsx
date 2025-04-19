@@ -7,7 +7,7 @@ import { useAppContext } from "@/contexts/app-context";
 import { Box, Slider } from "@mui/material";
 
 const AudioSettingsCard = () => {
-  const { envelopeParams, setEnvelopeParams } = useAppContext();
+  const { envelopeParams, setEnvelopeParams, clearSelections } = useAppContext();
   const [isOpen, setIsOpen] = useState(false);
 
   // Toggles the side panel
@@ -34,7 +34,7 @@ const AudioSettingsCard = () => {
         {/* The "Close" button (only shown when panel is open) */}
 
         <div className="audio-settings-card__content">
-          <h3 className="audio-settings-card__title">Audio Settings</h3>
+          <h3 className="audio-settings-card__title">Settings</h3>
 
           {/* Attack Slider */}
           <Box sx={{ width: 200, marginBottom: "16px" }}>
@@ -90,6 +90,9 @@ const AudioSettingsCard = () => {
               onChange={handleEnvelopeChange("release")}
               valueLabelDisplay="auto"
             />
+          </Box>
+          <Box sx={{ width: 200, marginBottom: "16px" }}>
+            <button className="audio-settings-card__clear-button" onClick={clearSelections}>Clear Selections</button>
           </Box>
         </div>
       </div>

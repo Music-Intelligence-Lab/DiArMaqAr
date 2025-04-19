@@ -28,6 +28,8 @@ export interface CellDetails {
   cents: string;
   ratios: string;
   stringLength: string;
+  frequency: string;
+  originalValue: string;
   originalValueType: string;
 }
 
@@ -42,6 +44,7 @@ interface AppContextInterface {
   setEnvelopeParams: React.Dispatch<React.SetStateAction<EnvelopeParams>>;
   selectedCells: SelectedCell[];
   setSelectedCells: React.Dispatch<React.SetStateAction<SelectedCell[]>>;
+  getAllCells: () => SelectedCell[];
   selectedIndices: number[];
   setSelectedIndices: React.Dispatch<React.SetStateAction<number[]>>;
   getSelectedCellDetails: (cell: SelectedCell) => CellDetails;
@@ -52,6 +55,9 @@ interface AppContextInterface {
   selectedJins: Jins | null;
   setSelectedJins: React.Dispatch<React.SetStateAction<Jins | null>>;
   getNoteNamesUsedInTuningSystem: () => TransliteratedNoteName[];
+  centsTolerance: number;
+  setCentsTolerance: React.Dispatch<React.SetStateAction<number>>;
+  clearSelections: () => void;
 }
 
 const AppContext = createContext<AppContextInterface | null>(null);
@@ -60,6 +66,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   const [isPageLoading, setIsPageLoading] = useState(true);
   const [tuningSystems, setTuningSystems] = useState<TuningSystem[]>([]);
   const [selectedTuningSystem, setSelectedTuningSystem] = useState<TuningSystem | null>(null);
+  const [centsTolerance, setCentsTolerance] = useState(1);
 
   const [envelopeParams, setEnvelopeParams] = useState<EnvelopeParams>({
     attack: 0.01,
@@ -165,6 +172,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       const existsInNew = newSystems.find((sys) => sys.getId() === selectedTuningSystem.getId());
       if (!existsInNew) {
         setSelectedTuningSystem(null);
+        clearSelections();
       }
     }
     try {
@@ -200,7 +208,6 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   };
 
   const updateAllAjnas = async (newAjnas: Jins[]) => {
-    console.log(newAjnas);
     setAjnas(newAjnas);
     setSelectedJins(null);
 
@@ -276,6 +283,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       cents: "",
       ratios: "",
       stringLength: "",
+      frequency: "",
+      originalValue: "",
       originalValueType: "",
     };
 
@@ -341,8 +350,28 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       cents: conv ? conv.cents : "-",
       ratios: conv ? conv.decimal : "-",
       stringLength: conv ? conv.stringLength : "-",
+      frequency: conv ? conv.frequency : "-",
+      originalValue: shiftedPc,
       originalValueType: pitchType,
     };
+  };
+
+  const getAllCells = (): SelectedCell[] => {
+    if (!selectedTuningSystem) return [];
+    const pitchArr = selectedTuningSystem.getNotes();
+    const cells: SelectedCell[] = [];
+
+    for (let octave = 0; octave < 4; octave++) {
+      for (let index = 0; index < pitchArr.length; index++) {
+        cells.push({ octave, index });
+      }
+    }
+    return cells;
+  };
+
+  const clearSelections = () => {
+    setSelectedCells([]);
+    setSelectedJins(null);
   };
 
   return (
@@ -358,6 +387,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         setEnvelopeParams,
         selectedCells,
         setSelectedCells,
+        getAllCells,
         selectedIndices,
         setSelectedIndices,
         getSelectedCellDetails,
@@ -367,6 +397,9 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         selectedJins,
         setSelectedJins,
         getNoteNamesUsedInTuningSystem,
+        centsTolerance,
+        setCentsTolerance,
+        clearSelections,
       }}
     >
       {children}

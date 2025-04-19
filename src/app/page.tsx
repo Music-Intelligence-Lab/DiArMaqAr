@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import TuningSystemManager from "@/components/tuning-system-manager";
 import AudioSettingsCard from "@/components/audio-settings-cards";
 import JinsManager from "@/components/jins-manager";
+import JinsTranspositions from "@/components/jins-transpositions";
 
 export default function Home() {
   const searchParams = useSearchParams();
@@ -14,6 +15,7 @@ export default function Home() {
       <div className="home-page__title">Maqam Network</div>
       <TuningSystemManager urlTuningSystemId={tuningSystemIdFromUrl} />
       <JinsManager />
+      <JinsTranspositions />
       <AudioSettingsCard />
     </div>
   );
