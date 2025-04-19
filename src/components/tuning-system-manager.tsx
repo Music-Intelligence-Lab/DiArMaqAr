@@ -150,7 +150,7 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
 
       const firstSetOfNotes = loadedNames[0] ?? [];
 
-      // Suppose octaveOneNoteNames.length == 34
+      // Suppose octaveOneNoteNames.length == 36
       const O1_LEN = octaveOneNoteNames.length;
 
       const mappedIndices = firstSetOfNotes.map((arabicName) => {
@@ -231,7 +231,7 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
 
     const firstSetOfNotes = loadedNames[0] ?? [];
 
-    // Suppose octaveOneNoteNames.length == 34
+    // Suppose octaveOneNoteNames.length == 36
     const O1_LEN = octaveOneNoteNames.length;
 
     const mappedIndices = firstSetOfNotes.map((arabicName) => {
@@ -506,8 +506,8 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
     const idx = selectedIndices[colIndex];
     if (idx < 0) return "none";
 
-    // The length of octaveOneNoteNames. For example, if it's 34,
-    // then any idx >= 34 means it's from the "octaveTwoNoteNames" portion.
+    // The length of octaveOneNoteNames. For example, if it's 36,
+    // then any idx >= 36 means it's from the "octaveTwoNoteNames" portion.
     const O1_LEN = octaveOneNoteNames.length;
 
     // Decide whether idx points into octaveOne or octaveTwo
