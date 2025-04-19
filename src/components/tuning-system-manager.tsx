@@ -21,8 +21,18 @@ import { getEnglishNoteName, firstOctaveAbjadNames, secondOctaveAbjadNames } fro
 //todo: transfer all abjad names to new tuningSystems.json
 
 export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSystemId: string | null }) {
-  const { tuningSystems, selectedTuningSystem, setSelectedTuningSystem, updateAllTuningSystems, playNoteFrequency, selectedCells, setSelectedCells, selectedIndices, setSelectedIndices } =
-    useAppContext();
+  const {
+    tuningSystems,
+    selectedTuningSystem,
+    setSelectedTuningSystem,
+    updateAllTuningSystems,
+    playNoteFrequency,
+    selectedCells,
+    setSelectedCells,
+    selectedIndices,
+    setSelectedIndices,
+    clearSelections,
+  } = useAppContext();
 
   const [sortOption, setSortOption] = useState<"id" | "creatorEnglish" | "year">("year");
 
@@ -126,6 +136,7 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
       setSourceEnglish(selectedTuningSystem.getSourceEnglish());
       setSourceArabic(selectedTuningSystem.getSourceArabic());
       setCreatorEnglish(selectedTuningSystem.getCreatorEnglish());
+      setCreatorArabic(selectedTuningSystem.getCreatorArabic());
       setCommentsEnglish(selectedTuningSystem.getCommentsEnglish());
       setCommentsArabic(selectedTuningSystem.getCommentsArabic());
       setPitchClasses(selectedTuningSystem.getNotes().join("\n"));
@@ -255,6 +266,9 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
   // When user changes the dropdown (overall TuningSystem):
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
+
+    clearSelections();
+
     if (value === "new") {
       // If "new," you can remove `tuningSystem` from the URL or set it to something else
       router.replace("/", { scroll: false });
@@ -265,6 +279,7 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
       if (chosen) {
         // set the chosen system
         setSelectedTuningSystem(chosen);
+
         // update query param
         router.replace(`/?tuningSystem=${encodeURIComponent(chosen.getId())}`, { scroll: false });
       }
@@ -303,6 +318,7 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
       const updatedList = tuningSystems.map((ts) => (ts.getId() === selectedTuningSystem.getId() ? updated : ts));
       updateAllTuningSystems(updatedList);
       setSelectedTuningSystem(updated);
+      clearSelections();
     } else {
       // Creating a new TuningSystem
       const newSystem = new TuningSystem(
@@ -336,6 +352,7 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
       setSelectedTuningSystem(null);
       console.log("TuningSystem deleted:", selectedTuningSystem.getId());
       resetFormForNewSystem();
+      clearSelections();
     }
   };
 
@@ -672,10 +689,10 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
     ];
 
     return (
-      <details className="tuning-system-manager__octave-details" open={octave !== 0}>
+      <details className="tuning-system-manager__octave-details" open={octave !== 0 && octave !== 3}>
         <summary className="tuning-system-manager__octave-summary">
           Octave {octave}{" "}
-          {octave === 1 && (
+          {(octave === 1 || octave === 2) && (
             <button className="tuning-system-manager__octave-cascade-button" onClick={() => setCascade((prevCascade) => !prevCascade)}>
               {cascade ? "Cascade Enabled" : "Cascade Disabled"}
             </button>

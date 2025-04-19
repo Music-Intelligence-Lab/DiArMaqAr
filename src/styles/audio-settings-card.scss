@@ -47,4 +47,32 @@
     margin-bottom: 20px;
     font-size: 1.2rem;
   }
+
+  &__save-button,
+  &__delete-button, &__clear-button {
+    margin-right: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    color: white;
+
+    &:hover {
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  &__save-button {
+    background-color: $secondary;
+  }
+
+  &__delete-button {
+    background-color: $delete;
+  }
+
+  &__clear-button {
+    background-color: $primary;
+  }
 }
