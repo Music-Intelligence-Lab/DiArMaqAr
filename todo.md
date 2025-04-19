@@ -3,11 +3,14 @@
 
 17 Apr 2025
 - Add ID and URL parameters for ajnas and maqamat
-- Add URL parameter for starting note name yegāh or 'ushayran. If jins selected and starting note name changed the jins selection doesn't update. By adding this to the URL parameters it should work
+- Add URL parameter for starting note name yegāh or 'ushayran. Currently if a jins is selected and then the starting note name is changed, everything resets. By adding this to the URL parameters it should work better
 - Add cascade Abjad and apply disable cascade button
 - Add play selected checkboxes sequence button (for now ascending and descending including the highest note repeated)
 - Add different waveforms for audio playback 
 - Make current selection plus ajnas and maqam analysis and transpositions into separate components that display in the same space
 - Data of analysis and transpositions table should include following rows: AR note names, EN note names, pitch class input type values and intervals, cents values and intervals.
 - Saving abjad in octave two not working - only octave one is saved
-- Problem with the available ajnas in the jins manager list: Choose Al-Urmawi First Oud Tuning, select Ushayran as starting note name, jins bayāt yegāh is clickable, even though the note name yegāh is not in the list.
+- Move clear selection button to somewhere else for easier access
+- transpositions: change the return filter so it returns transpositions in octave 0 as well as 1 and 2
+ (return oct === 0 || oct === 1 || oct === 2;)
+ - problems with saving new ajnas: currently when I update ajnas or create a new one, the new ID numbers are all deleted and the note names of the new jins are not saved. 
