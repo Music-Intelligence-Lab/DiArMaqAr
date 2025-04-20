@@ -1,0 +1,49 @@
+.maqam‑transpositions {
+  width: 100%;
+
+  &__title {
+    width: 100%;
+    background-color: $primary;
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    padding: 1rem 0;
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th,
+    td {
+      vertical-align: middle;
+    }
+
+    thead th {
+      background-color: transparent;
+      font-weight: 600;
+    }
+
+    tbody tr:nth-child(odd) {
+      background-color: transparent;
+    }
+    tbody tr:nth-child(even) {
+      background-color: transparent;
+    }
+  }
+
+  &__header,
+  &__cell {
+    border: 1px solid #e2e8f0;
+    text-align: center;
+  }
+
+  &__input {
+    width: 100px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+  }
+}
