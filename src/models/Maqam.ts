@@ -37,6 +37,7 @@ export default class Maqam {
 }
 
 export interface Seir {
+  id: string,
   creatorEnglish: string,
   creatorArabic: string,
   sourceEnglish: string,

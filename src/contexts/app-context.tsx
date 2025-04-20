@@ -10,7 +10,7 @@ import TransliteratedNoteName from "@/models/NoteName";
 import detectPitchClassType from "@/functions/detectPitchClassType";
 import convertPitchClass, { shiftPitchClass } from "@/functions/convertPitchClass";
 import { octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames, octaveThreeNoteNames, octaveFourNoteNames } from "@/models/NoteName";
-import Maqam from "@/models/Maqam";
+import Maqam, { Seir } from "@/models/Maqam";
 
 interface EnvelopeParams {
   attack: number;
@@ -122,7 +122,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     const loadedAjnas = ajnasData.map((data) => new Jins(data.id, data.name, data.noteNames));
     setAjnas(loadedAjnas);
 
-    const loadedMaqamat = maqamatData.map((data) => new Maqam(data.id, data.name, data.ascendingNoteNames, data.descendingNoteNames, data.suyur));
+    const loadedMaqamat = maqamatData.map((data) => new Maqam(data.id, data.name, data.ascendingNoteNames, data.descendingNoteNames, data.suyur as Seir[]));
     setMaqamat(loadedMaqamat);
 
     setIsPageLoading(false);
@@ -153,13 +153,13 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
           const details = getSelectedCellDetails(cell);
           return details.noteName;
         });
-        setSelectedMaqam(new Maqam(selectedMaqam.getId(), selectedMaqam.getName(), selectedNoteNames, selectedMaqam.getDescendingNoteNames(), []));
+        setSelectedMaqam(new Maqam(selectedMaqam.getId(), selectedMaqam.getName(), selectedNoteNames, selectedMaqam.getDescendingNoteNames(), selectedMaqam.getSuyur()));
       } else {
         const selectedNoteNames = selectedCells.map((cell: SelectedCell) => {
           const details = getSelectedCellDetails(cell);
           return details.noteName;
         });
-        setSelectedMaqam(new Maqam(selectedMaqam.getId(), selectedMaqam.getName(), selectedMaqam.getAscendingNoteNames(), [...selectedNoteNames].reverse(), []));
+        setSelectedMaqam(new Maqam(selectedMaqam.getId(), selectedMaqam.getName(), selectedMaqam.getAscendingNoteNames(), [...selectedNoteNames].reverse(), selectedMaqam.getSuyur()));
       }
     }
   }, [selectedCells]);

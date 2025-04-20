@@ -49,6 +49,7 @@ export default function MaqamManager() {
   const handleClickMaqam = (maqam: Maqam) => {
     // when selecting, populate cells for asc or desc based on stored noteNames
     setSelectedMaqam(maqam);
+    console.log(maqam)
     setSelectedJins(null);
     const namesToSelect = isAscending ? maqam.getAscendingNoteNames() : maqam.getDescendingNoteNames();
 
@@ -82,7 +83,7 @@ export default function MaqamManager() {
       selectedMaqam.getName(),
       ascNames,
       descNames,
-      [] // ignoring suyur for now
+      selectedMaqam.getSuyur()
     );
 
     const others = maqamat.filter((m) => m.getId() !== updated.getId());
@@ -185,7 +186,7 @@ export default function MaqamManager() {
             value={selectedMaqam.getName()}
             onChange={(e) =>
               setSelectedMaqam(
-                new Maqam(selectedMaqam.getId(), e.target.value, selectedMaqam.getAscendingNoteNames(), selectedMaqam.getDescendingNoteNames(), [])
+                new Maqam(selectedMaqam.getId(), e.target.value, selectedMaqam.getAscendingNoteNames(), selectedMaqam.getDescendingNoteNames(), selectedMaqam.getSuyur())
               )
             }
             placeholder="Enter maqam name"
