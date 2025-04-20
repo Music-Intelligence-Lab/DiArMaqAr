@@ -600,31 +600,6 @@
     "suyur": []
   },
   {
-    "id": "25",
-    "name": "maqām mustaʿār",
-    "ascendingNoteNames": [
-      "segāh",
-      "ḥijāz",
-      "nawā",
-      "ḥuseinī",
-      "awj",
-      "kurdān",
-      "muḥayyar",
-      "buzurk"
-    ],
-    "descendingNoteNames": [
-      "buzurk",
-      "muḥayyar",
-      "kurdān",
-      "awj",
-      "ḥuseinī",
-      "nawā",
-      "ḥijāz",
-      "segāh"
-    ],
-    "suyur": []
-  },
-  {
     "id": "26",
     "name": "maqām ʿirāq",
     "ascendingNoteNames": [
@@ -696,6 +671,31 @@
       "kurdī",
       "tīk zirguleh",
       "rāst"
+    ],
+    "suyur": []
+  },
+  {
+    "id": "25",
+    "name": "maqām mustaʿār",
+    "ascendingNoteNames": [
+      "segāh",
+      "ḥijāz",
+      "nawā",
+      "ḥuseinī",
+      "awj",
+      "kurdān",
+      "muḥayyar",
+      "buzurk"
+    ],
+    "descendingNoteNames": [
+      "buzurk",
+      "muḥayyar",
+      "kurdān",
+      "awj",
+      "ḥuseinī",
+      "nawā",
+      "ḥijāz",
+      "segāh"
     ],
     "suyur": []
   }
