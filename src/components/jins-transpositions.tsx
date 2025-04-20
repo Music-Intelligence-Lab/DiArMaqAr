@@ -8,7 +8,7 @@ export default function JinsTranspositions() {
   const { selectedJins, selectedTuningSystem, selectedCells, getAllCells, getSelectedCellDetails, centsTolerance, setCentsTolerance } =
     useAppContext();
 
-  if (!selectedJins || !selectedTuningSystem) return null;
+  if (!selectedJins || !selectedTuningSystem || selectedCells.length < 2) return null;
 
   // retrieve details for each selected cell
   const selectedCellDetails = selectedCells.map((cell) => getSelectedCellDetails(cell));

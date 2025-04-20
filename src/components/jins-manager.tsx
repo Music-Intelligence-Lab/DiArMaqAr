@@ -10,28 +10,44 @@ export default function JinsManager() {
     selectedJins,
     setSelectedJins,
     updateAllAjnas,
+    selectedCells,
     setSelectedCells,
     getNoteNamesUsedInTuningSystem,
+    getSelectedCellDetails,
+    clearSelections,
   } = useAppContext();
-
 
   const usedNoteNames = getNoteNamesUsedInTuningSystem();
 
+  const selectedCellNoteNames = selectedCells.map((cell) => {
+    const cellDetails = getSelectedCellDetails(cell);
+    return cellDetails.noteName;
+  });
+
   const handleSaveJins = async () => {
     if (!selectedJins) return;
-    const newAjnas = ajnas.filter((jins) => jins.getName() !== selectedJins.getName());
+    const newAjnas = ajnas.filter((jins) => jins.getId() !== selectedJins.getId());
     await updateAllAjnas([...newAjnas, selectedJins]);
   };
 
   // Stub handler for deleting a new jins entry.
   const handleDeleteJins = async () => {
     if (!selectedJins) return;
-    const newAjnas = ajnas.filter((jins) => jins.getName() !== selectedJins.getName());
+    const newAjnas = ajnas.filter((jins) => jins.getId() !== selectedJins.getId());
     await updateAllAjnas(newAjnas);
   };
 
   const checkIfJinsIsSelectable = (jins: Jins) => {
     return jins.getNoteNames().every((noteName) => usedNoteNames.includes(noteName));
+  };
+
+  const checkIfNoteNameIsUnsaved = (noteName: string) => {
+    if (!selectedJins) return false;
+    const id = selectedJins.getId();
+    const originalJins = ajnas.find((jins) => jins.getId() === id);
+    if (!originalJins) return false;
+    const originalNoteNames = originalJins.getNoteNames();
+    return !originalNoteNames.includes(noteName);
   };
 
   const handleClickJins = (jins: Jins) => {
@@ -66,7 +82,16 @@ export default function JinsManager() {
 
   return (
     <div className="jins-manager">
-      <h2 className="jins-manager__header">Jins Manager</h2>
+      <h2 className="jins-manager__header">
+        Jins Manager{" "}
+        {selectedJins && (
+          <span className="jins-manager__selections">
+            {`- ${selectedJins.getName()}`} {selectedCellNoteNames.length > 0 && <> - Selected Notes: {selectedCellNoteNames.map((noteName) => {
+              return <span key={noteName} className={"jins-manager__selected-note " + (checkIfNoteNameIsUnsaved(noteName) ? "jins-manager__selected-note_unsaved":"") }>{noteName} </span>;
+            })}</>}
+          </span>
+        )}
+      </h2>
 
       <div className="jins-manager__list">
         {ajnas.length === 0 ? (
@@ -94,7 +119,7 @@ export default function JinsManager() {
         )}
       </div>
       {!selectedJins && (
-        <button onClick={() => setSelectedJins(new Jins("", []))} className="jins-manager__create-new-jins-button">
+        <button onClick={() => setSelectedJins(new Jins((ajnas.length + 1).toString(), "", []))} className="jins-manager__create-new-jins-button">
           Create New Jins
         </button>
       )}
@@ -104,9 +129,13 @@ export default function JinsManager() {
             type="text"
             value={selectedJins.getName()}
             onChange={(e) =>
-              setSelectedJins((prevSelectedJins: Jins | null) => {
-                return new Jins(e.target.value, prevSelectedJins ? prevSelectedJins.getNoteNames() : []);
-              })
+              setSelectedJins(
+                new Jins(
+                  selectedJins.getId(),
+                  e.target.value,
+                 selectedJins.getNoteNames()
+                )
+              )
             }
             placeholder="Enter new jins name"
             className="jins-manager__jins-input"
@@ -117,8 +146,8 @@ export default function JinsManager() {
           <button onClick={handleDeleteJins} className="jins-manager__delete-button">
             Delete
           </button>
-          <button onClick={() => setSelectedJins(null)} className="jins-manager__clear-button">
-           Clear
+          <button onClick={clearSelections} className="jins-manager__clear-button">
+            Clear
           </button>
         </div>
       )}

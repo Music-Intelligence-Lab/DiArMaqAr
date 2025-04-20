@@ -5,6 +5,7 @@ import TuningSystemManager from "@/components/tuning-system-manager";
 import AudioSettingsCard from "@/components/audio-settings-cards";
 import JinsManager from "@/components/jins-manager";
 import JinsTranspositions from "@/components/jins-transpositions";
+import MaqamManager from "@/components/maqam-manager";
 
 export default function Home() {
   const searchParams = useSearchParams();
@@ -16,6 +17,7 @@ export default function Home() {
       <TuningSystemManager urlTuningSystemId={tuningSystemIdFromUrl} />
       <JinsManager />
       <JinsTranspositions />
+      <MaqamManager />
       <AudioSettingsCard />
     </div>
   );

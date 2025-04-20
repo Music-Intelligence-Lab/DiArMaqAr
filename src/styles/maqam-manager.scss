@@ -1,4 +1,4 @@
-.jins-manager {
+.maqam-manager {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -21,6 +21,21 @@
     &_unsaved {
       background-color: transparent;
       border: 2px dashed $secondary;
+    }
+  }
+
+  &__toggle-button {
+    margin: 0 10px;
+    padding: 5px 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    color: $primary;
+
+    &:hover {
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     }
   }
 
@@ -55,7 +70,7 @@
     }
   }
 
-  &__create-new-jins-button {
+  &__create-new-maqam-button {
     width: fit-content;
     margin: 20px auto;
     font-size: 20px;
@@ -72,7 +87,7 @@
     }
   }
 
-  &__jins-form {
+  &__maqam-form {
     display: flex;
     justify-content: center;
     gap: 20px;
@@ -80,7 +95,7 @@
     font-size: 20px;
   }
 
-  &__jins-input {
+  &__maqam-input {
     padding: 0.4rem;
     font-size: 1rem;
     border: 1px solid #ccc;
