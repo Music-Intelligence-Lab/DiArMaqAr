@@ -1,14 +1,14 @@
-// components/JinsTranspositions.tsx
+// components/MaqamTranspositions.tsx
 "use client";
 
 import React from "react";
 import { SelectedCell, useAppContext } from "@/contexts/app-context";
 
-export default function JinsTranspositions() {
-  const { selectedJins, selectedTuningSystem, selectedCells, getAllCells, getSelectedCellDetails, centsTolerance, setCentsTolerance } =
+export default function MaqamTranspositions() {
+  const { selectedMaqam, selectedTuningSystem, selectedCells, getAllCells, getSelectedCellDetails, centsTolerance, setCentsTolerance } =
     useAppContext();
 
-  if (!selectedJins || !selectedTuningSystem || selectedCells.length < 2) return null;
+  if (!selectedMaqam || !selectedTuningSystem || selectedCells.length < 2) return null;
 
   // retrieve details for each selected cell
   const selectedCellDetails = selectedCells.map((cell) => getSelectedCellDetails(cell));
@@ -82,30 +82,30 @@ export default function JinsTranspositions() {
   });
 
   return (
-    <div className="jins‑transpositions">
-      <h2 className="jins‑transpositions__title">{selectedJins.getName()}</h2>
+    <div className="maqam‑transpositions">
+      <h2 className="maqam‑transpositions__title">{selectedMaqam.getName()}</h2>
 
-      <table className="jins‑transpositions__table">
+      <table className="maqam‑transpositions__table">
         <thead>
           <tr>
-            <th className="jins‑transpositions__header">
+            <th className="maqam‑transpositions__header">
               Transpositions{" "}
               {!useRatio && <> / Cents Tolerance: <input
-                className="jins‑transpositions__input"
+                className="maqam‑transpositions__input"
                 type="number"
                 value={centsTolerance ?? 0}
                 onChange={(e) => setCentsTolerance(Number(e.target.value))}
               /></>}
             </th>
-            <th className="jins‑transpositions__header">
+            <th className="maqam‑transpositions__header">
               {selectedCellDetails[0].noteName}
               <br />
               {selectedCellDetails[0].fraction}
             </th>
             {intervalPattern.map((pat, i) => (
               <React.Fragment key={i}>
-                <th className="jins‑transpositions__header">{useRatio ? `(${pat.ratio})` : `≈${(pat.diff ?? 0).toFixed(1)}¢`}</th>
-                <th className="jins‑transpositions__header">
+                <th className="maqam‑transpositions__header">{useRatio ? `(${pat.ratio})` : `≈${(pat.diff ?? 0).toFixed(1)}¢`}</th>
+                <th className="maqam‑transpositions__header">
                   {selectedCellDetails[i + 1].noteName}
                   <br />
                   {selectedCellDetails[i + 1].fraction}
@@ -119,20 +119,20 @@ export default function JinsTranspositions() {
             const details = seq.map(getSelectedCellDetails);
             return (
               <tr key={row}>
-                <td className="jins‑transpositions__cell">{`${selectedJins.getName()} al-${details[0].noteName}`}</td>
-                <td className="jins‑transpositions__cell">
+                <td className="maqam‑transpositions__cell">{`${selectedMaqam.getName()} al-${details[0].noteName}`}</td>
+                <td className="maqam‑transpositions__cell">
                   {details[0].noteName}
                   <br />
                   {details[0].originalValue}
                 </td>
                 {details.slice(1).map((d, j) => (
                   <React.Fragment key={j}>
-                    <td className="jins‑transpositions__cell">
+                    <td className="maqam‑transpositions__cell">
                       {useRatio
                         ? `(${computeRatio(details[j].fraction, d.fraction)})`
                         : `≈${(parseFloat(d.originalValue) - parseFloat(details[j].originalValue)).toFixed(1)}¢`}
                     </td>
-                    <td className="jins‑transpositions__cell">
+                    <td className="maqam‑transpositions__cell">
                       {d.noteName}
                       <br />
                       {d.originalValue}

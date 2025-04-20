@@ -6,6 +6,7 @@ import AudioSettingsCard from "@/components/audio-settings-cards";
 import JinsManager from "@/components/jins-manager";
 import JinsTranspositions from "@/components/jins-transpositions";
 import MaqamManager from "@/components/maqam-manager";
+import MaqamTranspositions from "@/components/maqam-transpositions";
 
 export default function Home() {
   const searchParams = useSearchParams();
@@ -18,6 +19,7 @@ export default function Home() {
       <JinsManager />
       <MaqamManager />
       <JinsTranspositions />
+      <MaqamTranspositions/>
       <AudioSettingsCard />
     </div>
   );
