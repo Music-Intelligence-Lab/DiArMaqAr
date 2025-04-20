@@ -16,8 +16,8 @@ export default function Home() {
       <div className="home-page__title">Maqam Network</div>
       <TuningSystemManager urlTuningSystemId={tuningSystemIdFromUrl} />
       <JinsManager />
-      <JinsTranspositions />
       <MaqamManager />
+      <JinsTranspositions />
       <AudioSettingsCard />
     </div>
   );

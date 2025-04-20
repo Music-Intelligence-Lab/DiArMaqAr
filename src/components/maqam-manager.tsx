@@ -16,6 +16,7 @@ export default function MaqamManager() {
     isAscending,
     setIsAscending,
     clearSelections,
+    setSelectedJins,
   } = useAppContext();
 
   // Derive displayed note names based on current selection and mode
@@ -48,6 +49,7 @@ export default function MaqamManager() {
   const handleClickMaqam = (maqam: Maqam) => {
     // when selecting, populate cells for asc or desc based on stored noteNames
     setSelectedMaqam(maqam);
+    setSelectedJins(null);
     const namesToSelect = isAscending ? maqam.getAscendingNoteNames() : maqam.getDescendingNoteNames();
 
     // translate names back into SelectedCell[] by matching against usedNoteNames
@@ -98,11 +100,10 @@ export default function MaqamManager() {
   };
 
   const displayNoteNames = (noteNames: string[], ascending: boolean) => {
-    const modifiedNoteNames = ascending ? noteNames : [...noteNames].reverse();
-    return modifiedNoteNames.map((noteName) => {
+    return noteNames.map((noteName) => {
       return (
         <span
-          key={noteName}
+          key={noteName + " " + ascending}
           className={"maqam-manager__selected-note " + (checkIfNoteNameIsUnsaved(noteName, ascending) ? "maqam-manager__selected-note_unsaved" : "")}
         >
           {noteName}{" "}
@@ -124,20 +125,19 @@ export default function MaqamManager() {
           </span>
         )}
       </h2>
-      {selectedMaqam && ((selectedMaqam.getAscendingNoteNames().length + selectedMaqam.getDescendingNoteNames().length) > 0) && (
+      {selectedMaqam && selectedMaqam.getAscendingNoteNames().length + selectedMaqam.getDescendingNoteNames().length > 0 && (
         <>
           <div className="maqam-manager__selections">
             {isAscending ? (
-              <>Ascending: {displayNoteNames(selectedMaqam.getAscendingNoteNames(), true)}</>
+              <>
+                <div className="maqam-manager__selections-row">Ascending: {displayNoteNames(selectedMaqam.getAscendingNoteNames(), true)}</div>
+                <div className="maqam-manager__selections-row">Descending: {displayNoteNames(selectedMaqam.getDescendingNoteNames(), false)}</div>
+              </>
             ) : (
-              <>Descending: {displayNoteNames(selectedMaqam.getDescendingNoteNames(), false)}</>
-            )}
-          </div>
-          <div className="maqam-manager__selections">
-            {!isAscending ? (
-              <>Ascending: {displayNoteNames(selectedMaqam.getAscendingNoteNames(), true)}</>
-            ) : (
-              <>Descending: {displayNoteNames(selectedMaqam.getDescendingNoteNames(), false)}</>
+              <>
+                <div className="maqam-manager__selections-row">Descending: {displayNoteNames(selectedMaqam.getDescendingNoteNames(), false)}</div>
+                <div className="maqam-manager__selections-row">Ascending: {displayNoteNames(selectedMaqam.getAscendingNoteNames(), true)}</div>
+              </>
             )}
           </div>
         </>
@@ -170,7 +170,10 @@ export default function MaqamManager() {
       </div>
 
       {!selectedMaqam && (
-        <button onClick={() => setSelectedMaqam(new Maqam((maqamat.length + 1).toString(), "", [], [], []))} className="maqam-manager__create-new-maqam-button">
+        <button
+          onClick={() => setSelectedMaqam(new Maqam((maqamat.length + 1).toString(), "", [], [], []))}
+          className="maqam-manager__create-new-maqam-button"
+        >
           Create New Maqam
         </button>
       )}
@@ -197,12 +200,7 @@ export default function MaqamManager() {
             Delete
           </button>
 
-          <button
-            onClick={
-              clearSelections
-            }
-            className="maqam-manager__clear-button"
-          >
+          <button onClick={clearSelections} className="maqam-manager__clear-button">
             Clear
           </button>
         </div>
