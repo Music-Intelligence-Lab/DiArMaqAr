@@ -1,6 +1,6 @@
 [
   {
-    "id": 1,
+    "id": "1",
     "name": "jins rāst",
     "noteNames": [
       "rāst",
@@ -10,7 +10,7 @@
     ]
   },
   {
-    "id": 2,
+    "id": "2",
     "name": "jins bayāt",
     "noteNames": [
       "dūgāh",
@@ -20,7 +20,7 @@
     ]
   },
   {
-    "id": 3,
+    "id": "3",
     "name": "jins segāh",
     "noteNames": [
       "segāh",
@@ -29,7 +29,7 @@
     ]
   },
   {
-    "id": 4,
+    "id": "4",
     "name": "jins ṣabā",
     "noteNames": [
       "dūgāh",
@@ -39,7 +39,7 @@
     ]
   },
   {
-    "id": 5,
+    "id": "5",
     "name": "jins ʿajam",
     "noteNames": [
       "rāst",
@@ -49,7 +49,7 @@
     ]
   },
   {
-    "id": 6,
+    "id": "6",
     "name": "jins nahāwand",
     "noteNames": [
       "rāst",
@@ -59,7 +59,7 @@
     ]
   },
   {
-    "id": 7,
+    "id": "7",
     "name": "jins kurd",
     "noteNames": [
       "dūgāh",
@@ -69,7 +69,7 @@
     ]
   },
   {
-    "id": 8,
+    "id": "8",
     "name": "jins ḥijāz",
     "noteNames": [
       "dūgāh",
@@ -79,7 +79,7 @@
     ]
   },
   {
-    "id": 9,
+    "id": "9",
     "name": "jins ṣabā zamzam",
     "noteNames": [
       "dūgāh",
@@ -89,7 +89,7 @@
     ]
   },
   {
-    "id": 10,
+    "id": "10",
     "name": "jins chahargāh",
     "noteNames": [
       "chahargāh",
@@ -99,7 +99,7 @@
     ]
   },
   {
-    "id": 11,
+    "id": "11",
     "name": "jins athar kurd",
     "noteNames": [
       "dūgāh",
@@ -110,7 +110,7 @@
     ]
   },
   {
-    "id": 12,
+    "id": "12",
     "name": "jins ʿirāq",
     "noteNames": [
       "ʿirāq",
@@ -119,7 +119,7 @@
     ]
   },
   {
-    "id": 13,
+    "id": "13",
     "name": "jins mustaʿār",
     "noteNames": [
       "ʿirāq",
@@ -129,7 +129,7 @@
     ]
   },
   {
-    "id": 14,
+    "id": "14",
     "name": "jins segāh baladī",
     "noteNames": [
       "nawā",
@@ -139,7 +139,7 @@
     ]
   },
   {
-    "id": 15,
+    "id": "15",
     "name": "jins nikrīz",
     "noteNames": [
       "rāst",
@@ -149,33 +149,13 @@
     ]
   },
   {
-    "id": 16,
+    "id": "16",
     "name": "jins rāst nīm buselīk",
     "noteNames": [
       "rāst",
       "dūgāh",
       "nīm buselīk",
       "chahargāh"
-    ]
-  },
-  {
-    "id": 17,
-    "name": "jins bayāt yegāh",
-    "noteNames": [
-      "yegāh",
-      "qarār tīk ḥiṣār/shūrī",
-      "ʿajam ʿushayrān",
-      "rāst"
-    ]
-  },
-  {
-    "id": 18,
-    "name": "jins bayāt nawā",
-    "noteNames": [
-      "nawā",
-      "tīk ḥiṣār",
-      "ʿajam",
-      "kurdān"
     ]
   }
 ]

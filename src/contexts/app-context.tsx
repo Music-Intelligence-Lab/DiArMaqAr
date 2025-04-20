@@ -3,12 +3,14 @@
 import React, { createContext, useState, useEffect, useRef, useContext } from "react";
 import tuningSystemsData from "@/../data/tuningSystems.json";
 import ajnasData from "@/../data/ajnas.json";
+import maqamatData from "@/../data/maqamat.json";
 import TuningSystem from "@/models/TuningSystem";
 import Jins from "@/models/Jins";
 import TransliteratedNoteName from "@/models/NoteName";
 import detectPitchClassType from "@/functions/detectPitchClassType";
 import convertPitchClass, { shiftPitchClass } from "@/functions/convertPitchClass";
 import { octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames, octaveThreeNoteNames, octaveFourNoteNames } from "@/models/NoteName";
+import Maqam from "@/models/Maqam";
 
 interface EnvelopeParams {
   attack: number;
@@ -48,16 +50,22 @@ interface AppContextInterface {
   selectedIndices: number[];
   setSelectedIndices: React.Dispatch<React.SetStateAction<number[]>>;
   getSelectedCellDetails: (cell: SelectedCell) => CellDetails;
-  // New state for ajnas and selected jins:
   ajnas: Jins[];
   setAjnas: React.Dispatch<React.SetStateAction<Jins[]>>;
   updateAllAjnas: (newAjnas: Jins[]) => Promise<void>;
   selectedJins: Jins | null;
   setSelectedJins: React.Dispatch<React.SetStateAction<Jins | null>>;
+  maqamat: Maqam[];
+  setMaqamat: React.Dispatch<React.SetStateAction<Maqam[]>>;
+  updateAllMaqamat: (newMaqamat: Maqam[]) => Promise<void>;
+  selectedMaqam: Maqam | null;
+  setSelectedMaqam: React.Dispatch<React.SetStateAction<Maqam | null>>;
   getNoteNamesUsedInTuningSystem: () => TransliteratedNoteName[];
   centsTolerance: number;
   setCentsTolerance: React.Dispatch<React.SetStateAction<number>>;
   clearSelections: () => void;
+  isAscending: boolean;
+  setIsAscending: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AppContext = createContext<AppContextInterface | null>(null);
@@ -81,6 +89,10 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   const [ajnas, setAjnas] = useState<Jins[]>([]);
   const [selectedJins, setSelectedJins] = useState<Jins | null>(null);
 
+  const [maqamat, setMaqamat] = useState<Maqam[]>([]);
+  const [selectedMaqam, setSelectedMaqam] = useState<Maqam | null>(null);
+  const [isAscending, setIsAscending] = useState(true);
+
   const audioCtxRef = useRef<AudioContext | null>(null);
   const masterGainRef = useRef<GainNode | null>(null);
 
@@ -97,8 +109,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         data.creatorArabic,
         data.commentsEnglish,
         data.commentsArabic,
-        data.pitchClasses, // an array of pitch class strings
-        data.noteNames as TransliteratedNoteName[][], // note names configuration
+        data.pitchClasses,
+        data.noteNames as TransliteratedNoteName[][],
         data.abjadNames,
         Number(data.stringLength),
         Number(data.referenceFrequency)
@@ -107,8 +119,11 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
     setTuningSystems(formattedTuningSystems);
 
-    const loadedAjnas = ajnasData.map((data) => new Jins(data.name, data.noteNames));
+    const loadedAjnas = ajnasData.map((data) => new Jins(data.id, data.name, data.noteNames));
     setAjnas(loadedAjnas);
+
+    const loadedMaqamat = maqamatData.map((data) => new Maqam(data.id, data.name, data.ascendingNoteNames, data.descendingNoteNames, data.suyur));
+    setMaqamat(loadedMaqamat);
 
     setIsPageLoading(false);
   }, []);
@@ -131,9 +146,50 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         return details.noteName;
       });
 
-      setSelectedJins(new Jins(selectedJins.getName(), selectedNoteNames));
+      setSelectedJins(new Jins(selectedJins.getId(), selectedJins.getName(), selectedNoteNames));
+    } else if (selectedMaqam) {
+      if (isAscending) {
+        const selectedNoteNames = selectedCells.map((cell: SelectedCell) => {
+          const details = getSelectedCellDetails(cell);
+          return details.noteName;
+        });
+        setSelectedMaqam(new Maqam(selectedMaqam.getId(), selectedMaqam.getName(), selectedNoteNames, selectedMaqam.getDescendingNoteNames(), []));
+      } else {
+        const selectedNoteNames = selectedCells.map((cell: SelectedCell) => {
+          const details = getSelectedCellDetails(cell);
+          return details.noteName;
+        });
+        setSelectedMaqam(new Maqam(selectedMaqam.getId(), selectedMaqam.getName(), selectedMaqam.getAscendingNoteNames(), selectedNoteNames, []));
+      }
     }
   }, [selectedCells]);
+
+  useEffect(() => {
+    if (!selectedMaqam) return;
+    
+    const usedNoteNames = getNoteNamesUsedInTuningSystem();
+
+    const namesToSelect = isAscending
+      ? selectedMaqam.getAscendingNoteNames()
+      : selectedMaqam.getDescendingNoteNames();
+
+    // translate names back into SelectedCell[] by matching against usedNoteNames
+    const newCells: SelectedCell[] = [];
+    usedNoteNames.forEach((name, idx) => {
+      if (namesToSelect.includes(name)) {
+        let octave = 0;
+        let index = idx;
+        // assume 4 octaves evenly divided
+        const perOct = usedNoteNames.length / 4;
+        while (index >= perOct) {
+          octave++;
+          index -= perOct;
+        }
+        newCells.push({ octave, index });
+      }
+    });
+    setSelectedCells(newCells);
+  }, [isAscending])
 
   const playNoteFrequency = (frequency: number, duration: number = 1) => {
     if (!audioCtxRef.current || !masterGainRef.current) return;
@@ -209,7 +265,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
   const updateAllAjnas = async (newAjnas: Jins[]) => {
     setAjnas(newAjnas);
-    setSelectedJins(null);
+    clearSelections();
 
     try {
       const response = await fetch("/api/ajnas", {
@@ -217,6 +273,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(
           newAjnas.map((j) => ({
+            id: j.getId(),
             name: j.getName(),
             noteNames: j.getNoteNames(),
           }))
@@ -227,6 +284,32 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       }
     } catch (error) {
       console.error("Error updating all Ajnas:", error);
+    }
+  };
+
+  const updateAllMaqamat = async (newMaqamat: Maqam[]) => {
+    setMaqamat(newMaqamat);
+    clearSelections();
+
+    try {
+      const response = await fetch("/api/maqams", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(
+          newMaqamat.map((m) => ({
+            id: m.getId(),
+            name: m.getName(),
+            ascendingNoteNames: m.getAscendingNoteNames(),
+            descendingNoteNames: m.getDescendingNoteNames(),
+            suyur: m.getSuyur(),
+          }))
+        ),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to save updated Maqamat on the server.");
+      }
+    } catch (error) {
+      console.error("Error updating all Maqamat:", error);
     }
   };
 
@@ -372,6 +455,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   const clearSelections = () => {
     setSelectedCells([]);
     setSelectedJins(null);
+    setSelectedMaqam(null);
   };
 
   return (
@@ -396,10 +480,17 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         updateAllAjnas,
         selectedJins,
         setSelectedJins,
+        maqamat,
+        setMaqamat,
+        updateAllMaqamat,
+        selectedMaqam,
+        setSelectedMaqam,
         getNoteNamesUsedInTuningSystem,
         centsTolerance,
         setCentsTolerance,
         clearSelections,
+        isAscending,
+        setIsAscending,
       }}
     >
       {children}
