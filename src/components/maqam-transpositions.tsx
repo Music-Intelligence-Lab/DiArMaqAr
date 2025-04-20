@@ -5,13 +5,13 @@ import React from "react";
 import { SelectedCell, useAppContext } from "@/contexts/app-context";
 
 export default function MaqamTranspositions() {
-  const { selectedMaqam, selectedTuningSystem, selectedCells, getAllCells, getSelectedCellDetails, centsTolerance, setCentsTolerance } =
+  const { selectedMaqam, selectedTuningSystem, selectedCells, getAllCells, getSelectedCellDetails, centsTolerance, setCentsTolerance, isAscending } =
     useAppContext();
 
   if (!selectedMaqam || !selectedTuningSystem || selectedCells.length < 2) return null;
 
   // retrieve details for each selected cell
-  const selectedCellDetails = selectedCells.map((cell) => getSelectedCellDetails(cell));
+  const selectedCellDetails = isAscending ? selectedCells.map((cell) => getSelectedCellDetails(cell)) : selectedCells.map((cell) => getSelectedCellDetails(cell)).reverse();
 
   // determine mode based on originalValueType
   const valueType = selectedCellDetails[0].originalValueType;
@@ -83,7 +83,7 @@ export default function MaqamTranspositions() {
 
   return (
     <div className="maqam‑transpositions">
-      <h2 className="maqam‑transpositions__title">{selectedMaqam.getName()}</h2>
+      <h2 className="maqam‑transpositions__title">{selectedMaqam.getName() + " - " + (isAscending ? "Ascending":"Descending")}</h2>
 
       <table className="maqam‑transpositions__table">
         <thead>
