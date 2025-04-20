@@ -159,14 +159,14 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
           const details = getSelectedCellDetails(cell);
           return details.noteName;
         });
-        setSelectedMaqam(new Maqam(selectedMaqam.getId(), selectedMaqam.getName(), selectedMaqam.getAscendingNoteNames(), selectedNoteNames, []));
+        setSelectedMaqam(new Maqam(selectedMaqam.getId(), selectedMaqam.getName(), selectedMaqam.getAscendingNoteNames(), [...selectedNoteNames].reverse(), []));
       }
     }
   }, [selectedCells]);
 
   useEffect(() => {
     if (!selectedMaqam) return;
-    
+
     const usedNoteNames = getNoteNamesUsedInTuningSystem();
 
     const namesToSelect = isAscending

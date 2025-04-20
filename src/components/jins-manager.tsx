@@ -15,6 +15,7 @@ export default function JinsManager() {
     getNoteNamesUsedInTuningSystem,
     getSelectedCellDetails,
     clearSelections,
+    setSelectedMaqam,
   } = useAppContext();
 
   const usedNoteNames = getNoteNamesUsedInTuningSystem();
@@ -51,6 +52,9 @@ export default function JinsManager() {
   };
 
   const handleClickJins = (jins: Jins) => {
+    setSelectedJins(jins);
+    setSelectedMaqam(null);
+
     const noteNames = jins.getNoteNames();
 
     const newSelectedCells: SelectedCell[] = [];
@@ -77,7 +81,6 @@ export default function JinsManager() {
     }
 
     setSelectedCells(newSelectedCells);
-    setSelectedJins(jins);
   };
 
   return (
@@ -86,9 +89,23 @@ export default function JinsManager() {
         Jins Manager{" "}
         {selectedJins && (
           <span className="jins-manager__selections">
-            {`- ${selectedJins.getName()}`} {selectedCellNoteNames.length > 0 && <> - Selected Notes: {selectedCellNoteNames.map((noteName) => {
-              return <span key={noteName} className={"jins-manager__selected-note " + (checkIfNoteNameIsUnsaved(noteName) ? "jins-manager__selected-note_unsaved":"") }>{noteName} </span>;
-            })}</>}
+            {`- ${selectedJins.getName()}`}{" "}
+            {selectedCellNoteNames.length > 0 && (
+              <>
+                {" "}
+                - Selected Notes:{" "}
+                {selectedCellNoteNames.map((noteName) => {
+                  return (
+                    <span
+                      key={noteName}
+                      className={"jins-manager__selected-note " + (checkIfNoteNameIsUnsaved(noteName) ? "jins-manager__selected-note_unsaved" : "")}
+                    >
+                      {noteName}{" "}
+                    </span>
+                  );
+                })}
+              </>
+            )}
           </span>
         )}
       </h2>
@@ -128,15 +145,7 @@ export default function JinsManager() {
           <input
             type="text"
             value={selectedJins.getName()}
-            onChange={(e) =>
-              setSelectedJins(
-                new Jins(
-                  selectedJins.getId(),
-                  e.target.value,
-                 selectedJins.getNoteNames()
-                )
-              )
-            }
+            onChange={(e) => setSelectedJins(new Jins(selectedJins.getId(), e.target.value, selectedJins.getNoteNames()))}
             placeholder="Enter new jins name"
             className="jins-manager__jins-input"
           />

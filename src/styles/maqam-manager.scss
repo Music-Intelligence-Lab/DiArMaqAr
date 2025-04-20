@@ -1,7 +1,6 @@
 .maqam-manager {
   display: flex;
   flex-direction: column;
-  gap: 10px;
 
   &__header {
     margin: 20px 0;
@@ -9,6 +8,10 @@
 
   &__selections {
     font-size: 18px;
+  }
+
+  &__selections-row {
+    margin: 10px 0;
   }
 
   &__selected-note {
