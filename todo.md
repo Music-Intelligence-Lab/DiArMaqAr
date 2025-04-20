@@ -11,6 +11,5 @@
 - Data of analysis and transpositions table should include following rows: AR note names, EN note names, pitch class input type values and intervals, cents values and intervals.
 - Saving abjad in octave two not working - only octave one is saved
 - Move clear selection button to somewhere else for easier access
-- transpositions: change the return filter so it returns transpositions in octave 0 as well as 1 and 2
- (return oct === 0 || oct === 1 || oct === 2;)
+
  - problems with saving new ajnas: currently when I update ajnas or create a new one, the new ID numbers are all deleted and the note names of the new jins are not saved. 
