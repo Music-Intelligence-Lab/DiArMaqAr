@@ -17,6 +17,7 @@ interface EnvelopeParams {
   decay: number;
   sustain: number;
   release: number;
+  waveform: string;
 }
 
 export interface SelectedCell {
@@ -66,6 +67,9 @@ interface AppContextInterface {
   clearSelections: () => void;
   isAscending: boolean;
   setIsAscending: React.Dispatch<React.SetStateAction<boolean>>;
+  tempo: number;
+  setTempo: React.Dispatch<React.SetStateAction<number>>;
+  playSequence: (frequencies: number[], noteDuration?: number) => void;
 }
 
 const AppContext = createContext<AppContextInterface | null>(null);
@@ -81,7 +85,10 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     decay: 0.01,
     sustain: 0.7,
     release: 0.3,
+    waveform: "sine",
   });
+
+  const [tempo, setTempo] = useState<number>(120);
 
   const [selectedCells, setSelectedCells] = useState<SelectedCell[]>([]);
   const [selectedIndices, setSelectedIndices] = useState<number[]>([]);
@@ -207,7 +214,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     const releaseEnd = releaseStart + release;
 
     const oscillator = audioCtx.createOscillator();
-    oscillator.type = "sine";
+    oscillator.type = envelopeParams.waveform as OscillatorType;
     oscillator.frequency.setValueAtTime(frequency, startTime);
 
     const gainNode = audioCtx.createGain();
@@ -220,6 +227,13 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     oscillator.connect(gainNode).connect(masterGain);
     oscillator.start(startTime);
     oscillator.stop(releaseEnd);
+  };
+
+  const playSequence = (frequencies: number[], noteDuration = 1) => {
+    frequencies.forEach((freq, i) => {
+      const delayMs = (60 / tempo) * i * 1000;
+      setTimeout(() => playNoteFrequency(freq, noteDuration), delayMs);
+    });
   };
 
   const updateAllTuningSystems = async (newSystems: TuningSystem[]) => {
@@ -491,6 +505,9 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         clearSelections,
         isAscending,
         setIsAscending,
+        tempo,
+        setTempo,
+        playSequence
       }}
     >
       {children}

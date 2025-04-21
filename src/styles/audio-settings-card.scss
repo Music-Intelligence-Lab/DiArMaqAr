@@ -64,6 +64,18 @@
     }
   }
 
+  &__select, &__number-input {
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+  }
+
+  &__select {
+    cursor: pointer;
+  }
+
   &__save-button {
     background-color: $secondary;
   }

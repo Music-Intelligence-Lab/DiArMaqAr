@@ -1,7 +1,8 @@
 import React from "react";
-import { useAppContext } from "@/contexts/app-context";
+import { CellDetails, useAppContext } from "@/contexts/app-context";
 import Maqam from "@/models/Maqam";
 import { SelectedCell } from "@/contexts/app-context";
+import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 
 export default function MaqamManager() {
   const {
@@ -17,15 +18,56 @@ export default function MaqamManager() {
     setIsAscending,
     clearSelections,
     setSelectedJins,
+    playSequence,
+    playNoteFrequency
   } = useAppContext();
 
-  // Derive displayed note names based on current selection and mode
   const usedNoteNames = getNoteNamesUsedInTuningSystem();
 
+  const ascendingNoteNamesCellDetails: CellDetails[]  = [];
+  const descendingNoteNamesCellDetails: CellDetails[] = [];
+
+  if (selectedMaqam ) {
+    usedNoteNames.forEach((name, idx) => {
+      if (selectedMaqam.getAscendingNoteNames().includes(name)) {
+        let octave = 0;
+        let index = idx;
+        // assume 4 octaves evenly divided
+        const perOct = usedNoteNames.length / 4;
+        while (index >= perOct) {
+          octave++;
+          index -= perOct;
+        }
+        const cellDetails = getSelectedCellDetails({octave, index})
+        ascendingNoteNamesCellDetails.push(cellDetails)
+      }
+    });
+  
+    usedNoteNames.forEach((name, idx) => {
+      if (selectedMaqam.getDescendingNoteNames().includes(name)) {
+        let octave = 0;
+        let index = idx;
+        // assume 4 octaves evenly divided
+        const perOct = usedNoteNames.length / 4;
+        while (index >= perOct) {
+          octave++;
+          index -= perOct;
+        }
+        const cellDetails = getSelectedCellDetails({octave, index})
+        descendingNoteNamesCellDetails.push(cellDetails)
+      }
+    });
+
+    descendingNoteNamesCellDetails.reverse()
+  }
+  
+
   // Map selectedCells to note names
-  const selectedCellNoteNames = selectedCells.map((cell: SelectedCell) => {
-    return getSelectedCellDetails(cell).noteName;
+  const selectedCellDetails = selectedCells.map((cell: SelectedCell) => {
+    return getSelectedCellDetails(cell);
   });
+
+  const selectedCellNoteNames = selectedCellDetails.map((cellDetail) => cellDetail.noteName);
 
   const checkIfMaqamIsSelectable = (maqam: Maqam) => {
     return (
@@ -49,7 +91,6 @@ export default function MaqamManager() {
   const handleClickMaqam = (maqam: Maqam) => {
     // when selecting, populate cells for asc or desc based on stored noteNames
     setSelectedMaqam(maqam);
-    console.log(maqam)
     setSelectedJins(null);
     const namesToSelect = isAscending ? maqam.getAscendingNoteNames() : maqam.getDescendingNoteNames();
 
@@ -100,18 +141,37 @@ export default function MaqamManager() {
     setSelectedCells([]);
   };
 
-  const displayNoteNames = (noteNames: string[], ascending: boolean) => {
-    return noteNames.map((noteName) => {
+  const displayNoteNames = (cellDetails: CellDetails[], ascending: boolean) => {
+    return cellDetails.map((cellDetail) => {
       return (
         <span
-          key={noteName + " " + ascending}
-          className={"maqam-manager__selected-note " + (checkIfNoteNameIsUnsaved(noteName, ascending) ? "maqam-manager__selected-note_unsaved" : "")}
+          key={cellDetail.noteName + " " + ascending}
+          onClick={() => playNoteFrequency(parseInt(cellDetail.frequency) ?? 0)}
+          className={"maqam-manager__selected-note " + (checkIfNoteNameIsUnsaved(cellDetail.noteName, ascending) ? "maqam-manager__selected-note_unsaved" : "")}
         >
-          {noteName}{" "}
+          {cellDetail.noteName}{" "}
         </span>
       );
     });
   };
+
+  const playSelectedMaqam = () => {
+    if (!selectedMaqam) return;
+
+    const maqamFrequencies: number[] = []
+
+    ascendingNoteNamesCellDetails.forEach((cellDetail) => {
+      maqamFrequencies.push(parseInt(cellDetail.frequency) ?? 0)
+    })
+
+    maqamFrequencies.push(0)
+
+    descendingNoteNamesCellDetails.forEach((cellDetail) => {
+      maqamFrequencies.push(parseInt(cellDetail.frequency) ?? 0)
+    })
+
+    playSequence(maqamFrequencies)
+  }
 
   return (
     <div className="maqam-manager">
@@ -119,25 +179,27 @@ export default function MaqamManager() {
         Maqam Manager
         {selectedMaqam && (
           <span className="maqam-manager__selections">
-            {` - Selected Notes (${isAscending ? "Ascending" : "Descending"}): `} {displayNoteNames(selectedCellNoteNames, isAscending)}
+            {` - Selected Notes (${isAscending ? "Ascending" : "Descending"}): `} {displayNoteNames(selectedCellDetails, isAscending)}
             <button className="maqam-manager__toggle-button" onClick={() => setIsAscending((prev) => !prev)}>
               Switch to {isAscending ? "Descending" : "Ascending"}
             </button>
+            <button className="maqam-manager__play-button" onClick={playSelectedMaqam}>Play Selected Maqam <PlayCircleIcon /></button>
+
           </span>
         )}
       </h2>
       {selectedMaqam && selectedMaqam.getAscendingNoteNames().length + selectedMaqam.getDescendingNoteNames().length > 0 && (
         <>
-          <div className="maqam-manager__selections">
+          <div className="maqam-manager__rows">
             {isAscending ? (
               <>
-                <div className="maqam-manager__selections-row">Ascending: {displayNoteNames(selectedMaqam.getAscendingNoteNames(), true)}</div>
-                <div className="maqam-manager__selections-row">Descending: {displayNoteNames(selectedMaqam.getDescendingNoteNames(), false)}</div>
+                <div className="maqam-manager__selections-row">Ascending: {displayNoteNames(ascendingNoteNamesCellDetails, true)}</div>
+                <div className="maqam-manager__selections-row">Descending: {displayNoteNames(descendingNoteNamesCellDetails, false)}</div>
               </>
             ) : (
               <>
-                <div className="maqam-manager__selections-row">Descending: {displayNoteNames(selectedMaqam.getDescendingNoteNames(), false)}</div>
-                <div className="maqam-manager__selections-row">Ascending: {displayNoteNames(selectedMaqam.getAscendingNoteNames(), true)}</div>
+                <div className="maqam-manager__selections-row">Descending: {displayNoteNames(descendingNoteNamesCellDetails, false)}</div>
+                <div className="maqam-manager__selections-row">Ascending: {displayNoteNames(ascendingNoteNamesCellDetails, true)}</div>
               </>
             )}
           </div>

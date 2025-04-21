@@ -1,43 +1,64 @@
 "use client";
 
 import React, { useState } from "react";
+import { Box, Slider } from "@mui/material";
 import { useAppContext } from "@/contexts/app-context";
 
-// Material UI imports
-import { Box, Slider } from "@mui/material";
-
 const AudioSettingsCard = () => {
-  const { envelopeParams, setEnvelopeParams, clearSelections } = useAppContext();
+  const { envelopeParams, setEnvelopeParams, clearSelections, tempo, setTempo } = useAppContext();
   const [isOpen, setIsOpen] = useState(false);
 
-  // Toggles the side panel
   const togglePanel = () => setIsOpen(!isOpen);
 
-  // A helper function to update envelope parameters via MUI Slider
-  const handleEnvelopeChange = (paramName: string) => (event: Event, newValue: number | number[]) => {
+  // ADSR slider handler
+  const handleEnvelopeChange = (paramName: keyof typeof envelopeParams) => (
+    _event: Event,
+    newValue: number | number[]
+  ) => {
     if (typeof newValue === "number") {
-      setEnvelopeParams((prev) => ({
-        ...prev,
-        [paramName]: newValue,
-      }));
+      setEnvelopeParams(prev => ({ ...prev, [paramName]: newValue }));
     }
+  };
+
+  // Waveform select handler
+  const handleWaveformChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setEnvelopeParams(prev => ({ ...prev, waveform: e.target.value }));
+  };
+
+  // Tempo number input handler
+  const handleTempoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = Number(e.target.value);
+    if (!isNaN(val)) setTempo(val);
   };
 
   return (
     <>
-      {/* The "Open" button (only shown when panel is closed) */}
       <button className="audio-settings-open-button" onClick={togglePanel}>
-        {isOpen ? "Close":"Open"}
+        {isOpen ? "Close" : "Open"}
       </button>
 
       <div className={`audio-settings-card ${isOpen ? "audio-settings-card--open" : ""}`}>
-        {/* The "Close" button (only shown when panel is open) */}
-
         <div className="audio-settings-card__content">
-          <h3 className="audio-settings-card__title">Settings</h3>
+          <h3 className="audio-settings-card__title">Audio Settings</h3>
 
-          {/* Attack Slider */}
-          <Box sx={{ width: 200, marginBottom: "16px" }}>
+          {/* Tempo Input */}
+          <div style={{ marginBottom: '16px' }}>
+            <label htmlFor="tempo-input" style={{ display: 'block', marginBottom: '4px' }}>
+              Tempo (BPM):
+            </label>
+            <input
+              type="number"
+              id="tempo-input"
+              value={tempo}
+              onChange={handleTempoChange}
+              className="audio-settings-card__number-input"
+              min={20}
+              max={300}
+            />
+          </div>
+
+          {/* Attack */}
+          <Box sx={{ width: 200, mb: 2 }}>
             <p>Attack (s): {envelopeParams.attack.toFixed(2)}</p>
             <Slider
               size="small"
@@ -50,8 +71,8 @@ const AudioSettingsCard = () => {
             />
           </Box>
 
-          {/* Decay Slider */}
-          <Box sx={{ width: 200, marginBottom: "16px" }}>
+          {/* Decay */}
+          <Box sx={{ width: 200, mb: 2 }}>
             <p>Decay (s): {envelopeParams.decay.toFixed(2)}</p>
             <Slider
               size="small"
@@ -64,22 +85,22 @@ const AudioSettingsCard = () => {
             />
           </Box>
 
-          {/* Sustain Slider */}
-          <Box sx={{ width: 200, marginBottom: "16px" }}>
+          {/* Sustain */}
+          <Box sx={{ width: 200, mb: 2 }}>
             <p>Sustain: {envelopeParams.sustain.toFixed(2)}</p>
             <Slider
               size="small"
               value={envelopeParams.sustain}
               min={0}
-              max={10}
+              max={1}
               step={0.01}
               onChange={handleEnvelopeChange("sustain")}
               valueLabelDisplay="auto"
             />
           </Box>
 
-          {/* Release Slider */}
-          <Box sx={{ width: 200, marginBottom: "16px" }}>
+          {/* Release */}
+          <Box sx={{ width: 200, mb: 2 }}>
             <p>Release (s): {envelopeParams.release.toFixed(2)}</p>
             <Slider
               size="small"
@@ -91,9 +112,28 @@ const AudioSettingsCard = () => {
               valueLabelDisplay="auto"
             />
           </Box>
-          <Box sx={{ width: 200, marginBottom: "16px" }}>
-            <button className="audio-settings-card__clear-button" onClick={clearSelections}>Clear Selections</button>
-          </Box>
+
+          {/* Waveform Select */}
+          <div style={{ marginBottom: '16px' }}>
+            <label htmlFor="waveform-select" style={{ display: 'block', marginBottom: '4px' }}>
+              Waveform:
+            </label>
+            <select
+              id="waveform-select"
+              value={envelopeParams.waveform}
+              onChange={handleWaveformChange}
+              className="audio-settings-card__select"
+            >
+              <option value="sine">Sine</option>
+              <option value="square">Square</option>
+              <option value="sawtooth">Sawtooth</option>
+              <option value="triangle">Triangle</option>
+            </select>
+          </div>
+
+          <button className="audio-settings-card__clear-button" onClick={clearSelections}>
+            Clear Selections
+          </button>
         </div>
       </div>
     </>
