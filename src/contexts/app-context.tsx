@@ -247,7 +247,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
             creatorArabic: ts.getCreatorArabic(),
             commentsEnglish: ts.getCommentsEnglish(),
             commentsArabic: ts.getCommentsArabic(),
-            pitchClasses: ts.getNotes(),
+            pitchClasses: ts.getPitchClasses(),
             noteNames: ts.getSetsOfNoteNames(),
             abjadNames: ts.getAbjadNames(),
             stringLength: ts.getStringLength(),
@@ -373,7 +373,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
     if (!selectedTuningSystem) return emptyDetails;
 
-    const pitchArr = selectedTuningSystem.getNotes();
+    const pitchArr = selectedTuningSystem.getPitchClasses();
     if (cell.index < 0 || cell.index >= pitchArr.length) return emptyDetails;
     const basePc = pitchArr[cell.index];
 
@@ -441,7 +441,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
   const getAllCells = (): SelectedCell[] => {
     if (!selectedTuningSystem) return [];
-    const pitchArr = selectedTuningSystem.getNotes();
+    const pitchArr = selectedTuningSystem.getPitchClasses();
     const cells: SelectedCell[] = [];
 
     for (let octave = 0; octave < 4; octave++) {
