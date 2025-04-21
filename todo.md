@@ -16,7 +16,14 @@
 
  - Tuning system manager: make collapsable like octaves
  - Tuning system octave tables: if a checkbox is selected, change colour of entire column 
- - Tuning system octave tables: change order of rows so that values are: fraction, cents, string length, decimal, frequency
+ - Tuning system octave tables: add a new row for MIDI note numbers and display the values to 2 decimal places (but make sure calculation isn't clipped to two decimal places)
+
+ function frequencyToMidiNoteNumber(frequency: number): number {
+  const midi = 69 + 12 * Math.log2(freq / 440);
+  return midiNoteNumber;
+}
+
+ - Tuning system octave tables: change order of rows so that values are: fraction, cents, string length, decimal, midi note number frequency
 
 
  - Maqam manager: Change functionality of saving ascending and descending. Currently I have to select the boxes twice, once for ascending and again for descending. Let's go back to having two buttons: "save ascending" and "save descending", and add a function that when ascending is saved, automaticaly inverts the sequence and saves it as descending. This relieves additional input that is duplicated if a maqam is the same both ascending and descending, plus makes sure that the descending values in the json are never empty. If there is a need to save a different descending sequence, I can just select the maqam and change the few values that are different for the descent, then click "save descending" to update the values already stored. 
