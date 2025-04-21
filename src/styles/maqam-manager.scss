@@ -3,10 +3,18 @@
   flex-direction: column;
 
   &__header {
-    margin: 20px 0;
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
   }
 
   &__selections {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+  }
+
+  &__rows {
     font-size: 18px;
   }
 
@@ -20,6 +28,7 @@
     padding: 5px;
     margin: 0 3px;
     border-radius: 5px;
+    cursor: pointer;
 
     &_unsaved {
       background-color: transparent;
@@ -70,6 +79,23 @@
 
     &_selected {
       background-color: $secondary;
+    }
+  }
+
+  &__play-button {
+    margin: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px;
+    gap: 10px;
+    color: $primary;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+
+    &:hover {
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
     }
   }
 

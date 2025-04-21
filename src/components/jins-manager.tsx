@@ -3,6 +3,7 @@
 import { useAppContext } from "@/contexts/app-context";
 import Jins from "@/models/Jins";
 import { SelectedCell } from "@/contexts/app-context";
+import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 
 export default function JinsManager() {
   const {
@@ -16,13 +17,14 @@ export default function JinsManager() {
     getSelectedCellDetails,
     clearSelections,
     setSelectedMaqam,
+    playSequence,
+    playNoteFrequency
   } = useAppContext();
 
   const usedNoteNames = getNoteNamesUsedInTuningSystem();
 
-  const selectedCellNoteNames = selectedCells.map((cell) => {
-    const cellDetails = getSelectedCellDetails(cell);
-    return cellDetails.noteName;
+  const selectedCellDetails = selectedCells.map((cell) => {
+    return getSelectedCellDetails(cell);
   });
 
   const handleSaveJins = async () => {
@@ -83,6 +85,16 @@ export default function JinsManager() {
     setSelectedCells(newSelectedCells);
   };
 
+  const playSelectedJins = () => {
+    if (!selectedJins) return;
+    const selectedCellFrequencies = selectedCells.map((cell) => {
+      const cellDetails = getSelectedCellDetails(cell);
+      return parseInt(cellDetails.frequency) ?? 0;
+    });
+
+    playSequence(selectedCellFrequencies)
+  }
+
   return (
     <div className="jins-manager">
       <h2 className="jins-manager__header">
@@ -90,22 +102,24 @@ export default function JinsManager() {
         {selectedJins && (
           <span className="jins-manager__selections">
             {`- ${selectedJins.getName()}`}{" "}
-            {selectedCellNoteNames.length > 0 && (
+            {selectedCellDetails.length > 0 && (
               <>
                 {" "}
                 - Selected Notes:{" "}
-                {selectedCellNoteNames.map((noteName) => {
+                {selectedCellDetails.map((selectedCellDetail) => {
                   return (
                     <span
-                      key={noteName}
-                      className={"jins-manager__selected-note " + (checkIfNoteNameIsUnsaved(noteName) ? "jins-manager__selected-note_unsaved" : "")}
+                      key={selectedCellDetail.noteName}
+                      onClick={() => playNoteFrequency(parseInt(selectedCellDetail.frequency) ?? 0)}
+                      className={"jins-manager__selected-note " + (checkIfNoteNameIsUnsaved(selectedCellDetail.noteName) ? "jins-manager__selected-note_unsaved" : "")}
                     >
-                      {noteName}{" "}
+                      {selectedCellDetail.noteName}{" "}
                     </span>
                   );
                 })}
               </>
             )}
+            <button className="jins-manager__play-button" onClick={playSelectedJins}>Play Selected Jins <PlayCircleIcon /></button>
           </span>
         )}
       </h2>

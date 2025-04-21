@@ -8,6 +8,7 @@ import JinsTranspositions from "@/components/jins-transpositions";
 import MaqamManager from "@/components/maqam-manager";
 import MaqamTranspositions from "@/components/maqam-transpositions";
 import SeirManager from "@/components/seir-manager";
+import KeyboardControls from "@/components/keyboard-controls";
 
 export default function Home() {
   const searchParams = useSearchParams();
@@ -22,6 +23,7 @@ export default function Home() {
       <SeirManager />
       <JinsTranspositions />
       <MaqamTranspositions/>
+      <KeyboardControls/>
       <AudioSettingsCard />
     </div>
   );
