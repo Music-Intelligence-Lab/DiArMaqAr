@@ -32,3 +32,20 @@
  - Playback: extend playable keyboard keys to remainder of "asdf" row (semicolon, apostraphe, backslash)
  - Playback: extend keyboard playback to allow descending maqam to be played on "qwertyuiop[]" row. Leftmost key (q) should be the lowest note
  - Playback: note length should be determind by holding keyboard key down, not fixed note length
+
+ - Suyur: I updated the maqamat.json to include all the suyur I had inputted in version 1.4. The current interface for suyur is missing a couple of dropdowns/values... if type is "jins" it needs "value" + startingNote and direction:
+         "stops": [
+          {
+            "type": "note",
+            "value": "chahargāh"
+          },
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "jins bayāt",
+            "startingNote": "dūgāh",
+            "direction": "none"
+          },
