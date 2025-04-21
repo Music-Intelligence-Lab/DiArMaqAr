@@ -16,9 +16,7 @@ import TransliteratedNoteName, {
 
 import { useRouter } from "next/navigation";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
-import { getEnglishNoteName, firstOctaveAbjadNames, secondOctaveAbjadNames } from "@/functions/noteNameMappings";
-
-//todo: transfer all abjad names to new tuningSystems.json
+import { getEnglishNoteName, abjadNames } from "@/functions/noteNameMappings";
 
 export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSystemId: string | null }) {
   const {
@@ -60,8 +58,7 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
    */
   const [originalIndices, setOriginalIndices] = useState<number[]>([]);
   const [cascade, setCascade] = useState(false);
-  const [selectedAbjadOct1, setSelectedAbjadOct1] = useState<string[]>([]);
-  const [selectedAbjadOct2, setSelectedAbjadOct2] = useState<string[]>([]);
+  const [selectedAbjadNames, setSelectedAbjadNames] = useState<string[]>([]);
 
   const router = useRouter();
 
@@ -139,12 +136,12 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
       setCreatorArabic(selectedTuningSystem.getCreatorArabic());
       setCommentsEnglish(selectedTuningSystem.getCommentsEnglish());
       setCommentsArabic(selectedTuningSystem.getCommentsArabic());
-      setPitchClasses(selectedTuningSystem.getNotes().join("\n"));
+      setPitchClasses(selectedTuningSystem.getPitchClasses().join("\n"));
       setStringLength(selectedTuningSystem.getStringLength());
-      setSelectedAbjadOct1(selectedTuningSystem.getAbjadNames());
+      setSelectedAbjadNames(selectedTuningSystem.getAbjadNames());
       setReferenceFrequency(selectedTuningSystem.getReferenceFrequency());
 
-      const pitchArr = selectedTuningSystem.getNotes() || [];
+      const pitchArr = selectedTuningSystem.getPitchClasses() || [];
       const loadedNames = selectedTuningSystem.getSetsOfNoteNames(); // array of strings from JSON
       setNoteNames(loadedNames);
 
@@ -222,6 +219,7 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
     setStringLength(0);
     setReferenceFrequency(0);
     setSelectedIndices([]);
+    setSelectedAbjadNames([]);
 
     clearSelections();
 
@@ -313,7 +311,7 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
         commentsArabic,
         pitchClassesArr,
         noteNames,
-        selectedAbjadOct1,
+        selectedAbjadNames,
         Number(stringLength),
         Number(referenceFrequency)
       );
@@ -336,7 +334,7 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
         commentsArabic,
         pitchClassesArr,
         noteNames,
-        selectedAbjadOct1,
+        selectedAbjadNames,
         Number(stringLength),
         Number(referenceFrequency)
       );
@@ -467,30 +465,39 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
     .map((p) => p.trim())
     .filter((p) => p.length > 0);
 
-  useEffect(() => {
-    if (selectedAbjadOct1.length !== pitchClassesArr.length) {
-      setSelectedAbjadOct1(Array(pitchClassesArr.length).fill(""));
-    }
-    if (selectedAbjadOct2.length !== pitchClassesArr.length) {
-      setSelectedAbjadOct2(Array(pitchClassesArr.length).fill(""));
-    }
-  }, [pitchClassesArr.length, selectedAbjadOct1, selectedAbjadOct2]);
+  const numberOfPitchClasses = pitchClassesArr.length;
 
-  function handleAbjadSelect(octave: number, colIndex: number, newValue: string) {
-    if (octave === 1) {
-      setSelectedAbjadOct1((prev) => {
-        const copy = [...prev];
-        copy[colIndex] = newValue;
-        return copy;
-      });
-    } else if (octave === 2) {
-      setSelectedAbjadOct2((prev) => {
-        const copy = [...prev];
-        copy[colIndex] = newValue;
-        return copy;
-      });
+  useEffect(() => {
+    if (selectedAbjadNames.length > pitchClassesArr.length * 2) {
+      setSelectedAbjadNames(selectedAbjadNames.slice(0, pitchClassesArr.length * 2));
+    } else if (selectedAbjadNames.length < pitchClassesArr.length * 2) {
+      const newArr = [...selectedAbjadNames];
+      while (newArr.length < pitchClassesArr.length * 2) {
+        newArr.push("");
+      }
+      setSelectedAbjadNames(newArr);
     }
-    // If you want to auto-map from 1st to 2nd or vice versa, you can do so here.
+  }, [pitchClassesArr.length, selectedAbjadNames]);
+
+  function handleAbjadSelect(colIndex: number, newValue: string, octave: number) {
+    setSelectedAbjadNames(prev => {
+      const copy = [...prev];
+      const rowOffset = octave === 1 ? 0 : numberOfPitchClasses;
+      const baseIdx = rowOffset + colIndex;
+  
+      copy[baseIdx] = newValue;
+  
+      if (cascade) {
+        const allNames = abjadNames;
+        const startPos = allNames.indexOf(newValue);
+        if (startPos >= 0) {
+          for (let c = colIndex + 1; c < numberOfPitchClasses; c++) {
+            copy[rowOffset + c] = allNames[startPos + (c - colIndex)] ?? "";
+          }
+        }
+      }
+      return copy;
+    });
   }
 
   // Make sure selectedIndices has length = pitchClassesArr.length
@@ -754,48 +761,25 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
             </tr>
             <tr>
               <td>Abjad</td>
-              {pitchClassesArr.map((_, colIndex) => {
-                if (octave === 1) {
-                  // Show a <select> from firstOctaveAbjadNames
-                  return (
-                    <td key={colIndex}>
-                      <select
-                        value={selectedAbjadOct1[colIndex] ?? ""}
-                        className="tuning-system-manager__select-abjad"
-                        onChange={(e) => handleAbjadSelect(1, colIndex, e.target.value)}
-                      >
-                        <option value="">(none)</option>
-                        {firstOctaveAbjadNames.map((name) => (
-                          <option key={name} value={name}>
-                            {name}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                  );
-                } else if (octave === 2) {
-                  // Show a <select> from secondOctaveAbjadNames
-                  return (
-                    <td key={colIndex}>
-                      <select
-                        value={selectedAbjadOct2[colIndex] ?? ""}
-                        className="tuning-system-manager__select-abjad"
-                        onChange={(e) => handleAbjadSelect(2, colIndex, e.target.value)}
-                      >
-                        <option value="">(none)</option>
-                        {secondOctaveAbjadNames.map((name) => (
-                          <option key={name} value={name}>
-                            {name}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                  );
-                } else {
-                  // For octaves 0 and 3, we just show “-” or blank
-                  return <td key={colIndex}>-</td>;
-                }
-              })}
+              {pitchClassesArr.map((_, colIndex) => (
+                <td key={colIndex}>
+                  {octave === 1 || octave === 2 ? (
+                    <select
+                      value={selectedAbjadNames[colIndex + (octave === 1 ? 0 : numberOfPitchClasses)] || ""}
+                      onChange={(e) => handleAbjadSelect(colIndex, e.target.value, octave)}
+                    >
+                      <option value="">(none)</option>
+                      {abjadNames.map((name, idx) => (
+                        <option key={`${name}-${idx}`} value={name}>
+                          {name}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <span>-</span>
+                  )}
+                </td>
+              ))}
             </tr>
 
             <tr>

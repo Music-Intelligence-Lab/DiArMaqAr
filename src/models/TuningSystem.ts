@@ -91,7 +91,7 @@ export default class TuningSystem {
     return this.commentsArabic;
   }
 
-  getNotes(): string[] {
+  getPitchClasses(): string[] {
     return this.pitchClasses;
   }
 

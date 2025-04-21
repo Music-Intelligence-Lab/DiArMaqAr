@@ -88,7 +88,7 @@ export function getEnglishNoteName(arabicName: string): string {
 // -----------------------
 // Abjad arrays
 // -----------------------
-export const firstOctaveAbjadNames = [
+export const abjadNames = [
   "آ",
   "ب",
   "ج",
@@ -136,64 +136,3 @@ export const firstOctaveAbjadNames = [
   "كح",
   "كط",
 ];
-
-export const secondOctaveAbjadNames = [
-  "آ",
-  "ب",
-  "ج",
-  "د",
-  "ه",
-  "و",
-  "ز",
-  "ح",
-  "ط",
-  "ي",
-  "ك",
-  "ل",
-  "م",
-  "ن",
-  "س",
-  "ع",
-  "ف",
-  "ص",
-  "ق",
-  "ر",
-  "ش",
-  "ت",
-  "ث",
-  "خ",
-  "ذ",
-  "ض",
-  "ظ",
-  "غ",
-  "يا",
-  "يب",
-  "يج",
-  "يد",
-  "يه",
-  "يو",
-  "يز",
-  "يح",
-  "يط",
-  "كا",
-  "كب",
-  "كج",
-  "كد",
-  "كه",
-  "كو",
-  "كز",
-  "كح",
-  "كط",
-];
-
-// Build a mapping from firstOctaveAbjadNames[i] -> secondOctaveAbjadNames[i]
-export const firstToSecondAbjadMapping: Record<string, string> = {};
-for (let i = 0; i < firstOctaveAbjadNames.length && i < secondOctaveAbjadNames.length; i++) {
-  firstToSecondAbjadMapping[firstOctaveAbjadNames[i]] = secondOctaveAbjadNames[i];
-}
-
-// Build the reverse
-export const secondToFirstAbjadMapping: Record<string, string> = {};
-for (const [k, v] of Object.entries(firstToSecondAbjadMapping)) {
-  secondToFirstAbjadMapping[v] = k;
-}
