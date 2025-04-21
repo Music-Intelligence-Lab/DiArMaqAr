@@ -30,4 +30,5 @@
 
  - Playback: add volume slider
  - Playback: extend playable keyboard keys to remainder of "asdf" row (semicolon, apostraphe, backslash)
+ - Playback: extend keyboard playback to allow descending maqam to be played on "qwertyuiop[]" row. Leftmost key (q) should be the lowest note
  - Playback: note length should be determind by holding keyboard key down, not fixed note length
