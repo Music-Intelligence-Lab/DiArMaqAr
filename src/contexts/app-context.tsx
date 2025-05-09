@@ -6,12 +6,12 @@ import ajnasData from "@/../data/ajnas.json";
 import maqamatData from "@/../data/maqamat.json";
 import TuningSystem from "@/models/TuningSystem";
 import Jins from "@/models/Jins";
-import TransliteratedNoteName from "@/models/NoteName";
+import TransliteratedNoteName, { TransliteratedNoteNameOctaveOne, TransliteratedNoteNameOctaveTwo } from "@/models/NoteName";
 import detectPitchClassType from "@/functions/detectPitchClassType";
 import convertPitchClass, { shiftPitchClass } from "@/functions/convertPitchClass";
 import { octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames, octaveThreeNoteNames, octaveFourNoteNames } from "@/models/NoteName";
 import Maqam, { Seir } from "@/models/Maqam";
-
+import { useRouter } from "next/navigation";
 interface EnvelopeParams {
   attack: number;
   decay: number;
@@ -42,6 +42,12 @@ interface AppContextInterface {
   updateAllTuningSystems: (newSystems: TuningSystem[]) => Promise<void>;
   selectedTuningSystem: TuningSystem | null;
   setSelectedTuningSystem: (tuningSystem: TuningSystem | null) => void;
+  pitchClasses: string;
+  setPitchClasses: React.Dispatch<React.SetStateAction<string>>;
+  noteNames: TransliteratedNoteName[][];
+  setNoteNames: (noteNames: TransliteratedNoteName[][]) => void;
+  getFirstNoteName: () => string;
+  handleStartNoteNameChange: (startingNoteName: string) => void;
   playNoteFrequency: (frequency: number, duration?: number) => void;
   envelopeParams: EnvelopeParams;
   setEnvelopeParams: React.Dispatch<React.SetStateAction<EnvelopeParams>>;
@@ -50,17 +56,26 @@ interface AppContextInterface {
   getAllCells: () => SelectedCell[];
   selectedIndices: number[];
   setSelectedIndices: React.Dispatch<React.SetStateAction<number[]>>;
+  originalIndices: number[];
+  setOriginalIndices: React.Dispatch<React.SetStateAction<number[]>>;
+  mapIndices: (notesToMap: TransliteratedNoteName[]) => void;
+  initialMappingDone: boolean;
+  setInitialMappingDone: React.Dispatch<React.SetStateAction<boolean>>;
   getSelectedCellDetails: (cell: SelectedCell) => CellDetails;
   ajnas: Jins[];
   setAjnas: React.Dispatch<React.SetStateAction<Jins[]>>;
   updateAllAjnas: (newAjnas: Jins[]) => Promise<void>;
   selectedJins: Jins | null;
   setSelectedJins: React.Dispatch<React.SetStateAction<Jins | null>>;
+  checkIfJinsIsSelectable: (jins: Jins) => boolean;
+  handleClickJins: (jins: Jins) => void;
   maqamat: Maqam[];
   setMaqamat: React.Dispatch<React.SetStateAction<Maqam[]>>;
   updateAllMaqamat: (newMaqamat: Maqam[]) => Promise<void>;
   selectedMaqam: Maqam | null;
   setSelectedMaqam: React.Dispatch<React.SetStateAction<Maqam | null>>;
+  checkIfMaqamIsSelectable: (maqam: Maqam) => boolean;
+  handleClickMaqam: (maqam: Maqam) => void;
   getNoteNamesUsedInTuningSystem: () => TransliteratedNoteName[];
   centsTolerance: number;
   setCentsTolerance: React.Dispatch<React.SetStateAction<number>>;
@@ -70,6 +85,7 @@ interface AppContextInterface {
   tempo: number;
   setTempo: React.Dispatch<React.SetStateAction<number>>;
   playSequence: (frequencies: number[], noteDuration?: number) => void;
+  handleUrlParams: (params: { tuningSystemId?: string; jinsId?: string; maqamId?: string; firstNote?: string }) => void;
 }
 
 const AppContext = createContext<AppContextInterface | null>(null);
@@ -78,6 +94,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   const [isPageLoading, setIsPageLoading] = useState(true);
   const [tuningSystems, setTuningSystems] = useState<TuningSystem[]>([]);
   const [selectedTuningSystem, setSelectedTuningSystem] = useState<TuningSystem | null>(null);
+  const [pitchClasses, setPitchClasses] = useState("");
+  const [noteNames, setNoteNames] = useState<TransliteratedNoteName[][]>([]);
   const [centsTolerance, setCentsTolerance] = useState(1);
 
   const [envelopeParams, setEnvelopeParams] = useState<EnvelopeParams>({
@@ -92,6 +110,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
   const [selectedCells, setSelectedCells] = useState<SelectedCell[]>([]);
   const [selectedIndices, setSelectedIndices] = useState<number[]>([]);
+  const [originalIndices, setOriginalIndices] = useState<number[]>([]);
+  const [initialMappingDone, setInitialMappingDone] = useState(false);
 
   const [ajnas, setAjnas] = useState<Jins[]>([]);
   const [selectedJins, setSelectedJins] = useState<Jins | null>(null);
@@ -102,6 +122,13 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
   const audioCtxRef = useRef<AudioContext | null>(null);
   const masterGainRef = useRef<GainNode | null>(null);
+
+  const router = useRouter();
+
+  const pitchClassesArr = pitchClasses
+    .split("\n")
+    .map((p) => p.trim())
+    .filter((p) => p.length > 0);
 
   useEffect(() => {
     const formattedTuningSystems = tuningSystemsData.map((data) => {
@@ -129,7 +156,9 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     const loadedAjnas = ajnasData.map((data) => new Jins(data.id, data.name, data.noteNames));
     setAjnas(loadedAjnas);
 
-    const loadedMaqamat = maqamatData.map((data) => new Maqam(data.id, data.name, data.ascendingNoteNames, data.descendingNoteNames, data.suyur as Seir[]));
+    const loadedMaqamat = maqamatData.map(
+      (data) => new Maqam(data.id, data.name, data.ascendingNoteNames, data.descendingNoteNames, data.suyur as Seir[])
+    );
     setMaqamat(loadedMaqamat);
 
     setIsPageLoading(false);
@@ -147,6 +176,28 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   }, []);
 
   useEffect(() => {
+    const params = [];
+
+    if (selectedTuningSystem) {
+      params.push(`tuningSystem=${selectedTuningSystem.getId()}`);
+      const firstNote = getFirstNoteName();
+      if (firstNote) {
+        params.push(`firstNote=${firstNote}`);
+      }
+    }
+
+    if (selectedJins) {
+      params.push(`jins=${selectedJins.getId()}`);
+    }
+
+    if (selectedMaqam) {
+      params.push(`maqam=${selectedMaqam.getId()}`);
+    }
+
+    router.replace(`/?${params.join("&")}`, { scroll: false });
+  }, [selectedTuningSystem, selectedJins, selectedMaqam, selectedIndices, originalIndices]);
+
+  useEffect(() => {
     if (selectedJins) {
       const selectedNoteNames = selectedCells.map((cell: SelectedCell) => {
         const details = getSelectedCellDetails(cell);
@@ -160,13 +211,29 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
           const details = getSelectedCellDetails(cell);
           return details.noteName;
         });
-        setSelectedMaqam(new Maqam(selectedMaqam.getId(), selectedMaqam.getName(), selectedNoteNames, selectedMaqam.getDescendingNoteNames(), selectedMaqam.getSuyur()));
+        setSelectedMaqam(
+          new Maqam(
+            selectedMaqam.getId(),
+            selectedMaqam.getName(),
+            selectedNoteNames,
+            selectedMaqam.getDescendingNoteNames(),
+            selectedMaqam.getSuyur()
+          )
+        );
       } else {
         const selectedNoteNames = selectedCells.map((cell: SelectedCell) => {
           const details = getSelectedCellDetails(cell);
           return details.noteName;
         });
-        setSelectedMaqam(new Maqam(selectedMaqam.getId(), selectedMaqam.getName(), selectedMaqam.getAscendingNoteNames(), [...selectedNoteNames].reverse(), selectedMaqam.getSuyur()));
+        setSelectedMaqam(
+          new Maqam(
+            selectedMaqam.getId(),
+            selectedMaqam.getName(),
+            selectedMaqam.getAscendingNoteNames(),
+            [...selectedNoteNames].reverse(),
+            selectedMaqam.getSuyur()
+          )
+        );
       }
     }
   }, [selectedCells]);
@@ -176,9 +243,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
     const usedNoteNames = getNoteNamesUsedInTuningSystem();
 
-    const namesToSelect = isAscending
-      ? selectedMaqam.getAscendingNoteNames()
-      : selectedMaqam.getDescendingNoteNames();
+    const namesToSelect = isAscending ? selectedMaqam.getAscendingNoteNames() : selectedMaqam.getDescendingNoteNames();
 
     // translate names back into SelectedCell[] by matching against usedNoteNames
     const newCells: SelectedCell[] = [];
@@ -196,7 +261,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       }
     });
     setSelectedCells(newCells);
-  }, [isAscending])
+  }, [isAscending]);
 
   const playNoteFrequency = (frequency: number, duration: number = 1) => {
     if (!audioCtxRef.current || !masterGainRef.current) return;
@@ -327,14 +392,16 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     }
   };
 
-  const getNoteNamesUsedInTuningSystem = (): TransliteratedNoteName[] => {
-    if (!selectedTuningSystem) return [];
+  const getNoteNamesUsedInTuningSystem = (givenIndices: number[] = []): TransliteratedNoteName[] => {
+    if (!selectedTuningSystem && givenIndices.length === 0) return [];
+
+    const indicesToSearch = givenIndices.length ? givenIndices : selectedIndices;
 
     const noteNames = [];
-    const baseLength = 36;
+    const baseLength = octaveOneNoteNames.length;
 
     for (let octave = 0; octave < 4; octave++) {
-      for (const index of selectedIndices) {
+      for (const index of indicesToSearch) {
         if (index < baseLength) {
           switch (octave) {
             case 0:
@@ -472,6 +539,174 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     setSelectedMaqam(null);
   };
 
+  function getFirstNoteName() {
+    const idx = selectedIndices[0];
+    if (idx < 0) return "none";
+    return octaveOneNoteNames[idx];
+  }
+
+  function mapIndices(notesToMap: TransliteratedNoteName[], givenNumberOfPitchClasses: number = 0) {
+    const numberOfPitchClasses = givenNumberOfPitchClasses || pitchClassesArr.length || selectedTuningSystem?.getPitchClasses().length || 0;
+
+    const O1_LEN = octaveOneNoteNames.length;
+    const mappedIndices = notesToMap.map((arabicName) => {
+      const i1 = octaveOneNoteNames.indexOf(arabicName as TransliteratedNoteNameOctaveOne);
+      if (i1 >= 0) return i1;
+
+      const i2 = octaveTwoNoteNames.indexOf(arabicName as TransliteratedNoteNameOctaveTwo);
+      if (i2 >= 0) return O1_LEN + i2;
+
+      return -1;
+    });
+
+    while (mappedIndices.length < numberOfPitchClasses) {
+      mappedIndices.push(-1);
+    }
+    if (mappedIndices.length > numberOfPitchClasses) {
+      mappedIndices.length = numberOfPitchClasses;
+    }
+
+    setSelectedIndices(mappedIndices);
+    setOriginalIndices([...mappedIndices]);
+    return mappedIndices;
+  }
+
+  const handleStartNoteNameChange = (
+    startingNoteName: string,
+    givenNoteNames: TransliteratedNoteName[][] = [],
+    givenNumberOfPitchClasses: number = 0
+  ) => {
+    clearSelections();
+
+    const noteNamesToSearch = givenNoteNames.length ? givenNoteNames : noteNames;
+
+    for (const setOfNotes of noteNamesToSearch) {
+      if (setOfNotes[0] === startingNoteName) {
+        return mapIndices(setOfNotes, givenNumberOfPitchClasses);
+      }
+    }
+
+    // If no config found, fallback:
+    setSelectedIndices(Array(selectedIndices.length).fill(-1));
+    return [];
+  };
+
+  const checkIfJinsIsSelectable = (jins: Jins, givenIndices: number[] = []) => {
+    const usedNoteNames = getNoteNamesUsedInTuningSystem(givenIndices);
+    return jins.getNoteNames().every((noteName) => usedNoteNames.includes(noteName));
+  };
+
+  const handleClickJins = (jins: Jins, givenIndices: number[] = []) => {
+    const usedNoteNames = getNoteNamesUsedInTuningSystem(givenIndices);
+
+    setSelectedJins(jins);
+    setSelectedMaqam(null);
+
+    const noteNames = jins.getNoteNames();
+
+    const newSelectedCells: SelectedCell[] = [];
+
+    const lengthOfUsedNoteNames = usedNoteNames.length;
+
+    for (let i = 0; i < lengthOfUsedNoteNames; i++) {
+      const usedNoteName = usedNoteNames[i];
+
+      if (noteNames.includes(usedNoteName)) {
+        let octave = 0;
+        let index = i;
+
+        while (index >= lengthOfUsedNoteNames / 4) {
+          octave++;
+          index -= lengthOfUsedNoteNames / 4;
+        }
+
+        newSelectedCells.push({
+          octave,
+          index,
+        });
+      }
+    }
+
+    setSelectedCells(newSelectedCells);
+  };
+
+  const checkIfMaqamIsSelectable = (maqam: Maqam, givenIndices: number[] = []) => {
+    const usedNoteNames = getNoteNamesUsedInTuningSystem(givenIndices);
+
+    return (
+      maqam.getAscendingNoteNames().every((noteName) => usedNoteNames.includes(noteName)) &&
+      maqam.getDescendingNoteNames().every((noteName) => usedNoteNames.includes(noteName))
+    );
+  };
+
+  const handleClickMaqam = (maqam: Maqam, givenIndices: number[] = []) => {
+    const usedNoteNames = getNoteNamesUsedInTuningSystem(givenIndices);
+
+    // when selecting, populate cells for asc or desc based on stored noteNames
+    setSelectedMaqam(maqam);
+    setSelectedJins(null);
+    const namesToSelect = isAscending ? maqam.getAscendingNoteNames() : maqam.getDescendingNoteNames();
+
+    // translate names back into SelectedCell[] by matching against usedNoteNames
+    const newCells: SelectedCell[] = [];
+    usedNoteNames.forEach((name, idx) => {
+      if (namesToSelect.includes(name)) {
+        let octave = 0;
+        let index = idx;
+        // assume 4 octaves evenly divided
+        const perOct = usedNoteNames.length / 4;
+        while (index >= perOct) {
+          octave++;
+          index -= perOct;
+        }
+        newCells.push({ octave, index });
+      }
+    });
+    setSelectedCells(newCells);
+  };
+
+  const handleUrlParams = ({
+    tuningSystemId,
+    jinsId,
+    maqamId,
+    firstNote,
+  }: {
+    tuningSystemId?: string;
+    jinsId?: string;
+    maqamId?: string;
+    firstNote?: string;
+  }) => {
+    if (!tuningSystems.length || !ajnas.length || !maqamat.length) return;
+
+    if (tuningSystemId) {
+      if (!selectedTuningSystem || selectedTuningSystem.getId() !== tuningSystemId) {
+        const found = tuningSystems.find((ts) => ts.getId() === tuningSystemId);
+        if (found) {
+          setSelectedTuningSystem(found);
+          const givenIndices = handleStartNoteNameChange(
+            firstNote || found.getSetsOfNoteNames()[0][0],
+            found.getSetsOfNoteNames(),
+            found.getPitchClasses().length
+          );
+
+          if (jinsId) {
+            const foundJins = ajnas.find((j) => j.getId() === jinsId);
+            if (foundJins && checkIfJinsIsSelectable(foundJins, givenIndices)) {
+              handleClickJins(foundJins, givenIndices);
+            }
+          } else if (maqamId) {
+            const foundMaqam = maqamat.find((m) => m.getId() === maqamId);
+            if (foundMaqam && checkIfMaqamIsSelectable(foundMaqam, givenIndices)) {
+              handleClickMaqam(foundMaqam, givenIndices);
+            }
+          }
+        }
+      }
+    } else if (selectedTuningSystem) {
+      setSelectedTuningSystem(null);
+    }
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -480,6 +715,12 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         updateAllTuningSystems,
         selectedTuningSystem,
         setSelectedTuningSystem,
+        pitchClasses,
+        setPitchClasses,
+        noteNames,
+        setNoteNames,
+        getFirstNoteName,
+        handleStartNoteNameChange,
         playNoteFrequency,
         envelopeParams,
         setEnvelopeParams,
@@ -488,17 +729,26 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         getAllCells,
         selectedIndices,
         setSelectedIndices,
+        originalIndices,
+        setOriginalIndices,
+        mapIndices,
+        initialMappingDone,
+        setInitialMappingDone,
         getSelectedCellDetails,
         ajnas,
         setAjnas,
         updateAllAjnas,
         selectedJins,
         setSelectedJins,
+        checkIfJinsIsSelectable,
+        handleClickJins,
         maqamat,
         setMaqamat,
         updateAllMaqamat,
         selectedMaqam,
         setSelectedMaqam,
+        checkIfMaqamIsSelectable,
+        handleClickMaqam,
         getNoteNamesUsedInTuningSystem,
         centsTolerance,
         setCentsTolerance,
@@ -507,7 +757,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         setIsAscending,
         tempo,
         setTempo,
-        playSequence
+        playSequence,
+        handleUrlParams,
       }}
     >
       {children}

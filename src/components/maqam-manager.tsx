@@ -17,17 +17,18 @@ export default function MaqamManager() {
     isAscending,
     setIsAscending,
     clearSelections,
-    setSelectedJins,
     playSequence,
-    playNoteFrequency
+    playNoteFrequency,
+    handleClickMaqam,
+    checkIfMaqamIsSelectable,
   } = useAppContext();
 
   const usedNoteNames = getNoteNamesUsedInTuningSystem();
 
-  const ascendingNoteNamesCellDetails: CellDetails[]  = [];
+  const ascendingNoteNamesCellDetails: CellDetails[] = [];
   const descendingNoteNamesCellDetails: CellDetails[] = [];
 
-  if (selectedMaqam ) {
+  if (selectedMaqam) {
     usedNoteNames.forEach((name, idx) => {
       if (selectedMaqam.getAscendingNoteNames().includes(name)) {
         let octave = 0;
@@ -38,11 +39,11 @@ export default function MaqamManager() {
           octave++;
           index -= perOct;
         }
-        const cellDetails = getSelectedCellDetails({octave, index})
-        ascendingNoteNamesCellDetails.push(cellDetails)
+        const cellDetails = getSelectedCellDetails({ octave, index });
+        ascendingNoteNamesCellDetails.push(cellDetails);
       }
     });
-  
+
     usedNoteNames.forEach((name, idx) => {
       if (selectedMaqam.getDescendingNoteNames().includes(name)) {
         let octave = 0;
@@ -53,14 +54,13 @@ export default function MaqamManager() {
           octave++;
           index -= perOct;
         }
-        const cellDetails = getSelectedCellDetails({octave, index})
-        descendingNoteNamesCellDetails.push(cellDetails)
+        const cellDetails = getSelectedCellDetails({ octave, index });
+        descendingNoteNamesCellDetails.push(cellDetails);
       }
     });
 
-    descendingNoteNamesCellDetails.reverse()
+    descendingNoteNamesCellDetails.reverse();
   }
-  
 
   // Map selectedCells to note names
   const selectedCellDetails = selectedCells.map((cell: SelectedCell) => {
@@ -68,13 +68,6 @@ export default function MaqamManager() {
   });
 
   const selectedCellNoteNames = selectedCellDetails.map((cellDetail) => cellDetail.noteName);
-
-  const checkIfMaqamIsSelectable = (maqam: Maqam) => {
-    return (
-      maqam.getAscendingNoteNames().every((noteName) => usedNoteNames.includes(noteName)) &&
-      maqam.getDescendingNoteNames().every((noteName) => usedNoteNames.includes(noteName))
-    );
-  };
 
   const checkIfNoteNameIsUnsaved = (noteName: string, ascending: boolean) => {
     if (!selectedMaqam) return true;
@@ -87,31 +80,6 @@ export default function MaqamManager() {
     return !originalNoteNames.includes(noteName);
   };
 
-  // Handle clicking on a Maqam in the list
-  const handleClickMaqam = (maqam: Maqam) => {
-    // when selecting, populate cells for asc or desc based on stored noteNames
-    setSelectedMaqam(maqam);
-    setSelectedJins(null);
-    const namesToSelect = isAscending ? maqam.getAscendingNoteNames() : maqam.getDescendingNoteNames();
-
-    // translate names back into SelectedCell[] by matching against usedNoteNames
-    const newCells: SelectedCell[] = [];
-    usedNoteNames.forEach((name, idx) => {
-      if (namesToSelect.includes(name)) {
-        let octave = 0;
-        let index = idx;
-        // assume 4 octaves evenly divided
-        const perOct = usedNoteNames.length / 4;
-        while (index >= perOct) {
-          octave++;
-          index -= perOct;
-        }
-        newCells.push({ octave, index });
-      }
-    });
-    setSelectedCells(newCells);
-  };
-
   // Save or update Maqam
   const handleSaveMaqam = async () => {
     if (!selectedMaqam) return;
@@ -119,13 +87,7 @@ export default function MaqamManager() {
     const ascNames = isAscending ? selectedCellNoteNames : selectedMaqam.getAscendingNoteNames();
     const descNames = !isAscending ? selectedCellNoteNames : selectedMaqam.getDescendingNoteNames();
 
-    const updated = new Maqam(
-      selectedMaqam.getId(),
-      selectedMaqam.getName(),
-      ascNames,
-      descNames,
-      selectedMaqam.getSuyur()
-    );
+    const updated = new Maqam(selectedMaqam.getId(), selectedMaqam.getName(), ascNames, descNames, selectedMaqam.getSuyur());
 
     const others = maqamat.filter((m) => m.getId() !== updated.getId());
     await updateAllMaqamat([...others, updated]);
@@ -147,7 +109,9 @@ export default function MaqamManager() {
         <span
           key={cellDetail.noteName + " " + ascending}
           onClick={() => playNoteFrequency(parseInt(cellDetail.frequency) ?? 0)}
-          className={"maqam-manager__selected-note " + (checkIfNoteNameIsUnsaved(cellDetail.noteName, ascending) ? "maqam-manager__selected-note_unsaved" : "")}
+          className={
+            "maqam-manager__selected-note " + (checkIfNoteNameIsUnsaved(cellDetail.noteName, ascending) ? "maqam-manager__selected-note_unsaved" : "")
+          }
         >
           {cellDetail.noteName}{" "}
         </span>
@@ -158,20 +122,20 @@ export default function MaqamManager() {
   const playSelectedMaqam = () => {
     if (!selectedMaqam) return;
 
-    const maqamFrequencies: number[] = []
+    const maqamFrequencies: number[] = [];
 
     ascendingNoteNamesCellDetails.forEach((cellDetail) => {
-      maqamFrequencies.push(parseInt(cellDetail.frequency) ?? 0)
-    })
+      maqamFrequencies.push(parseInt(cellDetail.frequency) ?? 0);
+    });
 
-    maqamFrequencies.push(0)
+    maqamFrequencies.push(0);
 
     descendingNoteNamesCellDetails.forEach((cellDetail) => {
-      maqamFrequencies.push(parseInt(cellDetail.frequency) ?? 0)
-    })
+      maqamFrequencies.push(parseInt(cellDetail.frequency) ?? 0);
+    });
 
-    playSequence(maqamFrequencies)
-  }
+    playSequence(maqamFrequencies);
+  };
 
   return (
     <div className="maqam-manager">
@@ -183,8 +147,9 @@ export default function MaqamManager() {
             <button className="maqam-manager__toggle-button" onClick={() => setIsAscending((prev) => !prev)}>
               Switch to {isAscending ? "Descending" : "Ascending"}
             </button>
-            <button className="maqam-manager__play-button" onClick={playSelectedMaqam}>Play Selected Maqam <PlayCircleIcon /></button>
-
+            <button className="maqam-manager__play-button" onClick={playSelectedMaqam}>
+              Play Selected Maqam <PlayCircleIcon />
+            </button>
           </span>
         )}
       </h2>
@@ -248,7 +213,13 @@ export default function MaqamManager() {
             value={selectedMaqam.getName()}
             onChange={(e) =>
               setSelectedMaqam(
-                new Maqam(selectedMaqam.getId(), e.target.value, selectedMaqam.getAscendingNoteNames(), selectedMaqam.getDescendingNoteNames(), selectedMaqam.getSuyur())
+                new Maqam(
+                  selectedMaqam.getId(),
+                  e.target.value,
+                  selectedMaqam.getAscendingNoteNames(),
+                  selectedMaqam.getDescendingNoteNames(),
+                  selectedMaqam.getSuyur()
+                )
               )
             }
             placeholder="Enter maqam name"

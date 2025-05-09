@@ -2,7 +2,6 @@
 
 import { useAppContext } from "@/contexts/app-context";
 import Jins from "@/models/Jins";
-import { SelectedCell } from "@/contexts/app-context";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 
 export default function JinsManager() {
@@ -10,18 +9,15 @@ export default function JinsManager() {
     ajnas,
     selectedJins,
     setSelectedJins,
+    handleClickJins,
+    checkIfJinsIsSelectable,
     updateAllAjnas,
     selectedCells,
-    setSelectedCells,
-    getNoteNamesUsedInTuningSystem,
     getSelectedCellDetails,
     clearSelections,
-    setSelectedMaqam,
     playSequence,
     playNoteFrequency
   } = useAppContext();
-
-  const usedNoteNames = getNoteNamesUsedInTuningSystem();
 
   const selectedCellDetails = selectedCells.map((cell) => {
     return getSelectedCellDetails(cell);
@@ -40,10 +36,6 @@ export default function JinsManager() {
     await updateAllAjnas(newAjnas);
   };
 
-  const checkIfJinsIsSelectable = (jins: Jins) => {
-    return jins.getNoteNames().every((noteName) => usedNoteNames.includes(noteName));
-  };
-
   const checkIfNoteNameIsUnsaved = (noteName: string) => {
     if (!selectedJins) return false;
     const id = selectedJins.getId();
@@ -51,38 +43,6 @@ export default function JinsManager() {
     if (!originalJins) return false;
     const originalNoteNames = originalJins.getNoteNames();
     return !originalNoteNames.includes(noteName);
-  };
-
-  const handleClickJins = (jins: Jins) => {
-    setSelectedJins(jins);
-    setSelectedMaqam(null);
-
-    const noteNames = jins.getNoteNames();
-
-    const newSelectedCells: SelectedCell[] = [];
-
-    const lengthOfUsedNoteNames = usedNoteNames.length;
-
-    for (let i = 0; i < lengthOfUsedNoteNames; i++) {
-      const usedNoteName = usedNoteNames[i];
-
-      if (noteNames.includes(usedNoteName)) {
-        let octave = 0;
-        let index = i;
-
-        while (index >= lengthOfUsedNoteNames / 4) {
-          octave++;
-          index -= lengthOfUsedNoteNames / 4;
-        }
-
-        newSelectedCells.push({
-          octave,
-          index,
-        });
-      }
-    }
-
-    setSelectedCells(newSelectedCells);
   };
 
   const playSelectedJins = () => {
