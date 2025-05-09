@@ -4,7 +4,7 @@ import { useAppContext } from "@/contexts/app-context"; // Update import path as
 import TuningSystem from "@/models/TuningSystem";
 import detectPitchClassType from "@/functions/detectPitchClassType";
 import convertPitchClass, { shiftPitchClass } from "@/functions/convertPitchClass";
-import TransliteratedNoteName, {
+import {
   octaveZeroNoteNames,
   octaveOneNoteNames,
   octaveTwoNoteNames,
@@ -14,22 +14,32 @@ import TransliteratedNoteName, {
   TransliteratedNoteNameOctaveTwo,
 } from "@/models/NoteName";
 
-import { useRouter } from "next/navigation";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { getEnglishNoteName, abjadNames } from "@/functions/noteNameMappings";
 
-export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSystemId: string | null }) {
+export default function TuningSystemManager() {
   const {
     tuningSystems,
     selectedTuningSystem,
     setSelectedTuningSystem,
+    pitchClasses,
+    setPitchClasses,
+    noteNames,
+    setNoteNames,
+    getFirstNoteName,
     updateAllTuningSystems,
     playNoteFrequency,
     selectedCells,
     setSelectedCells,
     selectedIndices,
     setSelectedIndices,
+    originalIndices,
+    setOriginalIndices,
+    mapIndices,
+    initialMappingDone,
+    setInitialMappingDone,
     clearSelections,
+    handleStartNoteNameChange,
   } = useAppContext();
 
   const [sortOption, setSortOption] = useState<"id" | "creatorEnglish" | "year">("year");
@@ -46,8 +56,7 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
   const [creatorArabic, setCreatorArabic] = useState("");
   const [commentsEnglish, setCommentsEnglish] = useState("");
   const [commentsArabic, setCommentsArabic] = useState("");
-  const [pitchClasses, setPitchClasses] = useState("");
-  const [noteNames, setNoteNames] = useState<TransliteratedNoteName[][]>([]);
+
   const [stringLength, setStringLength] = useState<number>(0);
   const [referenceFrequency, setReferenceFrequency] = useState<number>(0);
 
@@ -56,11 +65,13 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
    * For example, if selectedIndices[i] = 5, that means the user has chosen the 5th element in octaveOneNoteNames.
    * If the user picks “none”, we store -1 in that slot.
    */
-  const [originalIndices, setOriginalIndices] = useState<number[]>([]);
   const [cascade, setCascade] = useState(false);
   const [selectedAbjadNames, setSelectedAbjadNames] = useState<string[]>([]);
 
-  const router = useRouter();
+  const pitchClassesArr = pitchClasses
+    .split("\n")
+    .map((p) => p.trim())
+    .filter((p) => p.length > 0);
 
   const defaultStartingNoteNames = [
     "yegāh",
@@ -114,17 +125,6 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
   ];
 
   useEffect(() => {
-    // If there's a param in the URL AND we currently don't have a selected system,
-    // OR we have a different system selected, attempt to match the param.
-    if (urlTuningSystemId) {
-      const found = tuningSystems.find((ts) => ts.getId() === urlTuningSystemId);
-      if (found) {
-        setSelectedTuningSystem(found);
-      }
-    }
-  }, [urlTuningSystemId, tuningSystems, setSelectedTuningSystem]);
-
-  useEffect(() => {
     if (selectedTuningSystem) {
       setId(selectedTuningSystem.getId());
       setTitleEnglish(selectedTuningSystem.getTitleEnglish());
@@ -141,45 +141,15 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
       setSelectedAbjadNames(selectedTuningSystem.getAbjadNames());
       setReferenceFrequency(selectedTuningSystem.getReferenceFrequency());
 
-      const pitchArr = selectedTuningSystem.getPitchClasses() || [];
       const loadedNames = selectedTuningSystem.getSetsOfNoteNames(); // array of strings from JSON
       setNoteNames(loadedNames);
 
-      const firstSetOfNotes = loadedNames[0] ?? [];
-
-      // Suppose octaveOneNoteNames.length == 36
-      const O1_LEN = octaveOneNoteNames.length;
-
-      const mappedIndices = firstSetOfNotes.map((arabicName) => {
-        // 1) Try octaveOne
-        const i1 = octaveOneNoteNames.indexOf(arabicName as TransliteratedNoteNameOctaveOne);
-        if (i1 >= 0) {
-          return i1; // it's in the first array
-        }
-
-        // 2) Try octaveTwo
-        const i2 = octaveTwoNoteNames.indexOf(arabicName as TransliteratedNoteNameOctaveTwo);
-        if (i2 >= 0) {
-          return O1_LEN + i2; // offset by the size of the first array
-        }
-
-        // 3) If not found in either, fallback to -1
-        return -1;
-      });
-
-      while (mappedIndices.length < pitchArr.length) {
-        mappedIndices.push(-1);
+      if (initialMappingDone) {
+        const firstSetOfNotes = loadedNames[0] ?? [];
+        mapIndices(firstSetOfNotes);
+      } else {
+        setInitialMappingDone(true);
       }
-      if (mappedIndices.length > pitchArr.length) {
-        mappedIndices.length = pitchArr.length; // or keep them if you want
-      }
-
-      // 5) Update the selectedIndices state
-      setSelectedIndices(mappedIndices);
-      setOriginalIndices([...mappedIndices]);
-    } else {
-      // If user selects "new", reset everything
-      resetFormForNewSystem();
     }
   }, [selectedTuningSystem]);
 
@@ -225,42 +195,11 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
 
     const loadedNames = [defaultStartingNoteNames];
 
-    const defaultStartingLength = defaultStartingNoteNames.length;
-
     setNoteNames(loadedNames);
 
     const firstSetOfNotes = loadedNames[0] ?? [];
 
-    // Suppose octaveOneNoteNames.length == 36
-    const O1_LEN = octaveOneNoteNames.length;
-
-    const mappedIndices = firstSetOfNotes.map((arabicName) => {
-      // 1) Try octaveOne
-      const i1 = octaveOneNoteNames.indexOf(arabicName as TransliteratedNoteNameOctaveOne);
-      if (i1 >= 0) {
-        return i1; // it's in the first array
-      }
-
-      // 2) Try octaveTwo
-      const i2 = octaveTwoNoteNames.indexOf(arabicName as TransliteratedNoteNameOctaveTwo);
-      if (i2 >= 0) {
-        return O1_LEN + i2; // offset by the size of the first array
-      }
-
-      // 3) If not found in either, fallback to -1
-      return -1;
-    });
-
-    while (mappedIndices.length < defaultStartingLength) {
-      mappedIndices.push(-1);
-    }
-    if (mappedIndices.length > defaultStartingLength) {
-      mappedIndices.length = defaultStartingLength; // or keep them if you want
-    }
-
-    // 5) Update the selectedIndices state
-    setSelectedIndices(mappedIndices);
-    setOriginalIndices([...mappedIndices]);
+    mapIndices(firstSetOfNotes);
   };
 
   // When user changes the dropdown (overall TuningSystem):
@@ -271,7 +210,6 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
 
     if (value === "new") {
       // If "new," you can remove `tuningSystem` from the URL or set it to something else
-      router.replace("/", { scroll: false });
       setSelectedTuningSystem(null);
       resetFormForNewSystem();
     } else {
@@ -279,9 +217,6 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
       if (chosen) {
         // set the chosen system
         setSelectedTuningSystem(chosen);
-
-        // update query param
-        router.replace(`/?tuningSystem=${encodeURIComponent(chosen.getId())}`, { scroll: false });
       }
     }
   };
@@ -291,10 +226,6 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
     event.preventDefault();
 
     // Each line in pitchClasses is one element in the array:
-    const pitchClassesArr = pitchClasses
-      .split("\n")
-      .map((p) => p.trim())
-      .filter((p) => p.length > 0);
 
     if (selectedTuningSystem) {
       // Editing an existing TuningSystem
@@ -399,39 +330,6 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
     setOriginalIndices(Array(selectedIndices.length).fill(-1));
   };
 
-  const handleStartNoteNameChange = (startingNoteName: string) => {
-    clearSelections();
-
-    for (const setOfNotes of noteNames) {
-      if (setOfNotes[0] === startingNoteName) {
-        const O1_LEN = octaveOneNoteNames.length;
-        const mappedIndices = setOfNotes.map((arabicName) => {
-          const i1 = octaveOneNoteNames.indexOf(arabicName as TransliteratedNoteNameOctaveOne);
-          if (i1 >= 0) return i1;
-
-          const i2 = octaveTwoNoteNames.indexOf(arabicName as TransliteratedNoteNameOctaveTwo);
-          if (i2 >= 0) return O1_LEN + i2;
-
-          return -1;
-        });
-
-        while (mappedIndices.length < selectedIndices.length) {
-          mappedIndices.push(-1);
-        }
-        if (mappedIndices.length > selectedIndices.length) {
-          mappedIndices.length = selectedIndices.length;
-        }
-
-        setSelectedIndices(mappedIndices);
-        setOriginalIndices([...mappedIndices]);
-        return;
-      }
-    }
-
-    // If no config found, fallback:
-    setSelectedIndices(Array(selectedIndices.length).fill(-1));
-  };
-
   // MARK: Cell Checkbox Handlers
 
   // Given an octave and a column index, check if that cell is already selected.
@@ -459,12 +357,6 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
   // and update the “first octave” index accordingly, maintaining sync.
   // ----------------------------------------------------------------------------------
 
-  // Safety: parse pitch classes to figure out how many columns we need:
-  const pitchClassesArr = pitchClasses
-    .split("\n")
-    .map((p) => p.trim())
-    .filter((p) => p.length > 0);
-
   const numberOfPitchClasses = pitchClassesArr.length;
 
   useEffect(() => {
@@ -480,13 +372,13 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
   }, [pitchClassesArr.length, selectedAbjadNames]);
 
   function handleAbjadSelect(colIndex: number, newValue: string, octave: number) {
-    setSelectedAbjadNames(prev => {
+    setSelectedAbjadNames((prev) => {
       const copy = [...prev];
       const rowOffset = octave === 1 ? 0 : numberOfPitchClasses;
       const baseIdx = rowOffset + colIndex;
-  
+
       copy[baseIdx] = newValue;
-  
+
       if (cascade) {
         const allNames = abjadNames;
         const startPos = allNames.indexOf(newValue);
@@ -499,21 +391,6 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
       return copy;
     });
   }
-
-  // Make sure selectedIndices has length = pitchClassesArr.length
-  useEffect(() => {
-    if (pitchClassesArr.length !== selectedIndices.length) {
-      setSelectedIndices((old) => {
-        const newArr = [...old];
-        newArr.length = pitchClassesArr.length;
-        // fill new/undefined entries with -1
-        for (let i = 0; i < newArr.length; i++) {
-          if (newArr[i] === undefined) newArr[i] = -1;
-        }
-        return newArr;
-      });
-    }
-  }, [pitchClassesArr.length, selectedIndices]);
 
   function getOctaveNoteName(octave: number, colIndex: number) {
     const idx = selectedIndices[colIndex];
@@ -882,12 +759,6 @@ export default function TuningSystemManager({ urlTuningSystemId }: { urlTuningSy
         {renderOctaveDetails(3)}
       </div>
     );
-  }
-
-  function getFirstNoteName() {
-    const idx = selectedIndices[0];
-    if (idx < 0) return "none";
-    return octaveOneNoteNames[idx];
   }
 
   const isCurrentConfigurationNew = () => {
