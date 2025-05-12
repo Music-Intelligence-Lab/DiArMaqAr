@@ -3,6 +3,7 @@
 
 import React from "react";
 import { SelectedCell, useAppContext } from "@/contexts/app-context";
+import { getEnglishNoteName } from "@/functions/noteNameMappings";
 
 export default function JinsTranspositions() {
   const { selectedJins, selectedTuningSystem, selectedCells, getAllCells, getSelectedCellDetails, centsTolerance, setCentsTolerance } =
@@ -98,16 +99,27 @@ export default function JinsTranspositions() {
               /></>}
             </th>
             <th className="jins‑transpositions__header">
-              {selectedCellDetails[0].noteName}
-              <br />
+              {selectedCellDetails[0].noteName + ` (${getEnglishNoteName(selectedCellDetails[0].noteName)})`}
+            </th>
+            {intervalPattern.map((pat, i) => (
+              <React.Fragment key={i}>
+                <th className="jins‑transpositions__header"></th>
+                <th className="jins‑transpositions__header">
+                  {selectedCellDetails[i + 1].noteName + ` (${getEnglishNoteName(selectedCellDetails[i + 1].noteName)})`}
+                </th>
+              </React.Fragment>
+            ))}
+          </tr>
+          <tr>
+            <th className="jins‑transpositions__header">
+            </th>
+            <th className="jins‑transpositions__header">
               {selectedCellDetails[0].fraction}
             </th>
             {intervalPattern.map((pat, i) => (
               <React.Fragment key={i}>
                 <th className="jins‑transpositions__header">{useRatio ? `(${pat.ratio})` : `≈${(pat.diff ?? 0).toFixed(1)}¢`}</th>
                 <th className="jins‑transpositions__header">
-                  {selectedCellDetails[i + 1].noteName}
-                  <br />
                   {selectedCellDetails[i + 1].fraction}
                 </th>
               </React.Fragment>
@@ -118,11 +130,25 @@ export default function JinsTranspositions() {
           {filteredSeqs.map((seq, row) => {
             const details = seq.map(getSelectedCellDetails);
             return (
-              <tr key={row}>
+              <React.Fragment key={row}>
+              <tr>
                 <td className="jins‑transpositions__cell">{`${selectedJins.getName()} al-${details[0].noteName}`}</td>
                 <td className="jins‑transpositions__cell">
-                  {details[0].noteName}
-                  <br />
+                  {details[0].noteName + ` (${getEnglishNoteName(details[0].noteName)})`}
+                </td>
+                {details.slice(1).map((d, j) => (
+                  <React.Fragment key={j}>
+                    <td className="jins‑transpositions__cell">
+                    </td>
+                    <td className="jins‑transpositions__cell">
+                      {d.noteName + ` (${getEnglishNoteName(d.noteName)})`}
+                    </td>
+                  </React.Fragment>
+                ))}
+              </tr>
+              <tr>
+                <td className="jins‑transpositions__cell"></td>
+                <td className="jins‑transpositions__cell">
                   {details[0].originalValue}
                 </td>
                 {details.slice(1).map((d, j) => (
@@ -133,13 +159,12 @@ export default function JinsTranspositions() {
                         : `≈${(parseFloat(d.originalValue) - parseFloat(details[j].originalValue)).toFixed(1)}¢`}
                     </td>
                     <td className="jins‑transpositions__cell">
-                      {d.noteName}
-                      <br />
                       {d.originalValue}
                     </td>
                   </React.Fragment>
                 ))}
               </tr>
+              </React.Fragment>
             );
           })}
         </tbody>

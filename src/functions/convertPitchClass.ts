@@ -28,6 +28,11 @@ function decimalToFraction(decimal: number) {
   return `${bestNumerator / gcdValue}/${bestDenominator / gcdValue}`;
 }
 
+export function frequencyToMidiNoteNumber(frequency: number): number {
+  const midi = 69 + 12 * Math.log2(frequency / 440);
+  return midi;
+}
+
 export default function convertPitchClass(
   originalValue: string,
   inputType: "fraction" | "cents" | "decimal" | "stringLength",

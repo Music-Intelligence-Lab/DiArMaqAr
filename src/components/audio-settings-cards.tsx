@@ -5,7 +5,7 @@ import { Box, Slider } from "@mui/material";
 import { useAppContext } from "@/contexts/app-context";
 
 const AudioSettingsCard = () => {
-  const { envelopeParams, setEnvelopeParams, clearSelections, tempo, setTempo } = useAppContext();
+  const { envelopeParams, setEnvelopeParams, clearSelections, volume, setVolume, duration, setDuration, tempo, setTempo } = useAppContext();
   const [isOpen, setIsOpen] = useState(false);
 
   const togglePanel = () => setIsOpen(!isOpen);
@@ -30,6 +30,11 @@ const AudioSettingsCard = () => {
     const val = Number(e.target.value);
     if (!isNaN(val)) setTempo(val);
   };
+
+  const handleDurationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = Number(e.target.value);
+    if (!isNaN(val)) setDuration(val);
+  }
 
   return (
     <>
@@ -56,6 +61,36 @@ const AudioSettingsCard = () => {
               max={300}
             />
           </div>
+
+          {/* Note Duration Input */}
+          <div style={{ marginBottom: '16px' }}>
+            <label htmlFor="tempo-input" style={{ display: 'block', marginBottom: '4px' }}>
+              Duration (s):
+            </label>
+            <input
+              type="number"
+              id="tempo-input"
+              value={duration}
+              onChange={handleDurationChange}
+              className="audio-settings-card__number-input"
+              min={0.1}
+              max={10}
+            />
+          </div>
+
+          {/* Volume Input */}
+          <Box sx={{ width: 200, mb: 2 }}>
+            <p>Volume: {(volume * 100).toFixed(0)}%</p>
+            <Slider
+              size="small"
+              value={volume}
+              min={0}
+              max={1}
+              step={0.01}
+              onChange={(_e, newVal) => typeof newVal === "number" && setVolume(newVal)}
+              valueLabelDisplay="auto"
+            />
+          </Box>
 
           {/* Attack */}
           <Box sx={{ width: 200, mb: 2 }}>

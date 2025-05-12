@@ -189,6 +189,7 @@ export default function SeirManager() {
                   <option value="direction">direction</option>
                 </select>
 
+                {/* --- note stop --- */}
                 {stop.type === "note" && (
                   <select className="seir-manager__stop-value" value={stop.value} onChange={(e) => updateStop(i, "value", e.target.value)}>
                     <option value="">(none)</option>
@@ -206,17 +207,53 @@ export default function SeirManager() {
                   </select>
                 )}
 
+                {/* --- jins stop (updated) --- */}
                 {stop.type === "jins" && (
-                  <select className="seir-manager__stop-value" value={stop.value} onChange={(e) => updateStop(i, "value", e.target.value)}>
-                    <option value="">(none)</option>
-                    {ajnas.map((j) => (
-                      <option key={j.getName()} value={j.getName()}>
-                        {j.getName()}
-                      </option>
-                    ))}
-                  </select>
+                  <>
+                    {/* 1) select which jins */}
+                    <select className="seir-manager__stop-value" value={stop.value} onChange={(e) => updateStop(i, "value", e.target.value)}>
+                      <option value="">(none)</option>
+                      {ajnas.map((j) => (
+                        <option key={j.getId()} value={j.getId()}>
+                          {j.getName()}
+                        </option>
+                      ))}
+                    </select>
+
+                    {/* 2) optional starting note for this jins */}
+                    <select
+                      className="seir-manager__stop-value"
+                      value={stop.startingNote ?? ""}
+                      onChange={(e) => updateStop(i, "startingNote", e.target.value)}
+                    >
+                      <option value="">(none)</option>
+                      {octaveOneNoteNames.map((n) => (
+                        <option key={n} value={n}>
+                          {n}
+                        </option>
+                      ))}
+                      <option disabled>---</option>
+                      {octaveTwoNoteNames.map((n) => (
+                        <option key={n} value={n}>
+                          {n}
+                        </option>
+                      ))}
+                    </select>
+
+                    {/* 3) optional direction for this jins */}
+                    <select
+                      className="seir-manager__stop-value"
+                      value={stop.direction ?? ""}
+                      onChange={(e) => updateStop(i, "direction", e.target.value)}
+                    >
+                      <option value="">(none)</option>
+                      <option value="ascending">ascending</option>
+                      <option value="descending">descending</option>
+                    </select>
+                  </>
                 )}
 
+                {/* --- direction stop --- */}
                 {stop.type === "direction" && (
                   <select className="seir-manager__stop-value" value={stop.value} onChange={(e) => updateStop(i, "value", e.target.value)}>
                     <option value="">(none)</option>

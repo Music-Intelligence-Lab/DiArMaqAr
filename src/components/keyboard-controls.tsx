@@ -1,4 +1,3 @@
-// components/KeyboardControls.tsx
 "use client";
 
 import { useEffect } from "react";
@@ -8,31 +7,39 @@ export default function KeyboardControls() {
   const {
     selectedCells,
     getSelectedCellDetails,
-    playNoteFrequency,
+    noteOn,
+    noteOff,
   } = useAppContext();
 
-  // Home‐row keys A S D F G H J K L
-  const keys = ["a","s","d","f","g","h","j","k","l"];
+  // home row + semicolon + apostrophe
+  const keys = ["a","s","d","f","g","h","j","k","l",";","'"];
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // ignore typing in inputs, and repeated key events
-      if (e.target instanceof HTMLInputElement || e.repeat) return;
-
+      if (e.repeat || e.target instanceof HTMLInputElement) return;
       const idx = keys.indexOf(e.key);
-      if (idx !== -1 && idx < selectedCells.length) {
+      if (idx >= 0 && idx < selectedCells.length) {
         const cell = selectedCells[idx];
-        const details = getSelectedCellDetails(cell);
-        const freq = parseFloat(details.frequency);
-        if (!isNaN(freq)) {
-          playNoteFrequency(freq);
-        }
+        const freq = parseFloat(getSelectedCellDetails(cell).frequency);
+        if (!isNaN(freq)) noteOn(freq);
+      }
+    };
+    const handleKeyUp = (e: KeyboardEvent) => {
+      const idx = keys.indexOf(e.key);
+      if (idx >= 0 && idx < selectedCells.length) {
+        const cell = selectedCells[idx];
+        const freq = parseFloat(getSelectedCellDetails(cell).frequency);
+        if (!isNaN(freq)) noteOff(freq);
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedCells, getSelectedCellDetails, playNoteFrequency]);
+    window.addEventListener("keyup", handleKeyUp);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+    };
+  }, [selectedCells, getSelectedCellDetails, noteOn, noteOff]);
 
   return null;
 }

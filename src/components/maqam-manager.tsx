@@ -128,8 +128,6 @@ export default function MaqamManager() {
       maqamFrequencies.push(parseInt(cellDetail.frequency) ?? 0);
     });
 
-    maqamFrequencies.push(0);
-
     descendingNoteNamesCellDetails.forEach((cellDetail) => {
       maqamFrequencies.push(parseInt(cellDetail.frequency) ?? 0);
     });
