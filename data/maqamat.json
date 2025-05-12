@@ -2135,49 +2135,6 @@
     ]
   },
   {
-    "id": "1",
-    "name": "maqām rāst",
-    "ascendingNoteNames": [
-      "rāst",
-      "dūgāh",
-      "segāh",
-      "chahargāh",
-      "nawā",
-      "ḥuseinī",
-      "awj",
-      "kurdān"
-    ],
-    "descendingNoteNames": [
-      "kurdān",
-      "ʿajam",
-      "ḥuseinī",
-      "nawā",
-      "chahargāh",
-      "segāh",
-      "dūgāh",
-      "rāst"
-    ],
-    "suyur": [
-      {
-        "id": "mxBF-Ty6OY8xIt0pkyIBn",
-        "creatorEnglish": "test",
-        "creatorArabic": "",
-        "sourceEnglish": "",
-        "sourceArabic": "",
-        "year": "",
-        "page": "",
-        "commentsEnglish": "",
-        "commentsArabic": "",
-        "stops": [
-          {
-            "type": "note",
-            "value": "yegāh"
-          }
-        ]
-      }
-    ]
-  },
-  {
     "id": "42",
     "name": "maqām shawq āwr",
     "ascendingNoteNames": [
@@ -2250,6 +2207,80 @@
           {
             "type": "note",
             "value": "ʿajam ʿushayrān"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "1",
+    "name": "maqām rāst",
+    "ascendingNoteNames": [
+      "rāst",
+      "dūgāh",
+      "segāh",
+      "chahargāh",
+      "nawā",
+      "ḥuseinī",
+      "awj",
+      "kurdān"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "ʿajam",
+      "ḥuseinī",
+      "nawā",
+      "chahargāh",
+      "segāh",
+      "dūgāh",
+      "rāst"
+    ],
+    "suyur": [
+      {
+        "id": "mxBF-Ty6OY8xIt0pkyIBn",
+        "creatorEnglish": "test",
+        "creatorArabic": "",
+        "sourceEnglish": "",
+        "sourceArabic": "",
+        "year": "",
+        "page": "",
+        "commentsEnglish": "",
+        "commentsArabic": "",
+        "stops": [
+          {
+            "type": "note",
+            "value": "yegāh"
+          }
+        ]
+      },
+      {
+        "id": "nUFVt8da4ElLEAqCqzMEq",
+        "creatorEnglish": "test",
+        "creatorArabic": "test",
+        "sourceEnglish": "test",
+        "sourceArabic": "test",
+        "year": "test",
+        "page": "test",
+        "commentsEnglish": "tests",
+        "commentsArabic": "ttesssss",
+        "stops": [
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "yegāh",
+            "direction": "descending"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "mahurān"
+          },
+          {
+            "type": "jins",
+            "value": "15"
           }
         ]
       }

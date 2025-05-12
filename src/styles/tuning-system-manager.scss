@@ -5,6 +5,7 @@
     font-size: 1.5rem;
     margin-bottom: 1.5rem;
     font-weight: bold;
+    display: inline;
   }
 
   &__form {
@@ -168,7 +169,7 @@
     }
   }
 
-  &__octave-details {
+  &__details, &__octave-details {
     min-width: 100%;
     width: fit-content;
     padding: 10px;
@@ -176,7 +177,7 @@
     border-radius: 10px;
   }
 
-  &__octave-summary {
+  &__summary, &__octave-summary {
     font-size: 24px;
     margin-bottom: 10px;
     cursor: pointer;
@@ -218,6 +219,11 @@
     }
   }
 
+  &__cell-selected {
+    background-color: $primary;
+    color: white;
+  }
+
   &__select-note,
   &__select-abjad {
     border: none;
@@ -232,6 +238,8 @@
     padding: 5px 0;
     font-size: 14px;
     cursor: pointer;
+    color: inherit;
+    background-color: transparent;
   }
 
   &__checkbox {

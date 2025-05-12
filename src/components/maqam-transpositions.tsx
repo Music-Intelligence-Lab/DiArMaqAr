@@ -3,6 +3,7 @@
 
 import React from "react";
 import { SelectedCell, useAppContext } from "@/contexts/app-context";
+import { getEnglishNoteName } from "@/functions/noteNameMappings";
 
 export default function MaqamTranspositions() {
   const { selectedMaqam, selectedTuningSystem, selectedCells, getAllCells, getSelectedCellDetails, centsTolerance, setCentsTolerance, isAscending } =
@@ -98,17 +99,28 @@ export default function MaqamTranspositions() {
               /></>}
             </th>
             <th className="maqam‑transpositions__header">
-              {selectedCellDetails[0].noteName}
-              <br />
-              {selectedCellDetails[0].fraction}
+              {selectedCellDetails[0].noteName + ` (${getEnglishNoteName(selectedCellDetails[0].noteName)})`}
+            </th>
+            {intervalPattern.map((pat, i) => (
+              <React.Fragment key={i}>
+                <th className="maqam‑transpositions__header"></th>
+                <th className="maqam‑transpositions__header">
+                  {selectedCellDetails[i + 1].noteName + ` (${getEnglishNoteName(selectedCellDetails[i + 1].noteName)})`}
+                </th>
+              </React.Fragment>
+            ))}
+          </tr>
+          <tr>
+            <th className="maqam‑transpositions__header">
+            </th>
+            <th className="maqam‑transpositions__header">
+              {selectedCellDetails[0].originalValue}
             </th>
             {intervalPattern.map((pat, i) => (
               <React.Fragment key={i}>
                 <th className="maqam‑transpositions__header">{useRatio ? `(${pat.ratio})` : `≈${(pat.diff ?? 0).toFixed(1)}¢`}</th>
                 <th className="maqam‑transpositions__header">
-                  {selectedCellDetails[i + 1].noteName}
-                  <br />
-                  {selectedCellDetails[i + 1].fraction}
+                  {selectedCellDetails[i + 1].originalValue}
                 </th>
               </React.Fragment>
             ))}
@@ -118,11 +130,25 @@ export default function MaqamTranspositions() {
           {filteredSeqs.map((seq, row) => {
             const details = seq.map(getSelectedCellDetails);
             return (
-              <tr key={row}>
+              <React.Fragment key={row}>
+              <tr>
                 <td className="maqam‑transpositions__cell">{`${selectedMaqam.getName()} al-${details[0].noteName}`}</td>
                 <td className="maqam‑transpositions__cell">
-                  {details[0].noteName}
-                  <br />
+                  {details[0].noteName + ` (${getEnglishNoteName(details[0].noteName)})`}
+                </td>
+                {details.slice(1).map((d, j) => (
+                  <React.Fragment key={j}>
+                    <td className="maqam‑transpositions__cell">
+                    </td>
+                    <td className="maqam‑transpositions__cell">
+                      {d.noteName + ` (${getEnglishNoteName(d.noteName)})`}
+                    </td>
+                  </React.Fragment>
+                ))}
+              </tr>
+              <tr>
+                <td className="maqam‑transpositions__cell"></td>
+                <td className="maqam‑transpositions__cell">
                   {details[0].originalValue}
                 </td>
                 {details.slice(1).map((d, j) => (
@@ -133,13 +159,12 @@ export default function MaqamTranspositions() {
                         : `≈${(parseFloat(d.originalValue) - parseFloat(details[j].originalValue)).toFixed(1)}¢`}
                     </td>
                     <td className="maqam‑transpositions__cell">
-                      {d.noteName}
-                      <br />
                       {d.originalValue}
                     </td>
                   </React.Fragment>
                 ))}
               </tr>
+              </React.Fragment>
             );
           })}
         </tbody>

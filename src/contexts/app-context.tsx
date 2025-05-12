@@ -82,9 +82,15 @@ interface AppContextInterface {
   clearSelections: () => void;
   isAscending: boolean;
   setIsAscending: React.Dispatch<React.SetStateAction<boolean>>;
+  volume: number;
+  setVolume: React.Dispatch<React.SetStateAction<number>>;
+  duration: number;
+  setDuration: React.Dispatch<React.SetStateAction<number>>;
   tempo: number;
   setTempo: React.Dispatch<React.SetStateAction<number>>;
   playSequence: (frequencies: number[], noteDuration?: number) => void;
+  noteOn: (frequency: number) => void;
+  noteOff: (frequency: number) => void;
   handleUrlParams: (params: { tuningSystemId?: string; jinsId?: string; maqamId?: string; firstNote?: string }) => void;
 }
 
@@ -106,6 +112,10 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     waveform: "sine",
   });
 
+  const activeNotesRef = useRef<Map<number, { oscillator: OscillatorNode; gainNode: GainNode }[]>>(new Map());
+
+  const [volume, setVolume] = useState(0.5);
+  const [duration, setDuration] = useState(1);
   const [tempo, setTempo] = useState<number>(120);
 
   const [selectedCells, setSelectedCells] = useState<SelectedCell[]>([]);
@@ -170,10 +180,16 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     audioCtxRef.current = audioCtx;
 
     const masterGain = audioCtx.createGain();
-    masterGain.gain.value = 0.5;
+    masterGain.gain.value = volume;
     masterGain.connect(audioCtx.destination);
     masterGainRef.current = masterGain;
   }, []);
+
+  useEffect(() => {
+    if (masterGainRef.current) {
+      masterGainRef.current.gain.setValueAtTime(volume, audioCtxRef.current!.currentTime);
+    }
+  }, [volume]);
 
   useEffect(() => {
     const params = [];
@@ -263,7 +279,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     setSelectedCells(newCells);
   }, [isAscending]);
 
-  const playNoteFrequency = (frequency: number, duration: number = 1) => {
+  const playNoteFrequency = (frequency: number, givenDuration: number = duration) => {
     if (!audioCtxRef.current || !masterGainRef.current) return;
     if (isNaN(frequency) || frequency <= 0) return;
 
@@ -274,7 +290,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
     const attackEnd = startTime + attack;
     const decayEnd = attackEnd + decay;
-    const noteOffTime = startTime + duration;
+    const noteOffTime = startTime + givenDuration;
     const releaseStart = Math.max(noteOffTime - release, decayEnd);
     const releaseEnd = releaseStart + release;
 
@@ -300,6 +316,64 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       setTimeout(() => playNoteFrequency(freq, noteDuration), delayMs);
     });
   };
+
+  function noteOn(frequency: number) {
+  const audioCtx = audioCtxRef.current!;
+  const masterGain = masterGainRef.current!;
+  const now = audioCtx.currentTime;
+  const { attack, decay, sustain, waveform } = envelopeParams;
+
+  // create osc + gain
+  const osc = audioCtx.createOscillator();
+  osc.type = waveform as OscillatorType;
+  osc.frequency.setValueAtTime(frequency, now);
+  const gain = audioCtx.createGain();
+  gain.gain.setValueAtTime(0, now);
+  gain.gain.linearRampToValueAtTime(1, now + attack);
+  gain.gain.linearRampToValueAtTime(sustain, now + attack + decay);
+
+  osc.connect(gain).connect(masterGain);
+  osc.start(now);
+
+  // cleanup when this one ends
+  osc.onended = () => {
+    const queue = activeNotesRef.current.get(frequency) || [];
+    // remove *this* oscillator from its own queue
+    activeNotesRef.current.set(
+      frequency,
+      queue.filter(e => e.oscillator !== osc)
+    );
+  };
+
+  // enqueue
+  const queue = activeNotesRef.current.get(frequency) || [];
+  queue.push({ oscillator: osc, gainNode: gain });
+  activeNotesRef.current.set(frequency, queue);
+
+  const MAX_VOICES = 2;
+  if (queue.length > MAX_VOICES) {
+    const oldest = queue.shift()!;
+    oldest.oscillator.stop(now);
+    activeNotesRef.current.set(frequency, queue);
+  }
+}
+
+// noteOff → dequeue one voice (e.g. the head) and trigger its release
+function noteOff(frequency: number) {
+  const audioCtx = audioCtxRef.current!;
+  const now = audioCtx.currentTime;
+  const { release } = envelopeParams;
+  const queue = activeNotesRef.current.get(frequency) || [];
+  if (!queue.length) return;
+
+  const voice = queue.shift()!;
+  voice.gainNode.gain.cancelScheduledValues(now);
+  voice.gainNode.gain.setValueAtTime(voice.gainNode.gain.value, now);
+  voice.gainNode.gain.linearRampToValueAtTime(0, now + release);
+  voice.oscillator.stop(now + release);
+
+  activeNotesRef.current.set(frequency, queue);
+}
 
   const updateAllTuningSystems = async (newSystems: TuningSystem[]) => {
     setTuningSystems(newSystems);
@@ -755,9 +829,15 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         clearSelections,
         isAscending,
         setIsAscending,
+        volume,
+        setVolume,
+        duration,
+        setDuration,
         tempo,
         setTempo,
         playSequence,
+        noteOn,
+        noteOff,
         handleUrlParams,
       }}
     >

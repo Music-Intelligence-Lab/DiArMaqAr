@@ -52,4 +52,6 @@ export interface Seir {
 export interface SeirStop {
   type: "note" | "jins" | "direction"
   value: string
+  startingNote?: TransliteratedNoteName
+  direction?: "ascending" | "descending"
 }
