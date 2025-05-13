@@ -524,7 +524,7 @@ function noteOn(frequency: number) {
     clearSelections();
 
     try {
-      const response = await fetch("/api/maqams", {
+      const response = await fetch("/api/maqamat", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(
