@@ -19,7 +19,17 @@ export default function JinsTranspositions() {
   const useRatio = valueType === "fraction" || valueType === "ratios";
 
   // helpers for ratio and gcd
-  const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
+  function gcd(a: number, b: number): number {
+    a = Math.abs(a);
+    b = Math.abs(b);
+    const EPS = 1e-10;
+    while (b > EPS) {
+      const t = a % b;
+      a = b;
+      b = t;
+    }
+    return a;
+  }
   const computeRatio = (prev: string, next: string) => {
     const [a, b] = prev.split("/").map(Number);
     const [c, d] = next.split("/").map(Number);
@@ -79,7 +89,7 @@ export default function JinsTranspositions() {
   // only sequences starting in octave 1 or 2
   const filteredSeqs = sequences.filter((seq) => {
     const oct = seq[0].octave;
-    return  oct !== 3;
+    return oct !== 3;
   });
 
   return (
@@ -91,12 +101,18 @@ export default function JinsTranspositions() {
           <tr>
             <th className="jins‑transpositions__header">
               Transpositions{" "}
-              {!useRatio && <> / Cents Tolerance: <input
-                className="jins‑transpositions__input"
-                type="number"
-                value={centsTolerance ?? 0}
-                onChange={(e) => setCentsTolerance(Number(e.target.value))}
-              /></>}
+              {!useRatio && (
+                <>
+                  {" "}
+                  / Cents Tolerance:{" "}
+                  <input
+                    className="jins‑transpositions__input"
+                    type="number"
+                    value={centsTolerance ?? 0}
+                    onChange={(e) => setCentsTolerance(Number(e.target.value))}
+                  />
+                </>
+              )}
             </th>
             <th className="jins‑transpositions__header">
               {selectedCellDetails[0].noteName + ` (${getEnglishNoteName(selectedCellDetails[0].noteName)})`}
@@ -111,17 +127,12 @@ export default function JinsTranspositions() {
             ))}
           </tr>
           <tr>
-            <th className="jins‑transpositions__header">
-            </th>
-            <th className="jins‑transpositions__header">
-              {selectedCellDetails[0].fraction}
-            </th>
+            <th className="jins‑transpositions__header"></th>
+            <th className="jins‑transpositions__header">{selectedCellDetails[0].fraction}</th>
             {intervalPattern.map((pat, i) => (
               <React.Fragment key={i}>
                 <th className="jins‑transpositions__header">{useRatio ? `(${pat.ratio})` : `≈${(pat.diff ?? 0).toFixed(1)}¢`}</th>
-                <th className="jins‑transpositions__header">
-                  {selectedCellDetails[i + 1].fraction}
-                </th>
+                <th className="jins‑transpositions__header">{selectedCellDetails[i + 1].fraction}</th>
               </React.Fragment>
             ))}
           </tr>
@@ -131,39 +142,30 @@ export default function JinsTranspositions() {
             const details = seq.map(getSelectedCellDetails);
             return (
               <React.Fragment key={row}>
-              <tr>
-                <td className="jins‑transpositions__cell">{`${selectedJins.getName()} al-${details[0].noteName}`}</td>
-                <td className="jins‑transpositions__cell">
-                  {details[0].noteName + ` (${getEnglishNoteName(details[0].noteName)})`}
-                </td>
-                {details.slice(1).map((d, j) => (
-                  <React.Fragment key={j}>
-                    <td className="jins‑transpositions__cell">
-                    </td>
-                    <td className="jins‑transpositions__cell">
-                      {d.noteName + ` (${getEnglishNoteName(d.noteName)})`}
-                    </td>
-                  </React.Fragment>
-                ))}
-              </tr>
-              <tr>
-                <td className="jins‑transpositions__cell"></td>
-                <td className="jins‑transpositions__cell">
-                  {details[0].originalValue}
-                </td>
-                {details.slice(1).map((d, j) => (
-                  <React.Fragment key={j}>
-                    <td className="jins‑transpositions__cell">
-                      {useRatio
-                        ? `(${computeRatio(details[j].fraction, d.fraction)})`
-                        : `≈${(parseFloat(d.originalValue) - parseFloat(details[j].originalValue)).toFixed(1)}¢`}
-                    </td>
-                    <td className="jins‑transpositions__cell">
-                      {d.originalValue}
-                    </td>
-                  </React.Fragment>
-                ))}
-              </tr>
+                <tr>
+                  <td className="jins‑transpositions__cell">{`${selectedJins.getName()} al-${details[0].noteName}`}</td>
+                  <td className="jins‑transpositions__cell">{details[0].noteName + ` (${getEnglishNoteName(details[0].noteName)})`}</td>
+                  {details.slice(1).map((d, j) => (
+                    <React.Fragment key={j}>
+                      <td className="jins‑transpositions__cell"></td>
+                      <td className="jins‑transpositions__cell">{d.noteName + ` (${getEnglishNoteName(d.noteName)})`}</td>
+                    </React.Fragment>
+                  ))}
+                </tr>
+                <tr>
+                  <td className="jins‑transpositions__cell"></td>
+                  <td className="jins‑transpositions__cell">{details[0].originalValue}</td>
+                  {details.slice(1).map((d, j) => (
+                    <React.Fragment key={j}>
+                      <td className="jins‑transpositions__cell">
+                        {useRatio
+                          ? `(${computeRatio(details[j].fraction, d.fraction)})`
+                          : `≈${(parseFloat(d.originalValue) - parseFloat(details[j].originalValue)).toFixed(1)}¢`}
+                      </td>
+                      <td className="jins‑transpositions__cell">{d.originalValue}</td>
+                    </React.Fragment>
+                  ))}
+                </tr>
               </React.Fragment>
             );
           })}

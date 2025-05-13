@@ -85,6 +85,24 @@
   }
 
   &__clear-button {
+    margin: 10px 0;
     background-color: $primary;
+  }
+
+  &__sound-mode {
+    width: 100%;
+    display: flex;
+    padding: 10px 0;
+  }
+
+  &__sound-mode-button {
+    padding: 10px 20px;
+    transition: 0.3s;
+    cursor: pointer;
+
+    &_selected {
+      background-color: $primary;
+      color: white;
+    }
   }
 }

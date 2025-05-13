@@ -8,10 +8,11 @@ import TuningSystem from "@/models/TuningSystem";
 import Jins from "@/models/Jins";
 import TransliteratedNoteName, { TransliteratedNoteNameOctaveOne, TransliteratedNoteNameOctaveTwo } from "@/models/NoteName";
 import detectPitchClassType from "@/functions/detectPitchClassType";
-import convertPitchClass, { shiftPitchClass } from "@/functions/convertPitchClass";
+import convertPitchClass, { shiftPitchClass, frequencyToMidiNoteNumber } from "@/functions/convertPitchClass";
 import { octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames, octaveThreeNoteNames, octaveFourNoteNames } from "@/models/NoteName";
 import Maqam, { Seir } from "@/models/Maqam";
 import { useRouter } from "next/navigation";
+
 interface EnvelopeParams {
   attack: number;
   decay: number;
@@ -35,6 +36,13 @@ export interface CellDetails {
   originalValue: string;
   originalValueType: string;
 }
+
+interface MidiPortInfo {
+  id: string;
+  name: string;
+}
+
+type SoundMode = "mute" | "waveform" | "midi";
 
 interface AppContextInterface {
   isPageLoading: boolean;
@@ -92,6 +100,11 @@ interface AppContextInterface {
   noteOn: (frequency: number) => void;
   noteOff: (frequency: number) => void;
   handleUrlParams: (params: { tuningSystemId?: string; jinsId?: string; maqamId?: string; firstNote?: string }) => void;
+  midiOutputs: MidiPortInfo[];
+  selectedMidiOutputId: string | null;
+  setSelectedMidiOutputId: React.Dispatch<React.SetStateAction<string | null>>;
+  soundMode: SoundMode;
+  setSoundMode: React.Dispatch<React.SetStateAction<SoundMode>>;
 }
 
 const AppContext = createContext<AppContextInterface | null>(null);
@@ -132,6 +145,30 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
   const audioCtxRef = useRef<AudioContext | null>(null);
   const masterGainRef = useRef<GainNode | null>(null);
+
+  const [midiOutputs, setMidiOutputs] = useState<MidiPortInfo[]>([]);
+  const [selectedMidiOutputId, setSelectedMidiOutputId] = useState<string | null>(null);
+  const [soundMode, setSoundMode] = useState<SoundMode>("waveform");
+
+  const midiAccessRef = useRef<MIDIAccess | null>(null);
+
+  const sendMidiMessage = (bytes: number[]) => {
+  const ma = midiAccessRef.current;
+  if (!ma || !selectedMidiOutputId) return;
+
+  const port = ma.outputs.get(selectedMidiOutputId);
+  port?.send(bytes);
+};
+
+function sendPitchBend(detuneSemitones: number) {
+  const semitoneRange = 2;
+  const center = 8192;
+  const bendOffset = Math.round((detuneSemitones / semitoneRange) * center);
+  const bendValue  = Math.max(0, Math.min(16383, center + bendOffset));
+  const lsb =  bendValue  & 0x7F;
+  const msb = (bendValue >> 7) & 0x7F;
+  sendMidiMessage([0xE0, lsb, msb]);
+}
 
   const router = useRouter();
 
@@ -279,6 +316,26 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     setSelectedCells(newCells);
   }, [isAscending]);
 
+  useEffect(() => {
+    if (!navigator.requestMIDIAccess) return;
+    navigator.requestMIDIAccess({ sysex: false })
+      .then(ma => {
+        midiAccessRef.current = ma;
+        const list = Array.from(ma.outputs.values()).map(o => ({
+          id: o.id, name: o.name || o.manufacturer || "Unknown"
+        }));
+        setMidiOutputs(list);
+        ma.onstatechange = () => {
+          // re-scan on connect/disconnect
+          const outs = Array.from(ma.outputs.values()).map(o => ({
+            id: o.id, name: o.name || o.manufacturer || "Unknown"
+          }));
+          setMidiOutputs(outs);
+        };
+      })
+      .catch(console.error);
+  }, []);
+
   const playNoteFrequency = (frequency: number, givenDuration: number = duration) => {
     if (!audioCtxRef.current || !masterGainRef.current) return;
     if (isNaN(frequency) || frequency <= 0) return;
@@ -317,13 +374,30 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     });
   };
 
-  function noteOn(frequency: number) {
+function noteOn(frequency: number) {
+  // 1) Mute
+  if (soundMode === "mute") return;
+
+  // 2) MIDI
+  if (soundMode === "midi") {
+    // 1) compute float note & split into int + detune
+    const mf = frequencyToMidiNoteNumber(frequency);
+    const note = Math.floor(mf);
+    const detune = mf - note;
+
+    // 2) send pitch bend THEN Note On
+    sendPitchBend(detune);
+    const vel = Math.round(volume * 127);
+    sendMidiMessage([0x90, note, vel]);
+    return;
+  }
+
+  // 3) Waveform (unchanged)
   const audioCtx = audioCtxRef.current!;
   const masterGain = masterGainRef.current!;
   const now = audioCtx.currentTime;
   const { attack, decay, sustain, waveform } = envelopeParams;
 
-  // create osc + gain
   const osc = audioCtx.createOscillator();
   osc.type = waveform as OscillatorType;
   osc.frequency.setValueAtTime(frequency, now);
@@ -335,17 +409,14 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   osc.connect(gain).connect(masterGain);
   osc.start(now);
 
-  // cleanup when this one ends
   osc.onended = () => {
     const queue = activeNotesRef.current.get(frequency) || [];
-    // remove *this* oscillator from its own queue
     activeNotesRef.current.set(
       frequency,
-      queue.filter(e => e.oscillator !== osc)
+      queue.filter((e) => e.oscillator !== osc)
     );
   };
 
-  // enqueue
   const queue = activeNotesRef.current.get(frequency) || [];
   queue.push({ oscillator: osc, gainNode: gain });
   activeNotesRef.current.set(frequency, queue);
@@ -358,8 +429,16 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   }
 }
 
-// noteOff → dequeue one voice (e.g. the head) and trigger its release
-function noteOff(frequency: number) {
+
+  function noteOff(frequency: number) {
+  if (soundMode === "mute") return;
+
+  if (soundMode === "midi") {
+    const note = Math.floor(frequencyToMidiNoteNumber(frequency));
+    sendMidiMessage([0x80, note, 0]);
+    return;
+  }
+
   const audioCtx = audioCtxRef.current!;
   const now = audioCtx.currentTime;
   const { release } = envelopeParams;
@@ -839,6 +918,11 @@ function noteOff(frequency: number) {
         noteOn,
         noteOff,
         handleUrlParams,
+        midiOutputs,
+        selectedMidiOutputId,
+        setSelectedMidiOutputId,
+        soundMode,
+        setSoundMode,
       }}
     >
       {children}
