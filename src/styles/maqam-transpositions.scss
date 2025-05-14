@@ -1,5 +1,6 @@
 .maqam‑transpositions {
   width: 100%;
+  font-size: 0.9rem;
 
   &__title {
     width: 100%;
@@ -11,6 +12,15 @@
     padding: 1rem 0;
   }
 
+  &__button {
+    background-color: $primary;
+    color: white;
+    padding: 5px 10px; 
+    border-radius: 3px;
+    cursor: pointer;
+    margin: 0 5px;
+  }
+
   &__table {
     width: 100%;
     border-collapse: collapse;
@@ -18,11 +28,10 @@
     th,
     td {
       vertical-align: middle;
-      padding: 5px 0;
+      padding: 5px 2px;
     }
 
-    thead th {
-      background-color: transparent;
+    tbody {
       font-weight: 600;
     }
 
@@ -46,5 +55,9 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     resize: vertical;
+  }
+
+  .maqam-transpositions__spacer {
+    padding: 20px 0;
   }
 }

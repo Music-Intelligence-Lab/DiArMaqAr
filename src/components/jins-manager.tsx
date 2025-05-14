@@ -1,8 +1,9 @@
 "use client";
 
-import { useAppContext } from "@/contexts/app-context";
+import { SelectedCell, useAppContext } from "@/contexts/app-context";
 import Jins from "@/models/Jins";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
+import React, { useEffect } from "react";
 
 export default function JinsManager() {
   const {
@@ -18,6 +19,17 @@ export default function JinsManager() {
     playSequence,
     playNoteFrequency
   } = useAppContext();
+
+  useEffect(() => {
+      if (selectedJins) {
+        const selectedNoteNames = selectedCells.map((cell: SelectedCell) => {
+          const details = getSelectedCellDetails(cell);
+          return details.noteName;
+        });
+  
+        setSelectedJins(new Jins(selectedJins.getId(), selectedJins.getName(), selectedNoteNames));
+      }
+    }, [selectedCells]);
 
   const selectedCellDetails = selectedCells.map((cell) => {
     return getSelectedCellDetails(cell);
