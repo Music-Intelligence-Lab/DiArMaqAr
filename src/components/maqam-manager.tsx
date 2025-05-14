@@ -15,7 +15,6 @@ export default function MaqamManager() {
     getNoteNamesUsedInTuningSystem,
     getSelectedCellDetails,
     isAscending,
-    setIsAscending,
     clearSelections,
     playSequence,
     playNoteFrequency,
@@ -81,17 +80,28 @@ export default function MaqamManager() {
   };
 
   // Save or update Maqam
-  const handleSaveMaqam = async () => {
+  const handleSaveMaqam = async (maqam: Maqam) => {
     if (!selectedMaqam) return;
-    // build new Maqam instance with both asc and desc noteNames
-    const ascNames = isAscending ? selectedCellNoteNames : selectedMaqam.getAscendingNoteNames();
-    const descNames = !isAscending ? selectedCellNoteNames : selectedMaqam.getDescendingNoteNames();
 
-    const updated = new Maqam(selectedMaqam.getId(), selectedMaqam.getName(), ascNames, descNames, selectedMaqam.getSuyur());
+    const others = maqamat.filter((m) => m.getId() !== maqam.getId());
+    await updateAllMaqamat([...others, maqam]);
+    setSelectedMaqam(maqam);
+  };
 
-    const others = maqamat.filter((m) => m.getId() !== updated.getId());
-    await updateAllMaqamat([...others, updated]);
-    setSelectedMaqam(updated);
+  const handleSaveAscending = async () => {
+    if (!selectedMaqam) return;
+
+    const descendingNoteNames = selectedMaqam.getDescendingNoteNames().length > 0 ? selectedMaqam.getDescendingNoteNames() : [...selectedCellNoteNames].reverse();
+
+    const updated = new Maqam(selectedMaqam.getId(), selectedMaqam.getName(), selectedCellNoteNames, descendingNoteNames, selectedMaqam.getSuyur());
+    handleSaveMaqam(updated);
+  }
+
+  const handleSaveDescending = async () => {
+    if (!selectedMaqam) return;
+
+    const updated = new Maqam(selectedMaqam.getId(), selectedMaqam.getName(), selectedMaqam.getAscendingNoteNames(), selectedCellNoteNames.reverse(), selectedMaqam.getSuyur());
+    handleSaveMaqam(updated);
   };
 
   // Delete Maqam
@@ -141,17 +151,17 @@ export default function MaqamManager() {
         Maqam Manager
         {selectedMaqam && (
           <span className="maqam-manager__selections">
-            {` - Selected Notes (${isAscending ? "Ascending" : "Descending"}): `} {displayNoteNames(selectedCellDetails, isAscending)}
-            <button className="maqam-manager__toggle-button" onClick={() => setIsAscending((prev) => !prev)}>
+            {` - Selected Notes: `} {displayNoteNames(selectedCellDetails, isAscending)}
+            {/* <button className="maqam-manager__toggle-button" onClick={() => setIsAscending((prev) => !prev)}>
               Switch to {isAscending ? "Descending" : "Ascending"}
-            </button>
+            </button> */}
             <button className="maqam-manager__play-button" onClick={playSelectedMaqam}>
               Play Selected Maqam <PlayCircleIcon />
             </button>
           </span>
         )}
       </h2>
-      {selectedMaqam && selectedMaqam.getAscendingNoteNames().length + selectedMaqam.getDescendingNoteNames().length > 0 && (
+      {/* {selectedMaqam && selectedMaqam.getAscendingNoteNames().length + selectedMaqam.getDescendingNoteNames().length > 0 && (
         <>
           <div className="maqam-manager__rows">
             {isAscending ? (
@@ -167,7 +177,7 @@ export default function MaqamManager() {
             )}
           </div>
         </>
-      )}
+      )} */}
 
       <div className="maqam-manager__list">
         {maqamat.length === 0 ? (
@@ -224,8 +234,16 @@ export default function MaqamManager() {
             className="maqam-manager__maqam-input"
           />
 
-          <button onClick={handleSaveMaqam} className="maqam-manager__save-button">
-            Save
+          <button onClick={() => handleSaveMaqam(selectedMaqam)} className="maqam-manager__save-button">
+            Save Details
+          </button>
+
+          <button onClick={handleSaveAscending} className="maqam-manager__save-button">
+            Save Ascending
+          </button>
+
+          <button onClick={handleSaveDescending} className="maqam-manager__save-button">
+            Save Descending
           </button>
 
           <button onClick={handleDeleteMaqam} className="maqam-manager__delete-button">

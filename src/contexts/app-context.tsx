@@ -122,7 +122,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     decay: 0.01,
     sustain: 0.7,
     release: 0.3,
-    waveform: "sine",
+    waveform: "triangle"
   });
 
   const activeNotesRef = useRef<Map<number, { oscillator: OscillatorNode; gainNode: GainNode }[]>>(new Map());
@@ -249,47 +249,6 @@ function sendPitchBend(detuneSemitones: number) {
 
     router.replace(`/?${params.join("&")}`, { scroll: false });
   }, [selectedTuningSystem, selectedJins, selectedMaqam, selectedIndices, originalIndices]);
-
-  useEffect(() => {
-    if (selectedJins) {
-      const selectedNoteNames = selectedCells.map((cell: SelectedCell) => {
-        const details = getSelectedCellDetails(cell);
-        return details.noteName;
-      });
-
-      setSelectedJins(new Jins(selectedJins.getId(), selectedJins.getName(), selectedNoteNames));
-    } else if (selectedMaqam) {
-      if (isAscending) {
-        const selectedNoteNames = selectedCells.map((cell: SelectedCell) => {
-          const details = getSelectedCellDetails(cell);
-          return details.noteName;
-        });
-        setSelectedMaqam(
-          new Maqam(
-            selectedMaqam.getId(),
-            selectedMaqam.getName(),
-            selectedNoteNames,
-            selectedMaqam.getDescendingNoteNames(),
-            selectedMaqam.getSuyur()
-          )
-        );
-      } else {
-        const selectedNoteNames = selectedCells.map((cell: SelectedCell) => {
-          const details = getSelectedCellDetails(cell);
-          return details.noteName;
-        });
-        setSelectedMaqam(
-          new Maqam(
-            selectedMaqam.getId(),
-            selectedMaqam.getName(),
-            selectedMaqam.getAscendingNoteNames(),
-            [...selectedNoteNames].reverse(),
-            selectedMaqam.getSuyur()
-          )
-        );
-      }
-    }
-  }, [selectedCells]);
 
   useEffect(() => {
     if (!selectedMaqam) return;

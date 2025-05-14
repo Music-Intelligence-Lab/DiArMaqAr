@@ -1,6 +1,7 @@
 /* styles/jins‑transpositions.scss */
-.jins‑transpositions {
+.jins-transpositions {
   width: 100%;
+  font-size: 0.9rem;
 
   &__title {
     width: 100%;
@@ -10,6 +11,15 @@
     font-weight: bold;
     text-align: center;
     padding: 1rem 0;
+  }
+
+  &__button {
+    background-color: $primary;
+    color: white;
+    padding: 5px 10px; 
+    border-radius: 3px;
+    cursor: pointer;
+    margin: 0 5px;
   }
 
   &__table {
@@ -47,5 +57,9 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     resize: vertical;
+  }
+
+  .jins-transpositions__spacer {
+    padding: 10px 0;
   }
 }
