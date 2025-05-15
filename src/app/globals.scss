@@ -7,13 +7,16 @@ $mobile-bottom-navbar-height: 100px;
 $mobile-page-height: calc(100svh - $mobile-top-bar-height);
 
 $primary: #69247C;
-$secondary: #DA498D;
+$secondary: #6100b0;
 $tertiary: #FAC67A;
 $quaternary: #4569b6;
 $text: #ffffff;
 $success: #28a745;
 $delete: #e74c3c;
 $disabled: #3b3b3b;
+$dark-grey: #222222;
+$grey: #555555;
+$light-grey: #f0f0f0;
 
 $hovered-primary: lighten($primary, 10%);
 $hovered-secondary: darken($secondary, 10%);
@@ -22,7 +25,7 @@ $hovered-success: darken($success, 10%);
 $hovered-delete: darken($delete, 10%);
 $hovered-disabled: darken($disabled, 10%);
 
-$main-gradient: linear-gradient(0deg, $secondary, $tertiary);
+$main-gradient: linear-gradient(0deg, $dark-grey, $dark-grey);
 
 @import "../styles/home-page.scss";
 @import "../styles/tuning-system-manager.scss";

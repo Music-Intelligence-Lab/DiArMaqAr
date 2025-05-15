@@ -3,6 +3,7 @@
 
   &__header {
     font-size: 1.5rem;
+    margin-left: 1rem;
     margin-bottom: 1.5rem;
     font-weight: bold;
     display: inline;
@@ -36,7 +37,7 @@
   &__textarea,
   &__select {
     padding: 0.4rem;
-    font-size: 1rem;
+    font-size: 0.9rem;
     border: 1px solid #ccc;
     border-radius: 4px;
     resize: vertical;
@@ -45,7 +46,7 @@
   &__select {
     margin-bottom: 1.5rem;
     padding: 0.4rem;
-    font-size: 1rem;
+    // font-size: 1rem;
   }
 
   &__buttons {
@@ -56,7 +57,7 @@
   &__delete-button {
     margin-right: 20px;
     padding: 10px 20px;
-    font-size: 16px;
+    font-size: 0.9rem;
     border-radius: 5px;
     cursor: pointer;
     transition: 0.3s;
@@ -205,7 +206,7 @@
     }
 
     td {
-      font-size: 12px;
+      font-size: 11px;
       padding: 5px 0;
       text-align: center;
       vertical-align: middle;
@@ -227,7 +228,7 @@
   &__select-note,
   &__select-abjad {
     border: none;
-    border-radius: 4px;
+    border-radius: 0px;
     width: 70px;
     font-size: 12px;
   }

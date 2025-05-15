@@ -148,7 +148,7 @@ export default function MaqamManager() {
   return (
     <div className="maqam-manager">
       <h2 className="maqam-manager__header">
-        Maqam Manager
+        Maqamāt
         {selectedMaqam && (
           <span className="maqam-manager__selections">
             {` - Selected Notes: `} {displayNoteNames(selectedCellDetails, isAscending)}
