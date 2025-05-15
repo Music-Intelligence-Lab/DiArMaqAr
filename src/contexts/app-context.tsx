@@ -120,17 +120,17 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
   const [envelopeParams, setEnvelopeParams] = useState<EnvelopeParams>({
     attack: 0.01,
-    decay: 0.01,
+    decay: 0.2,
     sustain: 0.7,
-    release: 0.3,
+    release: 0.1,
     waveform: "triangle",
   });
 
   const activeNotesRef = useRef<Map<number, { oscillator: OscillatorNode; gainNode: GainNode }[]>>(new Map());
 
   const [volume, setVolume] = useState(0.5);
-  const [duration, setDuration] = useState(1);
-  const [tempo, setTempo] = useState<number>(120);
+  const [duration, setDuration] = useState(0.1);
+  const [tempo, setTempo] = useState<number>(300);
 
   const [selectedCells, setSelectedCells] = useState<SelectedCell[]>([]);
   const [selectedIndices, setSelectedIndices] = useState<number[]>([]);
