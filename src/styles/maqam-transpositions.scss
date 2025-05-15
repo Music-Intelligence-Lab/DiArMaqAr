@@ -1,6 +1,6 @@
 .maqam‑transpositions {
   width: 100%;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 
   &__title {
     width: 100%;
@@ -8,8 +8,8 @@
     color: #fff;
     font-size: 1.5rem;
     font-weight: bold;
-    text-align: center;
-    padding: 1rem 0;
+    text-align: left;
+    padding: 1rem 1rem;
   }
 
   &__button {
@@ -28,7 +28,7 @@
     th,
     td {
       vertical-align: middle;
-      padding: 5px 2px;
+      padding: 5px 10px;
     }
 
     tbody {
@@ -46,7 +46,7 @@
   &__header,
   &__cell {
     border: 1px solid #e2e8f0;
-    text-align: center;
+    text-align: left;
   }
 
   &__input {
