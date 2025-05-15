@@ -70,7 +70,7 @@ export default function JinsManager() {
   return (
     <div className="jins-manager">
       <h2 className="jins-manager__header">
-        Jins Manager{" "}
+        Ajnās{" "}
         {selectedJins && (
           <span className="jins-manager__selections">
             {`- ${selectedJins.getName()}`}{" "}

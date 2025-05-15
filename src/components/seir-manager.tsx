@@ -110,12 +110,12 @@ export default function SeirManager() {
   return (
     <div className="seir-manager">
       <details className="seir-manager__details">
-        <summary className="seir-manager__summary"><h2 className="seir-manager__header">Seir Manager</h2></summary>
+        <summary className="seir-manager__summary"><h2 className="seir-manager__header">Suyūr</h2></summary>
         
         <div className="seir-manager__group">
           <div className="seir-manager__input-container">
             <label className="seir-manager__label" htmlFor="seirSelect">
-              Select Seir or Create New:
+              Select Sayr or Create New:
             </label>
             <select id="seirSelect" className="seir-manager__select" value={seirId} onChange={handleSelect}>
               <option value="">-- New Seir --</option>
