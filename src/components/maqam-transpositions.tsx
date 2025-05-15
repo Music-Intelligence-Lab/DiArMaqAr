@@ -4,6 +4,7 @@
 import React from "react";
 import { SelectedCell, useAppContext } from "@/contexts/app-context";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
+import computeRatio from "@/functions/computeRatio";
 
 export default function MaqamTranspositions() {
   const {
@@ -38,27 +39,6 @@ export default function MaqamTranspositions() {
   // determine mode based on originalValueType
   const valueType = selectedCellDetails[0].originalValueType;
   const useRatio = valueType === "fraction" || valueType === "ratios";
-
-  // helpers for ratio and gcd
-  function gcd(a: number, b: number): number {
-    a = Math.abs(a);
-    b = Math.abs(b);
-    const EPS = 1e-10;
-    while (b > EPS) {
-      const t = a % b;
-      a = b;
-      b = t;
-    }
-    return a;
-  }
-  const computeRatio = (prev: string, next: string) => {
-    const [a, b] = prev.split("/").map(Number);
-    const [c, d] = next.split("/").map(Number);
-    const num = c * b;
-    const den = d * a;
-    const g = gcd(num, den);
-    return `${num / g}:${den / g}`;
-  };
 
   // build interval pattern: for ratios or cent/stringLength diffs
   type Pattern = { ratio?: string; diff?: number };

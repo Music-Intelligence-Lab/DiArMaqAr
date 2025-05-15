@@ -35,6 +35,7 @@ export interface CellDetails {
   frequency: string;
   originalValue: string;
   originalValueType: string;
+  octave?: number;
 }
 
 interface MidiPortInfo {
