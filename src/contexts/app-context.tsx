@@ -313,10 +313,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       sendPitchBend(detune);
       const vel = Math.round(volume * 127);
       sendMidiMessage([0x90, note, vel]);
-      console.log("NOTE ON", note, vel ,duration);
       // schedule note-off after givenDuration (in seconds)
       setTimeout(() => {
-        console.log("NOTE OFF", note);
         sendMidiMessage([0x80, note, 0]);
       }, givenDuration * 1000);
 
@@ -605,7 +603,6 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
     if (cell.index < 0 || cell.index >= selectedIndices.length) return emptyDetails;
     const combinedIndex = selectedIndices[cell.index];
-    if (combinedIndex < 0) return { ...emptyDetails, noteName: "none" };
 
     const baseLength = octaveOneNoteNames.length;
     let noteName = "none";
