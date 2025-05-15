@@ -56,7 +56,7 @@ interface AppContextInterface {
   noteNames: TransliteratedNoteName[][];
   setNoteNames: (noteNames: TransliteratedNoteName[][]) => void;
   getFirstNoteName: () => string;
-  handleStartNoteNameChange: (startingNoteName: string) => void;
+  handleStartNoteNameChange: (startingNoteName: string, givenNoteNames?: TransliteratedNoteName[][], givenNumberOfPitchClasses?: number ) => void;
   playNoteFrequency: (frequency: number, duration?: number) => void;
   envelopeParams: EnvelopeParams;
   setEnvelopeParams: React.Dispatch<React.SetStateAction<EnvelopeParams>>;
@@ -101,6 +101,9 @@ interface AppContextInterface {
   noteOn: (frequency: number) => void;
   noteOff: (frequency: number) => void;
   handleUrlParams: (params: { tuningSystemId?: string; jinsId?: string; maqamId?: string; firstNote?: string }) => void;
+  midiInputs: MidiPortInfo[];
+  selectedMidiInputId: string | null;
+  setSelectedMidiInputId: React.Dispatch<React.SetStateAction<string | null>>;
   midiOutputs: MidiPortInfo[];
   selectedMidiOutputId: string | null;
   setSelectedMidiOutputId: React.Dispatch<React.SetStateAction<string | null>>;
@@ -147,6 +150,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   const audioCtxRef = useRef<AudioContext | null>(null);
   const masterGainRef = useRef<GainNode | null>(null);
 
+  const [midiInputs, setMidiInputs] = useState<MidiPortInfo[]>([]);
+  const [selectedMidiInputId, setSelectedMidiInputId] = useState<string | null>(null);
   const [midiOutputs, setMidiOutputs] = useState<MidiPortInfo[]>([]);
   const [selectedMidiOutputId, setSelectedMidiOutputId] = useState<string | null>(null);
   const [soundMode, setSoundMode] = useState<SoundMode>("waveform");
@@ -277,27 +282,101 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   }, [isAscending]);
 
   useEffect(() => {
+    if (!selectedTuningSystem) return;
+
+    if (selectedJins) {
+      if (checkIfJinsIsSelectable(selectedJins)) {
+        handleClickJins(selectedJins);
+      } else {
+        setSelectedJins(null);
+      }
+    }
+
+    if (selectedMaqam) {
+      if (checkIfMaqamIsSelectable(selectedMaqam)) {
+        handleClickMaqam(selectedMaqam);
+      } else {
+        setSelectedMaqam(null);
+      }
+    }
+
+  }, [selectedIndices])
+
+  useEffect(() => {
     if (!navigator.requestMIDIAccess) return;
     navigator
       .requestMIDIAccess({ sysex: false })
       .then((ma) => {
         midiAccessRef.current = ma;
-        const list = Array.from(ma.outputs.values()).map((o) => ({
-          id: o.id,
-          name: o.name || o.manufacturer || "Unknown",
-        }));
-        setMidiOutputs(list);
+
+        const outs = Array.from(ma.outputs.values());
+        setMidiOutputs(outs.map((o) => ({ id: o.id, name: o.name || o.manufacturer || "Unknown" })));
+
+        const ins = Array.from(ma.inputs.values());
+        setMidiInputs(ins.map((i) => ({ id: i.id, name: i.name || i.manufacturer || "Unknown" })));
+
+        // we do NOT attach input.onmidimessage here
         ma.onstatechange = () => {
-          // re-scan on connect/disconnect
-          const outs = Array.from(ma.outputs.values()).map((o) => ({
-            id: o.id,
-            name: o.name || o.manufacturer || "Unknown",
-          }));
-          setMidiOutputs(outs);
+          const newOuts = Array.from(ma.outputs.values());
+          setMidiOutputs(newOuts.map((o) => ({ id: o.id, name: o.name || o.manufacturer || "Unknown" })));
+
+          const newIns = Array.from(ma.inputs.values());
+          setMidiInputs(newIns.map((i) => ({ id: i.id, name: i.name || i.manufacturer || "Unknown" })));
+          // binding will happen in the next effect
         };
       })
       .catch(console.error);
   }, []);
+
+  // 3) Re-attachment effect — runs whenever inputs list or selected ID changes:
+  useEffect(() => {
+    const ma = midiAccessRef.current;
+    if (!ma) return;
+
+    for (const input of Array.from(ma.inputs.values())) {
+      input.onmidimessage = handleMidiInput;
+    }
+
+    return () => {
+      for (const input of Array.from(ma.inputs.values())) {
+        input.onmidimessage = null;
+      }
+    };
+  }, [selectedMidiInputId, midiInputs, selectedTuningSystem, pitchClasses]);
+
+  const handleMidiInput: NonNullable<MIDIInput["onmidimessage"]> =
+  function (this: MIDIInput, ev: MIDIMessageEvent) {
+    // only from our selected port
+    if (this.id !== selectedMidiInputId) return;
+
+    const data = ev.data;
+    if (!data) return;                        // safety
+    const [status, noteNumber, velocity] = data;
+    const cmd = status & 0xf0;
+
+    // ——— mapping setup ———
+    const cells = getAllCells();
+
+    const MIDI_BASE = 55;
+    const numberOfCellsPerRow = pitchClassesArr.length;
+
+    const idx = noteNumber + numberOfCellsPerRow - MIDI_BASE;
+
+    if (idx < 0 || idx >= cells.length) return;
+
+    // grab the frequency from your cell‐detail helper
+    const freqStr = getSelectedCellDetails(cells[idx]).frequency;
+    const freq = parseFloat(freqStr);
+    if (isNaN(freq)) return;
+
+    // ——— dispatch sound ———
+    if (cmd === 0x90 && velocity > 0) {
+      noteOn(freq);
+    } else if (cmd === 0x80 || (cmd === 0x90 && velocity === 0)) {
+      noteOff(freq);
+    }
+  };
+
 
   const playNoteFrequency = (frequency: number, givenDuration: number = duration) => {
     // 1) Mute
@@ -698,6 +777,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     while (mappedIndices.length < numberOfPitchClasses) {
       mappedIndices.push(-1);
     }
+
     if (mappedIndices.length > numberOfPitchClasses) {
       mappedIndices.length = numberOfPitchClasses;
     }
@@ -712,11 +792,11 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     givenNoteNames: TransliteratedNoteName[][] = [],
     givenNumberOfPitchClasses: number = 0
   ) => {
-    clearSelections();
-
+    
     const noteNamesToSearch = givenNoteNames.length ? givenNoteNames : noteNames;
 
     if (startingNoteName === "" && noteNamesToSearch.length > 0) {
+
       for (const setOfNotes of noteNamesToSearch) {
         if (setOfNotes[0] === "ʿushayrān") {
           return mapIndices(setOfNotes, givenNumberOfPitchClasses);
@@ -913,6 +993,9 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         noteOn,
         noteOff,
         handleUrlParams,
+        midiInputs,
+        selectedMidiInputId,
+        setSelectedMidiInputId,
         midiOutputs,
         selectedMidiOutputId,
         setSelectedMidiOutputId,
