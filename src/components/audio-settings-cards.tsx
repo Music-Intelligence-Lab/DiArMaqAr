@@ -15,6 +15,9 @@ const AudioSettingsCard = () => {
     setDuration,
     tempo,
     setTempo,
+    midiInputs,
+    selectedMidiInputId,
+    setSelectedMidiInputId,
     midiOutputs,
     selectedMidiOutputId,
     setSelectedMidiOutputId,
@@ -159,6 +162,25 @@ const AudioSettingsCard = () => {
               valueLabelDisplay="auto"
             />
           </Box>
+
+          <div style={{ marginBottom: "16px" }}>
+              <label htmlFor="midi-output-select" style={{ display: "block", marginBottom: "4px" }}>
+                MIDI Input:
+              </label>
+              <select
+                id="midi-output-select"
+                value={selectedMidiInputId || ""}
+                onChange={(e) => setSelectedMidiInputId(e.target.value || null)}
+                className="audio-settings-card__select"
+              >
+                <option value="">– choose an input –</option>
+                {midiInputs.map((o) => (
+                  <option key={o.id} value={o.id}>
+                    {o.name}
+                  </option>
+                ))}
+              </select>
+            </div>
 
           <div>Sound Output:</div>
           <div className="audio-settings-card__sound-mode">

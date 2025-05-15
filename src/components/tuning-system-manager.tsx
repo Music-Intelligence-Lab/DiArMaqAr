@@ -208,7 +208,7 @@ export default function TuningSystemManager() {
       if (chosen) {
         // set the chosen system
         setSelectedTuningSystem(chosen);
-        handleStartNoteNameChange("");
+        handleStartNoteNameChange("", chosen.getSetsOfNoteNames(), chosen.getPitchClasses().length);
       }
     }
   };
