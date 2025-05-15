@@ -36,8 +36,6 @@ export default function TuningSystemManager() {
     originalIndices,
     setOriginalIndices,
     mapIndices,
-    initialMappingDone,
-    setInitialMappingDone,
     clearSelections,
     handleStartNoteNameChange,
   } = useAppContext();
@@ -143,13 +141,6 @@ export default function TuningSystemManager() {
 
       const loadedNames = selectedTuningSystem.getSetsOfNoteNames(); // array of strings from JSON
       setNoteNames(loadedNames);
-
-      if (initialMappingDone) {
-        const firstSetOfNotes = loadedNames[0] ?? [];
-        mapIndices(firstSetOfNotes);
-      } else {
-        setInitialMappingDone(true);
-      }
     }
   }, [selectedTuningSystem]);
 
@@ -217,6 +208,7 @@ export default function TuningSystemManager() {
       if (chosen) {
         // set the chosen system
         setSelectedTuningSystem(chosen);
+        handleStartNoteNameChange("");
       }
     }
   };
@@ -281,7 +273,6 @@ export default function TuningSystemManager() {
       const updatedList = tuningSystems.filter((ts) => ts.getId() !== selectedTuningSystem.getId());
       updateAllTuningSystems(updatedList);
       setSelectedTuningSystem(null);
-      console.log("TuningSystem deleted:", selectedTuningSystem.getId());
       resetFormForNewSystem();
       clearSelections();
     }

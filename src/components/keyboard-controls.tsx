@@ -16,7 +16,7 @@ export default function KeyboardControls() {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.repeat || e.target instanceof HTMLInputElement) return;
+      if (e.repeat) return;
       const idx = keys.indexOf(e.key);
       if (idx >= 0 && idx < selectedCells.length) {
         const cell = selectedCells[idx];
