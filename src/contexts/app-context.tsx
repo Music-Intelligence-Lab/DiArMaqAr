@@ -122,7 +122,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     decay: 0.01,
     sustain: 0.7,
     release: 0.3,
-    waveform: "triangle"
+    waveform: "triangle",
   });
 
   const activeNotesRef = useRef<Map<number, { oscillator: OscillatorNode; gainNode: GainNode }[]>>(new Map());
@@ -153,22 +153,22 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   const midiAccessRef = useRef<MIDIAccess | null>(null);
 
   const sendMidiMessage = (bytes: number[]) => {
-  const ma = midiAccessRef.current;
-  if (!ma || !selectedMidiOutputId) return;
+    const ma = midiAccessRef.current;
+    if (!ma || !selectedMidiOutputId) return;
 
-  const port = ma.outputs.get(selectedMidiOutputId);
-  port?.send(bytes);
-};
+    const port = ma.outputs.get(selectedMidiOutputId);
+    port?.send(bytes);
+  };
 
-function sendPitchBend(detuneSemitones: number) {
-  const semitoneRange = 2;
-  const center = 8192;
-  const bendOffset = Math.round((detuneSemitones / semitoneRange) * center);
-  const bendValue  = Math.max(0, Math.min(16383, center + bendOffset));
-  const lsb =  bendValue  & 0x7F;
-  const msb = (bendValue >> 7) & 0x7F;
-  sendMidiMessage([0xE0, lsb, msb]);
-}
+  function sendPitchBend(detuneSemitones: number) {
+    const semitoneRange = 2;
+    const center = 8192;
+    const bendOffset = Math.round((detuneSemitones / semitoneRange) * center);
+    const bendValue = Math.max(0, Math.min(16383, center + bendOffset));
+    const lsb = bendValue & 0x7f;
+    const msb = (bendValue >> 7) & 0x7f;
+    sendMidiMessage([0xe0, lsb, msb]);
+  }
 
   const router = useRouter();
 
@@ -277,17 +277,20 @@ function sendPitchBend(detuneSemitones: number) {
 
   useEffect(() => {
     if (!navigator.requestMIDIAccess) return;
-    navigator.requestMIDIAccess({ sysex: false })
-      .then(ma => {
+    navigator
+      .requestMIDIAccess({ sysex: false })
+      .then((ma) => {
         midiAccessRef.current = ma;
-        const list = Array.from(ma.outputs.values()).map(o => ({
-          id: o.id, name: o.name || o.manufacturer || "Unknown"
+        const list = Array.from(ma.outputs.values()).map((o) => ({
+          id: o.id,
+          name: o.name || o.manufacturer || "Unknown",
         }));
         setMidiOutputs(list);
         ma.onstatechange = () => {
           // re-scan on connect/disconnect
-          const outs = Array.from(ma.outputs.values()).map(o => ({
-            id: o.id, name: o.name || o.manufacturer || "Unknown"
+          const outs = Array.from(ma.outputs.values()).map((o) => ({
+            id: o.id,
+            name: o.name || o.manufacturer || "Unknown",
           }));
           setMidiOutputs(outs);
         };
@@ -296,6 +299,30 @@ function sendPitchBend(detuneSemitones: number) {
   }, []);
 
   const playNoteFrequency = (frequency: number, givenDuration: number = duration) => {
+    // 1) Mute
+    if (soundMode === "mute") return;
+    // 2) MIDI
+    if (soundMode === "midi") {
+      // compute float MIDI note and detune fraction
+      const mf = frequencyToMidiNoteNumber(frequency);
+      const note = Math.floor(mf);
+      const detune = mf - note;
+
+      // send pitch bend then note-on
+      sendPitchBend(detune);
+      const vel = Math.round(volume * 127);
+      sendMidiMessage([0x90, note, vel]);
+      console.log("NOTE ON", note, vel ,duration);
+      // schedule note-off after givenDuration (in seconds)
+      setTimeout(() => {
+        console.log("NOTE OFF", note);
+        sendMidiMessage([0x80, note, 0]);
+      }, givenDuration * 1000);
+
+      return;
+    }
+
+    // 3) Waveform (unchanged)
     if (!audioCtxRef.current || !masterGainRef.current) return;
     if (isNaN(frequency) || frequency <= 0) return;
 
@@ -326,92 +353,91 @@ function sendPitchBend(detuneSemitones: number) {
     oscillator.stop(releaseEnd);
   };
 
-  const playSequence = (frequencies: number[], noteDuration = 1) => {
+  const playSequence = (frequencies: number[], noteDuration = duration) => {
     frequencies.forEach((freq, i) => {
       const delayMs = (60 / tempo) * i * 1000;
       setTimeout(() => playNoteFrequency(freq, noteDuration), delayMs);
     });
   };
 
-function noteOn(frequency: number) {
-  // 1) Mute
-  if (soundMode === "mute") return;
+  function noteOn(frequency: number) {
+    // 1) Mute
+    if (soundMode === "mute") return;
 
-  // 2) MIDI
-  if (soundMode === "midi") {
-    // 1) compute float note & split into int + detune
-    const mf = frequencyToMidiNoteNumber(frequency);
-    const note = Math.floor(mf);
-    const detune = mf - note;
+    // 2) MIDI
+    if (soundMode === "midi") {
+      // 1) compute float note & split into int + detune
+      const mf = frequencyToMidiNoteNumber(frequency);
+      const note = Math.floor(mf);
+      const detune = mf - note;
 
-    // 2) send pitch bend THEN Note On
-    sendPitchBend(detune);
-    const vel = Math.round(volume * 127);
-    sendMidiMessage([0x90, note, vel]);
-    return;
-  }
+      // 2) send pitch bend THEN Note On
+      sendPitchBend(detune);
+      const vel = Math.round(volume * 127);
+      sendMidiMessage([0x90, note, vel]);
+      return;
+    }
 
-  // 3) Waveform (unchanged)
-  const audioCtx = audioCtxRef.current!;
-  const masterGain = masterGainRef.current!;
-  const now = audioCtx.currentTime;
-  const { attack, decay, sustain, waveform } = envelopeParams;
+    // 3) Waveform (unchanged)
+    const audioCtx = audioCtxRef.current!;
+    const masterGain = masterGainRef.current!;
+    const now = audioCtx.currentTime;
+    const { attack, decay, sustain, waveform } = envelopeParams;
 
-  const osc = audioCtx.createOscillator();
-  osc.type = waveform as OscillatorType;
-  osc.frequency.setValueAtTime(frequency, now);
-  const gain = audioCtx.createGain();
-  gain.gain.setValueAtTime(0, now);
-  gain.gain.linearRampToValueAtTime(1, now + attack);
-  gain.gain.linearRampToValueAtTime(sustain, now + attack + decay);
+    const osc = audioCtx.createOscillator();
+    osc.type = waveform as OscillatorType;
+    osc.frequency.setValueAtTime(frequency, now);
+    const gain = audioCtx.createGain();
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(1, now + attack);
+    gain.gain.linearRampToValueAtTime(sustain, now + attack + decay);
 
-  osc.connect(gain).connect(masterGain);
-  osc.start(now);
+    osc.connect(gain).connect(masterGain);
+    osc.start(now);
 
-  osc.onended = () => {
+    osc.onended = () => {
+      const queue = activeNotesRef.current.get(frequency) || [];
+      activeNotesRef.current.set(
+        frequency,
+        queue.filter((e) => e.oscillator !== osc)
+      );
+    };
+
     const queue = activeNotesRef.current.get(frequency) || [];
-    activeNotesRef.current.set(
-      frequency,
-      queue.filter((e) => e.oscillator !== osc)
-    );
-  };
-
-  const queue = activeNotesRef.current.get(frequency) || [];
-  queue.push({ oscillator: osc, gainNode: gain });
-  activeNotesRef.current.set(frequency, queue);
-
-  const MAX_VOICES = 2;
-  if (queue.length > MAX_VOICES) {
-    const oldest = queue.shift()!;
-    oldest.oscillator.stop(now);
+    queue.push({ oscillator: osc, gainNode: gain });
     activeNotesRef.current.set(frequency, queue);
-  }
-}
 
+    const MAX_VOICES = 2;
+    if (queue.length > MAX_VOICES) {
+      const oldest = queue.shift()!;
+      oldest.oscillator.stop(now);
+      activeNotesRef.current.set(frequency, queue);
+    }
+  }
 
   function noteOff(frequency: number) {
-  if (soundMode === "mute") return;
+    if (soundMode === "mute") return;
 
-  if (soundMode === "midi") {
-    const note = Math.floor(frequencyToMidiNoteNumber(frequency));
-    sendMidiMessage([0x80, note, 0]);
-    return;
+    if (soundMode === "midi") {
+      const note = Math.floor(frequencyToMidiNoteNumber(frequency));
+      sendMidiMessage([0x80, note, 0]);
+      return;
+    }
+
+    const audioCtx = audioCtxRef.current!;
+    const now = audioCtx.currentTime;
+    const { release } = envelopeParams;
+    const queue = activeNotesRef.current.get(frequency) || [];
+    if (!queue.length) return;
+
+    const voice = queue.shift()!;
+    voice.gainNode.gain.cancelScheduledValues(now);
+    voice.gainNode.gain.setValueAtTime(voice.gainNode.gain.value, now);
+    voice.gainNode.gain.linearRampToValueAtTime(0, now + release);
+    voice.oscillator.stop(now + release);
+
+    activeNotesRef.current.set(frequency, queue);
   }
-
-  const audioCtx = audioCtxRef.current!;
-  const now = audioCtx.currentTime;
-  const { release } = envelopeParams;
-  const queue = activeNotesRef.current.get(frequency) || [];
-  if (!queue.length) return;
-
-  const voice = queue.shift()!;
-  voice.gainNode.gain.cancelScheduledValues(now);
-  voice.gainNode.gain.setValueAtTime(voice.gainNode.gain.value, now);
-  voice.gainNode.gain.linearRampToValueAtTime(0, now + release);
-  voice.oscillator.stop(now + release);
-
-  activeNotesRef.current.set(frequency, queue);
-}
 
   const updateAllTuningSystems = async (newSystems: TuningSystem[]) => {
     setTuningSystems(newSystems);
@@ -692,9 +718,25 @@ function noteOn(frequency: number) {
 
     const noteNamesToSearch = givenNoteNames.length ? givenNoteNames : noteNames;
 
-    for (const setOfNotes of noteNamesToSearch) {
-      if (setOfNotes[0] === startingNoteName) {
-        return mapIndices(setOfNotes, givenNumberOfPitchClasses);
+    if (startingNoteName === "" && noteNamesToSearch.length > 0) {
+      for (const setOfNotes of noteNamesToSearch) {
+        if (setOfNotes[0] === "ʿushayrān") {
+          return mapIndices(setOfNotes, givenNumberOfPitchClasses);
+        }
+      }
+
+      for (const setOfNotes of noteNamesToSearch) {
+        if (setOfNotes[0] === "yegāh") {
+          return mapIndices(setOfNotes, givenNumberOfPitchClasses);
+        }
+      }
+
+      return mapIndices(noteNamesToSearch[0], givenNumberOfPitchClasses);
+    } else {
+      for (const setOfNotes of noteNamesToSearch) {
+        if (setOfNotes[0] === startingNoteName) {
+          return mapIndices(setOfNotes, givenNumberOfPitchClasses);
+        }
       }
     }
 
@@ -795,11 +837,7 @@ function noteOn(frequency: number) {
         const found = tuningSystems.find((ts) => ts.getId() === tuningSystemId);
         if (found) {
           setSelectedTuningSystem(found);
-          const givenIndices = handleStartNoteNameChange(
-            firstNote || found.getSetsOfNoteNames()[0][0],
-            found.getSetsOfNoteNames(),
-            found.getPitchClasses().length
-          );
+          const givenIndices = handleStartNoteNameChange(firstNote ?? "", found.getSetsOfNoteNames(), found.getPitchClasses().length);
 
           if (jinsId) {
             const foundJins = ajnas.find((j) => j.getId() === jinsId);
