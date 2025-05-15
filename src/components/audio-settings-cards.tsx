@@ -160,7 +160,7 @@ const AudioSettingsCard = () => {
             />
           </Box>
 
-          <div>Sound Mode:</div>
+          <div>Sound Output:</div>
           <div className="audio-settings-card__sound-mode">
             <button
               onClick={() => setSoundMode("mute")}
