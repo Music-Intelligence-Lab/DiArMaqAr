@@ -1,6 +1,8 @@
 .maqam-manager {
   display: flex;
   flex-direction: column;
+  gap: 10px;
+  width: 100%;
 
   &__header {
     margin: 10px 0;
@@ -11,7 +13,7 @@
   &__selections {
     display: flex;
     align-items: center;
-    font-size: 18px;
+    // font-size: 18px;
   }
 
   &__rows {
@@ -52,25 +54,23 @@
   }
 
   &__list {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
     width: 100%;
     gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   }
 
   &__item {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
-    width: 100%;
-    max-width: 200px;
-    padding: 10px;
+    padding: 5px;
     background-color: rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
+    border-radius: 5px;
+    font-size: 14px;
     color: $text;
     cursor: pointer;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    // box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
     transition: 0.3s;
 
     &_active {
@@ -127,7 +127,7 @@
   &__maqam-input {
     padding: 0.4rem;
     font-size: 1rem;
-    border: 1px solid #ccc;
+    // border: 1px solid #ccc;
     border-radius: 4px;
   }
 

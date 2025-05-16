@@ -37,9 +37,9 @@
   &__textarea,
   &__select {
     padding: 0.4rem;
-    font-size: 0.9rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    // font-size: 0.9rem;
+    // border: 1px solid #ccc;
+    // border-radius: 4px;
     resize: vertical;
   }
 
@@ -83,7 +83,7 @@
   }
 
   &__starting-note-container {
-    display: flex;
+    display: block;
     align-items: center;
     justify-content: space-evenly;
     gap: 10px;
@@ -199,24 +199,38 @@
     overflow: auto;
     background-color: white;
     color: black;
+    border: none;
+    padding: 0px 0;
+    margin: 0px 0;
 
+    
     th {
-      text-align: left;
-      padding: 10px;
+      // text-align: left;
+      padding: 0px 0;
+      margin: 0px 0;
+    }
+
+    tr {
+      border: 0px;
+      padding: 0px 0;
+      margin: 0px 0;
     }
 
     td {
       font-size: 11px;
-      padding: 5px 0;
+      padding-left: 10px;
+      padding-top: 2px;
+      padding-right: 10px;
+      padding-bottom: 2px;
       text-align: center;
       vertical-align: middle;
-      width: 70px;
-      max-width: 70px;
-      border-top: none;
-      border-bottom: none;
-      border-left: none;
+     // width: 70px;
+     // max-width: 70px;
+     height: 30px;
+      border: 0px;
+      margin: 0px;
       white-space: nowrap;
-      overflow: hidden;
+      overflow: scroll;
     }
   }
 
@@ -229,8 +243,11 @@
   &__select-abjad {
     border: none;
     border-radius: 0px;
+    background: white;
+    color: black;
     width: 70px;
     font-size: 12px;
+    text-align: center;
   }
 
   &__play-button {
@@ -244,7 +261,9 @@
   }
 
   &__checkbox {
-    transform: scale(1.1);
+    transform: scale(1);
     cursor: pointer;
+    padding: 0px;
+    margin: 0px;
   }
 }
