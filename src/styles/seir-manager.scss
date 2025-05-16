@@ -31,15 +31,16 @@
     font-weight: 600;
   }
 
-  &__select,
-  &__input,
-  &__textarea {
-    padding: 0.5rem;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+&__input,
+  &__textarea,
+  &__select {
+    padding: 0.4rem;
+    // font-size: 0.9rem;
+    // border: 1px solid #ccc;
+    // border-radius: 4px;
+    resize: vertical;
   }
-
+  
   &__form {
     display: flex;
     flex-direction: column;

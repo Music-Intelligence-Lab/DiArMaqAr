@@ -580,7 +580,7 @@ export default function TuningSystemManager() {
             </button>
           )}
         </summary>
-        <table className="tuning-system-manager__octave-table" border={1}>
+        <table className="tuning-system-manager__octave-table" border={0}>
           <tbody>
             {/* Row 1: "Index" */}
             <tr>
@@ -633,7 +633,8 @@ export default function TuningSystemManager() {
               {pitchClassesArr.map((_, colIndex) => (
                 <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
                   {octave === 1 || octave === 2 ? (
-                    <select
+                    <select className="tuning-system-manager__select-abjad"
+
                       value={selectedAbjadNames[colIndex + (octave === 1 ? 0 : numberOfPitchClasses)] || ""}
                       onChange={(e) => handleAbjadSelect(colIndex, e.target.value, octave)}
                     >
@@ -774,7 +775,9 @@ export default function TuningSystemManager() {
     <div className="tuning-system-manager">
       <details open={true} className="tuning-system-manager__details">
         <summary className="tuning-system-manager__summary">
-          <h2 className="tuning-system-manager__header">Tuning System Manager</h2>
+          <h2 className="tuning-system-manager__header">Tuning System</h2>
+                      {`: ${selectedTuningSystem?.getCreatorEnglish()} (${selectedTuningSystem?.getYear()}) ${selectedTuningSystem?.getTitleEnglish()}`}{" "}
+
         </summary>
         <div className="tuning-system-manager__group">
           <div className="tuning-system-manager__input-container">
@@ -1008,7 +1011,7 @@ export default function TuningSystemManager() {
         {pitchClassesArr.length !== 0 && (
           <div className="tuning-system-manager__starting-note-container">
             <div className="tuning-system-manager__starting-note-left">
-              Choose Which Note Name To Start On:
+              Start Note Names From:
               {noteNames.map((notes, index) => {
                 const startingNote = notes[0];
                 return (

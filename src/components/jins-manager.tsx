@@ -20,6 +20,10 @@ export default function JinsManager() {
     playNoteFrequency
   } = useAppContext();
 
+  const sortedAjnas = [...ajnas].sort((a, b) =>
+    a.getName().localeCompare(b.getName())
+  );
+
   useEffect(() => {
       if (selectedJins) {
         const selectedNoteNames = selectedCells.map((cell: SelectedCell) => {
@@ -73,8 +77,9 @@ export default function JinsManager() {
         Ajnās{" "}
         {selectedJins && (
           <span className="jins-manager__selections">
-            {`- ${selectedJins.getName()}`}{" "}
-            {selectedCellDetails.length > 0 && (
+            {`: ${selectedJins.getName()}`}{" "}
+           
+            {/* {selectedCellDetails.length > 0 && (
               <>
                 {" "}
                 - Selected Notes:{" "}
@@ -90,17 +95,17 @@ export default function JinsManager() {
                   );
                 })}
               </>
-            )}
+            )} */}
             <button className="jins-manager__play-button" onClick={playSelectedJins}>Play Selected Jins <PlayCircleIcon /></button>
           </span>
         )}
       </h2>
 
       <div className="jins-manager__list">
-        {ajnas.length === 0 ? (
+        {sortedAjnas.length === 0 ? (
           <p>No ajnas available.</p>
         ) : (
-          ajnas.map((jins, index) => (
+          sortedAjnas.map((jins, index) => (
             <div
               key={index}
               className={

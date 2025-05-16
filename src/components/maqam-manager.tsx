@@ -22,6 +22,10 @@ export default function MaqamManager() {
     checkIfMaqamIsSelectable,
   } = useAppContext();
 
+  const sortedMaqamat = [...maqamat].sort((a, b) =>
+    a.getName().localeCompare(b.getName())
+  );
+
   const usedNoteNames = getNoteNamesUsedInTuningSystem();
 
   const ascendingNoteNamesCellDetails: CellDetails[] = [];
@@ -148,13 +152,15 @@ export default function MaqamManager() {
   return (
     <div className="maqam-manager">
       <h2 className="maqam-manager__header">
-        Maqamāt
+        Maqāmāt
         {selectedMaqam && (
           <span className="maqam-manager__selections">
-            {` - Selected Notes: `} {displayNoteNames(selectedCellDetails, isAscending)}
-            {/* <button className="maqam-manager__toggle-button" onClick={() => setIsAscending((prev) => !prev)}>
+            {`: ${selectedMaqam.getName()}`}{" "}
+
+            {/* {` - Selected Notes: `} {displayNoteNames(selectedCellDetails, isAscending)}
+            { <button className="maqam-manager__toggle-button" onClick={() => setIsAscending((prev) => !prev)}>
               Switch to {isAscending ? "Descending" : "Ascending"}
-            </button> */}
+            </button> } */}
             <button className="maqam-manager__play-button" onClick={playSelectedMaqam}>
               Play Selected Maqam <PlayCircleIcon />
             </button>
@@ -180,10 +186,10 @@ export default function MaqamManager() {
       )} */}
 
       <div className="maqam-manager__list">
-        {maqamat.length === 0 ? (
+        {sortedMaqamat.length === 0 ? (
           <p>No maqamat available.</p>
         ) : (
-          maqamat.map((maqam, index) => (
+          sortedMaqamat.map((maqam, index) => (
             <div
               key={index}
               className={
