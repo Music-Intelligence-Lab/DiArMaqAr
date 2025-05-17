@@ -169,7 +169,8 @@
     }
   }
 
-  &__details, &__octave-details {
+  &__details,
+  &__octave-details {
     min-width: 100%;
     width: fit-content;
     padding: 10px;
@@ -177,7 +178,8 @@
     border-radius: 10px;
   }
 
-  &__summary, &__octave-summary {
+  &__summary,
+  &__octave-summary {
     font-size: 24px;
     margin-bottom: 10px;
     cursor: pointer;
@@ -195,14 +197,16 @@
 
   &__octave-table {
     width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
     overflow: auto;
-    background-color: white;
-    color: black;
-    border: none;
+    // background-color: white;
+    color: white;
+    border: 1px solid rgb(86, 86, 86);
     padding: 0px 0;
     margin: 0px 0;
 
-    
+
     th {
       // text-align: left;
       padding: 0px 0;
@@ -218,18 +222,24 @@
     td {
       font-size: 11px;
       padding-left: 10px;
-      padding-top: 2px;
+      padding-top: 5px;
       padding-right: 10px;
-      padding-bottom: 2px;
+      padding-bottom: 5px;
       text-align: center;
       vertical-align: middle;
-     // width: 70px;
-     // max-width: 70px;
-     height: 30px;
-      border: 0px;
+      // width: 70px;
+      min-width: 80px;
+      max-width: 80px;
+      max-height: 40px;
+      border: 1px solid rgb(86, 86, 86);
       margin: 0px;
-      white-space: nowrap;
-      overflow: scroll;
+      white-space: normal;
+      overflow-wrap: normal;
+      word-break: normal;
+    }
+
+    &__detectedPitchClassType {
+      background-color: $medium-grey;
     }
   }
 
@@ -242,11 +252,23 @@
   &__select-abjad {
     border: none;
     border-radius: 0px;
-    background: white;
-    color: black;
-    width: 70px;
+    background-color: transparent !important;
+    color: white !important;
+    height: 45px;
+    max-width: 60px;
     font-size: 12px;
     text-align: center;
+    white-space: wrap;
+
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    position: relative;
+    padding-left: 0rem;
+    padding-bottom: 0.5px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path fill='%23aaa' d='M0 0l5 6 5-6z'/></svg>") !important;
+    background-repeat: no-repeat !important;
+    background-position: center bottom 0rem !important;
   }
 
   &__play-button {

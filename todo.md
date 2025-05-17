@@ -32,4 +32,10 @@ function dottedQuarterDuration(bpm) {
 - Saving Starting Note Name, should also save or updated the Tuning System
 - Add Play Selected Sequence Button 
 
+# 17 May 2025
+- We need to be able to define a unique reference frequency for each tuning system starting note name. Currently we are using yegāh, 'ushayrān and rāst, but we should be able to define the reference freuqency for any starthing note name. 
+
+This is for comparitive purpouses, for example: to hear the exact difference in tuning between a jins rast rendered from yegāh as a starting note name, versus 'ushayrān as a starting note name, yegāh and 'ushayrān need to have different yet relative frequency values. 
+
+
 # ROADMAP FEATURES
