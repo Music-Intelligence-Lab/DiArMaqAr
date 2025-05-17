@@ -39,16 +39,6 @@
     ]
   },
   {
-    "id": "5",
-    "name": "jins ʿajam",
-    "noteNames": [
-      "rāst",
-      "dūgāh",
-      "buselīk/ʿushshāq",
-      "chahargāh"
-    ]
-  },
-  {
     "id": "6",
     "name": "jins nahāwand",
     "noteNames": [
@@ -167,6 +157,16 @@
       "shahnāz",
       "muḥayyar",
       "jawāb tīk kūrdī"
+    ]
+  },
+  {
+    "id": "5",
+    "name": "jins ʿajam ʿushayrān ",
+    "noteNames": [
+      "ʿajam ʿushayrān",
+      "rāst",
+      "dūgāh",
+      "kurdī"
     ]
   }
 ]

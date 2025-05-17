@@ -1,5 +1,77 @@
 // NoteNameMappings.ts
+import {
+  octaveZeroNoteNames,
+  octaveOneNoteNames,
+  octaveTwoNoteNames,
+  octaveThreeNoteNames,
+} from "../models/NoteName";
 
+// 1. Define the parallel English-note arrays:
+const englishOctaveZero = [
+  "G", 
+  "Ab--", "Ab-", "Ab", "Ab+", "A-", "A", 
+  "Bb-", "Bb", "Bb+", "Bb++", "B-b", "B--", "B-", "B", "B+",
+  "C", "C-#", "C#", "C#+",
+  "D", "D+", 
+  "Eb-", "Eb", "Eb+", "E-b", "E-", "E", "E+", 
+  "F","F+", "F-#", "F-#+", "F#", "F#+", 
+  "G-", 
+];
+
+const englishOctaveOne = [
+  "G", 
+  "Ab--", "Ab-", "Ab", "Ab+", "A-", "A", 
+  "Bb-", "Bb", "Bb+", "Bb++", "B-b", "B--", "B-", "B", "B+",
+  "C", "C-#", "C#", "C#+",
+  "D", "D+", 
+  "Eb-", "Eb", "Eb+", "E-b", "E-", "E", "E+", 
+  "F","F+", "F-#", "F-#+", "F#", "F#+", 
+  "G-", 
+];
+
+const englishOctaveTwo = [
+  "g",
+  "ab--", "ab-", "ab", "ab+", "a-", "a",
+  "bb-", "bb", "bb+", "bb++", "b-b", "b--", "b-", "b", "b+",
+  "c", "c-#", "c#", "c#+",
+  "d", "d+",
+  "eb-", "eb", "eb+", "e-b", "e-", "e", "e+",
+  "f", "f+", "f-#", "f-#+", "f#", "f#+",
+  "g-",
+];
+
+const englishOctaveThree = [
+  "g",
+  "ab--", "ab-", "ab", "ab+", "a-", "a",
+  "bb-", "bb", "bb+", "bb++", "b-b", "b--", "b-", "b", "b+",
+  "c", "c-#", "c#", "c#+",
+  "d", "d+",
+  "eb-", "eb", "eb+", "e-b", "e-", "e", "e+",
+  "f", "f+", "f-#", "f-#+", "f#", "f#+",
+  "g-",
+];
+
+// 2. A small helper to zip Arabic→English:
+function makeMap(arabic: string[], english: string[]) {
+  if (arabic.length !== english.length) {
+    throw new Error("octave arrays and english arrays must be same length");
+  }
+  return Object.fromEntries(arabic.map((a, i) => [a, english[i]]));
+}
+
+// 3. Build the single mapping by merging all four octaves:
+export const arabicToEnglishNoteMapping = {
+  ...makeMap(octaveZeroNoteNames,  englishOctaveZero),
+  ...makeMap(octaveOneNoteNames,   englishOctaveOne),
+  ...makeMap(octaveTwoNoteNames,   englishOctaveTwo),
+  ...makeMap(octaveThreeNoteNames, englishOctaveThree),
+};
+
+export function getEnglishNoteName(arabicName: string): string {
+  return arabicToEnglishNoteMapping[arabicName] || "--";
+}
+
+/* 
 export const arabicToEnglishNoteMapping: Record<string, string> = {
   "qarār yegāh": "G",
   "qarār qarār nīm ḥiṣār": "Ab-",
@@ -114,12 +186,13 @@ export const arabicToEnglishNoteMapping: Record<string, string> = {
   "jawāb māhūr": "b",
   "jawāb tīk māhūr": "b+",
   "jawāb kurdān": "c",
-};
+}; 
 
-/** Returns the English name for a given Arabic note name (or "--" if not found). */
+// Returns the English name for a given Arabic note name (or "--" if not found). 
 export function getEnglishNoteName(arabicName: string): string {
   return arabicToEnglishNoteMapping[arabicName] || "--";
 }
+  */
 
 // -----------------------
 // Abjad arrays
