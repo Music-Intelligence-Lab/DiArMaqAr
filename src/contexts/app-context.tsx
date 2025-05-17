@@ -12,6 +12,7 @@ import convertPitchClass, { shiftPitchClass, frequencyToMidiNoteNumber } from "@
 import { octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames, octaveThreeNoteNames, octaveFourNoteNames } from "@/models/NoteName";
 import Maqam, { Seir } from "@/models/Maqam";
 import { useRouter } from "next/navigation";
+import getNoteNamesUsedInTuningSystem from "@/functions/getNoteNamesUsedInTuningSystem";
 
 interface EnvelopeParams {
   attack: number;
@@ -85,7 +86,6 @@ interface AppContextInterface {
   setSelectedMaqam: React.Dispatch<React.SetStateAction<Maqam | null>>;
   checkIfMaqamIsSelectable: (maqam: Maqam) => boolean;
   handleClickMaqam: (maqam: Maqam) => void;
-  getNoteNamesUsedInTuningSystem: () => TransliteratedNoteName[];
   centsTolerance: number;
   setCentsTolerance: React.Dispatch<React.SetStateAction<number>>;
   clearSelections: () => void;
@@ -259,7 +259,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   useEffect(() => {
     if (!selectedMaqam) return;
 
-    const usedNoteNames = getNoteNamesUsedInTuningSystem();
+    const usedNoteNames = getNoteNamesUsedInTuningSystem(selectedIndices);
 
     const namesToSelect = isAscending ? selectedMaqam.getAscendingNoteNames() : selectedMaqam.getDescendingNoteNames();
 
@@ -608,54 +608,6 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     }
   };
 
-  const getNoteNamesUsedInTuningSystem = (givenIndices: number[] = []): TransliteratedNoteName[] => {
-    if (!selectedTuningSystem && givenIndices.length === 0) return [];
-
-    const indicesToSearch = givenIndices.length ? givenIndices : selectedIndices;
-
-    const noteNames = [];
-    const baseLength = octaveOneNoteNames.length;
-
-    for (let octave = 0; octave < 4; octave++) {
-      for (const index of indicesToSearch) {
-        if (index < baseLength) {
-          switch (octave) {
-            case 0:
-              noteNames.push(octaveZeroNoteNames[index] || "none");
-              break;
-            case 1:
-              noteNames.push(octaveOneNoteNames[index] || "none");
-              break;
-            case 2:
-              noteNames.push(octaveTwoNoteNames[index] || "none");
-              break;
-            case 3:
-              noteNames.push(octaveThreeNoteNames[index] || "none");
-              break;
-          }
-        } else {
-          const localIndex = index - baseLength;
-          switch (octave) {
-            case 0:
-              noteNames.push(octaveOneNoteNames[localIndex] || "none");
-              break;
-            case 1:
-              noteNames.push(octaveTwoNoteNames[localIndex] || "none");
-              break;
-            case 2:
-              noteNames.push(octaveThreeNoteNames[localIndex] || "none");
-              break;
-            case 3:
-              noteNames.push(octaveFourNoteNames[localIndex] || "none");
-              break;
-          }
-        }
-      }
-    }
-
-    return noteNames;
-  };
-
   const getSelectedCellDetails = (cell: SelectedCell): CellDetails => {
     const emptyDetails: CellDetails = {
       noteName: "",
@@ -824,12 +776,12 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   };
 
   const checkIfJinsIsSelectable = (jins: Jins, givenIndices: number[] = []) => {
-    const usedNoteNames = getNoteNamesUsedInTuningSystem(givenIndices);
+    const usedNoteNames = getNoteNamesUsedInTuningSystem(givenIndices.length ? givenIndices : selectedIndices);
     return jins.getNoteNames().every((noteName) => usedNoteNames.includes(noteName));
   };
 
   const handleClickJins = (jins: Jins, givenIndices: number[] = []) => {
-    const usedNoteNames = getNoteNamesUsedInTuningSystem(givenIndices);
+    const usedNoteNames = getNoteNamesUsedInTuningSystem(givenIndices.length ? givenIndices : selectedIndices);
 
     setSelectedJins(jins);
     setSelectedMaqam(null);
@@ -863,7 +815,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   };
 
   const checkIfMaqamIsSelectable = (maqam: Maqam, givenIndices: number[] = []) => {
-    const usedNoteNames = getNoteNamesUsedInTuningSystem(givenIndices);
+    const usedNoteNames = getNoteNamesUsedInTuningSystem(givenIndices.length ? givenIndices : selectedIndices);
 
     return (
       maqam.getAscendingNoteNames().every((noteName) => usedNoteNames.includes(noteName)) &&
@@ -872,7 +824,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   };
 
   const handleClickMaqam = (maqam: Maqam, givenIndices: number[] = []) => {
-    const usedNoteNames = getNoteNamesUsedInTuningSystem(givenIndices);
+    const usedNoteNames = getNoteNamesUsedInTuningSystem(givenIndices.length ? givenIndices : selectedIndices);
 
     // when selecting, populate cells for asc or desc based on stored noteNames
     setSelectedMaqam(maqam);
@@ -977,7 +929,6 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         setSelectedMaqam,
         checkIfMaqamIsSelectable,
         handleClickMaqam,
-        getNoteNamesUsedInTuningSystem,
         centsTolerance,
         setCentsTolerance,
         clearSelections,

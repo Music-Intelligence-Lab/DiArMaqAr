@@ -4,7 +4,7 @@
 import React from "react";
 import { SelectedCell, useAppContext } from "@/contexts/app-context";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
-import computeRatio from "@/functions/computeRatio";
+import computeRatio, { convertRatioToNumber } from "@/functions/computeRatio";
 
 export default function MaqamTranspositions() {
   const {
@@ -69,28 +69,37 @@ export default function MaqamTranspositions() {
   const ascendingSequences: SelectedCell[][] = [];
 
   // build matching sequences recursively
-  const buildAscendingSequences = (seq: SelectedCell[], idx: number) => {
-    if (idx === ascendingIntervalPattern.length) {
+  const buildAscendingSequences = (seq: SelectedCell[], cellIndex: number, intervalIndex: number) => {
+    if (intervalIndex === ascendingIntervalPattern.length) {
       ascendingSequences.push(seq);
       return;
     }
     const last = seq[seq.length - 1];
     const lastDet = getSelectedCellDetails(last);
 
-    for (const candidate of allCells) {
+    for (let i = cellIndex; i < allCells.length; i++) {
+      const candidate = allCells[i];
+
       const candDet = getSelectedCellDetails(candidate);
-      const pat = ascendingIntervalPattern[idx];
+      const pat = ascendingIntervalPattern[intervalIndex];
 
       if (useRatio) {
-        if (computeRatio(lastDet.fraction, candDet.fraction) === pat.ratio) {
-          buildAscendingSequences([...seq, candidate], idx + 1);
+        const computedRatio = computeRatio(lastDet.fraction, candDet.fraction);
+        if (computedRatio === pat.ratio) {
+          buildAscendingSequences([...seq, candidate], i + 1, intervalIndex + 1);
+          break;
+        } else if (convertRatioToNumber(computedRatio) > convertRatioToNumber(pat.ratio ?? "")) {
+          break;
         }
       } else {
         const lastVal = parseFloat(lastDet.originalValue);
         const candVal = parseFloat(candDet.originalValue);
         const diff = candVal - lastVal;
         if (Math.abs(diff - (pat.diff ?? 0)) <= centsTolerance) {
-          buildAscendingSequences([...seq, candidate], idx + 1);
+          buildAscendingSequences([...seq, candidate], i + 1, intervalIndex + 1);
+          break;
+        } else if (Math.abs(pat.diff ?? 0) + centsTolerance < Math.abs(diff)) {
+          break;
         }
       }
     }
@@ -98,35 +107,49 @@ export default function MaqamTranspositions() {
 
   const descendingSequences: SelectedCell[][] = [];
 
-  const buildDescendingSequences = (seq: SelectedCell[], idx: number) => {
-    if (idx === descendingIntervalPattern.length) {
+  const buildDescendingSequences = (seq: SelectedCell[], cellIndex: number, intervalIndex: number) => {
+    if (intervalIndex === descendingIntervalPattern.length) {
       descendingSequences.push(seq);
       return;
     }
     const last = seq[seq.length - 1];
     const lastDet = getSelectedCellDetails(last);
 
-    for (const candidate of allCells) {
+    for (let i = cellIndex; i >= 0; i--) {
+      const candidate = allCells[i];
+
       const candDet = getSelectedCellDetails(candidate);
-      const pat = descendingIntervalPattern[idx];
+      const pat = descendingIntervalPattern[intervalIndex];
 
       if (useRatio) {
-        if (computeRatio(lastDet.fraction, candDet.fraction) === pat.ratio) {
-          buildDescendingSequences([...seq, candidate], idx + 1);
+        const computedRatio = computeRatio(lastDet.fraction, candDet.fraction);
+        if (computedRatio === pat.ratio) {
+          buildDescendingSequences([...seq, candidate], i - 1, intervalIndex + 1);
+          break;
+        } else if (convertRatioToNumber(computedRatio) < convertRatioToNumber(pat.ratio ?? "")) {
+          break;
         }
       } else {
         const lastVal = parseFloat(lastDet.originalValue);
         const candVal = parseFloat(candDet.originalValue);
         const diff = candVal - lastVal;
+
         if (Math.abs(diff - (pat.diff ?? 0)) <= centsTolerance) {
-          buildDescendingSequences([...seq, candidate], idx + 1);
+          buildDescendingSequences([...seq, candidate], i - 1, intervalIndex + 1);
+          break;
+        } else if (Math.abs(pat.diff ?? 0) + centsTolerance < Math.abs(diff)) {
+          break;
         }
       }
     }
   };
 
-  allCells.forEach((start) => buildAscendingSequences([start], 0));
-  allCells.forEach((start) => buildDescendingSequences([start], 0));
+  for (let i = 0; i < allCells.length; i++) {
+    const startingCell = allCells[i];
+
+    buildAscendingSequences([startingCell], i + 1, 0);
+    buildDescendingSequences([startingCell], i - 1, 0);
+  }
 
   // only sequences starting in octave 1 or 2
   const filteredAscendingSequences = ascendingSequences.filter((seq) => {

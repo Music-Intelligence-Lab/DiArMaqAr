@@ -5,7 +5,7 @@ import { promises as fs } from "fs";
 import path from "path";
 import { CellDetails } from "@/contexts/app-context";
 import { octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames, octaveThreeNoteNames, octaveFourNoteNames } from "@/models/NoteName";
-import computeRatio from "@/functions/computeRatio";
+import computeRatio, { convertRatioToNumber } from "@/functions/computeRatio";
 
 const dataFilePath = path.join(process.cwd(), "data", "tuningSystems.json");
 const maqamatPath = path.join(process.cwd(), "data", "maqamat.json");
@@ -232,26 +232,35 @@ export async function POST(request: Request) {
 
       const ascendingSequences: CellDetails[][] = [];
 
-      const buildAscendingSequences = (seq: CellDetails[], idx: number) => {
-        if (idx === ascendingIntervalPattern.length) {
+      const buildAscendingSequences = (seq: CellDetails[], cellIndex: number, intervalIndex: number) => {
+        if (intervalIndex === ascendingIntervalPattern.length) {
           ascendingSequences.push(seq);
           return;
         }
         const lastDet = seq[seq.length - 1];
 
-        for (const candidate of allCellDetails) {
-          const pat = ascendingIntervalPattern[idx];
+        for (let i = cellIndex; i < allCellDetails.length; i++) {
+          const candidate = allCellDetails[i];
+          const pat = ascendingIntervalPattern[intervalIndex];
 
           if (useRatio) {
-            if (computeRatio(lastDet.fraction, candidate.fraction) === pat.ratio) {
-              buildAscendingSequences([...seq, candidate], idx + 1);
+            const computedRatio = computeRatio(lastDet.fraction, candidate.fraction);
+
+            if (computedRatio === pat.ratio) {
+              buildAscendingSequences([...seq, candidate], i + 1, intervalIndex + 1);
+              break;
+            } else if (convertRatioToNumber(computedRatio) > convertRatioToNumber(pat.ratio ?? "")) {
+              break;
             }
           } else {
             const lastVal = parseFloat(lastDet.originalValue);
             const candVal = parseFloat(candidate.originalValue);
             const diff = candVal - lastVal;
             if (Math.abs(diff - (pat.diff ?? 0)) <= centsTolerance) {
-              buildAscendingSequences([...seq, candidate], idx + 1);
+              buildAscendingSequences([...seq, candidate], i + 1, intervalIndex + 1);
+              break;
+            } else if (Math.abs(pat.diff ?? 0) + centsTolerance < Math.abs(diff)) {
+              break;
             }
           }
         }
@@ -259,33 +268,46 @@ export async function POST(request: Request) {
 
       const descendingSequences: CellDetails[][] = [];
 
-      const buildDescendingSequences = (seq: CellDetails[], idx: number) => {
-        if (idx === descendingIntervalPattern.length) {
+      const buildDescendingSequences = (seq: CellDetails[], cellIndex: number, intervalIndex: number) => {
+        if (intervalIndex === descendingIntervalPattern.length) {
           descendingSequences.push(seq);
           return;
         }
         const lastDet = seq[seq.length - 1];
 
-        for (const candidate of allCellDetails) {
-          const pat = descendingIntervalPattern[idx];
+        for (let i = cellIndex; i >= 0; i--) {
+          const candidate = allCellDetails[i];
+          const pat = descendingIntervalPattern[intervalIndex];
 
           if (useRatio) {
-            if (computeRatio(lastDet.fraction, candidate.fraction) === pat.ratio) {
-              buildDescendingSequences([...seq, candidate], idx + 1);
+            const computedRatio = computeRatio(lastDet.fraction, candidate.fraction);
+
+            if (computedRatio === pat.ratio) {
+              buildDescendingSequences([...seq, candidate], i + 1, intervalIndex + 1);
+              break;
+            } else if (convertRatioToNumber(computedRatio) < convertRatioToNumber(pat.ratio ?? "")) {
+              break;
             }
           } else {
             const lastVal = parseFloat(lastDet.originalValue);
             const candVal = parseFloat(candidate.originalValue);
             const diff = candVal - lastVal;
             if (Math.abs(diff - (pat.diff ?? 0)) <= centsTolerance) {
-              buildDescendingSequences([...seq, candidate], idx + 1);
+              buildDescendingSequences([...seq, candidate], i + 1, intervalIndex + 1);
+              break;
+            } else if (Math.abs(pat.diff ?? 0) + centsTolerance < Math.abs(diff)) {
+              break;
             }
           }
         }
       };
 
-      allCellDetails.forEach((start) => buildAscendingSequences([start], 0));
-      allCellDetails.forEach((start) => buildDescendingSequences([start], 0));
+      for (let i = 0; i < allCellDetails.length; i++) {
+        const startingCell = allCellDetails[i];
+
+        buildAscendingSequences([startingCell], i + 1, 0);
+        buildDescendingSequences([startingCell], i - 1, 0);
+      }
 
       // only sequences starting in octave 1 or 2
       const filteredAscendingSequences = ascendingSequences.filter((seq) => {
@@ -339,7 +361,6 @@ export async function POST(request: Request) {
 
       data.transpositions = filteredSequences.map((seq) => {
         const name = selectedMaqam.name + " al-" + seq.ascendingSequence[0].noteName;
-        console.log(name);
         return { name, ascendingSequence: seq.ascendingSequence, descendingSequence: seq.descendingSequence };
       });
 
@@ -379,32 +400,46 @@ export async function POST(request: Request) {
       const sequences: CellDetails[][] = [];
 
       // build matching sequences recursively
-      const buildSeq = (seq: CellDetails[], idx: number) => {
-        if (idx === intervalPattern.length) {
+      const buildSequences = (seq: CellDetails[], cellIndex: number, intervalIndex: number) => {
+        if (intervalIndex === intervalPattern.length) {
           sequences.push(seq);
           return;
         }
+
         const lastDet = seq[seq.length - 1];
 
-        for (const candidate of allCellDetails) {
-          const pat = intervalPattern[idx];
+        for (let i = cellIndex; i < allCellDetails.length; i++) {
+          const candidate = allCellDetails[i];
+          const pat = intervalPattern[intervalIndex];
 
           if (useRatio) {
-            if (computeRatio(lastDet.fraction, candidate.fraction) === pat.ratio) {
-              buildSeq([...seq, candidate], idx + 1);
+            const computedRatio = computeRatio(lastDet.fraction, candidate.fraction);
+
+            if (computedRatio === pat.ratio) {
+              buildSequences([...seq, candidate], i + 1, intervalIndex + 1);
+              break;
+            } else if (convertRatioToNumber(computedRatio) > convertRatioToNumber(pat.ratio ?? "")) {
+              break;
             }
           } else {
             const lastVal = parseFloat(lastDet.originalValue);
             const candVal = parseFloat(candidate.originalValue);
             const diff = candVal - lastVal;
             if (Math.abs(diff - (pat.diff ?? 0)) <= centsTolerance) {
-              buildSeq([...seq, candidate], idx + 1);
+              buildSequences([...seq, candidate], i + 1, intervalIndex + 1);
+              break;
+            } else if (Math.abs(pat.diff ?? 0) + centsTolerance < Math.abs(diff)) {
+              break;
             }
           }
         }
       };
 
-      allCellDetails.forEach((start) => buildSeq([start], 0));
+      for (let i = 0; i < allCellDetails.length; i++) {
+        const startingCell = allCellDetails[i];
+
+        buildSequences([startingCell], i + 1, 0);
+      }
 
       // only sequences starting in octave 1 or 2
       const filteredSeqs = sequences.filter((seq) => {

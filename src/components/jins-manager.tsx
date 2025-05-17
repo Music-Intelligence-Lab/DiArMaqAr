@@ -1,9 +1,9 @@
 "use client";
 
-import { SelectedCell, useAppContext } from "@/contexts/app-context";
+import { CellDetails, SelectedCell, useAppContext } from "@/contexts/app-context";
 import Jins from "@/models/Jins";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
-import React, { useEffect } from "react";
+import React from "react";
 
 export default function JinsManager() {
   const {
@@ -17,32 +17,33 @@ export default function JinsManager() {
     getSelectedCellDetails,
     clearSelections,
     playSequence,
-    playNoteFrequency
+    getAllCells,
   } = useAppContext();
 
-  const sortedAjnas = [...ajnas].sort((a, b) =>
-    a.getName().localeCompare(b.getName())
-  );
+  const sortedAjnas = [...ajnas].sort((a, b) => a.getName().localeCompare(b.getName()));
 
-  useEffect(() => {
-      if (selectedJins) {
-        const selectedNoteNames = selectedCells.map((cell: SelectedCell) => {
-          const details = getSelectedCellDetails(cell);
-          return details.noteName;
-        });
-  
-        setSelectedJins(new Jins(selectedJins.getId(), selectedJins.getName(), selectedNoteNames));
-      }
-    }, [selectedCells]);
+  // const selectedCellDetails = selectedCells.map((cell) => {
+  //   return getSelectedCellDetails(cell);
+  // });
 
-  const selectedCellDetails = selectedCells.map((cell) => {
-    return getSelectedCellDetails(cell);
-  });
+  const allCells = getAllCells();
+
+  let jinsCellDetails: CellDetails[] = [];
+
+  if (selectedJins) {
+    jinsCellDetails = allCells.map((cell) => getSelectedCellDetails(cell)).filter((cell) => selectedJins.getNoteNames().includes(cell.noteName));
+  }
 
   const handleSaveJins = async () => {
     if (!selectedJins) return;
-    const newAjnas = ajnas.filter((jins) => jins.getId() !== selectedJins.getId());
-    await updateAllAjnas([...newAjnas, selectedJins]);
+    const selectedNoteNames = selectedCells.map((cell: SelectedCell) => {
+      const details = getSelectedCellDetails(cell);
+      return details.noteName;
+    });
+
+    const newJins = new Jins(selectedJins.getId(), selectedJins.getName(), selectedNoteNames);
+    const newAjnas = ajnas.filter((jins) => jins.getId() !== newJins.getId());
+    await updateAllAjnas([...newAjnas, newJins]);
   };
 
   // Stub handler for deleting a new jins entry.
@@ -52,24 +53,21 @@ export default function JinsManager() {
     await updateAllAjnas(newAjnas);
   };
 
-  const checkIfNoteNameIsUnsaved = (noteName: string) => {
-    if (!selectedJins) return false;
-    const id = selectedJins.getId();
-    const originalJins = ajnas.find((jins) => jins.getId() === id);
-    if (!originalJins) return false;
-    const originalNoteNames = originalJins.getNoteNames();
-    return !originalNoteNames.includes(noteName);
-  };
+  // const checkIfNoteNameIsUnsaved = (noteName: string) => {
+  //   if (!selectedJins) return false;
+  //   const id = selectedJins.getId();
+  //   const originalJins = ajnas.find((jins) => jins.getId() === id);
+  //   if (!originalJins) return false;
+  //   const originalNoteNames = originalJins.getNoteNames();
+  //   return !originalNoteNames.includes(noteName);
+  // };
 
   const playSelectedJins = () => {
     if (!selectedJins) return;
-    const selectedCellFrequencies = selectedCells.map((cell) => {
-      const cellDetails = getSelectedCellDetails(cell);
-      return parseInt(cellDetails.frequency) ?? 0;
-    });
+    const jinsCellFrequencies = jinsCellDetails.map((cellDetails) => parseInt(cellDetails.frequency) ?? 0);
 
-    playSequence(selectedCellFrequencies)
-  }
+    playSequence(jinsCellFrequencies);
+  };
 
   return (
     <div className="jins-manager">
@@ -78,7 +76,6 @@ export default function JinsManager() {
         {selectedJins && (
           <span className="jins-manager__selections">
             {`: ${selectedJins.getName()}`}{" "}
-           
             {/* {selectedCellDetails.length > 0 && (
               <>
                 {" "}
@@ -96,7 +93,9 @@ export default function JinsManager() {
                 })}
               </>
             )} */}
-            <button className="jins-manager__play-button" onClick={playSelectedJins}>Play Selected Jins <PlayCircleIcon /></button>
+            <button className="jins-manager__play-button" onClick={playSelectedJins}>
+              Play Selected Jins <PlayCircleIcon />
+            </button>
           </span>
         )}
       </h2>

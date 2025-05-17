@@ -84,15 +84,14 @@
 
   &__starting-note-container {
     display: block;
-    align-items: center;
-    justify-content: space-evenly;
-    gap: 10px;
+    margin: 20px 0;
   }
 
   &__starting-note-left {
     display: flex;
     align-items: center;
     gap: 10px;
+    margin-bottom: 10px;
   }
 
   &__starting-note {
