@@ -1,5 +1,6 @@
+/* eslint-disable react/jsx-key */
 "use client";
-import { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { useAppContext } from "@/contexts/app-context"; // Update import path as needed
 import TuningSystem from "@/models/TuningSystem";
 import detectPitchClassType from "@/functions/detectPitchClassType";
@@ -556,16 +557,16 @@ export default function TuningSystemManager() {
     if (!pitchClassesArr.length) return null;
 
     const rowLabels = [
-      "Pitch Classes",
+      "Pitch Class",
       "Note Name",
-      "Abjad",
-      "English",
-      "Fraction",
-      "Cents",
+      "Abjad Name",
+      "English Name",
+      "Fraction Ratio",
+      "Cents (¢)",
       "String Length",
-      "Decimal",
-      "Midi Note #",
-      "Frequency",
+      "Decimal Ratio",
+      "Midi Note",
+      "Freq (Hz)",
       "Play",
       "Select",
     ];
@@ -586,7 +587,12 @@ export default function TuningSystemManager() {
             <tr>
               <td>{rowLabels[0]}</td>
               {pitchClassesArr.map((_, colIndex) => (
-                <td key={colIndex}>{colIndex}</td>
+                <td
+                  key={colIndex}
+                  className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}
+                >
+                  {colIndex}
+                </td>
               ))}
             </tr>
 
@@ -607,7 +613,7 @@ export default function TuningSystemManager() {
                         <option value="none">(none)</option>
                         {octaveOneNoteNames.map((nm) => (
                           <option key={nm} value={nm}>
-                            {nm}
+                            {nm.replace(/\//g, '/\u200B')}
                           </option>
                         ))}
                         {colIndex !== 0 && (
@@ -615,7 +621,7 @@ export default function TuningSystemManager() {
                             <option value="none">---</option>
                             {octaveTwoNoteNames.map((nm) => (
                               <option key={nm} value={nm}>
-                                {nm}
+                                {nm.replace(/\//g, '/\u200B')}
                               </option>
                             ))}
                           </>
@@ -624,36 +630,43 @@ export default function TuningSystemManager() {
                     </td>
                   );
                 } else {
-                  return <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>{currentVal === "none" ? "(none)" : currentVal}</td>;
+                  return (
+                    <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
+                      {currentVal === "none"
+                        ? "(none)"
+                        : currentVal.replace(/\//g, '/\u200B')}
+                    </td>
+                  );
                 }
               })}
             </tr>
+            {/* Row 3: "Abjad Name" */}
             <tr>
-              <td>Abjad</td>
+              <td>{rowLabels[2]}</td>
               {pitchClassesArr.map((_, colIndex) => (
                 <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
                   {octave === 1 || octave === 2 ? (
                     <select className="tuning-system-manager__select-abjad"
-
                       value={selectedAbjadNames[colIndex + (octave === 1 ? 0 : numberOfPitchClasses)] || ""}
                       onChange={(e) => handleAbjadSelect(colIndex, e.target.value, octave)}
                     >
                       <option value="">(none)</option>
                       {abjadNames.map((name, idx) => (
                         <option key={`${name}-${idx}`} value={name}>
-                          {name}
+                          {name.replace(/\//g, '/\u200B')}
                         </option>
                       ))}
                     </select>
                   ) : (
-                    <span>-</span>
+                    (selectedAbjadNames[colIndex + (octave === 1 ? 0 : numberOfPitchClasses)] || "")
+                      .replace(/\//g, '/\u200B')
                   )}
                 </td>
               ))}
             </tr>
 
             <tr>
-              <td>English</td>
+              <td>{rowLabels[3]}</td>
               {pitchClassesArr.map((_, colIndex) => {
                 // get the Arabic name that the user chose in “Note Name”
                 const arabicName = getOctaveNoteName(octave, colIndex);
@@ -664,7 +677,7 @@ export default function TuningSystemManager() {
             </tr>
 
             {/* Row 5: "Fraction" */}
-            <tr>
+            <tr className={pitchClassType === "fraction" ? "tuning-system-manager__octave-table__detectedPitchClassType" : ""}>
               <td>{rowLabels[4]}</td>
               {pitchClassesArr.map((basePc, colIndex) => (
                 <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>{renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "fraction")}</td>
@@ -672,7 +685,7 @@ export default function TuningSystemManager() {
             </tr>
 
             {/* Row 6: "Cents" */}
-            <tr>
+            <tr className={pitchClassType === "cents" ? "tuning-system-manager__octave-table__detectedPitchClassType" : ""}>
               <td>{rowLabels[5]}</td>
               {pitchClassesArr.map((basePc, colIndex) => (
                 <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>{renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "cents")}</td>
@@ -680,7 +693,7 @@ export default function TuningSystemManager() {
             </tr>
 
             {/* Row 7: "String Length" */}
-            <tr>
+            <tr className={pitchClassType === "stringLength" ? "tuning-system-manager__octave-table__detectedPitchClassType" : ""}>
               <td>{rowLabels[6]}</td>
               {pitchClassesArr.map((basePc, colIndex) => (
                 <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>{renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "stringLength")}</td>
@@ -688,7 +701,7 @@ export default function TuningSystemManager() {
             </tr>
 
             {/* Row 8: "Decimal" */}
-            <tr>
+            <tr className={pitchClassType === "decimal" ? "tuning-system-manager__octave-table__detectedPitchClassType" : ""}>
               <td>{rowLabels[7]}</td>
               {pitchClassesArr.map((basePc, colIndex) => (
                 <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>{renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "decimal")}</td>
