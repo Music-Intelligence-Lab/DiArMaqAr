@@ -624,7 +624,11 @@ export default function TuningSystemManager() {
                     </td>
                   );
                 } else {
-                  return <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>{currentVal === "none" ? "(none)" : currentVal}</td>;
+                  return (
+                    <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
+                      {currentVal === "none" ? "(none)" : currentVal}
+                    </td>
+                  );
                 }
               })}
             </tr>
@@ -633,8 +637,8 @@ export default function TuningSystemManager() {
               {pitchClassesArr.map((_, colIndex) => (
                 <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
                   {octave === 1 || octave === 2 ? (
-                    <select className="tuning-system-manager__select-abjad"
-
+                    <select
+                      className="tuning-system-manager__select-abjad"
                       value={selectedAbjadNames[colIndex + (octave === 1 ? 0 : numberOfPitchClasses)] || ""}
                       onChange={(e) => handleAbjadSelect(colIndex, e.target.value, octave)}
                     >
@@ -659,7 +663,11 @@ export default function TuningSystemManager() {
                 const arabicName = getOctaveNoteName(octave, colIndex);
                 // Now map it to English
                 const english = getEnglishNoteName(arabicName);
-                return <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>{english}</td>;
+                return (
+                  <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
+                    {english}
+                  </td>
+                );
               })}
             </tr>
 
@@ -667,7 +675,9 @@ export default function TuningSystemManager() {
             <tr>
               <td>{rowLabels[4]}</td>
               {pitchClassesArr.map((basePc, colIndex) => (
-                <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>{renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "fraction")}</td>
+                <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
+                  {renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "fraction")}
+                </td>
               ))}
             </tr>
 
@@ -675,7 +685,9 @@ export default function TuningSystemManager() {
             <tr>
               <td>{rowLabels[5]}</td>
               {pitchClassesArr.map((basePc, colIndex) => (
-                <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>{renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "cents")}</td>
+                <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
+                  {renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "cents")}
+                </td>
               ))}
             </tr>
 
@@ -683,7 +695,9 @@ export default function TuningSystemManager() {
             <tr>
               <td>{rowLabels[6]}</td>
               {pitchClassesArr.map((basePc, colIndex) => (
-                <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>{renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "stringLength")}</td>
+                <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
+                  {renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "stringLength")}
+                </td>
               ))}
             </tr>
 
@@ -691,7 +705,9 @@ export default function TuningSystemManager() {
             <tr>
               <td>{rowLabels[7]}</td>
               {pitchClassesArr.map((basePc, colIndex) => (
-                <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>{renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "decimal")}</td>
+                <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
+                  {renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "decimal")}
+                </td>
               ))}
             </tr>
 
@@ -699,16 +715,19 @@ export default function TuningSystemManager() {
             <tr>
               <td>{rowLabels[8]}</td>
               {pitchClassesArr.map((basePc, colIndex) => (
-                <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>{frequencyToMidiNoteNumber(parseInt(renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "frequency"))).toFixed(2)}</td>
+                <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
+                  {frequencyToMidiNoteNumber(parseInt(renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "frequency"))).toFixed(2)}
+                </td>
               ))}
             </tr>
-
 
             {/* Row 10: "Frequency" */}
             <tr>
               <td>{rowLabels[9]}</td>
               {pitchClassesArr.map((basePc, colIndex) => (
-                <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>{renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "frequency")}</td>
+                <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
+                  {renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "frequency")}
+                </td>
               ))}
             </tr>
 
@@ -776,8 +795,7 @@ export default function TuningSystemManager() {
       <details open={true} className="tuning-system-manager__details">
         <summary className="tuning-system-manager__summary">
           <h2 className="tuning-system-manager__header">Tuning System</h2>
-                      {`: ${selectedTuningSystem?.getCreatorEnglish()} (${selectedTuningSystem?.getYear()}) ${selectedTuningSystem?.getTitleEnglish()}`}{" "}
-
+          {`${ selectedTuningSystem ? `: ${selectedTuningSystem.getCreatorEnglish()} (${selectedTuningSystem.getYear()}) ${selectedTuningSystem.getTitleEnglish()}` : ""}`}{" "}
         </summary>
         <div className="tuning-system-manager__group">
           <div className="tuning-system-manager__input-container">
@@ -1002,7 +1020,7 @@ export default function TuningSystemManager() {
             </button>
             {selectedTuningSystem && (
               <button className="tuning-system-manager__delete-button" type="button" onClick={handleDelete}>
-                Delete
+                Delete Tuning System
               </button>
             )}
           </div>
@@ -1043,7 +1061,7 @@ export default function TuningSystemManager() {
                 className={"tuning-system-manager__starting-note-button tuning-system-manager__starting-note-button_reset"}
                 onClick={() => handleStartNoteNameChange("none")}
               >
-                Reset
+                Reset Note Names
               </button>
             </div>
             <div className="tuning-system-manager__starting-note-right">
@@ -1052,14 +1070,14 @@ export default function TuningSystemManager() {
                 onClick={handleSaveStartingNoteConfiguration}
                 disabled={!haveIndicesChanged() || getFirstNoteName() === "none"}
               >
-                Save
+                Save Note Name Configuration
               </button>
               <button
                 className="tuning-system-manager__starting-note-button tuning-system-manager__starting-note-button_delete"
                 onClick={handleDeleteStartingNoteConfiguration}
                 disabled={getFirstNoteName() === "none"}
               >
-                Delete
+                Delete Note Name Configuration
               </button>
             </div>
           </div>

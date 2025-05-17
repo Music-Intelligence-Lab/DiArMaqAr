@@ -10,9 +10,6 @@
 - Clean the code plus add README and documentation
 
 # 15 May 2025
-- Make select transposed jins not change anything
-- API: Tuning system maqams list is not including the maqamat available when ushayran is first selected note name
-- Cents Tolerance Issue: Louis Ronzevalle Modernist Arabic Tuning, Maqam Hijaz, output is rendering duplicated transpositions
 - Sayr: Control Input Error
 - Add Source Auto-Input Button to Sayr Manager:
 

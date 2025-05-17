@@ -4,7 +4,7 @@
 import React from "react";
 import { SelectedCell, useAppContext } from "@/contexts/app-context";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
-import computeRatio from "@/functions/computeRatio";
+import computeRatio, { convertRatioToNumber } from "@/functions/computeRatio";
 
 export default function JinsTranspositions() {
   const {
@@ -17,11 +17,16 @@ export default function JinsTranspositions() {
     centsTolerance,
     setCentsTolerance,
     playNoteFrequency,
-    playSequence
+    playSequence,
   } = useAppContext();
 
   if (!selectedJins || !selectedTuningSystem || selectedCells.length < 2) return null;
 
+  const jinsNoteNames = selectedJins.getNoteNames();
+
+  const allCells = getAllCells();
+
+  const jinsCellDetails = allCells.map((cell) => getSelectedCellDetails(cell)).filter((cell) => jinsNoteNames.includes(cell.noteName));
   // retrieve details for each selected cell
   const selectedCellDetails = selectedCells.map((cell) => getSelectedCellDetails(cell));
 
@@ -31,50 +36,63 @@ export default function JinsTranspositions() {
 
   // build interval pattern: for ratios or cent/stringLength diffs
   type Pattern = { ratio?: string; diff?: number };
-  const intervalPattern: Pattern[] = selectedCellDetails.slice(1).map((det, i) => {
+  const intervalPattern: Pattern[] = jinsCellDetails.slice(1).map((det, i) => {
     if (useRatio) {
       return {
-        ratio: computeRatio(selectedCellDetails[i].fraction, det.fraction),
+        ratio: computeRatio(jinsCellDetails[i].fraction, det.fraction),
       };
     } else {
-      const prevVal = parseFloat(selectedCellDetails[i].originalValue);
+      const prevVal = parseFloat(jinsCellDetails[i].originalValue);
       const curVal = parseFloat(det.originalValue);
       return { diff: curVal - prevVal };
     }
   });
 
-  const allCells = getAllCells();
   const sequences: SelectedCell[][] = [];
 
   // build matching sequences recursively
-  const buildSeq = (seq: SelectedCell[], idx: number) => {
-    if (idx === intervalPattern.length) {
+  const buildSequences = (seq: SelectedCell[], cellIndex: number, intervalIndex: number) => {
+    if (intervalIndex === intervalPattern.length) {
       sequences.push(seq);
       return;
     }
     const last = seq[seq.length - 1];
     const lastDet = getSelectedCellDetails(last);
 
-    for (const candidate of allCells) {
+    for (let i = cellIndex; i < allCells.length; i++) {
+      const candidate = allCells[i];
+
       const candDet = getSelectedCellDetails(candidate);
-      const pat = intervalPattern[idx];
+      const pat = intervalPattern[intervalIndex];
 
       if (useRatio) {
-        if (computeRatio(lastDet.fraction, candDet.fraction) === pat.ratio) {
-          buildSeq([...seq, candidate], idx + 1);
+        const computedRatio = computeRatio(lastDet.fraction, candDet.fraction);
+
+        if (computedRatio === pat.ratio) {
+          buildSequences([...seq, candidate], i + 1, intervalIndex + 1);
+          break;
+        } else if (convertRatioToNumber(computedRatio) > convertRatioToNumber(pat.ratio ?? "")) {
+          break;
         }
       } else {
         const lastVal = parseFloat(lastDet.originalValue);
         const candVal = parseFloat(candDet.originalValue);
         const diff = candVal - lastVal;
         if (Math.abs(diff - (pat.diff ?? 0)) <= centsTolerance) {
-          buildSeq([...seq, candidate], idx + 1);
+          buildSequences([...seq, candidate], i + 1, intervalIndex + 1);
+          break;
+        } else if (Math.abs(pat.diff ?? 0) + centsTolerance < Math.abs(diff)) {
+          break;
         }
       }
     }
   };
 
-  allCells.forEach((start) => buildSeq([start], 0));
+  for (let i = 0; i < allCells.length; i++) {
+    const startingCell = allCells[i];
+
+    buildSequences([startingCell], i + 1, 0);
+  }
 
   // only sequences starting in octave 1 or 2
   const filteredSeqs = sequences.filter((seq) => {
@@ -103,23 +121,26 @@ export default function JinsTranspositions() {
         <thead>
           <tr>
             <th className="jins-transpositions__header">
-              <button className="jins-transpositions__button" onClick={() => {
-                playSequence(selectedCellDetails.map((cell) => parseInt(cell.frequency)));
-              }}>
-              {`${selectedJins.getName()} al-${selectedCellDetails[0].noteName}`}
+              <button
+                className="jins-transpositions__button"
+                onClick={() => {
+                  playSequence(jinsCellDetails.map((cell) => parseInt(cell.frequency)));
+                }}
+              >
+                {`${selectedJins.getName()} al-${jinsCellDetails[0].noteName}`}
               </button>
-              </th>
+            </th>
             <th className="jins-transpositions__header">
-              <button className="jins-transpositions__button" onClick={() => playNoteFrequency(parseInt(selectedCellDetails[0].frequency))}>
-                {selectedCellDetails[0].noteName + ` (${getEnglishNoteName(selectedCellDetails[0].noteName)})`}
+              <button className="jins-transpositions__button" onClick={() => playNoteFrequency(parseInt(jinsCellDetails[0].frequency))}>
+                {jinsCellDetails[0].noteName + ` (${getEnglishNoteName(jinsCellDetails[0].noteName)})`}
               </button>
             </th>
             {intervalPattern.map((pat, i) => (
               <React.Fragment key={i}>
                 <th className="jins-transpositions__header"></th>
                 <th className="jins-transpositions__header">
-                  <button className="jins-transpositions__button" onClick={() => playNoteFrequency(parseInt(selectedCellDetails[i + 1].frequency))}>
-                    {selectedCellDetails[i + 1].noteName + ` (${getEnglishNoteName(selectedCellDetails[i + 1].noteName)})`}
+                  <button className="jins-transpositions__button" onClick={() => playNoteFrequency(parseInt(jinsCellDetails[i + 1].frequency))}>
+                    {jinsCellDetails[i + 1].noteName + ` (${getEnglishNoteName(jinsCellDetails[i + 1].noteName)})`}
                   </button>
                 </th>
               </React.Fragment>
@@ -127,24 +148,22 @@ export default function JinsTranspositions() {
           </tr>
           <tr>
             <th className="jins-transpositions__header">{valueType}</th>
-            <th className="jins-transpositions__header">{selectedCellDetails[0].originalValue}</th>
+            <th className="jins-transpositions__header">{jinsCellDetails[0].originalValue}</th>
             {intervalPattern.map((pat, i) => (
               <React.Fragment key={i}>
                 <th className="jins-transpositions__header">{useRatio ? `(${pat.ratio})` : `≈${(pat.diff ?? 0).toFixed(1)}`}</th>
-                <th className="jins-transpositions__header">{selectedCellDetails[i + 1].originalValue}</th>
+                <th className="jins-transpositions__header">{jinsCellDetails[i + 1].originalValue}</th>
               </React.Fragment>
             ))}
           </tr>
           {valueType !== "cents" && (
             <tr>
               <th className="jins-transpositions__header">cents (¢)</th>
-              <th className="jins-transpositions__header">{selectedCellDetails[0].cents}</th>
+              <th className="jins-transpositions__header">{jinsCellDetails[0].cents}</th>
               {intervalPattern.map((pat, i) => (
                 <React.Fragment key={i}>
-                  <th className="jins-transpositions__header">{`≈${
-                    parseInt(selectedCellDetails[i].cents) - parseInt(selectedCellDetails[i + 1].cents)
-                  }`}</th>
-                  <th className="jins-transpositions__header">{selectedCellDetails[i + 1].cents}</th>
+                  <th className="jins-transpositions__header">{`≈${parseInt(jinsCellDetails[i].cents) - parseInt(jinsCellDetails[i + 1].cents)}`}</th>
+                  <th className="jins-transpositions__header">{jinsCellDetails[i + 1].cents}</th>
                 </React.Fragment>
               ))}
             </tr>
@@ -154,7 +173,7 @@ export default function JinsTranspositions() {
           {filteredSeqs.map((seq, row) => {
             const details = seq.map(getSelectedCellDetails);
             const colCount = 2 + (details.length - 1) * 2;
-            if (selectedCellDetails[0].noteName === details[0].noteName) return null;
+            if (jinsCellDetails[0].noteName === details[0].noteName) return null;
             return (
               <React.Fragment key={row}>
                 <tr>
@@ -162,25 +181,33 @@ export default function JinsTranspositions() {
                 </tr>
                 <tr>
                   <td className="jins-transpositions__cell">
-                    <button className="jins-transpositions__button" onClick={() => {
-                      playSequence(details.map((cell) => parseInt(cell.frequency)));
-                    }}>
-                    {`${selectedJins.getName()} al-${details[0].noteName}`}
+                    <button
+                      className="jins-transpositions__button"
+                      onClick={() => {
+                        playSequence(details.map((cell) => parseInt(cell.frequency)));
+                      }}
+                    >
+                      {`${selectedJins.getName()} al-${details[0].noteName}`}
                     </button>
-                    <button className="jins-transpositions__button" onClick={() => {
-                      const transpositionNoteNames = details.map((cell) => cell.noteName);
-                      
-                      const newSelectedCells = [];
+                    <button
+                      className="jins-transpositions__button"
+                      onClick={() => {
+                        const transpositionNoteNames = details.map((cell) => cell.noteName);
 
-                      for (const cell of allCells) {
-                        const cellDetails = getSelectedCellDetails(cell);
-                        if (transpositionNoteNames.includes(cellDetails.noteName)) {
-                          newSelectedCells.push(cell);
+                        const newSelectedCells = [];
+
+                        for (const cell of allCells) {
+                          const cellDetails = getSelectedCellDetails(cell);
+                          if (transpositionNoteNames.includes(cellDetails.noteName)) {
+                            newSelectedCells.push(cell);
+                          }
                         }
-                      }
-                      setSelectedCells(newSelectedCells);
-                    }}>select</button>
-                    </td>
+                        setSelectedCells(newSelectedCells);
+                      }}
+                    >
+                      select
+                    </button>
+                  </td>
                   <td className="jins-transpositions__cell">
                     <button className="jins-transpositions__button" onClick={() => playNoteFrequency(parseInt(details[0].frequency))}>
                       {details[0].noteName + ` (${getEnglishNoteName(details[0].noteName)})`}

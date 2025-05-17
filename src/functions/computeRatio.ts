@@ -8,3 +8,8 @@ export default function computeRatio(prev: string, next: string) {
   const g = gcd(num, den);
   return `${num / g}:${den / g}`;
 }
+
+export function convertRatioToNumber(ratio: string) {
+  const [num, den] = ratio.split(":").map(Number);
+  return num / den;
+}
