@@ -37,5 +37,6 @@ function dottedQuarterDuration(bpm) {
 
 This is for comparitive purpouses, for example: to hear the exact difference in tuning between a jins rast rendered from yegāh as a starting note name, versus 'ushayrān as a starting note name, yegāh and 'ushayrān need to have different yet relative frequency values. 
 
+- add control to collapsable octave tabs so that we can automate them. For example if user selects a jins or maqam transposition that's in an octave which is closed, it would be forced open
 
 # ROADMAP FEATURES
