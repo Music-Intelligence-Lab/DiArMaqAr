@@ -29,9 +29,22 @@ This is for comparitive purpouses, for example: to hear the exact difference in 
 
 - add control to collapsable octave tabs so that we can automate them. For example if user selects a jins or maqam transposition that's in an octave which is closed, it would be forced open
 
-- I want to add sources for each jins and each maqam in the database. Each jins and each maqam will likely have multiple sources, therefore each will need to be able to accept multiple sources. With this in mind (and my previous request for adding Source Auto-Input to the Sayr Manager which is commented out below) maybe it's better that we create an application wide Bibliography, then when I am imputting Tuning Systems, Ajnas, Maqamat or Suyur, I can just select the relevant Source from a Bibliography List Dropdown menu, and only manually input the relevant page number(s) plus Comments English and Comments Arabic.
+- I want to add sources for each jins and each maqam in the database. Each jins and each maqam will likely have multiple sources, therefore each will need to be able to accept multiple sources. With this in mind (and my previous request for adding Source Auto-Input to the Sayr Manager which is commented out below) maybe it's better that we crea  graphy List Dropdown menu, and only manually input the relevant page number(s) plus Comments English and Comments Arabic.
 
 Let's discuss this so we can figure out the best way to implement it. 
+
+I added a bibliography.html to the khyam folder, this is the format of the form for a book entry.
+For an article we would need to add:
+
+Title of article
+Journal
+Date
+Volume number
+Issue number
+Page range
+DOI
+Article URL
+
 
 <!-- 
 - Add Source Auto-Input Button to Sayr Manager:
