@@ -1,6 +1,8 @@
 # 13 May 2025
 - Clean the code plus add README and documentation
 
+- Unify transposition code into one function
+
 # 15 May 2025
 - Add Sayr ID to URL Parameters
 - In each Jins and Maqam Button, display number of possible transpositions. If not fractions, use default cents tolerance which should be 5 cents
