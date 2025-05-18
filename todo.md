@@ -2,7 +2,6 @@
 - Clean the code plus add README and documentation
 
 # 15 May 2025
-- Sayr: Control Input Error
 - Add Sayr ID to URL Parameters
 - Display how many possible maqamat and ajnas in each tuning system as x/y
 - In each Jins and Maqam Button, display number of possible transpositions. If not fractions, use default cents tolerance which should be 5 cents

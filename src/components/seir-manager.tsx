@@ -3,7 +3,7 @@
 import React, { FormEvent, useEffect, useState } from "react";
 import { useAppContext } from "@/contexts/app-context";
 import Maqam, { Seir, SeirStop } from "@/models/Maqam";
-import { octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames, octaveThreeNoteNames } from "@/models/NoteName";
+import { octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames } from "@/models/NoteName";
 import { nanoid } from "nanoid";
 
 export default function SeirManager() {
@@ -41,14 +41,14 @@ export default function SeirManager() {
     if (selectedMaqam && seirId) {
       const sel = selectedMaqam.getSuyur().find((s) => s.id === seirId);
       if (sel) {
-        setCreatorEnglish(sel.creatorEnglish);
-        setCreatorArabic(sel.creatorArabic);
-        setSourceEnglish(sel.sourceEnglish);
-        setSourceArabic(sel.sourceArabic);
-        setYear(sel.year);
-        setPage(sel.page);
-        setCommentsEnglish(sel.commentsEnglish);
-        setCommentsArabic(sel.commentsArabic);
+        setCreatorEnglish(sel.creatorEnglish ?? "");
+        setCreatorArabic(sel.creatorArabic ?? "");
+        setSourceEnglish(sel.sourceEnglish ?? "");
+        setSourceArabic(sel.sourceArabic ?? "");
+        setYear(sel.year ?? "");
+        setPage(sel.page ?? "");
+        setCommentsEnglish(sel.commentsEnglish ?? "");
+        setCommentsArabic(sel.commentsArabic ?? "");
         setStops(sel.stops.map((s) => ({ ...s })));
         return;
       }
@@ -110,8 +110,10 @@ export default function SeirManager() {
   return (
     <div className="seir-manager">
       <details className="seir-manager__details">
-        <summary className="seir-manager__summary"><h2 className="seir-manager__header">Suyūr</h2></summary>
-        
+        <summary className="seir-manager__summary">
+          <h2 className="seir-manager__header">Suyūr</h2>
+        </summary>
+
         <div className="seir-manager__group">
           <div className="seir-manager__input-container">
             <label className="seir-manager__label" htmlFor="seirSelect">
@@ -205,7 +207,7 @@ export default function SeirManager() {
                           {n}
                         </option>
                       ))}
-                                            <option disabled>---</option>
+                      <option disabled>---</option>
                       {octaveTwoNoteNames.map((n) => (
                         <option key={n} value={n}>
                           {n}
