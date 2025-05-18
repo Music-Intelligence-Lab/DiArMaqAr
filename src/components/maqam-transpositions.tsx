@@ -256,15 +256,15 @@ export default function MaqamTranspositions() {
                 Ascending <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
               </button>
             </th>
-            <th className="maqam-transpositions__header">
+            <th className="maqam-transpositions__header-cell">
               <button className="maqam-transpositions__button" onClick={() => playNoteFrequency(parseInt(ascendingMaqamCellDetails[0].frequency))}>
                {ascendingMaqamCellDetails[0].noteName + ` (${getEnglishNoteName(ascendingMaqamCellDetails[0].noteName)})`} <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
               </button>
             </th>
             {ascendingIntervalPattern.map((pat, i) => (
               <React.Fragment key={i}>
-                <th className="maqam-transpositions__header"></th>
-                <th className="maqam-transpositions__header">
+                <th className="maqam-transpositions__header-cell"></th>
+                <th className="maqam-transpositions__header-cell">
                   <button
                     className="maqam-transpositions__button"
                     onClick={() => playNoteFrequency(parseInt(ascendingMaqamCellDetails[i + 1].frequency))}
@@ -277,28 +277,28 @@ export default function MaqamTranspositions() {
           </tr>
           <tr>
             <th className="maqam-transpositions__row-header">{valueType}</th>
-            <th className="maqam-transpositions__header">{ascendingMaqamCellDetails[0].originalValue}</th>
+            <th className="maqam-transpositions__header-cell">{ascendingMaqamCellDetails[0].originalValue}</th>
             {ascendingIntervalPattern.map((pat, i) => (
               <React.Fragment key={i}>
-                <th className="maqam-transpositions__header">{useRatio ? `(${pat.ratio})` : `${(pat.diff ?? 0).toFixed(3)}`}</th>
-                <th className="maqam-transpositions__header">{ascendingMaqamCellDetails[i + 1].originalValue}</th>
+                <th className="maqam-transpositions__header-cell">{useRatio ? `(${pat.ratio})` : `(${(pat.diff ?? 0).toFixed(3)})`}</th>
+                <th className="maqam-transpositions__header-cell">{ascendingMaqamCellDetails[i + 1].originalValue}</th>
               </React.Fragment>
             ))}
           </tr>
           {valueType !== "cents" && (
             <tr>
               <th className="maqam-transpositions__row-header">cents (¢)</th>
-              <th className="maqam-transpositions__header">
+              <th className="maqam-transpositions__header-cell">
                 {parseFloat(ascendingMaqamCellDetails[0].cents).toFixed(3)}
               </th>
               {ascendingIntervalPattern.map((pat, i) => (
                 <React.Fragment key={i}>
-                  <th className="maqam-transpositions__header">
-                    {(parseFloat(ascendingMaqamCellDetails[i].cents) -
-                      parseFloat(ascendingMaqamCellDetails[i + 1].cents)
-                    ).toFixed(3)}
+                  <th className="maqam-transpositions__header-cell"> (
+                    {(parseFloat(ascendingMaqamCellDetails[i + 1].cents) -
+                      parseFloat(ascendingMaqamCellDetails[i].cents)
+                    ).toFixed(3)})
                   </th>
-                  <th className="maqam-transpositions__header">
+                  <th className="maqam-transpositions__header-cell">
                     {parseFloat(ascendingMaqamCellDetails[i + 1].cents).toFixed(3)}
                   </th>
                 </React.Fragment>
@@ -314,15 +314,15 @@ export default function MaqamTranspositions() {
                 Descending <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
               </button>
             </th>
-            <th className="maqam-transpositions__header">
+            <th className="maqam-transpositions__header-cell">
               <button className="maqam-transpositions__button" onClick={() => playNoteFrequency(parseInt(descendingMaqamCellDetails[0].frequency))}>
                 {descendingMaqamCellDetails[0].noteName + ` (${getEnglishNoteName(descendingMaqamCellDetails[0].noteName)})`} <PlayCircleIcon className="maqam-transpositions__play-circle-icon" /> 
               </button>
             </th>
             {descendingIntervalPattern.map((pat, i) => (
               <React.Fragment key={i}>
-                <th className="maqam-transpositions__header"></th>
-                <th className="maqam-transpositions__header">
+                <th className="maqam-transpositions__header-cell"></th>
+                <th className="maqam-transpositions__header-cell">
                   <button
                     className="maqam-transpositions__button"
                     onClick={() => playNoteFrequency(parseInt(descendingMaqamCellDetails[i + 1].frequency))}
@@ -335,27 +335,27 @@ export default function MaqamTranspositions() {
           </tr>
           <tr>
             <th className="maqam-transpositions__row-header">{valueType}</th>
-            <th className="maqam-transpositions__header">{descendingMaqamCellDetails[0].originalValue}</th>
+            <th className="maqam-transpositions__header-cell">{descendingMaqamCellDetails[0].originalValue}</th>
             {descendingIntervalPattern.map((pat, i) => (
               <React.Fragment key={i}>
-                <th className="maqam-transpositions__header">{useRatio ? `(${pat.ratio})` : `${(pat.diff ?? 0).toFixed(3)}`}</th>
-                <th className="maqam-transpositions__header">{descendingMaqamCellDetails[i + 1].originalValue}</th>
+                <th className="maqam-transpositions__header-cell">{useRatio ? `(${pat.ratio})` : `(${(pat.diff ?? 0).toFixed(3)})`}</th>
+                <th className="maqam-transpositions__header-cell">{descendingMaqamCellDetails[i + 1].originalValue}</th>
               </React.Fragment>
             ))}
           </tr>
           {valueType !== "cents" && (
             <tr>
               <th className="maqam-transpositions__row-header">cents (¢)</th>
-              <th className="maqam-transpositions__header">{descendingMaqamCellDetails[0].cents}</th>
+              <th className="maqam-transpositions__header-cell">{descendingMaqamCellDetails[0].cents}</th>
               {descendingIntervalPattern.map((pat, i) => (
                 <React.Fragment key={i}>
-                  <th className="maqam-transpositions__header">{`${
+                  <th className="maqam-transpositions__header-cell">{`(${
                     (
-                      parseFloat(descendingMaqamCellDetails[i].cents) -
-                      parseFloat(descendingMaqamCellDetails[i + 1].cents)
+                      parseFloat(descendingMaqamCellDetails[i + 1].cents) -
+                      parseFloat(descendingMaqamCellDetails[i].cents)
                     ).toFixed(3)
-                  }`}</th>
-                  <th className="maqam-transpositions__header">{parseFloat(descendingMaqamCellDetails[i + 1].cents).toFixed(3)}</th>
+                  })`}</th>
+                  <th className="maqam-transpositions__header-cell">{parseFloat(descendingMaqamCellDetails[i + 1].cents).toFixed(3)}</th>
                 </React.Fragment>
               ))}
             </tr>
@@ -481,7 +481,7 @@ export default function MaqamTranspositions() {
                       <td className="maqam-transpositions__cell">
                         {useRatio
                           ? `(${computeRatio(ascendingDetails[j].fraction, d.fraction)})`
-                          : `${(parseFloat(d.originalValue) - parseFloat(ascendingDetails[j].originalValue)).toFixed(3)}`}
+                          : `(${(parseFloat(d.originalValue) - parseFloat(ascendingDetails[j].originalValue)).toFixed(3)})`}
                       </td>
                       <td className="maqam-transpositions__cell">{d.originalValue}</td>
                     </React.Fragment>
@@ -493,11 +493,11 @@ export default function MaqamTranspositions() {
                     <td className="maqam-transpositions__cell">{ascendingDetails[0].cents}</td>
                     {ascendingIntervalPattern.map((pat, i) => (
                       <React.Fragment key={i}>
-                        <td className="maqam-transpositions__cell">{`${
-                          (parseFloat(ascendingDetails[i].cents) -
-                           parseFloat(ascendingDetails[i + 1].cents)
+                        <td className="maqam-transpositions__cell">{`(${
+                          (parseFloat(ascendingDetails[i + 1].cents) -
+                           parseFloat(ascendingDetails[i].cents)
                           ).toFixed(3)
-                        }`}</td>
+                        })`}</td>
                         <td className="maqam-transpositions__cell">{parseFloat(ascendingDetails[i + 1].cents).toFixed(3)}</td>
                       </React.Fragment>
                     ))}
@@ -548,12 +548,12 @@ export default function MaqamTranspositions() {
                     <td className="maqam-transpositions__cell">{descendingDetails[0].cents}</td>
                     {descendingIntervalPattern.map((pat, i) => (
                       <React.Fragment key={i}>
-                        <td className="maqam-transpositions__cell">{`${
+                        <td className="maqam-transpositions__cell">{`(${
                           (
-                            parseFloat(descendingDetails[i].cents) -
-                            parseFloat(descendingDetails[i + 1].cents)
+                            parseFloat(descendingDetails[i + 1].cents) -
+                            parseFloat(descendingDetails[i].cents)
                           ).toFixed(3)
-                        }`}</td>
+                        })`}</td>
                         <td className="maqam-transpositions__cell">
                           {parseFloat(descendingDetails[i + 1].cents).toFixed(3)}
                         </td>
