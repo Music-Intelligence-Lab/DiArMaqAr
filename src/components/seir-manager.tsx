@@ -3,7 +3,7 @@
 import React, { FormEvent, useEffect, useState } from "react";
 import { useAppContext } from "@/contexts/app-context";
 import Maqam, { Seir, SeirStop } from "@/models/Maqam";
-import { octaveOneNoteNames, octaveTwoNoteNames } from "@/models/NoteName";
+import { octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames, octaveThreeNoteNames } from "@/models/NoteName";
 import { nanoid } from "nanoid";
 
 export default function SeirManager() {
@@ -194,12 +194,18 @@ export default function SeirManager() {
                   {stop.type === "note" && (
                     <select className="seir-manager__stop-value" value={stop.value} onChange={(e) => updateStop(i, "value", e.target.value)}>
                       <option value="">(none)</option>
-                      {octaveOneNoteNames.map((n) => (
+                      {octaveZeroNoteNames.map((n) => (
                         <option key={n} value={n}>
                           {n}
                         </option>
                       ))}
                       <option disabled>---</option>
+                      {octaveOneNoteNames.map((n) => (
+                        <option key={n} value={n}>
+                          {n}
+                        </option>
+                      ))}
+                                            <option disabled>---</option>
                       {octaveTwoNoteNames.map((n) => (
                         <option key={n} value={n}>
                           {n}

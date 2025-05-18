@@ -14,11 +14,12 @@ export default function KeyboardControls() {
 
   const descendingMaqamCellDetails = getAllCells()
     .map((cell) => getSelectedCellDetails(cell))
-    .filter((cell) => descendingNoteNames.includes(cell.noteName))
+    .filter((cell) => descendingNoteNames.includes(cell.noteName));
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.repeat) return;
+
       const firstRowIndex = firstRowKeys.indexOf(e.key);
       if (firstRowIndex >= 0 && firstRowIndex < descendingMaqamCellDetails.length) {
         const cell = descendingMaqamCellDetails[firstRowIndex];
@@ -27,10 +28,28 @@ export default function KeyboardControls() {
       }
 
       const secondRowIndex = secondRowKeys.indexOf(e.key);
-      if (secondRowIndex >= 0 && secondRowIndex < selectedCells.length) {
-        const cell = selectedCells[secondRowIndex];
+      if (secondRowIndex < 0 || selectedCells.length === 0) return;
+      // determine which selected cell and octave shift
+      const baseCount = selectedCells.length;
+      // only allow upper-octave keys when exactly 8 notes are selected
+      if (secondRowIndex >= baseCount && baseCount !== 8) return;
+      const octaveShift = Math.floor(secondRowIndex / baseCount);
+      let cellIndex = secondRowIndex % baseCount;
+      if (octaveShift > 0) {
+        // only bump into next scale degree when exactly 8 are selected
+        if (baseCount === 8) {
+          cellIndex = cellIndex + 1;
+        } else {
+          cellIndex = cellIndex + 0;
+        }
+      }
+      if (cellIndex >= 0 && cellIndex < baseCount) {
+        const cell = selectedCells[cellIndex];
         const freq = parseFloat(getSelectedCellDetails(cell).frequency);
-        if (!isNaN(freq)) noteOn(freq);
+        if (!isNaN(freq)) {
+          // multiply frequency by 2^octaveShift
+          noteOn(freq * Math.pow(2, octaveShift));
+        }
       }
     };
     const handleKeyUp = (e: KeyboardEvent) => {
@@ -42,10 +61,26 @@ export default function KeyboardControls() {
       }
 
       const secondRowIndex = secondRowKeys.indexOf(e.key);
-      if (secondRowIndex >= 0 && secondRowIndex < selectedCells.length) {
-        const cell = selectedCells[secondRowIndex];
+      if (secondRowIndex < 0 || selectedCells.length === 0) return;
+      const baseCount = selectedCells.length;
+      // only allow upper-octave keys when exactly 8 notes are selected
+      if (secondRowIndex >= baseCount && baseCount !== 8) return;
+      const octaveShift = Math.floor(secondRowIndex / baseCount);
+      let cellIndex = secondRowIndex % baseCount;
+      if (octaveShift > 0) {
+        // only bump into next scale degree when exactly 8 are selected
+        if (baseCount === 8) {
+          cellIndex = cellIndex + 1;
+        } else {
+          cellIndex = cellIndex + 0;
+        }
+      }
+      if (cellIndex >= 0 && cellIndex < baseCount) {
+        const cell = selectedCells[cellIndex];
         const freq = parseFloat(getSelectedCellDetails(cell).frequency);
-        if (!isNaN(freq)) noteOff(freq);
+        if (!isNaN(freq)) {
+          noteOff(freq * Math.pow(2, octaveShift));
+        }
       }
     };
 

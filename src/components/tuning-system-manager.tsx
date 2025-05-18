@@ -640,30 +640,39 @@ export default function TuningSystemManager() {
                 }
               })}
             </tr>
-            {/* Row 3: "Abjad Name" */}
-            <tr>
-              <td>{rowLabels[2]}</td>
-              {pitchClassesArr.map((_, colIndex) => (
-                <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
-                  {octave === 1 || octave === 2 ? (
-                    <select className="tuning-system-manager__select-abjad"
-                      value={selectedAbjadNames[colIndex + (octave === 1 ? 0 : numberOfPitchClasses)] || ""}
-                      onChange={(e) => handleAbjadSelect(colIndex, e.target.value, octave)}
-                    >
-                      <option value="">(none)</option>
-                      {abjadNames.map((name, idx) => (
-                        <option key={`${name}-${idx}`} value={name}>
-                          {name.replace(/\//g, '/\u200B')}
-                        </option>
-                      ))}
-                    </select>
-                  ) : (
-                    (selectedAbjadNames[colIndex + (octave === 1 ? 0 : numberOfPitchClasses)] || "")
-                      .replace(/\//g, '/\u200B')
-                  )}
-                </td>
+    {/* Row 3: "Abjad Name" */}
+    <tr>
+      <td>{rowLabels[2]}</td>
+      {pitchClassesArr.map((_, colIndex) => (
+        <td
+          key={colIndex}
+          className={`
+            ${isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}
+            ${!(octave === 1 || octave === 2) ? "tuning-system-manager__abjad-name" : ""}
+          `.trim()}
+        >
+          {octave === 1 || octave === 2 ? (
+            <select
+              className="tuning-system-manager__select-abjad"
+              value={selectedAbjadNames[colIndex + (octave === 1 ? 0 : numberOfPitchClasses)] || ""}
+              onChange={(e) => handleAbjadSelect(colIndex, e.target.value, octave)}
+            >
+              <option value="">(none)</option>
+              {abjadNames.map((name, idx) => (
+                <option key={`${name}-${idx}`} value={name}>
+                  {name.replace(/\//g, '/\u200B')}
+                </option>
               ))}
-            </tr>
+            </select>
+          ) : (
+            <span className="tuning-system-manager__abjad-name">
+              {(selectedAbjadNames[colIndex + (octave === 1 ? 0 : numberOfPitchClasses)] || "")
+                .replace(/\//g, '/\u200B')}
+            </span>
+          )}
+        </td>
+      ))}
+    </tr>
 
             <tr>
               <td>{rowLabels[3]}</td>

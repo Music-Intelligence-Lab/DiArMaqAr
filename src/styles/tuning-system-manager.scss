@@ -8,6 +8,10 @@
     font-weight: bold;
     display: inline;
   }
+    &__abjad-name {
+    font-size: 16px;
+    font-weight: bold;
+  }
 
   &__form {
     display: flex;
@@ -248,8 +252,7 @@
     color: white;
   }
 
-  &__select-note,
-  &__select-abjad {
+  &__select-note {
     border: none;
     border-radius: 0px;
     background-color: transparent !important;
@@ -259,16 +262,41 @@
     font-size: 12px;
     text-align: center;
     white-space: wrap;
+    padding-bottom: 0px;
+        padding-top: 0px;
 
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
     position: relative;
     padding-left: 0rem;
-    padding-bottom: 0.5px;
+    padding-bottom: 0px;
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path fill='%23aaa' d='M0 0l5 6 5-6z'/></svg>") !important;
     background-repeat: no-repeat !important;
     background-position: center bottom 0rem !important;
+  }
+
+  &__select-abjad{
+    border: none;
+    border-radius: 0px;
+    background-color: transparent !important;
+    color: white !important;
+    height: 35px;
+    max-width: 60px;
+    font-size: 16px;
+    text-align: center;
+    white-space: wrap;
+        padding-bottom: 0px;
+        padding-top: 0px;
+
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    position: relative;
+    padding-left: 0rem;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path fill='%23aaa' d='M0 0l5 6 5-6z'/></svg>") !important;
+    background-repeat: no-repeat !important;
+    background-position: center bottom 0px !important;
   }
 
   &__play-button {
