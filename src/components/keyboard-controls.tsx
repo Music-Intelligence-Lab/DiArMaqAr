@@ -21,13 +21,13 @@ export default function KeyboardControls() {
       if (idx < 0 || selectedCells.length === 0) return;
       // determine which selected cell and octave shift
       const baseCount = selectedCells.length;
-      // If we have more than one full octave, do not use upper octaves
-      if (baseCount > 8 && idx >= baseCount) return;
+      // only allow upper-octave keys when exactly 8 notes are selected
+      if (idx >= baseCount && baseCount !== 8) return;
       const octaveShift = Math.floor(idx / baseCount);
       let cellIndex = idx % baseCount;
       if (octaveShift > 0) {
-        // only bump when we have a full octave (>=8) of selected cells
-        if (baseCount >= 8) {
+        // only bump into next scale degree when exactly 8 are selected
+        if (baseCount === 8) {
           cellIndex = cellIndex + 1;
         } else {
           cellIndex = cellIndex + 0;
@@ -46,13 +46,13 @@ export default function KeyboardControls() {
       const idx = keys.indexOf(e.key);
       if (idx < 0 || selectedCells.length === 0) return;
       const baseCount = selectedCells.length;
-      // If we have more than one full octave, do not use upper octaves
-      if (baseCount > 8 && idx >= baseCount) return;
+      // only allow upper-octave keys when exactly 8 notes are selected
+      if (idx >= baseCount && baseCount !== 8) return;
       const octaveShift = Math.floor(idx / baseCount);
       let cellIndex = idx % baseCount;
       if (octaveShift > 0) {
-        // only bump when we have a full octave (>=8) of selected cells
-        if (baseCount >= 8) {
+        // only bump into next scale degree when exactly 8 are selected
+        if (baseCount === 8) {
           cellIndex = cellIndex + 1;
         } else {
           cellIndex = cellIndex + 0;
