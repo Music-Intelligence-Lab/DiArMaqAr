@@ -11,18 +11,9 @@
 
 # 15 May 2025
 - Sayr: Control Input Error
-- Add Source Auto-Input Button to Sayr Manager:
-
-Creator (English): Al-Shawwā, Sāmī
-Creator (Arabic): الشوّا، سامي
-Source (English): Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.
-Source (Arabic): القواعد الفنية في الموسيقى الشرقيّة والغربيّة
-Year: 1946
-
 - Add Sayr ID to URL Parameters
 - Display how many possible maqamat and ajnas in each tuning system as x/y
 - In each Jins and Maqam Button, display number of possible transpositions. If not fractions, use default cents tolerance which should be 5 cents
-- Add Suyur Select Buttons to Sayr Manager
 - Deploy Playback Patterns input and functionality based on Cells and SCALE DEGREES (which are different from pitch classes) in a manner similar to Sayr input. Don't forget to include RESTS and durations 32n, 32t, 32d, 16n, 16t, 16d, 8n, 8t, 8d, 4n, 4t, 4d, 2n, 2t, 2d, 1n, 1t, 1d
 
 function dottedQuarterDuration(bpm) {
@@ -39,4 +30,19 @@ This is for comparitive purpouses, for example: to hear the exact difference in 
 
 - add control to collapsable octave tabs so that we can automate them. For example if user selects a jins or maqam transposition that's in an octave which is closed, it would be forced open
 
+- I want to add sources for each jins and each maqam in the database. Each jins and each maqam will likely have multiple sources, therefore each will need to be able to accept multiple sources. With this in mind (and my previous request for adding Source Auto-Input to the Sayr Manager which is commented out below) maybe it's better that we create an application wide Bibliography, then when I am imputting Tuning Systems, Ajnas, Maqamat or Suyur, I can just select the relevant Source from a Bibliography List Dropdown menu, and only manually input the relevant page number(s) plus Comments English and Comments Arabic.
+
+Let's discuss this so we can figure out the best way to implement it. 
+
+<!-- 
+- Add Source Auto-Input Button to Sayr Manager:
+
+Creator (English): Al-Shawwā, Sāmī
+Creator (Arabic): الشوّا، سامي
+Source (English): Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.
+Source (Arabic): القواعد الفنية في الموسيقى الشرقيّة والغربيّة
+Year: 1946
+
+- Add Suyur Select Buttons to Sayr Manager
+ -->
 # ROADMAP FEATURES
