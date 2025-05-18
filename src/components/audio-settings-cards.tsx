@@ -21,8 +21,12 @@ const AudioSettingsCard = () => {
     midiOutputs,
     selectedMidiOutputId,
     setSelectedMidiOutputId,
-    soundMode,
-    setSoundMode,
+    inputMode,
+    setInputMode,
+    outputMode,
+    setOutputMode,
+    pitchBendRange,
+    setPitchBendRange,
   } = useAppContext();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -51,6 +55,11 @@ const AudioSettingsCard = () => {
     if (!isNaN(val)) setDuration(val);
   };
 
+  const handlePitchBendRangeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = Number(e.target.value);
+    if (!isNaN(val)) setPitchBendRange(val);
+  };
+
   return (
     <>
       <button className="audio-settings-open-button" onClick={togglePanel}>
@@ -62,7 +71,7 @@ const AudioSettingsCard = () => {
           <h3 className="audio-settings-card__title">Audio Settings</h3>
 
           {/* Tempo Input */}
-          <div style={{ marginBottom: "16px" }}>
+          <div style={{ marginBottom: "8px" }}>
             <label htmlFor="tempo-input" style={{ display: "block", marginBottom: "4px" }}>
               Tempo (BPM):
             </label>
@@ -78,7 +87,7 @@ const AudioSettingsCard = () => {
           </div>
 
           {/* Note Duration Input */}
-          <div style={{ marginBottom: "16px" }}>
+          <div style={{ marginBottom: "8px" }}>
             <label htmlFor="tempo-input" style={{ display: "block", marginBottom: "4px" }}>
               Duration (s):
             </label>
@@ -163,52 +172,87 @@ const AudioSettingsCard = () => {
             />
           </Box>
 
-          <div style={{ marginBottom: "16px" }}>
-              <label htmlFor="midi-output-select" style={{ display: "block", marginBottom: "4px" }}>
-                MIDI Input:
-              </label>
-              <select
-                id="midi-output-select"
-                value={selectedMidiInputId || ""}
-                onChange={(e) => setSelectedMidiInputId(e.target.value || null)}
-                className="audio-settings-card__select"
-              >
-                <option value="">– choose an input –</option>
-                {midiInputs.map((o) => (
-                  <option key={o.id} value={o.id}>
-                    {o.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+          <div style={{ marginBottom: "8px" }}>
+            <label htmlFor="tempo-input" style={{ display: "block", marginBottom: "4px" }}>
+              Pitch Bend Range (semitones):
+            </label>
+            <input
+              type="number"
+              id="tempo-input"
+              value={pitchBendRange}
+              onChange={handlePitchBendRangeChange}
+              className="audio-settings-card__number-input"
+              min={0}
+              max={50}
+            />
+          </div>
+
+          <div>Sound Input:</div>
+          <div className="audio-settings-card__sound-mode">
+            <button
+              onClick={() => setInputMode("tuningSystem")}
+              className={`audio-settings-card__sound-mode-button ${
+                inputMode === "tuningSystem" ? "audio-settings-card__sound-mode-button_selected" : ""
+              }`}
+            >
+              Tuning System
+            </button>
+            <button
+              onClick={() => setInputMode("selection")}
+              className={`audio-settings-card__sound-mode-button ${
+                inputMode === "selection" ? "audio-settings-card__sound-mode-button_selected" : ""
+              }`}
+            >
+              Selection
+            </button>
+          </div>
+
+          <div style={{ marginBottom: "8px" }}>
+            <label htmlFor="midi-output-select" style={{ display: "block", marginBottom: "4px" }}>
+              MIDI Input:
+            </label>
+            <select
+              id="midi-output-select"
+              value={selectedMidiInputId || ""}
+              onChange={(e) => setSelectedMidiInputId(e.target.value || null)}
+              className="audio-settings-card__select"
+            >
+              <option value="">– choose an input –</option>
+              {midiInputs.map((o) => (
+                <option key={o.id} value={o.id}>
+                  {o.name}
+                </option>
+              ))}
+            </select>
+          </div>
 
           <div>Sound Output:</div>
           <div className="audio-settings-card__sound-mode">
             <button
-              onClick={() => setSoundMode("mute")}
-              className={`audio-settings-card__sound-mode-button ${soundMode === "mute" ? "audio-settings-card__sound-mode-button_selected" : ""}`}
+              onClick={() => setOutputMode("mute")}
+              className={`audio-settings-card__sound-mode-button ${outputMode === "mute" ? "audio-settings-card__sound-mode-button_selected" : ""}`}
             >
               Mute
             </button>
             <button
-              onClick={() => setSoundMode("waveform")}
+              onClick={() => setOutputMode("waveform")}
               className={`audio-settings-card__sound-mode-button ${
-                soundMode === "waveform" ? "audio-settings-card__sound-mode-button_selected" : ""
+                outputMode === "waveform" ? "audio-settings-card__sound-mode-button_selected" : ""
               }`}
             >
               Waveform
             </button>
             <button
-              onClick={() => setSoundMode("midi")}
-              className={`audio-settings-card__sound-mode-button ${soundMode === "midi" ? "audio-settings-card__sound-mode-button_selected" : ""}`}
+              onClick={() => setOutputMode("midi")}
+              className={`audio-settings-card__sound-mode-button ${outputMode === "midi" ? "audio-settings-card__sound-mode-button_selected" : ""}`}
             >
               Midi
             </button>
           </div>
 
           {/* Waveform Select */}
-          {soundMode === "waveform" && (
-            <div style={{ marginBottom: "16px" }}>
+          {outputMode === "waveform" && (
+            <div style={{ marginBottom: "8px" }}>
               <label htmlFor="waveform-select" style={{ display: "block", marginBottom: "4px" }}>
                 Waveform:
               </label>
@@ -220,9 +264,9 @@ const AudioSettingsCard = () => {
               </select>
             </div>
           )}
-          
-          {soundMode === "midi" && (
-            <div style={{ marginBottom: "16px" }}>
+
+          {outputMode === "midi" && (
+            <div style={{ marginBottom: "8px" }}>
               <label htmlFor="midi-output-select" style={{ display: "block", marginBottom: "4px" }}>
                 MIDI Output:
               </label>
