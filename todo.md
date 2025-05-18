@@ -1,6 +1,5 @@
 
  # 21 Apr 2025
-
  - Playback: extend keyboard playback to allow descending maqam to be played on "qwertyuiop[]" row. Leftmost key (q) should be the lowest note
 
 
@@ -45,4 +44,7 @@ Year: 1946
 
 - Add Suyur Select Buttons to Sayr Manager
  -->
+
 # ROADMAP FEATURES
+- Compare Ajnas/Maqamat from different tuning systems: How to implement?
+- Compare multiple suyur for each maqam: How to implement?
