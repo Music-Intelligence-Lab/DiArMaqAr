@@ -76,7 +76,12 @@
 
   &__header {
     text-align: left;
-    background-color: green;
+    background-color: white;
+  }
+
+    &__header-cell {
+    text-align: left;
+    background-color: transparent;
   }
 
   &__row-header {
