@@ -131,7 +131,7 @@ export default function MaqamManager() {
   return (
     <div className="maqam-manager">
       <h2 className="maqam-manager__header">
-        Maqāmāt
+        Maqāmāt {`(${maqamat.filter((maqam) => checkIfMaqamIsSelectable(maqam)).length}/${maqamat.length})`}
         {selectedMaqam && (
           <span className="maqam-manager__selections">
             {`: ${selectedMaqam.getName()}`}{" "}

@@ -72,7 +72,7 @@ export default function JinsManager() {
   return (
     <div className="jins-manager">
       <h2 className="jins-manager__header">
-        Ajnās{" "}
+        Ajnās{` (${ajnas.filter((jins) => checkIfJinsIsSelectable(jins)).length}/${ajnas.length})`}
         {selectedJins && (
           <span className="jins-manager__selections">
             {`: ${selectedJins.getName()}`}{" "}
