@@ -703,31 +703,6 @@
     "suyur": []
   },
   {
-    "id": "28",
-    "name": "maqām bayāt rāst",
-    "ascendingNoteNames": [
-      "rāst",
-      "tīk zirguleh",
-      "kurdī",
-      "chahargāh",
-      "nawā",
-      "tīk ḥiṣār",
-      "ʿajam",
-      "kurdān"
-    ],
-    "descendingNoteNames": [
-      "kurdān",
-      "ʿajam",
-      "tīk ḥiṣār",
-      "nawā",
-      "chahargāh",
-      "kurdī",
-      "tīk zirguleh",
-      "rāst"
-    ],
-    "suyur": []
-  },
-  {
     "id": "25",
     "name": "maqām mustaʿār",
     "ascendingNoteNames": [
@@ -2285,5 +2260,30 @@
         ]
       }
     ]
+  },
+  {
+    "id": "28",
+    "name": "maqām bayāt rāst",
+    "ascendingNoteNames": [
+      "rāst",
+      "zirguleh",
+      "kurdī",
+      "chahargāh",
+      "nawā",
+      "tīk ḥiṣār",
+      "ʿajam",
+      "kurdān"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "ʿajam",
+      "tīk ḥiṣār",
+      "nawā",
+      "chahargāh",
+      "kurdī",
+      "tīk zirguleh",
+      "rāst"
+    ],
+    "suyur": []
   }
 ]

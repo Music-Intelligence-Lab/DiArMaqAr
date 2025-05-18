@@ -140,7 +140,7 @@ export default function MaqamManager() {
               Switch to {isAscending ? "Descending" : "Ascending"}
             </button> } */}
             <button className="maqam-manager__play-button" onClick={playSelectedMaqam}>
-              Play Selected Maqam <PlayCircleIcon />
+              <PlayCircleIcon /> Play Selected Maqam
             </button>
           </span>
         )}

@@ -1,34 +1,60 @@
-.maqam‑transpositions {
+.maqam-transpositions {
   width: 100%;
   font-size: 0.8rem;
 
   &__title {
     width: 100%;
-    background-color: $primary;
+    background-color: $secondary;
     color: #fff;
     font-size: 1.5rem;
     font-weight: bold;
     text-align: left;
     padding: 1rem 1rem;
+    border: solid 1px $grey;
   }
+
+&__play-circle-icon.MuiSvgIcon-root {
+//    background-color: $tertiary;
+    color: white;
+    padding: 0px ; 
+    margin: 0px;
+    vertical-align: middle;
+      font-size: 18px;
+  }
+   
 
   &__button {
     background-color: $primary;
     color: white;
-    padding: 5px 10px; 
+    padding: 5px;
     border-radius: 3px;
     cursor: pointer;
-    margin: 0 5px;
+    margin-left: 0px;
+    margin-right: 0px;
+    vertical-align: middle;
+    
   }
 
   &__table {
     width: 100%;
     border-collapse: collapse;
+    margin-bottom: 50px;
 
-    th,
+    th {
+            vertical-align: middle;
+      margin-bottom: 500px;
+      text-align: left;
+      padding: 10px;
+          border: solid 1px $grey;
+          
+
+    } 
+  
     td {
       vertical-align: middle;
-      padding: 5px 10px;
+      padding: 10px ;
+          border: solid 1px $grey;
+
     }
 
     tbody {
@@ -43,10 +69,27 @@
     }
   }
 
-  &__header,
-  &__cell {
-    border: 1px solid #e2e8f0;
+  &__transposition-title {
+    font-size: 20px;  
+    padding-right: 20px;
+  }
+
+  &__header {
     text-align: left;
+    background-color: green;
+  }
+
+  &__row-header {
+    font-weight: bold;
+    background-color: $medium-grey;
+      text-transform: capitalize;
+
+  }
+
+  &__maqam-name-row {
+    font-weight: bold;
+    background-color: black;
+    color: white;
   }
 
   &__input {
@@ -58,6 +101,7 @@
   }
 
   .maqam-transpositions__spacer {
-    padding: 20px 0;
+    padding: 10px;
+    border: 0px;
   }
 }
