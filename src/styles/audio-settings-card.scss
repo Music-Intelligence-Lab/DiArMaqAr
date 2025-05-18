@@ -38,9 +38,12 @@
 
   &__content {
     /* Add some top padding so it doesn't run into the close button */
-    margin-top: 70px;
+    margin-top: 40px;
     padding: 20px;
+    padding-bottom: 50px;
     color: black;
+    height: 100%;
+    overflow-y: auto;
   }
 
   &__title {
