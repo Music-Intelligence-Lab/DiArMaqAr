@@ -20,12 +20,15 @@ export default function MaqamTranspositions() {
     playNoteFrequency,
     playSequence,
   } = useAppContext();
+  
 
   if (!selectedMaqam || !selectedTuningSystem || selectedCells.length < 2) return null;
 
   const ascendingNoteNames = selectedMaqam.getAscendingNoteNames();
   const descendingNoteNames = selectedMaqam.getDescendingNoteNames();
 
+  const romanNumerals = ['I','II','III','IV','V','VI','VII', 'VIII', 'XI', 'X', 'XI', 'XII'];
+  
   // retrieve details for each selected cell
   const selectedCellDetails = selectedCells.map((cell) => getSelectedCellDetails(cell));
 
@@ -248,6 +251,7 @@ export default function MaqamTranspositions() {
               </button>
             </th>
           </tr>
+
           <tr>
             <th className="maqam-transpositions__row-header">
               <button
@@ -276,6 +280,24 @@ export default function MaqamTranspositions() {
               </React.Fragment>
             ))}
           </tr>
+ <tr>
+            <th className="maqam-transpositions__row-header">Scale Degrees</th>
+            {ascendingMaqamCellDetails.map((_, idx) =>
+              idx === 0 ? (
+                <th key={idx} className="maqam-transpositions__header-cell">
+                  {romanNumerals[idx]}
+                </th>
+              ) : (
+                <React.Fragment key={idx}>
+                  <th className="maqam-transpositions__header-cell"></th>
+                  <th className="maqam-transpositions__header-cell">
+                    {romanNumerals[idx]}
+                  </th>
+                </React.Fragment>
+              )
+            )}
+          </tr>
+
           <tr>
             <th className="maqam-transpositions__row-header">{valueType}</th>
             <th className="maqam-transpositions__header-cell">{ascendingMaqamCellDetails[0].originalValue}</th>
@@ -306,6 +328,7 @@ export default function MaqamTranspositions() {
               ))}
             </tr>
           )}
+
           <tr>
             <th className="maqam-transpositions__row-header">
               <button
@@ -334,6 +357,28 @@ export default function MaqamTranspositions() {
               </React.Fragment>
             ))}
           </tr>
+
+          <tr>
+            <th className="maqam-transpositions__row-header">Scale Degrees</th>
+            {romanNumerals
+              .slice(0, ascendingMaqamCellDetails.length)
+              .reverse()
+              .map((num, idx) =>
+                idx === 0 ? (
+                  <th key={idx} className="maqam-transpositions__header-cell">
+                    {num}
+                  </th>
+                ) : (
+                  <React.Fragment key={idx}>
+                    <th className="maqam-transpositions__header-cell"></th>
+                    <th className="maqam-transpositions__header-cell">
+                      {num}
+                    </th>
+                  </React.Fragment>
+                )
+              )}
+          </tr>
+
           <tr>
             <th className="maqam-transpositions__row-header">{valueType}</th>
             <th className="maqam-transpositions__header-cell">{descendingMaqamCellDetails[0].originalValue}</th>

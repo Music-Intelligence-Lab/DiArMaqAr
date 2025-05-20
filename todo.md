@@ -5,7 +5,9 @@
 
 # 15 May 2025
 - Add Sayr ID to URL Parameters
+
 - In each Jins and Maqam Button, display number of possible transpositions. If not fractions, use default cents tolerance which should be 5 cents
+
 - Deploy Playback Patterns input and functionality based on Cells and SCALE DEGREES (which are different from pitch classes) in a manner similar to Sayr input. Don't forget to include RESTS and durations 32n, 32t, 32d, 16n, 16t, 16d, 8n, 8t, 8d, 4n, 4t, 4d, 2n, 2t, 2d, 1n, 1t, 1d
 
 function dottedQuarterDuration(bpm) {
@@ -13,7 +15,8 @@ function dottedQuarterDuration(bpm) {
 }
 
 - Saving Starting Note Name, should also save or updated the Tuning System
-- Add Play Selected Sequence Button under Octave 3 but not in its collapsable DIV
+
+- Add Play Selected Pitch Classes Button under Octave 3 but not in its collapsable <div>
 
 # 17 May 2025
 - We need to be able to define a unique reference frequency for each tuning system starting note name. Currently we are using yegāh, 'ushayrān and rāst, but we should be able to define the reference freuqency for any starthing note name. 
@@ -52,9 +55,25 @@ Year: 1946
  -->
 
 # 20 May 2025
-- Create new tuning system IDs for each tuning system and unify their number format 
+- MIDI INPUT BUG: When setting MIDI Input playback to "Selection" the notes and mappings only work for the first selection and then stick to it, they don't update when I select a different jins or maqam. NOTE: This doesn't apply to QWERTY keyboard playback, only MIDI.
+
+- Create new tuning system IDs for each tuning system and unify their number format so that tuning systems inputted in the future will auto number according to same number format
+
+- Disable QWERTY playback when cursor is in a text field or text area
+
+- Disable QWERTY playback when keys are used in combination with Shift, Option, Control (not sure what this is called on PC), or Command (control on PC)
+
+- Add Scale Degrees Row to Maqam Analysis and 
+- Add row in tuning system table for "Fret Division" which calculates where a fret should be according to the string length: full string length minus string length of the pitch class. First cell (Fret Division 0) would always be 0 because its open string, second cell (Fret Division 1) would be full string length minus string length of that pitch class, etc...
+
+- Add check boxes in Octave 1 header to show/hide rows in tuning system table. One check box per row name. For now include all rows. The check boxes selection should apply to all octaves, but only show it on Octave 1.
+
+- When Octave is collapsed force showing pitch class and note name rows
+
 - Default note naming convention should be based on Al-Kindi 12 tone system and naming convention
+
 - Check why yegah starting note name always saves with tuning system even if the starting note name is changed before initial first time save 
+
 - // only sequences starting in octave 1 or 2
   const filteredAscendingSequences = ascendingSequences.filter((seq) => {
     const oct = seq[0].octave;
@@ -92,7 +111,6 @@ src/components/maqam-transpositions.tsx (211:151) @ noteName
   212 |               </button>
   213 |               <button
   214 |                 className="maqam-transpositions__button"
-
 
 
 # ROADMAP FEATURES
