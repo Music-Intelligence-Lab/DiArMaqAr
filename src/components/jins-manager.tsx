@@ -4,6 +4,7 @@ import { CellDetails, Cell, useAppContext } from "@/contexts/app-context";
 import Jins from "@/models/Jins";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import React from "react";
+import { getJinsTranspositions } from "@/functions/transpose";
 
 export default function JinsManager() {
   const {
@@ -27,6 +28,8 @@ export default function JinsManager() {
   // });
 
   const allCells = getAllCells();
+
+  const allCellDetails = allCells.map(getSelectedCellDetails);
 
   let jinsCellDetails: CellDetails[] = [];
 
@@ -120,6 +123,7 @@ export default function JinsManager() {
             >
               <div className="jins-manager__item-name">
                 <strong>{jins.getName()}</strong>
+                {checkIfJinsIsSelectable(jins) && <strong>{`Transpositions: ${getJinsTranspositions(allCellDetails, jins).length}`}</strong>}
               </div>
             </div>
           ))

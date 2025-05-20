@@ -1,5 +1,7 @@
 import { CellDetails } from "@/contexts/app-context";
 import computeRatio, { convertRatioToNumber } from "./computeRatio";
+import Maqam from "@/models/Maqam";
+import Jins from "@/models/Jins";
 
 export type Pattern = { ratio?: string; diff?: number };
 
@@ -99,4 +101,58 @@ export function mergeTranspositions(ascendingSequences: CellDetails[][], descend
   });
 
   return filteredSequences;
+}
+
+export function getMaqamTranspositions(
+  allCellDetails: CellDetails[],
+  maqam: Maqam
+) {
+
+  const ascendingNoteNames = maqam.getAscendingNoteNames();
+  const descendingNoteNames = maqam.getDescendingNoteNames();
+
+  if (ascendingNoteNames.length < 2 || descendingNoteNames.length < 2) return [];
+
+  const ascendingMaqamCellDetails = allCellDetails.filter((cell) => ascendingNoteNames.includes(cell.noteName));
+  const descendingMaqamCellDetails = allCellDetails
+    .filter((cell) => descendingNoteNames.includes(cell.noteName))
+    .reverse();
+
+  if (ascendingMaqamCellDetails.length === 0 || descendingMaqamCellDetails.length === 0) return [];
+
+  const valueType = ascendingMaqamCellDetails[0].originalValueType;
+  const useRatio = valueType === "fraction" || valueType === "ratios";
+
+  const ascendingIntervalPattern: Pattern[] = getIntervalPattern(ascendingMaqamCellDetails, useRatio);
+  
+  const descendingIntervalPattern: Pattern[] = getIntervalPattern(descendingMaqamCellDetails, useRatio);
+
+  const ascendingSequences: CellDetails[][] = getTranspositions(allCellDetails, ascendingIntervalPattern, true, useRatio, 5);
+
+  const descendingSequences: CellDetails[][] =  getTranspositions(allCellDetails, descendingIntervalPattern, false, useRatio, 5);
+
+  const filteredSequences: { ascendingSequence: CellDetails[]; descendingSequence: CellDetails[] }[] = mergeTranspositions(ascendingSequences, descendingSequences);
+
+  return filteredSequences;
+}
+
+export function getJinsTranspositions(
+  allCellDetails: CellDetails[],
+  jins: Jins
+) {
+
+  const jinsNoteNames = jins.getNoteNames();
+  
+  if (jinsNoteNames.length < 2) return [];
+
+  const jinsCellDetails = allCellDetails.filter((cell) => jinsNoteNames.includes(cell.noteName));
+
+  const valueType = jinsCellDetails[0].originalValueType;
+  const useRatio = valueType === "fraction" || valueType === "ratios";
+
+  const intervalPattern: Pattern[] = getIntervalPattern(jinsCellDetails, useRatio);
+
+  const sequences: CellDetails[][] = getTranspositions(allCellDetails, intervalPattern, true, useRatio, 5);
+
+  return sequences;
 }

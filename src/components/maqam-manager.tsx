@@ -3,6 +3,7 @@ import { CellDetails, useAppContext } from "@/contexts/app-context";
 import Maqam from "@/models/Maqam";
 import { Cell } from "@/contexts/app-context";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
+import { getMaqamTranspositions } from "@/functions/transpose";
 
 export default function MaqamManager() {
   const {
@@ -23,6 +24,8 @@ export default function MaqamManager() {
   const sortedMaqamat = [...maqamat].sort((a, b) => a.getName().localeCompare(b.getName()));
 
   const allCells = getAllCells();
+
+  const allCellDetails = allCells.map(getSelectedCellDetails);
 
   let ascendingMaqamCellDetails: CellDetails[] = [];
   let descendingMaqamCellDetails: CellDetails[] = [];
@@ -183,6 +186,7 @@ export default function MaqamManager() {
             >
               <div className="maqam-manager__item-name">
                 <strong>{maqam.getName()}</strong>
+                {checkIfMaqamIsSelectable(maqam) && <strong>{`Transpositions: ${getMaqamTranspositions(allCellDetails, maqam).length}`}</strong>}
               </div>
             </div>
           ))
