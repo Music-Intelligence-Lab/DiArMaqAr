@@ -112,7 +112,12 @@ src/components/maqam-transpositions.tsx (211:151) @ noteName
   213 |               <button
   214 |                 className="maqam-transpositions__button"
 
+- Find a way to separate the accidental in the English Note Name so it can be used for other purposes. i.e. C# or Bb or B-- or G+
+
+- Add staff notation to ajnas and maqamat based on English Note Names or Midi Note Numbers (without decimal) including transpositions using VexFLow: https://github.com/0xfe/vexflow which already includes "microtonal" accidentals using saggital (see "const accidentals" here: https://github.com/0xfe/vexflow/blob/master/src/tables.ts)
+
 
 # ROADMAP FEATURES
 - Compare Ajnas/Maqamat from different tuning systems: How to implement?
+
 - Compare multiple suyur for each maqam: How to implement?
