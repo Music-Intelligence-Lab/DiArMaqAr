@@ -157,9 +157,10 @@ export default function MaqamTranspositions() {
     const oct = seq[0].octave;
     return oct !== 3;
   });
+  // TODO: DO THIS FOR API ALSO
 
   const filteredDescendingSequences = descendingSequences.filter((seq) => {
-    const oct = seq[0].octave;
+    const oct = seq[seq.length - 1].octave;
     return oct !== 3;
   });
 
@@ -522,7 +523,7 @@ export default function MaqamTranspositions() {
                       <td className="maqam-transpositions__cell"></td>
                       <td className="maqam-transpositions__cell">
                         <button className="maqam-transpositions__button" onClick={() => playNoteFrequency(parseInt(d.frequency))}>
-                          {d.noteName + ` (${getEnglishNoteName(d.noteName)})`} <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
+                        {d.noteName + ` (${getEnglishNoteName(d.noteName)})`} <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
                         </button>
                       </td>
                     </React.Fragment>
