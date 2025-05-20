@@ -124,7 +124,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   const [selectedTuningSystem, setSelectedTuningSystem] = useState<TuningSystem | null>(null);
   const [pitchClasses, setPitchClasses] = useState("");
   const [noteNames, setNoteNames] = useState<TransliteratedNoteName[][]>([]);
-  const [centsTolerance, setCentsTolerance] = useState(1);
+  const [centsTolerance, setCentsTolerance] = useState(5);
 
   const [envelopeParams, setEnvelopeParams] = useState<EnvelopeParams>({
     attack: 0.01,

@@ -60,6 +60,13 @@
     }
   }
 
+  &__item-name {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
   &__play-button {
     margin: 0 10px;
     display: flex;
@@ -110,7 +117,8 @@
   }
 
   &__save-button,
-  &__delete-button, &__clear-button {
+  &__delete-button,
+  &__clear-button {
     margin-right: 20px;
     padding: 10px 20px;
     font-size: 16px;
