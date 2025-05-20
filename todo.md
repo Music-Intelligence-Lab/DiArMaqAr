@@ -12,8 +12,6 @@ function dottedQuarterDuration(bpm) {
 
 - Saving Starting Note Name, should also save or updated the Tuning System
 
-- Add Play Selected Pitch Classes Button under Octave 3 but not in its collapsable <div>
-
 # 17 May 2025
 - We need to be able to define a unique reference frequency for each tuning system starting note name. Currently we are using yegāh, 'ushayrān and rāst, but we should be able to define the reference freuqency for any starthing note name. 
 

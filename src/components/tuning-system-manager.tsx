@@ -39,6 +39,8 @@ export default function TuningSystemManager() {
     mapIndices,
     clearSelections,
     handleStartNoteNameChange,
+    getSelectedCellDetails,
+    playSequence,
   } = useAppContext();
 
   const [sortOption, setSortOption] = useState<"id" | "creatorEnglish" | "year">("year");
@@ -587,10 +589,7 @@ export default function TuningSystemManager() {
             <tr>
               <td>{rowLabels[0]}</td>
               {pitchClassesArr.map((_, colIndex) => (
-                <td
-                  key={colIndex}
-                  className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}
-                >
+                <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
                   {colIndex}
                 </td>
               ))}
@@ -613,7 +612,7 @@ export default function TuningSystemManager() {
                         <option value="none">(none)</option>
                         {octaveOneNoteNames.map((nm) => (
                           <option key={nm} value={nm}>
-                            {nm.replace(/\//g, '/\u200B')}
+                            {nm.replace(/\//g, "/\u200B")}
                           </option>
                         ))}
                         {colIndex !== 0 && (
@@ -621,7 +620,7 @@ export default function TuningSystemManager() {
                             <option value="none">---</option>
                             {octaveTwoNoteNames.map((nm) => (
                               <option key={nm} value={nm}>
-                                {nm.replace(/\//g, '/\u200B')}
+                                {nm.replace(/\//g, "/\u200B")}
                               </option>
                             ))}
                           </>
@@ -632,47 +631,44 @@ export default function TuningSystemManager() {
                 } else {
                   return (
                     <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
-                      {currentVal === "none"
-                        ? "(none)"
-                        : currentVal.replace(/\//g, '/\u200B')}
+                      {currentVal === "none" ? "(none)" : currentVal.replace(/\//g, "/\u200B")}
                     </td>
                   );
                 }
               })}
             </tr>
-    {/* Row 3: "Abjad Name" */}
-    <tr>
-      <td>{rowLabels[2]}</td>
-      {pitchClassesArr.map((_, colIndex) => (
-        <td
-          key={colIndex}
-          className={`
+            {/* Row 3: "Abjad Name" */}
+            <tr>
+              <td>{rowLabels[2]}</td>
+              {pitchClassesArr.map((_, colIndex) => (
+                <td
+                  key={colIndex}
+                  className={`
             ${isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}
             ${!(octave === 1 || octave === 2) ? "tuning-system-manager__abjad-name" : ""}
           `.trim()}
-        >
-          {octave === 1 || octave === 2 ? (
-            <select
-              className="tuning-system-manager__select-abjad"
-              value={selectedAbjadNames[colIndex + (octave === 1 ? 0 : numberOfPitchClasses)] || ""}
-              onChange={(e) => handleAbjadSelect(colIndex, e.target.value, octave)}
-            >
-              <option value="">(none)</option>
-              {abjadNames.map((name, idx) => (
-                <option key={`${name}-${idx}`} value={name}>
-                  {name.replace(/\//g, '/\u200B')}
-                </option>
+                >
+                  {octave === 1 || octave === 2 ? (
+                    <select
+                      className="tuning-system-manager__select-abjad"
+                      value={selectedAbjadNames[colIndex + (octave === 1 ? 0 : numberOfPitchClasses)] || ""}
+                      onChange={(e) => handleAbjadSelect(colIndex, e.target.value, octave)}
+                    >
+                      <option value="">(none)</option>
+                      {abjadNames.map((name, idx) => (
+                        <option key={`${name}-${idx}`} value={name}>
+                          {name.replace(/\//g, "/\u200B")}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <span className="tuning-system-manager__abjad-name">
+                      {(selectedAbjadNames[colIndex + (octave === 1 ? 0 : numberOfPitchClasses)] || "").replace(/\//g, "/\u200B")}
+                    </span>
+                  )}
+                </td>
               ))}
-            </select>
-          ) : (
-            <span className="tuning-system-manager__abjad-name">
-              {(selectedAbjadNames[colIndex + (octave === 1 ? 0 : numberOfPitchClasses)] || "")
-                .replace(/\//g, '/\u200B')}
-            </span>
-          )}
-        </td>
-      ))}
-    </tr>
+            </tr>
 
             <tr>
               <td>{rowLabels[3]}</td>
@@ -813,7 +809,11 @@ export default function TuningSystemManager() {
       <details open={true} className="tuning-system-manager__details">
         <summary className="tuning-system-manager__summary">
           <h2 className="tuning-system-manager__header">Tuning System</h2>
-          {`${ selectedTuningSystem ? `: ${selectedTuningSystem.getCreatorEnglish()} (${selectedTuningSystem.getYear()}) ${selectedTuningSystem.getTitleEnglish()}` : ""}`}{" "}
+          {`${
+            selectedTuningSystem
+              ? `: ${selectedTuningSystem.getCreatorEnglish()} (${selectedTuningSystem.getYear()}) ${selectedTuningSystem.getTitleEnglish()}`
+              : ""
+          }`}{" "}
         </summary>
         <div className="tuning-system-manager__group">
           <div className="tuning-system-manager__input-container">
@@ -1103,6 +1103,23 @@ export default function TuningSystemManager() {
       </details>
 
       <div className="tuning-system-manager__grid-wrapper">{renderNoteNameGrid()}</div>
+      <div className="tuning-system-manager__buttons">
+        <button
+          className="tuning-system-manager__play-sequence-button"
+          disabled={selectedCells.length === 0}
+          onClick={() => {
+            const frequencies = selectedCells.map((cell) => {
+              const cellDetails = getSelectedCellDetails(cell);
+
+              return parseInt(cellDetails.frequency) ?? 0;
+            });
+
+            playSequence(frequencies);
+          }}
+        >
+          Play Selected Sequence
+        </button>
+      </div>
     </div>
   );
 }
