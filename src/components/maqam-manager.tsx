@@ -1,7 +1,7 @@
 import React from "react";
 import { CellDetails, useAppContext } from "@/contexts/app-context";
 import Maqam from "@/models/Maqam";
-import { SelectedCell } from "@/contexts/app-context";
+import { Cell } from "@/contexts/app-context";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 
 export default function MaqamManager() {
@@ -38,7 +38,7 @@ export default function MaqamManager() {
   }
 
   // Map selectedCells to note names
-  const selectedCellDetails = selectedCells.map((cell: SelectedCell) => {
+  const selectedCellDetails = selectedCells.map((cell: Cell) => {
     return getSelectedCellDetails(cell);
   });
 

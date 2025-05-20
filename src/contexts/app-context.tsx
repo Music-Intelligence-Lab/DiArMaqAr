@@ -24,7 +24,7 @@ interface EnvelopeParams {
   waveform: string;
 }
 
-export interface SelectedCell {
+export interface Cell {
   octave: number;
   index: number;
 }
@@ -39,7 +39,7 @@ export interface CellDetails {
   originalValue: string;
   originalValueType: string;
   englishName: string;
-  octave?: number;
+  octave: number;
 }
 
 interface MidiPortInfo {
@@ -64,9 +64,9 @@ interface AppContextInterface {
   playNoteFrequency: (frequency: number, duration?: number) => void;
   envelopeParams: EnvelopeParams;
   setEnvelopeParams: React.Dispatch<React.SetStateAction<EnvelopeParams>>;
-  selectedCells: SelectedCell[];
-  setSelectedCells: React.Dispatch<React.SetStateAction<SelectedCell[]>>;
-  getAllCells: () => SelectedCell[];
+  selectedCells: Cell[];
+  setSelectedCells: React.Dispatch<React.SetStateAction<Cell[]>>;
+  getAllCells: () => Cell[];
   selectedIndices: number[];
   setSelectedIndices: React.Dispatch<React.SetStateAction<number[]>>;
   originalIndices: number[];
@@ -74,7 +74,7 @@ interface AppContextInterface {
   mapIndices: (notesToMap: TransliteratedNoteName[]) => void;
   initialMappingDone: boolean;
   setInitialMappingDone: React.Dispatch<React.SetStateAction<boolean>>;
-  getSelectedCellDetails: (cell: SelectedCell) => CellDetails;
+  getSelectedCellDetails: (cell: Cell) => CellDetails;
   ajnas: Jins[];
   setAjnas: React.Dispatch<React.SetStateAction<Jins[]>>;
   updateAllAjnas: (newAjnas: Jins[]) => Promise<void>;
@@ -92,8 +92,6 @@ interface AppContextInterface {
   centsTolerance: number;
   setCentsTolerance: React.Dispatch<React.SetStateAction<number>>;
   clearSelections: () => void;
-  isAscending: boolean;
-  setIsAscending: React.Dispatch<React.SetStateAction<boolean>>;
   volume: number;
   setVolume: React.Dispatch<React.SetStateAction<number>>;
   duration: number;
@@ -142,7 +140,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   const [duration, setDuration] = useState(0.1);
   const [tempo, setTempo] = useState<number>(300);
 
-  const [selectedCells, setSelectedCells] = useState<SelectedCell[]>([]);
+  const [selectedCells, setSelectedCells] = useState<Cell[]>([]);
   const [selectedIndices, setSelectedIndices] = useState<number[]>([]);
   const [originalIndices, setOriginalIndices] = useState<number[]>([]);
   const [initialMappingDone, setInitialMappingDone] = useState(false);
@@ -152,7 +150,6 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
   const [maqamat, setMaqamat] = useState<Maqam[]>([]);
   const [selectedMaqam, setSelectedMaqam] = useState<Maqam | null>(null);
-  const [isAscending, setIsAscending] = useState(true);
 
   const audioCtxRef = useRef<AudioContext | null>(null);
   const masterGainRef = useRef<GainNode | null>(null);
@@ -263,31 +260,6 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
     router.replace(`/?${params.join("&")}`, { scroll: false });
   }, [selectedTuningSystem, selectedJins, selectedMaqam, selectedIndices, originalIndices]);
-
-  useEffect(() => {
-    if (!selectedMaqam) return;
-
-    const usedNoteNames = getNoteNamesUsedInTuningSystem(selectedIndices);
-
-    const namesToSelect = isAscending ? selectedMaqam.getAscendingNoteNames() : selectedMaqam.getDescendingNoteNames();
-
-    // translate names back into SelectedCell[] by matching against usedNoteNames
-    const newCells: SelectedCell[] = [];
-    usedNoteNames.forEach((name, idx) => {
-      if (namesToSelect.includes(name)) {
-        let octave = 0;
-        let index = idx;
-        // assume 4 octaves evenly divided
-        const perOct = usedNoteNames.length / 4;
-        while (index >= perOct) {
-          octave++;
-          index -= perOct;
-        }
-        newCells.push({ octave, index });
-      }
-    });
-    setSelectedCells(newCells);
-  }, [isAscending]);
 
   useEffect(() => {
     if (!selectedTuningSystem) return;
@@ -650,7 +622,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     }
   };
 
-  const getSelectedCellDetails = (cell: SelectedCell): CellDetails => {
+  const getSelectedCellDetails = (cell: Cell): CellDetails => {
     const emptyDetails: CellDetails = {
       noteName: "",
       fraction: "",
@@ -661,6 +633,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       englishName: "",
       originalValue: "",
       originalValueType: "",
+      octave: cell.octave,
     };
 
     if (!selectedTuningSystem) return emptyDetails;
@@ -728,13 +701,14 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       frequency: conv ? conv.frequency : "-",
       originalValue: shiftedPc,
       originalValueType: pitchType,
+      octave: cell.octave,
     };
   };
 
-  const getAllCells = (): SelectedCell[] => {
+  const getAllCells = (): Cell[] => {
     if (!selectedTuningSystem) return [];
     const pitchArr = selectedTuningSystem.getPitchClasses();
-    const cells: SelectedCell[] = [];
+    const cells: Cell[] = [];
 
     for (let octave = 0; octave < 4; octave++) {
       for (let index = 0; index < pitchArr.length; index++) {
@@ -830,7 +804,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
     const noteNames = jins.getNoteNames();
 
-    const newSelectedCells: SelectedCell[] = [];
+    const newSelectedCells: Cell[] = [];
 
     const lengthOfUsedNoteNames = usedNoteNames.length;
 
@@ -871,10 +845,10 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     // when selecting, populate cells for asc or desc based on stored noteNames
     setSelectedMaqam(maqam);
     setSelectedJins(null);
-    const namesToSelect = isAscending ? maqam.getAscendingNoteNames() : maqam.getDescendingNoteNames();
+    const namesToSelect = maqam.getAscendingNoteNames()
 
     // translate names back into SelectedCell[] by matching against usedNoteNames
-    const newCells: SelectedCell[] = [];
+    const newCells: Cell[] = [];
     usedNoteNames.forEach((name, idx) => {
       if (namesToSelect.includes(name)) {
         let octave = 0;
@@ -974,8 +948,6 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         centsTolerance,
         setCentsTolerance,
         clearSelections,
-        isAscending,
-        setIsAscending,
         volume,
         setVolume,
         duration,

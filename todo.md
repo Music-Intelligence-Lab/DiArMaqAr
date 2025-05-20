@@ -1,8 +1,6 @@
 # 13 May 2025
 - Clean the code plus add README and documentation
 
-- Unify transposition code into one function
-
 # 15 May 2025
 - Add Sayr ID to URL Parameters
 

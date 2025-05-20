@@ -2,16 +2,16 @@
 "use client";
 
 import React from "react";
-import { SelectedCell, useAppContext } from "@/contexts/app-context";
+import { CellDetails, useAppContext } from "@/contexts/app-context";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
-import computeRatio, { convertRatioToNumber } from "@/functions/computeRatio";
+import computeRatio from "@/functions/computeRatio";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
+import { getIntervalPattern, getTranspositions, mergeTranspositions, Pattern } from "@/functions/transpose";
 
 export default function MaqamTranspositions() {
   const {
     selectedMaqam,
     selectedTuningSystem,
-    selectedCells,
     setSelectedCells,
     getAllCells,
     getSelectedCellDetails,
@@ -22,163 +22,36 @@ export default function MaqamTranspositions() {
   } = useAppContext();
   
 
-  if (!selectedMaqam || !selectedTuningSystem || selectedCells.length < 2) return null;
+  if (!selectedMaqam || !selectedTuningSystem) return null;
 
   const ascendingNoteNames = selectedMaqam.getAscendingNoteNames();
   const descendingNoteNames = selectedMaqam.getDescendingNoteNames();
 
+  if (ascendingNoteNames.length < 2 || descendingNoteNames.length < 2) return null;
+
   const romanNumerals = ['I','II','III','IV','V','VI','VII', 'VIII', 'XI', 'X', 'XI', 'XII'];
   
-  // retrieve details for each selected cell
-  const selectedCellDetails = selectedCells.map((cell) => getSelectedCellDetails(cell));
-
   const allCells = getAllCells();
 
-  const ascendingMaqamCellDetails = allCells.map((cell) => getSelectedCellDetails(cell)).filter((cell) => ascendingNoteNames.includes(cell.noteName));
-  const descendingMaqamCellDetails = allCells
-    .map((cell) => getSelectedCellDetails(cell))
+  const allCellDetails = allCells.map((cell) => getSelectedCellDetails(cell));
+
+  const ascendingMaqamCellDetails = allCellDetails.filter((cell) => ascendingNoteNames.includes(cell.noteName));
+  const descendingMaqamCellDetails = allCellDetails
     .filter((cell) => descendingNoteNames.includes(cell.noteName))
     .reverse();
 
-  // determine mode based on originalValueType
-  const valueType = selectedCellDetails[0].originalValueType;
+  const valueType = ascendingMaqamCellDetails[0].originalValueType;
   const useRatio = valueType === "fraction" || valueType === "ratios";
 
-  // build interval pattern: for ratios or cent/stringLength diffs
-  type Pattern = { ratio?: string; diff?: number };
-  const ascendingIntervalPattern: Pattern[] = ascendingMaqamCellDetails.slice(1).map((det, i) => {
-    if (useRatio) {
-      return {
-        ratio: computeRatio(ascendingMaqamCellDetails[i].fraction, det.fraction),
-      };
-    } else {
-      const prevVal = parseFloat(ascendingMaqamCellDetails[i].originalValue);
-      const curVal = parseFloat(det.originalValue);
-      return { diff: curVal - prevVal };
-    }
-  });
+  const ascendingIntervalPattern: Pattern[] = getIntervalPattern(ascendingMaqamCellDetails, useRatio);
+  
+  const descendingIntervalPattern: Pattern[] = getIntervalPattern(descendingMaqamCellDetails, useRatio);
 
-  const descendingIntervalPattern: Pattern[] = descendingMaqamCellDetails.slice(1).map((det, i) => {
-    if (useRatio) {
-      return {
-        ratio: computeRatio(descendingMaqamCellDetails[i].fraction, det.fraction),
-      };
-    } else {
-      const prevVal = parseFloat(descendingMaqamCellDetails[i].originalValue);
-      const curVal = parseFloat(det.originalValue);
-      return { diff: curVal - prevVal };
-    }
-  });
+  const ascendingSequences: CellDetails[][] = getTranspositions(allCellDetails, ascendingIntervalPattern, true, useRatio, centsTolerance);
 
-  const ascendingSequences: SelectedCell[][] = [];
+  const descendingSequences: CellDetails[][] =  getTranspositions(allCellDetails, descendingIntervalPattern, false, useRatio, centsTolerance);
 
-  // build matching sequences recursively
-  const buildAscendingSequences = (seq: SelectedCell[], cellIndex: number, intervalIndex: number) => {
-    if (intervalIndex === ascendingIntervalPattern.length) {
-      ascendingSequences.push(seq);
-      return;
-    }
-    const last = seq[seq.length - 1];
-    const lastDet = getSelectedCellDetails(last);
-
-    for (let i = cellIndex; i < allCells.length; i++) {
-      const candidate = allCells[i];
-
-      const candDet = getSelectedCellDetails(candidate);
-      const pat = ascendingIntervalPattern[intervalIndex];
-
-      if (useRatio) {
-        const computedRatio = computeRatio(lastDet.fraction, candDet.fraction);
-        if (computedRatio === pat.ratio) {
-          buildAscendingSequences([...seq, candidate], i + 1, intervalIndex + 1);
-          break;
-        } else if (convertRatioToNumber(computedRatio) > convertRatioToNumber(pat.ratio ?? "")) {
-          break;
-        }
-      } else {
-        const lastVal = parseFloat(lastDet.originalValue);
-        const candVal = parseFloat(candDet.originalValue);
-        const diff = candVal - lastVal;
-        if (Math.abs(diff - (pat.diff ?? 0)) <= centsTolerance) {
-          buildAscendingSequences([...seq, candidate], i + 1, intervalIndex + 1);
-          break;
-        } else if (Math.abs(pat.diff ?? 0) + centsTolerance < Math.abs(diff)) {
-          break;
-        }
-      }
-    }
-  };
-
-  const descendingSequences: SelectedCell[][] = [];
-
-  const buildDescendingSequences = (seq: SelectedCell[], cellIndex: number, intervalIndex: number) => {
-    if (intervalIndex === descendingIntervalPattern.length) {
-      descendingSequences.push(seq);
-      return;
-    }
-    const last = seq[seq.length - 1];
-    const lastDet = getSelectedCellDetails(last);
-
-    for (let i = cellIndex; i >= 0; i--) {
-      const candidate = allCells[i];
-
-      const candDet = getSelectedCellDetails(candidate);
-      const pat = descendingIntervalPattern[intervalIndex];
-
-      if (useRatio) {
-        const computedRatio = computeRatio(lastDet.fraction, candDet.fraction);
-        if (computedRatio === pat.ratio) {
-          buildDescendingSequences([...seq, candidate], i - 1, intervalIndex + 1);
-          break;
-        } else if (convertRatioToNumber(computedRatio) < convertRatioToNumber(pat.ratio ?? "")) {
-          break;
-        }
-      } else {
-        const lastVal = parseFloat(lastDet.originalValue);
-        const candVal = parseFloat(candDet.originalValue);
-        const diff = candVal - lastVal;
-
-        if (Math.abs(diff - (pat.diff ?? 0)) <= centsTolerance) {
-          buildDescendingSequences([...seq, candidate], i - 1, intervalIndex + 1);
-          break;
-        } else if (Math.abs(pat.diff ?? 0) + centsTolerance < Math.abs(diff)) {
-          break;
-        }
-      }
-    }
-  };
-
-  for (let i = 0; i < allCells.length; i++) {
-    const startingCell = allCells[i];
-
-    buildAscendingSequences([startingCell], i + 1, 0);
-    buildDescendingSequences([startingCell], i - 1, 0);
-  }
-
-  // only sequences starting in octave 1 or 2
-  const filteredAscendingSequences = ascendingSequences.filter((seq) => {
-    const oct = seq[0].octave;
-    return oct !== 3;
-  });
-  // TODO: DO THIS FOR API ALSO
-
-  const filteredDescendingSequences = descendingSequences.filter((seq) => {
-    const oct = seq[seq.length - 1].octave;
-    return oct !== 3;
-  });
-
-  const filteredSequences: { ascendingSequence: SelectedCell[]; descendingSequence: SelectedCell[] }[] = [];
-
-  filteredAscendingSequences.forEach((ascSeq) => {
-    const ascNoteName = getSelectedCellDetails(ascSeq[0]).noteName;
-    const descSeq = filteredDescendingSequences.find((descSeq) => {
-      const descNoteName = getSelectedCellDetails(descSeq[descSeq.length - 1]).noteName;
-      return ascNoteName === descNoteName;
-    });
-    if (descSeq) {
-      filteredSequences.push({ ascendingSequence: ascSeq, descendingSequence: descSeq });
-    }
-  });
+  const filteredSequences: { ascendingSequence: CellDetails[]; descendingSequence: CellDetails[] }[] = mergeTranspositions(ascendingSequences, descendingSequences);
 
   return (
     <div className="maqam-transpositions">
@@ -434,8 +307,8 @@ export default function MaqamTranspositions() {
           </thead>
         <tbody>
           {filteredSequences.map((seq, row) => {
-            const ascendingDetails = seq.ascendingSequence.map(getSelectedCellDetails);
-            const descendingDetails = seq.descendingSequence.map(getSelectedCellDetails);
+            const ascendingDetails = seq.ascendingSequence;
+            const descendingDetails = seq.descendingSequence;
             const colCount = 2 + (ascendingDetails.length - 1) * 2;
             if (ascendingMaqamCellDetails[0].noteName === ascendingDetails[0].noteName) return null;
 
