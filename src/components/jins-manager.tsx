@@ -1,6 +1,6 @@
 "use client";
 
-import { CellDetails, SelectedCell, useAppContext } from "@/contexts/app-context";
+import { CellDetails, Cell, useAppContext } from "@/contexts/app-context";
 import Jins from "@/models/Jins";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import React from "react";
@@ -36,7 +36,7 @@ export default function JinsManager() {
 
   const handleSaveJins = async () => {
     if (!selectedJins) return;
-    const selectedNoteNames = selectedCells.map((cell: SelectedCell) => {
+    const selectedNoteNames = selectedCells.map((cell: Cell) => {
       const details = getSelectedCellDetails(cell);
       return details.noteName;
     });

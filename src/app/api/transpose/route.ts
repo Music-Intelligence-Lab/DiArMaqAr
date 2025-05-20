@@ -5,7 +5,8 @@ import { promises as fs } from "fs";
 import path from "path";
 import { CellDetails } from "@/contexts/app-context";
 import { octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames, octaveThreeNoteNames, octaveFourNoteNames } from "@/models/NoteName";
-import computeRatio, { convertRatioToNumber } from "@/functions/computeRatio";
+import { getEnglishNoteName } from "@/functions/noteNameMappings";
+import { getIntervalPattern, getTranspositions, mergeTranspositions, Pattern } from "@/functions/transpose";
 
 const dataFilePath = path.join(process.cwd(), "data", "tuningSystems.json");
 const maqamatPath = path.join(process.cwd(), "data", "maqamat.json");
@@ -157,13 +158,12 @@ export async function POST(request: Request) {
           fraction,
           noteName,
           octave,
+          englishName: getEnglishNoteName(noteName),
         };
 
         allCellDetails.push(cellDetails);
       }
     }
-
-    type Pattern = { ratio?: string; diff?: number };
 
     const valueType = allCellDetails[0].originalValueType;
 
@@ -206,132 +206,17 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "This maqam is not compatible with this tuning system" }, { status: 400 });
       }
 
-      const ascendingIntervalPattern: Pattern[] = ascendingMaqamCellDetails.slice(1).map((det, i) => {
-        if (useRatio) {
-          return {
-            ratio: computeRatio(ascendingMaqamCellDetails[i].fraction, det.fraction),
-          };
-        } else {
-          const prevVal = parseFloat(ascendingMaqamCellDetails[i].originalValue);
-          const curVal = parseFloat(det.originalValue);
-          return { diff: curVal - prevVal };
-        }
-      });
+      const ascendingIntervalPattern: Pattern[] = getIntervalPattern(ascendingMaqamCellDetails, useRatio);
 
-      const descendingIntervalPattern: Pattern[] = descendingMaqamCellDetails.slice(1).map((det, i) => {
-        if (useRatio) {
-          return {
-            ratio: computeRatio(descendingMaqamCellDetails[i].fraction, det.fraction),
-          };
-        } else {
-          const prevVal = parseFloat(descendingMaqamCellDetails[i].originalValue);
-          const curVal = parseFloat(det.originalValue);
-          return { diff: curVal - prevVal };
-        }
-      });
+      const descendingIntervalPattern: Pattern[] = getIntervalPattern(descendingMaqamCellDetails, useRatio);
 
-      const ascendingSequences: CellDetails[][] = [];
+      const ascendingSequences: CellDetails[][] = getTranspositions(allCellDetails, ascendingIntervalPattern, true, useRatio, centsTolerance);
+      const descendingSequences: CellDetails[][] = getTranspositions(allCellDetails, descendingIntervalPattern, false, useRatio, centsTolerance);
 
-      const buildAscendingSequences = (seq: CellDetails[], cellIndex: number, intervalIndex: number) => {
-        if (intervalIndex === ascendingIntervalPattern.length) {
-          ascendingSequences.push(seq);
-          return;
-        }
-        const lastDet = seq[seq.length - 1];
-
-        for (let i = cellIndex; i < allCellDetails.length; i++) {
-          const candidate = allCellDetails[i];
-          const pat = ascendingIntervalPattern[intervalIndex];
-
-          if (useRatio) {
-            const computedRatio = computeRatio(lastDet.fraction, candidate.fraction);
-
-            if (computedRatio === pat.ratio) {
-              buildAscendingSequences([...seq, candidate], i + 1, intervalIndex + 1);
-              break;
-            } else if (convertRatioToNumber(computedRatio) > convertRatioToNumber(pat.ratio ?? "")) {
-              break;
-            }
-          } else {
-            const lastVal = parseFloat(lastDet.originalValue);
-            const candVal = parseFloat(candidate.originalValue);
-            const diff = candVal - lastVal;
-            if (Math.abs(diff - (pat.diff ?? 0)) <= centsTolerance) {
-              buildAscendingSequences([...seq, candidate], i + 1, intervalIndex + 1);
-              break;
-            } else if (Math.abs(pat.diff ?? 0) + centsTolerance < Math.abs(diff)) {
-              break;
-            }
-          }
-        }
-      };
-
-      const descendingSequences: CellDetails[][] = [];
-
-      const buildDescendingSequences = (seq: CellDetails[], cellIndex: number, intervalIndex: number) => {
-        if (intervalIndex === descendingIntervalPattern.length) {
-          descendingSequences.push(seq);
-          return;
-        }
-        const lastDet = seq[seq.length - 1];
-
-        for (let i = cellIndex; i >= 0; i--) {
-          const candidate = allCellDetails[i];
-          const pat = descendingIntervalPattern[intervalIndex];
-
-          if (useRatio) {
-            const computedRatio = computeRatio(lastDet.fraction, candidate.fraction);
-
-            if (computedRatio === pat.ratio) {
-              buildDescendingSequences([...seq, candidate], i + 1, intervalIndex + 1);
-              break;
-            } else if (convertRatioToNumber(computedRatio) < convertRatioToNumber(pat.ratio ?? "")) {
-              break;
-            }
-          } else {
-            const lastVal = parseFloat(lastDet.originalValue);
-            const candVal = parseFloat(candidate.originalValue);
-            const diff = candVal - lastVal;
-            if (Math.abs(diff - (pat.diff ?? 0)) <= centsTolerance) {
-              buildDescendingSequences([...seq, candidate], i + 1, intervalIndex + 1);
-              break;
-            } else if (Math.abs(pat.diff ?? 0) + centsTolerance < Math.abs(diff)) {
-              break;
-            }
-          }
-        }
-      };
-
-      for (let i = 0; i < allCellDetails.length; i++) {
-        const startingCell = allCellDetails[i];
-
-        buildAscendingSequences([startingCell], i + 1, 0);
-        buildDescendingSequences([startingCell], i - 1, 0);
-      }
-
-      // only sequences starting in octave 1 or 2
-      const filteredAscendingSequences = ascendingSequences.filter((seq) => {
-        const oct = seq[0].octave;
-        return oct !== 3;
-      });
-
-      const filteredDescendingSequences = descendingSequences.filter((seq) => {
-        const oct = seq[0].octave;
-        return oct !== 3;
-      });
-
-      const filteredSequences: { ascendingSequence: CellDetails[]; descendingSequence: CellDetails[] }[] = [];
-
-      filteredAscendingSequences.forEach((ascSeq) => {
-        const ascNoteName = ascSeq[0].noteName;
-        const descSeq = filteredDescendingSequences.find((descSeq) => {
-          const descNoteName = descSeq[descSeq.length - 1].noteName;
-          return ascNoteName === descNoteName;
-        });
-        if (descSeq) {
-          filteredSequences.push({ ascendingSequence: ascSeq, descendingSequence: descSeq });
-        }
-      });
+      const filteredSequences: { ascendingSequence: CellDetails[]; descendingSequence: CellDetails[] }[] = mergeTranspositions(
+        ascendingSequences,
+        descendingSequences
+      );
 
       const data: {
         ascendingInterval: string[];
@@ -385,67 +270,9 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "This jins is not compatible with this tuning system" }, { status: 400 });
       }
 
-      const intervalPattern: Pattern[] = jinsCellDetails.slice(1).map((det, i) => {
-        if (useRatio) {
-          return {
-            ratio: computeRatio(jinsCellDetails[i].fraction, det.fraction),
-          };
-        } else {
-          const prevVal = parseFloat(jinsCellDetails[i].originalValue);
-          const curVal = parseFloat(det.originalValue);
-          return { diff: curVal - prevVal };
-        }
-      });
+      const intervalPattern: Pattern[] = getIntervalPattern(jinsCellDetails, useRatio);
 
-      const sequences: CellDetails[][] = [];
-
-      // build matching sequences recursively
-      const buildSequences = (seq: CellDetails[], cellIndex: number, intervalIndex: number) => {
-        if (intervalIndex === intervalPattern.length) {
-          sequences.push(seq);
-          return;
-        }
-
-        const lastDet = seq[seq.length - 1];
-
-        for (let i = cellIndex; i < allCellDetails.length; i++) {
-          const candidate = allCellDetails[i];
-          const pat = intervalPattern[intervalIndex];
-
-          if (useRatio) {
-            const computedRatio = computeRatio(lastDet.fraction, candidate.fraction);
-
-            if (computedRatio === pat.ratio) {
-              buildSequences([...seq, candidate], i + 1, intervalIndex + 1);
-              break;
-            } else if (convertRatioToNumber(computedRatio) > convertRatioToNumber(pat.ratio ?? "")) {
-              break;
-            }
-          } else {
-            const lastVal = parseFloat(lastDet.originalValue);
-            const candVal = parseFloat(candidate.originalValue);
-            const diff = candVal - lastVal;
-            if (Math.abs(diff - (pat.diff ?? 0)) <= centsTolerance) {
-              buildSequences([...seq, candidate], i + 1, intervalIndex + 1);
-              break;
-            } else if (Math.abs(pat.diff ?? 0) + centsTolerance < Math.abs(diff)) {
-              break;
-            }
-          }
-        }
-      };
-
-      for (let i = 0; i < allCellDetails.length; i++) {
-        const startingCell = allCellDetails[i];
-
-        buildSequences([startingCell], i + 1, 0);
-      }
-
-      // only sequences starting in octave 1 or 2
-      const filteredSeqs = sequences.filter((seq) => {
-        const oct = seq[0].octave;
-        return oct !== 3;
-      });
+      const sequences: CellDetails[][] = getTranspositions(allCellDetails, intervalPattern, true, useRatio, centsTolerance);
 
       const data: {
         interval: string[];
@@ -463,7 +290,7 @@ export async function POST(request: Request) {
         }
       });
 
-      data.transpositions = filteredSeqs.map((seq) => {
+      data.transpositions = sequences.map((seq) => {
         const name = selectedJins.name + " al-" + seq[0].noteName;
         return { name, sequence: seq };
       });
