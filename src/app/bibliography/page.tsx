@@ -15,16 +15,16 @@ export default function BibliographyPage() {
   const [contributors, setContributors] = useState<Contributor[]>([]);
   const [editionEnglish, setEditionEnglish] = useState<string>("");
   const [editionArabic, setEditionArabic] = useState<string>("");
-  const [releaseDateEnglish, setReleaseDateEnglish] = useState<string>("");
-  const [releaseDateArabic, setReleaseDateArabic] = useState<string>("");
-  const [originalReleaseDateEnglish, setOriginalReleaseDateEnglish] = useState<string>("");
-  const [originalReleaseDateArabic, setOriginalReleaseDateArabic] = useState<string>("");
+  const [publicationDateEnglish, setReleaseDateEnglish] = useState<string>("");
+  const [publicationDateArabic, setReleaseDateArabic] = useState<string>("");
+  const [originalPublicationDateEnglish, setOriginalReleaseDateEnglish] = useState<string>("");
+  const [originalPublicationDateArabic, setOriginalReleaseDateArabic] = useState<string>("");
   const [publisherEnglish, setPublisherEnglish] = useState<string>("");
   const [publisherArabic, setPublisherArabic] = useState<string>("");
-  const [locationEnglish, setLocationEnglish] = useState<string>("");
-  const [locationArabic, setLocationArabic] = useState<string>("");
+  const [placeEnglish, setPlaceEnglish] = useState<string>("");
+  const [placeArabic, setPlaceArabic] = useState<string>("");
   const [ISBN, setISBN] = useState<string>("");
-  const [digitizedBookURL, setDigitizedBookURL] = useState<string>("");
+  const [url, setUrl] = useState<string>("");
   const [dateAccessed, setDateAccessed] = useState<string>("");
 
   useEffect(() => {
@@ -42,10 +42,10 @@ export default function BibliographyPage() {
       setOriginalReleaseDateArabic("");
       setPublisherEnglish("");
       setPublisherArabic("");
-      setLocationEnglish("");
-      setLocationArabic("");
+      setPlaceEnglish("");
+      setPlaceArabic("");
       setISBN("");
-      setDigitizedBookURL("");
+      setUrl("");
       setDateAccessed("");
     } else {
       const source = sources.find((s: Source) => s.getId() === selectedSourceId);
@@ -63,10 +63,10 @@ export default function BibliographyPage() {
         setOriginalReleaseDateArabic(source.getOriginalReleaseDateArabic());
         setPublisherEnglish(source.getPublisherEnglish());
         setPublisherArabic(source.getPublisherArabic());
-        setLocationEnglish(source.getLocationEnglish());
-        setLocationArabic(source.getLocationArabic());
+        setPlaceEnglish(source.getPlaceEnglish());
+        setPlaceArabic(source.getPlaceArabic());
         setISBN(source.getISBN());
-        setDigitizedBookURL(source.getDigitizedBookURL());
+        setUrl(source.getUrl());
         setDateAccessed(source.getDateAccessed());
       }
     }
@@ -100,16 +100,16 @@ export default function BibliographyPage() {
       contributors,
       editionEnglish,
       editionArabic,
-      releaseDateEnglish,
-      releaseDateArabic,
-      originalReleaseDateEnglish,
-      originalReleaseDateArabic,
+      publicationDateEnglish,
+      publicationDateArabic,
+      originalPublicationDateEnglish,
+      originalPublicationDateArabic,
       publisherEnglish,
       publisherArabic,
-      locationEnglish,
-      locationArabic,
+      placeEnglish,
+      placeArabic,
       ISBN,
-      digitizedBookURL,
+      url,
       dateAccessed
     );
 
@@ -226,26 +226,26 @@ export default function BibliographyPage() {
             />
           </div>
           <div className="sources-page__input-container">
-            <label className="sources-page__label" htmlFor="releaseDateEnglishField">
-              Release Date (English)
+            <label className="sources-page__label" htmlFor="publicationDateEnglishField">
+              Publication Date (English)
             </label>
             <input
-              id="releaseDateEnglishField"
+              id="publicationDateEnglishField"
               className="sources-page__input"
               type="text"
-              value={releaseDateEnglish}
+              value={publicationDateEnglish}
               onChange={(e) => setReleaseDateEnglish(e.target.value)}
             />
           </div>
           <div className="sources-page__input-container">
-            <label className="sources-page__label" htmlFor="releaseDateArabicField">
-              Release Date (Arabic)
+            <label className="sources-page__label" htmlFor="publicationDateArabicField">
+              Publication Date (Arabic)
             </label>
             <input
-              id="releaseDateArabicField"
+              id="publicationDateArabicField"
               className="sources-page__input"
               type="text"
-              value={releaseDateArabic}
+              value={publicationDateArabic}
               onChange={(e) => setReleaseDateArabic(e.target.value)}
             />
           </div>
@@ -254,26 +254,26 @@ export default function BibliographyPage() {
         {/* Original Dates & Publisher */}
         <div className="sources-page__group">
           <div className="sources-page__input-container">
-            <label className="sources-page__label" htmlFor="originalReleaseDateEnglishField">
-              Original Release Date (English)
+            <label className="sources-page__label" htmlFor="originalPublicationDateEnglishField">
+              Original Publication Date (English)
             </label>
             <input
-              id="originalReleaseDateEnglishField"
+              id="originalPublicationDateEnglishField"
               className="sources-page__input"
               type="text"
-              value={originalReleaseDateEnglish}
+              value={originalPublicationDateEnglish}
               onChange={(e) => setOriginalReleaseDateEnglish(e.target.value)}
             />
           </div>
           <div className="sources-page__input-container">
-            <label className="sources-page__label" htmlFor="originalReleaseDateArabicField">
-              Original Release Date (Arabic)
+            <label className="sources-page__label" htmlFor="originalPublicationDateArabicField">
+              Original Publication Date (Arabic)
             </label>
             <input
-              id="originalReleaseDateArabicField"
+              id="originalPublicationDateArabicField"
               className="sources-page__input"
               type="text"
-              value={originalReleaseDateArabic}
+              value={originalPublicationDateArabic}
               onChange={(e) => setOriginalReleaseDateArabic(e.target.value)}
             />
           </div>
@@ -303,30 +303,30 @@ export default function BibliographyPage() {
           </div>
         </div>
 
-        {/* Location, ISBN & URL */}
+        {/* Place, ISBN & URL */}
         <div className="sources-page__group">
           <div className="sources-page__input-container">
-            <label className="sources-page__label" htmlFor="locationEnglishField">
-              Location (English)
+            <label className="sources-page__label" htmlFor="placeEnglishField">
+              Place (English)
             </label>
             <input
-              id="locationEnglishField"
+              id="placeEnglishField"
               className="sources-page__input"
               type="text"
-              value={locationEnglish}
-              onChange={(e) => setLocationEnglish(e.target.value)}
+              value={placeEnglish}
+              onChange={(e) => setPlaceEnglish(e.target.value)}
             />
           </div>
           <div className="sources-page__input-container">
-            <label className="sources-page__label" htmlFor="locationArabicField">
-              Location (Arabic)
+            <label className="sources-page__label" htmlFor="placeArabicField">
+              Place (Arabic)
             </label>
             <input
-              id="locationArabicField"
+              id="placeArabicField"
               className="sources-page__input"
               type="text"
-              value={locationArabic}
-              onChange={(e) => setLocationArabic(e.target.value)}
+              value={placeArabic}
+              onChange={(e) => setPlaceArabic(e.target.value)}
             />
           </div>
           <div className="sources-page__input-container">
@@ -336,15 +336,15 @@ export default function BibliographyPage() {
             <input id="isbnField" className="sources-page__input" type="text" value={ISBN} onChange={(e) => setISBN(e.target.value)} />
           </div>
           <div className="sources-page__input-container">
-            <label className="sources-page__label" htmlFor="digitizedBookURLField">
-              Digitized Book URL
+            <label className="sources-page__label" htmlFor="urlField">
+              URL
             </label>
             <input
-              id="digitizedBookURLField"
+              id="urlField"
               className="sources-page__input"
               type="text"
-              value={digitizedBookURL}
-              onChange={(e) => setDigitizedBookURL(e.target.value)}
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
             />
           </div>
           <div className="sources-page__input-container">

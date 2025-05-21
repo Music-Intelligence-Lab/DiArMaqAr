@@ -18,16 +18,16 @@ export default class Source {
   private contributors: Contributor[];
   private editionEnglish: string;
   private editionArabic: string;
-  private releaseDateEnglish: string;
-  private releaseDateArabic: string;
-  private originalReleaseDateEnglish: string;
-  private originalReleaseDateArabic: string;
+  private publicationDateEnglish: string;
+  private publicationDateArabic: string;
+  private originalPublicationDateEnglish: string;
+  private originalPublicationDateArabic: string;
   private publisherEnglish: string;
   private publisherArabic: string;
-  private locationEnglish: string;
-  private locationArabic: string;
+  private placeEnglish: string;
+  private placeArabic: string;
   private ISBN: string;
-  private digitizedBookURL: string;
+  private url: string;
   private dateAccessed: string;
 
   constructor(
@@ -38,16 +38,16 @@ export default class Source {
     contributors: Contributor[],
     editionEnglish: string,
     editionArabic: string,
-    releaseDateEnglish: string,
-    releaseDateArabic: string,
-    originalReleaseDateEnglish: string,
-    originalReleaseDateArabic: string,
+    publicationDateEnglish: string,
+    publicationDateArabic: string,
+    originalPublicationDateEnglish: string,
+    originalPublicationDateArabic: string,
     publisherEnglish: string,
     publisherArabic: string,
-    locationEnglish: string,
-    locationArabic: string,
+    placeEnglish: string,
+    placeArabic: string,
     ISBN: string,
-    digitizedBookURL: string,
+    url: string,
     dateAccessed: string
   ) {
     this.id = id;
@@ -57,16 +57,16 @@ export default class Source {
     this.contributors = contributors;
     this.editionEnglish = editionEnglish;
     this.editionArabic = editionArabic;
-    this.releaseDateEnglish = releaseDateEnglish;
-    this.releaseDateArabic = releaseDateArabic;
-    this.originalReleaseDateEnglish = originalReleaseDateEnglish;
-    this.originalReleaseDateArabic = originalReleaseDateArabic;
+    this.publicationDateEnglish = publicationDateEnglish;
+    this.publicationDateArabic = publicationDateArabic;
+    this.originalPublicationDateEnglish = originalPublicationDateEnglish;
+    this.originalPublicationDateArabic = originalPublicationDateArabic;
     this.publisherEnglish = publisherEnglish;
     this.publisherArabic = publisherArabic;
-    this.locationEnglish = locationEnglish;
-    this.locationArabic = locationArabic;
+    this.placeEnglish = placeEnglish;
+    this.placeArabic = placeArabic;
     this.ISBN = ISBN;
-    this.digitizedBookURL = digitizedBookURL;
+    this.url = url;
     this.dateAccessed = dateAccessed;
   }
 
@@ -99,19 +99,19 @@ export default class Source {
   }
 
   public getReleaseDateEnglish(): string {
-    return this.releaseDateEnglish;
+    return this.publicationDateEnglish;
   }
 
   public getReleaseDateArabic(): string {
-    return this.releaseDateArabic;
+    return this.publicationDateArabic;
   }
 
   public getOriginalReleaseDateEnglish(): string {
-    return this.originalReleaseDateEnglish;
+    return this.originalPublicationDateEnglish;
   }
 
   public getOriginalReleaseDateArabic(): string {
-    return this.originalReleaseDateArabic;
+    return this.originalPublicationDateArabic;
   }
 
   public getPublisherEnglish(): string {
@@ -122,20 +122,20 @@ export default class Source {
     return this.publisherArabic;
   }
 
-  public getLocationEnglish(): string {
-    return this.locationEnglish;
+  public getPlaceEnglish(): string {
+    return this.placeEnglish;
   }
 
-  public getLocationArabic(): string {
-    return this.locationArabic;
+  public getPlaceArabic(): string {
+    return this.placeArabic;
   }
 
   public getISBN(): string {
     return this.ISBN;
   }
 
-  public getDigitizedBookURL(): string {
-    return this.digitizedBookURL;
+  public getUrl(): string {
+    return this.url;
   }
 
   public getDateAccessed(): string {
@@ -151,16 +151,16 @@ export default class Source {
       contributors: this.contributors,
       editionEnglish: this.editionEnglish,
       editionArabic: this.editionArabic,
-      releaseDateEnglish: this.releaseDateEnglish,
-      releaseDateArabic: this.releaseDateArabic,
-      originalReleaseDateEnglish: this.originalReleaseDateEnglish,
-      originalReleaseDateArabic: this.originalReleaseDateArabic,
+      publicationDateEnglish: this.publicationDateEnglish,
+      publicationDateArabic: this.publicationDateArabic,
+      originalPublicationDateEnglish: this.originalPublicationDateEnglish,
+      originalPublicationDateArabic: this.originalPublicationDateArabic,
       publisherEnglish: this.publisherEnglish,
       publisherArabic: this.publisherArabic,
-      locationEnglish: this.locationEnglish,
-      locationArabic: this.locationArabic,
+      placeEnglish: this.placeEnglish,
+      placeArabic: this.placeArabic,
       ISBN: this.ISBN,
-      digitizedBookURL: this.digitizedBookURL,
+      url: this.url,
       dateAccessed: this.dateAccessed
     };
   }
@@ -175,16 +175,16 @@ export default class Source {
       json.contributors,
       json.editionEnglish,
       json.editionArabic,
-      json.releaseDateEnglish,
-      json.releaseDateArabic,
-      json.originalReleaseDateEnglish,
-      json.originalReleaseDateArabic,
+      json.publicationDateEnglish,
+      json.publicationDateArabic,
+      json.originalPublicationDateEnglish,
+      json.originalPublicationDateArabic,
       json.publisherEnglish,
       json.publisherArabic,
-      json.locationEnglish,
-      json.locationArabic,
+      json.placeEnglish,
+      json.placeArabic,
       json.ISBN,
-      json.digitizedBookURL,
+      json.url,
       json.dateAccessed
     );
   }

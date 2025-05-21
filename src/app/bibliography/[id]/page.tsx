@@ -32,13 +32,13 @@ export default function SourceDetailPage() {
         </span>
       </div>
       <div className="sources-detail__field">
-        <span className="sources-detail__label">Release Date:</span>
+        <span className="sources-detail__label">Publication Date:</span>
         <span className="sources-detail__value">
           {source.getReleaseDateEnglish()} / {source.getReleaseDateArabic()}
         </span>
       </div>
       <div className="sources-detail__field">
-        <span className="sources-detail__label">Original Release Date:</span>
+        <span className="sources-detail__label">Original Publication Date:</span>
         <span className="sources-detail__value">
           {source.getOriginalReleaseDateEnglish()} / {source.getOriginalReleaseDateArabic()}
         </span>
@@ -50,9 +50,9 @@ export default function SourceDetailPage() {
         </span>
       </div>
       <div className="sources-detail__field">
-        <span className="sources-detail__label">Location:</span>
+        <span className="sources-detail__label">Place:</span>
         <span className="sources-detail__value">
-          {source.getLocationEnglish()} / {source.getLocationArabic()}
+          {source.getPlaceEnglish()} / {source.getPlaceArabic()}
         </span>
       </div>
       <div className="sources-detail__field">
@@ -63,11 +63,11 @@ export default function SourceDetailPage() {
         <span className="sources-detail__label">Digitized URL:</span>
         <a
           className="sources-detail__link"
-          href={source.getDigitizedBookURL()}
+          href={source.getUrl()}
           target="_blank"
           rel="noopener noreferrer"
         >
-          {source.getDigitizedBookURL()}
+          {source.getUrl()}
         </a>
       </div>
       <div className="sources-detail__field">
