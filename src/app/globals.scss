@@ -1,10 +1,5 @@
-$desktop-navbar-height: 150px;
-$desktop-navbar-width: 1200px;
-$desktop-page-height: calc(100vh - $desktop-navbar-height);
-
-$mobile-top-bar-height: 50px;
-$mobile-bottom-navbar-height: 100px;
-$mobile-page-height: calc(100svh - $mobile-top-bar-height);
+$navbar-height: 50px;
+$page-height: calc(100svh - $navbar-height);
 
 $primary: #610C9F;
 $secondary: #940B92;
@@ -36,6 +31,9 @@ $main-gradient: linear-gradient(0deg, $dark-grey, $dark-grey);
 @import "../styles/maqam-manager.scss";
 @import "../styles/seir-manager.scss";
 @import "../styles/maqam-transpositions.scss";
+@import "../styles/navbar.scss";
+@import "../styles/sources-page.scss";
+@import "../styles/source-details-page.scss";
 
 :root {
   display: flex;
@@ -80,4 +78,17 @@ select:focus {
   box-shadow: none;
   background-color: white;
   color: black;
+}
+
+.center-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overscroll-behavior: none;
+  position: relative;
+  width: 100%;
+
+  & > * {
+    width: 100%;
+  }
 }

@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Box, Slider } from "@mui/material";
 import { useAppContext } from "@/contexts/app-context";
+import SettingsIcon from "@mui/icons-material/Settings";
 
 const AudioSettingsCard = () => {
   const {
@@ -63,7 +64,7 @@ const AudioSettingsCard = () => {
   return (
     <>
       <button className="audio-settings-open-button" onClick={togglePanel}>
-        {isOpen ? "Close" : "Open"}
+        <SettingsIcon />
       </button>
 
       <div className={`audio-settings-card ${isOpen ? "audio-settings-card--open" : ""}`}>

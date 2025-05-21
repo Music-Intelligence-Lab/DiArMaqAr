@@ -21,20 +21,6 @@ This is for comparitive purpouses, for example: to hear the exact difference in 
 
 - I want to add sources for each jins and each maqam in the database. Each jins and each maqam will likely have multiple sources, therefore each will need to be able to accept multiple sources. With this in mind (and my previous request for adding Source Auto-Input to the Sayr Manager which is commented out below) maybe it's better that we crea  graphy List Dropdown menu, and only manually input the relevant page number(s) plus Comments English and Comments Arabic.
 
-Let's discuss this so we can figure out the best way to implement it. 
-
-I added a bibliography.html to the khyam folder, this is the format of the form for a book entry.
-For an article we would need to add:
-
-Title of article
-Journal
-Date
-Volume number
-Issue number
-Page range
-DOI
-Article URL
-
 
 <!-- 
 - Add Source Auto-Input Button to Sayr Manager:
@@ -49,9 +35,6 @@ Year: 1946
  -->
 
 # 20 May 2025
-- MIDI INPUT BUG: When setting MIDI Input playback to "Selection" the notes and mappings only work for the first selection and then stick to it, they don't update when I select a different jins or maqam. NOTE: This doesn't apply to QWERTY keyboard playback, only MIDI.
-
-- Create new tuning system IDs for each tuning system and unify their number format so that tuning systems inputted in the future will auto number according to same number format
 
 - Disable QWERTY playback when cursor is in a text field or text area
 

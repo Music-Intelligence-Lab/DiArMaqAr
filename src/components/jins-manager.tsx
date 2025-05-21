@@ -9,6 +9,7 @@ import { getJinsTranspositions } from "@/functions/transpose";
 export default function JinsManager() {
   const {
     ajnas,
+    selectedTuningSystem,
     selectedJins,
     setSelectedJins,
     handleClickJins,
@@ -36,6 +37,8 @@ export default function JinsManager() {
   if (selectedJins) {
     jinsCellDetails = allCells.map((cell) => getSelectedCellDetails(cell)).filter((cell) => selectedJins.getNoteNames().includes(cell.noteName));
   }
+
+  const numberOfPitchClasses = selectedTuningSystem ? selectedTuningSystem.getPitchClasses().length : 0;
 
   const handleSaveJins = async () => {
     if (!selectedJins) return;
@@ -123,7 +126,7 @@ export default function JinsManager() {
             >
               <div className="jins-manager__item-name">
                 <strong>{jins.getName()}</strong>
-                {checkIfJinsIsSelectable(jins) && <strong>{`Transpositions: ${getJinsTranspositions(allCellDetails, jins).length}`}</strong>}
+                {checkIfJinsIsSelectable(jins) && <strong>{`Transpositions: ${getJinsTranspositions(allCellDetails, jins).length - 1}/${numberOfPitchClasses - 1}`}</strong>}
               </div>
             </div>
           ))

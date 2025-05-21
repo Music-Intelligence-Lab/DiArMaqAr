@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { AppContextProvider } from "@/contexts/app-context";
+import Navbar from "@/components/navbar";
 import { Roboto, Bebas_Neue, Inter } from "next/font/google";
 import "./globals.scss";
 
@@ -37,7 +38,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${roboto.variable} ${bebasNeue.variable} ${inter.variable}`}>
-        <AppContextProvider>{children}</AppContextProvider>
+        <AppContextProvider>
+          <Navbar />
+          <main className="center-container">{children}</main>
+        </AppContextProvider>
       </body>
     </html>
   );
