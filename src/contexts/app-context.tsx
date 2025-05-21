@@ -91,6 +91,8 @@ interface AppContextInterface {
   setSelectedMaqam: React.Dispatch<React.SetStateAction<Maqam | null>>;
   checkIfMaqamIsSelectable: (maqam: Maqam) => boolean;
   handleClickMaqam: (maqam: Maqam) => void;
+  maqamSeirId: string;
+  setMaqamSeirId: React.Dispatch<React.SetStateAction<string>>;
   centsTolerance: number;
   setCentsTolerance: React.Dispatch<React.SetStateAction<number>>;
   clearSelections: () => void;
@@ -103,7 +105,7 @@ interface AppContextInterface {
   playSequence: (frequencies: number[], noteDuration?: number) => void;
   noteOn: (frequency: number) => void;
   noteOff: (frequency: number) => void;
-  handleUrlParams: (params: { tuningSystemId?: string; jinsId?: string; maqamId?: string; firstNote?: string }) => void;
+  handleUrlParams: (params: { tuningSystemId?: string; jinsId?: string; maqamId?: string; seirId?: string, firstNote?: string }) => void;
   midiInputs: MidiPortInfo[];
   selectedMidiInputId: string | null;
   setSelectedMidiInputId: React.Dispatch<React.SetStateAction<string | null>>;
@@ -155,6 +157,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
   const [maqamat, setMaqamat] = useState<Maqam[]>([]);
   const [selectedMaqam, setSelectedMaqam] = useState<Maqam | null>(null);
+  const [maqamSeirId, setMaqamSeirId] = useState<string>("");
 
   const [sources, setSources] = useState<Source[]>([])
 
@@ -270,10 +273,14 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       params.push(`maqam=${selectedMaqam.getId()}`);
     }
 
+    if (maqamSeirId) {
+      params.push(`seir=${maqamSeirId}`);
+    }
+
     if (typeof window !== "undefined" && window.location.pathname !== "/") return;
 
     router.replace(`/?${params.join("&")}`, { scroll: false });
-  }, [selectedTuningSystem, selectedJins, selectedMaqam, selectedIndices, originalIndices]);
+  }, [selectedTuningSystem, selectedJins, selectedMaqam, maqamSeirId, selectedIndices, originalIndices]);
 
   useEffect(() => {
     if (!selectedTuningSystem) return;
@@ -902,11 +909,13 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     tuningSystemId,
     jinsId,
     maqamId,
+    seirId,
     firstNote,
   }: {
     tuningSystemId?: string;
     jinsId?: string;
     maqamId?: string;
+    seirId?: string;
     firstNote?: string;
   }) => {
     if (!tuningSystems.length || !ajnas.length || !maqamat.length) return;
@@ -927,6 +936,11 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
             const foundMaqam = maqamat.find((m) => m.getId() === maqamId);
             if (foundMaqam && checkIfMaqamIsSelectable(foundMaqam, givenIndices)) {
               handleClickMaqam(foundMaqam, givenIndices);
+              console.log(seirId, "TEST")
+              if (seirId) {
+                console.log("test")
+                setMaqamSeirId(seirId);
+              }
             }
           }
         }
@@ -978,6 +992,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         setSelectedMaqam,
         checkIfMaqamIsSelectable,
         handleClickMaqam,
+        maqamSeirId,
+        setMaqamSeirId,
         centsTolerance,
         setCentsTolerance,
         clearSelections,

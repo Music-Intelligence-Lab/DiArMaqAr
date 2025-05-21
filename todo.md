@@ -2,8 +2,6 @@
 - Clean the code plus add README and documentation
 
 # 15 May 2025
-- Add Sayr ID to URL Parameters
-
 - Deploy Playback Patterns input and functionality based on Cells and SCALE DEGREES (which are different from pitch classes) in a manner similar to Sayr input. Don't forget to include RESTS and durations 32n, 32t, 32d, 16n, 16t, 16d, 8n, 8t, 8d, 4n, 4t, 4d, 2n, 2t, 2d, 1n, 1t, 1d
 
 function dottedQuarterDuration(bpm) {
