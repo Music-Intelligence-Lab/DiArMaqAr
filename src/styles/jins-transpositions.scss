@@ -3,14 +3,24 @@
   width: 100%;
   font-size: 0.9rem;
 
-  &__title {
+ &__title {
     width: 100%;
-    background-color: $primary;
+    background-color: $secondary;
     color: #fff;
     font-size: 1.5rem;
     font-weight: bold;
-    text-align: center;
-    padding: 1rem 0;
+    text-align: left;
+    padding: 1rem 1rem;
+    border: solid 1px $grey;
+  }
+
+  &__play-circle-icon.MuiSvgIcon-root {
+//    background-color: $tertiary;
+    color: white;
+    padding: 0px ; 
+    margin: 0px;
+    vertical-align: middle;
+      font-size: 18px;
   }
 
   &__button {
@@ -25,15 +35,26 @@
   &__table {
     width: 100%;
     border-collapse: collapse;
+    margin-bottom: 50px;
 
-    th,
+    th {
+            vertical-align: middle;
+      margin-bottom: 500px;
+      text-align: left;
+      padding: 10px;
+          border: solid 1px $grey;
+          
+
+    } 
+  
     td {
       vertical-align: middle;
-      padding: 5px 0;
+      padding: 10px ;
+          border: solid 1px $grey;
+
     }
 
-    thead th {
-      background-color: transparent;
+    tbody {
       font-weight: 600;
     }
 
@@ -45,12 +66,32 @@
     }
   }
 
-  &__header,
-  &__cell {
-    border: 1px solid #e2e8f0;
-    text-align: center;
+  &__transposition-title {
+    font-size: 20px;  
+    padding-right: 20px;
   }
 
+ &__header {
+    text-align: left;
+    background-color: transparent;
+  }
+
+    &__header-cell {
+    text-align: left;
+    background-color: transparent;
+  }
+
+  &__row-header {
+    font-weight: bold;
+    background-color: $medium-grey;
+      text-transform: capitalize;
+
+  }
+    &__jins-name-row {
+    font-weight: bold;
+    background-color: black;
+    color: white;
+  }
   &__input {
     width: 100px;
     font-size: 1rem;
@@ -60,6 +101,7 @@
   }
 
   .jins-transpositions__spacer {
-    padding: 10px 0;
+    padding: 10px;
+    border: 0px;
   }
 }
