@@ -17,6 +17,7 @@ export default function Home() {
   const tuningSystemId = searchParams.get("tuningSystem");
   const jinsId = searchParams.get("jins");
   const maqamId = searchParams.get("maqam");
+  const seirId = searchParams.get("seir");
   const firstNote = searchParams.get("firstNote");
 
   useEffect(() => {
@@ -24,6 +25,7 @@ export default function Home() {
       tuningSystemId: tuningSystemId || undefined,
       jinsId: jinsId || undefined,
       maqamId: maqamId || undefined,
+      seirId: seirId || undefined,
       firstNote: firstNote || undefined,
     });
   }, [tuningSystems, ajnas, maqamat]);

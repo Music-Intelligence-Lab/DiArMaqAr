@@ -7,9 +7,8 @@ import { octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames } from "@/m
 import { nanoid } from "nanoid";
 
 export default function SeirManager() {
-  const { selectedMaqam, setSelectedMaqam, ajnas } = useAppContext();
+  const { selectedMaqam, setSelectedMaqam, ajnas, maqamSeirId, setMaqamSeirId, initialMappingDone } = useAppContext();
 
-  const [seirId, setSeirId] = useState<string>("");
   const [creatorEnglish, setCreatorEnglish] = useState("");
   const [creatorArabic, setCreatorArabic] = useState("");
   const [sourceEnglish, setSourceEnglish] = useState("");
@@ -33,13 +32,14 @@ export default function SeirManager() {
   };
 
   useEffect(() => {
-    setSeirId("");
+    if (!initialMappingDone) return;
+    setMaqamSeirId("");
     resetForm();
   }, [selectedMaqam]);
 
   useEffect(() => {
-    if (selectedMaqam && seirId) {
-      const sel = selectedMaqam.getSuyur().find((s) => s.id === seirId);
+    if (selectedMaqam && maqamSeirId) {
+      const sel = selectedMaqam.getSuyur().find((s) => s.id === maqamSeirId);
       if (sel) {
         setCreatorEnglish(sel.creatorEnglish ?? "");
         setCreatorArabic(sel.creatorArabic ?? "");
@@ -54,12 +54,12 @@ export default function SeirManager() {
       }
     }
     resetForm();
-  }, [seirId, selectedMaqam]);
+  }, [maqamSeirId, selectedMaqam]);
 
   if (!selectedMaqam) return null;
   const existing = selectedMaqam.getSuyur();
 
-  const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => setSeirId(e.target.value);
+  const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => setMaqamSeirId(e.target.value);
   const addStop = () => setStops((prev) => [...prev, { type: "note", value: "" }]);
   const removeStop = (i: number) => setStops((prev) => prev.filter((_, idx) => idx !== i));
   const updateStop = (i: number, field: keyof SeirStop, val: string) => {
@@ -68,7 +68,7 @@ export default function SeirManager() {
 
   const handleSave = (e: FormEvent) => {
     e.preventDefault();
-    const idUse = seirId || nanoid();
+    const idUse = maqamSeirId || nanoid();
     const newSeir: Seir = {
       id: idUse,
       creatorEnglish,
@@ -90,12 +90,12 @@ export default function SeirManager() {
       updated
     );
     setSelectedMaqam(updatedM);
-    setSeirId(idUse);
+    setMaqamSeirId(idUse);
   };
 
   const handleDelete = () => {
-    if (!seirId) return;
-    const filtered = existing.filter((s) => s.id !== seirId);
+    if (!maqamSeirId) return;
+    const filtered = existing.filter((s) => s.id !== maqamSeirId);
     const updatedM = new Maqam(
       selectedMaqam.getId(),
       selectedMaqam.getName(),
@@ -104,7 +104,7 @@ export default function SeirManager() {
       filtered
     );
     setSelectedMaqam(updatedM);
-    setSeirId("");
+    setMaqamSeirId("");
   };
 
   return (
@@ -119,7 +119,7 @@ export default function SeirManager() {
             <label className="seir-manager__label" htmlFor="seirSelect">
               Select Sayr or Create New:
             </label>
-            <select id="seirSelect" className="seir-manager__select" value={seirId} onChange={handleSelect}>
+            <select id="seirSelect" className="seir-manager__select" value={maqamSeirId} onChange={handleSelect}>
               <option value="">-- New Seir --</option>
               {existing.map((s) => (
                 <option key={s.id} value={s.id}>
@@ -281,9 +281,9 @@ export default function SeirManager() {
 
           <div className="seir-manager__buttons">
             <button type="submit" className="seir-manager__save-button">
-              {seirId ? "Update Seir" : "Save Seir"}
+              {maqamSeirId ? "Update Seir" : "Save Seir"}
             </button>
-            {seirId && (
+            {maqamSeirId && (
               <button type="button" className="seir-manager__delete-button" onClick={handleDelete}>
                 Delete Seir
               </button>
