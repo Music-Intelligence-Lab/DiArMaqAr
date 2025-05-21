@@ -12,7 +12,6 @@ import detectPitchClassType from "@/functions/detectPitchClassType";
 import convertPitchClass, { shiftPitchClass, frequencyToMidiNoteNumber } from "@/functions/convertPitchClass";
 import { octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames, octaveThreeNoteNames, octaveFourNoteNames } from "@/models/NoteName";
 import Maqam, { Seir } from "@/models/Maqam";
-import { useRouter } from "next/navigation";
 import getNoteNamesUsedInTuningSystem from "@/functions/getNoteNamesUsedInTuningSystem";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import midiNumberToNoteName from "@/functions/midiToNoteNumber";
@@ -191,8 +190,6 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     sendMidiMessage([0xe0, lsb, msb]);
   }
 
-  const router = useRouter();
-
   const pitchClassesArr = pitchClasses
     .split("\n")
     .map((p) => p.trim())
@@ -253,34 +250,6 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       masterGainRef.current.gain.setValueAtTime(volume, audioCtxRef.current!.currentTime);
     }
   }, [volume]);
-
-  useEffect(() => {
-    const params = [];
-
-    if (selectedTuningSystem) {
-      params.push(`tuningSystem=${selectedTuningSystem.getId()}`);
-      const firstNote = getFirstNoteName();
-      if (firstNote) {
-        params.push(`firstNote=${firstNote}`);
-      }
-    }
-
-    if (selectedJins) {
-      params.push(`jins=${selectedJins.getId()}`);
-    }
-
-    if (selectedMaqam) {
-      params.push(`maqam=${selectedMaqam.getId()}`);
-    }
-
-    if (maqamSeirId) {
-      params.push(`seir=${maqamSeirId}`);
-    }
-
-    if (typeof window !== "undefined" && window.location.pathname !== "/") return;
-
-    router.replace(`/?${params.join("&")}`, { scroll: false });
-  }, [selectedTuningSystem, selectedJins, selectedMaqam, maqamSeirId, selectedIndices, originalIndices]);
 
   useEffect(() => {
     if (!selectedTuningSystem) return;
@@ -945,8 +914,6 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
           }
         }
       }
-    } else if (selectedTuningSystem) {
-      setSelectedTuningSystem(null);
     }
   };
 

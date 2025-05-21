@@ -108,6 +108,8 @@ export function getMaqamTranspositions(
   maqam: Maqam
 ) {
 
+  if (allCellDetails.length === 0) return [];
+
   const ascendingNoteNames = maqam.getAscendingNoteNames();
   const descendingNoteNames = maqam.getDescendingNoteNames();
 
@@ -140,6 +142,8 @@ export function getJinsTranspositions(
   allCellDetails: CellDetails[],
   jins: Jins
 ) {
+
+  if (allCellDetails.length === 0) return [];
 
   const jinsNoteNames = jins.getNoteNames();
   
