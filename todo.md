@@ -46,11 +46,16 @@ Year: 1946
 
 - Find a way to separate the accidental in the English Note Name so it can be used for other purposes. i.e. C# or Bb or B-- or G+
 
-- Add staff notation to ajnas and maqamat based on English Note Names or Midi Note Numbers (without decimal) including transpositions using VexFLow: https://github.com/0xfe/vexflow which already includes "microtonal" accidentals using saggital (see "const accidentals" here: https://github.com/0xfe/vexflow/blob/master/src/tables.ts)
+- Add staff notation to ajnas and maqamat based on English Note Names or Midi Note Numbers (without decimal) including transpositions using VexFLow: https://github.com/0xfe/vexflow which already includes "microtonal" accidentals using saggital (see "const accidentals" here: https://github.com/0xfe/vexflow/blob/master/src/tables.ts). For this we will need to be able to separate the accidental in the English note name so we can use it to access the correct accidental in vexflow. 
 
 # 21 May 2025
 - New IDs are too long and complicated, unnecessary. Will be annoying for API usage. Keep it simple numbers (like maqam ID).
 - Bibliography: in my original note there was info about different fields needed for Type: Article, but those aren't implemented :(
+  - Change names and 
+    "Release Date" to "Publication Date"
+    "Original Release Date" to "Original Publication Date"
+    "Location" to "Place" 
+    "Digitized" Book URL to URL
 
   - If Type: Article is selected 
   show input fields:
@@ -66,6 +71,16 @@ Year: 1946
     Publication Date (AR/EN) - Keep Original Publication Date
     ISBN
     
+- Spelling: Sayr/Suyūr
+
+- Transpositions counters issues:
+Let’s remove the -1’s from both the x and y
+Let’s count transpositions that start inside octaves 1 & 2
+
+We need a different style class for the line “Transpositions: x/y” (maqam-manager__item-transposition-counter-text)
+
+- Transpositions table: we need a way to differentiate which transpositions are from which octave. Ideally with colour/styling. Please add something to code and then we can play with some ideas.
+
 # ROADMAP FEATURES
 - Compare Ajnas/Maqamat from different tuning systems: How to implement?
 

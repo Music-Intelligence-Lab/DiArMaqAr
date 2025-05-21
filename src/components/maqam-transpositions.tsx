@@ -318,11 +318,15 @@ export default function MaqamTranspositions() {
             const ascendingDetails = seq.ascendingSequence;
             const descendingDetails = seq.descendingSequence;
             const colCount = 2 + (ascendingDetails.length - 1) * 2;
+            const rowCount = 7;
             if (ascendingMaqamCellDetails[0].noteName === ascendingDetails[0].noteName) return null;
+
+            // --- Patch: add rowCount for rowspan
 
             return (
               <React.Fragment key={row}>
                 <tr>
+                  <td className="maqam-transpositions__transposition-number" rowSpan={rowCount}>{row + 1}</td>
                   <td className="maqam-transpositions__maqam-name-row" colSpan={colCount}>
                     <span className="maqam-transpositions__transposition-title">{`${selectedMaqam.getName()} al-${
                       ascendingDetails[0].noteName
@@ -378,6 +382,7 @@ export default function MaqamTranspositions() {
                 </tr>
 
                 <tr>
+                  {/* <td>X</td> */}
                   <td className="maqam-transpositions__row-header">
                     <button
                       className="maqam-transpositions__button"
@@ -418,6 +423,7 @@ export default function MaqamTranspositions() {
                   ))}
                 </tr>
                 <tr>
+                  {/* <td>X</td> */}
                   <td className="maqam-transpositions__row-header">{valueType}</td>
                   <td className="maqam-transpositions__cell">{ascendingDetails[0].originalValue}</td>
                   {ascendingDetails.slice(1).map((d, j) => (
@@ -433,6 +439,7 @@ export default function MaqamTranspositions() {
                 </tr>
                 {valueType !== "cents" && (
                   <tr>
+                    {/* <td>X</td> */}
                     <td className="maqam-transpositions__row-header">cents (¢)</td>
                     <td className="maqam-transpositions__cell">{ascendingDetails[0].cents}</td>
                     {ascendingIntervalPattern.map((pat, i) => (
@@ -446,6 +453,7 @@ export default function MaqamTranspositions() {
                   </tr>
                 )}
                 <tr>
+                  {/* <td>X</td> */}
                   <td className="maqam-transpositions__row-header">
                     <button
                       className="maqam-transpositions__button"
@@ -486,6 +494,7 @@ export default function MaqamTranspositions() {
                   ))}
                 </tr>
                 <tr>
+                  {/* <td>X</td> */}
                   <td className="maqam-transpositions__row-header">{valueType}</td>
                   <td className="maqam-transpositions__cell">{descendingDetails[0].originalValue}</td>
                   {descendingDetails.slice(1).map((d, j) => (
@@ -501,6 +510,7 @@ export default function MaqamTranspositions() {
                 </tr>
                 {valueType !== "cents" && (
                   <tr>
+                    {/* <td>X</td> */}
                     <td className="maqam-transpositions__row-header">cents (¢)</td>
                     <td className="maqam-transpositions__cell">{descendingDetails[0].cents}</td>
                     {descendingIntervalPattern.map((pat, i) => (
