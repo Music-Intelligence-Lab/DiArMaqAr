@@ -32,7 +32,6 @@ Year: 1946
 
 # 20 May 2025
 
-- Add Scale Degrees Row to Maqam Analysis and 
 - Add row in tuning system table for "Fret Division" which calculates where a fret should be according to the string length: full string length minus string length of the pitch class. First cell (Fret Division 0) would always be 0 because its open string, second cell (Fret Division 1) would be full string length minus string length of that pitch class, etc...
 
 - Add check boxes in Octave 1 header to show/hide rows in tuning system table. One check box per row name. For now include all rows. The check boxes selection should apply to all octaves, but only show it on Octave 1.
@@ -49,6 +48,30 @@ Year: 1946
 
 - Add staff notation to ajnas and maqamat based on English Note Names or Midi Note Numbers (without decimal) including transpositions using VexFLow: https://github.com/0xfe/vexflow which already includes "microtonal" accidentals using saggital (see "const accidentals" here: https://github.com/0xfe/vexflow/blob/master/src/tables.ts)
 
+# 21 May 2025
+- New IDs are too long and complicated, unnecessary. Will be annoying for API usage. Keep it simple numbers (like maqam ID).
+- Bibliography: in my original note there was info about different fields needed for Type: Article, but those aren't implemented :(
+  - Change names and 
+    "Release Date" to "Publication Date"
+    "Original Release Date" to "Original Publication Date"
+    "Location" to "Place" 
+    "Digitized" Book URL to URL
+
+  - If Type: Article is selected 
+  show input fields:
+    Journal (EN/AR)
+    Volume (EN/AR)
+    Issue (EN/AR)
+    Page Range (EN/AR)
+    DOI (EN only - this is similar to ISBN)
+
+  hide input fields:
+    Publisher (EN/AR)
+    Place (EN/AR)
+    Publication Date (AR/EN) - Keep Original Publication Date
+    ISBN
+    
+- Transpositions counter for ajnas and maqamat (X/Y): The number of avialable transpositions (x) should only count those starting in Octave 1
 
 # ROADMAP FEATURES
 - Compare Ajnas/Maqamat from different tuning systems: How to implement?

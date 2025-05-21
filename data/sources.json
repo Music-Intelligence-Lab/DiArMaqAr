@@ -40,5 +40,131 @@
     "ISBN": "test",
     "digitizedBookURL": "test",
     "dateAccessed": "test"
+  },
+  {
+    "id": "d6c9fb3d-61ed-4211-b741-a64be2c5abe7",
+    "titleEnglish": "Musical Mathematics: On the Art and Science of Acoustic Instruments",
+    "titleArabic": "الرياضيات الموسيقية: عن فن وعلم الآلات الصوتية",
+    "sourceType": "Book",
+    "contributors": [
+      {
+        "type": "Author",
+        "firstNameEnglish": "Cris",
+        "lastNameEnglish": "Forster",
+        "firstNameArabic": "كريس",
+        "lastNameArabic": "فورستر"
+      }
+    ],
+    "editionEnglish": "",
+    "editionArabic": "",
+    "releaseDateEnglish": "2010",
+    "releaseDateArabic": "٢٠١٠",
+    "originalReleaseDateEnglish": "",
+    "originalReleaseDateArabic": "",
+    "publisherEnglish": "Chronicle Books",
+    "publisherArabic": "",
+    "locationEnglish": "San Francisco, CA",
+    "locationArabic": "سان فرانسيسكو، كاليفورنيا",
+    "ISBN": "9780811874076",
+    "digitizedBookURL": "",
+    "dateAccessed": ""
+  },
+  {
+    "id": "d6f0b70b-ac67-4626-9c91-c9b334def7b6",
+    "titleEnglish": "Kitāb al-Adwār fi al-Mūsīqā",
+    "titleArabic": "كتاب الادوار في الموسيقى",
+    "sourceType": "Book",
+    "contributors": [
+      {
+        "type": "Author",
+        "firstNameEnglish": "Ṣafī Al-Dīn",
+        "lastNameEnglish": "Al-Urmawī Al-Baghdādī",
+        "firstNameArabic": "صفي الدين",
+        "lastNameArabic": "الأرموي البغدادي"
+      },
+      {
+        "type": "Editor",
+        "firstNameEnglish": "Ghattas Abdelmalik",
+        "lastNameEnglish": "Khashaba",
+        "firstNameArabic": "غطاس عبد الملك",
+        "lastNameArabic": "خشبة"
+      },
+      {
+        "type": "Reviewer",
+        "firstNameEnglish": "Mahmoud Ahmad",
+        "lastNameEnglish": "El-Ḥefni",
+        "firstNameArabic": "محمود أحمد",
+        "lastNameArabic": "الحفني"
+      }
+    ],
+    "editionEnglish": "Second Edition",
+    "editionArabic": "الطبعة الثانية",
+    "releaseDateEnglish": "2017",
+    "releaseDateArabic": "٢٠١٧",
+    "originalReleaseDateEnglish": "1986",
+    "originalReleaseDateArabic": "١٩٨٦",
+    "publisherEnglish": "al-Hayʼah al-Miṣrīyah al-ʻĀmmah lil-Kitāb",
+    "publisherArabic": "الهيئة المصرية العامّة للكتاب",
+    "locationEnglish": "Cairo",
+    "locationArabic": "القاهرة",
+    "ISBN": "9789779112459",
+    "digitizedBookURL": "",
+    "dateAccessed": ""
+  },
+  {
+    "id": "671974c0-06a7-47ee-bcad-0a66ef378929",
+    "titleEnglish": "Kitāb al-Musiqā al-Sharqī",
+    "titleArabic": "كتاب الموسيقى الشرقي",
+    "sourceType": "Book",
+    "contributors": [
+      {
+        "type": "Author",
+        "firstNameEnglish": "Mohammad Kāmil",
+        "lastNameEnglish": "Al-Khul’ī",
+        "firstNameArabic": "محمد كامل",
+        "lastNameArabic": "الخلعي"
+      }
+    ],
+    "editionEnglish": "",
+    "editionArabic": "",
+    "releaseDateEnglish": "2011",
+    "releaseDateArabic": "٢٠١١",
+    "originalReleaseDateEnglish": "1904",
+    "originalReleaseDateArabic": "١٩٠٤",
+    "publisherEnglish": "Hindawi Foundation for Education and Culture",
+    "publisherArabic": "مؤسسة هنداوي للتعليم والثقافة",
+    "locationEnglish": "Cairo",
+    "locationArabic": "القاهرة",
+    "ISBN": "9789776416543",
+    "digitizedBookURL": "https://www.hindawi.org/books/46319638/",
+    "dateAccessed": "21-05-2025"
+  },
+  {
+    "id": "6b5c5e52-ecfe-458a-9b53-203f6ef59a3c",
+    "titleEnglish": "Falsafat al-Mūsīqā al-Sharqīyah fī Asrār al-Fann al-ʻArabī",
+    "titleArabic": " فلسفة الموسيقى الشرقية في أسرار الفن العربي",
+    "sourceType": "Book",
+    "contributors": [
+      {
+        "type": "Author",
+        "firstNameEnglish": "Mīkhāʼīl Khalīl",
+        "lastNameEnglish": "Allāh Wīrdī",
+        "firstNameArabic": "ميخائيل خليل",
+        "lastNameArabic": "الله ويردي"
+      }
+    ],
+    "editionEnglish": "",
+    "editionArabic": "",
+    "releaseDateEnglish": "1949",
+    "releaseDateArabic": "١٩٤٩",
+    "originalReleaseDateEnglish": "",
+    "originalReleaseDateArabic": "",
+    "publisherEnglish": "Maṭbaʻat Ibn Zaydūn",
+    "publisherArabic": "مطبعة إبن زيدون",
+    "locationEnglish": "Damascus",
+    "locationArabic": "دمشق",
+    "ISBN": "",
+    "digitizedBookURL": "https://dlib.nyu.edu/aco/book/aub_aco003675",
+    "dateAccessed": "21-05-2025"
   }
 ]
