@@ -167,7 +167,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   const [selectedMidiInputId, setSelectedMidiInputId] = useState<string | null>(null);
   const [midiOutputs, setMidiOutputs] = useState<MidiPortInfo[]>([]);
   const [selectedMidiOutputId, setSelectedMidiOutputId] = useState<string | null>(null);
-  const [inputMode, setInputMode] = useState<InputMode>("tuningSystem");
+  const [inputMode, setInputMode] = useState<InputMode>("selection");
   const [outputMode, setOutputMode] = useState<OutputMode>("waveform");
   const [pitchBendRange, setPitchBendRange] = useState(2);
 
