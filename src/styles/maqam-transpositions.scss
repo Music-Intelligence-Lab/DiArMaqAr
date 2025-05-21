@@ -33,6 +33,9 @@
     margin-right: 0px;
     vertical-align: middle;
     
+    &_unique {
+      background-color: $secondary;
+    }
   }
 
   &__table {

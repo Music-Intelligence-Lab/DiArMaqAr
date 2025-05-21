@@ -1005,7 +1005,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         setPitchBendRange,
         sources,
         setSources,
-        updateAllSources
+        updateAllSources,
       }}
     >
       {children}

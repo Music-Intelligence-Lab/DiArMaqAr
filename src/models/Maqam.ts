@@ -34,6 +34,20 @@ export default class Maqam {
   getSuyur(): Seir[] {
     return this.suyur;
   }
+
+  isMaqamSymmetric(): boolean {
+    if (this.ascendingNoteNames.length !== this.descendingNoteNames.length) {
+      return false;
+    }
+
+    for (let i = 0; i < this.ascendingNoteNames.length; i++) {
+      if (this.ascendingNoteNames[i] !== this.descendingNoteNames[this.descendingNoteNames.length - 1 - i]) {
+        return false;
+      }
+    }
+
+    return true;
+  }
 }
 
 export interface Seir {
