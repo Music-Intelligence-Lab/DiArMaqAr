@@ -51,11 +51,6 @@ Year: 1946
 # 21 May 2025
 - New IDs are too long and complicated, unnecessary. Will be annoying for API usage. Keep it simple numbers (like maqam ID).
 - Bibliography: in my original note there was info about different fields needed for Type: Article, but those aren't implemented :(
-  - Change names and 
-    "Release Date" to "Publication Date"
-    "Original Release Date" to "Original Publication Date"
-    "Location" to "Place" 
-    "Digitized" Book URL to URL
 
   - If Type: Article is selected 
   show input fields:
@@ -71,8 +66,6 @@ Year: 1946
     Publication Date (AR/EN) - Keep Original Publication Date
     ISBN
     
-- Transpositions counter for ajnas and maqamat (X/Y): The number of avialable transpositions (x) should only count those starting in Octave 1
-
 # ROADMAP FEATURES
 - Compare Ajnas/Maqamat from different tuning systems: How to implement?
 

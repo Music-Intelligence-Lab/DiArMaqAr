@@ -4,7 +4,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import HomeIcon from "@mui/icons-material/Home";
-import AudioSettingsCard from "@/components/audio-settings-cards";
+import SettingsCard from "@/components/settings-cards";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 export default function Navbar() {
   const [isSideBarOpen, setIsSideBarOpen] = useState(false);
@@ -27,7 +27,7 @@ export default function Navbar() {
         <div className="navbar__center-panel">Maqam Network</div>
         <div className="navbar__right-panel">
           <div className="navbar__left-panel-icon">
-            <AudioSettingsCard />
+            <SettingsCard />
           </div>
         </div>
       </header>

@@ -1,0 +1,125 @@
+.settings-open-button {
+  background-color: $primary;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  z-index: 10000;
+}
+
+.settings-card {
+  font-size: 18px;
+  position: fixed;
+  top: $navbar-height;
+  right: 0;
+  height: 100%;
+  width: 300px;
+  background-color: #f8f8f8;
+  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.1);
+
+  transform: translateX(130%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 9999;
+
+  &--open {
+    transform: translateX(0);
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 50px;
+    color: black;
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+    background: $main-gradient;
+    color: white;
+    -webkit-box-shadow: 0px 0px 237px 1px rgba(98, 12, 159, 0.63);
+    -moz-box-shadow: 0px 0px 237px 1px rgba(98, 12, 159, 0.63);
+    box-shadow: 0px 0px 237px 1px rgba(98, 12, 159, 0.63), inset 0px 0px 155px 13px black;
+  }
+
+  &__details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+
+    padding: 10px;
+    border-bottom: 1px solid #e0e0e0;
+
+    transition: all 0.2s ease-in-out;
+
+    &[open] {
+      background-color: $medium-grey;
+    }
+  }
+
+  &__summary {
+    width: 100%;
+    cursor: pointer;
+    user-select: none;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+
+  &__input-container {
+    width: 100%;
+    margin-bottom: 5px;
+  }
+
+  &__label {
+    margin-bottom: 3px;
+  }
+
+  &__number-input {
+    width: 100%;
+  }
+
+  &__clear-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    color: white;
+    margin: 10px;
+    background-color: $primary;
+
+    &:hover {
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  &__select,
+  &__number-input {
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+  }
+
+  &__select {
+    cursor: pointer;
+  }
+
+  &__sound-mode {
+    padding: 10px 0;
+    width: fit-content;
+    margin: 0 auto;
+  }
+
+  &__sound-mode-button {
+    padding: 10px 20px;
+    transition: 0.3s;
+    cursor: pointer;
+
+    &_selected {
+      background-color: $primary;
+      color: white;
+    }
+  }
+}

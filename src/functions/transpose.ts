@@ -103,11 +103,7 @@ export function mergeTranspositions(ascendingSequences: CellDetails[][], descend
   return filteredSequences;
 }
 
-export function getMaqamTranspositions(
-  allCellDetails: CellDetails[],
-  maqam: Maqam
-) {
-
+export function getMaqamTranspositions(allCellDetails: CellDetails[], maqam: Maqam, onlyOctaveOne: boolean = false) {
   if (allCellDetails.length === 0) return [];
 
   const ascendingNoteNames = maqam.getAscendingNoteNames();
@@ -116,9 +112,7 @@ export function getMaqamTranspositions(
   if (ascendingNoteNames.length < 2 || descendingNoteNames.length < 2) return [];
 
   const ascendingMaqamCellDetails = allCellDetails.filter((cell) => ascendingNoteNames.includes(cell.noteName));
-  const descendingMaqamCellDetails = allCellDetails
-    .filter((cell) => descendingNoteNames.includes(cell.noteName))
-    .reverse();
+  const descendingMaqamCellDetails = allCellDetails.filter((cell) => descendingNoteNames.includes(cell.noteName)).reverse();
 
   if (ascendingMaqamCellDetails.length === 0 || descendingMaqamCellDetails.length === 0) return [];
 
@@ -126,27 +120,28 @@ export function getMaqamTranspositions(
   const useRatio = valueType === "fraction" || valueType === "ratios";
 
   const ascendingIntervalPattern: Pattern[] = getIntervalPattern(ascendingMaqamCellDetails, useRatio);
-  
+
   const descendingIntervalPattern: Pattern[] = getIntervalPattern(descendingMaqamCellDetails, useRatio);
 
-  const ascendingSequences: CellDetails[][] = getTranspositions(allCellDetails, ascendingIntervalPattern, true, useRatio, 5);
+  const ascendingSequences: CellDetails[][] = getTranspositions(allCellDetails, ascendingIntervalPattern, true, useRatio, 5).filter(
+    (sequence) => !onlyOctaveOne || sequence[0].octave === 1
+  );;
 
-  const descendingSequences: CellDetails[][] =  getTranspositions(allCellDetails, descendingIntervalPattern, false, useRatio, 5);
+  const descendingSequences: CellDetails[][] = getTranspositions(allCellDetails, descendingIntervalPattern, false, useRatio, 5);
 
-  const filteredSequences: { ascendingSequence: CellDetails[]; descendingSequence: CellDetails[] }[] = mergeTranspositions(ascendingSequences, descendingSequences);
+  const filteredSequences: { ascendingSequence: CellDetails[]; descendingSequence: CellDetails[] }[] = mergeTranspositions(
+    ascendingSequences,
+    descendingSequences
+  );
 
   return filteredSequences;
 }
 
-export function getJinsTranspositions(
-  allCellDetails: CellDetails[],
-  jins: Jins
-) {
-
+export function getJinsTranspositions(allCellDetails: CellDetails[], jins: Jins, onlyOctaveOne: boolean = false) {
   if (allCellDetails.length === 0) return [];
 
   const jinsNoteNames = jins.getNoteNames();
-  
+
   if (jinsNoteNames.length < 2) return [];
 
   const jinsCellDetails = allCellDetails.filter((cell) => jinsNoteNames.includes(cell.noteName));
@@ -156,7 +151,9 @@ export function getJinsTranspositions(
 
   const intervalPattern: Pattern[] = getIntervalPattern(jinsCellDetails, useRatio);
 
-  const sequences: CellDetails[][] = getTranspositions(allCellDetails, intervalPattern, true, useRatio, 5);
-
+  const sequences: CellDetails[][] = getTranspositions(allCellDetails, intervalPattern, true, useRatio, 5).filter(
+    (sequence) => !onlyOctaveOne || sequence[0].octave === 1
+  );
+  
   return sequences;
 }
