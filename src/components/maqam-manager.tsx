@@ -19,7 +19,10 @@ export default function MaqamManager() {
     playSequence,
     handleClickMaqam,
     checkIfMaqamIsSelectable,
+    selectedTuningSystem
   } = useAppContext();
+
+  const numberOfPitchClasses = selectedTuningSystem ? selectedTuningSystem.getPitchClasses().length : 0;
 
   const sortedMaqamat = [...maqamat].sort((a, b) => a.getName().localeCompare(b.getName()));
 
@@ -186,7 +189,7 @@ export default function MaqamManager() {
             >
               <div className="maqam-manager__item-name">
                 <strong>{maqam.getName()}</strong>
-                {checkIfMaqamIsSelectable(maqam) && <strong>{`Transpositions: ${getMaqamTranspositions(allCellDetails, maqam).length}`}</strong>}
+                {checkIfMaqamIsSelectable(maqam) && <strong>{`Transpositions: ${getMaqamTranspositions(allCellDetails, maqam).length - 1}/${numberOfPitchClasses - 1}`}</strong>}
               </div>
             </div>
           ))

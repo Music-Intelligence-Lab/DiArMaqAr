@@ -14,6 +14,7 @@ import {
   TransliteratedNoteNameOctaveOne,
   TransliteratedNoteNameOctaveTwo,
 } from "@/models/NoteName";
+import { v4 as uuidv4 } from "uuid";
 
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { getEnglishNoteName, abjadNames } from "@/functions/noteNameMappings";
@@ -41,18 +42,21 @@ export default function TuningSystemManager() {
     handleStartNoteNameChange,
     getSelectedCellDetails,
     playSequence,
+    sources,
   } = useAppContext();
 
   const [sortOption, setSortOption] = useState<"id" | "creatorEnglish" | "year">("year");
 
   // MARK: States
   // Local state that mirrors the selected or “new” system’s fields
-  const [id, setId] = useState("");
+  const [id, setId] = useState(uuidv4());
   const [titleEnglish, setTitleEnglish] = useState("");
   const [titleArabic, setTitleArabic] = useState("");
   const [year, setYear] = useState("");
   const [sourceEnglish, setSourceEnglish] = useState("");
   const [sourceArabic, setSourceArabic] = useState("");
+  const [sourceId, setSourceId] = useState(uuidv4());
+  const [page, setPage] = useState("");
   const [creatorEnglish, setCreatorEnglish] = useState("");
   const [creatorArabic, setCreatorArabic] = useState("");
   const [commentsEnglish, setCommentsEnglish] = useState("");
@@ -133,6 +137,8 @@ export default function TuningSystemManager() {
       setYear(selectedTuningSystem.getYear());
       setSourceEnglish(selectedTuningSystem.getSourceEnglish());
       setSourceArabic(selectedTuningSystem.getSourceArabic());
+      setSourceId(selectedTuningSystem.getSourceId());
+      setPage(selectedTuningSystem.getPage());
       setCreatorEnglish(selectedTuningSystem.getCreatorEnglish());
       setCreatorArabic(selectedTuningSystem.getCreatorArabic());
       setCommentsEnglish(selectedTuningSystem.getCommentsEnglish());
@@ -170,13 +176,16 @@ export default function TuningSystemManager() {
 
   // Clears the form for creating a new TuningSystem:
   const resetFormForNewSystem = () => {
-    setId("");
+    setId(uuidv4());
     setTitleEnglish("");
     setTitleArabic("");
     setYear("");
     setSourceEnglish("");
     setSourceArabic("");
+    setSourceId("");
+    setPage("");
     setCreatorEnglish("");
+    setCreatorArabic("");
     setCommentsEnglish("");
     setCommentsArabic("");
     setPitchClasses("");
@@ -197,7 +206,7 @@ export default function TuningSystemManager() {
   };
 
   // When user changes the dropdown (overall TuningSystem):
-  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleTuningSystemChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
 
     clearSelections();
@@ -216,6 +225,11 @@ export default function TuningSystemManager() {
     }
   };
 
+  const handleSourceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    setSourceId(value);
+  }
+
   // Handle creating or updating a system:
   const handleSave = (event: FormEvent) => {
     event.preventDefault();
@@ -231,6 +245,8 @@ export default function TuningSystemManager() {
         year,
         sourceEnglish,
         sourceArabic,
+        sourceId,
+        page,
         creatorEnglish,
         creatorArabic,
         commentsEnglish,
@@ -254,6 +270,8 @@ export default function TuningSystemManager() {
         year,
         sourceEnglish,
         sourceArabic,
+        sourceId,
+        page,
         creatorEnglish,
         creatorArabic,
         commentsEnglish,
@@ -823,7 +841,7 @@ export default function TuningSystemManager() {
             <select
               className="tuning-system-manager__select"
               id="tuningSystemSelect"
-              onChange={handleSelectChange}
+              onChange={handleTuningSystemChange}
               value={selectedTuningSystem ? selectedTuningSystem.getId() : "new"}
             >
               <option value="new">-- Create New System --</option>
@@ -854,13 +872,6 @@ export default function TuningSystemManager() {
         <form className="tuning-system-manager__form" onSubmit={handleSave}>
           {/* Identification / Titles */}
           <div className="tuning-system-manager__group">
-            <div className="tuning-system-manager__input-container">
-              <label className="tuning-system-manager__label" htmlFor="idField">
-                ID
-              </label>
-              <input className="tuning-system-manager__input" id="idField" type="text" value={id ?? ""} onChange={(e) => setId(e.target.value)} />
-            </div>
-
             <div className="tuning-system-manager__input-container">
               <label className="tuning-system-manager__label" htmlFor="titleEnglishField">
                 Title (English)
@@ -904,28 +915,34 @@ export default function TuningSystemManager() {
 
           <div className="tuning-system-manager__group">
             <div className="tuning-system-manager__input-container">
-              <label className="tuning-system-manager__label" htmlFor="sourceEnglishField">
-                Source (English)
+              <label className="tuning-system-manager__label" htmlFor="tuningSystemSelect">
+                Select Source:
               </label>
-              <input
-                className="tuning-system-manager__input"
-                id="sourceEnglishField"
-                type="text"
-                value={sourceEnglish ?? ""}
-                onChange={(e) => setSourceEnglish(e.target.value)}
-              />
+              <select
+                className="tuning-system-manager__select"
+                id="tuningSystemSelect"
+                onChange={handleSourceChange}
+                value={sourceId}
+              >
+                <option value="">-- No Source Selected --</option>
+                {sources.map((source) => (
+                  <option key={source.getId()} value={source.getId()}>
+                     {`${source.getTitleEnglish()} (${source.getSourceType()})`}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div className="tuning-system-manager__input-container">
               <label className="tuning-system-manager__label" htmlFor="sourceArabicField">
-                Source (Arabic)
+                Page
               </label>
               <input
                 className="tuning-system-manager__input"
                 id="sourceArabicField"
                 type="text"
-                value={sourceArabic ?? ""}
-                onChange={(e) => setSourceArabic(e.target.value)}
+                value={page ?? ""}
+                onChange={(e) => setPage(e.target.value)}
               />
             </div>
 

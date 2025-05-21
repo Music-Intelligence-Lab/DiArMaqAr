@@ -1,0 +1,44 @@
+[
+  {
+    "id": "2d4c0cd3-2ce8-44be-9992-3f2566fa5170",
+    "titleEnglish": "test",
+    "titleArabic": "test",
+    "sourceType": "Book",
+    "contributors": [
+      {
+        "type": "Author",
+        "firstNameEnglish": "test",
+        "lastNameEnglish": "test",
+        "firstNameArabic": "test",
+        "lastNameArabic": "test"
+      },
+      {
+        "type": "Author",
+        "firstNameEnglish": "test",
+        "lastNameEnglish": "test",
+        "firstNameArabic": "test",
+        "lastNameArabic": "test"
+      },
+      {
+        "type": "Author",
+        "firstNameEnglish": "test",
+        "lastNameEnglish": "test",
+        "firstNameArabic": "test",
+        "lastNameArabic": "test"
+      }
+    ],
+    "editionEnglish": "test",
+    "editionArabic": "test",
+    "releaseDateEnglish": "test",
+    "releaseDateArabic": "test",
+    "originalReleaseDateEnglish": "test",
+    "originalReleaseDateArabic": "test",
+    "publisherEnglish": "test",
+    "publisherArabic": "test",
+    "locationEnglish": "test",
+    "locationArabic": "test",
+    "ISBN": "test",
+    "digitizedBookURL": "test",
+    "dateAccessed": "test"
+  }
+]

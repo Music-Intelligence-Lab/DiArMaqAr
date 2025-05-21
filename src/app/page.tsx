@@ -3,7 +3,6 @@
 import { useAppContext } from "@/contexts/app-context";
 import { useSearchParams } from "next/navigation";
 import TuningSystemManager from "@/components/tuning-system-manager";
-import AudioSettingsCard from "@/components/audio-settings-cards";
 import JinsManager from "@/components/jins-manager";
 import JinsTranspositions from "@/components/jins-transpositions";
 import MaqamManager from "@/components/maqam-manager";
@@ -31,7 +30,6 @@ export default function Home() {
   
   return (
     <div className="home-page">
-      <div className="home-page__title">Maqam Network</div>
       <TuningSystemManager />
       <JinsManager />
       <MaqamManager />
@@ -39,7 +37,6 @@ export default function Home() {
       <JinsTranspositions />
       <MaqamTranspositions/>
       <KeyboardControls/>
-      <AudioSettingsCard />
     </div>
   );
 }

@@ -4,6 +4,7 @@ import React, { createContext, useState, useEffect, useRef, useContext } from "r
 import tuningSystemsData from "@/../data/tuningSystems.json";
 import ajnasData from "@/../data/ajnas.json";
 import maqamatData from "@/../data/maqamat.json";
+import sourcesData from "@/../data/sources.json";
 import TuningSystem from "@/models/TuningSystem";
 import Jins from "@/models/Jins";
 import TransliteratedNoteName, { TransliteratedNoteNameOctaveOne, TransliteratedNoteNameOctaveTwo } from "@/models/NoteName";
@@ -15,6 +16,7 @@ import { useRouter } from "next/navigation";
 import getNoteNamesUsedInTuningSystem from "@/functions/getNoteNamesUsedInTuningSystem";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import midiNumberToNoteName from "@/functions/midiToNoteNumber";
+import Source from "@/models/Source";
 
 interface EnvelopeParams {
   attack: number;
@@ -114,6 +116,9 @@ interface AppContextInterface {
   setOutputMode: React.Dispatch<React.SetStateAction<OutputMode>>;
   pitchBendRange: number;
   setPitchBendRange: React.Dispatch<React.SetStateAction<number>>;
+  sources: Source[];
+  setSources: React.Dispatch<React.SetStateAction<Source[]>>;
+  updateAllSources: (sources: Source[]) => Promise<void>;
 }
 
 const AppContext = createContext<AppContextInterface | null>(null);
@@ -150,6 +155,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
   const [maqamat, setMaqamat] = useState<Maqam[]>([]);
   const [selectedMaqam, setSelectedMaqam] = useState<Maqam | null>(null);
+
+  const [sources, setSources] = useState<Source[]>([])
 
   const audioCtxRef = useRef<AudioContext | null>(null);
   const masterGainRef = useRef<GainNode | null>(null);
@@ -197,6 +204,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         data.year,
         data.sourceEnglish,
         data.sourceArabic,
+        data.sourceId,
+        data.page,
         data.creatorEnglish,
         data.creatorArabic,
         data.commentsEnglish,
@@ -218,6 +227,9 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       (data) => new Maqam(data.id, data.name, data.ascendingNoteNames, data.descendingNoteNames, data.suyur as Seir[])
     );
     setMaqamat(loadedMaqamat);
+
+    const loadedSources = sourcesData.map((data) => Source.fromJSON(data));
+    setSources(loadedSources);
 
     setIsPageLoading(false);
   }, []);
@@ -257,6 +269,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     if (selectedMaqam) {
       params.push(`maqam=${selectedMaqam.getId()}`);
     }
+
+    if (typeof window !== "undefined" && window.location.pathname !== "/") return;
 
     router.replace(`/?${params.join("&")}`, { scroll: false });
   }, [selectedTuningSystem, selectedJins, selectedMaqam, selectedIndices, originalIndices]);
@@ -321,7 +335,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         input.onmidimessage = null;
       }
     };
-  }, [selectedMidiInputId, midiInputs, selectedTuningSystem, pitchClasses, inputMode, outputMode, selectedMidiInputId, selectedMidiOutputId]);
+  }, [selectedMidiInputId, midiInputs, selectedTuningSystem, selectedMaqam, selectedJins, pitchClasses, inputMode, outputMode, selectedMidiInputId, selectedMidiOutputId]);
 
   const handleMidiInput: NonNullable<MIDIInput["onmidimessage"]> = function (this: MIDIInput, ev: MIDIMessageEvent) {
     // only from our selected port
@@ -552,6 +566,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
             year: ts.getYear(),
             sourceEnglish: ts.getSourceEnglish(),
             sourceArabic: ts.getSourceArabic(),
+            sourceId: ts.getSourceId(),
+            page: ts.getPage(),
             creatorEnglish: ts.getCreatorEnglish(),
             creatorArabic: ts.getCreatorArabic(),
             commentsEnglish: ts.getCommentsEnglish(),
@@ -619,6 +635,23 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       }
     } catch (error) {
       console.error("Error updating all Maqamat:", error);
+    }
+  };
+
+  const updateAllSources = async (sources: Source[]) => {
+    try {
+      const response = await fetch("/api/sources", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(
+          sources.map((source) => (source.convertToJSON()))
+        ),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to save updated Sources on the server.");
+      }
+    } catch (error) {
+      console.error("Error updating all Sources:", error);
     }
   };
 
@@ -970,6 +1003,9 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         setOutputMode,
         pitchBendRange,
         setPitchBendRange,
+        sources,
+        setSources,
+        updateAllSources
       }}
     >
       {children}

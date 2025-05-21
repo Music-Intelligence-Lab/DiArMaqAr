@@ -1,0 +1,147 @@
+.navbar {
+  width: 100%;
+
+  &__top-bar {
+    display: flex;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.6);
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.2rem;
+    height: $navbar-height;
+    color: white;
+    z-index: 1000;
+    background-color: $primary;
+    padding: 0 25px;
+    font-size: 30px;
+  }
+
+  &__left-panel {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    cursor: pointer;
+
+    & svg {
+      font-size: 40px;
+      margin-bottom: 4px;
+      margin-right: 10px;
+    }
+  }
+
+  &__left-panel-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 999;
+  }
+
+  &__side-bar {
+    position: fixed;
+    top: calc($navbar-height);
+    left: 0;
+    width: 190px;
+    height: auto;
+    background-color: rgba($primary, 0.9);
+    box-shadow: 2px 0 6px rgba(0, 0, 0, 0.2);
+    z-index: 10001;
+    border-radius: 0 0 10px 0;
+  
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  
+    flex-direction: column;
+  
+    &_open {
+      transform: translateX(0);
+    }
+  }
+
+  &__side-bar-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    padding: 10px 0;
+  }
+
+  &__side-bar-ruler {
+    width: 90%;
+    border: 1px dashed white;
+    border-radius: 10px;
+    margin: 5px  auto;
+  }
+
+  &__side-bar-link {
+    display: flex;
+    align-items: center;
+    width: 90%;
+    height: fit-content;
+    padding: 7px 10px;
+    margin: 0 auto;
+    border-radius: 10px;
+    color: white;
+    font-size: 20px;
+    letter-spacing: 1.5;
+    cursor: pointer;
+    transition: 0.3s;
+    user-select: none;
+    text-decoration: none;
+    gap: 10px;
+
+    & svg {
+      margin-bottom: 4px;
+    }
+
+    &_active{
+      color: #e73878;
+      background-color: white;
+    }
+  }
+
+  &__side-bar-bottom-link {
+    display: flex;
+    align-items: center;
+    width: 90%;
+    padding: 5px;
+    margin: 0 auto;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+    user-select: none;
+    text-decoration: none;
+  }
+
+  @media (max-width: 350px) {
+    &__left-panel {
+      font-size: 30px;
+
+      & svg {
+        font-size: 30px;
+        margin-right: 5px;
+      }
+    }
+
+    &__side-bar {
+      width: 140px;
+    }
+
+    &__side-bar-content {
+      padding: 5px 0;
+    }
+
+    &__side-bar-link {
+      font-size: 18px;
+    }
+  }
+}
