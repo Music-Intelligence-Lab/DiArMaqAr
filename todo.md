@@ -81,6 +81,10 @@ We need a different style class for the line “Transpositions: x/y” (maqam-ma
 
 - Transpositions table: we need a way to differentiate which transpositions are from which octave. Ideally with colour/styling. Please add something to code and then we can play with some ideas.
 
+- Add these synth types to our "waveform" select. All data is opensource we will just need to credit:
+https://github.com/xenharmonic-devs/scale-workshop/blob/main/src/synth.ts
+
+
 # ROADMAP FEATURES
 - Compare Ajnas/Maqamat from different tuning systems: How to implement?
 
