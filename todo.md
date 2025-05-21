@@ -32,10 +32,6 @@ Year: 1946
 
 # 20 May 2025
 
-- Disable QWERTY playback when cursor is in a text field or text area
-
-- Disable QWERTY playback when keys are used in combination with Shift, Option, Control (not sure what this is called on PC), or Command (control on PC)
-
 - Add Scale Degrees Row to Maqam Analysis and 
 - Add row in tuning system table for "Fret Division" which calculates where a fret should be according to the string length: full string length minus string length of the pitch class. First cell (Fret Division 0) would always be 0 because its open string, second cell (Fret Division 1) would be full string length minus string length of that pitch class, etc...
 

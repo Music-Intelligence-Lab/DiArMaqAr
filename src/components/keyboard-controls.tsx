@@ -17,8 +17,13 @@ export default function KeyboardControls() {
     .filter((cell) => descendingNoteNames.includes(cell.noteName));
 
   useEffect(() => {
+    const isTyping = () => {
+      const el = document.activeElement;
+      return el?.tagName === "INPUT" || el?.tagName === "TEXTAREA" || (el instanceof HTMLElement && el.isContentEditable);
+    };
+
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.repeat) return;
+      if (e.repeat || e.shiftKey || e.ctrlKey || e.altKey || e.metaKey || isTyping()) return;
 
       const firstRowIndex = firstRowKeys.indexOf(e.key);
       if (firstRowIndex >= 0 && firstRowIndex < descendingMaqamCellDetails.length) {
@@ -53,6 +58,8 @@ export default function KeyboardControls() {
       }
     };
     const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.shiftKey || e.ctrlKey || e.altKey || e.metaKey || isTyping()) return;
+
       const firstRowIndex = firstRowKeys.indexOf(e.key);
       if (firstRowIndex >= 0 && firstRowIndex < descendingMaqamCellDetails.length) {
         const cell = descendingMaqamCellDetails[firstRowIndex];
