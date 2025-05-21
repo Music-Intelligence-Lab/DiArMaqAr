@@ -40,6 +40,9 @@ export default function JinsTranspositions() {
 
   const sequences: CellDetails[][] = getTranspositions(allCellDetails, intervalPattern, true, useRatio, centsTolerance);
 
+  const rowCount = 4;
+
+
   return (
     <div className="jins-transpositions">
       <h2 className="jins-transpositions__title">
@@ -68,8 +71,8 @@ export default function JinsTranspositions() {
                   playSequence(jinsCellDetails.map((cell) => parseInt(cell.frequency)));
                 }}
               >
-                <PlayCircleIcon className="jins-transpositions__play-circle-icon" /> {`${selectedJins.getName()} al-${jinsCellDetails[0].noteName}`}
-              </button>
+                <PlayCircleIcon className="jins-transpositions__play-circle-icon" /> Play jins{/* {`${selectedJins.getName()} al-${sequence[0].noteName}`} */}
+            </button>
             </th>
             <th className="jins-transpositions__header-cell">
               <button className="jins-transpositions__button" onClick={() => playNoteFrequency(parseInt(jinsCellDetails[0].frequency))}>
@@ -143,6 +146,8 @@ export default function JinsTranspositions() {
             return (
               <React.Fragment key={row}>
                 <tr>
+                  <td className="jins-transpositions__transposition-number" rowSpan={rowCount}>{row + 1}</td>
+                  
                   <td className="jins-transpositions__jins-name-row" colSpan={colCount}>
                     <span className="jins-transpositions__transposition-title" >{`${selectedJins.getName()} al-${sequence[0].noteName}`}</span>
                   <button
@@ -173,7 +178,7 @@ export default function JinsTranspositions() {
                   playSequence(sequence.map((cell) => parseInt(cell.frequency)));
                 }}
               >
-                <PlayCircleIcon className="jins-transpositions__play-circle-icon" /> {`${selectedJins.getName()} al-${sequence[0].noteName}`}
+                <PlayCircleIcon className="jins-transpositions__play-circle-icon" /> Play jins{/* {`${selectedJins.getName()} al-${sequence[0].noteName}`} */}
               </button>
                   
                   </td>
