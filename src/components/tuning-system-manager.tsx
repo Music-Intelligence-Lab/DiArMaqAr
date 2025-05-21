@@ -47,6 +47,8 @@ export default function TuningSystemManager() {
 
   const [sortOption, setSortOption] = useState<"id" | "creatorEnglish" | "year">("year");
 
+  const [openedOctaveRows, setOpenedOctaveRows] = useState<{0: boolean, 1: boolean, 2: boolean, 3: boolean}>({0: false, 1: true, 2: true, 3: false});
+
   // MARK: States
   // Local state that mirrors the selected or “new” system’s fields
   const [id, setId] = useState(uuidv4());
@@ -152,6 +154,20 @@ export default function TuningSystemManager() {
       setNoteNames(loadedNames);
     }
   }, [selectedTuningSystem]);
+
+  useEffect(() => {
+    if (selectedCells.length === 0) {
+      setOpenedOctaveRows({0: false, 1: true, 2: true, 3: false})
+    } else {
+      const rows = {0: false, 1: false, 2: false, 3: false}
+      for (const selectedCell of selectedCells) {
+        if (rows[selectedCell.octave as 0 | 1 | 2 | 3] === false) {
+          rows[selectedCell.octave as 0 | 1 | 2 |3] = true
+        }
+      }
+      setOpenedOctaveRows(rows)
+    }
+  }, [selectedCells])
 
   // Sort the tuning systems according to sortOption
   // so our dropdown is neatly sorted:
@@ -592,7 +608,7 @@ export default function TuningSystemManager() {
     ];
 
     return (
-      <details className="tuning-system-manager__octave-details" open={octave !== 0 && octave !== 3}>
+      <details className="tuning-system-manager__octave-details" open={openedOctaveRows[octave as 0 | 1 | 2 | 3]}>
         <summary className="tuning-system-manager__octave-summary">
           Octave {octave}{" "}
           {(octave === 1 || octave === 2) && (

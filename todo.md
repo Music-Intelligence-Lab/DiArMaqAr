@@ -17,8 +17,6 @@ function dottedQuarterDuration(bpm) {
 
 This is for comparitive purpouses, for example: to hear the exact difference in tuning between a jins rast rendered from yegāh as a starting note name, versus 'ushayrān as a starting note name, yegāh and 'ushayrān need to have different yet relative frequency values. 
 
-- add control to collapsable octave tabs so that we can automate them. For example if user selects a jins or maqam transposition that's in an octave which is closed, it would be forced open
-
 - I want to add sources for each jins and each maqam in the database. Each jins and each maqam will likely have multiple sources, therefore each will need to be able to accept multiple sources. With this in mind (and my previous request for adding Source Auto-Input to the Sayr Manager which is commented out below) maybe it's better that we crea  graphy List Dropdown menu, and only manually input the relevant page number(s) plus Comments English and Comments Arabic.
 
 
@@ -52,8 +50,6 @@ Year: 1946
 - Check why yegah starting note name always saves with tuning system even if the starting note name is changed before initial first time save 
 
 - Maqam Analysis and Transpositions: Add row of which ajnas exist within teh currently selected maqam. Add a second row underneath with a play jins button and a highlight jins button which highlights the relevant cells in the table.
-
-- In maqam analysis and transpositions, highlight the notes that are different between ascending and descending
 
 - Find a way to separate the accidental in the English Note Name so it can be used for other purposes. i.e. C# or Bb or B-- or G+
 
