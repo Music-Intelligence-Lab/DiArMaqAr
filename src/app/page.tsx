@@ -3,14 +3,15 @@
 import { useAppContext } from "@/contexts/app-context";
 import { useSearchParams } from "next/navigation";
 import TuningSystemManager from "@/components/tuning-system-manager";
-import JinsManager from "@/components/jins-manager";
+// import JinsManager from "@/components/jins-manager";
 import JinsTranspositions from "@/components/jins-transpositions";
-import MaqamManager from "@/components/maqam-manager";
+// import MaqamManager from "@/components/maqam-manager";
 import MaqamTranspositions from "@/components/maqam-transpositions";
 import SeirManager from "@/components/seir-manager";
 import KeyboardControls from "@/components/keyboard-controls";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import BottomDrawer from "@/components/bottom-drawer";
 
 export default function Home() {
   const {tuningSystems, ajnas, maqamat, handleUrlParams, selectedTuningSystem, selectedJins, selectedMaqam, maqamSeirId, getFirstNoteName, selectedIndices, originalIndices} = useAppContext();
@@ -64,12 +65,13 @@ export default function Home() {
   return (
     <div className="home-page">
       <TuningSystemManager />
-      <JinsManager />
-      <MaqamManager />
+      {/* <JinsManager /> */}
+      {/* <MaqamManager /> */}
       <SeirManager />
       <JinsTranspositions />
       <MaqamTranspositions/>
       <KeyboardControls/>
+      <BottomDrawer />
     </div>
   );
 }

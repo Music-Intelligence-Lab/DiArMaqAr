@@ -1,6 +1,8 @@
 $navbar-height: 50px;
 $page-height: calc(100svh - $navbar-height);
 
+$bottom-drawer-height: 200px;
+
 $primary: #610C9F;
 $secondary: #940B92;
 $tertiary: #FAC67A;
@@ -35,6 +37,8 @@ $main-gradient: linear-gradient(0deg, $dark-grey, $dark-grey);
 @import "../styles/sources-page.scss";
 @import "../styles/source-details-page.scss";
 @import "../styles/patterns-page.scss";
+@import "../styles/bottom-drawer.scss";
+
 
 
 :root {
