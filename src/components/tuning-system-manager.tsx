@@ -1,11 +1,11 @@
 /* eslint-disable react/jsx-key */
 "use client";
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppContext } from "@/contexts/app-context"; // Update import path as needed
 import TuningSystem from "@/models/TuningSystem";
 import detectPitchClassType from "@/functions/detectPitchClassType";
 import convertPitchClass, { shiftPitchClass, frequencyToMidiNoteNumber } from "@/functions/convertPitchClass";
-import {
+import TransliteratedNoteName, {
   octaveZeroNoteNames,
   octaveOneNoteNames,
   octaveTwoNoteNames,
@@ -30,6 +30,8 @@ export default function TuningSystemManager() {
     setNoteNames,
     getFirstNoteName,
     updateAllTuningSystems,
+    referenceFrequencies,
+    setReferenceFrequencies,
     playNoteFrequency,
     selectedCells,
     setSelectedCells,
@@ -62,7 +64,7 @@ export default function TuningSystemManager() {
   const [year, setYear] = useState("");
   const [sourceEnglish, setSourceEnglish] = useState("");
   const [sourceArabic, setSourceArabic] = useState("");
-  const [sourceId, setSourceId] = useState(nanoid());
+  const [sourceId, setSourceId] = useState("");
   const [page, setPage] = useState("");
   const [creatorEnglish, setCreatorEnglish] = useState("");
   const [creatorArabic, setCreatorArabic] = useState("");
@@ -70,7 +72,7 @@ export default function TuningSystemManager() {
   const [commentsArabic, setCommentsArabic] = useState("");
 
   const [stringLength, setStringLength] = useState<number>(0);
-  const [referenceFrequency, setReferenceFrequency] = useState<number>(0);
+  const [defaultReferenceFrequency, setDefaultReferenceFrequency] = useState<number>(0);
 
   /**
    * We only store the note name “index” for the first octave (octaveOneNoteNames).
@@ -153,7 +155,8 @@ export default function TuningSystemManager() {
       setPitchClasses(selectedTuningSystem.getPitchClasses().join("\n"));
       setStringLength(selectedTuningSystem.getStringLength());
       setSelectedAbjadNames(selectedTuningSystem.getAbjadNames());
-      setReferenceFrequency(selectedTuningSystem.getReferenceFrequency());
+      setReferenceFrequencies(selectedTuningSystem.getReferenceFrequencies());
+      setDefaultReferenceFrequency(selectedTuningSystem.getDefaultReferenceFrequency());
 
       const loadedNames = selectedTuningSystem.getSetsOfNoteNames(); // array of strings from JSON
       setNoteNames(loadedNames);
@@ -211,7 +214,7 @@ export default function TuningSystemManager() {
     setCommentsArabic("");
     setPitchClasses("");
     setStringLength(0);
-    setReferenceFrequency(0);
+    setDefaultReferenceFrequency(0);
     setSelectedIndices([]);
     setSelectedAbjadNames([]);
 
@@ -252,13 +255,11 @@ export default function TuningSystemManager() {
   };
 
   // Handle creating or updating a system:
-  const handleSave = (event: FormEvent) => {
-    event.preventDefault();
+  const handleSaveTuningSystem = (givenNoteNames: TransliteratedNoteName[][] = []) => {
 
-    // Each line in pitchClasses is one element in the array:
+    const usedNoteNames = givenNoteNames.length > 0 ? givenNoteNames : noteNames;
 
     if (selectedTuningSystem) {
-      // Editing an existing TuningSystem
       const updated = new TuningSystem(
         id,
         titleEnglish,
@@ -273,10 +274,11 @@ export default function TuningSystemManager() {
         commentsEnglish,
         commentsArabic,
         pitchClassesArr,
-        noteNames,
+        usedNoteNames,
         selectedAbjadNames,
         Number(stringLength),
-        Number(referenceFrequency)
+        referenceFrequencies,
+        Number(defaultReferenceFrequency)
       );
       const updatedList = tuningSystems.map((ts) => (ts.getId() === selectedTuningSystem.getId() ? updated : ts));
       updateAllTuningSystems(updatedList);
@@ -298,10 +300,11 @@ export default function TuningSystemManager() {
         commentsEnglish,
         commentsArabic,
         pitchClassesArr,
-        noteNames,
+        usedNoteNames,
         selectedAbjadNames,
         Number(stringLength),
-        Number(referenceFrequency)
+        referenceFrequencies,
+        Number(defaultReferenceFrequency)
       );
       const updatedList = [...tuningSystems, newSystem];
       updateAllTuningSystems(updatedList);
@@ -328,7 +331,7 @@ export default function TuningSystemManager() {
 
   const handleSaveStartingNoteConfiguration = () => {
     clearSelections();
-    if (haveIndicesChanged()) {
+    if (selectedTuningSystem && haveIndicesChanged()) {
       const newNoteSet = selectedIndices.map((idx) => {
         if (idx < 0) return "none";
         const O1_LEN = octaveOneNoteNames.length;
@@ -344,6 +347,8 @@ export default function TuningSystemManager() {
       const newNoteNames = [...noteNames.filter((setOfNotes) => setOfNotes[0] !== firstNote)];
       newNoteNames.push(newNoteSet);
       setNoteNames(newNoteNames);
+
+      handleSaveTuningSystem(newNoteNames);
 
       setOriginalIndices(selectedIndices);
     }
@@ -567,13 +572,15 @@ export default function TuningSystemManager() {
   // figure out what the input type is (fraction, cents, decimal, stringLength, or unknown)
   const pitchClassType = detectPitchClassType(pitchClassesArr);
 
+  const actualReferenceFrequency = referenceFrequencies[getFirstNoteName()] || defaultReferenceFrequency;
+
   function renderConvertedCell(basePc: string, octave: 0 | 1 | 2 | 3, field: "fraction" | "decimal" | "cents" | "stringLength" | "frequency") {
     if (pitchClassType === "unknown") return "-";
 
     // Shift from octave 1 to whichever we want:
     const shiftedPc = shiftPitchClass(basePc, pitchClassType, octave);
     // Now convert that shifted PC to fraction/decimal/cents/stringLength/frequency
-    const conv = convertPitchClass(shiftedPc, pitchClassType, stringLength, referenceFrequency);
+    const conv = convertPitchClass(shiftedPc, pitchClassType, stringLength, actualReferenceFrequency);
     if (!conv) return "-";
 
     return conv[field] ?? "-";
@@ -890,7 +897,7 @@ export default function TuningSystemManager() {
           </div>
         </div>
 
-        <form className="tuning-system-manager__form" onSubmit={handleSave}>
+        <form className="tuning-system-manager__form">
           {/* Identification / Titles */}
           <div className="tuning-system-manager__group">
             <div className="tuning-system-manager__input-container">
@@ -1051,14 +1058,14 @@ export default function TuningSystemManager() {
 
               <div className="tuning-system-manager__input-container">
                 <label className="tuning-system-manager__label" htmlFor="refFreqField">
-                  Reference Frequency
+                  Default Reference Frequency
                 </label>
                 <input
                   className="tuning-system-manager__input"
                   id="refFreqField"
                   type="number"
-                  value={referenceFrequency ?? 0}
-                  onChange={(e) => setReferenceFrequency(Number(e.target.value))}
+                  value={defaultReferenceFrequency ?? 0}
+                  onChange={(e) => setDefaultReferenceFrequency(Number(e.target.value))}
                 />
               </div>
             </div>
@@ -1066,7 +1073,7 @@ export default function TuningSystemManager() {
 
           {/* Buttons */}
           <div className="tuning-system-manager__buttons">
-            <button className="tuning-system-manager__save-button" type="submit">
+            <button className="tuning-system-manager__save-button" onClick={() => handleSaveTuningSystem()}>
               {selectedTuningSystem ? "Save Tuning System Changes" : "Create New Tuning System"}
             </button>
             {selectedTuningSystem && (
@@ -1084,29 +1091,59 @@ export default function TuningSystemManager() {
               {noteNames.map((notes, index) => {
                 const startingNote = notes[0];
                 return (
-                  <button
-                    key={index}
-                    className={
-                      "tuning-system-manager__starting-note " +
-                      (getFirstNoteName() === startingNote ? "tuning-system-manager__starting-note_selected" : "")
-                    }
-                    onClick={() => handleStartNoteNameChange(startingNote)}
-                  >
-                    {startingNote}
-                  </button>
+                  <div className="tuning-system-manager__starting-note" key={index}>
+                    <button
+                      className={
+                        "tuning-system-manager__starting-note-button " +
+                        (getFirstNoteName() === startingNote ? "tuning-system-manager__starting-note-button_selected" : "")
+                      }
+                      onClick={() => handleStartNoteNameChange(startingNote)}
+                    >
+                      {startingNote}
+                    </button>
+                    <label htmlFor="reference-frequency-input">
+                      Frequency (Hz):
+                      <input
+                        type="number"
+                        id="tempo-input"
+                        value={referenceFrequencies[startingNote] ?? 0}
+                        onChange={(e) => {
+                          const val = Number(e.target.value);
+                          setReferenceFrequencies((prev) => ({
+                            ...prev,
+                            [startingNote]: val,
+                          }));
+                        }}
+                        className="tuning-system-manager__starting-note-input"
+                      />
+                    </label>
+                  </div>
                 );
               })}
               {isCurrentConfigurationNew() && (
-                <button
-                  className={"tuning-system-manager__starting-note tuning-system-manager__starting-note_unsaved"}
-                  // Optionally, you can provide an onClick if you want to re-select it.
-                  onClick={() => {
-                    // For an unsaved config, you might just leave it as is or perform additional logic.
-                    console.log("New unsaved configuration selected:", getFirstNoteName());
-                  }}
-                >
-                  {getFirstNoteName()} (unsaved)
-                </button>
+                <div className="tuning-system-manager__starting-note">
+                  <button
+                    className={"tuning-system-manager__starting-note-button tuning-system-manager__starting-note-button_unsaved tuning-system-manager__starting-note-button_selected"}
+                  >
+                    {getFirstNoteName()} (unsaved)
+                  </button>
+                  <label htmlFor="reference-frequency-input">
+                    Frequency (Hz):
+                    <input
+                      type="number"
+                      id="tempo-input"
+                      value={referenceFrequencies[getFirstNoteName()] ?? 0}
+                      onChange={(e) => {
+                        const val = Number(e.target.value);
+                        setReferenceFrequencies((prev) => ({
+                          ...prev,
+                          [getFirstNoteName()]: val,
+                        }));
+                      }}
+                      className="tuning-system-manager__starting-note-input"
+                    />
+                  </label>
+                </div>
               )}
               <button
                 className={"tuning-system-manager__starting-note-button tuning-system-manager__starting-note-button_reset"}

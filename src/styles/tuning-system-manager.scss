@@ -8,7 +8,7 @@
     font-weight: bold;
     display: inline;
   }
-  
+
   &__abjad-name {
     font-size: 16px;
     font-weight: bold;
@@ -101,6 +101,12 @@
   }
 
   &__starting-note {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__starting-note-button {
     padding: 10px;
     background-color: rgba(0, 0, 0, 0.3);
     border-radius: 10px;
@@ -110,8 +116,19 @@
     transition: 0.3s;
 
     &_selected {
-      background-color: $secondary;
+      background-color: $secondary !important;
     }
+  }
+
+  &__starting-note-input {
+    display: inline-block;
+    padding: 10px;
+    margin-left: 10px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    color: $text;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    width: 90px;
   }
 
   &__starting-note-right {
@@ -165,7 +182,7 @@
     font-weight: 500;
     padding-bottom: 20px;
 
-/*     &::-webkit-scrollbar {
+    /*     &::-webkit-scrollbar {
       width: 8px;
     }
 
@@ -277,6 +294,11 @@
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path fill='%23aaa' d='M0 0l5 6 5-6z'/></svg>") !important;
     background-repeat: no-repeat !important;
     background-position: center bottom 0rem !important;
+
+    &:focus,
+    &:hover {
+      color: #333 !important;
+    }
   }
 
   &__select-abjad {
@@ -301,6 +323,11 @@
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path fill='%23aaa' d='M0 0l5 6 5-6z'/></svg>") !important;
     background-repeat: no-repeat !important;
     background-position: center bottom 0px !important;
+
+    &:focus,
+    &:hover {
+      color: #333 !important;
+    }
   }
 
   &__play-button {
