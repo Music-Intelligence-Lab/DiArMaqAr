@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { Slider } from "@mui/material";
 import { useAppContext } from "@/contexts/app-context";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -31,11 +31,18 @@ const SettingsCard = () => {
     patterns,
     selectedPattern,
     setSelectedPattern,
-    setRefresh
+    setRefresh,
+    openSettings,
+    setOpenSettings,
+    setOpenBottomDrawer,
+    setOpenNavigation,
   } = useAppContext();
-  const [isOpen, setIsOpen] = useState(false);
 
-  const togglePanel = () => setIsOpen(!isOpen);
+  const togglePanel = () => {
+    setOpenSettings((prev) => !prev);
+    setOpenBottomDrawer(false);
+    setOpenNavigation(false);
+  };
 
   const handleEnvelopeChange = (paramName: keyof typeof envelopeParams) => (_event: Event, newValue: number | number[]) => {
     if (typeof newValue === "number") {
@@ -68,7 +75,7 @@ const SettingsCard = () => {
         <SettingsIcon />
       </button>
 
-      <div className={`settings-card ${isOpen ? "settings-card--open" : ""}`}>
+      <div className={`settings-card ${openSettings ? "settings-card--open" : ""}`}>
         <div className="settings-card__content">
           <details className="settings-card__details">
             <summary className="settings-card__summary">Pattern</summary>
@@ -214,7 +221,10 @@ const SettingsCard = () => {
 
             <div className="settings-card__input-container">
               <label htmlFor="midi-output-select" className="settings-card__label">
-                MIDI Input: <button className="settings-card__refresh-button" onClick={() => setRefresh((prev) => !prev)}>Refresh</button>
+                MIDI Input:{" "}
+                <button className="settings-card__refresh-button" onClick={() => setRefresh((prev) => !prev)}>
+                  Refresh
+                </button>
               </label>
               <select
                 id="midi-output-select"
@@ -273,7 +283,10 @@ const SettingsCard = () => {
               <>
                 <div className="settings-card__input-container">
                   <label htmlFor="midi-output-select" className="settings-card__label">
-                    MIDI Output: <button className="settings-card__refresh-button" onClick={() => setRefresh((prev) => !prev)}>Refresh</button>
+                    MIDI Output:{" "}
+                    <button className="settings-card__refresh-button" onClick={() => setRefresh((prev) => !prev)}>
+                      Refresh
+                    </button>
                   </label>
                   <select
                     id="midi-output-select"
