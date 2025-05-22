@@ -28,7 +28,7 @@ export default function MaqamTranspositions() {
 
   if (ascendingNoteNames.length < 2 || descendingNoteNames.length < 2) return null;
 
-  const romanNumerals = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "XI", "X", "XI", "XII"];
+  const romanNumerals = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "XI", "X", "XI", "XII", "XIII", "XIV", "XV"];
 
   const allCells = getAllCells();
 
@@ -56,7 +56,7 @@ export default function MaqamTranspositions() {
   return (
     <div className="maqam-transpositions">
       <h2 className="maqam-transpositions__title">
-        Analysis: {`${selectedMaqam.getName()}`}
+        Taḥlīl (analysis): {`${selectedMaqam.getName()}`}
         {!useRatio && (
           <>
             {" "}
@@ -72,9 +72,19 @@ export default function MaqamTranspositions() {
       </h2>
 
       <table className="maqam-transpositions__table">
+
+        <colgroup>
+          <col style={{ width: '30px' }} /> {/* Transposition number column */}
+          <col style={{ width: '40px' }} /> {/* Arrow column */}
+        </colgroup>
+
         <thead>
           <tr>
-            <th className="maqam-transpositions__header" colSpan={2 + (ascendingMaqamCellDetails.length - 1) * 2}>
+            <th className="maqam-transpositions__transposition-number" rowSpan={14}>{1}</th>
+
+            <th className="maqam-transpositions__header" colSpan={3 + (ascendingMaqamCellDetails.length - 1) * 2}>
+              <span className="maqam-transpositions__transposition-title">{`Darajat al-Istiqrār (tonic/finalis): ${ascendingMaqamCellDetails[0].noteName} (${getEnglishNoteName(ascendingMaqamCellDetails[0].noteName)})`}</span>
+
               <button
                 className="maqam-transpositions__button"
                 onClick={() => {
@@ -85,7 +95,6 @@ export default function MaqamTranspositions() {
                 }}
               >
                 <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />{" "}
-                {`${selectedMaqam.getName()} al-${ascendingMaqamCellDetails[0].noteName}`}
               </button>
               <button
                 className="maqam-transpositions__button"
@@ -123,66 +132,65 @@ export default function MaqamTranspositions() {
               >
                 Select Descending
               </button>
-            </th>
-          </tr>
-
-          <tr>
-            <th className="maqam-transpositions__row-header">
               <button
                 className="maqam-transpositions__button"
                 onClick={() => playSequence(ascendingMaqamCellDetails.map((cell) => parseInt(cell.frequency)))}
               >
                 <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
-                Ascending 
+                Play Ascending
               </button>
-            </th>
-            <th className="maqam-transpositions__header-cell">
               <button
-                className={
-                  "maqam-transpositions__button " +
-                  (!descendingNoteNames.includes(ascendingMaqamCellDetails[0].noteName) ? "maqam-transpositions__button_unique" : "")
-                }
-                onClick={() => playNoteFrequency(parseInt(ascendingMaqamCellDetails[0].frequency))}
+                className="maqam-transpositions__button"
+                onClick={() => playSequence(descendingMaqamCellDetails.map((cell) => parseInt(cell.frequency)))}
               >
                 <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
-                {ascendingMaqamCellDetails[0].noteName + ` (${getEnglishNoteName(ascendingMaqamCellDetails[0].noteName)})`}{" "}
-                
+                Play Descending
               </button>
             </th>
-            {ascendingIntervalPattern.map((pat, i) => (
-              <React.Fragment key={i}>
-                <th className="maqam-transpositions__header-cell"></th>
-                <th className="maqam-transpositions__header-cell">
-                  <button
-                    className={
-                      "maqam-transpositions__button " +
-                      (!descendingNoteNames.includes(ascendingMaqamCellDetails[i + 1].noteName) ? "maqam-transpositions__button_unique" : "")
-                    }
-                    onClick={() => playNoteFrequency(parseInt(ascendingMaqamCellDetails[i + 1].frequency))}
-                  >
-                    <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
-                    {ascendingMaqamCellDetails[i + 1].noteName + ` (${getEnglishNoteName(ascendingMaqamCellDetails[i + 1].noteName)})`}{" "}
-                  </button>
-                </th>
-              </React.Fragment>
-            ))}
           </tr>
+          {/* Ascending Scale Degrees Row */}
+          <tr>
+            <td className="maqam-transpositions__asc-desc-column" rowSpan={6}>↗</td>
+            </tr>
           <tr>
             <th className="maqam-transpositions__row-header">Scale Degrees</th>
             {ascendingMaqamCellDetails.map((_, idx) =>
               idx === 0 ? (
-                <th key={idx} className="maqam-transpositions__header-cell">
+                <th key={idx} className="maqam-transpositions__header-cell_scale-degrees-number">
                   {romanNumerals[idx]}
                 </th>
               ) : (
                 <React.Fragment key={idx}>
-                  <th className="maqam-transpositions__header-cell"></th>
-                  <th className="maqam-transpositions__header-cell">{romanNumerals[idx]}</th>
+                  <th className="maqam-transpositions__header-cell_scale-degrees"></th>
+                  <th className="maqam-transpositions__header-cell_scale-degrees-number">{romanNumerals[idx]}</th>
                 </React.Fragment>
               )
             )}
           </tr>
+          {/* Ascending Note Names Row */}
+          <tr>
+            <th className="maqam-transpositions__row-header">
+              Note Names            </th>
+            <th className={
+              (!descendingNoteNames.includes(ascendingMaqamCellDetails[0].noteName) ? "maqam-transpositions__header-cell_unique" : "maqam-transpositions__header-cell")
+            }                  >
+              {ascendingMaqamCellDetails[0].noteName + ` (${getEnglishNoteName(ascendingMaqamCellDetails[0].noteName)})`}{" "}
+            </th>
 
+            {ascendingIntervalPattern.map((pat, i) => (
+              <React.Fragment key={i}>
+                <th className="maqam-transpositions__header-cell"></th>
+                <th className={
+                  (!descendingNoteNames.includes(ascendingMaqamCellDetails[i + 1].noteName) ? "maqam-transpositions__header-cell_unique" : "maqam-transpositions__header-cell")
+                }                  >
+                  {ascendingMaqamCellDetails[i + 1].noteName + ` (${getEnglishNoteName(ascendingMaqamCellDetails[i + 1].noteName)})`}{" "}
+
+                </th>
+              </React.Fragment>
+            ))}
+          </tr>
+
+          {/* Ascending Tuning Unit and Cents Values Row */}
           <tr>
             <th className="maqam-transpositions__row-header">{valueType}</th>
             <th className="maqam-transpositions__header-cell">{ascendingMaqamCellDetails[0].originalValue}</th>
@@ -208,46 +216,30 @@ export default function MaqamTranspositions() {
               ))}
             </tr>
           )}
-
+          {/* Ascending Play Buttons Row */}
           <tr>
             <th className="maqam-transpositions__row-header">
-              <button
-                className="maqam-transpositions__button"
-                onClick={() => playSequence(descendingMaqamCellDetails.map((cell) => parseInt(cell.frequency)))}
-              >
-                <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
-                Descending 
-              </button>
+              Play
             </th>
-            <th className="maqam-transpositions__header-cell">
-              <button
-                className={
-                  "maqam-transpositions__button " +
-                  (!ascendingNoteNames.includes(descendingMaqamCellDetails[0].noteName) ? "maqam-transpositions__button_unique" : "")
-                }
-                onClick={() => playNoteFrequency(parseInt(descendingMaqamCellDetails[0].frequency))}
-              >
-                <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
-                {descendingMaqamCellDetails[0].noteName + ` (${getEnglishNoteName(descendingMaqamCellDetails[0].noteName)})`}{" "}
-              </button>
+            <th>
+              <PlayCircleIcon className="maqam-transpositions__play-circle-icon" onClick={() => playNoteFrequency(parseInt(ascendingMaqamCellDetails[0].frequency))} />
             </th>
             {descendingIntervalPattern.map((pat, i) => (
               <React.Fragment key={i}>
                 <th className="maqam-transpositions__header-cell"></th>
-                <th className="maqam-transpositions__header-cell">
-                  <button
-                    className={
-                      "maqam-transpositions__button " +
-                      (!ascendingNoteNames.includes(descendingMaqamCellDetails[i + 1].noteName) ? "maqam-transpositions__button_unique" : "")
-                    }
-                    onClick={() => playNoteFrequency(parseInt(descendingMaqamCellDetails[i + 1].frequency))}
-                  >
-                    <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
-                    {descendingMaqamCellDetails[i + 1].noteName + ` (${getEnglishNoteName(descendingMaqamCellDetails[i + 1].noteName)})`}{" "}
-                  </button>
+                <th>
+                  <PlayCircleIcon className="maqam-transpositions__play-circle-icon" onClick={() => playNoteFrequency(parseInt(ascendingMaqamCellDetails[i + 1].frequency))} />
                 </th>
               </React.Fragment>
             ))}
+          </tr>
+          <tr>
+            <td className="maqam-transpositions__spacer" colSpan={2 + (ascendingMaqamCellDetails.length - 1) * 2} />
+          </tr>
+
+          {/* Descending Scale Degrees Row */}
+          <tr>
+            <td className="maqam-transpositions__asc-desc-column" rowSpan={6}>↘</td>
           </tr>
 
           <tr>
@@ -257,17 +249,47 @@ export default function MaqamTranspositions() {
               .reverse()
               .map((num, idx) =>
                 idx === 0 ? (
-                  <th key={idx} className="maqam-transpositions__header-cell">
+                  <th key={idx} className="maqam-transpositions__header-cell_scale-degrees">
                     {num}
                   </th>
                 ) : (
                   <React.Fragment key={idx}>
-                    <th className="maqam-transpositions__header-cell"></th>
-                    <th className="maqam-transpositions__header-cell">{num}</th>
+                    <th className="maqam-transpositions__header-cell_scale-degrees"></th>
+                    <th className="maqam-transpositions__header-cell_scale-degrees-number">{num}</th>
                   </React.Fragment>
                 )
               )}
           </tr>
+
+          {/* Descending Note Names Row */}
+          <tr>
+            <th className="maqam-transpositions__row-header">
+              Note Names
+            </th>
+
+            <th className={
+              (!ascendingNoteNames.includes(descendingMaqamCellDetails[0].noteName) ? "maqam-transpositions__header-cell_unique" : "maqam-transpositions__header-cell")
+            }
+            >
+              {descendingMaqamCellDetails[0].noteName + ` (${getEnglishNoteName(descendingMaqamCellDetails[0].noteName)})`}{" "}
+
+            </th>
+
+            {descendingIntervalPattern.map((pat, i) => (
+              <React.Fragment key={i}>
+                <th className="maqam-transpositions__header-cell"></th>
+                <th className={
+                  (!ascendingNoteNames.includes(descendingMaqamCellDetails[i + 1].noteName) ? "maqam-transpositions__header-cell_unique" : "maqam-transpositions__header-cell")
+                }
+                >
+                  {descendingMaqamCellDetails[i + 1].noteName + ` (${getEnglishNoteName(descendingMaqamCellDetails[i + 1].noteName)})`}{" "}
+                </th>
+              </React.Fragment>
+            ))}
+          </tr>
+
+
+          {/* Descending Tuning Unit and Cents Values Row */}
 
           <tr>
             <th className="maqam-transpositions__row-header">{valueType}</th>
@@ -293,11 +315,29 @@ export default function MaqamTranspositions() {
               ))}
             </tr>
           )}
+          {/* Descending Play Buttons Row */}
+          <tr>
+            <th className="maqam-transpositions__row-header">
+              Play
+            </th>
+            <th>
+              <PlayCircleIcon className="maqam-transpositions__play-circle-icon" onClick={() => playNoteFrequency(parseInt(descendingMaqamCellDetails[0].frequency))} />
+            </th>
+            {descendingIntervalPattern.map((pat, i) => (
+              <React.Fragment key={i}>
+                <th className="maqam-transpositions__header-cell"></th>
+                <th>
+                  <PlayCircleIcon className="maqam-transpositions__play-circle-icon" onClick={() => playNoteFrequency(parseInt(descendingMaqamCellDetails[i + 1].frequency))} />
+                </th>
+              </React.Fragment>
+            ))}
+          </tr>
+
         </thead>
       </table>
 
       <h2 className="maqam-transpositions__title">
-        Transpositions: {`${selectedMaqam.getName()}`}
+        Taṣwīr (transpositions): {`${selectedMaqam.getName()}`}
         {!useRatio && (
           <>
             {" "}
@@ -313,15 +353,16 @@ export default function MaqamTranspositions() {
       </h2>
 
       <table className="maqam-transpositions__table">
-        <thead>
-          <tr></tr>
-        </thead>
+        <colgroup>
+          <col style={{ width: '30px' }} /> {/* Transposition number column */}
+          <col style={{ width: '40px' }} /> {/* Arrow column */}
+        </colgroup>
         <tbody>
           {filteredSequences.map((seq, row) => {
             const ascendingDetails = seq.ascendingSequence;
             const descendingDetails = seq.descendingSequence;
             const colCount = 2 + (ascendingDetails.length - 1) * 2;
-            const rowCount = 7;
+            const rowCount = 14;
             if (ascendingMaqamCellDetails[0].noteName === ascendingDetails[0].noteName) return null;
 
             // --- Patch: add rowCount for rowspan
@@ -329,11 +370,10 @@ export default function MaqamTranspositions() {
             return (
               <React.Fragment key={row}>
                 <tr>
-                  <td className="maqam-transpositions__transposition-number" rowSpan={rowCount}>{row + 1}</td>
-                  <td className="maqam-transpositions__maqam-name-row" colSpan={colCount}>
-                    <span className="maqam-transpositions__transposition-title">{`${selectedMaqam.getName()} al-${
-                      ascendingDetails[0].noteName
-                    }`}</span>
+                  <td className="maqam-transpositions__transposition-number" rowSpan={rowCount}>{row + 2}</td>
+                  <td className="maqam-transpositions__maqam-name-row" colSpan={colCount + 1}>
+                    <span className="maqam-transpositions__transposition-title">{`${selectedMaqam.getName()} al-${ascendingDetails[0].noteName
+                      }`}</span>
                     <button
                       className="maqam-transpositions__button"
                       onClick={() => {
@@ -344,7 +384,7 @@ export default function MaqamTranspositions() {
                       }}
                     >
                       Ascending {">"} Descending
-                      <PlayCircleIcon className="maqam-transpositions__play-circle-icon" /> 
+                      <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
                     </button>
                     <button
                       className="maqam-transpositions__button"
@@ -382,157 +422,208 @@ export default function MaqamTranspositions() {
                     >
                       Select Descending
                     </button>
+                                  <button
+                className="maqam-transpositions__button"
+                onClick={() => playSequence(ascendingDetails.map((cell) => parseInt(cell.frequency)))}
+              >
+                <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
+                Play Ascending
+              </button>
+              <button
+                className="maqam-transpositions__button"
+                onClick={() => playSequence(descendingDetails.map((cell) => parseInt(cell.frequency)))}
+              >
+                <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
+                Play Descending
+              </button>
+
                   </td>
                 </tr>
 
+                {/* Ascending Scale Degrees Row */}
+                <tr><td className="maqam-transpositions__asc-desc-column" rowSpan={6}>↗</td></tr>
                 <tr>
-                  {/* <td>X</td> */}
-                  <td className="maqam-transpositions__row-header">
-                    <button
-                      className="maqam-transpositions__button"
-                      onClick={() => playSequence(ascendingDetails.map((cell) => parseInt(cell.frequency)))}
-                    >
-                      <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
-                      Ascending
-                    </button>
-                  </td>
-                  <td className="maqam-transpositions__cell">
-                    <button
-                      className={
-                        "maqam-transpositions__button " +
-                        (!descendingDetails.map((cell) => cell.noteName).includes(ascendingDetails[0].noteName)
-                          ? "maqam-transpositions__button_unique"
-                          : "")
-                      }
-                      onClick={() => playNoteFrequency(parseInt(ascendingDetails[0].frequency))}
-                    >
-                      <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
-                      {ascendingDetails[0].noteName + ` (${getEnglishNoteName(ascendingDetails[0].noteName)})`}{" "}
-                    </button>
-                  </td>
-                  {ascendingDetails.slice(1).map((d, j) => (
-                    <React.Fragment key={j}>
-                      <td className="maqam-transpositions__cell"></td>
-                      <td className="maqam-transpositions__cell">
-                        <button
-                          className={
-                            "maqam-transpositions__button " +
-                            (!descendingDetails.map((cell) => cell.noteName).includes(d.noteName) ? "maqam-transpositions__button_unique" : "")
-                          }
-                          onClick={() => playNoteFrequency(parseInt(d.frequency))}
->
-                          <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
-                          {d.noteName + ` (${getEnglishNoteName(d.noteName)})`} 
-                        </button>
-                      </td>
+                  <th className="maqam-transpositions__row-header">Scale Degrees</th>
+                  {ascendingMaqamCellDetails.map((_, idx) =>
+                    idx === 0 ? (
+                      <th key={idx} className="maqam-transpositions__header-cell_scale-degrees-number">
+                        {romanNumerals[idx]}
+                      </th>
+                    ) : (
+                      <React.Fragment key={idx}>
+                        <th className="maqam-transpositions__header-cell_scale-degrees"></th>
+                        <th className="maqam-transpositions__header-cell_scale-degrees-number">{romanNumerals[idx]}</th>
+                      </React.Fragment>
+                    )
+                  )}
+                </tr>
+                {/* Ascending Note Names Row */}
+                <tr>
+                  <th className="maqam-transpositions__row-header">
+                    Note Names            </th>
+                  <th className={
+                    (!descendingNoteNames.includes(ascendingMaqamCellDetails[0].noteName) ? "maqam-transpositions__header-cell_unique" : "maqam-transpositions__header-cell")
+                  }                  >
+                    {ascendingDetails[0].noteName + ` (${getEnglishNoteName(ascendingDetails[0].noteName)})`}{" "}
+                  </th>
+
+                  {ascendingIntervalPattern.map((pat, i) => (
+                    <React.Fragment key={i}>
+                      <th className="maqam-transpositions__header-cell"></th>
+                      <th className={
+                        (!descendingNoteNames.includes(ascendingMaqamCellDetails[i + 1].noteName) ? "maqam-transpositions__header-cell_unique" : "maqam-transpositions__header-cell")
+                      }                  >
+                        {ascendingMaqamCellDetails[i + 1].noteName + ` (${getEnglishNoteName(ascendingMaqamCellDetails[i + 1].noteName)})`}{" "}
+
+                      </th>
                     </React.Fragment>
                   ))}
                 </tr>
+
+                {/* Ascending Tuning Unit and Cents Values Row */}
                 <tr>
-                  {/* <td>X</td> */}
-                  <td className="maqam-transpositions__row-header">{valueType}</td>
-                  <td className="maqam-transpositions__cell">{ascendingDetails[0].originalValue}</td>
-                  {ascendingDetails.slice(1).map((d, j) => (
-                    <React.Fragment key={j}>
-                      <td className="maqam-transpositions__cell">
-                        {useRatio
-                          ? `(${computeRatio(ascendingDetails[j].fraction, d.fraction)})`
-                          : `(${(parseFloat(d.originalValue) - parseFloat(ascendingDetails[j].originalValue)).toFixed(3)})`}
-                      </td>
-                      <td className="maqam-transpositions__cell">{d.originalValue}</td>
+                  <th className="maqam-transpositions__row-header">{valueType}</th>
+                  <th className="maqam-transpositions__header-cell">{ascendingMaqamCellDetails[0].originalValue}</th>
+                  {ascendingIntervalPattern.map((pat, i) => (
+                    <React.Fragment key={i}>
+                      <th className="maqam-transpositions__header-cell">{useRatio ? `(${pat.ratio})` : `(${(pat.diff ?? 0).toFixed(3)})`}</th>
+                      <th className="maqam-transpositions__header-cell">{ascendingMaqamCellDetails[i + 1].originalValue}</th>
                     </React.Fragment>
                   ))}
                 </tr>
                 {valueType !== "cents" && (
                   <tr>
-                    {/* <td>X</td> */}
-                    <td className="maqam-transpositions__row-header">cents (¢)</td>
-                    <td className="maqam-transpositions__cell">{ascendingDetails[0].cents}</td>
+                    <th className="maqam-transpositions__row-header">cents (¢)</th>
+                    <th className="maqam-transpositions__header-cell">{parseFloat(ascendingMaqamCellDetails[0].cents).toFixed(3)}</th>
                     {ascendingIntervalPattern.map((pat, i) => (
                       <React.Fragment key={i}>
-                        <td className="maqam-transpositions__cell">{`(${(
-                          parseFloat(ascendingDetails[i + 1].cents) - parseFloat(ascendingDetails[i].cents)
-                        ).toFixed(3)})`}</td>
-                        <td className="maqam-transpositions__cell">{parseFloat(ascendingDetails[i + 1].cents).toFixed(3)}</td>
+                        <th className="maqam-transpositions__header-cell">
+                          {" "}
+                          ({(parseFloat(ascendingMaqamCellDetails[i + 1].cents) - parseFloat(ascendingMaqamCellDetails[i].cents)).toFixed(3)})
+                        </th>
+                        <th className="maqam-transpositions__header-cell">{parseFloat(ascendingMaqamCellDetails[i + 1].cents).toFixed(3)}</th>
                       </React.Fragment>
                     ))}
                   </tr>
                 )}
+                {/* Ascending Play Buttons Row */}
                 <tr>
-                  {/* <td>X</td> */}
-                  <td className="maqam-transpositions__row-header">
-                    <button
-                      className="maqam-transpositions__button"
-                      onClick={() => playSequence(descendingDetails.map((cell) => parseInt(cell.frequency)))}
-                    >  
-                    <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
-                    Descending
-                    </button>
-                  </td>
-                  <td className="maqam-transpositions__cell">
-                    <button
-                      className={
-                        "maqam-transpositions__button " +
-                        (!ascendingDetails.map((cell) => cell.noteName).includes(descendingDetails[0].noteName)
-                          ? "maqam-transpositions__button_unique"
-                          : "")
-                      }
-                      onClick={() => playNoteFrequency(parseInt(descendingDetails[0].frequency))}
-                    >
-                      <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
-                      {descendingDetails[0].noteName + ` (${getEnglishNoteName(descendingDetails[0].noteName)})`}{" "}
-                    </button>
-                  </td>
-                  {descendingDetails.slice(1).map((d, j) => (
-                    <React.Fragment key={j}>
-                      <td className="maqam-transpositions__cell"></td>
-                      <td className="maqam-transpositions__cell">
-                        <button
-                          className={
-                            "maqam-transpositions__button " +
-                            (!ascendingDetails.map((cell) => cell.noteName).includes(d.noteName) ? "maqam-transpositions__button_unique" : "")
-                          }
-                          onClick={() => playNoteFrequency(parseInt(d.frequency))}
-                        >
-                          <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
-                          {d.noteName + ` (${getEnglishNoteName(d.noteName)})`} 
-                        </button>
-                      </td>
+                  <th className="maqam-transpositions__row-header">
+                    Play
+                  </th>
+                  <th>
+                    <PlayCircleIcon className="maqam-transpositions__play-circle-icon" onClick={() => playNoteFrequency(parseInt(ascendingMaqamCellDetails[0].frequency))} />
+                  </th>
+                  {descendingIntervalPattern.map((pat, i) => (
+                    <React.Fragment key={i}>
+                      <th className="maqam-transpositions__header-cell"></th>
+                      <th>
+                        <PlayCircleIcon className="maqam-transpositions__play-circle-icon" onClick={() => playNoteFrequency(parseInt(ascendingMaqamCellDetails[i + 1].frequency))} />
+                      </th>
                     </React.Fragment>
                   ))}
                 </tr>
                 <tr>
-                  {/* <td>X</td> */}
-                  <td className="maqam-transpositions__row-header">{valueType}</td>
-                  <td className="maqam-transpositions__cell">{descendingDetails[0].originalValue}</td>
-                  {descendingDetails.slice(1).map((d, j) => (
-                    <React.Fragment key={j}>
-                      <td className="maqam-transpositions__cell">
-                        {useRatio
-                          ? `(${computeRatio(descendingDetails[j].fraction, d.fraction)})`
-                          : `${(parseFloat(d.originalValue) - parseFloat(descendingDetails[j].originalValue)).toFixed(3)}`}
-                      </td>
-                      <td className="maqam-transpositions__cell">{d.originalValue}</td>
+                  <td className="maqam-transpositions__spacer" colSpan={2 + (ascendingMaqamCellDetails.length - 1) * 2} />
+                </tr>
+
+                {/* Descending Scale Degrees Row */}
+                <tr>
+                  <td className="maqam-transpositions__asc-desc-column" rowSpan={6}>↘</td>
+                </tr>
+
+                <tr>
+                  <th className="maqam-transpositions__row-header">Scale Degrees</th>
+                  {romanNumerals
+                    .slice(0, ascendingMaqamCellDetails.length)
+                    .reverse()
+                    .map((num, idx) =>
+                      idx === 0 ? (
+                        <th key={idx} className="maqam-transpositions__header-cell_scale-degrees">
+                          {num}
+                        </th>
+                      ) : (
+                        <React.Fragment key={idx}>
+                          <th className="maqam-transpositions__header-cell_scale-degrees"></th>
+                          <th className="maqam-transpositions__header-cell_scale-degrees-number">{num}</th>
+                        </React.Fragment>
+                      )
+                    )}
+                </tr>
+
+                {/* Descending Note Names Row */}
+                <tr>
+                  <th className="maqam-transpositions__row-header">
+                    Note Names
+                  </th>
+
+                  <th className={
+                    (!ascendingNoteNames.includes(descendingMaqamCellDetails[0].noteName) ? "maqam-transpositions__header-cell_unique" : "maqam-transpositions__header-cell")
+                  }
+                  >
+                    {descendingDetails[0].noteName + ` (${getEnglishNoteName(descendingDetails[0].noteName)})`}{" "}
+
+                  </th>
+
+                  {descendingIntervalPattern.map((pat, i) => (
+                    <React.Fragment key={i}>
+                      <th className="maqam-transpositions__header-cell"></th>
+                      <th className={
+                        (!ascendingNoteNames.includes(descendingMaqamCellDetails[i + 1].noteName) ? "maqam-transpositions__header-cell_unique" : "maqam-transpositions__header-cell")
+                      }
+                      >
+                        {descendingMaqamCellDetails[i + 1].noteName + ` (${getEnglishNoteName(descendingMaqamCellDetails[i + 1].noteName)})`}{" "}
+                      </th>
+                    </React.Fragment>
+                  ))}
+                </tr>
+
+
+                {/* Descending Tuning Unit and Cents Values Row */}
+
+                <tr>
+                  <th className="maqam-transpositions__row-header">{valueType}</th>
+                  <th className="maqam-transpositions__header-cell">{descendingMaqamCellDetails[0].originalValue}</th>
+                  {descendingIntervalPattern.map((pat, i) => (
+                    <React.Fragment key={i}>
+                      <th className="maqam-transpositions__header-cell">{useRatio ? `(${pat.ratio})` : `(${(pat.diff ?? 0).toFixed(3)})`}</th>
+                      <th className="maqam-transpositions__header-cell">{descendingMaqamCellDetails[i + 1].originalValue}</th>
                     </React.Fragment>
                   ))}
                 </tr>
                 {valueType !== "cents" && (
                   <tr>
-                    {/* <td>X</td> */}
-                    <td className="maqam-transpositions__row-header">cents (¢)</td>
-                    <td className="maqam-transpositions__cell">{descendingDetails[0].cents}</td>
+                    <th className="maqam-transpositions__row-header">cents (¢)</th>
+                    <th className="maqam-transpositions__header-cell">{descendingMaqamCellDetails[0].cents}</th>
                     {descendingIntervalPattern.map((pat, i) => (
                       <React.Fragment key={i}>
-                        <td className="maqam-transpositions__cell">{`(${(
-                          parseFloat(descendingDetails[i + 1].cents) - parseFloat(descendingDetails[i].cents)
-                        ).toFixed(3)})`}</td>
-                        <td className="maqam-transpositions__cell">{parseFloat(descendingDetails[i + 1].cents).toFixed(3)}</td>
+                        <th className="maqam-transpositions__header-cell">{`(${(
+                          parseFloat(descendingMaqamCellDetails[i + 1].cents) - parseFloat(descendingMaqamCellDetails[i].cents)
+                        ).toFixed(3)})`}</th>
+                        <th className="maqam-transpositions__header-cell">{parseFloat(descendingMaqamCellDetails[i + 1].cents).toFixed(3)}</th>
                       </React.Fragment>
                     ))}
                   </tr>
                 )}
+                {/* Descending Play Buttons Row */}
                 <tr>
-                  <td className="maqam-transpositions__spacer" colSpan={colCount} />
+                  <th className="maqam-transpositions__row-header">
+                    Play
+                  </th>
+                  <th>
+                    <PlayCircleIcon className="maqam-transpositions__play-circle-icon" onClick={() => playNoteFrequency(parseInt(descendingMaqamCellDetails[0].frequency))} />
+                  </th>
+                  {descendingIntervalPattern.map((pat, i) => (
+                    <React.Fragment key={i}>
+                      <th className="maqam-transpositions__header-cell"></th>
+                      <th>
+                        <PlayCircleIcon className="maqam-transpositions__play-circle-icon" onClick={() => playNoteFrequency(parseInt(descendingMaqamCellDetails[i + 1].frequency))} />
+                      </th>
+                    </React.Fragment>
+                  ))}
+                </tr>
+                <tr>
+                  <td className="maqam-transpositions__spacer" colSpan={2 + (ascendingMaqamCellDetails.length - 1) * 2} />
                 </tr>
               </React.Fragment>
             );

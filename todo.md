@@ -74,6 +74,13 @@ https://github.com/xenharmonic-devs/scale-workshop/blob/main/src/synth.ts
 
 Currently the pattern playback only continues ascending until the last note of the pattern is the octave. Instead it should continue until the first note of the pattern is the octave (VIII), and then start its descent. When descending, it should end when the first note of the pattern reaches the Root (I). BUT this only works for patterns that START from the Root (I). This means we need to detect certain info about the pattern and then implement the behaviour of how to deal with reaching the octave accordingly.
 
+- Please check Ajnas and Maqamat transposition row numbers, the sequence gets chopped i.e. 1, 2, 4, 5, 6
+
+- For all the buttons that play a pattern, on click change the play symbol to a stop symbol and make the button stop the playback if clicked a second time
+
+- Add extra weights to the fonts used in the site
+
+- MIDI Inputs and Outputs not working 
 
 # ROADMAP FEATURES
 - Compare Ajnas/Maqamat from different tuning systems: How to implement?
