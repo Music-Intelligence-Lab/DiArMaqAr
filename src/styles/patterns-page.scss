@@ -1,0 +1,156 @@
+.patterns-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: $page-height;
+  overflow: auto;
+  color: $text;
+  padding: 20px 10px;
+
+  &::-webkit-scrollbar {
+    width: 12px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: $primary;
+    cursor: pointer;
+  }
+  &::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 0 25px 0 0;
+    cursor: pointer;
+  }
+
+  &__header {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+  }
+
+  &__group {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    width: 100%;
+    max-width: 600px;
+  }
+
+  &__input-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__label {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+
+  &__input,
+  &__select {
+    padding: 0.4rem;
+    font-size: 0.9rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  &__notes-section {
+    margin-top: 1rem;
+    width: 100%;
+    padding: 0 100px;
+  }
+
+  &__notes-header {
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    gap: 10px;
+  }
+
+  &__add-note {
+    padding: 0.4rem 0.8rem;
+    background-color: $secondary;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+
+  &__notes {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  &__note {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  &__note-scaleDegree,
+  &__note-duration {
+    padding: 0.4rem;
+    font-size: 0.9rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  &__delete-note {
+    padding: 0.4rem 0.8rem;
+    background-color: $delete;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+
+  &__buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  &__save-button,
+  &__delete-button {
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: white;
+    transition: filter 0.2s ease;
+
+    &:hover {
+      filter: brightness(0.9);
+    }
+  }
+
+  &__save-button {
+    background-color: $secondary;
+  }
+
+  &__delete-button {
+    background-color: $delete;
+  }
+}

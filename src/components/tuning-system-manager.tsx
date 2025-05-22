@@ -14,7 +14,7 @@ import {
   TransliteratedNoteNameOctaveOne,
   TransliteratedNoteNameOctaveTwo,
 } from "@/models/NoteName";
-import { v4 as uuidv4 } from "uuid";
+import { nanoid } from "nanoid";
 
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { getEnglishNoteName, abjadNames } from "@/functions/noteNameMappings";
@@ -47,17 +47,22 @@ export default function TuningSystemManager() {
 
   const [sortOption, setSortOption] = useState<"id" | "creatorEnglish" | "year">("year");
 
-  const [openedOctaveRows, setOpenedOctaveRows] = useState<{0: boolean, 1: boolean, 2: boolean, 3: boolean}>({0: false, 1: true, 2: true, 3: false});
+  const [openedOctaveRows, setOpenedOctaveRows] = useState<{ 0: boolean; 1: boolean; 2: boolean; 3: boolean }>({
+    0: false,
+    1: true,
+    2: true,
+    3: false,
+  });
 
   // MARK: States
   // Local state that mirrors the selected or “new” system’s fields
-  const [id, setId] = useState(uuidv4());
+  const [id, setId] = useState(nanoid());
   const [titleEnglish, setTitleEnglish] = useState("");
   const [titleArabic, setTitleArabic] = useState("");
   const [year, setYear] = useState("");
   const [sourceEnglish, setSourceEnglish] = useState("");
   const [sourceArabic, setSourceArabic] = useState("");
-  const [sourceId, setSourceId] = useState(uuidv4());
+  const [sourceId, setSourceId] = useState(nanoid());
   const [page, setPage] = useState("");
   const [creatorEnglish, setCreatorEnglish] = useState("");
   const [creatorArabic, setCreatorArabic] = useState("");
@@ -157,17 +162,17 @@ export default function TuningSystemManager() {
 
   useEffect(() => {
     if (selectedCells.length === 0) {
-      setOpenedOctaveRows({0: false, 1: true, 2: true, 3: false})
+      setOpenedOctaveRows({ 0: false, 1: true, 2: true, 3: false });
     } else {
-      const rows = {0: false, 1: false, 2: false, 3: false}
+      const rows = { 0: false, 1: false, 2: false, 3: false };
       for (const selectedCell of selectedCells) {
         if (rows[selectedCell.octave as 0 | 1 | 2 | 3] === false) {
-          rows[selectedCell.octave as 0 | 1 | 2 |3] = true
+          rows[selectedCell.octave as 0 | 1 | 2 | 3] = true;
         }
       }
-      setOpenedOctaveRows(rows)
+      setOpenedOctaveRows(rows);
     }
-  }, [selectedCells])
+  }, [selectedCells]);
 
   // Sort the tuning systems according to sortOption
   // so our dropdown is neatly sorted:
@@ -192,7 +197,7 @@ export default function TuningSystemManager() {
 
   // Clears the form for creating a new TuningSystem:
   const resetFormForNewSystem = () => {
-    setId(uuidv4());
+    setId(nanoid());
     setTitleEnglish("");
     setTitleArabic("");
     setYear("");
@@ -244,7 +249,7 @@ export default function TuningSystemManager() {
   const handleSourceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
     setSourceId(value);
-  }
+  };
 
   // Handle creating or updating a system:
   const handleSave = (event: FormEvent) => {
@@ -934,16 +939,11 @@ export default function TuningSystemManager() {
               <label className="tuning-system-manager__label" htmlFor="tuningSystemSelect">
                 Select Source:
               </label>
-              <select
-                className="tuning-system-manager__select"
-                id="tuningSystemSelect"
-                onChange={handleSourceChange}
-                value={sourceId}
-              >
+              <select className="tuning-system-manager__select" id="tuningSystemSelect" onChange={handleSourceChange} value={sourceId}>
                 <option value="">-- No Source Selected --</option>
                 {sources.map((source) => (
                   <option key={source.getId()} value={source.getId()}>
-                     {`${source.getTitleEnglish()} (${source.getSourceType()})`}
+                    {`${source.getTitleEnglish()} (${source.getSourceType()})`}
                   </option>
                 ))}
               </select>

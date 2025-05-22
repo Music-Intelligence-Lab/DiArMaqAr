@@ -6,6 +6,8 @@ import { usePathname } from "next/navigation";
 import HomeIcon from "@mui/icons-material/Home";
 import SettingsCard from "@/components/settings-cards";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
+import QueueMusicIcon from '@mui/icons-material/QueueMusic';
+
 export default function Navbar() {
   const [isSideBarOpen, setIsSideBarOpen] = useState(false);
 
@@ -48,6 +50,14 @@ export default function Navbar() {
             >
               <LibraryBooksIcon />
               Bibliography
+            </Link>
+            <Link
+              onClick={closeSidebar}
+              href="/patterns"
+              className={`navbar__side-bar-link ${currentPath === "patterns" ? "navbar__side-bar-link_active" : ""}`}
+            >
+              <QueueMusicIcon />
+              Patterns
             </Link>
           </div>
         </div>

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useAppContext } from "@/contexts/app-context";
 import Source, { Contributor } from "@/models/Source";
-import { v4 as uuidv4 } from "uuid";
+import { nanoid } from "nanoid";
 
 export default function BibliographyPage() {
   const { sources, setSources, updateAllSources } = useAppContext();
@@ -29,7 +29,7 @@ export default function BibliographyPage() {
 
   useEffect(() => {
     if (selectedSourceId === "new") {
-      setId(uuidv4());
+      setId(nanoid());
       setTitleEnglish("");
       setTitleArabic("");
       setSourceType("Book");
@@ -131,14 +131,12 @@ export default function BibliographyPage() {
       updateAllSources(updatedSources);
       setSelectedSourceId("new");
     }
-  }
+  };
 
   return (
     <div className="sources-page">
-      <summary className="sources-page__summary">
-        <h2 className="sources-page__header">Bibliography</h2>
-        {selectedSourceId !== "new" && <span className="sources-page__selected">{`: ${selectedSourceId} ${titleEnglish}`}</span>}
-      </summary>
+      <h2 className="sources-page__header">Bibliography</h2>
+      {selectedSourceId !== "new" && <span className="sources-page__selected">{`: ${selectedSourceId} ${titleEnglish}`}</span>}
 
       <div className="sources-page__group">
         <div className="sources-page__input-container">
@@ -339,13 +337,7 @@ export default function BibliographyPage() {
             <label className="sources-page__label" htmlFor="urlField">
               URL
             </label>
-            <input
-              id="urlField"
-              className="sources-page__input"
-              type="text"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-            />
+            <input id="urlField" className="sources-page__input" type="text" value={url} onChange={(e) => setUrl(e.target.value)} />
           </div>
           <div className="sources-page__input-container">
             <label className="sources-page__label" htmlFor="dateAccessedField">
