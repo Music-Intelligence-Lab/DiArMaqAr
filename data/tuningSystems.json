@@ -167,7 +167,8 @@
       ""
     ],
     "stringLength": 3600,
-    "referenceFrequency": 220
+    "defaultReferenceFrequency": 220,
+    "referenceFrequencies": {}
   },
   {
     "id": "f7f2de93-1368-44ca-817a-e72cb07cf694",
@@ -277,7 +278,8 @@
       ""
     ],
     "stringLength": 1000,
-    "referenceFrequency": 220
+    "defaultReferenceFrequency": 220,
+    "referenceFrequencies": {}
   },
   {
     "id": "ac9f7121-727f-4d58-bc76-e1b196a87101",
@@ -361,7 +363,8 @@
       ""
     ],
     "stringLength": 1000,
-    "referenceFrequency": 220
+    "defaultReferenceFrequency": 220,
+    "referenceFrequencies": {}
   },
   {
     "id": "1d4d2389-98ca-4d08-a58e-13153a12017b",
@@ -505,7 +508,8 @@
       ""
     ],
     "stringLength": 10000,
-    "referenceFrequency": 195.998
+    "defaultReferenceFrequency": 195.998,
+    "referenceFrequencies": {}
   },
   {
     "id": "c93f1a2f-067f-4d11-92d2-1858e4eee1ba",
@@ -614,7 +618,8 @@
       ""
     ],
     "stringLength": 10000,
-    "referenceFrequency": 195.998
+    "defaultReferenceFrequency": 195.998,
+    "referenceFrequencies": {}
   },
   {
     "id": "62c3f1e0-152c-4983-8b4f-ce3526860fb3",
@@ -715,7 +720,8 @@
     ],
     "abjadNames": [],
     "stringLength": 10000,
-    "referenceFrequency": 195.998
+    "defaultReferenceFrequency": 195.998,
+    "referenceFrequencies": {}
   },
   {
     "id": "c5c3127a-1b69-49e7-9dba-50a54dbe6761",
@@ -810,7 +816,8 @@
     ],
     "abjadNames": [],
     "stringLength": 10000,
-    "referenceFrequency": 195.998
+    "defaultReferenceFrequency": 195.998,
+    "referenceFrequencies": {}
   },
   {
     "id": "6fa5f03c-4839-4e8f-93fd-4a1666d7bafa",
@@ -905,7 +912,8 @@
     ],
     "abjadNames": [],
     "stringLength": 1000,
-    "referenceFrequency": 195.998
+    "defaultReferenceFrequency": 195.998,
+    "referenceFrequencies": {}
   },
   {
     "id": "09085f50-3aa3-492b-b707-fe90527e93f6",
@@ -1050,7 +1058,8 @@
       ""
     ],
     "stringLength": 1000,
-    "referenceFrequency": 220
+    "defaultReferenceFrequency": 220,
+    "referenceFrequencies": {}
   },
   {
     "id": "83b5fcff-23b0-4d72-9fff-373433fdf6d2",
@@ -1244,7 +1253,8 @@
       ""
     ],
     "stringLength": 1000,
-    "referenceFrequency": 220
+    "defaultReferenceFrequency": 220,
+    "referenceFrequencies": {}
   },
   {
     "id": "67b248d2-4ac2-4153-876e-ad39c0714cf3",
@@ -1438,7 +1448,8 @@
       ""
     ],
     "stringLength": 1000,
-    "referenceFrequency": 195.998
+    "defaultReferenceFrequency": 195.998,
+    "referenceFrequencies": {}
   },
   {
     "id": "1fdd26af-0909-4519-8577-901051a2379d",
@@ -1596,7 +1607,12 @@
       ""
     ],
     "stringLength": 1000,
-    "referenceFrequency": 220
+    "defaultReferenceFrequency": 220,
+    "referenceFrequencies": {
+      "yegāh": 220,
+      "ʿushayrān": 247.5,
+      "shūrī": 240
+    }
   },
   {
     "id": "ef4162e8-bf11-4750-806c-49caab370bc8",
@@ -1741,7 +1757,8 @@
       "يز"
     ],
     "stringLength": 1000,
-    "referenceFrequency": 195.998
+    "defaultReferenceFrequency": 195.998,
+    "referenceFrequencies": {}
   },
   {
     "id": "dfb14864-970f-4e43-8e1b-173ef762a0fb",
@@ -1810,7 +1827,8 @@
       "ط"
     ],
     "stringLength": 1000,
-    "referenceFrequency": 220
+    "defaultReferenceFrequency": 220,
+    "referenceFrequencies": {}
   },
   {
     "id": "c329d42f-4241-4175-b965-3a7c42f17efe",
@@ -1954,7 +1972,8 @@
       ""
     ],
     "stringLength": 10000,
-    "referenceFrequency": 261.6256
+    "defaultReferenceFrequency": 261.6256,
+    "referenceFrequencies": {}
   },
   {
     "id": "e2f4d6f2-a6f8-4e9d-aca1-0a9097b95f87",
@@ -2098,7 +2117,8 @@
       ""
     ],
     "stringLength": 1000,
-    "referenceFrequency": 195.998
+    "defaultReferenceFrequency": 195.998,
+    "referenceFrequencies": {}
   },
   {
     "id": "15fb08df-51a0-4237-939f-19be07afa967",
@@ -2184,7 +2204,8 @@
       "ي"
     ],
     "stringLength": 1000,
-    "referenceFrequency": 220
+    "defaultReferenceFrequency": 220,
+    "referenceFrequencies": {}
   },
   {
     "id": "3ce2b712-d483-470a-a439-6656e2493f37",
@@ -2328,7 +2349,8 @@
       ""
     ],
     "stringLength": 0,
-    "referenceFrequency": 220
+    "defaultReferenceFrequency": 220,
+    "referenceFrequencies": {}
   },
   {
     "id": "74d71da5-b87f-4595-b04d-c681b8c9fb9b",
@@ -2452,7 +2474,8 @@
       ""
     ],
     "stringLength": 1000,
-    "referenceFrequency": 220
+    "defaultReferenceFrequency": 220,
+    "referenceFrequencies": {}
   },
   {
     "id": "c951c714-176d-4c4f-a9d4-4c24c28c0dee",
@@ -2563,7 +2586,8 @@
       "لد"
     ],
     "stringLength": 1000,
-    "referenceFrequency": 220
+    "defaultReferenceFrequency": 220,
+    "referenceFrequencies": {}
   },
   {
     "id": "187d6208-6094-4ecc-930d-14318d9131f3",
@@ -2674,6 +2698,7 @@
       ""
     ],
     "stringLength": 1000,
-    "referenceFrequency": 220
+    "defaultReferenceFrequency": 220,
+    "referenceFrequencies": {}
   }
 ]

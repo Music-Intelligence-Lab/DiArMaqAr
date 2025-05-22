@@ -65,6 +65,8 @@ interface AppContextInterface {
   setNoteNames: (noteNames: TransliteratedNoteName[][]) => void;
   getFirstNoteName: () => string;
   handleStartNoteNameChange: (startingNoteName: string, givenNoteNames?: TransliteratedNoteName[][], givenNumberOfPitchClasses?: number) => void;
+  referenceFrequencies: { [noteName: string]: number };
+  setReferenceFrequencies: React.Dispatch<React.SetStateAction<{ [noteName: string]: number }>>;
   playNoteFrequency: (frequency: number, duration?: number) => void;
   envelopeParams: EnvelopeParams;
   setEnvelopeParams: React.Dispatch<React.SetStateAction<EnvelopeParams>>;
@@ -138,6 +140,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   const [selectedTuningSystem, setSelectedTuningSystem] = useState<TuningSystem | null>(null);
   const [pitchClasses, setPitchClasses] = useState("");
   const [noteNames, setNoteNames] = useState<TransliteratedNoteName[][]>([]);
+  const [referenceFrequencies, setReferenceFrequencies] = useState<{ [noteName: string]: number }>({});
   const [centsTolerance, setCentsTolerance] = useState(5);
 
   const [envelopeParams, setEnvelopeParams] = useState<EnvelopeParams>({
@@ -225,7 +228,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         data.noteNames as TransliteratedNoteName[][],
         data.abjadNames,
         Number(data.stringLength),
-        Number(data.referenceFrequency)
+        data.referenceFrequencies as { [noteName: string]: number },
+        Number(data.defaultReferenceFrequency)
       );
     });
 
@@ -636,7 +640,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
             noteNames: ts.getSetsOfNoteNames(),
             abjadNames: ts.getAbjadNames(),
             stringLength: ts.getStringLength(),
-            referenceFrequency: ts.getReferenceFrequency(),
+            defaultReferenceFrequency: ts.getDefaultReferenceFrequency(),
+            referenceFrequencies: ts.getReferenceFrequencies(),
           }))
         ),
       });
@@ -751,8 +756,10 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     const pitchType = detectPitchClassType(pitchArr);
     if (pitchType === "unknown") return emptyDetails;
 
+    const actualReferenceFrequency = referenceFrequencies[getFirstNoteName()] || selectedTuningSystem.getDefaultReferenceFrequency();
+
     const shiftedPc = shiftPitchClass(basePc, pitchType, cell.octave as 0 | 1 | 2 | 3);
-    const conv = convertPitchClass(shiftedPc, pitchType, selectedTuningSystem.getStringLength(), selectedTuningSystem.getReferenceFrequency());
+    const conv = convertPitchClass(shiftedPc, pitchType, selectedTuningSystem.getStringLength(), actualReferenceFrequency);//todo change this
 
     if (cell.index < 0 || cell.index >= selectedIndices.length) return emptyDetails;
     const combinedIndex = selectedIndices[cell.index];
@@ -831,6 +838,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   };
 
   function getFirstNoteName() {
+    if (selectedIndices.length === 0) return "none";
     const idx = selectedIndices[0];
     if (idx < 0) return "none";
     return octaveOneNoteNames[idx];
@@ -1028,6 +1036,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         setNoteNames,
         getFirstNoteName,
         handleStartNoteNameChange,
+        referenceFrequencies,
+        setReferenceFrequencies,
         playNoteFrequency,
         envelopeParams,
         setEnvelopeParams,

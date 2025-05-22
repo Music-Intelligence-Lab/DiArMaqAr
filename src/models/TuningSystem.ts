@@ -15,9 +15,10 @@ export default class TuningSystem {
   private commentsArabic: string;
   private pitchClasses: string[];
   private setOfTransliteratedNoteNames: TransliteratedNoteName[][];
+  private defaultReferenceFrequency: number;
+  private referenceFrequencies: {[noteName: string]: number};
   private abjadNames: string[];
   private stringLength: number;
-  private referenceFrequency: number;
 
   constructor(
     id: string,
@@ -36,7 +37,8 @@ export default class TuningSystem {
     setOfTransliteratedNoteNames: TransliteratedNoteName[][],
     abjadNames: string[],
     stringLength: number,
-    referenceFrequency: number
+    referenceFrequencies: {[noteName: string]: number},
+    defaultReferenceFrequency: number
   ) {
     this.id = id;
     this.titleEnglish = titleEnglish;
@@ -54,7 +56,8 @@ export default class TuningSystem {
     this.setOfTransliteratedNoteNames = setOfTransliteratedNoteNames;
     this.abjadNames = abjadNames;
     this.stringLength = stringLength;
-    this.referenceFrequency = referenceFrequency;
+    this.referenceFrequencies = referenceFrequencies;
+    this.defaultReferenceFrequency = defaultReferenceFrequency;
   }
 
   getId(): string {
@@ -119,7 +122,36 @@ export default class TuningSystem {
     return this.stringLength;
   }
 
-  getReferenceFrequency(): number {
-    return this.referenceFrequency;
+  getReferenceFrequencies(): {[noteName: string]: number} {
+    return this.referenceFrequencies;
+  }
+
+  getDefaultReferenceFrequency(): number {
+    return this.defaultReferenceFrequency;
+  }
+
+  copyWithNewSetOfTransliteratedNoteNames(
+    newSetOfTransliteratedNoteNames: TransliteratedNoteName[][]
+  ): TuningSystem {
+    return new TuningSystem(
+      this.id,
+      this.titleEnglish,
+      this.titleArabic,
+      this.year,
+      this.sourceEnglish,
+      this.sourceArabic,
+      this.sourceId,
+      this.page,
+      this.creatorEnglish,
+      this.creatorArabic,
+      this.commentsEnglish,
+      this.commentsArabic,
+      this.pitchClasses,
+      newSetOfTransliteratedNoteNames,
+      this.abjadNames,
+      this.stringLength,
+      this.referenceFrequencies,
+      this.defaultReferenceFrequency
+    );
   }
 }

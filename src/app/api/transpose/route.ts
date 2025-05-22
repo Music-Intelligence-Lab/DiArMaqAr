@@ -43,7 +43,8 @@ export async function POST(request: Request) {
       noteNames: string[][];
       abjadNames: string[];
       stringLength: number;
-      referenceFrequency: number;
+      referenceFrequencies: {[noteName: string]: number};
+      defaultReferenceFrequency: number;
     }[] = JSON.parse(tsRaw);
 
     const maqamatData: {
@@ -91,13 +92,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Invalid pitch class type" }, { status: 400 });
     }
 
+    const actualReferenceFrequency = selectedTuningSystem.referenceFrequencies[noteNames[0]] ?? selectedTuningSystem.defaultReferenceFrequency;
+
     const allCellDetails: CellDetails[] = [];
 
     for (let octave = 0; octave < 4; octave++) {
       for (let index = 0; index < selectedTuningSystem.pitchClasses.length; index++) {
         const pitchClass = selectedTuningSystem.pitchClasses[index];
         const baseNoteName = noteNames[index];
-        const conversions = convertPitchClass(pitchClass, pitchClassType, selectedTuningSystem.stringLength, selectedTuningSystem.referenceFrequency);
+        const conversions = convertPitchClass(pitchClass, pitchClassType, selectedTuningSystem.stringLength, actualReferenceFrequency);
 
         if (!conversions) {
           return NextResponse.json({ error: "Invalid pitch class conversion" }, { status: 400 });
@@ -107,7 +110,7 @@ export async function POST(request: Request) {
         const stringLength = shiftPitchClass(conversions.stringLength, "stringLength", octave as 0 | 1 | 2 | 3);
         const cents = shiftPitchClass(conversions.cents, "cents", octave as 0 | 1 | 2 | 3);
         const decimal = shiftPitchClass(conversions.decimal, "decimal", octave as 0 | 1 | 2 | 3);
-        const frequency = convertPitchClass(cents, "cents", selectedTuningSystem.stringLength, selectedTuningSystem.referenceFrequency)?.frequency;
+        const frequency = convertPitchClass(cents, "cents", selectedTuningSystem.stringLength, actualReferenceFrequency)?.frequency;
 
         if (!frequency) {
           return NextResponse.json({ error: "Invalid frequency conversion" }, { status: 400 });
