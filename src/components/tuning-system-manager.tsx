@@ -223,7 +223,7 @@ export default function TuningSystemManager() {
 
     const firstSetOfNotes = loadedNames[0] ?? [];
 
-    mapIndices(firstSetOfNotes);
+    mapIndices(firstSetOfNotes, 0, false);
   };
 
   // When user changes the dropdown (overall TuningSystem):

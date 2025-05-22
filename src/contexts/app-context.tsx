@@ -75,7 +75,7 @@ interface AppContextInterface {
   setSelectedIndices: React.Dispatch<React.SetStateAction<number[]>>;
   originalIndices: number[];
   setOriginalIndices: React.Dispatch<React.SetStateAction<number[]>>;
-  mapIndices: (notesToMap: TransliteratedNoteName[]) => void;
+  mapIndices: (notesToMap: TransliteratedNoteName[], givenNumberOfPitchClasses: number, setOriginal: boolean) => void;
   initialMappingDone: boolean;
   setInitialMappingDone: React.Dispatch<React.SetStateAction<boolean>>;
   getSelectedCellDetails: (cell: Cell) => CellDetails;
@@ -836,7 +836,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     return octaveOneNoteNames[idx];
   }
 
-  function mapIndices(notesToMap: TransliteratedNoteName[], givenNumberOfPitchClasses: number = 0) {
+  function mapIndices(notesToMap: TransliteratedNoteName[], givenNumberOfPitchClasses: number = 0, setOriginal: boolean = true) {
     const numberOfPitchClasses = givenNumberOfPitchClasses || pitchClassesArr.length || selectedTuningSystem?.getPitchClasses().length || 0;
 
     const O1_LEN = octaveOneNoteNames.length;
@@ -859,7 +859,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     }
 
     setSelectedIndices(mappedIndices);
-    setOriginalIndices([...mappedIndices]);
+    if (setOriginal) setOriginalIndices([...mappedIndices]);
     return mappedIndices;
   }
 
