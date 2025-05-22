@@ -17,9 +17,9 @@
 //    background-color: $tertiary;
     color: white;
     padding: 0px ; 
-    margin: 0px;
-    vertical-align: middle;
-      font-size: 18px;
+    margin: 0px 0px 5px 40%;    
+    font-size: 16px;
+    display: block;
   }
    
 
@@ -29,11 +29,13 @@
     padding: 5px;
     border-radius: 3px;
     cursor: pointer;
-    margin-left: 0px;
-    margin-right: 0px;
-    vertical-align: middle;
+    margin: 0px;
+    font-family: inherit;
+    font-size: 12px;
+    width: 100px;
+    height: 50px;
     
-    &_unique {
+  &_unique {
       background-color: $secondary;
     }
   }
@@ -42,6 +44,7 @@
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 50px;
+    font-size: 12px;
 
     th {
             vertical-align: middle;
@@ -73,7 +76,7 @@
   }
 
   &__transposition-title {
-    font-size: 20px;  
+    font-size: 18px;  
     padding-right: 20px;
   }
 

@@ -70,7 +70,7 @@ Year: 1946
 
 - Transpositions table: we need a way to differentiate which transpositions are from which octave. Ideally with colour/styling. Please add something to code and then we can play with some ideas.
 
-- Add these synth types to our "waveform" select. All data is opensource we will just need to credit:
+- Add these synth types to our "waveform" select. All data is opensource we will just need to credit them somewhere:
 https://github.com/xenharmonic-devs/scale-workshop/blob/main/src/synth.ts
 
 
