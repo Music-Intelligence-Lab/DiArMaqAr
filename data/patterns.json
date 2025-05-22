@@ -40,5 +40,31 @@
         "noteDuration": "8n"
       }
     ]
+  },
+  {
+    "id": "NbC43ZMhRaZZ8tZ5kbA9G",
+    "name": "maqam p1",
+    "notes": [
+      {
+        "scaleDegree": "I",
+        "noteDuration": "8n"
+      },
+      {
+        "scaleDegree": "II",
+        "noteDuration": "8n"
+      },
+      {
+        "scaleDegree": "III",
+        "noteDuration": "8n"
+      },
+      {
+        "scaleDegree": "II",
+        "noteDuration": "8n"
+      },
+      {
+        "scaleDegree": "I",
+        "noteDuration": "4n"
+      }
+    ]
   }
 ]
