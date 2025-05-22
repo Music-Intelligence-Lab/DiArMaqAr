@@ -115,11 +115,11 @@
       },
       {
         "scaleDegree": "VI",
-        "noteDuration": "32t"
+        "noteDuration": "16n"
       },
       {
         "scaleDegree": "II",
-        "noteDuration": "32t"
+        "noteDuration": "16n"
       },
       {
         "scaleDegree": "VII",
@@ -127,7 +127,7 @@
       },
       {
         "scaleDegree": "VIII",
-        "noteDuration": "8d"
+        "noteDuration": "16n"
       }
     ]
   }
