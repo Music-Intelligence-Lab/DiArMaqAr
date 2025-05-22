@@ -13,53 +13,48 @@
     border: solid 1px $grey;
   }
 
-&__play-circle-icon.MuiSvgIcon-root {
-//    background-color: $tertiary;
+  &__play-circle-icon.MuiSvgIcon-root {
+    //    background-color: $tertiary;
     color: white;
-    padding: 0px ; 
-    margin: 0px 0px 5px 40%;    
-    font-size: 16px;
-    display: block;
+    padding: 0px;
+    margin: 0px;
+    font-size: 24px;
+    cursor: pointer;
   }
-   
+
 
   &__button {
     background-color: $primary;
     color: white;
-    padding: 5px;
+    padding: 0px;
     border-radius: 3px;
     cursor: pointer;
-    margin: 0px;
+    margin-right: 10px;
     font-family: inherit;
     font-size: 12px;
-    width: 100px;
-    height: 50px;
-    
-  &_unique {
-      background-color: $secondary;
-    }
+    width: 180px;
+    height: 40px;
+    vertical-align: middle;
   }
 
   &__table {
     width: 100%;
     border-collapse: collapse;
+    table-layout:fixed;
     margin-bottom: 50px;
     font-size: 12px;
 
     th {
-            vertical-align: middle;
+      vertical-align: middle;
       margin-bottom: 500px;
       text-align: left;
       padding: 10px;
-          border: solid 1px $grey;
-          
+      border: solid 1px $grey;
+    }
 
-    } 
-  
     td {
       vertical-align: middle;
-      padding: 10px ;
-          border: solid 1px $grey;
+      border: solid 1px $grey;
 
     }
 
@@ -70,47 +65,72 @@
     tbody tr:nth-child(odd) {
       background-color: transparent;
     }
+
     tbody tr:nth-child(even) {
       background-color: transparent;
     }
   }
 
   &__transposition-title {
-    font-size: 18px;  
+    font-size: 18px;
+    padding-left: 10px;
     padding-right: 20px;
   }
 
   &__transposition-number {
-    
-    width: 30px;
-    font-size: 20px;  
+    width: 34px !important;
+    font-size: 20px;
     padding: 0px 0px 0px 0px;
     margin: 0px 0px 0px 0px;
     text-align: center;
+    background-color: black;
   }
 
 
   &__header {
     text-align: left;
-    background-color: white;
+    background-color: black;
   }
 
-    &__header-cell {
+  &__header-cell {
     text-align: left;
     background-color: transparent;
+
+    &_unique {
+      background-color: $secondary;
+    }
+
+    &_scale-degrees {
+      background-color: $medium-grey;
+    }
+
+    &_scale-degrees-number {
+      background-color: $medium-grey;
+      font-weight: bold;
+    }
   }
+
+  &__asc-desc-column {
+    font-size: 14px;
+    font-weight: bold;
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+    text-align: center;
+
+  }
+
 
   &__row-header {
     font-weight: bold;
     background-color: $medium-grey;
-      text-transform: capitalize;
-
+    text-transform: capitalize;
   }
 
   &__maqam-name-row {
     font-weight: bold;
     background-color: black;
     color: white;
+    padding: 15px;
   }
 
   &__input {
