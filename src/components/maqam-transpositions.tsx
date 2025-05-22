@@ -132,7 +132,8 @@ export default function MaqamTranspositions() {
                 className="maqam-transpositions__button"
                 onClick={() => playSequence(ascendingMaqamCellDetails.map((cell) => parseInt(cell.frequency)))}
               >
-                Ascending <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
+                <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
+                Ascending 
               </button>
             </th>
             <th className="maqam-transpositions__header-cell">
@@ -143,8 +144,9 @@ export default function MaqamTranspositions() {
                 }
                 onClick={() => playNoteFrequency(parseInt(ascendingMaqamCellDetails[0].frequency))}
               >
-                {ascendingMaqamCellDetails[0].noteName + ` (${getEnglishNoteName(ascendingMaqamCellDetails[0].noteName)})`}{" "}
                 <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
+                {ascendingMaqamCellDetails[0].noteName + ` (${getEnglishNoteName(ascendingMaqamCellDetails[0].noteName)})`}{" "}
+                
               </button>
             </th>
             {ascendingIntervalPattern.map((pat, i) => (
@@ -158,8 +160,8 @@ export default function MaqamTranspositions() {
                     }
                     onClick={() => playNoteFrequency(parseInt(ascendingMaqamCellDetails[i + 1].frequency))}
                   >
-                    {ascendingMaqamCellDetails[i + 1].noteName + ` (${getEnglishNoteName(ascendingMaqamCellDetails[i + 1].noteName)})`}{" "}
                     <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
+                    {ascendingMaqamCellDetails[i + 1].noteName + ` (${getEnglishNoteName(ascendingMaqamCellDetails[i + 1].noteName)})`}{" "}
                   </button>
                 </th>
               </React.Fragment>
@@ -213,7 +215,8 @@ export default function MaqamTranspositions() {
                 className="maqam-transpositions__button"
                 onClick={() => playSequence(descendingMaqamCellDetails.map((cell) => parseInt(cell.frequency)))}
               >
-                Descending <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
+                <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
+                Descending 
               </button>
             </th>
             <th className="maqam-transpositions__header-cell">
@@ -224,8 +227,8 @@ export default function MaqamTranspositions() {
                 }
                 onClick={() => playNoteFrequency(parseInt(descendingMaqamCellDetails[0].frequency))}
               >
-                {descendingMaqamCellDetails[0].noteName + ` (${getEnglishNoteName(descendingMaqamCellDetails[0].noteName)})`}{" "}
                 <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
+                {descendingMaqamCellDetails[0].noteName + ` (${getEnglishNoteName(descendingMaqamCellDetails[0].noteName)})`}{" "}
               </button>
             </th>
             {descendingIntervalPattern.map((pat, i) => (
@@ -239,8 +242,8 @@ export default function MaqamTranspositions() {
                     }
                     onClick={() => playNoteFrequency(parseInt(descendingMaqamCellDetails[i + 1].frequency))}
                   >
-                    {descendingMaqamCellDetails[i + 1].noteName + ` (${getEnglishNoteName(descendingMaqamCellDetails[i + 1].noteName)})`}{" "}
                     <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
+                    {descendingMaqamCellDetails[i + 1].noteName + ` (${getEnglishNoteName(descendingMaqamCellDetails[i + 1].noteName)})`}{" "}
                   </button>
                 </th>
               </React.Fragment>
@@ -340,7 +343,8 @@ export default function MaqamTranspositions() {
                         playSequence(allFreq);
                       }}
                     >
-                      <PlayCircleIcon className="maqam-transpositions__play-circle-icon" /> Ascending {">"} Descending
+                      Ascending {">"} Descending
+                      <PlayCircleIcon className="maqam-transpositions__play-circle-icon" /> 
                     </button>
                     <button
                       className="maqam-transpositions__button"
@@ -388,7 +392,8 @@ export default function MaqamTranspositions() {
                       className="maqam-transpositions__button"
                       onClick={() => playSequence(ascendingDetails.map((cell) => parseInt(cell.frequency)))}
                     >
-                      Ascending <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
+                      <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
+                      Ascending
                     </button>
                   </td>
                   <td className="maqam-transpositions__cell">
@@ -401,8 +406,8 @@ export default function MaqamTranspositions() {
                       }
                       onClick={() => playNoteFrequency(parseInt(ascendingDetails[0].frequency))}
                     >
-                      {ascendingDetails[0].noteName + ` (${getEnglishNoteName(ascendingDetails[0].noteName)})`}{" "}
                       <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
+                      {ascendingDetails[0].noteName + ` (${getEnglishNoteName(ascendingDetails[0].noteName)})`}{" "}
                     </button>
                   </td>
                   {ascendingDetails.slice(1).map((d, j) => (
@@ -415,8 +420,9 @@ export default function MaqamTranspositions() {
                             (!descendingDetails.map((cell) => cell.noteName).includes(d.noteName) ? "maqam-transpositions__button_unique" : "")
                           }
                           onClick={() => playNoteFrequency(parseInt(d.frequency))}
-                        >
-                          {d.noteName + ` (${getEnglishNoteName(d.noteName)})`} <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
+>
+                          <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
+                          {d.noteName + ` (${getEnglishNoteName(d.noteName)})`} 
                         </button>
                       </td>
                     </React.Fragment>
@@ -458,8 +464,9 @@ export default function MaqamTranspositions() {
                     <button
                       className="maqam-transpositions__button"
                       onClick={() => playSequence(descendingDetails.map((cell) => parseInt(cell.frequency)))}
-                    >
-                      Descending <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
+                    >  
+                    <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
+                    Descending
                     </button>
                   </td>
                   <td className="maqam-transpositions__cell">
@@ -472,8 +479,8 @@ export default function MaqamTranspositions() {
                       }
                       onClick={() => playNoteFrequency(parseInt(descendingDetails[0].frequency))}
                     >
-                      {descendingDetails[0].noteName + ` (${getEnglishNoteName(descendingDetails[0].noteName)})`}{" "}
                       <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
+                      {descendingDetails[0].noteName + ` (${getEnglishNoteName(descendingDetails[0].noteName)})`}{" "}
                     </button>
                   </td>
                   {descendingDetails.slice(1).map((d, j) => (
@@ -487,7 +494,8 @@ export default function MaqamTranspositions() {
                           }
                           onClick={() => playNoteFrequency(parseInt(d.frequency))}
                         >
-                          {d.noteName + ` (${getEnglishNoteName(d.noteName)})`} <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
+                          <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
+                          {d.noteName + ` (${getEnglishNoteName(d.noteName)})`} 
                         </button>
                       </td>
                     </React.Fragment>
