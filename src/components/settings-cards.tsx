@@ -28,6 +28,9 @@ const SettingsCard = () => {
     setOutputMode,
     pitchBendRange,
     setPitchBendRange,
+    patterns,
+    selectedPattern,
+    setSelectedPattern,
   } = useAppContext();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -66,7 +69,6 @@ const SettingsCard = () => {
 
       <div className={`settings-card ${isOpen ? "settings-card--open" : ""}`}>
         <div className="settings-card__content">
-
           <details className="settings-card__details">
             <summary className="settings-card__summary">Pattern</summary>
             <div className="settings-card__input-container">
@@ -82,6 +84,30 @@ const SettingsCard = () => {
                 min={20}
                 max={300}
               />
+            </div>
+            <div className="settings-card__input-container">
+              <label htmlFor="pattern-select" className="settings-card__label">
+                Pattern Select:
+              </label>
+              <select
+                id="pattern-select"
+                className="settings-card__select"
+                // use the Pattern’s id for the value
+                value={selectedPattern ? selectedPattern.getId() : ""}
+                onChange={(e) => {
+                  const id = e.target.value;
+                  // find the Pattern instance (or null if empty)
+                  const pat = patterns.find((p) => p.getId() === id) ?? null;
+                  setSelectedPattern(pat);
+                }}
+              >
+                <option value="">– none –</option>
+                {patterns.map((p) => (
+                  <option key={p.getId()} value={p.getId()}>
+                    {p.getName()}
+                  </option>
+                ))}
+              </select>
             </div>
           </details>
 
@@ -173,17 +199,13 @@ const SettingsCard = () => {
             <div className="settings-card__sound-mode">
               <button
                 onClick={() => setInputMode("tuningSystem")}
-                className={`settings-card__sound-mode-button ${
-                  inputMode === "tuningSystem" ? "settings-card__sound-mode-button_selected" : ""
-                }`}
+                className={`settings-card__sound-mode-button ${inputMode === "tuningSystem" ? "settings-card__sound-mode-button_selected" : ""}`}
               >
                 Tuning System
               </button>
               <button
                 onClick={() => setInputMode("selection")}
-                className={`settings-card__sound-mode-button ${
-                  inputMode === "selection" ? "settings-card__sound-mode-button_selected" : ""
-                }`}
+                className={`settings-card__sound-mode-button ${inputMode === "selection" ? "settings-card__sound-mode-button_selected" : ""}`}
               >
                 Selection
               </button>
@@ -220,9 +242,7 @@ const SettingsCard = () => {
               </button>
               <button
                 onClick={() => setOutputMode("waveform")}
-                className={`settings-card__sound-mode-button ${
-                  outputMode === "waveform" ? "settings-card__sound-mode-button_selected" : ""
-                }`}
+                className={`settings-card__sound-mode-button ${outputMode === "waveform" ? "settings-card__sound-mode-button_selected" : ""}`}
               >
                 Waveform
               </button>

@@ -6,7 +6,7 @@ import { CellDetails, useAppContext } from "@/contexts/app-context";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import computeRatio from "@/functions/computeRatio";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
-import { getIntervalPattern, getTranspositions, mergeTranspositions, Pattern } from "@/functions/transpose";
+import { getIntervalPattern, getTranspositions, mergeTranspositions, Interval } from "@/functions/transpose";
 
 export default function MaqamTranspositions() {
   const {
@@ -40,9 +40,9 @@ export default function MaqamTranspositions() {
   const valueType = ascendingMaqamCellDetails[0].originalValueType;
   const useRatio = valueType === "fraction" || valueType === "ratios";
 
-  const ascendingIntervalPattern: Pattern[] = getIntervalPattern(ascendingMaqamCellDetails, useRatio);
+  const ascendingIntervalPattern: Interval[] = getIntervalPattern(ascendingMaqamCellDetails, useRatio);
 
-  const descendingIntervalPattern: Pattern[] = getIntervalPattern(descendingMaqamCellDetails, useRatio);
+  const descendingIntervalPattern: Interval[] = getIntervalPattern(descendingMaqamCellDetails, useRatio);
 
   const ascendingSequences: CellDetails[][] = getTranspositions(allCellDetails, ascendingIntervalPattern, true, useRatio, centsTolerance);
 

@@ -6,7 +6,7 @@ import { CellDetails, useAppContext } from "@/contexts/app-context";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import computeRatio from "@/functions/computeRatio";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
-import { getIntervalPattern, getTranspositions, Pattern } from "@/functions/transpose";
+import { getIntervalPattern, getTranspositions, Interval } from "@/functions/transpose";
 
 export default function JinsTranspositions() {
   const {
@@ -36,7 +36,7 @@ export default function JinsTranspositions() {
   const valueType = jinsCellDetails[0].originalValueType;
   const useRatio = valueType === "fraction" || valueType === "ratios";
 
-  const intervalPattern: Pattern[] = getIntervalPattern(jinsCellDetails, useRatio);
+  const intervalPattern: Interval[] = getIntervalPattern(jinsCellDetails, useRatio);
 
   const sequences: CellDetails[][] = getTranspositions(allCellDetails, intervalPattern, true, useRatio, centsTolerance);
 

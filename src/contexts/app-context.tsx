@@ -5,6 +5,7 @@ import tuningSystemsData from "@/../data/tuningSystems.json";
 import ajnasData from "@/../data/ajnas.json";
 import maqamatData from "@/../data/maqamat.json";
 import sourcesData from "@/../data/sources.json";
+import patternsData from "@/../data/patterns.json";
 import TuningSystem from "@/models/TuningSystem";
 import Jins from "@/models/Jins";
 import TransliteratedNoteName, { TransliteratedNoteNameOctaveOne, TransliteratedNoteNameOctaveTwo } from "@/models/NoteName";
@@ -16,6 +17,8 @@ import getNoteNamesUsedInTuningSystem from "@/functions/getNoteNamesUsedInTuning
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import midiNumberToNoteName from "@/functions/midiToNoteNumber";
 import Source from "@/models/Source";
+import Pattern, { NoteDuration } from "@/models/Pattern";
+import romanToNumber from "@/functions/romanToNumber";
 
 interface EnvelopeParams {
   attack: number;
@@ -101,10 +104,10 @@ interface AppContextInterface {
   setDuration: React.Dispatch<React.SetStateAction<number>>;
   tempo: number;
   setTempo: React.Dispatch<React.SetStateAction<number>>;
-  playSequence: (frequencies: number[], noteDuration?: number) => void;
+  playSequence: (frequencies: number[]) => void;
   noteOn: (frequency: number) => void;
   noteOff: (frequency: number) => void;
-  handleUrlParams: (params: { tuningSystemId?: string; jinsId?: string; maqamId?: string; seirId?: string, firstNote?: string }) => void;
+  handleUrlParams: (params: { tuningSystemId?: string; jinsId?: string; maqamId?: string; seirId?: string; firstNote?: string }) => void;
   midiInputs: MidiPortInfo[];
   selectedMidiInputId: string | null;
   setSelectedMidiInputId: React.Dispatch<React.SetStateAction<string | null>>;
@@ -120,6 +123,11 @@ interface AppContextInterface {
   sources: Source[];
   setSources: React.Dispatch<React.SetStateAction<Source[]>>;
   updateAllSources: (sources: Source[]) => Promise<void>;
+  patterns: Pattern[];
+  setPatterns: React.Dispatch<React.SetStateAction<Pattern[]>>;
+  updateAllPatterns: (patterns: Pattern[]) => Promise<void>;
+  selectedPattern: Pattern | null;
+  setSelectedPattern: React.Dispatch<React.SetStateAction<Pattern | null>>;
 }
 
 const AppContext = createContext<AppContextInterface | null>(null);
@@ -158,7 +166,10 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   const [selectedMaqam, setSelectedMaqam] = useState<Maqam | null>(null);
   const [maqamSeirId, setMaqamSeirId] = useState<string>("");
 
-  const [sources, setSources] = useState<Source[]>([])
+  const [patterns, setPatterns] = useState<Pattern[]>([]);
+  const [selectedPattern, setSelectedPattern] = useState<Pattern | null>(null);
+
+  const [sources, setSources] = useState<Source[]>([]);
 
   const audioCtxRef = useRef<AudioContext | null>(null);
   const masterGainRef = useRef<GainNode | null>(null);
@@ -230,6 +241,19 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
     const loadedSources = sourcesData.map((data) => Source.fromJSON(data));
     setSources(loadedSources);
+
+    const loadedPatterns = patternsData.map(
+      (data) =>
+        new Pattern(
+          data.id,
+          data.name,
+          data.notes.map((note) => ({
+            scaleDegree: note.scaleDegree as string,
+            noteDuration: note.noteDuration as NoteDuration,
+          }))
+        )
+    );
+    setPatterns(loadedPatterns);
 
     setIsPageLoading(false);
   }, []);
@@ -311,7 +335,18 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         input.onmidimessage = null;
       }
     };
-  }, [selectedMidiInputId, midiInputs, selectedTuningSystem, selectedMaqam, selectedJins, pitchClasses, inputMode, outputMode, selectedMidiInputId, selectedMidiOutputId]);
+  }, [
+    selectedMidiInputId,
+    midiInputs,
+    selectedTuningSystem,
+    selectedMaqam,
+    selectedJins,
+    pitchClasses,
+    inputMode,
+    outputMode,
+    selectedMidiInputId,
+    selectedMidiOutputId,
+  ]);
 
   const handleMidiInput: NonNullable<MIDIInput["onmidimessage"]> = function (this: MIDIInput, ev: MIDIMessageEvent) {
     // only from our selected port
@@ -348,7 +383,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       const { note, alt } = midiNumberToNoteName(noteNumber);
 
       for (const cellDetails of selectedCellDetails) {
-        let convertedEnglishName = cellDetails.englishName
+        let convertedEnglishName = cellDetails.englishName;
         convertedEnglishName = convertedEnglishName[0].toUpperCase() + convertedEnglishName.slice(1);
         if (convertedEnglishName.includes("-")) convertedEnglishName = convertedEnglishName[0];
 
@@ -435,12 +470,61 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     oscillator.stop(releaseEnd);
   };
 
-  const playSequence = (frequencies: number[], noteDuration = duration) => {
-    frequencies.forEach((freq, i) => {
-      const delayMs = (60 / tempo) * i * 1000;
-      setTimeout(() => playNoteFrequency(freq, noteDuration), delayMs);
-    });
-  };
+  const playSequence = (frequencies: number[]) => {
+  const beatSec = 60 / tempo;
+
+  // fallback ascending if no pattern
+  if (!selectedPattern || !selectedPattern.getNotes().length) {
+    frequencies.forEach((freq, i) =>
+      setTimeout(() => playNoteFrequency(freq), i * beatSec * 1000)
+    );
+    return;
+  }
+
+  const patternNotes = selectedPattern.getNotes();
+  // highest degree (e.g. III -> 3)
+  const maxDegree = Math.max(
+    ...patternNotes.map((n) =>
+      n.scaleDegree === "0" ? 0 : romanToNumber(n.scaleDegree)
+    )
+  );
+
+  // if too few freqs, fallback ascending
+  if (frequencies.length < maxDegree) {
+    frequencies.forEach((freq, i) =>
+      setTimeout(() => playNoteFrequency(freq), i * beatSec * 1000)
+    );
+    return;
+  }
+
+  // sliding-window: for each start index, walk the pattern
+  let timeOffset = 0;
+  for (
+    let windowStart = 0;
+    windowStart <= frequencies.length - maxDegree;
+    windowStart++
+  ) {
+    for (const { scaleDegree, noteDuration } of patternNotes) {
+      // compute duration in seconds
+      const base = 4 / Number(noteDuration.replace(/\D/g, ""));
+      const mod = noteDuration.endsWith("d")
+        ? 1.5
+        : noteDuration.endsWith("t")
+        ? 2 / 3
+        : 1;
+      const durSec = base * mod * beatSec;
+
+      if (scaleDegree !== "0") {
+        const deg = romanToNumber(scaleDegree);
+        const freq = frequencies[windowStart + deg - 1];
+        setTimeout(() => playNoteFrequency(freq, durSec), timeOffset * 1000);
+      }
+
+      timeOffset += durSec;
+    }
+  }
+};
+
 
   function noteOn(frequency: number) {
     // 1) Mute
@@ -619,15 +703,28 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       const response = await fetch("/api/sources", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(
-          sources.map((source) => (source.convertToJSON()))
-        ),
+        body: JSON.stringify(sources.map((source) => source.convertToJSON())),
       });
       if (!response.ok) {
         throw new Error("Failed to save updated Sources on the server.");
       }
     } catch (error) {
       console.error("Error updating all Sources:", error);
+    }
+  };
+
+  const updateAllPatterns = async (patterns: Pattern[]) => {
+    try {
+      const response = await fetch("/api/patterns", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(patterns.map((pattern) => pattern.convertToJSON())),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to save updated Patterns on the server.");
+      }
+    } catch (error) {
+      console.error("Error updating all Patterns:", error);
     }
   };
 
@@ -854,7 +951,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     // when selecting, populate cells for asc or desc based on stored noteNames
     setSelectedMaqam(maqam);
     setSelectedJins(null);
-    const namesToSelect = maqam.getAscendingNoteNames()
+    const namesToSelect = maqam.getAscendingNoteNames();
 
     // translate names back into SelectedCell[] by matching against usedNoteNames
     const newCells: Cell[] = [];
@@ -905,9 +1002,9 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
             const foundMaqam = maqamat.find((m) => m.getId() === maqamId);
             if (foundMaqam && checkIfMaqamIsSelectable(foundMaqam, givenIndices)) {
               handleClickMaqam(foundMaqam, givenIndices);
-              console.log(seirId, "TEST")
+              console.log(seirId, "TEST");
               if (seirId) {
-                console.log("test")
+                console.log("test");
                 setMaqamSeirId(seirId);
               }
             }
@@ -989,6 +1086,11 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         sources,
         setSources,
         updateAllSources,
+        patterns,
+        setPatterns,
+        updateAllPatterns,
+        selectedPattern,
+        setSelectedPattern,
       }}
     >
       {children}

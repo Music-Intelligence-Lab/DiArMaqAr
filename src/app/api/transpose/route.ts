@@ -6,7 +6,7 @@ import path from "path";
 import { CellDetails } from "@/contexts/app-context";
 import { octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames, octaveThreeNoteNames, octaveFourNoteNames } from "@/models/NoteName";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
-import { getIntervalPattern, getTranspositions, mergeTranspositions, Pattern } from "@/functions/transpose";
+import { getIntervalPattern, getTranspositions, mergeTranspositions, Interval } from "@/functions/transpose";
 
 const dataFilePath = path.join(process.cwd(), "data", "tuningSystems.json");
 const maqamatPath = path.join(process.cwd(), "data", "maqamat.json");
@@ -206,9 +206,9 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "This maqam is not compatible with this tuning system" }, { status: 400 });
       }
 
-      const ascendingIntervalPattern: Pattern[] = getIntervalPattern(ascendingMaqamCellDetails, useRatio);
+      const ascendingIntervalPattern: Interval[] = getIntervalPattern(ascendingMaqamCellDetails, useRatio);
 
-      const descendingIntervalPattern: Pattern[] = getIntervalPattern(descendingMaqamCellDetails, useRatio);
+      const descendingIntervalPattern: Interval[] = getIntervalPattern(descendingMaqamCellDetails, useRatio);
 
       const ascendingSequences: CellDetails[][] = getTranspositions(allCellDetails, ascendingIntervalPattern, true, useRatio, centsTolerance);
       const descendingSequences: CellDetails[][] = getTranspositions(allCellDetails, descendingIntervalPattern, false, useRatio, centsTolerance);
@@ -270,7 +270,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "This jins is not compatible with this tuning system" }, { status: 400 });
       }
 
-      const intervalPattern: Pattern[] = getIntervalPattern(jinsCellDetails, useRatio);
+      const intervalPattern: Interval[] = getIntervalPattern(jinsCellDetails, useRatio);
 
       const sequences: CellDetails[][] = getTranspositions(allCellDetails, intervalPattern, true, useRatio, centsTolerance);
 

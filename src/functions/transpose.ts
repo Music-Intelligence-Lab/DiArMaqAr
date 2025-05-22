@@ -3,7 +3,7 @@ import computeRatio, { convertRatioToNumber } from "./computeRatio";
 import Maqam from "@/models/Maqam";
 import Jins from "@/models/Jins";
 
-export type Pattern = { ratio?: string; diff?: number };
+export type Interval = { ratio?: string; diff?: number };
 
 export function getIntervalPattern(cellDetails: CellDetails[], useRatio: boolean) {
   return cellDetails.slice(1).map((det, i) => {
@@ -21,7 +21,7 @@ export function getIntervalPattern(cellDetails: CellDetails[], useRatio: boolean
 
 export function getTranspositions(
   inputCellDetails: CellDetails[],
-  intervalPattern: Pattern[],
+  intervalPattern: Interval[],
   ascending: boolean,
   useRatio: boolean,
   centsTolerance: number
@@ -119,9 +119,9 @@ export function getMaqamTranspositions(allCellDetails: CellDetails[], maqam: Maq
   const valueType = ascendingMaqamCellDetails[0].originalValueType;
   const useRatio = valueType === "fraction" || valueType === "ratios";
 
-  const ascendingIntervalPattern: Pattern[] = getIntervalPattern(ascendingMaqamCellDetails, useRatio);
+  const ascendingIntervalPattern: Interval[] = getIntervalPattern(ascendingMaqamCellDetails, useRatio);
 
-  const descendingIntervalPattern: Pattern[] = getIntervalPattern(descendingMaqamCellDetails, useRatio);
+  const descendingIntervalPattern: Interval[] = getIntervalPattern(descendingMaqamCellDetails, useRatio);
 
   const ascendingSequences: CellDetails[][] = getTranspositions(allCellDetails, ascendingIntervalPattern, true, useRatio, 5).filter(
     (sequence) => !onlyOctaveOne || sequence[0].octave === 1
@@ -149,7 +149,7 @@ export function getJinsTranspositions(allCellDetails: CellDetails[], jins: Jins,
   const valueType = jinsCellDetails[0].originalValueType;
   const useRatio = valueType === "fraction" || valueType === "ratios";
 
-  const intervalPattern: Pattern[] = getIntervalPattern(jinsCellDetails, useRatio);
+  const intervalPattern: Interval[] = getIntervalPattern(jinsCellDetails, useRatio);
 
   const sequences: CellDetails[][] = getTranspositions(allCellDetails, intervalPattern, true, useRatio, 5).filter(
     (sequence) => !onlyOctaveOne || sequence[0].octave === 1
