@@ -31,6 +31,7 @@ const SettingsCard = () => {
     patterns,
     selectedPattern,
     setSelectedPattern,
+    setRefresh
   } = useAppContext();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -213,7 +214,7 @@ const SettingsCard = () => {
 
             <div className="settings-card__input-container">
               <label htmlFor="midi-output-select" className="settings-card__label">
-                MIDI Input:
+                MIDI Input: <button className="settings-card__refresh-button" onClick={() => setRefresh((prev) => !prev)}>Refresh</button>
               </label>
               <select
                 id="midi-output-select"
@@ -272,7 +273,7 @@ const SettingsCard = () => {
               <>
                 <div className="settings-card__input-container">
                   <label htmlFor="midi-output-select" className="settings-card__label">
-                    MIDI Output:
+                    MIDI Output: <button className="settings-card__refresh-button" onClick={() => setRefresh((prev) => !prev)}>Refresh</button>
                   </label>
                   <select
                     id="midi-output-select"

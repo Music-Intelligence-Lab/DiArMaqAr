@@ -4,7 +4,6 @@
 import React from "react";
 import { CellDetails, useAppContext } from "@/contexts/app-context";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
-import computeRatio from "@/functions/computeRatio";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { getIntervalPattern, getTranspositions, mergeTranspositions, Interval } from "@/functions/transpose";
 
@@ -74,8 +73,8 @@ export default function MaqamTranspositions() {
       <table className="maqam-transpositions__table">
 
         <colgroup>
-          <col style={{ width: '30px' }} /> {/* Transposition number column */}
-          <col style={{ width: '40px' }} /> {/* Arrow column */}
+          <col style={{ width: '30px' }} />
+          <col style={{ width: '40px' }} />
         </colgroup>
 
         <thead>
@@ -354,8 +353,8 @@ export default function MaqamTranspositions() {
 
       <table className="maqam-transpositions__table">
         <colgroup>
-          <col style={{ width: '30px' }} /> {/* Transposition number column */}
-          <col style={{ width: '40px' }} /> {/* Arrow column */}
+          <col style={{ width: '30px' }} />
+          <col style={{ width: '40px' }} />
         </colgroup>
         <tbody>
           {filteredSequences.map((seq, row) => {
