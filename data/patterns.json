@@ -66,5 +66,31 @@
         "noteDuration": "4n"
       }
     ]
+  },
+  {
+    "id": "q6VQ_Cleehoo0AiAXqy4W",
+    "name": "maqam p2",
+    "notes": [
+      {
+        "scaleDegree": "III",
+        "noteDuration": "8n"
+      },
+      {
+        "scaleDegree": "II",
+        "noteDuration": "8n"
+      },
+      {
+        "scaleDegree": "I",
+        "noteDuration": "8n"
+      },
+      {
+        "scaleDegree": "II",
+        "noteDuration": "8n"
+      },
+      {
+        "scaleDegree": "I",
+        "noteDuration": "4n"
+      }
+    ]
   }
 ]
