@@ -68,12 +68,6 @@ Year: 1946
     
 - Spelling: Sayr/Suyūr
 
-- Transpositions counters issues:
-Let’s remove the -1’s from both the x and y
-Let’s count transpositions that start inside octaves 1 & 2
-
-We need a different style class for the line “Transpositions: x/y” (maqam-manager__item-transposition-counter-text)
-
 - Transpositions table: we need a way to differentiate which transpositions are from which octave. Ideally with colour/styling. Please add something to code and then we can play with some ideas.
 
 - Add these synth types to our "waveform" select. All data is opensource we will just need to credit:

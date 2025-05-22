@@ -65,6 +65,13 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
+    &-transpositions {
+      color: rgba(255, 255, 255, 0.76);
+      font-size: 12px;
+      font-style: italic;
+      margin-top: 3px;
+    }
   }
 
   &__play-button {

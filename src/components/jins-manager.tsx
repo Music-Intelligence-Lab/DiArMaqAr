@@ -126,7 +126,7 @@ export default function JinsManager() {
             >
               <div className="jins-manager__item-name">
                 <strong>{jins.getName()}</strong>
-                {checkIfJinsIsSelectable(jins) && <strong>{`Transpositions: ${getJinsTranspositions(allCellDetails, jins, true).length - 1}/${numberOfPitchClasses - 1}`}</strong>}
+                {checkIfJinsIsSelectable(jins) && <strong className="jins-manager__item-name-transpositions">{`Transpositions: ${getJinsTranspositions(allCellDetails, jins, true).length}/${numberOfPitchClasses}`}</strong>}
               </div>
             </div>
           ))

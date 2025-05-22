@@ -189,7 +189,7 @@ export default function MaqamManager() {
             >
               <div className="maqam-manager__item-name">
                 <strong>{`${maqam.getName()}${!maqam.isMaqamSymmetric() ? "*":""}`}</strong>
-                {checkIfMaqamIsSelectable(maqam) && <strong>{`Transpositions: ${getMaqamTranspositions(allCellDetails, maqam, true).length - 1}/${numberOfPitchClasses - 1}`}</strong>}
+                {checkIfMaqamIsSelectable(maqam) && <strong className="maqam-manager__item-name-transpositions">{`Transpositions: ${getMaqamTranspositions(allCellDetails, maqam, true).length}/${numberOfPitchClasses}`}</strong>}
               </div>
             </div>
           ))
