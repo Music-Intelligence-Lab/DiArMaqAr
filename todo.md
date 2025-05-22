@@ -73,6 +73,13 @@ Year: 1946
 - Add these synth types to our "waveform" select. All data is opensource we will just need to credit them somewhere:
 https://github.com/xenharmonic-devs/scale-workshop/blob/main/src/synth.ts
 
+# 22 May 2025
+- Patterns Input: add roman numerals with minus sign for lower octave and with plus sign for upper octaves i.e. VII-, I+
+
+- Patterns Playback: There is currently a problem with the playback when it reaches the octave and starts descending. Before fixing it, we need to think in more detail about the logic of different patters and how they deal with the Root note and the Octave.
+
+Currently the pattern playback only continues ascending until the last note of the pattern is the octave. Instead it should continue until the first note of the pattern is the octave (VIII), and then start its descent. When descending, it should end when the first note of the pattern reaches the Root (I). BUT this only works for patterns that START from the Root (I). This means we need to detect certain info about the pattern and then implement the behaviour of how to deal with reaching the octave accordingly.
+
 
 # ROADMAP FEATURES
 - Compare Ajnas/Maqamat from different tuning systems: How to implement?
