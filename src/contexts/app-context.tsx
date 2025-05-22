@@ -130,6 +130,8 @@ interface AppContextInterface {
   updateAllPatterns: (patterns: Pattern[]) => Promise<void>;
   selectedPattern: Pattern | null;
   setSelectedPattern: React.Dispatch<React.SetStateAction<Pattern | null>>;
+  refresh: boolean;
+  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AppContext = createContext<AppContextInterface | null>(null);
@@ -184,6 +186,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   const [inputMode, setInputMode] = useState<InputMode>("selection");
   const [outputMode, setOutputMode] = useState<OutputMode>("waveform");
   const [pitchBendRange, setPitchBendRange] = useState(2);
+  const [refresh, setRefresh] = useState(false);
 
   const midiAccessRef = useRef<MIDIAccess | null>(null);
 
@@ -323,7 +326,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         };
       })
       .catch(console.error);
-  }, []);
+  }, [refresh]);
 
   // 3) Re-attachment effect — runs whenever inputs list or selected ID changes:
   useEffect(() => {
@@ -1010,9 +1013,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
             const foundMaqam = maqamat.find((m) => m.getId() === maqamId);
             if (foundMaqam && checkIfMaqamIsSelectable(foundMaqam, givenIndices)) {
               handleClickMaqam(foundMaqam, givenIndices);
-              console.log(seirId, "TEST");
               if (seirId) {
-                console.log("test");
                 setMaqamSeirId(seirId);
               }
             }
@@ -1101,6 +1102,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         updateAllPatterns,
         selectedPattern,
         setSelectedPattern,
+        refresh,
+        setRefresh,
       }}
     >
       {children}
