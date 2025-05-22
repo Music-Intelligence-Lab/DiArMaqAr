@@ -155,7 +155,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
   const [volume, setVolume] = useState(0.5);
   const [duration, setDuration] = useState(0.1);
-  const [tempo, setTempo] = useState<number>(300);
+  const [tempo, setTempo] = useState<number>(100);
 
   const [selectedCells, setSelectedCells] = useState<Cell[]>([]);
   const [selectedIndices, setSelectedIndices] = useState<number[]>([]);

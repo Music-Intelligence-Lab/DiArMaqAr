@@ -73,23 +73,23 @@
     "notes": [
       {
         "scaleDegree": "III",
-        "noteDuration": "8n"
+        "noteDuration": "16n"
       },
       {
         "scaleDegree": "II",
-        "noteDuration": "8n"
+        "noteDuration": "16n"
+      },
+      {
+        "scaleDegree": "I",
+        "noteDuration": "16n"
+      },
+      {
+        "scaleDegree": "II",
+        "noteDuration": "16n"
       },
       {
         "scaleDegree": "I",
         "noteDuration": "8n"
-      },
-      {
-        "scaleDegree": "II",
-        "noteDuration": "8n"
-      },
-      {
-        "scaleDegree": "I",
-        "noteDuration": "4n"
       }
     ]
   }
