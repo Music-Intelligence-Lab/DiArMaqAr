@@ -7,18 +7,6 @@
 - I want to add sources for each jins and each maqam in the database. Each jins and each maqam will likely have multiple sources, therefore each will need to be able to accept multiple sources. With this in mind (and my previous request for adding Source Auto-Input to the Sayr Manager which is commented out below) maybe it's better that we crea  graphy List Dropdown menu, and only manually input the relevant page number(s) plus Comments English and Comments Arabic.
 
 
-<!-- 
-- Add Source Auto-Input Button to Sayr Manager:
-
-Creator (English): Al-Shawwā, Sāmī
-Creator (Arabic): الشوّا، سامي
-Source (English): Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.
-Source (Arabic): القواعد الفنية في الموسيقى الشرقيّة والغربيّة
-Year: 1946
-
-- Add Suyur Select Buttons to Sayr Manager
- -->
-
 # 20 May 2025
 
 - Add row in tuning system table for "Fret Division" which calculates where a fret should be according to the string length: full string length minus string length of the pitch class. First cell (Fret Division 0) would always be 0 because its open string, second cell (Fret Division 1) would be full string length minus string length of that pitch class, etc...
