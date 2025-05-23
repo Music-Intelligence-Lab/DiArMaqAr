@@ -12,7 +12,7 @@ import TransliteratedNoteName, { TransliteratedNoteNameOctaveOne, Transliterated
 import detectPitchClassType from "@/functions/detectPitchClassType";
 import convertPitchClass, { shiftPitchClass, frequencyToMidiNoteNumber } from "@/functions/convertPitchClass";
 import { octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames, octaveThreeNoteNames, octaveFourNoteNames } from "@/models/NoteName";
-import Maqam, { Seir } from "@/models/Maqam";
+import Maqam, { Sayr } from "@/models/Maqam";
 import getNoteNamesUsedInTuningSystem from "@/functions/getNoteNamesUsedInTuningSystem";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import midiNumberToNoteName from "@/functions/midiToNoteNumber";
@@ -95,8 +95,8 @@ interface AppContextInterface {
   setSelectedMaqam: React.Dispatch<React.SetStateAction<Maqam | null>>;
   checkIfMaqamIsSelectable: (maqam: Maqam) => boolean;
   handleClickMaqam: (maqam: Maqam) => void;
-  maqamSeirId: string;
-  setMaqamSeirId: React.Dispatch<React.SetStateAction<string>>;
+  maqamSayrId: string;
+  setMaqamSayrId: React.Dispatch<React.SetStateAction<string>>;
   centsTolerance: number;
   setCentsTolerance: React.Dispatch<React.SetStateAction<number>>;
   clearSelections: () => void;
@@ -109,7 +109,7 @@ interface AppContextInterface {
   playSequence: (frequencies: number[]) => void;
   noteOn: (frequency: number) => void;
   noteOff: (frequency: number) => void;
-  handleUrlParams: (params: { tuningSystemId?: string; jinsId?: string; maqamId?: string; seirId?: string; firstNote?: string }) => void;
+  handleUrlParams: (params: { tuningSystemId?: string; jinsId?: string; maqamId?: string; sayrId?: string; firstNote?: string }) => void;
   midiInputs: MidiPortInfo[];
   selectedMidiInputId: string | null;
   setSelectedMidiInputId: React.Dispatch<React.SetStateAction<string | null>>;
@@ -175,7 +175,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
   const [maqamat, setMaqamat] = useState<Maqam[]>([]);
   const [selectedMaqam, setSelectedMaqam] = useState<Maqam | null>(null);
-  const [maqamSeirId, setMaqamSeirId] = useState<string>("");
+  const [maqamSayrId, setMaqamSayrId] = useState<string>("");
 
   const [patterns, setPatterns] = useState<Pattern[]>([]);
   const [selectedPattern, setSelectedPattern] = useState<Pattern | null>(null);
@@ -248,11 +248,11 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
     setTuningSystems(formattedTuningSystems);
 
-    const loadedAjnas = ajnasData.map((data) => new Jins(data.id, data.name, data.noteNames));
+    const loadedAjnas = ajnasData.map((data) => new Jins(data.id, data.name, data.noteNames, data.sourcePageReferences));
     setAjnas(loadedAjnas);
 
     const loadedMaqamat = maqamatData.map(
-      (data) => new Maqam(data.id, data.name, data.ascendingNoteNames, data.descendingNoteNames, data.suyur as Seir[])
+      (data) => new Maqam(data.id, data.name, data.ascendingNoteNames, data.descendingNoteNames, data.suyūr as Sayr[], data.sourcePageReferences)
     );
     setMaqamat(loadedMaqamat);
 
@@ -679,6 +679,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
             id: j.getId(),
             name: j.getName(),
             noteNames: j.getNoteNames(),
+            sourcePageReferences: j.getSourcePageReferences(),
           }))
         ),
       });
@@ -704,7 +705,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
             name: m.getName(),
             ascendingNoteNames: m.getAscendingNoteNames(),
             descendingNoteNames: m.getDescendingNoteNames(),
-            suyur: m.getSuyur(),
+            suyūr: m.getSuyūr(),
+            sourcePageReferences: m.getSourcePageReferences(),
           }))
         ),
       });
@@ -996,13 +998,13 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     tuningSystemId,
     jinsId,
     maqamId,
-    seirId,
+    sayrId,
     firstNote,
   }: {
     tuningSystemId?: string;
     jinsId?: string;
     maqamId?: string;
-    seirId?: string;
+    sayrId?: string;
     firstNote?: string;
   }) => {
     if (!tuningSystems.length || !ajnas.length || !maqamat.length) return;
@@ -1023,8 +1025,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
             const foundMaqam = maqamat.find((m) => m.getId() === maqamId);
             if (foundMaqam && checkIfMaqamIsSelectable(foundMaqam, givenIndices)) {
               handleClickMaqam(foundMaqam, givenIndices);
-              if (seirId) {
-                setMaqamSeirId(seirId);
+              if (sayrId) {
+                setMaqamSayrId(sayrId);
               }
             }
           }
@@ -1077,8 +1079,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         setSelectedMaqam,
         checkIfMaqamIsSelectable,
         handleClickMaqam,
-        maqamSeirId,
-        setMaqamSeirId,
+        maqamSayrId,
+        setMaqamSayrId,
         centsTolerance,
         setCentsTolerance,
         clearSelections,

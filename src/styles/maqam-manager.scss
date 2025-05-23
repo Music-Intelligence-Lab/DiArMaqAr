@@ -132,6 +132,7 @@
   &__maqam-form {
     display: flex;
     justify-content: center;
+    align-items: flex-start;
     gap: 20px;
     padding: 20px;
     font-size: 20px;
@@ -170,5 +171,38 @@
 
   &__clear-button {
     background-color: $primary;
+  }
+
+  &__source-add-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  &__source-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100px;
+  }
+
+  &__source-select, &__source-input {
+    padding: 5px;
+    font-size: 14px;
+  }
+
+  &__source-delete-button {
+    padding: 5px;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: $delete;
+    color: white;
+    transition: 0.1s;
+
+    &:hover {
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    }
   }
 }

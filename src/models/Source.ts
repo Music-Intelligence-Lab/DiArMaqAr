@@ -189,3 +189,8 @@ export default class Source {
     );
   }
 }
+
+export interface SourcePageReference {
+  sourceId: string;
+  page: string;
+}

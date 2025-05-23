@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Cell, CellDetails, useAppContext } from "@/contexts/app-context";
 import Maqam from "@/models/Maqam";
 import Jins from "@/models/Jins";
 import { getMaqamTranspositions, getJinsTranspositions } from "@/functions/transpose";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
+import { SourcePageReference } from "@/models/Source";
 
 export default function BottomDrawer() {
   const {
@@ -30,11 +31,20 @@ export default function BottomDrawer() {
     clearSelections,
     playSequence,
     selectedTuningSystem,
+    sources
   } = useAppContext();
 
   const [navbarItem, setNavbarItem] = useState(
     "ajnas"
   ); // "ajnas" | "editJins" | "maqamat" | "editMaqam"
+
+  useEffect(() => {
+    if (navbarItem === "editJins") {
+      setSelectedMaqam(null);
+    } else if (navbarItem === "editMaqam") {
+      setSelectedJins(null);
+    }
+  }, [navbarItem])
 
   const togglePanel = () => {
     setOpenBottomDrawer((prev) => !prev);
@@ -58,7 +68,7 @@ export default function BottomDrawer() {
   const handleSaveJins = async () => {
     if (!selectedJins) return;
     const names = selectedCells.map((cell: Cell) => getSelectedCellDetails(cell).noteName);
-    const newJins = new Jins(selectedJins.getId(), selectedJins.getName(), names);
+    const newJins = new Jins(selectedJins.getId(), selectedJins.getName(), names, selectedJins.getSourcePageReferences());
     const others = ajnas.filter((j) => j.getId() !== newJins.getId());
     await updateAllAjnas([...others, newJins]);
     setSelectedJins(newJins);
@@ -108,7 +118,8 @@ export default function BottomDrawer() {
       selectedMaqam.getName(),
       selectedCells.map((c) => getSelectedCellDetails(c).noteName),
       descNames,
-      selectedMaqam.getSuyur()
+      selectedMaqam.getSuyūr(),
+      selectedMaqam.getSourcePageReferences()
     );
     handleSaveMaqam(updated);
   };
@@ -120,7 +131,8 @@ export default function BottomDrawer() {
       selectedMaqam.getName(),
       selectedMaqam.getAscendingNoteNames(),
       [...selectedCells.map((c) => getSelectedCellDetails(c).noteName)].reverse(),
-      selectedMaqam.getSuyur()
+      selectedMaqam.getSuyūr(),
+      selectedMaqam.getSourcePageReferences()
     );
     handleSaveMaqam(updated);
   };
@@ -139,6 +151,74 @@ export default function BottomDrawer() {
     ascendingDetails.forEach((d) => freqs.push(parseInt(d.frequency) || 0));
     descendingDetails.forEach((d) => freqs.push(parseInt(d.frequency) || 0));
     playSequence(freqs);
+  };
+
+  const updateSourceRefs = (
+    refs: SourcePageReference[],
+    index: number,
+    newRef: Partial<SourcePageReference>
+  ) => {
+    if (!selectedJins && !selectedMaqam) return;
+    const list = [...refs];
+    list[index] = { ...list[index], ...newRef } as SourcePageReference;
+    if (selectedJins) {
+      setSelectedJins(
+        new Jins(
+          selectedJins.getId(),
+          selectedJins.getName(),
+          selectedJins.getNoteNames(),
+          list
+        )
+      );
+    } else if (selectedMaqam) {
+      setSelectedMaqam(
+        new Maqam(
+          selectedMaqam.getId(),
+          selectedMaqam.getName(),
+          selectedMaqam.getAscendingNoteNames(),
+          selectedMaqam.getDescendingNoteNames(),
+          selectedMaqam.getSuyūr(),
+          list
+        )
+      );
+    }
+  };
+
+  const removeSourceRef = (index: number) => {
+    if (!selectedJins && !selectedMaqam) return;
+    const refs = (selectedJins
+      ? selectedJins.getSourcePageReferences()
+      : selectedMaqam?.getSourcePageReferences()
+    ) || [];
+    const newList = refs.filter((_, i) => i !== index);
+    if (selectedJins) setSelectedJins(new Jins(selectedJins.getId(), selectedJins.getName(), selectedJins.getNoteNames(), newList));
+    else if (selectedMaqam) setSelectedMaqam(new Maqam(
+      selectedMaqam.getId(),
+      selectedMaqam.getName(),
+      selectedMaqam.getAscendingNoteNames(),
+      selectedMaqam.getDescendingNoteNames(),
+      selectedMaqam.getSuyūr(),
+      newList
+    ));
+  };
+
+  const addSourceRef = () => {
+    if (!selectedJins && !selectedMaqam) return;
+    const refs = (selectedJins
+      ? selectedJins.getSourcePageReferences()
+      : selectedMaqam?.getSourcePageReferences()
+    ) || [];
+    const newRef: SourcePageReference = { sourceId: "", page: "" };
+    const newList = [...refs, newRef];
+    if (selectedJins) setSelectedJins(new Jins(selectedJins.getId(), selectedJins.getName(), selectedJins.getNoteNames(), newList));
+    else if (selectedMaqam) setSelectedMaqam(new Maqam(
+      selectedMaqam.getId(),
+      selectedMaqam.getName(),
+      selectedMaqam.getAscendingNoteNames(),
+      selectedMaqam.getDescendingNoteNames(),
+      selectedMaqam.getSuyūr(),
+      newList
+    ));
   };
 
   return (
@@ -199,11 +279,16 @@ export default function BottomDrawer() {
 
             {navbarItem === "editJins" && (
               <div className="jins-manager__jins-form">
+                {selectedJins && (
+                  <button className="jins-manager__play-button" onClick={playSelectedJins}>
+                    <PlayCircleIcon /> Play Jins
+                  </button>
+                )}
                 <input
                   type="text"
                   value={selectedJins?.getName() || ""}
                   onChange={(e) =>
-                    setSelectedJins(new Jins(selectedJins?.getId() || "", e.target.value, selectedJins?.getNoteNames() || []))
+                    setSelectedJins(new Jins(selectedJins?.getId() || "", e.target.value, selectedJins?.getNoteNames() || [], selectedJins?.getSourcePageReferences() || []))
                   }
                   placeholder="Enter jins name"
                   className="jins-manager__jins-input"
@@ -217,11 +302,31 @@ export default function BottomDrawer() {
                 <button onClick={clearSelections} className="jins-manager__clear-button">
                   Clear
                 </button>
-                {selectedJins && (
-                  <button className="jins-manager__play-button" onClick={playSelectedJins}>
-                    <PlayCircleIcon /> Play Jins
-                  </button>
-                )}
+                {selectedJins && <button className="jins-manager__source-add-button" onClick={addSourceRef}>Add Source</button>}
+                {selectedJins && selectedJins.getSourcePageReferences().map((ref, idx) => (
+                  <div key={idx} className="jins-manager__source-item">
+                    <select
+                      className="jins-manager__source-select"
+                      value={ref.sourceId}
+                      onChange={e => updateSourceRefs(selectedJins.getSourcePageReferences(), idx, { sourceId: e.target.value })}
+                    >
+                      <option value="">Select source</option>
+                      {sources.map(s => (
+                        <option key={s.getId()} value={s.getId()}>{s.getTitleEnglish()}</option>
+                      ))}
+                    </select>
+                    <input
+                      className="jins-manager__source-input"
+                      type="text"
+                      value={ref.page}
+                      placeholder="Page"
+                      onChange={e => updateSourceRefs(selectedJins.getSourcePageReferences(), idx, { page: e.target.value })}
+                    />
+                    <button
+                      className="jins-manager__source-delete-button"
+                     onClick={() => removeSourceRef(idx)}>Delete</button>
+                  </div>
+                ))}
               </div>
             )}
 
@@ -248,6 +353,11 @@ export default function BottomDrawer() {
 
             {navbarItem === "editMaqam" && (
               <div className="maqam-manager__maqam-form">
+                {selectedMaqam && (
+                  <button className="maqam-manager__play-button" onClick={playSelectedMaqam}>
+                    <PlayCircleIcon /> Play Maqām
+                  </button>
+                )}
                 <input
                   type="text"
                   value={selectedMaqam?.getName() || ""}
@@ -258,7 +368,8 @@ export default function BottomDrawer() {
                         e.target.value,
                         selectedMaqam?.getAscendingNoteNames() || [],
                         selectedMaqam?.getDescendingNoteNames() || [],
-                        selectedMaqam?.getSuyur() || []
+                        selectedMaqam?.getSuyūr() || [],
+                        selectedMaqam?.getSourcePageReferences() || []
                       )
                     )
                   }
@@ -280,11 +391,32 @@ export default function BottomDrawer() {
                 <button onClick={clearSelections} className="maqam-manager__clear-button">
                   Clear
                 </button>
-                {selectedMaqam && (
-                  <button className="maqam-manager__play-button" onClick={playSelectedMaqam}>
-                    <PlayCircleIcon /> Play Maqām
-                  </button>
-                )}
+                
+                {selectedMaqam && <button className="maqam-manager__source-add-button" onClick={addSourceRef}>Add Source</button>}
+                {selectedMaqam && selectedMaqam.getSourcePageReferences().map((ref, idx) => (
+                  <div key={idx} className="maqam-manager__source-item">
+                    <select
+                      className="maqam-manager__source-select"
+                      value={ref.sourceId}
+                      onChange={e => updateSourceRefs(selectedMaqam.getSourcePageReferences(), idx, { sourceId: e.target.value })}
+                    >
+                      <option value="">Select source</option>
+                      {sources.map(s => (
+                        <option key={s.getId()} value={s.getId()}>{s.getTitleEnglish()}</option>
+                      ))}
+                    </select>
+                    <input
+                      className="maqam-manager__source-input"
+                      type="text"
+                      value={ref.page}
+                      placeholder="Page"
+                      onChange={e => updateSourceRefs(selectedMaqam.getSourcePageReferences(), idx, { page: e.target.value })}
+                    />
+                    <button
+                      className="maqam-manager__source-delete-button"
+                     onClick={() => removeSourceRef(idx)}>Delete</button>
+                  </div>
+                ))}
               </div>
             )}
           </div>

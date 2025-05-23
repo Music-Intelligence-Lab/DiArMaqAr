@@ -76,7 +76,7 @@ export default function MaqamManager() {
     const descendingNoteNames =
       selectedMaqam.getDescendingNoteNames().length > 0 ? selectedMaqam.getDescendingNoteNames() : [...selectedCellNoteNames].reverse();
 
-    const updated = new Maqam(selectedMaqam.getId(), selectedMaqam.getName(), selectedCellNoteNames, descendingNoteNames, selectedMaqam.getSuyur());
+    const updated = new Maqam(selectedMaqam.getId(), selectedMaqam.getName(), selectedCellNoteNames, descendingNoteNames, selectedMaqam.getSuyūr(), selectedMaqam.getSourcePageReferences());
     handleSaveMaqam(updated);
   };
 
@@ -88,7 +88,8 @@ export default function MaqamManager() {
       selectedMaqam.getName(),
       selectedMaqam.getAscendingNoteNames(),
       selectedCellNoteNames.reverse(),
-      selectedMaqam.getSuyur()
+      selectedMaqam.getSuyūr(),
+      selectedMaqam.getSourcePageReferences()
     );
     handleSaveMaqam(updated);
   };
@@ -198,7 +199,7 @@ export default function MaqamManager() {
 
       {!selectedMaqam && (
         <button
-          onClick={() => setSelectedMaqam(new Maqam((maqamat.length + 1).toString(), "", [], [], []))}
+          onClick={() => setSelectedMaqam(new Maqam((maqamat.length + 1).toString(), "", [], [], [],[]))}
           className="maqam-manager__create-new-maqam-button"
         >
           Create New Maqam
@@ -217,7 +218,8 @@ export default function MaqamManager() {
                   e.target.value,
                   selectedMaqam.getAscendingNoteNames(),
                   selectedMaqam.getDescendingNoteNames(),
-                  selectedMaqam.getSuyur()
+                  selectedMaqam.getSuyūr(),
+                  selectedMaqam.getSourcePageReferences()
                 )
               )
             }

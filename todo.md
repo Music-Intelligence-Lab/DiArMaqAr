@@ -4,9 +4,6 @@
 
 # 17 May 2025
 
-- I want to add sources for each jins and each maqam in the database. Each jins and each maqam will likely have multiple sources, therefore each will need to be able to accept multiple sources. With this in mind (and my previous request for adding Source Auto-Input to the Sayr Manager which is commented out below) maybe it's better that we crea  graphy List Dropdown menu, and only manually input the relevant page number(s) plus Comments English and Comments Arabic.
-
-
 # 20 May 2025
 
 - Add row in tuning system table for "Fret Division" which calculates where a fret should be according to the string length: full string length minus string length of the pitch class. First cell (Fret Division 0) would always be 0 because its open string, second cell (Fret Division 1) would be full string length minus string length of that pitch class, etc...
@@ -26,7 +23,6 @@
 - Add staff notation to ajnas and maqamat based on English Note Names or Midi Note Numbers (without decimal) including transpositions using VexFLow: https://github.com/0xfe/vexflow which already includes "microtonal" accidentals using saggital (see "const accidentals" here: https://github.com/0xfe/vexflow/blob/master/src/tables.ts). For this we will need to be able to separate the accidental in the English note name so we can use it to access the correct accidental in vexflow. 
 
 # 21 May 2025
-- New IDs are too long and complicated, unnecessary. Will be annoying for API usage. Keep it simple numbers (like maqam ID).
 - Bibliography: in my original note there was info about different fields needed for Type: Article, but those aren't implemented :(
   - Change names and 
     "Release Date" to "Publication Date"
@@ -48,8 +44,6 @@
     Publication Date (AR/EN) - Keep Original Publication Date
     ISBN
     
-- Spelling: Sayr/Suyūr
-
 - Transpositions table: we need a way to differentiate which transpositions are from which octave. Ideally with colour/styling. Please add something to code and then we can play with some ideas.
 
 - Add these synth types to our "waveform" select. All data is opensource we will just need to credit them somewhere:
@@ -73,4 +67,4 @@ Currently the pattern playback only continues ascending until the last note of t
 # ROADMAP FEATURES
 - Compare Ajnas/Maqamat from different tuning systems: How to implement?
 
-- Compare multiple suyur for each maqam: How to implement?
+- Compare multiple suyūr for each maqam: How to implement?
