@@ -22,7 +22,8 @@
       "kurdī",
       "dūgāh"
     ],
-    "suyur": []
+    "suyūr": [],
+    "sourcePageReferences": []
   },
   {
     "id": "3",
@@ -47,7 +48,8 @@
       "kurdī",
       "dūgāh"
     ],
-    "suyur": []
+    "suyūr": [],
+    "sourcePageReferences": []
   },
   {
     "id": "4",
@@ -72,7 +74,8 @@
       "zirguleh",
       "rāst"
     ],
-    "suyur": []
+    "suyūr": [],
+    "sourcePageReferences": []
   },
   {
     "id": "5",
@@ -97,7 +100,8 @@
       "dūgāh",
       "rāst"
     ],
-    "suyur": []
+    "suyūr": [],
+    "sourcePageReferences": []
   },
   {
     "id": "6",
@@ -122,7 +126,8 @@
       "dūgāh",
       "rāst"
     ],
-    "suyur": []
+    "suyūr": [],
+    "sourcePageReferences": []
   },
   {
     "id": "7",
@@ -147,7 +152,8 @@
       "segāh",
       "dūgāh"
     ],
-    "suyur": []
+    "suyūr": [],
+    "sourcePageReferences": []
   },
   {
     "id": "8",
@@ -172,7 +178,8 @@
       "segāh",
       "dūgāh"
     ],
-    "suyur": []
+    "suyūr": [],
+    "sourcePageReferences": []
   },
   {
     "id": "9",
@@ -197,7 +204,8 @@
       "kurdī",
       "dūgāh"
     ],
-    "suyur": []
+    "suyūr": [],
+    "sourcePageReferences": []
   },
   {
     "id": "10",
@@ -222,7 +230,8 @@
       "dūgāh",
       "rāst"
     ],
-    "suyur": []
+    "suyūr": [],
+    "sourcePageReferences": []
   },
   {
     "id": "11",
@@ -247,7 +256,8 @@
       "dūgāh",
       "rāst"
     ],
-    "suyur": []
+    "suyūr": [],
+    "sourcePageReferences": []
   },
   {
     "id": "12",
@@ -272,7 +282,8 @@
       "kurdī",
       "dūgāh"
     ],
-    "suyur": []
+    "suyūr": [],
+    "sourcePageReferences": []
   },
   {
     "id": "13",
@@ -297,7 +308,8 @@
       "segāh",
       "dūgāh"
     ],
-    "suyur": []
+    "suyūr": [],
+    "sourcePageReferences": []
   },
   {
     "id": "14",
@@ -322,7 +334,8 @@
       "tīk zirguleh",
       "rāst"
     ],
-    "suyur": []
+    "suyūr": [],
+    "sourcePageReferences": []
   },
   {
     "id": "15",
@@ -347,7 +360,8 @@
       "segāh",
       "dūgāh"
     ],
-    "suyur": []
+    "suyūr": [],
+    "sourcePageReferences": []
   },
   {
     "id": "16",
@@ -372,7 +386,8 @@
       "kurdī",
       "dūgāh"
     ],
-    "suyur": []
+    "suyūr": [],
+    "sourcePageReferences": []
   },
   {
     "id": "17",
@@ -397,7 +412,8 @@
       "rāst",
       "ʿajam ʿushayrān"
     ],
-    "suyur": []
+    "suyūr": [],
+    "sourcePageReferences": []
   },
   {
     "id": "18",
@@ -422,7 +438,8 @@
       "dūgāh",
       "rāst"
     ],
-    "suyur": []
+    "suyūr": [],
+    "sourcePageReferences": []
   },
   {
     "id": "19",
@@ -447,7 +464,8 @@
       "chahargāh",
       "segāh"
     ],
-    "suyur": []
+    "suyūr": [],
+    "sourcePageReferences": []
   },
   {
     "id": "20",
@@ -472,7 +490,8 @@
       "rāst",
       "ʿirāq"
     ],
-    "suyur": []
+    "suyūr": [],
+    "sourcePageReferences": []
   },
   {
     "id": "21",
@@ -497,7 +516,7 @@
       "rāst",
       "ʿirāq"
     ],
-    "suyur": [
+    "suyūr": [
       {
         "id": "337de5290e47439d8027",
         "creatorEnglish": "Al-Shawwā, Sāmī",
@@ -536,7 +555,8 @@
           }
         ]
       }
-    ]
+    ],
+    "sourcePageReferences": []
   },
   {
     "id": "22",
@@ -561,7 +581,8 @@
       "buselīk/ʿushshāq",
       "dūgāh"
     ],
-    "suyur": []
+    "suyūr": [],
+    "sourcePageReferences": []
   },
   {
     "id": "23",
@@ -586,7 +607,8 @@
       "ḥuseinī",
       "nawā"
     ],
-    "suyur": []
+    "suyūr": [],
+    "sourcePageReferences": []
   },
   {
     "id": "24",
@@ -611,7 +633,8 @@
       "ʿirāq",
       "ʿushayrān"
     ],
-    "suyur": []
+    "suyūr": [],
+    "sourcePageReferences": []
   },
   {
     "id": "26",
@@ -636,12 +659,11 @@
       "rāst",
       "ʿirāq"
     ],
-    "suyur": [
+    "suyūr": [
       {
         "id": "526f73d6d5e1423ab392",
         "creatorEnglish": "Al-Shawwā, Sāmī",
-        "sourceEnglish": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
-        "year": 1946,
+        "sourceId": "",
         "page": 33,
         "commentsEnglish": "Starts on 'iraq or dūgāh descending until yegāh, then bayāt dūgāh until nawā then rāst nawā and descends to the qarār which is 'irāq",
         "stops": [
@@ -675,7 +697,8 @@
           }
         ]
       }
-    ]
+    ],
+    "sourcePageReferences": []
   },
   {
     "id": "27",
@@ -700,7 +723,8 @@
       "ʿajam ʿushayrān",
       "ʿushayrān"
     ],
-    "suyur": []
+    "suyūr": [],
+    "sourcePageReferences": []
   },
   {
     "id": "25",
@@ -725,7 +749,8 @@
       "ḥijāz",
       "segāh"
     ],
-    "suyur": []
+    "suyūr": [],
+    "sourcePageReferences": []
   },
   {
     "id": "29",
@@ -750,7 +775,7 @@
       "ʿushayrān",
       "yegāh"
     ],
-    "suyur": [
+    "suyūr": [
       {
         "id": "43bf91094c2e4995b17e",
         "creatorEnglish": "Al-Shawwā, Sāmī",
@@ -801,7 +826,8 @@
           }
         ]
       }
-    ]
+    ],
+    "sourcePageReferences": []
   },
   {
     "id": "30",
@@ -826,7 +852,7 @@
       "ʿushayrān",
       "yegāh"
     ],
-    "suyur": [
+    "suyūr": [
       {
         "id": "a4b9d74bd46d4170a292",
         "creatorEnglish": "Al-Shawwā, Sāmī",
@@ -885,7 +911,8 @@
           }
         ]
       }
-    ]
+    ],
+    "sourcePageReferences": []
   },
   {
     "id": "31",
@@ -910,7 +937,7 @@
       "qarār ḥiṣār",
       "yegāh"
     ],
-    "suyur": [
+    "suyūr": [
       {
         "id": "e8f160537be549d5972e",
         "creatorEnglish": "Al-Shawwā, Sāmī",
@@ -959,7 +986,8 @@
           }
         ]
       }
-    ]
+    ],
+    "sourcePageReferences": []
   },
   {
     "id": "32",
@@ -984,7 +1012,7 @@
       "ʿushayrān",
       "yegāh"
     ],
-    "suyur": [
+    "suyūr": [
       {
         "id": "72128ddd3a9f410d9d1e",
         "creatorEnglish": "Al-Shawwā, Sāmī",
@@ -1015,7 +1043,8 @@
           }
         ]
       }
-    ]
+    ],
+    "sourcePageReferences": []
   },
   {
     "id": "33",
@@ -1040,7 +1069,7 @@
       "rāst",
       "ʿirāq"
     ],
-    "suyur": [
+    "suyūr": [
       {
         "id": "619d403ca9714a888c72",
         "creatorEnglish": "Al-Shawwā, Sāmī",
@@ -1093,7 +1122,8 @@
           }
         ]
       }
-    ]
+    ],
+    "sourcePageReferences": []
   },
   {
     "id": "34",
@@ -1118,7 +1148,7 @@
       "ʿushayrān",
       "yegāh"
     ],
-    "suyur": [
+    "suyūr": [
       {
         "id": "71c36f6c27b548f3bbaf",
         "creatorEnglish": "Al-Shawwā, Sāmī",
@@ -1171,97 +1201,8 @@
           }
         ]
       }
-    ]
-  },
-  {
-    "id": "35",
-    "name": "maqām ʿushayrān",
-    "ascendingNoteNames": [
-      "ʿushayrān",
-      "ʿirāq",
-      "rāst",
-      "dūgāh",
-      "segāh",
-      "chahargāh",
-      "nawā",
-      "ḥuseinī"
     ],
-    "descendingNoteNames": [
-      "ḥuseinī",
-      "nawā",
-      "chahargāh",
-      "nīm buselīk",
-      "dūgāh",
-      "rāst",
-      "ʿirāq",
-      "ʿushayrān"
-    ],
-    "suyur": [
-      {
-        "id": "0852bc14eddf4caaab32",
-        "creatorEnglish": "Al-Shawwā, Sāmī",
-        "sourceEnglish": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
-        "year": 1946,
-        "page": 24,
-        "commentsEnglish": "Begins on nawā to develop bayāt on dūgāh, then bayāt 'ushayran and upon reaching muḥayyar in the ascent, it descends until dūgāh using 'ajam instead of awj (jins kurd ḥuseinī) and its qarār is 'ushayrān.",
-        "stops": [
-          {
-            "type": "note",
-            "value": "nawā"
-          },
-          {
-            "type": "jins",
-            "value": "jins bayāt",
-            "startingNote": "dūgāh",
-            "direction": "none"
-          },
-          {
-            "type": "jins",
-            "value": "jins bayāt",
-            "startingNote": "ʿushayrān",
-            "direction": "ascending"
-          },
-          {
-            "type": "jins",
-            "value": "jins bayāt",
-            "startingNote": "dūgāh",
-            "direction": "ascending"
-          },
-          {
-            "type": "jins",
-            "value": "jins bayāt",
-            "startingNote": "ḥuseinī",
-            "direction": "ascending"
-          },
-          {
-            "type": "note",
-            "value": "muḥayyar"
-          },
-          {
-            "type": "jins",
-            "value": "jins kurd",
-            "startingNote": "ḥuseinī",
-            "direction": "descending"
-          },
-          {
-            "type": "jins",
-            "value": "jins bayāt",
-            "startingNote": "dūgāh",
-            "direction": "descending"
-          },
-          {
-            "type": "jins",
-            "value": "jins bayāt",
-            "startingNote": "ʿushayrān",
-            "direction": "descending"
-          },
-          {
-            "type": "note",
-            "value": "ʿushayrān"
-          }
-        ]
-      }
-    ]
+    "sourcePageReferences": []
   },
   {
     "id": "36",
@@ -1292,7 +1233,7 @@
       "ʿirāq",
       "ʿushayrān"
     ],
-    "suyur": [
+    "suyūr": [
       {
         "id": "9fd0ee5666b5422db247",
         "creatorEnglish": "Al-Shawwā, Sāmī",
@@ -1367,7 +1308,8 @@
           }
         ]
       }
-    ]
+    ],
+    "sourcePageReferences": []
   },
   {
     "id": "37",
@@ -1392,7 +1334,7 @@
       "ʿirāq",
       "ʿushayrān"
     ],
-    "suyur": [
+    "suyūr": [
       {
         "id": "228c3a86e297476e8c94",
         "creatorEnglish": "Al-Shawwā, Sāmī",
@@ -1421,7 +1363,8 @@
           }
         ]
       }
-    ]
+    ],
+    "sourcePageReferences": []
   },
   {
     "id": "38",
@@ -1452,7 +1395,7 @@
       "ʿajam ʿushayrān",
       "ʿushayrān"
     ],
-    "suyur": [
+    "suyūr": [
       {
         "id": "1e9f40f699ae4c738327",
         "creatorEnglish": "Al-Shawwā, Sāmī",
@@ -1489,7 +1432,8 @@
           }
         ]
       }
-    ]
+    ],
+    "sourcePageReferences": []
   },
   {
     "id": "39",
@@ -1524,7 +1468,7 @@
       "ʿajam ʿushayrān",
       "ʿushayrān"
     ],
-    "suyur": [
+    "suyūr": [
       {
         "id": "4dd5110845684e959e2e",
         "creatorEnglish": "Al-Shawwā, Sāmī",
@@ -1579,7 +1523,8 @@
           }
         ]
       }
-    ]
+    ],
+    "sourcePageReferences": []
   },
   {
     "id": "40",
@@ -1614,7 +1559,7 @@
       "ʿirāq",
       "ʿushayrān"
     ],
-    "suyur": [
+    "suyūr": [
       {
         "id": "d323f080075e4640ab22",
         "creatorEnglish": "Al-Shawwā, Sāmī",
@@ -1669,7 +1614,8 @@
           }
         ]
       }
-    ]
+    ],
+    "sourcePageReferences": []
   },
   {
     "id": "41",
@@ -1702,7 +1648,7 @@
       "rāst",
       "ʿajam ʿushayrān"
     ],
-    "suyur": [
+    "suyūr": [
       {
         "id": "78195d77a5ca41aaaed5",
         "creatorEnglish": "Al-Shawwā, Sāmī",
@@ -1739,7 +1685,8 @@
           }
         ]
       }
-    ]
+    ],
+    "sourcePageReferences": []
   },
   {
     "id": "43",
@@ -1764,7 +1711,7 @@
       "rāst",
       "ʿirāq"
     ],
-    "suyur": [
+    "suyūr": [
       {
         "id": "5bab4c42f4ea415eb389",
         "creatorEnglish": "Al-Shawwā, Sāmī",
@@ -1823,7 +1770,8 @@
           }
         ]
       }
-    ]
+    ],
+    "sourcePageReferences": []
   },
   {
     "id": "44",
@@ -1848,7 +1796,7 @@
       "rāst",
       "ʿirāq"
     ],
-    "suyur": [
+    "suyūr": [
       {
         "id": "2cb35c7c89bc4ac3aecb",
         "creatorEnglish": "Al-Shawwā, Sāmī",
@@ -1891,7 +1839,8 @@
           }
         ]
       }
-    ]
+    ],
+    "sourcePageReferences": []
   },
   {
     "id": "49",
@@ -1920,7 +1869,7 @@
       "rāst",
       "ʿirāq"
     ],
-    "suyur": [
+    "suyūr": [
       {
         "id": "ec2d66a078954d059120",
         "creatorEnglish": "Al-Shawwā, Sāmī",
@@ -1941,7 +1890,8 @@
           }
         ]
       }
-    ]
+    ],
+    "sourcePageReferences": []
   },
   {
     "id": "50",
@@ -1970,7 +1920,7 @@
       "rāst",
       "ʿirāq"
     ],
-    "suyur": [
+    "suyūr": [
       {
         "id": "b47fa1e5ed3a4fd792ae",
         "creatorEnglish": "Al-Shawwā, Sāmī",
@@ -2021,7 +1971,8 @@
           }
         ]
       }
-    ]
+    ],
+    "sourcePageReferences": []
   },
   {
     "id": "51",
@@ -2052,7 +2003,7 @@
       "rāst",
       "ʿirāq"
     ],
-    "suyur": [
+    "suyūr": [
       {
         "id": "c4664877ad284982b0a8",
         "creatorEnglish": "Al-Shawwā, Sāmī",
@@ -2107,7 +2058,8 @@
           }
         ]
       }
-    ]
+    ],
+    "sourcePageReferences": []
   },
   {
     "id": "42",
@@ -2140,7 +2092,7 @@
       "rāst",
       "ʿajam ʿushayrān"
     ],
-    "suyur": [
+    "suyūr": [
       {
         "id": "c621cf4a580446b6bebe",
         "creatorEnglish": "Al-Shawwā, Sāmī",
@@ -2185,7 +2137,8 @@
           }
         ]
       }
-    ]
+    ],
+    "sourcePageReferences": []
   },
   {
     "id": "1",
@@ -2210,7 +2163,7 @@
       "dūgāh",
       "rāst"
     ],
-    "suyur": [
+    "suyūr": [
       {
         "id": "mxBF-Ty6OY8xIt0pkyIBn",
         "creatorEnglish": "test",
@@ -2259,7 +2212,8 @@
           }
         ]
       }
-    ]
+    ],
+    "sourcePageReferences": []
   },
   {
     "id": "28",
@@ -2284,6 +2238,128 @@
       "tīk zirguleh",
       "rāst"
     ],
-    "suyur": []
+    "suyūr": [
+      {
+        "id": "r5c0mqoHrrqJav-_Y1ihf",
+        "creatorEnglish": "test",
+        "creatorArabic": "test",
+        "sourceId": "HK6shRFzmS98eQ-u2MZ1E",
+        "page": "3233",
+        "commentsEnglish": "2342",
+        "commentsArabic": "234",
+        "stops": []
+      }
+    ],
+    "sourcePageReferences": []
+  },
+  {
+    "id": "35",
+    "name": "maqām ʿushayrān",
+    "ascendingNoteNames": [
+      "ʿushayrān",
+      "ʿirāq",
+      "rāst",
+      "dūgāh",
+      "segāh",
+      "chahargāh",
+      "nawā",
+      "ḥuseinī"
+    ],
+    "descendingNoteNames": [
+      "ḥuseinī",
+      "nawā",
+      "chahargāh",
+      "nīm buselīk",
+      "dūgāh",
+      "rāst",
+      "ʿirāq",
+      "ʿushayrān"
+    ],
+    "suyūr": [
+      {
+        "id": "0852bc14eddf4caaab32",
+        "creatorEnglish": "Al-Shawwā, Sāmī",
+        "sourceEnglish": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
+        "year": 1946,
+        "page": 24,
+        "commentsEnglish": "Begins on nawā to develop bayāt on dūgāh, then bayāt 'ushayran and upon reaching muḥayyar in the ascent, it descends until dūgāh using 'ajam instead of awj (jins kurd ḥuseinī) and its qarār is 'ushayrān.",
+        "stops": [
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "jins bayāt",
+            "startingNote": "dūgāh",
+            "direction": "none"
+          },
+          {
+            "type": "jins",
+            "value": "jins bayāt",
+            "startingNote": "ʿushayrān",
+            "direction": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "jins bayāt",
+            "startingNote": "dūgāh",
+            "direction": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "jins bayāt",
+            "startingNote": "ḥuseinī",
+            "direction": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "muḥayyar"
+          },
+          {
+            "type": "jins",
+            "value": "jins kurd",
+            "startingNote": "ḥuseinī",
+            "direction": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "jins bayāt",
+            "startingNote": "dūgāh",
+            "direction": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "jins bayāt",
+            "startingNote": "ʿushayrān",
+            "direction": "descending"
+          },
+          {
+            "type": "note",
+            "value": "ʿushayrān"
+          }
+        ]
+      },
+      {
+        "id": "t1et5sZLc1Uo8zdS3GKCN",
+        "creatorEnglish": "test",
+        "creatorArabic": "test",
+        "sourceId": "VmShC7ciSIikhGlZwUUJC",
+        "page": "tete",
+        "commentsEnglish": "etetwet",
+        "commentsArabic": "wetwet",
+        "stops": [
+          {
+            "type": "note",
+            "value": "qarār zirguleh"
+          },
+          {
+            "type": "note",
+            "value": "qarār tīk ʿajam ʿushayrān"
+          }
+        ]
+      }
+    ],
+    "sourcePageReferences": []
   }
 ]

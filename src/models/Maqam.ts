@@ -1,18 +1,21 @@
 import TransliteratedNoteName from "./NoteName";
+import { SourcePageReference } from "./Source";
 
 export default class Maqam {
   private id: string;
   private name: string;
   private ascendingNoteNames: TransliteratedNoteName[];
   private descendingNoteNames: TransliteratedNoteName[];
-  private suyur: Seir[]
+  private suyūr: Sayr[]
+  private sourcePageReferences: SourcePageReference[];
 
-  constructor(id: string, name: string, ascendingNoteNames: TransliteratedNoteName[], descendingNoteNames: TransliteratedNoteName[], suyur: Seir[]) {
+  constructor(id: string, name: string, ascendingNoteNames: TransliteratedNoteName[], descendingNoteNames: TransliteratedNoteName[], suyūr: Sayr[], sourcePageReferences: SourcePageReference[]) {
     this.id = id;
     this.name = name;
     this.ascendingNoteNames = ascendingNoteNames;
     this.descendingNoteNames = descendingNoteNames;
-    this.suyur = suyur;
+    this.suyūr = suyūr;
+    this.sourcePageReferences = sourcePageReferences;
   }
   
   getId(): string {
@@ -31,8 +34,12 @@ export default class Maqam {
     return this.descendingNoteNames;
   }
 
-  getSuyur(): Seir[] {
-    return this.suyur;
+  getSuyūr(): Sayr[] {
+    return this.suyūr;
+  }
+
+  getSourcePageReferences(): SourcePageReference[] {
+    return this.sourcePageReferences;
   }
 
   isMaqamSymmetric(): boolean {
@@ -50,20 +57,18 @@ export default class Maqam {
   }
 }
 
-export interface Seir {
+export interface Sayr {
   id: string,
   creatorEnglish: string,
   creatorArabic: string,
-  sourceEnglish: string,
-  sourceArabic: string,
-  year: string,
+  sourceId: string,
   page: string,
   commentsEnglish: string,
   commentsArabic: string,
-  stops: SeirStop[]
+  stops: SayrStop[]
 }
 
-export interface SeirStop {
+export interface SayrStop {
   type: "note" | "jins" | "direction"
   value: string
   startingNote?: TransliteratedNoteName
