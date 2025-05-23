@@ -58,7 +58,6 @@ export default function TuningSystemManager() {
 
   // MARK: States
   // Local state that mirrors the selected or “new” system’s fields
-  console.log(nanoid());
   const [id, setId] = useState(nanoid());
   const [titleEnglish, setTitleEnglish] = useState("");
   const [titleArabic, setTitleArabic] = useState("");
