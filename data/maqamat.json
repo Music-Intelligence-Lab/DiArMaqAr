@@ -2361,5 +2361,31 @@
       }
     ],
     "sourcePageReferences": []
+  },
+  {
+    "id": "",
+    "name": "maqām soznāk",
+    "ascendingNoteNames": [
+      "rāst",
+      "dūgāh",
+      "segāh",
+      "chahargāh",
+      "nawā",
+      "ḥiṣār",
+      "māhūr",
+      "kurdān"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "māhūr",
+      "ḥiṣār",
+      "nawā",
+      "chahargāh",
+      "segāh",
+      "dūgāh",
+      "rāst"
+    ],
+    "suyūr": [],
+    "sourcePageReferences": []
   }
 ]

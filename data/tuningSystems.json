@@ -278,8 +278,11 @@
       ""
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 220,
-    "referenceFrequencies": {}
+    "defaultReferenceFrequency": 220.5,
+    "referenceFrequencies": {
+      "ʿushayrān": 220.5,
+      "yegāh": 195.998
+    }
   },
   {
     "id": "2pWeb0iwkX92M56fhKxl0",
@@ -1827,8 +1830,10 @@
       "ط"
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 220,
-    "referenceFrequencies": {}
+    "defaultReferenceFrequency": 220.5,
+    "referenceFrequencies": {
+      "ʿushayrān": 220.5
+    }
   },
   {
     "id": "6yKTJBlKXj-sHv7vVanNv",
@@ -2712,7 +2717,7 @@
     "page": "18",
     "creatorEnglish": "Meshshāqa, Mikhā'īl",
     "creatorArabic": "مشّاقة، ميخائيل",
-    "commentsEnglish": "The tuning system is printed in the book as \"String Length\" but it is actually as Fret Divisions i.e. the list is ascending as:\n\nYegāh = 000\n102\n201\n298\n392\n483\n572\n658\n742\n823\n903\n980\n1054\n1127\n1197\n1266\n1332\n1397\n1460\n1521\n1580\n1638\n1693\n1748\n1800 = nawā\n\nTherefore as nawā is the octave, we deduce that the string length is 3600 and we must recalculate by doing 3600-102 etc... ",
+    "commentsEnglish": "The tuning system is printed in the book as \"String Length\" but it is actually listed as Fret Divisions i.e. the list is ascending as:\n\nYegāh = 000\n102\n201\n298\n392\n483\n572\n658\n742\n823\n903\n980\n1054\n1127\n1197\n1266\n1332\n1397\n1460\n1521\n1580\n1638\n1693\n1748\n1800 = nawā\n\nTherefore as nawā is the octave, we deduce that the string length is 3600 and we must recalculate the tuning systems pitch classes as 3600-102, 3600-201 etc...",
     "commentsArabic": "",
     "pitchClasses": [
       "3600",
