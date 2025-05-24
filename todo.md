@@ -6,10 +6,6 @@
 
 # 20 May 2025
 
-- Add row in tuning system table for "Fret Division" which calculates where a fret should be according to the string length: full string length minus string length of the pitch class. First cell (Fret Division 0) would always be 0 because its open string, second cell (Fret Division 1) would be full string length minus string length of that pitch class, etc...
-
-- Add check boxes in Octave 1 header to show/hide rows in tuning system table. One check box per row name. For now include all rows. The check boxes selection should apply to all octaves, but only show it on Octave 1.
-
 - When Octave is collapsed force showing pitch class and note name rows
 
 - Default note naming convention should be based on Al-Kindi 12 tone system and naming convention

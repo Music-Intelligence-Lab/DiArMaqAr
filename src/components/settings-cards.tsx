@@ -3,6 +3,7 @@
 import React from "react";
 import { Slider } from "@mui/material";
 import { useAppContext } from "@/contexts/app-context";
+import { useFilterContext } from "@/contexts/filter-context";
 import SettingsIcon from "@mui/icons-material/Settings";
 
 const SettingsCard = () => {
@@ -37,6 +38,8 @@ const SettingsCard = () => {
     setOpenBottomDrawer,
     setOpenNavigation,
   } = useAppContext();
+
+  const { filters, setFilters } = useFilterContext();
 
   const togglePanel = () => {
     setOpenSettings((prev) => !prev);
@@ -318,6 +321,29 @@ const SettingsCard = () => {
                 </div>
               </>
             )}
+          </details>
+
+          <details className="settings-card__details">
+            <summary className="settings-card__summary">Filters</summary>
+            {
+              Object.keys(filters).map((key) => (
+                <div key={key} className="settings-card__filter-container">
+                  <label htmlFor={`${key}-filter`} className="settings-card__filter-label">
+                    {key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}:
+                  </label>
+                  <label className="settings-card__filter-checkbox">
+                    <input
+                      type="checkbox"
+                      id={`${key}-filter`}
+                      checked={filters[key as keyof typeof filters]}
+                      onChange={() => setFilters((prev) => ({ ...prev, [key]: !prev[key as keyof typeof filters] }))}
+                      className="settings-card__checkbox"
+                    />
+                    <div className="checkmark"></div>
+                  </label>
+                </div>
+              ))
+            }
           </details>
 
           <button className="settings-card__clear-button" onClick={clearSelections}>
