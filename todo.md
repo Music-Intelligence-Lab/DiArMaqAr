@@ -63,22 +63,24 @@ Currently the pattern playback only continues ascending until the last note of t
 # 24 May 2025
 - Cascading for Note Names has stopped working, and with that the default note names selection when inputting a new tuning system. When fixing remember we have a previous feature request: "Default note naming convention should be based on Al-Kindi 12 tone system and naming convention".
 
-
-- Problem with Transpositions: if a tuning systenm doesn't use fractions as Input Type, always use cents to calculate the intervals, transpositions etc... I inputed a new tuning system: Meshshāqa, Mikhā'īl (1899) The Arabic Octave According to the Modernists. Choose it and click maqām rāst and then play the transpositions so you can hear the problem... by using string length to calculate the intervals, the results are incorrect (because string length is exponential).
+- Problem with Transpositions: if a tuning system doesn't use fractions as Input Type, always use cents to calculate the intervals, transpositions etc... I inputed a new tuning system: Meshshāqa, Mikhā'īl (1899). Choose it and click maqām rāst and then play the transpositions so you can hear the problem: by using string length to calculate the intervals, the results are incorrect (because string length is exponential).
 
 - Fret divisions calculations for first divisions in octaves 2 and 3 not correct, they should include the 2/1 and 4/1 string length plus the division value
 
-- Add option to filter Abjad Name
+- Tuning System Table: Add option to filter Abjad Name
 
-- ⁠hide the checkbox that controls the "input type" so that we don't have functionality that doesn't do anything (i.e uncheck the box, the row is supposed to disappear but it doesn't)
+- ⁠Hide the checkbox that controls the "input type" so that we don't have functionality that doesn't do anything (i.e uncheck the box, the row is supposed to disappear but it doesn't)
 
-- Can we put the tuning system table rows filters next to the cascade enable/disable button so that they're easier to access. We want to try to avoid "hidden" settings unless they're "set and forget"
+- Can we put the tuning system table rows filters next to the cascade enable/disable button so that they're easier to access. We want to try to avoid "hidden" settings unless they're "set and forget". 
+- Also, make sure Cascade button and Filter checkboxes are hidden when the Octave panel is closed
 
 - remove styling from filter checkboxes
 
 - Bibliography Page: Print saved bibliography under the form. Two columns, one row per source, Arabic in right column, English in left. 
 
 - Saving new maqām does not give it an ID. check maqām soznāk which I saved today.
+
+- Fix Play Jins Buttons in Ajnas Transpositions table: Apologies but I made a mistake whilst formatting and styling the Ajnas transpositions. The Play Jins buttons now only play the original (Taḥlīl) jins notes, not the transposed sequence.
 
 # ROADMAP FEATURES
 - Compare Ajnas/Maqamat from different tuning systems: How to implement?

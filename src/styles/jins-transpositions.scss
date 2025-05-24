@@ -3,7 +3,7 @@
   width: 100%;
   font-size: 0.9rem;
 
- &__title {
+  &__title {
     width: 100%;
     background-color: $secondary;
     color: #fff;
@@ -14,53 +14,58 @@
     border: solid 1px $grey;
   }
 
-&__play-circle-icon.MuiSvgIcon-root {
-//    background-color: $tertiary;
+  &__play-circle-icon.MuiSvgIcon-root {
+    //    background-color: $tertiary;
     color: white;
-    padding: 0px ; 
-    margin: 0px 0px 5px 35px;    
-    font-size: 16px;
-    display: block;
+    padding: 0px;
+    margin: 0px;
+    font-size: 24px;
+    cursor: pointer;
+    vertical-align: middle;
   }
-   
 
   &__button {
     background-color: $primary;
     color: white;
-    padding: 5px;
+    padding: 0px;
+    padding-left: 10px;
+    padding-right: 10px;
     border-radius: 3px;
     cursor: pointer;
-    margin: 0px;
+    margin-right: 10px;
     font-family: inherit;
     font-size: 12px;
-    width: 100px;
-    height: 50px;
+    width: 190px;
+    height: 40px;
+    vertical-align: middle;
+    text-align: center;
   }
-
+  
   &__table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 50px;
     font-size: 12px;
 
+    tr {
+      text-align: left;
+    }
 
     th {
-            vertical-align: middle;
+      vertical-align: middle;
       margin-bottom: 500px;
       text-align: left;
       padding: 10px;
-          border: solid 1px $grey;
-          
-
-    } 
-  
-    td {
-      vertical-align: middle;
-      padding: 10px ;
-          border: solid 1px $grey;
+      border: solid 1px $grey;
 
     }
 
+    td {
+      vertical-align: middle;
+      border: solid 1px $grey;
+      padding: 10px;
+    }
+      
     tbody {
       font-weight: 600;
     }
@@ -68,46 +73,54 @@
     tbody tr:nth-child(odd) {
       background-color: transparent;
     }
+
     tbody tr:nth-child(even) {
       background-color: transparent;
     }
   }
 
+  &__cell {
+    min-width: 50px !important;
+  }
+
   &__transposition-title {
-    font-size: 20px;  
+    font-size: 20px;
     padding-right: 20px;
   }
 
-    &__transposition-number {
+  &__transposition-number {
     background-color: black;
-    width: 30px;
-    font-size: 20px;  
-    padding: 0px 0px 0px 0px;
+    width: 30px !important;
+    font-size: 20px;
+    padding: 0px 0px 0px 0px !important;
     margin: 0px 0px 0px 0px;
-    text-align: center;
+    text-align: center !important;
   }
 
- &__header {
+  &__header {
     text-align: left;
     background-color: transparent;
   }
 
-    &__header-cell {
+  &__header-cell {
     text-align: left;
     background-color: transparent;
   }
 
   &__row-header {
     font-weight: bold;
+    width: 120px !important;
     background-color: $medium-grey;
-      text-transform: capitalize;
+    text-transform: capitalize;
 
   }
-    &__jins-name-row {
+
+  &__jins-name-row {
     font-weight: bold;
     background-color: black;
     color: white;
   }
+
   &__input {
     width: 100px;
     font-size: 1rem;
@@ -117,7 +130,8 @@
   }
 
   .jins-transpositions__spacer {
-    padding: 10px;
+    padding: 0px;
     border: 0px;
+    height: 20px !important;
   }
 }

@@ -18,8 +18,11 @@
     color: white;
     padding: 0px;
     margin: 0px;
+    margin-right: 5px;
     font-size: 24px;
     cursor: pointer;
+        vertical-align: middle;
+
   }
 
 
@@ -27,14 +30,17 @@
     background-color: $primary;
     color: white;
     padding: 0px;
+    padding-left: 10px;
+    padding-right: 10px;
     border-radius: 3px;
     cursor: pointer;
     margin-right: 10px;
     font-family: inherit;
     font-size: 12px;
-    width: 180px;
+    width: 190px;
     height: 40px;
     vertical-align: middle;
+    text-align: center;
   }
 
   &__table {
@@ -80,9 +86,9 @@
   &__transposition-number {
     width: 34px !important;
     font-size: 20px;
-    padding: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px !important;
     margin: 0px 0px 0px 0px;
-    text-align: center;
+    text-align: center !important;
     background-color: black;
   }
 
