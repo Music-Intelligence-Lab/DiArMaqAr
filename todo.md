@@ -12,7 +12,7 @@
 
 - Check why yegah starting note name always saves with tuning system even if the starting note name is changed before initial first time save 
 
-- Maqam Analysis and Transpositions: Add row of which ajnas exist within teh currently selected maqam. Add a second row underneath with a play jins button and a highlight jins button which highlights the relevant cells in the table.
+- Maqam Analysis and Transpositions: Add row of which ajnas exist within the currently selected maqam. Add a second row underneath with a play jins button and a highlight jins button which highlights the relevant cells in the table.
 
 - Find a way to separate the accidental in the English Note Name so it can be used for other purposes. i.e. C# or Bb or B-- or G+
 
@@ -59,6 +59,24 @@ Currently the pattern playback only continues ascending until the last note of t
 - Add extra weights to the fonts used in the site
 
 - MIDI Inputs and Outputs not working 
+
+# 24 May 2025
+- Cascading for Note Names has stopped working, and with that the default note names selection when inputting a new tuning system. When fixing remember we have a previous feature request: "Default note naming convention should be based on Al-Kindi 12 tone system and naming convention".
+
+
+- Problem with Transpositions: if a tuning systenm doesn't use fractions as Input Type, always use cents to calculate the transpositions etc... I inputed a new tuning system: Meshshāqa, Mikhā'īl (1899) The Arabic Octave According to the Modernists. Choose it and click maqām rāst and then playback the transpositions so you can hear the problem.
+
+- Fret divisions calculations for first divisions in octaves 2 and 3 not correct, they should include the 2/1 and 4/1 string length plus the division value
+
+- Add option to filter Abjad Name
+
+- ⁠hide the checkbox that controls the "input type" so that we don't have functionality that doesn't do anything (i.e uncheck the box, the row is supposed to disappear but it doesn't)
+
+- Can we put the tuning system table rows filters next to the cascade enable/disable button so that they're easier to access. We want to try to avoid "hidden" settings unless they're "set and forget"
+
+- remove styling from filter checkboxes
+
+
 
 # ROADMAP FEATURES
 - Compare Ajnas/Maqamat from different tuning systems: How to implement?
