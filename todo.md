@@ -64,7 +64,7 @@ Currently the pattern playback only continues ascending until the last note of t
 - Cascading for Note Names has stopped working, and with that the default note names selection when inputting a new tuning system. When fixing remember we have a previous feature request: "Default note naming convention should be based on Al-Kindi 12 tone system and naming convention".
 
 
-- Problem with Transpositions: if a tuning systenm doesn't use fractions as Input Type, always use cents to calculate the transpositions etc... I inputed a new tuning system: Meshshāqa, Mikhā'īl (1899) The Arabic Octave According to the Modernists. Choose it and click maqām rāst and then playback the transpositions so you can hear the problem.
+- Problem with Transpositions: if a tuning systenm doesn't use fractions as Input Type, always use cents to calculate the intervals, transpositions etc... I inputed a new tuning system: Meshshāqa, Mikhā'īl (1899) The Arabic Octave According to the Modernists. Choose it and click maqām rāst and then play the transpositions so you can hear the problem... by using string length to calculate the intervals, the results are incorrect (because string length is exponential).
 
 - Fret divisions calculations for first divisions in octaves 2 and 3 not correct, they should include the 2/1 and 4/1 string length plus the division value
 
@@ -76,7 +76,9 @@ Currently the pattern playback only continues ascending until the last note of t
 
 - remove styling from filter checkboxes
 
+- Bibliography Page: Print saved bibliography under the form. Two columns, one row per source, Arabic in right column, English in left. 
 
+- Saving new maqām does not give it an ID. check maqām soznāk which I saved today.
 
 # ROADMAP FEATURES
 - Compare Ajnas/Maqamat from different tuning systems: How to implement?

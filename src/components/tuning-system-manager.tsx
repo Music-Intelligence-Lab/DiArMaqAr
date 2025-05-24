@@ -860,7 +860,7 @@ export default function TuningSystemManager() {
     <div className="tuning-system-manager">
       <details open={true} className="tuning-system-manager__details">
         <summary className="tuning-system-manager__summary">
-          <h2 className="tuning-system-manager__header">Tuning System</h2>
+          <h2 className="tuning-system-manager__header">Tanghīm (Tuning System)</h2>
           {`${
             selectedTuningSystem
               ? `: ${selectedTuningSystem.getCreatorEnglish()} (${selectedTuningSystem.getYear()}) ${selectedTuningSystem.getTitleEnglish()}`
