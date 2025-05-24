@@ -172,7 +172,7 @@
   },
   {
     "id": "XPnGrqey5SmtQ1b625n0X",
-    "titleEnglish": "",
+    "titleEnglish": "12-Tone",
     "titleArabic": "",
     "year": "874",
     "sourceEnglish": "",
@@ -1765,7 +1765,7 @@
   },
   {
     "id": "L5aRrcAb6g7u2xb52to4h",
-    "titleEnglish": "",
+    "titleEnglish": "9-Tone",
     "titleArabic": "",
     "year": "850",
     "sourceEnglish": "",
@@ -2127,7 +2127,7 @@
   },
   {
     "id": "x4WhUP1sdDtlrTPIsGSPq",
-    "titleEnglish": "",
+    "titleEnglish": "10-Tone",
     "titleArabic": "",
     "year": "912",
     "sourceEnglish": "",
@@ -2210,7 +2210,10 @@
     ],
     "stringLength": 1000,
     "defaultReferenceFrequency": 220,
-    "referenceFrequencies": {}
+    "referenceFrequencies": {
+      "ʿushayrān": 220.5,
+      "yegāh": 195.998
+    }
   },
   {
     "id": "8NKeX1yBGiwyhgRAlbi7f",
@@ -2359,7 +2362,7 @@
   },
   {
     "id": "3KFjxwsRj8atudI6L3x60",
-    "titleEnglish": "11-Fret Oud 25-tone",
+    "titleEnglish": "11-Fret Oud 25-Tone",
     "titleArabic": "",
     "year": "950",
     "sourceEnglish": "",
