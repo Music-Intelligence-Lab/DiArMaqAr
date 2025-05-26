@@ -166,5 +166,40 @@
     "ISBN": "",
     "url": "https://dlib.nyu.edu/aco/book/aub_aco003675",
     "dateAccessed": "21-05-2025"
+  },
+  {
+    "id": "npR7tB33uFtyZiJyrXbPx",
+    "titleEnglish": "al-Risālah al-Shihābīyah fī al-Ṣināʻah al-Mūsīqīyah",
+    "titleArabic": "الرسالة الشهابية في الصناعة الموسيقية",
+    "sourceType": "Book",
+    "contributors": [
+      {
+        "type": "Author",
+        "firstNameEnglish": "Mikhā'il",
+        "lastNameEnglish": "Meshshāqa",
+        "firstNameArabic": "ميخائيل",
+        "lastNameArabic": "مشّاقة"
+      },
+      {
+        "type": "Author",
+        "firstNameEnglish": "Loius",
+        "lastNameEnglish": "Ronzevalle",
+        "firstNameArabic": "لويس",
+        "lastNameArabic": "رونزيفال"
+      }
+    ],
+    "editionEnglish": "",
+    "editionArabic": "",
+    "publicationDateEnglish": "1899",
+    "publicationDateArabic": "١٨٩٩",
+    "originalPublicationDateEnglish": "",
+    "originalPublicationDateArabic": "",
+    "publisherEnglish": "Al-Ābā’ Al-Yasū’īyīn",
+    "publisherArabic": "الآباء اليسوعيين",
+    "placeEnglish": "Beirut",
+    "placeArabic": "بيروت",
+    "ISBN": "",
+    "url": "",
+    "dateAccessed": ""
   }
 ]

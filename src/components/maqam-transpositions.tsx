@@ -84,17 +84,7 @@ export default function MaqamTranspositions() {
             <th className="maqam-transpositions__header" colSpan={3 + (ascendingMaqamCellDetails.length - 1) * 2}>
               <span className="maqam-transpositions__transposition-title">{`Darajat al-Istiqrār (tonic/finalis): ${ascendingMaqamCellDetails[0].noteName} (${getEnglishNoteName(ascendingMaqamCellDetails[0].noteName)})`}</span>
 
-              <button
-                className="maqam-transpositions__button"
-                onClick={() => {
-                  const ascFreq = ascendingMaqamCellDetails.map((cell) => parseInt(cell.frequency));
-                  const descFreq = descendingMaqamCellDetails.map((cell) => parseInt(cell.frequency));
-                  const allFreq = [...ascFreq, ...descFreq];
-                  playSequence(allFreq);
-                }}
-              >
-                <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />{" "}
-              </button>
+
               <button
                 className="maqam-transpositions__button"
                 onClick={() => {
@@ -111,9 +101,20 @@ export default function MaqamTranspositions() {
                   setSelectedCells(newSelectedCells);
                 }}
               >
-                Select Ascending
+                Select & Load to Keyboard
               </button>
-              <button
+                            <button
+                className="maqam-transpositions__button"
+                onClick={() => {
+                  const ascFreq = ascendingMaqamCellDetails.map((cell) => parseInt(cell.frequency));
+                  const descFreq = descendingMaqamCellDetails.map((cell) => parseInt(cell.frequency));
+                  const allFreq = [...ascFreq, ...descFreq];
+                  playSequence(allFreq);
+                }}
+              >
+                <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />{"Ascending > Descending"}
+              </button>
+{/*               <button
                 className="maqam-transpositions__button"
                 onClick={() => {
                   const transpositionNoteNames = descendingMaqamCellDetails.map((cell) => cell.noteName);
@@ -131,26 +132,26 @@ export default function MaqamTranspositions() {
               >
                 Select Descending
               </button>
-              <button
+ */}              <button
                 className="maqam-transpositions__button"
                 onClick={() => playSequence(ascendingMaqamCellDetails.map((cell) => parseInt(cell.frequency)))}
               >
                 <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
-                Play Ascending
+                Ascending
               </button>
               <button
                 className="maqam-transpositions__button"
                 onClick={() => playSequence(descendingMaqamCellDetails.map((cell) => parseInt(cell.frequency)))}
               >
                 <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
-                Play Descending
+                Descending
               </button>
             </th>
           </tr>
           {/* Ascending Scale Degrees Row */}
           <tr>
             <td className="maqam-transpositions__asc-desc-column" rowSpan={6}>↗</td>
-            </tr>
+          </tr>
           <tr>
             <th className="maqam-transpositions__row-header">Scale Degrees</th>
             {ascendingMaqamCellDetails.map((_, idx) =>
@@ -371,20 +372,7 @@ export default function MaqamTranspositions() {
                 <tr>
                   <td className="maqam-transpositions__transposition-number" rowSpan={rowCount}>{row + 2}</td>
                   <td className="maqam-transpositions__maqam-name-row" colSpan={colCount + 1}>
-                    <span className="maqam-transpositions__transposition-title">{`${selectedMaqam.getName()} al-${ascendingDetails[0].noteName
-                      }`}</span>
-                    <button
-                      className="maqam-transpositions__button"
-                      onClick={() => {
-                        const ascFreq = ascendingDetails.map((cell) => parseInt(cell.frequency));
-                        const descFreq = descendingDetails.map((cell) => parseInt(cell.frequency));
-                        const allFreq = [...ascFreq, ...descFreq];
-                        playSequence(allFreq);
-                      }}
-                    >
-                      Ascending {">"} Descending
-                      <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
-                    </button>
+                    <span className="maqam-transpositions__transposition-title">{`${selectedMaqam.getName()} al-${ascendingDetails[0].noteName} (${getEnglishNoteName(ascendingDetails[0].noteName)})`}</span>
                     <button
                       className="maqam-transpositions__button"
                       onClick={() => {
@@ -401,40 +389,53 @@ export default function MaqamTranspositions() {
                         setSelectedCells(newSelectedCells);
                       }}
                     >
-                      Select Ascending
-                    </button>
+                Select & Load to Keyboard
+              </button>
+
                     <button
                       className="maqam-transpositions__button"
                       onClick={() => {
-                        const transpositionNoteNames = descendingDetails.map((cell) => cell.noteName);
-
-                        const newSelectedCells = [];
-
-                        for (const cell of allCells) {
-                          const cellDetails = getSelectedCellDetails(cell);
-                          if (transpositionNoteNames.includes(cellDetails.noteName)) {
-                            newSelectedCells.push(cell);
-                          }
-                        }
-                        setSelectedCells(newSelectedCells);
+                        const ascFreq = ascendingDetails.map((cell) => parseInt(cell.frequency));
+                        const descFreq = descendingDetails.map((cell) => parseInt(cell.frequency));
+                        const allFreq = [...ascFreq, ...descFreq];
+                        playSequence(allFreq);
                       }}
                     >
-                      Select Descending
+                      <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
+                      Ascending {">"} Descending
                     </button>
-                                  <button
+{/*               <button
                 className="maqam-transpositions__button"
-                onClick={() => playSequence(ascendingDetails.map((cell) => parseInt(cell.frequency)))}
+                onClick={() => {
+                  const transpositionNoteNames = descendingMaqamCellDetails.map((cell) => cell.noteName);
+
+                  const newSelectedCells = [];
+
+                  for (const cell of allCells) {
+                    const cellDetails = getSelectedCellDetails(cell);
+                    if (transpositionNoteNames.includes(cellDetails.noteName)) {
+                      newSelectedCells.push(cell);
+                    }
+                  }
+                  setSelectedCells(newSelectedCells);
+                }}
               >
-                <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
-                Play Ascending
+                Select Descending
               </button>
-              <button
-                className="maqam-transpositions__button"
-                onClick={() => playSequence(descendingDetails.map((cell) => parseInt(cell.frequency)))}
-              >
-                <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
-                Play Descending
-              </button>
+ */}              <button
+                      className="maqam-transpositions__button"
+                      onClick={() => playSequence(ascendingDetails.map((cell) => parseInt(cell.frequency)))}
+                    >
+                      <PlayCircleIcon className="maqam-transpositions__play-circle-icon" /> 
+                      Ascending
+                    </button>
+                    <button
+                      className="maqam-transpositions__button"
+                      onClick={() => playSequence(descendingDetails.map((cell) => parseInt(cell.frequency)))}
+                    >
+                      <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
+                      Descending
+                    </button>
 
                   </td>
                 </tr>
