@@ -4,6 +4,7 @@ import React from "react";
 import { Slider } from "@mui/material";
 import { useAppContext } from "@/contexts/app-context";
 import { useFilterContext } from "@/contexts/filter-context";
+import { useMenuContext } from "@/contexts/menu-context";
 import SettingsIcon from "@mui/icons-material/Settings";
 
 const SettingsCard = () => {
@@ -33,11 +34,9 @@ const SettingsCard = () => {
     selectedPattern,
     setSelectedPattern,
     setRefresh,
-    openSettings,
-    setOpenSettings,
-    setOpenBottomDrawer,
-    setOpenNavigation,
   } = useAppContext();
+
+  const { openSettings, setOpenSettings, setOpenBottomDrawer, setOpenNavigation } = useMenuContext();
 
   const { filters, setFilters } = useFilterContext();
 
