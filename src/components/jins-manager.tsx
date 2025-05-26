@@ -5,16 +5,17 @@ import Jins from "@/models/Jins";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import React from "react";
 import { getJinsTranspositions } from "@/functions/transpose";
+import { updateAjnas } from "@/functions/update";
 
 export default function JinsManager() {
   const {
     ajnas,
+    setAjnas,
     selectedTuningSystem,
     selectedJins,
     setSelectedJins,
     handleClickJins,
     checkIfJinsIsSelectable,
-    updateAllAjnas,
     selectedCells,
     getSelectedCellDetails,
     clearSelections,
@@ -49,14 +50,16 @@ export default function JinsManager() {
 
     const newJins = new Jins(selectedJins.getId(), selectedJins.getName(), selectedNoteNames, selectedJins.getSourcePageReferences());
     const newAjnas = ajnas.filter((jins) => jins.getId() !== newJins.getId());
-    await updateAllAjnas([...newAjnas, newJins]);
+    await updateAjnas([...newAjnas, newJins]);
+    setAjnas([...newAjnas, newJins]);
   };
 
   // Stub handler for deleting a new jins entry.
   const handleDeleteJins = async () => {
     if (!selectedJins) return;
     const newAjnas = ajnas.filter((jins) => jins.getId() !== selectedJins.getId());
-    await updateAllAjnas(newAjnas);
+    await updateAjnas(newAjnas);
+    setAjnas(newAjnas);
   };
 
   // const checkIfNoteNameIsUnsaved = (noteName: string) => {

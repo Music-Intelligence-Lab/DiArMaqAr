@@ -4,9 +4,10 @@ import React, { useState, useEffect } from "react";
 import { useAppContext } from "@/contexts/app-context";
 import Source, { Contributor } from "@/models/Source";
 import { nanoid } from "nanoid";
+import { updateSources } from "@/functions/update";
 
 export default function BibliographyPage() {
-  const { sources, setSources, updateAllSources } = useAppContext();
+  const { sources, setSources } = useAppContext();
   const [selectedSourceId, setSelectedSourceId] = useState<string>("new");
   const [id, setId] = useState<string>("");
   const [titleEnglish, setTitleEnglish] = useState<string>("");
@@ -120,7 +121,7 @@ export default function BibliographyPage() {
       updatedSources = sources.map((s: Source) => (s.getId() === selectedSourceId ? newSource : s));
     }
     setSources(updatedSources);
-    updateAllSources(updatedSources);
+    updateSources(updatedSources);
   };
 
   const handleDelete = (e: React.FormEvent) => {
@@ -128,7 +129,7 @@ export default function BibliographyPage() {
     if (selectedSourceId !== "new") {
       const updatedSources = sources.filter((s: Source) => s.getId() !== selectedSourceId);
       setSources(updatedSources);
-      updateAllSources(updatedSources);
+      updateSources(updatedSources);
       setSelectedSourceId("new");
     }
   };

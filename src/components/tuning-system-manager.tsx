@@ -19,10 +19,12 @@ import { nanoid } from "nanoid";
 
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { getEnglishNoteName, abjadNames } from "@/functions/noteNameMappings";
+import { updateTuningSystems } from "@/functions/update";
 
 export default function TuningSystemManager() {
   const {
     tuningSystems,
+    setTuningSystems,
     selectedTuningSystem,
     setSelectedTuningSystem,
     pitchClasses,
@@ -30,7 +32,6 @@ export default function TuningSystemManager() {
     noteNames,
     setNoteNames,
     getFirstNoteName,
-    updateAllTuningSystems,
     referenceFrequencies,
     setReferenceFrequencies,
     playNoteFrequency,
@@ -257,7 +258,8 @@ export default function TuningSystemManager() {
         Number(defaultReferenceFrequency)
       );
       const updatedList = tuningSystems.map((ts) => (ts.getId() === selectedTuningSystem.getId() ? updated : ts));
-      updateAllTuningSystems(updatedList);
+      updateTuningSystems(updatedList);
+      setTuningSystems(updatedList);
       setSelectedTuningSystem(updated);
       clearSelections();
     } else {
@@ -283,7 +285,8 @@ export default function TuningSystemManager() {
         Number(defaultReferenceFrequency)
       );
       const updatedList = [...tuningSystems, newSystem];
-      updateAllTuningSystems(updatedList);
+      updateTuningSystems(updatedList);
+      setTuningSystems(updatedList);
       setSelectedTuningSystem(newSystem);
     }
   };
@@ -292,7 +295,8 @@ export default function TuningSystemManager() {
   const handleDelete = () => {
     if (selectedTuningSystem) {
       const updatedList = tuningSystems.filter((ts) => ts.getId() !== selectedTuningSystem.getId());
-      updateAllTuningSystems(updatedList);
+      updateTuningSystems(updatedList);
+      setTuningSystems(updatedList);
       setSelectedTuningSystem(null);
       resetFormForNewSystem();
       clearSelections();
@@ -374,9 +378,7 @@ export default function TuningSystemManager() {
   const numberOfPitchClasses = pitchClassesArr.length;
 
   useEffect(() => {
-    if (selectedIndices.length > numberOfPitchClasses) {
-      setSelectedIndices(selectedIndices.slice(0, numberOfPitchClasses));
-    } else if (selectedIndices.length < numberOfPitchClasses) {
+    if (selectedIndices.length < numberOfPitchClasses) {
       const typeOfPitchClass = detectPitchClassType(pitchClassesArr);
 
       if (typeOfPitchClass === "unknown") {
