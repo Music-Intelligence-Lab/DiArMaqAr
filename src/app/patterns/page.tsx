@@ -4,6 +4,7 @@ import React, { FormEvent, useEffect, useState } from "react";
 import { useAppContext } from "@/contexts/app-context";
 import Pattern, { PatternNote, NoteDuration } from "@/models/Pattern";
 import { nanoid } from "nanoid";
+import { updatePatterns } from "@/functions/update";
 
 const DURATION_OPTIONS: NoteDuration[] = [
   "32n",
@@ -27,7 +28,7 @@ const DURATION_OPTIONS: NoteDuration[] = [
 ];
 
 export default function PatternsPage() {
-  const { patterns, setPatterns, updateAllPatterns } = useAppContext();
+  const { patterns, setPatterns } = useAppContext();
   const [patternId, setPatternId] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [notes, setNotes] = useState<PatternNote[]>([]);
@@ -78,7 +79,7 @@ export default function PatternsPage() {
     const updatedList = patterns.some((p) => p.getId() === idUse)
       ? patterns.map((p) => (p.getId() === idUse ? newPattern : p))
       : [...patterns, newPattern];
-    updateAllPatterns(updatedList);
+    updatePatterns(updatedList);
     setPatterns(updatedList);
     setPatternId(idUse);
   };
@@ -87,7 +88,7 @@ export default function PatternsPage() {
   const handleDelete = () => {
     if (!patternId) return;
     const filtered = patterns.filter((p) => p.getId() !== patternId);
-    updateAllPatterns(filtered);
+    updatePatterns(filtered);
     setPatterns(filtered);
     setPatternId("");
   };

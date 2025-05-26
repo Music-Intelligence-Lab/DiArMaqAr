@@ -72,8 +72,6 @@ Currently the pattern playback only continues ascending until the last note of t
 
 - Bibliography Page: Print saved bibliography under the form. Two columns, one row per source, Arabic in right column, English in left. 
 
-- Saving new maqām does not give it an ID. check maqām soznāk which I saved today.
-
 - Fix Play Jins Buttons in Ajnas Transpositions table: Apologies but I made a mistake whilst formatting and styling the Ajnas transpositions. The Play Jins buttons now only play the original (Taḥlīl) jins notes, not the transposed sequence.
 
 # ROADMAP FEATURES

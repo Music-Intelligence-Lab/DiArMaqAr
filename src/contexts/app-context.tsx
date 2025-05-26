@@ -56,7 +56,7 @@ type OutputMode = "mute" | "waveform" | "midi";
 interface AppContextInterface {
   isPageLoading: boolean;
   tuningSystems: TuningSystem[];
-  updateAllTuningSystems: (newSystems: TuningSystem[]) => Promise<void>;
+  setTuningSystems: React.Dispatch<React.SetStateAction<TuningSystem[]>>;
   selectedTuningSystem: TuningSystem | null;
   setSelectedTuningSystem: (tuningSystem: TuningSystem | null) => void;
   pitchClasses: string;
@@ -83,14 +83,12 @@ interface AppContextInterface {
   getSelectedCellDetails: (cell: Cell) => CellDetails;
   ajnas: Jins[];
   setAjnas: React.Dispatch<React.SetStateAction<Jins[]>>;
-  updateAllAjnas: (newAjnas: Jins[]) => Promise<void>;
   selectedJins: Jins | null;
   setSelectedJins: React.Dispatch<React.SetStateAction<Jins | null>>;
   checkIfJinsIsSelectable: (jins: Jins) => boolean;
   handleClickJins: (jins: Jins) => void;
   maqamat: Maqam[];
   setMaqamat: React.Dispatch<React.SetStateAction<Maqam[]>>;
-  updateAllMaqamat: (newMaqamat: Maqam[]) => Promise<void>;
   selectedMaqam: Maqam | null;
   setSelectedMaqam: React.Dispatch<React.SetStateAction<Maqam | null>>;
   checkIfMaqamIsSelectable: (maqam: Maqam) => boolean;
@@ -124,10 +122,8 @@ interface AppContextInterface {
   setPitchBendRange: React.Dispatch<React.SetStateAction<number>>;
   sources: Source[];
   setSources: React.Dispatch<React.SetStateAction<Source[]>>;
-  updateAllSources: (sources: Source[]) => Promise<void>;
   patterns: Pattern[];
   setPatterns: React.Dispatch<React.SetStateAction<Pattern[]>>;
-  updateAllPatterns: (patterns: Pattern[]) => Promise<void>;
   selectedPattern: Pattern | null;
   setSelectedPattern: React.Dispatch<React.SetStateAction<Pattern | null>>;
   refresh: boolean;
@@ -488,60 +484,43 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   };
 
   const playSequence = (frequencies: number[]) => {
-  const beatSec = 60 / tempo;
+    const beatSec = 60 / tempo;
 
-  // fallback ascending if no pattern
-  if (!selectedPattern || !selectedPattern.getNotes().length) {
-    frequencies.forEach((freq, i) =>
-      setTimeout(() => playNoteFrequency(freq), i * beatSec * 1000)
-    );
-    return;
-  }
-
-  const patternNotes = selectedPattern.getNotes();
-  // highest degree (e.g. III -> 3)
-  const maxDegree = Math.max(
-    ...patternNotes.map((n) =>
-      n.scaleDegree === "0" ? 0 : romanToNumber(n.scaleDegree)
-    )
-  );
-
-  // if too few freqs, fallback ascending
-  if (frequencies.length < maxDegree) {
-    frequencies.forEach((freq, i) =>
-      setTimeout(() => playNoteFrequency(freq), i * beatSec * 1000)
-    );
-    return;
-  }
-
-  // sliding-window: for each start index, walk the pattern
-  let timeOffset = 0;
-  for (
-    let windowStart = 0;
-    windowStart <= frequencies.length - maxDegree;
-    windowStart++
-  ) {
-    for (const { scaleDegree, noteDuration } of patternNotes) {
-      // compute duration in seconds
-      const base = 4 / Number(noteDuration.replace(/\D/g, ""));
-      const mod = noteDuration.endsWith("d")
-        ? 1.5
-        : noteDuration.endsWith("t")
-        ? 2 / 3
-        : 1;
-      const durSec = base * mod * beatSec;
-
-      if (scaleDegree !== "0") {
-        const deg = romanToNumber(scaleDegree);
-        const freq = frequencies[windowStart + deg - 1];
-        setTimeout(() => playNoteFrequency(freq, durSec), timeOffset * 1000);
-      }
-
-      timeOffset += durSec;
+    // fallback ascending if no pattern
+    if (!selectedPattern || !selectedPattern.getNotes().length) {
+      frequencies.forEach((freq, i) => setTimeout(() => playNoteFrequency(freq), i * beatSec * 1000));
+      return;
     }
-  }
-};
 
+    const patternNotes = selectedPattern.getNotes();
+    // highest degree (e.g. III -> 3)
+    const maxDegree = Math.max(...patternNotes.map((n) => (n.scaleDegree === "0" ? 0 : romanToNumber(n.scaleDegree))));
+
+    // if too few freqs, fallback ascending
+    if (frequencies.length < maxDegree) {
+      frequencies.forEach((freq, i) => setTimeout(() => playNoteFrequency(freq), i * beatSec * 1000));
+      return;
+    }
+
+    // sliding-window: for each start index, walk the pattern
+    let timeOffset = 0;
+    for (let windowStart = 0; windowStart <= frequencies.length - maxDegree; windowStart++) {
+      for (const { scaleDegree, noteDuration } of patternNotes) {
+        // compute duration in seconds
+        const base = 4 / Number(noteDuration.replace(/\D/g, ""));
+        const mod = noteDuration.endsWith("d") ? 1.5 : noteDuration.endsWith("t") ? 2 / 3 : 1;
+        const durSec = base * mod * beatSec;
+
+        if (scaleDegree !== "0") {
+          const deg = romanToNumber(scaleDegree);
+          const freq = frequencies[windowStart + deg - 1];
+          setTimeout(() => playNoteFrequency(freq, durSec), timeOffset * 1000);
+        }
+
+        timeOffset += durSec;
+      }
+    }
+  };
 
   function noteOn(frequency: number) {
     // 1) Mute
@@ -622,132 +601,6 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     activeNotesRef.current.set(frequency, queue);
   }
 
-  const updateAllTuningSystems = async (newSystems: TuningSystem[]) => {
-    setTuningSystems(newSystems);
-    if (selectedTuningSystem) {
-      const existsInNew = newSystems.find((sys) => sys.getId() === selectedTuningSystem.getId());
-      if (!existsInNew) {
-        setSelectedTuningSystem(null);
-        clearSelections();
-      }
-    }
-    try {
-      const response = await fetch("/api/tuningSystems", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(
-          newSystems.map((ts) => ({
-            id: ts.getId(),
-            titleEnglish: ts.getTitleEnglish(),
-            titleArabic: ts.getTitleArabic(),
-            year: ts.getYear(),
-            sourceEnglish: ts.getSourceEnglish(),
-            sourceArabic: ts.getSourceArabic(),
-            sourceId: ts.getSourceId(),
-            page: ts.getPage(),
-            creatorEnglish: ts.getCreatorEnglish(),
-            creatorArabic: ts.getCreatorArabic(),
-            commentsEnglish: ts.getCommentsEnglish(),
-            commentsArabic: ts.getCommentsArabic(),
-            pitchClasses: ts.getPitchClasses(),
-            noteNames: ts.getSetsOfNoteNames(),
-            abjadNames: ts.getAbjadNames(),
-            stringLength: ts.getStringLength(),
-            defaultReferenceFrequency: ts.getDefaultReferenceFrequency(),
-            referenceFrequencies: ts.getReferenceFrequencies(),
-          }))
-        ),
-      });
-      if (!response.ok) {
-        throw new Error("Failed to save updated TuningSystems on the server.");
-      }
-    } catch (error) {
-      console.error("Error updating all TuningSystems:", error);
-    }
-  };
-
-  const updateAllAjnas = async (newAjnas: Jins[]) => {
-    setAjnas(newAjnas);
-    clearSelections();
-
-    try {
-      const response = await fetch("/api/ajnas", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(
-          newAjnas.map((j) => ({
-            id: j.getId(),
-            name: j.getName(),
-            noteNames: j.getNoteNames(),
-            sourcePageReferences: j.getSourcePageReferences(),
-          }))
-        ),
-      });
-      if (!response.ok) {
-        throw new Error("Failed to save updated Ajnas on the server.");
-      }
-    } catch (error) {
-      console.error("Error updating all Ajnas:", error);
-    }
-  };
-
-  const updateAllMaqamat = async (newMaqamat: Maqam[]) => {
-    setMaqamat(newMaqamat);
-    clearSelections();
-
-    try {
-      const response = await fetch("/api/maqamat", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(
-          newMaqamat.map((m) => ({
-            id: m.getId(),
-            name: m.getName(),
-            ascendingNoteNames: m.getAscendingNoteNames(),
-            descendingNoteNames: m.getDescendingNoteNames(),
-            suyūr: m.getSuyūr(),
-            sourcePageReferences: m.getSourcePageReferences(),
-          }))
-        ),
-      });
-      if (!response.ok) {
-        throw new Error("Failed to save updated Maqamat on the server.");
-      }
-    } catch (error) {
-      console.error("Error updating all Maqamat:", error);
-    }
-  };
-
-  const updateAllSources = async (sources: Source[]) => {
-    try {
-      const response = await fetch("/api/sources", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(sources.map((source) => source.convertToJSON())),
-      });
-      if (!response.ok) {
-        throw new Error("Failed to save updated Sources on the server.");
-      }
-    } catch (error) {
-      console.error("Error updating all Sources:", error);
-    }
-  };
-
-  const updateAllPatterns = async (patterns: Pattern[]) => {
-    try {
-      const response = await fetch("/api/patterns", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(patterns.map((pattern) => pattern.convertToJSON())),
-      });
-      if (!response.ok) {
-        throw new Error("Failed to save updated Patterns on the server.");
-      }
-    } catch (error) {
-      console.error("Error updating all Patterns:", error);
-    }
-  };
-
   const getSelectedCellDetails = (cell: Cell): CellDetails => {
     const emptyDetails: CellDetails = {
       noteName: "",
@@ -766,6 +619,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
     const pitchArr = selectedTuningSystem.getPitchClasses();
     if (cell.index < 0 || cell.index >= pitchArr.length) return emptyDetails;
+
     const basePc = pitchArr[cell.index];
 
     const pitchType = detectPitchClassType(pitchArr);
@@ -774,9 +628,10 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     const actualReferenceFrequency = referenceFrequencies[getFirstNoteName()] || selectedTuningSystem.getDefaultReferenceFrequency();
 
     const shiftedPc = shiftPitchClass(basePc, pitchType, cell.octave as 0 | 1 | 2 | 3);
-    const conv = convertPitchClass(shiftedPc, pitchType, selectedTuningSystem.getStringLength(), actualReferenceFrequency);//todo change this
+    const conv = convertPitchClass(shiftedPc, pitchType, selectedTuningSystem.getStringLength(), actualReferenceFrequency);
 
     if (cell.index < 0 || cell.index >= selectedIndices.length) return emptyDetails;
+
     const combinedIndex = selectedIndices[cell.index];
 
     const baseLength = octaveOneNoteNames.length;
@@ -1040,7 +895,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       value={{
         isPageLoading,
         tuningSystems,
-        updateAllTuningSystems,
+        setTuningSystems,
         selectedTuningSystem,
         setSelectedTuningSystem,
         pitchClasses,
@@ -1067,14 +922,12 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         getSelectedCellDetails,
         ajnas,
         setAjnas,
-        updateAllAjnas,
         selectedJins,
         setSelectedJins,
         checkIfJinsIsSelectable,
         handleClickJins,
         maqamat,
         setMaqamat,
-        updateAllMaqamat,
         selectedMaqam,
         setSelectedMaqam,
         checkIfMaqamIsSelectable,
@@ -1108,10 +961,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         setPitchBendRange,
         sources,
         setSources,
-        updateAllSources,
         patterns,
         setPatterns,
-        updateAllPatterns,
         selectedPattern,
         setSelectedPattern,
         refresh,

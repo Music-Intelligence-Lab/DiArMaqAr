@@ -4,13 +4,14 @@ import Maqam from "@/models/Maqam";
 import { Cell } from "@/contexts/app-context";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { getMaqamTranspositions } from "@/functions/transpose";
+import { updateMaqamat } from "@/functions/update";
 
 export default function MaqamManager() {
   const {
     maqamat,
+    setMaqamat,
     selectedMaqam,
     setSelectedMaqam,
-    updateAllMaqamat,
     selectedCells,
     setSelectedCells,
     getAllCells,
@@ -66,7 +67,8 @@ export default function MaqamManager() {
     if (!selectedMaqam) return;
 
     const others = maqamat.filter((m) => m.getId() !== maqam.getId());
-    await updateAllMaqamat([...others, maqam]);
+    await updateMaqamat([...others, maqam]);
+    setMaqamat([...others, maqam]);
     setSelectedMaqam(maqam);
   };
 
@@ -98,7 +100,8 @@ export default function MaqamManager() {
   const handleDeleteMaqam = async () => {
     if (!selectedMaqam) return;
     const filtered = maqamat.filter((m) => m.getId() !== selectedMaqam.getId());
-    await updateAllMaqamat(filtered);
+    await updateMaqamat(filtered);
+    setMaqamat(filtered);
     setSelectedMaqam(null);
     setSelectedCells([]);
   };
