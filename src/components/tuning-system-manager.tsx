@@ -1,5 +1,5 @@
-/* eslint-disable react/jsx-key */
 "use client";
+
 import React, { useEffect, useState } from "react";
 import { useAppContext } from "@/contexts/app-context";
 import { useFilterContext } from "@/contexts/filter-context";
@@ -588,6 +588,7 @@ export default function TuningSystemManager() {
     return conv[field] ?? "-";
   }
 
+
   // MARK: Octaves Grid Component
 
   /**
@@ -609,14 +610,15 @@ export default function TuningSystemManager() {
     return (
       <details className="tuning-system-manager__octave-details" open={openedOctaveRows[octave as 0 | 1 | 2 | 3]}>
         <summary className="tuning-system-manager__octave-summary">
+          <span className="tuning-system-manager__octave-summary-title">
           Octave {octave}{" "}
           {(octave === 1 || octave === 2) && (
             <button className="tuning-system-manager__octave-cascade-button" onClick={() => setCascade((prevCascade) => !prevCascade)}>
               {cascade ? "Cascade Enabled" : "Cascade Disabled"}
             </button>
-          )}
-        </summary>
-        <table className="tuning-system-manager__octave-table" border={0}>
+          )}</span>
+          <div className="tuning-system-manager__octave-summary-content">
+            <table className="tuning-system-manager__octave-table" border={0}>
           <tbody>
             {/* Row 1: Pitch Class */}
             <tr>
@@ -627,7 +629,6 @@ export default function TuningSystemManager() {
                 </td>
               ))}
             </tr>
-
             {/* Row 2: Note Name */}
             <tr>
               <td>Note Name</td>
@@ -670,6 +671,12 @@ export default function TuningSystemManager() {
                 }
               })}
             </tr>
+          </tbody>
+        </table>
+          </div>
+        </summary>
+        <table className="tuning-system-manager__octave-table" border={0}>
+          <tbody>
             {/* Row 3: Abjad Name */}
             <tr>
               <td>Abjad Name</td>

@@ -1,7 +1,11 @@
-import type { NextConfig } from "next";
+// next.config.ts
+import path from "path"
+import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
-  /* config options here */
-};
+  sassOptions: {
+    includePaths: [ path.join(__dirname, "src", "styles") ]
+  },
+}
 
-export default nextConfig;
+export default nextConfig

@@ -1,4 +1,4 @@
-// source-details-page.scss
+@use "./variables" as *;
 
 .sources-detail {
   display: flex;
@@ -53,7 +53,7 @@
 
     &:hover {
       text-decoration: none;
-      color: darken($primary, 10%);
+      color: $hovered-primary;
     }
   }
 

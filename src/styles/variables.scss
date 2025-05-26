@@ -1,0 +1,28 @@
+@use "sass:color";
+
+$navbar-height: 50px;
+$page-height: calc(100svh - $navbar-height);
+
+$bottom-drawer-height: 200px;
+
+$primary: #610C9F;
+$secondary: #940B92;
+$tertiary: #FAC67A;
+$quaternary: #4569b6;
+$text: #ffffff;
+$success: #28a745;
+$delete: #C62300;
+$disabled: #3b3b3b;
+$dark-grey: #222222;
+$medium-grey: #333333;
+$grey: #555555;
+$light-grey: #f0f0f0;
+
+$hovered-primary: color.adjust($primary, $lightness: 10%);
+$hovered-secondary: color.adjust($secondary, $lightness: -10%);
+$hovered-tertiary: color.adjust($tertiary, $lightness: 10%);
+$hovered-success: color.adjust($success, $lightness: -10%);
+$hovered-delete: color.adjust($delete, $lightness: -10%);
+$hovered-disabled: color.adjust($disabled, $lightness: -10%);
+
+$main-gradient: linear-gradient(0deg, $dark-grey, $dark-grey);

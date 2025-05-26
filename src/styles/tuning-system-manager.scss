@@ -1,3 +1,5 @@
+@use "./variables" as *;
+
 .tuning-system-manager {
   width: 100%;
 
@@ -207,6 +209,13 @@
     font-size: 24px;
     margin-bottom: 10px;
     cursor: pointer;
+    user-select: none;
+  }
+
+  &__octave-summary-title {
+    display: inline-block;
+    user-select: none;
+    margin-bottom: 5px;
   }
 
   &__octave-cascade-button {
