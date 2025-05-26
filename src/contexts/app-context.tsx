@@ -19,13 +19,26 @@ import midiNumberToNoteName from "@/functions/midiToNoteNumber";
 import Source from "@/models/Source";
 import Pattern, { NoteDuration } from "@/models/Pattern";
 import romanToNumber from "@/functions/romanToNumber";
+import getFirstNoteName from "@/functions/getFirstNoteName";
 
-interface EnvelopeParams {
+type InputMode = "tuningSystem" | "selection";
+type OutputMode = "mute" | "waveform" | "midi";
+
+interface SoundSettings {
   attack: number;
   decay: number;
   sustain: number;
   release: number;
+  volume: number;
+  duration: number;
+  tempo: number;
   waveform: string;
+  pitchBendRange: number;
+  inputMode: InputMode;
+  selectedMidiInputId: string | null;
+  outputMode: OutputMode;
+  selectedMidiOutputId: string | null;
+  selectedPattern: Pattern | null;
 }
 
 export interface Cell {
@@ -50,8 +63,6 @@ interface MidiPortInfo {
   id: string;
   name: string;
 }
-type InputMode = "tuningSystem" | "selection";
-type OutputMode = "mute" | "waveform" | "midi";
 
 interface AppContextInterface {
   isPageLoading: boolean;
@@ -63,13 +74,12 @@ interface AppContextInterface {
   setPitchClasses: React.Dispatch<React.SetStateAction<string>>;
   noteNames: TransliteratedNoteName[][];
   setNoteNames: (noteNames: TransliteratedNoteName[][]) => void;
-  getFirstNoteName: () => string;
   handleStartNoteNameChange: (startingNoteName: string, givenNoteNames?: TransliteratedNoteName[][], givenNumberOfPitchClasses?: number) => void;
   referenceFrequencies: { [noteName: string]: number };
   setReferenceFrequencies: React.Dispatch<React.SetStateAction<{ [noteName: string]: number }>>;
   playNoteFrequency: (frequency: number, duration?: number) => void;
-  envelopeParams: EnvelopeParams;
-  setEnvelopeParams: React.Dispatch<React.SetStateAction<EnvelopeParams>>;
+  soundSettings: SoundSettings;
+  setSoundSettings: React.Dispatch<React.SetStateAction<SoundSettings>>;
   selectedCells: Cell[];
   setSelectedCells: React.Dispatch<React.SetStateAction<Cell[]>>;
   getAllCells: () => Cell[];
@@ -79,7 +89,6 @@ interface AppContextInterface {
   setOriginalIndices: React.Dispatch<React.SetStateAction<number[]>>;
   mapIndices: (notesToMap: TransliteratedNoteName[], givenNumberOfPitchClasses: number, setOriginal: boolean) => void;
   initialMappingDone: boolean;
-  setInitialMappingDone: React.Dispatch<React.SetStateAction<boolean>>;
   getSelectedCellDetails: (cell: Cell) => CellDetails;
   ajnas: Jins[];
   setAjnas: React.Dispatch<React.SetStateAction<Jins[]>>;
@@ -98,35 +107,16 @@ interface AppContextInterface {
   centsTolerance: number;
   setCentsTolerance: React.Dispatch<React.SetStateAction<number>>;
   clearSelections: () => void;
-  volume: number;
-  setVolume: React.Dispatch<React.SetStateAction<number>>;
-  duration: number;
-  setDuration: React.Dispatch<React.SetStateAction<number>>;
-  tempo: number;
-  setTempo: React.Dispatch<React.SetStateAction<number>>;
   playSequence: (frequencies: number[]) => void;
   noteOn: (frequency: number) => void;
   noteOff: (frequency: number) => void;
   handleUrlParams: (params: { tuningSystemId?: string; jinsId?: string; maqamId?: string; sayrId?: string; firstNote?: string }) => void;
   midiInputs: MidiPortInfo[];
-  selectedMidiInputId: string | null;
-  setSelectedMidiInputId: React.Dispatch<React.SetStateAction<string | null>>;
   midiOutputs: MidiPortInfo[];
-  selectedMidiOutputId: string | null;
-  setSelectedMidiOutputId: React.Dispatch<React.SetStateAction<string | null>>;
-  inputMode: InputMode;
-  setInputMode: React.Dispatch<React.SetStateAction<InputMode>>;
-  outputMode: OutputMode;
-  setOutputMode: React.Dispatch<React.SetStateAction<OutputMode>>;
-  pitchBendRange: number;
-  setPitchBendRange: React.Dispatch<React.SetStateAction<number>>;
   sources: Source[];
   setSources: React.Dispatch<React.SetStateAction<Source[]>>;
   patterns: Pattern[];
   setPatterns: React.Dispatch<React.SetStateAction<Pattern[]>>;
-  selectedPattern: Pattern | null;
-  setSelectedPattern: React.Dispatch<React.SetStateAction<Pattern | null>>;
-  refresh: boolean;
   setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -141,19 +131,24 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   const [referenceFrequencies, setReferenceFrequencies] = useState<{ [noteName: string]: number }>({});
   const [centsTolerance, setCentsTolerance] = useState(5);
 
-  const [envelopeParams, setEnvelopeParams] = useState<EnvelopeParams>({
+  const [soundSettings, setSoundSettings] = useState<SoundSettings>({
     attack: 0.01,
     decay: 0.2,
     sustain: 0.7,
     release: 0.1,
     waveform: "triangle",
+    volume: 0.5,
+    duration: 0.1,
+    tempo: 100,
+    pitchBendRange: 2,
+    inputMode: "selection",
+    selectedMidiInputId: null,
+    outputMode: "waveform",
+    selectedMidiOutputId: null,
+    selectedPattern: null,
   });
 
   const activeNotesRef = useRef<Map<number, { oscillator: OscillatorNode; gainNode: GainNode }[]>>(new Map());
-
-  const [volume, setVolume] = useState(0.5);
-  const [duration, setDuration] = useState(0.1);
-  const [tempo, setTempo] = useState<number>(100);
 
   const [selectedCells, setSelectedCells] = useState<Cell[]>([]);
   const [selectedIndices, setSelectedIndices] = useState<number[]>([]);
@@ -168,35 +163,28 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   const [maqamSayrId, setMaqamSayrId] = useState<string>("");
 
   const [patterns, setPatterns] = useState<Pattern[]>([]);
-  const [selectedPattern, setSelectedPattern] = useState<Pattern | null>(null);
 
   const [sources, setSources] = useState<Source[]>([]);
 
   const audioCtxRef = useRef<AudioContext | null>(null);
   const masterGainRef = useRef<GainNode | null>(null);
+  const midiAccessRef = useRef<MIDIAccess | null>(null);
 
   const [midiInputs, setMidiInputs] = useState<MidiPortInfo[]>([]);
-  const [selectedMidiInputId, setSelectedMidiInputId] = useState<string | null>(null);
   const [midiOutputs, setMidiOutputs] = useState<MidiPortInfo[]>([]);
-  const [selectedMidiOutputId, setSelectedMidiOutputId] = useState<string | null>(null);
-  const [inputMode, setInputMode] = useState<InputMode>("selection");
-  const [outputMode, setOutputMode] = useState<OutputMode>("waveform");
-  const [pitchBendRange, setPitchBendRange] = useState(2);
   const [refresh, setRefresh] = useState(false);
-
-  const midiAccessRef = useRef<MIDIAccess | null>(null);
 
   const sendMidiMessage = (bytes: number[]) => {
     const ma = midiAccessRef.current;
-    if (!ma || !selectedMidiOutputId) return;
+    if (!ma || !soundSettings.selectedMidiOutputId) return;
 
-    const port = ma.outputs.get(selectedMidiOutputId);
+    const port = ma.outputs.get(soundSettings.selectedMidiOutputId);
     port?.send(bytes);
   };
 
   function sendPitchBend(detuneSemitones: number) {
     const center = 8192;
-    const bendOffset = Math.round((detuneSemitones / pitchBendRange) * center);
+    const bendOffset = Math.round((detuneSemitones / soundSettings.pitchBendRange) * center);
     const bendValue = Math.max(0, Math.min(16383, center + bendOffset));
     const lsb = bendValue & 0x7f;
     const msb = (bendValue >> 7) & 0x7f;
@@ -259,6 +247,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     setPatterns(loadedPatterns);
 
     setIsPageLoading(false);
+    setInitialMappingDone(true);
   }, []);
 
   useEffect(() => {
@@ -267,16 +256,16 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     audioCtxRef.current = audioCtx;
 
     const masterGain = audioCtx.createGain();
-    masterGain.gain.value = volume;
+    masterGain.gain.value = soundSettings.volume;
     masterGain.connect(audioCtx.destination);
     masterGainRef.current = masterGain;
   }, []);
 
   useEffect(() => {
     if (masterGainRef.current) {
-      masterGainRef.current.gain.setValueAtTime(volume, audioCtxRef.current!.currentTime);
+      masterGainRef.current.gain.setValueAtTime(soundSettings.volume, audioCtxRef.current!.currentTime);
     }
-  }, [volume]);
+  }, [soundSettings.volume]);
 
   useEffect(() => {
     if (!selectedTuningSystem) return;
@@ -339,28 +328,27 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       }
     };
   }, [
-    selectedMidiInputId,
     midiInputs,
     selectedTuningSystem,
     selectedMaqam,
     selectedJins,
     pitchClasses,
-    inputMode,
-    outputMode,
-    selectedMidiInputId,
-    selectedMidiOutputId,
+    soundSettings.inputMode,
+    soundSettings.outputMode,
+    soundSettings.selectedMidiInputId,
+    soundSettings.selectedMidiOutputId
   ]);
 
   const handleMidiInput: NonNullable<MIDIInput["onmidimessage"]> = function (this: MIDIInput, ev: MIDIMessageEvent) {
     // only from our selected port
-    if (this.id !== selectedMidiInputId) return;
+    if (this.id !== soundSettings.selectedMidiInputId) return;
 
     const data = ev.data;
     if (!data) return; // safety
     const [status, noteNumber, velocity] = data;
     const cmd = status & 0xf0;
 
-    if (inputMode === "tuningSystem") {
+    if (soundSettings.inputMode === "tuningSystem") {
       const cells = getAllCells();
 
       const MIDI_BASE = 55;
@@ -381,7 +369,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       } else if (cmd === 0x80 || (cmd === 0x90 && velocity === 0)) {
         noteOff(freq);
       }
-    } else if (inputMode === "selection") {
+    } else if (soundSettings.inputMode === "selection") {
       const selectedCellDetails = selectedCells.map((cell) => getSelectedCellDetails(cell));
       const { note, alt } = midiNumberToNoteName(noteNumber);
 
@@ -420,11 +408,11 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     }
   };
 
-  const playNoteFrequency = (frequency: number, givenDuration: number = duration) => {
+  const playNoteFrequency = (frequency: number, givenDuration: number = soundSettings.duration) => {
     // 1) Mute
-    if (outputMode === "mute") return;
+    if (soundSettings.outputMode === "mute") return;
     // 2) MIDI
-    if (outputMode === "midi") {
+    if (soundSettings.outputMode === "midi") {
       // compute float MIDI note and detune fraction
       const mf = frequencyToMidiNoteNumber(frequency);
       const note = Math.floor(mf);
@@ -432,7 +420,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
       // send pitch bend then note-on
       sendPitchBend(detune);
-      const vel = Math.round(volume * 127);
+      const vel = Math.round(soundSettings.volume * 127);
       sendMidiMessage([0x90, note, vel]);
       // schedule note-off after givenDuration (in seconds)
       setTimeout(() => {
@@ -449,7 +437,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     const audioCtx = audioCtxRef.current;
     const masterGain = masterGainRef.current;
     const startTime = audioCtx.currentTime;
-    const { attack, decay, sustain, release } = envelopeParams;
+    const { attack, decay, sustain, release } = soundSettings;
 
     const attackEnd = startTime + attack;
     const decayEnd = attackEnd + decay;
@@ -458,7 +446,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     const releaseEnd = releaseStart + release;
 
     const oscillator = audioCtx.createOscillator();
-    oscillator.type = envelopeParams.waveform as OscillatorType;
+    oscillator.type = soundSettings.waveform as OscillatorType;
     oscillator.frequency.setValueAtTime(frequency, startTime);
 
     const gainNode = audioCtx.createGain();
@@ -474,15 +462,15 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   };
 
   const playSequence = (frequencies: number[]) => {
-    const beatSec = 60 / tempo;
+    const beatSec = 60 / soundSettings.tempo;
 
     // fallback ascending if no pattern
-    if (!selectedPattern || !selectedPattern.getNotes().length) {
+    if (!soundSettings.selectedPattern || !soundSettings.selectedPattern.getNotes().length) {
       frequencies.forEach((freq, i) => setTimeout(() => playNoteFrequency(freq), i * beatSec * 1000));
       return;
     }
 
-    const patternNotes = selectedPattern.getNotes();
+    const patternNotes = soundSettings.selectedPattern.getNotes();
     // highest degree (e.g. III -> 3)
     const maxDegree = Math.max(...patternNotes.map((n) => (n.scaleDegree === "0" ? 0 : romanToNumber(n.scaleDegree))));
 
@@ -514,10 +502,10 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
   function noteOn(frequency: number) {
     // 1) Mute
-    if (outputMode === "mute") return;
+    if (soundSettings.outputMode === "mute") return;
 
     // 2) MIDI
-    if (outputMode === "midi") {
+    if (soundSettings.outputMode === "midi") {
       // 1) compute float note & split into int + detune
       const mf = frequencyToMidiNoteNumber(frequency);
       const note = Math.floor(mf);
@@ -525,7 +513,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
       // 2) send pitch bend THEN Note On
       sendPitchBend(detune);
-      const vel = Math.round(volume * 127);
+      const vel = Math.round(soundSettings.volume * 127);
       sendMidiMessage([0x90, note, vel]);
       return;
     }
@@ -534,7 +522,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     const audioCtx = audioCtxRef.current!;
     const masterGain = masterGainRef.current!;
     const now = audioCtx.currentTime;
-    const { attack, decay, sustain, waveform } = envelopeParams;
+    const { attack, decay, sustain, waveform } = soundSettings;
 
     const osc = audioCtx.createOscillator();
     osc.type = waveform as OscillatorType;
@@ -568,9 +556,9 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   }
 
   function noteOff(frequency: number) {
-    if (outputMode === "mute") return;
+    if (soundSettings.outputMode === "mute") return;
 
-    if (outputMode === "midi") {
+    if (soundSettings.outputMode === "midi") {
       const note = Math.floor(frequencyToMidiNoteNumber(frequency));
       sendMidiMessage([0x80, note, 0]);
       return;
@@ -578,7 +566,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
     const audioCtx = audioCtxRef.current!;
     const now = audioCtx.currentTime;
-    const { release } = envelopeParams;
+    const { release } = soundSettings;
     const queue = activeNotesRef.current.get(frequency) || [];
     if (!queue.length) return;
 
@@ -615,7 +603,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     const pitchType = detectPitchClassType(pitchArr);
     if (pitchType === "unknown") return emptyDetails;
 
-    const actualReferenceFrequency = referenceFrequencies[getFirstNoteName()] || selectedTuningSystem.getDefaultReferenceFrequency();
+    const actualReferenceFrequency = referenceFrequencies[getFirstNoteName(selectedIndices)] || selectedTuningSystem.getDefaultReferenceFrequency();
 
     const shiftedPc = shiftPitchClass(basePc, pitchType, cell.octave as 0 | 1 | 2 | 3);
     const conv = convertPitchClass(shiftedPc, pitchType, selectedTuningSystem.getStringLength(), actualReferenceFrequency);
@@ -696,13 +684,6 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     setSelectedJins(null);
     setSelectedMaqam(null);
   };
-
-  function getFirstNoteName() {
-    if (selectedIndices.length === 0) return "none";
-    const idx = selectedIndices[0];
-    if (idx < 0) return "none";
-    return octaveOneNoteNames[idx];
-  }
 
   function mapIndices(notesToMap: TransliteratedNoteName[], givenNumberOfPitchClasses: number = 0, setOriginal: boolean = true) {
     const numberOfPitchClasses = givenNumberOfPitchClasses || pitchClassesArr.length || selectedTuningSystem?.getPitchClasses().length || 0;
@@ -892,13 +873,12 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         setPitchClasses,
         noteNames,
         setNoteNames,
-        getFirstNoteName,
         handleStartNoteNameChange,
         referenceFrequencies,
         setReferenceFrequencies,
         playNoteFrequency,
-        envelopeParams,
-        setEnvelopeParams,
+        soundSettings,
+        setSoundSettings,
         selectedCells,
         setSelectedCells,
         getAllCells,
@@ -908,7 +888,6 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         setOriginalIndices,
         mapIndices,
         initialMappingDone,
-        setInitialMappingDone,
         getSelectedCellDetails,
         ajnas,
         setAjnas,
@@ -927,35 +906,16 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         centsTolerance,
         setCentsTolerance,
         clearSelections,
-        volume,
-        setVolume,
-        duration,
-        setDuration,
-        tempo,
-        setTempo,
         playSequence,
         noteOn,
         noteOff,
         handleUrlParams,
         midiInputs,
-        selectedMidiInputId,
-        setSelectedMidiInputId,
         midiOutputs,
-        selectedMidiOutputId,
-        setSelectedMidiOutputId,
-        inputMode,
-        setInputMode,
-        outputMode,
-        setOutputMode,
-        pitchBendRange,
-        setPitchBendRange,
         sources,
         setSources,
         patterns,
         setPatterns,
-        selectedPattern,
-        setSelectedPattern,
-        refresh,
         setRefresh
       }}
     >

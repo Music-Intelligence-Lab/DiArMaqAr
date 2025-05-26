@@ -9,6 +9,7 @@ import MaqamTranspositions from "@/components/maqam-transpositions";
 import SayrManager from "@/components/sayr-manager";
 import KeyboardControls from "@/components/keyboard-controls";
 import BottomDrawer from "@/components/bottom-drawer";
+import getFirstNoteName from "@/functions/getFirstNoteName";
 
 export default function HomeClient() {
   const {
@@ -20,7 +21,6 @@ export default function HomeClient() {
     selectedJins,
     selectedMaqam,
     maqamSayrId,
-    getFirstNoteName,
     selectedIndices,
     originalIndices,
   } = useAppContext();
@@ -43,7 +43,7 @@ export default function HomeClient() {
 
     if (selectedTuningSystem) {
       params.push(`tuningSystem=${selectedTuningSystem.getId()}`);
-      const first = getFirstNoteName();
+      const first = getFirstNoteName(selectedIndices);
       if (first) params.push(`firstNote=${first}`);
     }
 

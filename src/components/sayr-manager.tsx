@@ -5,9 +5,10 @@ import { useAppContext } from "@/contexts/app-context";
 import Maqam, { Sayr, SayrStop } from "@/models/Maqam";
 import { octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames } from "@/models/NoteName";
 import { nanoid } from "nanoid";
+import { updateMaqamat } from "@/functions/update";
 
 export default function SayrManager() {
-  const { selectedMaqam, setSelectedMaqam, ajnas, maqamSayrId, setMaqamSayrId, initialMappingDone, sources, updateAllMaqamat, maqamat } = useAppContext();
+  const { selectedMaqam, setSelectedMaqam, ajnas, maqamSayrId, setMaqamSayrId, initialMappingDone, sources, maqamat, setMaqamat } = useAppContext();
 
   const [creatorEnglish, setCreatorEnglish] = useState("");
   const [creatorArabic, setCreatorArabic] = useState("");
@@ -86,7 +87,8 @@ export default function SayrManager() {
     setMaqamSayrId(idUse);
 
     const others = maqamat.filter((m) => m.getId() !== updatedMaqam.getId());
-    await updateAllMaqamat([...others, updatedMaqam]);
+    await updateMaqamat([...others, updatedMaqam]);
+    setMaqamat([...others, updatedMaqam]);
   };
 
   const handleDelete = async () => {
@@ -104,7 +106,8 @@ export default function SayrManager() {
     setMaqamSayrId("");
 
     const others = maqamat.filter((m) => m.getId() !== updatedMaqam.getId());
-    await updateAllMaqamat([...others, updatedMaqam]);
+    await updateMaqamat([...others, updatedMaqam]);
+    setMaqamat([...others, updatedMaqam]);
   };
 
   return (

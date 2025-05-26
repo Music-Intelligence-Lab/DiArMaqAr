@@ -20,6 +20,7 @@ import { nanoid } from "nanoid";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { getEnglishNoteName, abjadNames } from "@/functions/noteNameMappings";
 import { updateTuningSystems } from "@/functions/update";
+import getFirstNoteName from "@/functions/getFirstNoteName";
 
 export default function TuningSystemManager() {
   const {
@@ -31,7 +32,6 @@ export default function TuningSystemManager() {
     setPitchClasses,
     noteNames,
     setNoteNames,
-    getFirstNoteName,
     referenceFrequencies,
     setReferenceFrequencies,
     playNoteFrequency,
@@ -591,7 +591,7 @@ export default function TuningSystemManager() {
   // figure out what the input type is (fraction, cents, decimal, stringLength, or unknown)
   const pitchClassType = detectPitchClassType(pitchClassesArr);
 
-  const actualReferenceFrequency = referenceFrequencies[getFirstNoteName()] || defaultReferenceFrequency;
+  const actualReferenceFrequency = referenceFrequencies[getFirstNoteName(selectedIndices)] || defaultReferenceFrequency;
 
   function renderConvertedCell(basePc: string, octave: 0 | 1 | 2 | 3, field: "fraction" | "decimal" | "cents" | "stringLength" | "frequency") {
     if (pitchClassType === "unknown") return "-";
@@ -891,7 +891,7 @@ export default function TuningSystemManager() {
   }
 
   const isCurrentConfigurationNew = () => {
-    const currentFirst = getFirstNoteName();
+    const currentFirst = getFirstNoteName(selectedIndices);
     if (currentFirst === "none") return false;
     return !noteNames.some((config) => config[0] === currentFirst);
   };
@@ -1143,7 +1143,7 @@ export default function TuningSystemManager() {
                     <button
                       className={
                         "tuning-system-manager__starting-note-button " +
-                        (getFirstNoteName() === startingNote ? "tuning-system-manager__starting-note-button_selected" : "")
+                        (getFirstNoteName(selectedIndices) === startingNote ? "tuning-system-manager__starting-note-button_selected" : "")
                       }
                       onClick={() => handleStartNoteNameChange(startingNote)}
                     >
@@ -1175,19 +1175,19 @@ export default function TuningSystemManager() {
                       "tuning-system-manager__starting-note-button tuning-system-manager__starting-note-button_unsaved tuning-system-manager__starting-note-button_selected"
                     }
                   >
-                    {getFirstNoteName()} (unsaved)
+                    {getFirstNoteName(selectedIndices)} (unsaved)
                   </button>
                   <label htmlFor="reference-frequency-input">
                     Frequency (Hz):
                     <input
                       type="number"
                       id="tempo-input"
-                      value={referenceFrequencies[getFirstNoteName()] ?? 0}
+                      value={referenceFrequencies[getFirstNoteName(selectedIndices)] ?? 0}
                       onChange={(e) => {
                         const val = Number(e.target.value);
                         setReferenceFrequencies((prev) => ({
                           ...prev,
-                          [getFirstNoteName()]: val,
+                          [getFirstNoteName(selectedIndices)]: val,
                         }));
                       }}
                       className="tuning-system-manager__starting-note-input"
@@ -1206,14 +1206,14 @@ export default function TuningSystemManager() {
               <button
                 className="tuning-system-manager__starting-note-button tuning-system-manager__starting-note-button_save"
                 onClick={handleSaveStartingNoteConfiguration}
-                disabled={!haveIndicesChanged() || getFirstNoteName() === "none"}
+                disabled={!haveIndicesChanged() || getFirstNoteName(selectedIndices) === "none"}
               >
                 Save Note Name Configuration
               </button>
               <button
                 className="tuning-system-manager__starting-note-button tuning-system-manager__starting-note-button_delete"
                 onClick={handleDeleteStartingNoteConfiguration}
-                disabled={getFirstNoteName() === "none"}
+                disabled={getFirstNoteName(selectedIndices) === "none"}
               >
                 Delete Note Name Configuration
               </button>
