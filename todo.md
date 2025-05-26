@@ -6,10 +6,6 @@
 
 # 20 May 2025
 
-- Default note naming convention should be based on Al-Kindi 12 tone system and naming convention
-
-- Check why yegah starting note name always saves with tuning system even if the starting note name is changed before initial first time save 
-
 - Maqam Analysis and Transpositions: Add row of which ajnas exist within the currently selected maqam. Add a second row underneath with a play jins button and a highlight jins button which highlights the relevant cells in the table.
 
 - Find a way to separate the accidental in the English Note Name so it can be used for other purposes. i.e. C# or Bb or B-- or G+
