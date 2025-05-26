@@ -128,12 +128,6 @@ interface AppContextInterface {
   setSelectedPattern: React.Dispatch<React.SetStateAction<Pattern | null>>;
   refresh: boolean;
   setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
-  openNavigation: boolean;
-  setOpenNavigation: React.Dispatch<React.SetStateAction<boolean>>;
-  openSettings: boolean;
-  setOpenSettings: React.Dispatch<React.SetStateAction<boolean>>;
-  openBottomDrawer: boolean;
-  setOpenBottomDrawer: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AppContext = createContext<AppContextInterface | null>(null);
@@ -189,10 +183,6 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   const [outputMode, setOutputMode] = useState<OutputMode>("waveform");
   const [pitchBendRange, setPitchBendRange] = useState(2);
   const [refresh, setRefresh] = useState(false);
-
-  const [openNavigation, setOpenNavigation] = useState(false);
-  const [openSettings, setOpenSettings] = useState(false);
-  const [openBottomDrawer, setOpenBottomDrawer] = useState(false);
 
   const midiAccessRef = useRef<MIDIAccess | null>(null);
 
@@ -966,13 +956,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         selectedPattern,
         setSelectedPattern,
         refresh,
-        setRefresh,
-        openNavigation,
-        setOpenNavigation,
-        openSettings,
-        setOpenSettings,
-        openBottomDrawer,
-        setOpenBottomDrawer,
+        setRefresh
       }}
     >
       {children}

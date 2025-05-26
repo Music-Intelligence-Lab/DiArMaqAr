@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Cell, CellDetails, useAppContext } from "@/contexts/app-context";
+import { useMenuContext } from "@/contexts/menu-context";
 import Maqam from "@/models/Maqam";
 import Jins from "@/models/Jins";
 import { getMaqamTranspositions, getJinsTranspositions } from "@/functions/transpose";
@@ -10,10 +11,6 @@ import { updateAjnas, updateMaqamat } from "@/functions/update";
 
 export default function BottomDrawer() {
   const {
-    openBottomDrawer,
-    setOpenBottomDrawer,
-    setOpenNavigation,
-    setOpenSettings,
     ajnas,
     setAjnas,
     maqamat,
@@ -34,6 +31,8 @@ export default function BottomDrawer() {
     selectedTuningSystem,
     sources,
   } = useAppContext();
+
+  const { openBottomDrawer, setOpenBottomDrawer, setOpenNavigation, setOpenSettings } = useMenuContext();
 
   const [navbarItem, setNavbarItem] = useState("ajnas"); // "ajnas" | "editJins" | "maqamat" | "editMaqam"
 

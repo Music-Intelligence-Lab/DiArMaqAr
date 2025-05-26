@@ -7,10 +7,10 @@ import HomeIcon from "@mui/icons-material/Home";
 import SettingsCard from "@/components/settings-cards";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import QueueMusicIcon from '@mui/icons-material/QueueMusic';
-import { useAppContext } from "@/contexts/app-context";
+import { useMenuContext } from "@/contexts/menu-context";
 
 export default function Navbar() {
-  const {openNavigation, setOpenNavigation, setOpenBottomDrawer, openSettings, setOpenSettings} = useAppContext();
+  const {openNavigation, setOpenNavigation, setOpenBottomDrawer, openSettings, setOpenSettings} = useMenuContext();
 
   const currentPath = usePathname().split("/")[1];
 
