@@ -611,7 +611,7 @@ export default function TuningSystemManager() {
       <details className="tuning-system-manager__octave-details" open={openedOctaveRows[octave as 0 | 1 | 2 | 3]}>
         <summary className="tuning-system-manager__octave-summary">
           <span className="tuning-system-manager__octave-summary-title">
-          Octave {octave}{" "}
+          Diwān (octave) {octave}{" "}
           {(octave === 1 || octave === 2) && (
             <button className="tuning-system-manager__octave-cascade-button" onClick={() => setCascade((prevCascade) => !prevCascade)}>
               {cascade ? "Cascade Enabled" : "Cascade Disabled"}
@@ -867,7 +867,7 @@ export default function TuningSystemManager() {
     <div className="tuning-system-manager">
       <details open={true} className="tuning-system-manager__details">
         <summary className="tuning-system-manager__summary">
-          <h2 className="tuning-system-manager__header">Tuning System</h2>
+          <h2 className="tuning-system-manager__header">Tanghīm (tuning system)</h2>
           {`${
             selectedTuningSystem
               ? `: ${selectedTuningSystem.getCreatorEnglish()} (${selectedTuningSystem.getYear()}) ${selectedTuningSystem.getTitleEnglish()}`

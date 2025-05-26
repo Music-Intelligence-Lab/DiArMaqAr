@@ -92,43 +92,5 @@
         "noteDuration": "8n"
       }
     ]
-  },
-  {
-    "id": "tI3GTCMIxfsOUX9cnw23Z",
-    "name": "Nadine",
-    "notes": [
-      {
-        "scaleDegree": "I",
-        "noteDuration": "16n"
-      },
-      {
-        "scaleDegree": "III",
-        "noteDuration": "16n"
-      },
-      {
-        "scaleDegree": "II",
-        "noteDuration": "16n"
-      },
-      {
-        "scaleDegree": "IV",
-        "noteDuration": "16n"
-      },
-      {
-        "scaleDegree": "VI",
-        "noteDuration": "16n"
-      },
-      {
-        "scaleDegree": "II",
-        "noteDuration": "16n"
-      },
-      {
-        "scaleDegree": "VII",
-        "noteDuration": "16n"
-      },
-      {
-        "scaleDegree": "VIII",
-        "noteDuration": "16n"
-      }
-    ]
   }
 ]
