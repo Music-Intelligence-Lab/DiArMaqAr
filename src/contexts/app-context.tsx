@@ -65,7 +65,6 @@ interface MidiPortInfo {
 }
 
 interface AppContextInterface {
-  isPageLoading: boolean;
   tuningSystems: TuningSystem[];
   setTuningSystems: React.Dispatch<React.SetStateAction<TuningSystem[]>>;
   selectedTuningSystem: TuningSystem | null;
@@ -123,7 +122,6 @@ interface AppContextInterface {
 const AppContext = createContext<AppContextInterface | null>(null);
 
 export function AppContextProvider({ children }: { children: React.ReactNode }) {
-  const [isPageLoading, setIsPageLoading] = useState(true);
   const [tuningSystems, setTuningSystems] = useState<TuningSystem[]>([]);
   const [selectedTuningSystem, setSelectedTuningSystem] = useState<TuningSystem | null>(null);
   const [pitchClasses, setPitchClasses] = useState("");
@@ -246,7 +244,6 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     );
     setPatterns(loadedPatterns);
 
-    setIsPageLoading(false);
     setInitialMappingDone(true);
   }, []);
 
@@ -501,17 +498,13 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   };
 
   function noteOn(frequency: number) {
-    // 1) Mute
     if (soundSettings.outputMode === "mute") return;
 
-    // 2) MIDI
     if (soundSettings.outputMode === "midi") {
-      // 1) compute float note & split into int + detune
       const mf = frequencyToMidiNoteNumber(frequency);
       const note = Math.floor(mf);
       const detune = mf - note;
 
-      // 2) send pitch bend THEN Note On
       sendPitchBend(detune);
       const vel = Math.round(soundSettings.volume * 127);
       sendMidiMessage([0x90, note, vel]);
@@ -864,7 +857,6 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   return (
     <AppContext.Provider
       value={{
-        isPageLoading,
         tuningSystems,
         setTuningSystems,
         selectedTuningSystem,
