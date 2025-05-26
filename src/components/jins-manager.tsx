@@ -47,7 +47,7 @@ export default function JinsManager() {
       return details.noteName;
     });
 
-    const newJins = new Jins(selectedJins.getId(), selectedJins.getName(), selectedNoteNames);
+    const newJins = new Jins(selectedJins.getId(), selectedJins.getName(), selectedNoteNames, selectedJins.getSourcePageReferences());
     const newAjnas = ajnas.filter((jins) => jins.getId() !== newJins.getId());
     await updateAllAjnas([...newAjnas, newJins]);
   };
@@ -133,7 +133,7 @@ export default function JinsManager() {
         )}
       </div>
       {!selectedJins && (
-        <button onClick={() => setSelectedJins(new Jins((ajnas.length + 1).toString(), "", []))} className="jins-manager__create-new-jins-button">
+        <button onClick={() => setSelectedJins(new Jins((ajnas.length + 1).toString(), "", [], []))} className="jins-manager__create-new-jins-button">
           Create New Jins
         </button>
       )}
@@ -142,7 +142,7 @@ export default function JinsManager() {
           <input
             type="text"
             value={selectedJins.getName()}
-            onChange={(e) => setSelectedJins(new Jins(selectedJins.getId(), e.target.value, selectedJins.getNoteNames()))}
+            onChange={(e) => setSelectedJins(new Jins(selectedJins.getId(), e.target.value, selectedJins.getNoteNames(), selectedJins.getSourcePageReferences()))}
             placeholder="Enter new jins name"
             className="jins-manager__jins-input"
           />

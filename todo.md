@@ -6,8 +6,6 @@
 
 # 20 May 2025
 
-- When Octave is collapsed force showing pitch class and note name rows
-
 - Default note naming convention should be based on Al-Kindi 12 tone system and naming convention
 
 - Check why yegah starting note name always saves with tuning system even if the starting note name is changed before initial first time save 

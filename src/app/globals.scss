@@ -1,44 +1,17 @@
-$navbar-height: 50px;
-$page-height: calc(100svh - $navbar-height);
-
-$bottom-drawer-height: 200px;
-
-$primary: #610C9F;
-$secondary: #940B92;
-$tertiary: #FAC67A;
-$quaternary: #4569b6;
-$text: #ffffff;
-$success: #28a745;
-$delete: #C62300;
-$disabled: #3b3b3b;
-$dark-grey: #222222;
-$medium-grey: #333333;
-$grey: #555555;
-$light-grey: #f0f0f0;
-
-$hovered-primary: lighten($primary, 10%);
-$hovered-secondary: darken($secondary, 10%);
-$hovered-tertiary: lighten($tertiary, 10%);
-$hovered-success: darken($success, 10%);
-$hovered-delete: darken($delete, 10%);
-$hovered-disabled: darken($disabled, 10%);
-
-$main-gradient: linear-gradient(0deg, $dark-grey, $dark-grey);
-
-@import "../styles/home-page.scss";
-@import "../styles/tuning-system-manager.scss";
-@import "../styles/settings-card.scss";
-@import "../styles/jins-manager.scss";
-@import "../styles/jins-transpositions.scss";
-@import "../styles/maqam-manager.scss";
-@import "../styles/sayr-manager.scss";
-@import "../styles/maqam-transpositions.scss";
-@import "../styles/navbar.scss";
-@import "../styles/sources-page.scss";
-@import "../styles/source-details-page.scss";
-@import "../styles/patterns-page.scss";
-@import "../styles/bottom-drawer.scss";
-
+@use "../styles/variables.scss" as *;
+@use "../styles/home-page.scss";
+@use "../styles/tuning-system-manager.scss";
+@use "../styles/settings-card.scss";
+@use "../styles/jins-manager.scss";
+@use "../styles/jins-transpositions.scss";
+@use "../styles/maqam-manager.scss";
+@use "../styles/sayr-manager.scss";
+@use "../styles/maqam-transpositions.scss";
+@use "../styles/navbar.scss";
+@use "../styles/sources-page.scss";
+@use "../styles/source-details-page.scss";
+@use "../styles/patterns-page.scss";
+@use "../styles/bottom-drawer.scss";
 
 
 :root {

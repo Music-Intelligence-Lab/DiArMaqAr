@@ -1,3 +1,5 @@
+@use "./variables" as *;
+
 .maqam-manager {
   display: flex;
   flex-direction: column;

@@ -1,3 +1,5 @@
+@use "./variables" as *;
+
 .settings-open-button {
   background-color: $primary;
   color: #ffffff;
