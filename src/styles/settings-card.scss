@@ -12,7 +12,7 @@
 .settings-card {
   font-size: 18px;
   position: fixed;
-  top: $navbar-height;
+  top: calc($top-navbar-height + $bottom-navbar-height);
   right: 0;
   height: 100%;
   width: 300px;

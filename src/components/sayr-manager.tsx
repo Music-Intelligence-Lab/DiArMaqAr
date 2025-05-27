@@ -8,7 +8,7 @@ import { nanoid } from "nanoid";
 import { updateMaqamat } from "@/functions/update";
 
 export default function SayrManager() {
-  const { selectedMaqam, setSelectedMaqam, ajnas, maqamSayrId, setMaqamSayrId, initialMappingDone, sources, maqamat, setMaqamat } = useAppContext();
+  const { selectedMaqam, setSelectedMaqam, ajnas, maqamSayrId, setMaqamSayrId, sources, maqamat, setMaqamat } = useAppContext();
 
   const [creatorEnglish, setCreatorEnglish] = useState("");
   const [creatorArabic, setCreatorArabic] = useState("");
@@ -27,12 +27,6 @@ export default function SayrManager() {
     setCommentsArabic("");
     setStops([]);
   };
-
-  useEffect(() => {
-    if (!initialMappingDone) return;
-    setMaqamSayrId("");
-    resetForm();
-  }, [selectedMaqam]);
 
   useEffect(() => {
     if (selectedMaqam && maqamSayrId) {
@@ -112,10 +106,6 @@ export default function SayrManager() {
 
   return (
     <div className="sayr-manager">
-      <details className="sayr-manager__details">
-        <summary className="sayr-manager__summary">
-          <h2 className="sayr-manager__header">Suyūr</h2>
-        </summary>
 
         <div className="sayr-manager__group">
           <div className="sayr-manager__input-container">
@@ -293,7 +283,6 @@ export default function SayrManager() {
             )}
           </div>
         </form>
-      </details>
     </div>
   );
 }

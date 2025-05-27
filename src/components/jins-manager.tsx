@@ -6,6 +6,7 @@ import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import React from "react";
 import { getJinsTranspositions } from "@/functions/transpose";
 import { updateAjnas } from "@/functions/update";
+import { SourcePageReference } from "@/models/Source";
 
 export default function JinsManager() {
   const {
@@ -21,6 +22,7 @@ export default function JinsManager() {
     clearSelections,
     playSequence,
     getAllCells,
+    sources,
   } = useAppContext();
 
   const sortedAjnas = [...ajnas].sort((a, b) => a.getName().localeCompare(b.getName()));
@@ -78,6 +80,28 @@ export default function JinsManager() {
     playSequence(jinsCellFrequencies);
   };
 
+  const updateSourceRefs = (refs: SourcePageReference[], index: number, newRef: Partial<SourcePageReference>) => {
+    if (!selectedJins) return;
+    const list = [...refs];
+    list[index] = { ...list[index], ...newRef } as SourcePageReference;
+    setSelectedJins(new Jins(selectedJins.getId(), selectedJins.getName(), selectedJins.getNoteNames(), list));
+  };
+
+  const removeSourceRef = (index: number) => {
+    if (!selectedJins) return;
+    const refs = selectedJins.getSourcePageReferences() || [];
+    const newList = refs.filter((_, i) => i !== index);
+    setSelectedJins(new Jins(selectedJins.getId(), selectedJins.getName(), selectedJins.getNoteNames(), newList));
+  };
+
+  const addSourceRef = () => {
+    if (!selectedJins) return;
+    const refs = selectedJins.getSourcePageReferences() || [];
+    const newRef: SourcePageReference = { sourceId: "", page: "" };
+    const newList = [...refs, newRef];
+    setSelectedJins(new Jins(selectedJins.getId(), selectedJins.getName(), selectedJins.getNoteNames(), newList));
+  };
+
   return (
     <div className="jins-manager">
       <h2 className="jins-manager__header">
@@ -129,7 +153,11 @@ export default function JinsManager() {
             >
               <div className="jins-manager__item-name">
                 <strong>{jins.getName()}</strong>
-                {checkIfJinsIsSelectable(jins) && <strong className="jins-manager__item-name-transpositions">{`Transpositions: ${getJinsTranspositions(allCellDetails, jins, true).length}/${numberOfPitchClasses}`}</strong>}
+                {checkIfJinsIsSelectable(jins) && (
+                  <strong className="jins-manager__item-name-transpositions">{`Transpositions: ${
+                    getJinsTranspositions(allCellDetails, jins, true).length
+                  }/${numberOfPitchClasses}`}</strong>
+                )}
               </div>
             </div>
           ))
@@ -145,7 +173,9 @@ export default function JinsManager() {
           <input
             type="text"
             value={selectedJins.getName()}
-            onChange={(e) => setSelectedJins(new Jins(selectedJins.getId(), e.target.value, selectedJins.getNoteNames(), selectedJins.getSourcePageReferences()))}
+            onChange={(e) =>
+              setSelectedJins(new Jins(selectedJins.getId(), e.target.value, selectedJins.getNoteNames(), selectedJins.getSourcePageReferences()))
+            }
             placeholder="Enter new jins name"
             className="jins-manager__jins-input"
           />
@@ -158,6 +188,38 @@ export default function JinsManager() {
           <button onClick={clearSelections} className="jins-manager__clear-button">
             Clear
           </button>
+          {selectedJins && (
+            <button className="jins-manager__source-add-button" onClick={addSourceRef}>
+              Add Source
+            </button>
+          )}
+          {selectedJins &&
+            selectedJins.getSourcePageReferences().map((ref, idx) => (
+              <div key={idx} className="jins-manager__source-item">
+                <select
+                  className="jins-manager__source-select"
+                  value={ref.sourceId}
+                  onChange={(e) => updateSourceRefs(selectedJins.getSourcePageReferences(), idx, { sourceId: e.target.value })}
+                >
+                  <option value="">Select source</option>
+                  {sources.map((s) => (
+                    <option key={s.getId()} value={s.getId()}>
+                      {s.getTitleEnglish()}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  className="jins-manager__source-input"
+                  type="text"
+                  value={ref.page}
+                  placeholder="Page"
+                  onChange={(e) => updateSourceRefs(selectedJins.getSourcePageReferences(), idx, { page: e.target.value })}
+                />
+                <button className="jins-manager__source-delete-button" onClick={() => removeSourceRef(idx)}>
+                  Delete
+                </button>
+              </div>
+            ))}
         </div>
       )}
     </div>

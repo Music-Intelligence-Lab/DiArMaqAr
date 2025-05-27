@@ -6,7 +6,7 @@ import Source, { Contributor } from "@/models/Source";
 import { nanoid } from "nanoid";
 import { updateSources } from "@/functions/update";
 
-export default function BibliographyPage() {
+export default function SourcesManager() {
   const { sources, setSources } = useAppContext();
   const [selectedSourceId, setSelectedSourceId] = useState<string>("new");
   const [id, setId] = useState<string>("");
@@ -135,16 +135,16 @@ export default function BibliographyPage() {
   };
 
   return (
-    <div className="sources-page">
-      <h2 className="sources-page__header">Bibliography</h2>
-      {selectedSourceId !== "new" && <span className="sources-page__selected">{`: ${selectedSourceId} ${titleEnglish}`}</span>}
+    <div className="sources-manager">
+      <h2 className="sources-manager__header">Bibliography</h2>
+      {selectedSourceId !== "new" && <span className="sources-manager__selected">{`: ${selectedSourceId} ${titleEnglish}`}</span>}
 
-      <div className="sources-page__group">
-        <div className="sources-page__input-container">
-          <label className="sources-page__label" htmlFor="sourceSelect">
+      <div className="sources-manager__group">
+        <div className="sources-manager__input-container">
+          <label className="sources-manager__label" htmlFor="sourceSelect">
             Select Source or Create New:
           </label>
-          <select className="sources-page__select" id="sourceSelect" value={selectedSourceId} onChange={handleSelectChange}>
+          <select className="sources-manager__select" id="sourceSelect" value={selectedSourceId} onChange={handleSelectChange}>
             <option value="new">-- Create New Source --</option>
             {sources.map((s: Source) => (
               <option key={s.getId()} value={s.getId()}>
@@ -155,40 +155,40 @@ export default function BibliographyPage() {
         </div>
       </div>
 
-      <form className="sources-page__form" onSubmit={handleSave}>
+      <form className="sources-manager__form" onSubmit={handleSave}>
         {/* Identification & Titles */}
-        <div className="sources-page__group">
-          <div className="sources-page__input-container">
-            <label className="sources-page__label" htmlFor="titleEnglishField">
+        <div className="sources-manager__group">
+          <div className="sources-manager__input-container">
+            <label className="sources-manager__label" htmlFor="titleEnglishField">
               Title (English)
             </label>
             <input
               id="titleEnglishField"
-              className="sources-page__input"
+              className="sources-manager__input"
               type="text"
               value={titleEnglish}
               onChange={(e) => setTitleEnglish(e.target.value)}
             />
           </div>
-          <div className="sources-page__input-container">
-            <label className="sources-page__label" htmlFor="titleArabicField">
+          <div className="sources-manager__input-container">
+            <label className="sources-manager__label" htmlFor="titleArabicField">
               Title (Arabic)
             </label>
             <input
               id="titleArabicField"
-              className="sources-page__input"
+              className="sources-manager__input"
               type="text"
               value={titleArabic}
               onChange={(e) => setTitleArabic(e.target.value)}
             />
           </div>
-          <div className="sources-page__input-container">
-            <label className="sources-page__label" htmlFor="sourceTypeField">
+          <div className="sources-manager__input-container">
+            <label className="sources-manager__label" htmlFor="sourceTypeField">
               Type
             </label>
             <select
               id="sourceTypeField"
-              className="sources-page__select"
+              className="sources-manager__select"
               value={sourceType}
               onChange={(e) => setSourceType(e.target.value as "Book" | "Article")}
             >
@@ -199,50 +199,50 @@ export default function BibliographyPage() {
         </div>
 
         {/* Edition & Dates */}
-        <div className="sources-page__group">
-          <div className="sources-page__input-container">
-            <label className="sources-page__label" htmlFor="editionEnglishField">
+        <div className="sources-manager__group">
+          <div className="sources-manager__input-container">
+            <label className="sources-manager__label" htmlFor="editionEnglishField">
               Edition (English)
             </label>
             <input
               id="editionEnglishField"
-              className="sources-page__input"
+              className="sources-manager__input"
               type="text"
               value={editionEnglish}
               onChange={(e) => setEditionEnglish(e.target.value)}
             />
           </div>
-          <div className="sources-page__input-container">
-            <label className="sources-page__label" htmlFor="editionArabicField">
+          <div className="sources-manager__input-container">
+            <label className="sources-manager__label" htmlFor="editionArabicField">
               Edition (Arabic)
             </label>
             <input
               id="editionArabicField"
-              className="sources-page__input"
+              className="sources-manager__input"
               type="text"
               value={editionArabic}
               onChange={(e) => setEditionArabic(e.target.value)}
             />
           </div>
-          <div className="sources-page__input-container">
-            <label className="sources-page__label" htmlFor="publicationDateEnglishField">
+          <div className="sources-manager__input-container">
+            <label className="sources-manager__label" htmlFor="publicationDateEnglishField">
               Publication Date (English)
             </label>
             <input
               id="publicationDateEnglishField"
-              className="sources-page__input"
+              className="sources-manager__input"
               type="text"
               value={publicationDateEnglish}
               onChange={(e) => setReleaseDateEnglish(e.target.value)}
             />
           </div>
-          <div className="sources-page__input-container">
-            <label className="sources-page__label" htmlFor="publicationDateArabicField">
+          <div className="sources-manager__input-container">
+            <label className="sources-manager__label" htmlFor="publicationDateArabicField">
               Publication Date (Arabic)
             </label>
             <input
               id="publicationDateArabicField"
-              className="sources-page__input"
+              className="sources-manager__input"
               type="text"
               value={publicationDateArabic}
               onChange={(e) => setReleaseDateArabic(e.target.value)}
@@ -251,50 +251,50 @@ export default function BibliographyPage() {
         </div>
 
         {/* Original Dates & Publisher */}
-        <div className="sources-page__group">
-          <div className="sources-page__input-container">
-            <label className="sources-page__label" htmlFor="originalPublicationDateEnglishField">
+        <div className="sources-manager__group">
+          <div className="sources-manager__input-container">
+            <label className="sources-manager__label" htmlFor="originalPublicationDateEnglishField">
               Original Publication Date (English)
             </label>
             <input
               id="originalPublicationDateEnglishField"
-              className="sources-page__input"
+              className="sources-manager__input"
               type="text"
               value={originalPublicationDateEnglish}
               onChange={(e) => setOriginalReleaseDateEnglish(e.target.value)}
             />
           </div>
-          <div className="sources-page__input-container">
-            <label className="sources-page__label" htmlFor="originalPublicationDateArabicField">
+          <div className="sources-manager__input-container">
+            <label className="sources-manager__label" htmlFor="originalPublicationDateArabicField">
               Original Publication Date (Arabic)
             </label>
             <input
               id="originalPublicationDateArabicField"
-              className="sources-page__input"
+              className="sources-manager__input"
               type="text"
               value={originalPublicationDateArabic}
               onChange={(e) => setOriginalReleaseDateArabic(e.target.value)}
             />
           </div>
-          <div className="sources-page__input-container">
-            <label className="sources-page__label" htmlFor="publisherEnglishField">
+          <div className="sources-manager__input-container">
+            <label className="sources-manager__label" htmlFor="publisherEnglishField">
               Publisher (English)
             </label>
             <input
               id="publisherEnglishField"
-              className="sources-page__input"
+              className="sources-manager__input"
               type="text"
               value={publisherEnglish}
               onChange={(e) => setPublisherEnglish(e.target.value)}
             />
           </div>
-          <div className="sources-page__input-container">
-            <label className="sources-page__label" htmlFor="publisherArabicField">
+          <div className="sources-manager__input-container">
+            <label className="sources-manager__label" htmlFor="publisherArabicField">
               Publisher (Arabic)
             </label>
             <input
               id="publisherArabicField"
-              className="sources-page__input"
+              className="sources-manager__input"
               type="text"
               value={publisherArabic}
               onChange={(e) => setPublisherArabic(e.target.value)}
@@ -303,50 +303,50 @@ export default function BibliographyPage() {
         </div>
 
         {/* Place, ISBN & URL */}
-        <div className="sources-page__group">
-          <div className="sources-page__input-container">
-            <label className="sources-page__label" htmlFor="placeEnglishField">
+        <div className="sources-manager__group">
+          <div className="sources-manager__input-container">
+            <label className="sources-manager__label" htmlFor="placeEnglishField">
               Place (English)
             </label>
             <input
               id="placeEnglishField"
-              className="sources-page__input"
+              className="sources-manager__input"
               type="text"
               value={placeEnglish}
               onChange={(e) => setPlaceEnglish(e.target.value)}
             />
           </div>
-          <div className="sources-page__input-container">
-            <label className="sources-page__label" htmlFor="placeArabicField">
+          <div className="sources-manager__input-container">
+            <label className="sources-manager__label" htmlFor="placeArabicField">
               Place (Arabic)
             </label>
             <input
               id="placeArabicField"
-              className="sources-page__input"
+              className="sources-manager__input"
               type="text"
               value={placeArabic}
               onChange={(e) => setPlaceArabic(e.target.value)}
             />
           </div>
-          <div className="sources-page__input-container">
-            <label className="sources-page__label" htmlFor="isbnField">
+          <div className="sources-manager__input-container">
+            <label className="sources-manager__label" htmlFor="isbnField">
               ISBN
             </label>
-            <input id="isbnField" className="sources-page__input" type="text" value={ISBN} onChange={(e) => setISBN(e.target.value)} />
+            <input id="isbnField" className="sources-manager__input" type="text" value={ISBN} onChange={(e) => setISBN(e.target.value)} />
           </div>
-          <div className="sources-page__input-container">
-            <label className="sources-page__label" htmlFor="urlField">
+          <div className="sources-manager__input-container">
+            <label className="sources-manager__label" htmlFor="urlField">
               URL
             </label>
-            <input id="urlField" className="sources-page__input" type="text" value={url} onChange={(e) => setUrl(e.target.value)} />
+            <input id="urlField" className="sources-manager__input" type="text" value={url} onChange={(e) => setUrl(e.target.value)} />
           </div>
-          <div className="sources-page__input-container">
-            <label className="sources-page__label" htmlFor="dateAccessedField">
+          <div className="sources-manager__input-container">
+            <label className="sources-manager__label" htmlFor="dateAccessedField">
               Date Accessed
             </label>
             <input
               id="dateAccessedField"
-              className="sources-page__input"
+              className="sources-manager__input"
               type="text"
               value={dateAccessed}
               onChange={(e) => setDateAccessed(e.target.value)}
@@ -354,19 +354,19 @@ export default function BibliographyPage() {
           </div>
         </div>
         {/* Contributors */}
-        <div className="sources-page__group sources-page__group_vertical">
-          <div className="sources-page__input-container">
-            <div className="sources-page__label">
+        <div className="sources-manager__group sources-manager__group_vertical">
+          <div className="sources-manager__input-container">
+            <div className="sources-manager__label">
               Contributors
-              <button type="button" className="sources-page__add-button" onClick={handleAddContributor}>
+              <button type="button" className="sources-manager__add-button" onClick={handleAddContributor}>
                 Add Contributor
               </button>
             </div>
           </div>
           {contributors.map((contributor, index) => (
-            <div key={index} className="sources-page__contributor">
+            <div key={index} className="sources-manager__contributor">
               <select
-                className="sources-page__select"
+                className="sources-manager__select"
                 value={contributor.type}
                 onChange={(e) => handleContributorChange(index, "type", e.target.value)}
               >
@@ -400,17 +400,17 @@ export default function BibliographyPage() {
                 value={contributor.lastNameArabic}
                 onChange={(e) => handleContributorChange(index, "lastNameArabic", e.target.value)}
               />
-              <button type="button" className="sources-page__remove-button" onClick={() => handleRemoveContributor(index)}>
+              <button type="button" className="sources-manager__remove-button" onClick={() => handleRemoveContributor(index)}>
                 Remove
               </button>
             </div>
           ))}
         </div>
-        <div className="sources-page__buttons">
-          <button type="submit" className="sources-page__save-button">
+        <div className="sources-manager__buttons">
+          <button type="submit" className="sources-manager__save-button">
             Save
           </button>
-          <button type="button" className="sources-page__delete-button" onClick={handleDelete}>
+          <button type="button" className="sources-manager__delete-button" onClick={handleDelete}>
             Delete
           </button>
         </div>

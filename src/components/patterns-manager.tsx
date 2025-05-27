@@ -27,7 +27,7 @@ const DURATION_OPTIONS: NoteDuration[] = [
   "1t",
 ];
 
-export default function PatternsPage() {
+export default function PatternsManager() {
   const { patterns, setPatterns } = useAppContext();
   const [patternId, setPatternId] = useState<string>("");
   const [name, setName] = useState<string>("");
@@ -94,17 +94,17 @@ export default function PatternsPage() {
   };
 
   return (
-    <div className="patterns-page">
-      <h2 className="patterns-page__header">Patterns</h2>
+    <div className="patterns-manager">
+      <h2 className="patterns-manager__header">Patterns</h2>
 
-      <form className="patterns-page__form" onSubmit={handleSave}>
-        <div className="patterns-page__group">
-          <div className="patterns-page__group">
-            <div className="patterns-page__input-container">
-              <label className="patterns-page__label" htmlFor="patternSelect">
+      <form className="patterns-manager__form" onSubmit={handleSave}>
+        <div className="patterns-manager__group">
+          <div className="patterns-manager__group">
+            <div className="patterns-manager__input-container">
+              <label className="patterns-manager__label" htmlFor="patternSelect">
                 Select Pattern or Create New:
               </label>
-              <select id="patternSelect" className="patterns-page__select" value={patternId} onChange={(e) => setPatternId(e.target.value)}>
+              <select id="patternSelect" className="patterns-manager__select" value={patternId} onChange={(e) => setPatternId(e.target.value)}>
                 <option value="">-- New Pattern --</option>
                 {patterns.map((p) => (
                   <option key={p.getId()} value={p.getId()}>
@@ -114,25 +114,25 @@ export default function PatternsPage() {
               </select>
             </div>
           </div>
-          <div className="patterns-page__input-container">
-            <label className="patterns-page__label">Name</label>
-            <input className="patterns-page__input" type="text" value={name} onChange={(e) => setName(e.target.value)} required />
+          <div className="patterns-manager__input-container">
+            <label className="patterns-manager__label">Name</label>
+            <input className="patterns-manager__input" type="text" value={name} onChange={(e) => setName(e.target.value)} required />
           </div>
         </div>
 
-        <div className="patterns-page__notes-section">
-          <h3 className="patterns-page__notes-header">
+        <div className="patterns-manager__notes-section">
+          <h3 className="patterns-manager__notes-header">
             Notes{" "}
-            <button type="button" className="patterns-page__add-note" onClick={addNote}>
+            <button type="button" className="patterns-manager__add-note" onClick={addNote}>
               + Add Note
             </button>
           </h3>
 
-          <div className="patterns-page__notes">
+          <div className="patterns-manager__notes">
             {notes.map((note, i) => (
-              <div key={i} className="patterns-page__note">
+              <div key={i} className="patterns-manager__note">
                 <select
-                  className="patterns-page__note-scaleDegree"
+                  className="patterns-manager__note-scaleDegree"
                   value={note.scaleDegree}
                   onChange={(e) => updateNote(i, "scaleDegree", e.target.value)}
                   required
@@ -145,7 +145,7 @@ export default function PatternsPage() {
                   ))}
                 </select>
                 <select
-                  className="patterns-page__note-duration"
+                  className="patterns-manager__note-duration"
                   value={note.noteDuration}
                   onChange={(e) => updateNote(i, "noteDuration", e.target.value)}
                 >
@@ -155,7 +155,7 @@ export default function PatternsPage() {
                     </option>
                   ))}
                 </select>
-                <button type="button" className="patterns-page__delete-note" onClick={() => removeNote(i)}>
+                <button type="button" className="patterns-manager__delete-note" onClick={() => removeNote(i)}>
                   Delete
                 </button>
               </div>
@@ -163,12 +163,12 @@ export default function PatternsPage() {
           </div>
         </div>
 
-        <div className="patterns-page__buttons">
-          <button type="submit" className="patterns-page__save-button">
+        <div className="patterns-manager__buttons">
+          <button type="submit" className="patterns-manager__save-button">
             {patternId ? "Update Pattern" : "Save Pattern"}
           </button>
           {patternId && (
-            <button type="button" className="patterns-page__delete-button" onClick={handleDelete}>
+            <button type="button" className="patterns-manager__delete-button" onClick={handleDelete}>
               Delete Pattern
             </button>
           )}

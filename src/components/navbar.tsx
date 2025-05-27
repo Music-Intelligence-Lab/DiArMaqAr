@@ -1,16 +1,17 @@
 "use client";
 import React from "react";
-import MenuIcon from "@mui/icons-material/Menu";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import HomeIcon from "@mui/icons-material/Home";
 import SettingsCard from "@/components/settings-cards";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import QueueMusicIcon from '@mui/icons-material/QueueMusic';
+import { useAppContext } from "@/contexts/app-context";
 import { useMenuContext } from "@/contexts/menu-context";
 
 export default function Navbar() {
-  const {openNavigation, setOpenNavigation, setOpenBottomDrawer, openSettings, setOpenSettings} = useMenuContext();
+  const {openNavigation, setOpenNavigation, setOpenBottomDrawer, openSettings, setOpenSettings, selectedMenu, setSelectedMenu} = useMenuContext();
+  const {selectedTuningSystem, selectedJins, selectedMaqam, maqamSayrId} = useAppContext();
 
   const currentPath = usePathname().split("/")[1];
 
@@ -31,7 +32,6 @@ export default function Navbar() {
       <header className="navbar__top-bar">
         <div className="navbar__left-panel">
           <div className="navbar__left-panel-icon" onClick={toggleSidebar}>
-            <MenuIcon />
           </div>
         </div>
 
@@ -42,6 +42,26 @@ export default function Navbar() {
           </div>
         </div>
       </header>
+      <div className="navbar__bottom-bar">
+        <button className={`navbar__bottom-bar-item ${selectedMenu === "tuningSystem" ? "navbar__bottom-bar-item_selected":""}`} onClick={() => setSelectedMenu("tuningSystem")}>
+          {selectedTuningSystem ? selectedTuningSystem.getTitleEnglish():"Select Tuning System"}
+        </button>
+        <button className={`navbar__bottom-bar-item ${selectedMenu === "jins" ? "navbar__bottom-bar-item_selected":""}`} onClick={() => setSelectedMenu("jins")} disabled={!selectedTuningSystem}>
+          {selectedJins ? selectedJins.getName() : "Select Jins"}
+        </button>
+        <button className={`navbar__bottom-bar-item ${selectedMenu === "maqam" ? "navbar__bottom-bar-item_selected":""}`} onClick={() => setSelectedMenu("maqam")} disabled={!selectedTuningSystem}>
+          {selectedMaqam ? selectedMaqam.getName() : "Select Maqam"}
+        </button>
+        <button className={`navbar__bottom-bar-item ${selectedMenu === "sayr" ? "navbar__bottom-bar-item_selected":""}`} onClick={() => setSelectedMenu("sayr")} disabled={!selectedMaqam}>
+          {maqamSayrId ? "Sayr: " + maqamSayrId : "Select Sayr"}
+        </button>
+        <button className={`navbar__bottom-bar-item ${selectedMenu === "bibliography" ? "navbar__bottom-bar-item_selected":""}`} onClick={() => setSelectedMenu("bibliography")}>
+          Bibliography
+        </button>
+        <button className={`navbar__bottom-bar-item ${selectedMenu === "pattern" ? "navbar__bottom-bar-item_selected":""}`} onClick={() => setSelectedMenu("pattern")}>
+          Patterns
+        </button>
+      </div>
 
       {(openNavigation || openSettings) && <div className="navbar__backdrop" onClick={close} onTouchMove={close} />}
 

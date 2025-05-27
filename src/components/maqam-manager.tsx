@@ -5,6 +5,7 @@ import { Cell } from "@/contexts/app-context";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { getMaqamTranspositions } from "@/functions/transpose";
 import { updateMaqamat } from "@/functions/update";
+import { SourcePageReference } from "@/models/Source";
 
 export default function MaqamManager() {
   const {
@@ -20,7 +21,8 @@ export default function MaqamManager() {
     playSequence,
     handleClickMaqam,
     checkIfMaqamIsSelectable,
-    selectedTuningSystem
+    sources,
+    selectedTuningSystem,
   } = useAppContext();
 
   const numberOfPitchClasses = selectedTuningSystem ? selectedTuningSystem.getPitchClasses().length : 0;
@@ -78,7 +80,14 @@ export default function MaqamManager() {
     const descendingNoteNames =
       selectedMaqam.getDescendingNoteNames().length > 0 ? selectedMaqam.getDescendingNoteNames() : [...selectedCellNoteNames].reverse();
 
-    const updated = new Maqam(selectedMaqam.getId(), selectedMaqam.getName(), selectedCellNoteNames, descendingNoteNames, selectedMaqam.getSuyūr(), selectedMaqam.getSourcePageReferences());
+    const updated = new Maqam(
+      selectedMaqam.getId(),
+      selectedMaqam.getName(),
+      selectedCellNoteNames,
+      descendingNoteNames,
+      selectedMaqam.getSuyūr(),
+      selectedMaqam.getSourcePageReferences()
+    );
     handleSaveMaqam(updated);
   };
 
@@ -138,6 +147,55 @@ export default function MaqamManager() {
     playSequence(maqamFrequencies);
   };
 
+  const updateSourceRefs = (refs: SourcePageReference[], index: number, newRef: Partial<SourcePageReference>) => {
+    if (!selectedMaqam) return;
+    const list = [...refs];
+    list[index] = { ...list[index], ...newRef } as SourcePageReference;
+    setSelectedMaqam(
+      new Maqam(
+        selectedMaqam.getId(),
+        selectedMaqam.getName(),
+        selectedMaqam.getAscendingNoteNames(),
+        selectedMaqam.getDescendingNoteNames(),
+        selectedMaqam.getSuyūr(),
+        list
+      )
+    );
+  };
+
+  const removeSourceRef = (index: number) => {
+    if (!selectedMaqam) return;
+    const refs = selectedMaqam.getSourcePageReferences() || [];
+    const newList = refs.filter((_, i) => i !== index);
+    setSelectedMaqam(
+      new Maqam(
+        selectedMaqam.getId(),
+        selectedMaqam.getName(),
+        selectedMaqam.getAscendingNoteNames(),
+        selectedMaqam.getDescendingNoteNames(),
+        selectedMaqam.getSuyūr(),
+        newList
+      )
+    );
+  };
+
+  const addSourceRef = () => {
+    if (!selectedMaqam) return;
+    const refs = selectedMaqam?.getSourcePageReferences() || [];
+    const newRef: SourcePageReference = { sourceId: "", page: "" };
+    const newList = [...refs, newRef];
+    setSelectedMaqam(
+      new Maqam(
+        selectedMaqam.getId(),
+        selectedMaqam.getName(),
+        selectedMaqam.getAscendingNoteNames(),
+        selectedMaqam.getDescendingNoteNames(),
+        selectedMaqam.getSuyūr(),
+        newList
+      )
+    );
+  };
+
   return (
     <div className="maqam-manager">
       <h2 className="maqam-manager__header">
@@ -192,8 +250,12 @@ export default function MaqamManager() {
               }}
             >
               <div className="maqam-manager__item-name">
-                <strong>{`${maqam.getName()}${!maqam.isMaqamSymmetric() ? "*":""}`}</strong>
-                {checkIfMaqamIsSelectable(maqam) && <strong className="maqam-manager__item-name-transpositions">{`Transpositions: ${getMaqamTranspositions(allCellDetails, maqam, true).length}/${numberOfPitchClasses}`}</strong>}
+                <strong>{`${maqam.getName()}${!maqam.isMaqamSymmetric() ? "*" : ""}`}</strong>
+                {checkIfMaqamIsSelectable(maqam) && (
+                  <strong className="maqam-manager__item-name-transpositions">{`Transpositions: ${
+                    getMaqamTranspositions(allCellDetails, maqam, true).length
+                  }/${numberOfPitchClasses}`}</strong>
+                )}
               </div>
             </div>
           ))
@@ -202,7 +264,7 @@ export default function MaqamManager() {
 
       {!selectedMaqam && (
         <button
-          onClick={() => setSelectedMaqam(new Maqam((maqamat.length + 1).toString(), "", [], [], [],[]))}
+          onClick={() => setSelectedMaqam(new Maqam((maqamat.length + 1).toString(), "", [], [], [], []))}
           className="maqam-manager__create-new-maqam-button"
         >
           Create New Maqam
@@ -249,6 +311,39 @@ export default function MaqamManager() {
           <button onClick={clearSelections} className="maqam-manager__clear-button">
             Clear
           </button>
+
+          {selectedMaqam && (
+            <button className="maqam-manager__source-add-button" onClick={addSourceRef}>
+              Add Source
+            </button>
+          )}
+          {selectedMaqam &&
+            selectedMaqam.getSourcePageReferences().map((ref, idx) => (
+              <div key={idx} className="maqam-manager__source-item">
+                <select
+                  className="maqam-manager__source-select"
+                  value={ref.sourceId}
+                  onChange={(e) => updateSourceRefs(selectedMaqam.getSourcePageReferences(), idx, { sourceId: e.target.value })}
+                >
+                  <option value="">Select source</option>
+                  {sources.map((s) => (
+                    <option key={s.getId()} value={s.getId()}>
+                      {s.getTitleEnglish()}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  className="maqam-manager__source-input"
+                  type="text"
+                  value={ref.page}
+                  placeholder="Page"
+                  onChange={(e) => updateSourceRefs(selectedMaqam.getSourcePageReferences(), idx, { page: e.target.value })}
+                />
+                <button className="maqam-manager__source-delete-button" onClick={() => removeSourceRef(idx)}>
+                  Delete
+                </button>
+              </div>
+            ))}
         </div>
       )}
     </div>
