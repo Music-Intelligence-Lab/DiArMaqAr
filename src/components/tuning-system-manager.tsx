@@ -49,7 +49,7 @@ export default function TuningSystemManager() {
     sources,
   } = useAppContext();
 
-  const { filters } = useFilterContext();
+  const { filters, setFilters } = useFilterContext();
 
   const alKindiPitchClasses = ["1/1", "256/243", "9/8", "32/27", "81/64", "4/3", "1024/729", "3/2", "128/81", "27/16", "16/9", "4096/2187"];
 
@@ -79,7 +79,6 @@ export default function TuningSystemManager() {
     "saham/ramal tūtī",
     "jawāb ḥiṣār",
     "jawāb ḥuseinī",
-
   ];
 
   const [sortOption, setSortOption] = useState<"id" | "creatorEnglish" | "year">("year");
@@ -607,7 +606,7 @@ export default function TuningSystemManager() {
     return conv[field] ?? "-";
   }
 
-  // MARK: Octaves Grid Component
+  // MARK: Octave Rows
 
   /**
    * Render a single octave's table, with each column showing:
@@ -627,13 +626,55 @@ export default function TuningSystemManager() {
 
     return (
       <details className="tuning-system-manager__octave-details" open={openedOctaveRows[octave as 0 | 1 | 2 | 3]}>
-        <summary className="tuning-system-manager__octave-summary">
+        <summary
+          className="tuning-system-manager__octave-summary"
+          onClick={e => {
+          e.preventDefault();
+          setOpenedOctaveRows(rows => ({
+            ...rows,
+            [octave]: !rows[octave as 0|1|2|3]
+          }));
+        }}
+        >
           <span className="tuning-system-manager__octave-summary-title">
             Diwān (octave) {octave}{" "}
-            {(octave === 1 || octave === 2) && (
-              <button className="tuning-system-manager__octave-cascade-button" onClick={() => setCascade((prevCascade) => !prevCascade)}>
+            {((octave === 1 && openedOctaveRows[1]) || (octave === 2 && openedOctaveRows[2])) && (
+              <button
+                className="tuning-system-manager__octave-cascade-button"
+                onClick={(e: React.MouseEvent) => {
+                  e.stopPropagation();
+                  setCascade((c) => !c);
+                }}
+              >
                 {cascade ? "Cascade Enabled" : "Cascade Disabled"}
               </button>
+            )}
+            {octave === 1 && openedOctaveRows[1] && (
+              <span className="tuning-system-manager__filter-menu">
+                {Object.keys(filters).map((filterKey) => (
+                  <button
+                    className={`tuning-system-manager__filter-menu-button ${
+                      filters[filterKey as keyof typeof filters] ? "tuning-system-manager__filter-menu-button_active" : ""
+                    }`}
+                    key={filterKey}
+                    disabled={
+                      (filterKey === "fractionRatio" && pitchClassType === "fraction") ||
+                      (filterKey === "cents" && pitchClassType === "cents") ||
+                      (filterKey === "decimalRatio" && pitchClassType === "decimal") ||
+                      (filterKey === "stringLength" && pitchClassType === "stringLength")
+                    }
+                    onClick={(e: React.MouseEvent) => {
+                      e.stopPropagation();
+                      setFilters((prev) => ({
+                        ...prev,
+                        [filterKey as keyof typeof filters]: !prev[filterKey as keyof typeof filters],
+                      }));
+                    }}
+                  >
+                    {filterKey.charAt(0).toUpperCase() + filterKey.slice(1)}
+                  </button>
+                ))}
+              </span>
             )}
           </span>
           <div className="tuning-system-manager__octave-summary-content">
@@ -898,7 +939,7 @@ export default function TuningSystemManager() {
     return !noteNames.some((config) => config[0] === currentFirst);
   };
 
-  // MARK: Render Main Component
+  // MARK: Main Component
 
   return (
     <div className="tuning-system-manager">
@@ -925,7 +966,7 @@ export default function TuningSystemManager() {
               <option value="new">-- Create New System --</option>
               {sortedTuningSystems.map((system) => (
                 <option key={system.getId()} value={system.getId()}>
-                  {system.getCreatorEnglish()} ({system.getYear() ? system.getYear() : "NA"}) {system.getTitleEnglish()}
+                  {system.stringify()}
                 </option>
               ))}
             </select>
