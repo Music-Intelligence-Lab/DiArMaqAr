@@ -177,9 +177,8 @@ export default function JinsTranspositions() {
         </thead>
         <tbody>
 
-          {sequences.map((sequence, row) => {
+          {sequences.filter((sequence) => sequence[0].noteName !== jinsCellDetails[0].noteName).map((sequence, row) => {
             const colCount = 2 + (sequence.length - 1) * 2;
-            if (jinsCellDetails[0].noteName === sequence[0].noteName) return null;
             return (
               <React.Fragment key={row}>
                 <tr>
@@ -208,7 +207,7 @@ export default function JinsTranspositions() {
                     <button
                       className="jins-transpositions__button"
                       onClick={() => {
-                        playSequence(jinsCellDetails.map((cell) => parseInt(cell.frequency)));
+                        playSequence(sequence.map((cell) => parseInt(cell.frequency)));
                       }}
                     >
                       <PlayCircleIcon className="jins-transpositions__play-circle-icon" /> Play jins{/* {`${selectedJins.getName()} al-${sequence[0].noteName}`} */}
