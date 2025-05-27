@@ -48,11 +48,9 @@ Currently the pattern playback only continues ascending until the last note of t
 
 - Please check Ajnas and Maqamat transposition row numbers, the sequence gets chopped i.e. 1, 2, 4, 5, 6
 
-- For all the buttons that play a pattern, on click change the play symbol to a stop symbol and make the button stop the playback if clicked a second time
+- Add stop playback option: For all the buttons that play a pattern/sequence, on click, change the play symbol to a stop symbol and make the button stop the playback if clicked a second time
 
 - Add extra weights to the fonts used in the site
-
-- MIDI Inputs and Outputs not working 
 
 # 24 May 2025
 - Cascading for Note Names has stopped working, and with that the default note names selection when inputting a new tuning system. When fixing remember we have a previous feature request: "Default note naming convention should be based on Al-Kindi 12 tone system and naming convention".
