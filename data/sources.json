@@ -201,5 +201,33 @@
     "ISBN": "",
     "url": "",
     "dateAccessed": ""
+  },
+  {
+    "id": "IDE6rHb6y71_H8_0p5nh1",
+    "titleEnglish": "Qiyās Al-Sullam Al-Mūsīqī Al-'Arabī",
+    "titleArabic": "قياس السلم الموسيقي العربي",
+    "sourceType": "Book",
+    "contributors": [
+      {
+        "type": "Author",
+        "firstNameEnglish": "Youssef",
+        "lastNameEnglish": "Shawqi",
+        "firstNameArabic": "يوسف",
+        "lastNameArabic": "شوقي"
+      }
+    ],
+    "editionEnglish": "",
+    "editionArabic": "",
+    "publicationDateEnglish": "1969",
+    "publicationDateArabic": "١٩٦٩",
+    "originalPublicationDateEnglish": "",
+    "originalPublicationDateArabic": "",
+    "publisherEnglish": "Dar Al-Kutub",
+    "publisherArabic": "دار الكتب",
+    "placeEnglish": "Cairo",
+    "placeArabic": "القاهرة",
+    "ISBN": "",
+    "url": "",
+    "dateAccessed": ""
   }
 ]
