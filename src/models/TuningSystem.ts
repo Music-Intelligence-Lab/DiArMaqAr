@@ -130,28 +130,7 @@ export default class TuningSystem {
     return this.defaultReferenceFrequency;
   }
 
-  copyWithNewSetOfTransliteratedNoteNames(
-    newSetOfTransliteratedNoteNames: TransliteratedNoteName[][]
-  ): TuningSystem {
-    return new TuningSystem(
-      this.id,
-      this.titleEnglish,
-      this.titleArabic,
-      this.year,
-      this.sourceEnglish,
-      this.sourceArabic,
-      this.sourceId,
-      this.page,
-      this.creatorEnglish,
-      this.creatorArabic,
-      this.commentsEnglish,
-      this.commentsArabic,
-      this.pitchClasses,
-      newSetOfTransliteratedNoteNames,
-      this.abjadNames,
-      this.stringLength,
-      this.referenceFrequencies,
-      this.defaultReferenceFrequency
-    );
+  stringify(): string {
+    return `${this.getCreatorEnglish()} (${this.getYear() ? this.getYear() : "NA"}) ${this.getTitleEnglish()}`;
   }
 }

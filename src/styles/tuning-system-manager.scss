@@ -230,6 +230,39 @@
     user-select: none;
   }
 
+  &__filter-menu {
+    gap: 10px;
+    height: 100%;
+    margin: 0 10px;
+  }
+
+  &__filter-menu-button {
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    color: $text;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-left: 10px;
+
+    &:hover {
+      background-color: rgba($primary, 0.5);
+      color: white;
+      box-shadow: 0 1px 15px rgba(0, 0, 0, 0.6);
+    }
+
+    &_active {
+      background-color: $primary;
+      color: white;
+    }
+
+    &:disabled {
+      background-color: $secondary;
+      color: $text;
+      cursor: not-allowed;
+    }
+  }
+
   &__octave-table {
     width: 100%;
     border-collapse: collapse;

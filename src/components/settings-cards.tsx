@@ -3,7 +3,7 @@
 import React from "react";
 import { Slider } from "@mui/material";
 import { useAppContext } from "@/contexts/app-context";
-import { useFilterContext } from "@/contexts/filter-context";
+// import { useFilterContext } from "@/contexts/filter-context";
 import { useMenuContext } from "@/contexts/menu-context";
 import SettingsIcon from "@mui/icons-material/Settings";
 
@@ -13,7 +13,7 @@ const SettingsCard = () => {
 
   const { openSettings, setOpenSettings, setOpenBottomDrawer, setOpenNavigation } = useMenuContext();
 
-  const { filters, setFilters } = useFilterContext();
+  // const { filters, setFilters } = useFilterContext();
 
   const togglePanel = () => {
     setOpenSettings((prev) => !prev);
@@ -297,7 +297,7 @@ const SettingsCard = () => {
             )}
           </details>
 
-          <details className="settings-card__details">
+          {/* <details className="settings-card__details">
             <summary className="settings-card__summary">Filters</summary>
             {Object.keys(filters).map((key) => (
               <div key={key} className="settings-card__filter-container">
@@ -316,7 +316,7 @@ const SettingsCard = () => {
                 </label>
               </div>
             ))}
-          </details>
+          </details> */}
 
           <button className="settings-card__clear-button" onClick={clearSelections}>
             Clear Selections
