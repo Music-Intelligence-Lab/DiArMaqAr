@@ -481,15 +481,12 @@ export default function MaqamTranspositions() {
           <col style={{ width: "40px" }} />
         </colgroup>
         <tbody>
-          {filteredSequences.map((seq, row) => {
+          {filteredSequences.filter((sequence) => sequence.ascendingSequence[0].noteName !== ascendingMaqamCellDetails[0].noteName).map((seq, row) => {
             const ascendingDetails = seq.ascendingSequence;
             const descendingDetails = seq.descendingSequence;
             const colCount = 2 + (ascendingDetails.length - 1) * 2;
             const rowCount = 14;
-            if (ascendingMaqamCellDetails[0].noteName === ascendingDetails[0].noteName) return null;
-
-            // --- Patch: add rowCount for rowspan
-
+            
             return (
               <React.Fragment key={row}>
                 <tr>
