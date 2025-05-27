@@ -1,4 +1,3 @@
-// components/MaqamTranspositions.tsx
 "use client";
 
 import React from "react";
@@ -6,6 +5,7 @@ import { CellDetails, useAppContext } from "@/contexts/app-context";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { getIntervalPattern, getTranspositions, mergeTranspositions, Interval } from "@/functions/transpose";
+import Jins from "@/models/Jins";
 
 export default function MaqamTranspositions() {
   const {
@@ -18,6 +18,7 @@ export default function MaqamTranspositions() {
     setCentsTolerance,
     playNoteFrequency,
     playSequence,
+    ajnas,
   } = useAppContext();
 
   if (!selectedMaqam || !selectedTuningSystem) return null;
@@ -39,6 +40,25 @@ export default function MaqamTranspositions() {
   const valueType = ascendingMaqamCellDetails[0].originalValueType;
   const useRatio = valueType === "fraction" || valueType === "ratios";
 
+  function equalIntervalPatterns(pattern1: Interval[], pattern2: Interval[]): boolean {
+    if (pattern1.length !== pattern2.length) return false;
+
+    for (let i = 0; i < pattern1.length; i++) {
+      const interval1 = pattern1[i];
+      const interval2 = pattern2[i];
+
+      if (useRatio) {
+        if (interval1.ratio !== interval2.ratio) return false;
+      } else {
+        if (interval1.diff === undefined || interval2.diff === undefined) return false;
+        const diff = Math.abs(interval1.diff - interval2.diff);
+        if (diff > centsTolerance) return false;
+      }
+    }
+
+    return true;
+  }
+
   const ascendingIntervalPattern: Interval[] = getIntervalPattern(ascendingMaqamCellDetails, useRatio);
 
   const descendingIntervalPattern: Interval[] = getIntervalPattern(descendingMaqamCellDetails, useRatio);
@@ -51,6 +71,65 @@ export default function MaqamTranspositions() {
     ascendingSequences,
     descendingSequences
   );
+
+  const ascendingAjnasIntervals: { jins: Jins; intervalPattern: Interval[] }[] = [];
+  const descendingAjnasIntervals: { jins: Jins; intervalPattern: Interval[] }[] = [];
+
+  for (const jins of ajnas) {
+    const jinsCellDetails = allCellDetails.filter((cell) => jins.getNoteNames().includes(cell.noteName));
+    const reverseJinsCellDetails = [...jinsCellDetails].reverse();
+    if (jinsCellDetails.length !== jins.getNoteNames().length) continue;
+    const ascendingJinsIntervalPattern = getIntervalPattern(jinsCellDetails, useRatio);
+    ascendingAjnasIntervals.push({ jins, intervalPattern: ascendingJinsIntervalPattern });
+    const descendingJinsIntervalPattern = getIntervalPattern(reverseJinsCellDetails, useRatio);
+    descendingAjnasIntervals.push({ jins, intervalPattern: descendingJinsIntervalPattern });
+  }
+
+  const extendedAscendingIntervalPattern = [...ascendingIntervalPattern, ...ascendingIntervalPattern];
+  const extendedDescendingIntervalPattern = [...descendingIntervalPattern, ...descendingIntervalPattern];
+
+  let ascendingMaqamJinsIntervals: { jins: Jins | null; intervalPattern: Interval[] }[] = [];
+  let descendingMaqamJinsIntervals: { jins: Jins | null; intervalPattern: Interval[] }[] = [];
+
+  for (let i = 0; i < extendedAscendingIntervalPattern.length; i++) {
+    let found = false;
+
+    for (const { jins, intervalPattern } of ascendingAjnasIntervals) {
+      const slicedIntervalPattern = extendedAscendingIntervalPattern.slice(i, i + intervalPattern.length);
+
+      if (equalIntervalPatterns(slicedIntervalPattern, intervalPattern)) {
+        ascendingMaqamJinsIntervals.push({ jins, intervalPattern });
+        found = true;
+        break;
+      }
+    }
+
+    if (!found) {
+      ascendingMaqamJinsIntervals.push({ jins: null, intervalPattern: [] });
+    }
+  }
+
+  ascendingMaqamJinsIntervals = ascendingMaqamJinsIntervals.slice(0, ascendingIntervalPattern.length);
+
+  for (let i = 0; i < extendedDescendingIntervalPattern.length; i++) {
+    let found = false;
+
+    for (const { jins, intervalPattern } of descendingAjnasIntervals) {
+      const slicedIntervalPattern = extendedDescendingIntervalPattern.slice(i, i + intervalPattern.length);
+
+      if (equalIntervalPatterns(slicedIntervalPattern, intervalPattern)) {
+        descendingMaqamJinsIntervals.push({ jins, intervalPattern });
+        found = true;
+        break;
+      }
+    }
+
+    if (!found) {
+      descendingMaqamJinsIntervals.push({ jins: null, intervalPattern: [] });
+    }
+  }
+
+  descendingMaqamJinsIntervals = descendingMaqamJinsIntervals.slice(0, descendingIntervalPattern.length);
 
   return (
     <div className="maqam-transpositions">
@@ -78,7 +157,7 @@ export default function MaqamTranspositions() {
 
         <thead>
           <tr>
-            <th className="maqam-transpositions__transposition-number" rowSpan={14}>
+            <th className="maqam-transpositions__transposition-number" rowSpan={16}>
               {1}
             </th>
 
@@ -153,7 +232,7 @@ export default function MaqamTranspositions() {
           </tr>
           {/* Ascending Scale Degrees Row */}
           <tr>
-            <td className="maqam-transpositions__asc-desc-column" rowSpan={6}>
+            <td className="maqam-transpositions__asc-desc-column" rowSpan={7}>
               ↗
             </td>
           </tr>
@@ -249,12 +328,23 @@ export default function MaqamTranspositions() {
             ))}
           </tr>
           <tr>
+            <th className="maqam-transpositions__row-header">Ajnas</th>
+            {ascendingMaqamJinsIntervals.map((pat, i) => (
+              <React.Fragment key={i}>
+                <th className="maqam-transpositions__header-cell" colSpan={2}>
+                  {pat.jins?.getName()}
+                </th>
+              </React.Fragment>
+            ))}
+            <th className="maqam-transpositions__header-cell"></th>
+          </tr>
+          <tr>
             <td className="maqam-transpositions__spacer" colSpan={2 + (ascendingMaqamCellDetails.length - 1) * 2} />
           </tr>
 
           {/* Descending Scale Degrees Row */}
           <tr>
-            <td className="maqam-transpositions__asc-desc-column" rowSpan={6}>
+            <td className="maqam-transpositions__asc-desc-column" rowSpan={7}>
               ↘
             </td>
           </tr>
@@ -354,6 +444,17 @@ export default function MaqamTranspositions() {
                 </th>
               </React.Fragment>
             ))}
+          </tr>
+          <tr>
+            <th className="maqam-transpositions__row-header">Ajnas</th>
+            {descendingMaqamJinsIntervals.map((pat, i) => (
+              <React.Fragment key={i}>
+                <th className="maqam-transpositions__header-cell" colSpan={2}>
+                  {pat.jins?.getName()}
+                </th>
+              </React.Fragment>
+            ))}
+            <th className="maqam-transpositions__header-cell"></th>
           </tr>
         </thead>
       </table>
