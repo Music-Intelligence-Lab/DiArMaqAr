@@ -749,6 +749,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
     setSelectedJins(jins);
     setSelectedMaqam(null);
+    setMaqamSayrId("");
 
     const noteNames = jins.getNoteNames();
 
@@ -793,6 +794,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     // when selecting, populate cells for asc or desc based on stored noteNames
     setSelectedMaqam(maqam);
     setSelectedJins(null);
+    setMaqamSayrId("");
     const namesToSelect = maqam.getAscendingNoteNames();
 
     // translate names back into SelectedCell[] by matching against usedNoteNames
