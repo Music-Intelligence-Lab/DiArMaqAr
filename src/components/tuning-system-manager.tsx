@@ -54,8 +54,6 @@ export default function TuningSystemManager() {
   const alKindiPitchClasses = ["1/1", "256/243", "9/8", "32/27", "81/64", "4/3", "1024/729", "3/2", "128/81", "27/16", "16/9", "4096/2187"];
 
   const alKindiNoteNames = [
-    "yegāh",
-    "qarār ḥiṣār",
     "ʿushayrān",
     "ʿajam ʿushayrān",
     "kawasht",
@@ -78,6 +76,10 @@ export default function TuningSystemManager() {
     "jawāb buselīk",
     "mahurān",
     "jawāb ḥijāz",
+    "saham/ramal tūtī",
+    "jawāb ḥiṣār",
+    "jawāb ḥuseinī",
+
   ];
 
   const [sortOption, setSortOption] = useState<"id" | "creatorEnglish" | "year">("year");
