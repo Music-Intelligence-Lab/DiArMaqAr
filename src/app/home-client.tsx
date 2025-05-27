@@ -3,13 +3,17 @@
 import { useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useAppContext } from "@/contexts/app-context";
+import { useMenuContext } from "@/contexts/menu-context";
 import TuningSystemManager from "@/components/tuning-system-manager";
 import JinsTranspositions from "@/components/jins-transpositions";
 import MaqamTranspositions from "@/components/maqam-transpositions";
 import SayrManager from "@/components/sayr-manager";
 import KeyboardControls from "@/components/keyboard-controls";
-import BottomDrawer from "@/components/bottom-drawer";
 import getFirstNoteName from "@/functions/getFirstNoteName";
+import SourcesManager from "@/components/sources-manager";
+import PatternsManager from "@/components/patterns-manager";
+import JinsManager from "@/components/jins-manager";
+import MaqamManager from "@/components/maqam-manager";
 
 export default function HomeClient() {
   const {
@@ -24,6 +28,8 @@ export default function HomeClient() {
     selectedIndices,
     originalIndices,
   } = useAppContext();
+
+  const { selectedMenu } = useMenuContext();
 
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -58,14 +64,15 @@ export default function HomeClient() {
 
   return (
     <div className="home-page">
-      <TuningSystemManager />
-      {/* <JinsManager /> */}
-      {/* <MaqamManager /> */}
-      <SayrManager />
-      <JinsTranspositions />
-      <MaqamTranspositions />
+      {selectedMenu === "tuningSystem" && <TuningSystemManager />}
+      {selectedMenu === "maqam" && selectedTuningSystem && <MaqamManager />}
+      {selectedMenu === "maqam" && selectedTuningSystem && <MaqamTranspositions />}
+      {selectedMenu === "jins" && selectedTuningSystem && <JinsManager />}
+      {selectedMenu === "jins" && selectedTuningSystem && <JinsTranspositions />}
+      {selectedMenu === "sayr" && selectedMaqam && <SayrManager />}
+      {selectedMenu === "bibliography" && <SourcesManager />}
+      {selectedMenu === "pattern" && <PatternsManager />}
       <KeyboardControls />
-      <BottomDrawer />
     </div>
   );
 }
