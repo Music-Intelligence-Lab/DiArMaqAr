@@ -7,7 +7,7 @@ import { getMaqamTranspositions } from "@/functions/transpose";
 import { updateMaqamat } from "@/functions/update";
 import { SourcePageReference } from "@/models/Source";
 
-export default function MaqamManager() {
+export default function MaqamManager({admin}: { admin: boolean }) {
   const {
     maqamat,
     setMaqamat,
@@ -262,7 +262,7 @@ export default function MaqamManager() {
         )}
       </div>
 
-      {!selectedMaqam && (
+      {admin && !selectedMaqam && (
         <button
           onClick={() => setSelectedMaqam(new Maqam((maqamat.length + 1).toString(), "", [], [], [], []))}
           className="maqam-manager__create-new-maqam-button"
@@ -271,7 +271,7 @@ export default function MaqamManager() {
         </button>
       )}
 
-      {selectedMaqam && (
+      {admin && selectedMaqam && (
         <div className="maqam-manager__maqam-form">
           <input
             type="text"

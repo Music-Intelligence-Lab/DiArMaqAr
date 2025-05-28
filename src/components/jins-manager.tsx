@@ -8,7 +8,8 @@ import { getJinsTranspositions } from "@/functions/transpose";
 import { updateAjnas } from "@/functions/update";
 import { SourcePageReference } from "@/models/Source";
 
-export default function JinsManager() {
+
+export default function JinsManager({admin}: {admin: boolean}) {
   const {
     ajnas,
     setAjnas,
@@ -163,12 +164,12 @@ export default function JinsManager() {
           ))
         )}
       </div>
-      {!selectedJins && (
+      {admin && !selectedJins && (
         <button onClick={() => setSelectedJins(new Jins((ajnas.length + 1).toString(), "", [], []))} className="jins-manager__create-new-jins-button">
           Create New Jins
         </button>
       )}
-      {selectedJins && (
+      {admin && selectedJins && (
         <div className="jins-manager__jins-form">
           <input
             type="text"
