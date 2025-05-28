@@ -168,6 +168,32 @@
     }
   }
 
+  &__list {
+    display: grid;
+    width: 100%;
+    gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 5px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    font-size: 14px;
+    color: $text;
+    cursor: pointer;
+    transition: 0.3s;
+
+    &_selected {
+      background-color: $secondary;
+    }
+  }
+
   &__grid-wrapper {
     margin-top: 20px;
     width: 100%;

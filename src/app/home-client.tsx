@@ -64,12 +64,16 @@ export default function HomeClient() {
 
   return (
     <div className="home-page">
-      {selectedMenu === "tuningSystem" && <TuningSystemManager />}
-      {selectedMenu === "maqam" && selectedTuningSystem && <MaqamManager />}
-      {selectedMenu === "maqam" && selectedTuningSystem && <MaqamTranspositions />}
-      {selectedMenu === "jins" && selectedTuningSystem && <JinsManager />}
-      {selectedMenu === "jins" && selectedTuningSystem && <JinsTranspositions />}
-      {selectedMenu === "sayr" && selectedMaqam && <SayrManager />}
+      {selectedMenu === "tuningSystem" && <TuningSystemManager admin={false} />}
+      {selectedMenu === "tuningSystem-admin" && <TuningSystemManager admin />}
+      {selectedMenu === "maqam" && selectedTuningSystem && <MaqamManager admin={false} />}
+      {selectedMenu === "maqam-admin" && selectedTuningSystem && <MaqamManager admin/>}
+      {(selectedMenu === "maqam" || selectedMenu === "maqam-admin") && selectedTuningSystem && <MaqamTranspositions />}
+      {selectedMenu === "jins" && selectedTuningSystem && <JinsManager admin={false} />}
+      {selectedMenu === "jins-admin" && selectedTuningSystem && <JinsManager admin />}
+      {(selectedMenu === "jins" || selectedMenu === "jins-admin") && selectedTuningSystem && <JinsTranspositions />}
+      {selectedMenu === "sayr" && selectedMaqam && <SayrManager admin={false} />}
+      {selectedMenu === "sayr-admin" && selectedMaqam && <SayrManager admin />}
       {selectedMenu === "bibliography" && <SourcesManager />}
       {selectedMenu === "pattern" && <PatternsManager />}
       <KeyboardControls />

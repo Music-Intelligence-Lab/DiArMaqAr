@@ -9,8 +9,8 @@ interface MenuContextInterface {
   setOpenSettings: React.Dispatch<React.SetStateAction<boolean>>;
   openBottomDrawer: boolean;
   setOpenBottomDrawer: React.Dispatch<React.SetStateAction<boolean>>;
-  selectedMenu: "tuningSystem" | "maqam" | "jins" | "sayr" | "bibliography" | "pattern"
-  setSelectedMenu: React.Dispatch<React.SetStateAction<"tuningSystem" | "maqam" | "jins" | "sayr" | "bibliography" | "pattern">>;
+  selectedMenu: "tuningSystem" | "maqam" | "jins" | "sayr" | "bibliography" | "pattern" | "tuningSystem-admin" | "maqam-admin" | "jins-admin" | "sayr-admin" | "bibliography-admin" | "pattern-admin"
+  setSelectedMenu: React.Dispatch<React.SetStateAction<"tuningSystem" | "maqam" | "jins" | "sayr" | "bibliography" | "pattern" | "tuningSystem-admin" | "maqam-admin" | "jins-admin" | "sayr-admin" | "bibliography-admin" | "pattern-admin">>;
 }
 
 const MenuContext = createContext<MenuContextInterface | undefined>(undefined);
@@ -19,7 +19,7 @@ export function MenuContextProvider({ children }: { children: ReactNode }) {
   const [openNavigation, setOpenNavigation] = useState(false);
   const [openSettings, setOpenSettings] = useState(false);
   const [openBottomDrawer, setOpenBottomDrawer] = useState(false);
-  const [selectedMenu, setSelectedMenu] = useState<"tuningSystem" | "maqam" | "jins" | "sayr" | "bibliography" | "pattern">("tuningSystem");
+  const [selectedMenu, setSelectedMenu] = useState<"tuningSystem" | "maqam" | "jins" | "sayr" | "bibliography" | "pattern" | "tuningSystem-admin" | "maqam-admin" | "jins-admin" | "sayr-admin" | "bibliography-admin" | "pattern-admin">("tuningSystem");
 
   return (
     <MenuContext.Provider

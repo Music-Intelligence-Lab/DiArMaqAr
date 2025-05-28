@@ -46,14 +46,26 @@ export default function Navbar() {
         <button className={`navbar__bottom-bar-item ${selectedMenu === "tuningSystem" ? "navbar__bottom-bar-item_selected":""}`} onClick={() => setSelectedMenu("tuningSystem")}>
           {selectedTuningSystem ? selectedTuningSystem.getTitleEnglish():"Select Tuning System"}
         </button>
+        <button className={`navbar__bottom-bar-item ${selectedMenu === "tuningSystem-admin" ? "navbar__bottom-bar-item_selected":""}`} onClick={() => setSelectedMenu("tuningSystem-admin")}>
+          Tuning System Admin
+        </button>
         <button className={`navbar__bottom-bar-item ${selectedMenu === "jins" ? "navbar__bottom-bar-item_selected":""}`} onClick={() => setSelectedMenu("jins")} disabled={!selectedTuningSystem}>
           {selectedJins ? selectedJins.getName() : "Select Jins"}
+        </button>
+         <button className={`navbar__bottom-bar-item ${selectedMenu === "jins-admin" ? "navbar__bottom-bar-item_selected":""}`} onClick={() => setSelectedMenu("jins-admin")} disabled={!selectedTuningSystem}>
+          Jins Admin
         </button>
         <button className={`navbar__bottom-bar-item ${selectedMenu === "maqam" ? "navbar__bottom-bar-item_selected":""}`} onClick={() => setSelectedMenu("maqam")} disabled={!selectedTuningSystem}>
           {selectedMaqam ? selectedMaqam.getName() : "Select Maqam"}
         </button>
+        <button className={`navbar__bottom-bar-item ${selectedMenu === "maqam-admin" ? "navbar__bottom-bar-item_selected":""}`} onClick={() => setSelectedMenu("maqam-admin")} disabled={!selectedTuningSystem}>
+          Maqam Admin
+        </button>
         <button className={`navbar__bottom-bar-item ${selectedMenu === "sayr" ? "navbar__bottom-bar-item_selected":""}`} onClick={() => setSelectedMenu("sayr")} disabled={!selectedMaqam}>
           {maqamSayrId ? "Sayr: " + maqamSayrId : "Select Sayr"}
+        </button>
+        <button className={`navbar__bottom-bar-item ${selectedMenu === "sayr-admin" ? "navbar__bottom-bar-item_selected":""}`} onClick={() => setSelectedMenu("sayr-admin")} disabled={!selectedMaqam}>
+          Sayr Admin
         </button>
         <button className={`navbar__bottom-bar-item ${selectedMenu === "bibliography" ? "navbar__bottom-bar-item_selected":""}`} onClick={() => setSelectedMenu("bibliography")}>
           Bibliography
