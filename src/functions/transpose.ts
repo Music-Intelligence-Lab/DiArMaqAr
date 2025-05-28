@@ -12,8 +12,8 @@ export function getIntervalPattern(cellDetails: CellDetails[], useRatio: boolean
         ratio: computeRatio(cellDetails[i].fraction, det.fraction),
       };
     } else {
-      const prevVal = parseFloat(cellDetails[i].originalValue);
-      const curVal = parseFloat(det.originalValue);
+      const prevVal = parseFloat(cellDetails[i].cents);
+      const curVal = parseFloat(det.cents);
       return { diff: curVal - prevVal };
     }
   });
@@ -54,8 +54,8 @@ export function getTranspositions(
           break;
         }
       } else {
-        const lastVal = parseFloat(lastDet.originalValue);
-        const candVal = parseFloat(candidate.originalValue);
+        const lastVal = parseFloat(lastDet.cents);
+        const candVal = parseFloat(candidate.cents);
         const diff = candVal - lastVal;
         if (Math.abs(diff - (pat.diff ?? 0)) <= centsTolerance) {
           buildSequences([...seq, candidate], i + 1, intervalIndex + 1);
