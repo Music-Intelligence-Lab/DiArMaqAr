@@ -5,13 +5,13 @@ import { usePathname } from "next/navigation";
 import HomeIcon from "@mui/icons-material/Home";
 import SettingsCard from "@/components/settings-cards";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
-import QueueMusicIcon from '@mui/icons-material/QueueMusic';
+import QueueMusicIcon from "@mui/icons-material/QueueMusic";
 import { useAppContext } from "@/contexts/app-context";
 import { useMenuContext } from "@/contexts/menu-context";
 
 export default function Navbar() {
-  const {openNavigation, setOpenNavigation, setOpenBottomDrawer, openSettings, setOpenSettings, selectedMenu, setSelectedMenu} = useMenuContext();
-  const {selectedTuningSystem, selectedJins, selectedMaqam, maqamSayrId} = useAppContext();
+  const { openNavigation, setOpenNavigation, setOpenBottomDrawer, openSettings, setOpenSettings, selectedMenu, setSelectedMenu } = useMenuContext();
+  const { selectedTuningSystem, selectedJins, selectedMaqam } = useAppContext();
 
   const currentPath = usePathname().split("/")[1];
 
@@ -19,20 +19,19 @@ export default function Navbar() {
     setOpenNavigation((prev) => !prev);
     setOpenBottomDrawer(false);
     setOpenSettings(false);
-  }
+  };
 
   const close = () => {
     setOpenNavigation(false);
     setOpenBottomDrawer(false);
     setOpenSettings(false);
-  }
+  };
 
   return (
     <nav className="navbar">
       <header className="navbar__top-bar">
         <div className="navbar__left-panel">
-          <div className="navbar__left-panel-icon" onClick={toggleSidebar}>
-          </div>
+          <div className="navbar__left-panel-icon" onClick={toggleSidebar}></div>
         </div>
 
         <div className="navbar__center-panel">Maqam Network</div>
@@ -43,34 +42,70 @@ export default function Navbar() {
         </div>
       </header>
       <div className="navbar__bottom-bar">
-        <button className={`navbar__bottom-bar-item ${selectedMenu === "tuningSystem" ? "navbar__bottom-bar-item_selected":""}`} onClick={() => setSelectedMenu("tuningSystem")}>
-          {selectedTuningSystem ? selectedTuningSystem.getTitleEnglish():"Select Tuning System"}
+        <button
+          className={`navbar__bottom-bar-item ${selectedMenu === "tuningSystem" ? "navbar__bottom-bar-item_selected" : ""}`}
+          onClick={() => setSelectedMenu("tuningSystem")}
+        >
+          {selectedTuningSystem ? selectedTuningSystem.getTitleEnglish() : "Select Tuning System"}
         </button>
-        <button className={`navbar__bottom-bar-item ${selectedMenu === "tuningSystem-admin" ? "navbar__bottom-bar-item_selected":""}`} onClick={() => setSelectedMenu("tuningSystem-admin")}>
+        <button
+          className={`navbar__bottom-bar-item ${selectedMenu === "tuningSystem-admin" ? "navbar__bottom-bar-item_selected" : ""}`}
+          onClick={() => setSelectedMenu("tuningSystem-admin")}
+        >
           Tuning System Admin
         </button>
-        <button className={`navbar__bottom-bar-item ${selectedMenu === "jins" ? "navbar__bottom-bar-item_selected":""}`} onClick={() => setSelectedMenu("jins")} disabled={!selectedTuningSystem}>
+        <button
+          className={`navbar__bottom-bar-item ${selectedMenu === "jins" ? "navbar__bottom-bar-item_selected" : ""}`}
+          onClick={() => setSelectedMenu("jins")}
+          disabled={!selectedTuningSystem}
+        >
           {selectedJins ? selectedJins.getName() : "Select Jins"}
         </button>
-         <button className={`navbar__bottom-bar-item ${selectedMenu === "jins-admin" ? "navbar__bottom-bar-item_selected":""}`} onClick={() => setSelectedMenu("jins-admin")} disabled={!selectedTuningSystem}>
+        <button
+          className={`navbar__bottom-bar-item ${selectedMenu === "jins-admin" ? "navbar__bottom-bar-item_selected" : ""}`}
+          onClick={() => setSelectedMenu("jins-admin")}
+          disabled={!selectedTuningSystem}
+        >
           Jins Admin
         </button>
-        <button className={`navbar__bottom-bar-item ${selectedMenu === "maqam" ? "navbar__bottom-bar-item_selected":""}`} onClick={() => setSelectedMenu("maqam")} disabled={!selectedTuningSystem}>
+        <button
+          className={`navbar__bottom-bar-item ${selectedMenu === "maqam" ? "navbar__bottom-bar-item_selected" : ""}`}
+          onClick={() => setSelectedMenu("maqam")}
+          disabled={!selectedTuningSystem}
+        >
           {selectedMaqam ? selectedMaqam.getName() : "Select Maqam"}
         </button>
-        <button className={`navbar__bottom-bar-item ${selectedMenu === "maqam-admin" ? "navbar__bottom-bar-item_selected":""}`} onClick={() => setSelectedMenu("maqam-admin")} disabled={!selectedTuningSystem}>
+        <button
+          className={`navbar__bottom-bar-item ${selectedMenu === "maqam-admin" ? "navbar__bottom-bar-item_selected" : ""}`}
+          onClick={() => setSelectedMenu("maqam-admin")}
+          disabled={!selectedTuningSystem}
+        >
           Maqam Admin
         </button>
-        <button className={`navbar__bottom-bar-item ${selectedMenu === "sayr" ? "navbar__bottom-bar-item_selected":""}`} onClick={() => setSelectedMenu("sayr")} disabled={!selectedMaqam}>
-          {maqamSayrId ? "Sayr: " + maqamSayrId : "Select Sayr"}
+        <button
+          className={`navbar__bottom-bar-item ${selectedMenu === "sayr" ? "navbar__bottom-bar-item_selected" : ""}`}
+          onClick={() => setSelectedMenu("sayr")}
+          disabled={!selectedMaqam}
+        >
+          Sayr
         </button>
-        <button className={`navbar__bottom-bar-item ${selectedMenu === "sayr-admin" ? "navbar__bottom-bar-item_selected":""}`} onClick={() => setSelectedMenu("sayr-admin")} disabled={!selectedMaqam}>
+        <button
+          className={`navbar__bottom-bar-item ${selectedMenu === "sayr-admin" ? "navbar__bottom-bar-item_selected" : ""}`}
+          onClick={() => setSelectedMenu("sayr-admin")}
+          disabled={!selectedMaqam}
+        >
           Sayr Admin
         </button>
-        <button className={`navbar__bottom-bar-item ${selectedMenu === "bibliography" ? "navbar__bottom-bar-item_selected":""}`} onClick={() => setSelectedMenu("bibliography")}>
+        <button
+          className={`navbar__bottom-bar-item ${selectedMenu === "bibliography" ? "navbar__bottom-bar-item_selected" : ""}`}
+          onClick={() => setSelectedMenu("bibliography")}
+        >
           Bibliography
         </button>
-        <button className={`navbar__bottom-bar-item ${selectedMenu === "pattern" ? "navbar__bottom-bar-item_selected":""}`} onClick={() => setSelectedMenu("pattern")}>
+        <button
+          className={`navbar__bottom-bar-item ${selectedMenu === "pattern" ? "navbar__bottom-bar-item_selected" : ""}`}
+          onClick={() => setSelectedMenu("pattern")}
+        >
           Patterns
         </button>
       </div>
