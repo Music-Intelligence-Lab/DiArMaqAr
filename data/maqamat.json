@@ -358,7 +358,16 @@
       "dūgāh"
     ],
     "suyūr": [],
-    "sourcePageReferences": []
+    "sourcePageReferences": [
+      {
+        "sourceId": "HK6shRFzmS98eQ-u2MZ1E",
+        "page": "1"
+      },
+      {
+        "sourceId": "HK6shRFzmS98eQ-u2MZ1E",
+        "page": "3"
+      }
+    ]
   },
   {
     "id": "13",
@@ -1459,10 +1468,11 @@
       {
         "id": "9fd0ee5666b5422db247",
         "creatorEnglish": "Al-Shawwā, Sāmī",
-        "sourceEnglish": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
-        "year": 1946,
+        "creatorArabic": "",
+        "sourceId": "",
         "page": 30,
         "commentsEnglish": "Starts on nawā to render maqām bayāt al-dūgāh and descends to ʿushayrān to render maqām bayāt al-ḥuseinī and descends stepwise until it's qarār ʿushayrān.",
+        "commentsArabic": "",
         "stops": [
           {
             "type": "note",
@@ -1470,7 +1480,7 @@
           },
           {
             "type": "jins",
-            "value": "jins bayāt",
+            "value": "2",
             "startingNote": "dūgāh",
             "direction": "descending"
           },
@@ -1480,7 +1490,7 @@
           },
           {
             "type": "jins",
-            "value": "jins bayāt",
+            "value": "2",
             "startingNote": "ḥuseinī",
             "direction": "descending"
           },

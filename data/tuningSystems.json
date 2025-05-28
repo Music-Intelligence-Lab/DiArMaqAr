@@ -952,42 +952,6 @@
     ],
     "noteNames": [
       [
-        "ʿushayrān",
-        "ʿajam ʿushayrān",
-        "ʿirāq",
-        "kawasht",
-        "rāst",
-        "nīm zirguleh",
-        "zirguleh",
-        "dūgāh",
-        "kurdī",
-        "segāh",
-        "buselīk/ʿushshāq",
-        "chahargāh",
-        "nīm ḥijāz",
-        "ḥijāz",
-        "nawā",
-        "ḥiṣār",
-        "tīk ḥiṣār",
-        "ḥuseinī",
-        "ʿajam",
-        "awj",
-        "māhūr",
-        "kurdān",
-        "nīm shahnāz",
-        "shahnāz",
-        "muḥayyar",
-        "sunbuleh/zawāl",
-        "buzurk",
-        "jawāb buselīk",
-        "mahurān",
-        "jawāb nīm ḥijāz",
-        "jawāb ḥijāz",
-        "saham/ramal tūtī",
-        "jawāb ḥiṣār",
-        "jawāb tīk ḥiṣār"
-      ],
-      [
         "yegāh",
         "qarār ḥiṣār",
         "qarār tīk ḥiṣār/shūrī",
@@ -1022,6 +986,33 @@
         "mahurān",
         "jawāb ḥijāz",
         "jawāb tīk ḥijāz"
+      ],
+      [
+        "ʿushayrān",
+        "ʿajam ʿushayrān",
+        "ʿirāq",
+        "kawasht",
+        "rāst",
+        "nīm zirguleh",
+        "zirguleh",
+        "dūgāh",
+        "kurdī",
+        "segāh",
+        "buselīk/ʿushshāq",
+        "chahargāh",
+        "nīm ḥijāz",
+        "ḥijāz",
+        "nawā",
+        "ḥiṣār",
+        "tīk ḥiṣār",
+        "none",
+        "none",
+        "ḥijāz",
+        "nawā",
+        "ḥiṣār",
+        "none",
+        "none",
+        "none"
       ]
     ],
     "abjadNames": [
@@ -1062,7 +1053,10 @@
     ],
     "stringLength": 1000,
     "defaultReferenceFrequency": 220,
-    "referenceFrequencies": {}
+    "referenceFrequencies": {
+      "ʿushayrān": 220.5,
+      "yegāh": 195.998
+    }
   },
   {
     "id": "3KFjxwsRj8atudI6L3x60",
