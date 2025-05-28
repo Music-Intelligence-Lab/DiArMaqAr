@@ -97,6 +97,18 @@
     padding: 0px 0px 0px 0px !important;
     margin: 0px 0px 0px 0px;
     text-align: center !important;
+
+    &_0 {
+      background-color: $primary;
+    }
+
+    &_1 {
+      background-color: $secondary;
+    }
+
+    &_2 {
+      background-color: $tertiary;
+    }
   }
 
   &__header {
