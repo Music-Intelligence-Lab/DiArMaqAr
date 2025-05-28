@@ -157,7 +157,7 @@ export default function MaqamTranspositions() {
 
         <thead>
           <tr>
-            <th className="maqam-transpositions__transposition-number" rowSpan={16}>
+            <th className={`maqam-transpositions__transposition-number maqam-transpositions__transposition-number_${ascendingMaqamCellDetails[0].octave}`} rowSpan={16}>
               {1}
             </th>
 
@@ -490,7 +490,7 @@ export default function MaqamTranspositions() {
             return (
               <React.Fragment key={row}>
                 <tr>
-                  <td className="maqam-transpositions__transposition-number" rowSpan={rowCount}>
+                  <td className={`maqam-transpositions__transposition-number maqam-transpositions__transposition-number_${ascendingDetails[0].octave}`} rowSpan={rowCount}>
                     {row + 2}
                   </td>
                   <td className="maqam-transpositions__maqam-name-row" colSpan={colCount + 1}>

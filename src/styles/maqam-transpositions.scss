@@ -93,6 +93,18 @@
     margin: 0px 0px 0px 0px;
     text-align: center !important;
     background-color: black;
+
+    &_0 {
+      background-color: $primary;
+    }
+
+    &_1 {
+      background-color: $secondary;
+    }
+
+    &_2 {
+      background-color: $tertiary;
+    }
   }
 
 
