@@ -258,37 +258,56 @@
   }
 
   &__filter-menu {
-    gap: 10px;
-    height: 100%;
-    margin: 0 10px;
-  }
+  gap: 10px;
+  height: 100%;
+  margin: 0 10px;
+}
 
-  &__filter-menu-button {
-    padding: 10px;
-    background-color: rgba(0, 0, 0, 0.3);
-    border-radius: 5px;
+&__filter-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  color: $text;
+  cursor: pointer;
+  transition: 0.3s;
+  margin-left: 10px;
+  font-size: 14px;
+  
+  // hover (when not disabled)
+  &:hover {
+    background-color: rgba($primary, 0.5);
+    color: white;
+    box-shadow: 0 1px 15px rgba(0, 0, 0, 0.6);
+  }
+  
+  // active state (checked)
+  &_active {
+    background-color: $primary;
+    color: white;
+  }
+  
+  // disabled state via :has() (modern browsers)
+  &:has(> .tuning-system-manager__filter-checkbox:disabled) {
+    background-color: $secondary;
     color: $text;
-    cursor: pointer;
-    transition: 0.3s;
-    margin-left: 10px;
-
+    cursor: not-allowed;
+    
     &:hover {
-      background-color: rgba($primary, 0.5);
-      color: white;
-      box-shadow: 0 1px 15px rgba(0, 0, 0, 0.6);
-    }
-
-    &_active {
-      background-color: $primary;
-      color: white;
-    }
-
-    &:disabled {
-      background-color: $secondary;
+      background-color: rgba(0, 0, 0, 0.3);
+      box-shadow: none;
       color: $text;
-      cursor: not-allowed;
     }
   }
+}
+
+&__filter-label {
+  user-select: none;
+  /* inherit color from parent label */
+}
+
 
   &__octave-table {
     width: 100%;

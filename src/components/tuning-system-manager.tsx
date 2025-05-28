@@ -657,29 +657,45 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             )}
             {octave === 1 && openedOctaveRows[1] && (
               <span className="tuning-system-manager__filter-menu">
-                {Object.keys(filters).map((filterKey) => (
-                  <button
-                    className={`tuning-system-manager__filter-menu-button ${
-                      filters[filterKey as keyof typeof filters] ? "tuning-system-manager__filter-menu-button_active" : ""
-                    }`}
-                    key={filterKey}
-                    disabled={
-                      (filterKey === "fractionRatio" && pitchClassType === "fraction") ||
-                      (filterKey === "cents" && pitchClassType === "cents") ||
-                      (filterKey === "decimalRatio" && pitchClassType === "decimal") ||
-                      (filterKey === "stringLength" && pitchClassType === "stringLength")
-                    }
-                    onClick={(e: React.MouseEvent) => {
-                      e.stopPropagation();
-                      setFilters((prev) => ({
-                        ...prev,
-                        [filterKey as keyof typeof filters]: !prev[filterKey as keyof typeof filters],
-                      }));
-                    }}
-                  >
-                    {filterKey.charAt(0).toUpperCase() + filterKey.slice(1)}
-                  </button>
-                ))}
+                {Object.keys(filters).map((filterKey) => {
+                  const isDisabled =
+                    (filterKey === "fractionRatio" && pitchClassType === "fraction") ||
+                    (filterKey === "cents" && pitchClassType === "cents") ||
+                    (filterKey === "decimalRatio" && pitchClassType === "decimal") ||
+                    (filterKey === "stringLength" && pitchClassType === "stringLength");
+
+                  if (isDisabled) return null;
+
+                  return (
+                    <label
+                      key={filterKey}
+                      htmlFor={`filter-${filterKey}`}
+                      className={`tuning-system-manager__filter-item ${
+                        filters[filterKey as keyof typeof filters] ? "tuning-system-manager__filter-item_active" : ""
+                      }`}
+                      // prevent the drawer (or parent) click handler from firing
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <span className="tuning-system-manager__filter-label">{filterKey.charAt(0).toUpperCase() + filterKey.slice(1)}</span>
+
+                      <input
+                        id={`filter-${filterKey}`}
+                        type="checkbox"
+                        className="tuning-system-manager__filter-checkbox"
+                        checked={filters[filterKey as keyof typeof filters]}
+                        disabled={isDisabled}
+                        onChange={(e) => {
+                          // still stop propagation so only the checkbox toggles
+                          e.stopPropagation();
+                          setFilters((prev) => ({
+                            ...prev,
+                            [filterKey as keyof typeof filters]: e.target.checked,
+                          }));
+                        }}
+                      />
+                    </label>
+                  );
+                })}
               </span>
             )}
           </span>
@@ -738,37 +754,39 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                   })}
                 </tr>
                 {/* Row 3: Abjad Name */}
-                <tr>
-                  <td>Abjad Name</td>
-                  {pitchClassesArr.map((_, colIndex) => (
-                    <td
-                      key={colIndex}
-                      className={`
+                {filters.abjadName && (
+                  <tr>
+                    <td>Abjad Name</td>
+                    {pitchClassesArr.map((_, colIndex) => (
+                      <td
+                        key={colIndex}
+                        className={`
             ${isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}
             ${!(octave === 1 || octave === 2) ? "tuning-system-manager__abjad-name" : ""}
           `.trim()}
-                    >
-                      {octave === 1 || octave === 2 ? (
-                        <select
-                          className="tuning-system-manager__select-abjad"
-                          value={selectedAbjadNames[colIndex + (octave === 1 ? 0 : numberOfPitchClasses)] || ""}
-                          onChange={(e) => handleAbjadSelect(colIndex, e.target.value, octave)}
-                        >
-                          <option value="">(none)</option>
-                          {abjadNames.map((name, idx) => (
-                            <option key={`${name}-${idx}`} value={name}>
-                              {name.replace(/\//g, "/\u200B")}
-                            </option>
-                          ))}
-                        </select>
-                      ) : (
-                        <span className="tuning-system-manager__abjad-name">
-                          {(selectedAbjadNames[colIndex + (octave === 1 ? 0 : numberOfPitchClasses)] || "").replace(/\//g, "/\u200B")}
-                        </span>
-                      )}
-                    </td>
-                  ))}
-                </tr>
+                      >
+                        {octave === 1 || octave === 2 ? (
+                          <select
+                            className="tuning-system-manager__select-abjad"
+                            value={selectedAbjadNames[colIndex + (octave === 1 ? 0 : numberOfPitchClasses)] || ""}
+                            onChange={(e) => handleAbjadSelect(colIndex, e.target.value, octave)}
+                          >
+                            <option value="">(none)</option>
+                            {abjadNames.map((name, idx) => (
+                              <option key={`${name}-${idx}`} value={name}>
+                                {name.replace(/\//g, "/\u200B")}
+                              </option>
+                            ))}
+                          </select>
+                        ) : (
+                          <span className="tuning-system-manager__abjad-name">
+                            {(selectedAbjadNames[colIndex + (octave === 1 ? 0 : numberOfPitchClasses)] || "").replace(/\//g, "/\u200B")}
+                          </span>
+                        )}
+                      </td>
+                    ))}
+                  </tr>
+                )}
                 {/* Row 4: English Name */}
                 {filters.englishName && (
                   <tr>
@@ -801,7 +819,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
               </tr>
             )}
 
-{/* Row 5: Cents (¢) */}
+            {/* Row 5: Cents (¢) */}
             {filters.cents && pitchClassType !== "cents" && (
               <tr>
                 <td>Cents (¢)</td>

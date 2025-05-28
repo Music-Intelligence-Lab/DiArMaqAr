@@ -4,6 +4,7 @@ import React, { createContext, useState, useContext, ReactNode } from "react";
 
 export interface FilterSettings {
   englishName: boolean;
+  abjadName: boolean;
   fractionRatio: boolean;
   cents: boolean;
   stringLength: boolean;
@@ -15,6 +16,7 @@ export interface FilterSettings {
 
 const defaultFilters: FilterSettings = {
   englishName: true,
+  abjadName: true,
   fractionRatio: true,
   cents: true,
   stringLength: true,
