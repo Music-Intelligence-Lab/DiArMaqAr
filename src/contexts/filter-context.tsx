@@ -15,14 +15,14 @@ export interface FilterSettings {
 }
 
 const defaultFilters: FilterSettings = {
+  abjadName: false,
   englishName: true,
-  abjadName: true,
-  fractionRatio: true,
+  fractionRatio: false,
   cents: true,
-  stringLength: true,
-  fretDivision: true,
-  decimalRatio: true,
-  midiNote: true,
+  stringLength: false,
+  fretDivision: false,
+  decimalRatio: false,
+  midiNote: false,
   frequency: true,
 };
 
