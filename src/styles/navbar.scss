@@ -7,15 +7,24 @@
   box-shadow: 0 20px 15px rgba(0, 0, 0, 0.6);
   z-index: 10000;
 
+  &__center-panel {
+text-align: center;  
+}
+
+&__title {
+    font-size: 30px;
+    font-weight: bold;
+    color: white;  }
+
   &__top-bar {
     display: flex;
     width: 100%;
     justify-content: space-between;
     align-items: center;
-    height: $top-navbar-height;
+    //height: $top-navbar-height;
     color: white;
-    padding: 0 25px;
-    font-size: 30px;
+    padding: 20px;
+    font-size: 20px;
     border-bottom: $grey 1px solid;
     background-color: $primary;
   }
@@ -36,8 +45,9 @@
     background-color: transparent;
     color: white;
     cursor: pointer;
-    font-size: 15px;
-    transition: 0.3s ease;
+    font-size: 14px;
+    transition: 0.1s ease;
+    padding: 10px;
 
     &:not(:last-child) {
       border-right: 1px solid $grey;

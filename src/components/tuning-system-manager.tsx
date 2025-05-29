@@ -964,9 +964,10 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   return (
     <div className="tuning-system-manager">
       {/*       <details open={true} className="tuning-system-manager__details">
- */}        <summary className="tuning-system-manager__summary">
+         <summary className="tuning-system-manager__summary">
         <h2 className="tuning-system-manager__header">Tanghīm (tuning system)</h2>
       </summary>
+      */}
       {admin && (
         <div className="tuning-system-manager__group">
           <div className="tuning-system-manager__input-container">

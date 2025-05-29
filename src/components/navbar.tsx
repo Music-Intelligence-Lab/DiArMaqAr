@@ -34,7 +34,10 @@ export default function Navbar() {
           <div className="navbar__left-panel-icon" onClick={toggleSidebar}></div>
         </div>
 
-        <div className="navbar__center-panel">Arabic Maqam Database</div>
+        <div className="navbar__center-panel"><span className="navbar__title"> Arabic Maqam Database</span> <br></br>
+        {selectedTuningSystem && `Tanghīm: ${selectedTuningSystem.getCreatorEnglish()} (${selectedTuningSystem.getYear()}) ${selectedTuningSystem.getTitleEnglish()}`}<br></br>
+        {selectedJins && `${selectedJins.getName()}`} {selectedMaqam && `${selectedMaqam.getName()}`}
+        </div>
         <div className="navbar__right-panel">
           <div className="navbar__left-panel-icon">
             <SettingsCard />
@@ -46,7 +49,8 @@ export default function Navbar() {
           className={`navbar__bottom-bar-item ${selectedMenu === "tuningSystem" ? "navbar__bottom-bar-item_selected" : ""}`}
           onClick={() => setSelectedMenu("tuningSystem")}
         >
-          {selectedTuningSystem ? `${selectedTuningSystem.getCreatorEnglish()} (${selectedTuningSystem.getYear()}) ${selectedTuningSystem.getTitleEnglish()}` : "Select Tuning System"}
+          Tanghīm (Tuning System)
+          {/* {selectedTuningSystem ? `${selectedTuningSystem.getCreatorEnglish()} (${selectedTuningSystem.getYear()}) ${selectedTuningSystem.getTitleEnglish()}` : "Tanghīm (Tuning System)"} */}
         </button>
         <button
           className={`navbar__bottom-bar-item ${selectedMenu === "tuningSystem-admin" ? "navbar__bottom-bar-item_selected" : ""}`}
@@ -59,7 +63,8 @@ export default function Navbar() {
           onClick={() => setSelectedMenu("jins")}
           disabled={!selectedTuningSystem}
         >
-          {selectedJins ? selectedJins.getName() : "Select Jins"}
+          Ajnās
+          {/* {selectedJins ? selectedJins.getName() : "Ajnās"} */}
         </button>
         <button
           className={`navbar__bottom-bar-item ${selectedMenu === "jins-admin" ? "navbar__bottom-bar-item_selected" : ""}`}
@@ -73,7 +78,8 @@ export default function Navbar() {
           onClick={() => setSelectedMenu("maqam")}
           disabled={!selectedTuningSystem}
         >
-          {selectedMaqam ? selectedMaqam.getName() : "Select Maqam"}
+          Maqāmāt
+          {/* {selectedMaqam ? selectedMaqam.getName() : "Maqāmāt"} */}
         </button>
         <button
           className={`navbar__bottom-bar-item ${selectedMenu === "maqam-admin" ? "navbar__bottom-bar-item_selected" : ""}`}
@@ -87,7 +93,7 @@ export default function Navbar() {
           onClick={() => setSelectedMenu("sayr")}
           disabled={!selectedMaqam}
         >
-          Sayr
+          Suyūr
         </button>
         <button
           className={`navbar__bottom-bar-item ${selectedMenu === "sayr-admin" ? "navbar__bottom-bar-item_selected" : ""}`}

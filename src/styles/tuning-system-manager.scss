@@ -244,10 +244,16 @@
     margin-bottom: 10px;
   }
 
-  &__summary,
+  &__summary {
+    font-size: 20px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    user-select: none;
+  }
+
   &__octave-summary {
     font-size: 20px;
-    margin-bottom: 10px;
+    margin-bottom: -1px;
     cursor: pointer;
     user-select: none;
   }
@@ -345,7 +351,7 @@
     }
 
     td {
-      font-size: 11px;
+      font-size: 12px;
       padding-left: 10px;
       padding-top: 5px;
       padding-right: 10px;
