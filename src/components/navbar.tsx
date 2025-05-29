@@ -34,7 +34,7 @@ export default function Navbar() {
           <div className="navbar__left-panel-icon" onClick={toggleSidebar}></div>
         </div>
 
-        <div className="navbar__center-panel">Maqam Network</div>
+        <div className="navbar__center-panel">Arabic Maqam Database</div>
         <div className="navbar__right-panel">
           <div className="navbar__left-panel-icon">
             <SettingsCard />
@@ -46,7 +46,7 @@ export default function Navbar() {
           className={`navbar__bottom-bar-item ${selectedMenu === "tuningSystem" ? "navbar__bottom-bar-item_selected" : ""}`}
           onClick={() => setSelectedMenu("tuningSystem")}
         >
-          {selectedTuningSystem ? selectedTuningSystem.getTitleEnglish() : "Select Tuning System"}
+          {selectedTuningSystem ? `${selectedTuningSystem.getCreatorEnglish()} (${selectedTuningSystem.getYear()}) ${selectedTuningSystem.getTitleEnglish()}` : "Select Tuning System"}
         </button>
         <button
           className={`navbar__bottom-bar-item ${selectedMenu === "tuningSystem-admin" ? "navbar__bottom-bar-item_selected" : ""}`}
