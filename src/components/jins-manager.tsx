@@ -105,12 +105,12 @@ export default function JinsManager({admin}: {admin: boolean}) {
 
   return (
     <div className="jins-manager">
-      <h2 className="jins-manager__header">
+      {/* <h2 className="jins-manager__header">
         Ajnās{` (${ajnas.filter((jins) => checkIfJinsIsSelectable(jins)).length}/${ajnas.length})`}
         {selectedJins && (
           <span className="jins-manager__selections">
             {`: ${selectedJins.getName()}`}{" "}
-            {/* {selectedCellDetails.length > 0 && (
+            {selectedCellDetails.length > 0 && (
               <>
                 {" "}
                 - Selected Notes:{" "}
@@ -126,13 +126,13 @@ export default function JinsManager({admin}: {admin: boolean}) {
                   );
                 })}
               </>
-            )} */}
+            )}
             <button className="jins-manager__play-button" onClick={playSelectedJins}>
               Play Selected Jins <PlayCircleIcon />
             </button>
           </span>
         )}
-      </h2>
+      </h2> */}
 
       <div className="jins-manager__list">
         {sortedAjnas.length === 0 ? (

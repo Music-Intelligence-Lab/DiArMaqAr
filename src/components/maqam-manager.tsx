@@ -198,22 +198,22 @@ export default function MaqamManager({admin}: { admin: boolean }) {
 
   return (
     <div className="maqam-manager">
-      <h2 className="maqam-manager__header">
+      {/* <h2 className="maqam-manager__header">
         Maqāmāt {`(${maqamat.filter((maqam) => checkIfMaqamIsSelectable(maqam)).length}/${maqamat.length})`}
         {selectedMaqam && (
           <span className="maqam-manager__selections">
             {`: ${selectedMaqam.getName()}`}{" "}
-            {/* {` - Selected Notes: `} {displayNoteNames(selectedCellDetails, isAscending)}
+             {` - Selected Notes: `} {displayNoteNames(selectedCellDetails, isAscending)}
             { <button className="maqam-manager__toggle-button" onClick={() => setIsAscending((prev) => !prev)}>
               Switch to {isAscending ? "Descending" : "Ascending"}
-            </button> } */}
+            </button> } *
             <button className="maqam-manager__play-button" onClick={playSelectedMaqam}>
               <PlayCircleIcon /> Play Selected Maqam
             </button>
           </span>
         )}
       </h2>
-      {/* {selectedMaqam && selectedMaqam.getAscendingNoteNames().length + selectedMaqam.getDescendingNoteNames().length > 0 && (
+      {selectedMaqam && selectedMaqam.getAscendingNoteNames().length + selectedMaqam.getDescendingNoteNames().length > 0 && (
         <>
           <div className="maqam-manager__rows">
             {isAscending ? (
@@ -229,7 +229,7 @@ export default function MaqamManager({admin}: { admin: boolean }) {
             )}
           </div>
         </>
-      )} */}
+      )} */} 
 
       <div className="maqam-manager__list">
         {sortedMaqamat.length === 0 ? (
