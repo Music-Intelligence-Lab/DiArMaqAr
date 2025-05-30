@@ -47,7 +47,7 @@ export default function JinsTranspositions() {
     <div className="jins-transpositions">
       <h2 className="jins-transpositions__title">
         Taḥlīl (analysis): {`${selectedJins.getName()}`}
-        {!useRatio && (
+{/*         {!useRatio && (
           <>
             {" "}
             / Cents Tolerance:{" "}
@@ -59,7 +59,7 @@ export default function JinsTranspositions() {
             />
           </>
         )}
-      </h2>
+ */}      </h2>
       <table className="jins-transpositions__table">
         <thead>
           <tr className="jins-transpositions__header">
@@ -67,7 +67,7 @@ export default function JinsTranspositions() {
 
             <td className="jins-transpositions__jins-name-row" colSpan={11}>
               <span className="jins-transpositions__transposition-title" >Darajat al-Istiqrār (tonic/finalis):  {jinsCellDetails[0].noteName + ` (${getEnglishNoteName(jinsCellDetails[0].noteName)})`}</span>
-              <button
+             {/*  <button
                 className="jins-transpositions__button"
                 onClick={() => {
                   const transpositionNoteNames = jinsCellDetails.map((cell) => cell.noteName);
@@ -84,7 +84,7 @@ export default function JinsTranspositions() {
                 }}
               >
                 select
-              </button>
+              </button> */}
 
               <button
                 className="jins-transpositions__button"
