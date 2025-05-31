@@ -113,21 +113,6 @@
     text-align: left;
   }
 
-  &__starting-note-button {
-    padding: 10px;
-    background-color: rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
-    color: $text;
-    cursor: pointer;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-    transition: 0.3s;
-
-
-    &_selected {
-      background-color: $secondary !important;
-    }
-  }
-
   &__starting-note-input {
     display: inline-block;
     padding: 10px;
@@ -147,14 +132,20 @@
 
   &__starting-note-button {
     padding: 10px;
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba($primary, 0.5);
     border-radius: 10px;
     color: $text;
     cursor: pointer;
     transition: 0.3s;
     height: 40px;
     align-content: center;
+    &:hover {
+      background-color: rgba($secondary, 0.5);
+    }
 
+        &_selected {
+      background-color: $secondary;
+        }
     &_reset {
       background-color: $primary;
     }

@@ -30,7 +30,7 @@
 
 
   &__button {
-    background-color: $primary;
+    background-color: rgba($primary, 0.5);
     color: white;
     padding: 0px;
     padding-left: 10px;
@@ -44,6 +44,11 @@
     height: 40px;
     vertical-align: middle;
     text-align: center;
+
+    &:hover {
+    background-color: rgba($primary, 1);
+    }
+
   }
 
   &__table {
@@ -71,13 +76,6 @@
       font-weight: 600;
     }
 
-    tbody tr:nth-child(odd) {
-      background-color: transparent;
-    }
-
-    tbody tr:nth-child(even) {
-      background-color: transparent;
-    }
   }
 
   &__transposition-title {

@@ -27,7 +27,7 @@
   }
 
   &__button {
-    background-color: $primary;
+    background-color: rgba($primary, 0.5);
     color: white;
     padding: 0px;
     padding-left: 10px;
@@ -41,16 +41,25 @@
     height: 40px;
     vertical-align: middle;
     text-align: center;
+
+    &:hover {
+      background-color: rgba($primary, 1);
+    }
+
   }
-  
+
   &__table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 50px;
     font-size: 12px;
+    table-layout:auto;
+
 
     tr {
       text-align: left;
+          width: 100%;
+
     }
 
     th {
@@ -67,17 +76,11 @@
       border: solid 1px $grey;
       padding: 10px;
     }
-      
+
     tbody {
       font-weight: 600;
-    }
+          width: 100%;
 
-    tbody tr:nth-child(odd) {
-      background-color: transparent;
-    }
-
-    tbody tr:nth-child(even) {
-      background-color: transparent;
     }
   }
 
