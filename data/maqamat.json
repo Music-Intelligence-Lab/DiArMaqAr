@@ -1631,10 +1631,11 @@
       {
         "id": "1e9f40f699ae4c738327",
         "creatorEnglish": "Al-Shawwā, Sāmī",
-        "sourceEnglish": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
-        "year": 1946,
+        "creatorArabic": "",
+        "sourceId": "",
         "page": 27,
         "commentsEnglish": "Starts on ḥiṣār to render ḥijāz  on ḥuseinī followed by maqām nawā athar al-dugāh then ḥijāz on ʿushayrān and it ends on its qarār ʿushayrān",
+        "commentsArabic": "",
         "stops": [
           {
             "type": "note",
@@ -1642,19 +1643,19 @@
           },
           {
             "type": "jins",
-            "value": "jins ḥijāz",
+            "value": "8",
             "startingNote": "ḥuseinī",
             "direction": "none"
           },
           {
             "type": "jins",
-            "value": "jins nikrīz",
+            "value": "17",
             "startingNote": "dūgāh",
             "direction": "none"
           },
           {
             "type": "jins",
-            "value": "jins ḥijāz",
+            "value": "8",
             "startingNote": "ʿushayrān",
             "direction": "none"
           },

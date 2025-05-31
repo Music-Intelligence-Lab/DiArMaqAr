@@ -61,6 +61,11 @@ export default function JinsTranspositions() {
         )}
  */}      </h2>
       <table className="jins-transpositions__table">
+        <colgroup>
+          <col style={{ minWidth: "30px", maxWidth: "30px", width: "30px" }} />          
+          <col style={{ minWidth: "150px", maxWidth: "150px", width: "150px" }} />          
+        </colgroup>
+
         <thead>
           <tr className="jins-transpositions__header">
             <td className={`jins-transpositions__transposition-number jins-transpositions__transposition-number_${jinsCellDetails[0].octave}`} rowSpan={5}>{1}</td>
@@ -173,6 +178,11 @@ export default function JinsTranspositions() {
       </h2>
 
       <table className="jins-transpositions__table">
+                <colgroup>
+          <col style={{ minWidth: "30px", maxWidth: "30px", width: "30px" }} />          
+          <col style={{ minWidth: "150px", maxWidth: "150px", width: "150px" }} />          
+        </colgroup>
+
         <thead>
         </thead>
         <tbody>

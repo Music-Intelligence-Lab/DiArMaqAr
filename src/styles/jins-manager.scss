@@ -56,7 +56,11 @@
     transition: 0.1s;
 
     &_active {
-      background-color: $primary;
+      background-color: rgba($primary, 0.5);
+    }
+
+    &:hover {
+      background-color: rgba($primary, 1);
     }
 
     &_selected {
