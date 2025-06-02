@@ -1,8 +1,8 @@
 import React from "react";
-import { CellDetails, useAppContext } from "@/contexts/app-context";
+import {  useAppContext } from "@/contexts/app-context";
 import Maqam from "@/models/Maqam";
 import { Cell } from "@/contexts/app-context";
-import PlayCircleIcon from "@mui/icons-material/PlayCircle";
+// import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { getMaqamTranspositions } from "@/functions/transpose";
 import { updateMaqamat } from "@/functions/update";
 import { SourcePageReference } from "@/models/Source";
@@ -18,7 +18,7 @@ export default function MaqamManager({admin}: { admin: boolean }) {
     getAllCells,
     getSelectedCellDetails,
     clearSelections,
-    playSequence,
+    // playSequence,
     handleClickMaqam,
     checkIfMaqamIsSelectable,
     sources,
@@ -33,18 +33,25 @@ export default function MaqamManager({admin}: { admin: boolean }) {
 
   const allCellDetails = allCells.map(getSelectedCellDetails);
 
-  let ascendingMaqamCellDetails: CellDetails[] = [];
-  let descendingMaqamCellDetails: CellDetails[] = [];
-
-  if (selectedMaqam) {
-    ascendingMaqamCellDetails = allCells
-      .map((cell) => getSelectedCellDetails(cell))
-      .filter((cell) => selectedMaqam.getAscendingNoteNames().includes(cell.noteName));
-    descendingMaqamCellDetails = allCells
-      .map((cell) => getSelectedCellDetails(cell))
-      .filter((cell) => selectedMaqam.getDescendingNoteNames().includes(cell.noteName))
-      .reverse();
+  const setOfMaqamat = new Set(maqamat.map((m) => m.getId()));
+  let newMaqamIdNum = 1;
+  while (setOfMaqamat.has(newMaqamIdNum.toString())) {
+    newMaqamIdNum++;
   }
+  const newMaqamId = newMaqamIdNum.toString();
+
+  // let ascendingMaqamCellDetails: CellDetails[] = [];
+  // let descendingMaqamCellDetails: CellDetails[] = [];
+
+  // if (selectedMaqam) {
+  //   ascendingMaqamCellDetails = allCells
+  //     .map((cell) => getSelectedCellDetails(cell))
+  //     .filter((cell) => selectedMaqam.getAscendingNoteNames().includes(cell.noteName));
+  //   descendingMaqamCellDetails = allCells
+  //     .map((cell) => getSelectedCellDetails(cell))
+  //     .filter((cell) => selectedMaqam.getDescendingNoteNames().includes(cell.noteName))
+  //     .reverse();
+  // }
 
   // Map selectedCells to note names
   const selectedCellDetails = selectedCells.map((cell: Cell) => {
@@ -131,21 +138,21 @@ export default function MaqamManager({admin}: { admin: boolean }) {
   //   });
   // };
 
-  const playSelectedMaqam = () => {
-    if (!selectedMaqam) return;
+  // const playSelectedMaqam = () => {
+  //   if (!selectedMaqam) return;
 
-    const maqamFrequencies: number[] = [];
+  //   const maqamFrequencies: number[] = [];
 
-    ascendingMaqamCellDetails.forEach((cellDetail) => {
-      maqamFrequencies.push(parseInt(cellDetail.frequency) ?? 0);
-    });
+  //   ascendingMaqamCellDetails.forEach((cellDetail) => {
+  //     maqamFrequencies.push(parseInt(cellDetail.frequency) ?? 0);
+  //   });
 
-    descendingMaqamCellDetails.forEach((cellDetail) => {
-      maqamFrequencies.push(parseInt(cellDetail.frequency) ?? 0);
-    });
+  //   descendingMaqamCellDetails.forEach((cellDetail) => {
+  //     maqamFrequencies.push(parseInt(cellDetail.frequency) ?? 0);
+  //   });
 
-    playSequence(maqamFrequencies);
-  };
+  //   playSequence(maqamFrequencies);
+  // };
 
   const updateSourceRefs = (refs: SourcePageReference[], index: number, newRef: Partial<SourcePageReference>) => {
     if (!selectedMaqam) return;
@@ -264,7 +271,7 @@ export default function MaqamManager({admin}: { admin: boolean }) {
 
       {admin && !selectedMaqam && (
         <button
-          onClick={() => setSelectedMaqam(new Maqam((maqamat.length + 1).toString(), "", [], [], [], []))}
+          onClick={() => setSelectedMaqam(new Maqam(newMaqamId, "", [], [], [], []))}
           className="maqam-manager__create-new-maqam-button"
         >
           Create New Maqam

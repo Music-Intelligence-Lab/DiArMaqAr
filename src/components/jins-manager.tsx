@@ -1,15 +1,15 @@
 "use client";
 
-import { CellDetails, Cell, useAppContext } from "@/contexts/app-context";
+import { Cell, useAppContext } from "@/contexts/app-context";
 import Jins from "@/models/Jins";
-import PlayCircleIcon from "@mui/icons-material/PlayCircle";
+// import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import React from "react";
 import { getJinsTranspositions } from "@/functions/transpose";
 import { updateAjnas } from "@/functions/update";
 import { SourcePageReference } from "@/models/Source";
 
 
-export default function JinsManager({admin}: {admin: boolean}) {
+export default function JinsManager({ admin }: { admin: boolean }) {
   const {
     ajnas,
     setAjnas,
@@ -21,7 +21,7 @@ export default function JinsManager({admin}: {admin: boolean}) {
     selectedCells,
     getSelectedCellDetails,
     clearSelections,
-    playSequence,
+    // playSequence,
     getAllCells,
     sources,
   } = useAppContext();
@@ -36,13 +36,18 @@ export default function JinsManager({admin}: {admin: boolean}) {
 
   const allCellDetails = allCells.map(getSelectedCellDetails);
 
-  let jinsCellDetails: CellDetails[] = [];
-
-  if (selectedJins) {
-    jinsCellDetails = allCells.map((cell) => getSelectedCellDetails(cell)).filter((cell) => selectedJins.getNoteNames().includes(cell.noteName));
-  }
+  // const jinsCellDetails = selectedJins ? allCellDetails.filter((cell) => selectedJins.getNoteNames().includes(cell.noteName)) : [];
 
   const numberOfPitchClasses = selectedTuningSystem ? selectedTuningSystem.getPitchClasses().length : 0;
+
+  const setOfAjnas = new Set(ajnas.map((j) => j.getId()));
+
+  let newJinsIdNum = 1;
+  while (setOfAjnas.has(newJinsIdNum.toString())) {
+    newJinsIdNum++;
+  }
+
+  const newJinsId = newJinsIdNum.toString();
 
   const handleSaveJins = async () => {
     if (!selectedJins) return;
@@ -74,12 +79,12 @@ export default function JinsManager({admin}: {admin: boolean}) {
   //   return !originalNoteNames.includes(noteName);
   // };
 
-  const playSelectedJins = () => {
-    if (!selectedJins) return;
-    const jinsCellFrequencies = jinsCellDetails.map((cellDetails) => parseInt(cellDetails.frequency) ?? 0);
+  // const playSelectedJins = () => {
+  //   if (!selectedJins) return;
+  //   const jinsCellFrequencies = jinsCellDetails.map((cellDetails) => parseInt(cellDetails.frequency) ?? 0);
 
-    playSequence(jinsCellFrequencies);
-  };
+  //   playSequence(jinsCellFrequencies);
+  // };
 
   const updateSourceRefs = (refs: SourcePageReference[], index: number, newRef: Partial<SourcePageReference>) => {
     if (!selectedJins) return;
@@ -155,9 +160,8 @@ export default function JinsManager({admin}: {admin: boolean}) {
               <div className="jins-manager__item-name">
                 <strong>{jins.getName()}</strong>
                 {checkIfJinsIsSelectable(jins) && (
-                  <strong className="jins-manager__item-name-transpositions">{`Transpositions: ${
-                    getJinsTranspositions(allCellDetails, jins, true).length
-                  }/${numberOfPitchClasses}`}</strong>
+                  <strong className="jins-manager__item-name-transpositions">{`Transpositions: ${getJinsTranspositions(allCellDetails, jins, true).length
+                    }/${numberOfPitchClasses}`}</strong>
                 )}
               </div>
             </div>
@@ -165,7 +169,7 @@ export default function JinsManager({admin}: {admin: boolean}) {
         )}
       </div>
       {admin && !selectedJins && (
-        <button onClick={() => setSelectedJins(new Jins((ajnas.length + 1).toString(), "", [], []))} className="jins-manager__create-new-jins-button">
+        <button onClick={() => setSelectedJins(new Jins(newJinsId, "", [], []))} className="jins-manager__create-new-jins-button">
           Create New Jins
         </button>
       )}
