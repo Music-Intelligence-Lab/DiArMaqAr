@@ -304,7 +304,7 @@
     max-height: fit-content;
     width: fit-content;
     padding: 10px;
-    background-color: rgba(0, 0, 0, 0.075);
+    background-color: rgba($black, 0.3);
     border-radius: 10px;
     margin-bottom: 10px;
   }
@@ -396,7 +396,7 @@
     border-collapse: collapse;
     border-spacing: 0;
     overflow: auto;
-    // background-color: white;
+    background-color: $dark-grey;
     color: white;
     border: 1px solid rgb(86, 86, 86);
     padding: 0px 0;
@@ -406,6 +406,7 @@
       // text-align: left;
       padding: 0px 0;
       margin: 0px 0;
+
     }
 
     tr {
@@ -432,6 +433,13 @@
       overflow-wrap: normal;
       word-break: normal;
 
+    }
+
+    &_row-header {
+      font-weight: bold;
+      width: 120px !important;
+      background-color: $medium-grey;
+      text-transform: capitalize;
 
     }
 
