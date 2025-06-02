@@ -229,5 +229,33 @@
     "ISBN": "",
     "url": "",
     "dateAccessed": ""
+  },
+  {
+    "id": "HhRIZW8WYgYJJVgHrdt3y",
+    "titleEnglish": "Échos-monde: Towards a hybrid repertoire of contemporary and experimental acoustic, electroacoustic and electronic Arabic music",
+    "titleArabic": "",
+    "sourceType": "Book",
+    "contributors": [
+      {
+        "type": "Author",
+        "firstNameEnglish": "Khyam",
+        "lastNameEnglish": "Allami",
+        "firstNameArabic": "خيّام",
+        "lastNameArabic": "اللامي"
+      }
+    ],
+    "editionEnglish": "",
+    "editionArabic": "",
+    "publicationDateEnglish": "2022",
+    "publicationDateArabic": "٢٠٢٢",
+    "originalPublicationDateEnglish": "",
+    "originalPublicationDateArabic": "",
+    "publisherEnglish": "Birmingham City University",
+    "publisherArabic": "جامعة مدينة برمنغهام",
+    "placeEnglish": "",
+    "placeArabic": "",
+    "ISBN": "",
+    "url": "",
+    "dateAccessed": ""
   }
 ]

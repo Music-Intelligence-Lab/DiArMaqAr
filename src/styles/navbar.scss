@@ -13,7 +13,13 @@
 
   &__title {
     font-size: 30px;
-    font-weight: bold;
+    font-weight: 300;
+    color: white;
+    cursor: pointer;
+  }
+
+   &__subtitle {
+    font-size: 16px;
     color: white;
     cursor: pointer;
   }
@@ -28,7 +34,7 @@
     padding: 20px;
     font-size: 20px;
     border-bottom: $grey 1px solid;
-    background-color: $primary;
+    background-color: $background;
   }
 
   &__bottom-bar {
@@ -50,7 +56,7 @@
     background-color: transparent;
     color: white;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 16px;
     transition: 0.1s ease;
     padding: 10px;
 
@@ -72,10 +78,10 @@
     }
 
     &_selected {
-      background-color: rgba($secondary, 1);
+      background-color: $primary;
 
       &:hover {
-        background-color: rgba($secondary, 1);
+        background-color: $secondary;
       }
     }
   }
