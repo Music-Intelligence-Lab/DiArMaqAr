@@ -1340,10 +1340,16 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       {/* </details> */}
 
       {/* COMMENTS AND SOURCES */}
+      <div className="tuning-system-manager__comments-sources-container">
       <div className="tuning-system-manager__comments-english">
         <h3>Comments:</h3>
         {selectedTuningSystem?.getCommentsEnglish()}
       </div>
+
+      {/* <div className="tuning-system-manager__comments-arabic">
+        <h3>تعليقات:</h3>
+        {selectedTuningSystem?.getCommentsArabic()}
+      </div> */}
 
       <div className="tuning-system-manager__sources-english">
         <h3>Sources:</h3>
@@ -1358,15 +1364,12 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         })()}
       </div>
 
-      <div className="tuning-system-manager__comments-arabic">
-        <h3>تعليقات:</h3>
-        {selectedTuningSystem?.getCommentsArabic()}
-      </div>
-
-      <div className="tuning-system-manager__sources-arabic">
+      {/* <div className="tuning-system-manager__sources-arabic">
         <h3>مصادر:</h3>
         {selectedTuningSystem?.getSourceArabic()}
-      </div>
+      </div> */}
+
+</div>
 
 
       <div className="tuning-system-manager__grid-wrapper">{renderNoteNameGrid()}</div>

@@ -137,7 +137,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     waveform: "triangle",
     volume: 0.5,
     duration: 0.1,
-    tempo: 100,
+    tempo: 200,
     pitchBendRange: 2,
     inputMode: "selection",
     selectedMidiInputId: null,

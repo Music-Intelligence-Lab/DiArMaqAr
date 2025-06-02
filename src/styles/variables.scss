@@ -1,13 +1,15 @@
 @use "sass:color";
 
-$top-navbar-height: 70px;
-$bottom-navbar-height: 50px;
+$top-navbar-height: 140px;
+$bottom-navbar-height: 60px;
 $page-height: calc(100svh - $top-navbar-height - $bottom-navbar-height);
 
-$primary: #610C9F;
-$secondary: #940B92;
-$tertiary: #FAC67A;
+$background: #222222;
+$primary: #788a94;
+$secondary: #9bb6c49a;
+$tertiary: #81adc3;
 $quaternary: #4569b6;
+$black: #000000;
 $text: #ffffff;
 $success: #28a745;
 $delete: #C62300;

@@ -183,11 +183,12 @@
   }
 
   &__input {
-    width: 100px;
+    width: 50px;
     font-size: 1rem;
     border: 1px solid #ccc;
     border-radius: 4px;
     resize: vertical;
+    padding: 5px;
   }
 
   .jins-transpositions__spacer {
