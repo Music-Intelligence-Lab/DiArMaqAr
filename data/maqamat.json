@@ -1137,10 +1137,11 @@
       {
         "id": "72128ddd3a9f410d9d1e",
         "creatorEnglish": "Al-Shawwā, Sāmī",
-        "sourceEnglish": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
-        "year": 1946,
+        "creatorArabic": "",
+        "sourceId": "HK6shRFzmS98eQ-u2MZ1E",
         "page": 21,
         "commentsEnglish": "nahāwand nawā, followed by ḥijāz dūgāh then the qarār, yegāh, with a touch of qarār ḥijāz",
+        "commentsArabic": "",
         "stops": [
           {
             "type": "jins",
@@ -2185,10 +2186,11 @@
       {
         "id": "ec2d66a078954d059120",
         "creatorEnglish": "Al-Shawwā, Sāmī",
-        "sourceEnglish": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
-        "year": 1946,
+        "creatorArabic": "",
+        "sourceId": "HK6shRFzmS98eQ-u2MZ1E",
         "page": 37,
         "commentsEnglish": "Starts on ṣabā dūgāh and it's qarār is irāq",
+        "commentsArabic": "",
         "stops": [
           {
             "type": "jins",

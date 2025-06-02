@@ -2,8 +2,9 @@
 
 .tuning-system-manager {
   width: 100%;
-  margin-top: 20px;
+  // margin-top: 20px;
   font-weight: bold;
+  padding: 20px 10px;
 
   &__header {
     font-size: 20px;
@@ -115,13 +116,23 @@
 
   &__starting-note-input {
     display: inline-block;
-    padding: 10px;
-    margin-left: 10px;
-    background-color: rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
+    box-sizing: border-box;
+    padding: 5px;
+    margin-left: 5px;
+    background-color: black;
+    border-radius: 5px;
     color: $text;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-    width: 90px;
+    width: 60px;
+
+    // Remove default arrows in webkit browsers
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    // Remove default arrows in Firefox
+    -moz-appearance: textfield;
   }
 
   &__starting-note-right {
@@ -139,13 +150,15 @@
     transition: 0.3s;
     height: 40px;
     align-content: center;
+
     &:hover {
       background-color: rgba($secondary, 0.5);
     }
 
-        &_selected {
+    &_selected {
       background-color: $secondary;
-        }
+    }
+
     &_reset {
       background-color: $primary;
     }
@@ -165,7 +178,52 @@
         background-color: rgba(0, 0, 0, 0.3);
       }
     }
+
   }
+
+  h3 {
+font-size: 20px;
+
+  }
+
+  &__comments-english {
+    font-size: 14px;
+    display: inline-block;
+    width: 50%;
+    direction: ltr;
+    text-align: left;
+    vertical-align: top;
+    padding-right: 30px;
+  }
+
+  &__comments-arabic {
+    font-size: 14px;    
+    display: inline-block;
+    width: 50%;
+    text-align: right;
+    direction: rtl;
+    vertical-align: top;
+    padding-right: 30px;
+  }
+
+  &__sources-english {
+    font-size: 14px;    
+    display: inline-block;
+    width: 50%;
+    direction: ltr;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  &__sources-arabic {
+    font-size: 14px;    
+    display: inline-block;
+    width: 50%;
+    text-align: right;
+    direction: rtl;
+    vertical-align: top;
+  }
+
 
   &__list {
     display: grid;
@@ -181,7 +239,7 @@
     align-items: center;
     text-align: center;
     padding: 10px;
-    background-color: rgba($primary, 0.5); 
+    background-color: rgba($primary, 0.5);
     border-radius: 5px;
     font-size: 14px;
     color: $text;
@@ -191,6 +249,7 @@
     &_selected {
       background-color: $secondary;
     }
+
     &:hover {
       background-color: rgba($primary, 1);
     }
@@ -266,55 +325,55 @@
   }
 
   &__filter-menu {
-  gap: 10px;
-  height: 100%;
-  margin: 0 10px;
-}
+    gap: 10px;
+    height: 100%;
+    margin: 0 10px;
+  }
 
-&__filter-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0px;
-  // background-color: rgba(0, 0, 0, 0.3);
-  border-radius: 5px;
-  color: $text;
-  cursor: pointer;
-  transition: 0s;
-  margin-left: 10px;
-  font-size: 14px;
-  
-  // hover (when not disabled)
-  &:hover {
-   // background-color: rgba($primary, 0.5);
-    color: white;
-    // box-shadow: 0 1px 15px rgba(0, 0, 0, 0.6);
-  }
-  
-  // active state (checked)
-  &_active {
-   // background-color: $primary;
-    color: white;
-  }
-  
-  // disabled state via :has() (modern browsers)
-  &:has(> .tuning-system-manager__filter-checkbox:disabled) {
-    background-color: $secondary;
+  &__filter-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0px;
+    // background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
     color: $text;
-    cursor: not-allowed;
-    
+    cursor: pointer;
+    transition: 0s;
+    margin-left: 10px;
+    font-size: 14px;
+
+    // hover (when not disabled)
     &:hover {
-      background-color: rgba(0, 0, 0, 0.3);
-      box-shadow: none;
+      // background-color: rgba($primary, 0.5);
+      color: white;
+      // box-shadow: 0 1px 15px rgba(0, 0, 0, 0.6);
+    }
+
+    // active state (checked)
+    &_active {
+      // background-color: $primary;
+      color: white;
+    }
+
+    // disabled state via :has() (modern browsers)
+    &:has(> .tuning-system-manager__filter-checkbox:disabled) {
+      background-color: $secondary;
       color: $text;
+      cursor: not-allowed;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.3);
+        box-shadow: none;
+        color: $text;
+      }
     }
   }
-}
 
-&__filter-label {
-  user-select: none;
-  /* inherit color from parent label */
-}
+  &__filter-label {
+    user-select: none;
+    /* inherit color from parent label */
+  }
 
 
   &__octave-table {
@@ -359,7 +418,7 @@
       overflow-wrap: normal;
       word-break: normal;
 
-      
+
     }
 
 
@@ -432,7 +491,7 @@
     }
   }
 
-/*   &__play-button {
+  /*   &__play-button {
     width: 100%;
     height: 100%;
     padding: 0px 0;
@@ -444,15 +503,15 @@
 
   } */
 
-   &__play-circle-icon.MuiSvgIcon-root {
-    background-color: transparent; 
-    color: white ;
+  &__play-circle-icon.MuiSvgIcon-root {
+    background-color: transparent;
+    color: white;
     padding: 0px;
     margin: 0px;
     margin-right: 0px;
-  font-size: 20px;
+    font-size: 20px;
     cursor: pointer;
-        vertical-align: middle;
+    vertical-align: middle;
 
   }
 
@@ -475,12 +534,10 @@
 
     background-color: $primary;
 
-    
+
     &:disabled {
       background-color: rgba(0, 0, 0, 0.3);
     }
   }
 
 }
-
-

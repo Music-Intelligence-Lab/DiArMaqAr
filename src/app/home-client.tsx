@@ -74,8 +74,8 @@ export default function HomeClient() {
       {(selectedMenu === "jins" || selectedMenu === "jins-admin") && selectedTuningSystem && <JinsTranspositions />}
       {selectedMenu === "sayr" && selectedMaqam && <SayrManager admin={false} />}
       {selectedMenu === "sayr-admin" && selectedMaqam && <SayrManager admin />}
-      {selectedMenu === "bibliography" && <SourcesManager />}
-      {selectedMenu === "pattern" && <PatternsManager />}
+      {selectedMenu === "bibliography-admin" && <SourcesManager />}
+      {selectedMenu === "pattern-admin" && <PatternsManager />}
       <KeyboardControls />
     </div>
   );

@@ -676,6 +676,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     setSelectedCells([]);
     setSelectedJins(null);
     setSelectedMaqam(null);
+    setMaqamSayrId("");
   };
 
   function mapIndices(notesToMap: TransliteratedNoteName[], givenNumberOfPitchClasses: number = 0, setOriginal: boolean = true) {
