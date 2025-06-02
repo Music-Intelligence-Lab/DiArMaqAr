@@ -1,5 +1,5 @@
 import React from "react";
-import {  useAppContext } from "@/contexts/app-context";
+import { useAppContext } from "@/contexts/app-context";
 import Maqam from "@/models/Maqam";
 import { Cell } from "@/contexts/app-context";
 // import PlayCircleIcon from "@mui/icons-material/PlayCircle";
@@ -7,7 +7,7 @@ import { getMaqamTranspositions } from "@/functions/transpose";
 import { updateMaqamat } from "@/functions/update";
 import { SourcePageReference } from "@/models/Source";
 
-export default function MaqamManager({admin}: { admin: boolean }) {
+export default function MaqamManager({ admin }: { admin: boolean }) {
   const {
     maqamat,
     setMaqamat,
@@ -236,36 +236,36 @@ export default function MaqamManager({admin}: { admin: boolean }) {
             )}
           </div>
         </>
-      )} */} 
+      )} */}
 
       <div className="maqam-manager__list">
         {sortedMaqamat.length === 0 ? (
           <p>No maqamat available.</p>
         ) : (
-          sortedMaqamat.map((maqam, index) => (
-            <div
+          sortedMaqamat.map((maqam, index) => {
+            const isMaqamSelectable = checkIfMaqamIsSelectable(maqam);
+            return <div
               key={index}
               className={
                 "maqam-manager__item " +
                 (maqam.getName() === selectedMaqam?.getName() ? "maqam-manager__item_selected " : "") +
-                (checkIfMaqamIsSelectable(maqam) ? "maqam-manager__item_active" : "")
+                (isMaqamSelectable ? "maqam-manager__item_active" : "")
               }
               onClick={() => {
-                if (checkIfMaqamIsSelectable(maqam)) {
+                if (isMaqamSelectable) {
                   handleClickMaqam(maqam);
                 }
               }}
             >
               <div className="maqam-manager__item-name">
                 <strong>{`${maqam.getName()}${!maqam.isMaqamSymmetric() ? "*" : ""}`}</strong>
-                {checkIfMaqamIsSelectable(maqam) && (
-                  <strong className="maqam-manager__item-name-transpositions">{`Transpositions: ${
-                    getMaqamTranspositions(allCellDetails, maqam, true).length
-                  }/${numberOfPitchClasses}`}</strong>
+                {isMaqamSelectable && (
+                  <strong className="maqam-manager__item-name-transpositions">{`Transpositions: ${getMaqamTranspositions(allCellDetails, maqam, true).length
+                    }/${numberOfPitchClasses}`}</strong>
                 )}
               </div>
             </div>
-          ))
+          })
         )}
       </div>
 

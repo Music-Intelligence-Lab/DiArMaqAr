@@ -780,6 +780,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     givenNumberOfPitchClasses: number = 0
   ) => {
     const noteNamesToSearch = givenNoteNames.length ? givenNoteNames : noteNames;
+    const numberOfPitchClasses = givenNumberOfPitchClasses || pitchClassesArr.length || selectedTuningSystem?.getPitchClasses().length || 0;
 
     if (startingNoteName === "" && noteNamesToSearch.length > 0) {
       for (const setOfNotes of noteNamesToSearch) {
@@ -804,12 +805,11 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     }
 
     // If no config found, fallback:
-    setSelectedIndices(Array(selectedIndices.length).fill(-1));
+    setSelectedIndices(Array(numberOfPitchClasses).fill(-1));
     return [];
   };
 
   const checkIfJinsIsSelectable = (jins: Jins, givenIndices: number[] = []) => {
-
     const usedNoteNames = getNoteNamesUsedInTuningSystem(givenIndices.length ? givenIndices : selectedIndices);
     return jins.getNoteNames().every((noteName) => usedNoteNames.includes(noteName));
   };
