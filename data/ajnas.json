@@ -86,12 +86,12 @@
   },
   {
     "id": "8",
-    "name": "jins ḥijāz",
+    "name": "jins ḥijāz binṣir",
     "noteNames": [
-      "dūgāh",
-      "kurdī",
-      "ḥijāz",
-      "nawā"
+      "rāst",
+      "tīk zirguleh",
+      "buselīk/ʿushshāq",
+      "chahargāh"
     ],
     "sourcePageReferences": []
   },
@@ -126,6 +126,17 @@
       "chahargāh",
       "ḥiṣār",
       "ḥuseinī"
+    ],
+    "sourcePageReferences": []
+  },
+  {
+    "id": "12",
+    "name": "jins ḥijāz",
+    "noteNames": [
+      "dūgāh",
+      "kurdī",
+      "ḥijāz",
+      "nawā"
     ],
     "sourcePageReferences": []
   },
@@ -169,6 +180,17 @@
       "rāst",
       "dūgāh",
       "nīm buselīk",
+      "chahargāh"
+    ],
+    "sourcePageReferences": []
+  },
+  {
+    "id": "17",
+    "name": "jins kurd binṣir",
+    "noteNames": [
+      "rāst",
+      "tīk zirguleh",
+      "kurdī",
       "chahargāh"
     ],
     "sourcePageReferences": []
