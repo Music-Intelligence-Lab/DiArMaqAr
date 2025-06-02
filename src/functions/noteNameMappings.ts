@@ -103,8 +103,14 @@ export const arabicToEnglishNoteMapping = {
   ...makeMap(octaveThreeNoteNames, englishOctaveThree),
 };
 
-export function getEnglishNoteName(arabicName: string): string {
-  return arabicToEnglishNoteMapping[arabicName] || "--";
+function splitEnglishNoteName(englishNoteName: string) {
+    return { englishNoteNameNatural: englishNoteName[0], englishNoteNameAccidental: englishNoteName.slice(1) }
+}
+
+export function getEnglishNoteName(arabicName: string): string{
+  const mapping = arabicToEnglishNoteMapping[arabicName]
+  if (mapping) return splitEnglishNoteName(mapping).englishNoteNameNatural + splitEnglishNoteName(mapping).englishNoteNameAccidental
+  else return "--";
 }
 
 /* 
