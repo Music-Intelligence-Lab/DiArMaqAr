@@ -21,7 +21,7 @@ const bebasNeue = Bebas_Neue({
 });
 
 const inter = Inter({
-  weight: "200",
+  weight: ["200", "300", "400"],
   subsets: ["latin"],
   display: "swap",
   variable: "--font-inter",
