@@ -8,20 +8,22 @@
   z-index: 10000;
 
   &__center-panel {
-text-align: center;  
-}
+    text-align: center;
+  }
 
-&__title {
+  &__title {
     font-size: 30px;
     font-weight: bold;
-    color: white;  }
+    color: white;
+    cursor: pointer;
+  }
 
   &__top-bar {
     display: flex;
     width: 100%;
     justify-content: space-between;
     align-items: center;
-    //height: $top-navbar-height;
+    height: $top-navbar-height;
     color: white;
     padding: 20px;
     font-size: 20px;
@@ -40,7 +42,10 @@ text-align: center;
   }
 
   &__bottom-bar-item {
+    display: flex;
+    flex-direction: column;
     flex: 1;
+    vertical-align: top;
     height: 100%;
     background-color: transparent;
     color: white;

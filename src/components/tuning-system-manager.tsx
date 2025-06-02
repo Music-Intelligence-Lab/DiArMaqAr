@@ -1300,13 +1300,18 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 </label>
               </div>
             )}
-            {/*               <button
+
+
+
+
+{/*               <button
                 className={"tuning-system-manager__starting-note-button tuning-system-manager__starting-note-button_reset"}
                 onClick={() => handleStartNoteNameChange("none")}
               >
                 Reset Note Names
               </button>
- */}            </div>
+ */}            
+ </div>
           {admin && (
             <div className="tuning-system-manager__starting-note-right">
               <button
@@ -1328,6 +1333,36 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         </div>
       )}
       {/* </details> */}
+
+{/* COMMENTS AND SOURCES */}
+<div className="tuning-system-manager__comments-english">
+  <h3>Comments:</h3>
+  {selectedTuningSystem?.getCommentsEnglish()}
+</div>
+
+<div className="tuning-system-manager__sources-english">
+  <h3>Sources:</h3>
+  {(() => {
+    const source = sources.find(source => source.getId() === selectedTuningSystem?.getSourceId());
+    if (!source) return null;
+    return (
+      <>
+        {source.getContributors()[0].lastNameEnglish}, {source.getContributors()[0].firstNameEnglish} ({source.getReleaseDateEnglish()}:{selectedTuningSystem?.getPage()})<br />
+      </>
+    );
+  })()}
+</div>
+
+<div className="tuning-system-manager__comments-arabic"> 
+  <h3>تعليقات:</h3>
+  {selectedTuningSystem?.getCommentsArabic()}
+</div>
+
+<div className="tuning-system-manager__sources-arabic"> 
+  <h3>مصادر:</h3>
+  {selectedTuningSystem?.getSourceArabic()}
+</div>
+
 
       <div className="tuning-system-manager__grid-wrapper">{renderNoteNameGrid()}</div>
       <div className="tuning-system-manager__buttons">

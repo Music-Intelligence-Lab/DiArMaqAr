@@ -48,6 +48,50 @@
 
   }
 
+  &__comments-sources-container {
+    width: 100%;
+  }
+
+  &__comments-english {
+    font-size: 14px;
+    display: inline-block;
+    width: 50%;
+    direction: ltr;
+    text-align: left;
+    vertical-align: top;
+    padding-right: 30px;
+  }
+
+  &__comments-arabic {
+    font-size: 14px;    
+    display: inline-block;
+    width: 50%;
+    text-align: right;
+    direction: rtl;
+    vertical-align: top;
+    padding-right: 30px;
+  }
+
+  &__sources-english {
+    font-size: 14px;    
+    display: inline-block;
+    width: 50%;
+    direction: ltr;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  &__sources-arabic {
+    font-size: 14px;    
+    display: inline-block;
+    width: 50%;
+    text-align: right;
+    direction: rtl;
+    vertical-align: top;
+  }
+
+
+
   &__table {
     width: 100%;
     border-collapse: collapse;

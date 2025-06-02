@@ -19,6 +19,7 @@ export default function JinsTranspositions() {
     setCentsTolerance,
     playNoteFrequency,
     playSequence,
+    sources,
   } = useAppContext();
 
   if (!selectedJins || !selectedTuningSystem) return null;
@@ -39,11 +40,46 @@ export default function JinsTranspositions() {
   const intervalPattern: Interval[] = getIntervalPattern(jinsCellDetails, useRatio);
 
   const sequences: CellDetails[][] = getTranspositions(allCellDetails, intervalPattern, true, useRatio, centsTolerance);
-
+  
   const rowCount = 5;
 
 
-  return (
+return (
+  <>
+    {/* COMMENTS AND SOURCES */}
+<div className="jins-transpositions__comments-sources-container">
+    <div className="jins-transpositions__comments-english">
+      <h3>Comments:</h3>
+    </div>
+  
+    <div className="jins-transpositions__sources-english">
+      <h3>Sources:</h3>
+      {selectedJins?.getSourcePageReferences().length > 0 &&
+      selectedJins.getSourcePageReferences().map((sourceRef, idx) => {
+        const source = sources.find((s: any) => s.id === sourceRef.sourceId);
+        return source ? (
+        <React.Fragment key={idx}>
+          {source.getContributors()[0].lastNameEnglish} ({source.getReleaseDateEnglish()}:{sourceRef.page})
+          <br />
+        </React.Fragment>
+        ) : null;
+      })}
+    </div>
+  
+    <div className="jins-transpositions__comments-arabic"> 
+      <h3>تعليقات:</h3>
+      {selectedTuningSystem?.getCommentsArabic()}
+    </div>
+  
+    <div className="jins-transpositions__sources-arabic"> 
+      <h3>مصادر:</h3>
+      {selectedTuningSystem?.getSourceArabic()}
+    </div>
+
+</div>
+
+    {/* JINS TRANSPOSITIONS TABLE */}
+
     <div className="jins-transpositions">
       <h2 className="jins-transpositions__title">
         Taḥlīl (analysis): {`${selectedJins.getName()}`}
@@ -297,6 +333,7 @@ export default function JinsTranspositions() {
 
         </tbody>
       </table>
-    </div>
+      </div>
+    </>
   );
 }
