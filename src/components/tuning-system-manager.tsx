@@ -727,7 +727,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
               ))}
             </tr>
             {/* Row 2: Note Name */}
-            <tr style={{minHeight: "50px", maxHeight: "50px", height: "50px" }}>
+            <tr style={{ minHeight: "50px", maxHeight: "50px", height: "50px" }}>
               <td>Note Name</td>
               {pitchClassesArr.map((_, colIndex) => {
                 const currentVal = getOctaveNoteName(octave, colIndex);
@@ -776,7 +776,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                   <td
                     key={colIndex}
                     className={`
-            ${isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}
+            ${isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected " : ""}
             ${!(octave === 1 || octave === 2) ? "tuning-system-manager__abjad-name" : ""}
           `.trim()}
                   >
@@ -880,7 +880,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 {pitchClassesArr.map((basePc, colIndex) => (
                   <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
                     {(
-                      parseFloat(renderConvertedCell(pitchClassesArr[0], octave as 0 | 1 | 2 | 3, "stringLength")) -
+                      parseFloat(renderConvertedCell(pitchClassesArr[0], 1, "stringLength")) -
                       parseFloat(renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "stringLength"))
                     ).toFixed(3)}
                   </td>
@@ -1304,14 +1304,14 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
 
 
-{/*               <button
+            {/*               <button
                 className={"tuning-system-manager__starting-note-button tuning-system-manager__starting-note-button_reset"}
                 onClick={() => handleStartNoteNameChange("none")}
               >
                 Reset Note Names
               </button>
- */}            
- </div>
+ */}
+          </div>
           {admin && (
             <div className="tuning-system-manager__starting-note-right">
               <button
@@ -1334,34 +1334,34 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       )}
       {/* </details> */}
 
-{/* COMMENTS AND SOURCES */}
-<div className="tuning-system-manager__comments-english">
-  <h3>Comments:</h3>
-  {selectedTuningSystem?.getCommentsEnglish()}
-</div>
+      {/* COMMENTS AND SOURCES */}
+      <div className="tuning-system-manager__comments-english">
+        <h3>Comments:</h3>
+        {selectedTuningSystem?.getCommentsEnglish()}
+      </div>
 
-<div className="tuning-system-manager__sources-english">
-  <h3>Sources:</h3>
-  {(() => {
-    const source = sources.find(source => source.getId() === selectedTuningSystem?.getSourceId());
-    if (!source) return null;
-    return (
-      <>
-        {source.getContributors()[0].lastNameEnglish}, {source.getContributors()[0].firstNameEnglish} ({source.getReleaseDateEnglish()}:{selectedTuningSystem?.getPage()})<br />
-      </>
-    );
-  })()}
-</div>
+      <div className="tuning-system-manager__sources-english">
+        <h3>Sources:</h3>
+        {(() => {
+          const source = sources.find(source => source.getId() === selectedTuningSystem?.getSourceId());
+          if (!source) return null;
+          return (
+            <>
+              {source.getContributors()[0].lastNameEnglish}, {source.getContributors()[0].firstNameEnglish} ({source.getReleaseDateEnglish()}:{selectedTuningSystem?.getPage()})<br />
+            </>
+          );
+        })()}
+      </div>
 
-<div className="tuning-system-manager__comments-arabic"> 
-  <h3>تعليقات:</h3>
-  {selectedTuningSystem?.getCommentsArabic()}
-</div>
+      <div className="tuning-system-manager__comments-arabic">
+        <h3>تعليقات:</h3>
+        {selectedTuningSystem?.getCommentsArabic()}
+      </div>
 
-<div className="tuning-system-manager__sources-arabic"> 
-  <h3>مصادر:</h3>
-  {selectedTuningSystem?.getSourceArabic()}
-</div>
+      <div className="tuning-system-manager__sources-arabic">
+        <h3>مصادر:</h3>
+        {selectedTuningSystem?.getSourceArabic()}
+      </div>
 
 
       <div className="tuning-system-manager__grid-wrapper">{renderNoteNameGrid()}</div>

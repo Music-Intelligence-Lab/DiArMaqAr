@@ -73,22 +73,40 @@
     "notes": [
       {
         "scaleDegree": "III",
-        "noteDuration": "16n"
+        "noteDuration": "8n"
       },
       {
         "scaleDegree": "II",
-        "noteDuration": "16n"
+        "noteDuration": "8n"
       },
       {
         "scaleDegree": "I",
-        "noteDuration": "16n"
+        "noteDuration": "8n"
       },
       {
         "scaleDegree": "II",
-        "noteDuration": "16n"
+        "noteDuration": "8n"
       },
       {
         "scaleDegree": "I",
+        "noteDuration": "4n"
+      }
+    ]
+  },
+  {
+    "id": "_n933jN8J9bwKO5sv7WS1",
+    "name": "basic",
+    "notes": [
+      {
+        "scaleDegree": "I",
+        "noteDuration": "8n"
+      },
+      {
+        "scaleDegree": "II",
+        "noteDuration": "8n"
+      },
+      {
+        "scaleDegree": "III",
         "noteDuration": "8n"
       }
     ]
