@@ -108,8 +108,6 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   const [stringLength, setStringLength] = useState<number>(0);
   const [defaultReferenceFrequency, setDefaultReferenceFrequency] = useState<number>(0);
 
-  const [finishedLoading, setFinishedLoading] = useState(false);
-
   /**
    * We only store the note name “index” for the first octave (octaveOneNoteNames).
    * For example, if selectedIndices[i] = 5, that means the user has chosen the 5th element in octaveOneNoteNames.
@@ -122,10 +120,6 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     .split("\n")
     .map((p) => p.trim())
     .filter((p) => p.length > 0);
-
-  useEffect(() => {
-    setFinishedLoading(true);
-  });
 
   useEffect(() => {
     if (selectedTuningSystem) {
@@ -316,6 +310,55 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     }
   };
 
+  function handlePitchClassesChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+    const raw = e.target.value;
+    setPitchClasses(raw);
+
+    // 1. Recompute the array of pitch-classes
+    const newArr = raw
+      .split("\n")
+      .map((p) => p.trim())
+      .filter((p) => p.length > 0);
+
+    // 2. Detect type (fraction/decimal/cents/stringLength/unknown)
+    const typeOfPitchClass = detectPitchClassType(newArr);
+
+    // 3. Build newIndices exactly as before:
+    const newSelectedIndices = Array.from({ length: newArr.length }, () => -1);
+
+    if (typeOfPitchClass !== "unknown") {
+      for (let i = 0; i < newArr.length; i++) {
+        const pitchClass = newArr[i];
+        const conv = convertPitchClass(pitchClass, typeOfPitchClass, stringLength, defaultReferenceFrequency);
+        const fraction = conv?.fraction;
+        if (fraction) {
+          const idx = alKindiPitchClasses.indexOf(fraction);
+          if (idx >= 0) {
+            // first try octaveOne
+            const o1 = octaveOneNoteNames.indexOf(alKindiNoteNames[idx] as TransliteratedNoteNameOctaveOne);
+            if (o1 >= 0) {
+              newSelectedIndices[i] = o1;
+            } else {
+              // otherwise try octaveTwo
+              const o2 = octaveTwoNoteNames.indexOf(alKindiNoteNames[idx] as TransliteratedNoteNameOctaveTwo);
+              if (o2 >= 0) {
+                newSelectedIndices[i] = octaveOneNoteNames.length + o2;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    setSelectedIndices(newSelectedIndices);
+
+    // 4. Re‐pad selectedAbjadNames to length = newArr.length * 2
+    const totalAbjadSlots = newArr.length * 2;
+    const padded = Array(totalAbjadSlots).fill("");
+    setSelectedAbjadNames(padded);
+  }
+
+
   // MARK: Note Names Function Handlers
 
   const haveIndicesChanged = () => {
@@ -389,55 +432,6 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   // ----------------------------------------------------------------------------------
 
   const numberOfPitchClasses = pitchClassesArr.length;
-
-  useEffect(() => {
-    if (selectedIndices.length < numberOfPitchClasses && finishedLoading) {
-      const typeOfPitchClass = detectPitchClassType(pitchClassesArr);
-
-      if (typeOfPitchClass === "unknown") {
-        setSelectedIndices((prev) => [...prev, -1]);
-      } else {
-        const newSelectedIndices = Array.from({ length: numberOfPitchClasses }, () => -1);
-
-        for (let i = 0; i < numberOfPitchClasses; i++) {
-          if (!selectedIndices[i] || selectedIndices[i] === -1) {
-            const pitchClass = pitchClassesArr[i];
-            const fraction = convertPitchClass(pitchClass, typeOfPitchClass, stringLength, defaultReferenceFrequency)?.fraction;
-
-            if (fraction) {
-              const alKindiFractionIndex = alKindiPitchClasses.indexOf(fraction);
-              if (alKindiFractionIndex >= 0) {
-                const alKindiNoteName = alKindiNoteNames[alKindiFractionIndex];
-                const octaveOneIndex = octaveOneNoteNames.indexOf(alKindiNoteName as TransliteratedNoteNameOctaveOne);
-                if (octaveOneIndex >= 0) {
-                  newSelectedIndices[i] = octaveOneIndex;
-                } else {
-                  const octaveTwoIndex = octaveTwoNoteNames.indexOf(alKindiNoteName as TransliteratedNoteNameOctaveTwo);
-                  if (octaveTwoIndex >= 0) {
-                    newSelectedIndices[i] = octaveOneNoteNames.length + octaveTwoIndex;
-                  }
-                }
-              }
-            }
-          } else {
-            newSelectedIndices[i] = selectedIndices[i];
-          }
-        }
-
-        setSelectedIndices(newSelectedIndices);
-      }
-    }
-  }, [pitchClassesArr, selectedIndices]);
-
-  useEffect(() => {
-      if (selectedAbjadNames.length < numberOfPitchClasses * 2 && finishedLoading) {
-      const newArr = [...selectedAbjadNames];
-      while (newArr.length < numberOfPitchClasses * 2) {
-        newArr.push("");
-      }
-      setSelectedAbjadNames(newArr);
-    }
-  }, [pitchClassesArr, selectedAbjadNames]);
 
   function handleAbjadSelect(colIndex: number, newValue: string, octave: number) {
     setSelectedAbjadNames((prev) => {
@@ -724,7 +718,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
           <tbody>
             {/* Row 1: Pitch Class */}
             <tr>
-              <td className="tuning-system-manager__octave-table_row-header">Pitch Class</td>
+              <td>Pitch Class</td>
               {pitchClassesArr.map((_, colIndex) => (
                 <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
                   {colIndex}
@@ -733,7 +727,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             </tr>
             {/* Row 2: Note Name */}
             <tr style={{ minHeight: "50px", maxHeight: "50px", height: "50px" }}>
-              <td className="tuning-system-manager__octave-table_row-header">Note Name</td>
+              <td>Note Name</td>
               {pitchClassesArr.map((_, colIndex) => {
                 const currentVal = getOctaveNoteName(octave, colIndex);
 
@@ -776,7 +770,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             {/* Row 3: Abjad Name */}
             {filters.abjadName && (
               <tr>
-                <td className="tuning-system-manager__octave-table_row-header">Abjad Name</td>
+                <td>Abjad Name</td>
                 {pitchClassesArr.map((_, colIndex) => (
                   <td
                     key={colIndex}
@@ -810,7 +804,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             {/* Row 4: English Name */}
             {filters.englishName && (
               <tr>
-                <td className="tuning-system-manager__octave-table_row-header">English Name</td>
+                <td>English Name</td>
                 {pitchClassesArr.map((_, colIndex) => {
                   const arabicName = getOctaveNoteName(octave, colIndex);
                   const english = getEnglishNoteName(arabicName);
@@ -834,7 +828,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
           <tbody>
             {pitchClassType !== "unknown" && (
               <tr className="tuning-system-manager__octave-table__detectedPitchClassType">
-                <td className="tuning-system-manager__octave-table_row-header">{{ fraction: "Fraction Ratio", cents: "Cents (¢)", decimal: "Decimal Ratio", stringLength: "String Length" }[pitchClassType]}</td>
+                <td>{{ fraction: "Fraction Ratio", cents: "Cents (¢)", decimal: "Decimal Ratio", stringLength: "String Length" }[pitchClassType]}</td>
                 {pitchClassesArr.map((basePc, colIndex) => (
                   <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
                     {renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, pitchClassType)}
@@ -846,7 +840,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             {/* Row 5: Cents (¢) */}
             {filters.cents && pitchClassType !== "cents" && (
               <tr>
-                <td className="tuning-system-manager__octave-table_row-header">Cents (¢)</td>
+                <td>Cents (¢)</td>
                 {pitchClassesArr.map((basePc, colIndex) => (
                   <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
                     {renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "cents")}
@@ -858,7 +852,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             {/* Row 6: Fraction Ratio */}
             {filters.fractionRatio && pitchClassType !== "fraction" && (
               <tr>
-                <td className="tuning-system-manager__octave-table_row-header">Fraction Ratio</td>
+                <td>Fraction Ratio</td>
                 {pitchClassesArr.map((basePc, colIndex) => (
                   <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
                     {renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "fraction")}
@@ -870,7 +864,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             {/* Row 7: String Length */}
             {filters.stringLength && pitchClassType !== "stringLength" && (
               <tr>
-                <td className="tuning-system-manager__octave-table_row-header">String Length</td>
+                <td>String Length</td>
                 {pitchClassesArr.map((basePc, colIndex) => (
                   <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
                     {renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "stringLength")}
@@ -881,7 +875,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
             {filters.fretDivision && (
               <tr>
-                <td className="tuning-system-manager__octave-table_row-header">Fret Division</td>
+                <td>Fret Division</td>
                 {pitchClassesArr.map((basePc, colIndex) => (
                   <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
                     {(
@@ -896,7 +890,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             {/* Row 8: Decimal Ratio */}
             {filters.decimalRatio && pitchClassType !== "decimal" && (
               <tr>
-                <td className="tuning-system-manager__octave-table_row-header">Decimal Ratio</td>
+                <td>Decimal Ratio</td>
                 {pitchClassesArr.map((basePc, colIndex) => (
                   <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
                     {renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "decimal")}
@@ -908,7 +902,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             {/* Row 9: Midi Note */}
             {filters.midiNote && (
               <tr>
-                <td className="tuning-system-manager__octave-table_row-header">Midi Note</td>
+                <td>Midi Note</td>
                 {pitchClassesArr.map((basePc, colIndex) => (
                   <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
                     {frequencyToMidiNoteNumber(parseInt(renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "frequency"))).toFixed(2)}
@@ -920,7 +914,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             {/* Row 10: Freq (Hz) */}
             {filters.frequency && (
               <tr>
-                <td className="tuning-system-manager__octave-table_row-header">Freq (Hz)</td>
+                <td>Freq (Hz)</td>
                 {pitchClassesArr.map((basePc, colIndex) => (
                   <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
                     {renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "frequency")}
@@ -931,7 +925,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
             {/* Row 11: Play */}
             <tr>
-              <td className="tuning-system-manager__octave-table_row-header">Play</td>
+              <td>Play</td>
               {pitchClassesArr.map((basePc, colIndex) => (
                 <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
                   <PlayCircleIcon className="tuning-system-manager__play-circle-icon" onClick={() => playNoteFrequency(parseInt(renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "frequency")))} />
@@ -942,7 +936,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
             {/* Row 12: Select (checkbox) */}
             <tr>
-              <td className="tuning-system-manager__octave-table_row-header">Select</td>
+              <td>Select</td>
               {pitchClassesArr.map((_, colIndex) => (
                 <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
                   <input
@@ -1169,7 +1163,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 id="pitchClassesField"
                 rows={5}
                 value={pitchClasses}
-                onChange={(e) => setPitchClasses(e.target.value)}
+                onChange={handlePitchClassesChange}
               />
             </div>
 
@@ -1341,35 +1335,35 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
       {/* COMMENTS AND SOURCES */}
       <div className="tuning-system-manager__comments-sources-container">
-      <div className="tuning-system-manager__comments-english">
-        <h3>Comments:</h3>
-        {selectedTuningSystem?.getCommentsEnglish()}
-      </div>
+        <div className="tuning-system-manager__comments-english">
+          <h3>Comments:</h3>
+          {selectedTuningSystem?.getCommentsEnglish()}
+        </div>
 
-      {/* <div className="tuning-system-manager__comments-arabic">
+        {/* <div className="tuning-system-manager__comments-arabic">
         <h3>تعليقات:</h3>
         {selectedTuningSystem?.getCommentsArabic()}
       </div> */}
 
-      <div className="tuning-system-manager__sources-english">
-        <h3>Sources:</h3>
-        {(() => {
-          const source = sources.find(source => source.getId() === selectedTuningSystem?.getSourceId());
-          if (!source) return null;
-          return (
-            <>
-              {source.getContributors()[0].lastNameEnglish}, {source.getContributors()[0].firstNameEnglish} ({source.getReleaseDateEnglish()}:{selectedTuningSystem?.getPage()})<br />
-            </>
-          );
-        })()}
-      </div>
+        <div className="tuning-system-manager__sources-english">
+          <h3>Sources:</h3>
+          {(() => {
+            const source = sources.find(source => source.getId() === selectedTuningSystem?.getSourceId());
+            if (!source) return null;
+            return (
+              <>
+                {source.getContributors()[0].lastNameEnglish}, {source.getContributors()[0].firstNameEnglish} ({source.getReleaseDateEnglish()}:{selectedTuningSystem?.getPage()})<br />
+              </>
+            );
+          })()}
+        </div>
 
-      {/* <div className="tuning-system-manager__sources-arabic">
+        {/* <div className="tuning-system-manager__sources-arabic">
         <h3>مصادر:</h3>
         {selectedTuningSystem?.getSourceArabic()}
       </div> */}
 
-</div>
+      </div>
 
 
       <div className="tuning-system-manager__grid-wrapper">{renderNoteNameGrid()}</div>

@@ -143,29 +143,29 @@ export default function JinsManager({ admin }: { admin: boolean }) {
         {sortedAjnas.length === 0 ? (
           <p>No ajnas available.</p>
         ) : (
-          sortedAjnas.map((jins, index) => (
-            <div
+          sortedAjnas.map((jins, index) => {
+            const isJinsSelectable = checkIfJinsIsSelectable(jins);
+            return <div
               key={index}
               className={
                 "jins-manager__item " +
                 (jins.getName() === selectedJins?.getName() ? "jins-manager__item_selected " : "") +
-                (checkIfJinsIsSelectable(jins) ? "jins-manager__item_active" : "")
+                (isJinsSelectable ? "jins-manager__item_active" : "")
               }
               onClick={() => {
-                if (checkIfJinsIsSelectable(jins)) {
-                  handleClickJins(jins);
-                }
+                if (isJinsSelectable) handleClickJins(jins);
               }}
             >
               <div className="jins-manager__item-name">
                 <strong>{jins.getName()}</strong>
-                {checkIfJinsIsSelectable(jins) && (
+                {isJinsSelectable && (
                   <strong className="jins-manager__item-name-transpositions">{`Transpositions: ${getJinsTranspositions(allCellDetails, jins, true).length
                     }/${numberOfPitchClasses}`}</strong>
                 )}
               </div>
             </div>
-          ))
+          }
+          )
         )}
       </div>
       {admin && !selectedJins && (
