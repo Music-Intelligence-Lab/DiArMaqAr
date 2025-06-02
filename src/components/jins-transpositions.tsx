@@ -66,7 +66,7 @@ return (
       })}
     </div>
   
-    <div className="jins-transpositions__comments-arabic"> 
+    {/* <div className="jins-transpositions__comments-arabic"> 
       <h3>تعليقات:</h3>
       {selectedTuningSystem?.getCommentsArabic()}
     </div>
@@ -74,7 +74,7 @@ return (
     <div className="jins-transpositions__sources-arabic"> 
       <h3>مصادر:</h3>
       {selectedTuningSystem?.getSourceArabic()}
-    </div>
+    </div> */}
 
 </div>
 

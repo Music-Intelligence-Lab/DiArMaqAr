@@ -44,8 +44,8 @@ export default function Navbar() {
         <div className="navbar__center-panel"><span className="navbar__title" onClick={() => {
           clearSelections();
           setSelectedTuningSystem(null);
-        }}> Arabic Maqam Database</span>
-
+        }}> Arabic Maqām Database</span>
+        <br></br><span className="navbar__subtitle">Explore and play the tanghīm, ajnās, maqāmāt and suyūr of the Arabic Maqām system</span>
         </div>
         <div className="navbar__right-panel">
           <div className="navbar__left-panel-icon">
@@ -58,7 +58,7 @@ export default function Navbar() {
           className={`navbar__bottom-bar-item ${selectedMenu === "tuningSystem" ? "navbar__bottom-bar-item_selected" : ""}`}
           onClick={() => setSelectedMenu("tuningSystem")}
         >
-          {selectedTuningSystem ? <>{`${selectedTuningSystem.getCreatorEnglish()} (${selectedTuningSystem.getYear()})`} <br /> {selectedTuningSystem.getTitleEnglish()}</> : "Tanghīm (Tuning System)"}
+          {selectedTuningSystem ? <>{`${selectedTuningSystem.getCreatorEnglish()} (${selectedTuningSystem.getYear()})`} <br /> {selectedTuningSystem.getTitleEnglish()}</> : "Tanghīm (Tuning Systems)"}
         </button>
         {admin && <button
           className={`navbar__bottom-bar-item ${selectedMenu === "tuningSystem-admin" ? "navbar__bottom-bar-item_selected" : ""}`}
