@@ -1343,7 +1343,17 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       <div className="tuning-system-manager__comments-sources-container">
       <div className="tuning-system-manager__comments-english">
         <h3>Comments:</h3>
-        {selectedTuningSystem?.getCommentsEnglish()}
+        <div>
+          {selectedTuningSystem
+            ?.getCommentsEnglish()
+            .split("\n")
+            .map((line, index) => (
+              <span key={index}>
+                {line}
+                <br />
+              </span>
+            ))}
+        </div>
       </div>
 
       {/* <div className="tuning-system-manager__comments-arabic">
@@ -1358,7 +1368,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
           if (!source) return null;
           return (
             <>
-              {source.getContributors()[0].lastNameEnglish}, {source.getContributors()[0].firstNameEnglish} ({source.getReleaseDateEnglish()}:{selectedTuningSystem?.getPage()})<br />
+              {source.getContributors()[0].lastNameEnglish} ({source.getReleaseDateEnglish()}:{selectedTuningSystem?.getPage()})<br />
             </>
           );
         })()}
