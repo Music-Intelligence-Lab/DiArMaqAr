@@ -172,7 +172,7 @@ return (
               <th className="jins-transpositions__header-cell">{Number(jinsCellDetails[0].cents).toFixed(3)}</th>
               {intervalPattern.map((pat, i) => (
                 <React.Fragment key={i}>
-                  <th className="jins-transpositions__header-cell">{`${(parseInt(jinsCellDetails[i + 1].cents) - parseInt(jinsCellDetails[i].cents)).toFixed(3)}`}</th>
+                  <th className="jins-transpositions__header-cell">{`(${(parseInt(jinsCellDetails[i + 1].cents) - parseInt(jinsCellDetails[i].cents)).toFixed(3)})`}</th>
                   <th className="jins-transpositions__header-cell">{Number(jinsCellDetails[i + 1].cents).toFixed(3)}</th>
                 </React.Fragment>
               ))}
@@ -297,7 +297,7 @@ return (
                     <th className="jins-transpositions__cell">{Number(sequence[0].cents).toFixed(3)}</th>
                     {intervalPattern.map((pat, i) => (
                       <React.Fragment key={i}>
-                        <th className="jins-transpositions__cell">{`${(parseInt(jinsCellDetails[i + 1].cents) - parseInt(jinsCellDetails[i].cents)).toFixed(3)}`}</th>
+                        <th className="jins-transpositions__cell">{`(${(parseInt(jinsCellDetails[i + 1].cents) - parseInt(jinsCellDetails[i].cents)).toFixed(3)})`}</th>
                         <th className="jins-transpositions__cell">{Number(sequence[i + 1].cents).toFixed(3)}</th>
 
                       </React.Fragment>
