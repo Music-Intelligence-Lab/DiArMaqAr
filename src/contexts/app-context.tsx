@@ -20,7 +20,6 @@ import Source from "@/models/Source";
 import Pattern, { NoteDuration, reversePatternNotes } from "@/models/Pattern";
 import romanToNumber from "@/functions/romanToNumber";
 import getFirstNoteName from "@/functions/getFirstNoteName";
-import { reverse } from "dns";
 
 type InputMode = "tuningSystem" | "selection";
 type OutputMode = "mute" | "waveform" | "midi";
