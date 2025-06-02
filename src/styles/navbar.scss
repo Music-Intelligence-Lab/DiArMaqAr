@@ -57,6 +57,7 @@
     color: white;
     cursor: pointer;
     font-size: 16px;
+    font-family: inherit;
     transition: 0.1s ease;
     padding: 10px;
 
@@ -84,9 +85,19 @@
         background-color: $secondary;
       }
     }
+    &_tab-title {
+      font-size: 16px;
+      font-weight: 300;
+    }
+      &_tab-subtitle {
+      font-size: 16px;
+      font-weight: 200;
+    }
+
   }
 
   &__left-panel {
+    width: 10%;
     display: flex;
     align-items: center;
     height: 100%;
@@ -101,14 +112,28 @@
   }
 
   &__left-panel-icon {
+    font-family: inherit;
+    font-size: 14px;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: left;
+    justify-content: left;
     user-select: none;
     background-color: $primary;
-    padding: 10px;
+    padding: 5px;
     border-radius: 5px;
   }
+
+  &__right-panel {
+    width: 10%;
+    display: flex;
+    align-items: right;
+    justify-content: right;
+    //height: 100%;
+    cursor: pointer;
+    z-index: 1000;
+
+  }
+
 
   &__backdrop {
     position: fixed;
