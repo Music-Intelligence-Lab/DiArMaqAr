@@ -175,14 +175,8 @@
   },
   {
     "id": "17",
-    "name": "jins nawā athar",
-    "noteNames": [
-      "rāst",
-      "dūgāh",
-      "kurdī",
-      "ḥijāz",
-      "nawā"
-    ],
+    "name": "test",
+    "noteNames": [],
     "sourcePageReferences": []
   }
 ]
