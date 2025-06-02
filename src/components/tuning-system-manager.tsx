@@ -108,6 +108,8 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   const [stringLength, setStringLength] = useState<number>(0);
   const [defaultReferenceFrequency, setDefaultReferenceFrequency] = useState<number>(0);
 
+  const [finishedLoading, setFinishedLoading] = useState(false);
+
   /**
    * We only store the note name “index” for the first octave (octaveOneNoteNames).
    * For example, if selectedIndices[i] = 5, that means the user has chosen the 5th element in octaveOneNoteNames.
@@ -120,6 +122,10 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     .split("\n")
     .map((p) => p.trim())
     .filter((p) => p.length > 0);
+
+  useEffect(() => {
+    setFinishedLoading(true);
+  });
 
   useEffect(() => {
     if (selectedTuningSystem) {
@@ -385,7 +391,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   const numberOfPitchClasses = pitchClassesArr.length;
 
   useEffect(() => {
-    if (selectedIndices.length < numberOfPitchClasses) {
+    if (selectedIndices.length < numberOfPitchClasses && finishedLoading) {
       const typeOfPitchClass = detectPitchClassType(pitchClassesArr);
 
       if (typeOfPitchClass === "unknown") {
@@ -424,9 +430,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   }, [pitchClassesArr, selectedIndices]);
 
   useEffect(() => {
-    if (selectedAbjadNames.length > numberOfPitchClasses * 2) {
-      setSelectedAbjadNames(selectedAbjadNames.slice(0, numberOfPitchClasses * 2));
-    } else if (selectedAbjadNames.length < numberOfPitchClasses * 2) {
+      if (selectedAbjadNames.length < numberOfPitchClasses * 2 && finishedLoading) {
       const newArr = [...selectedAbjadNames];
       while (newArr.length < numberOfPitchClasses * 2) {
         newArr.push("");
@@ -627,6 +631,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
    *  9) frequency
    *  10) "Play" button + checkbox
    */
+
   function renderOctaveDetails(octave: number) {
     if (!pitchClassesArr.length) return null;
 
@@ -778,9 +783,9 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                     className={`
             ${isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected " : ""}
             ${!(octave === 1 || octave === 2) ? "tuning-system-manager__abjad-name" : ""}
-          `.trim()}
+          `}
                   >
-                    {octave === 1 || octave === 2 ? (
+                    {admin && (octave === 1 || octave === 2) ? (
                       <select
                         className="tuning-system-manager__select-abjad"
                         value={selectedAbjadNames[colIndex + (octave === 1 ? 0 : numberOfPitchClasses)] || ""}
@@ -795,7 +800,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                       </select>
                     ) : (
                       <span className="tuning-system-manager__abjad-name">
-                        {(selectedAbjadNames[colIndex + (octave === 1 ? 0 : numberOfPitchClasses)] || "").replace(/\//g, "/\u200B")}
+                        {(selectedAbjadNames[colIndex + (octave <= 1 ? 0 : numberOfPitchClasses)] || "").replace(/\//g, "/\u200B")}
                       </span>
                     )}
                   </td>
@@ -1024,7 +1029,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       )}
 
       {admin && (
-        <form className="tuning-system-manager__form">
+        <div className="tuning-system-manager__form">
           {/* Identification / Titles */}
           <div className="tuning-system-manager__group">
             <div className="tuning-system-manager__input-container">
@@ -1209,7 +1214,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
               </button>
             )}
           </div>
-        </form>
+        </div>
       )}
 
       {!admin && (
