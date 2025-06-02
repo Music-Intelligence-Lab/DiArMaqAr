@@ -16,7 +16,7 @@ export default function Navbar() {
 
   const currentPath = usePathname().split("/")[1];
 
-  const admin = false;
+  const admin = true;
 
   const selectedSayr: Sayr | null = (selectedMaqam && maqamSayrId) ? selectedMaqam.getSuyūr().find((sayr) => sayr.id === maqamSayrId) || null : null
 
