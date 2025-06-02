@@ -163,17 +163,6 @@
     "sourcePageReferences": []
   },
   {
-    "id": "15",
-    "name": "jins nikrīz",
-    "noteNames": [
-      "rāst",
-      "dūgāh",
-      "kurdī",
-      "ḥijāz"
-    ],
-    "sourcePageReferences": []
-  },
-  {
     "id": "16",
     "name": "jins rāst nīm buselīk",
     "noteNames": [
@@ -192,6 +181,18 @@
       "tīk zirguleh",
       "kurdī",
       "chahargāh"
+    ],
+    "sourcePageReferences": []
+  },
+  {
+    "id": "18",
+    "name": "jins nikrīz",
+    "noteNames": [
+      "rāst",
+      "dūgāh",
+      "kurdī",
+      "ḥijāz",
+      "nawā"
     ],
     "sourcePageReferences": []
   }

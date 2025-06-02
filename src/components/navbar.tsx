@@ -39,7 +39,18 @@ export default function Navbar() {
           className={`navbar__bottom-bar-item ${selectedMenu === "tuningSystem" ? "navbar__bottom-bar-item_selected" : ""}`}
           onClick={() => setSelectedMenu("tuningSystem")}
         >
-          {selectedTuningSystem ? <>{`${selectedTuningSystem.getCreatorEnglish()} (${selectedTuningSystem.getYear()})`} <br /> {selectedTuningSystem.getTitleEnglish()}</> : "Tanghīm (Tuning Systems)"}
+        {selectedTuningSystem ? (
+          <>
+            <span className="navbar__bottom-bar-item_tab-title">
+              {selectedTuningSystem.getCreatorEnglish()} ({selectedTuningSystem.getYear()})
+            </span>
+            <span className="navbar__bottom-bar-item_tab-subtitle">            
+            {selectedTuningSystem.getTitleEnglish()}
+            </span>
+          </>
+        ) : (
+          "Tanghīm (Tuning Systems)"
+        )}
         </button>
         {showAdminTabs && <button
           className={`navbar__bottom-bar-item ${selectedMenu === "tuningSystem-admin" ? "navbar__bottom-bar-item_selected" : ""}`}
@@ -52,8 +63,12 @@ export default function Navbar() {
           onClick={() => setSelectedMenu("jins")}
           disabled={!selectedTuningSystem}
         >
-          {selectedTuningSystem ? `Ajnās (${ajnas.filter((jins) => checkIfJinsIsSelectable(jins)).length}/${ajnas.length})` : "Ajnās"} <br />
+            <span className="navbar__bottom-bar-item_tab-title">
+            {selectedTuningSystem ? `Ajnās (${ajnas.filter((jins) => checkIfJinsIsSelectable(jins)).length}/${ajnas.length})` : "Ajnās"}
+            </span> 
+            <span className="navbar__bottom-bar-item_tab-subtitle">
           {selectedJins && selectedJins.getName()}
+          </span>
         </button>
         {showAdminTabs && <button
           className={`navbar__bottom-bar-item ${selectedMenu === "jins-admin" ? "navbar__bottom-bar-item_selected" : ""}`}
@@ -67,8 +82,12 @@ export default function Navbar() {
           onClick={() => setSelectedMenu("maqam")}
           disabled={!selectedTuningSystem}
         >
+          <span className="navbar__bottom-bar-item_tab-title">
           {selectedTuningSystem ? `Maqāmāt (${maqamat.filter((maqam) => checkIfMaqamIsSelectable(maqam)).length}/${maqamat.length})` : "Maqāmāt"} <br />
+          </span>
+          <span className="navbar__bottom-bar-item_tab-subtitle">
           {selectedMaqam && selectedMaqam.getName()}
+          </span>
         </button>
         {showAdminTabs && <button
           className={`navbar__bottom-bar-item ${selectedMenu === "maqam-admin" ? "navbar__bottom-bar-item_selected" : ""}`}
@@ -82,8 +101,12 @@ export default function Navbar() {
           onClick={() => setSelectedMenu("sayr")}
           disabled={!selectedMaqam}
         >
+          <span className="navbar__bottom-bar-item_tab-title">
           {selectedMaqam ? `Suyūr (${selectedMaqam.getSuyūr().length})` : "Suyūr"} <br />
+          </span>
+          <span className="navbar__bottom-bar-item_tab-subtitle">
           {selectedSayr && `${selectedSayr.creatorEnglish} ${selectedSayrSource ? `(${selectedSayrSource.getReleaseDateEnglish()})` : ""}`}
+          </span>
         </button>
         {showAdminTabs && <button
           className={`navbar__bottom-bar-item ${selectedMenu === "sayr-admin" ? "navbar__bottom-bar-item_selected" : ""}`}
