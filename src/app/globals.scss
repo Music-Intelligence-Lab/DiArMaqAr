@@ -19,6 +19,9 @@
   background: $main-gradient;
   overscroll-behavior: none;
 }
+html {
+  overflow-y: scroll
+}
 
 body {
   font-family: var(--font-inter), Arial;

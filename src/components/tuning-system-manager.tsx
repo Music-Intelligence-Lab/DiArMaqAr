@@ -1335,28 +1335,38 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
       {/* COMMENTS AND SOURCES */}
       <div className="tuning-system-manager__comments-sources-container">
-        <div className="tuning-system-manager__comments-english">
-          <h3>Comments:</h3>
-          {selectedTuningSystem?.getCommentsEnglish()}
+      <div className="tuning-system-manager__comments-english">
+        <h3>Comments:</h3>
+        <div>
+          {selectedTuningSystem
+            ?.getCommentsEnglish()
+            .split("\n")
+            .map((line, index) => (
+              <span key={index}>
+                {line}
+                <br />
+              </span>
+            ))}
         </div>
+      </div>
 
         {/* <div className="tuning-system-manager__comments-arabic">
         <h3>تعليقات:</h3>
         {selectedTuningSystem?.getCommentsArabic()}
       </div> */}
 
-        <div className="tuning-system-manager__sources-english">
-          <h3>Sources:</h3>
-          {(() => {
-            const source = sources.find(source => source.getId() === selectedTuningSystem?.getSourceId());
-            if (!source) return null;
-            return (
-              <>
-                {source.getContributors()[0].lastNameEnglish}, {source.getContributors()[0].firstNameEnglish} ({source.getReleaseDateEnglish()}:{selectedTuningSystem?.getPage()})<br />
-              </>
-            );
-          })()}
-        </div>
+      <div className="tuning-system-manager__sources-english">
+        <h3>Sources:</h3>
+        {(() => {
+          const source = sources.find(source => source.getId() === selectedTuningSystem?.getSourceId());
+          if (!source) return null;
+          return (
+            <>
+              {source.getContributors()[0].lastNameEnglish} ({source.getReleaseDateEnglish()}:{selectedTuningSystem?.getPage()})<br />
+            </>
+          );
+        })()}
+      </div>
 
         {/* <div className="tuning-system-manager__sources-arabic">
         <h3>مصادر:</h3>

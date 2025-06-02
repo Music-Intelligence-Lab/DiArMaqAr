@@ -2,8 +2,8 @@
 
 .tuning-system-manager {
   width: 100%;
-  // margin-top: 20px;
-  padding: 20px 10px;
+  margin-top: 20px;
+  //padding: 20px 10px;
 
   &__header {
     font-size: 20px;
@@ -188,9 +188,7 @@
   &__comments-sources-container {
     display: block;
     width: 100%;
-    margin-top: 20px;
-    margin-bottom: 150px;
-
+    margin-top: 0px;
   }
 
   &__comments-english {
@@ -202,6 +200,7 @@
     vertical-align: top;
     padding-right: 30px;
     float: left;
+    margin-bottom: 40px;
   }
 
   &__comments-arabic {
@@ -318,7 +317,7 @@
 
   &__octave-summary {
     font-size: 20px;
-    margin-bottom: -1px;
+    margin-bottom: 10px;
     cursor: pointer;
     user-select: none;
   }
@@ -326,7 +325,6 @@
   &__octave-summary-title {
     display: inline-block;
     user-select: none;
-    margin-bottom: 5px;
   }
 
   &__octave-cascade-button {
@@ -400,7 +398,7 @@
     color: white;
     border: 1px solid rgb(86, 86, 86);
     padding: 0px 0;
-    margin: 0px 0;
+    margin: -1px 0;
 
     th {
       // text-align: left;
