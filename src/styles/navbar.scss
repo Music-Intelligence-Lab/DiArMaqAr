@@ -104,6 +104,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    user-select: none;
+    background-color: $primary;
+    padding: 10px;
+    border-radius: 5px;
   }
 
   &__backdrop {
