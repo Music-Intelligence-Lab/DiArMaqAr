@@ -378,19 +378,12 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
           const baseFreq = parseFloat(cellDetails.frequency);
           if (isNaN(baseFreq)) return;
 
-          let cellMidi = Math.round(frequencyToMidiNoteNumber(baseFreq));
 
-          let adjFreq = baseFreq;
-
-          while (noteNumber - cellMidi >= 12) {
-            adjFreq *= 2;
-            cellMidi += 12;
-          }
-
-          while (cellMidi - noteNumber >= 12) {
-            adjFreq /= 2;
-            cellMidi -= 12;
-          }
+          const baseMidi = Math.round(frequencyToMidiNoteNumber(baseFreq));
+          // how many octaves to shift (positive => up, negative => down)
+          const octaveShift = Math.round((noteNumber - baseMidi) / 12);
+          // adjust frequency by 2^octaveShift
+          const adjFreq = baseFreq * Math.pow(2, octaveShift);
 
           if (cmd === 0x90 && velocity > 0) {
             noteOn(adjFreq);
@@ -458,111 +451,111 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   };
 
   const playSequence = (frequencies: number[]): Promise<void> => {
-  return new Promise((resolve) => {
+    return new Promise((resolve) => {
 
-    const isAscending = frequencies.every(
-      (freq, idx, arr) => idx === 0 || freq >= arr[idx - 1]
-    );
+      const isAscending = frequencies.every(
+        (freq, idx, arr) => idx === 0 || freq >= arr[idx - 1]
+      );
 
-    const beatSec = 60 / soundSettings.tempo;
+      const beatSec = 60 / soundSettings.tempo;
 
-    // 1) FALLBACK “straight ascending” if no pattern is selected
-    if (
-      !soundSettings.selectedPattern ||
-      !soundSettings.selectedPattern.getNotes().length
-    ) {
-      // total time = (number of notes) * (beat duration)
-      const totalTimeMs = frequencies.length * beatSec * 1000;
+      // 1) FALLBACK “straight ascending” if no pattern is selected
+      if (
+        !soundSettings.selectedPattern ||
+        !soundSettings.selectedPattern.getNotes().length
+      ) {
+        // total time = (number of notes) * (beat duration)
+        const totalTimeMs = frequencies.length * beatSec * 1000;
 
-      frequencies.forEach((freq, i) => {
-        setTimeout(() => {
-          playNoteFrequency(freq);
-        }, i * beatSec * 1000);
-      });
-
-      // resolve after all notes have been scheduled AND played
-      setTimeout(() => {
-        resolve();
-      }, totalTimeMs);
-
-      return;
-    }
-
-    // 2) THERE IS A PATTERN: build the “extendedFrequencies” window
-    const patternNotes = isAscending ? soundSettings.selectedPattern.getNotes() : reversePatternNotes(soundSettings.selectedPattern.getNotes());
-    // find the highest degree number (e.g. "III" → 3)
-    const maxDegree = Math.max(
-      ...patternNotes.map((n) =>
-        n.scaleDegree === "0" ? 0 : romanToNumber(n.scaleDegree)
-      )
-    );
-
-    // if not enough input freqs → fallback ascending
-    if (frequencies.length < maxDegree) {
-      const totalTimeMs = frequencies.length * beatSec * 1000;
-
-      frequencies.forEach((freq, i) => {
-        setTimeout(() => {
-          playNoteFrequency(freq);
-        }, i * beatSec * 1000);
-      });
-
-      setTimeout(() => {
-        resolve();
-      }, totalTimeMs);
-
-      return;
-    }
-
-    let extendedFrequencies: number[];
-    if (isAscending) {
-      extendedFrequencies = [
-        ...frequencies,
-        ...frequencies.map((f) => f * 2).slice(1, maxDegree),
-      ];
-    } else {
-      extendedFrequencies = [
-        ...frequencies.map((f) => f * 2).slice(frequencies.length - maxDegree, frequencies.length - 1),
-        ...frequencies,
-      ];
-    }
-
-    // 3) SLIDING-WINDOW “pattern” scheduling
-    let cumulativeTimeSec = 0;
-    for (let windowStart = 0; windowStart <= frequencies.length - 1; windowStart++) {
-      for (const { scaleDegree, noteDuration } of patternNotes) {
-        // compute note length in seconds:
-        //   base = (4 ÷ numeric part of noteDuration), e.g. "4" → whole note
-        //   mod  = 1 (normal), 1.5 (dotted), 2/3 (triplet)
-        const base = 4 / Number(noteDuration.replace(/\D/g, ""));
-        const mod = noteDuration.endsWith("d")
-          ? 1.5
-          : noteDuration.endsWith("t")
-          ? 2 / 3
-          : 1;
-        const durSec = base * mod * beatSec;
-
-        if (scaleDegree !== "0") {
-          const deg = romanToNumber(scaleDegree);
-          const freqToPlay = extendedFrequencies[windowStart + deg - 1];
-
+        frequencies.forEach((freq, i) => {
           setTimeout(() => {
-            playNoteFrequency(freqToPlay, durSec);
-          }, cumulativeTimeSec * 1000);
-        }
+            playNoteFrequency(freq);
+          }, i * beatSec * 1000);
+        });
 
-        cumulativeTimeSec += durSec;
+        // resolve after all notes have been scheduled AND played
+        setTimeout(() => {
+          resolve();
+        }, totalTimeMs);
+
+        return;
       }
-    }
 
-    // by now, cumulativeTimeSec (in seconds) is the total schedule length
-    const totalSeqMs = cumulativeTimeSec * 1000;
+      // 2) THERE IS A PATTERN: build the “extendedFrequencies” window
+      const patternNotes = isAscending ? soundSettings.selectedPattern.getNotes() : reversePatternNotes(soundSettings.selectedPattern.getNotes());
+      // find the highest degree number (e.g. "III" → 3)
+      const maxDegree = Math.max(
+        ...patternNotes.map((n) =>
+          n.scaleDegree === "0" ? 0 : romanToNumber(n.scaleDegree)
+        )
+      );
 
-    setTimeout(() => {
-      resolve();
-    }, totalSeqMs);
-  });
-};
+      // if not enough input freqs → fallback ascending
+      if (frequencies.length < maxDegree) {
+        const totalTimeMs = frequencies.length * beatSec * 1000;
+
+        frequencies.forEach((freq, i) => {
+          setTimeout(() => {
+            playNoteFrequency(freq);
+          }, i * beatSec * 1000);
+        });
+
+        setTimeout(() => {
+          resolve();
+        }, totalTimeMs);
+
+        return;
+      }
+
+      let extendedFrequencies: number[];
+      if (isAscending) {
+        extendedFrequencies = [
+          ...frequencies,
+          ...frequencies.map((f) => f * 2).slice(1, maxDegree),
+        ];
+      } else {
+        extendedFrequencies = [
+          ...frequencies.map((f) => f * 2).slice(frequencies.length - maxDegree, frequencies.length - 1),
+          ...frequencies,
+        ];
+      }
+
+      // 3) SLIDING-WINDOW “pattern” scheduling
+      let cumulativeTimeSec = 0;
+      for (let windowStart = 0; windowStart <= frequencies.length - 1; windowStart++) {
+        for (const { scaleDegree, noteDuration } of patternNotes) {
+          // compute note length in seconds:
+          //   base = (4 ÷ numeric part of noteDuration), e.g. "4" → whole note
+          //   mod  = 1 (normal), 1.5 (dotted), 2/3 (triplet)
+          const base = 4 / Number(noteDuration.replace(/\D/g, ""));
+          const mod = noteDuration.endsWith("d")
+            ? 1.5
+            : noteDuration.endsWith("t")
+              ? 2 / 3
+              : 1;
+          const durSec = base * mod * beatSec;
+
+          if (scaleDegree !== "0") {
+            const deg = romanToNumber(scaleDegree);
+            const freqToPlay = extendedFrequencies[windowStart + deg - 1];
+
+            setTimeout(() => {
+              playNoteFrequency(freqToPlay, durSec);
+            }, cumulativeTimeSec * 1000);
+          }
+
+          cumulativeTimeSec += durSec;
+        }
+      }
+
+      // by now, cumulativeTimeSec (in seconds) is the total schedule length
+      const totalSeqMs = cumulativeTimeSec * 1000;
+
+      setTimeout(() => {
+        resolve();
+      }, totalSeqMs);
+    });
+  };
 
   function noteOn(frequency: number) {
     if (soundSettings.outputMode === "mute") return;
