@@ -53,7 +53,8 @@
     width: 100px;
   }
 
-  &__source-select, &__source-input {
+  &__source-select,
+  &__source-input {
     padding: 5px;
     font-size: 14px;
   }
@@ -340,10 +341,8 @@
 
   &__details,
   &__octave-details {
-    min-width: 100%;
-    max-height: fit-content;
-    width: fit-content;
-    padding: 10px;
+    width: 100%;
+    padding: 20px;
     background-color: rgba($black, 0.3);
     border-radius: 10px;
     margin-bottom: 10px;
@@ -376,6 +375,31 @@
     cursor: pointer;
     transition: 0.3s;
     user-select: none;
+  }
+
+  &__octave-scroll {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+    height: fit-content;
+    padding: 10px 0;
+
+    &::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: $primary;
+      cursor: pointer;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+    }
   }
 
   &__filter-menu {
@@ -431,6 +455,7 @@
 
 
   &__octave-table {
+
     width: 100%;
     border-collapse: collapse;
     border-spacing: 0;
