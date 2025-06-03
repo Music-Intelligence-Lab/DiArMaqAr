@@ -20,12 +20,12 @@
   overscroll-behavior: none;
 }
 html {
-  overflow-y: scroll
+ // overflow-y: scroll
 }
 
 body {
-  font-family: var(--font-inter), Arial;
-  font-weight: 200;
+ font-family: var(--font-readex-pro), Arial;
+  font-weight: 300;
   display: flex;
   flex-direction: column;
   align-items: center;

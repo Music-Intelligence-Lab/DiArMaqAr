@@ -1317,7 +1317,8 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                   handleTuningSystemClick(tuningSystem);
                 }}
               >
-                {tuningSystem.stringify()}
+                <strong className="tuning-system-manager__item-english-creator">{`${tuningSystem.getCreatorEnglish()} (${tuningSystem.getYear()})`}</strong>
+                  <strong className="tuning-system-manager__item-english-title">{tuningSystem.getTitleEnglish()}</strong>
               </div>
             ))
           )}

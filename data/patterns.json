@@ -110,5 +110,27 @@
         "noteDuration": "8n"
       }
     ]
+  },
+  {
+    "id": "B_xR3HJRUf3Dcsf6YIyZg",
+    "name": "test 2",
+    "notes": [
+      {
+        "scaleDegree": "I",
+        "noteDuration": "8n"
+      },
+      {
+        "scaleDegree": "II",
+        "noteDuration": "4n"
+      },
+      {
+        "scaleDegree": "I",
+        "noteDuration": "8n"
+      },
+      {
+        "scaleDegree": "III",
+        "noteDuration": "8n"
+      }
+    ]
   }
 ]
