@@ -14,7 +14,7 @@ interface MenuContextInterface {
 const MenuContext = createContext<MenuContextInterface | undefined>(undefined);
 
 export function MenuContextProvider({ children }: { children: ReactNode }) {
-  const [showAdminTabs, setShowAdminTabs] = useState(false);
+  const [showAdminTabs, setShowAdminTabs] = useState(true);
   const [openSettings, setOpenSettings] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState<"tuningSystem" | "maqam" | "jins" | "sayr" | "bibliography" | "pattern" | "tuningSystem-admin" | "maqam-admin" | "jins-admin" | "sayr-admin" | "bibliography-admin" | "pattern-admin">("tuningSystem");
 

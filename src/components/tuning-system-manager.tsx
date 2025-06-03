@@ -368,7 +368,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     const raw = e.target.value;
     setPitchClasses(raw);
 
-    // 1. Recompute the array of pitch-classes
+    // 1. Recompute the array of pitch‐classes
     const newArr = raw
       .split("\n")
       .map((p) => p.trim())
@@ -377,7 +377,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     // 2. Detect type (fraction/decimal/cents/stringLength/unknown)
     const typeOfPitchClass = detectPitchClassType(newArr);
 
-    // 3. Build newIndices exactly as before:
+    // 3. Build initial newSelectedIndices[] exactly as before:
     const newSelectedIndices = Array.from({ length: newArr.length }, () => -1);
 
     if (typeOfPitchClass !== "unknown") {
@@ -404,14 +404,39 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       }
     }
 
+    // 4. “Cascade‐fill” every remaining -1 so that no indices stay undefined.
+    //    We treat the combined octave‐1 + octave‐2 arrays as a single “row”:
+    const TOTAL_NOTE_NAMES = octaveOneNoteNames.length + octaveTwoNoteNames.length;
+
+    // If the very first column is still -1, force it to 0:
+    if (newSelectedIndices[0] < 0) {
+      newSelectedIndices[0] = 0;
+    }
+
+    // Keep track of “last valid” as we scan left→right
+    let lastValidIndex = newSelectedIndices[0];
+
+    for (let i = 1; i < newSelectedIndices.length; i++) {
+      if (newSelectedIndices[i] < 0) {
+        // no match at i, so cascade from lastValidIndex
+        let candidate = lastValidIndex + 1;
+        if (candidate >= TOTAL_NOTE_NAMES) {
+          // if we would run past the end of our combined row, clamp to the topmost index
+          candidate = TOTAL_NOTE_NAMES - 1;
+        }
+        newSelectedIndices[i] = candidate;
+      }
+      // update lastValidIndex (whether it was originally set or just cascaded)
+      lastValidIndex = newSelectedIndices[i];
+    }
+
     setSelectedIndices(newSelectedIndices);
 
-    // 4. Re‐pad selectedAbjadNames to length = newArr.length * 2
+    // 5. Re‐pad selectedAbjadNames to length = newArr.length * 2
     const totalAbjadSlots = newArr.length * 2;
     const padded = Array(totalAbjadSlots).fill("");
     setSelectedAbjadNames(padded);
   }
-
 
   // MARK: Note Names Function Handlers
 
@@ -698,15 +723,15 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
           <span className="tuning-system-manager__octave-summary-title">
             Diwān (octave) {octave}{" "}
             {admin && ((octave === 1 && openedOctaveRows[1]) || (octave === 2 && openedOctaveRows[2])) && (
-            <button
-              className="tuning-system-manager__octave-cascade-button"
-              onClick={(e: React.MouseEvent) => {
-                e.stopPropagation();
-                setCascade((c) => !c);
-              }}
-            >
-              {cascade ? "Cascade Enabled" : "Cascade Disabled"}
-            </button>
+              <button
+                className="tuning-system-manager__octave-cascade-button"
+                onClick={(e: React.MouseEvent) => {
+                  e.stopPropagation();
+                  setCascade((c) => !c);
+                }}
+              >
+                {cascade ? "Cascade Enabled" : "Cascade Disabled"}
+              </button>
             )}
             {octave === 1 && openedOctaveRows[1] && (
               <span className="tuning-system-manager__filter-menu">
