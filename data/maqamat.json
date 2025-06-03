@@ -1196,14 +1196,15 @@
       {
         "id": "619d403ca9714a888c72",
         "creatorEnglish": "Al-Shawwā, Sāmī",
-        "sourceEnglish": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
-        "year": 1946,
+        "creatorArabic": "",
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
         "page": 22,
         "commentsEnglish": "Start with jins bayāt on dūgāh, ending on 'irāq. Then ascend and descend ending on note 'ushayrān. Repeat jins bayāt on dūgāh, and descend to end on the qarār which is yegāh. This maqām name corresponds with a Persian Gushe also called Majlis Afrooz in the Dastgah Mahūr and Dastgāh Shūr. In Mahūr it bears no melodic or intervallic resemblance, but in Shūr the jins bayāt is prominent.",
+        "commentsArabic": "",
         "stops": [
           {
             "type": "jins",
-            "value": "jins bayāt",
+            "value": "2",
             "startingNote": "dūgāh",
             "direction": "none"
           },
@@ -1213,13 +1214,13 @@
           },
           {
             "type": "jins",
-            "value": "jins ʿirāq",
+            "value": "3",
             "startingNote": "ʿirāq",
             "direction": "ascending"
           },
           {
             "type": "jins",
-            "value": "jins ʿirāq",
+            "value": "3",
             "startingNote": "ʿirāq",
             "direction": "descending"
           },
@@ -1229,13 +1230,13 @@
           },
           {
             "type": "jins",
-            "value": "jins bayāt",
+            "value": "2",
             "startingNote": "dūgāh",
             "direction": "none"
           },
           {
             "type": "jins",
-            "value": "jins bayāt",
+            "value": "2",
             "startingNote": "dūgāh",
             "direction": "descending"
           },
