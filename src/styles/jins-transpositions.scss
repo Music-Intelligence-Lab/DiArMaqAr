@@ -10,7 +10,7 @@
     background-color: $secondary;
     color: #fff;
     font-size: 1.5rem;
-    font-weight: bold;
+    font-weight: 400;
     text-align: left;
     padding: 1rem 1rem;
     border: solid 1px $grey;
@@ -100,6 +100,7 @@
     margin-bottom: 50px;
     font-size: 12px;
     table-layout:auto;
+    font-weight: 200;
 
 
     tr {
@@ -124,7 +125,7 @@
     }
 
     tbody {
-      font-weight: 600;
+      font-weight: 200;
           width: 100%;
 
     }
@@ -132,6 +133,8 @@
 
   &__cell {
     min-width: 50px !important;
+    font-weight: 200;
+    font-size: 14px;
   }
 
   &__transposition-title {
@@ -163,23 +166,28 @@
   &__header {
     text-align: left;
     background-color: transparent;
+    
+    
   }
 
   &__header-cell {
     text-align: left;
     background-color: transparent;
+    font-weight: 200;
   }
 
   &__row-header {
-    font-weight: bold;
+    font-weight: 400;
     width: 120px !important;
     background-color: $medium-grey;
     text-transform: capitalize;
+    font-size: 14px;
+
 
   }
 
   &__jins-name-row {
-    font-weight: bold;
+    font-weight: 400;
     background-color: black;
     color: white;
   }
