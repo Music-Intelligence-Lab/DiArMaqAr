@@ -1,4 +1,5 @@
 import TransliteratedNoteName from "./NoteName";
+import { SourcePageReference } from "./Source";
 
 export default class TuningSystem {
   private id: string;
@@ -7,8 +8,7 @@ export default class TuningSystem {
   private year: string;
   private sourceEnglish: string;
   private sourceArabic: string;
-  private sourceId: string;
-  private page: string
+  private sourcePageReferences: SourcePageReference[];
   private creatorEnglish: string;
   private creatorArabic: string;
   private commentsEnglish: string;
@@ -27,8 +27,7 @@ export default class TuningSystem {
     year: string,
     sourceEnglish: string,
     sourceArabic: string,
-    sourceId: string,
-    page: string,
+    SourcePageReferences: SourcePageReference[],
     creatorEnglish: string,
     creatorArabic: string,
     commentsEnglish: string,
@@ -46,8 +45,7 @@ export default class TuningSystem {
     this.year = year;
     this.sourceEnglish = sourceEnglish;
     this.sourceArabic = sourceArabic;
-    this.sourceId = sourceId;
-    this.page = page;
+    this.sourcePageReferences = SourcePageReferences;
     this.creatorEnglish = creatorEnglish;
     this.creatorArabic = creatorArabic;
     this.commentsEnglish = commentsEnglish;
@@ -83,13 +81,9 @@ export default class TuningSystem {
   getSourceArabic(): string {
     return this.sourceArabic;
   }
-  getSourceId(): string {
-    return this.sourceId;
+  getSourcePageReferences(): SourcePageReference[] {
+    return this.sourcePageReferences;
   }
-  getPage(): string {
-    return this.page;
-  }
-
   getCreatorEnglish(): string {
     return this.creatorEnglish;
   }

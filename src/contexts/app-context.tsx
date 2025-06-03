@@ -16,7 +16,7 @@ import Maqam, { Sayr } from "@/models/Maqam";
 import getNoteNamesUsedInTuningSystem from "@/functions/getNoteNamesUsedInTuningSystem";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import midiNumberToNoteName from "@/functions/midiToNoteNumber";
-import Source from "@/models/Source";
+import Source, { SourcePageReference } from "@/models/Source";
 import Pattern, { NoteDuration, reversePatternNotes } from "@/models/Pattern";
 import romanToNumber from "@/functions/romanToNumber";
 import getFirstNoteName from "@/functions/getFirstNoteName";
@@ -203,8 +203,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         data.year,
         data.sourceEnglish,
         data.sourceArabic,
-        data.sourceId,
-        data.page,
+        data.sourcePageReferences as SourcePageReference[],
         data.creatorEnglish,
         data.creatorArabic,
         data.commentsEnglish,
