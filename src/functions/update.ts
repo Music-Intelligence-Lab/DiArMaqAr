@@ -57,6 +57,8 @@ export async function updateAjnas(newAjnas: Jins[]) {
           id: j.getId(),
           name: j.getName(),
           noteNames: j.getNoteNames(),
+          commentsEnglish: j.getCommentsEnglish(),
+          commentsArabic: j.getCommentsArabic(),
           sourcePageReferences: j.getSourcePageReferences(),
         }))
       ),
@@ -82,6 +84,8 @@ export async function updateMaqamat(newMaqamat: Maqam[]) {
           ascendingNoteNames: m.getAscendingNoteNames(),
           descendingNoteNames: m.getDescendingNoteNames(),
           suyūr: m.getSuyūr(),
+          commentsEnglish: m.getCommentsEnglish(),
+          commentsArabic: m.getCommentsArabic(),
           sourcePageReferences: m.getSourcePageReferences(),
         }))
       ),

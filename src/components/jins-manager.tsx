@@ -56,7 +56,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
       return details.noteName;
     });
 
-    const newJins = new Jins(selectedJins.getId(), selectedJins.getName(), selectedNoteNames, selectedJins.getSourcePageReferences());
+    const newJins = new Jins(selectedJins.getId(), selectedJins.getName(), selectedNoteNames, selectedJins.getCommentsEnglish(), selectedJins.getCommentsArabic(), selectedJins.getSourcePageReferences());
     const newAjnas = ajnas.filter((jins) => jins.getId() !== newJins.getId());
     await updateAjnas([...newAjnas, newJins]);
     setAjnas([...newAjnas, newJins]);
@@ -90,14 +90,14 @@ export default function JinsManager({ admin }: { admin: boolean }) {
     if (!selectedJins) return;
     const list = [...refs];
     list[index] = { ...list[index], ...newRef } as SourcePageReference;
-    setSelectedJins(new Jins(selectedJins.getId(), selectedJins.getName(), selectedJins.getNoteNames(), list));
+    setSelectedJins(selectedJins.createJinsWithNewSourcePageReferences(list));
   };
 
   const removeSourceRef = (index: number) => {
     if (!selectedJins) return;
     const refs = selectedJins.getSourcePageReferences() || [];
     const newList = refs.filter((_, i) => i !== index);
-    setSelectedJins(new Jins(selectedJins.getId(), selectedJins.getName(), selectedJins.getNoteNames(), newList));
+    setSelectedJins(selectedJins.createJinsWithNewSourcePageReferences(newList));
   };
 
   const addSourceRef = () => {
@@ -105,7 +105,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
     const refs = selectedJins.getSourcePageReferences() || [];
     const newRef: SourcePageReference = { sourceId: "", page: "" };
     const newList = [...refs, newRef];
-    setSelectedJins(new Jins(selectedJins.getId(), selectedJins.getName(), selectedJins.getNoteNames(), newList));
+    setSelectedJins(selectedJins.createJinsWithNewSourcePageReferences(newList));
   };
 
   return (
@@ -169,62 +169,92 @@ export default function JinsManager({ admin }: { admin: boolean }) {
         )}
       </div>
       {admin && !selectedJins && (
-        <button onClick={() => setSelectedJins(new Jins(newJinsId, "", [], []))} className="jins-manager__create-new-jins-button">
+        <button onClick={() => setSelectedJins(new Jins(newJinsId, "", [], "", "", []))} className="jins-manager__create-new-jins-button">
           Create New Jins
         </button>
       )}
       {admin && selectedJins && (
         <div className="jins-manager__jins-form">
-          <input
-            type="text"
-            value={selectedJins.getName()}
-            onChange={(e) =>
-              setSelectedJins(new Jins(selectedJins.getId(), e.target.value, selectedJins.getNoteNames(), selectedJins.getSourcePageReferences()))
-            }
-            placeholder="Enter new jins name"
-            className="jins-manager__jins-input"
-          />
-          <button onClick={handleSaveJins} className="jins-manager__save-button">
-            Save
-          </button>
-          <button onClick={handleDeleteJins} className="jins-manager__delete-button">
-            Delete
-          </button>
-          <button onClick={clearSelections} className="jins-manager__clear-button">
-            Clear
-          </button>
-          {selectedJins && (
-            <button className="jins-manager__source-add-button" onClick={addSourceRef}>
-              Add Source
+          <div className="jins-manager__group">
+            <input
+              type="text"
+              value={selectedJins.getName()}
+              onChange={(e) =>
+                setSelectedJins(new Jins(selectedJins.getId(), e.target.value, selectedJins.getNoteNames(), selectedJins.getCommentsEnglish(), selectedJins.getCommentsArabic(), selectedJins.getSourcePageReferences()))
+              }
+              placeholder="Enter new jins name"
+              className="jins-manager__jins-input"
+            />
+            <button onClick={handleSaveJins} className="jins-manager__save-button">
+              Save
             </button>
-          )}
-          {selectedJins &&
-            selectedJins.getSourcePageReferences().map((ref, idx) => (
-              <div key={idx} className="jins-manager__source-item">
-                <select
-                  className="jins-manager__source-select"
-                  value={ref.sourceId}
-                  onChange={(e) => updateSourceRefs(selectedJins.getSourcePageReferences(), idx, { sourceId: e.target.value })}
-                >
-                  <option value="">Select source</option>
-                  {sources.map((s) => (
-                    <option key={s.getId()} value={s.getId()}>
-                      {s.getTitleEnglish()}
-                    </option>
-                  ))}
-                </select>
-                <input
-                  className="jins-manager__source-input"
-                  type="text"
-                  value={ref.page}
-                  placeholder="Page"
-                  onChange={(e) => updateSourceRefs(selectedJins.getSourcePageReferences(), idx, { page: e.target.value })}
-                />
-                <button className="jins-manager__source-delete-button" onClick={() => removeSourceRef(idx)}>
-                  Delete
-                </button>
-              </div>
-            ))}
+            <button onClick={handleDeleteJins} className="jins-manager__delete-button">
+              Delete
+            </button>
+            <button onClick={clearSelections} className="jins-manager__clear-button">
+              Clear
+            </button>
+            </div>
+          <div className="jins-manager__group">
+            {selectedJins && (
+              <button className="jins-manager__source-add-button" onClick={addSourceRef}>
+                Add Source
+              </button>
+            )}
+            {selectedJins &&
+              selectedJins.getSourcePageReferences().map((ref, idx) => (
+                <div key={idx} className="jins-manager__source-item">
+                  <select
+                    className="jins-manager__source-select"
+                    value={ref.sourceId}
+                    onChange={(e) => updateSourceRefs(selectedJins.getSourcePageReferences(), idx, { sourceId: e.target.value })}
+                  >
+                    <option value="">Select source</option>
+                    {sources.map((s) => (
+                      <option key={s.getId()} value={s.getId()}>
+                        {s.getTitleEnglish()}
+                      </option>
+                    ))}
+                  </select>
+                  <input
+                    className="jins-manager__source-input"
+                    type="text"
+                    value={ref.page}
+                    placeholder="Page"
+                    onChange={(e) => updateSourceRefs(selectedJins.getSourcePageReferences(), idx, { page: e.target.value })}
+                  />
+                  <button className="jins-manager__source-delete-button" onClick={() => removeSourceRef(idx)}>
+                    Delete
+                  </button>
+                </div>
+              ))}</div>
+          {selectedJins && <div className="jins-manager__group">
+            <div className="jins-manager__input-container">
+              <label className="jins-manager__label" htmlFor="commentsEnglishField">
+                Comments (English)
+              </label>
+              <textarea
+                rows={5}
+                className="jins-manager__input"
+                id="commentsEnglishField"
+                value={selectedJins.getCommentsEnglish()}
+                onChange={(e) => setSelectedJins(new Jins(selectedJins.getId(), selectedJins.getName(), selectedJins.getNoteNames(), e.target.value, selectedJins.getCommentsArabic(), selectedJins.getSourcePageReferences()))}
+              />
+            </div>
+
+            <div className="jins-manager__input-container">
+              <label className="jins-manager__label" htmlFor="commentsArabicField">
+                Comments (Arabic)
+              </label>
+              <textarea
+                rows={5}
+                className="jins-manager__input"
+                id="commentsArabicField"
+                value={selectedJins.getCommentsArabic()}
+                onChange={(e) => setSelectedJins(new Jins(selectedJins.getId(), selectedJins.getName(), selectedJins.getNoteNames(), selectedJins.getCommentsEnglish(), e.target.value, selectedJins.getSourcePageReferences()))}
+              />
+            </div>
+          </div>}
         </div>
       )}
     </div>

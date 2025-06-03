@@ -145,7 +145,7 @@
 
   &__maqam-form {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: flex-start;
     gap: 20px;
     padding: 20px;
@@ -220,5 +220,54 @@
     &:hover {
       box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
     }
+  }
+
+  &__comments-english {
+    font-size: 14px;
+    width: 50%;
+    min-height: 80px;
+    direction: ltr;
+    text-align: left;
+    vertical-align: top;
+    padding-right: 30px;
+    float: left;
+    margin-bottom: 40px;
+  }
+
+  &__comments-arabic {
+    font-size: 14px;
+    width: 50%;
+    min-height: 80px;
+    text-align: right;
+    direction: rtl;
+    vertical-align: top;
+    padding-left: 30px;
+    float: right;
+  }
+
+  &__input-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  &__group {
+    display: flex;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  &__label {
+    margin-bottom: 0.4rem;
+    font-weight: bold;
+  }
+
+  &__input,
+  &__textarea{
+    padding: 0.4rem;
+    // font-size: 0.9rem;
+    // border: 1px solid #ccc;
+    // border-radius: 4px;
+    resize: vertical;
   }
 }

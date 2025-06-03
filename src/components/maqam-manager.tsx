@@ -93,6 +93,8 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
       selectedCellNoteNames,
       descendingNoteNames,
       selectedMaqam.getSuyūr(),
+      selectedMaqam.getCommentsEnglish(),
+      selectedMaqam.getCommentsArabic(),
       selectedMaqam.getSourcePageReferences()
     );
     handleSaveMaqam(updated);
@@ -107,6 +109,8 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
       selectedMaqam.getAscendingNoteNames(),
       selectedCellNoteNames.reverse(),
       selectedMaqam.getSuyūr(),
+      selectedMaqam.getCommentsEnglish(),
+      selectedMaqam.getCommentsArabic(),
       selectedMaqam.getSourcePageReferences()
     );
     handleSaveMaqam(updated);
@@ -159,12 +163,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
     const list = [...refs];
     list[index] = { ...list[index], ...newRef } as SourcePageReference;
     setSelectedMaqam(
-      new Maqam(
-        selectedMaqam.getId(),
-        selectedMaqam.getName(),
-        selectedMaqam.getAscendingNoteNames(),
-        selectedMaqam.getDescendingNoteNames(),
-        selectedMaqam.getSuyūr(),
+      selectedMaqam.createMaqamWithNewSourcePageReferences(
         list
       )
     );
@@ -175,12 +174,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
     const refs = selectedMaqam.getSourcePageReferences() || [];
     const newList = refs.filter((_, i) => i !== index);
     setSelectedMaqam(
-      new Maqam(
-        selectedMaqam.getId(),
-        selectedMaqam.getName(),
-        selectedMaqam.getAscendingNoteNames(),
-        selectedMaqam.getDescendingNoteNames(),
-        selectedMaqam.getSuyūr(),
+      selectedMaqam.createMaqamWithNewSourcePageReferences(
         newList
       )
     );
@@ -192,12 +186,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
     const newRef: SourcePageReference = { sourceId: "", page: "" };
     const newList = [...refs, newRef];
     setSelectedMaqam(
-      new Maqam(
-        selectedMaqam.getId(),
-        selectedMaqam.getName(),
-        selectedMaqam.getAscendingNoteNames(),
-        selectedMaqam.getDescendingNoteNames(),
-        selectedMaqam.getSuyūr(),
+      selectedMaqam.createMaqamWithNewSourcePageReferences(
         newList
       )
     );
@@ -271,7 +260,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
 
       {admin && !selectedMaqam && (
         <button
-          onClick={() => setSelectedMaqam(new Maqam(newMaqamId, "", [], [], [], []))}
+          onClick={() => setSelectedMaqam(new Maqam(newMaqamId, "", [], [], [], "", "", []))}
           className="maqam-manager__create-new-maqam-button"
         >
           Create New Maqam
@@ -280,77 +269,108 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
 
       {admin && selectedMaqam && (
         <div className="maqam-manager__maqam-form">
-          <input
-            type="text"
-            value={selectedMaqam.getName()}
-            onChange={(e) =>
-              setSelectedMaqam(
-                new Maqam(
-                  selectedMaqam.getId(),
-                  e.target.value,
-                  selectedMaqam.getAscendingNoteNames(),
-                  selectedMaqam.getDescendingNoteNames(),
-                  selectedMaqam.getSuyūr(),
-                  selectedMaqam.getSourcePageReferences()
+          <div className="maqam-manager__group">
+            <input
+              type="text"
+              value={selectedMaqam.getName()}
+              onChange={(e) =>
+                setSelectedMaqam(
+                  new Maqam(
+                    selectedMaqam.getId(),
+                    e.target.value,
+                    selectedMaqam.getAscendingNoteNames(),
+                    selectedMaqam.getDescendingNoteNames(),
+                    selectedMaqam.getSuyūr(),
+                    selectedMaqam.getCommentsEnglish(),
+                    selectedMaqam.getCommentsArabic(),
+                    selectedMaqam.getSourcePageReferences()
+                  )
                 )
-              )
-            }
-            placeholder="Enter maqam name"
-            className="maqam-manager__maqam-input"
-          />
+              }
+              placeholder="Enter maqam name"
+              className="maqam-manager__maqam-input"
+            />
 
-          <button onClick={() => handleSaveMaqam(selectedMaqam)} className="maqam-manager__save-button">
-            Save Details
-          </button>
-
-          <button onClick={handleSaveAscending} className="maqam-manager__save-button">
-            Save Ascending
-          </button>
-
-          <button onClick={handleSaveDescending} className="maqam-manager__save-button">
-            Save Descending
-          </button>
-
-          <button onClick={handleDeleteMaqam} className="maqam-manager__delete-button">
-            Delete
-          </button>
-
-          <button onClick={clearSelections} className="maqam-manager__clear-button">
-            Clear
-          </button>
-
-          {selectedMaqam && (
-            <button className="maqam-manager__source-add-button" onClick={addSourceRef}>
-              Add Source
+            <button onClick={() => handleSaveMaqam(selectedMaqam)} className="maqam-manager__save-button">
+              Save Details
             </button>
-          )}
-          {selectedMaqam &&
-            selectedMaqam.getSourcePageReferences().map((ref, idx) => (
-              <div key={idx} className="maqam-manager__source-item">
-                <select
-                  className="maqam-manager__source-select"
-                  value={ref.sourceId}
-                  onChange={(e) => updateSourceRefs(selectedMaqam.getSourcePageReferences(), idx, { sourceId: e.target.value })}
-                >
-                  <option value="">Select source</option>
-                  {sources.map((s) => (
-                    <option key={s.getId()} value={s.getId()}>
-                      {s.getTitleEnglish()}
-                    </option>
-                  ))}
-                </select>
-                <input
-                  className="maqam-manager__source-input"
-                  type="text"
-                  value={ref.page}
-                  placeholder="Page"
-                  onChange={(e) => updateSourceRefs(selectedMaqam.getSourcePageReferences(), idx, { page: e.target.value })}
-                />
-                <button className="maqam-manager__source-delete-button" onClick={() => removeSourceRef(idx)}>
-                  Delete
-                </button>
-              </div>
-            ))}
+
+            <button onClick={handleSaveAscending} className="maqam-manager__save-button">
+              Save Ascending
+            </button>
+
+            <button onClick={handleSaveDescending} className="maqam-manager__save-button">
+              Save Descending
+            </button>
+
+            <button onClick={handleDeleteMaqam} className="maqam-manager__delete-button">
+              Delete
+            </button>
+
+            <button onClick={clearSelections} className="maqam-manager__clear-button">
+              Clear
+            </button></div>
+
+          <div className="maqam-manager__group">
+            {selectedMaqam && (
+              <button className="maqam-manager__source-add-button" onClick={addSourceRef}>
+                Add Source
+              </button>
+            )}
+            {selectedMaqam &&
+              selectedMaqam.getSourcePageReferences().map((ref, idx) => (
+                <div key={idx} className="maqam-manager__source-item">
+                  <select
+                    className="maqam-manager__source-select"
+                    value={ref.sourceId}
+                    onChange={(e) => updateSourceRefs(selectedMaqam.getSourcePageReferences(), idx, { sourceId: e.target.value })}
+                  >
+                    <option value="">Select source</option>
+                    {sources.map((s) => (
+                      <option key={s.getId()} value={s.getId()}>
+                        {s.getTitleEnglish()}
+                      </option>
+                    ))}
+                  </select>
+                  <input
+                    className="maqam-manager__source-input"
+                    type="text"
+                    value={ref.page}
+                    placeholder="Page"
+                    onChange={(e) => updateSourceRefs(selectedMaqam.getSourcePageReferences(), idx, { page: e.target.value })}
+                  />
+                  <button className="maqam-manager__source-delete-button" onClick={() => removeSourceRef(idx)}>
+                    Delete
+                  </button>
+                </div>
+              ))}</div>
+          {selectedMaqam && <div className="maqam-manager__group">
+            <div className="maqam-manager__input-container">
+              <label className="maqam-manager__label" htmlFor="commentsEnglishField">
+                Comments (English)
+              </label>
+              <textarea
+                rows={5}
+                className="maqam-manager__input"
+                id="commentsEnglishField"
+                value={selectedMaqam.getCommentsEnglish()}
+                onChange={(e) => setSelectedMaqam(new Maqam(selectedMaqam.getId(), selectedMaqam.getName(), selectedMaqam.getAscendingNoteNames(), selectedMaqam.getDescendingNoteNames(), selectedMaqam.getSuyūr(), e.target.value, selectedMaqam.getCommentsArabic(), selectedMaqam.getSourcePageReferences()))}
+              />
+            </div>
+
+            <div className="maqam-manager__input-container">
+              <label className="maqam-manager__label" htmlFor="commentsArabicField">
+                Comments (Arabic)
+              </label>
+              <textarea
+                rows={5}
+                className="maqam-manager__input"
+                id="commentsArabicField"
+                value={selectedMaqam.getCommentsArabic()}
+                onChange={(e) => setSelectedMaqam(new Maqam(selectedMaqam.getId(), selectedMaqam.getName(), selectedMaqam.getAscendingNoteNames(), selectedMaqam.getDescendingNoteNames(), selectedMaqam.getSuyūr(), selectedMaqam.getCommentsEnglish(), e.target.value, selectedMaqam.getSourcePageReferences()))}
+              />
+            </div>
+          </div>}
         </div>
       )}
     </div>

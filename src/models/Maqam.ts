@@ -6,18 +6,31 @@ export default class Maqam {
   private name: string;
   private ascendingNoteNames: TransliteratedNoteName[];
   private descendingNoteNames: TransliteratedNoteName[];
-  private suyūr: Sayr[]
+  private suyūr: Sayr[];
+  private commentsEnglish: string;
+  private commentsArabic: string;
   private sourcePageReferences: SourcePageReference[];
 
-  constructor(id: string, name: string, ascendingNoteNames: TransliteratedNoteName[], descendingNoteNames: TransliteratedNoteName[], suyūr: Sayr[], sourcePageReferences: SourcePageReference[]) {
+  constructor(
+    id: string,
+    name: string,
+    ascendingNoteNames: TransliteratedNoteName[],
+    descendingNoteNames: TransliteratedNoteName[],
+    suyūr: Sayr[],
+    commentsEnglish: string,
+    commentsArabic: string,
+    sourcePageReferences: SourcePageReference[]
+  ) {
     this.id = id;
     this.name = name;
     this.ascendingNoteNames = ascendingNoteNames;
     this.descendingNoteNames = descendingNoteNames;
     this.suyūr = suyūr;
+    this.commentsEnglish = commentsEnglish;
+    this.commentsArabic = commentsArabic;
     this.sourcePageReferences = sourcePageReferences;
   }
-  
+
   getId(): string {
     return this.id;
   }
@@ -38,6 +51,13 @@ export default class Maqam {
     return this.suyūr;
   }
 
+  getCommentsEnglish(): string {
+    return this.commentsEnglish;
+  }
+
+  getCommentsArabic(): string {
+    return this.commentsArabic;
+  }
   getSourcePageReferences(): SourcePageReference[] {
     return this.sourcePageReferences;
   }
@@ -55,22 +75,35 @@ export default class Maqam {
 
     return true;
   }
+
+  createMaqamWithNewSourcePageReferences(newSourcePageReferences: SourcePageReference[]): Maqam {
+    return new Maqam(
+      this.id,
+      this.name,
+      this.ascendingNoteNames,
+      this.descendingNoteNames,
+      this.suyūr,
+      this.commentsEnglish,
+      this.commentsArabic,
+      newSourcePageReferences
+    );
+  }
 }
 
 export interface Sayr {
-  id: string,
-  creatorEnglish: string,
-  creatorArabic: string,
-  sourceId: string,
-  page: string,
-  commentsEnglish: string,
-  commentsArabic: string,
-  stops: SayrStop[]
+  id: string;
+  creatorEnglish: string;
+  creatorArabic: string;
+  sourceId: string;
+  page: string;
+  commentsEnglish: string;
+  commentsArabic: string;
+  stops: SayrStop[];
 }
 
 export interface SayrStop {
-  type: "note" | "jins" | "direction"
-  value: string
-  startingNote?: TransliteratedNoteName
-  direction?: "ascending" | "descending"
+  type: "note" | "jins" | "direction";
+  value: string;
+  startingNote?: TransliteratedNoteName;
+  direction?: "ascending" | "descending";
 }
