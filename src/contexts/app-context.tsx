@@ -219,11 +219,11 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
     setTuningSystems(formattedTuningSystems);
 
-    const loadedAjnas = ajnasData.map((data) => new Jins(data.id, data.name, data.noteNames, data.sourcePageReferences));
+    const loadedAjnas = ajnasData.map((data) => new Jins(data.id, data.name, data.noteNames, data.commentsEnglish, data.commentsArabic, data.sourcePageReferences));
     setAjnas(loadedAjnas);
 
     const loadedMaqamat = maqamatData.map(
-      (data) => new Maqam(data.id, data.name, data.ascendingNoteNames, data.descendingNoteNames, data.suyūr as Sayr[], data.sourcePageReferences)
+      (data) => new Maqam(data.id, data.name, data.ascendingNoteNames, data.descendingNoteNames, data.suyūr as Sayr[], data.commentsEnglish, data.commentsArabic, data.sourcePageReferences)
     );
     setMaqamat(loadedMaqamat);
 
