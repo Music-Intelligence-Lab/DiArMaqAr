@@ -257,5 +257,33 @@
     "ISBN": "",
     "url": "",
     "dateAccessed": ""
+  },
+  {
+    "id": "oY8WnTdP5msak8o1G_N7f",
+    "titleEnglish": "Al-Qawaʿid al-Faniyya fi al-Mūsiqa al-Sharqīyah wa al-Gharbīyah",
+    "titleArabic": "القواعد الفنيّة في الموسيقى الشرقيّة والغربيّة",
+    "sourceType": "Book",
+    "contributors": [
+      {
+        "type": "Author",
+        "firstNameEnglish": "Sami",
+        "lastNameEnglish": "Al-Shawwā",
+        "firstNameArabic": "سامي",
+        "lastNameArabic": "الشوا"
+      }
+    ],
+    "editionEnglish": "",
+    "editionArabic": "",
+    "publicationDateEnglish": "1946",
+    "publicationDateArabic": "١٩٤٦",
+    "originalPublicationDateEnglish": "",
+    "originalPublicationDateArabic": "",
+    "publisherEnglish": "Jibra'īl Jabrā",
+    "publisherArabic": "جبرائيل جبرى",
+    "placeEnglish": "Cairo",
+    "placeArabic": "القاهرة",
+    "ISBN": "",
+    "url": "",
+    "dateAccessed": ""
   }
 ]
