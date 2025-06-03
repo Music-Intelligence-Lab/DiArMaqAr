@@ -153,7 +153,7 @@
   },
   {
     "id": "12",
-    "name": "jins ḥijāz",
+    "name": "jins ḥijāz 1",
     "noteNames": [
       "dūgāh",
       "kurdī",
@@ -188,6 +188,17 @@
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "15",
+    "name": "jins ḥijāz 2",
+    "noteNames": [
+      "nawā",
+      "ḥiṣār",
+      "nīm māhūr",
+      "kurdān"
+    ],
     "sourcePageReferences": []
   },
   {
