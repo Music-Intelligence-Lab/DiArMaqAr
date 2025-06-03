@@ -48,6 +48,8 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     getSelectedCellDetails,
     playSequence,
     sources,
+    selectedJins,
+    selectedMaqam,
   } = useAppContext();
 
   const { filters, setFilters } = useFilterContext();
@@ -153,6 +155,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   }, [selectedTuningSystem]);
 
   useEffect(() => {
+    if (!selectedJins || !selectedMaqam) return;
     if (selectedCells.length === 0) {
       setOpenedOctaveRows({ 0: false, 1: true, 2: true, 3: false });
     } else {
