@@ -21,6 +21,7 @@ import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { getEnglishNoteName, abjadNames } from "@/functions/noteNameMappings";
 import { updateTuningSystems } from "@/functions/update";
 import getFirstNoteName from "@/functions/getFirstNoteName";
+import { SourcePageReference } from "@/models/Source";
 
 export default function TuningSystemManager({ admin }: { admin: boolean }) {
   const {
@@ -98,8 +99,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   const [year, setYear] = useState("");
   const [sourceEnglish, setSourceEnglish] = useState("");
   const [sourceArabic, setSourceArabic] = useState("");
-  const [sourceId, setSourceId] = useState("");
-  const [page, setPage] = useState("");
+  const [sourcePageReferences, setSourcePageReferences] = useState<SourcePageReference[]>([]);
   const [creatorEnglish, setCreatorEnglish] = useState("");
   const [creatorArabic, setCreatorArabic] = useState("");
   const [commentsEnglish, setCommentsEnglish] = useState("");
@@ -129,8 +129,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       setYear(selectedTuningSystem.getYear());
       setSourceEnglish(selectedTuningSystem.getSourceEnglish());
       setSourceArabic(selectedTuningSystem.getSourceArabic());
-      setSourceId(selectedTuningSystem.getSourceId());
-      setPage(selectedTuningSystem.getPage());
+      setSourcePageReferences(selectedTuningSystem.getSourcePageReferences());
       setCreatorEnglish(selectedTuningSystem.getCreatorEnglish());
       setCreatorArabic(selectedTuningSystem.getCreatorArabic());
       setCommentsEnglish(selectedTuningSystem.getCommentsEnglish());
@@ -189,8 +188,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     setYear("");
     setSourceEnglish("");
     setSourceArabic("");
-    setSourceId("");
-    setPage("");
+    setSourcePageReferences([]);
     setCreatorEnglish("");
     setCreatorArabic("");
     setCommentsEnglish("");
@@ -234,9 +232,23 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     handleStartNoteNameChange("", ts.getSetsOfNoteNames(), ts.getPitchClasses().length);
   };
 
-  const handleSourceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value;
-    setSourceId(value);
+  const updateSourceRefs = (index: number, newRef: Partial<SourcePageReference>) => {
+    const list = [...sourcePageReferences];
+    list[index] = { ...list[index], ...newRef } as SourcePageReference;
+    setSourcePageReferences(list);
+  };
+
+  const removeSourceRef = (index: number) => {
+    const refs = sourcePageReferences;
+    const newList = refs.filter((_, i) => i !== index);
+    setSourcePageReferences(newList);
+  };
+
+  const addSourceRef = () => {
+    const refs = sourcePageReferences;
+    const newRef: SourcePageReference = { sourceId: "", page: "" };
+    const newList = [...refs, newRef];
+    setSourcePageReferences(newList);
   };
 
   // Handle creating or updating a system:
@@ -251,8 +263,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         year,
         sourceEnglish,
         sourceArabic,
-        sourceId,
-        page,
+        sourcePageReferences,
         creatorEnglish,
         creatorArabic,
         commentsEnglish,
@@ -278,8 +289,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         year,
         sourceEnglish,
         sourceArabic,
-        sourceId,
-        page,
+        sourcePageReferences,
         creatorEnglish,
         creatorArabic,
         commentsEnglish,
@@ -1068,31 +1078,37 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
           </div>
 
           <div className="tuning-system-manager__group">
-            <div className="tuning-system-manager__input-container">
-              <label className="tuning-system-manager__label" htmlFor="tuningSystemSelect">
-                Select Source:
-              </label>
-              <select className="tuning-system-manager__select" id="tuningSystemSelect" onChange={handleSourceChange} value={sourceId}>
-                <option value="">-- No Source Selected --</option>
-                {sources.map((source) => (
-                  <option key={source.getId()} value={source.getId()}>
-                    {`${source.getTitleEnglish()} (${source.getSourceType()})`}
-                  </option>
+            <div className="tuning-system-manager__sources-container">
+              {sourcePageReferences.length < 6 && <button className="tuning-system-manager__source-add-button" onClick={addSourceRef}>
+                Add Source
+              </button>}
+              {
+                sourcePageReferences.map((ref, idx) => (
+                  <div key={idx} className="tuning-system-manager__source-item">
+                    <select
+                      className="tuning-system-manager__source-select"
+                      value={ref.sourceId}
+                      onChange={(e) => updateSourceRefs(idx, { sourceId: e.target.value })}
+                    >
+                      <option value="">Select source</option>
+                      {sources.map((s) => (
+                        <option key={s.getId()} value={s.getId()}>
+                          {s.getTitleEnglish()}
+                        </option>
+                      ))}
+                    </select>
+                    <input
+                      className="tuning-system-manager__source-input"
+                      type="text"
+                      value={ref.page}
+                      placeholder="Page"
+                      onChange={(e) => updateSourceRefs(idx, { page: e.target.value })}
+                    />
+                    <button className="jins-manager__source-delete-button" onClick={() => removeSourceRef(idx)}>
+                      Delete
+                    </button>
+                  </div>
                 ))}
-              </select>
-            </div>
-
-            <div className="tuning-system-manager__input-container">
-              <label className="tuning-system-manager__label" htmlFor="sourceArabicField">
-                Page
-              </label>
-              <input
-                className="tuning-system-manager__input"
-                id="sourceArabicField"
-                type="text"
-                value={page ?? ""}
-                onChange={(e) => setPage(e.target.value)}
-              />
             </div>
 
             <div className="tuning-system-manager__input-container">
@@ -1335,38 +1351,39 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
       {/* COMMENTS AND SOURCES */}
       <div className="tuning-system-manager__comments-sources-container">
-      <div className="tuning-system-manager__comments-english">
-        <h3>Comments:</h3>
-        <div>
-          {selectedTuningSystem
-            ?.getCommentsEnglish()
-            .split("\n")
-            .map((line, index) => (
-              <span key={index}>
-                {line}
-                <br />
-              </span>
-            ))}
+        <div className="tuning-system-manager__comments-english">
+          <h3>Comments:</h3>
+          <div>
+            {selectedTuningSystem
+              ?.getCommentsEnglish()
+              .split("\n")
+              .map((line, index) => (
+                <span key={index}>
+                  {line}
+                  <br />
+                </span>
+              ))}
+          </div>
         </div>
-      </div>
 
         {/* <div className="tuning-system-manager__comments-arabic">
         <h3>تعليقات:</h3>
         {selectedTuningSystem?.getCommentsArabic()}
       </div> */}
 
-      <div className="tuning-system-manager__sources-english">
-        <h3>Sources:</h3>
-        {(() => {
-          const source = sources.find(source => source.getId() === selectedTuningSystem?.getSourceId());
-          if (!source) return null;
-          return (
-            <>
-              {source.getContributors()[0].lastNameEnglish} ({source.getReleaseDateEnglish()}:{selectedTuningSystem?.getPage()})<br />
-            </>
-          );
-        })()}
-      </div>
+        <div className="tuning-system-manager__sources-english">
+          <h3>Sources:</h3>
+          {sourcePageReferences.map((ref, idx) => {
+            const source = sources.find((s) => s.getId() === ref.sourceId);
+            return (
+              <div key={idx} className="tuning-system-manager__source-item">
+                {source &&
+                  <span className="">{`${source.getTitleEnglish()}, Page: ${ref.page}`}</span>
+                }
+              </div>
+            );
+          })}
+        </div>
 
         {/* <div className="tuning-system-manager__sources-arabic">
         <h3>مصادر:</h3>
