@@ -33,6 +33,8 @@ body {
   height: 100svh;
   overscroll-behavior: none;
   background-color: $background;
+  -webkit-font-smoothing: antialiased;
+  color: $text;
 }
 
 *,
