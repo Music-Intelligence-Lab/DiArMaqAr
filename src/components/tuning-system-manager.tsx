@@ -1378,7 +1378,11 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             return (
               <div key={idx} className="tuning-system-manager__source-item">
                 {source &&
-                  <span className="">{`${source.getTitleEnglish()}, Page: ${ref.page}`}</span>
+                  <span className="">
+                    {`${source?.getContributors()[0]?.lastNameEnglish ?? ""} (${source?.getReleaseDateEnglish() ?? ""}${
+                      source?.getOriginalReleaseDateEnglish() ? "/" + source.getOriginalReleaseDateEnglish() : ""
+                    }:${ref.page})`}
+                  </span>
                 }
               </div>
             );
