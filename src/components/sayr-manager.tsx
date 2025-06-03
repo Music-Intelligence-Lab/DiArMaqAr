@@ -132,14 +132,20 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                 <div
                   key={index}
                   className={
-                    "sayr-manager__item " +
-                    (sayr.id === maqamSayrId ? "sayr-manager__item_selected " : "")
+                  "sayr-manager__item " +
+                  (sayr.id === maqamSayrId ? "sayr-manager__item_selected " : "")
                   }
                   onClick={() => {
-                    setMaqamSayrId(sayr.id);
+                  setMaqamSayrId(sayr.id);
                   }}
                 >
-                  {sayr.creatorEnglish}
+                  {sayr.sourceId
+                  ? (() => {
+                    const source = sources.find((s) => s.getId() === sayr.sourceId);
+                    return `${source?.getContributors()[0]?.lastNameEnglish ?? ""} (${source?.getReleaseDateEnglish() ?? ""}`;
+                    })()
+                  : "No Source"}
+                  :{sayr.page})
                 </div>
               ))
             )}

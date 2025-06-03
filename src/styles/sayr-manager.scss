@@ -2,6 +2,8 @@
 
 .sayr-manager {
   width: 100%;
+  margin-top: 20px;
+
 
   &__header {
     font-size: 1.5rem;
@@ -43,19 +45,30 @@
   &__item {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 5px;
-    background-color: rgba(0, 0, 0, 0.3);
+    align-items: left;
+    padding: 10px;
+    background-color: rgba($primary, 0.4);
     border-radius: 5px;
     font-size: 14px;
     color: $text;
     cursor: pointer;
+    // box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
     transition: 0.3s;
 
+    &_active {
+      background-color: rgba($primary, 0.4);
+
+      &:hover {
+        background-color: rgba($primary, 0.9);
+      }
+    }
+
     &_selected {
-      background-color: $secondary;
+      background-color: $tertiary;
+
+      &:hover {
+        background-color: $tertiary;
+      }
     }
   }
 
