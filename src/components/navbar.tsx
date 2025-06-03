@@ -7,7 +7,7 @@ import { Sayr } from "@/models/Maqam";
 
 export default function Navbar() {
   const { showAdminTabs, setShowAdminTabs, selectedMenu, setSelectedMenu } = useMenuContext();
-  const { selectedTuningSystem, selectedJins, selectedMaqam, ajnas, checkIfJinsIsSelectable, maqamat, checkIfMaqamIsSelectable, maqamSayrId, sources, setSelectedTuningSystem, clearSelections } = useAppContext();
+  const { selectedTuningSystem, selectedJins, selectedMaqam, ajnas, checkIfJinsIsSelectable, maqamat, checkIfMaqamIsSelectable, maqamSayrId, sources, setSelectedTuningSystem, clearSelections, setPitchClasses, setSelectedIndices, setNoteNames } = useAppContext();
 
   const selectedSayr: Sayr | null = (selectedMaqam && maqamSayrId) ? selectedMaqam.getSuyūr().find((sayr) => sayr.id === maqamSayrId) || null : null
 
@@ -25,6 +25,9 @@ export default function Navbar() {
         <div className="navbar__center-panel"><span className="navbar__title" onClick={() => {
           clearSelections();
           setSelectedTuningSystem(null);
+          setPitchClasses("");
+          setSelectedIndices([]);
+          setNoteNames([]);
         }}> Arabic Maqām Database</span>
           <br></br><span className="navbar__subtitle">Explore and play the tanghīm, ajnās, maqāmāt and suyūr of the Arabic Maqām system</span>
         </div>
@@ -39,18 +42,18 @@ export default function Navbar() {
           className={`navbar__bottom-bar-item ${selectedMenu === "tuningSystem" ? "navbar__bottom-bar-item_selected" : ""}`}
           onClick={() => setSelectedMenu("tuningSystem")}
         >
-        {selectedTuningSystem ? (
-          <>
-            <span className="navbar__bottom-bar-item_tab-title">
-              {selectedTuningSystem.getCreatorEnglish()} ({selectedTuningSystem.getYear()})
-            </span>
-            <span className="navbar__bottom-bar-item_tab-subtitle">            
-            {selectedTuningSystem.getTitleEnglish()}
-            </span>
-          </>
-        ) : (
-          "Tanghīm (Tuning Systems)"
-        )}
+          {selectedTuningSystem ? (
+            <>
+              <span className="navbar__bottom-bar-item_tab-title">
+                {selectedTuningSystem.getCreatorEnglish()} ({selectedTuningSystem.getYear()})
+              </span>
+              <span className="navbar__bottom-bar-item_tab-subtitle">
+                {selectedTuningSystem.getTitleEnglish()}
+              </span>
+            </>
+          ) : (
+            "Tanghīm (Tuning Systems)"
+          )}
         </button>
         {showAdminTabs && <button
           className={`navbar__bottom-bar-item ${selectedMenu === "tuningSystem-admin" ? "navbar__bottom-bar-item_selected" : ""}`}
@@ -63,11 +66,11 @@ export default function Navbar() {
           onClick={() => setSelectedMenu("jins")}
           disabled={!selectedTuningSystem}
         >
-            <span className="navbar__bottom-bar-item_tab-title">
+          <span className="navbar__bottom-bar-item_tab-title">
             {selectedTuningSystem ? `Ajnās (${ajnas.filter((jins) => checkIfJinsIsSelectable(jins)).length}/${ajnas.length})` : "Ajnās"}
-            </span> 
-            <span className="navbar__bottom-bar-item_tab-subtitle">
-          {selectedJins && selectedJins.getName()}
+          </span>
+          <span className="navbar__bottom-bar-item_tab-subtitle">
+            {selectedJins && selectedJins.getName()}
           </span>
         </button>
         {showAdminTabs && <button
@@ -83,10 +86,10 @@ export default function Navbar() {
           disabled={!selectedTuningSystem}
         >
           <span className="navbar__bottom-bar-item_tab-title">
-          {selectedTuningSystem ? `Maqāmāt (${maqamat.filter((maqam) => checkIfMaqamIsSelectable(maqam)).length}/${maqamat.length})` : "Maqāmāt"} <br />
+            {selectedTuningSystem ? `Maqāmāt (${maqamat.filter((maqam) => checkIfMaqamIsSelectable(maqam)).length}/${maqamat.length})` : "Maqāmāt"} <br />
           </span>
           <span className="navbar__bottom-bar-item_tab-subtitle">
-          {selectedMaqam && selectedMaqam.getName()}
+            {selectedMaqam && selectedMaqam.getName()}
           </span>
         </button>
         {showAdminTabs && <button
@@ -102,10 +105,10 @@ export default function Navbar() {
           disabled={!selectedMaqam}
         >
           <span className="navbar__bottom-bar-item_tab-title">
-          {selectedMaqam ? `Suyūr (${selectedMaqam.getSuyūr().length})` : "Suyūr"} <br />
+            {selectedMaqam ? `Suyūr (${selectedMaqam.getSuyūr().length})` : "Suyūr"} <br />
           </span>
           <span className="navbar__bottom-bar-item_tab-subtitle">
-          {selectedSayr && `${selectedSayr.creatorEnglish} ${selectedSayrSource ? `(${selectedSayrSource.getReleaseDateEnglish()})` : ""}`}
+            {selectedSayr && `${selectedSayr.creatorEnglish} ${selectedSayrSource ? `(${selectedSayrSource.getReleaseDateEnglish()})` : ""}`}
           </span>
         </button>
         {showAdminTabs && <button
