@@ -977,20 +977,21 @@
       {
         "id": "a4b9d74bd46d4170a292",
         "creatorEnglish": "Al-Shawwā, Sāmī",
-        "sourceEnglish": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
-        "year": 1946,
+        "creatorArabic": "",
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
         "page": 19,
         "commentsEnglish": "Begins on nawā, then ḥuseinī and 'ajam until muḥayyar ascending and descending, then descends from nawā until yegāh with a touch of qarār ḥijāz before ending on its qarār, yegāh. Therefore it is assumed that the initial ascents and descents are in jins nahāwand nawā as per the construction of the maqām. Also the note qarār ḥijāz does not exist in the list of note names provided by Shawwā in his book.",
+        "commentsArabic": "",
         "stops": [
           {
             "type": "jins",
-            "value": "jins nahāwand/buselīk",
+            "value": "6",
             "startingNote": "nawā",
             "direction": "ascending"
           },
           {
             "type": "jins",
-            "value": "jins nahāwand/buselīk",
+            "value": "6",
             "startingNote": "nawā",
             "direction": "descending"
           },
@@ -1024,7 +1025,7 @@
           },
           {
             "type": "note",
-            "value": "ḥijāz"
+            "value": "qarār ḥijāz"
           },
           {
             "type": "note",
@@ -1470,7 +1471,7 @@
         "id": "9fd0ee5666b5422db247",
         "creatorEnglish": "Al-Shawwā, Sāmī",
         "creatorArabic": "",
-        "sourceId": "",
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
         "page": 30,
         "commentsEnglish": "Starts on nawā to render maqām bayāt al-dūgāh and descends to ʿushayrān to render maqām bayāt al-ḥuseinī and descends stepwise until it's qarār ʿushayrān.",
         "commentsArabic": "",
@@ -1542,7 +1543,12 @@
         ]
       }
     ],
-    "sourcePageReferences": []
+    "sourcePageReferences": [
+      {
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "30"
+      }
+    ]
   },
   {
     "id": "37",
@@ -2238,10 +2244,11 @@
       {
         "id": "b47fa1e5ed3a4fd792ae",
         "creatorEnglish": "Al-Shawwā, Sāmī",
-        "sourceEnglish": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
-        "year": 1946,
+        "creatorArabic": "",
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
         "page": 38,
         "commentsEnglish": "Rules: Starts on 'ajam and ascends to awj then descends to segāh, the ascends to to shahnāz and muḥayyar, and upon descent it ends on 'irāq. Analysis: nagham awj ara on 'irāq, jins musta'ār on segāh, jins awj on awj, descends according to its pitch classes until the qarār ('irāq)",
+        "commentsArabic": "",
         "stops": [
           {
             "type": "note",
@@ -2286,7 +2293,12 @@
         ]
       }
     ],
-    "sourcePageReferences": []
+    "sourcePageReferences": [
+      {
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": ""
+      }
+    ]
   },
   {
     "id": "47",
