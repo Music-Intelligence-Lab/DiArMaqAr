@@ -5,9 +5,9 @@ $bottom-navbar-height: 60px;
 $page-height: calc(100svh - $top-navbar-height - $bottom-navbar-height);
 
 $background: #222222;
-$primary: #788a94;
-$secondary: #9bb6c49a;
-$tertiary: #81adc3;
+$primary: #5a2585;
+$secondary: #83105d;
+$tertiary: #a4079c;
 $quaternary: #4569b6;
 $black: #000000;
 $text: #ffffff;
@@ -17,7 +17,7 @@ $disabled: #3b3b3b;
 $dark-grey: #222222;
 $medium-grey: #333333;
 $grey: #555555;
-$light-grey: #f0f0f0;
+$light-grey: #dddddd;
 
 $hovered-primary: color.adjust($primary, $lightness: 10%);
 $hovered-secondary: color.adjust($secondary, $lightness: -10%);
