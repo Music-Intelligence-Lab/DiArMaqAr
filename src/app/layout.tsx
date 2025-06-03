@@ -3,8 +3,15 @@ import { AppContextProvider } from "@/contexts/app-context";
 import { FilterContextProvider } from "@/contexts/filter-context";
 import { MenuContextProvider } from "@/contexts/menu-context";
 import Navbar from "@/components/navbar";
-import { Roboto, Bebas_Neue, Inter } from "next/font/google";
+import { Readex_Pro, Roboto, Bebas_Neue, Inter } from "next/font/google";
 import "./globals.scss";
+
+const readexPro = Readex_Pro({
+  weight: ["200", "300", "400"],
+  subsets: ["latin", "arabic"],
+  display: "swap",
+  variable: "--font-readex-pro",
+});
 
 const roboto = Roboto({
   weight: "300",
@@ -39,7 +46,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${roboto.variable} ${bebasNeue.variable} ${inter.variable}`}>
+      <body className={`${readexPro.variable}`}>
         <AppContextProvider>
           <MenuContextProvider>
             <FilterContextProvider>
