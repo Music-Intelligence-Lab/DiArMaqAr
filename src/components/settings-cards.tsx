@@ -11,14 +11,12 @@ const SettingsCard = () => {
   const { soundSettings, setSoundSettings, clearSelections, midiInputs, midiOutputs, patterns, setRefresh } =
     useAppContext();
 
-  const { openSettings, setOpenSettings, setOpenBottomDrawer, setOpenNavigation } = useMenuContext();
+  const { openSettings, setOpenSettings} = useMenuContext();
 
   // const { filters, setFilters } = useFilterContext();
 
   const togglePanel = () => {
     setOpenSettings((prev) => !prev);
-    setOpenBottomDrawer(false);
-    setOpenNavigation(false);
   };
 
   const handleSoundSettingsChange = (paramName: keyof typeof soundSettings) => (_event: Event, newValue: number | number[]) => {
