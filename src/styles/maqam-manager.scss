@@ -79,13 +79,15 @@
 
     &_active {
       background-color: rgba($primary, 0.4);
+
       &:hover {
-      background-color: rgba($primary, 0.9);
+        background-color: rgba($primary, 0.9);
       }
     }
 
     &_selected {
       background-color: $tertiary;
+
       &:hover {
         background-color: $tertiary;
       }
@@ -158,7 +160,8 @@
   }
 
   &__save-button,
-  &__delete-button, &__clear-button {
+  &__delete-button,
+  &__clear-button {
     margin-right: 20px;
     padding: 10px 20px;
     font-size: 16px;
@@ -199,7 +202,8 @@
     width: 100px;
   }
 
-  &__source-select, &__source-input {
+  &__source-select,
+  &__source-input {
     padding: 5px;
     font-size: 14px;
   }
