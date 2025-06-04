@@ -50,7 +50,7 @@
     display: flex;
     flex-direction: column;
     gap: 5px;
-    width: 100px;
+
   }
 
   &__source-select,
@@ -71,6 +71,10 @@
     &:hover {
       box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
     }
+  }
+
+  &__bib-title {
+    font-style: italic;
   }
 
   &__group {
@@ -355,7 +359,7 @@
   }
 
   &__details {
-        width: 100%;
+    width: 100%;
     padding: 20px;
     background-color: rgba($black, 0.3);
     border-radius: 10px;
@@ -369,7 +373,8 @@
     background-color: rgba($black, 0.3);
     border-radius: 10px;
     margin-bottom: 10px;
-        position: relative; // needed for the pseudo-element positioning
+    position: relative; // needed for the pseudo-element positioning
+
     &::before {
       content: "";
       position: absolute;
@@ -389,7 +394,7 @@
     margin-bottom: 20px;
     cursor: pointer;
     user-select: none;
-    
+
   }
 
   &__octave-summary {
@@ -397,8 +402,8 @@
     margin-bottom: 10px;
     cursor: pointer;
     user-select: none;
-    
-    
+
+
   }
 
   &__octave-summary-title {
@@ -425,7 +430,7 @@
     white-space: nowrap;
     height: fit-content;
     padding: 10px 0;
-    
+
 
     &::-webkit-scrollbar {
       height: 6px;
@@ -504,8 +509,8 @@
     color: white;
     border: 1px solid rgb(86, 86, 86);
     padding: 0px 0;
-    margin: -6px 0;
-    
+    margin: -6px 50px 0px 0px;
+
 
 
     th {

@@ -1,47 +1,5 @@
 [
   {
-    "id": "HK6shRFzmS98eQ-u2MZ1E",
-    "titleEnglish": "test",
-    "titleArabic": "test",
-    "sourceType": "Book",
-    "contributors": [
-      {
-        "type": "Author",
-        "firstNameEnglish": "test",
-        "lastNameEnglish": "test",
-        "firstNameArabic": "test",
-        "lastNameArabic": "test"
-      },
-      {
-        "type": "Author",
-        "firstNameEnglish": "test",
-        "lastNameEnglish": "test",
-        "firstNameArabic": "test",
-        "lastNameArabic": "test"
-      },
-      {
-        "type": "Author",
-        "firstNameEnglish": "test",
-        "lastNameEnglish": "test",
-        "firstNameArabic": "test",
-        "lastNameArabic": "test"
-      }
-    ],
-    "editionEnglish": "test",
-    "editionArabic": "test",
-    "publicationDateEnglish": "1950",
-    "publicationDateArabic": "test",
-    "originalPublicationDateEnglish": "test",
-    "originalPublicationDateArabic": "test",
-    "publisherEnglish": "test",
-    "publisherArabic": "test",
-    "placeEnglish": "test",
-    "placeArabic": "test",
-    "ISBN": "test",
-    "url": "test",
-    "dateAccessed": "test"
-  },
-  {
     "id": "vfTln54gK68IgHo2tlULX",
     "titleEnglish": "Musical Mathematics: On the Art and Science of Acoustic Instruments",
     "titleArabic": "الرياضيات الموسيقية: عن فن وعلم الآلات الصوتية",
@@ -113,14 +71,14 @@
   },
   {
     "id": "SZNw4epqCZe7VhE5eWT3L",
-    "titleEnglish": "Kitāb al-Musiqā al-Sharqī",
+    "titleEnglish": "Kitāb al-Mūsiqā al-Sharqī",
     "titleArabic": "كتاب الموسيقى الشرقي",
     "sourceType": "Book",
     "contributors": [
       {
         "type": "Author",
         "firstNameEnglish": "Mohammad Kāmil",
-        "lastNameEnglish": "Al-Khul’ī",
+        "lastNameEnglish": "Al-Khulʿī",
         "firstNameArabic": "محمد كامل",
         "lastNameArabic": "الخلعي"
       }
@@ -282,6 +240,34 @@
     "publisherArabic": "جبرائيل جبرى",
     "placeEnglish": "Cairo",
     "placeArabic": "القاهرة",
+    "ISBN": "",
+    "url": "",
+    "dateAccessed": ""
+  },
+  {
+    "id": "63Ao66cM9W2M-4NhIIHgv",
+    "titleEnglish": "The Lute Scale of Avicenna",
+    "titleArabic": "سلم العود لإبن سينا",
+    "sourceType": "Book",
+    "contributors": [
+      {
+        "type": "Author",
+        "firstNameEnglish": "Henry George",
+        "lastNameEnglish": "Farmer",
+        "firstNameArabic": "هنري جورج",
+        "lastNameArabic": "فارمر"
+      }
+    ],
+    "editionEnglish": "",
+    "editionArabic": "",
+    "publicationDateEnglish": "1937",
+    "publicationDateArabic": "١٩٣٧",
+    "originalPublicationDateEnglish": "",
+    "originalPublicationDateArabic": "",
+    "publisherEnglish": "The Journal of the Royal Asiatic Society of Great Britain and Ireland, 2",
+    "publisherArabic": "",
+    "placeEnglish": "",
+    "placeArabic": "",
     "ISBN": "",
     "url": "",
     "dateAccessed": ""
