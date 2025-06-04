@@ -14,7 +14,7 @@
   }
 
   &__abjad-name {
-    font-size: 12px;    
+    font-size: 12px;
   }
 
   &__form {
@@ -243,6 +243,7 @@
 
   h3 {
     font-size: 20px;
+    margin-bottom: 10px;
 
   }
 
@@ -262,6 +263,8 @@
     padding-right: 30px;
     float: left;
     margin-bottom: 40px;
+    line-height: calc(20px);
+
   }
 
   &__comments-arabic {
@@ -279,7 +282,6 @@
     font-size: 14px;
     width: 50%;
     min-height: 80px;
-
     direction: ltr;
     text-align: left;
     vertical-align: top;
@@ -291,7 +293,6 @@
     font-size: 14px;
     width: 50%;
     min-height: 80px;
-
     text-align: right;
     direction: rtl;
     vertical-align: top;
@@ -524,7 +525,7 @@
     color: white;
     border: 1px solid rgb(86, 86, 86);
     padding: 0px 0;
-    margin: -6px 50px 0px 0px;
+    margin: -10px 0px 0px 0px;
 
 
 

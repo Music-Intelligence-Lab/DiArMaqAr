@@ -327,5 +327,61 @@
     "ISBN": "",
     "url": "",
     "dateAccessed": ""
+  },
+  {
+    "id": "I1lrMQizwLfs8wwA17rRv",
+    "titleEnglish": "La Musique Arabe, Tome 1",
+    "titleArabic": "الموسيقى العربية، المجلد ١",
+    "sourceType": "Book",
+    "contributors": [
+      {
+        "type": "Author",
+        "firstNameEnglish": "Rodolphe",
+        "lastNameEnglish": "d'Erlanger",
+        "firstNameArabic": "رودولف",
+        "lastNameArabic": "ديرلانجير"
+      }
+    ],
+    "editionEnglish": "",
+    "editionArabic": "",
+    "publicationDateEnglish": "1930",
+    "publicationDateArabic": "١٩٣٠",
+    "originalPublicationDateEnglish": "",
+    "originalPublicationDateArabic": "",
+    "publisherEnglish": "Paul Geuthner",
+    "publisherArabic": "بول غيوثنر",
+    "placeEnglish": "Paris",
+    "placeArabic": "باريس",
+    "ISBN": "",
+    "url": "",
+    "dateAccessed": ""
+  },
+  {
+    "id": "uLBA69pin8YrIQVTwCHjF",
+    "titleEnglish": "Holographic Composition Technique: Revisiting the Medieval Treatises on Iranian Music",
+    "titleArabic": "تقنية التأليف الثلاثي الأبعاد: إعادة النظر في رسائل العصور الوسطى عن الموسيقى الإيرانية",
+    "sourceType": "Book",
+    "contributors": [
+      {
+        "type": "Author",
+        "firstNameEnglish": "Idin Samimi",
+        "lastNameEnglish": "Mofakham",
+        "firstNameArabic": "ايدين ساميمي",
+        "lastNameArabic": "مفخم"
+      }
+    ],
+    "editionEnglish": "",
+    "editionArabic": "",
+    "publicationDateEnglish": "2022",
+    "publicationDateArabic": "",
+    "originalPublicationDateEnglish": "",
+    "originalPublicationDateArabic": "",
+    "publisherEnglish": "The Norwegian Academy of Music",
+    "publisherArabic": "",
+    "placeEnglish": "Oslo",
+    "placeArabic": "اوسلو",
+    "ISBN": "",
+    "url": "https://www.researchcatalogue.net/view/1092359/1871366 ",
+    "dateAccessed": ""
   }
 ]
