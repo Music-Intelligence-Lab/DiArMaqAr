@@ -1306,25 +1306,42 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       {!admin && (
         <div className="tuning-system-manager__list">
           {tuningSystems.length === 0 ? (
-            <p>No tuning systems available.</p>
-            ) : (
-            [...tuningSystems]
-              .sort((a, b) => (parseInt(a.getYear()) || 0) - (parseInt(b.getYear()) || 0))
-              .map((tuningSystem, index) => (
-              <div
-                key={index}
-                className={
-                  "tuning-system-manager__item " +
-                  (tuningSystem.getId() === selectedTuningSystem?.getId() ? "tuning-system-manager__item_selected " : "")
-                }
-                onClick={() => {
-                  handleTuningSystemClick(tuningSystem);
-                }}
-              >
-                <strong className="tuning-system-manager__item-english-creator">{`${tuningSystem.getCreatorEnglish()} (${tuningSystem.getYear()})`}</strong>
-                  <strong className="tuning-system-manager__item-english-title">{tuningSystem.getTitleEnglish()}</strong>
-              </div>
-            ))
+        <p>No tuning systems available.</p>
+          ) : (
+        [...tuningSystems]
+          .sort((a, b) => {
+            // Extract numeric and optional letter parts from year string
+            function parseYear(year: string) {
+          const match = year.match(/^(\d+)([a-zA-Z]?)$/);
+          if (match) {
+            return { num: parseInt(match[1], 10), letter: match[2] };
+          }
+          return { num: parseInt(year, 10) || 0, letter: "" };
+            }
+            const yearA = parseYear(a.getYear());
+            const yearB = parseYear(b.getYear());
+            if (yearA.num !== yearB.num) {
+          return yearA.num - yearB.num;
+            }
+            return yearA.letter.localeCompare(yearB.letter);
+          })
+          .map((tuningSystem, index) => (
+            <div
+          key={index}
+          className={
+            "tuning-system-manager__item " +
+            (tuningSystem.getId() === selectedTuningSystem?.getId()
+              ? "tuning-system-manager__item_selected "
+              : "")
+          }
+          onClick={() => {
+            handleTuningSystemClick(tuningSystem);
+          }}
+            >
+          <strong className="tuning-system-manager__item-english-creator">{`${tuningSystem.getCreatorEnglish()} (${tuningSystem.getYear()})`}</strong>
+          <strong className="tuning-system-manager__item-english-title">{tuningSystem.getTitleEnglish()}</strong>
+            </div>
+          ))
           )}
         </div>
       )}
@@ -1473,27 +1490,35 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
         <div className="tuning-system-manager__sources-english">
           <h3>Sources:</h3>
-          {sourcePageReferences.map((ref, idx) => {
-            const source = sources.find((s) => s.getId() === ref.sourceId);
-            return (
-                <div key={idx} className="tuning-system-manager__source-item">
+            {[...sourcePageReferences]
+            .sort((a, b) => {
+              const srcA = sources.find((s) => s.getId() === a.sourceId);
+              const srcB = sources.find((s) => s.getId() === b.sourceId);
+              const nameA = srcA?.getContributors()[0]?.lastNameEnglish || "";
+              const nameB = srcB?.getContributors()[0]?.lastNameEnglish || "";
+              return nameA.localeCompare(nameB);
+            })
+            .map((ref, idx) => {
+              const source = sources.find((s) => s.getId() === ref.sourceId);
+              return (
+              <div key={idx} className="tuning-system-manager__source-item">
                 {source && (
-                  <span className="">
+                <span className="">
                   {source.getContributors()[0].lastNameEnglish?.length
-                    ? `${source.getContributors()[0]?.lastNameEnglish ?? ""}, ${source
-                      .getContributors()[0]?.firstNameEnglish?.split(" ")
-                      .map((w) => w.charAt(0))
-                      .join(". ") ?? ""}. (${source.getOriginalReleaseDateEnglish() ? source.getOriginalReleaseDateEnglish() + "/" : ""}${
-                      source.getReleaseDateEnglish() ?? ""
+                  ? `${source.getContributors()[0]?.lastNameEnglish ?? ""}, ${source
+                    .getContributors()[0]?.firstNameEnglish?.split(" ")
+                    .map((w) => w.charAt(0))
+                    .join(". ") ?? ""}. (${source.getOriginalReleaseDateEnglish() ? source.getOriginalReleaseDateEnglish() + "/" : ""}${
+                    source.getReleaseDateEnglish() ?? ""
                     }:${ref.page})`
-                    : `${source.getTitleEnglish()} (${source.getOriginalReleaseDateEnglish() ? source.getOriginalReleaseDateEnglish() + "/" : ""}${
-                      source.getReleaseDateEnglish() ?? ""
+                  : `${source.getTitleEnglish()} (${source.getOriginalReleaseDateEnglish() ? source.getOriginalReleaseDateEnglish() + "/" : ""}${
+                    source.getReleaseDateEnglish() ?? ""
                     }:${ref.page})`}
-                  </span>
+                </span>
                 )}
-                </div>
-            );
-          })}
+              </div>
+              );
+            })}
         </div>
 
         {/* <div className="tuning-system-manager__sources-arabic">
