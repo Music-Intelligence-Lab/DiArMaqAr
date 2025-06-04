@@ -271,5 +271,61 @@
     "ISBN": "",
     "url": "",
     "dateAccessed": ""
+  },
+  {
+    "id": "zQU1LvEwGBICtY09uE5Rj",
+    "titleEnglish": "Kitāb Muʼtamar al-Mūsīqā al-ʻArabiyah",
+    "titleArabic": "كتاب مؤتمر الموسيقى العربية",
+    "sourceType": "Book",
+    "contributors": [
+      {
+        "type": "Author",
+        "firstNameEnglish": "",
+        "lastNameEnglish": "",
+        "firstNameArabic": "",
+        "lastNameArabic": ""
+      }
+    ],
+    "editionEnglish": "",
+    "editionArabic": "",
+    "publicationDateEnglish": "1933",
+    "publicationDateArabic": "١٩٣٣",
+    "originalPublicationDateEnglish": "",
+    "originalPublicationDateArabic": "",
+    "publisherEnglish": "al-Maṭbaʻah al-Amīrīyah",
+    "publisherArabic": "المطبعة العامريّة",
+    "placeEnglish": "Cairo",
+    "placeArabic": "القاهرة",
+    "ISBN": "",
+    "url": "https://dlib.nyu.edu/aco/book/columbia_aco003841/1",
+    "dateAccessed": "04-06-2025"
+  },
+  {
+    "id": "zH7tN7EXXSSXNmYXyY-TK",
+    "titleEnglish": "Actes du Sixième Congrès International Des Orientalistes tenu en 1883 à Leide. Deuxième Partie",
+    "titleArabic": "",
+    "sourceType": "Book",
+    "contributors": [
+      {
+        "type": "Author",
+        "firstNameEnglish": "J. P. N.",
+        "lastNameEnglish": "Land",
+        "firstNameArabic": "ج. ب. ن.",
+        "lastNameArabic": "لاند"
+      }
+    ],
+    "editionEnglish": "",
+    "editionArabic": "",
+    "publicationDateEnglish": "1885",
+    "publicationDateArabic": "١٨٨٥",
+    "originalPublicationDateEnglish": "",
+    "originalPublicationDateArabic": "",
+    "publisherEnglish": "E. J. Brill",
+    "publisherArabic": "",
+    "placeEnglish": "Leide",
+    "placeArabic": "لايدن",
+    "ISBN": "",
+    "url": "",
+    "dateAccessed": ""
   }
 ]
