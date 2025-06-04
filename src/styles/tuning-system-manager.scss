@@ -14,8 +14,7 @@
   }
 
   &__abjad-name {
-    font-size: 16px;
-    font-weight: bold;
+    font-size: 12px;    
   }
 
   &__form {
@@ -38,6 +37,14 @@
     width: 50%;
   }
 
+  &__sources-select-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    width: 50%;
+  }
+
+
   &__source-add-button {
     height: fit-content;
     padding: 10px 20px;
@@ -51,6 +58,14 @@
     flex-direction: column;
     gap: 5px;
 
+  }
+
+
+  &__source-select-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100px;
   }
 
   &__source-select,

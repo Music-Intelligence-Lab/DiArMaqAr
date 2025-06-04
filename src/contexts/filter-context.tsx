@@ -3,6 +3,7 @@
 import React, { createContext, useState, useContext, ReactNode } from "react";
 
 export interface FilterSettings {
+  pitchClass: boolean;
   englishName: boolean;
   abjadName: boolean;
   fractionRatio: boolean;
@@ -15,6 +16,7 @@ export interface FilterSettings {
 }
 
 const defaultFilters: FilterSettings = {
+  pitchClass: false,
   abjadName: false,
   englishName: true,
   fractionRatio: false,
@@ -23,7 +25,7 @@ const defaultFilters: FilterSettings = {
   fretDivision: false,
   decimalRatio: false,
   midiNote: false,
-  frequency: true,
+  frequency: false,
 };
 
 interface FilterContextInterface {
