@@ -1142,7 +1142,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 Year
               </label>
               <input
-                className="tuning-system-manager__input"
+                className="tuning-system-manager__input" 
                 id="yearField"
                 type="text"
                 value={year ?? ""}
@@ -1454,8 +1454,10 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
               <div key={idx} className="tuning-system-manager__source-item">
                 {source &&
                   <span className="">
-                    {`${source?.getContributors()[0]?.lastNameEnglish ?? ""} (${source?.getReleaseDateEnglish() ?? ""}${source?.getOriginalReleaseDateEnglish() ? "/" + source.getOriginalReleaseDateEnglish() : ""
-                      }:${ref.page})`}
+                    {`${source?.getContributors()[0]?.lastNameEnglish?? ""}, ${source?.getContributors()[0]?.firstNameEnglish
+                      ?.split(" ")
+                      .map((w) => w.charAt(0))
+                      .join(". ") ?? ""}. (${source?.getOriginalReleaseDateEnglish() ? source.getOriginalReleaseDateEnglish() + "/" : ""}${source?.getReleaseDateEnglish() ?? ""}:${ref.page})`}
                   </span>
                 }
               </div>

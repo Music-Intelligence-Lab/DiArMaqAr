@@ -188,10 +188,15 @@
     "year": "874",
     "sourceEnglish": "",
     "sourceArabic": "",
-    "sourcePageReferences": [],
+    "sourcePageReferences": [
+      {
+        "sourceId": "63Ao66cM9W2M-4NhIIHgv",
+        "page": "248"
+      }
+    ],
     "creatorEnglish": "Al-Kindī",
     "creatorArabic": "",
-    "commentsEnglish": "Farmer, H.G. (1937) ‘The Lute Scale of Avicenna’, The Journal of the Royal Asiatic Society of Great Britain and Ireland, 2, pp. 248.\n\nAbu Yusuf Ya‘qub ibn Ishaq Al-Kindi (ca. 800–870)\nhttps://plato.stanford.edu/entries/al-kindi/",
+    "commentsEnglish": "Abu Yusuf Ya‘qub ibn Ishaq Al-Kindi (ca. 800–870)\nhttps://plato.stanford.edu/entries/al-kindi/",
     "commentsArabic": "اسداسداسدا",
     "pitchClasses": [
       "1/1",
@@ -382,7 +387,7 @@
   },
   {
     "id": "cqgfdXVVSDvBB6w2oXP5X",
-    "titleEnglish": "Al-Sullam Al-Fārsī or Al-'Arabī",
+    "titleEnglish": "Al-Sullam Al-Fārsī or Al-'Arabī (!!!)",
     "titleArabic": "",
     "year": "1926",
     "sourceEnglish": "",
@@ -395,7 +400,7 @@
     ],
     "creatorEnglish": "Aḥmad Amīn Al-Dīk",
     "creatorArabic": "",
-    "commentsEnglish": "Numbers for string length are given as 1,0000, 0,9716. They are used here as 10000, 9716 etc... for clarity.\n\nTypo in Shawqī lists the second pitch class as 0.7916. Most likely it is supposed to be 0.9716 and that is what is used here.\n\nNote names for the string length divisions aren't mentioned in Shawqī and therefore presumably not in Al-Dīk's original (NEED TO VERIFY), but in Shawqī's reproduction of a table from another publication by Al-Dīk (ملحق في ذبذبات طبقة شيرقية) the text by Al-Dīk which refers to his calculations of frequency pitchClasses for his tuning system, he mentions that he considered the Arabic note name dūgāh equivalent to La/A at 435 Hz. This is in line with the Ottoman (and the modern Turkish convention) which names the fourth string on the oud, dūgāh, but tunes it to the Anglo-European La/A at 220Hz, and the Arabic convention of naming the fourth string of the oud as nawā (the higher octave of yegāh). Therefore this tuning system is placed according to yegāh at 1/1.",
+    "commentsEnglish": "In Shawqī (1969:43) the numbers for string length are given as 1,0000, 0,9716, etc... They are presented here as 10000, 9716 etc... for clarity.\n\nTypo in Shawqī (1969:43) lists the second pitch class as 0.7916. Most likely it is supposed to be 0.9716 and that is what is used here.\n\nThe note names for the string length divisions aren't mentioned in Shawqī (1969:43) and therefore presumably not in Al-Dīk's original (NEED TO VERIFY). Though in Shawqī's reproduction of a table from another publication by Al-Dīk (mulḥaq fī dhabdhabāt ṭabaqa sharqīya/ملحق في ذبذبات طبقة شيرقية), the text by Al-Dīk which refers to his calculations of frequencies for his tuning system mentions that he considered the Arabic note name dūgāh equivalent to A/La at 435 Hz. \n\nThis is in line with the Ottoman (and the modern Turkish convention) equates the fret (perde) dūgāh to the Anglo-European La/A at 220/440 Hz, and naming the oud string referred to by Arabs as nawā usually tuned to G at 196 Hz as dugāh because they tune up to A at 220 Hz. Therefore this tuning system is placed according to yegāh at 1/1.",
     "commentsArabic": "",
     "pitchClasses": [
       "10000",
