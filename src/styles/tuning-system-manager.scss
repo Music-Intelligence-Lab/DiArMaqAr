@@ -14,8 +14,7 @@
   }
 
   &__abjad-name {
-    font-size: 16px;
-    font-weight: bold;
+    font-size: 12px;
   }
 
   &__form {
@@ -38,6 +37,14 @@
     width: 50%;
   }
 
+  &__sources-select-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    width: 50%;
+  }
+
+
   &__source-add-button {
     height: fit-content;
     padding: 10px 20px;
@@ -47,6 +54,14 @@
   }
 
   &__source-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+  }
+
+
+  &__source-select-item {
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -71,6 +86,10 @@
     &:hover {
       box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
     }
+  }
+
+  &__bib-title {
+    font-style: italic;
   }
 
   &__group {
@@ -224,6 +243,7 @@
 
   h3 {
     font-size: 20px;
+    margin-bottom: 10px;
 
   }
 
@@ -243,6 +263,8 @@
     padding-right: 30px;
     float: left;
     margin-bottom: 40px;
+    line-height: calc(20px);
+
   }
 
   &__comments-arabic {
@@ -260,7 +282,6 @@
     font-size: 14px;
     width: 50%;
     min-height: 80px;
-
     direction: ltr;
     text-align: left;
     vertical-align: top;
@@ -272,7 +293,6 @@
     font-size: 14px;
     width: 50%;
     min-height: 80px;
-
     text-align: right;
     direction: rtl;
     vertical-align: top;
@@ -355,7 +375,7 @@
   }
 
   &__details {
-        width: 100%;
+    width: 100%;
     padding: 20px;
     background-color: rgba($black, 0.3);
     border-radius: 10px;
@@ -369,7 +389,8 @@
     background-color: rgba($black, 0.3);
     border-radius: 10px;
     margin-bottom: 10px;
-        position: relative; // needed for the pseudo-element positioning
+    position: relative; // needed for the pseudo-element positioning
+
     &::before {
       content: "";
       position: absolute;
@@ -389,7 +410,7 @@
     margin-bottom: 20px;
     cursor: pointer;
     user-select: none;
-    
+
   }
 
   &__octave-summary {
@@ -397,8 +418,8 @@
     margin-bottom: 10px;
     cursor: pointer;
     user-select: none;
-    
-    
+
+
   }
 
   &__octave-summary-title {
@@ -425,7 +446,7 @@
     white-space: nowrap;
     height: fit-content;
     padding: 10px 0;
-    
+
 
     &::-webkit-scrollbar {
       height: 6px;
@@ -504,8 +525,8 @@
     color: white;
     border: 1px solid rgb(86, 86, 86);
     padding: 0px 0;
-    margin: -6px 0;
-    
+    margin: -10px 0px 0px 0px;
+
 
 
     th {
