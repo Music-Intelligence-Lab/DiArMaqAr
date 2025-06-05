@@ -3,7 +3,7 @@
     "id": "HK6shRFzmS98eQ-u2MZ1E",
     "titleEnglish": "test",
     "titleArabic": "test",
-    "sourceType": "Book",
+    "sourceType": "Article",
     "contributors": [
       {
         "type": "Author",
@@ -31,15 +31,17 @@
     "editionArabic": "test",
     "publicationDateEnglish": "1950",
     "publicationDateArabic": "test",
-    "originalPublicationDateEnglish": "test",
-    "originalPublicationDateArabic": "test",
-    "publisherEnglish": "test",
-    "publisherArabic": "test",
-    "placeEnglish": "test",
-    "placeArabic": "test",
-    "ISBN": "test",
     "url": "test",
-    "dateAccessed": "test"
+    "dateAccessed": "test",
+    "journalEnglish": "TEST",
+    "journalArabic": "TEST",
+    "volumeEnglish": "TEST",
+    "volumeArabic": "TEST",
+    "issueEnglish": "TEST",
+    "issueArabic": "TEST",
+    "pageRangeEnglish": "TEST",
+    "pageRangeArabic": "TEST",
+    "DOI": "TEST"
   },
   {
     "id": "vfTln54gK68IgHo2tlULX",
@@ -59,15 +61,15 @@
     "editionArabic": "",
     "publicationDateEnglish": "2010",
     "publicationDateArabic": "٢٠١٠",
+    "url": "",
+    "dateAccessed": "",
     "originalPublicationDateEnglish": "",
     "originalPublicationDateArabic": "",
     "publisherEnglish": "Chronicle Books",
     "publisherArabic": "",
     "placeEnglish": "San Francisco, CA",
     "placeArabic": "سان فرانسيسكو، كاليفورنيا",
-    "ISBN": "9780811874076",
-    "url": "",
-    "dateAccessed": ""
+    "ISBN": "9780811874076"
   },
   {
     "id": "VmShC7ciSIikhGlZwUUJC",
@@ -101,15 +103,15 @@
     "editionArabic": "الطبعة الثانية",
     "publicationDateEnglish": "2017",
     "publicationDateArabic": "٢٠١٧",
+    "url": "",
+    "dateAccessed": "",
     "originalPublicationDateEnglish": "1986",
     "originalPublicationDateArabic": "١٩٨٦",
     "publisherEnglish": "al-Hayʼah al-Miṣrīyah al-ʻĀmmah lil-Kitāb",
     "publisherArabic": "الهيئة المصرية العامّة للكتاب",
     "placeEnglish": "Cairo",
     "placeArabic": "القاهرة",
-    "ISBN": "9789779112459",
-    "url": "",
-    "dateAccessed": ""
+    "ISBN": "9789779112459"
   },
   {
     "id": "SZNw4epqCZe7VhE5eWT3L",
@@ -129,15 +131,15 @@
     "editionArabic": "",
     "publicationDateEnglish": "2011",
     "publicationDateArabic": "٢٠١١",
+    "url": "https://www.hindawi.org/books/46319638/",
+    "dateAccessed": "21-05-2025",
     "originalPublicationDateEnglish": "1904",
     "originalPublicationDateArabic": "١٩٠٤",
     "publisherEnglish": "Hindawi Foundation for Education and Culture",
     "publisherArabic": "مؤسسة هنداوي للتعليم والثقافة",
     "placeEnglish": "Cairo",
     "placeArabic": "القاهرة",
-    "ISBN": "9789776416543",
-    "url": "https://www.hindawi.org/books/46319638/",
-    "dateAccessed": "21-05-2025"
+    "ISBN": "9789776416543"
   },
   {
     "id": "GJwpuIRbQ8bxNFoA-FxWK",
@@ -157,15 +159,15 @@
     "editionArabic": "",
     "publicationDateEnglish": "1949",
     "publicationDateArabic": "١٩٤٩",
+    "url": "https://dlib.nyu.edu/aco/book/aub_aco003675",
+    "dateAccessed": "21-05-2025",
     "originalPublicationDateEnglish": "",
     "originalPublicationDateArabic": "",
     "publisherEnglish": "Maṭbaʻat Ibn Zaydūn",
     "publisherArabic": "مطبعة إبن زيدون",
     "placeEnglish": "Damascus",
     "placeArabic": "دمشق",
-    "ISBN": "",
-    "url": "https://dlib.nyu.edu/aco/book/aub_aco003675",
-    "dateAccessed": "21-05-2025"
+    "ISBN": ""
   },
   {
     "id": "npR7tB33uFtyZiJyrXbPx",
@@ -192,15 +194,15 @@
     "editionArabic": "",
     "publicationDateEnglish": "1899",
     "publicationDateArabic": "١٨٩٩",
+    "url": "",
+    "dateAccessed": "",
     "originalPublicationDateEnglish": "",
     "originalPublicationDateArabic": "",
     "publisherEnglish": "Al-Ābā’ Al-Yasū’īyīn",
     "publisherArabic": "الآباء اليسوعيين",
     "placeEnglish": "Beirut",
     "placeArabic": "بيروت",
-    "ISBN": "",
-    "url": "",
-    "dateAccessed": ""
+    "ISBN": ""
   },
   {
     "id": "IDE6rHb6y71_H8_0p5nh1",
@@ -220,15 +222,15 @@
     "editionArabic": "",
     "publicationDateEnglish": "1969",
     "publicationDateArabic": "١٩٦٩",
+    "url": "",
+    "dateAccessed": "",
     "originalPublicationDateEnglish": "",
     "originalPublicationDateArabic": "",
     "publisherEnglish": "Dar Al-Kutub",
     "publisherArabic": "دار الكتب",
     "placeEnglish": "Cairo",
     "placeArabic": "القاهرة",
-    "ISBN": "",
-    "url": "",
-    "dateAccessed": ""
+    "ISBN": ""
   },
   {
     "id": "HhRIZW8WYgYJJVgHrdt3y",
@@ -248,15 +250,15 @@
     "editionArabic": "",
     "publicationDateEnglish": "2022",
     "publicationDateArabic": "٢٠٢٢",
+    "url": "",
+    "dateAccessed": "",
     "originalPublicationDateEnglish": "",
     "originalPublicationDateArabic": "",
     "publisherEnglish": "Birmingham City University",
     "publisherArabic": "جامعة مدينة برمنغهام",
     "placeEnglish": "",
     "placeArabic": "",
-    "ISBN": "",
-    "url": "",
-    "dateAccessed": ""
+    "ISBN": ""
   },
   {
     "id": "oY8WnTdP5msak8o1G_N7f",
@@ -276,14 +278,14 @@
     "editionArabic": "",
     "publicationDateEnglish": "1946",
     "publicationDateArabic": "١٩٤٦",
+    "url": "",
+    "dateAccessed": "",
     "originalPublicationDateEnglish": "",
     "originalPublicationDateArabic": "",
     "publisherEnglish": "Jibra'īl Jabrā",
     "publisherArabic": "جبرائيل جبرى",
     "placeEnglish": "Cairo",
     "placeArabic": "القاهرة",
-    "ISBN": "",
-    "url": "",
-    "dateAccessed": ""
+    "ISBN": ""
   }
 ]

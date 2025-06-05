@@ -1,7 +1,7 @@
 import Jins from "@/models/Jins";
 import Maqam from "@/models/Maqam";
 import Pattern from "@/models/Pattern";
-import Source from "@/models/Source";
+import { Source } from "@/models/bibliography/Source";
 import TuningSystem from "@/models/TuningSystem";
 
 function compareStringNumbers(a: string, b: string): number {
@@ -57,8 +57,8 @@ export async function updateAjnas(newAjnas: Jins[]) {
           id: j.getId(),
           name: j.getName(),
           noteNames: j.getNoteNames(),
-          commentsEnglish: j.getCommentsEnglish(),
-          commentsArabic: j.getCommentsArabic(),
+          commentsEnglish: j.getCommentsEnglish() || "",
+          commentsArabic: j.getCommentsArabic() || "",
           sourcePageReferences: j.getSourcePageReferences(),
         }))
       ),
@@ -84,8 +84,8 @@ export async function updateMaqamat(newMaqamat: Maqam[]) {
           ascendingNoteNames: m.getAscendingNoteNames(),
           descendingNoteNames: m.getDescendingNoteNames(),
           suyūr: m.getSuyūr(),
-          commentsEnglish: m.getCommentsEnglish(),
-          commentsArabic: m.getCommentsArabic(),
+          commentsEnglish: m.getCommentsEnglish() || "",
+          commentsArabic: m.getCommentsArabic() || "",
           sourcePageReferences: m.getSourcePageReferences(),
         }))
       ),

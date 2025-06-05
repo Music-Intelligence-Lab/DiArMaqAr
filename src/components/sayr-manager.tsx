@@ -2,7 +2,7 @@
 
 import React, { FormEvent, useEffect, useState } from "react";
 import { useAppContext } from "@/contexts/app-context";
-import Maqam, { Sayr, SayrStop } from "@/models/Maqam";
+import { Sayr, SayrStop } from "@/models/Maqam";
 import { octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames } from "@/models/NoteName";
 import { nanoid } from "nanoid";
 import { updateMaqamat } from "@/functions/update";
@@ -69,14 +69,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
       stops,
     };
     const updated = existingSuyūr.some((s) => s.id === idUse) ? existingSuyūr.map((s) => (s.id === idUse ? newSayr : s)) : [...existingSuyūr, newSayr];
-    const updatedMaqam = new Maqam(
-      selectedMaqam.getId(),
-      selectedMaqam.getName(),
-      selectedMaqam.getAscendingNoteNames(),
-      selectedMaqam.getDescendingNoteNames(),
-      updated,
-      selectedMaqam.getSourcePageReferences()
-    );
+    const updatedMaqam = selectedMaqam.createMaqamWithNewSuyūr(updated);
     setSelectedMaqam(updatedMaqam);
     setMaqamSayrId(idUse);
 
@@ -88,14 +81,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
   const handleDelete = async () => {
     if (!maqamSayrId) return;
     const filtered = existingSuyūr.filter((s) => s.id !== maqamSayrId);
-    const updatedMaqam = new Maqam(
-      selectedMaqam.getId(),
-      selectedMaqam.getName(),
-      selectedMaqam.getAscendingNoteNames(),
-      selectedMaqam.getDescendingNoteNames(),
-      filtered,
-      selectedMaqam.getSourcePageReferences()
-    );
+    const updatedMaqam = selectedMaqam.createMaqamWithNewSuyūr(filtered);
     setSelectedMaqam(updatedMaqam);
     setMaqamSayrId("");
 

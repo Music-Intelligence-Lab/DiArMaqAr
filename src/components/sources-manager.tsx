@@ -2,13 +2,20 @@
 
 import React, { useState, useEffect } from "react";
 import { useAppContext } from "@/contexts/app-context";
-import Source, { Contributor } from "@/models/Source";
+import { Contributor } from "@/models/bibliography/AbstractSource";
+import Book from "@/models/bibliography/Book";
+import Article from "@/models/bibliography/Article";
+import { Source } from "@/models/bibliography/Source";
 import { nanoid } from "nanoid";
 import { updateSources } from "@/functions/update";
 
 export default function SourcesManager() {
   const { sources, setSources } = useAppContext();
+
+  // “selectedSourceId” can be “new” or the id of an existing Book/Article
   const [selectedSourceId, setSelectedSourceId] = useState<string>("new");
+
+  // Shared fields:
   const [id, setId] = useState<string>("");
   const [titleEnglish, setTitleEnglish] = useState<string>("");
   const [titleArabic, setTitleArabic] = useState<string>("");
@@ -16,20 +23,35 @@ export default function SourcesManager() {
   const [contributors, setContributors] = useState<Contributor[]>([]);
   const [editionEnglish, setEditionEnglish] = useState<string>("");
   const [editionArabic, setEditionArabic] = useState<string>("");
-  const [publicationDateEnglish, setReleaseDateEnglish] = useState<string>("");
-  const [publicationDateArabic, setReleaseDateArabic] = useState<string>("");
-  const [originalPublicationDateEnglish, setOriginalReleaseDateEnglish] = useState<string>("");
-  const [originalPublicationDateArabic, setOriginalReleaseDateArabic] = useState<string>("");
+  const [publicationDateEnglish, setPublicationDateEnglish] = useState<string>("");
+  const [publicationDateArabic, setPublicationDateArabic] = useState<string>("");
+  const [url, setUrl] = useState<string>("");
+  const [dateAccessed, setDateAccessed] = useState<string>("");
+
+  // --- Book‐only fields ---
+  const [originalPublicationDateEnglish, setOriginalPublicationDateEnglish] = useState<string>("");
+  const [originalPublicationDateArabic, setOriginalPublicationDateArabic] = useState<string>("");
   const [publisherEnglish, setPublisherEnglish] = useState<string>("");
   const [publisherArabic, setPublisherArabic] = useState<string>("");
   const [placeEnglish, setPlaceEnglish] = useState<string>("");
   const [placeArabic, setPlaceArabic] = useState<string>("");
   const [ISBN, setISBN] = useState<string>("");
-  const [url, setUrl] = useState<string>("");
-  const [dateAccessed, setDateAccessed] = useState<string>("");
 
+  // --- Article‐only fields ---
+  const [journalEnglish, setJournalEnglish] = useState<string>("");
+  const [journalArabic, setJournalArabic] = useState<string>("");
+  const [volumeEnglish, setVolumeEnglish] = useState<string>("");
+  const [volumeArabic, setVolumeArabic] = useState<string>("");
+  const [issueEnglish, setIssueEnglish] = useState<string>("");
+  const [issueArabic, setIssueArabic] = useState<string>("");
+  const [pageRangeEnglish, setPageRangeEnglish] = useState<string>("");
+  const [pageRangeArabic, setPageRangeArabic] = useState<string>("");
+  const [DOI, setDOI] = useState<string>("");
+
+  // Whenever selectedSourceId or sources change, populate (or clear) all fields:
   useEffect(() => {
     if (selectedSourceId === "new") {
+      // Reset everything for a brand‐new source
       setId(nanoid());
       setTitleEnglish("");
       setTitleArabic("");
@@ -37,38 +59,89 @@ export default function SourcesManager() {
       setContributors([]);
       setEditionEnglish("");
       setEditionArabic("");
-      setReleaseDateEnglish("");
-      setReleaseDateArabic("");
-      setOriginalReleaseDateEnglish("");
-      setOriginalReleaseDateArabic("");
+      setPublicationDateEnglish("");
+      setPublicationDateArabic("");
+      setUrl("");
+      setDateAccessed("");
+
+      // Clear Book‐only:
+      setOriginalPublicationDateEnglish("");
+      setOriginalPublicationDateArabic("");
       setPublisherEnglish("");
       setPublisherArabic("");
       setPlaceEnglish("");
       setPlaceArabic("");
       setISBN("");
-      setUrl("");
-      setDateAccessed("");
+
+      // Clear Article‐only:
+      setJournalEnglish("");
+      setJournalArabic("");
+      setVolumeEnglish("");
+      setVolumeArabic("");
+      setIssueEnglish("");
+      setIssueArabic("");
+      setPageRangeEnglish("");
+      setPageRangeArabic("");
+      setDOI("");
     } else {
-      const source = sources.find((s: Source) => s.getId() === selectedSourceId);
-      if (source) {
-        setId(source.getId());
-        setTitleEnglish(source.getTitleEnglish());
-        setTitleArabic(source.getTitleArabic());
-        setSourceType(source.getSourceType());
-        setContributors(source.getContributors());
-        setEditionEnglish(source.getEditionEnglish());
-        setEditionArabic(source.getEditionArabic());
-        setReleaseDateEnglish(source.getReleaseDateEnglish());
-        setReleaseDateArabic(source.getReleaseDateArabic());
-        setOriginalReleaseDateEnglish(source.getOriginalReleaseDateEnglish());
-        setOriginalReleaseDateArabic(source.getOriginalReleaseDateArabic());
-        setPublisherEnglish(source.getPublisherEnglish());
-        setPublisherArabic(source.getPublisherArabic());
-        setPlaceEnglish(source.getPlaceEnglish());
-        setPlaceArabic(source.getPlaceArabic());
-        setISBN(source.getISBN());
-        setUrl(source.getUrl());
-        setDateAccessed(source.getDateAccessed());
+      // Find the existing Book or Article from context:
+      const found = sources.find((s: Source) => s.getId() === selectedSourceId);
+      if (!found) return;
+
+      // Fill shared fields:
+      setId(found.getId());
+      setTitleEnglish(found.getTitleEnglish());
+      setTitleArabic(found.getTitleArabic());
+      setSourceType(found.getSourceType());
+      setContributors(found.getContributors());
+      setEditionEnglish(found.getEditionEnglish());
+      setEditionArabic(found.getEditionArabic());
+      setPublicationDateEnglish(found.getReleaseDateEnglish());
+      setPublicationDateArabic(found.getReleaseDateArabic());
+      setUrl(found.getUrl());
+      setDateAccessed(found.getDateAccessed());
+
+      // Clear all subtype fields first:
+      setOriginalPublicationDateEnglish("");
+      setOriginalPublicationDateArabic("");
+      setPublisherEnglish("");
+      setPublisherArabic("");
+      setPlaceEnglish("");
+      setPlaceArabic("");
+      setISBN("");
+
+      setJournalEnglish("");
+      setJournalArabic("");
+      setVolumeEnglish("");
+      setVolumeArabic("");
+      setIssueEnglish("");
+      setIssueArabic("");
+      setPageRangeEnglish("");
+      setPageRangeArabic("");
+      setDOI("");
+
+      // Now cast to the correct subclass and populate its own fields:
+      if (found.getSourceType() === "Book") {
+        const book = found as Book;
+        setOriginalPublicationDateEnglish(book.getOriginalReleaseDateEnglish());
+        setOriginalPublicationDateArabic(book.getOriginalReleaseDateArabic());
+        setPublisherEnglish(book.getPublisherEnglish());
+        setPublisherArabic(book.getPublisherArabic());
+        setPlaceEnglish(book.getPlaceEnglish());
+        setPlaceArabic(book.getPlaceArabic());
+        setISBN(book.getISBN());
+      } else {
+        // Article
+        const article = found as Article;
+        setJournalEnglish(article.getJournalEnglish());
+        setJournalArabic(article.getJournalArabic());
+        setVolumeEnglish(article.getVolumeEnglish());
+        setVolumeArabic(article.getVolumeArabic());
+        setIssueEnglish(article.getIssueEnglish());
+        setIssueArabic(article.getIssueArabic());
+        setPageRangeEnglish(article.getPageRangeEnglish());
+        setPageRangeArabic(article.getPageRangeArabic());
+        setDOI(article.getDOI());
       }
     }
   }, [selectedSourceId, sources]);
@@ -78,7 +151,16 @@ export default function SourcesManager() {
   };
 
   const handleAddContributor = () => {
-    setContributors([...contributors, { type: "Author", firstNameEnglish: "", lastNameEnglish: "", firstNameArabic: "", lastNameArabic: "" }]);
+    setContributors([
+      ...contributors,
+      {
+        type: "Author",
+        firstNameEnglish: "",
+        lastNameEnglish: "",
+        firstNameArabic: "",
+        lastNameArabic: "",
+      },
+    ]);
   };
 
   const handleContributorChange = (index: number, field: keyof Contributor, value: string) => {
@@ -93,35 +175,67 @@ export default function SourcesManager() {
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
-    const newSource = new Source(
-      id,
-      titleEnglish,
-      titleArabic,
-      sourceType,
-      contributors,
-      editionEnglish,
-      editionArabic,
-      publicationDateEnglish,
-      publicationDateArabic,
-      originalPublicationDateEnglish,
-      originalPublicationDateArabic,
-      publisherEnglish,
-      publisherArabic,
-      placeEnglish,
-      placeArabic,
-      ISBN,
-      url,
-      dateAccessed
-    );
+
+    let newSource: Source;
+    if (sourceType === "Book") {
+      newSource = new Book(
+        id,
+        titleEnglish,
+        titleArabic,
+        contributors,
+        editionEnglish,
+        editionArabic,
+        publicationDateEnglish,
+        publicationDateArabic,
+        // Book‐only:
+        originalPublicationDateEnglish,
+        originalPublicationDateArabic,
+        publisherEnglish,
+        publisherArabic,
+        placeEnglish,
+        placeArabic,
+        ISBN,
+        url,
+        dateAccessed
+      );
+    } else {
+      // Article
+      newSource = new Article(
+        id,
+        titleEnglish,
+        titleArabic,
+        contributors,
+        editionEnglish,
+        editionArabic,
+        publicationDateEnglish,
+        publicationDateArabic,
+        // Article‐only:
+        journalEnglish,
+        journalArabic,
+        volumeEnglish,
+        volumeArabic,
+        issueEnglish,
+        issueArabic,
+        pageRangeEnglish,
+        pageRangeArabic,
+        DOI,
+        url,
+        dateAccessed
+      );
+    }
 
     let updatedSources: Source[];
     if (selectedSourceId === "new") {
       updatedSources = [...sources, newSource];
     } else {
-      updatedSources = sources.map((s: Source) => (s.getId() === selectedSourceId ? newSource : s));
+      updatedSources = sources.map((s: Source) =>
+        s.getId() === selectedSourceId ? newSource : s
+      );
     }
+
     setSources(updatedSources);
     updateSources(updatedSources);
+    setSelectedSourceId("new"); // reset to “new” if you want
   };
 
   const handleDelete = (e: React.FormEvent) => {
@@ -137,14 +251,24 @@ export default function SourcesManager() {
   return (
     <div className="sources-manager">
       <h2 className="sources-manager__header">Bibliography</h2>
-      {selectedSourceId !== "new" && <span className="sources-manager__selected">{`: ${selectedSourceId} ${titleEnglish}`}</span>}
+      {selectedSourceId !== "new" && (
+        <span className="sources-manager__selected">
+          {`: ${selectedSourceId} ${titleEnglish}`}
+        </span>
+      )}
 
+      {/* Select existing or create new */}
       <div className="sources-manager__group">
         <div className="sources-manager__input-container">
           <label className="sources-manager__label" htmlFor="sourceSelect">
             Select Source or Create New:
           </label>
-          <select className="sources-manager__select" id="sourceSelect" value={selectedSourceId} onChange={handleSelectChange}>
+          <select
+            id="sourceSelect"
+            className="sources-manager__select"
+            value={selectedSourceId}
+            onChange={handleSelectChange}
+          >
             <option value="new">-- Create New Source --</option>
             {sources.map((s: Source) => (
               <option key={s.getId()} value={s.getId()}>
@@ -156,7 +280,9 @@ export default function SourcesManager() {
       </div>
 
       <form className="sources-manager__form" onSubmit={handleSave}>
-        {/* Identification & Titles */}
+        {/* ───────────────────────────────────────── */}
+        {/* Shared fields: Title & Type */}
+        {/* ───────────────────────────────────────── */}
         <div className="sources-manager__group">
           <div className="sources-manager__input-container">
             <label className="sources-manager__label" htmlFor="titleEnglishField">
@@ -198,7 +324,9 @@ export default function SourcesManager() {
           </div>
         </div>
 
-        {/* Edition & Dates */}
+        {/* ───────────────────────────────────────── */}
+        {/* Shared fields: Edition & Publication Dates */}
+        {/* ───────────────────────────────────────── */}
         <div className="sources-manager__group">
           <div className="sources-manager__input-container">
             <label className="sources-manager__label" htmlFor="editionEnglishField">
@@ -225,120 +353,275 @@ export default function SourcesManager() {
             />
           </div>
           <div className="sources-manager__input-container">
-            <label className="sources-manager__label" htmlFor="publicationDateEnglishField">
+            <label className="sources-manager__label" htmlFor="pubDateEnglishField">
               Publication Date (English)
             </label>
             <input
-              id="publicationDateEnglishField"
+              id="pubDateEnglishField"
               className="sources-manager__input"
               type="text"
               value={publicationDateEnglish}
-              onChange={(e) => setReleaseDateEnglish(e.target.value)}
+              onChange={(e) => setPublicationDateEnglish(e.target.value)}
             />
           </div>
           <div className="sources-manager__input-container">
-            <label className="sources-manager__label" htmlFor="publicationDateArabicField">
+            <label className="sources-manager__label" htmlFor="pubDateArabicField">
               Publication Date (Arabic)
             </label>
             <input
-              id="publicationDateArabicField"
+              id="pubDateArabicField"
               className="sources-manager__input"
               type="text"
               value={publicationDateArabic}
-              onChange={(e) => setReleaseDateArabic(e.target.value)}
+              onChange={(e) => setPublicationDateArabic(e.target.value)}
             />
           </div>
         </div>
 
-        {/* Original Dates & Publisher */}
-        <div className="sources-manager__group">
-          <div className="sources-manager__input-container">
-            <label className="sources-manager__label" htmlFor="originalPublicationDateEnglishField">
-              Original Publication Date (English)
-            </label>
-            <input
-              id="originalPublicationDateEnglishField"
-              className="sources-manager__input"
-              type="text"
-              value={originalPublicationDateEnglish}
-              onChange={(e) => setOriginalReleaseDateEnglish(e.target.value)}
-            />
-          </div>
-          <div className="sources-manager__input-container">
-            <label className="sources-manager__label" htmlFor="originalPublicationDateArabicField">
-              Original Publication Date (Arabic)
-            </label>
-            <input
-              id="originalPublicationDateArabicField"
-              className="sources-manager__input"
-              type="text"
-              value={originalPublicationDateArabic}
-              onChange={(e) => setOriginalReleaseDateArabic(e.target.value)}
-            />
-          </div>
-          <div className="sources-manager__input-container">
-            <label className="sources-manager__label" htmlFor="publisherEnglishField">
-              Publisher (English)
-            </label>
-            <input
-              id="publisherEnglishField"
-              className="sources-manager__input"
-              type="text"
-              value={publisherEnglish}
-              onChange={(e) => setPublisherEnglish(e.target.value)}
-            />
-          </div>
-          <div className="sources-manager__input-container">
-            <label className="sources-manager__label" htmlFor="publisherArabicField">
-              Publisher (Arabic)
-            </label>
-            <input
-              id="publisherArabicField"
-              className="sources-manager__input"
-              type="text"
-              value={publisherArabic}
-              onChange={(e) => setPublisherArabic(e.target.value)}
-            />
-          </div>
-        </div>
+        {/* ───────────────────────────────────────── */}
+        {/* Book‐Only: Original Dates, Publisher, Place, ISBN */}
+        {/* ...rendered only if sourceType === "Book" */}
+        {/* ───────────────────────────────────────── */}
+        {sourceType === "Book" && (
+          <>
+            <div className="sources-manager__group">
+              <div className="sources-manager__input-container">
+                <label
+                  className="sources-manager__label"
+                  htmlFor="origPubDateEnglishField"
+                >
+                  Original Publication Date (English)
+                </label>
+                <input
+                  id="origPubDateEnglishField"
+                  className="sources-manager__input"
+                  type="text"
+                  value={originalPublicationDateEnglish}
+                  onChange={(e) => setOriginalPublicationDateEnglish(e.target.value)}
+                />
+              </div>
+              <div className="sources-manager__input-container">
+                <label
+                  className="sources-manager__label"
+                  htmlFor="origPubDateArabicField"
+                >
+                  Original Publication Date (Arabic)
+                </label>
+                <input
+                  id="origPubDateArabicField"
+                  className="sources-manager__input"
+                  type="text"
+                  value={originalPublicationDateArabic}
+                  onChange={(e) => setOriginalPublicationDateArabic(e.target.value)}
+                />
+              </div>
+              <div className="sources-manager__input-container">
+                <label className="sources-manager__label" htmlFor="publisherEnglishField">
+                  Publisher (English)
+                </label>
+                <input
+                  id="publisherEnglishField"
+                  className="sources-manager__input"
+                  type="text"
+                  value={publisherEnglish}
+                  onChange={(e) => setPublisherEnglish(e.target.value)}
+                />
+              </div>
+              <div className="sources-manager__input-container">
+                <label className="sources-manager__label" htmlFor="publisherArabicField">
+                  Publisher (Arabic)
+                </label>
+                <input
+                  id="publisherArabicField"
+                  className="sources-manager__input"
+                  type="text"
+                  value={publisherArabic}
+                  onChange={(e) => setPublisherArabic(e.target.value)}
+                />
+              </div>
+            </div>
 
-        {/* Place, ISBN & URL */}
+            <div className="sources-manager__group">
+              <div className="sources-manager__input-container">
+                <label className="sources-manager__label" htmlFor="placeEnglishField">
+                  Place (English)
+                </label>
+                <input
+                  id="placeEnglishField"
+                  className="sources-manager__input"
+                  type="text"
+                  value={placeEnglish}
+                  onChange={(e) => setPlaceEnglish(e.target.value)}
+                />
+              </div>
+              <div className="sources-manager__input-container">
+                <label className="sources-manager__label" htmlFor="placeArabicField">
+                  Place (Arabic)
+                </label>
+                <input
+                  id="placeArabicField"
+                  className="sources-manager__input"
+                  type="text"
+                  value={placeArabic}
+                  onChange={(e) => setPlaceArabic(e.target.value)}
+                />
+              </div>
+              <div className="sources-manager__input-container">
+                <label className="sources-manager__label" htmlFor="isbnField">
+                  ISBN
+                </label>
+                <input
+                  id="isbnField"
+                  className="sources-manager__input"
+                  type="text"
+                  value={ISBN}
+                  onChange={(e) => setISBN(e.target.value)}
+                />
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* ───────────────────────────────────────── */}
+        {/* Article‐Only: Journal, Volume, Issue, Page Range, DOI */}
+        {/* ...rendered only if sourceType === "Article" */}
+        {/* ───────────────────────────────────────── */}
+        {sourceType === "Article" && (
+          <>
+            <div className="sources-manager__group">
+              <div className="sources-manager__input-container">
+                <label className="sources-manager__label" htmlFor="journalEnglishField">
+                  Journal (English)
+                </label>
+                <input
+                  id="journalEnglishField"
+                  className="sources-manager__input"
+                  type="text"
+                  value={journalEnglish}
+                  onChange={(e) => setJournalEnglish(e.target.value)}
+                />
+              </div>
+              <div className="sources-manager__input-container">
+                <label className="sources-manager__label" htmlFor="journalArabicField">
+                  Journal (Arabic)
+                </label>
+                <input
+                  id="journalArabicField"
+                  className="sources-manager__input"
+                  type="text"
+                  value={journalArabic}
+                  onChange={(e) => setJournalArabic(e.target.value)}
+                />
+              </div>
+              <div className="sources-manager__input-container">
+                <label className="sources-manager__label" htmlFor="volumeEnglishField">
+                  Volume (English)
+                </label>
+                <input
+                  id="volumeEnglishField"
+                  className="sources-manager__input"
+                  type="text"
+                  value={volumeEnglish}
+                  onChange={(e) => setVolumeEnglish(e.target.value)}
+                />
+              </div>
+              <div className="sources-manager__input-container">
+                <label className="sources-manager__label" htmlFor="volumeArabicField">
+                  Volume (Arabic)
+                </label>
+                <input
+                  id="volumeArabicField"
+                  className="sources-manager__input"
+                  type="text"
+                  value={volumeArabic}
+                  onChange={(e) => setVolumeArabic(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="sources-manager__group">
+              <div className="sources-manager__input-container">
+                <label className="sources-manager__label" htmlFor="issueEnglishField">
+                  Issue (English)
+                </label>
+                <input
+                  id="issueEnglishField"
+                  className="sources-manager__input"
+                  type="text"
+                  value={issueEnglish}
+                  onChange={(e) => setIssueEnglish(e.target.value)}
+                />
+              </div>
+              <div className="sources-manager__input-container">
+                <label className="sources-manager__label" htmlFor="issueArabicField">
+                  Issue (Arabic)
+                </label>
+                <input
+                  id="issueArabicField"
+                  className="sources-manager__input"
+                  type="text"
+                  value={issueArabic}
+                  onChange={(e) => setIssueArabic(e.target.value)}
+                />
+              </div>
+              <div className="sources-manager__input-container">
+                <label className="sources-manager__label" htmlFor="pageRangeEnglishField">
+                  Page Range (English)
+                </label>
+                <input
+                  id="pageRangeEnglishField"
+                  className="sources-manager__input"
+                  type="text"
+                  value={pageRangeEnglish}
+                  onChange={(e) => setPageRangeEnglish(e.target.value)}
+                />
+              </div>
+              <div className="sources-manager__input-container">
+                <label className="sources-manager__label" htmlFor="pageRangeArabicField">
+                  Page Range (Arabic)
+                </label>
+                <input
+                  id="pageRangeArabicField"
+                  className="sources-manager__input"
+                  type="text"
+                  value={pageRangeArabic}
+                  onChange={(e) => setPageRangeArabic(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="sources-manager__group">
+              <div className="sources-manager__input-container">
+                <label className="sources-manager__label" htmlFor="doiField">
+                  DOI
+                </label>
+                <input
+                  id="doiField"
+                  className="sources-manager__input"
+                  type="text"
+                  value={DOI}
+                  onChange={(e) => setDOI(e.target.value)}
+                />
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* ───────────────────────────────────────── */}
+        {/* URL & Date Accessed (shared) */}
+        {/* ───────────────────────────────────────── */}
         <div className="sources-manager__group">
-          <div className="sources-manager__input-container">
-            <label className="sources-manager__label" htmlFor="placeEnglishField">
-              Place (English)
-            </label>
-            <input
-              id="placeEnglishField"
-              className="sources-manager__input"
-              type="text"
-              value={placeEnglish}
-              onChange={(e) => setPlaceEnglish(e.target.value)}
-            />
-          </div>
-          <div className="sources-manager__input-container">
-            <label className="sources-manager__label" htmlFor="placeArabicField">
-              Place (Arabic)
-            </label>
-            <input
-              id="placeArabicField"
-              className="sources-manager__input"
-              type="text"
-              value={placeArabic}
-              onChange={(e) => setPlaceArabic(e.target.value)}
-            />
-          </div>
-          <div className="sources-manager__input-container">
-            <label className="sources-manager__label" htmlFor="isbnField">
-              ISBN
-            </label>
-            <input id="isbnField" className="sources-manager__input" type="text" value={ISBN} onChange={(e) => setISBN(e.target.value)} />
-          </div>
           <div className="sources-manager__input-container">
             <label className="sources-manager__label" htmlFor="urlField">
               URL
             </label>
-            <input id="urlField" className="sources-manager__input" type="text" value={url} onChange={(e) => setUrl(e.target.value)} />
+            <input
+              id="urlField"
+              className="sources-manager__input"
+              type="text"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+            />
           </div>
           <div className="sources-manager__input-container">
             <label className="sources-manager__label" htmlFor="dateAccessedField">
@@ -353,12 +636,19 @@ export default function SourcesManager() {
             />
           </div>
         </div>
-        {/* Contributors */}
+
+        {/* ───────────────────────────────────────── */}
+        {/* Contributors (shared) */}
+        {/* ───────────────────────────────────────── */}
         <div className="sources-manager__group sources-manager__group_vertical">
           <div className="sources-manager__input-container">
             <div className="sources-manager__label">
               Contributors
-              <button type="button" className="sources-manager__add-button" onClick={handleAddContributor}>
+              <button
+                type="button"
+                className="sources-manager__add-button"
+                onClick={handleAddContributor}
+              >
                 Add Contributor
               </button>
             </div>
@@ -368,7 +658,9 @@ export default function SourcesManager() {
               <select
                 className="sources-manager__select"
                 value={contributor.type}
-                onChange={(e) => handleContributorChange(index, "type", e.target.value)}
+                onChange={(e) =>
+                  handleContributorChange(index, "type", e.target.value)
+                }
               >
                 <option value="Author">Author</option>
                 <option value="Editor">Editor</option>
@@ -380,37 +672,57 @@ export default function SourcesManager() {
                 type="text"
                 placeholder="First Name (English)"
                 value={contributor.firstNameEnglish}
-                onChange={(e) => handleContributorChange(index, "firstNameEnglish", e.target.value)}
+                onChange={(e) =>
+                  handleContributorChange(index, "firstNameEnglish", e.target.value)
+                }
               />
               <input
                 type="text"
                 placeholder="Last Name (English)"
                 value={contributor.lastNameEnglish}
-                onChange={(e) => handleContributorChange(index, "lastNameEnglish", e.target.value)}
+                onChange={(e) =>
+                  handleContributorChange(index, "lastNameEnglish", e.target.value)
+                }
               />
               <input
                 type="text"
                 placeholder="First Name (Arabic)"
                 value={contributor.firstNameArabic}
-                onChange={(e) => handleContributorChange(index, "firstNameArabic", e.target.value)}
+                onChange={(e) =>
+                  handleContributorChange(index, "firstNameArabic", e.target.value)
+                }
               />
               <input
                 type="text"
                 placeholder="Last Name (Arabic)"
                 value={contributor.lastNameArabic}
-                onChange={(e) => handleContributorChange(index, "lastNameArabic", e.target.value)}
+                onChange={(e) =>
+                  handleContributorChange(index, "lastNameArabic", e.target.value)
+                }
               />
-              <button type="button" className="sources-manager__remove-button" onClick={() => handleRemoveContributor(index)}>
+              <button
+                type="button"
+                className="sources-manager__remove-button"
+                onClick={() => handleRemoveContributor(index)}
+              >
                 Remove
               </button>
             </div>
           ))}
         </div>
+
+        {/* ───────────────────────────────────────── */}
+        {/* Save & Delete Buttons */}
+        {/* ───────────────────────────────────────── */}
         <div className="sources-manager__buttons">
           <button type="submit" className="sources-manager__save-button">
             Save
           </button>
-          <button type="button" className="sources-manager__delete-button" onClick={handleDelete}>
+          <button
+            type="button"
+            className="sources-manager__delete-button"
+            onClick={handleDelete}
+          >
             Delete
           </button>
         </div>

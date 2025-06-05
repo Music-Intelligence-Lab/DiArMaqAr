@@ -1,5 +1,5 @@
 import TransliteratedNoteName from "./NoteName";
-import { SourcePageReference } from "./Source";
+import { SourcePageReference } from "./bibliography/Source";
 
 export default class TuningSystem {
   private id: string;

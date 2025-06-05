@@ -1,5 +1,5 @@
 import TransliteratedNoteName from "./NoteName";
-import { SourcePageReference } from "./Source";
+import { SourcePageReference } from "./bibliography/Source";
 
 export default class Maqam {
   private id: string;
@@ -74,6 +74,18 @@ export default class Maqam {
     }
 
     return true;
+  }
+  createMaqamWithNewSuyūr(newSuyūr: Sayr[]): Maqam {
+    return new Maqam(
+      this.id,
+      this.name,
+      this.ascendingNoteNames,
+      this.descendingNoteNames,
+      newSuyūr,
+      this.commentsEnglish,
+      this.commentsArabic,
+      this.sourcePageReferences
+    );
   }
 
   createMaqamWithNewSourcePageReferences(newSourcePageReferences: SourcePageReference[]): Maqam {
