@@ -12,9 +12,10 @@ export default function KeyboardControls() {
 
   const descendingNoteNames = selectedMaqam ? selectedMaqam.getDescendingNoteNames() : [];
 
-  const descendingMaqamCellDetails = getAllCells()
-    .map((cell) => getSelectedCellDetails(cell))
-    .filter((cell) => descendingNoteNames.includes(cell.noteName));
+  const descendingMaqamCells = getAllCells().filter((cell) => {
+    const det = getSelectedCellDetails(cell);
+    return descendingNoteNames.includes(det.noteName);
+  });
 
   useEffect(() => {
     const isTyping = () => {
@@ -26,10 +27,20 @@ export default function KeyboardControls() {
       if (e.repeat || e.shiftKey || e.ctrlKey || e.altKey || e.metaKey || isTyping()) return;
 
       const firstRowIndex = firstRowKeys.indexOf(e.key);
-      if (firstRowIndex >= 0 && firstRowIndex < descendingMaqamCellDetails.length) {
-        const cell = descendingMaqamCellDetails[firstRowIndex];
-        const freq = parseFloat(cell.frequency);
-        if (!isNaN(freq)) noteOn(freq);
+      if (firstRowIndex >= 0 && firstRowIndex < descendingMaqamCells.length) {
+        const cell = descendingMaqamCells[firstRowIndex];
+        const freq = parseFloat(getSelectedCellDetails(cell).frequency);
+        if (!isNaN(freq)) {
+          noteOn(freq);
+          const cAny = cell as any;
+          const dIndex = cAny.index;              // full pitch‑class index
+          const dOct   = cAny.octave;
+          window.dispatchEvent(
+            new CustomEvent("noteTrigger", {
+              detail: { index: dIndex, octave: dOct },
+            })
+          );
+        }
       }
 
       const secondRowIndex = secondRowKeys.indexOf(e.key);
@@ -52,8 +63,15 @@ export default function KeyboardControls() {
         const cell = selectedCells[cellIndex];
         const freq = parseFloat(getSelectedCellDetails(cell).frequency);
         if (!isNaN(freq)) {
-          // multiply frequency by 2^octaveShift
           noteOn(freq * Math.pow(2, octaveShift));
+          const scAny = cell as any; // original Cell object
+          const sIndex = scAny.index;
+          const sOct = scAny.octave + octaveShift;
+          window.dispatchEvent(
+            new CustomEvent("noteTrigger", {
+              detail: { index: sIndex, octave: sOct },
+            })
+          );
         }
       }
     };
@@ -61,10 +79,20 @@ export default function KeyboardControls() {
       if (e.shiftKey || e.ctrlKey || e.altKey || e.metaKey || isTyping()) return;
 
       const firstRowIndex = firstRowKeys.indexOf(e.key);
-      if (firstRowIndex >= 0 && firstRowIndex < descendingMaqamCellDetails.length) {
-        const cell = descendingMaqamCellDetails[firstRowIndex];
-        const freq = parseFloat(cell.frequency);
-        if (!isNaN(freq)) noteOff(freq);
+      if (firstRowIndex >= 0 && firstRowIndex < descendingMaqamCells.length) {
+        const cell = descendingMaqamCells[firstRowIndex];
+        const freq = parseFloat(getSelectedCellDetails(cell).frequency);
+        if (!isNaN(freq)) {
+          noteOff(freq);
+          const cAny = cell as any;
+          const dIndex = cAny.index;
+          const dOct = cAny.octave;
+          window.dispatchEvent(
+            new CustomEvent("noteRelease", {
+              detail: { index: dIndex, octave: dOct },
+            })
+          );
+        }
       }
 
       const secondRowIndex = secondRowKeys.indexOf(e.key);
@@ -87,6 +115,14 @@ export default function KeyboardControls() {
         const freq = parseFloat(getSelectedCellDetails(cell).frequency);
         if (!isNaN(freq)) {
           noteOff(freq * Math.pow(2, octaveShift));
+          const scAny = cell as any;
+          const sIndex = scAny.index;
+          const sOct = scAny.octave + octaveShift;
+          window.dispatchEvent(
+            new CustomEvent("noteRelease", {
+              detail: { index: sIndex, octave: sOct },
+            })
+          );
         }
       }
     };
