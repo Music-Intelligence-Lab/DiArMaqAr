@@ -7,9 +7,9 @@ export default function KeyboardControls() {
   const { selectedCells, getCellDetails, noteOn, noteOff, selectedMaqam, selectedMaqamTransposition, getAllCells, activeCells, setActiveCells } = useAppContext();
 
   // home row + semicolon + apostrophe
-  const firstRowKeys = ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "["];
+  const firstRowKeys = ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]"];
   const secondRowKeys = ["a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'", "\\"];
-  const thirdRowKeys = ["z", "x", "c", "v", "b", "n", "m", ",", ".", "/"];
+  const thirdRowKeys = ["`", "z", "x", "c", "v", "b", "n", "m", ",", ".", "/"];
 
   const descendingNoteNames = selectedMaqamTransposition ? selectedMaqamTransposition.descendingNoteNames : selectedMaqam ? selectedMaqam.getDescendingNoteNames() : [];
 

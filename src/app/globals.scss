@@ -23,9 +23,20 @@ html {
   overflow-y:hidden;
 }
 
+
+a {
+  color: $text;
+  text-decoration: underline;
+  transition: color 0.2s ease-in-out;
+
+  &:hover {
+    color: darken($text, 50%);
+  }
+}
+
 body {
- font-family: var(--font-readex-pro), Arial;
-  font-weight: 300;
+ font-family: var(--font-readex-pro), 'Courier New', Courier, monospace;
+  font-weight: 200;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -77,3 +88,4 @@ select:focus {
     width: 100%;
   }
 }
+
