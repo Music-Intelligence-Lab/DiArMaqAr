@@ -286,9 +286,7 @@
     "publisherArabic": "جبرائيل جبرى",
     "placeEnglish": "Cairo",
     "placeArabic": "القاهرة",
-    "ISBN": "",
-    "url": "",
-    "dateAccessed": ""
+    "ISBN": ""
   },
   {
     "id": "63Ao66cM9W2M-4NhIIHgv",
@@ -308,15 +306,15 @@
     "editionArabic": "",
     "publicationDateEnglish": "1937",
     "publicationDateArabic": "١٩٣٧",
+    "url": "",
+    "dateAccessed": "",
     "originalPublicationDateEnglish": "",
     "originalPublicationDateArabic": "",
     "publisherEnglish": "The Journal of the Royal Asiatic Society of Great Britain and Ireland, 2",
     "publisherArabic": "",
     "placeEnglish": "",
     "placeArabic": "",
-    "ISBN": "",
-    "url": "",
-    "dateAccessed": ""
+    "ISBN": ""
   },
   {
     "id": "zQU1LvEwGBICtY09uE5Rj",
@@ -336,15 +334,15 @@
     "editionArabic": "",
     "publicationDateEnglish": "1933",
     "publicationDateArabic": "١٩٣٣",
+    "url": "https://dlib.nyu.edu/aco/book/columbia_aco003841/1",
+    "dateAccessed": "04-06-2025",
     "originalPublicationDateEnglish": "",
     "originalPublicationDateArabic": "",
     "publisherEnglish": "al-Maṭbaʻah al-Amīrīyah",
     "publisherArabic": "المطبعة العامريّة",
     "placeEnglish": "Cairo",
     "placeArabic": "القاهرة",
-    "ISBN": "",
-    "url": "https://dlib.nyu.edu/aco/book/columbia_aco003841/1",
-    "dateAccessed": "04-06-2025"
+    "ISBN": ""
   },
   {
     "id": "zH7tN7EXXSSXNmYXyY-TK",
@@ -364,15 +362,15 @@
     "editionArabic": "",
     "publicationDateEnglish": "1885",
     "publicationDateArabic": "١٨٨٥",
+    "url": "",
+    "dateAccessed": "",
     "originalPublicationDateEnglish": "",
     "originalPublicationDateArabic": "",
     "publisherEnglish": "E. J. Brill",
     "publisherArabic": "",
     "placeEnglish": "Leide",
     "placeArabic": "لايدن",
-    "ISBN": "",
-    "url": "",
-    "dateAccessed": ""
+    "ISBN": ""
   },
   {
     "id": "I1lrMQizwLfs8wwA17rRv",
@@ -392,15 +390,15 @@
     "editionArabic": "",
     "publicationDateEnglish": "1930",
     "publicationDateArabic": "١٩٣٠",
+    "url": "",
+    "dateAccessed": "",
     "originalPublicationDateEnglish": "",
     "originalPublicationDateArabic": "",
     "publisherEnglish": "Paul Geuthner",
     "publisherArabic": "بول غيوثنر",
     "placeEnglish": "Paris",
     "placeArabic": "باريس",
-    "ISBN": "",
-    "url": "",
-    "dateAccessed": ""
+    "ISBN": ""
   },
   {
     "id": "uLBA69pin8YrIQVTwCHjF",
@@ -420,14 +418,44 @@
     "editionArabic": "",
     "publicationDateEnglish": "2022",
     "publicationDateArabic": "",
+    "url": "https://www.researchcatalogue.net/view/1092359/1871366 ",
+    "dateAccessed": "",
     "originalPublicationDateEnglish": "",
     "originalPublicationDateArabic": "",
     "publisherEnglish": "The Norwegian Academy of Music",
     "publisherArabic": "",
     "placeEnglish": "Oslo",
     "placeArabic": "اوسلو",
-    "ISBN": "",
-    "url": "https://www.researchcatalogue.net/view/1092359/1871366 ",
-    "dateAccessed": ""
+    "ISBN": ""
+  },
+  {
+    "id": "9z5haGGUVxFc3djx6Mtwl",
+    "titleEnglish": "TEST 2",
+    "titleArabic": "TEST 2",
+    "sourceType": "Article",
+    "contributors": [
+      {
+        "type": "Author",
+        "firstNameEnglish": "TEST 2",
+        "lastNameEnglish": "TEST 2",
+        "firstNameArabic": "TEST 2",
+        "lastNameArabic": "TEST 2"
+      }
+    ],
+    "editionEnglish": "TEST 2",
+    "editionArabic": "TEST 2",
+    "publicationDateEnglish": "TEST 2",
+    "publicationDateArabic": "TEST 2",
+    "url": "TEST 2",
+    "dateAccessed": "TEST 2",
+    "journalEnglish": "TEST 2",
+    "journalArabic": "TEST 2",
+    "volumeEnglish": "TEST 2",
+    "volumeArabic": "TEST 2",
+    "issueEnglish": "TEST 2",
+    "issueArabic": "TEST 2",
+    "pageRangeEnglish": "TEST 2",
+    "pageRangeArabic": "TEST 2",
+    "DOI": "TEST 2"
   }
 ]
