@@ -4,17 +4,17 @@ import { useEffect } from "react";
 import { useAppContext } from "@/contexts/app-context";
 
 export default function KeyboardControls() {
-  const { selectedCells, getSelectedCellDetails, noteOn, noteOff, selectedMaqam, getAllCells } = useAppContext();
+  const { selectedCells, getCellDetails, noteOn, noteOff, selectedMaqam, selectedMaqamTransposition, getAllCells, activeCells, setActiveCells } = useAppContext();
 
   // home row + semicolon + apostrophe
   const firstRowKeys = ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "["];
   const secondRowKeys = ["a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'", "\\"];
   const thirdRowKeys = ["z", "x", "c", "v", "b", "n", "m", ",", ".", "/"];
 
-  const descendingNoteNames = selectedMaqam ? selectedMaqam.getDescendingNoteNames() : [];
+  const descendingNoteNames = selectedMaqamTransposition ? selectedMaqamTransposition.descendingNoteNames : selectedMaqam ? selectedMaqam.getDescendingNoteNames() : [];
 
   const descendingMaqamCells = getAllCells().filter((cell) => {
-    const det = getSelectedCellDetails(cell);
+    const det = getCellDetails(cell);
     return descendingNoteNames.includes(det.noteName);
   });
 
@@ -30,12 +30,11 @@ export default function KeyboardControls() {
       const firstRowIndex = firstRowKeys.indexOf(e.key);
       if (firstRowIndex >= 0 && firstRowIndex < descendingMaqamCells.length) {
         const cell = descendingMaqamCells[firstRowIndex];
-        const freq = parseFloat(getSelectedCellDetails(cell).frequency);
+        const dIndex = cell.index;
+        const dOct = cell.octave;
+        const freq = parseFloat(getCellDetails(cell).frequency);
         if (!isNaN(freq)) {
           noteOn(freq);
-          const cAny = cell as any;
-          const dIndex = cAny.index;              // full pitch‑class index
-          const dOct   = cAny.octave;
           window.dispatchEvent(
             new CustomEvent("noteTrigger", {
               detail: { index: dIndex, octave: dOct },
@@ -66,12 +65,11 @@ export default function KeyboardControls() {
         }
         if (cellIndex >= 0 && cellIndex < baseCount) {
           const cell = selectedCells[cellIndex];
-          const freq = parseFloat(getSelectedCellDetails(cell).frequency);
+          const sIndex = cell.index;
+          const sOct = cell.octave + octaveShift;
+          const freq = parseFloat(getCellDetails(cell).frequency);
           if (!isNaN(freq)) {
             noteOn(freq * Math.pow(2, octaveShift));
-            const scAny = cell as any; // original Cell object
-            const sIndex = scAny.index;
-            const sOct = scAny.octave + octaveShift;
             window.dispatchEvent(
               new CustomEvent("noteTrigger", {
                 detail: { index: sIndex, octave: sOct },
@@ -90,12 +88,11 @@ export default function KeyboardControls() {
         }
         if (cellIndex >= 0 && cellIndex < baseCount) {
           const cell = selectedCells[cellIndex];
-          const freq = parseFloat(getSelectedCellDetails(cell).frequency);
+          const sIndex = cell.index;
+          const sOct = cell.octave + octaveShift;
+          const freq = parseFloat(getCellDetails(cell).frequency);
           if (!isNaN(freq)) {
             noteOn(freq * Math.pow(2, octaveShift));
-            const scAny = cell as any;
-            const sIndex = scAny.index;
-            const sOct = scAny.octave + octaveShift;
             window.dispatchEvent(
               new CustomEvent("noteTrigger", {
                 detail: { index: sIndex, octave: sOct },
@@ -111,12 +108,11 @@ export default function KeyboardControls() {
       const firstRowIndex = firstRowKeys.indexOf(e.key);
       if (firstRowIndex >= 0 && firstRowIndex < descendingMaqamCells.length) {
         const cell = descendingMaqamCells[firstRowIndex];
-        const freq = parseFloat(getSelectedCellDetails(cell).frequency);
+        const freq = parseFloat(getCellDetails(cell).frequency);
         if (!isNaN(freq)) {
           noteOff(freq);
-          const cAny = cell as any;
-          const dIndex = cAny.index;
-          const dOct = cAny.octave;
+          const dIndex = cell.index;
+          const dOct = cell.octave;
           window.dispatchEvent(
             new CustomEvent("noteRelease", {
               detail: { index: dIndex, octave: dOct },
@@ -146,12 +142,11 @@ export default function KeyboardControls() {
         }
         if (cellIndex >= 0 && cellIndex < baseCount) {
           const cell = selectedCells[cellIndex];
-          const freq = parseFloat(getSelectedCellDetails(cell).frequency);
+          const freq = parseFloat(getCellDetails(cell).frequency);
           if (!isNaN(freq)) {
             noteOff(freq * Math.pow(2, octaveShift));
-            const scAny = cell as any;
-            const sIndex = scAny.index;
-            const sOct = scAny.octave + octaveShift;
+            const sIndex = cell.index;
+            const sOct = cell.octave + octaveShift;
             window.dispatchEvent(
               new CustomEvent("noteRelease", {
                 detail: { index: sIndex, octave: sOct },
@@ -170,12 +165,11 @@ export default function KeyboardControls() {
         }
         if (cellIndex >= 0 && cellIndex < baseCount) {
           const cell = selectedCells[cellIndex];
-          const freq = parseFloat(getSelectedCellDetails(cell).frequency);
+          const freq = parseFloat(getCellDetails(cell).frequency);
           if (!isNaN(freq)) {
             noteOff(freq * Math.pow(2, octaveShift));
-            const scAny = cell as any;
-            const sIndex = scAny.index;
-            const sOct = scAny.octave + octaveShift;
+            const sIndex = cell.index;
+            const sOct = cell.octave + octaveShift;
             window.dispatchEvent(
               new CustomEvent("noteRelease", {
                 detail: { index: sIndex, octave: sOct },
@@ -192,7 +186,27 @@ export default function KeyboardControls() {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [selectedCells, getSelectedCellDetails, noteOn, noteOff]);
+  }, [selectedCells, getCellDetails, noteOn, noteOff]);
+
+  useEffect(() => {
+    const handleTrigger = (e: any) => {
+      const { index, octave } = e.detail;
+      setActiveCells((prev) => {
+        if (prev.some((c) => c.index === index && c.octave === octave)) return prev;
+        return [...prev, { index, octave }];
+      });
+    };
+    const handleRelease = (e: any) => {
+      const { index, octave } = e.detail;
+      setActiveCells((prev) => prev.filter((c) => !(c.index === index && c.octave === octave)));
+    };
+    window.addEventListener("noteTrigger", handleTrigger);
+    window.addEventListener("noteRelease", handleRelease);
+    return () => {
+      window.removeEventListener("noteTrigger", handleTrigger);
+      window.removeEventListener("noteRelease", handleRelease);
+    };
+  }, [setActiveCells]);
 
   return null;
 }

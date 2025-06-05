@@ -12,7 +12,7 @@ import TransliteratedNoteName, { TransliteratedNoteNameOctaveOne, Transliterated
 import detectPitchClassType from "@/functions/detectPitchClassType";
 import convertPitchClass, { shiftPitchClass, frequencyToMidiNoteNumber } from "@/functions/convertPitchClass";
 import { octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames, octaveThreeNoteNames, octaveFourNoteNames } from "@/models/NoteName";
-import Maqam, { Sayr } from "@/models/Maqam";
+import Maqam, { MaqamTransposition, Sayr } from "@/models/Maqam";
 import getNoteNamesUsedInTuningSystem from "@/functions/getNoteNamesUsedInTuningSystem";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import midiNumberToNoteName from "@/functions/midiToNoteNumber";
@@ -58,6 +58,7 @@ export interface CellDetails {
   originalValue: string;
   originalValueType: string;
   englishName: string;
+  index: number;
   octave: number;
 }
 
@@ -83,6 +84,8 @@ interface AppContextInterface {
   setSoundSettings: React.Dispatch<React.SetStateAction<SoundSettings>>;
   selectedCells: Cell[];
   setSelectedCells: React.Dispatch<React.SetStateAction<Cell[]>>;
+  activeCells: Cell[];
+  setActiveCells: React.Dispatch<React.SetStateAction<Cell[]>>;
   getAllCells: () => Cell[];
   selectedIndices: number[];
   setSelectedIndices: React.Dispatch<React.SetStateAction<number[]>>;
@@ -90,7 +93,7 @@ interface AppContextInterface {
   setOriginalIndices: React.Dispatch<React.SetStateAction<number[]>>;
   mapIndices: (notesToMap: TransliteratedNoteName[], givenNumberOfPitchClasses: number, setOriginal: boolean) => void;
   initialMappingDone: boolean;
-  getSelectedCellDetails: (cell: Cell) => CellDetails;
+  getCellDetails: (cell: Cell) => CellDetails;
   ajnas: Jins[];
   setAjnas: React.Dispatch<React.SetStateAction<Jins[]>>;
   selectedJins: Jins | null;
@@ -103,6 +106,8 @@ interface AppContextInterface {
   setSelectedMaqam: React.Dispatch<React.SetStateAction<Maqam | null>>;
   checkIfMaqamIsSelectable: (maqam: Maqam) => boolean;
   handleClickMaqam: (maqam: Maqam) => void;
+  selectedMaqamTransposition: MaqamTransposition | null;
+  setSelectedMaqamTransposition: React.Dispatch<React.SetStateAction<MaqamTransposition | null>>;
   maqamSayrId: string;
   setMaqamSayrId: React.Dispatch<React.SetStateAction<string>>;
   centsTolerance: number;
@@ -151,6 +156,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   const activeNotesRef = useRef<Map<number, { oscillator: OscillatorNode; gainNode: GainNode }[]>>(new Map());
 
   const [selectedCells, setSelectedCells] = useState<Cell[]>([]);
+  const [activeCells, setActiveCells] = useState<Cell[]>([]);
   const [selectedIndices, setSelectedIndices] = useState<number[]>([]);
   const [originalIndices, setOriginalIndices] = useState<number[]>([]);
   const [initialMappingDone, setInitialMappingDone] = useState(false);
@@ -160,6 +166,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
   const [maqamat, setMaqamat] = useState<Maqam[]>([]);
   const [selectedMaqam, setSelectedMaqam] = useState<Maqam | null>(null);
+  const [selectedMaqamTransposition, setSelectedMaqamTransposition] = useState<MaqamTransposition | null>(null);
   const [maqamSayrId, setMaqamSayrId] = useState<string>("");
 
   const [patterns, setPatterns] = useState<Pattern[]>([]);
@@ -365,7 +372,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       if (idx < 0 || idx >= cells.length) return;
 
       // grab the frequency from your cell‐detail helper
-      const freqStr = getSelectedCellDetails(cells[idx]).frequency;
+      const freqStr = getCellDetails(cells[idx]).frequency;
       const freq = parseFloat(freqStr);
       if (isNaN(freq)) return;
 
@@ -376,7 +383,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         noteOff(freq);
       }
     } else if (soundSettings.inputMode === "selection") {
-      const selectedCellDetails = selectedCells.map((cell) => getSelectedCellDetails(cell));
+      const selectedCellDetails = selectedCells.map((cell) => getCellDetails(cell));
       const { note, alt } = midiNumberToNoteName(noteNumber);
 
       for (const cellDetails of selectedCellDetails) {
@@ -642,7 +649,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     activeNotesRef.current.set(frequency, queue);
   }
 
-  const getSelectedCellDetails = (cell: Cell): CellDetails => {
+  const getCellDetails = (cell: Cell): CellDetails => { //todo expand index and octave here 
     const emptyDetails: CellDetails = {
       noteName: "",
       fraction: "",
@@ -653,6 +660,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       englishName: "",
       originalValue: "",
       originalValueType: "",
+      index: cell.index,
       octave: cell.octave,
     };
 
@@ -725,6 +733,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       frequency: conv ? conv.frequency : "-",
       originalValue: shiftedPc,
       originalValueType: pitchType,
+      index: cell.index,
       octave: cell.octave,
     };
   };
@@ -867,6 +876,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     setSelectedMaqam(maqam);
     setSelectedJins(null);
     setMaqamSayrId("");
+    setSelectedMaqamTransposition(null);
     const namesToSelect = maqam.getAscendingNoteNames();
 
     // translate names back into SelectedCell[] by matching against usedNoteNames
@@ -947,6 +957,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         setSoundSettings,
         selectedCells,
         setSelectedCells,
+        activeCells,
+        setActiveCells,
         getAllCells,
         selectedIndices,
         setSelectedIndices,
@@ -954,7 +966,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         setOriginalIndices,
         mapIndices,
         initialMappingDone,
-        getSelectedCellDetails,
+        getCellDetails,
         ajnas,
         setAjnas,
         selectedJins,
@@ -967,6 +979,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         setSelectedMaqam,
         checkIfMaqamIsSelectable,
         handleClickMaqam,
+        selectedMaqamTransposition,
+        setSelectedMaqamTransposition,
         maqamSayrId,
         setMaqamSayrId,
         centsTolerance,

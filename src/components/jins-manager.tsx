@@ -19,7 +19,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
     handleClickJins,
     checkIfJinsIsSelectable,
     selectedCells,
-    getSelectedCellDetails,
+    getCellDetails,
     clearSelections,
     // playSequence,
     getAllCells,
@@ -29,12 +29,12 @@ export default function JinsManager({ admin }: { admin: boolean }) {
   const sortedAjnas = [...ajnas].sort((a, b) => a.getName().localeCompare(b.getName()));
 
   // const selectedCellDetails = selectedCells.map((cell) => {
-  //   return getSelectedCellDetails(cell);
+  //   return getCellDetails(cell);
   // });
 
   const allCells = getAllCells();
 
-  const allCellDetails = allCells.map(getSelectedCellDetails);
+  const allCellDetails = allCells.map(getCellDetails);
 
   // const jinsCellDetails = selectedJins ? allCellDetails.filter((cell) => selectedJins.getNoteNames().includes(cell.noteName)) : [];
 
@@ -52,7 +52,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
   const handleSaveJins = async () => {
     if (!selectedJins) return;
     const selectedNoteNames = selectedCells.map((cell: Cell) => {
-      const details = getSelectedCellDetails(cell);
+      const details = getCellDetails(cell);
       return details.noteName;
     });
 

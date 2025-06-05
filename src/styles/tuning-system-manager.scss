@@ -117,6 +117,7 @@
     margin-bottom: 1.5rem;
     padding: 0.4rem;
     font-family: inherit;
+
     // font-size: 1rem;
     :focus {
       outline: none;
@@ -307,20 +308,56 @@
 
   &__list {
     display: grid;
-    width: 100%;
+    grid-template-columns: repeat(10, minmax(19%, 1fr));
+    grid-template-rows: repeat(3, auto);
     gap: 10px;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    height: calc(225px + 60px);
+    overflow-x: scroll;
+    overflow-y: hidden;
+    position: relative;
+
+    &::before {
+      content: "";
+      position: fixed; // Use absolute positioning relative to the container
+      top: 270px;
+      right: 30px;
+      bottom: 0;
+      left: 95%;
+      background: linear-gradient(to left, $dark-grey, transparent);
+      background-size: 100% 255px;
+      background-repeat: no-repeat;
+      pointer-events: none;
+    }
+
+    &::-webkit-scrollbar {
+      height: 6px;
+      position: relative;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: $primary;
+      cursor: pointer;
+      position: relative;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      position: relative;
+    }
+
   }
 
   &__item {
+    height: 75px;
     display: flex;
     flex-direction: column;
     justify-content: left;
     align-items: left;
     text-align: left;
     padding: 10px;
-    background-color: rgba($primary, 0.5);
-    border-radius: 5px;
+    background-color: rgba($primary, 0.4);
+    border-radius: 0px;
     font-size: 14px;
     color: $text;
     cursor: pointer;
@@ -329,6 +366,10 @@
 
     &_selected {
       background-color: $secondary;
+
+      &:hover {
+        background-color: $secondary !important;
+      }
     }
 
     &:hover {
@@ -352,7 +393,6 @@
   }
 
   &__grid-wrapper {
-    margin-top: 20px;
     width: 100%;
   }
 
@@ -366,16 +406,6 @@
     font-size: 14px;
     font-weight: 500;
     padding-bottom: 0px;
-
-    /*     &::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background-color: #f9e6cf;
-      border-radius: 3px;
-      cursor: pointer;
-    } */
   }
 
   &__details {

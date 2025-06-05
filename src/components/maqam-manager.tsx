@@ -16,7 +16,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
     selectedCells,
     setSelectedCells,
     getAllCells,
-    getSelectedCellDetails,
+    getCellDetails,
     clearSelections,
     // playSequence,
     handleClickMaqam,
@@ -31,7 +31,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
 
   const allCells = getAllCells();
 
-  const allCellDetails = allCells.map(getSelectedCellDetails);
+  const allCellDetails = allCells.map(getCellDetails);
 
   const setOfMaqamat = new Set(maqamat.map((m) => m.getId()));
   let newMaqamIdNum = 1;
@@ -45,17 +45,17 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
 
   // if (selectedMaqam) {
   //   ascendingMaqamCellDetails = allCells
-  //     .map((cell) => getSelectedCellDetails(cell))
+  //     .map((cell) => getCellDetails(cell))
   //     .filter((cell) => selectedMaqam.getAscendingNoteNames().includes(cell.noteName));
   //   descendingMaqamCellDetails = allCells
-  //     .map((cell) => getSelectedCellDetails(cell))
+  //     .map((cell) => getCellDetails(cell))
   //     .filter((cell) => selectedMaqam.getDescendingNoteNames().includes(cell.noteName))
   //     .reverse();
   // }
 
   // Map selectedCells to note names
   const selectedCellDetails = selectedCells.map((cell: Cell) => {
-    return getSelectedCellDetails(cell);
+    return getCellDetails(cell);
   });
 
   const selectedCellNoteNames = selectedCellDetails.map((cellDetail) => cellDetail.noteName);

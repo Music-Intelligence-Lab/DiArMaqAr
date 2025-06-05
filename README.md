@@ -250,7 +250,7 @@ In addition, the context provides core functions such as:
 - **playSequence**: Play a sequence of notes, respecting patterns and tempo.
 - **handleStartNoteNameChange**: Change the starting note and update mappings.
 - **mapIndices**: Map note names to indices in the Tuning System.
-- **getSelectedCellDetails**: Retrieve all computed details for a given cell (note name, frequency, ratios, cents, etc.).
+- **getCellDetails**: Retrieve all computed details for a given cell (note name, frequency, ratios, cents, etc.).
 - **getAllCells**: Get all possible cells across octaves.
 - **clearSelections**: Reset selections for cells, jins, and maqam.
 - **checkIfJinsIsSelectable** and **checkIfMaqamIsSelectable**: Validate if a jins or maqam can be selected in the current tuning.

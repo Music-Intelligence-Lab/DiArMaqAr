@@ -6,6 +6,7 @@ import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { getIntervalPattern, getTranspositions, mergeTranspositions, Interval } from "@/functions/transpose";
 import Jins from "@/models/Jins";
+import { MaqamTransposition } from "@/models/Maqam";
 
 export default function MaqamTranspositions() {
   const {
@@ -13,12 +14,13 @@ export default function MaqamTranspositions() {
     selectedTuningSystem,
     setSelectedCells,
     getAllCells,
-    getSelectedCellDetails,
+    getCellDetails,
     centsTolerance,
     setCentsTolerance,
     playNoteFrequency,
     playSequence,
     ajnas,
+    setSelectedMaqamTransposition
   } = useAppContext();
 
   if (!selectedMaqam || !selectedTuningSystem) return null;
@@ -32,7 +34,7 @@ export default function MaqamTranspositions() {
 
   const allCells = getAllCells();
 
-  const allCellDetails = allCells.map((cell) => getSelectedCellDetails(cell));
+  const allCellDetails = allCells.map((cell) => getCellDetails(cell));
 
   const ascendingMaqamCellDetails = allCellDetails.filter((cell) => ascendingNoteNames.includes(cell.noteName));
   const descendingMaqamCellDetails = allCellDetails.filter((cell) => descendingNoteNames.includes(cell.noteName)).reverse();
@@ -173,12 +175,13 @@ export default function MaqamTranspositions() {
                   const newSelectedCells = [];
 
                   for (const cell of allCells) {
-                    const cellDetails = getSelectedCellDetails(cell);
+                    const cellDetails = getCellDetails(cell);
                     if (transpositionNoteNames.includes(cellDetails.noteName)) {
                       newSelectedCells.push(cell);
                     }
                   }
                   setSelectedCells(newSelectedCells);
+                  setSelectedMaqamTransposition(null);
                 }}
               >
                 Select & Load to Keyboard
@@ -204,7 +207,7 @@ export default function MaqamTranspositions() {
                   const newSelectedCells = [];
 
                   for (const cell of allCells) {
-                    const cellDetails = getSelectedCellDetails(cell);
+                    const cellDetails = getCellDetails(cell);
                     if (transpositionNoteNames.includes(cellDetails.noteName)) {
                       newSelectedCells.push(cell);
                     }
@@ -506,12 +509,18 @@ export default function MaqamTranspositions() {
                         const newSelectedCells = [];
 
                         for (const cell of allCells) {
-                          const cellDetails = getSelectedCellDetails(cell);
+                          const cellDetails = getCellDetails(cell);
                           if (transpositionNoteNames.includes(cellDetails.noteName)) {
                             newSelectedCells.push(cell);
                           }
                         }
                         setSelectedCells(newSelectedCells);
+                        const transposition: MaqamTransposition = {
+                          name: `${selectedMaqam.getName()} al-${ascendingDetails[0].noteName} (${getEnglishNoteName(ascendingDetails[0].noteName)})`,
+                          ascendingNoteNames: ascendingDetails.map((cell) => cell.noteName),
+                          descendingNoteNames: descendingDetails.map((cell) => cell.noteName),
+                        }
+                        setSelectedMaqamTransposition(transposition);
                       }}
                     >
                       Select & Load to Keyboard
@@ -536,7 +545,7 @@ export default function MaqamTranspositions() {
                   const newSelectedCells = [];
 
                   for (const cell of allCells) {
-                    const cellDetails = getSelectedCellDetails(cell);
+                    const cellDetails = getCellDetails(cell);
                     if (transpositionNoteNames.includes(cellDetails.noteName)) {
                       newSelectedCells.push(cell);
                     }
