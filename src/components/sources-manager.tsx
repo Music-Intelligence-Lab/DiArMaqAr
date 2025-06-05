@@ -272,7 +272,7 @@ export default function SourcesManager() {
             <option value="new">-- Create New Source --</option>
             {sources.map((s: Source) => (
               <option key={s.getId()} value={s.getId()}>
-                {`${s.getTitleEnglish()} (${s.getSourceType()})`}
+                {`${s.getContributors()[0].lastNameEnglish} (${s.getReleaseDateEnglish()}) ${s.getTitleEnglish()} (${s.getSourceType()})`}
               </option>
             ))}
           </select>

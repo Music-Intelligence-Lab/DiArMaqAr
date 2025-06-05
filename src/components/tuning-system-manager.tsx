@@ -784,8 +784,8 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
           </div>
         </summary>
 
-        <div
-          className="tuning-system-manager__octave-scroll"
+        <div 
+        className="tuning-system-manager__octave-scroll"
           ref={octaveScrollRefs[octave as 0 | 1 | 2 | 3]}
         >
           <table className="tuning-system-manager__octave-table" border={0}>
@@ -799,6 +799,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
             <tbody>
               {/* Row 1: Pitch Class */}
+              {filters.pitchClass && (
               <tr>
                 <td>Pitch Class</td>
                 {pitchClassesArr.map((_, colIndex) => (
@@ -807,6 +808,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                   </td>
                 ))}
               </tr>
+              )}
               {/* Row 2: Note Name */}
               <tr style={{ minHeight: "50px", maxHeight: "50px", height: "50px" }}>
                 <td>Note Name</td>
@@ -867,7 +869,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                           value={selectedAbjadNames[colIndex + (octave === 1 ? 0 : numberOfPitchClasses)] || ""}
                           onChange={(e) => handleAbjadSelect(colIndex, e.target.value, octave)}
                         >
-                          <option value="">(none)</option>
+                          <option value="">--</option>
                           {abjadNames.map((name, idx) => (
                             <option key={`${name}-${idx}`} value={name}>
                               {name.replace(/\//g, "/\u200B")}
@@ -876,7 +878,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                         </select>
                       ) : (
                         <span className="tuning-system-manager__abjad-name">
-                          {(selectedAbjadNames[colIndex + (octave <= 1 ? 0 : numberOfPitchClasses)] || "").replace(/\//g, "/\u200B")}
+                          {(selectedAbjadNames[colIndex + (octave <= 1 ? 0 : numberOfPitchClasses)] || "--").replace(/\//g, "/\u200B")}
                         </span>
                       )}
                     </td>
@@ -1142,7 +1144,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 Year
               </label>
               <input
-                className="tuning-system-manager__input"
+                className="tuning-system-manager__input" 
                 id="yearField"
                 type="text"
                 value={year ?? ""}
@@ -1152,13 +1154,13 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
           </div>
 
           <div className="tuning-system-manager__group">
-            <div className="tuning-system-manager__sources-container">
+            <div className="tuning-system-manager__sources-select-container">
               {sourcePageReferences.length < 6 && <button className="tuning-system-manager__source-add-button" onClick={addSourceRef}>
                 Add Source
               </button>}
               {
                 sourcePageReferences.map((ref, idx) => (
-                  <div key={idx} className="tuning-system-manager__source-item">
+                  <div key={idx} className="tuning-system-manager__source-select-item">
                     <select
                       className="tuning-system-manager__source-select"
                       value={ref.sourceId}
@@ -1304,23 +1306,42 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       {!admin && (
         <div className="tuning-system-manager__list">
           {tuningSystems.length === 0 ? (
-            <p>No tuning systems available.</p>
+        <p>No tuning systems available.</p>
           ) : (
-            tuningSystems.map((tuningSystem, index) => (
-              <div
-                key={index}
-                className={
-                  "tuning-system-manager__item " +
-                  (tuningSystem.getId() === selectedTuningSystem?.getId() ? "tuning-system-manager__item_selected " : "")
-                }
-                onClick={() => {
-                  handleTuningSystemClick(tuningSystem);
-                }}
-              >
-                <strong className="tuning-system-manager__item-english-creator">{`${tuningSystem.getCreatorEnglish()} (${tuningSystem.getYear()})`}</strong>
-                  <strong className="tuning-system-manager__item-english-title">{tuningSystem.getTitleEnglish()}</strong>
-              </div>
-            ))
+        [...tuningSystems]
+          .sort((a, b) => {
+            // Extract numeric and optional letter parts from year string
+            function parseYear(year: string) {
+          const match = year.match(/^(\d+)([a-zA-Z]?)$/);
+          if (match) {
+            return { num: parseInt(match[1], 10), letter: match[2] };
+          }
+          return { num: parseInt(year, 10) || 0, letter: "" };
+            }
+            const yearA = parseYear(a.getYear());
+            const yearB = parseYear(b.getYear());
+            if (yearA.num !== yearB.num) {
+          return yearA.num - yearB.num;
+            }
+            return yearA.letter.localeCompare(yearB.letter);
+          })
+          .map((tuningSystem, index) => (
+            <div
+          key={index}
+          className={
+            "tuning-system-manager__item " +
+            (tuningSystem.getId() === selectedTuningSystem?.getId()
+              ? "tuning-system-manager__item_selected "
+              : "")
+          }
+          onClick={() => {
+            handleTuningSystemClick(tuningSystem);
+          }}
+            >
+          <strong className="tuning-system-manager__item-english-creator">{`${tuningSystem.getCreatorEnglish()} (${tuningSystem.getYear()})`}</strong>
+          <strong className="tuning-system-manager__item-english-title">{tuningSystem.getTitleEnglish()}</strong>
+            </div>
+          ))
           )}
         </div>
       )}
@@ -1424,7 +1445,28 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       )}
       {/* </details> */}
 
-      {/* COMMENTS AND SOURCES */}
+
+
+      <div className="tuning-system-manager__grid-wrapper">{renderNoteNameGrid()}</div>
+      <div className="tuning-system-manager__buttons">
+        <button
+          className="tuning-system-manager__play-sequence-button"
+          disabled={selectedCells.length === 0}
+          onClick={() => {
+            const frequencies = selectedCells.map((cell) => {
+              const cellDetails = getSelectedCellDetails(cell);
+
+              return parseInt(cellDetails.frequency) ?? 0;
+            });
+
+            playSequence(frequencies);
+          }}
+        >
+          Play Selected Sequence
+        </button>
+      </div>
+
+            {/* COMMENTS AND SOURCES */}
       <div className="tuning-system-manager__comments-sources-container">
         <div className="tuning-system-manager__comments-english">
           <h3>Comments:</h3>
@@ -1448,19 +1490,35 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
         <div className="tuning-system-manager__sources-english">
           <h3>Sources:</h3>
-          {sourcePageReferences.map((ref, idx) => {
-            const source = sources.find((s) => s.getId() === ref.sourceId);
-            return (
+            {[...sourcePageReferences]
+            .sort((a, b) => {
+              const srcA = sources.find((s) => s.getId() === a.sourceId);
+              const srcB = sources.find((s) => s.getId() === b.sourceId);
+              const nameA = srcA?.getContributors()[0]?.lastNameEnglish || "";
+              const nameB = srcB?.getContributors()[0]?.lastNameEnglish || "";
+              return nameA.localeCompare(nameB);
+            })
+            .map((ref, idx) => {
+              const source = sources.find((s) => s.getId() === ref.sourceId);
+              return (
               <div key={idx} className="tuning-system-manager__source-item">
-                {source &&
-                  <span className="">
-                    {`${source?.getContributors()[0]?.lastNameEnglish ?? ""} (${source?.getReleaseDateEnglish() ?? ""}${source?.getReleaseDateEnglish() ? "/" + source.getReleaseDateEnglish() : ""
-                      }:${ref.page})`}
-                  </span>
-                }
+                {source && (
+                <span className="">
+                  {source.getContributors()[0].lastNameEnglish?.length
+                  ? `${source.getContributors()[0]?.lastNameEnglish ?? ""}, ${source
+                    .getContributors()[0]?.firstNameEnglish?.split(" ")
+                    .map((w) => w.charAt(0))
+                    .join(". ") ?? ""}. (${source.getReleaseDateEnglish() ? source.getReleaseDateEnglish() + "/" : ""}${
+                    source.getReleaseDateEnglish() ?? ""
+                    }:${ref.page})`
+                  : `${source.getTitleEnglish()} (${source.getReleaseDateEnglish() ? source.getReleaseDateEnglish() + "/" : ""}${
+                    source.getReleaseDateEnglish() ?? ""
+                    }:${ref.page})`}
+                </span>
+                )}
               </div>
-            );
-          })}
+              );
+            })}
         </div>
 
         {/* <div className="tuning-system-manager__sources-arabic">
@@ -1470,25 +1528,6 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
       </div>
 
-
-      <div className="tuning-system-manager__grid-wrapper">{renderNoteNameGrid()}</div>
-      <div className="tuning-system-manager__buttons">
-        <button
-          className="tuning-system-manager__play-sequence-button"
-          disabled={selectedCells.length === 0}
-          onClick={() => {
-            const frequencies = selectedCells.map((cell) => {
-              const cellDetails = getSelectedCellDetails(cell);
-
-              return parseInt(cellDetails.frequency) ?? 0;
-            });
-
-            playSequence(frequencies);
-          }}
-        >
-          Play Selected Sequence
-        </button>
-      </div>
     </div>
   );
 }

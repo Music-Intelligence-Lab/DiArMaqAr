@@ -115,14 +115,14 @@
   },
   {
     "id": "SZNw4epqCZe7VhE5eWT3L",
-    "titleEnglish": "Kitāb al-Musiqā al-Sharqī",
+    "titleEnglish": "Kitāb al-Mūsiqā al-Sharqī",
     "titleArabic": "كتاب الموسيقى الشرقي",
     "sourceType": "Book",
     "contributors": [
       {
         "type": "Author",
         "firstNameEnglish": "Mohammad Kāmil",
-        "lastNameEnglish": "Al-Khul’ī",
+        "lastNameEnglish": "Al-Khulʿī",
         "firstNameArabic": "محمد كامل",
         "lastNameArabic": "الخلعي"
       }
@@ -286,6 +286,148 @@
     "publisherArabic": "جبرائيل جبرى",
     "placeEnglish": "Cairo",
     "placeArabic": "القاهرة",
-    "ISBN": ""
+    "ISBN": "",
+    "url": "",
+    "dateAccessed": ""
+  },
+  {
+    "id": "63Ao66cM9W2M-4NhIIHgv",
+    "titleEnglish": "The Lute Scale of Avicenna",
+    "titleArabic": "سلم العود لإبن سينا",
+    "sourceType": "Book",
+    "contributors": [
+      {
+        "type": "Author",
+        "firstNameEnglish": "Henry George",
+        "lastNameEnglish": "Farmer",
+        "firstNameArabic": "هنري جورج",
+        "lastNameArabic": "فارمر"
+      }
+    ],
+    "editionEnglish": "",
+    "editionArabic": "",
+    "publicationDateEnglish": "1937",
+    "publicationDateArabic": "١٩٣٧",
+    "originalPublicationDateEnglish": "",
+    "originalPublicationDateArabic": "",
+    "publisherEnglish": "The Journal of the Royal Asiatic Society of Great Britain and Ireland, 2",
+    "publisherArabic": "",
+    "placeEnglish": "",
+    "placeArabic": "",
+    "ISBN": "",
+    "url": "",
+    "dateAccessed": ""
+  },
+  {
+    "id": "zQU1LvEwGBICtY09uE5Rj",
+    "titleEnglish": "Kitāb Muʼtamar al-Mūsīqā al-ʻArabiyah",
+    "titleArabic": "كتاب مؤتمر الموسيقى العربية",
+    "sourceType": "Book",
+    "contributors": [
+      {
+        "type": "Author",
+        "firstNameEnglish": "",
+        "lastNameEnglish": "",
+        "firstNameArabic": "",
+        "lastNameArabic": ""
+      }
+    ],
+    "editionEnglish": "",
+    "editionArabic": "",
+    "publicationDateEnglish": "1933",
+    "publicationDateArabic": "١٩٣٣",
+    "originalPublicationDateEnglish": "",
+    "originalPublicationDateArabic": "",
+    "publisherEnglish": "al-Maṭbaʻah al-Amīrīyah",
+    "publisherArabic": "المطبعة العامريّة",
+    "placeEnglish": "Cairo",
+    "placeArabic": "القاهرة",
+    "ISBN": "",
+    "url": "https://dlib.nyu.edu/aco/book/columbia_aco003841/1",
+    "dateAccessed": "04-06-2025"
+  },
+  {
+    "id": "zH7tN7EXXSSXNmYXyY-TK",
+    "titleEnglish": "Actes du Sixième Congrès International Des Orientalistes tenu en 1883 à Leide. Deuxième Partie",
+    "titleArabic": "",
+    "sourceType": "Book",
+    "contributors": [
+      {
+        "type": "Author",
+        "firstNameEnglish": "J. P. N.",
+        "lastNameEnglish": "Land",
+        "firstNameArabic": "ج. ب. ن.",
+        "lastNameArabic": "لاند"
+      }
+    ],
+    "editionEnglish": "",
+    "editionArabic": "",
+    "publicationDateEnglish": "1885",
+    "publicationDateArabic": "١٨٨٥",
+    "originalPublicationDateEnglish": "",
+    "originalPublicationDateArabic": "",
+    "publisherEnglish": "E. J. Brill",
+    "publisherArabic": "",
+    "placeEnglish": "Leide",
+    "placeArabic": "لايدن",
+    "ISBN": "",
+    "url": "",
+    "dateAccessed": ""
+  },
+  {
+    "id": "I1lrMQizwLfs8wwA17rRv",
+    "titleEnglish": "La Musique Arabe, Tome 1",
+    "titleArabic": "الموسيقى العربية، المجلد ١",
+    "sourceType": "Book",
+    "contributors": [
+      {
+        "type": "Author",
+        "firstNameEnglish": "Rodolphe",
+        "lastNameEnglish": "d'Erlanger",
+        "firstNameArabic": "رودولف",
+        "lastNameArabic": "ديرلانجير"
+      }
+    ],
+    "editionEnglish": "",
+    "editionArabic": "",
+    "publicationDateEnglish": "1930",
+    "publicationDateArabic": "١٩٣٠",
+    "originalPublicationDateEnglish": "",
+    "originalPublicationDateArabic": "",
+    "publisherEnglish": "Paul Geuthner",
+    "publisherArabic": "بول غيوثنر",
+    "placeEnglish": "Paris",
+    "placeArabic": "باريس",
+    "ISBN": "",
+    "url": "",
+    "dateAccessed": ""
+  },
+  {
+    "id": "uLBA69pin8YrIQVTwCHjF",
+    "titleEnglish": "Holographic Composition Technique: Revisiting the Medieval Treatises on Iranian Music",
+    "titleArabic": "تقنية التأليف الثلاثي الأبعاد: إعادة النظر في رسائل العصور الوسطى عن الموسيقى الإيرانية",
+    "sourceType": "Book",
+    "contributors": [
+      {
+        "type": "Author",
+        "firstNameEnglish": "Idin Samimi",
+        "lastNameEnglish": "Mofakham",
+        "firstNameArabic": "ايدين ساميمي",
+        "lastNameArabic": "مفخم"
+      }
+    ],
+    "editionEnglish": "",
+    "editionArabic": "",
+    "publicationDateEnglish": "2022",
+    "publicationDateArabic": "",
+    "originalPublicationDateEnglish": "",
+    "originalPublicationDateArabic": "",
+    "publisherEnglish": "The Norwegian Academy of Music",
+    "publisherArabic": "",
+    "placeEnglish": "Oslo",
+    "placeArabic": "اوسلو",
+    "ISBN": "",
+    "url": "https://www.researchcatalogue.net/view/1092359/1871366 ",
+    "dateAccessed": ""
   }
 ]
