@@ -18,7 +18,7 @@
     cursor: pointer;
   }
 
-   &__subtitle {
+  &__subtitle {
     font-size: 16px;
     color: white;
     cursor: pointer;
@@ -85,11 +85,13 @@
         background-color: $secondary;
       }
     }
+
     &_tab-title {
       font-size: 16px;
       font-weight: 300;
     }
-      &_tab-subtitle {
+
+    &_tab-subtitle {
       font-size: 16px;
       font-weight: 200;
     }
@@ -244,4 +246,49 @@
       font-size: 18px;
     }
   }
+  
+  &__note-name-row-wrapper {
+    width: 100%;
+    background: $background;
+    z-index: 10002;
+    margin-top: 0px;
+  }
+
+  &__note-name-table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: 12px;
+    color: $text;
+    font-weight: 200;
+
+    td {
+      border: 1px solid $grey;
+      text-align: left;
+      padding: 5px 10px 5px 10px;
+    }
+  }
+
+  &__note-name-header {
+    font-size: 12px;
+    border-bottom: 1px solid $grey;
+  }
+
+  &__note-name-cell {
+    transition-duration: 0.1s;
+  }
+
+  &__note-name-cell_highlighted {
+    background-color: rgb($primary, 0.5);
+  }
+
+  &__note-name-cell_active {
+    background-color: $secondary;
+  }
+
+  &__note-name-cell_descend-diff {
+    background-color: $tertiary; // distinct color for descending‑only notes
+  }
+
 }
