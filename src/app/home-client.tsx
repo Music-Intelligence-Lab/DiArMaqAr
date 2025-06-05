@@ -11,6 +11,7 @@ import SayrManager from "@/components/sayr-manager";
 import KeyboardControls from "@/components/keyboard-controls";
 import getFirstNoteName from "@/functions/getFirstNoteName";
 import SourcesManager from "@/components/sources-manager";
+import SourcesList from "@/components/sources-list";
 import PatternsManager from "@/components/patterns-manager";
 import JinsManager from "@/components/jins-manager";
 import MaqamManager from "@/components/maqam-manager";
@@ -74,6 +75,7 @@ export default function HomeClient() {
       {(selectedMenu === "jins" || selectedMenu === "jins-admin") && selectedTuningSystem && <JinsTranspositions />}
       {selectedMenu === "sayr" && selectedMaqam && <SayrManager admin={false} />}
       {selectedMenu === "sayr-admin" && selectedMaqam && <SayrManager admin />}
+      {selectedMenu === "bibliography" && <SourcesList />}
       {selectedMenu === "bibliography-admin" && <SourcesManager />}
       {selectedMenu === "pattern-admin" && <PatternsManager />}
       <KeyboardControls />
