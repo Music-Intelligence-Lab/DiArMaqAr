@@ -311,7 +311,7 @@
     grid-template-columns: repeat(10, minmax(18%, 1fr));
     grid-template-rows: repeat(3, auto);
     gap: 10px;
-    height: 270px;
+    height: 215px;
     overflow-x: scroll;
     overflow-y: hidden;
     position: relative;
@@ -350,7 +350,7 @@
   }
 
   &__item {
-    height: 75px;
+    height: 60px;
     display: flex;
     flex-direction: column;
     justify-content: left;
@@ -450,7 +450,7 @@
 
   &__octave-summary {
     font-size: 20px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     cursor: pointer;
     user-select: none;
 
@@ -559,7 +559,7 @@
     background-color: $dark-grey;
     color: white;
     border: 1px solid rgb(86, 86, 86);
-    padding: 0px 0;
+    padding: 0px;
     margin: -10px 0px 0px 0px;
 
 
