@@ -271,7 +271,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   };
 
   const handleTuningSystemClick = (ts: TuningSystem) => {
-    clearSelections();
+   // clearSelections();
     setSelectedTuningSystem(ts);
     handleStartNoteNameChange("", ts.getSetsOfNoteNames(), ts.getPitchClasses().length);
   };
@@ -1028,6 +1028,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                       className="tuning-system-manager__checkbox"
                       checked={isCellSelected(octave, colIndex)}
                       onChange={(e) => handleCheckboxChange(octave, colIndex, e.target.checked)}
+                      onClick={(e) => (e.currentTarget as HTMLInputElement).blur()}
                     />
                   </td>
                 ))}

@@ -292,7 +292,7 @@
     "id": "63Ao66cM9W2M-4NhIIHgv",
     "titleEnglish": "The Lute Scale of Avicenna",
     "titleArabic": "سلم العود لإبن سينا",
-    "sourceType": "Book",
+    "sourceType": "Article",
     "contributors": [
       {
         "type": "Author",
@@ -308,13 +308,15 @@
     "publicationDateArabic": "١٩٣٧",
     "url": "",
     "dateAccessed": "",
-    "originalPublicationDateEnglish": "",
-    "originalPublicationDateArabic": "",
-    "publisherEnglish": "The Journal of the Royal Asiatic Society of Great Britain and Ireland, 2",
-    "publisherArabic": "",
-    "placeEnglish": "",
-    "placeArabic": "",
-    "ISBN": ""
+    "journalEnglish": "The Journal of the Royal Asiatic Society of Great Britain and Ireland",
+    "journalArabic": "مجلة الجمعية الملكية الآسيوية في بريطانيا العظمى وأيرلندا",
+    "volumeEnglish": "2",
+    "volumeArabic": "٢",
+    "issueEnglish": "",
+    "issueArabic": "",
+    "pageRangeEnglish": "245–257",
+    "pageRangeArabic": "٢٤٥-٢٥٧",
+    "DOI": ""
   },
   {
     "id": "zQU1LvEwGBICtY09uE5Rj",
