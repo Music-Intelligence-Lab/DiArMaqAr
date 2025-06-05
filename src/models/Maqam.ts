@@ -119,3 +119,9 @@ export interface SayrStop {
   startingNote?: TransliteratedNoteName;
   direction?: "ascending" | "descending";
 }
+
+export interface MaqamTransposition {
+  name: string;
+  ascendingNoteNames: TransliteratedNoteName[];
+  descendingNoteNames: TransliteratedNoteName[];
+}

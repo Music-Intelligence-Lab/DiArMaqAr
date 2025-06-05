@@ -45,6 +45,8 @@
     height: $bottom-navbar-height;
     color: white;
     border-bottom: $grey 1px solid;
+    box-shadow: 0 20px 15px rgba(0, 0, 0, 0.6);
+
   }
 
   &__bottom-bar-item {
@@ -56,7 +58,6 @@
     background-color: transparent;
     color: white;
     cursor: pointer;
-    font-size: 16px;
     font-family: inherit;
     transition: 0.1s ease;
     padding: 10px;
@@ -87,13 +88,13 @@
     }
 
     &_tab-title {
-      font-size: 16px;
-      font-weight: 300;
+      font-size: 14px;
+      font-weight: 400;
     }
 
     &_tab-subtitle {
-      font-size: 16px;
-      font-weight: 200;
+      font-size: 13px;
+      font-weight: 300;
     }
 
   }
@@ -224,71 +225,88 @@
     text-decoration: none;
   }
 
-  @media (max-width: 350px) {
-    &__left-panel {
-      font-size: 30px;
+  &__pc-cells-row {
+    user-select: none;
+    width: 100%;
+    overflow: auto;
+    display: flex;
+    z-index: 999;
+    margin-top: 30px;
 
-      & svg {
-        font-size: 30px;
-        margin-right: 5px;
+    &::-webkit-scrollbar {
+      height: 0px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: $grey;
+      cursor: pointer;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: rgba($black, 0.5);
+      cursor: pointer;
+    }
+  }
+
+  &__pc-cell-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__pc-cell {
+    flex: none;
+    border-top: 3px solid $grey;
+    border-right: 0px;
+    border-bottom: 1px solid $grey;
+    border-left: 0px solid $grey;
+    text-align: left;
+    box-sizing: border-box;
+    width: 65px;
+    height: $navbar-pc-cells-row-height;
+    padding: 5px;
+
+    &:last-child {
+      border-right: 1px solid $grey;
+    }
+
+    &_selected {
+      background-color: $primary !important;
+    }
+
+    &_active {
+      background-color: rgb($tertiary, 0.8) !important;
+    }
+
+    &_tonic {
+      border-top: 3px $tertiary solid;
+      &:hover{
+        background-color: $tertiary !important;
       }
     }
 
-    &__side-bar {
-      width: 140px;
-    }
-
-    &__side-bar-content {
-      padding: 5px 0;
-    }
-
-    &__side-bar-link {
-      font-size: 18px;
+    &_descending {
+      background-color: rgba($primary, 0.5);
     }
   }
-  
-  &__note-name-row-wrapper {
+
+  &__pc-cell-label {
+    display: inline-block;
     width: 100%;
-    background: $background;
-    z-index: 10002;
-    margin-top: 0px;
+    line-height: 12px;
+    word-break: break-word;
+    margin: 0;
+    padding: 0;
+    font-size: 10px;
+    font-weight: 300;
+    text-align: left;
   }
 
-  &__note-name-table {
+  &__pc-cell-tonic {
+    height: 5px;
     width: 100%;
-    margin-top: 20px;
-    border-collapse: collapse;
-    table-layout: fixed;
-    font-size: 12px;
-    color: $text;
-    font-weight: 200;
-
-    td {
-      border: 1px solid $grey;
-      text-align: left;
-      padding: 5px 10px 5px 10px;
+    &_active {
+      background-color: green;
     }
-  }
-
-  &__note-name-header {
-    font-size: 12px;
-    border-bottom: 1px solid $grey;
-  }
-
-  &__note-name-cell {
-    transition-duration: 0.1s;
-  }
-
-  &__note-name-cell_highlighted {
-    background-color: rgb($primary, 0.5);
-  }
-
-  &__note-name-cell_active {
-    background-color: $secondary;
-  }
-
-  &__note-name-cell_descend-diff {
-    background-color: $tertiary; // distinct color for descending‑only notes
   }
 
 }

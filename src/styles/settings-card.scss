@@ -12,12 +12,10 @@
 .settings-card {
   font-size: 18px;
   position: fixed;
-  top: calc($top-navbar-height + $bottom-navbar-height);
+  top: 0;
   right: 0;
   height: 100%;
   width: 300px;
-  background-color: #f8f8f8;
-  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.1);
 
   transform: translateX(130%);
   transition: transform 0.3s ease-in-out;
@@ -31,15 +29,13 @@
     display: flex;
     flex-direction: column;
     padding-bottom: 50px;
+  padding-top: $top-navbar-height;
     color: black;
     height: 100%;
     width: 100%;
     overflow-y: auto;
-    background: $main-gradient;
+    background: $black ;
     color: white;
-    -webkit-box-shadow: 0px 0px 237px 1px rgba(98, 12, 159, 0.63);
-    -moz-box-shadow: 0px 0px 237px 1px rgba(98, 12, 159, 0.63);
-    box-shadow: 0px 0px 237px 1px rgba(98, 12, 159, 0.63), inset 0px 0px 155px 13px black;
   }
 
   &__details {

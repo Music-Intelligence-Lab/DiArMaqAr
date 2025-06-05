@@ -14,7 +14,7 @@ export default function JinsTranspositions() {
     selectedTuningSystem,
     setSelectedCells,
     getAllCells,
-    getSelectedCellDetails,
+    getCellDetails,
     centsTolerance,
     setCentsTolerance,
     playNoteFrequency,
@@ -30,7 +30,7 @@ export default function JinsTranspositions() {
 
   const allCells = getAllCells();
 
-  const allCellDetails = allCells.map(getSelectedCellDetails);
+  const allCellDetails = allCells.map(getCellDetails);
 
   const jinsCellDetails = allCellDetails.filter((cell) => jinsNoteNames.includes(cell.noteName));
 
@@ -116,7 +116,7 @@ return (
                   const newSelectedCells = [];
 
                   for (const cell of allCells) {
-                    const cellDetails = getSelectedCellDetails(cell);
+                    const cellDetails = getCellDetails(cell);
                     if (transpositionNoteNames.includes(cellDetails.noteName)) {
                       newSelectedCells.push(cell);
                     }
@@ -240,7 +240,7 @@ return (
                         const newSelectedCells = [];
 
                         for (const cell of allCells) {
-                          const cellDetails = getSelectedCellDetails(cell);
+                          const cellDetails = getCellDetails(cell);
                           if (transpositionNoteNames.includes(cellDetails.noteName)) {
                             newSelectedCells.push(cell);
                           }

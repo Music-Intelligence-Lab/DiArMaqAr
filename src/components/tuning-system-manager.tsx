@@ -45,7 +45,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     mapIndices,
     clearSelections,
     handleStartNoteNameChange,
-    getSelectedCellDetails,
+    getCellDetails,
     playSequence,
     sources,
     selectedJins,
@@ -1455,7 +1455,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
           disabled={selectedCells.length === 0}
           onClick={() => {
             const frequencies = selectedCells.map((cell) => {
-              const cellDetails = getSelectedCellDetails(cell);
+              const cellDetails = getCellDetails(cell);
 
               return parseInt(cellDetails.frequency) ?? 0;
             });
