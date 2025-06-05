@@ -118,6 +118,9 @@
     padding: 0.4rem;
     font-family: inherit;
     // font-size: 1rem;
+    :focus {
+      outline: none;
+    }
   }
 
   &__buttons {
@@ -193,6 +196,7 @@
 
     // Remove default arrows in Firefox
     -moz-appearance: textfield;
+    appearance: textfield;
   }
 
   &__starting-note-right {
