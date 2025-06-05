@@ -21,7 +21,7 @@ import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { getEnglishNoteName, abjadNames } from "@/functions/noteNameMappings";
 import { updateTuningSystems } from "@/functions/update";
 import getFirstNoteName from "@/functions/getFirstNoteName";
-import { SourcePageReference } from "@/models/Source";
+import { SourcePageReference } from "@/models/bibliography/Source";
 
 export default function TuningSystemManager({ admin }: { admin: boolean }) {
   const {
@@ -1454,7 +1454,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
               <div key={idx} className="tuning-system-manager__source-item">
                 {source &&
                   <span className="">
-                    {`${source?.getContributors()[0]?.lastNameEnglish ?? ""} (${source?.getReleaseDateEnglish() ?? ""}${source?.getOriginalReleaseDateEnglish() ? "/" + source.getOriginalReleaseDateEnglish() : ""
+                    {`${source?.getContributors()[0]?.lastNameEnglish ?? ""} (${source?.getReleaseDateEnglish() ?? ""}${source?.getReleaseDateEnglish() ? "/" + source.getReleaseDateEnglish() : ""
                       }:${ref.page})`}
                   </span>
                 }

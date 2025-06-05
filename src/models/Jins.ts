@@ -1,4 +1,4 @@
-import { SourcePageReference } from "./Source";
+import { SourcePageReference } from "./bibliography/Source";
 import TransliteratedNoteName from "./NoteName";
 
 export default class Jins {

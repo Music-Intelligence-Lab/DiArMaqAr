@@ -16,7 +16,9 @@ import Maqam, { Sayr } from "@/models/Maqam";
 import getNoteNamesUsedInTuningSystem from "@/functions/getNoteNamesUsedInTuningSystem";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import midiNumberToNoteName from "@/functions/midiToNoteNumber";
-import Source, { SourcePageReference } from "@/models/Source";
+import { Source, SourcePageReference } from "@/models/bibliography/Source";
+import Book from "@/models/bibliography/Book";
+import Article from "@/models/bibliography/Article";
 import Pattern, { NoteDuration, reversePatternNotes } from "@/models/Pattern";
 import romanToNumber from "@/functions/romanToNumber";
 import getFirstNoteName from "@/functions/getFirstNoteName";
@@ -227,7 +229,15 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     );
     setMaqamat(loadedMaqamat);
 
-    const loadedSources = sourcesData.map((data) => Source.fromJSON(data));
+    const loadedSources = sourcesData.map((data) => {
+      if (data.sourceType === "Book") {
+        return Book.fromJSON(data);
+      } else if (data.sourceType === "Article") {
+        return Article.fromJSON(data);
+      } else {
+        throw new Error(`Unknown sourceType "${data.sourceType}"`);
+      }
+    });
     setSources(loadedSources);
 
     const loadedPatterns = patternsData.map(

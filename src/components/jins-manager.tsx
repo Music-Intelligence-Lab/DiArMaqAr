@@ -6,7 +6,7 @@ import Jins from "@/models/Jins";
 import React from "react";
 import { getJinsTranspositions } from "@/functions/transpose";
 import { updateAjnas } from "@/functions/update";
-import { SourcePageReference } from "@/models/Source";
+import { SourcePageReference } from "@/models/bibliography/Source";
 
 
 export default function JinsManager({ admin }: { admin: boolean }) {

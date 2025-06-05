@@ -3,7 +3,7 @@ import { AppContextProvider } from "@/contexts/app-context";
 import { FilterContextProvider } from "@/contexts/filter-context";
 import { MenuContextProvider } from "@/contexts/menu-context";
 import Navbar from "@/components/navbar";
-import { Readex_Pro, Roboto, Bebas_Neue, Inter } from "next/font/google";
+import { Readex_Pro } from "next/font/google";
 import "./globals.scss";
 
 const readexPro = Readex_Pro({
@@ -11,27 +11,6 @@ const readexPro = Readex_Pro({
   subsets: ["latin", "arabic"],
   display: "swap",
   variable: "--font-readex-pro",
-});
-
-const roboto = Roboto({
-  weight: "300",
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-roboto",
-});
-
-const bebasNeue = Bebas_Neue({
-  weight: "400",
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-bebas-neue",
-});
-
-const inter = Inter({
-  weight: ["200", "300", "400"],
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {

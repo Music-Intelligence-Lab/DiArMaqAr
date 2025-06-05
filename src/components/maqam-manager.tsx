@@ -5,7 +5,7 @@ import { Cell } from "@/contexts/app-context";
 // import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { getMaqamTranspositions } from "@/functions/transpose";
 import { updateMaqamat } from "@/functions/update";
-import { SourcePageReference } from "@/models/Source";
+import { SourcePageReference } from "@/models/bibliography/Source";
 
 export default function MaqamManager({ admin }: { admin: boolean }) {
   const {

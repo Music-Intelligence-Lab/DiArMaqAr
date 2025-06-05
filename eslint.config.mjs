@@ -9,11 +9,14 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 });
 
-export default [
+const rules = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
     rules: {
       "react-hooks/exhaustive-deps": "off",
+      "@typescript-eslint/no-explicit-any": "off",
     },
   },
 ];
+
+export default rules;
