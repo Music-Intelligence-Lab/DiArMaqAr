@@ -6,7 +6,7 @@
   width: 100%;
   color: $text;
   padding: 20px 10px;
-  font-weight: normal;
+  font-weight: 200;
   
 
   /* Optional: custom scrollbar */
@@ -30,7 +30,7 @@
     align-items: start;
     padding: 0.75rem 0;
     border-bottom: 0px;
-    gap: 1rem;
+    gap: 200px;
 
     /* Alternate background for zebra effect (optional) */
     &:nth-child(even) {

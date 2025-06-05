@@ -87,5 +87,24 @@ select:focus {
   & > * {
     width: 100%;
   }
+
+input[type="checkbox"] {
+  appearance: none;
+  width: 10px;
+  height: 10px;
+  border: 0px solid $text;
+  border-radius: 0px;
+  background-color: $text;
+  cursor: pointer;
+
+  &:checked {
+    background-color: $tertiary;
+    border-color: $text;
+  }
+
+  &:focus {
+    outline: none;
+  }
 }
 
+}
