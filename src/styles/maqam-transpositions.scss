@@ -2,15 +2,16 @@
 
 .maqam-transpositions {
   width: 100%;
-  font-size: 0.8rem;
   margin-top: 10px;
+  font-family: inherit;
+
 
   &__title {
     width: 100%;
     background-color: $secondary;
     color: #fff;
     font-size: 1.5rem;
-    font-weight: bold;
+    font-weight: 200;
     text-align: left;
     padding: 1rem 1rem;
     border: solid 1px $grey;
@@ -24,7 +25,7 @@
     margin-right: 5px;
     font-size: 24px;
     cursor: pointer;
-        vertical-align: middle;
+    vertical-align: middle;
 
   }
 
@@ -44,10 +45,14 @@
     height: 40px;
     vertical-align: middle;
     text-align: center;
-    &:focus { outline: transparent ; border: white solid 1px; }
+
+    &:focus {
+      outline: transparent;
+      border: white solid 1px;
+    }
 
     &:hover {
-    background-color: rgba($primary, 1);
+      background-color: rgba($primary, 1);
     }
 
   }
@@ -55,9 +60,11 @@
   &__table {
     width: 100%;
     border-collapse: collapse;
-    table-layout:fixed;
+    table-layout: fixed;
     margin-bottom: 50px;
     font-size: 12px;
+    font-weight: 200;
+
 
     th {
       vertical-align: middle;
@@ -65,17 +72,14 @@
       text-align: left;
       padding: 10px;
       border: solid 1px $grey;
+      font-weight: 200;
     }
 
     td {
       vertical-align: middle;
       border: solid 1px $grey;
-
     }
 
-    tbody {
-      font-weight: 600;
-    }
 
   }
 
@@ -126,13 +130,12 @@
 
     &_scale-degrees-number {
       background-color: $medium-grey;
-      font-weight: bold;
+      font-weight: 400;
     }
   }
 
   &__asc-desc-column {
-    font-size: 14px;
-    font-weight: bold;
+    font-size: 24px;
     padding: 0px 0px 0px 0px;
     margin: 0px 0px 0px 0px;
     text-align: center;
@@ -141,13 +144,11 @@
 
 
   &__row-header {
-    font-weight: bold;
     background-color: $medium-grey;
     text-transform: capitalize;
   }
 
   &__maqam-name-row {
-    font-weight: bold;
     background-color: black;
     color: white;
     padding: 15px;

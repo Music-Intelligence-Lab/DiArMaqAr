@@ -14,8 +14,8 @@ export default function SourcesList() {
   const formatContributorsEnglish = (contributors: Contributor[]): string => {
     if (contributors.length === 0) return "";
     return contributors
-      .map((c) => `${c.lastNameEnglish}, ${c.firstNameEnglish}`)
-      .join("; ");
+      .map((c) => `${c.type}, ${c.lastNameEnglish}, ${c.firstNameEnglish[0]}`)
+      .join(", ");
   };
 
   // Helper to format contributor names as "Last First؛ Last First؛ …" (using Arabic space and semicolon)
@@ -26,73 +26,109 @@ export default function SourcesList() {
       .join("؛ ");
   };
 
-  // Build an English citation string for either Book or Article
-  const buildEnglishCitation = (source: Source): string => {
-    const common = [];
-    // Contributors
-    const contribs = formatContributorsEnglish(source.getContributors());
-    if (contribs) common.push(contribs);
+  // Build an English citation as JSX for either Book or Article
+  const buildEnglishCitation = (source: Source): React.ReactNode => {
+    // Helper to format individual names: "Last, F."
+    const formatName = (c: Contributor) => `${c.lastNameEnglish}, ${c.firstNameEnglish[0]}.`;
 
-    // Title
-    common.push(source.getTitleEnglish());
+    // Separate contributors by type: authors, editors, translators, reviewers
+    const allContribs = source.getContributors();
+    const authors = allContribs.filter((c) => c.type.toLowerCase().includes("author"));
+    const editors = allContribs.filter((c) => c.type.toLowerCase().includes("editor"));
+    const translators = allContribs.filter((c) => c.type.toLowerCase().includes("translator"));
+    const reviewers = allContribs.filter((c) => c.type.toLowerCase().includes("reviewer"));
 
-    // Edition (if present)
-    const edEng = source.getEditionEnglish();
-    if (edEng) common.push(`Edition: ${edEng}`);
+    // 1) Contributors: authors first, each role on its own sentence
+    const primaryAuthors = authors.map(formatName).join(" and ");
+    const contribLine = (
+      <>
+        {primaryAuthors && <>{primaryAuthors}.</>}
+        {editors.length > 0 && <> Edited by {editors.map(formatName).join(" and ")}.</>}
+        {translators.length > 0 && <> Translated by {translators.map(formatName).join(" and ")}.</>}
+        {reviewers.length > 0 && <> Reviewed by {reviewers.map(formatName).join(" and ")}.</>}
+      </>
+    );
+    const noContribs = authors.length + editors.length + translators.length + reviewers.length === 0;
+    const authorSegment = noContribs ? "n.a." : primaryAuthors;
+    const contribSegment = noContribs ? "n.a." : contribLine;
 
-    // Publication Date
-    const pubDateEng = source.getReleaseDateEnglish();
-    if (pubDateEng) common.push(pubDateEng);
+    // 2) Year (assume releaseDateEnglish is "YYYY" or "YYYY-MM-DD")
+    const pubDateEng = source.getReleaseDateEnglish() || "";
+    const yearMatch = pubDateEng.match(/^\d{4}/);
+    const year = yearMatch ? yearMatch[0] : pubDateEng;
 
-    // Now branch by type:
+    // 3) Title
+    const title = <span className="sources-list__citation-title">{source.getTitleEnglish()}{`.`}</span>;
+    const url = source.getUrl();
+    const dateAcc = source.getDateAccessed();
+    // Format dateAcc (DD-MM-YYYY) into “DD MMM YYYY”
+    const formattedDateAcc = dateAcc
+      ? (() => {
+          const [day, month, year] = dateAcc.split("-");
+          const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+          const m = parseInt(month, 10);
+          const monthName = monthNames[m - 1] || "";
+          return `${day} ${monthName} ${year}`;
+        })()
+      : "";
+
     if (source.getSourceType() === "Book") {
       const book = source as Book;
-      // Original Publication Date
-      const origEng = book.getOriginalReleaseDateEnglish();
-      if (origEng) common.push(`Orig. Pub.: ${origEng}`);
+      // Edition (if present)
+      const edEng = book.getEditionEnglish();
+      const editionPart = edEng ? `${edEng}.` : "";
+
+      // Original publication date (if present)
+            const oPubDateEng = book.getOriginalReleaseDateEnglish();
+      const oPubDateEngPart = oPubDateEng ? `${oPubDateEng}.` : "";
+
 
       // Publisher & Place
       const pubEng = book.getPublisherEnglish();
       const placeEng = book.getPlaceEnglish();
-      if (pubEng || placeEng) {
-        const parts = [];
-        if (pubEng) parts.push(pubEng);
-        if (placeEng) parts.push(`(${placeEng})`);
-        common.push(parts.join(" "));
-      }
+      const publisherPart = pubEng && placeEng ? `${placeEng}: ${pubEng}` : pubEng || placeEng || "";
 
-      // ISBN
-      const isbn = book.getISBN();
-      if (isbn) common.push(`ISBN: ${isbn}`);
+      return (
+        <>
+          {authorSegment} ({year}) {editors.length > 0 && <> Edited by {editors.map(formatName).join(" and ")}</>} {translators.length > 0 && <> Translated by {translators.map(formatName).join(" and ")}</>} {reviewers.length > 0 && <> Reviewed by {reviewers.map(formatName).join(" and ")}</>} {title} {editionPart && ` ${editionPart}`} {oPubDateEngPart && ` ${oPubDateEngPart}`} {publisherPart && <>{publisherPart}.</>} {url && (
+            <>
+              Available at: <a href={url} target="_blank" rel="noopener noreferrer">{url}</a>
+            </>
+          )}
+          {dateAcc && ` [Accessed ${formattedDateAcc}]`}
+        </>
+      );
     } else {
       // Article
       const article = source as Article;
-      // Journal, Volume, Issue, Page Range
       const journalEng = article.getJournalEnglish();
       const volumeEng = article.getVolumeEnglish();
       const issueEng = article.getIssueEnglish();
       const pageRangeEng = article.getPageRangeEnglish();
 
+      // Build journal line: Journal Title, 20(4), pp. 332-348.
+      const journalLineParts: string[] = [];
       if (journalEng) {
-        let journalLine = journalEng;
-        if (volumeEng) journalLine += `, Vol. ${volumeEng}`;
-        if (issueEng) journalLine += `, Issue ${issueEng}`;
-        if (pageRangeEng) journalLine += `, pp. ${pageRangeEng}`;
-        common.push(journalLine);
+        let line = journalEng;
+        if (volumeEng) line += `, ${volumeEng}`;
+        if (issueEng) line += `(${issueEng})`;
+        if (pageRangeEng) line += `, pp. ${pageRangeEng}`;
+        journalLineParts.push(line);
       }
 
-      // DOI
-      const doi = article.getDOI();
-      if (doi) common.push(`DOI: ${doi}`);
+      return (
+        <>
+          {contribSegment} ({year}) {source.getTitleEnglish()}.{" "}
+          <span className="citation-journal">{journalLineParts.join(", ")}</span>.
+          {url && (
+            <>
+              URL: <a href={url} target="_blank" rel="noopener noreferrer">{url}</a>.
+            </>
+          )}
+          {dateAcc && ` Accessed: ${formattedDateAcc}.`}
+        </>
+      );
     }
-
-    // URL & Date Accessed
-    const url = source.getUrl();
-    if (url) common.push(`URL: ${url}`);
-    const dateAcc = source.getDateAccessed();
-    if (dateAcc) common.push(`Accessed: ${dateAcc}`);
-
-    return common.join(". ") + ".";
   };
 
   // Build an Arabic citation string for either Book or Article

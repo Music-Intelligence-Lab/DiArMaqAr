@@ -270,11 +270,16 @@ export default function SourcesManager() {
             onChange={handleSelectChange}
           >
             <option value="new">-- Create New Source --</option>
-            {sources.map((s: Source) => (
-              <option key={s.getId()} value={s.getId()}>
-                {`${s.getContributors()[0].lastNameEnglish} (${s.getReleaseDateEnglish()}) ${s.getTitleEnglish()} (${s.getSourceType()})`}
-              </option>
-            ))}
+            {sources.map((s: Source) => {
+              const contribs = s.getContributors();
+              const firstContributor = contribs && contribs.length > 0 ? contribs[0] : null;
+              const lastName = firstContributor ? firstContributor.lastNameEnglish : "n.a.";
+              return (
+                <option key={s.getId()} value={s.getId()}>
+                  {`${lastName} (${s.getReleaseDateEnglish()}) ${s.getTitleEnglish()} (${s.getSourceType()})`}
+                </option>
+              );
+            })}
           </select>
         </div>
       </div>

@@ -14,7 +14,7 @@
   }
 
   &__abjad-name {
-    font-size: 12px;
+    font-size: 13px;
   }
 
   &__form {
@@ -308,13 +308,14 @@
 
   &__list {
     display: grid;
-    grid-template-columns: repeat(10, minmax(19%, 1fr));
+    grid-template-columns: repeat(10, minmax(18%, 1fr));
     grid-template-rows: repeat(3, auto);
     gap: 10px;
-    height: calc(225px + 60px);
+    height: 270px;
     overflow-x: scroll;
     overflow-y: hidden;
     position: relative;
+    padding-bottom: 20px;
 
     &::before {
       content: "";
@@ -362,7 +363,7 @@
     color: $text;
     cursor: pointer;
     transition: 0.2s;
-    font-weight: 500;
+    font-weight: 400;
 
     &_selected {
       background-color: $secondary;
@@ -404,7 +405,7 @@
     max-width: 100%;
     overflow: auto;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 200;
     padding-bottom: 0px;
   }
 

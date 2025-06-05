@@ -8,7 +8,7 @@ import "./globals.scss";
 
 const readexPro = Readex_Pro({
   weight: ["200", "300", "400"],
-  subsets: ["latin", "arabic"],
+  subsets: ["latin"],
   display: "swap",
   variable: "--font-readex-pro",
 });

@@ -2,7 +2,7 @@
 
 $top-navbar-height: 100px;
 $bottom-navbar-height: 55px;
-$navbar-pc-cells-row-height: 50px;
+$navbar-pc-cells-row-height: 70px;
 $page-height: calc(100svh - $top-navbar-height - $bottom-navbar-height - $navbar-pc-cells-row-height);
 
 $background: #222222;
@@ -11,7 +11,7 @@ $secondary: #83105d;
 $tertiary: #a4079c;
 $quaternary: #4569b6;
 $black: #000000;
-$text: #ffffff;
+$text: #eeeeee;
 $success: #28a745;
 $delete: #C62300;
 $disabled: #3b3b3b;

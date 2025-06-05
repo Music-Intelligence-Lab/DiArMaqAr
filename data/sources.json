@@ -1,49 +1,5 @@
 [
   {
-    "id": "HK6shRFzmS98eQ-u2MZ1E",
-    "titleEnglish": "test",
-    "titleArabic": "test",
-    "sourceType": "Article",
-    "contributors": [
-      {
-        "type": "Author",
-        "firstNameEnglish": "test",
-        "lastNameEnglish": "test",
-        "firstNameArabic": "test",
-        "lastNameArabic": "test"
-      },
-      {
-        "type": "Author",
-        "firstNameEnglish": "test",
-        "lastNameEnglish": "test",
-        "firstNameArabic": "test",
-        "lastNameArabic": "test"
-      },
-      {
-        "type": "Author",
-        "firstNameEnglish": "test",
-        "lastNameEnglish": "test",
-        "firstNameArabic": "test",
-        "lastNameArabic": "test"
-      }
-    ],
-    "editionEnglish": "test",
-    "editionArabic": "test",
-    "publicationDateEnglish": "1950",
-    "publicationDateArabic": "test",
-    "url": "test",
-    "dateAccessed": "test",
-    "journalEnglish": "TEST",
-    "journalArabic": "TEST",
-    "volumeEnglish": "TEST",
-    "volumeArabic": "TEST",
-    "issueEnglish": "TEST",
-    "issueArabic": "TEST",
-    "pageRangeEnglish": "TEST",
-    "pageRangeArabic": "TEST",
-    "DOI": "TEST"
-  },
-  {
     "id": "vfTln54gK68IgHo2tlULX",
     "titleEnglish": "Musical Mathematics: On the Art and Science of Acoustic Instruments",
     "titleArabic": "الرياضيات الموسيقية: عن فن وعلم الآلات الصوتية",
@@ -73,7 +29,7 @@
   },
   {
     "id": "VmShC7ciSIikhGlZwUUJC",
-    "titleEnglish": "Kitāb al-Adwār fi al-Mūsīqā",
+    "titleEnglish": "Kitāb al-Adwār fī al-Mūsīqā",
     "titleArabic": "كتاب الادوار في الموسيقى",
     "sourceType": "Book",
     "contributors": [
@@ -171,7 +127,7 @@
   },
   {
     "id": "npR7tB33uFtyZiJyrXbPx",
-    "titleEnglish": "al-Risālah al-Shihābīyah fī al-Ṣināʻah al-Mūsīqīyah",
+    "titleEnglish": "Al-Risālah al-Shihābīyah fī al-Ṣināʻah al-Mūsīqīyah",
     "titleArabic": "الرسالة الشهابية في الصناعة الموسيقية",
     "sourceType": "Book",
     "contributors": [
@@ -183,7 +139,7 @@
         "lastNameArabic": "مشّاقة"
       },
       {
-        "type": "Author",
+        "type": "Editor",
         "firstNameEnglish": "Loius",
         "lastNameEnglish": "Ronzevalle",
         "firstNameArabic": "لويس",
@@ -198,7 +154,7 @@
     "dateAccessed": "",
     "originalPublicationDateEnglish": "",
     "originalPublicationDateArabic": "",
-    "publisherEnglish": "Al-Ābā’ Al-Yasū’īyīn",
+    "publisherEnglish": "Al-Ābā’ Al-Yasūʿīyīn",
     "publisherArabic": "الآباء اليسوعيين",
     "placeEnglish": "Beirut",
     "placeArabic": "بيروت",
@@ -206,7 +162,7 @@
   },
   {
     "id": "IDE6rHb6y71_H8_0p5nh1",
-    "titleEnglish": "Qiyās Al-Sullam Al-Mūsīqī Al-'Arabī",
+    "titleEnglish": "Qiyās Al-Sullam Al-Mūsīqī Al-ʿArabī",
     "titleArabic": "قياس السلم الموسيقي العربي",
     "sourceType": "Book",
     "contributors": [
@@ -262,7 +218,7 @@
   },
   {
     "id": "oY8WnTdP5msak8o1G_N7f",
-    "titleEnglish": "Al-Qawaʿid al-Faniyya fi al-Mūsiqa al-Sharqīyah wa al-Gharbīyah",
+    "titleEnglish": "Al-Qawaʿid al-Fanīya fi al-Mūsiqa al-Sharqīyah wa al-Gharbīyah",
     "titleArabic": "القواعد الفنيّة في الموسيقى الشرقيّة والغربيّة",
     "sourceType": "Book",
     "contributors": [
@@ -320,18 +276,10 @@
   },
   {
     "id": "zQU1LvEwGBICtY09uE5Rj",
-    "titleEnglish": "Kitāb Muʼtamar al-Mūsīqā al-ʻArabiyah",
+    "titleEnglish": "Kitāb Muʼtamar al-Mūsīqā al-ʿArabiyah",
     "titleArabic": "كتاب مؤتمر الموسيقى العربية",
     "sourceType": "Book",
-    "contributors": [
-      {
-        "type": "Author",
-        "firstNameEnglish": "",
-        "lastNameEnglish": "",
-        "firstNameArabic": "",
-        "lastNameArabic": ""
-      }
-    ],
+    "contributors": [],
     "editionEnglish": "",
     "editionArabic": "",
     "publicationDateEnglish": "1933",
@@ -421,7 +369,7 @@
     "publicationDateEnglish": "2022",
     "publicationDateArabic": "",
     "url": "https://www.researchcatalogue.net/view/1092359/1871366 ",
-    "dateAccessed": "",
+    "dateAccessed": "04-06-2025",
     "originalPublicationDateEnglish": "",
     "originalPublicationDateArabic": "",
     "publisherEnglish": "The Norwegian Academy of Music",
@@ -429,35 +377,5 @@
     "placeEnglish": "Oslo",
     "placeArabic": "اوسلو",
     "ISBN": ""
-  },
-  {
-    "id": "9z5haGGUVxFc3djx6Mtwl",
-    "titleEnglish": "TEST 2",
-    "titleArabic": "TEST 2",
-    "sourceType": "Article",
-    "contributors": [
-      {
-        "type": "Author",
-        "firstNameEnglish": "TEST 2",
-        "lastNameEnglish": "TEST 2",
-        "firstNameArabic": "TEST 2",
-        "lastNameArabic": "TEST 2"
-      }
-    ],
-    "editionEnglish": "TEST 2",
-    "editionArabic": "TEST 2",
-    "publicationDateEnglish": "TEST 2",
-    "publicationDateArabic": "TEST 2",
-    "url": "TEST 2",
-    "dateAccessed": "TEST 2",
-    "journalEnglish": "TEST 2",
-    "journalArabic": "TEST 2",
-    "volumeEnglish": "TEST 2",
-    "volumeArabic": "TEST 2",
-    "issueEnglish": "TEST 2",
-    "issueArabic": "TEST 2",
-    "pageRangeEnglish": "TEST 2",
-    "pageRangeArabic": "TEST 2",
-    "DOI": "TEST 2"
   }
 ]
