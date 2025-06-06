@@ -1315,7 +1315,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             className="carousel-button carousel-button-prev"
             onClick={() => {
               const container = document.querySelector('.tuning-system-manager__list');
-              if (container) container.scrollBy({ left: -630, behavior: 'smooth' });
+              if (container) container.scrollBy({ left: -635, behavior: 'smooth' });
             }}
           >
             ‹
@@ -1364,7 +1364,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             className="carousel-button carousel-button-next"
             onClick={() => {
               const container = document.querySelector('.tuning-system-manager__list');
-              if (container) container.scrollBy({ left: 630, behavior: 'smooth' });
+              if (container) container.scrollBy({ left: 635, behavior: 'smooth' });
             }}
           >
             ›
