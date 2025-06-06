@@ -132,5 +132,19 @@
         "noteDuration": "8n"
       }
     ]
+  },
+  {
+    "id": "SdTAFwqWLUbQ5vDihru80",
+    "name": "simple long short",
+    "notes": [
+      {
+        "scaleDegree": "I",
+        "noteDuration": "4n"
+      },
+      {
+        "scaleDegree": "II",
+        "noteDuration": "4n"
+      }
+    ]
   }
 ]

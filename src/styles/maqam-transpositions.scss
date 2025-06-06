@@ -41,7 +41,7 @@
     margin-right: 10px;
     font-family: inherit;
     font-size: 12px;
-    width: 190px;
+    width: 200px;
     height: 40px;
     vertical-align: middle;
     text-align: center;
@@ -121,7 +121,7 @@
     background-color: transparent;
 
     &_unique {
-      background-color: $secondary;
+      background-color: rgba($primary, 0.5);
     }
 
     &_scale-degrees {

@@ -138,6 +138,16 @@ export default function JinsManager({ admin }: { admin: boolean }) {
           </span>
         )}
       </h2> */}
+        <div className="jins-manager__carousel">
+          <button
+            className="carousel-button carousel-button-prev"
+            onClick={() => {
+              const container = document.querySelector('.jins-manager__list');
+              if (container) container.scrollBy({ left: -670, behavior: 'smooth' });
+            }}
+          >
+            ‹
+          </button>
 
       <div className="jins-manager__list">
         {sortedAjnas.length === 0 ? (
@@ -168,6 +178,19 @@ export default function JinsManager({ admin }: { admin: boolean }) {
           )
         )}
       </div>
+ <button
+            className="carousel-button carousel-button-next"
+            onClick={() => {
+              const container = document.querySelector('.jins-manager__list');
+              if (container) container.scrollBy({ left: 520, behavior: 'smooth' });
+            }}
+          >
+            ›
+          </button>
+        </div>
+
+
+
       {admin && !selectedJins && (
         <button onClick={() => setSelectedJins(new Jins(newJinsId, "", [], "", "", []))} className="jins-manager__create-new-jins-button">
           Create New Jins

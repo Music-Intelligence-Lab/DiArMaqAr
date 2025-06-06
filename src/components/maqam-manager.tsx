@@ -226,7 +226,16 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
           </div>
         </>
       )} */}
-
+        <div className="maqam-manager__carousel">
+          <button
+            className="carousel-button carousel-button-prev"
+            onClick={() => {
+              const container = document.querySelector('.maqam-manager__list');
+              if (container) container.scrollBy({ left: -670, behavior: 'smooth' });
+            }}
+          >
+            ‹
+          </button>
       <div className="maqam-manager__list">
         {sortedMaqamat.length === 0 ? (
           <p>No maqamat available.</p>
@@ -257,8 +266,18 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
           })
         )}
       </div>
-
-      {admin && !selectedMaqam && (
+ <button
+            className="carousel-button carousel-button-next"
+            onClick={() => {
+              const container = document.querySelector('.maqam-manager__list');
+              if (container) container.scrollBy({ left: 520, behavior: 'smooth' });
+            }}
+          >
+            ›
+          </button>
+        </div>
+        
+              {admin && !selectedMaqam && (
         <button
           onClick={() => setSelectedMaqam(new Maqam(newMaqamId, "", [], [], [], "", "", []))}
           className="maqam-manager__create-new-maqam-button"
