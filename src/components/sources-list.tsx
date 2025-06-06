@@ -202,16 +202,34 @@ export default function SourcesList() {
 
   return (
     <div className="sources-list">
-      {sources.map((src: Source) => (
-        <div key={src.getId()} className="sources-list__row">
-          <div className="sources-list__cell sources-list__cell--english">
-            {buildEnglishCitation(src)}
+      {sources
+        .slice()
+        .sort((a: Source, b: Source) => {
+          // Determine primary sort key: first contributor's lastNameEnglish or title if no contributors
+          const aContribs = a.getContributors();
+          const bContribs = b.getContributors();
+          const aKey =
+            aContribs && aContribs.length > 0
+              ? aContribs[0].lastNameEnglish.toLowerCase()
+              : a.getTitleEnglish().toLowerCase();
+          const bKey =
+            bContribs && bContribs.length > 0
+              ? bContribs[0].lastNameEnglish.toLowerCase()
+              : b.getTitleEnglish().toLowerCase();
+          if (aKey < bKey) return -1;
+          if (aKey > bKey) return 1;
+          return 0;
+        })
+        .map((src: Source) => (
+          <div key={src.getId()} className="sources-list__row">
+            <div className="sources-list__cell sources-list__cell--english">
+              {buildEnglishCitation(src)}
+            </div>
+            <div className="sources-list__cell sources-list__cell--arabic">
+              {buildArabicCitation(src)}
+            </div>
           </div>
-          <div className="sources-list__cell sources-list__cell--arabic">
-            {buildArabicCitation(src)}
-          </div>
-        </div>
-      ))}
+        ))}
     </div>
   );
 }

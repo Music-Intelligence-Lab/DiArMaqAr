@@ -8,7 +8,7 @@
   height: $page-height;
   overflow: auto;
   color: $text;
-  padding: 20px;
+  padding-top: 0px;
   padding-bottom: 100px;
 
   &::-webkit-scrollbar {
@@ -28,6 +28,6 @@
 
   &__title {
     font-size: 50px;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
   }
 }
