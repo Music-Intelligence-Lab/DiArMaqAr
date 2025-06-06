@@ -714,14 +714,19 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
           className="tuning-system-manager__octave-summary"
           onClick={(e) => {
             e.preventDefault();
-            setOpenedOctaveRows((rows) => ({
+            /* setOpenedOctaveRows((rows) => ({
               ...rows,
               [octave]: !rows[octave as 0 | 1 | 2 | 3],
-            }));
+            })); */
           }}
         >
-          <span className="tuning-system-manager__octave-summary-title">
-            Diwān (octave) {octave}{" "}
+          <span className="tuning-system-manager__octave-summary-title"
+          onClick={() => setOpenedOctaveRows((rows) => ({
+              ...rows,
+              [octave]: !rows[octave as 0 | 1 | 2 | 3],
+            }))}
+          >
+            Diwān (octave) {octave}{" "}</span>
             {admin && ((octave === 1 && openedOctaveRows[1]) || (octave === 2 && openedOctaveRows[2])) && (
               <button
                 className="tuning-system-manager__octave-cascade-button"
@@ -778,7 +783,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 })}
               </span>
             )}
-          </span>
+          
           <div className="tuning-system-manager__octave-summary-content">
 
           </div>
@@ -1305,45 +1310,65 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       )}
 
       {!admin && (
-        <div className="tuning-system-manager__list">
-          {tuningSystems.length === 0 ? (
-        <p>No tuning systems available.</p>
-          ) : (
-        [...tuningSystems]
-          .sort((a, b) => {
-            // Extract numeric and optional letter parts from year string
-            function parseYear(year: string) {
-          const match = year.match(/^(\d+)([a-zA-Z]?)$/);
-          if (match) {
-            return { num: parseInt(match[1], 10), letter: match[2] };
-          }
-          return { num: parseInt(year, 10) || 0, letter: "" };
-            }
-            const yearA = parseYear(a.getYear());
-            const yearB = parseYear(b.getYear());
-            if (yearA.num !== yearB.num) {
-          return yearA.num - yearB.num;
-            }
-            return yearA.letter.localeCompare(yearB.letter);
-          })
-          .map((tuningSystem, index) => (
-            <div
-          key={index}
-          className={
-            "tuning-system-manager__item " +
-            (tuningSystem.getId() === selectedTuningSystem?.getId()
-              ? "tuning-system-manager__item_selected "
-              : "")
-          }
-          onClick={() => {
-            handleTuningSystemClick(tuningSystem);
-          }}
-            >
-          <strong className="tuning-system-manager__item-english-creator">{`${tuningSystem.getCreatorEnglish()} (${tuningSystem.getYear()})`}</strong>
-          <strong className="tuning-system-manager__item-english-title">{tuningSystem.getTitleEnglish()}</strong>
-            </div>
-          ))
-          )}
+        <div className="tuning-system-manager__carousel">
+          <button
+            className="carousel-button carousel-button-prev"
+            onClick={() => {
+              const container = document.querySelector('.tuning-system-manager__list');
+              if (container) container.scrollBy({ left: -630, behavior: 'smooth' });
+            }}
+          >
+            ‹
+          </button>
+          <div className="tuning-system-manager__list">
+            {tuningSystems.length === 0 ? (
+              <p>No tuning systems available.</p>
+            ) : (
+              [...tuningSystems]
+                .sort((a, b) => {
+                  // Extract numeric and optional letter parts from year string
+                  function parseYear(year: string) {
+                    const match = year.match(/^(\d+)([a-zA-Z]?)$/);
+                    if (match) {
+                      return { num: parseInt(match[1], 10), letter: match[2] };
+                    }
+                    return { num: parseInt(year, 10) || 0, letter: "" };
+                  }
+                  const yearA = parseYear(a.getYear());
+                  const yearB = parseYear(b.getYear());
+                  if (yearA.num !== yearB.num) {
+                    return yearA.num - yearB.num;
+                  }
+                  return yearA.letter.localeCompare(yearB.letter);
+                })
+                .map((tuningSystem, index) => (
+                  <div
+                    key={index}
+                    className={
+                      "tuning-system-manager__item " +
+                      (tuningSystem.getId() === selectedTuningSystem?.getId()
+                        ? "tuning-system-manager__item_selected "
+                        : "")
+                    }
+                    onClick={() => {
+                      handleTuningSystemClick(tuningSystem);
+                    }}
+                  >
+                    <strong className="tuning-system-manager__item-english-creator">{`${tuningSystem.getCreatorEnglish()} (${tuningSystem.getYear()})`}</strong>
+                    <strong className="tuning-system-manager__item-english-title">{tuningSystem.getTitleEnglish()}</strong>
+                  </div>
+                ))
+            )}
+          </div>
+          <button
+            className="carousel-button carousel-button-next"
+            onClick={() => {
+              const container = document.querySelector('.tuning-system-manager__list');
+              if (container) container.scrollBy({ left: 630, behavior: 'smooth' });
+            }}
+          >
+            ›
+          </button>
         </div>
       )}
 

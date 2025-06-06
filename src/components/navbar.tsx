@@ -86,7 +86,7 @@ export default function Navbar() {
         <header className="navbar__top-bar">
           <div className="navbar__left-panel">
             <div className="navbar__left-panel-icon" onClick={() => setShowAdminTabs(!showAdminTabs)}>
-              {showAdminTabs ? "Admin Mode" : "User Mode"}
+              {showAdminTabs ? "User Mode" : "Admin Mode"}
             </div>
           </div>
 
@@ -157,7 +157,12 @@ export default function Navbar() {
               {selectedTuningSystem ? `Maqāmāt (${maqamat.filter((maqam) => checkIfMaqamIsSelectable(maqam)).length}/${maqamat.length})` : "Maqāmāt"} <br />
             </span>
             <span className="navbar__bottom-bar-item_tab-subtitle">
-              {selectedMaqam && selectedMaqam.getName()}
+              {!selectedMaqam
+                ? ""
+                : selectedMaqamTransposition
+                ? `${selectedMaqam.getName()} al-${selectedMaqamTransposition.ascendingNoteNames[0]} (${getEnglishNoteName(selectedMaqamTransposition.ascendingNoteNames[0])})`
+                : `${selectedMaqam.getName()} (${selectedMaqam.getAscendingNoteNames()[0]}/${getEnglishNoteName(selectedMaqam.getAscendingNoteNames()[0])})`}
+              
             </span>
           </button>
           {showAdminTabs && <button
@@ -281,79 +286,6 @@ export default function Navbar() {
             })
           }</div>
       </nav>
-
-      {/* {selectedTuningSystem && (
-        <div className="navbar__note-name-row-wrapper">
-          <table className="navbar__note-name-table">
-            <tbody>
-              <tr>
-                <td className="navbar__note-name-header">Dīwān 1</td>
-                {selectedTuningSystem.getPitchClasses().map((_, colIndex) => {
-                  const idx = selectedIndices[colIndex];
-                  if (idx < 0) return <td key={colIndex}>(none)</td>;
-
-                  const O1_LEN = octaveOneNoteNames.length;
-                  const isFromO1 = idx < O1_LEN;
-                  const localIndex = isFromO1 ? idx : idx - O1_LEN;
-
-                  let lowerName = "none";
-                  if (isFromO1 && localIndex < octaveOneNoteNames.length) {
-                    lowerName = octaveOneNoteNames[localIndex];
-                  } else if (!isFromO1 && localIndex < octaveTwoNoteNames.length) {
-                    lowerName = octaveTwoNoteNames[localIndex];
-                  }
-
-                  const octaveLength = octaveOneNoteNames.length;
-                  const isHighlighted = adjustedCells.some(cell => cell.index === (colIndex % octaveLength) && cell.octave === 1);
-                  const isActive = activeNoteCells.some(cell => cell.index === (colIndex % octaveLength) && cell.octave === 1);
-
-                  return (
-                    <td
-                      key={colIndex}
-                      className={`navbar__note-name-cell ${isHighlighted ? "navbar__note-name-cell_highlighted" : ""} ${isActive ? "navbar__note-name-cell_active" : ""}`}
-                    >
-                      {lowerName.replace(/\//g, "/\u200B")}
-
-                    </td>
-                  );
-                })}
-              </tr>
-              <tr>
-                <td className="navbar__note-name-header">Dīwān 2</td>
-                {selectedTuningSystem.getPitchClasses().map((_, colIndex) => {
-                  const idx = selectedIndices[colIndex];
-                  if (idx < 0) return <td key={colIndex}>(none)</td>;
-
-                  const O1_LEN = octaveOneNoteNames.length;
-                  const isFromO1 = idx < O1_LEN;
-                  const localIndex = isFromO1 ? idx : idx - O1_LEN;
-
-                  let upperName = "";
-                  if (isFromO1 && localIndex < octaveOneNoteNames.length) {
-                    upperName = octaveTwoNoteNames[localIndex];
-                  } else if (!isFromO1 && localIndex < octaveTwoNoteNames.length) {
-                    upperName = octaveThreeNoteNames[localIndex];
-                  }
-
-                  const octaveLength = octaveOneNoteNames.length;
-                  const isHighlighted = adjustedCells.some(cell => cell.index === (colIndex % octaveLength) && cell.octave === 2);
-                  const isActive = activeNoteCells.some(cell => cell.index === (colIndex % octaveLength) && cell.octave === 2);
-
-                  return (
-                    <td
-                      key={colIndex}
-                      className={`navbar__note-name-cell ${isHighlighted ? "navbar__note-name-cell_highlighted" : ""} ${isActive ? "navbar__note-name-cell_active" : ""}`}
-                    >
-                      {upperName.replace(/\//g, "/\u200B")}
-                    </td>
-                  );
-                })}
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-      )} */}
     </>
   );
 }

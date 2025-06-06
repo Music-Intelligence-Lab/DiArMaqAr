@@ -142,7 +142,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     sustain: 0.7,
     release: 0.1,
     waveform: "triangle",
-    volume: 0.5,
+    volume: 0.2,
     duration: 0.1,
     tempo: 200,
     pitchBendRange: 2,

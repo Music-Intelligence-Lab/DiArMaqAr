@@ -2,7 +2,7 @@
 
 .tuning-system-manager {
   width: 100%;
-  margin-top: 20px;
+  margin-top: 0px;
   //padding: 20px 10px;
 
   &__header {
@@ -307,29 +307,20 @@
 
 
   &__list {
+    width: 100%;
+    background-color: $black;
     display: grid;
-    grid-template-columns: repeat(10, minmax(18%, 1fr));
+    grid-template-columns: repeat(9, minmax(18.5%, 1fr));
     grid-template-rows: repeat(3, auto);
     gap: 10px;
-    height: 215px;
+    height: 225px;
     overflow-x: scroll;
     overflow-y: hidden;
     position: relative;
-    padding-bottom: 20px;
-
-    &::before {
-      content: "";
-      position: fixed; // Use absolute positioning relative to the container
-      top: 270px;
-      right: 30px;
-      bottom: 0;
-      left: 95%;
-      background: linear-gradient(to left, $dark-grey, transparent);
-      background-size: 100% 255px;
-      background-repeat: no-repeat;
-      pointer-events: none;
-    }
-
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     &::-webkit-scrollbar {
       height: 6px;
       position: relative;
@@ -342,11 +333,56 @@
     }
 
     &::-webkit-scrollbar-track {
-      background: rgba(0, 0, 0, 0.1);
+      background: $medium-grey;
       cursor: pointer;
       position: relative;
     }
+  }
 
+  &__carousel {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+
+    .carousel-button {
+      background: none;
+      border: none;
+      font-size: 30px;
+      cursor: pointer;
+      color: $text;
+      padding: 0px;
+
+      &:hover {
+      color: $tertiary;
+      transition: background-color 0.2s ease-in-out;
+      }
+
+    }
+
+    .carousel-button-prev,
+    .carousel-button-next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1;
+      height: calc(100% - 20px);
+      width: 25px;
+      background-color: $black;
+      &:hover {
+        color: $tertiary;
+        transition: color 0.1s ease-in-out;
+      }
+
+    }
+
+    .carousel-button-prev {
+      left: 0;
+    }
+
+    .carousel-button-next {
+      right: 0;
+    }
   }
 
   &__item {
@@ -443,7 +479,7 @@
   &__summary {
     font-size: 20px;
     margin-bottom: 20px;
-    cursor: pointer;
+    //cursor: pointer;
     user-select: none;
 
   }
@@ -451,7 +487,7 @@
   &__octave-summary {
     font-size: 20px;
     margin-bottom: 20px;
-    cursor: pointer;
+    //cursor: pointer;
     user-select: none;
 
 
@@ -460,6 +496,7 @@
   &__octave-summary-title {
     display: inline-block;
     user-select: none;
+    cursor: pointer;
   }
 
   &__octave-cascade-button {
