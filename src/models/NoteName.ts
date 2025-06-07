@@ -207,3 +207,9 @@ export type TransliteratedNoteNameOctaveZero = typeof octaveZeroNoteNames[number
 export type TransliteratedNoteNameOctaveTwo = typeof octaveTwoNoteNames[number];
 export type TransliteratedNoteNameOctaveThree = typeof octaveThreeNoteNames[number];
 export type TransliteratedNoteNameOctaveFour = typeof octaveFourNoteNames[number];
+
+export function getNoteNameIndex(
+  noteName: TransliteratedNoteName
+): number {
+  return allNotes.indexOf(noteName);
+}

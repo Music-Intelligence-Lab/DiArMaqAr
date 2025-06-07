@@ -14,6 +14,7 @@ import TransliteratedNoteName, {
   octaveFourNoteNames,
   TransliteratedNoteNameOctaveOne,
   TransliteratedNoteNameOctaveTwo,
+  getNoteNameIndex,
 } from "@/models/NoteName";
 import { nanoid } from "nanoid";
 
@@ -271,7 +272,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   };
 
   const handleTuningSystemClick = (ts: TuningSystem) => {
-   // clearSelections();
+    // clearSelections();
     setSelectedTuningSystem(ts);
     handleStartNoteNameChange("", ts.getSetsOfNoteNames(), ts.getPitchClasses().length);
   };
@@ -721,76 +722,76 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
           }}
         >
           <span className="tuning-system-manager__octave-summary-title"
-          onClick={() => setOpenedOctaveRows((rows) => ({
+            onClick={() => setOpenedOctaveRows((rows) => ({
               ...rows,
               [octave]: !rows[octave as 0 | 1 | 2 | 3],
             }))}
           >
             Diwān (octave) {octave}{" "}</span>
-            {admin && ((octave === 1 && openedOctaveRows[1]) || (octave === 2 && openedOctaveRows[2])) && (
-              <button
-                className="tuning-system-manager__octave-cascade-button"
-                onClick={(e: React.MouseEvent) => {
-                  e.stopPropagation();
-                  setCascade((c) => !c);
-                }}
-              >
-                {cascade ? "Cascade Enabled" : "Cascade Disabled"}
-              </button>
-            )}
-            {octave === 1 && openedOctaveRows[1] && (
-              <span className="tuning-system-manager__filter-menu">
-                {Object.keys(filters).map((filterKey) => {
-                  const isDisabled =
-                    (filterKey === "fractionRatio" && pitchClassType === "fraction") ||
-                    (filterKey === "cents" && pitchClassType === "cents") ||
-                    (filterKey === "decimalRatio" && pitchClassType === "decimal") ||
-                    (filterKey === "stringLength" && pitchClassType === "stringLength");
+          {admin && ((octave === 1 && openedOctaveRows[1]) || (octave === 2 && openedOctaveRows[2])) && (
+            <button
+              className="tuning-system-manager__octave-cascade-button"
+              onClick={(e: React.MouseEvent) => {
+                e.stopPropagation();
+                setCascade((c) => !c);
+              }}
+            >
+              {cascade ? "Cascade Enabled" : "Cascade Disabled"}
+            </button>
+          )}
+          {octave === 1 && openedOctaveRows[1] && (
+            <span className="tuning-system-manager__filter-menu">
+              {Object.keys(filters).map((filterKey) => {
+                const isDisabled =
+                  (filterKey === "fractionRatio" && pitchClassType === "fraction") ||
+                  (filterKey === "cents" && pitchClassType === "cents") ||
+                  (filterKey === "decimalRatio" && pitchClassType === "decimal") ||
+                  (filterKey === "stringLength" && pitchClassType === "stringLength");
 
-                  if (isDisabled) return null;
+                if (isDisabled) return null;
 
-                  return (
-                    <label
-                      key={filterKey}
-                      htmlFor={`filter-${filterKey}`}
-                      className={`tuning-system-manager__filter-item ${filters[filterKey as keyof typeof filters] ? "tuning-system-manager__filter-item_active" : ""
-                        }`}
-                      // prevent the drawer (or parent) click handler from firing
-                      onClick={(e) => e.stopPropagation()}
-                    >
+                return (
+                  <label
+                    key={filterKey}
+                    htmlFor={`filter-${filterKey}`}
+                    className={`tuning-system-manager__filter-item ${filters[filterKey as keyof typeof filters] ? "tuning-system-manager__filter-item_active" : ""
+                      }`}
+                    // prevent the drawer (or parent) click handler from firing
+                    onClick={(e) => e.stopPropagation()}
+                  >
 
-                      <input
-                        id={`filter-${filterKey}`}
-                        type="checkbox"
-                        className="tuning-system-manager__filter-checkbox"
-                        checked={filters[filterKey as keyof typeof filters]}
-                        disabled={isDisabled}
-                        onChange={(e) => {
-                          // still stop propagation so only the checkbox toggles
-                          e.stopPropagation();
-                          setFilters((prev) => ({
-                            ...prev,
-                            [filterKey as keyof typeof filters]: e.target.checked,
-                          }));
-                        }}
-                      />
-                      <span className="tuning-system-manager__filter-label">
-                        {filterKey.replace(/([A-Z])/g, ' $1').trim().charAt(0).toUpperCase() + filterKey.replace(/([A-Z])/g, ' $1').trim().slice(1)}
-                      </span>
+                    <input
+                      id={`filter-${filterKey}`}
+                      type="checkbox"
+                      className="tuning-system-manager__filter-checkbox"
+                      checked={filters[filterKey as keyof typeof filters]}
+                      disabled={isDisabled}
+                      onChange={(e) => {
+                        // still stop propagation so only the checkbox toggles
+                        e.stopPropagation();
+                        setFilters((prev) => ({
+                          ...prev,
+                          [filterKey as keyof typeof filters]: e.target.checked,
+                        }));
+                      }}
+                    />
+                    <span className="tuning-system-manager__filter-label">
+                      {filterKey.replace(/([A-Z])/g, ' $1').trim().charAt(0).toUpperCase() + filterKey.replace(/([A-Z])/g, ' $1').trim().slice(1)}
+                    </span>
 
-                    </label>
-                  );
-                })}
-              </span>
-            )}
-          
+                  </label>
+                );
+              })}
+            </span>
+          )}
+
           <div className="tuning-system-manager__octave-summary-content">
 
           </div>
         </summary>
 
-        <div 
-        className="tuning-system-manager__octave-scroll"
+        <div
+          className="tuning-system-manager__octave-scroll"
           ref={octaveScrollRefs[octave as 0 | 1 | 2 | 3]}
         >
           <table className="tuning-system-manager__octave-table" border={0}>
@@ -805,14 +806,14 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             <tbody>
               {/* Row 1: Pitch Class */}
               {filters.pitchClass && (
-              <tr>
-                <td>Pitch Class</td>
-                {pitchClassesArr.map((_, colIndex) => (
-                  <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
-                    {colIndex}
-                  </td>
-                ))}
-              </tr>
+                <tr>
+                  <td>Pitch Class</td>
+                  {pitchClassesArr.map((_, colIndex) => (
+                    <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
+                      {colIndex}
+                    </td>
+                  ))}
+                </tr>
               )}
               {/* Row 2: Note Name */}
               <tr style={{ minHeight: "50px", maxHeight: "50px", height: "50px" }}>
@@ -1150,7 +1151,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 Year
               </label>
               <input
-                className="tuning-system-manager__input" 
+                className="tuning-system-manager__input"
                 id="yearField"
                 type="text"
                 value={year ?? ""}
@@ -1324,23 +1325,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             {tuningSystems.length === 0 ? (
               <p>No tuning systems available.</p>
             ) : (
-              [...tuningSystems]
-                .sort((a, b) => {
-                  // Extract numeric and optional letter parts from year string
-                  function parseYear(year: string) {
-                    const match = year.match(/^(\d+)([a-zA-Z]?)$/);
-                    if (match) {
-                      return { num: parseInt(match[1], 10), letter: match[2] };
-                    }
-                    return { num: parseInt(year, 10) || 0, letter: "" };
-                  }
-                  const yearA = parseYear(a.getYear());
-                  const yearB = parseYear(b.getYear());
-                  if (yearA.num !== yearB.num) {
-                    return yearA.num - yearB.num;
-                  }
-                  return yearA.letter.localeCompare(yearB.letter);
-                })
+              [...sortedTuningSystems]
                 .map((tuningSystem, index) => (
                   <div
                     key={index}
@@ -1372,11 +1357,38 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         </div>
       )}
 
+      {!admin && <div className="tuning-system-manager__sorting-options">
+        <label className="tuning-system-manager__sorting-label" htmlFor="sortOptionSelect">
+          Sort By:
+        </label>
+        <button className={"tuning-system-manager__sorting-button " + (sortOption === "id" ? "tuning-system-manager__sorting-button_selected" : "")} onClick={() => setSortOption("id")}>
+          ID
+        </button>
+        <button
+          className={
+            "tuning-system-manager__sorting-button " +
+            (sortOption === "creatorEnglish" ? "tuning-system-manager__sorting-button_selected" : "")
+          }
+          onClick={() => setSortOption("creatorEnglish")}
+        >
+          Creator (English)
+        </button>
+        <button
+          className={
+            "tuning-system-manager__sorting-button " +
+            (sortOption === "year" ? "tuning-system-manager__sorting-button_selected" : "")
+          }
+          onClick={() => setSortOption("year")}
+        >
+          Year
+        </button>
+      </div>}
+
       {pitchClassesArr.length !== 0 && (
         <div className="tuning-system-manager__starting-note-container">
           <div className="tuning-system-manager__starting-note-left">
             Start Note Names From:
-            {noteNames.map((notes, index) => {
+            {[...noteNames].sort((a, b) => getNoteNameIndex(a[0] ?? 0) - getNoteNameIndex(b[0] ?? 0)).map((notes, index) => {
               const startingNote = notes[0];
               return (
                 <div className="tuning-system-manager__starting-note" key={index}>
@@ -1438,16 +1450,6 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
               </div>
             )}
 
-
-
-
-            {/*               <button
-                className={"tuning-system-manager__starting-note-button tuning-system-manager__starting-note-button_reset"}
-                onClick={() => handleStartNoteNameChange("none")}
-              >
-                Reset Note Names
-              </button>
- */}
           </div>
           {admin && (
             <div className="tuning-system-manager__starting-note-right">
@@ -1492,7 +1494,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         </button>
       </div>
 
-            {/* COMMENTS AND SOURCES */}
+      {/* COMMENTS AND SOURCES */}
       <div className="tuning-system-manager__comments-sources-container">
         <div className="tuning-system-manager__comments-english">
           <h3>Comments:</h3>
@@ -1516,7 +1518,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
         <div className="tuning-system-manager__sources-english">
           <h3>Sources:</h3>
-            {[...sourcePageReferences]
+          {[...sourcePageReferences]
             .sort((a, b) => {
               const srcA = sources.find((s) => s.getId() === a.sourceId);
               const srcB = sources.find((s) => s.getId() === b.sourceId);
@@ -1527,22 +1529,20 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             .map((ref, idx) => {
               const source = sources.find((s) => s.getId() === ref.sourceId);
               return (
-              <div key={idx} className="tuning-system-manager__source-item">
-                {source && (
-                <span className="">
-                  {source.getContributors()[0].lastNameEnglish?.length
-                  ? `${source.getContributors()[0]?.lastNameEnglish ?? ""}, ${source
-                    .getContributors()[0]?.firstNameEnglish?.split(" ")
-                    .map((w) => w.charAt(0))
-                    .join(". ") ?? ""}. (${source.getReleaseDateEnglish() ? source.getReleaseDateEnglish() + "/" : ""}${
-                    source.getReleaseDateEnglish() ?? ""
-                    }:${ref.page})`
-                  : `${source.getTitleEnglish()} (${source.getReleaseDateEnglish() ? source.getReleaseDateEnglish() + "/" : ""}${
-                    source.getReleaseDateEnglish() ?? ""
-                    }:${ref.page})`}
-                </span>
-                )}
-              </div>
+                <div key={idx} className="tuning-system-manager__source-item">
+                  {source && source.getContributors().length !== 0 && (
+                    <span className="">
+                      {source.getContributors()[0].lastNameEnglish?.length
+                        ? `${source.getContributors()[0]?.lastNameEnglish ?? ""}, ${source
+                          .getContributors()[0]?.firstNameEnglish?.split(" ")
+                          .map((w) => w.charAt(0))
+                          .join(". ") ?? ""}. (${source.getReleaseDateEnglish() ? source.getReleaseDateEnglish() + "/" : ""}${source.getReleaseDateEnglish() ?? ""
+                        }:${ref.page})`
+                        : `${source.getTitleEnglish()} (${source.getReleaseDateEnglish() ? source.getReleaseDateEnglish() + "/" : ""}${source.getReleaseDateEnglish() ?? ""
+                        }:${ref.page})`}
+                    </span>
+                  )}
+                </div>
               );
             })}
         </div>
