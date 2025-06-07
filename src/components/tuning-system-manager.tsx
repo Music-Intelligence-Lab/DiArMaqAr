@@ -212,11 +212,8 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       case "creatorEnglish":
         return a.getCreatorEnglish().localeCompare(b.getCreatorEnglish());
 
-      case "year": {
-        const yearA = parseInt(a.getYear()) || 0;
-        const yearB = parseInt(b.getYear()) || 0;
-        return yearA - yearB;
-      }
+      case "year":
+        return a.getYear().localeCompare(b.getYear(), undefined, { numeric: true, sensitivity: "base" });
 
       case "id":
       default:
