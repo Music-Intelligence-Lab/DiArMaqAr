@@ -157,6 +157,30 @@
     font-style: italic;
   }
 
+  &__sorting-options {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0;
+  }
+
+  &__sorting-button {
+    padding: 10px;
+    background-color: rgba($primary, 0.5);
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+
+    &:hover {
+      background-color: rgba($secondary, 0.5);
+    }
+
+    &_selected {
+      background-color: $secondary;
+    }
+  }
+
   &__starting-note-container {
     display: block;
     margin: 30px 0;
