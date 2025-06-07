@@ -352,6 +352,18 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     soundSettings.selectedMidiOutputId
   ]);
 
+  useEffect(() => {
+    if (selectedTuningSystem) {
+      if (selectedJins) {
+        if (checkIfJinsIsSelectable(selectedJins)) handleClickJins(selectedJins);
+        else clearSelections();
+      } else if (selectedMaqam) {
+        if (checkIfMaqamIsSelectable(selectedMaqam)) handleClickMaqam(selectedMaqam);
+        else clearSelections();
+      }
+    } else clearSelections();
+  }, [selectedTuningSystem])
+
   const handleMidiInput: NonNullable<MIDIInput["onmidimessage"]> = function (this: MIDIInput, ev: MIDIMessageEvent) {
     // only from our selected port
     if (this.id !== soundSettings.selectedMidiInputId) return;
