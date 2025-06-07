@@ -273,7 +273,6 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   };
 
   const handleTuningSystemClick = (ts: TuningSystem) => {
-    // clearSelections();
     setSelectedTuningSystem(ts);
     handleStartNoteNameChange("", ts.getSetsOfNoteNames(), ts.getPitchClasses().length);
   };
