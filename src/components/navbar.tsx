@@ -64,8 +64,10 @@ export default function Navbar() {
             setPitchClasses("");
             setSelectedIndices([]);
             setNoteNames([]);
-          }}> Arabic Maqām Database</span>
-            <br></br><span className="navbar__subtitle">Explore and play the tanghīm, ajnās, maqāmāt and suyūr of the Arabic Maqām system</span>
+          }}> شبكة المقام العربي Arabic Maqām Network</span>
+            <br></br><span className="navbar__subtitle">
+            استكشفوا واعزفوا التنغيم والأجناس والمقامات في نظام المقام العربي • Explore and play the tanghīm, ajnās and maqāmāt of the Arabic Maqām system
+            </span>
           </div>
           <div className="navbar__right-panel">
             <div className="navbar__left-panel-icon">

@@ -1,7 +1,7 @@
 [
   {
     "id": "1",
-    "name": "jins rāst",
+    "name": "jins rāst binṣir",
     "noteNames": [
       "rāst",
       "dūgāh",
@@ -238,6 +238,19 @@
       "kurdī",
       "ḥijāz",
       "nawā"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "19",
+    "name": "jins rāst muṭlaq",
+    "noteNames": [
+      "ʿushayrān",
+      "kawasht",
+      "nīm zirguleh",
+      "dūgāh"
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
