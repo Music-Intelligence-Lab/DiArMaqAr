@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useAppContext } from "@/contexts/app-context";
 
 export default function KeyboardControls() {
-  const { selectedCells, getCellDetails, noteOn, noteOff, selectedMaqam, selectedMaqamTransposition, getAllCells, activeCells, setActiveCells } = useAppContext();
+  const { selectedCells, getCellDetails, noteOn, noteOff, selectedMaqam, selectedMaqamTransposition, getAllCells, setActiveCells } = useAppContext();
 
   // home row + semicolon + apostrophe
   const firstRowKeys = ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]"];

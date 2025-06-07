@@ -371,16 +371,23 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
       if (idx < 0 || idx >= cells.length) return;
 
+      const cell = cells[idx];
+
       // grab the frequency from your cell‐detail helper
-      const freqStr = getCellDetails(cells[idx]).frequency;
+      const freqStr = getCellDetails(cell).frequency;
       const freq = parseFloat(freqStr);
       if (isNaN(freq)) return;
 
       // ——— dispatch sound ———
       if (cmd === 0x90 && velocity > 0) {
         noteOn(freq);
+        setActiveCells((prev) => {
+          if (prev.some((c) => c.index === cell.index && c.octave === cell.octave)) return prev;
+          return [...prev, { index: cell.index, octave: cell.octave }];
+        });
       } else if (cmd === 0x80 || (cmd === 0x90 && velocity === 0)) {
         noteOff(freq);
+        setActiveCells((prev) => prev.filter((c) => !(c.index === cell.index && c.octave === cell.octave)));
       }
     } else if (soundSettings.inputMode === "selection") {
       const selectedCellDetails = selectedCells.map((cell) => getCellDetails(cell));
@@ -388,6 +395,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
       for (const cellDetails of selectedCellDetails) {
         let convertedEnglishName = cellDetails.englishName;
+        const cell: Cell = { index: cellDetails.index, octave: cellDetails.octave };
         convertedEnglishName = convertedEnglishName[0].toUpperCase() + convertedEnglishName.slice(1);
         if (convertedEnglishName.includes("-")) convertedEnglishName = convertedEnglishName[0];
 
@@ -404,8 +412,13 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
           if (cmd === 0x90 && velocity > 0) {
             noteOn(adjFreq);
+            setActiveCells((prev) => {
+              if (prev.some((c) => c.index === cell.index && c.octave === cell.octave)) return prev;
+              return [...prev, { index: cell.index, octave: cell.octave }];
+            });
           } else if (cmd === 0x80 || (cmd === 0x90 && velocity === 0)) {
             noteOff(adjFreq);
+            setActiveCells((prev) => prev.filter((c) => !(c.index === cell.index && c.octave === cell.octave)));
           }
 
           break;
