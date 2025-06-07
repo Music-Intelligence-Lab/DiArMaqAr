@@ -51,6 +51,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     sources,
     selectedJins,
     selectedMaqam,
+    activeCells
   } = useAppContext();
 
   const { filters, setFilters } = useFilterContext();
@@ -488,6 +489,13 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
   // Given an octave and a column index, check if that cell is already selected.
   const isCellSelected = (octave: number, colIndex: number) => selectedCells.some((cell) => cell.octave === octave && cell.index === colIndex);
+  const isCellActive = (octave: number, colIndex: number) => activeCells.some((cell) => cell.octave === octave && cell.index === colIndex);
+
+  const getCellClassName = (octave: number, colIndex: number) => {
+    const isSelected = isCellSelected(octave, colIndex);
+    const isActive = isCellActive(octave, colIndex);
+    return `tuning-system-manager__cell ${octave} ${isSelected ? "tuning-system-manager__cell_selected " : ""} ${isActive ? "tuning-system-manager__cell_active " : ""}`;
+  }
 
   // When a checkbox is toggled, update the selectedCells accordingly.
   const handleCheckboxChange = (octave: number, colIndex: number, checked: boolean) => {
@@ -809,7 +817,12 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 <tr>
                   <td>Pitch Class</td>
                   {pitchClassesArr.map((_, colIndex) => (
-                    <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
+                    <td
+                      key={colIndex}
+                      className={
+                      getCellClassName(octave, colIndex)
+                      }
+                    >
                       {colIndex}
                     </td>
                   ))}
@@ -823,7 +836,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
                   if (octave === 1 && admin) {
                     return (
-                      <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
+                      <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                         <select
                           className="tuning-system-manager__select-note"
                           value={currentVal ?? ""}
@@ -850,7 +863,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                     );
                   } else {
                     return (
-                      <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
+                      <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                         {currentVal === "none" ? "(none)" : currentVal.replace(/\//g, "/\u200B")}
                       </td>
                     );
@@ -865,7 +878,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                     <td
                       key={colIndex}
                       className={`
-            ${isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected " : ""}
+            ${getCellClassName(octave, colIndex)}
             ${!(octave === 1 || octave === 2) ? "tuning-system-manager__abjad-name" : ""}
           `}
                     >
@@ -899,7 +912,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                     const arabicName = getOctaveNoteName(octave, colIndex);
                     const english = getEnglishNoteName(arabicName);
                     return (
-                      <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
+                      <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                         {english}
                       </td>
                     );
@@ -920,7 +933,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 <tr className="tuning-system-manager__octave-table__detectedPitchClassType">
                   <td>{{ fraction: "Fraction Ratio", cents: "Cents (¢)", decimal: "Decimal Ratio", stringLength: "String Length" }[pitchClassType]}</td>
                   {pitchClassesArr.map((basePc, colIndex) => (
-                    <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
+                    <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                       {renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, pitchClassType)}
                     </td>
                   ))}
@@ -932,7 +945,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 <tr>
                   <td>Cents (¢)</td>
                   {pitchClassesArr.map((basePc, colIndex) => (
-                    <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
+                    <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                       {renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "cents")}
                     </td>
                   ))}
@@ -944,7 +957,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 <tr>
                   <td>Fraction Ratio</td>
                   {pitchClassesArr.map((basePc, colIndex) => (
-                    <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
+                    <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                       {renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "fraction")}
                     </td>
                   ))}
@@ -956,7 +969,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 <tr>
                   <td>String Length</td>
                   {pitchClassesArr.map((basePc, colIndex) => (
-                    <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
+                    <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                       {renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "stringLength")}
                     </td>
                   ))}
@@ -967,7 +980,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 <tr>
                   <td>Fret Division</td>
                   {pitchClassesArr.map((basePc, colIndex) => (
-                    <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
+                    <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                       {(
                         parseFloat(renderConvertedCell(pitchClassesArr[0], 1, "stringLength")) -
                         parseFloat(renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "stringLength"))
@@ -982,7 +995,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 <tr>
                   <td>Decimal Ratio</td>
                   {pitchClassesArr.map((basePc, colIndex) => (
-                    <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
+                    <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                       {renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "decimal")}
                     </td>
                   ))}
@@ -994,7 +1007,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 <tr>
                   <td>Midi Note</td>
                   {pitchClassesArr.map((basePc, colIndex) => (
-                    <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
+                    <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                       {frequencyToMidiNoteNumber(parseInt(renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "frequency"))).toFixed(2)}
                     </td>
                   ))}
@@ -1006,7 +1019,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 <tr>
                   <td>Freq (Hz)</td>
                   {pitchClassesArr.map((basePc, colIndex) => (
-                    <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
+                    <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                       {renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "frequency")}
                     </td>
                   ))}
@@ -1017,7 +1030,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
               <tr>
                 <td>Play</td>
                 {pitchClassesArr.map((basePc, colIndex) => (
-                  <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
+                  <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                     <PlayCircleIcon className="tuning-system-manager__play-circle-icon" onClick={() => playNoteFrequency(parseInt(renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "frequency")))} />
 
                   </td>
@@ -1028,7 +1041,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
               <tr>
                 <td>Select</td>
                 {pitchClassesArr.map((_, colIndex) => (
-                  <td key={colIndex} className={isCellSelected(octave, colIndex) ? "tuning-system-manager__cell-selected" : ""}>
+                  <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                     <input
                       type="checkbox"
                       className="tuning-system-manager__checkbox"
