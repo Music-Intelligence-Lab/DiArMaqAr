@@ -608,34 +608,6 @@
         "mahurān",
         "jawāb ḥijāz",
         "jawāb tīk ḥijāz"
-      ],
-      [
-        "ʿushayrān",
-        "qarār ḥiṣār",
-        "qarār tīk ḥiṣār/shūrī",
-        "ʿushayrān",
-        "ʿajam ʿushayrān",
-        "ʿirāq",
-        "kawasht",
-        "rāst",
-        "nīm zirguleh",
-        "zirguleh",
-        "dūgāh",
-        "kurdī",
-        "segāh",
-        "buselīk/ʿushshāq",
-        "chahargāh",
-        "ḥijāz",
-        "tīk ḥijāz/ṣabā",
-        "none",
-        "none",
-        "none",
-        "none",
-        "none",
-        "none",
-        "none",
-        "none",
-        "none"
       ]
     ],
     "abjadNames": [
@@ -774,34 +746,6 @@
         "jawāb nīm ḥijāz",
         "jawāb ḥijāz",
         "jawāb tīk ḥijāz"
-      ],
-      [
-        "ʿushayrān",
-        "qarār nīm ḥiṣār",
-        "qarār ḥiṣār",
-        "qarār tīk ḥiṣār/shūrī",
-        "ʿushayrān",
-        "nīm ʿajam ʿushayrān",
-        "ʿajam ʿushayrān",
-        "ʿirāq",
-        "kawasht",
-        "tīk kawasht",
-        "rāst",
-        "nīm zirguleh",
-        "zirguleh",
-        "tīk zirguleh",
-        "dūgāh",
-        "nīm kurdī/nahāwand",
-        "kurdī",
-        "segāh",
-        "buselīk/ʿushshāq",
-        "tīk buselīk",
-        "chahargāh",
-        "nīm ḥijāz",
-        "ḥijāz",
-        "tīk ḥijāz/ṣabā",
-        "none",
-        "none"
       ]
     ],
     "abjadNames": [
@@ -2465,15 +2409,15 @@
       ],
       [
         "ʿushayrān",
-        "ʿajam ʿushayrān",
         "kawasht",
         "rāst",
+        "zirguleh",
         "dūgāh",
-        "kurdī",
         "buselīk/ʿushshāq",
         "chahargāh",
         "ḥijāz",
-        "nawā"
+        "nawā",
+        "ḥiṣār"
       ]
     ],
     "abjadNames": [
