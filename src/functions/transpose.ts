@@ -103,7 +103,7 @@ export function mergeTranspositions(ascendingSequences: CellDetails[][], descend
   return filteredSequences;
 }
 
-export function getMaqamTranspositions(allCellDetails: CellDetails[], maqam: Maqam, onlyOctaveOneAndTwo: boolean = false) {
+export function getMaqamTranspositions(allCellDetails: CellDetails[], maqam: Maqam, onlyOctaveOne: boolean = false) {
   if (allCellDetails.length === 0) return [];
 
   const ascendingNoteNames = maqam.getAscendingNoteNames();
@@ -124,7 +124,7 @@ export function getMaqamTranspositions(allCellDetails: CellDetails[], maqam: Maq
   const descendingIntervalPattern: Interval[] = getIntervalPattern(descendingMaqamCellDetails, useRatio);
 
   const ascendingSequences: CellDetails[][] = getTranspositions(allCellDetails, ascendingIntervalPattern, true, useRatio, 5).filter(
-    (sequence) => !onlyOctaveOneAndTwo || sequence[0].octave === 1 || sequence[0].octave === 2
+    (sequence) => !onlyOctaveOne || sequence[0].octave === 1 
   );;
 
   const descendingSequences: CellDetails[][] = getTranspositions(allCellDetails, descendingIntervalPattern, false, useRatio, 5);
@@ -137,7 +137,7 @@ export function getMaqamTranspositions(allCellDetails: CellDetails[], maqam: Maq
   return filteredSequences;
 }
 
-export function getJinsTranspositions(allCellDetails: CellDetails[], jins: Jins, onlyOctaveOneAndTwo: boolean = false) {
+export function getJinsTranspositions(allCellDetails: CellDetails[], jins: Jins, onlyOctaveOne: boolean = false) {
   if (allCellDetails.length === 0) return [];
 
   const jinsNoteNames = jins.getNoteNames();
@@ -152,7 +152,7 @@ export function getJinsTranspositions(allCellDetails: CellDetails[], jins: Jins,
   const intervalPattern: Interval[] = getIntervalPattern(jinsCellDetails, useRatio);
 
   const sequences: CellDetails[][] = getTranspositions(allCellDetails, intervalPattern, true, useRatio, 5).filter(
-    (sequence) => !onlyOctaveOneAndTwo || sequence[0].octave === 1 || sequence[0].octave === 2
+    (sequence) => !onlyOctaveOne || sequence[0].octave === 1 
   );
   
   return sequences;
