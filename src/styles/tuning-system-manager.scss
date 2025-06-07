@@ -345,6 +345,7 @@
     padding-right: 25px;
     padding-top: 10px;
     padding-bottom: 10px;
+
     &::-webkit-scrollbar {
       height: 6px;
       position: relative;
@@ -378,8 +379,8 @@
       padding: 0px;
 
       &:hover {
-      color: $tertiary;
-      transition: background-color 0.2s ease-in-out;
+        color: $tertiary;
+        transition: background-color 0.2s ease-in-out;
       }
 
     }
@@ -393,6 +394,7 @@
       height: calc(100% - 20px);
       width: 25px;
       background-color: $black;
+
       &:hover {
         color: $tertiary;
         transition: color 0.1s ease-in-out;
@@ -672,9 +674,16 @@
     }
   }
 
-  &__cell-selected {
-    background-color: $primary;
-    color: white;
+  &__cell {
+    &_selected {
+      background-color: $primary;
+      color: white;
+    }
+
+    &_active {
+      background-color: $secondary !important;
+      color: white;
+    }
   }
 
   &__select-note {
