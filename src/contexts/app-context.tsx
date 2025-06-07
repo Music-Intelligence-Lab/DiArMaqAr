@@ -7,7 +7,7 @@ import maqamatData from "@/../data/maqamat.json";
 import sourcesData from "@/../data/sources.json";
 import patternsData from "@/../data/patterns.json";
 import TuningSystem from "@/models/TuningSystem";
-import Jins from "@/models/Jins";
+import Jins, { JinsTransposition } from "@/models/Jins";
 import TransliteratedNoteName, { TransliteratedNoteNameOctaveOne, TransliteratedNoteNameOctaveTwo } from "@/models/NoteName";
 import detectPitchClassType from "@/functions/detectPitchClassType";
 import convertPitchClass, { shiftPitchClass, frequencyToMidiNoteNumber } from "@/functions/convertPitchClass";
@@ -100,6 +100,8 @@ interface AppContextInterface {
   setSelectedJins: React.Dispatch<React.SetStateAction<Jins | null>>;
   checkIfJinsIsSelectable: (jins: Jins) => boolean;
   handleClickJins: (jins: Jins) => void;
+  selectedJinsTransposition: JinsTransposition | null;
+  setSelectedJinsTransposition: React.Dispatch<React.SetStateAction<JinsTransposition | null>>;
   maqamat: Maqam[];
   setMaqamat: React.Dispatch<React.SetStateAction<Maqam[]>>;
   selectedMaqam: Maqam | null;
@@ -163,6 +165,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
   const [ajnas, setAjnas] = useState<Jins[]>([]);
   const [selectedJins, setSelectedJins] = useState<Jins | null>(null);
+  const [selectedJinsTransposition, setSelectedJinsTransposition] = useState<JinsTransposition | null>(null);
 
   const [maqamat, setMaqamat] = useState<Maqam[]>([]);
   const [selectedMaqam, setSelectedMaqam] = useState<Maqam | null>(null);
@@ -781,6 +784,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     setSelectedJins(null);
     setSelectedMaqam(null);
     setMaqamSayrId("");
+    setSelectedJinsTransposition(null);
+    setSelectedMaqamTransposition(null);
   };
 
   function mapIndices(notesToMap: TransliteratedNoteName[], givenNumberOfPitchClasses: number = 0, setOriginal: boolean = true) {
@@ -966,62 +971,64 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   return (
     <AppContext.Provider
       value={{
-        tuningSystems,
-        setTuningSystems,
-        selectedTuningSystem,
-        setSelectedTuningSystem,
-        pitchClasses,
-        setPitchClasses,
-        noteNames,
-        setNoteNames,
-        handleStartNoteNameChange,
-        referenceFrequencies,
-        setReferenceFrequencies,
-        playNoteFrequency,
-        soundSettings,
-        setSoundSettings,
-        selectedCells,
-        setSelectedCells,
-        activeCells,
-        setActiveCells,
-        getAllCells,
-        selectedIndices,
-        setSelectedIndices,
-        originalIndices,
-        setOriginalIndices,
-        mapIndices,
-        initialMappingDone,
-        getCellDetails,
-        ajnas,
-        setAjnas,
-        selectedJins,
-        setSelectedJins,
-        checkIfJinsIsSelectable,
-        handleClickJins,
-        maqamat,
-        setMaqamat,
-        selectedMaqam,
-        setSelectedMaqam,
-        checkIfMaqamIsSelectable,
-        handleClickMaqam,
-        selectedMaqamTransposition,
-        setSelectedMaqamTransposition,
-        maqamSayrId,
-        setMaqamSayrId,
-        centsTolerance,
-        setCentsTolerance,
-        clearSelections,
-        playSequence,
-        noteOn,
-        noteOff,
-        handleUrlParams,
-        midiInputs,
-        midiOutputs,
-        sources,
-        setSources,
-        patterns,
-        setPatterns,
-        setRefresh
+      tuningSystems,
+      setTuningSystems,
+      selectedTuningSystem,
+      setSelectedTuningSystem,
+      pitchClasses,
+      setPitchClasses,
+      noteNames,
+      setNoteNames,
+      handleStartNoteNameChange,
+      referenceFrequencies,
+      setReferenceFrequencies,
+      playNoteFrequency,
+      soundSettings,
+      setSoundSettings,
+      selectedCells,
+      setSelectedCells,
+      activeCells,
+      setActiveCells,
+      getAllCells,
+      selectedIndices,
+      setSelectedIndices,
+      originalIndices,
+      setOriginalIndices,
+      mapIndices,
+      initialMappingDone,
+      getCellDetails,
+      ajnas,
+      setAjnas,
+      selectedJins,
+      setSelectedJins,
+      checkIfJinsIsSelectable,
+      handleClickJins,
+      selectedJinsTransposition,
+      setSelectedJinsTransposition,
+      maqamat,
+      setMaqamat,
+      selectedMaqam,
+      setSelectedMaqam,
+      checkIfMaqamIsSelectable,
+      handleClickMaqam,
+      selectedMaqamTransposition,
+      setSelectedMaqamTransposition,
+      maqamSayrId,
+      setMaqamSayrId,
+      centsTolerance,
+      setCentsTolerance,
+      clearSelections,
+      playSequence,
+      noteOn,
+      noteOff,
+      handleUrlParams,
+      midiInputs,
+      midiOutputs,
+      sources,
+      setSources,
+      patterns,
+      setPatterns,
+      setRefresh,
       }}
     >
       {children}

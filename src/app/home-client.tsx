@@ -15,7 +15,7 @@ import SourcesList from "@/components/sources-list";
 import PatternsManager from "@/components/patterns-manager";
 import JinsManager from "@/components/jins-manager";
 import MaqamManager from "@/components/maqam-manager";
-
+import PitchClassWheel from "@/components/pitch-class-wheel";
 export default function HomeClient() {
   const {
     tuningSystems,
@@ -65,6 +65,7 @@ export default function HomeClient() {
 
   return (
     <div className="home-page">
+      {selectedTuningSystem && <PitchClassWheel />}
       {selectedMenu === "tuningSystem" && <TuningSystemManager admin={false} />}
       {selectedMenu === "tuningSystem-admin" && <TuningSystemManager admin />}
       {selectedMenu === "maqam" && selectedTuningSystem && <MaqamManager admin={false} />}

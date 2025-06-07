@@ -2,8 +2,7 @@
 
 $top-navbar-height: 100px;
 $bottom-navbar-height: 55px;
-$navbar-pc-cells-row-height: 70px;
-$page-height: calc(100svh - $top-navbar-height - $bottom-navbar-height - $navbar-pc-cells-row-height - 50px);
+$page-height: calc(100svh - $top-navbar-height - $bottom-navbar-height);
 
 $background: #222222;
 $primary: #5a2585;

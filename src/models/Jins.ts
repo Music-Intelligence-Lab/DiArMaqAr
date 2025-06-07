@@ -59,3 +59,8 @@ export default class Jins {
     );
   }
 }
+
+export interface JinsTransposition {
+  name: string;
+  noteNames: TransliteratedNoteName[];
+}
