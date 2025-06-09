@@ -31,29 +31,73 @@ export default class Pattern {
 }
 
 export interface PatternNote {
-  scaleDegree: string;
+  scaleDegree: ScaleDegree;
   noteDuration: NoteDuration;
 }
 
-export type NoteDuration =
-  | "32n"
-  | "32d"
-  | "32t"
-  | "16n"
-  | "16d"
-  | "16t"
-  | "8n"
-  | "8d"
-  | "8t"
-  | "4n"
-  | "4d"
-  | "4t"
-  | "2n"
-  | "2d"
-  | "2t"
-  | "1n"
-  | "1d"
-  | "1t";
+export const DURATION_OPTIONS: string[] = [
+  "32n",
+  "32d",
+  "32t",
+  "16n",
+  "16d",
+  "16t",
+  "8n",
+  "8d",
+  "8t",
+  "4n",
+  "4d",
+  "4t",
+  "2n",
+  "2d",
+  "2t",
+  "1n",
+  "1d",
+  "1t",
+];
+
+export type NoteDuration = (typeof DURATION_OPTIONS)[number];
+export const SCALE_DEGREES: string[] = [
+  "-I",
+  "-II",
+  "-III",
+  "-IV",
+  "-V",
+  "-VI",
+  "-VII",
+  "-VIII",
+  "-IX",
+  "-X",
+  "-XI",
+  "-XII",
+  "R",
+  "I",
+  "II",
+  "III",
+  "IV",
+  "V",
+  "VI",
+  "VII",
+  "VIII",
+  "IX",
+  "X",
+  "XI",
+  "XII",
+  "+I",
+  "+II",
+  "+III",
+  "+IV",
+  "+V",
+  "+VI",
+  "+VII",
+  "+VIII",
+  "+IX",
+  "+X",
+  "+XI",
+  "+XII",
+];
+
+export type ScaleDegree = (typeof SCALE_DEGREES)[number];
 
 export function reversePatternNotes(notes: PatternNote[]): PatternNote[] {
   const reversedScaleDegrees = notes.map((note) => note.scaleDegree).reverse();

@@ -571,9 +571,17 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
           const mod = noteDuration.endsWith("d") ? 1.5 : noteDuration.endsWith("t") ? 2 / 3 : 1;
           const durSec = base * mod * beatSec;
 
-          if (scaleDegree !== "0") {
+          if (scaleDegree !== "R") {
             const deg = romanToNumber(scaleDegree);
-            const freqToPlay = extendedFrequencies[windowStart + deg - 1];
+            let freqToPlay = extendedFrequencies[windowStart + deg - 1];
+
+            if (scaleDegree.startsWith("-")) {
+              // negative degree, e.g. "-II" → play the previous octave
+              freqToPlay /= 2;
+            } else if (scaleDegree.startsWith("+")) {
+              // positive degree, e.g. "+II" → play the next octave
+              freqToPlay *= 2;
+            }
 
             setTimeout(() => {
               playNoteFrequency(freqToPlay, durSec);
@@ -779,8 +787,6 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     () => getAllCells().map(getCellDetails),
     [selectedTuningSystem, selectedIndices, referenceFrequencies, pitchClasses, noteNames]
   );
-
-  console.log(selectedCellDetails, allCellDetails);
 
   const clearSelections = () => {
     setSelectedCells([]);
