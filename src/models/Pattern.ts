@@ -55,10 +55,10 @@ export type NoteDuration =
   | "1d"
   | "1t";
 
-  export function reversePatternNotes(notes: PatternNote[]): PatternNote[] {
-    const reversedScaleDegrees = notes.map(note => note.scaleDegree).reverse();
-    return notes.map((note, index) => ({
-      scaleDegree: reversedScaleDegrees[index],
-      noteDuration: note.noteDuration,
-    }));
-  }
+export function reversePatternNotes(notes: PatternNote[]): PatternNote[] {
+  const reversedScaleDegrees = notes.map((note) => note.scaleDegree).reverse();
+  return notes.map((note, index) => ({
+    scaleDegree: reversedScaleDegrees[index],
+    noteDuration: note.noteDuration,
+  }));
+}

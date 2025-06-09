@@ -1,6 +1,6 @@
 "use client";
 
-import { Cell, useAppContext } from "@/contexts/app-context";
+import { useAppContext } from "@/contexts/app-context";
 import Jins from "@/models/Jins";
 import React, { useState, useEffect } from "react";
 import { getJinsTranspositions } from "@/functions/transpose";
@@ -16,10 +16,9 @@ export default function JinsManager({ admin }: { admin: boolean }) {
     setSelectedJins,
     handleClickJins,
     checkIfJinsIsSelectable,
-    selectedCells,
-    getCellDetails,
+    selectedCellDetails,
     clearSelections,
-    getAllCells,
+    allCellDetails,
     sources,
   } = useAppContext();
 
@@ -36,8 +35,6 @@ export default function JinsManager({ admin }: { admin: boolean }) {
   }, [selectedJins]);
 
   const sortedAjnas = [...ajnas].sort((a, b) => a.getName().localeCompare(b.getName()));
-  const allCells = getAllCells();
-  const allCellDetails = allCells.map(getCellDetails);
   const numberOfPitchClasses = selectedTuningSystem ? selectedTuningSystem.getPitchClasses().length : 0;
 
   // Generate a new unique ID for creating a Jins
@@ -51,7 +48,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
   // Save handler uses local comment state
   const handleSaveJins = async () => {
     if (!selectedJins) return;
-    const selectedNoteNames = selectedCells.map((cell: Cell) => getCellDetails(cell).noteName);
+    const selectedNoteNames = selectedCellDetails.map((cellDetails) => cellDetails.noteName);
     const newJins = new Jins(
       selectedJins.getId(),
       selectedJins.getName(),
@@ -99,8 +96,8 @@ export default function JinsManager({ admin }: { admin: boolean }) {
         <button
           className="carousel-button carousel-button-prev"
           onClick={() => {
-            const container = document.querySelector('.jins-manager__list');
-            if (container) container.scrollBy({ left: -670, behavior: 'smooth' });
+            const container = document.querySelector(".jins-manager__list");
+            if (container) container.scrollBy({ left: -670, behavior: "smooth" });
           }}
         >
           ‹
@@ -139,8 +136,8 @@ export default function JinsManager({ admin }: { admin: boolean }) {
         <button
           className="carousel-button carousel-button-next"
           onClick={() => {
-            const container = document.querySelector('.jins-manager__list');
-            if (container) container.scrollBy({ left: 520, behavior: 'smooth' });
+            const container = document.querySelector(".jins-manager__list");
+            if (container) container.scrollBy({ left: 520, behavior: "smooth" });
           }}
         >
           ›
@@ -148,10 +145,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
       </div>
 
       {admin && !selectedJins && (
-        <button
-          onClick={() => setSelectedJins(new Jins(newJinsId, "", [], "", "", []))}
-          className="jins-manager__create-new-jins-button"
-        >
+        <button onClick={() => setSelectedJins(new Jins(newJinsId, "", [], "", "", []))} className="jins-manager__create-new-jins-button">
           Create New Jins
         </button>
       )}
@@ -163,21 +157,29 @@ export default function JinsManager({ admin }: { admin: boolean }) {
               type="text"
               value={selectedJins.getName()}
               onChange={(e) =>
-                setSelectedJins(new Jins(
-                  selectedJins.getId(),
-                  e.target.value,
-                  selectedJins.getNoteNames(),
-                  selectedJins.getCommentsEnglish(), // keep comments until save
-                  selectedJins.getCommentsArabic(),
-                  selectedJins.getSourcePageReferences()
-                ))
+                setSelectedJins(
+                  new Jins(
+                    selectedJins.getId(),
+                    e.target.value,
+                    selectedJins.getNoteNames(),
+                    selectedJins.getCommentsEnglish(), // keep comments until save
+                    selectedJins.getCommentsArabic(),
+                    selectedJins.getSourcePageReferences()
+                  )
+                )
               }
               placeholder="Enter new jins name"
               className="jins-manager__jins-input"
             />
-            <button onClick={handleSaveJins} className="jins-manager__save-button">Save</button>
-            <button onClick={handleDeleteJins} className="jins-manager__delete-button">Delete</button>
-            <button onClick={clearSelections} className="jins-manager__clear-button">Clear</button>
+            <button onClick={handleSaveJins} className="jins-manager__save-button">
+              Save
+            </button>
+            <button onClick={handleDeleteJins} className="jins-manager__delete-button">
+              Delete
+            </button>
+            <button onClick={clearSelections} className="jins-manager__clear-button">
+              Clear
+            </button>
           </div>
 
           <div className="jins-manager__group">

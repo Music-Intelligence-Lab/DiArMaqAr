@@ -7,8 +7,35 @@ interface MenuContextInterface {
   setShowAdminTabs: React.Dispatch<React.SetStateAction<boolean>>;
   openSettings: boolean;
   setOpenSettings: React.Dispatch<React.SetStateAction<boolean>>;
-  selectedMenu: "tuningSystem" | "maqam" | "jins" | "sayr" | "bibliography" | "pattern" | "tuningSystem-admin" | "maqam-admin" | "jins-admin" | "sayr-admin" | "bibliography-admin" | "pattern-admin"
-  setSelectedMenu: React.Dispatch<React.SetStateAction<"tuningSystem" | "maqam" | "jins" | "sayr" | "bibliography" | "pattern" | "tuningSystem-admin" | "maqam-admin" | "jins-admin" | "sayr-admin" | "bibliography-admin" | "pattern-admin">>;
+  selectedMenu:
+    | "tuningSystem"
+    | "maqam"
+    | "jins"
+    | "sayr"
+    | "bibliography"
+    | "pattern"
+    | "tuningSystem-admin"
+    | "maqam-admin"
+    | "jins-admin"
+    | "sayr-admin"
+    | "bibliography-admin"
+    | "pattern-admin";
+  setSelectedMenu: React.Dispatch<
+    React.SetStateAction<
+      | "tuningSystem"
+      | "maqam"
+      | "jins"
+      | "sayr"
+      | "bibliography"
+      | "pattern"
+      | "tuningSystem-admin"
+      | "maqam-admin"
+      | "jins-admin"
+      | "sayr-admin"
+      | "bibliography-admin"
+      | "pattern-admin"
+    >
+  >;
 }
 
 const MenuContext = createContext<MenuContextInterface | undefined>(undefined);
@@ -16,7 +43,20 @@ const MenuContext = createContext<MenuContextInterface | undefined>(undefined);
 export function MenuContextProvider({ children }: { children: ReactNode }) {
   const [showAdminTabs, setShowAdminTabs] = useState(false);
   const [openSettings, setOpenSettings] = useState(false);
-  const [selectedMenu, setSelectedMenu] = useState<"tuningSystem" | "maqam" | "jins" | "sayr" | "bibliography" | "pattern" | "tuningSystem-admin" | "maqam-admin" | "jins-admin" | "sayr-admin" | "bibliography-admin" | "pattern-admin">("tuningSystem");
+  const [selectedMenu, setSelectedMenu] = useState<
+    | "tuningSystem"
+    | "maqam"
+    | "jins"
+    | "sayr"
+    | "bibliography"
+    | "pattern"
+    | "tuningSystem-admin"
+    | "maqam-admin"
+    | "jins-admin"
+    | "sayr-admin"
+    | "bibliography-admin"
+    | "pattern-admin"
+  >("tuningSystem");
 
   return (
     <MenuContext.Provider
@@ -26,7 +66,7 @@ export function MenuContextProvider({ children }: { children: ReactNode }) {
         openSettings,
         setOpenSettings,
         selectedMenu,
-        setSelectedMenu
+        setSelectedMenu,
       }}
     >
       {children}

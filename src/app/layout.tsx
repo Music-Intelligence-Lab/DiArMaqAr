@@ -25,6 +25,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <meta name="googlebot" content="notranslate" />
+        <meta name="google" content="notranslate" />
+      </head>
       <body className={`${readexPro.variable}`}>
         <AppContextProvider>
           <MenuContextProvider>

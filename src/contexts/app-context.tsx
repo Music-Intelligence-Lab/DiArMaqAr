@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useState, useEffect, useRef, useContext } from "react";
+import React, { createContext, useState, useEffect, useRef, useMemo, useContext } from "react";
 import tuningSystemsData from "@/../data/tuningSystems.json";
 import ajnasData from "@/../data/ajnas.json";
 import maqamatData from "@/../data/maqamat.json";
@@ -86,14 +86,14 @@ interface AppContextInterface {
   setSelectedCells: React.Dispatch<React.SetStateAction<Cell[]>>;
   activeCells: Cell[];
   setActiveCells: React.Dispatch<React.SetStateAction<Cell[]>>;
-  getAllCells: () => Cell[];
+  selectedCellDetails: CellDetails[];
+  allCellDetails: CellDetails[];
   selectedIndices: number[];
   setSelectedIndices: React.Dispatch<React.SetStateAction<number[]>>;
   originalIndices: number[];
   setOriginalIndices: React.Dispatch<React.SetStateAction<number[]>>;
   mapIndices: (notesToMap: TransliteratedNoteName[], givenNumberOfPitchClasses: number, setOriginal: boolean) => void;
   initialMappingDone: boolean;
-  getCellDetails: (cell: Cell) => CellDetails;
   ajnas: Jins[];
   setAjnas: React.Dispatch<React.SetStateAction<Jins[]>>;
   selectedJins: Jins | null;
@@ -231,11 +231,23 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
     setTuningSystems(formattedTuningSystems);
 
-    const loadedAjnas = ajnasData.map((data) => new Jins(data.id, data.name, data.noteNames, data.commentsEnglish, data.commentsArabic, data.sourcePageReferences));
+    const loadedAjnas = ajnasData.map(
+      (data) => new Jins(data.id, data.name, data.noteNames, data.commentsEnglish, data.commentsArabic, data.sourcePageReferences)
+    );
     setAjnas(loadedAjnas);
 
     const loadedMaqamat = maqamatData.map(
-      (data) => new Maqam(data.id, data.name, data.ascendingNoteNames, data.descendingNoteNames, data.suyūr as Sayr[], data.commentsEnglish, data.commentsArabic, data.sourcePageReferences)
+      (data) =>
+        new Maqam(
+          data.id,
+          data.name,
+          data.ascendingNoteNames,
+          data.descendingNoteNames,
+          data.suyūr as Sayr[],
+          data.commentsEnglish,
+          data.commentsArabic,
+          data.sourcePageReferences
+        )
     );
     setMaqamat(loadedMaqamat);
 
@@ -352,7 +364,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     soundSettings.inputMode,
     soundSettings.outputMode,
     soundSettings.selectedMidiInputId,
-    soundSettings.selectedMidiOutputId
+    soundSettings.selectedMidiOutputId,
   ]);
 
   useEffect(() => {
@@ -365,7 +377,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         else clearSelections();
       }
     } else clearSelections();
-  }, [selectedTuningSystem])
+  }, [selectedTuningSystem]);
 
   const handleMidiInput: NonNullable<MIDIInput["onmidimessage"]> = function (this: MIDIInput, ev: MIDIMessageEvent) {
     // only from our selected port
@@ -417,7 +429,6 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         if (convertedEnglishName === note || convertedEnglishName === alt) {
           const baseFreq = parseFloat(cellDetails.frequency);
           if (isNaN(baseFreq)) return;
-
 
           const baseMidi = Math.round(frequencyToMidiNoteNumber(baseFreq));
           // how many octaves to shift (positive => up, negative => down)
@@ -497,18 +508,12 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
   const playSequence = (frequencies: number[]): Promise<void> => {
     return new Promise((resolve) => {
-
-      const isAscending = frequencies.every(
-        (freq, idx, arr) => idx === 0 || freq >= arr[idx - 1]
-      );
+      const isAscending = frequencies.every((freq, idx, arr) => idx === 0 || freq >= arr[idx - 1]);
 
       const beatSec = 60 / soundSettings.tempo;
 
       // 1) FALLBACK “straight ascending” if no pattern is selected
-      if (
-        !soundSettings.selectedPattern ||
-        !soundSettings.selectedPattern.getNotes().length
-      ) {
+      if (!soundSettings.selectedPattern || !soundSettings.selectedPattern.getNotes().length) {
         // total time = (number of notes) * (beat duration)
         const totalTimeMs = frequencies.length * beatSec * 1000;
 
@@ -529,11 +534,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       // 2) THERE IS A PATTERN: build the “extendedFrequencies” window
       const patternNotes = isAscending ? soundSettings.selectedPattern.getNotes() : reversePatternNotes(soundSettings.selectedPattern.getNotes());
       // find the highest degree number (e.g. "III" → 3)
-      const maxDegree = Math.max(
-        ...patternNotes.map((n) =>
-          n.scaleDegree === "0" ? 0 : romanToNumber(n.scaleDegree)
-        )
-      );
+      const maxDegree = Math.max(...patternNotes.map((n) => (n.scaleDegree === "0" ? 0 : romanToNumber(n.scaleDegree))));
 
       // if not enough input freqs → fallback ascending
       if (frequencies.length < maxDegree) {
@@ -554,15 +555,9 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
       let extendedFrequencies: number[];
       if (isAscending) {
-        extendedFrequencies = [
-          ...frequencies,
-          ...frequencies.map((f) => f * 2).slice(1, maxDegree),
-        ];
+        extendedFrequencies = [...frequencies, ...frequencies.map((f) => f * 2).slice(1, maxDegree)];
       } else {
-        extendedFrequencies = [
-          ...frequencies.map((f) => f * 2).slice(frequencies.length - maxDegree, frequencies.length - 1),
-          ...frequencies,
-        ];
+        extendedFrequencies = [...frequencies.map((f) => f * 2).slice(frequencies.length - maxDegree, frequencies.length - 1), ...frequencies];
       }
 
       // 3) SLIDING-WINDOW “pattern” scheduling
@@ -573,11 +568,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
           //   base = (4 ÷ numeric part of noteDuration), e.g. "4" → whole note
           //   mod  = 1 (normal), 1.5 (dotted), 2/3 (triplet)
           const base = 4 / Number(noteDuration.replace(/\D/g, ""));
-          const mod = noteDuration.endsWith("d")
-            ? 1.5
-            : noteDuration.endsWith("t")
-              ? 2 / 3
-              : 1;
+          const mod = noteDuration.endsWith("d") ? 1.5 : noteDuration.endsWith("t") ? 2 / 3 : 1;
           const durSec = base * mod * beatSec;
 
           if (scaleDegree !== "0") {
@@ -677,7 +668,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     activeNotesRef.current.set(frequency, queue);
   }
 
-  const getCellDetails = (cell: Cell): CellDetails => { //todo expand index and octave here 
+  const getCellDetails = (cell: Cell): CellDetails => {
     const emptyDetails: CellDetails = {
       noteName: "",
       fraction: "",
@@ -778,6 +769,18 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     }
     return cells;
   };
+
+  const selectedCellDetails = useMemo(
+    () => selectedCells.map(getCellDetails),
+    [selectedCells, selectedTuningSystem, selectedIndices, referenceFrequencies, pitchClasses, noteNames]
+  );
+
+  const allCellDetails = useMemo(
+    () => getAllCells().map(getCellDetails),
+    [selectedTuningSystem, selectedIndices, referenceFrequencies, pitchClasses, noteNames]
+  );
+
+  console.log(selectedCellDetails, allCellDetails);
 
   const clearSelections = () => {
     setSelectedCells([]);
@@ -971,64 +974,64 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   return (
     <AppContext.Provider
       value={{
-      tuningSystems,
-      setTuningSystems,
-      selectedTuningSystem,
-      setSelectedTuningSystem,
-      pitchClasses,
-      setPitchClasses,
-      noteNames,
-      setNoteNames,
-      handleStartNoteNameChange,
-      referenceFrequencies,
-      setReferenceFrequencies,
-      playNoteFrequency,
-      soundSettings,
-      setSoundSettings,
-      selectedCells,
-      setSelectedCells,
-      activeCells,
-      setActiveCells,
-      getAllCells,
-      selectedIndices,
-      setSelectedIndices,
-      originalIndices,
-      setOriginalIndices,
-      mapIndices,
-      initialMappingDone,
-      getCellDetails,
-      ajnas,
-      setAjnas,
-      selectedJins,
-      setSelectedJins,
-      checkIfJinsIsSelectable,
-      handleClickJins,
-      selectedJinsTransposition,
-      setSelectedJinsTransposition,
-      maqamat,
-      setMaqamat,
-      selectedMaqam,
-      setSelectedMaqam,
-      checkIfMaqamIsSelectable,
-      handleClickMaqam,
-      selectedMaqamTransposition,
-      setSelectedMaqamTransposition,
-      maqamSayrId,
-      setMaqamSayrId,
-      centsTolerance,
-      setCentsTolerance,
-      clearSelections,
-      playSequence,
-      noteOn,
-      noteOff,
-      handleUrlParams,
-      midiInputs,
-      midiOutputs,
-      sources,
-      setSources,
-      patterns,
-      setPatterns,
-      setRefresh,
+        tuningSystems,
+        setTuningSystems,
+        selectedTuningSystem,
+        setSelectedTuningSystem,
+        pitchClasses,
+        setPitchClasses,
+        noteNames,
+        setNoteNames,
+        handleStartNoteNameChange,
+        referenceFrequencies,
+        setReferenceFrequencies,
+        playNoteFrequency,
+        soundSettings,
+        setSoundSettings,
+        selectedCells,
+        setSelectedCells,
+        activeCells,
+        setActiveCells,
+        selectedCellDetails,
+        allCellDetails,
+        selectedIndices,
+        setSelectedIndices,
+        originalIndices,
+        setOriginalIndices,
+        mapIndices,
+        initialMappingDone,
+        ajnas,
+        setAjnas,
+        selectedJins,
+        setSelectedJins,
+        checkIfJinsIsSelectable,
+        handleClickJins,
+        selectedJinsTransposition,
+        setSelectedJinsTransposition,
+        maqamat,
+        setMaqamat,
+        selectedMaqam,
+        setSelectedMaqam,
+        checkIfMaqamIsSelectable,
+        handleClickMaqam,
+        selectedMaqamTransposition,
+        setSelectedMaqamTransposition,
+        maqamSayrId,
+        setMaqamSayrId,
+        centsTolerance,
+        setCentsTolerance,
+        clearSelections,
+        playSequence,
+        noteOn,
+        noteOff,
+        handleUrlParams,
+        midiInputs,
+        midiOutputs,
+        sources,
+        setSources,
+        patterns,
+        setPatterns,
+        setRefresh,
       }}
     >
       {children}

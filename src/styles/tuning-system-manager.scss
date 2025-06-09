@@ -116,7 +116,6 @@
   &__select {
     margin-bottom: 1.5rem;
     padding: 0.4rem;
-    font-family: inherit;
 
     // font-size: 1rem;
     :focus {
@@ -440,15 +439,12 @@
     }
 
     &-english-creator {
-      font-family: inherit;
       font-size: 14px;
       margin-bottom: 0px;
       font-weight: 300;
     }
 
     &-english-title {
-      font-family: inherit;
-
       font-size: 14px;
       margin-bottom: 0px;
       font-weight: 200;
@@ -693,7 +689,6 @@
     color: white !important;
     height: 45px;
     max-width: 60px;
-    font-family: inherit;
     font-size: 12px;
     text-align: center;
     white-space: wrap;
@@ -723,7 +718,6 @@
     color: white !important;
     height: 35px;
     max-width: 60px;
-    font-family: inherit;
     font-size: 16px;
     text-align: center;
     white-space: wrap;

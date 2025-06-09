@@ -46,7 +46,7 @@
     color: white;
     border-bottom: $grey 1px solid;
     box-shadow: 0 20px 15px rgba(0, 0, 0, 0.6);
-    
+
   }
 
   &__bottom-bar-item {
@@ -58,7 +58,6 @@
     background-color: transparent;
     color: white;
     cursor: pointer;
-    font-family: inherit;
     transition: 0.1s ease;
     padding: 10px;
 
@@ -115,7 +114,6 @@
   }
 
   &__left-panel-icon {
-    font-family: inherit;
     font-size: 14px;
     display: flex;
     align-items: left;

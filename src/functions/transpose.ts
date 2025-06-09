@@ -124,8 +124,8 @@ export function getMaqamTranspositions(allCellDetails: CellDetails[], maqam: Maq
   const descendingIntervalPattern: Interval[] = getIntervalPattern(descendingMaqamCellDetails, useRatio);
 
   const ascendingSequences: CellDetails[][] = getTranspositions(allCellDetails, ascendingIntervalPattern, true, useRatio, 5).filter(
-    (sequence) => !onlyOctaveOne || sequence[0].octave === 1 
-  );;
+    (sequence) => !onlyOctaveOne || sequence[0].octave === 1
+  );
 
   const descendingSequences: CellDetails[][] = getTranspositions(allCellDetails, descendingIntervalPattern, false, useRatio, 5);
 
@@ -152,8 +152,8 @@ export function getJinsTranspositions(allCellDetails: CellDetails[], jins: Jins,
   const intervalPattern: Interval[] = getIntervalPattern(jinsCellDetails, useRatio);
 
   const sequences: CellDetails[][] = getTranspositions(allCellDetails, intervalPattern, true, useRatio, 5).filter(
-    (sequence) => !onlyOctaveOne || sequence[0].octave === 1 
+    (sequence) => !onlyOctaveOne || sequence[0].octave === 1
   );
-  
+
   return sequences;
 }

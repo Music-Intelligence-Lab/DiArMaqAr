@@ -33,7 +33,7 @@
     }
   }
 
-    &__comments-sources-container {
+  &__comments-sources-container {
     display: block;
     width: 100%;
     margin-top: 20px;
@@ -103,6 +103,7 @@
     padding-right: 25px;
     padding-top: 10px;
     padding-bottom: 10px;
+
     &::-webkit-scrollbar {
       height: 6px;
       position: relative;
@@ -136,8 +137,8 @@
       padding: 0px;
 
       &:hover {
-      color: $tertiary;
-      transition: background-color 0.2s ease-in-out;
+        color: $tertiary;
+        transition: background-color 0.2s ease-in-out;
       }
 
     }
@@ -151,6 +152,7 @@
       height: calc(100% - 20px);
       width: 25px;
       background-color: $black;
+
       &:hover {
         color: $tertiary;
         transition: color 0.1s ease-in-out;
@@ -200,10 +202,10 @@
     font-weight: 300;
 
     &-transpositions {
-      color: rgba(255, 255, 255,1);
+      color: rgba(255, 255, 255, 1);
       font-size: 14px;
       margin-top: 3px;
-          font-weight: 200;
+      font-weight: 200;
 
     }
   }
@@ -301,7 +303,8 @@
     width: 100px;
   }
 
-  &__source-select, &__source-input {
+  &__source-select,
+  &__source-input {
     padding: 5px;
     font-size: 14px;
   }
@@ -361,7 +364,7 @@
   }
 
   &__input,
-  &__textarea{
+  &__textarea {
     padding: 0.4rem;
     // font-size: 0.9rem;
     // border: 1px solid #ccc;

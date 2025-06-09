@@ -3,17 +3,13 @@
 import React from "react";
 import { Slider } from "@mui/material";
 import { useAppContext } from "@/contexts/app-context";
-// import { useFilterContext } from "@/contexts/filter-context";
 import { useMenuContext } from "@/contexts/menu-context";
 import SettingsIcon from "@mui/icons-material/Settings";
 
 const SettingsCard = () => {
-  const { soundSettings, setSoundSettings, clearSelections, midiInputs, midiOutputs, patterns, setRefresh } =
-    useAppContext();
+  const { soundSettings, setSoundSettings, clearSelections, midiInputs, midiOutputs, patterns, setRefresh } = useAppContext();
 
   const { openSettings, setOpenSettings } = useMenuContext();
-
-  // const { filters, setFilters } = useFilterContext();
 
   const togglePanel = () => {
     setOpenSettings((prev) => !prev);
@@ -182,13 +178,17 @@ const SettingsCard = () => {
             <div className="settings-card__sound-mode">
               <button
                 onClick={() => setSoundSettings((prev) => ({ ...prev, inputMode: "tuningSystem" }))}
-                className={`settings-card__sound-mode-button ${soundSettings.inputMode === "tuningSystem" ? "settings-card__sound-mode-button_selected" : ""}`}
+                className={`settings-card__sound-mode-button ${
+                  soundSettings.inputMode === "tuningSystem" ? "settings-card__sound-mode-button_selected" : ""
+                }`}
               >
                 Tuning System
               </button>
               <button
                 onClick={() => setSoundSettings((prev) => ({ ...prev, inputMode: "selection" }))}
-                className={`settings-card__sound-mode-button ${soundSettings.inputMode === "selection" ? "settings-card__sound-mode-button_selected" : ""}`}
+                className={`settings-card__sound-mode-button ${
+                  soundSettings.inputMode === "selection" ? "settings-card__sound-mode-button_selected" : ""
+                }`}
               >
                 Selection
               </button>
@@ -222,19 +222,25 @@ const SettingsCard = () => {
             <div className="settings-card__sound-mode">
               <button
                 onClick={() => setSoundSettings((prev) => ({ ...prev, outputMode: "mute" }))}
-                className={`settings-card__sound-mode-button ${soundSettings.outputMode === "mute" ? "settings-card__sound-mode-button_selected" : ""}`}
+                className={`settings-card__sound-mode-button ${
+                  soundSettings.outputMode === "mute" ? "settings-card__sound-mode-button_selected" : ""
+                }`}
               >
                 Mute
               </button>
               <button
                 onClick={() => setSoundSettings((prev) => ({ ...prev, outputMode: "waveform" }))}
-                className={`settings-card__sound-mode-button ${soundSettings.outputMode === "waveform" ? "settings-card__sound-mode-button_selected" : ""}`}
+                className={`settings-card__sound-mode-button ${
+                  soundSettings.outputMode === "waveform" ? "settings-card__sound-mode-button_selected" : ""
+                }`}
               >
                 Waveform
               </button>
               <button
                 onClick={() => setSoundSettings((prev) => ({ ...prev, outputMode: "midi" }))}
-                className={`settings-card__sound-mode-button ${soundSettings.outputMode === "midi" ? "settings-card__sound-mode-button_selected" : ""}`}
+                className={`settings-card__sound-mode-button ${
+                  soundSettings.outputMode === "midi" ? "settings-card__sound-mode-button_selected" : ""
+                }`}
               >
                 Midi
               </button>
