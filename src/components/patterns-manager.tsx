@@ -2,38 +2,15 @@
 
 import React, { FormEvent, useEffect, useState } from "react";
 import { useAppContext } from "@/contexts/app-context";
-import Pattern, { PatternNote, NoteDuration } from "@/models/Pattern";
+import Pattern, { PatternNote, SCALE_DEGREES, DURATION_OPTIONS } from "@/models/Pattern";
 import { nanoid } from "nanoid";
 import { updatePatterns } from "@/functions/update";
-
-const DURATION_OPTIONS: NoteDuration[] = [
-  "32n",
-  "32d",
-  "32t",
-  "16n",
-  "16d",
-  "16t",
-  "8n",
-  "8d",
-  "8t",
-  "4n",
-  "4d",
-  "4t",
-  "2n",
-  "2d",
-  "2t",
-  "1n",
-  "1d",
-  "1t",
-];
 
 export default function PatternsManager() {
   const { patterns, setPatterns } = useAppContext();
   const [patternId, setPatternId] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [notes, setNotes] = useState<PatternNote[]>([]);
-
-  const ROMAN_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
 
   // Reset form fields
   const resetForm = () => {
@@ -136,11 +113,11 @@ export default function PatternsManager() {
                   onChange={(e) => updateNote(i, "scaleDegree", e.target.value)}
                   required
                 >
-                  <option value="0">Rest</option>
-                  {ROMAN_NUMERALS.map((rn) => (
-                    <option key={rn} value={rn}>
+                  <option value="R">Rest</option>
+                  {SCALE_DEGREES.map((rn) => (
+                    (rn !== "R" && <option key={rn} value={rn}>
                       {rn}
-                    </option>
+                    </option>)
                   ))}
                 </select>
                 <select
