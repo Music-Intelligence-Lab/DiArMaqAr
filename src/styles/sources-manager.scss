@@ -63,7 +63,8 @@
     gap: 0.5rem;
     width: 100%;
 
-    & select, & input {
+    & select,
+    & input {
       flex: 1 0;
       height: fit-content;
       padding: 15px 10px;
@@ -99,7 +100,9 @@
   }
 
   &__save-button,
-  &__delete-button, &__remove-button, &__add-button {
+  &__delete-button,
+  &__remove-button,
+  &__add-button {
     height: fit-content;
     margin-right: 20px;
     padding: 15px 20px;
@@ -119,7 +122,8 @@
     background-color: $secondary;
   }
 
-  &__delete-button, &__remove-button {
+  &__delete-button,
+  &__remove-button {
     background-color: $delete;
   }
 

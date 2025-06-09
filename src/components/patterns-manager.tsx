@@ -96,7 +96,6 @@ export default function PatternsManager() {
   return (
     <div className="patterns-manager">
       <h2 className="patterns-manager__header">Patterns</h2>
-
       <form className="patterns-manager__form" onSubmit={handleSave}>
         <div className="patterns-manager__group">
           <div className="patterns-manager__group">

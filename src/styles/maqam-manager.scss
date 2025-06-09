@@ -70,6 +70,7 @@
     padding-right: 25px;
     padding-top: 10px;
     padding-bottom: 10px;
+
     &::-webkit-scrollbar {
       height: 6px;
       position: relative;
@@ -103,8 +104,8 @@
       padding: 0px;
 
       &:hover {
-      color: $tertiary;
-      transition: background-color 0.2s ease-in-out;
+        color: $tertiary;
+        transition: background-color 0.2s ease-in-out;
       }
 
     }
@@ -118,6 +119,7 @@
       height: calc(100% - 20px);
       width: 25px;
       background-color: $black;
+
       &:hover {
         color: $tertiary;
         transition: color 0.1s ease-in-out;
@@ -333,7 +335,7 @@
   }
 
   &__input,
-  &__textarea{
+  &__textarea {
     padding: 0.4rem;
     // font-size: 0.9rem;
     // border: 1px solid #ccc;

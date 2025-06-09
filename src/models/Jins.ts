@@ -46,17 +46,8 @@ export default class Jins {
     return this.SourcePageReferences;
   }
 
-  createJinsWithNewSourcePageReferences(
-    newSourcePageReferences: SourcePageReference[]
-  ): Jins {
-    return new Jins(
-      this.id,
-      this.name,
-      this.noteNames,
-      this.commentsEnglish,
-      this.commentsArabic,
-      newSourcePageReferences
-    );
+  createJinsWithNewSourcePageReferences(newSourcePageReferences: SourcePageReference[]): Jins {
+    return new Jins(this.id, this.name, this.noteNames, this.commentsEnglish, this.commentsArabic, newSourcePageReferences);
   }
 }
 

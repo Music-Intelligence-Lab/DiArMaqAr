@@ -16,7 +16,7 @@ export default class TuningSystem {
   private pitchClasses: string[];
   private setOfTransliteratedNoteNames: TransliteratedNoteName[][];
   private defaultReferenceFrequency: number;
-  private referenceFrequencies: {[noteName: string]: number};
+  private referenceFrequencies: { [noteName: string]: number };
   private abjadNames: string[];
   private stringLength: number;
 
@@ -36,7 +36,7 @@ export default class TuningSystem {
     setOfTransliteratedNoteNames: TransliteratedNoteName[][],
     abjadNames: string[],
     stringLength: number,
-    referenceFrequencies: {[noteName: string]: number},
+    referenceFrequencies: { [noteName: string]: number },
     defaultReferenceFrequency: number
   ) {
     this.id = id;
@@ -116,7 +116,7 @@ export default class TuningSystem {
     return this.stringLength;
   }
 
-  getReferenceFrequencies(): {[noteName: string]: number} {
+  getReferenceFrequencies(): { [noteName: string]: number } {
     return this.referenceFrequencies;
   }
 

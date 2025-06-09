@@ -68,7 +68,9 @@ export default function SayrManager({ admin }: { admin: boolean }) {
       commentsArabic,
       stops,
     };
-    const updated = existingSuyūr.some((s) => s.id === idUse) ? existingSuyūr.map((s) => (s.id === idUse ? newSayr : s)) : [...existingSuyūr, newSayr];
+    const updated = existingSuyūr.some((s) => s.id === idUse)
+      ? existingSuyūr.map((s) => (s.id === idUse ? newSayr : s))
+      : [...existingSuyūr, newSayr];
     const updatedMaqam = selectedMaqam.createMaqamWithNewSuyūr(updated);
     setSelectedMaqam(updatedMaqam);
     setMaqamSayrId(idUse);
@@ -110,73 +112,78 @@ export default function SayrManager({ admin }: { admin: boolean }) {
         </div>
       )}
 
-      {!admin && <div className="sayr-manager__list">
-            {existingSuyūr.length === 0 ? (
-              <p>No suyūr available.</p>
-            ) : (
-              existingSuyūr.map((sayr, index) => (
-                <div
-                  key={index}
-                  className={
-                  "sayr-manager__item " +
-                  (sayr.id === maqamSayrId ? "sayr-manager__item_selected " : "")
-                  }
-                  onClick={() => {
+      {!admin && (
+        <div className="sayr-manager__list">
+          {existingSuyūr.length === 0 ? (
+            <p>No suyūr available.</p>
+          ) : (
+            existingSuyūr.map((sayr, index) => (
+              <div
+                key={index}
+                className={"sayr-manager__item " + (sayr.id === maqamSayrId ? "sayr-manager__item_selected " : "")}
+                onClick={() => {
                   setMaqamSayrId(sayr.id);
-                  }}
-                >
-                  {sayr.sourceId
+                }}
+              >
+                {sayr.sourceId
                   ? (() => {
-                    const source = sources.find((s) => s.getId() === sayr.sourceId);
-                    return `${source?.getContributors()[0]?.lastNameEnglish ?? ""} (${source?.getReleaseDateEnglish() ?? ""}`;
+                      const source = sources.find((s) => s.getId() === sayr.sourceId);
+                      return `${source?.getContributors()[0]?.lastNameEnglish ?? ""} (${source?.getReleaseDateEnglish() ?? ""}`;
                     })()
                   : "No Source"}
-                  :{sayr.page})
-                </div>
-              ))
-            )}
-        </div>}
+                :{sayr.page})
+              </div>
+            ))
+          )}
+        </div>
+      )}
 
       <form className="sayr-manager__form" onSubmit={handleSave}>
-        {admin && <div className="sayr-manager__group">
-          <div className="sayr-manager__input-container">
-            <label className="sayr-manager__label">Creator (English)</label>
-            <input className="sayr-manager__input" type="text" value={creatorEnglish} onChange={(e) => setCreatorEnglish(e.target.value)} />
+        {admin && (
+          <div className="sayr-manager__group">
+            <div className="sayr-manager__input-container">
+              <label className="sayr-manager__label">Creator (English)</label>
+              <input className="sayr-manager__input" type="text" value={creatorEnglish} onChange={(e) => setCreatorEnglish(e.target.value)} />
+            </div>
+            <div className="sayr-manager__input-container">
+              <label className="sayr-manager__label">Creator (Arabic)</label>
+              <input className="sayr-manager__input" type="text" value={creatorArabic} onChange={(e) => setCreatorArabic(e.target.value)} />
+            </div>
           </div>
-          <div className="sayr-manager__input-container">
-            <label className="sayr-manager__label">Creator (Arabic)</label>
-            <input className="sayr-manager__input" type="text" value={creatorArabic} onChange={(e) => setCreatorArabic(e.target.value)} />
-          </div>
-        </div>}
+        )}
 
-        {admin && <div className="sayr-manager__group">
-          <div className="sayr-manager__input-container">
-            <label className="sayr-manager__label">Source</label>
-            <select className="sayr-manager__select" value={sourceId} onChange={(e) => setSourceId(e.target.value)}>
-              <option value="">Select source</option>
-              {sources.map((s) => (
-                <option key={s.getId()} value={s.getId()}>
-                  {s.getTitleEnglish()}
-                </option>
-              ))}
-            </select>
+        {admin && (
+          <div className="sayr-manager__group">
+            <div className="sayr-manager__input-container">
+              <label className="sayr-manager__label">Source</label>
+              <select className="sayr-manager__select" value={sourceId} onChange={(e) => setSourceId(e.target.value)}>
+                <option value="">Select source</option>
+                {sources.map((s) => (
+                  <option key={s.getId()} value={s.getId()}>
+                    {s.getTitleEnglish()}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="sayr-manager__input-container">
+              <label className="sayr-manager__label">Page</label>
+              <input className="sayr-manager__input" type="text" value={page} onChange={(e) => setPage(e.target.value)} />
+            </div>
           </div>
-          <div className="sayr-manager__input-container">
-            <label className="sayr-manager__label">Page</label>
-            <input className="sayr-manager__input" type="text" value={page} onChange={(e) => setPage(e.target.value)} />
-          </div>
-        </div>}
+        )}
 
-        {admin && <div className="sayr-manager__group">
-          <div className="sayr-manager__input-container">
-            <label className="sayr-manager__label">Comments (English)</label>
-            <textarea className="sayr-manager__textarea" rows={3} value={commentsEnglish} onChange={(e) => setCommentsEnglish(e.target.value)} />
+        {admin && (
+          <div className="sayr-manager__group">
+            <div className="sayr-manager__input-container">
+              <label className="sayr-manager__label">Comments (English)</label>
+              <textarea className="sayr-manager__textarea" rows={3} value={commentsEnglish} onChange={(e) => setCommentsEnglish(e.target.value)} />
+            </div>
+            <div className="sayr-manager__input-container">
+              <label className="sayr-manager__label">Comments (Arabic)</label>
+              <textarea className="sayr-manager__textarea" rows={3} value={commentsArabic} onChange={(e) => setCommentsArabic(e.target.value)} />
+            </div>
           </div>
-          <div className="sayr-manager__input-container">
-            <label className="sayr-manager__label">Comments (Arabic)</label>
-            <textarea className="sayr-manager__textarea" rows={3} value={commentsArabic} onChange={(e) => setCommentsArabic(e.target.value)} />
-          </div>
-        </div>}
+        )}
 
         <div className="sayr-manager__stops-section">
           <h3 className="sayr-manager__stops-header">

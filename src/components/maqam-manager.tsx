@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import { useAppContext } from "@/contexts/app-context";
 import Maqam from "@/models/Maqam";
-import { Cell } from "@/contexts/app-context";
 import { getMaqamTranspositions } from "@/functions/transpose";
 import { updateMaqamat } from "@/functions/update";
 import { SourcePageReference } from "@/models/bibliography/Source";
@@ -14,10 +13,9 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
     setMaqamat,
     selectedMaqam,
     setSelectedMaqam,
-    selectedCells,
+    selectedCellDetails,
     setSelectedCells,
-    getAllCells,
-    getCellDetails,
+    allCellDetails,
     clearSelections,
     handleClickMaqam,
     checkIfMaqamIsSelectable,
@@ -37,13 +35,9 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
     }
   }, [selectedMaqam]);
 
-  const numberOfPitchClasses = selectedTuningSystem
-    ? selectedTuningSystem.getPitchClasses().length
-    : 0;
+  const numberOfPitchClasses = selectedTuningSystem ? selectedTuningSystem.getPitchClasses().length : 0;
 
   const sortedMaqamat = [...maqamat].sort((a, b) => a.getName().localeCompare(b.getName()));
-  const allCells = getAllCells();
-  const allCellDetails = allCells.map(getCellDetails);
 
   // Generate new unique ID
   const setOfMaqamat = new Set(maqamat.map((m) => m.getId()));
@@ -51,7 +45,6 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
   while (setOfMaqamat.has(newMaqamIdNum.toString())) newMaqamIdNum++;
   const newMaqamId = newMaqamIdNum.toString();
 
-  const selectedCellDetails = selectedCells.map((cell: Cell) => getCellDetails(cell));
   const selectedCellNoteNames = selectedCellDetails.map((d) => d.noteName);
 
   // Base save logic
@@ -66,9 +59,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
   const handleSaveAscending = async () => {
     if (!selectedMaqam) return;
     const descendingNames =
-      selectedMaqam.getDescendingNoteNames().length > 0
-        ? selectedMaqam.getDescendingNoteNames()
-        : [...selectedCellNoteNames].reverse();
+      selectedMaqam.getDescendingNoteNames().length > 0 ? selectedMaqam.getDescendingNoteNames() : [...selectedCellNoteNames].reverse();
 
     const updated = new Maqam(
       selectedMaqam.getId(),
@@ -120,20 +111,13 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
   const removeSourceRef = (index: number) => {
     if (!selectedMaqam) return;
     const refs = selectedMaqam.getSourcePageReferences() || [];
-    setSelectedMaqam(
-      selectedMaqam.createMaqamWithNewSourcePageReferences(refs.filter((_, i) => i !== index))
-    );
+    setSelectedMaqam(selectedMaqam.createMaqamWithNewSourcePageReferences(refs.filter((_, i) => i !== index)));
   };
 
   const addSourceRef = () => {
     if (!selectedMaqam) return;
     const refs = selectedMaqam.getSourcePageReferences() || [];
-    setSelectedMaqam(
-      selectedMaqam.createMaqamWithNewSourcePageReferences([
-        ...refs,
-        { sourceId: "", page: "" },
-      ])
-    );
+    setSelectedMaqam(selectedMaqam.createMaqamWithNewSourcePageReferences([...refs, { sourceId: "", page: "" }]));
   };
 
   return (
@@ -142,8 +126,8 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
         <button
           className="carousel-button carousel-button-prev"
           onClick={() => {
-            const c = document.querySelector('.maqam-manager__list');
-            if (c) c.scrollBy({ left: -670, behavior: 'smooth' });
+            const c = document.querySelector(".maqam-manager__list");
+            if (c) c.scrollBy({ left: -670, behavior: "smooth" });
           }}
         >
           ‹
@@ -154,15 +138,13 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
             return (
               <div
                 key={idx}
-                className={
-                  `maqam-manager__item ${maqam.getName() === selectedMaqam?.getName() ? 'maqam-manager__item_selected ' : ''}${
-                    active ? 'maqam-manager__item_active' : ''
-                  }`
-                }
+                className={`maqam-manager__item ${maqam.getName() === selectedMaqam?.getName() ? "maqam-manager__item_selected " : ""}${
+                  active ? "maqam-manager__item_active" : ""
+                }`}
                 onClick={() => active && handleClickMaqam(maqam)}
               >
                 <div className="maqam-manager__item-name">
-                  <strong>{`${maqam.getName()}${!maqam.isMaqamSymmetric() ? '*' : ''}`}</strong>
+                  <strong>{`${maqam.getName()}${!maqam.isMaqamSymmetric() ? "*" : ""}`}</strong>
                   {active && (
                     <strong className="maqam-manager__item-name-transpositions">
                       {`Transpositions: ${getMaqamTranspositions(allCellDetails, maqam, true).length}/${numberOfPitchClasses}`}
@@ -176,8 +158,8 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
         <button
           className="carousel-button carousel-button-next"
           onClick={() => {
-            const c = document.querySelector('.maqam-manager__list');
-            if (c) c.scrollBy({ left: 520, behavior: 'smooth' });
+            const c = document.querySelector(".maqam-manager__list");
+            if (c) c.scrollBy({ left: 520, behavior: "smooth" });
           }}
         >
           ›

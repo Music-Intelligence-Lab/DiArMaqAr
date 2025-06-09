@@ -10,20 +10,10 @@ import { Contributor } from "@/models/bibliography/AbstractSource";
 export default function SourcesList() {
   const { sources } = useAppContext();
 
-  // Helper to format contributor names as "Last, First; Last, First; …"
-  const formatContributorsEnglish = (contributors: Contributor[]): string => {
-    if (contributors.length === 0) return "";
-    return contributors
-      .map((c) => `${c.type}, ${c.lastNameEnglish}, ${c.firstNameEnglish[0]}`)
-      .join(", ");
-  };
-
   // Helper to format contributor names as "Last First؛ Last First؛ …" (using Arabic space and semicolon)
   const formatContributorsArabic = (contributors: Contributor[]): string => {
     if (contributors.length === 0) return "";
-    return contributors
-      .map((c) => `${c.lastNameArabic} ${c.firstNameArabic}`)
-      .join("؛ ");
+    return contributors.map((c) => `${c.lastNameArabic} ${c.firstNameArabic}`).join("؛ ");
   };
 
   // Build an English citation as JSX for either Book or Article
@@ -58,7 +48,12 @@ export default function SourcesList() {
     const year = yearMatch ? yearMatch[0] : pubDateEng;
 
     // 3) Title
-    const title = <span className="sources-list__citation-title">{source.getTitleEnglish()}{`.`}</span>;
+    const title = (
+      <span className="sources-list__citation-title">
+        {source.getTitleEnglish()}
+        {`.`}
+      </span>
+    );
     const url = source.getUrl();
     const dateAcc = source.getDateAccessed();
     // Format dateAcc (DD-MM-YYYY) into “DD MMM YYYY”
@@ -79,9 +74,8 @@ export default function SourcesList() {
       const editionPart = edEng ? `${edEng}.` : "";
 
       // Original publication date (if present)
-            const oPubDateEng = book.getOriginalReleaseDateEnglish();
+      const oPubDateEng = book.getOriginalReleaseDateEnglish();
       const oPubDateEngPart = oPubDateEng ? `${oPubDateEng}.` : "";
-
 
       // Publisher & Place
       const pubEng = book.getPublisherEnglish();
@@ -90,9 +84,16 @@ export default function SourcesList() {
 
       return (
         <>
-          {authorSegment} ({year}) {editors.length > 0 && <> Edited by {editors.map(formatName).join(" and ")}</>} {translators.length > 0 && <> Translated by {translators.map(formatName).join(" and ")}</>} {reviewers.length > 0 && <> Reviewed by {reviewers.map(formatName).join(" and ")}</>} {title} {editionPart && ` ${editionPart}`} {oPubDateEngPart && ` ${oPubDateEngPart}`} {publisherPart && <>{publisherPart}.</>} {url && (
+          {authorSegment} ({year}) {editors.length > 0 && <> Edited by {editors.map(formatName).join(" and ")}</>}{" "}
+          {translators.length > 0 && <> Translated by {translators.map(formatName).join(" and ")}</>}{" "}
+          {reviewers.length > 0 && <> Reviewed by {reviewers.map(formatName).join(" and ")}</>} {title} {editionPart && ` ${editionPart}`}{" "}
+          {oPubDateEngPart && ` ${oPubDateEngPart}`} {publisherPart && <>{publisherPart}.</>}{" "}
+          {url && (
             <>
-              Available at: <a href={url} target="_blank" rel="noopener noreferrer">{url}</a>
+              Available at:{" "}
+              <a href={url} target="_blank" rel="noopener noreferrer">
+                {url}
+              </a>
             </>
           )}
           {dateAcc && ` [Accessed ${formattedDateAcc}]`}
@@ -118,11 +119,14 @@ export default function SourcesList() {
 
       return (
         <>
-          {contribSegment} ({year}) {source.getTitleEnglish()}.{" "}
-          <span className="citation-journal">{journalLineParts.join(", ")}</span>.
+          {contribSegment} ({year}) {source.getTitleEnglish()}. <span className="citation-journal">{journalLineParts.join(", ")}</span>.
           {url && (
             <>
-              URL: <a href={url} target="_blank" rel="noopener noreferrer">{url}</a>.
+              URL:{" "}
+              <a href={url} target="_blank" rel="noopener noreferrer">
+                {url}
+              </a>
+              .
             </>
           )}
           {dateAcc && ` Accessed: ${formattedDateAcc}.`}
@@ -208,26 +212,16 @@ export default function SourcesList() {
           // Determine primary sort key: first contributor's lastNameEnglish or title if no contributors
           const aContribs = a.getContributors();
           const bContribs = b.getContributors();
-          const aKey =
-            aContribs && aContribs.length > 0
-              ? aContribs[0].lastNameEnglish.toLowerCase()
-              : a.getTitleEnglish().toLowerCase();
-          const bKey =
-            bContribs && bContribs.length > 0
-              ? bContribs[0].lastNameEnglish.toLowerCase()
-              : b.getTitleEnglish().toLowerCase();
+          const aKey = aContribs && aContribs.length > 0 ? aContribs[0].lastNameEnglish.toLowerCase() : a.getTitleEnglish().toLowerCase();
+          const bKey = bContribs && bContribs.length > 0 ? bContribs[0].lastNameEnglish.toLowerCase() : b.getTitleEnglish().toLowerCase();
           if (aKey < bKey) return -1;
           if (aKey > bKey) return 1;
           return 0;
         })
         .map((src: Source) => (
           <div key={src.getId()} className="sources-list__row">
-            <div className="sources-list__cell sources-list__cell--english">
-              {buildEnglishCitation(src)}
-            </div>
-            <div className="sources-list__cell sources-list__cell--arabic">
-              {buildArabicCitation(src)}
-            </div>
+            <div className="sources-list__cell sources-list__cell--english">{buildEnglishCitation(src)}</div>
+            <div className="sources-list__cell sources-list__cell--arabic">{buildArabicCitation(src)}</div>
           </div>
         ))}
     </div>

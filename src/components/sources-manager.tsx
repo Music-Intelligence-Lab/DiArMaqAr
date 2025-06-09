@@ -228,9 +228,7 @@ export default function SourcesManager() {
     if (selectedSourceId === "new") {
       updatedSources = [...sources, newSource];
     } else {
-      updatedSources = sources.map((s: Source) =>
-        s.getId() === selectedSourceId ? newSource : s
-      );
+      updatedSources = sources.map((s: Source) => (s.getId() === selectedSourceId ? newSource : s));
     }
 
     setSources(updatedSources);
@@ -251,11 +249,7 @@ export default function SourcesManager() {
   return (
     <div className="sources-manager">
       <h2 className="sources-manager__header">Bibliography</h2>
-      {selectedSourceId !== "new" && (
-        <span className="sources-manager__selected">
-          {`: ${selectedSourceId} ${titleEnglish}`}
-        </span>
-      )}
+      {selectedSourceId !== "new" && <span className="sources-manager__selected">{`: ${selectedSourceId} ${titleEnglish}`}</span>}
 
       {/* Select existing or create new */}
       <div className="sources-manager__group">
@@ -263,12 +257,7 @@ export default function SourcesManager() {
           <label className="sources-manager__label" htmlFor="sourceSelect">
             Select Source or Create New:
           </label>
-          <select
-            id="sourceSelect"
-            className="sources-manager__select"
-            value={selectedSourceId}
-            onChange={handleSelectChange}
-          >
+          <select id="sourceSelect" className="sources-manager__select" value={selectedSourceId} onChange={handleSelectChange}>
             <option value="new">-- Create New Source --</option>
             {sources.map((s: Source) => {
               const contribs = s.getContributors();
@@ -391,10 +380,7 @@ export default function SourcesManager() {
           <>
             <div className="sources-manager__group">
               <div className="sources-manager__input-container">
-                <label
-                  className="sources-manager__label"
-                  htmlFor="origPubDateEnglishField"
-                >
+                <label className="sources-manager__label" htmlFor="origPubDateEnglishField">
                   Original Publication Date (English)
                 </label>
                 <input
@@ -406,10 +392,7 @@ export default function SourcesManager() {
                 />
               </div>
               <div className="sources-manager__input-container">
-                <label
-                  className="sources-manager__label"
-                  htmlFor="origPubDateArabicField"
-                >
+                <label className="sources-manager__label" htmlFor="origPubDateArabicField">
                   Original Publication Date (Arabic)
                 </label>
                 <input
@@ -475,13 +458,7 @@ export default function SourcesManager() {
                 <label className="sources-manager__label" htmlFor="isbnField">
                   ISBN
                 </label>
-                <input
-                  id="isbnField"
-                  className="sources-manager__input"
-                  type="text"
-                  value={ISBN}
-                  onChange={(e) => setISBN(e.target.value)}
-                />
+                <input id="isbnField" className="sources-manager__input" type="text" value={ISBN} onChange={(e) => setISBN(e.target.value)} />
               </div>
             </div>
           </>
@@ -600,13 +577,7 @@ export default function SourcesManager() {
                 <label className="sources-manager__label" htmlFor="doiField">
                   DOI
                 </label>
-                <input
-                  id="doiField"
-                  className="sources-manager__input"
-                  type="text"
-                  value={DOI}
-                  onChange={(e) => setDOI(e.target.value)}
-                />
+                <input id="doiField" className="sources-manager__input" type="text" value={DOI} onChange={(e) => setDOI(e.target.value)} />
               </div>
             </div>
           </>
@@ -620,13 +591,7 @@ export default function SourcesManager() {
             <label className="sources-manager__label" htmlFor="urlField">
               URL
             </label>
-            <input
-              id="urlField"
-              className="sources-manager__input"
-              type="text"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-            />
+            <input id="urlField" className="sources-manager__input" type="text" value={url} onChange={(e) => setUrl(e.target.value)} />
           </div>
           <div className="sources-manager__input-container">
             <label className="sources-manager__label" htmlFor="dateAccessedField">
@@ -649,11 +614,7 @@ export default function SourcesManager() {
           <div className="sources-manager__input-container">
             <div className="sources-manager__label">
               Contributors
-              <button
-                type="button"
-                className="sources-manager__add-button"
-                onClick={handleAddContributor}
-              >
+              <button type="button" className="sources-manager__add-button" onClick={handleAddContributor}>
                 Add Contributor
               </button>
             </div>
@@ -663,9 +624,7 @@ export default function SourcesManager() {
               <select
                 className="sources-manager__select"
                 value={contributor.type}
-                onChange={(e) =>
-                  handleContributorChange(index, "type", e.target.value)
-                }
+                onChange={(e) => handleContributorChange(index, "type", e.target.value)}
               >
                 <option value="Author">Author</option>
                 <option value="Editor">Editor</option>
@@ -677,39 +636,27 @@ export default function SourcesManager() {
                 type="text"
                 placeholder="First Name (English)"
                 value={contributor.firstNameEnglish}
-                onChange={(e) =>
-                  handleContributorChange(index, "firstNameEnglish", e.target.value)
-                }
+                onChange={(e) => handleContributorChange(index, "firstNameEnglish", e.target.value)}
               />
               <input
                 type="text"
                 placeholder="Last Name (English)"
                 value={contributor.lastNameEnglish}
-                onChange={(e) =>
-                  handleContributorChange(index, "lastNameEnglish", e.target.value)
-                }
+                onChange={(e) => handleContributorChange(index, "lastNameEnglish", e.target.value)}
               />
               <input
                 type="text"
                 placeholder="First Name (Arabic)"
                 value={contributor.firstNameArabic}
-                onChange={(e) =>
-                  handleContributorChange(index, "firstNameArabic", e.target.value)
-                }
+                onChange={(e) => handleContributorChange(index, "firstNameArabic", e.target.value)}
               />
               <input
                 type="text"
                 placeholder="Last Name (Arabic)"
                 value={contributor.lastNameArabic}
-                onChange={(e) =>
-                  handleContributorChange(index, "lastNameArabic", e.target.value)
-                }
+                onChange={(e) => handleContributorChange(index, "lastNameArabic", e.target.value)}
               />
-              <button
-                type="button"
-                className="sources-manager__remove-button"
-                onClick={() => handleRemoveContributor(index)}
-              >
+              <button type="button" className="sources-manager__remove-button" onClick={() => handleRemoveContributor(index)}>
                 Remove
               </button>
             </div>
@@ -723,11 +670,7 @@ export default function SourcesManager() {
           <button type="submit" className="sources-manager__save-button">
             Save
           </button>
-          <button
-            type="button"
-            className="sources-manager__delete-button"
-            onClick={handleDelete}
-          >
+          <button type="button" className="sources-manager__delete-button" onClick={handleDelete}>
             Delete
           </button>
         </div>

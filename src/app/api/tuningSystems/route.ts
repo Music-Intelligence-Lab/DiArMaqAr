@@ -65,7 +65,10 @@ export async function GET() {
           const ascendingNotes: string[] = maqam.ascendingNoteNames;
           const descendingNotes: string[] = maqam.descendingNoteNames;
 
-          if (ascendingNotes.every((note: string) => noteNamesUsed.includes(note)) && descendingNotes.every((note: string) => noteNamesUsed.includes(note))) {
+          if (
+            ascendingNotes.every((note: string) => noteNamesUsed.includes(note)) &&
+            descendingNotes.every((note: string) => noteNamesUsed.includes(note))
+          ) {
             tempMaqamat.push(maqam.name);
           }
         }

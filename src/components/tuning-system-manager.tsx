@@ -37,7 +37,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     referenceFrequencies,
     setReferenceFrequencies,
     playNoteFrequency,
-    selectedCells,
+    selectedCellDetails,
     setSelectedCells,
     selectedIndices,
     setSelectedIndices,
@@ -46,12 +46,11 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     mapIndices,
     clearSelections,
     handleStartNoteNameChange,
-    getCellDetails,
     playSequence,
     sources,
     selectedJins,
     selectedMaqam,
-    activeCells
+    activeCells,
   } = useAppContext();
 
   const { filters, setFilters } = useFilterContext();
@@ -112,12 +111,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   const [stringLength, setStringLength] = useState<number>(0);
   const [defaultReferenceFrequency, setDefaultReferenceFrequency] = useState<number>(0);
 
-  const octaveScrollRefs = [
-    useRef<HTMLDivElement>(null),
-    useRef<HTMLDivElement>(null),
-    useRef<HTMLDivElement>(null),
-    useRef<HTMLDivElement>(null),
-  ];
+  const octaveScrollRefs = [useRef<HTMLDivElement>(null), useRef<HTMLDivElement>(null), useRef<HTMLDivElement>(null), useRef<HTMLDivElement>(null)];
 
   /**
    * We only store the note name “index” for the first octave (octaveOneNoteNames).
@@ -158,18 +152,18 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
   useEffect(() => {
     if (!selectedJins || !selectedMaqam) return;
-    if (selectedCells.length === 0) {
+    if (selectedCellDetails.length === 0) {
       setOpenedOctaveRows({ 0: false, 1: true, 2: true, 3: false });
     } else {
       const rows = { 0: false, 1: false, 2: false, 3: false };
-      for (const selectedCell of selectedCells) {
-        if (rows[selectedCell.octave as 0 | 1 | 2 | 3] === false) {
-          rows[selectedCell.octave as 0 | 1 | 2 | 3] = true;
+      for (const cellDetails of selectedCellDetails) {
+        if (rows[cellDetails.octave as 0 | 1 | 2 | 3] === false) {
+          rows[cellDetails.octave as 0 | 1 | 2 | 3] = true;
         }
       }
       setOpenedOctaveRows(rows);
     }
-  }, [selectedCells]);
+  }, [selectedCellDetails]);
 
   useEffect(() => {
     // helper: given the source index and new scrollLeft, push to the others
@@ -187,7 +181,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     // attach a scroll listener to each ref
     const cleanups = octaveScrollRefs.map((ref, idx) => {
       const el = ref.current;
-      if (!el) return () => { };
+      if (!el) return () => {};
       const handler = () => {
         const x = el.scrollLeft;
         syncScroll(idx, x);
@@ -203,7 +197,6 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       cleanups.forEach((cleanup) => cleanup());
     };
   }, [octaveScrollRefs]);
-
 
   // Sort the tuning systems according to sortOption
   // so our dropdown is neatly sorted:
@@ -484,16 +477,20 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   // MARK: Cell Checkbox Handlers
 
   // Given an octave and a column index, check if that cell is already selected.
-  const isCellSelected = (octave: number, colIndex: number) => selectedCells.some((cell) => cell.octave === octave && cell.index === colIndex);
-  const isCellActive = (octave: number, colIndex: number) => activeCells.some((cell) => cell.octave === octave && cell.index === colIndex);
+  const isCellSelected = (octave: number, colIndex: number) =>
+    selectedCellDetails.some((cellDetails) => cellDetails.octave === octave && cellDetails.index === colIndex);
+  const isCellActive = (octave: number, colIndex: number) =>
+    activeCells.some((cellDetails) => cellDetails.octave === octave && cellDetails.index === colIndex);
 
   const getCellClassName = (octave: number, colIndex: number) => {
     const isSelected = isCellSelected(octave, colIndex);
     const isActive = isCellActive(octave, colIndex);
-    return `tuning-system-manager__cell ${octave} ${isSelected ? "tuning-system-manager__cell_selected " : ""} ${isActive ? "tuning-system-manager__cell_active " : ""}`;
-  }
+    return `tuning-system-manager__cell ${octave} ${isSelected ? "tuning-system-manager__cell_selected " : ""} ${
+      isActive ? "tuning-system-manager__cell_active " : ""
+    }`;
+  };
 
-  // When a checkbox is toggled, update the selectedCells accordingly.
+  // When a checkbox is toggled, update the selectedCellDetails accordingly.
   const handleCheckboxChange = (octave: number, colIndex: number, checked: boolean) => {
     setSelectedCells((prevCells) => {
       // Remove any existing instance of this cell.
@@ -725,13 +722,17 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             })); */
           }}
         >
-          <span className="tuning-system-manager__octave-summary-title"
-            onClick={() => setOpenedOctaveRows((rows) => ({
-              ...rows,
-              [octave]: !rows[octave as 0 | 1 | 2 | 3],
-            }))}
+          <span
+            className="tuning-system-manager__octave-summary-title"
+            onClick={() =>
+              setOpenedOctaveRows((rows) => ({
+                ...rows,
+                [octave]: !rows[octave as 0 | 1 | 2 | 3],
+              }))
+            }
           >
-            Diwān (octave) {octave}{" "}</span>
+            Diwān (octave) {octave}{" "}
+          </span>
           {admin && ((octave === 1 && openedOctaveRows[1]) || (octave === 2 && openedOctaveRows[2])) && (
             <button
               className="tuning-system-manager__octave-cascade-button"
@@ -758,12 +759,12 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                   <label
                     key={filterKey}
                     htmlFor={`filter-${filterKey}`}
-                    className={`tuning-system-manager__filter-item ${filters[filterKey as keyof typeof filters] ? "tuning-system-manager__filter-item_active" : ""
-                      }`}
+                    className={`tuning-system-manager__filter-item ${
+                      filters[filterKey as keyof typeof filters] ? "tuning-system-manager__filter-item_active" : ""
+                    }`}
                     // prevent the drawer (or parent) click handler from firing
                     onClick={(e) => e.stopPropagation()}
                   >
-
                     <input
                       id={`filter-${filterKey}`}
                       type="checkbox"
@@ -780,32 +781,30 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                       }}
                     />
                     <span className="tuning-system-manager__filter-label">
-                      {filterKey.replace(/([A-Z])/g, ' $1').trim().charAt(0).toUpperCase() + filterKey.replace(/([A-Z])/g, ' $1').trim().slice(1)}
+                      {filterKey
+                        .replace(/([A-Z])/g, " $1")
+                        .trim()
+                        .charAt(0)
+                        .toUpperCase() +
+                        filterKey
+                          .replace(/([A-Z])/g, " $1")
+                          .trim()
+                          .slice(1)}
                     </span>
-
                   </label>
                 );
               })}
             </span>
           )}
 
-          <div className="tuning-system-manager__octave-summary-content">
-
-          </div>
+          <div className="tuning-system-manager__octave-summary-content"></div>
         </summary>
 
-        <div
-          className="tuning-system-manager__octave-scroll"
-          ref={octaveScrollRefs[octave as 0 | 1 | 2 | 3]}
-        >
+        <div className="tuning-system-manager__octave-scroll" ref={octaveScrollRefs[octave as 0 | 1 | 2 | 3]}>
           <table className="tuning-system-manager__octave-table" border={0}>
-
-
             <colgroup>
               <col style={{ minWidth: "110px", maxWidth: "110px", width: "110px" }} />
             </colgroup>
-
-
 
             <tbody>
               {/* Row 1: Pitch Class */}
@@ -813,12 +812,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 <tr>
                   <td>Pitch Class</td>
                   {pitchClassesArr.map((_, colIndex) => (
-                    <td
-                      key={colIndex}
-                      className={
-                      getCellClassName(octave, colIndex)
-                      }
-                    >
+                    <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                       {colIndex}
                     </td>
                   ))}
@@ -919,7 +913,6 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
           </table>
 
           <table className="tuning-system-manager__octave-table" border={0}>
-
             <colgroup>
               <col style={{ minWidth: "110px", maxWidth: "110px", width: "110px" }} />
             </colgroup>
@@ -927,7 +920,9 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             <tbody>
               {pitchClassType !== "unknown" && (
                 <tr className="tuning-system-manager__octave-table__detectedPitchClassType">
-                  <td>{{ fraction: "Fraction Ratio", cents: "Cents (¢)", decimal: "Decimal Ratio", stringLength: "String Length" }[pitchClassType]}</td>
+                  <td>
+                    {{ fraction: "Fraction Ratio", cents: "Cents (¢)", decimal: "Decimal Ratio", stringLength: "String Length" }[pitchClassType]}
+                  </td>
                   {pitchClassesArr.map((basePc, colIndex) => (
                     <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                       {renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, pitchClassType)}
@@ -1027,8 +1022,10 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 <td>Play</td>
                 {pitchClassesArr.map((basePc, colIndex) => (
                   <td key={colIndex} className={getCellClassName(octave, colIndex)}>
-                    <PlayCircleIcon className="tuning-system-manager__play-circle-icon" onClick={() => playNoteFrequency(parseInt(renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "frequency")))} />
-
+                    <PlayCircleIcon
+                      className="tuning-system-manager__play-circle-icon"
+                      onClick={() => playNoteFrequency(parseInt(renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "frequency")))}
+                    />
                   </td>
                 ))}
               </tr>
@@ -1051,7 +1048,6 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             </tbody>
           </table>
         </div>
-
       </details>
     );
   }
@@ -1171,36 +1167,37 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
           <div className="tuning-system-manager__group">
             <div className="tuning-system-manager__sources-select-container">
-              {sourcePageReferences.length < 6 && <button className="tuning-system-manager__source-add-button" onClick={addSourceRef}>
-                Add Source
-              </button>}
-              {
-                sourcePageReferences.map((ref, idx) => (
-                  <div key={idx} className="tuning-system-manager__source-select-item">
-                    <select
-                      className="tuning-system-manager__source-select"
-                      value={ref.sourceId}
-                      onChange={(e) => updateSourceRefs(idx, { sourceId: e.target.value })}
-                    >
-                      <option value="">Select source</option>
-                      {sources.map((s) => (
-                        <option key={s.getId()} value={s.getId()}>
-                          {s.getTitleEnglish()}
-                        </option>
-                      ))}
-                    </select>
-                    <input
-                      className="tuning-system-manager__source-input"
-                      type="text"
-                      value={ref.page}
-                      placeholder="Page"
-                      onChange={(e) => updateSourceRefs(idx, { page: e.target.value })}
-                    />
-                    <button className="jins-manager__source-delete-button" onClick={() => removeSourceRef(idx)}>
-                      Delete
-                    </button>
-                  </div>
-                ))}
+              {sourcePageReferences.length < 6 && (
+                <button className="tuning-system-manager__source-add-button" onClick={addSourceRef}>
+                  Add Source
+                </button>
+              )}
+              {sourcePageReferences.map((ref, idx) => (
+                <div key={idx} className="tuning-system-manager__source-select-item">
+                  <select
+                    className="tuning-system-manager__source-select"
+                    value={ref.sourceId}
+                    onChange={(e) => updateSourceRefs(idx, { sourceId: e.target.value })}
+                  >
+                    <option value="">Select source</option>
+                    {sources.map((s) => (
+                      <option key={s.getId()} value={s.getId()}>
+                        {s.getTitleEnglish()}
+                      </option>
+                    ))}
+                  </select>
+                  <input
+                    className="tuning-system-manager__source-input"
+                    type="text"
+                    value={ref.page}
+                    placeholder="Page"
+                    onChange={(e) => updateSourceRefs(idx, { page: e.target.value })}
+                  />
+                  <button className="jins-manager__source-delete-button" onClick={() => removeSourceRef(idx)}>
+                    Delete
+                  </button>
+                </div>
+              ))}
             </div>
 
             <div className="tuning-system-manager__input-container">
@@ -1324,8 +1321,8 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
           <button
             className="carousel-button carousel-button-prev"
             onClick={() => {
-              const container = document.querySelector('.tuning-system-manager__list');
-              if (container) container.scrollBy({ left: -635, behavior: 'smooth' });
+              const container = document.querySelector(".tuning-system-manager__list");
+              if (container) container.scrollBy({ left: -635, behavior: "smooth" });
             }}
           >
             ‹
@@ -1334,31 +1331,28 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             {tuningSystems.length === 0 ? (
               <p>No tuning systems available.</p>
             ) : (
-              [...sortedTuningSystems]
-                .map((tuningSystem, index) => (
-                  <div
-                    key={index}
-                    className={
-                      "tuning-system-manager__item " +
-                      (tuningSystem.getId() === selectedTuningSystem?.getId()
-                        ? "tuning-system-manager__item_selected "
-                        : "")
-                    }
-                    onClick={() => {
-                      handleTuningSystemClick(tuningSystem);
-                    }}
-                  >
-                    <strong className="tuning-system-manager__item-english-creator">{`${tuningSystem.getCreatorEnglish()} (${tuningSystem.getYear()})`}</strong>
-                    <strong className="tuning-system-manager__item-english-title">{tuningSystem.getTitleEnglish()}</strong>
-                  </div>
-                ))
+              [...sortedTuningSystems].map((tuningSystem, index) => (
+                <div
+                  key={index}
+                  className={
+                    "tuning-system-manager__item " +
+                    (tuningSystem.getId() === selectedTuningSystem?.getId() ? "tuning-system-manager__item_selected " : "")
+                  }
+                  onClick={() => {
+                    handleTuningSystemClick(tuningSystem);
+                  }}
+                >
+                  <strong className="tuning-system-manager__item-english-creator">{`${tuningSystem.getCreatorEnglish()} (${tuningSystem.getYear()})`}</strong>
+                  <strong className="tuning-system-manager__item-english-title">{tuningSystem.getTitleEnglish()}</strong>
+                </div>
+              ))
             )}
           </div>
           <button
             className="carousel-button carousel-button-next"
             onClick={() => {
-              const container = document.querySelector('.tuning-system-manager__list');
-              if (container) container.scrollBy({ left: 635, behavior: 'smooth' });
+              const container = document.querySelector(".tuning-system-manager__list");
+              if (container) container.scrollBy({ left: 635, behavior: "smooth" });
             }}
           >
             ›
@@ -1366,70 +1360,73 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         </div>
       )}
 
-      {!admin && <div className="tuning-system-manager__sorting-options">
-        <label className="tuning-system-manager__sorting-label" htmlFor="sortOptionSelect">
-          Sort By:
-        </label>
-        <button className={"tuning-system-manager__sorting-button " + (sortOption === "id" ? "tuning-system-manager__sorting-button_selected" : "")} onClick={() => setSortOption("id")}>
-          ID
-        </button>
-        <button
-          className={
-            "tuning-system-manager__sorting-button " +
-            (sortOption === "creatorEnglish" ? "tuning-system-manager__sorting-button_selected" : "")
-          }
-          onClick={() => setSortOption("creatorEnglish")}
-        >
-          Creator (English)
-        </button>
-        <button
-          className={
-            "tuning-system-manager__sorting-button " +
-            (sortOption === "year" ? "tuning-system-manager__sorting-button_selected" : "")
-          }
-          onClick={() => setSortOption("year")}
-        >
-          Year
-        </button>
-      </div>}
+      {!admin && (
+        <div className="tuning-system-manager__sorting-options">
+          <label className="tuning-system-manager__sorting-label" htmlFor="sortOptionSelect">
+            Sort By:
+          </label>
+          <button
+            className={"tuning-system-manager__sorting-button " + (sortOption === "id" ? "tuning-system-manager__sorting-button_selected" : "")}
+            onClick={() => setSortOption("id")}
+          >
+            ID
+          </button>
+          <button
+            className={
+              "tuning-system-manager__sorting-button " + (sortOption === "creatorEnglish" ? "tuning-system-manager__sorting-button_selected" : "")
+            }
+            onClick={() => setSortOption("creatorEnglish")}
+          >
+            Creator (English)
+          </button>
+          <button
+            className={"tuning-system-manager__sorting-button " + (sortOption === "year" ? "tuning-system-manager__sorting-button_selected" : "")}
+            onClick={() => setSortOption("year")}
+          >
+            Year
+          </button>
+        </div>
+      )}
 
       {pitchClassesArr.length !== 0 && (
         <div className="tuning-system-manager__starting-note-container">
           <div className="tuning-system-manager__starting-note-left">
             Start Note Names From:
-            {[...noteNames].sort((a, b) => getNoteNameIndex(a[0] ?? 0) - getNoteNameIndex(b[0] ?? 0)).map((notes, index) => {
-              const startingNote = notes[0];
-              return (
-                <div className="tuning-system-manager__starting-note" key={index}>
-                  <button
-                    className={
-                      "tuning-system-manager__starting-note-button " +
-                      (getFirstNoteName(selectedIndices) === startingNote ? "tuning-system-manager__starting-note-button_selected" : "")
-                    }
-                    onClick={() => handleStartNoteNameChange(startingNote)}
-                  >
-                    {startingNote}
-                  </button>
-                  <label htmlFor="reference-frequency-input">
-                    Frequency (Hz):
-                    <input
-                      type="number"
-                      disabled={!admin}
-                      id="reference-frequency-input"
-                      value={referenceFrequencies[startingNote] ?? 0}
-                      onChange={(e) => {
-                        const val = Number(e.target.value);
-                        setReferenceFrequencies((prev) => ({
-                          ...prev,
-                          [startingNote]: val,
-                        }));
-                      }}
-                      className="tuning-system-manager__starting-note-input"
-                    />
-                  </label>
-                </div>
-              );
-            })}
+            {[...noteNames]
+              .sort((a, b) => getNoteNameIndex(a[0] ?? 0) - getNoteNameIndex(b[0] ?? 0))
+              .map((notes, index) => {
+                const startingNote = notes[0];
+                return (
+                  <div className="tuning-system-manager__starting-note" key={index}>
+                    <button
+                      className={
+                        "tuning-system-manager__starting-note-button " +
+                        (getFirstNoteName(selectedIndices) === startingNote ? "tuning-system-manager__starting-note-button_selected" : "")
+                      }
+                      onClick={() => handleStartNoteNameChange(startingNote)}
+                    >
+                      {startingNote}
+                    </button>
+                    <label htmlFor="reference-frequency-input">
+                      Frequency (Hz):
+                      <input
+                        type="number"
+                        disabled={!admin}
+                        id="reference-frequency-input"
+                        value={referenceFrequencies[startingNote] ?? 0}
+                        onChange={(e) => {
+                          const val = Number(e.target.value);
+                          setReferenceFrequencies((prev) => ({
+                            ...prev,
+                            [startingNote]: val,
+                          }));
+                        }}
+                        className="tuning-system-manager__starting-note-input"
+                      />
+                    </label>
+                  </div>
+                );
+              })}
             {isCurrentConfigurationNew() && (
               <div className="tuning-system-manager__starting-note">
                 <button
@@ -1458,7 +1455,6 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 </label>
               </div>
             )}
-
           </div>
           {admin && (
             <div className="tuning-system-manager__starting-note-right">
@@ -1482,17 +1478,13 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       )}
       {/* </details> */}
 
-
-
       <div className="tuning-system-manager__grid-wrapper">{renderNoteNameGrid()}</div>
       <div className="tuning-system-manager__buttons">
         <button
           className="tuning-system-manager__play-sequence-button"
-          disabled={selectedCells.length === 0}
+          disabled={selectedCellDetails.length === 0}
           onClick={() => {
-            const frequencies = selectedCells.map((cell) => {
-              const cellDetails = getCellDetails(cell);
-
+            const frequencies = selectedCellDetails.map((cellDetails) => {
               return parseInt(cellDetails.frequency) ?? 0;
             });
 
@@ -1542,13 +1534,18 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                   {source && source.getContributors().length !== 0 && (
                     <span className="">
                       {source.getContributors()[0].lastNameEnglish?.length
-                        ? `${source.getContributors()[0]?.lastNameEnglish ?? ""}, ${source
-                          .getContributors()[0]?.firstNameEnglish?.split(" ")
-                          .map((w) => w.charAt(0))
-                          .join(". ") ?? ""}. (${source.getReleaseDateEnglish() ? source.getReleaseDateEnglish() + "/" : ""}${source.getReleaseDateEnglish() ?? ""
-                        }:${ref.page})`
-                        : `${source.getTitleEnglish()} (${source.getReleaseDateEnglish() ? source.getReleaseDateEnglish() + "/" : ""}${source.getReleaseDateEnglish() ?? ""
-                        }:${ref.page})`}
+                        ? `${source.getContributors()[0]?.lastNameEnglish ?? ""}, ${
+                            source
+                              .getContributors()[0]
+                              ?.firstNameEnglish?.split(" ")
+                              .map((w) => w.charAt(0))
+                              .join(". ") ?? ""
+                          }. (${source.getReleaseDateEnglish() ? source.getReleaseDateEnglish() + "/" : ""}${source.getReleaseDateEnglish() ?? ""}:${
+                            ref.page
+                          })`
+                        : `${source.getTitleEnglish()} (${source.getReleaseDateEnglish() ? source.getReleaseDateEnglish() + "/" : ""}${
+                            source.getReleaseDateEnglish() ?? ""
+                          }:${ref.page})`}
                     </span>
                   )}
                 </div>
@@ -1560,9 +1557,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         <h3>مصادر:</h3>
         {selectedTuningSystem?.getSourceArabic()}
       </div> */}
-
       </div>
-
     </div>
   );
 }

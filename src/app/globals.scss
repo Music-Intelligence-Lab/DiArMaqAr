@@ -20,8 +20,9 @@
   background: $main-gradient;
   overscroll-behavior: none;
 }
+
 html {
-  overflow-y:hidden;
+  overflow-y: hidden;
 }
 
 
@@ -61,7 +62,9 @@ button {
   border: none;
 }
 
-input, textarea, select {
+input,
+textarea,
+select {
   background-color: #000;
   color: #f0f0f0;
   border: 0px;
@@ -86,38 +89,38 @@ select:focus {
   position: relative;
   width: 100%;
 
-  & > * {
+  &>* {
     width: 100%;
   }
 
-input[type="checkbox"] {
-  appearance: none;
-  width: 10px;
-  height: 10px;
-  border: 1px solid rgb($text, 50%);
-  border-radius: 0px;
-  background-color: transparent;
-  cursor: pointer;
+  input[type="checkbox"] {
+    appearance: none;
+    width: 10px;
+    height: 10px;
+    border: 1px solid rgb($text, 50%);
+    border-radius: 0px;
+    background-color: transparent;
+    cursor: pointer;
 
-  &:checked {
-    background-color: rgb(209, 164, 0);
-    border-color: rgb(209, 164, 0);
-    position: relative;
+    &:checked {
+      background-color: rgb(209, 164, 0);
+      border-color: rgb(209, 164, 0);
+      position: relative;
 
-    &:after {
-      content: "\2713";
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: black;
-      font-size: 10px;
+      &:after {
+        content: "\2713";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: black;
+        font-size: 10px;
+      }
+    }
+
+    &:focus {
+      outline: none;
     }
   }
-
-  &:focus {
-    outline: none;
-  }
-}
 
 }

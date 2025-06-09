@@ -43,7 +43,7 @@ export async function POST(request: Request) {
       noteNames: string[][];
       abjadNames: string[];
       stringLength: number;
-      referenceFrequencies: {[noteName: string]: number};
+      referenceFrequencies: { [noteName: string]: number };
       defaultReferenceFrequency: number;
     }[] = JSON.parse(tsRaw);
 
@@ -161,6 +161,7 @@ export async function POST(request: Request) {
           fraction,
           noteName,
           octave,
+          index,
           englishName: getEnglishNoteName(noteName),
         };
 

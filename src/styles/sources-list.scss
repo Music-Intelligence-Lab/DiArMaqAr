@@ -7,16 +7,18 @@
   color: $text;
   padding: 20px 10px;
   font-weight: 200;
-  
+
 
   /* Optional: custom scrollbar */
   &::-webkit-scrollbar {
     width: 12px;
   }
+
   &::-webkit-scrollbar-thumb {
     background-color: $primary;
     cursor: pointer;
   }
+
   &::-webkit-scrollbar-track {
     background: rgba(0, 0, 0, 0.1);
     border-radius: 0 25px 0 0;
@@ -62,7 +64,7 @@
     line-height: 1.4;
   }
 
-  &__citation-title{
+  &__citation-title {
     font-style: italic;
   }
 }

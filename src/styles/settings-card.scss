@@ -29,7 +29,7 @@
     display: flex;
     flex-direction: column;
     padding-bottom: 50px;
-  padding-top: $top-navbar-height;
+    padding-top: $top-navbar-height;
     color: black;
     height: 100%;
     width: 100%;
@@ -104,7 +104,7 @@
       transition: 300ms;
     }
 
-    & input:checked ~ .checkmark {
+    & input:checked~.checkmark {
       background-color: $primary;
       border-radius: 5px;
       animation: pulse 500ms ease-in-out;
@@ -116,7 +116,7 @@
       display: none;
     }
 
-    & input:checked ~ .checkmark:after {
+    & input:checked~.checkmark:after {
       display: block;
     }
 

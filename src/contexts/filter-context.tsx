@@ -44,17 +44,13 @@ export function FilterContextProvider({ children }: { children: ReactNode }) {
   const [filters, setFilters] = useState<FilterSettings>(defaultFilters);
 
   const toggleFilter = (field: keyof FilterSettings) => {
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
-      [field]: !prev[field]
+      [field]: !prev[field],
     }));
   };
 
-  return (
-    <FilterContext.Provider value={{ filters, setFilters, toggleFilter }}>
-      {children}
-    </FilterContext.Provider>
-  );
+  return <FilterContext.Provider value={{ filters, setFilters, toggleFilter }}>{children}</FilterContext.Provider>;
 }
 
 export function useFilterContext() {

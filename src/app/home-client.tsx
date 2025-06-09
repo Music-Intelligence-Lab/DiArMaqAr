@@ -69,7 +69,7 @@ export default function HomeClient() {
       {selectedMenu === "tuningSystem" && <TuningSystemManager admin={false} />}
       {selectedMenu === "tuningSystem-admin" && <TuningSystemManager admin />}
       {selectedMenu === "maqam" && selectedTuningSystem && <MaqamManager admin={false} />}
-      {selectedMenu === "maqam-admin" && selectedTuningSystem && <MaqamManager admin/>}
+      {selectedMenu === "maqam-admin" && selectedTuningSystem && <MaqamManager admin />}
       {(selectedMenu === "maqam" || selectedMenu === "maqam-admin") && selectedTuningSystem && <MaqamTranspositions />}
       {selectedMenu === "jins" && selectedTuningSystem && <JinsManager admin={false} />}
       {selectedMenu === "jins-admin" && selectedTuningSystem && <JinsManager admin />}

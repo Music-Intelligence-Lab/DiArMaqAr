@@ -35,13 +35,16 @@
     border-radius: 3px;
     cursor: pointer;
     margin-right: 10px;
-    font-family: inherit;
     font-size: 12px;
     width: 190px;
     height: 40px;
     vertical-align: middle;
     text-align: center;
-    &:focus { outline: transparent ; border: white solid 1px; }
+
+    &:focus {
+      outline: transparent;
+      border: white solid 1px;
+    }
 
 
     &:hover {
@@ -65,7 +68,7 @@
   }
 
   &__comments-arabic {
-    font-size: 14px;    
+    font-size: 14px;
     display: inline-block;
     width: 50%;
     text-align: right;
@@ -75,7 +78,7 @@
   }
 
   &__sources-english {
-    font-size: 14px;    
+    font-size: 14px;
     display: inline-block;
     width: 50%;
     direction: ltr;
@@ -84,7 +87,7 @@
   }
 
   &__sources-arabic {
-    font-size: 14px;    
+    font-size: 14px;
     display: inline-block;
     width: 50%;
     text-align: right;
@@ -99,13 +102,13 @@
     border-collapse: collapse;
     margin-bottom: 50px;
     font-size: 12px;
-    table-layout:auto;
+    table-layout: auto;
     font-weight: 200;
 
 
     tr {
       text-align: left;
-          width: 100%;
+      width: 100%;
 
     }
 
@@ -126,7 +129,7 @@
 
     tbody {
       font-weight: 200;
-          width: 100%;
+      width: 100%;
 
     }
   }
@@ -166,8 +169,8 @@
   &__header {
     text-align: left;
     background-color: transparent;
-    
-    
+
+
   }
 
   &__header-cell {

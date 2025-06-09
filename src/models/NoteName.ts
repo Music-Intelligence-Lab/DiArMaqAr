@@ -35,7 +35,7 @@ export const octaveZeroNoteNames = [
   "qarār ṣabā",
   "qarār ḥijāz",
   "qarār tīk ḥijāz/ṣabā",
-  "nīm yegāh",	
+  "nīm yegāh",
 ];
 export const octaveOneNoteNames = [
   "yegāh",
@@ -192,28 +192,20 @@ export const octaveFourNoteNames = [
   "jawāb jawāb jawāb ḥijāz",
   "jawāb jawāb jawāb tīk ḥijāz",
   "jawāb jawāb saham/ramal tūtī",
-]
+];
 
 export const allNotes = [
-  ...new Set([
-    ...octaveZeroNoteNames,
-    ...octaveOneNoteNames,
-    ...octaveTwoNoteNames,
-    ...octaveThreeNoteNames,
-    ...octaveFourNoteNames,
-  ]),
+  ...new Set([...octaveZeroNoteNames, ...octaveOneNoteNames, ...octaveTwoNoteNames, ...octaveThreeNoteNames, ...octaveFourNoteNames]),
 ] as const;
 
-type TransliteratedNoteName = typeof allNotes[number];
+type TransliteratedNoteName = (typeof allNotes)[number];
 export default TransliteratedNoteName;
-export type TransliteratedNoteNameOctaveOne = typeof octaveOneNoteNames[number];
-export type TransliteratedNoteNameOctaveZero = typeof octaveZeroNoteNames[number];
-export type TransliteratedNoteNameOctaveTwo = typeof octaveTwoNoteNames[number];
-export type TransliteratedNoteNameOctaveThree = typeof octaveThreeNoteNames[number];
-export type TransliteratedNoteNameOctaveFour = typeof octaveFourNoteNames[number];
+export type TransliteratedNoteNameOctaveOne = (typeof octaveOneNoteNames)[number];
+export type TransliteratedNoteNameOctaveZero = (typeof octaveZeroNoteNames)[number];
+export type TransliteratedNoteNameOctaveTwo = (typeof octaveTwoNoteNames)[number];
+export type TransliteratedNoteNameOctaveThree = (typeof octaveThreeNoteNames)[number];
+export type TransliteratedNoteNameOctaveFour = (typeof octaveFourNoteNames)[number];
 
-export function getNoteNameIndex(
-  noteName: TransliteratedNoteName
-): number {
+export function getNoteNameIndex(noteName: TransliteratedNoteName): number {
   return allNotes.indexOf(noteName);
 }

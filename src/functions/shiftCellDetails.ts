@@ -45,5 +45,6 @@ export default function shiftCellDetails(cellDetails: CellDetails): CellDetails 
     originalValue: newOriginalValue,
     originalValueType,
     octave: newOctave,
+    index: cellDetails.index,
   };
 }
