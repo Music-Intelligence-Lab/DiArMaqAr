@@ -27,6 +27,7 @@ export default function Navbar() {
     setPitchClasses,
     setSelectedIndices,
     setNoteNames,
+    getModulations,
   } = useAppContext();
 
   const rowRef = useRef<HTMLDivElement>(null);
@@ -60,6 +61,20 @@ export default function Navbar() {
   const selectedSayr: Sayr | null = selectedMaqam && maqamSayrId ? selectedMaqam.getSuyūr().find((sayr) => sayr.id === maqamSayrId) || null : null;
 
   const selectedSayrSource = selectedSayr ? sources.find((source) => source.getId() === selectedSayr.sourceId) : null;
+
+  // Calculate total modulations for the selected maqam
+  let totalModulations = 0;
+  if (selectedMaqam) {
+    const transposition = selectedMaqam.convertToMaqamTransposition();
+    const modulations = getModulations(transposition);
+    totalModulations =
+      (modulations?.hopsFromOne?.length || 0) +
+      (modulations?.hopsFromThree?.length || 0) +
+      (modulations?.hopsFromThree2p?.length || 0) +
+      (modulations?.hopsFromFour?.length || 0) +
+      (modulations?.hopsFromFive?.length || 0) +
+      (modulations?.hopsFromSix?.length || 0);
+  }
 
   return (
     <>
@@ -207,7 +222,7 @@ export default function Navbar() {
               onClick={() => setSelectedMenu("modulation")}
               disabled={!selectedMaqam}
             >
-              Intiqalat
+              Intiqālāt{selectedMaqam ? ` (${totalModulations})` : ""}
             </button>
           
           <button
