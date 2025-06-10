@@ -509,7 +509,7 @@ export default function MaqamTranspositions() {
                             }
                           }
                           setSelectedCells(newSelectedCells);
-                          const transposition: MaqamTransposition = {
+                          const transposition: MaqamTransposition = { //todo make this as a useeffect
                             name: `${selectedMaqam.getName()} al-${ascendingDetails[0].noteName} (${getEnglishNoteName(
                               ascendingDetails[0].noteName
                             )})`,

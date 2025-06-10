@@ -12,7 +12,7 @@ import TransliteratedNoteName, { TransliteratedNoteNameOctaveOne, Transliterated
 import detectPitchClassType from "@/functions/detectPitchClassType";
 import convertPitchClass, { shiftPitchClass, frequencyToMidiNoteNumber } from "@/functions/convertPitchClass";
 import { octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames, octaveThreeNoteNames, octaveFourNoteNames } from "@/models/NoteName";
-import Maqam, { MaqamTransposition, Sayr } from "@/models/Maqam";
+import Maqam, { MaqamTransposition, Sayr, MaqamModulations } from "@/models/Maqam";
 import getNoteNamesUsedInTuningSystem from "@/functions/getNoteNamesUsedInTuningSystem";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import midiNumberToNoteName from "@/functions/midiToNoteNumber";
@@ -22,6 +22,8 @@ import Article from "@/models/bibliography/Article";
 import Pattern, { NoteDuration, reversePatternNotes } from "@/models/Pattern";
 import romanToNumber from "@/functions/romanToNumber";
 import getFirstNoteName from "@/functions/getFirstNoteName";
+import { getMaqamTranspositions } from "@/functions/transpose";
+import shawwaMapping from "@/functions/shawwaMapping";
 
 type InputMode = "tuningSystem" | "selection";
 type OutputMode = "mute" | "waveform" | "midi";
@@ -126,6 +128,7 @@ interface AppContextInterface {
   patterns: Pattern[];
   setPatterns: React.Dispatch<React.SetStateAction<Pattern[]>>;
   setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+  getModulations: (maqamTransposition: MaqamTransposition) => MaqamModulations;
 }
 
 const AppContext = createContext<AppContextInterface | null>(null);
@@ -936,6 +939,86 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     setSelectedCells(newCells);
   };
 
+  const getModulations = (maqamTransposition: MaqamTransposition): MaqamModulations => {
+    const hopsFromOne: MaqamTransposition[] = []
+    const hopsFromThree: MaqamTransposition[] = []
+    const hopsFromThree2p: MaqamTransposition[] = []
+    const hopsFromFour: MaqamTransposition[] = []
+    const hopsFromFive: MaqamTransposition[] = []
+    const hopsFromSix: MaqamTransposition[] = []
+
+    let check2p = false;
+    let checkSixth = false;
+
+    const shawwaList = [...octaveOneNoteNames, ...octaveTwoNoteNames].filter((noteName) => shawwaMapping(noteName) !== "/");
+
+    const firstDegreeNoteName = maqamTransposition.ascendingNoteNames[0];
+    const firstDegreeShawwaIndex = shawwaList.findIndex((noteName) => noteName === firstDegreeNoteName);
+
+    const secondDegreeNoteName = maqamTransposition.ascendingNoteNames[1];
+    const secondDegreeShawwaIndex = shawwaList.findIndex((noteName) => noteName === secondDegreeNoteName);
+
+    const thirdDegreeNoteName = maqamTransposition.ascendingNoteNames[2];
+    const thirdDegreeCellDetailsIndex = allCellDetails.findIndex((cd) => cd.noteName === thirdDegreeNoteName);
+
+    let noteName2p = "";
+
+    const numberOfPitchClasses = selectedTuningSystem?.getPitchClasses().length || 0;
+
+    const slice = allCellDetails.slice(numberOfPitchClasses, thirdDegreeCellDetailsIndex + 1).reverse();
+
+    for (const cellDetails of slice) {
+      if (shawwaMapping(cellDetails.noteName) === "2p") {
+        noteName2p = cellDetails.noteName
+        const first2pBeforeShawwaIndex = shawwaList.findIndex((noteName) => noteName === noteName2p);
+
+        if (first2pBeforeShawwaIndex - firstDegreeShawwaIndex === 6 && first2pBeforeShawwaIndex - secondDegreeShawwaIndex === 2) check2p = true;
+        break;
+      }
+    }
+
+    const sixthDegreeNoteName = maqamTransposition.ascendingNoteNames[5];
+    const sixthDegreeCellDetailsIndex = shawwaList.findIndex((noteName) => noteName === sixthDegreeNoteName);
+
+    if ((sixthDegreeCellDetailsIndex - firstDegreeShawwaIndex === 16 || sixthDegreeCellDetailsIndex - firstDegreeShawwaIndex === 17) && shawwaMapping(sixthDegreeNoteName) === "n") checkSixth = true;
+
+
+    for (const maqam of maqamat) {
+      if (!checkIfMaqamIsSelectable(maqam)) continue
+
+      const transpositions: MaqamTransposition[] = JSON.stringify(maqam.getAscendingNoteNames()) !== JSON.stringify(maqamTransposition.ascendingNoteNames) ? [maqam.convertToMaqamTransposition()] : [];
+
+      getMaqamTranspositions(allCellDetails, maqam).forEach((sequence) => {
+        if (JSON.stringify(maqam.getAscendingNoteNames()) === JSON.stringify(sequence.ascendingSequence.map((cellDetails) => cellDetails.noteName))) return;
+        transpositions.push(
+          {
+            name: maqam.getName() + " al-" + sequence.ascendingSequence[0].noteName,
+            ascendingNoteNames: sequence.ascendingSequence.map((cellDetails) => cellDetails.noteName),
+            descendingNoteNames: sequence.descendingSequence.map((cellDetails) => cellDetails.noteName),
+          }
+        )
+      })
+
+      for (const transposition of transpositions) {
+        if (transposition.ascendingNoteNames[0] === maqamTransposition.ascendingNoteNames[0]) hopsFromOne.push(transposition);
+        if (transposition.ascendingNoteNames[0] === maqamTransposition.ascendingNoteNames[3] && shawwaMapping(maqamTransposition.ascendingNoteNames[3]) !== "/") hopsFromFour.push(transposition);
+        if (transposition.ascendingNoteNames[0] === maqamTransposition.ascendingNoteNames[4] && shawwaMapping(maqamTransposition.ascendingNoteNames[4]) !== "/") hopsFromFive.push(transposition);
+        if (transposition.ascendingNoteNames[0] === maqamTransposition.ascendingNoteNames[2] && shawwaMapping(maqamTransposition.ascendingNoteNames[2]) !== "/") hopsFromThree.push(transposition);
+        if (check2p && transposition.ascendingNoteNames[0] === noteName2p) hopsFromThree2p.push(transposition);
+        if (checkSixth && transposition.ascendingNoteNames[0] === maqamTransposition.ascendingNoteNames[5]) hopsFromSix.push(transposition);
+      }
+    }
+
+    return {
+      hopsFromOne,
+      hopsFromThree,
+      hopsFromThree2p,
+      hopsFromFour,
+      hopsFromFive,
+      hopsFromSix,
+    }
+  }
+
   const handleUrlParams = ({
     tuningSystemId,
     jinsId,
@@ -1038,6 +1121,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         patterns,
         setPatterns,
         setRefresh,
+        getModulations
       }}
     >
       {children}

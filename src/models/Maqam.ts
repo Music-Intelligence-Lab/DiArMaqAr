@@ -75,6 +75,16 @@ export default class Maqam {
 
     return true;
   }
+
+
+  convertToMaqamTransposition(): MaqamTransposition {
+    return {
+      name: this.name,
+      ascendingNoteNames: this.ascendingNoteNames,
+      descendingNoteNames: this.descendingNoteNames,
+    };
+  }
+  
   createMaqamWithNewSuyūr(newSuyūr: Sayr[]): Maqam {
     return new Maqam(
       this.id,
@@ -124,4 +134,13 @@ export interface MaqamTransposition {
   name: string;
   ascendingNoteNames: TransliteratedNoteName[];
   descendingNoteNames: TransliteratedNoteName[];
+}
+
+export interface MaqamModulations {
+  hopsFromOne: MaqamTransposition[];
+  hopsFromThree: MaqamTransposition[];
+  hopsFromThree2p: MaqamTransposition[];
+  hopsFromFour: MaqamTransposition[];
+  hopsFromFive: MaqamTransposition[];
+  hopsFromSix: MaqamTransposition[];
 }
