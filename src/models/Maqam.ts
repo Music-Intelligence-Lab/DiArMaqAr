@@ -143,4 +143,5 @@ export interface MaqamModulations {
   hopsFromFour: MaqamTransposition[];
   hopsFromFive: MaqamTransposition[];
   hopsFromSix: MaqamTransposition[];
+  noteName2p: string;
 }

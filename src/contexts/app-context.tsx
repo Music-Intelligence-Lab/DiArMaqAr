@@ -975,7 +975,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         if (first2pBeforeShawwaIndex - firstDegreeShawwaIndex === 6 && first2pBeforeShawwaIndex - secondDegreeShawwaIndex === 2) check2p = true;
         break;
       }
-    }
+    }    
 
     const sixthDegreeNoteName = maqamTransposition.ascendingNoteNames[5];
     const sixthDegreeCellDetailsIndex = shawwaList.findIndex((noteName) => noteName === sixthDegreeNoteName);
@@ -1016,6 +1016,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       hopsFromFour,
       hopsFromFive,
       hopsFromSix,
+      noteName2p, // add this line
     }
   }
 
