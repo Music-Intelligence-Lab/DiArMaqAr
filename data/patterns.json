@@ -164,5 +164,117 @@
         "noteDuration": "4n"
       }
     ]
+  },
+  {
+    "id": "OkpHgnG1bUbumAVYpPa8t",
+    "name": "Abdo Dagher 1",
+    "notes": [
+      {
+        "scaleDegree": "I",
+        "noteDuration": "4n"
+      },
+      {
+        "scaleDegree": "-I",
+        "noteDuration": "4n"
+      },
+      {
+        "scaleDegree": "I",
+        "noteDuration": "4n"
+      },
+      {
+        "scaleDegree": "II",
+        "noteDuration": "4n"
+      }
+    ]
+  },
+  {
+    "id": "O4e6UKPCDNwFbkJWnyZ3M",
+    "name": "All octaves test",
+    "notes": [
+      {
+        "scaleDegree": "-I",
+        "noteDuration": "4n"
+      },
+      {
+        "scaleDegree": "-II",
+        "noteDuration": "4n"
+      },
+      {
+        "scaleDegree": "-III",
+        "noteDuration": "4n"
+      },
+      {
+        "scaleDegree": "-IV",
+        "noteDuration": "4n"
+      },
+      {
+        "scaleDegree": "-V",
+        "noteDuration": "4n"
+      },
+      {
+        "scaleDegree": "-VI",
+        "noteDuration": "4n"
+      },
+      {
+        "scaleDegree": "-VII",
+        "noteDuration": "4n"
+      },
+      {
+        "scaleDegree": "I",
+        "noteDuration": "4n"
+      },
+      {
+        "scaleDegree": "II",
+        "noteDuration": "4n"
+      },
+      {
+        "scaleDegree": "III",
+        "noteDuration": "4n"
+      },
+      {
+        "scaleDegree": "IV",
+        "noteDuration": "4n"
+      },
+      {
+        "scaleDegree": "V",
+        "noteDuration": "4n"
+      },
+      {
+        "scaleDegree": "VI",
+        "noteDuration": "4n"
+      },
+      {
+        "scaleDegree": "VII",
+        "noteDuration": "4n"
+      },
+      {
+        "scaleDegree": "+I",
+        "noteDuration": "4n"
+      },
+      {
+        "scaleDegree": "+II",
+        "noteDuration": "4n"
+      },
+      {
+        "scaleDegree": "+III",
+        "noteDuration": "4n"
+      },
+      {
+        "scaleDegree": "+IV",
+        "noteDuration": "4n"
+      },
+      {
+        "scaleDegree": "+V",
+        "noteDuration": "4n"
+      },
+      {
+        "scaleDegree": "+VI",
+        "noteDuration": "4n"
+      },
+      {
+        "scaleDegree": "+VII",
+        "noteDuration": "4n"
+      }
+    ]
   }
 ]
