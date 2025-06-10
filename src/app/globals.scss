@@ -12,6 +12,7 @@
 @use "../styles/sources-list.scss";
 @use "../styles/patterns-manager.scss";
 @use "../styles/pitch-class-wheel.scss";
+@use "../styles/navigation-menu.scss";
 
 
 :root {
@@ -30,10 +31,6 @@ a {
   color: rgb($text, 75%);
   text-decoration: underline;
   transition: color 0.1s ease-in-out;
-
-  &:hover {
-    color: lighten($text, 100%);
-  }
 }
 
 body {
