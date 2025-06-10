@@ -9,10 +9,11 @@ import SettingsIcon from "@mui/icons-material/Settings";
 const SettingsCard = () => {
   const { soundSettings, setSoundSettings, clearSelections, midiInputs, midiOutputs, patterns, setRefresh } = useAppContext();
 
-  const { openSettings, setOpenSettings } = useMenuContext();
+  const { openSettings, setOpenSettings, openNavigation, setOpenNavigation } = useMenuContext();
 
   const togglePanel = () => {
     setOpenSettings((prev) => !prev);
+    if (openNavigation) setOpenNavigation(false);
   };
 
   const handleSoundSettingsChange = (paramName: keyof typeof soundSettings) => (_event: Event, newValue: number | number[]) => {

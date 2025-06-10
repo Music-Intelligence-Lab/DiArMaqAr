@@ -1,7 +1,8 @@
 @use "./variables" as *;
 
 .settings-open-button {
-  background-color: $primary;
+  position: relative;
+  background-color: transparent;
   color: #ffffff;
   border: none;
   border-radius: 10px;

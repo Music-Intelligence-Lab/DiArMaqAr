@@ -6,7 +6,7 @@ import { useAppContext } from "@/contexts/app-context";
 import { useMenuContext } from "@/contexts/menu-context";
 import { Sayr } from "@/models/Maqam";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
-
+import NavigationMenu from "./navigation-menu";
 export default function Navbar() {
   const { showAdminTabs, setShowAdminTabs, selectedMenu, setSelectedMenu } = useMenuContext();
   const {
@@ -66,7 +66,10 @@ export default function Navbar() {
       <nav className="navbar">
         <header className="navbar__top-bar">
           <div className="navbar__left-panel">
-            <div className="navbar__left-panel-icon" onClick={() => setShowAdminTabs(!showAdminTabs)}>
+          <div className="navbar__left-panel-menu-icon">
+            <NavigationMenu />
+          </div>
+            <div className="navbar__left-panel-admin" onClick={() => setShowAdminTabs(!showAdminTabs)}>
               {showAdminTabs ? "User Mode" : "Admin Mode"}
             </div>
           </div>

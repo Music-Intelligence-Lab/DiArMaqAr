@@ -5,6 +5,8 @@ import React, { createContext, useState, useContext, ReactNode } from "react";
 interface MenuContextInterface {
   showAdminTabs: boolean;
   setShowAdminTabs: React.Dispatch<React.SetStateAction<boolean>>;
+  openNavigation: boolean;
+  setOpenNavigation: React.Dispatch<React.SetStateAction<boolean>>;
   openSettings: boolean;
   setOpenSettings: React.Dispatch<React.SetStateAction<boolean>>;
   selectedMenu:
@@ -42,6 +44,7 @@ const MenuContext = createContext<MenuContextInterface | undefined>(undefined);
 
 export function MenuContextProvider({ children }: { children: ReactNode }) {
   const [showAdminTabs, setShowAdminTabs] = useState(false);
+  const [openNavigation, setOpenNavigation] = useState(false);
   const [openSettings, setOpenSettings] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState<
     | "tuningSystem"
@@ -63,6 +66,8 @@ export function MenuContextProvider({ children }: { children: ReactNode }) {
       value={{
         showAdminTabs,
         setShowAdminTabs,
+        openNavigation,
+        setOpenNavigation,
         openSettings,
         setOpenSettings,
         selectedMenu,

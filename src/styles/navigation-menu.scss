@@ -1,0 +1,53 @@
+@use "./variables" as *;
+
+.navigation-menu-open-button {
+  position: relative;
+  background-color: transparent;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  z-index: 10000;
+}
+
+.navigation-menu-card {
+  font-size: 18px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 300px;
+
+  transform: translateX(-130%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 9999;
+
+  &--open {
+    transform: translateX(0);
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 50px;
+    padding-top: $top-navbar-height;
+    color: black;
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+    background: $black ;
+    color: white;
+  }
+
+  &__link {
+    width: 100%;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: white;
+    font-weight: 500;
+
+    &:hover {
+      background-color: $primary;
+    }
+  }
+}
