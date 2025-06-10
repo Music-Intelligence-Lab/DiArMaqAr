@@ -38,42 +38,42 @@ export const octaveZeroNoteNames = [
   "nīm yegāh",
 ];
 export const octaveOneNoteNames = [
-  "yegāh",
-  "qarār nīm ḥiṣār",
+  "yegāh", // 0
+  "qarār nīm ḥiṣār", // 1
   "shūrī",
-  "qarār ḥiṣār",
-  "qarār tīk ḥiṣār/shūrī",
+  "qarār ḥiṣār", // 3
+  "qarār tīk ḥiṣār/shūrī", // 4
   "nīm ʿushayrān",
-  "ʿushayrān",
-  "nīm ʿajam ʿushayrān",
-  "ʿajam ʿushayrān",
+  "ʿushayrān", //6
+  "nīm ʿajam ʿushayrān", // 7
+  "ʿajam ʿushayrān", // 8
   "nairūz",
   "tīk ʿajam ʿushayrān",
-  "ʿirāq",
+  "ʿirāq", // 11
   "rahāwī",
-  "nīm kawasht",
-  "kawasht",
+  "nīm kawasht", // 13
+  "kawasht", // 14
   "tīk kawasht",
-  "rāst",
+  "rāst", // 16
   "tīk rāst",
-  "nīm zirguleh",
-  "zirguleh",
-  "tīk zirguleh",
-  "dūgāh",
-  "nīm kurdī/nahāwand",
+  "nīm zirguleh", // 18
+  "zirguleh", // 19
+  "tīk zirguleh", // 20
+  "dūgāh", // 21
+  "nīm kurdī/nahāwand", // 22
   "nahāwand",
-  "kurdī",
+  "kurdī", // 24
   "tīk kūrdī",
-  "segāh",
-  "nīm buselīk",
-  "buselīk/ʿushshāq",
+  "segāh", // 26
+  "nīm buselīk", // 27
+  "buselīk/ʿushshāq", // 28
   "tīk buselīk",
-  "chahargāh",
+  "chahargāh", // 30
   "tīk chahargāh",
-  "nīm ḥijāz",
+  "nīm ḥijāz", // 32
   "ṣabā",
-  "ḥijāz",
-  "tīk ḥijāz/ṣabā",
+  "ḥijāz", // 34
+  "tīk ḥijāz/ṣabā", // 35
   "nīm nawā",
 ];
 export const octaveTwoNoteNames = [
@@ -208,4 +208,13 @@ export type TransliteratedNoteNameOctaveFour = (typeof octaveFourNoteNames)[numb
 
 export function getNoteNameIndex(noteName: TransliteratedNoteName): number {
   return allNotes.indexOf(noteName);
+}
+
+export function getNoteNameIndexPerOctave(noteName: TransliteratedNoteName): number {
+  if (octaveZeroNoteNames.includes(noteName)) return octaveZeroNoteNames.indexOf(noteName);
+  if (octaveOneNoteNames.includes(noteName)) return octaveOneNoteNames.indexOf(noteName);
+  if (octaveTwoNoteNames.includes(noteName)) return octaveTwoNoteNames.indexOf(noteName);
+  if (octaveThreeNoteNames.includes(noteName)) return octaveThreeNoteNames.indexOf(noteName);
+  if (octaveFourNoteNames.includes(noteName)) return octaveFourNoteNames.indexOf(noteName);
+  return -1;
 }
