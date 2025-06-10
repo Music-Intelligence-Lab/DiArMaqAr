@@ -45,19 +45,18 @@ export default function Modulations() {
     }
   }, [modulatedMaqamTransposition]);
 
+  const totalModulations =
+    (modulations?.hopsFromOne?.length || 0) +
+    (modulations?.hopsFromThree?.length || 0) +
+    (modulations?.hopsFromThree2p?.length || 0) +
+    (modulations?.hopsFromFour?.length || 0) +
+    (modulations?.hopsFromFive?.length || 0) +
+    (modulations?.hopsFromSix?.length || 0);
+
   return (
     <div className="modulations__container">
-
       <div className="modulations__source-maqam-name">
-        {selectedMaqam?.getName()} ({selectedMaqam?.getAscendingNoteNames()[0]}/{getEnglishNoteName(selectedMaqam?.getAscendingNoteNames()[0]!)}) - {
-            (modulations?.hopsFromOne?.length || 0) +
-            (modulations?.hopsFromThree?.length || 0) +
-            (modulations?.hopsFromThree2p?.length || 0) +
-            (modulations?.hopsFromFour?.length || 0) +
-            (modulations?.hopsFromFive?.length || 0) +
-            (modulations?.hopsFromSix?.length || 0)
-          } modulation options
-        
+        {selectedMaqam?.getName()} ({selectedMaqam?.getAscendingNoteNames()[0]}/{getEnglishNoteName(selectedMaqam?.getAscendingNoteNames()[0]!)}) - {totalModulations} modulation options
       </div>
 
       {modulations &&

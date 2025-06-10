@@ -2535,5 +2535,33 @@
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": []
+  },
+  {
+    "id": "50",
+    "name": "maqām chahargāh/girkah",
+    "ascendingNoteNames": [
+      "chahargāh",
+      "nawā",
+      "nīm ḥuseinī",
+      "ʿajam",
+      "kurdān",
+      "muḥayyar",
+      "buzurk",
+      "mahurān"
+    ],
+    "descendingNoteNames": [
+      "mahurān",
+      "buzurk",
+      "muḥayyar",
+      "kurdān",
+      "ʿajam",
+      "nīm ḥuseinī",
+      "nawā",
+      "chahargāh"
+    ],
+    "suyūr": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
   }
 ]
