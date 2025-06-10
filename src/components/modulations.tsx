@@ -48,108 +48,245 @@ export default function Modulations() {
   return (
     <div className="modulations">
       {modulations && <div className="modulations__hops">
-        <h2>Modulations From Tonic: {modulatedMaqamTransposition?.ascendingNoteNames[0]}</h2>
-        <ul>
+        <h2>
+          Modulations From Tonic: {modulatedMaqamTransposition?.ascendingNoteNames[0]} ({modulations?.hopsFromOne ? modulations.hopsFromOne.length : 0})
+        </h2>
+        <div className="modulations__carousel">
+          <button
+            className="carousel-button carousel-button-prev"
+            onClick={() => {
+              const c = document.querySelector(".modulations__list-tonic");
+              if (c) c.scrollBy({ left: -670, behavior: "smooth" });
+            }}
+          >
+            ‹
+          </button>
+          <div className="modulations__list modulations__list-tonic">
             {[...modulations.hopsFromOne]
-            .sort((a, b) => a.name.localeCompare(b.name))
-            .map((hop, index) => (
-              <li
-              key={index}
-              onClick={() => {
-                setModulatedMaqamTransposition(hop);
-                setSelectedMaqamTransposition(hop);
-              }}
-              style={{ cursor: "pointer" }}
-              >
-              {hop.name}
-              </li>
-            ))}
-        </ul>
-        <h2>Modulations From Third: {modulatedMaqamTransposition?.ascendingNoteNames[2]}</h2>
-        <ul>
-          {[...modulations.hopsFromThree]
-            .sort((a, b) => a.name.localeCompare(b.name))
-            .map((hop, index) => (
-              <li
-          key={index}
-          onClick={() => {
-            setModulatedMaqamTransposition(hop);
-            setSelectedMaqamTransposition(hop);
-          }}
-          style={{ cursor: "pointer" }}
-              >
-          {hop.name}
-              </li>
-            ))}
-        </ul>
-        <h2>Modulations From Third </h2>
-        <ul>
-          {[...modulations.hopsFromThree2p]
-            .sort((a, b) => a.name.localeCompare(b.name))
-            .map((hop, index) => (
-              <li
-          key={index}
-          onClick={() => {
-            setModulatedMaqamTransposition(hop);
-            setSelectedMaqamTransposition(hop);
-          }}
-          style={{ cursor: "pointer" }}
-              >
-          {hop.name}
-              </li>
-            ))}
-        </ul>
-        <h2>Modulations From Fourth</h2>
-        <ul>
-          {[...modulations.hopsFromFour]
-            .sort((a, b) => a.name.localeCompare(b.name))
-            .map((hop, index) => (
-              <li
-          key={index}
-          onClick={() => {
-            setModulatedMaqamTransposition(hop);
-            setSelectedMaqamTransposition(hop);
-          }}
-          style={{ cursor: "pointer" }}
-              >
-          {hop.name}
-              </li>
-            ))}
-        </ul>
-        <h2>Modulations From Fifth</h2>
-        <ul>
-          {[...modulations.hopsFromFive]
-            .sort((a, b) => a.name.localeCompare(b.name))
-            .map((hop, index) => (
-              <li
-          key={index}
-          onClick={() => {
-            setModulatedMaqamTransposition(hop);
-            setSelectedMaqamTransposition(hop);
-          }}
-          style={{ cursor: "pointer" }}
-              >
-          {hop.name}
-              </li>
-            ))}
-        </ul>
-        <h2>Modulations From Sixth</h2>
-        <ul>
-          {[...modulations.hopsFromSix]
-            .sort((a, b) => a.name.localeCompare(b.name))
-            .map((hop, index) => (
-              <li
-          key={index}
-          onClick={() => {
-            setModulatedMaqamTransposition(hop);
-            setSelectedMaqamTransposition(hop);
-          }}
-          style={{ cursor: "pointer" }}
-              >
-          {hop.name}
-              </li>
-            ))}
-        </ul>
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map((hop, index) => (
+          <button
+            key={index}
+            className="modulations__item"
+            onClick={() => {
+              setModulatedMaqamTransposition(hop);
+              setSelectedMaqamTransposition(hop);
+            }}
+          >
+            {hop.name}
+          </button>
+              ))}
+          </div>
+          <button
+            className="carousel-button carousel-button-next"
+            onClick={() => {
+              const c = document.querySelector(".modulations__list-tonic");
+              if (c) c.scrollBy({ left: 520, behavior: "smooth" });
+            }}
+          >
+            ›
+          </button>
+        </div>
+        <h2>
+          Modulations From Third: {modulatedMaqamTransposition?.ascendingNoteNames[2]} (
+          {modulations?.hopsFromThree ? modulations.hopsFromThree.length : 0})
+        </h2>
+        <div className="modulations__carousel">
+          <button
+            className="carousel-button carousel-button-prev"
+            onClick={() => {
+              const c = document.querySelector(".modulations__list-third");
+              if (c) c.scrollBy({ left: -670, behavior: "smooth" });
+            }}
+          >
+            ‹
+          </button>
+          <div className="modulations__list modulations__list-third">
+            {[...modulations.hopsFromThree]
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map((hop, index) => (
+          <button
+            key={index}
+            className="modulations__item"
+            onClick={() => {
+              setModulatedMaqamTransposition(hop);
+              setSelectedMaqamTransposition(hop);
+            }}
+          >
+            {hop.name}
+          </button>
+              ))}
+          </div>
+          <button
+            className="carousel-button carousel-button-next"
+            onClick={() => {
+              const c = document.querySelector(".modulations__list-third");
+              if (c) c.scrollBy({ left: 520, behavior: "smooth" });
+            }}
+          >
+            ›
+          </button>
+        </div>
+        <h2>
+          Modulations From Alternative Third: {modulatedMaqamTransposition?.ascendingNoteNames[2]} (
+          {modulations?.hopsFromThree2p ? modulations.hopsFromThree2p.length : 0})
+        </h2>
+        <div className="modulations__carousel">
+          <button
+            className="carousel-button carousel-button-prev"
+            onClick={() => {
+              const c = document.querySelector(".modulations__list-third2p");
+              if (c) c.scrollBy({ left: -670, behavior: "smooth" });
+            }}
+          >
+            ‹
+          </button>
+          <div className="modulations__list modulations__list-third2p">
+            {[...modulations.hopsFromThree2p]
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map((hop, index) => (
+          <button
+            key={index}
+            className="modulations__item"
+            onClick={() => {
+              setModulatedMaqamTransposition(hop);
+              setSelectedMaqamTransposition(hop);
+            }}
+          >
+            {hop.name}
+          </button>
+              ))}
+          </div>
+          <button
+            className="carousel-button carousel-button-next"
+            onClick={() => {
+              const c = document.querySelector(".modulations__list-third2p");
+              if (c) c.scrollBy({ left: 520, behavior: "smooth" });
+            }}
+          >
+            ›
+          </button>
+        </div>
+        <h2>
+          Modulations From Fourth: {modulatedMaqamTransposition?.ascendingNoteNames[3]} (
+          {modulations?.hopsFromFour ? modulations.hopsFromFour.length : 0})
+        </h2>
+        <div className="modulations__carousel">
+          <button
+            className="carousel-button carousel-button-prev"
+            onClick={() => {
+              const c = document.querySelector(".modulations__list-four");
+              if (c) c.scrollBy({ left: -670, behavior: "smooth" });
+            }}
+          >
+            ‹
+          </button>
+          <div className="modulations__list modulations__list-four">
+            {[...modulations.hopsFromFour]
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map((hop, index) => (
+          <button
+            key={index}
+            className="modulations__item"
+            onClick={() => {
+              setModulatedMaqamTransposition(hop);
+              setSelectedMaqamTransposition(hop);
+            }}
+          >
+            {hop.name}
+          </button>
+              ))}
+          </div>
+          <button
+            className="carousel-button carousel-button-next"
+            onClick={() => {
+              const c = document.querySelector(".modulations__list-four");
+              if (c) c.scrollBy({ left: 520, behavior: "smooth" });
+            }}
+          >
+            ›
+          </button>
+        </div>
+        <h2>
+          Modulations From Fifth: {modulatedMaqamTransposition?.ascendingNoteNames[4]} (
+          {modulations?.hopsFromFive ? modulations.hopsFromFive.length : 0})
+        </h2>
+        <div className="modulations__carousel">
+          <button
+            className="carousel-button carousel-button-prev"
+            onClick={() => {
+              const c = document.querySelector(".modulations__list-five");
+              if (c) c.scrollBy({ left: -670, behavior: "smooth" });
+            }}
+          >
+            ‹
+          </button>
+          <div className="modulations__list modulations__list-five">
+            {[...modulations.hopsFromFive]
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map((hop, index) => (
+          <button
+            key={index}
+            className="modulations__item"
+            onClick={() => {
+              setModulatedMaqamTransposition(hop);
+              setSelectedMaqamTransposition(hop);
+            }}
+          >
+            {hop.name}
+          </button>
+              ))}
+          </div>
+          <button
+            className="carousel-button carousel-button-next"
+            onClick={() => {
+              const c = document.querySelector(".modulations__list-five");
+              if (c) c.scrollBy({ left: 520, behavior: "smooth" });
+            }}
+          >
+            ›
+          </button>
+        </div>
+        <h2>
+          Modulations From Sixth: {modulatedMaqamTransposition?.ascendingNoteNames[5]} (
+          {modulations?.hopsFromSix ? modulations.hopsFromSix.length : 0})
+        </h2>
+        <div className="modulations__carousel">
+          <button
+            className="carousel-button carousel-button-prev"
+            onClick={() => {
+              const c = document.querySelector(".modulations__list-six");
+              if (c) c.scrollBy({ left: -670, behavior: "smooth" });
+            }}
+          >
+            ‹
+          </button>
+          <div className="modulations__list modulations__list-six">
+            {[...modulations.hopsFromSix]
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map((hop, index) => (
+          <button
+            key={index}
+            className="modulations__item"
+            onClick={() => {
+              setModulatedMaqamTransposition(hop);
+              setSelectedMaqamTransposition(hop);
+            }}
+          >
+            {hop.name}
+          </button>
+              ))}
+          </div>
+          <button
+            className="carousel-button carousel-button-next"
+            onClick={() => {
+              const c = document.querySelector(".modulations__list-six");
+              if (c) c.scrollBy({ left: 520, behavior: "smooth" });
+            }}
+          >
+            ›
+          </button>
+        </div>
       </div>}
     </div>
   );

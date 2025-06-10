@@ -1,0 +1,114 @@
+@use "./variables" as *;
+.modulations {
+
+&__list {
+    width: 100%;
+    background-color: $black;
+    display: grid;
+    grid-template-columns: repeat(16, (minmax(250px, 1fr)));
+    grid-template-rows: repeat(3, auto);
+    gap: 10px;
+    height: 225px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    position: relative;
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    &::-webkit-scrollbar {
+      height: 6px;
+      position: relative;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: $primary;
+      cursor: pointer;
+      position: relative;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: $medium-grey;
+      cursor: pointer;
+      position: relative;
+    }
+  }
+
+    &__item {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    padding: 10px;
+    background-color: rgba($black, 0.3);
+    font-size: 14px;
+    color: $text;
+    cursor: pointer;
+    // box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    transition: 0.3s;
+
+    &_active {
+      background-color: rgba($primary, 0.4);
+
+      &:hover {
+        background-color: rgba($primary, 0.9);
+      }
+    }
+
+    &_selected {
+      background-color: $tertiary;
+
+      &:hover {
+        background-color: $tertiary;
+      }
+    }
+  }
+
+
+  &__carousel {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+
+    .carousel-button {
+      background: none;
+      border: none;
+      font-size: 30px;
+      cursor: pointer;
+      color: $text;
+      padding: 0px;
+
+      &:hover {
+        color: $tertiary;
+        transition: background-color 0.2s ease-in-out;
+      }
+
+    }
+
+    .carousel-button-prev,
+    .carousel-button-next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1;
+      height: calc(100% - 20px);
+      width: 25px;
+      background-color: $black;
+
+      &:hover {
+        color: $tertiary;
+        transition: color 0.1s ease-in-out;
+      }
+
+    }
+
+    .carousel-button-prev {
+      left: 0;
+    }
+
+    .carousel-button-next {
+      right: 0;
+    }
+  }
+}
