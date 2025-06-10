@@ -201,6 +201,15 @@ export default function Navbar() {
               Sayr Admin
             </button>
           )}
+          
+            <button
+              className={`navbar__bottom-bar-item ${selectedMenu === "modulation" ? "navbar__bottom-bar-item_selected" : ""}`}
+              onClick={() => setSelectedMenu("modulation")}
+              disabled={!selectedMaqam}
+            >
+              Intiqalat
+            </button>
+          
           <button
             className={`navbar__bottom-bar-item ${selectedMenu === "bibliography" ? "navbar__bottom-bar-item_selected" : ""}`}
             onClick={() => setSelectedMenu("bibliography")}

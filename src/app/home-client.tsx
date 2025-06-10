@@ -16,6 +16,7 @@ import PatternsManager from "@/components/patterns-manager";
 import JinsManager from "@/components/jins-manager";
 import MaqamManager from "@/components/maqam-manager";
 import PitchClassWheel from "@/components/pitch-class-wheel";
+import Modulations from "@/components/modulations";
 export default function HomeClient() {
   const {
     tuningSystems,
@@ -76,6 +77,7 @@ export default function HomeClient() {
       {(selectedMenu === "jins" || selectedMenu === "jins-admin") && selectedTuningSystem && <JinsTranspositions />}
       {selectedMenu === "sayr" && selectedMaqam && <SayrManager admin={false} />}
       {selectedMenu === "sayr-admin" && selectedMaqam && <SayrManager admin />}
+      {selectedMenu === "modulation" && selectedMaqam && <Modulations />}
       {selectedMenu === "bibliography" && <SourcesList />}
       {selectedMenu === "bibliography-admin" && <SourcesManager />}
       {selectedMenu === "pattern-admin" && <PatternsManager />}
