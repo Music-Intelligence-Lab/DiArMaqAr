@@ -17,13 +17,22 @@
     gap: 10px; // optional spacing between divs
     width: calc(100% / 6 - 20px); // 6 hops, each taking up 1/6th of the width minus some padding
     margin-right: 20px;
+    text-align: center;
+  }
+
+  &__wrapper-maqam-name { 
+  text-align: center;
+    font-size: 20px;
+    color: $text;
+    font-weight: 400;
+    margin-bottom: 30px;
   }
 
  &__source-maqam-name{
   text-align: center;
     font-size: 20px;
     color: $text;
-    font-weight: 600;
+    font-weight: 400;
     margin-bottom: 30px;
   }
   &__list {
