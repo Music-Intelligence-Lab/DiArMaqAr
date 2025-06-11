@@ -118,7 +118,7 @@ export default function Navbar() {
         </header>
         <div className="navbar__bottom-bar">
           <button
-            className={`navbar__bottom-bar-item ${selectedMenu === "tuningSystem" ? "navbar__bottom-bar-item_selected" : ""}`}
+            className={`navbar__bottom-bar-item ${selectedMenu === "tuningSystem" ? "navbar__bottom-bar-item_selected " : ""} ${selectedTuningSystem ? "navbar__bottom-bar-item_active" : ""}`}
             onClick={() => setSelectedMenu("tuningSystem")}
           >
             {selectedTuningSystem ? (
@@ -141,7 +141,7 @@ export default function Navbar() {
             </button>
           )}
           <button
-            className={`navbar__bottom-bar-item ${selectedMenu === "jins" ? "navbar__bottom-bar-item_selected" : ""}`}
+            className={`navbar__bottom-bar-item ${selectedMenu === "jins" ? "navbar__bottom-bar-item_selected" : ""} ${selectedJins ? "navbar__bottom-bar-item_active" : ""}`}
             onClick={() => setSelectedMenu("jins")}
             disabled={!selectedTuningSystem}
           >
@@ -168,7 +168,7 @@ export default function Navbar() {
             </button>
           )}
           <button
-            className={`navbar__bottom-bar-item ${selectedMenu === "maqam" ? "navbar__bottom-bar-item_selected" : ""}`}
+            className={`navbar__bottom-bar-item ${selectedMenu === "maqam" ? "navbar__bottom-bar-item_selected" : ""} ${selectedMaqam ? "navbar__bottom-bar-item_active" : ""}`}
             onClick={() => setSelectedMenu("maqam")}
             disabled={!selectedTuningSystem}
           >
@@ -198,7 +198,7 @@ export default function Navbar() {
             </button>
           )}
           <button
-            className={`navbar__bottom-bar-item ${selectedMenu === "sayr" ? "navbar__bottom-bar-item_selected" : ""}`}
+            className={`navbar__bottom-bar-item ${selectedMenu === "sayr" ? "navbar__bottom-bar-item_selected" : ""} ${selectedSayr ? "navbar__bottom-bar-item_active" : ""}`}
             onClick={() => setSelectedMenu("sayr")}
             disabled={!selectedMaqam}
           >

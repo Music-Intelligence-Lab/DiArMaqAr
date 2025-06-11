@@ -79,10 +79,18 @@
     }
 
     &_selected {
-      background-color: $primary;
+      background-color: $primary !important;
 
       &:hover {
-        background-color: $primary;
+        background-color: $primary !important;
+      }
+    }
+
+    &_active {
+      background-color: rgba($primary, 0.3);
+
+      &:hover {
+      background-color: rgba($primary, 0.5);
       }
     }
 
