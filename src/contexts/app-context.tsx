@@ -212,7 +212,6 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   useEffect(() => {
     const formattedTuningSystems = tuningSystemsData.map((data) => {
       return new TuningSystem(
-        data.id,
         data.titleEnglish,
         data.titleArabic || "",
         data.year,

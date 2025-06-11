@@ -21,7 +21,6 @@ export default class TuningSystem {
   private stringLength: number;
 
   constructor(
-    id: string,
     titleEnglish: string,
     titleArabic: string,
     year: string,
@@ -39,7 +38,7 @@ export default class TuningSystem {
     referenceFrequencies: { [noteName: string]: number },
     defaultReferenceFrequency: number
   ) {
-    this.id = id;
+    this.id = `${titleEnglish}-${year}-${creatorEnglish}`;
     this.titleEnglish = titleEnglish;
     this.titleArabic = titleArabic;
     this.year = year;

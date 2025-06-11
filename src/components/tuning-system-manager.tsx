@@ -16,7 +16,6 @@ import TransliteratedNoteName, {
   TransliteratedNoteNameOctaveTwo,
   getNoteNameIndex,
 } from "@/models/NoteName";
-import { nanoid } from "nanoid";
 
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { getEnglishNoteName, abjadNames } from "@/functions/noteNameMappings";
@@ -96,7 +95,6 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
   // MARK: States
   // Local state that mirrors the selected or “new” system’s fields
-  const [id, setId] = useState(nanoid());
   const [titleEnglish, setTitleEnglish] = useState("");
   const [titleArabic, setTitleArabic] = useState("");
   const [year, setYear] = useState("");
@@ -128,7 +126,6 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
   useEffect(() => {
     if (selectedTuningSystem) {
-      setId(selectedTuningSystem.getId());
       setTitleEnglish(selectedTuningSystem.getTitleEnglish());
       setTitleArabic(selectedTuningSystem.getTitleArabic());
       setYear(selectedTuningSystem.getYear());
@@ -218,7 +215,6 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
   // Clears the form for creating a new TuningSystem:
   const resetFormForNewSystem = () => {
-    setId(nanoid());
     setTitleEnglish("");
     setTitleArabic("");
     setYear("");
@@ -292,7 +288,6 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
     if (selectedTuningSystem) {
       const updated = new TuningSystem(
-        id,
         titleEnglish,
         titleArabic,
         year,
@@ -318,7 +313,6 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     } else {
       // Creating a new TuningSystem
       const newSystem = new TuningSystem(
-        id,
         titleEnglish,
         titleArabic,
         year,
