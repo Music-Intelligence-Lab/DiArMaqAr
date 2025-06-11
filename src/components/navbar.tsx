@@ -7,6 +7,7 @@ import { useMenuContext } from "@/contexts/menu-context";
 import { Sayr } from "@/models/Maqam";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import NavigationMenu from "./navigation-menu";
+import { octaveOneNoteNames } from "@/models/NoteName";
 export default function Navbar() {
   const { showAdminTabs, setShowAdminTabs, selectedMenu, setSelectedMenu } = useMenuContext();
   const {
@@ -28,6 +29,7 @@ export default function Navbar() {
     setSelectedIndices,
     setNoteNames,
     getModulations,
+    selectedIndices
   } = useAppContext();
 
   const rowRef = useRef<HTMLDivElement>(null);
@@ -124,7 +126,7 @@ export default function Navbar() {
                 <span className="navbar__bottom-bar-item_tab-title">
                   {selectedTuningSystem.getCreatorEnglish()} ({selectedTuningSystem.getYear()})
                 </span>
-                <span className="navbar__bottom-bar-item_tab-subtitle">{selectedTuningSystem.getTitleEnglish()}</span>
+                <span className="navbar__bottom-bar-item_tab-subtitle">{`${selectedTuningSystem.getTitleEnglish()} (${octaveOneNoteNames[selectedIndices[0]] ?? "none"})`}</span>
               </>
             ) : (
               "Tanghīm (Tuning Systems)"
