@@ -13,5 +13,7 @@ export default function romanToNumber(r: string) {
     XI: 11,
     XII: 12,
   };
+
+  if (r.startsWith("+") || r.startsWith("-")) return map[r.slice(1)] ?? 0;
   return map[r] ?? 0;
 }

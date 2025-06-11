@@ -576,7 +576,6 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
           if (scaleDegree !== "R") {
             const deg = romanToNumber(scaleDegree);
             let freqToPlay = extendedFrequencies[windowStart + deg - 1];
-
             if (scaleDegree.startsWith("-")) {
               // negative degree, e.g. "-II" → play the previous octave
               freqToPlay /= 2;
