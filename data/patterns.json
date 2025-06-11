@@ -5,27 +5,27 @@
     "notes": [
       {
         "scaleDegree": "I",
-        "noteDuration": "8n"
+        "noteDuration": "16n"
       },
       {
         "scaleDegree": "II",
-        "noteDuration": "8n"
+        "noteDuration": "16n"
       },
       {
         "scaleDegree": "III",
-        "noteDuration": "8n"
+        "noteDuration": "16n"
       },
       {
         "scaleDegree": "II",
-        "noteDuration": "8n"
+        "noteDuration": "16n"
       },
       {
         "scaleDegree": "III",
-        "noteDuration": "8n"
+        "noteDuration": "16n"
       },
       {
         "scaleDegree": "II",
-        "noteDuration": "8n"
+        "noteDuration": "16n"
       },
       {
         "scaleDegree": "III",
@@ -37,7 +37,7 @@
       },
       {
         "scaleDegree": "I",
-        "noteDuration": "8n"
+        "noteDuration": "16n"
       }
     ]
   },
@@ -174,16 +174,12 @@
         "noteDuration": "4n"
       },
       {
-        "scaleDegree": "-I",
-        "noteDuration": "4n"
+        "scaleDegree": "-VII",
+        "noteDuration": "8n"
       },
       {
         "scaleDegree": "I",
-        "noteDuration": "4n"
-      },
-      {
-        "scaleDegree": "II",
-        "noteDuration": "4n"
+        "noteDuration": "8n"
       }
     ]
   },

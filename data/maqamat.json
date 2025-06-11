@@ -593,24 +593,24 @@
     "id": "20",
     "name": "maqām huzām",
     "ascendingNoteNames": [
-      "ʿirāq",
-      "rāst",
-      "dūgāh",
-      "kurdī",
-      "ḥijāz",
+      "segāh",
+      "chahargāh",
       "nawā",
-      "ḥuseinī",
-      "awj"
+      "ḥiṣār",
+      "māhūr",
+      "kurdān",
+      "muḥayyar",
+      "buzurk"
     ],
     "descendingNoteNames": [
-      "awj",
-      "ḥuseinī",
+      "buzurk",
+      "muḥayyar",
+      "kurdān",
+      "māhūr",
+      "ḥiṣār",
       "nawā",
-      "ḥijāz",
-      "kurdī",
-      "dūgāh",
-      "rāst",
-      "ʿirāq"
+      "chahargāh",
+      "segāh"
     ],
     "suyūr": [],
     "commentsEnglish": "",
@@ -680,34 +680,6 @@
         ]
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "sourcePageReferences": []
-  },
-  {
-    "id": "23",
-    "name": "maqām rāst nawā",
-    "ascendingNoteNames": [
-      "nawā",
-      "ḥuseinī",
-      "awj",
-      "kurdān",
-      "muḥayyar",
-      "jawāb buselīk",
-      "jawāb nīm ḥijāz",
-      "saham/ramal tūtī"
-    ],
-    "descendingNoteNames": [
-      "saham/ramal tūtī",
-      "mahurān",
-      "jawāb buselīk",
-      "muḥayyar",
-      "kurdān",
-      "awj",
-      "ḥuseinī",
-      "nawā"
-    ],
-    "suyūr": [],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": []
