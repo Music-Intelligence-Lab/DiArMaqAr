@@ -8,14 +8,15 @@
   }
 
   &__header {
-    font-size: 16px;
     font-weight: 400;
+    margin-bottom: 20px;
   }
   &__hops {
     display: inline-flex; // makes each hop appear side by side
     flex-direction: column;
     gap: 10px; // optional spacing between divs
-    width: calc(100% / 6);
+    width: calc(100% / 6 - 20px); // 6 hops, each taking up 1/6th of the width minus some padding
+    margin-right: 20px;
   }
 
  &__source-maqam-name{
@@ -23,7 +24,7 @@
     font-size: 20px;
     color: $text;
     font-weight: 600;
-    margin-bottom: 10px;
+    margin-bottom: 30px;
   }
   &__list {
     width: 100%;

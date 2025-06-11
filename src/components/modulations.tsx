@@ -18,17 +18,22 @@ export default function Modulations() {
   const [modulatedMaqamTransposition, setModulatedMaqamTransposition] = useState<MaqamTransposition | null>(null);
   const [modulations, setModulations] = useState<MaqamModulations | null>(null);
 
+  // Store the source (original) selectedMaqamTransposition on mount
+  const [sourceMaqam, setSourceMaqam] = useState<MaqamTransposition | null>(null);
+
   useEffect(() => {
     if (selectedMaqam) {
       const transposition = selectedMaqam.convertToMaqamTransposition();
       setModulatedMaqamTransposition(transposition);
+      setSourceMaqam(transposition); // store source
       const modulationsData = getModulations(transposition);
       setModulations(modulationsData);
     } else {
       setModulatedMaqamTransposition(null);
+      setSourceMaqam(null);
       setModulations(null);
     }
-  }, []);
+  }, []); // only run on mount
 
   useEffect(() => {
     if (modulatedMaqamTransposition) {
@@ -55,7 +60,8 @@ export default function Modulations() {
   return (
     <div className="modulations__container">
       <div className="modulations__source-maqam-name">
-        {selectedMaqam?.getName()} ({selectedMaqam?.getAscendingNoteNames()[0]}/{getEnglishNoteName(selectedMaqam ? selectedMaqam.getAscendingNoteNames()[0] : "")}) - {totalModulations} modulation options
+        <span onClick={() => sourceMaqam && setModulatedMaqamTransposition(sourceMaqam)} style={{ cursor: "pointer" }}>
+          {selectedMaqam?.getName ? selectedMaqam.getName() : "Unknown"} ({selectedMaqam?.getAscendingNoteNames ? selectedMaqam.getAscendingNoteNames()[0] : "N/A"}/{getEnglishNoteName(selectedMaqam?.getAscendingNoteNames ? selectedMaqam.getAscendingNoteNames()[0]! : "")})</span> - {totalModulations} modulation options
       </div>
 
       {modulations &&
@@ -66,7 +72,7 @@ export default function Modulations() {
               <div className="modulations__hops">
 
                 <span className="modulations__header">
-                  Modulations From Tonic: <br/>
+                  Modulations from Tonic: <br/>
                   {modulatedMaqamTransposition?.ascendingNoteNames[0]} ({modulations?.hopsFromOne ? modulations.hopsFromOne.length : 0})
                 </span>
 
@@ -90,7 +96,7 @@ export default function Modulations() {
               <div className="modulations__hops">
 
                 <span className="modulations__header"> 
-                  Modulations From Third <br/>
+                  Modulations from Third: <br/>
                   {modulatedMaqamTransposition?.ascendingNoteNames[2]} ({modulations?.hopsFromThree ? modulations.hopsFromThree.length : 0})
                 </span>
                 {[...modulations.hopsFromThree]
@@ -112,7 +118,7 @@ export default function Modulations() {
 
               <div className="modulations__hops">
                 <span className="modulations__header">              
-                  Modulations From Alternative Third <br/>
+                  Modulations from Alternative Third: <br/>
                   {noteName2p} ({modulations?.hopsFromThree2p ? modulations.hopsFromThree2p.length : 0})
                 </span>
                 {[...modulations.hopsFromThree2p]
@@ -134,7 +140,7 @@ export default function Modulations() {
 
               <div className="modulations__hops">
                 <span className="modulations__header">              
-                  Modulations From Fourth <br/>
+                  Modulations from Fourth: <br/>
                   {modulatedMaqamTransposition?.ascendingNoteNames[3]} ({modulations?.hopsFromFour ? modulations.hopsFromFour.length : 0})
                 </span>
                 {[...modulations.hopsFromFour]
@@ -156,7 +162,7 @@ export default function Modulations() {
 
               <div className="modulations__hops">
                 <span className="modulations__header">
-                  Modulations From Fifth <br/>
+                  Modulations from Fifth: <br/>
                   {modulatedMaqamTransposition?.ascendingNoteNames[4]} ({modulations?.hopsFromFive ? modulations.hopsFromFive.length : 0})
                 </span>
 
@@ -179,7 +185,7 @@ export default function Modulations() {
 
               <div className="modulations__hops">
 <span className="modulations__header">
-                  Modulations From Sixth: <br/>
+                  Modulations from Sixth: <br/>
                   {modulatedMaqamTransposition?.ascendingNoteNames[5]} ({modulations?.hopsFromSix ? modulations.hopsFromSix.length : 0})
 </span>
 
