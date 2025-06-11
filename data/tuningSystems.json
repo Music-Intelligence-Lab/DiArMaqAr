@@ -2069,6 +2069,10 @@
       {
         "sourceId": "zQU1LvEwGBICtY09uE5Rj",
         "page": "336"
+      },
+      {
+        "sourceId": "GJwpuIRbQ8bxNFoA-FxWK",
+        "page": "80"
       }
     ],
     "creatorEnglish": "Cairo Congress Tuning Committee",
@@ -2077,29 +2081,29 @@
     "commentsArabic": "",
     "pitchClasses": [
       "10000",
-      "9724",
-      "9492",
-      "9166",
-      "8889",
-      "8707",
-      "8437",
-      "8148",
-      "8000",
-      "7777",
+      "9712",
+      "9487",
+      "9175",
+      "8910",
+      "8696",
+      "8445",
+      "8175",
+      "7978",
+      "7748",
       "7500",
-      "7291",
-      "7119",
-      "6913",
+      "7320",
+      "7111",
+      "6881",
       "6666",
-      "6530",
-      "6328",
-      "6111",
-      "5925",
-      "5769",
-      "5555",
-      "5454",
-      "5333",
-      "5142"
+      "6524",
+      "6310",
+      "6116",
+      "5940",
+      "5789",
+      "5580",
+      "5450",
+      "5320",
+      "5120"
     ],
     "noteNames": [
       [
@@ -2151,6 +2155,32 @@
         "jawāb awj",
         "jawāb māhūr",
         "jawāb tīk māhūr"
+      ],
+      [
+        "yegāh",
+        "qarār nīm ḥiṣār",
+        "qarār ḥiṣār",
+        "qarār tīk ḥiṣār/shūrī",
+        "ʿushayrān",
+        "nīm ʿajam ʿushayrān",
+        "ʿajam ʿushayrān",
+        "ʿirāq",
+        "nīm kawasht",
+        "kawasht",
+        "rāst",
+        "nīm zirguleh",
+        "zirguleh",
+        "tīk zirguleh",
+        "dūgāh",
+        "nīm kurdī/nahāwand",
+        "kurdī",
+        "segāh",
+        "nīm buselīk",
+        "buselīk/ʿushshāq",
+        "chahargāh",
+        "nīm ḥijāz",
+        "ḥijāz",
+        "tīk ḥijāz/ṣabā"
       ]
     ],
     "abjadNames": [
@@ -2206,7 +2236,8 @@
     "stringLength": 10000,
     "defaultReferenceFrequency": 261.6256,
     "referenceFrequencies": {
-      "rāst": 261.33
+      "rāst": 261.33,
+      "yegāh": 195.998
     }
   },
   {

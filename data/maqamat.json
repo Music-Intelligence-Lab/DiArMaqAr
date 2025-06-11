@@ -685,34 +685,6 @@
     "sourcePageReferences": []
   },
   {
-    "id": "22",
-    "name": "maqām rāst dūgāh",
-    "ascendingNoteNames": [
-      "dūgāh",
-      "buselīk/ʿushshāq",
-      "nīm ḥijāz",
-      "nawā",
-      "ḥuseinī",
-      "māhūr",
-      "shahnāz",
-      "muḥayyar"
-    ],
-    "descendingNoteNames": [
-      "muḥayyar",
-      "shahnāz",
-      "māhūr",
-      "ḥuseinī",
-      "nawā",
-      "nīm ḥijāz",
-      "buselīk/ʿushshāq",
-      "dūgāh"
-    ],
-    "suyūr": [],
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "sourcePageReferences": []
-  },
-  {
     "id": "23",
     "name": "maqām rāst nawā",
     "ascendingNoteNames": [
