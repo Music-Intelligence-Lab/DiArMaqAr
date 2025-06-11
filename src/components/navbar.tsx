@@ -29,7 +29,7 @@ export default function Navbar() {
     setSelectedIndices,
     setNoteNames,
     getModulations,
-    selectedIndices
+    selectedIndices,
   } = useAppContext();
 
   const rowRef = useRef<HTMLDivElement>(null);
@@ -118,7 +118,9 @@ export default function Navbar() {
         </header>
         <div className="navbar__bottom-bar">
           <button
-            className={`navbar__bottom-bar-item ${selectedMenu === "tuningSystem" ? "navbar__bottom-bar-item_selected " : ""} ${selectedTuningSystem ? "navbar__bottom-bar-item_active" : ""}`}
+            className={`navbar__bottom-bar-item ${selectedMenu === "tuningSystem" ? "navbar__bottom-bar-item_selected " : ""} ${
+              selectedTuningSystem ? "navbar__bottom-bar-item_active" : ""
+            }`}
             onClick={() => setSelectedMenu("tuningSystem")}
           >
             {selectedTuningSystem ? (
@@ -126,7 +128,9 @@ export default function Navbar() {
                 <span className="navbar__bottom-bar-item_tab-title">
                   {selectedTuningSystem.getCreatorEnglish()} ({selectedTuningSystem.getYear()})
                 </span>
-                <span className="navbar__bottom-bar-item_tab-subtitle">{`${selectedTuningSystem.getTitleEnglish()} (${octaveOneNoteNames[selectedIndices[0]] ?? "none"})`}</span>
+                <span className="navbar__bottom-bar-item_tab-subtitle">{`${selectedTuningSystem.getTitleEnglish()} (${
+                  octaveOneNoteNames[selectedIndices[0]] ?? "none"
+                })`}</span>
               </>
             ) : (
               "Tanghīm (Tuning Systems)"
@@ -141,7 +145,9 @@ export default function Navbar() {
             </button>
           )}
           <button
-            className={`navbar__bottom-bar-item ${selectedMenu === "jins" ? "navbar__bottom-bar-item_selected" : ""} ${selectedJins ? "navbar__bottom-bar-item_active" : ""}`}
+            className={`navbar__bottom-bar-item ${selectedMenu === "jins" ? "navbar__bottom-bar-item_selected" : ""} ${
+              selectedJins ? "navbar__bottom-bar-item_active" : ""
+            }`}
             onClick={() => setSelectedMenu("jins")}
             disabled={!selectedTuningSystem}
           >
@@ -168,7 +174,9 @@ export default function Navbar() {
             </button>
           )}
           <button
-            className={`navbar__bottom-bar-item ${selectedMenu === "maqam" ? "navbar__bottom-bar-item_selected" : ""} ${selectedMaqam ? "navbar__bottom-bar-item_active" : ""}`}
+            className={`navbar__bottom-bar-item ${selectedMenu === "maqam" ? "navbar__bottom-bar-item_selected" : ""} ${
+              selectedMaqam ? "navbar__bottom-bar-item_active" : ""
+            }`}
             onClick={() => setSelectedMenu("maqam")}
             disabled={!selectedTuningSystem}
           >
@@ -198,7 +206,9 @@ export default function Navbar() {
             </button>
           )}
           <button
-            className={`navbar__bottom-bar-item ${selectedMenu === "sayr" ? "navbar__bottom-bar-item_selected" : ""} ${selectedSayr ? "navbar__bottom-bar-item_active" : ""}`}
+            className={`navbar__bottom-bar-item ${selectedMenu === "sayr" ? "navbar__bottom-bar-item_selected" : ""} ${
+              selectedSayr ? "navbar__bottom-bar-item_active" : ""
+            }`}
             onClick={() => setSelectedMenu("sayr")}
             disabled={!selectedMaqam}
           >
