@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useAppContext } from "@/contexts/app-context";
 import Maqam from "@/models/Maqam";
 import { getMaqamTranspositions } from "@/functions/transpose";
@@ -34,6 +34,14 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
       setCommentsArabicLocal(selectedMaqam.getCommentsArabic());
     }
   }, [selectedMaqam]);
+
+  const maqamTranspositions = useMemo(() => {
+    const map = new Map<string, ReturnType<typeof getMaqamTranspositions>>();
+    maqamat.forEach((maqam) => {
+      map.set(maqam.getId(), getMaqamTranspositions(allCellDetails, maqam, true));
+    });
+    return map;
+  }, [maqamat, allCellDetails]);
 
   const numberOfPitchClasses = selectedTuningSystem ? selectedTuningSystem.getPitchClasses().length : 0;
 
@@ -134,20 +142,21 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
         </button>
         <div className="maqam-manager__list">
           {sortedMaqamat.map((maqam, idx) => {
-            const active = checkIfMaqamIsSelectable(maqam);
+            const selectable = checkIfMaqamIsSelectable(maqam);
+            const numberOfTranspositions = maqamTranspositions.get(maqam.getId())?.length || 0;
             return (
               <div
                 key={idx}
                 className={`maqam-manager__item ${maqam.getName() === selectedMaqam?.getName() ? "maqam-manager__item_selected " : ""}${
-                  active ? "maqam-manager__item_active" : ""
+                  selectable ? "maqam-manager__item_active" : ""
                 }`}
-                onClick={() => active && handleClickMaqam(maqam)}
+                onClick={() => selectable && handleClickMaqam(maqam)}
               >
                 <div className="maqam-manager__item-name">
                   <strong>{`${maqam.getName()}${!maqam.isMaqamSymmetric() ? "*" : ""}`}</strong>
-                  {active && (
+                  {selectable && (
                     <strong className="maqam-manager__item-name-transpositions">
-                      {`Transpositions: ${getMaqamTranspositions(allCellDetails, maqam, true).length}/${numberOfPitchClasses}`}
+                      {`Transpositions: ${numberOfTranspositions}/${numberOfPitchClasses}`}
                     </strong>
                   )}
                 </div>

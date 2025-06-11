@@ -2,7 +2,7 @@
 
 import { useAppContext } from "@/contexts/app-context";
 import Jins from "@/models/Jins";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { getJinsTranspositions } from "@/functions/transpose";
 import { updateAjnas } from "@/functions/update";
 import { SourcePageReference } from "@/models/bibliography/Source";
@@ -33,6 +33,14 @@ export default function JinsManager({ admin }: { admin: boolean }) {
       setCommentsArabicLocal(selectedJins.getCommentsArabic());
     }
   }, [selectedJins]);
+
+  const jinsTranspositions = useMemo(() => {
+      const map = new Map<string, ReturnType<typeof getJinsTranspositions>>();
+      ajnas.forEach((jins) => {
+        map.set(jins.getId(), getJinsTranspositions(allCellDetails, jins, true));
+      });
+      return map;
+    }, [ajnas, allCellDetails]);
 
   const sortedAjnas = [...ajnas].sort((a, b) => a.getName().localeCompare(b.getName()));
   const numberOfPitchClasses = selectedTuningSystem ? selectedTuningSystem.getPitchClasses().length : 0;
@@ -107,24 +115,25 @@ export default function JinsManager({ admin }: { admin: boolean }) {
             <p>No ajnas available.</p>
           ) : (
             sortedAjnas.map((jins, index) => {
-              const isJinsSelectable = checkIfJinsIsSelectable(jins);
+              const selectable = checkIfJinsIsSelectable(jins);
+              const numberOfTranspositions = jinsTranspositions.get(jins.getId())?.length || 0;
               return (
                 <div
                   key={index}
                   className={
                     "jins-manager__item " +
                     (jins.getName() === selectedJins?.getName() ? "jins-manager__item_selected " : "") +
-                    (isJinsSelectable ? "jins-manager__item_active" : "")
+                    (selectable ? "jins-manager__item_active" : "")
                   }
                   onClick={() => {
-                    if (isJinsSelectable) handleClickJins(jins);
+                    if (selectable) handleClickJins(jins);
                   }}
                 >
                   <div className="jins-manager__item-name">
                     <strong>{jins.getName()}</strong>
-                    {isJinsSelectable && (
+                    {selectable && (
                       <strong className="jins-manager__item-name-transpositions">
-                        {`Transpositions: ${getJinsTranspositions(allCellDetails, jins, true).length}/${numberOfPitchClasses}`}
+                        {`Transpositions: ${numberOfTranspositions}/${numberOfPitchClasses}`}
                       </strong>
                     )}
                   </div>
