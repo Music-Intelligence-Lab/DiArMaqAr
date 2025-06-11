@@ -1,10 +1,38 @@
 "use client";
-import React, { useEffect, useState, useRef } from "react";
-import { Cell, CellDetails, useAppContext } from "@/contexts/app-context";
-import { MaqamTransposition } from "@/models/Maqam";
-import { getIntervalPattern, getTranspositions, Interval, mergeTranspositions } from "@/functions/transpose";
+
+import React, { useEffect, useState, useRef, useMemo, memo } from "react";
+import { CellDetails, useAppContext } from "@/contexts/app-context";
+import { getIntervalPattern, getTranspositions, mergeTranspositions } from "@/functions/transpose";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
-import { JinsTransposition } from "@/models/Jins";
+
+interface WheelCellProps {
+  cell: CellDetails;
+  isSelected: boolean;
+  isActive: boolean;
+  isDescending: boolean;
+  isTonic: boolean;
+  onClick: () => void;
+}
+
+const WheelCell = memo<WheelCellProps>(
+  ({ cell, isSelected, isActive, isDescending, isTonic, onClick }) => {
+    let className = "pitch-class-wheel__cell";
+    if (isSelected) className += " pitch-class-wheel__cell_selected";
+    if (isDescending) className += " pitch-class-wheel__cell_descending";
+    if (isTonic) className += " pitch-class-wheel__cell_tonic";
+    if (isActive) className += " pitch-class-wheel__cell_active";
+
+    return (
+      <div className={className} onClick={onClick}>
+        <span className="pitch-class-wheel__cell-label">{cell.noteName.replace(/\//g, "/\u200B")}</span>
+      </div>
+    );
+  },
+  (prev, next) =>
+    prev.isSelected === next.isSelected && prev.isActive === next.isActive && prev.isDescending === next.isDescending && prev.isTonic === next.isTonic
+);
+
+WheelCell.displayName = "WheelCell";
 
 export default function PitchClassWheel() {
   const {
@@ -27,68 +55,104 @@ export default function PitchClassWheel() {
   const [grabbing, setGrabbing] = useState(false);
 
   useEffect(() => {
-    if (!rowRef.current) return;
     const container = rowRef.current;
-    const selectedEls = container.querySelectorAll<HTMLElement>(".pitch-class-wheel__cell_selected");
-    if (selectedEls.length === 0) return;
+    if (!container) return;
 
-    let minLeft = Infinity;
-    let maxRight = -Infinity;
+    const els = container.querySelectorAll<HTMLElement>(".pitch-class-wheel__cell_selected");
+    if (els.length === 0) return;
 
-    selectedEls.forEach((el) => {
-      const elLeft = el.offsetLeft;
-      const elRight = elLeft + el.offsetWidth;
-      if (elLeft < minLeft) minLeft = elLeft;
-      if (elRight > maxRight) maxRight = elRight;
+    let minLeft = Infinity,
+      maxRight = -Infinity;
+    els.forEach((el) => {
+      minLeft = Math.min(minLeft, el.offsetLeft);
+      maxRight = Math.max(maxRight, el.offsetLeft + el.offsetWidth);
     });
 
     const selectedCenter = (minLeft + maxRight) / 2;
-    const containerWidth = container.clientWidth;
-    const targetScrollLeft = selectedCenter - containerWidth / 2;
-
-    container.scrollTo({
-      left: targetScrollLeft,
-      behavior: "smooth",
-    });
+    const target = selectedCenter - container.clientWidth / 2;
+    container.scrollTo({ left: target, behavior: "smooth" });
   }, [selectedCellDetails]);
 
-  const jinsNoteNames = selectedJins ? selectedJins.getNoteNames() : [];
+  const jinsNoteNames = selectedJins?.getNoteNames() ?? [];
+  const filteredJinsTranspositions = useMemo<CellDetails[][]>(() => {
+    if (jinsNoteNames.length < 2) return [];
+    const jinsCells = allCellDetails.filter((c) => jinsNoteNames.includes(c.noteName));
+    const useRatio = ["fraction", "ratios"].includes(jinsCells[0].originalValueType);
+    const pattern = getIntervalPattern(jinsCells, useRatio);
+    return getTranspositions(allCellDetails, pattern, true, useRatio, centsTolerance);
+  }, [allCellDetails, jinsNoteNames, centsTolerance]);
 
-  let filteredJinsTranspositions: CellDetails[][] = [];
+  const filteredMaqamTranspositions = useMemo<{ ascendingSequence: CellDetails[]; descendingSequence: CellDetails[] }[]>(() => {
+    if (!selectedMaqam) return [];
+    const asc = selectedMaqam.getAscendingNoteNames();
+    const desc = selectedMaqam.getDescendingNoteNames();
+    if (asc.length < 2 || desc.length < 2) return [];
 
-  if (jinsNoteNames.length >= 2) {
-    const jinsCellDetails = allCellDetails.filter((cell) => jinsNoteNames.includes(cell.noteName));
+    const ascCells = allCellDetails.filter((c) => asc.includes(c.noteName));
+    const descCells = allCellDetails.filter((c) => desc.includes(c.noteName)).reverse();
+    const useRatio = ["fraction", "ratios"].includes(ascCells[0].originalValueType);
+    const ascPattern = getIntervalPattern(ascCells, useRatio);
+    const descPattern = getIntervalPattern(descCells, useRatio);
 
-    const valueType = jinsCellDetails[0].originalValueType;
-    const useRatio = valueType === "fraction" || valueType === "ratios";
+    const ascSeqs = getTranspositions(allCellDetails, ascPattern, true, useRatio, centsTolerance);
+    const descSeqs = getTranspositions(allCellDetails, descPattern, false, useRatio, centsTolerance);
 
-    const intervalPattern: Interval[] = getIntervalPattern(jinsCellDetails, useRatio);
+    return mergeTranspositions(ascSeqs, descSeqs);
+  }, [
+    allCellDetails,
+    selectedMaqam,
+    selectedMaqam?.getAscendingNoteNames().join(","),
+    selectedMaqam?.getDescendingNoteNames().join(","),
+    centsTolerance,
+  ]);
 
-    filteredJinsTranspositions = getTranspositions(allCellDetails, intervalPattern, true, useRatio, centsTolerance);
-  }
+  const cellsData = useMemo(() => {
+    return allCellDetails.map((cell) => {
+      const name = cell.noteName;
+      const isSelected = selectedCellDetails.some((c) => c.noteName === name);
+      const isActive = activeCells.some((c) => c.index === cell.index && c.octave === cell.octave);
 
-  const ascendingMaqamNoteNames = selectedMaqam ? selectedMaqam.getAscendingNoteNames() : [];
-  const descendingMaqamNoteNames = selectedMaqam ? selectedMaqam.getDescendingNoteNames() : [];
+      const isDescending = selectedMaqamTransposition
+        ? selectedMaqamTransposition.descendingNoteNames.includes(name) && !selectedMaqamTransposition.ascendingNoteNames.includes(name)
+        : selectedMaqam
+        ? selectedMaqam.getDescendingNoteNames().includes(name)
+        : false;
 
-  let filteredMaqamTranspositions: { ascendingSequence: CellDetails[]; descendingSequence: CellDetails[] }[] = [];
+      const isTonic =
+        filteredMaqamTranspositions.some((t) => t.ascendingSequence[0].noteName === name) ||
+        filteredJinsTranspositions.some((t) => t[0].noteName === name);
 
-  if (ascendingMaqamNoteNames.length >= 2 && descendingMaqamNoteNames.length >= 2) {
-    const ascendingMaqamCellDetails = allCellDetails.filter((cell) => ascendingMaqamNoteNames.includes(cell.noteName));
-    const descendingMaqamCellDetails = allCellDetails.filter((cell) => descendingMaqamNoteNames.includes(cell.noteName)).reverse();
+      const onClick = () => {
+        if (selectedMaqam && filteredMaqamTranspositions.length) {
+          const seq = filteredMaqamTranspositions.find((t) => t.ascendingSequence[0].noteName === name)!;
+          setSelectedCells(seq.ascendingSequence.map((cd) => ({ index: cd.index, octave: cd.octave })));
+          setSelectedMaqamTransposition({
+            name: `${selectedMaqam.getName()} al-${name} (${getEnglishNoteName(name)})`,
+            ascendingNoteNames: seq.ascendingSequence.map((cd) => cd.noteName),
+            descendingNoteNames: seq.descendingSequence.map((cd) => cd.noteName),
+          });
+        } else if (selectedJins && filteredJinsTranspositions.length) {
+          const seq = filteredJinsTranspositions.find((t) => t[0].noteName === name)!;
+          setSelectedCells(seq.map((cd) => ({ index: cd.index, octave: cd.octave })));
+          setSelectedJinsTransposition({
+            name: `${selectedJins.getName()} al-${name} (${getEnglishNoteName(name)})`,
+            noteNames: seq.map((cd) => cd.noteName),
+          });
+        }
+      };
 
-    const valueType = ascendingMaqamCellDetails[0].originalValueType;
-    const useRatio = valueType === "fraction" || valueType === "ratios";
-
-    const ascendingIntervalPattern: Interval[] = getIntervalPattern(ascendingMaqamCellDetails, useRatio);
-
-    const descendingIntervalPattern: Interval[] = getIntervalPattern(descendingMaqamCellDetails, useRatio);
-
-    const ascendingSequences: CellDetails[][] = getTranspositions(allCellDetails, ascendingIntervalPattern, true, useRatio, centsTolerance);
-
-    const descendingSequences: CellDetails[][] = getTranspositions(allCellDetails, descendingIntervalPattern, false, useRatio, centsTolerance);
-
-    filteredMaqamTranspositions = mergeTranspositions(ascendingSequences, descendingSequences);
-  }
+      return { cell, isSelected, isActive, isDescending, isTonic, onClick };
+    });
+  }, [
+    allCellDetails,
+    selectedCellDetails,
+    activeCells,
+    selectedMaqam,
+    selectedMaqamTransposition,
+    filteredMaqamTranspositions,
+    selectedJins,
+    filteredJinsTranspositions,
+  ]);
 
   return (
     <div
@@ -114,89 +178,20 @@ export default function PitchClassWheel() {
         if (!isDown.current || !rowRef.current) return;
         e.preventDefault();
         const x = e.pageX - rowRef.current.offsetLeft;
-        const walk = x - startX.current;
-        rowRef.current.scrollLeft = scrollLeftStart.current - walk;
+        rowRef.current.scrollLeft = scrollLeftStart.current - (x - startX.current);
       }}
     >
-      {allCellDetails.map((cell, index) => {
-        const cellNoteName = cell.noteName;
-        // if (index < allCellDetails.length - 1) {
-        //   const nextCell = allCellDetails[index + 1];
-        //   divWidth = (parseFloat(nextCell.cents) - parseFloat(cell.cents))*2;
-        // }
-        const isSelected = selectedCellDetails.find((selectedCell) => selectedCell.noteName === cellNoteName);
-        const isActive = activeCells.find((activeCell) => activeCell.index === cell.index && activeCell.octave == cell.octave);
-        const filteredMaqamTransposition = filteredMaqamTranspositions.find(
-          (filteredSequence) => filteredSequence.ascendingSequence[0].noteName === cellNoteName
-        );
-        const filteredJinsTransposition = filteredJinsTranspositions.find((transposition) => transposition[0].noteName === cellNoteName);
-        let isAscendingNoteName = false;
-        let isDescendingNoteName = false;
-        if (selectedMaqamTransposition) {
-          if (selectedMaqamTransposition.ascendingNoteNames.includes(cellNoteName)) isAscendingNoteName = true;
-          if (selectedMaqamTransposition.descendingNoteNames.includes(cellNoteName)) isDescendingNoteName = true;
-        } else if (selectedMaqam) {
-          if (selectedMaqam.getAscendingNoteNames().includes(cellNoteName)) isAscendingNoteName = true;
-          if (selectedMaqam.getDescendingNoteNames().includes(cellNoteName)) isDescendingNoteName = true;
-        }
-
-        let className = "pitch-class-wheel__cell";
-
-        if (isSelected) className += " pitch-class-wheel__cell_selected";
-        if (isDescendingNoteName && !isAscendingNoteName) className += " pitch-class-wheel__cell_descending";
-        if (filteredMaqamTransposition || filteredJinsTransposition) className += " pitch-class-wheel__cell_tonic";
-        if (isActive) className += " pitch-class-wheel__cell_active";
-
-        return (
-          <div
-            key={index}
-            className={className}
-            style={{ cursor: filteredMaqamTransposition || filteredJinsTransposition ? "pointer" : "" }}
-            onClick={() => {
-              if (selectedMaqam && filteredMaqamTransposition) {
-                const transpositionNoteNames = filteredMaqamTransposition.ascendingSequence.map((cell) => cell.noteName);
-
-                const newSelectedCells: Cell[] = [];
-
-                for (const cellDetails of allCellDetails) {
-                  if (transpositionNoteNames.includes(cellDetails.noteName)) {
-                    newSelectedCells.push({ index: cellDetails.index, octave: cellDetails.octave });
-                  }
-                }
-                setSelectedCells(newSelectedCells);
-                const transposition: MaqamTransposition = {
-                  name: `${selectedMaqam.getName()} al-${filteredMaqamTransposition.ascendingSequence[0].noteName} (${getEnglishNoteName(
-                    filteredMaqamTransposition.ascendingSequence[0].noteName
-                  )})`,
-                  ascendingNoteNames: filteredMaqamTransposition.ascendingSequence.map((cell) => cell.noteName),
-                  descendingNoteNames: filteredMaqamTransposition.descendingSequence.map((cell) => cell.noteName),
-                };
-                setSelectedMaqamTransposition(transposition);
-              } else if (selectedJins && filteredJinsTransposition) {
-                const transpositionNoteNames = filteredJinsTransposition.map((cell) => cell.noteName);
-
-                const newSelectedCells = [];
-
-                for (const cellDetails of allCellDetails) {
-                  if (transpositionNoteNames.includes(cellDetails.noteName)) {
-                    newSelectedCells.push({ index: cellDetails.index, octave: cellDetails.octave });
-                  }
-                }
-                setSelectedCells(newSelectedCells);
-                const transposition: JinsTransposition = {
-                  name: `${selectedJins.getName()} al-${filteredJinsTransposition[0].noteName} (${getEnglishNoteName(
-                    filteredJinsTransposition[0].noteName
-                  )})`,
-                  noteNames: filteredJinsTransposition.map((cell) => cell.noteName),
-                };
-                setSelectedJinsTransposition(transposition);
-              }
-            }}
-          >
-            <span className="pitch-class-wheel__cell-label">{cell.noteName.replace(/\//g, "/\u200B")}</span>
-          </div>
-        );
-      })}
+      {cellsData.map((c, i) => (
+        <WheelCell
+          key={i}
+          cell={c.cell}
+          isSelected={c.isSelected}
+          isActive={c.isActive}
+          isDescending={c.isDescending}
+          isTonic={c.isTonic}
+          onClick={c.onClick}
+        />
+      ))}
     </div>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { Cell, useAppContext } from "@/contexts/app-context";
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect } from "react";
 import { MaqamModulations, MaqamTransposition } from "@/models/Maqam";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 
@@ -32,7 +32,6 @@ export default function Modulations() {
 
   useEffect(() => {
     if (modulatedMaqamTransposition) {
-      const modulationsData = getModulations(modulatedMaqamTransposition);
       const newSelectedCells: Cell[] = [];
 
       for (const cellDetails of allCellDetails) {
@@ -56,7 +55,7 @@ export default function Modulations() {
   return (
     <div className="modulations__container">
       <div className="modulations__source-maqam-name">
-        {selectedMaqam?.getName()} ({selectedMaqam?.getAscendingNoteNames()[0]}/{getEnglishNoteName(selectedMaqam?.getAscendingNoteNames()[0]!)}) - {totalModulations} modulation options
+        {selectedMaqam?.getName()} ({selectedMaqam?.getAscendingNoteNames()[0]}/{getEnglishNoteName(selectedMaqam ? selectedMaqam.getAscendingNoteNames()[0] : "")}) - {totalModulations} modulation options
       </div>
 
       {modulations &&
