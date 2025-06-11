@@ -22,11 +22,11 @@ export default function MaqamTranspositions() {
     setSelectedMaqamTransposition,
   } = useAppContext();
 
-  const [highlightedNotes, setHighlightedNotes] = useState<{index: number, noteNames: string[]}>({ index: -1, noteNames: [] });
+  const [highlightedNotes, setHighlightedNotes] = useState<{ index: number; noteNames: string[] }>({ index: -1, noteNames: [] });
 
   const isCellHighlighted = (index: number, noteName: string): boolean => {
     return highlightedNotes.index === index && highlightedNotes.noteNames.includes(noteName);
-  }
+  };
 
   if (!selectedMaqam || !selectedTuningSystem) return null;
 
@@ -244,17 +244,17 @@ export default function MaqamTranspositions() {
             <th className="maqam-transpositions__row-header">Note Names </th>
             {ascendingMaqamCellDetails.map((cell, i) => (
               <React.Fragment key={i}>
-              {i !== 0 && <th className="maqam-transpositions__header-cell"></th>}
-              <th
-                className={
-                (!descendingNoteNames.includes(cell.noteName)
-                  ? "maqam-transpositions__header-cell_unique "
-                  : "maqam-transpositions__header-cell ") + 
-                (isCellHighlighted(0, cell.noteName) ? "maqam-transpositions__header-cell_highlighted" : "")
-                }
-              >
-                {cell.noteName + ` (${getEnglishNoteName(cell.noteName)})`}{" "}
-              </th>
+                {i !== 0 && <th className="maqam-transpositions__header-cell"></th>}
+                <th
+                  className={
+                    (!descendingNoteNames.includes(cell.noteName)
+                      ? "maqam-transpositions__header-cell_unique "
+                      : "maqam-transpositions__header-cell ") +
+                    (isCellHighlighted(0, cell.noteName) ? "maqam-transpositions__header-cell_highlighted" : "")
+                  }
+                >
+                  {cell.noteName + ` (${getEnglishNoteName(cell.noteName)})`}{" "}
+                </th>
               </React.Fragment>
             ))}
           </tr>
@@ -317,29 +317,31 @@ export default function MaqamTranspositions() {
             {ascendingMaqamJinsIntervals.map((pat, i) => (
               <React.Fragment key={i}>
                 <th className="maqam-transpositions__header-cell" colSpan={2}>
-                  {pat.jins?.getName()}
-                  {pat.jins && <button
-                    className="maqam-transpositions__jins-select-button"
-                    onClick={() => {
-                      const noteNames = ascendingMaqamCellDetails.slice(i, i + pat.intervalPattern.length).map((cell) => cell.noteName);
-
-                      const newSelectedCells: Cell[] = [];
-
-                      for (const cellDetails of allCellDetails) {
-                        if (noteNames.includes(cellDetails.noteName)) {
-                          newSelectedCells.push({ index: cellDetails.index, octave: cellDetails.octave });
-                        }
-                      }
-                      setSelectedCells(newSelectedCells);
-                    }}
-                    onMouseEnter={() => {
-                      const noteNames = ascendingMaqamCellDetails.slice(i, i + pat.intervalPattern.length).map((cell) => cell.noteName);
-                      setHighlightedNotes({index: 0, noteNames});
-                    }}
-                    onMouseLeave={() => setHighlightedNotes({index: -1, noteNames: []})}
-                  >
-                    Select
-                  </button>}
+                  {pat.jins && (
+                    <>
+                      {pat.jins.getName()}
+                      <button
+                        className="maqam-transpositions__jins-button"
+                        onClick={() => {
+                          const frequencies = ascendingMaqamCellDetails
+                            .slice(i, i + pat.intervalPattern.length)
+                            .map((cell) => parseInt(cell.frequency));
+                          playSequence(frequencies);
+                        }}
+                      >
+                        Play
+                      </button>
+                      <button
+                        className="maqam-transpositions__jins-button"
+                        onClick={() => {
+                          const noteNames = ascendingMaqamCellDetails.slice(i, i + pat.intervalPattern.length).map((cell) => cell.noteName);
+                          setHighlightedNotes({ index: 0, noteNames });
+                        }}
+                      >
+                        Highlight
+                      </button>
+                    </>
+                  )}
                 </th>
               </React.Fragment>
             ))}
@@ -381,17 +383,17 @@ export default function MaqamTranspositions() {
 
             {descendingMaqamCellDetails.map((cell, i) => (
               <React.Fragment key={i}>
-              {i !== 0 && <th className="maqam-transpositions__header-cell"></th>}
-              <th
-                className={
-                (!ascendingNoteNames.includes(cell.noteName)
-                  ? "maqam-transpositions__header-cell_unique "
-                  : "maqam-transpositions__header-cell ")
-                  + (isCellHighlighted(0.5, cell.noteName) ? "maqam-transpositions__header-cell_highlighted" : "")
-                }
-              >
-                {cell.noteName + ` (${getEnglishNoteName(cell.noteName)})`}{" "}
-              </th>
+                {i !== 0 && <th className="maqam-transpositions__header-cell"></th>}
+                <th
+                  className={
+                    (!ascendingNoteNames.includes(cell.noteName)
+                      ? "maqam-transpositions__header-cell_unique "
+                      : "maqam-transpositions__header-cell ") +
+                    (isCellHighlighted(0.5, cell.noteName) ? "maqam-transpositions__header-cell_highlighted" : "")
+                  }
+                >
+                  {cell.noteName + ` (${getEnglishNoteName(cell.noteName)})`}{" "}
+                </th>
               </React.Fragment>
             ))}
           </tr>
@@ -454,29 +456,31 @@ export default function MaqamTranspositions() {
             {descendingMaqamJinsIntervals.map((pat, i) => (
               <React.Fragment key={i}>
                 <th className="maqam-transpositions__header-cell" colSpan={2}>
-                  {pat.jins?.getName()}{" "}
-                  {pat.jins && <button
-                    className="maqam-transpositions__jins-select-button"
-                    onClick={() => {
-                      const noteNames = descendingMaqamCellDetails.slice(i, i + pat.intervalPattern.length).map((cell) => cell.noteName);
-
-                      const newSelectedCells: Cell[] = [];
-
-                      for (const cellDetails of allCellDetails) {
-                        if (noteNames.includes(cellDetails.noteName)) {
-                          newSelectedCells.push({ index: cellDetails.index, octave: cellDetails.octave });
-                        }
-                      }
-                      setSelectedCells(newSelectedCells);
-                    }}
-                    onMouseEnter={() => {
-                      const noteNames = descendingMaqamCellDetails.slice(i, i + pat.intervalPattern.length).map((cell) => cell.noteName);
-                      setHighlightedNotes({index: 0.5, noteNames});
-                    }}
-                    onMouseLeave={() => setHighlightedNotes({index: -1, noteNames: []})}
-                  >
-                    Select
-                  </button>}
+                  {pat.jins && (
+                    <>
+                      {pat.jins.getName()}
+                      <button
+                        className="maqam-transpositions__jins-button"
+                        onClick={() => {
+                          const frequencies = descendingMaqamCellDetails
+                            .slice(i, i + pat.intervalPattern.length)
+                            .map((cell) => parseInt(cell.frequency));
+                          playSequence(frequencies);
+                        }}
+                      >
+                        Play
+                      </button>
+                      <button
+                        className="maqam-transpositions__jins-button"
+                        onClick={() => {
+                          const noteNames = descendingMaqamCellDetails.slice(i, i + pat.intervalPattern.length).map((cell) => cell.noteName);
+                          setHighlightedNotes({ index: 0.5, noteNames });
+                        }}
+                      >
+                        Highlight
+                      </button>
+                    </>
+                  )}
                 </th>
               </React.Fragment>
             ))}
@@ -680,28 +684,30 @@ export default function MaqamTranspositions() {
                     {ascendingMaqamJinsIntervals.map((pat, i) => (
                       <React.Fragment key={i}>
                         <th className="maqam-transpositions__header-cell" colSpan={2}>
-                          {pat.jins?.getName()}
                           {pat.jins && (
-                            <button
-                              className="maqam-transpositions__jins-select-button"
-                              onClick={() => {
-                                const noteNames = ascendingDetails.slice(i, i + pat.intervalPattern.length).map((cell) => cell.noteName);
-                                const newSelectedCells: Cell[] = [];
-                                for (const cellDetails of allCellDetails) {
-                                  if (noteNames.includes(cellDetails.noteName)) {
-                                    newSelectedCells.push({ index: cellDetails.index, octave: cellDetails.octave });
-                                  }
-                                }
-                                setSelectedCells(newSelectedCells);
-                              }}
-                              onMouseEnter={() => {
-                                const noteNames = ascendingDetails.slice(i, i + pat.intervalPattern.length).map((cell) => cell.noteName);
-                                setHighlightedNotes({ index: row + 1, noteNames });
-                              }}
-                              onMouseLeave={() => setHighlightedNotes({ index: -1, noteNames: [] })}
-                            >
-                              Select
-                            </button>
+                            <>
+                              {pat.jins.getName()}
+                              <button
+                                className="maqam-transpositions__jins-button"
+                                onClick={() => {
+                                  const frequencies = ascendingDetails
+                                    .slice(i, i + pat.intervalPattern.length)
+                                    .map((cell) => parseInt(cell.frequency));
+                                  playSequence(frequencies);
+                                }}
+                              >
+                                Play
+                              </button>
+                              <button
+                                className="maqam-transpositions__jins-button"
+                                onClick={() => {
+                                  const noteNames = ascendingDetails.slice(i, i + pat.intervalPattern.length).map((cell) => cell.noteName);
+                                  setHighlightedNotes({ index: row + 1, noteNames });
+                                }}
+                              >
+                                Highlight
+                              </button>
+                            </>
                           )}
                         </th>
                       </React.Fragment>
@@ -815,28 +821,30 @@ export default function MaqamTranspositions() {
                     {descendingMaqamJinsIntervals.map((pat, i) => (
                       <React.Fragment key={i}>
                         <th className="maqam-transpositions__header-cell" colSpan={2}>
-                          {pat.jins?.getName()}
                           {pat.jins && (
-                            <button
-                              className="maqam-transpositions__jins-select-button"
-                              onClick={() => {
-                                const noteNames = descendingDetails.slice(i, i + pat.intervalPattern.length).map((cell) => cell.noteName);
-                                const newSelectedCells: Cell[] = [];
-                                for (const cellDetails of allCellDetails) {
-                                  if (noteNames.includes(cellDetails.noteName)) {
-                                    newSelectedCells.push({ index: cellDetails.index, octave: cellDetails.octave });
-                                  }
-                                }
-                                setSelectedCells(newSelectedCells);
-                              }}
-                              onMouseEnter={() => {
-                                const noteNames = descendingDetails.slice(i, i + pat.intervalPattern.length).map((cell) => cell.noteName);
-                                setHighlightedNotes({ index: row + 1.5, noteNames });
-                              }}
-                              onMouseLeave={() => setHighlightedNotes({ index: -1, noteNames: [] })}
-                            >
-                              Select
-                            </button>
+                            <>
+                              {pat.jins.getName()}
+                              <button
+                                className="maqam-transpositions__jins-button"
+                                onClick={() => {
+                                  const frequencies = descendingDetails
+                                    .slice(i, i + pat.intervalPattern.length)
+                                    .map((cell) => parseInt(cell.frequency));
+                                  playSequence(frequencies);
+                                }}
+                              >
+                                Play
+                              </button>
+                              <button
+                                className="maqam-transpositions__jins-button"
+                                onClick={() => {
+                                  const noteNames = descendingDetails.slice(i, i + pat.intervalPattern.length).map((cell) => cell.noteName);
+                                  setHighlightedNotes({ index: row + 1.5, noteNames });
+                                }}
+                              >
+                                Highlight
+                              </button>
+                            </>
                           )}
                         </th>
                       </React.Fragment>
