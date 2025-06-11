@@ -121,6 +121,10 @@
       background-color: rgba($primary, 0.5);
     }
 
+    &_highlighted {
+      background-color: rgba($secondary, 0.2) !important;
+    }
+
     &_scale-degrees {
       background-color: $medium-grey;
     }
@@ -158,6 +162,15 @@
     border-radius: 4px;
     resize: vertical;
     padding: 5px;
+  }
+
+  &__jins-select-button {
+    padding: 5px;
+    border-radius: 5px;
+    background-color: $primary;
+    color: white;
+    cursor: pointer;
+    font-size: 12px;
   }
 
   .maqam-transpositions__spacer {

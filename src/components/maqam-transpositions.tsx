@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Cell, CellDetails, useAppContext } from "@/contexts/app-context";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
@@ -21,6 +21,12 @@ export default function MaqamTranspositions() {
     ajnas,
     setSelectedMaqamTransposition,
   } = useAppContext();
+
+  const [highlightedNotes, setHighlightedNotes] = useState<{index: number, noteNames: string[]}>({ index: -1, noteNames: [] });
+
+  const isCellHighlighted = (index: number, noteName: string): boolean => {
+    return highlightedNotes.index === index && highlightedNotes.noteNames.includes(noteName);
+  }
 
   if (!selectedMaqam || !selectedTuningSystem) return null;
 
@@ -74,8 +80,8 @@ export default function MaqamTranspositions() {
 
   for (const jins of ajnas) {
     const jinsCellDetails = allCellDetails.filter((cell) => jins.getNoteNames().includes(cell.noteName));
-    const reverseJinsCellDetails = [...jinsCellDetails].reverse();
     if (jinsCellDetails.length !== jins.getNoteNames().length) continue;
+    const reverseJinsCellDetails = [...jinsCellDetails].reverse();
     const ascendingJinsIntervalPattern = getIntervalPattern(jinsCellDetails, useRatio);
     ascendingAjnasIntervals.push({ jins, intervalPattern: ascendingJinsIntervalPattern });
     const descendingJinsIntervalPattern = getIntervalPattern(reverseJinsCellDetails, useRatio);
@@ -236,28 +242,19 @@ export default function MaqamTranspositions() {
           {/* Ascending Note Names Row */}
           <tr>
             <th className="maqam-transpositions__row-header">Note Names </th>
-            <th
-              className={
-                !descendingNoteNames.includes(ascendingMaqamCellDetails[0].noteName)
-                  ? "maqam-transpositions__header-cell_unique"
-                  : "maqam-transpositions__header-cell"
-              }
-            >
-              {ascendingMaqamCellDetails[0].noteName + ` (${getEnglishNoteName(ascendingMaqamCellDetails[0].noteName)})`}{" "}
-            </th>
-
-            {ascendingIntervalPattern.map((pat, i) => (
+            {ascendingMaqamCellDetails.map((cell, i) => (
               <React.Fragment key={i}>
-                <th className="maqam-transpositions__header-cell"></th>
-                <th
-                  className={
-                    !descendingNoteNames.includes(ascendingMaqamCellDetails[i + 1].noteName)
-                      ? "maqam-transpositions__header-cell_unique"
-                      : "maqam-transpositions__header-cell"
-                  }
-                >
-                  {ascendingMaqamCellDetails[i + 1].noteName + ` (${getEnglishNoteName(ascendingMaqamCellDetails[i + 1].noteName)})`}{" "}
-                </th>
+              {i !== 0 && <th className="maqam-transpositions__header-cell"></th>}
+              <th
+                className={
+                (!descendingNoteNames.includes(cell.noteName)
+                  ? "maqam-transpositions__header-cell_unique "
+                  : "maqam-transpositions__header-cell ") + 
+                (isCellHighlighted(0, cell.noteName) ? "maqam-transpositions__header-cell_highlighted" : "")
+                }
+              >
+                {cell.noteName + ` (${getEnglishNoteName(cell.noteName)})`}{" "}
+              </th>
               </React.Fragment>
             ))}
           </tr>
@@ -321,6 +318,28 @@ export default function MaqamTranspositions() {
               <React.Fragment key={i}>
                 <th className="maqam-transpositions__header-cell" colSpan={2}>
                   {pat.jins?.getName()}
+                  {pat.jins && <button
+                    className="maqam-transpositions__jins-select-button"
+                    onClick={() => {
+                      const noteNames = ascendingMaqamCellDetails.slice(i, i + pat.intervalPattern.length).map((cell) => cell.noteName);
+
+                      const newSelectedCells: Cell[] = [];
+
+                      for (const cellDetails of allCellDetails) {
+                        if (noteNames.includes(cellDetails.noteName)) {
+                          newSelectedCells.push({ index: cellDetails.index, octave: cellDetails.octave });
+                        }
+                      }
+                      setSelectedCells(newSelectedCells);
+                    }}
+                    onMouseEnter={() => {
+                      const noteNames = ascendingMaqamCellDetails.slice(i, i + pat.intervalPattern.length).map((cell) => cell.noteName);
+                      setHighlightedNotes({index: 0, noteNames});
+                    }}
+                    onMouseLeave={() => setHighlightedNotes({index: -1, noteNames: []})}
+                  >
+                    Select
+                  </button>}
                 </th>
               </React.Fragment>
             ))}
@@ -360,28 +379,19 @@ export default function MaqamTranspositions() {
           <tr>
             <th className="maqam-transpositions__row-header">Note Names</th>
 
-            <th
-              className={
-                !ascendingNoteNames.includes(descendingMaqamCellDetails[0].noteName)
-                  ? "maqam-transpositions__header-cell_unique"
-                  : "maqam-transpositions__header-cell"
-              }
-            >
-              {descendingMaqamCellDetails[0].noteName + ` (${getEnglishNoteName(descendingMaqamCellDetails[0].noteName)})`}{" "}
-            </th>
-
-            {descendingIntervalPattern.map((pat, i) => (
+            {descendingMaqamCellDetails.map((cell, i) => (
               <React.Fragment key={i}>
-                <th className="maqam-transpositions__header-cell"></th>
-                <th
-                  className={
-                    !ascendingNoteNames.includes(descendingMaqamCellDetails[i + 1].noteName)
-                      ? "maqam-transpositions__header-cell_unique"
-                      : "maqam-transpositions__header-cell"
-                  }
-                >
-                  {descendingMaqamCellDetails[i + 1].noteName + ` (${getEnglishNoteName(descendingMaqamCellDetails[i + 1].noteName)})`}{" "}
-                </th>
+              {i !== 0 && <th className="maqam-transpositions__header-cell"></th>}
+              <th
+                className={
+                (!ascendingNoteNames.includes(cell.noteName)
+                  ? "maqam-transpositions__header-cell_unique "
+                  : "maqam-transpositions__header-cell ")
+                  + (isCellHighlighted(0.5, cell.noteName) ? "maqam-transpositions__header-cell_highlighted" : "")
+                }
+              >
+                {cell.noteName + ` (${getEnglishNoteName(cell.noteName)})`}{" "}
+              </th>
               </React.Fragment>
             ))}
           </tr>
@@ -444,7 +454,29 @@ export default function MaqamTranspositions() {
             {descendingMaqamJinsIntervals.map((pat, i) => (
               <React.Fragment key={i}>
                 <th className="maqam-transpositions__header-cell" colSpan={2}>
-                  {pat.jins?.getName()}
+                  {pat.jins?.getName()}{" "}
+                  {pat.jins && <button
+                    className="maqam-transpositions__jins-select-button"
+                    onClick={() => {
+                      const noteNames = descendingMaqamCellDetails.slice(i, i + pat.intervalPattern.length).map((cell) => cell.noteName);
+
+                      const newSelectedCells: Cell[] = [];
+
+                      for (const cellDetails of allCellDetails) {
+                        if (noteNames.includes(cellDetails.noteName)) {
+                          newSelectedCells.push({ index: cellDetails.index, octave: cellDetails.octave });
+                        }
+                      }
+                      setSelectedCells(newSelectedCells);
+                    }}
+                    onMouseEnter={() => {
+                      const noteNames = descendingMaqamCellDetails.slice(i, i + pat.intervalPattern.length).map((cell) => cell.noteName);
+                      setHighlightedNotes({index: 0.5, noteNames});
+                    }}
+                    onMouseLeave={() => setHighlightedNotes({index: -1, noteNames: []})}
+                  >
+                    Select
+                  </button>}
                 </th>
               </React.Fragment>
             ))}
@@ -481,7 +513,7 @@ export default function MaqamTranspositions() {
               const ascendingDetails = seq.ascendingSequence;
               const descendingDetails = seq.descendingSequence;
               const colCount = 2 + (ascendingDetails.length - 1) * 2;
-              const rowCount = 14;
+              const rowCount = 16;
 
               return (
                 <React.Fragment key={row}>
@@ -509,7 +541,8 @@ export default function MaqamTranspositions() {
                             }
                           }
                           setSelectedCells(newSelectedCells);
-                          const transposition: MaqamTransposition = { //todo make this as a useeffect
+                          const transposition: MaqamTransposition = {
+                            //todo make this as a useeffect
                             name: `${selectedMaqam.getName()} al-${ascendingDetails[0].noteName} (${getEnglishNoteName(
                               ascendingDetails[0].noteName
                             )})`,
@@ -552,7 +585,7 @@ export default function MaqamTranspositions() {
 
                   {/* Ascending Scale Degrees Row */}
                   <tr>
-                    <td className="maqam-transpositions__asc-desc-column" rowSpan={6}>
+                    <td className="maqam-transpositions__asc-desc-column" rowSpan={7}>
                       ↗
                     </td>
                   </tr>
@@ -574,27 +607,18 @@ export default function MaqamTranspositions() {
                   {/* Ascending Note Names Row */}
                   <tr>
                     <th className="maqam-transpositions__row-header">Note Names </th>
-                    <th
-                      className={
-                        !descendingDetails.map((details) => details.noteName).includes(ascendingDetails[0].noteName)
-                          ? "maqam-transpositions__header-cell_unique"
-                          : "maqam-transpositions__header-cell"
-                      }
-                    >
-                      {ascendingDetails[0].noteName + ` (${getEnglishNoteName(ascendingDetails[0].noteName)})`}{" "}
-                    </th>
-
-                    {ascendingIntervalPattern.map((pat, i) => (
+                    {ascendingDetails.map((cell, i) => (
                       <React.Fragment key={i}>
-                        <th className="maqam-transpositions__header-cell"></th>
+                        {i !== 0 && <th className="maqam-transpositions__header-cell"></th>}
                         <th
                           className={
-                            !descendingDetails.map((details) => details.noteName).includes(ascendingDetails[i + 1].noteName)
-                              ? "maqam-transpositions__header-cell_unique"
-                              : "maqam-transpositions__header-cell"
+                            (!descendingDetails.map((details) => details.noteName).includes(cell.noteName)
+                              ? "maqam-transpositions__header-cell_unique "
+                              : "maqam-transpositions__header-cell ") +
+                            (isCellHighlighted(row + 1, cell.noteName) ? "maqam-transpositions__header-cell_highlighted" : "")
                           }
                         >
-                          {ascendingDetails[i + 1].noteName + ` (${getEnglishNoteName(ascendingDetails[i + 1].noteName)})`}{" "}
+                          {cell.noteName + ` (${getEnglishNoteName(cell.noteName)})`}{" "}
                         </th>
                       </React.Fragment>
                     ))}
@@ -652,12 +676,45 @@ export default function MaqamTranspositions() {
                     ))}
                   </tr>
                   <tr>
+                    <th className="maqam-transpositions__row-header">Ajnas</th>
+                    {ascendingMaqamJinsIntervals.map((pat, i) => (
+                      <React.Fragment key={i}>
+                        <th className="maqam-transpositions__header-cell" colSpan={2}>
+                          {pat.jins?.getName()}
+                          {pat.jins && (
+                            <button
+                              className="maqam-transpositions__jins-select-button"
+                              onClick={() => {
+                                const noteNames = ascendingDetails.slice(i, i + pat.intervalPattern.length).map((cell) => cell.noteName);
+                                const newSelectedCells: Cell[] = [];
+                                for (const cellDetails of allCellDetails) {
+                                  if (noteNames.includes(cellDetails.noteName)) {
+                                    newSelectedCells.push({ index: cellDetails.index, octave: cellDetails.octave });
+                                  }
+                                }
+                                setSelectedCells(newSelectedCells);
+                              }}
+                              onMouseEnter={() => {
+                                const noteNames = ascendingDetails.slice(i, i + pat.intervalPattern.length).map((cell) => cell.noteName);
+                                setHighlightedNotes({ index: row + 1, noteNames });
+                              }}
+                              onMouseLeave={() => setHighlightedNotes({ index: -1, noteNames: [] })}
+                            >
+                              Select
+                            </button>
+                          )}
+                        </th>
+                      </React.Fragment>
+                    ))}
+                    <th className="maqam-transpositions__header-cell"></th>
+                  </tr>
+                  <tr>
                     <td className="maqam-transpositions__spacer" colSpan={2 + (ascendingDetails.length - 1) * 2} />
                   </tr>
 
                   {/* Descending Scale Degrees Row */}
                   <tr>
-                    <td className="maqam-transpositions__asc-desc-column" rowSpan={6}>
+                    <td className="maqam-transpositions__asc-desc-column" rowSpan={7}>
                       ↘
                     </td>
                   </tr>
@@ -685,27 +742,18 @@ export default function MaqamTranspositions() {
                   <tr>
                     <th className="maqam-transpositions__row-header">Note Names</th>
 
-                    <th
-                      className={
-                        !ascendingDetails.map((details) => details.noteName).includes(descendingDetails[0].noteName)
-                          ? "maqam-transpositions__header-cell_unique"
-                          : "maqam-transpositions__header-cell"
-                      }
-                    >
-                      {descendingDetails[0].noteName + ` (${getEnglishNoteName(descendingDetails[0].noteName)})`}{" "}
-                    </th>
-
-                    {descendingIntervalPattern.map((pat, i) => (
+                    {descendingDetails.map((cell, i) => (
                       <React.Fragment key={i}>
-                        <th className="maqam-transpositions__header-cell"></th>
+                        {i !== 0 && <th className="maqam-transpositions__header-cell"></th>}
                         <th
                           className={
-                            !ascendingDetails.map((details) => details.noteName).includes(descendingDetails[i + 1].noteName)
-                              ? "maqam-transpositions__header-cell_unique"
-                              : "maqam-transpositions__header-cell"
+                            (!ascendingDetails.map((details) => details.noteName).includes(cell.noteName)
+                              ? "maqam-transpositions__header-cell_unique "
+                              : "maqam-transpositions__header-cell ") +
+                            (isCellHighlighted(row + 1.5, cell.noteName) ? "maqam-transpositions__header-cell_highlighted" : "")
                           }
                         >
-                          {descendingDetails[i + 1].noteName + ` (${getEnglishNoteName(descendingDetails[i + 1].noteName)})`}{" "}
+                          {cell.noteName + ` (${getEnglishNoteName(cell.noteName)})`}{" "}
                         </th>
                       </React.Fragment>
                     ))}
@@ -761,6 +809,39 @@ export default function MaqamTranspositions() {
                         </th>
                       </React.Fragment>
                     ))}
+                  </tr>
+                  <tr>
+                    <th className="maqam-transpositions__row-header">Ajnas</th>
+                    {descendingMaqamJinsIntervals.map((pat, i) => (
+                      <React.Fragment key={i}>
+                        <th className="maqam-transpositions__header-cell" colSpan={2}>
+                          {pat.jins?.getName()}
+                          {pat.jins && (
+                            <button
+                              className="maqam-transpositions__jins-select-button"
+                              onClick={() => {
+                                const noteNames = descendingDetails.slice(i, i + pat.intervalPattern.length).map((cell) => cell.noteName);
+                                const newSelectedCells: Cell[] = [];
+                                for (const cellDetails of allCellDetails) {
+                                  if (noteNames.includes(cellDetails.noteName)) {
+                                    newSelectedCells.push({ index: cellDetails.index, octave: cellDetails.octave });
+                                  }
+                                }
+                                setSelectedCells(newSelectedCells);
+                              }}
+                              onMouseEnter={() => {
+                                const noteNames = descendingDetails.slice(i, i + pat.intervalPattern.length).map((cell) => cell.noteName);
+                                setHighlightedNotes({ index: row + 1.5, noteNames });
+                              }}
+                              onMouseLeave={() => setHighlightedNotes({ index: -1, noteNames: [] })}
+                            >
+                              Select
+                            </button>
+                          )}
+                        </th>
+                      </React.Fragment>
+                    ))}
+                    <th className="maqam-transpositions__header-cell"></th>
                   </tr>
                   <tr>
                     <td className="maqam-transpositions__spacer" colSpan={2 + (ascendingDetails.length - 1) * 2} />
