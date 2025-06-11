@@ -18,28 +18,19 @@ interface WheelCellProps {
 const WheelCell = React.memo<WheelCellProps>(
   ({ cell, isSelected, isActive, isDescending, isTonic, onClick }) => {
     let className = "pitch-class-wheel__cell";
-    if (isSelected)   className += " pitch-class-wheel__cell_selected";
+    if (isSelected) className += " pitch-class-wheel__cell_selected";
     if (isDescending) className += " pitch-class-wheel__cell_descending";
-    if (isTonic)      className += " pitch-class-wheel__cell_tonic";
-    if (isActive)     className += " pitch-class-wheel__cell_active";
+    if (isTonic) className += " pitch-class-wheel__cell_tonic";
+    if (isActive) className += " pitch-class-wheel__cell_active";
 
     return (
-      <div
-        className={className}
-        onClick={onClick}
-        style={{ cursor: isTonic ? "pointer" : undefined }}
-      >
-        <span className="pitch-class-wheel__cell-label">
-          {cell.noteName.replace(/\//g, "/\u200B")}
-        </span>
+      <div className={className} onClick={onClick} style={{ cursor: isTonic ? "pointer" : undefined }}>
+        <span className="pitch-class-wheel__cell-label">{cell.noteName.replace(/\//g, "/\u200B")}</span>
       </div>
     );
   },
   (prev, next) =>
-    prev.isSelected   === next.isSelected   &&
-    prev.isActive     === next.isActive     &&
-    prev.isDescending === next.isDescending &&
-    prev.isTonic      === next.isTonic
+    prev.isSelected === next.isSelected && prev.isActive === next.isActive && prev.isDescending === next.isDescending && prev.isTonic === next.isTonic
 );
 
 WheelCell.displayName = "WheelCell";
@@ -117,16 +108,14 @@ export default function PitchClassWheel() {
     return mergeTranspositions(ascSequences, descSequences);
   }, [allCellDetails, selectedMaqam, centsTolerance]);
 
-   const wheelCells = useMemo(() => {
+  const wheelCells = useMemo(() => {
     return allCellDetails.map((cell) => {
       const note = cell.noteName;
-      const isSelected = selectedCellDetails.some(sc => sc.noteName === note);
-      const isActive   = activeCells.some(ac => ac.index === cell.index && ac.octave === cell.octave);
+      const isSelected = selectedCellDetails.some((sc) => sc.noteName === note);
+      const isActive = activeCells.some((ac) => ac.index === cell.index && ac.octave === cell.octave);
 
-      const jinsSeq  = filteredJinsTranspositions.find(seq => seq[0].noteName === note);
-      const maqamSeq = filteredMaqamTranspositions.find(
-        m => m.ascendingSequence[0].noteName === note
-      );
+      const jinsSeq = filteredJinsTranspositions.find((seq) => seq[0].noteName === note);
+      const maqamSeq = filteredMaqamTranspositions.find((m) => m.ascendingSequence[0].noteName === note);
 
       const isDescending = selectedMaqamTransposition
         ? selectedMaqamTransposition.descendingNoteNames.includes(note)
@@ -136,28 +125,24 @@ export default function PitchClassWheel() {
 
       const onClick = () => {
         if (maqamSeq && selectedMaqam) {
-          const names = maqamSeq.ascendingSequence.map(c => c.noteName);
-          const newCells: Cell[] = allCellDetails
-            .filter(c => names.includes(c.noteName))
-            .map(c => ({ index: c.index, octave: c.octave }));
+          const names = maqamSeq.ascendingSequence.map((c) => c.noteName);
+          const newCells: Cell[] = allCellDetails.filter((c) => names.includes(c.noteName)).map((c) => ({ index: c.index, octave: c.octave }));
           setSelectedCells(newCells);
           const trans: MaqamTransposition = {
             name: `${selectedMaqam.getName()} al-${note} (${getEnglishNoteName(note)})`,
-            ascendingNoteNames: maqamSeq.ascendingSequence.map(c => c.noteName),
-            descendingNoteNames: maqamSeq.descendingSequence.map(c => c.noteName),
+            ascendingNoteNames: maqamSeq.ascendingSequence.map((c) => c.noteName),
+            descendingNoteNames: maqamSeq.descendingSequence.map((c) => c.noteName),
           };
           setSelectedMaqamTransposition(trans);
           return;
         }
         if (jinsSeq && selectedJins) {
-          const names = jinsSeq.map(c => c.noteName);
-          const newCells = allCellDetails
-            .filter(c => names.includes(c.noteName))
-            .map(c => ({ index: c.index, octave: c.octave }));
+          const names = jinsSeq.map((c) => c.noteName);
+          const newCells = allCellDetails.filter((c) => names.includes(c.noteName)).map((c) => ({ index: c.index, octave: c.octave }));
           setSelectedCells(newCells);
           const trans: JinsTransposition = {
             name: `${selectedJins.getName()} al-${note} (${getEnglishNoteName(note)})`,
-            noteNames: jinsSeq.map(c => c.noteName),
+            noteNames: jinsSeq.map((c) => c.noteName),
           };
           setSelectedJinsTransposition(trans);
         }
@@ -203,8 +188,14 @@ export default function PitchClassWheel() {
         const x = e.pageX - rowRef.current.offsetLeft;
         rowRef.current.scrollLeft = scrollLeftStart.current - (x - startX.current);
       }}
-      onMouseUp={() => { isDown.current = false; setGrabbing(false); }}
-      onMouseLeave={() => { isDown.current = false; setGrabbing(false); }}
+      onMouseUp={() => {
+        isDown.current = false;
+        setGrabbing(false);
+      }}
+      onMouseLeave={() => {
+        isDown.current = false;
+        setGrabbing(false);
+      }}
     >
       {wheelCells.map(({ key, ...props }) => (
         <WheelCell key={key} {...props} />

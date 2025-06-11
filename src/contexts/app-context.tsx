@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useState, useEffect, useRef, useMemo, useContext } from "react";
+import React, { createContext, useState, useEffect, useRef, useMemo, useContext, useCallback } from "react";
 import tuningSystemsData from "@/../data/tuningSystems.json";
 import ajnasData from "@/../data/ajnas.json";
 import maqamatData from "@/../data/maqamat.json";
@@ -344,7 +344,6 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       .catch(console.error);
   }, [refresh]);
 
-  // 3) Re-attachment effect — runs whenever inputs list or selected ID changes:
   useEffect(() => {
     const ma = midiAccessRef.current;
     if (!ma) return;
@@ -603,7 +602,6 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       }, totalSeqMs);
     });
   };
-
   function noteOn(frequency: number) {
     if (soundSettings.outputMode === "mute") return;
 
@@ -939,13 +937,15 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     setSelectedCells(newCells);
   };
 
-  const getModulations = (maqamTransposition: MaqamTransposition): MaqamModulations => {
-    const hopsFromOne: MaqamTransposition[] = []
-    const hopsFromThree: MaqamTransposition[] = []
-    const hopsFromThree2p: MaqamTransposition[] = []
-    const hopsFromFour: MaqamTransposition[] = []
-    const hopsFromFive: MaqamTransposition[] = []
-    const hopsFromSix: MaqamTransposition[] = []
+  const getModulations = useCallback((maqamTransposition: MaqamTransposition): MaqamModulations => {
+    const hopsFromOne: MaqamTransposition[] = [];
+    const hopsFromThree: MaqamTransposition[] = [];
+    const hopsFromThree2p: MaqamTransposition[] = [];
+    const hopsFromFour: MaqamTransposition[] = [];
+    const hopsFromFive: MaqamTransposition[] = [];
+    const hopsFromSix: MaqamTransposition[] = [];
+
+    console.log("WHAT");
 
     let check2p = false;
     let checkSixth = false;
@@ -969,41 +969,58 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
     for (const cellDetails of slice) {
       if (shawwaMapping(cellDetails.noteName) === "2p") {
-        noteName2p = cellDetails.noteName
+        noteName2p = cellDetails.noteName;
         const first2pBeforeShawwaIndex = shawwaList.findIndex((noteName) => noteName === noteName2p);
 
         if (first2pBeforeShawwaIndex - firstDegreeShawwaIndex === 6 && first2pBeforeShawwaIndex - secondDegreeShawwaIndex === 2) check2p = true;
         break;
       }
-    }    
+    }
 
     const sixthDegreeNoteName = maqamTransposition.ascendingNoteNames[5];
     const sixthDegreeCellDetailsIndex = shawwaList.findIndex((noteName) => noteName === sixthDegreeNoteName);
 
-    if ((sixthDegreeCellDetailsIndex - firstDegreeShawwaIndex === 16 || sixthDegreeCellDetailsIndex - firstDegreeShawwaIndex === 17) && shawwaMapping(sixthDegreeNoteName) === "n") checkSixth = true;
-
+    if (
+      (sixthDegreeCellDetailsIndex - firstDegreeShawwaIndex === 16 || sixthDegreeCellDetailsIndex - firstDegreeShawwaIndex === 17) &&
+      shawwaMapping(sixthDegreeNoteName) === "n"
+    )
+      checkSixth = true;
 
     for (const maqam of maqamat) {
-      if (!checkIfMaqamIsSelectable(maqam)) continue
+      if (!checkIfMaqamIsSelectable(maqam)) continue;
 
-      const transpositions: MaqamTransposition[] = JSON.stringify(maqam.getAscendingNoteNames()) !== JSON.stringify(maqamTransposition.ascendingNoteNames) ? [maqam.convertToMaqamTransposition()] : [];
+      const transpositions: MaqamTransposition[] =
+        JSON.stringify(maqam.getAscendingNoteNames()) !== JSON.stringify(maqamTransposition.ascendingNoteNames)
+          ? [maqam.convertToMaqamTransposition()]
+          : [];
 
       getMaqamTranspositions(allCellDetails, maqam).forEach((sequence) => {
-        if (JSON.stringify(maqam.getAscendingNoteNames()) === JSON.stringify(sequence.ascendingSequence.map((cellDetails) => cellDetails.noteName))) return;
-        transpositions.push(
-          {
-            name: maqam.getName() + " al-" + sequence.ascendingSequence[0].noteName,
-            ascendingNoteNames: sequence.ascendingSequence.map((cellDetails) => cellDetails.noteName),
-            descendingNoteNames: sequence.descendingSequence.map((cellDetails) => cellDetails.noteName),
-          }
-        )
-      })
+        if (JSON.stringify(maqam.getAscendingNoteNames()) === JSON.stringify(sequence.ascendingSequence.map((cellDetails) => cellDetails.noteName)))
+          return;
+        transpositions.push({
+          name: maqam.getName() + " al-" + sequence.ascendingSequence[0].noteName,
+          ascendingNoteNames: sequence.ascendingSequence.map((cellDetails) => cellDetails.noteName),
+          descendingNoteNames: sequence.descendingSequence.map((cellDetails) => cellDetails.noteName),
+        });
+      });
 
       for (const transposition of transpositions) {
         if (transposition.ascendingNoteNames[0] === maqamTransposition.ascendingNoteNames[0]) hopsFromOne.push(transposition);
-        if (transposition.ascendingNoteNames[0] === maqamTransposition.ascendingNoteNames[3] && shawwaMapping(maqamTransposition.ascendingNoteNames[3]) !== "/") hopsFromFour.push(transposition);
-        if (transposition.ascendingNoteNames[0] === maqamTransposition.ascendingNoteNames[4] && shawwaMapping(maqamTransposition.ascendingNoteNames[4]) !== "/") hopsFromFive.push(transposition);
-        if (transposition.ascendingNoteNames[0] === maqamTransposition.ascendingNoteNames[2] && shawwaMapping(maqamTransposition.ascendingNoteNames[2]) !== "/") hopsFromThree.push(transposition);
+        if (
+          transposition.ascendingNoteNames[0] === maqamTransposition.ascendingNoteNames[3] &&
+          shawwaMapping(maqamTransposition.ascendingNoteNames[3]) !== "/"
+        )
+          hopsFromFour.push(transposition);
+        if (
+          transposition.ascendingNoteNames[0] === maqamTransposition.ascendingNoteNames[4] &&
+          shawwaMapping(maqamTransposition.ascendingNoteNames[4]) !== "/"
+        )
+          hopsFromFive.push(transposition);
+        if (
+          transposition.ascendingNoteNames[0] === maqamTransposition.ascendingNoteNames[2] &&
+          shawwaMapping(maqamTransposition.ascendingNoteNames[2]) !== "/"
+        )
+          hopsFromThree.push(transposition);
         if (check2p && transposition.ascendingNoteNames[0] === noteName2p) hopsFromThree2p.push(transposition);
         if (checkSixth && transposition.ascendingNoteNames[0] === maqamTransposition.ascendingNoteNames[5]) hopsFromSix.push(transposition);
       }
@@ -1017,8 +1034,13 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       hopsFromFive,
       hopsFromSix,
       noteName2p, // add this line
-    }
-  }
+    };
+  }, [allCellDetails,
+    maqamat,
+    shawwaMapping,
+    selectedTuningSystem,
+    getMaqamTranspositions]
+);
 
   const handleUrlParams = ({
     tuningSystemId,
@@ -1122,7 +1144,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         patterns,
         setPatterns,
         setRefresh,
-        getModulations
+        getModulations,
       }}
     >
       {children}

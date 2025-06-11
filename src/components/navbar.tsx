@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useMemo } from "react";
 import SettingsCard from "@/components/settings-cards";
 import { useAppContext } from "@/contexts/app-context";
 import { useMenuContext } from "@/contexts/menu-context";
@@ -62,28 +62,28 @@ export default function Navbar() {
 
   const selectedSayrSource = selectedSayr ? sources.find((source) => source.getId() === selectedSayr.sourceId) : null;
 
-  // Calculate total modulations for the selected maqam
-  let totalModulations = 0;
-  if (selectedMaqam) {
+  const totalModulations = useMemo(() => {
+    if (!selectedMaqam) return null;
     const transposition = selectedMaqam.convertToMaqamTransposition();
     const modulations = getModulations(transposition);
-    totalModulations =
-      (modulations?.hopsFromOne?.length || 0) +
-      (modulations?.hopsFromThree?.length || 0) +
-      (modulations?.hopsFromThree2p?.length || 0) +
-      (modulations?.hopsFromFour?.length || 0) +
-      (modulations?.hopsFromFive?.length || 0) +
-      (modulations?.hopsFromSix?.length || 0);
-  }
+    return (
+      (modulations.hopsFromOne?.length || 0) +
+      (modulations.hopsFromThree?.length || 0) +
+      (modulations.hopsFromThree2p?.length || 0) +
+      (modulations.hopsFromFour?.length || 0) +
+      (modulations.hopsFromFive?.length || 0) +
+      (modulations.hopsFromSix?.length || 0)
+    );
+  }, [selectedMaqam, getModulations]);
 
   return (
     <>
       <nav className="navbar">
         <header className="navbar__top-bar">
           <div className="navbar__left-panel">
-          <div className="navbar__left-panel-menu-icon">
-            <NavigationMenu />
-          </div>
+            <div className="navbar__left-panel-menu-icon">
+              <NavigationMenu />
+            </div>
             <div className="navbar__left-panel-admin" onClick={() => setShowAdminTabs(!showAdminTabs)}>
               {showAdminTabs ? "User Mode" : "Admin Mode"}
             </div>
@@ -216,15 +216,15 @@ export default function Navbar() {
               Sayr Admin
             </button>
           )}
-          
-            <button
-              className={`navbar__bottom-bar-item ${selectedMenu === "modulation" ? "navbar__bottom-bar-item_selected" : ""}`}
-              onClick={() => setSelectedMenu("modulation")}
-              disabled={!selectedMaqam}
-            >
-              Intiqālāt{selectedMaqam ? ` (${totalModulations})` : ""}
-            </button>
-          
+
+          <button
+            className={`navbar__bottom-bar-item ${selectedMenu === "modulation" ? "navbar__bottom-bar-item_selected" : ""}`}
+            onClick={() => setSelectedMenu("modulation")}
+            disabled={!selectedMaqam}
+          >
+            Intiqālāt{selectedMaqam ? ` (${totalModulations})` : ""}
+          </button>
+
           <button
             className={`navbar__bottom-bar-item ${selectedMenu === "bibliography" ? "navbar__bottom-bar-item_selected" : ""}`}
             onClick={() => setSelectedMenu("bibliography")}
