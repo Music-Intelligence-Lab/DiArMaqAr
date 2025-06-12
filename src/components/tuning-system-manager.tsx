@@ -85,6 +85,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   ];
 
   const [sortOption, setSortOption] = useState<"id" | "creatorEnglish" | "year">("year");
+  const [editingCell, setEditingCell] = useState<{ octave: number; index: number } | null>(null);
 
   const [openedOctaveRows, setOpenedOctaveRows] = useState<{ 0: boolean; 1: boolean; 2: boolean; 3: boolean }>({
     0: false,
@@ -1003,11 +1004,46 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
               {filters.frequency && (
                 <tr>
                   <td>Freq (Hz)</td>
-                  {pitchClassesArr.map((basePc, colIndex) => (
-                    <td key={colIndex} className={getCellClassName(octave, colIndex)}>
-                      {renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "frequency")}
-                    </td>
-                  ))}
+                  {pitchClassesArr.map((basePc, colIndex) => {
+                    const isEditing = editingCell?.octave === octave && editingCell.index === colIndex;
+                    return (
+                      <td
+                        key={colIndex}
+                        className={getCellClassName(octave, colIndex)}
+                        style={{cursor: "pointer"}}
+                        onDoubleClick={() => {
+                          if (referenceFrequencies[getFirstNoteName(selectedIndices)]) setEditingCell({ octave, index: colIndex });
+                        }}
+                      >
+                        {isEditing ? (
+                          <input
+                            type="number"
+                            defaultValue={renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "frequency")}
+                            autoFocus
+                            className="tuning-system-manager__freq-input"
+                            onBlur={(e) => {
+                              const newValue = parseFloat(e.currentTarget.value);
+                              const ratio = renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "fraction");
+                              const numerator = parseFloat(ratio.split("/")[0]);
+                              const denominator = parseFloat(ratio.split("/")[1]);
+                              const newStartingFrequency = (newValue * denominator) / numerator;
+                              const startingNote = getFirstNoteName(selectedIndices);
+                              setReferenceFrequencies((prev) => ({
+                                ...prev,
+                                [startingNote]: newStartingFrequency,
+                              }));
+                              setEditingCell(null);
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") e.currentTarget.blur();
+                            }}
+                          />
+                        ) : (
+                          renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "frequency")
+                        )}
+                      </td>
+                    );
+                  })}
                 </tr>
               )}
 
@@ -1405,7 +1441,6 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                       Frequency (Hz):
                       <input
                         type="number"
-                        disabled={!admin}
                         id="reference-frequency-input"
                         value={referenceFrequencies[startingNote] ?? 0}
                         onChange={(e) => {
@@ -1435,7 +1470,6 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                   <input
                     type="number"
                     id="reference-frequency-input"
-                    disabled={!admin}
                     value={referenceFrequencies[getFirstNoteName(selectedIndices)] ?? 0}
                     onChange={(e) => {
                       const val = Number(e.target.value);
