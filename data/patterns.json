@@ -5,39 +5,48 @@
     "notes": [
       {
         "scaleDegree": "I",
-        "noteDuration": "16n"
+        "noteDuration": "16n",
+        "isTarget": false
       },
       {
         "scaleDegree": "II",
-        "noteDuration": "16n"
+        "noteDuration": "16n",
+        "isTarget": false
       },
       {
         "scaleDegree": "III",
-        "noteDuration": "16n"
+        "noteDuration": "16n",
+        "isTarget": false
       },
       {
         "scaleDegree": "II",
-        "noteDuration": "16n"
+        "noteDuration": "16n",
+        "isTarget": false
       },
       {
         "scaleDegree": "III",
-        "noteDuration": "16n"
+        "noteDuration": "16n",
+        "isTarget": false
       },
       {
         "scaleDegree": "II",
-        "noteDuration": "16n"
+        "noteDuration": "16n",
+        "isTarget": false
       },
       {
         "scaleDegree": "III",
-        "noteDuration": "16n"
+        "noteDuration": "16n",
+        "isTarget": false
       },
       {
         "scaleDegree": "II",
-        "noteDuration": "16n"
+        "noteDuration": "16n",
+        "isTarget": false
       },
       {
         "scaleDegree": "I",
-        "noteDuration": "16n"
+        "noteDuration": "16n",
+        "isTarget": false
       }
     ]
   },
@@ -47,23 +56,28 @@
     "notes": [
       {
         "scaleDegree": "I",
-        "noteDuration": "8n"
+        "noteDuration": "8n",
+        "isTarget": false
       },
       {
         "scaleDegree": "II",
-        "noteDuration": "8n"
+        "noteDuration": "8n",
+        "isTarget": false
       },
       {
         "scaleDegree": "III",
-        "noteDuration": "8n"
+        "noteDuration": "8n",
+        "isTarget": false
       },
       {
         "scaleDegree": "II",
-        "noteDuration": "8n"
+        "noteDuration": "8n",
+        "isTarget": false
       },
       {
         "scaleDegree": "I",
-        "noteDuration": "4n"
+        "noteDuration": "4n",
+        "isTarget": true
       }
     ]
   },
@@ -73,23 +87,28 @@
     "notes": [
       {
         "scaleDegree": "III",
-        "noteDuration": "8n"
+        "noteDuration": "8n",
+        "isTarget": false
       },
       {
         "scaleDegree": "II",
-        "noteDuration": "8n"
+        "noteDuration": "8n",
+        "isTarget": false
       },
       {
         "scaleDegree": "I",
-        "noteDuration": "8n"
+        "noteDuration": "8n",
+        "isTarget": false
       },
       {
         "scaleDegree": "II",
-        "noteDuration": "8n"
+        "noteDuration": "8n",
+        "isTarget": false
       },
       {
         "scaleDegree": "I",
-        "noteDuration": "4n"
+        "noteDuration": "4n",
+        "isTarget": true
       }
     ]
   },
@@ -99,15 +118,18 @@
     "notes": [
       {
         "scaleDegree": "I",
-        "noteDuration": "8n"
+        "noteDuration": "8n",
+        "isTarget": true
       },
       {
         "scaleDegree": "II",
-        "noteDuration": "8n"
+        "noteDuration": "8n",
+        "isTarget": false
       },
       {
         "scaleDegree": "III",
-        "noteDuration": "8n"
+        "noteDuration": "8n",
+        "isTarget": false
       }
     ]
   },
@@ -117,19 +139,23 @@
     "notes": [
       {
         "scaleDegree": "I",
-        "noteDuration": "8n"
+        "noteDuration": "8n",
+        "isTarget": false
       },
       {
         "scaleDegree": "II",
-        "noteDuration": "4n"
+        "noteDuration": "4n",
+        "isTarget": false
       },
       {
         "scaleDegree": "I",
-        "noteDuration": "8n"
+        "noteDuration": "8n",
+        "isTarget": false
       },
       {
         "scaleDegree": "III",
-        "noteDuration": "8n"
+        "noteDuration": "8n",
+        "isTarget": false
       }
     ]
   },
@@ -139,11 +165,13 @@
     "notes": [
       {
         "scaleDegree": "I",
-        "noteDuration": "4n"
+        "noteDuration": "4n",
+        "isTarget": false
       },
       {
         "scaleDegree": "II",
-        "noteDuration": "4n"
+        "noteDuration": "4n",
+        "isTarget": false
       }
     ]
   },
@@ -153,15 +181,18 @@
     "notes": [
       {
         "scaleDegree": "-I",
-        "noteDuration": "4n"
+        "noteDuration": "4n",
+        "isTarget": false
       },
       {
         "scaleDegree": "I",
-        "noteDuration": "4n"
+        "noteDuration": "4n",
+        "isTarget": false
       },
       {
         "scaleDegree": "+I",
-        "noteDuration": "4n"
+        "noteDuration": "4n",
+        "isTarget": false
       }
     ]
   },
@@ -171,15 +202,18 @@
     "notes": [
       {
         "scaleDegree": "I",
-        "noteDuration": "4n"
+        "noteDuration": "4n",
+        "isTarget": true
       },
       {
         "scaleDegree": "-VII",
-        "noteDuration": "8n"
+        "noteDuration": "8n",
+        "isTarget": false
       },
       {
         "scaleDegree": "I",
-        "noteDuration": "8n"
+        "noteDuration": "8n",
+        "isTarget": false
       }
     ]
   },
@@ -189,87 +223,108 @@
     "notes": [
       {
         "scaleDegree": "-I",
-        "noteDuration": "4n"
+        "noteDuration": "4n",
+        "isTarget": false
       },
       {
         "scaleDegree": "-II",
-        "noteDuration": "4n"
+        "noteDuration": "4n",
+        "isTarget": false
       },
       {
         "scaleDegree": "-III",
-        "noteDuration": "4n"
+        "noteDuration": "4n",
+        "isTarget": false
       },
       {
         "scaleDegree": "-IV",
-        "noteDuration": "4n"
+        "noteDuration": "4n",
+        "isTarget": false
       },
       {
         "scaleDegree": "-V",
-        "noteDuration": "4n"
+        "noteDuration": "4n",
+        "isTarget": false
       },
       {
         "scaleDegree": "-VI",
-        "noteDuration": "4n"
+        "noteDuration": "4n",
+        "isTarget": false
       },
       {
         "scaleDegree": "-VII",
-        "noteDuration": "4n"
+        "noteDuration": "4n",
+        "isTarget": false
       },
       {
         "scaleDegree": "I",
-        "noteDuration": "4n"
+        "noteDuration": "4n",
+        "isTarget": false
       },
       {
         "scaleDegree": "II",
-        "noteDuration": "4n"
+        "noteDuration": "4n",
+        "isTarget": false
       },
       {
         "scaleDegree": "III",
-        "noteDuration": "4n"
+        "noteDuration": "4n",
+        "isTarget": false
       },
       {
         "scaleDegree": "IV",
-        "noteDuration": "4n"
+        "noteDuration": "4n",
+        "isTarget": false
       },
       {
         "scaleDegree": "V",
-        "noteDuration": "4n"
+        "noteDuration": "4n",
+        "isTarget": false
       },
       {
         "scaleDegree": "VI",
-        "noteDuration": "4n"
+        "noteDuration": "4n",
+        "isTarget": false
       },
       {
         "scaleDegree": "VII",
-        "noteDuration": "4n"
+        "noteDuration": "4n",
+        "isTarget": false
       },
       {
         "scaleDegree": "+I",
-        "noteDuration": "4n"
+        "noteDuration": "4n",
+        "isTarget": false
       },
       {
         "scaleDegree": "+II",
-        "noteDuration": "4n"
+        "noteDuration": "4n",
+        "isTarget": false
       },
       {
         "scaleDegree": "+III",
-        "noteDuration": "4n"
+        "noteDuration": "4n",
+        "isTarget": false
       },
       {
         "scaleDegree": "+IV",
-        "noteDuration": "4n"
+        "noteDuration": "4n",
+        "isTarget": false
       },
       {
         "scaleDegree": "+V",
-        "noteDuration": "4n"
+        "noteDuration": "4n",
+        "isTarget": false
       },
       {
         "scaleDegree": "+VI",
-        "noteDuration": "4n"
+        "noteDuration": "4n",
+        "isTarget": false
       },
       {
         "scaleDegree": "+VII",
-        "noteDuration": "4n"
+        "noteDuration": "4n",
+        "isTarget": false
       }
     ]
   }

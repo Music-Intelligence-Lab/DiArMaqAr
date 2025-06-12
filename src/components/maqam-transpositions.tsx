@@ -193,9 +193,9 @@ export default function MaqamTranspositions() {
                 className="maqam-transpositions__button"
                 onClick={async () => {
                   const ascFreq = ascendingMaqamCellDetails.map((cell) => parseInt(cell.frequency));
-                  const descFreq = descendingMaqamCellDetails.map((cell) => parseInt(cell.frequency));
+                  const descFreq = descendingMaqamCellDetails.map((cell) => parseInt(cell.frequency)).reverse();
                   playSequence(ascFreq).then(() => {
-                    playSequence(descFreq);
+                    playSequence(descFreq, false);
                   });
                 }}
               >
@@ -211,7 +211,7 @@ export default function MaqamTranspositions() {
               </button>
               <button
                 className="maqam-transpositions__button"
-                onClick={() => playSequence(descendingMaqamCellDetails.map((cell) => parseInt(cell.frequency)))}
+                onClick={() => playSequence(descendingMaqamCellDetails.map((cell) => parseInt(cell.frequency)).reverse(), false)}
               >
                 <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
                 Descending
