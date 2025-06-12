@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useMemo } from "react";
 import { useAppContext } from "@/contexts/app-context";
 import { useFilterContext } from "@/contexts/filter-context";
 import TuningSystem from "@/models/TuningSystem";
@@ -211,6 +211,39 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         return a.getId().localeCompare(b.getId());
     }
   });
+
+  // Tabs for filtering tuning systems by historical period
+  const tabs = [
+    { label: "All", min: -Infinity, max: Infinity },
+    { label: "8th–10th c. CE", min: 700, max: 999 },
+    { label: "11th–15th c. CE", min: 1000, max: 1499 },
+    { label: "16th–19th c. CE", min: 1500, max: 1899 },
+    { label: "20th–21st c. CE", min: 1900, max: 2100 },
+  ];
+    const [activePeriodTab, setActivePeriodTab] = useState<string>(() => {
+      return localStorage.getItem("activePeriodTab") || "all";
+    });
+  
+    useEffect(() => {
+      localStorage.setItem("activePeriodTab", activePeriodTab);
+    }, [activePeriodTab]);
+
+
+  // Helper to get year as number (handles missing/invalid years)
+  function getYearNum(ts: any) {
+    const y = parseInt(ts.getYear?.() ?? ts.year ?? "");
+    return isNaN(y) ? 0 : y;
+  }
+
+  // Filter tuning systems by period tab
+  const filteredTuningSystems = useMemo(() => {
+    const tab = tabs.find((t) => t.label === activePeriodTab);
+    if (!tab || tab.label === "All") return sortedTuningSystems;
+    return sortedTuningSystems.filter((ts) => {
+      const y = getYearNum(ts);
+      return y >= tab.min && y <= tab.max;
+    });
+  }, [sortedTuningSystems, activePeriodTab]);
 
   // MARK: Tuning System Function Handlers
 
@@ -504,7 +537,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   // The other octaves (0, 2, 3) are derived by the same index if not -1.
   // We also want “cascading” so that if the user picks a note for col i, col i+1 gets auto-filled.
   // If the user picks something in an *upper/lower* octave, we find its index in that octave’s array
-  // and update the “first octave” index accordingly, maintaining sync.
+  // and update the “first-octave” index accordingly, maintaining sync.
   // ----------------------------------------------------------------------------------
 
   const numberOfPitchClasses = pitchClassesArr.length;
@@ -726,7 +759,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
               }))
             }
           >
-            Diwān (octave) {octave}{" "}
+            Dīwān (octave) {octave}{" "}
           </span>
           {admin && ((octave === 1 && openedOctaveRows[1]) || (octave === 2 && openedOctaveRows[2])) && (
             <button
@@ -795,7 +828,17 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
           <div className="tuning-system-manager__octave-summary-content"></div>
         </summary>
 
-        <div className="tuning-system-manager__octave-scroll" ref={octaveScrollRefs[octave as 0 | 1 | 2 | 3]}>
+        <div className="tuning-system-manager__octaves-carousel" >
+          <button
+            className="carousel-button carousel-button-prev"
+            onClick={() => {
+              const container = document.querySelector(".tuning-system-manager__octave-scroll");
+              if (container) container.scrollBy({ left: -635, behavior: "smooth" });
+            }}
+          >
+            ‹
+          </button>
+<div className="tuning-system-manager__octave-scroll" ref={octaveScrollRefs[octave as 0 | 1 | 2 | 3]}>
           <table className="tuning-system-manager__octave-table" border={0}>
             <colgroup>
               <col style={{ minWidth: "110px", maxWidth: "110px", width: "110px" }} />
@@ -904,15 +947,8 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                   })}
                 </tr>
               )}
-            </tbody>
-          </table>
 
-          <table className="tuning-system-manager__octave-table" border={0}>
-            <colgroup>
-              <col style={{ minWidth: "110px", maxWidth: "110px", width: "110px" }} />
-            </colgroup>
 
-            <tbody>
               {pitchClassType !== "unknown" && (
                 <tr className="tuning-system-manager__octave-table__detectedPitchClassType">
                   <td>
@@ -1077,6 +1113,17 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
               </tr>
             </tbody>
           </table>
+</div>          
+          <button
+            className="carousel-button carousel-button-next"
+            onClick={() => {
+              const container = document.querySelector(".tuning-system-manager__octave-scroll");
+              if (container) container.scrollBy({ left: 635, behavior: "smooth" });
+            }}
+          >
+            ›
+          </button>
+
         </div>
       </details>
     );
@@ -1347,6 +1394,33 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       )}
 
       {!admin && (
+        <div className="tuning-system-manager__tabs">
+          {tabs.map((tab) => {
+            let count = 0;
+            if (tab.label === "All") {
+              count = sortedTuningSystems.length;
+            } else {
+              count = sortedTuningSystems.filter((ts) => {
+                const y = getYearNum(ts);
+                return y >= tab.min && y <= tab.max;
+              }).length;
+            }
+            return (
+              <button
+                key={tab.label}
+                className={
+                  "tuning-system-manager__tab" + (activePeriodTab === tab.label ? " tuning-system-manager__tab_active" : "")
+                }
+                onClick={() => setActivePeriodTab(tab.label)}
+              >
+                {tab.label} <span className="tuning-system-manager__tab-count">({count})</span>
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      {!admin && (
         <div className="tuning-system-manager__carousel">
           <button
             className="carousel-button carousel-button-prev"
@@ -1358,10 +1432,10 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             ‹
           </button>
           <div className="tuning-system-manager__list">
-            {tuningSystems.length === 0 ? (
+            {filteredTuningSystems.length === 0 ? (
               <p>No tuning systems available.</p>
             ) : (
-              [...sortedTuningSystems].map((tuningSystem, index) => (
+              filteredTuningSystems.map((tuningSystem, index) => (
                 <div
                   key={index}
                   className={

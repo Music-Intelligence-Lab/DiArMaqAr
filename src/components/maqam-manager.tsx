@@ -128,8 +128,52 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
     setSelectedMaqam(selectedMaqam.createMaqamWithNewSourcePageReferences([...refs, { sourceId: "", page: "" }]));
   };
 
+  // Tabs for filtering maqamat by starting note name
+  const tabs = [
+   "all", "yegāh", "ʿushayrān", "ʿajam ʿushayrān", "ʿirāq", "rāst", "dūgāh", "segāh", "chahargāh"
+  ];
+    const [activeMaqamatTab, setActiveMaqamatTab] = useState<string>(() => {
+      return localStorage.getItem("activeMaqamatTab") || "all";
+    });
+  
+    useEffect(() => {
+      localStorage.setItem("activeMaqamatTab", activeMaqamatTab);
+    }, [activeMaqamatTab]);
+
+
+  // Filter maqamat by tab
+  const filteredMaqamat = useMemo(() => {
+    if (activeMaqamatTab === "all") return sortedMaqamat;
+    return sortedMaqamat.filter(maqam =>
+      maqam.getAscendingNoteNames()[0]?.toLowerCase() === activeMaqamatTab.toLowerCase()
+    );
+  }, [sortedMaqamat, activeMaqamatTab]);
+
   return (
     <div className="maqam-manager">
+      {/* Tabs for filtering maqamat by starting note name */}
+      <div className="maqam-manager__tabs">
+        {tabs.map(tab => {
+          let count = 0;
+          if (tab === "all") {
+            count = sortedMaqamat.length;
+          } else {
+            count = sortedMaqamat.filter(maqam => maqam.getAscendingNoteNames()[0]?.toLowerCase() === tab.toLowerCase()).length;
+          }
+          return (
+            <button
+              key={tab}
+              className={
+                "maqam-manager__tab" + (activeMaqamatTab === tab ? " maqam-manager__tab_active" : "")
+              }
+              onClick={() => setActiveMaqamatTab(tab)}
+            >
+              {tab} <span className="maqam-manager__tab-count">({count})</span>
+            </button>
+          );
+        })}
+      </div>
+
       <div className="maqam-manager__carousel">
         <button
           className="carousel-button carousel-button-prev"
@@ -141,7 +185,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
           ‹
         </button>
         <div className="maqam-manager__list">
-          {sortedMaqamat.map((maqam, idx) => {
+          {filteredMaqamat.map((maqam, idx) => {
             const selectable = checkIfMaqamIsSelectable(maqam);
             const numberOfTranspositions = maqamTranspositions.get(maqam.getId())?.length || 0;
             return (
