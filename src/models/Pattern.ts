@@ -33,6 +33,7 @@ export default class Pattern {
 export interface PatternNote {
   scaleDegree: ScaleDegree;
   noteDuration: NoteDuration;
+  isTarget: boolean;
 }
 
 export const DURATION_OPTIONS: string[] = [
@@ -65,11 +66,6 @@ export const SCALE_DEGREES: string[] = [
   "-V",
   "-VI",
   "-VII",
-  "-VIII",
-  "-IX",
-  "-X",
-  "-XI",
-  "-XII",
   "R",
   "I",
   "II",
@@ -78,11 +74,6 @@ export const SCALE_DEGREES: string[] = [
   "V",
   "VI",
   "VII",
-  "VIII",
-  "IX",
-  "X",
-  "XI",
-  "XII",
   "+I",
   "+II",
   "+III",
@@ -90,11 +81,6 @@ export const SCALE_DEGREES: string[] = [
   "+V",
   "+VI",
   "+VII",
-  "+VIII",
-  "+IX",
-  "+X",
-  "+XI",
-  "+XII",
 ];
 
 export type ScaleDegree = (typeof SCALE_DEGREES)[number];
@@ -104,5 +90,6 @@ export function reversePatternNotes(notes: PatternNote[]): PatternNote[] {
   return notes.map((note, index) => ({
     scaleDegree: reversedScaleDegrees[index],
     noteDuration: note.noteDuration,
+    isTarget: note.isTarget,
   }));
 }

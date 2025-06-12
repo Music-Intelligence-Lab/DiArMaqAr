@@ -35,7 +35,7 @@ export default function PatternsManager() {
 
   // Handle adding a new empty note
   const addNote = () => {
-    setNotes((prev) => [...prev, { scaleDegree: "", noteDuration: "4n" }]);
+    setNotes((prev) => [...prev, { scaleDegree: "I", noteDuration: "8n", isTarget: false }]);
   };
 
   // Remove note at index
@@ -45,8 +45,19 @@ export default function PatternsManager() {
 
   // Update a field on a note
   const updateNote = (i: number, field: keyof PatternNote, val: string) => {
-    setNotes((prev) => prev.map((n, idx) => (idx === i ? ({ ...n, [field]: val } as PatternNote) : n)));
-  };
+  setNotes((prev) =>
+    prev.map((n, idx) => {
+      if (idx === i) {
+        if (field === "isTarget") {
+          return { ...n, isTarget: val === "Target" } as PatternNote;
+        }
+        return { ...n, [field]: val } as PatternNote;
+      }
+      return n;
+    })
+  );
+};
+
 
   // Handle save or update
   const handleSave = (e: FormEvent) => {
@@ -130,6 +141,14 @@ export default function PatternsManager() {
                       {d}
                     </option>
                   ))}
+                </select>
+                <select
+                  className="patterns-manager__note-duration"
+                  value={note.isTarget ? "Target" : ""}
+                  onChange={(e) => updateNote(i, "isTarget", e.target.value)}
+                >
+                  <option value="Target">Target</option>
+                  <option value="">Not Target</option>
                 </select>
                 <button type="button" className="patterns-manager__delete-note" onClick={() => removeNote(i)}>
                   Delete

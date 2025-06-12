@@ -32,16 +32,31 @@ interface FilterContextInterface {
   filters: FilterSettings;
   setFilters: React.Dispatch<React.SetStateAction<FilterSettings>>;
   toggleFilter: (field: keyof FilterSettings) => void;
+  tuningSystemsFilter: string;
+  setTuningSystemsFilter: React.Dispatch<React.SetStateAction<string>>;
+  ajnasFilter: string;
+  setAjnasFilter: React.Dispatch<React.SetStateAction<string>>;
+  maqamatFilter: string;
+  setMaqamatFilter: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const FilterContext = createContext<FilterContextInterface>({
   filters: defaultFilters,
   setFilters: () => {},
   toggleFilter: () => {},
+  tuningSystemsFilter: "",
+  setTuningSystemsFilter: () => {},
+  ajnasFilter: "",
+  setAjnasFilter: () => {},
+  maqamatFilter: "",
+  setMaqamatFilter: () => {},
 });
 
 export function FilterContextProvider({ children }: { children: ReactNode }) {
   const [filters, setFilters] = useState<FilterSettings>(defaultFilters);
+  const [tuningSystemsFilter, setTuningSystemsFilter] = useState<string>("all");
+  const [ajnasFilter, setAjnasFilter] = useState<string>("all");
+  const [maqamatFilter, setMaqamatFilter] = useState<string>("all");
 
   const toggleFilter = (field: keyof FilterSettings) => {
     setFilters((prev) => ({
@@ -50,7 +65,23 @@ export function FilterContextProvider({ children }: { children: ReactNode }) {
     }));
   };
 
-  return <FilterContext.Provider value={{ filters, setFilters, toggleFilter }}>{children}</FilterContext.Provider>;
+  return (
+    <FilterContext.Provider
+      value={{
+        filters,
+        setFilters,
+        toggleFilter,
+        tuningSystemsFilter,
+        setTuningSystemsFilter,
+        ajnasFilter,
+        setAjnasFilter,
+        maqamatFilter,
+        setMaqamatFilter,
+      }}
+    >
+      {children}
+    </FilterContext.Provider>
+  );
 }
 
 export function useFilterContext() {
