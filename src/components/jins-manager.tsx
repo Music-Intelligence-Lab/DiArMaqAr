@@ -98,8 +98,51 @@ export default function JinsManager({ admin }: { admin: boolean }) {
     setSelectedJins(selectedJins.createJinsWithNewSourcePageReferences([...refs, newRef]));
   };
 
+  // Tabs for filtering ajnas by starting note name
+  const tabs = [
+   "all", "yegāh", "ʿushayrān", "ʿajam ʿushayrān", "ʿirāq", "rāst", "dūgāh", "segāh", "chahargāh", 
+  ];
+    const [activeJinsTab, setActiveJinsTab] = useState<string>(() => {
+      return localStorage.getItem("activeJinsTab") || "all";
+    });
+  
+    useEffect(() => {
+      localStorage.setItem("activeJinsTab", activeJinsTab);
+    }, [activeJinsTab]);
+
+
+  // Filter ajnas by tab
+  const filteredAjnas = useMemo(() => {
+    if (activeJinsTab === "all") return sortedAjnas;
+    return sortedAjnas.filter(jins =>
+      jins.getNoteNames()[0]?.toLowerCase() === activeJinsTab.toLowerCase()
+    );
+  }, [sortedAjnas, activeJinsTab]);
+
   return (
     <div className="jins-manager">
+    
+      <div className="jins-manager__tabs">
+        {tabs.map(tab => {
+          let count = 0;
+          if (tab === "all") {
+            count = sortedAjnas.length;
+          } else {
+            count = sortedAjnas.filter(jins => jins.getNoteNames()[0]?.toLowerCase() === tab.toLowerCase()).length;
+          }
+          return (
+            <button
+              key={tab}
+              className={
+                "jins-manager__tab" + (activeJinsTab === tab ? " jins-manager__tab_active" : "")
+              }
+              onClick={() => setActiveJinsTab(tab)}
+            >
+              {tab} <span className="jins-manager__tab-count">({count})</span>
+            </button>
+          );
+        })}
+      </div>
       <div className="jins-manager__carousel">
         <button
           className="carousel-button carousel-button-prev"
@@ -111,10 +154,10 @@ export default function JinsManager({ admin }: { admin: boolean }) {
           ‹
         </button>
         <div className="jins-manager__list">
-          {sortedAjnas.length === 0 ? (
+          {filteredAjnas.length === 0 ? (
             <p>No ajnas available.</p>
           ) : (
-            sortedAjnas.map((jins, index) => {
+            filteredAjnas.map((jins, index) => {
               const selectable = checkIfJinsIsSelectable(jins);
               const numberOfTranspositions = jinsTranspositions.get(jins.getId())?.length || 0;
               return (
