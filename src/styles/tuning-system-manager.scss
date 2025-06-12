@@ -44,7 +44,6 @@
     width: 50%;
   }
 
-
   &__source-add-button {
     height: fit-content;
     padding: 10px 20px;
@@ -57,9 +56,7 @@
     display: flex;
     flex-direction: column;
     gap: 5px;
-
   }
-
 
   &__source-select-item {
     display: flex;
@@ -266,13 +263,11 @@
         background-color: rgba(0, 0, 0, 0.3);
       }
     }
-
   }
 
   h3 {
     font-size: 20px;
     margin-bottom: 10px;
-
   }
 
   &__comments-sources-container {
@@ -292,7 +287,6 @@
     float: left;
     margin-bottom: 40px;
     line-height: calc(20px);
-
   }
 
   &__comments-arabic {
@@ -327,7 +321,6 @@
     padding-left: 30px;
     float: right;
   }
-
 
   &__list {
     width: 100%;
@@ -381,7 +374,6 @@
         color: $tertiary;
         transition: background-color 0.2s ease-in-out;
       }
-
     }
 
     .carousel-button-prev,
@@ -398,7 +390,6 @@
         color: $tertiary;
         transition: color 0.1s ease-in-out;
       }
-
     }
 
     .carousel-button-prev {
@@ -410,7 +401,7 @@
     }
   }
 
-    &__octaves-carousel {
+  &__octaves-carousel {
     display: flex;
     align-items: center;
     position: relative;
@@ -428,7 +419,6 @@
         color: $tertiary;
         transition: background-color 0.2s ease-in-out;
       }
-
     }
 
     .carousel-button-prev,
@@ -442,14 +432,11 @@
       background-color: $dark-grey;
       border-top: 1px solid $grey;
       border-bottom: 1px solid $grey;
-      
-
 
       &:hover {
         color: $tertiary;
         transition: color 0.1s ease-in-out;
       }
-
     }
 
     .carousel-button-prev {
@@ -462,8 +449,6 @@
       border-right: 1px solid $grey;
     }
   }
-
-
 
   &__item {
     height: 60px;
@@ -528,7 +513,6 @@
     background-color: rgba($black, 0.3);
     border-radius: 10px;
     margin-bottom: 10px;
-
   }
 
   &__octave-details {
@@ -538,8 +522,6 @@
     border-radius: 10px;
     margin-bottom: 10px;
     position: relative; // needed for the pseudo-element positioning
-
-
   }
 
   &__summary {
@@ -547,7 +529,6 @@
     margin-bottom: 20px;
     //cursor: pointer;
     user-select: none;
-
   }
 
   &__octave-summary {
@@ -555,8 +536,6 @@
     margin-bottom: 20px;
     //cursor: pointer;
     user-select: none;
-
-
   }
 
   &__octave-summary-title {
@@ -584,7 +563,6 @@
     white-space: nowrap;
     height: fit-content;
     padding: 10px 0;
-
 
     &::-webkit-scrollbar {
       height: 6px;
@@ -652,9 +630,7 @@
     /* inherit color from parent label */
   }
 
-
   &__octave-table {
-
     width: 100%;
     border-collapse: collapse;
     border-spacing: 0;
@@ -664,13 +640,10 @@
     padding: 0px;
     margin: -10px 25px 0px 25px;
 
-
-
     th {
       // text-align: left;
       padding: 0px 0;
       margin: 0px 0;
-
     }
 
     tr {
@@ -696,7 +669,6 @@
       white-space: normal;
       overflow-wrap: normal;
       word-break: normal;
-
     }
 
     &_row-header {
@@ -704,9 +676,7 @@
       width: 120px !important;
       background-color: $medium-grey;
       text-transform: capitalize;
-
     }
-
 
     &__detectedPitchClassType {
       background-color: $medium-grey;
@@ -722,6 +692,11 @@
     &_active {
       background-color: $secondary !important;
       color: white;
+    }
+
+    &_editing {
+      background-color: $black!important;
+      color: $text !important;
     }
   }
 
@@ -783,12 +758,26 @@
   }
 
   &__freq-input {
-  width: 90%;
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-size: inherit;
-}
+    width: 80%;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-size: inherit;
+    text-align: center;
+    border-radius: 0px;
+    background-color: $black !important;
+    color: $text !important;
+    padding: 0px 0px;
+    // Remove default arrows in webkit browsers:
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    // Remove default arrows in Firefox:
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
 
   &__play-circle-icon.MuiSvgIcon-root {
     background-color: transparent;
@@ -799,7 +788,6 @@
     font-size: 20px;
     cursor: pointer;
     vertical-align: middle;
-
   }
 
   &__checkbox {
@@ -808,8 +796,6 @@
     padding: 0px;
     margin: 0px;
   }
-
-
 
   &__play-sequence-button {
     padding: 10px;
@@ -820,7 +806,6 @@
     transition: 0.3s;
 
     background-color: $primary;
-
 
     &:disabled {
       background-color: rgba(0, 0, 0, 0.3);
@@ -846,7 +831,7 @@
     border-radius: 0px;
     border: none;
     background: $medium-grey;
-        color: $text;
+    color: $text;
 
     font-weight: 400;
     cursor: pointer;
@@ -860,7 +845,7 @@
     border: none;
     background: $black;
     font-weight: 300;
-     &:hover {
+    &:hover {
       background: $black;
     }
   }

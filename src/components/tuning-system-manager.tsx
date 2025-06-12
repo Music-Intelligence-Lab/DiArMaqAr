@@ -1290,9 +1290,9 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                     return (
                       <td
                         key={colIndex}
-                        className={getCellClassName(octave, colIndex)}
+                        className={getCellClassName(octave, colIndex) + " " + (isEditing ? "tuning-system-manager__cell_editing " : "")}
                         style={{cursor: "pointer"}}
-                        onDoubleClick={() => {
+                        onClick={() => {
                           if (referenceFrequencies[getFirstNoteName(selectedIndices)]) setEditingCell({ octave, index: colIndex });
                         }}
                       >
