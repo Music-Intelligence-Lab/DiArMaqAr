@@ -27,6 +27,9 @@ html {
   overflow-y: hidden;
 }
 
+:focus {
+  outline: 0px solid rgb(gold, 100%);
+}
 
 a {
   color: rgb($text, 75%);
