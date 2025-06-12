@@ -79,10 +79,10 @@ export default function convertPitchClass(
     }
     return {
       fraction: fractionVal,
-      decimal: decimalVal.toFixed(3),
-      cents: centsVal.toFixed(2),
-      stringLength: stringLenVal.toFixed(2),
-      frequency: freqVal.toFixed(2),
+      decimal: decimalVal.toString(),
+      cents: centsVal.toString(),
+      stringLength: stringLenVal.toString(),
+      frequency: freqVal.toString(),
     };
   } catch {
     return null;
@@ -124,12 +124,12 @@ export function shiftPitchClass(
       // decimal => just multiply by 2^(octaveSteps)
       const dec = parseFloat(baseValue);
       const shifted = dec * Math.pow(2, octaveSteps);
-      return shifted.toFixed(4); // or as many decimals as you want
+      return shifted.toString(); // or as many decimals as you want
     } else if (inputType === "cents") {
       // cents => just add 1200 * octaveSteps
       const c = parseFloat(baseValue);
       const shifted = c + 1200 * octaveSteps;
-      return shifted.toFixed(2);
+      return shifted.toString();
     } else if (inputType === "stringLength") {
       // stringLength => / 2^(octaveSteps),
       // because going UP an octave means frequency *2 => stringLength /2
@@ -138,7 +138,7 @@ export function shiftPitchClass(
       const multiplier = Math.pow(2, -octaveSteps);
       // e.g. if octaveSteps=1 => multiplier=1/2
       const shifted = slVal * multiplier;
-      return shifted.toFixed(2);
+      return shifted.toString();
     }
   } catch (err) {
     console.error("Error shifting pitch class:", err);

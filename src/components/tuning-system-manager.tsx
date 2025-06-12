@@ -804,7 +804,8 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   function renderConvertedCell(
     basePc: string,
     octave: 0 | 1 | 2 | 3,
-    field: "fraction" | "decimal" | "cents" | "stringLength" | "frequency"
+    field: "fraction" | "decimal" | "cents" | "stringLength" | "frequency",
+    fixedDecimalPlaces: number = 2
   ) {
     if (pitchClassType === "unknown") return "-";
 
@@ -819,7 +820,17 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     );
     if (!conv) return "-";
 
-    return conv[field] ?? "-";
+    if (fixedDecimalPlaces === -1) return conv[field] ?? "-";
+    else {
+      const {fraction, decimal, cents, stringLength, frequency} = conv;
+      return {
+        fraction,
+        decimal: parseFloat(decimal).toFixed(fixedDecimalPlaces),
+        cents: parseFloat(cents).toFixed(fixedDecimalPlaces),
+        stringLength: parseFloat(stringLength).toFixed(fixedDecimalPlaces),
+        frequency: parseFloat(frequency).toFixed(fixedDecimalPlaces),
+      }[field] ?? "-";
+    }
   }
 
   // MARK: Octave Rows
@@ -1274,18 +1285,45 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 {filters.frequency && (
                   <tr>
                     <td>Freq (Hz)</td>
-                    {pitchClassesArr.map((basePc, colIndex) => (
+                    {pitchClassesArr.map((basePc, colIndex) => {
+                    const isEditing = editingCell?.octave === octave && editingCell.index === colIndex;
+                    return (
                       <td
                         key={colIndex}
                         className={getCellClassName(octave, colIndex)}
+                        style={{cursor: "pointer"}}
+                        onDoubleClick={() => {
+                          if (referenceFrequencies[getFirstNoteName(selectedIndices)]) setEditingCell({ octave, index: colIndex });
+                        }}
                       >
-                        {renderConvertedCell(
-                          basePc,
-                          octave as 0 | 1 | 2 | 3,
-                          "frequency"
+                        {isEditing ? (
+                          <input
+                            type="number"
+                            defaultValue={renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "frequency")}
+                            autoFocus
+                            className="tuning-system-manager__freq-input"
+                            onBlur={(e) => {
+                              const newFrequency = parseFloat(e.currentTarget.value);
+                              const cents = renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "cents", -1);
+                              const centsValue = parseFloat(cents);
+                              const newStartingFrequency = newFrequency / Math.pow(2, centsValue / 1200);
+                              const startingNote = getFirstNoteName(selectedIndices);
+                              setReferenceFrequencies((prev) => ({
+                                ...prev,
+                                [startingNote]: newStartingFrequency,
+                              }));
+                              setEditingCell(null);
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") e.currentTarget.blur();
+                            }}
+                          />
+                        ) : (
+                          renderConvertedCell(basePc, octave as 0 | 1 | 2 | 3, "frequency")
                         )}
                       </td>
-                    ))}
+                    );
+                  })}
                   </tr>
                 )}
 
@@ -1301,11 +1339,12 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                         className="tuning-system-manager__play-circle-icon"
                         onClick={() =>
                           playNoteFrequency(
-                            parseInt(
+                            parseFloat(
                               renderConvertedCell(
                                 basePc,
                                 octave as 0 | 1 | 2 | 3,
-                                "frequency"
+                                "frequency",
+                                -1
                               )
                             )
                           )
