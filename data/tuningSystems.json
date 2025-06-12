@@ -3880,7 +3880,7 @@
     ],
     "creatorEnglish": "Mashrafa and Mukhtār",
     "creatorArabic": "",
-    "commentsEnglish": "According to Shawqī (1969:135) quoting from Mukhtār (1944) the research project began in 1935. The researchers Alī Muṣṭafā Mashrafa and Maḥmūd Mukhtār asked the musicians Muṣṭafā Riḍā, Muṣṭafā Al-'Aqqād and Ibrahīm Farūz to tune a Qanūn and then oversee the recording and analysis of each note, which were analysed using a device that reproduced the accuracy of a sound to 1/10th of a Hz. \n\nOriginal values given in Hz:\n1000, 1042, 1080, 1125, 1171, 1200, 1228, 1250, 1279, 1302, 1333, 1390, 1440, 1500, 1562, 1600, 1667, 1738, 1800, 1831, 1875, 1920, 1955\n\nMaḥmūd Mukhtār (1944) Al-Salālem al-Muūṣīqīya al-Musta'mala fi Miṣr, Maṭbū'āt al-Jam'īya al-Miṣrīya li Huwāt al-Mūsīqā",
+    "commentsEnglish": "According to Shawqī (1969:135) quoting from Mukhtār (1944) the research project began in 1935. The researchers Alī Muṣṭafā Mashrafa and Maḥmūd Mukhtār asked the musicians Muṣṭafā Riḍā, Muṣṭafā Al-'Aqqād and Ibrahīm Farūz to tune a Qanūn and then oversee the recording and analysis of each note. \n\nThe results are given as a table with multiple columns that is confusing, including a partial list of the note names in Arabic but a full list of the note names in solfege. The confusion arises because some notes have two different values in columns marked as Results of the Experiment, and Full List.\n\nThe version saved here is mostly from the Full List column, with a few values from the Results of the Experiment list. \n\nThe original values reprinted by Shawqī are given as frequencies in Hz starting from 1000, which is a bizarre choice (see below). We have converted them to cents in order to enter them accurately in this database.\n\nOriginal values in Hz:\n1000, 1042, 1080, 1125, 1171, 1200, 1228, 1250, 1279, 1302, 1333, 1390, 1440, 1500, 1562, 1600, 1667, 1738, 1800, 1831, 1875, 1920, 1955\n\nMaḥmūd Mukhtār (1944) Al-Salālem al-Muūṣīqīya al-Musta'mala fi Miṣr, Maṭbū'āt al-Jam'īya al-Miṣrīya li Huwāt al-Mūsīqā",
     "commentsArabic": "",
     "pitchClasses": [
       "0.000",
@@ -3982,11 +3982,12 @@
       "",
       ""
     ],
-    "stringLength": 0,
-    "defaultReferenceFrequency": 0,
+    "stringLength": 1000,
+    "defaultReferenceFrequency": 261.33,
     "referenceFrequencies": {
       "yegāh": 195.998,
-      "ʿushayrān": 220.5
+      "ʿushayrān": 220.5,
+      "rāst": 261.33
     }
   }
 ]

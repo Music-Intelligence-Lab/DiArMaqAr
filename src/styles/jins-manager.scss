@@ -371,4 +371,43 @@
     // border-radius: 4px;
     resize: vertical;
   }
+
+  &__tabs {
+    display: flex;
+    gap: 5px;
+    margin-bottom: -10px;
+    margin-left: 25px;
+  }
+
+  &__tab {
+    text-align: left;
+    width:max-content;
+    padding: 10px 10px;
+    border-radius: 0px;
+    border: none;
+    background: $medium-grey;
+        color: $text;
+
+    font-weight: 400;
+    cursor: pointer;
+
+    &:hover {
+      background: darken($color: $medium-grey, $amount: 10);
+    }
+  }
+
+  &__tab_active {
+    border: none;
+    background: $black;
+    font-weight: 300;
+     &:hover {
+      background: $black;
+    }
+  }
+
+  &__tab-count {
+    font-size: 0.95em;
+    color: silver;
+    margin-left: 2px;
+  }
 }
