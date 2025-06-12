@@ -1781,7 +1781,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
           >
             ‹
           </button>
-          <div className="tuning-system-manager__list">
+          <div className="tuning-system-manager__list" style={{ ['--column-count' as any]: Math.min(filteredTuningSystems.length, 10) }}>
             {filteredTuningSystems.length === 0 ? (
               <p>No tuning systems available.</p>
             ) : (

@@ -326,7 +326,7 @@
     width: 100%;
     background-color: $black;
     display: grid;
-    grid-template-columns: repeat(9, minmax(320px, 1fr));
+    grid-template-columns: repeat(var(--column-count, 9), minmax(320px, 1fr));
     grid-template-rows: repeat(3, auto);
     gap: 10px;
     height: 225px;
