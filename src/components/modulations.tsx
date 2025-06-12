@@ -97,14 +97,7 @@ export default function Modulations() {
               {srcMaqam?.name ? srcMaqam.name : "Unknown"} ({srcMaqam?.ascendingNoteNames ? srcMaqam.ascendingNoteNames[0] : "N/A"}/{getEnglishNoteName(srcMaqam?.ascendingNoteNames ? srcMaqam.ascendingNoteNames[0]! : "")})
             
             {modulationsStack[stackIdx] && (
-              <> - {(
-                (modulationsStack[stackIdx]?.hopsFromOne?.length || 0) +
-                (modulationsStack[stackIdx]?.hopsFromThree?.length || 0) +
-                (modulationsStack[stackIdx]?.hopsFromThree2p?.length || 0) +
-                (modulationsStack[stackIdx]?.hopsFromFour?.length || 0) +
-                (modulationsStack[stackIdx]?.hopsFromFive?.length || 0) +
-                (modulationsStack[stackIdx]?.hopsFromSix?.length || 0)
-              )} modulation options</>
+              <> - {totalModulations} modulation options</>
             )}
             </span>
             {/* Show delete button only on the last hops-wrapper and only if more than one exists */}

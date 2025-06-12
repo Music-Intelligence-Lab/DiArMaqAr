@@ -66,14 +66,14 @@ export default function HomeClient() {
 
   return (
     <div className="home-page">
-      {selectedTuningSystem && <PitchClassWheel />}
       {selectedMenu === "tuningSystem" && <TuningSystemManager admin={false} />}
       {selectedMenu === "tuningSystem-admin" && <TuningSystemManager admin />}
       {selectedMenu === "maqam" && selectedTuningSystem && <MaqamManager admin={false} />}
       {selectedMenu === "maqam-admin" && selectedTuningSystem && <MaqamManager admin />}
-      {(selectedMenu === "maqam" || selectedMenu === "maqam-admin") && selectedTuningSystem && <MaqamTranspositions />}
       {selectedMenu === "jins" && selectedTuningSystem && <JinsManager admin={false} />}
       {selectedMenu === "jins-admin" && selectedTuningSystem && <JinsManager admin />}
+      {selectedTuningSystem && (!["tuningSystem", "tuningSystem-admin", "bibliography", "bibliography-admin", "pattern-admin"].includes(selectedMenu)) && <PitchClassWheel />}
+      {(selectedMenu === "maqam" || selectedMenu === "maqam-admin") && selectedTuningSystem && <MaqamTranspositions />}
       {(selectedMenu === "jins" || selectedMenu === "jins-admin") && selectedTuningSystem && <JinsTranspositions />}
       {selectedMenu === "sayr" && selectedMaqam && <SayrManager admin={false} />}
       {selectedMenu === "sayr-admin" && selectedMaqam && <SayrManager admin />}

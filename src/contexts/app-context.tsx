@@ -43,7 +43,7 @@ import midiNumberToNoteName from "@/functions/midiToNoteNumber";
 import { Source, SourcePageReference } from "@/models/bibliography/Source";
 import Book from "@/models/bibliography/Book";
 import Article from "@/models/bibliography/Article";
-import Pattern, { NoteDuration, reversePatternNotes } from "@/models/Pattern";
+import Pattern, { NoteDuration} from "@/models/Pattern";
 import romanToNumber from "@/functions/romanToNumber";
 import getFirstNoteName from "@/functions/getFirstNoteName";
 import { getMaqamTranspositions } from "@/functions/transpose";
