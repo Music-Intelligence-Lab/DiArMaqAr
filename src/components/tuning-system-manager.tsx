@@ -105,7 +105,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   const [editingCell, setEditingCell] = useState<{ octave: number; index: number } | null>(null);
   // Tabs for filtering tuning systems by historical period
   const tabs = [
-    { label: "All", min: -Infinity, max: Infinity },
+    { label: "all", min: -Infinity, max: Infinity },
     { label: "8th–10th c. CE", min: 700, max: 999 },
     { label: "11th–15th c. CE", min: 1000, max: 1499 },
     { label: "16th–19th c. CE", min: 1500, max: 1899 },
@@ -265,7 +265,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   // Filter tuning systems by period tab
   const filteredTuningSystems = useMemo(() => {
     const tab = tabs.find((t) => t.label === tuningSystemsFilter);
-    if (!tab || tab.label === "All") return sortedTuningSystems;
+    if (!tab || tab.label === "all") return sortedTuningSystems;
     return sortedTuningSystems.filter((ts) => {
       const y = getYearNum(ts);
       return y >= tab.min && y <= tab.max;
@@ -1747,21 +1747,21 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
               }).length;
             }
             return (
-              <button
+                <button
                 key={tab.label}
                 className={
                   "tuning-system-manager__tab" +
                   (tuningSystemsFilter === tab.label
-                    ? " tuning-system-manager__tab_active"
-                    : "")
+                  ? " tuning-system-manager__tab_active"
+                  : "")
                 }
                 onClick={() => setTuningSystemsFilter(tab.label)}
-              >
-                {tab.label}{" "}
+                >
+                {tab.label.charAt(0).toUpperCase() + tab.label.slice(1)}{" "}
                 <span className="tuning-system-manager__tab-count">
                   ({count})
                 </span>
-              </button>
+                </button>
             );
           })}
         </div>
