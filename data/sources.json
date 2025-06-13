@@ -377,5 +377,33 @@
     "placeEnglish": "Oslo",
     "placeArabic": "اوسلو",
     "ISBN": ""
+  },
+  {
+    "id": "YQh0gMMk0mKbUKc-FMgrZ",
+    "titleEnglish": "Al-Dalīl al-Mūsīqī al-ʿām fi Aṭrab al-Anghām",
+    "titleArabic": "الدليل الموسيقي العام في أطرب الأنغام",
+    "sourceType": "Book",
+    "contributors": [
+      {
+        "type": "Author",
+        "firstNameEnglish": "Tawfīq",
+        "lastNameEnglish": "Al-Ṣabbāgh",
+        "firstNameArabic": "توفيق ",
+        "lastNameArabic": "الصبّاغ"
+      }
+    ],
+    "editionEnglish": "",
+    "editionArabic": "",
+    "publicationDateEnglish": "1950",
+    "publicationDateArabic": "١٩٥٠",
+    "url": "",
+    "dateAccessed": "",
+    "originalPublicationDateEnglish": "",
+    "originalPublicationDateArabic": "",
+    "publisherEnglish": "Maṭbaʿat al-Iḥsān",
+    "publisherArabic": "مطبعة الإحسان",
+    "placeEnglish": "Aleppo",
+    "placeArabic": "حلب",
+    "ISBN": ""
   }
 ]
