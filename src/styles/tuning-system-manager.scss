@@ -405,7 +405,7 @@
     display: flex;
     align-items: center;
     position: relative;
-    width: 100%;
+    width: calc(100% - 0px);
 
     .carousel-button {
       background: none;
@@ -559,7 +559,7 @@
     flex-direction: column;
     gap: 10px;
     width: 100%;
-    overflow-x: auto;
+    overflow-x:scroll; 
     white-space: nowrap;
     height: fit-content;
     padding: 10px 0;
@@ -631,7 +631,7 @@
   }
 
   &__octave-table {
-    width: 100%;
+    width: calc(100% - 50px);
     border-collapse: collapse;
     border-spacing: 0;
     overflow: auto;
