@@ -631,12 +631,10 @@ export function AppContextProvider({
     return new Promise((resolve) => {
       const beatSec = 60 / soundSettings.tempo;
 
-      // 1) FALLBACK “straight ascending” if no pattern is selected
       if (
         !soundSettings.selectedPattern ||
         !soundSettings.selectedPattern.getNotes().length
       ) {
-        // total time = (number of notes) * (beat duration)
         const totalTimeMs = frequencies.length * beatSec * 1000;
 
         frequencies.forEach((freq, i) => {
@@ -645,7 +643,6 @@ export function AppContextProvider({
           }, i * beatSec * 1000);
         });
 
-        // resolve after all notes have been scheduled AND played
         setTimeout(() => {
           resolve();
         }, totalTimeMs);
@@ -653,17 +650,13 @@ export function AppContextProvider({
         return;
       }
 
-      // 2) THERE IS A PATTERN: build the “extendedFrequencies” window
-      // const patternNotes = ascending ? soundSettings.selectedPattern.getNotes() : reversePatternNotes(soundSettings.selectedPattern.getNotes());
       const patternNotes = soundSettings.selectedPattern.getNotes();
-      // find the highest degree number (e.g. "III" → 3)
       const maxDegree = Math.max(
         ...patternNotes.map((n) =>
           n.scaleDegree === "0" ? 0 : romanToNumber(n.scaleDegree)
         )
       );
 
-      // if not enough input freqs → fallback ascending
       if (frequencies.length < maxDegree) {
         const totalTimeMs = frequencies.length * beatSec * 1000;
 
@@ -684,8 +677,6 @@ export function AppContextProvider({
         ...frequencies,
         ...frequencies.map((f) => f * 2).slice(1, maxDegree),
       ];
-
-      // 3) SLIDING-WINDOW “pattern” scheduling
 
       const n = frequencies.length;
       let cumulativeTimeSec = 0;
@@ -719,6 +710,7 @@ export function AppContextProvider({
           }
 
           setTimeout(() => {
+            console.log("TEST")
             playNoteFrequency(freqToPlay, durSec);
           }, cumulativeTimeSec * 1000);
         }
