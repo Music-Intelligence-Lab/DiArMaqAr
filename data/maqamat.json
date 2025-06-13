@@ -685,6 +685,62 @@
     "sourcePageReferences": []
   },
   {
+    "id": "22",
+    "name": "maqām nahāwand al-'ushayrān",
+    "ascendingNoteNames": [
+      "ʿushayrān",
+      "kawasht",
+      "rāst",
+      "dūgāh",
+      "buselīk/ʿushshāq",
+      "chahargāh",
+      "nawā",
+      "ḥuseinī"
+    ],
+    "descendingNoteNames": [
+      "ḥuseinī",
+      "nawā",
+      "chahargāh",
+      "buselīk/ʿushshāq",
+      "dūgāh",
+      "rāst",
+      "kawasht",
+      "ʿushayrān"
+    ],
+    "suyūr": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "23",
+    "name": "maqām ḥijāz kār al-rāst",
+    "ascendingNoteNames": [
+      "rāst",
+      "zirguleh",
+      "buselīk/ʿushshāq",
+      "chahargāh",
+      "nawā",
+      "ḥiṣār",
+      "māhūr",
+      "kurdān"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "māhūr",
+      "ḥiṣār",
+      "nawā",
+      "chahargāh",
+      "buselīk/ʿushshāq",
+      "zirguleh",
+      "rāst"
+    ],
+    "suyūr": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
     "id": "24",
     "name": "maqām bayāt ḥuseinī",
     "ascendingNoteNames": [
@@ -2502,6 +2558,34 @@
       "nīm ḥuseinī",
       "nawā",
       "chahargāh"
+    ],
+    "suyūr": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "51",
+    "name": "maqām kurd al-kawasht",
+    "ascendingNoteNames": [
+      "kawasht",
+      "rāst",
+      "dūgāh",
+      "buselīk/ʿushshāq",
+      "ḥijāz",
+      "nawā",
+      "ḥuseinī",
+      "māhūr"
+    ],
+    "descendingNoteNames": [
+      "māhūr",
+      "ḥuseinī",
+      "nawā",
+      "ḥijāz",
+      "buselīk/ʿushshāq",
+      "dūgāh",
+      "zirguleh",
+      "kawasht"
     ],
     "suyūr": [],
     "commentsEnglish": "",
