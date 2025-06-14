@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { AppContextProvider } from "@/contexts/app-context";
+import { SoundContextProvider } from "@/contexts/sound-context";
 import { FilterContextProvider } from "@/contexts/filter-context";
 import { MenuContextProvider } from "@/contexts/menu-context";
 import Navbar from "@/components/navbar";
@@ -30,14 +31,16 @@ export default function RootLayout({
         <meta name="google" content="notranslate" />
       </head>
       <body className={`${readexPro.variable}`}>
-        <AppContextProvider>
-          <MenuContextProvider>
-            <FilterContextProvider>
-              <Navbar />
-              <main className="center-container">{children}</main>
-            </FilterContextProvider>
-          </MenuContextProvider>
-        </AppContextProvider>
+          <AppContextProvider>
+            <SoundContextProvider>
+              <MenuContextProvider>
+                <FilterContextProvider>
+                  <Navbar />
+                  <main className="center-container">{children}</main>
+                </FilterContextProvider>
+              </MenuContextProvider>
+            </SoundContextProvider>
+          </AppContextProvider>
       </body>
     </html>
   );

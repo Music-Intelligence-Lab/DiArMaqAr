@@ -1,6 +1,7 @@
 "use client";
 
-import { Cell, useAppContext } from "@/contexts/app-context";
+import useAppContext from "@/contexts/app-context";
+import { Cell } from "@/models/Cell";
 import React, { useState, useEffect } from "react";
 import { MaqamModulations, MaqamTransposition } from "@/models/Maqam";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";

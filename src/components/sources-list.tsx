@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useAppContext } from "@/contexts/app-context";
+import useAppContext from "@/contexts/app-context";
 import { Source } from "@/models/bibliography/Source";
 import Book from "@/models/bibliography/Book";
 import Article from "@/models/bibliography/Article";

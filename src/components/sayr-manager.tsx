@@ -1,7 +1,7 @@
 "use client";
 
 import React, { FormEvent, useEffect, useState } from "react";
-import { useAppContext } from "@/contexts/app-context";
+import useAppContext from "@/contexts/app-context";
 import { Sayr, SayrStop } from "@/models/Maqam";
 import { octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames } from "@/models/NoteName";
 import { nanoid } from "nanoid";

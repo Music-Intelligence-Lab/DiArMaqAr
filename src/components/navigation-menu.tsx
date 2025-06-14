@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useMenuContext } from "@/contexts/menu-context";
+import useMenuContext from "@/contexts/menu-context";
 import MenuIcon from "@mui/icons-material/Menu";
 import Link from "next/link";
 

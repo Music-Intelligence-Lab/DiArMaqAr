@@ -2,8 +2,8 @@
 
 import { useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useAppContext } from "@/contexts/app-context";
-import { useMenuContext } from "@/contexts/menu-context";
+import useAppContext from "@/contexts/app-context";
+import useMenuContext from "@/contexts/menu-context";
 import TuningSystemManager from "@/components/tuning-system-manager";
 import JinsTranspositions from "@/components/jins-transpositions";
 import MaqamTranspositions from "@/components/maqam-transpositions";

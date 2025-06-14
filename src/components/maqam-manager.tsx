@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
-import { useAppContext } from "@/contexts/app-context";
-import { useFilterContext } from "@/contexts/filter-context";
+import useAppContext from "@/contexts/app-context";
+import useFilterContext from "@/contexts/filter-context";
 import Maqam from "@/models/Maqam";
 import { getMaqamTranspositions } from "@/functions/transpose";
 import { updateMaqamat } from "@/functions/update";

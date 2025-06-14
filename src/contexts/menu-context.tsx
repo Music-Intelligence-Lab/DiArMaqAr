@@ -82,7 +82,7 @@ export function MenuContextProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export function useMenuContext() {
+export default function useMenuContext() {
   const context = useContext(MenuContext);
   if (!context) {
     throw new Error("useMenu must be used within a MenuProvider");

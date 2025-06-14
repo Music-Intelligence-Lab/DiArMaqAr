@@ -1,7 +1,7 @@
 "use client";
 
-import { useAppContext } from "@/contexts/app-context";
-import { useFilterContext } from "@/contexts/filter-context";
+import useAppContext from "@/contexts/app-context";
+import useFilterContext from "@/contexts/filter-context";
 import Jins from "@/models/Jins";
 import React, { useState, useEffect, useMemo } from "react";
 import { getJinsTranspositions } from "@/functions/transpose";
