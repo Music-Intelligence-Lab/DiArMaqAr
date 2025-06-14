@@ -3,7 +3,7 @@ import detectPitchClassType from "@/functions/detectPitchClassType";
 import { NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
-import { CellDetails } from "@/contexts/app-context";
+import { CellDetails } from "@/models/Cell";
 import { octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames, octaveThreeNoteNames, octaveFourNoteNames } from "@/models/NoteName";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import { getIntervalPattern, getTranspositions, mergeTranspositions, Interval } from "@/functions/transpose";

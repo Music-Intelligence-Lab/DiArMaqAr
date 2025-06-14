@@ -2,8 +2,8 @@
 
 import React, { useEffect, useRef, useMemo } from "react";
 import SettingsCard from "@/components/settings-cards";
-import { useAppContext } from "@/contexts/app-context";
-import { useMenuContext } from "@/contexts/menu-context";
+import useAppContext from "@/contexts/app-context";
+import useMenuContext from "@/contexts/menu-context";
 import { Sayr } from "@/models/Maqam";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import NavigationMenu from "./navigation-menu";

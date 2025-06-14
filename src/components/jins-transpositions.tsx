@@ -2,7 +2,9 @@
 "use client";
 
 import React from "react";
-import { CellDetails, useAppContext } from "@/contexts/app-context";
+import useAppContext from "@/contexts/app-context";
+import useSoundContext from "@/contexts/sound-context";
+import { CellDetails } from "@/models/Cell";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import computeRatio from "@/functions/computeRatio";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
@@ -16,11 +18,11 @@ export default function JinsTranspositions() {
     allCellDetails,
     centsTolerance,
     setCentsTolerance,
-    playNoteFrequency,
-    playSequence,
     sources,
     setSelectedJinsTransposition,
   } = useAppContext();
+
+  const { playNoteFrequency, playSequence } = useSoundContext();
 
   if (!selectedJins || !selectedTuningSystem) return null;
 

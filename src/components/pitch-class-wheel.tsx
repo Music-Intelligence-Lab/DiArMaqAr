@@ -1,6 +1,8 @@
 "use client";
 import React, { useEffect, useState, useRef, useMemo } from "react";
-import { Cell, CellDetails, useAppContext } from "@/contexts/app-context";
+import useAppContext from "@/contexts/app-context";
+import useSoundContext from "@/contexts/sound-context";
+import { Cell, CellDetails } from "@/models/Cell";
 import { MaqamTransposition } from "@/models/Maqam";
 import { getIntervalPattern, getTranspositions, mergeTranspositions } from "@/functions/transpose";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
@@ -45,9 +47,10 @@ export default function PitchClassWheel() {
     selectedCellDetails,
     setSelectedCells,
     allCellDetails,
-    activeCells,
     centsTolerance,
   } = useAppContext();
+
+  const { activeCells } = useSoundContext();
 
   const rowRef = useRef<HTMLDivElement>(null);
   const isDown = useRef(false);

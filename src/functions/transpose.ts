@@ -1,4 +1,5 @@
-import { CellDetails } from "@/contexts/app-context";
+import { CellDetails } from "@/models/Cell";
+
 import computeRatio, { convertRatioToNumber } from "./computeRatio";
 import Maqam from "@/models/Maqam";
 import Jins from "@/models/Jins";

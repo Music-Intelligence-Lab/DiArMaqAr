@@ -2,12 +2,14 @@
 
 import React from "react";
 import { Slider } from "@mui/material";
-import { useAppContext } from "@/contexts/app-context";
-import { useMenuContext } from "@/contexts/menu-context";
+import useAppContext from "@/contexts/app-context";
+import useSoundContext from "@/contexts/sound-context";
+import useMenuContext from "@/contexts/menu-context";
 import SettingsIcon from "@mui/icons-material/Settings";
 
 const SettingsCard = () => {
-  const { soundSettings, setSoundSettings, clearSelections, midiInputs, midiOutputs, patterns, setRefresh } = useAppContext();
+  const { clearSelections, patterns } = useAppContext();
+  const { soundSettings, setSoundSettings, midiInputs, midiOutputs, setRefresh } = useSoundContext();
 
   const { openSettings, setOpenSettings, openNavigation, setOpenNavigation } = useMenuContext();
 

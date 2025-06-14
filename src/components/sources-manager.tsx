@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useAppContext } from "@/contexts/app-context";
+import useAppContext from "@/contexts/app-context";
 import { Contributor } from "@/models/bibliography/AbstractSource";
 import Book from "@/models/bibliography/Book";
 import Article from "@/models/bibliography/Article";

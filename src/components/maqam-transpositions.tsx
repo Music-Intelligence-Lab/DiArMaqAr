@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { Cell, CellDetails, useAppContext } from "@/contexts/app-context";
+import useAppContext from "@/contexts/app-context";
+import useSoundContext from "@/contexts/sound-context";
+import { Cell, CellDetails } from "@/models/Cell";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { getIntervalPattern, getTranspositions, mergeTranspositions, Interval } from "@/functions/transpose";
@@ -16,11 +18,11 @@ export default function MaqamTranspositions() {
     allCellDetails,
     centsTolerance,
     setCentsTolerance,
-    playNoteFrequency,
-    playSequence,
     ajnas,
     setSelectedMaqamTransposition,
   } = useAppContext();
+
+  const { playNoteFrequency, playSequence } = useSoundContext();
 
   const [highlightedNotes, setHighlightedNotes] = useState<{ index: number; noteNames: string[] }>({ index: -1, noteNames: [] });
 

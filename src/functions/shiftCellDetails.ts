@@ -1,7 +1,8 @@
 import { octaveFourNoteNames, octaveOneNoteNames, octaveThreeNoteNames, octaveTwoNoteNames, octaveZeroNoteNames } from "@/models/NoteName";
 import { getEnglishNoteName } from "./noteNameMappings";
 import { shiftPitchClass } from "./convertPitchClass";
-import { CellDetails } from "@/contexts/app-context";
+import { CellDetails } from "@/models/Cell";
+
 
 export default function shiftCellDetails(cellDetails: CellDetails): CellDetails {
   const newOctave = cellDetails.octave + 1;

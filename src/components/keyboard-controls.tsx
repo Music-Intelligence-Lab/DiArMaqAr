@@ -1,10 +1,14 @@
 "use client";
 
 import { useEffect } from "react";
-import { CellDetails, useAppContext } from "@/contexts/app-context";
+import useAppContext from "@/contexts/app-context";
+import useSoundContext from "@/contexts/sound-context";
+import { CellDetails } from "@/models/Cell";
+
 
 export default function KeyboardControls() {
-  const { selectedCellDetails, noteOn, noteOff, selectedMaqam, selectedMaqamTransposition, allCellDetails, setActiveCells } = useAppContext();
+  const { selectedCellDetails, selectedMaqam, selectedMaqamTransposition, allCellDetails } = useAppContext();
+  const { noteOn, noteOff, setActiveCells } = useSoundContext();
 
   // home row + semicolon + apostrophe
   const firstRowKeys = ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]"];

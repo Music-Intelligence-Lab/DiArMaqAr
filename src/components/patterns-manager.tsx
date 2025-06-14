@@ -1,7 +1,7 @@
 "use client";
 
 import React, { FormEvent, useEffect, useState } from "react";
-import { useAppContext } from "@/contexts/app-context";
+import useAppContext from "@/contexts/app-context";
 import Pattern, { PatternNote, SCALE_DEGREES, DURATION_OPTIONS } from "@/models/Pattern";
 import { nanoid } from "nanoid";
 import { updatePatterns } from "@/functions/update";
