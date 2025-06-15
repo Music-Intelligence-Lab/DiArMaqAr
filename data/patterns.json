@@ -165,12 +165,12 @@
     "notes": [
       {
         "scaleDegree": "I",
-        "noteDuration": "4n",
-        "isTarget": false
+        "noteDuration": "8n",
+        "isTarget": true
       },
       {
-        "scaleDegree": "II",
-        "noteDuration": "4n",
+        "scaleDegree": "-VII",
+        "noteDuration": "8n",
         "isTarget": false
       }
     ]
@@ -335,6 +335,27 @@
         "scaleDegree": "+VII",
         "noteDuration": "4n",
         "isTarget": false
+      }
+    ]
+  },
+  {
+    "id": "Vwgo4te4XXOwcHxQdoiBj",
+    "name": "basic desc",
+    "notes": [
+      {
+        "scaleDegree": "III",
+        "noteDuration": "8n",
+        "isTarget": false
+      },
+      {
+        "scaleDegree": "II",
+        "noteDuration": "8n",
+        "isTarget": false
+      },
+      {
+        "scaleDegree": "I",
+        "noteDuration": "8n",
+        "isTarget": true
       }
     ]
   }
