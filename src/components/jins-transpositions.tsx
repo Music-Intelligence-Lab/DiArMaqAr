@@ -39,7 +39,6 @@ export default function JinsTranspositions() {
 
   const sequences: CellDetails[][] = getTranspositions(allCellDetails, intervalPattern, true, useRatio, centsTolerance);
 
-  const rowCount = 5;
 
   return (
     <>
@@ -77,7 +76,7 @@ export default function JinsTranspositions() {
                 {1}
               </td>
 
-              <td className="jins-transpositions__jins-name-row" colSpan={11}>
+              <td className="jins-transpositions__jins-name-row" colSpan={2 + (jinsCellDetails.length - 1) * 2}>
                 <span className="jins-transpositions__transposition-title">
                   Darajat al-Istiqrār (tonic/finalis): {jinsCellDetails[0].noteName + ` (${getEnglishNoteName(jinsCellDetails[0].noteName)})`}
                 </span>
@@ -200,7 +199,8 @@ export default function JinsTranspositions() {
             {sequences
               .filter((sequence) => sequence[0].noteName !== jinsCellDetails[0].noteName)
               .map((sequence, row) => {
-                const colCount = 2 + (sequence.length - 1) * 2;
+              const colCount = (jinsCellDetails.length) * 2;
+              const rowCount = 5;
                 return (
                   <React.Fragment key={row}>
                     <tr>
@@ -211,7 +211,7 @@ export default function JinsTranspositions() {
                         {row + 2}
                       </td>
 
-                      <td className="jins-transpositions__jins-name-row" colSpan={colCount}>
+                      <td className="jins-transpositions__jins-name-row" colSpan={2 + (jinsCellDetails.length - 1) * 2}>
                         <span className="jins-transpositions__transposition-title">{`${selectedJins.getName()} al-${
                           sequence[0].noteName
                         } (${getEnglishNoteName(sequence[0].noteName)})`}</span>
