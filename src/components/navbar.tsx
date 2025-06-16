@@ -22,7 +22,7 @@ export default function Navbar() {
     checkIfMaqamIsSelectable,
     maqamSayrId,
     sources,
-    selectedCellDetails,
+    selectedCells,
     setSelectedTuningSystem,
     clearSelections,
     setPitchClasses,
@@ -58,7 +58,7 @@ export default function Navbar() {
       left: targetScrollLeft,
       behavior: "smooth",
     });
-  }, [selectedCellDetails]);
+  }, [selectedCells]);
 
   const selectedSayr: Sayr | null = selectedMaqam && maqamSayrId ? selectedMaqam.getSuyūr().find((sayr) => sayr.id === maqamSayrId) || null : null;
 

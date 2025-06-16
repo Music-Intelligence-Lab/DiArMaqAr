@@ -14,9 +14,9 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
     setMaqamat,
     selectedMaqam,
     setSelectedMaqam,
-    selectedCellDetails,
+    selectedCells,
     setSelectedCells,
-    allCellDetails,
+    allCells,
     clearSelections,
     handleClickMaqam,
     checkIfMaqamIsSelectable,
@@ -59,11 +59,11 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
     maqamat.forEach((maqam) => {
       map.set(
         maqam.getId(),
-        getMaqamTranspositions(allCellDetails, maqam, true)
+        getMaqamTranspositions(allCells, maqam, true)
       );
     });
     return map;
-  }, [maqamat, allCellDetails]);
+  }, [maqamat, allCells]);
 
   const numberOfPitchClasses = selectedTuningSystem
     ? selectedTuningSystem.getPitchClasses().length
@@ -79,7 +79,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
   while (setOfMaqamat.has(newMaqamIdNum.toString())) newMaqamIdNum++;
   const newMaqamId = newMaqamIdNum.toString();
 
-  const selectedCellNoteNames = selectedCellDetails.map((d) => d.noteName);
+  const selectedCellNoteNames = selectedCells.map((d) => d.noteName);
 
   // Base save logic
   const handleSaveMaqam = async (maqam: Maqam) => {
@@ -311,7 +311,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
               }}
               className="maqam-manager__save-button"
             >
-              Save Details
+              Save S
             </button>
             <button
               onClick={handleSaveAscending}

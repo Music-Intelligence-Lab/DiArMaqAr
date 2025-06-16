@@ -1,5 +1,3 @@
-// src/functions/tuningSystemHelpers.ts
-
 import TuningSystem from "@/models/TuningSystem";
 import TransliteratedNoteName, {
   TransliteratedNoteNameOctaveOne,
@@ -11,26 +9,18 @@ import TransliteratedNoteName, {
   octaveFourNoteNames,
 } from "@/models/NoteName";
 import detectPitchClassType from "@/functions/detectPitchClassType";
-import convertPitchClass, {
-  shiftPitchClass,
-  frequencyToMidiNoteNumber,
-} from "@/functions/convertPitchClass";
+import convertPitchClass, { shiftPitchClass, frequencyToMidiNoteNumber } from "@/functions/convertPitchClass";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
-import { CellDetails } from "@/models/Cell";
+import Cell from "@/models/Cell";
 
-export function getTuningSystemCellDetails(
-  tuningSystem: TuningSystem,
-  startingNote: TransliteratedNoteName
-): CellDetails[] {
+export function getTuningSystemCells(tuningSystem: TuningSystem, startingNote: TransliteratedNoteName): Cell[] {
   const pitchArr = tuningSystem.getPitchClasses();
   const nPC = pitchArr.length;
   const allSets = tuningSystem.getSetsOfNoteNames();
-  // choose the right starting set
-  const startSet = allSets.find((s) => s[0] === startingNote) ?? allSets[0];
+  const noteNames = allSets.find((s) => s[0] === startingNote) ?? allSets[0];
 
-  // mapIndices
   const O1 = octaveOneNoteNames.length;
-  const selectedIndices = startSet.slice(0, nPC).map((nm) => {
+  const selectedIndices = noteNames.slice(0, nPC).map((nm) => {
     const i1 = octaveOneNoteNames.indexOf(nm as TransliteratedNoteNameOctaveOne);
     if (i1 >= 0) return i1;
     const i2 = octaveTwoNoteNames.indexOf(nm as TransliteratedNoteNameOctaveTwo);
@@ -44,25 +34,19 @@ export function getTuningSystemCellDetails(
   if (type === "unknown") return [];
 
   const stringLen = tuningSystem.getStringLength();
-  const refFreq = tuningSystem.getDefaultReferenceFrequency();
-  // precompute open string length at octave 1, index 0
-  const openConv = convertPitchClass(
-    shiftPitchClass(pitchArr[0], type, 1),
-    type,
-    stringLen,
-    refFreq
-  )!;
+  const actualReferenceFrequency = tuningSystem.getReferenceFrequencies()[noteNames[0]] ?? tuningSystem.getDefaultReferenceFrequency();
+  const openConv = convertPitchClass(shiftPitchClass(pitchArr[0], type, 1), type, stringLen, actualReferenceFrequency)!;
   const openLen = parseFloat(openConv.stringLength);
 
   const abjadArr = tuningSystem.getAbjadNames();
 
-  const cells: CellDetails[] = [];
+  const cells: Cell[] = [];
 
   for (let octave = 0; octave < 4; octave++) {
     for (let idx = 0; idx < nPC; idx++) {
       const basePc = pitchArr[idx];
-      const shifted = shiftPitchClass(basePc, type, octave as 0|1|2|3);
-      const conv = convertPitchClass(shifted, type, stringLen, refFreq);
+      const shifted = shiftPitchClass(basePc, type, octave as 0 | 1 | 2 | 3);
+      const conv = convertPitchClass(shifted, type, stringLen, actualReferenceFrequency);
       if (!conv) continue;
 
       // noteName
@@ -79,8 +63,8 @@ export function getTuningSystemCellDetails(
 
       // abjadName (only for octaves 1 & 2)
       let abjadName = "";
-        const offset = octave <= 1 ? 0 : nPC;
-        abjadName = abjadArr[offset + idx] || "";
+      const offset = octave <= 1 ? 0 : nPC;
+      abjadName = abjadArr[offset + idx] || "";
 
       // fretDivision
       const thisLen = parseFloat(conv.stringLength);
