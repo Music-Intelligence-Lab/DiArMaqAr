@@ -1,28 +1,23 @@
 "use client";
 
 import React, { createContext, useState, useEffect, useMemo, useContext, useCallback } from "react";
-import tuningSystemsData from "@/../data/tuningSystems.json";
-import ajnasData from "@/../data/ajnas.json";
-import maqamatData from "@/../data/maqamat.json";
-import sourcesData from "@/../data/sources.json";
-import patternsData from "@/../data/patterns.json";
 import TuningSystem from "@/models/TuningSystem";
 import Jins, { JinsTransposition } from "@/models/Jins";
 import TransliteratedNoteName, { TransliteratedNoteNameOctaveOne, TransliteratedNoteNameOctaveTwo } from "@/models/NoteName";
 import detectPitchClassType from "@/functions/detectPitchClassType";
-import convertPitchClass, { shiftPitchClass } from "@/functions/convertPitchClass";
+import convertPitchClass, { frequencyToMidiNoteNumber, shiftPitchClass } from "@/functions/convertPitchClass";
 import { octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames, octaveThreeNoteNames, octaveFourNoteNames } from "@/models/NoteName";
-import Maqam, { MaqamTransposition, Sayr, MaqamModulations } from "@/models/Maqam";
+import Maqam, { MaqamTransposition, MaqamModulations } from "@/models/Maqam";
 import getNoteNamesUsedInTuningSystem from "@/functions/getNoteNamesUsedInTuningSystem";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
-import { Source, SourcePageReference } from "@/models/bibliography/Source";
-import Book from "@/models/bibliography/Book";
-import Article from "@/models/bibliography/Article";
-import Pattern, { NoteDuration } from "@/models/Pattern";
+import { Source} from "@/models/bibliography/Source";
+import Pattern from "@/models/Pattern";
 import getFirstNoteName from "@/functions/getFirstNoteName";
 import { getMaqamTranspositions } from "@/functions/transpose";
 import shawwaMapping from "@/functions/shawwaMapping";
 import { Cell, CellDetails } from "@/models/Cell";
+import { getTuningSystems, getMaqamat, getAjnas, getSources, getPatterns } from "@/functions/import";
+import { getTuningSystemCellDetails } from "@/functions/export";
 
 interface AppContextInterface {
   tuningSystems: TuningSystem[];
@@ -113,73 +108,15 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     .filter((p) => p.length > 0);
 
   useEffect(() => {
-    const formattedTuningSystems = tuningSystemsData.map((data) => {
-      return new TuningSystem(
-        data.titleEnglish,
-        data.titleArabic || "",
-        data.year,
-        data.sourceEnglish,
-        data.sourceArabic,
-        data.sourcePageReferences as SourcePageReference[],
-        data.creatorEnglish,
-        data.creatorArabic,
-        data.commentsEnglish,
-        data.commentsArabic,
-        data.pitchClasses,
-        data.noteNames as TransliteratedNoteName[][],
-        data.abjadNames,
-        Number(data.stringLength),
-        data.referenceFrequencies as unknown as { [noteName: string]: number },
-        Number(data.defaultReferenceFrequency)
-      );
-    });
+    setTuningSystems(getTuningSystems());
 
-    setTuningSystems(formattedTuningSystems);
+    setAjnas(getAjnas());
 
-    const loadedAjnas = ajnasData.map(
-      (data) => new Jins(data.id, data.name, data.noteNames, data.commentsEnglish, data.commentsArabic, data.sourcePageReferences)
-    );
-    setAjnas(loadedAjnas);
+    setMaqamat(getMaqamat());
 
-    const loadedMaqamat = maqamatData.map(
-      (data) =>
-        new Maqam(
-          data.id,
-          data.name,
-          data.ascendingNoteNames,
-          data.descendingNoteNames,
-          data.suyūr as Sayr[],
-          data.commentsEnglish,
-          data.commentsArabic,
-          data.sourcePageReferences
-        )
-    );
-    setMaqamat(loadedMaqamat);
+    setSources(getSources());
 
-    const loadedSources = sourcesData.map((data) => {
-      if (data.sourceType === "Book") {
-        return Book.fromJSON(data);
-      } else if (data.sourceType === "Article") {
-        return Article.fromJSON(data);
-      } else {
-        throw new Error(`Unknown sourceType "${data.sourceType}"`);
-      }
-    });
-    setSources(loadedSources);
-
-    const loadedPatterns = patternsData.map(
-      (data) =>
-        new Pattern(
-          data.id,
-          data.name,
-          data.notes.map((note) => ({
-            scaleDegree: note.scaleDegree as string,
-            noteDuration: note.noteDuration as NoteDuration,
-            isTarget: note.isTarget || false,
-          }))
-        )
-    );
-    setPatterns(loadedPatterns);
+    setPatterns(getPatterns());
 
     setInitialMappingDone(true);
   }, []);
@@ -217,93 +154,98 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   }, [selectedTuningSystem]);
 
   const getCellDetails = (cell: Cell): CellDetails => {
-    const emptyDetails: CellDetails = {
-      noteName: "",
-      fraction: "",
-      cents: "",
-      ratios: "",
-      stringLength: "",
-      frequency: "",
-      englishName: "",
-      originalValue: "",
-      originalValueType: "",
-      index: cell.index,
-      octave: cell.octave,
-    };
-
-    if (!selectedTuningSystem) return emptyDetails;
-
-    const pitchArr = selectedTuningSystem.getPitchClasses();
-    if (cell.index < 0 || cell.index >= pitchArr.length) return emptyDetails;
-
-    const basePc = pitchArr[cell.index];
-
-    const pitchType = detectPitchClassType(pitchArr);
-    if (pitchType === "unknown") return emptyDetails;
-
-    const actualReferenceFrequency = referenceFrequencies[getFirstNoteName(selectedIndices)] || selectedTuningSystem.getDefaultReferenceFrequency();
-
-    const shiftedPc = shiftPitchClass(basePc, pitchType, cell.octave as 0 | 1 | 2 | 3);
-    const conv = convertPitchClass(shiftedPc, pitchType, selectedTuningSystem.getStringLength(), actualReferenceFrequency);
-
-    if (cell.index < 0 || cell.index >= selectedIndices.length) return emptyDetails;
-
-    const combinedIndex = selectedIndices[cell.index];
-
-    const baseLength = octaveOneNoteNames.length;
-    let noteName = "none";
-
-    if (combinedIndex < baseLength) {
-      switch (cell.octave) {
-        case 0:
-          noteName = octaveZeroNoteNames[combinedIndex] || "none";
-          break;
-        case 1:
-          noteName = octaveOneNoteNames[combinedIndex] || "none";
-          break;
-        case 2:
-          noteName = octaveTwoNoteNames[combinedIndex] || "none";
-          break;
-        case 3:
-          noteName = octaveThreeNoteNames[combinedIndex] || "none";
-          break;
-        default:
-          noteName = "none";
-      }
-    } else {
-      const localIndex = combinedIndex - baseLength;
-      switch (cell.octave) {
-        case 0:
-          noteName = octaveOneNoteNames[localIndex] || "none";
-          break;
-        case 1:
-          noteName = octaveTwoNoteNames[localIndex] || "none";
-          break;
-        case 2:
-          noteName = octaveThreeNoteNames[localIndex] || "none";
-          break;
-        case 3:
-          noteName = octaveFourNoteNames[localIndex] || "none";
-          break;
-        default:
-          noteName = "none";
-      }
-    }
-
-    return {
-      noteName,
-      englishName: getEnglishNoteName(noteName),
-      fraction: conv ? conv.fraction : "-",
-      cents: conv ? conv.cents : "-",
-      ratios: conv ? conv.decimal : "-",
-      stringLength: conv ? conv.stringLength : "-",
-      frequency: conv ? conv.frequency : "-",
-      originalValue: shiftedPc,
-      originalValueType: pitchType,
-      index: cell.index,
-      octave: cell.octave,
-    };
+  const empty = {
+    noteName: "",
+    fraction: "",
+    cents: "",
+    ratios: "",
+    stringLength: "",
+    frequency: "",
+    englishName: "",
+    originalValue: "",
+    originalValueType: "",
+    index: cell.index,
+    octave: cell.octave,
+    abjadName: "",
+    fretDivision: "",
+    midiNoteNumber: 0,
   };
+
+  if (!selectedTuningSystem) return empty;
+
+  const pcs = selectedTuningSystem.getPitchClasses();
+  const nPC = pcs.length;
+  if (cell.index < 0 || cell.index >= nPC) return empty;
+
+  // 1) compute pitch conversion
+  const pitchType = detectPitchClassType(pcs);
+  if (pitchType === "unknown") return empty;
+  const basePc = pcs[cell.index];
+  const shifted = shiftPitchClass(basePc, pitchType, cell.octave as 0|1|2|3);
+  const conv = convertPitchClass(
+    shifted,
+    pitchType,
+    selectedTuningSystem.getStringLength(),
+    referenceFrequencies[getFirstNoteName(selectedIndices)] ||
+      selectedTuningSystem.getDefaultReferenceFrequency()
+  );
+  if (!conv) return empty;
+
+  // 2) figure out noteName & englishName as before
+  const combinedIndex = selectedIndices[cell.index];
+  const O1 = octaveOneNoteNames.length;
+  let noteName = "none";
+  if (combinedIndex >= 0) {
+    if (combinedIndex < O1) {
+      // first-span
+      noteName = [octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames, octaveThreeNoteNames][cell.octave][combinedIndex] || "none";
+    } else {
+      // second-span
+      const local = combinedIndex - O1;
+      noteName = [octaveOneNoteNames, octaveTwoNoteNames, octaveThreeNoteNames, octaveFourNoteNames][cell.octave][local] || "none";
+    }
+  }
+
+  // 3) abjad name: pick from your array (you’ll need to have selectedAbjadNames available here)
+  const abjadArr = selectedTuningSystem.getAbjadNames();
+  let abjadName = "";
+  if (cell.octave === 1 || cell.octave === 2) {
+    const offset = cell.octave === 1 ? 0 : nPC;
+    abjadName = abjadArr[offset + cell.index] || "";
+  }
+
+  // 4) fret division: difference in stringLength from octave-1 at index 0
+  const openStringLen = parseFloat(convertPitchClass(
+    shiftPitchClass(pcs[0], pitchType, 1),
+    pitchType,
+    selectedTuningSystem.getStringLength(),
+    referenceFrequencies[getFirstNoteName(selectedIndices)] ||
+      selectedTuningSystem.getDefaultReferenceFrequency()
+  )!.stringLength);
+  const thisLen = parseFloat(conv.stringLength);
+  const fretDivision = (openStringLen - thisLen).toString();
+
+  // 5) midi note
+  const freq = parseFloat(conv.frequency);
+  const midiNoteNumber = frequencyToMidiNoteNumber(freq);
+
+  return {
+    noteName,
+    englishName: getEnglishNoteName(noteName),
+    fraction: conv.fraction,
+    cents: conv.cents,
+    ratios: conv.decimal,
+    stringLength: conv.stringLength,
+    frequency: conv.frequency,
+    originalValue: shifted,
+    originalValueType: pitchType,
+    index: cell.index,
+    octave: cell.octave,
+    abjadName,
+    fretDivision,
+    midiNoteNumber,
+  };
+};
 
   const getAllCells = (): Cell[] => {
     if (!selectedTuningSystem) return [];
@@ -617,6 +559,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       }
     }
   };
+
+  if (selectedTuningSystem) console.log(getTuningSystemCellDetails(selectedTuningSystem, getFirstNoteName(selectedIndices)));
 
   return (
     <AppContext.Provider

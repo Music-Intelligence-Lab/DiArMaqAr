@@ -10,7 +10,7 @@
     background-color: $secondary;
     color: #fff;
     font-size: 1.5rem;
-    font-weight: 400;
+    font-weight: 200;
     text-align: left;
     padding: 1rem 1rem;
     border: solid 1px $grey;
@@ -36,7 +36,7 @@
     cursor: pointer;
     margin-right: 10px;
     font-size: 12px;
-    width: 190px;
+    width: 200px;
     height: 40px;
     vertical-align: middle;
     text-align: center;
@@ -45,7 +45,6 @@
       outline: transparent;
       border: white solid 1px;
     }
-
 
     &:hover {
       background-color: rgba($primary, 1);
@@ -100,17 +99,11 @@
   &__table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed;
     margin-bottom: 50px;
     font-size: 12px;
-    table-layout: auto;
     font-weight: 200;
 
-
-    tr {
-      text-align: left;
-      width: 100%;
-
-    }
 
     th {
       vertical-align: middle;
@@ -118,40 +111,33 @@
       text-align: left;
       padding: 10px;
       border: solid 1px $grey;
-
+      font-weight: 200;
     }
 
     td {
-      vertical-align: middle;
-      border: solid 1px $grey;
+    vertical-align: middle;
+      margin-bottom: 500px;
+      text-align: left;
       padding: 10px;
-    }
+      border: solid 1px $grey;
+      font-weight: 200;    }
 
-    tbody {
-      font-weight: 200;
-      width: 100%;
 
-    }
-  }
-
-  &__cell {
-    min-width: 50px !important;
-    font-weight: 200;
-    font-size: 14px;
   }
 
   &__transposition-title {
-    font-size: 20px;
+    font-size: 18px;
+    padding-left: 10px;
     padding-right: 20px;
   }
 
   &__transposition-number {
-    background-color: black;
-    width: 30px !important;
+    width: 34px !important;
     font-size: 20px;
     padding: 0px 0px 0px 0px !important;
     margin: 0px 0px 0px 0px;
     text-align: center !important;
+    background-color: black;
 
     &_0 {
       background-color: $primary;
@@ -173,26 +159,24 @@
 
   }
 
-  &__header-cell {
+  &__cell {
     text-align: left;
     background-color: transparent;
-    font-weight: 200;
+
+    &_highlighted {
+      background-color: rgba($secondary, 0.2) !important;
+    }
   }
 
   &__row-header {
-    font-weight: 400;
-    width: 120px !important;
     background-color: $medium-grey;
     text-transform: capitalize;
-    font-size: 14px;
-
-
   }
 
   &__jins-name-row {
-    font-weight: 400;
     background-color: black;
     color: white;
+    padding: 15px;
   }
 
   &__input {
@@ -205,8 +189,7 @@
   }
 
   .jins-transpositions__spacer {
-    padding: 0px;
+    padding: 10px !important;
     border: 0px;
-    height: 20px !important;
   }
 }
