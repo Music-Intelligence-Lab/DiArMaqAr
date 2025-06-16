@@ -9,7 +9,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 
 const SettingsCard = () => {
   const { clearSelections, patterns } = useAppContext();
-  const { soundSettings, setSoundSettings, midiInputs, midiOutputs, setRefresh } = useSoundContext();
+  const { soundSettings, setSoundSettings, midiInputs, midiOutputs, setRefresh, stopAll } = useSoundContext();
 
   const { openSettings, setOpenSettings, openNavigation, setOpenNavigation } = useMenuContext();
 
@@ -303,30 +303,11 @@ const SettingsCard = () => {
               </>
             )}
           </details>
-
-          {/* <details className="settings-card__details">
-            <summary className="settings-card__summary">Filters</summary>
-            {Object.keys(filters).map((key) => (
-              <div key={key} className="settings-card__filter-container">
-                <label htmlFor={`${key}-filter`} className="settings-card__filter-label">
-                  {key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, " $1")}:
-                </label>
-                <label className="settings-card__filter-checkbox">
-                  <input
-                    type="checkbox"
-                    id={`${key}-filter`}
-                    checked={filters[key as keyof typeof filters]}
-                    onChange={() => setFilters((prev) => ({ ...prev, [key]: !prev[key as keyof typeof filters] }))}
-                    className="settings-card__checkbox"
-                  />
-                  <div className="checkmark"></div>
-                </label>
-              </div>
-            ))}
-          </details> */}
-
           <button className="settings-card__clear-button" onClick={clearSelections}>
             Clear Selections
+          </button>
+          <button className="settings-card__clear-button" onClick={stopAll}>
+            Stop All Sounds
           </button>
         </div>
       </div>
