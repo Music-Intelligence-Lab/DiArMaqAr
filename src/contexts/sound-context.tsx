@@ -45,12 +45,12 @@ interface SoundContextInterface {
   midiInputs: MidiPortInfo[];
   midiOutputs: MidiPortInfo[];
   setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+  stopAll: () => void;
 }
 
 const SoundContext = createContext<SoundContextInterface | null>(null);
 
 export function SoundContextProvider({ children }: { children: React.ReactNode }) {
-
   const { selectedTuningSystem, selectedMaqam, selectedJins, pitchClasses, allCellDetails, selectedCellDetails } = useAppContext();
 
   const [soundSettings, setSoundSettings] = useState<SoundSettings>({
@@ -71,6 +71,8 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
   });
 
   const activeNotesRef = useRef<Map<number, { oscillator: OscillatorNode; gainNode: GainNode }[]>>(new Map());
+  const timeoutsRef = useRef<number[]>([]);
+  const midiActiveNotesRef = useRef<Set<number>>(new Set());
 
   const [activeCells, setActiveCells] = useState<Cell[]>([]);
 
@@ -97,6 +99,12 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     const lsb = bendValue & 0x7f;
     const msb = (bendValue >> 7) & 0x7f;
     sendMidiMessage([0xe0, lsb, msb]);
+  }
+
+  function scheduleTimeout(fn: () => void, ms: number) {
+    const id = window.setTimeout(fn, ms);
+    timeoutsRef.current.push(id);
+    return id;
   }
 
   useEffect(() => {
@@ -186,6 +194,12 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     soundSettings.selectedMidiInputId,
     soundSettings.selectedMidiOutputId,
   ]);
+
+  useEffect(() => {
+    return () => {
+      stopAll();
+    };
+  }, []);
 
   const handleMidiInput: NonNullable<MIDIInput["onmidimessage"]> = function (this: MIDIInput, ev: MIDIMessageEvent) {
     // only from our selected port
@@ -277,9 +291,12 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
       sendPitchBend(detune);
       const vel = Math.round(soundSettings.volume * 127);
       sendMidiMessage([0x90, note, vel]);
-      // schedule note-off after givenDuration (in seconds)
-      setTimeout(() => {
+
+      midiActiveNotesRef.current.add(note);
+
+      scheduleTimeout(() => {
         sendMidiMessage([0x80, note, 0]);
+        midiActiveNotesRef.current.delete(note);
       }, givenDuration * 1000);
 
       return;
@@ -317,19 +334,23 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
   };
 
   const playSequence = (frequencies: number[], ascending = true): Promise<void> => {
+    timeoutsRef.current.forEach(clearTimeout);
+    timeoutsRef.current = [];
+
     return new Promise((resolve) => {
+      console.log("Playing sequence with frequencies:", frequencies, "ascending:", ascending);
       const beatSec = 60 / soundSettings.tempo;
 
       if (!soundSettings.selectedPattern || !soundSettings.selectedPattern.getNotes().length) {
         const totalTimeMs = frequencies.length * beatSec * 1000;
 
         frequencies.forEach((freq, i) => {
-          setTimeout(() => {
+          scheduleTimeout(() => {
             playNoteFrequency(freq);
           }, i * beatSec * 1000);
         });
 
-        setTimeout(() => {
+        scheduleTimeout(() => {
           resolve();
         }, totalTimeMs);
 
@@ -343,12 +364,12 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         const totalTimeMs = frequencies.length * beatSec * 1000;
 
         frequencies.forEach((freq, i) => {
-          setTimeout(() => {
+          scheduleTimeout(() => {
             playNoteFrequency(freq);
           }, i * beatSec * 1000);
         });
 
-        setTimeout(() => {
+        scheduleTimeout(() => {
           resolve();
         }, totalTimeMs);
 
@@ -381,8 +402,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
                 freqToPlay *= 2;
               }
 
-              setTimeout(() => {
-                console.log("TEST");
+              scheduleTimeout(() => {
                 playNoteFrequency(freqToPlay, durSec);
               }, cumulativeTimeSec * 1000);
             }
@@ -409,7 +429,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
       const totalSeqMs = cumulativeTimeSec * 1000 + restTime;
 
-      setTimeout(() => {
+      scheduleTimeout(() => {
         resolve();
       }, totalSeqMs);
     });
@@ -490,6 +510,21 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     activeNotesRef.current.set(frequency, queue);
   }
 
+  function stopAll() {
+    timeoutsRef.current.forEach(clearTimeout);
+    timeoutsRef.current = [];
+
+    for (const voices of activeNotesRef.current.values()) {
+      voices.forEach(({ oscillator }) => oscillator.stop());
+    }
+    activeNotesRef.current.clear();
+
+    midiActiveNotesRef.current.forEach((note) => sendMidiMessage([0x80, note, 0]));
+    midiActiveNotesRef.current.clear();
+
+    setActiveCells([]);
+  }
+
   return (
     <SoundContext.Provider
       value={{
@@ -504,6 +539,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         midiInputs,
         midiOutputs,
         setRefresh,
+        stopAll,
       }}
     >
       {children}
