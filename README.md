@@ -250,7 +250,7 @@ In addition, the context provides core functions such as:
 - **playSequence**: Play a sequence of notes, respecting patterns and tempo.
 - **handleStartNoteNameChange**: Change the starting note and update mappings.
 - **mapIndices**: Map note names to indices in the Tuning System.
-- **getCellDetails**: Retrieve all computed details for a given cell (note name, frequency, ratios, cents, etc.).
+- **getCellS**: Retrieve all computed details for a given cell (note name, frequency, ratios, cents, etc.).
 - **getAllCells**: Get all possible cells across octaves.
 - **clearSelections**: Reset selections for cells, jins, and maqam.
 - **checkIfJinsIsSelectable** and **checkIfMaqamIsSelectable**: Validate if a jins or maqam can be selected in the current tuning.
@@ -815,7 +815,7 @@ This component bridges theoretical Sayr concepts with practical, editable struct
 | Section                      | Description                                                                                  |
 | ---------------------------- | -------------------------------------------------------------------------------------------- |
 | Sayr Selection               | Dropdown to select an existing Sayr or create a new one.                                      |
-| Sayr Details Form            | Input fields for creator name, source, page, comments (English & Arabic).                     |
+| Sayr S Form            | Input fields for creator name, source, page, comments (English & Arabic).                     |
 | Stops Section                | List of stops (notes, jins, directions) with editable options.                                |
 | Stop Controls                | Add, edit, or delete stops.                                                                  |
 | Save & Delete Buttons        | Persist or delete the Sayr.                                                                  |

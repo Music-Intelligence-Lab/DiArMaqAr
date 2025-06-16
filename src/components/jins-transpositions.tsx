@@ -4,23 +4,15 @@
 import React from "react";
 import useAppContext from "@/contexts/app-context";
 import useSoundContext from "@/contexts/sound-context";
-import { CellDetails } from "@/models/Cell";
+import Cell from "@/models/Cell";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import computeRatio from "@/functions/computeRatio";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { getIntervalPattern, getTranspositions, Interval } from "@/functions/transpose";
 
 export default function JinsTranspositions() {
-  const {
-    selectedJins,
-    selectedTuningSystem,
-    setSelectedCells,
-    allCellDetails,
-    centsTolerance,
-    setCentsTolerance,
-    sources,
-    setSelectedJinsTransposition,
-  } = useAppContext();
+  const { selectedJins, selectedTuningSystem, setSelectedCells, allCells, centsTolerance, setCentsTolerance, sources, setSelectedJinsTransposition } =
+    useAppContext();
 
   const { playNoteFrequency, playSequence } = useSoundContext();
 
@@ -30,15 +22,14 @@ export default function JinsTranspositions() {
 
   if (jinsNoteNames.length < 2) return null;
 
-  const jinsCellDetails = allCellDetails.filter((cell) => jinsNoteNames.includes(cell.noteName));
+  const jinsCells = allCells.filter((cell) => jinsNoteNames.includes(cell.noteName));
 
-  const valueType = jinsCellDetails[0].originalValueType;
+  const valueType = jinsCells[0].originalValueType;
   const useRatio = valueType === "fraction" || valueType === "ratios";
 
-  const intervalPattern: Interval[] = getIntervalPattern(jinsCellDetails, useRatio);
+  const intervalPattern: Interval[] = getIntervalPattern(jinsCells, useRatio);
 
-  const sequences: CellDetails[][] = getTranspositions(allCellDetails, intervalPattern, true, useRatio, centsTolerance);
-
+  const sequences: Cell[][] = getTranspositions(allCells, intervalPattern, true, useRatio, centsTolerance);
 
   return (
     <>
@@ -70,26 +61,26 @@ export default function JinsTranspositions() {
           <thead>
             <tr className="jins-transpositions__header">
               <td
-                className={`jins-transpositions__transposition-number jins-transpositions__transposition-number_${jinsCellDetails[0].octave}`}
+                className={`jins-transpositions__transposition-number jins-transpositions__transposition-number_${jinsCells[0].octave}`}
                 rowSpan={5}
               >
                 {1}
               </td>
 
-              <td className="jins-transpositions__jins-name-row" colSpan={2 + (jinsCellDetails.length - 1) * 2}>
+              <td className="jins-transpositions__jins-name-row" colSpan={2 + (jinsCells.length - 1) * 2}>
                 <span className="jins-transpositions__transposition-title">
-                  Darajat al-Istiqrār (tonic/finalis): {jinsCellDetails[0].noteName + ` (${getEnglishNoteName(jinsCellDetails[0].noteName)})`}
+                  Darajat al-Istiqrār (tonic/finalis): {jinsCells[0].noteName + ` (${getEnglishNoteName(jinsCells[0].noteName)})`}
                 </span>
                 <button
                   className="jins-transpositions__button"
                   onClick={() => {
-                    const transpositionNoteNames = jinsCellDetails.map((cell) => cell.noteName);
+                    const transpositionNoteNames = jinsCells.map((cell) => cell.noteName);
 
                     const newSelectedCells = [];
 
-                    for (const cellDetails of allCellDetails) {
-                      if (transpositionNoteNames.includes(cellDetails.noteName)) {
-                        newSelectedCells.push({ index: cellDetails.index, octave: cellDetails.octave });
+                    for (const cell of allCells) {
+                      if (transpositionNoteNames.includes(cell.noteName)) {
+                        newSelectedCells.push(cell);
                       }
                     }
                     setSelectedCells(newSelectedCells);
@@ -102,7 +93,7 @@ export default function JinsTranspositions() {
                 <button
                   className="jins-transpositions__button"
                   onClick={() => {
-                    playSequence(jinsCellDetails.map((cell) => parseInt(cell.frequency)));
+                    playSequence(jinsCells.map((cell) => parseInt(cell.frequency)));
                   }}
                 >
                   <PlayCircleIcon className="jins-transpositions__play-circle-icon" /> Play jins
@@ -113,38 +104,36 @@ export default function JinsTranspositions() {
 
             <tr>
               <th className="jins-transpositions__row-header">Note Names </th>
-              <th className="jins-transpositions__header-cell">
-                {jinsCellDetails[0].noteName + ` (${getEnglishNoteName(jinsCellDetails[0].noteName)})`}
-              </th>
+              <th className="jins-transpositions__header-cell">{jinsCells[0].noteName + ` (${getEnglishNoteName(jinsCells[0].noteName)})`}</th>
               {intervalPattern.map((pat, i) => (
                 <React.Fragment key={i}>
                   <th className="jins-transpositions__header-cell"></th>
                   <th className="jins-transpositions__header-cell">
-                    {jinsCellDetails[i + 1].noteName + ` (${getEnglishNoteName(jinsCellDetails[i + 1].noteName)})`}
+                    {jinsCells[i + 1].noteName + ` (${getEnglishNoteName(jinsCells[i + 1].noteName)})`}
                   </th>
                 </React.Fragment>
               ))}
             </tr>
             <tr>
               <th className="jins-transpositions__row-header">{valueType}</th>
-              <th className="jins-transpositions__header-cell">{jinsCellDetails[0].originalValue}</th>
+              <th className="jins-transpositions__header-cell">{jinsCells[0].originalValue}</th>
               {intervalPattern.map((pat, i) => (
                 <React.Fragment key={i}>
                   <th className="jins-transpositions__header-cell">{useRatio ? `(${pat.ratio})` : `${(pat.diff ?? 0).toFixed(3)}`}</th>
-                  <th className="jins-transpositions__header-cell">{jinsCellDetails[i + 1].originalValue}</th>
+                  <th className="jins-transpositions__header-cell">{jinsCells[i + 1].originalValue}</th>
                 </React.Fragment>
               ))}
             </tr>
             {valueType !== "cents" && (
               <tr>
                 <th className="jins-transpositions__row-header">cents (¢)</th>
-                <th className="jins-transpositions__header-cell">{Number(jinsCellDetails[0].cents).toFixed(3)}</th>
+                <th className="jins-transpositions__header-cell">{Number(jinsCells[0].cents).toFixed(3)}</th>
                 {intervalPattern.map((pat, i) => (
                   <React.Fragment key={i}>
-                    <th className="jins-transpositions__header-cell">{`(${(
-                      parseInt(jinsCellDetails[i + 1].cents) - parseInt(jinsCellDetails[i].cents)
-                    ).toFixed(3)})`}</th>
-                    <th className="jins-transpositions__header-cell">{Number(jinsCellDetails[i + 1].cents).toFixed(3)}</th>
+                    <th className="jins-transpositions__header-cell">{`(${(parseInt(jinsCells[i + 1].cents) - parseInt(jinsCells[i].cents)).toFixed(
+                      3
+                    )})`}</th>
+                    <th className="jins-transpositions__header-cell">{Number(jinsCells[i + 1].cents).toFixed(3)}</th>
                   </React.Fragment>
                 ))}
               </tr>
@@ -154,7 +143,7 @@ export default function JinsTranspositions() {
               <th className="jins-transpositions__header-cell">
                 <PlayCircleIcon
                   className="jins-transpositions__play-circle-icon"
-                  onClick={() => playNoteFrequency(parseInt(jinsCellDetails[0].frequency))}
+                  onClick={() => playNoteFrequency(parseInt(jinsCells[0].frequency))}
                 />
               </th>
               {intervalPattern.map((pat, i) => (
@@ -163,7 +152,7 @@ export default function JinsTranspositions() {
                   <th className="jins-transpositions__header-cell">
                     <PlayCircleIcon
                       className="jins-transpositions__play-circle-icon"
-                      onClick={() => playNoteFrequency(parseInt(jinsCellDetails[i + 1].frequency))}
+                      onClick={() => playNoteFrequency(parseInt(jinsCells[i + 1].frequency))}
                     />
                   </th>
                 </React.Fragment>
@@ -197,10 +186,10 @@ export default function JinsTranspositions() {
           <thead></thead>
           <tbody>
             {sequences
-              .filter((sequence) => sequence[0].noteName !== jinsCellDetails[0].noteName)
+              .filter((sequence) => sequence[0].noteName !== jinsCells[0].noteName)
               .map((sequence, row) => {
-              const colCount = (jinsCellDetails.length) * 2;
-              const rowCount = 5;
+                const colCount = jinsCells.length * 2;
+                const rowCount = 5;
                 return (
                   <React.Fragment key={row}>
                     <tr>
@@ -211,7 +200,7 @@ export default function JinsTranspositions() {
                         {row + 2}
                       </td>
 
-                      <td className="jins-transpositions__jins-name-row" colSpan={2 + (jinsCellDetails.length - 1) * 2}>
+                      <td className="jins-transpositions__jins-name-row" colSpan={2 + (jinsCells.length - 1) * 2}>
                         <span className="jins-transpositions__transposition-title">{`${selectedJins.getName()} al-${
                           sequence[0].noteName
                         } (${getEnglishNoteName(sequence[0].noteName)})`}</span>
@@ -222,10 +211,8 @@ export default function JinsTranspositions() {
 
                             const newSelectedCells = [];
 
-                            for (const cellDetails of allCellDetails) {
-                              if (transpositionNoteNames.includes(cellDetails.noteName)) {
-                                newSelectedCells.push({ index: cellDetails.index, octave: cellDetails.octave });
-                              }
+                            for (const cell of allCells) {
+                              if (transpositionNoteNames.includes(cell.noteName)) newSelectedCells.push(cell);
                             }
                             setSelectedCells(newSelectedCells);
                             const transposition = {
@@ -278,9 +265,9 @@ export default function JinsTranspositions() {
                         <th className="jins-transpositions__cell">{Number(sequence[0].cents).toFixed(3)}</th>
                         {intervalPattern.map((pat, i) => (
                           <React.Fragment key={i}>
-                            <th className="jins-transpositions__cell">{`(${(
-                              parseInt(jinsCellDetails[i + 1].cents) - parseInt(jinsCellDetails[i].cents)
-                            ).toFixed(3)})`}</th>
+                            <th className="jins-transpositions__cell">{`(${(parseInt(jinsCells[i + 1].cents) - parseInt(jinsCells[i].cents)).toFixed(
+                              3
+                            )})`}</th>
                             <th className="jins-transpositions__cell">{Number(sequence[i + 1].cents).toFixed(3)}</th>
                           </React.Fragment>
                         ))}

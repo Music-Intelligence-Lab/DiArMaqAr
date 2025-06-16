@@ -6,7 +6,7 @@ import { frequencyToMidiNoteNumber } from "@/functions/convertPitchClass";
 import midiNumberToNoteName from "@/functions/midiToNoteNumber";
 import Pattern from "@/models/Pattern";
 import romanToNumber from "@/functions/romanToNumber";
-import { Cell } from "@/models/Cell";
+import Cell from "@/models/Cell";
 
 type InputMode = "tuningSystem" | "selection";
 type OutputMode = "mute" | "waveform" | "midi";
@@ -51,7 +51,7 @@ interface SoundContextInterface {
 const SoundContext = createContext<SoundContextInterface | null>(null);
 
 export function SoundContextProvider({ children }: { children: React.ReactNode }) {
-  const { selectedTuningSystem, selectedMaqam, selectedJins, pitchClasses, allCellDetails, selectedCellDetails } = useAppContext();
+  const { selectedTuningSystem, selectedMaqam, selectedJins, pitchClasses, allCells, selectedCells } = useAppContext();
 
   const [soundSettings, setSoundSettings] = useState<SoundSettings>({
     attack: 0.01,
@@ -211,7 +211,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     const cmd = status & 0xf0;
 
     if (soundSettings.inputMode === "tuningSystem" && selectedTuningSystem) {
-      const cells = allCellDetails;
+      const cells = allCells;
 
       const MIDI_BASE = 55;
       const numberOfCellsPerRow = selectedTuningSystem.getPitchClasses().length;
@@ -232,7 +232,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         noteOn(freq);
         setActiveCells((prev) => {
           if (prev.some((c) => c.index === cell.index && c.octave === cell.octave)) return prev;
-          return [...prev, { index: cell.index, octave: cell.octave }];
+          return [...prev, cell];
         });
       } else if (cmd === 0x80 || (cmd === 0x90 && velocity === 0)) {
         noteOff(freq);
@@ -241,17 +241,13 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     } else if (soundSettings.inputMode === "selection") {
       const { note, alt } = midiNumberToNoteName(noteNumber);
 
-      for (const cellDetails of selectedCellDetails) {
-        let convertedEnglishName = cellDetails.englishName;
-        const cell: Cell = {
-          index: cellDetails.index,
-          octave: cellDetails.octave,
-        };
+      for (const cell of selectedCells) {
+        let convertedEnglishName = cell.englishName;
         convertedEnglishName = convertedEnglishName[0].toUpperCase() + convertedEnglishName.slice(1);
         if (convertedEnglishName.includes("-")) convertedEnglishName = convertedEnglishName[0];
 
         if (convertedEnglishName === note || convertedEnglishName === alt) {
-          const baseFreq = parseFloat(cellDetails.frequency);
+          const baseFreq = parseFloat(cell.frequency);
           if (isNaN(baseFreq)) return;
 
           const baseMidi = Math.round(frequencyToMidiNoteNumber(baseFreq));
@@ -264,7 +260,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
             noteOn(adjFreq);
             setActiveCells((prev) => {
               if (prev.some((c) => c.index === cell.index && c.octave === cell.octave)) return prev;
-              return [...prev, { index: cell.index, octave: cell.octave }];
+              return [...prev, cell];
             });
           } else if (cmd === 0x80 || (cmd === 0x90 && velocity === 0)) {
             noteOff(adjFreq);
@@ -338,7 +334,6 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     timeoutsRef.current = [];
 
     return new Promise((resolve) => {
-      console.log("Playing sequence with frequencies:", frequencies, "ascending:", ascending);
       const beatSec = 60 / soundSettings.tempo;
 
       if (!soundSettings.selectedPattern || !soundSettings.selectedPattern.getNotes().length) {

@@ -36,7 +36,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     setNoteNames,
     referenceFrequencies,
     setReferenceFrequencies,
-    selectedCellDetails,
+    selectedCells,
     setSelectedCells,
     selectedIndices,
     setSelectedIndices,
@@ -48,9 +48,10 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     sources,
     selectedJins,
     selectedMaqam,
+    allCells,
   } = useAppContext();
 
-  const { activeCells, playNoteFrequency, playSequence  } = useSoundContext();
+  const { activeCells, playNoteFrequency, playSequence } = useSoundContext();
 
   const { filters, setFilters, tuningSystemsFilter, setTuningSystemsFilter } = useFilterContext();
 
@@ -163,18 +164,18 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
   useEffect(() => {
     if (!selectedJins || !selectedMaqam) return;
-    if (selectedCellDetails.length === 0) {
+    if (selectedCells.length === 0) {
       setOpenedOctaveRows({ 0: false, 1: true, 2: true, 3: false });
     } else {
       const rows = { 0: false, 1: false, 2: false, 3: false };
-      for (const cellDetails of selectedCellDetails) {
-        if (rows[cellDetails.octave as 0 | 1 | 2 | 3] === false) {
-          rows[cellDetails.octave as 0 | 1 | 2 | 3] = true;
+      for (const cell of selectedCells) {
+        if (rows[cell.octave as 0 | 1 | 2 | 3] === false) {
+          rows[cell.octave as 0 | 1 | 2 | 3] = true;
         }
       }
       setOpenedOctaveRows(rows);
     }
-  }, [selectedCellDetails]);
+  }, [selectedCells]);
 
   useEffect(() => {
     // helper: given the source index and new scrollLeft, push to the others
@@ -504,9 +505,9 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
   // Given an octave and a column index, check if that cell is already selected.
   const isCellSelected = (octave: number, colIndex: number) =>
-    selectedCellDetails.some((cellDetails) => cellDetails.octave === octave && cellDetails.index === colIndex);
+    selectedCells.some((cellS) => cellS.octave === octave && cellS.index === colIndex);
   const isCellActive = (octave: number, colIndex: number) =>
-    activeCells.some((cellDetails) => cellDetails.octave === octave && cellDetails.index === colIndex);
+    activeCells.some((cellS) => cellS.octave === octave && cellS.index === colIndex);
 
   const getCellClassName = (octave: number, colIndex: number) => {
     const isSelected = isCellSelected(octave, colIndex);
@@ -516,14 +517,13 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     }`;
   };
 
-  // When a checkbox is toggled, update the selectedCellDetails accordingly.
   const handleCheckboxChange = (octave: number, colIndex: number, checked: boolean) => {
     setSelectedCells((prevCells) => {
-      // Remove any existing instance of this cell.
       const newCells = prevCells.filter((cell) => !(cell.octave === octave && cell.index === colIndex));
-      // If the checkbox is now checked, add the cell.
-      if (checked) newCells.push({ octave, index: colIndex });
-      // Always sort the cells first by octave then by index.
+      if (checked) {
+        const existingCell = allCells.find((cell) => cell.octave === octave && cell.index === colIndex);
+        if (existingCell) newCells.push(existingCell);
+      }
       newCells.sort((a, b) => (a.octave === b.octave ? a.index - b.index : a.octave - b.octave));
       return newCells;
     });
@@ -750,7 +750,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
    *  10) "Play" button + checkbox
    */
 
-  function renderOctaveDetails(octave: number) {
+  function renderOctaveS(octave: number) {
     if (!pitchClassesArr.length) return null;
 
     return (
@@ -1167,10 +1167,10 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
     return (
       <div className="tuning-system-manager__grid">
-        {renderOctaveDetails(0)}
-        {renderOctaveDetails(1)}
-        {renderOctaveDetails(2)}
-        {renderOctaveDetails(3)}
+        {renderOctaveS(0)}
+        {renderOctaveS(1)}
+        {renderOctaveS(2)}
+        {renderOctaveS(3)}
       </div>
     );
   }
@@ -1614,10 +1614,10 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       <div className="tuning-system-manager__buttons">
         <button
           className="tuning-system-manager__play-sequence-button"
-          disabled={selectedCellDetails.length === 0}
+          disabled={selectedCells.length === 0}
           onClick={() => {
-            const frequencies = selectedCellDetails.map((cellDetails) => {
-              return parseInt(cellDetails.frequency) ?? 0;
+            const frequencies = selectedCells.map((cellS) => {
+              return parseInt(cellS.frequency) ?? 0;
             });
 
             playSequence(frequencies);

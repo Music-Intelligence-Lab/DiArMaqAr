@@ -1,9 +1,4 @@
-export interface Cell {
-  octave: number;
-  index: number;
-}
-
-export interface CellDetails {
+export default interface Cell {
   noteName: string;
   fraction: string;
   cents: string;
