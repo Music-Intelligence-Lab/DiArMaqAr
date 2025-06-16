@@ -35,6 +35,7 @@ function mapIndices(notesToMap: TransliteratedNoteName[], numberOfPitchClasses: 
 
   return mappedIndices;
 }
+
 export async function GET() {
   try {
     const fileContents = await fs.readFile(dataFilePath, "utf-8");

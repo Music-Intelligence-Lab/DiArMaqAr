@@ -1,0 +1,98 @@
+import tuningSystemsData from "@/../data/tuningSystems.json";
+import ajnasData from "@/../data/ajnas.json";
+import maqamatData from "@/../data/maqamat.json";
+import sourcesData from "@/../data/sources.json";
+import patternsData from "@/../data/patterns.json";
+
+import TuningSystem from "@/models/TuningSystem";
+import Jins from "@/models/Jins";
+import Maqam from "@/models/Maqam";
+import { Source } from "@/models/bibliography/Source";
+import Book from "@/models/bibliography/Book";
+import Article from "@/models/bibliography/Article";
+import Pattern from "@/models/Pattern";
+import { NoteDuration } from "@/models/Pattern";
+
+type RawSource = { sourceType: string; [key: string]: any };
+
+export function getTuningSystems(): TuningSystem[] {
+  return (tuningSystemsData as any[]).map(
+    (d) =>
+      new TuningSystem(
+        d.titleEnglish,
+        d.titleArabic,
+        d.year,
+        d.sourceEnglish,
+        d.sourceArabic,
+        d.sourcePageReferences,
+        d.creatorEnglish,
+        d.creatorArabic,
+        d.commentsEnglish,
+        d.commentsArabic,
+        d.pitchClasses,
+        d.noteNames,
+        d.abjadNames,
+        Number(d.stringLength),
+        d.referenceFrequencies,
+        Number(d.defaultReferenceFrequency)
+      )
+  );
+}
+
+export function getAjnas(): Jins[] {
+  return (ajnasData as any[]).map(
+    (d) =>
+      new Jins(
+        d.id,
+        d.name,
+        d.noteNames,
+        d.commentsEnglish,
+        d.commentsArabic,
+        d.sourcePageReferences
+      )
+  );
+}
+
+export function getMaqamat(): Maqam[] {
+  return (maqamatData as any[]).map(
+    (d) =>
+      new Maqam(
+        d.id,
+        d.name,
+        d.ascendingNoteNames,
+        d.descendingNoteNames,
+        d.suyūr,
+        d.commentsEnglish,
+        d.commentsArabic,
+        d.sourcePageReferences
+      )
+  );
+}
+
+export function getSources(): Source[] {
+  return (sourcesData as RawSource[]).map((d) => {
+    switch (d.sourceType) {
+      case "Book":
+        return Book.fromJSON(d);
+      case "Article":
+        return Article.fromJSON(d);
+      default:
+        throw new Error(`Unknown sourceType "${d.sourceType}"`);
+    }
+  });
+}
+
+export function getPatterns(): Pattern[] {
+  return patternsData.map(
+    (data) =>
+      new Pattern(
+        data.id,
+        data.name,
+        data.notes.map((note) => ({
+          scaleDegree: note.scaleDegree as string,
+          noteDuration: note.noteDuration as NoteDuration,
+          isTarget: note.isTarget || false,
+        }))
+      )
+  );
+}

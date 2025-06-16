@@ -9,6 +9,7 @@ import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { getIntervalPattern, getTranspositions, mergeTranspositions, Interval } from "@/functions/transpose";
 import Jins from "@/models/Jins";
 import { MaqamTransposition } from "@/models/Maqam";
+import shiftCellDetails from "@/functions/shiftCellDetails";
 
 export default function MaqamTranspositions() {
   const {
@@ -39,8 +40,21 @@ export default function MaqamTranspositions() {
 
   const romanNumerals = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "XI", "X", "XI", "XII", "XIII", "XIV", "XV"];
 
-  const ascendingMaqamCellDetails = allCellDetails.filter((cell) => ascendingNoteNames.includes(cell.noteName));
-  const descendingMaqamCellDetails = allCellDetails.filter((cell) => descendingNoteNames.includes(cell.noteName)).reverse();
+  let ascendingMaqamCellDetails = allCellDetails.filter((cell) => ascendingNoteNames.includes(cell.noteName));
+  let descendingMaqamCellDetails = allCellDetails.filter((cell) => descendingNoteNames.includes(cell.noteName)).reverse();
+
+  const numberOfMaqamNotes = ascendingMaqamCellDetails.length;
+
+  let noOctaveMaqam = false;
+
+  if (numberOfMaqamNotes <= 7) {
+    noOctaveMaqam = true;
+    romanNumerals[numberOfMaqamNotes] = "I+"
+    const firstCellDetails = ascendingMaqamCellDetails[0];
+    const octaveCellDetails = shiftCellDetails(firstCellDetails);
+    ascendingMaqamCellDetails = [...ascendingMaqamCellDetails, octaveCellDetails];
+    descendingMaqamCellDetails = [octaveCellDetails, ...descendingMaqamCellDetails]
+  }
 
   const valueType = ascendingMaqamCellDetails[0].originalValueType;
   const useRatio = valueType === "fraction" || valueType === "ratios";
@@ -182,7 +196,7 @@ export default function MaqamTranspositions() {
 
                   for (const cellDetails of allCellDetails) {
                     if (transpositionNoteNames.includes(cellDetails.noteName)) {
-                      newSelectedCells.push({ index: cellDetails.index, octave: cellDetails.octave });
+                      if ((!noOctaveMaqam || newSelectedCells.every((cell) => cell.index !== cellDetails.index))) newSelectedCells.push({ index: cellDetails.index, octave: cellDetails.octave });
                     }
                   }
                   setSelectedCells(newSelectedCells);
@@ -248,7 +262,7 @@ export default function MaqamTranspositions() {
                 {i !== 0 && <th className="maqam-transpositions__header-cell"></th>}
                 <th
                   className={
-                    (!descendingNoteNames.includes(cell.noteName)
+                    (!descendingMaqamCellDetails.includes(cell)
                       ? "maqam-transpositions__header-cell_unique "
                       : "maqam-transpositions__header-cell ") +
                     (isCellHighlighted(0, cell.noteName) ? "maqam-transpositions__header-cell_highlighted" : "")
@@ -387,7 +401,7 @@ export default function MaqamTranspositions() {
                 {i !== 0 && <th className="maqam-transpositions__header-cell"></th>}
                 <th
                   className={
-                    (!ascendingNoteNames.includes(cell.noteName)
+                    (!ascendingMaqamCellDetails.includes(cell)
                       ? "maqam-transpositions__header-cell_unique "
                       : "maqam-transpositions__header-cell ") +
                     (isCellHighlighted(0.5, cell.noteName) ? "maqam-transpositions__header-cell_highlighted" : "")
@@ -420,7 +434,7 @@ export default function MaqamTranspositions() {
           {valueType !== "cents" && (
             <tr>
               <th className="maqam-transpositions__row-header">cents (¢)</th>
-              <th className="maqam-transpositions__header-cell">{descendingMaqamCellDetails[0].cents}</th>
+              <th className="maqam-transpositions__header-cell">{parseFloat(descendingMaqamCellDetails[0].cents).toFixed(3)}</th>
               {descendingIntervalPattern.map((pat, i) => (
                 <React.Fragment key={i}>
                   <th className="maqam-transpositions__header-cell">{`(${(
@@ -542,7 +556,7 @@ export default function MaqamTranspositions() {
 
                           for (const cellDetails of allCellDetails) {
                             if (transpositionNoteNames.includes(cellDetails.noteName)) {
-                              newSelectedCells.push({ index: cellDetails.index, octave: cellDetails.octave });
+                              if ((!noOctaveMaqam || newSelectedCells.every((cell) => cell.index !== cellDetails.index))) newSelectedCells.push({ index: cellDetails.index, octave: cellDetails.octave });
                             }
                           }
                           setSelectedCells(newSelectedCells);
@@ -551,8 +565,8 @@ export default function MaqamTranspositions() {
                             name: `${selectedMaqam.getName()} al-${ascendingDetails[0].noteName} (${getEnglishNoteName(
                               ascendingDetails[0].noteName
                             )})`,
-                            ascendingNoteNames: ascendingDetails.map((cell) => cell.noteName),
-                            descendingNoteNames: descendingDetails.map((cell) => cell.noteName),
+                            ascendingNoteNames: ascendingDetails.filter((cell) => !noOctaveMaqam || !newSelectedCells.some((c) => c.index === cell.index)).map((cell) => cell.noteName),
+                            descendingNoteNames: descendingDetails.filter((cell) => !noOctaveMaqam || !newSelectedCells.some((c) => c.index === cell.index)).map((cell) => cell.noteName),
                           };
                           setSelectedMaqamTransposition(transposition);
                         }}
@@ -785,7 +799,7 @@ export default function MaqamTranspositions() {
                   {valueType !== "cents" && (
                     <tr>
                       <th className="maqam-transpositions__row-header">cents (¢)</th>
-                      <th className="maqam-transpositions__header-cell">{descendingDetails[0].cents}</th>
+                      <th className="maqam-transpositions__header-cell">{parseFloat(descendingDetails[0].cents).toFixed(3)}</th>
                       {descendingIntervalPattern.map((pat, i) => (
                         <React.Fragment key={i}>
                           <th className="maqam-transpositions__header-cell">{`(${(
