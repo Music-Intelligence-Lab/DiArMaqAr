@@ -1,3 +1,6 @@
+import { getCellIntervals } from "@/functions/transpose";
+import Cell, { CellInterval } from "./Cell";
+import { JinsTransposition } from "./Jins";
 import TransliteratedNoteName from "./NoteName";
 import { SourcePageReference } from "./bibliography/Source";
 
@@ -77,11 +80,19 @@ export default class Maqam {
   }
 
 
-  convertToMaqamTransposition(): MaqamTransposition {
+  getTahlil(allCells: Cell[]): MaqamTransposition {
+    const ascendingCells = allCells.filter(cell => this.ascendingNoteNames.includes(cell.noteName));
+    const ascendingCellIntervals: CellInterval[] = getCellIntervals(ascendingCells);
+    const descendingCells = allCells.filter(cell => this.descendingNoteNames.includes(cell.noteName)).reverse();
+    const descendingCellIntervals: CellInterval[] = getCellIntervals(descendingCells);
     return {
+      maqamId: this.id,
       name: this.name,
-      ascendingNoteNames: this.ascendingNoteNames,
-      descendingNoteNames: this.descendingNoteNames,
+      tahlil: true,
+      ascendingCells,
+      ascendingCellIntervals,
+      descendingCells,
+      descendingCellIntervals,
     };
   }
   
@@ -131,9 +142,15 @@ export interface SayrStop {
 }
 
 export interface MaqamTransposition {
+  maqamId: string;
   name: string;
-  ascendingNoteNames: TransliteratedNoteName[];
-  descendingNoteNames: TransliteratedNoteName[];
+  tahlil: boolean;
+  ascendingCells: Cell[];
+  ascendingCellIntervals: CellInterval[];
+  ascendingJinsTranspositions?: (JinsTransposition | null)[];
+  descendingCells: Cell[];
+  descendingCellIntervals: CellInterval[];
+  descendingJinsTranspositions?: (JinsTransposition | null)[];
 }
 
 export interface MaqamModulations {

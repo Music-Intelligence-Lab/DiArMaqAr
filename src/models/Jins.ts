@@ -1,5 +1,7 @@
 import { SourcePageReference } from "./bibliography/Source";
+import Cell, { CellInterval } from "./Cell";
 import TransliteratedNoteName from "./NoteName";
+import { getCellIntervals } from "@/functions/transpose";
 
 export default class Jins {
   private id: string;
@@ -49,9 +51,24 @@ export default class Jins {
   createJinsWithNewSourcePageReferences(newSourcePageReferences: SourcePageReference[]): Jins {
     return new Jins(this.id, this.name, this.noteNames, this.commentsEnglish, this.commentsArabic, newSourcePageReferences);
   }
+
+  getTahlil(allCells: Cell[]): JinsTransposition {
+    const cells: Cell[] = allCells.filter((cell) => this.noteNames.includes(cell.noteName));
+    const cellIntervals: CellInterval[] = getCellIntervals(cells);
+    return {
+      jinsId: this.id,
+      name: this.name,
+      tahlil: true,
+      cells,
+      cellIntervals,
+    };
+  }
 }
 
 export interface JinsTransposition {
+  jinsId: string;
   name: string;
-  noteNames: TransliteratedNoteName[];
+  tahlil: boolean;
+  cells: Cell[];
+  cellIntervals: CellInterval[];
 }

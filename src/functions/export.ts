@@ -31,23 +31,16 @@ export function exportTuningSystem(tuningSystem: TuningSystem, startingNote: Tra
   const possibleAjnasTranspositions: JinsTransposition[] = [];
 
   for (const jins of possibleAjnas) {
-    for (const cells of getJinsTranspositions(allCells, jins)) {
-      possibleAjnasTranspositions.push({
-        name: jins.getName() + " al-" + cells[0].noteName,
-        noteNames: cells.map((cell) => cell.noteName),
-      });
+    for (const jinsTransposition of getJinsTranspositions(allCells, jins, true)) {
+      possibleAjnasTranspositions.push(jinsTransposition);
     }
   }
 
   const possibleMaqamatTranspositions: MaqamTransposition[] = [];
 
   for (const maqam of possibleMaqamat) {
-    for (const sequences of getMaqamTranspositions(allCells, maqam)) {
-      possibleMaqamatTranspositions.push({
-        name: maqam.getName() + " al-" + sequences.ascendingSequence[0].noteName,
-        ascendingNoteNames: sequences.ascendingSequence.map((cell) => cell.noteName),
-        descendingNoteNames: sequences.descendingSequence.map((cell) => cell.noteName),
-      });
+    for (const maqamTransposition of getMaqamTranspositions(allCells, allAjnas, maqam, true)) {
+      possibleMaqamatTranspositions.push(maqamTransposition);
     }
   }
 

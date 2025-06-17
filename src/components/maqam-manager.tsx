@@ -12,6 +12,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
   const {
     maqamat,
     setMaqamat,
+    ajnas,
     selectedMaqam,
     setSelectedMaqam,
     selectedCells,
@@ -59,7 +60,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
     maqamat.forEach((maqam) => {
       map.set(
         maqam.getId(),
-        getMaqamTranspositions(allCells, maqam, true)
+        getMaqamTranspositions(allCells, ajnas, maqam, true)
       );
     });
     return map;

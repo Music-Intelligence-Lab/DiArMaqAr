@@ -26,7 +26,7 @@ export function frequencyToMidiNoteNumber(frequency: number): number {
 
 export default function convertPitchClass(
   originalValue: string,
-  inputType: "fraction" | "cents" | "decimal" | "stringLength",
+  inputType: "fraction" | "cents" | "decimalRatio" | "stringLength",
   stringLength: number,
   referenceFrequency: number
 ) {
@@ -57,7 +57,7 @@ export default function convertPitchClass(
       fractionVal = decimalToFraction(decimalVal);
       stringLenVal = stringLength / decimalVal;
       freqVal = referenceFrequency * decimalVal;
-    } else if (inputType === "decimal") {
+    } else if (inputType === "decimalRatio") {
       const dec = parseFloat(originalValue);
       decimalVal = dec;
 
@@ -91,7 +91,7 @@ export default function convertPitchClass(
 
 export function shiftPitchClass(
   baseValue: string,
-  inputType: "fraction" | "decimal" | "cents" | "stringLength",
+  inputType: "fraction" | "decimalRatio" | "cents" | "stringLength",
   targetOctave: 0 | 1 | 2 | 3
 ): string {
   if (targetOctave === 1) return baseValue;
@@ -120,7 +120,7 @@ export function shiftPitchClass(
 
       const g = gcd(newNum, newDen);
       return `${newNum / g}/${newDen / g}`;
-    } else if (inputType === "decimal") {
+    } else if (inputType === "decimalRatio") {
       // decimal => just multiply by 2^(octaveSteps)
       const dec = parseFloat(baseValue);
       const shifted = dec * Math.pow(2, octaveSteps);

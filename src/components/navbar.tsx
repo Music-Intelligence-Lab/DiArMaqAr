@@ -30,6 +30,7 @@ export default function Navbar() {
     setNoteNames,
     getModulations,
     selectedIndices,
+    allCells
   } = useAppContext();
 
   const rowRef = useRef<HTMLDivElement>(null);
@@ -66,7 +67,7 @@ export default function Navbar() {
 
   const totalModulations = useMemo(() => {
     if (!selectedMaqam) return null;
-    const transposition = selectedMaqam.convertToMaqamTransposition();
+    const transposition = selectedMaqam.getTahlil(allCells);
     const modulations = getModulations(transposition);
     return (
       (modulations.hopsFromOne?.length || 0) +
@@ -158,8 +159,8 @@ export default function Navbar() {
               {!selectedJins
                 ? ""
                 : selectedJinsTransposition
-                ? `${selectedJins.getName()} al-${selectedJinsTransposition.noteNames[0]} (${getEnglishNoteName(
-                    selectedJinsTransposition.noteNames[0]
+                ? `${selectedJins.getName()} al-${selectedJinsTransposition.cells.map(cell => cell.noteName)[0]} (${getEnglishNoteName(
+                    selectedJinsTransposition.cells.map(cell => cell.noteName)[0]
                   )})`
                 : `${selectedJins.getName()} (${selectedJins.getNoteNames()[0]}/${getEnglishNoteName(selectedJins.getNoteNames()[0])})`}
             </span>
@@ -188,8 +189,8 @@ export default function Navbar() {
               {!selectedMaqam
                 ? ""
                 : selectedMaqamTransposition
-                ? `${selectedMaqam.getName()} al-${selectedMaqamTransposition.ascendingNoteNames[0]} (${getEnglishNoteName(
-                    selectedMaqamTransposition.ascendingNoteNames[0]
+                ? `${selectedMaqam.getName()} al-${selectedMaqamTransposition.ascendingCells.map(cell => cell.noteName)[0]} (${getEnglishNoteName(
+                    selectedMaqamTransposition.ascendingCells.map(cell => cell.noteName)[0]
                   )})`
                 : `${selectedMaqam.getName()} (${selectedMaqam.getAscendingNoteNames()[0]}/${getEnglishNoteName(
                     selectedMaqam.getAscendingNoteNames()[0]
