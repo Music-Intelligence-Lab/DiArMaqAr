@@ -705,7 +705,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 const isDisabled =
                   (filterKey === "fractionRatio" && pitchClassType === "fraction") ||
                   (filterKey === "cents" && pitchClassType === "cents") ||
-                  (filterKey === "decimalRatio" && pitchClassType === "decimal") ||
+                  (filterKey === "decimalRatio" && pitchClassType === "decimalRatio") ||
                   (filterKey === "stringLength" && pitchClassType === "stringLength");
 
                 if (isDisabled) return null;
@@ -890,7 +890,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                         {
                           fraction: "Fraction Ratio",
                           cents: "Cents (¢)",
-                          decimal: "Decimal Ratio",
+                          decimalRatio: "Decimal Ratio",
                           stringLength: "String Length",
                         }[pitchClassType]
                       }
@@ -951,12 +951,12 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 )}
 
                 {/* Row 8: Decimal Ratio */}
-                {filters.decimalRatio && pitchClassType !== "decimal" && (
+                {filters.decimalRatio && pitchClassType !== "decimalRatio" && (
                   <tr>
                     <td>Decimal Ratio</td>
                     {rowCells.map((cell, colIndex) => (
                       <td key={colIndex} className={getCellClassName(octave, colIndex)}>
-                        {displayStringValue(cell.ratios)}
+                        {displayStringValue(cell.decimalRatio)}
                       </td>
                     ))}
                   </tr>

@@ -22,7 +22,7 @@ export default function Modulations() {
   // On mount, initialize the stack with the original source maqam
   useEffect(() => {
     if (selectedMaqam) {
-      const transposition = selectedMaqam.convertToMaqamTransposition();
+      const transposition = selectedMaqam.getTahlil(allCells);
       setModulatedMaqamTransposition(transposition);
       setSourceMaqam(transposition);
       setSourceMaqamStack([transposition]);
@@ -43,7 +43,7 @@ export default function Modulations() {
       const newSelectedCells: Cell[] = [];
 
       for (const cell of allCells) {
-        if (modulatedMaqamTransposition.ascendingNoteNames.includes(cell.noteName)) newSelectedCells.push(cell);
+        if (modulatedMaqamTransposition.ascendingCells.map((cell) => cell.noteName).includes(cell.noteName)) newSelectedCells.push(cell);
       }
       setSelectedCells(newSelectedCells);
     }
@@ -73,171 +73,174 @@ export default function Modulations() {
   return (
     <div className="modulations__container">
       {/* Render a hops-wrapper for each sourceMaqam in the stack */}
-      {sourceMaqamStack.map((srcMaqam, stackIdx) => (
-        <div
-          className="modulations__hops-wrapper"
-          key={stackIdx}
-          style={{ marginTop: stackIdx === 0 ? 0 : 32, borderTop: stackIdx === 0 ? undefined : "1px solid #444" }}
-        >
-          {/* Maqam name/details at the top of each wrapper */}
-          <div className="modulations__wrapper-maqam-name">
-            <span
-              onClick={() => sourceMaqam && (setModulatedMaqamTransposition(srcMaqam), setSelectedMaqamTransposition(srcMaqam))}
-              style={{ cursor: "pointer" }}
-            >
-              {srcMaqam?.name ? srcMaqam.name : "Unknown"} ({srcMaqam?.ascendingNoteNames ? srcMaqam.ascendingNoteNames[0] : "N/A"}/
-              {getEnglishNoteName(srcMaqam?.ascendingNoteNames ? srcMaqam.ascendingNoteNames[0]! : "")})
-              {modulationsStack[stackIdx] && <> - {totalModulations} modulation options</>}
-            </span>
-            {/* Show delete button only on the last hops-wrapper and only if more than one exists */}
-            {stackIdx === sourceMaqamStack.length - 1 && sourceMaqamStack.length > 1 && (
-              <button
-                className="modulations__delete-hop-btn"
-                style={{ marginLeft: 8, padding: "2px 8px", fontSize: 14, cursor: "pointer" }}
-                onClick={removeLastHopsWrapper}
+      {sourceMaqamStack.map((srcMaqam, stackIdx) => {
+        const ascendingNoteNames = srcMaqam.ascendingCells.map((cell) => cell.noteName);
+        return (
+          <div
+            className="modulations__hops-wrapper"
+            key={stackIdx}
+            style={{ marginTop: stackIdx === 0 ? 0 : 32, borderTop: stackIdx === 0 ? undefined : "1px solid #444" }}
+          >
+            {/* Maqam name/details at the top of each wrapper */}
+            <div className="modulations__wrapper-maqam-name">
+              <span
+                onClick={() => sourceMaqam && (setModulatedMaqamTransposition(srcMaqam), setSelectedMaqamTransposition(srcMaqam))}
+                style={{ cursor: "pointer" }}
               >
-                Delete Hop
-              </button>
-            )}
-          </div>
+                {srcMaqam?.name ? srcMaqam.name : "Unknown"} ({ascendingNoteNames ? ascendingNoteNames[0] : "N/A"}/
+                {getEnglishNoteName(ascendingNoteNames ? ascendingNoteNames[0]! : "")})
+                {modulationsStack[stackIdx] && <> - {totalModulations} modulation options</>}
+              </span>
+              {/* Show delete button only on the last hops-wrapper and only if more than one exists */}
+              {stackIdx === sourceMaqamStack.length - 1 && sourceMaqamStack.length > 1 && (
+                <button
+                  className="modulations__delete-hop-btn"
+                  style={{ marginLeft: 8, padding: "2px 8px", fontSize: 14, cursor: "pointer" }}
+                  onClick={removeLastHopsWrapper}
+                >
+                  Delete Hop
+                </button>
+              )}
+            </div>
 
-          {modulationsStack[stackIdx] &&
-            (() => {
-              const modulations = modulationsStack[stackIdx];
-              const { noteName2p } = modulations;
-              return (
-                <>
-                  <div className="modulations__hops">
-                    <span className="modulations__header">
-                      Modulations from Tonic: <br />
-                      {srcMaqam?.ascendingNoteNames[0]} ({modulations?.hopsFromOne ? modulations.hopsFromOne.length : 0})
-                    </span>
-                    {[...modulations.hopsFromOne]
-                      .sort((a, b) => a.name.localeCompare(b.name))
-                      .map((hop, index) => (
-                        <span
-                          key={index}
-                          onClick={() => {
-                            addHopsWrapper(hop, stackIdx);
-                            setModulatedMaqamTransposition(hop);
-                            setSelectedMaqamTransposition(hop);
-                          }}
-                          style={{ cursor: "pointer" }}
-                        >
-                          {hop.name}
-                        </span>
-                      ))}
-                  </div>
-                  <div className="modulations__hops">
-                    <span className="modulations__header">
-                      Modulations from Third: <br />
-                      {srcMaqam?.ascendingNoteNames[2]} ({modulations?.hopsFromThree ? modulations.hopsFromThree.length : 0})
-                    </span>
-                    {[...modulations.hopsFromThree]
-                      .sort((a, b) => a.name.localeCompare(b.name))
-                      .map((hop, index) => (
-                        <span
-                          key={index}
-                          onClick={() => {
-                            addHopsWrapper(hop, stackIdx);
-                            setModulatedMaqamTransposition(hop);
-                            setSelectedMaqamTransposition(hop);
-                          }}
-                          style={{ cursor: "pointer" }}
-                        >
-                          {hop.name}
-                        </span>
-                      ))}
-                  </div>
-                  <div className="modulations__hops">
-                    <span className="modulations__header">
-                      Modulations from Alternative Third: <br />
-                      {noteName2p} ({modulations?.hopsFromThree2p ? modulations.hopsFromThree2p.length : 0})
-                    </span>
-                    {[...modulations.hopsFromThree2p]
-                      .sort((a, b) => a.name.localeCompare(b.name))
-                      .map((hop, index) => (
-                        <span
-                          key={index}
-                          onClick={() => {
-                            addHopsWrapper(hop, stackIdx);
-                            setModulatedMaqamTransposition(hop);
-                            setSelectedMaqamTransposition(hop);
-                          }}
-                          style={{ cursor: "pointer" }}
-                        >
-                          {hop.name}
-                        </span>
-                      ))}
-                  </div>
-                  <div className="modulations__hops">
-                    <span className="modulations__header">
-                      Modulations from Fourth: <br />
-                      {srcMaqam?.ascendingNoteNames[3]} ({modulations?.hopsFromFour ? modulations.hopsFromFour.length : 0})
-                    </span>
-                    {[...modulations.hopsFromFour]
-                      .sort((a, b) => a.name.localeCompare(b.name))
-                      .map((hop, index) => (
-                        <span
-                          key={index}
-                          onClick={() => {
-                            addHopsWrapper(hop, stackIdx);
-                            setModulatedMaqamTransposition(hop);
-                            setSelectedMaqamTransposition(hop);
-                          }}
-                          style={{ cursor: "pointer" }}
-                        >
-                          {hop.name}
-                        </span>
-                      ))}
-                  </div>
-                  <div className="modulations__hops">
-                    <span className="modulations__header">
-                      Modulations from Fifth: <br />
-                      {srcMaqam?.ascendingNoteNames[4]} ({modulations?.hopsFromFive ? modulations.hopsFromFive.length : 0})
-                    </span>
-                    {[...modulations.hopsFromFive]
-                      .sort((a, b) => a.name.localeCompare(b.name))
-                      .map((hop, index) => (
-                        <span
-                          key={index}
-                          onClick={() => {
-                            addHopsWrapper(hop, stackIdx);
-                            setModulatedMaqamTransposition(hop);
-                            setSelectedMaqamTransposition(hop);
-                          }}
-                          style={{ cursor: "pointer" }}
-                        >
-                          {hop.name}
-                        </span>
-                      ))}
-                  </div>
-                  <div className="modulations__hops">
-                    <span className="modulations__header">
-                      Modulations from Sixth: <br />
-                      {srcMaqam?.ascendingNoteNames[5]} ({modulations?.hopsFromSix ? modulations.hopsFromSix.length : 0})
-                    </span>
-                    {[...modulations.hopsFromSix]
-                      .sort((a, b) => a.name.localeCompare(b.name))
-                      .map((hop, index) => (
-                        <span
-                          key={index}
-                          onClick={() => {
-                            addHopsWrapper(hop, stackIdx);
-                            setModulatedMaqamTransposition(hop);
-                            setSelectedMaqamTransposition(hop);
-                          }}
-                          style={{ cursor: "pointer" }}
-                        >
-                          {hop.name}
-                        </span>
-                      ))}
-                  </div>
-                </>
-              );
-            })()}
-        </div>
-      ))}
+            {modulationsStack[stackIdx] &&
+              (() => {
+                const modulations = modulationsStack[stackIdx];
+                const { noteName2p } = modulations;
+                return (
+                  <>
+                    <div className="modulations__hops">
+                      <span className="modulations__header">
+                        Modulations from Tonic: <br />
+                        {ascendingNoteNames[0]} ({modulations?.hopsFromOne ? modulations.hopsFromOne.length : 0})
+                      </span>
+                      {[...modulations.hopsFromOne]
+                        .sort((a, b) => a.name.localeCompare(b.name))
+                        .map((hop, index) => (
+                          <span
+                            key={index}
+                            onClick={() => {
+                              addHopsWrapper(hop, stackIdx);
+                              setModulatedMaqamTransposition(hop);
+                              setSelectedMaqamTransposition(hop);
+                            }}
+                            style={{ cursor: "pointer" }}
+                          >
+                            {hop.name}
+                          </span>
+                        ))}
+                    </div>
+                    <div className="modulations__hops">
+                      <span className="modulations__header">
+                        Modulations from Third: <br />
+                        {ascendingNoteNames[2]} ({modulations?.hopsFromThree ? modulations.hopsFromThree.length : 0})
+                      </span>
+                      {[...modulations.hopsFromThree]
+                        .sort((a, b) => a.name.localeCompare(b.name))
+                        .map((hop, index) => (
+                          <span
+                            key={index}
+                            onClick={() => {
+                              addHopsWrapper(hop, stackIdx);
+                              setModulatedMaqamTransposition(hop);
+                              setSelectedMaqamTransposition(hop);
+                            }}
+                            style={{ cursor: "pointer" }}
+                          >
+                            {hop.name}
+                          </span>
+                        ))}
+                    </div>
+                    <div className="modulations__hops">
+                      <span className="modulations__header">
+                        Modulations from Alternative Third: <br />
+                        {noteName2p} ({modulations?.hopsFromThree2p ? modulations.hopsFromThree2p.length : 0})
+                      </span>
+                      {[...modulations.hopsFromThree2p]
+                        .sort((a, b) => a.name.localeCompare(b.name))
+                        .map((hop, index) => (
+                          <span
+                            key={index}
+                            onClick={() => {
+                              addHopsWrapper(hop, stackIdx);
+                              setModulatedMaqamTransposition(hop);
+                              setSelectedMaqamTransposition(hop);
+                            }}
+                            style={{ cursor: "pointer" }}
+                          >
+                            {hop.name}
+                          </span>
+                        ))}
+                    </div>
+                    <div className="modulations__hops">
+                      <span className="modulations__header">
+                        Modulations from Fourth: <br />
+                        {ascendingNoteNames[3]} ({modulations?.hopsFromFour ? modulations.hopsFromFour.length : 0})
+                      </span>
+                      {[...modulations.hopsFromFour]
+                        .sort((a, b) => a.name.localeCompare(b.name))
+                        .map((hop, index) => (
+                          <span
+                            key={index}
+                            onClick={() => {
+                              addHopsWrapper(hop, stackIdx);
+                              setModulatedMaqamTransposition(hop);
+                              setSelectedMaqamTransposition(hop);
+                            }}
+                            style={{ cursor: "pointer" }}
+                          >
+                            {hop.name}
+                          </span>
+                        ))}
+                    </div>
+                    <div className="modulations__hops">
+                      <span className="modulations__header">
+                        Modulations from Fifth: <br />
+                        {ascendingNoteNames[4]} ({modulations?.hopsFromFive ? modulations.hopsFromFive.length : 0})
+                      </span>
+                      {[...modulations.hopsFromFive]
+                        .sort((a, b) => a.name.localeCompare(b.name))
+                        .map((hop, index) => (
+                          <span
+                            key={index}
+                            onClick={() => {
+                              addHopsWrapper(hop, stackIdx);
+                              setModulatedMaqamTransposition(hop);
+                              setSelectedMaqamTransposition(hop);
+                            }}
+                            style={{ cursor: "pointer" }}
+                          >
+                            {hop.name}
+                          </span>
+                        ))}
+                    </div>
+                    <div className="modulations__hops">
+                      <span className="modulations__header">
+                        Modulations from Sixth: <br />
+                        {ascendingNoteNames[5]} ({modulations?.hopsFromSix ? modulations.hopsFromSix.length : 0})
+                      </span>
+                      {[...modulations.hopsFromSix]
+                        .sort((a, b) => a.name.localeCompare(b.name))
+                        .map((hop, index) => (
+                          <span
+                            key={index}
+                            onClick={() => {
+                              addHopsWrapper(hop, stackIdx);
+                              setModulatedMaqamTransposition(hop);
+                              setSelectedMaqamTransposition(hop);
+                            }}
+                            style={{ cursor: "pointer" }}
+                          >
+                            {hop.name}
+                          </span>
+                        ))}
+                    </div>
+                  </>
+                );
+              })()}
+          </div>
+        );
+      })}
     </div>
   );
 }

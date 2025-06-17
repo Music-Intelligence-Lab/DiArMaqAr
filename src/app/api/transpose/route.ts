@@ -2,7 +2,7 @@ import { getTuningSystems, getAjnas, getMaqamat } from "@/functions/import";
 import detectPitchClassType from "@/functions/detectPitchClassType";
 import { NextResponse } from "next/server";
 import Cell from "@/models/Cell";
-import { getIntervalPattern, getTranspositions, mergeTranspositions, Interval } from "@/functions/transpose";
+import { getJinsTranspositions, getMaqamTranspositions } from "@/functions/transpose";
 import getTuningSystemCells from "@/functions/getTuningSystemCells";
 
 export async function POST(request: Request) {
@@ -54,137 +54,24 @@ export async function POST(request: Request) {
 
     const allCells: Cell[] = getTuningSystemCells(selectedTuningSystem, firstNote);
 
-    const valueType = allCells[0].originalValueType;
-
-    const useRatio = valueType === "fraction" || valueType === "ratios";
-
-    if (!useRatio) {
-      if (centsTolerance === undefined) return NextResponse.json({ error: "centsTolerance is required for non-ratio values" }, { status: 400 });
-      else if (isNaN(parseInt(centsTolerance))) return NextResponse.json({ error: "centsTolerance must be a number" }, { status: 400 });
-      else if (parseInt(centsTolerance) < 0) return NextResponse.json({ error: "centsTolerance must be a positive number" }, { status: 400 });
-    }
-
     if (maqamID) {
       const selectedMaqam = maqamat.find((maqam) => maqam.getId() === maqamID);
       if (!selectedMaqam) {
         return NextResponse.json({ error: "Invalid maqamID" }, { status: 400 });
       }
 
-      const ascendingMaqamCells: Cell[] = [];
-      const descendingMaqamCells: Cell[] = [];
+      const maqamTranspositions = getMaqamTranspositions(allCells, ajnas, selectedMaqam, true, centsTolerance ?? 5);
 
-      for (const cellDetail of allCells) {
-        const noteName = cellDetail.noteName;
-
-        if (selectedMaqam.getAscendingNoteNames().includes(noteName)) {
-          ascendingMaqamCells.push(cellDetail);
-        }
-
-        if (selectedMaqam.getDescendingNoteNames().includes(noteName)) {
-          descendingMaqamCells.push(cellDetail);
-        }
-      }
-
-      descendingMaqamCells.reverse();
-
-      if (ascendingMaqamCells.length !== selectedMaqam.getAscendingNoteNames().length) {
-        return NextResponse.json({ error: "This maqam is not compatible with this tuning system" }, { status: 400 });
-      }
-
-      if (descendingMaqamCells.length !== selectedMaqam.getDescendingNoteNames().length) {
-        return NextResponse.json({ error: "This maqam is not compatible with this tuning system" }, { status: 400 });
-      }
-
-      const ascendingIntervalPattern: Interval[] = getIntervalPattern(ascendingMaqamCells, useRatio);
-
-      const descendingIntervalPattern: Interval[] = getIntervalPattern(descendingMaqamCells, useRatio);
-
-      const ascendingSequences: Cell[][] = getTranspositions(allCells, ascendingIntervalPattern, true, useRatio, centsTolerance);
-      const descendingSequences: Cell[][] = getTranspositions(allCells, descendingIntervalPattern, false, useRatio, centsTolerance);
-
-      const filteredSequences: { ascendingSequence: Cell[]; descendingSequence: Cell[] }[] = mergeTranspositions(
-        ascendingSequences,
-        descendingSequences
-      );
-
-      const data: {
-        ascendingInterval: string[];
-        descendingInterval: string[];
-        transpositions: { name: string; ascendingSequence: Cell[]; descendingSequence: Cell[] }[];
-      } = {
-        ascendingInterval: [],
-        descendingInterval: [],
-        transpositions: [],
-      };
-
-      data.ascendingInterval = ascendingIntervalPattern.map((pat) => {
-        if (useRatio) {
-          return pat.ratio ?? "1/1";
-        } else {
-          return pat.diff?.toString() ?? "0";
-        }
-      });
-
-      data.descendingInterval = descendingIntervalPattern.map((pat) => {
-        if (useRatio) {
-          return pat.ratio ?? "1/1";
-        } else {
-          return pat.diff?.toString() ?? "0";
-        }
-      });
-
-      data.transpositions = filteredSequences.map((seq) => {
-        const name = selectedMaqam.getName() + " al-" + seq.ascendingSequence[0].noteName;
-        return { name, ascendingSequence: seq.ascendingSequence, descendingSequence: seq.descendingSequence };
-      });
-
-      return NextResponse.json(data);
+      return NextResponse.json(maqamTranspositions);
     } else if (jinsID) {
       const selectedJins = ajnas.find((jins) => jins.getId() === jinsID);
       if (!selectedJins) {
         return NextResponse.json({ error: "Invalid jinsID" }, { status: 400 });
       }
 
-      const jinsCellS: Cell[] = [];
+      const jinsTranspositions = getJinsTranspositions(allCells, selectedJins, true, centsTolerance ?? 5);
 
-      for (const cellDetail of allCells) {
-        const noteName = cellDetail.noteName;
-
-        if (selectedJins.getNoteNames().includes(noteName)) {
-          jinsCellS.push(cellDetail);
-        }
-      }
-
-      if (jinsCellS.length !== selectedJins.getNoteNames().length) {
-        return NextResponse.json({ error: "This jins is not compatible with this tuning system" }, { status: 400 });
-      }
-
-      const intervalPattern: Interval[] = getIntervalPattern(jinsCellS, useRatio);
-
-      const sequences: Cell[][] = getTranspositions(allCells, intervalPattern, true, useRatio, centsTolerance);
-
-      const data: {
-        interval: string[];
-        transpositions: { name: string; sequence: Cell[] }[];
-      } = {
-        interval: [],
-        transpositions: [],
-      };
-
-      data.interval = intervalPattern.map((pat) => {
-        if (useRatio) {
-          return pat.ratio ?? "1/1";
-        } else {
-          return pat.diff?.toString() ?? "0";
-        }
-      });
-
-      data.transpositions = sequences.map((seq) => {
-        const name = selectedJins.getName() + " al-" + seq[0].noteName;
-        return { name, sequence: seq };
-      });
-
-      return NextResponse.json(data);
+      return NextResponse.json(jinsTranspositions);
     }
 
     return NextResponse.json({

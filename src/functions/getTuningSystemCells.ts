@@ -78,7 +78,7 @@ export default function getTuningSystemCells(tuningSystem: TuningSystem, startin
         englishName: getEnglishNoteName(noteName),
         fraction: conv.fraction,
         cents: conv.cents,
-        ratios: conv.decimal,
+        decimalRatio: conv.decimal,
         stringLength: conv.stringLength,
         frequency: conv.frequency,
         originalValue: shifted,

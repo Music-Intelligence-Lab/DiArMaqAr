@@ -1,9 +1,9 @@
-export default function detectPitchClassType(values: string[]): "fraction" | "cents" | "decimal" | "stringLength" | "unknown" {
+export default function detectPitchClassType(values: string[]): "fraction" | "cents" | "decimalRatio" | "stringLength" | "unknown" {
   /*
     Basic approach:
     - If all lines match fraction pattern (e.g. "3/2", "4:3"), call it "fraction".
     - If all lines are numeric < 1200 and ascending, call it "cents".
-    - If all lines are numeric >=1.0 and <2.0 and ascending, call it "decimal".
+    - If all lines are numeric >=1.0 and <2.0 and ascending, call it "decimalRatio".
     - If all lines are numeric and descending, call it "stringLength".
     - Otherwise, return "unknown".
   */
@@ -34,7 +34,7 @@ export default function detectPitchClassType(values: string[]): "fraction" | "ce
 
   // check decimal ratio
   if (ascending && numericVals.every((v) => v >= 1.0 && v < 2.0)) {
-    return "decimal";
+    return "decimalRatio";
   }
 
   // check string length

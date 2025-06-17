@@ -15,7 +15,7 @@ At the heart of the Maqam Network is the **Tuning System**, known in Arabic as *
 Each Tuning System in Maqam Network is represented by a TypeScript class called `TuningSystem`. This class holds all the essential information about a tuning system, including:
 
 - **Metadata**: such as the title, source, year, creator, and comments (in both English and Arabic).
-- **Pitch Classes**: the raw notes that form the backbone of the tuning system, these can be in either fractions, string lengths, cents or decimal ratios.
+- **Pitch Classes**: the raw notes that form the backbone of the tuning system, these can be in either fractions, string lengths, cents or decimal decimalRatio.
 - **Reference Frequencies**: mappings from note names to specific frequencies, which allow us to recreate and synthesize the sound of the system.
 - **Abjad Names**: Arabic-style note names used for traditional notation and analysis.
 - **Transliterated Note Sets**: collections of note names in different transliterations, enabling flexibility in representing pitches in various formats.
@@ -250,7 +250,7 @@ In addition, the context provides core functions such as:
 - **playSequence**: Play a sequence of notes, respecting patterns and tempo.
 - **handleStartNoteNameChange**: Change the starting note and update mappings.
 - **mapIndices**: Map note names to indices in the Tuning System.
-- **getCellS**: Retrieve all computed details for a given cell (note name, frequency, ratios, cents, etc.).
+- **getCellS**: Retrieve all computed details for a given cell (note name, frequency, decimalRatio, cents, etc.).
 - **getAllCells**: Get all possible cells across octaves.
 - **clearSelections**: Reset selections for cells, jins, and maqam.
 - **checkIfJinsIsSelectable** and **checkIfMaqamIsSelectable**: Validate if a jins or maqam can be selected in the current tuning.
@@ -274,7 +274,7 @@ The **Filter Context** in Maqam Network manages the visibility of various fields
 
 ### 🧭 Purpose
 
-The Filter Context defines which columns or fields are shown in the UI, such as note names, frequencies, ratios, and other technical details. By toggling these filters, users can tailor the interface to their specific needs.
+The Filter Context defines which columns or fields are shown in the UI, such as note names, frequencies, decimalRatio, and other technical details. By toggling these filters, users can tailor the interface to their specific needs.
 
 ### 🏗️ Structure
 
@@ -466,7 +466,7 @@ The **Transpose Functions** module provides core logic for calculating transposi
 
 This module allows the Maqam Network to:
 
-- **Analyze melodic patterns** within *ajnas* and *maqamat* by computing intervals (either as ratios or cent differences).
+- **Analyze melodic patterns** within *ajnas* and *maqamat* by computing intervals (either as decimalRatio or cent differences).
 - **Generate transposed sequences** of cells that match a given interval pattern, enabling exploration of musical possibilities across the pitch grid.
 - **Support both ascending and descending sequences**, ensuring that transpositions align with the theoretical structure of Arabic music.
 - **Bridge user-defined pitch data** (via the `AppContext`) with theoretical patterns, enabling educational and creative exploration.
@@ -476,7 +476,7 @@ This module allows the Maqam Network to:
 ## 🔧 Core Functionality
 
 - **Interval Pattern Generation**:
-  - The `getIntervalPattern()` function creates an array of intervals (as either ratios or cent differences) based on a sequence of cell details.
+  - The `getIntervalPattern()` function creates an array of intervals (as either decimalRatio or cent differences) based on a sequence of cell details.
 
 - **Transpositions Generation**:
   - The `getTranspositions()` function recursively builds all valid sequences of cells that match a given interval pattern, considering direction (ascending/descending), ratio/cents mode, and a user-defined cents tolerance.
@@ -538,7 +538,7 @@ It integrates theoretical concepts like **Darajat al-Istiqrār** (tonic/finalis)
   - Filters sequences to exclude the original tonic/finalis when displaying transpositions.
 
 - **Two Main Tables**:
-  1. **Analysis Table (`Taḥlīl`)**: Shows the original *jins*, its note names, intervals (in ratios or cent differences), original values, and playback options.
+  1. **Analysis Table (`Taḥlīl`)**: Shows the original *jins*, its note names, intervals (in decimalRatio or cent differences), original values, and playback options.
   2. **Transpositions Table (`Taṣwīr`)**: Lists valid transpositions of the *jins*, including note names, intervals, and playback buttons.
 
 - **Playback Controls**:
@@ -702,7 +702,7 @@ It bridges theory (maqam models, *ajnas*) with interactive exploration and sound
 ## 🔧 Core Functionality
 
 - **Interval Analysis**:
-  - Computes the interval patterns (ratios or cent differences) for both ascending and descending maqam structures.
+  - Computes the interval patterns (decimalRatio or cent differences) for both ascending and descending maqam structures.
   - Uses `getIntervalPattern`, `getTranspositions`, and `mergeTranspositions` from `transpose.ts`.
 
 - **Ajnas Detection**:

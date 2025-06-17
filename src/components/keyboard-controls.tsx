@@ -16,7 +16,7 @@ export default function KeyboardControls() {
 
   // derive descending cells
   const descendingNoteNames = selectedMaqamTransposition
-    ? selectedMaqamTransposition.descendingNoteNames
+    ? selectedMaqamTransposition.descendingCells.map(cell => cell.noteName)
     : selectedMaqam
     ? selectedMaqam.getDescendingNoteNames()
     : [];
