@@ -77,21 +77,21 @@ interface AppContextInterface {
 const AppContext = createContext<AppContextInterface | null>(null);
 
 let emptyCell: Cell = {
-      noteName: "",
-      fraction: "",
-      cents: "",
-      ratios: "",
-      stringLength: "",
-      frequency: "",
-      englishName: "",
-      originalValue: "",
-      originalValueType: "",
-      index: -1,
-      octave: -1,
-      abjadName: "",
-      fretDivision: "",
-      midiNoteNumber: 0,
-    };
+  noteName: "",
+  fraction: "",
+  cents: "",
+  ratios: "",
+  stringLength: "",
+  frequency: "",
+  englishName: "",
+  originalValue: "",
+  originalValueType: "",
+  index: -1,
+  octave: -1,
+  abjadName: "",
+  fretDivision: "",
+  midiNoteNumber: 0,
+};
 
 export function AppContextProvider({ children }: { children: React.ReactNode }) {
   const [tuningSystems, setTuningSystems] = useState<TuningSystem[]>([]);
@@ -123,10 +123,14 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
   const [sources, setSources] = useState<Source[]>([]);
 
-  const pitchClassesArr = pitchClasses
-    .split("\n")
-    .map((p) => p.trim())
-    .filter((p) => p.length > 0);
+  const pitchClassesArr = useMemo(
+    () =>
+      pitchClasses
+        .split("\n")
+        .map((p) => p.trim())
+        .filter((p) => p.length > 0),
+    [pitchClasses]
+  );
 
   useEffect(() => {
     setTuningSystems(getTuningSystems());
@@ -170,10 +174,10 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   }, [selectedTuningSystem]);
 
   const getCells = (miniCell: MiniCell): Cell => {
-    emptyCell = {...emptyCell, index: miniCell.index, octave: miniCell.octave}
+    emptyCell = { ...emptyCell, index: miniCell.index, octave: miniCell.octave };
     if (!selectedTuningSystem) return emptyCell;
 
-    const pcs = selectedTuningSystem.getPitchClasses();
+    const pcs = pitchClassesArr;
     const nPC = pcs.length;
     if (miniCell.index < 0 || miniCell.index >= nPC) return emptyCell;
 
@@ -249,7 +253,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
   const allCells = useMemo(() => {
     if (!selectedTuningSystem) return [];
-    const pitchArr = selectedTuningSystem.getPitchClasses();
+    const pitchArr = pitchClassesArr;
     const cells: MiniCell[] = [];
 
     for (let octave = 0; octave < 4; octave++) {
@@ -261,18 +265,16 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   }, [selectedTuningSystem, selectedIndices, referenceFrequencies, pitchClasses, noteNames]);
 
   const shiftCell = (cell: Cell, octaveShift: number): Cell => {
-    const cellIndex = allCells.findIndex(
-      (c) => c.index === cell.index && c.octave === cell.octave
-    );
+    const cellIndex = allCells.findIndex((c) => c.index === cell.index && c.octave === cell.octave);
     if (cellIndex === -1) return emptyCell;
 
     const numberOfPitchClasses = selectedTuningSystem?.getPitchClasses().length || 0;
 
-    const newIndex = (cellIndex + octaveShift * numberOfPitchClasses)
+    const newIndex = cellIndex + octaveShift * numberOfPitchClasses;
 
     if (newIndex < 0 || newIndex >= allCells.length) return emptyCell;
 
-    return {...allCells[newIndex], octave: cell.octave + octaveShift};
+    return { ...allCells[newIndex], octave: cell.octave + octaveShift };
   };
 
   const clearSelections = () => {
@@ -480,8 +482,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
             : [];
 
         getMaqamTranspositions(allCells, maqam).forEach((sequence) => {
-          if (JSON.stringify(maqam.getAscendingNoteNames()) === JSON.stringify(sequence.ascendingSequence.map((cellS) => cellS.noteName)))
-            return;
+          if (JSON.stringify(maqam.getAscendingNoteNames()) === JSON.stringify(sequence.ascendingSequence.map((cellS) => cellS.noteName))) return;
           transpositions.push({
             name: maqam.getName() + " al-" + sequence.ascendingSequence[0].noteName,
             ascendingNoteNames: sequence.ascendingSequence.map((cellS) => cellS.noteName),
