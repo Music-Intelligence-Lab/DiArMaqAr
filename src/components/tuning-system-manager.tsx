@@ -16,10 +16,12 @@ import TransliteratedNoteName, {
 } from "@/models/NoteName";
 
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { abjadNames } from "@/functions/noteNameMappings";
 import { updateTuningSystems } from "@/functions/update";
 import getFirstNoteName from "@/functions/getFirstNoteName";
 import { SourcePageReference } from "@/models/bibliography/Source";
+import { exportTuningSystem } from "@/functions/export";
 
 export default function TuningSystemManager({ admin }: { admin: boolean }) {
   const {
@@ -642,7 +644,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     if (typeof value === "number") return value.toFixed(decimal);
     else if (value.includes("/")) return value;
     else return parseFloat(value).toFixed(decimal);
-  }
+  };
 
   /**
    * Render a single octave's table, with each column showing:
@@ -1489,6 +1491,24 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                   />
                 </label>
               </div>
+            )}
+            {selectedTuningSystem && (
+              <button className="tuning-system-manager__export-button" onClick={() => {
+                const firstNote = getFirstNoteName(selectedIndices);
+                const data = exportTuningSystem(selectedTuningSystem, firstNote);
+                const json = JSON.stringify(data, null, 2);
+                const blob = new Blob([json], { type: "application/json" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `${selectedTuningSystem.stringify()} starting on ${firstNote}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+              }}>
+                <FileDownloadIcon />
+              </button>
             )}
           </div>
           {admin && (

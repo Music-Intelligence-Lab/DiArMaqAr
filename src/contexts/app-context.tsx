@@ -13,7 +13,7 @@ import { getMaqamTranspositions } from "@/functions/transpose";
 import shawwaMapping from "@/functions/shawwaMapping";
 import Cell from "@/models/Cell";
 import { getTuningSystems, getMaqamat, getAjnas, getSources, getPatterns } from "@/functions/import";
-import { getTuningSystemCells } from "@/functions/export";
+import getTuningSystemCells from "@/functions/getTuningSystemCells";
 
 interface MiniCell {
   octave: number;
