@@ -3,7 +3,7 @@ import detectPitchClassType from "@/functions/detectPitchClassType";
 import { NextResponse } from "next/server";
 import Cell from "@/models/Cell";
 import { getIntervalPattern, getTranspositions, mergeTranspositions, Interval } from "@/functions/transpose";
-import { getTuningSystemCells } from "@/functions/export";
+import getTuningSystemCells from "@/functions/getTuningSystemCells";
 
 export async function POST(request: Request) {
   try {

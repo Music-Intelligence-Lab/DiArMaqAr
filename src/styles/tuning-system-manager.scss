@@ -812,6 +812,17 @@
     }
   }
 
+  &__export-button {
+    height: fit-content;
+    padding: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    background-color: $primary;
+    color: white;
+    margin: 0 10px;
+  }
+
   &__sources-english {
     display: flex;
     flex-direction: column;
