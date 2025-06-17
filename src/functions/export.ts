@@ -13,8 +13,8 @@ import convertPitchClass, { shiftPitchClass, frequencyToMidiNoteNumber } from "@
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import Cell from "@/models/Cell";
 
-export function getTuningSystemCells(tuningSystem: TuningSystem, startingNote: TransliteratedNoteName): Cell[] {
-  const pitchArr = tuningSystem.getPitchClasses();
+export function getTuningSystemCells(tuningSystem: TuningSystem, startingNote: TransliteratedNoteName, pitchClasses: string[] = []): Cell[] {
+  const pitchArr = pitchClasses.length ? pitchClasses : tuningSystem.getPitchClasses();
   const nPC = pitchArr.length;
   const allSets = tuningSystem.getSetsOfNoteNames();
   const noteNames = allSets.find((s) => s[0] === startingNote) ?? allSets[0];

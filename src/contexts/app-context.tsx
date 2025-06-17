@@ -4,12 +4,8 @@ import React, { createContext, useState, useEffect, useMemo, useContext, useCall
 import TuningSystem from "@/models/TuningSystem";
 import Jins, { JinsTransposition } from "@/models/Jins";
 import TransliteratedNoteName, { TransliteratedNoteNameOctaveOne, TransliteratedNoteNameOctaveTwo } from "@/models/NoteName";
-import detectPitchClassType from "@/functions/detectPitchClassType";
-import convertPitchClass, { frequencyToMidiNoteNumber, shiftPitchClass } from "@/functions/convertPitchClass";
-import { octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames, octaveThreeNoteNames, octaveFourNoteNames } from "@/models/NoteName";
+import {  octaveOneNoteNames, octaveTwoNoteNames } from "@/models/NoteName";
 import Maqam, { MaqamTransposition, MaqamModulations } from "@/models/Maqam";
-import getNoteNamesUsedInTuningSystem from "@/functions/getNoteNamesUsedInTuningSystem";
-import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import { Source } from "@/models/bibliography/Source";
 import Pattern from "@/models/Pattern";
 import getFirstNoteName from "@/functions/getFirstNoteName";
@@ -17,6 +13,7 @@ import { getMaqamTranspositions } from "@/functions/transpose";
 import shawwaMapping from "@/functions/shawwaMapping";
 import Cell from "@/models/Cell";
 import { getTuningSystems, getMaqamat, getAjnas, getSources, getPatterns } from "@/functions/import";
+import { getTuningSystemCells } from "@/functions/export";
 
 interface MiniCell {
   octave: number;
@@ -76,7 +73,7 @@ interface AppContextInterface {
 
 const AppContext = createContext<AppContextInterface | null>(null);
 
-let emptyCell: Cell = {
+const emptyCell: Cell = {
   noteName: "",
   fraction: "",
   cents: "",
@@ -173,84 +170,6 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     } else clearSelections();
   }, [selectedTuningSystem]);
 
-  const getCells = (miniCell: MiniCell): Cell => {
-    emptyCell = { ...emptyCell, index: miniCell.index, octave: miniCell.octave };
-    if (!selectedTuningSystem) return emptyCell;
-
-    const pcs = pitchClassesArr;
-    const nPC = pcs.length;
-    if (miniCell.index < 0 || miniCell.index >= nPC) return emptyCell;
-
-    // 1) compute pitch conversion
-    const pitchType = detectPitchClassType(pcs);
-    if (pitchType === "unknown") return emptyCell;
-    const basePc = pcs[miniCell.index];
-    const shifted = shiftPitchClass(basePc, pitchType, miniCell.octave as 0 | 1 | 2 | 3);
-    const conv = convertPitchClass(
-      shifted,
-      pitchType,
-      selectedTuningSystem.getStringLength(),
-      referenceFrequencies[getFirstNoteName(selectedIndices)] || selectedTuningSystem.getDefaultReferenceFrequency()
-    );
-    if (!conv) return emptyCell;
-
-    // 2) figure out noteName & englishName as before
-    const combinedIndex = selectedIndices[miniCell.index];
-    const O1 = octaveOneNoteNames.length;
-    let noteName = "none";
-    if (combinedIndex >= 0) {
-      if (combinedIndex < O1) {
-        // first-span
-        noteName = [octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames, octaveThreeNoteNames][miniCell.octave][combinedIndex] || "none";
-      } else {
-        // second-span
-        const local = combinedIndex - O1;
-        noteName = [octaveOneNoteNames, octaveTwoNoteNames, octaveThreeNoteNames, octaveFourNoteNames][miniCell.octave][local] || "none";
-      }
-    }
-
-    // 3) abjad name: pick from your array (you’ll need to have selectedAbjadNames available here)
-    const abjadArr = selectedTuningSystem.getAbjadNames();
-    let abjadName = "";
-    if (miniCell.octave === 1 || miniCell.octave === 2) {
-      const offset = miniCell.octave === 1 ? 0 : nPC;
-      abjadName = abjadArr[offset + miniCell.index] || "";
-    }
-
-    // 4) fret division: difference in stringLength from octave-1 at index 0
-    const openStringLen = parseFloat(
-      convertPitchClass(
-        shiftPitchClass(pcs[0], pitchType, 1),
-        pitchType,
-        selectedTuningSystem.getStringLength(),
-        referenceFrequencies[getFirstNoteName(selectedIndices)] || selectedTuningSystem.getDefaultReferenceFrequency()
-      )!.stringLength
-    );
-    const thisLen = parseFloat(conv.stringLength);
-    const fretDivision = (openStringLen - thisLen).toString();
-
-    // 5) midi note
-    const freq = parseFloat(conv.frequency);
-    const midiNoteNumber = frequencyToMidiNoteNumber(freq);
-
-    return {
-      noteName,
-      englishName: getEnglishNoteName(noteName),
-      fraction: conv.fraction,
-      cents: conv.cents,
-      ratios: conv.decimal,
-      stringLength: conv.stringLength,
-      frequency: conv.frequency,
-      originalValue: shifted,
-      originalValueType: pitchType,
-      index: miniCell.index,
-      octave: miniCell.octave,
-      abjadName,
-      fretDivision,
-      midiNoteNumber,
-    };
-  };
-
   const allCells = useMemo(() => {
     if (!selectedTuningSystem) return [];
     const pitchArr = pitchClassesArr;
@@ -261,7 +180,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         cells.push({ octave, index });
       }
     }
-    return cells.map(getCells);
+    const firstNote = getFirstNoteName(selectedIndices);
+    return getTuningSystemCells(selectedTuningSystem, firstNote, pitchArr);
   }, [selectedTuningSystem, selectedIndices, referenceFrequencies, pitchClasses, noteNames]);
 
   const shiftCell = (cell: Cell, octaveShift: number): Cell => {
@@ -348,13 +268,13 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     return [];
   };
 
-  const checkIfJinsIsSelectable = (jins: Jins, givenIndices: number[] = []) => {
-    const usedNoteNames = getNoteNamesUsedInTuningSystem(givenIndices.length ? givenIndices : selectedIndices);
+  const checkIfJinsIsSelectable = (jins: Jins, givenCells: Cell[] = []) => {
+    const usedNoteNames = givenCells.length ? givenCells.map((cell) => cell.noteName) : allCells.map((cell) => cell.noteName);
     return jins.getNoteNames().every((noteName) => usedNoteNames.includes(noteName));
   };
 
-  const handleClickJins = (jins: Jins, givenIndices: number[] = []) => {
-    const usedNoteNames = getNoteNamesUsedInTuningSystem(givenIndices.length ? givenIndices : selectedIndices);
+  const handleClickJins = (jins: Jins, givenCells: Cell[] = []) => {
+    const usedCells = givenCells.length ? givenCells : allCells;
 
     setSelectedJins(jins);
     setSelectedMaqam(null);
@@ -362,34 +282,17 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
     const noteNames = jins.getNoteNames();
 
-    const newSelectedCells: MiniCell[] = [];
+    const newSelectedCells: Cell[] = [];
 
-    const lengthOfUsedNoteNames = usedNoteNames.length;
-
-    for (let i = 0; i < lengthOfUsedNoteNames; i++) {
-      const usedNoteName = usedNoteNames[i];
-
-      if (noteNames.includes(usedNoteName)) {
-        let octave = 0;
-        let index = i;
-
-        while (index >= lengthOfUsedNoteNames / 4) {
-          octave++;
-          index -= lengthOfUsedNoteNames / 4;
-        }
-
-        newSelectedCells.push({
-          octave,
-          index,
-        });
-      }
+    for (const cell of usedCells) {
+      if (noteNames.includes(cell.noteName)) newSelectedCells.push(cell);
     }
 
-    setSelectedCells(newSelectedCells.map(getCells));
+    setSelectedCells(newSelectedCells);
   };
 
-  const checkIfMaqamIsSelectable = (maqam: Maqam, givenIndices: number[] = []) => {
-    const usedNoteNames = getNoteNamesUsedInTuningSystem(givenIndices.length ? givenIndices : selectedIndices);
+  const checkIfMaqamIsSelectable = (maqam: Maqam, givenCells: Cell[] = []) => {
+    const usedNoteNames = givenCells.length ? givenCells.map((cell) => cell.noteName) : allCells.map((cell) => cell.noteName);
 
     return (
       maqam.getAscendingNoteNames().every((noteName) => usedNoteNames.includes(noteName)) &&
@@ -397,32 +300,23 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     );
   };
 
-  const handleClickMaqam = (maqam: Maqam, givenIndices: number[] = []) => {
-    const usedNoteNames = getNoteNamesUsedInTuningSystem(givenIndices.length ? givenIndices : selectedIndices);
+  const handleClickMaqam = (maqam: Maqam, given: Cell[] = []) => {
+    const usedCells = given.length ? given : allCells;
 
-    // when selecting, populate cells for asc or desc based on stored noteNames
     setSelectedMaqam(maqam);
     setSelectedJins(null);
     setMaqamSayrId("");
     setSelectedMaqamTransposition(null);
-    const namesToSelect = maqam.getAscendingNoteNames();
 
-    // translate names back into SelectedCell[] by matching against usedNoteNames
-    const newCells: MiniCell[] = [];
-    usedNoteNames.forEach((name, idx) => {
-      if (namesToSelect.includes(name)) {
-        let octave = 0;
-        let index = idx;
-        // assume 4 octaves evenly divided
-        const perOct = usedNoteNames.length / 4;
-        while (index >= perOct) {
-          octave++;
-          index -= perOct;
-        }
-        newCells.push({ octave, index });
-      }
-    });
-    setSelectedCells(newCells.map(getCells));
+    const noteNames = maqam.getAscendingNoteNames();
+
+    const newSelectedCells: Cell[] = [];
+
+    for (const cell of usedCells) {
+      if (noteNames.includes(cell.noteName)) newSelectedCells.push(cell);
+    }
+
+    setSelectedCells(newSelectedCells);
   };
 
   const getModulations = useCallback(
@@ -545,17 +439,18 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         const found = tuningSystems.find((ts) => ts.getId() === tuningSystemId);
         if (found) {
           setSelectedTuningSystem(found);
-          const givenIndices = handleStartNoteNameChange(firstNote ?? "", found.getSetsOfNoteNames(), found.getPitchClasses().length);
+          handleStartNoteNameChange(firstNote ?? "", found.getSetsOfNoteNames(), found.getPitchClasses().length);
+          const allCells = getTuningSystemCells(found, firstNote || "");
 
           if (jinsId) {
             const foundJins = ajnas.find((j) => j.getId() === jinsId);
-            if (foundJins && checkIfJinsIsSelectable(foundJins, givenIndices)) {
-              handleClickJins(foundJins, givenIndices);
+            if (foundJins && checkIfJinsIsSelectable(foundJins, allCells)) {
+              handleClickJins(foundJins, allCells);
             }
           } else if (maqamId) {
             const foundMaqam = maqamat.find((m) => m.getId() === maqamId);
-            if (foundMaqam && checkIfMaqamIsSelectable(foundMaqam, givenIndices)) {
-              handleClickMaqam(foundMaqam, givenIndices);
+            if (foundMaqam && checkIfMaqamIsSelectable(foundMaqam, allCells)) {
+              handleClickMaqam(foundMaqam, allCells);
               if (sayrId) {
                 setMaqamSayrId(sayrId);
               }
