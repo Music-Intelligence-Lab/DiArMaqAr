@@ -40,9 +40,11 @@ export default function JinsTranspositions() {
           </td>
 
           <td className="jins-transpositions__jins-name-row" colSpan={2 + (cells.length - 1) * 2}>
-            <span className="jins-transpositions__transposition-title">
+            {tahlil ? <span className="jins-transpositions__transposition-title">
               Darajat al-Istiqrār (tonic/finalis): {cells[0].noteName + ` (${getEnglishNoteName(cells[0].noteName)})`}
-            </span>
+            </span>:<span className="jins-transpositions__transposition-title">
+              {transposition.name}
+            </span>}
             <button
               className="jins-transpositions__button"
               onClick={() => {

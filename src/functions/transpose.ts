@@ -109,7 +109,7 @@ export function getMaqamTranspositions(
   const descendingIntervalPattern: CellInterval[] = getCellIntervals(descendingMaqamCells);
 
   const ascendingSequences: Cell[][] = getCellTranspositions(allCells, ascendingIntervalPattern, true, useRatio, centsTolerance).filter(
-    (sequence) => !onlyOctaveOne || sequence[0].octave === 1
+    (sequence) => (!onlyOctaveOne || sequence[0].octave === 1)
   );
 
   const descendingSequences: Cell[][] = getCellTranspositions(allCells, descendingIntervalPattern, false, useRatio, centsTolerance);
@@ -165,7 +165,7 @@ export function getMaqamTranspositions(
         }
 
         if (!found) ascendingJinsTranspositions.push(null);
-        if (i === ascendingCellIntervals.length - 1) break;
+        if (i === ascendingCellIntervals.length) break;
       }
 
       for (let i = 0; i < extendedDescendingCellIntervals.length; i++) {
@@ -194,7 +194,7 @@ export function getMaqamTranspositions(
         }
 
         if (!found) descendingJinsTranspositions.push(null);
-        if (i === descendingCellIntervals.length - 1) break;
+        if (i === descendingCellIntervals.length) break;
       }
     }
 
@@ -211,8 +211,12 @@ export function getMaqamTranspositions(
     };
   });
 
-  if (withTahlil) return [maqam.getTahlil(allCells), ...maqamTranspositions];
-  else return maqamTranspositions;
+  const tahlilTransposition = maqamTranspositions.find((transposition) => transposition.ascendingCells[0].noteName === ascendingNoteNames[0]);
+  const maqamTranspositionsWithoutTahlil = maqamTranspositions.filter((transposition) => transposition !== tahlilTransposition);
+
+  if (withTahlil && tahlilTransposition) {
+    return [{...tahlilTransposition, tahlil: true}, ... maqamTranspositionsWithoutTahlil];}
+  else return  maqamTranspositionsWithoutTahlil;
 }
 
 export function getJinsTranspositions(
@@ -236,7 +240,7 @@ export function getJinsTranspositions(
   const intervalPattern: CellInterval[] = getCellIntervals(jinsCells);
 
   const jinsTranspositions: JinsTransposition[] = getCellTranspositions(allCells, intervalPattern, true, useRatio, centsTolerance)
-    .filter((sequence) => !onlyOctaveOne || sequence[0].octave === 1)
+    .filter((sequence) => (!onlyOctaveOne || sequence[0].octave === 1))
     .map((sequence) => {
       return {
         jinsId: jins.getId(),
@@ -247,6 +251,9 @@ export function getJinsTranspositions(
       };
     });
 
-  if (withTahlil) return [jins.getTahlil(allCells), ...jinsTranspositions];
-  else return jinsTranspositions;
+  const tahlilTransposition = jinsTranspositions.find((transposition) => transposition.cells[0].noteName === jinsNoteNames[0]);
+  const jinsTranspositionsWithoutTahlil = jinsTranspositions.filter((transposition) => transposition !== tahlilTransposition);
+
+  if (withTahlil && tahlilTransposition) return [{...tahlilTransposition, tahlil: true,}, ...jinsTranspositionsWithoutTahlil];
+  else return jinsTranspositionsWithoutTahlil;
 }
