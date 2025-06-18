@@ -8,6 +8,7 @@ import { Sayr } from "@/models/Maqam";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import NavigationMenu from "./navigation-menu";
 import { octaveOneNoteNames } from "@/models/NoteName";
+import calculateNumberOfHops from "@/functions/calculateNumberOfHops";
 export default function Navbar() {
   const { showAdminTabs, setShowAdminTabs, selectedMenu, setSelectedMenu } = useMenuContext();
   const {
@@ -69,14 +70,7 @@ export default function Navbar() {
     if (!selectedMaqam) return null;
     const transposition = selectedMaqam.getTahlil(allCells);
     const modulations = getModulations(transposition);
-    return (
-      (modulations.hopsFromOne?.length || 0) +
-      (modulations.hopsFromThree?.length || 0) +
-      (modulations.hopsFromThree2p?.length || 0) +
-      (modulations.hopsFromFour?.length || 0) +
-      (modulations.hopsFromFive?.length || 0) +
-      (modulations.hopsFromSix?.length || 0)
-    );
+    return calculateNumberOfHops(modulations);
   }, [selectedMaqam, getModulations]);
 
   return (
@@ -189,9 +183,7 @@ export default function Navbar() {
               {!selectedMaqam
                 ? ""
                 : selectedMaqamTransposition
-                ? `${selectedMaqam.getName()} al-${selectedMaqamTransposition.ascendingCells.map(cell => cell.noteName)[0]} (${getEnglishNoteName(
-                    selectedMaqamTransposition.ascendingCells.map(cell => cell.noteName)[0]
-                  )})`
+                ? selectedMaqamTransposition.name
                 : `${selectedMaqam.getName()} (${selectedMaqam.getAscendingNoteNames()[0]}/${getEnglishNoteName(
                     selectedMaqam.getAscendingNoteNames()[0]
                   )})`}
