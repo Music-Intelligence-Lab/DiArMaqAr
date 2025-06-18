@@ -2433,32 +2433,6 @@
     "sourcePageReferences": []
   },
   {
-    "id": "49",
-    "name": "!Test No Octave",
-    "ascendingNoteNames": [
-      "ʿushayrān",
-      "kawasht",
-      "rāst",
-      "dūgāh",
-      "buselīk/ʿushshāq",
-      "chahargāh",
-      "nawā"
-    ],
-    "descendingNoteNames": [
-      "nawā",
-      "chahargāh",
-      "buselīk/ʿushshāq",
-      "dūgāh",
-      "rāst",
-      "kawasht",
-      "ʿushayrān"
-    ],
-    "suyūr": [],
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "sourcePageReferences": []
-  },
-  {
     "id": "50",
     "name": "maqām chahargāh/girkah",
     "ascendingNoteNames": [
