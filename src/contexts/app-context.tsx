@@ -181,7 +181,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       }
     }
     const firstNote = getFirstNoteName(selectedIndices);
-    return getTuningSystemCells(selectedTuningSystem, firstNote, pitchArr);
+
+    return getTuningSystemCells(selectedTuningSystem, firstNote, pitchArr, referenceFrequencies);
   }, [selectedTuningSystem, selectedIndices, referenceFrequencies, pitchClasses, noteNames]);
 
   const shiftCell = (cell: Cell, octaveShift: number): Cell => {
