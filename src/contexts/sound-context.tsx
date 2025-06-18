@@ -333,26 +333,14 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     timeoutsRef.current.forEach(clearTimeout);
     timeoutsRef.current = [];
 
+    const selectedPattern = soundSettings.selectedPattern || new Pattern("Default", "Default", [
+      {scaleDegree: "I", noteDuration: "4", isTarget: true},
+    ]);
+
     return new Promise((resolve) => {
       const beatSec = 60 / soundSettings.tempo;
 
-      if (!soundSettings.selectedPattern || !soundSettings.selectedPattern.getNotes().length) {
-        const totalTimeMs = frequencies.length * beatSec * 1000;
-
-        frequencies.forEach((freq, i) => {
-          scheduleTimeout(() => {
-            playNoteFrequency(freq);
-          }, i * beatSec * 1000);
-        });
-
-        scheduleTimeout(() => {
-          resolve();
-        }, totalTimeMs);
-
-        return;
-      }
-
-      const patternNotes = soundSettings.selectedPattern.getNotes();
+      const patternNotes = selectedPattern.getNotes();
       const maxDegree = Math.max(...patternNotes.map((n) => (n.scaleDegree === "0" ? 0 : romanToNumber(n.scaleDegree))));
 
       if (frequencies.length < maxDegree) {
