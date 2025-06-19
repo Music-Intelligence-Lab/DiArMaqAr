@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     let noteNames: string[] = [];
 
     if (firstNote) {
-      for (const setOfNotes of selectedTuningSystem.getSetsOfNoteNames()) {
+      for (const setOfNotes of selectedTuningSystem.getNoteNames()) {
         if (setOfNotes[0] === firstNote) {
           noteNames = setOfNotes;
           break;
@@ -40,7 +40,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Invalid firstNote" }, { status: 400 });
       }
     } else {
-      if (selectedTuningSystem.getSetsOfNoteNames().length > 0) noteNames = selectedTuningSystem.getSetsOfNoteNames()[0];
+      if (selectedTuningSystem.getNoteNames().length > 0) noteNames = selectedTuningSystem.getNoteNames()[0];
       else {
         return NextResponse.json({ error: "No note names available" }, { status: 400 });
       }

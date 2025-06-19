@@ -269,14 +269,14 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       if (chosen) {
         // set the chosen system
         setSelectedTuningSystem(chosen);
-        handleStartNoteNameChange("", chosen.getSetsOfNoteNames(), chosen.getPitchClasses().length);
+        handleStartNoteNameChange("", chosen.getNoteNames(), chosen.getPitchClasses().length);
       }
     }
   };
 
   const handleTuningSystemClick = (ts: TuningSystem) => {
     setSelectedTuningSystem(ts);
-    handleStartNoteNameChange("", ts.getSetsOfNoteNames(), ts.getPitchClasses().length);
+    handleStartNoteNameChange("", ts.getNoteNames(), ts.getPitchClasses().length);
   };
 
   const updateSourceRefs = (index: number, newRef: Partial<SourcePageReference>) => {
@@ -300,7 +300,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
   // Handle creating or updating a system:
   const handleSaveTuningSystem = (givenNoteNames: NoteName[][] = []) => {
-    const usedNoteNames = givenNoteNames.length > 0 ? givenNoteNames : selectedTuningSystem?.getSetsOfNoteNames() || [[]];
+    const usedNoteNames = givenNoteNames.length > 0 ? givenNoteNames : selectedTuningSystem?.getNoteNames() || [[]];
 
     if (selectedTuningSystem) {
       const updated = new TuningSystem(
@@ -518,7 +518,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
       const firstNote = newNoteSet[0];
 
-      const noteNames = selectedTuningSystem.getSetsOfNoteNames();
+      const noteNames = selectedTuningSystem.getNoteNames();
 
       const newNoteNames = [...noteNames.filter((setOfNotes) => setOfNotes[0] !== firstNote)];
       newNoteNames.push(newNoteSet);
@@ -537,7 +537,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
     if (firstNote === "none") return;
 
-    const noteNames = selectedTuningSystem?.getSetsOfNoteNames() || [[]];
+    const noteNames = selectedTuningSystem?.getNoteNames() || [[]];
 
     const newNoteNames = [...noteNames.filter((setOfNotes) => setOfNotes[0] !== firstNote)];
     setSelectedTuningSystem(selectedTuningSystem.copyWithNewSetOfNoteNames(newNoteNames));
@@ -615,7 +615,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         return newArr;
       }
 
-      const noteNames = selectedTuningSystem?.getSetsOfNoteNames() || [[]];
+      const noteNames = selectedTuningSystem?.getNoteNames() || [[]];
 
       // 2) If this is the *first column*, try to see if there's an existing config
       //    whose FIRST note is chosenName. If yes, we load that config in full.
@@ -1145,7 +1145,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   const isCurrentConfigurationNew = () => {
     const currentFirst = getFirstNoteName(selectedIndices);
     if (currentFirst === "none") return false;
-    const noteNames = selectedTuningSystem?.getSetsOfNoteNames() || [[]];
+    const noteNames = selectedTuningSystem?.getNoteNames() || [[]];
     return !noteNames.some((config) => config[0] === currentFirst);
   };
 
@@ -1494,7 +1494,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         <div className="tuning-system-manager__starting-note-container">
           <div className="tuning-system-manager__starting-note-left">
             Start Note Names From:
-            {[...selectedTuningSystem.getSetsOfNoteNames()]
+            {[...selectedTuningSystem.getNoteNames()]
               .sort((a, b) => getNoteNameIndex(a[0] ?? 0) - getNoteNameIndex(b[0] ?? 0))
               .map((notes, index) => {
                 const startingNote = notes[0];
