@@ -181,6 +181,9 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
     );
   }, [sortedMaqamat, maqamatFilter]);
 
+  const numberOfRows = 3; // Fixed number of rows
+  const numberOfColumns = Math.ceil(filteredMaqamat.length / numberOfRows); // Calculate columns dynamically
+
   return (
     <div className="maqam-manager">
       {/* Tabs for filtering maqamat by starting note name */}
@@ -221,7 +224,12 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
         >
           ‹
         </button>
-        <div className="maqam-manager__list">
+        <div
+          className="maqam-manager__list"
+          style={{
+            gridTemplateColumns: `repeat(${numberOfColumns}, minmax(250px, 1fr))`,
+          }}
+        >
           {filteredMaqamat.map((maqam, idx) => {
             const selectable = checkIfMaqamIsSelectable(maqam);
             const numberOfTranspositions =
