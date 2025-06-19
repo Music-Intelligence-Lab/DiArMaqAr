@@ -1,5 +1,5 @@
 import TuningSystem from "@/models/TuningSystem";
-import TransliteratedNoteName, {
+import NoteName, {
   TransliteratedNoteNameOctaveOne,
   TransliteratedNoteNameOctaveTwo,
   octaveZeroNoteNames,
@@ -11,10 +11,10 @@ import TransliteratedNoteName, {
 import detectPitchClassType from "@/functions/detectPitchClassType";
 import convertPitchClass, { shiftPitchClass, frequencyToMidiNoteNumber } from "@/functions/convertPitchClass";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
-import Cell from "@/models/Cell";
+import PitchClass from "@/models/PitchClass";
 
-export default function getTuningSystemCells(tuningSystem: TuningSystem, startingNote: TransliteratedNoteName, pitchClasses: string[] = [], inputReferenceFrequencies: { [noteName: string]: number } = {}): Cell[] {
-  const pitchArr = pitchClasses.length ? pitchClasses : tuningSystem.getPitchClasses();
+export default function getTuningSystemCells(tuningSystem: TuningSystem, startingNote: NoteName, tuningSystemPitchClasses: string[] = [], inputReferenceFrequencies: { [noteName: string]: number } = {}): PitchClass[] {
+  const pitchArr = tuningSystemPitchClasses.length ? tuningSystemPitchClasses : tuningSystem.getPitchClasses();
   const nPC = pitchArr.length;
   const allSets = tuningSystem.getSetsOfNoteNames();
   const noteNames = allSets.find((s) => s[0] === startingNote) ?? allSets[0] ?? [];
@@ -41,7 +41,7 @@ export default function getTuningSystemCells(tuningSystem: TuningSystem, startin
 
   const abjadArr = tuningSystem?.getAbjadNames();
 
-  const cells: Cell[] = [];
+  const pitchClasses: PitchClass[] = [];
 
   for (let octave = 0; octave < 4; octave++) {
     for (let idx = 0; idx < nPC; idx++) {
@@ -74,7 +74,7 @@ export default function getTuningSystemCells(tuningSystem: TuningSystem, startin
       // midi
       const midiNoteNumber = frequencyToMidiNoteNumber(parseFloat(conv.frequency));
 
-      cells.push({
+      pitchClasses.push({
         noteName,
         englishName: getEnglishNoteName(noteName),
         fraction: conv.fraction,
@@ -93,5 +93,5 @@ export default function getTuningSystemCells(tuningSystem: TuningSystem, startin
     }
   }
 
-  return cells;
+  return pitchClasses;
 }

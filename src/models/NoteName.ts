@@ -198,19 +198,19 @@ export const allNotes = [
   ...new Set([...octaveZeroNoteNames, ...octaveOneNoteNames, ...octaveTwoNoteNames, ...octaveThreeNoteNames, ...octaveFourNoteNames]),
 ] as const;
 
-type TransliteratedNoteName = (typeof allNotes)[number];
-export default TransliteratedNoteName;
+type NoteName = (typeof allNotes)[number];
+export default NoteName;
 export type TransliteratedNoteNameOctaveOne = (typeof octaveOneNoteNames)[number];
 export type TransliteratedNoteNameOctaveZero = (typeof octaveZeroNoteNames)[number];
 export type TransliteratedNoteNameOctaveTwo = (typeof octaveTwoNoteNames)[number];
 export type TransliteratedNoteNameOctaveThree = (typeof octaveThreeNoteNames)[number];
 export type TransliteratedNoteNameOctaveFour = (typeof octaveFourNoteNames)[number];
 
-export function getNoteNameIndex(noteName: TransliteratedNoteName): number {
+export function getNoteNameIndex(noteName: NoteName): number {
   return allNotes.indexOf(noteName);
 }
 
-export function getNoteNameIndexPerOctave(noteName: TransliteratedNoteName): number {
+export function getNoteNameIndexPerOctave(noteName: NoteName): number {
   if (octaveZeroNoteNames.includes(noteName)) return octaveZeroNoteNames.indexOf(noteName);
   if (octaveOneNoteNames.includes(noteName)) return octaveOneNoteNames.indexOf(noteName);
   if (octaveTwoNoteNames.includes(noteName)) return octaveTwoNoteNames.indexOf(noteName);

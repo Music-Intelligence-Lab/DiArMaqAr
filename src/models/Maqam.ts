@@ -1,5 +1,5 @@
 import { getCellIntervals } from "@/functions/transpose";
-import Cell, { CellInterval } from "./Cell";
+import PitchClass, { PitchClassInterval } from "./PitchClass";
 import { Jins } from "./Jins";
 import NoteName from "./NoteName";
 import { SourcePageReference } from "./bibliography/Source";
@@ -80,19 +80,19 @@ export default class MaqamDetails {
   }
 
 
-  getTahlil(allCells: Cell[]): Maqam {
-    const ascendingCells = allCells.filter(cell => this.ascendingNoteNames.includes(cell.noteName));
-    const ascendingCellIntervals: CellInterval[] = getCellIntervals(ascendingCells);
-    const descendingCells = allCells.filter(cell => this.descendingNoteNames.includes(cell.noteName)).reverse();
-    const descendingCellIntervals: CellInterval[] = getCellIntervals(descendingCells);
+  getTahlil(allPitchClasses: PitchClass[]): Maqam {
+    const ascendingCells = allPitchClasses.filter(pitchClass => this.ascendingNoteNames.includes(pitchClass.noteName));
+    const ascendingCellIntervals: PitchClassInterval[] = getCellIntervals(ascendingCells);
+    const descendingCells = allPitchClasses.filter(pitchClass => this.descendingNoteNames.includes(pitchClass.noteName)).reverse();
+    const descendingCellIntervals: PitchClassInterval[] = getCellIntervals(descendingCells);
     return {
       maqamId: this.id,
       name: this.name,
-      tahlil: true,
-      ascendingCells,
-      ascendingCellIntervals,
-      descendingCells,
-      descendingCellIntervals,
+      transposition: false,
+      ascendingPitchClasses: ascendingCells,
+      ascendingPitchClassIntervals: ascendingCellIntervals,
+      descendingPitchClasses: descendingCells,
+      descendingPitchClassIntervals: descendingCellIntervals,
     };
   }
   
@@ -144,13 +144,13 @@ export interface SayrStop {
 export interface Maqam {
   maqamId: string;
   name: string;
-  tahlil: boolean;
-  ascendingCells: Cell[];
-  ascendingCellIntervals: CellInterval[];
-  ascendingJinsTranspositions?: (Jins | null)[];
-  descendingCells: Cell[];
-  descendingCellIntervals: CellInterval[];
-  descendingJinsTranspositions?: (Jins | null)[];
+  transposition: boolean;
+  ascendingPitchClasses: PitchClass[];
+  ascendingPitchClassIntervals: PitchClassInterval[];
+  ascendingMaqamAjnas?: (Jins | null)[];
+  descendingPitchClasses: PitchClass[];
+  descendingPitchClassIntervals: PitchClassInterval[];
+  descendingMaqamAjnas?: (Jins | null)[];
 }
 
 export interface MaqamModulations {

@@ -10,7 +10,7 @@ import { getJinsTranspositions } from "@/functions/transpose";
 import { Jins } from "@/models/Jins";
 
 export default function JinsTranspositions() {
-  const { selectedJins, selectedTuningSystem, setSelectedCells, allCells, centsTolerance, setCentsTolerance, sources, setSelectedJinsTransposition } =
+  const { selectedJins, selectedTuningSystem, setSelectedPitchClasses, allPitchClasses, centsTolerance, setCentsTolerance, sources, setSelectedJinsTransposition } =
     useAppContext();
 
   const { playNoteFrequency, playSequence } = useSoundContext();
@@ -21,35 +21,35 @@ export default function JinsTranspositions() {
 
   if (jinsNoteNames.length < 2) return null;
 
-  const valueType = allCells[0].originalValueType;
+  const valueType = allPitchClasses[0].originalValueType;
   const useRatio = valueType === "fraction" || valueType === "decimalRatio";
 
-  const jinsTranspositions = getJinsTranspositions(allCells, selectedJins, true, centsTolerance);
+  const jinsTranspositions = getJinsTranspositions(allPitchClasses, selectedJins, true, centsTolerance);
 
-  function renderTransposition(transposition: Jins, index: number) {
-    const tahlil = transposition.tahlil;
-    const cells = transposition.cells;
-    const intervals = transposition.cellIntervals;
-    const colCount = transposition.cells.length * 2;
+  function renderTransposition(jins: Jins, index: number) {
+    const transposition = jins.transposition;
+    const pitchClasses = jins.jinsPitchClasses;
+    const intervals = jins.jinsPitchClassIntervals;
+    const colCount = jins.jinsPitchClasses.length * 2;
 
     return (
       <>
         <tr className="jins-transpositions__header">
-          <td className={`jins-transpositions__transposition-number jins-transpositions__transposition-number_${cells[0].octave}`} rowSpan={5}>
+          <td className={`jins-transpositions__transposition-number jins-transpositions__transposition-number_${pitchClasses[0].octave}`} rowSpan={5}>
             {index + 1}
           </td>
 
-          <td className="jins-transpositions__jins-name-row" colSpan={2 + (cells.length - 1) * 2}>
-            {tahlil ? <span className="jins-transpositions__transposition-title">
-              Darajat al-Istiqrār (tonic/finalis): {cells[0].noteName + ` (${getEnglishNoteName(cells[0].noteName)})`}
+          <td className="jins-transpositions__jins-name-row" colSpan={2 + (pitchClasses.length - 1) * 2}>
+            {!transposition ? <span className="jins-transpositions__transposition-title">
+              Darajat al-Istiqrār (tonic/finalis): {pitchClasses[0].noteName + ` (${getEnglishNoteName(pitchClasses[0].noteName)})`}
             </span>:<span className="jins-transpositions__transposition-title">
-              {transposition.name}
+              {jins.name}
             </span>}
             <button
               className="jins-transpositions__button"
               onClick={() => {
-                setSelectedCells(cells);
-                setSelectedJinsTransposition(tahlil ? null : transposition);
+                setSelectedPitchClasses(pitchClasses);
+                setSelectedJinsTransposition(transposition ? jins : null);
               }}
             >
               Select & Load to Keyboard
@@ -58,7 +58,7 @@ export default function JinsTranspositions() {
             <button
               className="jins-transpositions__button"
               onClick={() => {
-                playSequence(cells.map(({ frequency }) => parseInt(frequency)));
+                playSequence(pitchClasses.map(({ frequency }) => parseInt(frequency)));
               }}
             >
               <PlayCircleIcon className="jins-transpositions__play-circle-icon" /> Play jins
@@ -68,7 +68,7 @@ export default function JinsTranspositions() {
 
         <tr>
           <th className="jins-transpositions__row-header">Note Names </th>
-          {cells.map(({ noteName }, i) => (
+          {pitchClasses.map(({ noteName }, i) => (
             <React.Fragment key={i}>
               {i !== 0 && <th className="jins-transpositions__header-cell"></th>}
               <th className="jins-transpositions__header-cell">{noteName + ` (${getEnglishNoteName(noteName)})`}</th>
@@ -77,29 +77,29 @@ export default function JinsTranspositions() {
         </tr>
         <tr>
           <th className="jins-transpositions__row-header">{valueType}</th>
-          <th className="jins-transpositions__header-cell">{cells[0].originalValue}</th>
+          <th className="jins-transpositions__header-cell">{pitchClasses[0].originalValue}</th>
           {intervals.map((interval, i) => (
             <React.Fragment key={i}>
               <th className="jins-transpositions__header-cell">{useRatio ? `(${interval.fraction.replace("/",":")})` : `${interval.cents.toFixed(3)}`}</th>
-              <th className="jins-transpositions__header-cell">{cells[i + 1].originalValue}</th>
+              <th className="jins-transpositions__header-cell">{pitchClasses[i + 1].originalValue}</th>
             </React.Fragment>
           ))}
         </tr>
         {valueType !== "cents" && (
           <tr>
             <th className="jins-transpositions__row-header">cents (¢)</th>
-            <th className="jins-transpositions__header-cell">{Number(cells[0].cents).toFixed(3)}</th>
+            <th className="jins-transpositions__header-cell">{Number(pitchClasses[0].cents).toFixed(3)}</th>
             {intervals.map((interval, i) => (
               <React.Fragment key={i}>
                 <th className="jins-transpositions__header-cell">{interval.cents.toFixed(3)}</th>
-                <th className="jins-transpositions__header-cell">{Number(cells[i + 1].cents).toFixed(3)}</th>
+                <th className="jins-transpositions__header-cell">{Number(pitchClasses[i + 1].cents).toFixed(3)}</th>
               </React.Fragment>
             ))}
           </tr>
         )}
         <tr>
           <th className="jins-transpositions__row-header">Play</th>
-          {cells.map(({ frequency }, i) => (
+          {pitchClasses.map(({ frequency }, i) => (
             <React.Fragment key={i}>
               {i !== 0 && <th className="jins-transpositions__header-cell"></th>}
               <th className="jins-transpositions__header-cell">

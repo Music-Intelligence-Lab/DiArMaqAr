@@ -6,7 +6,7 @@ import { frequencyToMidiNoteNumber } from "@/functions/convertPitchClass";
 import midiNumberToNoteName from "@/functions/midiToNoteNumber";
 import Pattern from "@/models/Pattern";
 import romanToNumber from "@/functions/romanToNumber";
-import Cell from "@/models/Cell";
+import PitchClass from "@/models/PitchClass";
 
 type InputMode = "tuningSystem" | "selection";
 type OutputMode = "mute" | "waveform" | "midi";
@@ -37,8 +37,8 @@ interface SoundContextInterface {
   playNoteFrequency: (frequency: number, duration?: number) => void;
   soundSettings: SoundSettings;
   setSoundSettings: React.Dispatch<React.SetStateAction<SoundSettings>>;
-  activeCells: Cell[];
-  setActiveCells: React.Dispatch<React.SetStateAction<Cell[]>>;
+  activePitchClasses: PitchClass[];
+  setActivePitchClasses: React.Dispatch<React.SetStateAction<PitchClass[]>>;
   playSequence: (frequencies: number[], ascending?: boolean) => Promise<void>;
   noteOn: (frequency: number) => void;
   noteOff: (frequency: number) => void;
@@ -51,7 +51,7 @@ interface SoundContextInterface {
 const SoundContext = createContext<SoundContextInterface | null>(null);
 
 export function SoundContextProvider({ children }: { children: React.ReactNode }) {
-  const { selectedTuningSystem, selectedMaqam, selectedJins, pitchClasses, allCells, selectedCells } = useAppContext();
+  const { selectedTuningSystem, selectedMaqam, selectedJins, tuningSystemPitchClasses, allPitchClasses, selectedPitchClasses } = useAppContext();
 
   const [soundSettings, setSoundSettings] = useState<SoundSettings>({
     attack: 0.01,
@@ -74,7 +74,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
   const timeoutsRef = useRef<number[]>([]);
   const midiActiveNotesRef = useRef<Set<number>>(new Set());
 
-  const [activeCells, setActiveCells] = useState<Cell[]>([]);
+  const [activePitchClasses, setActivePitchClasses] = useState<PitchClass[]>([]);
 
   const audioCtxRef = useRef<AudioContext | null>(null);
   const masterGainRef = useRef<GainNode | null>(null);
@@ -188,7 +188,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     selectedTuningSystem,
     selectedMaqam,
     selectedJins,
-    pitchClasses,
+    tuningSystemPitchClasses,
     soundSettings.inputMode,
     soundSettings.outputMode,
     soundSettings.selectedMidiInputId,
@@ -211,43 +211,43 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     const cmd = status & 0xf0;
 
     if (soundSettings.inputMode === "tuningSystem" && selectedTuningSystem) {
-      const cells = allCells;
+      const pitchClasses = allPitchClasses;
 
       const MIDI_BASE = 55;
       const numberOfCellsPerRow = selectedTuningSystem.getPitchClasses().length;
 
       const idx = noteNumber + numberOfCellsPerRow - MIDI_BASE;
 
-      if (idx < 0 || idx >= cells.length) return;
+      if (idx < 0 || idx >= pitchClasses.length) return;
 
-      const cell = cells[idx];
+      const pitchClass = pitchClasses[idx];
 
       // grab the frequency from your cell‐detail helper
-      const freqStr = cell.frequency;
+      const freqStr = pitchClass.frequency;
       const freq = parseFloat(freqStr);
       if (isNaN(freq)) return;
 
       // ——— dispatch sound ———
       if (cmd === 0x90 && velocity > 0) {
         noteOn(freq);
-        setActiveCells((prev) => {
-          if (prev.some((c) => c.index === cell.index && c.octave === cell.octave)) return prev;
-          return [...prev, cell];
+        setActivePitchClasses((prev) => {
+          if (prev.some((c) => c.index === pitchClass.index && c.octave === pitchClass.octave)) return prev;
+          return [...prev, pitchClass];
         });
       } else if (cmd === 0x80 || (cmd === 0x90 && velocity === 0)) {
         noteOff(freq);
-        setActiveCells((prev) => prev.filter((c) => !(c.index === cell.index && c.octave === cell.octave)));
+        setActivePitchClasses((prev) => prev.filter((c) => !(c.index === pitchClass.index && c.octave === pitchClass.octave)));
       }
     } else if (soundSettings.inputMode === "selection") {
       const { note, alt } = midiNumberToNoteName(noteNumber);
 
-      for (const cell of selectedCells) {
-        let convertedEnglishName = cell.englishName;
+      for (const pitchClass of selectedPitchClasses) {
+        let convertedEnglishName = pitchClass.englishName;
         convertedEnglishName = convertedEnglishName[0].toUpperCase() + convertedEnglishName.slice(1);
         if (convertedEnglishName.includes("-")) convertedEnglishName = convertedEnglishName[0];
 
         if (convertedEnglishName === note || convertedEnglishName === alt) {
-          const baseFreq = parseFloat(cell.frequency);
+          const baseFreq = parseFloat(pitchClass.frequency);
           if (isNaN(baseFreq)) return;
 
           const baseMidi = Math.round(frequencyToMidiNoteNumber(baseFreq));
@@ -258,13 +258,13 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
           if (cmd === 0x90 && velocity > 0) {
             noteOn(adjFreq);
-            setActiveCells((prev) => {
-              if (prev.some((c) => c.index === cell.index && c.octave === cell.octave)) return prev;
-              return [...prev, cell];
+            setActivePitchClasses((prev) => {
+              if (prev.some((c) => c.index === pitchClass.index && c.octave === pitchClass.octave)) return prev;
+              return [...prev, pitchClass];
             });
           } else if (cmd === 0x80 || (cmd === 0x90 && velocity === 0)) {
             noteOff(adjFreq);
-            setActiveCells((prev) => prev.filter((c) => !(c.index === cell.index && c.octave === cell.octave)));
+            setActivePitchClasses((prev) => prev.filter((c) => !(c.index === pitchClass.index && c.octave === pitchClass.octave)));
           }
 
           break;
@@ -505,7 +505,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     midiActiveNotesRef.current.forEach((note) => sendMidiMessage([0x80, note, 0]));
     midiActiveNotesRef.current.clear();
 
-    setActiveCells([]);
+    setActivePitchClasses([]);
   }
 
   return (
@@ -514,8 +514,8 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         playNoteFrequency,
         soundSettings,
         setSoundSettings,
-        activeCells,
-        setActiveCells,
+        activePitchClasses,
+        setActivePitchClasses,
         playSequence,
         noteOn,
         noteOff,

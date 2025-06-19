@@ -15,9 +15,9 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
     ajnas,
     selectedMaqam,
     setSelectedMaqam,
-    selectedCells,
-    setSelectedCells,
-    allCells,
+    selectedPitchClasses,
+    setSelectedPitchClasses,
+    allPitchClasses,
     clearSelections,
     handleClickMaqam,
     checkIfMaqamIsSelectable,
@@ -60,11 +60,11 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
     maqamat.forEach((maqam) => {
       map.set(
         maqam.getId(),
-        getMaqamTranspositions(allCells, ajnas, maqam, true)
+        getMaqamTranspositions(allPitchClasses, ajnas, maqam, true)
       );
     });
     return map;
-  }, [maqamat, allCells]);
+  }, [maqamat, allPitchClasses]);
 
   const numberOfPitchClasses = selectedTuningSystem
     ? selectedTuningSystem.getPitchClasses().length
@@ -80,7 +80,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
   while (setOfMaqamat.has(newMaqamIdNum.toString())) newMaqamIdNum++;
   const newMaqamId = newMaqamIdNum.toString();
 
-  const selectedCellNoteNames = selectedCells.map((d) => d.noteName);
+  const selectedCellNoteNames = selectedPitchClasses.map((d) => d.noteName);
 
   // Base save logic
   const handleSaveMaqam = async (maqam: MaqamDetails) => {
@@ -134,7 +134,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
     await updateMaqamat(filtered);
     setMaqamat(filtered);
     setSelectedMaqam(null);
-    setSelectedCells([]);
+    setSelectedPitchClasses([]);
   };
 
   // Source refs handlers omitted for brevity (same as before)

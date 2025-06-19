@@ -1,6 +1,6 @@
 import computeFractionInterval from "@/functions/computeFractionInterval";
 
-export default interface Cell {
+export default interface PitchClass {
   noteName: string;
   fraction: string;
   cents: string;
@@ -17,7 +17,7 @@ export default interface Cell {
   octave: number;
 }
 
-export interface CellInterval {
+export interface PitchClassInterval {
   fraction: string;
   cents: number;
   decimalRatio: number;
@@ -28,15 +28,15 @@ export interface CellInterval {
   originalValueType: string;
 }
 
-export function calculateInterval(firstCell: Cell, secondCell: Cell): CellInterval {
-  const fraction = computeFractionInterval(firstCell.fraction, secondCell.fraction);
-  const cents = parseFloat(secondCell.cents) - parseFloat(firstCell.cents);
-  const decimalRatio = parseFloat(secondCell.decimalRatio) / parseFloat(firstCell.decimalRatio);
-  const stringLength = parseFloat(secondCell.stringLength) - parseFloat(firstCell.stringLength);
-  const fretDivision = parseFloat(secondCell.fretDivision) - parseFloat(firstCell.fretDivision);
-  const index = secondCell.index * secondCell.octave - firstCell.index * firstCell.octave;
+export function calculateInterval(firstPitchClass: PitchClass, secondPitchClass: PitchClass): PitchClassInterval {
+  const fraction = computeFractionInterval(firstPitchClass.fraction, secondPitchClass.fraction);
+  const cents = parseFloat(secondPitchClass.cents) - parseFloat(firstPitchClass.cents);
+  const decimalRatio = parseFloat(secondPitchClass.decimalRatio) / parseFloat(firstPitchClass.decimalRatio);
+  const stringLength = parseFloat(secondPitchClass.stringLength) - parseFloat(firstPitchClass.stringLength);
+  const fretDivision = parseFloat(secondPitchClass.fretDivision) - parseFloat(firstPitchClass.fretDivision);
+  const index = secondPitchClass.index * secondPitchClass.octave - firstPitchClass.index * firstPitchClass.octave;
 
-  const originalValueType = secondCell.originalValueType;
+  const originalValueType = secondPitchClass.originalValueType;
   let originalValue = "";
 
   if (originalValueType === "fraction") originalValue = fraction;
@@ -56,7 +56,7 @@ export function calculateInterval(firstCell: Cell, secondCell: Cell): CellInterv
   };
 }
 
-export function matchingIntervals(firstInterval: CellInterval, secondInterval: CellInterval, centsTolerance: number = 5): boolean {
+export function matchingIntervals(firstInterval: PitchClassInterval, secondInterval: PitchClassInterval, centsTolerance: number = 5): boolean {
   const originalValueType = firstInterval.originalValueType;
 
   if (originalValueType === "fraction" || originalValueType === "decimalRatio") return firstInterval.fraction === secondInterval.fraction;
@@ -64,7 +64,7 @@ export function matchingIntervals(firstInterval: CellInterval, secondInterval: C
 }
 
 
-export function matchingListOfIntervals(firstIntervals: CellInterval[], secondIntervals: CellInterval[], centsTolerance: number = 5): boolean {
+export function matchingListOfIntervals(firstIntervals: PitchClassInterval[], secondIntervals: PitchClassInterval[], centsTolerance: number = 5): boolean {
   if (firstIntervals.length !== secondIntervals.length) return false;
 
   for (let i = 0; i < firstIntervals.length; i++) {

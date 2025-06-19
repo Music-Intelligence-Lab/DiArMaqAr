@@ -1,6 +1,6 @@
-import TransliteratedNoteName, { getNoteNameIndexPerOctave } from "@/models/NoteName";
+import NoteName, { getNoteNameIndexPerOctave } from "@/models/NoteName";
 
-export default function shawwaMapping(noteName: TransliteratedNoteName): "n" | "1p" | "2p" | "/" { //D3Js
+export default function shawwaMapping(noteName: NoteName): "n" | "1p" | "2p" | "/" { //D3Js
   if (noteName === "none") return "/";
   const index = getNoteNameIndexPerOctave(noteName);
   if (index === -1) {

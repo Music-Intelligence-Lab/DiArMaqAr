@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
-import TransliteratedNoteName, {
+import NoteName, {
   octaveOneNoteNames,
   octaveTwoNoteNames,
   TransliteratedNoteNameOctaveOne,
@@ -13,7 +13,7 @@ const dataFilePath = path.join(process.cwd(), "data", "tuningSystems.json");
 const maqamat = path.join(process.cwd(), "data", "maqamat.json");
 const ajnas = path.join(process.cwd(), "data", "ajnas.json");
 
-function mapIndices(notesToMap: TransliteratedNoteName[], numberOfPitchClasses: number) {
+function mapIndices(notesToMap: NoteName[], numberOfPitchClasses: number) {
   const O1_LEN = octaveOneNoteNames.length;
   const mappedIndices = notesToMap.map((arabicName) => {
     const i1 = octaveOneNoteNames.indexOf(arabicName as TransliteratedNoteNameOctaveOne);
@@ -54,7 +54,7 @@ export async function GET() {
       tuningSystem.possibleMaqamat = [];
       tuningSystem.possibleAjnas = [];
 
-      const numberOfPitchClasses = tuningSystem.pitchClasses.length;
+      const numberOfPitchClasses = tuningSystem.tuningSystemPitchClasses.length;
 
       for (const noteNames of tuningSystem.noteNames) {
         const indices = mapIndices(noteNames.slice(0, numberOfPitchClasses), numberOfPitchClasses);

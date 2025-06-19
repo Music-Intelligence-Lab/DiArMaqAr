@@ -1,12 +1,11 @@
 import { SourcePageReference } from "./bibliography/Source";
-import Cell, { CellInterval } from "./Cell";
-import TransliteratedNoteName from "./NoteName";
-import { getCellIntervals } from "@/functions/transpose";
+import PitchClass, { PitchClassInterval } from "./PitchClass";
+import NoteName from "./NoteName";
 
 export default class JinsDetails {
   private id: string;
   private name: string;
-  private noteNames: TransliteratedNoteName[];
+  private noteNames: NoteName[];
   private commentsEnglish: string;
   private commentsArabic: string;
   private SourcePageReferences: SourcePageReference[];
@@ -35,7 +34,7 @@ export default class JinsDetails {
     return this.name;
   }
 
-  getNoteNames(): TransliteratedNoteName[] {
+  getNoteNames(): NoteName[] {
     return this.noteNames;
   }
   getCommentsEnglish(): string {
@@ -51,24 +50,12 @@ export default class JinsDetails {
   createJinsWithNewSourcePageReferences(newSourcePageReferences: SourcePageReference[]): JinsDetails {
     return new JinsDetails(this.id, this.name, this.noteNames, this.commentsEnglish, this.commentsArabic, newSourcePageReferences);
   }
-
-  getTahlil(allCells: Cell[]): Jins {
-    const cells: Cell[] = allCells.filter((cell) => this.noteNames.includes(cell.noteName));
-    const cellIntervals: CellInterval[] = getCellIntervals(cells);
-    return {
-      jinsId: this.id,
-      name: this.name,
-      tahlil: true,
-      cells,
-      cellIntervals,
-    };
-  }
 }
 
 export interface Jins {
   jinsId: string;
   name: string;
-  tahlil: boolean;
-  cells: Cell[];
-  cellIntervals: CellInterval[];
+  transposition: boolean;
+  jinsPitchClasses: PitchClass[];
+  jinsPitchClassIntervals: PitchClassInterval[];
 }
