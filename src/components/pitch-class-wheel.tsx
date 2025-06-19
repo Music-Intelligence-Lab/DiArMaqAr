@@ -39,11 +39,11 @@ WheelCell.displayName = "WheelCell";
 export default function PitchClassWheel() {
   const {
     ajnas,
-    selectedJins,
-    setSelectedJinsTransposition,
+    selectedJinsDetails,
+    setSelectedJins,
+    selectedMaqamDetails,
     selectedMaqam,
-    selectedMaqamTransposition,
-    setSelectedMaqamTransposition,
+    setSelectedMaqam,
     selectedPitchClasses,
     setSelectedPitchClasses,
     allPitchClasses,
@@ -85,13 +85,13 @@ export default function PitchClassWheel() {
   }, [selectedPitchClasses]);
 
   const filteredJinsTranspositions = useMemo<Jins[]>(
-    () => getJinsTranspositions(allPitchClasses, selectedJins, true, centsTolerance),
-    [allPitchClasses, selectedJins, centsTolerance]
+    () => getJinsTranspositions(allPitchClasses, selectedJinsDetails, true, centsTolerance),
+    [allPitchClasses, selectedJinsDetails, centsTolerance]
   );
 
   const filteredMaqamTranspositions = useMemo<Maqam[]>(
-    () => getMaqamTranspositions(allPitchClasses, ajnas, selectedMaqam, true, centsTolerance),
-    [allPitchClasses, selectedMaqam, centsTolerance]
+    () => getMaqamTranspositions(allPitchClasses, ajnas, selectedMaqamDetails, true, centsTolerance),
+    [allPitchClasses, selectedMaqamDetails, centsTolerance]
   );
 
   const wheelCells = useMemo(() => {
@@ -103,21 +103,21 @@ export default function PitchClassWheel() {
       const jinsTransposition = filteredJinsTranspositions.find((transposition) => transposition.jinsPitchClasses[0].noteName === note);
       const maqamTransposition = filteredMaqamTranspositions.find((transposition) => transposition.ascendingPitchClasses[0].noteName === note);
 
-      const isDescending = selectedMaqamTransposition
-        ? selectedMaqamTransposition.descendingPitchClasses.map(pitchClass => pitchClass.noteName).includes(note)
-        : selectedMaqam?.getDescendingNoteNames().includes(note) ?? false;
+      const isDescending = selectedMaqam
+        ? selectedMaqam.descendingPitchClasses.map(pitchClass => pitchClass.noteName).includes(note)
+        : selectedMaqamDetails?.getDescendingNoteNames().includes(note) ?? false;
 
       const isTonic = !!(jinsTransposition || maqamTransposition);
 
       const onClick = () => {
-        if (maqamTransposition && selectedMaqam) {
+        if (maqamTransposition && selectedMaqamDetails) {
           setSelectedPitchClasses(maqamTransposition.ascendingPitchClasses);
-          setSelectedMaqamTransposition(maqamTransposition);
+          setSelectedMaqam(maqamTransposition);
           return;
         }
-        if (jinsTransposition && selectedJins) {
+        if (jinsTransposition && selectedJinsDetails) {
           setSelectedPitchClasses(jinsTransposition.jinsPitchClasses);
-          setSelectedJinsTransposition(jinsTransposition);
+          setSelectedJins(jinsTransposition);
         }
       };
 
@@ -137,9 +137,9 @@ export default function PitchClassWheel() {
     activePitchClasses,
     filteredJinsTranspositions,
     filteredMaqamTranspositions,
+    selectedMaqamDetails,
     selectedMaqam,
-    selectedMaqamTransposition,
-    selectedJins,
+    selectedJinsDetails,
     centsTolerance,
   ]);
 

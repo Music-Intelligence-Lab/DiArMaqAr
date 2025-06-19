@@ -92,6 +92,15 @@ export default class MaqamDetails {
     return true;
   }
 
+  isMaqamSelectable(allPitchClasses: PitchClass[]): boolean {
+    const usedNoteNames = allPitchClasses.map((pitchClass) => pitchClass.noteName);
+
+    return (
+      this.ascendingNoteNames.every((noteName) => usedNoteNames.includes(noteName)) &&
+      this.descendingNoteNames.every((noteName) => usedNoteNames.includes(noteName))
+    );
+  }
+
   getTahlil(allPitchClasses: PitchClass[]): Maqam {
     const ascendingCells = allPitchClasses.filter((pitchClass) => this.ascendingNoteNames.includes(pitchClass.noteName));
     const ascendingCellIntervals: PitchClassInterval[] = getCellIntervals(ascendingCells);

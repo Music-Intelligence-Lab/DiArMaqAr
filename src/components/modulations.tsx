@@ -9,11 +9,11 @@ import calculateNumberOfHops from "@/functions/calculateNumberOfHops";
 export default function Modulations() {
   const {
     maqamat,
+    selectedMaqamDetails,
+    setSelectedMaqamDetails,
+    getModulations,
     selectedMaqam,
     setSelectedMaqam,
-    getModulations,
-    selectedMaqamTransposition,
-    setSelectedMaqamTransposition,
     allPitchClasses,
     setSelectedPitchClasses,
   } = useAppContext();
@@ -22,8 +22,8 @@ export default function Modulations() {
   const [modulationsStack, setModulationsStack] = useState<MaqamModulations[]>([]);
 
   useEffect(() => {
-    if (selectedMaqam) {
-      const transposition = selectedMaqam.getTahlil(allPitchClasses);
+    if (selectedMaqamDetails) {
+      const transposition = selectedMaqamDetails.getTahlil(allPitchClasses);
       setSourceMaqamStack([transposition]);
       const modulationsData = getModulations(transposition);
       setModulationsStack([modulationsData]);
@@ -34,14 +34,14 @@ export default function Modulations() {
   }, []);
 
   useEffect(() => {
-    if (selectedMaqamTransposition) {
-      const maqam = maqamat.find((m) => m.getId() === selectedMaqamTransposition.maqamId);
+    if (selectedMaqam) {
+      const maqam = maqamat.find((m) => m.getId() === selectedMaqam.maqamId);
       if (maqam) {
-        setSelectedMaqam(maqam);
+        setSelectedMaqamDetails(maqam);
       }
-      setSelectedPitchClasses(selectedMaqamTransposition.ascendingPitchClasses);
+      setSelectedPitchClasses(selectedMaqam.ascendingPitchClasses);
     }
-  }, [selectedMaqamTransposition]);
+  }, [selectedMaqam]);
 
   const addHopsWrapper = (maqamTransposition: Maqam, stackIdx: number) => {
     const newModulations = getModulations(maqamTransposition);
@@ -67,7 +67,7 @@ export default function Modulations() {
           >
             {/* Maqam name/details at the top of each wrapper */}
             <div className="modulations__wrapper-maqam-name">
-              <span onClick={() => setSelectedMaqamTransposition(sourceMaqam)} style={{ cursor: "pointer" }}>
+              <span onClick={() => setSelectedMaqam(sourceMaqam)} style={{ cursor: "pointer" }}>
                 {sourceMaqam.name ? sourceMaqam.name : "Unknown"} ({ascendingNoteNames ? ascendingNoteNames[0] : "N/A"}/
                 {getEnglishNoteName(ascendingNoteNames ? ascendingNoteNames[0]! : "")})
                 {modulationsStack[stackIdx] && <> - {totalModulations} modulation options</>}
@@ -102,7 +102,7 @@ export default function Modulations() {
                             key={index}
                             onClick={() => {
                               addHopsWrapper(hop, stackIdx);
-                              setSelectedMaqamTransposition(hop);
+                              setSelectedMaqam(hop);
                             }}
                             style={{ cursor: "pointer" }}
                           >
@@ -122,7 +122,7 @@ export default function Modulations() {
                             key={index}
                             onClick={() => {
                               addHopsWrapper(hop, stackIdx);
-                              setSelectedMaqamTransposition(hop);
+                              setSelectedMaqam(hop);
                             }}
                             style={{ cursor: "pointer" }}
                           >
@@ -142,7 +142,7 @@ export default function Modulations() {
                             key={index}
                             onClick={() => {
                               addHopsWrapper(hop, stackIdx);
-                              setSelectedMaqamTransposition(hop);
+                              setSelectedMaqam(hop);
                             }}
                             style={{ cursor: "pointer" }}
                           >
@@ -162,7 +162,7 @@ export default function Modulations() {
                             key={index}
                             onClick={() => {
                               addHopsWrapper(hop, stackIdx);
-                              setSelectedMaqamTransposition(hop);
+                              setSelectedMaqam(hop);
                             }}
                             style={{ cursor: "pointer" }}
                           >
@@ -182,7 +182,7 @@ export default function Modulations() {
                             key={index}
                             onClick={() => {
                               addHopsWrapper(hop, stackIdx);
-                              setSelectedMaqamTransposition(hop);
+                              setSelectedMaqam(hop);
                             }}
                             style={{ cursor: "pointer" }}
                           >
@@ -202,7 +202,7 @@ export default function Modulations() {
                             key={index}
                             onClick={() => {
                               addHopsWrapper(hop, stackIdx);
-                              setSelectedMaqamTransposition(hop);
+                              setSelectedMaqam(hop);
                             }}
                             style={{ cursor: "pointer" }}
                           >

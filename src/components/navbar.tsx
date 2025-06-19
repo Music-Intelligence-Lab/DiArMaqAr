@@ -13,14 +13,12 @@ export default function Navbar() {
   const { showAdminTabs, setShowAdminTabs, selectedMenu, setSelectedMenu } = useMenuContext();
   const {
     selectedTuningSystem,
+    selectedJinsDetails,
     selectedJins,
-    selectedJinsTransposition,
+    selectedMaqamDetails,
     selectedMaqam,
-    selectedMaqamTransposition,
     ajnas,
-    checkIfJinsIsSelectable,
     maqamat,
-    checkIfMaqamIsSelectable,
     maqamSayrId,
     sources,
     selectedPitchClasses,
@@ -61,16 +59,16 @@ export default function Navbar() {
     });
   }, [selectedPitchClasses]);
 
-  const selectedSayr: Sayr | null = selectedMaqam && maqamSayrId ? selectedMaqam.getSuyūr().find((sayr) => sayr.id === maqamSayrId) || null : null;
+  const selectedSayr: Sayr | null = selectedMaqamDetails && maqamSayrId ? selectedMaqamDetails.getSuyūr().find((sayr) => sayr.id === maqamSayrId) || null : null;
 
   const selectedSayrSource = selectedSayr ? sources.find((source) => source.getId() === selectedSayr.sourceId) : null;
 
   const totalModulations = useMemo(() => {
-    if (!selectedMaqam) return null;
-    const transposition = selectedMaqam.getTahlil(allPitchClasses);
+    if (!selectedMaqamDetails) return null;
+    const transposition = selectedMaqamDetails.getTahlil(allPitchClasses);
     const modulations = getModulations(transposition);
     return calculateNumberOfHops(modulations);
-  }, [selectedMaqam, getModulations]);
+  }, [selectedMaqamDetails, getModulations]);
 
   return (
     <>
@@ -139,22 +137,22 @@ export default function Navbar() {
           )}
           <button
             className={`navbar__bottom-bar-item ${selectedMenu === "jins" ? "navbar__bottom-bar-item_selected" : ""} ${
-              selectedJins ? "navbar__bottom-bar-item_active" : ""
+              selectedJinsDetails ? "navbar__bottom-bar-item_active" : ""
             }`}
             onClick={() => setSelectedMenu("jins")}
             disabled={!selectedTuningSystem}
           >
             <span className="navbar__bottom-bar-item_tab-title">
-              {selectedTuningSystem ? `Ajnās (${ajnas.filter((jins) => checkIfJinsIsSelectable(jins)).length}/${ajnas.length})` : "Ajnās"}
+              {selectedTuningSystem ? `Ajnās (${ajnas.filter((jinsDetails) => jinsDetails.isJinsSelectable(allPitchClasses)).length}/${ajnas.length})` : "Ajnās"}
             </span>
             <span className="navbar__bottom-bar-item_tab-subtitle">
-              {!selectedJins
+              {!selectedJinsDetails
                 ? ""
-                : selectedJinsTransposition
-                ? `${selectedJins.getName()} al-${selectedJinsTransposition.jinsPitchClasses.map(pitchClass => pitchClass.noteName)[0]} (${getEnglishNoteName(
-                    selectedJinsTransposition.jinsPitchClasses.map(pitchClass => pitchClass.noteName)[0]
+                : selectedJins
+                ? `${selectedJinsDetails.getName()} al-${selectedJins.jinsPitchClasses.map(pitchClass => pitchClass.noteName)[0]} (${getEnglishNoteName(
+                    selectedJins.jinsPitchClasses.map(pitchClass => pitchClass.noteName)[0]
                   )})`
-                : `${selectedJins.getName()} (${selectedJins.getNoteNames()[0]}/${getEnglishNoteName(selectedJins.getNoteNames()[0])})`}
+                : `${selectedJinsDetails.getName()} (${selectedJinsDetails.getNoteNames()[0]}/${getEnglishNoteName(selectedJinsDetails.getNoteNames()[0])})`}
             </span>
           </button>
           {showAdminTabs && (
@@ -168,22 +166,22 @@ export default function Navbar() {
           )}
           <button
             className={`navbar__bottom-bar-item ${selectedMenu === "maqam" ? "navbar__bottom-bar-item_selected" : ""} ${
-              selectedMaqam ? "navbar__bottom-bar-item_active" : ""
+              selectedMaqamDetails ? "navbar__bottom-bar-item_active" : ""
             }`}
             onClick={() => setSelectedMenu("maqam")}
             disabled={!selectedTuningSystem}
           >
             <span className="navbar__bottom-bar-item_tab-title">
-              {selectedTuningSystem ? `Maqāmāt (${maqamat.filter((maqam) => checkIfMaqamIsSelectable(maqam)).length}/${maqamat.length})` : "Maqāmāt"}{" "}
+              {selectedTuningSystem ? `Maqāmāt (${maqamat.filter((maqamDetails) => maqamDetails.isMaqamSelectable(allPitchClasses)).length}/${maqamat.length})` : "Maqāmāt"}{" "}
               <br />
             </span>
             <span className="navbar__bottom-bar-item_tab-subtitle">
-              {!selectedMaqam
+              {!selectedMaqamDetails
                 ? ""
-                : selectedMaqamTransposition
-                ? selectedMaqamTransposition.name
-                : `${selectedMaqam.getName()} (${selectedMaqam.getAscendingNoteNames()[0]}/${getEnglishNoteName(
-                    selectedMaqam.getAscendingNoteNames()[0]
+                : selectedMaqam
+                ? selectedMaqam.name
+                : `${selectedMaqamDetails.getName()} (${selectedMaqamDetails.getAscendingNoteNames()[0]}/${getEnglishNoteName(
+                    selectedMaqamDetails.getAscendingNoteNames()[0]
                   )})`}
             </span>
           </button>
@@ -201,10 +199,10 @@ export default function Navbar() {
               selectedSayr ? "navbar__bottom-bar-item_active" : ""
             }`}
             onClick={() => setSelectedMenu("sayr")}
-            disabled={!selectedMaqam}
+            disabled={!selectedMaqamDetails}
           >
             <span className="navbar__bottom-bar-item_tab-title">
-              {selectedMaqam ? `Suyūr (${selectedMaqam.getSuyūr().length})` : "Suyūr"} <br />
+              {selectedMaqamDetails ? `Suyūr (${selectedMaqamDetails.getSuyūr().length})` : "Suyūr"} <br />
             </span>
             <span className="navbar__bottom-bar-item_tab-subtitle">
               {selectedSayr && `${selectedSayr.creatorEnglish} ${selectedSayrSource ? `(${selectedSayrSource.getReleaseDateEnglish()})` : ""}`}
@@ -214,7 +212,7 @@ export default function Navbar() {
             <button
               className={`navbar__bottom-bar-item ${selectedMenu === "sayr-admin" ? "navbar__bottom-bar-item_selected" : ""}`}
               onClick={() => setSelectedMenu("sayr-admin")}
-              disabled={!selectedMaqam}
+              disabled={!selectedMaqamDetails}
             >
               Sayr Admin
             </button>
@@ -223,9 +221,9 @@ export default function Navbar() {
           <button
             className={`navbar__bottom-bar-item ${selectedMenu === "modulation" ? "navbar__bottom-bar-item_selected" : ""}`}
             onClick={() => setSelectedMenu("modulation")}
-            disabled={!selectedMaqam}
+            disabled={!selectedMaqamDetails}
           >
-            Intiqālāt{selectedMaqam ? ` (${totalModulations})` : ""}
+            Intiqālāt{selectedMaqamDetails ? ` (${totalModulations})` : ""}
           </button>
 
           <button

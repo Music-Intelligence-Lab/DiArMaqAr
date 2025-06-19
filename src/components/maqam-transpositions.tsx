@@ -12,14 +12,14 @@ import shiftPitchClass from "@/functions/shiftPitchClass";
 
 export default function MaqamTranspositions() {
   const {
-    selectedMaqam,
+    selectedMaqamDetails,
     selectedTuningSystem,
     setSelectedPitchClasses,
     allPitchClasses,
     centsTolerance,
     setCentsTolerance,
     ajnas,
-    setSelectedMaqamTransposition,
+    setSelectedMaqam,
   } = useAppContext();
 
   const { playNoteFrequency, playSequence } = useSoundContext();
@@ -30,10 +30,10 @@ export default function MaqamTranspositions() {
     return highlightedNotes.index === index && highlightedNotes.noteNames.includes(noteName);
   };
 
-  if (!selectedMaqam || !selectedTuningSystem) return null;
+  if (!selectedMaqamDetails || !selectedTuningSystem) return null;
 
-  const ascendingNoteNames = selectedMaqam.getAscendingNoteNames();
-  const descendingNoteNames = selectedMaqam.getDescendingNoteNames();
+  const ascendingNoteNames = selectedMaqamDetails.getAscendingNoteNames();
+  const descendingNoteNames = selectedMaqamDetails.getDescendingNoteNames();
 
   if (ascendingNoteNames.length < 2 || descendingNoteNames.length < 2) return null;
 
@@ -53,7 +53,7 @@ export default function MaqamTranspositions() {
   const valueType = allPitchClasses[0].originalValueType;
   const useRatio = valueType === "fraction" || valueType === "decimalRatio";
 
-  const maqamTranspositions = getMaqamTranspositions(allPitchClasses, ajnas, selectedMaqam, true, centsTolerance);
+  const maqamTranspositions = getMaqamTranspositions(allPitchClasses, ajnas, selectedMaqamDetails, true, centsTolerance);
 
   function renderTranspositionRow(maqam: Maqam, ascending: boolean, rowIndex: number) {
     let ascendingTranspositionPitchClasses = maqam.ascendingPitchClasses;
@@ -102,7 +102,7 @@ export default function MaqamTranspositions() {
               className="maqam-transpositions__button"
               onClick={() => {
                 setSelectedPitchClasses(pitchclasses);
-                setSelectedMaqamTransposition(transposition ? maqam : null);
+                setSelectedMaqam(transposition ? maqam : null);
               }}
             >
               Select & Load to Keyboard
@@ -250,7 +250,7 @@ export default function MaqamTranspositions() {
   return (
     <div className="maqam-transpositions">
       <h2 className="maqam-transpositions__title">
-        Taḥlīl (analysis): {`${selectedMaqam.getName()}`}
+        Taḥlīl (analysis): {`${selectedMaqamDetails.getName()}`}
         {!useRatio && (
           <>
             {" "}
@@ -275,7 +275,7 @@ export default function MaqamTranspositions() {
       </table>
 
       <h2 className="maqam-transpositions__title">
-        Taṣwīr (transpositions): {`${selectedMaqam.getName()}`}
+        Taṣwīr (transpositions): {`${selectedMaqamDetails.getName()}`}
         {!useRatio && (
           <>
             {" "}

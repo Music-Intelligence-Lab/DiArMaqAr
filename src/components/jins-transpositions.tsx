@@ -10,21 +10,21 @@ import { getJinsTranspositions } from "@/functions/transpose";
 import { Jins } from "@/models/Jins";
 
 export default function JinsTranspositions() {
-  const { selectedJins, selectedTuningSystem, setSelectedPitchClasses, allPitchClasses, centsTolerance, setCentsTolerance, sources, setSelectedJinsTransposition } =
+  const { selectedJinsDetails, selectedTuningSystem, setSelectedPitchClasses, allPitchClasses, centsTolerance, setCentsTolerance, sources, setSelectedJins } =
     useAppContext();
 
   const { playNoteFrequency, playSequence } = useSoundContext();
 
-  if (!selectedJins || !selectedTuningSystem) return null;
+  if (!selectedJinsDetails || !selectedTuningSystem) return null;
 
-  const jinsNoteNames = selectedJins.getNoteNames();
+  const jinsNoteNames = selectedJinsDetails.getNoteNames();
 
   if (jinsNoteNames.length < 2) return null;
 
   const valueType = allPitchClasses[0].originalValueType;
   const useRatio = valueType === "fraction" || valueType === "decimalRatio";
 
-  const jinsTranspositions = getJinsTranspositions(allPitchClasses, selectedJins, true, centsTolerance);
+  const jinsTranspositions = getJinsTranspositions(allPitchClasses, selectedJinsDetails, true, centsTolerance);
 
   function renderTransposition(jins: Jins, index: number) {
     const transposition = jins.transposition;
@@ -49,7 +49,7 @@ export default function JinsTranspositions() {
               className="jins-transpositions__button"
               onClick={() => {
                 setSelectedPitchClasses(pitchClasses);
-                setSelectedJinsTransposition(transposition ? jins : null);
+                setSelectedJins(transposition ? jins : null);
               }}
             >
               Select & Load to Keyboard
@@ -119,7 +119,7 @@ export default function JinsTranspositions() {
     <>
       {/* JINS TRANSPOSITIONS TABLE */}
       <div className="jins-transpositions">
-        <h2 className="jins-transpositions__title">Taḥlīl (analysis): {`${selectedJins.getName()}`}</h2>
+        <h2 className="jins-transpositions__title">Taḥlīl (analysis): {`${selectedJinsDetails.getName()}`}</h2>
         <table className="jins-transpositions__table">
           <colgroup>
             <col style={{ minWidth: "30px", maxWidth: "30px", width: "30px" }} />
@@ -130,7 +130,7 @@ export default function JinsTranspositions() {
         </table>
 
         <h2 className="jins-transpositions__title">
-          Taṣwīr (transpositions): {`${selectedJins.getName()}`}
+          Taṣwīr (transpositions): {`${selectedJinsDetails.getName()}`}
           {!useRatio && (
             <>
               {" "}
@@ -168,8 +168,8 @@ export default function JinsTranspositions() {
 
         <div className="jins-transpositions__sources-english">
           <h3>Sources:</h3>
-          {selectedJins?.getSourcePageReferences().length > 0 &&
-            selectedJins.getSourcePageReferences().map((sourceRef, idx) => {
+          {selectedJinsDetails?.getSourcePageReferences().length > 0 &&
+            selectedJinsDetails.getSourcePageReferences().map((sourceRef, idx) => {
               const source = sources.find((s: any) => s.id === sourceRef.sourceId);
               return source ? (
                 <React.Fragment key={idx}>

@@ -46,8 +46,8 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     clearSelections,
     handleStartNoteNameChange,
     sources,
-    selectedJins,
-    selectedMaqam,
+    selectedJinsDetails,
+    selectedMaqamDetails,
     allPitchClasses,
   } = useAppContext();
 
@@ -154,7 +154,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   }, [selectedTuningSystem]);
 
   useEffect(() => {
-    if (!selectedJins || !selectedMaqam) return;
+    if (!selectedJinsDetails || !selectedMaqamDetails) return;
     if (selectedPitchClasses.length === 0) {
       setOpenedOctaveRows({ 0: false, 1: true, 2: true, 3: false });
     } else {
