@@ -19,6 +19,7 @@ export default class TuningSystem {
   private referenceFrequencies: { [noteName: string]: number };
   private abjadNames: string[];
   private stringLength: number;
+  private saved: boolean;
 
   constructor(
     titleEnglish: string,
@@ -36,7 +37,8 @@ export default class TuningSystem {
     abjadNames: string[],
     stringLength: number,
     referenceFrequencies: { [noteName: string]: number },
-    defaultReferenceFrequency: number
+    defaultReferenceFrequency: number,
+    saved: boolean
   ) {
     this.id = `${creatorEnglish}-(${year})-${titleEnglish}`.replaceAll(" ", "");
     this.titleEnglish = titleEnglish;
@@ -55,6 +57,7 @@ export default class TuningSystem {
     this.stringLength = stringLength;
     this.referenceFrequencies = referenceFrequencies;
     this.defaultReferenceFrequency = defaultReferenceFrequency;
+    this.saved = saved;
   }
 
   getId(): string {
@@ -123,7 +126,55 @@ export default class TuningSystem {
     return this.defaultReferenceFrequency;
   }
 
+  isSaved(): boolean {
+    return this.saved;
+  }
+
   stringify(): string {
     return `${this.getCreatorEnglish()} (${this.getYear() ? this.getYear() : "NA"}) ${this.getTitleEnglish()}`;
+  }
+
+  copyWithNewSetOfNoteNames(newNoteNames: TransliteratedNoteName[][]): TuningSystem {
+    return new TuningSystem(
+      this.titleEnglish,
+      this.titleArabic,
+      this.year,
+      this.sourceEnglish,
+      this.sourceArabic,
+      this.sourcePageReferences,
+      this.creatorEnglish,
+      this.creatorArabic,
+      this.commentsEnglish,
+      this.commentsArabic,
+      this.pitchClasses,
+      newNoteNames,
+      this.abjadNames,
+      this.stringLength,
+      this.referenceFrequencies,
+      this.defaultReferenceFrequency,
+      this.saved
+    );
+  }
+
+  static createBlankTuningSystem(): TuningSystem {
+    return new TuningSystem(
+      "Untitled",
+      "غير مسمى",
+      "",
+      "Unknown Source",
+      "مصدر غير معروف",
+      [],
+      "Unknown Creator",
+      "مؤلف غير معروف",
+      "",
+      "",
+      [],
+      [],
+      [],
+      0,
+      {},
+      440,
+      false
+    );
   }
 }
