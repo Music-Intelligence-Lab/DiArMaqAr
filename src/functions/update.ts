@@ -30,7 +30,7 @@ export async function updateTuningSystems(newSystems: TuningSystem[]) {
           commentsEnglish: ts.getCommentsEnglish(),
           commentsArabic: ts.getCommentsArabic(),
           tuningSystemPitchClasses: ts.getPitchClasses(),
-          noteNames: ts.getSetsOfNoteNames(),
+          noteNames: ts.getNoteNames(),
           abjadNames: ts.getAbjadNames(),
           stringLength: ts.getStringLength(),
           defaultReferenceFrequency: ts.getDefaultReferenceFrequency(),

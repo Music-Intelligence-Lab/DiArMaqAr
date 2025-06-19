@@ -16,7 +16,7 @@ import PitchClass from "@/models/PitchClass";
 export default function getTuningSystemCells(tuningSystem: TuningSystem, startingNote: NoteName, tuningSystemPitchClasses: string[] = [], inputReferenceFrequencies: { [noteName: string]: number } = {}): PitchClass[] {
   const pitchArr = tuningSystemPitchClasses.length ? tuningSystemPitchClasses : tuningSystem.getPitchClasses();
   const nPC = pitchArr.length;
-  const allSets = tuningSystem.getSetsOfNoteNames();
+  const allSets = tuningSystem.getNoteNames();
   const noteNames = allSets.find((s) => s[0] === startingNote) ?? allSets[0] ?? [];
 
   const O1 = octaveOneNoteNames.length;

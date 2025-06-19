@@ -206,7 +206,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     givenNoteNames: NoteName[][] = [],
     givenNumberOfPitchClasses: number = 0
   ) => {
-    const noteNamesToSearch = givenNoteNames.length ? givenNoteNames : selectedTuningSystem?.getSetsOfNoteNames() || [[]];
+    const noteNamesToSearch = givenNoteNames.length ? givenNoteNames : selectedTuningSystem?.getNoteNames() || [[]];
     const numberOfPitchClasses = givenNumberOfPitchClasses || tuningSystemPitchClassesArray.length || selectedTuningSystem?.getPitchClasses().length || 0;
 
     if (startingNoteName === "" && noteNamesToSearch.length > 0) {
@@ -406,7 +406,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         const found = tuningSystems.find((ts) => ts.getId() === tuningSystemId);
         if (found) {
           setSelectedTuningSystem(found);
-          handleStartNoteNameChange(firstNote ?? "", found.getSetsOfNoteNames(), found.getPitchClasses().length);
+          handleStartNoteNameChange(firstNote ?? "", found.getNoteNames(), found.getPitchClasses().length);
           const allPitchClasses = getTuningSystemCells(found, firstNote || "");
 
           if (jinsId) {

@@ -14,7 +14,7 @@ export default class TuningSystem {
   private commentsEnglish: string;
   private commentsArabic: string;
   private tuningSystemPitchClasses: string[];
-  private setsOfTuningNoteNames: NoteName[][];
+  private setsOfTuningSystemNoteNames: NoteName[][];
   private defaultReferenceFrequency: number;
   private referenceFrequencies: { [noteName: string]: number };
   private abjadNames: string[];
@@ -52,7 +52,7 @@ export default class TuningSystem {
     this.commentsEnglish = commentsEnglish;
     this.commentsArabic = commentsArabic;
     this.tuningSystemPitchClasses = notes;
-    this.setsOfTuningNoteNames = setsOfTuningNoteNames;
+    this.setsOfTuningSystemNoteNames = setsOfTuningNoteNames;
     this.abjadNames = abjadNames;
     this.stringLength = stringLength;
     this.referenceFrequencies = referenceFrequencies;
@@ -106,8 +106,8 @@ export default class TuningSystem {
     return this.tuningSystemPitchClasses;
   }
 
-  getSetsOfNoteNames(): NoteName[][] {
-    return this.setsOfTuningNoteNames;
+  getNoteNames(): NoteName[][] {
+    return this.setsOfTuningSystemNoteNames;
   }
 
   getAbjadNames(): string[] {

@@ -10,49 +10,49 @@ import PitchClass from "@/models/PitchClass";
 interface ExportedTuningSystem {
   tuningSystem: TuningSystem;
   startingNote: NoteName;
-  allPitchClasses: PitchClass[];
-  possibleAjnas: JinsDetails[];
-  possibleAjnasTranspositions: Jins[];
-  possibleMaqamat: MaqamDetails[];
-  possibleMaqamatTranspositions: Maqam[];
+  fullRangeTuningSystemPitchClasses: PitchClass[];
+  possibleAjnasOverview: JinsDetails[];
+  possibleAjnasDetails: Jins[];
+  possibleMaqamatOverview: MaqamDetails[];
+  possibleMaqamatDetails: Maqam[];
 }
 
 export function exportTuningSystem(tuningSystem: TuningSystem, startingNote: NoteName): ExportedTuningSystem {
-  const allPitchClasses = getTuningSystemCells(tuningSystem, startingNote);
+  const fullRangeTuningSystemPitchClasses = getTuningSystemCells(tuningSystem, startingNote);
 
   const allAjnas = getAjnas();
   const allMaqamat = getMaqamat();
 
-  const possibleAjnas = allAjnas.filter((jins) => jins.getNoteNames().every((noteName) => allPitchClasses.some((pitchClass) => pitchClass.noteName === noteName)));
-  const possibleMaqamat = allMaqamat.filter(
+  const possibleAjnasOverview = allAjnas.filter((jins) => jins.getNoteNames().every((noteName) => fullRangeTuningSystemPitchClasses.some((pitchClass) => pitchClass.noteName === noteName)));
+  const possibleMaqamatOverview = allMaqamat.filter(
     (maqam) =>
-      maqam.getAscendingNoteNames().every((noteName) => allPitchClasses.some((pitchClass) => pitchClass.noteName === noteName)) &&
-      maqam.getDescendingNoteNames().every((noteName) => allPitchClasses.some((pitchClass) => pitchClass.noteName === noteName))
+      maqam.getAscendingNoteNames().every((noteName) => fullRangeTuningSystemPitchClasses.some((pitchClass) => pitchClass.noteName === noteName)) &&
+      maqam.getDescendingNoteNames().every((noteName) => fullRangeTuningSystemPitchClasses.some((pitchClass) => pitchClass.noteName === noteName))
   );
 
-  const possibleAjnasTranspositions: Jins[] = [];
+  const possibleAjnasDetails: Jins[] = [];
 
-  for (const jins of possibleAjnas) {
-    for (const jinsTransposition of getJinsTranspositions(allPitchClasses, jins, true)) {
-      possibleAjnasTranspositions.push(jinsTransposition);
+  for (const jins of possibleAjnasOverview) {
+    for (const jinsTransposition of getJinsTranspositions(fullRangeTuningSystemPitchClasses, jins, true)) {
+      possibleAjnasDetails.push(jinsTransposition);
     }
   }
 
-  const possibleMaqamatTranspositions: Maqam[] = [];
+  const possibleMaqamatDetails: Maqam[] = [];
 
-  for (const maqam of possibleMaqamat) {
-    for (const maqamTransposition of getMaqamTranspositions(allPitchClasses, allAjnas, maqam, true)) {
-      possibleMaqamatTranspositions.push(maqamTransposition);
+  for (const maqam of possibleMaqamatOverview) {
+    for (const maqamTransposition of getMaqamTranspositions(fullRangeTuningSystemPitchClasses, allAjnas, maqam, true)) {
+      possibleMaqamatDetails.push(maqamTransposition);
     }
   }
 
   return {
     tuningSystem,
     startingNote,
-    allPitchClasses,
-    possibleAjnas,
-    possibleAjnasTranspositions,
-    possibleMaqamat,
-    possibleMaqamatTranspositions,
+    fullRangeTuningSystemPitchClasses,
+    possibleAjnasOverview,
+    possibleAjnasDetails,
+    possibleMaqamatOverview,
+    possibleMaqamatDetails,
   };
 }
