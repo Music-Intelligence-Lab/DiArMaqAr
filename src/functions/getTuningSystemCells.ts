@@ -17,7 +17,7 @@ export default function getTuningSystemCells(tuningSystem: TuningSystem, startin
   const pitchArr = pitchClasses.length ? pitchClasses : tuningSystem.getPitchClasses();
   const nPC = pitchArr.length;
   const allSets = tuningSystem.getSetsOfNoteNames();
-  const noteNames = allSets.find((s) => s[0] === startingNote) ?? allSets[0];
+  const noteNames = allSets.find((s) => s[0] === startingNote) ?? allSets[0] ?? [];
 
   const O1 = octaveOneNoteNames.length;
   const selectedIndices = noteNames.slice(0, nPC).map((nm) => {
@@ -30,16 +30,16 @@ export default function getTuningSystemCells(tuningSystem: TuningSystem, startin
   while (selectedIndices.length < nPC) selectedIndices.push(-1);
   selectedIndices.length = nPC;
 
+
   const type = detectPitchClassType(pitchArr);
   if (type === "unknown") return [];
-  console.log(tuningSystem.getReferenceFrequencies(), noteNames[0]);
 
-  const stringLen = tuningSystem.getStringLength();
+  const stringLen = tuningSystem?.getStringLength() ?? 3600;
   const actualReferenceFrequency = inputReferenceFrequencies[startingNote] ?? (tuningSystem.getReferenceFrequencies()[startingNote] ?? tuningSystem.getDefaultReferenceFrequency());
   const openConv = convertPitchClass(shiftPitchClass(pitchArr[0], type, 1), type, stringLen, actualReferenceFrequency)!;
   const openLen = parseFloat(openConv.stringLength);
 
-  const abjadArr = tuningSystem.getAbjadNames();
+  const abjadArr = tuningSystem?.getAbjadNames();
 
   const cells: Cell[] = [];
 

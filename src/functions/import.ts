@@ -34,7 +34,8 @@ export function getTuningSystems(): TuningSystem[] {
         d.abjadNames,
         Number(d.stringLength),
         d.referenceFrequencies,
-        Number(d.defaultReferenceFrequency)
+        Number(d.defaultReferenceFrequency),
+        true
       )
   );
 }

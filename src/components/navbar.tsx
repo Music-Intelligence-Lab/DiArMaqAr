@@ -28,7 +28,6 @@ export default function Navbar() {
     clearSelections,
     setPitchClasses,
     setSelectedIndices,
-    setNoteNames,
     getModulations,
     selectedIndices,
     allCells
@@ -93,7 +92,6 @@ export default function Navbar() {
                 setSelectedTuningSystem(null);
                 setPitchClasses("");
                 setSelectedIndices([]);
-                setNoteNames([]);
               }}
             >
               {" "}

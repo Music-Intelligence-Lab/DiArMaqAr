@@ -5,10 +5,12 @@ import Maqam, { MaqamTransposition } from "@/models/Maqam";
 import getTuningSystemCells from "./getTuningSystemCells";
 import { getAjnas, getMaqamat } from "./import";
 import { getJinsTranspositions, getMaqamTranspositions } from "./transpose";
+import Cell from "@/models/Cell";
 
 interface ExportedTuningSystem {
   tuningSystem: TuningSystem;
   startingNote: TransliteratedNoteName;
+  allCells: Cell[];
   possibleAjnas: Jins[];
   possibleAjnasTranspositions: JinsTransposition[];
   possibleMaqamat: Maqam[];
@@ -47,6 +49,7 @@ export function exportTuningSystem(tuningSystem: TuningSystem, startingNote: Tra
   return {
     tuningSystem,
     startingNote,
+    allCells,
     possibleAjnas,
     possibleAjnasTranspositions,
     possibleMaqamat,

@@ -13,6 +13,9 @@ import TransliteratedNoteName, {
   TransliteratedNoteNameOctaveOne,
   TransliteratedNoteNameOctaveTwo,
   getNoteNameIndex,
+  octaveZeroNoteNames,
+  octaveFourNoteNames,
+  octaveThreeNoteNames,
 } from "@/models/NoteName";
 
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
@@ -31,8 +34,6 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     setSelectedTuningSystem,
     pitchClasses,
     setPitchClasses,
-    noteNames,
-    setNoteNames,
     referenceFrequencies,
     setReferenceFrequencies,
     selectedCells,
@@ -149,9 +150,6 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       setSelectedAbjadNames(selectedTuningSystem.getAbjadNames());
       setReferenceFrequencies(selectedTuningSystem.getReferenceFrequencies());
       setDefaultReferenceFrequency(selectedTuningSystem.getDefaultReferenceFrequency());
-
-      const loadedNames = selectedTuningSystem.getSetsOfNoteNames();
-      setNoteNames(loadedNames);
     }
   }, [selectedTuningSystem]);
 
@@ -253,8 +251,6 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
     clearSelections();
 
-    setNoteNames([]);
-
     mapIndices([], 0, false);
   };
 
@@ -263,11 +259,11 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     const id = e.target.value;
 
     clearSelections();
-
-    if (id === "new") {
-      // If "new," you can remove `tuningSystem` from the URL or set it to something else
+    if (id === "") {
       setSelectedTuningSystem(null);
       resetFormForNewSystem();
+    } else if (id === "new") {
+      setSelectedTuningSystem(TuningSystem.createBlankTuningSystem());
     } else {
       const chosen = tuningSystems.find((ts) => ts.getId() === id);
       if (chosen) {
@@ -304,7 +300,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
   // Handle creating or updating a system:
   const handleSaveTuningSystem = (givenNoteNames: TransliteratedNoteName[][] = []) => {
-    const usedNoteNames = givenNoteNames.length > 0 ? givenNoteNames : noteNames;
+    const usedNoteNames = givenNoteNames.length > 0 ? givenNoteNames : selectedTuningSystem?.getSetsOfNoteNames() || [[]];
 
     if (selectedTuningSystem) {
       const updated = new TuningSystem(
@@ -323,9 +319,10 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         selectedAbjadNames,
         Number(stringLength),
         referenceFrequencies,
-        Number(defaultReferenceFrequency)
+        Number(defaultReferenceFrequency),
+        true
       );
-      const updatedList = tuningSystems.map((ts) => (ts.getId() === selectedTuningSystem.getId() ? updated : ts));
+      const updatedList = selectedTuningSystem.isSaved() ? tuningSystems.map((ts) => (ts.getId() === selectedTuningSystem.getId() ? updated : ts)) : [...tuningSystems, updated];
       updateTuningSystems(updatedList);
       setTuningSystems(updatedList);
       setSelectedTuningSystem(updated);
@@ -348,7 +345,8 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         selectedAbjadNames,
         Number(stringLength),
         referenceFrequencies,
-        Number(defaultReferenceFrequency)
+        Number(defaultReferenceFrequency),
+        true
       );
       const updatedList = [...tuningSystems, newSystem];
       updateTuningSystems(updatedList);
@@ -368,6 +366,61 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       clearSelections();
     }
   };
+
+  function getOctaveNoteName(octave: number, colIndex: number) {
+    const idx = selectedIndices[colIndex];
+    if (idx < 0) return "none";
+
+    // The length of octaveOneNoteNames. For example, if it's 36,
+    // then any idx >= 36 means it's from the "octaveTwoNoteNames" portion.
+    const O1_LEN = octaveOneNoteNames.length;
+
+    // Decide whether idx points into octaveOne or octaveTwo
+    let localIndex = idx;
+    let isFromOctaveOne = true;
+    if (idx >= O1_LEN) {
+      // It's from the "octaveTwo" segment
+      isFromOctaveOne = false;
+      localIndex = idx - O1_LEN;
+    }
+
+    // Now localIndex is the position within whichever segment
+    // (octaveOne or octaveTwo), and we do the same old logic
+    // but picking from the correct array depending on isFromOctaveOne.
+
+    if (isFromOctaveOne) {
+      // The user originally picked something in the "octaveOne" half
+      if (octave === 0 && localIndex < octaveZeroNoteNames.length) {
+        return octaveZeroNoteNames[localIndex];
+      }
+      if (octave === 1 && localIndex < octaveOneNoteNames.length) {
+        return octaveOneNoteNames[localIndex];
+      }
+      if (octave === 2 && localIndex < octaveTwoNoteNames.length) {
+        return octaveTwoNoteNames[localIndex];
+      }
+      if (octave === 3 && localIndex < octaveThreeNoteNames.length) {
+        return octaveThreeNoteNames[localIndex];
+      }
+      return "none";
+    } else {
+      // The user originally picked something in the "octaveTwo" half
+      // so localIndex is an index into the octaveTwoNoteNames array.
+      if (octave === 0 && localIndex < octaveZeroNoteNames.length) {
+        return octaveOneNoteNames[localIndex];
+      }
+      if (octave === 1 && localIndex < octaveOneNoteNames.length) {
+        return octaveTwoNoteNames[localIndex];
+      }
+      if (octave === 2 && localIndex < octaveTwoNoteNames.length) {
+        return octaveThreeNoteNames[localIndex];
+      }
+      if (octave === 3 && localIndex < octaveThreeNoteNames.length) {
+        return octaveFourNoteNames[localIndex];
+      }
+      return "none";
+    }
+  }
 
   function handlePitchClassesChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     const raw = e.target.value;
@@ -446,7 +499,8 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   // MARK: Note Names Function Handlers
 
   const haveIndicesChanged = () => {
-    return JSON.stringify(originalIndices) !== JSON.stringify(selectedIndices);
+
+    return JSON.stringify(originalIndices) !== JSON.stringify(selectedIndices) || JSON.stringify(selectedTuningSystem?.getReferenceFrequencies()) !== JSON.stringify(referenceFrequencies);
   };
 
   const handleSaveStartingNoteConfiguration = () => {
@@ -464,9 +518,10 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
       const firstNote = newNoteSet[0];
 
+      const noteNames = selectedTuningSystem.getSetsOfNoteNames();
+
       const newNoteNames = [...noteNames.filter((setOfNotes) => setOfNotes[0] !== firstNote)];
       newNoteNames.push(newNoteSet);
-      setNoteNames(newNoteNames);
 
       handleSaveTuningSystem(newNoteNames);
 
@@ -475,14 +530,17 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   };
 
   const handleDeleteStartingNoteConfiguration = () => {
-    clearSelections();
+    if (!selectedTuningSystem) return;
+
     const newNoteSet = selectedIndices.map((idx) => (idx >= 0 ? octaveOneNoteNames[idx] : "none"));
     const firstNote = newNoteSet[0];
 
     if (firstNote === "none") return;
 
+    const noteNames = selectedTuningSystem?.getSetsOfNoteNames() || [[]];
+
     const newNoteNames = [...noteNames.filter((setOfNotes) => setOfNotes[0] !== firstNote)];
-    setNoteNames(newNoteNames);
+    setSelectedTuningSystem(selectedTuningSystem.copyWithNewSetOfNoteNames(newNoteNames));
 
     setSelectedIndices(Array(selectedIndices.length).fill(-1));
     setOriginalIndices(Array(selectedIndices.length).fill(-1));
@@ -557,6 +615,8 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         return newArr;
       }
 
+      const noteNames = selectedTuningSystem?.getSetsOfNoteNames() || [[]];
+
       // 2) If this is the *first column*, try to see if there's an existing config
       //    whose FIRST note is chosenName. If yes, we load that config in full.
       if (colIndex === 0) {
@@ -625,6 +685,8 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
           }
         }
       }
+
+
 
       return newArr;
     });
@@ -804,7 +866,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                         <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                           <select
                             className="tuning-system-manager__select-note"
-                            value={cell.noteName ?? ""}
+                            value={getOctaveNoteName(octave, colIndex) ?? ""}
                             onChange={(e) => handleSelectOctaveNote(colIndex, e.target.value)}
                           >
                             <option value="none">(none)</option>
@@ -1083,6 +1145,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   const isCurrentConfigurationNew = () => {
     const currentFirst = getFirstNoteName(selectedIndices);
     if (currentFirst === "none") return false;
+    const noteNames = selectedTuningSystem?.getSetsOfNoteNames() || [[]];
     return !noteNames.some((config) => config[0] === currentFirst);
   };
 
@@ -1105,8 +1168,9 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
               className="tuning-system-manager__select"
               id="tuningSystemSelect"
               onChange={handleTuningSystemChange}
-              value={selectedTuningSystem ? selectedTuningSystem.getId() : "new"}
+              value={selectedTuningSystem ? (selectedTuningSystem.isSaved() ? selectedTuningSystem.getId() : "new") : ""}
             >
+              <option value="">-- None --</option>
               <option value="new">-- Create New System --</option>
               {sortedTuningSystems.map((system) => (
                 <option key={system.getId()} value={system.getId()}>
@@ -1133,7 +1197,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         </div>
       )}
 
-      {admin && (
+      {admin && selectedTuningSystem && (
         <div className="tuning-system-manager__form">
           {/* Identification / Titles */}
           <div className="tuning-system-manager__group">
@@ -1426,11 +1490,11 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         </div>
       )}
 
-      {pitchClassesArr.length !== 0 && (
+      {pitchClassesArr.length !== 0 && selectedTuningSystem && (
         <div className="tuning-system-manager__starting-note-container">
           <div className="tuning-system-manager__starting-note-left">
             Start Note Names From:
-            {[...noteNames]
+            {[...selectedTuningSystem.getSetsOfNoteNames()]
               .sort((a, b) => getNoteNameIndex(a[0] ?? 0) - getNoteNameIndex(b[0] ?? 0))
               .map((notes, index) => {
                 const startingNote = notes[0];
@@ -1493,20 +1557,23 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
               </div>
             )}
             {selectedTuningSystem && (
-              <button className="tuning-system-manager__export-button" onClick={() => {
-                const firstNote = getFirstNoteName(selectedIndices);
-                const data = exportTuningSystem(selectedTuningSystem, firstNote);
-                const json = JSON.stringify(data, null, 2);
-                const blob = new Blob([json], { type: "application/json" });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement("a");
-                a.href = url;
-                a.download = `${selectedTuningSystem.stringify()} starting on ${firstNote}.json`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-              }}>
+              <button
+                className="tuning-system-manager__export-button"
+                onClick={() => {
+                  const firstNote = getFirstNoteName(selectedIndices);
+                  const data = exportTuningSystem(selectedTuningSystem, firstNote);
+                  const json = JSON.stringify(data, null, 2);
+                  const blob = new Blob([json], { type: "application/json" });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement("a");
+                  a.href = url;
+                  a.download = `${selectedTuningSystem.stringify()} starting on ${firstNote}.json`;
+                  document.body.appendChild(a);
+                  a.click();
+                  document.body.removeChild(a);
+                  URL.revokeObjectURL(url);
+                }}
+              >
                 <FileDownloadIcon />
               </button>
             )}
