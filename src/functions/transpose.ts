@@ -1,6 +1,7 @@
 import Cell, { calculateInterval, CellInterval, matchingListOfIntervals } from "@/models/Cell";
 import Maqam, { MaqamTransposition } from "@/models/Maqam";
 import Jins, { JinsTransposition } from "@/models/Jins";
+import shiftCell from "./shiftCell";
 
 export function getCellIntervals(cells: Cell[]) {
   return cells.slice(1).map((cell, index) => calculateInterval(cells[index], cell));
@@ -129,13 +130,15 @@ export function getMaqamTranspositions(
 
   const maqamTranspositions: MaqamTransposition[] = mergeTranspositions(ascendingSequences, descendingSequences).map((sequencePair) => {
     const ascendingCells = sequencePair.ascendingSequence;
-    const ascendingCellIntervals = getCellIntervals(sequencePair.ascendingSequence);
+    const extendedAscendingCells = [...ascendingCells, ...ascendingCells.map(cell => shiftCell(allCells, cell, 1))]
+    const ascendingCellIntervals = getCellIntervals(ascendingCells);
     const ascendingJinsTranspositions: (JinsTransposition | null)[] = [];
     const descendingCells = sequencePair.descendingSequence;
+    const extendedDescendingCells = [...sequencePair.descendingSequence, ...sequencePair.descendingSequence.map(cell => shiftCell(allCells, cell, -1))];
     const descendingCellIntervals = getCellIntervals(sequencePair.descendingSequence);
     const descendingJinsTranspositions: (JinsTransposition | null)[] = [];
 
-    const extendedAscendingCellIntervals = [...ascendingCellIntervals, ...ascendingCellIntervals.slice(1)]; //todo make sure the slice is needed here
+    const extendedAscendingCellIntervals = [...ascendingCellIntervals, ...ascendingCellIntervals.slice(1)];
     const extendedDescendingCellIntervals = [...descendingCellIntervals, ...descendingCellIntervals.slice(1)];
 
     if (allAjnas.length > 0) {
@@ -147,13 +150,13 @@ export function getMaqamTranspositions(
           if (matchingListOfIntervals(extendedAscendingCellIntervals.slice(i, i + lengthOfInterval), ascendingJinsInterval.intervals, centsTolerance)) {
             const jins = ascendingJinsInterval.jins;
             const firstJinsNote = jins.getNoteNames()[0];
-            const firstCell = ascendingCells[i];
+            const firstCell = extendedAscendingCells[i];
 
             const jinsTransposition = {
               jinsId: jins.getId(),
               name: `${jins.getName()} al-${firstCell.noteName}`,
               tahlil: firstJinsNote === firstCell.noteName,
-              cells: ascendingCells.slice(i, i + lengthOfInterval),
+              cells: extendedAscendingCells.slice(i, i + lengthOfInterval),
               cellIntervals: extendedAscendingCellIntervals.slice(i, i + lengthOfInterval),
             }
 
@@ -176,13 +179,13 @@ export function getMaqamTranspositions(
           if (matchingListOfIntervals(extendedDescendingCellIntervals.slice(i, i + lengthOfInterval), descendingJinsInterval.intervals, centsTolerance)) {
             const jins = descendingJinsInterval.jins;
             const firstJinsNote = jins.getNoteNames()[0];
-            const firstCell = descendingCells[i];
+            const firstCell = extendedDescendingCells[i];
 
             const jinsTransposition = {
               jinsId: jins.getId(),
               name: `${jins.getName()} al-${firstCell.noteName}`,
               tahlil: firstJinsNote === firstCell.noteName,
-              cells: descendingCells.slice(i, i + lengthOfInterval),
+              cells: extendedDescendingCells.slice(i, i + lengthOfInterval),
               cellIntervals: extendedDescendingCellIntervals.slice(i, i + lengthOfInterval),
             }
 

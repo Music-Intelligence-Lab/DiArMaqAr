@@ -31,7 +31,6 @@ interface AppContextInterface {
   selectedCells: Cell[];
   setSelectedCells: React.Dispatch<React.SetStateAction<Cell[]>>;
   allCells: Cell[];
-  shiftCell: (cell: Cell, octaveShift: number) => Cell;
   selectedIndices: number[];
   setSelectedIndices: React.Dispatch<React.SetStateAction<number[]>>;
   originalIndices: number[];
@@ -70,23 +69,6 @@ interface AppContextInterface {
 }
 
 const AppContext = createContext<AppContextInterface | null>(null);
-
-const emptyCell: Cell = {
-  noteName: "",
-  fraction: "",
-  cents: "",
-  decimalRatio: "",
-  stringLength: "",
-  frequency: "",
-  englishName: "",
-  originalValue: "",
-  originalValueType: "",
-  index: -1,
-  octave: -1,
-  abjadName: "",
-  fretDivision: "",
-  midiNoteNumber: 0,
-};
 
 export function AppContextProvider({ children }: { children: React.ReactNode }) {
   const [tuningSystems, setTuningSystems] = useState<TuningSystem[]>([]);
@@ -182,19 +164,6 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
     return getTuningSystemCells(selectedTuningSystem, firstNote, pitchClassesArr, referenceFrequencies);
   }, [selectedTuningSystem, selectedIndices, referenceFrequencies, pitchClasses, pitchClassesArr]);
-
-  const shiftCell = (cell: Cell, octaveShift: number): Cell => {
-    const cellIndex = allCells.findIndex((c) => c.index === cell.index && c.octave === cell.octave);
-    if (cellIndex === -1) return emptyCell;
-
-    const numberOfPitchClasses = selectedTuningSystem?.getPitchClasses().length || 0;
-
-    const newIndex = cellIndex + octaveShift * numberOfPitchClasses;
-
-    if (newIndex < 0 || newIndex >= allCells.length) return emptyCell;
-
-    return { ...allCells[newIndex], octave: cell.octave + octaveShift };
-  };
 
   const clearSelections = () => {
     setSelectedCells([]);
@@ -472,7 +441,6 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         selectedCells,
         setSelectedCells,
         allCells,
-        shiftCell,
         selectedIndices,
         setSelectedIndices,
         originalIndices,

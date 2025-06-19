@@ -4,9 +4,10 @@ import { useEffect } from "react";
 import useAppContext from "@/contexts/app-context";
 import useSoundContext from "@/contexts/sound-context";
 import Cell from "@/models/Cell";
+import shiftCell from "@/functions/shiftCell";
 
 export default function KeyboardControls() {
-  const { selectedCells, selectedMaqam, selectedMaqamTransposition, allCells, shiftCell } = useAppContext();
+  const { selectedCells, selectedMaqam, selectedMaqamTransposition, allCells } = useAppContext();
   const { noteOn, noteOff, setActiveCells } = useSoundContext();
 
   // keyboard rows
@@ -50,20 +51,20 @@ export default function KeyboardControls() {
       const idx1 = firstRowKeys.indexOf(e.key);
       if (idx1 >= 0 && descendingMaqamCells.length > 0) {
         const base = descendingMaqamCells.length;
-        cell = shiftCell(descendingMaqamCells[idx1 % base], Math.floor(idx1 / base));
+        cell = shiftCell(allCells, descendingMaqamCells[idx1 % base], Math.floor(idx1 / base));
       } else {
         const idx2 = secondRowKeys.indexOf(e.key);
         if (idx2 >= 0 && selectedCells.length > 0) {
           const base = selectedCells.length;
           if (idx2 < base || base === 7) {
-            cell = shiftCell(selectedCells[idx2 % base], Math.floor(idx2 / base));
+            cell = shiftCell(allCells, selectedCells[idx2 % base], Math.floor(idx2 / base));
           }
         } else {
           const idx3 = thirdRowKeys.indexOf(e.key);
           if (idx3 >= 0 && selectedCells.length > 0) {
             const base = selectedCells.length;
             if (idx3 < base || base === 7) {
-              cell = shiftCell(selectedCells[idx3 % base], Math.floor(idx3 / base) - 1);
+              cell = shiftCell(allCells, selectedCells[idx3 % base], Math.floor(idx3 / base) - 1);
             }
           }
         }
@@ -79,20 +80,20 @@ export default function KeyboardControls() {
       const idx1 = firstRowKeys.indexOf(e.key);
       if (idx1 >= 0 && descendingMaqamCells.length > 0) {
         const base = descendingMaqamCells.length;
-        cell = shiftCell(descendingMaqamCells[idx1 % base], Math.floor(idx1 / base));
+        cell = shiftCell(allCells, descendingMaqamCells[idx1 % base], Math.floor(idx1 / base));
       } else {
         const idx2 = secondRowKeys.indexOf(e.key);
         if (idx2 >= 0 && selectedCells.length > 0) {
           const base = selectedCells.length;
           if (idx2 < base || base === 7) {
-            cell = shiftCell(selectedCells[idx2 % base], Math.floor(idx2 / base));
+            cell = shiftCell(allCells, selectedCells[idx2 % base], Math.floor(idx2 / base));
           }
         } else {
           const idx3 = thirdRowKeys.indexOf(e.key);
           if (idx3 >= 0 && selectedCells.length > 0) {
             const base = selectedCells.length;
             if (idx3 < base || base === 7) {
-              cell = shiftCell(selectedCells[idx3 % base], Math.floor(idx3 / base) - 1);
+              cell = shiftCell(allCells, selectedCells[idx3 % base], Math.floor(idx3 / base) - 1);
             }
           }
         }
@@ -107,7 +108,7 @@ export default function KeyboardControls() {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [selectedCells, selectedMaqam, selectedMaqamTransposition, allCells, shiftCell, descendingMaqamCells, noteOn, noteOff, setActiveCells]);
+  }, [selectedCells, selectedMaqam, selectedMaqamTransposition, allCells, descendingMaqamCells, noteOn, noteOff, setActiveCells]);
 
   return null;
 }
