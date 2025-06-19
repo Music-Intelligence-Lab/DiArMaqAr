@@ -22,50 +22,33 @@
     ],
     "suyūr": [
       {
-        "id": "mxBF-Ty6OY8xIt0pkyIBn",
-        "creatorEnglish": "test",
-        "creatorArabic": "",
-        "sourceEnglish": "",
-        "sourceArabic": "",
-        "year": "",
-        "page": "",
-        "commentsEnglish": "",
+        "id": "TX44wPOzOHjUvm-fCglz4",
+        "creatorEnglish": "Ṣabbāgh",
+        "creatorArabic": "صبّاغ",
+        "sourceId": "YQh0gMMk0mKbUKc-FMgrZ",
+        "page": "41",
+        "commentsEnglish": "Known in Tunis as Ṭabe' Al-Dhīl, also Ṭabe' al-Sharqī and Inqilāb al-'irāq.\n\nThe melodies that are close to the melodies of maqām rāst that can be utilised during composition or taqsīm are nahāwand, nawā athar, nikrīz or chahārgāh all on rāst, ṣabā ḥusaynī, ḥijāz nawā and bayāt nawā. Sometimes after chahārgāh, a transposition of segāh on rāst, then a return to chahargāh and then to rāst. ",
         "commentsArabic": "",
         "stops": [
           {
-            "type": "note",
-            "value": "yegāh"
-          }
-        ]
-      },
-      {
-        "id": "nUFVt8da4ElLEAqCqzMEq",
-        "creatorEnglish": "test",
-        "creatorArabic": "test",
-        "sourceEnglish": "test",
-        "sourceArabic": "test",
-        "year": "test",
-        "page": "test",
-        "commentsEnglish": "tests",
-        "commentsArabic": "ttesssss",
-        "stops": [
-          {
             "type": "jins",
-            "value": "12",
-            "startingNote": "yegāh",
-            "direction": "descending"
-          },
-          {
-            "type": "direction",
-            "value": "ascending"
-          },
-          {
-            "type": "note",
-            "value": "mahurān"
+            "value": "1",
+            "startingNote": "rāst"
           },
           {
             "type": "jins",
-            "value": "15"
+            "value": "10",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "jins",
+            "value": "3",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "jins",
+            "value": "1",
+            "startingNote": "rāst"
           }
         ]
       }
