@@ -2,10 +2,10 @@
 
 import React, { createContext, useState, useEffect, useMemo, useContext, useCallback } from "react";
 import TuningSystem from "@/models/TuningSystem";
-import Jins, { JinsTransposition } from "@/models/Jins";
+import JinsDetails, { Jins } from "@/models/Jins";
 import TransliteratedNoteName, { TransliteratedNoteNameOctaveOne, TransliteratedNoteNameOctaveTwo } from "@/models/NoteName";
 import { octaveOneNoteNames, octaveTwoNoteNames } from "@/models/NoteName";
-import Maqam, { MaqamTransposition, MaqamModulations } from "@/models/Maqam";
+import MaqamDetails, { Maqam, MaqamModulations } from "@/models/Maqam";
 import { Source } from "@/models/bibliography/Source";
 import Pattern from "@/models/Pattern";
 import getFirstNoteName from "@/functions/getFirstNoteName";
@@ -39,22 +39,22 @@ interface AppContextInterface {
   initialMappingDone: boolean;
   referenceFrequencies: { [noteName: string]: number };
   setReferenceFrequencies: React.Dispatch<React.SetStateAction<{ [noteName: string]: number }>>;
-  ajnas: Jins[];
-  setAjnas: React.Dispatch<React.SetStateAction<Jins[]>>;
-  selectedJins: Jins | null;
-  setSelectedJins: React.Dispatch<React.SetStateAction<Jins | null>>;
-  checkIfJinsIsSelectable: (jins: Jins) => boolean;
-  handleClickJins: (jins: Jins) => void;
-  selectedJinsTransposition: JinsTransposition | null;
-  setSelectedJinsTransposition: React.Dispatch<React.SetStateAction<JinsTransposition | null>>;
-  maqamat: Maqam[];
-  setMaqamat: React.Dispatch<React.SetStateAction<Maqam[]>>;
-  selectedMaqam: Maqam | null;
-  setSelectedMaqam: React.Dispatch<React.SetStateAction<Maqam | null>>;
-  checkIfMaqamIsSelectable: (maqam: Maqam) => boolean;
-  handleClickMaqam: (maqam: Maqam) => void;
-  selectedMaqamTransposition: MaqamTransposition | null;
-  setSelectedMaqamTransposition: React.Dispatch<React.SetStateAction<MaqamTransposition | null>>;
+  ajnas: JinsDetails[];
+  setAjnas: React.Dispatch<React.SetStateAction<JinsDetails[]>>;
+  selectedJins: JinsDetails | null;
+  setSelectedJins: React.Dispatch<React.SetStateAction<JinsDetails | null>>;
+  checkIfJinsIsSelectable: (jins: JinsDetails) => boolean;
+  handleClickJins: (jins: JinsDetails) => void;
+  selectedJinsTransposition: Jins | null;
+  setSelectedJinsTransposition: React.Dispatch<React.SetStateAction<Jins | null>>;
+  maqamat: MaqamDetails[];
+  setMaqamat: React.Dispatch<React.SetStateAction<MaqamDetails[]>>;
+  selectedMaqam: MaqamDetails | null;
+  setSelectedMaqam: React.Dispatch<React.SetStateAction<MaqamDetails | null>>;
+  checkIfMaqamIsSelectable: (maqam: MaqamDetails) => boolean;
+  handleClickMaqam: (maqam: MaqamDetails) => void;
+  selectedMaqamTransposition: Maqam | null;
+  setSelectedMaqamTransposition: React.Dispatch<React.SetStateAction<Maqam | null>>;
   maqamSayrId: string;
   setMaqamSayrId: React.Dispatch<React.SetStateAction<string>>;
   centsTolerance: number;
@@ -65,7 +65,7 @@ interface AppContextInterface {
   setSources: React.Dispatch<React.SetStateAction<Source[]>>;
   patterns: Pattern[];
   setPatterns: React.Dispatch<React.SetStateAction<Pattern[]>>;
-  getModulations: (maqamTransposition: MaqamTransposition) => MaqamModulations;
+  getModulations: (maqamTransposition: Maqam) => MaqamModulations;
 }
 
 const AppContext = createContext<AppContextInterface | null>(null);
@@ -86,13 +86,13 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     [noteName: string]: number;
   }>({});
 
-  const [ajnas, setAjnas] = useState<Jins[]>([]);
-  const [selectedJins, setSelectedJins] = useState<Jins | null>(null);
-  const [selectedJinsTransposition, setSelectedJinsTransposition] = useState<JinsTransposition | null>(null);
+  const [ajnas, setAjnas] = useState<JinsDetails[]>([]);
+  const [selectedJins, setSelectedJins] = useState<JinsDetails | null>(null);
+  const [selectedJinsTransposition, setSelectedJinsTransposition] = useState<Jins | null>(null);
 
-  const [maqamat, setMaqamat] = useState<Maqam[]>([]);
-  const [selectedMaqam, setSelectedMaqam] = useState<Maqam | null>(null);
-  const [selectedMaqamTransposition, setSelectedMaqamTransposition] = useState<MaqamTransposition | null>(null);
+  const [maqamat, setMaqamat] = useState<MaqamDetails[]>([]);
+  const [selectedMaqam, setSelectedMaqam] = useState<MaqamDetails | null>(null);
+  const [selectedMaqamTransposition, setSelectedMaqamTransposition] = useState<Maqam | null>(null);
   const [maqamSayrId, setMaqamSayrId] = useState<string>("");
 
   const [patterns, setPatterns] = useState<Pattern[]>([]);
@@ -236,12 +236,12 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     return [];
   };
 
-  const checkIfJinsIsSelectable = (jins: Jins, givenCells: Cell[] = []) => {
+  const checkIfJinsIsSelectable = (jins: JinsDetails, givenCells: Cell[] = []) => {
     const usedNoteNames = givenCells.length ? givenCells.map((cell) => cell.noteName) : allCells.map((cell) => cell.noteName);
     return jins.getNoteNames().every((noteName) => usedNoteNames.includes(noteName));
   };
 
-  const handleClickJins = (jins: Jins, givenCells: Cell[] = []) => {
+  const handleClickJins = (jins: JinsDetails, givenCells: Cell[] = []) => {
     const usedCells = givenCells.length ? givenCells : allCells;
 
     setSelectedJins(jins);
@@ -259,7 +259,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     setSelectedCells(newSelectedCells);
   };
 
-  const checkIfMaqamIsSelectable = (maqam: Maqam, givenCells: Cell[] = []) => {
+  const checkIfMaqamIsSelectable = (maqam: MaqamDetails, givenCells: Cell[] = []) => {
     const usedNoteNames = givenCells.length ? givenCells.map((cell) => cell.noteName) : allCells.map((cell) => cell.noteName);
 
     return (
@@ -268,7 +268,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     );
   };
 
-  const handleClickMaqam = (maqam: Maqam, given: Cell[] = []) => {
+  const handleClickMaqam = (maqam: MaqamDetails, given: Cell[] = []) => {
     const usedCells = given.length ? given : allCells;
 
     setSelectedMaqam(maqam);
@@ -288,13 +288,13 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   };
 
   const getModulations = useCallback(
-    (sourceMaqamTransposition: MaqamTransposition): MaqamModulations => {
-      const hopsFromOne: MaqamTransposition[] = [];
-      const hopsFromThree: MaqamTransposition[] = [];
-      const hopsFromThree2p: MaqamTransposition[] = [];
-      const hopsFromFour: MaqamTransposition[] = [];
-      const hopsFromFive: MaqamTransposition[] = [];
-      const hopsFromSix: MaqamTransposition[] = [];
+    (sourceMaqamTransposition: Maqam): MaqamModulations => {
+      const hopsFromOne: Maqam[] = [];
+      const hopsFromThree: Maqam[] = [];
+      const hopsFromThree2p: Maqam[] = [];
+      const hopsFromFour: Maqam[] = [];
+      const hopsFromFive: Maqam[] = [];
+      const hopsFromSix: Maqam[] = [];
 
       const sourceAscendingNotes = sourceMaqamTransposition.ascendingCells.map((cell) => cell.noteName);
 
@@ -342,7 +342,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
         const currentAscendingNotes = maqam.getAscendingNoteNames();
 
-        const transpositions: MaqamTransposition[] =
+        const transpositions: Maqam[] =
           JSON.stringify(currentAscendingNotes) !== JSON.stringify(sourceAscendingNotes) ? [maqam.getTahlil(allCells)] : [];
 
         getMaqamTranspositions(allCells, ajnas, maqam, true, centsTolerance).forEach((maqamTransposition) => {

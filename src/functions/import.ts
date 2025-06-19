@@ -5,8 +5,8 @@ import sourcesData from "@/../data/sources.json";
 import patternsData from "@/../data/patterns.json";
 
 import TuningSystem from "@/models/TuningSystem";
-import Jins from "@/models/Jins";
-import Maqam from "@/models/Maqam";
+import JinsDetails from "@/models/Jins";
+import MaqamDetails from "@/models/Maqam";
 import { Source } from "@/models/bibliography/Source";
 import Book from "@/models/bibliography/Book";
 import Article from "@/models/bibliography/Article";
@@ -40,10 +40,10 @@ export function getTuningSystems(): TuningSystem[] {
   );
 }
 
-export function getAjnas(): Jins[] {
+export function getAjnas(): JinsDetails[] {
   return (ajnasData as any[]).map(
     (d) =>
-      new Jins(
+      new JinsDetails(
         d.id,
         d.name,
         d.noteNames,
@@ -54,10 +54,10 @@ export function getAjnas(): Jins[] {
   );
 }
 
-export function getMaqamat(): Maqam[] {
+export function getMaqamat(): MaqamDetails[] {
   return (maqamatData as any[]).map(
     (d) =>
-      new Maqam(
+      new MaqamDetails(
         d.id,
         d.name,
         d.ascendingNoteNames,

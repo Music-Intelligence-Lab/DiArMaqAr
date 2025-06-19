@@ -6,7 +6,7 @@ import useSoundContext from "@/contexts/sound-context";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { getMaqamTranspositions } from "@/functions/transpose";
-import { MaqamTransposition } from "@/models/Maqam";
+import { Maqam } from "@/models/Maqam";
 import { calculateInterval } from "@/models/Cell";
 import shiftCell from "@/functions/shiftCell";
 
@@ -55,7 +55,7 @@ export default function MaqamTranspositions() {
 
   const maqamTranspositions = getMaqamTranspositions(allCells, ajnas, selectedMaqam, true, centsTolerance);
 
-  function renderTranspositionRow(transposition: MaqamTransposition, ascending: boolean, rowIndex: number) {
+  function renderTranspositionRow(transposition: Maqam, ascending: boolean, rowIndex: number) {
     let ascendingTranspositionCells = transposition.ascendingCells;
     let descendingTranspositionCells = transposition.descendingCells;
 
@@ -239,7 +239,7 @@ export default function MaqamTranspositions() {
     );
   }
 
-  function renderTransposition(transposition: MaqamTransposition, index: number) {
+  function renderTransposition(transposition: Maqam, index: number) {
     return (
       <>
         {renderTranspositionRow(transposition, true, index)}
