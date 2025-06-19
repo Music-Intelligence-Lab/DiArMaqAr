@@ -1244,7 +1244,7 @@
     }
   },
   {
-    "id": "KhyamAllami-(2022)-Al-KindiwithAl-Farabi's22/27",
+    "id": "Allami-(2022)-Al-KindiwithAl-Farabi's22/27",
     "titleEnglish": "Al-Kindi with Al-Farabi's 22/27",
     "titleArabic": "",
     "year": "2022",
@@ -1256,8 +1256,8 @@
         "page": "215"
       }
     ],
-    "creatorEnglish": "Khyam Allami",
-    "creatorArabic": "خيّام اللامي",
+    "creatorEnglish": "Allami",
+    "creatorArabic": "اللامي",
     "commentsEnglish": "Created using Al-Kindi's 12-tone system and adding Al-Farabi's 27:22 to each chromatic interval creating a \"segāh\" for each note",
     "commentsArabic": "تچربة",
     "tuningSystemPitchClasses": [
@@ -2241,7 +2241,7 @@
     }
   },
   {
-    "id": "KamilAl-Khul'īandIdrīsRāgheb-(1904)-",
+    "id": "Al-Khul'īandRāgheb-(1904)-",
     "titleEnglish": "",
     "titleArabic": "",
     "year": "1904",
@@ -2253,7 +2253,7 @@
         "page": "51-52"
       }
     ],
-    "creatorEnglish": "Kamil Al-Khul'ī and Idrīs Rāgheb",
+    "creatorEnglish": "Al-Khul'ī and Rāgheb",
     "creatorArabic": "",
     "commentsEnglish": "Also in Shawqi, Youssef. Qiyās Al-Sullam Al-Mūsīqī Al-'Arabī. Dar Al-Kutub, Cairo, 1969. pp. 28-29.\n\nShawqi says that whole tone (888 mm) doesn't add up to 10:9 or 9:8 as one would expect (1969:29) but the descrepency is only -1.732 cents and is infact the same as the descrepency between the perfect fourth (750 mm / 4:3) and the perfect fifth (666 mm / 3:2) which he states are correct in Khulī's measurements.",
     "commentsArabic": "",
@@ -2611,15 +2611,15 @@
     }
   },
   {
-    "id": "KhyamAllami-(2024)-Al-KindiwithIbnSina's39/32",
+    "id": "Allami-(2024)-Al-KindiwithIbnSina's39/32",
     "titleEnglish": "Al-Kindi with Ibn Sina's 39/32",
     "titleArabic": "تنغيم الكندي مع اضافة نسبة ٣٩\\٣٢ لابن سينا",
     "year": "2024",
     "sourceEnglish": "",
     "sourceArabic": "",
     "sourcePageReferences": [],
-    "creatorEnglish": "Khyam Allami",
-    "creatorArabic": "",
+    "creatorEnglish": "Allami",
+    "creatorArabic": "اللامي",
     "commentsEnglish": "Created using Al-Kindi's 12-tone system and adding Ibn Sīnā's 39/32 to each chromatic interval creating a \"segāh\" for each note",
     "commentsArabic": "تجربة",
     "tuningSystemPitchClasses": [
@@ -4377,15 +4377,15 @@
     }
   },
   {
-    "id": "KhyamAllami-(2025)-Ṣabbāgh-Shawwā29-Tone",
+    "id": "Allami-(2025)-Ṣabbāgh-Shawwā29-Tone",
     "titleEnglish": "Ṣabbāgh-Shawwā 29-Tone",
     "titleArabic": "صبّاغ شوا ٢٩ نغمة",
     "year": "2025",
     "sourceEnglish": "Unknown Source",
     "sourceArabic": "مصدر غير معروف",
     "sourcePageReferences": [],
-    "creatorEnglish": "Khyam Allami",
-    "creatorArabic": "خيّام اللامي",
+    "creatorEnglish": "Allami",
+    "creatorArabic": "اللامي",
     "commentsEnglish": "Created by using Ṣabbāgh (1954) 24-tone tuning system and including Shawwā's extra 5 note names (1946:13) with the correct one comma higher or one comma lower using the Syntonic comma 81/80 as utilised by Ṣabbāgh",
     "commentsArabic": "",
     "tuningSystemPitchClasses": [
