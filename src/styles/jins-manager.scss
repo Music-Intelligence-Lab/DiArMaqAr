@@ -94,6 +94,7 @@
     display: grid;
     grid-template-columns: repeat(7, (minmax(250px, 1fr)));
     grid-template-rows: repeat(3, auto);
+    grid-auto-flow: column;
     gap: 10px;
     height: 225px;
     overflow-x: scroll;
