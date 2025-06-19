@@ -1381,8 +1381,8 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
           {/* Buttons */}
           <div className="tuning-system-manager__buttons">
-            <button className="tuning-system-manager__save-button" onClick={() => handleSaveTuningSystem()}>
-              {selectedTuningSystem ? "Save Tuning System Changes" : "Create New Tuning System"}
+            <button className="tuning-system-manager__save-button" onClick={() => handleSaveTuningSystem()} disabled={(!haveIndicesChanged() || getFirstNoteName(selectedIndices) === "none")}>
+              {selectedTuningSystem.isSaved() ? "Save Tuning System Changes" : "Create New Tuning System"}
             </button>
             {selectedTuningSystem && (
               <button className="tuning-system-manager__delete-button" type="button" onClick={handleDelete}>
