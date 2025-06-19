@@ -1429,7 +1429,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
           >
             ‹
           </button>
-          <div className="tuning-system-manager__list" style={{ ["--column-count" as any]: Math.min(filteredTuningSystems.length, 10) }}>
+          <div className="tuning-system-manager__list" style={{ gridTemplateColumns: `repeat(${Math.ceil(filteredTuningSystems.length / 3)}, minmax(390px, 1fr))` }}>
             {filteredTuningSystems.length === 0 ? (
               <p>No tuning systems available.</p>
             ) : (
