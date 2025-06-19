@@ -6,8 +6,8 @@ import getTuningSystemCells from "./getTuningSystemCells";
 import { getAjnas, getMaqamat } from "./import";
 import { getJinsTranspositions, getMaqamTranspositions } from "./transpose";
 import PitchClass from "@/models/PitchClass";
-import modulate from "./modulate";
-import calculateNumberOfHops from "./calculateNumberOfHops";
+// import modulate from "./modulate";
+// import calculateNumberOfHops from "./calculateNumberOfHops";
 
 interface ExportedTuningSystem {
   tuningSystem: TuningSystem;
@@ -61,10 +61,10 @@ export function exportTuningSystem(tuningSystem: TuningSystem, startingNote: Not
 
     let numberOfTranspositions = 0;
     for (const maqamTransposition of getMaqamTranspositions(fullRangeTuningSystemPitchClasses, allAjnas, maqam, true, centsTolerance)) {
-      const modulations = modulate(fullRangeTuningSystemPitchClasses, allAjnas, allMaqamat, maqamTransposition, centsTolerance);
-      const numberOfHops = calculateNumberOfHops(modulations);
-      maqamTransposition.modulations = modulations;
-      maqamTransposition.numberOfHops = numberOfHops;
+      // const modulations = modulate(fullRangeTuningSystemPitchClasses, allAjnas, allMaqamat, maqamTransposition, centsTolerance);
+      // const numberOfHops = calculateNumberOfHops(modulations);
+      // maqamTransposition.modulations = modulations;
+      // maqamTransposition.numberOfHops = numberOfHops;
       possibleMaqamatDetails.push(maqamTransposition);
       numberOfTranspositions++;
     }
