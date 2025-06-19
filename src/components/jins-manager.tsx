@@ -2,7 +2,7 @@
 
 import useAppContext from "@/contexts/app-context";
 import useFilterContext from "@/contexts/filter-context";
-import Jins from "@/models/Jins";
+import JinsDetails from "@/models/Jins";
 import React, { useState, useEffect, useMemo } from "react";
 import { getJinsTranspositions } from "@/functions/transpose";
 import { updateAjnas } from "@/functions/update";
@@ -63,7 +63,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
   const handleSaveJins = async () => {
     if (!selectedJins) return;
     const selectedNoteNames = selectedCells.map((cell) => cell.noteName);
-    const newJins = new Jins(
+    const newJins = new JinsDetails(
       selectedJins.getId(),
       selectedJins.getName(),
       selectedNoteNames,
@@ -185,7 +185,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
       </div>
 
       {admin && !selectedJins && (
-        <button onClick={() => setSelectedJins(new Jins(newJinsId, "", [], "", "", []))} className="jins-manager__create-new-jins-button">
+        <button onClick={() => setSelectedJins(new JinsDetails(newJinsId, "", [], "", "", []))} className="jins-manager__create-new-jins-button">
           Create New Jins
         </button>
       )}
@@ -198,7 +198,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
               value={selectedJins.getName()}
               onChange={(e) =>
                 setSelectedJins(
-                  new Jins(
+                  new JinsDetails(
                     selectedJins.getId(),
                     e.target.value,
                     selectedJins.getNoteNames(),

@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import useAppContext from "@/contexts/app-context";
 import useFilterContext from "@/contexts/filter-context";
-import Maqam from "@/models/Maqam";
+import MaqamDetails from "@/models/Maqam";
 import { getMaqamTranspositions } from "@/functions/transpose";
 import { updateMaqamat } from "@/functions/update";
 import { SourcePageReference } from "@/models/bibliography/Source";
@@ -83,7 +83,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
   const selectedCellNoteNames = selectedCells.map((d) => d.noteName);
 
   // Base save logic
-  const handleSaveMaqam = async (maqam: Maqam) => {
+  const handleSaveMaqam = async (maqam: MaqamDetails) => {
     const others = maqamat.filter((m) => m.getId() !== maqam.getId());
     await updateMaqamat([...others, maqam]);
     setMaqamat([...others, maqam]);
@@ -98,7 +98,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
         ? selectedMaqam.getDescendingNoteNames()
         : [...selectedCellNoteNames].reverse();
 
-    const updated = new Maqam(
+    const updated = new MaqamDetails(
       selectedMaqam.getId(),
       selectedMaqam.getName(),
       selectedCellNoteNames,
@@ -114,7 +114,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
   // Save descending row
   const handleSaveDescending = async () => {
     if (!selectedMaqam) return;
-    const updated = new Maqam(
+    const updated = new MaqamDetails(
       selectedMaqam.getId(),
       selectedMaqam.getName(),
       selectedMaqam.getAscendingNoteNames(),
@@ -264,7 +264,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
       {admin && !selectedMaqam && (
         <button
           onClick={() =>
-            setSelectedMaqam(new Maqam(newMaqamId, "", [], [], [], "", "", []))
+            setSelectedMaqam(new MaqamDetails(newMaqamId, "", [], [], [], "", "", []))
           }
           className="maqam-manager__create-new-maqam-button"
         >
@@ -280,7 +280,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
               value={selectedMaqam.getName()}
               onChange={(e) =>
                 setSelectedMaqam(
-                  new Maqam(
+                  new MaqamDetails(
                     selectedMaqam.getId(),
                     e.target.value,
                     selectedMaqam.getAscendingNoteNames(),
@@ -298,7 +298,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
             <button
               onClick={() => {
                 if (!selectedMaqam) return;
-                const updated = new Maqam(
+                const updated = new MaqamDetails(
                   selectedMaqam.getId(),
                   selectedMaqam.getName(),
                   selectedMaqam.getAscendingNoteNames(),

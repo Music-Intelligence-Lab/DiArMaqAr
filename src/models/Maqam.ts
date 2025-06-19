@@ -1,14 +1,14 @@
 import { getCellIntervals } from "@/functions/transpose";
 import Cell, { CellInterval } from "./Cell";
-import { JinsTransposition } from "./Jins";
-import TransliteratedNoteName from "./NoteName";
+import { Jins } from "./Jins";
+import NoteName from "./NoteName";
 import { SourcePageReference } from "./bibliography/Source";
 
-export default class Maqam {
+export default class MaqamDetails {
   private id: string;
   private name: string;
-  private ascendingNoteNames: TransliteratedNoteName[];
-  private descendingNoteNames: TransliteratedNoteName[];
+  private ascendingNoteNames: NoteName[];
+  private descendingNoteNames: NoteName[];
   private suyūr: Sayr[];
   private commentsEnglish: string;
   private commentsArabic: string;
@@ -17,8 +17,8 @@ export default class Maqam {
   constructor(
     id: string,
     name: string,
-    ascendingNoteNames: TransliteratedNoteName[],
-    descendingNoteNames: TransliteratedNoteName[],
+    ascendingNoteNames: NoteName[],
+    descendingNoteNames: NoteName[],
     suyūr: Sayr[],
     commentsEnglish: string,
     commentsArabic: string,
@@ -42,11 +42,11 @@ export default class Maqam {
     return this.name;
   }
 
-  getAscendingNoteNames(): TransliteratedNoteName[] {
+  getAscendingNoteNames(): NoteName[] {
     return this.ascendingNoteNames;
   }
 
-  getDescendingNoteNames(): TransliteratedNoteName[] {
+  getDescendingNoteNames(): NoteName[] {
     return this.descendingNoteNames;
   }
 
@@ -80,7 +80,7 @@ export default class Maqam {
   }
 
 
-  getTahlil(allCells: Cell[]): MaqamTransposition {
+  getTahlil(allCells: Cell[]): Maqam {
     const ascendingCells = allCells.filter(cell => this.ascendingNoteNames.includes(cell.noteName));
     const ascendingCellIntervals: CellInterval[] = getCellIntervals(ascendingCells);
     const descendingCells = allCells.filter(cell => this.descendingNoteNames.includes(cell.noteName)).reverse();
@@ -96,8 +96,8 @@ export default class Maqam {
     };
   }
   
-  createMaqamWithNewSuyūr(newSuyūr: Sayr[]): Maqam {
-    return new Maqam(
+  createMaqamWithNewSuyūr(newSuyūr: Sayr[]): MaqamDetails {
+    return new MaqamDetails(
       this.id,
       this.name,
       this.ascendingNoteNames,
@@ -109,8 +109,8 @@ export default class Maqam {
     );
   }
 
-  createMaqamWithNewSourcePageReferences(newSourcePageReferences: SourcePageReference[]): Maqam {
-    return new Maqam(
+  createMaqamWithNewSourcePageReferences(newSourcePageReferences: SourcePageReference[]): MaqamDetails {
+    return new MaqamDetails(
       this.id,
       this.name,
       this.ascendingNoteNames,
@@ -137,28 +137,28 @@ export interface Sayr {
 export interface SayrStop {
   type: "note" | "jins" | "direction";
   value: string;
-  startingNote?: TransliteratedNoteName;
+  startingNote?: NoteName;
   direction?: "ascending" | "descending";
 }
 
-export interface MaqamTransposition {
+export interface Maqam {
   maqamId: string;
   name: string;
   tahlil: boolean;
   ascendingCells: Cell[];
   ascendingCellIntervals: CellInterval[];
-  ascendingJinsTranspositions?: (JinsTransposition | null)[];
+  ascendingJinsTranspositions?: (Jins | null)[];
   descendingCells: Cell[];
   descendingCellIntervals: CellInterval[];
-  descendingJinsTranspositions?: (JinsTransposition | null)[];
+  descendingJinsTranspositions?: (Jins | null)[];
 }
 
 export interface MaqamModulations {
-  hopsFromOne: MaqamTransposition[];
-  hopsFromThree: MaqamTransposition[];
-  hopsFromThree2p: MaqamTransposition[];
-  hopsFromFour: MaqamTransposition[];
-  hopsFromFive: MaqamTransposition[];
-  hopsFromSix: MaqamTransposition[];
+  hopsFromOne: Maqam[];
+  hopsFromThree: Maqam[];
+  hopsFromThree2p: Maqam[];
+  hopsFromFour: Maqam[];
+  hopsFromFive: Maqam[];
+  hopsFromSix: Maqam[];
   noteName2p: string;
 }

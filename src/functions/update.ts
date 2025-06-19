@@ -1,5 +1,5 @@
-import Jins from "@/models/Jins";
-import Maqam from "@/models/Maqam";
+import JinsDetails from "@/models/Jins";
+import MaqamDetails from "@/models/Maqam";
 import Pattern from "@/models/Pattern";
 import { Source } from "@/models/bibliography/Source";
 import TuningSystem from "@/models/TuningSystem";
@@ -46,7 +46,7 @@ export async function updateTuningSystems(newSystems: TuningSystem[]) {
   }
 }
 
-export async function updateAjnas(newAjnas: Jins[]) {
+export async function updateAjnas(newAjnas: JinsDetails[]) {
   newAjnas.sort((a, b) => compareStringNumbers(a.getId(), b.getId()));
   try {
     const response = await fetch("/api/ajnas", {
@@ -71,7 +71,7 @@ export async function updateAjnas(newAjnas: Jins[]) {
   }
 }
 
-export async function updateMaqamat(newMaqamat: Maqam[]) {
+export async function updateMaqamat(newMaqamat: MaqamDetails[]) {
   newMaqamat.sort((a, b) => compareStringNumbers(a.getId(), b.getId()));
   try {
     const response = await fetch("/api/maqamat", {

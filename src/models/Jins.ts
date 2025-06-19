@@ -3,7 +3,7 @@ import Cell, { CellInterval } from "./Cell";
 import TransliteratedNoteName from "./NoteName";
 import { getCellIntervals } from "@/functions/transpose";
 
-export default class Jins {
+export default class JinsDetails {
   private id: string;
   private name: string;
   private noteNames: TransliteratedNoteName[];
@@ -48,11 +48,11 @@ export default class Jins {
     return this.SourcePageReferences;
   }
 
-  createJinsWithNewSourcePageReferences(newSourcePageReferences: SourcePageReference[]): Jins {
-    return new Jins(this.id, this.name, this.noteNames, this.commentsEnglish, this.commentsArabic, newSourcePageReferences);
+  createJinsWithNewSourcePageReferences(newSourcePageReferences: SourcePageReference[]): JinsDetails {
+    return new JinsDetails(this.id, this.name, this.noteNames, this.commentsEnglish, this.commentsArabic, newSourcePageReferences);
   }
 
-  getTahlil(allCells: Cell[]): JinsTransposition {
+  getTahlil(allCells: Cell[]): Jins {
     const cells: Cell[] = allCells.filter((cell) => this.noteNames.includes(cell.noteName));
     const cellIntervals: CellInterval[] = getCellIntervals(cells);
     return {
@@ -65,7 +65,7 @@ export default class Jins {
   }
 }
 
-export interface JinsTransposition {
+export interface Jins {
   jinsId: string;
   name: string;
   tahlil: boolean;

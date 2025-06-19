@@ -1,7 +1,7 @@
 import TransliteratedNoteName from "@/models/NoteName";
 import TuningSystem from "@/models/TuningSystem";
-import Jins, { JinsTransposition } from "@/models/Jins";
-import Maqam, { MaqamTransposition } from "@/models/Maqam";
+import JinsDetails, { Jins } from "@/models/Jins";
+import MaqamDetails, { Maqam } from "@/models/Maqam";
 import getTuningSystemCells from "./getTuningSystemCells";
 import { getAjnas, getMaqamat } from "./import";
 import { getJinsTranspositions, getMaqamTranspositions } from "./transpose";
@@ -11,10 +11,10 @@ interface ExportedTuningSystem {
   tuningSystem: TuningSystem;
   startingNote: TransliteratedNoteName;
   allCells: Cell[];
-  possibleAjnas: Jins[];
-  possibleAjnasTranspositions: JinsTransposition[];
-  possibleMaqamat: Maqam[];
-  possibleMaqamatTranspositions: MaqamTransposition[];
+  possibleAjnas: JinsDetails[];
+  possibleAjnasTranspositions: Jins[];
+  possibleMaqamat: MaqamDetails[];
+  possibleMaqamatTranspositions: Maqam[];
 }
 
 export function exportTuningSystem(tuningSystem: TuningSystem, startingNote: TransliteratedNoteName): ExportedTuningSystem {
@@ -30,7 +30,7 @@ export function exportTuningSystem(tuningSystem: TuningSystem, startingNote: Tra
       maqam.getDescendingNoteNames().every((noteName) => allCells.some((cell) => cell.noteName === noteName))
   );
 
-  const possibleAjnasTranspositions: JinsTransposition[] = [];
+  const possibleAjnasTranspositions: Jins[] = [];
 
   for (const jins of possibleAjnas) {
     for (const jinsTransposition of getJinsTranspositions(allCells, jins, true)) {
@@ -38,7 +38,7 @@ export function exportTuningSystem(tuningSystem: TuningSystem, startingNote: Tra
     }
   }
 
-  const possibleMaqamatTranspositions: MaqamTransposition[] = [];
+  const possibleMaqamatTranspositions: Maqam[] = [];
 
   for (const maqam of possibleMaqamat) {
     for (const maqamTransposition of getMaqamTranspositions(allCells, allAjnas, maqam, true)) {

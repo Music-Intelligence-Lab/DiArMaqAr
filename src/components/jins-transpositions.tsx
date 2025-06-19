@@ -7,7 +7,7 @@ import useSoundContext from "@/contexts/sound-context";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { getJinsTranspositions } from "@/functions/transpose";
-import { JinsTransposition } from "@/models/Jins";
+import { Jins } from "@/models/Jins";
 
 export default function JinsTranspositions() {
   const { selectedJins, selectedTuningSystem, setSelectedCells, allCells, centsTolerance, setCentsTolerance, sources, setSelectedJinsTransposition } =
@@ -26,7 +26,7 @@ export default function JinsTranspositions() {
 
   const jinsTranspositions = getJinsTranspositions(allCells, selectedJins, true, centsTolerance);
 
-  function renderTransposition(transposition: JinsTransposition, index: number) {
+  function renderTransposition(transposition: Jins, index: number) {
     const tahlil = transposition.tahlil;
     const cells = transposition.cells;
     const intervals = transposition.cellIntervals;

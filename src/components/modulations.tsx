@@ -2,7 +2,7 @@
 
 import useAppContext from "@/contexts/app-context";
 import React, { useState, useEffect } from "react";
-import { MaqamModulations, MaqamTransposition } from "@/models/Maqam";
+import { MaqamModulations, Maqam } from "@/models/Maqam";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import calculateNumberOfHops from "@/functions/calculateNumberOfHops";
 
@@ -18,7 +18,7 @@ export default function Modulations() {
     setSelectedCells,
   } = useAppContext();
 
-  const [sourceMaqamStack, setSourceMaqamStack] = useState<MaqamTransposition[]>([]);
+  const [sourceMaqamStack, setSourceMaqamStack] = useState<Maqam[]>([]);
   const [modulationsStack, setModulationsStack] = useState<MaqamModulations[]>([]);
 
   useEffect(() => {
@@ -43,7 +43,7 @@ export default function Modulations() {
     }
   }, [selectedMaqamTransposition]);
 
-  const addHopsWrapper = (maqamTransposition: MaqamTransposition, stackIdx: number) => {
+  const addHopsWrapper = (maqamTransposition: Maqam, stackIdx: number) => {
     const newModulations = getModulations(maqamTransposition);
     setSourceMaqamStack((prev) => [...prev.slice(0, stackIdx + 1), maqamTransposition]);
     setModulationsStack((prev) => [...prev.slice(0, stackIdx + 1), newModulations]);

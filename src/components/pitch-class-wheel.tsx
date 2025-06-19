@@ -3,9 +3,9 @@ import React, { useEffect, useState, useRef, useMemo } from "react";
 import useAppContext from "@/contexts/app-context";
 import useSoundContext from "@/contexts/sound-context";
 import Cell from "@/models/Cell";
-import { MaqamTransposition } from "@/models/Maqam";
+import { Maqam } from "@/models/Maqam";
 import { getJinsTranspositions, getMaqamTranspositions } from "@/functions/transpose";
-import { JinsTransposition } from "@/models/Jins";
+import { Jins } from "@/models/Jins";
 
 interface WheelCellProps {
   cell: Cell;
@@ -84,12 +84,12 @@ export default function PitchClassWheel() {
     });
   }, [selectedCells]);
 
-  const filteredJinsTranspositions = useMemo<JinsTransposition[]>(
+  const filteredJinsTranspositions = useMemo<Jins[]>(
     () => getJinsTranspositions(allCells, selectedJins, true, centsTolerance),
     [allCells, selectedJins, centsTolerance]
   );
 
-  const filteredMaqamTranspositions = useMemo<MaqamTransposition[]>(
+  const filteredMaqamTranspositions = useMemo<Maqam[]>(
     () => getMaqamTranspositions(allCells, ajnas, selectedMaqam, true, centsTolerance),
     [allCells, selectedMaqam, centsTolerance]
   );
