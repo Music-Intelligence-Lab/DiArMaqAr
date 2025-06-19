@@ -13,14 +13,13 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
     maqamat,
     setMaqamat,
     ajnas,
-    selectedMaqam,
-    setSelectedMaqam,
+    selectedMaqamDetails,
+    setSelectedMaqamDetails,
     selectedPitchClasses,
     setSelectedPitchClasses,
     allPitchClasses,
     clearSelections,
     handleClickMaqam,
-    checkIfMaqamIsSelectable,
     sources,
     selectedTuningSystem,
   } = useAppContext();
@@ -29,10 +28,10 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
 
   // Local state for comments
   const [commentsEnglishLocal, setCommentsEnglishLocal] = useState<string>(
-    selectedMaqam?.getCommentsEnglish() ?? ""
+    selectedMaqamDetails?.getCommentsEnglish() ?? ""
   );
   const [commentsArabicLocal, setCommentsArabicLocal] = useState<string>(
-    selectedMaqam?.getCommentsArabic() ?? ""
+    selectedMaqamDetails?.getCommentsArabic() ?? ""
   );
 
   const tabs = [
@@ -49,11 +48,11 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
 
   // Sync local state when a different maqam is selected
   useEffect(() => {
-    if (selectedMaqam) {
-      setCommentsEnglishLocal(selectedMaqam.getCommentsEnglish());
-      setCommentsArabicLocal(selectedMaqam.getCommentsArabic());
+    if (selectedMaqamDetails) {
+      setCommentsEnglishLocal(selectedMaqamDetails.getCommentsEnglish());
+      setCommentsArabicLocal(selectedMaqamDetails.getCommentsArabic());
     }
-  }, [selectedMaqam]);
+  }, [selectedMaqamDetails]);
 
   const maqamTranspositions = useMemo(() => {
     const map = new Map<string, ReturnType<typeof getMaqamTranspositions>>();
@@ -87,53 +86,53 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
     const others = maqamat.filter((m) => m.getId() !== maqam.getId());
     await updateMaqamat([...others, maqam]);
     setMaqamat([...others, maqam]);
-    setSelectedMaqam(maqam);
+    setSelectedMaqamDetails(maqam);
   };
 
   // Save ascending row
   const handleSaveAscending = async () => {
-    if (!selectedMaqam) return;
+    if (!selectedMaqamDetails) return;
     const descendingNames =
-      selectedMaqam.getDescendingNoteNames().length > 0
-        ? selectedMaqam.getDescendingNoteNames()
+      selectedMaqamDetails.getDescendingNoteNames().length > 0
+        ? selectedMaqamDetails.getDescendingNoteNames()
         : [...selectedCellNoteNames].reverse();
 
     const updated = new MaqamDetails(
-      selectedMaqam.getId(),
-      selectedMaqam.getName(),
+      selectedMaqamDetails.getId(),
+      selectedMaqamDetails.getName(),
       selectedCellNoteNames,
       descendingNames,
-      selectedMaqam.getSuyūr(),
+      selectedMaqamDetails.getSuyūr(),
       commentsEnglishLocal,
       commentsArabicLocal,
-      selectedMaqam.getSourcePageReferences()
+      selectedMaqamDetails.getSourcePageReferences()
     );
     handleSaveMaqam(updated);
   };
 
   // Save descending row
   const handleSaveDescending = async () => {
-    if (!selectedMaqam) return;
+    if (!selectedMaqamDetails) return;
     const updated = new MaqamDetails(
-      selectedMaqam.getId(),
-      selectedMaqam.getName(),
-      selectedMaqam.getAscendingNoteNames(),
+      selectedMaqamDetails.getId(),
+      selectedMaqamDetails.getName(),
+      selectedMaqamDetails.getAscendingNoteNames(),
       [...selectedCellNoteNames].reverse(),
-      selectedMaqam.getSuyūr(),
+      selectedMaqamDetails.getSuyūr(),
       commentsEnglishLocal,
       commentsArabicLocal,
-      selectedMaqam.getSourcePageReferences()
+      selectedMaqamDetails.getSourcePageReferences()
     );
     handleSaveMaqam(updated);
   };
 
   // Delete maqam
   const handleDeleteMaqam = async () => {
-    if (!selectedMaqam) return;
-    const filtered = maqamat.filter((m) => m.getId() !== selectedMaqam.getId());
+    if (!selectedMaqamDetails) return;
+    const filtered = maqamat.filter((m) => m.getId() !== selectedMaqamDetails.getId());
     await updateMaqamat(filtered);
     setMaqamat(filtered);
-    setSelectedMaqam(null);
+    setSelectedMaqamDetails(null);
     setSelectedPitchClasses([]);
   };
 
@@ -143,29 +142,29 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
     index: number,
     newRef: Partial<SourcePageReference>
   ) => {
-    if (!selectedMaqam) return;
+    if (!selectedMaqamDetails) return;
     const list = [...refs];
     list[index] = { ...list[index], ...newRef } as SourcePageReference;
-    setSelectedMaqam(
-      selectedMaqam.createMaqamWithNewSourcePageReferences(list)
+    setSelectedMaqamDetails(
+      selectedMaqamDetails.createMaqamWithNewSourcePageReferences(list)
     );
   };
 
   const removeSourceRef = (index: number) => {
-    if (!selectedMaqam) return;
-    const refs = selectedMaqam.getSourcePageReferences() || [];
-    setSelectedMaqam(
-      selectedMaqam.createMaqamWithNewSourcePageReferences(
+    if (!selectedMaqamDetails) return;
+    const refs = selectedMaqamDetails.getSourcePageReferences() || [];
+    setSelectedMaqamDetails(
+      selectedMaqamDetails.createMaqamWithNewSourcePageReferences(
         refs.filter((_, i) => i !== index)
       )
     );
   };
 
   const addSourceRef = () => {
-    if (!selectedMaqam) return;
-    const refs = selectedMaqam.getSourcePageReferences() || [];
-    setSelectedMaqam(
-      selectedMaqam.createMaqamWithNewSourcePageReferences([
+    if (!selectedMaqamDetails) return;
+    const refs = selectedMaqamDetails.getSourcePageReferences() || [];
+    setSelectedMaqamDetails(
+      selectedMaqamDetails.createMaqamWithNewSourcePageReferences([
         ...refs,
         { sourceId: "", page: "" },
       ])
@@ -230,23 +229,23 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
             gridTemplateColumns: `repeat(${numberOfColumns}, minmax(250px, 1fr))`,
           }}
         >
-          {filteredMaqamat.map((maqam, idx) => {
-            const selectable = checkIfMaqamIsSelectable(maqam);
+          {filteredMaqamat.map((maqamDetails, idx) => {
+            const selectable = maqamDetails.isMaqamSelectable(allPitchClasses);
             const numberOfTranspositions =
-              maqamTranspositions.get(maqam.getId())?.length || 0;
+              maqamTranspositions.get(maqamDetails.getId())?.length || 0;
             return (
               <div
                 key={idx}
                 className={`maqam-manager__item ${
-                  maqam.getName() === selectedMaqam?.getName()
+                  maqamDetails.getName() === selectedMaqamDetails?.getName()
                     ? "maqam-manager__item_selected "
                     : ""
                 }${selectable ? "maqam-manager__item_active" : ""}`}
-                onClick={() => selectable && handleClickMaqam(maqam)}
+                onClick={() => selectable && handleClickMaqam(maqamDetails)}
               >
                 <div className="maqam-manager__item-name">
-                  <strong>{`${maqam.getName()}${
-                    !maqam.isMaqamSymmetric() ? "*" : ""
+                  <strong>{`${maqamDetails.getName()}${
+                    !maqamDetails.isMaqamSymmetric() ? "*" : ""
                   }`}</strong>
                   {selectable && (
                     <strong className="maqam-manager__item-name-transpositions">
@@ -269,10 +268,10 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
         </button>
       </div>
 
-      {admin && !selectedMaqam && (
+      {admin && !selectedMaqamDetails && (
         <button
           onClick={() =>
-            setSelectedMaqam(new MaqamDetails(newMaqamId, "", [], [], [], "", "", []))
+            setSelectedMaqamDetails(new MaqamDetails(newMaqamId, "", [], [], [], "", "", []))
           }
           className="maqam-manager__create-new-maqam-button"
         >
@@ -280,23 +279,23 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
         </button>
       )}
 
-      {admin && selectedMaqam && (
+      {admin && selectedMaqamDetails && (
         <div className="maqam-manager__maqam-form">
           <div className="maqam-manager__group">
             <input
               type="text"
-              value={selectedMaqam.getName()}
+              value={selectedMaqamDetails.getName()}
               onChange={(e) =>
-                setSelectedMaqam(
+                setSelectedMaqamDetails(
                   new MaqamDetails(
-                    selectedMaqam.getId(),
+                    selectedMaqamDetails.getId(),
                     e.target.value,
-                    selectedMaqam.getAscendingNoteNames(),
-                    selectedMaqam.getDescendingNoteNames(),
-                    selectedMaqam.getSuyūr(),
-                    selectedMaqam.getCommentsEnglish(), // comments unchanged
-                    selectedMaqam.getCommentsArabic(),
-                    selectedMaqam.getSourcePageReferences()
+                    selectedMaqamDetails.getAscendingNoteNames(),
+                    selectedMaqamDetails.getDescendingNoteNames(),
+                    selectedMaqamDetails.getSuyūr(),
+                    selectedMaqamDetails.getCommentsEnglish(), // comments unchanged
+                    selectedMaqamDetails.getCommentsArabic(),
+                    selectedMaqamDetails.getSourcePageReferences()
                   )
                 )
               }
@@ -305,16 +304,16 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
             />
             <button
               onClick={() => {
-                if (!selectedMaqam) return;
+                if (!selectedMaqamDetails) return;
                 const updated = new MaqamDetails(
-                  selectedMaqam.getId(),
-                  selectedMaqam.getName(),
-                  selectedMaqam.getAscendingNoteNames(),
-                  selectedMaqam.getDescendingNoteNames(),
-                  selectedMaqam.getSuyūr(),
+                  selectedMaqamDetails.getId(),
+                  selectedMaqamDetails.getName(),
+                  selectedMaqamDetails.getAscendingNoteNames(),
+                  selectedMaqamDetails.getDescendingNoteNames(),
+                  selectedMaqamDetails.getSuyūr(),
                   commentsEnglishLocal,
                   commentsArabicLocal,
-                  selectedMaqam.getSourcePageReferences()
+                  selectedMaqamDetails.getSourcePageReferences()
                 );
                 handleSaveMaqam(updated);
               }}
@@ -355,14 +354,14 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
             >
               Add Source
             </button>
-            {selectedMaqam.getSourcePageReferences().map((ref, idx) => (
+            {selectedMaqamDetails.getSourcePageReferences().map((ref, idx) => (
               <div key={idx} className="maqam-manager__source-item">
                 <select
                   className="maqam-manager__source-select"
                   value={ref.sourceId}
                   onChange={(e) =>
                     updateSourceRefs(
-                      selectedMaqam.getSourcePageReferences(),
+                      selectedMaqamDetails.getSourcePageReferences(),
                       idx,
                       { sourceId: e.target.value }
                     )
@@ -382,7 +381,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
                   placeholder="Page"
                   onChange={(e) =>
                     updateSourceRefs(
-                      selectedMaqam.getSourcePageReferences(),
+                      selectedMaqamDetails.getSourcePageReferences(),
                       idx,
                       { page: e.target.value }
                     )

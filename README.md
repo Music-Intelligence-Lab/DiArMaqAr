@@ -233,9 +233,9 @@ The `AppContextInterface` exposes a rich set of state variables and functions, i
 - **selectedIndices**: The mapped indices of selected pitch classes.
 - **originalIndices**: The original pitch class indices before any mapping.
 - **ajnas**: List of all Jins definitions.
-- **selectedJins**: The currently selected Jins.
+- **selectedJinsDetails**: The currently selected Jins.
 - **maqamat**: List of all Maqamat definitions.
-- **selectedMaqam**: The currently selected Maqam.
+- **selectedMaqamDetails**: The currently selected Maqam.
 - **maqamSayrId**: ID of the selected Sayr for the current Maqam.
 - **centsTolerance**: Tolerance setting for matching pitches by cents.
 - **soundSettings**: All sound-related settings including waveform, volume, ADSR envelope, MIDI input/output, and playback pattern.

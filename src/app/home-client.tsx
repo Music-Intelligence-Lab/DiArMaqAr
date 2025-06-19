@@ -24,8 +24,8 @@ export default function HomeClient() {
     maqamat,
     handleUrlParams,
     selectedTuningSystem,
-    selectedJins,
-    selectedMaqam,
+    selectedJinsDetails,
+    selectedMaqamDetails,
     maqamSayrId,
     selectedIndices,
     originalIndices,
@@ -55,14 +55,14 @@ export default function HomeClient() {
       if (first) params.push(`firstNote=${first}`);
     }
 
-    if (selectedJins) params.push(`jins=${selectedJins.getId()}`);
-    if (selectedMaqam) params.push(`maqam=${selectedMaqam.getId()}`);
+    if (selectedJinsDetails) params.push(`jins=${selectedJinsDetails.getId()}`);
+    if (selectedMaqamDetails) params.push(`maqam=${selectedMaqamDetails.getId()}`);
     if (maqamSayrId) params.push(`sayr=${maqamSayrId}`);
 
     if (typeof window !== "undefined" && window.location.pathname === "/") {
       router.replace(`/?${params.join("&")}`, { scroll: false });
     }
-  }, [selectedTuningSystem, selectedJins, selectedMaqam, maqamSayrId, selectedIndices, originalIndices]);
+  }, [selectedTuningSystem, selectedJinsDetails, selectedMaqamDetails, maqamSayrId, selectedIndices, originalIndices]);
 
   return (
     <div className="home-page">
@@ -75,9 +75,9 @@ export default function HomeClient() {
       {selectedTuningSystem && (!["tuningSystem", "tuningSystem-admin", "bibliography", "bibliography-admin", "pattern-admin"].includes(selectedMenu)) && <PitchClassWheel />}
       {(selectedMenu === "maqam" || selectedMenu === "maqam-admin") && selectedTuningSystem && <MaqamTranspositions />}
       {(selectedMenu === "jins" || selectedMenu === "jins-admin") && selectedTuningSystem && <JinsTranspositions />}
-      {selectedMenu === "sayr" && selectedMaqam && <SayrManager admin={false} />}
-      {selectedMenu === "sayr-admin" && selectedMaqam && <SayrManager admin />}
-      {selectedMenu === "modulation" && selectedMaqam && <Modulations />}
+      {selectedMenu === "sayr" && selectedMaqamDetails && <SayrManager admin={false} />}
+      {selectedMenu === "sayr-admin" && selectedMaqamDetails && <SayrManager admin />}
+      {selectedMenu === "modulation" && selectedMaqamDetails && <Modulations />}
       {selectedMenu === "bibliography" && <SourcesList />}
       {selectedMenu === "bibliography-admin" && <SourcesManager />}
       {selectedMenu === "pattern-admin" && <PatternsManager />}

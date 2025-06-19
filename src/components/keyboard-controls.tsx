@@ -7,7 +7,7 @@ import PitchClass from "@/models/PitchClass";
 import shiftPitchClass from "@/functions/shiftPitchClass";
 
 export default function KeyboardControls() {
-  const { selectedPitchClasses, selectedMaqam, selectedMaqamTransposition, allPitchClasses } = useAppContext();
+  const { selectedPitchClasses, selectedMaqamDetails, selectedMaqam, allPitchClasses } = useAppContext();
   const { noteOn, noteOff, setActivePitchClasses } = useSoundContext();
 
   // keyboard rows
@@ -16,10 +16,10 @@ export default function KeyboardControls() {
   const thirdRowKeys = ["`", "z", "x", "c", "v", "b", "n", "m", ",", ".", "/"];
 
   // derive descending pitch classes
-  const descendingNoteNames = selectedMaqamTransposition
-    ? selectedMaqamTransposition.descendingPitchClasses.map(pitchClass => pitchClass.noteName)
-    : selectedMaqam
-    ? selectedMaqam.getDescendingNoteNames()
+  const descendingNoteNames = selectedMaqam
+    ? selectedMaqam.descendingPitchClasses.map(pitchClass => pitchClass.noteName)
+    : selectedMaqamDetails
+    ? selectedMaqamDetails.getDescendingNoteNames()
     : [];
 
   const descendingMaqamCells: PitchClass[] = allPitchClasses.filter((pitchClass) => descendingNoteNames.includes(pitchClass.noteName));
@@ -108,7 +108,7 @@ export default function KeyboardControls() {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [selectedPitchClasses, selectedMaqam, selectedMaqamTransposition, allPitchClasses, descendingMaqamCells, noteOn, noteOff, setActivePitchClasses]);
+  }, [selectedPitchClasses, selectedMaqamDetails, selectedMaqam, allPitchClasses, descendingMaqamCells, noteOn, noteOff, setActivePitchClasses]);
 
   return null;
 }
