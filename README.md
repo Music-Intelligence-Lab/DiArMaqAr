@@ -43,7 +43,7 @@ For example:
 
 Each note name represents a specific **microtonal position** within the maqam system, and the naming conventions are based on historical and theoretical sources.
 
-These transliterated names are implemented as TypeScript constants (e.g., `octaveOneNoteNames`, `octaveTwoNoteNames`) and are combined into a unified type called `TransliteratedNoteName`. This allows developers to reference, validate, and manipulate note names consistently across the codebase.
+These transliterated names are implemented as TypeScript constants (e.g., `octaveOneNoteNames`, `octaveTwoNoteNames`) and are combined into a unified type called `NoteName`. This allows developers to reference, validate, and manipulate note names consistently across the codebase.
 
 By using this detailed mapping, Maqam Network can:
 - **Display note names** accurately in the UI.
@@ -226,10 +226,10 @@ The `AppContextInterface` exposes a rich set of state variables and functions, i
 
 - **tuningSystems**: List of all loaded Tuning Systems.
 - **selectedTuningSystem**: The currently active Tuning System.
-- **pitchClasses**: User-defined pitch classes as a string (e.g., comma-separated fractions).
+- **tuningSystemPitchClasses**: User-defined pitch classes as a string (e.g., comma-separated fractions).
 - **noteNames**: The transliterated note names mapped across octaves.
 - **referenceFrequencies**: Mapping of note names to frequencies for sound synthesis.
-- **selectedCells**: The currently selected cells in the Tuning System grid.
+- **selectedPitchClasses**: The currently selected cells in the Tuning System grid.
 - **selectedIndices**: The mapped indices of selected pitch classes.
 - **originalIndices**: The original pitch class indices before any mapping.
 - **ajnas**: List of all Jins definitions.
@@ -546,7 +546,7 @@ It integrates theoretical concepts like **Darajat al-Istiqrār** (tonic/finalis)
   - **Play Full Sequence**: Plays the entire *jins* sequence with `playSequence`.
 
 - **Selection Controls**:
-  - Allows users to select and highlight the cells corresponding to a transposed sequence by updating the `selectedCells` in the `AppContext`.
+  - Allows users to select and highlight the cells corresponding to a transposed sequence by updating the `selectedPitchClasses` in the `AppContext`.
 
 - **Cents Tolerance**:
   - Users can adjust the `centsTolerance` value, enabling flexibility when matching sequences by cent differences.

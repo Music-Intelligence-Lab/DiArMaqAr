@@ -23,14 +23,14 @@ export default function Navbar() {
     checkIfMaqamIsSelectable,
     maqamSayrId,
     sources,
-    selectedCells,
+    selectedPitchClasses,
     setSelectedTuningSystem,
     clearSelections,
-    setPitchClasses,
+    setTuningSystemPitchClasses,
     setSelectedIndices,
     getModulations,
     selectedIndices,
-    allCells
+    allPitchClasses
   } = useAppContext();
 
   const rowRef = useRef<HTMLDivElement>(null);
@@ -59,7 +59,7 @@ export default function Navbar() {
       left: targetScrollLeft,
       behavior: "smooth",
     });
-  }, [selectedCells]);
+  }, [selectedPitchClasses]);
 
   const selectedSayr: Sayr | null = selectedMaqam && maqamSayrId ? selectedMaqam.getSuyūr().find((sayr) => sayr.id === maqamSayrId) || null : null;
 
@@ -67,7 +67,7 @@ export default function Navbar() {
 
   const totalModulations = useMemo(() => {
     if (!selectedMaqam) return null;
-    const transposition = selectedMaqam.getTahlil(allCells);
+    const transposition = selectedMaqam.getTahlil(allPitchClasses);
     const modulations = getModulations(transposition);
     return calculateNumberOfHops(modulations);
   }, [selectedMaqam, getModulations]);
@@ -90,7 +90,7 @@ export default function Navbar() {
               onClick={() => {
                 clearSelections();
                 setSelectedTuningSystem(null);
-                setPitchClasses("");
+                setTuningSystemPitchClasses("");
                 setSelectedIndices([]);
               }}
             >
@@ -151,8 +151,8 @@ export default function Navbar() {
               {!selectedJins
                 ? ""
                 : selectedJinsTransposition
-                ? `${selectedJins.getName()} al-${selectedJinsTransposition.cells.map(cell => cell.noteName)[0]} (${getEnglishNoteName(
-                    selectedJinsTransposition.cells.map(cell => cell.noteName)[0]
+                ? `${selectedJins.getName()} al-${selectedJinsTransposition.jinsPitchClasses.map(pitchClass => pitchClass.noteName)[0]} (${getEnglishNoteName(
+                    selectedJinsTransposition.jinsPitchClasses.map(pitchClass => pitchClass.noteName)[0]
                   )})`
                 : `${selectedJins.getName()} (${selectedJins.getNoteNames()[0]}/${getEnglishNoteName(selectedJins.getNoteNames()[0])})`}
             </span>

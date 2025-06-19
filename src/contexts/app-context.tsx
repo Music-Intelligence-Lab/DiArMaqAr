@@ -3,7 +3,7 @@
 import React, { createContext, useState, useEffect, useMemo, useContext, useCallback } from "react";
 import TuningSystem from "@/models/TuningSystem";
 import JinsDetails, { Jins } from "@/models/Jins";
-import TransliteratedNoteName, { TransliteratedNoteNameOctaveOne, TransliteratedNoteNameOctaveTwo } from "@/models/NoteName";
+import NoteName, { TransliteratedNoteNameOctaveOne, TransliteratedNoteNameOctaveTwo } from "@/models/NoteName";
 import { octaveOneNoteNames, octaveTwoNoteNames } from "@/models/NoteName";
 import MaqamDetails, { Maqam, MaqamModulations } from "@/models/Maqam";
 import { Source } from "@/models/bibliography/Source";
@@ -11,7 +11,7 @@ import Pattern from "@/models/Pattern";
 import getFirstNoteName from "@/functions/getFirstNoteName";
 import { getMaqamTranspositions } from "@/functions/transpose";
 import shawwaMapping from "@/functions/shawwaMapping";
-import Cell from "@/models/Cell";
+import PitchClass from "@/models/PitchClass";
 import { getTuningSystems, getMaqamat, getAjnas, getSources, getPatterns } from "@/functions/import";
 import getTuningSystemCells from "@/functions/getTuningSystemCells";
 
@@ -25,17 +25,17 @@ interface AppContextInterface {
   setTuningSystems: React.Dispatch<React.SetStateAction<TuningSystem[]>>;
   selectedTuningSystem: TuningSystem | null;
   setSelectedTuningSystem: (tuningSystem: TuningSystem | null) => void;
-  pitchClasses: string;
-  setPitchClasses: React.Dispatch<React.SetStateAction<string>>;
-  handleStartNoteNameChange: (startingNoteName: string, givenNoteNames?: TransliteratedNoteName[][], givenNumberOfPitchClasses?: number) => void;
-  selectedCells: Cell[];
-  setSelectedCells: React.Dispatch<React.SetStateAction<Cell[]>>;
-  allCells: Cell[];
+  tuningSystemPitchClasses: string;
+  setTuningSystemPitchClasses: React.Dispatch<React.SetStateAction<string>>;
+  handleStartNoteNameChange: (startingNoteName: string, givenNoteNames?: NoteName[][], givenNumberOfPitchClasses?: number) => void;
+  selectedPitchClasses: PitchClass[];
+  setSelectedPitchClasses: React.Dispatch<React.SetStateAction<PitchClass[]>>;
+  allPitchClasses: PitchClass[];
   selectedIndices: number[];
   setSelectedIndices: React.Dispatch<React.SetStateAction<number[]>>;
   originalIndices: number[];
   setOriginalIndices: React.Dispatch<React.SetStateAction<number[]>>;
-  mapIndices: (notesToMap: TransliteratedNoteName[], givenNumberOfPitchClasses: number, setOriginal: boolean) => void;
+  mapIndices: (notesToMap: NoteName[], givenNumberOfPitchClasses: number, setOriginal: boolean) => void;
   initialMappingDone: boolean;
   referenceFrequencies: { [noteName: string]: number };
   setReferenceFrequencies: React.Dispatch<React.SetStateAction<{ [noteName: string]: number }>>;
@@ -73,11 +73,11 @@ const AppContext = createContext<AppContextInterface | null>(null);
 export function AppContextProvider({ children }: { children: React.ReactNode }) {
   const [tuningSystems, setTuningSystems] = useState<TuningSystem[]>([]);
   const [selectedTuningSystem, setSelectedTuningSystem] = useState<TuningSystem | null>(null);
-  const [pitchClasses, setPitchClasses] = useState("");
+  const [tuningSystemPitchClasses, setTuningSystemPitchClasses] = useState("");
 
   const [centsTolerance, setCentsTolerance] = useState(5);
 
-  const [selectedCells, setSelectedCells] = useState<Cell[]>([]);
+  const [selectedPitchClasses, setSelectedPitchClasses] = useState<PitchClass[]>([]);
   const [selectedIndices, setSelectedIndices] = useState<number[]>([]);
   const [originalIndices, setOriginalIndices] = useState<number[]>([]);
   const [initialMappingDone, setInitialMappingDone] = useState(false);
@@ -99,13 +99,13 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
   const [sources, setSources] = useState<Source[]>([]);
 
-  const pitchClassesArr = useMemo(
+  const tuningSystemPitchClassesArray = useMemo(
     () =>
-      pitchClasses
+      tuningSystemPitchClasses
         .split("\n")
         .map((p) => p.trim())
         .filter((p) => p.length > 0),
-    [pitchClasses]
+    [tuningSystemPitchClasses]
   );
 
   useEffect(() => {
@@ -150,23 +150,23 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     } else clearSelections();
   }, [selectedTuningSystem]);
 
-  const allCells = useMemo(() => {
+  const allPitchClasses = useMemo(() => {
     if (!selectedTuningSystem) return [];
-    const cells: MiniCell[] = [];
+    const miniCells: MiniCell[] = [];
 
     for (let octave = 0; octave < 4; octave++) {
-      for (let index = 0; index < pitchClassesArr.length; index++) {
-        cells.push({ octave, index });
+      for (let index = 0; index < tuningSystemPitchClassesArray.length; index++) {
+        miniCells.push({ octave, index });
       }
     }
 
     const firstNote = getFirstNoteName(selectedIndices);
 
-    return getTuningSystemCells(selectedTuningSystem, firstNote, pitchClassesArr, referenceFrequencies);
-  }, [selectedTuningSystem, selectedIndices, referenceFrequencies, pitchClasses, pitchClassesArr]);
+    return getTuningSystemCells(selectedTuningSystem, firstNote, tuningSystemPitchClassesArray, referenceFrequencies);
+  }, [selectedTuningSystem, selectedIndices, referenceFrequencies, tuningSystemPitchClasses, tuningSystemPitchClassesArray]);
 
   const clearSelections = () => {
-    setSelectedCells([]);
+    setSelectedPitchClasses([]);
     setSelectedJins(null);
     setSelectedMaqam(null);
     setMaqamSayrId("");
@@ -174,8 +174,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     setSelectedMaqamTransposition(null);
   };
 
-  function mapIndices(notesToMap: TransliteratedNoteName[], givenNumberOfPitchClasses: number = 0, setOriginal: boolean = true) {
-    const numberOfPitchClasses = givenNumberOfPitchClasses || pitchClassesArr.length || selectedTuningSystem?.getPitchClasses().length || 0;
+  function mapIndices(notesToMap: NoteName[], givenNumberOfPitchClasses: number = 0, setOriginal: boolean = true) {
+    const numberOfPitchClasses = givenNumberOfPitchClasses || tuningSystemPitchClassesArray.length || selectedTuningSystem?.getPitchClasses().length || 0;
 
     const O1_LEN = octaveOneNoteNames.length;
     const mappedIndices = notesToMap.map((arabicName) => {
@@ -203,11 +203,11 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
   const handleStartNoteNameChange = (
     startingNoteName: string,
-    givenNoteNames: TransliteratedNoteName[][] = [],
+    givenNoteNames: NoteName[][] = [],
     givenNumberOfPitchClasses: number = 0
   ) => {
     const noteNamesToSearch = givenNoteNames.length ? givenNoteNames : selectedTuningSystem?.getSetsOfNoteNames() || [[]];
-    const numberOfPitchClasses = givenNumberOfPitchClasses || pitchClassesArr.length || selectedTuningSystem?.getPitchClasses().length || 0;
+    const numberOfPitchClasses = givenNumberOfPitchClasses || tuningSystemPitchClassesArray.length || selectedTuningSystem?.getPitchClasses().length || 0;
 
     if (startingNoteName === "" && noteNamesToSearch.length > 0) {
       for (const setOfNotes of noteNamesToSearch) {
@@ -236,13 +236,13 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     return [];
   };
 
-  const checkIfJinsIsSelectable = (jins: JinsDetails, givenCells: Cell[] = []) => {
-    const usedNoteNames = givenCells.length ? givenCells.map((cell) => cell.noteName) : allCells.map((cell) => cell.noteName);
+  const checkIfJinsIsSelectable = (jins: JinsDetails, givenCells: PitchClass[] = []) => {
+    const usedNoteNames = givenCells.length ? givenCells.map((pitchClass) => pitchClass.noteName) : allPitchClasses.map((pitchClass) => pitchClass.noteName);
     return jins.getNoteNames().every((noteName) => usedNoteNames.includes(noteName));
   };
 
-  const handleClickJins = (jins: JinsDetails, givenCells: Cell[] = []) => {
-    const usedCells = givenCells.length ? givenCells : allCells;
+  const handleClickJins = (jins: JinsDetails, givenCells: PitchClass[] = []) => {
+    const usedCells = givenCells.length ? givenCells : allPitchClasses;
 
     setSelectedJins(jins);
     setSelectedMaqam(null);
@@ -250,17 +250,17 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
     const jinsNoteNames = jins.getNoteNames();
 
-    const newSelectedCells: Cell[] = [];
+    const newSelectedCells: PitchClass[] = [];
 
-    for (const cell of usedCells) {
-      if (jinsNoteNames.includes(cell.noteName)) newSelectedCells.push(cell);
+    for (const pitchClass of usedCells) {
+      if (jinsNoteNames.includes(pitchClass.noteName)) newSelectedCells.push(pitchClass);
     }
 
-    setSelectedCells(newSelectedCells);
+    setSelectedPitchClasses(newSelectedCells);
   };
 
-  const checkIfMaqamIsSelectable = (maqam: MaqamDetails, givenCells: Cell[] = []) => {
-    const usedNoteNames = givenCells.length ? givenCells.map((cell) => cell.noteName) : allCells.map((cell) => cell.noteName);
+  const checkIfMaqamIsSelectable = (maqam: MaqamDetails, givenCells: PitchClass[] = []) => {
+    const usedNoteNames = givenCells.length ? givenCells.map((pitchClass) => pitchClass.noteName) : allPitchClasses.map((pitchClass) => pitchClass.noteName);
 
     return (
       maqam.getAscendingNoteNames().every((noteName) => usedNoteNames.includes(noteName)) &&
@@ -268,8 +268,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     );
   };
 
-  const handleClickMaqam = (maqam: MaqamDetails, given: Cell[] = []) => {
-    const usedCells = given.length ? given : allCells;
+  const handleClickMaqam = (maqam: MaqamDetails, given: PitchClass[] = []) => {
+    const usedCells = given.length ? given : allPitchClasses;
 
     setSelectedMaqam(maqam);
     setSelectedJins(null);
@@ -278,13 +278,13 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
     const maqamNoteNames = maqam.getAscendingNoteNames();
 
-    const newSelectedCells: Cell[] = [];
+    const newSelectedCells: PitchClass[] = [];
 
-    for (const cell of usedCells) {
-      if (maqamNoteNames.includes(cell.noteName)) newSelectedCells.push(cell);
+    for (const pitchClass of usedCells) {
+      if (maqamNoteNames.includes(pitchClass.noteName)) newSelectedCells.push(pitchClass);
     }
 
-    setSelectedCells(newSelectedCells);
+    setSelectedPitchClasses(newSelectedCells);
   };
 
   const getModulations = useCallback(
@@ -296,7 +296,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       const hopsFromFive: Maqam[] = [];
       const hopsFromSix: Maqam[] = [];
 
-      const sourceAscendingNotes = sourceMaqamTransposition.ascendingCells.map((cell) => cell.noteName);
+      const sourceAscendingNotes = sourceMaqamTransposition.ascendingPitchClasses.map((pitchClass) => pitchClass.noteName);
 
       let check2p = false;
       let checkSixth = false;
@@ -310,17 +310,17 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       const secondDegreeShawwaIndex = shawwaList.findIndex((noteName) => noteName === secondDegreeNoteName);
 
       const thirdDegreeNoteName = sourceAscendingNotes[2];
-      const thirdDegreeCellSIndex = allCells.findIndex((cd) => cd.noteName === thirdDegreeNoteName);
+      const thirdDegreeCellSIndex = allPitchClasses.findIndex((cd) => cd.noteName === thirdDegreeNoteName);
 
       let noteName2p = "";
 
       const numberOfPitchClasses = selectedTuningSystem?.getPitchClasses().length || 0;
 
-      const slice = allCells.slice(numberOfPitchClasses, thirdDegreeCellSIndex + 1).reverse();
+      const slice = allPitchClasses.slice(numberOfPitchClasses, thirdDegreeCellSIndex + 1).reverse();
 
-      for (const cells of slice) {
-        if (shawwaMapping(cells.noteName) === "2p") {
-          noteName2p = cells.noteName;
+      for (const pitchClasses of slice) {
+        if (shawwaMapping(pitchClasses.noteName) === "2p") {
+          noteName2p = pitchClasses.noteName;
           const first2pBeforeShawwaIndex = shawwaList.findIndex((noteName) => noteName === noteName2p);
 
           if (first2pBeforeShawwaIndex - firstDegreeShawwaIndex === 6 && first2pBeforeShawwaIndex - secondDegreeShawwaIndex === 2) check2p = true;
@@ -343,15 +343,15 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         const currentAscendingNotes = maqam.getAscendingNoteNames();
 
         const transpositions: Maqam[] =
-          JSON.stringify(currentAscendingNotes) !== JSON.stringify(sourceAscendingNotes) ? [maqam.getTahlil(allCells)] : [];
+          JSON.stringify(currentAscendingNotes) !== JSON.stringify(sourceAscendingNotes) ? [maqam.getTahlil(allPitchClasses)] : [];
 
-        getMaqamTranspositions(allCells, ajnas, maqam, true, centsTolerance).forEach((maqamTransposition) => {
-          if (JSON.stringify(currentAscendingNotes) === JSON.stringify(maqamTransposition.ascendingCells.map((cell) => cell.noteName))) return;
+        getMaqamTranspositions(allPitchClasses, ajnas, maqam, true, centsTolerance).forEach((maqamTransposition) => {
+          if (JSON.stringify(currentAscendingNotes) === JSON.stringify(maqamTransposition.ascendingPitchClasses.map((pitchClass) => pitchClass.noteName))) return;
           transpositions.push(maqamTransposition);
         });
 
         for (const transposition of transpositions) {
-          const currentAscendingNotes = transposition.ascendingCells.map(cell => cell.noteName);
+          const currentAscendingNotes = transposition.ascendingPitchClasses.map(pitchClass => pitchClass.noteName);
           if (currentAscendingNotes[0] === sourceAscendingNotes[0]) hopsFromOne.push(transposition);
           if (
             currentAscendingNotes[0] === sourceAscendingNotes[3] &&
@@ -383,7 +383,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         noteName2p, // add this line
       };
     },
-    [allCells, maqamat, shawwaMapping, selectedTuningSystem, getMaqamTranspositions]
+    [allPitchClasses, maqamat, shawwaMapping, selectedTuningSystem, getMaqamTranspositions]
   );
 
   const handleUrlParams = ({
@@ -407,17 +407,17 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         if (found) {
           setSelectedTuningSystem(found);
           handleStartNoteNameChange(firstNote ?? "", found.getSetsOfNoteNames(), found.getPitchClasses().length);
-          const allCells = getTuningSystemCells(found, firstNote || "");
+          const allPitchClasses = getTuningSystemCells(found, firstNote || "");
 
           if (jinsId) {
             const foundJins = ajnas.find((j) => j.getId() === jinsId);
-            if (foundJins && checkIfJinsIsSelectable(foundJins, allCells)) {
-              handleClickJins(foundJins, allCells);
+            if (foundJins && checkIfJinsIsSelectable(foundJins, allPitchClasses)) {
+              handleClickJins(foundJins, allPitchClasses);
             }
           } else if (maqamId) {
             const foundMaqam = maqamat.find((m) => m.getId() === maqamId);
-            if (foundMaqam && checkIfMaqamIsSelectable(foundMaqam, allCells)) {
-              handleClickMaqam(foundMaqam, allCells);
+            if (foundMaqam && checkIfMaqamIsSelectable(foundMaqam, allPitchClasses)) {
+              handleClickMaqam(foundMaqam, allPitchClasses);
               if (sayrId) {
                 setMaqamSayrId(sayrId);
               }
@@ -435,12 +435,12 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         setTuningSystems,
         selectedTuningSystem,
         setSelectedTuningSystem,
-        pitchClasses,
-        setPitchClasses,
+        tuningSystemPitchClasses,
+        setTuningSystemPitchClasses,
         handleStartNoteNameChange,
-        selectedCells,
-        setSelectedCells,
-        allCells,
+        selectedPitchClasses,
+        setSelectedPitchClasses,
+        allPitchClasses,
         selectedIndices,
         setSelectedIndices,
         originalIndices,

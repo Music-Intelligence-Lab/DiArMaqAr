@@ -29,7 +29,7 @@ export function getTuningSystems(): TuningSystem[] {
         d.creatorArabic,
         d.commentsEnglish,
         d.commentsArabic,
-        d.pitchClasses,
+        d.tuningSystemPitchClasses,
         d.noteNames,
         d.abjadNames,
         Number(d.stringLength),

@@ -1,7 +1,7 @@
 import { getTuningSystems, getAjnas, getMaqamat } from "@/functions/import";
 import detectPitchClassType from "@/functions/detectPitchClassType";
 import { NextResponse } from "next/server";
-import Cell from "@/models/Cell";
+import PitchClass from "@/models/PitchClass";
 import { getJinsTranspositions, getMaqamTranspositions } from "@/functions/transpose";
 import getTuningSystemCells from "@/functions/getTuningSystemCells";
 
@@ -52,7 +52,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Invalid pitch class type" }, { status: 400 });
     }
 
-    const allCells: Cell[] = getTuningSystemCells(selectedTuningSystem, firstNote);
+    const allPitchClasses: PitchClass[] = getTuningSystemCells(selectedTuningSystem, firstNote);
 
     if (maqamID) {
       const selectedMaqam = maqamat.find((maqam) => maqam.getId() === maqamID);
@@ -60,7 +60,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Invalid maqamID" }, { status: 400 });
       }
 
-      const maqamTranspositions = getMaqamTranspositions(allCells, ajnas, selectedMaqam, true, centsTolerance ?? 5);
+      const maqamTranspositions = getMaqamTranspositions(allPitchClasses, ajnas, selectedMaqam, true, centsTolerance ?? 5);
 
       return NextResponse.json(maqamTranspositions);
     } else if (jinsID) {
@@ -69,7 +69,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Invalid jinsID" }, { status: 400 });
       }
 
-      const jinsTranspositions = getJinsTranspositions(allCells, selectedJins, true, centsTolerance ?? 5);
+      const jinsTranspositions = getJinsTranspositions(allPitchClasses, selectedJins, true, centsTolerance ?? 5);
 
       return NextResponse.json(jinsTranspositions);
     }

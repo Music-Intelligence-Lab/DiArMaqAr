@@ -17,9 +17,9 @@ export default function JinsManager({ admin }: { admin: boolean }) {
     setSelectedJins,
     handleClickJins,
     checkIfJinsIsSelectable,
-    selectedCells,
+    selectedPitchClasses,
     clearSelections,
-    allCells: allCells,
+    allPitchClasses: allPitchClasses,
     sources,
   } = useAppContext();
 
@@ -43,10 +43,10 @@ export default function JinsManager({ admin }: { admin: boolean }) {
   const jinsTranspositions = useMemo(() => {
     const map = new Map<string, ReturnType<typeof getJinsTranspositions>>();
     ajnas.forEach((jins) => {
-      map.set(jins.getId(), getJinsTranspositions(allCells, jins, true));
+      map.set(jins.getId(), getJinsTranspositions(allPitchClasses, jins, true));
     });
     return map;
-  }, [ajnas, allCells]);
+  }, [ajnas, allPitchClasses]);
 
   const sortedAjnas = [...ajnas].sort((a, b) => a.getName().localeCompare(b.getName()));
   const numberOfPitchClasses = selectedTuningSystem ? selectedTuningSystem.getPitchClasses().length : 0;
@@ -62,7 +62,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
   // Save handler uses local comment state
   const handleSaveJins = async () => {
     if (!selectedJins) return;
-    const selectedNoteNames = selectedCells.map((cell) => cell.noteName);
+    const selectedNoteNames = selectedPitchClasses.map((pitchClass) => pitchClass.noteName);
     const newJins = new JinsDetails(
       selectedJins.getId(),
       selectedJins.getName(),

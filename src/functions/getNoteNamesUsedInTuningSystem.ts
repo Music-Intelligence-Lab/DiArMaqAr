@@ -1,4 +1,4 @@
-import TransliteratedNoteName, {
+import NoteName, {
   octaveFourNoteNames,
   octaveOneNoteNames,
   octaveThreeNoteNames,
@@ -6,7 +6,7 @@ import TransliteratedNoteName, {
   octaveZeroNoteNames,
 } from "@/models/NoteName";
 
-export default function getNoteNamesUsedInTuningSystem(indicesToSearch: number[] = []): TransliteratedNoteName[] {
+export default function getNoteNamesUsedInTuningSystem(indicesToSearch: number[] = []): NoteName[] {
   const noteNames = [];
   const baseLength = octaveOneNoteNames.length;
 

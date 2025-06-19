@@ -7,7 +7,7 @@ import useFilterContext from "@/contexts/filter-context";
 import TuningSystem from "@/models/TuningSystem";
 import detectPitchClassType from "@/functions/detectPitchClassType";
 import convertPitchClass from "@/functions/convertPitchClass";
-import TransliteratedNoteName, {
+import NoteName, {
   octaveOneNoteNames,
   octaveTwoNoteNames,
   TransliteratedNoteNameOctaveOne,
@@ -32,12 +32,12 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     setTuningSystems,
     selectedTuningSystem,
     setSelectedTuningSystem,
-    pitchClasses,
-    setPitchClasses,
+    tuningSystemPitchClasses,
+    setTuningSystemPitchClasses,
     referenceFrequencies,
     setReferenceFrequencies,
-    selectedCells,
-    setSelectedCells,
+    selectedPitchClasses,
+    setSelectedPitchClasses,
     selectedIndices,
     setSelectedIndices,
     originalIndices,
@@ -48,10 +48,10 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     sources,
     selectedJins,
     selectedMaqam,
-    allCells,
+    allPitchClasses,
   } = useAppContext();
 
-  const { activeCells, playNoteFrequency, playSequence } = useSoundContext();
+  const { activePitchClasses, playNoteFrequency, playSequence } = useSoundContext();
 
   const { filters, setFilters, tuningSystemsFilter, setTuningSystemsFilter } = useFilterContext();
 
@@ -128,7 +128,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   const [cascade, setCascade] = useState(false);
   const [selectedAbjadNames, setSelectedAbjadNames] = useState<string[]>([]);
 
-  const pitchClassesArr = pitchClasses
+  const tuningSystemPitchClassesArray = tuningSystemPitchClasses
     .split("\n")
     .map((p) => p.trim())
     .filter((p) => p.length > 0);
@@ -145,7 +145,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       setCreatorArabic(selectedTuningSystem.getCreatorArabic());
       setCommentsEnglish(selectedTuningSystem.getCommentsEnglish());
       setCommentsArabic(selectedTuningSystem.getCommentsArabic());
-      setPitchClasses(selectedTuningSystem.getPitchClasses().join("\n"));
+      setTuningSystemPitchClasses(selectedTuningSystem.getPitchClasses().join("\n"));
       setStringLength(selectedTuningSystem.getStringLength());
       setSelectedAbjadNames(selectedTuningSystem.getAbjadNames());
       setReferenceFrequencies(selectedTuningSystem.getReferenceFrequencies());
@@ -155,18 +155,18 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
   useEffect(() => {
     if (!selectedJins || !selectedMaqam) return;
-    if (selectedCells.length === 0) {
+    if (selectedPitchClasses.length === 0) {
       setOpenedOctaveRows({ 0: false, 1: true, 2: true, 3: false });
     } else {
       const rows = { 0: false, 1: false, 2: false, 3: false };
-      for (const cell of selectedCells) {
-        if (rows[cell.octave as 0 | 1 | 2 | 3] === false) {
-          rows[cell.octave as 0 | 1 | 2 | 3] = true;
+      for (const pitchClass of selectedPitchClasses) {
+        if (rows[pitchClass.octave as 0 | 1 | 2 | 3] === false) {
+          rows[pitchClass.octave as 0 | 1 | 2 | 3] = true;
         }
       }
       setOpenedOctaveRows(rows);
     }
-  }, [selectedCells]);
+  }, [selectedPitchClasses]);
 
   useEffect(() => {
     const syncScroll = (sourceIdx: number, newScrollLeft: number) => {
@@ -243,7 +243,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     setCreatorArabic("");
     setCommentsEnglish("");
     setCommentsArabic("");
-    setPitchClasses("");
+    setTuningSystemPitchClasses("");
     setStringLength(0);
     setDefaultReferenceFrequency(0);
     setSelectedIndices([]);
@@ -299,7 +299,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   };
 
   // Handle creating or updating a system:
-  const handleSaveTuningSystem = (givenNoteNames: TransliteratedNoteName[][] = []) => {
+  const handleSaveTuningSystem = (givenNoteNames: NoteName[][] = []) => {
     const usedNoteNames = givenNoteNames.length > 0 ? givenNoteNames : selectedTuningSystem?.getSetsOfNoteNames() || [[]];
 
     if (selectedTuningSystem) {
@@ -314,7 +314,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         creatorArabic,
         commentsEnglish,
         commentsArabic,
-        pitchClassesArr,
+        tuningSystemPitchClassesArray,
         usedNoteNames,
         selectedAbjadNames,
         Number(stringLength),
@@ -340,7 +340,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         creatorArabic,
         commentsEnglish,
         commentsArabic,
-        pitchClassesArr,
+        tuningSystemPitchClassesArray,
         usedNoteNames,
         selectedAbjadNames,
         Number(stringLength),
@@ -424,7 +424,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
   function handlePitchClassesChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     const raw = e.target.value;
-    setPitchClasses(raw);
+    setTuningSystemPitchClasses(raw);
 
     // 1. Recompute the array of pitch‐classes
     const newArr = raw
@@ -546,11 +546,11 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     setOriginalIndices(Array(selectedIndices.length).fill(-1));
   };
 
-  // MARK: Cell Checkbox Handlers
+  // MARK: pitchClass Checkbox Handlers
 
-  // Given an octave and a column index, check if that cell is already selected.
-  const isCellSelected = (octave: number, colIndex: number) => selectedCells.some((cellS) => cellS.octave === octave && cellS.index === colIndex);
-  const isCellActive = (octave: number, colIndex: number) => activeCells.some((cellS) => cellS.octave === octave && cellS.index === colIndex);
+  // Given an octave and a column index, check if that pitchClass is already selected.
+  const isCellSelected = (octave: number, colIndex: number) => selectedPitchClasses.some((pitchClasses) => pitchClasses.octave === octave && pitchClasses.index === colIndex);
+  const isCellActive = (octave: number, colIndex: number) => activePitchClasses.some((pitchClasses) => pitchClasses.octave === octave && pitchClasses.index === colIndex);
 
   const getCellClassName = (octave: number, colIndex: number) => {
     const isSelected = isCellSelected(octave, colIndex);
@@ -561,10 +561,10 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   };
 
   const handleCheckboxChange = (octave: number, colIndex: number, checked: boolean) => {
-    setSelectedCells((prevCells) => {
-      const newCells = prevCells.filter((cell) => !(cell.octave === octave && cell.index === colIndex));
+    setSelectedPitchClasses((prevCells) => {
+      const newCells = prevCells.filter((pitchClass) => !(pitchClass.octave === octave && pitchClass.index === colIndex));
       if (checked) {
-        const existingCell = allCells.find((cell) => cell.octave === octave && cell.index === colIndex);
+        const existingCell = allPitchClasses.find((pitchClass) => pitchClass.octave === octave && pitchClass.index === colIndex);
         if (existingCell) newCells.push(existingCell);
       }
       newCells.sort((a, b) => (a.octave === b.octave ? a.index - b.index : a.octave - b.octave));
@@ -581,7 +581,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   // and update the “first-octave” index accordingly, maintaining sync.
   // ----------------------------------------------------------------------------------
 
-  const numberOfPitchClasses = pitchClassesArr.length;
+  const numberOfPitchClasses = tuningSystemPitchClassesArray.length;
 
   function handleAbjadSelect(colIndex: number, newValue: string, octave: number) {
     setSelectedAbjadNames((prev) => {
@@ -693,13 +693,13 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   }
 
   // figure out what the input type is (fraction, cents, decimal, stringLength, or unknown)
-  const pitchClassType = detectPitchClassType(pitchClassesArr);
+  const pitchClassType = detectPitchClassType(tuningSystemPitchClassesArray);
 
   // MARK: Octave Rows
 
   const getCells = (octave: number) => {
-    if (allCells.length % numberOfPitchClasses !== 0) throw new Error("All cells must be evenly divisible by the number of pitch classes.");
-    return allCells.slice(octave * numberOfPitchClasses, (octave + 1) * numberOfPitchClasses);
+    if (allPitchClasses.length % numberOfPitchClasses !== 0) throw new Error("All pitchClasses must be evenly divisible by the number of pitch classes.");
+    return allPitchClasses.slice(octave * numberOfPitchClasses, (octave + 1) * numberOfPitchClasses);
   };
 
   const displayStringValue = (value: string | number, decimal = 2) => {
@@ -723,7 +723,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
    */
 
   function renderOctave(octave: number) {
-    if (!pitchClassesArr.length) return null;
+    if (!tuningSystemPitchClassesArray.length) return null;
 
     const rowCells = getCells(octave);
 
@@ -844,7 +844,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 {filters.pitchClass && (
                   <tr>
                     <td>Pitch Class</td>
-                    {pitchClassesArr.map((_, colIndex) => (
+                    {tuningSystemPitchClassesArray.map((_, colIndex) => (
                       <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                         {colIndex}
                       </td>
@@ -860,7 +860,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                   }}
                 >
                   <td>Note Name</td>
-                  {rowCells.map((cell, colIndex) => {
+                  {rowCells.map((pitchClass, colIndex) => {
                     if (octave === 1 && admin) {
                       return (
                         <td key={colIndex} className={getCellClassName(octave, colIndex)}>
@@ -891,7 +891,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                     } else {
                       return (
                         <td key={colIndex} className={getCellClassName(octave, colIndex)}>
-                          {cell.noteName === "none" ? "(none)" : cell.noteName.replace(/\//g, "/\u200B")}
+                          {pitchClass.noteName === "none" ? "(none)" : pitchClass.noteName.replace(/\//g, "/\u200B")}
                         </td>
                       );
                     }
@@ -901,7 +901,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 {filters.abjadName && (
                   <tr>
                     <td>Abjad Name</td>
-                    {pitchClassesArr.map((_, colIndex) => (
+                    {tuningSystemPitchClassesArray.map((_, colIndex) => (
                       <td
                         key={colIndex}
                         className={`
@@ -935,10 +935,10 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 {filters.englishName && (
                   <tr>
                     <td>English Name</td>
-                    {rowCells.map((cell, colIndex) => {
+                    {rowCells.map((pitchClass, colIndex) => {
                       return (
                         <td key={colIndex} className={getCellClassName(octave, colIndex)}>
-                          {cell.englishName}
+                          {pitchClass.englishName}
                         </td>
                       );
                     })}
@@ -957,9 +957,9 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                         }[pitchClassType]
                       }
                     </td>
-                    {rowCells.map((cell, colIndex) => (
+                    {rowCells.map((pitchClass, colIndex) => (
                       <td key={colIndex} className={getCellClassName(octave, colIndex)}>
-                        {displayStringValue(cell.originalValue)}
+                        {displayStringValue(pitchClass.originalValue)}
                       </td>
                     ))}
                   </tr>
@@ -969,9 +969,9 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 {filters.cents && pitchClassType !== "cents" && (
                   <tr>
                     <td>Cents (¢)</td>
-                    {rowCells.map((cell, colIndex) => (
+                    {rowCells.map((pitchClass, colIndex) => (
                       <td key={colIndex} className={getCellClassName(octave, colIndex)}>
-                        {displayStringValue(cell.cents)}
+                        {displayStringValue(pitchClass.cents)}
                       </td>
                     ))}
                   </tr>
@@ -981,9 +981,9 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 {filters.fractionRatio && pitchClassType !== "fraction" && (
                   <tr>
                     <td>Fraction Ratio</td>
-                    {rowCells.map((cell, colIndex) => (
+                    {rowCells.map((pitchClass, colIndex) => (
                       <td key={colIndex} className={getCellClassName(octave, colIndex)}>
-                        {displayStringValue(cell.fraction)}
+                        {displayStringValue(pitchClass.fraction)}
                       </td>
                     ))}
                   </tr>
@@ -993,9 +993,9 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 {filters.stringLength && pitchClassType !== "stringLength" && (
                   <tr>
                     <td>String Length</td>
-                    {rowCells.map((cell, colIndex) => (
+                    {rowCells.map((pitchClass, colIndex) => (
                       <td key={colIndex} className={getCellClassName(octave, colIndex)}>
-                        {displayStringValue(cell.stringLength)}
+                        {displayStringValue(pitchClass.stringLength)}
                       </td>
                     ))}
                   </tr>
@@ -1004,9 +1004,9 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 {filters.fretDivision && (
                   <tr>
                     <td>Fret Division</td>
-                    {rowCells.map((cell, colIndex) => (
+                    {rowCells.map((pitchClass, colIndex) => (
                       <td key={colIndex} className={getCellClassName(octave, colIndex)}>
-                        {displayStringValue(cell.fretDivision)}
+                        {displayStringValue(pitchClass.fretDivision)}
                       </td>
                     ))}
                   </tr>
@@ -1016,9 +1016,9 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 {filters.decimalRatio && pitchClassType !== "decimalRatio" && (
                   <tr>
                     <td>Decimal Ratio</td>
-                    {rowCells.map((cell, colIndex) => (
+                    {rowCells.map((pitchClass, colIndex) => (
                       <td key={colIndex} className={getCellClassName(octave, colIndex)}>
-                        {displayStringValue(cell.decimalRatio)}
+                        {displayStringValue(pitchClass.decimalRatio)}
                       </td>
                     ))}
                   </tr>
@@ -1028,9 +1028,9 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 {filters.midiNote && (
                   <tr>
                     <td>Midi Note</td>
-                    {rowCells.map((cell, colIndex) => (
+                    {rowCells.map((pitchClass, colIndex) => (
                       <td key={colIndex} className={getCellClassName(octave, colIndex)}>
-                        {displayStringValue(cell.midiNoteNumber)}
+                        {displayStringValue(pitchClass.midiNoteNumber)}
                       </td>
                     ))}
                   </tr>
@@ -1040,7 +1040,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 {filters.frequency && (
                   <tr>
                     <td>Freq (Hz)</td>
-                    {rowCells.map((cell, colIndex) => {
+                    {rowCells.map((pitchClass, colIndex) => {
                       const isEditing = editingCell?.octave === octave && editingCell.index === colIndex;
                       return (
                         <td
@@ -1054,12 +1054,12 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                           {isEditing ? (
                             <input
                               type="number"
-                              defaultValue={cell.frequency}
+                              defaultValue={pitchClass.frequency}
                               autoFocus
                               className="tuning-system-manager__freq-input"
                               onBlur={(e) => {
                                 const newFrequency = parseFloat(e.currentTarget.value);
-                                const cents = cell.cents;
+                                const cents = pitchClass.cents;
                                 const centsValue = parseFloat(cents);
                                 const newStartingFrequency = newFrequency / Math.pow(2, centsValue / 1200);
                                 const startingNote = getFirstNoteName(selectedIndices);
@@ -1074,7 +1074,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                               }}
                             />
                           ) : (
-                            displayStringValue(cell.frequency)
+                            displayStringValue(pitchClass.frequency)
                           )}
                         </td>
                       );
@@ -1085,11 +1085,11 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 {/* Row 11: Play */}
                 <tr>
                   <td>Play</td>
-                  {rowCells.map((cell, colIndex) => (
+                  {rowCells.map((pitchClass, colIndex) => (
                     <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                       <PlayCircleIcon
                         className="tuning-system-manager__play-circle-icon"
-                        onClick={() => playNoteFrequency(parseFloat(cell.frequency))}
+                        onClick={() => playNoteFrequency(parseFloat(pitchClass.frequency))}
                       />
                     </td>
                   ))}
@@ -1098,7 +1098,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 {/* Row 12: Select (checkbox) */}
                 <tr>
                   <td>Select</td>
-                  {pitchClassesArr.map((_, colIndex) => (
+                  {tuningSystemPitchClassesArray.map((_, colIndex) => (
                     <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                       <input
                         type="checkbox"
@@ -1130,7 +1130,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   // We can either display all 4 octaves in separate tables, or combine them.
   // Here, we do separate calls:
   function renderNoteNameGrid() {
-    if (!pitchClassesArr.length) return null;
+    if (!tuningSystemPitchClassesArray.length) return null;
 
     return (
       <div className="tuning-system-manager__grid">
@@ -1336,15 +1336,15 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             <div className="tuning-system-manager__input-container">
               <label className="tuning-system-manager__label" htmlFor="pitchClassesField">
                 Pitch Classes (one per line){" "}
-                {detectPitchClassType(pitchClasses.split("\n")) !== "unknown" && (
-                  <span className="tuning-system-manager__pitch-class-type">{"// " + detectPitchClassType(pitchClasses.split("\n"))}</span>
+                {detectPitchClassType(tuningSystemPitchClasses.split("\n")) !== "unknown" && (
+                  <span className="tuning-system-manager__pitch-class-type">{"// " + detectPitchClassType(tuningSystemPitchClasses.split("\n"))}</span>
                 )}
               </label>
               <textarea
                 className="tuning-system-manager__textarea"
                 id="pitchClassesField"
                 rows={5}
-                value={pitchClasses}
+                value={tuningSystemPitchClasses}
                 onChange={handlePitchClassesChange}
               />
             </div>
@@ -1490,7 +1490,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         </div>
       )}
 
-      {pitchClassesArr.length !== 0 && selectedTuningSystem && (
+      {tuningSystemPitchClassesArray.length !== 0 && selectedTuningSystem && (
         <div className="tuning-system-manager__starting-note-container">
           <div className="tuning-system-manager__starting-note-left">
             Start Note Names From:
@@ -1604,10 +1604,10 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       <div className="tuning-system-manager__buttons">
         <button
           className="tuning-system-manager__play-sequence-button"
-          disabled={selectedCells.length === 0}
+          disabled={selectedPitchClasses.length === 0}
           onClick={() => {
-            const frequencies = selectedCells.map((cellS) => {
-              return parseInt(cellS.frequency) ?? 0;
+            const frequencies = selectedPitchClasses.map((pitchClasses) => {
+              return parseInt(pitchClasses.frequency) ?? 0;
             });
 
             playSequence(frequencies);

@@ -1,4 +1,4 @@
-import TransliteratedNoteName from "./NoteName";
+import NoteName from "./NoteName";
 import { SourcePageReference } from "./bibliography/Source";
 
 export default class TuningSystem {
@@ -13,8 +13,8 @@ export default class TuningSystem {
   private creatorArabic: string;
   private commentsEnglish: string;
   private commentsArabic: string;
-  private pitchClasses: string[];
-  private setOfTransliteratedNoteNames: TransliteratedNoteName[][];
+  private tuningSystemPitchClasses: string[];
+  private setsOfTuningNoteNames: NoteName[][];
   private defaultReferenceFrequency: number;
   private referenceFrequencies: { [noteName: string]: number };
   private abjadNames: string[];
@@ -33,7 +33,7 @@ export default class TuningSystem {
     commentsEnglish: string,
     commentsArabic: string,
     notes: string[],
-    setOfTransliteratedNoteNames: TransliteratedNoteName[][],
+    setsOfTuningNoteNames: NoteName[][],
     abjadNames: string[],
     stringLength: number,
     referenceFrequencies: { [noteName: string]: number },
@@ -51,8 +51,8 @@ export default class TuningSystem {
     this.creatorArabic = creatorArabic;
     this.commentsEnglish = commentsEnglish;
     this.commentsArabic = commentsArabic;
-    this.pitchClasses = notes;
-    this.setOfTransliteratedNoteNames = setOfTransliteratedNoteNames;
+    this.tuningSystemPitchClasses = notes;
+    this.setsOfTuningNoteNames = setsOfTuningNoteNames;
     this.abjadNames = abjadNames;
     this.stringLength = stringLength;
     this.referenceFrequencies = referenceFrequencies;
@@ -103,11 +103,11 @@ export default class TuningSystem {
   }
 
   getPitchClasses(): string[] {
-    return this.pitchClasses;
+    return this.tuningSystemPitchClasses;
   }
 
-  getSetsOfNoteNames(): TransliteratedNoteName[][] {
-    return this.setOfTransliteratedNoteNames;
+  getSetsOfNoteNames(): NoteName[][] {
+    return this.setsOfTuningNoteNames;
   }
 
   getAbjadNames(): string[] {
@@ -134,7 +134,7 @@ export default class TuningSystem {
     return `${this.getCreatorEnglish()} (${this.getYear() ? this.getYear() : "NA"}) ${this.getTitleEnglish()}`;
   }
 
-  copyWithNewSetOfNoteNames(newNoteNames: TransliteratedNoteName[][]): TuningSystem {
+  copyWithNewSetOfNoteNames(newNoteNames: NoteName[][]): TuningSystem {
     return new TuningSystem(
       this.titleEnglish,
       this.titleArabic,
@@ -146,7 +146,7 @@ export default class TuningSystem {
       this.creatorArabic,
       this.commentsEnglish,
       this.commentsArabic,
-      this.pitchClasses,
+      this.tuningSystemPitchClasses,
       newNoteNames,
       this.abjadNames,
       this.stringLength,

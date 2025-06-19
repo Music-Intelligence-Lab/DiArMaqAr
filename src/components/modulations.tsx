@@ -14,8 +14,8 @@ export default function Modulations() {
     getModulations,
     selectedMaqamTransposition,
     setSelectedMaqamTransposition,
-    allCells,
-    setSelectedCells,
+    allPitchClasses,
+    setSelectedPitchClasses,
   } = useAppContext();
 
   const [sourceMaqamStack, setSourceMaqamStack] = useState<Maqam[]>([]);
@@ -23,7 +23,7 @@ export default function Modulations() {
 
   useEffect(() => {
     if (selectedMaqam) {
-      const transposition = selectedMaqam.getTahlil(allCells);
+      const transposition = selectedMaqam.getTahlil(allPitchClasses);
       setSourceMaqamStack([transposition]);
       const modulationsData = getModulations(transposition);
       setModulationsStack([modulationsData]);
@@ -39,7 +39,7 @@ export default function Modulations() {
       if (maqam) {
         setSelectedMaqam(maqam);
       }
-      setSelectedCells(selectedMaqamTransposition.ascendingCells);
+      setSelectedPitchClasses(selectedMaqamTransposition.ascendingPitchClasses);
     }
   }, [selectedMaqamTransposition]);
 
@@ -57,7 +57,7 @@ export default function Modulations() {
   return (
     <div className="modulations__container">
       {sourceMaqamStack.map((sourceMaqam, stackIdx) => {
-        const ascendingNoteNames = sourceMaqam.ascendingCells.map((cell) => cell.noteName);
+        const ascendingNoteNames = sourceMaqam.ascendingPitchClasses.map((pitchClass) => pitchClass.noteName);
         const totalModulations = calculateNumberOfHops(modulationsStack[stackIdx]);
         return (
           <div

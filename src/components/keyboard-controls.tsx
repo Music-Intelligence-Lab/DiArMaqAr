@@ -3,26 +3,26 @@
 import { useEffect } from "react";
 import useAppContext from "@/contexts/app-context";
 import useSoundContext from "@/contexts/sound-context";
-import Cell from "@/models/Cell";
-import shiftCell from "@/functions/shiftCell";
+import PitchClass from "@/models/PitchClass";
+import shiftPitchClass from "@/functions/shiftPitchClass";
 
 export default function KeyboardControls() {
-  const { selectedCells, selectedMaqam, selectedMaqamTransposition, allCells } = useAppContext();
-  const { noteOn, noteOff, setActiveCells } = useSoundContext();
+  const { selectedPitchClasses, selectedMaqam, selectedMaqamTransposition, allPitchClasses } = useAppContext();
+  const { noteOn, noteOff, setActivePitchClasses } = useSoundContext();
 
   // keyboard rows
   const firstRowKeys = ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]"];
   const secondRowKeys = ["a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'", "\\"];
   const thirdRowKeys = ["`", "z", "x", "c", "v", "b", "n", "m", ",", ".", "/"];
 
-  // derive descending cells
+  // derive descending pitch classes
   const descendingNoteNames = selectedMaqamTransposition
-    ? selectedMaqamTransposition.descendingCells.map(cell => cell.noteName)
+    ? selectedMaqamTransposition.descendingPitchClasses.map(pitchClass => pitchClass.noteName)
     : selectedMaqam
     ? selectedMaqam.getDescendingNoteNames()
     : [];
 
-  const descendingMaqamCells: Cell[] = allCells.filter((cell) => descendingNoteNames.includes(cell.noteName));
+  const descendingMaqamCells: PitchClass[] = allPitchClasses.filter((pitchClass) => descendingNoteNames.includes(pitchClass.noteName));
 
   const isTyping = () => {
     const el = document.activeElement;
@@ -30,76 +30,76 @@ export default function KeyboardControls() {
   };
 
   useEffect(() => {
-    const addActive = (cell: Cell) => {
-      const freq = parseFloat(cell.frequency);
+    const addActive = (pitchClass: PitchClass) => {
+      const freq = parseFloat(pitchClass.frequency);
       if (isNaN(freq)) return;
       noteOn(freq);
-      setActiveCells((prev) => (prev.some((c) => c.index === cell.index && c.octave === cell.octave) ? prev : [...prev, cell]));
+      setActivePitchClasses((prev) => (prev.some((c) => c.index === pitchClass.index && c.octave === pitchClass.octave) ? prev : [...prev, pitchClass]));
     };
 
-    const removeActive = (cell: Cell) => {
-      const freq = parseFloat(cell.frequency);
+    const removeActive = (pitchClass: PitchClass) => {
+      const freq = parseFloat(pitchClass.frequency);
       if (isNaN(freq)) return;
       noteOff(freq);
-      setActiveCells((prev) => prev.filter((c) => !(c.index === cell.index && c.octave === cell.octave)));
+      setActivePitchClasses((prev) => prev.filter((c) => !(c.index === pitchClass.index && c.octave === pitchClass.octave)));
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.repeat || e.shiftKey || e.ctrlKey || e.altKey || e.metaKey || isTyping()) return;
 
-      let cell: Cell | null = null;
+      let pitchClass: PitchClass | null = null;
       const idx1 = firstRowKeys.indexOf(e.key);
       if (idx1 >= 0 && descendingMaqamCells.length > 0) {
         const base = descendingMaqamCells.length;
-        cell = shiftCell(allCells, descendingMaqamCells[idx1 % base], Math.floor(idx1 / base));
+        pitchClass = shiftPitchClass(allPitchClasses, descendingMaqamCells[idx1 % base], Math.floor(idx1 / base));
       } else {
         const idx2 = secondRowKeys.indexOf(e.key);
-        if (idx2 >= 0 && selectedCells.length > 0) {
-          const base = selectedCells.length;
+        if (idx2 >= 0 && selectedPitchClasses.length > 0) {
+          const base = selectedPitchClasses.length;
           if (idx2 < base || base === 7) {
-            cell = shiftCell(allCells, selectedCells[idx2 % base], Math.floor(idx2 / base));
+            pitchClass = shiftPitchClass(allPitchClasses, selectedPitchClasses[idx2 % base], Math.floor(idx2 / base));
           }
         } else {
           const idx3 = thirdRowKeys.indexOf(e.key);
-          if (idx3 >= 0 && selectedCells.length > 0) {
-            const base = selectedCells.length;
+          if (idx3 >= 0 && selectedPitchClasses.length > 0) {
+            const base = selectedPitchClasses.length;
             if (idx3 < base || base === 7) {
-              cell = shiftCell(allCells, selectedCells[idx3 % base], Math.floor(idx3 / base) - 1);
+              pitchClass = shiftPitchClass(allPitchClasses, selectedPitchClasses[idx3 % base], Math.floor(idx3 / base) - 1);
             }
           }
         }
       }
 
-      if (cell) addActive(cell);
+      if (pitchClass) addActive(pitchClass);
     };
 
     const handleKeyUp = (e: KeyboardEvent) => {
       if (e.shiftKey || e.ctrlKey || e.altKey || e.metaKey || isTyping()) return;
 
-      let cell: Cell | null = null;
+      let pitchClass: PitchClass | null = null;
       const idx1 = firstRowKeys.indexOf(e.key);
       if (idx1 >= 0 && descendingMaqamCells.length > 0) {
         const base = descendingMaqamCells.length;
-        cell = shiftCell(allCells, descendingMaqamCells[idx1 % base], Math.floor(idx1 / base));
+        pitchClass = shiftPitchClass(allPitchClasses, descendingMaqamCells[idx1 % base], Math.floor(idx1 / base));
       } else {
         const idx2 = secondRowKeys.indexOf(e.key);
-        if (idx2 >= 0 && selectedCells.length > 0) {
-          const base = selectedCells.length;
+        if (idx2 >= 0 && selectedPitchClasses.length > 0) {
+          const base = selectedPitchClasses.length;
           if (idx2 < base || base === 7) {
-            cell = shiftCell(allCells, selectedCells[idx2 % base], Math.floor(idx2 / base));
+            pitchClass = shiftPitchClass(allPitchClasses, selectedPitchClasses[idx2 % base], Math.floor(idx2 / base));
           }
         } else {
           const idx3 = thirdRowKeys.indexOf(e.key);
-          if (idx3 >= 0 && selectedCells.length > 0) {
-            const base = selectedCells.length;
+          if (idx3 >= 0 && selectedPitchClasses.length > 0) {
+            const base = selectedPitchClasses.length;
             if (idx3 < base || base === 7) {
-              cell = shiftCell(allCells, selectedCells[idx3 % base], Math.floor(idx3 / base) - 1);
+              pitchClass = shiftPitchClass(allPitchClasses, selectedPitchClasses[idx3 % base], Math.floor(idx3 / base) - 1);
             }
           }
         }
       }
 
-      if (cell) removeActive(cell);
+      if (pitchClass) removeActive(pitchClass);
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -108,7 +108,7 @@ export default function KeyboardControls() {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [selectedCells, selectedMaqam, selectedMaqamTransposition, allCells, descendingMaqamCells, noteOn, noteOff, setActiveCells]);
+  }, [selectedPitchClasses, selectedMaqam, selectedMaqamTransposition, allPitchClasses, descendingMaqamCells, noteOn, noteOff, setActivePitchClasses]);
 
   return null;
 }
