@@ -110,6 +110,9 @@ export default function JinsManager({ admin }: { admin: boolean }) {
     return sortedAjnas.filter((jins) => jins.getNoteNames()[0]?.toLowerCase() === ajnasFilter.toLowerCase());
   }, [sortedAjnas, ajnasFilter]);
 
+  const numberOfRows = 3; // Fixed number of rows
+  const numberOfColumns = Math.ceil(filteredAjnas.length / numberOfRows); // Calculate columns dynamically
+
   return (
     <div className="jins-manager">
       <div className="jins-manager__tabs">
@@ -141,7 +144,10 @@ export default function JinsManager({ admin }: { admin: boolean }) {
         >
           ‹
         </button>
-        <div className="jins-manager__list">
+        <div
+          className="jins-manager__list"
+          style={{ gridTemplateColumns: `repeat(${numberOfColumns}, minmax(250px, 1fr))` }}
+        >
           {filteredAjnas.length === 0 ? (
             <p>No ajnas available.</p>
           ) : (
