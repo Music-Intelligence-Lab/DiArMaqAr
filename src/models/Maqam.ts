@@ -4,6 +4,18 @@ import { Jins } from "./Jins";
 import NoteName from "./NoteName";
 import { SourcePageReference } from "./bibliography/Source";
 
+export interface MaqamDetailsInterface {
+  id: string;
+  name: string;
+  ascendingNoteNames: NoteName[];
+  descendingNoteNames: NoteName[];
+  suyūr: Sayr[];
+  commentsEnglish: string;
+  commentsArabic: string;
+  sourcePageReferences: SourcePageReference[];
+  numberOfTranspositions?: number;
+}
+
 export default class MaqamDetails {
   private id: string;
   private name: string;
@@ -13,6 +25,7 @@ export default class MaqamDetails {
   private commentsEnglish: string;
   private commentsArabic: string;
   private sourcePageReferences: SourcePageReference[];
+  ascendingPitchClasses: any;
 
   constructor(
     id: string,
@@ -79,11 +92,10 @@ export default class MaqamDetails {
     return true;
   }
 
-
   getTahlil(allPitchClasses: PitchClass[]): Maqam {
-    const ascendingCells = allPitchClasses.filter(pitchClass => this.ascendingNoteNames.includes(pitchClass.noteName));
+    const ascendingCells = allPitchClasses.filter((pitchClass) => this.ascendingNoteNames.includes(pitchClass.noteName));
     const ascendingCellIntervals: PitchClassInterval[] = getCellIntervals(ascendingCells);
-    const descendingCells = allPitchClasses.filter(pitchClass => this.descendingNoteNames.includes(pitchClass.noteName)).reverse();
+    const descendingCells = allPitchClasses.filter((pitchClass) => this.descendingNoteNames.includes(pitchClass.noteName)).reverse();
     const descendingCellIntervals: PitchClassInterval[] = getCellIntervals(descendingCells);
     return {
       maqamId: this.id,
@@ -95,7 +107,7 @@ export default class MaqamDetails {
       descendingPitchClassIntervals: descendingCellIntervals,
     };
   }
-  
+
   createMaqamWithNewSuyūr(newSuyūr: Sayr[]): MaqamDetails {
     return new MaqamDetails(
       this.id,
@@ -120,6 +132,19 @@ export default class MaqamDetails {
       this.commentsArabic,
       newSourcePageReferences
     );
+  }
+
+  convertToObject(): MaqamDetailsInterface {
+    return {
+      id: this.id,
+      name: this.name,
+      ascendingNoteNames: this.ascendingNoteNames,
+      descendingNoteNames: this.descendingNoteNames,
+      suyūr: this.suyūr,
+      commentsEnglish: this.commentsEnglish,
+      commentsArabic: this.commentsArabic,
+      sourcePageReferences: this.sourcePageReferences,
+    };
   }
 }
 
@@ -151,6 +176,8 @@ export interface Maqam {
   descendingPitchClasses: PitchClass[];
   descendingPitchClassIntervals: PitchClassInterval[];
   descendingMaqamAjnas?: (Jins | null)[];
+  modulations?: MaqamModulations;
+  numberOfHops?: number;
 }
 
 export interface MaqamModulations {
