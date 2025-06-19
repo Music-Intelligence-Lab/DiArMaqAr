@@ -2,6 +2,16 @@ import { SourcePageReference } from "./bibliography/Source";
 import PitchClass, { PitchClassInterval } from "./PitchClass";
 import NoteName from "./NoteName";
 
+export interface JinsDetailsInterface {
+  id: string;
+  name: string;
+  noteNames: NoteName[];
+  commentsEnglish: string;
+  commentsArabic: string;
+  SourcePageReferences: SourcePageReference[];
+  numberOfTranspositions?: number;
+}
+
 export default class JinsDetails {
   private id: string;
   private name: string;
@@ -49,6 +59,17 @@ export default class JinsDetails {
 
   createJinsWithNewSourcePageReferences(newSourcePageReferences: SourcePageReference[]): JinsDetails {
     return new JinsDetails(this.id, this.name, this.noteNames, this.commentsEnglish, this.commentsArabic, newSourcePageReferences);
+  }
+
+  convertToObject(): JinsDetailsInterface {
+    return {
+      id: this.id,
+      name: this.name,
+      noteNames: this.noteNames,
+      commentsEnglish: this.commentsEnglish,
+      commentsArabic: this.commentsArabic,
+      SourcePageReferences: this.SourcePageReferences,
+    };
   }
 }
 
