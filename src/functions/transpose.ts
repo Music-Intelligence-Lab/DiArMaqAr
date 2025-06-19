@@ -156,7 +156,7 @@ export function getMaqamTranspositions(
               jinsId: jins.getId(),
               name: `${jins.getName()} al-${firstCell.noteName}`,
               tahlil: firstJinsNote === firstCell.noteName,
-              cells: extendedAscendingCells.slice(i, i + lengthOfInterval),
+              cells: extendedAscendingCells.slice(i, i + lengthOfInterval + 1),
               cellIntervals: extendedAscendingCellIntervals.slice(i, i + lengthOfInterval),
             }
 
@@ -185,7 +185,7 @@ export function getMaqamTranspositions(
               jinsId: jins.getId(),
               name: `${jins.getName()} al-${firstCell.noteName}`,
               tahlil: firstJinsNote === firstCell.noteName,
-              cells: extendedDescendingCells.slice(i, i + lengthOfInterval),
+              cells: extendedDescendingCells.slice(i, i + lengthOfInterval + 1),
               cellIntervals: extendedDescendingCellIntervals.slice(i, i + lengthOfInterval),
             }
 
