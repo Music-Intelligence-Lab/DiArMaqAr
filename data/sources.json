@@ -405,5 +405,33 @@
     "placeEnglish": "Aleppo",
     "placeArabic": "حلب",
     "ISBN": ""
+  },
+  {
+    "id": "YcVXQflykzViRp6e3tIHo",
+    "titleEnglish": "Al-Anghām al-Sharqīya: al-Qism al-Thānī min kitāb Al-Dalīl al-Mūsīqī al-ʿām fi Aṭrab al-Anghām",
+    "titleArabic": "الأنغام الشرقيّة: القسم الثاني من كتاب الديلي العام في اطرب الأنغام",
+    "sourceType": "Book",
+    "contributors": [
+      {
+        "type": "Author",
+        "firstNameEnglish": "Tawfīq",
+        "lastNameEnglish": "Al-Ṣabbāgh",
+        "firstNameArabic": "توفيق",
+        "lastNameArabic": "الصبّاغ"
+      }
+    ],
+    "editionEnglish": "",
+    "editionArabic": "",
+    "publicationDateEnglish": "1954",
+    "publicationDateArabic": "١٩٥٤",
+    "url": "",
+    "dateAccessed": "",
+    "originalPublicationDateEnglish": "",
+    "originalPublicationDateArabic": "",
+    "publisherEnglish": "Maṭbaʿat Al-Maʿārif",
+    "publisherArabic": "مطبعة المعارف",
+    "placeEnglish": "Aleppo",
+    "placeArabic": "حلب",
+    "ISBN": ""
   }
 ]
