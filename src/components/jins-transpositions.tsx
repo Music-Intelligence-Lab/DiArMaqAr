@@ -80,7 +80,7 @@ export default function JinsTranspositions() {
           <th className="jins-transpositions__header-cell">{cells[0].originalValue}</th>
           {intervals.map((interval, i) => (
             <React.Fragment key={i}>
-              <th className="jins-transpositions__header-cell">{useRatio ? `(${interval.decimalRatio})` : `${interval.cents.toFixed(3)}`}</th>
+              <th className="jins-transpositions__header-cell">{useRatio ? `(${interval.fraction.replace("/",":")})` : `${interval.cents.toFixed(3)}`}</th>
               <th className="jins-transpositions__header-cell">{cells[i + 1].originalValue}</th>
             </React.Fragment>
           ))}
@@ -91,7 +91,7 @@ export default function JinsTranspositions() {
             <th className="jins-transpositions__header-cell">{Number(cells[0].cents).toFixed(3)}</th>
             {intervals.map((interval, i) => (
               <React.Fragment key={i}>
-                <th className="jins-transpositions__header-cell">{interval.cents}</th>
+                <th className="jins-transpositions__header-cell">{interval.cents.toFixed(3)}</th>
                 <th className="jins-transpositions__header-cell">{Number(cells[i + 1].cents).toFixed(3)}</th>
               </React.Fragment>
             ))}
