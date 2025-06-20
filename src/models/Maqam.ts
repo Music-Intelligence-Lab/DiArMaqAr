@@ -1,4 +1,4 @@
-import { getCellIntervals } from "@/functions/transpose";
+import { getPitchClassIntervals } from "@/functions/transpose";
 import PitchClass, { PitchClassInterval } from "./PitchClass";
 import { Jins } from "./Jins";
 import NoteName from "./NoteName";
@@ -103,9 +103,9 @@ export default class MaqamDetails {
 
   getTahlil(allPitchClasses: PitchClass[]): Maqam {
     const ascendingCells = allPitchClasses.filter((pitchClass) => this.ascendingNoteNames.includes(pitchClass.noteName));
-    const ascendingCellIntervals: PitchClassInterval[] = getCellIntervals(ascendingCells);
+    const ascendingCellIntervals: PitchClassInterval[] = getPitchClassIntervals(ascendingCells);
     const descendingCells = allPitchClasses.filter((pitchClass) => this.descendingNoteNames.includes(pitchClass.noteName)).reverse();
-    const descendingCellIntervals: PitchClassInterval[] = getCellIntervals(descendingCells);
+    const descendingCellIntervals: PitchClassInterval[] = getPitchClassIntervals(descendingCells);
     return {
       maqamId: this.id,
       name: this.name,

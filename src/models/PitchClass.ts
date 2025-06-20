@@ -28,10 +28,15 @@ export interface PitchClassInterval {
   originalValueType: string;
 }
 
+function convertFractionToDecimal(fraction: string): number {
+  const [numerator, denominator] = fraction.split("/").map(Number);
+  return numerator / denominator;
+}
+
 export function calculateInterval(firstPitchClass: PitchClass, secondPitchClass: PitchClass): PitchClassInterval {
   const fraction = computeFractionInterval(firstPitchClass.fraction, secondPitchClass.fraction);
   const cents = parseFloat(secondPitchClass.cents) - parseFloat(firstPitchClass.cents);
-  const decimalRatio = parseFloat(secondPitchClass.decimalRatio) / parseFloat(firstPitchClass.decimalRatio);
+  const decimalRatio = convertFractionToDecimal(fraction);
   const stringLength = parseFloat(secondPitchClass.stringLength) - parseFloat(firstPitchClass.stringLength);
   const fretDivision = parseFloat(secondPitchClass.fretDivision) - parseFloat(firstPitchClass.fretDivision);
   const index = secondPitchClass.index * secondPitchClass.octave - firstPitchClass.index * firstPitchClass.octave;
