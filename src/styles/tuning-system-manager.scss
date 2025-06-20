@@ -158,60 +158,81 @@
     font-style: italic;
   }
 
-  &__sorting-options {
+  &__options-container {
     display: flex;
+    justify-content: space-between;
+    gap: 0px;
+    padding-left: 25px;
+    padding-right: 25px;
+    margin-top: 20px;
+    margin-bottom: 30px;
+    
+    width: 100%;
+  }
+
+  &__sorting-options {
+    display: inline-flex;
     align-items: center;
+    float: left;
     gap: 10px;
-    margin: 20px 0;
+    margin: 0px 0px 0px 0px;
   }
 
   &__sorting-button {
-    padding: 10px;
+    padding: 5px 20px;
     background-color: rgba($primary, 0.5);
-    border-radius: 10px;
-    color: white;
+    width: fit-content;
+    border-radius: 0px;
+    color: $text;
     cursor: pointer;
-    transition: 0.3s;
+    transition: 0.1s;
+    margin: 0px;
+    align-items: flex-start;
 
     &:hover {
-      background-color: rgba($secondary, 0.5);
+      background-color: rgba($primary, 1);
     }
 
     &_selected {
       background-color: $secondary;
+      &:hover {
+        background-color: rgba($secondary, 1);
+      }
     }
   }
 
   &__starting-note-container {
-    display: block;
-    margin: 30px 0;
+    align-items: center;
+    gap: 10px;
+    margin-left: -0px;
+    padding: 0px 0px 0px 0px;
   }
 
   &__starting-note-left {
     display: flex;
-    align-items: top;
+    align-items: center;
     gap: 10px;
-    margin-bottom: 0px;
+    margin-left: 0px;
   }
 
   &__starting-note {
-    height: 80px;
-    display: flex;
+    display: block;
     flex-direction: column;
+    align-items: baseline;
     gap: 10px;
-    vertical-align: top;
-    text-align: left;
+    text-align: center;
+    margin-right: 10px;
   }
 
   &__starting-note-input {
     display: inline-block;
     box-sizing: border-box;
-    padding: 5px;
-    margin-left: 5px;
+    padding: 5px 10px;
+    margin-left: 10px;
     background-color: black;
-    border-radius: 5px;
+    border-radius: 0px;
     color: $text;
-    width: 60px;
+    width: 70px;
 
     // Remove default arrows in webkit browsers
     &::-webkit-outer-spin-button,
@@ -232,21 +253,25 @@
   }
 
   &__starting-note-button {
-    padding: 10px;
+    padding: 5px 20px;
     background-color: rgba($primary, 0.5);
-    border-radius: 10px;
+    width: fit-content;
+    border-radius: 0px;
     color: $text;
     cursor: pointer;
-    transition: 0.3s;
-    height: 40px;
-    align-content: center;
+    transition: 0.1s;
+    margin: 0px;
+    align-items: flex-start;
 
     &:hover {
-      background-color: rgba($secondary, 0.5);
+      background-color: rgba($primary, 1);
     }
 
     &_selected {
       background-color: $secondary;
+      &:hover {
+        background-color: rgba($secondary, 1);
+      }
     }
 
     &_reset {
@@ -565,7 +590,7 @@
     flex-direction: column;
     gap: 10px;
     width: 100%;
-    overflow-x:scroll; 
+    overflow-x: scroll;
     white-space: nowrap;
     height: fit-content;
     padding: 10px 0;
@@ -701,7 +726,7 @@
     }
 
     &_editing {
-      background-color: $black!important;
+      background-color: $black !important;
       color: $text !important;
     }
   }
@@ -818,15 +843,27 @@
     }
   }
 
+  &__export-container {
+    display: inline-flex;
+    float: right;
+    align-items: center;
+    gap: 10px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+  }
+
   &__export-button {
-    height: fit-content;
-    padding: 5px;
-    font-size: 16px;
+    padding-top: 5px;
+    padding-bottom: 0px;
+    width: 50px;
+    background-color: rgba($primary, 0.5);
     cursor: pointer;
-    border-radius: 5px;
-    background-color: $primary;
-    color: white;
-    margin: 0 10px;
+    border-radius: 0px;
+    color: $text;
+    margin-left: 0px;
+    &:hover {
+      background-color: rgba($primary, 1);
+    }
   }
 
   &__sources-english {
