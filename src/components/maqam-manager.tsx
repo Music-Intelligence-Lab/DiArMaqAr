@@ -63,7 +63,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
       );
     });
     return map;
-  }, [maqamat, allPitchClasses]);
+  }, [maqamat, allPitchClasses, ajnas]);
 
   const numberOfPitchClasses = selectedTuningSystem
     ? selectedTuningSystem.getPitchClasses().length
