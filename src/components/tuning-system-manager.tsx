@@ -51,7 +51,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     allPitchClasses,
   } = useAppContext();
 
-  const { activePitchClasses, playNoteFrequency, playSequence } =
+  const { activePitchClasses, playNoteFrequency /* playSequence */ } =
     useSoundContext();
 
   const { filters, setFilters, tuningSystemsFilter, setTuningSystemsFilter } =
@@ -1793,7 +1793,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         </div>
       )}
       <div className="tuning-system-manager__options-container">
-        {!admin && (
+{/*         {!admin && (
           <div className="tuning-system-manager__sorting-options">
             <label
               className="tuning-system-manager__sorting-label"
@@ -1801,13 +1801,19 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             >
               Sort By:
             </label>
-            {/*         <button
-          className={"tuning-system-manager__sorting-button " + (sortOption === "id" ? "tuning-system-manager__sorting-button_selected" : "")}
-          onClick={() => setSortOption("id")}
-        >
-          ID
-        </button>
- */}{" "}
+            {
+              <button
+                className={
+                  "tuning-system-manager__sorting-button " +
+                  (sortOption === "id"
+                    ? "tuning-system-manager__sorting-button_selected"
+                    : "")
+                }
+                onClick={() => setSortOption("id")}
+              >
+                ID
+              </button>
+            }{" "}
             <button
               className={
                 "tuning-system-manager__sorting-button " +
@@ -1830,110 +1836,119 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             >
               Year
             </button>
+            
           </div>
-        )}
-        {tuningSystemPitchClassesArray.length !== 0 && selectedTuningSystem && (
-          <div className="tuning-system-manager__starting-note-container">
-            <div className="tuning-system-manager__starting-note-left">
-              Starting Note Name:
-              {[...selectedTuningSystem.getNoteNames()]
-                .sort(
-                  (a, b) =>
-                    getNoteNameIndex(a[0] ?? 0) - getNoteNameIndex(b[0] ?? 0)
-                )
-                .map((notes, index) => {
-                  const startingNote = notes[0];
-                  return (
-                    <div
-                      className="tuning-system-manager__starting-note"
-                      key={index}
-                    >
+        )} */}
+
+{tuningSystemPitchClassesArray.length !== 0 &&
+              selectedTuningSystem && (
+                <div className="tuning-system-manager__starting-note-container">
+                  <div className="tuning-system-manager__starting-note-left">
+                    Starting Note Name:
+                    {[...selectedTuningSystem.getNoteNames()]
+                      .sort(
+                        (a, b) =>
+                          getNoteNameIndex(a[0] ?? 0) -
+                          getNoteNameIndex(b[0] ?? 0)
+                      )
+                      .map((notes, index) => {
+                        const startingNote = notes[0];
+                        return (
+                          <div
+                            className="tuning-system-manager__starting-note"
+                            key={index}
+                          >
+                            <button
+                              className={
+                                "tuning-system-manager__starting-note-button " +
+                                (getFirstNoteName(selectedIndices) ===
+                                startingNote
+                                  ? "tuning-system-manager__starting-note-button_selected"
+                                  : "")
+                              }
+                              onClick={() =>
+                                handleStartNoteNameChange(startingNote)
+                              }
+                            >
+                              {startingNote}
+                            </button>
+                            <label htmlFor="reference-frequency-input">
+                              <input
+                                type="number"
+                                id="reference-frequency-input"
+                                value={referenceFrequencies[startingNote] ?? 0}
+                                onChange={(e) => {
+                                  const val = Number(e.target.value);
+                                  setReferenceFrequencies((prev) => ({
+                                    ...prev,
+                                    [startingNote]: val,
+                                  }));
+                                }}
+                                className="tuning-system-manager__starting-note-input"
+                              />{" "}
+                              Hz
+                            </label>
+                          </div>
+                        );
+                      })}
+                    {isCurrentConfigurationNew() && (
+                      <div className="tuning-system-manager__starting-note">
+                        <button
+                          className={
+                            "tuning-system-manager__starting-note-button tuning-system-manager__starting-note-button_unsaved tuning-system-manager__starting-note-button_selected"
+                          }
+                        >
+                          {getFirstNoteName(selectedIndices)} (unsaved)
+                        </button>
+                        <label htmlFor="reference-frequency-input">
+                          Frequency (Hz):
+                          <input
+                            type="number"
+                            id="reference-frequency-input"
+                            disabled={!admin}
+                            value={
+                              referenceFrequencies[
+                                getFirstNoteName(selectedIndices)
+                              ] ?? 0
+                            }
+                            onChange={(e) => {
+                              const val = Number(e.target.value);
+                              setReferenceFrequencies((prev) => ({
+                                ...prev,
+                                [getFirstNoteName(selectedIndices)]: val,
+                              }));
+                            }}
+                            className="tuning-system-manager__starting-note-input"
+                          />
+                        </label>
+                      </div>
+                    )}
+                  </div>
+                  {admin && (
+                    <div className="tuning-system-manager__starting-note-right">
                       <button
-                        className={
-                          "tuning-system-manager__starting-note-button " +
-                          (getFirstNoteName(selectedIndices) === startingNote
-                            ? "tuning-system-manager__starting-note-button_selected"
-                            : "")
+                        className="tuning-system-manager__starting-note-button tuning-system-manager__starting-note-button_save"
+                        onClick={handleSaveStartingNoteConfiguration}
+                        disabled={
+                          !haveIndicesChanged() ||
+                          getFirstNoteName(selectedIndices) === "none"
                         }
-                        onClick={() => handleStartNoteNameChange(startingNote)}
                       >
-                        {startingNote}
+                        Save Note Name Configuration
                       </button>
-                      <label htmlFor="reference-frequency-input">
-                        <input
-                          type="number"
-                          id="reference-frequency-input"
-                          value={referenceFrequencies[startingNote] ?? 0}
-                          onChange={(e) => {
-                            const val = Number(e.target.value);
-                            setReferenceFrequencies((prev) => ({
-                              ...prev,
-                              [startingNote]: val,
-                            }));
-                          }}
-                          className="tuning-system-manager__starting-note-input"
-                        />{" "}
-                        Hz
-                      </label>
+                      <button
+                        className="tuning-system-manager__starting-note-button tuning-system-manager__starting-note-button_delete"
+                        onClick={handleDeleteStartingNoteConfiguration}
+                        disabled={getFirstNoteName(selectedIndices) === "none"}
+                      >
+                        Delete Note Name Configuration
+                      </button>
                     </div>
-                  );
-                })}
-              {isCurrentConfigurationNew() && (
-                <div className="tuning-system-manager__starting-note">
-                  <button
-                    className={
-                      "tuning-system-manager__starting-note-button tuning-system-manager__starting-note-button_unsaved tuning-system-manager__starting-note-button_selected"
-                    }
-                  >
-                    {getFirstNoteName(selectedIndices)} (unsaved)
-                  </button>
-                  <label htmlFor="reference-frequency-input">
-                    Frequency (Hz):
-                    <input
-                      type="number"
-                      id="reference-frequency-input"
-                      disabled={!admin}
-                      value={
-                        referenceFrequencies[
-                          getFirstNoteName(selectedIndices)
-                        ] ?? 0
-                      }
-                      onChange={(e) => {
-                        const val = Number(e.target.value);
-                        setReferenceFrequencies((prev) => ({
-                          ...prev,
-                          [getFirstNoteName(selectedIndices)]: val,
-                        }));
-                      }}
-                      className="tuning-system-manager__starting-note-input"
-                    />
-                  </label>
+                  )}
                 </div>
               )}
-            </div>
-            {admin && (
-              <div className="tuning-system-manager__starting-note-right">
-                <button
-                  className="tuning-system-manager__starting-note-button tuning-system-manager__starting-note-button_save"
-                  onClick={handleSaveStartingNoteConfiguration}
-                  disabled={
-                    !haveIndicesChanged() ||
-                    getFirstNoteName(selectedIndices) === "none"
-                  }
-                >
-                  Save Note Name Configuration
-                </button>
-                <button
-                  className="tuning-system-manager__starting-note-button tuning-system-manager__starting-note-button_delete"
-                  onClick={handleDeleteStartingNoteConfiguration}
-                  disabled={getFirstNoteName(selectedIndices) === "none"}
-                >
-                  Delete Note Name Configuration
-                </button>
-              </div>
-            )}
-          </div>
-        )}
+
+
         {selectedTuningSystem && (
           <div className="tuning-system-manager__export-container">
             Export:
@@ -1968,7 +1983,8 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       <div className="tuning-system-manager__grid-wrapper">
         {renderNoteNameGrid()}
       </div>
-      <div className="tuning-system-manager__buttons">
+
+      {/* <div className="tuning-system-manager__buttons">
         <button
           className="tuning-system-manager__play-sequence-button"
           disabled={selectedPitchClasses.length === 0}
@@ -1982,7 +1998,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         >
           Play Selected Sequence
         </button>
-      </div>
+      </div> */}
 
       {/* COMMENTS AND SOURCES */}
       <div className="tuning-system-manager__comments-sources-container">

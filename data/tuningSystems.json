@@ -4377,16 +4377,16 @@
     }
   },
   {
-    "id": "Allami-(2025)-Ṣabbāgh-Shawwā29-Tone",
-    "titleEnglish": "Ṣabbāgh-Shawwā 29-Tone",
-    "titleArabic": "صبّاغ شوا ٢٩ نغمة",
+    "id": "Allami-(2025)-Ṣabbāgh-Shawwā28-Tone",
+    "titleEnglish": "Ṣabbāgh-Shawwā 28-Tone",
+    "titleArabic": "صبّاغ شوا ٢٨ نغمة",
     "year": "2025",
     "sourceEnglish": "Unknown Source",
     "sourceArabic": "مصدر غير معروف",
     "sourcePageReferences": [],
     "creatorEnglish": "Allami",
-    "creatorArabic": "اللامي",
-    "commentsEnglish": "Created by using Ṣabbāgh (1954) 24-tone tuning system and including Shawwā's extra 5 note names (1946:13) with the correct one comma higher or one comma lower using the Syntonic comma 81/80 as utilised by Ṣabbāgh",
+    "creatorArabic": "خيّام اللامي",
+    "commentsEnglish": "Created by using Ṣabbāgh (1954) 24-tone tuning system and including Shawwā's extra note names (1946:13) with the applicable one comma higher or one comma lower using the Syntonic comma 81/80 as utilised by Ṣabbāgh. Although Shawwā provides 5 extra note names we only need 4 becuase one of them, nahāwand, which is supposed to be lower than kūrdī by one comma (6/5 x 80/81) gives 32/27 which is already assigned to nīm kurdī/nahāwand.",
     "commentsArabic": "",
     "tuningSystemPitchClasses": [
       "1/1",
@@ -4509,9 +4509,9 @@
       ""
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 261.33,
+    "defaultReferenceFrequency": 261.333,
     "referenceFrequencies": {
-      "rāst": 261.33
+      "rāst": 261.333
     }
   }
 ]
