@@ -177,6 +177,9 @@
     gap: 10px;
     margin: 0px 0px 0px 0px;
   }
+  &__sorting-label {
+    margin-bottom: 0px;
+  }
 
   &__sorting-button {
     padding: 5px 20px;
@@ -188,6 +191,8 @@
     transition: 0.1s;
     margin: 0px;
     align-items: flex-start;
+    display: block;
+
 
     &:hover {
       background-color: rgba($primary, 1);
