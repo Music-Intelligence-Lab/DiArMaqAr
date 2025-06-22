@@ -13,13 +13,13 @@ interface ExportedTuningSystem {
   tuningSystem: TuningSystem;
   startingNote: NoteName;
   fullRangeTuningSystemPitchClasses: PitchClass[];
-  possibleAjnasOverview: JinsDetailsInterface[];
   numberOfPossibleAjnas: number;
   numberOfAjnas: number;
+  possibleAjnasOverview: JinsDetailsInterface[];
   possibleAjnasDetails: Jins[];
-  possibleMaqamatOverview: MaqamDetailsInterface[];
   numberOfPossibleMaqamat: number;
   numberOfMaqamat: number;
+  possibleMaqamatOverview: MaqamDetailsInterface[];
   possibleMaqamatDetails: Maqam[];
 }
 
@@ -77,13 +77,13 @@ export function exportTuningSystem(tuningSystem: TuningSystem, startingNote: Not
     tuningSystem,
     startingNote,
     fullRangeTuningSystemPitchClasses,
-    possibleAjnasOverview: possibleAjnasOverview as JinsDetailsInterface[],
     numberOfPossibleAjnas: possibleAjnasOverview.length,
     numberOfAjnas: allAjnas.length,
+    possibleAjnasOverview: possibleAjnasOverview as JinsDetailsInterface[],
     possibleAjnasDetails,
-    possibleMaqamatOverview: possibleMaqamatOverview as MaqamDetailsInterface[],
     numberOfPossibleMaqamat: possibleMaqamatOverview.length,
     numberOfMaqamat: allMaqamat.length,
+    possibleMaqamatOverview: possibleMaqamatOverview as MaqamDetailsInterface[],
     possibleMaqamatDetails,
   };
 }
