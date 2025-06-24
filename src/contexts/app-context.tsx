@@ -257,6 +257,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     setSelectedPitchClasses(newSelectedCells);
   };
 
+  console.log("APP CONTEXT RENDERED");
+
   const checkIfMaqamIsSelectable = (maqamDetails: MaqamDetails, givenCells: PitchClass[] = []) => {
     const usedNoteNames = givenCells.length ? givenCells.map((pitchClass) => pitchClass.noteName) : allPitchClasses.map((pitchClass) => pitchClass.noteName);
 
