@@ -175,7 +175,7 @@ export default function MaqamTranspositions() {
                     (isCellHighlighted(rowIndex + (ascending ? 0 : 0.5), pitchClass.noteName) ? "maqam-transpositions__header-cell_highlighted" : "")
                   }
                 >
-                  {pitchClass.noteName + ` (${getEnglishNoteName(pitchClass.noteName)})`}{" "}
+                  {pitchClass.noteName}{" "}
                 </th>
               </React.Fragment>
             ))}
@@ -486,7 +486,7 @@ export default function MaqamTranspositions() {
         )}
       </div>
     );
-  }, [allPitchClasses, ajnas, selectedMaqamDetails, selectedTuningSystem, centsTolerance, filters]);
+  }, [allPitchClasses, ajnas, selectedMaqamDetails, selectedTuningSystem, centsTolerance, filters, highlightedNotes]);
 
   return transpositionTables;
 }
