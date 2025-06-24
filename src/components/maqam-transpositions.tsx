@@ -3,12 +3,14 @@
 import React, { useMemo, useState } from "react";
 import useAppContext from "@/contexts/app-context";
 import useSoundContext from "@/contexts/sound-context";
+import useFilterContext from "@/contexts/filter-context";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { getMaqamTranspositions } from "@/functions/transpose";
 import { Maqam } from "@/models/Maqam";
 import { calculateInterval } from "@/models/PitchClass";
 import shiftPitchClass from "@/functions/shiftPitchClass";
+import camelCaseToWord from "@/functions/camelCaseToWord";
 
 export default function MaqamTranspositions() {
   const {
@@ -24,11 +26,15 @@ export default function MaqamTranspositions() {
 
   const { playNoteFrequency, playSequence } = useSoundContext();
 
+  const { filters, setFilters } = useFilterContext();
+
   const [highlightedNotes, setHighlightedNotes] = useState<{ index: number; noteNames: string[] }>({ index: -1, noteNames: [] });
 
   const isCellHighlighted = (index: number, noteName: string): boolean => {
     return highlightedNotes.index === index && highlightedNotes.noteNames.includes(noteName);
   };
+
+  const disabledFilters = ["englishName", "pitchClass", "abjadName", "midiNote", "frequency"];
 
   const transpositionTables = useMemo(() => {
     if (!selectedMaqamDetails || !selectedTuningSystem) return null;
@@ -53,6 +59,10 @@ export default function MaqamTranspositions() {
 
     const valueType = allPitchClasses[0].originalValueType;
     const useRatio = valueType === "fraction" || valueType === "decimalRatio";
+
+    const numberOfFilterRows = Object.keys(filters).filter(
+      (key) => !disabledFilters.includes(key) && key !== valueType && filters[key as keyof typeof filters]
+    ).length;
 
     const maqamTranspositions = getMaqamTranspositions(allPitchClasses, ajnas, selectedMaqamDetails, true, centsTolerance);
 
@@ -88,7 +98,7 @@ export default function MaqamTranspositions() {
             <tr>
               <th
                 className={`maqam-transpositions__transposition-number maqam-transpositions__transposition-number_${pitchClasses[0].octave}`}
-                rowSpan={16}
+                rowSpan={14 + numberOfFilterRows * 2}
               >
                 {rowIndex + 1}
               </th>
@@ -139,7 +149,7 @@ export default function MaqamTranspositions() {
             </tr>
           )}
           <tr>
-            <td className="maqam-transpositions__asc-desc-column" rowSpan={7}>
+            <td className="maqam-transpositions__asc-desc-column" rowSpan={6 + numberOfFilterRows}>
               {ascending ? "↗" : "↘"}
             </td>
           </tr>
@@ -171,7 +181,7 @@ export default function MaqamTranspositions() {
             ))}
           </tr>
           <tr>
-            <th className="maqam-transpositions__row-header">{valueType}</th>
+            <th className="maqam-transpositions__row-header">{camelCaseToWord(valueType)}</th>
             <th className="maqam-transpositions__header-pitchClass">{pitchClasses[0].originalValue}</th>
             {intervals.map((interval, i) => (
               <React.Fragment key={i}>
@@ -182,7 +192,19 @@ export default function MaqamTranspositions() {
               </React.Fragment>
             ))}
           </tr>
-          {valueType !== "cents" && (
+          {valueType !== "fraction" && filters["fraction"] && (
+            <tr>
+              <th className="maqam-transpositions__row-header">fraction</th>
+              <th className="maqam-transpositions__header-pitchClass">{pitchClasses[0].fraction}</th>
+              {intervals.map((interval, i) => (
+                <React.Fragment key={i}>
+                  <th className="maqam-transpositions__header-pitchClass">{interval.fraction}</th>
+                  <th className="maqam-transpositions__header-pitchClass">{pitchClasses[i + 1].fraction}</th>
+                </React.Fragment>
+              ))}
+            </tr>
+          )}
+          {valueType !== "cents" && filters["cents"] && (
             <tr>
               <th className="maqam-transpositions__row-header">cents (¢)</th>
               <th className="maqam-transpositions__header-pitchClass">{parseFloat(pitchClasses[0].cents).toFixed(3)}</th>
@@ -190,6 +212,42 @@ export default function MaqamTranspositions() {
                 <React.Fragment key={i}>
                   <th className="maqam-transpositions__header-pitchClass">{interval.cents.toFixed(3)}</th>
                   <th className="maqam-transpositions__header-pitchClass">{parseFloat(pitchClasses[i + 1].cents).toFixed(3)}</th>
+                </React.Fragment>
+              ))}
+            </tr>
+          )}
+          {valueType !== "decimalRatio" && filters["decimalRatio"] && (
+            <tr>
+              <th className="maqam-transpositions__row-header">decimal ratio</th>
+              <th className="maqam-transpositions__header-pitchClass">{parseFloat(pitchClasses[0].decimalRatio).toFixed(3)}</th>
+              {intervals.map((interval, i) => (
+                <React.Fragment key={i}>
+                  <th className="maqam-transpositions__header-pitchClass">{interval.decimalRatio.toFixed(3)}</th>
+                  <th className="maqam-transpositions__header-pitchClass">{parseFloat(pitchClasses[i + 1].decimalRatio).toFixed(3)}</th>
+                </React.Fragment>
+              ))}
+            </tr>
+          )}
+          {valueType !== "stringLength" && filters["stringLength"] && (
+            <tr>
+              <th className="maqam-transpositions__row-header">string length</th>
+              <th className="maqam-transpositions__header-pitchClass">{parseFloat(pitchClasses[0].stringLength).toFixed(3)}</th>
+              {intervals.map((interval, i) => (
+                <React.Fragment key={i}>
+                  <th className="maqam-transpositions__header-pitchClass">{interval.stringLength.toFixed(3)}</th>
+                  <th className="maqam-transpositions__header-pitchClass">{parseFloat(pitchClasses[i + 1].stringLength).toFixed(3)}</th>
+                </React.Fragment>
+              ))}
+            </tr>
+          )}
+          {valueType !== "fretDivision" && filters["fretDivision"] && (
+            <tr>
+              <th className="maqam-transpositions__row-header">fret division</th>
+              <th className="maqam-transpositions__header-pitchClass">{parseFloat(pitchClasses[0].fretDivision).toFixed(3)}</th>
+              {intervals.map((interval, i) => (
+                <React.Fragment key={i}>
+                  <th className="maqam-transpositions__header-pitchClass">{interval.fretDivision.toFixed(3)}</th>
+                  <th className="maqam-transpositions__header-pitchClass">{parseFloat(pitchClasses[i + 1].fretDivision).toFixed(3)}</th>
                 </React.Fragment>
               ))}
             </tr>
@@ -275,6 +333,58 @@ export default function MaqamTranspositions() {
                   />
                 </>
               )}
+              <span className="tuning-system-manager__filter-menu">
+                {Object.keys(filters).map((filterKey) => {
+                  const isDisabled =
+                    (filterKey === "fraction" && valueType === "fraction") ||
+                    (filterKey === "cents" && valueType === "cents") ||
+                    (filterKey === "decimalRatio" && valueType === "decimalRatio") ||
+                    (filterKey === "stringLength" && valueType === "stringLength");
+
+                  if (isDisabled) return null;
+
+                  if (disabledFilters.includes(filterKey)) return null;
+
+                  return (
+                    <label
+                      key={filterKey}
+                      htmlFor={`filter-${filterKey}`}
+                      className={`tuning-system-manager__filter-item ${
+                        filters[filterKey as keyof typeof filters] ? "tuning-system-manager__filter-item_active" : ""
+                      }`}
+                      // prevent the drawer (or parent) click handler from firing
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <input
+                        id={`filter-${filterKey}`}
+                        type="checkbox"
+                        className="tuning-system-manager__filter-checkbox"
+                        checked={filters[filterKey as keyof typeof filters]}
+                        disabled={isDisabled}
+                        onChange={(e) => {
+                          // still stop propagation so only the checkbox toggles
+                          e.stopPropagation();
+                          setFilters((prev) => ({
+                            ...prev,
+                            [filterKey as keyof typeof filters]: e.target.checked,
+                          }));
+                        }}
+                      />
+                      <span className="tuning-system-manager__filter-label">
+                        {filterKey
+                          .replace(/([A-Z])/g, " $1")
+                          .trim()
+                          .charAt(0)
+                          .toUpperCase() +
+                          filterKey
+                            .replace(/([A-Z])/g, " $1")
+                            .trim()
+                            .slice(1)}
+                      </span>
+                    </label>
+                  );
+                })}
+              </span>
             </h2>
 
             <table className="maqam-transpositions__table">
@@ -328,7 +438,7 @@ export default function MaqamTranspositions() {
         )}
       </div>
     );
-  }, [allPitchClasses, ajnas, selectedMaqamDetails, selectedTuningSystem, centsTolerance]);
+  }, [allPitchClasses, ajnas, selectedMaqamDetails, selectedTuningSystem, centsTolerance, filters]);
 
   return transpositionTables;
 }

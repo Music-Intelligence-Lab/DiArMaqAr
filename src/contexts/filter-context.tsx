@@ -6,7 +6,7 @@ export interface FilterSettings {
   pitchClass: boolean;
   englishName: boolean;
   abjadName: boolean;
-  fractionRatio: boolean;
+  fraction: boolean;
   cents: boolean;
   stringLength: boolean;
   fretDivision: boolean;
@@ -19,7 +19,7 @@ const defaultFilters: FilterSettings = {
   pitchClass: false,
   abjadName: false,
   englishName: true,
-  fractionRatio: false,
+  fraction: false,
   cents: true,
   stringLength: false,
   fretDivision: false,
