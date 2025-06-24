@@ -51,7 +51,7 @@ interface SoundContextInterface {
 const SoundContext = createContext<SoundContextInterface | null>(null);
 
 export function SoundContextProvider({ children }: { children: React.ReactNode }) {
-  const { selectedTuningSystem, selectedMaqam, selectedJins, tuningSystemPitchClasses, allPitchClasses, selectedPitchClasses } = useAppContext();
+  const { selectedTuningSystem, selectedMaqamDetails, selectedJinsDetails, tuningSystemPitchClasses, allPitchClasses, selectedPitchClasses } = useAppContext();
 
   const [soundSettings, setSoundSettings] = useState<SoundSettings>({
     attack: 0.01,
@@ -186,8 +186,8 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
   }, [
     midiInputs,
     selectedTuningSystem,
-    selectedMaqam,
-    selectedJins,
+    selectedMaqamDetails,
+    selectedJinsDetails,
     tuningSystemPitchClasses,
     soundSettings.inputMode,
     soundSettings.outputMode,
