@@ -27,6 +27,8 @@ interface AppContextInterface {
   setSelectedTuningSystem: (tuningSystem: TuningSystem | null) => void;
   tuningSystemPitchClasses: string;
   setTuningSystemPitchClasses: React.Dispatch<React.SetStateAction<string>>;
+  selectedAbjadNames: string[];
+  setSelectedAbjadNames: React.Dispatch<React.SetStateAction<string[]>>;
   handleStartNoteNameChange: (startingNoteName: string, givenNoteNames?: NoteName[][], givenNumberOfPitchClasses?: number) => void;
   selectedPitchClasses: PitchClass[];
   setSelectedPitchClasses: React.Dispatch<React.SetStateAction<PitchClass[]>>;
@@ -72,6 +74,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   const [tuningSystems, setTuningSystems] = useState<TuningSystem[]>([]);
   const [selectedTuningSystem, setSelectedTuningSystem] = useState<TuningSystem | null>(null);
   const [tuningSystemPitchClasses, setTuningSystemPitchClasses] = useState("");
+  const [selectedAbjadNames, setSelectedAbjadNames] = useState<string[]>([]);
 
   const [centsTolerance, setCentsTolerance] = useState(5);
 
@@ -345,6 +348,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         setSelectedTuningSystem,
         tuningSystemPitchClasses,
         setTuningSystemPitchClasses,
+        selectedAbjadNames,
+        setSelectedAbjadNames,
         handleStartNoteNameChange,
         selectedPitchClasses,
         setSelectedPitchClasses,
