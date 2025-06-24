@@ -5,6 +5,7 @@ import { FilterContextProvider } from "@/contexts/filter-context";
 import { MenuContextProvider } from "@/contexts/menu-context";
 import Navbar from "@/components/navbar";
 import { Readex_Pro } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.scss";
 
 const readexPro = Readex_Pro({
@@ -31,16 +32,17 @@ export default function RootLayout({
         <meta name="google" content="notranslate" />
       </head>
       <body className={`${readexPro.variable}`}>
-          <AppContextProvider>
-            <SoundContextProvider>
-              <MenuContextProvider>
-                <FilterContextProvider>
-                  <Navbar />
-                  <main className="center-container">{children}</main>
-                </FilterContextProvider>
-              </MenuContextProvider>
-            </SoundContextProvider>
-          </AppContextProvider>
+        <AppContextProvider>
+          <SoundContextProvider>
+            <MenuContextProvider>
+              <FilterContextProvider>
+                <Navbar />
+                <main className="center-container">{children}</main>
+                <Analytics />
+              </FilterContextProvider>
+            </MenuContextProvider>
+          </SoundContextProvider>
+        </AppContextProvider>
       </body>
     </html>
   );
