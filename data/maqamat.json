@@ -480,7 +480,12 @@
     "suyūr": [],
     "commentsEnglish": "TEST",
     "commentsArabic": "TEST",
-    "sourcePageReferences": []
+    "sourcePageReferences": [
+      {
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "30"
+      }
+    ]
   },
   {
     "id": "18",
@@ -623,7 +628,12 @@
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": []
+    "sourcePageReferences": [
+      {
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "36"
+      }
+    ]
   },
   {
     "id": "22",
@@ -791,7 +801,12 @@
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": []
+    "sourcePageReferences": [
+      {
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "33"
+      }
+    ]
   },
   {
     "id": "27",
@@ -931,7 +946,12 @@
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": []
+    "sourcePageReferences": [
+      {
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "17"
+      }
+    ]
   },
   {
     "id": "30",
@@ -1017,11 +1037,16 @@
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": []
+    "sourcePageReferences": [
+      {
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "19"
+      }
+    ]
   },
   {
     "id": "31",
-    "name": "maqām shad ʿarabān",
+    "name": "maqām shat ʿarabān",
     "ascendingNoteNames": [
       "yegāh",
       "qarār ḥiṣār",
@@ -1092,7 +1117,12 @@
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": []
+    "sourcePageReferences": [
+      {
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "20"
+      }
+    ]
   },
   {
     "id": "32",
@@ -1150,7 +1180,12 @@
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": []
+    "sourcePageReferences": [
+      {
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "21"
+      }
+    ]
   },
   {
     "id": "33",
@@ -1309,7 +1344,12 @@
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": []
+    "sourcePageReferences": [
+      {
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "23"
+      }
+    ]
   },
   {
     "id": "35",
@@ -1419,11 +1459,16 @@
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": []
+    "sourcePageReferences": [
+      {
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "24"
+      }
+    ]
   },
   {
     "id": "36",
-    "name": "maqām bayāt ʿushayrān",
+    "name": "maqām bayyātī ʿushayrān",
     "ascendingNoteNames": [
       "ʿushayrān",
       "ʿirāq",
@@ -1532,7 +1577,7 @@
     "sourcePageReferences": [
       {
         "sourceId": "oY8WnTdP5msak8o1G_N7f",
-        "page": "30"
+        "page": "25"
       }
     ]
   },
@@ -1589,7 +1634,12 @@
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": []
+    "sourcePageReferences": [
+      {
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "26"
+      }
+    ]
   },
   {
     "id": "38",
@@ -1661,7 +1711,12 @@
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": []
+    "sourcePageReferences": [
+      {
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "27"
+      }
+    ]
   },
   {
     "id": "39",
@@ -1754,7 +1809,12 @@
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": []
+    "sourcePageReferences": [
+      {
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "28"
+      }
+    ]
   },
   {
     "id": "40",
@@ -1847,7 +1907,12 @@
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": []
+    "sourcePageReferences": [
+      {
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "29"
+      }
+    ]
   },
   {
     "id": "41",
@@ -1920,7 +1985,12 @@
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": []
+    "sourcePageReferences": [
+      {
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "31"
+      }
+    ]
   },
   {
     "id": "42",
@@ -2001,11 +2071,16 @@
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": []
+    "sourcePageReferences": [
+      {
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "32"
+      }
+    ]
   },
   {
     "id": "43",
-    "name": "maqām awj",
+    "name": "maqām ʾawj",
     "ascendingNoteNames": [
       "ʿirāq",
       "rāst",
@@ -2086,11 +2161,16 @@
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": []
+    "sourcePageReferences": [
+      {
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "34"
+      }
+    ]
   },
   {
     "id": "44",
-    "name": "maqām farḥanak",
+    "name": "maqām faraḥnāk",
     "ascendingNoteNames": [
       "ʿirāq",
       "rāst",
@@ -2155,7 +2235,12 @@
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": []
+    "sourcePageReferences": [
+      {
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "35"
+      }
+    ]
   },
   {
     "id": "45",
@@ -2209,11 +2294,16 @@
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": []
+    "sourcePageReferences": [
+      {
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "37"
+      }
+    ]
   },
   {
     "id": "46",
-    "name": "maqām awj arā",
+    "name": "maqām ʾawj ʾārāʼ",
     "ascendingNoteNames": [
       "ʿirāq",
       "rāst",
@@ -2296,7 +2386,7 @@
     "sourcePageReferences": [
       {
         "sourceId": "oY8WnTdP5msak8o1G_N7f",
-        "page": ""
+        "page": "38"
       }
     ]
   },
@@ -2387,7 +2477,12 @@
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": []
+    "sourcePageReferences": [
+      {
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "39"
+      }
+    ]
   },
   {
     "id": "48",
@@ -2497,5 +2592,76 @@
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": []
+  },
+  {
+    "id": "52",
+    "name": "maqām dilkesh ḥūrān",
+    "ascendingNoteNames": [
+      "ʿirāq",
+      "rāst",
+      "dūgāh",
+      "segāh",
+      "chahargāh",
+      "nawā",
+      "ḥusaynī",
+      "awj",
+      "kurdān",
+      "shahnāz"
+    ],
+    "descendingNoteNames": [
+      "shahnāz",
+      "kurdān",
+      "awj",
+      "ḥusaynī",
+      "nawā",
+      "chahargāh",
+      "segāh",
+      "dūgāh",
+      "rāst",
+      "ʿirāq"
+    ],
+    "suyūr": [
+      {
+        "id": "Mh3QKj9HKe-WN-nebWg0Z",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "40",
+        "commentsEnglish": "Starts with a transposition of maqām ṣabā on ḥusaynī, then rāst on nawā then, bayyātī on dūgāh and it's qarār ends on ʿirāq. Sometimes it starts bayyātī on ḥusaynī instead of ṣabā.",
+        "commentsArabic": "",
+        "stops": [
+          {
+            "type": "jins",
+            "value": "4",
+            "startingNote": "ḥusaynī",
+            "direction": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā",
+            "direction": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "dūgāh",
+            "direction": "descending"
+          },
+          {
+            "type": "note",
+            "value": "ʿirāq"
+          }
+        ]
+      }
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "40"
+      }
+    ]
   }
 ]
