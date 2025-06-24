@@ -5,14 +5,6 @@ import PitchClass from "@/models/PitchClass";
 import JinsDetails from "@/models/Jins";
 import MaqamDetails, { Maqam, MaqamModulations } from "@/models/Maqam";
 
-const checkIfMaqamIsSelectable = (maqam: MaqamDetails, allPitchClasses: PitchClass[]) => {
-  const usedNoteNames = allPitchClasses.map((pitchClass) => pitchClass.noteName);
-
-  return (
-    maqam.getAscendingNoteNames().every((noteName) => usedNoteNames.includes(noteName)) &&
-    maqam.getDescendingNoteNames().every((noteName) => usedNoteNames.includes(noteName))
-  );
-};
 export default function modulate(
   allPitchClasses: PitchClass[],
   allAjnas: JinsDetails[],
@@ -69,7 +61,7 @@ export default function modulate(
     checkSixth = true;
 
   for (const maqam of allMaqamat) {
-    if (!checkIfMaqamIsSelectable(maqam, allPitchClasses)) continue;
+    if (!maqam.isMaqamSelectable(allPitchClasses)) continue;
 
     const currentAscendingNotes = maqam.getAscendingNoteNames();
 

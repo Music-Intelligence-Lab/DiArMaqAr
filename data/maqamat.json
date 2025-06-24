@@ -2416,6 +2416,37 @@
     "sourcePageReferences": []
   },
   {
+    "id": "49",
+    "name": "maqām chahargāh (Al-Shawwā)",
+    "ascendingNoteNames": [
+      "chahargāh",
+      "nawā",
+      "ḥusaynī",
+      "ʿajam",
+      "kurdān",
+      "muḥayyar",
+      "buzurk"
+    ],
+    "descendingNoteNames": [
+      "buzurk",
+      "muḥayyar",
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahargāh"
+    ],
+    "suyūr": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "90"
+      }
+    ]
+  },
+  {
     "id": "50",
     "name": "maqām chahargāh/girkah",
     "ascendingNoteNames": [

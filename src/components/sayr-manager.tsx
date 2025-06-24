@@ -8,7 +8,7 @@ import { nanoid } from "nanoid";
 import { updateMaqamat } from "@/functions/update";
 
 export default function SayrManager({ admin }: { admin: boolean }) {
-  const { selectedMaqam, setSelectedMaqam, ajnas, maqamSayrId, setMaqamSayrId, sources, maqamat, setMaqamat } = useAppContext();
+  const { selectedMaqamDetails, setSelectedMaqamDetails, ajnas, maqamSayrId, setMaqamSayrId, sources, maqamat, setMaqamat } = useAppContext();
 
   const [creatorEnglish, setCreatorEnglish] = useState("");
   const [creatorArabic, setCreatorArabic] = useState("");
@@ -29,8 +29,8 @@ export default function SayrManager({ admin }: { admin: boolean }) {
   };
 
   useEffect(() => {
-    if (selectedMaqam && maqamSayrId) {
-      const sel = selectedMaqam.getSuyūr().find((s) => s.id === maqamSayrId);
+    if (selectedMaqamDetails && maqamSayrId) {
+      const sel = selectedMaqamDetails.getSuyūr().find((s) => s.id === maqamSayrId);
       if (sel) {
         setCreatorEnglish(sel.creatorEnglish ?? "");
         setCreatorArabic(sel.creatorArabic ?? "");
@@ -43,10 +43,10 @@ export default function SayrManager({ admin }: { admin: boolean }) {
       }
     }
     resetForm();
-  }, [maqamSayrId, selectedMaqam]);
+  }, [maqamSayrId, selectedMaqamDetails]);
 
-  if (!selectedMaqam) return null;
-  const existingSuyūr = selectedMaqam.getSuyūr();
+  if (!selectedMaqamDetails) return null;
+  const existingSuyūr = selectedMaqamDetails.getSuyūr();
 
   const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => setMaqamSayrId(e.target.value);
   const addStop = () => setStops((prev) => [...prev, { type: "note", value: "" }]);
@@ -71,8 +71,8 @@ export default function SayrManager({ admin }: { admin: boolean }) {
     const updated = existingSuyūr.some((s) => s.id === idUse)
       ? existingSuyūr.map((s) => (s.id === idUse ? newSayr : s))
       : [...existingSuyūr, newSayr];
-    const updatedMaqam = selectedMaqam.createMaqamWithNewSuyūr(updated);
-    setSelectedMaqam(updatedMaqam);
+    const updatedMaqam = selectedMaqamDetails.createMaqamWithNewSuyūr(updated);
+    setSelectedMaqamDetails(updatedMaqam);
     setMaqamSayrId(idUse);
 
     const others = maqamat.filter((m) => m.getId() !== updatedMaqam.getId());
@@ -83,8 +83,8 @@ export default function SayrManager({ admin }: { admin: boolean }) {
   const handleDelete = async () => {
     if (!maqamSayrId) return;
     const filtered = existingSuyūr.filter((s) => s.id !== maqamSayrId);
-    const updatedMaqam = selectedMaqam.createMaqamWithNewSuyūr(filtered);
-    setSelectedMaqam(updatedMaqam);
+    const updatedMaqam = selectedMaqamDetails.createMaqamWithNewSuyūr(filtered);
+    setSelectedMaqamDetails(updatedMaqam);
     setMaqamSayrId("");
 
     const others = maqamat.filter((m) => m.getId() !== updatedMaqam.getId());

@@ -1,6 +1,6 @@
 [
   {
-    "id": "LouisRonzevalle-(1904)-ModernistArabicTuning",
+    "id": "Ronzevalle-(1904)-ModernistArabicTuning",
     "titleEnglish": "Modernist Arabic Tuning",
     "titleArabic": "",
     "year": "1904",
@@ -16,8 +16,8 @@
         "page": "32-33"
       }
     ],
-    "creatorEnglish": "Louis Ronzevalle",
-    "creatorArabic": "",
+    "creatorEnglish": "Ronzevalle",
+    "creatorArabic": "رونزيفال",
     "commentsEnglish": "Also in: Shawqi, Youssef. Qiyās Al-Sullam Al-Mūsīqī Al-'Arabī. Dar Al-Kutub, Cairo, 1969. pp. 32-33\t\t\t\t\t\t\t\t\t",
     "commentsArabic": "ايضاً في شوقي ",
     "tuningSystemPitchClasses": [
@@ -386,9 +386,9 @@
     }
   },
   {
-    "id": "AḥmadAmīnAl-Dīk-(1926)-Al-SullamAl-FārsīorAl-'Arabī(!!!)",
+    "id": "Al-Dīk-(1926)-Al-SullamAl-FārsīorAl-'Arabī(!!!)",
     "titleEnglish": "Al-Sullam Al-Fārsī or Al-'Arabī (!!!)",
-    "titleArabic": "",
+    "titleArabic": "السلم الفارسي او العربي",
     "year": "1926",
     "sourceEnglish": "",
     "sourceArabic": "",
@@ -398,8 +398,8 @@
         "page": "43"
       }
     ],
-    "creatorEnglish": "Aḥmad Amīn Al-Dīk",
-    "creatorArabic": "",
+    "creatorEnglish": "Al-Dīk",
+    "creatorArabic": "الديك، احمد امين",
     "commentsEnglish": "In Shawqī (1969:43) the numbers for string length are given as 1,0000, 0,9716, etc... They are presented here as 10000, 9716 etc... for clarity.\n\nTypo in Shawqī (1969:43) lists the second pitch class as 0.7916. Most likely it is supposed to be 0.9716 and that is what is used here.\n\nThe note names for the string length divisions aren't mentioned in Shawqī (1969:43) and therefore presumably not in Al-Dīk's original (NEED TO VERIFY). Though in Shawqī's reproduction of a table from another publication by Al-Dīk (mulḥaq fī dhabdhabāt ṭabaqa sharqīya/ملحق في ذبذبات طبقة شيرقية), the text by Al-Dīk which refers to his calculations of frequencies for his tuning system mentions that he considered the Arabic note name dūgāh equivalent to A/La at 435 Hz. \n\nThis is in line with the Ottoman (and the modern Turkish convention) equates the fret (perde) dūgāh to the Anglo-European La/A at 220/440 Hz, and naming the oud string referred to by Arabs as nawā usually tuned to G at 196 Hz as dugāh because they tune up to A at 220 Hz. Therefore this tuning system is placed according to yegāh at 1/1.",
     "commentsArabic": "",
     "tuningSystemPitchClasses": [
@@ -537,7 +537,7 @@
     }
   },
   {
-    "id": "AḥmadAmīnAl-Dīk-(1926)-Al-SullamAl-'ArabīAl-Qadīm",
+    "id": "Al-Dīk-(1926)-Al-SullamAl-'ArabīAl-Qadīm",
     "titleEnglish": "Al-Sullam Al-'Arabī Al-Qadīm",
     "titleArabic": "",
     "year": "1926",
@@ -549,8 +549,8 @@
         "page": "41"
       }
     ],
-    "creatorEnglish": "Aḥmad Amīn Al-Dīk",
-    "creatorArabic": "",
+    "creatorEnglish": "Al-Dīk",
+    "creatorArabic": "احمد امين الديك",
     "commentsEnglish": "",
     "commentsArabic": "",
     "tuningSystemPitchClasses": [
@@ -1240,7 +1240,8 @@
     "stringLength": 1000,
     "defaultReferenceFrequency": 220,
     "referenceFrequencies": {
-      "ʿushayrān": 220.5
+      "ʿushayrān": 220.5,
+      "yegāh": 195.998
     }
   },
   {
@@ -3987,7 +3988,7 @@
     }
   },
   {
-    "id": "Ṣabbāgh-(1950)-ContemporaryArabic19-Tone",
+    "id": "Al-Ṣabbāgh-(1950)-ContemporaryArabic19-Tone",
     "titleEnglish": "Contemporary Arabic 19-Tone",
     "titleArabic": "السلم العربي الحالي",
     "year": "1950",
@@ -4003,8 +4004,8 @@
         "page": "173"
       }
     ],
-    "creatorEnglish": "Ṣabbāgh",
-    "creatorArabic": "",
+    "creatorEnglish": "Al-Ṣabbāgh",
+    "creatorArabic": "توفيق الصباغ",
     "commentsEnglish": "This tuning system by Tawfīq Al-Ṣabbāgh is built on a theoretical 53-comma per octave division, resulting in 19-tones that are used in the maqāmāt he recounts in his book. Ṣabbāgh gives the comma a value of 1/81th of a string length of 10,000 = 123.4567901235 (1950:38, defined in error by Shawqī as 0,012346 in 1969:147). This is a syntonic comma, also known as the Didymus' comma, the meantone comma or the Ptolemaic comma, with a frequency ratio of 81/80. Al-Ṣabbāgh proceeds to calculate the notes of many maqāmāt based on the principle distances between the fundamental notes as follows:\n\nrāst (9 commas) dūgāh (7) segāh (6) chahargāh (9) nawā (9) ḥusaynī (7) awj (6) kurdān\n\nThe final 19-tone system is then given as as string lengths and frequency in Hz starting from rāst at 10000 and 516 Hz plus the number of commas per interval between the 19-tones (which are either 5,4,3,2 or 1 commas).\n\nHere we have set the default frequency at 258 Hz for rast (an octave lower than Ṣabbāgh) but the frequency of rāst-10000-1/1 as 261.33 to match other tuning systems in the database for the sake of clarity and comparison.\n\nṢabbāgh also uses the note names kurdī wāṭī and kurdī ʿālī instead of nīm kurdī and kurdī, nīm būseḹīk instead of buselīk, ḥiṣār wāṭī and ḥiṣār ʿālī instead of nīm ḥiṣār and ḥiṣār, and nīm māhūr wāṭī and nīm māhūr ʿālī instead of nīm māhūr and tīk mahūr.",
     "commentsArabic": "",
     "tuningSystemPitchClasses": [
@@ -4136,7 +4137,7 @@
     }
   },
   {
-    "id": "Al-LaythīKāmil-(1965)-20-Tone",
+    "id": "Al-Laythī-(1965)-20-Tone",
     "titleEnglish": "20-Tone",
     "titleArabic": "",
     "year": "1965",
@@ -4148,7 +4149,7 @@
         "page": "190"
       }
     ],
-    "creatorEnglish": "Al-Laythī Kāmil",
+    "creatorEnglish": "Al-Laythī",
     "creatorArabic": "",
     "commentsEnglish": "Gives the name tīk kūrdi (zalzal) for 39/32, here renamed segāh and segāh as 5/4, here named būselīk and būseḹik as 81/63 here named tīk būselīk",
     "commentsArabic": "",
@@ -4250,7 +4251,7 @@
     }
   },
   {
-    "id": "Ṣabbāgh-(1954)-ContemporaryArabicTuning24-Tone",
+    "id": "Al-Ṣabbāgh-(1954)-ContemporaryArabicTuning24-Tone",
     "titleEnglish": "Contemporary Arabic Tuning 24-Tone",
     "titleArabic": "السلم العربي الحالي ٢٤ نغمة",
     "year": "1954",
@@ -4262,7 +4263,7 @@
         "page": "47"
       }
     ],
-    "creatorEnglish": "Ṣabbāgh",
+    "creatorEnglish": "Al-Ṣabbāgh",
     "creatorArabic": "الصبّاغ",
     "commentsEnglish": "In Ṣabbāgh's previous book (1950:173) he gives The Contemporary Arabic tuning system as one of 19 tones. In his follow up book (1954:47) he states the following:\n\n\"It appears from the preceding pitch tables that our primary and secondary tones consist of nineteen degrees, and it has been stated in al-Dalīl al-Mūsīqī al-ʿĀmm (The General Musical Guide) that these are, by default, considered the current Arabic scale.\n\nAfter that, I observed a tendency among many to preserve the names of the well-known twenty-four quarter-tones familiar to us. So I proceeded to add seven additional degrees, thereby allowing our scale to encompass the conventional theoretical tones as well. In this way, we have preserved the names of the twenty-four quarters used in our tradition, leaving no room for objection by anyone.\n\nThus, our current Arabic scale becomes composed of twenty-five degrees, among which are twenty-four unequal intervals, as defined in the following table.\"\n\nṢabbāgh then proceeds to give the 24-tone tuning system in fret divisions as fractions ratios, vibrating string length, number of commas between each pitch class and the note names for each pitch class starting from rāst.\n\nThe tuning values inputted here are inversions of Ṣabbāgh's fret divisions fraction ratios into string length fraction ratios, for example: 1/9 becomes 9/8 but we provide the originals here for reference:\n\n0, 13/256, 1/16, 17/201, 1/9, 5/32, 1/6, 19/102, 1/5, 17/81, 1/4, 31/112, 13/45, 217/729, 1/3, 47/128, 71/189, 235/603, 11/27, 7/16, 393/883, 549/1200, 7/15, 115/243, 1/2\n\n10000, 9492, 9375, 9155, 8889, 8438, 8333, 8137, 8000, 7901, 7500, 7233, 7111, 7023, 6667, 6328, 6243, 6103, 5926, 5625, 5549, 5425, 5333, 5267, 5000",
     "commentsArabic": "",
@@ -4377,16 +4378,16 @@
     }
   },
   {
-    "id": "Allami-(2025)-Ṣabbāgh-Shawwā29-Tone",
-    "titleEnglish": "Ṣabbāgh-Shawwā 29-Tone",
-    "titleArabic": "صبّاغ شوا ٢٩ نغمة",
+    "id": "Allami-(2025)-Ṣabbāgh-Shawwā28-Tone",
+    "titleEnglish": "Ṣabbāgh-Shawwā 28-Tone",
+    "titleArabic": "صبّاغ شوا ٢٨ نغمة",
     "year": "2025",
     "sourceEnglish": "Unknown Source",
     "sourceArabic": "مصدر غير معروف",
     "sourcePageReferences": [],
     "creatorEnglish": "Allami",
-    "creatorArabic": "اللامي",
-    "commentsEnglish": "Created by using Ṣabbāgh (1954) 24-tone tuning system and including Shawwā's extra 5 note names (1946:13) with the correct one comma higher or one comma lower using the Syntonic comma 81/80 as utilised by Ṣabbāgh",
+    "creatorArabic": "خيّام اللامي",
+    "commentsEnglish": "Created by using Ṣabbāgh (1954) 24-tone tuning system and including Shawwā's extra note names (1946:13) with the applicable one comma higher or one comma lower using the Syntonic comma 81/80 as utilised by Ṣabbāgh. Although Shawwā provides 5 extra note names we only need 4 becuase one of them, nahāwand, which is supposed to be lower than kūrdī by one comma (6/5 x 80/81) gives 32/27 which is already assigned to nīm kurdī/nahāwand.",
     "commentsArabic": "",
     "tuningSystemPitchClasses": [
       "1/1",
@@ -4509,9 +4510,9 @@
       ""
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 261.33,
+    "defaultReferenceFrequency": 261.333,
     "referenceFrequencies": {
-      "rāst": 261.33
+      "rāst": 261.333
     }
   }
 ]
