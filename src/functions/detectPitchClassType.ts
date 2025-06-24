@@ -17,7 +17,15 @@ export default function detectPitchClassType(values: string[]): "fraction" | "ce
   // fraction check:
   const fractionRegex = /^[1-9]\d*[/:][1-9]\d*$/;
   const allFractions = cleaned.every((val) => fractionRegex.test(val));
-  if (allFractions) return "fraction";
+  if (allFractions) {
+    const fractionNumbers = cleaned.map((val) => {
+      const [num, denom] = val.split(/[/:]/).map(Number);
+      return num / denom;
+    });
+    const isAscending = fractionNumbers.every((val, i, arr) => i === 0 || val >= arr[i - 1]);
+    if (!isAscending) return "unknown";
+    return "fraction";
+  }
 
   // parse numeric
   const numericVals = cleaned.map(Number);
