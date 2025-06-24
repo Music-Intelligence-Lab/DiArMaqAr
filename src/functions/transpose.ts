@@ -150,14 +150,14 @@ export function getMaqamTranspositions(
     const ascendingMaqamAjnas: (Jins | null)[] = [];
     const descendingPitchClasses = sequencePair.descendingSequence;
     const extendedDescendingPitchClasses = [
-      ...sequencePair.descendingSequence,
-      ...sequencePair.descendingSequence.map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, -1)),
+      ...descendingPitchClasses.map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 1)),
+      ...descendingPitchClasses,
     ];
-    const descendingPitchClassIntervals = getPitchClassIntervals(sequencePair.descendingSequence);
+    const descendingPitchClassIntervals = getPitchClassIntervals(descendingPitchClasses);
     const descendingMaqamAjnas: (Jins | null)[] = [];
 
     const extendedAscendingPitchClassIntervals = [...ascendingPitchClassIntervals, ...ascendingPitchClassIntervals.slice(1)];
-    const extendedDescendingPitchClassIntervals = [...descendingPitchClassIntervals, ...descendingPitchClassIntervals.slice(1)];
+    const extendedDescendingPitchClassIntervals = [...descendingPitchClassIntervals, ...descendingPitchClassIntervals.slice(1), ...descendingPitchClassIntervals.slice(1)];
 
     if (allAjnas.length > 0) {
       for (let i = 0; i < extendedAscendingPitchClassIntervals.length; i++) {
@@ -192,10 +192,11 @@ export function getMaqamTranspositions(
         }
 
         if (!found) ascendingMaqamAjnas.push(null);
-        if (i === ascendingPitchClassIntervals.length) break;
+        if (ascendingMaqamAjnas.length - 1 === ascendingPitchClassIntervals.length) break;
       }
 
-      for (let i = 0; i < extendedDescendingPitchClassIntervals.length; i++) {
+      const offSet = descendingPitchClasses.length; //todo fix this
+      for (let i = offSet; i < extendedDescendingPitchClassIntervals.length; i++) {
         let found = false;
 
         for (const descendingJinsInterval of descendingAjnasIntervals) {
@@ -227,7 +228,7 @@ export function getMaqamTranspositions(
         }
 
         if (!found) descendingMaqamAjnas.push(null);
-        if (i === descendingPitchClassIntervals.length) break;
+        if (descendingMaqamAjnas.length - 1 === descendingPitchClassIntervals.length) break;
       }
     }
 
