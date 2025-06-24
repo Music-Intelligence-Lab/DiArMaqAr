@@ -180,6 +180,18 @@ export default function MaqamTranspositions() {
               </React.Fragment>
             ))}
           </tr>
+          {filters["abjadName"] && (
+            <tr>
+              <th className="maqam-transpositions__row-header">Abjad Name</th>
+              <th className="maqam-transpositions__header-pitchClass">{pitchClasses[0].abjadName || "--"}</th>
+              {intervals.map((interval, i) => (
+                <React.Fragment key={i}>
+                  <th className="maqam-transpositions__header-pitchClass"></th>
+                  <th className="maqam-transpositions__header-pitchClass">{pitchClasses[i + 1].abjadName  || "--"}</th>
+                </React.Fragment>
+              ))}
+            </tr>
+          )}
           {filters["englishName"] && (
             <tr>
               <th className="maqam-transpositions__row-header">English Name</th>
@@ -188,18 +200,6 @@ export default function MaqamTranspositions() {
                 <React.Fragment key={i}>
                   <th className="maqam-transpositions__header-pitchClass"></th>
                   <th className="maqam-transpositions__header-pitchClass">{pitchClasses[i + 1].englishName}</th>
-                </React.Fragment>
-              ))}
-            </tr>
-          )}
-          {filters["abjadName"] && (
-            <tr>
-              <th className="maqam-transpositions__row-header">Arabic Name</th>
-              <th className="maqam-transpositions__header-pitchClass">{pitchClasses[0].abjadName}</th>
-              {intervals.map((interval, i) => (
-                <React.Fragment key={i}>
-                  <th className="maqam-transpositions__header-pitchClass"></th>
-                  <th className="maqam-transpositions__header-pitchClass">{pitchClasses[i + 1].abjadName}</th>
                 </React.Fragment>
               ))}
             </tr>
@@ -276,18 +276,6 @@ export default function MaqamTranspositions() {
               ))}
             </tr>
           )}
-          {filters["frequency"] && (
-            <tr>
-              <th className="maqam-transpositions__row-header">Frequency</th>
-              <th className="maqam-transpositions__header-pitchClass">{parseFloat(pitchClasses[0].frequency).toFixed(3)}</th>
-              {intervals.map((interval, i) => (
-                <React.Fragment key={i}>
-                  <th className="maqam-transpositions__header-pitchClass"></th>
-                  <th className="maqam-transpositions__header-pitchClass">{parseFloat(pitchClasses[i + 1].frequency).toFixed(3)}</th>
-                </React.Fragment>
-              ))}
-            </tr>
-          )}
           {filters["midiNote"] && (
             <tr>
               <th className="maqam-transpositions__row-header">MIDI Note</th>
@@ -296,6 +284,18 @@ export default function MaqamTranspositions() {
                 <React.Fragment key={i}>
                   <th className="maqam-transpositions__header-pitchClass"></th>
                   <th className="maqam-transpositions__header-pitchClass">{pitchClasses[i + 1].midiNoteNumber.toFixed(3)}</th>
+                </React.Fragment>
+              ))}
+            </tr>
+          )}
+          {filters["frequency"] && (
+            <tr>
+              <th className="maqam-transpositions__row-header">Freq (Hz)</th>
+              <th className="maqam-transpositions__header-pitchClass">{parseFloat(pitchClasses[0].frequency).toFixed(3)}</th>
+              {intervals.map((interval, i) => (
+                <React.Fragment key={i}>
+                  <th className="maqam-transpositions__header-pitchClass"></th>
+                  <th className="maqam-transpositions__header-pitchClass">{parseFloat(pitchClasses[i + 1].frequency).toFixed(3)}</th>
                 </React.Fragment>
               ))}
             </tr>
