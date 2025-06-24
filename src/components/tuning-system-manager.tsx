@@ -643,8 +643,6 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     } ${isActive ? "tuning-system-manager__cell_active " : ""}`;
   };
 
-  console.log("TUNING SYSTEM MANAGER RENDERING");
-
   const handleCheckboxChange = (
     octave: number,
     colIndex: number,
