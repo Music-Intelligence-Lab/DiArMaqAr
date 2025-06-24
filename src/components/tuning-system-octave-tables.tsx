@@ -430,14 +430,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
           {octave === 1 && openedOctaveRows[1] && (
             <span className="tuning-system-manager__filter-menu">
               {Object.keys(filters).map((filterKey) => {
-                const isDisabled =
-                  (filterKey === "fractionRatio" &&
-                    pitchClassType === "fraction") ||
-                  (filterKey === "cents" && pitchClassType === "cents") ||
-                  (filterKey === "decimalRatio" &&
-                    pitchClassType === "decimalRatio") ||
-                  (filterKey === "stringLength" &&
-                    pitchClassType === "stringLength");
+                const isDisabled = filterKey === pitchClassType;
 
                 if (isDisabled) return null;
 
@@ -697,7 +690,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                 )}
 
                 {/* Row 6: Fraction Ratio */}
-                {filters.fractionRatio && pitchClassType !== "fraction" && (
+                {filters.fraction && pitchClassType !== "fraction" && (
                   <tr>
                     <td>Fraction Ratio</td>
                     {rowCells.map((pitchClass, colIndex) => (

@@ -129,7 +129,7 @@ export function shiftPitchClass(
       // cents => just add 1200 * octaveSteps
       const c = parseFloat(baseValue);
       const shifted = c + 1200 * octaveSteps;
-      return shifted.toString();
+      return shifted.toFixed(3);
     } else if (inputType === "stringLength") {
       // stringLength => / 2^(octaveSteps),
       // because going UP an octave means frequency *2 => stringLength /2
