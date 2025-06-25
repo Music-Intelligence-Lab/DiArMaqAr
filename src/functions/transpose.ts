@@ -38,7 +38,7 @@ export function getPitchClassTranspositions(
         if (comp === target) {
           buildSequences([...pitchClasses, candidateCell], i + 1, intervalIndex + 1);
           break;
-        } else if (ascending && comp > target || !ascending && comp < target) break;
+        } else if ((ascending && comp > target) || (!ascending && comp < target)) break;
       } else {
         if (Math.abs(computedInterval.cents - cellInterval.cents) <= centsTolerance) {
           buildSequences([...pitchClasses, candidateCell], i + 1, intervalIndex + 1);
@@ -142,22 +142,36 @@ export function getMaqamTranspositions(
 
   const maqamTranspositions: Maqam[] = mergeTranspositions(ascendingSequences, descendingSequences).map((sequencePair) => {
     const ascendingPitchClasses = sequencePair.ascendingSequence;
+    let sliceIndex = 0;
+    const lastAscendingPitchClass = ascendingPitchClasses[ascendingPitchClasses.length - 1];
+
+    for (let i = 0; i < ascendingPitchClasses.length; i++) { // if the maqam is longer than 7 and has octaves in them, then you want to slice the sequence in a way where you dont shift the octave again
+      if (parseFloat(ascendingPitchClasses[i].frequency) * 2 < parseFloat(lastAscendingPitchClass.frequency)) {
+        sliceIndex = i + 1;
+      }
+    }
+
     const extendedAscendingPitchClasses = [
       ...ascendingPitchClasses,
-      ...ascendingPitchClasses.map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 1)),
+      ...ascendingPitchClasses.slice(sliceIndex).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 1)),
     ];
+
     const ascendingPitchClassIntervals = getPitchClassIntervals(ascendingPitchClasses);
     const ascendingMaqamAjnas: (Jins | null)[] = [];
+
     const descendingPitchClasses = sequencePair.descendingSequence;
+
     const extendedDescendingPitchClasses = [
-      ...descendingPitchClasses.map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 1)),
+      ...descendingPitchClasses
+        .slice(0, descendingPitchClasses.length - sliceIndex)
+        .map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 1)),
       ...descendingPitchClasses,
     ];
     const descendingPitchClassIntervals = getPitchClassIntervals(descendingPitchClasses);
     const descendingMaqamAjnas: (Jins | null)[] = [];
 
-    const extendedAscendingPitchClassIntervals = [...ascendingPitchClassIntervals, ...ascendingPitchClassIntervals.slice(1)];
-    const extendedDescendingPitchClassIntervals = [...descendingPitchClassIntervals, ...descendingPitchClassIntervals.slice(1), ...descendingPitchClassIntervals.slice(1)];
+    const extendedAscendingPitchClassIntervals = getPitchClassIntervals(extendedAscendingPitchClasses);
+    const extendedDescendingPitchClassIntervals = getPitchClassIntervals(extendedDescendingPitchClasses);
 
     if (allAjnas.length > 0) {
       for (let i = 0; i < extendedAscendingPitchClassIntervals.length; i++) {
@@ -195,15 +209,15 @@ export function getMaqamTranspositions(
         if (ascendingMaqamAjnas.length - 1 === ascendingPitchClassIntervals.length) break;
       }
 
-      const offSet = descendingPitchClasses.length; //todo fix this
-      for (let i = offSet; i < extendedDescendingPitchClassIntervals.length; i++) {
+      const offSet = descendingPitchClasses.length - (sliceIndex === 0 ? 0 : 1); //todo fix this
+      for (let i = offSet; i <= extendedDescendingPitchClassIntervals.length; i++) {
         let found = false;
 
         for (const descendingJinsInterval of descendingAjnasIntervals) {
           const lengthOfInterval = descendingJinsInterval.intervals.length;
           if (
             matchingListOfIntervals(
-              extendedDescendingPitchClassIntervals.slice(i, i + lengthOfInterval),
+              extendedDescendingPitchClassIntervals.slice(i - lengthOfInterval, i),
               descendingJinsInterval.intervals,
               centsTolerance
             )
@@ -216,8 +230,8 @@ export function getMaqamTranspositions(
               jinsId: jins.getId(),
               name: `${jins.getName()} al-${firstCell.noteName}`,
               transposition: firstJinsNote !== firstCell.noteName,
-              jinsPitchClasses: extendedDescendingPitchClasses.slice(i, i + lengthOfInterval + 1),
-              jinsPitchClassIntervals: extendedDescendingPitchClassIntervals.slice(i, i + lengthOfInterval),
+              jinsPitchClasses: extendedDescendingPitchClasses.slice(i - lengthOfInterval, i + 1),
+              jinsPitchClassIntervals: extendedDescendingPitchClassIntervals.slice(i - lengthOfInterval, i),
             };
 
             descendingMaqamAjnas.push(jinsTransposition);
@@ -230,6 +244,8 @@ export function getMaqamTranspositions(
         if (!found) descendingMaqamAjnas.push(null);
         if (descendingMaqamAjnas.length - 1 === descendingPitchClassIntervals.length) break;
       }
+
+      if (sliceIndex !== 0) descendingMaqamAjnas.push(null);
     }
 
     return {
