@@ -33,14 +33,12 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
     selectedMaqamDetails,
     allPitchClasses,
     selectedAbjadNames,
-    setSelectedAbjadNames
+    setSelectedAbjadNames,
   } = useAppContext();
 
-  const { activePitchClasses, playNoteFrequency /* playSequence */ } =
-    useSoundContext();
+  const { activePitchClasses, playNoteFrequency } = useSoundContext();
 
-  const { filters, setFilters } =
-    useFilterContext();
+  const { filters, setFilters } = useFilterContext();
 
   const [editingCell, setEditingCell] = useState<{
     octave: number;
@@ -59,12 +57,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
     3: false,
   });
 
-  const octaveScrollRefs = [
-    useRef<HTMLDivElement>(null),
-    useRef<HTMLDivElement>(null),
-    useRef<HTMLDivElement>(null),
-    useRef<HTMLDivElement>(null),
-  ];
+  const octaveScrollRefs = [useRef<HTMLDivElement>(null), useRef<HTMLDivElement>(null), useRef<HTMLDivElement>(null), useRef<HTMLDivElement>(null)];
 
   const [cascade, setCascade] = useState(false);
 
@@ -171,45 +164,23 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
     }
   }
 
-  const isCellSelected = (octave: number, colIndex: number) =>
-    selectedPitchClasses.some(
-      (pitchClasses) =>
-        pitchClasses.octave === octave && pitchClasses.index === colIndex
-    );
-  const isCellActive = (octave: number, colIndex: number) =>
-    activePitchClasses.some(
-      (pitchClasses) =>
-        pitchClasses.octave === octave && pitchClasses.index === colIndex
-    );
+  const isCellSelected = (octave: number, colIndex: number) => selectedPitchClasses.some((pitchClasses) => pitchClasses.octave === octave && pitchClasses.index === colIndex);
+  const isCellActive = (octave: number, colIndex: number) => activePitchClasses.some((pitchClasses) => pitchClasses.octave === octave && pitchClasses.index === colIndex);
 
   const getCellClassName = (octave: number, colIndex: number) => {
     const isSelected = isCellSelected(octave, colIndex);
     const isActive = isCellActive(octave, colIndex);
-    return `tuning-system-manager__cell ${octave} ${
-      isSelected ? "tuning-system-manager__cell_selected " : ""
-    } ${isActive ? "tuning-system-manager__cell_active " : ""}`;
+    return `tuning-system-manager__cell ${octave} ${isSelected ? "tuning-system-manager__cell_selected " : ""} ${isActive ? "tuning-system-manager__cell_active " : ""}`;
   };
 
-  const handleCheckboxChange = (
-    octave: number,
-    colIndex: number,
-    checked: boolean
-  ) => {
+  const handleCheckboxChange = (octave: number, colIndex: number, checked: boolean) => {
     setSelectedPitchClasses((prevCells) => {
-      const newCells = prevCells.filter(
-        (pitchClass) =>
-          !(pitchClass.octave === octave && pitchClass.index === colIndex)
-      );
+      const newCells = prevCells.filter((pitchClass) => !(pitchClass.octave === octave && pitchClass.index === colIndex));
       if (checked) {
-        const existingCell = allPitchClasses.find(
-          (pitchClass) =>
-            pitchClass.octave === octave && pitchClass.index === colIndex
-        );
+        const existingCell = allPitchClasses.find((pitchClass) => pitchClass.octave === octave && pitchClass.index === colIndex);
         if (existingCell) newCells.push(existingCell);
       }
-      newCells.sort((a, b) =>
-        a.octave === b.octave ? a.index - b.index : a.octave - b.octave
-      );
+      newCells.sort((a, b) => (a.octave === b.octave ? a.index - b.index : a.octave - b.octave));
       return newCells;
     });
   };
@@ -225,11 +196,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
 
   const numberOfPitchClasses = tuningSystemPitchClassesArray.length;
 
-  function handleAbjadSelect(
-    colIndex: number,
-    newValue: string,
-    octave: number
-  ) {
+  function handleAbjadSelect(colIndex: number, newValue: string, octave: number) {
     setSelectedAbjadNames((prev) => {
       const copy = [...prev];
       const rowOffset = octave === 1 ? 0 : numberOfPitchClasses;
@@ -266,22 +233,16 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
       // 2) If this is the *first column*, try to see if there's an existing config
       //    whose FIRST note is chosenName. If yes, we load that config in full.
       if (colIndex === 0) {
-        const existingConfig = noteNames.find(
-          (config) => config[0] === chosenName
-        );
+        const existingConfig = noteNames.find((config) => config[0] === chosenName);
         if (existingConfig) {
           // Convert each note in existingConfig to its *combined* index:
           const newMapping = existingConfig.map((arabicName) => {
             // See if arabicName is in octaveOne or octaveTwo:
-            const idxInOct1 = octaveOneNoteNames.indexOf(
-              arabicName as TransliteratedNoteNameOctaveOne
-            );
+            const idxInOct1 = octaveOneNoteNames.indexOf(arabicName as TransliteratedNoteNameOctaveOne);
             if (idxInOct1 >= 0) {
               return idxInOct1;
             } else {
-              const idxInOct2 = octaveTwoNoteNames.indexOf(
-                arabicName as TransliteratedNoteNameOctaveTwo
-              );
+              const idxInOct2 = octaveTwoNoteNames.indexOf(arabicName as TransliteratedNoteNameOctaveTwo);
               if (idxInOct2 >= 0) {
                 // Offset by length of octaveOne array to point into octaveTwo portion
                 return octaveOneNoteNames.length + idxInOct2;
@@ -304,15 +265,11 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
 
       // 3) Otherwise, we directly find chosenName in either octaveOne or octaveTwo
       let foundIndex = -1;
-      const idxInOct1 = octaveOneNoteNames.indexOf(
-        chosenName as TransliteratedNoteNameOctaveOne
-      );
+      const idxInOct1 = octaveOneNoteNames.indexOf(chosenName as TransliteratedNoteNameOctaveOne);
       if (idxInOct1 >= 0) {
         foundIndex = idxInOct1;
       } else {
-        const idxInOct2 = octaveTwoNoteNames.indexOf(
-          chosenName as TransliteratedNoteNameOctaveTwo
-        );
+        const idxInOct2 = octaveTwoNoteNames.indexOf(chosenName as TransliteratedNoteNameOctaveTwo);
         if (idxInOct2 >= 0) {
           // Offset by the size of the first array
           foundIndex = octaveOneNoteNames.length + idxInOct2;
@@ -330,8 +287,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
 
       // 5) Cascade fill for columns to the right
       if (cascade) {
-        const totalRow1Length =
-          octaveOneNoteNames.length + octaveTwoNoteNames.length;
+        const totalRow1Length = octaveOneNoteNames.length + octaveTwoNoteNames.length;
         for (let c = colIndex + 1; c < newArr.length; c++) {
           const offset = c - colIndex; // increment for each column
           const nextVal = foundIndex + offset;
@@ -353,14 +309,8 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
   // MARK: Octave Rows
 
   const getOctavePitchClasses = (octave: number) => {
-    if (allPitchClasses.length % numberOfPitchClasses !== 0)
-      throw new Error(
-        "All pitchClasses must be evenly divisible by the number of pitch classes."
-      );
-    return allPitchClasses.slice(
-      octave * numberOfPitchClasses,
-      (octave + 1) * numberOfPitchClasses
-    );
+    if (allPitchClasses.length % numberOfPitchClasses !== 0) throw new Error("All pitchClasses must be evenly divisible by the number of pitch classes.");
+    return allPitchClasses.slice(octave * numberOfPitchClasses, (octave + 1) * numberOfPitchClasses);
   };
 
   const displayStringValue = (value: string | number, decimal = 2) => {
@@ -389,10 +339,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
     const rowCells = getOctavePitchClasses(octave);
 
     return (
-      <details
-        className="tuning-system-manager__octave-details"
-        open={openedOctaveRows[octave as 0 | 1 | 2 | 3]}
-      >
+      <details className="tuning-system-manager__octave-details" open={openedOctaveRows[octave as 0 | 1 | 2 | 3]}>
         <summary
           className="tuning-system-manager__octave-summary"
           onClick={(e) => {
@@ -414,19 +361,17 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
           >
             Dīwān (octave) {octave}{" "}
           </span>
-          {admin &&
-            ((octave === 1 && openedOctaveRows[1]) ||
-              (octave === 2 && openedOctaveRows[2])) && (
-              <button
-                className="tuning-system-manager__octave-cascade-button"
-                onClick={(e: React.MouseEvent) => {
-                  e.stopPropagation();
-                  setCascade((c) => !c);
-                }}
-              >
-                {cascade ? "Cascade Enabled" : "Cascade Disabled"}
-              </button>
-            )}
+          {admin && ((octave === 1 && openedOctaveRows[1]) || (octave === 2 && openedOctaveRows[2])) && (
+            <button
+              className="tuning-system-manager__octave-cascade-button"
+              onClick={(e: React.MouseEvent) => {
+                e.stopPropagation();
+                setCascade((c) => !c);
+              }}
+            >
+              {cascade ? "Cascade Enabled" : "Cascade Disabled"}
+            </button>
+          )}
           {octave === 1 && openedOctaveRows[1] && (
             <span className="tuning-system-manager__filter-menu">
               {Object.keys(filters).map((filterKey) => {
@@ -438,11 +383,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                   <label
                     key={filterKey}
                     htmlFor={`filter-${filterKey}`}
-                    className={`tuning-system-manager__filter-item ${
-                      filters[filterKey as keyof typeof filters]
-                        ? "tuning-system-manager__filter-item_active"
-                        : ""
-                    }`}
+                    className={`tuning-system-manager__filter-item ${filters[filterKey as keyof typeof filters] ? "tuning-system-manager__filter-item_active" : ""}`}
                     // prevent the drawer (or parent) click handler from firing
                     onClick={(e) => e.stopPropagation()}
                   >
@@ -485,19 +426,13 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
           <button
             className="carousel-button carousel-button-prev"
             onClick={() => {
-              const container = document.querySelector(
-                ".tuning-system-manager__octave-scroll"
-              );
-              if (container)
-                container.scrollBy({ left: -635, behavior: "smooth" });
+              const container = document.querySelector(".tuning-system-manager__octave-scroll");
+              if (container) container.scrollBy({ left: -635, behavior: "smooth" });
             }}
           >
             ‹
           </button>
-          <div
-            className="tuning-system-manager__octave-scroll"
-            ref={octaveScrollRefs[octave as 0 | 1 | 2 | 3]}
-          >
+          <div className="tuning-system-manager__octave-scroll" ref={octaveScrollRefs[octave as 0 | 1 | 2 | 3]}>
             <table className="tuning-system-manager__octave-table" border={0}>
               <colgroup>
                 <col
@@ -515,10 +450,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                   <tr>
                     <td>Pitch Class</td>
                     {tuningSystemPitchClassesArray.map((_, colIndex) => (
-                      <td
-                        key={colIndex}
-                        className={getCellClassName(octave, colIndex)}
-                      >
+                      <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                         {colIndex}
                       </td>
                     ))}
@@ -536,17 +468,8 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                   {rowCells.map((pitchClass, colIndex) => {
                     if (octave === 1 && admin) {
                       return (
-                        <td
-                          key={colIndex}
-                          className={getCellClassName(octave, colIndex)}
-                        >
-                          <select
-                            className="tuning-system-manager__select-note"
-                            value={getOctaveNoteName(octave, colIndex) ?? ""}
-                            onChange={(e) =>
-                              handleSelectOctaveNote(colIndex, e.target.value)
-                            }
-                          >
+                        <td key={colIndex} className={getCellClassName(octave, colIndex)}>
+                          <select className="tuning-system-manager__select-note" value={getOctaveNoteName(octave, colIndex) ?? ""} onChange={(e) => handleSelectOctaveNote(colIndex, e.target.value)}>
                             <option value="none">(none)</option>
                             {octaveOneNoteNames.map((nm) => (
                               <option key={nm} value={nm}>
@@ -568,13 +491,8 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                       );
                     } else {
                       return (
-                        <td
-                          key={colIndex}
-                          className={getCellClassName(octave, colIndex)}
-                        >
-                          {pitchClass.noteName === "none"
-                            ? "(none)"
-                            : pitchClass.noteName.replace(/\//g, "/\u200B")}
+                        <td key={colIndex} className={getCellClassName(octave, colIndex)}>
+                          {pitchClass.noteName === "none" ? "(none)" : pitchClass.noteName.replace(/\//g, "/\u200B")}
                         </td>
                       );
                     }
@@ -589,29 +507,14 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                         key={colIndex}
                         className={`
             ${getCellClassName(octave, colIndex)}
-            ${
-              !(octave === 1 || octave === 2)
-                ? "tuning-system-manager__abjad-name"
-                : ""
-            }
+            ${!(octave === 1 || octave === 2) ? "tuning-system-manager__abjad-name" : ""}
           `}
                       >
                         {admin && (octave === 1 || octave === 2) ? (
                           <select
                             className="tuning-system-manager__select-abjad"
-                            value={
-                              selectedAbjadNames[
-                                colIndex +
-                                  (octave === 1 ? 0 : numberOfPitchClasses)
-                              ] || ""
-                            }
-                            onChange={(e) =>
-                              handleAbjadSelect(
-                                colIndex,
-                                e.target.value,
-                                octave
-                              )
-                            }
+                            value={selectedAbjadNames[colIndex + (octave === 1 ? 0 : numberOfPitchClasses)] || ""}
+                            onChange={(e) => handleAbjadSelect(colIndex, e.target.value, octave)}
                           >
                             <option value="">--</option>
                             {abjadNames.map((name, idx) => (
@@ -621,14 +524,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                             ))}
                           </select>
                         ) : (
-                          <span className="tuning-system-manager__abjad-name">
-                            {(
-                              selectedAbjadNames[
-                                colIndex +
-                                  (octave <= 1 ? 0 : numberOfPitchClasses)
-                              ] || "--"
-                            ).replace(/\//g, "/\u200B")}
-                          </span>
+                          <span className="tuning-system-manager__abjad-name">{(selectedAbjadNames[colIndex + (octave <= 1 ? 0 : numberOfPitchClasses)] || "--").replace(/\//g, "/\u200B")}</span>
                         )}
                       </td>
                     ))}
@@ -640,10 +536,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                     <td>English Name</td>
                     {rowCells.map((pitchClass, colIndex) => {
                       return (
-                        <td
-                          key={colIndex}
-                          className={getCellClassName(octave, colIndex)}
-                        >
+                        <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                           {pitchClass.englishName}
                         </td>
                       );
@@ -664,10 +557,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                       }
                     </td>
                     {rowCells.map((pitchClass, colIndex) => (
-                      <td
-                        key={colIndex}
-                        className={getCellClassName(octave, colIndex)}
-                      >
+                      <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                         {displayStringValue(pitchClass.originalValue)}
                       </td>
                     ))}
@@ -679,10 +569,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                   <tr>
                     <td>Cents (¢)</td>
                     {rowCells.map((pitchClass, colIndex) => (
-                      <td
-                        key={colIndex}
-                        className={getCellClassName(octave, colIndex)}
-                      >
+                      <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                         {displayStringValue(pitchClass.cents)}
                       </td>
                     ))}
@@ -694,10 +581,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                   <tr>
                     <td>Fraction Ratio</td>
                     {rowCells.map((pitchClass, colIndex) => (
-                      <td
-                        key={colIndex}
-                        className={getCellClassName(octave, colIndex)}
-                      >
+                      <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                         {displayStringValue(pitchClass.fraction)}
                       </td>
                     ))}
@@ -709,10 +593,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                   <tr>
                     <td>String Length</td>
                     {rowCells.map((pitchClass, colIndex) => (
-                      <td
-                        key={colIndex}
-                        className={getCellClassName(octave, colIndex)}
-                      >
+                      <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                         {displayStringValue(pitchClass.stringLength)}
                       </td>
                     ))}
@@ -723,10 +604,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                   <tr>
                     <td>Fret Division</td>
                     {rowCells.map((pitchClass, colIndex) => (
-                      <td
-                        key={colIndex}
-                        className={getCellClassName(octave, colIndex)}
-                      >
+                      <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                         {displayStringValue(pitchClass.fretDivision)}
                       </td>
                     ))}
@@ -738,10 +616,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                   <tr>
                     <td>Decimal Ratio</td>
                     {rowCells.map((pitchClass, colIndex) => (
-                      <td
-                        key={colIndex}
-                        className={getCellClassName(octave, colIndex)}
-                      >
+                      <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                         {displayStringValue(pitchClass.decimalRatio)}
                       </td>
                     ))}
@@ -753,10 +628,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                   <tr>
                     <td>Midi Note</td>
                     {rowCells.map((pitchClass, colIndex) => (
-                      <td
-                        key={colIndex}
-                        className={getCellClassName(octave, colIndex)}
-                      >
+                      <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                         {displayStringValue(pitchClass.midiNoteNumber)}
                       </td>
                     ))}
@@ -768,27 +640,14 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                   <tr>
                     <td>Freq (Hz)</td>
                     {rowCells.map((pitchClass, colIndex) => {
-                      const isEditing =
-                        editingCell?.octave === octave &&
-                        editingCell.index === colIndex;
+                      const isEditing = editingCell?.octave === octave && editingCell.index === colIndex;
                       return (
                         <td
                           key={colIndex}
-                          className={
-                            getCellClassName(octave, colIndex) +
-                            " " +
-                            (isEditing
-                              ? "tuning-system-manager__cell_editing "
-                              : "")
-                          }
+                          className={getCellClassName(octave, colIndex) + " " + (isEditing ? "tuning-system-manager__cell_editing " : "")}
                           style={{ cursor: "pointer" }}
                           onClick={() => {
-                            if (
-                              referenceFrequencies[
-                                getFirstNoteName(selectedIndices)
-                              ]
-                            )
-                              setEditingCell({ octave, index: colIndex });
+                            if (referenceFrequencies[getFirstNoteName(selectedIndices)]) setEditingCell({ octave, index: colIndex });
                           }}
                         >
                           {isEditing ? (
@@ -798,15 +657,11 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                               autoFocus
                               className="tuning-system-manager__freq-input"
                               onBlur={(e) => {
-                                const newFrequency = parseFloat(
-                                  e.currentTarget.value
-                                );
+                                const newFrequency = parseFloat(e.currentTarget.value);
                                 const cents = pitchClass.cents;
                                 const centsValue = parseFloat(cents);
-                                const newStartingFrequency =
-                                  newFrequency / Math.pow(2, centsValue / 1200);
-                                const startingNote =
-                                  getFirstNoteName(selectedIndices);
+                                const newStartingFrequency = newFrequency / Math.pow(2, centsValue / 1200);
+                                const startingNote = getFirstNoteName(selectedIndices);
                                 setReferenceFrequencies((prev) => ({
                                   ...prev,
                                   [startingNote]: newStartingFrequency,
@@ -830,16 +685,8 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                 <tr>
                   <td>Play</td>
                   {rowCells.map((pitchClass, colIndex) => (
-                    <td
-                      key={colIndex}
-                      className={getCellClassName(octave, colIndex)}
-                    >
-                      <PlayCircleIcon
-                        className="tuning-system-manager__play-circle-icon"
-                        onClick={() =>
-                          playNoteFrequency(parseFloat(pitchClass.frequency))
-                        }
-                      />
+                    <td key={colIndex} className={getCellClassName(octave, colIndex)}>
+                      <PlayCircleIcon className="tuning-system-manager__play-circle-icon" onClick={() => playNoteFrequency(parseFloat(pitchClass.frequency))} />
                     </td>
                   ))}
                 </tr>
@@ -848,24 +695,13 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                 <tr>
                   <td>Select</td>
                   {tuningSystemPitchClassesArray.map((_, colIndex) => (
-                    <td
-                      key={colIndex}
-                      className={getCellClassName(octave, colIndex)}
-                    >
+                    <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                       <input
                         type="checkbox"
                         className="tuning-system-manager__checkbox"
                         checked={isCellSelected(octave, colIndex)}
-                        onChange={(e) =>
-                          handleCheckboxChange(
-                            octave,
-                            colIndex,
-                            e.target.checked
-                          )
-                        }
-                        onClick={(e) =>
-                          (e.currentTarget as HTMLInputElement).blur()
-                        }
+                        onChange={(e) => handleCheckboxChange(octave, colIndex, e.target.checked)}
+                        onClick={(e) => (e.currentTarget as HTMLInputElement).blur()}
                       />
                     </td>
                   ))}
@@ -876,11 +712,8 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
           <button
             className="carousel-button carousel-button-next"
             onClick={() => {
-              const container = document.querySelector(
-                ".tuning-system-manager__octave-scroll"
-              );
-              if (container)
-                container.scrollBy({ left: 635, behavior: "smooth" });
+              const container = document.querySelector(".tuning-system-manager__octave-scroll");
+              if (container) container.scrollBy({ left: 635, behavior: "smooth" });
             }}
           >
             ›
@@ -891,13 +724,13 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
   }
 
   return (
-      <div className="tuning-system-manager__grid-wrapper">
-        <div className="tuning-system-manager__grid">
+    <div className="tuning-system-manager__grid-wrapper">
+      <div className="tuning-system-manager__grid">
         {renderOctave(0)}
         {renderOctave(1)}
         {renderOctave(2)}
         {renderOctave(3)}
       </div>
-      </div>
+    </div>
   );
 }
