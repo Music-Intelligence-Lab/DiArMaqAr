@@ -335,7 +335,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     [allPitchClasses, maqamat, ajnas, selectedTuningSystem, getMaqamTranspositions]
   );
 
-  const handleUrlParams = ({
+  const handleUrlParams = useCallback(({
     tuningSystemId,
     jinsDetailsId,
     maqamDetailsId,
@@ -392,10 +392,18 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         }
       }
     }
-  };
-
-
-  console.log("AppContextProvider rendered");
+  }, [
+    tuningSystems,
+    ajnas,
+    maqamat,
+    selectedTuningSystem,
+    setSelectedTuningSystem,
+    handleStartNoteNameChange,
+    getJinsTranspositions,
+    handleClickJins,
+    getMaqamTranspositions,
+    handleClickMaqam,
+  ]);
   
   return (
     <AppContext.Provider
