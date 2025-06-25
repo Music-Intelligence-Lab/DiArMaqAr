@@ -209,7 +209,7 @@ export function getMaqamTranspositions(
         if (ascendingMaqamAjnas.length - 1 === ascendingPitchClassIntervals.length) break;
       }
 
-      const offSet = descendingPitchClasses.length - (sliceIndex === 0 ? 0 : 1); //todo fix this
+      const offSet = descendingPitchClasses.length - (sliceIndex === 0 ? 0 : 1);
       for (let i = offSet; i <= extendedDescendingPitchClassIntervals.length; i++) {
         let found = false;
 

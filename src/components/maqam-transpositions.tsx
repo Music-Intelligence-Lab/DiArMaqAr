@@ -44,7 +44,7 @@ export default function MaqamTranspositions() {
 
     if (ascendingNoteNames.length < 2 || descendingNoteNames.length < 2) return null;
 
-    const romanNumerals = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "XI", "X", "XI", "XII", "XIII", "XIV", "XV"];
+    let romanNumerals = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "XI", "X", "XI", "XII", "XIII", "XIV", "XV"];
 
     const ascendingMaqamPitchClasses = allPitchClasses.filter((pitchClass) => ascendingNoteNames.includes(pitchClass.noteName));
 
@@ -56,6 +56,8 @@ export default function MaqamTranspositions() {
       noOctaveMaqam = true;
       romanNumerals[numberOfMaqamNotes] = "I+";
     }
+
+    romanNumerals = romanNumerals.slice(0, numberOfMaqamNotes + (noOctaveMaqam ? 1 : 0));
 
     const valueType = allPitchClasses[0].originalValueType;
     const useRatio = valueType === "fraction" || valueType === "decimalRatio";
@@ -158,7 +160,9 @@ export default function MaqamTranspositions() {
             {pitchClasses.map((_, i) => (
               <React.Fragment key={i}>
                 {i !== 0 && <th className="maqam-transpositions__header-cell_scale-degrees"></th>}
-                <th className="maqam-transpositions__header-cell_scale-degrees-number">{romanNumerals[i]}</th>
+                <th className="maqam-transpositions__header-cell_scale-degrees-number">
+                  {ascending ? romanNumerals[i] : romanNumerals[romanNumerals.length - 1 - i]}
+                </th>
               </React.Fragment>
             ))}
           </tr>
@@ -187,7 +191,7 @@ export default function MaqamTranspositions() {
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
                   <th className="maqam-transpositions__header-pitchClass"></th>
-                  <th className="maqam-transpositions__header-pitchClass">{pitchClasses[i + 1].abjadName  || "--"}</th>
+                  <th className="maqam-transpositions__header-pitchClass">{pitchClasses[i + 1].abjadName || "--"}</th>
                 </React.Fragment>
               ))}
             </tr>
