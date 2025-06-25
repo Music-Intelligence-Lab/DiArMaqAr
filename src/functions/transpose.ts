@@ -297,7 +297,7 @@ export function getJinsTranspositions(
       return {
         jinsId: jinsDetails.getId(),
         name: `${jinsDetails.getName()} al-${sequence[0].noteName}`,
-        transposition: false,
+        transposition: true,
         jinsPitchClasses: sequence,
         jinsPitchClassIntervals: getPitchClassIntervals(sequence),
       };

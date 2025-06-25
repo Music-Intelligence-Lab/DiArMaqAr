@@ -28,22 +28,31 @@ export default function HomeClient() {
     selectedMaqamDetails,
     maqamSayrId,
     selectedIndices,
-    originalIndices,
+    selectedMaqam,
+    selectedJins,
   } = useAppContext();
 
-  const { selectedMenu } = useMenuContext();
+  const { setSelectedMenu, selectedMenu } = useMenuContext();
 
   const searchParams = useSearchParams();
   const router = useRouter();
 
   useEffect(() => {
+    const maqamDetailsId = searchParams.get("maqamDetails") ?? undefined;
+    const jinsDetailsId = searchParams.get("jinsDetails") ?? undefined;
+
     handleUrlParams({
       tuningSystemId: searchParams.get("tuningSystem") ?? undefined,
-      jinsId: searchParams.get("jins") ?? undefined,
-      maqamId: searchParams.get("maqam") ?? undefined,
+      jinsDetailsId,
+      maqamDetailsId,
+      jinsFirstNote: searchParams.get("jinsFirstNote") ?? undefined,
+      maqamFirstNote: searchParams.get("maqamFirstNote") ?? undefined,
       sayrId: searchParams.get("sayr") ?? undefined,
       firstNote: searchParams.get("firstNote") ?? undefined,
     });
+
+    if (maqamDetailsId) setSelectedMenu("maqam");
+    else if (jinsDetailsId) setSelectedMenu("jins");
   }, [tuningSystems, ajnas, maqamat]);
 
   useEffect(() => {
@@ -55,14 +64,17 @@ export default function HomeClient() {
       if (first) params.push(`firstNote=${first}`);
     }
 
-    if (selectedJinsDetails) params.push(`jins=${selectedJinsDetails.getId()}`);
-    if (selectedMaqamDetails) params.push(`maqam=${selectedMaqamDetails.getId()}`);
+    if (selectedJinsDetails) params.push(`jinsDetails=${selectedJinsDetails.getId()}`);
+    if (selectedMaqamDetails) params.push(`maqamDetails=${selectedMaqamDetails.getId()}`);
     if (maqamSayrId) params.push(`sayr=${maqamSayrId}`);
+
+    if (selectedJins) params.push(`jinsFirstNote=${selectedJins.jinsPitchClasses[0].noteName}`);
+    if (selectedMaqam) params.push(`maqamFirstNote=${selectedMaqam.ascendingPitchClasses[0].noteName}`);
 
     if (typeof window !== "undefined" && window.location.pathname === "/") {
       router.replace(`/?${params.join("&")}`, { scroll: false });
     }
-  }, [selectedTuningSystem, selectedJinsDetails, selectedMaqamDetails, maqamSayrId, selectedIndices, originalIndices]);
+  }, [selectedTuningSystem, selectedJinsDetails, selectedMaqamDetails, maqamSayrId, selectedIndices, selectedMaqam, selectedJins]);
 
   return (
     <div className="home-page">
