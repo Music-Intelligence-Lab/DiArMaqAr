@@ -24,9 +24,7 @@
     font-size: 24px;
     cursor: pointer;
     vertical-align: middle;
-
   }
-
 
   &__button {
     background-color: rgba($primary, 0.5);
@@ -51,7 +49,6 @@
     &:hover {
       background-color: rgba($primary, 1);
     }
-
   }
 
   &__table {
@@ -62,22 +59,23 @@
     font-size: 12px;
     font-weight: 200;
 
-
     th {
-      vertical-align: middle;
+      vertical-align: top;
       margin-bottom: 500px;
       text-align: left;
       padding: 10px;
       border: solid 1px $grey;
       font-weight: 200;
     }
-
-    td {
-      vertical-align: middle;
-      border: solid 1px $grey;
+    tr {
+      height: 100%;
     }
-
-
+    td {
+      vertical-align: top;
+      border: solid 1px $grey;
+      height: 100%;
+      position: relative; // Optional: helpful if absolute children are used later
+    }
   }
 
   &__transposition-title {
@@ -107,7 +105,6 @@
     }
   }
 
-
   &__header {
     text-align: left;
     background-color: black;
@@ -122,7 +119,7 @@
     }
 
     &_highlighted {
-      background-color: rgba($tertiary, 0.8) !important;
+      background-color: rgba($tertiary, 0.5) !important;
     }
 
     &_scale-degrees {
@@ -140,9 +137,7 @@
     padding: 0px 0px 0px 0px;
     margin: 0px 0px 0px 0px;
     text-align: center;
-
   }
-
 
   &__row-header {
     background-color: $medium-grey;
@@ -165,12 +160,21 @@
   }
 
   &__jins-button {
-    padding: 5px;
-    border-radius: 5px;
-    background-color: $primary;
-    color: white;
-    cursor: pointer;
+    width: 100%;
+    min-height: 50px;
+    padding: 10px;
+    border-radius: 0px;
+    background-color: rgba($black, 0);
+    color: $text;
+    font-family: inherit;
+    font-weight: inherit;
     font-size: 12px;
+    text-align: left;
+    display: flex; // Enables flex layout
+    align-items: flex-start; // Aligns content to top
+    justify-content: flex-start; // (optional) aligns to left horizontally
+    cursor: pointer;
+    margin-bottom: 0px;
   }
 
   .maqam-transpositions__spacer {
