@@ -31,8 +31,6 @@ export default function Navbar() {
     allPitchClasses
   } = useAppContext();
 
-  console.log("Navbar rendered");
-
   const rowRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
