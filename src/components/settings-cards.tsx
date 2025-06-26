@@ -130,21 +130,7 @@ const SettingsCard = () => {
           </details>
 
           <details className="settings-card__details">
-            <summary className="settings-card__summary">Sound Input</summary>
-            <div className="settings-card__sound-mode">
-              <button
-                onClick={() => setSoundSettings((prev) => ({ ...prev, inputMode: "tuningSystem" }))}
-                className={`settings-card__sound-mode-button ${soundSettings.inputMode === "tuningSystem" ? "settings-card__sound-mode-button_selected" : ""}`}
-              >
-                Tuning System
-              </button>
-              <button
-                onClick={() => setSoundSettings((prev) => ({ ...prev, inputMode: "selection" }))}
-                className={`settings-card__sound-mode-button ${soundSettings.inputMode === "selection" ? "settings-card__sound-mode-button_selected" : ""}`}
-              >
-                Selection
-              </button>
-            </div>
+            <summary className="settings-card__summary">Live Input</summary>
 
             <div className="settings-card__input-container">
               <label htmlFor="midi-output-select" className="settings-card__label">
@@ -166,11 +152,41 @@ const SettingsCard = () => {
                   </option>
                 ))}
               </select>
+              <div className="settings-card__sound-mode">
+                <button
+                  onClick={() => setSoundSettings((prev) => ({ ...prev, inputType: "QWERTY" }))}
+                  className={`settings-card__sound-mode-button ${soundSettings.inputType === "QWERTY" ? "settings-card__sound-mode-button_selected" : ""}`}
+                >
+                  QWERTY
+                </button>
+                <button
+                  onClick={() => setSoundSettings((prev) => ({ ...prev, inputType: "MIDI" }))}
+                  className={`settings-card__sound-mode-button ${soundSettings.inputType === "MIDI" ? "settings-card__sound-mode-button_selected" : ""}`}
+                >
+                  MIDI
+                </button>
+              </div>
+              {soundSettings.inputType === "MIDI" && (
+                <div className="settings-card__sound-mode">
+                  <button
+                    onClick={() => setSoundSettings((prev) => ({ ...prev, inputMode: "tuningSystem" }))}
+                    className={`settings-card__sound-mode-button ${soundSettings.inputMode === "tuningSystem" ? "settings-card__sound-mode-button_selected" : ""}`}
+                  >
+                    Tuning System
+                  </button>
+                  <button
+                    onClick={() => setSoundSettings((prev) => ({ ...prev, inputMode: "selection" }))}
+                    className={`settings-card__sound-mode-button ${soundSettings.inputMode === "selection" ? "settings-card__sound-mode-button_selected" : ""}`}
+                  >
+                    Selection
+                  </button>
+                </div>
+              )}
             </div>
           </details>
 
           <details className="settings-card__details">
-            <summary className="settings-card__summary">Sound Output</summary>
+            <summary className="settings-card__summary">Audio Output</summary>
             <div className="settings-card__sound-mode">
               <button
                 onClick={() => setSoundSettings((prev) => ({ ...prev, outputMode: "mute" }))}

@@ -8,7 +8,7 @@ import shiftPitchClass from "@/functions/shiftPitchClass";
 
 export default function KeyboardControls() {
   const { selectedPitchClasses, selectedMaqamDetails, selectedMaqam, allPitchClasses } = useAppContext();
-  const { noteOn, noteOff, setActivePitchClasses } = useSoundContext();
+  const { noteOn, noteOff, setActivePitchClasses, soundSettings } = useSoundContext();
 
   // keyboard rows
   const firstRowKeys = ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]"];
@@ -45,7 +45,7 @@ export default function KeyboardControls() {
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.repeat || e.shiftKey || e.ctrlKey || e.altKey || e.metaKey || isTyping()) return;
+      if (e.repeat || e.shiftKey || e.ctrlKey || e.altKey || e.metaKey || isTyping() || soundSettings.inputType !== "QWERTY") return;
 
       let pitchClass: PitchClass | null = null;
       const idx1 = firstRowKeys.indexOf(e.key);
@@ -74,7 +74,7 @@ export default function KeyboardControls() {
     };
 
     const handleKeyUp = (e: KeyboardEvent) => {
-      if (e.shiftKey || e.ctrlKey || e.altKey || e.metaKey || isTyping()) return;
+      if (e.shiftKey || e.ctrlKey || e.altKey || e.metaKey || isTyping() || soundSettings.inputType !== "QWERTY") return;
 
       let pitchClass: PitchClass | null = null;
       const idx1 = firstRowKeys.indexOf(e.key);
