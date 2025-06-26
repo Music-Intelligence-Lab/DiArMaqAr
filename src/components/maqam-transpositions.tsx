@@ -15,7 +15,7 @@ import camelCaseToWord from "@/functions/camelCaseToWord";
 export default function MaqamTranspositions() {
   const { selectedMaqamDetails, selectedTuningSystem, setSelectedPitchClasses, allPitchClasses, centsTolerance, setCentsTolerance, ajnas, setSelectedMaqam, sources } = useAppContext();
 
-  const { playNoteFrequency, playSequence } = useSoundContext();
+  const { playNoteFrequency, playSequence, soundSettings } = useSoundContext();
 
   const { filters, setFilters } = useFilterContext();
 
@@ -26,6 +26,10 @@ export default function MaqamTranspositions() {
   };
 
   const disabledFilters = ["pitchClass"];
+
+  const maqamTranspositions = useMemo(() => {
+    return getMaqamTranspositions(allPitchClasses, ajnas, selectedMaqamDetails, true, centsTolerance);
+  }, [allPitchClasses, ajnas, selectedMaqamDetails, centsTolerance]);
 
   const transpositionTables = useMemo(() => {
     if (!selectedMaqamDetails || !selectedTuningSystem) return null;
@@ -54,9 +58,6 @@ export default function MaqamTranspositions() {
     const useRatio = valueType === "fraction" || valueType === "decimalRatio";
 
     const numberOfFilterRows = Object.keys(filters).filter((key) => !disabledFilters.includes(key) && key !== valueType && filters[key as keyof typeof filters]).length;
-
-    const maqamTranspositions = getMaqamTranspositions(allPitchClasses, ajnas, selectedMaqamDetails, true, centsTolerance);
-
     function renderTranspositionRow(maqam: Maqam, ascending: boolean, rowIndex: number) {
       let ascendingTranspositionPitchClasses = maqam.ascendingPitchClasses;
       let descendingTranspositionPitchClasses = maqam.descendingPitchClasses;
@@ -482,7 +483,7 @@ export default function MaqamTranspositions() {
         )}
       </div>
     );
-  }, [allPitchClasses, ajnas, selectedMaqamDetails, selectedTuningSystem, centsTolerance, filters, highlightedNotes]);
+  }, [allPitchClasses, ajnas, selectedMaqamDetails, selectedTuningSystem, centsTolerance, filters, highlightedNotes, soundSettings]);
 
   return transpositionTables;
 }

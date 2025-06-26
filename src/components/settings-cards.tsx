@@ -6,6 +6,7 @@ import useAppContext from "@/contexts/app-context";
 import useSoundContext from "@/contexts/sound-context";
 import useMenuContext from "@/contexts/menu-context";
 import SettingsIcon from "@mui/icons-material/Settings";
+import { BASIC_WAVEFORMS, APERIODIC_WAVEFORMS, CUSTOM_WAVEFORMS } from "@/audio/waves";
 
 const SettingsCard = () => {
   const { clearSelections, patterns } = useAppContext();
@@ -57,15 +58,7 @@ const SettingsCard = () => {
               <label htmlFor="tempo-input" className="settings-card__label">
                 Tempo (BPM):
               </label>
-              <input
-                type="number"
-                id="tempo-input"
-                value={soundSettings.tempo}
-                onChange={handleTempoChange}
-                className="settings-card__number-input"
-                min={20}
-                max={300}
-              />
+              <input type="number" id="tempo-input" value={soundSettings.tempo} onChange={handleTempoChange} className="settings-card__number-input" min={20} max={300} />
             </div>
             <div className="settings-card__input-container">
               <label htmlFor="pattern-select" className="settings-card__label">
@@ -99,15 +92,7 @@ const SettingsCard = () => {
               <label htmlFor="tempo-input" className="settings-card__label">
                 Duration (s):
               </label>
-              <input
-                type="number"
-                id="tempo-input"
-                value={soundSettings.duration}
-                onChange={handleDurationChange}
-                className="settings-card__number-input"
-                min={0.1}
-                max={10}
-              />
+              <input type="number" id="tempo-input" value={soundSettings.duration} onChange={handleDurationChange} className="settings-card__number-input" min={0.1} max={10} />
             </div>
 
             <div className="settings-card__input-container">
@@ -125,54 +110,22 @@ const SettingsCard = () => {
 
             <div className="settings-card__input-container">
               <p>Attack (s): {soundSettings.attack.toFixed(2)}</p>
-              <Slider
-                size="small"
-                value={soundSettings.attack}
-                min={0}
-                max={10}
-                step={0.01}
-                onChange={handleSoundSettingsChange("attack")}
-                valueLabelDisplay="auto"
-              />
+              <Slider size="small" value={soundSettings.attack} min={0} max={10} step={0.01} onChange={handleSoundSettingsChange("attack")} valueLabelDisplay="auto" />
             </div>
 
             <div className="settings-card__input-container">
               <p>Decay (s): {soundSettings.decay.toFixed(2)}</p>
-              <Slider
-                size="small"
-                value={soundSettings.decay}
-                min={0}
-                max={10}
-                step={0.01}
-                onChange={handleSoundSettingsChange("decay")}
-                valueLabelDisplay="auto"
-              />
+              <Slider size="small" value={soundSettings.decay} min={0} max={10} step={0.01} onChange={handleSoundSettingsChange("decay")} valueLabelDisplay="auto" />
             </div>
 
             <div className="settings-card__input-container">
               <p>Sustain: {soundSettings.sustain.toFixed(2)}</p>
-              <Slider
-                size="small"
-                value={soundSettings.sustain}
-                min={0}
-                max={1}
-                step={0.01}
-                onChange={handleSoundSettingsChange("sustain")}
-                valueLabelDisplay="auto"
-              />
+              <Slider size="small" value={soundSettings.sustain} min={0} max={1} step={0.01} onChange={handleSoundSettingsChange("sustain")} valueLabelDisplay="auto" />
             </div>
 
             <div className="settings-card__input-container">
               <p>Release (s): {soundSettings.release.toFixed(2)}</p>
-              <Slider
-                size="small"
-                value={soundSettings.release}
-                min={0}
-                max={10}
-                step={0.01}
-                onChange={handleSoundSettingsChange("release")}
-                valueLabelDisplay="auto"
-              />
+              <Slider size="small" value={soundSettings.release} min={0} max={10} step={0.01} onChange={handleSoundSettingsChange("release")} valueLabelDisplay="auto" />
             </div>
           </details>
 
@@ -181,17 +134,13 @@ const SettingsCard = () => {
             <div className="settings-card__sound-mode">
               <button
                 onClick={() => setSoundSettings((prev) => ({ ...prev, inputMode: "tuningSystem" }))}
-                className={`settings-card__sound-mode-button ${
-                  soundSettings.inputMode === "tuningSystem" ? "settings-card__sound-mode-button_selected" : ""
-                }`}
+                className={`settings-card__sound-mode-button ${soundSettings.inputMode === "tuningSystem" ? "settings-card__sound-mode-button_selected" : ""}`}
               >
                 Tuning System
               </button>
               <button
                 onClick={() => setSoundSettings((prev) => ({ ...prev, inputMode: "selection" }))}
-                className={`settings-card__sound-mode-button ${
-                  soundSettings.inputMode === "selection" ? "settings-card__sound-mode-button_selected" : ""
-                }`}
+                className={`settings-card__sound-mode-button ${soundSettings.inputMode === "selection" ? "settings-card__sound-mode-button_selected" : ""}`}
               >
                 Selection
               </button>
@@ -225,25 +174,19 @@ const SettingsCard = () => {
             <div className="settings-card__sound-mode">
               <button
                 onClick={() => setSoundSettings((prev) => ({ ...prev, outputMode: "mute" }))}
-                className={`settings-card__sound-mode-button ${
-                  soundSettings.outputMode === "mute" ? "settings-card__sound-mode-button_selected" : ""
-                }`}
+                className={`settings-card__sound-mode-button ${soundSettings.outputMode === "mute" ? "settings-card__sound-mode-button_selected" : ""}`}
               >
                 Mute
               </button>
               <button
                 onClick={() => setSoundSettings((prev) => ({ ...prev, outputMode: "waveform" }))}
-                className={`settings-card__sound-mode-button ${
-                  soundSettings.outputMode === "waveform" ? "settings-card__sound-mode-button_selected" : ""
-                }`}
+                className={`settings-card__sound-mode-button ${soundSettings.outputMode === "waveform" ? "settings-card__sound-mode-button_selected" : ""}`}
               >
                 Waveform
               </button>
               <button
                 onClick={() => setSoundSettings((prev) => ({ ...prev, outputMode: "midi" }))}
-                className={`settings-card__sound-mode-button ${
-                  soundSettings.outputMode === "midi" ? "settings-card__sound-mode-button_selected" : ""
-                }`}
+                className={`settings-card__sound-mode-button ${soundSettings.outputMode === "midi" ? "settings-card__sound-mode-button_selected" : ""}`}
               >
                 Midi
               </button>
@@ -255,10 +198,27 @@ const SettingsCard = () => {
                   Waveform:
                 </label>
                 <select id="waveform-select" value={soundSettings.waveform} onChange={handleWaveformChange} className="settings-card__select">
-                  <option value="sine">Sine</option>
-                  <option value="square">Square</option>
-                  <option value="sawtooth">Sawtooth</option>
-                  <option value="triangle">Triangle</option>
+                  <optgroup label="Basic">
+                    {BASIC_WAVEFORMS.map((w) => (
+                      <option key={w} value={w}>
+                        {w}
+                      </option>
+                    ))}
+                  </optgroup>
+                  <optgroup label="Custom Periodic">
+                    {CUSTOM_WAVEFORMS.map((w) => (
+                      <option key={w} value={w}>
+                        {w}
+                      </option>
+                    ))}
+                  </optgroup>
+                  <optgroup label="Aperiodic">
+                    {APERIODIC_WAVEFORMS.map((w) => (
+                      <option key={w} value={w}>
+                        {w}
+                      </option>
+                    ))}
+                  </optgroup>
                 </select>
               </div>
             )}
@@ -290,15 +250,7 @@ const SettingsCard = () => {
                   <label htmlFor="tempo-input" className="settings-card__label">
                     Pitch Bend Range (semitones):
                   </label>
-                  <input
-                    type="number"
-                    id="tempo-input"
-                    value={soundSettings.pitchBendRange}
-                    onChange={handlePitchBendRangeChange}
-                    className="settings-card__number-input"
-                    min={0}
-                    max={50}
-                  />
+                  <input type="number" id="tempo-input" value={soundSettings.pitchBendRange} onChange={handlePitchBendRangeChange} className="settings-card__number-input" min={0} max={50} />
                 </div>
               </>
             )}
