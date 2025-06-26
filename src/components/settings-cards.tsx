@@ -50,7 +50,7 @@ const SettingsCard = () => {
     if (!isNaN(val)) setSoundSettings((prev) => ({ ...prev, tempo: val }));
   };
 
-/*   const handleDurationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  /*   const handleDurationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = Number(e.target.value);
     if (!isNaN(val)) setSoundSettings((prev) => ({ ...prev, duration: val }));
   };
@@ -224,7 +224,7 @@ const SettingsCard = () => {
 
           <details className="settings-card__details">
             <summary className="settings-card__summary">Envelope</summary>
-{/*             <div className="settings-card__input-container">
+            {/*             <div className="settings-card__input-container">
               <label htmlFor="tempo-input" className="settings-card__label">
                 Duration (s):
               </label>
@@ -255,7 +255,7 @@ const SettingsCard = () => {
                   const el = document.activeElement as HTMLElement | null;
                   el?.blur();
                 }}
-                valueLabelDisplay="auto"
+                valueLabelDisplay="off"
               />
             </div>
 
@@ -265,14 +265,14 @@ const SettingsCard = () => {
                 size="small"
                 value={soundSettings.attack}
                 min={0}
-                max={10}
+                max={5}
                 step={0.01}
                 onChange={handleSoundSettingsChange("attack")}
                 onChangeCommitted={() => {
                   const el = document.activeElement as HTMLElement | null;
                   el?.blur();
                 }}
-                valueLabelDisplay="auto"
+                valueLabelDisplay="off"
               />
             </div>
 
@@ -282,14 +282,14 @@ const SettingsCard = () => {
                 size="small"
                 value={soundSettings.decay}
                 min={0}
-                max={10}
+                max={5}
                 step={0.01}
                 onChange={handleSoundSettingsChange("decay")}
                 onChangeCommitted={() => {
                   const el = document.activeElement as HTMLElement | null;
                   el?.blur();
                 }}
-                valueLabelDisplay="auto"
+                valueLabelDisplay="off"
               />
             </div>
 
@@ -306,7 +306,7 @@ const SettingsCard = () => {
                   const el = document.activeElement as HTMLElement | null;
                   el?.blur();
                 }}
-                valueLabelDisplay="auto"
+                valueLabelDisplay="off"
               />
             </div>
 
@@ -323,7 +323,7 @@ const SettingsCard = () => {
                   const el = document.activeElement as HTMLElement | null;
                   el?.blur();
                 }}
-                valueLabelDisplay="auto"
+                valueLabelDisplay="off"
               />
             </div>
           </details>

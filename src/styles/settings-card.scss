@@ -3,7 +3,7 @@
 .settings-open-button {
   position: relative;
   background-color: transparent;
-  color: #ffffff;
+  color: $text;
   border: none;
   border-radius: 10px;
   cursor: pointer;
@@ -16,11 +16,12 @@
   top: 0;
   right: 0;
   height: 100%;
-  width: 300px;
-
+  width: 288px;
+  // border-left: solid $grey 1px;
   transform: translateX(130%);
   transition: transform 0.3s ease-in-out;
   z-index: 9999;
+  box-shadow: -10px 0 50px rgba($black, 0.75);
 
   &--open {
     transform: translateX(0);
@@ -30,13 +31,14 @@
     display: flex;
     flex-direction: column;
     padding-bottom: 50px;
-    padding-top: $top-navbar-height;
-    color: black;
+    padding-top: calc($top-navbar-height - 1px);
+    color: $black;
     height: 100%;
     width: 100%;
     overflow-y: auto;
-    background: $black ;
-    color: white;
+    background: $black;
+    color: $text;
+    font-size: 14px;
   }
 
   &__details {
@@ -44,14 +46,14 @@
     flex-direction: column;
     justify-content: center;
     width: 100%;
-
-    padding: 10px;
-    border-bottom: 1px solid #e0e0e0;
-
-    transition: all 0.2s ease-in-out;
+    height: 55px;
+    padding: 10px 20px;
+    border-top: 1px solid $grey;
+    transition: all 0.1s ease-in-out;
 
     &[open] {
-      background-color: $medium-grey;
+      background-color: $dark-grey;
+      height: fit-content;
     }
   }
 
@@ -59,8 +61,9 @@
     width: 100%;
     cursor: pointer;
     user-select: none;
-    margin-bottom: 5px;
-    font-weight: bold;
+    margin-bottom: 14px;
+    font-weight: 300;
+    font-size: 16px;
   }
 
   &__input-container {
@@ -100,12 +103,12 @@
       left: 0;
       height: 28px;
       width: 28px;
-      background-color: #ccc;
+      background-color: $text;
       border-radius: 50%;
       transition: 300ms;
     }
 
-    & input:checked~.checkmark {
+    & input:checked ~ .checkmark {
       background-color: $primary;
       border-radius: 5px;
       animation: pulse 500ms ease-in-out;
@@ -117,7 +120,7 @@
       display: none;
     }
 
-    & input:checked~.checkmark:after {
+    & input:checked ~ .checkmark:after {
       display: block;
     }
 
@@ -150,31 +153,31 @@
 
   &__clear-button {
     padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 5px;
+    font-size: 14px;
     cursor: pointer;
-    transition: 0.3s;
-    color: white;
+    transition: 0.1s;
+    color: $text;
     margin: 10px;
     background-color: $primary;
 
     &:hover {
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+      background-color: $secondary;
     }
   }
 
   &__select,
   &__number-input {
-    padding: 0.5rem;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    padding: 5px 10px;
+    font-size: 12px;
+    border: none;
     width: 100%;
+    border-radius: 0px;
+    background-position: left -40px center;
   }
 
   &__select {
     cursor: pointer;
+    padding-right: 20px;
   }
 
   &__sound-mode {
@@ -184,13 +187,20 @@
   }
 
   &__sound-mode-button {
-    padding: 10px 20px;
-    transition: 0.3s;
+    padding: 10px 10px;
+    font-size: 12px;
+    margin-right: 10px;
+    transition: 0.1s;
     cursor: pointer;
+    background-color: rgba($primary, 0.5);
+    color: $text;
+    &:hover{
+      background-color: rgba($primary, 1);
+    }
 
     &_selected {
-      background-color: $primary;
-      color: white;
+      background-color: $secondary;
+      color: $text;
     }
   }
 
@@ -199,10 +209,9 @@
     margin-right: 10px;
     margin-top: 5px;
     padding: 5px;
-    font-size: 16px;
+    font-size: 12px;
     background-color: $secondary;
-    color: white;
-    border-radius: 5px;
+    color: $text;
     cursor: pointer;
   }
 }

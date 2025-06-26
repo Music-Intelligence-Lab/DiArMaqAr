@@ -626,9 +626,9 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
   }
 
   function stopAll() {
-    timeoutsRef.current.forEach(clearTimeout);
+/*     timeoutsRef.current.forEach(clearTimeout);
     timeoutsRef.current = [];
-
+ */
     for (const voices of activeNotesRef.current.values()) {
       voices.forEach(({ oscillator }) => {
         if (Array.isArray(oscillator)) {
