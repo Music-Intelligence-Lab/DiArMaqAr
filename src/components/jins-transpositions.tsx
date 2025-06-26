@@ -11,16 +11,7 @@ import { Jins } from "@/models/Jins";
 import camelCaseToWord from "@/functions/camelCaseToWord";
 
 export default function JinsTranspositions() {
-  const {
-    selectedJinsDetails,
-    selectedTuningSystem,
-    setSelectedPitchClasses,
-    allPitchClasses,
-    centsTolerance,
-    setCentsTolerance,
-    sources,
-    setSelectedJins,
-  } = useAppContext();
+  const { selectedJinsDetails, selectedTuningSystem, setSelectedPitchClasses, allPitchClasses, centsTolerance, setCentsTolerance, sources, setSelectedJins } = useAppContext();
 
   const { playNoteFrequency, playSequence } = useSoundContext();
 
@@ -38,9 +29,7 @@ export default function JinsTranspositions() {
     const valueType = allPitchClasses[0].originalValueType;
     const useRatio = valueType === "fraction" || valueType === "decimalRatio";
 
-    const numberOfFilterRows = Object.keys(filters).filter(
-      (key) => !disabledFilters.includes(key) && key !== valueType && filters[key as keyof typeof filters]
-    ).length;
+    const numberOfFilterRows = Object.keys(filters).filter((key) => !disabledFilters.includes(key) && key !== valueType && filters[key as keyof typeof filters]).length;
 
     const jinsTranspositions = getJinsTranspositions(allPitchClasses, selectedJinsDetails, true, centsTolerance);
 
@@ -53,18 +42,13 @@ export default function JinsTranspositions() {
       return (
         <>
           <tr className="jins-transpositions__header">
-            <td
-              className={`jins-transpositions__transposition-number jins-transpositions__transposition-number_${pitchClasses[0].octave}`}
-              rowSpan={4 + numberOfFilterRows}
-            >
+            <td className={`jins-transpositions__transposition-number jins-transpositions__transposition-number_${pitchClasses[0].octave}`} rowSpan={4 + numberOfFilterRows}>
               {index + 1}
             </td>
 
             <td className="jins-transpositions__jins-name-row" colSpan={2 + (pitchClasses.length - 1) * 2}>
               {!transposition ? (
-                <span className="jins-transpositions__transposition-title">
-                  Darajat al-Istiqrār (tonic/finalis): {pitchClasses[0].noteName + ` (${getEnglishNoteName(pitchClasses[0].noteName)})`}
-                </span>
+                <span className="jins-transpositions__transposition-title">Darajat al-Istiqrār (tonic/finalis): {pitchClasses[0].noteName + ` (${getEnglishNoteName(pitchClasses[0].noteName)})`}</span>
               ) : (
                 <span className="jins-transpositions__transposition-title">{jins.name}</span>
               )}
@@ -127,9 +111,7 @@ export default function JinsTranspositions() {
             <th className="jins-transpositions__header-pitchClass">{pitchClasses[0].originalValue}</th>
             {intervals.map((interval, i) => (
               <React.Fragment key={i}>
-                <th className="jins-transpositions__header-pitchClass">
-                  {useRatio ? `(${interval.fraction.replace("/", ":")})` : `${interval.cents.toFixed(3)}`}
-                </th>
+                <th className="jins-transpositions__header-pitchClass">{useRatio ? `(${interval.fraction.replace("/", ":")})` : `${interval.cents.toFixed(3)}`}</th>
                 <th className="jins-transpositions__header-pitchClass">{pitchClasses[i + 1].originalValue}</th>
               </React.Fragment>
             ))}
@@ -257,9 +239,7 @@ export default function JinsTranspositions() {
                   <label
                     key={filterKey}
                     htmlFor={`filter-${filterKey}`}
-                    className={`tuning-system-manager__filter-item ${
-                      filters[filterKey as keyof typeof filters] ? "tuning-system-manager__filter-item_active" : ""
-                    }`}
+                    className={`tuning-system-manager__filter-item ${filters[filterKey as keyof typeof filters] ? "tuning-system-manager__filter-item_active" : ""}`}
                     // prevent the drawer (or parent) click handler from firing
                     onClick={(e) => e.stopPropagation()}
                   >
@@ -308,13 +288,7 @@ export default function JinsTranspositions() {
             {!useRatio && (
               <>
                 {" "}
-                / Cents Tolerance:{" "}
-                <input
-                  className="jins-transpositions__input"
-                  type="number"
-                  value={centsTolerance ?? 0}
-                  onChange={(e) => setCentsTolerance(Number(e.target.value))}
-                />
+                / Cents Tolerance: <input className="jins-transpositions__input" type="number" value={centsTolerance ?? 0} onChange={(e) => setCentsTolerance(Number(e.target.value))} />
               </>
             )}
           </h2>
@@ -335,35 +309,33 @@ export default function JinsTranspositions() {
         </div>
 
         {/* COMMENTS AND SOURCES */}
-        <div className="jins-transpositions__comments-sources-container">
-          <div className="jins-transpositions__comments-english">
-            <h3>Comments:</h3>
-          </div>
-
-          <div className="jins-transpositions__sources-english">
-            <h3>Sources:</h3>
-            {selectedJinsDetails?.getSourcePageReferences().length > 0 &&
-              selectedJinsDetails.getSourcePageReferences().map((sourceRef, idx) => {
-                const source = sources.find((s: any) => s.id === sourceRef.sourceId);
-                return source ? (
-                  <React.Fragment key={idx}>
-                    {source.getContributors()[0].lastNameEnglish} ({source.getReleaseDateEnglish()}:{sourceRef.page})
-                    <br />
-                  </React.Fragment>
-                ) : null;
-              })}
-          </div>
-
-          {/* <div className="jins-transpositions__comments-arabic"> 
-      <h3>تعليقات:</h3>
-      {selectedTuningSystem?.getCommentsArabic()}
-    </div>
-  
-    <div className="jins-transpositions__sources-arabic"> 
-      <h3>مصادر:</h3>
-      {selectedTuningSystem?.getSourceArabic()}
-    </div> */}
-        </div>
+        {selectedJinsDetails && (
+          <>
+            <div className="jins-transpositions__comments-sources-container">
+              <div className="jins-transpositions__comments">
+                <h3>Comments:</h3>
+                <div className="jins-transpositions__comments-text">{selectedJinsDetails.getCommentsEnglish()}</div>
+              </div>
+              <div className="jins-transpositions__comments">
+                <h3>التعليقات</h3>
+                <div className="jins-transpositions__comments-text">{selectedJinsDetails.getCommentsArabic()}</div>
+              </div>
+            </div>
+            <div className="jins-transpositions__sources">
+              <h3>Sources:</h3>
+              {selectedJinsDetails?.getSourcePageReferences().length > 0 &&
+                selectedJinsDetails.getSourcePageReferences().map((sourceRef, idx) => {
+                  const source = sources.find((s: any) => s.id === sourceRef.sourceId);
+                  return source ? (
+                    <React.Fragment key={idx}>
+                      {source.getContributors()[0].lastNameEnglish} ({source.getReleaseDateEnglish()}:{sourceRef.page})
+                      <br />
+                    </React.Fragment>
+                  ) : null;
+                })}
+            </div>
+          </>
+        )}
       </>
     );
   }, [allPitchClasses, selectedJinsDetails, centsTolerance, filters]);

@@ -177,6 +177,18 @@
     margin-bottom: 0px;
   }
 
+  &__comments-sources-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 30px;
+  }
+
+  &__sources {
+    width: 100%;
+    display: flex;
+    padding: 10px 30px;
+  }
+
   .maqam-transpositions__spacer {
     padding: 10px;
     border: 0px;
