@@ -7,7 +7,7 @@ import midiNumberToNoteName from "@/functions/midiToNoteNumber";
 import Pattern from "@/models/Pattern";
 import romanToNumber from "@/functions/romanToNumber";
 import PitchClass from "@/models/PitchClass";
-
+import { initializeCustomWaves, PERIODIC_WAVES, APERIODIC_WAVES } from "@/audio/waves";
 type InputMode = "tuningSystem" | "selection";
 type OutputMode = "mute" | "waveform" | "midi";
 
@@ -116,6 +116,9 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     masterGain.gain.value = soundSettings.volume;
     masterGain.connect(audioCtx.destination);
     masterGainRef.current = masterGain;
+
+    // ← initialize *all* periodic & aperiodic waves here
+    initializeCustomWaves(audioCtx);
   }, []);
 
   useEffect(() => {
@@ -276,66 +279,88 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
   const playNoteFrequency = (frequency: number, givenDuration: number = soundSettings.duration) => {
     // 1) Mute
     if (soundSettings.outputMode === "mute") return;
+
     // 2) MIDI
     if (soundSettings.outputMode === "midi") {
-      // compute float MIDI note and detune fraction
       const mf = frequencyToMidiNoteNumber(frequency);
       const note = Math.floor(mf);
       const detune = mf - note;
-
-      // send pitch bend then note-on
       sendPitchBend(detune);
       const vel = Math.round(soundSettings.volume * 127);
       sendMidiMessage([0x90, note, vel]);
-
       midiActiveNotesRef.current.add(note);
-
       scheduleTimeout(() => {
         sendMidiMessage([0x80, note, 0]);
         midiActiveNotesRef.current.delete(note);
       }, givenDuration * 1000);
-
       return;
     }
 
-    // 3) Waveform (unchanged)
+    // 3) Waveform
     if (!audioCtxRef.current || !masterGainRef.current) return;
     if (isNaN(frequency) || frequency <= 0) return;
 
     const audioCtx = audioCtxRef.current;
     const masterGain = masterGainRef.current;
     const startTime = audioCtx.currentTime;
-    const { attack, decay, sustain, release } = soundSettings;
+    const { attack, decay, sustain, release, waveform } = soundSettings;
 
-    const attackEnd = startTime + attack;
-    const decayEnd = attackEnd + decay;
-    const noteOffTime = startTime + givenDuration;
-    const releaseStart = Math.max(noteOffTime - release, decayEnd);
-    const releaseEnd = releaseStart + release;
+    //–– pick source node based on waveform string ––
+    let source: AudioNode;
 
-    const oscillator = audioCtx.createOscillator();
-    oscillator.type = soundSettings.waveform as OscillatorType;
-    oscillator.frequency.setValueAtTime(frequency, startTime);
+    // A) aperiodic
+    if (APERIODIC_WAVES[waveform]) {
+      // sw-synth AperiodicWave typically provides createNode(ctx, freq):
+      const aw: any = APERIODIC_WAVES[waveform];
+      // pick one of the built-in PeriodicWave variants;
+      // most people just take the first, but you can experiment
+      const pw: PeriodicWave = aw.periodicWaves[0];
 
+      // spin up an oscillator with that PeriodicWave
+      const osc = audioCtx.createOscillator();
+      osc.setPeriodicWave(pw);
+      osc.frequency.setValueAtTime(frequency, startTime);
+
+      source = osc;
+    }
+    // B) periodic
+    else if (PERIODIC_WAVES[waveform]) {
+      const osc = audioCtx.createOscillator();
+      osc.setPeriodicWave(PERIODIC_WAVES[waveform]);
+      osc.frequency.setValueAtTime(frequency, startTime);
+      source = osc;
+    }
+    // C) built-in
+    else {
+      const osc = audioCtx.createOscillator();
+      osc.type = waveform as OscillatorType;
+      osc.frequency.setValueAtTime(frequency, startTime);
+      source = osc;
+    }
+
+    //–– apply ADSR envelope ––
     const gainNode = audioCtx.createGain();
+    // attack → decay → sustain
     gainNode.gain.setValueAtTime(0, startTime);
-    gainNode.gain.linearRampToValueAtTime(1, attackEnd);
-    gainNode.gain.linearRampToValueAtTime(sustain, decayEnd);
+    gainNode.gain.linearRampToValueAtTime(1, startTime + attack);
+    gainNode.gain.linearRampToValueAtTime(sustain, startTime + attack + decay);
+    // schedule release
+    const noteOffTime = startTime + givenDuration;
+    const releaseStart = noteOffTime - release;
     gainNode.gain.setValueAtTime(sustain, releaseStart);
-    gainNode.gain.linearRampToValueAtTime(0, releaseEnd);
+    gainNode.gain.linearRampToValueAtTime(0, noteOffTime);
 
-    oscillator.connect(gainNode).connect(masterGain);
-    oscillator.start(startTime);
-    oscillator.stop(releaseEnd);
+    //–– connect & play ––
+    source.connect(gainNode).connect(masterGain);
+    if ((source as OscillatorNode).start) (source as OscillatorNode).start(startTime);
+    if ((source as OscillatorNode).stop) (source as OscillatorNode).stop(noteOffTime);
   };
 
   const playSequence = (frequencies: number[], ascending = true): Promise<void> => {
     timeoutsRef.current.forEach(clearTimeout);
     timeoutsRef.current = [];
 
-    const selectedPattern = soundSettings.selectedPattern || new Pattern("Default", "Default", [
-      {scaleDegree: "I", noteDuration: "4", isTarget: true},
-    ]);
+    const selectedPattern = soundSettings.selectedPattern || new Pattern("Default", "Default", [{ scaleDegree: "I", noteDuration: "4", isTarget: true }]);
 
     return new Promise((resolve) => {
       const beatSec = 60 / soundSettings.tempo;

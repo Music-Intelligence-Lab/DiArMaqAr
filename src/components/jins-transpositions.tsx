@@ -13,7 +13,7 @@ import camelCaseToWord from "@/functions/camelCaseToWord";
 export default function JinsTranspositions() {
   const { selectedJinsDetails, selectedTuningSystem, setSelectedPitchClasses, allPitchClasses, centsTolerance, setCentsTolerance, sources, setSelectedJins } = useAppContext();
 
-  const { playNoteFrequency, playSequence } = useSoundContext();
+  const { playNoteFrequency, playSequence, soundSettings } = useSoundContext();
 
   const { filters, setFilters } = useFilterContext();
 
@@ -338,7 +338,7 @@ export default function JinsTranspositions() {
         )}
       </>
     );
-  }, [allPitchClasses, selectedJinsDetails, centsTolerance, filters]);
+  }, [allPitchClasses, selectedJinsDetails, centsTolerance, filters, soundSettings]);
 
   return transpositionTables;
 }
