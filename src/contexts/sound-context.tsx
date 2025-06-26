@@ -21,6 +21,7 @@ interface SoundSettings {
   tempo: number;
   waveform: string;
   pitchBendRange: number;
+  inputType: "QWERTY" | "MIDI";
   inputMode: InputMode;
   selectedMidiInputId: string | null;
   outputMode: OutputMode;
@@ -63,6 +64,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     duration: 0.1,
     tempo: 200,
     pitchBendRange: 2,
+    inputType: "QWERTY",
     inputMode: "selection",
     selectedMidiInputId: null,
     outputMode: "waveform",
