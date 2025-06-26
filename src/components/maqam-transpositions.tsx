@@ -13,7 +13,7 @@ import shiftPitchClass from "@/functions/shiftPitchClass";
 import camelCaseToWord from "@/functions/camelCaseToWord";
 
 export default function MaqamTranspositions() {
-  const { selectedMaqamDetails, selectedTuningSystem, setSelectedPitchClasses, allPitchClasses, centsTolerance, setCentsTolerance, ajnas, setSelectedMaqam } = useAppContext();
+  const { selectedMaqamDetails, selectedTuningSystem, setSelectedPitchClasses, allPitchClasses, centsTolerance, setCentsTolerance, ajnas, setSelectedMaqam, sources } = useAppContext();
 
   const { playNoteFrequency, playSequence } = useSoundContext();
 
@@ -449,6 +449,35 @@ export default function MaqamTranspositions() {
                 })}
               </tbody>
             </table>
+          </>
+        )}
+
+        {/* COMMENTS AND SOURCES */}
+        {selectedMaqamDetails && (
+          <>
+            <div className="maqam-transpositions__comments-sources-container">
+              <div className="maqam-transpositions__comments">
+                <h3>Comments:</h3>
+                <div className="maqam-transpositions__comments-text">{selectedMaqamDetails.getCommentsEnglish()}</div>
+              </div>
+              <div className="maqam-transpositions__comments">
+                <h3>التعليقات</h3>
+                <div className="maqam-transpositions__comments-text">{selectedMaqamDetails.getCommentsArabic()}</div>
+              </div>
+            </div>
+            <div className="maqam-transpositions__sources">
+              <h3>Sources:</h3>
+              {selectedMaqamDetails?.getSourcePageReferences().length > 0 &&
+                selectedMaqamDetails.getSourcePageReferences().map((sourceRef, idx) => {
+                  const source = sources.find((s: any) => s.id === sourceRef.sourceId);
+                  return source ? (
+                    <React.Fragment key={idx}>
+                      {source.getContributors()[0].lastNameEnglish} ({source.getReleaseDateEnglish()}:{sourceRef.page})
+                      <br />
+                    </React.Fragment>
+                  ) : null;
+                })}
+            </div>
           </>
         )}
       </div>
