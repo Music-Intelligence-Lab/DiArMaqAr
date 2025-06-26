@@ -21,21 +21,21 @@ const NavigationMenu = () => {
 
       <div className={`navigation-menu-card ${openNavigation ? "navigation-menu-card--open" : ""}`}>
         <div className="navigation-menu-card__content">
-            <Link href="/" className="navigation-menu-card__link">
+          <Link href="/" className="navigation-menu-card__link">
             Home
-            </Link>
-            <Link href="/landing" className="navigation-menu-card__link">
+          </Link>
+          <Link href="/landing" className="navigation-menu-card__link">
             Landing Page
-            </Link>
-            <Link href="/user-guide" className="navigation-menu-card__link">
+          </Link>
+          <Link href="/user-guide" className="navigation-menu-card__link">
             User Guide
-            </Link>
-            <Link href="/about" className="navigation-menu-card__link">
+          </Link>
+          <Link href="/about" className="navigation-menu-card__link">
             About Page
-            </Link>
-            <Link href="/credits" className="navigation-menu-card__link">
+          </Link>
+          <Link href="/credits" className="navigation-menu-card__link">
             Credits Page
-            </Link>
+          </Link>
         </div>
       </div>
     </>

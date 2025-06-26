@@ -68,9 +68,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
       commentsArabic,
       stops,
     };
-    const updated = existingSuyūr.some((s) => s.id === idUse)
-      ? existingSuyūr.map((s) => (s.id === idUse ? newSayr : s))
-      : [...existingSuyūr, newSayr];
+    const updated = existingSuyūr.some((s) => s.id === idUse) ? existingSuyūr.map((s) => (s.id === idUse ? newSayr : s)) : [...existingSuyūr, newSayr];
     const updatedMaqam = selectedMaqamDetails.createMaqamWithNewSuyūr(updated);
     setSelectedMaqamDetails(updatedMaqam);
     setMaqamSayrId(idUse);
@@ -242,11 +240,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                     </select>
 
                     {/* 2) optional starting note for this jins */}
-                    <select
-                      className="sayr-manager__stop-value"
-                      value={stop.startingNote ?? ""}
-                      onChange={(e) => updateStop(i, "startingNote", e.target.value)}
-                    >
+                    <select className="sayr-manager__stop-value" value={stop.startingNote ?? ""} onChange={(e) => updateStop(i, "startingNote", e.target.value)}>
                       <option value="">(none)</option>
                       {octaveOneNoteNames.map((n) => (
                         <option key={n} value={n}>
@@ -262,11 +256,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                     </select>
 
                     {/* 3) optional direction for this jins */}
-                    <select
-                      className="sayr-manager__stop-value"
-                      value={stop.direction ?? ""}
-                      onChange={(e) => updateStop(i, "direction", e.target.value)}
-                    >
+                    <select className="sayr-manager__stop-value" value={stop.direction ?? ""} onChange={(e) => updateStop(i, "direction", e.target.value)}>
                       <option value="">(none)</option>
                       <option value="ascending">ascending</option>
                       <option value="descending">descending</option>

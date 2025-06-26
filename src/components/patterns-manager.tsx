@@ -45,28 +45,25 @@ export default function PatternsManager() {
 
   // Update a field on a note
   const updateNote = (i: number, field: keyof PatternNote, val: string) => {
-  setNotes((prev) =>
-    prev.map((n, idx) => {
-      if (idx === i) {
-        if (field === "isTarget") {
-          return { ...n, isTarget: val === "Target" } as PatternNote;
+    setNotes((prev) =>
+      prev.map((n, idx) => {
+        if (idx === i) {
+          if (field === "isTarget") {
+            return { ...n, isTarget: val === "Target" } as PatternNote;
+          }
+          return { ...n, [field]: val } as PatternNote;
         }
-        return { ...n, [field]: val } as PatternNote;
-      }
-      return n;
-    })
-  );
-};
-
+        return n;
+      })
+    );
+  };
 
   // Handle save or update
   const handleSave = (e: FormEvent) => {
     e.preventDefault();
     const idUse = patternId || nanoid();
     const newPattern = new Pattern(idUse, name, notes);
-    const updatedList = patterns.some((p) => p.getId() === idUse)
-      ? patterns.map((p) => (p.getId() === idUse ? newPattern : p))
-      : [...patterns, newPattern];
+    const updatedList = patterns.some((p) => p.getId() === idUse) ? patterns.map((p) => (p.getId() === idUse ? newPattern : p)) : [...patterns, newPattern];
     updatePatterns(updatedList);
     setPatterns(updatedList);
     setPatternId(idUse);
@@ -118,35 +115,25 @@ export default function PatternsManager() {
           <div className="patterns-manager__notes">
             {notes.map((note, i) => (
               <div key={i} className="patterns-manager__note">
-                <select
-                  className="patterns-manager__note-scaleDegree"
-                  value={note.scaleDegree}
-                  onChange={(e) => updateNote(i, "scaleDegree", e.target.value)}
-                  required
-                >
+                <select className="patterns-manager__note-scaleDegree" value={note.scaleDegree} onChange={(e) => updateNote(i, "scaleDegree", e.target.value)} required>
                   <option value="R">Rest</option>
-                  {SCALE_DEGREES.map((rn) => (
-                    (rn !== "R" && <option key={rn} value={rn}>
-                      {rn}
-                    </option>)
-                  ))}
+                  {SCALE_DEGREES.map(
+                    (rn) =>
+                      rn !== "R" && (
+                        <option key={rn} value={rn}>
+                          {rn}
+                        </option>
+                      )
+                  )}
                 </select>
-                <select
-                  className="patterns-manager__note-duration"
-                  value={note.noteDuration}
-                  onChange={(e) => updateNote(i, "noteDuration", e.target.value)}
-                >
+                <select className="patterns-manager__note-duration" value={note.noteDuration} onChange={(e) => updateNote(i, "noteDuration", e.target.value)}>
                   {DURATION_OPTIONS.map((d) => (
                     <option key={d} value={d}>
                       {d}
                     </option>
                   ))}
                 </select>
-                <select
-                  className="patterns-manager__note-duration"
-                  value={note.isTarget ? "Target" : ""}
-                  onChange={(e) => updateNote(i, "isTarget", e.target.value)}
-                >
+                <select className="patterns-manager__note-duration" value={note.isTarget ? "Target" : ""} onChange={(e) => updateNote(i, "isTarget", e.target.value)}>
                   <option value="Target">Target</option>
                   <option value="">Not Target</option>
                 </select>

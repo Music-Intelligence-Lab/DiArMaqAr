@@ -9,18 +9,7 @@ import { updateAjnas } from "@/functions/update";
 import { SourcePageReference } from "@/models/bibliography/Source";
 
 export default function JinsManager({ admin }: { admin: boolean }) {
-  const {
-    ajnas,
-    setAjnas,
-    selectedTuningSystem,
-    selectedJinsDetails,
-    setSelectedJinsDetails,
-    handleClickJins,
-    selectedPitchClasses,
-    clearSelections,
-    allPitchClasses,
-    sources,
-  } = useAppContext();
+  const { ajnas, setAjnas, selectedTuningSystem, selectedJinsDetails, setSelectedJinsDetails, handleClickJins, selectedPitchClasses, clearSelections, allPitchClasses, sources } = useAppContext();
 
   const { ajnasFilter, setAjnasFilter } = useFilterContext();
 
@@ -123,11 +112,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
             count = sortedAjnas.filter((jins) => jins.getNoteNames()[0]?.toLowerCase() === tab.toLowerCase()).length;
           }
           return (
-            <button
-              key={tab}
-              className={"jins-manager__tab" + (ajnasFilter === tab ? " jins-manager__tab_active" : "")}
-              onClick={() => setAjnasFilter(tab)}
-            >
+            <button key={tab} className={"jins-manager__tab" + (ajnasFilter === tab ? " jins-manager__tab_active" : "")} onClick={() => setAjnasFilter(tab)}>
               {tab} <span className="jins-manager__tab-count">({count})</span>
             </button>
           );
@@ -143,10 +128,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
         >
           ‹
         </button>
-        <div
-          className="jins-manager__list"
-          style={{ gridTemplateColumns: `repeat(${numberOfColumns}, minmax(250px, 1fr))` }}
-        >
+        <div className="jins-manager__list" style={{ gridTemplateColumns: `repeat(${numberOfColumns}, minmax(250px, 1fr))` }}>
           {filteredAjnas.length === 0 ? (
             <p>No ajnas available.</p>
           ) : (
@@ -156,22 +138,14 @@ export default function JinsManager({ admin }: { admin: boolean }) {
               return (
                 <div
                   key={index}
-                  className={
-                    "jins-manager__item " +
-                    (jinsDetails.getName() === selectedJinsDetails?.getName() ? "jins-manager__item_selected " : "") +
-                    (selectable ? "jins-manager__item_active" : "")
-                  }
+                  className={"jins-manager__item " + (jinsDetails.getName() === selectedJinsDetails?.getName() ? "jins-manager__item_selected " : "") + (selectable ? "jins-manager__item_active" : "")}
                   onClick={() => {
                     if (selectable) handleClickJins(jinsDetails);
                   }}
                 >
                   <div className="jins-manager__item-name">
                     <strong>{jinsDetails.getName()}</strong>
-                    {selectable && (
-                      <strong className="jins-manager__item-name-transpositions">
-                        {`Transpositions: ${numberOfTranspositions}/${numberOfPitchClasses}`}
-                      </strong>
-                    )}
+                    {selectable && <strong className="jins-manager__item-name-transpositions">{`Transpositions: ${numberOfTranspositions}/${numberOfPitchClasses}`}</strong>}
                   </div>
                 </div>
               );
@@ -267,26 +241,14 @@ export default function JinsManager({ admin }: { admin: boolean }) {
               <label className="jins-manager__label" htmlFor="commentsEnglishField">
                 Comments (English)
               </label>
-              <textarea
-                rows={5}
-                className="jins-manager__input"
-                id="commentsEnglishField"
-                value={commentsEnglishLocal}
-                onChange={(e) => setCommentsEnglishLocal(e.target.value)}
-              />
+              <textarea rows={5} className="jins-manager__input" id="commentsEnglishField" value={commentsEnglishLocal} onChange={(e) => setCommentsEnglishLocal(e.target.value)} />
             </div>
 
             <div className="jins-manager__input-container">
               <label className="jins-manager__label" htmlFor="commentsArabicField">
                 Comments (Arabic)
               </label>
-              <textarea
-                rows={5}
-                className="jins-manager__input"
-                id="commentsArabicField"
-                value={commentsArabicLocal}
-                onChange={(e) => setCommentsArabicLocal(e.target.value)}
-              />
+              <textarea rows={5} className="jins-manager__input" id="commentsArabicField" value={commentsArabicLocal} onChange={(e) => setCommentsArabicLocal(e.target.value)} />
             </div>
           </div>
         </div>

@@ -16,11 +16,7 @@ export default function KeyboardControls() {
   const thirdRowKeys = ["`", "z", "x", "c", "v", "b", "n", "m", ",", ".", "/"];
 
   // derive descending pitch classes
-  const descendingNoteNames = selectedMaqam
-    ? selectedMaqam.descendingPitchClasses.map(pitchClass => pitchClass.noteName)
-    : selectedMaqamDetails
-    ? selectedMaqamDetails.getDescendingNoteNames()
-    : [];
+  const descendingNoteNames = selectedMaqam ? selectedMaqam.descendingPitchClasses.map((pitchClass) => pitchClass.noteName) : selectedMaqamDetails ? selectedMaqamDetails.getDescendingNoteNames() : [];
 
   const descendingMaqamCells: PitchClass[] = allPitchClasses.filter((pitchClass) => descendingNoteNames.includes(pitchClass.noteName));
 

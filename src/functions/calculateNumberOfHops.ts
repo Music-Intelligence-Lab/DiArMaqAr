@@ -1,6 +1,6 @@
 import { MaqamModulations } from "@/models/Maqam";
 
-export default function calculateNumberOfHops(modulations: MaqamModulations){
+export default function calculateNumberOfHops(modulations: MaqamModulations) {
   return (
     (modulations.hopsFromOne?.length || 0) +
     (modulations.hopsFromThree?.length || 0) +
