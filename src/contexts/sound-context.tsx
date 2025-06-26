@@ -309,32 +309,50 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
     //–– pick source node based on waveform string ––
     let source: AudioNode;
+    let osc: OscillatorNode | null = null;
 
-    // A) aperiodic
-    if (APERIODIC_WAVES[waveform]) {
-      // sw-synth AperiodicWave typically provides createNode(ctx, freq):
-      const aw: any = APERIODIC_WAVES[waveform];
-      // pick one of the built-in PeriodicWave variants;
-      // most people just take the first, but you can experiment
-      const pw: PeriodicWave = aw.periodicWaves[0];
+// A) aperiodic
+if (APERIODIC_WAVES[waveform]) {
+  const aw = APERIODIC_WAVES[waveform];
+  const pws = aw.periodicWaves;
+  const dets = aw.detunings;
 
-      // spin up an oscillator with that PeriodicWave
-      const osc = audioCtx.createOscillator();
-      osc.setPeriodicWave(pw);
-      osc.frequency.setValueAtTime(frequency, startTime);
+  const merger = audioCtx.createGain(); // to sum the oscillators
+  const oscs: OscillatorNode[] = [];
 
-      source = osc;
-    }
-    // B) periodic
+  for (let i = 0; i < pws.length; i++) {
+    const oscNode = audioCtx.createOscillator();
+    oscNode.setPeriodicWave(pws[i]);
+    // detune and align
+    const detunedFreq = frequency * Math.pow(2, dets[i] / 1200);
+    oscNode.frequency.setValueAtTime(detunedFreq, startTime);
+    oscNode.connect(merger);
+    oscs.push(oscNode);
+  }
+
+  // Normalize the volume
+  merger.gain.setValueAtTime(1 / pws.length, startTime); // average the total gain
+  source = merger;
+
+  // Start/stop all oscillators together, do not assign to osc to avoid duplicate start()
+  oscs.forEach((o) => {
+    o.start(startTime);
+    o.stop(startTime + givenDuration);
+  });
+
+  osc = null; // prevent double-start below
+}
+
+// B) periodic
     else if (PERIODIC_WAVES[waveform]) {
-      const osc = audioCtx.createOscillator();
+      osc = audioCtx.createOscillator();
       osc.setPeriodicWave(PERIODIC_WAVES[waveform]);
       osc.frequency.setValueAtTime(frequency, startTime);
       source = osc;
     }
     // C) built-in
     else {
-      const osc = audioCtx.createOscillator();
+      osc = audioCtx.createOscillator();
       osc.type = waveform as OscillatorType;
       osc.frequency.setValueAtTime(frequency, startTime);
       source = osc;
@@ -354,8 +372,13 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
     //–– connect & play ––
     source.connect(gainNode).connect(masterGain);
-    if ((source as OscillatorNode).start) (source as OscillatorNode).start(startTime);
-    if ((source as OscillatorNode).stop) (source as OscillatorNode).stop(noteOffTime);
+    if (osc) {
+      osc.start(startTime);
+      osc.stop(noteOffTime);
+      osc.onended = () => {
+        // Clean up references if needed in the future
+      };
+    }
   };
 
   const playSequence = (frequencies: number[], ascending = true): Promise<void> => {
