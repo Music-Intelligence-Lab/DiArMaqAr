@@ -30,25 +30,14 @@ const WheelCell = React.memo<WheelCellProps>(
       </div>
     );
   },
-  (prev, next) =>
-    prev.isSelected === next.isSelected && prev.isActive === next.isActive && prev.isDescending === next.isDescending && prev.isTonic === next.isTonic
+  (prev, next) => prev.isSelected === next.isSelected && prev.isActive === next.isActive && prev.isDescending === next.isDescending && prev.isTonic === next.isTonic
 );
 
 WheelCell.displayName = "WheelCell";
 
 export default function PitchClassWheel() {
-  const {
-    ajnas,
-    selectedJinsDetails,
-    setSelectedJins,
-    selectedMaqamDetails,
-    selectedMaqam,
-    setSelectedMaqam,
-    selectedPitchClasses,
-    setSelectedPitchClasses,
-    allPitchClasses,
-    centsTolerance,
-  } = useAppContext();
+  const { ajnas, selectedJinsDetails, setSelectedJins, selectedMaqamDetails, selectedMaqam, setSelectedMaqam, selectedPitchClasses, setSelectedPitchClasses, allPitchClasses, centsTolerance } =
+    useAppContext();
 
   const { activePitchClasses } = useSoundContext();
 
@@ -84,10 +73,7 @@ export default function PitchClassWheel() {
     });
   }, [selectedPitchClasses]);
 
-  const filteredJinsTranspositions = useMemo<Jins[]>(
-    () => getJinsTranspositions(allPitchClasses, selectedJinsDetails, true, centsTolerance),
-    [allPitchClasses, selectedJinsDetails, centsTolerance]
-  );
+  const filteredJinsTranspositions = useMemo<Jins[]>(() => getJinsTranspositions(allPitchClasses, selectedJinsDetails, true, centsTolerance), [allPitchClasses, selectedJinsDetails, centsTolerance]);
 
   const filteredMaqamTranspositions = useMemo<Maqam[]>(
     () => getMaqamTranspositions(allPitchClasses, ajnas, selectedMaqamDetails, true, centsTolerance),
@@ -104,7 +90,7 @@ export default function PitchClassWheel() {
       const maqamTransposition = filteredMaqamTranspositions.find((transposition) => transposition.ascendingPitchClasses[0].noteName === note);
 
       const isDescending = selectedMaqam
-        ? selectedMaqam.descendingPitchClasses.map(pitchClass => pitchClass.noteName).includes(note)
+        ? selectedMaqam.descendingPitchClasses.map((pitchClass) => pitchClass.noteName).includes(note)
         : selectedMaqamDetails?.getDescendingNoteNames().includes(note) ?? false;
 
       const isTonic = !!(jinsTransposition || maqamTransposition);
@@ -131,17 +117,7 @@ export default function PitchClassWheel() {
         onClick,
       };
     });
-  }, [
-    allPitchClasses,
-    selectedPitchClasses,
-    activePitchClasses,
-    filteredJinsTranspositions,
-    filteredMaqamTranspositions,
-    selectedMaqamDetails,
-    selectedMaqam,
-    selectedJinsDetails,
-    centsTolerance,
-  ]);
+  }, [allPitchClasses, selectedPitchClasses, activePitchClasses, filteredJinsTranspositions, filteredMaqamTranspositions, selectedMaqamDetails, selectedMaqam, selectedJinsDetails, centsTolerance]);
 
   return (
     <div

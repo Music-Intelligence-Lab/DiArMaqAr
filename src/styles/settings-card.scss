@@ -139,6 +139,32 @@
     margin-bottom: 5px;
   }
 
+  &__pattern-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 5px;
+    padding-right: 10px;
+  }
+
+  &__drone-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    color: $primary;
+    background-color: white;
+
+    margin: 10px;
+
+    &_active {
+      color: white;
+      background-color: $primary;
+    }
+  }
+
   &__filter-label {
     cursor: pointer;
     user-select: none;

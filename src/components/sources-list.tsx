@@ -85,9 +85,8 @@ export default function SourcesList() {
       return (
         <>
           {authorSegment} ({year}) {editors.length > 0 && <> Edited by {editors.map(formatName).join(" and ")}</>}{" "}
-          {translators.length > 0 && <> Translated by {translators.map(formatName).join(" and ")}</>}{" "}
-          {reviewers.length > 0 && <> Reviewed by {reviewers.map(formatName).join(" and ")}</>} {title} {editionPart && ` ${editionPart}`}{" "}
-          {oPubDateEngPart && ` ${oPubDateEngPart}`} {publisherPart && <>{publisherPart}.</>}{" "}
+          {translators.length > 0 && <> Translated by {translators.map(formatName).join(" and ")}</>} {reviewers.length > 0 && <> Reviewed by {reviewers.map(formatName).join(" and ")}</>} {title}{" "}
+          {editionPart && ` ${editionPart}`} {oPubDateEngPart && ` ${oPubDateEngPart}`} {publisherPart && <>{publisherPart}.</>}{" "}
           {url && (
             <>
               Available at:{" "}

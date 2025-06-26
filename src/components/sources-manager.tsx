@@ -282,36 +282,19 @@ export default function SourcesManager() {
             <label className="sources-manager__label" htmlFor="titleEnglishField">
               Title (English)
             </label>
-            <input
-              id="titleEnglishField"
-              className="sources-manager__input"
-              type="text"
-              value={titleEnglish}
-              onChange={(e) => setTitleEnglish(e.target.value)}
-            />
+            <input id="titleEnglishField" className="sources-manager__input" type="text" value={titleEnglish} onChange={(e) => setTitleEnglish(e.target.value)} />
           </div>
           <div className="sources-manager__input-container">
             <label className="sources-manager__label" htmlFor="titleArabicField">
               Title (Arabic)
             </label>
-            <input
-              id="titleArabicField"
-              className="sources-manager__input"
-              type="text"
-              value={titleArabic}
-              onChange={(e) => setTitleArabic(e.target.value)}
-            />
+            <input id="titleArabicField" className="sources-manager__input" type="text" value={titleArabic} onChange={(e) => setTitleArabic(e.target.value)} />
           </div>
           <div className="sources-manager__input-container">
             <label className="sources-manager__label" htmlFor="sourceTypeField">
               Type
             </label>
-            <select
-              id="sourceTypeField"
-              className="sources-manager__select"
-              value={sourceType}
-              onChange={(e) => setSourceType(e.target.value as "Book" | "Article")}
-            >
+            <select id="sourceTypeField" className="sources-manager__select" value={sourceType} onChange={(e) => setSourceType(e.target.value as "Book" | "Article")}>
               <option value="Book">Book</option>
               <option value="Article">Article</option>
             </select>
@@ -326,49 +309,25 @@ export default function SourcesManager() {
             <label className="sources-manager__label" htmlFor="editionEnglishField">
               Edition (English)
             </label>
-            <input
-              id="editionEnglishField"
-              className="sources-manager__input"
-              type="text"
-              value={editionEnglish}
-              onChange={(e) => setEditionEnglish(e.target.value)}
-            />
+            <input id="editionEnglishField" className="sources-manager__input" type="text" value={editionEnglish} onChange={(e) => setEditionEnglish(e.target.value)} />
           </div>
           <div className="sources-manager__input-container">
             <label className="sources-manager__label" htmlFor="editionArabicField">
               Edition (Arabic)
             </label>
-            <input
-              id="editionArabicField"
-              className="sources-manager__input"
-              type="text"
-              value={editionArabic}
-              onChange={(e) => setEditionArabic(e.target.value)}
-            />
+            <input id="editionArabicField" className="sources-manager__input" type="text" value={editionArabic} onChange={(e) => setEditionArabic(e.target.value)} />
           </div>
           <div className="sources-manager__input-container">
             <label className="sources-manager__label" htmlFor="pubDateEnglishField">
               Publication Date (English)
             </label>
-            <input
-              id="pubDateEnglishField"
-              className="sources-manager__input"
-              type="text"
-              value={publicationDateEnglish}
-              onChange={(e) => setPublicationDateEnglish(e.target.value)}
-            />
+            <input id="pubDateEnglishField" className="sources-manager__input" type="text" value={publicationDateEnglish} onChange={(e) => setPublicationDateEnglish(e.target.value)} />
           </div>
           <div className="sources-manager__input-container">
             <label className="sources-manager__label" htmlFor="pubDateArabicField">
               Publication Date (Arabic)
             </label>
-            <input
-              id="pubDateArabicField"
-              className="sources-manager__input"
-              type="text"
-              value={publicationDateArabic}
-              onChange={(e) => setPublicationDateArabic(e.target.value)}
-            />
+            <input id="pubDateArabicField" className="sources-manager__input" type="text" value={publicationDateArabic} onChange={(e) => setPublicationDateArabic(e.target.value)} />
           </div>
         </div>
 
@@ -407,25 +366,13 @@ export default function SourcesManager() {
                 <label className="sources-manager__label" htmlFor="publisherEnglishField">
                   Publisher (English)
                 </label>
-                <input
-                  id="publisherEnglishField"
-                  className="sources-manager__input"
-                  type="text"
-                  value={publisherEnglish}
-                  onChange={(e) => setPublisherEnglish(e.target.value)}
-                />
+                <input id="publisherEnglishField" className="sources-manager__input" type="text" value={publisherEnglish} onChange={(e) => setPublisherEnglish(e.target.value)} />
               </div>
               <div className="sources-manager__input-container">
                 <label className="sources-manager__label" htmlFor="publisherArabicField">
                   Publisher (Arabic)
                 </label>
-                <input
-                  id="publisherArabicField"
-                  className="sources-manager__input"
-                  type="text"
-                  value={publisherArabic}
-                  onChange={(e) => setPublisherArabic(e.target.value)}
-                />
+                <input id="publisherArabicField" className="sources-manager__input" type="text" value={publisherArabic} onChange={(e) => setPublisherArabic(e.target.value)} />
               </div>
             </div>
 
@@ -434,25 +381,13 @@ export default function SourcesManager() {
                 <label className="sources-manager__label" htmlFor="placeEnglishField">
                   Place (English)
                 </label>
-                <input
-                  id="placeEnglishField"
-                  className="sources-manager__input"
-                  type="text"
-                  value={placeEnglish}
-                  onChange={(e) => setPlaceEnglish(e.target.value)}
-                />
+                <input id="placeEnglishField" className="sources-manager__input" type="text" value={placeEnglish} onChange={(e) => setPlaceEnglish(e.target.value)} />
               </div>
               <div className="sources-manager__input-container">
                 <label className="sources-manager__label" htmlFor="placeArabicField">
                   Place (Arabic)
                 </label>
-                <input
-                  id="placeArabicField"
-                  className="sources-manager__input"
-                  type="text"
-                  value={placeArabic}
-                  onChange={(e) => setPlaceArabic(e.target.value)}
-                />
+                <input id="placeArabicField" className="sources-manager__input" type="text" value={placeArabic} onChange={(e) => setPlaceArabic(e.target.value)} />
               </div>
               <div className="sources-manager__input-container">
                 <label className="sources-manager__label" htmlFor="isbnField">
@@ -475,49 +410,25 @@ export default function SourcesManager() {
                 <label className="sources-manager__label" htmlFor="journalEnglishField">
                   Journal (English)
                 </label>
-                <input
-                  id="journalEnglishField"
-                  className="sources-manager__input"
-                  type="text"
-                  value={journalEnglish}
-                  onChange={(e) => setJournalEnglish(e.target.value)}
-                />
+                <input id="journalEnglishField" className="sources-manager__input" type="text" value={journalEnglish} onChange={(e) => setJournalEnglish(e.target.value)} />
               </div>
               <div className="sources-manager__input-container">
                 <label className="sources-manager__label" htmlFor="journalArabicField">
                   Journal (Arabic)
                 </label>
-                <input
-                  id="journalArabicField"
-                  className="sources-manager__input"
-                  type="text"
-                  value={journalArabic}
-                  onChange={(e) => setJournalArabic(e.target.value)}
-                />
+                <input id="journalArabicField" className="sources-manager__input" type="text" value={journalArabic} onChange={(e) => setJournalArabic(e.target.value)} />
               </div>
               <div className="sources-manager__input-container">
                 <label className="sources-manager__label" htmlFor="volumeEnglishField">
                   Volume (English)
                 </label>
-                <input
-                  id="volumeEnglishField"
-                  className="sources-manager__input"
-                  type="text"
-                  value={volumeEnglish}
-                  onChange={(e) => setVolumeEnglish(e.target.value)}
-                />
+                <input id="volumeEnglishField" className="sources-manager__input" type="text" value={volumeEnglish} onChange={(e) => setVolumeEnglish(e.target.value)} />
               </div>
               <div className="sources-manager__input-container">
                 <label className="sources-manager__label" htmlFor="volumeArabicField">
                   Volume (Arabic)
                 </label>
-                <input
-                  id="volumeArabicField"
-                  className="sources-manager__input"
-                  type="text"
-                  value={volumeArabic}
-                  onChange={(e) => setVolumeArabic(e.target.value)}
-                />
+                <input id="volumeArabicField" className="sources-manager__input" type="text" value={volumeArabic} onChange={(e) => setVolumeArabic(e.target.value)} />
               </div>
             </div>
 
@@ -526,49 +437,25 @@ export default function SourcesManager() {
                 <label className="sources-manager__label" htmlFor="issueEnglishField">
                   Issue (English)
                 </label>
-                <input
-                  id="issueEnglishField"
-                  className="sources-manager__input"
-                  type="text"
-                  value={issueEnglish}
-                  onChange={(e) => setIssueEnglish(e.target.value)}
-                />
+                <input id="issueEnglishField" className="sources-manager__input" type="text" value={issueEnglish} onChange={(e) => setIssueEnglish(e.target.value)} />
               </div>
               <div className="sources-manager__input-container">
                 <label className="sources-manager__label" htmlFor="issueArabicField">
                   Issue (Arabic)
                 </label>
-                <input
-                  id="issueArabicField"
-                  className="sources-manager__input"
-                  type="text"
-                  value={issueArabic}
-                  onChange={(e) => setIssueArabic(e.target.value)}
-                />
+                <input id="issueArabicField" className="sources-manager__input" type="text" value={issueArabic} onChange={(e) => setIssueArabic(e.target.value)} />
               </div>
               <div className="sources-manager__input-container">
                 <label className="sources-manager__label" htmlFor="pageRangeEnglishField">
                   Page Range (English)
                 </label>
-                <input
-                  id="pageRangeEnglishField"
-                  className="sources-manager__input"
-                  type="text"
-                  value={pageRangeEnglish}
-                  onChange={(e) => setPageRangeEnglish(e.target.value)}
-                />
+                <input id="pageRangeEnglishField" className="sources-manager__input" type="text" value={pageRangeEnglish} onChange={(e) => setPageRangeEnglish(e.target.value)} />
               </div>
               <div className="sources-manager__input-container">
                 <label className="sources-manager__label" htmlFor="pageRangeArabicField">
                   Page Range (Arabic)
                 </label>
-                <input
-                  id="pageRangeArabicField"
-                  className="sources-manager__input"
-                  type="text"
-                  value={pageRangeArabic}
-                  onChange={(e) => setPageRangeArabic(e.target.value)}
-                />
+                <input id="pageRangeArabicField" className="sources-manager__input" type="text" value={pageRangeArabic} onChange={(e) => setPageRangeArabic(e.target.value)} />
               </div>
             </div>
 
@@ -597,13 +484,7 @@ export default function SourcesManager() {
             <label className="sources-manager__label" htmlFor="dateAccessedField">
               Date Accessed
             </label>
-            <input
-              id="dateAccessedField"
-              className="sources-manager__input"
-              type="text"
-              value={dateAccessed}
-              onChange={(e) => setDateAccessed(e.target.value)}
-            />
+            <input id="dateAccessedField" className="sources-manager__input" type="text" value={dateAccessed} onChange={(e) => setDateAccessed(e.target.value)} />
           </div>
         </div>
 
@@ -621,41 +502,17 @@ export default function SourcesManager() {
           </div>
           {contributors.map((contributor, index) => (
             <div key={index} className="sources-manager__contributor">
-              <select
-                className="sources-manager__select"
-                value={contributor.type}
-                onChange={(e) => handleContributorChange(index, "type", e.target.value)}
-              >
+              <select className="sources-manager__select" value={contributor.type} onChange={(e) => handleContributorChange(index, "type", e.target.value)}>
                 <option value="Author">Author</option>
                 <option value="Editor">Editor</option>
                 <option value="Translator">Translator</option>
                 <option value="Reviewer">Reviewer</option>
                 <option value="Investigator">Investigator</option>
               </select>
-              <input
-                type="text"
-                placeholder="First Name (English)"
-                value={contributor.firstNameEnglish}
-                onChange={(e) => handleContributorChange(index, "firstNameEnglish", e.target.value)}
-              />
-              <input
-                type="text"
-                placeholder="Last Name (English)"
-                value={contributor.lastNameEnglish}
-                onChange={(e) => handleContributorChange(index, "lastNameEnglish", e.target.value)}
-              />
-              <input
-                type="text"
-                placeholder="First Name (Arabic)"
-                value={contributor.firstNameArabic}
-                onChange={(e) => handleContributorChange(index, "firstNameArabic", e.target.value)}
-              />
-              <input
-                type="text"
-                placeholder="Last Name (Arabic)"
-                value={contributor.lastNameArabic}
-                onChange={(e) => handleContributorChange(index, "lastNameArabic", e.target.value)}
-              />
+              <input type="text" placeholder="First Name (English)" value={contributor.firstNameEnglish} onChange={(e) => handleContributorChange(index, "firstNameEnglish", e.target.value)} />
+              <input type="text" placeholder="Last Name (English)" value={contributor.lastNameEnglish} onChange={(e) => handleContributorChange(index, "lastNameEnglish", e.target.value)} />
+              <input type="text" placeholder="First Name (Arabic)" value={contributor.firstNameArabic} onChange={(e) => handleContributorChange(index, "firstNameArabic", e.target.value)} />
+              <input type="text" placeholder="Last Name (Arabic)" value={contributor.lastNameArabic} onChange={(e) => handleContributorChange(index, "lastNameArabic", e.target.value)} />
               <button type="button" className="sources-manager__remove-button" onClick={() => handleRemoveContributor(index)}>
                 Remove
               </button>

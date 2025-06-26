@@ -61,8 +61,16 @@ const SettingsCard = () => {
               <input type="number" id="tempo-input" value={soundSettings.tempo} onChange={handleTempoChange} className="settings-card__number-input" min={20} max={300} />
             </div>
             <div className="settings-card__input-container">
-              <label htmlFor="pattern-select" className="settings-card__label">
-                Pattern Select:
+              <label className="settings-card__pattern-label">
+                Pattern Select:{" "}
+                <button
+                  onClick={() => {
+                    setSoundSettings((prev) => ({ ...prev, drone: !prev.drone }));
+                  }}
+                  className={"settings-card__drone-button " + (soundSettings.drone ? "settings-card__drone-button_active" : "")}
+                >
+                  {soundSettings.drone ? "Drone On" : "Drone Off"}
+                </button>
               </label>
               <select
                 id="pattern-select"

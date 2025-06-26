@@ -28,7 +28,7 @@ export default function Navbar() {
     setSelectedIndices,
     getModulations,
     selectedIndices,
-    allPitchClasses
+    allPitchClasses,
   } = useAppContext();
 
   const rowRef = useRef<HTMLDivElement>(null);
@@ -96,10 +96,7 @@ export default function Navbar() {
               شبكة المقام العربي Arabic Maqām Network
             </span>
             <br></br>
-            <span className="navbar__subtitle">
-              استكشفوا واعزفوا التنغيم والأجناس والمقامات في نظام المقام العربي • Explore and play the tanghīm, ajnās and maqāmāt of the Arabic Maqām
-              system
-            </span>
+            <span className="navbar__subtitle">استكشفوا واعزفوا التنغيم والأجناس والمقامات في نظام المقام العربي • Explore and play the tanghīm, ajnās and maqāmāt of the Arabic Maqām system</span>
           </div>
           <div className="navbar__right-panel">
             <div className="navbar__left-panel-icon">
@@ -109,9 +106,7 @@ export default function Navbar() {
         </header>
         <div className="navbar__bottom-bar">
           <button
-            className={`navbar__bottom-bar-item ${selectedMenu === "tuningSystem" ? "navbar__bottom-bar-item_selected " : ""} ${
-              selectedTuningSystem ? "navbar__bottom-bar-item_active" : ""
-            }`}
+            className={`navbar__bottom-bar-item ${selectedMenu === "tuningSystem" ? "navbar__bottom-bar-item_selected " : ""} ${selectedTuningSystem ? "navbar__bottom-bar-item_active" : ""}`}
             onClick={() => setSelectedMenu("tuningSystem")}
           >
             {selectedTuningSystem ? (
@@ -119,26 +114,19 @@ export default function Navbar() {
                 <span className="navbar__bottom-bar-item_tab-title">
                   {selectedTuningSystem.getCreatorEnglish()} ({selectedTuningSystem.getYear()})
                 </span>
-                <span className="navbar__bottom-bar-item_tab-subtitle">{`${selectedTuningSystem.getTitleEnglish()} (${
-                  octaveOneNoteNames[selectedIndices[0]] ?? "none"
-                })`}</span>
+                <span className="navbar__bottom-bar-item_tab-subtitle">{`${selectedTuningSystem.getTitleEnglish()} (${octaveOneNoteNames[selectedIndices[0]] ?? "none"})`}</span>
               </>
             ) : (
               "Tanghīm (Tuning Systems)"
             )}
           </button>
           {showAdminTabs && (
-            <button
-              className={`navbar__bottom-bar-item ${selectedMenu === "tuningSystem-admin" ? "navbar__bottom-bar-item_selected" : ""}`}
-              onClick={() => setSelectedMenu("tuningSystem-admin")}
-            >
+            <button className={`navbar__bottom-bar-item ${selectedMenu === "tuningSystem-admin" ? "navbar__bottom-bar-item_selected" : ""}`} onClick={() => setSelectedMenu("tuningSystem-admin")}>
               Tuning System Admin
             </button>
           )}
           <button
-            className={`navbar__bottom-bar-item ${selectedMenu === "jins" ? "navbar__bottom-bar-item_selected" : ""} ${
-              selectedJinsDetails ? "navbar__bottom-bar-item_active" : ""
-            }`}
+            className={`navbar__bottom-bar-item ${selectedMenu === "jins" ? "navbar__bottom-bar-item_selected" : ""} ${selectedJinsDetails ? "navbar__bottom-bar-item_active" : ""}`}
             onClick={() => setSelectedMenu("jins")}
             disabled={!selectedTuningSystem}
           >
@@ -149,8 +137,8 @@ export default function Navbar() {
               {!selectedJinsDetails
                 ? ""
                 : selectedJins
-                ? `${selectedJinsDetails.getName()} al-${selectedJins.jinsPitchClasses.map(pitchClass => pitchClass.noteName)[0]} (${getEnglishNoteName(
-                    selectedJins.jinsPitchClasses.map(pitchClass => pitchClass.noteName)[0]
+                ? `${selectedJinsDetails.getName()} al-${selectedJins.jinsPitchClasses.map((pitchClass) => pitchClass.noteName)[0]} (${getEnglishNoteName(
+                    selectedJins.jinsPitchClasses.map((pitchClass) => pitchClass.noteName)[0]
                   )})`
                 : `${selectedJinsDetails.getName()} (${selectedJinsDetails.getNoteNames()[0]}/${getEnglishNoteName(selectedJinsDetails.getNoteNames()[0])})`}
             </span>
@@ -165,24 +153,19 @@ export default function Navbar() {
             </button>
           )}
           <button
-            className={`navbar__bottom-bar-item ${selectedMenu === "maqam" ? "navbar__bottom-bar-item_selected" : ""} ${
-              selectedMaqamDetails ? "navbar__bottom-bar-item_active" : ""
-            }`}
+            className={`navbar__bottom-bar-item ${selectedMenu === "maqam" ? "navbar__bottom-bar-item_selected" : ""} ${selectedMaqamDetails ? "navbar__bottom-bar-item_active" : ""}`}
             onClick={() => setSelectedMenu("maqam")}
             disabled={!selectedTuningSystem}
           >
             <span className="navbar__bottom-bar-item_tab-title">
-              {selectedTuningSystem ? `Maqāmāt (${maqamat.filter((maqamDetails) => maqamDetails.isMaqamSelectable(allPitchClasses)).length}/${maqamat.length})` : "Maqāmāt"}{" "}
-              <br />
+              {selectedTuningSystem ? `Maqāmāt (${maqamat.filter((maqamDetails) => maqamDetails.isMaqamSelectable(allPitchClasses)).length}/${maqamat.length})` : "Maqāmāt"} <br />
             </span>
             <span className="navbar__bottom-bar-item_tab-subtitle">
               {!selectedMaqamDetails
                 ? ""
                 : selectedMaqam
                 ? selectedMaqam.name
-                : `${selectedMaqamDetails.getName()} (${selectedMaqamDetails.getAscendingNoteNames()[0]}/${getEnglishNoteName(
-                    selectedMaqamDetails.getAscendingNoteNames()[0]
-                  )})`}
+                : `${selectedMaqamDetails.getName()} (${selectedMaqamDetails.getAscendingNoteNames()[0]}/${getEnglishNoteName(selectedMaqamDetails.getAscendingNoteNames()[0])})`}
             </span>
           </button>
           {showAdminTabs && (
@@ -195,9 +178,7 @@ export default function Navbar() {
             </button>
           )}
           <button
-            className={`navbar__bottom-bar-item ${selectedMenu === "sayr" ? "navbar__bottom-bar-item_selected" : ""} ${
-              selectedSayr ? "navbar__bottom-bar-item_active" : ""
-            }`}
+            className={`navbar__bottom-bar-item ${selectedMenu === "sayr" ? "navbar__bottom-bar-item_selected" : ""} ${selectedSayr ? "navbar__bottom-bar-item_active" : ""}`}
             onClick={() => setSelectedMenu("sayr")}
             disabled={!selectedMaqamDetails}
           >
@@ -226,25 +207,16 @@ export default function Navbar() {
             Intiqālāt{selectedMaqamDetails ? ` (${totalModulations})` : ""}
           </button>
 
-          <button
-            className={`navbar__bottom-bar-item ${selectedMenu === "bibliography" ? "navbar__bottom-bar-item_selected" : ""}`}
-            onClick={() => setSelectedMenu("bibliography")}
-          >
+          <button className={`navbar__bottom-bar-item ${selectedMenu === "bibliography" ? "navbar__bottom-bar-item_selected" : ""}`} onClick={() => setSelectedMenu("bibliography")}>
             Bibliography
           </button>
           {showAdminTabs && (
-            <button
-              className={`navbar__bottom-bar-item ${selectedMenu === "bibliography-admin" ? "navbar__bottom-bar-item_selected" : ""}`}
-              onClick={() => setSelectedMenu("bibliography-admin")}
-            >
+            <button className={`navbar__bottom-bar-item ${selectedMenu === "bibliography-admin" ? "navbar__bottom-bar-item_selected" : ""}`} onClick={() => setSelectedMenu("bibliography-admin")}>
               Bibliography Admin
             </button>
           )}
           {showAdminTabs && (
-            <button
-              className={`navbar__bottom-bar-item ${selectedMenu === "pattern-admin" ? "navbar__bottom-bar-item_selected" : ""}`}
-              onClick={() => setSelectedMenu("pattern-admin")}
-            >
+            <button className={`navbar__bottom-bar-item ${selectedMenu === "pattern-admin" ? "navbar__bottom-bar-item_selected" : ""}`} onClick={() => setSelectedMenu("pattern-admin")}>
               Patterns Admin
             </button>
           )}

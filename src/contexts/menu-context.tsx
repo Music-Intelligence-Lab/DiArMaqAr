@@ -29,7 +29,7 @@ interface MenuContextInterface {
       | "maqam"
       | "jins"
       | "sayr"
-    | "modulation"
+      | "modulation"
       | "bibliography"
       | "pattern"
       | "tuningSystem-admin"
@@ -49,19 +49,7 @@ export function MenuContextProvider({ children }: { children: ReactNode }) {
   const [openNavigation, setOpenNavigation] = useState(false);
   const [openSettings, setOpenSettings] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState<
-    | "tuningSystem"
-    | "maqam"
-    | "jins"
-    | "sayr"
-    | "modulation"
-    | "bibliography"
-    | "pattern"
-    | "tuningSystem-admin"
-    | "maqam-admin"
-    | "jins-admin"
-    | "sayr-admin"
-    | "bibliography-admin"
-    | "pattern-admin"
+    "tuningSystem" | "maqam" | "jins" | "sayr" | "modulation" | "bibliography" | "pattern" | "tuningSystem-admin" | "maqam-admin" | "jins-admin" | "sayr-admin" | "bibliography-admin" | "pattern-admin"
   >("tuningSystem");
 
   return (

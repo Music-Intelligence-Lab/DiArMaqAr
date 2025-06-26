@@ -27,6 +27,7 @@ interface SoundSettings {
   outputMode: OutputMode;
   selectedMidiOutputId: string | null;
   selectedPattern: Pattern | null;
+  drone: boolean;
 }
 
 interface MidiPortInfo {
@@ -70,6 +71,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     outputMode: "waveform",
     selectedMidiOutputId: null,
     selectedPattern: null,
+    drone: false,
   });
 
   const activeNotesRef = useRef<Map<number, { oscillator: OscillatorNode; gainNode: GainNode }[]>>(new Map());
@@ -391,6 +393,10 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
       const n = frequencies.length;
       let cumulativeTimeSec = 0;
 
+      if (soundSettings.drone) {
+        noteOn(frequencies[0]);
+      }
+
       const playPattern = (windowStartIndexes: number[], terminationCheck: (windowStart: number, isTarget: boolean) => boolean) => {
         for (const windowStart of windowStartIndexes) {
           for (const { scaleDegree, noteDuration, isTarget } of patternNotes) {
@@ -438,6 +444,12 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
       const restTime = cycleDifference * (beatSec * 4) * 1000;
 
       const totalSeqMs = cumulativeTimeSec * 1000 + restTime;
+
+      if (soundSettings.drone) {
+        scheduleTimeout(() => {
+          noteOff(frequencies[0]);
+        }, totalSeqMs);
+      }
 
       scheduleTimeout(() => {
         resolve();

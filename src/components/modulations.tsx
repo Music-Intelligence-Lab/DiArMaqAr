@@ -7,16 +7,7 @@ import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import calculateNumberOfHops from "@/functions/calculateNumberOfHops";
 
 export default function Modulations() {
-  const {
-    maqamat,
-    selectedMaqamDetails,
-    setSelectedMaqamDetails,
-    getModulations,
-    selectedMaqam,
-    setSelectedMaqam,
-    allPitchClasses,
-    setSelectedPitchClasses,
-  } = useAppContext();
+  const { maqamat, selectedMaqamDetails, setSelectedMaqamDetails, getModulations, selectedMaqam, setSelectedMaqam, allPitchClasses, setSelectedPitchClasses } = useAppContext();
 
   const [sourceMaqamStack, setSourceMaqamStack] = useState<Maqam[]>([]);
   const [modulationsStack, setModulationsStack] = useState<MaqamModulations[]>([]);
@@ -60,25 +51,16 @@ export default function Modulations() {
         const ascendingNoteNames = sourceMaqam.ascendingPitchClasses.map((pitchClass) => pitchClass.noteName);
         const totalModulations = calculateNumberOfHops(modulationsStack[stackIdx]);
         return (
-          <div
-            className="modulations__hops-wrapper"
-            key={stackIdx}
-            style={{ marginTop: stackIdx === 0 ? 0 : 32, borderTop: stackIdx === 0 ? undefined : "1px solid #444" }}
-          >
+          <div className="modulations__hops-wrapper" key={stackIdx} style={{ marginTop: stackIdx === 0 ? 0 : 32, borderTop: stackIdx === 0 ? undefined : "1px solid #444" }}>
             {/* Maqam name/details at the top of each wrapper */}
             <div className="modulations__wrapper-maqam-name">
               <span onClick={() => setSelectedMaqam(sourceMaqam)} style={{ cursor: "pointer" }}>
-                {sourceMaqam.name ? sourceMaqam.name : "Unknown"} ({ascendingNoteNames ? ascendingNoteNames[0] : "N/A"}/
-                {getEnglishNoteName(ascendingNoteNames ? ascendingNoteNames[0]! : "")})
+                {sourceMaqam.name ? sourceMaqam.name : "Unknown"} ({ascendingNoteNames ? ascendingNoteNames[0] : "N/A"}/{getEnglishNoteName(ascendingNoteNames ? ascendingNoteNames[0]! : "")})
                 {modulationsStack[stackIdx] && <> - {totalModulations} modulation options</>}
               </span>
               {/* Show delete button only on the last hops-wrapper and only if more than one exists */}
               {stackIdx === sourceMaqamStack.length - 1 && sourceMaqamStack.length > 1 && (
-                <button
-                  className="modulations__delete-hop-btn"
-                  style={{ marginLeft: 8, padding: "2px 8px", fontSize: 14, cursor: "pointer" }}
-                  onClick={removeLastHopsWrapper}
-                >
+                <button className="modulations__delete-hop-btn" style={{ marginLeft: 8, padding: "2px 8px", fontSize: 14, cursor: "pointer" }} onClick={removeLastHopsWrapper}>
                   Delete Hop
                 </button>
               )}
