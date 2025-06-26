@@ -74,7 +74,8 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     drone: false,
   });
 
-  const activeNotesRef = useRef<Map<number, { oscillator: OscillatorNode; gainNode: GainNode }[]>>(new Map());
+  // Union type: oscillator can be OscillatorNode or OscillatorNode[]
+  const activeNotesRef = useRef<Map<number, { oscillator: OscillatorNode | OscillatorNode[]; gainNode: GainNode }[]>>(new Map());
   const timeoutsRef = useRef<number[]>([]);
   const midiActiveNotesRef = useRef<Set<number>>(new Set());
 
@@ -307,57 +308,106 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     const audioCtx = audioCtxRef.current;
     const masterGain = masterGainRef.current;
     const startTime = audioCtx.currentTime;
-    const { attack, decay, sustain, release, waveform } = soundSettings;
+    const { attack, decay, sustain, waveform } = soundSettings;
 
     //–– pick source node based on waveform string ––
     let source: AudioNode;
+    let osc: OscillatorNode | null = null;
 
     // A) aperiodic
     if (APERIODIC_WAVES[waveform]) {
-      // sw-synth AperiodicWave typically provides createNode(ctx, freq):
-      const aw: any = APERIODIC_WAVES[waveform];
-      // pick one of the built-in PeriodicWave variants;
-      // most people just take the first, but you can experiment
-      const pw: PeriodicWave = aw.periodicWaves[0];
+      const aw = APERIODIC_WAVES[waveform];
+      const pws = aw.periodicWaves;
+      const dets = aw.detunings;
 
-      // spin up an oscillator with that PeriodicWave
-      const osc = audioCtx.createOscillator();
-      osc.setPeriodicWave(pw);
-      osc.frequency.setValueAtTime(frequency, startTime);
+      const merger = audioCtx.createGain(); // to sum the oscillators
+      const oscs: OscillatorNode[] = [];
 
-      source = osc;
+      for (let i = 0; i < pws.length; i++) {
+        const oscNode = audioCtx.createOscillator();
+        oscNode.setPeriodicWave(pws[i]);
+        // detune and align
+        const detunedFreq = frequency * Math.pow(2, dets[i] / 1200);
+        oscNode.frequency.setValueAtTime(detunedFreq, startTime);
+        oscNode.connect(merger);
+        oscs.push(oscNode);
+      }
+
+      // Use square‑root compensation so perceived loudness matches periodic waves
+      // (≈ -3 dB when five oscillators are active instead of −14 dB).
+      merger.gain.setValueAtTime(1 / Math.sqrt(pws.length), startTime);
+      source = merger;
+
+      // Connect through ADSR envelope
+      const gainNode = audioCtx.createGain();
+      // attack to full level
+      gainNode.gain.setValueAtTime(0, startTime);
+      gainNode.gain.linearRampToValueAtTime(1, startTime + attack);
+      // decay to sustain level
+      gainNode.gain.linearRampToValueAtTime(sustain, startTime + attack + decay);
+
+      source.connect(gainNode).connect(masterGain);
+
+      // Start oscillators
+      oscs.forEach((osc) => osc.start(startTime));
+
+      // store aperiodic voice for release
+      const prevQueue = activeNotesRef.current.get(frequency) || [];
+      prevQueue.push({ oscillator: oscs, gainNode });
+      activeNotesRef.current.set(frequency, prevQueue);
+
+      // schedule release for aperiodic voices after duration
+      scheduleTimeout(() => {
+        noteOff(frequency);
+      }, givenDuration * 1000);
+
+      return;
     }
     // B) periodic
     else if (PERIODIC_WAVES[waveform]) {
-      const osc = audioCtx.createOscillator();
+      osc = audioCtx.createOscillator();
       osc.setPeriodicWave(PERIODIC_WAVES[waveform]);
       osc.frequency.setValueAtTime(frequency, startTime);
       source = osc;
     }
     // C) built-in
     else {
-      const osc = audioCtx.createOscillator();
+      osc = audioCtx.createOscillator();
       osc.type = waveform as OscillatorType;
       osc.frequency.setValueAtTime(frequency, startTime);
       source = osc;
     }
 
-    //–– apply ADSR envelope ––
-    const gainNode = audioCtx.createGain();
-    // attack → decay → sustain
-    gainNode.gain.setValueAtTime(0, startTime);
-    gainNode.gain.linearRampToValueAtTime(1, startTime + attack);
-    gainNode.gain.linearRampToValueAtTime(sustain, startTime + attack + decay);
-    // schedule release
-    const noteOffTime = startTime + givenDuration;
-    const releaseStart = noteOffTime - release;
-    gainNode.gain.setValueAtTime(sustain, releaseStart);
-    gainNode.gain.linearRampToValueAtTime(0, noteOffTime);
+    //–– unified polyphonic envelope ––
+    const upcomingCount = Array.from(activeNotesRef.current.values())
+      .reduce((sum, arr) => sum + arr.length, 0) + 1;
+    // peak normalization: scale each voice by 1/N to prevent clipping at peaks
+    const voiceScale = 1 / upcomingCount;
 
-    //–– connect & play ––
+    const gainNode = audioCtx.createGain();
+    // attack to full voiceScale
+    gainNode.gain.setValueAtTime(0, startTime);
+    gainNode.gain.linearRampToValueAtTime(voiceScale, startTime + attack);
+    // decay to sustain * voiceScale
+    gainNode.gain.linearRampToValueAtTime(
+      voiceScale * sustain,
+      startTime + attack + decay
+    );
+    // connect source -> envelope -> master
     source.connect(gainNode).connect(masterGain);
-    if ((source as OscillatorNode).start) (source as OscillatorNode).start(startTime);
-    if ((source as OscillatorNode).stop) (source as OscillatorNode).stop(noteOffTime);
+
+    // store for release
+    if (osc) {
+      const queue = activeNotesRef.current.get(frequency) || [];
+      queue.push({ oscillator: osc, gainNode });
+      activeNotesRef.current.set(frequency, queue);
+      osc.start(startTime);
+    }
+
+    // schedule release after the requested duration
+    scheduleTimeout(() => {
+      noteOff(frequency);
+    }, givenDuration * 1000);
   };
 
   const playSequence = (frequencies: number[], ascending = true): Promise<void> => {
@@ -377,7 +427,9 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
         frequencies.forEach((freq, i) => {
           scheduleTimeout(() => {
-            playNoteFrequency(freq);
+            playNoteFrequency(freq, soundSettings.duration);
+            // ensure release for waveform output
+            scheduleTimeout(() => noteOff(freq), soundSettings.duration * 1000);
           }, i * beatSec * 1000);
         });
 
@@ -420,6 +472,8 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
               scheduleTimeout(() => {
                 playNoteFrequency(freqToPlay, durSec);
+                // schedule noteOff for waveform output
+                scheduleTimeout(() => noteOff(freqToPlay), durSec * 1000);
               }, cumulativeTimeSec * 1000);
             }
 
@@ -471,41 +525,87 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
       return;
     }
 
-    // 3) Waveform (unchanged)
-    const audioCtx = audioCtxRef.current!;
-    const masterGain = masterGainRef.current!;
-    const now = audioCtx.currentTime;
+    // For waveform output, manually instantiate oscillator/gainNode with ADSR (no release) and store in activeNotesRef
+    if (!audioCtxRef.current || !masterGainRef.current) return;
+    const audioCtx = audioCtxRef.current;
+    const masterGain = masterGainRef.current;
+    const startTime = audioCtx.currentTime;
     const { attack, decay, sustain, waveform } = soundSettings;
+    // Polyphony normalization: scale each voice so overlapping notes don’t clip
+    const upcomingCount = Array.from(activeNotesRef.current.values()).reduce((sum, v) => sum + v.length, 0) + 1;
+    const polyScale = 1 / Math.sqrt(upcomingCount);
 
-    const osc = audioCtx.createOscillator();
-    osc.type = waveform as OscillatorType;
-    osc.frequency.setValueAtTime(frequency, now);
-    const gain = audioCtx.createGain();
-    gain.gain.setValueAtTime(0, now);
-    gain.gain.linearRampToValueAtTime(1, now + attack);
-    gain.gain.linearRampToValueAtTime(sustain, now + attack + decay);
+    // Handle aperiodic waves
+    if (APERIODIC_WAVES[waveform]) {
+      const aw = APERIODIC_WAVES[waveform];
+      const pws = aw.periodicWaves;
+      const dets = aw.detunings;
 
-    osc.connect(gain).connect(masterGain);
-    osc.start(now);
+      const merger = audioCtx.createGain(); // to sum the oscillators
+      const oscs: OscillatorNode[] = [];
 
-    osc.onended = () => {
-      const queue = activeNotesRef.current.get(frequency) || [];
-      activeNotesRef.current.set(
-        frequency,
-        queue.filter((e) => e.oscillator !== osc)
-      );
-    };
+      for (let i = 0; i < pws.length; i++) {
+        const oscNode = audioCtx.createOscillator();
+        oscNode.setPeriodicWave(pws[i]);
+        const detunedFreq = frequency * Math.pow(2, dets[i] / 1200);
+        oscNode.frequency.setValueAtTime(detunedFreq, startTime);
+        oscNode.connect(merger);
+        oscs.push(oscNode);
+      }
 
-    const queue = activeNotesRef.current.get(frequency) || [];
-    queue.push({ oscillator: osc, gainNode: gain });
-    activeNotesRef.current.set(frequency, queue);
+      // Use square‑root compensation so perceived loudness matches periodic waves
+      // (≈ -3 dB when five oscillators are active instead of −14 dB).
+      merger.gain.setValueAtTime(1 / Math.sqrt(pws.length), startTime);
+      const source = merger;
 
-    const MAX_VOICES = 2;
-    if (queue.length > MAX_VOICES) {
-      const oldest = queue.shift()!;
-      oldest.oscillator.stop(now);
-      activeNotesRef.current.set(frequency, queue);
+      const gainNode = audioCtx.createGain();
+      const peakLevel = 1.0;
+      const sustainLevel = sustain;
+      const attackEndTime = startTime + attack;
+      const decayEndTime = attackEndTime + decay;
+
+      gainNode.gain.setValueAtTime(0, startTime);
+      gainNode.gain.linearRampToValueAtTime(peakLevel, attackEndTime);
+      gainNode.gain.linearRampToValueAtTime(sustainLevel, decayEndTime);
+
+      source.connect(gainNode).connect(masterGain);
+
+      const prev = activeNotesRef.current.get(frequency) || [];
+      // Store the entire array of oscillators for this note
+      prev.push({ oscillator: oscs, gainNode });
+      activeNotesRef.current.set(frequency, prev);
+
+      // Start oscillators only (do not stop here)
+      oscs.forEach((osc) => osc.start(startTime));
+      return;
     }
+
+    // periodic
+    const osc = audioCtx.createOscillator();
+    if (PERIODIC_WAVES[waveform]) {
+      osc.setPeriodicWave(PERIODIC_WAVES[waveform]);
+    } else {
+      osc.type = waveform as OscillatorType;
+    }
+    osc.frequency.setValueAtTime(frequency, startTime);
+    const source: AudioNode = osc;
+
+    const gainNode = audioCtx.createGain();
+    const peakLevel = polyScale;
+    const sustainLevel = sustain * polyScale;
+    const attackEndTime = startTime + attack;
+    const decayEndTime = attackEndTime + decay;
+
+    gainNode.gain.setValueAtTime(0, startTime);
+    gainNode.gain.linearRampToValueAtTime(peakLevel, attackEndTime);
+    gainNode.gain.linearRampToValueAtTime(sustainLevel, decayEndTime);
+
+    source.connect(gainNode).connect(masterGain);
+    osc.start(startTime);
+
+    const prev = activeNotesRef.current.get(frequency) || [];
+    prev.push({ oscillator: osc, gainNode });
+    activeNotesRef.current.set(frequency, prev);
   }
 
   function noteOff(frequency: number) {
@@ -527,17 +627,28 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     voice.gainNode.gain.cancelScheduledValues(now);
     voice.gainNode.gain.setValueAtTime(voice.gainNode.gain.value, now);
     voice.gainNode.gain.linearRampToValueAtTime(0, now + release);
-    voice.oscillator.stop(now + release);
+    // If the voice was created with aperiodic oscillators (multiple), stop them all
+    if (Array.isArray(voice.oscillator)) {
+      voice.oscillator.forEach((osc) => osc.stop(now + release));
+    } else {
+      voice.oscillator.stop(now + release);
+    }
 
     activeNotesRef.current.set(frequency, queue);
   }
 
   function stopAll() {
-    timeoutsRef.current.forEach(clearTimeout);
+/*     timeoutsRef.current.forEach(clearTimeout);
     timeoutsRef.current = [];
-
+ */
     for (const voices of activeNotesRef.current.values()) {
-      voices.forEach(({ oscillator }) => oscillator.stop());
+      voices.forEach(({ oscillator }) => {
+        if (Array.isArray(oscillator)) {
+          oscillator.forEach((osc) => osc.stop());
+        } else {
+          oscillator.stop();
+        }
+      });
     }
     activeNotesRef.current.clear();
 
