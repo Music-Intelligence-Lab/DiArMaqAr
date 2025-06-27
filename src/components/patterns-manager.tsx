@@ -2,15 +2,43 @@
 
 import React, { FormEvent, useEffect, useState } from "react";
 import useAppContext from "@/contexts/app-context";
-import Pattern, { PatternNote, SCALE_DEGREES, DURATION_OPTIONS } from "@/models/Pattern";
+import useSoundContext from "@/contexts/sound-context";
+import Pattern, {
+  PatternNote,
+  SCALE_DEGREES,
+  DURATION_OPTIONS,
+} from "@/models/Pattern";
 import { nanoid } from "nanoid";
 import { updatePatterns } from "@/functions/update";
 
+
 export default function PatternsManager() {
-  const { patterns, setPatterns } = useAppContext();
+  const { patterns, setPatterns, selectedMaqamDetails, allPitchClasses } = useAppContext();
+  const { playSequence } = useSoundContext();
   const [patternId, setPatternId] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [notes, setNotes] = useState<PatternNote[]>([]);
+
+  const maqamModel = selectedMaqamDetails
+    ? selectedMaqamDetails.getTahlil(allPitchClasses)
+    : null;
+
+  const pitchClasses = maqamModel
+    ? maqamModel.ascendingPitchClasses
+    : [];
+
+  // Add render log for debugging context/state
+  console.log("PatternsManager render:", {
+    maqamModel,
+    patternId,
+    patternsCount: patterns.length,
+  });
+
+  // Find the selected pattern
+  const selectedPattern = patterns.find((p) => p.getId() === patternId);
+
+  // Log pitchClasses before handlers
+  console.log("PatternsManager pitchClasses:", pitchClasses);
 
   // Reset form fields
   const resetForm = () => {
@@ -35,7 +63,10 @@ export default function PatternsManager() {
 
   // Handle adding a new empty note
   const addNote = () => {
-    setNotes((prev) => [...prev, { scaleDegree: "I", noteDuration: "8n", isTarget: false }]);
+    setNotes((prev) => [
+      ...prev,
+      { scaleDegree: "I", noteDuration: "8n", isTarget: false },
+    ]);
   };
 
   // Remove note at index
@@ -63,7 +94,9 @@ export default function PatternsManager() {
     e.preventDefault();
     const idUse = patternId || nanoid();
     const newPattern = new Pattern(idUse, name, notes);
-    const updatedList = patterns.some((p) => p.getId() === idUse) ? patterns.map((p) => (p.getId() === idUse ? newPattern : p)) : [...patterns, newPattern];
+    const updatedList = patterns.some((p) => p.getId() === idUse)
+      ? patterns.map((p) => (p.getId() === idUse ? newPattern : p))
+      : [...patterns, newPattern];
     updatePatterns(updatedList);
     setPatterns(updatedList);
     setPatternId(idUse);
@@ -78,6 +111,37 @@ export default function PatternsManager() {
     setPatternId("");
   };
 
+  const playAscending = () => {
+    console.log("playAscending: maqamModel", maqamModel);
+    if (!maqamModel) return;
+    const freqs = pitchClasses.map((pc) =>
+      parseInt(pc.frequency)
+    );
+    console.log("playAscending: freqs", freqs);
+    playSequence(freqs);
+  };
+
+  const playPattern = async () => {
+    console.log("playPattern: maqamModel", maqamModel, "selectedPattern", selectedPattern);
+    if (!maqamModel || !selectedPattern) return;
+    const freqs = selectedPattern.getNotes().map((n: PatternNote) => {
+      // Find the absolute index in SCALE_DEGREES
+      const degreeIndex = SCALE_DEGREES.indexOf(n.scaleDegree);
+      // First occurrence of "I" marks the start of octave degrees
+      const firstDegree = SCALE_DEGREES.indexOf("I");
+      // Calculate position within the maqam's seven-tone scale
+      const relIndex = degreeIndex - firstDegree;
+      if (relIndex < 0 || relIndex >= pitchClasses.length) {
+        // Rest or out-of-range → silence (0)
+        return 0;
+      }
+      const pc = pitchClasses[relIndex];
+      return parseInt(pc.frequency);
+    });
+    console.log("playPattern: freqs", freqs);
+    await playSequence(freqs);
+  };
+
   return (
     <div className="patterns-manager">
       <h2 className="patterns-manager__header">Patterns</h2>
@@ -85,10 +149,18 @@ export default function PatternsManager() {
         <div className="patterns-manager__group">
           <div className="patterns-manager__group">
             <div className="patterns-manager__input-container">
-              <label className="patterns-manager__label" htmlFor="patternSelect">
+              <label
+                className="patterns-manager__label"
+                htmlFor="patternSelect"
+              >
                 Select Pattern or Create New:
               </label>
-              <select id="patternSelect" className="patterns-manager__select" value={patternId} onChange={(e) => setPatternId(e.target.value)}>
+              <select
+                id="patternSelect"
+                className="patterns-manager__select"
+                value={patternId}
+                onChange={(e) => setPatternId(e.target.value)}
+              >
                 <option value="">-- New Pattern --</option>
                 {patterns.map((p) => (
                   <option key={p.getId()} value={p.getId()}>
@@ -100,14 +172,24 @@ export default function PatternsManager() {
           </div>
           <div className="patterns-manager__input-container">
             <label className="patterns-manager__label">Name</label>
-            <input className="patterns-manager__input" type="text" value={name} onChange={(e) => setName(e.target.value)} required />
+            <input
+              className="patterns-manager__input"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
           </div>
         </div>
 
         <div className="patterns-manager__notes-section">
           <h3 className="patterns-manager__notes-header">
             Notes{" "}
-            <button type="button" className="patterns-manager__add-note" onClick={addNote}>
+            <button
+              type="button"
+              className="patterns-manager__add-note"
+              onClick={addNote}
+            >
               + Add Note
             </button>
           </h3>
@@ -115,7 +197,12 @@ export default function PatternsManager() {
           <div className="patterns-manager__notes">
             {notes.map((note, i) => (
               <div key={i} className="patterns-manager__note">
-                <select className="patterns-manager__note-scaleDegree" value={note.scaleDegree} onChange={(e) => updateNote(i, "scaleDegree", e.target.value)} required>
+                <select
+                  className="patterns-manager__note-scaleDegree"
+                  value={note.scaleDegree}
+                  onChange={(e) => updateNote(i, "scaleDegree", e.target.value)}
+                  required
+                >
                   <option value="R">Rest</option>
                   {SCALE_DEGREES.map(
                     (rn) =>
@@ -126,18 +213,32 @@ export default function PatternsManager() {
                       )
                   )}
                 </select>
-                <select className="patterns-manager__note-duration" value={note.noteDuration} onChange={(e) => updateNote(i, "noteDuration", e.target.value)}>
+                <select
+                  className="patterns-manager__note-duration"
+                  value={note.noteDuration}
+                  onChange={(e) =>
+                    updateNote(i, "noteDuration", e.target.value)
+                  }
+                >
                   {DURATION_OPTIONS.map((d) => (
                     <option key={d} value={d}>
                       {d}
                     </option>
                   ))}
                 </select>
-                <select className="patterns-manager__note-duration" value={note.isTarget ? "Target" : ""} onChange={(e) => updateNote(i, "isTarget", e.target.value)}>
+                <select
+                  className="patterns-manager__note-duration"
+                  value={note.isTarget ? "Target" : ""}
+                  onChange={(e) => updateNote(i, "isTarget", e.target.value)}
+                >
                   <option value="Target">Target</option>
                   <option value="">Not Target</option>
                 </select>
-                <button type="button" className="patterns-manager__delete-note" onClick={() => removeNote(i)}>
+                <button
+                  type="button"
+                  className="patterns-manager__delete-note"
+                  onClick={() => removeNote(i)}
+                >
                   Delete
                 </button>
               </div>
@@ -150,10 +251,28 @@ export default function PatternsManager() {
             {patternId ? "Update Pattern" : "Save Pattern"}
           </button>
           {patternId && (
-            <button type="button" className="patterns-manager__delete-button" onClick={handleDelete}>
+            <button
+              type="button"
+              className="patterns-manager__delete-button"
+              onClick={handleDelete}
+            >
               Delete Pattern
             </button>
           )}
+        </div>
+
+        {!maqamModel && (
+          <p className="patterns-manager__warning">
+            Please select a Maqam before playing patterns.
+          </p>
+        )}
+        <div className="patterns-manager__play-buttons">
+          <button type="button" onClick={playPattern} disabled={!maqamModel}>
+            Play Pattern
+          </button>
+          <button type="button" onClick={playAscending} disabled={!maqamModel}>
+            Play Ascending
+          </button>
         </div>
       </form>
     </div>

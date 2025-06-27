@@ -114,7 +114,7 @@
     "name": "maqām ḥijāz kār kurd",
     "ascendingNoteNames": [
       "rāst",
-      "tīk zirguleh",
+      "zirguleh",
       "kurdī",
       "chahargāh",
       "nawā",
@@ -127,7 +127,7 @@
       "nawā",
       "chahargāh",
       "kurdī",
-      "tīk zirguleh",
+      "zirguleh",
       "rāst"
     ],
     "suyūr": [],
@@ -663,7 +663,7 @@
   },
   {
     "id": "23",
-    "name": "maqām ḥijāz kār al-rāst",
+    "name": "maqām ḥijāz kār binṣir",
     "ascendingNoteNames": [
       "rāst",
       "zirguleh",
@@ -2663,5 +2663,31 @@
         "page": "40"
       }
     ]
+  },
+  {
+    "id": "54",
+    "name": "maqām ḥijāz kār muṭlaq",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "kurdī",
+      "ḥijāz",
+      "nawā",
+      "ḥusaynī",
+      "ʿajam",
+      "shahnāz"
+    ],
+    "descendingNoteNames": [
+      "shahnāz",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "ḥijāz",
+      "kurdī",
+      "dūgāh"
+    ],
+    "suyūr": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
   }
 ]
