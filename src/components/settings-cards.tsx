@@ -20,7 +20,7 @@ const SettingsCard = () => {
     midiInputs,
     midiOutputs,
     setRefresh,
-    stopAll,
+    clearHangingNotes,
     clearHangingNotes,
   } = useSoundContext();
 
@@ -54,7 +54,7 @@ const SettingsCard = () => {
 
   const handleWaveformChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSoundSettings((prev) => ({ ...prev, waveform: e.target.value }));
-    stopAll();
+    clearHangingNotes();
     e.target.blur();
   };
 
@@ -497,7 +497,7 @@ const SettingsCard = () => {
           <button className="settings-card__clear-button" onClick={clearHangingNotes}>
             Clear Hanging Notes
           </button>
-          <button className="settings-card__clear-button" onClick={stopAll}>
+          <button className="settings-card__clear-button" onClick={clearHangingNotes}>
             Stop All Sounds
           </button>
 

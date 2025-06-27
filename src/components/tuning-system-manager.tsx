@@ -38,7 +38,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
   const { tuningSystemsFilter, setTuningSystemsFilter } = useFilterContext();
   
-  const { stopAll } = useSoundContext();
+  const { clearHangingNotes } = useSoundContext();
 
   const alKindiPitchClasses = ["1/1", "256/243", "9/8", "32/27", "81/64", "4/3", "1024/729", "3/2", "128/81", "27/16", "16/9", "4096/2187"];
 
@@ -232,7 +232,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   const handleTuningSystemClick = (ts: TuningSystem) => {
     setSelectedTuningSystem(ts);
     handleStartNoteNameChange("", ts.getNoteNames(), ts.getPitchClasses().length);
-    stopAll();
+    clearHangingNotes();
   };
 
   const updateSourceRefs = (index: number, newRef: Partial<SourcePageReference>) => {

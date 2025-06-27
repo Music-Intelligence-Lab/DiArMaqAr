@@ -27,7 +27,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
 
   const { maqamatFilter, setMaqamatFilter } = useFilterContext();
 
-  const { stopAll } = useSoundContext();
+  const { clearHangingNotes } = useSoundContext();
 
   // Local state for comments
   const [commentsEnglishLocal, setCommentsEnglishLocal] = useState<string>(selectedMaqamDetails?.getCommentsEnglish() ?? "");
@@ -188,7 +188,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
                 onClick={() => {
                   if (selectable) {
                     handleClickMaqam(maqamDetails);
-                    stopAll();
+                    clearHangingNotes();
                   }
                 }}
               >

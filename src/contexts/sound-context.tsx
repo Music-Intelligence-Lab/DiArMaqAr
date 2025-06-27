@@ -47,7 +47,6 @@ interface SoundContextInterface {
   midiInputs: MidiPortInfo[];
   midiOutputs: MidiPortInfo[];
   setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
-  stopAll: () => void;
   clearHangingNotes: () => void;
 }
 
@@ -212,7 +211,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
   useEffect(() => {
     return () => {
-      stopAll();
+      clearHangingNotes();
     };
   }, []);
 
@@ -655,32 +654,10 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     activeNotesRef.current.set(frequency, queue);
   }
 
-  function stopAll() {
+  function clearHangingNotes() {
     timeoutsRef.current.forEach(clearTimeout);
     timeoutsRef.current = [];
 
-    for (const voices of activeNotesRef.current.values()) {
-      voices.forEach(({ oscillator }) => {
-        if (Array.isArray(oscillator)) {
-          oscillator.forEach((osc) => osc.stop());
-        } else {
-          oscillator.stop();
-        }
-      });
-    }
-    activeNotesRef.current.clear();
-
-    midiActiveNotesRef.current.forEach((note) => sendMidiMessage([0x80, note, 0]));
-    midiActiveNotesRef.current.clear();
-
-    setActivePitchClasses([]);
-  }
-
-
-  function clearHangingNotes() {
-/*     timeoutsRef.current.forEach(clearTimeout);
-    timeoutsRef.current = [];
- */
     for (const voices of activeNotesRef.current.values()) {
       voices.forEach(({ oscillator }) => {
         if (Array.isArray(oscillator)) {
@@ -712,7 +689,6 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         midiInputs,
         midiOutputs,
         setRefresh,
-        stopAll,
         clearHangingNotes
       }}
     >
