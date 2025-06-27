@@ -3,11 +3,11 @@
 import React, { useEffect, useState, useRef, useMemo } from "react";
 import useAppContext from "@/contexts/app-context";
 import useFilterContext from "@/contexts/filter-context";
+import useSoundContext from "@/contexts/sound-context";
 import TuningSystem from "@/models/TuningSystem";
 import detectPitchClassType from "@/functions/detectPitchClassType";
 import convertPitchClass from "@/functions/convertPitchClass";
 import NoteName, { octaveOneNoteNames, octaveTwoNoteNames, TransliteratedNoteNameOctaveOne, TransliteratedNoteNameOctaveTwo, getNoteNameIndex } from "@/models/NoteName";
-
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { updateTuningSystems } from "@/functions/update";
 import getFirstNoteName from "@/functions/getFirstNoteName";
@@ -37,6 +37,8 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   } = useAppContext();
 
   const { tuningSystemsFilter, setTuningSystemsFilter } = useFilterContext();
+  
+  const { stopAll } = useSoundContext();
 
   const alKindiPitchClasses = ["1/1", "256/243", "9/8", "32/27", "81/64", "4/3", "1024/729", "3/2", "128/81", "27/16", "16/9", "4096/2187"];
 
@@ -230,6 +232,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   const handleTuningSystemClick = (ts: TuningSystem) => {
     setSelectedTuningSystem(ts);
     handleStartNoteNameChange("", ts.getNoteNames(), ts.getPitchClasses().length);
+    stopAll();
   };
 
   const updateSourceRefs = (index: number, newRef: Partial<SourcePageReference>) => {
