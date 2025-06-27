@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import useAppContext from "@/contexts/app-context";
 import useFilterContext from "@/contexts/filter-context";
+import useSoundContext from "@/contexts/sound-context";
 import MaqamDetails from "@/models/Maqam";
 import { getMaqamTranspositions } from "@/functions/transpose";
 import { updateMaqamat } from "@/functions/update";
@@ -25,6 +26,8 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
   } = useAppContext();
 
   const { maqamatFilter, setMaqamatFilter } = useFilterContext();
+
+  const { stopAll } = useSoundContext();
 
   // Local state for comments
   const [commentsEnglishLocal, setCommentsEnglishLocal] = useState<string>(selectedMaqamDetails?.getCommentsEnglish() ?? "");
@@ -182,7 +185,12 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
               <div
                 key={idx}
                 className={`maqam-manager__item ${maqamDetails.getName() === selectedMaqamDetails?.getName() ? "maqam-manager__item_selected " : ""}${selectable ? "maqam-manager__item_active" : ""}`}
-                onClick={() => selectable && handleClickMaqam(maqamDetails)}
+                onClick={() => {
+                  if (selectable) {
+                    handleClickMaqam(maqamDetails);
+                    stopAll();
+                  }
+                }}
               >
                 <div className="maqam-manager__item-name">
                   <strong>{`${maqamDetails.getName()}${!maqamDetails.isMaqamSymmetric() ? "*" : ""}`}</strong>

@@ -2,6 +2,7 @@
 
 import useAppContext from "@/contexts/app-context";
 import useFilterContext from "@/contexts/filter-context";
+import useSoundContext from "@/contexts/sound-context";
 import JinsDetails from "@/models/Jins";
 import React, { useState, useEffect, useMemo } from "react";
 import { getJinsTranspositions } from "@/functions/transpose";
@@ -12,6 +13,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
   const { ajnas, setAjnas, selectedTuningSystem, selectedJinsDetails, setSelectedJinsDetails, handleClickJins, selectedPitchClasses, clearSelections, allPitchClasses, sources } = useAppContext();
 
   const { ajnasFilter, setAjnasFilter } = useFilterContext();
+  const { stopAll } = useSoundContext();
 
   // Local state for comments
   const [commentsEnglishLocal, setCommentsEnglishLocal] = useState<string>(selectedJinsDetails?.getCommentsEnglish() ?? "");
@@ -140,7 +142,10 @@ export default function JinsManager({ admin }: { admin: boolean }) {
                   key={index}
                   className={"jins-manager__item " + (jinsDetails.getName() === selectedJinsDetails?.getName() ? "jins-manager__item_selected " : "") + (selectable ? "jins-manager__item_active" : "")}
                   onClick={() => {
-                    if (selectable) handleClickJins(jinsDetails);
+                    if (selectable) {
+                      handleClickJins(jinsDetails);
+                      stopAll();
+                    }
                   }}
                 >
                   <div className="jins-manager__item-name">
