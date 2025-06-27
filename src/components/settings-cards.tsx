@@ -133,7 +133,7 @@ const SettingsCard = () => {
                   }));
                 }}
               >
-                <option value="">– none –</option>
+                
                 {[...patterns]
                   .slice()
                   .sort((a, b) => a.getName().localeCompare(b.getName()))

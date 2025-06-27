@@ -291,6 +291,11 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
   };
 
   const playNoteFrequency = (frequency: number, givenDuration: number = soundSettings.duration) => {
+    // Resume AudioContext if it's suspended to avoid lag.
+    const audioCtx = audioCtxRef.current!;
+    if (audioCtx && audioCtx.state === "suspended") {
+      audioCtx.resume();
+    }
     // 1) Mute
     if (soundSettings.outputMode === "mute") return;
 
@@ -314,7 +319,8 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     if (!audioCtxRef.current || !masterGainRef.current) return;
     if (isNaN(frequency) || frequency <= 0) return;
 
-    const audioCtx = audioCtxRef.current;
+    // Use the resumed audioCtx from above
+    // const audioCtx = audioCtxRef.current;
     const masterGain = masterGainRef.current;
     const startTime = audioCtx.currentTime;
     const { attack, decay, sustain, waveform } = soundSettings;
