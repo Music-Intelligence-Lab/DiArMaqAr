@@ -1,7 +1,7 @@
 [
   {
     "id": "1",
-    "name": "maqām rāst",
+    "name": "maqām rāst binṣir",
     "ascendingNoteNames": [
       "rāst",
       "dūgāh",
@@ -2663,6 +2663,32 @@
         "page": "40"
       }
     ]
+  },
+  {
+    "id": "53",
+    "name": "maqām rāst muṭlaq",
+    "ascendingNoteNames": [
+      "yegāh",
+      "ʿushayrān",
+      "ʿirāq",
+      "rāst",
+      "dūgāh",
+      "buselīk/ʿushshāq",
+      "nīm ḥijāz"
+    ],
+    "descendingNoteNames": [
+      "chahargāh",
+      "buselīk/ʿushshāq",
+      "dūgāh",
+      "rāst",
+      "ʿirāq",
+      "ʿushayrān",
+      "yegāh"
+    ],
+    "suyūr": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
   },
   {
     "id": "54",
