@@ -152,18 +152,16 @@
   }
 
   &__drone-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 5px;
+    padding: 5px 10px;
     cursor: pointer;
-    transition: 0.3s;
-    color: $primary;
-    background-color: white;
-
-    margin: 10px;
+    transition: 0.1s;
+    color: $text;
+    background-color: $black;
+    font-size: 12px;
+    margin: 10px 0px;
 
     &_active {
-      color: white;
+      color: $text;
       background-color: $primary;
     }
   }
