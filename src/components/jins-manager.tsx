@@ -136,7 +136,13 @@ export default function JinsManager({ admin }: { admin: boolean }) {
           ) : (
             filteredAjnas.map((jinsDetails, index) => {
               const selectable = jinsDetails.isJinsSelectable(allPitchClasses);
-              const numberOfTranspositions = jinsTranspositions.get(jinsDetails.getId())?.length || 0;
+              const numberOfTranspositions =
+                jinsTranspositions
+                  .get(jinsDetails.getId())
+                  ?.filter(
+                    (transposition) =>
+                      transposition.jinsPitchClasses[0]?.octave === 1
+                  ).length || 0;
               return (
                 <div
                   key={index}
