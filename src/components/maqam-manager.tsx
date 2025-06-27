@@ -180,7 +180,11 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
         >
           {filteredMaqamat.map((maqamDetails, idx) => {
             const selectable = maqamDetails.isMaqamSelectable(allPitchClasses);
-            const numberOfTranspositions = maqamTranspositions.get(maqamDetails.getId())?.length || 0;
+            const numberOfTranspositions = maqamTranspositions
+              .get(maqamDetails.getId())
+              ?.filter((transposition) =>
+                transposition.ascendingPitchClasses[0]?.octave === 1
+              ).length || 0;
             return (
               <div
                 key={idx}
