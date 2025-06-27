@@ -60,11 +60,11 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     attack: 0.01,
     decay: 0.2,
     sustain: 0.7,
-    release: 0.1,
+    release: 0.3,
     waveform: "triangle",
     volume: 0.2,
     duration: 0.1,
-    tempo: 200,
+    tempo: 150,
     pitchBendRange: 2,
     inputType: "QWERTY",
     inputMode: "selection",
@@ -72,7 +72,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     outputMode: "waveform",
     selectedMidiOutputId: null,
     selectedPattern: null,
-    drone: false,
+    drone: true,
   });
 
   // Union type: oscillator can be OscillatorNode or OscillatorNode[]
@@ -199,9 +199,15 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     selectedJinsDetails,
     tuningSystemPitchClasses,
     soundSettings.inputMode,
+    soundSettings.inputType,
     soundSettings.outputMode,
     soundSettings.selectedMidiInputId,
     soundSettings.selectedMidiOutputId,
+    soundSettings.waveform,
+    soundSettings.attack,
+    soundSettings.decay,
+    soundSettings.sustain,
+    soundSettings.release,
   ]);
 
   useEffect(() => {
@@ -211,6 +217,8 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
   }, []);
 
   const handleMidiInput: NonNullable<MIDIInput["onmidimessage"]> = function (this: MIDIInput, ev: MIDIMessageEvent) {
+    // Ignore MIDI messages unless inputType is "MIDI"
+    if (soundSettings.inputType !== "MIDI") return;
     // only from our selected port
     if (this.id !== soundSettings.selectedMidiInputId) return;
 

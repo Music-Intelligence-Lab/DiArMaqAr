@@ -1,58 +1,7 @@
 [
   {
-    "id": "1",
-    "name": "Test Pattern",
-    "notes": [
-      {
-        "scaleDegree": "I",
-        "noteDuration": "16n",
-        "isTarget": false
-      },
-      {
-        "scaleDegree": "II",
-        "noteDuration": "16n",
-        "isTarget": false
-      },
-      {
-        "scaleDegree": "III",
-        "noteDuration": "16n",
-        "isTarget": false
-      },
-      {
-        "scaleDegree": "II",
-        "noteDuration": "16n",
-        "isTarget": false
-      },
-      {
-        "scaleDegree": "III",
-        "noteDuration": "16n",
-        "isTarget": false
-      },
-      {
-        "scaleDegree": "II",
-        "noteDuration": "16n",
-        "isTarget": false
-      },
-      {
-        "scaleDegree": "III",
-        "noteDuration": "16n",
-        "isTarget": false
-      },
-      {
-        "scaleDegree": "II",
-        "noteDuration": "16n",
-        "isTarget": false
-      },
-      {
-        "scaleDegree": "I",
-        "noteDuration": "16n",
-        "isTarget": false
-      }
-    ]
-  },
-  {
     "id": "NbC43ZMhRaZZ8tZ5kbA9G",
-    "name": "maqam p1",
+    "name": "Three Notes Ascending Descending",
     "notes": [
       {
         "scaleDegree": "I",
@@ -83,7 +32,7 @@
   },
   {
     "id": "q6VQ_Cleehoo0AiAXqy4W",
-    "name": "maqam p2",
+    "name": "Three Notes Descending Ascending",
     "notes": [
       {
         "scaleDegree": "III",
@@ -114,70 +63,28 @@
   },
   {
     "id": "_n933jN8J9bwKO5sv7WS1",
-    "name": "basic",
+    "name": "Three Notes Ascending",
     "notes": [
       {
-        "scaleDegree": "I",
-        "noteDuration": "8n",
-        "isTarget": true
-      },
-      {
-        "scaleDegree": "II",
+        "scaleDegree": "-VI",
         "noteDuration": "8n",
         "isTarget": false
-      },
-      {
-        "scaleDegree": "III",
-        "noteDuration": "8n",
-        "isTarget": false
-      }
-    ]
-  },
-  {
-    "id": "B_xR3HJRUf3Dcsf6YIyZg",
-    "name": "test 2",
-    "notes": [
-      {
-        "scaleDegree": "I",
-        "noteDuration": "8n",
-        "isTarget": false
-      },
-      {
-        "scaleDegree": "II",
-        "noteDuration": "4n",
-        "isTarget": false
-      },
-      {
-        "scaleDegree": "I",
-        "noteDuration": "8n",
-        "isTarget": false
-      },
-      {
-        "scaleDegree": "III",
-        "noteDuration": "8n",
-        "isTarget": false
-      }
-    ]
-  },
-  {
-    "id": "SdTAFwqWLUbQ5vDihru80",
-    "name": "simple long short",
-    "notes": [
-      {
-        "scaleDegree": "I",
-        "noteDuration": "8n",
-        "isTarget": true
       },
       {
         "scaleDegree": "-VII",
         "noteDuration": "8n",
         "isTarget": false
+      },
+      {
+        "scaleDegree": "I",
+        "noteDuration": "8n",
+        "isTarget": true
       }
     ]
   },
   {
     "id": "5oJKogu0ht2-kyN2m5JHg",
-    "name": "Test Extra Octaves",
+    "name": "Single Note Octaves",
     "notes": [
       {
         "scaleDegree": "-I",
@@ -192,7 +99,7 @@
       {
         "scaleDegree": "+I",
         "noteDuration": "4n",
-        "isTarget": false
+        "isTarget": true
       }
     ]
   },
@@ -228,119 +135,8 @@
     ]
   },
   {
-    "id": "O4e6UKPCDNwFbkJWnyZ3M",
-    "name": "All octaves test",
-    "notes": [
-      {
-        "scaleDegree": "-I",
-        "noteDuration": "4n",
-        "isTarget": false
-      },
-      {
-        "scaleDegree": "-II",
-        "noteDuration": "4n",
-        "isTarget": false
-      },
-      {
-        "scaleDegree": "-III",
-        "noteDuration": "4n",
-        "isTarget": false
-      },
-      {
-        "scaleDegree": "-IV",
-        "noteDuration": "4n",
-        "isTarget": false
-      },
-      {
-        "scaleDegree": "-V",
-        "noteDuration": "4n",
-        "isTarget": false
-      },
-      {
-        "scaleDegree": "-VI",
-        "noteDuration": "4n",
-        "isTarget": false
-      },
-      {
-        "scaleDegree": "-VII",
-        "noteDuration": "4n",
-        "isTarget": false
-      },
-      {
-        "scaleDegree": "I",
-        "noteDuration": "4n",
-        "isTarget": false
-      },
-      {
-        "scaleDegree": "II",
-        "noteDuration": "4n",
-        "isTarget": false
-      },
-      {
-        "scaleDegree": "III",
-        "noteDuration": "4n",
-        "isTarget": false
-      },
-      {
-        "scaleDegree": "IV",
-        "noteDuration": "4n",
-        "isTarget": false
-      },
-      {
-        "scaleDegree": "V",
-        "noteDuration": "4n",
-        "isTarget": false
-      },
-      {
-        "scaleDegree": "VI",
-        "noteDuration": "4n",
-        "isTarget": false
-      },
-      {
-        "scaleDegree": "VII",
-        "noteDuration": "4n",
-        "isTarget": false
-      },
-      {
-        "scaleDegree": "+I",
-        "noteDuration": "4n",
-        "isTarget": false
-      },
-      {
-        "scaleDegree": "+II",
-        "noteDuration": "4n",
-        "isTarget": false
-      },
-      {
-        "scaleDegree": "+III",
-        "noteDuration": "4n",
-        "isTarget": false
-      },
-      {
-        "scaleDegree": "+IV",
-        "noteDuration": "4n",
-        "isTarget": false
-      },
-      {
-        "scaleDegree": "+V",
-        "noteDuration": "4n",
-        "isTarget": false
-      },
-      {
-        "scaleDegree": "+VI",
-        "noteDuration": "4n",
-        "isTarget": false
-      },
-      {
-        "scaleDegree": "+VII",
-        "noteDuration": "4n",
-        "isTarget": false
-      }
-    ]
-  },
-  {
     "id": "Vwgo4te4XXOwcHxQdoiBj",
-    "name": "basic desc",
+    "name": "Three Notes Descending",
     "notes": [
       {
         "scaleDegree": "III",
@@ -361,7 +157,7 @@
   },
   {
     "id": "NnoF7nBwVtt3pdsevNZRr",
-    "name": "main",
+    "name": "Default",
     "notes": [
       {
         "scaleDegree": "I",

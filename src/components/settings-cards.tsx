@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Slider } from "@mui/material";
 import useAppContext from "@/contexts/app-context";
 import useSoundContext from "@/contexts/sound-context";
@@ -26,6 +26,18 @@ const SettingsCard = () => {
 
   const { openSettings, setOpenSettings, openNavigation, setOpenNavigation } =
     useMenuContext();
+
+  useEffect(() => {
+    if (!soundSettings.selectedPattern && patterns.length > 0) {
+      const defaultPattern = patterns.find((p) => p.getName() === "Default");
+      if (defaultPattern) {
+        setSoundSettings((prev) => ({
+          ...prev,
+          selectedPattern: defaultPattern,
+        }));
+      }
+    }
+  }, [patterns, soundSettings.selectedPattern, setSoundSettings]);
 
   const togglePanel = () => {
     setOpenSettings((prev) => !prev);
@@ -122,11 +134,14 @@ const SettingsCard = () => {
                 }}
               >
                 <option value="">– none –</option>
-                {patterns.map((p) => (
-                  <option key={p.getId()} value={p.getId()}>
-                    {p.getName()}
-                  </option>
-                ))}
+                {[...patterns]
+                  .slice()
+                  .sort((a, b) => a.getName().localeCompare(b.getName()))
+                  .map((p) => (
+                    <option key={p.getId()} value={p.getId()}>
+                      {p.getName()}
+                    </option>
+                  ))}
               </select>
             </div>
           </details>
@@ -224,7 +239,7 @@ const SettingsCard = () => {
                         : ""
                     }`}
                   >
-                    Selection
+                    Jins/Maqām
                   </button>
                 </div>
               )}
