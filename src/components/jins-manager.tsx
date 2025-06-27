@@ -13,7 +13,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
   const { ajnas, setAjnas, selectedTuningSystem, selectedJinsDetails, setSelectedJinsDetails, handleClickJins, selectedPitchClasses, clearSelections, allPitchClasses, sources } = useAppContext();
 
   const { ajnasFilter, setAjnasFilter } = useFilterContext();
-  const { stopAll } = useSoundContext();
+  const { clearHangingNotes } = useSoundContext();
 
   // Local state for comments
   const [commentsEnglishLocal, setCommentsEnglishLocal] = useState<string>(selectedJinsDetails?.getCommentsEnglish() ?? "");
@@ -144,7 +144,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
                   onClick={() => {
                     if (selectable) {
                       handleClickJins(jinsDetails);
-                      stopAll();
+                      clearHangingNotes();
                     }
                   }}
                 >
