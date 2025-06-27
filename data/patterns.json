@@ -358,5 +358,26 @@
         "isTarget": true
       }
     ]
+  },
+  {
+    "id": "NnoF7nBwVtt3pdsevNZRr",
+    "name": "main",
+    "notes": [
+      {
+        "scaleDegree": "I",
+        "noteDuration": "8n",
+        "isTarget": false
+      },
+      {
+        "scaleDegree": "-VII",
+        "noteDuration": "8n",
+        "isTarget": false
+      },
+      {
+        "scaleDegree": "I",
+        "noteDuration": "8n",
+        "isTarget": true
+      }
+    ]
   }
 ]

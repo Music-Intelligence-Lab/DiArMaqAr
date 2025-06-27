@@ -48,6 +48,7 @@ interface SoundContextInterface {
   midiOutputs: MidiPortInfo[];
   setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
   stopAll: () => void;
+  clearHangingNotes: () => void;
 }
 
 const SoundContext = createContext<SoundContextInterface | null>(null);
@@ -237,7 +238,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
       // ——— dispatch sound ———
       if (cmd === 0x90 && velocity > 0) {
-        noteOn(freq);
+        noteOn(freq, velocity);
         setActivePitchClasses((prev) => {
           if (prev.some((c) => c.index === pitchClass.index && c.octave === pitchClass.octave)) return prev;
           return [...prev, pitchClass];
@@ -265,7 +266,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
           const adjFreq = baseFreq * Math.pow(2, octaveShift);
 
           if (cmd === 0x90 && velocity > 0) {
-            noteOn(adjFreq);
+            noteOn(adjFreq, velocity);
             setActivePitchClasses((prev) => {
               if (prev.some((c) => c.index === pitchClass.index && c.octave === pitchClass.octave)) return prev;
               return [...prev, pitchClass];
@@ -446,7 +447,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
       let cumulativeTimeSec = 0;
 
       if (soundSettings.drone) {
-        noteOn(frequencies[0]);
+        noteOn(frequencies[0] / 2, 30);
       }
 
       const playPattern = (windowStartIndexes: number[], terminationCheck: (windowStart: number, isTarget: boolean) => boolean) => {
@@ -501,7 +502,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
       if (soundSettings.drone) {
         scheduleTimeout(() => {
-          noteOff(frequencies[0]);
+          noteOff(frequencies[0] / 2);
         }, totalSeqMs);
       }
 
@@ -511,8 +512,10 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     });
   };
 
-  function noteOn(frequency: number) {
+  function noteOn(frequency: number, midiVelocity: number = 127) {
     if (soundSettings.outputMode === "mute") return;
+
+    const velocityScale = midiVelocity / 127;
 
     if (soundSettings.outputMode === "midi") {
       const mf = frequencyToMidiNoteNumber(frequency);
@@ -533,7 +536,8 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     const { attack, decay, sustain, waveform } = soundSettings;
     // Polyphony normalization: scale each voice so overlapping notes don’t clip
     const upcomingCount = Array.from(activeNotesRef.current.values()).reduce((sum, v) => sum + v.length, 0) + 1;
-    const polyScale = 1 / Math.sqrt(upcomingCount);
+    // const polyScale = 1 / Math.sqrt(upcomingCount);
+    const polyScale = (1 / Math.sqrt(upcomingCount)) * velocityScale;
 
     // Handle aperiodic waves
     if (APERIODIC_WAVES[waveform]) {
@@ -559,8 +563,8 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
       const source = merger;
 
       const gainNode = audioCtx.createGain();
-      const peakLevel = 1.0;
-      const sustainLevel = sustain;
+      const peakLevel = velocityScale;
+      const sustainLevel = sustain * velocityScale;
       const attackEndTime = startTime + attack;
       const decayEndTime = attackEndTime + decay;
 
@@ -638,6 +642,28 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
   }
 
   function stopAll() {
+    timeoutsRef.current.forEach(clearTimeout);
+    timeoutsRef.current = [];
+
+    for (const voices of activeNotesRef.current.values()) {
+      voices.forEach(({ oscillator }) => {
+        if (Array.isArray(oscillator)) {
+          oscillator.forEach((osc) => osc.stop());
+        } else {
+          oscillator.stop();
+        }
+      });
+    }
+    activeNotesRef.current.clear();
+
+    midiActiveNotesRef.current.forEach((note) => sendMidiMessage([0x80, note, 0]));
+    midiActiveNotesRef.current.clear();
+
+    setActivePitchClasses([]);
+  }
+
+
+  function clearHangingNotes() {
 /*     timeoutsRef.current.forEach(clearTimeout);
     timeoutsRef.current = [];
  */
@@ -673,12 +699,14 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         midiOutputs,
         setRefresh,
         stopAll,
+        clearHangingNotes
       }}
     >
       {children}
     </SoundContext.Provider>
   );
 }
+
 
 export default function useSoundContext() {
   const context = useContext(SoundContext);
