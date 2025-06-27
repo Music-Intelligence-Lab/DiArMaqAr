@@ -21,7 +21,6 @@ const SettingsCard = () => {
     midiOutputs,
     setRefresh,
     clearHangingNotes,
-    clearHangingNotes,
   } = useSoundContext();
 
   const { openSettings, setOpenSettings, openNavigation, setOpenNavigation } =
