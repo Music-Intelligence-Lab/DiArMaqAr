@@ -19,8 +19,18 @@ export default function JinsManager({ admin }: { admin: boolean }) {
   const [commentsEnglishLocal, setCommentsEnglishLocal] = useState<string>(selectedJinsDetails?.getCommentsEnglish() ?? "");
   const [commentsArabicLocal, setCommentsArabicLocal] = useState<string>(selectedJinsDetails?.getCommentsArabic() ?? "");
 
-  // Tabs for filtering ajnas by starting note name
-  const tabs = ["all", "yegāh", "ʿushayrān", "ʿajam ʿushayrān", "ʿirāq", "rāst", "dūgāh", "segāh", "chahargāh"];
+  // Dynamic note names for tabs ordered by allPitchClasses.noteName
+  const tabs = useMemo(() => {
+    const uniqueNoteNames = new Set<string>();
+    ajnas.forEach((jins) => {
+      const firstNote = jins.getNoteNames()[0]?.toLowerCase();
+      if (firstNote) uniqueNoteNames.add(firstNote);
+    });
+    const orderedByPitchClasses = allPitchClasses
+      .map((pc) => pc.noteName.toLowerCase())
+      .filter((name) => uniqueNoteNames.has(name));
+    return ["all", ...orderedByPitchClasses];
+  }, [ajnas, allPitchClasses]);
 
   // Sync local state when a different jins is selected
   useEffect(() => {
