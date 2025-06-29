@@ -17,7 +17,7 @@ export default function modulate(
   const hopsFromThree2p: Maqam[] = [];
   const hopsFromFour: Maqam[] = [];
   const hopsFromFive: Maqam[] = [];
-  const hopsFromSix: Maqam[] = [];
+  const HopFromSixNoThird: Maqam[] = [];
 
   const sourceAscendingNotes = sourceMaqamTransposition.ascendingPitchClasses.map((pitchClass: PitchClass) => pitchClass.noteName);
 
@@ -83,7 +83,7 @@ export default function modulate(
       if (currentAscendingNotes[0] === sourceAscendingNotes[4] && shawwaMapping(sourceAscendingNotes[4]) !== "/") hopsFromFive.push(transposition);
       if (currentAscendingNotes[0] === sourceAscendingNotes[2] && shawwaMapping(sourceAscendingNotes[2]) !== "/") hopsFromThree.push(transposition);
       if (check2p && currentAscendingNotes[0] === noteName2p) hopsFromThree2p.push(transposition);
-      if (checkSixth && currentAscendingNotes[0] === sourceAscendingNotes[5]) hopsFromSix.push(transposition);
+      if (checkSixth && currentAscendingNotes[0] === sourceAscendingNotes[5]) HopFromSixNoThird.push(transposition);
     }
   }
 
@@ -93,7 +93,7 @@ export default function modulate(
     hopsFromThree2p,
     hopsFromFour,
     hopsFromFive,
-    hopsFromSix,
+    HopFromSixNoThird,
     noteName2p
   };
 }

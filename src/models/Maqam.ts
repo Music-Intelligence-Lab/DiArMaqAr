@@ -195,6 +195,6 @@ export interface MaqamModulations {
   hopsFromThree2p: Maqam[];
   hopsFromFour: Maqam[];
   hopsFromFive: Maqam[];
-  hopsFromSix: Maqam[];
+  HopFromSixNoThird: Maqam[];
   noteName2p: string;
 }
