@@ -7,6 +7,6 @@ export default function calculateNumberOfHops(modulations: MaqamModulations) {
     (modulations.hopsFromThree2p?.length || 0) +
     (modulations.hopsFromFour?.length || 0) +
     (modulations.hopsFromFive?.length || 0) +
-    (modulations.hopsFromSix?.length || 0)
+    (modulations.HopFromSixNoThird?.length || 0)
   );
 }

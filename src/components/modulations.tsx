@@ -175,9 +175,9 @@ export default function Modulations() {
                     <div className="modulations__hops">
                       <span className="modulations__header">
                         Modulations from Sixth: <br />
-                        {ascendingNoteNames[5]} ({modulations?.hopsFromSix ? modulations.hopsFromSix.length : 0})
+                        {ascendingNoteNames[5]} ({modulations?.HopFromSixNoThird ? modulations.HopFromSixNoThird.length : 0})
                       </span>
-                      {[...modulations.hopsFromSix]
+                      {[...modulations.HopFromSixNoThird]
                         .sort((a, b) => a.name.localeCompare(b.name))
                         .map((hop, index) => (
                           <span

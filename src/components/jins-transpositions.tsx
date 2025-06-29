@@ -223,6 +223,12 @@ export default function JinsTranspositions() {
         <div className="jins-transpositions">
           <h2 className="jins-transpositions__title">
             Taḥlīl (analysis): {`${selectedJinsDetails.getName()}`}{" "}
+            {!useRatio && (
+              <>
+                {" "}
+                / Cents Tolerance: <input className="jins-transpositions__input" type="number" value={centsTolerance ?? 0} onChange={(e) => setCentsTolerance(Number(e.target.value))} />
+              </>
+            )}
             <span className="tuning-system-manager__filter-menu">
               {Object.keys(filters).map((filterKey) => {
                 const isDisabled =
@@ -283,15 +289,7 @@ export default function JinsTranspositions() {
             <thead>{renderTransposition(jinsTranspositions[0], 0)}</thead>
           </table>
 
-          <h2 className="jins-transpositions__title">
-            Taṣwīr (transpositions): {`${selectedJinsDetails.getName()}`}
-            {!useRatio && (
-              <>
-                {" "}
-                / Cents Tolerance: <input className="jins-transpositions__input" type="number" value={centsTolerance ?? 0} onChange={(e) => setCentsTolerance(Number(e.target.value))} />
-              </>
-            )}
-          </h2>
+          <h2 className="jins-transpositions__title">Taṣwīr (transpositions): {`${selectedJinsDetails.getName()}`}</h2>
 
           <table className="jins-transpositions__table">
             <colgroup>
