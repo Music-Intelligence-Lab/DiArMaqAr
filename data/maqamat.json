@@ -2715,5 +2715,31 @@
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": []
+  },
+  {
+    "id": "55",
+    "name": "maqām kurd nawā",
+    "ascendingNoteNames": [
+      "nawā",
+      "ḥiṣār",
+      "ʿajam",
+      "kurdān",
+      "muḥayyar",
+      "sunbuleh/zawāl",
+      "mahurān"
+    ],
+    "descendingNoteNames": [
+      "mahurān",
+      "sunbuleh/zawāl",
+      "muḥayyar",
+      "kurdān",
+      "ʿajam",
+      "ḥiṣār",
+      "nawā"
+    ],
+    "suyūr": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
   }
 ]

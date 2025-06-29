@@ -173,6 +173,11 @@
     align-items: left;
     justify-content: left;
     font-weight: 300;
+
+    &-transpositions {
+      font-weight: 200;
+      margin-top: 3px;
+    }
     
   }
 
