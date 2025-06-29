@@ -20,10 +20,10 @@ export default function KeyboardControls() {
 
   const descendingMaqamCells: PitchClass[] = allPitchClasses.filter((pitchClass) => descendingNoteNames.includes(pitchClass.noteName));
 
-  const isTyping = () => {
-    const el = document.activeElement;
-    return el?.tagName === "INPUT" || el?.tagName === "TEXTAREA" || (el instanceof HTMLElement && el.isContentEditable);
-  };
+  // const isTyping = () => {
+  //   const el = document.activeElement;
+  //   return el?.tagName === "INPUT" || el?.tagName === "TEXTAREA" || (el instanceof HTMLElement && el.isContentEditable);
+  // };
 
   useEffect(() => {
     const addActive = (pitchClass: PitchClass) => {
@@ -41,7 +41,7 @@ export default function KeyboardControls() {
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.repeat || e.shiftKey || e.ctrlKey || e.altKey || e.metaKey || isTyping() || soundSettings.inputType !== "QWERTY") return;
+      if (e.repeat || e.shiftKey || e.ctrlKey || e.altKey || e.metaKey || soundSettings.inputType !== "QWERTY") return;
 
       let pitchClass: PitchClass | null = null;
       const idx1 = firstRowKeys.indexOf(e.key);
@@ -70,7 +70,7 @@ export default function KeyboardControls() {
     };
 
     const handleKeyUp = (e: KeyboardEvent) => {
-      if (e.shiftKey || e.ctrlKey || e.altKey || e.metaKey || isTyping() || soundSettings.inputType !== "QWERTY") return;
+      if (e.shiftKey || e.ctrlKey || e.altKey || e.metaKey || soundSettings.inputType !== "QWERTY") return;
 
       let pitchClass: PitchClass | null = null;
       const idx1 = firstRowKeys.indexOf(e.key);
