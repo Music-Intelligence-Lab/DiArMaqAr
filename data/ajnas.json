@@ -1,12 +1,12 @@
 [
   {
     "id": "1",
-    "name": "jins rāst muṭlaq",
+    "name": "jins rāst",
     "noteNames": [
-      "yegāh",
-      "ʿushayrān",
-      "ʿirāq",
-      "rāst"
+      "rāst",
+      "dūgāh",
+      "segāh",
+      "chahargāh"
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -238,19 +238,6 @@
       "kurdī",
       "ḥijāz",
       "nawā"
-    ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "sourcePageReferences": []
-  },
-  {
-    "id": "20",
-    "name": "jins bayāt al-nawā",
-    "noteNames": [
-      "nawā",
-      "tīk ḥiṣār",
-      "ʿajam",
-      "kurdān"
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
