@@ -1,4 +1,4 @@
-import NoteName from "./NoteName";
+import NoteName, { shiftNoteName } from "./NoteName";
 import { SourcePageReference } from "./bibliography/Source";
 
 export default class TuningSystem {
@@ -40,7 +40,7 @@ export default class TuningSystem {
     defaultReferenceFrequency: number,
     saved: boolean
   ) {
-    this.id = `${creatorEnglish}-(${year})-${titleEnglish}`.replaceAll(" ", "");
+    this.id = `${creatorEnglish}-(${year})-${titleEnglish}`.replaceAll(" ", "").replaceAll("+", "");
     this.titleEnglish = titleEnglish;
     this.titleArabic = titleArabic;
     this.year = year;
@@ -132,6 +132,14 @@ export default class TuningSystem {
 
   stringify(): string {
     return `${this.getCreatorEnglish()} (${this.getYear() ? this.getYear() : "NA"}) ${this.getTitleEnglish()}`;
+  }
+
+  getSetsOfNoteNamesShiftedUpAndDown(): NoteName[][] {
+    const usedNoteNames: NoteName[][] = [];
+    for (const set of this.setsOfTuningSystemNoteNames) {
+      usedNoteNames.push([...set.map((noteName) => shiftNoteName(noteName, -1)), ...set, ...set.map((noteName) => shiftNoteName(noteName, 1))] as NoteName[]);
+    }
+    return usedNoteNames as NoteName[][];
   }
 
   copyWithNewSetOfNoteNames(newNoteNames: NoteName[][]): TuningSystem {

@@ -7,13 +7,50 @@ import useSoundContext from "@/contexts/sound-context";
 import TuningSystem from "@/models/TuningSystem";
 import detectPitchClassType from "@/functions/detectPitchClassType";
 import convertPitchClass from "@/functions/convertPitchClass";
-import NoteName, { octaveOneNoteNames, octaveTwoNoteNames, TransliteratedNoteNameOctaveOne, TransliteratedNoteNameOctaveTwo, getNoteNameIndex } from "@/models/NoteName";
+import NoteName, {
+  octaveOneNoteNames,
+  octaveTwoNoteNames,
+  TransliteratedNoteNameOctaveOne,
+  TransliteratedNoteNameOctaveTwo,
+  getNoteNameIndex,
+} from "@/models/NoteName";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { updateTuningSystems } from "@/functions/update";
 import getFirstNoteName from "@/functions/getFirstNoteName";
 import { SourcePageReference } from "@/models/bibliography/Source";
 import { exportTuningSystem } from "@/functions/export";
 import TuningSystemOctaveTables from "./tuning-system-octave-tables";
+import JinsDetails from "@/models/Jins";
+import MaqamDetails from "@/models/Maqam";
+
+function isTuningSystemDisabled(
+  tuningSystem: TuningSystem,
+  selectedJinsDetails: JinsDetails | null,
+  selectedMaqamDetails: MaqamDetails | null
+): { disabled: boolean; noteName: string } {
+  const shiftedNoteNames = tuningSystem.getSetsOfNoteNamesShiftedUpAndDown();
+
+  if (!selectedJinsDetails && !selectedMaqamDetails) return { disabled: false, noteName: "" };
+
+  if (selectedJinsDetails) {
+    for (const set of shiftedNoteNames) {
+      if (selectedJinsDetails.isJinsSelectable(set)) {
+        const firstNoteName = set[set.length / 3];
+        return { disabled: false, noteName: firstNoteName };
+      }
+    }
+  } else if (selectedMaqamDetails) {
+    for (const set of shiftedNoteNames) {
+      if (selectedMaqamDetails.isMaqamSelectable(set)) {
+        const firstNoteName = set[set.length / 3];
+        return { disabled: false, noteName: firstNoteName };
+      }
+    }
+  }
+
+  return { disabled: true, noteName: "" };
+}
+
 export default function TuningSystemManager({ admin }: { admin: boolean }) {
   const {
     tuningSystems,
@@ -34,10 +71,12 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     sources,
     selectedAbjadNames,
     setSelectedAbjadNames,
+    selectedJinsDetails,
+    selectedMaqamDetails,
   } = useAppContext();
 
   const { tuningSystemsFilter, setTuningSystemsFilter } = useFilterContext();
-  
+
   const { clearHangingNotes } = useSoundContext();
 
   const alKindiPitchClasses = ["1/1", "256/243", "9/8", "32/27", "81/64", "4/3", "1024/729", "3/2", "128/81", "27/16", "16/9", "4096/2187"];
@@ -229,9 +268,9 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     }
   };
 
-  const handleTuningSystemClick = (ts: TuningSystem) => {
+  const handleTuningSystemClick = (ts: TuningSystem, noteName: NoteName = "") => {
     setSelectedTuningSystem(ts);
-    handleStartNoteNameChange("", ts.getNoteNames(), ts.getPitchClasses().length);
+    handleStartNoteNameChange(noteName, ts.getNoteNames(), ts.getPitchClasses().length);
     clearHangingNotes();
   };
 
@@ -278,7 +317,9 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         Number(defaultReferenceFrequency),
         true
       );
-      const updatedList = selectedTuningSystem.isSaved() ? tuningSystems.map((ts) => (ts.getId() === selectedTuningSystem.getId() ? updated : ts)) : [...tuningSystems, updated];
+      const updatedList = selectedTuningSystem.isSaved()
+        ? tuningSystems.map((ts) => (ts.getId() === selectedTuningSystem.getId() ? updated : ts))
+        : [...tuningSystems, updated];
       updateTuningSystems(updatedList);
       setTuningSystems(updatedList);
       setSelectedTuningSystem(updated);
@@ -399,7 +440,10 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   // MARK: Note Names Function Handlers
 
   const haveIndicesChanged = () => {
-    return JSON.stringify(originalIndices) !== JSON.stringify(selectedIndices) || JSON.stringify(selectedTuningSystem?.getReferenceFrequencies()) !== JSON.stringify(referenceFrequencies);
+    return (
+      JSON.stringify(originalIndices) !== JSON.stringify(selectedIndices) ||
+      JSON.stringify(selectedTuningSystem?.getReferenceFrequencies()) !== JSON.stringify(referenceFrequencies)
+    );
   };
 
   const handleSaveStartingNoteConfiguration = () => {
@@ -487,7 +531,12 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             <label className="tuning-system-manager__label" htmlFor="sortOptionSelect" style={{ marginRight: "8px" }}>
               Sort By:
             </label>
-            <select className="tuning-system-manager__select" id="sortOptionSelect" value={sortOption} onChange={(e) => setSortOption(e.target.value as "id" | "creatorEnglish" | "year")}>
+            <select
+              className="tuning-system-manager__select"
+              id="sortOptionSelect"
+              value={sortOption}
+              onChange={(e) => setSortOption(e.target.value as "id" | "creatorEnglish" | "year")}
+            >
               <option value="id">ID</option>
               <option value="creatorEnglish">Creator (English)</option>
               <option value="year">Year</option>
@@ -504,14 +553,26 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
               <label className="tuning-system-manager__label" htmlFor="titleEnglishField">
                 Title (English)
               </label>
-              <input className="tuning-system-manager__input" id="titleEnglishField" type="text" value={titleEnglish ?? ""} onChange={(e) => setTitleEnglish(e.target.value)} />
+              <input
+                className="tuning-system-manager__input"
+                id="titleEnglishField"
+                type="text"
+                value={titleEnglish ?? ""}
+                onChange={(e) => setTitleEnglish(e.target.value)}
+              />
             </div>
 
             <div className="tuning-system-manager__input-container">
               <label className="tuning-system-manager__label" htmlFor="titleArabicField">
                 Title (Arabic)
               </label>
-              <input className="tuning-system-manager__input" id="titleArabicField" type="text" value={titleArabic ?? ""} onChange={(e) => setTitleArabic(e.target.value)} />
+              <input
+                className="tuning-system-manager__input"
+                id="titleArabicField"
+                type="text"
+                value={titleArabic ?? ""}
+                onChange={(e) => setTitleArabic(e.target.value)}
+              />
             </div>
 
             {/* Year / Source / Creator */}
@@ -519,7 +580,13 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
               <label className="tuning-system-manager__label" htmlFor="yearField">
                 Year
               </label>
-              <input className="tuning-system-manager__input" id="yearField" type="text" value={year ?? ""} onChange={(e) => setYear(e.target.value)} />
+              <input
+                className="tuning-system-manager__input"
+                id="yearField"
+                type="text"
+                value={year ?? ""}
+                onChange={(e) => setYear(e.target.value)}
+              />
             </div>
           </div>
 
@@ -532,7 +599,11 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
               )}
               {sourcePageReferences.map((ref, idx) => (
                 <div key={idx} className="tuning-system-manager__source-select-item">
-                  <select className="tuning-system-manager__source-select" value={ref.sourceId} onChange={(e) => updateSourceRefs(idx, { sourceId: e.target.value })}>
+                  <select
+                    className="tuning-system-manager__source-select"
+                    value={ref.sourceId}
+                    onChange={(e) => updateSourceRefs(idx, { sourceId: e.target.value })}
+                  >
                     <option value="">Select source</option>
                     {sources.map((s) => (
                       <option key={s.getId()} value={s.getId()}>
@@ -540,7 +611,13 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                       </option>
                     ))}
                   </select>
-                  <input className="tuning-system-manager__source-input" type="text" value={ref.page} placeholder="Page" onChange={(e) => updateSourceRefs(idx, { page: e.target.value })} />
+                  <input
+                    className="tuning-system-manager__source-input"
+                    type="text"
+                    value={ref.page}
+                    placeholder="Page"
+                    onChange={(e) => updateSourceRefs(idx, { page: e.target.value })}
+                  />
                   <button className="jins-manager__source-delete-button" onClick={() => removeSourceRef(idx)}>
                     Delete
                   </button>
@@ -552,13 +629,25 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
               <label className="tuning-system-manager__label" htmlFor="creatorEnglishField">
                 Creator (English)
               </label>
-              <input className="tuning-system-manager__input" id="creatorEnglishField" type="text" value={creatorEnglish ?? ""} onChange={(e) => setCreatorEnglish(e.target.value)} />
+              <input
+                className="tuning-system-manager__input"
+                id="creatorEnglishField"
+                type="text"
+                value={creatorEnglish ?? ""}
+                onChange={(e) => setCreatorEnglish(e.target.value)}
+              />
             </div>
             <div className="tuning-system-manager__input-container">
               <label className="tuning-system-manager__label" htmlFor="creatorArabicField">
                 Creator (Arabic)
               </label>
-              <input className="tuning-system-manager__input" id="creatorArabicField" type="text" value={creatorArabic ?? ""} onChange={(e) => setCreatorArabic(e.target.value)} />
+              <input
+                className="tuning-system-manager__input"
+                id="creatorArabicField"
+                type="text"
+                value={creatorArabic ?? ""}
+                onChange={(e) => setCreatorArabic(e.target.value)}
+              />
             </div>
           </div>
 
@@ -568,14 +657,26 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
               <label className="tuning-system-manager__label" htmlFor="commentsEnglishField">
                 Comments (English)
               </label>
-              <textarea rows={5} className="tuning-system-manager__input" id="commentsEnglishField" value={commentsEnglish} onChange={(e) => setCommentsEnglish(e.target.value)} />
+              <textarea
+                rows={5}
+                className="tuning-system-manager__input"
+                id="commentsEnglishField"
+                value={commentsEnglish}
+                onChange={(e) => setCommentsEnglish(e.target.value)}
+              />
             </div>
 
             <div className="tuning-system-manager__input-container">
               <label className="tuning-system-manager__label" htmlFor="commentsArabicField">
                 Comments (Arabic)
               </label>
-              <textarea rows={5} className="tuning-system-manager__input" id="commentsArabicField" value={commentsArabic} onChange={(e) => setCommentsArabic(e.target.value)} />
+              <textarea
+                rows={5}
+                className="tuning-system-manager__input"
+                id="commentsArabicField"
+                value={commentsArabic}
+                onChange={(e) => setCommentsArabic(e.target.value)}
+              />
             </div>
           </div>
           <div className="tuning-system-manager__group">
@@ -584,10 +685,18 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
               <label className="tuning-system-manager__label" htmlFor="pitchClassesField">
                 Pitch Classes (one per line){" "}
                 {detectPitchClassType(tuningSystemPitchClasses.split("\n")) !== "unknown" && (
-                  <span className="tuning-system-manager__pitch-class-type">{"// " + detectPitchClassType(tuningSystemPitchClasses.split("\n"))}</span>
+                  <span className="tuning-system-manager__pitch-class-type">
+                    {"// " + detectPitchClassType(tuningSystemPitchClasses.split("\n"))}
+                  </span>
                 )}
               </label>
-              <textarea className="tuning-system-manager__textarea" id="pitchClassesField" rows={5} value={tuningSystemPitchClasses} onChange={handlePitchClassesChange} />
+              <textarea
+                className="tuning-system-manager__textarea"
+                id="pitchClassesField"
+                rows={5}
+                value={tuningSystemPitchClasses}
+                onChange={handlePitchClassesChange}
+              />
             </div>
 
             {/* Numeric fields */}
@@ -596,7 +705,13 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 <label className="tuning-system-manager__label" htmlFor="stringLengthField">
                   String Length
                 </label>
-                <input className="tuning-system-manager__input" id="stringLengthField" type="number" value={stringLength ?? 0} onChange={(e) => setStringLength(Number(e.target.value))} />
+                <input
+                  className="tuning-system-manager__input"
+                  id="stringLengthField"
+                  type="number"
+                  value={stringLength ?? 0}
+                  onChange={(e) => setStringLength(Number(e.target.value))}
+                />
               </div>
 
               <div className="tuning-system-manager__input-container">
@@ -616,7 +731,11 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
           {/* Buttons */}
           <div className="tuning-system-manager__buttons">
-            <button className="tuning-system-manager__save-button" onClick={() => handleSaveTuningSystem()} disabled={!(!haveIndicesChanged() || getFirstNoteName(selectedIndices) === "none")}>
+            <button
+              className="tuning-system-manager__save-button"
+              onClick={() => handleSaveTuningSystem()}
+              disabled={!(!haveIndicesChanged() || getFirstNoteName(selectedIndices) === "none")}
+            >
               {selectedTuningSystem.isSaved() ? "Save Tuning System Changes" : "Create New Tuning System"}
             </button>
             {selectedTuningSystem && (
@@ -676,9 +795,16 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
               filteredTuningSystems.map((tuningSystem, index) => (
                 <div
                   key={index}
-                  className={"tuning-system-manager__item " + (tuningSystem.getId() === selectedTuningSystem?.getId() ? "tuning-system-manager__item_selected " : "")}
+                  className={
+                    "tuning-system-manager__item " +
+                    (isTuningSystemDisabled(tuningSystem, selectedJinsDetails, selectedMaqamDetails).disabled
+                      ? "tuning-system-manager__item_disabled "
+                      : "") +
+                    (tuningSystem.getId() === selectedTuningSystem?.getId() ? "tuning-system-manager__item_selected " : "")
+                  }
                   onClick={() => {
-                    handleTuningSystemClick(tuningSystem);
+                    const { noteName } = isTuningSystemDisabled(tuningSystem, selectedJinsDetails, selectedMaqamDetails);
+                    handleTuningSystemClick(tuningSystem, noteName);
                   }}
                 >
                   <strong className="tuning-system-manager__item-english-creator">{`${tuningSystem.getCreatorEnglish()} (${tuningSystem.getYear()})`}</strong>
@@ -757,7 +883,10 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                   return (
                     <div className="tuning-system-manager__starting-note" key={index}>
                       <button
-                        className={"tuning-system-manager__starting-note-button " + (getFirstNoteName(selectedIndices) === startingNote ? "tuning-system-manager__starting-note-button_selected" : "")}
+                        className={
+                          "tuning-system-manager__starting-note-button " +
+                          (getFirstNoteName(selectedIndices) === startingNote ? "tuning-system-manager__starting-note-button_selected" : "")
+                        }
                         onClick={() => handleStartNoteNameChange(startingNote)}
                       >
                         {startingNote}
@@ -783,7 +912,11 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 })}
               {isCurrentConfigurationNew() && (
                 <div className="tuning-system-manager__starting-note">
-                  <button className={"tuning-system-manager__starting-note-button tuning-system-manager__starting-note-button_unsaved tuning-system-manager__starting-note-button_selected"}>
+                  <button
+                    className={
+                      "tuning-system-manager__starting-note-button tuning-system-manager__starting-note-button_unsaved tuning-system-manager__starting-note-button_selected"
+                    }
+                  >
                     {getFirstNoteName(selectedIndices)} (unsaved)
                   </button>
                   <label htmlFor="reference-frequency-input">
@@ -918,8 +1051,12 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                               ?.firstNameEnglish?.split(" ")
                               .map((w) => w.charAt(0))
                               .join(". ") ?? ""
-                          }. (${source.getReleaseDateEnglish() ? source.getReleaseDateEnglish() + "/" : ""}${source.getReleaseDateEnglish() ?? ""}:${ref.page})`
-                        : `${source.getTitleEnglish()} (${source.getReleaseDateEnglish() ? source.getReleaseDateEnglish() + "/" : ""}${source.getReleaseDateEnglish() ?? ""}:${ref.page})`}
+                          }. (${source.getReleaseDateEnglish() ? source.getReleaseDateEnglish() + "/" : ""}${source.getReleaseDateEnglish() ?? ""}:${
+                            ref.page
+                          })`
+                        : `${source.getTitleEnglish()} (${source.getReleaseDateEnglish() ? source.getReleaseDateEnglish() + "/" : ""}${
+                            source.getReleaseDateEnglish() ?? ""
+                          }:${ref.page})`}
                     </span>
                   )}
                 </div>

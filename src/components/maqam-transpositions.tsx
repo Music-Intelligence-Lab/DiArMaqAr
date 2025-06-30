@@ -484,12 +484,6 @@ export default function MaqamTranspositions() {
             <>
               <tr>
                 <th className="maqam-transpositions__row-header">Ajnas</th>
-                {!ascending && (
-                  <th
-                    className="maqam-transpositions__header-pitchClass"
-                    colSpan={2}
-                  />
-                )}
                 {pitchClasses.map((_, degreeIdx) => {
                   const jt = jinsTranspositions[degreeIdx];
                   const validJt =
@@ -623,7 +617,7 @@ export default function MaqamTranspositions() {
               </span>
             </h2>
 
-            <table className="maqam-transpositions__table"><colgroup><col style={{width: "30px"}}/><col style={{width: "40px"}}/><col style={{minWidth: "100px", maxWidth: "100px", width: "100px"}}/>{" "}</colgroup>
+            <table className="maqam-transpositions__table"><colgroup><col style={{width: "30px"}}/><col style={{width: "40px"}}/><col style={{minWidth: "100px", maxWidth: "100px", width: "100px"}}/></colgroup>
               <thead>{renderTransposition(maqamTranspositions[0], 0)}</thead>
             </table>
           </>

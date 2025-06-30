@@ -92,12 +92,10 @@ export default class MaqamDetails {
     return true;
   }
 
-  isMaqamSelectable(allPitchClasses: PitchClass[]): boolean {
-    const usedNoteNames = allPitchClasses.map((pitchClass) => pitchClass.noteName);
-
+  isMaqamSelectable(allNoteNames: NoteName[]): boolean {
     return (
-      this.ascendingNoteNames.every((noteName) => usedNoteNames.includes(noteName)) &&
-      this.descendingNoteNames.every((noteName) => usedNoteNames.includes(noteName))
+      this.ascendingNoteNames.every((noteName) => allNoteNames.includes(noteName)) &&
+      this.descendingNoteNames.every((noteName) => allNoteNames.includes(noteName))
     );
   }
 

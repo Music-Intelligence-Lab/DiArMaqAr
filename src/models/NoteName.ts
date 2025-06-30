@@ -194,6 +194,11 @@ export const octaveFourNoteNames = [
   "jawāb jawāb saham/ramal tūtī",
 ];
 
+export interface Cell {
+  octave: number;
+  index: number;
+}
+
 export const allNotes = [
   ...new Set([...octaveZeroNoteNames, ...octaveOneNoteNames, ...octaveTwoNoteNames, ...octaveThreeNoteNames, ...octaveFourNoteNames]),
 ] as const;
@@ -210,11 +215,30 @@ export function getNoteNameIndex(noteName: NoteName): number {
   return allNotes.indexOf(noteName);
 }
 
-export function getNoteNameIndexPerOctave(noteName: NoteName): number {
-  if (octaveZeroNoteNames.includes(noteName)) return octaveZeroNoteNames.indexOf(noteName);
-  if (octaveOneNoteNames.includes(noteName)) return octaveOneNoteNames.indexOf(noteName);
-  if (octaveTwoNoteNames.includes(noteName)) return octaveTwoNoteNames.indexOf(noteName);
-  if (octaveThreeNoteNames.includes(noteName)) return octaveThreeNoteNames.indexOf(noteName);
-  if (octaveFourNoteNames.includes(noteName)) return octaveFourNoteNames.indexOf(noteName);
-  return -1;
+export function getNoteNameIndexAndOctave(noteName: NoteName): Cell {
+  if (octaveZeroNoteNames.includes(noteName)) return { octave: 0, index: octaveZeroNoteNames.indexOf(noteName) };
+  if (octaveOneNoteNames.includes(noteName)) return { octave: 1, index: octaveOneNoteNames.indexOf(noteName) };
+  if (octaveTwoNoteNames.includes(noteName)) return { octave: 2, index: octaveTwoNoteNames.indexOf(noteName) };
+  if (octaveThreeNoteNames.includes(noteName)) return { octave: 3, index: octaveThreeNoteNames.indexOf(noteName) };
+  if (octaveFourNoteNames.includes(noteName)) return { octave: 4, index: octaveFourNoteNames.indexOf(noteName) };
+  return { index: -1, octave: -1 };
+}
+
+export function getNoteNameFromIndexAndOctave(cell: Cell): NoteName {
+  const { octave, index } = cell;
+  if (octave === 0) return octaveZeroNoteNames[index];
+  else if (octave === 1) return octaveOneNoteNames[index];
+  else if (octave === 2) return octaveTwoNoteNames[index];
+  else if (octave === 3) return octaveThreeNoteNames[index];
+  else if (octave === 4) return octaveFourNoteNames[index];
+  else return "none";
+}
+
+export function shiftNoteName(noteName: NoteName, shift: number): NoteName {
+  const { index, octave } = getNoteNameIndexAndOctave(noteName);
+  
+  return getNoteNameFromIndexAndOctave({
+    index,
+    octave: octave + shift,
+  }) as NoteName;
 }
