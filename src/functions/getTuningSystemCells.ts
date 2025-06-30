@@ -13,7 +13,7 @@ import convertPitchClass, { shiftPitchClass, frequencyToMidiNoteNumber } from "@
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import PitchClass from "@/models/PitchClass";
 
-export default function getTuningSystemCells(tuningSystem: TuningSystem, startingNote: NoteName, tuningSystemPitchClasses: string[] = [], inputReferenceFrequencies: { [noteName: string]: number } = {}): PitchClass[] {
+export default function getTuningSystemCells(tuningSystem: TuningSystem, startingNote: NoteName, tuningSystemPitchClasses: string[] = [], inputStringLength: number = 0, inputReferenceFrequencies: { [noteName: string]: number } = {}): PitchClass[] {
   const pitchArr = tuningSystemPitchClasses.length ? tuningSystemPitchClasses : tuningSystem.getPitchClasses();
   const nPC = pitchArr.length;
   const allSets = tuningSystem.getNoteNames();
@@ -34,9 +34,9 @@ export default function getTuningSystemCells(tuningSystem: TuningSystem, startin
   const type = detectPitchClassType(pitchArr);
   if (type === "unknown") return [];
 
-  const stringLen = tuningSystem?.getStringLength() ?? 3600;
+  const stringLength = inputStringLength > 0 ? inputStringLength : tuningSystem.getStringLength();
   const actualReferenceFrequency = inputReferenceFrequencies[startingNote] ?? (tuningSystem.getReferenceFrequencies()[startingNote] ?? tuningSystem.getDefaultReferenceFrequency());
-  const openConv = convertPitchClass(shiftPitchClass(pitchArr[0], type, 1), type, stringLen, actualReferenceFrequency)!;
+  const openConv = convertPitchClass(shiftPitchClass(pitchArr[0], type, 1), type, stringLength, actualReferenceFrequency)!;
   const openLen = parseFloat(openConv.stringLength);
 
   const abjadArr = tuningSystem?.getAbjadNames();
@@ -47,7 +47,7 @@ export default function getTuningSystemCells(tuningSystem: TuningSystem, startin
     for (let idx = 0; idx < nPC; idx++) {
       const basePc = pitchArr[idx];
       const shifted = shiftPitchClass(basePc, type, octave as 0 | 1 | 2 | 3);
-      const conv = convertPitchClass(shifted, type, stringLen, actualReferenceFrequency);
+      const conv = convertPitchClass(shifted, type, stringLength, actualReferenceFrequency);
       if (!conv) continue;
 
       // noteName
