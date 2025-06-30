@@ -3,12 +3,25 @@
 import React, { FormEvent, useEffect, useState } from "react";
 import useAppContext from "@/contexts/app-context";
 import { Sayr, SayrStop } from "@/models/Maqam";
-import { octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames } from "@/models/NoteName";
+import {
+  octaveZeroNoteNames,
+  octaveOneNoteNames,
+  octaveTwoNoteNames,
+} from "@/models/NoteName";
 import { nanoid } from "nanoid";
 import { updateMaqamat } from "@/functions/update";
 
 export default function SayrManager({ admin }: { admin: boolean }) {
-  const { selectedMaqamDetails, setSelectedMaqamDetails, ajnas, maqamSayrId, setMaqamSayrId, sources, maqamat, setMaqamat } = useAppContext();
+  const {
+    selectedMaqamDetails,
+    setSelectedMaqamDetails,
+    ajnas,
+    maqamSayrId,
+    setMaqamSayrId,
+    sources,
+    maqamat,
+    setMaqamat,
+  } = useAppContext();
 
   const [creatorEnglish, setCreatorEnglish] = useState("");
   const [creatorArabic, setCreatorArabic] = useState("");
@@ -30,7 +43,9 @@ export default function SayrManager({ admin }: { admin: boolean }) {
 
   useEffect(() => {
     if (selectedMaqamDetails && maqamSayrId) {
-      const sel = selectedMaqamDetails.getSuyūr().find((s) => s.id === maqamSayrId);
+      const sel = selectedMaqamDetails
+        .getSuyūr()
+        .find((s) => s.id === maqamSayrId);
       if (sel) {
         setCreatorEnglish(sel.creatorEnglish ?? "");
         setCreatorArabic(sel.creatorArabic ?? "");
@@ -48,11 +63,16 @@ export default function SayrManager({ admin }: { admin: boolean }) {
   if (!selectedMaqamDetails) return null;
   const existingSuyūr = selectedMaqamDetails.getSuyūr();
 
-  const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => setMaqamSayrId(e.target.value);
-  const addStop = () => setStops((prev) => [...prev, { type: "note", value: "" }]);
-  const removeStop = (i: number) => setStops((prev) => prev.filter((_, idx) => idx !== i));
+  const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) =>
+    setMaqamSayrId(e.target.value);
+  const addStop = () =>
+    setStops((prev) => [...prev, { type: "note", value: "" }]);
+  const removeStop = (i: number) =>
+    setStops((prev) => prev.filter((_, idx) => idx !== i));
   const updateStop = (i: number, field: keyof SayrStop, val: string) => {
-    setStops((prev) => prev.map((s, idx) => (idx === i ? { ...s, [field]: val } : s)));
+    setStops((prev) =>
+      prev.map((s, idx) => (idx === i ? { ...s, [field]: val } : s))
+    );
   };
 
   const handleSave = async (e: FormEvent) => {
@@ -68,7 +88,9 @@ export default function SayrManager({ admin }: { admin: boolean }) {
       commentsArabic,
       stops,
     };
-    const updated = existingSuyūr.some((s) => s.id === idUse) ? existingSuyūr.map((s) => (s.id === idUse ? newSayr : s)) : [...existingSuyūr, newSayr];
+    const updated = existingSuyūr.some((s) => s.id === idUse)
+      ? existingSuyūr.map((s) => (s.id === idUse ? newSayr : s))
+      : [...existingSuyūr, newSayr];
     const updatedMaqam = selectedMaqamDetails.createMaqamWithNewSuyūr(updated);
     setSelectedMaqamDetails(updatedMaqam);
     setMaqamSayrId(idUse);
@@ -98,7 +120,12 @@ export default function SayrManager({ admin }: { admin: boolean }) {
             <label className="sayr-manager__label" htmlFor="sayrSelect">
               Select Sayr or Create New:
             </label>
-            <select id="sayrSelect" className="sayr-manager__select" value={maqamSayrId} onChange={handleSelect}>
+            <select
+              id="sayrSelect"
+              className="sayr-manager__select"
+              value={maqamSayrId}
+              onChange={handleSelect}
+            >
               <option value="">-- New Sayr --</option>
               {existingSuyūr.map((s) => (
                 <option key={s.id} value={s.id}>
@@ -118,15 +145,24 @@ export default function SayrManager({ admin }: { admin: boolean }) {
             existingSuyūr.map((sayr, index) => (
               <div
                 key={index}
-                className={"sayr-manager__item " + (sayr.id === maqamSayrId ? "sayr-manager__item_selected " : "")}
+                className={
+                  "sayr-manager__item " +
+                  (sayr.id === maqamSayrId
+                    ? "sayr-manager__item_selected "
+                    : "")
+                }
                 onClick={() => {
                   setMaqamSayrId(sayr.id);
                 }}
               >
                 {sayr.sourceId
                   ? (() => {
-                      const source = sources.find((s) => s.getId() === sayr.sourceId);
-                      return `${source?.getContributors()[0]?.lastNameEnglish ?? ""} (${source?.getReleaseDateEnglish() ?? ""}`;
+                      const source = sources.find(
+                        (s) => s.getId() === sayr.sourceId
+                      );
+                      return `${
+                        source?.getContributors()[0]?.lastNameEnglish ?? ""
+                      } (${source?.getPublicationDateEnglish() ?? ""}`;
                     })()
                   : "No Source"}
                 :{sayr.page})
@@ -141,11 +177,21 @@ export default function SayrManager({ admin }: { admin: boolean }) {
           <div className="sayr-manager__group">
             <div className="sayr-manager__input-container">
               <label className="sayr-manager__label">Creator (English)</label>
-              <input className="sayr-manager__input" type="text" value={creatorEnglish} onChange={(e) => setCreatorEnglish(e.target.value)} />
+              <input
+                className="sayr-manager__input"
+                type="text"
+                value={creatorEnglish}
+                onChange={(e) => setCreatorEnglish(e.target.value)}
+              />
             </div>
             <div className="sayr-manager__input-container">
               <label className="sayr-manager__label">Creator (Arabic)</label>
-              <input className="sayr-manager__input" type="text" value={creatorArabic} onChange={(e) => setCreatorArabic(e.target.value)} />
+              <input
+                className="sayr-manager__input"
+                type="text"
+                value={creatorArabic}
+                onChange={(e) => setCreatorArabic(e.target.value)}
+              />
             </div>
           </div>
         )}
@@ -154,7 +200,11 @@ export default function SayrManager({ admin }: { admin: boolean }) {
           <div className="sayr-manager__group">
             <div className="sayr-manager__input-container">
               <label className="sayr-manager__label">Source</label>
-              <select className="sayr-manager__select" value={sourceId} onChange={(e) => setSourceId(e.target.value)}>
+              <select
+                className="sayr-manager__select"
+                value={sourceId}
+                onChange={(e) => setSourceId(e.target.value)}
+              >
                 <option value="">Select source</option>
                 {sources.map((s) => (
                   <option key={s.getId()} value={s.getId()}>
@@ -165,7 +215,12 @@ export default function SayrManager({ admin }: { admin: boolean }) {
             </div>
             <div className="sayr-manager__input-container">
               <label className="sayr-manager__label">Page</label>
-              <input className="sayr-manager__input" type="text" value={page} onChange={(e) => setPage(e.target.value)} />
+              <input
+                className="sayr-manager__input"
+                type="text"
+                value={page}
+                onChange={(e) => setPage(e.target.value)}
+              />
             </div>
           </div>
         )}
@@ -174,29 +229,63 @@ export default function SayrManager({ admin }: { admin: boolean }) {
           <div className="sayr-manager__group">
             <div className="sayr-manager__input-container">
               <label className="sayr-manager__label">Comments (English)</label>
-              <textarea className="sayr-manager__textarea" rows={3} value={commentsEnglish} onChange={(e) => setCommentsEnglish(e.target.value)} />
+              <textarea
+                className="sayr-manager__textarea"
+                rows={3}
+                value={commentsEnglish}
+                onChange={(e) => setCommentsEnglish(e.target.value)}
+              />
             </div>
             <div className="sayr-manager__input-container">
               <label className="sayr-manager__label">Comments (Arabic)</label>
-              <textarea className="sayr-manager__textarea" rows={3} value={commentsArabic} onChange={(e) => setCommentsArabic(e.target.value)} />
+              <textarea
+                className="sayr-manager__textarea"
+                rows={3}
+                value={commentsArabic}
+                onChange={(e) => setCommentsArabic(e.target.value)}
+              />
             </div>
           </div>
         )}
 
         <div className="sayr-manager__stops-section">
+
+          <div className="sayr-manager__comments-section">
+            <span className="sayr-manager__comments-english_title">
+  Comments on Sayr from {creatorEnglish}
+  {sourceId &&
+    (() => {
+      const source = sources.find((s) => s.getId() === sourceId);
+      const year = source?.getPublicationDateEnglish() ?? "";
+      return year ? ` (${year}` : "";
+    })()}
+  {page && `:${page})`}
+</span>
+            <span className="sayr-manager__comments-english">
+              {commentsEnglish}
+            </span>
+          </div>
+
           <h3 className="sayr-manager__stops-header">
             Stops{" "}
             {admin && (
-              <button type="button" className="sayr-manager__add-stop" onClick={addStop}>
+              <button
+                type="button"
+                className="sayr-manager__add-stop"
+                onClick={addStop}
+              >
                 + Add Stop
               </button>
             )}
           </h3>
-
           <div className="sayr-manager__stops">
             {stops.map((stop, i) => (
               <div key={i} className="sayr-manager__stop">
-                <select className="sayr-manager__stop-type" value={stop.type} onChange={(e) => updateStop(i, "type", e.target.value)}>
+                <select
+                  className="sayr-manager__stop-type"
+                  value={stop.type}
+                  onChange={(e) => updateStop(i, "type", e.target.value)}
+                >
                   <option value="note">note</option>
                   <option value="jins">jins</option>
                   <option value="direction">direction</option>
@@ -204,7 +293,11 @@ export default function SayrManager({ admin }: { admin: boolean }) {
 
                 {/* --- note stop --- */}
                 {stop.type === "note" && (
-                  <select className="sayr-manager__stop-value" value={stop.value} onChange={(e) => updateStop(i, "value", e.target.value)}>
+                  <select
+                    className="sayr-manager__stop-value"
+                    value={stop.value}
+                    onChange={(e) => updateStop(i, "value", e.target.value)}
+                  >
                     <option value="">(none)</option>
                     {octaveZeroNoteNames.map((n) => (
                       <option key={n} value={n}>
@@ -230,7 +323,11 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                 {stop.type === "jins" && (
                   <>
                     {/* 1) select which jins */}
-                    <select className="sayr-manager__stop-value" value={stop.value} onChange={(e) => updateStop(i, "value", e.target.value)}>
+                    <select
+                      className="sayr-manager__stop-value"
+                      value={stop.value}
+                      onChange={(e) => updateStop(i, "value", e.target.value)}
+                    >
                       <option value="">(none)</option>
                       {ajnas.map((j) => (
                         <option key={j.getId()} value={j.getId()}>
@@ -240,7 +337,13 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                     </select>
 
                     {/* 2) optional starting note for this jins */}
-                    <select className="sayr-manager__stop-value" value={stop.startingNote ?? ""} onChange={(e) => updateStop(i, "startingNote", e.target.value)}>
+                    <select
+                      className="sayr-manager__stop-value"
+                      value={stop.startingNote ?? ""}
+                      onChange={(e) =>
+                        updateStop(i, "startingNote", e.target.value)
+                      }
+                    >
                       <option value="">(none)</option>
                       {octaveOneNoteNames.map((n) => (
                         <option key={n} value={n}>
@@ -256,7 +359,13 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                     </select>
 
                     {/* 3) optional direction for this jins */}
-                    <select className="sayr-manager__stop-value" value={stop.direction ?? ""} onChange={(e) => updateStop(i, "direction", e.target.value)}>
+                    <select
+                      className="sayr-manager__stop-value"
+                      value={stop.direction ?? ""}
+                      onChange={(e) =>
+                        updateStop(i, "direction", e.target.value)
+                      }
+                    >
                       <option value="">(none)</option>
                       <option value="ascending">ascending</option>
                       <option value="descending">descending</option>
@@ -266,7 +375,11 @@ export default function SayrManager({ admin }: { admin: boolean }) {
 
                 {/* --- direction stop --- */}
                 {stop.type === "direction" && (
-                  <select className="sayr-manager__stop-value" value={stop.value} onChange={(e) => updateStop(i, "value", e.target.value)}>
+                  <select
+                    className="sayr-manager__stop-value"
+                    value={stop.value}
+                    onChange={(e) => updateStop(i, "value", e.target.value)}
+                  >
                     <option value="">(none)</option>
                     <option value="ascending">ascending</option>
                     <option value="descending">descending</option>
@@ -274,7 +387,11 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                 )}
 
                 {admin && (
-                  <button type="button" className="sayr-manager__delete-stop" onClick={() => removeStop(i)}>
+                  <button
+                    type="button"
+                    className="sayr-manager__delete-stop"
+                    onClick={() => removeStop(i)}
+                  >
                     Delete
                   </button>
                 )}
@@ -289,7 +406,11 @@ export default function SayrManager({ admin }: { admin: boolean }) {
               {maqamSayrId ? "Update Sayr" : "Save Sayr"}
             </button>
             {maqamSayrId && (
-              <button type="button" className="sayr-manager__delete-button" onClick={handleDelete}>
+              <button
+                type="button"
+                className="sayr-manager__delete-button"
+                onClick={handleDelete}
+              >
                 Delete Sayr
               </button>
             )}

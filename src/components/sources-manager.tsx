@@ -96,8 +96,8 @@ export default function SourcesManager() {
       setContributors(found.getContributors());
       setEditionEnglish(found.getEditionEnglish());
       setEditionArabic(found.getEditionArabic());
-      setPublicationDateEnglish(found.getReleaseDateEnglish());
-      setPublicationDateArabic(found.getReleaseDateArabic());
+      setPublicationDateEnglish(found.getPublicationDateEnglish());
+      setPublicationDateArabic(found.getPublicationDateArabic());
       setUrl(found.getUrl());
       setDateAccessed(found.getDateAccessed());
 
@@ -123,8 +123,8 @@ export default function SourcesManager() {
       // Now cast to the correct subclass and populate its own fields:
       if (found.getSourceType() === "Book") {
         const book = found as Book;
-        setOriginalPublicationDateEnglish(book.getOriginalReleaseDateEnglish());
-        setOriginalPublicationDateArabic(book.getOriginalReleaseDateArabic());
+        setOriginalPublicationDateEnglish(book.getOriginalPublicationDateEnglish());
+        setOriginalPublicationDateArabic(book.getOriginalPublicationDateArabic());
         setPublisherEnglish(book.getPublisherEnglish());
         setPublisherArabic(book.getPublisherArabic());
         setPlaceEnglish(book.getPlaceEnglish());
@@ -265,7 +265,7 @@ export default function SourcesManager() {
               const lastName = firstContributor ? firstContributor.lastNameEnglish : "n.a.";
               return (
                 <option key={s.getId()} value={s.getId()}>
-                  {`${lastName} (${s.getReleaseDateEnglish()}) ${s.getTitleEnglish()} (${s.getSourceType()})`}
+                  {`${lastName} (${s.getPublicationDateEnglish()}) ${s.getTitleEnglish()} (${s.getSourceType()})`}
                 </option>
               );
             })}

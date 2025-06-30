@@ -77,11 +77,11 @@ export abstract class AbstractSource {
     return this.editionArabic;
   }
 
-  public getReleaseDateEnglish(): string {
+  public getPublicationDateEnglish(): string {
     return this.publicationDateEnglish;
   }
 
-  public getReleaseDateArabic(): string {
+  public getPublicationDateArabic(): string {
     return this.publicationDateArabic;
   }
 

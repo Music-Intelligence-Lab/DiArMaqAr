@@ -342,22 +342,23 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
       <details className="tuning-system-manager__octave-details" open={openedOctaveRows[octave as 0 | 1 | 2 | 3]}>
         <summary
           className="tuning-system-manager__octave-summary"
-          onClick={(e) => {
+         /*  onClick={(e) => {
             e.preventDefault();
-            /* setOpenedOctaveRows((rows) => ({
+             setOpenedOctaveRows((rows) => ({
               ...rows,
               [octave]: !rows[octave as 0 | 1 | 2 | 3],
-            })); */
-          }}
+            }));
+          }} */
         >
           <span
             className="tuning-system-manager__octave-summary-title"
-            onClick={() =>
+            onClick={(e) => {
+            e.preventDefault();
               setOpenedOctaveRows((rows) => ({
                 ...rows,
                 [octave]: !rows[octave as 0 | 1 | 2 | 3],
               }))
-            }
+            }}
           >
             Dīwān (octave) {octave}{" "}
           </span>

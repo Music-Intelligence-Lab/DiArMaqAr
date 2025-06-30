@@ -186,7 +186,7 @@ export default function Navbar() {
               {selectedMaqamDetails ? `Suyūr (${selectedMaqamDetails.getSuyūr().length})` : "Suyūr"} <br />
             </span>
             <span className="navbar__bottom-bar-item_tab-subtitle">
-              {selectedSayr && `${selectedSayr.creatorEnglish} ${selectedSayrSource ? `(${selectedSayrSource.getReleaseDateEnglish()})` : ""}`}
+              {selectedSayr && `${selectedSayr.creatorEnglish} ${selectedSayrSource ? `(${selectedSayrSource.getPublicationDateEnglish()})` : ""}`}
             </span>
           </button>
           {showAdminTabs && (
