@@ -651,7 +651,7 @@ export default function MaqamTranspositions() {
                     return source ? (
                       <React.Fragment key={idx}>
                         {source.getContributors()[0].lastNameEnglish} (
-                        {source.getReleaseDateEnglish()}:{sourceRef.page})
+                        {source.getPublicationDateEnglish()}:{sourceRef.page})
                         <br />
                       </React.Fragment>
                     ) : null;
