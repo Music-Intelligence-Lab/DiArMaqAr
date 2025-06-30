@@ -7,7 +7,8 @@
   overflow-x: scroll;
   display: flex;
   z-index: 2000;
-  margin: 25px 0;
+  margin: 20px 0;
+  background-color: black;
 
   &::-webkit-scrollbar {
     height: 0px;
@@ -39,15 +40,18 @@
     }
 
     &_active {
-      background-color: rgb($tertiary, 0.8) !important;
+      background-color: rgb($tertiary, 1);
     }
 
     &_tonic {
       border-top: 3px $tertiary solid;
-
+      background-color: $medium-grey;
 
       &:hover {
         background-color: $tertiary !important;
+      }
+      &:active {
+        background-color: $primary !important;
       }
     }
 
