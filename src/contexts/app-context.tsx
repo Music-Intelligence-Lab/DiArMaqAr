@@ -2,7 +2,7 @@
 
 import React, { createContext, useState, useEffect, useMemo, useContext, useCallback } from "react";
 import TuningSystem from "@/models/TuningSystem";
-import JinsDetails, { Jins } from "@/models/Jins";
+import JinsDetails, { Jins, JinsModulations } from "@/models/Jins";
 import NoteName, { TransliteratedNoteNameOctaveOne, TransliteratedNoteNameOctaveTwo, Cell } from "@/models/NoteName";
 import { octaveOneNoteNames, octaveTwoNoteNames } from "@/models/NoteName";
 import MaqamDetails, { Maqam, MaqamModulations } from "@/models/Maqam";
@@ -69,7 +69,9 @@ interface AppContextInterface {
   setSources: React.Dispatch<React.SetStateAction<Source[]>>;
   patterns: Pattern[];
   setPatterns: React.Dispatch<React.SetStateAction<Pattern[]>>;
-  getModulations: (sourceMaqamTransposition: Maqam) => MaqamModulations;
+  getModulations: (sourceMaqamTransposition: Maqam) => MaqamModulations | JinsModulations;
+  ajnasModulationsMode: boolean;
+  setAjnasModulationsMode: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AppContext = createContext<AppContextInterface | null>(null);
@@ -103,6 +105,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   const [patterns, setPatterns] = useState<Pattern[]>([]);
 
   const [sources, setSources] = useState<Source[]>([]);
+
+  const [ajnasModulationsMode, setAjnasModulationsMode] = useState(false);
 
   const tuningSystemPitchClassesArray = useMemo(
     () =>
@@ -288,10 +292,10 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   };
 
   const getModulations = useCallback(
-    (sourceMaqamTransposition: Maqam): MaqamModulations => {
-      return modulate(allPitchClasses, ajnas, maqamat, sourceMaqamTransposition, centsTolerance);
+    (sourceMaqamTransposition: Maqam): MaqamModulations | JinsModulations => {
+      return modulate(allPitchClasses, ajnas, maqamat, sourceMaqamTransposition, ajnasModulationsMode, centsTolerance);
     },
-    [allPitchClasses, maqamat, ajnas, selectedTuningSystem, getMaqamTranspositions]
+    [allPitchClasses, maqamat, ajnas, selectedTuningSystem, ajnasModulationsMode, getMaqamTranspositions]
   );
 
   const handleUrlParams = useCallback(
@@ -417,6 +421,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         patterns,
         setPatterns,
         getModulations,
+        ajnasModulationsMode,
+        setAjnasModulationsMode,
       }}
     >
       {children}

@@ -89,7 +89,7 @@ export default function HomeClient() {
       {(selectedMenu === "jins" || selectedMenu === "jins-admin") && selectedTuningSystem && <JinsTranspositions />}
       {selectedMenu === "sayr" && selectedMaqamDetails && <SayrManager admin={false} />}
       {selectedMenu === "sayr-admin" && selectedMaqamDetails && <SayrManager admin />}
-      {selectedMenu === "modulation" && selectedMaqamDetails && <Modulations />}
+      {selectedMenu === "modulation" && <Modulations />}
       {selectedMenu === "bibliography" && <SourcesList />}
       {selectedMenu === "bibliography-admin" && <SourcesManager />}
       {selectedMenu === "pattern-admin" && <PatternsManager />}

@@ -1,8 +1,8 @@
 import { octaveOneNoteNames, octaveTwoNoteNames } from "@/models/NoteName";
-import { getMaqamTranspositions } from "./transpose";
+import { getJinsTranspositions, getMaqamTranspositions } from "./transpose";
 import shawwaMapping from "@/functions/shawwaMapping";
 import PitchClass from "@/models/PitchClass";
-import JinsDetails from "@/models/Jins";
+import JinsDetails, { Jins, JinsModulations } from "@/models/Jins";
 import MaqamDetails, { Maqam, MaqamModulations } from "@/models/Maqam";
 
 export default function modulate(
@@ -10,16 +10,18 @@ export default function modulate(
   allAjnas: JinsDetails[],
   allMaqamat: MaqamDetails[],
   sourceMaqamTransposition: Maqam,
+  ajnasModulationsMode: boolean,
   centsTolerance: number = 5
-): MaqamModulations {
-  const modulationsOnOne: Maqam[] = [];
-  const modulationsOnThree: Maqam[] = [];
-  const modulationsOnThree2p: Maqam[] = [];
-  const modulationsOnFour: Maqam[] = [];
-  const modulationsOnFive: Maqam[] = [];
-  const modulationsOnSixAscending: Maqam[] = [];
-  const modulationsOnSixDescending: Maqam[] = [];
-  const modulationsOnSixNoThird: Maqam[] = [];
+): MaqamModulations | JinsModulations {
+  type ModulationType = Maqam | Jins;
+  const modulationsOnOne: ModulationType[] = [];
+  const modulationsOnThree: ModulationType[] = [];
+  const modulationsOnThree2p: ModulationType[] = [];
+  const modulationsOnFour: ModulationType[] = [];
+  const modulationsOnFive: ModulationType[] = [];
+  const modulationsOnSixAscending: ModulationType[] = [];
+  const modulationsOnSixDescending: ModulationType[] = [];
+  const modulationsOnSixNoThird: ModulationType[] = [];
 
   const sourceAscendingNotes = sourceMaqamTransposition.ascendingPitchClasses.map((pitchClass: PitchClass) => pitchClass.noteName);
   const sourceDescendingNotes = [...sourceMaqamTransposition.descendingPitchClasses.map((pitchClass: PitchClass) => pitchClass.noteName)].reverse();
@@ -68,24 +70,47 @@ export default function modulate(
   )
     checkSixthNoThird = true;
 
-  for (const maqam of allMaqamat) {
-    if (!maqam.isMaqamSelectable(allPitchClasses.map((pitchClass) => pitchClass.noteName))) continue;
+  for (const maqamOrJins of ajnasModulationsMode ? allAjnas : allMaqamat) {
+    let transpositions: (Maqam | Jins)[] = [];
 
-    const currentAscendingNotes = maqam.getAscendingNoteNames();
+    if (maqamOrJins instanceof JinsDetails) {
+      if (!maqamOrJins.isJinsSelectable(allPitchClasses.map((pitchClass) => pitchClass.noteName))) continue;
 
-    const transpositions = JSON.stringify(currentAscendingNotes) !== JSON.stringify(sourceAscendingNotes) ? [maqam.getTahlil(allPitchClasses)] : [];
+      const currentNotes = maqamOrJins.getNoteNames();
 
-    getMaqamTranspositions(allPitchClasses, allAjnas, maqam, true, centsTolerance).forEach((maqamTransposition: Maqam) => {
-      if (
-        JSON.stringify(currentAscendingNotes) ===
-        JSON.stringify(maqamTransposition.ascendingPitchClasses.map((pitchClass: PitchClass) => pitchClass.noteName))
-      )
-        return;
-      transpositions.push(maqamTransposition);
-    });
+      transpositions = JSON.stringify(currentNotes) !== JSON.stringify(sourceAscendingNotes) ? [maqamOrJins.getTahlil(allPitchClasses)] : [];
+
+      getJinsTranspositions(allPitchClasses, maqamOrJins, true, centsTolerance).forEach((jinsTransposition: Jins) => {
+        if (JSON.stringify(currentNotes) === JSON.stringify(jinsTransposition.jinsPitchClasses.map((pitchClass: PitchClass) => pitchClass.noteName)))
+          return;
+        transpositions.push(jinsTransposition);
+      });
+    } else {
+      if (!maqamOrJins.isMaqamSelectable(allPitchClasses.map((pitchClass) => pitchClass.noteName))) continue;
+
+      const currentAscendingNotes = maqamOrJins.getAscendingNoteNames();
+
+      transpositions = JSON.stringify(currentAscendingNotes) !== JSON.stringify(sourceAscendingNotes) ? [maqamOrJins.getTahlil(allPitchClasses)] : [];
+
+      getMaqamTranspositions(allPitchClasses, allAjnas, maqamOrJins, true, centsTolerance).forEach((maqamTransposition: Maqam) => {
+        if (
+          JSON.stringify(currentAscendingNotes) ===
+          JSON.stringify(maqamTransposition.ascendingPitchClasses.map((pitchClass: PitchClass) => pitchClass.noteName))
+        )
+          return;
+        transpositions.push(maqamTransposition);
+      });
+    }
 
     for (const transposition of transpositions) {
-      const currentAscendingNotes = transposition.ascendingPitchClasses.map((pitchClass: PitchClass) => pitchClass.noteName);
+      let currentAscendingNotes: string[] = [];
+      
+      if ('ascendingPitchClasses' in transposition) {
+        currentAscendingNotes = transposition.ascendingPitchClasses.map((pitchClass: PitchClass) => pitchClass.noteName);
+      } else {
+        currentAscendingNotes = transposition.jinsPitchClasses.map((pitchClass: PitchClass) => pitchClass.noteName);
+      }
+
       if (currentAscendingNotes[0] === sourceAscendingNotes[0]) modulationsOnOne.push(transposition);
       if (currentAscendingNotes[0] === sourceAscendingNotes[3] && shawwaMapping(sourceAscendingNotes[3]) !== "/")
         modulationsOnFour.push(transposition);
@@ -97,19 +122,32 @@ export default function modulate(
       else if (checkSixthNoThird && currentAscendingNotes[0] === sourceAscendingNotes[5]) modulationsOnSixNoThird.push(transposition);
       if (checkSixAscending && currentAscendingNotes[0] === sourceAscendingNotes[5]) modulationsOnSixAscending.push(transposition);
       if (checkSixDescending && currentAscendingNotes[0] === sourceDescendingNotes[5]) modulationsOnSixDescending.push(transposition);
-      
     }
   }
 
-  return {
-    modulationsOnOne,
-    modulationsOnThree,
-    modulationsOnThree2p: modulationsOnThree.length === 0 ? modulationsOnThree2p : [],
-    modulationsOnSixNoThird: modulationsOnThree.length === 0 && modulationsOnThree2p.length === 0 ? modulationsOnThree2p : [],
-    modulationsOnFour,
-    modulationsOnFive,
-    modulationsOnSixAscending,
-    modulationsOnSixDescending,
-    noteName2p,
-  };
+  if (ajnasModulationsMode) {
+    return {
+      modulationsOnOne,
+      modulationsOnThree,
+      modulationsOnThree2p: modulationsOnThree.length === 0 ? modulationsOnThree2p : [],
+      modulationsOnSixNoThird: modulationsOnThree.length === 0 && modulationsOnThree2p.length === 0 ? modulationsOnThree2p : [],
+      modulationsOnFour,
+      modulationsOnFive,
+      modulationsOnSixAscending,
+      modulationsOnSixDescending,
+      noteName2p,
+    } as JinsModulations;
+  } else {
+    return {
+      modulationsOnOne,
+      modulationsOnThree,
+      modulationsOnThree2p: modulationsOnThree.length === 0 ? modulationsOnThree2p : [],
+      modulationsOnSixNoThird: modulationsOnThree.length === 0 && modulationsOnThree2p.length === 0 ? modulationsOnThree2p : [],
+      modulationsOnFour,
+      modulationsOnFive,
+      modulationsOnSixAscending,
+      modulationsOnSixDescending,
+      noteName2p,
+    } as MaqamModulations;
+  }
 }

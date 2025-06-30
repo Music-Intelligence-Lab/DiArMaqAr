@@ -100,18 +100,18 @@ export default class MaqamDetails {
   }
 
   getTahlil(allPitchClasses: PitchClass[]): Maqam {
-    const ascendingCells = allPitchClasses.filter((pitchClass) => this.ascendingNoteNames.includes(pitchClass.noteName));
-    const ascendingCellIntervals: PitchClassInterval[] = getPitchClassIntervals(ascendingCells);
-    const descendingCells = allPitchClasses.filter((pitchClass) => this.descendingNoteNames.includes(pitchClass.noteName)).reverse();
-    const descendingCellIntervals: PitchClassInterval[] = getPitchClassIntervals(descendingCells);
+    const ascendingPitchClasses = allPitchClasses.filter((pitchClass) => this.ascendingNoteNames.includes(pitchClass.noteName));
+    const ascendingPitchClassIntervals: PitchClassInterval[] = getPitchClassIntervals(ascendingPitchClasses);
+    const descendingPitchClasses = allPitchClasses.filter((pitchClass) => this.descendingNoteNames.includes(pitchClass.noteName)).reverse();
+    const descendingPitchClassIntervals: PitchClassInterval[] = getPitchClassIntervals(descendingPitchClasses);
     return {
       maqamId: this.id,
       name: this.name,
       transposition: false,
-      ascendingPitchClasses: ascendingCells,
-      ascendingPitchClassIntervals: ascendingCellIntervals,
-      descendingPitchClasses: descendingCells,
-      descendingPitchClassIntervals: descendingCellIntervals,
+      ascendingPitchClasses: ascendingPitchClasses,
+      ascendingPitchClassIntervals: ascendingPitchClassIntervals,
+      descendingPitchClasses: descendingPitchClasses,
+      descendingPitchClassIntervals: descendingPitchClassIntervals,
     };
   }
 
