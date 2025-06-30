@@ -55,7 +55,7 @@
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
-    margin-bottom: 50px;
+    margin-bottom: 10px;
     font-size: 12px;
     font-weight: 200;
 
@@ -180,13 +180,13 @@
   &__comments-sources-container {
     display: flex;
     justify-content: space-between;
-    padding: 0 30px;
+    padding: 0 0px;
   }
 
   &__sources {
     width: 100%;
     display: flex;
-    padding: 10px 30px;
+    padding: 10px 0px;
   }
 
   .maqam-transpositions__spacer {
