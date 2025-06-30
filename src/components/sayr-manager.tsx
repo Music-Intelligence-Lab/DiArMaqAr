@@ -162,7 +162,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                       );
                       return `${
                         source?.getContributors()[0]?.lastNameEnglish ?? ""
-                      } (${source?.getReleaseDateEnglish() ?? ""}`;
+                      } (${source?.getPublicationDateEnglish() ?? ""}`;
                     })()
                   : "No Source"}
                 :{sayr.page})
@@ -256,7 +256,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
   {sourceId &&
     (() => {
       const source = sources.find((s) => s.getId() === sourceId);
-      const year = source?.getReleaseDateEnglish() ?? "";
+      const year = source?.getPublicationDateEnglish() ?? "";
       return year ? ` (${year}` : "";
     })()}
   {page && `:${page})`}
