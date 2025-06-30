@@ -638,13 +638,7 @@ export default function MaqamTranspositions() {
                   {selectedMaqamDetails.getCommentsEnglish()}
                 </div>
               </div>
-              <div className="maqam-transpositions__comments">
-                <h3>التعليقات</h3>
-                <div className="maqam-transpositions__comments-text">
-                  {selectedMaqamDetails.getCommentsArabic()}
-                </div>
-              </div>
-            </div>
+            
             <div className="maqam-transpositions__sources">
               <h3>Sources:</h3>
               {selectedMaqamDetails?.getSourcePageReferences().length > 0 &&
@@ -662,6 +656,7 @@ export default function MaqamTranspositions() {
                       </React.Fragment>
                     ) : null;
                   })}
+            </div>
             </div>
           </>
         )}
