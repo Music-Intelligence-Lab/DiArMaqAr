@@ -145,7 +145,8 @@ export function getMaqamTranspositions(
     let sliceIndex = 0;
     const lastAscendingPitchClass = ascendingPitchClasses[ascendingPitchClasses.length - 1];
 
-    for (let i = 0; i < ascendingPitchClasses.length; i++) { // if the maqam is longer than 7 and has octaves in them, then you want to slice the sequence in a way where you dont shift the octave again
+    for (let i = 0; i < ascendingPitchClasses.length; i++) {
+      // if the maqam is longer than 7 and has octaves in them, then you want to slice the sequence in a way where you dont shift the octave again
       if (parseFloat(ascendingPitchClasses[i].frequency) * 2 < parseFloat(lastAscendingPitchClass.frequency)) {
         sliceIndex = i + 1;
       }
@@ -209,7 +210,7 @@ export function getMaqamTranspositions(
         if (ascendingMaqamAjnas.length - 1 === ascendingPitchClassIntervals.length) break;
       }
 
-      const offSet = descendingPitchClasses.length;
+      const offSet = descendingPitchClasses.length - (sliceIndex === 0 ? 0 : 1) - 1;
       for (let i = offSet; i <= extendedDescendingPitchClassIntervals.length; i++) {
         let found = false;
 
@@ -244,8 +245,6 @@ export function getMaqamTranspositions(
         if (!found) descendingMaqamAjnas.push(null);
         if (descendingMaqamAjnas.length - 1 === descendingPitchClassIntervals.length) break;
       }
-
-      if (sliceIndex !== 0) descendingMaqamAjnas.push(null);
     }
 
     return {
