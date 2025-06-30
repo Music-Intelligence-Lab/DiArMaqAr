@@ -490,8 +490,7 @@ export default function MaqamTranspositions() {
                     jt &&
                     (ascending ||
                       degreeIdx <
-                        jinsTranspositions.length -
-                          (noOctaveMaqam ? 0 : 1));
+                        jinsTranspositions.length - (noOctaveMaqam ? 0 : 1));
                   return (
                     <React.Fragment key={degreeIdx}>
                       <th
@@ -617,12 +616,23 @@ export default function MaqamTranspositions() {
               </span>
             </h2>
 
-            <table className="maqam-transpositions__table"><colgroup><col style={{width: "30px"}}/><col style={{width: "40px"}}/><col style={{minWidth: "100px", maxWidth: "100px", width: "100px"}}/>{" "}</colgroup>
+            <table className="maqam-transpositions__table">
+              <colgroup>
+                <col style={{ width: "30px" }} />
+                <col style={{ width: "40px" }} />
+                <col
+                  style={{
+                    minWidth: "100px",
+                    maxWidth: "100px",
+                    width: "100px",
+                  }}
+                />
+              </colgroup>
               <thead>{renderTransposition(maqamTranspositions[0], 0)}</thead>
             </table>
           </>
         )}
-         {/* COMMENTS AND SOURCES */}
+        {/* COMMENTS AND SOURCES */}
         {selectedMaqamDetails && (
           <>
             <div className="maqam-transpositions__comments-sources-container">
@@ -632,25 +642,25 @@ export default function MaqamTranspositions() {
                   {selectedMaqamDetails.getCommentsEnglish()}
                 </div>
               </div>
-            
-            <div className="maqam-transpositions__sources">
-              Sources:
-              {selectedMaqamDetails?.getSourcePageReferences().length > 0 &&
-                selectedMaqamDetails
-                  .getSourcePageReferences()
-                  .map((sourceRef, idx) => {
-                    const source = sources.find(
-                      (s: any) => s.id === sourceRef.sourceId
-                    );
-                    return source ? (
-                      <React.Fragment key={idx}>
-                        {source.getContributors()[0].lastNameEnglish} (
-                        {source.getPublicationDateEnglish()}:{sourceRef.page})
-                        <br />
-                      </React.Fragment>
-                    ) : null;
-                  })}
-            </div>
+
+              <div className="maqam-transpositions__sources">
+                Sources:
+                {selectedMaqamDetails?.getSourcePageReferences().length > 0 &&
+                  selectedMaqamDetails
+                    .getSourcePageReferences()
+                    .map((sourceRef, idx) => {
+                      const source = sources.find(
+                        (s: any) => s.id === sourceRef.sourceId
+                      );
+                      return source ? (
+                        <React.Fragment key={idx}>
+                          {source.getContributors()[0].lastNameEnglish} (
+                          {source.getPublicationDateEnglish()}:{sourceRef.page})
+                          <br />
+                        </React.Fragment>
+                      ) : null;
+                    })}
+              </div>
             </div>
           </>
         )}
