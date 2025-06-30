@@ -181,9 +181,9 @@
 
   &__input {
     width: 50px;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    font-size: 14px;
+    border: 1px solid $text;
+    border-radius: 0px;
     resize: vertical;
     padding: 5px;
   }

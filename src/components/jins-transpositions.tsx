@@ -111,7 +111,7 @@ export default function JinsTranspositions() {
             <th className="jins-transpositions__header-pitchClass">{pitchClasses[0].originalValue}</th>
             {intervals.map((interval, i) => (
               <React.Fragment key={i}>
-                <th className="jins-transpositions__header-pitchClass">{useRatio ? `(${interval.fraction.replace("/", ":")})` : `${interval.cents.toFixed(3)}`}</th>
+                <th className="jins-transpositions__header-pitchClass">{useRatio ? `(${interval.fraction.replace("/", ":")})` : `(${interval.cents.toFixed(3)})`}</th>
                 <th className="jins-transpositions__header-pitchClass">{pitchClasses[i + 1].originalValue}</th>
               </React.Fragment>
             ))}
@@ -122,7 +122,7 @@ export default function JinsTranspositions() {
               <th className="jins-transpositions__header-pitchClass">{pitchClasses[0].fraction}</th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
-                  <th className="jins-transpositions__header-pitchClass">{interval.fraction}</th>
+                  <th className="jins-transpositions__header-pitchClass">({interval.fraction})</th>
                   <th className="jins-transpositions__header-pitchClass">{pitchClasses[i + 1].fraction}</th>
                 </React.Fragment>
               ))}
@@ -134,7 +134,7 @@ export default function JinsTranspositions() {
               <th className="jins-transpositions__header-pitchClass">{parseFloat(pitchClasses[0].cents).toFixed(3)}</th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
-                  <th className="jins-transpositions__header-pitchClass">{interval.cents.toFixed(3)}</th>
+                  <th className="jins-transpositions__header-pitchClass">({interval.cents.toFixed(3)})</th>
                   <th className="jins-transpositions__header-pitchClass">{parseFloat(pitchClasses[i + 1].cents).toFixed(3)}</th>
                 </React.Fragment>
               ))}
@@ -146,7 +146,7 @@ export default function JinsTranspositions() {
               <th className="jins-transpositions__header-pitchClass">{parseFloat(pitchClasses[0].decimalRatio).toFixed(3)}</th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
-                  <th className="jins-transpositions__header-pitchClass">{interval.decimalRatio.toFixed(3)}</th>
+                  <th className="jins-transpositions__header-pitchClass">({interval.decimalRatio.toFixed(3)})</th>
                   <th className="jins-transpositions__header-pitchClass">{parseFloat(pitchClasses[i + 1].decimalRatio).toFixed(3)}</th>
                 </React.Fragment>
               ))}
@@ -158,7 +158,7 @@ export default function JinsTranspositions() {
               <th className="jins-transpositions__header-pitchClass">{parseFloat(pitchClasses[0].stringLength).toFixed(3)}</th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
-                  <th className="jins-transpositions__header-pitchClass">{interval.stringLength.toFixed(3)}</th>
+                  <th className="jins-transpositions__header-pitchClass">({interval.stringLength.toFixed(3)})</th>
                   <th className="jins-transpositions__header-pitchClass">{parseFloat(pitchClasses[i + 1].stringLength).toFixed(3)}</th>
                 </React.Fragment>
               ))}
@@ -170,7 +170,7 @@ export default function JinsTranspositions() {
               <th className="jins-transpositions__header-pitchClass">{parseFloat(pitchClasses[0].fretDivision).toFixed(3)}</th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
-                  <th className="jins-transpositions__header-pitchClass">{interval.fretDivision.toFixed(3)}</th>
+                  <th className="jins-transpositions__header-pitchClass">({interval.fretDivision.toFixed(3)})</th>
                   <th className="jins-transpositions__header-pitchClass">{parseFloat(pitchClasses[i + 1].fretDivision).toFixed(3)}</th>
                 </React.Fragment>
               ))}
