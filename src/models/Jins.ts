@@ -57,8 +57,8 @@ export default class JinsDetails {
     return this.SourcePageReferences;
   }
 
-  isJinsSelectable(allPitchClasses: PitchClass[]): boolean {
-    return this.noteNames.every((noteName) => allPitchClasses.some((pitchClass) => pitchClass.noteName === noteName));
+  isJinsSelectable(allNoteNames: NoteName[]): boolean {
+    return this.noteNames.every((noteName) => allNoteNames.some((allNoteName) => allNoteName === noteName));
   }
 
   createJinsWithNewSourcePageReferences(newSourcePageReferences: SourcePageReference[]): JinsDetails {

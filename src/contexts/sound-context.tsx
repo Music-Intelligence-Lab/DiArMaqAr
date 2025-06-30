@@ -238,7 +238,6 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
       const pitchClass = pitchClasses[idx];
 
-      // grab the frequency from your cell‐detail helper
       const freqStr = pitchClass.frequency;
       const freq = parseFloat(freqStr);
       if (isNaN(freq)) return;

@@ -1,8 +1,8 @@
-import NoteName, { getNoteNameIndexPerOctave } from "@/models/NoteName";
+import NoteName, { getNoteNameIndexAndOctave } from "@/models/NoteName";
 
 export default function shawwaMapping(noteName: NoteName): "n" | "1p" | "2p" | "/" { //D3Js
   if (noteName === "none") return "/";
-  const index = getNoteNameIndexPerOctave(noteName);
+  const index = getNoteNameIndexAndOctave(noteName).index;
   if (index === -1) {
     throw new Error(`Note name "${noteName}" not found in the mapping.`);
   }

@@ -131,7 +131,7 @@ export default function Navbar() {
             disabled={!selectedTuningSystem}
           >
             <span className="navbar__bottom-bar-item_tab-title">
-              {selectedTuningSystem ? `Ajnās (${ajnas.filter((jinsDetails) => jinsDetails.isJinsSelectable(allPitchClasses)).length}/${ajnas.length})` : "Ajnās"}
+              {selectedTuningSystem ? `Ajnās (${ajnas.filter((jinsDetails) => jinsDetails.isJinsSelectable(allPitchClasses.map(pitchClass => pitchClass.noteName))).length}/${ajnas.length})` : "Ajnās"}
             </span>
             <span className="navbar__bottom-bar-item_tab-subtitle">
               {!selectedJinsDetails
@@ -158,7 +158,7 @@ export default function Navbar() {
             disabled={!selectedTuningSystem}
           >
             <span className="navbar__bottom-bar-item_tab-title">
-              {selectedTuningSystem ? `Maqāmāt (${maqamat.filter((maqamDetails) => maqamDetails.isMaqamSelectable(allPitchClasses)).length}/${maqamat.length})` : "Maqāmāt"} <br />
+              {selectedTuningSystem ? `Maqāmāt (${maqamat.filter((maqamDetails) => maqamDetails.isMaqamSelectable(allPitchClasses.map(pitchClass => pitchClass.noteName))).length}/${maqamat.length})` : "Maqāmāt"} <br />
             </span>
             <span className="navbar__bottom-bar-item_tab-subtitle">
               {!selectedMaqamDetails

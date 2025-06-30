@@ -145,7 +145,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
             <p>No ajnas available.</p>
           ) : (
             filteredAjnas.map((jinsDetails, index) => {
-              const selectable = jinsDetails.isJinsSelectable(allPitchClasses);
+              const selectable = jinsDetails.isJinsSelectable(allPitchClasses.map(pitchClass => pitchClass.noteName));
               const numberOfTranspositions =
                 jinsTranspositions
                   .get(jinsDetails.getId())

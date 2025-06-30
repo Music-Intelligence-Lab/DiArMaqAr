@@ -236,7 +236,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
           }}
         >
           {filteredMaqamat.map((maqamDetails, idx) => {
-            const selectable = maqamDetails.isMaqamSelectable(allPitchClasses);
+            const selectable = maqamDetails.isMaqamSelectable(allPitchClasses.map(pitchClass => pitchClass.noteName));
             const numberOfTranspositions =
               maqamTranspositions
                 .get(maqamDetails.getId())

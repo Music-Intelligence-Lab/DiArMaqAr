@@ -30,7 +30,16 @@ export async function updateTuningSystems(newSystems: TuningSystem[]) {
           commentsEnglish: ts.getCommentsEnglish(),
           commentsArabic: ts.getCommentsArabic(),
           tuningSystemPitchClasses: ts.getPitchClasses(),
-          noteNames: ts.getNoteNames(),
+          noteNames: ts.getNoteNames().sort((a, b) => {
+            const priority = ["ʿushayrān", "yegāh"];
+            const getPriority = (arr: string[]) => {
+              const first = arr[0];
+              if (first === priority[0]) return 0;
+              if (first === priority[1]) return 1;
+              return 2;
+            };
+            return getPriority(a) - getPriority(b);
+          }),
           abjadNames: ts.getAbjadNames(),
           stringLength: ts.getStringLength(),
           defaultReferenceFrequency: ts.getDefaultReferenceFrequency(),

@@ -502,6 +502,17 @@
     transition: 0.2s;
     font-weight: 400;
 
+    &_disabled {
+      background-color: rgba($primary, 0.1) !important;
+      color: $text;
+
+      &:hover {
+        background-color: rgba($primary, 0.5);
+        box-shadow: none;
+        color: $text;
+      }
+    }
+
     &_selected {
       background-color: $secondary;
 

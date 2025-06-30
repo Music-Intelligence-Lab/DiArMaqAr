@@ -27,18 +27,8 @@ export default function PatternsManager() {
     ? maqamModel.ascendingPitchClasses
     : [];
 
-  // Add render log for debugging context/state
-  console.log("PatternsManager render:", {
-    maqamModel,
-    patternId,
-    patternsCount: patterns.length,
-  });
-
   // Find the selected pattern
   const selectedPattern = patterns.find((p) => p.getId() === patternId);
-
-  // Log pitchClasses before handlers
-  console.log("PatternsManager pitchClasses:", pitchClasses);
 
   // Reset form fields
   const resetForm = () => {
@@ -112,17 +102,14 @@ export default function PatternsManager() {
   };
 
   const playAscending = () => {
-    console.log("playAscending: maqamModel", maqamModel);
     if (!maqamModel) return;
     const freqs = pitchClasses.map((pc) =>
       parseInt(pc.frequency)
     );
-    console.log("playAscending: freqs", freqs);
     playSequence(freqs);
   };
 
   const playPattern = async () => {
-    console.log("playPattern: maqamModel", maqamModel, "selectedPattern", selectedPattern);
     if (!maqamModel || !selectedPattern) return;
     const freqs = selectedPattern.getNotes().map((n: PatternNote) => {
       // Find the absolute index in SCALE_DEGREES
@@ -138,7 +125,6 @@ export default function PatternsManager() {
       const pc = pitchClasses[relIndex];
       return parseInt(pc.frequency);
     });
-    console.log("playPattern: freqs", freqs);
     await playSequence(freqs);
   };
 

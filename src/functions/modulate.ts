@@ -61,7 +61,7 @@ export default function modulate(
     checkSixth = true;
 
   for (const maqam of allMaqamat) {
-    if (!maqam.isMaqamSelectable(allPitchClasses)) continue;
+    if (!maqam.isMaqamSelectable(allPitchClasses.map(pitchClass => pitchClass.noteName))) continue;
 
     const currentAscendingNotes = maqam.getAscendingNoteNames();
 
