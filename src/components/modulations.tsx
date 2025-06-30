@@ -49,6 +49,7 @@ export default function Modulations() {
     <div className="modulations__container">
       {sourceMaqamStack.map((sourceMaqam, stackIdx) => {
         const ascendingNoteNames = sourceMaqam.ascendingPitchClasses.map((pitchClass) => pitchClass.noteName);
+        const descendingNoteNames = [...sourceMaqam.descendingPitchClasses.map((pitchClass) => pitchClass.noteName)].reverse();
         const totalModulations = calculateNumberOfHops(modulationsStack[stackIdx]);
         return (
           <div className="modulations__hops-wrapper" key={stackIdx} style={{ marginTop: stackIdx === 0 ? 0 : 32, borderTop: stackIdx === 0 ? undefined : "1px solid #444" }}>
@@ -75,9 +76,9 @@ export default function Modulations() {
                     <div className="modulations__hops">
                       <span className="modulations__header">
                         Modulations from Tonic: <br />
-                        {ascendingNoteNames[0]} ({modulations?.hopsFromOne ? modulations.hopsFromOne.length : 0})
+                        {ascendingNoteNames[0]} ({modulations?.modulationsOnOne ? modulations.modulationsOnOne.length : 0})
                       </span>
-                      {[...modulations.hopsFromOne]
+                      {[...modulations.modulationsOnOne]
                         .sort((a, b) => a.name.localeCompare(b.name))
                         .map((hop, index) => (
                           <span
@@ -95,9 +96,9 @@ export default function Modulations() {
                     <div className="modulations__hops">
                       <span className="modulations__header">
                         Modulations from Third: <br />
-                        {ascendingNoteNames[2]} ({modulations?.hopsFromThree ? modulations.hopsFromThree.length : 0})
+                        {ascendingNoteNames[2]} ({modulations?.modulationsOnThree ? modulations.modulationsOnThree.length : 0})
                       </span>
-                      {[...modulations.hopsFromThree]
+                      {[...modulations.modulationsOnThree]
                         .sort((a, b) => a.name.localeCompare(b.name))
                         .map((hop, index) => (
                           <span
@@ -115,9 +116,29 @@ export default function Modulations() {
                     <div className="modulations__hops">
                       <span className="modulations__header">
                         Modulations from Alternative Third: <br />
-                        {noteName2p} ({modulations?.hopsFromThree2p ? modulations.hopsFromThree2p.length : 0})
+                        {noteName2p} ({modulations?.modulationsOnThree2p ? modulations.modulationsOnThree2p.length : 0})
                       </span>
-                      {[...modulations.hopsFromThree2p]
+                      {[...modulations.modulationsOnThree2p]
+                        .sort((a, b) => a.name.localeCompare(b.name))
+                        .map((hop, index) => (
+                          <span
+                            key={index}
+                            onClick={() => {
+                              addHopsWrapper(hop, stackIdx);
+                              setSelectedMaqam(hop);
+                            }}
+                            style={{ cursor: "pointer" }}
+                          >
+                            {hop.name}
+                          </span>
+                        ))}
+                    </div>
+                    <div className="modulations__hops">
+                      <span className="modulations__header">
+                        Modulations from Sixth No Third: <br />
+                        {ascendingNoteNames[5]} ({modulations?.modulationsOnSixNoThird ? modulations.modulationsOnSixNoThird.length : 0})
+                      </span>
+                      {[...modulations.modulationsOnSixNoThird]
                         .sort((a, b) => a.name.localeCompare(b.name))
                         .map((hop, index) => (
                           <span
@@ -135,9 +156,9 @@ export default function Modulations() {
                     <div className="modulations__hops">
                       <span className="modulations__header">
                         Modulations from Fourth: <br />
-                        {ascendingNoteNames[3]} ({modulations?.hopsFromFour ? modulations.hopsFromFour.length : 0})
+                        {ascendingNoteNames[3]} ({modulations?.modulationsOnFour ? modulations.modulationsOnFour.length : 0})
                       </span>
-                      {[...modulations.hopsFromFour]
+                      {[...modulations.modulationsOnFour]
                         .sort((a, b) => a.name.localeCompare(b.name))
                         .map((hop, index) => (
                           <span
@@ -155,9 +176,9 @@ export default function Modulations() {
                     <div className="modulations__hops">
                       <span className="modulations__header">
                         Modulations from Fifth: <br />
-                        {ascendingNoteNames[4]} ({modulations?.hopsFromFive ? modulations.hopsFromFive.length : 0})
+                        {ascendingNoteNames[4]} ({modulations?.modulationsOnFive ? modulations.modulationsOnFive.length : 0})
                       </span>
-                      {[...modulations.hopsFromFive]
+                      {[...modulations.modulationsOnFive]
                         .sort((a, b) => a.name.localeCompare(b.name))
                         .map((hop, index) => (
                           <span
@@ -174,10 +195,30 @@ export default function Modulations() {
                     </div>
                     <div className="modulations__hops">
                       <span className="modulations__header">
-                        Modulations from Sixth: <br />
-                        {ascendingNoteNames[5]} ({modulations?.HopFromSixNoThird ? modulations.HopFromSixNoThird.length : 0})
+                        Modulations from Sixth Ascending: <br />
+                        {ascendingNoteNames[5]} ({modulations?.modulationsOnSixAscending ? modulations.modulationsOnSixAscending.length : 0})
                       </span>
-                      {[...modulations.HopFromSixNoThird]
+                      {[...modulations.modulationsOnSixAscending]
+                        .sort((a, b) => a.name.localeCompare(b.name))
+                        .map((hop, index) => (
+                          <span
+                            key={index}
+                            onClick={() => {
+                              addHopsWrapper(hop, stackIdx);
+                              setSelectedMaqam(hop);
+                            }}
+                            style={{ cursor: "pointer" }}
+                          >
+                            {hop.name}
+                          </span>
+                        ))}
+                    </div>
+                    <div className="modulations__hops">
+                      <span className="modulations__header">
+                        Modulations from Sixth Descending: <br />
+                        {descendingNoteNames[5]} ({modulations?.modulationsOnSixDescending ? modulations.modulationsOnSixDescending.length : 0})
+                      </span>
+                      {[...modulations.modulationsOnSixDescending]
                         .sort((a, b) => a.name.localeCompare(b.name))
                         .map((hop, index) => (
                           <span

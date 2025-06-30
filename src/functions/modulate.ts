@@ -12,17 +12,22 @@ export default function modulate(
   sourceMaqamTransposition: Maqam,
   centsTolerance: number = 5
 ): MaqamModulations {
-  const hopsFromOne: Maqam[] = [];
-  const hopsFromThree: Maqam[] = [];
-  const hopsFromThree2p: Maqam[] = [];
-  const hopsFromFour: Maqam[] = [];
-  const hopsFromFive: Maqam[] = [];
-  const HopFromSixNoThird: Maqam[] = [];
+  const modulationsOnOne: Maqam[] = [];
+  const modulationsOnThree: Maqam[] = [];
+  const modulationsOnThree2p: Maqam[] = [];
+  const modulationsOnFour: Maqam[] = [];
+  const modulationsOnFive: Maqam[] = [];
+  const modulationsOnSixAscending: Maqam[] = [];
+  const modulationsOnSixDescending: Maqam[] = [];
+  const modulationsOnSixNoThird: Maqam[] = [];
 
   const sourceAscendingNotes = sourceMaqamTransposition.ascendingPitchClasses.map((pitchClass: PitchClass) => pitchClass.noteName);
+  const sourceDescendingNotes = [...sourceMaqamTransposition.descendingPitchClasses.map((pitchClass: PitchClass) => pitchClass.noteName)].reverse();
 
   let check2p = false;
-  let checkSixth = false;
+  let checkSixthNoThird = false;
+  let checkSixAscending = false;
+  let checkSixDescending = false;
 
   const shawwaList = [...octaveOneNoteNames, ...octaveTwoNoteNames].filter((noteName) => shawwaMapping(noteName) !== "/");
 
@@ -51,6 +56,9 @@ export default function modulate(
     }
   }
 
+  if (shawwaMapping(sourceAscendingNotes[4]) === "n" && shawwaMapping(sourceAscendingNotes[6]) === "n") checkSixAscending = true;
+  if (shawwaMapping(sourceDescendingNotes[4]) === "n" && shawwaMapping(sourceDescendingNotes[6]) === "n") checkSixDescending = true;
+
   const sixthDegreeNoteName = sourceAscendingNotes[5];
   const sixthDegreeCellSIndex = shawwaList.findIndex((noteName) => noteName === sixthDegreeNoteName);
 
@@ -58,10 +66,10 @@ export default function modulate(
     (sixthDegreeCellSIndex - firstDegreeShawwaIndex === 16 || sixthDegreeCellSIndex - firstDegreeShawwaIndex === 17) &&
     shawwaMapping(sixthDegreeNoteName) === "n"
   )
-    checkSixth = true;
+    checkSixthNoThird = true;
 
   for (const maqam of allMaqamat) {
-    if (!maqam.isMaqamSelectable(allPitchClasses.map(pitchClass => pitchClass.noteName))) continue;
+    if (!maqam.isMaqamSelectable(allPitchClasses.map((pitchClass) => pitchClass.noteName))) continue;
 
     const currentAscendingNotes = maqam.getAscendingNoteNames();
 
@@ -78,22 +86,30 @@ export default function modulate(
 
     for (const transposition of transpositions) {
       const currentAscendingNotes = transposition.ascendingPitchClasses.map((pitchClass: PitchClass) => pitchClass.noteName);
-      if (currentAscendingNotes[0] === sourceAscendingNotes[0]) hopsFromOne.push(transposition);
-      if (currentAscendingNotes[0] === sourceAscendingNotes[3] && shawwaMapping(sourceAscendingNotes[3]) !== "/") hopsFromFour.push(transposition);
-      if (currentAscendingNotes[0] === sourceAscendingNotes[4] && shawwaMapping(sourceAscendingNotes[4]) !== "/") hopsFromFive.push(transposition);
-      if (currentAscendingNotes[0] === sourceAscendingNotes[2] && shawwaMapping(sourceAscendingNotes[2]) !== "/") hopsFromThree.push(transposition);
-      if (check2p && currentAscendingNotes[0] === noteName2p) hopsFromThree2p.push(transposition);
-      if (checkSixth && currentAscendingNotes[0] === sourceAscendingNotes[5]) HopFromSixNoThird.push(transposition);
+      if (currentAscendingNotes[0] === sourceAscendingNotes[0]) modulationsOnOne.push(transposition);
+      if (currentAscendingNotes[0] === sourceAscendingNotes[3] && shawwaMapping(sourceAscendingNotes[3]) !== "/")
+        modulationsOnFour.push(transposition);
+      if (currentAscendingNotes[0] === sourceAscendingNotes[4] && shawwaMapping(sourceAscendingNotes[4]) !== "/")
+        modulationsOnFive.push(transposition);
+      if (currentAscendingNotes[0] === sourceAscendingNotes[2] && shawwaMapping(sourceAscendingNotes[2]) !== "/")
+        modulationsOnThree.push(transposition);
+      else if (check2p && currentAscendingNotes[0] === noteName2p) modulationsOnThree2p.push(transposition);
+      else if (checkSixthNoThird && currentAscendingNotes[0] === sourceAscendingNotes[5]) modulationsOnSixNoThird.push(transposition);
+      if (checkSixAscending && currentAscendingNotes[0] === sourceAscendingNotes[5]) modulationsOnSixAscending.push(transposition);
+      if (checkSixDescending && currentAscendingNotes[0] === sourceDescendingNotes[5]) modulationsOnSixDescending.push(transposition);
+      
     }
   }
 
   return {
-    hopsFromOne,
-    hopsFromThree,
-    hopsFromThree2p,
-    hopsFromFour,
-    hopsFromFive,
-    HopFromSixNoThird,
-    noteName2p
+    modulationsOnOne,
+    modulationsOnThree,
+    modulationsOnThree2p: modulationsOnThree.length === 0 ? modulationsOnThree2p : [],
+    modulationsOnSixNoThird: modulationsOnThree.length === 0 && modulationsOnThree2p.length === 0 ? modulationsOnThree2p : [],
+    modulationsOnFour,
+    modulationsOnFive,
+    modulationsOnSixAscending,
+    modulationsOnSixDescending,
+    noteName2p,
   };
 }

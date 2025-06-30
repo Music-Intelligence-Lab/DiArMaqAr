@@ -2,11 +2,14 @@ import { MaqamModulations } from "@/models/Maqam";
 
 export default function calculateNumberOfHops(modulations: MaqamModulations) {
   return (
-    (modulations.hopsFromOne?.length || 0) +
-    (modulations.hopsFromThree?.length || 0) +
-    (modulations.hopsFromThree2p?.length || 0) +
-    (modulations.hopsFromFour?.length || 0) +
-    (modulations.hopsFromFive?.length || 0) +
-    (modulations.HopFromSixNoThird?.length || 0)
+    (modulations.modulationsOnOne.length || 0) +
+    (modulations.modulationsOnThree.length || 0) +
+    (modulations.modulationsOnThree2p.length || 0) +
+    (modulations.modulationsOnFour.length || 0) +
+    (modulations.modulationsOnFive.length || 0) +
+    (modulations.modulationsOnSixNoThird.length || 0) + 
+    (modulations.modulationsOnSixAscending.length || 0) + 
+    (modulations.modulationsOnSixDescending.length || 0)
+
   );
 }
