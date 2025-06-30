@@ -59,6 +59,8 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     setSelectedTuningSystem,
     tuningSystemPitchClasses,
     setTuningSystemPitchClasses,
+    tuningSystemStringLength,
+    setTuningSystemStringLength,
     referenceFrequencies,
     setReferenceFrequencies,
     selectedIndices,
@@ -79,20 +81,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
   const { clearHangingNotes } = useSoundContext();
 
-  const alKindiPitchClasses = [
-    "1/1",
-    "256/243",
-    "9/8",
-    "32/27",
-    "81/64",
-    "4/3",
-    "1024/729",
-    "3/2",
-    "128/81",
-    "27/16",
-    "16/9",
-    "4096/2187",
-  ];
+  const alKindiPitchClasses = ["1/1", "256/243", "9/8", "32/27", "81/64", "4/3", "1024/729", "3/2", "128/81", "27/16", "16/9", "4096/2187"];
 
   const alKindiNoteNames = [
     "ʿushayrān",
@@ -122,9 +111,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     "jawāb ḥuseinī",
   ];
 
-  const [sortOption, setSortOption] = useState<
-    "id" | "creatorEnglish" | "year"
-  >("year");
+  const [sortOption, setSortOption] = useState<"id" | "creatorEnglish" | "year">("year");
 
   const tabs = [
     { label: "all", min: -Infinity, max: Infinity },
@@ -141,24 +128,15 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   const [year, setYear] = useState("");
   const [sourceEnglish, setSourceEnglish] = useState("");
   const [sourceArabic, setSourceArabic] = useState("");
-  const [sourcePageReferences, setSourcePageReferences] = useState<
-    SourcePageReference[]
-  >([]);
+  const [sourcePageReferences, setSourcePageReferences] = useState<SourcePageReference[]>([]);
   const [creatorEnglish, setCreatorEnglish] = useState("");
   const [creatorArabic, setCreatorArabic] = useState("");
   const [commentsEnglish, setCommentsEnglish] = useState("");
   const [commentsArabic, setCommentsArabic] = useState("");
 
-  const [stringLength, setStringLength] = useState<number>(0);
-  const [defaultReferenceFrequency, setDefaultReferenceFrequency] =
-    useState<number>(0);
+  const [defaultReferenceFrequency, setDefaultReferenceFrequency] = useState<number>(0);
 
-  const octaveScrollRefs = [
-    useRef<HTMLDivElement>(null),
-    useRef<HTMLDivElement>(null),
-    useRef<HTMLDivElement>(null),
-    useRef<HTMLDivElement>(null),
-  ];
+  const octaveScrollRefs = [useRef<HTMLDivElement>(null), useRef<HTMLDivElement>(null), useRef<HTMLDivElement>(null), useRef<HTMLDivElement>(null)];
 
   const tuningSystemPitchClassesArray = tuningSystemPitchClasses
     .split("\n")
@@ -177,15 +155,11 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       setCreatorArabic(selectedTuningSystem.getCreatorArabic());
       setCommentsEnglish(selectedTuningSystem.getCommentsEnglish());
       setCommentsArabic(selectedTuningSystem.getCommentsArabic());
-      setTuningSystemPitchClasses(
-        selectedTuningSystem.getPitchClasses().join("\n")
-      );
+      setTuningSystemPitchClasses(selectedTuningSystem.getPitchClasses().join("\n"));
       setSelectedAbjadNames(selectedTuningSystem.getAbjadNames());
-      setStringLength(selectedTuningSystem.getStringLength());
+      setTuningSystemStringLength(selectedTuningSystem.getStringLength());
       setReferenceFrequencies(selectedTuningSystem.getReferenceFrequencies());
-      setDefaultReferenceFrequency(
-        selectedTuningSystem.getDefaultReferenceFrequency()
-      );
+      setDefaultReferenceFrequency(selectedTuningSystem.getDefaultReferenceFrequency());
     }
   }, [selectedTuningSystem]);
 
@@ -265,7 +239,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     setCommentsEnglish("");
     setCommentsArabic("");
     setTuningSystemPitchClasses("");
-    setStringLength(0);
+    setTuningSystemStringLength(0);
     setDefaultReferenceFrequency(0);
     setSelectedIndices([]);
     setSelectedAbjadNames([]);
@@ -276,9 +250,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   };
 
   // When user changes the dropdown (overall TuningSystem):
-  const handleTuningSystemChange = (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
+  const handleTuningSystemChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const id = e.target.value;
 
     clearSelections();
@@ -292,11 +264,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       if (chosen) {
         // set the chosen system
         setSelectedTuningSystem(chosen);
-        handleStartNoteNameChange(
-          "",
-          chosen.getNoteNames(),
-          chosen.getPitchClasses().length
-        );
+        handleStartNoteNameChange("", chosen.getNoteNames(), chosen.getPitchClasses().length);
       }
     }
   };
@@ -307,10 +275,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     clearHangingNotes();
   };
 
-  const updateSourceRefs = (
-    index: number,
-    newRef: Partial<SourcePageReference>
-  ) => {
+  const updateSourceRefs = (index: number, newRef: Partial<SourcePageReference>) => {
     const list = [...sourcePageReferences];
     list[index] = { ...list[index], ...newRef } as SourcePageReference;
     setSourcePageReferences(list);
@@ -331,10 +296,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
   // Handle creating or updating a system:
   const handleSaveTuningSystem = (givenNoteNames: NoteName[][] = []) => {
-    const usedNoteNames =
-      givenNoteNames.length > 0
-        ? givenNoteNames
-        : selectedTuningSystem?.getNoteNames() || [[]];
+    const usedNoteNames = givenNoteNames.length > 0 ? givenNoteNames : selectedTuningSystem?.getNoteNames() || [[]];
 
     if (selectedTuningSystem) {
       const updated = new TuningSystem(
@@ -351,7 +313,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         tuningSystemPitchClassesArray,
         usedNoteNames,
         selectedAbjadNames,
-        Number(stringLength),
+        Number(tuningSystemStringLength),
         referenceFrequencies,
         Number(defaultReferenceFrequency),
         true
@@ -379,7 +341,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         tuningSystemPitchClassesArray,
         usedNoteNames,
         selectedAbjadNames,
-        Number(stringLength),
+        Number(tuningSystemStringLength),
         referenceFrequencies,
         Number(defaultReferenceFrequency),
         true
@@ -394,9 +356,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   // Handle delete
   const handleDelete = () => {
     if (selectedTuningSystem) {
-      const updatedList = tuningSystems.filter(
-        (ts) => ts.getId() !== selectedTuningSystem.getId()
-      );
+      const updatedList = tuningSystems.filter((ts) => ts.getId() !== selectedTuningSystem.getId());
       updateTuningSystems(updatedList);
       setTuningSystems(updatedList);
       setSelectedTuningSystem(null);
@@ -423,27 +383,18 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     if (typeOfPitchClass !== "unknown") {
       for (let i = 0; i < newArr.length; i++) {
         const pitchClass = newArr[i];
-        const conv = convertPitchClass(
-          pitchClass,
-          typeOfPitchClass,
-          stringLength,
-          defaultReferenceFrequency
-        );
+        const conv = convertPitchClass(pitchClass, typeOfPitchClass, tuningSystemStringLength, defaultReferenceFrequency);
         const fraction = conv?.fraction;
         if (fraction) {
           const idx = alKindiPitchClasses.indexOf(fraction);
           if (idx >= 0) {
             // first try octaveOne
-            const o1 = octaveOneNoteNames.indexOf(
-              alKindiNoteNames[idx] as TransliteratedNoteNameOctaveOne
-            );
+            const o1 = octaveOneNoteNames.indexOf(alKindiNoteNames[idx] as TransliteratedNoteNameOctaveOne);
             if (o1 >= 0) {
               newSelectedIndices[i] = o1;
             } else {
               // otherwise try octaveTwo
-              const o2 = octaveTwoNoteNames.indexOf(
-                alKindiNoteNames[idx] as TransliteratedNoteNameOctaveTwo
-              );
+              const o2 = octaveTwoNoteNames.indexOf(alKindiNoteNames[idx] as TransliteratedNoteNameOctaveTwo);
               if (o2 >= 0) {
                 newSelectedIndices[i] = octaveOneNoteNames.length + o2;
               }
@@ -455,8 +406,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
     // 4. “Cascade‐fill” every remaining -1 so that no indices stay undefined.
     //    We treat the combined octave‐1 + octave‐2 arrays as a single “row”:
-    const TOTAL_NOTE_NAMES =
-      octaveOneNoteNames.length + octaveTwoNoteNames.length;
+    const TOTAL_NOTE_NAMES = octaveOneNoteNames.length + octaveTwoNoteNames.length;
 
     // If the very first column is still -1, force it to 0:
     if (newSelectedIndices[0] < 0) {
@@ -514,9 +464,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
       const noteNames = selectedTuningSystem.getNoteNames();
 
-      const newNoteNames = [
-        ...noteNames.filter((setOfNotes) => setOfNotes[0] !== firstNote),
-      ];
+      const newNoteNames = [...noteNames.filter((setOfNotes) => setOfNotes[0] !== firstNote)];
       newNoteNames.push(newNoteSet);
 
       handleSaveTuningSystem(newNoteNames);
@@ -528,21 +476,15 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   const handleDeleteStartingNoteConfiguration = () => {
     if (!selectedTuningSystem) return;
 
-    const newNoteSet = selectedIndices.map((idx) =>
-      idx >= 0 ? octaveOneNoteNames[idx] : "none"
-    );
+    const newNoteSet = selectedIndices.map((idx) => (idx >= 0 ? octaveOneNoteNames[idx] : "none"));
     const firstNote = newNoteSet[0];
 
     if (firstNote === "none") return;
 
     const noteNames = selectedTuningSystem?.getNoteNames() || [[]];
 
-    const newNoteNames = [
-      ...noteNames.filter((setOfNotes) => setOfNotes[0] !== firstNote),
-    ];
-    setSelectedTuningSystem(
-      selectedTuningSystem.copyWithNewSetOfNoteNames(newNoteNames)
-    );
+    const newNoteNames = [...noteNames.filter((setOfNotes) => setOfNotes[0] !== firstNote)];
+    setSelectedTuningSystem(selectedTuningSystem.copyWithNewSetOfNoteNames(newNoteNames));
 
     setSelectedIndices(Array(selectedIndices.length).fill(-1));
     setOriginalIndices(Array(selectedIndices.length).fill(-1));
@@ -568,23 +510,14 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       {admin && (
         <div className="tuning-system-manager__group">
           <div className="tuning-system-manager__input-container">
-            <label
-              className="tuning-system-manager__label"
-              htmlFor="tuningSystemSelect"
-            >
+            <label className="tuning-system-manager__label" htmlFor="tuningSystemSelect">
               Select Tuning System or Create New:
             </label>
             <select
               className="tuning-system-manager__select"
               id="tuningSystemSelect"
               onChange={handleTuningSystemChange}
-              value={
-                selectedTuningSystem
-                  ? selectedTuningSystem.isSaved()
-                    ? selectedTuningSystem.getId()
-                    : "new"
-                  : ""
-              }
+              value={selectedTuningSystem ? (selectedTuningSystem.isSaved() ? selectedTuningSystem.getId() : "new") : ""}
             >
               <option value="">-- None --</option>
               <option value="new">-- Create New System --</option>
@@ -596,11 +529,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             </select>
           </div>
           <div className="tuning-system-manager__input-container">
-            <label
-              className="tuning-system-manager__label"
-              htmlFor="sortOptionSelect"
-              style={{ marginRight: "8px" }}
-            >
+            <label className="tuning-system-manager__label" htmlFor="sortOptionSelect" style={{ marginRight: "8px" }}>
               Sort By:
             </label>
             <select
@@ -622,10 +551,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
           {/* Identification / Titles */}
           <div className="tuning-system-manager__group">
             <div className="tuning-system-manager__input-container">
-              <label
-                className="tuning-system-manager__label"
-                htmlFor="titleEnglishField"
-              >
+              <label className="tuning-system-manager__label" htmlFor="titleEnglishField">
                 Title (English)
               </label>
               <input
@@ -638,10 +564,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             </div>
 
             <div className="tuning-system-manager__input-container">
-              <label
-                className="tuning-system-manager__label"
-                htmlFor="titleArabicField"
-              >
+              <label className="tuning-system-manager__label" htmlFor="titleArabicField">
                 Title (Arabic)
               </label>
               <input
@@ -655,10 +578,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
             {/* Year / Source / Creator */}
             <div className="tuning-system-manager__input-container">
-              <label
-                className="tuning-system-manager__label"
-                htmlFor="yearField"
-              >
+              <label className="tuning-system-manager__label" htmlFor="yearField">
                 Year
               </label>
               <input
@@ -674,10 +594,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
           <div className="tuning-system-manager__group">
             <div className="tuning-system-manager__sources-select-container">
               {sourcePageReferences.length < 6 && (
-                <button
-                  className="tuning-system-manager__source-add-button"
-                  onClick={addSourceRef}
-                >
+                <button className="tuning-system-manager__source-add-button" onClick={addSourceRef}>
                   Add Source
                 </button>
               )}
@@ -710,10 +627,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             </div>
 
             <div className="tuning-system-manager__input-container">
-              <label
-                className="tuning-system-manager__label"
-                htmlFor="creatorEnglishField"
-              >
+              <label className="tuning-system-manager__label" htmlFor="creatorEnglishField">
                 Creator (English)
               </label>
               <input
@@ -725,10 +639,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
               />
             </div>
             <div className="tuning-system-manager__input-container">
-              <label
-                className="tuning-system-manager__label"
-                htmlFor="creatorArabicField"
-              >
+              <label className="tuning-system-manager__label" htmlFor="creatorArabicField">
                 Creator (Arabic)
               </label>
               <input
@@ -744,10 +655,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
           {/* Comments */}
           <div className="tuning-system-manager__group">
             <div className="tuning-system-manager__input-container">
-              <label
-                className="tuning-system-manager__label"
-                htmlFor="commentsEnglishField"
-              >
+              <label className="tuning-system-manager__label" htmlFor="commentsEnglishField">
                 Comments (English)
               </label>
               <textarea
@@ -760,10 +668,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             </div>
 
             <div className="tuning-system-manager__input-container">
-              <label
-                className="tuning-system-manager__label"
-                htmlFor="commentsArabicField"
-              >
+              <label className="tuning-system-manager__label" htmlFor="commentsArabicField">
                 Comments (Arabic)
               </label>
               <textarea
@@ -778,10 +683,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
           <div className="tuning-system-manager__group">
             {/* Pitch Classes (textarea, each line => one element in string[]) */}
             <div className="tuning-system-manager__input-container">
-              <label
-                className="tuning-system-manager__label"
-                htmlFor="pitchClassesField"
-              >
+              <label className="tuning-system-manager__label" htmlFor="pitchClassesField">
                 Pitch Classes (one per line){" "}
                 {detectPitchClassType(tuningSystemPitchClasses.split("\n")) !== "unknown" && (
                   <span className="tuning-system-manager__pitch-class-type">
@@ -801,26 +703,20 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             {/* Numeric fields */}
             <div className="tuning-system-manager__input-container">
               <div className="tuning-system-manager__input-container">
-                <label
-                  className="tuning-system-manager__label"
-                  htmlFor="stringLengthField"
-                >
+                <label className="tuning-system-manager__label" htmlFor="stringLengthField">
                   String Length
                 </label>
                 <input
                   className="tuning-system-manager__input"
                   id="stringLengthField"
                   type="number"
-                  value={stringLength ?? 0}
-                  onChange={(e) => setStringLength(Number(e.target.value))}
+                  value={tuningSystemStringLength ?? 0}
+                  onChange={(e) => setTuningSystemStringLength(Number(e.target.value))}
                 />
               </div>
 
               <div className="tuning-system-manager__input-container">
-                <label
-                  className="tuning-system-manager__label"
-                  htmlFor="refFreqField"
-                >
+                <label className="tuning-system-manager__label" htmlFor="refFreqField">
                   Default Reference Frequency
                 </label>
                 <input
@@ -828,9 +724,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                   id="refFreqField"
                   type="number"
                   value={defaultReferenceFrequency ?? 0}
-                  onChange={(e) =>
-                    setDefaultReferenceFrequency(Number(e.target.value))
-                  }
+                  onChange={(e) => setDefaultReferenceFrequency(Number(e.target.value))}
                 />
               </div>
             </div>
@@ -846,11 +740,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
               {selectedTuningSystem.isSaved() ? "Save Tuning System Changes" : "Create New Tuning System"}
             </button>
             {selectedTuningSystem && (
-              <button
-                className="tuning-system-manager__delete-button"
-                type="button"
-                onClick={handleDelete}
-              >
+              <button className="tuning-system-manager__delete-button" type="button" onClick={handleDelete}>
                 Delete Tuning System
               </button>
             )}
@@ -873,18 +763,10 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             return (
               <button
                 key={tab.label}
-                className={
-                  "tuning-system-manager__tab" +
-                  (tuningSystemsFilter === tab.label
-                    ? " tuning-system-manager__tab_active"
-                    : "")
-                }
+                className={"tuning-system-manager__tab" + (tuningSystemsFilter === tab.label ? " tuning-system-manager__tab_active" : "")}
                 onClick={() => setTuningSystemsFilter(tab.label)}
               >
-                {tab.label.charAt(0).toUpperCase() + tab.label.slice(1)}{" "}
-                <span className="tuning-system-manager__tab-count">
-                  ({count})
-                </span>
+                {tab.label.charAt(0).toUpperCase() + tab.label.slice(1)} <span className="tuning-system-manager__tab-count">({count})</span>
               </button>
             );
           })}
@@ -896,11 +778,8 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
           <button
             className="carousel-button carousel-button-prev"
             onClick={() => {
-              const container = document.querySelector(
-                ".tuning-system-manager__list"
-              );
-              if (container)
-                container.scrollBy({ left: -635, behavior: "smooth" });
+              const container = document.querySelector(".tuning-system-manager__list");
+              if (container) container.scrollBy({ left: -635, behavior: "smooth" });
             }}
           >
             ‹
@@ -908,9 +787,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
           <div
             className="tuning-system-manager__list"
             style={{
-              gridTemplateColumns: `repeat(${Math.ceil(
-                filteredTuningSystems.length / 3
-              )}, minmax(430px, 1fr))`,
+              gridTemplateColumns: `repeat(${Math.ceil(filteredTuningSystems.length / 3)}, minmax(430px, 1fr))`,
             }}
           >
             {filteredTuningSystems.length === 0 ? (
@@ -932,9 +809,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                   }}
                 >
                   <strong className="tuning-system-manager__item-english-creator">{`${tuningSystem.getCreatorEnglish()} (${tuningSystem.getYear()})`}</strong>
-                  <strong className="tuning-system-manager__item-english-title">
-                    {tuningSystem.getTitleEnglish()}
-                  </strong>
+                  <strong className="tuning-system-manager__item-english-title">{tuningSystem.getTitleEnglish()}</strong>
                 </div>
               ))
             )}
@@ -942,11 +817,8 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
           <button
             className="carousel-button carousel-button-next"
             onClick={() => {
-              const container = document.querySelector(
-                ".tuning-system-manager__list"
-              );
-              if (container)
-                container.scrollBy({ left: 635, behavior: "smooth" });
+              const container = document.querySelector(".tuning-system-manager__list");
+              if (container) container.scrollBy({ left: 635, behavior: "smooth" });
             }}
           >
             ›
@@ -1006,17 +878,11 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             <div className="tuning-system-manager__starting-note-left">
               Starting Note Name:
               {[...selectedTuningSystem.getNoteNames()]
-                .sort(
-                  (a, b) =>
-                    getNoteNameIndex(a[0] ?? 0) - getNoteNameIndex(b[0] ?? 0)
-                )
+                .sort((a, b) => getNoteNameIndex(a[0] ?? 0) - getNoteNameIndex(b[0] ?? 0))
                 .map((notes, index) => {
                   const startingNote = notes[0];
                   return (
-                    <div
-                      className="tuning-system-manager__starting-note"
-                      key={index}
-                    >
+                    <div className="tuning-system-manager__starting-note" key={index}>
                       <button
                         className={
                           "tuning-system-manager__starting-note-button " +
@@ -1060,11 +926,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                       type="number"
                       id="reference-frequency-input"
                       disabled={!admin}
-                      value={
-                        referenceFrequencies[
-                          getFirstNoteName(selectedIndices)
-                        ] ?? 0
-                      }
+                      value={referenceFrequencies[getFirstNoteName(selectedIndices)] ?? 0}
                       onChange={(e) => {
                         const val = Number(e.target.value);
                         setReferenceFrequencies((prev) => ({
@@ -1077,16 +939,26 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                   </label>
                 </div>
               )}
+              <label htmlFor="reference-frequency-input">
+                 String Length:
+                <input
+                  type="number"
+                  id="reference-frequency-input"
+                  value={tuningSystemStringLength ?? 0}
+                  onChange={(e) => {
+                    const val = Number(e.target.value);
+                    setTuningSystemStringLength(val);
+                  }}
+                  className="tuning-system-manager__starting-note-input"
+                />
+              </label>
             </div>
             {admin && (
               <div className="tuning-system-manager__starting-note-right">
                 <button
                   className="tuning-system-manager__starting-note-button tuning-system-manager__starting-note-button_save"
                   onClick={handleSaveStartingNoteConfiguration}
-                  disabled={
-                    !haveIndicesChanged() ||
-                    getFirstNoteName(selectedIndices) === "none"
-                  }
+                  disabled={!haveIndicesChanged() || getFirstNoteName(selectedIndices) === "none"}
                 >
                   Save Note Name Configuration
                 </button>
@@ -1109,10 +981,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
               className="tuning-system-manager__export-button"
               onClick={() => {
                 const firstNote = getFirstNoteName(selectedIndices);
-                const data = exportTuningSystem(
-                  selectedTuningSystem,
-                  firstNote
-                );
+                const data = exportTuningSystem(selectedTuningSystem, firstNote);
                 const json = JSON.stringify(data, null, 2);
                 const blob = new Blob([json], { type: "application/json" });
                 const url = URL.createObjectURL(blob);
@@ -1185,9 +1054,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                   {source && source.getContributors().length !== 0 && (
                     <span className="">
                       {source.getContributors()[0].lastNameEnglish?.length
-                        ? `${
-                            source.getContributors()[0]?.lastNameEnglish ?? ""
-                          }, ${
+                        ? `${source.getContributors()[0]?.lastNameEnglish ?? ""}, ${
                             source
                               .getContributors()[0]
                               ?.firstNameEnglish?.split(" ")

@@ -33,6 +33,8 @@ interface AppContextInterface {
   originalIndices: number[];
   setOriginalIndices: React.Dispatch<React.SetStateAction<number[]>>;
   mapIndices: (notesToMap: NoteName[], givenNumberOfPitchClasses: number, setOriginal: boolean) => void;
+  tuningSystemStringLength: number;
+  setTuningSystemStringLength: React.Dispatch<React.SetStateAction<number>>;
   referenceFrequencies: { [noteName: string]: number };
   setReferenceFrequencies: React.Dispatch<React.SetStateAction<{ [noteName: string]: number }>>;
   ajnas: JinsDetails[];
@@ -84,6 +86,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   const [selectedIndices, setSelectedIndices] = useState<number[]>([]);
   const [originalIndices, setOriginalIndices] = useState<number[]>([]);
 
+  const [tuningSystemStringLength, setTuningSystemStringLength] = useState(0);
   const [referenceFrequencies, setReferenceFrequencies] = useState<{
     [noteName: string]: number;
   }>({});
@@ -122,8 +125,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
     const firstNote = getFirstNoteName(selectedIndices);
 
-    return getTuningSystemCells(selectedTuningSystem, firstNote, tuningSystemPitchClassesArray, referenceFrequencies);
-  }, [selectedTuningSystem, selectedIndices, referenceFrequencies, tuningSystemPitchClassesArray]);
+    return getTuningSystemCells(selectedTuningSystem, firstNote, tuningSystemPitchClassesArray, tuningSystemStringLength, referenceFrequencies);
+  }, [selectedTuningSystem, selectedIndices, referenceFrequencies, tuningSystemPitchClassesArray, tuningSystemStringLength]);
 
   useEffect(() => {
     setTuningSystems(getTuningSystems());
@@ -385,6 +388,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         originalIndices,
         setOriginalIndices,
         mapIndices,
+        tuningSystemStringLength,
+        setTuningSystemStringLength,
         referenceFrequencies,
         setReferenceFrequencies,
         ajnas,
