@@ -1,6 +1,7 @@
 import { SourcePageReference } from "./bibliography/Source";
 import PitchClass, { PitchClassInterval } from "./PitchClass";
 import NoteName from "./NoteName";
+import { getPitchClassIntervals } from "@/functions/transpose";
 
 export interface JinsDetailsInterface {
   id: string;
@@ -65,6 +66,18 @@ export default class JinsDetails {
     return new JinsDetails(this.id, this.name, this.noteNames, this.commentsEnglish, this.commentsArabic, newSourcePageReferences);
   }
 
+  getTahlil(allPitchClasses: PitchClass[]): Jins {
+      const pitchClasses = allPitchClasses.filter((pitchClass) => this.noteNames.includes(pitchClass.noteName));
+      const pitchClassIntervals: PitchClassInterval[] = getPitchClassIntervals(pitchClasses);
+      return {
+        jinsId: this.id,
+        name: this.name,
+        transposition: false,
+        jinsPitchClasses: pitchClasses,
+        jinsPitchClassIntervals: pitchClassIntervals,
+      };
+    }
+
   convertToObject(): JinsDetailsInterface {
     return {
       id: this.id,
@@ -83,4 +96,16 @@ export interface Jins {
   transposition: boolean;
   jinsPitchClasses: PitchClass[];
   jinsPitchClassIntervals: PitchClassInterval[];
+}
+
+export interface JinsModulations {
+  modulationsOnOne: Jins[];
+  modulationsOnThree: Jins[];
+  modulationsOnThree2p: Jins[];
+  modulationsOnFour: Jins[];
+  modulationsOnFive: Jins[];
+  modulationsOnSixAscending: Jins[];
+  modulationsOnSixDescending: Jins[];
+  modulationsOnSixNoThird: Jins[];
+  noteName2p: string;
 }

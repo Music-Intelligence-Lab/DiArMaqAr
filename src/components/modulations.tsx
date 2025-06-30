@@ -5,12 +5,28 @@ import React, { useState, useEffect } from "react";
 import { MaqamModulations, Maqam } from "@/models/Maqam";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import calculateNumberOfHops from "@/functions/calculateNumberOfHops";
+import { JinsModulations } from "@/models/Jins";
 
 export default function Modulations() {
-  const { maqamat, selectedMaqamDetails, setSelectedMaqamDetails, getModulations, selectedMaqam, setSelectedMaqam, allPitchClasses, setSelectedPitchClasses } = useAppContext();
+  const {
+    maqamat,
+    ajnas,
+    selectedMaqamDetails,
+    setSelectedMaqamDetails,
+    getModulations,
+    selectedMaqam,
+    setSelectedMaqam,
+    selectedJins,
+    setSelectedJins,
+    setSelectedJinsDetails,
+    allPitchClasses,
+    setSelectedPitchClasses,
+    ajnasModulationsMode,
+    setAjnasModulationsMode,
+  } = useAppContext();
 
   const [sourceMaqamStack, setSourceMaqamStack] = useState<Maqam[]>([]);
-  const [modulationsStack, setModulationsStack] = useState<MaqamModulations[]>([]);
+  const [modulationsStack, setModulationsStack] = useState<(MaqamModulations | JinsModulations)[]>([]);
 
   useEffect(() => {
     if (selectedMaqamDetails) {
@@ -18,21 +34,34 @@ export default function Modulations() {
       setSourceMaqamStack([transposition]);
       const modulationsData = getModulations(transposition);
       setModulationsStack([modulationsData]);
+    } else if (sourceMaqamStack.length > 0 ) {
+      const transposition = sourceMaqamStack[0];
+      setSourceMaqamStack([transposition]);
+      const modulationsData = getModulations(transposition);
+      setModulationsStack([modulationsData]);
     } else {
       setSourceMaqamStack([]);
       setModulationsStack([]);
     }
-  }, []);
+  }, [ajnasModulationsMode]);
 
   useEffect(() => {
     if (selectedMaqam) {
       const maqam = maqamat.find((m) => m.getId() === selectedMaqam.maqamId);
       if (maqam) {
         setSelectedMaqamDetails(maqam);
+        setSelectedJinsDetails(null);
       }
       setSelectedPitchClasses(selectedMaqam.ascendingPitchClasses);
+    } else if (selectedJins) {
+      const jins = ajnas.find((j) => j.getId() === selectedJins.jinsId);
+      if (jins) {
+        setSelectedJinsDetails(jins);
+        setSelectedMaqamDetails(null);
+      }
+      setSelectedPitchClasses(selectedJins.jinsPitchClasses);
     }
-  }, [selectedMaqam]);
+  }, [selectedMaqam, selectedJins]);
 
   const addHopsWrapper = (maqamTransposition: Maqam, stackIdx: number) => {
     const newModulations = getModulations(maqamTransposition);
@@ -52,16 +81,31 @@ export default function Modulations() {
         const descendingNoteNames = [...sourceMaqam.descendingPitchClasses.map((pitchClass) => pitchClass.noteName)].reverse();
         const totalModulations = calculateNumberOfHops(modulationsStack[stackIdx]);
         return (
-          <div className="modulations__hops-wrapper" key={stackIdx} style={{ marginTop: stackIdx === 0 ? 0 : 32, borderTop: stackIdx === 0 ? undefined : "1px solid #444" }}>
+          <div
+            className="modulations__hops-wrapper"
+            key={stackIdx}
+            style={{ marginTop: stackIdx === 0 ? 0 : 32, borderTop: stackIdx === 0 ? undefined : "1px solid #444" }}
+          >
             {/* Maqam name/details at the top of each wrapper */}
             <div className="modulations__wrapper-maqam-name">
               <span onClick={() => setSelectedMaqam(sourceMaqam)} style={{ cursor: "pointer" }}>
-                {sourceMaqam.name ? sourceMaqam.name : "Unknown"} ({ascendingNoteNames ? ascendingNoteNames[0] : "N/A"}/{getEnglishNoteName(ascendingNoteNames ? ascendingNoteNames[0]! : "")})
+                {sourceMaqam.name ? sourceMaqam.name : "Unknown"} ({ascendingNoteNames ? ascendingNoteNames[0] : "N/A"}/
+                {getEnglishNoteName(ascendingNoteNames ? ascendingNoteNames[0]! : "")})
                 {modulationsStack[stackIdx] && <> - {totalModulations} modulation options</>}
+                <button
+                  className={"modulations__ajnas-modulations-mode " + (ajnasModulationsMode ? "modulations__ajnas-modulations-mode_active" : "")}
+                  onClick={() => setAjnasModulationsMode(!ajnasModulationsMode)}
+                >
+                  {ajnasModulationsMode ? "Ajnas Modulations" : "Maqamat Modulations"}
+                </button>
               </span>
               {/* Show delete button only on the last hops-wrapper and only if more than one exists */}
               {stackIdx === sourceMaqamStack.length - 1 && sourceMaqamStack.length > 1 && (
-                <button className="modulations__delete-hop-btn" style={{ marginLeft: 8, padding: "2px 8px", fontSize: 14, cursor: "pointer" }} onClick={removeLastHopsWrapper}>
+                <button
+                  className="modulations__delete-hop-btn"
+                  style={{ marginLeft: 8, padding: "2px 8px", fontSize: 14, cursor: "pointer" }}
+                  onClick={removeLastHopsWrapper}
+                >
                   Delete Hop
                 </button>
               )}
@@ -84,8 +128,14 @@ export default function Modulations() {
                           <span
                             key={index}
                             onClick={() => {
-                              addHopsWrapper(hop, stackIdx);
-                              setSelectedMaqam(hop);
+                              if ("ascendingPitchClasses" in hop) {
+                                addHopsWrapper(hop, stackIdx);
+                                setSelectedMaqam(hop);
+                                setSelectedJins(null);
+                              } else {
+                                setSelectedJins(hop);
+                                setSelectedMaqam(null);
+                              }
                             }}
                             style={{ cursor: "pointer" }}
                           >
@@ -104,8 +154,14 @@ export default function Modulations() {
                           <span
                             key={index}
                             onClick={() => {
-                              addHopsWrapper(hop, stackIdx);
-                              setSelectedMaqam(hop);
+                              if ("ascendingPitchClasses" in hop) {
+                                addHopsWrapper(hop, stackIdx);
+                                setSelectedMaqam(hop);
+                                setSelectedJins(null);
+                              } else {
+                                setSelectedJins(hop);
+                                setSelectedMaqam(null);
+                              }
                             }}
                             style={{ cursor: "pointer" }}
                           >
@@ -124,8 +180,14 @@ export default function Modulations() {
                           <span
                             key={index}
                             onClick={() => {
-                              addHopsWrapper(hop, stackIdx);
-                              setSelectedMaqam(hop);
+                              if ("ascendingPitchClasses" in hop) {
+                                addHopsWrapper(hop, stackIdx);
+                                setSelectedMaqam(hop);
+                                setSelectedJins(null);
+                              } else {
+                                setSelectedJins(hop);
+                                setSelectedMaqam(null);
+                              }
                             }}
                             style={{ cursor: "pointer" }}
                           >
@@ -144,8 +206,14 @@ export default function Modulations() {
                           <span
                             key={index}
                             onClick={() => {
-                              addHopsWrapper(hop, stackIdx);
-                              setSelectedMaqam(hop);
+                              if ("ascendingPitchClasses" in hop) {
+                                addHopsWrapper(hop, stackIdx);
+                                setSelectedMaqam(hop);
+                                setSelectedJins(null);
+                              } else {
+                                setSelectedJins(hop);
+                                setSelectedMaqam(null);
+                              }
                             }}
                             style={{ cursor: "pointer" }}
                           >
@@ -164,8 +232,14 @@ export default function Modulations() {
                           <span
                             key={index}
                             onClick={() => {
-                              addHopsWrapper(hop, stackIdx);
-                              setSelectedMaqam(hop);
+                              if ("ascendingPitchClasses" in hop) {
+                                addHopsWrapper(hop, stackIdx);
+                                setSelectedMaqam(hop);
+                                setSelectedJins(null);
+                              } else {
+                                setSelectedJins(hop);
+                                setSelectedMaqam(null);
+                              }
                             }}
                             style={{ cursor: "pointer" }}
                           >
@@ -184,8 +258,14 @@ export default function Modulations() {
                           <span
                             key={index}
                             onClick={() => {
-                              addHopsWrapper(hop, stackIdx);
-                              setSelectedMaqam(hop);
+                              if ("ascendingPitchClasses" in hop) {
+                                addHopsWrapper(hop, stackIdx);
+                                setSelectedMaqam(hop);
+                                setSelectedJins(null);
+                              } else {
+                                setSelectedJins(hop);
+                                setSelectedMaqam(null);
+                              }
                             }}
                             style={{ cursor: "pointer" }}
                           >
@@ -204,8 +284,14 @@ export default function Modulations() {
                           <span
                             key={index}
                             onClick={() => {
-                              addHopsWrapper(hop, stackIdx);
-                              setSelectedMaqam(hop);
+                              if ("ascendingPitchClasses" in hop) {
+                                addHopsWrapper(hop, stackIdx);
+                                setSelectedMaqam(hop);
+                                setSelectedJins(null);
+                              } else {
+                                setSelectedJins(hop);
+                                setSelectedMaqam(null);
+                              }
                             }}
                             style={{ cursor: "pointer" }}
                           >
@@ -224,8 +310,14 @@ export default function Modulations() {
                           <span
                             key={index}
                             onClick={() => {
-                              addHopsWrapper(hop, stackIdx);
-                              setSelectedMaqam(hop);
+                              if ("ascendingPitchClasses" in hop) {
+                                addHopsWrapper(hop, stackIdx);
+                                setSelectedMaqam(hop);
+                                setSelectedJins(null);
+                              } else {
+                                setSelectedJins(hop);
+                                setSelectedMaqam(null);
+                              }
                             }}
                             style={{ cursor: "pointer" }}
                           >

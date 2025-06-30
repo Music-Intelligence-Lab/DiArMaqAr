@@ -1,6 +1,7 @@
+import { JinsModulations } from "@/models/Jins";
 import { MaqamModulations } from "@/models/Maqam";
 
-export default function calculateNumberOfHops(modulations: MaqamModulations) {
+export default function calculateNumberOfHops(modulations: MaqamModulations | JinsModulations) {
   return (
     (modulations.modulationsOnOne.length || 0) +
     (modulations.modulationsOnThree.length || 0) +
