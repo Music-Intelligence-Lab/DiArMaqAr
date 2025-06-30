@@ -390,7 +390,14 @@ export default function JinsTranspositions() {
             </span>
           </h2>
           <table className="jins-transpositions__table">
-            <colgroup><col style={{minWidth: "30px", maxWidth: "30px", width: "30px"}}/><col style={{minWidth: "150px", maxWidth: "150px", width: "150px"}}/></colgroup>
+            <colgroup>
+              <col
+                style={{ minWidth: "30px", maxWidth: "30px", width: "30px" }}
+              />
+              <col
+                style={{ minWidth: "150px", maxWidth: "150px", width: "150px" }}
+              />
+            </colgroup>
 
             <thead>{renderTransposition(jinsTranspositions[0], 0)}</thead>
           </table>
