@@ -15,7 +15,7 @@
     display: inline-flex; // makes each hop appear side by side
     flex-direction: column;
     gap: 10px; // optional spacing between divs
-    width: calc(100% / 6 - 20px); // 6 hops, each taking up 1/6th of the width minus some padding
+    width: calc(100% / 8 - 20px); // 6 hops, each taking up 1/6th of the width minus some padding
     margin-right: 20px;
     text-align: left;
   }
