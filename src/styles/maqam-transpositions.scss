@@ -2,16 +2,16 @@
 
 .maqam-transpositions {
   width: 100%;
-  margin-top: 10px;
+  
 
   &__title {
     width: 100%;
     background-color: $secondary;
     color: #fff;
-    font-size: 1.5rem;
-    font-weight: 200;
+    font-size: 20px;
+    font-weight: 300;
     text-align: left;
-    padding: 1rem 1rem;
+    padding: 10px 20px;
     border: solid 1px $grey;
   }
 
@@ -55,7 +55,7 @@
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
-    margin-bottom: 50px;
+    margin-bottom: 0px;
     font-size: 12px;
     font-weight: 200;
 
@@ -79,7 +79,8 @@
   }
 
   &__transposition-title {
-    font-size: 18px;
+    font-size: 16px;
+    font-weight: 300;
     padding-left: 10px;
     padding-right: 20px;
   }
@@ -87,10 +88,12 @@
   &__transposition-number {
     width: 34px !important;
     font-size: 20px;
-    padding: 0px 0px 0px 0px !important;
+    padding: 55px 0px 0px 0px !important;
     margin: 0px 0px 0px 0px;
     text-align: center !important;
     background-color: black;
+    vertical-align: middle !important;
+    
 
     &_0 {
       background-color: $primary;
@@ -133,10 +136,14 @@
   }
 
   &__asc-desc-column {
+    font-family: inherit;
     font-size: 24px;
+    font-weight: 400 !important;
     padding: 0px 0px 0px 0px;
     margin: 0px 0px 0px 0px;
     text-align: center;
+    vertical-align: middle !important;
+    color: $text;
   }
 
   &__row-header {
@@ -180,17 +187,23 @@
   &__comments-sources-container {
     display: flex;
     justify-content: space-between;
-    padding: 0 30px;
+    flex-direction: column;
+    padding: 0 0px;
+    margin-bottom: 20px;
+  }
+
+  &__comments {
+    width: 100%;    
+    padding: 10px 0px;
   }
 
   &__sources {
     width: 100%;
-    display: flex;
-    padding: 10px 30px;
+    padding: 10px 0px;
   }
 
   .maqam-transpositions__spacer {
-    padding: 10px;
+    height: 10px;
     border: 0px;
   }
 }

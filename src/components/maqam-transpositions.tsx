@@ -622,7 +622,38 @@ export default function MaqamTranspositions() {
             </table>
           </>
         )}
-
+         {/* COMMENTS AND SOURCES */}
+        {selectedMaqamDetails && (
+          <>
+            <div className="maqam-transpositions__comments-sources-container">
+              <div className="maqam-transpositions__comments">
+                <h3>Comments:</h3>
+                <div className="maqam-transpositions__comments-text">
+                  {selectedMaqamDetails.getCommentsEnglish()}
+                </div>
+              </div>
+            
+            <div className="maqam-transpositions__sources">
+              <h3>Sources:</h3>
+              {selectedMaqamDetails?.getSourcePageReferences().length > 0 &&
+                selectedMaqamDetails
+                  .getSourcePageReferences()
+                  .map((sourceRef, idx) => {
+                    const source = sources.find(
+                      (s: any) => s.id === sourceRef.sourceId
+                    );
+                    return source ? (
+                      <React.Fragment key={idx}>
+                        {source.getContributors()[0].lastNameEnglish} (
+                        {source.getPublicationDateEnglish()}:{sourceRef.page})
+                        <br />
+                      </React.Fragment>
+                    ) : null;
+                  })}
+            </div>
+            </div>
+          </>
+        )}
         {maqamTranspositions.length > 1 && (
           <>
             <h2 className="maqam-transpositions__title">
@@ -667,44 +698,6 @@ export default function MaqamTranspositions() {
                 })}
               </tbody>
             </table>
-          </>
-        )}
-
-        {/* COMMENTS AND SOURCES */}
-        {selectedMaqamDetails && (
-          <>
-            <div className="maqam-transpositions__comments-sources-container">
-              <div className="maqam-transpositions__comments">
-                <h3>Comments:</h3>
-                <div className="maqam-transpositions__comments-text">
-                  {selectedMaqamDetails.getCommentsEnglish()}
-                </div>
-              </div>
-              <div className="maqam-transpositions__comments">
-                <h3>التعليقات</h3>
-                <div className="maqam-transpositions__comments-text">
-                  {selectedMaqamDetails.getCommentsArabic()}
-                </div>
-              </div>
-            </div>
-            <div className="maqam-transpositions__sources">
-              <h3>Sources:</h3>
-              {selectedMaqamDetails?.getSourcePageReferences().length > 0 &&
-                selectedMaqamDetails
-                  .getSourcePageReferences()
-                  .map((sourceRef, idx) => {
-                    const source = sources.find(
-                      (s: any) => s.id === sourceRef.sourceId
-                    );
-                    return source ? (
-                      <React.Fragment key={idx}>
-                        {source.getContributors()[0].lastNameEnglish} (
-                        {source.getReleaseDateEnglish()}:{sourceRef.page})
-                        <br />
-                      </React.Fragment>
-                    ) : null;
-                  })}
-            </div>
           </>
         )}
       </div>

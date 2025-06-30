@@ -52,13 +52,22 @@ export default class Book extends AbstractSource {
     this.ISBN = ISBN;
   }
 
-  public getOriginalReleaseDateEnglish(): string {
+  public getOriginalPublicationDateEnglish(): string {
     return this.originalPublicationDateEnglish;
   }
 
-  public getOriginalReleaseDateArabic(): string {
+  public getOriginalPublicationDateArabic(): string {
     return this.originalPublicationDateArabic;
   }
+
+    public getPublicationDateEnglish(): string {
+    return this.publicationDateEnglish;
+  }
+
+  public getReleaseDateArabic(): string {
+    return this.publicationDateArabic;
+  }
+
 
   public getPublisherEnglish(): string {
     return this.publisherEnglish;

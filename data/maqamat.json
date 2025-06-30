@@ -977,8 +977,8 @@
     "suyūr": [
       {
         "id": "a4b9d74bd46d4170a292",
-        "creatorEnglish": "Al-Shawwā, Sāmī",
-        "creatorArabic": "",
+        "creatorEnglish": "Al-Shawwā",
+        "creatorArabic": "الشوّا",
         "sourceId": "oY8WnTdP5msak8o1G_N7f",
         "page": 19,
         "commentsEnglish": "Begins on nawā, then ḥusaynī and 'ajam until muḥayyar ascending and descending, then descends from nawā until yegāh with a touch of qarār ḥijāz before ending on its qarār, yegāh. Therefore it is assumed that the initial ascents and descents are in jins nahāwand nawā as per the construction of the maqām. Also the note qarār ḥijāz does not exist in the list of note names provided by Shawwā in his book.",
@@ -1292,10 +1292,11 @@
       {
         "id": "71c36f6c27b548f3bbaf",
         "creatorEnglish": "Al-Shawwā, Sāmī",
-        "sourceEnglish": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
-        "year": 1946,
+        "creatorArabic": "",
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
         "page": 23,
         "commentsEnglish": "Start on nawā to huseinī and what's above it (jins kurd huseinī), then jins bayāt on dūgāh. After it's descent ascend bayāt dūgāh and during the descent use the note kurdī instead of segāh (i.e. jins kurd on dūgāh) and descend to end on yegāh using a touch of qarār ḥijāz. This maqām is Ottoman and not really utilised in Arabic music but Shawwā listed it either way.",
+        "commentsArabic": "",
         "stops": [
           {
             "type": "note",
@@ -1303,31 +1304,31 @@
           },
           {
             "type": "jins",
-            "value": "jins kurd",
+            "value": "7",
             "startingNote": "ḥusaynī",
             "direction": "ascending"
           },
           {
             "type": "jins",
-            "value": "jins bayāt",
+            "value": "2",
             "startingNote": "dūgāh",
             "direction": "none"
           },
           {
             "type": "jins",
-            "value": "jins bayāt",
+            "value": "2",
             "startingNote": "dūgāh",
             "direction": "descending"
           },
           {
             "type": "jins",
-            "value": "jins bayāt",
+            "value": "2",
             "startingNote": "dūgāh",
             "direction": "ascending"
           },
           {
             "type": "jins",
-            "value": "jins kurd",
+            "value": "7",
             "startingNote": "dūgāh",
             "direction": "descending"
           },

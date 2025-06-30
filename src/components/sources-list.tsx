@@ -43,7 +43,7 @@ export default function SourcesList() {
     const contribSegment = noContribs ? "n.a." : contribLine;
 
     // 2) Year (assume releaseDateEnglish is "YYYY" or "YYYY-MM-DD")
-    const pubDateEng = source.getReleaseDateEnglish() || "";
+    const pubDateEng = source.getPublicationDateEnglish() || "";
     const yearMatch = pubDateEng.match(/^\d{4}/);
     const year = yearMatch ? yearMatch[0] : pubDateEng;
 
@@ -74,7 +74,7 @@ export default function SourcesList() {
       const editionPart = edEng ? `${edEng}.` : "";
 
       // Original publication date (if present)
-      const oPubDateEng = book.getOriginalReleaseDateEnglish();
+      const oPubDateEng = book.getOriginalPublicationDateEnglish();
       const oPubDateEngPart = oPubDateEng ? `${oPubDateEng}.` : "";
 
       // Publisher & Place
@@ -149,14 +149,14 @@ export default function SourcesList() {
     if (edAr) common.push(`الطبعة: ${edAr}`);
 
     // Publication Date
-    const pubDateAr = source.getReleaseDateArabic();
+    const pubDateAr = source.getPublicationDateArabic();
     if (pubDateAr) common.push(pubDateAr);
 
     // Branch by type:
     if (source.getSourceType() === "Book") {
       const book = source as Book;
       // Original Publication Date
-      const origAr = book.getOriginalReleaseDateArabic();
+      const origAr = book.getOriginalPublicationDateArabic();
       if (origAr) common.push(`النشر الأصلي: ${origAr}`);
 
       // Publisher & Place
