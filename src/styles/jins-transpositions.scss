@@ -8,11 +8,11 @@
   &__title {
     width: 100%;
     background-color: $secondary;
-    color: #fff;
-    font-size: 1.5rem;
-    font-weight: 200;
+    color: $text;
+    font-size: 20px;
+    font-weight: 300;
     text-align: left;
-    padding: 1rem 1rem;
+    padding: 10px 20px;
     border: solid 1px $grey;
   }
 
@@ -126,7 +126,8 @@
   }
 
   &__transposition-title {
-    font-size: 18px;
+    font-size: 16px;
+    font-weight: 300;
     padding-left: 10px;
     padding-right: 20px;
   }
