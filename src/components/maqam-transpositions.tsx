@@ -617,7 +617,7 @@ export default function MaqamTranspositions() {
               </span>
             </h2>
 
-            <table className="maqam-transpositions__table"><colgroup><col style={{width: "30px"}}/><col style={{width: "40px"}}/><col style={{minWidth: "100px", maxWidth: "100px", width: "100px"}}/></colgroup>
+            <table className="maqam-transpositions__table"><colgroup><col style={{width: "30px"}}/><col style={{width: "40px"}}/><col style={{minWidth: "100px", maxWidth: "100px", width: "100px"}}/>{" "}</colgroup>
               <thead>{renderTransposition(maqamTranspositions[0], 0)}</thead>
             </table>
           </>
@@ -627,14 +627,14 @@ export default function MaqamTranspositions() {
           <>
             <div className="maqam-transpositions__comments-sources-container">
               <div className="maqam-transpositions__comments">
-                <h3>Comments:</h3>
+                Comments:
                 <div className="maqam-transpositions__comments-text">
                   {selectedMaqamDetails.getCommentsEnglish()}
                 </div>
               </div>
             
             <div className="maqam-transpositions__sources">
-              <h3>Sources:</h3>
+              Sources:
               {selectedMaqamDetails?.getSourcePageReferences().length > 0 &&
                 selectedMaqamDetails
                   .getSourcePageReferences()

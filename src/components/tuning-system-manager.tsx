@@ -1131,7 +1131,6 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         )}
       </div>
 
-
       {/* TUNING OCTAVES TABLES GRID */}
 
       <TuningSystemOctaveTables admin={admin} />
@@ -1152,7 +1151,6 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         </button>
       </div> */}
 
-
       {/* COMMENTS AND SOURCES */}
       <div className="tuning-system-manager__comments-sources-container">
         <div className="tuning-system-manager__comments-english">
@@ -1169,11 +1167,6 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
               ))}
           </div>
         </div>
-
-        {/* <div className="tuning-system-manager__comments-arabic">
-        <h3>تعليقات:</h3>
-        {selectedTuningSystem?.getCommentsArabic()}
-      </div> */}
 
         <div className="tuning-system-manager__sources-english">
           <h3>Sources:</h3>
@@ -1220,15 +1213,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
               );
             })}
         </div>
-
-        {/* <div className="tuning-system-manager__sources-arabic">
-        <h3>مصادر:</h3>
-        {selectedTuningSystem?.getSourceArabic()}
-      </div> */}
       </div>
-
     </div>
-
-    
   );
 }
