@@ -92,8 +92,9 @@
   }
 
   &__stops-header {
-    font-size: 1.2rem;
-    margin-bottom: 0.5rem;
+    font-size: 18px;
+    margin-bottom: 10px;
+    font-weight: 300;
   }
 
   &__add-stop {
@@ -194,15 +195,19 @@
 &__comments-section {
   width: 50%;
     text-align: left;
-    display: inline-flex;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0px 0px;
     
 }
 
   &__comments-english {
     font-size: 14px;
+    margin-bottom: 20px;
 
     &_title {
-      font-weight: 400;
+      font-weight: 300;
     }
   }
 }
