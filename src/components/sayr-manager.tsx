@@ -281,6 +281,11 @@ export default function SayrManager({ admin }: { admin: boolean }) {
               </div>
             ))}
           </div>
+                  <div className="sayr-manager__comments-section">
+                    <span className="sayr-manager__comments-english_title">Comments:</span> 
+                    <span className="sayr-manager__comments-english">{commentsEnglish}</span> 
+
+</div>
         </div>
 
         {admin && (

@@ -190,4 +190,19 @@
     margin-bottom: 10px;
     cursor: pointer;
   }
+
+&__comments-section {
+  width: 50%;
+    text-align: left;
+    display: inline-flex;
+    
+}
+
+  &__comments-english {
+    font-size: 14px;
+
+    &_title {
+      font-weight: 400;
+    }
+  }
 }
