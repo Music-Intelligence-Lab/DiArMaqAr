@@ -40,7 +40,7 @@
     }
 
     &_active {
-      background-color: rgb($tertiary, 1);
+      background-color: rgb($tertiary, 1) !important;
     }
 
     &_tonic {
