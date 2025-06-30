@@ -267,7 +267,7 @@
   },
   {
     "id": "10",
-    "name": "maqām nahāwand",
+    "name": "maqām nahāwand binṣir",
     "ascendingNoteNames": [
       "rāst",
       "dūgāh",
@@ -293,7 +293,7 @@
   },
   {
     "id": "11",
-    "name": "maqām nahāwand kabīr",
+    "name": "maqām nahāwand kabīr binṣir",
     "ascendingNoteNames": [
       "rāst",
       "dūgāh",
@@ -636,32 +636,6 @@
     ]
   },
   {
-    "id": "22",
-    "name": "maqām nahāwand al-'ushayrān",
-    "ascendingNoteNames": [
-      "ʿushayrān",
-      "kawasht",
-      "rāst",
-      "dūgāh",
-      "buselīk/ʿushshāq",
-      "chahargāh",
-      "nawā"
-    ],
-    "descendingNoteNames": [
-      "nawā",
-      "chahargāh",
-      "buselīk/ʿushshāq",
-      "dūgāh",
-      "rāst",
-      "kawasht",
-      "ʿushayrān"
-    ],
-    "suyūr": [],
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "sourcePageReferences": []
-  },
-  {
     "id": "23",
     "name": "maqām ḥijāz kār binṣir",
     "ascendingNoteNames": [
@@ -807,32 +781,6 @@
         "page": "33"
       }
     ]
-  },
-  {
-    "id": "27",
-    "name": "maqām ḥijāz ḥusaynī",
-    "ascendingNoteNames": [
-      "ʿushayrān",
-      "ʿajam ʿushayrān",
-      "zirguleh",
-      "dūgāh",
-      "buselīk/ʿushshāq",
-      "nīm ḥijāz",
-      "nawā"
-    ],
-    "descendingNoteNames": [
-      "nawā",
-      "chahargāh",
-      "buselīk/ʿushshāq",
-      "dūgāh",
-      "zirguleh",
-      "ʿajam ʿushayrān",
-      "ʿushayrān"
-    ],
-    "suyūr": [],
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "sourcePageReferences": []
   },
   {
     "id": "28",
@@ -2558,32 +2506,6 @@
     "sourcePageReferences": []
   },
   {
-    "id": "51",
-    "name": "maqām kurd al-kawasht",
-    "ascendingNoteNames": [
-      "kawasht",
-      "rāst",
-      "dūgāh",
-      "buselīk/ʿushshāq",
-      "ḥijāz",
-      "nawā",
-      "ḥusaynī"
-    ],
-    "descendingNoteNames": [
-      "ḥusaynī",
-      "nawā",
-      "ḥijāz",
-      "buselīk/ʿushshāq",
-      "dūgāh",
-      "zirguleh",
-      "kawasht"
-    ],
-    "suyūr": [],
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "sourcePageReferences": []
-  },
-  {
     "id": "52",
     "name": "maqām dilkesh ḥūrān",
     "ascendingNoteNames": [
@@ -2700,32 +2622,6 @@
       "ḥijāz",
       "kurdī",
       "dūgāh"
-    ],
-    "suyūr": [],
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "sourcePageReferences": []
-  },
-  {
-    "id": "55",
-    "name": "maqām kurd nawā",
-    "ascendingNoteNames": [
-      "nawā",
-      "ḥiṣār",
-      "ʿajam",
-      "kurdān",
-      "muḥayyar",
-      "sunbuleh/zawāl",
-      "mahurān"
-    ],
-    "descendingNoteNames": [
-      "mahurān",
-      "sunbuleh/zawāl",
-      "muḥayyar",
-      "kurdān",
-      "ʿajam",
-      "ḥiṣār",
-      "nawā"
     ],
     "suyūr": [],
     "commentsEnglish": "",

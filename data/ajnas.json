@@ -74,7 +74,7 @@
   },
   {
     "id": "6",
-    "name": "jins nahāwand",
+    "name": "jins nahāwand binṣir",
     "noteNames": [
       "rāst",
       "dūgāh",
@@ -238,6 +238,32 @@
       "kurdī",
       "ḥijāz",
       "nawā"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "19",
+    "name": "jins rāst muṭlaq",
+    "noteNames": [
+      "yegāh",
+      "ʿushayrān",
+      "ʿirāq",
+      "rāst"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "20",
+    "name": "jins nahāwand muṭlaq",
+    "noteNames": [
+      "nawā",
+      "ḥusaynī",
+      "ʿajam",
+      "kurdān"
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
