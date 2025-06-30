@@ -1130,6 +1130,28 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         )}
       </div>
 
+
+      {/* TUNING OCTAVES TABLES GRID */}
+
+      <TuningSystemOctaveTables admin={admin} />
+
+      {/* <div className="tuning-system-manager__buttons">
+        <button
+          className="tuning-system-manager__play-sequence-button"
+          disabled={selectedPitchClasses.length === 0}
+          onClick={() => {
+            const frequencies = selectedPitchClasses.map((pitchClasses) => {
+              return parseInt(pitchClasses.frequency) ?? 0;
+            });
+
+            playSequence(frequencies);
+          }}
+        >
+          Play Selected Sequence
+        </button>
+      </div> */}
+
+
       {/* COMMENTS AND SOURCES */}
       <div className="tuning-system-manager__comments-sources-container">
         <div className="tuning-system-manager__comments-english">
@@ -1204,25 +1226,8 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       </div> */}
       </div>
 
-      {/* TUNING OCTAVES TABLES GRID */}
-
-      <TuningSystemOctaveTables admin={admin} />
-
-      {/* <div className="tuning-system-manager__buttons">
-        <button
-          className="tuning-system-manager__play-sequence-button"
-          disabled={selectedPitchClasses.length === 0}
-          onClick={() => {
-            const frequencies = selectedPitchClasses.map((pitchClasses) => {
-              return parseInt(pitchClasses.frequency) ?? 0;
-            });
-
-            playSequence(frequencies);
-          }}
-        >
-          Play Selected Sequence
-        </button>
-      </div> */}
     </div>
+
+    
   );
 }
