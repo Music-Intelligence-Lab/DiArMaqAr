@@ -474,41 +474,6 @@ export default function Modulations() {
                         ))}
                     </div>
                     {/* Only show descending if different from ascending */}
-                    <div className="modulations__modulations-list">
-                      <span className="modulations__header">
-                        <span className="modulations__header-text">
-                          Sixth Descending:{" "}
-                        </span>
-                        {descendingNoteNames[5]} (
-                        {modulations?.modulationsOnSixDescending
-                          ? modulations.modulationsOnSixDescending.length
-                          : 0}
-                        )
-                      </span>
-                      {[...modulations.modulationsOnSixDescending]
-                        .sort((a, b) => a.name.localeCompare(b.name))
-                        .map((hop, index) => (
-                          <span
-                            className="modulations__modulation-item"
-                            key={index}
-                            onClick={() => {
-                              if ("ascendingPitchClasses" in hop) {
-                                addHopsWrapper(hop, stackIdx);
-                                setSelectedMaqam(hop);
-                                setSelectedJins(null);
-                              } else {
-                                setSelectedJins(hop);
-                                setSelectedMaqam(null);
-                              }
-                            }}
-                            style={{ cursor: "pointer" }}
-                          >
-                            {hop.name}
-                          </span>
-                        ))}
-                    </div>
-                    {/* Only show descending if different from ascending */}
-                    {JSON.stringify(modulations.modulationsOnSixDescending) !== JSON.stringify(modulations.modulationsOnSixAscending) && (
                       <div className="modulations__modulations-list">
                         <span className="modulations__header">
                           <span className="modulations__header-text">
@@ -520,6 +485,8 @@ export default function Modulations() {
                             : 0}
                           )
                         </span>
+{JSON.stringify(modulations.modulationsOnSixDescending) !== JSON.stringify(modulations.modulationsOnSixAscending) && (
+
                         <div>
                           {[...modulations.modulationsOnSixDescending]
                             .sort((a, b) => a.name.localeCompare(b.name))
@@ -543,8 +510,9 @@ export default function Modulations() {
                               </span>
                             ))}
                         </div>
+                                            )}
                       </div>
-                    )}
+
                   </>
                 );
               })()}
