@@ -100,47 +100,61 @@ useEffect(() => {
         return (
           <div
             className="modulations__hops-wrapper"
-            key={stackIdx}
-            style={{ marginTop: stackIdx === 0 ? 0 : 32, borderTop: stackIdx === 0 ? undefined : "1px solid #444" }}
-          >
+            key={stackIdx}          >
             {/* Maqam name/details at the top of each wrapper */}
-            <div className="modulations__wrapper-maqam-name">
-              <span onClick={() => setSelectedMaqam(sourceMaqam)} style={{ cursor: "pointer" }}>
+            <div className="modulations__wrapper-modulations-header">
+              <div
+                className="modulations__source-maqam-name"
+                onClick={() => setSelectedMaqam(sourceMaqam)}
+                style={{ cursor: "pointer" }}
+              >
                 {sourceMaqam.name ? sourceMaqam.name : "Unknown"} ({ascendingNoteNames ? ascendingNoteNames[0] : "N/A"}/
                 {getEnglishNoteName(ascendingNoteNames ? ascendingNoteNames[0]! : "")})
-                {modulationsStack[stackIdx] && (
-                  <>
-                    {" - "}
-                    <span
-                      style={{
-                        cursor: "pointer",
-                        textDecoration: ajnasModulationsMode ? "underline" : "none",
-                        marginRight: 12,
-                        color: ajnasModulationsMode ? "#0070f3" : undefined,
-                      }}
-                      onClick={e => {
-                        e.stopPropagation();
-                        setAjnasModulationsMode(true);
-                      }}
-                    >
-                      {totalAjnasModulations} Ajnās modulations
-                    </span>
-                    <span
-                      style={{
-                        cursor: "pointer",
-                        textDecoration: !ajnasModulationsMode ? "underline" : "none",
-                        color: !ajnasModulationsMode ? "#0070f3" : undefined,
-                      }}
-                      onClick={e => {
-                        e.stopPropagation();
-                        setAjnasModulationsMode(false);
-                      }}
-                    >
-                      {totalMaqamatModulations} Maqāmāt modulations
-                    </span>
-                  </>
-                )}
-              </span>
+              </div>
+              {modulationsStack[stackIdx] && (
+                <>
+
+                  <br />
+                  <button
+                    className={
+                      "modulations__ajnas-count" +
+                      (ajnasModulationsMode ? " modulations__ajnas-count_active" : "")
+                    }
+                    style={{
+                      cursor: "pointer",
+                      textDecoration: ajnasModulationsMode ? "underline" : "none",
+                      marginRight: 12,
+                      color: ajnasModulationsMode ? "#0070f3" : undefined,
+                    }}
+                    onClick={e => {
+                      e.stopPropagation();
+                      setAjnasModulationsMode(true);
+                    }}
+                  >
+                    {totalAjnasModulations} ajnās modulations
+                  </button>
+                  <button
+                    className={
+                      "modulations__maqamat-count" +
+                      (!ajnasModulationsMode ? " modulations__maqamat-count_active" : "")
+                    }
+                    style={{
+                      cursor: "pointer",
+                      textDecoration: !ajnasModulationsMode ? "underline" : "none",
+                      color: !ajnasModulationsMode ? "#0070f3" : undefined,
+                    }}
+                    onClick={e => {
+                      e.stopPropagation();
+                      setAjnasModulationsMode(false);
+                    }}
+                  >
+                    {totalMaqamatModulations} maqāmāt modulations
+                  </button>
+                </>
+              )}
+              </div>
+
+              
               {/* Show delete button only on the last hops-wrapper and only if more than one exists */}
               {stackIdx === sourceMaqamStack.length - 1 && sourceMaqamStack.length > 1 && (
                 <button
@@ -151,21 +165,20 @@ useEffect(() => {
                   Delete Hop
                 </button>
               )}
-            </div>
-
-            {modulationsStack[stackIdx] &&
-              (() => {
-                const modulations = ajnasModulationsMode ? modulationsStack[stackIdx].ajnas : modulationsStack[stackIdx].maqamat;
-                const { noteName2p } = modulations;
-                return (
-                  <>
-                    <div className="modulations__hops">
+        
+        {modulationsStack[stackIdx] &&
+          (() => {
+            const modulations = ajnasModulationsMode ? modulationsStack[stackIdx].ajnas : modulationsStack[stackIdx].maqamat;
+            const { noteName2p } = modulations;
+            return (
+              <>
+                    <div className="modulations__modulations-list">
                       <span className="modulations__header">
-                        Modulations from Tonic: <br />
+                         <span className="modulations__header-text">Tonic: </span>
                         {ascendingNoteNames[0]} ({modulations?.modulationsOnOne ? modulations.modulationsOnOne.length : 0})
                       </span>
                       {[...modulations.modulationsOnOne]
-                        .sort((a, b) => a.name.localeCompare(b.name))
+                        .sort((a: any, b: any) => a.name.localeCompare(b.name))
                         .map((hop, index) => (
                           <span
                             key={index}
@@ -185,9 +198,9 @@ useEffect(() => {
                           </span>
                         ))}
                     </div>
-                    <div className="modulations__hops">
+                    <div className="modulations__modulations-list">
                       <span className="modulations__header">
-                        Modulations from Third: <br />
+                        <span className="modulations__header-text">Third: </span>
                         {ascendingNoteNames[2]} ({modulations?.modulationsOnThree ? modulations.modulationsOnThree.length : 0})
                       </span>
                       {[...modulations.modulationsOnThree]
@@ -211,9 +224,9 @@ useEffect(() => {
                           </span>
                         ))}
                     </div>
-                    <div className="modulations__hops">
+                    <div className="modulations__modulations-list">
                       <span className="modulations__header">
-                        Modulations from Alternative Third: <br />
+                         <span className="modulations__header-text">alt Third: </span>
                         {noteName2p} ({modulations?.modulationsOnThree2p ? modulations.modulationsOnThree2p.length : 0})
                       </span>
                       {[...modulations.modulationsOnThree2p]
@@ -237,9 +250,9 @@ useEffect(() => {
                           </span>
                         ))}
                     </div>
-                    <div className="modulations__hops">
+                    <div className="modulations__modulations-list">
                       <span className="modulations__header">
-                        Modulations from Sixth No Third: <br />
+                         <span className="modulations__header-text">Sixth No Third: </span>
                         {ascendingNoteNames[5]} ({modulations?.modulationsOnSixNoThird ? modulations.modulationsOnSixNoThird.length : 0})
                       </span>
                       {[...modulations.modulationsOnSixNoThird]
@@ -263,9 +276,9 @@ useEffect(() => {
                           </span>
                         ))}
                     </div>
-                    <div className="modulations__hops">
+                    <div className="modulations__modulations-list">
                       <span className="modulations__header">
-                        Modulations from Fourth: <br />
+                         <span className="modulations__header-text">Fourth: </span>
                         {ascendingNoteNames[3]} ({modulations?.modulationsOnFour ? modulations.modulationsOnFour.length : 0})
                       </span>
                       {[...modulations.modulationsOnFour]
@@ -289,9 +302,9 @@ useEffect(() => {
                           </span>
                         ))}
                     </div>
-                    <div className="modulations__hops">
+                    <div className="modulations__modulations-list">
                       <span className="modulations__header">
-                        Modulations from Fifth: <br />
+                         <span className="modulations__header-text">Fifth: </span>
                         {ascendingNoteNames[4]} ({modulations?.modulationsOnFive ? modulations.modulationsOnFive.length : 0})
                       </span>
                       {[...modulations.modulationsOnFive]
@@ -315,9 +328,9 @@ useEffect(() => {
                           </span>
                         ))}
                     </div>
-                    <div className="modulations__hops">
+                    <div className="modulations__modulations-list">
                       <span className="modulations__header">
-                        Modulations from Sixth Ascending: <br />
+                        <span className="modulations__header-text">Sixth Ascending: </span>
                         {ascendingNoteNames[5]} ({modulations?.modulationsOnSixAscending ? modulations.modulationsOnSixAscending.length : 0})
                       </span>
                       {[...modulations.modulationsOnSixAscending]
@@ -341,9 +354,9 @@ useEffect(() => {
                           </span>
                         ))}
                     </div>
-                    <div className="modulations__hops">
+                    <div className="modulations__modulations-list">
                       <span className="modulations__header">
-                        Modulations from Sixth Descending: <br />
+                        <span className="modulations__header-text">Sixth Descending: </span>
                         {descendingNoteNames[5]} ({modulations?.modulationsOnSixDescending ? modulations.modulationsOnSixDescending.length : 0})
                       </span>
                       {[...modulations.modulationsOnSixDescending]

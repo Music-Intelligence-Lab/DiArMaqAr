@@ -1,40 +1,75 @@
 @use "./variables" as *;
 
 .modulations {
-
   &__container {
     width: 100%;
-    padding: 0 20px;
+    padding: 0px 20px;
   }
 
   &__header {
     font-weight: 400;
     margin-bottom: 20px;
   }
-  &__hops {
+  &__header-text {
+    font-weight: 300;
+    
+  }
+
+  &__wrapper-modulations-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  &__source-maqam-name {
+    color: $text !important;
+    font-size: 24px;
+    font-weight: 400;
+    text-decoration: none !important;
+    padding: 0px;
+    margin-bottom: 0px;
+    &:hover {
+      text-decoration: underline !important;
+      outline: none;
+    }
+  }
+
+  &__ajnas-count,
+  &__maqamat-count {
+    color: $text !important;
+    font-size: 14px;
+    font-weight: 400;
+    text-decoration: none !important;
+    background-color: rgba($primary, 0.5);
+    padding: 10px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgba($primary, 1);
+      outline: none;
+    }
+
+    &_active {
+      background-color: rgba($tertiary, 0.5);
+      outline: none;
+    }
+  }
+  
+  &__hops-wrapper {
+padding: 0px;
+}
+
+    &__modulations-list {
     display: inline-flex; // makes each hop appear side by side
     flex-direction: column;
     gap: 10px; // optional spacing between divs
-    width: calc(100% / 8 - 20px); // 6 hops, each taking up 1/6th of the width minus some padding
-    margin-right: 20px;
+    width: calc(
+      100% / 8
+    ); // 6 hops, each taking up 1/6th of the width minus some padding
+    margin-right: 0px;
     text-align: left;
   }
 
-  &__wrapper-maqam-name { 
-  text-align: center;
-    font-size: 24px;
-    color: $text;
-    font-weight: 400;
-    margin-bottom: 30px;
-  }
 
- &__source-maqam-name{
-  text-align: center;
-    font-size: 20px;
-    color: $text;
-    font-weight: 400;
-    margin-bottom: 30px;
-  }
   &__list {
     width: 100%;
     background-color: $black;
@@ -114,7 +149,6 @@
     }
   }
 
-
   &__carousel {
     display: flex;
     align-items: center;
@@ -133,7 +167,6 @@
         color: $tertiary;
         transition: background-color 0.2s ease-in-out;
       }
-
     }
 
     .carousel-button-prev,
@@ -150,7 +183,6 @@
         color: $tertiary;
         transition: color 0.1s ease-in-out;
       }
-
     }
 
     .carousel-button-prev {
