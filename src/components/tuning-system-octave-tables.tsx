@@ -34,10 +34,10 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
     allPitchClasses,
     selectedAbjadNames,
     setSelectedAbjadNames,
-    selectedMaqam
+    selectedMaqam,
   } = useAppContext();
 
-  const { activePitchClasses, playNote } = useSoundContext();
+  const { activePitchClasses, noteOn, noteOff } = useSoundContext();
 
   const { filters, setFilters } = useFilterContext();
 
@@ -696,7 +696,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                   <td>Play</td>
                   {rowCells.map((pitchClass, colIndex) => (
                     <td key={colIndex} className={getCellClassName(octave, colIndex)}>
-                      <PlayCircleIcon className="tuning-system-manager__play-circle-icon" onClick={() => playNote(pitchClass)} />
+                      <PlayCircleIcon className="tuning-system-manager__play-circle-icon" onMouseUp={() => noteOff(pitchClass)} onMouseDown={() => noteOn(pitchClass)}/>
                     </td>
                   ))}
                 </tr>

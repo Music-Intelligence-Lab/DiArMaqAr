@@ -25,7 +25,7 @@ export default function MaqamTranspositions() {
     sources,
   } = useAppContext();
 
-  const { playNote, playSequence, soundSettings } = useSoundContext();
+  const { noteOn, noteOff, playSequence, soundSettings } = useSoundContext();
 
   const { filters, setFilters } = useFilterContext();
 
@@ -149,17 +149,11 @@ export default function MaqamTranspositions() {
                   <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
                   {"Ascending > Descending"}
                 </button>
-                <button
-                  className="maqam-transpositions__button"
-                  onClick={() => playSequence(pitchClasses)}
-                >
+                <button className="maqam-transpositions__button" onClick={() => playSequence(pitchClasses)}>
                   <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
                   Ascending
                 </button>
-                <button
-                  className="maqam-transpositions__button"
-                  onClick={() => playSequence([...oppositePitchClasses].reverse(), false)}
-                >
+                <button className="maqam-transpositions__button" onClick={() => playSequence([...oppositePitchClasses].reverse(), false)}>
                   <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
                   Descending
                 </button>
@@ -327,7 +321,11 @@ export default function MaqamTranspositions() {
             {pitchClasses.map((pitchClass, i) => (
               <React.Fragment key={i}>
                 <th>
-                  <PlayCircleIcon className="maqam-transpositions__play-circle-icon" onClick={() => playNote(pitchClass)} />
+                  <PlayCircleIcon
+                    className="maqam-transpositions__play-circle-icon"
+                    onMouseDown={() => noteOn(pitchClass)}
+                    onMouseUp={() => noteOff(pitchClass)}
+                  />
                 </th>
                 <th className="maqam-transpositions__header-cell"></th>
               </React.Fragment>
