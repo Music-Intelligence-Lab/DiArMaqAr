@@ -82,8 +82,8 @@ export default function PitchClassWheel() {
 
   const wheelCells = useMemo(() => {
     return allPitchClasses.map((pitchClass) => {
-      const note = pitchClass.noteName;
-      const isSelected = selectedPitchClasses.some((sc) => sc.noteName === note);
+      const note = pitchClass.originalValue;
+      const isSelected = selectedPitchClasses.some((sc) => sc.originalValue === note);
       const isActive = activePitchClasses.some((ac) => ac.index === pitchClass.index && ac.octave === pitchClass.octave);
 
       const jinsTransposition = filteredJinsTranspositions.find((transposition) => transposition.jinsPitchClasses[0].noteName === note);
