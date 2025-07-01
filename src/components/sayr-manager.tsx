@@ -7,8 +7,10 @@ import { octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames } from "@/m
 import { nanoid } from "nanoid";
 import { updateMaqamat } from "@/functions/update";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import JinsDetails from "@/models/Jins";
 export default function SayrManager({ admin }: { admin: boolean }) {
-  const { selectedMaqamDetails, setSelectedMaqamDetails, ajnas, maqamSayrId, setMaqamSayrId, sources, maqamat, setMaqamat } = useAppContext();
+  const { selectedMaqamDetails, setSelectedMaqamDetails, ajnas, maqamSayrId, setMaqamSayrId, sources, maqamat, setMaqamat, handleClickJins } =
+    useAppContext();
 
   const [creatorEnglish, setCreatorEnglish] = useState("");
   const [creatorArabic, setCreatorArabic] = useState("");
@@ -308,12 +310,13 @@ export default function SayrManager({ admin }: { admin: boolean }) {
           <div className="sayr-manager__stops">
             {!admin &&
               stops.map((stop, i) => {
+                let jinsDetails: JinsDetails | undefined;
                 let sentence = "";
                 if (stop.type === "note") {
                   sentence += `Note: ${stop.value}`;
                 } else if (stop.type === "jins") {
-                  const jins = ajnas.find((j) => j.getId() === stop.value);
-                  const jinsName = jins ? jins.getName() : stop.value;
+                  jinsDetails = ajnas.find((j) => j.getId() === stop.value);
+                  const jinsName = jinsDetails ? jinsDetails.getName() : stop.value;
                   sentence += `${jinsName}${stop.startingNote ? " al-" + stop.startingNote : ""}`;
                 } else if (stop.type === "direction") {
                   sentence += `Direction: ${stop.value}`;
@@ -321,7 +324,17 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                 return (
                   <React.Fragment key={i}>
                     {i !== 0 && <ArrowForwardIcon />}
-                    <div className="sayr-manager__stop">{sentence}</div>
+                    <div
+                      className="sayr-manager__stop"
+                      style={stop.type === "jins" ? { cursor: "pointer" } : undefined}
+                      onClick={() => {
+                        if (stop.type === "jins" && jinsDetails) {
+                          handleClickJins(jinsDetails);
+                        }
+                      }}
+                    >
+                      {sentence}
+                    </div>
                   </React.Fragment>
                 );
               })}
