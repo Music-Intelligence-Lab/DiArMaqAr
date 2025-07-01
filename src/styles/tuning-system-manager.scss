@@ -280,7 +280,7 @@
     }
 
     &_disabled {
-      background-color: rgba($primary, 0.1) !important;
+      background-color: rgba($black, 0.5) !important;
       color: $text;
 
       &:hover {

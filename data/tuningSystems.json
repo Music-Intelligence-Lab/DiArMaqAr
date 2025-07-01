@@ -2753,7 +2753,7 @@
       "",
       ""
     ],
-    "stringLength": 0,
+    "stringLength": 1000,
     "defaultReferenceFrequency": 220,
     "referenceFrequencies": {
       "ʿushayrān": 220.5
@@ -4243,7 +4243,7 @@
       "",
       ""
     ],
-    "stringLength": 100000,
+    "stringLength": 10000,
     "defaultReferenceFrequency": 261.33,
     "referenceFrequencies": {
       "yegāh": 195.998,
