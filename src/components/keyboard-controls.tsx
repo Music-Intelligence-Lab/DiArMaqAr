@@ -11,26 +11,86 @@ export default function KeyboardControls() {
   const { noteOn, noteOff, setActivePitchClasses, soundSettings } = useSoundContext();
 
   // keyboard rows
-  const firstRowKeys = ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]"];
-  const secondRowKeys = ["a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'", "\\"];
-  const thirdRowKeys = ["`", "z", "x", "c", "v", "b", "n", "m", ",", ".", "/"];
+  const firstRowCodes = ["KeyQ", "KeyW", "KeyE", "KeyR", "KeyT", "KeyY", "KeyU", "KeyI", "KeyO", "KeyP", "BracketLeft", "BracketRight"];
 
-  // derive descending pitch classes
-  const descendingNoteNames = selectedMaqam ? selectedMaqam.descendingPitchClasses.map((pitchClass) => pitchClass.noteName) : selectedMaqamDetails ? selectedMaqamDetails.getDescendingNoteNames() : [];
+  const secondRowCodes = ["KeyA", "KeyS", "KeyD", "KeyF", "KeyG", "KeyH", "KeyJ", "KeyK", "KeyL", "Semicolon", "Quote", "Backslash"];
 
-  const descendingMaqamCells: PitchClass[] = allPitchClasses.filter((pitchClass) => descendingNoteNames.includes(pitchClass.noteName));
+  const thirdRowCodes = ["Backquote", "KeyZ", "KeyX", "KeyC", "KeyV", "KeyB", "KeyN", "KeyM", "Comma", "Period", "Slash", "Slash"];
 
   // const isTyping = () => {
   //   const el = document.activeElement;
   //   return el?.tagName === "INPUT" || el?.tagName === "TEXTAREA" || (el instanceof HTMLElement && el.isContentEditable);
   // };
 
+  const pitchClassMapping: Record<string, PitchClass> = {};
+
+  if (selectedMaqam || selectedMaqamDetails) {
+    const ascendingNoteNames = selectedMaqam
+      ? selectedMaqam.ascendingPitchClasses.map((pitchClass) => pitchClass.noteName)
+      : selectedMaqamDetails
+      ? selectedMaqamDetails.getAscendingNoteNames()
+      : [];
+
+    const descendingNoteNames = selectedMaqam
+      ? selectedMaqam.descendingPitchClasses.map((pitchClass) => pitchClass.noteName)
+      : selectedMaqamDetails
+      ? selectedMaqamDetails.getDescendingNoteNames()
+      : [];
+
+    const ascendingMaqamPitchClasses: PitchClass[] = allPitchClasses.filter((pitchClass) => ascendingNoteNames.includes(pitchClass.noteName));
+    const descendingMaqamPitchClasses: PitchClass[] = allPitchClasses.filter((pitchClass) => descendingNoteNames.includes(pitchClass.noteName));
+
+    let sliceIndex = 0;
+    const lastAscendingPitchClass = ascendingMaqamPitchClasses[ascendingMaqamPitchClasses.length - 1];
+
+    for (let i = 0; i < ascendingMaqamPitchClasses.length; i++) {
+      if (parseFloat(ascendingMaqamPitchClasses[i].frequency) * 2 <= parseFloat(lastAscendingPitchClass.frequency)) {
+        sliceIndex = i + 1;
+      }
+    }
+
+    const extendedAscendingPitchClasses = [
+      ...ascendingMaqamPitchClasses,
+      ...ascendingMaqamPitchClasses.slice(sliceIndex, -1).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 1)),
+      ...ascendingMaqamPitchClasses.slice(0, sliceIndex).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 2)),
+      ...ascendingMaqamPitchClasses.slice(sliceIndex, -1).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 2)),
+    ];
+
+    const extendedDescendingPitchClasses = [
+      ...descendingMaqamPitchClasses,
+      ...descendingMaqamPitchClasses.slice(sliceIndex, -1).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 1)),
+      ...descendingMaqamPitchClasses.slice(0, sliceIndex).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 2)),
+      ...descendingMaqamPitchClasses.slice(sliceIndex, -1).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 2)),
+    ];
+
+    console.log(extendedAscendingPitchClasses, ascendingMaqamPitchClasses, sliceIndex);
+
+    for (let i = 0; i <= 12; i++) {
+      const ascendingPitchClass = extendedAscendingPitchClasses[i];
+      const descendingPitchClass = extendedDescendingPitchClasses[i];
+      const ascendingShiftedPitchClass = shiftPitchClass(allPitchClasses, ascendingPitchClass, -1);
+
+      pitchClassMapping[firstRowCodes[i]] = descendingPitchClass;
+      pitchClassMapping[secondRowCodes[i]] = ascendingPitchClass;
+      pitchClassMapping[thirdRowCodes[i]] = ascendingShiftedPitchClass;
+    }
+  } else {
+    for (let i = 0; i < selectedPitchClasses.length; i++) {
+      const pitchClass = selectedPitchClasses[i];
+      const loweredOctavePitchClass = shiftPitchClass(allPitchClasses, pitchClass, -1);
+      pitchClassMapping[secondRowCodes[i]] = pitchClass;
+      pitchClassMapping[thirdRowCodes[i]] = loweredOctavePitchClass;
+    }
+  }
+
   useEffect(() => {
     const addActive = (pitchClass: PitchClass) => {
       const freq = parseFloat(pitchClass.frequency);
       if (isNaN(freq)) return;
       noteOn(freq);
-      setActivePitchClasses((prev) => (prev.some((c) => c.index === pitchClass.index && c.octave === pitchClass.octave) ? prev : [...prev, pitchClass]));
+      setActivePitchClasses((prev) =>
+        prev.some((c) => c.index === pitchClass.index && c.octave === pitchClass.octave) ? prev : [...prev, pitchClass]
+      );
     };
 
     const removeActive = (pitchClass: PitchClass) => {
@@ -43,28 +103,7 @@ export default function KeyboardControls() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.repeat || e.shiftKey || e.ctrlKey || e.altKey || e.metaKey || soundSettings.inputType !== "QWERTY") return;
 
-      let pitchClass: PitchClass | null = null;
-      const idx1 = firstRowKeys.indexOf(e.key);
-      if (idx1 >= 0 && descendingMaqamCells.length > 0) {
-        const base = descendingMaqamCells.length;
-        pitchClass = shiftPitchClass(allPitchClasses, descendingMaqamCells[idx1 % base], Math.floor(idx1 / base));
-      } else {
-        const idx2 = secondRowKeys.indexOf(e.key);
-        if (idx2 >= 0 && selectedPitchClasses.length > 0) {
-          const base = selectedPitchClasses.length;
-          if (idx2 < base || base === 7) {
-            pitchClass = shiftPitchClass(allPitchClasses, selectedPitchClasses[idx2 % base], Math.floor(idx2 / base));
-          }
-        } else {
-          const idx3 = thirdRowKeys.indexOf(e.key);
-          if (idx3 >= 0 && selectedPitchClasses.length > 0) {
-            const base = selectedPitchClasses.length;
-            if (idx3 < base || base === 7) {
-              pitchClass = shiftPitchClass(allPitchClasses, selectedPitchClasses[idx3 % base], Math.floor(idx3 / base) - 1);
-            }
-          }
-        }
-      }
+      const pitchClass = pitchClassMapping[e.code];
 
       if (pitchClass) addActive(pitchClass);
     };
@@ -72,28 +111,7 @@ export default function KeyboardControls() {
     const handleKeyUp = (e: KeyboardEvent) => {
       if (e.shiftKey || e.ctrlKey || e.altKey || e.metaKey || soundSettings.inputType !== "QWERTY") return;
 
-      let pitchClass: PitchClass | null = null;
-      const idx1 = firstRowKeys.indexOf(e.key);
-      if (idx1 >= 0 && descendingMaqamCells.length > 0) {
-        const base = descendingMaqamCells.length;
-        pitchClass = shiftPitchClass(allPitchClasses, descendingMaqamCells[idx1 % base], Math.floor(idx1 / base));
-      } else {
-        const idx2 = secondRowKeys.indexOf(e.key);
-        if (idx2 >= 0 && selectedPitchClasses.length > 0) {
-          const base = selectedPitchClasses.length;
-          if (idx2 < base || base === 7) {
-            pitchClass = shiftPitchClass(allPitchClasses, selectedPitchClasses[idx2 % base], Math.floor(idx2 / base));
-          }
-        } else {
-          const idx3 = thirdRowKeys.indexOf(e.key);
-          if (idx3 >= 0 && selectedPitchClasses.length > 0) {
-            const base = selectedPitchClasses.length;
-            if (idx3 < base || base === 7) {
-              pitchClass = shiftPitchClass(allPitchClasses, selectedPitchClasses[idx3 % base], Math.floor(idx3 / base) - 1);
-            }
-          }
-        }
-      }
+      const pitchClass = pitchClassMapping[e.code];
 
       if (pitchClass) removeActive(pitchClass);
     };
@@ -104,7 +122,15 @@ export default function KeyboardControls() {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [selectedPitchClasses, selectedMaqamDetails, selectedMaqam, allPitchClasses, descendingMaqamCells, noteOn, noteOff, setActivePitchClasses]);
+  }, [
+    selectedPitchClasses,
+    selectedMaqamDetails,
+    selectedMaqam,
+    allPitchClasses,
+    noteOn,
+    noteOff,
+    setActivePitchClasses,
+  ]);
 
   return null;
 }
