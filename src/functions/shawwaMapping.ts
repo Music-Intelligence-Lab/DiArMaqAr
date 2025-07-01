@@ -3,9 +3,6 @@ import NoteName, { getNoteNameIndexAndOctave } from "@/models/NoteName";
 export default function shawwaMapping(noteName: NoteName): "n" | "1p" | "2p" | "/" { //D3Js
   if (noteName === "none") return "/";
   const index = getNoteNameIndexAndOctave(noteName).index;
-  if (index === -1) {
-    throw new Error(`Note name "${noteName}" not found in the mapping.`);
-  }
 
   const naturalIndices = [0, 6, 11, 16, 21, 26, 30];
   const onePartIndices = [1, 4, 7, 13, 18, 20, 22, 27, 32, 35];
