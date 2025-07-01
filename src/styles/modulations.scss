@@ -3,21 +3,22 @@
 .modulations {
   &__container {
     width: 100%;
-    padding: 0px 20px;
+    padding: 0px 0px;
   }
 
   &__header {
     font-weight: 400;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    min-height: 40px;
   }
   &__header-text {
     font-weight: 300;
-    
   }
 
   &__wrapper-modulations-header {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
   }
 
   &__source-maqam-name {
@@ -26,7 +27,7 @@
     font-weight: 400;
     text-decoration: none !important;
     padding: 0px;
-    margin-bottom: 0px;
+    margin-bottom: 10px;
     &:hover {
       text-decoration: underline !important;
       outline: none;
@@ -53,22 +54,36 @@
       outline: none;
     }
   }
-  
-  &__hops-wrapper {
-padding: 0px;
-}
 
-    &__modulations-list {
-    display: inline-flex; // makes each hop appear side by side
-    flex-direction: column;
-    gap: 10px; // optional spacing between divs
-    width: calc(
-      100% / 8
-    ); // 6 hops, each taking up 1/6th of the width minus some padding
-    margin-right: 0px;
-    text-align: left;
+  &__hops-wrapper {
+    width: 100%;
+    padding: 0px 0px;
   }
 
+  &__modulations-list {
+    display: inline-flex; // makes each list of modulations appear side by side
+    flex-direction: column;
+    // To add space between columns, use margin-right on child elements except the last one:
+    &:not(:last-child) {
+      margin-right: 10px; // for column gap if you switch to row direction
+    }
+    gap: 10px;
+    width: calc(100% / 8 - 10px); // 6 hops, each taking up 1/6th of the width minus some padding
+    //background-color: rgba($black, 0.2);
+    padding: 10px 0px;
+  }
+
+  &__modulation-item {
+        text-align: left;
+    padding: 10px 10px;
+    font-size: 14px;
+    font-weight: 400;
+background-color: rgba($primary, 0.3);
+        &:hover {
+      background-color: $primary;
+    }
+
+  }
 
   &__list {
     width: 100%;
