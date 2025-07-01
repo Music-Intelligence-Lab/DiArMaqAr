@@ -166,7 +166,7 @@
     padding-right: 0px;
     margin-top: 20px;
     margin-bottom: 30px;
-        font-size: 14px;
+    font-size: 14px;
     font-weight: 300;
     width: 100%;
   }
@@ -194,7 +194,6 @@
     align-items: flex-start;
     display: block;
 
-
     &:hover {
       background-color: rgba($primary, 1);
     }
@@ -219,7 +218,6 @@
     align-items: center;
     gap: 10px;
     margin-left: 0px;
-
   }
 
   &__starting-note {
@@ -278,6 +276,17 @@
       background-color: $secondary;
       &:hover {
         background-color: rgba($secondary, 1);
+      }
+    }
+
+    &_disabled {
+      background-color: rgba($primary, 0.1) !important;
+      color: $text;
+
+      &:hover {
+        background-color: rgba($primary, 0.5);
+        box-shadow: none;
+        color: $text;
       }
     }
 
