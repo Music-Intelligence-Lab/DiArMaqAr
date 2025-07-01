@@ -26,7 +26,8 @@ import MaqamDetails from "@/models/Maqam";
 function isTuningSystemDisabled(
   tuningSystem: TuningSystem,
   selectedJinsDetails: JinsDetails | null,
-  selectedMaqamDetails: MaqamDetails | null
+  selectedMaqamDetails: MaqamDetails | null,
+  startingNoteName: NoteName = ""
 ): { disabled: boolean; noteName: string } {
   const shiftedNoteNames = tuningSystem.getSetsOfNoteNamesShiftedUpAndDown();
 
@@ -36,6 +37,7 @@ function isTuningSystemDisabled(
     for (const set of shiftedNoteNames) {
       if (selectedJinsDetails.isJinsSelectable(set)) {
         const firstNoteName = set[set.length / 3];
+        if (startingNoteName && firstNoteName !== startingNoteName) continue;
         return { disabled: false, noteName: firstNoteName };
       }
     }
@@ -43,6 +45,7 @@ function isTuningSystemDisabled(
     for (const set of shiftedNoteNames) {
       if (selectedMaqamDetails.isMaqamSelectable(set)) {
         const firstNoteName = set[set.length / 3];
+        if (startingNoteName && firstNoteName !== startingNoteName) continue;
         return { disabled: false, noteName: firstNoteName };
       }
     }
@@ -50,7 +53,6 @@ function isTuningSystemDisabled(
 
   return { disabled: true, noteName: "" };
 }
-
 export default function TuningSystemManager({ admin }: { admin: boolean }) {
   const {
     tuningSystems,
@@ -881,12 +883,14 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 .sort((a, b) => getNoteNameIndex(a[0] ?? 0) - getNoteNameIndex(b[0] ?? 0))
                 .map((notes, index) => {
                   const startingNote = notes[0];
+                  const disabled = isTuningSystemDisabled(selectedTuningSystem, selectedJinsDetails, selectedMaqamDetails, startingNote).disabled;
                   return (
                     <div className="tuning-system-manager__starting-note" key={index}>
                       <button
                         className={
                           "tuning-system-manager__starting-note-button " +
-                          (getFirstNoteName(selectedIndices) === startingNote ? "tuning-system-manager__starting-note-button_selected" : "")
+                          (getFirstNoteName(selectedIndices) === startingNote ? "tuning-system-manager__starting-note-button_selected " : "") +
+                          (disabled ? "tuning-system-manager__starting-note-button_disabled " : "")
                         }
                         onClick={() => handleStartNoteNameChange(startingNote)}
                       >
