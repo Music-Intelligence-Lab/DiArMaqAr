@@ -245,7 +245,7 @@ The `AppContextInterface` exposes a rich set of state variables and functions, i
 - **setRefresh**: A trigger for manually refreshing MIDI devices.
 
 In addition, the context provides core functions such as:
-- **playNoteFrequency**: Play a sound for a given frequency.
+- **playNote**: Play a sound for a given frequency.
 - **noteOn** and **noteOff**: Start and stop a note based on frequency.
 - **playSequence**: Play a sequence of notes, respecting patterns and tempo.
 - **handleStartNoteNameChange**: Change the starting note and update mappings.
@@ -542,7 +542,7 @@ It integrates theoretical concepts like **Darajat al-Istiqrār** (tonic/finalis)
   2. **Transpositions Table (`Taṣwīr`)**: Lists valid transpositions of the *jins*, including note names, intervals, and playback buttons.
 
 - **Playback Controls**:
-  - **Play Single Note**: Plays individual notes using `playNoteFrequency`.
+  - **Play Single Note**: Plays individual notes using `playNote`.
   - **Play Full Sequence**: Plays the entire *jins* sequence with `playSequence`.
 
 - **Selection Controls**:

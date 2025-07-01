@@ -9,7 +9,7 @@ import NoteName, {
   octaveFourNoteNames,
 } from "@/models/NoteName";
 import detectPitchClassType from "@/functions/detectPitchClassType";
-import convertPitchClass, { shiftPitchClass, frequencyToMidiNoteNumber } from "@/functions/convertPitchClass";
+import convertPitchClass, { shiftPitchClassBaseValue, frequencyToMidiNoteNumber } from "@/functions/convertPitchClass";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import PitchClass from "@/models/PitchClass";
 
@@ -36,7 +36,7 @@ export default function getTuningSystemCells(tuningSystem: TuningSystem, startin
 
   const stringLength = inputStringLength > 0 ? inputStringLength : tuningSystem.getStringLength();
   const actualReferenceFrequency = inputReferenceFrequencies[startingNote] ?? (tuningSystem.getReferenceFrequencies()[startingNote] ?? tuningSystem.getDefaultReferenceFrequency());
-  const openConv = convertPitchClass(shiftPitchClass(pitchArr[0], type, 1), type, stringLength, actualReferenceFrequency)!;
+  const openConv = convertPitchClass(shiftPitchClassBaseValue(pitchArr[0], type, 1), type, stringLength, actualReferenceFrequency)!;
   const openLen = parseFloat(openConv.stringLength);
 
   const abjadArr = tuningSystem?.getAbjadNames();
@@ -46,7 +46,7 @@ export default function getTuningSystemCells(tuningSystem: TuningSystem, startin
   for (let octave = 0; octave < 4; octave++) {
     for (let idx = 0; idx < nPC; idx++) {
       const basePc = pitchArr[idx];
-      const shifted = shiftPitchClass(basePc, type, octave as 0 | 1 | 2 | 3);
+      const shifted = shiftPitchClassBaseValue(basePc, type, octave as 0 | 1 | 2 | 3);
       const conv = convertPitchClass(shifted, type, stringLength, actualReferenceFrequency);
       if (!conv) continue;
 

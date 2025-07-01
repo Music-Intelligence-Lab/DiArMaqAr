@@ -735,13 +735,17 @@
 
   &__cell {
     &_selected {
-      background-color: $primary;
+      background-color: $primary !important;
       color: white;
     }
 
     &_active {
       background-color: $secondary !important;
       color: white;
+    }
+
+    &_descending {
+      background-color: rgba($primary, 0.5);
     }
 
     &_editing {

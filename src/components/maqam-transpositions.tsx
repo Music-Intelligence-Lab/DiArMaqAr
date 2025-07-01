@@ -25,7 +25,7 @@ export default function MaqamTranspositions() {
     sources,
   } = useAppContext();
 
-  const { playNoteFrequency, playSequence, soundSettings } = useSoundContext();
+  const { playNote, playSequence, soundSettings } = useSoundContext();
 
   const { filters, setFilters } = useFilterContext();
 
@@ -142,10 +142,8 @@ export default function MaqamTranspositions() {
                 <button
                   className="maqam-transpositions__button"
                   onClick={async () => {
-                    const ascFreq = pitchClasses.map((pitchClass) => parseInt(pitchClass.frequency));
-                    const descFreq = oppositePitchClasses.map((pitchClass) => parseInt(pitchClass.frequency)).reverse();
-                    await playSequence(ascFreq);
-                    await playSequence(descFreq, false);
+                    await playSequence(pitchClasses);
+                    await playSequence([...oppositePitchClasses].reverse(), false);
                   }}
                 >
                   <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
@@ -153,14 +151,14 @@ export default function MaqamTranspositions() {
                 </button>
                 <button
                   className="maqam-transpositions__button"
-                  onClick={() => playSequence(pitchClasses.map((pitchClass) => parseInt(pitchClass.frequency)))}
+                  onClick={() => playSequence(pitchClasses)}
                 >
                   <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
                   Ascending
                 </button>
                 <button
                   className="maqam-transpositions__button"
-                  onClick={() => playSequence(oppositePitchClasses.map((pitchClass) => parseInt(pitchClass.frequency)).reverse(), false)}
+                  onClick={() => playSequence([...oppositePitchClasses].reverse(), false)}
                 >
                   <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
                   Descending
@@ -326,10 +324,10 @@ export default function MaqamTranspositions() {
           )}
           <tr>
             <th className="maqam-transpositions__row-header">Play</th>
-            {pitchClasses.map(({ frequency }, i) => (
+            {pitchClasses.map((pitchClass, i) => (
               <React.Fragment key={i}>
                 <th>
-                  <PlayCircleIcon className="maqam-transpositions__play-circle-icon" onClick={() => playNoteFrequency(parseInt(frequency))} />
+                  <PlayCircleIcon className="maqam-transpositions__play-circle-icon" onClick={() => playNote(pitchClass)} />
                 </th>
                 <th className="maqam-transpositions__header-cell"></th>
               </React.Fragment>

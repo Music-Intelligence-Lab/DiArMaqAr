@@ -34,9 +34,10 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
     allPitchClasses,
     selectedAbjadNames,
     setSelectedAbjadNames,
+    selectedMaqam
   } = useAppContext();
 
-  const { activePitchClasses, playNoteFrequency } = useSoundContext();
+  const { activePitchClasses, playNote } = useSoundContext();
 
   const { filters, setFilters } = useFilterContext();
 
@@ -166,11 +167,19 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
 
   const isCellSelected = (octave: number, colIndex: number) => selectedPitchClasses.some((pitchClasses) => pitchClasses.octave === octave && pitchClasses.index === colIndex);
   const isCellActive = (octave: number, colIndex: number) => activePitchClasses.some((pitchClasses) => pitchClasses.octave === octave && pitchClasses.index === colIndex);
+  const isCellDescending = (octave: number, colIndex: number) => {
+    const originalValue = allPitchClasses[octave * tuningSystemPitchClassesArray.length + colIndex].originalValue;
+    return selectedMaqam
+      ? selectedMaqam.descendingPitchClasses.map((pitchClass) => pitchClass.originalValue).includes(originalValue)
+      : selectedMaqamDetails?.getTahlil(allPitchClasses).descendingPitchClasses.map((pitchClass) => pitchClass.originalValue).includes(originalValue) ?? false;
+  }
 
   const getCellClassName = (octave: number, colIndex: number) => {
     const isSelected = isCellSelected(octave, colIndex);
     const isActive = isCellActive(octave, colIndex);
-    return `tuning-system-manager__cell ${octave} ${isSelected ? "tuning-system-manager__cell_selected " : ""} ${isActive ? "tuning-system-manager__cell_active " : ""}`;
+    const isDescending = !isSelected && !isActive && isCellDescending(octave, colIndex);
+
+    return `tuning-system-manager__cell ${octave} ${isSelected ? "tuning-system-manager__cell_selected " : ""} ${isActive ? "tuning-system-manager__cell_active " : ""} ${isDescending ? "tuning-system-manager__cell_descending " : ""}`;
   };
 
   const handleCheckboxChange = (octave: number, colIndex: number, checked: boolean) => {
@@ -687,7 +696,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                   <td>Play</td>
                   {rowCells.map((pitchClass, colIndex) => (
                     <td key={colIndex} className={getCellClassName(octave, colIndex)}>
-                      <PlayCircleIcon className="tuning-system-manager__play-circle-icon" onClick={() => playNoteFrequency(parseFloat(pitchClass.frequency))} />
+                      <PlayCircleIcon className="tuning-system-manager__play-circle-icon" onClick={() => playNote(pitchClass)} />
                     </td>
                   ))}
                 </tr>

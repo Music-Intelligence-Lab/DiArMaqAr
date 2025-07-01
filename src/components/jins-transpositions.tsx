@@ -22,7 +22,7 @@ export default function JinsTranspositions() {
     setSelectedJins,
   } = useAppContext();
 
-  const { playNoteFrequency, playSequence, soundSettings } = useSoundContext();
+  const { playNote, playSequence, soundSettings } = useSoundContext();
 
   const { filters, setFilters } = useFilterContext();
 
@@ -97,7 +97,7 @@ export default function JinsTranspositions() {
                 className="jins-transpositions__button"
                 onClick={() => {
                   playSequence(
-                    pitchClasses.map(({ frequency }) => parseInt(frequency))
+                    pitchClasses
                   );
                 }}
               >
@@ -294,7 +294,7 @@ export default function JinsTranspositions() {
           )}
           <tr>
             <th className="jins-transpositions__row-header">Play</th>
-            {pitchClasses.map(({ frequency }, i) => (
+            {pitchClasses.map((pitchClass, i) => (
               <React.Fragment key={i}>
                 {i !== 0 && (
                   <th className="jins-transpositions__header-cell"></th>
@@ -302,7 +302,7 @@ export default function JinsTranspositions() {
                 <th className="jins-transpositions__header-cell">
                   <PlayCircleIcon
                     className="jins-transpositions__play-circle-icon"
-                    onClick={() => playNoteFrequency(parseInt(frequency))}
+                    onClick={() => playNote(pitchClass)}
                   />
                 </th>
               </React.Fragment>

@@ -103,15 +103,12 @@ export default function PatternsManager() {
 
   const playAscending = () => {
     if (!maqamModel) return;
-    const freqs = pitchClasses.map((pc) =>
-      parseInt(pc.frequency)
-    );
-    playSequence(freqs);
+    playSequence(pitchClasses);
   };
 
   const playPattern = async () => {
     if (!maqamModel || !selectedPattern) return;
-    const freqs = selectedPattern.getNotes().map((n: PatternNote) => {
+    const selectedPatternPitchClasses = selectedPattern.getNotes().map((n: PatternNote) => {
       // Find the absolute index in SCALE_DEGREES
       const degreeIndex = SCALE_DEGREES.indexOf(n.scaleDegree);
       // First occurrence of "I" marks the start of octave degrees
@@ -120,12 +117,12 @@ export default function PatternsManager() {
       const relIndex = degreeIndex - firstDegree;
       if (relIndex < 0 || relIndex >= pitchClasses.length) {
         // Rest or out-of-range → silence (0)
-        return 0;
+        return null;
       }
-      const pc = pitchClasses[relIndex];
-      return parseInt(pc.frequency);
+
+      return pitchClasses[relIndex];
     });
-    await playSequence(freqs);
+    await playSequence(selectedPatternPitchClasses.filter((f) => f !== null));
   };
 
   return (

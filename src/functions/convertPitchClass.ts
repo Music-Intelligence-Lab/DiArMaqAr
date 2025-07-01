@@ -89,7 +89,7 @@ export default function convertPitchClass(
   }
 }
 
-export function shiftPitchClass(
+export function shiftPitchClassBaseValue(
   baseValue: string,
   inputType: "fraction" | "decimalRatio" | "cents" | "stringLength",
   targetOctave: 0 | 1 | 2 | 3
