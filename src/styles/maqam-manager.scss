@@ -63,7 +63,7 @@
     grid-template-rows: repeat(3, auto);
     grid-auto-flow: column;
     gap: 10px;
-    height: 225px;
+    height: 200px;
     overflow-x: scroll;
     overflow-y: hidden;
     position: relative;
@@ -108,7 +108,6 @@
         color: $tertiary;
         transition: background-color 0.2s ease-in-out;
       }
-
     }
 
     .carousel-button-prev,
@@ -125,7 +124,6 @@
         color: $tertiary;
         transition: color 0.1s ease-in-out;
       }
-
     }
 
     .carousel-button-prev {
@@ -137,18 +135,16 @@
     }
   }
 
-
   &__item {
     display: flex;
     flex-direction: column;
     align-items: left;
-    padding: 10px;
+    padding: 5px 10px ;
     background-color: rgba($black, 0.3);
     font-size: 14px;
     color: $text;
     cursor: pointer;
-    // box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-    transition: 0.3s;
+    transition: 0.2s;
 
     &_active {
       background-color: rgba($primary, 0.4);
@@ -178,7 +174,6 @@
       font-weight: 200;
       margin-top: 3px;
     }
-    
   }
 
   &__play-button {
@@ -352,12 +347,12 @@
 
   &__tab {
     text-align: left;
-    width:max-content;
+    width: max-content;
     padding: 10px 10px;
     border-radius: 0px;
     border: none;
     background: $medium-grey;
-        color: $text;
+    color: $text;
 
     font-weight: 400;
     cursor: pointer;
@@ -371,7 +366,7 @@
     border: none;
     background: $black;
     font-weight: 300;
-     &:hover {
+    &:hover {
       background: $black;
     }
   }
