@@ -145,7 +145,7 @@ export function getMaqamTranspositions(
     let sliceIndex = 0;
     const lastAscendingPitchClass = ascendingPitchClasses[ascendingPitchClasses.length - 1];
 
-    for (let i = 0; i < ascendingPitchClasses.length; i++) { //todo we might nee to add <= and not just < here
+    for (let i = 0; i < ascendingPitchClasses.length; i++) {
       // if the maqam is longer than 7 and has octaves in them, then you want to slice the sequence in a way where you dont shift the octave again
       if (parseFloat(ascendingPitchClasses[i].frequency) * 2 < parseFloat(lastAscendingPitchClass.frequency)) {
         sliceIndex = i + 1;
