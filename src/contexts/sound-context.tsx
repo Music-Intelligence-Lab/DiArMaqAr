@@ -8,6 +8,7 @@ import Pattern from "@/models/Pattern";
 import romanToNumber from "@/functions/romanToNumber";
 import PitchClass from "@/models/PitchClass";
 import { initializeCustomWaves, PERIODIC_WAVES, APERIODIC_WAVES } from "@/audio/waves";
+import shiftPitchClass from "@/functions/shiftPitchClass";
 type InputMode = "tuningSystem" | "selection";
 type OutputMode = "mute" | "waveform" | "midi";
 
@@ -36,14 +37,14 @@ interface MidiPortInfo {
 }
 
 interface SoundContextInterface {
-  playNoteFrequency: (frequency: number, duration?: number) => void;
+  playNote: (pitchClass: PitchClass, duration?: number) => void;
   soundSettings: SoundSettings;
   setSoundSettings: React.Dispatch<React.SetStateAction<SoundSettings>>;
   activePitchClasses: PitchClass[];
   setActivePitchClasses: React.Dispatch<React.SetStateAction<PitchClass[]>>;
-  playSequence: (frequencies: number[], ascending?: boolean) => Promise<void>;
-  noteOn: (frequency: number) => void;
-  noteOff: (frequency: number) => void;
+  playSequence: (pitchClasses: PitchClass[], ascending?: boolean) => Promise<void>;
+  noteOn: (pitchClass: PitchClass) => void;
+  noteOff: (pitchClass: PitchClass) => void;
   midiInputs: MidiPortInfo[];
   midiOutputs: MidiPortInfo[];
   setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
@@ -53,7 +54,8 @@ interface SoundContextInterface {
 const SoundContext = createContext<SoundContextInterface | null>(null);
 
 export function SoundContextProvider({ children }: { children: React.ReactNode }) {
-  const { selectedTuningSystem, selectedMaqamDetails, selectedJinsDetails, tuningSystemPitchClasses, allPitchClasses, selectedPitchClasses } = useAppContext();
+  const { selectedTuningSystem, selectedMaqamDetails, selectedJinsDetails, tuningSystemPitchClasses, allPitchClasses, selectedPitchClasses } =
+    useAppContext();
 
   const [soundSettings, setSoundSettings] = useState<SoundSettings>({
     attack: 0.01,
@@ -238,19 +240,15 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
       const pitchClass = pitchClasses[idx];
 
-      const freqStr = pitchClass.frequency;
-      const freq = parseFloat(freqStr);
-      if (isNaN(freq)) return;
-
       // ——— dispatch sound ———
       if (cmd === 0x90 && velocity > 0) {
-        noteOn(freq, velocity);
+        noteOn(pitchClass, velocity);
         setActivePitchClasses((prev) => {
           if (prev.some((c) => c.index === pitchClass.index && c.octave === pitchClass.octave)) return prev;
           return [...prev, pitchClass];
         });
       } else if (cmd === 0x80 || (cmd === 0x90 && velocity === 0)) {
-        noteOff(freq);
+        noteOff(pitchClass);
         setActivePitchClasses((prev) => prev.filter((c) => !(c.index === pitchClass.index && c.octave === pitchClass.octave)));
       }
     } else if (soundSettings.inputMode === "selection") {
@@ -268,17 +266,18 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
           const baseMidi = Math.round(frequencyToMidiNoteNumber(baseFreq));
           // how many octaves to shift (positive => up, negative => down)
           const octaveShift = Math.round((noteNumber - baseMidi) / 12);
+
+          const adjPitchClass = shiftPitchClass(allPitchClasses, pitchClass, octaveShift);
           // adjust frequency by 2^octaveShift
-          const adjFreq = baseFreq * Math.pow(2, octaveShift);
 
           if (cmd === 0x90 && velocity > 0) {
-            noteOn(adjFreq, velocity);
+            noteOn(adjPitchClass, velocity);
             setActivePitchClasses((prev) => {
               if (prev.some((c) => c.index === pitchClass.index && c.octave === pitchClass.octave)) return prev;
               return [...prev, pitchClass];
             });
           } else if (cmd === 0x80 || (cmd === 0x90 && velocity === 0)) {
-            noteOff(adjFreq);
+            noteOff(adjPitchClass);
             setActivePitchClasses((prev) => prev.filter((c) => !(c.index === pitchClass.index && c.octave === pitchClass.octave)));
           }
 
@@ -288,7 +287,13 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     }
   };
 
-  const playNoteFrequency = (frequency: number, givenDuration: number = soundSettings.duration) => {
+  const playNote = (pitchClass: PitchClass, givenDuration: number = soundSettings.duration) => {
+    setActivePitchClasses((prev) => {
+      if (prev.some((c) => c.frequency === frequency.toString())) return prev;
+      return [...prev, pitchClass];
+    });
+
+    const frequency = parseFloat(pitchClass.frequency);
     // Resume AudioContext if it's suspended to avoid lag.
     const audioCtx = audioCtxRef.current!;
     if (audioCtx && audioCtx.state === "suspended") {
@@ -371,7 +376,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
       // schedule release for aperiodic voices after duration
       scheduleTimeout(() => {
-        noteOff(frequency);
+        noteOff(pitchClass);
       }, givenDuration * 1000);
 
       return;
@@ -392,8 +397,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     }
 
     //–– unified polyphonic envelope ––
-    const upcomingCount = Array.from(activeNotesRef.current.values())
-      .reduce((sum, arr) => sum + arr.length, 0) + 1;
+    const upcomingCount = Array.from(activeNotesRef.current.values()).reduce((sum, arr) => sum + arr.length, 0) + 1;
     // peak normalization: scale each voice by 1/N to prevent clipping at peaks
     const voiceScale = 1 / upcomingCount;
 
@@ -402,10 +406,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     gainNode.gain.setValueAtTime(0, startTime);
     gainNode.gain.linearRampToValueAtTime(voiceScale, startTime + attack);
     // decay to sustain * voiceScale
-    gainNode.gain.linearRampToValueAtTime(
-      voiceScale * sustain,
-      startTime + attack + decay
-    );
+    gainNode.gain.linearRampToValueAtTime(voiceScale * sustain, startTime + attack + decay);
     // connect source -> envelope -> master
     source.connect(gainNode).connect(masterGain);
 
@@ -419,15 +420,16 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
     // schedule release after the requested duration
     scheduleTimeout(() => {
-      noteOff(frequency);
+      noteOff(pitchClass);
     }, givenDuration * 1000);
   };
 
-  const playSequence = (frequencies: number[], ascending = true): Promise<void> => {
+  const playSequence = (pitchClasses: PitchClass[], ascending = true): Promise<void> => {
     timeoutsRef.current.forEach(clearTimeout);
     timeoutsRef.current = [];
 
-    const selectedPattern = soundSettings.selectedPattern || new Pattern("Default", "Default", [{ scaleDegree: "I", noteDuration: "4", isTarget: true }]);
+    const selectedPattern =
+      soundSettings.selectedPattern || new Pattern("Default", "Default", [{ scaleDegree: "I", noteDuration: "4", isTarget: true }]);
 
     return new Promise((resolve) => {
       const beatSec = 60 / soundSettings.tempo;
@@ -435,14 +437,14 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
       const patternNotes = selectedPattern.getNotes();
       const maxDegree = Math.max(...patternNotes.map((n) => (n.scaleDegree === "0" ? 0 : romanToNumber(n.scaleDegree))));
 
-      if (frequencies.length < maxDegree) {
-        const totalTimeMs = frequencies.length * beatSec * 1000;
+      if (pitchClasses.length < maxDegree) {
+        const totalTimeMs = pitchClasses.length * beatSec * 1000;
 
-        frequencies.forEach((freq, i) => {
+        pitchClasses.forEach((pitchClass, i) => {
           scheduleTimeout(() => {
-            playNoteFrequency(freq, soundSettings.duration);
+            playNote(pitchClass, soundSettings.duration);
             // ensure release for waveform output
-            scheduleTimeout(() => noteOff(freq), soundSettings.duration * 1000);
+            scheduleTimeout(() => noteOff(pitchClass), soundSettings.duration * 1000);
           }, i * beatSec * 1000);
         });
 
@@ -453,13 +455,25 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         return;
       }
 
-      const extendedFrequencies = [...frequencies, ...frequencies.map((f) => f * 2).slice(1, maxDegree)];
+      let sliceIndex = 0;
+      const lastAscendingPitchClass = pitchClasses[pitchClasses.length - 1];
 
-      const n = frequencies.length;
+      for (let i = 0; i < pitchClasses.length; i++) {
+        if (parseFloat(pitchClasses[i].frequency) * 2 <= parseFloat(lastAscendingPitchClass.frequency)) {
+          sliceIndex = i + 1;
+        }
+      }
+
+      const extendedPitchClasses = [
+        ...pitchClasses,
+        ...pitchClasses.slice(sliceIndex, -1).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 1)),
+      ];
+
+      const n = pitchClasses.length;
       let cumulativeTimeSec = 0;
 
       if (soundSettings.drone) {
-        noteOn(frequencies[0] / 2, 30);
+        noteOn(shiftPitchClass(allPitchClasses, pitchClasses[0], -1), 30);
       }
 
       const playPattern = (windowStartIndexes: number[], terminationCheck: (windowStart: number, isTarget: boolean) => boolean) => {
@@ -474,19 +488,19 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
             if (scaleDegree !== "R") {
               const deg = romanToNumber(scaleDegree);
-              let freqToPlay = extendedFrequencies[windowStart + deg - 1];
+              let pitchClassToPlay = extendedPitchClasses[windowStart + deg - 1];
               if (scaleDegree.startsWith("-")) {
                 // negative degree, e.g. "-II" → play the previous octave
-                freqToPlay /= 2;
+                pitchClassToPlay = shiftPitchClass(allPitchClasses, pitchClassToPlay, -1);
               } else if (scaleDegree.startsWith("+")) {
                 // positive degree, e.g. "+II" → play the next octave
-                freqToPlay *= 2;
+                pitchClassToPlay = shiftPitchClass(allPitchClasses, pitchClassToPlay, 1);
               }
 
               scheduleTimeout(() => {
-                playNoteFrequency(freqToPlay, durSec);
+                playNote(pitchClassToPlay, durSec);
                 // schedule noteOff for waveform output
-                scheduleTimeout(() => noteOff(freqToPlay), durSec * 1000);
+                scheduleTimeout(() => noteOff(pitchClassToPlay), durSec * 1000);
               }, cumulativeTimeSec * 1000);
             }
 
@@ -498,7 +512,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
       if (ascending) {
         const ascendingIndexes = Array.from({ length: n }, (_, i) => i);
-        playPattern(ascendingIndexes, (windowStart, isTarget) => windowStart === frequencies.length - 1 && isTarget);
+        playPattern(ascendingIndexes, (windowStart, isTarget) => windowStart === n - 1 && isTarget);
       } else {
         const descendingIndexes = Array.from({ length: n }, (_, i) => n - 1 - i);
         playPattern(descendingIndexes, (windowStart, isTarget) => windowStart === 0 && isTarget);
@@ -514,7 +528,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
       if (soundSettings.drone) {
         scheduleTimeout(() => {
-          noteOff(frequencies[0] / 2);
+          noteOff(shiftPitchClass(allPitchClasses, pitchClasses[0], -1));
         }, totalSeqMs);
       }
 
@@ -524,7 +538,12 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     });
   };
 
-  function noteOn(frequency: number, midiVelocity: number = 127) {
+  function noteOn(pitchClass: PitchClass, midiVelocity: number = 127) {
+    setActivePitchClasses((prev) => {
+      if (prev.some((c) => c.frequency === pitchClass.frequency)) return prev;
+      return [...prev, pitchClass];
+    });
+    const frequency = parseFloat(pitchClass.frequency);
     if (soundSettings.outputMode === "mute") return;
 
     const velocityScale = midiVelocity / 127;
@@ -624,7 +643,10 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     activeNotesRef.current.set(frequency, prev);
   }
 
-  function noteOff(frequency: number) {
+  function noteOff(pitchClass: PitchClass) {
+    setActivePitchClasses((prev) => prev.filter((c) => !(c.frequency === pitchClass.frequency)));
+    const frequency = parseFloat(pitchClass.frequency);
+
     if (soundSettings.outputMode === "mute") return;
 
     if (soundSettings.outputMode === "midi") {
@@ -677,7 +699,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
   return (
     <SoundContext.Provider
       value={{
-        playNoteFrequency,
+        playNote,
         soundSettings,
         setSoundSettings,
         activePitchClasses,
@@ -688,14 +710,13 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         midiInputs,
         midiOutputs,
         setRefresh,
-        clearHangingNotes
+        clearHangingNotes,
       }}
     >
       {children}
     </SoundContext.Provider>
   );
 }
-
 
 export default function useSoundContext() {
   const context = useContext(SoundContext);

@@ -83,18 +83,14 @@ export default function KeyboardControls() {
 
   useEffect(() => {
     const addActive = (pitchClass: PitchClass) => {
-      const freq = parseFloat(pitchClass.frequency);
-      if (isNaN(freq)) return;
-      noteOn(freq);
+      noteOn(pitchClass);
       setActivePitchClasses((prev) =>
         prev.some((c) => c.index === pitchClass.index && c.octave === pitchClass.octave) ? prev : [...prev, pitchClass]
       );
     };
 
     const removeActive = (pitchClass: PitchClass) => {
-      const freq = parseFloat(pitchClass.frequency);
-      if (isNaN(freq)) return;
-      noteOff(freq);
+      noteOff(pitchClass);
       setActivePitchClasses((prev) => prev.filter((c) => !(c.index === pitchClass.index && c.octave === pitchClass.octave)));
     };
 

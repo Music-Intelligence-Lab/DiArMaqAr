@@ -81,17 +81,17 @@ export default function PitchClassWheel() {
   );
 
   const wheelCells = useMemo(() => {
-    return allPitchClasses.map((pitchClass) => {
-      const note = pitchClass.originalValue;
-      const isSelected = selectedPitchClasses.some((sc) => sc.originalValue === note);
+    return allPitchClasses.map((pitchClass: PitchClass) => {
+      const originalValue = pitchClass.originalValue;
+      const isSelected = selectedPitchClasses.some((sc) => sc.originalValue === originalValue);
       const isActive = activePitchClasses.some((ac) => ac.index === pitchClass.index && ac.octave === pitchClass.octave);
 
-      const jinsTransposition = filteredJinsTranspositions.find((transposition) => transposition.jinsPitchClasses[0].noteName === note);
-      const maqamTransposition = filteredMaqamTranspositions.find((transposition) => transposition.ascendingPitchClasses[0].noteName === note);
+      const jinsTransposition = filteredJinsTranspositions.find((transposition) => transposition.jinsPitchClasses[0].originalValue === originalValue);
+      const maqamTransposition = filteredMaqamTranspositions.find((transposition) => transposition.ascendingPitchClasses[0].originalValue === originalValue);
 
       const isDescending = selectedMaqam
-        ? selectedMaqam.descendingPitchClasses.map((pitchClass) => pitchClass.noteName).includes(note)
-        : selectedMaqamDetails?.getDescendingNoteNames().includes(note) ?? false;
+        ? selectedMaqam.descendingPitchClasses.map((pitchClass) => pitchClass.originalValue).includes(originalValue)
+        : selectedMaqamDetails?.getTahlil(allPitchClasses).descendingPitchClasses.map((pitchClass) => pitchClass.originalValue).includes(originalValue) ?? false;
 
       const isTonic = !!(jinsTransposition || maqamTransposition);
 
