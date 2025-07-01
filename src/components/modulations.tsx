@@ -2,10 +2,13 @@
 
 import useAppContext from "@/contexts/app-context";
 import React, { useState, useEffect } from "react";
-import { MaqamModulations, Maqam } from "@/models/Maqam";
+import { MaqamatModulations, Maqam } from "@/models/Maqam";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
-import calculateNumberOfHops from "@/functions/calculateNumberOfHops";
-import { JinsModulations } from "@/models/Jins";
+import calculateNumberOfModulations from "@/functions/calculateNumberOfModulations";
+import { AjnasModulations } from "@/models/Jins";
+import modulate from "@/functions/modulate";
+
+type ModulationsPair = { ajnas: AjnasModulations; maqamat: MaqamatModulations };
 
 export default function Modulations() {
   const {
@@ -26,24 +29,31 @@ export default function Modulations() {
   } = useAppContext();
 
   const [sourceMaqamStack, setSourceMaqamStack] = useState<Maqam[]>([]);
-  const [modulationsStack, setModulationsStack] = useState<(MaqamModulations | JinsModulations)[]>([]);
+  const [modulationsStack, setModulationsStack] = useState<ModulationsPair[]>([]);
 
-  useEffect(() => {
-    if (selectedMaqamDetails) {
-      const transposition = selectedMaqamDetails.getTahlil(allPitchClasses);
-      setSourceMaqamStack([transposition]);
-      const modulationsData = getModulations(transposition);
-      setModulationsStack([modulationsData]);
-    } else if (sourceMaqamStack.length > 0 ) {
-      const transposition = sourceMaqamStack[0];
-      setSourceMaqamStack([transposition]);
-      const modulationsData = getModulations(transposition);
-      setModulationsStack([modulationsData]);
-    } else {
-      setSourceMaqamStack([]);
-      setModulationsStack([]);
-    }
-  }, [ajnasModulationsMode]);
+useEffect(() => {
+  function getBothModulations(transposition: Maqam): ModulationsPair {
+    const ajnasMods = modulate(allPitchClasses, ajnas, maqamat, transposition, true) as AjnasModulations;
+    const maqamatMods = modulate(allPitchClasses, ajnas, maqamat, transposition, false) as MaqamatModulations;
+    return {
+      ajnas: ajnasMods,
+      maqamat: maqamatMods,
+    };
+  }
+
+  if (selectedMaqamDetails) {
+    const transposition = selectedMaqamDetails.getTahlil(allPitchClasses);
+    setSourceMaqamStack([transposition]);
+    setModulationsStack([getBothModulations(transposition)]);
+  } else if (sourceMaqamStack.length > 0 ) {
+    const transposition = sourceMaqamStack[0];
+    setSourceMaqamStack([transposition]);
+    setModulationsStack([getBothModulations(transposition)]);
+  } else {
+    setSourceMaqamStack([]);
+    setModulationsStack([]);
+  }
+}, [selectedMaqamDetails, sourceMaqamStack.length, allPitchClasses, getModulations, ajnas, maqamat]);
 
   useEffect(() => {
     if (selectedMaqam) {
@@ -64,7 +74,12 @@ export default function Modulations() {
   }, [selectedMaqam, selectedJins]);
 
   const addHopsWrapper = (maqamTransposition: Maqam, stackIdx: number) => {
-    const newModulations = getModulations(maqamTransposition);
+    const ajnasMods = modulate(allPitchClasses, ajnas, maqamat, maqamTransposition, true) as AjnasModulations;
+    const maqamatMods = modulate(allPitchClasses, ajnas, maqamat, maqamTransposition, false) as MaqamatModulations;
+    const newModulations = {
+      ajnas: ajnasMods,
+      maqamat: maqamatMods,
+    };
     setSourceMaqamStack((prev) => [...prev.slice(0, stackIdx + 1), maqamTransposition]);
     setModulationsStack((prev) => [...prev.slice(0, stackIdx + 1), newModulations]);
   };
@@ -79,7 +94,9 @@ export default function Modulations() {
       {sourceMaqamStack.map((sourceMaqam, stackIdx) => {
         const ascendingNoteNames = sourceMaqam.ascendingPitchClasses.map((pitchClass) => pitchClass.noteName);
         const descendingNoteNames = [...sourceMaqam.descendingPitchClasses.map((pitchClass) => pitchClass.noteName)].reverse();
-        const totalModulations = calculateNumberOfHops(modulationsStack[stackIdx]);
+        // Always calculate both counts independently, regardless of mode
+        const totalAjnasModulations = modulationsStack[stackIdx] ? calculateNumberOfModulations(modulationsStack[stackIdx].ajnas, "ajnas") : 0;
+        const totalMaqamatModulations = modulationsStack[stackIdx] ? calculateNumberOfModulations(modulationsStack[stackIdx].maqamat, "maqamat") : 0;
         return (
           <div
             className="modulations__hops-wrapper"
@@ -91,13 +108,38 @@ export default function Modulations() {
               <span onClick={() => setSelectedMaqam(sourceMaqam)} style={{ cursor: "pointer" }}>
                 {sourceMaqam.name ? sourceMaqam.name : "Unknown"} ({ascendingNoteNames ? ascendingNoteNames[0] : "N/A"}/
                 {getEnglishNoteName(ascendingNoteNames ? ascendingNoteNames[0]! : "")})
-                {modulationsStack[stackIdx] && <> - {totalModulations} modulation options</>}
-                <button
-                  className={"modulations__ajnas-modulations-mode " + (ajnasModulationsMode ? "modulations__ajnas-modulations-mode_active" : "")}
-                  onClick={() => setAjnasModulationsMode(!ajnasModulationsMode)}
-                >
-                  {ajnasModulationsMode ? "Ajnas Modulations" : "Maqamat Modulations"}
-                </button>
+                {modulationsStack[stackIdx] && (
+                  <>
+                    {" - "}
+                    <span
+                      style={{
+                        cursor: "pointer",
+                        textDecoration: ajnasModulationsMode ? "underline" : "none",
+                        marginRight: 12,
+                        color: ajnasModulationsMode ? "#0070f3" : undefined,
+                      }}
+                      onClick={e => {
+                        e.stopPropagation();
+                        setAjnasModulationsMode(true);
+                      }}
+                    >
+                      {totalAjnasModulations} Ajnās modulations
+                    </span>
+                    <span
+                      style={{
+                        cursor: "pointer",
+                        textDecoration: !ajnasModulationsMode ? "underline" : "none",
+                        color: !ajnasModulationsMode ? "#0070f3" : undefined,
+                      }}
+                      onClick={e => {
+                        e.stopPropagation();
+                        setAjnasModulationsMode(false);
+                      }}
+                    >
+                      {totalMaqamatModulations} Maqāmāt modulations
+                    </span>
+                  </>
+                )}
               </span>
               {/* Show delete button only on the last hops-wrapper and only if more than one exists */}
               {stackIdx === sourceMaqamStack.length - 1 && sourceMaqamStack.length > 1 && (
@@ -113,7 +155,7 @@ export default function Modulations() {
 
             {modulationsStack[stackIdx] &&
               (() => {
-                const modulations = modulationsStack[stackIdx];
+                const modulations = ajnasModulationsMode ? modulationsStack[stackIdx].ajnas : modulationsStack[stackIdx].maqamat;
                 const { noteName2p } = modulations;
                 return (
                   <>
