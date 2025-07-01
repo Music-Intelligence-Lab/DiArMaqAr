@@ -354,32 +354,34 @@ useEffect(() => {
                           </span>
                         ))}
                     </div>
-                    <div className="modulations__modulations-list">
-                      <span className="modulations__header">
-                        <span className="modulations__header-text">Sixth Descending: </span>
-                        {descendingNoteNames[5]} ({modulations?.modulationsOnSixDescending ? modulations.modulationsOnSixDescending.length : 0})
-                      </span>
-                      {[...modulations.modulationsOnSixDescending]
-                        .sort((a, b) => a.name.localeCompare(b.name))
-                        .map((hop, index) => (
-                          <span
-                            key={index}
-                            onClick={() => {
-                              if ("ascendingPitchClasses" in hop) {
-                                addHopsWrapper(hop, stackIdx);
-                                setSelectedMaqam(hop);
-                                setSelectedJins(null);
-                              } else {
-                                setSelectedJins(hop);
-                                setSelectedMaqam(null);
-                              }
-                            }}
-                            style={{ cursor: "pointer" }}
-                          >
-                            {hop.name}
-                          </span>
-                        ))}
-                    </div>
+                    {JSON.stringify(modulations.modulationsOnSixAscending) !== JSON.stringify(modulations.modulationsOnSixDescending) && (
+                      <div className="modulations__modulations-list">
+                        <span className="modulations__header">
+                          <span className="modulations__header-text">Sixth Descending: </span>
+                          {descendingNoteNames[5]} ({modulations?.modulationsOnSixDescending ? modulations.modulationsOnSixDescending.length : 0})
+                        </span>
+                        {[...modulations.modulationsOnSixDescending]
+                          .sort((a, b) => a.name.localeCompare(b.name))
+                          .map((hop, index) => (
+                            <span
+                              key={index}
+                              onClick={() => {
+                                if ("ascendingPitchClasses" in hop) {
+                                  addHopsWrapper(hop, stackIdx);
+                                  setSelectedMaqam(hop);
+                                  setSelectedJins(null);
+                                } else {
+                                  setSelectedJins(hop);
+                                  setSelectedMaqam(null);
+                                }
+                              }}
+                              style={{ cursor: "pointer" }}
+                            >
+                              {hop.name}
+                            </span>
+                          ))}
+                      </div>
+                    )}
                   </>
                 );
               })()}
