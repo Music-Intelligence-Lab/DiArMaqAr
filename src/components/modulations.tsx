@@ -245,7 +245,7 @@ export default function Modulations() {
                     <div className="modulations__modulations-list">
                       <span className="modulations__header">
                         <span className="modulations__header-text">
-                          Tonic:{" "}
+                          Tonic:<br />{" "}
                         </span>
                         {ascendingNoteNames[0]} (
                         {modulations?.modulationsOnOne
@@ -278,7 +278,7 @@ export default function Modulations() {
                     <div className="modulations__modulations-list">
                       <span className="modulations__header">
                         <span className="modulations__header-text">
-                          Third:{" "}
+                          Third:<br />{" "}
                         </span>
                         {ascendingNoteNames[2]} (
                         {modulations?.modulationsOnThree
@@ -311,7 +311,7 @@ export default function Modulations() {
                     <div className="modulations__modulations-list">
                       <span className="modulations__header">
                         <span className="modulations__header-text">
-                          alt Third:{" "}
+                          Third (alternative):<br />{" "}
                         </span>
                         {noteName2p} (
                         {modulations?.modulationsOnThree2p
@@ -344,7 +344,7 @@ export default function Modulations() {
                     <div className="modulations__modulations-list">
                       <span className="modulations__header">
                         <span className="modulations__header-text">
-                          Fourth:{" "}
+                          Fourth:<br />{" "}
                         </span>
                         {ascendingNoteNames[3]} (
                         {modulations?.modulationsOnFour
@@ -377,7 +377,7 @@ export default function Modulations() {
                     <div className="modulations__modulations-list">
                       <span className="modulations__header">
                         <span className="modulations__header-text">
-                          Fifth:{" "}
+                          Fifth:<br />{" "}
                         </span>
                         {ascendingNoteNames[4]} (
                         {modulations?.modulationsOnFive
@@ -410,7 +410,7 @@ export default function Modulations() {
                     <div className="modulations__modulations-list">
                       <span className="modulations__header">
                         <span className="modulations__header-text">
-                          Sixth (if no Third):{" "}
+                          Sixth (if no Third):<br />{" "}
                         </span>
                         {ascendingNoteNames[5]} (
                         {modulations?.modulationsOnSixNoThird
@@ -443,7 +443,7 @@ export default function Modulations() {
                     <div className="modulations__modulations-list">
                       <span className="modulations__header">
                         <span className="modulations__header-text">
-                          Sixth Ascending:{" "}
+                          Sixth (ascending):<br />{" "}
                         </span>
                         {ascendingNoteNames[5]} (
                         {modulations?.modulationsOnSixAscending
@@ -477,7 +477,7 @@ export default function Modulations() {
                       <div className="modulations__modulations-list">
                         <span className="modulations__header">
                           <span className="modulations__header-text">
-                            Sixth Descending:{" "}
+                            Sixth (descending): <br />{" "}
                           </span>
                           {descendingNoteNames[5]} (
                           {modulations?.modulationsOnSixDescending
