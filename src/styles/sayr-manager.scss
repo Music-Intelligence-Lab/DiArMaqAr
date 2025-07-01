@@ -111,17 +111,30 @@
     }
   }
 
-  &__stops {
+  &__admin-stops {
     display: flex;
     gap: 10px;
   }
 
-  &__stop {
+  &__stops {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  &__admin-stop {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
     align-items: center;
     margin-bottom: 0.5rem;
+  }
+
+  &__stop {
+    background-color: $primary;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
   }
 
   &__stop-type,
