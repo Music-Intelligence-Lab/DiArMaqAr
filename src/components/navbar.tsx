@@ -8,7 +8,7 @@ import { Sayr } from "@/models/Maqam";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import NavigationMenu from "./navigation-menu";
 import { octaveOneNoteNames } from "@/models/NoteName";
-import calculateNumberOfHops from "@/functions/calculateNumberOfHops";
+import calculateNumberOfModulations from "@/functions/calculateNumberOfModulations";
 export default function Navbar() {
   const { showAdminTabs, setShowAdminTabs, selectedMenu, setSelectedMenu } = useMenuContext();
   const {
@@ -67,7 +67,7 @@ export default function Navbar() {
     if (!selectedMaqamDetails) return null;
     const transposition = selectedMaqamDetails.getTahlil(allPitchClasses);
     const modulations = getModulations(transposition);
-    return calculateNumberOfHops(modulations);
+    return calculateNumberOfModulations(modulations);
   }, [selectedMaqamDetails, getModulations]);
 
   return (

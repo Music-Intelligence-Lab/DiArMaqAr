@@ -2,8 +2,8 @@ import { octaveOneNoteNames, octaveTwoNoteNames } from "@/models/NoteName";
 import { getJinsTranspositions, getMaqamTranspositions } from "./transpose";
 import shawwaMapping from "@/functions/shawwaMapping";
 import PitchClass from "@/models/PitchClass";
-import JinsDetails, { Jins, JinsModulations } from "@/models/Jins";
-import MaqamDetails, { Maqam, MaqamModulations } from "@/models/Maqam";
+import JinsDetails, { Jins, AjnasModulations } from "@/models/Jins";
+import MaqamDetails, { Maqam, MaqamatModulations } from "@/models/Maqam";
 
 export default function modulate(
   allPitchClasses: PitchClass[],
@@ -12,7 +12,7 @@ export default function modulate(
   sourceMaqamTransposition: Maqam,
   ajnasModulationsMode: boolean,
   centsTolerance: number = 5
-): MaqamModulations | JinsModulations {
+): MaqamatModulations | AjnasModulations {
   type ModulationType = Maqam | Jins;
   const modulationsOnOne: ModulationType[] = [];
   const modulationsOnThree: ModulationType[] = [];
@@ -136,7 +136,7 @@ export default function modulate(
       modulationsOnSixAscending,
       modulationsOnSixDescending,
       noteName2p,
-    } as JinsModulations;
+    } as AjnasModulations;
   } else {
     return {
       modulationsOnOne,
@@ -148,6 +148,6 @@ export default function modulate(
       modulationsOnSixAscending,
       modulationsOnSixDescending,
       noteName2p,
-    } as MaqamModulations;
+    } as MaqamatModulations;
   }
 }

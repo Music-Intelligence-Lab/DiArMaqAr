@@ -2,10 +2,10 @@
 
 import React, { createContext, useState, useEffect, useMemo, useContext, useCallback } from "react";
 import TuningSystem from "@/models/TuningSystem";
-import JinsDetails, { Jins, JinsModulations } from "@/models/Jins";
+import JinsDetails, { Jins, AjnasModulations } from "@/models/Jins";
 import NoteName, { TransliteratedNoteNameOctaveOne, TransliteratedNoteNameOctaveTwo, Cell } from "@/models/NoteName";
 import { octaveOneNoteNames, octaveTwoNoteNames } from "@/models/NoteName";
-import MaqamDetails, { Maqam, MaqamModulations } from "@/models/Maqam";
+import MaqamDetails, { Maqam, MaqamatModulations } from "@/models/Maqam";
 import { Source } from "@/models/bibliography/Source";
 import Pattern from "@/models/Pattern";
 import getFirstNoteName from "@/functions/getFirstNoteName";
@@ -69,7 +69,7 @@ interface AppContextInterface {
   setSources: React.Dispatch<React.SetStateAction<Source[]>>;
   patterns: Pattern[];
   setPatterns: React.Dispatch<React.SetStateAction<Pattern[]>>;
-  getModulations: (sourceMaqamTransposition: Maqam) => MaqamModulations | JinsModulations;
+  getModulations: (sourceMaqamTransposition: Maqam) => MaqamatModulations | AjnasModulations;
   ajnasModulationsMode: boolean;
   setAjnasModulationsMode: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -292,7 +292,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   };
 
   const getModulations = useCallback(
-    (sourceMaqamTransposition: Maqam): MaqamModulations | JinsModulations => {
+    (sourceMaqamTransposition: Maqam): MaqamatModulations | AjnasModulations => {
       return modulate(allPitchClasses, ajnas, maqamat, sourceMaqamTransposition, ajnasModulationsMode, centsTolerance);
     },
     [allPitchClasses, maqamat, ajnas, selectedTuningSystem, ajnasModulationsMode, getMaqamTranspositions]

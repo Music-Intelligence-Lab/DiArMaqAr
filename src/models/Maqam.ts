@@ -183,11 +183,11 @@ export interface Maqam {
   descendingPitchClasses: PitchClass[];
   descendingPitchClassIntervals: PitchClassInterval[];
   descendingMaqamAjnas?: (Jins | null)[];
-  modulations?: MaqamModulations;
+  modulations?: MaqamatModulations;
   numberOfHops?: number;
 }
 
-export interface MaqamModulations {
+export interface MaqamatModulations {
   modulationsOnOne: Maqam[];
   modulationsOnThree: Maqam[];
   modulationsOnThree2p: Maqam[];

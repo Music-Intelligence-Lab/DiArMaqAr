@@ -98,7 +98,7 @@ export interface Jins {
   jinsPitchClassIntervals: PitchClassInterval[];
 }
 
-export interface JinsModulations {
+export interface AjnasModulations {
   modulationsOnOne: Jins[];
   modulationsOnThree: Jins[];
   modulationsOnThree2p: Jins[];
