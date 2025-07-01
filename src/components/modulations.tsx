@@ -475,7 +475,7 @@ export default function Modulations() {
                       {[...modulations.modulationsOnSixDescending]
                         .sort((a, b) => a.name.localeCompare(b.name))
                         .map((hop, index) => (
-                          <span
+                          <span  className="modulations__modulation-item"
                             key={index}
                             onClick={() => {
                               if ("ascendingPitchClasses" in hop) {
