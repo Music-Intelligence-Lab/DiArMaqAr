@@ -63,8 +63,6 @@ export default function KeyboardControls() {
       ...descendingMaqamPitchClasses.slice(sliceIndex, -1).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 2)),
     ];
 
-    console.log(extendedAscendingPitchClasses, ascendingMaqamPitchClasses, sliceIndex);
-
     for (let i = 0; i <= 12; i++) {
       const ascendingPitchClass = extendedAscendingPitchClasses[i];
       const descendingPitchClass = extendedDescendingPitchClasses[i];
