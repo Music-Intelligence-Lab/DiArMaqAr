@@ -170,7 +170,6 @@ export default function Modulations() {
               </div>
               {modulationsStack[stackIdx] && (
                 <>
-                  
                   <button
                     className={
                       "modulations__ajnas-count" +
@@ -257,7 +256,8 @@ export default function Modulations() {
                       {[...modulations.modulationsOnOne]
                         .sort((a: any, b: any) => a.name.localeCompare(b.name))
                         .map((hop, index) => (
-                          <span className="modulations__modulation-item"
+                          <span
+                            className="modulations__modulation-item"
                             key={index}
                             onClick={() => {
                               if ("ascendingPitchClasses" in hop) {
@@ -289,7 +289,8 @@ export default function Modulations() {
                       {[...modulations.modulationsOnThree]
                         .sort((a, b) => a.name.localeCompare(b.name))
                         .map((hop, index) => (
-                          <span className="modulations__modulation-item"
+                          <span
+                            className="modulations__modulation-item"
                             key={index}
                             onClick={() => {
                               if ("ascendingPitchClasses" in hop) {
@@ -321,7 +322,8 @@ export default function Modulations() {
                       {[...modulations.modulationsOnThree2p]
                         .sort((a, b) => a.name.localeCompare(b.name))
                         .map((hop, index) => (
-                          <span className="modulations__modulation-item"
+                          <span
+                            className="modulations__modulation-item"
                             key={index}
                             onClick={() => {
                               if ("ascendingPitchClasses" in hop) {
@@ -353,7 +355,8 @@ export default function Modulations() {
                       {[...modulations.modulationsOnFour]
                         .sort((a, b) => a.name.localeCompare(b.name))
                         .map((hop, index) => (
-                          <span className="modulations__modulation-item"
+                          <span
+                            className="modulations__modulation-item"
                             key={index}
                             onClick={() => {
                               if ("ascendingPitchClasses" in hop) {
@@ -385,7 +388,8 @@ export default function Modulations() {
                       {[...modulations.modulationsOnFive]
                         .sort((a, b) => a.name.localeCompare(b.name))
                         .map((hop, index) => (
-                          <span className="modulations__modulation-item"
+                          <span
+                            className="modulations__modulation-item"
                             key={index}
                             onClick={() => {
                               if ("ascendingPitchClasses" in hop) {
@@ -417,7 +421,8 @@ export default function Modulations() {
                       {[...modulations.modulationsOnSixNoThird]
                         .sort((a, b) => a.name.localeCompare(b.name))
                         .map((hop, index) => (
-                          <span className="modulations__modulation-item"
+                          <span
+                            className="modulations__modulation-item"
                             key={index}
                             onClick={() => {
                               if ("ascendingPitchClasses" in hop) {
@@ -449,7 +454,8 @@ export default function Modulations() {
                       {[...modulations.modulationsOnSixAscending]
                         .sort((a, b) => a.name.localeCompare(b.name))
                         .map((hop, index) => (
-                          <span className="modulations__modulation-item"
+                          <span
+                            className="modulations__modulation-item"
                             key={index}
                             onClick={() => {
                               if ("ascendingPitchClasses" in hop) {
@@ -467,15 +473,23 @@ export default function Modulations() {
                           </span>
                         ))}
                     </div>
+                    {/* Only show descending if different from ascending */}
                     <div className="modulations__modulations-list">
                       <span className="modulations__header">
-                        <span className="modulations__header-text">Sixth Descending: </span>
-                        {descendingNoteNames[5]} ({modulations?.modulationsOnSixDescending ? modulations.modulationsOnSixDescending.length : 0})
+                        <span className="modulations__header-text">
+                          Sixth Descending:{" "}
+                        </span>
+                        {descendingNoteNames[5]} (
+                        {modulations?.modulationsOnSixDescending
+                          ? modulations.modulationsOnSixDescending.length
+                          : 0}
+                        )
                       </span>
                       {[...modulations.modulationsOnSixDescending]
                         .sort((a, b) => a.name.localeCompare(b.name))
                         .map((hop, index) => (
-                          <span  className="modulations__modulation-item"
+                          <span
+                            className="modulations__modulation-item"
                             key={index}
                             onClick={() => {
                               if ("ascendingPitchClasses" in hop) {
@@ -493,6 +507,44 @@ export default function Modulations() {
                           </span>
                         ))}
                     </div>
+                    {/* Only show descending if different from ascending */}
+                    {JSON.stringify(modulations.modulationsOnSixDescending) !== JSON.stringify(modulations.modulationsOnSixAscending) && (
+                      <div className="modulations__modulations-list">
+                        <span className="modulations__header">
+                          <span className="modulations__header-text">
+                            Sixth Descending:{" "}
+                          </span>
+                          {descendingNoteNames[5]} (
+                          {modulations?.modulationsOnSixDescending
+                            ? modulations.modulationsOnSixDescending.length
+                            : 0}
+                          )
+                        </span>
+                        <div>
+                          {[...modulations.modulationsOnSixDescending]
+                            .sort((a, b) => a.name.localeCompare(b.name))
+                            .map((hop, index) => (
+                              <span
+                                className="modulations__modulation-item"
+                                key={index}
+                                onClick={() => {
+                                  if ("ascendingPitchClasses" in hop) {
+                                    addHopsWrapper(hop, stackIdx);
+                                    setSelectedMaqam(hop);
+                                    setSelectedJins(null);
+                                  } else {
+                                    setSelectedJins(hop);
+                                    setSelectedMaqam(null);
+                                  }
+                                }}
+                                style={{ cursor: "pointer" }}
+                              >
+                                {hop.name}
+                              </span>
+                            ))}
+                        </div>
+                      </div>
+                    )}
                   </>
                 );
               })()}
