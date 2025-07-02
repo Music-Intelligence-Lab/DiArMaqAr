@@ -55,9 +55,29 @@
     }
   }
 
+  &__delete-hop-btn {
+    color: $text !important;
+    font-size: 14px;
+    font-weight: 400;
+    text-decoration: none !important;
+    background-color: rgba($primary, 0.5);
+    padding: 10px !important;
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgba($primary, 1);
+      outline: none;
+    }
+
+    &_active {
+      background-color: rgba($tertiary, 0.5);
+      outline: none;
+    }
+  }
+
   &__hops-wrapper {
     width: 100%;
-    padding: 0px 0px;
+    padding-bottom: 40px;
   }
 
   &__modulations-list {
@@ -68,21 +88,22 @@
       margin-right: 10px; // for column gap if you switch to row direction
     }
     gap: 10px;
-    width: calc(100% / 8 - 10px); // 6 hops, each taking up 1/6th of the width minus some padding
+    width: calc(
+      100% / 8 - 10px
+    ); // 6 hops, each taking up 1/6th of the width minus some padding
     //background-color: rgba($black, 0.2);
     padding: 10px 0px;
   }
 
   &__modulation-item {
-        text-align: left;
+    text-align: left;
     padding: 10px 10px;
     font-size: 14px;
     font-weight: 400;
-background-color: rgba($primary, 0.3);
-        &:hover {
+    background-color: rgba($primary, 0.3);
+    &:hover {
       background-color: $primary;
     }
-
   }
 
   &__list {
@@ -149,6 +170,7 @@ background-color: rgba($primary, 0.3);
       }
     }
   }
+
   &__item-name {
     display: flex;
     flex-direction: column;
