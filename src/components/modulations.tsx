@@ -69,7 +69,6 @@ export default function Modulations() {
     }
   }, [
     selectedMaqamDetails,
-    sourceMaqamStack.length,
     allPitchClasses,
     getModulations,
     ajnas,
@@ -94,39 +93,44 @@ export default function Modulations() {
     }
   }, [selectedMaqam, selectedJins]);
 
-  const addHopsWrapper = (maqamTransposition: Maqam, stackIdx: number) => {
-    const ajnasMods = modulate(
-      allPitchClasses,
-      ajnas,
-      maqamat,
-      maqamTransposition,
-      true
-    ) as AjnasModulations;
-    const maqamatMods = modulate(
-      allPitchClasses,
-      ajnas,
-      maqamat,
-      maqamTransposition,
-      false
-    ) as MaqamatModulations;
-    const newModulations = {
-      ajnas: ajnasMods,
-      maqamat: maqamatMods,
-    };
-    setSourceMaqamStack((prev) => [
-      ...prev.slice(0, stackIdx + 1),
-      maqamTransposition,
-    ]);
-    setModulationsStack((prev) => [
-      ...prev.slice(0, stackIdx + 1),
-      newModulations,
-    ]);
+const addHopsWrapper = (maqamTransposition: Maqam, stackIdx: number) => {
+  console.log("addHopsWrapper called with:", { maqamTransposition, stackIdx });
+  console.log("maqamTransposition keys:", Object.keys(maqamTransposition));
+  const ajnasMods = modulate(
+    allPitchClasses,
+    ajnas,
+    maqamat,
+    maqamTransposition,
+    true
+  ) as AjnasModulations;
+  const maqamatMods = modulate(
+    allPitchClasses,
+    ajnas,
+    maqamat,
+    maqamTransposition,
+    false
+  ) as MaqamatModulations;
+  const newModulations = {
+    ajnas: ajnasMods,
+    maqamat: maqamatMods,
   };
+  setSourceMaqamStack((prev) => {
+    const newStack = [...prev.slice(0, stackIdx + 1), maqamTransposition];
+    console.log("New sourceMaqamStack:", newStack);
+    return newStack;
+  });
+  setModulationsStack((prev) => {
+    const newStack = [...prev.slice(0, stackIdx + 1), newModulations];
+    console.log("New modulationsStack:", newStack);
+    return newStack;
+  });
+};
 
   const removeLastHopsWrapper = () => {
     setSourceMaqamStack((prev) => (prev.length > 1 ? prev.slice(0, -1) : prev));
     setModulationsStack((prev) => (prev.length > 1 ? prev.slice(0, -1) : prev));
   };
+
 
   return (
     <div className="modulations__container">
@@ -215,7 +219,7 @@ export default function Modulations() {
                   </button>
                 </>
               )}
-            </div>
+            
 
             {/* Show delete button only on the last hops-wrapper and only if more than one exists */}
             {stackIdx === sourceMaqamStack.length - 1 &&
@@ -233,6 +237,7 @@ export default function Modulations() {
                   Delete Hop
                 </button>
               )}
+              </div>
 
             {modulationsStack[stackIdx] &&
               (() => {
@@ -240,12 +245,15 @@ export default function Modulations() {
                   ? modulationsStack[stackIdx].ajnas
                   : modulationsStack[stackIdx].maqamat;
                 const { noteName2p } = modulations;
+                                      {console.log("modulationsOnOne", modulations.modulationsOnOne)}
+
                 return (
                   <>
                     <div className="modulations__modulations-list">
                       <span className="modulations__header">
                         <span className="modulations__header-text">
-                          Tonic:<br />{" "}
+                          Tonic:
+                          <br />{" "}
                         </span>
                         {ascendingNoteNames[0]} (
                         {modulations?.modulationsOnOne
@@ -262,7 +270,6 @@ export default function Modulations() {
                             onClick={() => {
                               if ("ascendingPitchClasses" in hop) {
                                 addHopsWrapper(hop, stackIdx);
-                                setSelectedMaqam(hop);
                                 setSelectedJins(null);
                               } else {
                                 setSelectedJins(hop);
@@ -278,7 +285,8 @@ export default function Modulations() {
                     <div className="modulations__modulations-list">
                       <span className="modulations__header">
                         <span className="modulations__header-text">
-                          Third:<br />{" "}
+                          Third:
+                          <br />{" "}
                         </span>
                         {ascendingNoteNames[2]} (
                         {modulations?.modulationsOnThree
@@ -295,7 +303,6 @@ export default function Modulations() {
                             onClick={() => {
                               if ("ascendingPitchClasses" in hop) {
                                 addHopsWrapper(hop, stackIdx);
-                                setSelectedMaqam(hop);
                                 setSelectedJins(null);
                               } else {
                                 setSelectedJins(hop);
@@ -311,7 +318,8 @@ export default function Modulations() {
                     <div className="modulations__modulations-list">
                       <span className="modulations__header">
                         <span className="modulations__header-text">
-                          Third (alternative):<br />{" "}
+                          Third (alternative):
+                          <br />{" "}
                         </span>
                         {noteName2p} (
                         {modulations?.modulationsOnThree2p
@@ -328,7 +336,6 @@ export default function Modulations() {
                             onClick={() => {
                               if ("ascendingPitchClasses" in hop) {
                                 addHopsWrapper(hop, stackIdx);
-                                setSelectedMaqam(hop);
                                 setSelectedJins(null);
                               } else {
                                 setSelectedJins(hop);
@@ -344,7 +351,8 @@ export default function Modulations() {
                     <div className="modulations__modulations-list">
                       <span className="modulations__header">
                         <span className="modulations__header-text">
-                          Fourth:<br />{" "}
+                          Fourth:
+                          <br />{" "}
                         </span>
                         {ascendingNoteNames[3]} (
                         {modulations?.modulationsOnFour
@@ -361,7 +369,6 @@ export default function Modulations() {
                             onClick={() => {
                               if ("ascendingPitchClasses" in hop) {
                                 addHopsWrapper(hop, stackIdx);
-                                setSelectedMaqam(hop);
                                 setSelectedJins(null);
                               } else {
                                 setSelectedJins(hop);
@@ -377,7 +384,8 @@ export default function Modulations() {
                     <div className="modulations__modulations-list">
                       <span className="modulations__header">
                         <span className="modulations__header-text">
-                          Fifth:<br />{" "}
+                          Fifth:
+                          <br />{" "}
                         </span>
                         {ascendingNoteNames[4]} (
                         {modulations?.modulationsOnFive
@@ -394,7 +402,6 @@ export default function Modulations() {
                             onClick={() => {
                               if ("ascendingPitchClasses" in hop) {
                                 addHopsWrapper(hop, stackIdx);
-                                setSelectedMaqam(hop);
                                 setSelectedJins(null);
                               } else {
                                 setSelectedJins(hop);
@@ -410,7 +417,8 @@ export default function Modulations() {
                     <div className="modulations__modulations-list">
                       <span className="modulations__header">
                         <span className="modulations__header-text">
-                          Sixth (if no Third):<br />{" "}
+                          Sixth (if no Third):
+                          <br />{" "}
                         </span>
                         {ascendingNoteNames[5]} (
                         {modulations?.modulationsOnSixNoThird
@@ -427,7 +435,6 @@ export default function Modulations() {
                             onClick={() => {
                               if ("ascendingPitchClasses" in hop) {
                                 addHopsWrapper(hop, stackIdx);
-                                setSelectedMaqam(hop);
                                 setSelectedJins(null);
                               } else {
                                 setSelectedJins(hop);
@@ -443,7 +450,8 @@ export default function Modulations() {
                     <div className="modulations__modulations-list">
                       <span className="modulations__header">
                         <span className="modulations__header-text">
-                          Sixth (ascending):<br />{" "}
+                          Sixth (ascending):
+                          <br />{" "}
                         </span>
                         {ascendingNoteNames[5]} (
                         {modulations?.modulationsOnSixAscending
@@ -460,7 +468,6 @@ export default function Modulations() {
                             onClick={() => {
                               if ("ascendingPitchClasses" in hop) {
                                 addHopsWrapper(hop, stackIdx);
-                                setSelectedMaqam(hop);
                                 setSelectedJins(null);
                               } else {
                                 setSelectedJins(hop);
@@ -474,19 +481,23 @@ export default function Modulations() {
                         ))}
                     </div>
                     {/* Only show descending if different from ascending */}
-                      <div className="modulations__modulations-list">
-                        <span className="modulations__header">
-                          <span className="modulations__header-text">
-                            Sixth (descending): <br />{" "}
-                          </span>
-                          {descendingNoteNames[5]} (
-                          {modulations?.modulationsOnSixDescending
-                            ? modulations.modulationsOnSixDescending.length
-                            : 0}
-                          )
+                    <div className="modulations__modulations-list">
+                      <span className="modulations__header">
+                        <span className="modulations__header-text">
+                          Sixth (descending): <br />{" "}
                         </span>
-{JSON.stringify(modulations.modulationsOnSixDescending) !== JSON.stringify(modulations.modulationsOnSixAscending) && (
-
+                        {descendingNoteNames[5]} (
+                        {modulations?.modulationsOnSixDescending
+                          ? modulations.modulationsOnSixDescending.length
+                          : 0}
+                        )
+                      </span>
+                      {JSON.stringify(
+                        modulations.modulationsOnSixDescending
+                      ) !==
+                        JSON.stringify(
+                          modulations.modulationsOnSixAscending
+                        ) && (
                         <div>
                           {[...modulations.modulationsOnSixDescending]
                             .sort((a, b) => a.name.localeCompare(b.name))
@@ -497,7 +508,6 @@ export default function Modulations() {
                                 onClick={() => {
                                   if ("ascendingPitchClasses" in hop) {
                                     addHopsWrapper(hop, stackIdx);
-                                    setSelectedMaqam(hop);
                                     setSelectedJins(null);
                                   } else {
                                     setSelectedJins(hop);
@@ -510,9 +520,8 @@ export default function Modulations() {
                               </span>
                             ))}
                         </div>
-                                            )}
-                      </div>
-
+                      )}
+                    </div>
                   </>
                 );
               })()}
