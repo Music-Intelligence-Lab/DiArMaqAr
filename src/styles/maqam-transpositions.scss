@@ -2,7 +2,7 @@
 
 .maqam-transpositions {
   width: 100%;
-  
+  margin-top: 20px;
 
   &__title {
     width: 100%;
@@ -238,7 +238,7 @@
   }
 
   .maqam-transpositions__spacer {
-    height: 10px;
+    height: 20px;
     border: 0px;
   }
 }

@@ -7,8 +7,14 @@
   overflow-x: scroll;
   display: flex;
   z-index: 2000;
-  margin: 20px 0;
-  background-color: black;
+  margin-bottom: 20px;
+  background-color: $background;
+      box-shadow: 0 20px 15px rgba(0, 0, 0, 0.6);
+
+
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0px;
 
   &::-webkit-scrollbar {
     height: 0px;

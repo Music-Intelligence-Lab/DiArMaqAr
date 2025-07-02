@@ -7,6 +7,8 @@ import { octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames } from "@/m
 import { nanoid } from "nanoid";
 import { updateMaqamat } from "@/functions/update";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import NorthEastIcon from "@mui/icons-material/NorthEast";
+import SouthEastIcon from "@mui/icons-material/SouthEast";
 import JinsDetails from "@/models/Jins";
 export default function SayrManager({ admin }: { admin: boolean }) {
   const { selectedMaqamDetails, setSelectedMaqamDetails, ajnas, maqamSayrId, setMaqamSayrId, sources, maqamat, setMaqamat, handleClickJins } =
@@ -321,9 +323,26 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                 } else if (stop.type === "direction") {
                   sentence += `Direction: ${stop.value}`;
                 }
+                // Determine which icon to use for the transition before this stop
+                let TransitionIcon = ArrowForwardIcon;
+                if (i !== 0) {
+                  // Check direction on previous stop, or direction property on previous jins stop
+                  const prevStop = stops[i - 1];
+                  let direction = null;
+                  if (prevStop.type === "direction") {
+                    direction = prevStop.value;
+                  } else if (prevStop.type === "jins" && prevStop.direction) {
+                    direction = prevStop.direction;
+                  }
+                  if (direction === "ascending") {
+                    TransitionIcon = NorthEastIcon;
+                  } else if (direction === "descending") {
+                    TransitionIcon = SouthEastIcon;
+                  }
+                }
                 return (
                   <React.Fragment key={i}>
-                    {i !== 0 && <ArrowForwardIcon />}
+                    {i !== 0 && <TransitionIcon />}
                     <div
                       className="sayr-manager__stop"
                       style={stop.type === "jins" ? { cursor: "pointer" } : undefined}
