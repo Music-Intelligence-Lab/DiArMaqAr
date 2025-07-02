@@ -67,13 +67,7 @@ export default function Modulations() {
       setSourceMaqamStack([]);
       setModulationsStack([]);
     }
-  }, [
-    selectedMaqamDetails,
-    allPitchClasses,
-    getModulations,
-    ajnas,
-    maqamat,
-  ]);
+  }, [selectedMaqamDetails, allPitchClasses, getModulations, ajnas, maqamat]);
 
   useEffect(() => {
     if (selectedMaqam) {
@@ -93,44 +87,39 @@ export default function Modulations() {
     }
   }, [selectedMaqam, selectedJins]);
 
-const addHopsWrapper = (maqamTransposition: Maqam, stackIdx: number) => {
-  console.log("addHopsWrapper called with:", { maqamTransposition, stackIdx });
-  console.log("maqamTransposition keys:", Object.keys(maqamTransposition));
-  const ajnasMods = modulate(
-    allPitchClasses,
-    ajnas,
-    maqamat,
-    maqamTransposition,
-    true
-  ) as AjnasModulations;
-  const maqamatMods = modulate(
-    allPitchClasses,
-    ajnas,
-    maqamat,
-    maqamTransposition,
-    false
-  ) as MaqamatModulations;
-  const newModulations = {
-    ajnas: ajnasMods,
-    maqamat: maqamatMods,
+  const addHopsWrapper = (maqamTransposition: Maqam, stackIdx: number) => {
+    const ajnasMods = modulate(
+      allPitchClasses,
+      ajnas,
+      maqamat,
+      maqamTransposition,
+      true
+    ) as AjnasModulations;
+    const maqamatMods = modulate(
+      allPitchClasses,
+      ajnas,
+      maqamat,
+      maqamTransposition,
+      false
+    ) as MaqamatModulations;
+    const newModulations = {
+      ajnas: ajnasMods,
+      maqamat: maqamatMods,
+    };
+    setSourceMaqamStack((prev) => {
+      const newStack = [...prev.slice(0, stackIdx + 1), maqamTransposition];
+      return newStack;
+    });
+    setModulationsStack((prev) => {
+      const newStack = [...prev.slice(0, stackIdx + 1), newModulations];
+      return newStack;
+    });
   };
-  setSourceMaqamStack((prev) => {
-    const newStack = [...prev.slice(0, stackIdx + 1), maqamTransposition];
-    console.log("New sourceMaqamStack:", newStack);
-    return newStack;
-  });
-  setModulationsStack((prev) => {
-    const newStack = [...prev.slice(0, stackIdx + 1), newModulations];
-    console.log("New modulationsStack:", newStack);
-    return newStack;
-  });
-};
 
   const removeLastHopsWrapper = () => {
     setSourceMaqamStack((prev) => (prev.length > 1 ? prev.slice(0, -1) : prev));
     setModulationsStack((prev) => (prev.length > 1 ? prev.slice(0, -1) : prev));
   };
-
 
   return (
     <div className="modulations__container">
@@ -157,6 +146,7 @@ const addHopsWrapper = (maqamTransposition: Maqam, stackIdx: number) => {
             )
           : 0;
         return (
+
           <div className="modulations__hops-wrapper" key={stackIdx}>
             {/* Maqam name/details at the top of each wrapper */}
             <div className="modulations__wrapper-modulations-header">
@@ -219,25 +209,24 @@ const addHopsWrapper = (maqamTransposition: Maqam, stackIdx: number) => {
                   </button>
                 </>
               )}
-            
 
-            {/* Show delete button only on the last hops-wrapper and only if more than one exists */}
-            {stackIdx === sourceMaqamStack.length - 1 &&
-              sourceMaqamStack.length > 1 && (
-                <button
-                  className="modulations__delete-hop-btn"
-                  style={{
-                    marginLeft: 8,
-                    padding: "2px 8px",
-                    fontSize: 14,
-                    cursor: "pointer",
-                  }}
-                  onClick={removeLastHopsWrapper}
-                >
-                  Delete Hop
-                </button>
-              )}
-              </div>
+              {/* Show delete button only on the last hops-wrapper and only if more than one exists */}
+              {stackIdx === sourceMaqamStack.length - 1 &&
+                sourceMaqamStack.length > 1 && (
+                  <button
+                    className="modulations__delete-hop-btn"
+                    style={{
+                      marginLeft: 8,
+                      padding: "2px 8px",
+                      fontSize: 14,
+                      cursor: "pointer",
+                    }}
+                    onClick={removeLastHopsWrapper}
+                  >
+                    Delete Hop
+                  </button>
+                )}
+            </div>
 
             {modulationsStack[stackIdx] &&
               (() => {
@@ -245,8 +234,6 @@ const addHopsWrapper = (maqamTransposition: Maqam, stackIdx: number) => {
                   ? modulationsStack[stackIdx].ajnas
                   : modulationsStack[stackIdx].maqamat;
                 const { noteName2p } = modulations;
-                                      {console.log("modulationsOnOne", modulations.modulationsOnOne)}
-
                 return (
                   <>
                     <div className="modulations__modulations-list">
@@ -497,30 +484,27 @@ const addHopsWrapper = (maqamTransposition: Maqam, stackIdx: number) => {
                       ) !==
                         JSON.stringify(
                           modulations.modulationsOnSixAscending
-                        ) && (
-                        <div>
-                          {[...modulations.modulationsOnSixDescending]
-                            .sort((a, b) => a.name.localeCompare(b.name))
-                            .map((hop, index) => (
-                              <span
-                                className="modulations__modulation-item"
-                                key={index}
-                                onClick={() => {
-                                  if ("ascendingPitchClasses" in hop) {
-                                    addHopsWrapper(hop, stackIdx);
-                                    setSelectedJins(null);
-                                  } else {
-                                    setSelectedJins(hop);
-                                    setSelectedMaqam(null);
-                                  }
-                                }}
-                                style={{ cursor: "pointer" }}
-                              >
-                                {hop.name}
-                              </span>
-                            ))}
-                        </div>
-                      )}
+                        ) &&
+                        [...modulations.modulationsOnSixDescending]
+                          .sort((a, b) => a.name.localeCompare(b.name))
+                          .map((hop, index) => (
+                            <span
+                              className="modulations__modulation-item"
+                              key={index}
+                              onClick={() => {
+                                if ("ascendingPitchClasses" in hop) {
+                                  addHopsWrapper(hop, stackIdx);
+                                  setSelectedJins(null);
+                                } else {
+                                  setSelectedJins(hop);
+                                  setSelectedMaqam(null);
+                                }
+                              }}
+                              style={{ cursor: "pointer" }}
+                            >
+                              {hop.name}
+                            </span>
+                          ))}
                     </div>
                   </>
                 );

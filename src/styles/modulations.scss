@@ -77,21 +77,19 @@
 
   &__hops-wrapper {
     width: 100%;
-    padding-bottom: 40px;
+    margin-bottom: 0px;
   }
 
   &__modulations-list {
     display: inline-flex; // makes each list of modulations appear side by side
     flex-direction: column;
-    // To add space between columns, use margin-right on child elements except the last one:
     &:not(:last-child) {
       margin-right: 10px; // for column gap if you switch to row direction
     }
     gap: 10px;
     width: calc(
       100% / 8 - 10px
-    ); // 6 hops, each taking up 1/6th of the width minus some padding
-    //background-color: rgba($black, 0.2);
+    ); 
     padding: 10px 0px;
   }
 
