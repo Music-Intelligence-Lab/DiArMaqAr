@@ -167,7 +167,7 @@ export interface Sayr {
 }
 
 export interface SayrStop {
-  type: "note" | "jins" | "direction";
+  type: "note" | "jins" | "maqam" | "direction";
   value: string;
   startingNote?: NoteName;
   direction?: "ascending" | "descending";

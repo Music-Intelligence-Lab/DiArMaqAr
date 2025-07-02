@@ -2218,8 +2218,8 @@
         "commentsArabic": "",
         "stops": [
           {
-            "type": "jins",
-            "value": "jins ṣabā",
+            "type": "maqam",
+            "value": "15",
             "startingNote": "dūgāh",
             "direction": "none"
           },
@@ -2543,8 +2543,8 @@
         "commentsArabic": "",
         "stops": [
           {
-            "type": "jins",
-            "value": "4",
+            "type": "maqam",
+            "value": "15",
             "startingNote": "ḥusaynī",
             "direction": "descending"
           },

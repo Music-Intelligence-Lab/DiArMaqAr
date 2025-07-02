@@ -11,7 +11,7 @@ import NorthEastIcon from "@mui/icons-material/NorthEast";
 import SouthEastIcon from "@mui/icons-material/SouthEast";
 import JinsDetails from "@/models/Jins";
 export default function SayrManager({ admin }: { admin: boolean }) {
-  const { selectedMaqamDetails, setSelectedMaqamDetails, ajnas, maqamSayrId, setMaqamSayrId, sources, maqamat, setMaqamat, handleClickJins } =
+  const { selectedMaqamDetails, setSelectedMaqamDetails, ajnas, maqamSayrId, setMaqamSayrId, sources, maqamat, setMaqamat, /* handleClickJins, handleClickMaqam */ } =
     useAppContext();
 
   const [creatorEnglish, setCreatorEnglish] = useState("");
@@ -219,6 +219,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                   <select className="sayr-manager__stop-type" value={stop.type} onChange={(e) => updateStop(i, "type", e.target.value)}>
                     <option value="note">note</option>
                     <option value="jins">jins</option>
+                    <option value="maqam">maqam</option>
                     <option value="direction">direction</option>
                   </select>
 
@@ -292,6 +293,53 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                     </>
                   )}
 
+                                    {/* --- maqam stop (updated) --- */}
+                  {stop.type === "maqam" && (
+                    <>
+                      {/* 1) select which maqam */}
+                      <select className="sayr-manager__stop-value" value={stop.value} onChange={(e) => updateStop(i, "value", e.target.value)}>
+                        <option value="">(none)</option>
+                        {maqamat.map((m) => (
+                          <option key={m.getId()} value={m.getId()}>
+                            {m.getName()}
+                          </option>
+                        ))}
+                      </select>
+
+                      {/* 2) optional starting note for this maqam */}
+                      <select
+                        className="sayr-manager__stop-value"
+                        value={stop.startingNote ?? ""}
+                        onChange={(e) => updateStop(i, "startingNote", e.target.value)}
+                      >
+                        <option value="">(none)</option>
+                        {octaveOneNoteNames.map((n) => (
+                          <option key={n} value={n}>
+                            {n}
+                          </option>
+                        ))}
+                        <option disabled>---</option>
+                        {octaveTwoNoteNames.map((n) => (
+                          <option key={n} value={n}>
+                            {n}
+                          </option>
+                        ))}
+                      </select>
+
+                      {/* 3) optional direction for this maqam */}
+                      <select
+                        className="sayr-manager__stop-value"
+                        value={stop.direction ?? ""}
+                        onChange={(e) => updateStop(i, "direction", e.target.value)}
+                      >
+                        <option value="">(none)</option>
+                        <option value="ascending">ascending</option>
+                        <option value="descending">descending</option>
+                      </select>
+                    </>
+                  )}
+
+
                   {/* --- direction stop --- */}
                   {stop.type === "direction" && (
                     <select className="sayr-manager__stop-value" value={stop.value} onChange={(e) => updateStop(i, "value", e.target.value)}>
@@ -313,20 +361,26 @@ export default function SayrManager({ admin }: { admin: boolean }) {
             {!admin &&
               stops.map((stop, i) => {
                 let jinsDetails: JinsDetails | undefined;
+                let maqamDetails: any | undefined;
                 let sentence = "";
+                // Patch: support for maqam stop type (type assertion workaround)
                 if (stop.type === "note") {
                   sentence += `Note: ${stop.value}`;
                 } else if (stop.type === "jins") {
                   jinsDetails = ajnas.find((j) => j.getId() === stop.value);
                   const jinsName = jinsDetails ? jinsDetails.getName() : stop.value;
                   sentence += `${jinsName}${stop.startingNote ? " al-" + stop.startingNote : ""}`;
+                } else if ((stop as any).type === "maqam") {
+                  maqamDetails = maqamat.find((m) => m.getId() === stop.value);
+                  const maqamName = maqamDetails ? maqamDetails.getName() : stop.value;
+                  sentence += `${maqamName}${stop.startingNote ? " al-" + stop.startingNote : ""}`;
                 } else if (stop.type === "direction") {
                   sentence += `Direction: ${stop.value}`;
                 }
                 // Determine which icon to use for the transition before this stop
                 let TransitionIcon = ArrowForwardIcon;
                 if (i !== 0) {
-                  // Check direction on previous stop, or direction property on previous jins stop
+                  // Check direction on previous stop, or direction property on previous jins or maqam stop
                   const prevStop = stops[i - 1];
                   let direction = null;
                   if (prevStop.type === "direction") {
@@ -345,10 +399,13 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                     {i !== 0 && <TransitionIcon />}
                     <div
                       className="sayr-manager__stop"
-                      style={stop.type === "jins" ? { cursor: "pointer" } : undefined}
+                      style={stop.type === "jins" || (stop as any).type === "maqam" ? { cursor: "default" } : undefined}
                       onClick={() => {
                         if (stop.type === "jins" && jinsDetails) {
-                          handleClickJins(jinsDetails);
+                          // handleClickJins(jinsDetails);
+                        } else if ((stop as any).type === "maqam" && maqamDetails) {
+                          // Optionally, implement a handler for maqam click
+                          // handleClickMaqam(maqamDetails);
                         }
                       }}
                     >
