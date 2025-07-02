@@ -6,14 +6,16 @@
   align-items: center;
   width: 100%;
   height: $page-height;
-  overflow: auto;
+  overflow-x: auto;
   color: $text;
-  padding-top: 30px;
+  //padding-top: 30px;
   padding-bottom: 100px;
   padding-left: 12px;
+  padding-right: 12px;
 
   &::-webkit-scrollbar {
     width: 12px;
+    padding-right: 0px;
   }
 
   &::-webkit-scrollbar-thumb {
@@ -31,4 +33,7 @@
     font-size: 50px;
     margin-bottom: 0px;
   }
+}
+body.scrollbar-active {
+  padding-right: 0 !important;
 }

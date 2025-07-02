@@ -2,10 +2,12 @@
 
 .navbar {
   width: 100%;
-  background-color: $dark-grey;
   display: flex;
   flex-direction: column;
   z-index: 10000;
+  padding-bottom: 30px;
+  background-color: $background;
+
 
   &__center-panel {
     text-align: center;
@@ -46,6 +48,7 @@
     color: white;
     border-bottom: $grey 1px solid;
     box-shadow: 0 20px 15px rgba(0, 0, 0, 0.6);
+    background-color: $background;
 
   }
 
