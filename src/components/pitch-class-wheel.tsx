@@ -4,7 +4,10 @@ import useAppContext from "@/contexts/app-context";
 import useSoundContext from "@/contexts/sound-context";
 import PitchClass from "@/models/PitchClass";
 import { Maqam } from "@/models/Maqam";
-import { getJinsTranspositions, getMaqamTranspositions } from "@/functions/transpose";
+import {
+  getJinsTranspositions,
+  getMaqamTranspositions,
+} from "@/functions/transpose";
 import { Jins } from "@/models/Jins";
 
 interface WheelCellProps {
@@ -13,31 +16,71 @@ interface WheelCellProps {
   isActive: boolean;
   isDescending: boolean;
   isTonic: boolean;
+  isCurrentTonic: boolean;
   onClick: () => void;
 }
 
 const WheelCell = React.memo<WheelCellProps>(
-  ({ pitchClass, isSelected, isActive, isDescending, isTonic, onClick }) => {
+  ({
+    pitchClass,
+    isSelected,
+    isActive,
+    isDescending,
+    isTonic,
+    isCurrentTonic,
+    onClick,
+  }) => {
     let className = "pitch-class-wheel__cell";
     if (isSelected) className += " pitch-class-wheel__cell_selected";
     if (isDescending) className += " pitch-class-wheel__cell_descending";
-    if (isTonic) className += " pitch-class-wheel__cell_tonic";
+    // Highlight all possible tonics
+    if (isTonic) {
+      className += " pitch-class-wheel__cell_tonic";
+    }
+    // Add a special class if this is the tonic of the current selected jins or maqam
+    if (isCurrentTonic) {
+      className += " pitch-class-wheel__cell_tonic_current";
+    }
+    if (isCurrentTonic && isActive) {
+      className += " pitch-class-wheel__cell_tonic_current_active";
+    }
     if (isActive) className += " pitch-class-wheel__cell_active";
-
+  
     return (
-      <div className={className} onClick={onClick} style={{ cursor: isTonic ? "pointer" : undefined }}>
-        <span className="pitch-class-wheel__cell-label">{pitchClass.noteName.replace(/\//g, "/\u200B")}</span>
+      <div
+        className={className}
+        onClick={onClick}
+        style={{ cursor: isTonic ? "pointer" : undefined }}
+      >
+        <span className="pitch-class-wheel__cell-label">
+          {pitchClass.noteName.replace(/\//g, "/\u200B")}
+        </span>
       </div>
     );
   },
-  (prev, next) => prev.isSelected === next.isSelected && prev.isActive === next.isActive && prev.isDescending === next.isDescending && prev.isTonic === next.isTonic
+  (prev, next) =>
+    prev.isSelected === next.isSelected &&
+    prev.isActive === next.isActive &&
+    prev.isDescending === next.isDescending &&
+    prev.isTonic === next.isTonic &&
+    prev.isCurrentTonic === next.isCurrentTonic
 );
 
 WheelCell.displayName = "WheelCell";
 
 export default function PitchClassWheel() {
-  const { ajnas, selectedJinsDetails, setSelectedJins, selectedMaqamDetails, selectedMaqam, setSelectedMaqam, selectedPitchClasses, setSelectedPitchClasses, allPitchClasses, centsTolerance } =
-    useAppContext();
+  const {
+    ajnas,
+    selectedJinsDetails,
+    setSelectedJins,
+    selectedMaqamDetails,
+    selectedMaqam,
+    setSelectedMaqam,
+    selectedPitchClasses,
+    setSelectedPitchClasses,
+    allPitchClasses,
+    centsTolerance,
+  } = useAppContext();
 
   const { activePitchClasses } = useSoundContext();
 
@@ -50,7 +93,9 @@ export default function PitchClassWheel() {
   useEffect(() => {
     if (!rowRef.current) return;
     const container = rowRef.current;
-    const selectedEls = container.querySelectorAll<HTMLElement>(".pitch-class-wheel__cell_selected");
+    const selectedEls = container.querySelectorAll<HTMLElement>(
+      ".pitch-class-wheel__cell_selected"
+    );
     if (selectedEls.length === 0) return;
 
     let minLeft = Infinity;
@@ -73,27 +118,75 @@ export default function PitchClassWheel() {
     });
   }, [selectedPitchClasses]);
 
-  const filteredJinsTranspositions = useMemo<Jins[]>(() => getJinsTranspositions(allPitchClasses, selectedJinsDetails, true, centsTolerance), [allPitchClasses, selectedJinsDetails, centsTolerance]);
+  const filteredJinsTranspositions = useMemo<Jins[]>(
+    () =>
+      getJinsTranspositions(
+        allPitchClasses,
+        selectedJinsDetails,
+        true,
+        centsTolerance
+      ),
+    [allPitchClasses, selectedJinsDetails, centsTolerance]
+  );
 
   const filteredMaqamTranspositions = useMemo<Maqam[]>(
-    () => getMaqamTranspositions(allPitchClasses, ajnas, selectedMaqamDetails, true, centsTolerance),
+    () =>
+      getMaqamTranspositions(
+        allPitchClasses,
+        ajnas,
+        selectedMaqamDetails,
+        true,
+        centsTolerance
+      ),
     [allPitchClasses, selectedMaqamDetails, centsTolerance]
   );
 
   const wheelCells = useMemo(() => {
+    // Determine the tonic of the current selected maqam or jins
+    const maqamTonic = selectedMaqam
+      ? selectedMaqam.ascendingPitchClasses[0]?.originalValue
+      : selectedMaqamDetails?.getTahlil(allPitchClasses)
+          .ascendingPitchClasses[0]?.originalValue;
+    // Use getTahlil to get the tonic pitch class for the selected jins
+    const jinsTonic =
+      selectedJinsDetails?.getTahlil(allPitchClasses).jinsPitchClasses[0]
+        ?.originalValue;
+
     return allPitchClasses.map((pitchClass: PitchClass) => {
       const originalValue = pitchClass.originalValue;
-      const isSelected = selectedPitchClasses.some((sc) => sc.originalValue === originalValue);
-      const isActive = activePitchClasses.some((ac) => ac.index === pitchClass.index && ac.octave === pitchClass.octave);
+      const isSelected = selectedPitchClasses.some(
+        (sc) => sc.originalValue === originalValue
+      );
+      const isActive = activePitchClasses.some(
+        (ac) => ac.index === pitchClass.index && ac.octave === pitchClass.octave
+      );
 
-      const jinsTransposition = filteredJinsTranspositions.find((transposition) => transposition.jinsPitchClasses[0].originalValue === originalValue);
-      const maqamTransposition = filteredMaqamTranspositions.find((transposition) => transposition.ascendingPitchClasses[0].originalValue === originalValue);
+      const jinsTransposition = filteredJinsTranspositions.find(
+        (transposition) =>
+          transposition.jinsPitchClasses[0].originalValue === originalValue
+      );
+      const maqamTransposition = filteredMaqamTranspositions.find(
+        (transposition) =>
+          transposition.ascendingPitchClasses[0].originalValue === originalValue
+      );
 
       const isDescending = selectedMaqam
-        ? selectedMaqam.descendingPitchClasses.map((pitchClass) => pitchClass.originalValue).includes(originalValue)
-        : selectedMaqamDetails?.getTahlil(allPitchClasses).descendingPitchClasses.map((pitchClass) => pitchClass.originalValue).includes(originalValue) ?? false;
+        ? selectedMaqam.descendingPitchClasses
+            .map((pitchClass) => pitchClass.originalValue)
+            .includes(originalValue)
+        : selectedMaqamDetails
+            ?.getTahlil(allPitchClasses)
+            .descendingPitchClasses.map(
+              (pitchClass) => pitchClass.originalValue
+            )
+            .includes(originalValue) ?? false;
 
       const isTonic = !!(jinsTransposition || maqamTransposition);
+      // Mark as current tonic if this pitch class is the tonic of the current selected maqam or jins
+      const isCurrentTonic = Boolean(
+        (maqamTonic && maqamTonic === originalValue) ||
+          (jinsTonic && jinsTonic === originalValue)
+      );
 
       const onClick = () => {
         if (maqamTransposition && selectedMaqamDetails) {
@@ -114,10 +207,21 @@ export default function PitchClassWheel() {
         isActive,
         isDescending,
         isTonic,
+        isCurrentTonic,
         onClick,
       };
     });
-  }, [allPitchClasses, selectedPitchClasses, activePitchClasses, filteredJinsTranspositions, filteredMaqamTranspositions, selectedMaqamDetails, selectedMaqam, selectedJinsDetails, centsTolerance]);
+  }, [
+    allPitchClasses,
+    selectedPitchClasses,
+    activePitchClasses,
+    filteredJinsTranspositions,
+    filteredMaqamTranspositions,
+    selectedMaqamDetails,
+    selectedMaqam,
+    selectedJinsDetails,
+    centsTolerance,
+  ]);
 
   return (
     <div
@@ -135,7 +239,8 @@ export default function PitchClassWheel() {
         if (!isDown.current || !rowRef.current) return;
         e.preventDefault();
         const x = e.pageX - rowRef.current.offsetLeft;
-        rowRef.current.scrollLeft = scrollLeftStart.current - (x - startX.current);
+        rowRef.current.scrollLeft =
+          scrollLeftStart.current - (x - startX.current);
       }}
       onMouseUp={() => {
         isDown.current = false;
