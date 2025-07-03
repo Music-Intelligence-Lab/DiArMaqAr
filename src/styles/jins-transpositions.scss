@@ -58,11 +58,12 @@
 
   &__comments-english {
     font-size: 14px;
-    display: inline-block;
+    display: block;
+    float: left;
     width: 50%;
     direction: ltr;
     text-align: left;
-    vertical-align: top;
+    
     padding-right: 30px;
   }
 
@@ -100,7 +101,7 @@
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
-    margin-bottom: 50px;
+    margin-bottom: 0px;
     font-size: 12px;
     font-weight: 200;
 

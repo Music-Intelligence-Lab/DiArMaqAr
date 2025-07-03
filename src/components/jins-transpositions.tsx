@@ -319,23 +319,6 @@ export default function JinsTranspositions() {
             <thead>{renderTransposition(jinsTranspositions[0], 0)}</thead>
           </table>
 
-          <h2 className="jins-transpositions__title">Taṣwīr (transpositions): {`${selectedJinsDetails.getName()}`}</h2>
-
-          <table className="jins-transpositions__table">
-            <colgroup>
-              <col style={{ minWidth: "30px", maxWidth: "30px", width: "30px" }} />
-              <col style={{ minWidth: "150px", maxWidth: "150px", width: "150px" }} />
-            </colgroup>
-
-            <thead></thead>
-            <tbody>
-              {jinsTranspositions.slice(1).map((jinsTransposition, row) => {
-                return <React.Fragment key={row}>{renderTransposition(jinsTransposition, row + 1)}</React.Fragment>;
-              })}
-            </tbody>
-          </table>
-        </div>
-
         {/* COMMENTS AND SOURCES */}
         {selectedJinsDetails && (
           <>
@@ -343,10 +326,6 @@ export default function JinsTranspositions() {
               <div className="jins-transpositions__comments">
                 <h3>Comments:</h3>
                 <div className="jins-transpositions__comments-text">{selectedJinsDetails.getCommentsEnglish()}</div>
-              </div>
-              <div className="jins-transpositions__comments">
-                <h3>التعليقات</h3>
-                <div className="jins-transpositions__comments-text">{selectedJinsDetails.getCommentsArabic()}</div>
               </div>
             </div>
             <div className="jins-transpositions__sources">
@@ -363,7 +342,24 @@ export default function JinsTranspositions() {
                 })}
             </div>
           </>
-        )}
+        )}          
+
+          <h2 className="jins-transpositions__title">Taṣwīr (transpositions): {`${selectedJinsDetails.getName()}`}</h2>
+
+          <table className="jins-transpositions__table">
+            <colgroup>
+              <col style={{ minWidth: "30px", maxWidth: "30px", width: "30px" }} />
+              <col style={{ minWidth: "150px", maxWidth: "150px", width: "150px" }} />
+            </colgroup>
+
+            <thead></thead>
+            <tbody>
+              {jinsTranspositions.slice(1).map((jinsTransposition, row) => {
+                return <React.Fragment key={row}>{renderTransposition(jinsTransposition, row + 1)}</React.Fragment>;
+              })}
+            </tbody>
+          </table>
+        </div>
       </>
     );
   }, [allPitchClasses, selectedJinsDetails, centsTolerance, filters, soundSettings]);
