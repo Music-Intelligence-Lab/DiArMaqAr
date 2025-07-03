@@ -1,20 +1,23 @@
-"use client";
+export const revalidate = 0;
 
 import { getTuningSystems, getAjnas, getMaqamat } from "@/functions/import";
 import { getJinsTranspositions, getMaqamTranspositions } from "@/functions/transpose";
 import modulate from "@/functions/modulate";
 import getTuningSystemCells from "@/functions/getTuningSystemCells";
 import calculateNumberOfModulations from "@/functions/calculateNumberOfModulations";
+import TuningSystem from "@/models/TuningSystem";
 
 export default function AnalyticsPage() {
-  const allTuningSystems = [getTuningSystems()[0]];
+  const allTuningSystems: TuningSystem[] = [getTuningSystems()[0]];
   const allAjnas = getAjnas();
   const allMaqamat = getMaqamat();
 
   const totalNumberOfAjnas = allAjnas.length;
   const totalNumberOfMaqamat = allMaqamat.length;
 
-  <div className="analytics-page">
+  console.log("HERE");
+
+  return (<div className="analytics-page">
     <table>
       <thead>
         <tr>
@@ -83,5 +86,5 @@ export default function AnalyticsPage() {
         })}
       </tbody>
     </table>
-  </div>;
+  </div>);
 }
