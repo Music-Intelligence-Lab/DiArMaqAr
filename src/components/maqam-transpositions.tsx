@@ -94,17 +94,21 @@ export default function MaqamTranspositions() {
         ascendingIntervals = [...ascendingIntervals, shiftedCellInterval];
         descendingIntervals = [shiftedCellInterval, ...descendingIntervals];
 
-        if (jinsTranspositions)
-          jinsTranspositions = [
-            ...jinsTranspositions,
-            ascending
-              ? maqam.descendingMaqamAjnas
-                ? maqam.descendingMaqamAjnas[0]
-                : null
-              : maqam.ascendingMaqamAjnas
-              ? maqam.ascendingMaqamAjnas[0]
-              : null,
-          ];
+        if (jinsTranspositions) {
+          let octaveTransposition = maqam.ascendingMaqamAjnas ? maqam.ascendingMaqamAjnas[0] : null;
+          if (octaveTransposition) {
+            const foundJinsDetails = ajnas.find((jins) => jins.getId() === octaveTransposition?.jinsId);
+            if (foundJinsDetails) {
+              octaveTransposition = {
+                ...octaveTransposition,
+                jinsPitchClasses: [shiftedFirstCell],
+                jinsPitchClassIntervals: [],
+                name: foundJinsDetails.getName() + " al-" + shiftedFirstCell.noteName,
+              };
+            }
+          }
+          jinsTranspositions = ascending ? [...jinsTranspositions, octaveTransposition] : [octaveTransposition, ...jinsTranspositions];
+        }
       }
 
       const transposition = maqam.transposition;
