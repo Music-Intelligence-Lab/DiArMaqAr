@@ -1,5 +1,80 @@
 @use "./variables" as *;
 
 .analytics-page {
+  width: 100%;
+  margin: 0px auto 500px auto;
+  padding: 12px;
+  background: $background;
 
+  button {
+    font-size: 1rem;
+    padding: 10px 20px;
+    border-radius: 0px;
+    border: none;
+    background: $primary;
+    color: $text;
+    cursor: pointer;
+    transition: background 0.2s;
+
+    &:hover:enabled {
+      background: $hovered-primary;
+    }
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: $dark-grey;
+    border-radius: 0px;
+    overflow: hidden;
+    margin-top: 20px;
+  }
+
+  th,
+  td {
+    padding: 10px 20px;
+    text-align: left;
+    font-size: 1rem;
+  }
+
+  th {
+    background: $primary;
+    color: $text;
+    font-weight: 400;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+
+  tr:nth-child(even) td {
+    background: $medium-grey;
+  }
+  tr:nth-child(odd) td {
+    background: $dark-grey;
+  }
+
+  td {
+    border-bottom: 1px solid $grey;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  @media (max-width: 700px) {
+    padding: 10px;
+    table,
+    th,
+    td {
+      font-size: 14px;
+    }
+    th,
+    td {
+      padding: 10px 20px;
+    }
+  }
 }
