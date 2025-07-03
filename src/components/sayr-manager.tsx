@@ -365,7 +365,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                 let sentence = "";
                 // Patch: support for maqam stop type (type assertion workaround)
                 if (stop.type === "note") {
-                  sentence += `Note: ${stop.value}`;
+                  sentence += `${stop.value}`;
                 } else if (stop.type === "jins") {
                   jinsDetails = ajnas.find((j) => j.getId() === stop.value);
                   const jinsName = jinsDetails ? jinsDetails.getName() : stop.value;
@@ -386,6 +386,8 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                   if (prevStop.type === "direction") {
                     direction = prevStop.value;
                   } else if (prevStop.type === "jins" && prevStop.direction) {
+                    direction = prevStop.direction;
+                  } else if (prevStop.type === "maqam" && prevStop.direction) {
                     direction = prevStop.direction;
                   }
                   if (direction === "ascending") {
