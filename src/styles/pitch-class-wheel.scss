@@ -32,32 +32,38 @@
   &__cell {
     flex: none;
     border-top: 3px solid $grey;
+    border-left: 1px solid $grey !important;
     border-right: 1px solid $grey;
-    border-bottom: 1px solid $grey;
+    border-bottom: 3px solid $grey;
     border-left: 0px;
     text-align: left;
     width: 75px;
     height: 70px;
-    padding: 0px 5px;
-
+    padding: 0px 6px;
     &_selected {
-      background-color: $primary !important;
+      background-color: $primary;
     }
-
     &_active {
       background-color: rgb($tertiary, 1) !important;
     }
 
     &_tonic {
-      border-top: 3px $tertiary solid;
-      background-color: $medium-grey;
-
-      &:hover {
-        background-color: $tertiary !important;
-      }
-      &:active {
-        background-color: $primary !important;
-      }
+      border-top: 3px $quaternary solid;
+      border-right: 2px solid $quaternary;
+      border-left: 2px solid $quaternary !important;
+      border-bottom: 3px solid $quaternary;
+    }
+    &_tonic_current {
+      background-color: $quaternary !important;
+    }
+    &_tonic_selected {
+      border-color: $primary;
+    }
+    &_tonic_current_active {
+      background-color: rgba($tertiary, 1) !important;
+    }
+    &_tonic:hover {
+      background-color: $quaternary !important;
     }
 
     &_descending {
