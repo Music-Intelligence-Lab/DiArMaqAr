@@ -83,7 +83,7 @@ function computeAnalyticsForSystem(
 }
 
 export function generateAndWriteAnalytics() {
-  const systems = getTuningSystems().slice(12, 15);
+  const systems = getTuningSystems();
   const allAjnas = getAjnas();
   const allMaqamat = getMaqamat();
   const analyticsRows = systems.flatMap(ts =>
