@@ -5,10 +5,15 @@ $bottom-navbar-height: 55px;
 $page-height: calc(100svh - $top-navbar-height - $bottom-navbar-height);
 
 $background: #222222;
-$primary: #5a2585;
+$primary:   #1f548d; // Lapis Lazuli (deep blue)
+$secondary: #144f4f; // Fairuz (turquoise)
+$tertiary:  #236944; // Malachite (green)
+$quaternary: #349d65; // Carnelian (deep red)
+$gold:      #d4af37; // Gold (optional accent)
+/* $primary: #5a2585;
 $secondary: #83105d;
 $tertiary: #a4079c;
-$quaternary: #4569b6;
+$quaternary: #4569b6; */
 $black: #000000;
 $text: #eeeeee;
 $success: #28a745;
