@@ -100,7 +100,7 @@ function computeAnalyticsForSystem(
 export default function AnalyticsPage() {
   // cache it so we only measure once per render
   const analyticsRows = useMemo(() => {
-    const systems = [getTuningSystems()[11]]
+    const systems = getTuningSystems().slice(8, 11);
     const allAjnas = getAjnas();
     const allMaqamat = getMaqamat();
 
