@@ -1,5 +1,6 @@
 export const revalidate = 0;
 
+import { useMemo } from "react";
 import { getTuningSystems, getAjnas, getMaqamat } from "@/functions/import";
 import { getJinsTranspositions, getMaqamTranspositions } from "@/functions/transpose";
 import modulate from "@/functions/modulate";
@@ -7,84 +8,146 @@ import getTuningSystemCells from "@/functions/getTuningSystemCells";
 import calculateNumberOfModulations from "@/functions/calculateNumberOfModulations";
 import TuningSystem from "@/models/TuningSystem";
 
-export default function AnalyticsPage() {
-  const allTuningSystems: TuningSystem[] = [getTuningSystems()[0]];
-  const allAjnas = getAjnas();
-  const allMaqamat = getMaqamat();
+interface AnalyticsRow {
+  id: string;
+  label: string;
+  possibleAjnasCount: number;
+  possibleAjnasTranspositionsCount: number;
+  totalAjnas: number;
+  possibleMaqamatCount: number;
+  possibleMaqamatTranspositionsCount: number;
+  totalMaqamat: number;
+  totalSuyur: number;
+  totalAjnasModulations: number;
+  totalMaqamatModulations: number;
+}
 
+function computeAnalyticsForSystem(
+  tuningSystem: TuningSystem,
+  allAjnas: ReturnType<typeof getAjnas>,
+  allMaqamat: ReturnType<typeof getMaqamat>
+): AnalyticsRow[] {
+  console.time(`computeAnalytics:${tuningSystem.getId()}`);
+
+  const rows: AnalyticsRow[] = [];
   const totalNumberOfAjnas = allAjnas.length;
   const totalNumberOfMaqamat = allMaqamat.length;
 
-  console.log("HERE");
+  console.time(`getNoteNames:${tuningSystem.getId()}`);
+  const allNoteNameLists = tuningSystem.getNoteNames();
+  console.timeEnd(`getNoteNames:${tuningSystem.getId()}`);
 
-  return (<div className="analytics-page">
-    <table>
-      <thead>
-        <tr>
-          <th>Tuning Systems</th>
-          <th>Possible Ajnas</th>
-          <th>Possible Ajnas Transpositions</th>
-          <th>Possible Maqamat</th>
-          <th>Possible Maqamat Transpositions</th>
-          <th>Total Suyur</th>
-          <th>Total Possible Ajnas Modulations</th>
-          <th>Total Possible Maqamat Modulations</th>
-        </tr>
-      </thead>
-      <tbody>
-        {allTuningSystems.map((tuningSystem) => {
-          for (const noteNames of tuningSystem.getNoteNames()) {
-            const startingNoteName = noteNames[0];
+  for (const noteNames of allNoteNameLists) {
+    const starting = noteNames[0];
+    const rowId = tuningSystem.getId() + starting;
+    const label = `${tuningSystem.stringify()} ${starting}`;
 
-            const allPitchClasses = getTuningSystemCells(tuningSystem, startingNoteName);
-            const possibleAjnas = [];
-            const possibleAjnasTranspositions = [];
+    console.time(`getCells:${rowId}`);
+    const allPitchClasses = getTuningSystemCells(tuningSystem, starting);
+    console.timeEnd(`getCells:${rowId}`);
 
-            for (const jinsDetails of allAjnas) {
-              if (jinsDetails.isJinsSelectable(allPitchClasses.map((pc) => pc.noteName))) {
-                possibleAjnas.push(jinsDetails);
+    console.time(`computeAjnas:${rowId}`);
+    const possibleAjnas = [];
+    const possibleAjnasTrans = [];
+    for (const jinsDetails of allAjnas) {
+      if (jinsDetails.isJinsSelectable(allPitchClasses.map(pc => pc.noteName))) {
+        possibleAjnas.push(jinsDetails);
+        getJinsTranspositions(allPitchClasses, jinsDetails, false)
+          .forEach(tr => possibleAjnasTrans.push(tr));
+      }
+    }
+    console.timeEnd(`computeAjnas:${rowId}`);
 
-                getJinsTranspositions(allPitchClasses, jinsDetails, false).forEach((transposition) => {
-                  possibleAjnasTranspositions.push(transposition);
-                });
-              }
-            }
+    console.time(`computeMaqamat:${rowId}`);
+    let totalSuyur = 0;
+    const possibleMaqamat = [];
+    const possibleMaqamatTrans = [];
+    let totalAjnasMod = 0;
+    let totalMaqamatMod = 0;
 
-            let totalNumberOfSuyur = 0;
-            const possibleMaqamat = [];
-            const possibleMaqamatTranspositions = [];
-            let totalNumberOfAjnasModulations = 0;
-            let totalNumberOfMaqamatModulations = 0;
+    for (const maqamDetails of allMaqamat) {
+      console.log(maqamDetails);
+      if (maqamDetails.isMaqamSelectable(allPitchClasses.map(pc => pc.noteName))) {
+        possibleMaqamat.push(maqamDetails);
+        totalSuyur += maqamDetails.getSuyūr().length;
 
-            for (const maqamDetails of allMaqamat) {
-              if (maqamDetails.isMaqamSelectable(allPitchClasses.map((pc) => pc.noteName))) {
-                possibleMaqamat.push(maqamDetails);
-                totalNumberOfSuyur += maqamDetails.getSuyūr().length;
+        getMaqamTranspositions(allPitchClasses, allAjnas, maqamDetails, false)
+          .forEach(transposition => {
+            console.log(transposition);
+            possibleMaqamatTrans.push(transposition);
 
-                getMaqamTranspositions(allPitchClasses, allAjnas, maqamDetails, false).forEach((transposition) => {
-                  possibleMaqamatTranspositions.push(transposition);
+            // totalAjnasMod += calculateNumberOfModulations(modulate(
+            //   allPitchClasses, allAjnas, allMaqamat, transposition, true
+            // ));
+            // totalMaqamatMod += calculateNumberOfModulations(modulate(
+            //   allPitchClasses, allAjnas, allMaqamat, transposition, false
+            // ));
+          });
+      }
+    }
+    console.timeEnd(`computeMaqamat:${rowId}`);
 
-                  totalNumberOfAjnasModulations += calculateNumberOfModulations(modulate(allPitchClasses, allAjnas, allMaqamat, transposition, true))
-                  totalNumberOfMaqamatModulations += calculateNumberOfModulations(modulate(allPitchClasses, allAjnas, allMaqamat, transposition, false));
-                });
-              }
-            }
+    rows.push({
+      id: rowId,
+      label,
+      possibleAjnasCount: possibleAjnas.length,
+      possibleAjnasTranspositionsCount: possibleAjnasTrans.length,
+      totalAjnas: totalNumberOfAjnas,
+      possibleMaqamatCount: possibleMaqamat.length,
+      possibleMaqamatTranspositionsCount: possibleMaqamatTrans.length,
+      totalMaqamat: totalNumberOfMaqamat,
+      totalSuyur,
+      totalAjnasModulations: totalAjnasMod,
+      totalMaqamatModulations: totalMaqamatMod,
+    });
+  }
 
-            return (
-              <tr key={tuningSystem.getId() + startingNoteName}>
-                <td>{tuningSystem.stringify() + " " + startingNoteName}</td>
-                <td>{`${possibleAjnas.length}/${totalNumberOfAjnas}`}</td>
-                <td>{possibleAjnasTranspositions.length}</td>
-                <td>{`${possibleMaqamat.length}/${totalNumberOfMaqamat}`}</td>
-                <td>{possibleMaqamatTranspositions.length}</td>
-                <td>{totalNumberOfSuyur}</td>
-                <td>{totalNumberOfAjnasModulations}</td>
-                <td>{totalNumberOfMaqamatModulations}</td>
-              </tr>
-            );
-          }
-        })}
-      </tbody>
-    </table>
-  </div>);
+  console.timeEnd(`computeAnalytics:${tuningSystem.getId()}`);
+  return rows;
+}
+
+export default function AnalyticsPage() {
+  // cache it so we only measure once per render
+  const analyticsRows = useMemo(() => {
+    const systems = [getTuningSystems()[11]]
+    const allAjnas = getAjnas();
+    const allMaqamat = getMaqamat();
+
+    return systems.flatMap(ts =>
+      computeAnalyticsForSystem(ts, allAjnas, allMaqamat)
+    );
+  }, []);
+
+  return (
+    <div className="analytics-page">
+      <table>
+        <thead>
+          <tr>
+            <th>Tuning Systems</th>
+            <th>Possible Ajnas</th>
+            <th>Possible Ajnas Transpositions</th>
+            <th>Possible Maqamat</th>
+            <th>Possible Maqamat Transpositions</th>
+            <th>Total Suyur</th>
+            <th>Total Possible Ajnas Modulations</th>
+            <th>Total Possible Maqamat Modulations</th>
+          </tr>
+        </thead>
+        <tbody>
+          {analyticsRows.map(row => (
+            <tr key={row.id}>
+              <td>{row.label}</td>
+              <td>{`${row.possibleAjnasCount}/${row.totalAjnas}`}</td>
+              <td>{row.possibleAjnasTranspositionsCount}</td>
+              <td>{`${row.possibleMaqamatCount}/${row.totalMaqamat}`}</td>
+              <td>{row.possibleMaqamatTranspositionsCount}</td>
+              <td>{row.totalSuyur}</td>
+              <td>{row.totalAjnasModulations}</td>
+              <td>{row.totalMaqamatModulations}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 }
