@@ -41,18 +41,19 @@
     height: 70px;
     padding: 0px 6px;
     &_selected {
-      background-color: $primary;
+      background-color: rgb($primary, 0.8) !important;
     }
     &_active {
       background-color: rgb($tertiary, 1) !important;
     }
 
     &_tonic {
-      border-top: 3px $quaternary solid;
-      border-bottom: 3px solid $quaternary;
+      border-top: 3px $tertiary solid;
+      border-bottom: 3px solid $tertiary;
     }
     &_tonic_current {
-      background-color: $quaternary !important;
+      background-color: rgb($tertiary, 0.8) !important;
+      border: rgb($tertiary, 0.8) solid 3px 2px 2px 3px;
     }
     &_tonic_selected {
       border-color: $primary;
@@ -61,11 +62,11 @@
       background-color: rgba($tertiary, 1) !important;
     }
     &_tonic:hover {
-      background-color: $quaternary !important;
+      background-color: rgba($tertiary, 1) !important;
     }
 
     &_descending {
-      background-color: rgba($primary, 0.5);
+      background-color: rgba($primary, 0.4);
     }
   }
 
