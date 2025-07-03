@@ -1,14 +1,14 @@
-export const revalidate = 0;
+"use client";
 
-import { useMemo } from "react";
-import { getTuningSystems, getAjnas, getMaqamat } from "@/functions/import";
-import { getJinsTranspositions, getMaqamTranspositions } from "@/functions/transpose";
-import modulate from "@/functions/modulate";
-import getTuningSystemCells from "@/functions/getTuningSystemCells";
-import calculateNumberOfModulations from "@/functions/calculateNumberOfModulations";
-import TuningSystem from "@/models/TuningSystem";
+import React, { useState } from "react";
+// import { getTuningSystems, getAjnas, getMaqamat } from "@/functions/import";
+// import { getJinsTranspositions, getMaqamTranspositions } from "@/functions/transpose";
+// import modulate from "@/functions/modulate";
+// import getTuningSystemCells from "@/functions/getTuningSystemCells";
+// import calculateNumberOfModulations from "@/functions/calculateNumberOfModulations";
+// import TuningSystem from "@/models/TuningSystem";
 
-interface AnalyticsRow {
+ interface AnalyticsRow {
   id: string;
   label: string;
   possibleAjnasCount: number;
@@ -33,15 +33,20 @@ function computeAnalyticsForSystem(
   const totalNumberOfAjnas = allAjnas.length;
   const totalNumberOfMaqamat = allMaqamat.length;
 
+  console.time(`getNoteNames:${tuningSystem.getId()}`);
   const allNoteNameLists = tuningSystem.getNoteNames();
+  console.timeEnd(`getNoteNames:${tuningSystem.getId()}`);
 
   for (const noteNames of allNoteNameLists) {
     const starting = noteNames[0];
     const rowId = tuningSystem.getId() + starting;
     const label = `${tuningSystem.stringify()} ${starting}`;
 
+    console.time(`getCells:${rowId}`);
     const allPitchClasses = getTuningSystemCells(tuningSystem, starting);
+    console.timeEnd(`getCells:${rowId}`);
 
+    console.time(`computeAjnas:${rowId}`);
     const possibleAjnas = [];
     const possibleAjnasTrans = [];
     for (const jinsDetails of allAjnas) {
@@ -51,7 +56,9 @@ function computeAnalyticsForSystem(
           .forEach(tr => possibleAjnasTrans.push(tr));
       }
     }
+    console.timeEnd(`computeAjnas:${rowId}`);
 
+    console.time(`computeMaqamat:${rowId}`);
     let totalSuyur = 0;
     const possibleMaqamat = [];
     const possibleMaqamatTrans = [];
@@ -59,6 +66,7 @@ function computeAnalyticsForSystem(
     let totalMaqamatMod = 0;
 
     for (const maqamDetails of allMaqamat) {
+      console.log(maqamDetails);
       if (maqamDetails.isMaqamSelectable(allPitchClasses.map(pc => pc.noteName))) {
         possibleMaqamat.push(maqamDetails);
         totalSuyur += maqamDetails.getSuyūr().length;
@@ -77,6 +85,7 @@ function computeAnalyticsForSystem(
           });
       }
     }
+    console.timeEnd(`computeMaqamat:${rowId}`);
 
     rows.push({
       id: rowId,
@@ -100,7 +109,7 @@ function computeAnalyticsForSystem(
 export default function AnalyticsPage() {
   // cache it so we only measure once per render
   const analyticsRows = useMemo(() => {
-    const systems = getTuningSystems().slice(8, 11);
+    const systems = [getTuningSystems()[11]]
     const allAjnas = getAjnas();
     const allMaqamat = getMaqamat();
 
@@ -111,21 +120,26 @@ export default function AnalyticsPage() {
 
   return (
     <div className="analytics-page">
+      <button onClick={handleReRender} disabled={loading} style={{marginBottom: 16}}>
+        {loading ? "Re-Rendering..." : "Re-Render Analytics"}
+      </button>
+      {error && <div style={{color: 'red'}}>{error}</div>}
+      {success && <div style={{color: 'green'}}>{success}</div>}
       <table>
         <thead>
           <tr>
-            <th>Tuning Systems</th>
-            <th>Possible Ajnas</th>
-            <th>Possible Ajnas Transpositions</th>
-            <th>Possible Maqamat</th>
-            <th>Possible Maqamat Transpositions</th>
-            <th>Total Suyur</th>
-            <th>Total Possible Ajnas Modulations</th>
-            <th>Total Possible Maqamat Modulations</th>
+            {renderSortableHeader('Tuning Systems', 'label')}
+            {renderSortableHeader('Possible Ajnas', 'possibleAjnasCount')}
+            {renderSortableHeader('Possible Ajnas Transpositions', 'possibleAjnasTranspositionsCount')}
+            {renderSortableHeader('Possible Maqamat', 'possibleMaqamatCount')}
+            {renderSortableHeader('Possible Maqamat Transpositions', 'possibleMaqamatTranspositionsCount')}
+            {renderSortableHeader('Total Suyur', 'totalSuyur')}
+            {renderSortableHeader('Total Possible Ajnas Modulations', 'totalAjnasModulations')}
+            {renderSortableHeader('Total Possible Maqamat Modulations', 'totalMaqamatModulations')}
           </tr>
         </thead>
         <tbody>
-          {analyticsRows.map(row => (
+          {sortedRows.map(row => (
             <tr key={row.id}>
               <td>{row.label}</td>
               <td>{`${row.possibleAjnasCount}/${row.totalAjnas}`}</td>

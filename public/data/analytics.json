@@ -1,0 +1,80 @@
+[
+  {
+    "id": "IbnSīnā-(1037)-7-FretOud17-Toneʿushayrān",
+    "label": "Ibn Sīnā  (1037) 7-Fret Oud 17-Tone ʿushayrān",
+    "possibleAjnasCount": 15,
+    "possibleAjnasTranspositionsCount": 111,
+    "totalAjnas": 20,
+    "possibleMaqamatCount": 38,
+    "possibleMaqamatTranspositionsCount": 157,
+    "totalMaqamat": 51,
+    "totalSuyur": 13,
+    "totalAjnasModulations": 2423,
+    "totalMaqamatModulations": 3542
+  },
+  {
+    "id": "IbnSīnā-(1037)-7-FretOud17-Toneyegāh",
+    "label": "Ibn Sīnā  (1037) 7-Fret Oud 17-Tone yegāh",
+    "possibleAjnasCount": 17,
+    "possibleAjnasTranspositionsCount": 160,
+    "totalAjnas": 20,
+    "possibleMaqamatCount": 40,
+    "possibleMaqamatTranspositionsCount": 200,
+    "totalMaqamat": 51,
+    "totalSuyur": 13,
+    "totalAjnasModulations": 4435,
+    "totalMaqamatModulations": 5919
+  },
+  {
+    "id": "IsḥāqAl-Mawṣilī-(850)-9-Toneʿushayrān",
+    "label": "Isḥāq Al-Mawṣilī (850) 9-Tone ʿushayrān",
+    "possibleAjnasCount": 0,
+    "possibleAjnasTranspositionsCount": 0,
+    "totalAjnas": 20,
+    "possibleMaqamatCount": 0,
+    "possibleMaqamatTranspositionsCount": 0,
+    "totalMaqamat": 51,
+    "totalSuyur": 0,
+    "totalAjnasModulations": 0,
+    "totalMaqamatModulations": 0
+  },
+  {
+    "id": "IsḥāqAl-Mawṣilī-(850)-9-Toneyegāh",
+    "label": "Isḥāq Al-Mawṣilī (850) 9-Tone yegāh",
+    "possibleAjnasCount": 4,
+    "possibleAjnasTranspositionsCount": 44,
+    "totalAjnas": 20,
+    "possibleMaqamatCount": 2,
+    "possibleMaqamatTranspositionsCount": 16,
+    "totalMaqamat": 51,
+    "totalSuyur": 0,
+    "totalAjnasModulations": 117,
+    "totalMaqamatModulations": 48
+  },
+  {
+    "id": "CairoCongressTuningCommittee-(1929)-EgyptianTuningyegāh",
+    "label": "Cairo Congress Tuning Committee (1929) Egyptian Tuning yegāh",
+    "possibleAjnasCount": 19,
+    "possibleAjnasTranspositionsCount": 170,
+    "totalAjnas": 20,
+    "possibleMaqamatCount": 50,
+    "possibleMaqamatTranspositionsCount": 178,
+    "totalMaqamat": 51,
+    "totalSuyur": 24,
+    "totalAjnasModulations": 2695,
+    "totalMaqamatModulations": 3579
+  },
+  {
+    "id": "CairoCongressTuningCommittee-(1929)-EgyptianTuningrāst",
+    "label": "Cairo Congress Tuning Committee (1929) Egyptian Tuning rāst",
+    "possibleAjnasCount": 17,
+    "possibleAjnasTranspositionsCount": 229,
+    "totalAjnas": 20,
+    "possibleMaqamatCount": 40,
+    "possibleMaqamatTranspositionsCount": 202,
+    "totalMaqamat": 51,
+    "totalSuyur": 13,
+    "totalAjnasModulations": 3881,
+    "totalMaqamatModulations": 4928
+  }
+]
