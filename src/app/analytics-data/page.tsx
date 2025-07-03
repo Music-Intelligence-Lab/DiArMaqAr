@@ -33,20 +33,15 @@ function computeAnalyticsForSystem(
   const totalNumberOfAjnas = allAjnas.length;
   const totalNumberOfMaqamat = allMaqamat.length;
 
-  console.time(`getNoteNames:${tuningSystem.getId()}`);
   const allNoteNameLists = tuningSystem.getNoteNames();
-  console.timeEnd(`getNoteNames:${tuningSystem.getId()}`);
 
   for (const noteNames of allNoteNameLists) {
     const starting = noteNames[0];
     const rowId = tuningSystem.getId() + starting;
     const label = `${tuningSystem.stringify()} ${starting}`;
 
-    console.time(`getCells:${rowId}`);
     const allPitchClasses = getTuningSystemCells(tuningSystem, starting);
-    console.timeEnd(`getCells:${rowId}`);
 
-    console.time(`computeAjnas:${rowId}`);
     const possibleAjnas = [];
     const possibleAjnasTrans = [];
     for (const jinsDetails of allAjnas) {
@@ -56,9 +51,7 @@ function computeAnalyticsForSystem(
           .forEach(tr => possibleAjnasTrans.push(tr));
       }
     }
-    console.timeEnd(`computeAjnas:${rowId}`);
 
-    console.time(`computeMaqamat:${rowId}`);
     let totalSuyur = 0;
     const possibleMaqamat = [];
     const possibleMaqamatTrans = [];
@@ -66,7 +59,6 @@ function computeAnalyticsForSystem(
     let totalMaqamatMod = 0;
 
     for (const maqamDetails of allMaqamat) {
-      console.log(maqamDetails);
       if (maqamDetails.isMaqamSelectable(allPitchClasses.map(pc => pc.noteName))) {
         possibleMaqamat.push(maqamDetails);
         totalSuyur += maqamDetails.getSuyūr().length;
@@ -85,7 +77,6 @@ function computeAnalyticsForSystem(
           });
       }
     }
-    console.timeEnd(`computeMaqamat:${rowId}`);
 
     rows.push({
       id: rowId,
