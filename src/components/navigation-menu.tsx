@@ -27,7 +27,7 @@ const NavigationMenu = () => {
           <Link href="/landing" className="navigation-menu-card__link">
             Landing Page
           </Link>
-          <Link href="/analytics" className="navigation-menu-card__link">
+          <Link href="/analytics-data" className="navigation-menu-card__link">
             Analytics
           </Link>
           <Link href="/user-guide" className="navigation-menu-card__link">
