@@ -29,9 +29,9 @@ export default function AnalyticsPage() {
   const [rows, setRows] = useState<AnalyticsRow[]>([]);
   const [sortKey, setSortKey] = useState<keyof AnalyticsRow>("label");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
-  const [loading, setLoading] = useState(false);
+//  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
+//  const [success, setSuccess] = useState<string | null>(null);
 
   // Fetch analytics data from JSON file
   const fetchAnalytics = async () => {
@@ -50,7 +50,7 @@ export default function AnalyticsPage() {
     fetchAnalytics();
   }, []);
 
-  // Handle re-generation
+  /* // Handle re-generation
   const handleReRender = async () => {
     setLoading(true);
     setError(null);
@@ -66,7 +66,7 @@ export default function AnalyticsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }; */
 
   // Sorting logic
   const sortedRows = useMemo(() => {
@@ -104,31 +104,37 @@ export default function AnalyticsPage() {
     );
   }
 
+  const [selectedRowId, setSelectedRowId] = useState<string | null>(null);
+
   return (
     <div className="analytics-page">
-      
-        <button onClick={handleReRender} disabled={loading} style={{ marginBottom: 16 }}>
-          {loading ? "Re-Rendering..." : "Re-Render Analytics"}
-        </button>
-      
+      {/* <button onClick={handleReRender} disabled={loading} style={{ marginBottom: 16 }}>
+        {loading ? "Re-Rendering..." : "Re-Render Analytics"}
+      </button> */}
+
       {error && <div style={{ color: "red" }}>{error}</div>}
-      {success && <div style={{ color: "green" }}>{success}</div>}
+      {/* {success && <div style={{ color: "green" }}>{success}</div>} */}
       <table>
         <thead>
           <tr>
-            {renderSortableHeader("Tuning Systems", "label")}
-            {renderSortableHeader("Possible Ajnas", "possibleAjnasCount")}
-            {renderSortableHeader("Possible Ajnas Transpositions", "possibleAjnasTranspositionsCount")}
-            {renderSortableHeader("Possible Maqamat", "possibleMaqamatCount")}
-            {renderSortableHeader("Possible Maqamat Transpositions", "possibleMaqamatTranspositionsCount")}
-            {renderSortableHeader("Total Suyur", "totalSuyur")}
-            {renderSortableHeader("Total Possible Ajnas Modulations", "totalAjnasModulations")}
-            {renderSortableHeader("Total Possible Maqamat Modulations", "totalMaqamatModulations")}
+            {renderSortableHeader("Tuning System", "label")}
+            {renderSortableHeader("Possible Ajnās", "possibleAjnasCount")}
+            {renderSortableHeader("Possible Ajnās Transpositions", "possibleAjnasTranspositionsCount")}
+            {renderSortableHeader("Possible Maqāmāt", "possibleMaqamatCount")}
+            {renderSortableHeader("Possible Maqāmāt Transpositions", "possibleMaqamatTranspositionsCount")}
+            {renderSortableHeader("Total Suyūr", "totalSuyur")}
+            {renderSortableHeader("Total Possible Ajnās Modulations", "totalAjnasModulations")}
+            {renderSortableHeader("Total Possible Maqāmāt Modulations", "totalMaqamatModulations")}
           </tr>
         </thead>
         <tbody>
           {sortedRows.map((row) => (
-            <tr key={row.id}>
+            <tr
+              key={row.id}
+              className={selectedRowId === row.id ? "selected-row" : ""}
+              onClick={() => setSelectedRowId(selectedRowId === row.id ? null : row.id)}
+              style={{ cursor: "pointer" }}
+            >
               <td>{row.label}</td>
               <td>{`${row.possibleAjnasCount}/${row.totalAjnas}`}</td>
               <td>{row.possibleAjnasTranspositionsCount}</td>

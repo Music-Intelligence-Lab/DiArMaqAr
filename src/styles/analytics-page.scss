@@ -1,11 +1,9 @@
 @use "./variables" as *;
-
 .analytics-page {
   width: 100%;
-  height: auto;
-  margin: 0px auto 500px auto;
   padding: 12px;
   background: $background;
+  overflow: auto;
 
   button {
     font-size: 1rem;
@@ -30,15 +28,25 @@
     width: 100%;
     border-collapse: collapse;
     background: $dark-grey;
-    border-radius: 0px;
-    margin-top: 20px;
+    border-bottom: 1px solid $grey;
+    margin-bottom: 40px;
+    max-height: 75vh;
+    overflow-y: scroll;
+    table-layout: auto;
+    display: block;
   }
 
   th,
   td {
     padding: 10px 20px;
     text-align: left;
-    font-size: 1rem;
+    font-size: 14px;
+    
+  }
+
+  td {
+    white-space: nowrap;
+    
   }
 
   th {
@@ -47,9 +55,25 @@
     font-weight: 400;
     position: sticky;
     top: 0;
-    z-index: 1;
+    z-index: 2;
+    white-space: wrap;
+    vertical-align: top;
+    box-shadow: 0 2px 0 0 $grey;
+    
+    
   }
-
+  tr {
+    transition: background 0.15s;
+    &:hover td {
+      background: rgb($primary, 0.5 ) !important;
+      color: $text;
+    }
+  }
+  tr.selected-row td {
+    background: $secondary !important;
+    color: $text;
+    font-weight: 300;
+  }
   tr:nth-child(even) td {
     background: $medium-grey;
   }
@@ -64,6 +88,4 @@
   tr:last-child td {
     border-bottom: none;
   }
-
-  }
-
+}
