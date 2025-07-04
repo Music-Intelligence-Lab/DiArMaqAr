@@ -1,5 +1,7 @@
 @use "./variables" as *;
 
+// Ensure hops scroll into view below sticky pitch class wheel
+
 .modulations {
   &__container {
     width: 100%;
@@ -78,6 +80,7 @@
   &__hops-wrapper {
     width: 100%;
     margin-bottom: 0px;
+    scroll-margin-top: 90px;
   }
 
   &__modulations-list {
@@ -87,9 +90,7 @@
       margin-right: 10px; // for column gap if you switch to row direction
     }
     gap: 10px;
-    width: calc(
-      100% / 8 - 10px
-    ); 
+    width: calc(100% / 8 - 10px);
     padding: 10px 0px;
   }
 
