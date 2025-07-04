@@ -24,9 +24,6 @@ export default function Modulations() {
     setSelectedJinsDetails,
     allPitchClasses,
     setSelectedPitchClasses,
-    // Remove global ajnasModulationsMode
-    // ajnasModulationsMode,
-    // setAjnasModulationsMode,
     handleClickMaqam,
   } = useAppContext();
   // Per-hop modulation mode: true = ajnas, false = maqamat
@@ -86,6 +83,32 @@ export default function Modulations() {
       setSelectedPitchClasses(selectedJins.jinsPitchClasses);
     }
   }, [selectedMaqam, selectedJins]);
+
+// Handles clicking the source maqam name (propagates tonic and details)
+  function handleSourceMaqamClick(sourceMaqam: Maqam) {
+    const maqamDetails = maqamat.find((m) => m.getId() === sourceMaqam.maqamId);
+    if (maqamDetails) {
+      const tonicNote = sourceMaqam.ascendingPitchClasses[0]?.noteName;
+      let maqamToSend = maqamDetails;
+      // If tonic is different, create a new MaqamDetails with the correct tonic
+      if (
+        tonicNote &&
+        maqamDetails.getAscendingNoteNames()[0] !== tonicNote
+      ) {
+        maqamToSend = new (Object.getPrototypeOf(maqamDetails).constructor)(
+          maqamDetails.getId(),
+          maqamDetails.getName(),
+          [tonicNote, ...maqamDetails.getAscendingNoteNames().slice(1)],
+          maqamDetails.getDescendingNoteNames(),
+          maqamDetails.getSuyūr(),
+          maqamDetails.getCommentsEnglish(),
+          maqamDetails.getCommentsArabic(),
+          maqamDetails.getSourcePageReferences()
+        );
+      }
+      setSelectedMaqamDetails(maqamToSend);
+    }
+  }
 
   const addHopsWrapper = (maqamTransposition: Maqam, stackIdx: number) => {
     const ajnasMods = modulate(
@@ -222,7 +245,7 @@ export default function Modulations() {
             <div className="modulations__wrapper-modulations-header">
               <div
                 className="modulations__source-maqam-name"
-                onClick={() => setSelectedMaqam(sourceMaqam)}
+                onClick={() => handleSourceMaqamClick(sourceMaqam)}
                 style={{ cursor: "pointer" }}
               >
                 {sourceMaqam.name ? sourceMaqam.name : "Unknown"} (
