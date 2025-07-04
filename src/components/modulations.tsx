@@ -34,9 +34,9 @@ export default function Modulations() {
   const { clearHangingNotes } = useSoundContext();
 
   const [sourceMaqamStack, setSourceMaqamStack] = useState<Maqam[]>([]);
-  const [modulationsStack, setModulationsStack] = useState<ModulationsPair[]>(
-    []
-  );
+  const [modulationsStack, setModulationsStack] = useState<ModulationsPair[]>([]);
+  // For scrolling to new hop
+  const hopsRefs = React.useRef<Array<HTMLDivElement | null>>([]);
 
   // Only initialize the stack once, when the component mounts, using the initial selectedMaqamDetails
   React.useEffect(() => {
@@ -119,12 +119,36 @@ export default function Modulations() {
       const newModes = [...prev.slice(0, stackIdx + 1), false];
       return newModes;
     });
+    // Scroll to the new hop after a short delay to ensure DOM update
+    setTimeout(() => {
+      const nextIdx = stackIdx + 1;
+      if (hopsRefs.current[nextIdx]) {
+        hopsRefs.current[nextIdx]?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 100);
   };
 
   const removeLastHopsWrapper = () => {
-    setSourceMaqamStack((prev) => (prev.length > 1 ? prev.slice(0, -1) : prev));
-    setModulationsStack((prev) => (prev.length > 1 ? prev.slice(0, -1) : prev));
-    setModulationModes((prev) => (prev.length > 1 ? prev.slice(0, -1) : prev));
+    setSourceMaqamStack((prev) => {
+      const newStack = prev.length > 1 ? prev.slice(0, -1) : prev;
+      return newStack;
+    });
+    setModulationsStack((prev) => {
+      const newStack = prev.length > 1 ? prev.slice(0, -1) : prev;
+      return newStack;
+    });
+    setModulationModes((prev) => {
+      const newModes = prev.length > 1 ? prev.slice(0, -1) : prev;
+      return newModes;
+    });
+    // Scroll to the previous hop or first hop after a short delay
+    setTimeout(() => {
+      // Find the last non-null ref (should be the last hop in DOM)
+      const validRefs = hopsRefs.current.filter(Boolean);
+      if (validRefs.length > 0) {
+        validRefs[validRefs.length - 1]?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 100);
   };
 
   // Handles clicking any modulation hop (for all positions: tonic, third, etc)
@@ -189,7 +213,11 @@ export default function Modulations() {
           : 0;
         return (
 
-          <div className="modulations__hops-wrapper" key={stackIdx}>
+          <div
+            className="modulations__hops-wrapper"
+            key={stackIdx}
+            ref={el => { hopsRefs.current[stackIdx] = el; }}
+          >
             {/* Maqam name/details at the top of each wrapper */}
             <div className="modulations__wrapper-modulations-header">
               <div
