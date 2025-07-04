@@ -1,6 +1,7 @@
 "use client";
 
 import useAppContext from "@/contexts/app-context";
+import useSoundContext from "@/contexts/sound-context";
 import React, { useState, useEffect } from "react";
 import { MaqamatModulations, Maqam } from "@/models/Maqam";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
@@ -16,7 +17,6 @@ export default function Modulations() {
     ajnas,
     selectedMaqamDetails,
     setSelectedMaqamDetails,
-    getModulations,
     selectedMaqam,
     setSelectedMaqam,
     selectedJins,
@@ -26,48 +26,45 @@ export default function Modulations() {
     setSelectedPitchClasses,
     ajnasModulationsMode,
     setAjnasModulationsMode,
+    handleClickMaqam,
   } = useAppContext();
+  const { clearHangingNotes } = useSoundContext();
 
   const [sourceMaqamStack, setSourceMaqamStack] = useState<Maqam[]>([]);
   const [modulationsStack, setModulationsStack] = useState<ModulationsPair[]>(
     []
   );
 
-  useEffect(() => {
-    function getBothModulations(transposition: Maqam): ModulationsPair {
-      const ajnasMods = modulate(
-        allPitchClasses,
-        ajnas,
-        maqamat,
-        transposition,
-        true
-      ) as AjnasModulations;
-      const maqamatMods = modulate(
-        allPitchClasses,
-        ajnas,
-        maqamat,
-        transposition,
-        false
-      ) as MaqamatModulations;
-      return {
-        ajnas: ajnasMods,
-        maqamat: maqamatMods,
-      };
-    }
-
-    if (selectedMaqamDetails) {
+  // Only initialize the stack once, when the component mounts, using the initial selectedMaqamDetails
+  React.useEffect(() => {
+    if (sourceMaqamStack.length === 0 && selectedMaqamDetails) {
+      function getBothModulations(transposition: Maqam): ModulationsPair {
+        const ajnasMods = modulate(
+          allPitchClasses,
+          ajnas,
+          maqamat,
+          transposition,
+          true
+        ) as AjnasModulations;
+        const maqamatMods = modulate(
+          allPitchClasses,
+          ajnas,
+          maqamat,
+          transposition,
+          false
+        ) as MaqamatModulations;
+        return {
+          ajnas: ajnasMods,
+          maqamat: maqamatMods,
+        };
+      }
       const transposition = selectedMaqamDetails.getTahlil(allPitchClasses);
       setSourceMaqamStack([transposition]);
       setModulationsStack([getBothModulations(transposition)]);
-    } else if (sourceMaqamStack.length > 0) {
-      const transposition = sourceMaqamStack[0];
-      setSourceMaqamStack([transposition]);
-      setModulationsStack([getBothModulations(transposition)]);
-    } else {
-      setSourceMaqamStack([]);
-      setModulationsStack([]);
     }
-  }, [selectedMaqamDetails, allPitchClasses, getModulations, ajnas, maqamat]);
+    // Do not update the stack on subsequent prop/context changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (selectedMaqam) {
@@ -258,6 +255,15 @@ export default function Modulations() {
                               if ("ascendingPitchClasses" in hop) {
                                 addHopsWrapper(hop, stackIdx);
                                 setSelectedJins(null);
+                                // Only call handleClickMaqam/clearHangingNotes if not already selected
+                                const maqamDetails = maqamat.find((m) => m.getId() === hop.maqamId);
+                                if (
+                                  maqamDetails &&
+                                  (!selectedMaqamDetails || maqamDetails.getId() !== selectedMaqamDetails.getId())
+                                ) {
+                                  handleClickMaqam(maqamDetails);
+                                  clearHangingNotes();
+                                }
                               } else {
                                 setSelectedJins(hop);
                                 setSelectedMaqam(null);
@@ -291,6 +297,15 @@ export default function Modulations() {
                               if ("ascendingPitchClasses" in hop) {
                                 addHopsWrapper(hop, stackIdx);
                                 setSelectedJins(null);
+                                // Only call handleClickMaqam/clearHangingNotes if not already selected
+                                const maqamDetails = maqamat.find((m) => m.getId() === hop.maqamId);
+                                if (
+                                  maqamDetails &&
+                                  (!selectedMaqamDetails || maqamDetails.getId() !== selectedMaqamDetails.getId())
+                                ) {
+                                  handleClickMaqam(maqamDetails);
+                                  clearHangingNotes();
+                                }
                               } else {
                                 setSelectedJins(hop);
                                 setSelectedMaqam(null);
@@ -324,6 +339,15 @@ export default function Modulations() {
                               if ("ascendingPitchClasses" in hop) {
                                 addHopsWrapper(hop, stackIdx);
                                 setSelectedJins(null);
+                                // Only call handleClickMaqam/clearHangingNotes if not already selected
+                                const maqamDetails = maqamat.find((m) => m.getId() === hop.maqamId);
+                                if (
+                                  maqamDetails &&
+                                  (!selectedMaqamDetails || maqamDetails.getId() !== selectedMaqamDetails.getId())
+                                ) {
+                                  handleClickMaqam(maqamDetails);
+                                  clearHangingNotes();
+                                }
                               } else {
                                 setSelectedJins(hop);
                                 setSelectedMaqam(null);
@@ -357,6 +381,15 @@ export default function Modulations() {
                               if ("ascendingPitchClasses" in hop) {
                                 addHopsWrapper(hop, stackIdx);
                                 setSelectedJins(null);
+                                // Only call handleClickMaqam/clearHangingNotes if not already selected
+                                const maqamDetails = maqamat.find((m) => m.getId() === hop.maqamId);
+                                if (
+                                  maqamDetails &&
+                                  (!selectedMaqamDetails || maqamDetails.getId() !== selectedMaqamDetails.getId())
+                                ) {
+                                  handleClickMaqam(maqamDetails);
+                                  clearHangingNotes();
+                                }
                               } else {
                                 setSelectedJins(hop);
                                 setSelectedMaqam(null);
@@ -390,6 +423,15 @@ export default function Modulations() {
                               if ("ascendingPitchClasses" in hop) {
                                 addHopsWrapper(hop, stackIdx);
                                 setSelectedJins(null);
+                                // Only call handleClickMaqam/clearHangingNotes if not already selected
+                                const maqamDetails = maqamat.find((m) => m.getId() === hop.maqamId);
+                                if (
+                                  maqamDetails &&
+                                  (!selectedMaqamDetails || maqamDetails.getId() !== selectedMaqamDetails.getId())
+                                ) {
+                                  handleClickMaqam(maqamDetails);
+                                  clearHangingNotes();
+                                }
                               } else {
                                 setSelectedJins(hop);
                                 setSelectedMaqam(null);
@@ -423,6 +465,15 @@ export default function Modulations() {
                               if ("ascendingPitchClasses" in hop) {
                                 addHopsWrapper(hop, stackIdx);
                                 setSelectedJins(null);
+                                // Only call handleClickMaqam/clearHangingNotes if not already selected
+                                const maqamDetails = maqamat.find((m) => m.getId() === hop.maqamId);
+                                if (
+                                  maqamDetails &&
+                                  (!selectedMaqamDetails || maqamDetails.getId() !== selectedMaqamDetails.getId())
+                                ) {
+                                  handleClickMaqam(maqamDetails);
+                                  clearHangingNotes();
+                                }
                               } else {
                                 setSelectedJins(hop);
                                 setSelectedMaqam(null);
@@ -456,6 +507,15 @@ export default function Modulations() {
                               if ("ascendingPitchClasses" in hop) {
                                 addHopsWrapper(hop, stackIdx);
                                 setSelectedJins(null);
+                                // Only call handleClickMaqam/clearHangingNotes if not already selected
+                                const maqamDetails = maqamat.find((m) => m.getId() === hop.maqamId);
+                                if (
+                                  maqamDetails &&
+                                  (!selectedMaqamDetails || maqamDetails.getId() !== selectedMaqamDetails.getId())
+                                ) {
+                                  handleClickMaqam(maqamDetails);
+                                  clearHangingNotes();
+                                }
                               } else {
                                 setSelectedJins(hop);
                                 setSelectedMaqam(null);
@@ -488,22 +548,31 @@ export default function Modulations() {
                         [...modulations.modulationsOnSixDescending]
                           .sort((a, b) => a.name.localeCompare(b.name))
                           .map((hop, index) => (
-                            <span
-                              className="modulations__modulation-item"
-                              key={index}
-                              onClick={() => {
-                                if ("ascendingPitchClasses" in hop) {
-                                  addHopsWrapper(hop, stackIdx);
-                                  setSelectedJins(null);
-                                } else {
-                                  setSelectedJins(hop);
-                                  setSelectedMaqam(null);
+                          <span
+                            className="modulations__modulation-item"
+                            key={index}
+                            onClick={() => {
+                              if ("ascendingPitchClasses" in hop) {
+                                addHopsWrapper(hop, stackIdx);
+                                setSelectedJins(null);
+                                // Only call handleClickMaqam/clearHangingNotes if not already selected
+                                const maqamDetails = maqamat.find((m) => m.getId() === hop.maqamId);
+                                if (
+                                  maqamDetails &&
+                                  (!selectedMaqamDetails || maqamDetails.getId() !== selectedMaqamDetails.getId())
+                                ) {
+                                  handleClickMaqam(maqamDetails);
+                                  clearHangingNotes();
                                 }
-                              }}
-                              style={{ cursor: "pointer" }}
-                            >
-                              {hop.name}
-                            </span>
+                              } else {
+                                setSelectedJins(hop);
+                                setSelectedMaqam(null);
+                              }
+                            }}
+                            style={{ cursor: "pointer" }}
+                          >
+                            {hop.name}
+                          </span>
                           ))}
                     </div>
                   </>
