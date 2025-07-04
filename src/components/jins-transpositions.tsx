@@ -90,7 +90,7 @@ export default function JinsTranspositions() {
           </tr>
 
           <tr>
-            <th className="jins-transpositions__row-header">Note Names </th>
+            <th className="jins-transposition s__row-header">Note Names </th>
             {pitchClasses.map(({ noteName }, i) => (
               <React.Fragment key={i}>
                 {i !== 0 && <th className="jins-transpositions__header-cell"></th>}
