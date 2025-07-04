@@ -2,6 +2,7 @@
 
 .analytics-page {
   width: 100%;
+  height: auto;
   margin: 0px auto 500px auto;
   padding: 12px;
   background: $background;
@@ -30,7 +31,6 @@
     border-collapse: collapse;
     background: $dark-grey;
     border-radius: 0px;
-    overflow: hidden;
     margin-top: 20px;
   }
 
@@ -65,16 +65,5 @@
     border-bottom: none;
   }
 
-  @media (max-width: 700px) {
-    padding: 10px;
-    table,
-    th,
-    td {
-      font-size: 14px;
-    }
-    th,
-    td {
-      padding: 10px 20px;
-    }
   }
-}
+
