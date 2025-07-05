@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import useAppContext from "@/contexts/app-context";
 import useSoundContext from "@/contexts/sound-context";
 import useFilterContext from "@/contexts/filter-context";
@@ -12,7 +12,17 @@ import { calculateInterval } from "@/models/PitchClass";
 import shiftPitchClass from "@/functions/shiftPitchClass";
 import camelCaseToWord from "@/functions/camelCaseToWord";
 
-export default function MaqamTranspositions() {
+// Utility to create a safe id from a note name
+// Utility to create a safe id from a note name
+const getHeaderId = (noteName: string): string => {
+  if (typeof noteName !== "string") return "";
+  return `maqam-transpositions__header--${noteName
+    .replace(/[^a-zA-Z0-9]/g, "-")
+    .replace(/-+/g, "-")
+    .toLowerCase()}`;
+};
+
+const MaqamTranspositions: React.FC = () => {
   const {
     selectedMaqamDetails,
     selectedTuningSystem,
@@ -108,6 +118,7 @@ export default function MaqamTranspositions() {
         key !== valueType &&
         filters[key as keyof typeof filters]
     ).length;
+
     function renderTranspositionRow(
       maqam: Maqam,
       ascending: boolean,
@@ -197,6 +208,7 @@ export default function MaqamTranspositions() {
               </th>
               <th
                 className="maqam-transpositions__header"
+                id={getHeaderId(pitchClasses[0].noteName)}
                 colSpan={4 + (pitchClasses.length - 1) * 2}
               >
                 {!transposition ? (
@@ -215,6 +227,11 @@ export default function MaqamTranspositions() {
                       noOctaveMaqam ? pitchClasses.slice(0, -1) : pitchClasses
                     );
                     setSelectedMaqam(transposition ? maqam : null);
+                    // Scroll to this header
+                    const el = document.getElementById(getHeaderId(pitchClasses[0].noteName));
+                    if (el) {
+                      el.scrollIntoView({ behavior: "smooth", block: "start" });
+                    }
                   }}
                 >
                   Select & Load to Keyboard
@@ -744,5 +761,24 @@ export default function MaqamTranspositions() {
     soundSettings,
   ]);
 
+  // Scroll to header on mount if maqamFirstNote is in the URL
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const maqamFirstNote = params.get("maqamFirstNote");
+    if (maqamFirstNote) {
+      // decode and normalize
+      const id = getHeaderId(decodeURIComponent(maqamFirstNote));
+      const el = document.getElementById(id);
+      if (el && typeof el.scrollIntoView === "function") {
+        setTimeout(() => {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 200);
+      }
+    }
+  }, []);
   return transpositionTables;
-}
+};
+
+export default MaqamTranspositions;
+
