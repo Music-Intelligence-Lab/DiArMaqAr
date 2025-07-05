@@ -4,6 +4,8 @@
   width: 100%;
   font-size: 0.9rem;
   margin-top: 10px;
+  scroll-margin-top: 450px;
+
 
   &__title {
     width: 100%;
@@ -167,8 +169,7 @@
   &__header {
     text-align: left;
     background-color: transparent;
-    scroll-margin-top: 90px;
-
+    scroll-margin-top: calc($top-navbar-height);
   }
 
   &__cell {
