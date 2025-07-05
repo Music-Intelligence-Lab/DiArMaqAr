@@ -323,13 +323,14 @@ export default function JinsTranspositions() {
         {selectedJinsDetails && (
           <>
             <div className="jins-transpositions__comments-sources-container">
-              <div className="jins-transpositions__comments">
+              <div className="jins-transpositions__comments-english">
                 <h3>Comments:</h3>
                 <div className="jins-transpositions__comments-text">{selectedJinsDetails.getCommentsEnglish()}</div>
               </div>
-            </div>
-            <div className="jins-transpositions__sources">
+            
+            <div className="jins-transpositions__sources-english">
               <h3>Sources:</h3>
+              <div className="jins-transpositions__sources-text">
               {selectedJinsDetails?.getSourcePageReferences().length > 0 &&
                 selectedJinsDetails.getSourcePageReferences().map((sourceRef, idx) => {
                   const source = sources.find((s: any) => s.id === sourceRef.sourceId);
@@ -340,6 +341,8 @@ export default function JinsTranspositions() {
                     </React.Fragment>
                   ) : null;
                 })}
+                </div>
+            </div>
             </div>
           </>
         )}          
