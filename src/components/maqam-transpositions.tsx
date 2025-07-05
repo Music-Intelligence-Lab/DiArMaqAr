@@ -25,7 +25,7 @@ export default function MaqamTranspositions() {
     sources,
   } = useAppContext();
 
-  const { noteOn, noteOff, playSequence, soundSettings } = useSoundContext();
+  const { noteOn, noteOff, playSequence, soundSettings, clearHangingNotes } = useSoundContext();
 
   const { filters, setFilters } = useFilterContext();
 
@@ -146,6 +146,7 @@ export default function MaqamTranspositions() {
                 <button
                   className="maqam-transpositions__button"
                   onClick={async () => {
+                    await clearHangingNotes();
                     await playSequence(pitchClasses);
                     await playSequence([...oppositePitchClasses].reverse(), false);
                   }}
@@ -153,11 +154,11 @@ export default function MaqamTranspositions() {
                   <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
                   {"Ascending > Descending"}
                 </button>
-                <button className="maqam-transpositions__button" onClick={() => playSequence(pitchClasses)}>
+                <button className="maqam-transpositions__button" onClick={() => { clearHangingNotes(); playSequence(pitchClasses); }}>
                   <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
                   Ascending
                 </button>
-                <button className="maqam-transpositions__button" onClick={() => playSequence([...oppositePitchClasses].reverse(), false)}>
+                <button className="maqam-transpositions__button" onClick={() => { clearHangingNotes(); playSequence([...oppositePitchClasses].reverse(), false); }}>
                   <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
                   Descending
                 </button>

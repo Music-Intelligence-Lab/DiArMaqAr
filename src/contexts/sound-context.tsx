@@ -814,12 +814,22 @@ export function SoundContextProvider({
   function stopAllSounds() {
     timeoutsRef.current.forEach(clearTimeout);
     timeoutsRef.current = [];
+    const FADEOUT_MS = 5;
+    const audioCtx = audioCtxRef.current;
+    const now = audioCtx ? audioCtx.currentTime : 0;
     for (const voices of activeNotesRef.current.values()) {
-      voices.forEach(({ oscillator }) => {
+      voices.forEach(({ oscillator, gainNode }) => {
+        if (audioCtx) {
+          gainNode.gain.cancelScheduledValues(now);
+          gainNode.gain.setValueAtTime(gainNode.gain.value, now);
+          gainNode.gain.linearRampToValueAtTime(0, now + FADEOUT_MS / 1000);
+        }
         if (Array.isArray(oscillator)) {
-          oscillator.forEach((osc) => osc.stop());
+          oscillator.forEach((osc) =>
+            osc.stop(audioCtx ? now + FADEOUT_MS / 1000 : undefined)
+          );
         } else {
-          oscillator.stop();
+          oscillator.stop(audioCtx ? now + FADEOUT_MS / 1000 : undefined);
         }
       });
     }
@@ -834,15 +844,23 @@ export function SoundContextProvider({
   }
 
   function clearHangingNotes() {
-    /*  timeoutsRef.current.forEach(clearTimeout);
-    timeoutsRef.current = []; */
-
+    // Fade out all active voices over 5ms before stopping oscillators
+    const FADEOUT_MS = 5;
+    const audioCtx = audioCtxRef.current;
+    const now = audioCtx ? audioCtx.currentTime : 0;
     for (const voices of activeNotesRef.current.values()) {
-      voices.forEach(({ oscillator }) => {
+      voices.forEach(({ oscillator, gainNode }) => {
+        if (audioCtx) {
+          gainNode.gain.cancelScheduledValues(now);
+          gainNode.gain.setValueAtTime(gainNode.gain.value, now);
+          gainNode.gain.linearRampToValueAtTime(0, now + FADEOUT_MS / 1000);
+        }
         if (Array.isArray(oscillator)) {
-          oscillator.forEach((osc) => osc.stop());
+          oscillator.forEach((osc) =>
+            osc.stop(audioCtx ? now + FADEOUT_MS / 1000 : undefined)
+          );
         } else {
-          oscillator.stop();
+          oscillator.stop(audioCtx ? now + FADEOUT_MS / 1000 : undefined);
         }
       });
     }
