@@ -1,3 +1,4 @@
+
 @use "./variables" as *;
 
 // Ensure hops scroll into view below sticky pitch class wheel
@@ -20,7 +21,8 @@
 
   &__wrapper-modulations-header {
     text-align: center;
-    margin-bottom: 20px;
+    align-items: center;
+    margin-bottom: 10px;
   }
 
   &__source-maqam-name {
@@ -30,6 +32,8 @@
     text-decoration: none !important;
     padding: 0px;
     margin-bottom: 10px;
+      display: inline-flex;
+
     &:hover {
       text-decoration: underline !important;
       outline: none;
@@ -80,7 +84,7 @@
   &__hops-wrapper {
     width: 100%;
     margin-bottom: 0px;
-    scroll-margin-top: 90px;
+    scroll-margin-top: 100px;
   }
 
   &__modulations-list {
@@ -227,6 +231,27 @@
 
     .carousel-button-next {
       right: 0;
+    }
+  }
+
+  &__collapse-arrow {
+  display: inline-flex;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 10px;
+    color: #888;
+    outline: none;
+    //align-items: center;
+    padding: 0;
+    transition: color 0.2s;
+    &:hover {
+      color: $primary;
+    }
+    &-icon {
+      //display: inline-block;
+      transition: transform 0.2s;
     }
   }
 }
