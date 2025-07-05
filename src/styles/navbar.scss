@@ -9,6 +9,8 @@
   background-color: $background;
   position: sticky;
   position: -webkit-sticky;
+    scroll-margin-top: 0px;
+
 
   &__center-panel {
     text-align: center;

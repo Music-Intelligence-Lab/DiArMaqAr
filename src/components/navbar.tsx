@@ -107,8 +107,21 @@ export default function Navbar() {
         <div className="navbar__bottom-bar">
           <button
             className={`navbar__bottom-bar-item ${selectedMenu === "tuningSystem" ? "navbar__bottom-bar-item_selected " : ""} ${selectedTuningSystem ? "navbar__bottom-bar-item_active" : ""}`}
-            onClick={() => setSelectedMenu("tuningSystem")}
+            onClick={() => {
+              setSelectedMenu("tuningSystem");
+              // Scroll tuning-system-manager to top if present
+              if (typeof window !== "undefined") {
+                const tuningSystemManager = document.querySelector('.tuning-system-manager');
+                if (tuningSystemManager) {
+                  tuningSystemManager.scrollIntoView({ behavior: "smooth", block: "start" });
+                } else {
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }
+              }
+            }}
+            disabled={!selectedTuningSystem}
           >
+          
             {selectedTuningSystem ? (
               <>
                 <span className="navbar__bottom-bar-item_tab-title">
@@ -127,7 +140,18 @@ export default function Navbar() {
           )}
           <button
             className={`navbar__bottom-bar-item ${selectedMenu === "jins" ? "navbar__bottom-bar-item_selected" : ""} ${selectedJinsDetails ? "navbar__bottom-bar-item_active" : ""}`}
-            onClick={() => setSelectedMenu("jins")}
+            onClick={() => {
+              setSelectedMenu("jins");
+              // Scroll jins-transpositions to top if present
+              if (typeof window !== "undefined") {
+                const jinsTranspositions = document.querySelector('.jins-transpositions');
+                if (jinsTranspositions) {
+                  jinsTranspositions.scrollIntoView({ behavior: "smooth", block: "start" });
+                } else {
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }
+              }
+            }}
             disabled={!selectedTuningSystem}
           >
             <span className="navbar__bottom-bar-item_tab-title">
@@ -156,17 +180,13 @@ export default function Navbar() {
             className={`navbar__bottom-bar-item ${selectedMenu === "maqam" ? "navbar__bottom-bar-item_selected" : ""} ${selectedMaqamDetails ? "navbar__bottom-bar-item_active" : ""}`}
             onClick={() => {
               setSelectedMenu("maqam");
-              // Dispatch scroll event after DOM update
-              if (window && window.dispatchEvent) {
-                // Try to get the first note of the currently selected maqam transposition
-                // This assumes selectedMaqamDetails is available in this scope
-                const firstNote = selectedMaqamDetails?.getAscendingNoteNames?.()?.[0];
-                if (firstNote) {
-                  window.dispatchEvent(
-                    new CustomEvent("maqamTranspositionChange", {
-                      detail: { firstNote }
-                    })
-                  );
+    // Scroll maqam-transpositions to top if present
+              if (typeof window !== "undefined") {
+                const maqamTranspositions = document.querySelector('.maqam-transpositions');
+                if (maqamTranspositions) {
+                  maqamTranspositions.scrollIntoView({ behavior: "smooth", block: "start" });
+                } else {
+                  window.scrollTo({ top: 0, behavior: "smooth" });
                 }
               }
             }}
