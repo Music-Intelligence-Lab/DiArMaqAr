@@ -21,6 +21,7 @@ const SettingsCard = () => {
     midiOutputs,
     setRefresh,
     clearHangingNotes,
+    stopAllSounds
   } = useSoundContext();
 
   const { openSettings, setOpenSettings, openNavigation, setOpenNavigation } =
@@ -496,7 +497,7 @@ const SettingsCard = () => {
           <button className="settings-card__clear-button" onClick={clearHangingNotes}>
             Clear Hanging Notes
           </button>
-          <button className="settings-card__clear-button" onClick={clearHangingNotes}>
+          <button className="settings-card__clear-button" onClick={stopAllSounds}>
             Stop All Sounds
           </button>
 
