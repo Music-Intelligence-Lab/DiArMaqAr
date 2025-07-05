@@ -534,8 +534,15 @@ const MaqamTranspositions: React.FC = () => {
                 <th>
                   <PlayCircleIcon
                     className="maqam-transpositions__play-circle-icon"
-                    onMouseDown={() => noteOn(pitchClass)}
-                    onMouseUp={() => noteOff(pitchClass)}
+                    onMouseDown={() => {
+                      noteOn(pitchClass);
+                      // Add global mouseup listener to ensure noteOff always fires
+                      const handleMouseUp = () => {
+                        noteOff(pitchClass);
+                        window.removeEventListener("mouseup", handleMouseUp);
+                      };
+                      window.addEventListener("mouseup", handleMouseUp);
+                    }}
                   />
                 </th>
                 <th className="maqam-transpositions__header-cell"></th>
