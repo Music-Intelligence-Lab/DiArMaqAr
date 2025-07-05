@@ -1,6 +1,30 @@
 "use client";
 
 import React, { useMemo, useState, useEffect } from "react";
+// --- Utility: getHeaderId ---
+const getHeaderId = (noteName: string): string => {
+  if (typeof noteName !== "string") return "";
+  return `maqam-transpositions__header--${noteName
+    .replace(/[^a-zA-Z0-9]/g, "-")
+    .replace(/-+/g, "-")
+    .toLowerCase()}`;
+};
+
+// --- Utility: scroll to maqam header by note name ---
+export function scrollToMaqamHeader(
+  firstNote: string,
+  selectedMaqamDetails?: any
+) {
+  if (!firstNote && selectedMaqamDetails) {
+    firstNote = selectedMaqamDetails.getAscendingNoteNames?.()?.[0];
+  }
+  if (!firstNote) return;
+  const id = getHeaderId(firstNote);
+  const el = document.getElementById(id);
+  if (el && typeof el.scrollIntoView === "function") {
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+}
 import useAppContext from "@/contexts/app-context";
 import useSoundContext from "@/contexts/sound-context";
 import useFilterContext from "@/contexts/filter-context";
@@ -11,16 +35,6 @@ import { Maqam } from "@/models/Maqam";
 import { calculateInterval } from "@/models/PitchClass";
 import shiftPitchClass from "@/functions/shiftPitchClass";
 import camelCaseToWord from "@/functions/camelCaseToWord";
-
-// Utility to create a safe id from a note name
-// Utility to create a safe id from a note name
-const getHeaderId = (noteName: string): string => {
-  if (typeof noteName !== "string") return "";
-  return `maqam-transpositions__header--${noteName
-    .replace(/[^a-zA-Z0-9]/g, "-")
-    .replace(/-+/g, "-")
-    .toLowerCase()}`;
-};
 
 const MaqamTranspositions: React.FC = () => {
   const {
@@ -65,7 +79,6 @@ const MaqamTranspositions: React.FC = () => {
     );
     return transpositions;
   }, [allPitchClasses, ajnas, selectedMaqamDetails, centsTolerance]);
-
 
   const transpositionTables = useMemo(() => {
     if (!selectedMaqamDetails || !selectedTuningSystem) return null;
@@ -213,6 +226,11 @@ const MaqamTranspositions: React.FC = () => {
                 className="maqam-transpositions__header"
                 id={getHeaderId(pitchClasses[0]?.noteName)}
                 colSpan={4 + (pitchClasses.length - 1) * 2}
+                style={
+                  rowIndex === 0 && ascending
+                    ? { scrollMarginTop: "150px" }
+                    : undefined
+                }
               >
                 {!transposition ? (
                   <span className="maqam-transpositions__transposition-title">{`Darajat al-Istiqrār (tonic/finalis): ${
@@ -234,7 +252,7 @@ const MaqamTranspositions: React.FC = () => {
                     setTimeout(() => {
                       window.dispatchEvent(
                         new CustomEvent("maqamTranspositionChange", {
-                          detail: { firstNote: pitchClasses[0].noteName }
+                          detail: { firstNote: pitchClasses[0].noteName },
                         })
                       );
                     }, 0);
@@ -578,7 +596,7 @@ const MaqamTranspositions: React.FC = () => {
     }
 
     return (
-      <div className="maqam-transpositions"> 
+      <div className="maqam-transpositions">
         {maqamTranspositions.length > 0 && (
           <>
             <h2 className="maqam-transpositions__title">
@@ -777,21 +795,17 @@ const MaqamTranspositions: React.FC = () => {
   // Listen for custom event to scroll to header when maqam/transposition changes (event-driven)
   useEffect(() => {
     function handleMaqamTranspositionChange(e: CustomEvent) {
-      let firstNote = e.detail?.firstNote;
-      // fallback: try to get from selectedMaqamDetails if not provided
-      if (!firstNote && selectedMaqamDetails) {
-        firstNote = selectedMaqamDetails.getAscendingNoteNames?.()?.[0];
-      }
-      if (!firstNote) return;
-      const id = getHeaderId(firstNote);
-      const el = document.getElementById(id);
-      if (el && typeof el.scrollIntoView === "function") {
-        el.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
+      scrollToMaqamHeader(e.detail?.firstNote, selectedMaqamDetails);
     }
-    window.addEventListener("maqamTranspositionChange", handleMaqamTranspositionChange as EventListener);
+    window.addEventListener(
+      "maqamTranspositionChange",
+      handleMaqamTranspositionChange as EventListener
+    );
     return () => {
-      window.removeEventListener("maqamTranspositionChange", handleMaqamTranspositionChange as EventListener);
+      window.removeEventListener(
+        "maqamTranspositionChange",
+        handleMaqamTranspositionChange as EventListener
+      );
     };
   }, [selectedMaqamDetails]);
 
@@ -801,18 +815,15 @@ const MaqamTranspositions: React.FC = () => {
     const params = new URLSearchParams(window.location.search);
     const maqamFirstNote = params.get("maqamFirstNote");
     if (maqamFirstNote) {
-      // decode and normalize
-      const id = getHeaderId(decodeURIComponent(maqamFirstNote));
-      const el = document.getElementById(id);
-      if (el && typeof el.scrollIntoView === "function") {
-        setTimeout(() => {
-          el.scrollIntoView({ behavior: "smooth", block: "start" });
-        }, 200);
-      }
+      setTimeout(() => {
+        scrollToMaqamHeader(
+          decodeURIComponent(maqamFirstNote),
+          selectedMaqamDetails
+        );
+      }, 200);
     }
-  }, []);
+  }, [selectedMaqamDetails]);
   return transpositionTables;
 };
 
 export default MaqamTranspositions;
-

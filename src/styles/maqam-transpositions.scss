@@ -93,7 +93,6 @@
     text-align: center !important;
     background-color: black;
     vertical-align: middle !important;
-    
 
     &_0 {
       background-color: $primary;
@@ -111,8 +110,7 @@
   &__header {
     text-align: left;
     background-color: black;
-        scroll-margin-top: 100px;
-
+    scroll-margin-top: 100px;
   }
 
   &__header-cell {
@@ -221,7 +219,7 @@
     float: left;
   }
 
-    &__comments-arabic {
+  &__comments-arabic {
     font-size: 14px;
     width: 50%;
     min-height: 80px;
