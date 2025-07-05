@@ -72,6 +72,7 @@ export default function PitchClassWheel() {
   const {
     ajnas,
     selectedJinsDetails,
+    selectedJins,
     setSelectedJins,
     selectedMaqamDetails,
     selectedMaqam,
@@ -147,10 +148,10 @@ export default function PitchClassWheel() {
       ? selectedMaqam.ascendingPitchClasses[0]?.originalValue
       : selectedMaqamDetails?.getTahlil(allPitchClasses)
           .ascendingPitchClasses[0]?.originalValue;
-    // Use getTahlil to get the tonic pitch class for the selected jins
-    const jinsTonic =
-      selectedJinsDetails?.getTahlil(allPitchClasses).jinsPitchClasses[0]
-        ?.originalValue;
+    // Use selectedJins (transposition) if available, else fall back to base jins details
+    const jinsTonic = selectedJins
+      ? selectedJins.jinsPitchClasses[0]?.originalValue
+      : selectedJinsDetails?.getTahlil(allPitchClasses).jinsPitchClasses[0]?.originalValue;
 
     return allPitchClasses.map((pitchClass: PitchClass) => {
       const originalValue = pitchClass.originalValue;
