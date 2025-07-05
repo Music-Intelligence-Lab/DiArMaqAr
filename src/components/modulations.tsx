@@ -28,6 +28,8 @@ export default function Modulations() {
   } = useAppContext();
   // Per-hop modulation mode: true = ajnas, false = maqamat
   const [modulationModes, setModulationModes] = useState<boolean[]>([false]);
+  // Track collapsed state for each hop
+  const [collapsedHops, setCollapsedHops] = useState<boolean[]>([]);
   const { clearHangingNotes } = useSoundContext();
 
   const [sourceMaqamStack, setSourceMaqamStack] = useState<Maqam[]>([]);
@@ -62,6 +64,7 @@ export default function Modulations() {
       setSourceMaqamStack([transposition]);
       setModulationsStack([getBothModulations(transposition)]);
       setModulationModes([false]); // default to maqamat for first hop
+      setCollapsedHops([false]); // not collapsed by default
     }
     // Do not update the stack on subsequent prop/context changes
   }, []);
@@ -86,27 +89,14 @@ export default function Modulations() {
 
 // Handles clicking the source maqam name (propagates tonic and details)
   function handleSourceMaqamClick(sourceMaqam: Maqam) {
-    const maqamDetails = maqamat.find((m) => m.getId() === sourceMaqam.maqamId);
-    if (maqamDetails) {
-      const tonicNote = sourceMaqam.ascendingPitchClasses[0]?.noteName;
-      let maqamToSend = maqamDetails;
-      // If tonic is different, create a new MaqamDetails with the correct tonic
-      if (
-        tonicNote &&
-        maqamDetails.getAscendingNoteNames()[0] !== tonicNote
-      ) {
-        maqamToSend = new (Object.getPrototypeOf(maqamDetails).constructor)(
-          maqamDetails.getId(),
-          maqamDetails.getName(),
-          [tonicNote, ...maqamDetails.getAscendingNoteNames().slice(1)],
-          maqamDetails.getDescendingNoteNames(),
-          maqamDetails.getSuyūr(),
-          maqamDetails.getCommentsEnglish(),
-          maqamDetails.getCommentsArabic(),
-          maqamDetails.getSourcePageReferences()
-        );
-      }
-      setSelectedMaqamDetails(maqamToSend);
+    // Defensive: ensure ascendingPitchClasses exists and has at least one element
+    const maqamId = sourceMaqam.maqamId;
+    const tonic = Array.isArray(sourceMaqam.ascendingPitchClasses) && sourceMaqam.ascendingPitchClasses.length > 0
+      ? sourceMaqam.ascendingPitchClasses[0].noteName
+      : undefined;
+    if (maqamId && tonic) {
+      handleClickMaqam({ maqamId, tonic } as any);
+      clearHangingNotes();
     }
   }
 
@@ -142,6 +132,11 @@ export default function Modulations() {
       const newModes = [...prev.slice(0, stackIdx + 1), false];
       return newModes;
     });
+    setCollapsedHops((prev) => {
+      // When adding a hop, keep previous collapsed states, default new hop to not collapsed
+      const newCollapsed = [...prev.slice(0, stackIdx + 1), false];
+      return newCollapsed;
+    });
     // Scroll to the new hop after a short delay to ensure DOM update
     setTimeout(() => {
       const nextIdx = stackIdx + 1;
@@ -164,6 +159,10 @@ export default function Modulations() {
       const newModes = prev.length > 1 ? prev.slice(0, -1) : prev;
       return newModes;
     });
+    setCollapsedHops((prev) => {
+      const newCollapsed = prev.length > 1 ? prev.slice(0, -1) : prev;
+      return newCollapsed;
+    });
     // Scroll to the previous hop or first hop after a short delay
     setTimeout(() => {
       // Find the last non-null ref (should be the last hop in DOM)
@@ -179,30 +178,20 @@ export default function Modulations() {
     if ("ascendingPitchClasses" in hop) {
       addHopsWrapper(hop, stackIdx);
       setSelectedJins(null);
-      // Always send the correct tonic (first note of hop.ascendingPitchClasses) to handleClickMaqam
-      const maqamDetails = maqamat.find((m) => m.getId() === hop.maqamId);
-      if (maqamDetails) {
-        const tonicNote = hop.ascendingPitchClasses[0]?.noteName;
-        let maqamToSend = maqamDetails;
-        if (
-          tonicNote &&
-          maqamDetails.getAscendingNoteNames()[0] !== tonicNote
-        ) {
-          maqamToSend = new (Object.getPrototypeOf(maqamDetails).constructor)(
-            maqamDetails.getId(),
-            maqamDetails.getName(),
-            [tonicNote, ...maqamDetails.getAscendingNoteNames().slice(1)],
-            maqamDetails.getDescendingNoteNames(),
-            maqamDetails.getSuyūr(),
-            maqamDetails.getCommentsEnglish(),
-            maqamDetails.getCommentsArabic(),
-            maqamDetails.getSourcePageReferences()
-          );
-        }
-        if (!selectedMaqamDetails || maqamToSend.getId() !== selectedMaqamDetails.getId() || maqamToSend.getAscendingNoteNames()[0] !== tonicNote) {
-          handleClickMaqam(maqamToSend);
-          clearHangingNotes();
-        }
+      // Pass only maqamId and tonic to handleClickMaqam, let main system handle lookup and transposition
+      const maqamId = hop.maqamId || (hop.getId && hop.getId());
+      const tonic = hop.ascendingPitchClasses?.[0]?.noteName || (hop.getAscendingNoteNames && hop.getAscendingNoteNames()[0]);
+      const selectedId = selectedMaqamDetails?.getId ? selectedMaqamDetails.getId() : undefined;
+      const selectedTonic = selectedMaqamDetails?.getAscendingNoteNames ? selectedMaqamDetails.getAscendingNoteNames()[0] : selectedMaqamDetails?.ascendingPitchClasses?.[0]?.noteName;
+
+      // TypeScript expects a MaqamDetails or the new object type; cast for type safety
+      if (
+        !selectedMaqamDetails ||
+        maqamId !== selectedId ||
+        tonic !== selectedTonic
+      ) {
+        handleClickMaqam({ maqamId, tonic } as any);
+        clearHangingNotes();
       }
     } else {
       setSelectedJins(hop);
@@ -243,93 +232,38 @@ export default function Modulations() {
           >
             {/* Maqam name/details at the top of each wrapper */}
             <div className="modulations__wrapper-modulations-header">
-              <div
-                className="modulations__source-maqam-name"
-                onClick={() => handleSourceMaqamClick(sourceMaqam)}
-                style={{ cursor: "pointer" }}
-              >
-                {sourceMaqam.name ? sourceMaqam.name : "Unknown"} (
-                {ascendingNoteNames ? ascendingNoteNames[0] : "N/A"}/
-                {getEnglishNoteName(
-                  ascendingNoteNames ? ascendingNoteNames[0]! : ""
-                )}
-                )
-              </div>
-              {modulationsStack[stackIdx] && (
-                <>
-                  <button
-                    className={
-                      "modulations__ajnas-count" +
-                      (modulationModes[stackIdx]
-                        ? " modulations__ajnas-count_active"
-                        : "")
-                    }
-                    style={{
-                      cursor: "pointer",
-                      textDecoration: modulationModes[stackIdx]
-                        ? "underline"
-                        : "none",
-                      marginRight: 12,
-                      color: modulationModes[stackIdx] ? "#0070f3" : undefined,
-                    }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setModulationModes((prev) => {
-                        const newModes = [...prev];
-                        newModes[stackIdx] = true;
-                        return newModes;
-                      });
-                    }}
+                <div
+                  className="modulations__source-maqam-name"
+                  onClick={() => handleSourceMaqamClick(sourceMaqam)}
+                  style={{ cursor: "pointer" }}
+                >
+                  {sourceMaqam.name ? sourceMaqam.name : "Unknown"} (
+                  {ascendingNoteNames ? ascendingNoteNames[0] : "N/A"}/
+                  {getEnglishNoteName(
+                    ascendingNoteNames ? ascendingNoteNames[0]! : ""
+                  )}
+                  )
+                </div>
+                <button
+                  className="modulations__collapse-arrow"
+                  aria-label={collapsedHops[stackIdx] ? 'Expand' : 'Collapse'}
+                  onClick={() => setCollapsedHops(prev => {
+                    const updated = [...prev];
+                    updated[stackIdx] = !updated[stackIdx];
+                    return updated;
+                  })}
+                >
+                  <span
+                    className="modulations__collapse-arrow-icon"
+                    style={{ transform: collapsedHops[stackIdx] ? 'rotate(0deg)' : 'rotate(90deg)' }}
                   >
-                    {totalAjnasModulations} ajnās modulations
-                  </button>
-                  <button
-                    className={
-                      "modulations__maqamat-count" +
-                      (!modulationModes[stackIdx]
-                        ? " modulations__maqamat-count_active"
-                        : "")
-                    }
-                    style={{
-                      cursor: "pointer",
-                      textDecoration: !modulationModes[stackIdx]
-                        ? "underline"
-                        : "none",
-                      color: !modulationModes[stackIdx] ? "#0070f3" : undefined,
-                    }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setModulationModes((prev) => {
-                        const newModes = [...prev];
-                        newModes[stackIdx] = false;
-                        return newModes;
-                      });
-                    }}
-                  >
-                    {totalMaqamatModulations} maqāmāt modulations
-                  </button>
-                </>
-              )}
-
-              {/* Show delete button only on the last hops-wrapper and only if more than one exists */}
-              {stackIdx === sourceMaqamStack.length - 1 &&
-                sourceMaqamStack.length > 1 && (
-                  <button
-                    className="modulations__delete-hop-btn"
-                    style={{
-                      marginLeft: 8,
-                      padding: "2px 8px",
-                      fontSize: 14,
-                      cursor: "pointer",
-                    }}
-                    onClick={removeLastHopsWrapper}
-                  >
-                    Delete Hop
-                  </button>
-                )}
+                    ▶
+                  </span>
+                </button>
             </div>
 
-            {modulationsStack[stackIdx] &&
+            {/* Only render modulations if not collapsed */}
+            {modulationsStack[stackIdx] && !collapsedHops[stackIdx] &&
               (() => {
                 const modulations = modulationModes[stackIdx]
                   ? modulationsStack[stackIdx].ajnas
@@ -337,6 +271,88 @@ export default function Modulations() {
                 const { noteName2p } = modulations;
                 return (
                   <>
+                    <div style={{ display: 'flex', gap: '8px', marginBottom: '12px', alignItems: 'center', justifyContent: 'center' }}>
+                      <button
+                        className={
+                          "modulations__ajnas-count" +
+                          (modulationModes[stackIdx]
+                            ? " modulations__ajnas-count_active"
+                            : "")
+                        }
+                        style={{
+                          cursor: "pointer",
+                          textDecoration: modulationModes[stackIdx]
+                            ? "underline"
+                            : "none",
+                          marginRight: 12,
+                          color: modulationModes[stackIdx] ? "#0070f3" : undefined,
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setModulationModes((prev) => {
+                            const newModes = [...prev];
+                            newModes[stackIdx] = true;
+                            return newModes;
+                          });
+                        }}
+                      >
+                        {totalAjnasModulations} ajnās modulations
+                      </button>
+                      <button
+                        className={
+                          "modulations__maqamat-count" +
+                          (!modulationModes[stackIdx]
+                            ? " modulations__maqamat-count_active"
+                            : "")
+                        }
+                        style={{
+                          cursor: "pointer",
+                          textDecoration: !modulationModes[stackIdx]
+                            ? "underline"
+                            : "none",
+                          color: !modulationModes[stackIdx] ? "#0070f3" : undefined,
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setModulationModes((prev) => {
+                            const newModes = [...prev];
+                            newModes[stackIdx] = false;
+                            return newModes;
+                          });
+                        }}
+                      >
+                        {totalMaqamatModulations} maqāmāt modulations
+                      </button>
+                      {/* Move delete button here, only on last hop and if more than one exists */}
+                      {stackIdx === sourceMaqamStack.length - 1 &&
+                        sourceMaqamStack.length > 1 && (
+                          <button
+                            className="modulations__delete-hop-btn"
+                            style={{
+                              marginLeft: 8,
+                              padding: "2px 8px",
+                              fontSize: 14,
+                              cursor: "pointer",
+                            }}
+                            onClick={() => {
+                              // Load previous hop's source maqam before removing
+                              const prevIdx = sourceMaqamStack.length - 2;
+                              const prevSourceMaqam = sourceMaqamStack[prevIdx];
+                              if (prevSourceMaqam) {
+                                handleSourceMaqamClick(prevSourceMaqam);
+                                setCollapsedHops(prev => {
+                                  const updated = [...prev];
+                                  updated[prevIdx] = false; // Uncollapse previous hop
+                                  return updated;
+                                });
+                              }
+                              removeLastHopsWrapper();
+                            }}
+                          >
+                            Delete Hop
+                          </button>
+                        )}
+                    </div>
                     <div className="modulations__modulations-list">
                       <span className="modulations__header">
                         <span className="modulations__header-text">
@@ -355,7 +371,16 @@ export default function Modulations() {
                           <span
                             className="modulations__modulation-item"
                             key={index}
-                            onClick={() => handleModulationClick(hop, stackIdx)}
+                            onClick={() => {
+                              if (!modulationModes[stackIdx]) { // Only collapse if not in ajnas mode
+                                setCollapsedHops(prev => {
+                                  const updated = [...prev];
+                                  updated[stackIdx] = true;
+                                  return updated;
+                                });
+                              }
+                              handleModulationClick(hop, stackIdx);
+                            }}
                             style={{ cursor: "pointer" }}
                           >
                             {hop.name}
@@ -380,7 +405,16 @@ export default function Modulations() {
                           <span
                             className="modulations__modulation-item"
                             key={index}
-                            onClick={() => handleModulationClick(hop, stackIdx)}
+                            onClick={() => {
+                              if (!modulationModes[stackIdx]) {
+                                setCollapsedHops(prev => {
+                                  const updated = [...prev];
+                                  updated[stackIdx] = true;
+                                  return updated;
+                                });
+                              }
+                              handleModulationClick(hop, stackIdx);
+                            }}
                             style={{ cursor: "pointer" }}
                           >
                             {hop.name}
@@ -405,7 +439,16 @@ export default function Modulations() {
                           <span
                             className="modulations__modulation-item"
                             key={index}
-                            onClick={() => handleModulationClick(hop, stackIdx)}
+                            onClick={() => {
+                              if (!modulationModes[stackIdx]) {
+                                setCollapsedHops(prev => {
+                                  const updated = [...prev];
+                                  updated[stackIdx] = true;
+                                  return updated;
+                                });
+                              }
+                              handleModulationClick(hop, stackIdx);
+                            }}
                             style={{ cursor: "pointer" }}
                           >
                             {hop.name}
@@ -430,7 +473,16 @@ export default function Modulations() {
                           <span
                             className="modulations__modulation-item"
                             key={index}
-                            onClick={() => handleModulationClick(hop, stackIdx)}
+                            onClick={() => {
+                              if (!modulationModes[stackIdx]) {
+                                setCollapsedHops(prev => {
+                                  const updated = [...prev];
+                                  updated[stackIdx] = true;
+                                  return updated;
+                                });
+                              }
+                              handleModulationClick(hop, stackIdx);
+                            }}
                             style={{ cursor: "pointer" }}
                           >
                             {hop.name}
@@ -455,7 +507,16 @@ export default function Modulations() {
                           <span
                             className="modulations__modulation-item"
                             key={index}
-                            onClick={() => handleModulationClick(hop, stackIdx)}
+                            onClick={() => {
+                              if (!modulationModes[stackIdx]) {
+                                setCollapsedHops(prev => {
+                                  const updated = [...prev];
+                                  updated[stackIdx] = true;
+                                  return updated;
+                                });
+                              }
+                              handleModulationClick(hop, stackIdx);
+                            }}
                             style={{ cursor: "pointer" }}
                           >
                             {hop.name}
@@ -480,7 +541,16 @@ export default function Modulations() {
                           <span
                             className="modulations__modulation-item"
                             key={index}
-                            onClick={() => handleModulationClick(hop, stackIdx)}
+                            onClick={() => {
+                              if (!modulationModes[stackIdx]) {
+                                setCollapsedHops(prev => {
+                                  const updated = [...prev];
+                                  updated[stackIdx] = true;
+                                  return updated;
+                                });
+                              }
+                              handleModulationClick(hop, stackIdx);
+                            }}
                             style={{ cursor: "pointer" }}
                           >
                             {hop.name}
@@ -505,7 +575,16 @@ export default function Modulations() {
                           <span
                             className="modulations__modulation-item"
                             key={index}
-                            onClick={() => handleModulationClick(hop, stackIdx)}
+                            onClick={() => {
+                              if (!modulationModes[stackIdx]) {
+                                setCollapsedHops(prev => {
+                                  const updated = [...prev];
+                                  updated[stackIdx] = true;
+                                  return updated;
+                                });
+                              }
+                              handleModulationClick(hop, stackIdx);
+                            }}
                             style={{ cursor: "pointer" }}
                           >
                             {hop.name}
@@ -536,7 +615,16 @@ export default function Modulations() {
                             <span
                               className="modulations__modulation-item"
                               key={index}
-                              onClick={() => handleModulationClick(hop, stackIdx)}
+                              onClick={() => {
+                                if (!modulationModes[stackIdx]) {
+                                  setCollapsedHops(prev => {
+                                    const updated = [...prev];
+                                    updated[stackIdx] = true;
+                                    return updated;
+                                  });
+                                }
+                                handleModulationClick(hop, stackIdx);
+                              }}
                               style={{ cursor: "pointer" }}
                             >
                               {hop.name}

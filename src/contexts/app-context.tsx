@@ -266,7 +266,39 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     setSelectedPitchClasses(newSelectedCells);
   };
 
-  const handleClickMaqam = (maqamDetails: MaqamDetails, givenPitchClasses: PitchClass[] = [], maqam: Maqam | null = null) => {
+  // Accepts either a MaqamDetails object (legacy) or an object { maqamId, tonic }
+  const handleClickMaqam = (
+    maqamOrParams: MaqamDetails | { maqamId: string; tonic: string },
+    givenPitchClasses: PitchClass[] = [],
+    maqam: Maqam | null = null
+  ) => {
+    // If called with { maqamId, tonic }, look up MaqamDetails and perform transposition
+    if (
+      typeof maqamOrParams === "object" &&
+      "maqamId" in maqamOrParams &&
+      "tonic" in maqamOrParams
+    ) {
+      const { maqamId, tonic } = maqamOrParams;
+      const maqamDetails = maqamat.find((m) => m.getId() === maqamId);
+      if (!maqamDetails) return;
+      // Find the correct transposition for the tonic
+      const maqamTranspositions = getMaqamTranspositions(
+        allPitchClasses,
+        ajnas,
+        maqamDetails,
+        true,
+        centsTolerance
+      );
+      const foundMaqam = maqamTranspositions.find(
+        (m) => m.ascendingPitchClasses[0].noteName === tonic
+      );
+      // Call the original logic with the looked-up MaqamDetails and transposed Maqam
+      handleClickMaqam(maqamDetails, allPitchClasses, foundMaqam || null);
+      return;
+    }
+
+    // Legacy: called with MaqamDetails
+    const maqamDetails = maqamOrParams as MaqamDetails;
     const usedCells = givenPitchClasses.length ? givenPitchClasses : allPitchClasses;
 
     setSelectedMaqamDetails(maqamDetails);
