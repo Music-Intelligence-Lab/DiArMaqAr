@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect } from "react";
 import useAppContext from "@/contexts/app-context";
 import useSoundContext from "@/contexts/sound-context";
 import useFilterContext from "@/contexts/filter-context";
@@ -28,6 +28,28 @@ export default function JinsTranspositions() {
 
   const disabledFilters = ["pitchClass"];
 
+  // --- Utility: getHeaderId for jins ---
+  const getJinsHeaderId = (noteName: string): string => {
+    if (typeof noteName !== "string") return "";
+    return `jins-transpositions__header--${noteName
+      .replace(/[^a-zA-Z0-9]/g, "-")
+      .replace(/-+/g, "-")
+      .toLowerCase()}`;
+  };
+
+  // --- Utility: scroll to jins header by note name ---
+  function scrollToJinsHeader(firstNote: string, selectedJinsDetails?: any) {
+    if (!firstNote && selectedJinsDetails) {
+      firstNote = selectedJinsDetails.getNoteNames?.()?.[0];
+    }
+    if (!firstNote) return;
+    const id = getJinsHeaderId(firstNote);
+    const el = document.getElementById(id);
+    if (el && typeof el.scrollIntoView === "function") {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
+
   const transpositionTables = useMemo(() => {
     if (!selectedJinsDetails || !selectedTuningSystem) return null;
 
@@ -39,10 +61,18 @@ export default function JinsTranspositions() {
     const useRatio = valueType === "fraction" || valueType === "decimalRatio";
 
     const numberOfFilterRows = Object.keys(filters).filter(
-      (key) => !disabledFilters.includes(key) && key !== valueType && filters[key as keyof typeof filters]
+      (key) =>
+        !disabledFilters.includes(key) &&
+        key !== valueType &&
+        filters[key as keyof typeof filters]
     ).length;
 
-    const jinsTranspositions = getJinsTranspositions(allPitchClasses, selectedJinsDetails, true, centsTolerance);
+    const jinsTranspositions = getJinsTranspositions(
+      allPitchClasses,
+      selectedJinsDetails,
+      true,
+      centsTolerance
+    );
 
     function renderTransposition(jins: Jins, index: number) {
       const transposition = jins.transposition;
@@ -52,7 +82,11 @@ export default function JinsTranspositions() {
 
       return (
         <>
-          <tr className="jins-transpositions__header">
+          <tr
+            className="jins-transpositions__header"
+            id={getJinsHeaderId(pitchClasses[0]?.noteName)}
+            style={index === 0 || index === 1 ? { scrollMarginTop: "150px" } : undefined}
+          >
             <td
               className={`jins-transpositions__transposition-number jins-transpositions__transposition-number_${pitchClasses[0].octave}`}
               rowSpan={4 + numberOfFilterRows}
@@ -60,19 +94,33 @@ export default function JinsTranspositions() {
               {index + 1}
             </td>
 
-            <td className="jins-transpositions__jins-name-row" colSpan={2 + (pitchClasses.length - 1) * 2}>
+            <td
+              className="jins-transpositions__jins-name-row"
+              colSpan={2 + (pitchClasses.length - 1) * 2}
+            >
               {!transposition ? (
                 <span className="jins-transpositions__transposition-title">
-                  Darajat al-Istiqrār (tonic/finalis): {pitchClasses[0].noteName + ` (${getEnglishNoteName(pitchClasses[0].noteName)})`}
+                  Darajat al-Istiqrār (tonic/finalis):{" "}
+                  {pitchClasses[0].noteName +
+                    ` (${getEnglishNoteName(pitchClasses[0].noteName)})`}
                 </span>
               ) : (
-                <span className="jins-transpositions__transposition-title">{jins.name}</span>
+                <span className="jins-transpositions__transposition-title">
+                  {jins.name}
+                </span>
               )}
               <button
                 className="jins-transpositions__button"
                 onClick={() => {
                   setSelectedPitchClasses(pitchClasses);
                   setSelectedJins(transposition ? jins : null);
+                  setTimeout(() => {
+                    window.dispatchEvent(
+                      new CustomEvent("jinsTranspositionChange", {
+                        detail: { firstNote: pitchClasses[0].noteName },
+                      })
+                    );
+                  }, 0);
                 }}
               >
                 Select & Load to Keyboard
@@ -84,16 +132,18 @@ export default function JinsTranspositions() {
                   playSequence(pitchClasses);
                 }}
               >
-                <PlayCircleIcon className="jins-transpositions__play-circle-icon" /> Play jins
+                <PlayCircleIcon className="jins-transpositions__play-circle-icon" />{" "}
+                Play jins
               </button>
             </td>
           </tr>
-
           <tr>
             <th className="jins-transposition s__row-header">Note Names </th>
             {pitchClasses.map(({ noteName }, i) => (
               <React.Fragment key={i}>
-                {i !== 0 && <th className="jins-transpositions__header-cell"></th>}
+                {i !== 0 && (
+                  <th className="jins-transpositions__header-cell"></th>
+                )}
                 <th className="jins-transpositions__header-cell">{noteName}</th>
               </React.Fragment>
             ))}
@@ -101,11 +151,15 @@ export default function JinsTranspositions() {
           {filters["abjadName"] && (
             <tr>
               <th className="jins-transpositions__row-header">Abjad Name</th>
-              <th className="jins-transpositions__header-pitchClass">{pitchClasses[0].abjadName || "--"}</th>
+              <th className="jins-transpositions__header-pitchClass">
+                {pitchClasses[0].abjadName || "--"}
+              </th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
                   <th className="jins-transpositions__header-pitchClass"></th>
-                  <th className="jins-transpositions__header-pitchClass">{pitchClasses[i + 1].abjadName || "--"}</th>
+                  <th className="jins-transpositions__header-pitchClass">
+                    {pitchClasses[i + 1].abjadName || "--"}
+                  </th>
                 </React.Fragment>
               ))}
             </tr>
@@ -113,35 +167,53 @@ export default function JinsTranspositions() {
           {filters["englishName"] && (
             <tr>
               <th className="jins-transpositions__row-header">English Name</th>
-              <th className="jins-transpositions__header-pitchClass">{pitchClasses[0].englishName}</th>
+              <th className="jins-transpositions__header-pitchClass">
+                {pitchClasses[0].englishName}
+              </th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
                   <th className="jins-transpositions__header-pitchClass"></th>
-                  <th className="jins-transpositions__header-pitchClass">{pitchClasses[i + 1].englishName}</th>
+                  <th className="jins-transpositions__header-pitchClass">
+                    {pitchClasses[i + 1].englishName}
+                  </th>
                 </React.Fragment>
               ))}
             </tr>
           )}
           <tr>
-            <th className="jins-transpositions__row-header">{camelCaseToWord(valueType)}</th>
-            <th className="jins-transpositions__header-pitchClass">{pitchClasses[0].originalValue}</th>
+            <th className="jins-transpositions__row-header">
+              {camelCaseToWord(valueType)}
+            </th>
+            <th className="jins-transpositions__header-pitchClass">
+              {pitchClasses[0].originalValue}
+            </th>
             {intervals.map((interval, i) => (
               <React.Fragment key={i}>
                 <th className="jins-transpositions__header-pitchClass">
-                  {useRatio ? `(${interval.fraction.replace("/", ":")})` : `(${interval.cents.toFixed(3)})`}
+                  {useRatio
+                    ? `(${interval.fraction.replace("/", ":")})`
+                    : `(${interval.cents.toFixed(3)})`}
                 </th>
-                <th className="jins-transpositions__header-pitchClass">{pitchClasses[i + 1].originalValue}</th>
+                <th className="jins-transpositions__header-pitchClass">
+                  {pitchClasses[i + 1].originalValue}
+                </th>
               </React.Fragment>
             ))}
           </tr>
           {valueType !== "fraction" && filters["fraction"] && (
             <tr>
               <th className="jins-transpositions__row-header">fraction</th>
-              <th className="jins-transpositions__header-pitchClass">{pitchClasses[0].fraction}</th>
+              <th className="jins-transpositions__header-pitchClass">
+                {pitchClasses[0].fraction}
+              </th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
-                  <th className="jins-transpositions__header-pitchClass">({interval.fraction})</th>
-                  <th className="jins-transpositions__header-pitchClass">{pitchClasses[i + 1].fraction}</th>
+                  <th className="jins-transpositions__header-pitchClass">
+                    ({interval.fraction})
+                  </th>
+                  <th className="jins-transpositions__header-pitchClass">
+                    {pitchClasses[i + 1].fraction}
+                  </th>
                 </React.Fragment>
               ))}
             </tr>
@@ -149,11 +221,17 @@ export default function JinsTranspositions() {
           {valueType !== "cents" && filters["cents"] && (
             <tr>
               <th className="jins-transpositions__row-header">cents (¢)</th>
-              <th className="jins-transpositions__header-pitchClass">{parseFloat(pitchClasses[0].cents).toFixed(3)}</th>
+              <th className="jins-transpositions__header-pitchClass">
+                {parseFloat(pitchClasses[0].cents).toFixed(3)}
+              </th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
-                  <th className="jins-transpositions__header-pitchClass">({interval.cents.toFixed(3)})</th>
-                  <th className="jins-transpositions__header-pitchClass">{parseFloat(pitchClasses[i + 1].cents).toFixed(3)}</th>
+                  <th className="jins-transpositions__header-pitchClass">
+                    ({interval.cents.toFixed(3)})
+                  </th>
+                  <th className="jins-transpositions__header-pitchClass">
+                    {parseFloat(pitchClasses[i + 1].cents).toFixed(3)}
+                  </th>
                 </React.Fragment>
               ))}
             </tr>
@@ -161,11 +239,17 @@ export default function JinsTranspositions() {
           {valueType !== "decimalRatio" && filters["decimalRatio"] && (
             <tr>
               <th className="jins-transpositions__row-header">decimal ratio</th>
-              <th className="jins-transpositions__header-pitchClass">{parseFloat(pitchClasses[0].decimalRatio).toFixed(3)}</th>
+              <th className="jins-transpositions__header-pitchClass">
+                {parseFloat(pitchClasses[0].decimalRatio).toFixed(3)}
+              </th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
-                  <th className="jins-transpositions__header-pitchClass">({interval.decimalRatio.toFixed(3)})</th>
-                  <th className="jins-transpositions__header-pitchClass">{parseFloat(pitchClasses[i + 1].decimalRatio).toFixed(3)}</th>
+                  <th className="jins-transpositions__header-pitchClass">
+                    ({interval.decimalRatio.toFixed(3)})
+                  </th>
+                  <th className="jins-transpositions__header-pitchClass">
+                    {parseFloat(pitchClasses[i + 1].decimalRatio).toFixed(3)}
+                  </th>
                 </React.Fragment>
               ))}
             </tr>
@@ -173,11 +257,17 @@ export default function JinsTranspositions() {
           {valueType !== "stringLength" && filters["stringLength"] && (
             <tr>
               <th className="jins-transpositions__row-header">string length</th>
-              <th className="jins-transpositions__header-pitchClass">{parseFloat(pitchClasses[0].stringLength).toFixed(3)}</th>
+              <th className="jins-transpositions__header-pitchClass">
+                {parseFloat(pitchClasses[0].stringLength).toFixed(3)}
+              </th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
-                  <th className="jins-transpositions__header-pitchClass">({interval.stringLength.toFixed(3)})</th>
-                  <th className="jins-transpositions__header-pitchClass">{parseFloat(pitchClasses[i + 1].stringLength).toFixed(3)}</th>
+                  <th className="jins-transpositions__header-pitchClass">
+                    ({interval.stringLength.toFixed(3)})
+                  </th>
+                  <th className="jins-transpositions__header-pitchClass">
+                    {parseFloat(pitchClasses[i + 1].stringLength).toFixed(3)}
+                  </th>
                 </React.Fragment>
               ))}
             </tr>
@@ -185,11 +275,17 @@ export default function JinsTranspositions() {
           {valueType !== "fretDivision" && filters["fretDivision"] && (
             <tr>
               <th className="jins-transpositions__row-header">fret division</th>
-              <th className="jins-transpositions__header-pitchClass">{parseFloat(pitchClasses[0].fretDivision).toFixed(3)}</th>
+              <th className="jins-transpositions__header-pitchClass">
+                {parseFloat(pitchClasses[0].fretDivision).toFixed(3)}
+              </th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
-                  <th className="jins-transpositions__header-pitchClass">({interval.fretDivision.toFixed(3)})</th>
-                  <th className="jins-transpositions__header-pitchClass">{parseFloat(pitchClasses[i + 1].fretDivision).toFixed(3)}</th>
+                  <th className="jins-transpositions__header-pitchClass">
+                    ({interval.fretDivision.toFixed(3)})
+                  </th>
+                  <th className="jins-transpositions__header-pitchClass">
+                    {parseFloat(pitchClasses[i + 1].fretDivision).toFixed(3)}
+                  </th>
                 </React.Fragment>
               ))}
             </tr>
@@ -197,11 +293,15 @@ export default function JinsTranspositions() {
           {filters["midiNote"] && (
             <tr>
               <th className="jins-transpositions__row-header">MIDI Note</th>
-              <th className="jins-transpositions__header-pitchClass">{pitchClasses[0].midiNoteNumber.toFixed(3)}</th>
+              <th className="jins-transpositions__header-pitchClass">
+                {pitchClasses[0].midiNoteNumber.toFixed(3)}
+              </th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
                   <th className="jins-transpositions__header-pitchClass"></th>
-                  <th className="jins-transpositions__header-pitchClass">{pitchClasses[i + 1].midiNoteNumber.toFixed(3)}</th>
+                  <th className="jins-transpositions__header-pitchClass">
+                    {pitchClasses[i + 1].midiNoteNumber.toFixed(3)}
+                  </th>
                 </React.Fragment>
               ))}
             </tr>
@@ -209,11 +309,15 @@ export default function JinsTranspositions() {
           {filters["frequency"] && (
             <tr>
               <th className="jins-transpositions__row-header">Freq (Hz)</th>
-              <th className="jins-transpositions__header-pitchClass">{parseFloat(pitchClasses[0].frequency).toFixed(3)}</th>
+              <th className="jins-transpositions__header-pitchClass">
+                {parseFloat(pitchClasses[0].frequency).toFixed(3)}
+              </th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
                   <th className="jins-transpositions__header-pitchClass"></th>
-                  <th className="jins-transpositions__header-pitchClass">{parseFloat(pitchClasses[i + 1].frequency).toFixed(3)}</th>
+                  <th className="jins-transpositions__header-pitchClass">
+                    {parseFloat(pitchClasses[i + 1].frequency).toFixed(3)}
+                  </th>
                 </React.Fragment>
               ))}
             </tr>
@@ -222,7 +326,9 @@ export default function JinsTranspositions() {
             <th className="jins-transpositions__row-header">Play</th>
             {pitchClasses.map((pitchClass, i) => (
               <React.Fragment key={i}>
-                {i !== 0 && <th className="jins-transpositions__header-cell"></th>}
+                {i !== 0 && (
+                  <th className="jins-transpositions__header-cell"></th>
+                )}
                 <th className="jins-transpositions__header-cell">
                   <PlayCircleIcon
                     className="jins-transpositions__play-circle-icon"
@@ -262,8 +368,10 @@ export default function JinsTranspositions() {
                 const isDisabled =
                   (filterKey === "fraction" && valueType === "fraction") ||
                   (filterKey === "cents" && valueType === "cents") ||
-                  (filterKey === "decimalRatio" && valueType === "decimalRatio") ||
-                  (filterKey === "stringLength" && valueType === "stringLength");
+                  (filterKey === "decimalRatio" &&
+                    valueType === "decimalRatio") ||
+                  (filterKey === "stringLength" &&
+                    valueType === "stringLength");
 
                 if (isDisabled) return null;
 
@@ -274,7 +382,9 @@ export default function JinsTranspositions() {
                     key={filterKey}
                     htmlFor={`filter-${filterKey}`}
                     className={`tuning-system-manager__filter-item ${
-                      filters[filterKey as keyof typeof filters] ? "tuning-system-manager__filter-item_active" : ""
+                      filters[filterKey as keyof typeof filters]
+                        ? "tuning-system-manager__filter-item_active"
+                        : ""
                     }`}
                     // prevent the drawer (or parent) click handler from firing
                     onClick={(e) => e.stopPropagation()}
@@ -312,60 +422,121 @@ export default function JinsTranspositions() {
           </h2>
           <table className="jins-transpositions__table">
             <colgroup>
-              <col style={{ minWidth: "30px", maxWidth: "30px", width: "30px" }} />
-              <col style={{ minWidth: "150px", maxWidth: "150px", width: "150px" }} />
+              <col
+                style={{ minWidth: "30px", maxWidth: "30px", width: "30px" }}
+              />
+              <col
+                style={{ minWidth: "150px", maxWidth: "150px", width: "150px" }}
+              />
             </colgroup>
 
             <thead>{renderTransposition(jinsTranspositions[0], 0)}</thead>
           </table>
 
-        {/* COMMENTS AND SOURCES */}
-        {selectedJinsDetails && (
-          <>
-            <div className="jins-transpositions__comments-sources-container">
-              <div className="jins-transpositions__comments-english">
-                <h3>Comments:</h3>
-                <div className="jins-transpositions__comments-text">{selectedJinsDetails.getCommentsEnglish()}</div>
-              </div>
-            
-            <div className="jins-transpositions__sources-english">
-              <h3>Sources:</h3>
-              <div className="jins-transpositions__sources-text">
-              {selectedJinsDetails?.getSourcePageReferences().length > 0 &&
-                selectedJinsDetails.getSourcePageReferences().map((sourceRef, idx) => {
-                  const source = sources.find((s: any) => s.id === sourceRef.sourceId);
-                  return source ? (
-                    <React.Fragment key={idx}>
-                      {source.getContributors()[0].lastNameEnglish} ({source.getPublicationDateEnglish()}:{sourceRef.page})
-                      <br />
-                    </React.Fragment>
-                  ) : null;
-                })}
+          {/* COMMENTS AND SOURCES */}
+          {selectedJinsDetails && (
+            <>
+              <div className="jins-transpositions__comments-sources-container">
+                <div className="jins-transpositions__comments-english">
+                  <h3>Comments:</h3>
+                  <div className="jins-transpositions__comments-text">
+                    {selectedJinsDetails.getCommentsEnglish()}
+                  </div>
                 </div>
-            </div>
-            </div>
-          </>
-        )}          
 
-          <h2 className="jins-transpositions__title">Taṣwīr (transpositions): {`${selectedJinsDetails.getName()}`}</h2>
+                <div className="jins-transpositions__sources-english">
+                  <h3>Sources:</h3>
+                  <div className="jins-transpositions__sources-text">
+                    {selectedJinsDetails?.getSourcePageReferences().length >
+                      0 &&
+                      selectedJinsDetails
+                        .getSourcePageReferences()
+                        .map((sourceRef, idx) => {
+                          const source = sources.find(
+                            (s: any) => s.id === sourceRef.sourceId
+                          );
+                          return source ? (
+                            <React.Fragment key={idx}>
+                              {source.getContributors()[0].lastNameEnglish} (
+                              {source.getPublicationDateEnglish()}:
+                              {sourceRef.page})
+                              <br />
+                            </React.Fragment>
+                          ) : null;
+                        })}
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+
+          <h2 className="jins-transpositions__title">
+            Taṣwīr (transpositions): {`${selectedJinsDetails.getName()}`}
+          </h2>
 
           <table className="jins-transpositions__table">
             <colgroup>
-              <col style={{ minWidth: "30px", maxWidth: "30px", width: "30px" }} />
-              <col style={{ minWidth: "150px", maxWidth: "150px", width: "150px" }} />
+              <col
+                style={{ minWidth: "30px", maxWidth: "30px", width: "30px" }}
+              />
+              <col
+                style={{ minWidth: "150px", maxWidth: "150px", width: "150px" }}
+              />
             </colgroup>
 
             <thead></thead>
             <tbody>
               {jinsTranspositions.slice(1).map((jinsTransposition, row) => {
-                return <React.Fragment key={row}>{renderTransposition(jinsTransposition, row + 1)}</React.Fragment>;
+                return (
+                  <React.Fragment key={row}>
+                    {renderTransposition(jinsTransposition, row + 1)}
+                  </React.Fragment>
+                );
               })}
             </tbody>
           </table>
         </div>
       </>
     );
-  }, [allPitchClasses, selectedJinsDetails, centsTolerance, filters, soundSettings]);
+  }, [
+    allPitchClasses,
+    selectedJinsDetails,
+    centsTolerance,
+    filters,
+    soundSettings,
+  ]);
+
+  // Listen for custom event to scroll to header when jins/transposition changes (event-driven)
+  useEffect(() => {
+    function handleJinsTranspositionChange(e: CustomEvent) {
+      scrollToJinsHeader(e.detail?.firstNote, selectedJinsDetails);
+    }
+    window.addEventListener(
+      "jinsTranspositionChange",
+      handleJinsTranspositionChange as EventListener
+    );
+    return () => {
+      window.removeEventListener(
+        "jinsTranspositionChange",
+        handleJinsTranspositionChange as EventListener
+      );
+    };
+  }, [selectedJinsDetails]);
+
+  // Scroll to header on mount if jinsFirstNote is in the URL
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const jinsFirstNote = params.get("jinsFirstNote");
+    if (jinsFirstNote) {
+      setTimeout(() => {
+        scrollToJinsHeader(
+          decodeURIComponent(jinsFirstNote),
+          selectedJinsDetails
+        );
+      }, 200);
+    }
+  }, [selectedJinsDetails]);
 
   return transpositionTables;
 }

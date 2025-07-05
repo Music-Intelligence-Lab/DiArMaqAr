@@ -205,6 +205,15 @@ export default function PitchClassWheel() {
         if (jinsTransposition && selectedJinsDetails) {
           setSelectedPitchClasses(jinsTransposition.jinsPitchClasses);
           setSelectedJins(jinsTransposition);
+                    // Dispatch scroll event after DOM update
+          setTimeout(() => {
+            window.dispatchEvent(
+              new CustomEvent("jinsTranspositionChange", {
+                detail: { firstNote: jinsTransposition.jinsPitchClasses[0]?.noteName }
+              })
+            );
+          }, 10);
+
         }
       };
 
