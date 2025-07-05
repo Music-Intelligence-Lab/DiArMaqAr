@@ -154,7 +154,22 @@ export default function Navbar() {
           )}
           <button
             className={`navbar__bottom-bar-item ${selectedMenu === "maqam" ? "navbar__bottom-bar-item_selected" : ""} ${selectedMaqamDetails ? "navbar__bottom-bar-item_active" : ""}`}
-            onClick={() => setSelectedMenu("maqam")}
+            onClick={() => {
+              setSelectedMenu("maqam");
+              // Dispatch scroll event after DOM update
+              if (window && window.dispatchEvent) {
+                // Try to get the first note of the currently selected maqam transposition
+                // This assumes selectedMaqamDetails is available in this scope
+                const firstNote = selectedMaqamDetails?.getAscendingNoteNames?.()?.[0];
+                if (firstNote) {
+                  window.dispatchEvent(
+                    new CustomEvent("maqamTranspositionChange", {
+                      detail: { firstNote }
+                    })
+                  );
+                }
+              }
+            }}
             disabled={!selectedTuningSystem}
           >
             <span className="navbar__bottom-bar-item_tab-title">
