@@ -200,7 +200,7 @@ export default function PitchClassWheel() {
                 detail: { firstNote: maqamTransposition.ascendingPitchClasses[0]?.noteName }
               })
             );
-          }, 0);
+          }, 10);
           return;
         }
         if (jinsTransposition && selectedJinsDetails) {

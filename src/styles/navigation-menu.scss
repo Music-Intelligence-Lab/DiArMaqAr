@@ -1,26 +1,32 @@
 @use "./variables" as *;
 
 .navigation-menu-open-button {
-  position: relative;
+  position: fixed;
+  top: 20px;
+  left: 20px;
   background-color: transparent;
   color: white;
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  z-index: 10000;
+  z-index: 300; // Ensure above sidebar
+  pointer-events: auto;
 }
 
+
+// Ensure the open button is always above the sidebar
 .navigation-menu-card {
   font-size: 18px;
   position: fixed;
   top: 0;
   left: 0;
-  height: 100%;
   width: 300px;
-
+  height: 100vh;
+  max-height: 100vh;
+  overflow-y: auto;
   transform: translateX(-130%);
   transition: transform 0.3s ease-in-out;
-  z-index: 9999;
+  z-index: 10;
 
   &--open {
     transform: translateX(0);

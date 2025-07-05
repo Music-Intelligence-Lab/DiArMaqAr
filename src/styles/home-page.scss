@@ -34,6 +34,9 @@
     margin-bottom: 0px;
   }
 }
+body {
+ scroll-padding-top: 175px;
+}
 body.scrollbar-active {
   padding-right: 0 !important;
 }
