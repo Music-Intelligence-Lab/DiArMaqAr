@@ -255,7 +255,7 @@ const MaqamTranspositions: React.FC = () => {
                           detail: { firstNote: pitchClasses[0].noteName },
                         })
                       );
-                    }, 0);
+                    }, 10);
                   }}
                 >
                   Select & Load to Keyboard
