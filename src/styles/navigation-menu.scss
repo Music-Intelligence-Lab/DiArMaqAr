@@ -20,7 +20,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 300px;
+  width: 288px;
   height: 100vh;
   max-height: 100vh;
   overflow-y: auto;
@@ -36,21 +36,29 @@
     display: flex;
     flex-direction: column;
     padding-bottom: 50px;
-    padding-top: $top-navbar-height;
-    color: black;
+    padding-top: calc($top-navbar-height - 1px);
+    color: $black;
     height: 100%;
     width: 100%;
     overflow-y: auto;
-    background: $black ;
-    color: white;
+    background: $black;
+    color: $text;
+    font-size: 14px;
   }
 
   &__link {
-    width: 100%;
-    padding: 10px 20px;
     text-decoration: none;
-    color: white;
-    font-weight: 500;
+    color: $text;
+    font-weight: 300;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    height: 55px;
+    padding: 10px 20px;
+    border-top: 1px solid $grey;
+    transition: all 0.1s ease-in-out;
+
 
     &:hover {
       background-color: $primary;

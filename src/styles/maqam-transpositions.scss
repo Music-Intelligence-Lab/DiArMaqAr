@@ -112,7 +112,7 @@
   &__header {
     text-align: left;
     background-color: black;
-    scroll-margin-top: $top-navbar-height;
+    scroll-margin-top: calc($top-navbar-height - 30px);
   }
 
   &__header-cell {
