@@ -730,6 +730,13 @@ const MaqamTranspositions: React.FC = () => {
               <colgroup>
                 <col style={{ width: "30px" }} />
                 <col style={{ width: "40px" }} />
+                <col
+                  style={{
+                    minWidth: "100px",
+                    maxWidth: "100px",
+                    width: "100px",
+                  }}
+                />
               </colgroup>
               <tbody>
                 {maqamTranspositions.slice(1).map((maqamTransposition, row) => {
