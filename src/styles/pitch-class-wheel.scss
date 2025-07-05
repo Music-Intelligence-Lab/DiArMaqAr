@@ -6,7 +6,7 @@
   width: 100%;
   overflow-x: scroll;
   display: flex;
-  z-index: 2000;
+  z-index: 5;
   margin-bottom: 20px;
   background-color: $background;
   box-shadow: 0 20px 15px rgba(0, 0, 0, 0.6);
@@ -48,12 +48,12 @@
     }
 
     &_tonic {
-      border-top: 3px $tertiary solid;
-      border-bottom: 3px solid $tertiary;
+      border-top: 3px rgb($tertiary, 0.8) solid;
+      border-bottom: 3px solid rgb($tertiary, 0.8);
     }
     &_tonic_current {
       background-color: rgb($tertiary, 0.8) !important;
-      border: rgb($tertiary, 0.8) solid 3px 2px 2px 3px;
+      border: rgba($tertiary, 0.8) solid 3px 2px 2px 3px !important;
     }
     &_tonic_selected {
       border-color: $primary;
