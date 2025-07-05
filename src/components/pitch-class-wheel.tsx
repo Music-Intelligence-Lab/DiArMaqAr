@@ -192,6 +192,14 @@ export default function PitchClassWheel() {
         if (maqamTransposition && selectedMaqamDetails) {
           setSelectedPitchClasses(maqamTransposition.ascendingPitchClasses);
           setSelectedMaqam(maqamTransposition);
+          // Dispatch scroll event after DOM update
+          setTimeout(() => {
+            window.dispatchEvent(
+              new CustomEvent("maqamTranspositionChange", {
+                detail: { firstNote: maqamTransposition.ascendingPitchClasses[0]?.noteName }
+              })
+            );
+          }, 0);
           return;
         }
         if (jinsTransposition && selectedJinsDetails) {

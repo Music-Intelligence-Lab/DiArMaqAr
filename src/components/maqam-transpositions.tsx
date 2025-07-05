@@ -54,15 +54,18 @@ const MaqamTranspositions: React.FC = () => {
 
   const disabledFilters = ["pitchClass"];
 
+  // Removed unused prevFirstNoteRef
   const maqamTranspositions = useMemo(() => {
-    return getMaqamTranspositions(
+    const transpositions = getMaqamTranspositions(
       allPitchClasses,
       ajnas,
       selectedMaqamDetails,
       true,
       centsTolerance
     );
+    return transpositions;
   }, [allPitchClasses, ajnas, selectedMaqamDetails, centsTolerance]);
+
 
   const transpositionTables = useMemo(() => {
     if (!selectedMaqamDetails || !selectedTuningSystem) return null;
@@ -208,7 +211,7 @@ const MaqamTranspositions: React.FC = () => {
               </th>
               <th
                 className="maqam-transpositions__header"
-                id={getHeaderId(pitchClasses[0].noteName)}
+                id={getHeaderId(pitchClasses[0]?.noteName)}
                 colSpan={4 + (pitchClasses.length - 1) * 2}
               >
                 {!transposition ? (
@@ -227,11 +230,14 @@ const MaqamTranspositions: React.FC = () => {
                       noOctaveMaqam ? pitchClasses.slice(0, -1) : pitchClasses
                     );
                     setSelectedMaqam(transposition ? maqam : null);
-                    // Scroll to this header
-                    const el = document.getElementById(getHeaderId(pitchClasses[0].noteName));
-                    if (el) {
-                      el.scrollIntoView({ behavior: "smooth", block: "start" });
-                    }
+                    // Dispatch event for scroll after DOM update
+                    setTimeout(() => {
+                      window.dispatchEvent(
+                        new CustomEvent("maqamTranspositionChange", {
+                          detail: { firstNote: pitchClasses[0].noteName }
+                        })
+                      );
+                    }, 0);
                   }}
                 >
                   Select & Load to Keyboard
@@ -572,7 +578,7 @@ const MaqamTranspositions: React.FC = () => {
     }
 
     return (
-      <div className="maqam-transpositions">
+      <div className="maqam-transpositions"> 
         {maqamTranspositions.length > 0 && (
           <>
             <h2 className="maqam-transpositions__title">
@@ -760,6 +766,27 @@ const MaqamTranspositions: React.FC = () => {
     highlightedNotes,
     soundSettings,
   ]);
+
+  // Listen for custom event to scroll to header when maqam/transposition changes (event-driven)
+  useEffect(() => {
+    function handleMaqamTranspositionChange(e: CustomEvent) {
+      let firstNote = e.detail?.firstNote;
+      // fallback: try to get from selectedMaqamDetails if not provided
+      if (!firstNote && selectedMaqamDetails) {
+        firstNote = selectedMaqamDetails.getAscendingNoteNames?.()?.[0];
+      }
+      if (!firstNote) return;
+      const id = getHeaderId(firstNote);
+      const el = document.getElementById(id);
+      if (el && typeof el.scrollIntoView === "function") {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+    window.addEventListener("maqamTranspositionChange", handleMaqamTranspositionChange as EventListener);
+    return () => {
+      window.removeEventListener("maqamTranspositionChange", handleMaqamTranspositionChange as EventListener);
+    };
+  }, [selectedMaqamDetails]);
 
   // Scroll to header on mount if maqamFirstNote is in the URL
   useEffect(() => {
