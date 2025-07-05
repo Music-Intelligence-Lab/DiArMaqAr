@@ -151,32 +151,35 @@ export function initializePeriodic(audioContext: BaseAudioContext) {
 
   // 3) Semisine
   {
-    const sines = new Float32Array(64);
     const coses = new Float32Array(64);
     for (let n = 1; n < 64; ++n) coses[n] = 1 / (1 - 4 * n * n);
-    PERIODIC_WAVES.semisine = audioContext.createPeriodicWave(coses, sines);
+  // Ensure 0-phase: use coses as real, sines as imag (if sines is all zeros, this is already 0-phase)
+  // If sines is not all zeros, use only coses for 0-phase
+  PERIODIC_WAVES.semisine = audioContext.createPeriodicWave(coses, new Float32Array(64));
   }
 
   // 4) Gold
   {
     const gold = new Float32Array(101);
     for (let n = 1; n <= 10; ++n) gold[n * n] = n ** -0.75;
-    PERIODIC_WAVES.gold = audioContext.createPeriodicWave(zeros, gold);
+  // Ensure 0-phase: use gold as real, zeros as imag
+  PERIODIC_WAVES.gold = audioContext.createPeriodicWave(gold, zeros);
   }
 
   // 5) Subgroup “classics” & modern
-  PERIODIC_WAVES["rich-classic"] = audioContext.createPeriodicWave(zeros, subgroupWaveforms.richClassic);
-  PERIODIC_WAVES.rich = audioContext.createPeriodicWave(zeros, subgroupWaveforms.rich);
-  PERIODIC_WAVES["slender-classic"] = audioContext.createPeriodicWave(zeros, subgroupWaveforms.slenderClassic);
-  PERIODIC_WAVES.slender = audioContext.createPeriodicWave(zeros, subgroupWaveforms.slender);
-  PERIODIC_WAVES["didacus-classic"] = audioContext.createPeriodicWave(zeros, subgroupWaveforms.didacusClassic);
-  PERIODIC_WAVES.didacus = audioContext.createPeriodicWave(zeros, subgroupWaveforms.didacus);
-  PERIODIC_WAVES["bohlen-classic"] = audioContext.createPeriodicWave(zeros, subgroupWaveforms.bohlenClassic);
-  PERIODIC_WAVES.bohlen = audioContext.createPeriodicWave(zeros, subgroupWaveforms.bohlen);
-  PERIODIC_WAVES["glass-classic"] = audioContext.createPeriodicWave(zeros, subgroupWaveforms.glassClassic);
-  PERIODIC_WAVES.glass = audioContext.createPeriodicWave(zeros, subgroupWaveforms.glass);
-  PERIODIC_WAVES["boethius-classic"] = audioContext.createPeriodicWave(zeros, subgroupWaveforms.boethiusClassic);
-  PERIODIC_WAVES.boethius = audioContext.createPeriodicWave(zeros, subgroupWaveforms.boethius);
+  // Ensure 0-phase: use subgroupWaveforms as real, zeros as imag
+  PERIODIC_WAVES["rich-classic"] = audioContext.createPeriodicWave(subgroupWaveforms.richClassic, zeros);
+  PERIODIC_WAVES.rich = audioContext.createPeriodicWave(subgroupWaveforms.rich, zeros);
+  PERIODIC_WAVES["slender-classic"] = audioContext.createPeriodicWave(subgroupWaveforms.slenderClassic, zeros);
+  PERIODIC_WAVES.slender = audioContext.createPeriodicWave(subgroupWaveforms.slender, zeros);
+  PERIODIC_WAVES["didacus-classic"] = audioContext.createPeriodicWave(subgroupWaveforms.didacusClassic, zeros);
+  PERIODIC_WAVES.didacus = audioContext.createPeriodicWave(subgroupWaveforms.didacus, zeros);
+  PERIODIC_WAVES["bohlen-classic"] = audioContext.createPeriodicWave(subgroupWaveforms.bohlenClassic, zeros);
+  PERIODIC_WAVES.bohlen = audioContext.createPeriodicWave(subgroupWaveforms.bohlen, zeros);
+  PERIODIC_WAVES["glass-classic"] = audioContext.createPeriodicWave(subgroupWaveforms.glassClassic, zeros);
+  PERIODIC_WAVES.glass = audioContext.createPeriodicWave(subgroupWaveforms.glass, zeros);
+  PERIODIC_WAVES["boethius-classic"] = audioContext.createPeriodicWave(subgroupWaveforms.boethiusClassic, zeros);
+  PERIODIC_WAVES.boethius = audioContext.createPeriodicWave(subgroupWaveforms.boethius, zeros);
 }
 
 function initializeAperiodic(audioContext: BaseAudioContext) {

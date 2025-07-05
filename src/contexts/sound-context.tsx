@@ -749,9 +749,67 @@ export function SoundContextProvider({
       return;
     }
 
+
     // periodic
     const osc = audioCtx.createOscillator();
-    if (PERIODIC_WAVES[waveform]) {
+    // Utility to create 0-phase (cosine) PeriodicWave
+    function createZeroPhasePeriodicWave(type: string, ctx: AudioContext) {
+      let real, imag, N;
+      if (type === "sine") {
+        real = new Float32Array(2);
+        imag = new Float32Array(2);
+        real[0] = 0; real[1] = 1; imag[0] = 0; imag[1] = 0;
+        return ctx.createPeriodicWave(real, imag, {disableNormalization: false});
+      } else if (type === "triangle") {
+        N = 32; // number of harmonics
+        real = new Float32Array(N);
+        imag = new Float32Array(N);
+        real[0] = 0;
+        for (let n = 1; n < N; n++) {
+          if (n % 2 === 1) {
+            // Only odd harmonics
+            real[n] = (8 / (Math.PI * Math.PI)) * (1 / (n * n)) * (n % 4 === 1 ? 1 : -1);
+            imag[n] = 0;
+          }
+        }
+        return ctx.createPeriodicWave(real, imag, {disableNormalization: false});
+      } else if (type === "square") {
+        N = 32;
+        real = new Float32Array(N);
+        imag = new Float32Array(N);
+        real[0] = 0;
+        for (let n = 1; n < N; n++) {
+          if (n % 2 === 1) {
+            real[n] = 4 / (Math.PI * n);
+            imag[n] = 0;
+          }
+        }
+        return ctx.createPeriodicWave(real, imag, {disableNormalization: false});
+      } else if (type === "sawtooth") {
+        N = 32;
+        real = new Float32Array(N);
+        imag = new Float32Array(N);
+        real[0] = 0;
+        for (let n = 1; n < N; n++) {
+          real[n] = 2 / (Math.PI * n) * (n % 2 === 0 ? 0 : 1) * (type === "sawtooth" ? 1 : 0);
+          // For sawtooth, all harmonics, but this keeps only odd for square
+          if (type === "sawtooth") real[n] = 2 / (Math.PI * n);
+          imag[n] = 0;
+        }
+        return ctx.createPeriodicWave(real, imag, {disableNormalization: false});
+      }
+      return null;
+    }
+
+    let customWave: PeriodicWave | null = null;
+    if (["sine", "triangle", "square", "sawtooth"].includes(waveform)) {
+      customWave = createZeroPhasePeriodicWave(waveform, audioCtx);
+      if (customWave) {
+        osc.setPeriodicWave(customWave);
+      } else {
+        osc.type = waveform as OscillatorType;
+      }
+    } else if (PERIODIC_WAVES[waveform]) {
       osc.setPeriodicWave(PERIODIC_WAVES[waveform]);
     } else {
       osc.type = waveform as OscillatorType;
