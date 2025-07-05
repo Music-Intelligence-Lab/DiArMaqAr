@@ -191,30 +191,33 @@ export default function PitchClassWheel() {
 
       const onClick = () => {
         if (maqamTransposition && selectedMaqamDetails) {
-          setSelectedPitchClasses(maqamTransposition.ascendingPitchClasses);
-          setSelectedMaqam(maqamTransposition);
-          // Dispatch scroll event after DOM update
+          setSelectedPitchClasses([]); // Clear first
           setTimeout(() => {
-            window.dispatchEvent(
-              new CustomEvent("maqamTranspositionChange", {
-                detail: { firstNote: maqamTransposition.ascendingPitchClasses[0]?.noteName }
-              })
-            );
-          }, 10);
+            setSelectedPitchClasses(maqamTransposition.ascendingPitchClasses);
+            setSelectedMaqam(maqamTransposition);
+            setTimeout(() => {
+              window.dispatchEvent(
+                new CustomEvent("maqamTranspositionChange", {
+                  detail: { firstNote: maqamTransposition.ascendingPitchClasses[0]?.noteName }
+                })
+              );
+            }, 10);
+          }, 20);
           return;
         }
         if (jinsTransposition && selectedJinsDetails) {
-          setSelectedPitchClasses(jinsTransposition.jinsPitchClasses);
-          setSelectedJins(jinsTransposition);
-                    // Dispatch scroll event after DOM update
+          setSelectedPitchClasses([]); // Clear first
           setTimeout(() => {
-            window.dispatchEvent(
-              new CustomEvent("jinsTranspositionChange", {
-                detail: { firstNote: jinsTransposition.jinsPitchClasses[0]?.noteName }
-              })
-            );
-          }, 10);
-
+            setSelectedPitchClasses(jinsTransposition.jinsPitchClasses);
+            setSelectedJins(jinsTransposition);
+            setTimeout(() => {
+              window.dispatchEvent(
+                new CustomEvent("jinsTranspositionChange", {
+                  detail: { firstNote: jinsTransposition.jinsPitchClasses[0]?.noteName }
+                })
+              );
+            }, 10);
+          }, 20);
         }
       };
 
