@@ -47,16 +47,17 @@ interface MidiPortInfo {
 }
 
 interface SoundContextInterface {
-  playNote: (pitchClass: PitchClass, duration?: number) => void;
+  playNote: (pitchClass: PitchClass, duration?: number, velocity?: number) => void;
   soundSettings: SoundSettings;
   setSoundSettings: React.Dispatch<React.SetStateAction<SoundSettings>>;
   activePitchClasses: PitchClass[];
   setActivePitchClasses: React.Dispatch<React.SetStateAction<PitchClass[]>>;
   playSequence: (
     pitchClasses: PitchClass[],
-    ascending?: boolean
+    ascending?: boolean,
+    velocity?: number | ((noteIdx: number, patternIdx: number) => number)
   ) => Promise<void>;
-  noteOn: (pitchClass: PitchClass) => void;
+  noteOn: (pitchClass: PitchClass, velocity?: number) => void;
   noteOff: (pitchClass: PitchClass) => void;
   midiInputs: MidiPortInfo[];
   midiOutputs: MidiPortInfo[];
@@ -361,149 +362,11 @@ export function SoundContextProvider({
 
   const playNote = (
     pitchClass: PitchClass,
-    givenDuration: number = soundSettings.duration
+    givenDuration: number = soundSettings.duration,
+    velocity?: number
   ) => {
-    setActivePitchClasses((prev) => {
-      if (prev.some((c) => c.frequency === frequency.toString())) return prev;
-      return [...prev, pitchClass];
-    });
-
-    const frequency = parseFloat(pitchClass.frequency);
-    // Resume AudioContext if it's suspended to avoid lag.
-    const audioCtx = audioCtxRef.current!;
-    if (audioCtx && audioCtx.state === "suspended") {
-      audioCtx.resume();
-    }
-    // 1) Mute
-    if (soundSettings.outputMode === "mute") return;
-
-    // 2) MIDI
-    if (soundSettings.outputMode === "midi") {
-      const mf = frequencyToMidiNoteNumber(frequency);
-      const note = Math.floor(mf);
-      const detune = mf - note;
-      sendPitchBend(detune);
-      const vel = Math.round(soundSettings.volume * 127);
-      sendMidiMessage([0x90, note, vel]);
-      midiActiveNotesRef.current.add(note);
-      scheduleTimeout(() => {
-        sendMidiMessage([0x80, note, 0]);
-        midiActiveNotesRef.current.delete(note);
-      }, givenDuration * 1000);
-      return;
-    }
-
-    // 3) Waveform
-    if (!audioCtxRef.current || !masterGainRef.current) return;
-    if (isNaN(frequency) || frequency <= 0) return;
-
-    // Use the resumed audioCtx from above
-    // const audioCtx = audioCtxRef.current;
-    const masterGain = masterGainRef.current;
-    const startTime = audioCtx.currentTime;
-    const { attack, decay, sustain, waveform } = soundSettings;
-
-    //–– pick source node based on waveform string ––
-    let source: AudioNode;
-    let osc: OscillatorNode | null = null;
-
-    // A) aperiodic
-    if (APERIODIC_WAVES[waveform]) {
-      const aw = APERIODIC_WAVES[waveform];
-      const pws = aw.periodicWaves;
-      const dets = aw.detunings;
-
-      const merger = audioCtx.createGain(); // to sum the oscillators
-      const oscs: OscillatorNode[] = [];
-
-      for (let i = 0; i < pws.length; i++) {
-        const oscNode = audioCtx.createOscillator();
-        oscNode.setPeriodicWave(pws[i]);
-        // detune and align
-        const detunedFreq = frequency * Math.pow(2, dets[i] / 1200);
-        oscNode.frequency.setValueAtTime(detunedFreq, startTime);
-        oscNode.connect(merger);
-        oscs.push(oscNode);
-      }
-
-      // Use square‑root compensation so perceived loudness matches periodic waves
-      // (≈ -3 dB when five oscillators are active instead of −14 dB).
-      merger.gain.setValueAtTime(1 / Math.sqrt(pws.length), startTime);
-      source = merger;
-
-      // Connect through ADSR envelope
-      const gainNode = audioCtx.createGain();
-      // attack to full level
-      gainNode.gain.setValueAtTime(0, startTime);
-      gainNode.gain.linearRampToValueAtTime(1, startTime + attack);
-      // decay to sustain level
-      gainNode.gain.linearRampToValueAtTime(
-        sustain,
-        startTime + attack + decay
-      );
-
-      source.connect(gainNode).connect(masterGain);
-
-      // Start oscillators
-      oscs.forEach((osc) => osc.start(startTime));
-
-      // store aperiodic voice for release
-      const prevQueue = activeNotesRef.current.get(frequency) || [];
-      prevQueue.push({ oscillator: oscs, gainNode });
-      activeNotesRef.current.set(frequency, prevQueue);
-
-      // schedule release for aperiodic voices after duration
-      scheduleTimeout(() => {
-        noteOff(pitchClass);
-      }, givenDuration * 1000);
-
-      return;
-    }
-    // B) periodic
-    else if (PERIODIC_WAVES[waveform]) {
-      osc = audioCtx.createOscillator();
-      osc.setPeriodicWave(PERIODIC_WAVES[waveform]);
-      osc.frequency.setValueAtTime(frequency, startTime);
-      source = osc;
-    }
-    // C) built-in
-    else {
-      osc = audioCtx.createOscillator();
-      osc.type = waveform as OscillatorType;
-      osc.frequency.setValueAtTime(frequency, startTime);
-      source = osc;
-    }
-
-    //–– unified polyphonic envelope ––
-    const upcomingCount =
-      Array.from(activeNotesRef.current.values()).reduce(
-        (sum, arr) => sum + arr.length,
-        0
-      ) + 1;
-    // peak normalization: scale each voice by 1/N to prevent clipping at peaks
-    const voiceScale = 1 / upcomingCount;
-
-    const gainNode = audioCtx.createGain();
-    // attack to full voiceScale
-    gainNode.gain.setValueAtTime(0, startTime);
-    gainNode.gain.linearRampToValueAtTime(voiceScale, startTime + attack);
-    // decay to sustain * voiceScale
-    gainNode.gain.linearRampToValueAtTime(
-      voiceScale * sustain,
-      startTime + attack + decay
-    );
-    // connect source -> envelope -> master
-    source.connect(gainNode).connect(masterGain);
-
-    // store for release
-    if (osc) {
-      const queue = activeNotesRef.current.get(frequency) || [];
-      queue.push({ oscillator: osc, gainNode });
-      activeNotesRef.current.set(frequency, queue);
-      osc.start(startTime);
-    }
-
-    // schedule release after the requested duration
+    noteOn(pitchClass, velocity);
+    // Schedule noteOff after the given duration
     scheduleTimeout(() => {
       noteOff(pitchClass);
     }, givenDuration * 1000);
@@ -511,7 +374,8 @@ export function SoundContextProvider({
 
   const playSequence = (
     pitchClasses: PitchClass[],
-    ascending = true
+    ascending = true,
+    velocity?: number | ((noteIdx: number, patternIdx: number) => number)
   ): Promise<void> => {
     timeoutsRef.current.forEach(clearTimeout);
     timeoutsRef.current = [];
@@ -584,7 +448,8 @@ export function SoundContextProvider({
         terminationCheck: (windowStart: number, isTarget: boolean) => boolean
       ) => {
         for (const windowStart of windowStartIndexes) {
-          for (const { scaleDegree, noteDuration, isTarget } of patternNotes) {
+          for (let patternIdx = 0; patternIdx < patternNotes.length; patternIdx++) {
+            const { scaleDegree, noteDuration, isTarget } = patternNotes[patternIdx];
             // compute note length in seconds:
             //   base = (4 ÷ numeric part of noteDuration), e.g. "4" → whole note
             //   mod  = 1 (normal), 1.5 (dotted), 2/3 (triplet)
@@ -616,8 +481,16 @@ export function SoundContextProvider({
                 );
               }
 
+              // Determine velocity for this note
+              let noteVelocity = 80;
+              if (typeof velocity === "function") {
+                noteVelocity = velocity(windowStart, patternIdx);
+              } else if (typeof velocity === "number") {
+                noteVelocity = velocity;
+              }
+
               scheduleTimeout(() => {
-                playNote(pitchClassToPlay, durSec);
+                playNote(pitchClassToPlay, durSec, noteVelocity);
                 // schedule noteOff for waveform output
                 scheduleTimeout(() => noteOff(pitchClassToPlay), durSec * 1000);
               }, cumulativeTimeSec * 1000);
