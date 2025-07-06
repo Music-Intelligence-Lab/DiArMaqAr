@@ -18,12 +18,21 @@ const emptyPitchClass: PitchClass = {
   midiNoteNumber: 0,
 };
 
-export default function shiftPitchClass(allPitchClasses: PitchClass[], pitchClass: PitchClass, octaveShift: number) {
-  const pitchClassIndex = allPitchClasses.findIndex((c) => c.index === pitchClass.index && c.octave === pitchClass.octave);
+export default function shiftPitchClass(
+  allPitchClasses: PitchClass[],
+  pitchClass: PitchClass | undefined,
+  octaveShift: number
+) {
+  if (!pitchClass || typeof pitchClass.index !== "number" || typeof pitchClass.octave !== "number") {
+    return emptyPitchClass;
+  }
+
+  const pitchClassIndex = allPitchClasses.findIndex(
+    (c) => c.index === pitchClass.index && c.octave === pitchClass.octave
+  );
   if (pitchClassIndex === -1) return emptyPitchClass;
 
   const numberOfPitchClasses = allPitchClasses.length / 4;
-
   const newIndex = pitchClassIndex + octaveShift * numberOfPitchClasses;
 
   if (newIndex < 0 || newIndex >= allPitchClasses.length)
