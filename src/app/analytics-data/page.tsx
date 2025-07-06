@@ -19,10 +19,14 @@ interface AnalyticsRow {
 
 const ANALYTICS_PATH = "/data/analytics.json";
 
-function extractYear(label: string): number {
-  // Extracts a 4-digit year from the label, or returns 0 if not found
-  const match = label.match(/(19|20)\d{2}/);
-  return match ? parseInt(match[0], 10) : 0;
+// Extracts the first number and optional trailing letter inside parentheses, e.g. (950g) or (950)
+function extractYearParts(label: string): { year: number; letter: string } {
+  const match = label.match(/\((\d+)([a-zA-Z]?)\)/);
+  if (match) {
+    return { year: parseInt(match[1], 10), letter: match[2] || "" };
+  }
+  return { year: 0, letter: "" };
+
 }
 
 export default function AnalyticsPage() {
@@ -72,15 +76,28 @@ export default function AnalyticsPage() {
   const sortedRows = useMemo(() => {
     const sorted = [...rows];
     sorted.sort((a, b) => {
-      let aVal: any = a[sortKey];
-      let bVal: any = b[sortKey];
       if (sortKey === "label") {
-        aVal = extractYear(a.label);
-        bVal = extractYear(b.label);
+        const aParts = extractYearParts(a.label);
+        const bParts = extractYearParts(b.label);
+        if (aParts.year !== bParts.year) {
+          return sortDir === "asc"
+            ? aParts.year - bParts.year
+            : bParts.year - aParts.year;
+        }
+        // If years are equal, compare the letter
+        if (aParts.letter !== bParts.letter) {
+          return sortDir === "asc"
+            ? aParts.letter.localeCompare(bParts.letter)
+            : bParts.letter.localeCompare(aParts.letter);
+        }
+        return 0;
+      } else {
+        const aVal: any = a[sortKey];
+        const bVal: any = b[sortKey];
+        if (aVal < bVal) return sortDir === "asc" ? -1 : 1;
+        if (aVal > bVal) return sortDir === "asc" ? 1 : -1;
+        return 0;
       }
-      if (aVal < bVal) return sortDir === "asc" ? -1 : 1;
-      if (aVal > bVal) return sortDir === "asc" ? 1 : -1;
-      return 0;
     });
     return sorted;
   }, [rows, sortKey, sortDir]);
