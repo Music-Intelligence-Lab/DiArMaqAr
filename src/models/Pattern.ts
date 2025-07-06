@@ -34,6 +34,7 @@ export interface PatternNote {
   scaleDegree: ScaleDegree;
   noteDuration: NoteDuration;
   isTarget: boolean;
+  velocity?: number; // Optional velocity (0-127)
 }
 
 export const DURATION_OPTIONS: string[] = [
@@ -91,5 +92,6 @@ export function reversePatternNotes(notes: PatternNote[]): PatternNote[] {
     scaleDegree: reversedScaleDegrees[index],
     noteDuration: note.noteDuration,
     isTarget: note.isTarget,
+    velocity: note.velocity,
   }));
 }

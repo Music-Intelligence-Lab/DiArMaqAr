@@ -89,11 +89,17 @@ export function getPatterns(): Pattern[] {
       new Pattern(
         data.id,
         data.name,
-        data.notes.map((note) => ({
-          scaleDegree: note.scaleDegree as string,
-          noteDuration: note.noteDuration as NoteDuration,
-          isTarget: note.isTarget || false,
-        }))
+        data.notes.map((note: any) => {
+          const base = {
+            scaleDegree: note.scaleDegree as string,
+            noteDuration: note.noteDuration as NoteDuration,
+            isTarget: note.isTarget || false,
+          };
+          if (typeof note.velocity === "number") {
+            return { ...base, velocity: note.velocity };
+          }
+          return base;
+        })
       )
   );
 }

@@ -22,6 +22,11 @@ import shiftPitchClass from "@/functions/shiftPitchClass";
 type InputMode = "tuningSystem" | "selection";
 type OutputMode = "mute" | "waveform" | "midi";
 
+// ---- Global velocity defaults ----
+export const defaultNoteVelocity = 70;
+export const defaultTargetVelocity = 90;
+export const defaultDroneVelocity = 30;
+
 interface SoundSettings {
   attack: number;
   decay: number;
@@ -47,7 +52,11 @@ interface MidiPortInfo {
 }
 
 interface SoundContextInterface {
-  playNote: (pitchClass: PitchClass, duration?: number, velocity?: number) => void;
+  playNote: (
+    pitchClass: PitchClass,
+    duration?: number,
+    velocity?: number
+  ) => void;
   soundSettings: SoundSettings;
   setSoundSettings: React.Dispatch<React.SetStateAction<SoundSettings>>;
   activePitchClasses: PitchClass[];
@@ -65,7 +74,6 @@ interface SoundContextInterface {
   clearHangingNotes: () => void;
   stopAllSounds: () => void;
 }
-
 
 const SoundContext = createContext<SoundContextInterface | null>(null);
 
@@ -86,10 +94,10 @@ export function SoundContextProvider({
   const [soundSettings, setSoundSettings] = useState<SoundSettings>({
     attack: 0.01,
     decay: 0.2,
-    sustain: 0.7,
-    release: 0.5,
+    sustain: 0.5,
+    release: 0.4,
     waveform: "triangle",
-    volume: 0.2,
+    volume: 0.75,
     duration: 0.1,
     tempo: 150,
     pitchBendRange: 2,
@@ -440,16 +448,28 @@ export function SoundContextProvider({
       let cumulativeTimeSec = 0;
 
       if (soundSettings.drone) {
-        noteOn(shiftPitchClass(allPitchClasses, pitchClasses[0], -1), 30);
+        noteOn(
+          shiftPitchClass(allPitchClasses, pitchClasses[0], -1),
+          defaultDroneVelocity
+        );
       }
 
+      // Refactored: playPattern always receives velocity as an explicit argument
       const playPattern = (
         windowStartIndexes: number[],
-        terminationCheck: (windowStart: number, isTarget: boolean) => boolean
+        terminationCheck: (windowStart: number, isTarget: boolean) => boolean,
+        velocityArg?:
+          | number
+          | ((windowStart: number, patternIdx: number) => number)
       ) => {
         for (const windowStart of windowStartIndexes) {
-          for (let patternIdx = 0; patternIdx < patternNotes.length; patternIdx++) {
-            const { scaleDegree, noteDuration, isTarget } = patternNotes[patternIdx];
+          for (
+            let patternIdx = 0;
+            patternIdx < patternNotes.length;
+            patternIdx++
+          ) {
+            const { scaleDegree, noteDuration, isTarget } =
+              patternNotes[patternIdx];
             // compute note length in seconds:
             //   base = (4 ÷ numeric part of noteDuration), e.g. "4" → whole note
             //   mod  = 1 (normal), 1.5 (dotted), 2/3 (triplet)
@@ -481,12 +501,18 @@ export function SoundContextProvider({
                 );
               }
 
-              // Determine velocity for this note
-              let noteVelocity = 80;
-              if (typeof velocity === "function") {
-                noteVelocity = velocity(windowStart, patternIdx);
-              } else if (typeof velocity === "number") {
-                noteVelocity = velocity;
+              // Determine velocity for this note: use pattern note velocity if present, else fall back
+              let noteVelocity =
+                patternNotes[patternIdx]?.velocity ??
+                (isTarget ? defaultTargetVelocity : defaultNoteVelocity);
+              if (typeof noteVelocity !== "number" || isNaN(noteVelocity))
+                noteVelocity = isTarget
+                  ? defaultTargetVelocity
+                  : defaultNoteVelocity;
+              if (typeof velocityArg === "function") {
+                noteVelocity = velocityArg(windowStart, patternIdx);
+              } else if (typeof velocityArg === "number") {
+                noteVelocity = velocityArg;
               }
 
               scheduleTimeout(() => {
@@ -506,7 +532,8 @@ export function SoundContextProvider({
         const ascendingIndexes = Array.from({ length: n }, (_, i) => i);
         playPattern(
           ascendingIndexes,
-          (windowStart, isTarget) => windowStart === n - 1 && isTarget
+          (windowStart, isTarget) => windowStart === n - 1 && isTarget,
+          velocity
         );
       } else {
         const descendingIndexes = Array.from(
@@ -515,7 +542,8 @@ export function SoundContextProvider({
         );
         playPattern(
           descendingIndexes,
-          (windowStart, isTarget) => windowStart === 0 && isTarget
+          (windowStart, isTarget) => windowStart === 0 && isTarget,
+          velocity
         );
       }
 
@@ -549,7 +577,9 @@ export function SoundContextProvider({
     const frequency = parseFloat(pitchClass.frequency);
     if (soundSettings.outputMode === "mute") return;
 
-    const velocityScale = midiVelocity / 127;
+    // Use a quadratic velocity curve for more expressive dynamics
+    const velocityNorm = Math.max(0, Math.min(1, midiVelocity / 127));
+    const velocityCurve = velocityNorm * velocityNorm;
 
     if (soundSettings.outputMode === "midi") {
       const mf = frequencyToMidiNoteNumber(frequency);
@@ -557,7 +587,8 @@ export function SoundContextProvider({
       const detune = mf - note;
 
       sendPitchBend(detune);
-      const vel = Math.round(soundSettings.volume * 127);
+      // For MIDI, pass velocity directly (scaled by volume if desired)
+      const vel = Math.round(velocityNorm * soundSettings.volume * 127);
       sendMidiMessage([0x90, note, vel]);
       return;
     }
@@ -575,7 +606,7 @@ export function SoundContextProvider({
         0
       ) + 1;
     // const polyScale = 1 / Math.sqrt(upcomingCount);
-    const polyScale = (1 / Math.sqrt(upcomingCount)) * velocityScale;
+    const polyScale = (1 / Math.sqrt(upcomingCount)) * velocityCurve;
 
     // Handle aperiodic waves
     if (APERIODIC_WAVES[waveform]) {
@@ -601,8 +632,8 @@ export function SoundContextProvider({
       const source = merger;
 
       const gainNode = audioCtx.createGain();
-      const peakLevel = velocityScale;
-      const sustainLevel = sustain * velocityScale;
+      const peakLevel = velocityCurve;
+      const sustainLevel = sustain * velocityCurve;
       const attackEndTime = startTime + attack;
       const decayEndTime = attackEndTime + decay;
 
@@ -622,7 +653,6 @@ export function SoundContextProvider({
       return;
     }
 
-
     // periodic
     const osc = audioCtx.createOscillator();
     // Utility to create 0-phase (cosine) PeriodicWave
@@ -631,8 +661,13 @@ export function SoundContextProvider({
       if (type === "sine") {
         real = new Float32Array(2);
         imag = new Float32Array(2);
-        real[0] = 0; real[1] = 1; imag[0] = 0; imag[1] = 0;
-        return ctx.createPeriodicWave(real, imag, {disableNormalization: false});
+        real[0] = 0;
+        real[1] = 1;
+        imag[0] = 0;
+        imag[1] = 0;
+        return ctx.createPeriodicWave(real, imag, {
+          disableNormalization: false,
+        });
       } else if (type === "triangle") {
         N = 32; // number of harmonics
         real = new Float32Array(N);
@@ -641,11 +676,16 @@ export function SoundContextProvider({
         for (let n = 1; n < N; n++) {
           if (n % 2 === 1) {
             // Only odd harmonics
-            real[n] = (8 / (Math.PI * Math.PI)) * (1 / (n * n)) * (n % 4 === 1 ? 1 : -1);
+            real[n] =
+              (8 / (Math.PI * Math.PI)) *
+              (1 / (n * n)) *
+              (n % 4 === 1 ? 1 : -1);
             imag[n] = 0;
           }
         }
-        return ctx.createPeriodicWave(real, imag, {disableNormalization: false});
+        return ctx.createPeriodicWave(real, imag, {
+          disableNormalization: false,
+        });
       } else if (type === "square") {
         N = 32;
         real = new Float32Array(N);
@@ -657,19 +697,26 @@ export function SoundContextProvider({
             imag[n] = 0;
           }
         }
-        return ctx.createPeriodicWave(real, imag, {disableNormalization: false});
+        return ctx.createPeriodicWave(real, imag, {
+          disableNormalization: false,
+        });
       } else if (type === "sawtooth") {
         N = 32;
         real = new Float32Array(N);
         imag = new Float32Array(N);
         real[0] = 0;
         for (let n = 1; n < N; n++) {
-          real[n] = 2 / (Math.PI * n) * (n % 2 === 0 ? 0 : 1) * (type === "sawtooth" ? 1 : 0);
+          real[n] =
+            (2 / (Math.PI * n)) *
+            (n % 2 === 0 ? 0 : 1) *
+            (type === "sawtooth" ? 1 : 0);
           // For sawtooth, all harmonics, but this keeps only odd for square
           if (type === "sawtooth") real[n] = 2 / (Math.PI * n);
           imag[n] = 0;
         }
-        return ctx.createPeriodicWave(real, imag, {disableNormalization: false});
+        return ctx.createPeriodicWave(real, imag, {
+          disableNormalization: false,
+        });
       }
       return null;
     }
@@ -820,7 +867,7 @@ export function SoundContextProvider({
         midiOutputs,
         setRefresh,
         clearHangingNotes,
-        stopAllSounds
+        stopAllSounds,
       }}
     >
       {children}

@@ -30,31 +30,36 @@
     font-weight: bold;
   }
 
-  &__group {
+&__group {
     display: flex;
-    gap: 1rem;
-    margin-bottom: 1rem;
-    width: 100%;
-    max-width: 600px;
+    flex-direction: row;
+    float: left;
+    gap: 20px;
+    margin-bottom: 20px;
+    width: 50%;
+    align-items: center;
+    justify-content: center;
   }
 
   &__input-container {
-    flex: 1;
     display: flex;
     flex-direction: column;
+    align-items: center;
   }
 
   &__label {
     margin-bottom: 0.5rem;
-    font-weight: 600;
+    font-weight: 300;
   }
 
   &__input,
   &__select {
     padding: 0.4rem;
     font-size: 0.9rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 0px;
+    min-width: 0;
+    width: fit-content;
+    display: inline-block;
   }
 
   &__form {
@@ -81,9 +86,8 @@
   &__add-note {
     padding: 0.4rem 0.8rem;
     background-color: $secondary;
-    color: white;
+    color: $text;
     border: none;
-    border-radius: 4px;
     cursor: pointer;
     font-size: 0.9rem;
 
@@ -100,17 +104,19 @@
   &__note {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 0.75rem;
+    align-items: left;
+    gap: 10px;
     flex-wrap: wrap;
   }
 
   &__note-scaleDegree,
-  &__note-duration {
+  &__note-duration,
+  &__note-target,
+  &__note-velocity {
     padding: 0.4rem;
     font-size: 0.9rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    border: 0px solid #ccc;
+    border-radius: 0px;
   }
 
   &__delete-note {
@@ -118,7 +124,6 @@
     background-color: $delete;
     color: white;
     border: none;
-    border-radius: 4px;
     cursor: pointer;
     font-size: 0.9rem;
 
@@ -130,18 +135,17 @@
   &__buttons {
     display: flex;
     justify-content: center;
-    gap: 1rem;
+    gap: 20px;
     margin-top: 1.5rem;
   }
 
   &__save-button,
-  &__delete-button {
-    padding: 0.6rem 1.2rem;
-    font-size: 1rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    color: white;
+  &__delete-button,
+  &__play-button {
+    padding: 10px 20px;
+    color: $text;
+    background-color: $primary;
+
     transition: filter 0.2s ease;
 
     &:hover {

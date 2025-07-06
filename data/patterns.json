@@ -162,17 +162,20 @@
       {
         "scaleDegree": "I",
         "noteDuration": "8n",
-        "isTarget": false
+        "isTarget": false,
+        "velocity": 90
       },
       {
         "scaleDegree": "-VII",
         "noteDuration": "8n",
-        "isTarget": false
+        "isTarget": false,
+        "velocity": 70
       },
       {
         "scaleDegree": "I",
         "noteDuration": "8n",
-        "isTarget": true
+        "isTarget": true,
+        "velocity": 90
       }
     ]
   }
