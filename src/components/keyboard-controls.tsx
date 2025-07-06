@@ -83,7 +83,8 @@ export default function KeyboardControls() {
 
   useEffect(() => {
     const addActive = (pitchClass: PitchClass) => {
-      noteOn(pitchClass);
+      // Use velocity 1.0 for QWERTY input
+      noteOn(pitchClass, 80);
       setActivePitchClasses((prev) =>
         prev.some((c) => c.index === pitchClass.index && c.octave === pitchClass.octave) ? prev : [...prev, pitchClass]
       );
