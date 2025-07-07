@@ -2962,13 +2962,133 @@
       "dūgāh",
       "rāst"
     ],
-    "suyūr": [],
+    "suyūr": [
+      {
+        "id": "q1g9Hf-RK4gnJSuyk75Cf",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "46",
+        "commentsEnglish": "This maqām starts from the upper octave, from kurdān or nīm mahūr and during it's descent it uses a brief chahārgāh on rāst and another brief nikrīz on rāst and ends on its qarār which is rāst",
+        "commentsArabic": "",
+        "stops": [
+          {
+            "type": "note",
+            "value": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "maqam",
+            "value": "49",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "maqam",
+            "value": "5",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ]
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "oY8WnTdP5msak8o1G_N7f",
         "page": "46"
+      }
+    ]
+  },
+  {
+    "id": "56",
+    "name": "maqām sāzkār",
+    "ascendingNoteNames": [
+      "rāst",
+      "dūgāh",
+      "segāh",
+      "chahargāh",
+      "nawā",
+      "ḥusaynī",
+      "awj"
+    ],
+    "descendingNoteNames": [
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahargāh",
+      "nīm buselīk",
+      "kurdī",
+      "rāst"
+    ],
+    "suyūr": [
+      {
+        "id": "azIP3f-EIzT2dShd1DNL_",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "47",
+        "commentsEnglish": "Starts from rāst ascending to nawā to render maqām rāst on nawā, then it ascends to kurdān. After that it descends to its qarār through maqām nahāwand on nawā and then it descends from nawā to rāst by highlighting the maqām sāzkār. It is compulsory to bring out maqām segāh before the closure. It's qarār is rāst.",
+        "commentsArabic": "",
+        "stops": [
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "maqam",
+            "value": "53",
+            "startingNote": "nawā",
+            "direction": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "kurdān"
+          },
+          {
+            "type": "maqam",
+            "value": "10",
+            "startingNote": "nawā",
+            "direction": "descending"
+          },
+          {
+            "type": "maqam",
+            "value": "56",
+            "startingNote": "rāst",
+            "direction": "descending"
+          },
+          {
+            "type": "maqam",
+            "value": "19",
+            "startingNote": "segāh"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ]
+      }
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "47"
       }
     ]
   }
