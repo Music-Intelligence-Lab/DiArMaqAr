@@ -2,7 +2,7 @@
 
 import React, { useMemo, useEffect } from "react";
 import useAppContext from "@/contexts/app-context";
-import useSoundContext from "@/contexts/sound-context";
+import useSoundContext, { defaultNoteVelocity } from "@/contexts/sound-context";
 import useFilterContext from "@/contexts/filter-context";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
@@ -112,6 +112,7 @@ export default function JinsTranspositions() {
               <button
                 className="jins-transpositions__button"
                 onClick={() => {
+                  setSelectedPitchClasses([]); // Clear first
                   setSelectedPitchClasses(pitchClasses);
                   setSelectedJins(transposition ? jins : null);
                   setTimeout(() => {
@@ -129,7 +130,7 @@ export default function JinsTranspositions() {
               <button
                 className="jins-transpositions__button"
                 onClick={() => {
-                  playSequence(pitchClasses);
+                  playSequence(pitchClasses, true);
                 }}
               >
                 <PlayCircleIcon className="jins-transpositions__play-circle-icon" />{" "}
@@ -333,7 +334,7 @@ export default function JinsTranspositions() {
                   <PlayCircleIcon
                     className="jins-transpositions__play-circle-icon"
                     onMouseDown={() => {
-                      noteOn(pitchClass);
+                      noteOn(pitchClass, defaultNoteVelocity);
                       // Add global mouseup listener to ensure noteOff always fires
                       const handleMouseUp = () => {
                         noteOff(pitchClass);

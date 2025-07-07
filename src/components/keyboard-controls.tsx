@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import useAppContext from "@/contexts/app-context";
-import useSoundContext from "@/contexts/sound-context";
+import useSoundContext, { defaultNoteVelocity } from "@/contexts/sound-context";
 import PitchClass from "@/models/PitchClass";
 import shiftPitchClass from "@/functions/shiftPitchClass";
 
@@ -160,8 +160,8 @@ export default function KeyboardControls() {
 
   useEffect(() => {
     const addActive = (pitchClass: PitchClass) => {
-      // Use velocity 1.0 for QWERTY input
-      noteOn(pitchClass, 70);
+      // Use defaultNoteVelocity for QWERTY input
+      noteOn(pitchClass, defaultNoteVelocity);
       setActivePitchClasses((prev) =>
         prev.some(
           (c) => c.index === pitchClass.index && c.octave === pitchClass.octave

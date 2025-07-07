@@ -391,7 +391,7 @@ export function SoundContextProvider({
     const selectedPattern =
       soundSettings.selectedPattern ||
       new Pattern("Default", "Default", [
-        { scaleDegree: "I", noteDuration: "4", isTarget: true },
+        { scaleDegree: "I", noteDuration: "8n", isTarget: true },
       ]);
 
     return new Promise((resolve) => {
@@ -405,17 +405,26 @@ export function SoundContextProvider({
       );
 
       if (pitchClasses.length < maxDegree) {
-        const totalTimeMs = pitchClasses.length * beatSec * 1000;
+        // Play ascending then descending, omitting the last note in the ascending sequence from the start of the descending sequence
+        const ascending = pitchClasses;
+        const descending = pitchClasses.slice(0, -1).reverse();
+        const sequence = [...ascending, ...descending];
 
-        pitchClasses.forEach((pitchClass, i) => {
+        // Use 8n duration for each note
+        const base = 4 / 8; // 8n = eighth note
+        const mod = 1; // not dotted or triplet
+        const durSec = base * mod * beatSec;
+        const totalTimeMs = sequence.length * durSec * 1000;
+
+        sequence.forEach((pitchClass, i) => {
           scheduleTimeout(() => {
-            playNote(pitchClass, soundSettings.duration);
+            playNote(pitchClass, durSec);
             // ensure release for waveform output
             scheduleTimeout(
               () => noteOff(pitchClass),
-              soundSettings.duration * 1000
+              durSec * 1000
             );
-          }, i * beatSec * 1000);
+          }, i * durSec * 1000);
         });
 
         scheduleTimeout(() => {
@@ -569,7 +578,7 @@ export function SoundContextProvider({
     });
   };
 
-  function noteOn(pitchClass: PitchClass, midiVelocity: number = 127) {
+  function noteOn(pitchClass: PitchClass, midiVelocity: number = defaultNoteVelocity) {
     setActivePitchClasses((prev) => {
       if (prev.some((c) => c.frequency === pitchClass.frequency)) return prev;
       return [...prev, pitchClass];
