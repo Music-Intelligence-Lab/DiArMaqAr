@@ -146,27 +146,16 @@ export default function SayrManager({ admin }: { admin: boolean }) {
         {admin && (
           <div className="sayr-manager__group">
             <div className="sayr-manager__input-container">
-              <label className="sayr-manager__label">Creator (English)</label>
-              <input className="sayr-manager__input" type="text" value={creatorEnglish} onChange={(e) => setCreatorEnglish(e.target.value)} />
-            </div>
-            <div className="sayr-manager__input-container">
-              <label className="sayr-manager__label">Creator (Arabic)</label>
-              <input className="sayr-manager__input" type="text" value={creatorArabic} onChange={(e) => setCreatorArabic(e.target.value)} />
-            </div>
-          </div>
-        )}
-
-        {admin && (
-          <div className="sayr-manager__group">
-            <div className="sayr-manager__input-container">
               <label className="sayr-manager__label">Source</label>
               <select className="sayr-manager__select" value={sourceId} onChange={(e) => setSourceId(e.target.value)}>
                 <option value="">Select source</option>
-                {sources.map((s) => (
+                {[...sources]
+                  .sort((a, b) => a.getTitleEnglish().localeCompare(b.getTitleEnglish()))
+                  .map((s) => (
                   <option key={s.getId()} value={s.getId()}>
                     {s.getTitleEnglish()}
                   </option>
-                ))}
+                  ))}
               </select>
             </div>
             <div className="sayr-manager__input-container">
@@ -253,11 +242,13 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                       {/* 1) select which jins */}
                       <select className="sayr-manager__stop-value" value={stop.value} onChange={(e) => updateStop(i, "value", e.target.value)}>
                         <option value="">(none)</option>
-                        {ajnas.map((j) => (
+                        {[...ajnas]
+                          .sort((a, b) => a.getName().localeCompare(b.getName()))
+                          .map((j) => (
                           <option key={j.getId()} value={j.getId()}>
                             {j.getName()}
                           </option>
-                        ))}
+                          ))}
                       </select>
 
                       {/* 2) optional starting note for this jins */}
@@ -299,11 +290,13 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                       {/* 1) select which maqam */}
                       <select className="sayr-manager__stop-value" value={stop.value} onChange={(e) => updateStop(i, "value", e.target.value)}>
                         <option value="">(none)</option>
-                        {maqamat.map((m) => (
+                        {[...maqamat]
+                          .sort((a, b) => a.getName().localeCompare(b.getName()))
+                          .map((m) => (
                           <option key={m.getId()} value={m.getId()}>
                             {m.getName()}
                           </option>
-                        ))}
+                          ))}
                       </select>
 
                       {/* 2) optional starting note for this maqam */}
