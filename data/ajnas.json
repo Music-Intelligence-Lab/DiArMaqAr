@@ -1,12 +1,12 @@
 [
   {
     "id": "1",
-    "name": "jins rāst",
+    "name": "jins rāst muṭlaq",
     "noteNames": [
-      "rāst",
-      "dūgāh",
-      "segāh",
-      "chahargāh"
+      "nawā",
+      "ḥusaynī",
+      "awj",
+      "kurdān"
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -205,7 +205,7 @@
   },
   {
     "id": "16",
-    "name": "jins rāst nīm buselīk",
+    "name": "jins rāst binṣir (nīm buselīk)",
     "noteNames": [
       "rāst",
       "dūgāh",
@@ -245,12 +245,12 @@
   },
   {
     "id": "19",
-    "name": "jins rāst muṭlaq",
+    "name": "jins rast binṣir",
     "noteNames": [
-      "yegāh",
-      "ʿushayrān",
-      "ʿirāq",
-      "rāst"
+      "rāst",
+      "dūgāh",
+      "segāh",
+      "chahargāh"
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -268,5 +268,23 @@
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": []
+  },
+  {
+    "id": "21",
+    "name": "jins būselīk",
+    "noteNames": [
+      "dūgāh",
+      "nīm buselīk",
+      "chahargāh",
+      "nawā"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "70"
+      }
+    ]
   }
 ]
