@@ -398,13 +398,8 @@ export function SoundContextProvider({
       const beatSec = 60 / soundSettings.tempo;
 
       const patternNotes = selectedPattern.getNotes();
-      const maxDegree = Math.max(
-        ...patternNotes.map((n) =>
-          n.scaleDegree === "0" ? 0 : romanToNumber(n.scaleDegree)
-        )
-      );
 
-      if (pitchClasses.length < maxDegree) {
+      if (pitchClasses.length <= 5) {
         // Play ascending then descending, omitting the last note in the ascending sequence from the start of the descending sequence
         const ascending = pitchClasses;
         const descending = pitchClasses.slice(0, -1).reverse();
