@@ -85,7 +85,7 @@ export default function JinsTranspositions() {
           <tr
             className="jins-transpositions__header"
             id={getJinsHeaderId(pitchClasses[0]?.noteName)}
-            style={index === 0 || index === 1 ? { scrollMarginTop: "150px" } : undefined}
+            style={index === 0 ||  index === 1 ? { scrollMarginTop: "140px" } : undefined}
           >
             <td
               className={`jins-transpositions__transposition-number jins-transpositions__transposition-number_${pitchClasses[0].octave}`}

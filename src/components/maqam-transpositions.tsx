@@ -228,7 +228,7 @@ const MaqamTranspositions: React.FC = () => {
                 colSpan={4 + (pitchClasses.length - 1) * 2}
                 style={
                   rowIndex === 0 && ascending
-                    ? { scrollMarginTop: "150px" }
+                    ? { scrollMarginTop: "140px" }
                     : undefined
                 }
               >
