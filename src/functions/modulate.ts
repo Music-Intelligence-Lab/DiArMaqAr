@@ -64,11 +64,7 @@ export default function modulate(
   const sixthDegreeNoteName = sourceAscendingNotes[5];
   const sixthDegreeCellSIndex = shawwaList.findIndex((noteName) => noteName === sixthDegreeNoteName);
 
-  if (
-    (sixthDegreeCellSIndex - firstDegreeShawwaIndex === 16 || sixthDegreeCellSIndex - firstDegreeShawwaIndex === 17) &&
-    shawwaMapping(sixthDegreeNoteName) === "n"
-  )
-    checkSixthNoThird = true;
+  if ((sixthDegreeCellSIndex - firstDegreeShawwaIndex === 16 || sixthDegreeCellSIndex - firstDegreeShawwaIndex === 17) && shawwaMapping(sixthDegreeNoteName) === "n") checkSixthNoThird = true;
 
   for (const maqamOrJins of ajnasModulationsMode ? allAjnas : allMaqamat) {
     let transpositions: (Maqam | Jins)[] = [];
@@ -81,8 +77,7 @@ export default function modulate(
       transpositions = JSON.stringify(currentNotes) !== JSON.stringify(sourceAscendingNotes) ? [maqamOrJins.getTahlil(allPitchClasses)] : [];
 
       getJinsTranspositions(allPitchClasses, maqamOrJins, true, centsTolerance).forEach((jinsTransposition: Jins) => {
-        if (JSON.stringify(currentNotes) === JSON.stringify(jinsTransposition.jinsPitchClasses.map((pitchClass: PitchClass) => pitchClass.noteName)))
-          return;
+        if (JSON.stringify(currentNotes) === JSON.stringify(jinsTransposition.jinsPitchClasses.map((pitchClass: PitchClass) => pitchClass.noteName))) return;
         transpositions.push(jinsTransposition);
       });
     } else {
@@ -93,31 +88,24 @@ export default function modulate(
       transpositions = JSON.stringify(currentAscendingNotes) !== JSON.stringify(sourceAscendingNotes) ? [maqamOrJins.getTahlil(allPitchClasses)] : [];
 
       getMaqamTranspositions(allPitchClasses, allAjnas, maqamOrJins, true, centsTolerance).forEach((maqamTransposition: Maqam) => {
-        if (
-          JSON.stringify(currentAscendingNotes) ===
-          JSON.stringify(maqamTransposition.ascendingPitchClasses.map((pitchClass: PitchClass) => pitchClass.noteName))
-        )
-          return;
+        if (JSON.stringify(currentAscendingNotes) === JSON.stringify(maqamTransposition.ascendingPitchClasses.map((pitchClass: PitchClass) => pitchClass.noteName))) return;
         transpositions.push(maqamTransposition);
       });
     }
 
     for (const transposition of transpositions) {
       let currentAscendingNotes: string[] = [];
-      
-      if ('ascendingPitchClasses' in transposition) {
+
+      if ("ascendingPitchClasses" in transposition) {
         currentAscendingNotes = transposition.ascendingPitchClasses.map((pitchClass: PitchClass) => pitchClass.noteName);
       } else {
         currentAscendingNotes = transposition.jinsPitchClasses.map((pitchClass: PitchClass) => pitchClass.noteName);
       }
 
       if (currentAscendingNotes[0] === sourceAscendingNotes[0]) modulationsOnOne.push(transposition);
-      if (currentAscendingNotes[0] === sourceAscendingNotes[3] && shawwaMapping(sourceAscendingNotes[3]) !== "/")
-        modulationsOnFour.push(transposition);
-      if (currentAscendingNotes[0] === sourceAscendingNotes[4] && shawwaMapping(sourceAscendingNotes[4]) !== "/")
-        modulationsOnFive.push(transposition);
-      if (currentAscendingNotes[0] === sourceAscendingNotes[2] && shawwaMapping(sourceAscendingNotes[2]) !== "/")
-        modulationsOnThree.push(transposition);
+      if (currentAscendingNotes[0] === sourceAscendingNotes[3] && shawwaMapping(sourceAscendingNotes[3]) !== "/") modulationsOnFour.push(transposition);
+      if (currentAscendingNotes[0] === sourceAscendingNotes[4] && shawwaMapping(sourceAscendingNotes[4]) !== "/") modulationsOnFive.push(transposition);
+      if (currentAscendingNotes[0] === sourceAscendingNotes[2] && shawwaMapping(sourceAscendingNotes[2]) !== "/") modulationsOnThree.push(transposition);
       else if (check2p && currentAscendingNotes[0] === noteName2p) modulationsOnThree2p.push(transposition);
       else if (checkSixthNoThird && currentAscendingNotes[0] === sourceAscendingNotes[5]) modulationsOnSixNoThird.push(transposition);
       if (checkSixAscending && currentAscendingNotes[0] === sourceAscendingNotes[5]) modulationsOnSixAscending.push(transposition);

@@ -92,7 +92,8 @@ export default function Navbar() {
                 setSelectedIndices([]);
               }}
             >
-              Arabic Maqām Network<br />
+              Arabic Maqām Network
+              <br />
               شبكة المقام العربي
             </span>
             {/* <br></br>
@@ -111,7 +112,7 @@ export default function Navbar() {
               setSelectedMenu("tuningSystem");
               // Scroll tuning-system-manager to top if present
               if (typeof window !== "undefined") {
-                const tuningSystemManager = document.querySelector('.tuning-system-manager');
+                const tuningSystemManager = document.querySelector(".tuning-system-manager");
                 if (tuningSystemManager) {
                   tuningSystemManager.scrollIntoView({ behavior: "smooth", block: "start" });
                 } else {
@@ -121,7 +122,6 @@ export default function Navbar() {
             }}
             disabled={!selectedTuningSystem}
           >
-          
             {selectedTuningSystem ? (
               <>
                 <span className="navbar__bottom-bar-item_tab-title">
@@ -144,7 +144,7 @@ export default function Navbar() {
               setSelectedMenu("jins");
               // Scroll jins-transpositions to top if present
               if (typeof window !== "undefined") {
-                const jinsTranspositions = document.querySelector('.jins-transpositions');
+                const jinsTranspositions = document.querySelector(".jins-transpositions");
                 if (jinsTranspositions) {
                   jinsTranspositions.scrollIntoView({ behavior: "smooth", block: "start" });
                 } else {
@@ -155,7 +155,9 @@ export default function Navbar() {
             disabled={!selectedTuningSystem}
           >
             <span className="navbar__bottom-bar-item_tab-title">
-              {selectedTuningSystem ? `Ajnās (${ajnas.filter((jinsDetails) => jinsDetails.isJinsSelectable(allPitchClasses.map(pitchClass => pitchClass.noteName))).length}/${ajnas.length})` : "Ajnās"}
+              {selectedTuningSystem
+                ? `Ajnās (${ajnas.filter((jinsDetails) => jinsDetails.isJinsSelectable(allPitchClasses.map((pitchClass) => pitchClass.noteName))).length}/${ajnas.length})`
+                : "Ajnās"}
             </span>
             <span className="navbar__bottom-bar-item_tab-subtitle">
               {!selectedJinsDetails
@@ -180,9 +182,9 @@ export default function Navbar() {
             className={`navbar__bottom-bar-item ${selectedMenu === "maqam" ? "navbar__bottom-bar-item_selected" : ""} ${selectedMaqamDetails ? "navbar__bottom-bar-item_active" : ""}`}
             onClick={() => {
               setSelectedMenu("maqam");
-    // Scroll maqam-transpositions to top if present
+              // Scroll maqam-transpositions to top if present
               if (typeof window !== "undefined") {
-                const maqamTranspositions = document.querySelector('.maqam-transpositions');
+                const maqamTranspositions = document.querySelector(".maqam-transpositions");
                 if (maqamTranspositions) {
                   maqamTranspositions.scrollIntoView({ behavior: "smooth", block: "start" });
                 } else {
@@ -193,7 +195,10 @@ export default function Navbar() {
             disabled={!selectedTuningSystem}
           >
             <span className="navbar__bottom-bar-item_tab-title">
-              {selectedTuningSystem ? `Maqāmāt (${maqamat.filter((maqamDetails) => maqamDetails.isMaqamSelectable(allPitchClasses.map(pitchClass => pitchClass.noteName))).length}/${maqamat.length})` : "Maqāmāt"} <br />
+              {selectedTuningSystem
+                ? `Maqāmāt (${maqamat.filter((maqamDetails) => maqamDetails.isMaqamSelectable(allPitchClasses.map((pitchClass) => pitchClass.noteName))).length}/${maqamat.length})`
+                : "Maqāmāt"}{" "}
+              <br />
             </span>
             <span className="navbar__bottom-bar-item_tab-subtitle">
               {!selectedMaqamDetails

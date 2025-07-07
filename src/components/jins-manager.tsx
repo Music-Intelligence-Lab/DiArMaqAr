@@ -26,9 +26,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
       const firstNote = jins.getNoteNames()[0]?.toLowerCase();
       if (firstNote) uniqueNoteNames.add(firstNote);
     });
-    const orderedByPitchClasses = allPitchClasses
-      .map((pc) => pc.noteName.toLowerCase())
-      .filter((name) => uniqueNoteNames.has(name));
+    const orderedByPitchClasses = allPitchClasses.map((pc) => pc.noteName.toLowerCase()).filter((name) => uniqueNoteNames.has(name));
     return ["all", ...orderedByPitchClasses];
   }, [ajnas, allPitchClasses]);
 
@@ -145,14 +143,8 @@ export default function JinsManager({ admin }: { admin: boolean }) {
             <p>No ajnas available.</p>
           ) : (
             filteredAjnas.map((jinsDetails, index) => {
-              const selectable = jinsDetails.isJinsSelectable(allPitchClasses.map(pitchClass => pitchClass.noteName));
-              const numberOfTranspositions =
-                jinsTranspositions
-                  .get(jinsDetails.getId())
-                  ?.filter(
-                    (transposition) =>
-                      transposition.jinsPitchClasses[0]?.octave === 1
-                  ).length || 0;
+              const selectable = jinsDetails.isJinsSelectable(allPitchClasses.map((pitchClass) => pitchClass.noteName));
+              const numberOfTranspositions = jinsTranspositions.get(jinsDetails.getId())?.filter((transposition) => transposition.jinsPitchClasses[0]?.octave === 1).length || 0;
               return (
                 <div
                   key={index}

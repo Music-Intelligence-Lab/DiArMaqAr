@@ -1,23 +1,13 @@
 "use client";
 
 import useAppContext from "./app-context";
-import React, {
-  createContext,
-  useState,
-  useEffect,
-  useRef,
-  useContext,
-} from "react";
+import React, { createContext, useState, useEffect, useRef, useContext } from "react";
 import { frequencyToMidiNoteNumber } from "@/functions/convertPitchClass";
 import midiNumberToNoteName from "@/functions/midiToNoteNumber";
 import Pattern from "@/models/Pattern";
 import romanToNumber from "@/functions/romanToNumber";
 import PitchClass from "@/models/PitchClass";
-import {
-  initializeCustomWaves,
-  PERIODIC_WAVES,
-  APERIODIC_WAVES,
-} from "@/audio/waves";
+import { initializeCustomWaves, PERIODIC_WAVES, APERIODIC_WAVES } from "@/audio/waves";
 import shiftPitchClass from "@/functions/shiftPitchClass";
 type InputMode = "tuningSystem" | "selection";
 type OutputMode = "mute" | "waveform" | "midi";
@@ -52,20 +42,12 @@ interface MidiPortInfo {
 }
 
 interface SoundContextInterface {
-  playNote: (
-    pitchClass: PitchClass,
-    duration?: number,
-    velocity?: number
-  ) => void;
+  playNote: (pitchClass: PitchClass, duration?: number, velocity?: number) => void;
   soundSettings: SoundSettings;
   setSoundSettings: React.Dispatch<React.SetStateAction<SoundSettings>>;
   activePitchClasses: PitchClass[];
   setActivePitchClasses: React.Dispatch<React.SetStateAction<PitchClass[]>>;
-  playSequence: (
-    pitchClasses: PitchClass[],
-    ascending?: boolean,
-    velocity?: number | ((noteIdx: number, patternIdx: number) => number)
-  ) => Promise<void>;
+  playSequence: (pitchClasses: PitchClass[], ascending?: boolean, velocity?: number | ((noteIdx: number, patternIdx: number) => number)) => Promise<void>;
   noteOn: (pitchClass: PitchClass, velocity?: number) => void;
   noteOff: (pitchClass: PitchClass) => void;
   midiInputs: MidiPortInfo[];
@@ -77,19 +59,8 @@ interface SoundContextInterface {
 
 const SoundContext = createContext<SoundContextInterface | null>(null);
 
-export function SoundContextProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const {
-    selectedTuningSystem,
-    selectedMaqamDetails,
-    selectedJinsDetails,
-    tuningSystemPitchClasses,
-    allPitchClasses,
-    selectedPitchClasses,
-  } = useAppContext();
+export function SoundContextProvider({ children }: { children: React.ReactNode }) {
+  const { selectedTuningSystem, selectedMaqamDetails, selectedJinsDetails, tuningSystemPitchClasses, allPitchClasses, selectedPitchClasses } = useAppContext();
 
   const [soundSettings, setSoundSettings] = useState<SoundSettings>({
     attack: 0.01,
@@ -111,18 +82,11 @@ export function SoundContextProvider({
   });
 
   // Union type: oscillator can be OscillatorNode or OscillatorNode[]
-  const activeNotesRef = useRef<
-    Map<
-      number,
-      { oscillator: OscillatorNode | OscillatorNode[]; gainNode: GainNode }[]
-    >
-  >(new Map());
+  const activeNotesRef = useRef<Map<number, { oscillator: OscillatorNode | OscillatorNode[]; gainNode: GainNode }[]>>(new Map());
   const timeoutsRef = useRef<number[]>([]);
   const midiActiveNotesRef = useRef<Set<number>>(new Set());
 
-  const [activePitchClasses, setActivePitchClasses] = useState<PitchClass[]>(
-    []
-  );
+  const [activePitchClasses, setActivePitchClasses] = useState<PitchClass[]>([]);
 
   const audioCtxRef = useRef<AudioContext | null>(null);
   const masterGainRef = useRef<GainNode | null>(null);
@@ -142,9 +106,7 @@ export function SoundContextProvider({
 
   function sendPitchBend(detuneSemitones: number) {
     const center = 8192;
-    const bendOffset = Math.round(
-      (detuneSemitones / soundSettings.pitchBendRange) * center
-    );
+    const bendOffset = Math.round((detuneSemitones / soundSettings.pitchBendRange) * center);
     const bendValue = Math.max(0, Math.min(16383, center + bendOffset));
     const lsb = bendValue & 0x7f;
     const msb = (bendValue >> 7) & 0x7f;
@@ -173,10 +135,7 @@ export function SoundContextProvider({
 
   useEffect(() => {
     if (masterGainRef.current) {
-      masterGainRef.current.gain.setValueAtTime(
-        soundSettings.volume,
-        audioCtxRef.current!.currentTime
-      );
+      masterGainRef.current.gain.setValueAtTime(soundSettings.volume, audioCtxRef.current!.currentTime);
     }
   }, [soundSettings.volume]);
 
@@ -263,10 +222,7 @@ export function SoundContextProvider({
     };
   }, []);
 
-  const handleMidiInput: NonNullable<MIDIInput["onmidimessage"]> = function (
-    this: MIDIInput,
-    ev: MIDIMessageEvent
-  ) {
+  const handleMidiInput: NonNullable<MIDIInput["onmidimessage"]> = function (this: MIDIInput, ev: MIDIMessageEvent) {
     // Ignore MIDI messages unless inputType is "MIDI"
     if (soundSettings.inputType !== "MIDI") return;
     // only from our selected port
@@ -293,33 +249,20 @@ export function SoundContextProvider({
       if (cmd === 0x90 && velocity > 0) {
         noteOn(pitchClass, velocity);
         setActivePitchClasses((prev) => {
-          if (
-            prev.some(
-              (c) =>
-                c.index === pitchClass.index && c.octave === pitchClass.octave
-            )
-          )
-            return prev;
+          if (prev.some((c) => c.index === pitchClass.index && c.octave === pitchClass.octave)) return prev;
           return [...prev, pitchClass];
         });
       } else if (cmd === 0x80 || (cmd === 0x90 && velocity === 0)) {
         noteOff(pitchClass);
-        setActivePitchClasses((prev) =>
-          prev.filter(
-            (c) =>
-              !(c.index === pitchClass.index && c.octave === pitchClass.octave)
-          )
-        );
+        setActivePitchClasses((prev) => prev.filter((c) => !(c.index === pitchClass.index && c.octave === pitchClass.octave)));
       }
     } else if (soundSettings.inputMode === "selection") {
       const { note, alt } = midiNumberToNoteName(noteNumber);
 
       for (const pitchClass of selectedPitchClasses) {
         let convertedEnglishName = pitchClass.englishName;
-        convertedEnglishName =
-          convertedEnglishName[0].toUpperCase() + convertedEnglishName.slice(1);
-        if (convertedEnglishName.includes("-"))
-          convertedEnglishName = convertedEnglishName[0];
+        convertedEnglishName = convertedEnglishName[0].toUpperCase() + convertedEnglishName.slice(1);
+        if (convertedEnglishName.includes("-")) convertedEnglishName = convertedEnglishName[0];
 
         if (convertedEnglishName === note || convertedEnglishName === alt) {
           const baseFreq = parseFloat(pitchClass.frequency);
@@ -329,37 +272,18 @@ export function SoundContextProvider({
           // how many octaves to shift (positive => up, negative => down)
           const octaveShift = Math.round((noteNumber - baseMidi) / 12);
 
-          const adjPitchClass = shiftPitchClass(
-            allPitchClasses,
-            pitchClass,
-            octaveShift
-          );
+          const adjPitchClass = shiftPitchClass(allPitchClasses, pitchClass, octaveShift);
           // adjust frequency by 2^octaveShift
 
           if (cmd === 0x90 && velocity > 0) {
             noteOn(adjPitchClass, velocity);
             setActivePitchClasses((prev) => {
-              if (
-                prev.some(
-                  (c) =>
-                    c.index === pitchClass.index &&
-                    c.octave === pitchClass.octave
-                )
-              )
-                return prev;
+              if (prev.some((c) => c.index === pitchClass.index && c.octave === pitchClass.octave)) return prev;
               return [...prev, pitchClass];
             });
           } else if (cmd === 0x80 || (cmd === 0x90 && velocity === 0)) {
             noteOff(adjPitchClass);
-            setActivePitchClasses((prev) =>
-              prev.filter(
-                (c) =>
-                  !(
-                    c.index === pitchClass.index &&
-                    c.octave === pitchClass.octave
-                  )
-              )
-            );
+            setActivePitchClasses((prev) => prev.filter((c) => !(c.index === pitchClass.index && c.octave === pitchClass.octave)));
           }
 
           break;
@@ -368,11 +292,7 @@ export function SoundContextProvider({
     }
   };
 
-  const playNote = (
-    pitchClass: PitchClass,
-    givenDuration: number = soundSettings.duration,
-    velocity?: number
-  ) => {
+  const playNote = (pitchClass: PitchClass, givenDuration: number = soundSettings.duration, velocity?: number) => {
     noteOn(pitchClass, velocity);
     // Schedule noteOff after the given duration
     scheduleTimeout(() => {
@@ -380,19 +300,11 @@ export function SoundContextProvider({
     }, givenDuration * 1000);
   };
 
-  const playSequence = (
-    pitchClasses: PitchClass[],
-    ascending = true,
-    velocity?: number | ((noteIdx: number, patternIdx: number) => number)
-  ): Promise<void> => {
+  const playSequence = (pitchClasses: PitchClass[], ascending = true, velocity?: number | ((noteIdx: number, patternIdx: number) => number)): Promise<void> => {
     timeoutsRef.current.forEach(clearTimeout);
     timeoutsRef.current = [];
 
-    const selectedPattern =
-      soundSettings.selectedPattern ||
-      new Pattern("Default", "Default", [
-        { scaleDegree: "I", noteDuration: "8n", isTarget: true },
-      ]);
+    const selectedPattern = soundSettings.selectedPattern || new Pattern("Default", "Default", [{ scaleDegree: "I", noteDuration: "8n", isTarget: true }]);
 
     return new Promise((resolve) => {
       const beatSec = 60 / soundSettings.tempo;
@@ -415,10 +327,7 @@ export function SoundContextProvider({
           scheduleTimeout(() => {
             playNote(pitchClass, durSec);
             // ensure release for waveform output
-            scheduleTimeout(
-              () => noteOff(pitchClass),
-              durSec * 1000
-            );
+            scheduleTimeout(() => noteOff(pitchClass), durSec * 1000);
           }, i * durSec * 1000);
         });
 
@@ -433,86 +342,50 @@ export function SoundContextProvider({
       const lastAscendingPitchClass = pitchClasses[pitchClasses.length - 1];
 
       for (let i = 0; i < pitchClasses.length; i++) {
-        if (
-          parseFloat(pitchClasses[i].frequency) * 2 <=
-          parseFloat(lastAscendingPitchClass.frequency)
-        ) {
+        if (parseFloat(pitchClasses[i].frequency) * 2 <= parseFloat(lastAscendingPitchClass.frequency)) {
           sliceIndex = i + 1;
         }
       }
 
-      const extendedPitchClasses = [
-        ...pitchClasses,
-        ...pitchClasses
-          .slice(sliceIndex, -1)
-          .map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 1)),
-      ];
+      const extendedPitchClasses = [...pitchClasses, ...pitchClasses.slice(sliceIndex, -1).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 1))];
 
       const n = pitchClasses.length;
       let cumulativeTimeSec = 0;
 
       if (soundSettings.drone) {
-        noteOn(
-          shiftPitchClass(allPitchClasses, pitchClasses[0], -1),
-          defaultDroneVelocity
-        );
+        noteOn(shiftPitchClass(allPitchClasses, pitchClasses[0], -1), defaultDroneVelocity);
       }
 
       // Refactored: playPattern always receives velocity as an explicit argument
       const playPattern = (
         windowStartIndexes: number[],
         terminationCheck: (windowStart: number, isTarget: boolean) => boolean,
-        velocityArg?:
-          | number
-          | ((windowStart: number, patternIdx: number) => number)
+        velocityArg?: number | ((windowStart: number, patternIdx: number) => number)
       ) => {
         for (const windowStart of windowStartIndexes) {
-          for (
-            let patternIdx = 0;
-            patternIdx < patternNotes.length;
-            patternIdx++
-          ) {
-            const { scaleDegree, noteDuration, isTarget } =
-              patternNotes[patternIdx];
+          for (let patternIdx = 0; patternIdx < patternNotes.length; patternIdx++) {
+            const { scaleDegree, noteDuration, isTarget } = patternNotes[patternIdx];
             // compute note length in seconds:
             //   base = (4 ÷ numeric part of noteDuration), e.g. "4" → whole note
             //   mod  = 1 (normal), 1.5 (dotted), 2/3 (triplet)
             const base = 4 / Number(noteDuration.replace(/\D/g, ""));
-            const mod = noteDuration.endsWith("d")
-              ? 1.5
-              : noteDuration.endsWith("t")
-              ? 2 / 3
-              : 1;
+            const mod = noteDuration.endsWith("d") ? 1.5 : noteDuration.endsWith("t") ? 2 / 3 : 1;
             const durSec = base * mod * beatSec;
 
             if (scaleDegree !== "R") {
               const deg = romanToNumber(scaleDegree);
-              let pitchClassToPlay =
-                extendedPitchClasses[windowStart + deg - 1];
+              let pitchClassToPlay = extendedPitchClasses[windowStart + deg - 1];
               if (scaleDegree.startsWith("-")) {
                 // negative degree, e.g. "-II" → play the previous octave
-                pitchClassToPlay = shiftPitchClass(
-                  allPitchClasses,
-                  pitchClassToPlay,
-                  -1
-                );
+                pitchClassToPlay = shiftPitchClass(allPitchClasses, pitchClassToPlay, -1);
               } else if (scaleDegree.startsWith("+")) {
                 // positive degree, e.g. "+II" → play the next octave
-                pitchClassToPlay = shiftPitchClass(
-                  allPitchClasses,
-                  pitchClassToPlay,
-                  1
-                );
+                pitchClassToPlay = shiftPitchClass(allPitchClasses, pitchClassToPlay, 1);
               }
 
               // Determine velocity for this note: use pattern note velocity if present, else fall back
-              let noteVelocity =
-                patternNotes[patternIdx]?.velocity ??
-                (isTarget ? defaultTargetVelocity : defaultNoteVelocity);
-              if (typeof noteVelocity !== "number" || isNaN(noteVelocity))
-                noteVelocity = isTarget
-                  ? defaultTargetVelocity
-                  : defaultNoteVelocity;
+              let noteVelocity = patternNotes[patternIdx]?.velocity ?? (isTarget ? defaultTargetVelocity : defaultNoteVelocity);
+              if (typeof noteVelocity !== "number" || isNaN(noteVelocity)) noteVelocity = isTarget ? defaultTargetVelocity : defaultNoteVelocity;
               if (typeof velocityArg === "function") {
                 noteVelocity = velocityArg(windowStart, patternIdx);
               } else if (typeof velocityArg === "number") {
@@ -534,26 +407,13 @@ export function SoundContextProvider({
 
       if (ascending) {
         const ascendingIndexes = Array.from({ length: n }, (_, i) => i);
-        playPattern(
-          ascendingIndexes,
-          (windowStart, isTarget) => windowStart === n - 1 && isTarget,
-          velocity
-        );
+        playPattern(ascendingIndexes, (windowStart, isTarget) => windowStart === n - 1 && isTarget, velocity);
       } else {
-        const descendingIndexes = Array.from(
-          { length: n },
-          (_, i) => n - 1 - i
-        );
-        playPattern(
-          descendingIndexes,
-          (windowStart, isTarget) => windowStart === 0 && isTarget,
-          velocity
-        );
+        const descendingIndexes = Array.from({ length: n }, (_, i) => n - 1 - i);
+        playPattern(descendingIndexes, (windowStart, isTarget) => windowStart === 0 && isTarget, velocity);
       }
 
-      const cycleLength = parseFloat(
-        (cumulativeTimeSec / (beatSec * 4)).toFixed(2)
-      );
+      const cycleLength = parseFloat((cumulativeTimeSec / (beatSec * 4)).toFixed(2));
 
       const cycleDifference = Math.ceil(cycleLength) - cycleLength;
 
@@ -604,11 +464,7 @@ export function SoundContextProvider({
     const startTime = audioCtx.currentTime;
     const { attack, decay, sustain, waveform } = soundSettings;
     // Polyphony normalization: scale each voice so overlapping notes don’t clip
-    const upcomingCount =
-      Array.from(activeNotesRef.current.values()).reduce(
-        (sum, v) => sum + v.length,
-        0
-      ) + 1;
+    const upcomingCount = Array.from(activeNotesRef.current.values()).reduce((sum, v) => sum + v.length, 0) + 1;
     // const polyScale = 1 / Math.sqrt(upcomingCount);
     const polyScale = (1 / Math.sqrt(upcomingCount)) * velocityCurve;
 
@@ -680,10 +536,7 @@ export function SoundContextProvider({
         for (let n = 1; n < N; n++) {
           if (n % 2 === 1) {
             // Only odd harmonics
-            real[n] =
-              (8 / (Math.PI * Math.PI)) *
-              (1 / (n * n)) *
-              (n % 4 === 1 ? 1 : -1);
+            real[n] = (8 / (Math.PI * Math.PI)) * (1 / (n * n)) * (n % 4 === 1 ? 1 : -1);
             imag[n] = 0;
           }
         }
@@ -710,10 +563,7 @@ export function SoundContextProvider({
         imag = new Float32Array(N);
         real[0] = 0;
         for (let n = 1; n < N; n++) {
-          real[n] =
-            (2 / (Math.PI * n)) *
-            (n % 2 === 0 ? 0 : 1) *
-            (type === "sawtooth" ? 1 : 0);
+          real[n] = (2 / (Math.PI * n)) * (n % 2 === 0 ? 0 : 1) * (type === "sawtooth" ? 1 : 0);
           // For sawtooth, all harmonics, but this keeps only odd for square
           if (type === "sawtooth") real[n] = 2 / (Math.PI * n);
           imag[n] = 0;
@@ -760,9 +610,7 @@ export function SoundContextProvider({
   }
 
   function noteOff(pitchClass: PitchClass) {
-    setActivePitchClasses((prev) =>
-      prev.filter((c) => !(c.frequency === pitchClass.frequency))
-    );
+    setActivePitchClasses((prev) => prev.filter((c) => !(c.frequency === pitchClass.frequency)));
     const frequency = parseFloat(pitchClass.frequency);
 
     if (soundSettings.outputMode === "mute") return;
@@ -807,9 +655,7 @@ export function SoundContextProvider({
           gainNode.gain.linearRampToValueAtTime(0, now + FADEOUT_MS / 1000);
         }
         if (Array.isArray(oscillator)) {
-          oscillator.forEach((osc) =>
-            osc.stop(audioCtx ? now + FADEOUT_MS / 1000 : undefined)
-          );
+          oscillator.forEach((osc) => osc.stop(audioCtx ? now + FADEOUT_MS / 1000 : undefined));
         } else {
           oscillator.stop(audioCtx ? now + FADEOUT_MS / 1000 : undefined);
         }
@@ -817,9 +663,7 @@ export function SoundContextProvider({
     }
     activeNotesRef.current.clear();
 
-    midiActiveNotesRef.current.forEach((note) =>
-      sendMidiMessage([0x80, note, 0])
-    );
+    midiActiveNotesRef.current.forEach((note) => sendMidiMessage([0x80, note, 0]));
     midiActiveNotesRef.current.clear();
 
     setActivePitchClasses([]);
@@ -838,9 +682,7 @@ export function SoundContextProvider({
           gainNode.gain.linearRampToValueAtTime(0, now + FADEOUT_MS / 1000);
         }
         if (Array.isArray(oscillator)) {
-          oscillator.forEach((osc) =>
-            osc.stop(audioCtx ? now + FADEOUT_MS / 1000 : undefined)
-          );
+          oscillator.forEach((osc) => osc.stop(audioCtx ? now + FADEOUT_MS / 1000 : undefined));
         } else {
           oscillator.stop(audioCtx ? now + FADEOUT_MS / 1000 : undefined);
         }
@@ -848,9 +690,7 @@ export function SoundContextProvider({
     }
     activeNotesRef.current.clear();
 
-    midiActiveNotesRef.current.forEach((note) =>
-      sendMidiMessage([0x80, note, 0])
-    );
+    midiActiveNotesRef.current.forEach((note) => sendMidiMessage([0x80, note, 0]));
     midiActiveNotesRef.current.clear();
 
     setActivePitchClasses([]);
@@ -882,9 +722,7 @@ export function SoundContextProvider({
 export default function useSoundContext() {
   const context = useContext(SoundContext);
   if (!context) {
-    throw new Error(
-      "useSoundContext must be used within an SoundContextProvider"
-    );
+    throw new Error("useSoundContext must be used within an SoundContextProvider");
   }
   return context;
 }

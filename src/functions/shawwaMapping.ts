@@ -1,6 +1,7 @@
 import NoteName, { getNoteNameIndexAndOctave } from "@/models/NoteName";
 
-export default function shawwaMapping(noteName: NoteName): "n" | "1p" | "2p" | "/" { //D3Js
+export default function shawwaMapping(noteName: NoteName): "n" | "1p" | "2p" | "/" {
+  //D3Js
   if (noteName === "none") return "/";
   const index = getNoteNameIndexAndOctave(noteName).index;
 

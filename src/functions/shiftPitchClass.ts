@@ -18,25 +18,18 @@ const emptyPitchClass: PitchClass = {
   midiNoteNumber: 0,
 };
 
-export default function shiftPitchClass(
-  allPitchClasses: PitchClass[],
-  pitchClass: PitchClass | undefined,
-  octaveShift: number
-) {
+export default function shiftPitchClass(allPitchClasses: PitchClass[], pitchClass: PitchClass | undefined, octaveShift: number) {
   if (!pitchClass || typeof pitchClass.index !== "number" || typeof pitchClass.octave !== "number") {
     return emptyPitchClass;
   }
 
-  const pitchClassIndex = allPitchClasses.findIndex(
-    (c) => c.index === pitchClass.index && c.octave === pitchClass.octave
-  );
+  const pitchClassIndex = allPitchClasses.findIndex((c) => c.index === pitchClass.index && c.octave === pitchClass.octave);
   if (pitchClassIndex === -1) return emptyPitchClass;
 
   const numberOfPitchClasses = allPitchClasses.length / 4;
   const newIndex = pitchClassIndex + octaveShift * numberOfPitchClasses;
 
-  if (newIndex < 0 || newIndex >= allPitchClasses.length)
-    return shiftPitchClassWithoutAllPitchClasses(pitchClass, octaveShift);
+  if (newIndex < 0 || newIndex >= allPitchClasses.length) return shiftPitchClassWithoutAllPitchClasses(pitchClass, octaveShift);
 
   return { ...allPitchClasses[newIndex], octave: pitchClass.octave + octaveShift };
 }
@@ -52,11 +45,7 @@ export function shiftPitchClassWithoutAllPitchClasses(pitchClass: PitchClass, oc
   const factor = Math.pow(2, octaves);
 
   // Compute the new original ratio value for fraction
-  const newOriginalValue = shiftPitchClassBaseValue(
-    pitchClass.originalValue,
-    pitchClass.originalValueType as "fraction" | "cents" | "decimalRatio" | "stringLength",
-    octaves as 0 | 1 | 2 | 3
-  );
+  const newOriginalValue = shiftPitchClassBaseValue(pitchClass.originalValue, pitchClass.originalValueType as "fraction" | "cents" | "decimalRatio" | "stringLength", octaves as 0 | 1 | 2 | 3);
 
   return {
     ...pitchClass,

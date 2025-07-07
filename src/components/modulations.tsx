@@ -41,20 +41,8 @@ export default function Modulations() {
   React.useEffect(() => {
     if (sourceMaqamStack.length === 0 && selectedMaqamDetails) {
       function getBothModulations(transposition: Maqam): ModulationsPair {
-        const ajnasMods = modulate(
-          allPitchClasses,
-          ajnas,
-          maqamat,
-          transposition,
-          true
-        ) as AjnasModulations;
-        const maqamatMods = modulate(
-          allPitchClasses,
-          ajnas,
-          maqamat,
-          transposition,
-          false
-        ) as MaqamatModulations;
+        const ajnasMods = modulate(allPitchClasses, ajnas, maqamat, transposition, true) as AjnasModulations;
+        const maqamatMods = modulate(allPitchClasses, ajnas, maqamat, transposition, false) as MaqamatModulations;
         return {
           ajnas: ajnasMods,
           maqamat: maqamatMods,
@@ -89,13 +77,11 @@ export default function Modulations() {
     }
   }, [selectedMaqam, selectedJins]);
 
-// Handles clicking the source maqam name (propagates tonic and details)
+  // Handles clicking the source maqam name (propagates tonic and details)
   function handleSourceMaqamClick(sourceMaqam: Maqam) {
     // Defensive: ensure ascendingPitchClasses exists and has at least one element
     const maqamId = sourceMaqam.maqamId;
-    const tonic = Array.isArray(sourceMaqam.ascendingPitchClasses) && sourceMaqam.ascendingPitchClasses.length > 0
-      ? sourceMaqam.ascendingPitchClasses[0].noteName
-      : undefined;
+    const tonic = Array.isArray(sourceMaqam.ascendingPitchClasses) && sourceMaqam.ascendingPitchClasses.length > 0 ? sourceMaqam.ascendingPitchClasses[0].noteName : undefined;
     if (maqamId && tonic) {
       handleClickMaqam({ maqamId, tonic } as any);
       clearHangingNotes();
@@ -103,20 +89,8 @@ export default function Modulations() {
   }
 
   const addHopsWrapper = (maqamTransposition: Maqam, stackIdx: number) => {
-    const ajnasMods = modulate(
-      allPitchClasses,
-      ajnas,
-      maqamat,
-      maqamTransposition,
-      true
-    ) as AjnasModulations;
-    const maqamatMods = modulate(
-      allPitchClasses,
-      ajnas,
-      maqamat,
-      maqamTransposition,
-      false
-    ) as MaqamatModulations;
+    const ajnasMods = modulate(allPitchClasses, ajnas, maqamat, maqamTransposition, true) as AjnasModulations;
+    const maqamatMods = modulate(allPitchClasses, ajnas, maqamat, maqamTransposition, false) as MaqamatModulations;
     const newModulations = {
       ajnas: ajnasMods,
       maqamat: maqamatMods,
@@ -187,11 +161,7 @@ export default function Modulations() {
       const selectedTonic = selectedMaqamDetails?.getAscendingNoteNames ? selectedMaqamDetails.getAscendingNoteNames()[0] : selectedMaqamDetails?.ascendingPitchClasses?.[0]?.noteName;
 
       // TypeScript expects a MaqamDetails or the new object type; cast for type safety
-      if (
-        !selectedMaqamDetails ||
-        maqamId !== selectedId ||
-        tonic !== selectedTonic
-      ) {
+      if (!selectedMaqamDetails || maqamId !== selectedId || tonic !== selectedTonic) {
         handleClickMaqam({ maqamId, tonic } as any);
         clearHangingNotes();
       }
@@ -204,88 +174,55 @@ export default function Modulations() {
   return (
     <div className="modulations__container">
       {sourceMaqamStack.map((sourceMaqam, stackIdx) => {
-        const ascendingNoteNames = sourceMaqam.ascendingPitchClasses.map(
-          (pitchClass) => pitchClass.noteName
-        );
-        const descendingNoteNames = [
-          ...sourceMaqam.descendingPitchClasses.map(
-            (pitchClass) => pitchClass.noteName
-          ),
-        ].reverse();
+        const ascendingNoteNames = sourceMaqam.ascendingPitchClasses.map((pitchClass) => pitchClass.noteName);
+        const descendingNoteNames = [...sourceMaqam.descendingPitchClasses.map((pitchClass) => pitchClass.noteName)].reverse();
         // Always calculate both counts independently, regardless of mode
-        const totalAjnasModulations = modulationsStack[stackIdx]
-          ? calculateNumberOfModulations(
-              modulationsStack[stackIdx].ajnas,
-              "ajnas"
-            )
-          : 0;
-        const totalMaqamatModulations = modulationsStack[stackIdx]
-          ? calculateNumberOfModulations(
-              modulationsStack[stackIdx].maqamat,
-              "maqamat"
-            )
-          : 0;
+        const totalAjnasModulations = modulationsStack[stackIdx] ? calculateNumberOfModulations(modulationsStack[stackIdx].ajnas, "ajnas") : 0;
+        const totalMaqamatModulations = modulationsStack[stackIdx] ? calculateNumberOfModulations(modulationsStack[stackIdx].maqamat, "maqamat") : 0;
         return (
-
           <div
             className="modulations__hops-wrapper"
             key={stackIdx}
-            ref={el => { hopsRefs.current[stackIdx] = el; }}
+            ref={(el) => {
+              hopsRefs.current[stackIdx] = el;
+            }}
           >
             {/* Maqam name/details at the top of each wrapper */}
             <div className="modulations__wrapper-modulations-header">
-                <div
-                  className="modulations__source-maqam-name"
-                  onClick={() => handleSourceMaqamClick(sourceMaqam)}
-                  style={{ cursor: "pointer" }}
-                >
-                  {sourceMaqam.name ? sourceMaqam.name : "Unknown"} (
-                  {ascendingNoteNames ? ascendingNoteNames[0] : "N/A"}/
-                  {getEnglishNoteName(
-                    ascendingNoteNames ? ascendingNoteNames[0]! : ""
-                  )}
-                  )
-                </div>
-                <button
-                  className="modulations__collapse-arrow"
-                  aria-label={collapsedHops[stackIdx] ? 'Expand' : 'Collapse'}
-                  onClick={() => setCollapsedHops(prev => {
+              <div className="modulations__source-maqam-name" onClick={() => handleSourceMaqamClick(sourceMaqam)} style={{ cursor: "pointer" }}>
+                {sourceMaqam.name ? sourceMaqam.name : "Unknown"} ({ascendingNoteNames ? ascendingNoteNames[0] : "N/A"}/{getEnglishNoteName(ascendingNoteNames ? ascendingNoteNames[0]! : "")})
+              </div>
+              <button
+                className="modulations__collapse-arrow"
+                aria-label={collapsedHops[stackIdx] ? "Expand" : "Collapse"}
+                onClick={() =>
+                  setCollapsedHops((prev) => {
                     const updated = [...prev];
                     updated[stackIdx] = !updated[stackIdx];
                     return updated;
-                  })}
-                >
-                  <span
-                    className="modulations__collapse-arrow-icon"
-                    style={{ transform: collapsedHops[stackIdx] ? 'rotate(0deg)' : 'rotate(90deg)' }}
-                  >
-                    ▶
-                  </span>
-                </button>
+                  })
+                }
+              >
+                <span className="modulations__collapse-arrow-icon" style={{ transform: collapsedHops[stackIdx] ? "rotate(0deg)" : "rotate(90deg)" }}>
+                  ▶
+                </span>
+              </button>
             </div>
 
             {/* Only render modulations if not collapsed */}
-            {modulationsStack[stackIdx] && !collapsedHops[stackIdx] &&
+            {modulationsStack[stackIdx] &&
+              !collapsedHops[stackIdx] &&
               (() => {
-                const modulations = modulationModes[stackIdx]
-                  ? modulationsStack[stackIdx].ajnas
-                  : modulationsStack[stackIdx].maqamat;
+                const modulations = modulationModes[stackIdx] ? modulationsStack[stackIdx].ajnas : modulationsStack[stackIdx].maqamat;
                 const { noteName2p } = modulations;
                 return (
                   <>
-                    <div style={{ display: 'flex', gap: '8px', marginBottom: '12px', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{ display: "flex", gap: "8px", marginBottom: "12px", alignItems: "center", justifyContent: "center" }}>
                       <button
-                        className={
-                          "modulations__ajnas-count" +
-                          (modulationModes[stackIdx]
-                            ? " modulations__ajnas-count_active"
-                            : "")
-                        }
+                        className={"modulations__ajnas-count" + (modulationModes[stackIdx] ? " modulations__ajnas-count_active" : "")}
                         style={{
                           cursor: "pointer",
-                          textDecoration: modulationModes[stackIdx]
-                            ? "underline"
-                            : "none",
+                          textDecoration: modulationModes[stackIdx] ? "underline" : "none",
                           marginRight: 12,
                           color: modulationModes[stackIdx] ? "#0070f3" : undefined,
                         }}
@@ -301,17 +238,10 @@ export default function Modulations() {
                         {totalAjnasModulations} ajnās modulations
                       </button>
                       <button
-                        className={
-                          "modulations__maqamat-count" +
-                          (!modulationModes[stackIdx]
-                            ? " modulations__maqamat-count_active"
-                            : "")
-                        }
+                        className={"modulations__maqamat-count" + (!modulationModes[stackIdx] ? " modulations__maqamat-count_active" : "")}
                         style={{
                           cursor: "pointer",
-                          textDecoration: !modulationModes[stackIdx]
-                            ? "underline"
-                            : "none",
+                          textDecoration: !modulationModes[stackIdx] ? "underline" : "none",
                           color: !modulationModes[stackIdx] ? "#0070f3" : undefined,
                         }}
                         onClick={(e) => {
@@ -326,34 +256,33 @@ export default function Modulations() {
                         {totalMaqamatModulations} maqāmāt modulations
                       </button>
                       {/* Move delete button here, only on last hop and if more than one exists */}
-                      {stackIdx === sourceMaqamStack.length - 1 &&
-                        sourceMaqamStack.length > 1 && (
-                          <button
-                            className="modulations__delete-hop-btn"
-                            style={{
-                              marginLeft: 8,
-                              padding: "2px 8px",
-                              fontSize: 14,
-                              cursor: "pointer",
-                            }}
-                            onClick={() => {
-                              // Load previous hop's source maqam before removing
-                              const prevIdx = sourceMaqamStack.length - 2;
-                              const prevSourceMaqam = sourceMaqamStack[prevIdx];
-                              if (prevSourceMaqam) {
-                                handleSourceMaqamClick(prevSourceMaqam);
-                                setCollapsedHops(prev => {
-                                  const updated = [...prev];
-                                  updated[prevIdx] = false; // Uncollapse previous hop
-                                  return updated;
-                                });
-                              }
-                              removeLastHopsWrapper();
-                            }}
-                          >
-                            Delete Hop
-                          </button>
-                        )}
+                      {stackIdx === sourceMaqamStack.length - 1 && sourceMaqamStack.length > 1 && (
+                        <button
+                          className="modulations__delete-hop-btn"
+                          style={{
+                            marginLeft: 8,
+                            padding: "2px 8px",
+                            fontSize: 14,
+                            cursor: "pointer",
+                          }}
+                          onClick={() => {
+                            // Load previous hop's source maqam before removing
+                            const prevIdx = sourceMaqamStack.length - 2;
+                            const prevSourceMaqam = sourceMaqamStack[prevIdx];
+                            if (prevSourceMaqam) {
+                              handleSourceMaqamClick(prevSourceMaqam);
+                              setCollapsedHops((prev) => {
+                                const updated = [...prev];
+                                updated[prevIdx] = false; // Uncollapse previous hop
+                                return updated;
+                              });
+                            }
+                            removeLastHopsWrapper();
+                          }}
+                        >
+                          Delete Hop
+                        </button>
+                      )}
                     </div>
                     <div className="modulations__modulations-list">
                       <span className="modulations__header">
@@ -361,11 +290,7 @@ export default function Modulations() {
                           Tonic:
                           <br />{" "}
                         </span>
-                        {ascendingNoteNames[0]} (
-                        {modulations?.modulationsOnOne
-                          ? modulations.modulationsOnOne.length
-                          : 0}
-                        )
+                        {ascendingNoteNames[0]} ({modulations?.modulationsOnOne ? modulations.modulationsOnOne.length : 0})
                       </span>
                       {[...modulations.modulationsOnOne]
                         .sort((a: any, b: any) => a.name.localeCompare(b.name))
@@ -374,8 +299,9 @@ export default function Modulations() {
                             className="modulations__modulation-item"
                             key={index}
                             onClick={() => {
-                              if (!modulationModes[stackIdx]) { // Only collapse if not in ajnas mode
-                                setCollapsedHops(prev => {
+                              if (!modulationModes[stackIdx]) {
+                                // Only collapse if not in ajnas mode
+                                setCollapsedHops((prev) => {
                                   const updated = [...prev];
                                   updated[stackIdx] = true;
                                   return updated;
@@ -395,11 +321,7 @@ export default function Modulations() {
                           Third:
                           <br />{" "}
                         </span>
-                        {ascendingNoteNames[2]} (
-                        {modulations?.modulationsOnThree
-                          ? modulations.modulationsOnThree.length
-                          : 0}
-                        )
+                        {ascendingNoteNames[2]} ({modulations?.modulationsOnThree ? modulations.modulationsOnThree.length : 0})
                       </span>
                       {[...modulations.modulationsOnThree]
                         .sort((a, b) => a.name.localeCompare(b.name))
@@ -409,7 +331,7 @@ export default function Modulations() {
                             key={index}
                             onClick={() => {
                               if (!modulationModes[stackIdx]) {
-                                setCollapsedHops(prev => {
+                                setCollapsedHops((prev) => {
                                   const updated = [...prev];
                                   updated[stackIdx] = true;
                                   return updated;
@@ -429,11 +351,7 @@ export default function Modulations() {
                           Third (alternative):
                           <br />{" "}
                         </span>
-                        {noteName2p} (
-                        {modulations?.modulationsOnThree2p
-                          ? modulations.modulationsOnThree2p.length
-                          : 0}
-                        )
+                        {noteName2p} ({modulations?.modulationsOnThree2p ? modulations.modulationsOnThree2p.length : 0})
                       </span>
                       {[...modulations.modulationsOnThree2p]
                         .sort((a, b) => a.name.localeCompare(b.name))
@@ -443,7 +361,7 @@ export default function Modulations() {
                             key={index}
                             onClick={() => {
                               if (!modulationModes[stackIdx]) {
-                                setCollapsedHops(prev => {
+                                setCollapsedHops((prev) => {
                                   const updated = [...prev];
                                   updated[stackIdx] = true;
                                   return updated;
@@ -463,11 +381,7 @@ export default function Modulations() {
                           Fourth:
                           <br />{" "}
                         </span>
-                        {ascendingNoteNames[3]} (
-                        {modulations?.modulationsOnFour
-                          ? modulations.modulationsOnFour.length
-                          : 0}
-                        )
+                        {ascendingNoteNames[3]} ({modulations?.modulationsOnFour ? modulations.modulationsOnFour.length : 0})
                       </span>
                       {[...modulations.modulationsOnFour]
                         .sort((a, b) => a.name.localeCompare(b.name))
@@ -477,7 +391,7 @@ export default function Modulations() {
                             key={index}
                             onClick={() => {
                               if (!modulationModes[stackIdx]) {
-                                setCollapsedHops(prev => {
+                                setCollapsedHops((prev) => {
                                   const updated = [...prev];
                                   updated[stackIdx] = true;
                                   return updated;
@@ -497,11 +411,7 @@ export default function Modulations() {
                           Fifth:
                           <br />{" "}
                         </span>
-                        {ascendingNoteNames[4]} (
-                        {modulations?.modulationsOnFive
-                          ? modulations.modulationsOnFive.length
-                          : 0}
-                        )
+                        {ascendingNoteNames[4]} ({modulations?.modulationsOnFive ? modulations.modulationsOnFive.length : 0})
                       </span>
                       {[...modulations.modulationsOnFive]
                         .sort((a, b) => a.name.localeCompare(b.name))
@@ -511,7 +421,7 @@ export default function Modulations() {
                             key={index}
                             onClick={() => {
                               if (!modulationModes[stackIdx]) {
-                                setCollapsedHops(prev => {
+                                setCollapsedHops((prev) => {
                                   const updated = [...prev];
                                   updated[stackIdx] = true;
                                   return updated;
@@ -531,11 +441,7 @@ export default function Modulations() {
                           Sixth (if no Third):
                           <br />{" "}
                         </span>
-                        {ascendingNoteNames[5]} (
-                        {modulations?.modulationsOnSixNoThird
-                          ? modulations.modulationsOnSixNoThird.length
-                          : 0}
-                        )
+                        {ascendingNoteNames[5]} ({modulations?.modulationsOnSixNoThird ? modulations.modulationsOnSixNoThird.length : 0})
                       </span>
                       {[...modulations.modulationsOnSixNoThird]
                         .sort((a, b) => a.name.localeCompare(b.name))
@@ -545,7 +451,7 @@ export default function Modulations() {
                             key={index}
                             onClick={() => {
                               if (!modulationModes[stackIdx]) {
-                                setCollapsedHops(prev => {
+                                setCollapsedHops((prev) => {
                                   const updated = [...prev];
                                   updated[stackIdx] = true;
                                   return updated;
@@ -565,11 +471,7 @@ export default function Modulations() {
                           Sixth (ascending):
                           <br />{" "}
                         </span>
-                        {ascendingNoteNames[5]} (
-                        {modulations?.modulationsOnSixAscending
-                          ? modulations.modulationsOnSixAscending.length
-                          : 0}
-                        )
+                        {ascendingNoteNames[5]} ({modulations?.modulationsOnSixAscending ? modulations.modulationsOnSixAscending.length : 0})
                       </span>
                       {[...modulations.modulationsOnSixAscending]
                         .sort((a, b) => a.name.localeCompare(b.name))
@@ -579,7 +481,7 @@ export default function Modulations() {
                             key={index}
                             onClick={() => {
                               if (!modulationModes[stackIdx]) {
-                                setCollapsedHops(prev => {
+                                setCollapsedHops((prev) => {
                                   const updated = [...prev];
                                   updated[stackIdx] = true;
                                   return updated;
@@ -599,18 +501,9 @@ export default function Modulations() {
                         <span className="modulations__header-text">
                           Sixth (descending): <br />{" "}
                         </span>
-                        {descendingNoteNames[5]} (
-                        {modulations?.modulationsOnSixDescending
-                          ? modulations.modulationsOnSixDescending.length
-                          : 0}
-                        )
+                        {descendingNoteNames[5]} ({modulations?.modulationsOnSixDescending ? modulations.modulationsOnSixDescending.length : 0})
                       </span>
-                      {JSON.stringify(
-                        modulations.modulationsOnSixDescending
-                      ) !==
-                        JSON.stringify(
-                          modulations.modulationsOnSixAscending
-                        ) &&
+                      {JSON.stringify(modulations.modulationsOnSixDescending) !== JSON.stringify(modulations.modulationsOnSixAscending) &&
                         [...modulations.modulationsOnSixDescending]
                           .sort((a, b) => a.name.localeCompare(b.name))
                           .map((hop, index) => (
@@ -619,7 +512,7 @@ export default function Modulations() {
                               key={index}
                               onClick={() => {
                                 if (!modulationModes[stackIdx]) {
-                                  setCollapsedHops(prev => {
+                                  setCollapsedHops((prev) => {
                                     const updated = [...prev];
                                     updated[stackIdx] = true;
                                     return updated;

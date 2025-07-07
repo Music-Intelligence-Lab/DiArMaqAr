@@ -41,33 +41,11 @@ export function getTuningSystems(): TuningSystem[] {
 }
 
 export function getAjnas(): JinsDetails[] {
-  return (ajnasData as any[]).map(
-    (d) =>
-      new JinsDetails(
-        d.id,
-        d.name,
-        d.noteNames,
-        d.commentsEnglish,
-        d.commentsArabic,
-        d.sourcePageReferences
-      )
-  );
+  return (ajnasData as any[]).map((d) => new JinsDetails(d.id, d.name, d.noteNames, d.commentsEnglish, d.commentsArabic, d.sourcePageReferences));
 }
 
 export function getMaqamat(): MaqamDetails[] {
-  return (maqamatData as any[]).map(
-    (d) =>
-      new MaqamDetails(
-        d.id,
-        d.name,
-        d.ascendingNoteNames,
-        d.descendingNoteNames,
-        d.suyūr,
-        d.commentsEnglish,
-        d.commentsArabic,
-        d.sourcePageReferences
-      )
-  );
+  return (maqamatData as any[]).map((d) => new MaqamDetails(d.id, d.name, d.ascendingNoteNames, d.descendingNoteNames, d.suyūr, d.commentsEnglish, d.commentsArabic, d.sourcePageReferences));
 }
 
 export function getSources(): Source[] {
