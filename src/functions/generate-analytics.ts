@@ -83,7 +83,6 @@ export function generateAndWriteAnalytics() {
   }
   const outputPath = path.join(outputDir, "analytics.json");
   fs.writeFileSync(outputPath, JSON.stringify(analyticsRows, null, 2), "utf-8");
-  console.log(`Analytics written to ${outputPath}`);
 }
 
 // To run this script from the command line:

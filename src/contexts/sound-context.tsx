@@ -301,6 +301,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
   };
 
   const playSequence = (pitchClasses: PitchClass[], ascending = true, velocity?: number | ((noteIdx: number, patternIdx: number) => number)): Promise<void> => {
+    console.log(pitchClasses, ascending, velocity);
     timeoutsRef.current.forEach(clearTimeout);
     timeoutsRef.current = [];
 
@@ -348,6 +349,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
       }
 
       const extendedPitchClasses = [...pitchClasses, ...pitchClasses.slice(sliceIndex, -1).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 1))];
+      console.log(extendedPitchClasses);
 
       const n = pitchClasses.length;
       let cumulativeTimeSec = 0;
@@ -375,6 +377,9 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
             if (scaleDegree !== "R") {
               const deg = romanToNumber(scaleDegree);
               let pitchClassToPlay = extendedPitchClasses[windowStart + deg - 1];
+              console.log("SWITCH\n\n\n\n\n\n\n\n");
+              console.log(pitchClassToPlay, scaleDegree, noteDuration, isTarget);
+
               if (scaleDegree.startsWith("-")) {
                 // negative degree, e.g. "-II" → play the previous octave
                 pitchClassToPlay = shiftPitchClass(allPitchClasses, pitchClassToPlay, -1);
@@ -382,6 +387,8 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
                 // positive degree, e.g. "+II" → play the next octave
                 pitchClassToPlay = shiftPitchClass(allPitchClasses, pitchClassToPlay, 1);
               }
+
+              console.log(pitchClassToPlay, scaleDegree, noteDuration, isTarget);
 
               // Determine velocity for this note: use pattern note velocity if present, else fall back
               let noteVelocity = patternNotes[patternIdx]?.velocity ?? (isTarget ? defaultTargetVelocity : defaultNoteVelocity);
