@@ -149,12 +149,6 @@ export function getMaqamTranspositions(
     const extendedAscendingPitchClassIntervals = getPitchClassIntervals(extendedAscendingPitchClasses);
     const extendedDescendingPitchClassIntervals = getPitchClassIntervals(extendedDescendingPitchClasses);
 
-    if (maqamDetails.getId() === "1") {
-      console.log("Tahlil maqam detected");
-      console.log("Ascending pitch classes:", extendedAscendingPitchClasses);
-      console.log("Descending pitch classes:", extendedDescendingPitchClasses);
-    }
-
     if (allAjnas.length > 0) {
       for (let i = 0; i < extendedAscendingPitchClassIntervals.length; i++) {
         let found = false;
