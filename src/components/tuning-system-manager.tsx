@@ -1017,7 +1017,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
               return parseInt(pitchClasses.frequency) ?? 0;
             });
 
-            playSequence(frequencies);
+            playSequence(frequencies, true, defaultNoteVelocity);
           }}
         >
           Play Selected Sequence

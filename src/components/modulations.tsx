@@ -76,6 +76,7 @@ export default function Modulations() {
         setSelectedMaqamDetails(maqam);
         setSelectedJinsDetails(null);
       }
+      setSelectedPitchClasses([]); // Clear first
       setSelectedPitchClasses(selectedMaqam.ascendingPitchClasses);
     } else if (selectedJins) {
       const jins = ajnas.find((j) => j.getId() === selectedJins.jinsId);
@@ -83,6 +84,7 @@ export default function Modulations() {
         setSelectedJinsDetails(jins);
         setSelectedMaqamDetails(null);
       }
+      setSelectedPitchClasses([]); // Clear first
       setSelectedPitchClasses(selectedJins.jinsPitchClasses);
     }
   }, [selectedMaqam, selectedJins]);

@@ -2,10 +2,7 @@
 
 import React, { FormEvent, useEffect, useState } from "react";
 import useAppContext from "@/contexts/app-context";
-import useSoundContext, {
-  defaultNoteVelocity,
-  defaultTargetVelocity,
-} from "@/contexts/sound-context";
+import useSoundContext, { defaultNoteVelocity, defaultTargetVelocity } from "@/contexts/sound-context";
 import Pattern, {
   PatternNote,
   SCALE_DEGREES as scale_degrees,
@@ -146,23 +143,25 @@ export default function PatternsManager() {
 
   const playPattern = async () => {
     if (!maqamModel || !selectedPattern) return;
-    const selectedPatternPitchClasses = selectedPattern
-      .getNotes()
-      .map((n: PatternNote) => {
-        // Find the absolute index in SCALE_DEGREES
-        const degreeIndex = scale_degrees.indexOf(n.scaleDegree);
-        // First occurrence of "I" marks the start of octave degrees
-        const firstDegree = scale_degrees.indexOf("I");
-        // Calculate position within the maqam's seven-tone scale
-        const relIndex = degreeIndex - firstDegree;
-        if (relIndex < 0 || relIndex >= pitchClasses.length) {
-          // Rest or out-of-range → silence (0)
-          return null;
-        }
-
-        return pitchClasses[relIndex];
-      });
-    await playSequence(selectedPatternPitchClasses.filter((f) => f !== null));
+    const patternNotes = selectedPattern.getNotes();
+    const selectedPatternPitchClasses = patternNotes.map((n: PatternNote) => {
+      // Find the absolute index in SCALE_DEGREES
+      const degreeIndex = scale_degrees.indexOf(n.scaleDegree);
+      // First occurrence of "I" marks the start of octave degrees
+      const firstDegree = scale_degrees.indexOf("I");
+      // Calculate position within the maqam's seven-tone scale
+      const relIndex = degreeIndex - firstDegree;
+      if (relIndex < 0 || relIndex >= pitchClasses.length) {
+        // Rest or out-of-range → silence (0)
+        return null;
+      }
+      return pitchClasses[relIndex];
+    });
+    await playSequence(
+      selectedPatternPitchClasses.filter((f) => f !== null),
+      true,
+      (_noteIdx, patternIdx) => patternNotes[patternIdx]?.velocity ?? defaultNoteVelocity
+    );
   };
 
   return (

@@ -26,7 +26,7 @@ export function scrollToMaqamHeader(
   }
 }
 import useAppContext from "@/contexts/app-context";
-import useSoundContext from "@/contexts/sound-context";
+import useSoundContext, { defaultNoteVelocity } from "@/contexts/sound-context";
 import useFilterContext from "@/contexts/filter-context";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
@@ -244,6 +244,7 @@ const MaqamTranspositions: React.FC = () => {
                 <button
                   className="maqam-transpositions__button"
                   onClick={() => {
+                    setSelectedPitchClasses([]); // Clear first
                     setSelectedPitchClasses(
                       noOctaveMaqam ? pitchClasses.slice(0, -1) : pitchClasses
                     );
@@ -264,11 +265,8 @@ const MaqamTranspositions: React.FC = () => {
                   className="maqam-transpositions__button"
                   onClick={async () => {
                     await clearHangingNotes();
-                    await playSequence(pitchClasses);
-                    await playSequence(
-                      [...oppositePitchClasses].reverse(),
-                      false
-                    );
+                    await playSequence(pitchClasses, true);
+                    await playSequence([...oppositePitchClasses].reverse(), false);
                   }}
                 >
                   <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
@@ -278,7 +276,7 @@ const MaqamTranspositions: React.FC = () => {
                   className="maqam-transpositions__button"
                   onClick={() => {
                     clearHangingNotes();
-                    playSequence(pitchClasses);
+                    playSequence(pitchClasses, true);
                   }}
                 >
                   <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
@@ -535,7 +533,7 @@ const MaqamTranspositions: React.FC = () => {
                   <PlayCircleIcon
                     className="maqam-transpositions__play-circle-icon"
                     onMouseDown={() => {
-                      noteOn(pitchClass);
+                      noteOn(pitchClass, defaultNoteVelocity);
                       // Add global mouseup listener to ensure noteOff always fires
                       const handleMouseUp = () => {
                         noteOff(pitchClass);
