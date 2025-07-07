@@ -92,11 +92,11 @@ export default function Navbar() {
                 setSelectedIndices([]);
               }}
             >
-              {" "}
-              شبكة المقام العربي Arabic Maqām Network
+              Arabic Maqām Network<br />
+              شبكة المقام العربي
             </span>
-            <br></br>
-            <span className="navbar__subtitle">استكشفوا واعزفوا التنغيم والأجناس والمقامات في نظام المقام العربي • Explore and play the tanghīm, ajnās and maqāmāt of the Arabic Maqām system</span>
+            {/* <br></br>
+            <span className="navbar__subtitle">استكشفوا واعزفوا التنغيم والأجناس والمقامات في نظام المقام العربي • Explore and play the tanghīm, ajnās and maqāmāt of the Arabic Maqām system</span> */}
           </div>
           <div className="navbar__right-panel">
             <div className="navbar__left-panel-icon">

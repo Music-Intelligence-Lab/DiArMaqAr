@@ -51,6 +51,42 @@
             "startingNote": "rāst"
           }
         ]
+      },
+      {
+        "id": "v7CSV9aJh1f2o7lX2lsy9",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "",
+        "commentsEnglish": "Begins from the note rāst or yegāh and repeats the sayr from the qarār, then it ascends to nawā and above. In the end it descends to the qarār which is rāst.",
+        "commentsArabic": "",
+        "stops": [
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ]
       }
     ],
     "commentsEnglish": "",
@@ -636,6 +672,101 @@
     ]
   },
   {
+    "id": "22",
+    "name": "maqām sūzdalāra",
+    "ascendingNoteNames": [
+      "rāst",
+      "dūgāh",
+      "segāh",
+      "chahargāh",
+      "nawā",
+      "ḥusaynī",
+      "ʿajam"
+    ],
+    "descendingNoteNames": [
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahargāh",
+      "nīm buselīk",
+      "dūgāh",
+      "rāst"
+    ],
+    "suyūr": [
+      {
+        "id": "Iwn9TU053BtYiEEuGOzNj",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "43",
+        "commentsEnglish": "Starts from rāst and plays jins chahargāh on rāst until nawā. Then jins chahargāh on chahargāh ascending to render bayyātī on ḥusaynī, then rāst on kurdān. During descent it uses chahargāh on kurdān instead of rāst, and touches nīm buselīk instead of segāh. Towards the end it uses yegāh and its qarār is rāst",
+        "commentsArabic": "",
+        "stops": [
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "jins",
+            "value": "10",
+            "startingNote": "rāst",
+            "direction": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "10",
+            "startingNote": "chahargāh",
+            "direction": ""
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "ḥusaynī"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "10",
+            "startingNote": "kurdān",
+            "direction": "descending"
+          },
+          {
+            "type": "note",
+            "value": "nīm buselīk"
+          },
+          {
+            "type": "note",
+            "value": "yegāh"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ]
+      }
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "43"
+      }
+    ]
+  },
+  {
     "id": "23",
     "name": "maqām ḥijāz kār binṣir",
     "ascendingNoteNames": [
@@ -779,6 +910,89 @@
       {
         "sourceId": "oY8WnTdP5msak8o1G_N7f",
         "page": "33"
+      }
+    ]
+  },
+  {
+    "id": "27",
+    "name": "maqām sūznāk",
+    "ascendingNoteNames": [
+      "rāst",
+      "dūgāh",
+      "segāh",
+      "chahargāh",
+      "nawā",
+      "ḥiṣār",
+      "nīm māhūr",
+      "kurdān",
+      "muḥayyar",
+      "sunbuleh/zawāl"
+    ],
+    "descendingNoteNames": [
+      "buzurk",
+      "muḥayyar",
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahargāh",
+      "segāh",
+      "dūgāh",
+      "rāst"
+    ],
+    "suyūr": [
+      {
+        "id": "a0Q3trZVat5Q0fByTt7JL",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "44",
+        "commentsEnglish": "Starts by ascending from rāst to nawā followed by ḥijāz on nawā the nahāwand on kurdān, it then descends with būselīk on nawā until the qarār which is rāst ",
+        "commentsArabic": "",
+        "stops": [
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "rāst",
+            "direction": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "maqam",
+            "value": "48",
+            "startingNote": "nawā",
+            "direction": "descending"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ]
+      }
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "44"
       }
     ]
   },
@@ -2424,29 +2638,34 @@
   },
   {
     "id": "48",
-    "name": "maqām soznāk",
+    "name": "maqām būselīk",
     "ascendingNoteNames": [
-      "rāst",
       "dūgāh",
-      "segāh",
+      "nīm buselīk",
       "chahargāh",
       "nawā",
-      "ḥiṣār",
-      "māhūr"
+      "ḥusaynī",
+      "ʿajam",
+      "kurdān"
     ],
     "descendingNoteNames": [
-      "māhūr",
-      "ḥiṣār",
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
       "nawā",
       "chahargāh",
-      "segāh",
-      "dūgāh",
-      "rāst"
+      "nīm buselīk",
+      "dūgāh"
     ],
     "suyūr": [],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": []
+    "sourcePageReferences": [
+      {
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "70"
+      }
+    ]
   },
   {
     "id": "49",
@@ -2504,6 +2723,100 @@
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": []
+  },
+  {
+    "id": "51",
+    "name": "maqām dilkishā",
+    "ascendingNoteNames": [
+      "rāst",
+      "zirguleh",
+      "segāh",
+      "chahargāh",
+      "nawā",
+      "ḥiṣār",
+      "nīm māhūr"
+    ],
+    "descendingNoteNames": [
+      "nīm māhūr",
+      "ḥiṣār",
+      "nawā",
+      "chahargāh",
+      "segāh",
+      "dūgāh",
+      "rāst"
+    ],
+    "suyūr": [
+      {
+        "id": "locGea9cyl0-KhikHKz4i",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "45",
+        "commentsEnglish": "Starts from rāst until nawā using zirgūleh ascending and descending, then it uses dūgāh in place of zirgūleh and continues with the same sayr as maqām sōznāk and its qarār is rāst.\n\nIt also has another sayr which is to starts on ḥijaz to render maqām shat 'arabān and then it ends on its qarār which is rāst",
+        "commentsArabic": "",
+        "stops": [
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "zirguleh"
+          },
+          {
+            "type": "note",
+            "value": "segāh"
+          },
+          {
+            "type": "note",
+            "value": "chahargāh"
+          },
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "rāst",
+            "direction": "descending"
+          },
+          {
+            "type": "maqam",
+            "value": "2",
+            "startingNote": "nawā",
+            "direction": "ascending"
+          },
+          {
+            "type": "maqam",
+            "value": "10",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "maqam",
+            "value": "1",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "maqam",
+            "value": "27",
+            "direction": "descending"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ]
+      }
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "45"
+      }
+    ]
   },
   {
     "id": "52",
@@ -2627,5 +2940,36 @@
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": []
+  },
+  {
+    "id": "55",
+    "name": "maqām māhūr",
+    "ascendingNoteNames": [
+      "rāst",
+      "dūgāh",
+      "segāh",
+      "chahargāh",
+      "nawā",
+      "ḥusaynī",
+      "nīm māhūr"
+    ],
+    "descendingNoteNames": [
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahargāh",
+      "segāh",
+      "dūgāh",
+      "rāst"
+    ],
+    "suyūr": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "46"
+      }
+    ]
   }
 ]
