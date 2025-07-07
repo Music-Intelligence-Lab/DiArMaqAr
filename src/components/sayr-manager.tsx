@@ -3,7 +3,7 @@
 import React, { FormEvent, useEffect, useState } from "react";
 import useAppContext from "@/contexts/app-context";
 import { Sayr, SayrStop } from "@/models/Maqam";
-import { octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames } from "@/models/NoteName";
+import { octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames, octaveThreeNoteNames } from "@/models/NoteName";
 import { nanoid } from "nanoid";
 import { updateMaqamat } from "@/functions/update";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
@@ -233,6 +233,13 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                           {n}
                         </option>
                       ))}
+                                            <option disabled>---</option>
+                      {octaveThreeNoteNames.map((n) => (
+                        <option key={n} value={n}>
+                          {n}
+                        </option>
+                      ))}
+
                     </select>
                   )}
 
