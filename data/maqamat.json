@@ -3091,5 +3091,36 @@
         "page": "47"
       }
     ]
+  },
+  {
+    "id": "57",
+    "name": "maqām zāwīl",
+    "ascendingNoteNames": [
+      "rāst",
+      "dūgāh",
+      "segāh",
+      "chahargāh",
+      "nawā",
+      "ḥiṣār",
+      "nīm māhūr"
+    ],
+    "descendingNoteNames": [
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "ḥijāz",
+      "kurdī",
+      "dūgāh",
+      "rāst"
+    ],
+    "suyūr": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "48"
+      }
+    ]
   }
 ]

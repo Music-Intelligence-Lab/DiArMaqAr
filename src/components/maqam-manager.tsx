@@ -335,7 +335,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
               }}
               className="maqam-manager__save-button"
             >
-              Save S
+              Save Name
             </button>
             <button
               onClick={handleSaveAscending}
@@ -383,12 +383,14 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
                     )
                   }
                 >
-                  <option value="">Select source</option>
-                  {sources.map((s) => (
-                    <option key={s.getId()} value={s.getId()}>
+                    <option value="">Select source</option>
+                    {[...sources]
+                    .sort((a, b) => a.getTitleEnglish().localeCompare(b.getTitleEnglish()))
+                    .map((s) => (
+                      <option key={s.getId()} value={s.getId()}>
                       {s.getTitleEnglish()}
-                    </option>
-                  ))}
+                      </option>
+                    ))}
                 </select>
                 <input
                   className="maqam-manager__source-input"
