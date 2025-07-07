@@ -1,8 +1,8 @@
 @use "sass:color";
 
-$top-navbar-height: 120px;
+$top-navbar-height: 105px;
 $bottom-navbar-height: 55px;
-$page-height: calc(100svh - $top-navbar-height - $bottom-navbar-height);
+$page-height: calc(100svh - $top-navbar-height - $bottom-navbar-height - 30px);
 
 $background: #222222;
 $primary: #5a2585;
