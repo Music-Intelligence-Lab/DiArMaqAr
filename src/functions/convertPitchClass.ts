@@ -24,12 +24,7 @@ export function frequencyToMidiNoteNumber(frequency: number): number {
   return midi;
 }
 
-export default function convertPitchClass(
-  originalValue: string,
-  inputType: "fraction" | "cents" | "decimalRatio" | "stringLength",
-  stringLength: number,
-  referenceFrequency: number
-) {
+export default function convertPitchClass(originalValue: string, inputType: "fraction" | "cents" | "decimalRatio" | "stringLength", stringLength: number, referenceFrequency: number) {
   // Return an object with fraction, decimal, cents, stringLength, frequency
   // or null if parsing fails
   let fractionVal = "";
@@ -89,11 +84,7 @@ export default function convertPitchClass(
   }
 }
 
-export function shiftPitchClassBaseValue(
-  baseValue: string,
-  inputType: "fraction" | "decimalRatio" | "cents" | "stringLength",
-  targetOctave: 0 | 1 | 2 | 3
-): string {
+export function shiftPitchClassBaseValue(baseValue: string, inputType: "fraction" | "decimalRatio" | "cents" | "stringLength", targetOctave: 0 | 1 | 2 | 3): string {
   if (targetOctave === 1) return baseValue;
 
   // We'll figure out how many 12-semitone steps from octave 1:

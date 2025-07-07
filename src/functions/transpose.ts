@@ -7,13 +7,7 @@ export function getPitchClassIntervals(pitchClasses: PitchClass[]) {
   return pitchClasses.slice(1).map((pitchClass, index) => calculateInterval(pitchClasses[index], pitchClass));
 }
 
-export function getPitchClassTranspositions(
-  inputPitchClasses: PitchClass[],
-  jinsPitchClassIntervals: PitchClassInterval[],
-  ascending: boolean,
-  useRatio: boolean,
-  centsTolerance: number
-) {
+export function getPitchClassTranspositions(inputPitchClasses: PitchClass[], jinsPitchClassIntervals: PitchClassInterval[], ascending: boolean, useRatio: boolean, centsTolerance: number) {
   const allPitchClasses = ascending ? inputPitchClasses : [...inputPitchClasses].reverse();
 
   const sequences: PitchClass[][] = [];
@@ -111,21 +105,11 @@ export function getMaqamTranspositions(
 
   const descendingIntervalPattern: PitchClassInterval[] = getPitchClassIntervals(descendingMaqamCells);
 
-  const ascendingSequences: PitchClass[][] = getPitchClassTranspositions(
-    allPitchClasses,
-    ascendingIntervalPattern,
-    true,
-    useRatio,
-    centsTolerance
-  ).filter((sequence) => !onlyOctaveOne || sequence[0].octave === 1);
-
-  const descendingSequences: PitchClass[][] = getPitchClassTranspositions(
-    allPitchClasses,
-    descendingIntervalPattern,
-    false,
-    useRatio,
-    centsTolerance
+  const ascendingSequences: PitchClass[][] = getPitchClassTranspositions(allPitchClasses, ascendingIntervalPattern, true, useRatio, centsTolerance).filter(
+    (sequence) => !onlyOctaveOne || sequence[0].octave === 1
   );
+
+  const descendingSequences: PitchClass[][] = getPitchClassTranspositions(allPitchClasses, descendingIntervalPattern, false, useRatio, centsTolerance);
 
   const ajnasIntervals: { jins: JinsDetails; intervals: PitchClassInterval[] }[] = [];
 
@@ -148,21 +132,16 @@ export function getMaqamTranspositions(
       }
     }
 
-    const extendedAscendingPitchClasses = [
-      ...ascendingPitchClasses,
-      ...ascendingPitchClasses.slice(sliceIndex + 1).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 1)),
-    ];
+    if (sliceIndex === 0) sliceIndex = -1;
+
+    const extendedAscendingPitchClasses = [...ascendingPitchClasses, ...ascendingPitchClasses.slice(sliceIndex + 1).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 1))];
 
     const ascendingPitchClassIntervals = getPitchClassIntervals(ascendingPitchClasses);
     const ascendingMaqamAjnas: (Jins | null)[] = [];
 
     const descendingPitchClasses = [...sequencePair.descendingSequence].reverse();
 
-    
-    const extendedDescendingPitchClasses = [
-      ...descendingPitchClasses,
-      ...descendingPitchClasses.slice(sliceIndex + 1).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 1)),
-    ];
+    const extendedDescendingPitchClasses = [...descendingPitchClasses, ...descendingPitchClasses.slice(sliceIndex + 1).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 1))];
 
     const descendingPitchClassIntervals = getPitchClassIntervals(descendingPitchClasses);
     const descendingMaqamAjnas: (Jins | null)[] = [];
@@ -170,19 +149,19 @@ export function getMaqamTranspositions(
     const extendedAscendingPitchClassIntervals = getPitchClassIntervals(extendedAscendingPitchClasses);
     const extendedDescendingPitchClassIntervals = getPitchClassIntervals(extendedDescendingPitchClasses);
 
+    if (maqamDetails.getId() === "1") {
+      console.log("Tahlil maqam detected");
+      console.log("Ascending pitch classes:", extendedAscendingPitchClasses);
+      console.log("Descending pitch classes:", extendedDescendingPitchClasses);
+    }
+
     if (allAjnas.length > 0) {
       for (let i = 0; i < extendedAscendingPitchClassIntervals.length; i++) {
         let found = false;
 
         for (const jinsInterval of ajnasIntervals) {
           const lengthOfInterval = jinsInterval.intervals.length;
-          if (
-            matchingListOfIntervals(
-              extendedAscendingPitchClassIntervals.slice(i, i + lengthOfInterval),
-              jinsInterval.intervals,
-              centsTolerance
-            )
-          ) {
+          if (matchingListOfIntervals(extendedAscendingPitchClassIntervals.slice(i, i + lengthOfInterval), jinsInterval.intervals, centsTolerance)) {
             const jins = jinsInterval.jins;
             const firstJinsNote = jins.getNoteNames()[0];
             const firstCell = extendedAscendingPitchClasses[i];
@@ -211,13 +190,7 @@ export function getMaqamTranspositions(
 
         for (const jinsInterval of ajnasIntervals) {
           const lengthOfInterval = jinsInterval.intervals.length;
-          if (
-            matchingListOfIntervals(
-              extendedDescendingPitchClassIntervals.slice(i, i + lengthOfInterval),
-              jinsInterval.intervals,
-              centsTolerance
-            )
-          ) {
+          if (matchingListOfIntervals(extendedDescendingPitchClassIntervals.slice(i, i + lengthOfInterval), jinsInterval.intervals, centsTolerance)) {
             const jins = jinsInterval.jins;
             const firstJinsNote = jins.getNoteNames()[0];
             const firstCell = extendedDescendingPitchClasses[i];
@@ -265,13 +238,7 @@ export function getMaqamTranspositions(
   } else return maqamTranspositionsWithoutTahlil;
 }
 
-export function getJinsTranspositions(
-  allPitchClasses: PitchClass[],
-  jinsDetails: JinsDetails | null,
-  withTahlil: boolean,
-  centsTolerance: number = 5,
-  onlyOctaveOne: boolean = false
-): Jins[] {
+export function getJinsTranspositions(allPitchClasses: PitchClass[], jinsDetails: JinsDetails | null, withTahlil: boolean, centsTolerance: number = 5, onlyOctaveOne: boolean = false): Jins[] {
   if (allPitchClasses.length === 0 || !jinsDetails) return [];
 
   const jinsNoteNames = jinsDetails.getNoteNames();

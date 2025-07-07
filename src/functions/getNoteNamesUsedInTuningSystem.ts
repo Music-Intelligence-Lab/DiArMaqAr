@@ -1,10 +1,4 @@
-import NoteName, {
-  octaveFourNoteNames,
-  octaveOneNoteNames,
-  octaveThreeNoteNames,
-  octaveTwoNoteNames,
-  octaveZeroNoteNames,
-} from "@/models/NoteName";
+import NoteName, { octaveFourNoteNames, octaveOneNoteNames, octaveThreeNoteNames, octaveTwoNoteNames, octaveZeroNoteNames } from "@/models/NoteName";
 
 export default function getNoteNamesUsedInTuningSystem(indicesToSearch: number[] = []): NoteName[] {
   const noteNames = [];

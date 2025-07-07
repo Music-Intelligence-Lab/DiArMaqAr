@@ -13,7 +13,13 @@ import convertPitchClass, { shiftPitchClassBaseValue, frequencyToMidiNoteNumber 
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import PitchClass from "@/models/PitchClass";
 
-export default function getTuningSystemCells(tuningSystem: TuningSystem, startingNote: NoteName, tuningSystemPitchClasses: string[] = [], inputStringLength: number = 0, inputReferenceFrequencies: { [noteName: string]: number } = {}): PitchClass[] {
+export default function getTuningSystemCells(
+  tuningSystem: TuningSystem,
+  startingNote: NoteName,
+  tuningSystemPitchClasses: string[] = [],
+  inputStringLength: number = 0,
+  inputReferenceFrequencies: { [noteName: string]: number } = {}
+): PitchClass[] {
   const pitchArr = tuningSystemPitchClasses.length ? tuningSystemPitchClasses : tuningSystem.getPitchClasses();
   const nPC = pitchArr.length;
   const allSets = tuningSystem.getNoteNames();
@@ -30,12 +36,11 @@ export default function getTuningSystemCells(tuningSystem: TuningSystem, startin
   while (selectedIndices.length < nPC) selectedIndices.push(-1);
   selectedIndices.length = nPC;
 
-
   const type = detectPitchClassType(pitchArr);
   if (type === "unknown") return [];
 
   const stringLength = inputStringLength > 0 ? inputStringLength : tuningSystem.getStringLength();
-  const actualReferenceFrequency = inputReferenceFrequencies[startingNote] ?? (tuningSystem.getReferenceFrequencies()[startingNote] ?? tuningSystem.getDefaultReferenceFrequency());
+  const actualReferenceFrequency = inputReferenceFrequencies[startingNote] ?? tuningSystem.getReferenceFrequencies()[startingNote] ?? tuningSystem.getDefaultReferenceFrequency();
   const openConv = convertPitchClass(shiftPitchClassBaseValue(pitchArr[0], type, 1), type, stringLength, actualReferenceFrequency)!;
   const openLen = parseFloat(openConv.stringLength);
 

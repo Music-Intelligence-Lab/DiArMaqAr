@@ -11,8 +11,7 @@ import NorthEastIcon from "@mui/icons-material/NorthEast";
 import SouthEastIcon from "@mui/icons-material/SouthEast";
 import JinsDetails from "@/models/Jins";
 export default function SayrManager({ admin }: { admin: boolean }) {
-  const { selectedMaqamDetails, setSelectedMaqamDetails, ajnas, maqamSayrId, setMaqamSayrId, sources, maqamat, setMaqamat, /* handleClickJins, handleClickMaqam */ } =
-    useAppContext();
+  const { selectedMaqamDetails, setSelectedMaqamDetails, ajnas, maqamSayrId, setMaqamSayrId, sources, maqamat, setMaqamat /* handleClickJins, handleClickMaqam */ } = useAppContext();
 
   const [creatorEnglish, setCreatorEnglish] = useState("");
   const [creatorArabic, setCreatorArabic] = useState("");
@@ -72,9 +71,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
       commentsArabic,
       stops,
     };
-    const updated = existingSuyūr.some((s) => s.id === idUse)
-      ? existingSuyūr.map((s) => (s.id === idUse ? newSayr : s))
-      : [...existingSuyūr, newSayr];
+    const updated = existingSuyūr.some((s) => s.id === idUse) ? existingSuyūr.map((s) => (s.id === idUse ? newSayr : s)) : [...existingSuyūr, newSayr];
     const updatedMaqam = selectedMaqamDetails.createMaqamWithNewSuyūr(updated);
     setSelectedMaqamDetails(updatedMaqam);
     setMaqamSayrId(idUse);
@@ -152,9 +149,9 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                 {[...sources]
                   .sort((a, b) => a.getTitleEnglish().localeCompare(b.getTitleEnglish()))
                   .map((s) => (
-                  <option key={s.getId()} value={s.getId()}>
-                    {s.getTitleEnglish()}
-                  </option>
+                    <option key={s.getId()} value={s.getId()}>
+                      {s.getTitleEnglish()}
+                    </option>
                   ))}
               </select>
             </div>
@@ -233,13 +230,12 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                           {n}
                         </option>
                       ))}
-                                            <option disabled>---</option>
+                      <option disabled>---</option>
                       {octaveThreeNoteNames.map((n) => (
                         <option key={n} value={n}>
                           {n}
                         </option>
                       ))}
-
                     </select>
                   )}
 
@@ -252,18 +248,14 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                         {[...ajnas]
                           .sort((a, b) => a.getName().localeCompare(b.getName()))
                           .map((j) => (
-                          <option key={j.getId()} value={j.getId()}>
-                            {j.getName()}
-                          </option>
+                            <option key={j.getId()} value={j.getId()}>
+                              {j.getName()}
+                            </option>
                           ))}
                       </select>
 
                       {/* 2) optional starting note for this jins */}
-                      <select
-                        className="sayr-manager__stop-value"
-                        value={stop.startingNote ?? ""}
-                        onChange={(e) => updateStop(i, "startingNote", e.target.value)}
-                      >
+                      <select className="sayr-manager__stop-value" value={stop.startingNote ?? ""} onChange={(e) => updateStop(i, "startingNote", e.target.value)}>
                         <option value="">(none)</option>
                         {octaveOneNoteNames.map((n) => (
                           <option key={n} value={n}>
@@ -279,11 +271,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                       </select>
 
                       {/* 3) optional direction for this jins */}
-                      <select
-                        className="sayr-manager__stop-value"
-                        value={stop.direction ?? ""}
-                        onChange={(e) => updateStop(i, "direction", e.target.value)}
-                      >
+                      <select className="sayr-manager__stop-value" value={stop.direction ?? ""} onChange={(e) => updateStop(i, "direction", e.target.value)}>
                         <option value="">(none)</option>
                         <option value="ascending">ascending</option>
                         <option value="descending">descending</option>
@@ -291,7 +279,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                     </>
                   )}
 
-                                    {/* --- maqam stop (updated) --- */}
+                  {/* --- maqam stop (updated) --- */}
                   {stop.type === "maqam" && (
                     <>
                       {/* 1) select which maqam */}
@@ -300,18 +288,14 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                         {[...maqamat]
                           .sort((a, b) => a.getName().localeCompare(b.getName()))
                           .map((m) => (
-                          <option key={m.getId()} value={m.getId()}>
-                            {m.getName()}
-                          </option>
+                            <option key={m.getId()} value={m.getId()}>
+                              {m.getName()}
+                            </option>
                           ))}
                       </select>
 
                       {/* 2) optional starting note for this maqam */}
-                      <select
-                        className="sayr-manager__stop-value"
-                        value={stop.startingNote ?? ""}
-                        onChange={(e) => updateStop(i, "startingNote", e.target.value)}
-                      >
+                      <select className="sayr-manager__stop-value" value={stop.startingNote ?? ""} onChange={(e) => updateStop(i, "startingNote", e.target.value)}>
                         <option value="">(none)</option>
                         {octaveOneNoteNames.map((n) => (
                           <option key={n} value={n}>
@@ -327,18 +311,13 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                       </select>
 
                       {/* 3) optional direction for this maqam */}
-                      <select
-                        className="sayr-manager__stop-value"
-                        value={stop.direction ?? ""}
-                        onChange={(e) => updateStop(i, "direction", e.target.value)}
-                      >
+                      <select className="sayr-manager__stop-value" value={stop.direction ?? ""} onChange={(e) => updateStop(i, "direction", e.target.value)}>
                         <option value="">(none)</option>
                         <option value="ascending">ascending</option>
                         <option value="descending">descending</option>
                       </select>
                     </>
                   )}
-
 
                   {/* --- direction stop --- */}
                   {stop.type === "direction" && (

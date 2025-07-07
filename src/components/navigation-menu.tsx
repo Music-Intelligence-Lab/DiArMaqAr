@@ -7,7 +7,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Link from "next/link";
 
 const NavigationMenu = () => {
-
   const { openSettings, setOpenSettings, openNavigation, setOpenNavigation } = useMenuContext();
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -28,12 +27,7 @@ const NavigationMenu = () => {
     if (!openNavigation) return;
     function handleClick(event: MouseEvent) {
       // If click is outside menu and not on the open button, close
-      if (
-        menuRef.current &&
-        !menuRef.current.contains(event.target as Node) &&
-        buttonRef.current &&
-        !buttonRef.current.contains(event.target as Node)
-      ) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node) && buttonRef.current && !buttonRef.current.contains(event.target as Node)) {
         setOpenNavigation(false);
       }
     }
@@ -44,9 +38,7 @@ const NavigationMenu = () => {
   // Trap focus inside menu and close on ESC
   useEffect(() => {
     if (!openNavigation) return;
-    const focusable = menuRef.current?.querySelectorAll<HTMLElement>(
-      'a, button, [tabindex]:not([tabindex="-1"])'
-    );
+    const focusable = menuRef.current?.querySelectorAll<HTMLElement>('a, button, [tabindex]:not([tabindex="-1"])');
     const first = focusable?.[0];
     const last = focusable?.[focusable.length - 1];
     first?.focus();
@@ -88,7 +80,6 @@ const NavigationMenu = () => {
     return () => window.removeEventListener("popstate", handleRoute);
   }, [setOpenNavigation]);
 
-
   // Only render portal after mount to avoid hydration errors
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
@@ -96,35 +87,33 @@ const NavigationMenu = () => {
   }, []);
 
   const menuContent = (
-    <div
-      ref={menuRef}
-      className={`navigation-menu-card ${openNavigation ? "navigation-menu-card--open" : ""}`}
-      role="dialog"
-      aria-modal="true"
-      aria-label="Main navigation menu"
-      tabIndex={-1}
-    >
+    <div ref={menuRef} className={`navigation-menu-card ${openNavigation ? "navigation-menu-card--open" : ""}`} role="dialog" aria-modal="true" aria-label="Main navigation menu" tabIndex={-1}>
       <div className="navigation-menu-card__content">
-        <Link href="/" className="navigation-menu-card__link">Home</Link>
-        <Link href="/landing" className="navigation-menu-card__link">Landing Page</Link>
-        <Link href="/analytics-data" className="navigation-menu-card__link">Analytics</Link>
-        <Link href="/user-guide" className="navigation-menu-card__link">User Guide</Link>
-        <Link href="/about" className="navigation-menu-card__link">About Page</Link>
-        <Link href="/credits" className="navigation-menu-card__link">Credits Page</Link>
+        <Link href="/" className="navigation-menu-card__link">
+          Home
+        </Link>
+        <Link href="/landing" className="navigation-menu-card__link">
+          Landing Page
+        </Link>
+        <Link href="/analytics-data" className="navigation-menu-card__link">
+          Analytics
+        </Link>
+        <Link href="/user-guide" className="navigation-menu-card__link">
+          User Guide
+        </Link>
+        <Link href="/about" className="navigation-menu-card__link">
+          About Page
+        </Link>
+        <Link href="/credits" className="navigation-menu-card__link">
+          Credits Page
+        </Link>
       </div>
     </div>
   );
 
   // Render open button via portal to ensure it's always above all stacking contexts
   const openButton = (
-    <button
-      className="navigation-menu-open-button"
-      onClick={togglePanel}
-      aria-haspopup="dialog"
-      aria-expanded={openNavigation}
-      aria-controls="navigation-menu"
-      ref={buttonRef}
-    >
+    <button className="navigation-menu-open-button" onClick={togglePanel} aria-haspopup="dialog" aria-expanded={openNavigation} aria-controls="navigation-menu" ref={buttonRef}>
       <MenuIcon className="navigation-menu-open-button__icon" />
     </button>
   );

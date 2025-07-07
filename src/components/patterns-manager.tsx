@@ -3,25 +3,18 @@
 import React, { FormEvent, useEffect, useState } from "react";
 import useAppContext from "@/contexts/app-context";
 import useSoundContext, { defaultNoteVelocity, defaultTargetVelocity } from "@/contexts/sound-context";
-import Pattern, {
-  PatternNote,
-  SCALE_DEGREES as scale_degrees,
-  DURATION_OPTIONS,
-} from "@/models/Pattern";
+import Pattern, { PatternNote, SCALE_DEGREES as scale_degrees, DURATION_OPTIONS } from "@/models/Pattern";
 import { nanoid } from "nanoid";
 import { updatePatterns } from "@/functions/update";
 
 export default function PatternsManager() {
-  const { patterns, setPatterns, selectedMaqamDetails, allPitchClasses } =
-    useAppContext();
+  const { patterns, setPatterns, selectedMaqamDetails, allPitchClasses } = useAppContext();
   const { playSequence } = useSoundContext();
   const [patternId, setPatternId] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [notes, setNotes] = useState<PatternNote[]>([]);
 
-  const maqamModel = selectedMaqamDetails
-    ? selectedMaqamDetails.getTahlil(allPitchClasses)
-    : null;
+  const maqamModel = selectedMaqamDetails ? selectedMaqamDetails.getTahlil(allPitchClasses) : null;
 
   const pitchClasses = maqamModel ? maqamModel.ascendingPitchClasses : [];
 
@@ -46,12 +39,7 @@ export default function PatternsManager() {
       setNotes(
         sel.getNotes().map((n) => ({
           ...n,
-          velocity:
-            typeof n.velocity === "number"
-              ? n.velocity
-              : n.isTarget
-              ? defaultTargetVelocity
-              : defaultNoteVelocity,
+          velocity: typeof n.velocity === "number" ? n.velocity : n.isTarget ? defaultTargetVelocity : defaultNoteVelocity,
         }))
       );
     } else {
@@ -69,11 +57,7 @@ export default function PatternsManager() {
         velocity: defaultNoteVelocity,
       };
       if (typeof index === "number") {
-        return [
-          ...prev.slice(0, index),
-          newNote,
-          ...prev.slice(index),
-        ];
+        return [...prev.slice(0, index), newNote, ...prev.slice(index)];
       } else {
         return [...prev, newNote];
       }
@@ -86,11 +70,7 @@ export default function PatternsManager() {
   };
 
   // Update a field on a note
-  const updateNote = (
-    i: number,
-    field: keyof PatternNote,
-    val: string | number
-  ) => {
+  const updateNote = (i: number, field: keyof PatternNote, val: string | number) => {
     setNotes((prev) =>
       prev.map((n, idx) => {
         if (idx === i) {
@@ -99,9 +79,7 @@ export default function PatternsManager() {
             return {
               ...n,
               isTarget,
-              velocity: isTarget
-                ? defaultTargetVelocity
-                : defaultNoteVelocity,
+              velocity: isTarget ? defaultTargetVelocity : defaultNoteVelocity,
             } as PatternNote;
           }
           if (field === "velocity") {
@@ -119,9 +97,7 @@ export default function PatternsManager() {
     e.preventDefault();
     const idUse = patternId || nanoid();
     const newPattern = new Pattern(idUse, name, notes);
-    const updatedList = patterns.some((p) => p.getId() === idUse)
-      ? patterns.map((p) => (p.getId() === idUse ? newPattern : p))
-      : [...patterns, newPattern];
+    const updatedList = patterns.some((p) => p.getId() === idUse) ? patterns.map((p) => (p.getId() === idUse ? newPattern : p)) : [...patterns, newPattern];
     updatePatterns(updatedList);
     setPatterns(updatedList);
     setPatternId(idUse);
@@ -168,42 +144,26 @@ export default function PatternsManager() {
     <div className="patterns-manager">
       <h2 className="patterns-manager__header">Patterns</h2>
       <form className="patterns-manager__form" onSubmit={handleSave}>
-          <div className="patterns-manager__group">
-            <div className="patterns-manager__input-container">
-              <label
-                className="patterns-manager__label"
-                htmlFor="patternSelect"
-              >
-                Select Pattern or Create New:
-              </label>
-              <select
-                id="patternSelect"
-                className="patterns-manager__select"
-                value={patternId}
-                onChange={(e) => setPatternId(e.target.value)}
-              >
-                <option value="">-- New Pattern --</option>
-                {patterns.map((p) => (
-                  <option key={p.getId()} value={p.getId()}>
-                    {p.getName()}
-                  </option>
-                ))}
-              </select>
-            </div>
+        <div className="patterns-manager__group">
+          <div className="patterns-manager__input-container">
+            <label className="patterns-manager__label" htmlFor="patternSelect">
+              Select Pattern or Create New:
+            </label>
+            <select id="patternSelect" className="patterns-manager__select" value={patternId} onChange={(e) => setPatternId(e.target.value)}>
+              <option value="">-- New Pattern --</option>
+              {patterns.map((p) => (
+                <option key={p.getId()} value={p.getId()}>
+                  {p.getName()}
+                </option>
+              ))}
+            </select>
+          </div>
 
-                      <div className="patterns-manager__input-container">
+          <div className="patterns-manager__input-container">
             <label className="patterns-manager__label">Name</label>
-            <input
-              className="patterns-manager__input"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
+            <input className="patterns-manager__input" type="text" value={name} onChange={(e) => setName(e.target.value)} required />
           </div>
-
-          </div>
-        
+        </div>
 
         <div className="patterns-manager__notes-section">
           <h3 className="patterns-manager__notes-header">Notes</h3>
@@ -211,21 +171,11 @@ export default function PatternsManager() {
             {notes.map((note, i) => (
               <React.Fragment key={i}>
                 {/* Add button before each note */}
-                <button
-                  type="button"
-                  className="patterns-manager__add-note patterns-manager__add-note--inline"
-                  onClick={() => addNote(i)}
-                  title="Add note here"
-                >
+                <button type="button" className="patterns-manager__add-note patterns-manager__add-note--inline" onClick={() => addNote(i)} title="Add note here">
                   +
                 </button>
                 <div className="patterns-manager__note">
-                  <select
-                    className="patterns-manager__note-scaleDegree"
-                    value={note.scaleDegree}
-                    onChange={(e) => updateNote(i, "scaleDegree", e.target.value)}
-                    required
-                  >
+                  <select className="patterns-manager__note-scaleDegree" value={note.scaleDegree} onChange={(e) => updateNote(i, "scaleDegree", e.target.value)} required>
                     <option value="R">Rest</option>
                     {scale_degrees.map(
                       (rn) =>
@@ -236,22 +186,14 @@ export default function PatternsManager() {
                         )
                     )}
                   </select>
-                  <select
-                    className="patterns-manager__note-duration"
-                    value={note.noteDuration}
-                    onChange={(e) => updateNote(i, "noteDuration", e.target.value)}
-                  >
+                  <select className="patterns-manager__note-duration" value={note.noteDuration} onChange={(e) => updateNote(i, "noteDuration", e.target.value)}>
                     {DURATION_OPTIONS.map((d) => (
                       <option key={d} value={d}>
                         {d}
                       </option>
                     ))}
                   </select>
-                  <select
-                    className="patterns-manager__note-target"
-                    value={note.isTarget ? "Target" : ""}
-                    onChange={(e) => updateNote(i, "isTarget", e.target.value)}
-                  >
+                  <select className="patterns-manager__note-target" value={note.isTarget ? "Target" : ""} onChange={(e) => updateNote(i, "isTarget", e.target.value)}>
                     <option value="Target">Target</option>
                     <option value="">Not Target</option>
                   </select>
@@ -261,44 +203,25 @@ export default function PatternsManager() {
                     max={127}
                     step={1}
                     className="patterns-manager__note-velocity"
-                    value={
-                      typeof note.velocity === "number"
-                        ? note.velocity
-                        : note.isTarget
-                        ? defaultTargetVelocity
-                        : defaultNoteVelocity
-                    }
+                    value={typeof note.velocity === "number" ? note.velocity : note.isTarget ? defaultTargetVelocity : defaultNoteVelocity}
                     onChange={(e) => updateNote(i, "velocity", e.target.value)}
                     title="Velocity (1-127)"
                   />
-                  <button
-                    type="button"
-                    className="patterns-manager__delete-note"
-                    onClick={() => removeNote(i)}
-                  >
+                  <button type="button" className="patterns-manager__delete-note" onClick={() => removeNote(i)}>
                     Delete
                   </button>
                 </div>
               </React.Fragment>
             ))}
             {/* Add button at the end */}
-            <button
-              type="button"
-              className="patterns-manager__add-note patterns-manager__add-note--end"
-              onClick={() => addNote(notes.length)}
-              title="Add note at end"
-            >
+            <button type="button" className="patterns-manager__add-note patterns-manager__add-note--end" onClick={() => addNote(notes.length)} title="Add note at end">
               + Add Note
             </button>
           </div>
         </div>
 
         <div className="patterns-manager__buttons">
-          {!maqamModel && (
-          <p className="patterns-manager__warning">
-            Please select a Maqam before playing patterns.
-          </p>
-        )}
+          {!maqamModel && <p className="patterns-manager__warning">Please select a Maqam before playing patterns.</p>}
 
           <button className="patterns-manager__play-button" type="button" onClick={playPattern} disabled={!maqamModel}>
             Play Pattern
@@ -306,22 +229,16 @@ export default function PatternsManager() {
           <button className="patterns-manager__play-button" type="button" onClick={playAscending} disabled={!maqamModel}>
             Play Ascending
           </button>
-        
-        <button type="submit" className="patterns-manager__save-button">
+
+          <button type="submit" className="patterns-manager__save-button">
             {patternId ? "Update Pattern" : "Save Pattern"}
           </button>
           {patternId && (
-            <button
-              type="button"
-              className="patterns-manager__delete-button"
-              onClick={handleDelete}
-            >
+            <button type="button" className="patterns-manager__delete-button" onClick={handleDelete}>
               Delete Pattern
             </button>
           )}
         </div>
-
-        
       </form>
     </div>
   );

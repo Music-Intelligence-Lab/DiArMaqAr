@@ -171,15 +171,20 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
     const originalValue = allPitchClasses[octave * tuningSystemPitchClassesArray.length + colIndex].originalValue;
     return selectedMaqam
       ? selectedMaqam.descendingPitchClasses.map((pitchClass) => pitchClass.originalValue).includes(originalValue)
-      : selectedMaqamDetails?.getTahlil(allPitchClasses).descendingPitchClasses.map((pitchClass) => pitchClass.originalValue).includes(originalValue) ?? false;
-  }
+      : selectedMaqamDetails
+          ?.getTahlil(allPitchClasses)
+          .descendingPitchClasses.map((pitchClass) => pitchClass.originalValue)
+          .includes(originalValue) ?? false;
+  };
 
   const getCellClassName = (octave: number, colIndex: number) => {
     const isSelected = isCellSelected(octave, colIndex);
     const isActive = isCellActive(octave, colIndex);
     const isDescending = !isSelected && !isActive && isCellDescending(octave, colIndex);
 
-    return `tuning-system-manager__cell ${octave} ${isSelected ? "tuning-system-manager__cell_selected " : ""} ${isActive ? "tuning-system-manager__cell_active " : ""} ${isDescending ? "tuning-system-manager__cell_descending " : ""}`;
+    return `tuning-system-manager__cell ${octave} ${isSelected ? "tuning-system-manager__cell_selected " : ""} ${isActive ? "tuning-system-manager__cell_active " : ""} ${
+      isDescending ? "tuning-system-manager__cell_descending " : ""
+    }`;
   };
 
   const handleCheckboxChange = (octave: number, colIndex: number, checked: boolean) => {
@@ -351,7 +356,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
       <details className="tuning-system-manager__octave-details" open={openedOctaveRows[octave as 0 | 1 | 2 | 3]}>
         <summary
           className="tuning-system-manager__octave-summary"
-         /*  onClick={(e) => {
+          /*  onClick={(e) => {
             e.preventDefault();
              setOpenedOctaveRows((rows) => ({
               ...rows,
@@ -362,11 +367,11 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
           <span
             className="tuning-system-manager__octave-summary-title"
             onClick={(e) => {
-            e.preventDefault();
+              e.preventDefault();
               setOpenedOctaveRows((rows) => ({
                 ...rows,
                 [octave]: !rows[octave as 0 | 1 | 2 | 3],
-              }))
+              }));
             }}
           >
             Dīwān (octave) {octave}{" "}
@@ -696,7 +701,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                   <td>Play</td>
                   {rowCells.map((pitchClass, colIndex) => (
                     <td key={colIndex} className={getCellClassName(octave, colIndex)}>
-                      <PlayCircleIcon className="tuning-system-manager__play-circle-icon" onMouseUp={() => noteOff(pitchClass)} onMouseDown={() => noteOn(pitchClass)}/>
+                      <PlayCircleIcon className="tuning-system-manager__play-circle-icon" onMouseUp={() => noteOff(pitchClass)} onMouseDown={() => noteOn(pitchClass)} />
                     </td>
                   ))}
                 </tr>

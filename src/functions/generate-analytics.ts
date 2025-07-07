@@ -21,11 +21,7 @@ interface AnalyticsRow {
   totalMaqamatModulations: number;
 }
 
-function computeAnalyticsForSystem(
-  tuningSystem: TuningSystem,
-  allAjnas: ReturnType<typeof getAjnas>,
-  allMaqamat: ReturnType<typeof getMaqamat>
-): AnalyticsRow[] {
+function computeAnalyticsForSystem(tuningSystem: TuningSystem, allAjnas: ReturnType<typeof getAjnas>, allMaqamat: ReturnType<typeof getMaqamat>): AnalyticsRow[] {
   const rows: AnalyticsRow[] = [];
   const totalNumberOfAjnas = allAjnas.length;
   const totalNumberOfMaqamat = allMaqamat.length;
@@ -38,10 +34,9 @@ function computeAnalyticsForSystem(
     const possibleAjnas = [];
     const possibleAjnasTrans = [];
     for (const jinsDetails of allAjnas) {
-      if (jinsDetails.isJinsSelectable(allPitchClasses.map(pc => pc.noteName))) {
+      if (jinsDetails.isJinsSelectable(allPitchClasses.map((pc) => pc.noteName))) {
         possibleAjnas.push(jinsDetails);
-        getJinsTranspositions(allPitchClasses, jinsDetails, false)
-          .forEach(tr => possibleAjnasTrans.push(tr));
+        getJinsTranspositions(allPitchClasses, jinsDetails, false).forEach((tr) => possibleAjnasTrans.push(tr));
       }
     }
     let totalSuyur = 0;
@@ -50,19 +45,14 @@ function computeAnalyticsForSystem(
     let totalAjnasMod = 0;
     let totalMaqamatMod = 0;
     for (const maqamDetails of allMaqamat) {
-      if (maqamDetails.isMaqamSelectable(allPitchClasses.map(pc => pc.noteName))) {
+      if (maqamDetails.isMaqamSelectable(allPitchClasses.map((pc) => pc.noteName))) {
         possibleMaqamat.push(maqamDetails);
         totalSuyur += maqamDetails.getSuyūr().length;
-        getMaqamTranspositions(allPitchClasses, allAjnas, maqamDetails, false)
-          .forEach(transposition => {
-            possibleMaqamatTrans.push(transposition);
-            totalAjnasMod += calculateNumberOfModulations(modulate(
-              allPitchClasses, allAjnas, allMaqamat, transposition, true
-            ));
-            totalMaqamatMod += calculateNumberOfModulations(modulate(
-              allPitchClasses, allAjnas, allMaqamat, transposition, false
-            ));
-          });
+        getMaqamTranspositions(allPitchClasses, allAjnas, maqamDetails, false).forEach((transposition) => {
+          possibleMaqamatTrans.push(transposition);
+          totalAjnasMod += calculateNumberOfModulations(modulate(allPitchClasses, allAjnas, allMaqamat, transposition, true));
+          totalMaqamatMod += calculateNumberOfModulations(modulate(allPitchClasses, allAjnas, allMaqamat, transposition, false));
+        });
       }
     }
     rows.push({
@@ -86,10 +76,8 @@ export function generateAndWriteAnalytics() {
   const systems = getTuningSystems();
   const allAjnas = getAjnas();
   const allMaqamat = getMaqamat();
-  const analyticsRows = systems.flatMap(ts =>
-    computeAnalyticsForSystem(ts, allAjnas, allMaqamat)
-  );
-const outputDir = path.join(process.cwd(), "public", "data");
+  const analyticsRows = systems.flatMap((ts) => computeAnalyticsForSystem(ts, allAjnas, allMaqamat));
+  const outputDir = path.join(process.cwd(), "public", "data");
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });
   }
