@@ -42,8 +42,8 @@
     border-left: 0px;
     text-align: left;
     width: 72px;
-    height: 100px;
-    padding: 10px 6px;
+    height: 90px;
+    padding: 10px 6px 3px 6px;
     &_selected {
       background-color: rgb($primary, 0.8) !important;
     }
@@ -82,10 +82,16 @@
     padding: 0px;
     font-size: 12px;
     font-weight: 200;
+    line-height: 16px;
   }
 
   &__cell-mapping {
     font-size: 12px;
-    opacity: 0.8;
+    font-weight: 600;
+    background-color: $medium-grey;
+    color: $text;
+    width: 20px;
+    padding: 2px 5px;
+    vertical-align: text-bottom;
   }
 }

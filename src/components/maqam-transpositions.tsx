@@ -155,7 +155,7 @@ const MaqamTranspositions: React.FC = () => {
                 className="maqam-transpositions__header"
                 id={getHeaderId(pitchClasses[0]?.noteName)}
                 colSpan={4 + (pitchClasses.length - 1) * 2}
-                style={rowIndex === 0 && ascending ? { scrollMarginTop: "140px" } : undefined}
+                style={rowIndex === 0 && ascending ? { scrollMarginTop: "160px" } : undefined}
               >
                 {!transposition ? (
                   <span className="maqam-transpositions__transposition-title">{`Darajat al-Istiqrār (tonic/finalis): ${
