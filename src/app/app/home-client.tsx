@@ -71,8 +71,8 @@ export default function HomeClient() {
     if (selectedJins) params.push(`jinsFirstNote=${selectedJins.jinsPitchClasses[0].noteName}`);
     if (selectedMaqam) params.push(`maqamFirstNote=${selectedMaqam.ascendingPitchClasses[0].noteName}`);
 
-    if (typeof window !== "undefined" && window.location.pathname === "/tools") {
-      router.replace(`/tools?${params.join("&")}`, { scroll: false });
+    if (typeof window !== "undefined" && window.location.pathname === "/app") {
+      router.replace(`/app?${params.join("&")}`, { scroll: false });
     }
   }, [selectedTuningSystem, selectedJinsDetails, selectedMaqamDetails, maqamSayrId, selectedIndices, selectedMaqam, selectedJins]);
 
