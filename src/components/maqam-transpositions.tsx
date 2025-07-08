@@ -264,9 +264,9 @@ const MaqamTranspositions: React.FC = () => {
                 <button
                   className="maqam-transpositions__button"
                   onClick={async () => {
-                    await clearHangingNotes();
+                    clearHangingNotes();
                     await playSequence(pitchClasses, true);
-                    await playSequence([...oppositePitchClasses].reverse(), false);
+                    await playSequence([...oppositePitchClasses].reverse(), false, pitchClasses);
                   }}
                 >
                   <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
@@ -286,7 +286,7 @@ const MaqamTranspositions: React.FC = () => {
                   className="maqam-transpositions__button"
                   onClick={() => {
                     clearHangingNotes();
-                    playSequence([...oppositePitchClasses].reverse(), false);
+                    playSequence([...oppositePitchClasses].reverse(), false, pitchClasses);
                   }}
                 >
                   <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
