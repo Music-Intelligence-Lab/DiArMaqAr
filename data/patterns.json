@@ -66,19 +66,22 @@
     "name": "Three Notes Ascending",
     "notes": [
       {
-        "scaleDegree": "-VI",
+        "scaleDegree": "-2",
         "noteDuration": "8n",
-        "isTarget": false
+        "isTarget": false,
+        "velocity": 70
       },
       {
-        "scaleDegree": "-VII",
+        "scaleDegree": "-1",
         "noteDuration": "8n",
-        "isTarget": false
+        "isTarget": false,
+        "velocity": 70
       },
       {
         "scaleDegree": "I",
         "noteDuration": "8n",
-        "isTarget": true
+        "isTarget": true,
+        "velocity": 90
       }
     ]
   },
@@ -89,17 +92,20 @@
       {
         "scaleDegree": "-I",
         "noteDuration": "4n",
-        "isTarget": false
+        "isTarget": false,
+        "velocity": 70
       },
       {
         "scaleDegree": "I",
         "noteDuration": "4n",
-        "isTarget": false
+        "isTarget": false,
+        "velocity": 70
       },
       {
         "scaleDegree": "+I",
         "noteDuration": "4n",
-        "isTarget": true
+        "isTarget": true,
+        "velocity": 90
       }
     ]
   },
@@ -110,27 +116,32 @@
       {
         "scaleDegree": "I",
         "noteDuration": "8n",
-        "isTarget": true
+        "isTarget": true,
+        "velocity": 90
       },
       {
         "scaleDegree": "II",
         "noteDuration": "16n",
-        "isTarget": false
+        "isTarget": false,
+        "velocity": 70
       },
       {
         "scaleDegree": "I",
         "noteDuration": "16n",
-        "isTarget": false
+        "isTarget": false,
+        "velocity": 70
       },
       {
-        "scaleDegree": "-VII",
+        "scaleDegree": "-1",
         "noteDuration": "8n",
-        "isTarget": false
+        "isTarget": false,
+        "velocity": 70
       },
       {
         "scaleDegree": "I",
         "noteDuration": "8n",
-        "isTarget": false
+        "isTarget": false,
+        "velocity": 70
       }
     ]
   },
