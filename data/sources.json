@@ -433,5 +433,33 @@
     "placeEnglish": "Aleppo",
     "placeArabic": "حلب",
     "ISBN": ""
+  },
+  {
+    "id": "zzowyMMW095bTuaDEyH6M",
+    "titleEnglish": "Al-Mūsīqah al-Nazarīya",
+    "titleArabic": "الموسيقى النَّظريَّة",
+    "sourceType": "Book",
+    "contributors": [
+      {
+        "type": "Author",
+        "firstNameEnglish": "Salīm",
+        "lastNameEnglish": "al-Ḥilū",
+        "firstNameArabic": "سليم ",
+        "lastNameArabic": "الحلو"
+      }
+    ],
+    "editionEnglish": "Second Edition",
+    "editionArabic": "الطبعة الثانية",
+    "publicationDateEnglish": "1961",
+    "publicationDateArabic": "١٩٦١",
+    "url": "",
+    "dateAccessed": "",
+    "originalPublicationDateEnglish": "1957",
+    "originalPublicationDateArabic": "١٩٥٧",
+    "publisherEnglish": "Dār Maktabat al-Ḥayāt",
+    "publisherArabic": "دار مكتبة الحياة",
+    "placeEnglish": "Beirut",
+    "placeArabic": "بيروت",
+    "ISBN": ""
   }
 ]

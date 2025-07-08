@@ -286,5 +286,23 @@
         "page": "70"
       }
     ]
+  },
+  {
+    "id": "22",
+    "name": "jins būselīk 2",
+    "noteNames": [
+      "dūgāh",
+      "buselīk/ʿushshāq",
+      "chahargāh",
+      "nawā"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "zzowyMMW095bTuaDEyH6M",
+        "page": "126"
+      }
+    ]
   }
 ]
