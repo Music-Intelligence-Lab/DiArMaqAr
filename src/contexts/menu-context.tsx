@@ -61,7 +61,7 @@ export function MenuContextProvider({ children }: { children: ReactNode }) {
     | "jins-admin"
     | "sayr-admin"
     | "pattern-admin"
-  >("tuningSystem");
+  >("");
 
   const router = useRouter();
   const pathname = usePathname();

@@ -10,8 +10,18 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import NorthEastIcon from "@mui/icons-material/NorthEast";
 import SouthEastIcon from "@mui/icons-material/SouthEast";
 import JinsDetails from "@/models/Jins";
+import Link from "next/link";
 export default function SayrManager({ admin }: { admin: boolean }) {
-  const { selectedMaqamDetails, setSelectedMaqamDetails, ajnas, maqamSayrId, setMaqamSayrId, sources, maqamat, setMaqamat /* handleClickJins, handleClickMaqam */ } = useAppContext();
+  const {
+    selectedMaqamDetails,
+    setSelectedMaqamDetails,
+    ajnas,
+    maqamSayrId,
+    setMaqamSayrId,
+    sources,
+    maqamat,
+    setMaqamat /* handleClickJins, handleClickMaqam */,
+  } = useAppContext();
 
   const [creatorEnglish, setCreatorEnglish] = useState("");
   const [creatorArabic, setCreatorArabic] = useState("");
@@ -71,7 +81,9 @@ export default function SayrManager({ admin }: { admin: boolean }) {
       commentsArabic,
       stops,
     };
-    const updated = existingSuyūr.some((s) => s.id === idUse) ? existingSuyūr.map((s) => (s.id === idUse ? newSayr : s)) : [...existingSuyūr, newSayr];
+    const updated = existingSuyūr.some((s) => s.id === idUse)
+      ? existingSuyūr.map((s) => (s.id === idUse ? newSayr : s))
+      : [...existingSuyūr, newSayr];
     const updatedMaqam = selectedMaqamDetails.createMaqamWithNewSuyūr(updated);
     setSelectedMaqamDetails(updatedMaqam);
     setMaqamSayrId(idUse);
@@ -177,16 +189,21 @@ export default function SayrManager({ admin }: { admin: boolean }) {
 
         <div className="sayr-manager__stops-section">
           <div className="sayr-manager__comments-section">
-            <span className="sayr-manager__comments-english_title">
-              Comments on Sayr from {creatorEnglish}
-              {sourceId &&
-                (() => {
-                  const source = sources.find((s) => s.getId() === sourceId);
-                  const year = source?.getPublicationDateEnglish() ?? "";
-                  return year ? ` (${year}` : "";
-                })()}
-              {page && `:${page})`}
-            </span>
+            {sourceId &&
+              (() => {
+                const source = sources.find((s) => s.getId() === sourceId);
+                const year = source?.getPublicationDateEnglish() ?? "";
+                return (
+                  <span className="sayr-manager__comments-english_title">
+                    Comments on Sayr from{" "}
+                    <Link href={`/bibliography?source=${sourceId}`}>
+                      {creatorEnglish}
+                      {year ? ` (${year}` : ""}
+                      {page && `:${page})`}
+                    </Link>
+                  </span>
+                );
+              })()}
             <span className="sayr-manager__comments-english">{commentsEnglish}</span>
           </div>
 
@@ -239,7 +256,11 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                         ))}
                       </select>
                       {/* Optional direction for note stop */}
-                      <select className="sayr-manager__stop-value" value={stop.direction ?? ""} onChange={(e) => updateStop(i, "direction", e.target.value)}>
+                      <select
+                        className="sayr-manager__stop-value"
+                        value={stop.direction ?? ""}
+                        onChange={(e) => updateStop(i, "direction", e.target.value)}
+                      >
                         <option value="">(no direction)</option>
                         <option value="ascending">ascending</option>
                         <option value="descending">descending</option>
@@ -263,7 +284,11 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                       </select>
 
                       {/* 2) optional starting note for this jins */}
-                      <select className="sayr-manager__stop-value" value={stop.startingNote ?? ""} onChange={(e) => updateStop(i, "startingNote", e.target.value)}>
+                      <select
+                        className="sayr-manager__stop-value"
+                        value={stop.startingNote ?? ""}
+                        onChange={(e) => updateStop(i, "startingNote", e.target.value)}
+                      >
                         <option value="">(none)</option>
                         {octaveOneNoteNames.map((n) => (
                           <option key={n} value={n}>
@@ -279,7 +304,11 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                       </select>
 
                       {/* 3) optional direction for this jins */}
-                      <select className="sayr-manager__stop-value" value={stop.direction ?? ""} onChange={(e) => updateStop(i, "direction", e.target.value)}>
+                      <select
+                        className="sayr-manager__stop-value"
+                        value={stop.direction ?? ""}
+                        onChange={(e) => updateStop(i, "direction", e.target.value)}
+                      >
                         <option value="">(none)</option>
                         <option value="ascending">ascending</option>
                         <option value="descending">descending</option>
@@ -303,7 +332,11 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                       </select>
 
                       {/* 2) optional starting note for this maqam */}
-                      <select className="sayr-manager__stop-value" value={stop.startingNote ?? ""} onChange={(e) => updateStop(i, "startingNote", e.target.value)}>
+                      <select
+                        className="sayr-manager__stop-value"
+                        value={stop.startingNote ?? ""}
+                        onChange={(e) => updateStop(i, "startingNote", e.target.value)}
+                      >
                         <option value="">(none)</option>
                         {octaveOneNoteNames.map((n) => (
                           <option key={n} value={n}>
@@ -319,7 +352,11 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                       </select>
 
                       {/* 3) optional direction for this maqam */}
-                      <select className="sayr-manager__stop-value" value={stop.direction ?? ""} onChange={(e) => updateStop(i, "direction", e.target.value)}>
+                      <select
+                        className="sayr-manager__stop-value"
+                        value={stop.direction ?? ""}
+                        onChange={(e) => updateStop(i, "direction", e.target.value)}
+                      >
                         <option value="">(none)</option>
                         <option value="ascending">ascending</option>
                         <option value="descending">descending</option>
@@ -398,15 +435,13 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                   }
                 }
                 // Only show the label if NEITHER the previous nor the current stop is a direction stop
-                showTransitionLabel = transitionLabel !== "" && stop.type !== "direction" && (i === 0 || stops[i-1].type !== "direction");
+                showTransitionLabel = transitionLabel !== "" && stop.type !== "direction" && (i === 0 || stops[i - 1].type !== "direction");
                 // Show transition arrow for all, but label only for non-direction stops (never for direction stops)
                 return (
                   <React.Fragment key={i}>
                     {i !== 0 && (
                       <span style={{ display: "inline-flex", alignItems: "center", gap: 2 }}>
-                        {showTransitionLabel && (
-                          <span className="sayr-manager__transition-label">{transitionLabel}</span>
-                        )}
+                        {showTransitionLabel && <span className="sayr-manager__transition-label">{transitionLabel}</span>}
                         {React.createElement(transitionIcon)}
                       </span>
                     )}
