@@ -2,13 +2,12 @@
 
 import useAppContext from "@/contexts/app-context";
 import useSoundContext from "@/contexts/sound-context";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { MaqamatModulations, Maqam } from "@/models/Maqam";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import calculateNumberOfModulations from "@/functions/calculateNumberOfModulations";
 import { AjnasModulations } from "@/models/Jins";
 import modulate from "@/functions/modulate";
-
 type ModulationsPair = { ajnas: AjnasModulations; maqamat: MaqamatModulations };
 
 export default function Modulations() {
@@ -26,35 +25,36 @@ export default function Modulations() {
     setSelectedPitchClasses,
     handleClickMaqam,
   } = useAppContext();
-  // Per-hop modulation mode: true = ajnas, false = maqamat
+
   const [modulationModes, setModulationModes] = useState<boolean[]>([false]);
-  // Track collapsed state for each hop
+
   const [collapsedHops, setCollapsedHops] = useState<boolean[]>([]);
   const { clearHangingNotes } = useSoundContext();
 
   const [sourceMaqamStack, setSourceMaqamStack] = useState<Maqam[]>([]);
   const [modulationsStack, setModulationsStack] = useState<ModulationsPair[]>([]);
-  // For scrolling to new hop
-  const hopsRefs = React.useRef<Array<HTMLDivElement | null>>([]);
 
-  // Only initialize the stack once, when the component mounts, using the initial selectedMaqamDetails
-  React.useEffect(() => {
+  const hopsRefs = useRef<Array<HTMLDivElement | null>>([]);
+
+  function getBothModulations(transposition: Maqam): ModulationsPair {
+    const ajnasMods = modulate(allPitchClasses, ajnas, maqamat, transposition, true) as AjnasModulations;
+    const maqamatMods = modulate(allPitchClasses, ajnas, maqamat, transposition, false) as MaqamatModulations;
+    return {
+      ajnas: ajnasMods,
+      maqamat: maqamatMods,
+    };
+  }
+
+  useEffect(() => {
     if (sourceMaqamStack.length === 0 && selectedMaqamDetails) {
-      function getBothModulations(transposition: Maqam): ModulationsPair {
-        const ajnasMods = modulate(allPitchClasses, ajnas, maqamat, transposition, true) as AjnasModulations;
-        const maqamatMods = modulate(allPitchClasses, ajnas, maqamat, transposition, false) as MaqamatModulations;
-        return {
-          ajnas: ajnasMods,
-          maqamat: maqamatMods,
-        };
-      }
-      const transposition = selectedMaqamDetails.getTahlil(allPitchClasses);
+      let transposition: Maqam;
+      if (selectedMaqam) transposition = selectedMaqam;
+      else transposition = selectedMaqamDetails.getTahlil(allPitchClasses);
       setSourceMaqamStack([transposition]);
       setModulationsStack([getBothModulations(transposition)]);
       setModulationModes([false]); // default to maqamat for first hop
       setCollapsedHops([false]); // not collapsed by default
     }
-    // Do not update the stack on subsequent prop/context changes
   }, []);
 
   useEffect(() => {
@@ -81,7 +81,10 @@ export default function Modulations() {
   function handleSourceMaqamClick(sourceMaqam: Maqam) {
     // Defensive: ensure ascendingPitchClasses exists and has at least one element
     const maqamId = sourceMaqam.maqamId;
-    const tonic = Array.isArray(sourceMaqam.ascendingPitchClasses) && sourceMaqam.ascendingPitchClasses.length > 0 ? sourceMaqam.ascendingPitchClasses[0].noteName : undefined;
+    const tonic =
+      Array.isArray(sourceMaqam.ascendingPitchClasses) && sourceMaqam.ascendingPitchClasses.length > 0
+        ? sourceMaqam.ascendingPitchClasses[0].noteName
+        : undefined;
     if (maqamId && tonic) {
       handleClickMaqam({ maqamId, tonic } as any);
       clearHangingNotes();
@@ -158,7 +161,9 @@ export default function Modulations() {
       const maqamId = hop.maqamId || (hop.getId && hop.getId());
       const tonic = hop.ascendingPitchClasses?.[0]?.noteName || (hop.getAscendingNoteNames && hop.getAscendingNoteNames()[0]);
       const selectedId = selectedMaqamDetails?.getId ? selectedMaqamDetails.getId() : undefined;
-      const selectedTonic = selectedMaqamDetails?.getAscendingNoteNames ? selectedMaqamDetails.getAscendingNoteNames()[0] : selectedMaqamDetails?.ascendingPitchClasses?.[0]?.noteName;
+      const selectedTonic = selectedMaqamDetails?.getAscendingNoteNames
+        ? selectedMaqamDetails.getAscendingNoteNames()[0]
+        : selectedMaqamDetails?.ascendingPitchClasses?.[0]?.noteName;
 
       // TypeScript expects a MaqamDetails or the new object type; cast for type safety
       if (!selectedMaqamDetails || maqamId !== selectedId || tonic !== selectedTonic) {
@@ -190,7 +195,8 @@ export default function Modulations() {
             {/* Maqam name/details at the top of each wrapper */}
             <div className="modulations__wrapper-modulations-header">
               <div className="modulations__source-maqam-name" onClick={() => handleSourceMaqamClick(sourceMaqam)} style={{ cursor: "pointer" }}>
-                {sourceMaqam.name ? sourceMaqam.name : "Unknown"} ({ascendingNoteNames ? ascendingNoteNames[0] : "N/A"}/{getEnglishNoteName(ascendingNoteNames ? ascendingNoteNames[0]! : "")})
+                {sourceMaqam.name ? sourceMaqam.name : "Unknown"} ({ascendingNoteNames ? ascendingNoteNames[0] : "N/A"}/
+                {getEnglishNoteName(ascendingNoteNames ? ascendingNoteNames[0]! : "")})
               </div>
               <button
                 className="modulations__collapse-arrow"
