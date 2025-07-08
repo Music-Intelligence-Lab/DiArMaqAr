@@ -367,15 +367,18 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
           descendingSliceIndex = i + 1;
         }
       }
+      
+      if (descendingSliceIndex === 0) descendingSliceIndex = pitchClasses.length + 1;
 
-      const temp = ascendingPitchClasses.length ? ascendingPitchClasses : pitchClasses;
+      const lowerExtension = ascendingPitchClasses.length ? ascendingPitchClasses : pitchClasses; //here we want to make sure that descending sequences have the lower extension using ascending pitch classes
 
       const extendedPitchClasses = [
-        ...temp.slice(0, descendingSliceIndex - 1).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, -1)),
+        ...lowerExtension.slice(0, descendingSliceIndex - 1).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, -1)),
         ...pitchClasses,
         ...pitchClasses.slice(ascendingSliceIndex).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 1)),
         ...pitchClasses.slice(ascendingSliceIndex).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 2)),
       ];
+
 
       const n = pitchClasses.length;
       let cumulativeTimeSec = 0;
@@ -405,7 +408,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
               if (!isNaN(Number(scaleDegree))) {
                 const intervalShift = Number(scaleDegree);
-                pitchClassToPlay = extendedPitchClasses[windowStart + descendingSliceIndex - 1 + intervalShift]
+                pitchClassToPlay = extendedPitchClasses[windowStart + descendingSliceIndex - 1 + intervalShift];
               } else {
                 const deg = romanToNumber(scaleDegree);
                 pitchClassToPlay = extendedPitchClasses[windowStart + deg - 1 + descendingSliceIndex - 1];
