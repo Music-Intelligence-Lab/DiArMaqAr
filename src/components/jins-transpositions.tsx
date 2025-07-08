@@ -9,6 +9,7 @@ import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { getJinsTranspositions } from "@/functions/transpose";
 import { Jins } from "@/models/Jins";
 import camelCaseToWord from "@/functions/camelCaseToWord";
+import Link from "next/link";
 
 export default function JinsTranspositions() {
   const { selectedJinsDetails, selectedTuningSystem, setSelectedPitchClasses, allPitchClasses, centsTolerance, setCentsTolerance, sources, setSelectedJins } = useAppContext();
@@ -345,10 +346,10 @@ export default function JinsTranspositions() {
                       selectedJinsDetails.getSourcePageReferences().map((sourceRef, idx) => {
                         const source = sources.find((s: any) => s.id === sourceRef.sourceId);
                         return source ? (
-                          <React.Fragment key={idx}>
+                          <Link href={`/bibliography?source=${source?.getId()}`} key={idx}>
                             {source.getContributors()[0].lastNameEnglish} ({source.getPublicationDateEnglish()}:{sourceRef.page})
                             <br />
-                          </React.Fragment>
+                          </Link>
                         ) : null;
                       })}
                   </div>

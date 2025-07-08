@@ -4,7 +4,7 @@ import useMenuContext from "@/contexts/menu-context";
 import SourcesManager from "@/components/sources-manager";
 import SourcesList from "@/components/sources-list";
 
-export default function HomeClient() {
+export default function BibliographyClient() {
   const { showAdminTabs } = useMenuContext();
 
   return (
