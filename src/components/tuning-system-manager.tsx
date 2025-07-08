@@ -22,6 +22,7 @@ import { exportTuningSystem } from "@/functions/export";
 import TuningSystemOctaveTables from "./tuning-system-octave-tables";
 import JinsDetails from "@/models/Jins";
 import MaqamDetails from "@/models/Maqam";
+import SelectedPitchClassTranspositions from "./selected-pitch-classes-transpositions";
 
 function isTuningSystemDisabled(
   tuningSystem: TuningSystem,
@@ -944,7 +945,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 </div>
               )}
               <label htmlFor="reference-frequency-input">
-                 String Length:
+                String Length:
                 <input
                   type="number"
                   id="reference-frequency-input"
@@ -1007,6 +1008,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       {/* TUNING OCTAVES TABLES GRID */}
 
       <TuningSystemOctaveTables admin={admin} />
+      <SelectedPitchClassTranspositions />
 
       {/* <div className="tuning-system-manager__buttons">
         <button
