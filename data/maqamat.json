@@ -311,7 +311,7 @@
       "chahargāh",
       "nawā",
       "ḥiṣār",
-      "ʿajam"
+      "nīm māhūr"
     ],
     "descendingNoteNames": [
       "ʿajam",
@@ -322,10 +322,75 @@
       "dūgāh",
       "rāst"
     ],
-    "suyūr": [],
+    "suyūr": [
+      {
+        "id": "_PJZNEo-BIKwIPz6buIyT",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "49",
+        "commentsEnglish": "Starts on the note chahargāh or nawā and after a descent to the note rāst the ascent begins from nawā using jins ḥijāz until kurdān, muḥayyar, sunbuleh, jawāb chahargāh (mahūran) until saham/ramal tūtī followed by a descent along it's scale degrees until its qarār which is rāst. ",
+        "commentsArabic": "",
+        "stops": [
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "note",
+            "value": "chahargāh",
+            "direction": "descending"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "nawā",
+            "direction": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "kurdān",
+            "direction": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "muḥayyar",
+            "direction": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "sunbuleh/zawāl",
+            "direction": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "mahurān",
+            "direction": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "saham/ramal tūtī",
+            "direction": "descending"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ]
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": []
+    "sourcePageReferences": [
+      {
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "49"
+      }
+    ]
   },
   {
     "id": "11",
@@ -340,8 +405,8 @@
       "māhūr"
     ],
     "descendingNoteNames": [
-      "ʿajam",
-      "ḥiṣār",
+      "māhūr",
+      "ḥusaynī",
       "nawā",
       "chahargāh",
       "kurdī",
@@ -351,7 +416,12 @@
     "suyūr": [],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": []
+    "sourcePageReferences": [
+      {
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "50"
+      }
+    ]
   },
   {
     "id": "12",
