@@ -291,7 +291,7 @@ export default function SelectedPitchClassTranspositions() {
         </div>
       </>
     );
-  }, [allPitchClasses, selectedPitchClasses, centsTolerance, filters, soundSettings]);
+  }, [selectedTuningSystem, allPitchClasses, selectedPitchClasses, centsTolerance, filters, soundSettings]);
 
   return transpositionTables;
 }
