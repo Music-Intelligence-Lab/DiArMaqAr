@@ -92,8 +92,8 @@ const NavigationMenu = () => {
         <Link href="/" className="navigation-menu-card__link">
           Home
         </Link>
-        <Link href="/tools" className="navigation-menu-card__link">
-          Tools Page
+        <Link href="/app" className="navigation-menu-card__link">
+          Tools
         </Link>
         <Link href="/analytics-data" className="navigation-menu-card__link">
           Analytics

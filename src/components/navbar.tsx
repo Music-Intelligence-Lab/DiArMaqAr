@@ -120,7 +120,6 @@ export default function Navbar() {
                 }
               }
             }}
-            disabled={!selectedTuningSystem}
           >
             {selectedTuningSystem ? (
               <>
