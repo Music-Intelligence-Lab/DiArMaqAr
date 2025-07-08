@@ -2249,10 +2249,11 @@
       {
         "id": "c621cf4a580446b6bebe",
         "creatorEnglish": "Al-Shawwā, Sāmī",
-        "sourceEnglish": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
-        "year": 1946,
+        "creatorArabic": "",
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
         "page": 32,
         "commentsEnglish": "Starts on kurdān ascending to jawāb nawā (saham/ramal tuti) then descends from nawā to its qarār using chahargāh and kurdī. In the \"analysis\" it states that one must descend at the end to qarār ḥijāz before ending on 'ajam 'ushayrān.",
+        "commentsArabic": "",
         "stops": [
           {
             "type": "note",
