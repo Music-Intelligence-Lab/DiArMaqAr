@@ -25,16 +25,20 @@ export default function KeyboardControls() {
   const pitchClassMapping: Record<string, PitchClass> = {};
 
   if (selectedMaqam || selectedMaqamDetails) {
-    const ascendingNoteNames = selectedMaqam ? selectedMaqam.ascendingPitchClasses.map((pitchClass) => pitchClass.noteName) : selectedMaqamDetails ? selectedMaqamDetails.getAscendingNoteNames() : [];
+    let ascendingMaqamPitchClasses: PitchClass[] = [];
+    let descendingMaqamPitchClasses: PitchClass[] = [];
 
-    const descendingNoteNames = selectedMaqam
-      ? selectedMaqam.descendingPitchClasses.map((pitchClass) => pitchClass.noteName)
-      : selectedMaqamDetails
-      ? selectedMaqamDetails.getDescendingNoteNames()
-      : [];
+    if (selectedMaqam) {
+      ascendingMaqamPitchClasses = selectedMaqam.ascendingPitchClasses;
+      descendingMaqamPitchClasses = selectedMaqam.descendingPitchClasses;
+    } else if (selectedMaqamDetails) {
+      const ascendingNoteNames = selectedMaqamDetails.getAscendingNoteNames();
 
-    const ascendingMaqamPitchClasses: PitchClass[] = allPitchClasses.filter((pitchClass) => ascendingNoteNames.includes(pitchClass.noteName));
-    const descendingMaqamPitchClasses: PitchClass[] = allPitchClasses.filter((pitchClass) => descendingNoteNames.includes(pitchClass.noteName));
+      const descendingNoteNames = selectedMaqamDetails.getDescendingNoteNames();
+
+      ascendingMaqamPitchClasses = allPitchClasses.filter((pitchClass) => ascendingNoteNames.includes(pitchClass.noteName));
+      descendingMaqamPitchClasses = allPitchClasses.filter((pitchClass) => descendingNoteNames.includes(pitchClass.noteName));
+    }
 
     let sliceIndex = 0;
     const lastAscendingPitchClass = ascendingMaqamPitchClasses[ascendingMaqamPitchClasses.length - 1];
@@ -81,7 +85,9 @@ export default function KeyboardControls() {
     const addActive = (pitchClass: PitchClass) => {
       // Use defaultNoteVelocity for QWERTY input
       noteOn(pitchClass, defaultNoteVelocity);
-      setActivePitchClasses((prev) => (prev.some((c) => c.index === pitchClass.index && c.octave === pitchClass.octave) ? prev : [...prev, pitchClass]));
+      setActivePitchClasses((prev) =>
+        prev.some((c) => c.index === pitchClass.index && c.octave === pitchClass.octave) ? prev : [...prev, pitchClass]
+      );
     };
 
     const removeActive = (pitchClass: PitchClass) => {
