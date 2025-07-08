@@ -136,6 +136,7 @@ export default function PatternsManager() {
     await playSequence(
       selectedPatternPitchClasses.filter((f) => f !== null),
       true,
+      [],
       (_noteIdx, patternIdx) => patternNotes[patternIdx]?.velocity ?? defaultNoteVelocity
     );
   };
@@ -177,14 +178,29 @@ export default function PatternsManager() {
                 <div className="patterns-manager__note">
                   <select className="patterns-manager__note-scaleDegree" value={note.scaleDegree} onChange={(e) => updateNote(i, "scaleDegree", e.target.value)} required>
                     <option value="R">Rest</option>
-                    {scale_degrees.map(
-                      (rn) =>
-                        rn !== "R" && (
-                          <option key={rn} value={rn}>
-                            {rn}
-                          </option>
-                        )
-                    )}
+                    <optgroup label="Degrees">
+                      {scale_degrees
+                      .filter((rn) => rn !== "R" && !/^-?\d+$/.test(rn))
+                      .map((rn) => (
+                        <option key={rn} value={rn}>
+                        {rn}
+                        </option>
+                      ))}
+                    </optgroup>
+                    <optgroup label="Positive Numbers">
+                      {Array.from({ length: 8 }, (_, i) => `${i + 1}`).map((num) => (
+                      <option key={num} value={num}>
+                        {num}
+                      </option>
+                      ))}
+                    </optgroup>
+                    <optgroup label="Negative Numbers">
+                      {Array.from({ length: 8 }, (_, i) => `-${i + 1}`).map((num) => (
+                      <option key={num} value={num}>
+                        {num}
+                      </option>
+                      ))}
+                    </optgroup>
                   </select>
                   <select className="patterns-manager__note-duration" value={note.noteDuration} onChange={(e) => updateNote(i, "noteDuration", e.target.value)}>
                     {DURATION_OPTIONS.map((d) => (

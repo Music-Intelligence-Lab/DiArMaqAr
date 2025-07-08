@@ -84,7 +84,7 @@ export default function convertPitchClass(originalValue: string, inputType: "fra
   }
 }
 
-export function shiftPitchClassBaseValue(baseValue: string, inputType: "fraction" | "decimalRatio" | "cents" | "stringLength", targetOctave: 0 | 1 | 2 | 3): string {
+export function shiftPitchClassBaseValue(baseValue: string, inputType: "fraction" | "decimalRatio" | "cents" | "stringLength", targetOctave: 0 | 1 | 2 | 3 | 4): string {
   if (targetOctave === 1) return baseValue;
 
   // We'll figure out how many 12-semitone steps from octave 1:
