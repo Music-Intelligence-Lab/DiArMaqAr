@@ -245,15 +245,6 @@ export default function Navbar() {
           >
             Intiqālāt{selectedMaqamDetails ? ` (${totalModulations})` : ""}
           </button>
-
-          <button className={`navbar__bottom-bar-item ${selectedMenu === "bibliography" ? "navbar__bottom-bar-item_selected" : ""}`} onClick={() => setSelectedMenu("bibliography")}>
-            Bibliography
-          </button>
-          {showAdminTabs && (
-            <button className={`navbar__bottom-bar-item ${selectedMenu === "bibliography-admin" ? "navbar__bottom-bar-item_selected" : ""}`} onClick={() => setSelectedMenu("bibliography-admin")}>
-              Bibliography Admin
-            </button>
-          )}
           {showAdminTabs && (
             <button className={`navbar__bottom-bar-item ${selectedMenu === "pattern-admin" ? "navbar__bottom-bar-item_selected" : ""}`} onClick={() => setSelectedMenu("pattern-admin")}>
               Patterns Admin
