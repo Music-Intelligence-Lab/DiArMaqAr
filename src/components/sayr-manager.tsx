@@ -211,32 +211,40 @@ export default function SayrManager({ admin }: { admin: boolean }) {
 
                   {/* --- note stop --- */}
                   {stop.type === "note" && (
-                    <select className="sayr-manager__stop-value" value={stop.value} onChange={(e) => updateStop(i, "value", e.target.value)}>
-                      <option value="">(none)</option>
-                      {octaveZeroNoteNames.map((n) => (
-                        <option key={n} value={n}>
-                          {n}
-                        </option>
-                      ))}
-                      <option disabled>---</option>
-                      {octaveOneNoteNames.map((n) => (
-                        <option key={n} value={n}>
-                          {n}
-                        </option>
-                      ))}
-                      <option disabled>---</option>
-                      {octaveTwoNoteNames.map((n) => (
-                        <option key={n} value={n}>
-                          {n}
-                        </option>
-                      ))}
-                      <option disabled>---</option>
-                      {octaveThreeNoteNames.map((n) => (
-                        <option key={n} value={n}>
-                          {n}
-                        </option>
-                      ))}
-                    </select>
+                    <>
+                      <select className="sayr-manager__stop-value" value={stop.value} onChange={(e) => updateStop(i, "value", e.target.value)}>
+                        <option value="">(none)</option>
+                        {octaveZeroNoteNames.map((n) => (
+                          <option key={n} value={n}>
+                            {n}
+                          </option>
+                        ))}
+                        <option disabled>---</option>
+                        {octaveOneNoteNames.map((n) => (
+                          <option key={n} value={n}>
+                            {n}
+                          </option>
+                        ))}
+                        <option disabled>---</option>
+                        {octaveTwoNoteNames.map((n) => (
+                          <option key={n} value={n}>
+                            {n}
+                          </option>
+                        ))}
+                        <option disabled>---</option>
+                        {octaveThreeNoteNames.map((n) => (
+                          <option key={n} value={n}>
+                            {n}
+                          </option>
+                        ))}
+                      </select>
+                      {/* Optional direction for note stop */}
+                      <select className="sayr-manager__stop-value" value={stop.direction ?? ""} onChange={(e) => updateStop(i, "direction", e.target.value)}>
+                        <option value="">(no direction)</option>
+                        <option value="ascending">ascending</option>
+                        <option value="descending">descending</option>
+                      </select>
+                    </>
                   )}
 
                   {/* --- jins stop (updated) --- */}
@@ -354,10 +362,19 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                   const maqamName = maqamDetails ? maqamDetails.getName() : stop.value;
                   sentence += `${maqamName}${stop.startingNote ? " al-" + stop.startingNote : ""}`;
                 } else if (stop.type === "direction") {
-                  sentence += `Direction: ${stop.value}`;
+                  if (stop.value === "ascending") {
+                    sentence += "ascend";
+                  } else if (stop.value === "descending") {
+                    sentence += "descend";
+                  } else {
+                    sentence += `${stop.value}`;
+                  }
                 }
+
                 // Determine which icon to use for the transition before this stop
-                let TransitionIcon = ArrowForwardIcon;
+                let transitionIcon = ArrowForwardIcon;
+                let transitionLabel = "";
+                let showTransitionLabel = false;
                 if (i !== 0) {
                   // Check direction on previous stop, or direction property on previous jins or maqam stop
                   const prevStop = stops[i - 1];
@@ -368,16 +385,31 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                     direction = prevStop.direction;
                   } else if (prevStop.type === "maqam" && prevStop.direction) {
                     direction = prevStop.direction;
+                  } else if (prevStop.type === "note" && prevStop.direction) {
+                    direction = prevStop.direction;
                   }
+
                   if (direction === "ascending") {
-                    TransitionIcon = NorthEastIcon;
+                    transitionIcon = NorthEastIcon;
+                    transitionLabel = "ascend to";
                   } else if (direction === "descending") {
-                    TransitionIcon = SouthEastIcon;
+                    transitionIcon = SouthEastIcon;
+                    transitionLabel = "descend to";
                   }
                 }
+                // Only show the label if NEITHER the previous nor the current stop is a direction stop
+                showTransitionLabel = transitionLabel !== "" && stop.type !== "direction" && (i === 0 || stops[i-1].type !== "direction");
+                // Show transition arrow for all, but label only for non-direction stops (never for direction stops)
                 return (
                   <React.Fragment key={i}>
-                    {i !== 0 && <TransitionIcon />}
+                    {i !== 0 && (
+                      <span style={{ display: "inline-flex", alignItems: "center", gap: 2 }}>
+                        {showTransitionLabel && (
+                          <span className="sayr-manager__transition-label">{transitionLabel}</span>
+                        )}
+                        {React.createElement(transitionIcon)}
+                      </span>
+                    )}
                     <div
                       className="sayr-manager__stop"
                       style={stop.type === "jins" || (stop as any).type === "maqam" ? { cursor: "default" } : undefined}
