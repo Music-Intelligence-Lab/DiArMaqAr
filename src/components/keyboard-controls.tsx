@@ -15,12 +15,7 @@ export default function KeyboardControls() {
 
   const secondRowCodes = ["KeyA", "KeyS", "KeyD", "KeyF", "KeyG", "KeyH", "KeyJ", "KeyK", "KeyL", "Semicolon", "Quote", "Backslash"];
 
-  const thirdRowCodes = ["Backquote", "KeyZ", "KeyX", "KeyC", "KeyV", "KeyB", "KeyN", "KeyM", "Comma", "Period", "Slash", "Slash"];
-
-  // const isTyping = () => {
-  //   const el = document.activeElement;
-  //   return el?.tagName === "INPUT" || el?.tagName === "TEXTAREA" || (el instanceof HTMLElement && el.isContentEditable);
-  // };
+  const thirdRowCodes = ["Backquote", "KeyZ", "KeyX", "KeyC", "KeyV", "KeyB", "KeyN", "KeyM", "Comma", "Period", "Slash"];
 
   const pitchClassMapping: Record<string, PitchClass> = {};
 
@@ -121,3 +116,8 @@ export default function KeyboardControls() {
 
   return null;
 }
+
+// const isTyping = () => {
+//   const el = document.activeElement;
+//   return el?.tagName === "INPUT" || el?.tagName === "TEXTAREA" || (el instanceof HTMLElement && el.isContentEditable);
+// };

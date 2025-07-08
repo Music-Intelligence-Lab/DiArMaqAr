@@ -93,7 +93,6 @@ export default function Navbar() {
               }}
             >
               Arabic Maqām Network
-              <br />
               شبكة المقام العربي
             </span>
             {/* <br></br>
