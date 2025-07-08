@@ -6,6 +6,7 @@ import PitchClass from "@/models/PitchClass";
 import { Maqam } from "@/models/Maqam";
 import { getJinsTranspositions, getMaqamTranspositions } from "@/functions/transpose";
 import { Jins } from "@/models/Jins";
+import shiftPitchClass from "@/functions/shiftPitchClass";
 
 interface WheelCellProps {
   pitchClass: PitchClass;
@@ -14,11 +15,12 @@ interface WheelCellProps {
   isDescending: boolean;
   isTonic: boolean;
   isCurrentTonic: boolean;
+  mapping: string;
   onClick: () => void;
 }
 
 const WheelCell = React.memo<WheelCellProps>(
-  ({ pitchClass, isSelected, isActive, isDescending, isTonic, isCurrentTonic, onClick }) => {
+  ({ pitchClass, isSelected, isActive, isDescending, isTonic, isCurrentTonic, mapping, onClick }) => {
     let className = "pitch-class-wheel__cell";
     if (isSelected) className += " pitch-class-wheel__cell_selected";
     if (isDescending) className += " pitch-class-wheel__cell_descending";
@@ -38,11 +40,17 @@ const WheelCell = React.memo<WheelCellProps>(
     return (
       <div className={className} onClick={onClick} style={{ cursor: isTonic ? "pointer" : undefined }}>
         <span className="pitch-class-wheel__cell-label">{pitchClass.noteName.replace(/\//g, "/\u200B")}</span>
+        {mapping && <span className="pitch-class-wheel__cell-mapping">{mapping}</span>}
       </div>
     );
   },
   (prev, next) =>
-    prev.isSelected === next.isSelected && prev.isActive === next.isActive && prev.isDescending === next.isDescending && prev.isTonic === next.isTonic && prev.isCurrentTonic === next.isCurrentTonic
+    prev.isSelected === next.isSelected &&
+    prev.isActive === next.isActive &&
+    prev.isDescending === next.isDescending &&
+    prev.isTonic === next.isTonic &&
+    prev.isCurrentTonic === next.isCurrentTonic &&
+    prev.mapping === next.mapping
 );
 
 WheelCell.displayName = "WheelCell";
@@ -63,6 +71,114 @@ export default function PitchClassWheel() {
   } = useAppContext();
 
   const { activePitchClasses } = useSoundContext();
+
+  const firstRowCodes = ["KeyQ", "KeyW", "KeyE", "KeyR", "KeyT", "KeyY", "KeyU", "KeyI", "KeyO", "KeyP", "BracketLeft", "BracketRight"];
+
+  const secondRowCodes = ["KeyA", "KeyS", "KeyD", "KeyF", "KeyG", "KeyH", "KeyJ", "KeyK", "KeyL", "Semicolon", "Quote", "Backslash"];
+
+  const thirdRowCodes = ["Backquote", "KeyZ", "KeyX", "KeyC", "KeyV", "KeyB", "KeyN", "KeyM", "Comma", "Period", "Slash", ""];
+
+  function conciseKey(code: string): string {
+    if (!code) return "";
+    if (code.startsWith("Key")) return code.slice(3).toLowerCase();
+    if (code.startsWith("Digit")) return code.slice(5);
+    const special: Record<string, string> = {
+      Backquote: "`",
+      Minus: "-",
+      Equal: "=",
+      BracketLeft: "[",
+      BracketRight: "]",
+      Backslash: "\\",
+      Semicolon: ";",
+      Quote: "'",
+      Comma: ",",
+      Period: ".",
+      Slash: "/",
+    };
+    return special[code] ?? code.toLowerCase();
+  }
+
+  const pitchClassMapping: Record<string, string> = {};
+
+  if (selectedMaqam || selectedMaqamDetails) {
+    let ascendingMaqamPitchClasses: PitchClass[] = [];
+    let descendingMaqamPitchClasses: PitchClass[] = [];
+
+    if (selectedMaqam) {
+      ascendingMaqamPitchClasses = selectedMaqam.ascendingPitchClasses;
+      descendingMaqamPitchClasses = [...selectedMaqam.descendingPitchClasses].reverse();
+    } else if (selectedMaqamDetails) {
+      const ascendingNoteNames = selectedMaqamDetails.getAscendingNoteNames();
+
+      const descendingNoteNames = selectedMaqamDetails.getDescendingNoteNames();
+
+      ascendingMaqamPitchClasses = allPitchClasses.filter((pitchClass) => ascendingNoteNames.includes(pitchClass.noteName));
+      descendingMaqamPitchClasses = allPitchClasses.filter((pitchClass) => descendingNoteNames.includes(pitchClass.noteName));
+    }
+
+    let sliceIndex = 0;
+    const lastAscendingPitchClass = ascendingMaqamPitchClasses[ascendingMaqamPitchClasses.length - 1];
+
+    for (let i = 0; i < ascendingMaqamPitchClasses.length; i++) {
+      if (parseFloat(ascendingMaqamPitchClasses[i].frequency) * 2 <= parseFloat(lastAscendingPitchClass.frequency)) {
+        sliceIndex = i + 1;
+      }
+    }
+
+    const extendedAscendingPitchClasses = [
+      ...ascendingMaqamPitchClasses,
+      ...ascendingMaqamPitchClasses.slice(sliceIndex, -1).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 1)),
+      ...ascendingMaqamPitchClasses.slice(0, sliceIndex).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 2)),
+      ...ascendingMaqamPitchClasses.slice(sliceIndex, -1).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 2)),
+    ];
+
+    const extendedDescendingPitchClasses = [
+      ...descendingMaqamPitchClasses,
+      ...descendingMaqamPitchClasses.slice(sliceIndex, -1).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 1)),
+      ...descendingMaqamPitchClasses.slice(0, sliceIndex).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 2)),
+      ...descendingMaqamPitchClasses.slice(sliceIndex, -1).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 2)),
+    ];
+
+    for (let i = 0; i <= 12; i++) {
+      const ascendingPitchClass = extendedAscendingPitchClasses[i];
+      const descendingPitchClass = extendedDescendingPitchClasses[i];
+      const ascendingShiftedPitchClass = shiftPitchClass(allPitchClasses, ascendingPitchClass, -1);
+
+      // First assign first and third row mappings (lower priority)
+      const key1 = conciseKey(firstRowCodes[i]);
+      if (key1 && !pitchClassMapping[descendingPitchClass.fraction]) {
+        pitchClassMapping[descendingPitchClass.fraction] = key1;
+      }
+
+      const key3 = conciseKey(thirdRowCodes[i]);
+      if (key3 && !pitchClassMapping[ascendingShiftedPitchClass.fraction]) {
+        pitchClassMapping[ascendingShiftedPitchClass.fraction] = key3;
+      }
+
+      // Then assign second row mapping (higher priority - will overwrite if there's a conflict)
+      const key2 = conciseKey(secondRowCodes[i]);
+      if (key2) {
+        pitchClassMapping[ascendingPitchClass.fraction] = key2;
+      }
+    }
+  } else {
+    for (let i = 0; i < selectedPitchClasses.length; i++) {
+      const pitchClass = selectedPitchClasses[i];
+      const loweredOctavePitchClass = shiftPitchClass(allPitchClasses, pitchClass, -1);
+
+      // Assign third row first (lower priority)
+      const key3 = conciseKey(thirdRowCodes[i]);
+      if (key3 && !pitchClassMapping[loweredOctavePitchClass.fraction]) {
+        pitchClassMapping[loweredOctavePitchClass.fraction] = key3;
+      }
+
+      // Then assign second row (higher priority - will overwrite if there's a conflict)
+      const key2 = conciseKey(secondRowCodes[i]);
+      if (key2) {
+        pitchClassMapping[pitchClass.fraction] = key2;
+      }
+    }
+  }
 
   const rowRef = useRef<HTMLDivElement>(null);
   const isDown = useRef(false);
@@ -96,7 +212,10 @@ export default function PitchClassWheel() {
     });
   }, [selectedPitchClasses]);
 
-  const filteredJinsTranspositions = useMemo<Jins[]>(() => getJinsTranspositions(allPitchClasses, selectedJinsDetails, true, centsTolerance), [allPitchClasses, selectedJinsDetails, centsTolerance]);
+  const filteredJinsTranspositions = useMemo<Jins[]>(
+    () => getJinsTranspositions(allPitchClasses, selectedJinsDetails, true, centsTolerance),
+    [allPitchClasses, selectedJinsDetails, centsTolerance]
+  );
 
   const filteredMaqamTranspositions = useMemo<Maqam[]>(
     () => getMaqamTranspositions(allPitchClasses, ajnas, selectedMaqamDetails, true, centsTolerance),
@@ -105,9 +224,13 @@ export default function PitchClassWheel() {
 
   const wheelCells = useMemo(() => {
     // Determine the tonic of the current selected maqam or jins
-    const maqamTonic = selectedMaqam ? selectedMaqam.ascendingPitchClasses[0]?.originalValue : selectedMaqamDetails?.getTahlil(allPitchClasses).ascendingPitchClasses[0]?.originalValue;
+    const maqamTonic = selectedMaqam
+      ? selectedMaqam.ascendingPitchClasses[0]?.originalValue
+      : selectedMaqamDetails?.getTahlil(allPitchClasses).ascendingPitchClasses[0]?.originalValue;
     // Use selectedJins (transposition) if available, else fall back to base jins details
-    const jinsTonic = selectedJins ? selectedJins.jinsPitchClasses[0]?.originalValue : selectedJinsDetails?.getTahlil(allPitchClasses).jinsPitchClasses[0]?.originalValue;
+    const jinsTonic = selectedJins
+      ? selectedJins.jinsPitchClasses[0]?.originalValue
+      : selectedJinsDetails?.getTahlil(allPitchClasses).jinsPitchClasses[0]?.originalValue;
 
     return allPitchClasses.map((pitchClass: PitchClass) => {
       const originalValue = pitchClass.originalValue;
@@ -115,7 +238,9 @@ export default function PitchClassWheel() {
       const isActive = activePitchClasses.some((ac) => ac.index === pitchClass.index && ac.octave === pitchClass.octave);
 
       const jinsTransposition = filteredJinsTranspositions.find((transposition) => transposition.jinsPitchClasses[0].originalValue === originalValue);
-      const maqamTransposition = filteredMaqamTranspositions.find((transposition) => transposition.ascendingPitchClasses[0].originalValue === originalValue);
+      const maqamTransposition = filteredMaqamTranspositions.find(
+        (transposition) => transposition.ascendingPitchClasses[0].originalValue === originalValue
+      );
 
       const isDescending = selectedMaqam
         ? selectedMaqam.descendingPitchClasses.map((pitchClass) => pitchClass.originalValue).includes(originalValue)
@@ -160,6 +285,8 @@ export default function PitchClassWheel() {
         }
       };
 
+      const mapping = pitchClassMapping[pitchClass.fraction] || "";
+
       return {
         key: `${pitchClass.index}-${pitchClass.octave}`,
         pitchClass,
@@ -168,10 +295,21 @@ export default function PitchClassWheel() {
         isDescending,
         isTonic,
         isCurrentTonic,
+        mapping,
         onClick,
       };
     });
-  }, [allPitchClasses, selectedPitchClasses, activePitchClasses, filteredJinsTranspositions, filteredMaqamTranspositions, selectedMaqamDetails, selectedMaqam, selectedJinsDetails, centsTolerance]);
+  }, [
+    allPitchClasses,
+    selectedPitchClasses,
+    activePitchClasses,
+    filteredJinsTranspositions,
+    filteredMaqamTranspositions,
+    selectedMaqamDetails,
+    selectedMaqam,
+    selectedJinsDetails,
+    centsTolerance,
+  ]);
 
   return (
     <div

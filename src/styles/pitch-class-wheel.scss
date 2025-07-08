@@ -31,6 +31,9 @@
   }
 
   &__cell {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     flex: none;
     border-top: 3px solid $grey;
     border-left: 1px solid $grey !important;
@@ -39,8 +42,8 @@
     border-left: 0px;
     text-align: left;
     width: 72px;
-    height: 70px;
-    padding: 0px 6px;
+    height: 100px;
+    padding: 10px 6px;
     &_selected {
       background-color: rgb($primary, 0.8) !important;
     }
@@ -79,5 +82,10 @@
     padding: 0px;
     font-size: 12px;
     font-weight: 200;
+  }
+
+  &__cell-mapping {
+    font-size: 12px;
+    opacity: 0.8;
   }
 }
