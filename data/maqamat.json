@@ -3122,5 +3122,114 @@
         "page": "48"
       }
     ]
+  },
+  {
+    "id": "58",
+    "name": "maqām zāwīl",
+    "ascendingNoteNames": [
+      "rāst",
+      "dūgāh",
+      "segāh",
+      "chahargāh",
+      "nawā",
+      "ḥiṣār",
+      "nīm māhūr"
+    ],
+    "descendingNoteNames": [
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "ḥijāz",
+      "kurdī",
+      "dūgāh",
+      "rāst"
+    ],
+    "suyūr": [
+      {
+        "id": "laJtmUde8ybWA7KSEsLF1",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "48",
+        "commentsEnglish": "Starts from kurdān and ascends until saham/ramal tūtī using sunbuleh and jawāb ḥijāz, then it returns descending until its qarār. During the descent its possible to use nahāwand on nawā then from nawā the descent continues until the qarār using maqām nikrīz followed by rāst. ",
+        "commentsArabic": "",
+        "stops": [
+          {
+            "type": "note",
+            "value": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "sunbuleh/zawāl"
+          },
+          {
+            "type": "note",
+            "value": "jawāb ḥijāz"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "maqam",
+            "value": "10",
+            "startingNote": "nawā",
+            "direction": "descending"
+          },
+          {
+            "type": "maqam",
+            "value": "5",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "maqam",
+            "value": "1",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ]
+      }
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "48"
+      }
+    ]
+  },
+  {
+    "id": "59",
+    "name": "maqām nahāwand muṭlaq",
+    "ascendingNoteNames": [
+      "nawā",
+      "ḥusaynī",
+      "ʿajam",
+      "kurdān",
+      "muḥayyar",
+      "sunbuleh/zawāl",
+      "mahurān"
+    ],
+    "descendingNoteNames": [
+      "mahurān",
+      "sunbuleh/zawāl",
+      "muḥayyar",
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā"
+    ],
+    "suyūr": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
   }
 ]
