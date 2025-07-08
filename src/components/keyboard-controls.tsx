@@ -30,7 +30,7 @@ export default function KeyboardControls() {
 
     if (selectedMaqam) {
       ascendingMaqamPitchClasses = selectedMaqam.ascendingPitchClasses;
-      descendingMaqamPitchClasses = selectedMaqam.descendingPitchClasses;
+      descendingMaqamPitchClasses = [...selectedMaqam.descendingPitchClasses].reverse();
     } else if (selectedMaqamDetails) {
       const ascendingNoteNames = selectedMaqamDetails.getAscendingNoteNames();
 
