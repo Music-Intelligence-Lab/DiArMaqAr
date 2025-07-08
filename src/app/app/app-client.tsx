@@ -10,14 +10,12 @@ import MaqamTranspositions from "@/components/maqam-transpositions";
 import SayrManager from "@/components/sayr-manager";
 import KeyboardControls from "@/components/keyboard-controls";
 import getFirstNoteName from "@/functions/getFirstNoteName";
-import SourcesManager from "@/components/sources-manager";
-import SourcesList from "@/components/sources-list";
 import PatternsManager from "@/components/patterns-manager";
 import JinsManager from "@/components/jins-manager";
 import MaqamManager from "@/components/maqam-manager";
 import PitchClassWheel from "@/components/pitch-class-wheel";
 import Modulations from "@/components/modulations";
-export default function HomeClient() {
+export default function AppClient() {
   const {
     tuningSystems,
     ajnas,
@@ -90,8 +88,6 @@ export default function HomeClient() {
       {selectedMenu === "sayr" && selectedMaqamDetails && <SayrManager admin={false} />}
       {selectedMenu === "sayr-admin" && selectedMaqamDetails && <SayrManager admin />}
       {selectedMenu === "modulation" && <Modulations />}
-      {selectedMenu === "bibliography" && <SourcesList />}
-      {selectedMenu === "bibliography-admin" && <SourcesManager />}
       {selectedMenu === "pattern-admin" && <PatternsManager />}
       <KeyboardControls />
     </div>

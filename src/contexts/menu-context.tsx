@@ -18,13 +18,11 @@ interface MenuContextInterface {
     | "jins"
     | "sayr"
     | "modulation"
-    | "bibliography"
     | "pattern"
     | "tuningSystem-admin"
     | "maqam-admin"
     | "jins-admin"
     | "sayr-admin"
-    | "bibliography-admin"
     | "pattern-admin";
   setSelectedMenu: React.Dispatch<
     React.SetStateAction<
@@ -34,13 +32,11 @@ interface MenuContextInterface {
       | "jins"
       | "sayr"
       | "modulation"
-      | "bibliography"
       | "pattern"
       | "tuningSystem-admin"
       | "maqam-admin"
       | "jins-admin"
       | "sayr-admin"
-      | "bibliography-admin"
       | "pattern-admin"
     >
   >;
@@ -59,13 +55,11 @@ export function MenuContextProvider({ children }: { children: ReactNode }) {
     | "jins"
     | "sayr"
     | "modulation"
-    | "bibliography"
     | "pattern"
     | "tuningSystem-admin"
     | "maqam-admin"
     | "jins-admin"
     | "sayr-admin"
-    | "bibliography-admin"
     | "pattern-admin"
   >("tuningSystem");
 
