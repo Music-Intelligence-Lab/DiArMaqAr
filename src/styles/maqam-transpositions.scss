@@ -3,8 +3,6 @@
 .maqam-transpositions {
   width: 100%;
   margin-top: 20px;
-    scroll-margin-top: 450px;
-
 
   &__title {
     width: 100%;
@@ -112,7 +110,7 @@
   &__header {
     text-align: left;
     background-color: black;
-    scroll-margin-top: calc($top-navbar-height - 30px);
+    scroll-margin-top: calc($top-navbar-height - 30px + 60px);
   }
 
   &__header-cell {
