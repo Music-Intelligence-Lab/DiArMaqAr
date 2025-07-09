@@ -40,7 +40,10 @@ const WheelCell = React.memo<WheelCellProps>(
     return (
       <div className={className} onClick={onClick} style={{ cursor: isTonic ? "pointer" : undefined }}>
         <span className="pitch-class-wheel__cell-label">{pitchClass.noteName.replace(/\//g, "/\u200B")}</span>
-        {mapping && <span className="pitch-class-wheel__cell-mapping">{mapping}</span>}
+
+        <span className="pitch-class-wheel__cell-qwerty-englishname"><span className="pitch-class-wheel__cell-english">{pitchClass.englishName}</span>{mapping && <span className="pitch-class-wheel__cell-mapping">{mapping}</span>}</span>
+        
+        
       </div>
     );
   },
