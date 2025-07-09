@@ -5,7 +5,7 @@
   top: 20px;
   left: 20px;
   background-color: transparent;
-  color: white;
+  color: $text !important;
   border: none;
   border-radius: 10px;
   cursor: pointer;
@@ -48,7 +48,7 @@
 
   &__link {
     text-decoration: none;
-    color: $text;
+    color: $text !important;
     font-weight: 300;
     display: flex;
     flex-direction: column;
@@ -58,10 +58,15 @@
     padding: 10px 20px;
     border-top: 1px solid $grey;
     transition: all 0.1s ease-in-out;
+    &:visited {
+    color: $text !important;
+    }
 
 
     &:hover {
       background-color: $primary;
+          color: $text !important;
+
     }
   }
 }
