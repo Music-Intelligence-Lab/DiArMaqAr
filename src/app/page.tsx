@@ -1,21 +1,102 @@
 import React from "react";
+import "../app/globals.scss";
+import "../styles/landing-page.scss";
 
 export default function LandingPage() {
   return (
     <div className="landing-page">
-      <h1>Welcome to the Arabic Maqām Network</h1>
       <p>
-        lorem impsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit
-        anim id est laborum. Eveniet harum eligendi pariatur similique dolorum odio, tenetur dolore veritatis asperiores cupiditate excepturi quod qui
-        sit porro? Lorem ipsum, dolor sit amet consectetur adipisicing elit. Cumque iste aspernatur, mollitia optio est nihil libero error sed
-        eveniet, velit dolorem fugit deleniti blanditiis possimus exercitationem, aliquam ducimus aperiam rerum! Lorem ipsum dolor sit amet,
-        consectetur adipisicing elit. Dolores incidunt adipisci, quidem perspiciatis in, error, omnis excepturi veritatis nam repudiandae veniam
-        dolorum magnam. Nemo assumenda, mollitia accusantium voluptas quaerat autem? Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse
-        aliquam incidunt laborum beatae veritatis cumque voluptatum hic. Nostrum, nobis accusamus. Impedit fugiat beatae atque iure iste laudantium
-        ipsum quia! Facilis.
+        <strong>Arabic Maqām Network</strong> is an innovative{" "}
+        <span className="highlight">open-access</span> online platform dedicated
+        to the study and exploration of the{" "}
+        <span className="highlight">Arabic maqām system</span>. It was
+        researched, designed and developed by <strong>Dr. Khyam Allami</strong>{" "}
+        and <strong>Ibrahim El Khansa</strong> in the{" "}
+        <span className="highlight">
+          <strong>Music Intelligence Lab</strong>
+        </span>{" "}
+        at the{" "}
+        <span className="highlight">
+          <strong>American University of Beirut</strong>
+        </span>
+        , Lebanon.
       </p>
+      <p>
+        The platform is designed to be a valuable resource for{" "}
+        <span className="highlight">students</span>,{" "}
+        <span className="highlight">musicians</span>,{" "}
+        <span className="highlight">composers</span>,{" "}
+        <span className="highlight">musicologists</span>,{" "}
+        <span className="highlight">educators</span>,{" "}
+        <span className="highlight">researchers</span>, and anyone interested in
+        the <span className="highlight">rich musical heritage</span> of the{" "}
+        <span className="highlight">Arabic-speaking region</span>.
+      </p>
+
+      <p>
+        It offers an <span className="highlight">interactive</span>,{" "}
+        <span className="highlight">comprehensive</span> and{" "}
+        <span className="highlight">academically rigorous</span> database of{" "}
+        <span className="highlight">tuning systems</span>,{" "}
+        <span className="highlight">ajnās</span>, and{" "}
+        <span className="highlight">maqāmāt</span>, along with their{" "}
+        <span className="highlight">suyūr</span> and{" "}
+        <span className="highlight">intiqālāt</span> (modulations), all of which
+        can be <span className="highlight">played</span> and heard with a{" "}
+        <span className="highlight">computer keyboard</span> or via{" "}
+        <span className="highlight">MIDI</span>.
+      </p>
+      <p>
+        In addition, it provides in-depth{" "}
+        <span className="highlight">mathematical</span> and{" "}
+        <span className="highlight">musicological analysis</span>, various{" "}
+        <span className="highlight">analytics</span> and an{" "}
+        <span className="highlight">API</span> for programmatic access to the{" "}
+        <span className="highlight">data</span>.
+      </p>
+      <ul>
+        <li>
+          Explore and play hundreds of Arabic tuning systems, ajnās, and maqāmāt
+          interactively.
+        </li>
+        <li>
+          Switch between multiple tuning systems to hear and compare their
+          structures and intervals on the same jins or maqām.
+        </li>
+        <li>
+          Play and hear every jins and maqām, including all their possible
+          transpositions and modulations using your computer keyboard or MIDI
+          input.
+        </li>
+        <li>
+          Explore maqām modulation based on a unique algorithm created from Sāmī
+          Al-Shawwā&apos;s rules for modulation.
+        </li>
+        <li>
+          See and hear detailed analysis for each tuning system, jins and maqām
+          including their ajnas constructions, transpositions and modulations.
+        </li>
+        <li>
+          Detailed commentaries by Dr. Khyam Allami on each tuning system, maqām
+          and sayr.
+        </li>
+        <li>
+          Access a comprehensive bibliography and source references for all the
+          musicological data.
+        </li>
+        <li>
+          Customize sound output with waveform, volume, and envelope controls.
+        </li>
+        <li>
+          Bookmark, organize, and revisit your favorite maqāmāt and ajnās.
+        </li>
+        <li>
+          Export the data in various formats for research or creative use.
+        </li>
+        <li>
+          Access an open API for programmatic data retrieval and integration.
+        </li>
+      </ul>
     </div>
   );
 }

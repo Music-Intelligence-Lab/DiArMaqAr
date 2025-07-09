@@ -1,0 +1,77 @@
+@use "./variables" as *;
+.landing-page {
+  display: flex;
+  flex-direction: column;
+
+  max-width: 65%;
+  margin: 30px auto;
+  padding: 0rem;
+  min-height: fit-content;
+
+  h3 {
+    font-size: 16px;
+    margin-bottom: 1.5rem;
+    color: $text;
+    font-weight: 400;
+//    text-align: center;
+  }
+  p {
+    font-size: 16px;
+    line-height: 1.7;
+    color: $text;
+    text-align: justify;
+    margin-bottom: 20px;
+  }
+  ul {
+
+    padding: 0;
+    list-style: none;
+    counter-reset: feature;
+    max-width: 60%;
+    text-align: justify;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  ul li {
+    position: relative;
+    line-height: 1.5;
+    font-size: 16px;
+    color: $text;
+   //border-radius: 0.7rem;
+    padding: 18px 24px 15px 52px;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+  }
+  ul li::before {
+    counter-increment: feature;
+    content: counter(feature);
+    position: absolute;
+    left: 0px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: 400;
+    color: $text;
+    background-color: $primary;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    border: 0px solid $text;
+    z-index: 1;
+  }
+  ul li:last-child {
+    margin-bottom: 0;
+  }
+
+/*   .highlight {
+    background-color: rgb($secondary, 0.8);
+    color: $text;
+    font-weight: 200;
+    padding: 1px 2px;
+    margin: 0 0;
+  }
+ */}
