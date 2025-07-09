@@ -1028,66 +1028,74 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       </div> */}
 
       {/* COMMENTS AND SOURCES */}
-      <div className="tuning-system-manager__comments-sources-container">
-        <div className="tuning-system-manager__comments-english">
-          <h3>Comments:</h3>
-          <div>
-            {selectedTuningSystem
-              ?.getCommentsEnglish()
-              .split("\n")
-              .map((line, index) => (
-                <span key={index}>
-                  {line}
-                  <br />
-                </span>
-              ))}
-          </div>
-        </div>
-
-        <div className="tuning-system-manager__sources-english">
-          <h3>Sources:</h3>
-          {[...sourcePageReferences]
-            .sort((a, b) => {
-              const srcA = sources.find((s) => s.getId() === a.sourceId);
-              const srcB = sources.find((s) => s.getId() === b.sourceId);
-              const nameA = srcA?.getContributors()[0]?.lastNameEnglish || "";
-              const nameB = srcB?.getContributors()[0]?.lastNameEnglish || "";
-              return nameA.localeCompare(nameB);
-            })
-            .map((ref, idx) => {
-              const source = sources.find((s) => s.getId() === ref.sourceId);
-              return (
-                <Link href={`/bibliography?source=${source?.getId()}`} key={idx} className="tuning-system-manager__source-item">
-                  {source && source.getContributors().length !== 0 && (
-                    <span className="">
-                      {source.getContributors()[0].lastNameEnglish?.length
-                        ? `${source.getContributors()[0]?.lastNameEnglish ?? ""}, ${
-                            source
-                              .getContributors()[0]
-                              ?.firstNameEnglish?.split(" ")
-                              .map((w) => w.charAt(0))
-                              .join(". ") ?? ""
-                          }. (${source.getPublicationDateEnglish() ?? ""}${
-                            source.getSourceType?.() === "Book" &&
-                            "getOriginalPublicationDateEnglish" in source &&
-                            source.getOriginalPublicationDateEnglish?.()
-                              ? "/" + source.getOriginalPublicationDateEnglish()
-                              : ""
-                          }:${ref.page})`
-                        : `{${source.getPublicationDateEnglish() ?? ""}${
-                            source.getSourceType?.() === "Book" &&
-                            "getOriginalPublicationDateEnglish" in source &&
-                            source.getOriginalPublicationDateEnglish?.()
-                              ? "/" + source.getOriginalPublicationDateEnglish()
-                              : ""
-                          }:${ref.page})`}
+      {(selectedTuningSystem?.getCommentsEnglish()?.trim() ||
+        (sourcePageReferences?.some(ref => ref.sourceId) && sourcePageReferences.length > 0)) && (
+        <div className="tuning-system-manager__comments-sources-container">
+          {selectedTuningSystem?.getCommentsEnglish()?.trim() && (
+            <div className="tuning-system-manager__comments-english">
+              <h3>Comments:</h3>
+              <div>
+                {selectedTuningSystem
+                  .getCommentsEnglish()
+                  .split("\n")
+                  .map((line, index) => (
+                    <span key={index}>
+                      {line}
+                      <br />
                     </span>
-                  )}
-                </Link>
-              );
-            })}
+                  ))}
+              </div>
+            </div>
+          )}
+
+          {sourcePageReferences?.some(ref => ref.sourceId) && (
+            <div className="tuning-system-manager__sources-english">
+              <h3>Sources:</h3>
+              {[...sourcePageReferences]
+                .filter(ref => ref.sourceId)
+                .sort((a, b) => {
+                  const srcA = sources.find((s) => s.getId() === a.sourceId);
+                  const srcB = sources.find((s) => s.getId() === b.sourceId);
+                  const nameA = srcA?.getContributors()[0]?.lastNameEnglish || "";
+                  const nameB = srcB?.getContributors()[0]?.lastNameEnglish || "";
+                  return nameA.localeCompare(nameB);
+                })
+                .map((ref, idx) => {
+                  const source = sources.find((s) => s.getId() === ref.sourceId);
+                  return (
+                    <Link href={`/bibliography?source=${source?.getId()}`} key={idx} className="tuning-system-manager__source-item">
+                      {source && source.getContributors().length !== 0 && (
+                        <span className="">
+                          {source.getContributors()[0].lastNameEnglish?.length
+                            ? `${source.getContributors()[0]?.lastNameEnglish ?? ""}, ${
+                                source
+                                  .getContributors()[0]
+                                  ?.firstNameEnglish?.split(" ")
+                                  .map((w) => w.charAt(0))
+                                  .join(". ") ?? ""
+                              }. (${source.getPublicationDateEnglish() ?? ""}${
+                                source.getSourceType?.() === "Book" &&
+                                "getOriginalPublicationDateEnglish" in source &&
+                                source.getOriginalPublicationDateEnglish?.()
+                                  ? "/" + source.getOriginalPublicationDateEnglish()
+                                  : ""
+                              }:${ref.page})`
+                            : `{${source.getPublicationDateEnglish() ?? ""}${
+                                source.getSourceType?.() === "Book" &&
+                                "getOriginalPublicationDateEnglish" in source &&
+                                source.getOriginalPublicationDateEnglish?.()
+                                  ? "/" + source.getOriginalPublicationDateEnglish()
+                                  : ""
+                              }:${ref.page})`}
+                        </span>
+                      )}
+                    </Link>
+                  );
+                })}
+            </div>
+          )}
         </div>
-      </div>
+      )}
     </div>
   );
 }
