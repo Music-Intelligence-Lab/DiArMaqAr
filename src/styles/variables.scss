@@ -1,7 +1,7 @@
 @use "sass:color";
 
-$top-navbar-height: 75px;
-$bottom-navbar-height: 55px;
+$top-navbar-height: 90px;
+$bottom-navbar-height: 70px;
 $page-height: calc(100svh - $top-navbar-height - $bottom-navbar-height - 30px);
 
 $background: #222222;
@@ -28,3 +28,22 @@ $hovered-delete: color.adjust($delete, $lightness: -10%);
 $hovered-disabled: color.adjust($disabled, $lightness: -10%);
 
 $main-gradient: linear-gradient(0deg, $dark-grey, $dark-grey);
+
+$link: $gold; // Default link color
+$link-visited: color.adjust($link, $saturation: -30%);
+
+a {
+    color: $link !important;
+    text-decoration: none !important;
+    transition: color 0.2s;
+
+    &:hover,
+    &:focus {
+        text-decoration: none !important;
+        color: lighten($color: $gold, $amount: 20%) !important;
+    }
+
+    &:visited {
+        color: $link-visited;
+    }
+}

@@ -169,7 +169,7 @@
   &__header {
     text-align: left;
     background-color: transparent;
-    scroll-margin-top: calc($top-navbar-height - 30px + 60px); // Adjusted for navbar height
+    scroll-margin-top: calc($top-navbar-height - 30px + 50px); // Adjusted for navbar height
   }
 
   &__cell {
