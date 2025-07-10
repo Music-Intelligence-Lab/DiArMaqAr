@@ -78,9 +78,11 @@ export default function Navbar() {
             <div className="navbar__left-panel-menu-icon">
               <NavigationMenu />
             </div>
-            <div className="navbar__left-panel-admin" onClick={() => setShowAdminTabs(!showAdminTabs)}>
-              {showAdminTabs ? "User Mode" : "Admin Mode"}
-            </div>
+            {process.env.NODE_ENV === "development" && (
+              <div className="navbar__left-panel-admin" onClick={() => setShowAdminTabs(!showAdminTabs)}>
+                {showAdminTabs ? "User Mode" : "Admin Mode"}
+              </div>
+            )}
           </div>
           <div className="navbar__center-panel">
             <span
