@@ -329,7 +329,7 @@
         "creatorArabic": "",
         "sourceId": "oY8WnTdP5msak8o1G_N7f",
         "page": "49",
-        "commentsEnglish": "Starts on the note chahargāh or nawā and after a descent to the note rāst the ascent begins from nawā using jins ḥijāz until kurdān, muḥayyar, sunbuleh, jawāb chahargāh (mahūran) until saham/ramal tūtī followed by a descent along it's scale degrees until its qarār which is rāst. ",
+        "commentsEnglish": "Starts on the note chahargāh or nawā and after a descent to the note rāst the ascent begins from nawā using jins ḥijāz until kurdān, then  ascend to muḥayyar, sunbuleh, jawāb chahargāh (mahūran) until saham/ramal tūtī followed by a descent along it's scale degrees until its qarār which is rāst. ",
         "commentsArabic": "",
         "stops": [
           {
@@ -413,7 +413,73 @@
       "dūgāh",
       "rāst"
     ],
-    "suyūr": [],
+    "suyūr": [
+      {
+        "id": "4KGp-L35_AHYXrBFnx_T9",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "50",
+        "commentsEnglish": "Starts from the note ḥijāz to render ḥijaz on nawā and it continues ascending until rendering nahāwand on kurdān. Then during the descent one renders nahāwand on nawā, then nawā on chahargāh after which the note ḥusaynī is swapped for ḥiṣār and the descent continues until its qarār which is rāst, but before the end one must briefly utilise ḥijāz on yegāh.",
+        "commentsArabic": "",
+        "stops": [
+          {
+            "type": "note",
+            "value": "ḥijāz"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "nawā",
+            "direction": "ascending"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "20",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "20",
+            "startingNote": "nawā",
+            "direction": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "chahargāh",
+            "direction": "descending"
+          },
+          {
+            "type": "note",
+            "value": "ḥiṣār",
+            "direction": "descending"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "yegāh",
+            "direction": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ]
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [
