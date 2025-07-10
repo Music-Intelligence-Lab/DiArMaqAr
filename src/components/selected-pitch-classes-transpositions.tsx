@@ -1,18 +1,15 @@
 "use client";
 
-import React, { useMemo, useEffect } from "react";
+import React, { useMemo } from "react";
 import useAppContext from "@/contexts/app-context";
 import useSoundContext, { defaultNoteVelocity } from "@/contexts/sound-context";
 import useFilterContext from "@/contexts/filter-context";
-import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
-import { getJinsTranspositions } from "@/functions/transpose";
-import { Jins } from "@/models/Jins";
+import { getPitchClassIntervals } from "@/functions/transpose";
 import camelCaseToWord from "@/functions/camelCaseToWord";
-import Link from "next/link";
 
-export default function JinsTranspositions() {
-  const { selectedJinsDetails, selectedTuningSystem, setSelectedPitchClasses, allPitchClasses, centsTolerance, setCentsTolerance, sources, setSelectedJins } = useAppContext();
+export default function SelectedPitchClassTranspositions() {
+  const { selectedPitchClasses, selectedTuningSystem, allPitchClasses, centsTolerance, setCentsTolerance } = useAppContext();
 
   const { noteOn, noteOff, playSequence, soundSettings } = useSoundContext();
 
@@ -20,86 +17,38 @@ export default function JinsTranspositions() {
 
   const disabledFilters = ["pitchClass"];
 
-  // --- Utility: getHeaderId for jins ---
-  const getJinsHeaderId = (noteName: string): string => {
-    if (typeof noteName !== "string") return "";
-    return `jins-transpositions__header--${noteName
-      .replace(/[^a-zA-Z0-9]/g, "-")
-      .replace(/-+/g, "-")
-      .toLowerCase()}`;
-  };
-
-  // --- Utility: scroll to jins header by note name ---
-  function scrollToJinsHeader(firstNote: string, selectedJinsDetails?: any) {
-    if (!firstNote && selectedJinsDetails) {
-      firstNote = selectedJinsDetails.getNoteNames?.()?.[0];
-    }
-    if (!firstNote) return;
-    const id = getJinsHeaderId(firstNote);
-    const el = document.getElementById(id);
-    if (el && typeof el.scrollIntoView === "function") {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  }
-
   const transpositionTables = useMemo(() => {
-    if (!selectedJinsDetails || !selectedTuningSystem) return null;
-
-    const jinsNoteNames = selectedJinsDetails.getNoteNames();
-
-    if (jinsNoteNames.length < 2) return null;
+    if (!selectedTuningSystem || selectedPitchClasses.length < 2) return null;
 
     const valueType = allPitchClasses[0].originalValueType;
     const useRatio = valueType === "fraction" || valueType === "decimalRatio";
 
-    const numberOfFilterRows = Object.keys(filters).filter((key) => !disabledFilters.includes(key) && key !== valueType && filters[key as keyof typeof filters]).length;
-
-    const jinsTranspositions = getJinsTranspositions(allPitchClasses, selectedJinsDetails, true, centsTolerance);
-
-    function renderTransposition(jins: Jins, index: number) {
-      const transposition = jins.transposition;
-      const pitchClasses = jins.jinsPitchClasses;
-      const intervals = jins.jinsPitchClassIntervals;
-      const colCount = jins.jinsPitchClasses.length * 2;
+    const numberOfFilterRows = Object.keys(filters).filter(
+      (key) => !disabledFilters.includes(key) && key !== valueType && filters[key as keyof typeof filters]
+    ).length;
+    const pitchClassIntervals = getPitchClassIntervals(selectedPitchClasses);
+    function renderTable() {
+      const pitchClasses = selectedPitchClasses;
+      const intervals = pitchClassIntervals;
+      const colCount = selectedPitchClasses.length * 2;
 
       return (
         <>
-          <tr className="jins-transpositions__header" id={getJinsHeaderId(pitchClasses[0]?.noteName)} style={index === 0 || index === 1 ? { scrollMarginTop: "590px" } : undefined}>
-            <td className={`jins-transpositions__transposition-number jins-transpositions__transposition-number_${pitchClasses[0].octave}`} rowSpan={4 + numberOfFilterRows}>
-              {index + 1}
+          <tr className="jins-transpositions__header" style={{ scrollMarginTop: "140px" }}>
+            <td
+              className={`jins-transpositions__transposition-number jins-transpositions__transposition-number_${pitchClasses[0].octave}`}
+              rowSpan={4 + numberOfFilterRows}
+            >
             </td>
 
             <td className="jins-transpositions__jins-name-row" colSpan={2 + (pitchClasses.length - 1) * 2}>
-              {!transposition ? (
-                <span className="jins-transpositions__transposition-title">Darajat al-Istiqrār (tonic/finalis): {pitchClasses[0].noteName + ` (${getEnglishNoteName(pitchClasses[0].noteName)})`}</span>
-              ) : (
-                <span className="jins-transpositions__transposition-title">{jins.name}</span>
-              )}
-              <button
-                className="jins-transpositions__button"
-                onClick={() => {
-                  setSelectedPitchClasses([]); // Clear first
-                  setSelectedPitchClasses(pitchClasses);
-                  setSelectedJins(transposition ? jins : null);
-                  setTimeout(() => {
-                    window.dispatchEvent(
-                      new CustomEvent("jinsTranspositionChange", {
-                        detail: { firstNote: pitchClasses[0].noteName },
-                      })
-                    );
-                  }, 0);
-                }}
-              >
-                Select & Load to Keyboard
-              </button>
-
               <button
                 className="jins-transpositions__button"
                 onClick={() => {
                   playSequence(pitchClasses, true);
                 }}
               >
-                <PlayCircleIcon className="jins-transpositions__play-circle-icon" /> Play jins
+                <PlayCircleIcon className="jins-transpositions__play-circle-icon" /> Play Selected Pitch Classes
               </button>
             </td>
           </tr>
@@ -141,7 +90,9 @@ export default function JinsTranspositions() {
             <th className="jins-transpositions__header-pitchClass">{pitchClasses[0].originalValue}</th>
             {intervals.map((interval, i) => (
               <React.Fragment key={i}>
-                <th className="jins-transpositions__header-pitchClass">{useRatio ? `(${interval.fraction.replace("/", ":")})` : `(${interval.cents.toFixed(3)})`}</th>
+                <th className="jins-transpositions__header-pitchClass">
+                  {useRatio ? `(${interval.fraction.replace("/", ":")})` : `(${interval.cents.toFixed(3)})`}
+                </th>
                 <th className="jins-transpositions__header-pitchClass">{pitchClasses[i + 1].originalValue}</th>
               </React.Fragment>
             ))}
@@ -263,11 +214,17 @@ export default function JinsTranspositions() {
       <>
         <div className="jins-transpositions">
           <h2 className="jins-transpositions__title">
-            Taḥlīl (analysis): {`${selectedJinsDetails.getName()}`}{" "}
+            Taḥlīl (analysis):
             {!useRatio && (
               <>
                 {" "}
-                / Cents Tolerance: <input className="jins-transpositions__input" type="number" value={centsTolerance ?? 0} onChange={(e) => setCentsTolerance(Number(e.target.value))} />
+                / Cents Tolerance:{" "}
+                <input
+                  className="jins-transpositions__input"
+                  type="number"
+                  value={centsTolerance ?? 0}
+                  onChange={(e) => setCentsTolerance(Number(e.target.value))}
+                />
               </>
             )}
             <span className="tuning-system-manager__filter-menu">
@@ -286,7 +243,9 @@ export default function JinsTranspositions() {
                   <label
                     key={filterKey}
                     htmlFor={`filter-${filterKey}`}
-                    className={`tuning-system-manager__filter-item ${filters[filterKey as keyof typeof filters] ? "tuning-system-manager__filter-item_active" : ""}`}
+                    className={`tuning-system-manager__filter-item ${
+                      filters[filterKey as keyof typeof filters] ? "tuning-system-manager__filter-item_active" : ""
+                    }`}
                     // prevent the drawer (or parent) click handler from firing
                     onClick={(e) => e.stopPropagation()}
                   >
@@ -327,79 +286,12 @@ export default function JinsTranspositions() {
               <col style={{ minWidth: "150px", maxWidth: "150px", width: "150px" }} />
             </colgroup>
 
-            <thead>{renderTransposition(jinsTranspositions[0], 0)}</thead>
-          </table>
-
-          {/* COMMENTS AND SOURCES */}
-          {selectedJinsDetails && (
-            <>
-              <div className="jins-transpositions__comments-sources-container">
-                <div className="jins-transpositions__comments-english">
-                  <h3>Comments:</h3>
-                  <div className="jins-transpositions__comments-text">{selectedJinsDetails.getCommentsEnglish()}</div>
-                </div>
-
-                <div className="jins-transpositions__sources-english">
-                  <h3>Sources:</h3>
-                  <div className="jins-transpositions__sources-text">
-                    {selectedJinsDetails?.getSourcePageReferences().length > 0 &&
-                      selectedJinsDetails.getSourcePageReferences().map((sourceRef, idx) => {
-                        const source = sources.find((s: any) => s.id === sourceRef.sourceId);
-                        return source ? (
-                          <Link href={`/bibliography?source=${source?.getId()}`} key={idx}>
-                            {source.getContributors()[0].lastNameEnglish} ({source.getPublicationDateEnglish()}:{sourceRef.page})
-                            <br />
-                          </Link>
-                        ) : null;
-                      })}
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
-
-          <h2 className="jins-transpositions__title">Taṣwīr (transpositions): {`${selectedJinsDetails.getName()}`}</h2>
-
-          <table className="jins-transpositions__table">
-            <colgroup>
-              <col style={{ minWidth: "30px", maxWidth: "30px", width: "30px" }} />
-              <col style={{ minWidth: "150px", maxWidth: "150px", width: "150px" }} />
-            </colgroup>
-
-            <thead></thead>
-            <tbody>
-              {jinsTranspositions.slice(1).map((jinsTransposition, row) => {
-                return <React.Fragment key={row}>{renderTransposition(jinsTransposition, row + 1)}</React.Fragment>;
-              })}
-            </tbody>
+            <thead>{renderTable()}</thead>
           </table>
         </div>
       </>
     );
-  }, [allPitchClasses, selectedJinsDetails, centsTolerance, filters, soundSettings]);
-
-  // Listen for custom event to scroll to header when jins/transposition changes (event-driven)
-  useEffect(() => {
-    function handleJinsTranspositionChange(e: CustomEvent) {
-      scrollToJinsHeader(e.detail?.firstNote, selectedJinsDetails);
-    }
-    window.addEventListener("jinsTranspositionChange", handleJinsTranspositionChange as EventListener);
-    return () => {
-      window.removeEventListener("jinsTranspositionChange", handleJinsTranspositionChange as EventListener);
-    };
-  }, [selectedJinsDetails]);
-
-  // Scroll to header on mount if jinsFirstNote is in the URL
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const params = new URLSearchParams(window.location.search);
-    const jinsFirstNote = params.get("jinsFirstNote");
-    if (jinsFirstNote) {
-      setTimeout(() => {
-        scrollToJinsHeader(decodeURIComponent(jinsFirstNote), selectedJinsDetails);
-      }, 200);
-    }
-  }, [selectedJinsDetails]);
+  }, [selectedTuningSystem, allPitchClasses, selectedPitchClasses, centsTolerance, filters, soundSettings]);
 
   return transpositionTables;
 }

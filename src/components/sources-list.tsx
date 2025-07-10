@@ -6,9 +6,39 @@ import { Source } from "@/models/bibliography/Source";
 import Book from "@/models/bibliography/Book";
 import Article from "@/models/bibliography/Article";
 import { Contributor } from "@/models/bibliography/AbstractSource";
+import { useEffect, useState, useRef } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
 
 export default function SourcesList() {
   const { sources } = useAppContext();
+
+  const [highlighted, setHighlighted] = useState<string | null>(null);
+  const sourceRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    if (pathname === "/bibliography") {
+      const sourceId = searchParams.get("source");
+      if (sourceId) setHighlighted(sourceId);
+      else setHighlighted(null);
+    } else {
+      setHighlighted(null);
+    }
+  }, [pathname, searchParams]);
+
+  // Auto-scroll to highlighted source
+  useEffect(() => {
+    if (highlighted && sourceRefs.current[highlighted]) {
+      sourceRefs.current[highlighted]?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
+    }
+  }, [highlighted]);
+
+  console.log("SourcesList rendered with highlighted:", highlighted);
 
   // Helper to format contributor names as "Last First؛ Last First؛ …" (using Arabic space and semicolon)
   const formatContributorsArabic = (contributors: Contributor[]): string => {
@@ -85,8 +115,9 @@ export default function SourcesList() {
       return (
         <>
           {authorSegment} ({year}) {editors.length > 0 && <> Edited by {editors.map(formatName).join(" and ")}</>}{" "}
-          {translators.length > 0 && <> Translated by {translators.map(formatName).join(" and ")}</>} {reviewers.length > 0 && <> Reviewed by {reviewers.map(formatName).join(" and ")}</>} {title}{" "}
-          {editionPart && ` ${editionPart}`} {oPubDateEngPart && ` ${oPubDateEngPart}`} {publisherPart && <>{publisherPart}.</>}{" "}
+          {translators.length > 0 && <> Translated by {translators.map(formatName).join(" and ")}</>}{" "}
+          {reviewers.length > 0 && <> Reviewed by {reviewers.map(formatName).join(" and ")}</>} {title} {editionPart && ` ${editionPart}`}{" "}
+          {oPubDateEngPart && ` ${oPubDateEngPart}`} {publisherPart && <>{publisherPart}.</>}{" "}
           {url && (
             <>
               Available at:{" "}
@@ -218,7 +249,11 @@ export default function SourcesList() {
           return 0;
         })
         .map((src: Source) => (
-          <div key={src.getId()} className="sources-list__row">
+          <div 
+            key={src.getId()} 
+            ref={(el) => { sourceRefs.current[src.getId()] = el; }}
+            className={"sources-list__row " + (highlighted === src.getId() ? "sources-list__row_highlighted" : "")}
+          >
             <div className="sources-list__cell sources-list__cell--english">{buildEnglishCitation(src)}</div>
             <div className="sources-list__cell sources-list__cell--arabic">{buildArabicCitation(src)}</div>
           </div>

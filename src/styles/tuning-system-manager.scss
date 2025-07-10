@@ -167,7 +167,7 @@
     padding-left: 0px;
     padding-right: 0px;
     margin-top: 20px;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     font-size: 14px;
     font-weight: 300;
     width: 100%;
@@ -211,22 +211,20 @@
   &__starting-note-container {
     align-items: center;
     gap: 10px;
-    margin-left: -0px;
-    padding: 0px 0px 0px 0px;
   }
 
   &__starting-note-left {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-left: 0px;
+    margin-left: 20px;
   }
 
   &__starting-note {
     display: block;
     flex-direction: column;
     align-items: baseline;
-    gap: 10px;
+    gap: 0px;
     text-align: center;
     margin-right: 10px;
   }
@@ -323,11 +321,12 @@
     display: block;
     width: 100%;
     margin-top: 0px;
+    padding: 0px 20px;
   }
 
   &__comments-english {
     font-size: 14px;
-    width: 50%;
+    width: 60%;
     min-height: 80px;
     direction: ltr;
     text-align: left;
@@ -340,7 +339,7 @@
 
   &__comments-arabic {
     font-size: 14px;
-    width: 50%;
+    width: 60%;
     min-height: 80px;
     text-align: right;
     direction: rtl;
@@ -351,7 +350,7 @@
 
   &__sources-english {
     font-size: 14px;
-    width: 50%;
+    width: 40%;
     min-height: 80px;
     direction: ltr;
     text-align: left;
@@ -362,7 +361,7 @@
 
   &__sources-arabic {
     font-size: 14px;
-    width: 50%;
+    width: 40%;
     min-height: 80px;
     text-align: right;
     direction: rtl;
@@ -578,9 +577,9 @@
 
   &__octave-details {
     width: 100%;
-    padding: 20px;
+    padding: 10px 20px;
     background-color: rgba($black, 0.3);
-    border-radius: 10px;
+    border-radius: 0px;
     margin-bottom: 10px;
     position: relative; // needed for the pseudo-element positioning
   }
@@ -594,7 +593,7 @@
 
   &__octave-summary {
     font-size: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     cursor: pointer;
     user-select: auto;
   }
@@ -882,7 +881,7 @@
     float: right;
     align-items: center;
     gap: 10px;
-    margin-top: 0px;
+    margin-right: 20px;
     margin-bottom: 0px;
   }
 

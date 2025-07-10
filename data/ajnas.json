@@ -271,7 +271,7 @@
   },
   {
     "id": "21",
-    "name": "jins būselīk",
+    "name": "jins būselīk (Al-Shawwā)",
     "noteNames": [
       "dūgāh",
       "nīm buselīk",
@@ -284,6 +284,24 @@
       {
         "sourceId": "oY8WnTdP5msak8o1G_N7f",
         "page": "70"
+      }
+    ]
+  },
+  {
+    "id": "22",
+    "name": "jins būselīk (Al-Ḥilū)",
+    "noteNames": [
+      "dūgāh",
+      "buselīk/ʿushshāq",
+      "chahargāh",
+      "nawā"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "zzowyMMW095bTuaDEyH6M",
+        "page": "126"
       }
     ]
   }

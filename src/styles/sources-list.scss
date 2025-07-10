@@ -38,6 +38,12 @@
     &:nth-child(even) {
       background-color: rgba($background, 0.05);
     }
+
+    &_highlighted {
+      background-color: rgba($secondary, 0.3) !important;
+      border-left: 4px solid $secondary;
+      border-right: 4px solid $secondary;
+    }
   }
 
   /* Common cell styles */

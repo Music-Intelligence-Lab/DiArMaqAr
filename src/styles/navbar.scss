@@ -34,7 +34,7 @@
     display: flex;
     width: 100%;
     justify-content: space-between;
-    align-items:end;
+    align-items:center;
     height: $top-navbar-height;
     color: white;
     padding: 20px;
@@ -66,7 +66,10 @@
     color: white;
     cursor: pointer;
     transition: 0.1s ease;
-    padding: 10px;
+    padding: 10px 20px;
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+    
 
     &:not(:last-child) {
       border-right: 1px solid $grey;
@@ -103,12 +106,13 @@
 
     &_tab-title {
       font-size: 14px;
-      font-weight: 400;
+      font-weight: 500;
+      margin-bottom: 5px;
     }
 
     &_tab-subtitle {
       font-size: 13px;
-      font-weight: 300;
+      font-weight: 200;
     }
 
   }

@@ -45,19 +45,26 @@ export function shiftPitchClassWithoutAllPitchClasses(pitchClass: PitchClass, oc
   const factor = Math.pow(2, octaves);
 
   // Compute the new original ratio value for fraction
-  const newOriginalValue = shiftPitchClassBaseValue(pitchClass.originalValue, pitchClass.originalValueType as "fraction" | "cents" | "decimalRatio" | "stringLength", octaves as 0 | 1 | 2 | 3);
+  const newOriginalValue = shiftPitchClassBaseValue(
+    pitchClass.originalValue,
+    pitchClass.originalValueType as "fraction" | "cents" | "decimalRatio" | "stringLength",
+    (octaves + pitchClass.octave - 1) as 0 | 1 | 2 | 3 | 4
+  );
+
+  const newFractionValue = shiftPitchClassBaseValue(pitchClass.fraction, "fraction", (octaves + pitchClass.octave - 1) as 0 | 1 | 2 | 3 | 4);
 
   return {
     ...pitchClass,
+    noteName: pitchClass.noteName + " shifted by " + octaves + " octaves",
     originalValue: newOriginalValue,
-    fraction: newOriginalValue,
+    fraction: newFractionValue,
     octave: pitchClass.octave + octaves,
     // Adjust frequency and string length by octave factor
     frequency: (parseFloat(pitchClass.frequency) * factor).toString(),
     stringLength: (parseFloat(pitchClass.stringLength) / factor).toString(),
     // Adjust decimal ratio, cents, and MIDI note
     decimalRatio: (parseFloat(pitchClass.decimalRatio) * factor).toString(),
-    cents: pitchClass.cents + octaves * 1200,
+    cents: (parseFloat(pitchClass.cents) + octaves * 1200).toString(),
     midiNoteNumber: pitchClass.midiNoteNumber + octaves * 12,
   };
 }
