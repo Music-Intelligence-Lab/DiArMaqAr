@@ -16,6 +16,8 @@ import TuningSystemOctaveTables from "./tuning-system-octave-tables";
 import JinsDetails from "@/models/Jins";
 import MaqamDetails from "@/models/Maqam";
 import ExportModal from "./export-modal";
+import SelectedPitchClassTranspositions from "./selected-pitch-classes-transpositions";
+import Link from "next/link";
 
 function isTuningSystemDisabled(
   tuningSystem: TuningSystem,
@@ -907,6 +909,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       {/* TUNING OCTAVES TABLES GRID */}
 
       <TuningSystemOctaveTables admin={admin} />
+      <SelectedPitchClassTranspositions />
 
       {/* <div className="tuning-system-manager__buttons">
         <button
@@ -954,7 +957,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             .map((ref, idx) => {
               const source = sources.find((s) => s.getId() === ref.sourceId);
               return (
-                <div key={idx} className="tuning-system-manager__source-item">
+                <Link href={`/bibliography?source=${source?.getId()}`} key={idx} className="tuning-system-manager__source-item">
                   {source && source.getContributors().length !== 0 && (
                     <span className="">
                       {source.getContributors()[0].lastNameEnglish?.length
@@ -965,22 +968,28 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                               .map((w) => w.charAt(0))
                               .join(". ") ?? ""
                           }. (${source.getPublicationDateEnglish() ?? ""}${
-                            source.getSourceType?.() === "Book" && "getOriginalPublicationDateEnglish" in source && source.getOriginalPublicationDateEnglish?.()
+                            source.getSourceType?.() === "Book" &&
+                            "getOriginalPublicationDateEnglish" in source &&
+                            source.getOriginalPublicationDateEnglish?.()
                               ? "/" + source.getOriginalPublicationDateEnglish()
                               : ""
                           }:${ref.page})`
                         : `{${source.getPublicationDateEnglish() ?? ""}${
-                            source.getSourceType?.() === "Book" && "getOriginalPublicationDateEnglish" in source && source.getOriginalPublicationDateEnglish?.()
+                            source.getSourceType?.() === "Book" &&
+                            "getOriginalPublicationDateEnglish" in source &&
+                            source.getOriginalPublicationDateEnglish?.()
                               ? "/" + source.getOriginalPublicationDateEnglish()
                               : ""
                           }:${ref.page})`}
                     </span>
                   )}
-                </div>
+                </Link>
               );
             })}
         </div>
       </div>
+
+      {/* Export Modal */}
       <ExportModal isOpen={isExportModalOpen} onClose={() => setIsExportModalOpen(false)} />
     </div>
   );

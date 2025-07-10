@@ -31,7 +31,7 @@ export default class Pattern {
 }
 
 export interface PatternNote {
-  scaleDegree: ScaleDegree;
+  scaleDegree: string;
   noteDuration: NoteDuration;
   isTarget: boolean;
   velocity?: number; // Optional velocity (0-127)
@@ -83,8 +83,6 @@ export const SCALE_DEGREES: string[] = [
   "+VI",
   "+VII",
 ];
-
-export type ScaleDegree = (typeof SCALE_DEGREES)[number];
 
 export function reversePatternNotes(notes: PatternNote[]): PatternNote[] {
   const reversedScaleDegrees = notes.map((note) => note.scaleDegree).reverse();

@@ -47,7 +47,12 @@ interface SoundContextInterface {
   setSoundSettings: React.Dispatch<React.SetStateAction<SoundSettings>>;
   activePitchClasses: PitchClass[];
   setActivePitchClasses: React.Dispatch<React.SetStateAction<PitchClass[]>>;
-  playSequence: (pitchClasses: PitchClass[], ascending?: boolean, velocity?: number | ((noteIdx: number, patternIdx: number) => number)) => Promise<void>;
+  playSequence: (
+    pitchClasses: PitchClass[],
+    ascending?: boolean,
+    ascendingPitchClasses?: PitchClass[],
+    velocity?: number | ((noteIdx: number, patternIdx: number) => number)
+  ) => Promise<void>;
   noteOn: (pitchClass: PitchClass, velocity?: number) => void;
   noteOff: (pitchClass: PitchClass) => void;
   midiInputs: MidiPortInfo[];
@@ -60,7 +65,8 @@ interface SoundContextInterface {
 const SoundContext = createContext<SoundContextInterface | null>(null);
 
 export function SoundContextProvider({ children }: { children: React.ReactNode }) {
-  const { selectedTuningSystem, selectedMaqamDetails, selectedJinsDetails, tuningSystemPitchClasses, allPitchClasses, selectedPitchClasses } = useAppContext();
+  const { selectedTuningSystem, selectedMaqamDetails, selectedJinsDetails, tuningSystemPitchClasses, allPitchClasses, selectedPitchClasses } =
+    useAppContext();
 
   const [soundSettings, setSoundSettings] = useState<SoundSettings>({
     attack: 0.01,
@@ -300,12 +306,17 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     }, givenDuration * 1000);
   };
 
-  const playSequence = (pitchClasses: PitchClass[], ascending = true, velocity?: number | ((noteIdx: number, patternIdx: number) => number)): Promise<void> => {
-    console.log(pitchClasses, ascending, velocity);
+  const playSequence = (
+    pitchClasses: PitchClass[],
+    ascending = true,
+    ascendingPitchClasses: PitchClass[] = [],
+    velocity?: number | ((noteIdx: number, patternIdx: number) => number)
+  ): Promise<void> => {
     timeoutsRef.current.forEach(clearTimeout);
     timeoutsRef.current = [];
 
-    const selectedPattern = soundSettings.selectedPattern || new Pattern("Default", "Default", [{ scaleDegree: "I", noteDuration: "8n", isTarget: true }]);
+    const selectedPattern =
+      soundSettings.selectedPattern || new Pattern("Default", "Default", [{ scaleDegree: "I", noteDuration: "8n", isTarget: true }]);
 
     return new Promise((resolve) => {
       const beatSec = 60 / soundSettings.tempo;
@@ -339,17 +350,35 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         return;
       }
 
-      let sliceIndex = 0;
+      let ascendingSliceIndex = 0;
       const lastAscendingPitchClass = pitchClasses[pitchClasses.length - 1];
 
       for (let i = 0; i < pitchClasses.length; i++) {
         if (parseFloat(pitchClasses[i].frequency) * 2 <= parseFloat(lastAscendingPitchClass.frequency)) {
-          sliceIndex = i + 1;
+          ascendingSliceIndex = i + 1;
         }
       }
 
-      const extendedPitchClasses = [...pitchClasses, ...pitchClasses.slice(sliceIndex, -1).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 1))];
-      console.log(extendedPitchClasses);
+      let descendingSliceIndex = 0;
+      const firstAscendingPitchClass = pitchClasses[0];
+
+      for (let i = pitchClasses.length - 1; i >= 0; i--) {
+        if (parseFloat(pitchClasses[i].frequency) / 2 >= parseFloat(firstAscendingPitchClass.frequency)) {
+          descendingSliceIndex = i + 1;
+        }
+      }
+      
+      if (descendingSliceIndex === 0) descendingSliceIndex = pitchClasses.length + 1;
+
+      const lowerExtension = ascendingPitchClasses.length ? ascendingPitchClasses : pitchClasses; //here we want to make sure that descending sequences have the lower extension using ascending pitch classes
+
+      const extendedPitchClasses = [
+        ...lowerExtension.slice(0, descendingSliceIndex - 1).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, -1)),
+        ...pitchClasses,
+        ...pitchClasses.slice(ascendingSliceIndex).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 1)),
+        ...pitchClasses.slice(ascendingSliceIndex).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 2)),
+      ];
+
 
       const n = pitchClasses.length;
       let cumulativeTimeSec = 0;
@@ -375,20 +404,23 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
             const durSec = base * mod * beatSec;
 
             if (scaleDegree !== "R") {
-              const deg = romanToNumber(scaleDegree);
-              let pitchClassToPlay = extendedPitchClasses[windowStart + deg - 1];
-              console.log("SWITCH\n\n\n\n\n\n\n\n");
-              console.log(pitchClassToPlay, scaleDegree, noteDuration, isTarget);
+              let pitchClassToPlay: PitchClass;
 
-              if (scaleDegree.startsWith("-")) {
-                // negative degree, e.g. "-II" → play the previous octave
-                pitchClassToPlay = shiftPitchClass(allPitchClasses, pitchClassToPlay, -1);
-              } else if (scaleDegree.startsWith("+")) {
-                // positive degree, e.g. "+II" → play the next octave
-                pitchClassToPlay = shiftPitchClass(allPitchClasses, pitchClassToPlay, 1);
+              if (!isNaN(Number(scaleDegree))) {
+                const intervalShift = Number(scaleDegree);
+                pitchClassToPlay = extendedPitchClasses[windowStart + descendingSliceIndex - 1 + intervalShift];
+              } else {
+                const deg = romanToNumber(scaleDegree);
+                pitchClassToPlay = extendedPitchClasses[windowStart + deg - 1 + descendingSliceIndex - 1];
+
+                if (scaleDegree.startsWith("-")) {
+                  // negative degree, e.g. "-II" → play the previous octave
+                  pitchClassToPlay = shiftPitchClass(allPitchClasses, pitchClassToPlay, -1);
+                } else if (scaleDegree.startsWith("+")) {
+                  // positive degree, e.g. "+II" → play the next octave
+                  pitchClassToPlay = shiftPitchClass(allPitchClasses, pitchClassToPlay, 1);
+                }
               }
-
-              console.log(pitchClassToPlay, scaleDegree, noteDuration, isTarget);
 
               // Determine velocity for this note: use pattern note velocity if present, else fall back
               let noteVelocity = patternNotes[patternIdx]?.velocity ?? (isTarget ? defaultTargetVelocity : defaultNoteVelocity);
@@ -595,7 +627,12 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     } else {
       osc.type = waveform as OscillatorType;
     }
-    osc.frequency.setValueAtTime(frequency, startTime);
+
+    try {
+      osc.frequency.setValueAtTime(frequency ?? 0, startTime);
+    } catch (e) {
+      console.error("Error setting frequency on oscillator:", e, frequency, startTime, pitchClass);
+    }
     const source: AudioNode = osc;
 
     const gainNode = audioCtx.createGain();

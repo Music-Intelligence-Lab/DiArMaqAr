@@ -10,14 +10,12 @@ import MaqamTranspositions from "@/components/maqam-transpositions";
 import SayrManager from "@/components/sayr-manager";
 import KeyboardControls from "@/components/keyboard-controls";
 import getFirstNoteName from "@/functions/getFirstNoteName";
-import SourcesManager from "@/components/sources-manager";
-import SourcesList from "@/components/sources-list";
 import PatternsManager from "@/components/patterns-manager";
 import JinsManager from "@/components/jins-manager";
 import MaqamManager from "@/components/maqam-manager";
 import PitchClassWheel from "@/components/pitch-class-wheel";
 import Modulations from "@/components/modulations";
-export default function HomeClient() {
+export default function AppClient() {
   const {
     tuningSystems,
     ajnas,
@@ -71,13 +69,13 @@ export default function HomeClient() {
     if (selectedJins) params.push(`jinsFirstNote=${selectedJins.jinsPitchClasses[0].noteName}`);
     if (selectedMaqam) params.push(`maqamFirstNote=${selectedMaqam.ascendingPitchClasses[0].noteName}`);
 
-    if (typeof window !== "undefined" && window.location.pathname === "/") {
-      router.replace(`/?${params.join("&")}`, { scroll: false });
+    if (typeof window !== "undefined" && window.location.pathname === "/app") {
+      router.replace(`/app?${params.join("&")}`, { scroll: false });
     }
   }, [selectedTuningSystem, selectedJinsDetails, selectedMaqamDetails, maqamSayrId, selectedIndices, selectedMaqam, selectedJins]);
 
   return (
-    <div className="home-page">
+    <div className="tools-page">
       {selectedMenu === "tuningSystem" && <TuningSystemManager admin={false} />}
       {selectedMenu === "tuningSystem-admin" && <TuningSystemManager admin />}
       {selectedMenu === "maqam" && selectedTuningSystem && <MaqamManager admin={false} />}
@@ -90,8 +88,6 @@ export default function HomeClient() {
       {selectedMenu === "sayr" && selectedMaqamDetails && <SayrManager admin={false} />}
       {selectedMenu === "sayr-admin" && selectedMaqamDetails && <SayrManager admin />}
       {selectedMenu === "modulation" && <Modulations />}
-      {selectedMenu === "bibliography" && <SourcesList />}
-      {selectedMenu === "bibliography-admin" && <SourcesManager />}
       {selectedMenu === "pattern-admin" && <PatternsManager />}
       <KeyboardControls />
     </div>
