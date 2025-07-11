@@ -2482,28 +2482,26 @@
       {
         "id": "2cb35c7c89bc4ac3aecb",
         "creatorEnglish": "Al-Shawwā, Sāmī",
-        "sourceEnglish": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
-        "year": 1946,
+        "creatorArabic": "",
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
         "page": 35,
         "commentsEnglish": "\"Rules\": Starts with rāst on dūgāh then descends to 'irāq and from there descends to yegāh and then ends on the qarār, 'irāq. Note: maqām bayāt muḥayyar should be rendered during the ascent. An alternative sayr is to start on awj to render rāst kurdān, then 'irāq on awj, then descending until its qarār, 'irāq.\"Analysis\": jins segāh on 'irāq, jins rāst on dūgāh, jins bayāt on muhayyar, then descends until 'irāq. Slightly conflicting directions. Must be clarified.",
+        "commentsArabic": "",
         "stops": [
           {
             "type": "jins",
-            "value": "jins rāst",
+            "value": "1",
             "startingNote": "dūgāh",
-            "direction": "none"
-          },
-          {
-            "type": "direction",
-            "value": "descending"
+            "direction": "descending"
           },
           {
             "type": "note",
-            "value": "ʿirāq"
+            "value": "ʿirāq",
+            "direction": "descending"
           },
           {
-            "type": "jins",
-            "value": "jins segāh",
+            "type": "note",
+            "value": "yegāh",
             "startingNote": "ʿirāq",
             "direction": "none"
           },
