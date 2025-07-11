@@ -1,6 +1,6 @@
 import { getPitchClassIntervals } from "@/functions/transpose";
 import PitchClass, { PitchClassInterval } from "./PitchClass";
-import { Jins } from "./Jins";
+import { AjnasModulations, Jins } from "./Jins";
 import NoteName from "./NoteName";
 import { SourcePageReference } from "./bibliography/Source";
 
@@ -183,7 +183,7 @@ export interface Maqam {
   descendingPitchClasses: PitchClass[];
   descendingPitchClassIntervals: PitchClassInterval[];
   descendingMaqamAjnas?: (Jins | null)[];
-  modulations?: MaqamatModulations;
+  modulations?: MaqamatModulations | AjnasModulations;
   numberOfHops?: number;
 }
 

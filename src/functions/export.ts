@@ -1,34 +1,64 @@
 import NoteName from "@/models/NoteName";
 import TuningSystem from "@/models/TuningSystem";
-import JinsDetails, { Jins, JinsDetailsInterface } from "@/models/Jins";
-import MaqamDetails, { Maqam, MaqamDetailsInterface } from "@/models/Maqam";
+import JinsDetails, { AjnasModulations, Jins, JinsDetailsInterface } from "@/models/Jins";
+import MaqamDetails, { Maqam, MaqamatModulations, MaqamDetailsInterface } from "@/models/Maqam";
 import getTuningSystemCells from "./getTuningSystemCells";
 import { getAjnas, getMaqamat } from "./import";
 import { getJinsTranspositions, getMaqamTranspositions } from "./transpose";
 import PitchClass from "@/models/PitchClass";
-// import modulate from "./modulate";
-// import calculateNumberOfHops from "./calculateNumberOfHops";
+import modulate from "./modulate";
+import calculateNumberOfModulations from "./calculateNumberOfModulations";
 
 interface ExportedTuningSystem {
-  tuningSystem: TuningSystem;
-  startingNote: NoteName;
-  fullRangeTuningSystemPitchClasses: PitchClass[];
-  numberOfPossibleAjnas: number;
-  numberOfAjnas: number;
-  possibleAjnasOverview: JinsDetailsInterface[];
-  possibleAjnasDetails: Jins[];
-  numberOfPossibleMaqamat: number;
-  numberOfMaqamat: number;
-  possibleMaqamatOverview: MaqamDetailsInterface[];
-  possibleMaqamatDetails: Maqam[];
+  tuningSystem?: TuningSystem;
+  startingNote?: NoteName;
+  fullRangeTuningSystemPitchClasses?: PitchClass[];
+  numberOfPossibleAjnas?: number;
+  numberOfAjnas?: number;
+  possibleAjnasOverview?: JinsDetailsInterface[];
+  possibleAjnas?: Jins[];
+  numberOfPossibleMaqamat?: number;
+  numberOfMaqamat?: number;
+  possibleMaqamatOverview?: MaqamDetailsInterface[];
+  possibleMaqamat?: Maqam[];
 }
 
-export function exportTuningSystem(tuningSystem: TuningSystem, startingNote: NoteName, centsTolerance: number = 5): ExportedTuningSystem {
-  const fullRangeTuningSystemPitchClasses = getTuningSystemCells(tuningSystem, startingNote);
+export interface ExportOptions {
+  includeTuningSystemDetails: boolean;
+  includePitchClasses: boolean;
+  includeAjnasDetails: boolean;
+  includeMaqamatDetails: boolean;
+  includeModulations: boolean;
+  modulationType: 'maqamat' | 'ajnas';
+}
 
+export function exportTuningSystem(
+  tuningSystem: TuningSystem, 
+  startingNote: NoteName, 
+  options: ExportOptions,
+  centsTolerance: number = 5
+): ExportedTuningSystem {
+  const result: ExportedTuningSystem = {};
+
+  // Always calculate basic counts for display
   const allAjnas = getAjnas();
   const allMaqamat = getMaqamat();
+  result.numberOfAjnas = allAjnas.length;
+  result.numberOfMaqamat = allMaqamat.length;
 
+  // Include tuning system details if requested
+  if (options.includeTuningSystemDetails) {
+    result.tuningSystem = tuningSystem;
+    result.startingNote = startingNote;
+  }
+
+  // Include pitch classes if requested
+  const fullRangeTuningSystemPitchClasses = getTuningSystemCells(tuningSystem, startingNote);
+  if (options.includePitchClasses) {
+    result.fullRangeTuningSystemPitchClasses = fullRangeTuningSystemPitchClasses;
+  }
+
+  // Filter possible ajnas and maqamat
   const possibleAjnasOverview: (JinsDetails | JinsDetailsInterface)[] = allAjnas.filter((jins) =>
     jins.getNoteNames().every((noteName) => fullRangeTuningSystemPitchClasses.some((pitchClass) => pitchClass.noteName === noteName))
   );
@@ -39,51 +69,59 @@ export function exportTuningSystem(tuningSystem: TuningSystem, startingNote: Not
       maqam.getDescendingNoteNames().every((noteName) => fullRangeTuningSystemPitchClasses.some((pitchClass) => pitchClass.noteName === noteName))
   );
 
-  const possibleAjnasDetails: Jins[] = [];
+  // Always include the counts
+  result.numberOfPossibleAjnas = possibleAjnasOverview.length;
+  result.numberOfPossibleMaqamat = possibleMaqamatOverview.length;
 
-  for (let i = 0; i < possibleAjnasOverview.length; i++) {
-    const jins = possibleAjnasOverview[i] as JinsDetails;
+  // Include ajnas details if requested
+  if (options.includeAjnasDetails) {
+    const possibleAjnas: Jins[] = [];
 
-    let numberOfTranspositions = 0;
-    for (const jinsTransposition of getJinsTranspositions(fullRangeTuningSystemPitchClasses, jins, true, centsTolerance)) {
-      possibleAjnasDetails.push(jinsTransposition);
-      numberOfTranspositions++;
+    for (let i = 0; i < possibleAjnasOverview.length; i++) {
+      const jins = possibleAjnasOverview[i] as JinsDetails;
+
+      let numberOfTranspositions = 0;
+      for (const jinsTransposition of getJinsTranspositions(fullRangeTuningSystemPitchClasses, jins, true, centsTolerance)) {
+        possibleAjnas.push(jinsTransposition);
+        numberOfTranspositions++;
+      }
+
+      possibleAjnasOverview[i] = jins.convertToObject();
+      (possibleAjnasOverview[i] as JinsDetailsInterface).numberOfTranspositions = numberOfTranspositions;
     }
 
-    possibleAjnasOverview[i] = jins.convertToObject();
-    (possibleAjnasOverview[i] as JinsDetailsInterface).numberOfTranspositions = numberOfTranspositions;
+    result.possibleAjnasOverview = possibleAjnasOverview as JinsDetailsInterface[];
+    result.possibleAjnas = possibleAjnas;
   }
 
-  const possibleMaqamatDetails: Maqam[] = [];
+  // Include maqamat details if requested
+  if (options.includeMaqamatDetails) {
+    const possibleMaqamat: Maqam[] = [];
 
-  for (let i = 0; i < possibleMaqamatOverview.length; i++) {
-    const maqam = possibleMaqamatOverview[i] as MaqamDetails;
+    for (let i = 0; i < possibleMaqamatOverview.length; i++) {
+      const maqam = possibleMaqamatOverview[i] as MaqamDetails;
 
-    let numberOfTranspositions = 0;
-    for (const maqamTransposition of getMaqamTranspositions(fullRangeTuningSystemPitchClasses, allAjnas, maqam, true, centsTolerance)) {
-      // const modulations = modulate(fullRangeTuningSystemPitchClasses, allAjnas, allMaqamat, maqamTransposition, centsTolerance);
-      // const numberOfHops = calculateNumberOfHops(modulations);
-      // maqamTransposition.modulations = modulations;
-      // maqamTransposition.numberOfHops = numberOfHops;
-      possibleMaqamatDetails.push(maqamTransposition);
-      numberOfTranspositions++;
+      let numberOfTranspositions = 0;
+      for (const maqamTransposition of getMaqamTranspositions(fullRangeTuningSystemPitchClasses, allAjnas, maqam, true, centsTolerance)) {
+        // Include modulations if requested
+        if (options.includeModulations) {
+          const useAjnasModulations = options.modulationType === 'ajnas';
+          const modulations = modulate(fullRangeTuningSystemPitchClasses, allAjnas, allMaqamat, maqamTransposition, useAjnasModulations, centsTolerance);
+          const numberOfHops = calculateNumberOfModulations(modulations as MaqamatModulations | AjnasModulations);
+          maqamTransposition.numberOfHops = numberOfHops;
+        }
+        
+        possibleMaqamat.push(maqamTransposition);
+        numberOfTranspositions++;
+      }
+
+      possibleMaqamatOverview[i] = maqam.convertToObject();
+      (possibleMaqamatOverview[i] as MaqamDetailsInterface).numberOfTranspositions = numberOfTranspositions;
     }
 
-    possibleMaqamatOverview[i] = maqam.convertToObject();
-    (possibleMaqamatOverview[i] as MaqamDetailsInterface).numberOfTranspositions = numberOfTranspositions;
+    result.possibleMaqamatOverview = possibleMaqamatOverview as MaqamDetailsInterface[];
+    result.possibleMaqamat = possibleMaqamat;
   }
 
-  return {
-    tuningSystem,
-    startingNote,
-    fullRangeTuningSystemPitchClasses,
-    numberOfPossibleAjnas: possibleAjnasOverview.length,
-    numberOfAjnas: allAjnas.length,
-    possibleAjnasOverview: possibleAjnasOverview as JinsDetailsInterface[],
-    possibleAjnasDetails,
-    numberOfPossibleMaqamat: possibleMaqamatOverview.length,
-    numberOfMaqamat: allMaqamat.length,
-    possibleMaqamatOverview: possibleMaqamatOverview as MaqamDetailsInterface[],
-    possibleMaqamatDetails,
-  };
+  return result;
 }

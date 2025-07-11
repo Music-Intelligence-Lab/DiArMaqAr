@@ -14,10 +14,12 @@ export type ExportFormat = "json" | "csv" | "txt" | "pdf" | "xml" | "yaml";
 
 export interface ExportOptions {
   format: ExportFormat;
-  includeAjnas: boolean;
-  includeMaqamat: boolean;
-  includeTuningSystem: boolean;
+  includeTuningSystemDetails: boolean;
+  includePitchClasses: boolean;
+  includeAjnasDetails: boolean;
+  includeMaqamatDetails: boolean;
   includeModulations: boolean;
+  modulationType: 'maqamat' | 'ajnas';
   prettifyJson: boolean;
   csvDelimiter: "," | ";" | "\t";
   filename: string;
@@ -28,10 +30,12 @@ export default function ExportModal({ isOpen, onClose }: ExportModalProps) {
 
   const [exportOptions, setExportOptions] = useState<ExportOptions>({
     format: "json",
-    includeAjnas: true,
-    includeMaqamat: true,
-    includeTuningSystem: true,
+    includeTuningSystemDetails: true,
+    includePitchClasses: true,
+    includeAjnasDetails: true,
+    includeMaqamatDetails: true,
     includeModulations: false,
+    modulationType: 'maqamat',
     prettifyJson: true,
     csvDelimiter: ",",
     filename: "maqam-network-export",
@@ -58,30 +62,16 @@ export default function ExportModal({ isOpen, onClose }: ExportModalProps) {
 
     try {
       const startingNote = selectedIndices[0] as unknown as NoteName;
-      const exportedData = exportTuningSystem(selectedTuningSystem, startingNote);
+      const exportedData = exportTuningSystem(selectedTuningSystem, startingNote, {
+        includeTuningSystemDetails: exportOptions.includeTuningSystemDetails,
+        includePitchClasses: exportOptions.includePitchClasses,
+        includeAjnasDetails: exportOptions.includeAjnasDetails,
+        includeMaqamatDetails: exportOptions.includeMaqamatDetails,
+        includeModulations: exportOptions.includeModulations,
+        modulationType: exportOptions.modulationType,
+      });
 
-      // Filter data based on options
-      const filteredData = {
-        ...(exportOptions.includeTuningSystem && {
-          tuningSystem: exportedData.tuningSystem,
-          startingNote: exportedData.startingNote,
-          fullRangeTuningSystemPitchClasses: exportedData.fullRangeTuningSystemPitchClasses,
-        }),
-        ...(exportOptions.includeAjnas && {
-          numberOfPossibleAjnas: exportedData.numberOfPossibleAjnas,
-          numberOfAjnas: exportedData.numberOfAjnas,
-          possibleAjnasOverview: exportedData.possibleAjnasOverview,
-          possibleAjnasDetails: exportedData.possibleAjnasDetails,
-        }),
-        ...(exportOptions.includeMaqamat && {
-          numberOfPossibleMaqamat: exportedData.numberOfPossibleMaqamat,
-          numberOfMaqamat: exportedData.numberOfMaqamat,
-          possibleMaqamatOverview: exportedData.possibleMaqamatOverview,
-          possibleMaqamatDetails: exportedData.possibleMaqamatDetails,
-        }),
-      };
-
-      await downloadFile(filteredData, exportOptions);
+      await downloadFile(exportedData, exportOptions);
       onClose();
     } catch (error) {
       console.error("Export failed:", error);
@@ -147,23 +137,137 @@ export default function ExportModal({ isOpen, onClose }: ExportModalProps) {
   };
 
   const convertToCSV = (data: any, delimiter: string): string => {
-    const flatten = (obj: any, prefix = ""): any => {
-      const flattened: any = {};
+    const sections: string[] = [];
+    
+    // Helper function to escape CSV values
+    const escapeCSV = (value: any): string => {
+      const str = String(value || '');
+      if (str.includes(delimiter) || str.includes('"') || str.includes('\n')) {
+        return `"${str.replace(/"/g, '""')}"`;
+      }
+      return str;
+    };
+
+    // Helper function to flatten nested objects and convert values to strings
+    const flattenObject = (obj: any, prefix = ''): Record<string, string> => {
+      const flattened: Record<string, string> = {};
+      
       for (const key in obj) {
-        if (obj[key] && typeof obj[key] === "object" && !Array.isArray(obj[key])) {
-          Object.assign(flattened, flatten(obj[key], `${prefix}${key}.`));
-        } else {
-          flattened[`${prefix}${key}`] = Array.isArray(obj[key]) ? obj[key].join(";") : obj[key];
+        if (obj.hasOwnProperty(key)) {
+          const value = obj[key];
+          const newKey = prefix ? `${prefix}.${key}` : key;
+          
+          if (value === null || value === undefined) {
+            flattened[newKey] = '';
+          } else if (Array.isArray(value)) {
+            // Convert arrays to semicolon-separated strings
+            flattened[newKey] = value.map(item => 
+              typeof item === 'object' ? JSON.stringify(item) : String(item)
+            ).join(';');
+          } else if (typeof value === 'object') {
+            // For objects, either flatten them or convert to JSON string if too complex
+            try {
+              const nested = flattenObject(value, newKey);
+              Object.assign(flattened, nested);
+            } catch {
+              flattened[newKey] = JSON.stringify(value);
+            }
+          } else {
+            flattened[newKey] = String(value);
+          }
         }
       }
+      
       return flattened;
     };
 
-    const flatData = flatten(data);
-    const headers = Object.keys(flatData);
-    const values = Object.values(flatData);
+    // Helper function to convert array of objects to CSV with proper flattening
+    const arrayToCSV = (items: any[], title: string): string => {
+      if (!items || items.length === 0) return `${title}\nNo data available\n`;
+      
+      // Flatten all objects and collect all unique keys
+      const flattenedItems = items.map(item => {
+        if (typeof item === 'object' && item !== null) {
+          return flattenObject(item);
+        } else {
+          return { value: String(item) };
+        }
+      });
+      
+      // Get all unique keys from all flattened objects
+      const allKeys = new Set<string>();
+      flattenedItems.forEach(item => {
+        Object.keys(item).forEach(key => allKeys.add(key));
+      });
+      
+      const headers = Array.from(allKeys).sort(); // Sort for consistency
+      const csvRows = [
+        `${title}`,
+        headers.map(escapeCSV).join(delimiter),
+        ...flattenedItems.map(item => 
+          headers.map(header => escapeCSV(item[header] || '')).join(delimiter)
+        )
+      ];
+      
+      return csvRows.join('\n') + '\n';
+    };
 
-    return [headers.join(delimiter), values.map((val) => `"${String(val).replace(/"/g, '""')}"`).join(delimiter)].join("\n");
+    // Tuning System Information
+    if (data.tuningSystem) {
+      const ts = data.tuningSystem;
+      const tuningSystemInfo = [
+        'Tuning System Information',
+        `Title (English)${delimiter}${escapeCSV(ts.titleEnglish || ts.getTitleEnglish?.())}`,
+        `Title (Arabic)${delimiter}${escapeCSV(ts.titleArabic || ts.getTitleArabic?.())}`,
+        `Creator (English)${delimiter}${escapeCSV(ts.creatorEnglish || ts.getCreatorEnglish?.())}`,
+        `Creator (Arabic)${delimiter}${escapeCSV(ts.creatorArabic || ts.getCreatorArabic?.())}`,
+        `Year${delimiter}${escapeCSV(ts.year || ts.getYear?.())}`,
+        `Starting Note${delimiter}${escapeCSV(data.startingNote)}`,
+        `String Length${delimiter}${escapeCSV(ts.stringLength || ts.getStringLength?.())}`,
+        `Default Reference Frequency${delimiter}${escapeCSV(ts.defaultReferenceFrequency || ts.getDefaultReferenceFrequency?.())}`,
+        ''
+      ].join('\n');
+      sections.push(tuningSystemInfo);
+    }
+
+    // Pitch Classes
+    if (data.fullRangeTuningSystemPitchClasses) {
+      sections.push(arrayToCSV(data.fullRangeTuningSystemPitchClasses, 'Pitch Classes'));
+    }
+
+    // Ajnas Overview
+    if (data.possibleAjnasOverview) {
+      sections.push(arrayToCSV(data.possibleAjnasOverview, 'Possible Ajnas Overview'));
+    }
+
+    // Ajnas Details
+    if (data.possibleAjnasDetails) {
+      sections.push(arrayToCSV(data.possibleAjnasDetails, 'Possible Ajnas Details'));
+    }
+
+    // Maqamat Overview
+    if (data.possibleMaqamatOverview) {
+      sections.push(arrayToCSV(data.possibleMaqamatOverview, 'Possible Maqamat Overview'));
+    }
+
+    // Maqamat Details
+    if (data.possibleMaqamatDetails) {
+      sections.push(arrayToCSV(data.possibleMaqamatDetails, 'Possible Maqamat Details'));
+    }
+
+    // Summary statistics
+    const summary = [
+      'Summary Statistics',
+      `Total Possible Ajnas${delimiter}${escapeCSV(data.numberOfPossibleAjnas || 0)}`,
+      `Total Ajnas in Database${delimiter}${escapeCSV(data.numberOfAjnas || 0)}`,
+      `Total Possible Maqamat${delimiter}${escapeCSV(data.numberOfPossibleMaqamat || 0)}`,
+      `Total Maqamat in Database${delimiter}${escapeCSV(data.numberOfMaqamat || 0)}`,
+      ''
+    ].join('\n');
+    
+    sections.push(summary);
+
+    return sections.join('\n');
   };
 
   const convertToText = (data: any): string => {
@@ -282,23 +386,79 @@ export default function ExportModal({ isOpen, onClose }: ExportModalProps) {
             <label className="export-modal__label">Include Data</label>
             <div className="export-modal__checkbox-group">
               <label className="export-modal__checkbox">
-                <input type="checkbox" checked={exportOptions.includeTuningSystem} onChange={(e) => setExportOptions((prev) => ({ ...prev, includeTuningSystem: e.target.checked }))} />
-                <span>Tuning System</span>
+                <input 
+                  type="checkbox" 
+                  checked={exportOptions.includeTuningSystemDetails} 
+                  onChange={(e) => setExportOptions((prev) => ({ ...prev, includeTuningSystemDetails: e.target.checked }))} 
+                />
+                <span>Tuning System Details</span>
               </label>
               <label className="export-modal__checkbox">
-                <input type="checkbox" checked={exportOptions.includeAjnas} onChange={(e) => setExportOptions((prev) => ({ ...prev, includeAjnas: e.target.checked }))} />
-                <span>Ajnas</span>
+                <input 
+                  type="checkbox" 
+                  checked={exportOptions.includePitchClasses} 
+                  onChange={(e) => setExportOptions((prev) => ({ ...prev, includePitchClasses: e.target.checked }))} 
+                />
+                <span>Pitch Classes</span>
               </label>
               <label className="export-modal__checkbox">
-                <input type="checkbox" checked={exportOptions.includeMaqamat} onChange={(e) => setExportOptions((prev) => ({ ...prev, includeMaqamat: e.target.checked }))} />
-                <span>Maqamat</span>
+                <input 
+                  type="checkbox" 
+                  checked={exportOptions.includeAjnasDetails} 
+                  onChange={(e) => setExportOptions((prev) => ({ ...prev, includeAjnasDetails: e.target.checked }))} 
+                />
+                <span>Ajnas Details</span>
               </label>
               <label className="export-modal__checkbox">
-                <input type="checkbox" checked={exportOptions.includeModulations} onChange={(e) => setExportOptions((prev) => ({ ...prev, includeModulations: e.target.checked }))} />
+                <input 
+                  type="checkbox" 
+                  checked={exportOptions.includeMaqamatDetails} 
+                  onChange={(e) => setExportOptions((prev) => ({ 
+                    ...prev, 
+                    includeMaqamatDetails: e.target.checked,
+                    // Auto-disable modulations if maqamat details is unchecked
+                    includeModulations: e.target.checked ? prev.includeModulations : false
+                  }))} 
+                />
+                <span>Maqamat Details</span>
+              </label>
+              <label className="export-modal__checkbox">
+                <input 
+                  type="checkbox" 
+                  checked={exportOptions.includeModulations} 
+                  disabled={!exportOptions.includeMaqamatDetails}
+                  onChange={(e) => setExportOptions((prev) => ({ ...prev, includeModulations: e.target.checked }))} 
+                />
                 <span>Modulations</span>
               </label>
             </div>
           </div>
+
+          {exportOptions.includeModulations && exportOptions.includeMaqamatDetails && (
+            <div className="export-modal__section">
+              <label className="export-modal__label">Modulation Type</label>
+              <div className="export-modal__checkbox-group">
+                <label className="export-modal__checkbox">
+                  <input 
+                    type="radio" 
+                    name="modulationType"
+                    checked={exportOptions.modulationType === 'maqamat'} 
+                    onChange={() => setExportOptions((prev) => ({ ...prev, modulationType: 'maqamat' }))} 
+                  />
+                  <span>Maqamat Modulations</span>
+                </label>
+                <label className="export-modal__checkbox">
+                  <input 
+                    type="radio" 
+                    name="modulationType"
+                    checked={exportOptions.modulationType === 'ajnas'} 
+                    onChange={() => setExportOptions((prev) => ({ ...prev, modulationType: 'ajnas' }))} 
+                  />
+                  <span>Ajnas Modulations</span>
+                </label>
+              </div>
+            </div>
+          )}
 
           {exportOptions.format === "json" && (
             <div className="export-modal__section">
