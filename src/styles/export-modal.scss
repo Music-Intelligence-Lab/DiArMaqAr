@@ -1,3 +1,5 @@
+@use "./variables" as *;
+
 /* Export Modal Styles */
 .export-modal-overlay {
   position: fixed;
@@ -5,7 +7,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.8);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -14,15 +16,17 @@
 }
 
 .export-modal {
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  background: $background;
+  border: 2px solid $grey;
+  border-radius: 10px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
   max-width: 800px;
   width: 90vw;
   max-height: 90vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  color: $text;
   animation: modalSlideIn 0.3s ease-out;
 
   @keyframes modalSlideIn {
@@ -40,27 +44,27 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 24px 32px;
-    border-bottom: 1px solid #e5e7eb;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    padding: 20px;
+    border-bottom: 2px solid $grey;
+    background: $primary;
+    color: $text;
   }
 
   &__title {
     margin: 0;
-    font-size: 24px;
-    font-weight: 600;
-    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    color: $text;
   }
 
   &__close {
-    background: rgba(255, 255, 255, 0.2);
-    border: none;
-    color: white;
-    font-size: 28px;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
+    background: $medium-grey;
+    border: 2px solid $grey;
+    color: $text;
+    font-size: 20px;
+    width: 35px;
+    height: 35px;
+    border-radius: 5px;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -68,19 +72,20 @@
     transition: all 0.2s ease;
 
     &:hover {
-      background: rgba(255, 255, 255, 0.3);
-      transform: scale(1.1);
+      background: $grey;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
     }
   }
 
   &__content {
-    padding: 32px;
+    padding: 20px;
     overflow-y: auto;
     flex: 1;
+    background: $background;
   }
 
   &__section {
-    margin-bottom: 32px;
+    margin-bottom: 20px;
 
     &:last-child {
       margin-bottom: 0;
@@ -90,44 +95,43 @@
   &__label {
     display: block;
     font-size: 16px;
-    font-weight: 600;
-    color: #374151;
-    margin-bottom: 12px;
+    font-weight: bold;
+    color: $text;
+    margin-bottom: 10px;
   }
 
   &__format-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 16px;
+    gap: 10px;
   }
 
   &__format-card {
-    border: 2px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 20px;
+    border: 2px solid $grey;
+    border-radius: 5px;
+    padding: 15px;
     cursor: pointer;
     transition: all 0.2s ease;
-    background: #f9fafb;
+    background: $medium-grey;
+    color: $text;
 
     &:hover {
-      border-color: #9ca3af;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border-color: $hovered-primary;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
     }
 
     &--selected {
-      border-color: #667eea;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+      border-color: $primary;
+      background: $primary;
+      color: $text;
+      box-shadow: 0 0 10px rgba(90, 37, 133, 0.3);
     }
   }
 
   &__format-name {
-    font-size: 18px;
-    font-weight: 700;
-    margin-bottom: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
   }
 
   &__format-description {
@@ -139,7 +143,7 @@
   &__checkbox-group {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
+    gap: 10px;
   }
 
   &__checkbox {
@@ -147,101 +151,117 @@
     align-items: center;
     cursor: pointer;
     font-size: 16px;
-    color: #374151;
-    padding: 12px;
-    border-radius: 8px;
+    color: $text;
+    padding: 10px;
+    border-radius: 5px;
     transition: background-color 0.2s ease;
 
     &:hover {
-      background-color: #f3f4f6;
+      background-color: $medium-grey;
     }
 
     input[type="checkbox"] {
-      margin-right: 12px;
-      width: 18px;
-      height: 18px;
-      accent-color: #667eea;
+      margin-right: 10px;
+      width: 16px;
+      height: 16px;
+      accent-color: $primary;
       cursor: pointer;
     }
   }
 
   &__select {
     width: 100%;
-    padding: 12px 16px;
-    border: 2px solid #e5e7eb;
-    border-radius: 8px;
+    padding: 10px;
+    border: 2px solid $grey;
+    border-radius: 5px;
     font-size: 16px;
-    background: white;
+    background: $medium-grey;
+    color: $text;
     cursor: pointer;
-    transition: border-color 0.2s ease;
+    transition: all 0.2s ease;
 
     &:focus {
       outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      border-color: $primary;
+      box-shadow: 0 0 5px rgba(90, 37, 133, 0.3);
+    }
+
+    option {
+      background: $medium-grey;
+      color: $text;
     }
   }
 
   &__input {
     width: 100%;
-    padding: 12px 16px;
-    border: 2px solid #e5e7eb;
-    border-radius: 8px;
+    padding: 10px;
+    border: 2px solid $grey;
+    border-radius: 5px;
     font-size: 16px;
-    transition: border-color 0.2s ease;
+    background: $medium-grey;
+    color: $text;
+    transition: all 0.2s ease;
 
     &:focus {
       outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      border-color: $primary;
+      box-shadow: 0 0 5px rgba(90, 37, 133, 0.3);
+    }
+
+    &::placeholder {
+      color: $light-grey;
+      opacity: 0.7;
     }
   }
 
   &__footer {
-    padding: 24px 32px;
-    border-top: 1px solid #e5e7eb;
+    padding: 20px;
+    border-top: 2px solid $grey;
     display: flex;
     justify-content: flex-end;
-    gap: 16px;
-    background: #f9fafb;
+    gap: 10px;
+    background: $medium-grey;
   }
 
   &__button {
-    padding: 12px 24px;
-    border-radius: 8px;
+    padding: 10px 20px;
+    border-radius: 5px;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: bold;
     cursor: pointer;
     transition: all 0.2s ease;
-    border: none;
+    border: 2px solid;
     min-width: 120px;
 
     &--secondary {
-      background: #f3f4f6;
-      color: #374151;
-      border: 2px solid #e5e7eb;
+      background: $medium-grey;
+      color: $text;
+      border-color: $grey;
 
       &:hover {
-        background: #e5e7eb;
-        transform: translateY(-1px);
+        background: $grey;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
       }
     }
 
     &--primary {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+      background: $primary;
+      color: $text;
+      border-color: $primary;
+      box-shadow: 0 0 5px rgba(90, 37, 133, 0.3);
 
       &:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+        background: $hovered-primary;
+        border-color: $hovered-primary;
+        box-shadow: 0 0 10px rgba(90, 37, 133, 0.4);
       }
 
       &:disabled {
         opacity: 0.6;
         cursor: not-allowed;
-        transform: none;
-        box-shadow: 0 2px 6px rgba(102, 126, 234, 0.2);
+        background: $disabled;
+        border-color: $disabled;
+        box-shadow: none;
       }
     }
   }
@@ -254,7 +274,7 @@
     &__header,
     &__content,
     &__footer {
-      padding: 20px;
+      padding: 15px;
     }
 
     &__format-grid {
@@ -271,56 +291,6 @@
 
     &__button {
       width: 100%;
-    }
-  }
-
-  /* Dark mode support */
-  @media (prefers-color-scheme: dark) {
-    background: #1f2937;
-    color: #f9fafb;
-
-    &__header {
-      border-bottom-color: #374151;
-    }
-
-    &__format-card {
-      background: #374151;
-      border-color: #4b5563;
-      color: #f9fafb;
-
-      &:hover {
-        border-color: #6b7280;
-      }
-    }
-
-    &__checkbox {
-      &:hover {
-        background-color: #374151;
-      }
-    }
-
-    &__select,
-    &__input {
-      background: #374151;
-      border-color: #4b5563;
-      color: #f9fafb;
-    }
-
-    &__footer {
-      background: #374151;
-      border-top-color: #4b5563;
-    }
-
-    &__button {
-      &--secondary {
-        background: #4b5563;
-        color: #f9fafb;
-        border-color: #6b7280;
-
-        &:hover {
-          background: #6b7280;
-        }
-      }
     }
   }
 }
