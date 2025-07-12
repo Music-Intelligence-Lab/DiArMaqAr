@@ -2,12 +2,15 @@
 
 import React, { useState } from "react";
 import useAppContext from "@/contexts/app-context";
-import { exportTuningSystem } from "@/functions/export";
+import { exportTuningSystem, exportJins, exportMaqam } from "@/functions/export";
 import NoteName from "@/models/NoteName";
+
+export type ExportType = "tuning-system" | "jins" | "maqam";
 
 interface ExportModalProps {
   isOpen: boolean;
   onClose: () => void;
+  exportType: ExportType;
 }
 
 export type ExportFormat = "json" | "csv" | "txt" | "pdf" | "xml" | "yaml";
@@ -16,8 +19,9 @@ export interface ExportOptions {
   format: ExportFormat;
   includeTuningSystemDetails: boolean;
   includePitchClasses: boolean;
-  includeAjnasDetails: boolean;
-  includeMaqamatDetails: boolean;
+  includeAjnasDetails?: boolean; // Only for tuning system exports
+  includeMaqamatDetails?: boolean; // Only for tuning system exports
+  includeTranspositions?: boolean; // For jins and maqam exports
   includeModulations: boolean;
   modulationType: 'maqamat' | 'ajnas';
   prettifyJson: boolean;
@@ -25,20 +29,33 @@ export interface ExportOptions {
   filename: string;
 }
 
-export default function ExportModal({ isOpen, onClose }: ExportModalProps) {
-  const { selectedTuningSystem, selectedIndices } = useAppContext();
+export default function ExportModal({ isOpen, onClose, exportType }: ExportModalProps) {
+  const { selectedTuningSystem, selectedIndices, selectedJinsDetails, selectedMaqamDetails } = useAppContext();
 
-  const [exportOptions, setExportOptions] = useState<ExportOptions>({
-    format: "json",
-    includeTuningSystemDetails: true,
-    includePitchClasses: true,
-    includeAjnasDetails: true,
-    includeMaqamatDetails: true,
-    includeModulations: false,
-    modulationType: 'maqamat',
-    prettifyJson: true,
-    csvDelimiter: ",",
-    filename: "maqam-network-export",
+  const [exportOptions, setExportOptions] = useState<ExportOptions>(() => {
+    const baseOptions = {
+      format: "json" as ExportFormat,
+      includeTuningSystemDetails: true,
+      includePitchClasses: true,
+      includeModulations: false,
+      modulationType: 'maqamat' as 'maqamat' | 'ajnas',
+      prettifyJson: true,
+      csvDelimiter: "," as "," | ";" | "\t",
+      filename: `maqam-network-${exportType}-export`,
+    };
+
+    if (exportType === 'tuning-system') {
+      return {
+        ...baseOptions,
+        includeAjnasDetails: true,
+        includeMaqamatDetails: true,
+      };
+    } else {
+      return {
+        ...baseOptions,
+        includeTranspositions: true,
+      };
+    }
   });
 
   const [isExporting, setIsExporting] = useState(false);
@@ -53,23 +70,54 @@ export default function ExportModal({ isOpen, onClose }: ExportModalProps) {
   };
 
   const handleExport = async () => {
-    if (!selectedTuningSystem || selectedIndices.length === 0) {
-      alert("Please select a tuning system first");
-      return;
+    // Validation based on export type
+    if (exportType === 'tuning-system') {
+      if (!selectedTuningSystem || selectedIndices.length === 0) {
+        alert("Please select a tuning system first");
+        return;
+      }
+    } else if (exportType === 'jins') {
+      if (!selectedJinsDetails || !selectedTuningSystem || selectedIndices.length === 0) {
+        alert("Please select a jins and tuning system first");
+        return;
+      }
+    } else if (exportType === 'maqam') {
+      if (!selectedMaqamDetails || !selectedTuningSystem || selectedIndices.length === 0) {
+        alert("Please select a maqam and tuning system first");
+        return;
+      }
     }
 
     setIsExporting(true);
 
     try {
       const startingNote = selectedIndices[0] as unknown as NoteName;
-      const exportedData = exportTuningSystem(selectedTuningSystem, startingNote, {
-        includeTuningSystemDetails: exportOptions.includeTuningSystemDetails,
-        includePitchClasses: exportOptions.includePitchClasses,
-        includeAjnasDetails: exportOptions.includeAjnasDetails,
-        includeMaqamatDetails: exportOptions.includeMaqamatDetails,
-        includeModulations: exportOptions.includeModulations,
-        modulationType: exportOptions.modulationType,
-      });
+      let exportedData: any;
+
+      if (exportType === 'tuning-system') {
+        exportedData = exportTuningSystem(selectedTuningSystem!, startingNote, {
+          includeTuningSystemDetails: exportOptions.includeTuningSystemDetails,
+          includePitchClasses: exportOptions.includePitchClasses,
+          includeAjnasDetails: exportOptions.includeAjnasDetails || false,
+          includeMaqamatDetails: exportOptions.includeMaqamatDetails || false,
+          includeModulations: exportOptions.includeModulations,
+          modulationType: exportOptions.modulationType,
+        });
+      } else if (exportType === 'jins') {
+        exportedData = exportJins(selectedJinsDetails!, selectedTuningSystem!, startingNote, {
+          includeTuningSystemDetails: exportOptions.includeTuningSystemDetails,
+          includePitchClasses: exportOptions.includePitchClasses,
+          includeTranspositions: exportOptions.includeTranspositions || false,
+        });
+      } else if (exportType === 'maqam') {
+        exportedData = exportMaqam(selectedMaqamDetails!, selectedTuningSystem!, startingNote, {
+          includeTuningSystemDetails: exportOptions.includeTuningSystemDetails,
+          includePitchClasses: exportOptions.includePitchClasses,
+          includeTranspositions: exportOptions.includeTranspositions || false,
+          includeModulations: exportOptions.includeModulations,
+          modulationType: exportOptions.modulationType,
+        });
+      }
 
       await downloadFile(exportedData, exportOptions);
       onClose();
@@ -359,7 +407,9 @@ export default function ExportModal({ isOpen, onClose }: ExportModalProps) {
     <div className="export-modal-overlay" onClick={onClose}>
       <div className="export-modal" onClick={(e) => e.stopPropagation()}>
         <div className="export-modal__header">
-          <h2 className="export-modal__title">Export Data</h2>
+          <h2 className="export-modal__title">
+            Export {exportType === 'tuning-system' ? 'Tuning System' : exportType === 'jins' ? 'Jins' : 'Maqam'} Data
+          </h2>
           <button className="export-modal__close" onClick={onClose}>
             ×
           </button>
@@ -401,40 +451,62 @@ export default function ExportModal({ isOpen, onClose }: ExportModalProps) {
                 />
                 <span>Pitch Classes</span>
               </label>
-              <label className="export-modal__checkbox">
-                <input 
-                  type="checkbox" 
-                  checked={exportOptions.includeAjnasDetails} 
-                  onChange={(e) => setExportOptions((prev) => ({ ...prev, includeAjnasDetails: e.target.checked }))} 
-                />
-                <span>Ajnas Details</span>
-              </label>
-              <label className="export-modal__checkbox">
-                <input 
-                  type="checkbox" 
-                  checked={exportOptions.includeMaqamatDetails} 
-                  onChange={(e) => setExportOptions((prev) => ({ 
-                    ...prev, 
-                    includeMaqamatDetails: e.target.checked,
-                    // Auto-disable modulations if maqamat details is unchecked
-                    includeModulations: e.target.checked ? prev.includeModulations : false
-                  }))} 
-                />
-                <span>Maqamat Details</span>
-              </label>
-              <label className="export-modal__checkbox">
-                <input 
-                  type="checkbox" 
-                  checked={exportOptions.includeModulations} 
-                  disabled={!exportOptions.includeMaqamatDetails}
-                  onChange={(e) => setExportOptions((prev) => ({ ...prev, includeModulations: e.target.checked }))} 
-                />
-                <span>Modulations</span>
-              </label>
+              
+              {/* Tuning System specific options */}
+              {exportType === 'tuning-system' && (
+                <>
+                  <label className="export-modal__checkbox">
+                    <input 
+                      type="checkbox" 
+                      checked={exportOptions.includeAjnasDetails || false} 
+                      onChange={(e) => setExportOptions((prev) => ({ ...prev, includeAjnasDetails: e.target.checked }))} 
+                    />
+                    <span>Ajnas Details</span>
+                  </label>
+                  <label className="export-modal__checkbox">
+                    <input 
+                      type="checkbox" 
+                      checked={exportOptions.includeMaqamatDetails || false} 
+                      onChange={(e) => setExportOptions((prev) => ({ 
+                        ...prev, 
+                        includeMaqamatDetails: e.target.checked,
+                        // Auto-disable modulations if maqamat details is unchecked
+                        includeModulations: e.target.checked ? prev.includeModulations : false
+                      }))} 
+                    />
+                    <span>Maqamat Details</span>
+                  </label>
+                </>
+              )}
+              
+              {/* Jins and Maqam specific options */}
+              {(exportType === 'jins' || exportType === 'maqam') && (
+                <label className="export-modal__checkbox">
+                  <input 
+                    type="checkbox" 
+                    checked={exportOptions.includeTranspositions || false} 
+                    onChange={(e) => setExportOptions((prev) => ({ ...prev, includeTranspositions: e.target.checked }))} 
+                  />
+                  <span>All Transpositions</span>
+                </label>
+              )}
+              
+              {/* Modulations option - available for tuning system (with maqamat details) and maqam exports */}
+              {((exportType === 'tuning-system' && exportOptions.includeMaqamatDetails) || exportType === 'maqam') && (
+                <label className="export-modal__checkbox">
+                  <input 
+                    type="checkbox" 
+                    checked={exportOptions.includeModulations} 
+                    onChange={(e) => setExportOptions((prev) => ({ ...prev, includeModulations: e.target.checked }))} 
+                  />
+                  <span>Modulations</span>
+                </label>
+              )}
             </div>
           </div>
 
-          {exportOptions.includeModulations && exportOptions.includeMaqamatDetails && (
+          {/* Modulation Type selection - show when modulations are enabled */}
+          {exportOptions.includeModulations && ((exportType === 'tuning-system' && exportOptions.includeMaqamatDetails) || exportType === 'maqam') && (
             <div className="export-modal__section">
               <label className="export-modal__label">Modulation Type</label>
               <div className="export-modal__checkbox-group">

@@ -1,15 +1,17 @@
 "use client";
 
-import React, { useMemo, useEffect } from "react";
+import React, { useMemo, useEffect, useState } from "react";
 import useAppContext from "@/contexts/app-context";
 import useSoundContext, { defaultNoteVelocity } from "@/contexts/sound-context";
 import useFilterContext from "@/contexts/filter-context";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { getJinsTranspositions } from "@/functions/transpose";
 import { Jins } from "@/models/Jins";
 import camelCaseToWord from "@/functions/camelCaseToWord";
 import Link from "next/link";
+import ExportModal from "./export-modal";
 
 export default function JinsTranspositions() {
   const { selectedJinsDetails, selectedTuningSystem, setSelectedPitchClasses, allPitchClasses, centsTolerance, setCentsTolerance, sources, setSelectedJins } = useAppContext();
@@ -17,6 +19,9 @@ export default function JinsTranspositions() {
   const { noteOn, noteOff, playSequence, soundSettings } = useSoundContext();
 
   const { filters, setFilters } = useFilterContext();
+  
+  // Export modal state
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
 
   const disabledFilters = ["pitchClass"];
 
@@ -101,6 +106,19 @@ export default function JinsTranspositions() {
               >
                 <PlayCircleIcon className="jins-transpositions__play-circle-icon" /> Play jins
               </button>
+
+              {/* Export button - only show on first transposition */}
+              {index === 0 && selectedTuningSystem && (
+                <div className="jins-transpositions__export-container">
+                  Export:
+                  <button 
+                    className="jins-transpositions__export-button" 
+                    onClick={() => setIsExportModalOpen(true)}
+                  >
+                    <FileDownloadIcon style={{ fontSize: 18 }} />
+                  </button>
+                </div>
+              )}
             </td>
           </tr>
           <tr>
@@ -401,5 +419,10 @@ export default function JinsTranspositions() {
     }
   }, [selectedJinsDetails]);
 
-  return transpositionTables;
+  return (
+    <>
+      {transpositionTables}
+      <ExportModal isOpen={isExportModalOpen} onClose={() => setIsExportModalOpen(false)} exportType="jins" />
+    </>
+  );
 }

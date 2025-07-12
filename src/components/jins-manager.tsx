@@ -8,6 +8,8 @@ import React, { useState, useEffect, useMemo } from "react";
 import { getJinsTranspositions } from "@/functions/transpose";
 import { updateAjnas } from "@/functions/update";
 import { SourcePageReference } from "@/models/bibliography/Source";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import ExportModal from "./export-modal";
 
 export default function JinsManager({ admin }: { admin: boolean }) {
   const { ajnas, setAjnas, selectedTuningSystem, selectedJinsDetails, setSelectedJinsDetails, handleClickJins, selectedPitchClasses, clearSelections, allPitchClasses, sources } = useAppContext();
@@ -18,6 +20,9 @@ export default function JinsManager({ admin }: { admin: boolean }) {
   // Local state for comments
   const [commentsEnglishLocal, setCommentsEnglishLocal] = useState<string>(selectedJinsDetails?.getCommentsEnglish() ?? "");
   const [commentsArabicLocal, setCommentsArabicLocal] = useState<string>(selectedJinsDetails?.getCommentsArabic() ?? "");
+  
+  // Export modal state
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
 
   // Dynamic note names for tabs ordered by allPitchClasses.noteName
   const tabs = useMemo(() => {
@@ -127,6 +132,16 @@ export default function JinsManager({ admin }: { admin: boolean }) {
             </button>
           );
         })}
+        
+        {/* Export button in tabs area */}
+        {selectedJinsDetails && selectedTuningSystem && (
+          <div className="jins-manager__export-container">
+            Export:
+            <button className="jins-manager__export-button" onClick={() => setIsExportModalOpen(true)}>
+              <FileDownloadIcon />
+            </button>
+          </div>
+        )}
       </div>
       <div className="jins-manager__carousel">
         <button
@@ -266,6 +281,9 @@ export default function JinsManager({ admin }: { admin: boolean }) {
           </div>
         </div>
       )}
+      
+      {/* Export Modal */}
+      <ExportModal isOpen={isExportModalOpen} onClose={() => setIsExportModalOpen(false)} exportType="jins" />
     </div>
   );
 }

@@ -414,4 +414,29 @@
     color: silver;
     margin-left: 2px;
   }
+
+  &__export-container {
+    display: inline-flex;
+    float: right;
+    align-items: center;
+    gap: 10px;
+    margin-right: 20px;
+    margin-bottom: 0px;
+    margin-left: auto;
+  }
+
+  &__export-button {
+    padding-top: 5px;
+    padding-bottom: 0px;
+    width: 50px;
+    background-color: rgba($primary, 0.5);
+    cursor: pointer;
+    border-radius: 0px;
+    color: $text;
+    margin-left: 0px;
+    
+    &:hover {
+      background-color: rgba($primary, 1);
+    }
+  }
 }

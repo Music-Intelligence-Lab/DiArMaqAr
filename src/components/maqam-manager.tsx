@@ -8,6 +8,8 @@ import MaqamDetails from "@/models/Maqam";
 import { getMaqamTranspositions } from "@/functions/transpose";
 import { updateMaqamat } from "@/functions/update";
 import { SourcePageReference } from "@/models/bibliography/Source";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import ExportModal from "./export-modal";
 
 export default function MaqamManager({ admin }: { admin: boolean }) {
   const {
@@ -28,6 +30,9 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
   const { maqamatFilter, setMaqamatFilter } = useFilterContext();
 
   const { clearHangingNotes } = useSoundContext();
+  
+  // Export modal state
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
 
   // Local state for comments
   const [commentsEnglishLocal, setCommentsEnglishLocal] = useState<string>(selectedMaqamDetails?.getCommentsEnglish() ?? "");
@@ -169,6 +174,16 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
             </button>
           );
         })}
+        
+        {/* Export button in tabs area */}
+        {selectedMaqamDetails && selectedTuningSystem && (
+          <div className="maqam-manager__export-container">
+            Export:
+            <button className="maqam-manager__export-button" onClick={() => setIsExportModalOpen(true)}>
+              <FileDownloadIcon />
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="maqam-manager__carousel">
@@ -333,6 +348,9 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
           </div>
         </div>
       )}
+      
+      {/* Export Modal */}
+      <ExportModal isOpen={isExportModalOpen} onClose={() => setIsExportModalOpen(false)} exportType="maqam" />
     </div>
   );
 }
