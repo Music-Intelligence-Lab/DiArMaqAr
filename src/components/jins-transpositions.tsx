@@ -10,7 +10,6 @@ import { getJinsTranspositions } from "@/functions/transpose";
 import { Jins } from "@/models/Jins";
 import camelCaseToWord from "@/functions/camelCaseToWord";
 import Link from "next/link";
-import ExportModal from "./export-modal";
 
 export default function JinsTranspositions() {
   const { selectedJinsDetails, selectedTuningSystem, setSelectedPitchClasses, allPitchClasses, centsTolerance, setCentsTolerance, sources, setSelectedJins } = useAppContext();
