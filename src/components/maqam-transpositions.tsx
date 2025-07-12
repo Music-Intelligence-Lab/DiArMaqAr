@@ -1,6 +1,13 @@
 "use client";
 
 import React, { useMemo, useState, useEffect } from "react";
+import useAppContext from "@/contexts/app-context";
+import useSoundContext, { defaultNoteVelocity } from "@/contexts/sound-context";
+import useFilterContext from "@/contexts/filter-context";
+import { getEnglishNoteName } from "@/functions/noteNameMappings";
+import PlayCircleIcon from "@mui/icons-material/PlayCircle";
+import { getMaqamTranspositions } from "@/functions/transpose";
+
 // --- Utility: getHeaderId ---
 const getHeaderId = (noteName: string): string => {
   if (typeof noteName !== "string") return "";
@@ -22,12 +29,6 @@ export function scrollToMaqamHeader(firstNote: string, selectedMaqamDetails?: an
     el.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 }
-import useAppContext from "@/contexts/app-context";
-import useSoundContext, { defaultNoteVelocity } from "@/contexts/sound-context";
-import useFilterContext from "@/contexts/filter-context";
-import { getEnglishNoteName } from "@/functions/noteNameMappings";
-import PlayCircleIcon from "@mui/icons-material/PlayCircle";
-import { getMaqamTranspositions } from "@/functions/transpose";
 import { Maqam } from "@/models/Maqam";
 import { calculateInterval } from "@/models/PitchClass";
 import shiftPitchClass from "@/functions/shiftPitchClass";

@@ -990,7 +990,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       </div>
 
       {/* Export Modal */}
-      <ExportModal isOpen={isExportModalOpen} onClose={() => setIsExportModalOpen(false)} />
+      <ExportModal isOpen={isExportModalOpen} onClose={() => setIsExportModalOpen(false)} exportType="tuning-system" />
     </div>
   );
 }
