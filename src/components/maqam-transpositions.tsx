@@ -7,6 +7,7 @@ import useFilterContext from "@/contexts/filter-context";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { getMaqamTranspositions } from "@/functions/transpose";
+import StaffNotation from "./staff-notation";
 
 // --- Utility: getHeaderId ---
 const getHeaderId = (noteName: string): string => {
@@ -56,6 +57,11 @@ const MaqamTranspositions: React.FC = () => {
     index: number;
     noteNames: string[];
   }>({ index: -1, noteNames: [] });
+
+  // Staff notation settings
+  const [staffNotationSettings, setStaffNotationSettings] = useState({
+    clef: 'treble' as 'treble' | 'bass' | 'alto' | 'tenor'
+  });
 
   const isCellHighlighted = (index: number, noteName: string): boolean => {
     return highlightedNotes.index === index && highlightedNotes.noteNames.includes(noteName);
@@ -371,6 +377,32 @@ const MaqamTranspositions: React.FC = () => {
                   <th className="maqam-transpositions__header-pitchClass"></th>
                 </React.Fragment>
               ))}
+            </tr>
+          )}
+          {filters.staffNotation && (
+            <tr>
+              <th className="maqam-transpositions__row-header">
+                Staff Notation
+                <select 
+                  value={staffNotationSettings.clef} 
+                  onChange={(e) => setStaffNotationSettings(prev => ({
+                    ...prev, 
+                    clef: e.target.value as 'treble' | 'bass' | 'alto' | 'tenor'
+                  }))}
+                  className="clef-select"
+                >
+                  <option value="treble">Treble</option>
+                  <option value="bass">Bass</option>
+                  <option value="alto">Alto</option>
+                  <option value="tenor">Tenor</option>
+                </select>
+              </th>
+              <td className="staff-notation-cell" colSpan={pitchClasses.length * 2}>
+                <StaffNotation 
+                  pitchClasses={pitchClasses}
+                  clef={staffNotationSettings.clef}
+                />
+              </td>
             </tr>
           )}
           <tr>
