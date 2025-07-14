@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useEffect } from "react";
+import React, { useMemo, useEffect, useState } from "react";
 import useAppContext from "@/contexts/app-context";
 import useSoundContext, { defaultNoteVelocity } from "@/contexts/sound-context";
 import useFilterContext from "@/contexts/filter-context";
@@ -10,6 +10,7 @@ import { getJinsTranspositions } from "@/functions/transpose";
 import { Jins } from "@/models/Jins";
 import camelCaseToWord from "@/functions/camelCaseToWord";
 import Link from "next/link";
+import StaffNotation from "./staff-notation";
 
 export default function JinsTranspositions() {
   const { selectedJinsDetails, selectedTuningSystem, setSelectedPitchClasses, allPitchClasses, centsTolerance, setCentsTolerance, sources, setSelectedJins } = useAppContext();
@@ -19,6 +20,11 @@ export default function JinsTranspositions() {
   const { filters, setFilters } = useFilterContext();
 
   const disabledFilters = ["pitchClass"];
+
+  // Staff notation settings
+  const [staffNotationSettings, setStaffNotationSettings] = useState({
+    clef: 'treble' as 'treble' | 'bass' | 'alto' | 'tenor'
+  });
 
   // --- Utility: getHeaderId for jins ---
   const getJinsHeaderId = (noteName: string): string => {
@@ -228,6 +234,32 @@ export default function JinsTranspositions() {
                   <th className="jins-transpositions__header-pitchClass">{parseFloat(pitchClasses[i + 1].frequency).toFixed(3)}</th>
                 </React.Fragment>
               ))}
+            </tr>
+          )}
+          {filters.staffNotation && (
+            <tr>
+              <th className="jins-transpositions__row-header">
+                Staff Notation
+                <select 
+                  value={staffNotationSettings.clef} 
+                  onChange={(e) => setStaffNotationSettings(prev => ({
+                    ...prev, 
+                    clef: e.target.value as 'treble' | 'bass' | 'alto' | 'tenor'
+                  }))}
+                  className="clef-select"
+                >
+                  <option value="treble">Treble</option>
+                  <option value="bass">Bass</option>
+                  <option value="alto">Alto</option>
+                  <option value="tenor">Tenor</option>
+                </select>
+              </th>
+              <td className="staff-notation-cell" colSpan={pitchClasses.length * 2 - 1}>
+                <StaffNotation 
+                  pitchClasses={pitchClasses}
+                  clef={staffNotationSettings.clef}
+                />
+              </td>
             </tr>
           )}
           <tr>
