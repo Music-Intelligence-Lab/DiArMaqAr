@@ -352,12 +352,12 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
           if (cmd === 0x90 && velocity > 0) {
             noteOn(adjPitchClass, velocity);
             setActivePitchClasses((prev) => {
-              if (prev.some((c) => c.index === pitchClass.index && c.octave === pitchClass.octave)) return prev;
-              return [...prev, pitchClass];
+              if (prev.some((c) => c.index === adjPitchClass.index && c.octave === adjPitchClass.octave)) return prev;
+              return [...prev, adjPitchClass];
             });
           } else if (cmd === 0x80 || (cmd === 0x90 && velocity === 0)) {
             noteOff(adjPitchClass);
-            setActivePitchClasses((prev) => prev.filter((c) => !(c.index === pitchClass.index && c.octave === pitchClass.octave)));
+            setActivePitchClasses((prev) => prev.filter((c) => !(c.index === adjPitchClass.index && c.octave === adjPitchClass.octave)));
           }
 
           break;
