@@ -73,6 +73,49 @@
     &_descending {
       background-color: rgba($primary, 0.4);
     }
+
+    // MIDI mode styling for black and white keys
+    &_midi_black {
+      background-color: black !important;
+      color: white;
+    }
+
+    &_midi_white {
+      background-color: #f8f8f8 !important;
+      color: $black;
+      border: 1px solid #ddd;
+    }
+
+    // MIDI mode state modifiers
+    &_midi_selected {
+      background-color: rgba($primary, 0.8) !important;
+      color: white !important;
+    }
+
+    &_midi_active {
+      background-color: rgba($tertiary, 1) !important;
+      color: white !important;
+    }
+
+    &_midi_descending {
+      background-color: rgba($primary, 0.4) !important;
+    }
+
+    &_midi_tonic {
+      border-top: 3px rgb($tertiary, 0.8) solid;
+      border-bottom: 3px solid rgb($tertiary, 0.8);
+    }
+
+    &_midi_tonic_current {
+      background-color: rgb($tertiary, 0.8) !important;
+      border: rgba($tertiary, 0.8) solid 3px !important;
+      color: white !important;
+    }
+
+    &_midi_tonic_current_active {
+      background-color: rgba($tertiary, 1) !important;
+      color: white !important;
+    }
   }
 
   &__cell-label {
