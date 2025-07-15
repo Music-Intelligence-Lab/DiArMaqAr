@@ -16,32 +16,48 @@ interface WheelCellProps {
   isTonic: boolean;
   isCurrentTonic: boolean;
   mapping: string;
+  inputType: "QWERTY" | "MIDI";
+  isBlackKey: boolean;
+  isMapped: boolean;
   onClick: () => void;
 }
 
 const WheelCell = React.memo<WheelCellProps>(
-  ({ pitchClass, isSelected, isActive, isDescending, isTonic, isCurrentTonic, mapping, onClick }) => {
+  ({ pitchClass, isSelected, isActive, isDescending, isTonic, isCurrentTonic, mapping, inputType, isBlackKey, isMapped, onClick }) => {
+    const baseClassName = "pitch-class-wheel__cell";
     let className = "pitch-class-wheel__cell";
-    if (isSelected) className += " pitch-class-wheel__cell_selected";
-    if (isDescending) className += " pitch-class-wheel__cell_descending";
+    if (isSelected) className = baseClassName + " pitch-class-wheel__cell_selected";
+    if (isDescending) className = baseClassName + " pitch-class-wheel__cell_descending";
     // Highlight all possible tonics
     if (isTonic) {
-      className += " pitch-class-wheel__cell_tonic";
+      className = baseClassName + " pitch-class-wheel__cell_tonic";
     }
     // Add a special class if this is the tonic of the current selected jins or maqam
     if (isCurrentTonic) {
-      className += " pitch-class-wheel__cell_tonic_current";
+      className = baseClassName + " pitch-class-wheel__cell_tonic_current";
     }
     if (isCurrentTonic && isActive) {
-      className += " pitch-class-wheel__cell_tonic_current_active";
+      className = baseClassName + " pitch-class-wheel__cell_tonic_current_active";
     }
-    if (isActive) className += " pitch-class-wheel__cell_active";
+    if (isActive) className = baseClassName + " pitch-class-wheel__cell_active";
+
+    // Add MIDI-specific classes for black/white keys when in MIDI mode
+    if (inputType === "MIDI" && isMapped) {
+      if (isBlackKey) {
+        className = baseClassName + " pitch-class-wheel__cell_midi_black";
+      } else {
+        className = baseClassName + " pitch-class-wheel__cell_midi_white";
+      }
+    }
 
     return (
       <div className={className} onClick={onClick} style={{ cursor: isTonic ? "pointer" : undefined }}>
         <span className="pitch-class-wheel__cell-label">{pitchClass.noteName.replace(/\//g, "/\u200B")}</span>
 
-        <span className="pitch-class-wheel__cell-qwerty-englishname"><span className="pitch-class-wheel__cell-english">{pitchClass.englishName}</span>{mapping && <span className="pitch-class-wheel__cell-mapping">{mapping}</span>}</span>
+        <span className="pitch-class-wheel__cell-qwerty-englishname">
+          <span className="pitch-class-wheel__cell-english">{pitchClass.englishName}</span>
+          {inputType === "QWERTY" && mapping && <span className="pitch-class-wheel__cell-mapping">{mapping}</span>}
+        </span>
         
         
       </div>
@@ -53,7 +69,10 @@ const WheelCell = React.memo<WheelCellProps>(
     prev.isDescending === next.isDescending &&
     prev.isTonic === next.isTonic &&
     prev.isCurrentTonic === next.isCurrentTonic &&
-    prev.mapping === next.mapping
+    prev.mapping === next.mapping &&
+    prev.inputType === next.inputType &&
+    prev.isBlackKey === next.isBlackKey &&
+    prev.isMapped === next.isMapped
 );
 
 WheelCell.displayName = "WheelCell";
@@ -70,16 +89,42 @@ export default function PitchClassWheel() {
     selectedPitchClasses,
     setSelectedPitchClasses,
     allPitchClasses,
+    selectedTuningSystem,
     centsTolerance,
   } = useAppContext();
 
-  const { activePitchClasses } = useSoundContext();
+  const { activePitchClasses, soundSettings } = useSoundContext();
 
   const firstRowCodes = ["KeyQ", "KeyW", "KeyE", "KeyR", "KeyT", "KeyY", "KeyU", "KeyI", "KeyO", "KeyP", "BracketLeft", "BracketRight"];
 
   const secondRowCodes = ["KeyA", "KeyS", "KeyD", "KeyF", "KeyG", "KeyH", "KeyJ", "KeyK", "KeyL", "Semicolon", "Quote", "Backslash"];
 
   const thirdRowCodes = ["Backquote", "KeyZ", "KeyX", "KeyC", "KeyV", "KeyB", "KeyN", "KeyM", "Comma", "Period", "Slash", ""];
+
+  // Function to determine if a pitch class corresponds to a black or white key
+  const isBlackKey = (pitchClass: PitchClass): boolean => {
+    const englishName = pitchClass.englishName.toLowerCase();
+    // Black keys typically have sharp or flat in their name
+    return englishName.includes('#') || englishName.includes('♯') || englishName.includes('b') || englishName.includes('♭');
+  };
+
+  // Function to check if a pitch class is mapped in the current mode
+  const isMapped = (pitchClass: PitchClass): boolean => {
+    if (soundSettings.inputType !== "MIDI") return false;
+    
+    if (soundSettings.inputMode === "tuningSystem" && selectedTuningSystem) {
+      // In tuning system mode, check if this pitch class is part of the tuning system
+      const tuningSystemPitchClasses = selectedTuningSystem.getPitchClasses();
+      return tuningSystemPitchClasses.includes(pitchClass.fraction);
+    } else if (soundSettings.inputMode === "selection") {
+      // In selection mode, check if this pitch class is in the selected pitch classes
+      return selectedPitchClasses.some(spc => 
+        spc.englishName.toLowerCase() === pitchClass.englishName.toLowerCase()
+      );
+    }
+    
+    return false;
+  };
 
   function conciseKey(code: string): string {
     if (!code) return "";
@@ -299,6 +344,9 @@ export default function PitchClassWheel() {
         isTonic,
         isCurrentTonic,
         mapping,
+        inputType: soundSettings.inputType,
+        isBlackKey: isBlackKey(pitchClass),
+        isMapped: isMapped(pitchClass),
         onClick,
       };
     });
@@ -311,6 +359,9 @@ export default function PitchClassWheel() {
     selectedMaqamDetails,
     selectedMaqam,
     selectedJinsDetails,
+    soundSettings.inputType,
+    soundSettings.inputMode,
+    selectedTuningSystem,
     centsTolerance,
   ]);
 
