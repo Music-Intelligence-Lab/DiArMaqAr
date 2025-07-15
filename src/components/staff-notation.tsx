@@ -8,11 +8,11 @@ import midiNumberToNoteName from "@/functions/midiToNoteNumber";
 
 interface StaffNotationProps {
   pitchClasses: PitchClass[];
-  clef?: "treble" | "bass" | "alto" | "tenor";
 }
 
-export default function StaffNotation({ pitchClasses, clef = "treble" }: StaffNotationProps) {
+export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const clef = "treble"; // Always use treble clef
 
   useEffect(() => {
     if (!containerRef.current || !pitchClasses.length) return;
@@ -28,7 +28,7 @@ export default function StaffNotation({ pitchClasses, clef = "treble" }: StaffNo
           '<div style="text-align: center; font-size: 14px; color: #666; padding: 20px;">Unable to display staff notation</div>';
       }
     }
-  }, [pitchClasses, clef]);
+  }, [pitchClasses]);
 
   const parseNote = (englishName: string) => {
     if (!englishName || englishName === "--") return null;
@@ -92,18 +92,18 @@ export default function StaffNotation({ pitchClasses, clef = "treble" }: StaffNo
     }).length;
 
     const noteWidth = 60;
-    const staveMargin = 60;
-    const rightMargin = 100;
+    const staveMargin = 300;
+    const rightMargin = 10;
     const calculatedWidth =  staveMargin + (notesCount * noteWidth) + rightMargin;
-    const calculatedHeight = 150;
+    const calculatedHeight = 160;
 
     const renderer = new Renderer(containerRef.current, Renderer.Backends.SVG);
     renderer.resize(calculatedWidth, calculatedHeight);
     const context = renderer.getContext();
 
     const staveX = 0;
-    const staveY = 0;
-    const staveWidth = calculatedWidth - 50;
+    const staveY = 15;
+    const staveWidth = calculatedWidth - rightMargin;
     const stave = new Stave(staveX, staveY, staveWidth);
     stave.addClef(clef);
     stave.setContext(context).draw();
