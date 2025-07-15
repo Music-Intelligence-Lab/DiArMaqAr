@@ -259,3 +259,17 @@
     rotate: 0;
   }
 }
+
+.settings-card {
+  &__checkbox {
+    margin-right: 8px;
+    transform: scale(1.2);
+  }
+
+  &__description {
+    font-size: 12px;
+    color: $grey;
+    margin-top: 4px;
+    line-height: 1.3;
+  }
+}

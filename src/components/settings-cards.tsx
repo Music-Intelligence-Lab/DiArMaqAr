@@ -533,6 +533,25 @@ const SettingsCard = () => {
                   max={50}
                 />
               </div>
+              <div className="settings-card__input-container">
+                <label className="settings-card__label">
+                  <input
+                    type="checkbox"
+                    checked={soundSettings.useMPE}
+                    onChange={(e) =>
+                      setSoundSettings((prev) => ({
+                        ...prev,
+                        useMPE: e.target.checked,
+                      }))
+                    }
+                    className="settings-card__checkbox"
+                  />
+                  Use MPE (MIDI Polyphonic Expression)
+                </label>
+                <div className="settings-card__description">
+                  Enables per-note pitch bends for microtonal music. Requires MPE-compatible synthesizer.
+                </div>
+              </div>
             </>
           )}
         </details>
