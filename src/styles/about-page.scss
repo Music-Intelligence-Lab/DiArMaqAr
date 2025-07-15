@@ -1,0 +1,140 @@
+@use "./variables" as *;
+
+.about-page {
+  display: flex;
+  flex-direction: column;
+  max-width: 65%;
+  margin: 30px auto;
+  padding: 0rem;
+  min-height: fit-content;
+
+  h1 {
+    font-size: 32px;
+    margin-bottom: 2rem;
+    color: $text;
+    font-weight: 400;
+    text-align: center;
+  }
+
+  h2 {
+    font-size: 24px;
+    margin-bottom: 1.5rem;
+    margin-top: 2rem;
+    color: $text;
+    font-weight: 400;
+  }
+
+  h3 {
+    font-size: 18px;
+    margin-bottom: 1rem;
+    color: $text;
+    font-weight: 400;
+  }
+
+  p {
+    font-size: 16px;
+    line-height: 1.7;
+    color: $text;
+    text-align: justify;
+    margin-bottom: 20px;
+  }
+
+  section {
+    margin-bottom: 2rem;
+  }
+
+  ul {
+    padding: 0;
+    list-style: none;
+    counter-reset: feature;
+    max-width: 80%;
+    text-align: justify;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 2rem;
+  }
+
+  ul li {
+    position: relative;
+    line-height: 1.5;
+    font-size: 16px;
+    color: $text;
+    padding: 18px 24px 15px 52px;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+  }
+
+  ul li::before {
+    counter-increment: feature;
+    content: counter(feature);
+    position: absolute;
+    left: 0px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: 400;
+    color: $text;
+    background-color: $primary;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    border: 0px solid $text;
+    z-index: 1;
+  }
+
+  ul li:last-child {
+    margin-bottom: 0;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+  }
+
+  .feature-card {
+    background-color: rgba($medium-grey, 0.7);
+    border: 1px solid rgba($primary, 0.3);
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+
+    &:hover {
+      border-color: $primary;
+      background-color: rgba($medium-grey, 0.9);
+      transform: translateY(-2px);
+    }
+
+    h3 {
+      color: $gold;
+      margin-bottom: 1rem;
+      font-size: 18px;
+    }
+
+    p {
+      margin-bottom: 0;
+      text-align: left;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+  }
+
+  .highlight {
+    background-color: rgba($secondary, 0.8);
+    color: $text;
+    font-weight: 300;
+    padding: 1px 3px;
+    margin: 0 0;
+    border-radius: 2px;
+  }
+
+  strong {
+    font-weight: 400;
+    color: $gold;
+  }
+}
