@@ -44,9 +44,9 @@ const WheelCell = React.memo<WheelCellProps>(
     // Add MIDI-specific classes for black/white keys when in MIDI mode
     if (inputType === "MIDI" && isMapped) {
       if (isBlackKey) {
-        className = baseClassName + " pitch-class-wheel__cell_midi_black";
+        className = "pitch-class-wheel__cell_midi_black " + className;
       } else {
-        className = baseClassName + " pitch-class-wheel__cell_midi_white";
+        className = "pitch-class-wheel__cell_midi_white " + className;
       }
     }
 
