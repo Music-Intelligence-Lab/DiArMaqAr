@@ -1,9 +1,13 @@
 "use client";
 
 import React, { useRef, useEffect } from 'react';
+import { octaveOneNoteNames } from '@/models/NoteName';
 import { Renderer, Stave, StaveNote, Voice, Formatter, Accidental } from 'vexflow';
 import { getEnglishNoteName } from '@/functions/noteNameMappings';
 import PitchClass from '@/models/PitchClass';
+  // Import selectedTuningSystem from context
+  import useAppContext from '@/contexts/app-context';
+
 
 interface StaffNotationProps {
   pitchClasses: PitchClass[];
@@ -14,6 +18,7 @@ export default function StaffNotation({
   pitchClasses,
   clef = 'treble'
 }: StaffNotationProps) {
+  const { selectedTuningSystem, selectedIndices } = useAppContext();
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -41,7 +46,7 @@ export default function StaffNotation({
       return null;
     }
     
-    const accidental = cleanName.slice(1);
+    const accidental = cleanName.slice(1).toLowerCase();
     
     return {
       letter: noteLetter,
@@ -51,14 +56,24 @@ export default function StaffNotation({
 
   const mapAccidentalToVexFlow = (accidental: string) => {
     switch (accidental) {
-      case '#': return '#';
-      case '##': return '##';
-      case 'b': return 'b';
-      case 'bb': return 'bb';
-      case 'n': return 'n';
-      default: return '';
+    case "--": return "b";
+      case "-": return "b";
+      case "+": return "n";
+      case "++": return "n";
+      case "b--": return "b";
+      case "-b": return "bs";
+      case "-#": return "+"; // fallback, or custom if needed
+      case "b": return "b";
+      case "#": return "#";
+      case "bb": return "b";
+      case "n": return "n";
+      case "b+": return "b";
+      case "#-": return "#";
+      case "#+": return "#";
+      default: return "";
     }
   };
+
 
   const renderStaff = () => {
     if (!containerRef.current) return;
@@ -69,11 +84,10 @@ export default function StaffNotation({
     }).length;
     
     const noteWidth = 60;
-    const staveMargin = 40;
+    const staveMargin = 0;
     const rightMargin = 40;
     const calculatedWidth = Math.max(200, staveMargin + (notesCount * noteWidth) + rightMargin);
-    
-    const calculatedHeight = 220;
+    const calculatedHeight = 150;
 
     const renderer = new Renderer(containerRef.current, Renderer.Backends.SVG);
     renderer.resize(calculatedWidth, calculatedHeight);
@@ -90,36 +104,69 @@ export default function StaffNotation({
     pitchClasses.forEach((pitchClass) => {
       try {
         const englishName = pitchClass.englishName || getEnglishNoteName(pitchClass.noteName);
-        
         if (!englishName || englishName === '--') {
+          console.log('[StaffNotation] Skipping invalid pitchClass:', pitchClass);
           return;
         }
-        
         const parsed = parseNote(englishName);
         if (!parsed) {
+          console.log('[StaffNotation] parseNote failed for:', englishName, 'pitchClass:', pitchClass);
           return;
         }
 
-        const octave = pitchClass.octave || 4;
-        
+        const noteLetters = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+        let octave = 3;
+        let startingNote = 'C';
+        if (
+          selectedTuningSystem &&
+          typeof selectedTuningSystem.getTitleEnglish === 'function' &&
+          Array.isArray(selectedIndices) &&
+          selectedIndices.length > 0
+        ) {
+          startingNote = getEnglishNoteName(octaveOneNoteNames[selectedIndices[0]]).toUpperCase();
+        }
+        if (typeof pitchClass.octave === 'number') {
+          const noteLetter = parsed.letter.toUpperCase();
+          // Find all notes from startingNote up to B
+          const startIdx = noteLetters.indexOf(startingNote);
+          const lowerOctaveNotes = startIdx === -1 ? [] : noteLetters.slice(startIdx);
+          // If note is in lowerOctaveNotes, subtract 1 from octave
+          octave = 3 + pitchClass.octave;
+          if (lowerOctaveNotes.includes(noteLetter)) {
+            octave = 4;
+          }
+        }
+
         const noteSpec = `${parsed.letter.toLowerCase()}/${octave}`;
-        
+        console.log('[StaffNotation] Note debug:', {
+          pitchClass,
+          englishName,
+          parsed,
+          octave,
+          noteSpec
+        });
         const staveNote = new StaveNote({
           clef: clef,
           keys: [noteSpec],
-          duration: 'q'
-        });
+          duration: 'q',
+          autoStem: true,
 
+        });
         if (parsed.accidental && parsed.accidental !== '') {
           const vexFlowAccidental = mapAccidentalToVexFlow(parsed.accidental);
+          console.log('[StaffNotation] Accidental debug:', {
+            pitchClass,
+            englishName,
+            accidental: parsed.accidental,
+            mapped: vexFlowAccidental
+          });
           if (vexFlowAccidental) {
             staveNote.addModifier(new Accidental(vexFlowAccidental), 0);
           }
         }
-
         vexFlowNotes.push(staveNote);
       } catch (error) {
-        console.warn(`Could not create note for ${pitchClass.noteName}:`, error);
+        console.warn(`[StaffNotation] Could not create note for ${pitchClass.noteName}:`, error);
       }
     });
 
