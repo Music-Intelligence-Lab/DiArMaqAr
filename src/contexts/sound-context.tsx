@@ -34,6 +34,7 @@ interface SoundSettings {
   selectedMidiOutputId: string | null;
   selectedPattern: Pattern | null;
   drone: boolean;
+  useMPE: boolean;
 }
 
 interface MidiPortInfo {
@@ -85,12 +86,22 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     selectedMidiOutputId: null,
     selectedPattern: null,
     drone: true,
+    useMPE: false,
   });
 
   // Union type: oscillator can be OscillatorNode or OscillatorNode[]
   const activeNotesRef = useRef<Map<number, { oscillator: OscillatorNode | OscillatorNode[]; gainNode: GainNode }[]>>(new Map());
   const timeoutsRef = useRef<number[]>([]);
-  const midiActiveNotesRef = useRef<Set<number>>(new Set());
+  const midiActiveNotesRef = useRef<Set<number>>(new Set()); // stores frequencies for MIDI notes
+
+  // MPE channel allocation
+  const mpeChannelAllocatorRef = useRef<{
+    activeChannels: Map<number, { frequency: number; noteNumber: number }>; // channel -> note info
+    availableChannels: number[]; // available MPE channels (2-15, channel 1 is global)
+  }>({
+    activeChannels: new Map(),
+    availableChannels: Array.from({ length: 14 }, (_, i) => i + 2), // channels 2-15
+  });
 
   const [activePitchClasses, setActivePitchClasses] = useState<PitchClass[]>([]);
 
@@ -110,13 +121,63 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     port?.send(bytes);
   };
 
-  function sendPitchBend(detuneSemitones: number) {
+  function sendPitchBend(detuneSemitones: number, channel: number = 0) {
     const center = 8192;
     const bendOffset = Math.round((detuneSemitones / soundSettings.pitchBendRange) * center);
     const bendValue = Math.max(0, Math.min(16383, center + bendOffset));
     const lsb = bendValue & 0x7f;
     const msb = (bendValue >> 7) & 0x7f;
-    sendMidiMessage([0xe0, lsb, msb]);
+    // Use the specified channel (0xE0 + channel)
+    sendMidiMessage([0xe0 + channel, lsb, msb]);
+  }
+
+  function allocateMPEChannel(frequency: number, noteNumber: number): number | null {
+    if (!soundSettings.useMPE) return 0; // Use channel 0 for non-MPE
+
+    const allocator = mpeChannelAllocatorRef.current;
+    if (allocator.availableChannels.length === 0) {
+      console.warn("No available MPE channels");
+      return null;
+    }
+
+    const channel = allocator.availableChannels.shift()!;
+    allocator.activeChannels.set(channel, { frequency, noteNumber });
+    return channel;
+  }
+
+  function releaseMPEChannel(frequency: number): number | null {
+    if (!soundSettings.useMPE) return 0;
+
+    const allocator = mpeChannelAllocatorRef.current;
+    for (const [channel, noteInfo] of allocator.activeChannels.entries()) {
+      if (noteInfo.frequency === frequency) {
+        allocator.activeChannels.delete(channel);
+        allocator.availableChannels.push(channel);
+        allocator.availableChannels.sort(); // Keep channels sorted for consistent allocation
+        return channel;
+      }
+    }
+    return null;
+  }
+
+  function initializeMPE() {
+    if (!soundSettings.useMPE || !soundSettings.selectedMidiOutputId) return;
+    
+    // Send MPE Configuration Message
+    // RPN MSB = 0, RPN LSB = 6 (MPE Configuration)
+    // Data Entry MSB = number of channels (14 for zone 1)
+    sendMidiMessage([0xB0, 0x65, 0x00]); // RPN LSB
+    sendMidiMessage([0xB0, 0x64, 0x06]); // RPN MSB  
+    sendMidiMessage([0xB0, 0x06, 0x0E]); // Data Entry MSB (14 channels)
+    sendMidiMessage([0xB0, 0x26, 0x00]); // Data Entry LSB
+    
+    // Set pitch bend range on all MPE channels to match our setting
+    for (let ch = 1; ch <= 15; ch++) {
+      sendMidiMessage([0xB0 + ch, 0x65, 0x00]); // RPN LSB
+      sendMidiMessage([0xB0 + ch, 0x64, 0x00]); // RPN MSB (pitch bend sensitivity)
+      sendMidiMessage([0xB0 + ch, 0x06, soundSettings.pitchBendRange]); // Data Entry MSB
+      sendMidiMessage([0xB0 + ch, 0x26, 0x00]); // Data Entry LSB
+    }
   }
 
   function scheduleTimeout(fn: () => void, ms: number) {
@@ -227,6 +288,13 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
       clearHangingNotes();
     };
   }, []);
+
+  // Initialize MPE when MPE setting or MIDI output changes
+  useEffect(() => {
+    if (soundSettings.useMPE && soundSettings.selectedMidiOutputId) {
+      initializeMPE();
+    }
+  }, [soundSettings.useMPE, soundSettings.selectedMidiOutputId, soundSettings.pitchBendRange]);
 
   const handleMidiInput: NonNullable<MIDIInput["onmidimessage"]> = function (this: MIDIInput, ev: MIDIMessageEvent) {
     // Ignore MIDI messages unless inputType is "MIDI"
@@ -489,10 +557,24 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
       const note = Math.floor(mf);
       const detune = mf - note;
 
-      sendPitchBend(detune);
+      // Allocate MPE channel if using MPE, otherwise use channel 0
+      const channel = allocateMPEChannel(frequency, note);
+      if (channel === null) {
+        console.warn("Could not allocate MPE channel for note");
+        return;
+      }
+
+      // Send pitch bend on the allocated channel
+      sendPitchBend(detune, channel);
+      
       // For MIDI, pass velocity directly (scaled by volume if desired)
       const vel = Math.round(velocityNorm * soundSettings.volume * 127);
-      sendMidiMessage([0x90, note, vel]);
+      
+      // Send note on with the allocated channel
+      sendMidiMessage([0x90 + channel, note, vel]);
+      
+      // Track the note with its channel for noteOff
+      midiActiveNotesRef.current.add(frequency);
       return;
     }
 
@@ -660,8 +742,20 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     if (soundSettings.outputMode === "mute") return;
 
     if (soundSettings.outputMode === "midi") {
-      const note = Math.floor(frequencyToMidiNoteNumber(frequency));
-      sendMidiMessage([0x80, note, 0]);
+      const mf = frequencyToMidiNoteNumber(frequency);
+      const note = Math.floor(mf);
+      
+      // Find and release the MPE channel for this frequency
+      const channel = releaseMPEChannel(frequency);
+      if (channel !== null) {
+        // Send note off on the specific channel
+        sendMidiMessage([0x80 + channel, note, 0]);
+      } else {
+        // Fallback to channel 0 if MPE channel not found
+        sendMidiMessage([0x80, note, 0]);
+      }
+      
+      midiActiveNotesRef.current.delete(frequency);
       return;
     }
 
@@ -707,7 +801,23 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     }
     activeNotesRef.current.clear();
 
-    midiActiveNotesRef.current.forEach((note) => sendMidiMessage([0x80, note, 0]));
+    // Send note off for all active MIDI notes
+    if (soundSettings.useMPE) {
+      // For MPE, send note off on each active channel
+      const allocator = mpeChannelAllocatorRef.current;
+      for (const [channel, noteInfo] of allocator.activeChannels.entries()) {
+        sendMidiMessage([0x80 + channel, noteInfo.noteNumber, 0]);
+      }
+      // Reset MPE allocator
+      allocator.activeChannels.clear();
+      allocator.availableChannels = Array.from({ length: 14 }, (_, i) => i + 2);
+    } else {
+      // For non-MPE, send note off on channel 0
+      midiActiveNotesRef.current.forEach((frequency) => {
+        const note = Math.floor(frequencyToMidiNoteNumber(frequency));
+        sendMidiMessage([0x80, note, 0]);
+      });
+    }
     midiActiveNotesRef.current.clear();
 
     setActivePitchClasses([]);
@@ -734,7 +844,23 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     }
     activeNotesRef.current.clear();
 
-    midiActiveNotesRef.current.forEach((note) => sendMidiMessage([0x80, note, 0]));
+    // Send note off for all active MIDI notes
+    if (soundSettings.useMPE) {
+      // For MPE, send note off on each active channel
+      const allocator = mpeChannelAllocatorRef.current;
+      for (const [channel, noteInfo] of allocator.activeChannels.entries()) {
+        sendMidiMessage([0x80 + channel, noteInfo.noteNumber, 0]);
+      }
+      // Reset MPE allocator
+      allocator.activeChannels.clear();
+      allocator.availableChannels = Array.from({ length: 14 }, (_, i) => i + 2);
+    } else {
+      // For non-MPE, send note off on channel 0
+      midiActiveNotesRef.current.forEach((frequency) => {
+        const note = Math.floor(frequencyToMidiNoteNumber(frequency));
+        sendMidiMessage([0x80, note, 0]);
+      });
+    }
     midiActiveNotesRef.current.clear();
 
     setActivePitchClasses([]);
