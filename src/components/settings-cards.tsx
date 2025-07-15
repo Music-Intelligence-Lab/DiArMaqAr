@@ -7,28 +7,17 @@ import useAppContext from "@/contexts/app-context";
 import useSoundContext from "@/contexts/sound-context";
 import useMenuContext from "@/contexts/menu-context";
 import SettingsIcon from "@mui/icons-material/Settings";
-import {
-  BASIC_WAVEFORMS,
-  APERIODIC_WAVEFORMS,
-  CUSTOM_WAVEFORMS,
-} from "@/audio/waves";
+import { BASIC_WAVEFORMS, APERIODIC_WAVEFORMS, CUSTOM_WAVEFORMS } from "@/audio/waves";
 
 const SettingsCard = () => {
   const { clearSelections, patterns } = useAppContext();
-  const {
-    soundSettings,
-    setSoundSettings,
-    midiInputs,
-    midiOutputs,
-    setRefresh,
-    clearHangingNotes,
-    stopAllSounds
-  } = useSoundContext();
+  const { soundSettings, setSoundSettings, midiInputs, midiOutputs, setRefresh, clearHangingNotes, stopAllSounds } = useSoundContext();
 
   const { openSettings, setOpenSettings, openNavigation, setOpenNavigation } = useMenuContext();
   const cardRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [mounted, setMounted] = useState(false);
+  const [originalPitchBend, setOriginalPitchBend] = useState<number>(2);
 
   useEffect(() => {
     if (!soundSettings.selectedPattern && patterns.length > 0) {
@@ -67,9 +56,7 @@ const SettingsCard = () => {
   // Trap focus inside settings and close on ESC
   useEffect(() => {
     if (!openSettings) return;
-    const focusable = cardRef.current?.querySelectorAll<HTMLElement>(
-      'input, select, button, a, [tabindex]:not([tabindex="-1"])'
-    );
+    const focusable = cardRef.current?.querySelectorAll<HTMLElement>('input, select, button, a, [tabindex]:not([tabindex="-1"])');
     const first = focusable?.[0];
     const last = focusable?.[focusable.length - 1];
     first?.focus();
@@ -109,13 +96,11 @@ const SettingsCard = () => {
     if (openNavigation) setOpenNavigation(false);
   };
 
-  const handleSoundSettingsChange =
-    (paramName: keyof typeof soundSettings) =>
-    (_event: Event, newValue: number | number[]) => {
-      if (typeof newValue === "number") {
-        setSoundSettings((prev) => ({ ...prev, [paramName]: newValue }));
-      }
-    };
+  const handleSoundSettingsChange = (paramName: keyof typeof soundSettings) => (_event: Event, newValue: number | number[]) => {
+    if (typeof newValue === "number") {
+      setSoundSettings((prev) => ({ ...prev, [paramName]: newValue }));
+    }
+  };
 
   const handleWaveformChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSoundSettings((prev) => ({ ...prev, waveform: e.target.value }));
@@ -133,9 +118,7 @@ const SettingsCard = () => {
     if (!isNaN(val)) setSoundSettings((prev) => ({ ...prev, duration: val }));
   };
  */
-  const handlePitchBendRangeChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handlePitchBendRangeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = Number(e.target.value);
     if (!isNaN(val)) setSoundSettings((prev) => ({ ...prev, pitchBendRange: val }));
   };
@@ -170,7 +153,7 @@ const SettingsCard = () => {
           </div>
           <div className="settings-card__input-container">
             <label className="settings-card__pattern-label">
-              Pattern Select: {" "}
+              Pattern Select:{" "}
               <button
                 onClick={() => {
                   setSoundSettings((prev) => ({ ...prev, drone: !prev.drone }));
@@ -183,11 +166,7 @@ const SettingsCard = () => {
             <select
               id="pattern-select"
               className="settings-card__select"
-              value={
-                soundSettings.selectedPattern
-                  ? soundSettings.selectedPattern.getId()
-                  : ""
-              }
+              value={soundSettings.selectedPattern ? soundSettings.selectedPattern.getId() : ""}
               onChange={(e) => {
                 const id = e.target.value;
                 const pat = patterns.find((p) => p.getId() === id) ?? null;
@@ -213,15 +192,9 @@ const SettingsCard = () => {
           <summary className="settings-card__summary">Live Input</summary>
 
           <div className="settings-card__input-container">
-            <label
-              htmlFor="midi-output-select"
-              className="settings-card__label"
-            >
-              MIDI Input: {" "}
-              <button
-                className="settings-card__refresh-button"
-                onClick={() => setRefresh((prev) => !prev)}
-              >
+            <label htmlFor="midi-output-select" className="settings-card__label">
+              MIDI Input:{" "}
+              <button className="settings-card__refresh-button" onClick={() => setRefresh((prev) => !prev)}>
                 Refresh
               </button>
             </label>
@@ -252,21 +225,15 @@ const SettingsCard = () => {
                   }))
                 }
                 className={`settings-card__sound-mode-button ${
-                  soundSettings.inputType === "QWERTY"
-                    ? "settings-card__sound-mode-button_selected"
-                    : ""
+                  soundSettings.inputType === "QWERTY" ? "settings-card__sound-mode-button_selected" : ""
                 }`}
               >
                 QWERTY
               </button>
               <button
-                onClick={() =>
-                  setSoundSettings((prev) => ({ ...prev, inputType: "MIDI" }))
-                }
+                onClick={() => setSoundSettings((prev) => ({ ...prev, inputType: "MIDI" }))}
                 className={`settings-card__sound-mode-button ${
-                  soundSettings.inputType === "MIDI"
-                    ? "settings-card__sound-mode-button_selected"
-                    : ""
+                  soundSettings.inputType === "MIDI" ? "settings-card__sound-mode-button_selected" : ""
                 }`}
               >
                 MIDI
@@ -282,9 +249,7 @@ const SettingsCard = () => {
                     }))
                   }
                   className={`settings-card__sound-mode-button ${
-                    soundSettings.inputMode === "tuningSystem"
-                      ? "settings-card__sound-mode-button_selected"
-                      : ""
+                    soundSettings.inputMode === "tuningSystem" ? "settings-card__sound-mode-button_selected" : ""
                   }`}
                 >
                   Tuning System
@@ -297,9 +262,7 @@ const SettingsCard = () => {
                     }))
                   }
                   className={`settings-card__sound-mode-button ${
-                    soundSettings.inputMode === "selection"
-                      ? "settings-card__sound-mode-button_selected"
-                      : ""
+                    soundSettings.inputMode === "selection" ? "settings-card__sound-mode-button_selected" : ""
                   }`}
                 >
                   Jins/Maqām
@@ -319,10 +282,7 @@ const SettingsCard = () => {
               min={0}
               max={1}
               step={0.01}
-              onChange={(_e, newVal) =>
-                typeof newVal === "number" &&
-                setSoundSettings((prev) => ({ ...prev, volume: newVal }))
-              }
+              onChange={(_e, newVal) => typeof newVal === "number" && setSoundSettings((prev) => ({ ...prev, volume: newVal }))}
               onChangeCommitted={() => {
                 const el = document.activeElement as HTMLElement | null;
                 el?.blur();
@@ -404,14 +364,8 @@ const SettingsCard = () => {
           <summary className="settings-card__summary">Audio Output</summary>
           <div className="settings-card__sound-mode">
             <button
-              onClick={() =>
-                setSoundSettings((prev) => ({ ...prev, outputMode: "mute" }))
-              }
-              className={`settings-card__sound-mode-button ${
-                soundSettings.outputMode === "mute"
-                  ? "settings-card__sound-mode-button_selected"
-                  : ""
-              }`}
+              onClick={() => setSoundSettings((prev) => ({ ...prev, outputMode: "mute" }))}
+              className={`settings-card__sound-mode-button ${soundSettings.outputMode === "mute" ? "settings-card__sound-mode-button_selected" : ""}`}
             >
               Mute
             </button>
@@ -423,22 +377,14 @@ const SettingsCard = () => {
                 }))
               }
               className={`settings-card__sound-mode-button ${
-                soundSettings.outputMode === "waveform"
-                  ? "settings-card__sound-mode-button_selected"
-                  : ""
+                soundSettings.outputMode === "waveform" ? "settings-card__sound-mode-button_selected" : ""
               }`}
             >
               Waveform
             </button>
             <button
-              onClick={() =>
-                setSoundSettings((prev) => ({ ...prev, outputMode: "midi" }))
-              }
-              className={`settings-card__sound-mode-button ${
-                soundSettings.outputMode === "midi"
-                  ? "settings-card__sound-mode-button_selected"
-                  : ""
-              }`}
+              onClick={() => setSoundSettings((prev) => ({ ...prev, outputMode: "midi" }))}
+              className={`settings-card__sound-mode-button ${soundSettings.outputMode === "midi" ? "settings-card__sound-mode-button_selected" : ""}`}
             >
               Midi
             </button>
@@ -446,10 +392,7 @@ const SettingsCard = () => {
 
           {soundSettings.outputMode === "waveform" && (
             <div className="settings-card__input-container">
-              <label
-                htmlFor="waveform-select"
-                className="settings-card__label"
-              >
+              <label htmlFor="waveform-select" className="settings-card__label">
                 Waveform:
               </label>
               <select
@@ -488,15 +431,9 @@ const SettingsCard = () => {
           {soundSettings.outputMode === "midi" && (
             <>
               <div className="settings-card__input-container">
-                <label
-                  htmlFor="midi-output-select"
-                  className="settings-card__label"
-                >
-                  MIDI Output: {" "}
-                  <button
-                    className="settings-card__refresh-button"
-                    onClick={() => setRefresh((prev) => !prev)}
-                  >
+                <label htmlFor="midi-output-select" className="settings-card__label">
+                  MIDI Output:{" "}
+                  <button className="settings-card__refresh-button" onClick={() => setRefresh((prev) => !prev)}>
                     Refresh
                   </button>
                 </label>
@@ -529,8 +466,8 @@ const SettingsCard = () => {
                   value={soundSettings.pitchBendRange}
                   onChange={handlePitchBendRangeChange}
                   className="settings-card__number-input"
-                  min={0}
-                  max={50}
+                  min={1}
+                  max={96}
                 />
               </div>
               <div className="settings-card__input-container">
@@ -538,27 +475,33 @@ const SettingsCard = () => {
                   <input
                     type="checkbox"
                     checked={soundSettings.useMPE}
-                    onChange={(e) =>
-                      setSoundSettings((prev) => ({
-                        ...prev,
-                        useMPE: e.target.checked,
-                      }))
-                    }
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        // Save current pitch bend value before switching to MPE
+                        setOriginalPitchBend(soundSettings.pitchBendRange);
+                        setSoundSettings((prev) => ({
+                          ...prev,
+                          useMPE: true,
+                          pitchBendRange: 48,
+                        }));
+                      } else {
+                        // Restore original pitch bend value when turning off MPE
+                        setSoundSettings((prev) => ({
+                          ...prev,
+                          useMPE: false,
+                          pitchBendRange: originalPitchBend,
+                        }));
+                      }
+                    }}
                     className="settings-card__checkbox"
                   />
-                  Use MPE (MIDI Polyphonic Expression)
+                  Use MPE
                 </label>
-                <div className="settings-card__description">
-                  Enables per-note pitch bends for microtonal music. Requires MPE-compatible synthesizer.
-                </div>
               </div>
             </>
           )}
         </details>
-        <button
-          className="settings-card__clear-button"
-          onClick={clearSelections}
-        >
+        <button className="settings-card__clear-button" onClick={clearSelections}>
           Clear Selections
         </button>
         <button className="settings-card__clear-button" onClick={clearHangingNotes}>
@@ -580,7 +523,7 @@ const SettingsCard = () => {
       aria-expanded={openSettings}
       aria-controls="settings-card"
       ref={buttonRef}
-      style={{ position: 'fixed', top: '20px', right: '20px', zIndex: 11000 }}
+      style={{ position: "fixed", top: "20px", right: "20px", zIndex: 11000 }}
     >
       <SettingsIcon />
     </button>
