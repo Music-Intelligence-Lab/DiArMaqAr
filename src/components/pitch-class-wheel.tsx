@@ -39,16 +39,17 @@ const WheelCell = React.memo<WheelCellProps>(
     if (isCurrentTonic && isActive) {
       className = baseClassName + " pitch-class-wheel__cell_tonic_current_active";
     }
-    if (isActive) className = baseClassName + " pitch-class-wheel__cell_active";
 
     // Add MIDI-specific classes for black/white keys when in MIDI mode
     if (inputType === "MIDI" && isMapped) {
       if (isBlackKey) {
-        className = "pitch-class-wheel__cell_midi_black " + className;
+        className = baseClassName + " pitch-class-wheel__cell_midi_black";
       } else {
-        className = "pitch-class-wheel__cell_midi_white " + className;
+        className = baseClassName + " pitch-class-wheel__cell_midi_white";
       }
     }
+    
+    if (isActive) className = baseClassName + " pitch-class-wheel__cell_active";
 
     return (
       <div className={className} onClick={onClick} style={{ cursor: isTonic ? "pointer" : undefined }}>
