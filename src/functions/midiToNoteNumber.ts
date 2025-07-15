@@ -1,4 +1,4 @@
-export default function midiNumberToNoteName(noteNumber: number): { note: string; alt?: string; octave: number } {
+export default function midiNumberToNoteName(noteNumber: number): {note: string; alt?: string; octave: number } {
   if (noteNumber < 0 || noteNumber > 127) {
     throw new RangeError("MIDI note number must be between 0 and 127");
   }
