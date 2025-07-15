@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useEffect, useState } from "react";
 import useAppContext from "@/contexts/app-context";
 import useSoundContext, { defaultNoteVelocity } from "@/contexts/sound-context";
 import useFilterContext from "@/contexts/filter-context";
@@ -57,11 +57,6 @@ const MaqamTranspositions: React.FC = () => {
     index: number;
     noteNames: string[];
   }>({ index: -1, noteNames: [] });
-
-  // Staff notation settings
-  const [staffNotationSettings, setStaffNotationSettings] = useState({
-    clef: 'treble' as 'treble' | 'bass' | 'alto' | 'tenor'
-  });
 
   const isCellHighlighted = (index: number, noteName: string): boolean => {
     return highlightedNotes.index === index && highlightedNotes.noteNames.includes(noteName);
@@ -379,32 +374,6 @@ const MaqamTranspositions: React.FC = () => {
               ))}
             </tr>
           )}
-          {filters.staffNotation && (
-            <tr>
-              <th className="maqam-transpositions__row-header">
-                Staff Notation
-                <select 
-                  value={staffNotationSettings.clef} 
-                  onChange={(e) => setStaffNotationSettings(prev => ({
-                    ...prev, 
-                    clef: e.target.value as 'treble' | 'bass' | 'alto' | 'tenor'
-                  }))}
-                  className="clef-select"
-                >
-                  <option value="treble">Treble</option>
-                  <option value="bass">Bass</option>
-                  <option value="alto">Alto</option>
-                  <option value="tenor">Tenor</option>
-                </select>
-              </th>
-              <td className="staff-notation-cell" colSpan={pitchClasses.length * 2}>
-                <StaffNotation 
-                  pitchClasses={pitchClasses}
-                  clef={staffNotationSettings.clef}
-                />
-              </td>
-            </tr>
-          )}
           <tr>
             <th className="maqam-transpositions__row-header">Play</th>
             {pitchClasses.map((pitchClass, i) => (
@@ -454,6 +423,15 @@ const MaqamTranspositions: React.FC = () => {
               </tr>
             </>
           )}
+          {filters.staffNotation && (
+            <tr>
+              <th className="maqam-transpositions__row-header">Staff Notation</th>
+              <td className="staff-notation-cell" colSpan={pitchClasses.length * 2}>
+                <StaffNotation pitchClasses={pitchClasses} />
+              </td>
+            </tr>
+          )}
+
           <tr>
             <td className="maqam-transpositions__spacer" colSpan={2 + (pitchClasses.length - 1) * 2} />
           </tr>
