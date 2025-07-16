@@ -32,6 +32,9 @@ const WheelCell = React.memo<WheelCellProps>(
     if (isTonic) {
       className = baseClassName + " pitch-class-wheel__cell_tonic";
     }
+    if (isTonic && isSelected) {
+      className = baseClassName + " pitch-class-wheel__cell_tonic_selected";
+    }
     // Add a special class if this is the tonic of the current selected jins or maqam
     if (isCurrentTonic) {
       className = baseClassName + " pitch-class-wheel__cell_tonic_current";

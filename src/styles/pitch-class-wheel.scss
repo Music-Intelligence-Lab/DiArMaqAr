@@ -61,7 +61,9 @@
       border: rgba($tertiary, 0.8) solid 3px 2px 2px 3px !important;
     }
     &_tonic_selected {
-      border-color: $primary;
+      border-top: 3px rgb($tertiary, 0.8) solid;
+      border-bottom: 3px solid rgb($tertiary, 0.8);
+      background-color: rgba($primary, 0.8) !important;
     }
     &_tonic_current_active {
       background-color: rgba($tertiary, 1) !important;
