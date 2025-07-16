@@ -1,14 +1,14 @@
 "use client";
 
 import useAppContext from "./app-context";
-import React, { createContext, useState, useEffect, useRef, useContext } from "react";
+import React, { createContext, useState, useEffect, useRef, useContext, useMemo } from "react";
 import { frequencyToMidiNoteNumber } from "@/functions/convertPitchClass";
-import midiNumberToNoteName from "@/functions/midiToNoteNumber";
 import Pattern from "@/models/Pattern";
 import romanToNumber from "@/functions/romanToNumber";
 import PitchClass from "@/models/PitchClass";
 import { initializeCustomWaves, PERIODIC_WAVES, APERIODIC_WAVES } from "@/audio/waves";
 import shiftPitchClass from "@/functions/shiftPitchClass";
+import extendPitchClasses from "@/functions/extendPitchClasses";
 type InputMode = "tuningSystem" | "selection";
 type OutputMode = "mute" | "waveform" | "midi";
 
@@ -48,12 +48,7 @@ interface SoundContextInterface {
   setSoundSettings: React.Dispatch<React.SetStateAction<SoundSettings>>;
   activePitchClasses: PitchClass[];
   setActivePitchClasses: React.Dispatch<React.SetStateAction<PitchClass[]>>;
-  playSequence: (
-    pitchClasses: PitchClass[],
-    ascending?: boolean,
-    ascendingPitchClasses?: PitchClass[],
-    velocity?: number | ((noteIdx: number, patternIdx: number) => number)
-  ) => Promise<void>;
+  playSequence: (pitchClasses: PitchClass[], ascending?: boolean, ascendingPitchClasses?: PitchClass[], velocity?: number | ((noteIdx: number, patternIdx: number) => number)) => Promise<void>;
   noteOn: (pitchClass: PitchClass, velocity?: number) => void;
   noteOff: (pitchClass: PitchClass) => void;
   midiInputs: MidiPortInfo[];
@@ -61,13 +56,17 @@ interface SoundContextInterface {
   setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
   clearHangingNotes: () => void;
   stopAllSounds: () => void;
+  keyToPitchClassMapping: Record<string, PitchClass>;
+  pitchClassToKeyMapping: Record<string, string>;
+  midiToPitchClassMapping: Record<number, PitchClass>;
+  pitchClassToMidiMapping: Record<string, number>;
+  pitchClassToBlackOrWhite: Record<string, "black" | "white">;
 }
 
 const SoundContext = createContext<SoundContextInterface | null>(null);
 
 export function SoundContextProvider({ children }: { children: React.ReactNode }) {
-  const { selectedTuningSystem, selectedMaqamDetails, selectedJinsDetails, tuningSystemPitchClasses, allPitchClasses, selectedPitchClasses } =
-    useAppContext();
+  const { selectedTuningSystem, selectedMaqamDetails, selectedMaqam, allPitchClasses, selectedPitchClasses } = useAppContext();
 
   const [soundSettings, setSoundSettings] = useState<SoundSettings>({
     attack: 0.01,
@@ -112,6 +111,221 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
   const [midiInputs, setMidiInputs] = useState<MidiPortInfo[]>([]);
   const [midiOutputs, setMidiOutputs] = useState<MidiPortInfo[]>([]);
   const [refresh, setRefresh] = useState(false);
+
+  // Keyboard row codes - centralized definition
+  const firstRowCodes = ["KeyQ", "KeyW", "KeyE", "KeyR", "KeyT", "KeyY", "KeyU", "KeyI", "KeyO", "KeyP", "BracketLeft", "BracketRight"];
+  const secondRowCodes = ["KeyA", "KeyS", "KeyD", "KeyF", "KeyG", "KeyH", "KeyJ", "KeyK", "KeyL", "Semicolon", "Quote", "Backslash"];
+  const thirdRowCodes = ["Backquote", "KeyZ", "KeyX", "KeyC", "KeyV", "KeyB", "KeyN", "KeyM", "Comma", "Period", "Slash", ""];
+
+  // Function to convert key code to concise display string
+  const conciseKey = (code: string): string => {
+    if (!code) return "";
+    if (code.startsWith("Key")) return code.slice(3).toLowerCase();
+    if (code.startsWith("Digit")) return code.slice(5);
+    const special: Record<string, string> = {
+      Backquote: "`",
+      Minus: "-",
+      Equal: "=",
+      BracketLeft: "[",
+      BracketRight: "]",
+      Backslash: "\\",
+      Semicolon: ";",
+      Quote: "'",
+      Comma: ",",
+      Period: ".",
+      Slash: "/",
+    };
+    return special[code] ?? code.toLowerCase();
+  };
+
+  // Centralized keyboard mapping: Key code -> PitchClass
+  const keyToPitchClassMapping = useMemo<Record<string, PitchClass>>(() => {
+    const mapping: Record<string, PitchClass> = {};
+
+    if (selectedMaqam || selectedMaqamDetails) {
+      let ascendingMaqamPitchClasses: PitchClass[] = [];
+      let descendingMaqamPitchClasses: PitchClass[] = [];
+
+      if (selectedMaqam) {
+        ascendingMaqamPitchClasses = selectedMaqam.ascendingPitchClasses;
+        descendingMaqamPitchClasses = [...selectedMaqam.descendingPitchClasses].reverse();
+      } else if (selectedMaqamDetails) {
+        const ascendingNoteNames = selectedMaqamDetails.getAscendingNoteNames();
+        const descendingNoteNames = selectedMaqamDetails.getDescendingNoteNames();
+
+        ascendingMaqamPitchClasses = allPitchClasses.filter((pitchClass) => ascendingNoteNames.includes(pitchClass.noteName));
+        descendingMaqamPitchClasses = allPitchClasses.filter((pitchClass) => descendingNoteNames.includes(pitchClass.noteName));
+      }
+
+      let sliceIndex = 0;
+      const lastAscendingPitchClass = ascendingMaqamPitchClasses[ascendingMaqamPitchClasses.length - 1];
+
+      for (let i = 0; i < ascendingMaqamPitchClasses.length; i++) {
+        if (parseFloat(ascendingMaqamPitchClasses[i].frequency) * 2 <= parseFloat(lastAscendingPitchClass.frequency)) {
+          sliceIndex = i + 1;
+        }
+      }
+
+      const extendedAscendingPitchClasses = [
+        ...ascendingMaqamPitchClasses,
+        ...ascendingMaqamPitchClasses.slice(sliceIndex).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 1)),
+        ...ascendingMaqamPitchClasses.slice(sliceIndex).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 2)),
+      ];
+
+      const extendedDescendingPitchClasses = [
+        ...descendingMaqamPitchClasses,
+        ...descendingMaqamPitchClasses.slice(sliceIndex).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 1)),
+        ...descendingMaqamPitchClasses.slice(sliceIndex).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 2)),
+      ];
+
+      for (let i = 0; i <= 12; i++) {
+        const ascendingPitchClass = extendedAscendingPitchClasses[i];
+        const descendingPitchClass = extendedDescendingPitchClasses[i];
+        const ascendingShiftedPitchClass = shiftPitchClass(allPitchClasses, ascendingPitchClass, -1);
+
+        // First assign first and third row mappings (lower priority)
+        if (firstRowCodes[i] && descendingPitchClass && !mapping[firstRowCodes[i]]) {
+          mapping[firstRowCodes[i]] = descendingPitchClass;
+        }
+
+        if (thirdRowCodes[i] && ascendingShiftedPitchClass && !mapping[thirdRowCodes[i]]) {
+          mapping[thirdRowCodes[i]] = ascendingShiftedPitchClass;
+        }
+
+        // Then assign second row mapping (higher priority - will overwrite if there's a conflict)
+        if (secondRowCodes[i] && ascendingPitchClass) {
+          mapping[secondRowCodes[i]] = ascendingPitchClass;
+        }
+      }
+    } else {
+      for (let i = 0; i < selectedPitchClasses.length; i++) {
+        const pitchClass = selectedPitchClasses[i];
+        const loweredOctavePitchClass = shiftPitchClass(allPitchClasses, pitchClass, -1);
+
+        // Assign third row first (lower priority)
+        if (thirdRowCodes[i] && loweredOctavePitchClass && !mapping[thirdRowCodes[i]]) {
+          mapping[thirdRowCodes[i]] = loweredOctavePitchClass;
+        }
+
+        // Then assign second row (higher priority - will overwrite if there's a conflict)
+        if (secondRowCodes[i] && pitchClass) {
+          mapping[secondRowCodes[i]] = pitchClass;
+        }
+      }
+    }
+
+    return mapping;
+  }, [selectedMaqam, selectedMaqamDetails, selectedPitchClasses, allPitchClasses]);
+
+  // Centralized keyboard mapping: PitchClass fraction -> Key display string
+  const pitchClassToKeyMapping = useMemo<Record<string, string>>(() => {
+    // Invert keyToPitchClassMapping, giving priority to secondRowCodes
+    const mapping: Record<string, string> = {};
+
+    // Helper: build a priority list of key codes (second row first)
+    const allKeyCodes = [...secondRowCodes, ...firstRowCodes, ...thirdRowCodes].filter(Boolean);
+
+    // For each key code in priority order, map its pitch class (if any)
+    for (const code of allKeyCodes) {
+      const pitchClass = keyToPitchClassMapping[code];
+      if (pitchClass && !mapping[pitchClass.fraction]) {
+        mapping[pitchClass.fraction] = conciseKey(code);
+      }
+    }
+
+    return mapping;
+  }, [keyToPitchClassMapping, secondRowCodes, firstRowCodes, thirdRowCodes]);
+
+  // Centralized MIDI mapping: MIDI note number -> PitchClass
+  const midiToPitchClassMapping = useMemo<Record<number, PitchClass>>(() => {
+    const mapping: Record<number, PitchClass> = {};
+
+    if (soundSettings.inputMode === "tuningSystem" && selectedTuningSystem) {
+      const pitchClasses = allPitchClasses;
+      const MIDI_BASE = 55;
+      const numberOfCellsPerRow = selectedTuningSystem.getPitchClasses().length;
+
+      for (let noteNumber = 0; noteNumber <= 127; noteNumber++) {
+        const idx = noteNumber + numberOfCellsPerRow - MIDI_BASE;
+        if (idx >= 0 && idx < pitchClasses.length) {
+          mapping[noteNumber] = pitchClasses[idx];
+        }
+      }
+    } else if (soundSettings.inputMode === "selection") {
+      const extendedPitchClasses = extendPitchClasses(allPitchClasses, selectedPitchClasses);
+
+      // For selection mode, map based on english note names
+      for (const pitchClass of extendedPitchClasses) {
+        const baseFreq = parseFloat(pitchClass.frequency);
+        if (isNaN(baseFreq)) continue;
+
+        const baseMidi = Math.round(frequencyToMidiNoteNumber(baseFreq));
+        if (baseMidi >= 0 && baseMidi <= 127) {
+          mapping[baseMidi] = pitchClass;
+        }
+      }
+    }
+
+    return mapping;
+  }, [soundSettings.inputMode, selectedTuningSystem, selectedPitchClasses, allPitchClasses]);
+
+  // Centralized MIDI mapping: PitchClass fraction -> MIDI note number
+  // Reverse mapping: PitchClass fraction -> MIDI note number
+  const pitchClassToMidiMapping = useMemo<Record<string, number>>(() => {
+    const mapping: Record<string, number> = {};
+    // Just reverse midiToPitchClassMapping
+    for (const [midi, pitchClass] of Object.entries(midiToPitchClassMapping)) {
+      if (pitchClass && pitchClass.fraction) {
+        mapping[pitchClass.fraction] = Number(midi);
+      }
+    }
+    return mapping;
+  }, [midiToPitchClassMapping]);
+
+  // Mapping for black/white key classification
+  const pitchClassToBlackOrWhite = useMemo<Record<string, "black" | "white">>(() => {
+    const mapping: Record<string, "black" | "white"> = {};
+
+    // Helper function to determine if a pitch class corresponds to a black or white key
+    // Helper: MIDI note numbers for black keys in an octave (C=0)
+    const BLACK_KEY_OFFSETS = [1, 3, 6, 8, 10];
+
+    // Helper: get MIDI note number for this pitch class (if mapped)
+    const getMidiNumber = (pitchClass: PitchClass): number | undefined => {
+      return pitchClassToMidiMapping[pitchClass.fraction];
+    };
+
+    // Helper: is this MIDI note number a black key?
+    const isMidiBlackKey = (midi: number) => BLACK_KEY_OFFSETS.includes(midi % 12);
+
+    // Main: is this pitch class a black key?
+    const isBlackKey = (pitchClass: PitchClass): boolean => {
+      const midi = getMidiNumber(pitchClass);
+      if (typeof midi === "number") {
+        return isMidiBlackKey(midi);
+      }
+      // fallback: treat as white if not mapped
+      return false;
+    };
+
+    // Helper function to check if a pitch class should be mapped based on current mode
+    const shouldMap = (pitchClass: PitchClass): boolean => {
+      if (soundSettings.inputMode === "tuningSystem" && selectedTuningSystem) {
+        return true;
+      } else if (soundSettings.inputMode === "selection") {
+        return selectedPitchClasses.some((spc) => spc.index === pitchClass.index);
+      }
+      return false;
+    };
+
+    for (const pitchClass of allPitchClasses) {
+      if (shouldMap(pitchClass) && getMidiNumber(pitchClass)) {
+        mapping[pitchClass.fraction] = isBlackKey(pitchClass) ? "black" : "white";
+      }
+    }
+
+    return mapping;
+  }, [soundSettings.inputMode, selectedTuningSystem, selectedPitchClasses, allPitchClasses]);
 
   const sendMidiMessage = (bytes: number[]) => {
     const ma = midiAccessRef.current;
@@ -162,21 +376,21 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
   function initializeMPE() {
     if (!soundSettings.useMPE || !soundSettings.selectedMidiOutputId) return;
-    
+
     // Send MPE Configuration Message
     // RPN MSB = 0, RPN LSB = 6 (MPE Configuration)
     // Data Entry MSB = number of channels (14 for zone 1)
-    sendMidiMessage([0xB0, 0x65, 0x00]); // RPN LSB
-    sendMidiMessage([0xB0, 0x64, 0x06]); // RPN MSB  
-    sendMidiMessage([0xB0, 0x06, 0x0E]); // Data Entry MSB (14 channels)
-    sendMidiMessage([0xB0, 0x26, 0x00]); // Data Entry LSB
-    
+    sendMidiMessage([0xb0, 0x65, 0x00]); // RPN LSB
+    sendMidiMessage([0xb0, 0x64, 0x06]); // RPN MSB
+    sendMidiMessage([0xb0, 0x06, 0x0e]); // Data Entry MSB (14 channels)
+    sendMidiMessage([0xb0, 0x26, 0x00]); // Data Entry LSB
+
     // Set pitch bend range on all MPE channels to match our setting
     for (let ch = 1; ch <= 15; ch++) {
-      sendMidiMessage([0xB0 + ch, 0x65, 0x00]); // RPN LSB
-      sendMidiMessage([0xB0 + ch, 0x64, 0x00]); // RPN MSB (pitch bend sensitivity)
-      sendMidiMessage([0xB0 + ch, 0x06, soundSettings.pitchBendRange]); // Data Entry MSB
-      sendMidiMessage([0xB0 + ch, 0x26, 0x00]); // Data Entry LSB
+      sendMidiMessage([0xb0 + ch, 0x65, 0x00]); // RPN LSB
+      sendMidiMessage([0xb0 + ch, 0x64, 0x00]); // RPN MSB (pitch bend sensitivity)
+      sendMidiMessage([0xb0 + ch, 0x06, soundSettings.pitchBendRange]); // Data Entry MSB
+      sendMidiMessage([0xb0 + ch, 0x26, 0x00]); // Data Entry LSB
     }
   }
 
@@ -265,23 +479,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         input.onmidimessage = null;
       }
     };
-  }, [
-    midiInputs,
-    selectedTuningSystem,
-    selectedMaqamDetails,
-    selectedJinsDetails,
-    tuningSystemPitchClasses,
-    soundSettings.inputMode,
-    soundSettings.inputType,
-    soundSettings.outputMode,
-    soundSettings.selectedMidiInputId,
-    soundSettings.selectedMidiOutputId,
-    soundSettings.waveform,
-    soundSettings.attack,
-    soundSettings.decay,
-    soundSettings.sustain,
-    soundSettings.release,
-  ]);
+  }, [midiInputs, midiToPitchClassMapping, soundSettings.inputType, soundSettings.selectedMidiInputId]);
 
   useEffect(() => {
     return () => {
@@ -307,62 +505,20 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     const [status, noteNumber, velocity] = data;
     const cmd = status & 0xf0;
 
-    if (soundSettings.inputMode === "tuningSystem" && selectedTuningSystem) {
-      const pitchClasses = allPitchClasses;
+    // Use centralized mapping to get pitch class from MIDI note number
+    const pitchClass = midiToPitchClassMapping[noteNumber];
+    if (!pitchClass) return; // No mapping found for this note number
 
-      const MIDI_BASE = 55;
-      const numberOfCellsPerRow = selectedTuningSystem.getPitchClasses().length;
-
-      const idx = noteNumber + numberOfCellsPerRow - MIDI_BASE;
-
-      if (idx < 0 || idx >= pitchClasses.length) return;
-
-      const pitchClass = pitchClasses[idx];
-
-      // ——— dispatch sound ———
-      if (cmd === 0x90 && velocity > 0) {
-        noteOn(pitchClass, velocity);
-        setActivePitchClasses((prev) => {
-          if (prev.some((c) => c.index === pitchClass.index && c.octave === pitchClass.octave)) return prev;
-          return [...prev, pitchClass];
-        });
-      } else if (cmd === 0x80 || (cmd === 0x90 && velocity === 0)) {
-        noteOff(pitchClass);
-        setActivePitchClasses((prev) => prev.filter((c) => !(c.index === pitchClass.index && c.octave === pitchClass.octave)));
-      }
-    } else if (soundSettings.inputMode === "selection") {
-      const { note, alt } = midiNumberToNoteName(noteNumber);
-
-      for (const pitchClass of selectedPitchClasses) {
-        let convertedEnglishName = pitchClass.englishName;
-        convertedEnglishName = convertedEnglishName[0].toUpperCase() + convertedEnglishName.slice(1);
-        if (convertedEnglishName.includes("-")) convertedEnglishName = convertedEnglishName[0];
-
-        if (convertedEnglishName === note || convertedEnglishName === alt) {
-          const baseFreq = parseFloat(pitchClass.frequency);
-          if (isNaN(baseFreq)) return;
-
-          const baseMidi = Math.round(frequencyToMidiNoteNumber(baseFreq));
-          // how many octaves to shift (positive => up, negative => down)
-          const octaveShift = Math.round((noteNumber - baseMidi) / 12);
-
-          const adjPitchClass = shiftPitchClass(allPitchClasses, pitchClass, octaveShift);
-          // adjust frequency by 2^octaveShift
-
-          if (cmd === 0x90 && velocity > 0) {
-            noteOn(adjPitchClass, velocity);
-            setActivePitchClasses((prev) => {
-              if (prev.some((c) => c.index === adjPitchClass.index && c.octave === adjPitchClass.octave)) return prev;
-              return [...prev, adjPitchClass];
-            });
-          } else if (cmd === 0x80 || (cmd === 0x90 && velocity === 0)) {
-            noteOff(adjPitchClass);
-            setActivePitchClasses((prev) => prev.filter((c) => !(c.index === adjPitchClass.index && c.octave === adjPitchClass.octave)));
-          }
-
-          break;
-        }
-      }
+    // ——— dispatch sound ———
+    if (cmd === 0x90 && velocity > 0) {
+      noteOn(pitchClass, velocity);
+      setActivePitchClasses((prev) => {
+        if (prev.some((c) => c.index === pitchClass.index && c.octave === pitchClass.octave)) return prev;
+        return [...prev, pitchClass];
+      });
+    } else if (cmd === 0x80 || (cmd === 0x90 && velocity === 0)) {
+      noteOff(pitchClass);
+      setActivePitchClasses((prev) => prev.filter((c) => !(c.index === pitchClass.index && c.octave === pitchClass.octave)));
     }
   };
 
@@ -383,8 +539,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     timeoutsRef.current.forEach(clearTimeout);
     timeoutsRef.current = [];
 
-    const selectedPattern =
-      soundSettings.selectedPattern || new Pattern("Default", "Default", [{ scaleDegree: "I", noteDuration: "8n", isTarget: true }]);
+    const selectedPattern = soundSettings.selectedPattern || new Pattern("Default", "Default", [{ scaleDegree: "I", noteDuration: "8n", isTarget: true }]);
 
     return new Promise((resolve) => {
       const beatSec = 60 / soundSettings.tempo;
@@ -435,7 +590,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
           descendingSliceIndex = i + 1;
         }
       }
-      
+
       if (descendingSliceIndex === 0) descendingSliceIndex = pitchClasses.length + 1;
 
       const lowerExtension = ascendingPitchClasses.length ? ascendingPitchClasses : pitchClasses; //here we want to make sure that descending sequences have the lower extension using ascending pitch classes
@@ -446,7 +601,6 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         ...pitchClasses.slice(ascendingSliceIndex).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 1)),
         ...pitchClasses.slice(ascendingSliceIndex).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 2)),
       ];
-
 
       const n = pitchClasses.length;
       let cumulativeTimeSec = 0;
@@ -566,13 +720,13 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
       // Send pitch bend on the allocated channel
       sendPitchBend(detune, channel);
-      
+
       // For MIDI, pass velocity directly (scaled by volume if desired)
       const vel = Math.round(velocityNorm * soundSettings.volume * 127);
-      
+
       // Send note on with the allocated channel
       sendMidiMessage([0x90 + channel, note, vel]);
-      
+
       // Track the note with its channel for noteOff
       midiActiveNotesRef.current.add(frequency);
       return;
@@ -744,7 +898,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     if (soundSettings.outputMode === "midi") {
       const mf = frequencyToMidiNoteNumber(frequency);
       const note = Math.floor(mf);
-      
+
       // Find and release the MPE channel for this frequency
       const channel = releaseMPEChannel(frequency);
       if (channel !== null) {
@@ -754,7 +908,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         // Fallback to channel 0 if MPE channel not found
         sendMidiMessage([0x80, note, 0]);
       }
-      
+
       midiActiveNotesRef.current.delete(frequency);
       return;
     }
@@ -882,6 +1036,11 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         setRefresh,
         clearHangingNotes,
         stopAllSounds,
+        keyToPitchClassMapping,
+        pitchClassToKeyMapping,
+        midiToPitchClassMapping,
+        pitchClassToMidiMapping,
+        pitchClassToBlackOrWhite,
       }}
     >
       {children}

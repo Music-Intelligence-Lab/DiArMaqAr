@@ -6,7 +6,6 @@ import PitchClass from "@/models/PitchClass";
 import { Maqam } from "@/models/Maqam";
 import { getJinsTranspositions, getMaqamTranspositions } from "@/functions/transpose";
 import { Jins } from "@/models/Jins";
-import shiftPitchClass from "@/functions/shiftPitchClass";
 
 interface WheelCellProps {
   pitchClass: PitchClass;
@@ -26,19 +25,23 @@ const WheelCell = React.memo<WheelCellProps>(
   ({ pitchClass, isSelected, isActive, isDescending, isTonic, isCurrentTonic, mapping, inputType, isBlackKey, isMapped, onClick }) => {
     const baseClassName = "pitch-class-wheel__cell";
     let className = "pitch-class-wheel__cell";
-    if (isSelected) className = baseClassName + " pitch-class-wheel__cell_selected";
     if (isDescending) className = baseClassName + " pitch-class-wheel__cell_descending";
+
     // Highlight all possible tonics
     if (isTonic) {
       className = baseClassName + " pitch-class-wheel__cell_tonic";
     }
+
     // Add a special class if this is the tonic of the current selected jins or maqam
     if (isCurrentTonic) {
       className = baseClassName + " pitch-class-wheel__cell_tonic_current";
     }
+
     if (isCurrentTonic && isActive) {
       className = baseClassName + " pitch-class-wheel__cell_tonic_current_active";
     }
+
+    if (isSelected) className = baseClassName + " pitch-class-wheel__cell_selected";
 
     // Add MIDI-specific classes for black/white keys when in MIDI mode
     if (inputType === "MIDI" && isMapped) {
@@ -48,7 +51,7 @@ const WheelCell = React.memo<WheelCellProps>(
         className = baseClassName + " pitch-class-wheel__cell_midi_white";
       }
     }
-    
+
     if (isActive) className = baseClassName + " pitch-class-wheel__cell_active";
 
     return (
@@ -94,140 +97,7 @@ export default function PitchClassWheel() {
     centsTolerance,
   } = useAppContext();
 
-  const { activePitchClasses, soundSettings } = useSoundContext();
-
-  const firstRowCodes = ["KeyQ", "KeyW", "KeyE", "KeyR", "KeyT", "KeyY", "KeyU", "KeyI", "KeyO", "KeyP", "BracketLeft", "BracketRight"];
-
-  const secondRowCodes = ["KeyA", "KeyS", "KeyD", "KeyF", "KeyG", "KeyH", "KeyJ", "KeyK", "KeyL", "Semicolon", "Quote", "Backslash"];
-
-  const thirdRowCodes = ["Backquote", "KeyZ", "KeyX", "KeyC", "KeyV", "KeyB", "KeyN", "KeyM", "Comma", "Period", "Slash", ""];
-
-  // Function to determine if a pitch class corresponds to a black or white key
-  const isBlackKey = (pitchClass: PitchClass): boolean => {
-    const englishName = pitchClass.englishName.toLowerCase();
-    // Black keys typically have sharp or flat in their name
-    return englishName.includes('#') || englishName.includes('♯') || englishName.includes('b') || englishName.includes('♭');
-  };
-
-  // Function to check if a pitch class is mapped in the current mode
-  const isMapped = (pitchClass: PitchClass): boolean => {
-    if (soundSettings.inputType !== "MIDI") return false;
-    
-    if (soundSettings.inputMode === "tuningSystem" && selectedTuningSystem) {
-      // In tuning system mode, check if this pitch class is part of the tuning system
-      const tuningSystemPitchClasses = selectedTuningSystem.getPitchClasses();
-      return tuningSystemPitchClasses.includes(pitchClass.fraction);
-    } else if (soundSettings.inputMode === "selection") {
-      // In selection mode, check if this pitch class is in the selected pitch classes
-      return selectedPitchClasses.some(spc => 
-        spc.englishName.toLowerCase() === pitchClass.englishName.toLowerCase()
-      );
-    }
-    
-    return false;
-  };
-
-  function conciseKey(code: string): string {
-    if (!code) return "";
-    if (code.startsWith("Key")) return code.slice(3).toLowerCase();
-    if (code.startsWith("Digit")) return code.slice(5);
-    const special: Record<string, string> = {
-      Backquote: "`",
-      Minus: "-",
-      Equal: "=",
-      BracketLeft: "[",
-      BracketRight: "]",
-      Backslash: "\\",
-      Semicolon: ";",
-      Quote: "'",
-      Comma: ",",
-      Period: ".",
-      Slash: "/",
-    };
-    return special[code] ?? code.toLowerCase();
-  }
-
-  const pitchClassMapping: Record<string, string> = {};
-
-  if (selectedMaqam || selectedMaqamDetails) {
-    let ascendingMaqamPitchClasses: PitchClass[] = [];
-    let descendingMaqamPitchClasses: PitchClass[] = [];
-
-    if (selectedMaqam) {
-      ascendingMaqamPitchClasses = selectedMaqam.ascendingPitchClasses;
-      descendingMaqamPitchClasses = [...selectedMaqam.descendingPitchClasses].reverse();
-    } else if (selectedMaqamDetails) {
-      const ascendingNoteNames = selectedMaqamDetails.getAscendingNoteNames();
-
-      const descendingNoteNames = selectedMaqamDetails.getDescendingNoteNames();
-
-      ascendingMaqamPitchClasses = allPitchClasses.filter((pitchClass) => ascendingNoteNames.includes(pitchClass.noteName));
-      descendingMaqamPitchClasses = allPitchClasses.filter((pitchClass) => descendingNoteNames.includes(pitchClass.noteName));
-    }
-
-    let sliceIndex = 0;
-    const lastAscendingPitchClass = ascendingMaqamPitchClasses[ascendingMaqamPitchClasses.length - 1];
-
-    for (let i = 0; i < ascendingMaqamPitchClasses.length; i++) {
-      if (parseFloat(ascendingMaqamPitchClasses[i].frequency) * 2 <= parseFloat(lastAscendingPitchClass.frequency)) {
-        sliceIndex = i + 1;
-      }
-    }
-
-    const extendedAscendingPitchClasses = [
-      ...ascendingMaqamPitchClasses,
-      ...ascendingMaqamPitchClasses.slice(sliceIndex, -1).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 1)),
-      ...ascendingMaqamPitchClasses.slice(0, sliceIndex).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 2)),
-      ...ascendingMaqamPitchClasses.slice(sliceIndex, -1).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 2)),
-    ];
-
-    const extendedDescendingPitchClasses = [
-      ...descendingMaqamPitchClasses,
-      ...descendingMaqamPitchClasses.slice(sliceIndex, -1).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 1)),
-      ...descendingMaqamPitchClasses.slice(0, sliceIndex).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 2)),
-      ...descendingMaqamPitchClasses.slice(sliceIndex, -1).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 2)),
-    ];
-
-    for (let i = 0; i <= 12; i++) {
-      const ascendingPitchClass = extendedAscendingPitchClasses[i];
-      const descendingPitchClass = extendedDescendingPitchClasses[i];
-      const ascendingShiftedPitchClass = shiftPitchClass(allPitchClasses, ascendingPitchClass, -1);
-
-      // First assign first and third row mappings (lower priority)
-      const key1 = conciseKey(firstRowCodes[i]);
-      if (key1 && !pitchClassMapping[descendingPitchClass.fraction]) {
-        pitchClassMapping[descendingPitchClass.fraction] = key1;
-      }
-
-      const key3 = conciseKey(thirdRowCodes[i]);
-      if (key3 && !pitchClassMapping[ascendingShiftedPitchClass.fraction]) {
-        pitchClassMapping[ascendingShiftedPitchClass.fraction] = key3;
-      }
-
-      // Then assign second row mapping (higher priority - will overwrite if there's a conflict)
-      const key2 = conciseKey(secondRowCodes[i]);
-      if (key2) {
-        pitchClassMapping[ascendingPitchClass.fraction] = key2;
-      }
-    }
-  } else {
-    for (let i = 0; i < selectedPitchClasses.length; i++) {
-      const pitchClass = selectedPitchClasses[i];
-      const loweredOctavePitchClass = shiftPitchClass(allPitchClasses, pitchClass, -1);
-
-      // Assign third row first (lower priority)
-      const key3 = conciseKey(thirdRowCodes[i]);
-      if (key3 && !pitchClassMapping[loweredOctavePitchClass.fraction]) {
-        pitchClassMapping[loweredOctavePitchClass.fraction] = key3;
-      }
-
-      // Then assign second row (higher priority - will overwrite if there's a conflict)
-      const key2 = conciseKey(secondRowCodes[i]);
-      if (key2) {
-        pitchClassMapping[pitchClass.fraction] = key2;
-      }
-    }
-  }
+  const { activePitchClasses, soundSettings, pitchClassToKeyMapping, pitchClassToBlackOrWhite } = useSoundContext();
 
   const rowRef = useRef<HTMLDivElement>(null);
   const isDown = useRef(false);
@@ -334,7 +204,7 @@ export default function PitchClassWheel() {
         }
       };
 
-      const mapping = pitchClassMapping[pitchClass.fraction] || "";
+      const mapping = pitchClassToKeyMapping[pitchClass.fraction] || "";
 
       return {
         key: `${pitchClass.index}-${pitchClass.octave}`,
@@ -346,8 +216,8 @@ export default function PitchClassWheel() {
         isCurrentTonic,
         mapping,
         inputType: soundSettings.inputType,
-        isBlackKey: isBlackKey(pitchClass),
-        isMapped: isMapped(pitchClass),
+        isBlackKey: pitchClassToBlackOrWhite[pitchClass.fraction] === "black",
+        isMapped: pitchClassToBlackOrWhite[pitchClass.fraction] !== undefined,
         onClick,
       };
     });
@@ -364,6 +234,7 @@ export default function PitchClassWheel() {
     soundSettings.inputMode,
     selectedTuningSystem,
     centsTolerance,
+    pitchClassToBlackOrWhite,
   ]);
 
   return (
