@@ -206,15 +206,15 @@ export default function SayrManager({ admin }: { admin: boolean }) {
               })()}
             <span className="sayr-manager__comments-english">{commentsEnglish}</span>
           </div>
-
+{admin && (
           <h3 className="sayr-manager__stops-header">
             Stops{" "}
-            {admin && (
-              <button type="button" className="sayr-manager__add-stop" onClick={addStop}>
-                + Add Stop
-              </button>
-            )}
+            <button type="button" className="sayr-manager__add-stop" onClick={addStop}>
+              + Add Stop
+            </button>
           </h3>
+        )}
+          
           <div className="sayr-manager__admin-stops">
             {admin &&
               stops.map((stop, i) => (
