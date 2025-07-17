@@ -13,7 +13,7 @@ import getFirstNoteName from "@/functions/getFirstNoteName";
 import PatternsManager from "@/components/patterns-manager";
 import JinsManager from "@/components/jins-manager";
 import MaqamManager from "@/components/maqam-manager";
-import PitchClassWheel from "@/components/pitch-class-wheel";
+import PitchClassBar from "@/components/pitch-class-bar";
 import Modulations from "@/components/modulations";
 export default function AppClient() {
   const {
@@ -82,7 +82,7 @@ export default function AppClient() {
       {selectedMenu === "maqam-admin" && selectedTuningSystem && <MaqamManager admin />}
       {selectedMenu === "jins" && selectedTuningSystem && <JinsManager admin={false} />}
       {selectedMenu === "jins-admin" && selectedTuningSystem && <JinsManager admin />}
-      {selectedTuningSystem && (!["tuningSystem", "tuningSystem-admin", "bibliography", "bibliography-admin", "pattern-admin"].includes(selectedMenu)) && <PitchClassWheel />}
+      {selectedTuningSystem && (!["tuningSystem", "tuningSystem-admin", "bibliography", "bibliography-admin", "pattern-admin"].includes(selectedMenu)) && <PitchClassBar />}
       {(selectedMenu === "maqam" || selectedMenu === "maqam-admin") && selectedTuningSystem && <MaqamTranspositions />}
       {(selectedMenu === "jins" || selectedMenu === "jins-admin") && selectedTuningSystem && <JinsTranspositions />}
       {selectedMenu === "sayr" && selectedMaqamDetails && <SayrManager admin={false} />}
