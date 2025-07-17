@@ -911,83 +911,73 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       <TuningSystemOctaveTables admin={admin} />
       <SelectedPitchClassTranspositions />
 
-      {/* <div className="tuning-system-manager__buttons">
-        <button
-          className="tuning-system-manager__play-sequence-button"
-          disabled={selectedPitchClasses.length === 0}
-          onClick={() => {
-            const frequencies = selectedPitchClasses.map((pitchClasses) => {
-              return parseInt(pitchClasses.frequency) ?? 0;
-            });
-
-            playSequence(frequencies, true, defaultNoteVelocity);
-          }}
-        >
-          Play Selected Sequence
-        </button>
-      </div> */}
-
-      {/* COMMENTS AND SOURCES */}
-      <div className="tuning-system-manager__comments-sources-container">
-        <div className="tuning-system-manager__comments-english">
-          <h3>Comments:</h3>
-          <div>
-            {selectedTuningSystem
-              ?.getCommentsEnglish()
-              .split("\n")
-              .map((line, index) => (
-                <span key={index}>
-                  {line}
-                  <br />
-                </span>
-              ))}
-          </div>
-        </div>
-
-        <div className="tuning-system-manager__sources-english">
-          <h3>Sources:</h3>
-          {[...sourcePageReferences]
-            .sort((a, b) => {
-              const srcA = sources.find((s) => s.getId() === a.sourceId);
-              const srcB = sources.find((s) => s.getId() === b.sourceId);
-              const nameA = srcA?.getContributors()[0]?.lastNameEnglish || "";
-              const nameB = srcB?.getContributors()[0]?.lastNameEnglish || "";
-              return nameA.localeCompare(nameB);
-            })
-            .map((ref, idx) => {
-              const source = sources.find((s) => s.getId() === ref.sourceId);
-              return (
-                <Link href={`/bibliography?source=${source?.getId()}`} key={idx} className="tuning-system-manager__source-item">
-                  {source && source.getContributors().length !== 0 && (
-                    <span className="">
-                      {source.getContributors()[0].lastNameEnglish?.length
-                        ? `${source.getContributors()[0]?.lastNameEnglish ?? ""}, ${
-                            source
-                              .getContributors()[0]
-                              ?.firstNameEnglish?.split(" ")
-                              .map((w) => w.charAt(0))
-                              .join(". ") ?? ""
-                          }. (${source.getPublicationDateEnglish() ?? ""}${
-                            source.getSourceType?.() === "Book" &&
-                            "getOriginalPublicationDateEnglish" in source &&
-                            source.getOriginalPublicationDateEnglish?.()
-                              ? "/" + source.getOriginalPublicationDateEnglish()
-                              : ""
-                          }:${ref.page})`
-                        : `{${source.getPublicationDateEnglish() ?? ""}${
-                            source.getSourceType?.() === "Book" &&
-                            "getOriginalPublicationDateEnglish" in source &&
-                            source.getOriginalPublicationDateEnglish?.()
-                              ? "/" + source.getOriginalPublicationDateEnglish()
-                              : ""
-                          }:${ref.page})`}
+      {(selectedTuningSystem?.getCommentsEnglish().trim() ||
+        (sourcePageReferences && sourcePageReferences.length > 0)) && (
+        <div className="tuning-system-manager__comments-sources-container">
+          {selectedTuningSystem?.getCommentsEnglish().trim() && (
+            <div className="tuning-system-manager__comments-english">
+              <h3>Comments:</h3>
+              <div>
+                {selectedTuningSystem
+                  .getCommentsEnglish()
+                  .split("\n")
+                  .map((line, index) => (
+                    <span key={index}>
+                      {line}
+                      <br />
                     </span>
-                  )}
-                </Link>
-              );
-            })}
+                  ))}
+              </div>
+            </div>
+          )}
+
+          {sourcePageReferences && sourcePageReferences.length > 0 && (
+            <div className="tuning-system-manager__sources-english">
+              <h3>Sources:</h3>
+              {[...sourcePageReferences]
+                .sort((a, b) => {
+                  const srcA = sources.find((s) => s.getId() === a.sourceId);
+                  const srcB = sources.find((s) => s.getId() === b.sourceId);
+                  const nameA = srcA?.getContributors()[0]?.lastNameEnglish || "";
+                  const nameB = srcB?.getContributors()[0]?.lastNameEnglish || "";
+                  return nameA.localeCompare(nameB);
+                })
+                .map((ref, idx) => {
+                  const source = sources.find((s) => s.getId() === ref.sourceId);
+                  return (
+                    <Link href={`/bibliography?source=${source?.getId()}`} key={idx} className="tuning-system-manager__source-item">
+                      {source && source.getContributors().length !== 0 && (
+                        <span>
+                          {source.getContributors()[0].lastNameEnglish?.length
+                            ? `${source.getContributors()[0]?.lastNameEnglish ?? ""}, ${
+                                source
+                                  .getContributors()[0]
+                                  ?.firstNameEnglish?.split(" ")
+                                  .map((w) => w.charAt(0))
+                                  .join(". ") ?? ""
+                              }. (${source.getPublicationDateEnglish() ?? ""}${
+                                source.getSourceType?.() === "Book" &&
+                                "getOriginalPublicationDateEnglish" in source &&
+                                source.getOriginalPublicationDateEnglish?.()
+                                  ? "/" + source.getOriginalPublicationDateEnglish()
+                                  : ""
+                              }:${ref.page})`
+                            : `{${source.getPublicationDateEnglish() ?? ""}${
+                                source.getSourceType?.() === "Book" &&
+                                "getOriginalPublicationDateEnglish" in source &&
+                                source.getOriginalPublicationDateEnglish?.()
+                                  ? "/" + source.getOriginalPublicationDateEnglish()
+                                  : ""
+                              }:${ref.page})`}
+                        </span>
+                      )}
+                    </Link>
+                  );
+                })}
+            </div>
+          )}
         </div>
-      </div>
+      )}
 
       {/* Export Modal */}
       <ExportModal isOpen={isExportModalOpen} onClose={() => setIsExportModalOpen(false)} exportType="tuning-system" />

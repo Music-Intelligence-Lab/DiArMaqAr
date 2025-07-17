@@ -51,6 +51,23 @@ const WheelCell = React.memo<WheelCellProps>(
       }
     }
 
+    // Add MIDI mode styles similar to tonic styles
+    if (inputType === "MIDI" && isTonic) {
+      if (isBlackKey) {
+      className = baseClassName + " pitch-class-bar__cell_midi_tonic_black";
+      } else {
+      className = baseClassName + " pitch-class-bar__cell_midi_tonic_white";
+      }
+    }
+    
+    if (inputType === "MIDI" && isCurrentTonic) {
+      className = baseClassName + " pitch-class-bar__cell_midi_tonic_current";
+    }
+
+    if (inputType === "MIDI" && isCurrentTonic && isActive) {
+      className = baseClassName + " pitch-class-bar__cell_midi_tonic_current_active";
+    }
+
     if (isActive) className = baseClassName + " pitch-class-bar__cell_active";
 
     return (
