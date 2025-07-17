@@ -44,7 +44,7 @@
     width: 80px;
     height: 90px;
     padding: 5px 6px 0px 6px;
-    
+
     &_selected {
       background-color: rgb($primary, 0.8) !important;
     }
@@ -89,11 +89,11 @@
     }
 
     // MIDI mode state modifiers
-    &_midi_selected {
+    /*     &_midi_selected {
       background-color: rgba($primary, 0.8) !important;
       color: white !important;
     }
-
+ */
     &_midi_active {
       background-color: rgba($tertiary, 1) !important;
       color: white !important;
@@ -103,15 +103,24 @@
       background-color: rgba($primary, 0.4) !important;
     }
 
-    &_midi_tonic {
-      border-top: 3px rgb($tertiary, 0.8) solid;
-      border-bottom: 3px solid rgb($tertiary, 0.8);
+    &_midi_tonic_black {
+      border-top: 3px rgb($tertiary, 0.8) solid !important;
+      border-bottom: 3px solid rgb($tertiary, 0.8) !important;
+      background-color: black !important;
+      color: $text;
+    }
+
+    &_midi_tonic_white {
+      border-top: 3px rgb($tertiary, 0.8) solid !important;
+      border-bottom: 3px solid rgb($tertiary, 0.8) !important;
+      background-color: #f8f8f8 !important;
+      color: black;
     }
 
     &_midi_tonic_current {
-      background-color: rgb($tertiary, 0.8) !important;
-      border: rgba($tertiary, 0.8) solid 3px !important;
-      color: white !important;
+      border: rgba($tertiary, 1) solid 3px !important;
+      background-color: white !important;
+      color: black !important;
     }
 
     &_midi_tonic_current_active {
