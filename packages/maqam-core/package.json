@@ -1,0 +1,48 @@
+{
+  "name": "maqam-core",
+  "version": "1.0.0",
+  "description": "Core music theory models, functions, and data for maqam analysis - includes pitch classes, tuning systems, jins, maqamat, and analysis utilities",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rimraf dist",
+    "prepublishOnly": "npm run clean && npm run build",
+    "test": "echo \"No tests yet\" && exit 0"
+  },
+  "keywords": [
+    "maqam",
+    "music-theory",
+    "arabic-music",
+    "microtonal",
+    "tuning-systems",
+    "jins",
+    "scales",
+    "pitch-class",
+    "interval-calculation",
+    "transposition",
+    "modulation",
+    "ethnomusicology",
+    "oriental-music",
+    "quarter-tone",
+    "just-intonation"
+  ],
+  "author": "Music Intelligence Lab",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Music-Intelligence-Lab/maqam-network.git",
+    "directory": "packages/maqam-core"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "rimraf": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

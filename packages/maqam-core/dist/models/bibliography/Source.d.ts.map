@@ -1,0 +1,1 @@
+{"version":3,"file":"Source.d.ts","sourceRoot":"","sources":["../../../src/models/bibliography/Source.ts"],"names":[],"mappings":"AAAA,OAAO,IAAI,MAAM,QAAQ,CAAC;AAC1B,OAAO,OAAO,MAAM,WAAW,CAAC;AAEhC,MAAM,MAAM,MAAM,GAAG,IAAI,GAAG,OAAO,CAAC;AAEpC,MAAM,WAAW,mBAAmB;IAClC,QAAQ,EAAE,MAAM,CAAC;IACjB,IAAI,EAAE,MAAM,CAAC;CACd"}

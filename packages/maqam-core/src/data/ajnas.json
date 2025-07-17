@@ -1,0 +1,308 @@
+[
+  {
+    "id": "1",
+    "name": "jins rāst muṭlaq",
+    "noteNames": [
+      "nawā",
+      "ḥusaynī",
+      "awj",
+      "kurdān"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "2",
+    "name": "jins bayāt",
+    "noteNames": [
+      "dūgāh",
+      "segāh",
+      "chahargāh",
+      "nawā"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "3",
+    "name": "jins segāh",
+    "noteNames": [
+      "segāh",
+      "chahargāh",
+      "nawā"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "4",
+    "name": "jins ṣabā",
+    "noteNames": [
+      "dūgāh",
+      "segāh",
+      "chahargāh",
+      "ḥijāz"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "SZNw4epqCZe7VhE5eWT3L",
+        "page": "55"
+      },
+      {
+        "sourceId": "VmShC7ciSIikhGlZwUUJC",
+        "page": "23"
+      }
+    ]
+  },
+  {
+    "id": "5",
+    "name": "jins ʿajam ʿushayrān ",
+    "noteNames": [
+      "ʿajam ʿushayrān",
+      "rāst",
+      "dūgāh",
+      "kurdī"
+    ],
+    "commentsEnglish": "TEST",
+    "commentsArabic": "TEST",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "6",
+    "name": "jins nahāwand binṣir",
+    "noteNames": [
+      "rāst",
+      "dūgāh",
+      "kurdī",
+      "chahargāh"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "7",
+    "name": "jins kurd",
+    "noteNames": [
+      "dūgāh",
+      "kurdī",
+      "chahargāh",
+      "nawā"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "8",
+    "name": "jins ḥijāz binṣir",
+    "noteNames": [
+      "rāst",
+      "tīk zirguleh",
+      "buselīk/ʿushshāq",
+      "chahargāh"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "9",
+    "name": "jins ṣabā zamzam",
+    "noteNames": [
+      "dūgāh",
+      "kurdī",
+      "chahargāh",
+      "ḥijāz"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "10",
+    "name": "jins chahargāh",
+    "noteNames": [
+      "chahargāh",
+      "nawā",
+      "nīm ḥusaynī",
+      "ʿajam"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "11",
+    "name": "jins athar kurd",
+    "noteNames": [
+      "dūgāh",
+      "kurdī",
+      "chahargāh",
+      "ḥiṣār",
+      "ḥusaynī"
+    ],
+    "commentsEnglish": "TEST",
+    "commentsArabic": "TEST",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "12",
+    "name": "jins ḥijāz 1",
+    "noteNames": [
+      "dūgāh",
+      "kurdī",
+      "ḥijāz",
+      "nawā"
+    ],
+    "commentsEnglish": "TEST",
+    "commentsArabic": "TEST",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "13",
+    "name": "jins mustaʿār",
+    "noteNames": [
+      "ʿirāq",
+      "zirguleh",
+      "dūgāh",
+      "buselīk/ʿushshāq"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "14",
+    "name": "jins segāh baladī",
+    "noteNames": [
+      "nawā",
+      "tīk ḥiṣār",
+      "awj",
+      "kurdān"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "15",
+    "name": "jins ḥijāz 2",
+    "noteNames": [
+      "dūgāh",
+      "nīm kurdī/nahāwand",
+      "tīk ḥijāz/ṣabā",
+      "nawā"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "16",
+    "name": "jins rāst binṣir (nīm buselīk)",
+    "noteNames": [
+      "rāst",
+      "dūgāh",
+      "nīm buselīk",
+      "chahargāh"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "17",
+    "name": "jins kurd binṣir",
+    "noteNames": [
+      "rāst",
+      "tīk zirguleh",
+      "kurdī",
+      "chahargāh"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "18",
+    "name": "jins nikrīz",
+    "noteNames": [
+      "rāst",
+      "dūgāh",
+      "kurdī",
+      "ḥijāz",
+      "nawā"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "19",
+    "name": "jins rast binṣir",
+    "noteNames": [
+      "rāst",
+      "dūgāh",
+      "segāh",
+      "chahargāh"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "20",
+    "name": "jins nahāwand muṭlaq",
+    "noteNames": [
+      "nawā",
+      "ḥusaynī",
+      "ʿajam",
+      "kurdān"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "21",
+    "name": "jins būselīk (Al-Shawwā)",
+    "noteNames": [
+      "dūgāh",
+      "nīm buselīk",
+      "chahargāh",
+      "nawā"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "70"
+      }
+    ]
+  },
+  {
+    "id": "22",
+    "name": "jins būselīk (Al-Ḥilū)",
+    "noteNames": [
+      "dūgāh",
+      "buselīk/ʿushshāq",
+      "chahargāh",
+      "nawā"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "zzowyMMW095bTuaDEyH6M",
+        "page": "126"
+      }
+    ]
+  }
+]
