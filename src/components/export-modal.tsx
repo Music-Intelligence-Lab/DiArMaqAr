@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import useAppContext from "@/contexts/app-context";
 import { exportTuningSystem, exportJins, exportMaqam } from "@/functions/export";
+import { exportToScala, exportToScalaKeymap, generateExportFilename } from "@/functions/scala-export";
 import NoteName from "@/models/NoteName";
 
 export type ExportType = "tuning-system" | "jins" | "maqam";
@@ -13,7 +14,7 @@ interface ExportModalProps {
   exportType: ExportType;
 }
 
-export type ExportFormat = "json" | "csv" | "txt" | "pdf" | "xml" | "yaml";
+export type ExportFormat = "json" | "csv" | "txt" | "pdf" | "xml" | "yaml" | "scala" | "scala-keymap";
 
 export interface ExportOptions {
   format: ExportFormat;
@@ -33,6 +34,18 @@ export default function ExportModal({ isOpen, onClose, exportType }: ExportModal
   const { selectedTuningSystem, selectedIndices, selectedJinsDetails, selectedMaqamDetails } = useAppContext();
 
   const [exportOptions, setExportOptions] = useState<ExportOptions>(() => {
+    // Generate dynamic filename
+    const getExportTypeForFilename = () => {
+      if (exportType === 'tuning-system') return 'tuning-details';
+      if (exportType === 'jins') return 'jins-details';
+      if (exportType === 'maqam') return 'maqam-details';
+      return 'export';
+    };
+
+    const dynamicFilename = selectedTuningSystem 
+      ? generateExportFilename(selectedTuningSystem, getExportTypeForFilename() as any, '')
+      : `maqam-network-${exportType}-export`;
+
     const baseOptions = {
       format: "json" as ExportFormat,
       includeTuningSystemDetails: true,
@@ -41,7 +54,7 @@ export default function ExportModal({ isOpen, onClose, exportType }: ExportModal
       modulationType: 'maqamat' as 'maqamat' | 'ajnas',
       prettifyJson: true,
       csvDelimiter: "," as "," | ";" | "\t",
-      filename: `maqam-network-${exportType}-export`,
+      filename: dynamicFilename,
     };
 
     if (exportType === 'tuning-system') {
@@ -60,6 +73,34 @@ export default function ExportModal({ isOpen, onClose, exportType }: ExportModal
 
   const [isExporting, setIsExporting] = useState(false);
 
+  // Helper function to generate filename based on current options
+  const generateCurrentFilename = (options: ExportOptions): string => {
+    if (!selectedTuningSystem) return `maqam-network-${exportType}-export`;
+    
+    let exportTypeForFilename: any;
+    if (exportType === 'tuning-system') {
+      if (options.includeModulations) {
+        exportTypeForFilename = options.modulationType === 'maqamat' ? 'modulations-maqamat' : 'modulations-ajnas';
+      } else if (options.includeMaqamatDetails) {
+        exportTypeForFilename = 'maqamat-details';
+      } else {
+        exportTypeForFilename = 'tuning-details';
+      }
+    } else if (exportType === 'jins') {
+      exportTypeForFilename = 'jins-details';
+    } else if (exportType === 'maqam') {
+      if (options.includeModulations) {
+        exportTypeForFilename = options.modulationType === 'maqamat' ? 'modulations-maqamat' : 'modulations-ajnas';
+      } else {
+        exportTypeForFilename = 'maqam-details';
+      }
+    } else {
+      exportTypeForFilename = 'export';
+    }
+    
+    return generateExportFilename(selectedTuningSystem, exportTypeForFilename, '');
+  };
+
   const formatDescriptions = {
     json: "JavaScript Object Notation - Best for data interchange and web applications",
     csv: "Comma Separated Values - Great for spreadsheets and data analysis",
@@ -67,6 +108,8 @@ export default function ExportModal({ isOpen, onClose, exportType }: ExportModal
     pdf: "Portable Document Format - Professional presentation and printing",
     xml: "Extensible Markup Language - Structured data with metadata",
     yaml: "YAML Ain't Markup Language - Human-readable data serialization",
+    scala: "Scala scale format (.scl) - For microtonal music software",
+    "scala-keymap": "Scala keymap format (.kbm) - MIDI key mapping for Scala scales",
   };
 
   const handleExport = async () => {
@@ -165,6 +208,24 @@ export default function ExportModal({ isOpen, onClose, exportType }: ExportModal
         fileExtension = "yaml";
         break;
 
+      case "scala":
+        if (!selectedTuningSystem || selectedIndices.length === 0) {
+          throw new Error("Scala export requires a tuning system and starting note");
+        }
+        content = exportToScala(selectedTuningSystem, selectedIndices[0] as unknown as NoteName);
+        mimeType = "text/plain";
+        fileExtension = "scl";
+        break;
+
+      case "scala-keymap":
+        if (!selectedTuningSystem || selectedIndices.length === 0) {
+          throw new Error("Scala keymap export requires a tuning system and starting note");
+        }
+        content = exportToScalaKeymap(selectedTuningSystem, selectedIndices[0] as unknown as NoteName);
+        mimeType = "text/plain";
+        fileExtension = "kbm";
+        break;
+
       case "pdf":
         await downloadPDF(data);
         return;
@@ -229,8 +290,8 @@ export default function ExportModal({ isOpen, onClose, exportType }: ExportModal
       return flattened;
     };
 
-    // Helper function to convert array of objects to CSV with proper flattening
-    const arrayToCSV = (items: any[], title: string): string => {
+    // Helper function to convert array of objects to CSV with proper flattening and column ordering
+    const arrayToCSV = (items: any[], title: string, preferredOrder: string[] = []): string => {
       if (!items || items.length === 0) return `${title}\nNo data available\n`;
       
       // Flatten all objects and collect all unique keys
@@ -248,7 +309,21 @@ export default function ExportModal({ isOpen, onClose, exportType }: ExportModal
         Object.keys(item).forEach(key => allKeys.add(key));
       });
       
-      const headers = Array.from(allKeys).sort(); // Sort for consistency
+      // Order headers based on preferred order first, then alphabetically
+      const headers = Array.from(allKeys).sort((a, b) => {
+        const aIndex = preferredOrder.indexOf(a);
+        const bIndex = preferredOrder.indexOf(b);
+        
+        if (aIndex !== -1 && bIndex !== -1) {
+          return aIndex - bIndex;
+        } else if (aIndex !== -1) {
+          return -1;
+        } else if (bIndex !== -1) {
+          return 1;
+        }
+        return a.localeCompare(b);
+      });
+      
       const csvRows = [
         `${title}`,
         headers.map(escapeCSV).join(delimiter),
@@ -260,7 +335,7 @@ export default function ExportModal({ isOpen, onClose, exportType }: ExportModal
       return csvRows.join('\n') + '\n';
     };
 
-    // Tuning System Information
+    // Combine Tuning System Information with Pitch Classes
     if (data.tuningSystem) {
       const ts = data.tuningSystem;
       const tuningSystemInfo = [
@@ -270,37 +345,86 @@ export default function ExportModal({ isOpen, onClose, exportType }: ExportModal
         `Creator (English)${delimiter}${escapeCSV(ts.creatorEnglish || ts.getCreatorEnglish?.())}`,
         `Creator (Arabic)${delimiter}${escapeCSV(ts.creatorArabic || ts.getCreatorArabic?.())}`,
         `Year${delimiter}${escapeCSV(ts.year || ts.getYear?.())}`,
-        `Starting Note${delimiter}${escapeCSV(data.startingNote)}`,
+        `Starting Note Name${delimiter}${escapeCSV(data.startingNote)}`,
+        `Source (English)${delimiter}${escapeCSV(ts.sourceEnglish || ts.getSourceEnglish?.())}`,
+        `Source (Arabic)${delimiter}${escapeCSV(ts.sourceArabic || ts.getSourceArabic?.())}`,
+        `Comments (English)${delimiter}${escapeCSV(ts.commentsEnglish || ts.getCommentsEnglish?.())}`,
+        `Comments (Arabic)${delimiter}${escapeCSV(ts.commentsArabic || ts.getCommentsArabic?.())}`,
         `String Length${delimiter}${escapeCSV(ts.stringLength || ts.getStringLength?.())}`,
         `Default Reference Frequency${delimiter}${escapeCSV(ts.defaultReferenceFrequency || ts.getDefaultReferenceFrequency?.())}`,
         ''
       ].join('\n');
       sections.push(tuningSystemInfo);
-    }
-
-    // Pitch Classes
-    if (data.fullRangeTuningSystemPitchClasses) {
-      sections.push(arrayToCSV(data.fullRangeTuningSystemPitchClasses, 'Pitch Classes'));
+      
+      // Add pitch classes as part of tuning system info
+      if (data.fullRangeTuningSystemPitchClasses) {
+        // Create a more organized pitch class table with logical column order
+        const pitchClasses = data.fullRangeTuningSystemPitchClasses.map((pc: any) => ({
+          'Note Name': pc.noteName,
+          'Octave': pc.octave,
+          'Cents': pc.cents,
+          'Frequency (Hz)': pc.frequency,
+          'Pitch Class': pc.pitchClass,
+          'Semitones': pc.semitones,
+        }));
+        const pitchClassOrder = ['Note Name', 'Octave', 'Cents', 'Frequency (Hz)', 'Pitch Class', 'Semitones'];
+        sections.push(arrayToCSV(pitchClasses, 'Pitch Classes', pitchClassOrder));
+      }
     }
 
     // Ajnas Overview
     if (data.possibleAjnasOverview) {
-      sections.push(arrayToCSV(data.possibleAjnasOverview, 'Possible Ajnas Overview'));
+      const ajnasOverviewOrder = ['titleEnglish', 'titleArabic', 'root', 'intonation', 'SourcePageReferences', 'numberOfTranspositions'];
+      sections.push(arrayToCSV(data.possibleAjnasOverview, 'Possible Ajnas Overview', ajnasOverviewOrder));
     }
 
     // Ajnas Details
     if (data.possibleAjnasDetails) {
-      sections.push(arrayToCSV(data.possibleAjnasDetails, 'Possible Ajnas Details'));
+      const ajnasDetailsOrder = ['titleEnglish', 'titleArabic', 'root', 'intonation', 'family', 'SourcePageReferences', 'commentsEnglish', 'commentsArabic', 'numberOfTranspositions'];
+      sections.push(arrayToCSV(data.possibleAjnasDetails, 'Possible Ajnas Details', ajnasDetailsOrder));
     }
 
     // Maqamat Overview
     if (data.possibleMaqamatOverview) {
-      sections.push(arrayToCSV(data.possibleMaqamatOverview, 'Possible Maqamat Overview'));
+      const maqamatOverviewOrder = ['titleEnglish', 'titleArabic', 'root', 'family', 'SourcePageReferences', 'numberOfTranspositions'];
+      sections.push(arrayToCSV(data.possibleMaqamatOverview, 'Possible Maqamat Overview', maqamatOverviewOrder));
     }
 
     // Maqamat Details
     if (data.possibleMaqamatDetails) {
-      sections.push(arrayToCSV(data.possibleMaqamatDetails, 'Possible Maqamat Details'));
+      const maqamatDetailsOrder = ['titleEnglish', 'titleArabic', 'root', 'family', 'suyur', 'SourcePageReferences', 'commentsEnglish', 'commentsArabic', 'numberOfTranspositions'];
+      sections.push(arrayToCSV(data.possibleMaqamatDetails, 'Possible Maqamat Details', maqamatDetailsOrder));
+    }
+
+    // Modulations
+    if (data.modulations) {
+      // Convert modulations object to an array for CSV export
+      const flatModulations: any[] = [];
+      if (typeof data.modulations === 'object' && data.modulations !== null) {
+        Object.entries(data.modulations).forEach(([key, value]) => {
+          if (Array.isArray(value)) {
+            value.forEach((mod: any) => {
+              flatModulations.push({
+                ModulationType: key,
+                ...mod
+              });
+            });
+          } else {
+            flatModulations.push({
+              ModulationType: key,
+              Value: value
+            });
+          }
+        });
+      }
+      const modulationsOrder = ['ModulationType', 'titleEnglish', 'titleArabic', 'root', 'family'];
+      sections.push(arrayToCSV(flatModulations, 'Modulations', modulationsOrder));
+    }
+
+    // Transpositions
+    if (data.transpositions) {
+      const transpositionsOrder = ['titleEnglish', 'titleArabic', 'root', 'family'];
+      sections.push(arrayToCSV(data.transpositions, 'Transpositions', transpositionsOrder));
     }
 
     // Summary statistics
@@ -319,19 +443,122 @@ export default function ExportModal({ isOpen, onClose, exportType }: ExportModal
   };
 
   const convertToText = (data: any): string => {
-    const formatValue = (value: any, indent = 0): string => {
-      const spaces = "  ".repeat(indent);
-      if (Array.isArray(value)) {
-        return value.map((item) => `${spaces}- ${formatValue(item, indent + 1)}`).join("\n");
-      } else if (value && typeof value === "object") {
-        return Object.entries(value)
-          .map(([key, val]) => `${spaces}${key}: ${formatValue(val, indent + 1)}`)
-          .join("\n");
-      }
-      return String(value);
-    };
-
-    return formatValue(data);
+    const sections: string[] = [];
+    
+    // Title Section
+    sections.push('='.repeat(60));
+    sections.push('ARABIC MAQAM NETWORK - EXPORT DATA');
+    sections.push('='.repeat(60));
+    sections.push('');
+    
+    // Export timestamp
+    const now = new Date();
+    sections.push(`Export Date: ${now.toLocaleDateString()}`);
+    sections.push(`Export Time: ${now.toLocaleTimeString()}`);
+    sections.push('');
+    
+    // Tuning System Information
+    if (data.tuningSystem) {
+      const ts = data.tuningSystem;
+      sections.push('TUNING SYSTEM INFORMATION');
+      sections.push('-'.repeat(40));
+      sections.push(`Title (English): ${ts.titleEnglish || ts.getTitleEnglish?.() || 'N/A'}`);
+      sections.push(`Title (Arabic): ${ts.titleArabic || ts.getTitleArabic?.() || 'N/A'}`);
+      sections.push(`Creator (English): ${ts.creatorEnglish || ts.getCreatorEnglish?.() || 'N/A'}`);
+      sections.push(`Creator (Arabic): ${ts.creatorArabic || ts.getCreatorArabic?.() || 'N/A'}`);
+      sections.push(`Year: ${ts.year || ts.getYear?.() || 'N/A'}`);
+      sections.push(`Starting Note: ${data.startingNote || 'N/A'}`);
+      sections.push(`Source (English): ${ts.sourceEnglish || ts.getSourceEnglish?.() || 'N/A'}`);
+      sections.push(`Source (Arabic): ${ts.sourceArabic || ts.getSourceArabic?.() || 'N/A'}`);
+      sections.push(`Comments (English): ${ts.commentsEnglish || ts.getCommentsEnglish?.() || 'N/A'}`);
+      sections.push(`Comments (Arabic): ${ts.commentsArabic || ts.getCommentsArabic?.() || 'N/A'}`);
+      sections.push(`String Length: ${ts.stringLength || ts.getStringLength?.() || 'N/A'}`);
+      sections.push(`Default Reference Frequency: ${ts.defaultReferenceFrequency || ts.getDefaultReferenceFrequency?.() || 'N/A'} Hz`);
+      sections.push('');
+    }
+    
+    // Pitch Classes
+    if (data.fullRangeTuningSystemPitchClasses) {
+      sections.push('PITCH CLASSES');
+      sections.push('-'.repeat(40));
+      data.fullRangeTuningSystemPitchClasses.forEach((pc: any, index: number) => {
+        sections.push(`${index + 1}. ${pc.noteName} (Octave ${pc.octave})`);
+        sections.push(`   Cents: ${pc.cents || 'N/A'}`);
+        sections.push(`   Frequency: ${pc.frequency || 'N/A'} Hz`);
+        sections.push(`   Pitch Class: ${pc.pitchClass || 'N/A'}`);
+        sections.push('');
+      });
+    }
+    
+    // Ajnas Details
+    if (data.possibleAjnasDetails) {
+      sections.push('AJNAS DETAILS');
+      sections.push('-'.repeat(40));
+      data.possibleAjnasDetails.forEach((jins: any, index: number) => {
+        sections.push(`${index + 1}. ${jins.titleEnglish || jins.getTitleEnglish?.() || 'N/A'}`);
+        sections.push(`   Arabic Title: ${jins.titleArabic || jins.getTitleArabic?.() || 'N/A'}`);
+        sections.push(`   Root: ${jins.root || 'N/A'}`);
+        sections.push(`   Intonation: ${jins.intonation || 'N/A'}`);
+        sections.push(`   Number of Transpositions: ${jins.numberOfTranspositions || 'N/A'}`);
+        sections.push('');
+      });
+    }
+    
+    // Maqamat Details
+    if (data.possibleMaqamatDetails) {
+      sections.push('MAQAMAT DETAILS');
+      sections.push('-'.repeat(40));
+      data.possibleMaqamatDetails.forEach((maqam: any, index: number) => {
+        sections.push(`${index + 1}. ${maqam.titleEnglish || maqam.getTitleEnglish?.() || 'N/A'}`);
+        sections.push(`   Arabic Title: ${maqam.titleArabic || maqam.getTitleArabic?.() || 'N/A'}`);
+        sections.push(`   Root: ${maqam.root || 'N/A'}`);
+        sections.push(`   Family: ${maqam.family || 'N/A'}`);
+        sections.push(`   Number of Transpositions: ${maqam.numberOfTranspositions || 'N/A'}`);
+        sections.push('');
+      });
+    }
+    
+    // Modulations
+    if (data.modulations) {
+      sections.push('MODULATIONS');
+      sections.push('-'.repeat(40));
+      const formatModulations = (modulations: any): string => {
+        if (typeof modulations === 'object' && modulations !== null) {
+          const result: string[] = [];
+          Object.entries(modulations).forEach(([key, value]) => {
+            if (Array.isArray(value)) {
+              result.push(`${key}: ${value.length} modulations`);
+              value.forEach((mod: any, idx: number) => {
+                result.push(`  ${idx + 1}. ${mod.titleEnglish || mod.getTitleEnglish?.() || 'N/A'}`);
+              });
+            } else {
+              result.push(`${key}: ${value}`);
+            }
+          });
+          return result.join('\n');
+        }
+        return String(modulations);
+      };
+      sections.push(formatModulations(data.modulations));
+      sections.push('');
+    }
+    
+    // Summary Statistics
+    if (data.numberOfPossibleAjnas !== undefined || data.numberOfPossibleMaqamat !== undefined) {
+      sections.push('SUMMARY STATISTICS');
+      sections.push('-'.repeat(40));
+      sections.push(`Total Possible Ajnas: ${data.numberOfPossibleAjnas || 0}`);
+      sections.push(`Total Ajnas in Database: ${data.numberOfAjnas || 0}`);
+      sections.push(`Total Possible Maqamat: ${data.numberOfPossibleMaqamat || 0}`);
+      sections.push(`Total Maqamat in Database: ${data.numberOfMaqamat || 0}`);
+      sections.push('');
+    }
+    
+    sections.push('='.repeat(60));
+    sections.push('End of Export');
+    sections.push('='.repeat(60));
+    
+    return sections.join('\n');
   };
 
   const convertToXML = (data: any): string => {
@@ -366,24 +593,72 @@ export default function ExportModal({ isOpen, onClose, exportType }: ExportModal
   };
 
   const downloadPDF = async (data: any) => {
+    // Convert data to formatted text first
+    const formattedText = convertToText(data);
+    
     const htmlContent = `
       <!DOCTYPE html>
       <html>
       <head>
-        <title>Maqam Network Export</title>
+        <title>Arabic Maqam Network Export</title>
         <style>
-          body { font-family: Arial, sans-serif; margin: 20px; }
-          h1 { color: #2c3e50; }
-          h2 { color: #34495e; margin-top: 30px; }
-          pre { background: #f8f9fa; padding: 15px; border-radius: 5px; overflow-wrap: break-word; }
-          .section { margin-bottom: 30px; }
+          body { 
+            font-family: 'Times New Roman', serif; 
+            margin: 30px; 
+            line-height: 1.6;
+            color: #333;
+          }
+          h1 { 
+            color: #2c3e50; 
+            text-align: center; 
+            border-bottom: 3px solid #3498db; 
+            padding-bottom: 10px; 
+            margin-bottom: 30px;
+          }
+          h2 { 
+            color: #34495e; 
+            margin-top: 30px; 
+            margin-bottom: 15px;
+            border-bottom: 1px solid #bdc3c7;
+            padding-bottom: 5px;
+          }
+          .export-info {
+            background: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            text-align: center;
+            font-style: italic;
+          }
+          .content {
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            line-height: 1.4;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            border: 1px solid #dee2e6;
+          }
+          .section { 
+            margin-bottom: 30px; 
+            page-break-inside: avoid;
+          }
+          @media print {
+            body { margin: 20mm; }
+            h1 { font-size: 18pt; }
+            h2 { font-size: 14pt; }
+            .content { font-size: 10pt; }
+          }
         </style>
       </head>
       <body>
         <h1>Arabic Maqam Network Export</h1>
+        <div class="export-info">
+          Generated on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}
+        </div>
         <div class="section">
-          <h2>Export Data</h2>
-          <pre>${JSON.stringify(data, null, 2)}</pre>
+          <div class="content">${formattedText}</div>
         </div>
       </body>
       </html>
@@ -419,16 +694,24 @@ export default function ExportModal({ isOpen, onClose, exportType }: ExportModal
           <div className="export-modal__section">
             <label className="export-modal__label">Export Format</label>
             <div className="export-modal__format-grid">
-              {Object.entries(formatDescriptions).map(([format, description]) => (
-                <div
-                  key={format}
-                  className={`export-modal__format-card ${exportOptions.format === format ? "export-modal__format-card--selected" : ""}`}
-                  onClick={() => setExportOptions((prev) => ({ ...prev, format: format as ExportFormat }))}
-                >
-                  <div className="export-modal__format-name">{format.toUpperCase()}</div>
-                  <div className="export-modal__format-description">{description}</div>
-                </div>
-              ))}
+              {Object.entries(formatDescriptions)
+                .filter(([format]) => {
+                  // Scala formats only available for tuning-system exports
+                  if (format === 'scala' || format === 'scala-keymap') {
+                    return exportType === 'tuning-system';
+                  }
+                  return true;
+                })
+                .map(([format, description]) => (
+                  <div
+                    key={format}
+                    className={`export-modal__format-card ${exportOptions.format === format ? "export-modal__format-card--selected" : ""}`}
+                    onClick={() => setExportOptions((prev) => ({ ...prev, format: format as ExportFormat }))}
+                  >
+                    <div className="export-modal__format-name">{format.toUpperCase()}</div>
+                    <div className="export-modal__format-description">{description}</div>
+                  </div>
+                ))}
             </div>
           </div>
 
@@ -497,7 +780,10 @@ export default function ExportModal({ isOpen, onClose, exportType }: ExportModal
                   <input 
                     type="checkbox" 
                     checked={exportOptions.includeModulations} 
-                    onChange={(e) => setExportOptions((prev) => ({ ...prev, includeModulations: e.target.checked }))} 
+                    onChange={(e) => setExportOptions((prev) => {
+                      const newOptions = { ...prev, includeModulations: e.target.checked };
+                      return { ...newOptions, filename: generateCurrentFilename(newOptions) };
+                    })} 
                   />
                   <span>Modulations</span>
                 </label>
@@ -515,7 +801,10 @@ export default function ExportModal({ isOpen, onClose, exportType }: ExportModal
                     type="radio" 
                     name="modulationType"
                     checked={exportOptions.modulationType === 'maqamat'} 
-                    onChange={() => setExportOptions((prev) => ({ ...prev, modulationType: 'maqamat' }))} 
+                    onChange={() => setExportOptions((prev) => {
+                      const newOptions = { ...prev, modulationType: 'maqamat' as 'maqamat' | 'ajnas' };
+                      return { ...newOptions, filename: generateCurrentFilename(newOptions) };
+                    })} 
                   />
                   <span>Maqamat Modulations</span>
                 </label>
@@ -524,7 +813,10 @@ export default function ExportModal({ isOpen, onClose, exportType }: ExportModal
                     type="radio" 
                     name="modulationType"
                     checked={exportOptions.modulationType === 'ajnas'} 
-                    onChange={() => setExportOptions((prev) => ({ ...prev, modulationType: 'ajnas' }))} 
+                    onChange={() => setExportOptions((prev) => {
+                      const newOptions = { ...prev, modulationType: 'ajnas' as 'maqamat' | 'ajnas' };
+                      return { ...newOptions, filename: generateCurrentFilename(newOptions) };
+                    })} 
                   />
                   <span>Ajnas Modulations</span>
                 </label>
