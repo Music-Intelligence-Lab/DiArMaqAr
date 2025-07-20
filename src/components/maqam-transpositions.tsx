@@ -8,6 +8,8 @@ import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { getMaqamTranspositions } from "@/functions/transpose";
 import StaffNotation from "./staff-notation";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import ExportModal from "./export-modal";
 
 // --- Utility: getHeaderId ---
 const getHeaderId = (noteName: string): string => {
@@ -57,6 +59,16 @@ const MaqamTranspositions: React.FC = () => {
     index: number;
     noteNames: string[];
   }>({ index: -1, noteNames: [] });
+
+  // Export modal state
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+  const [maqamToExport, setMaqamToExport] = useState<Maqam | null>(null);
+
+  // Export handler function for maqam transpositions - opens modal with specific maqam
+  const handleMaqamExport = (maqam: Maqam) => {
+    setMaqamToExport(maqam);
+    setIsExportModalOpen(true);
+  };
 
   const isCellHighlighted = (index: number, noteName: string): boolean => {
     return highlightedNotes.index === index && highlightedNotes.noteNames.includes(noteName);
@@ -214,6 +226,13 @@ const MaqamTranspositions: React.FC = () => {
                 >
                   <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
                   Descending
+                </button>
+                <button
+                  className="maqam-transpositions__button"
+                  onClick={() => handleMaqamExport(maqam)}
+                >
+                  <FileDownloadIcon className="maqam-transpositions__export-icon" />
+                  Export
                 </button>
               </th>
             </tr>
@@ -635,7 +654,20 @@ const MaqamTranspositions: React.FC = () => {
       }, 200);
     }
   }, [selectedMaqamDetails]);
-  return transpositionTables;
+  
+  return (
+    <>
+      {transpositionTables}
+      
+      {/* Export Modal */}
+      <ExportModal 
+        isOpen={isExportModalOpen} 
+        onClose={() => setIsExportModalOpen(false)} 
+        exportType="maqam" 
+        specificMaqam={maqamToExport || undefined}
+      />
+    </>
+  );
 };
 
 export default MaqamTranspositions;
