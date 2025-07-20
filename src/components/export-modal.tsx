@@ -5,6 +5,8 @@ import useAppContext from "@/contexts/app-context";
 import { exportTuningSystem, exportJins, exportMaqam } from "@/functions/export";
 import { exportToScala, exportToScalaKeymap, generateExportFilename } from "@/functions/scala-export";
 import NoteName from "@/models/NoteName";
+import { Jins } from "@/models/Jins";
+import { Maqam } from "@/models/Maqam";
 
 export type ExportType = "tuning-system" | "jins" | "maqam";
 
@@ -12,6 +14,8 @@ interface ExportModalProps {
   isOpen: boolean;
   onClose: () => void;
   exportType: ExportType;
+  specificJins?: Jins; // Optional specific jins to export
+  specificMaqam?: Maqam; // Optional specific maqam to export
 }
 
 export type ExportFormat = "json" | "csv" | "txt" | "pdf" | "xml" | "yaml" | "scala" | "scala-keymap";
@@ -30,21 +34,39 @@ export interface ExportOptions {
   filename: string;
 }
 
-export default function ExportModal({ isOpen, onClose, exportType }: ExportModalProps) {
+export default function ExportModal({ isOpen, onClose, exportType, specificJins, specificMaqam }: ExportModalProps) {
   const { selectedTuningSystem, selectedIndices, selectedJinsDetails, selectedMaqamDetails } = useAppContext();
+
+  // Determine which jins/maqam to use for export - prioritize specific instances
+  const jinsToExport = specificJins || selectedJinsDetails;
+  const maqamToExport = specificMaqam || selectedMaqamDetails;
 
   const [exportOptions, setExportOptions] = useState<ExportOptions>(() => {
     // Generate dynamic filename
     const getExportTypeForFilename = () => {
       if (exportType === 'tuning-system') return 'tuning-details';
-      if (exportType === 'jins') return 'jins-details';
-      if (exportType === 'maqam') return 'maqam-details';
+      if (exportType === 'jins') return 'jins';
+      if (exportType === 'maqam') return 'maqam';
       return 'export';
     };
 
     const dynamicFilename = selectedTuningSystem 
       ? generateExportFilename(selectedTuningSystem, getExportTypeForFilename() as any, '')
       : `maqam-network-${exportType}-export`;
+
+    // Add specific instance name to filename if available
+    let finalFilename = dynamicFilename;
+    if (exportType === 'jins' && specificJins) {
+      const instanceName = specificJins.name.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
+      finalFilename = selectedTuningSystem 
+        ? generateExportFilename(selectedTuningSystem, 'jins' as any, instanceName)
+        : `jins-${instanceName}-export`;
+    } else if (exportType === 'maqam' && specificMaqam) {
+      const instanceName = specificMaqam.name.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
+      finalFilename = selectedTuningSystem 
+        ? generateExportFilename(selectedTuningSystem, 'maqam' as any, instanceName)
+        : `maqam-${instanceName}-export`;
+    }
 
     const baseOptions = {
       format: "json" as ExportFormat,
@@ -54,7 +76,7 @@ export default function ExportModal({ isOpen, onClose, exportType }: ExportModal
       modulationType: 'maqamat' as 'maqamat' | 'ajnas',
       prettifyJson: true,
       csvDelimiter: "," as "," | ";" | "\t",
-      filename: dynamicFilename,
+      filename: finalFilename,
     };
 
     if (exportType === 'tuning-system') {
@@ -78,6 +100,8 @@ export default function ExportModal({ isOpen, onClose, exportType }: ExportModal
     if (!selectedTuningSystem) return `maqam-network-${exportType}-export`;
     
     let exportTypeForFilename: any;
+    let instanceName = '';
+    
     if (exportType === 'tuning-system') {
       if (options.includeModulations) {
         exportTypeForFilename = options.modulationType === 'maqamat' ? 'modulations-maqamat' : 'modulations-ajnas';
@@ -87,18 +111,24 @@ export default function ExportModal({ isOpen, onClose, exportType }: ExportModal
         exportTypeForFilename = 'tuning-details';
       }
     } else if (exportType === 'jins') {
-      exportTypeForFilename = 'jins-details';
+      exportTypeForFilename = 'jins';
+      if (specificJins) {
+        instanceName = specificJins.name.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
+      }
     } else if (exportType === 'maqam') {
       if (options.includeModulations) {
         exportTypeForFilename = options.modulationType === 'maqamat' ? 'modulations-maqamat' : 'modulations-ajnas';
       } else {
-        exportTypeForFilename = 'maqam-details';
+        exportTypeForFilename = 'maqam';
+      }
+      if (specificMaqam) {
+        instanceName = specificMaqam.name.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
       }
     } else {
       exportTypeForFilename = 'export';
     }
     
-    return generateExportFilename(selectedTuningSystem, exportTypeForFilename, '');
+    return generateExportFilename(selectedTuningSystem, exportTypeForFilename, instanceName);
   };
 
   const formatDescriptions = {
@@ -120,12 +150,12 @@ export default function ExportModal({ isOpen, onClose, exportType }: ExportModal
         return;
       }
     } else if (exportType === 'jins') {
-      if (!selectedJinsDetails || !selectedTuningSystem || selectedIndices.length === 0) {
+      if (!jinsToExport || !selectedTuningSystem || selectedIndices.length === 0) {
         alert("Please select a jins and tuning system first");
         return;
       }
     } else if (exportType === 'maqam') {
-      if (!selectedMaqamDetails || !selectedTuningSystem || selectedIndices.length === 0) {
+      if (!maqamToExport || !selectedTuningSystem || selectedIndices.length === 0) {
         alert("Please select a maqam and tuning system first");
         return;
       }
@@ -147,13 +177,13 @@ export default function ExportModal({ isOpen, onClose, exportType }: ExportModal
           modulationType: exportOptions.modulationType,
         });
       } else if (exportType === 'jins') {
-        exportedData = exportJins(selectedJinsDetails!, selectedTuningSystem!, startingNote, {
+        exportedData = exportJins(jinsToExport!, selectedTuningSystem!, startingNote, {
           includeTuningSystemDetails: exportOptions.includeTuningSystemDetails,
           includePitchClasses: exportOptions.includePitchClasses,
           includeTranspositions: exportOptions.includeTranspositions || false,
         });
       } else if (exportType === 'maqam') {
-        exportedData = exportMaqam(selectedMaqamDetails!, selectedTuningSystem!, startingNote, {
+        exportedData = exportMaqam(maqamToExport!, selectedTuningSystem!, startingNote, {
           includeTuningSystemDetails: exportOptions.includeTuningSystemDetails,
           includePitchClasses: exportOptions.includePitchClasses,
           includeTranspositions: exportOptions.includeTranspositions || false,
