@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const transpose_1 = require("../functions/transpose");
-class MaqamDetails {
+class MaqamTemplate {
     constructor(id, name, ascendingNoteNames, descendingNoteNames, suyūr, commentsEnglish, commentsArabic, sourcePageReferences) {
         this.id = id;
         this.name = name;
@@ -67,10 +67,10 @@ class MaqamDetails {
         };
     }
     createMaqamWithNewSuyūr(newSuyūr) {
-        return new MaqamDetails(this.id, this.name, this.ascendingNoteNames, this.descendingNoteNames, newSuyūr, this.commentsEnglish, this.commentsArabic, this.sourcePageReferences);
+        return new MaqamTemplate(this.id, this.name, this.ascendingNoteNames, this.descendingNoteNames, newSuyūr, this.commentsEnglish, this.commentsArabic, this.sourcePageReferences);
     }
     createMaqamWithNewSourcePageReferences(newSourcePageReferences) {
-        return new MaqamDetails(this.id, this.name, this.ascendingNoteNames, this.descendingNoteNames, this.suyūr, this.commentsEnglish, this.commentsArabic, newSourcePageReferences);
+        return new MaqamTemplate(this.id, this.name, this.ascendingNoteNames, this.descendingNoteNames, this.suyūr, this.commentsEnglish, this.commentsArabic, newSourcePageReferences);
     }
     convertToObject() {
         return {
@@ -85,5 +85,5 @@ class MaqamDetails {
         };
     }
 }
-exports.default = MaqamDetails;
+exports.default = MaqamTemplate;
 //# sourceMappingURL=Maqam.js.map

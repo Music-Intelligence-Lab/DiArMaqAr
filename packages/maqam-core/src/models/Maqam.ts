@@ -4,7 +4,7 @@ import { AjnasModulations, Jins } from "./Jins";
 import NoteName from "./NoteName";
 import { SourcePageReference } from "./bibliography/Source";
 
-export interface MaqamDetailsInterface {
+export interface MaqamTemplateInterface {
   id: string;
   name: string;
   ascendingNoteNames: NoteName[];
@@ -16,7 +16,7 @@ export interface MaqamDetailsInterface {
   numberOfTranspositions?: number;
 }
 
-export default class MaqamDetails {
+export default class MaqamTemplate {
   private id: string;
   private name: string;
   private ascendingNoteNames: NoteName[];
@@ -115,8 +115,8 @@ export default class MaqamDetails {
     };
   }
 
-  createMaqamWithNewSuyūr(newSuyūr: Sayr[]): MaqamDetails {
-    return new MaqamDetails(
+  createMaqamWithNewSuyūr(newSuyūr: Sayr[]): MaqamTemplate {
+    return new MaqamTemplate(
       this.id,
       this.name,
       this.ascendingNoteNames,
@@ -128,8 +128,8 @@ export default class MaqamDetails {
     );
   }
 
-  createMaqamWithNewSourcePageReferences(newSourcePageReferences: SourcePageReference[]): MaqamDetails {
-    return new MaqamDetails(
+  createMaqamWithNewSourcePageReferences(newSourcePageReferences: SourcePageReference[]): MaqamTemplate {
+    return new MaqamTemplate(
       this.id,
       this.name,
       this.ascendingNoteNames,
@@ -141,7 +141,7 @@ export default class MaqamDetails {
     );
   }
 
-  convertToObject(): MaqamDetailsInterface {
+  convertToObject(): MaqamTemplateInterface {
     return {
       id: this.id,
       name: this.name,

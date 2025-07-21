@@ -1,7 +1,7 @@
 import NoteName from "@/models/NoteName";
 import TuningSystem from "@/models/TuningSystem";
-import JinsDetails, { AjnasModulations, Jins, JinsDetailsInterface } from "@/models/Jins";
-import MaqamDetails, { Maqam, MaqamatModulations, MaqamDetailsInterface } from "@/models/Maqam";
+import JinsTemplate, { AjnasModulations, Jins, JinsTemplateInterface } from "@/models/Jins";
+import MaqamTemplate, { Maqam, MaqamatModulations, MaqamTemplateInterface } from "@/models/Maqam";
 import getTuningSystemCells from "./getTuningSystemCells";
 import { getAjnas, getMaqamat } from "./import";
 import { getJinsTranspositions, getMaqamTranspositions } from "./transpose";
@@ -15,11 +15,11 @@ interface ExportedTuningSystem {
   fullRangeTuningSystemPitchClasses?: PitchClass[];
   numberOfPossibleAjnas?: number;
   numberOfAjnas?: number;
-  possibleAjnasOverview?: JinsDetailsInterface[];
+  possibleAjnasOverview?: JinsTemplateInterface[];
   possibleAjnas?: Jins[];
   numberOfPossibleMaqamat?: number;
   numberOfMaqamat?: number;
-  possibleMaqamatOverview?: MaqamDetailsInterface[];
+  possibleMaqamatOverview?: MaqamTemplateInterface[];
   possibleMaqamat?: Maqam[];
 }
 
@@ -47,7 +47,7 @@ export interface MaqamExportOptions {
 }
 
 interface ExportedJins {
-  jins?: Jins; // Export the actual Jins instance instead of JinsDetails
+  jins?: Jins; // Export the actual Jins instance instead of JinsTemplate
   tuningSystem?: TuningSystem;
   startingNote?: NoteName;
   fullRangeTuningSystemPitchClasses?: PitchClass[];
@@ -56,7 +56,7 @@ interface ExportedJins {
 }
 
 interface ExportedMaqam {
-  maqam?: Maqam; // Export the actual Maqam instance instead of MaqamDetails
+  maqam?: Maqam; // Export the actual Maqam instance instead of MaqamTemplate
   tuningSystem?: TuningSystem;
   startingNote?: NoteName;
   fullRangeTuningSystemPitchClasses?: PitchClass[];
@@ -93,11 +93,11 @@ export function exportTuningSystem(
   }
 
   // Filter possible ajnas and maqamat
-  const possibleAjnasOverview: (JinsDetails | JinsDetailsInterface)[] = allAjnas.filter((jins) =>
+  const possibleAjnasOverview: (JinsTemplate | JinsTemplateInterface)[] = allAjnas.filter((jins) =>
     jins.getNoteNames().every((noteName) => fullRangeTuningSystemPitchClasses.some((pitchClass) => pitchClass.noteName === noteName))
   );
 
-  const possibleMaqamatOverview: (MaqamDetails | MaqamDetailsInterface)[] = allMaqamat.filter(
+  const possibleMaqamatOverview: (MaqamTemplate | MaqamTemplateInterface)[] = allMaqamat.filter(
     (maqam) =>
       maqam.getAscendingNoteNames().every((noteName) => fullRangeTuningSystemPitchClasses.some((pitchClass) => pitchClass.noteName === noteName)) &&
       maqam.getDescendingNoteNames().every((noteName) => fullRangeTuningSystemPitchClasses.some((pitchClass) => pitchClass.noteName === noteName))
@@ -112,7 +112,7 @@ export function exportTuningSystem(
     const possibleAjnas: Jins[] = [];
 
     for (let i = 0; i < possibleAjnasOverview.length; i++) {
-      const jins = possibleAjnasOverview[i] as JinsDetails;
+      const jins = possibleAjnasOverview[i] as JinsTemplate;
 
       let numberOfTranspositions = 0;
       for (const jinsTransposition of getJinsTranspositions(fullRangeTuningSystemPitchClasses, jins, true, centsTolerance)) {
@@ -121,10 +121,10 @@ export function exportTuningSystem(
       }
 
       possibleAjnasOverview[i] = jins.convertToObject();
-      (possibleAjnasOverview[i] as JinsDetailsInterface).numberOfTranspositions = numberOfTranspositions;
+      (possibleAjnasOverview[i] as JinsTemplateInterface).numberOfTranspositions = numberOfTranspositions;
     }
 
-    result.possibleAjnasOverview = possibleAjnasOverview as JinsDetailsInterface[];
+    result.possibleAjnasOverview = possibleAjnasOverview as JinsTemplateInterface[];
     result.possibleAjnas = possibleAjnas;
   }
 
@@ -133,7 +133,7 @@ export function exportTuningSystem(
     const possibleMaqamat: Maqam[] = [];
 
     for (let i = 0; i < possibleMaqamatOverview.length; i++) {
-      const maqam = possibleMaqamatOverview[i] as MaqamDetails;
+      const maqam = possibleMaqamatOverview[i] as MaqamTemplate;
 
       let numberOfTranspositions = 0;
       for (const maqamTransposition of getMaqamTranspositions(fullRangeTuningSystemPitchClasses, allAjnas, maqam, true, centsTolerance)) {
@@ -150,10 +150,10 @@ export function exportTuningSystem(
       }
 
       possibleMaqamatOverview[i] = maqam.convertToObject();
-      (possibleMaqamatOverview[i] as MaqamDetailsInterface).numberOfTranspositions = numberOfTranspositions;
+      (possibleMaqamatOverview[i] as MaqamTemplateInterface).numberOfTranspositions = numberOfTranspositions;
     }
 
-    result.possibleMaqamatOverview = possibleMaqamatOverview as MaqamDetailsInterface[];
+    result.possibleMaqamatOverview = possibleMaqamatOverview as MaqamTemplateInterface[];
     result.possibleMaqamat = possibleMaqamat;
   }
 
@@ -161,7 +161,7 @@ export function exportTuningSystem(
 }
 
 export function exportJins(
-  jinsInput: Jins | JinsDetails,
+  jinsInput: Jins | JinsTemplate,
   tuningSystem: TuningSystem,
   startingNote: NoteName,
   options: JinsExportOptions,
@@ -172,9 +172,9 @@ export function exportJins(
   const fullRangeTuningSystemPitchClasses = getTuningSystemCells(tuningSystem, startingNote);
   
   let jinsToExport: Jins;
-  let jinsDetails: JinsDetails | undefined;
+  let jinsTemplate: JinsTemplate | undefined;
   
-  // Check if input is a Jins instance or JinsDetails
+  // Check if input is a Jins instance or JinsTemplate
   if ('jinsId' in jinsInput) {
     // It's a Jins instance - export this directly
     jinsToExport = jinsInput;
@@ -182,12 +182,12 @@ export function exportJins(
     // Optionally get the details for transposition generation
     if (options.includeTranspositions) {
       const allAjnas = getAjnas();
-      jinsDetails = allAjnas.find(j => j.getId() === jinsInput.jinsId);
+      jinsTemplate = allAjnas.find(j => j.getId() === jinsInput.jinsId);
     }
   } else {
-    // It's a JinsDetails instance - convert to Jins using getTahlil
-    jinsDetails = jinsInput;
-    jinsToExport = jinsDetails.getTahlil(fullRangeTuningSystemPitchClasses);
+    // It's a JinsTemplate instance - convert to Jins using getTahlil
+    jinsTemplate = jinsInput;
+    jinsToExport = jinsTemplate.getTahlil(fullRangeTuningSystemPitchClasses);
   }
 
   // Include tuning system details if requested
@@ -204,12 +204,12 @@ export function exportJins(
   // Include the actual jins instance
   result.jins = jinsToExport;
 
-  // Include transpositions if requested and we have jinsDetails
-  if (options.includeTranspositions && jinsDetails) {
+  // Include transpositions if requested and we have jinsTemplate
+  if (options.includeTranspositions && jinsTemplate) {
     const transpositions: Jins[] = [];
     let numberOfTranspositions = 0;
 
-    for (const jinsTransposition of getJinsTranspositions(fullRangeTuningSystemPitchClasses, jinsDetails, true, centsTolerance)) {
+    for (const jinsTransposition of getJinsTranspositions(fullRangeTuningSystemPitchClasses, jinsTemplate, true, centsTolerance)) {
       transpositions.push(jinsTransposition);
       numberOfTranspositions++;
     }
@@ -222,7 +222,7 @@ export function exportJins(
 }
 
 export function exportMaqam(
-  maqamInput: Maqam | MaqamDetails,
+  maqamInput: Maqam | MaqamTemplate,
   tuningSystem: TuningSystem,
   startingNote: NoteName,
   options: MaqamExportOptions,
@@ -233,9 +233,9 @@ export function exportMaqam(
   const fullRangeTuningSystemPitchClasses = getTuningSystemCells(tuningSystem, startingNote);
   
   let maqamToExport: Maqam;
-  let maqamDetails: MaqamDetails | undefined;
+  let maqamTemplate: MaqamTemplate | undefined;
   
-  // Check if input is a Maqam instance or MaqamDetails
+  // Check if input is a Maqam instance or MaqamTemplate
   if ('maqamId' in maqamInput) {
     // It's a Maqam instance - export this directly
     maqamToExport = maqamInput;
@@ -243,12 +243,12 @@ export function exportMaqam(
     // Optionally get the details for transposition generation
     if (options.includeTranspositions) {
       const allMaqamat = getMaqamat();
-      maqamDetails = allMaqamat.find(m => m.getId() === maqamInput.maqamId);
+      maqamTemplate = allMaqamat.find(m => m.getId() === maqamInput.maqamId);
     }
   } else {
-    // It's a MaqamDetails instance - convert to Maqam using getTahlil
-    maqamDetails = maqamInput;
-    maqamToExport = maqamDetails.getTahlil(fullRangeTuningSystemPitchClasses);
+    // It's a MaqamTemplate instance - convert to Maqam using getTahlil
+    maqamTemplate = maqamInput;
+    maqamToExport = maqamTemplate.getTahlil(fullRangeTuningSystemPitchClasses);
   }
 
   // Include tuning system details if requested
@@ -278,14 +278,14 @@ export function exportMaqam(
     result.numberOfHops = numberOfHops;
   }
 
-  // Include transpositions if requested and we have maqamDetails
-  if (options.includeTranspositions && maqamDetails) {
+  // Include transpositions if requested and we have maqamTemplate
+  if (options.includeTranspositions && maqamTemplate) {
     const transpositions: Maqam[] = [];
     let numberOfTranspositions = 0;
     const allAjnas = getAjnas();
     const allMaqamat = getMaqamat();
 
-    for (const maqamTransposition of getMaqamTranspositions(fullRangeTuningSystemPitchClasses, allAjnas, maqamDetails, true, centsTolerance)) {
+    for (const maqamTransposition of getMaqamTranspositions(fullRangeTuningSystemPitchClasses, allAjnas, maqamTemplate, true, centsTolerance)) {
       // Include modulations for each transposition if requested
       if (options.includeModulations) {
         const useAjnasModulations = options.modulationType === 'ajnas';

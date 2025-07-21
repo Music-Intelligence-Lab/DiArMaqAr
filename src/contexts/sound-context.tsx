@@ -66,7 +66,7 @@ interface SoundContextInterface {
 const SoundContext = createContext<SoundContextInterface | null>(null);
 
 export function SoundContextProvider({ children }: { children: React.ReactNode }) {
-  const { selectedTuningSystem, selectedMaqamDetails, selectedMaqam, allPitchClasses, selectedPitchClasses } = useAppContext();
+  const { selectedTuningSystem, selectedMaqamTemplate, selectedMaqam, allPitchClasses, selectedPitchClasses } = useAppContext();
 
   const [soundSettings, setSoundSettings] = useState<SoundSettings>({
     attack: 0.01,
@@ -142,16 +142,16 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
   const keyToPitchClassMapping = useMemo<Record<string, PitchClass>>(() => {
     const mapping: Record<string, PitchClass> = {};
 
-    if (selectedMaqam || selectedMaqamDetails) {
+    if (selectedMaqam || selectedMaqamTemplate) {
       let ascendingMaqamPitchClasses: PitchClass[] = [];
       let descendingMaqamPitchClasses: PitchClass[] = [];
 
       if (selectedMaqam) {
         ascendingMaqamPitchClasses = selectedMaqam.ascendingPitchClasses;
         descendingMaqamPitchClasses = [...selectedMaqam.descendingPitchClasses].reverse();
-      } else if (selectedMaqamDetails) {
-        const ascendingNoteNames = selectedMaqamDetails.getAscendingNoteNames();
-        const descendingNoteNames = selectedMaqamDetails.getDescendingNoteNames();
+      } else if (selectedMaqamTemplate) {
+        const ascendingNoteNames = selectedMaqamTemplate.getAscendingNoteNames();
+        const descendingNoteNames = selectedMaqamTemplate.getDescendingNoteNames();
 
         ascendingMaqamPitchClasses = allPitchClasses.filter((pitchClass) => ascendingNoteNames.includes(pitchClass.noteName));
         descendingMaqamPitchClasses = allPitchClasses.filter((pitchClass) => descendingNoteNames.includes(pitchClass.noteName));
@@ -215,7 +215,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     }
 
     return mapping;
-  }, [selectedMaqam, selectedMaqamDetails, selectedPitchClasses, allPitchClasses]);
+  }, [selectedMaqam, selectedMaqamTemplate, selectedPitchClasses, allPitchClasses]);
 
   // Centralized keyboard mapping: PitchClass fraction -> Key display string
   const pitchClassToKeyMapping = useMemo<Record<string, string>>(() => {

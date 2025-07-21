@@ -13,33 +13,33 @@ import { updateTuningSystems } from "@/functions/update";
 import getFirstNoteName from "@/functions/getFirstNoteName";
 import { SourcePageReference } from "@/models/bibliography/Source";
 import TuningSystemOctaveTables from "./tuning-system-octave-tables";
-import JinsDetails from "@/models/Jins";
-import MaqamDetails from "@/models/Maqam";
+import JinsTemplate from "@/models/Jins";
+import MaqamTemplate from "@/models/Maqam";
 import ExportModal from "./export-modal";
 import SelectedPitchClassTranspositions from "./selected-pitch-classes-transpositions";
 import Link from "next/link";
 
 function isTuningSystemDisabled(
   tuningSystem: TuningSystem,
-  selectedJinsDetails: JinsDetails | null,
-  selectedMaqamDetails: MaqamDetails | null,
+  selectedJinsTemplate: JinsTemplate | null,
+  selectedMaqamTemplate: MaqamTemplate | null,
   startingNoteName: NoteName = ""
 ): { disabled: boolean; noteName: string } {
   const shiftedNoteNames = tuningSystem.getSetsOfNoteNamesShiftedUpAndDown();
 
-  if (!selectedJinsDetails && !selectedMaqamDetails) return { disabled: false, noteName: "" };
+  if (!selectedJinsTemplate && !selectedMaqamTemplate) return { disabled: false, noteName: "" };
 
-  if (selectedJinsDetails) {
+  if (selectedJinsTemplate) {
     for (const set of shiftedNoteNames) {
-      if (selectedJinsDetails.isJinsSelectable(set)) {
+      if (selectedJinsTemplate.isJinsSelectable(set)) {
         const firstNoteName = set[set.length / 3];
         if (startingNoteName && firstNoteName !== startingNoteName) continue;
         return { disabled: false, noteName: firstNoteName };
       }
     }
-  } else if (selectedMaqamDetails) {
+  } else if (selectedMaqamTemplate) {
     for (const set of shiftedNoteNames) {
-      if (selectedMaqamDetails.isMaqamSelectable(set)) {
+      if (selectedMaqamTemplate.isMaqamSelectable(set)) {
         const firstNoteName = set[set.length / 3];
         if (startingNoteName && firstNoteName !== startingNoteName) continue;
         return { disabled: false, noteName: firstNoteName };
@@ -73,8 +73,8 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     sources,
     selectedAbjadNames,
     setSelectedAbjadNames,
-    selectedJinsDetails,
-    selectedMaqamDetails,
+    selectedJinsTemplate,
+    selectedMaqamTemplate,
   } = useAppContext();
 
   const { tuningSystemsFilter, setTuningSystemsFilter } = useFilterContext();
@@ -724,11 +724,11 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                   key={index}
                   className={
                     "tuning-system-manager__item " +
-                    (isTuningSystemDisabled(tuningSystem, selectedJinsDetails, selectedMaqamDetails).disabled ? "tuning-system-manager__item_disabled " : "") +
+                    (isTuningSystemDisabled(tuningSystem, selectedJinsTemplate, selectedMaqamTemplate).disabled ? "tuning-system-manager__item_disabled " : "") +
                     (tuningSystem.getId() === selectedTuningSystem?.getId() ? "tuning-system-manager__item_selected " : "")
                   }
                   onClick={() => {
-                    const { noteName } = isTuningSystemDisabled(tuningSystem, selectedJinsDetails, selectedMaqamDetails);
+                    const { noteName } = isTuningSystemDisabled(tuningSystem, selectedJinsTemplate, selectedMaqamTemplate);
                     handleTuningSystemClick(tuningSystem, noteName);
                   }}
                 >
@@ -805,7 +805,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 .sort((a, b) => getNoteNameIndex(a[0] ?? 0) - getNoteNameIndex(b[0] ?? 0))
                 .map((notes, index) => {
                   const startingNote = notes[0];
-                  const disabled = isTuningSystemDisabled(selectedTuningSystem, selectedJinsDetails, selectedMaqamDetails, startingNote).disabled;
+                  const disabled = isTuningSystemDisabled(selectedTuningSystem, selectedJinsTemplate, selectedMaqamTemplate, startingNote).disabled;
                   return (
                     <div className="tuning-system-manager__starting-note" key={index}>
                       <button

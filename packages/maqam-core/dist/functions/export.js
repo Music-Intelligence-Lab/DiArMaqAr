@@ -89,7 +89,7 @@ function exportJins(jins, tuningSystem, startingNote, options, centsTolerance = 
         result.fullRangeTuningSystemPitchClasses = fullRangeTuningSystemPitchClasses;
     }
     // Include jins details
-    result.jinsDetails = jins.convertToObject();
+    result.jinsTemplate = jins.convertToObject();
     // Include transpositions if requested
     if (options.includeTranspositions) {
         const transpositions = [];
@@ -100,7 +100,7 @@ function exportJins(jins, tuningSystem, startingNote, options, centsTolerance = 
         }
         result.transpositions = transpositions;
         result.numberOfTranspositions = numberOfTranspositions;
-        result.jinsDetails.numberOfTranspositions = numberOfTranspositions;
+        result.jinsTemplate.numberOfTranspositions = numberOfTranspositions;
     }
     return result;
 }
@@ -117,7 +117,7 @@ function exportMaqam(maqam, tuningSystem, startingNote, options, centsTolerance 
         result.fullRangeTuningSystemPitchClasses = fullRangeTuningSystemPitchClasses;
     }
     // Include maqam details
-    result.maqamDetails = maqam.convertToObject();
+    result.maqamTemplate = maqam.convertToObject();
     // Include modulations if requested (for the base maqam)
     if (options.includeModulations) {
         const allAjnas = (0, import_1.getAjnas)();
@@ -149,7 +149,7 @@ function exportMaqam(maqam, tuningSystem, startingNote, options, centsTolerance 
         }
         result.transpositions = transpositions;
         result.numberOfTranspositions = numberOfTranspositions;
-        result.maqamDetails.numberOfTranspositions = numberOfTranspositions;
+        result.maqamTemplate.numberOfTranspositions = numberOfTranspositions;
     }
     return result;
 }

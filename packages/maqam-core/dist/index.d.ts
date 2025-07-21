@@ -1,8 +1,8 @@
 export type { default as PitchClass, PitchClassInterval } from './models/PitchClass';
 export { calculateInterval } from './models/PitchClass';
 export type { default as TuningSystem } from './models/TuningSystem';
-export type { default as JinsDetails, Jins, JinsDetailsInterface } from './models/Jins';
-export type { default as MaqamDetails, Maqam, MaqamDetailsInterface } from './models/Maqam';
+export type { default as JinsTemplate, Jins, JinsTemplateInterface } from './models/Jins';
+export type { default as MaqamTemplate, Maqam, MaqamTemplateInterface } from './models/Maqam';
 export type { default as NoteName } from './models/NoteName';
 export type { default as Pattern } from './models/Pattern';
 export type { SourcePageReference, Source } from './models/bibliography/Source';

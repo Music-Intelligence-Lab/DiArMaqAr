@@ -2,7 +2,7 @@ import PitchClass, { PitchClassInterval } from "./PitchClass";
 import { AjnasModulations, Jins } from "./Jins";
 import NoteName from "./NoteName";
 import { SourcePageReference } from "./bibliography/Source";
-export interface MaqamDetailsInterface {
+export interface MaqamTemplateInterface {
     id: string;
     name: string;
     ascendingNoteNames: NoteName[];
@@ -13,7 +13,7 @@ export interface MaqamDetailsInterface {
     sourcePageReferences: SourcePageReference[];
     numberOfTranspositions?: number;
 }
-export default class MaqamDetails {
+export default class MaqamTemplate {
     private id;
     private name;
     private ascendingNoteNames;
@@ -35,9 +35,9 @@ export default class MaqamDetails {
     isMaqamSymmetric(): boolean;
     isMaqamSelectable(allNoteNames: NoteName[]): boolean;
     getTahlil(allPitchClasses: PitchClass[]): Maqam;
-    createMaqamWithNewSuyūr(newSuyūr: Sayr[]): MaqamDetails;
-    createMaqamWithNewSourcePageReferences(newSourcePageReferences: SourcePageReference[]): MaqamDetails;
-    convertToObject(): MaqamDetailsInterface;
+    createMaqamWithNewSuyūr(newSuyūr: Sayr[]): MaqamTemplate;
+    createMaqamWithNewSourcePageReferences(newSourcePageReferences: SourcePageReference[]): MaqamTemplate;
+    convertToObject(): MaqamTemplateInterface;
 }
 export interface Sayr {
     id: string;

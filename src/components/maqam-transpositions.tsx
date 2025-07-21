@@ -21,9 +21,9 @@ const getHeaderId = (noteName: string): string => {
 };
 
 // --- Utility: scroll to maqam header by note name ---
-export function scrollToMaqamHeader(firstNote: string, selectedMaqamDetails?: any) {
-  if (!firstNote && selectedMaqamDetails) {
-    firstNote = selectedMaqamDetails.getAscendingNoteNames?.()?.[0];
+export function scrollToMaqamHeader(firstNote: string, selectedMaqamTemplate?: any) {
+  if (!firstNote && selectedMaqamTemplate) {
+    firstNote = selectedMaqamTemplate.getAscendingNoteNames?.()?.[0];
   }
   if (!firstNote) return;
   const id = getHeaderId(firstNote);
@@ -40,7 +40,7 @@ import Link from "next/link";
 
 const MaqamTranspositions: React.FC = () => {
   const {
-    selectedMaqamDetails,
+    selectedMaqamTemplate,
     selectedTuningSystem,
     setSelectedPitchClasses,
     allPitchClasses,
@@ -78,15 +78,15 @@ const MaqamTranspositions: React.FC = () => {
 
   // Removed unused prevFirstNoteRef
   const maqamTranspositions = useMemo(() => {
-    const transpositions = getMaqamTranspositions(allPitchClasses, ajnas, selectedMaqamDetails, true, centsTolerance);
+    const transpositions = getMaqamTranspositions(allPitchClasses, ajnas, selectedMaqamTemplate, true, centsTolerance);
     return transpositions;
-  }, [allPitchClasses, ajnas, selectedMaqamDetails, centsTolerance]);
+  }, [allPitchClasses, ajnas, selectedMaqamTemplate, centsTolerance]);
 
   const transpositionTables = useMemo(() => {
-    if (!selectedMaqamDetails || !selectedTuningSystem) return null;
+    if (!selectedMaqamTemplate || !selectedTuningSystem) return null;
 
-    const ascendingNoteNames = selectedMaqamDetails.getAscendingNoteNames();
-    const descendingNoteNames = selectedMaqamDetails.getDescendingNoteNames();
+    const ascendingNoteNames = selectedMaqamTemplate.getAscendingNoteNames();
+    const descendingNoteNames = selectedMaqamTemplate.getDescendingNoteNames();
 
     if (ascendingNoteNames.length < 2 || descendingNoteNames.length < 2) return null;
 
@@ -136,13 +136,13 @@ const MaqamTranspositions: React.FC = () => {
         if (jinsTranspositions) {
           let octaveTransposition = maqam.ascendingMaqamAjnas ? maqam.ascendingMaqamAjnas[0] : null;
           if (octaveTransposition) {
-            const foundJinsDetails = ajnas.find((jins) => jins.getId() === octaveTransposition?.jinsId);
-            if (foundJinsDetails) {
+            const foundJinsTemplate = ajnas.find((jins) => jins.getId() === octaveTransposition?.jinsId);
+            if (foundJinsTemplate) {
               octaveTransposition = {
                 ...octaveTransposition,
                 jinsPitchClasses: [shiftedFirstCell],
                 jinsPitchClassIntervals: [],
-                name: foundJinsDetails.getName() + " al-" + shiftedFirstCell.noteName,
+                name: foundJinsTemplate.getName() + " al-" + shiftedFirstCell.noteName,
               };
             }
           }
@@ -472,7 +472,7 @@ const MaqamTranspositions: React.FC = () => {
         {maqamTranspositions.length > 0 && (
           <>
             <h2 className="maqam-transpositions__title">
-              Taḥlīl (analysis): {`${selectedMaqamDetails.getName()}`}
+              Taḥlīl (analysis): {`${selectedMaqamTemplate.getName()}`}
               {!useRatio && (
                 <>
                   {" "}
@@ -556,19 +556,19 @@ const MaqamTranspositions: React.FC = () => {
           </>
         )}
         {/* COMMENTS AND SOURCES */}
-        {selectedMaqamDetails && (
+        {selectedMaqamTemplate && (
           <>
             <div className="maqam-transpositions__comments-sources-container">
               <div className="maqam-transpositions__comments-english">
                 <h3>Comments:</h3>
-                <div className="maqam-transpositions__comments-text">{selectedMaqamDetails.getCommentsEnglish()}</div>
+                <div className="maqam-transpositions__comments-text">{selectedMaqamTemplate.getCommentsEnglish()}</div>
               </div>
 
               <div className="maqam-transpositions__sources-english">
                 <h3>Sources:</h3>
                 <div className="maqam-transpositions__sources-text">
-                  {selectedMaqamDetails?.getSourcePageReferences().length > 0 &&
-                    selectedMaqamDetails.getSourcePageReferences().map((sourceRef, idx) => {
+                  {selectedMaqamTemplate?.getSourcePageReferences().length > 0 &&
+                    selectedMaqamTemplate.getSourcePageReferences().map((sourceRef, idx) => {
                       const source = sources.find((s: any) => s.id === sourceRef.sourceId);
                       return source ? (
                         <Link key={idx} href={`/bibliography?source=${source.getId()}`}>
@@ -586,7 +586,7 @@ const MaqamTranspositions: React.FC = () => {
           <>
             <div className="maqam-transpositions__title-container">
               <h2 className="maqam-transpositions__title">
-                Taṣwīr (transpositions): {`${selectedMaqamDetails.getName()}`}
+                Taṣwīr (transpositions): {`${selectedMaqamTemplate.getName()}`}
                 {!useRatio && (
                   <>
                     {" "}
@@ -630,18 +630,18 @@ const MaqamTranspositions: React.FC = () => {
         )}
       </div>
     );
-  }, [allPitchClasses, ajnas, selectedMaqamDetails, selectedTuningSystem, centsTolerance, filters, highlightedNotes, soundSettings]);
+  }, [allPitchClasses, ajnas, selectedMaqamTemplate, selectedTuningSystem, centsTolerance, filters, highlightedNotes, soundSettings]);
 
   // Listen for custom event to scroll to header when maqam/transposition changes (event-driven)
   useEffect(() => {
     function handleMaqamTranspositionChange(e: CustomEvent) {
-      scrollToMaqamHeader(e.detail?.firstNote, selectedMaqamDetails);
+      scrollToMaqamHeader(e.detail?.firstNote, selectedMaqamTemplate);
     }
     window.addEventListener("maqamTranspositionChange", handleMaqamTranspositionChange as EventListener);
     return () => {
       window.removeEventListener("maqamTranspositionChange", handleMaqamTranspositionChange as EventListener);
     };
-  }, [selectedMaqamDetails]);
+  }, [selectedMaqamTemplate]);
 
   // Scroll to header on mount if maqamFirstNote is in the URL
   useEffect(() => {
@@ -650,10 +650,10 @@ const MaqamTranspositions: React.FC = () => {
     const maqamFirstNote = params.get("maqamFirstNote");
     if (maqamFirstNote) {
       setTimeout(() => {
-        scrollToMaqamHeader(decodeURIComponent(maqamFirstNote), selectedMaqamDetails);
+        scrollToMaqamHeader(decodeURIComponent(maqamFirstNote), selectedMaqamTemplate);
       }, 200);
     }
-  }, [selectedMaqamDetails]);
+  }, [selectedMaqamTemplate]);
   
   return (
     <>

@@ -1,7 +1,7 @@
 import { SourcePageReference } from "./bibliography/Source";
 import PitchClass, { PitchClassInterval } from "./PitchClass";
 import NoteName from "./NoteName";
-export interface JinsDetailsInterface {
+export interface JinsTemplateInterface {
     id: string;
     name: string;
     noteNames: NoteName[];
@@ -10,7 +10,7 @@ export interface JinsDetailsInterface {
     SourcePageReferences: SourcePageReference[];
     numberOfTranspositions?: number;
 }
-export default class JinsDetails {
+export default class JinsTemplate {
     private id;
     private name;
     private noteNames;
@@ -25,9 +25,9 @@ export default class JinsDetails {
     getCommentsArabic(): string;
     getSourcePageReferences(): SourcePageReference[];
     isJinsSelectable(allNoteNames: NoteName[]): boolean;
-    createJinsWithNewSourcePageReferences(newSourcePageReferences: SourcePageReference[]): JinsDetails;
+    createJinsWithNewSourcePageReferences(newSourcePageReferences: SourcePageReference[]): JinsTemplate;
     getTahlil(allPitchClasses: PitchClass[]): Jins;
-    convertToObject(): JinsDetailsInterface;
+    convertToObject(): JinsTemplateInterface;
 }
 export interface Jins {
     jinsId: string;
