@@ -23,10 +23,10 @@ function computeAnalyticsForSystem(tuningSystem, allAjnas, allMaqamat) {
         const allPitchClasses = (0, getTuningSystemCells_1.default)(tuningSystem, starting);
         const possibleAjnas = [];
         const possibleAjnasTrans = [];
-        for (const jinsDetails of allAjnas) {
-            if (jinsDetails.isJinsSelectable(allPitchClasses.map((pc) => pc.noteName))) {
-                possibleAjnas.push(jinsDetails);
-                (0, transpose_1.getJinsTranspositions)(allPitchClasses, jinsDetails, false).forEach((tr) => possibleAjnasTrans.push(tr));
+        for (const jinsTemplate of allAjnas) {
+            if (jinsTemplate.isJinsSelectable(allPitchClasses.map((pc) => pc.noteName))) {
+                possibleAjnas.push(jinsTemplate);
+                (0, transpose_1.getJinsTranspositions)(allPitchClasses, jinsTemplate, false).forEach((tr) => possibleAjnasTrans.push(tr));
             }
         }
         let totalSuyur = 0;
@@ -34,11 +34,11 @@ function computeAnalyticsForSystem(tuningSystem, allAjnas, allMaqamat) {
         const possibleMaqamatTrans = [];
         let totalAjnasMod = 0;
         let totalMaqamatMod = 0;
-        for (const maqamDetails of allMaqamat) {
-            if (maqamDetails.isMaqamSelectable(allPitchClasses.map((pc) => pc.noteName))) {
-                possibleMaqamat.push(maqamDetails);
-                totalSuyur += maqamDetails.getSuyūr().length;
-                (0, transpose_1.getMaqamTranspositions)(allPitchClasses, allAjnas, maqamDetails, false).forEach((transposition) => {
+        for (const maqamTemplate of allMaqamat) {
+            if (maqamTemplate.isMaqamSelectable(allPitchClasses.map((pc) => pc.noteName))) {
+                possibleMaqamat.push(maqamTemplate);
+                totalSuyur += maqamTemplate.getSuyūr().length;
+                (0, transpose_1.getMaqamTranspositions)(allPitchClasses, allAjnas, maqamTemplate, false).forEach((transposition) => {
                     possibleMaqamatTrans.push(transposition);
                     totalAjnasMod += (0, calculateNumberOfModulations_1.default)((0, modulate_1.default)(allPitchClasses, allAjnas, allMaqamat, transposition, true));
                     totalMaqamatMod += (0, calculateNumberOfModulations_1.default)((0, modulate_1.default)(allPitchClasses, allAjnas, allMaqamat, transposition, false));

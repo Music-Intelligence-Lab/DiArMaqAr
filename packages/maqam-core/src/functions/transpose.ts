@@ -1,6 +1,6 @@
 import PitchClass, { calculateInterval, PitchClassInterval, matchingListOfIntervals } from "../models/PitchClass";
-import MaqamDetails, { Maqam } from "../models/Maqam";
-import JinsDetails, { Jins } from "../models/Jins";
+import MaqamTemplate, { Maqam } from "../models/Maqam";
+import JinsTemplate, { Jins } from "../models/Jins";
 import shiftPitchClass from "./shiftPitchClass";
 
 export function getPitchClassIntervals(pitchClasses: PitchClass[]) {
@@ -80,16 +80,16 @@ export function mergeTranspositions(ascendingSequences: PitchClass[][], descendi
 
 export function getMaqamTranspositions(
   allPitchClasses: PitchClass[],
-  allAjnas: JinsDetails[],
-  maqamDetails: MaqamDetails | null,
+  allAjnas: JinsTemplate[],
+  maqamTemplate: MaqamTemplate | null,
   withTahlil: boolean,
   centsTolerance: number = 5,
   onlyOctaveOne: boolean = false
 ): Maqam[] {
-  if (allPitchClasses.length === 0 || !maqamDetails) return [];
+  if (allPitchClasses.length === 0 || !maqamTemplate) return [];
 
-  const ascendingNoteNames = maqamDetails.getAscendingNoteNames();
-  const descendingNoteNames = maqamDetails.getDescendingNoteNames();
+  const ascendingNoteNames = maqamTemplate.getAscendingNoteNames();
+  const descendingNoteNames = maqamTemplate.getDescendingNoteNames();
 
   if (ascendingNoteNames.length < 2 || descendingNoteNames.length < 2) return [];
 
@@ -111,7 +111,7 @@ export function getMaqamTranspositions(
 
   const descendingSequences: PitchClass[][] = getPitchClassTranspositions(allPitchClasses, descendingIntervalPattern, false, useRatio, centsTolerance);
 
-  const ajnasIntervals: { jins: JinsDetails; intervals: PitchClassInterval[] }[] = [];
+  const ajnasIntervals: { jins: JinsTemplate; intervals: PitchClassInterval[] }[] = [];
 
   for (const jins of allAjnas) {
     const jinsCells = allPitchClasses.filter((pitchClass) => jins.getNoteNames().includes(pitchClass.noteName));
@@ -210,8 +210,8 @@ export function getMaqamTranspositions(
     }
 
     return {
-      maqamId: maqamDetails.getId(),
-      name: `${maqamDetails.getName()} al-${sequencePair.ascendingSequence[0].noteName}`,
+      maqamId: maqamTemplate.getId(),
+      name: `${maqamTemplate.getName()} al-${sequencePair.ascendingSequence[0].noteName}`,
       transposition: true,
       ascendingPitchClasses,
       ascendingPitchClassIntervals,
@@ -225,17 +225,17 @@ export function getMaqamTranspositions(
   const tahlilTransposition = maqamTranspositions.find((transposition) => transposition.ascendingPitchClasses[0].noteName === ascendingNoteNames[0]);
   const maqamTranspositionsWithoutTahlil = maqamTranspositions.filter((transposition) => transposition !== tahlilTransposition);
 
-  // if (maqamDetails.getId() === "12")
+  // if (maqamTemplate.getId() === "12")
 
   if (withTahlil && tahlilTransposition) {
     return [{ ...tahlilTransposition, transposition: false }, ...maqamTranspositionsWithoutTahlil];
   } else return maqamTranspositionsWithoutTahlil;
 }
 
-export function getJinsTranspositions(allPitchClasses: PitchClass[], jinsDetails: JinsDetails | null, withTahlil: boolean, centsTolerance: number = 5, onlyOctaveOne: boolean = false): Jins[] {
-  if (allPitchClasses.length === 0 || !jinsDetails) return [];
+export function getJinsTranspositions(allPitchClasses: PitchClass[], jinsTemplate: JinsTemplate | null, withTahlil: boolean, centsTolerance: number = 5, onlyOctaveOne: boolean = false): Jins[] {
+  if (allPitchClasses.length === 0 || !jinsTemplate) return [];
 
-  const jinsNoteNames = jinsDetails.getNoteNames();
+  const jinsNoteNames = jinsTemplate.getNoteNames();
 
   if (jinsNoteNames.length < 2) return [];
 
@@ -250,8 +250,8 @@ export function getJinsTranspositions(allPitchClasses: PitchClass[], jinsDetails
     .filter((sequence) => !onlyOctaveOne || sequence[0].octave === 1)
     .map((sequence) => {
       return {
-        jinsId: jinsDetails.getId(),
-        name: `${jinsDetails.getName()} al-${sequence[0].noteName}`,
+        jinsId: jinsTemplate.getId(),
+        name: `${jinsTemplate.getName()} al-${sequence[0].noteName}`,
         transposition: true,
         jinsPitchClasses: sequence,
         jinsPitchClassIntervals: getPitchClassIntervals(sequence),

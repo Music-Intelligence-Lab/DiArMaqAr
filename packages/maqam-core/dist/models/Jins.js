@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const transpose_1 = require("../functions/transpose");
-class JinsDetails {
+class JinsTemplate {
     constructor(id, name, noteNames, commentsEnglish, commentsArabic, SourcePageReferences) {
         this.id = id;
         this.name = name;
@@ -32,7 +32,7 @@ class JinsDetails {
         return this.noteNames.every((noteName) => allNoteNames.some((allNoteName) => allNoteName === noteName));
     }
     createJinsWithNewSourcePageReferences(newSourcePageReferences) {
-        return new JinsDetails(this.id, this.name, this.noteNames, this.commentsEnglish, this.commentsArabic, newSourcePageReferences);
+        return new JinsTemplate(this.id, this.name, this.noteNames, this.commentsEnglish, this.commentsArabic, newSourcePageReferences);
     }
     getTahlil(allPitchClasses) {
         const pitchClasses = allPitchClasses.filter((pitchClass) => this.noteNames.includes(pitchClass.noteName));
@@ -56,5 +56,5 @@ class JinsDetails {
         };
     }
 }
-exports.default = JinsDetails;
+exports.default = JinsTemplate;
 //# sourceMappingURL=Jins.js.map

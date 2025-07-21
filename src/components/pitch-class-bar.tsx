@@ -100,10 +100,10 @@ WheelCell.displayName = "WheelCell";
 export default function PitchClassBar() {
   const {
     ajnas,
-    selectedJinsDetails,
+    selectedJinsTemplate,
     selectedJins,
     setSelectedJins,
-    selectedMaqamDetails,
+    selectedMaqamTemplate,
     selectedMaqam,
     setSelectedMaqam,
     selectedPitchClasses,
@@ -148,24 +148,24 @@ export default function PitchClassBar() {
   }, [selectedPitchClasses]);
 
   const filteredJinsTranspositions = useMemo<Jins[]>(
-    () => getJinsTranspositions(allPitchClasses, selectedJinsDetails, true, centsTolerance),
-    [allPitchClasses, selectedJinsDetails, centsTolerance]
+    () => getJinsTranspositions(allPitchClasses, selectedJinsTemplate, true, centsTolerance),
+    [allPitchClasses, selectedJinsTemplate, centsTolerance]
   );
 
   const filteredMaqamTranspositions = useMemo<Maqam[]>(
-    () => getMaqamTranspositions(allPitchClasses, ajnas, selectedMaqamDetails, true, centsTolerance),
-    [allPitchClasses, selectedMaqamDetails, centsTolerance]
+    () => getMaqamTranspositions(allPitchClasses, ajnas, selectedMaqamTemplate, true, centsTolerance),
+    [allPitchClasses, selectedMaqamTemplate, centsTolerance]
   );
 
   const wheelCells = useMemo(() => {
     // Determine the tonic of the current selected maqam or jins
     const maqamTonic = selectedMaqam
       ? selectedMaqam.ascendingPitchClasses[0]?.originalValue
-      : selectedMaqamDetails?.getTahlil(allPitchClasses).ascendingPitchClasses[0]?.originalValue;
+      : selectedMaqamTemplate?.getTahlil(allPitchClasses).ascendingPitchClasses[0]?.originalValue;
     // Use selectedJins (transposition) if available, else fall back to base jins details
     const jinsTonic = selectedJins
       ? selectedJins.jinsPitchClasses[0]?.originalValue
-      : selectedJinsDetails?.getTahlil(allPitchClasses).jinsPitchClasses[0]?.originalValue;
+      : selectedJinsTemplate?.getTahlil(allPitchClasses).jinsPitchClasses[0]?.originalValue;
 
     return allPitchClasses.map((pitchClass: PitchClass) => {
       const originalValue = pitchClass.originalValue;
@@ -179,7 +179,7 @@ export default function PitchClassBar() {
 
       const isDescending = selectedMaqam
         ? selectedMaqam.descendingPitchClasses.map((pitchClass) => pitchClass.originalValue).includes(originalValue)
-        : selectedMaqamDetails
+        : selectedMaqamTemplate
             ?.getTahlil(allPitchClasses)
             .descendingPitchClasses.map((pitchClass) => pitchClass.originalValue)
             .includes(originalValue) ?? false;
@@ -189,7 +189,7 @@ export default function PitchClassBar() {
       const isCurrentTonic = Boolean((maqamTonic && maqamTonic === originalValue) || (jinsTonic && jinsTonic === originalValue));
 
       const onClick = () => {
-        if (maqamTransposition && selectedMaqamDetails) {
+        if (maqamTransposition && selectedMaqamTemplate) {
           setSelectedPitchClasses([]); // Clear first
           setTimeout(() => {
             setSelectedPitchClasses(maqamTransposition.ascendingPitchClasses);
@@ -204,7 +204,7 @@ export default function PitchClassBar() {
           }, 20);
           return;
         }
-        if (jinsTransposition && selectedJinsDetails) {
+        if (jinsTransposition && selectedJinsTemplate) {
           setSelectedPitchClasses([]); // Clear first
           setTimeout(() => {
             setSelectedPitchClasses(jinsTransposition.jinsPitchClasses);
@@ -243,9 +243,9 @@ export default function PitchClassBar() {
     activePitchClasses,
     filteredJinsTranspositions,
     filteredMaqamTranspositions,
-    selectedMaqamDetails,
+    selectedMaqamTemplate,
     selectedMaqam,
-    selectedJinsDetails,
+    selectedJinsTemplate,
     soundSettings.inputType,
     soundSettings.inputMode,
     selectedTuningSystem,

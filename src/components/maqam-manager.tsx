@@ -4,7 +4,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import useAppContext from "@/contexts/app-context";
 import useFilterContext from "@/contexts/filter-context";
 import useSoundContext from "@/contexts/sound-context";
-import MaqamDetails from "@/models/Maqam";
+import MaqamTemplate from "@/models/Maqam";
 import { getMaqamTranspositions } from "@/functions/transpose";
 import { updateMaqamat } from "@/functions/update";
 import { SourcePageReference } from "@/models/bibliography/Source";
@@ -14,8 +14,8 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
     maqamat,
     setMaqamat,
     ajnas,
-    selectedMaqamDetails,
-    setSelectedMaqamDetails,
+    selectedMaqamTemplate,
+    setSelectedMaqamTemplate,
     selectedPitchClasses,
     setSelectedPitchClasses,
     allPitchClasses,
@@ -30,8 +30,8 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
   const { clearHangingNotes } = useSoundContext();
 
   // Local state for comments
-  const [commentsEnglishLocal, setCommentsEnglishLocal] = useState<string>(selectedMaqamDetails?.getCommentsEnglish() ?? "");
-  const [commentsArabicLocal, setCommentsArabicLocal] = useState<string>(selectedMaqamDetails?.getCommentsArabic() ?? "");
+  const [commentsEnglishLocal, setCommentsEnglishLocal] = useState<string>(selectedMaqamTemplate?.getCommentsEnglish() ?? "");
+  const [commentsArabicLocal, setCommentsArabicLocal] = useState<string>(selectedMaqamTemplate?.getCommentsArabic() ?? "");
 
   // Dynamic note names for tabs ordered by allPitchClasses.noteName
   const tabs = useMemo(() => {
@@ -46,11 +46,11 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
 
   // Sync local state when a different maqam is selected
   useEffect(() => {
-    if (selectedMaqamDetails) {
-      setCommentsEnglishLocal(selectedMaqamDetails.getCommentsEnglish());
-      setCommentsArabicLocal(selectedMaqamDetails.getCommentsArabic());
+    if (selectedMaqamTemplate) {
+      setCommentsEnglishLocal(selectedMaqamTemplate.getCommentsEnglish());
+      setCommentsArabicLocal(selectedMaqamTemplate.getCommentsArabic());
     }
-  }, [selectedMaqamDetails]);
+  }, [selectedMaqamTemplate]);
 
   const maqamTranspositions = useMemo(() => {
     const map = new Map<string, ReturnType<typeof getMaqamTranspositions>>();
@@ -73,75 +73,75 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
   const selectedCellNoteNames = selectedPitchClasses.map((d) => d.noteName);
 
   // Base save logic
-  const handleSaveMaqam = async (maqam: MaqamDetails) => {
+  const handleSaveMaqam = async (maqam: MaqamTemplate) => {
     const others = maqamat.filter((m) => m.getId() !== maqam.getId());
     await updateMaqamat([...others, maqam]);
     setMaqamat([...others, maqam]);
-    setSelectedMaqamDetails(maqam);
+    setSelectedMaqamTemplate(maqam);
   };
 
   // Save ascending row
   const handleSaveAscending = async () => {
-    if (!selectedMaqamDetails) return;
-    const descendingNames = selectedMaqamDetails.getDescendingNoteNames().length > 0 ? selectedMaqamDetails.getDescendingNoteNames() : [...selectedCellNoteNames].reverse();
+    if (!selectedMaqamTemplate) return;
+    const descendingNames = selectedMaqamTemplate.getDescendingNoteNames().length > 0 ? selectedMaqamTemplate.getDescendingNoteNames() : [...selectedCellNoteNames].reverse();
 
-    const updated = new MaqamDetails(
-      selectedMaqamDetails.getId(),
-      selectedMaqamDetails.getName(),
+    const updated = new MaqamTemplate(
+      selectedMaqamTemplate.getId(),
+      selectedMaqamTemplate.getName(),
       selectedCellNoteNames,
       descendingNames,
-      selectedMaqamDetails.getSuyūr(),
+      selectedMaqamTemplate.getSuyūr(),
       commentsEnglishLocal,
       commentsArabicLocal,
-      selectedMaqamDetails.getSourcePageReferences()
+      selectedMaqamTemplate.getSourcePageReferences()
     );
     handleSaveMaqam(updated);
   };
 
   // Save descending row
   const handleSaveDescending = async () => {
-    if (!selectedMaqamDetails) return;
-    const updated = new MaqamDetails(
-      selectedMaqamDetails.getId(),
-      selectedMaqamDetails.getName(),
-      selectedMaqamDetails.getAscendingNoteNames(),
+    if (!selectedMaqamTemplate) return;
+    const updated = new MaqamTemplate(
+      selectedMaqamTemplate.getId(),
+      selectedMaqamTemplate.getName(),
+      selectedMaqamTemplate.getAscendingNoteNames(),
       [...selectedCellNoteNames].reverse(),
-      selectedMaqamDetails.getSuyūr(),
+      selectedMaqamTemplate.getSuyūr(),
       commentsEnglishLocal,
       commentsArabicLocal,
-      selectedMaqamDetails.getSourcePageReferences()
+      selectedMaqamTemplate.getSourcePageReferences()
     );
     handleSaveMaqam(updated);
   };
 
   // Delete maqam
   const handleDeleteMaqam = async () => {
-    if (!selectedMaqamDetails) return;
-    const filtered = maqamat.filter((m) => m.getId() !== selectedMaqamDetails.getId());
+    if (!selectedMaqamTemplate) return;
+    const filtered = maqamat.filter((m) => m.getId() !== selectedMaqamTemplate.getId());
     await updateMaqamat(filtered);
     setMaqamat(filtered);
-    setSelectedMaqamDetails(null);
+    setSelectedMaqamTemplate(null);
     setSelectedPitchClasses([]);
   };
 
   // Source refs handlers omitted for brevity (same as before)
   const updateSourceRefs = (refs: SourcePageReference[], index: number, newRef: Partial<SourcePageReference>) => {
-    if (!selectedMaqamDetails) return;
+    if (!selectedMaqamTemplate) return;
     const list = [...refs];
     list[index] = { ...list[index], ...newRef } as SourcePageReference;
-    setSelectedMaqamDetails(selectedMaqamDetails.createMaqamWithNewSourcePageReferences(list));
+    setSelectedMaqamTemplate(selectedMaqamTemplate.createMaqamWithNewSourcePageReferences(list));
   };
 
   const removeSourceRef = (index: number) => {
-    if (!selectedMaqamDetails) return;
-    const refs = selectedMaqamDetails.getSourcePageReferences() || [];
-    setSelectedMaqamDetails(selectedMaqamDetails.createMaqamWithNewSourcePageReferences(refs.filter((_, i) => i !== index)));
+    if (!selectedMaqamTemplate) return;
+    const refs = selectedMaqamTemplate.getSourcePageReferences() || [];
+    setSelectedMaqamTemplate(selectedMaqamTemplate.createMaqamWithNewSourcePageReferences(refs.filter((_, i) => i !== index)));
   };
 
   const addSourceRef = () => {
-    if (!selectedMaqamDetails) return;
-    const refs = selectedMaqamDetails.getSourcePageReferences() || [];
-    setSelectedMaqamDetails(selectedMaqamDetails.createMaqamWithNewSourcePageReferences([...refs, { sourceId: "", page: "" }]));
+    if (!selectedMaqamTemplate) return;
+    const refs = selectedMaqamTemplate.getSourcePageReferences() || [];
+    setSelectedMaqamTemplate(selectedMaqamTemplate.createMaqamWithNewSourcePageReferences([...refs, { sourceId: "", page: "" }]));
   };
 
   const filteredMaqamat = useMemo(() => {
@@ -189,22 +189,22 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
             gridTemplateColumns: `repeat(${numberOfColumns}, minmax(250px, 1fr))`,
           }}
         >
-          {filteredMaqamat.map((maqamDetails, idx) => {
-            const selectable = maqamDetails.isMaqamSelectable(allPitchClasses.map((pitchClass) => pitchClass.noteName));
-            const numberOfTranspositions = maqamTranspositions.get(maqamDetails.getId())?.filter((transposition) => transposition.ascendingPitchClasses[0]?.octave === 1).length || 0;
+          {filteredMaqamat.map((maqamTemplate, idx) => {
+            const selectable = maqamTemplate.isMaqamSelectable(allPitchClasses.map((pitchClass) => pitchClass.noteName));
+            const numberOfTranspositions = maqamTranspositions.get(maqamTemplate.getId())?.filter((transposition) => transposition.ascendingPitchClasses[0]?.octave === 1).length || 0;
             return (
               <div
                 key={idx}
-                className={`maqam-manager__item ${maqamDetails.getName() === selectedMaqamDetails?.getName() ? "maqam-manager__item_selected " : ""}${selectable ? "maqam-manager__item_active" : ""}`}
+                className={`maqam-manager__item ${maqamTemplate.getName() === selectedMaqamTemplate?.getName() ? "maqam-manager__item_selected " : ""}${selectable ? "maqam-manager__item_active" : ""}`}
                 onClick={() => {
                   if (selectable) {
-                    handleClickMaqam(maqamDetails);
+                    handleClickMaqam(maqamTemplate);
                     clearHangingNotes();
                   }
                 }}
               >
                 <div className="maqam-manager__item-name">
-                  <strong>{`${maqamDetails.getName()}${!maqamDetails.isMaqamSymmetric() ? "*" : ""}`}</strong>
+                  <strong>{`${maqamTemplate.getName()}${!maqamTemplate.isMaqamSymmetric() ? "*" : ""}`}</strong>
                   {selectable && <strong className="maqam-manager__item-name-transpositions">{`Transpositions: ${numberOfTranspositions}/${numberOfPitchClasses}`}</strong>}
                 </div>
               </div>
@@ -222,29 +222,29 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
         </button>
       </div>
 
-      {admin && !selectedMaqamDetails && (
-        <button onClick={() => setSelectedMaqamDetails(new MaqamDetails(newMaqamId, "", [], [], [], "", "", []))} className="maqam-manager__create-new-maqam-button">
+      {admin && !selectedMaqamTemplate && (
+        <button onClick={() => setSelectedMaqamTemplate(new MaqamTemplate(newMaqamId, "", [], [], [], "", "", []))} className="maqam-manager__create-new-maqam-button">
           Create New Maqam
         </button>
       )}
 
-      {admin && selectedMaqamDetails && (
+      {admin && selectedMaqamTemplate && (
         <div className="maqam-manager__maqam-form">
           <div className="maqam-manager__group">
             <input
               type="text"
-              value={selectedMaqamDetails.getName()}
+              value={selectedMaqamTemplate.getName()}
               onChange={(e) =>
-                setSelectedMaqamDetails(
-                  new MaqamDetails(
-                    selectedMaqamDetails.getId(),
+                setSelectedMaqamTemplate(
+                  new MaqamTemplate(
+                    selectedMaqamTemplate.getId(),
                     e.target.value,
-                    selectedMaqamDetails.getAscendingNoteNames(),
-                    selectedMaqamDetails.getDescendingNoteNames(),
-                    selectedMaqamDetails.getSuyūr(),
-                    selectedMaqamDetails.getCommentsEnglish(), // comments unchanged
-                    selectedMaqamDetails.getCommentsArabic(),
-                    selectedMaqamDetails.getSourcePageReferences()
+                    selectedMaqamTemplate.getAscendingNoteNames(),
+                    selectedMaqamTemplate.getDescendingNoteNames(),
+                    selectedMaqamTemplate.getSuyūr(),
+                    selectedMaqamTemplate.getCommentsEnglish(), // comments unchanged
+                    selectedMaqamTemplate.getCommentsArabic(),
+                    selectedMaqamTemplate.getSourcePageReferences()
                   )
                 )
               }
@@ -253,16 +253,16 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
             />
             <button
               onClick={() => {
-                if (!selectedMaqamDetails) return;
-                const updated = new MaqamDetails(
-                  selectedMaqamDetails.getId(),
-                  selectedMaqamDetails.getName(),
-                  selectedMaqamDetails.getAscendingNoteNames(),
-                  selectedMaqamDetails.getDescendingNoteNames(),
-                  selectedMaqamDetails.getSuyūr(),
+                if (!selectedMaqamTemplate) return;
+                const updated = new MaqamTemplate(
+                  selectedMaqamTemplate.getId(),
+                  selectedMaqamTemplate.getName(),
+                  selectedMaqamTemplate.getAscendingNoteNames(),
+                  selectedMaqamTemplate.getDescendingNoteNames(),
+                  selectedMaqamTemplate.getSuyūr(),
                   commentsEnglishLocal,
                   commentsArabicLocal,
-                  selectedMaqamDetails.getSourcePageReferences()
+                  selectedMaqamTemplate.getSourcePageReferences()
                 );
                 handleSaveMaqam(updated);
               }}
@@ -288,12 +288,12 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
             <button className="maqam-manager__source-add-button" onClick={addSourceRef}>
               Add Source
             </button>
-            {selectedMaqamDetails.getSourcePageReferences().map((ref, idx) => (
+            {selectedMaqamTemplate.getSourcePageReferences().map((ref, idx) => (
               <div key={idx} className="maqam-manager__source-item">
                 <select
                   className="maqam-manager__source-select"
                   value={ref.sourceId}
-                  onChange={(e) => updateSourceRefs(selectedMaqamDetails.getSourcePageReferences(), idx, { sourceId: e.target.value })}
+                  onChange={(e) => updateSourceRefs(selectedMaqamTemplate.getSourcePageReferences(), idx, { sourceId: e.target.value })}
                 >
                   <option value="">Select source</option>
                   {[...sources]
@@ -309,7 +309,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
                   type="text"
                   value={ref.page}
                   placeholder="Page"
-                  onChange={(e) => updateSourceRefs(selectedMaqamDetails.getSourcePageReferences(), idx, { page: e.target.value })}
+                  onChange={(e) => updateSourceRefs(selectedMaqamTemplate.getSourcePageReferences(), idx, { page: e.target.value })}
                 />
                 <button className="maqam-manager__source-delete-button" onClick={() => removeSourceRef(idx)}>
                   Delete

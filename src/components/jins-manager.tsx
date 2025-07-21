@@ -3,21 +3,21 @@
 import useAppContext from "@/contexts/app-context";
 import useFilterContext from "@/contexts/filter-context";
 import useSoundContext from "@/contexts/sound-context";
-import JinsDetails from "@/models/Jins";
+import JinsTemplate from "@/models/Jins";
 import React, { useState, useEffect, useMemo } from "react";
 import { getJinsTranspositions } from "@/functions/transpose";
 import { updateAjnas } from "@/functions/update";
 import { SourcePageReference } from "@/models/bibliography/Source";
 
 export default function JinsManager({ admin }: { admin: boolean }) {
-  const { ajnas, setAjnas, selectedTuningSystem, selectedJinsDetails, setSelectedJinsDetails, handleClickJins, selectedPitchClasses, clearSelections, allPitchClasses, sources } = useAppContext();
+  const { ajnas, setAjnas, selectedTuningSystem, selectedJinsTemplate, setSelectedJinsTemplate, handleClickJins, selectedPitchClasses, clearSelections, allPitchClasses, sources } = useAppContext();
 
   const { ajnasFilter, setAjnasFilter } = useFilterContext();
   const { clearHangingNotes } = useSoundContext();
 
   // Local state for comments
-  const [commentsEnglishLocal, setCommentsEnglishLocal] = useState<string>(selectedJinsDetails?.getCommentsEnglish() ?? "");
-  const [commentsArabicLocal, setCommentsArabicLocal] = useState<string>(selectedJinsDetails?.getCommentsArabic() ?? "");
+  const [commentsEnglishLocal, setCommentsEnglishLocal] = useState<string>(selectedJinsTemplate?.getCommentsEnglish() ?? "");
+  const [commentsArabicLocal, setCommentsArabicLocal] = useState<string>(selectedJinsTemplate?.getCommentsArabic() ?? "");
 
   // Dynamic note names for tabs ordered by allPitchClasses.noteName
   const tabs = useMemo(() => {
@@ -32,11 +32,11 @@ export default function JinsManager({ admin }: { admin: boolean }) {
 
   // Sync local state when a different jins is selected
   useEffect(() => {
-    if (selectedJinsDetails) {
-      setCommentsEnglishLocal(selectedJinsDetails.getCommentsEnglish());
-      setCommentsArabicLocal(selectedJinsDetails.getCommentsArabic());
+    if (selectedJinsTemplate) {
+      setCommentsEnglishLocal(selectedJinsTemplate.getCommentsEnglish());
+      setCommentsArabicLocal(selectedJinsTemplate.getCommentsArabic());
     }
-  }, [selectedJinsDetails]);
+  }, [selectedJinsTemplate]);
 
   const jinsTranspositions = useMemo(() => {
     const map = new Map<string, ReturnType<typeof getJinsTranspositions>>();
@@ -59,15 +59,15 @@ export default function JinsManager({ admin }: { admin: boolean }) {
 
   // Save handler uses local comment state
   const handleSaveJins = async () => {
-    if (!selectedJinsDetails) return;
+    if (!selectedJinsTemplate) return;
     const selectedNoteNames = selectedPitchClasses.map((pitchClass) => pitchClass.noteName);
-    const newJins = new JinsDetails(
-      selectedJinsDetails.getId(),
-      selectedJinsDetails.getName(),
+    const newJins = new JinsTemplate(
+      selectedJinsTemplate.getId(),
+      selectedJinsTemplate.getName(),
       selectedNoteNames,
       commentsEnglishLocal,
       commentsArabicLocal,
-      selectedJinsDetails.getSourcePageReferences()
+      selectedJinsTemplate.getSourcePageReferences()
     );
     const newAjnas = ajnas.filter((jins) => jins.getId() !== newJins.getId());
     await updateAjnas([...newAjnas, newJins]);
@@ -75,31 +75,31 @@ export default function JinsManager({ admin }: { admin: boolean }) {
   };
 
   const handleDeleteJins = async () => {
-    if (!selectedJinsDetails) return;
-    const newAjnas = ajnas.filter((jins) => jins.getId() !== selectedJinsDetails.getId());
+    if (!selectedJinsTemplate) return;
+    const newAjnas = ajnas.filter((jins) => jins.getId() !== selectedJinsTemplate.getId());
     await updateAjnas(newAjnas);
     setAjnas(newAjnas);
   };
 
   const updateSourceRefs = (refs: SourcePageReference[], index: number, newRef: Partial<SourcePageReference>) => {
-    if (!selectedJinsDetails) return;
+    if (!selectedJinsTemplate) return;
     const list = [...refs];
     list[index] = { ...list[index], ...newRef } as SourcePageReference;
-    setSelectedJinsDetails(selectedJinsDetails.createJinsWithNewSourcePageReferences(list));
+    setSelectedJinsTemplate(selectedJinsTemplate.createJinsWithNewSourcePageReferences(list));
   };
 
   const removeSourceRef = (index: number) => {
-    if (!selectedJinsDetails) return;
-    const refs = selectedJinsDetails.getSourcePageReferences() || [];
+    if (!selectedJinsTemplate) return;
+    const refs = selectedJinsTemplate.getSourcePageReferences() || [];
     const newList = refs.filter((_, i) => i !== index);
-    setSelectedJinsDetails(selectedJinsDetails.createJinsWithNewSourcePageReferences(newList));
+    setSelectedJinsTemplate(selectedJinsTemplate.createJinsWithNewSourcePageReferences(newList));
   };
 
   const addSourceRef = () => {
-    if (!selectedJinsDetails) return;
-    const refs = selectedJinsDetails.getSourcePageReferences() || [];
+    if (!selectedJinsTemplate) return;
+    const refs = selectedJinsTemplate.getSourcePageReferences() || [];
     const newRef: SourcePageReference = { sourceId: "", page: "" };
-    setSelectedJinsDetails(selectedJinsDetails.createJinsWithNewSourcePageReferences([...refs, newRef]));
+    setSelectedJinsTemplate(selectedJinsTemplate.createJinsWithNewSourcePageReferences([...refs, newRef]));
   };
 
   // Filter ajnas by tab
@@ -142,22 +142,22 @@ export default function JinsManager({ admin }: { admin: boolean }) {
           {filteredAjnas.length === 0 ? (
             <p>No ajnas available.</p>
           ) : (
-            filteredAjnas.map((jinsDetails, index) => {
-              const selectable = jinsDetails.isJinsSelectable(allPitchClasses.map((pitchClass) => pitchClass.noteName));
-              const numberOfTranspositions = jinsTranspositions.get(jinsDetails.getId())?.filter((transposition) => transposition.jinsPitchClasses[0]?.octave === 1).length || 0;
+            filteredAjnas.map((jinsTemplate, index) => {
+              const selectable = jinsTemplate.isJinsSelectable(allPitchClasses.map((pitchClass) => pitchClass.noteName));
+              const numberOfTranspositions = jinsTranspositions.get(jinsTemplate.getId())?.filter((transposition) => transposition.jinsPitchClasses[0]?.octave === 1).length || 0;
               return (
                 <div
                   key={index}
-                  className={"jins-manager__item " + (jinsDetails.getName() === selectedJinsDetails?.getName() ? "jins-manager__item_selected " : "") + (selectable ? "jins-manager__item_active" : "")}
+                  className={"jins-manager__item " + (jinsTemplate.getName() === selectedJinsTemplate?.getName() ? "jins-manager__item_selected " : "") + (selectable ? "jins-manager__item_active" : "")}
                   onClick={() => {
                     if (selectable) {
-                      handleClickJins(jinsDetails);
+                      handleClickJins(jinsTemplate);
                       clearHangingNotes();
                     }
                   }}
                 >
                   <div className="jins-manager__item-name">
-                    <strong>{jinsDetails.getName()}</strong>
+                    <strong>{jinsTemplate.getName()}</strong>
                     {selectable && <strong className="jins-manager__item-name-transpositions">{`Transpositions: ${numberOfTranspositions}/${numberOfPitchClasses}`}</strong>}
                   </div>
                 </div>
@@ -176,27 +176,27 @@ export default function JinsManager({ admin }: { admin: boolean }) {
         </button>
       </div>
 
-      {admin && !selectedJinsDetails && (
-        <button onClick={() => setSelectedJinsDetails(new JinsDetails(newJinsId, "", [], "", "", []))} className="jins-manager__create-new-jins-button">
+      {admin && !selectedJinsTemplate && (
+        <button onClick={() => setSelectedJinsTemplate(new JinsTemplate(newJinsId, "", [], "", "", []))} className="jins-manager__create-new-jins-button">
           Create New Jins
         </button>
       )}
 
-      {admin && selectedJinsDetails && (
+      {admin && selectedJinsTemplate && (
         <div className="jins-manager__jins-form">
           <div className="jins-manager__group">
             <input
               type="text"
-              value={selectedJinsDetails.getName()}
+              value={selectedJinsTemplate.getName()}
               onChange={(e) =>
-                setSelectedJinsDetails(
-                  new JinsDetails(
-                    selectedJinsDetails.getId(),
+                setSelectedJinsTemplate(
+                  new JinsTemplate(
+                    selectedJinsTemplate.getId(),
                     e.target.value,
-                    selectedJinsDetails.getNoteNames(),
-                    selectedJinsDetails.getCommentsEnglish(), // keep comments until save
-                    selectedJinsDetails.getCommentsArabic(),
-                    selectedJinsDetails.getSourcePageReferences()
+                    selectedJinsTemplate.getNoteNames(),
+                    selectedJinsTemplate.getCommentsEnglish(), // keep comments until save
+                    selectedJinsTemplate.getCommentsArabic(),
+                    selectedJinsTemplate.getSourcePageReferences()
                   )
                 )
               }
@@ -215,17 +215,17 @@ export default function JinsManager({ admin }: { admin: boolean }) {
           </div>
 
           <div className="jins-manager__group">
-            {selectedJinsDetails && (
+            {selectedJinsTemplate && (
               <button className="jins-manager__source-add-button" onClick={addSourceRef}>
                 Add Source
               </button>
             )}
-            {selectedJinsDetails.getSourcePageReferences().map((ref, idx) => (
+            {selectedJinsTemplate.getSourcePageReferences().map((ref, idx) => (
               <div key={idx} className="jins-manager__source-item">
                 <select
                   className="jins-manager__source-select"
                   value={ref.sourceId}
-                  onChange={(e) => updateSourceRefs(selectedJinsDetails.getSourcePageReferences(), idx, { sourceId: e.target.value })}
+                  onChange={(e) => updateSourceRefs(selectedJinsTemplate.getSourcePageReferences(), idx, { sourceId: e.target.value })}
                 >
                   <option value="">Select source</option>
                   {sources.map((s) => (
@@ -239,7 +239,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
                   type="text"
                   value={ref.page}
                   placeholder="Page"
-                  onChange={(e) => updateSourceRefs(selectedJinsDetails.getSourcePageReferences(), idx, { page: e.target.value })}
+                  onChange={(e) => updateSourceRefs(selectedJinsTemplate.getSourcePageReferences(), idx, { page: e.target.value })}
                 />
                 <button className="jins-manager__source-delete-button" onClick={() => removeSourceRef(idx)}>
                   Delete

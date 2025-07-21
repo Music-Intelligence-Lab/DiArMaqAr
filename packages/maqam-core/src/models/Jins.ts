@@ -3,7 +3,7 @@ import PitchClass, { PitchClassInterval } from "./PitchClass";
 import NoteName from "./NoteName";
 import { getPitchClassIntervals } from "../functions/transpose";
 
-export interface JinsDetailsInterface {
+export interface JinsTemplateInterface {
   id: string;
   name: string;
   noteNames: NoteName[];
@@ -13,7 +13,7 @@ export interface JinsDetailsInterface {
   numberOfTranspositions?: number;
 }
 
-export default class JinsDetails {
+export default class JinsTemplate {
   private id: string;
   private name: string;
   private noteNames: NoteName[];
@@ -62,8 +62,8 @@ export default class JinsDetails {
     return this.noteNames.every((noteName) => allNoteNames.some((allNoteName) => allNoteName === noteName));
   }
 
-  createJinsWithNewSourcePageReferences(newSourcePageReferences: SourcePageReference[]): JinsDetails {
-    return new JinsDetails(this.id, this.name, this.noteNames, this.commentsEnglish, this.commentsArabic, newSourcePageReferences);
+  createJinsWithNewSourcePageReferences(newSourcePageReferences: SourcePageReference[]): JinsTemplate {
+    return new JinsTemplate(this.id, this.name, this.noteNames, this.commentsEnglish, this.commentsArabic, newSourcePageReferences);
   }
 
   getTahlil(allPitchClasses: PitchClass[]): Jins {
@@ -78,7 +78,7 @@ export default class JinsDetails {
       };
     }
 
-  convertToObject(): JinsDetailsInterface {
+  convertToObject(): JinsTemplateInterface {
     return {
       id: this.id,
       name: this.name,

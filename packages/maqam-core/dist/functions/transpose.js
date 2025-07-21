@@ -75,11 +75,11 @@ function mergeTranspositions(ascendingSequences, descendingSequences) {
     });
     return filteredSequences;
 }
-function getMaqamTranspositions(allPitchClasses, allAjnas, maqamDetails, withTahlil, centsTolerance = 5, onlyOctaveOne = false) {
-    if (allPitchClasses.length === 0 || !maqamDetails)
+function getMaqamTranspositions(allPitchClasses, allAjnas, maqamTemplate, withTahlil, centsTolerance = 5, onlyOctaveOne = false) {
+    if (allPitchClasses.length === 0 || !maqamTemplate)
         return [];
-    const ascendingNoteNames = maqamDetails.getAscendingNoteNames();
-    const descendingNoteNames = maqamDetails.getDescendingNoteNames();
+    const ascendingNoteNames = maqamTemplate.getAscendingNoteNames();
+    const descendingNoteNames = maqamTemplate.getDescendingNoteNames();
     if (ascendingNoteNames.length < 2 || descendingNoteNames.length < 2)
         return [];
     const ascendingMaqamCells = allPitchClasses.filter((pitchClass) => ascendingNoteNames.includes(pitchClass.noteName));
@@ -174,8 +174,8 @@ function getMaqamTranspositions(allPitchClasses, allAjnas, maqamDetails, withTah
             }
         }
         return {
-            maqamId: maqamDetails.getId(),
-            name: `${maqamDetails.getName()} al-${sequencePair.ascendingSequence[0].noteName}`,
+            maqamId: maqamTemplate.getId(),
+            name: `${maqamTemplate.getName()} al-${sequencePair.ascendingSequence[0].noteName}`,
             transposition: true,
             ascendingPitchClasses,
             ascendingPitchClassIntervals,
@@ -187,17 +187,17 @@ function getMaqamTranspositions(allPitchClasses, allAjnas, maqamDetails, withTah
     });
     const tahlilTransposition = maqamTranspositions.find((transposition) => transposition.ascendingPitchClasses[0].noteName === ascendingNoteNames[0]);
     const maqamTranspositionsWithoutTahlil = maqamTranspositions.filter((transposition) => transposition !== tahlilTransposition);
-    // if (maqamDetails.getId() === "12")
+    // if (maqamTemplate.getId() === "12")
     if (withTahlil && tahlilTransposition) {
         return [{ ...tahlilTransposition, transposition: false }, ...maqamTranspositionsWithoutTahlil];
     }
     else
         return maqamTranspositionsWithoutTahlil;
 }
-function getJinsTranspositions(allPitchClasses, jinsDetails, withTahlil, centsTolerance = 5, onlyOctaveOne = false) {
-    if (allPitchClasses.length === 0 || !jinsDetails)
+function getJinsTranspositions(allPitchClasses, jinsTemplate, withTahlil, centsTolerance = 5, onlyOctaveOne = false) {
+    if (allPitchClasses.length === 0 || !jinsTemplate)
         return [];
-    const jinsNoteNames = jinsDetails.getNoteNames();
+    const jinsNoteNames = jinsTemplate.getNoteNames();
     if (jinsNoteNames.length < 2)
         return [];
     const jinsCells = allPitchClasses.filter((pitchClass) => jinsNoteNames.includes(pitchClass.noteName));
@@ -208,8 +208,8 @@ function getJinsTranspositions(allPitchClasses, jinsDetails, withTahlil, centsTo
         .filter((sequence) => !onlyOctaveOne || sequence[0].octave === 1)
         .map((sequence) => {
         return {
-            jinsId: jinsDetails.getId(),
-            name: `${jinsDetails.getName()} al-${sequence[0].noteName}`,
+            jinsId: jinsTemplate.getId(),
+            name: `${jinsTemplate.getName()} al-${sequence[0].noteName}`,
             transposition: true,
             jinsPitchClasses: sequence,
             jinsPitchClassIntervals: getPitchClassIntervals(sequence),

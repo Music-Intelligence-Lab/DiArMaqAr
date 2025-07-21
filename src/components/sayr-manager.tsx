@@ -9,12 +9,12 @@ import { updateMaqamat } from "@/functions/update";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import NorthEastIcon from "@mui/icons-material/NorthEast";
 import SouthEastIcon from "@mui/icons-material/SouthEast";
-import JinsDetails from "@/models/Jins";
+import JinsTemplate from "@/models/Jins";
 import Link from "next/link";
 export default function SayrManager({ admin }: { admin: boolean }) {
   const {
-    selectedMaqamDetails,
-    setSelectedMaqamDetails,
+    selectedMaqamTemplate,
+    setSelectedMaqamTemplate,
     ajnas,
     maqamSayrId,
     setMaqamSayrId,
@@ -42,8 +42,8 @@ export default function SayrManager({ admin }: { admin: boolean }) {
   };
 
   useEffect(() => {
-    if (selectedMaqamDetails && maqamSayrId) {
-      const sel = selectedMaqamDetails.getSuyūr().find((s) => s.id === maqamSayrId);
+    if (selectedMaqamTemplate && maqamSayrId) {
+      const sel = selectedMaqamTemplate.getSuyūr().find((s) => s.id === maqamSayrId);
       if (sel) {
         setCreatorEnglish(sel.creatorEnglish ?? "");
         setCreatorArabic(sel.creatorArabic ?? "");
@@ -56,10 +56,10 @@ export default function SayrManager({ admin }: { admin: boolean }) {
       }
     }
     resetForm();
-  }, [maqamSayrId, selectedMaqamDetails]);
+  }, [maqamSayrId, selectedMaqamTemplate]);
 
-  if (!selectedMaqamDetails) return null;
-  const existingSuyūr = selectedMaqamDetails.getSuyūr();
+  if (!selectedMaqamTemplate) return null;
+  const existingSuyūr = selectedMaqamTemplate.getSuyūr();
 
   const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => setMaqamSayrId(e.target.value);
   const addStop = () => setStops((prev) => [...prev, { type: "note", value: "" }]);
@@ -84,8 +84,8 @@ export default function SayrManager({ admin }: { admin: boolean }) {
     const updated = existingSuyūr.some((s) => s.id === idUse)
       ? existingSuyūr.map((s) => (s.id === idUse ? newSayr : s))
       : [...existingSuyūr, newSayr];
-    const updatedMaqam = selectedMaqamDetails.createMaqamWithNewSuyūr(updated);
-    setSelectedMaqamDetails(updatedMaqam);
+    const updatedMaqam = selectedMaqamTemplate.createMaqamWithNewSuyūr(updated);
+    setSelectedMaqamTemplate(updatedMaqam);
     setMaqamSayrId(idUse);
 
     const others = maqamat.filter((m) => m.getId() !== updatedMaqam.getId());
@@ -96,8 +96,8 @@ export default function SayrManager({ admin }: { admin: boolean }) {
   const handleDelete = async () => {
     if (!maqamSayrId) return;
     const filtered = existingSuyūr.filter((s) => s.id !== maqamSayrId);
-    const updatedMaqam = selectedMaqamDetails.createMaqamWithNewSuyūr(filtered);
-    setSelectedMaqamDetails(updatedMaqam);
+    const updatedMaqam = selectedMaqamTemplate.createMaqamWithNewSuyūr(filtered);
+    setSelectedMaqamTemplate(updatedMaqam);
     setMaqamSayrId("");
 
     const others = maqamat.filter((m) => m.getId() !== updatedMaqam.getId());
@@ -384,19 +384,19 @@ export default function SayrManager({ admin }: { admin: boolean }) {
           <div className="sayr-manager__stops">
             {!admin &&
               stops.map((stop, i) => {
-                let jinsDetails: JinsDetails | undefined;
-                let maqamDetails: any | undefined;
+                let jinsTemplate: JinsTemplate | undefined;
+                let maqamTemplate: any | undefined;
                 let sentence = "";
                 // Patch: support for maqam stop type (type assertion workaround)
                 if (stop.type === "note") {
                   sentence += `${stop.value}`;
                 } else if (stop.type === "jins") {
-                  jinsDetails = ajnas.find((j) => j.getId() === stop.value);
-                  const jinsName = jinsDetails ? jinsDetails.getName() : stop.value;
+                  jinsTemplate = ajnas.find((j) => j.getId() === stop.value);
+                  const jinsName = jinsTemplate ? jinsTemplate.getName() : stop.value;
                   sentence += `${jinsName}${stop.startingNote ? " al-" + stop.startingNote : ""}`;
                 } else if ((stop as any).type === "maqam") {
-                  maqamDetails = maqamat.find((m) => m.getId() === stop.value);
-                  const maqamName = maqamDetails ? maqamDetails.getName() : stop.value;
+                  maqamTemplate = maqamat.find((m) => m.getId() === stop.value);
+                  const maqamName = maqamTemplate ? maqamTemplate.getName() : stop.value;
                   sentence += `${maqamName}${stop.startingNote ? " al-" + stop.startingNote : ""}`;
                 } else if (stop.type === "direction") {
                   if (stop.value === "ascending") {
@@ -449,11 +449,11 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                       className="sayr-manager__stop"
                       style={stop.type === "jins" || (stop as any).type === "maqam" ? { cursor: "default" } : undefined}
                       onClick={() => {
-                        if (stop.type === "jins" && jinsDetails) {
-                          // handleClickJins(jinsDetails);
-                        } else if ((stop as any).type === "maqam" && maqamDetails) {
+                        if (stop.type === "jins" && jinsTemplate) {
+                          // handleClickJins(jinsTemplate);
+                        } else if ((stop as any).type === "maqam" && maqamTemplate) {
                           // Optionally, implement a handler for maqam click
-                          // handleClickMaqam(maqamDetails);
+                          // handleClickMaqam(maqamTemplate);
                         }
                       }}
                     >

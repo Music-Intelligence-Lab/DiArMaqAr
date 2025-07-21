@@ -1,7 +1,7 @@
 import NoteName from "../models/NoteName";
 import TuningSystem from "../models/TuningSystem";
-import JinsDetails, { AjnasModulations, Jins, JinsDetailsInterface } from "../models/Jins";
-import MaqamDetails, { Maqam, MaqamatModulations, MaqamDetailsInterface } from "../models/Maqam";
+import JinsTemplate, { AjnasModulations, Jins, JinsTemplateInterface } from "../models/Jins";
+import MaqamTemplate, { Maqam, MaqamatModulations, MaqamTemplateInterface } from "../models/Maqam";
 import PitchClass from "../models/PitchClass";
 interface ExportedTuningSystem {
     tuningSystem?: TuningSystem;
@@ -9,11 +9,11 @@ interface ExportedTuningSystem {
     fullRangeTuningSystemPitchClasses?: PitchClass[];
     numberOfPossibleAjnas?: number;
     numberOfAjnas?: number;
-    possibleAjnasOverview?: JinsDetailsInterface[];
+    possibleAjnasOverview?: JinsTemplateInterface[];
     possibleAjnas?: Jins[];
     numberOfPossibleMaqamat?: number;
     numberOfMaqamat?: number;
-    possibleMaqamatOverview?: MaqamDetailsInterface[];
+    possibleMaqamatOverview?: MaqamTemplateInterface[];
     possibleMaqamat?: Maqam[];
 }
 export interface ExportOptions {
@@ -37,7 +37,7 @@ export interface MaqamExportOptions {
     modulationType: 'maqamat' | 'ajnas';
 }
 interface ExportedJins {
-    jinsDetails?: JinsDetailsInterface;
+    jinsTemplate?: JinsTemplateInterface;
     tuningSystem?: TuningSystem;
     startingNote?: NoteName;
     fullRangeTuningSystemPitchClasses?: PitchClass[];
@@ -45,7 +45,7 @@ interface ExportedJins {
     numberOfTranspositions?: number;
 }
 interface ExportedMaqam {
-    maqamDetails?: MaqamDetailsInterface;
+    maqamTemplate?: MaqamTemplateInterface;
     tuningSystem?: TuningSystem;
     startingNote?: NoteName;
     fullRangeTuningSystemPitchClasses?: PitchClass[];
@@ -55,7 +55,7 @@ interface ExportedMaqam {
     numberOfHops?: number;
 }
 export declare function exportTuningSystem(tuningSystem: TuningSystem, startingNote: NoteName, options: ExportOptions, centsTolerance?: number): ExportedTuningSystem;
-export declare function exportJins(jins: JinsDetails, tuningSystem: TuningSystem, startingNote: NoteName, options: JinsExportOptions, centsTolerance?: number): ExportedJins;
-export declare function exportMaqam(maqam: MaqamDetails, tuningSystem: TuningSystem, startingNote: NoteName, options: MaqamExportOptions, centsTolerance?: number): ExportedMaqam;
+export declare function exportJins(jins: JinsTemplate, tuningSystem: TuningSystem, startingNote: NoteName, options: JinsExportOptions, centsTolerance?: number): ExportedJins;
+export declare function exportMaqam(maqam: MaqamTemplate, tuningSystem: TuningSystem, startingNote: NoteName, options: MaqamExportOptions, centsTolerance?: number): ExportedMaqam;
 export {};
 //# sourceMappingURL=export.d.ts.map
