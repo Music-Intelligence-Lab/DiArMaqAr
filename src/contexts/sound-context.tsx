@@ -9,6 +9,7 @@ import PitchClass from "@/models/PitchClass";
 import { initializeCustomWaves, PERIODIC_WAVES, APERIODIC_WAVES } from "@/audio/waves";
 import shiftPitchClass from "@/functions/shiftPitchClass";
 import extendSelectedPitchClasses from "@/functions/extendSelectedPitchClasses";
+import { Maqam } from "@/models/Maqam";
 type InputMode = "tuningSystem" | "selection";
 type OutputMode = "mute" | "waveform" | "midi";
 
@@ -48,7 +49,12 @@ interface SoundContextInterface {
   setSoundSettings: React.Dispatch<React.SetStateAction<SoundSettings>>;
   activePitchClasses: PitchClass[];
   setActivePitchClasses: React.Dispatch<React.SetStateAction<PitchClass[]>>;
-  playSequence: (pitchClasses: PitchClass[], ascending?: boolean, ascendingPitchClasses?: PitchClass[], velocity?: number | ((noteIdx: number, patternIdx: number) => number)) => Promise<void>;
+  playSequence: (
+    pitchClasses: PitchClass[],
+    ascending?: boolean,
+    ascendingPitchClasses?: PitchClass[],
+    velocity?: number | ((noteIdx: number, patternIdx: number) => number)
+  ) => Promise<void>;
   noteOn: (pitchClass: PitchClass, velocity?: number) => void;
   noteOff: (pitchClass: PitchClass) => void;
   midiInputs: MidiPortInfo[];
@@ -254,18 +260,55 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     } else if (soundSettings.inputMode === "selection") {
       const extendedPitchClasses = extendSelectedPitchClasses(allPitchClasses, selectedPitchClasses);
 
-      // For selection mode, map based on english note names
       for (const pitchClass of extendedPitchClasses) {
-        const baseFreq = parseFloat(pitchClass.frequency);
-        if (isNaN(baseFreq)) continue;
+        let baseMidi = Math.round(pitchClass.midiNoteNumber);
 
-        const baseMidi = Math.round(frequencyToMidiNoteNumber(baseFreq));
+        const englishName = pitchClass.englishName;
+
+        const accidental = englishName.slice(1);
+
+        if (["-b", "--", "-"].includes(accidental)) baseMidi += 1;
+
         if (baseMidi >= 0 && baseMidi <= 127) {
           mapping[baseMidi] = pitchClass;
         }
       }
-    }
 
+      if (selectedMaqamData) {
+        let maqam: Maqam;
+
+        if (selectedMaqam) maqam = selectedMaqam;
+        else maqam = selectedMaqamData.getTahlil(allPitchClasses);
+
+        const { ascendingPitchClasses, descendingPitchClasses } = maqam;
+
+        const uniqueDescendingPitchClasses = descendingPitchClasses.filter((pc) =>
+          !ascendingPitchClasses.find((ascendingPitchClass) => pc.originalValue === ascendingPitchClass.originalValue)
+        );
+
+        console.log(uniqueDescendingPitchClasses);
+
+        const extendedUniqueDescendingPitchClasses = extendSelectedPitchClasses(allPitchClasses, uniqueDescendingPitchClasses);
+
+        console.log(extendedUniqueDescendingPitchClasses)
+
+        for (const pitchClass of extendedUniqueDescendingPitchClasses) {
+          let baseMidi = Math.round(pitchClass.midiNoteNumber);
+
+          const englishName = pitchClass.englishName;
+
+          const accidental = englishName.slice(1);
+
+          if (["-b", "--", "-"].includes(accidental)) baseMidi += 1;
+          console.log(pitchClass, baseMidi)
+
+          if (baseMidi >= 0 && baseMidi <= 127) {
+            mapping[baseMidi] = pitchClass;
+          }
+        }
+      }
+    }
+    console.log("MIDI to PitchClass mapping:", mapping);
     return mapping;
   }, [soundSettings.inputMode, selectedTuningSystem, selectedPitchClasses, allPitchClasses]);
 
@@ -299,27 +342,17 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     const isMidiBlackKey = (midi: number) => BLACK_KEY_OFFSETS.includes(midi % 12);
 
     // Main: is this pitch class a black key?
-    const isBlackKey = (pitchClass: PitchClass): boolean => {
+    const isBlackKey = (pitchClass: PitchClass): boolean | undefined => {
       const midi = getMidiNumber(pitchClass);
       if (typeof midi === "number") {
         return isMidiBlackKey(midi);
       }
       // fallback: treat as white if not mapped
-      return false;
-    };
-
-    // Helper function to check if a pitch class should be mapped based on current mode
-    const shouldMap = (pitchClass: PitchClass): boolean => {
-      if (soundSettings.inputMode === "tuningSystem" && selectedTuningSystem) {
-        return true;
-      } else if (soundSettings.inputMode === "selection") {
-        return selectedPitchClasses.some((spc) => spc.index === pitchClass.index);
-      }
-      return false;
+      return undefined;
     };
 
     for (const pitchClass of allPitchClasses) {
-      if (shouldMap(pitchClass) && getMidiNumber(pitchClass)) {
+      if (getMidiNumber(pitchClass) !== undefined) {
         mapping[pitchClass.fraction] = isBlackKey(pitchClass) ? "black" : "white";
       }
     }
@@ -539,7 +572,8 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     timeoutsRef.current.forEach(clearTimeout);
     timeoutsRef.current = [];
 
-    const selectedPattern = soundSettings.selectedPattern || new Pattern("Default", "Default", [{ scaleDegree: "I", noteDuration: "8n", isTarget: true }]);
+    const selectedPattern =
+      soundSettings.selectedPattern || new Pattern("Default", "Default", [{ scaleDegree: "I", noteDuration: "8n", isTarget: true }]);
 
     return new Promise((resolve) => {
       const beatSec = 60 / soundSettings.tempo;
