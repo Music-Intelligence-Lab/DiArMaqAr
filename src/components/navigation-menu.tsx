@@ -3,11 +3,13 @@
 import React, { useRef, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import useMenuContext from "@/contexts/menu-context";
+import useLanguageContext from "@/contexts/language-context";
 import MenuIcon from "@mui/icons-material/Menu";
 import Link from "next/link";
 
 const NavigationMenu = () => {
   const { openSettings, setOpenSettings, openNavigation, setOpenNavigation } = useMenuContext();
+  const { t, isRTL } = useLanguageContext();
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -86,30 +88,32 @@ const NavigationMenu = () => {
     setMounted(true);
   }, []);
 
+  // Define navigation links with proper RTL ordering
+  const navigationLinks = [
+    { href: "/", key: "nav.home" },
+    { href: "/app", key: "nav.tools" },
+    { href: "/bibliography", key: "nav.bibliography" },
+    { href: "/analytics-data", key: "nav.analytics" },
+    { href: "/user-guide", key: "nav.userGuide" },
+    { href: "/about", key: "nav.about" },
+    { href: "/credits", key: "nav.credits" },
+  ];
+
+  // Reverse order for RTL languages
+  const orderedLinks = isRTL ? [...navigationLinks].reverse() : navigationLinks;
+
   const menuContent = (
     <div ref={menuRef} className={`navigation-menu-card ${openNavigation ? "navigation-menu-card--open" : ""}`} role="dialog" aria-modal="true" aria-label="Main navigation menu" tabIndex={-1}>
       <div className="navigation-menu-card__content">
-        <Link href="/" className="navigation-menu-card__link">
-          Home
-        </Link>
-        <Link href="/app" className="navigation-menu-card__link">
-          Tools
-        </Link>
-        <Link href="/bibliography" className="navigation-menu-card__link">
-          Bibliography
-        </Link>
-        <Link href="/analytics-data" className="navigation-menu-card__link">
-          Analytics
-        </Link>
-        <Link href="/user-guide" className="navigation-menu-card__link">
-          User Guide
-        </Link>
-        <Link href="/about" className="navigation-menu-card__link">
-          About Page
-        </Link>
-        <Link href="/credits" className="navigation-menu-card__link">
-          Credits Page
-        </Link>
+        {orderedLinks.map((link) => (
+          <Link 
+            key={link.href} 
+            href={link.href} 
+            className="navigation-menu-card__link"
+          >
+            {t(link.key)}
+          </Link>
+        ))}
       </div>
     </div>
   );

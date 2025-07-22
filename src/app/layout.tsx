@@ -3,6 +3,7 @@ import { AppContextProvider } from "@/contexts/app-context";
 import { SoundContextProvider } from "@/contexts/sound-context";
 import { FilterContextProvider } from "@/contexts/filter-context";
 import { MenuContextProvider } from "@/contexts/menu-context";
+import { LanguageContextProvider } from "@/contexts/language-context";
 import Navbar from "@/components/navbar";
 import MobileWarning from "@/components/mobile-warning";
 import { Readex_Pro } from "next/font/google";
@@ -34,17 +35,19 @@ export default function RootLayout({
       </head>
       <body className={`${readexPro.variable}`}>
         <MobileWarning />
-        <AppContextProvider>
-          <SoundContextProvider>
-            <MenuContextProvider>
-              <FilterContextProvider>
-                <Navbar />
-                <main className="center-container">{children}</main>
-                <Analytics />
-              </FilterContextProvider>
-            </MenuContextProvider>
-          </SoundContextProvider>
-        </AppContextProvider>
+        <LanguageContextProvider>
+          <AppContextProvider>
+            <SoundContextProvider>
+              <MenuContextProvider>
+                <FilterContextProvider>
+                  <Navbar />
+                  <main className="center-container">{children}</main>
+                  <Analytics />
+                </FilterContextProvider>
+              </MenuContextProvider>
+            </SoundContextProvider>
+          </AppContextProvider>
+        </LanguageContextProvider>
       </body>
     </html>
   );

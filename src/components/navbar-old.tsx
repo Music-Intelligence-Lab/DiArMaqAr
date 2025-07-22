@@ -11,7 +11,6 @@ import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import NavigationMenu from "./navigation-menu";
 import { octaveOneNoteNames } from "@/models/NoteName";
 import calculateNumberOfModulations from "@/functions/calculateNumberOfModulations";
-
 export default function Navbar() {
   const { showAdminTabs, setShowAdminTabs, selectedMenu, setSelectedMenu } =
     useMenuContext();
@@ -92,7 +91,6 @@ export default function Navbar() {
         condition: true,
         content: (
           <button
-            key="tuningSystem"
             className={`navbar__bottom-bar-item ${
               selectedMenu === "tuningSystem"
                 ? "navbar__bottom-bar-item_selected "
@@ -138,7 +136,6 @@ export default function Navbar() {
         condition: showAdminTabs,
         content: (
           <button
-            key="tuningSystem-admin"
             className={`navbar__bottom-bar-item ${
               selectedMenu === "tuningSystem-admin"
                 ? "navbar__bottom-bar-item_selected"
@@ -155,7 +152,6 @@ export default function Navbar() {
         condition: true,
         content: (
           <button
-            key="jins"
             className={`navbar__bottom-bar-item ${
               selectedMenu === "jins" ? "navbar__bottom-bar-item_selected" : ""
             } ${selectedJinsData ? "navbar__bottom-bar-item_active" : ""}`}
@@ -215,7 +211,6 @@ export default function Navbar() {
         condition: showAdminTabs,
         content: (
           <button
-            key="jins-admin"
             className={`navbar__bottom-bar-item ${
               selectedMenu === "jins-admin"
                 ? "navbar__bottom-bar-item_selected"
@@ -233,7 +228,6 @@ export default function Navbar() {
         condition: true,
         content: (
           <button
-            key="maqam"
             className={`navbar__bottom-bar-item ${
               selectedMenu === "maqam" ? "navbar__bottom-bar-item_selected" : ""
             } ${selectedMaqamData ? "navbar__bottom-bar-item_active" : ""}`}
@@ -286,7 +280,6 @@ export default function Navbar() {
         condition: showAdminTabs,
         content: (
           <button
-            key="maqam-admin"
             className={`navbar__bottom-bar-item ${
               selectedMenu === "maqam-admin"
                 ? "navbar__bottom-bar-item_selected"
@@ -304,7 +297,6 @@ export default function Navbar() {
         condition: true,
         content: (
           <button
-            key="sayr"
             className={`navbar__bottom-bar-item ${
               selectedMenu === "sayr" ? "navbar__bottom-bar-item_selected" : ""
             } ${selectedSayr ? "navbar__bottom-bar-item_active" : ""}`}
@@ -333,7 +325,6 @@ export default function Navbar() {
         condition: showAdminTabs,
         content: (
           <button
-            key="sayr-admin"
             className={`navbar__bottom-bar-item ${
               selectedMenu === "sayr-admin"
                 ? "navbar__bottom-bar-item_selected"
@@ -351,7 +342,6 @@ export default function Navbar() {
         condition: true,
         content: (
           <button
-            key="modulation"
             className={`navbar__bottom-bar-item ${
               selectedMenu === "modulation"
                 ? "navbar__bottom-bar-item_selected"
@@ -369,7 +359,6 @@ export default function Navbar() {
         condition: showAdminTabs,
         content: (
           <button
-            key="pattern-admin"
             className={`navbar__bottom-bar-item ${
               selectedMenu === "pattern-admin"
                 ? "navbar__bottom-bar-item_selected"
@@ -387,9 +376,7 @@ export default function Navbar() {
     const filteredTabs = tabs.filter(tab => tab.condition);
     
     // Reverse order for RTL languages
-    const orderedTabs = isRTL ? [...filteredTabs].reverse() : filteredTabs;
-    
-    return orderedTabs;
+    return isRTL ? filteredTabs.reverse() : filteredTabs;
   };
 
   return (
@@ -418,6 +405,8 @@ export default function Navbar() {
             >
               شبكة المقام العربي Arabic Maqām Network
             </span>
+            {/* <br></br>
+            <span className="navbar__subtitle">استكشفوا واعزفوا التنغيم والأجناس والمقامات في نظام المقام العربي • Explore and play the tanghīm, ajnās and maqāmāt of the Arabic Maqām system</span> */}
           </div>
           <div className="navbar__right-panel">
             <div className="navbar__right-panel-language">
@@ -428,8 +417,246 @@ export default function Navbar() {
             </div>
           </div>
         </header>
-        <div className={`navbar__bottom-bar ${isRTL ? 'navbar__bottom-bar--rtl' : ''}`}>
-          {getNavbarTabs().map(tab => tab.content)}
+        <div className="navbar__bottom-bar">
+          <button
+            className={`navbar__bottom-bar-item ${
+              selectedMenu === "tuningSystem"
+                ? "navbar__bottom-bar-item_selected "
+                : ""
+            } ${selectedTuningSystem ? "navbar__bottom-bar-item_active" : ""}`}
+            onClick={() => {
+              setSelectedMenu("tuningSystem");
+              // Always scroll to top using scrollIntoView on body/html
+              if (typeof window !== "undefined") {
+                // Try html first, then body as fallback
+                const html = document.documentElement;
+                if (html && html.scrollIntoView) {
+                  html.scrollIntoView({ behavior: "smooth", block: "start" });
+                } else if (document.body && document.body.scrollIntoView) {
+                  document.body.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                  });
+                } else {
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }
+              }
+            }}
+          >
+            {selectedTuningSystem ? (
+              <>
+                <span className="navbar__bottom-bar-item_tab-title">
+                  {selectedTuningSystem.getCreatorEnglish()} (
+                  {selectedTuningSystem.getYear()})
+                </span>
+                <span className="navbar__bottom-bar-item_tab-subtitle">
+                  {selectedTuningSystem.getTitleEnglish()} 
+                  <br />
+                  [{octaveOneNoteNames[selectedIndices[0]] ?? "none"}]
+                </span>
+              </>
+            ) : (
+              "Tanghīm (Tuning Systems)"
+            )}
+          </button>
+          {showAdminTabs && (
+            <button
+              className={`navbar__bottom-bar-item ${
+                selectedMenu === "tuningSystem-admin"
+                  ? "navbar__bottom-bar-item_selected"
+                  : ""
+              }`}
+              onClick={() => setSelectedMenu("tuningSystem-admin")}
+            >
+              Tuning System Admin
+            </button>
+          )}
+          <button
+            className={`navbar__bottom-bar-item ${
+              selectedMenu === "jins" ? "navbar__bottom-bar-item_selected" : ""
+            } ${selectedJinsData ? "navbar__bottom-bar-item_active" : ""}`}
+            onClick={() => {
+              setSelectedMenu("jins");
+              // Scroll jins-transpositions to top if present
+              if (typeof window !== "undefined") {
+                const jinsTranspositions = document.querySelector(
+                  ".jins-transpositions"
+                );
+                if (jinsTranspositions) {
+                  jinsTranspositions.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                  });
+                } else {
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }
+              }
+            }}
+            disabled={!selectedTuningSystem}
+          >
+            <span className="navbar__bottom-bar-item_tab-title">
+              {selectedTuningSystem
+                ? `Ajnās (${
+                    ajnas.filter((jinsData) =>
+                      jinsData.isJinsSelectable(
+                        allPitchClasses.map((pitchClass) => pitchClass.noteName)
+                      )
+                    ).length
+                  }/${ajnas.length})`
+                : "Ajnās"}
+            </span>
+            <span className="navbar__bottom-bar-item_tab-subtitle">
+              {!selectedJinsData
+                ? ""
+                : selectedJins
+                ? `${selectedJinsData.getName()} al-${
+                    selectedJins.jinsPitchClasses.map(
+                      (pitchClass) => pitchClass.noteName
+                    )[0]
+                  } (${getEnglishNoteName(
+                    selectedJins.jinsPitchClasses.map(
+                      (pitchClass) => pitchClass.noteName
+                    )[0]
+                  )})`
+                : `${selectedJinsData.getName()} (${
+                    selectedJinsData.getNoteNames()[0]
+                  }/${getEnglishNoteName(
+                    selectedJinsData.getNoteNames()[0]
+                  )})`}
+            </span>
+          </button>
+          {showAdminTabs && (
+            <button
+              className={`navbar__bottom-bar-item ${
+                selectedMenu === "jins-admin"
+                  ? "navbar__bottom-bar-item_selected"
+                  : ""
+              }`}
+              onClick={() => setSelectedMenu("jins-admin")}
+              disabled={!selectedTuningSystem}
+            >
+              Jins Admin
+            </button>
+          )}
+          <button
+            className={`navbar__bottom-bar-item ${
+              selectedMenu === "maqam" ? "navbar__bottom-bar-item_selected" : ""
+            } ${selectedMaqamData ? "navbar__bottom-bar-item_active" : ""}`}
+            onClick={() => {
+              setSelectedMenu("maqam");
+              // Scroll maqam-transpositions to top if present
+              if (typeof window !== "undefined") {
+                const maqamTranspositions = document.querySelector(
+                  ".maqam-transpositions"
+                );
+                if (maqamTranspositions) {
+                  maqamTranspositions.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                  });
+                } else {
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }
+              }
+            }}
+            disabled={!selectedTuningSystem}
+          >
+            <span className="navbar__bottom-bar-item_tab-title">
+              {selectedTuningSystem
+                ? `Maqāmāt (${
+                    maqamat.filter((maqamData) =>
+                      maqamData.isMaqamSelectable(
+                        allPitchClasses.map((pitchClass) => pitchClass.noteName)
+                      )
+                    ).length
+                  }/${maqamat.length})`
+                : "Maqāmāt"}{" "}
+              <br />
+            </span>
+            <span className="navbar__bottom-bar-item_tab-subtitle">
+              {!selectedMaqamData
+                ? ""
+                : selectedMaqam
+                ? selectedMaqam.name
+                : `${selectedMaqamData.getName()} (${
+                    selectedMaqamData.getAscendingNoteNames()[0]
+                  }/${getEnglishNoteName(
+                    selectedMaqamData.getAscendingNoteNames()[0]
+                  )})`}
+            </span>
+          </button>
+          {showAdminTabs && (
+            <button
+              className={`navbar__bottom-bar-item ${
+                selectedMenu === "maqam-admin"
+                  ? "navbar__bottom-bar-item_selected"
+                  : ""
+              }`}
+              onClick={() => setSelectedMenu("maqam-admin")}
+              disabled={!selectedTuningSystem}
+            >
+              Maqam Admin
+            </button>
+          )}
+          <button
+            className={`navbar__bottom-bar-item ${
+              selectedMenu === "sayr" ? "navbar__bottom-bar-item_selected" : ""
+            } ${selectedSayr ? "navbar__bottom-bar-item_active" : ""}`}
+            onClick={() => setSelectedMenu("sayr")}
+            disabled={!selectedMaqamData}
+          >
+            <span className="navbar__bottom-bar-item_tab-title">
+              {selectedMaqamData
+                ? `Suyūr (${selectedMaqamData.getSuyūr().length})`
+                : "Suyūr"}{" "}
+              <br />
+            </span>
+            <span className="navbar__bottom-bar-item_tab-subtitle">
+              {selectedSayr &&
+                `${selectedSayr.creatorEnglish} ${
+                  selectedSayrSource
+                    ? `(${selectedSayrSource.getPublicationDateEnglish()})`
+                    : ""
+                }`}
+            </span>
+          </button>
+          {showAdminTabs && (
+            <button
+              className={`navbar__bottom-bar-item ${
+                selectedMenu === "sayr-admin"
+                  ? "navbar__bottom-bar-item_selected"
+                  : ""
+              }`}
+              onClick={() => setSelectedMenu("sayr-admin")}
+              disabled={!selectedMaqamData}
+            >
+              Sayr Admin
+            </button>
+          )}
+
+          <button
+            className={`navbar__bottom-bar-item ${
+              selectedMenu === "modulation"
+                ? "navbar__bottom-bar-item_selected"
+                : ""
+            }`}
+            onClick={() => setSelectedMenu("modulation")}
+            disabled={!selectedMaqamData}
+          >
+            Intiqālāt{selectedMaqamData ? ` (${totalModulations})` : ""}
+          </button>
+          {showAdminTabs && (
+            <button
+              className={`navbar__bottom-bar-item ${
+                selectedMenu === "pattern-admin"
+                  ? "navbar__bottom-bar-item_selected"
+                  : ""
+              }`}
+              onClick={() => setSelectedMenu("pattern-admin")}
+            >
+              Patterns Admin
+            </button>
+          )}
         </div>
       </nav>
     </>
