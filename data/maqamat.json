@@ -1582,18 +1582,19 @@
         "creatorArabic": "",
         "sourceId": "oY8WnTdP5msak8o1G_N7f",
         "page": 23,
-        "commentsEnglish": "Start on nawā to huseinī and what's above it (jins kurd huseinī), then jins bayāt on dūgāh. After it's descent ascend bayāt dūgāh and during the descent use the note kurdī instead of segāh (i.e. jins kurd on dūgāh) and descend to end on yegāh using a touch of qarār ḥijāz. This maqām is Ottoman and not really utilised in Arabic music but Shawwā listed it either way.",
+        "commentsEnglish": "Start on nawā to huseinī and what's above it (jins kurd huseinī), then jins bayāt on dūgāh. After it's descent ascend bayāt dūgāh and during the descent use the note kurdī instead of segāh (i.e. jins kurd on dūgāh) and descend to end on yegāh using a touch of qarār ḥijāz. ",
         "commentsArabic": "",
         "stops": [
           {
             "type": "note",
-            "value": "nawā"
+            "value": "nawā",
+            "direction": "ascending"
           },
           {
             "type": "jins",
             "value": "7",
             "startingNote": "ḥusaynī",
-            "direction": "ascending"
+            "direction": ""
           },
           {
             "type": "jins",
@@ -1602,8 +1603,8 @@
             "direction": "none"
           },
           {
-            "type": "jins",
-            "value": "2",
+            "type": "direction",
+            "value": "descending",
             "startingNote": "dūgāh",
             "direction": "descending"
           },
@@ -2935,7 +2936,8 @@
           {
             "type": "maqam",
             "value": "27",
-            "direction": "descending"
+            "direction": "descending",
+            "startingNote": "rāst"
           },
           {
             "type": "note",
