@@ -387,9 +387,7 @@ export default function Navbar() {
     const filteredTabs = tabs.filter(tab => tab.condition);
     
     // Reverse order for RTL languages
-    const orderedTabs = isRTL ? [...filteredTabs].reverse() : filteredTabs;
-    
-    return orderedTabs;
+    return isRTL ? filteredTabs.reverse() : filteredTabs;
   };
 
   return (
@@ -428,7 +426,7 @@ export default function Navbar() {
             </div>
           </div>
         </header>
-        <div className={`navbar__bottom-bar ${isRTL ? 'navbar__bottom-bar--rtl' : ''}`}>
+        <div className="navbar__bottom-bar">
           {getNavbarTabs().map(tab => tab.content)}
         </div>
       </nav>

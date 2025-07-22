@@ -8,6 +8,7 @@
 @use "../styles/sayr-manager.scss";
 @use "../styles/maqam-transpositions.scss";
 @use "../styles/navbar.scss";
+@use "../styles/language-selector.scss";
 @use "../styles/sources-manager.scss";
 @use "../styles/sources-list.scss";
 @use "../styles/patterns-manager.scss";
@@ -55,6 +56,10 @@ body {
   background-color: $medium-grey;
   -webkit-font-smoothing: antialiased;
   color: $text;
+
+  & * {
+    font-family: inherit;
+  }
 }
 
 *,
@@ -129,5 +134,37 @@ select:focus {
       outline: none;
     }
   }
+
+// RTL Support
+[dir="rtl"] {
+  .navbar__bottom-bar {
+    direction: rtl;
+    flex-direction: row-reverse;
+  }
+  
+  .navbar__bottom-bar-item {
+    &:not(:last-child) {
+      border-right: none;
+      border-left: 1px solid;
+    }
+    
+    &:not(:first-child) {
+      border-right: 1px solid;
+    }
+  }
+  
+  .navigation-menu-card__content {
+    direction: rtl;
+    text-align: right;
+  }
+  
+  .navbar__right-panel {
+    flex-direction: row-reverse;
+  }
+  
+  .navbar__left-panel {
+    flex-direction: row-reverse;
+  }
+}
 
 }
