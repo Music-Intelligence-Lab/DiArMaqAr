@@ -2,6 +2,7 @@
 
 import useAppContext from "@/contexts/app-context";
 import useSoundContext from "@/contexts/sound-context";
+import useLanguageContext from "@/contexts/language-context";
 import React, { useState, useEffect, useRef } from "react";
 import { MaqamatModulations, Maqam } from "@/models/Maqam";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
@@ -11,6 +12,7 @@ import modulate from "@/functions/modulate";
 type ModulationsPair = { ajnas: AjnasModulations; maqamat: MaqamatModulations };
 
 export default function Modulations() {
+  const { t, getDisplayName } = useLanguageContext();
   const {
     maqamat,
     ajnas,
@@ -195,12 +197,12 @@ export default function Modulations() {
             {/* Maqam name/details at the top of each wrapper */}
             <div className="modulations__wrapper-modulations-header">
               <div className="modulations__source-maqam-name" onClick={() => handleSourceMaqamClick(sourceMaqam)} style={{ cursor: "pointer" }}>
-                {sourceMaqam.name ? sourceMaqam.name : "Unknown"} ({ascendingNoteNames ? ascendingNoteNames[0] : "N/A"}/
+                {sourceMaqam.name ? getDisplayName(sourceMaqam.name, 'maqam') : "Unknown"} ({ascendingNoteNames ? getDisplayName(ascendingNoteNames[0], 'note') : "N/A"}/
                 {getEnglishNoteName(ascendingNoteNames ? ascendingNoteNames[0]! : "")})
               </div>
               <button
                 className="modulations__collapse-arrow"
-                aria-label={collapsedHops[stackIdx] ? "Expand" : "Collapse"}
+                aria-label={collapsedHops[stackIdx] ? t('modulations.expand') : t('modulations.collapse')}
                 onClick={() =>
                   setCollapsedHops((prev) => {
                     const updated = [...prev];
@@ -241,7 +243,7 @@ export default function Modulations() {
                           });
                         }}
                       >
-                        {totalAjnasModulations} ajnās modulations
+                        {totalAjnasModulations} {t('modulations.ajnasModulations')}
                       </button>
                       <button
                         className={"modulations__maqamat-count" + (!modulationModes[stackIdx] ? " modulations__maqamat-count_active" : "")}
@@ -259,7 +261,7 @@ export default function Modulations() {
                           });
                         }}
                       >
-                        {totalMaqamatModulations} maqāmāt modulations
+                        {totalMaqamatModulations} {t('modulations.maqamatModulations')}
                       </button>
                       {/* Move delete button here, only on last hop and if more than one exists */}
                       {stackIdx === sourceMaqamStack.length - 1 && sourceMaqamStack.length > 1 && (
@@ -286,17 +288,17 @@ export default function Modulations() {
                             removeLastHopsWrapper();
                           }}
                         >
-                          Delete Hop
+                          {t('modulations.deleteHop')}
                         </button>
                       )}
                     </div>
                     <div className="modulations__modulations-list">
                       <span className="modulations__header">
                         <span className="modulations__header-text">
-                          Tonic:
+                          {t('modulations.tonic')}:
                           <br />{" "}
                         </span>
-                        {ascendingNoteNames[0]} ({modulations?.modulationsOnOne ? modulations.modulationsOnOne.length : 0})
+                        {getDisplayName(ascendingNoteNames[0], 'note')} ({modulations?.modulationsOnOne ? modulations.modulationsOnOne.length : 0})
                       </span>
                       {[...modulations.modulationsOnOne]
                         .sort((a: any, b: any) => a.name.localeCompare(b.name))
@@ -317,17 +319,17 @@ export default function Modulations() {
                             }}
                             style={{ cursor: "pointer" }}
                           >
-                            {hop.name}
+                            {getDisplayName(hop.name, modulationModes[stackIdx] ? 'jins' : 'maqam')}
                           </span>
                         ))}
                     </div>
                     <div className="modulations__modulations-list">
                       <span className="modulations__header">
                         <span className="modulations__header-text">
-                          Third:
+                          {t('modulations.third')}:
                           <br />{" "}
                         </span>
-                        {ascendingNoteNames[2]} ({modulations?.modulationsOnThree ? modulations.modulationsOnThree.length : 0})
+                        {getDisplayName(ascendingNoteNames[2], 'note')} ({modulations?.modulationsOnThree ? modulations.modulationsOnThree.length : 0})
                       </span>
                       {[...modulations.modulationsOnThree]
                         .sort((a, b) => a.name.localeCompare(b.name))
@@ -347,17 +349,17 @@ export default function Modulations() {
                             }}
                             style={{ cursor: "pointer" }}
                           >
-                            {hop.name}
+                            {getDisplayName(hop.name, modulationModes[stackIdx] ? 'jins' : 'maqam')}
                           </span>
                         ))}
                     </div>
                     <div className="modulations__modulations-list">
                       <span className="modulations__header">
                         <span className="modulations__header-text">
-                          Third (alternative):
+                          {t('modulations.thirdAlternative')}:
                           <br />{" "}
                         </span>
-                        {noteName2p} ({modulations?.modulationsOnThree2p ? modulations.modulationsOnThree2p.length : 0})
+                        {getDisplayName(noteName2p, 'note')} ({modulations?.modulationsOnThree2p ? modulations.modulationsOnThree2p.length : 0})
                       </span>
                       {[...modulations.modulationsOnThree2p]
                         .sort((a, b) => a.name.localeCompare(b.name))
@@ -377,17 +379,17 @@ export default function Modulations() {
                             }}
                             style={{ cursor: "pointer" }}
                           >
-                            {hop.name}
+                            {getDisplayName(hop.name, modulationModes[stackIdx] ? 'jins' : 'maqam')}
                           </span>
                         ))}
                     </div>
                     <div className="modulations__modulations-list">
                       <span className="modulations__header">
                         <span className="modulations__header-text">
-                          Fourth:
+                          {t('modulations.fourth')}:
                           <br />{" "}
                         </span>
-                        {ascendingNoteNames[3]} ({modulations?.modulationsOnFour ? modulations.modulationsOnFour.length : 0})
+                        {getDisplayName(ascendingNoteNames[3], 'note')} ({modulations?.modulationsOnFour ? modulations.modulationsOnFour.length : 0})
                       </span>
                       {[...modulations.modulationsOnFour]
                         .sort((a, b) => a.name.localeCompare(b.name))
@@ -407,17 +409,17 @@ export default function Modulations() {
                             }}
                             style={{ cursor: "pointer" }}
                           >
-                            {hop.name}
+                            {getDisplayName(hop.name, modulationModes[stackIdx] ? 'jins' : 'maqam')}
                           </span>
                         ))}
                     </div>
                     <div className="modulations__modulations-list">
                       <span className="modulations__header">
                         <span className="modulations__header-text">
-                          Fifth:
+                          {t('modulations.fifth')}:
                           <br />{" "}
                         </span>
-                        {ascendingNoteNames[4]} ({modulations?.modulationsOnFive ? modulations.modulationsOnFive.length : 0})
+                        {getDisplayName(ascendingNoteNames[4], 'note')} ({modulations?.modulationsOnFive ? modulations.modulationsOnFive.length : 0})
                       </span>
                       {[...modulations.modulationsOnFive]
                         .sort((a, b) => a.name.localeCompare(b.name))
@@ -437,17 +439,17 @@ export default function Modulations() {
                             }}
                             style={{ cursor: "pointer" }}
                           >
-                            {hop.name}
+                            {getDisplayName(hop.name, modulationModes[stackIdx] ? 'jins' : 'maqam')}
                           </span>
                         ))}
                     </div>
                     <div className="modulations__modulations-list">
                       <span className="modulations__header">
                         <span className="modulations__header-text">
-                          Sixth (if no Third):
+                          {t('modulations.sixthIfNoThird')}:
                           <br />{" "}
                         </span>
-                        {ascendingNoteNames[5]} ({modulations?.modulationsOnSixNoThird ? modulations.modulationsOnSixNoThird.length : 0})
+                        {getDisplayName(ascendingNoteNames[5], 'note')} ({modulations?.modulationsOnSixNoThird ? modulations.modulationsOnSixNoThird.length : 0})
                       </span>
                       {[...modulations.modulationsOnSixNoThird]
                         .sort((a, b) => a.name.localeCompare(b.name))
@@ -467,17 +469,17 @@ export default function Modulations() {
                             }}
                             style={{ cursor: "pointer" }}
                           >
-                            {hop.name}
+                            {getDisplayName(hop.name, modulationModes[stackIdx] ? 'jins' : 'maqam')}
                           </span>
                         ))}
                     </div>
                     <div className="modulations__modulations-list">
                       <span className="modulations__header">
                         <span className="modulations__header-text">
-                          Sixth (ascending):
+                          {t('modulations.sixthAscending')}:
                           <br />{" "}
                         </span>
-                        {ascendingNoteNames[5]} ({modulations?.modulationsOnSixAscending ? modulations.modulationsOnSixAscending.length : 0})
+                        {getDisplayName(ascendingNoteNames[5], 'note')} ({modulations?.modulationsOnSixAscending ? modulations.modulationsOnSixAscending.length : 0})
                       </span>
                       {[...modulations.modulationsOnSixAscending]
                         .sort((a, b) => a.name.localeCompare(b.name))
@@ -497,7 +499,7 @@ export default function Modulations() {
                             }}
                             style={{ cursor: "pointer" }}
                           >
-                            {hop.name}
+                            {getDisplayName(hop.name, modulationModes[stackIdx] ? 'jins' : 'maqam')}
                           </span>
                         ))}
                     </div>
@@ -505,9 +507,9 @@ export default function Modulations() {
                     <div className="modulations__modulations-list">
                       <span className="modulations__header">
                         <span className="modulations__header-text">
-                          Sixth (descending): <br />{" "}
+                          {t('modulations.sixthDescending')}: <br />{" "}
                         </span>
-                        {descendingNoteNames[5]} ({modulations?.modulationsOnSixDescending ? modulations.modulationsOnSixDescending.length : 0})
+                        {getDisplayName(descendingNoteNames[5], 'note')} ({modulations?.modulationsOnSixDescending ? modulations.modulationsOnSixDescending.length : 0})
                       </span>
                       {JSON.stringify(modulations.modulationsOnSixDescending) !== JSON.stringify(modulations.modulationsOnSixAscending) &&
                         [...modulations.modulationsOnSixDescending]
@@ -528,7 +530,7 @@ export default function Modulations() {
                               }}
                               style={{ cursor: "pointer" }}
                             >
-                              {hop.name}
+                              {getDisplayName(hop.name, modulationModes[stackIdx] ? 'jins' : 'maqam')}
                             </span>
                           ))}
                     </div>

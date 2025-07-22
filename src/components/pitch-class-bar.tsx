@@ -2,6 +2,7 @@
 import React, { useEffect, useState, useRef, useMemo } from "react";
 import useAppContext from "@/contexts/app-context";
 import useSoundContext from "@/contexts/sound-context";
+import useLanguageContext from "@/contexts/language-context";
 import PitchClass from "@/models/PitchClass";
 import { Maqam } from "@/models/Maqam";
 import { getJinsTranspositions, getMaqamTranspositions } from "@/functions/transpose";
@@ -23,6 +24,8 @@ interface WheelCellProps {
 
 const WheelCell = React.memo<WheelCellProps>(
   ({ pitchClass, isSelected, isActive, isDescending, isTonic, isCurrentTonic, mapping, inputType, isBlackKey, isMapped, onClick }) => {
+    const { getDisplayName } = useLanguageContext();
+    
     const baseClassName = "pitch-class-bar__cell";
     let className = "pitch-class-bar__cell";
     
@@ -51,9 +54,11 @@ const WheelCell = React.memo<WheelCellProps>(
 
     if (isActive) className = baseClassName + " pitch-class-bar__cell_active";
 
+    const displayNoteName = getDisplayName(pitchClass.noteName, 'note');
+
     return (
       <div className={className} onClick={onClick} style={{ cursor: isTonic ? "pointer" : undefined }}>
-        <span className="pitch-class-bar__cell-label">{pitchClass.noteName.replace(/\//g, "/\u200B")}</span>
+        <span className="pitch-class-bar__cell-label">{displayNoteName.replace(/\//g, "/\u200B")}</span>
 
         <span className="pitch-class-bar__cell-qwerty-englishname">
           <span className="pitch-class-bar__cell-english">{pitchClass.englishName}</span>

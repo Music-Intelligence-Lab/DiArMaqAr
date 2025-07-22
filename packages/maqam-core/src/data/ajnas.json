@@ -18,7 +18,7 @@
     "noteNames": [
       "dūgāh",
       "segāh",
-      "chahargāh",
+      "chahārgāh",
       "nawā"
     ],
     "commentsEnglish": "",
@@ -30,7 +30,7 @@
     "name": "jins segāh",
     "noteNames": [
       "segāh",
-      "chahargāh",
+      "chahārgāh",
       "nawā"
     ],
     "commentsEnglish": "",
@@ -43,7 +43,7 @@
     "noteNames": [
       "dūgāh",
       "segāh",
-      "chahargāh",
+      "chahārgāh",
       "ḥijāz"
     ],
     "commentsEnglish": "",
@@ -79,7 +79,7 @@
       "rāst",
       "dūgāh",
       "kurdī",
-      "chahargāh"
+      "chahārgāh"
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -91,7 +91,7 @@
     "noteNames": [
       "dūgāh",
       "kurdī",
-      "chahargāh",
+      "chahārgāh",
       "nawā"
     ],
     "commentsEnglish": "",
@@ -105,7 +105,7 @@
       "rāst",
       "tīk zirguleh",
       "buselīk/ʿushshāq",
-      "chahargāh"
+      "chahārgāh"
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -117,7 +117,7 @@
     "noteNames": [
       "dūgāh",
       "kurdī",
-      "chahargāh",
+      "chahārgāh",
       "ḥijāz"
     ],
     "commentsEnglish": "",
@@ -126,9 +126,9 @@
   },
   {
     "id": "10",
-    "name": "jins chahargāh",
+    "name": "jins chahārgāh",
     "noteNames": [
-      "chahargāh",
+      "chahārgāh",
       "nawā",
       "nīm ḥusaynī",
       "ʿajam"
@@ -143,7 +143,7 @@
     "noteNames": [
       "dūgāh",
       "kurdī",
-      "chahargāh",
+      "chahārgāh",
       "ḥiṣār",
       "ḥusaynī"
     ],
@@ -210,7 +210,7 @@
       "rāst",
       "dūgāh",
       "nīm buselīk",
-      "chahargāh"
+      "chahārgāh"
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -223,7 +223,7 @@
       "rāst",
       "tīk zirguleh",
       "kurdī",
-      "chahargāh"
+      "chahārgāh"
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -250,7 +250,7 @@
       "rāst",
       "dūgāh",
       "segāh",
-      "chahargāh"
+      "chahārgāh"
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -275,7 +275,7 @@
     "noteNames": [
       "dūgāh",
       "nīm buselīk",
-      "chahargāh",
+      "chahārgāh",
       "nawā"
     ],
     "commentsEnglish": "",
@@ -293,7 +293,7 @@
     "noteNames": [
       "dūgāh",
       "buselīk/ʿushshāq",
-      "chahargāh",
+      "chahārgāh",
       "nawā"
     ],
     "commentsEnglish": "",

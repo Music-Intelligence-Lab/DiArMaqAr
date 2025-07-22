@@ -4,9 +4,9 @@ import React, { useMemo } from "react";
 import useAppContext from "@/contexts/app-context";
 import useSoundContext, { defaultNoteVelocity } from "@/contexts/sound-context";
 import useFilterContext from "@/contexts/filter-context";
+import useLanguageContext from "@/contexts/language-context";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { getPitchClassIntervals } from "@/functions/transpose";
-import camelCaseToWord from "@/functions/camelCaseToWord";
 
 export default function SelectedPitchClassTranspositions() {
   const { selectedPitchClasses, selectedTuningSystem, allPitchClasses, centsTolerance, setCentsTolerance } = useAppContext();
@@ -14,6 +14,8 @@ export default function SelectedPitchClassTranspositions() {
   const { noteOn, noteOff, playSequence, soundSettings } = useSoundContext();
 
   const { filters, setFilters } = useFilterContext();
+
+  const { t, getDisplayName } = useLanguageContext();
 
   const disabledFilters = ["pitchClass"];
 
@@ -48,22 +50,22 @@ export default function SelectedPitchClassTranspositions() {
                   playSequence(pitchClasses, true);
                 }}
               >
-                <PlayCircleIcon className="jins-transpositions__play-circle-icon" /> Play Selected Pitch Classes
+                <PlayCircleIcon className="jins-transpositions__play-circle-icon" /> {t('analysis.playSelectedPitchClasses')}
               </button>
             </td>
           </tr>
           <tr>
-            <th className="jins-transposition s__row-header">Note Names </th>
+            <th className="jins-transposition s__row-header">{t('analysis.noteNames')} </th>
             {pitchClasses.map(({ noteName }, i) => (
               <React.Fragment key={i}>
                 {i !== 0 && <th className="jins-transpositions__header-cell"></th>}
-                <th className="jins-transpositions__header-cell">{noteName}</th>
+                <th className="jins-transpositions__header-cell">{getDisplayName(noteName, 'note')}</th>
               </React.Fragment>
             ))}
           </tr>
           {filters["abjadName"] && (
             <tr>
-              <th className="jins-transpositions__row-header">Abjad Name</th>
+              <th className="jins-transpositions__row-header">{t('analysis.abjadName')}</th>
               <th className="jins-transpositions__header-pitchClass">{pitchClasses[0].abjadName || "--"}</th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
@@ -75,7 +77,7 @@ export default function SelectedPitchClassTranspositions() {
           )}
           {filters["englishName"] && (
             <tr>
-              <th className="jins-transpositions__row-header">English Name</th>
+              <th className="jins-transpositions__row-header">{t('analysis.englishName')}</th>
               <th className="jins-transpositions__header-pitchClass">{pitchClasses[0].englishName}</th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
@@ -86,7 +88,7 @@ export default function SelectedPitchClassTranspositions() {
             </tr>
           )}
           <tr>
-            <th className="jins-transpositions__row-header">{camelCaseToWord(valueType)}</th>
+            <th className="jins-transpositions__row-header">{t(`analysis.${valueType}`)}</th>
             <th className="jins-transpositions__header-pitchClass">{pitchClasses[0].originalValue}</th>
             {intervals.map((interval, i) => (
               <React.Fragment key={i}>
@@ -99,7 +101,7 @@ export default function SelectedPitchClassTranspositions() {
           </tr>
           {valueType !== "fraction" && filters["fraction"] && (
             <tr>
-              <th className="jins-transpositions__row-header">fraction</th>
+              <th className="jins-transpositions__row-header">{t('analysis.fraction')}</th>
               <th className="jins-transpositions__header-pitchClass">{pitchClasses[0].fraction}</th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
@@ -111,7 +113,7 @@ export default function SelectedPitchClassTranspositions() {
           )}
           {valueType !== "cents" && filters["cents"] && (
             <tr>
-              <th className="jins-transpositions__row-header">cents (¢)</th>
+              <th className="jins-transpositions__row-header">{t('analysis.cents')}</th>
               <th className="jins-transpositions__header-pitchClass">{parseFloat(pitchClasses[0].cents).toFixed(3)}</th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
@@ -123,7 +125,7 @@ export default function SelectedPitchClassTranspositions() {
           )}
           {valueType !== "decimalRatio" && filters["decimalRatio"] && (
             <tr>
-              <th className="jins-transpositions__row-header">decimal ratio</th>
+              <th className="jins-transpositions__row-header">{t('analysis.decimalRatio')}</th>
               <th className="jins-transpositions__header-pitchClass">{parseFloat(pitchClasses[0].decimalRatio).toFixed(3)}</th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
@@ -135,7 +137,7 @@ export default function SelectedPitchClassTranspositions() {
           )}
           {valueType !== "stringLength" && filters["stringLength"] && (
             <tr>
-              <th className="jins-transpositions__row-header">string length</th>
+              <th className="jins-transpositions__row-header">{t('analysis.stringLength')}</th>
               <th className="jins-transpositions__header-pitchClass">{parseFloat(pitchClasses[0].stringLength).toFixed(3)}</th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
@@ -147,7 +149,7 @@ export default function SelectedPitchClassTranspositions() {
           )}
           {valueType !== "fretDivision" && filters["fretDivision"] && (
             <tr>
-              <th className="jins-transpositions__row-header">fret division</th>
+              <th className="jins-transpositions__row-header">{t('analysis.fretDivision')}</th>
               <th className="jins-transpositions__header-pitchClass">{parseFloat(pitchClasses[0].fretDivision).toFixed(3)}</th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
@@ -159,7 +161,7 @@ export default function SelectedPitchClassTranspositions() {
           )}
           {filters["midiNote"] && (
             <tr>
-              <th className="jins-transpositions__row-header">MIDI Note</th>
+              <th className="jins-transpositions__row-header">{t('analysis.midiNote')}</th>
               <th className="jins-transpositions__header-pitchClass">{pitchClasses[0].midiNoteNumber.toFixed(3)}</th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
@@ -171,7 +173,7 @@ export default function SelectedPitchClassTranspositions() {
           )}
           {filters["frequency"] && (
             <tr>
-              <th className="jins-transpositions__row-header">Freq (Hz)</th>
+              <th className="jins-transpositions__row-header">{t('analysis.frequency')}</th>
               <th className="jins-transpositions__header-pitchClass">{parseFloat(pitchClasses[0].frequency).toFixed(3)}</th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
@@ -182,7 +184,7 @@ export default function SelectedPitchClassTranspositions() {
             </tr>
           )}
           <tr>
-            <th className="jins-transpositions__row-header">Play</th>
+            <th className="jins-transpositions__row-header">{t('analysis.play')}</th>
             {pitchClasses.map((pitchClass, i) => (
               <React.Fragment key={i}>
                 {i !== 0 && <th className="jins-transpositions__header-cell"></th>}
@@ -214,11 +216,11 @@ export default function SelectedPitchClassTranspositions() {
       <>
         <div className="jins-transpositions">
           <h2 className="jins-transpositions__title">
-            Taḥlīl (analysis):
+            {t('analysis.title')}:
             {!useRatio && (
               <>
                 {" "}
-                / Cents Tolerance:{" "}
+                / {t('analysis.centsTolerance')}:{" "}
                 <input
                   className="jins-transpositions__input"
                   type="number"
@@ -265,15 +267,7 @@ export default function SelectedPitchClassTranspositions() {
                       }}
                     />
                     <span className="tuning-system-manager__filter-label">
-                      {filterKey
-                        .replace(/([A-Z])/g, " $1")
-                        .trim()
-                        .charAt(0)
-                        .toUpperCase() +
-                        filterKey
-                          .replace(/([A-Z])/g, " $1")
-                          .trim()
-                          .slice(1)}
+                      {t(`filter.${filterKey}`)}
                     </span>
                   </label>
                 );

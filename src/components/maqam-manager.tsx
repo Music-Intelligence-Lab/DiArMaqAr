@@ -4,6 +4,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import useAppContext from "@/contexts/app-context";
 import useFilterContext from "@/contexts/filter-context";
 import useSoundContext from "@/contexts/sound-context";
+import useLanguageContext from "@/contexts/language-context";
 import MaqamData from "@/models/Maqam";
 import { getMaqamTranspositions } from "@/functions/transpose";
 import { updateMaqamat } from "@/functions/update";
@@ -28,6 +29,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
   const { maqamatFilter, setMaqamatFilter } = useFilterContext();
 
   const { clearHangingNotes } = useSoundContext();
+  const { t, language, isRTL, getDisplayName } = useLanguageContext();
 
   // Local state for comments
   const [commentsEnglishLocal, setCommentsEnglishLocal] = useState<string>(selectedMaqamData?.getCommentsEnglish() ?? "");
@@ -42,7 +44,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
     });
     const orderedByPitchClasses = allPitchClasses.map((pc) => pc.noteName.toLowerCase()).filter((name) => uniqueNoteNames.has(name));
     return ["all", ...orderedByPitchClasses];
-  }, [maqamat, allPitchClasses]);
+  }, [maqamat, allPitchClasses, language]);
 
   // Sync local state when a different maqam is selected
   useEffect(() => {
@@ -147,13 +149,13 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
   const filteredMaqamat = useMemo(() => {
     if (maqamatFilter === "all") return sortedMaqamat;
     return sortedMaqamat.filter((maqam) => maqam.getAscendingNoteNames()[0]?.toLowerCase() === maqamatFilter.toLowerCase());
-  }, [sortedMaqamat, maqamatFilter]);
+  }, [sortedMaqamat, maqamatFilter, language]);
 
   const numberOfRows = 3; // Fixed number of rows
   const numberOfColumns = Math.ceil(filteredMaqamat.length / numberOfRows); // Calculate columns dynamically
 
   return (
-    <div className="maqam-manager">
+    <div className="maqam-manager" key={language}>
       {/* Tabs for filtering maqamat by starting note name */}
       <div className="maqam-manager__tabs">
         {tabs.map((tab) => {
@@ -163,9 +165,10 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
           } else {
             count = sortedMaqamat.filter((maqam) => maqam.getAscendingNoteNames()[0]?.toLowerCase() === tab.toLowerCase()).length;
           }
+          const displayName = tab === "all" ? t('maqam.all') : getDisplayName(tab, 'note');
           return (
             <button key={tab} className={"maqam-manager__tab" + (maqamatFilter === tab ? " maqam-manager__tab_active" : "")} onClick={() => setMaqamatFilter(tab)}>
-              {tab} <span className="maqam-manager__tab-count">({count})</span>
+              {displayName} <span className="maqam-manager__tab-count">({count})</span>
             </button>
           );
         })}
@@ -178,7 +181,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
           className="carousel-button carousel-button-prev"
           onClick={() => {
             const c = document.querySelector(".maqam-manager__list");
-            if (c) c.scrollBy({ left: -670, behavior: "smooth" });
+            if (c) c.scrollBy({ left: isRTL ? 670 : -670, behavior: "smooth" });
           }}
         >
           ‹
@@ -204,8 +207,8 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
                 }}
               >
                 <div className="maqam-manager__item-name">
-                  <strong>{`${maqamData.getName()}${!maqamData.isMaqamSymmetric() ? "*" : ""}`}</strong>
-                  {selectable && <strong className="maqam-manager__item-name-transpositions">{`Transpositions: ${numberOfTranspositions}/${numberOfPitchClasses}`}</strong>}
+                  <strong>{`${getDisplayName(maqamData.getName(), 'maqam')}${!maqamData.isMaqamSymmetric() ? "*" : ""}`}</strong>
+                  {selectable && <strong className="maqam-manager__item-name-transpositions">{`${t('maqam.transpositions')}: ${numberOfTranspositions}/${numberOfPitchClasses}`}</strong>}
                 </div>
               </div>
             );
@@ -215,7 +218,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
           className="carousel-button carousel-button-next"
           onClick={() => {
             const c = document.querySelector(".maqam-manager__list");
-            if (c) c.scrollBy({ left: 520, behavior: "smooth" });
+            if (c) c.scrollBy({ left: isRTL ? -520 : 520, behavior: "smooth" });
           }}
         >
           ›
@@ -224,7 +227,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
 
       {admin && !selectedMaqamData && (
         <button onClick={() => setSelectedMaqamData(new MaqamData(newMaqamId, "", [], [], [], "", "", []))} className="maqam-manager__create-new-maqam-button">
-          Create New Maqam
+          {t('maqam.createNewMaqam')}
         </button>
       )}
 
@@ -248,7 +251,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
                   )
                 )
               }
-              placeholder="Enter maqam name"
+              placeholder={t('maqam.enterMaqamName')}
               className="maqam-manager__maqam-input"
             />
             <button
@@ -268,25 +271,25 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
               }}
               className="maqam-manager__save-button"
             >
-              Save Name
+              {t('maqam.saveName')}
             </button>
             <button onClick={handleSaveAscending} className="maqam-manager__save-button">
-              Save Ascending
+              {t('maqam.saveAscending')}
             </button>
             <button onClick={handleSaveDescending} className="maqam-manager__save-button">
-              Save Descending
+              {t('maqam.saveDescending')}
             </button>
             <button onClick={handleDeleteMaqam} className="maqam-manager__delete-button">
-              Delete
+              {t('maqam.delete')}
             </button>
             <button onClick={clearSelections} className="maqam-manager__clear-button">
-              Clear
+              {t('maqam.clear')}
             </button>
           </div>
 
           <div className="maqam-manager__group">
             <button className="maqam-manager__source-add-button" onClick={addSourceRef}>
-              Add Source
+              {t('maqam.addSource')}
             </button>
             {selectedMaqamData.getSourcePageReferences().map((ref, idx) => (
               <div key={idx} className="maqam-manager__source-item">
@@ -295,7 +298,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
                   value={ref.sourceId}
                   onChange={(e) => updateSourceRefs(selectedMaqamData.getSourcePageReferences(), idx, { sourceId: e.target.value })}
                 >
-                  <option value="">Select source</option>
+                  <option value="">{t('maqam.selectSource')}</option>
                   {[...sources]
                     .sort((a, b) => a.getTitleEnglish().localeCompare(b.getTitleEnglish()))
                     .map((s) => (
@@ -308,11 +311,11 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
                   className="maqam-manager__source-input"
                   type="text"
                   value={ref.page}
-                  placeholder="Page"
+                  placeholder={t('maqam.page')}
                   onChange={(e) => updateSourceRefs(selectedMaqamData.getSourcePageReferences(), idx, { page: e.target.value })}
                 />
                 <button className="maqam-manager__source-delete-button" onClick={() => removeSourceRef(idx)}>
-                  Delete
+                  {t('maqam.delete')}
                 </button>
               </div>
             ))}
@@ -322,13 +325,13 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
           <div className="maqam-manager__group">
             <div className="maqam-manager__input-container">
               <label className="maqam-manager__label" htmlFor="commentsEnglishField">
-                Comments (English)
+                {t('maqam.commentsEnglish')}
               </label>
               <textarea rows={5} className="maqam-manager__input" id="commentsEnglishField" value={commentsEnglishLocal} onChange={(e) => setCommentsEnglishLocal(e.target.value)} />
             </div>
             <div className="maqam-manager__input-container">
               <label className="maqam-manager__label" htmlFor="commentsArabicField">
-                Comments (Arabic)
+                {t('maqam.commentsArabic')}
               </label>
               <textarea rows={5} className="maqam-manager__input" id="commentsArabicField" value={commentsArabicLocal} onChange={(e) => setCommentsArabicLocal(e.target.value)} />
             </div>

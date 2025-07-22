@@ -4,6 +4,7 @@ import React, { useMemo, useEffect, useState } from "react";
 import useAppContext from "@/contexts/app-context";
 import useSoundContext, { defaultNoteVelocity } from "@/contexts/sound-context";
 import useFilterContext from "@/contexts/filter-context";
+import useLanguageContext from "@/contexts/language-context";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { getMaqamTranspositions } from "@/functions/transpose";
@@ -35,7 +36,6 @@ export function scrollToMaqamHeader(firstNote: string, selectedMaqamData?: any) 
 import { Maqam } from "@/models/Maqam";
 import { calculateInterval } from "@/models/PitchClass";
 import shiftPitchClass from "@/functions/shiftPitchClass";
-import camelCaseToWord from "@/functions/camelCaseToWord";
 import Link from "next/link";
 
 const MaqamTranspositions: React.FC = () => {
@@ -54,6 +54,7 @@ const MaqamTranspositions: React.FC = () => {
   const { noteOn, noteOff, playSequence, soundSettings, clearHangingNotes } = useSoundContext();
 
   const { filters, setFilters } = useFilterContext();
+  const { t, language, getDisplayName } = useLanguageContext();
 
   const [highlightedNotes, setHighlightedNotes] = useState<{
     index: number;
@@ -142,7 +143,7 @@ const MaqamTranspositions: React.FC = () => {
                 ...octaveTransposition,
                 jinsPitchClasses: [shiftedFirstCell],
                 jinsPitchClassIntervals: [],
-                name: foundJinsData.getName() + " al-" + shiftedFirstCell.noteName,
+                name: getDisplayName(foundJinsData.getName(), 'jins') + " al-" + getDisplayName(shiftedFirstCell.noteName, 'note'),
               };
             }
           }
@@ -172,11 +173,11 @@ const MaqamTranspositions: React.FC = () => {
                 style={rowIndex === 0 && ascending ? { scrollMarginTop: "160px" } : undefined}
               >
                 {!transposition ? (
-                  <span className="maqam-transpositions__transposition-title">{`Darajat al-Istiqrār (tonic/finalis): ${
-                    pitchClasses[0].noteName
+                  <span className="maqam-transpositions__transposition-title">{`${t('maqam.darajatAlIstiqrar')}: ${
+                    getDisplayName(pitchClasses[0].noteName, 'note')
                   } (${getEnglishNoteName(pitchClasses[0].noteName)})`}</span>
                 ) : (
-                  <span className="maqam-transpositions__transposition-title">{maqam.name}</span>
+                  <span className="maqam-transpositions__transposition-title">{getDisplayName(maqam.name, 'maqam')}</span>
                 )}
                 <button
                   className="maqam-transpositions__button"
@@ -194,7 +195,7 @@ const MaqamTranspositions: React.FC = () => {
                     }, 10);
                   }}
                 >
-                  Select & Load to Keyboard
+                  {t('maqam.selectLoadToKeyboard')}
                 </button>
                 <button
                   className="maqam-transpositions__button"
@@ -205,7 +206,7 @@ const MaqamTranspositions: React.FC = () => {
                   }}
                 >
                   <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
-                  {"Ascending > Descending"}
+                  {t('maqam.ascendingDescending')}
                 </button>
                 <button
                   className="maqam-transpositions__button"
@@ -215,7 +216,7 @@ const MaqamTranspositions: React.FC = () => {
                   }}
                 >
                   <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
-                  Ascending
+                  {t('maqam.ascending')}
                 </button>
                 <button
                   className="maqam-transpositions__button"
@@ -225,14 +226,14 @@ const MaqamTranspositions: React.FC = () => {
                   }}
                 >
                   <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
-                  Descending
+                  {t('maqam.descending')}
                 </button>
                 <button
                   className="maqam-transpositions__button"
                   onClick={() => handleMaqamExport(maqam)}
                 >
                   <FileDownloadIcon className="maqam-transpositions__export-icon" />
-                  Export
+                  {t('maqam.export')}
                 </button>
               </th>
             </tr>
@@ -243,7 +244,7 @@ const MaqamTranspositions: React.FC = () => {
             </td>
           </tr>
           <tr>
-            <th className="maqam-transpositions__row-header">Scale Degrees</th>
+            <th className="maqam-transpositions__row-header">{t('maqam.scaleDegrees')}</th>
             {pitchClasses.map((_, i) => (
               <React.Fragment key={i}>
                 <th className="maqam-transpositions__header-cell_scale-degrees-number">
@@ -254,7 +255,7 @@ const MaqamTranspositions: React.FC = () => {
             ))}
           </tr>
           <tr>
-            <th className="maqam-transpositions__row-header">Note Names </th>
+            <th className="maqam-transpositions__row-header">{t('maqam.noteNames')}</th>
             {pitchClasses.map((pitchClass, i) => (
               <React.Fragment key={i}>
                 <th
@@ -265,7 +266,7 @@ const MaqamTranspositions: React.FC = () => {
                     (isCellHighlighted(rowIndex + (ascending ? 0 : 0.5), pitchClass.noteName) ? "maqam-transpositions__header-cell_highlighted" : "")
                   }
                 >
-                  {pitchClass.noteName}{" "}
+                  {getDisplayName(pitchClass.noteName, 'note')}{" "}
                 </th>
                 <th className="maqam-transpositions__header-pitchClass"></th>
               </React.Fragment>
@@ -273,7 +274,7 @@ const MaqamTranspositions: React.FC = () => {
           </tr>
           {filters["abjadName"] && (
             <tr>
-              <th className="maqam-transpositions__row-header">Abjad Name</th>
+              <th className="maqam-transpositions__row-header">{t('maqam.abjadName')}</th>
               {pitchClasses.map((pitchClass, i) => (
                 <React.Fragment key={i}>
                   <th className="maqam-transpositions__header-pitchClass">{pitchClass.abjadName || "--"}</th>
@@ -284,7 +285,7 @@ const MaqamTranspositions: React.FC = () => {
           )}
           {filters["englishName"] && (
             <tr>
-              <th className="maqam-transpositions__row-header">English Name</th>
+              <th className="maqam-transpositions__row-header">{t('maqam.englishName')}</th>
               {pitchClasses.map((pitchClass, i) => (
                 <React.Fragment key={i}>
                   <th className="maqam-transpositions__header-pitchClass">{pitchClass.englishName}</th>
@@ -294,7 +295,7 @@ const MaqamTranspositions: React.FC = () => {
             </tr>
           )}
           <tr>
-            <th className="maqam-transpositions__row-header">{camelCaseToWord(valueType)}</th>
+            <th className="maqam-transpositions__row-header">{t(`maqam.${valueType}`)}</th>
             <th className="maqam-transpositions__header-pitchClass">{pitchClasses[0].originalValue}</th>
             {intervals.map((interval, i) => (
               <React.Fragment key={i}>
@@ -308,7 +309,7 @@ const MaqamTranspositions: React.FC = () => {
           </tr>
           {valueType !== "fraction" && filters["fraction"] && (
             <tr>
-              <th className="maqam-transpositions__row-header">fraction</th>
+              <th className="maqam-transpositions__row-header">{t('maqam.fraction')}</th>
               <th className="maqam-transpositions__header-pitchClass">{pitchClasses[0].fraction}</th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
@@ -321,7 +322,7 @@ const MaqamTranspositions: React.FC = () => {
           )}
           {valueType !== "cents" && filters["cents"] && (
             <tr>
-              <th className="maqam-transpositions__row-header">cents (¢)</th>
+              <th className="maqam-transpositions__row-header">{t('maqam.cents')}</th>
               <th className="maqam-transpositions__header-pitchClass">{parseFloat(pitchClasses[0].cents).toFixed(3)}</th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
@@ -334,7 +335,7 @@ const MaqamTranspositions: React.FC = () => {
           )}
           {valueType !== "decimalRatio" && filters["decimalRatio"] && (
             <tr>
-              <th className="maqam-transpositions__row-header">decimal ratio</th>
+              <th className="maqam-transpositions__row-header">{t('maqam.decimalRatio')}</th>
               <th className="maqam-transpositions__header-pitchClass">{parseFloat(pitchClasses[0].decimalRatio).toFixed(3)}</th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
@@ -347,7 +348,7 @@ const MaqamTranspositions: React.FC = () => {
           )}
           {valueType !== "stringLength" && filters["stringLength"] && (
             <tr>
-              <th className="maqam-transpositions__row-header">string length</th>
+              <th className="maqam-transpositions__row-header">{t('maqam.stringLength')}</th>
               <th className="maqam-transpositions__header-pitchClass">{parseFloat(pitchClasses[0].stringLength).toFixed(3)}</th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
@@ -360,7 +361,7 @@ const MaqamTranspositions: React.FC = () => {
           )}
           {valueType !== "fretDivision" && filters["fretDivision"] && (
             <tr>
-              <th className="maqam-transpositions__row-header">fret division</th>
+              <th className="maqam-transpositions__row-header">{t('maqam.fretDivision')}</th>
               <th className="maqam-transpositions__header-pitchClass">{parseFloat(pitchClasses[0].fretDivision).toFixed(3)}</th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
@@ -373,7 +374,7 @@ const MaqamTranspositions: React.FC = () => {
           )}
           {filters["midiNote"] && (
             <tr>
-              <th className="maqam-transpositions__row-header">MIDI Note</th>
+              <th className="maqam-transpositions__row-header">{t('maqam.midiNote')}</th>
               {pitchClasses.map((pitchClass, i) => (
                 <React.Fragment key={i}>
                   <th className="maqam-transpositions__header-pitchClass">{pitchClass.midiNoteNumber.toFixed(3)}</th>
@@ -384,7 +385,7 @@ const MaqamTranspositions: React.FC = () => {
           )}
           {filters["frequency"] && (
             <tr>
-              <th className="maqam-transpositions__row-header">Freq (Hz)</th>
+              <th className="maqam-transpositions__row-header">{t('maqam.frequency')}</th>
               {pitchClasses.map((pitchClass, i) => (
                 <React.Fragment key={i}>
                   <th className="maqam-transpositions__header-pitchClass">{parseFloat(pitchClass.frequency).toFixed(3)}</th>
@@ -394,7 +395,7 @@ const MaqamTranspositions: React.FC = () => {
             </tr>
           )}
           <tr>
-            <th className="maqam-transpositions__row-header">Play</th>
+            <th className="maqam-transpositions__row-header">{t('maqam.play')}</th>
             {pitchClasses.map((pitchClass, i) => (
               <React.Fragment key={i}>
                 <th>
@@ -418,7 +419,7 @@ const MaqamTranspositions: React.FC = () => {
           {jinsTranspositions && (
             <>
               <tr>
-                <th className="maqam-transpositions__row-header">Ajnas</th>
+                <th className="maqam-transpositions__row-header">{t('maqam.ajnas')}</th>
                 {jinsTranspositions.map((jinsTransposition, index) => {
                   return (
                     <th className="maqam-transpositions__header-pitchClass" colSpan={2} key={index}>
@@ -433,7 +434,7 @@ const MaqamTranspositions: React.FC = () => {
                             });
                           }}
                         >
-                          {jinsTransposition.name}
+                          {getDisplayName(jinsTransposition.name, 'jins')}
                         </button>
                       )}
                     </th>
@@ -444,7 +445,7 @@ const MaqamTranspositions: React.FC = () => {
           )}
           {filters.staffNotation && (
             <tr>
-              <th className="maqam-transpositions__row-header">Staff Notation</th>
+              <th className="maqam-transpositions__row-header">{t('maqam.staffNotation')}</th>
               <td className="staff-notation-cell" colSpan={pitchClasses.length * 2}>
                 <StaffNotation pitchClasses={pitchClasses} />
               </td>
@@ -468,15 +469,15 @@ const MaqamTranspositions: React.FC = () => {
     }
 
     return (
-      <div className="maqam-transpositions">
+      <div className="maqam-transpositions" key={language}>
         {maqamTranspositions.length > 0 && (
           <>
             <h2 className="maqam-transpositions__title">
-              Taḥlīl (analysis): {`${selectedMaqamData.getName()}`}
+              {t('maqam.analysis')}: {`${getDisplayName(selectedMaqamData.getName(), 'maqam')}`}
               {!useRatio && (
                 <>
                   {" "}
-                  / Cents Tolerance:{" "}
+                  / {t('maqam.centsTolerance')}:{" "}
                   <input
                     className="maqam-transpositions__input"
                     type="number"
@@ -523,15 +524,7 @@ const MaqamTranspositions: React.FC = () => {
                         }}
                       />
                       <span className="tuning-system-manager__filter-label">
-                        {filterKey
-                          .replace(/([A-Z])/g, " $1")
-                          .trim()
-                          .charAt(0)
-                          .toUpperCase() +
-                          filterKey
-                            .replace(/([A-Z])/g, " $1")
-                            .trim()
-                            .slice(1)}
+                        {t(`maqam.${filterKey}`)}
                       </span>
                     </label>
                   );
@@ -560,12 +553,12 @@ const MaqamTranspositions: React.FC = () => {
           <>
             <div className="maqam-transpositions__comments-sources-container">
               <div className="maqam-transpositions__comments-english">
-                <h3>Comments:</h3>
+                <h3>{t('maqam.comments')}:</h3>
                 <div className="maqam-transpositions__comments-text">{selectedMaqamData.getCommentsEnglish()}</div>
               </div>
 
               <div className="maqam-transpositions__sources-english">
-                <h3>Sources:</h3>
+                <h3>{t('maqam.sources')}:</h3>
                 <div className="maqam-transpositions__sources-text">
                   {selectedMaqamData?.getSourcePageReferences().length > 0 &&
                     selectedMaqamData.getSourcePageReferences().map((sourceRef, idx) => {
@@ -586,11 +579,11 @@ const MaqamTranspositions: React.FC = () => {
           <>
             <div className="maqam-transpositions__title-container">
               <h2 className="maqam-transpositions__title">
-                Taṣwīr (transpositions): {`${selectedMaqamData.getName()}`}
+                {t('maqam.transpositionsTitle')}: {`${getDisplayName(selectedMaqamData.getName(), 'maqam')}`}
                 {!useRatio && (
                   <>
                     {" "}
-                    / Cents Tolerance:{" "}
+                    / {t('maqam.centsTolerance')}:{" "}
                     <input
                       className="maqam-transpositions__input"
                       type="number"
@@ -630,7 +623,7 @@ const MaqamTranspositions: React.FC = () => {
         )}
       </div>
     );
-  }, [allPitchClasses, ajnas, selectedMaqamData, selectedTuningSystem, centsTolerance, filters, highlightedNotes, soundSettings]);
+  }, [allPitchClasses, ajnas, selectedMaqamData, selectedTuningSystem, centsTolerance, filters, highlightedNotes, soundSettings, language]);
 
   // Listen for custom event to scroll to header when maqam/transposition changes (event-driven)
   useEffect(() => {
