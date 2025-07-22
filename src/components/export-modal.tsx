@@ -35,11 +35,11 @@ export interface ExportOptions {
 }
 
 export default function ExportModal({ isOpen, onClose, exportType, specificJins, specificMaqam }: ExportModalProps) {
-  const { selectedTuningSystem, selectedIndices, selectedJinsTemplate, selectedMaqamTemplate } = useAppContext();
+  const { selectedTuningSystem, selectedIndices, selectedJinsData, selectedMaqamData } = useAppContext();
 
   // Determine which jins/maqam to use for export - prioritize specific instances
-  const jinsToExport = specificJins || selectedJinsTemplate;
-  const maqamToExport = specificMaqam || selectedMaqamTemplate;
+  const jinsToExport = specificJins || selectedJinsData;
+  const maqamToExport = specificMaqam || selectedMaqamData;
 
   const [exportOptions, setExportOptions] = useState<ExportOptions>(() => {
     // Generate dynamic filename

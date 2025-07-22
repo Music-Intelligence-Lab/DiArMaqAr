@@ -29,8 +29,8 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
     setSelectedPitchClasses,
     selectedIndices,
     setSelectedIndices,
-    selectedJinsTemplate,
-    selectedMaqamTemplate,
+    selectedJinsData,
+    selectedMaqamData,
     allPitchClasses,
     selectedAbjadNames,
     setSelectedAbjadNames,
@@ -68,7 +68,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
     .filter((p) => p.length > 0);
 
   useEffect(() => {
-    if (!selectedJinsTemplate || !selectedMaqamTemplate) return;
+    if (!selectedJinsData || !selectedMaqamData) return;
     if (selectedPitchClasses.length === 0) {
       setOpenedOctaveRows({ 0: false, 1: true, 2: true, 3: false });
     } else {
@@ -171,7 +171,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
     const originalValue = allPitchClasses[octave * tuningSystemPitchClassesArray.length + colIndex].originalValue;
     return selectedMaqam
       ? selectedMaqam.descendingPitchClasses.map((pitchClass) => pitchClass.originalValue).includes(originalValue)
-      : selectedMaqamTemplate
+      : selectedMaqamData
           ?.getTahlil(allPitchClasses)
           .descendingPitchClasses.map((pitchClass) => pitchClass.originalValue)
           .includes(originalValue) ?? false;

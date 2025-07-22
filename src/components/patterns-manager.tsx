@@ -8,13 +8,13 @@ import { nanoid } from "nanoid";
 import { updatePatterns } from "@/functions/update";
 
 export default function PatternsManager() {
-  const { patterns, setPatterns, selectedMaqamTemplate, allPitchClasses } = useAppContext();
+  const { patterns, setPatterns, selectedMaqamData, allPitchClasses } = useAppContext();
   const { playSequence } = useSoundContext();
   const [patternId, setPatternId] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [notes, setNotes] = useState<PatternNote[]>([]);
 
-  const maqamModel = selectedMaqamTemplate ? selectedMaqamTemplate.getTahlil(allPitchClasses) : null;
+  const maqamModel = selectedMaqamData ? selectedMaqamData.getTahlil(allPitchClasses) : null;
 
   const pitchClasses = maqamModel ? maqamModel.ascendingPitchClasses : [];
 

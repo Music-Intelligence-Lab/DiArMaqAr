@@ -15,7 +15,7 @@ import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import ExportModal from "./export-modal";
 
 export default function JinsTranspositions() {
-  const { selectedJinsTemplate, selectedTuningSystem, setSelectedPitchClasses, allPitchClasses, centsTolerance, setCentsTolerance, sources, setSelectedJins } = useAppContext();
+  const { selectedJinsData, selectedTuningSystem, setSelectedPitchClasses, allPitchClasses, centsTolerance, setCentsTolerance, sources, setSelectedJins } = useAppContext();
 
   const { noteOn, noteOff, playSequence, soundSettings } = useSoundContext();
 
@@ -43,9 +43,9 @@ export default function JinsTranspositions() {
   };
 
   // --- Utility: scroll to jins header by note name ---
-  function scrollToJinsHeader(firstNote: string, selectedJinsTemplate?: any) {
-    if (!firstNote && selectedJinsTemplate) {
-      firstNote = selectedJinsTemplate.getNoteNames?.()?.[0];
+  function scrollToJinsHeader(firstNote: string, selectedJinsData?: any) {
+    if (!firstNote && selectedJinsData) {
+      firstNote = selectedJinsData.getNoteNames?.()?.[0];
     }
     if (!firstNote) return;
     const id = getJinsHeaderId(firstNote);
@@ -56,9 +56,9 @@ export default function JinsTranspositions() {
   }
 
   const transpositionTables = useMemo(() => {
-    if (!selectedJinsTemplate || !selectedTuningSystem) return null;
+    if (!selectedJinsData || !selectedTuningSystem) return null;
 
-    const jinsNoteNames = selectedJinsTemplate.getNoteNames();
+    const jinsNoteNames = selectedJinsData.getNoteNames();
 
     if (jinsNoteNames.length < 2) return null;
 
@@ -67,7 +67,7 @@ export default function JinsTranspositions() {
 
     const numberOfFilterRows = Object.keys(filters).filter((key) => !disabledFilters.includes(key) && key !== valueType && filters[key as keyof typeof filters]).length;
 
-    const jinsTranspositions = getJinsTranspositions(allPitchClasses, selectedJinsTemplate, true, centsTolerance);
+    const jinsTranspositions = getJinsTranspositions(allPitchClasses, selectedJinsData, true, centsTolerance);
 
     function renderTransposition(jins: Jins, index: number) {
       const transposition = jins.transposition;
@@ -293,7 +293,7 @@ export default function JinsTranspositions() {
       <>
         <div className="jins-transpositions">
           <h2 className="jins-transpositions__title">
-            Taḥlīl (analysis): {`${selectedJinsTemplate.getName()}`}{" "}
+            Taḥlīl (analysis): {`${selectedJinsData.getName()}`}{" "}
             {!useRatio && (
               <>
                 {" "}
@@ -361,19 +361,19 @@ export default function JinsTranspositions() {
           </table>
 
           {/* COMMENTS AND SOURCES */}
-          {selectedJinsTemplate && (
+          {selectedJinsData && (
             <>
               <div className="jins-transpositions__comments-sources-container">
                 <div className="jins-transpositions__comments-english">
                   <h3>Comments:</h3>
-                  <div className="jins-transpositions__comments-text">{selectedJinsTemplate.getCommentsEnglish()}</div>
+                  <div className="jins-transpositions__comments-text">{selectedJinsData.getCommentsEnglish()}</div>
                 </div>
 
                 <div className="jins-transpositions__sources-english">
                   <h3>Sources:</h3>
                   <div className="jins-transpositions__sources-text">
-                    {selectedJinsTemplate?.getSourcePageReferences().length > 0 &&
-                      selectedJinsTemplate.getSourcePageReferences().map((sourceRef, idx) => {
+                    {selectedJinsData?.getSourcePageReferences().length > 0 &&
+                      selectedJinsData.getSourcePageReferences().map((sourceRef, idx) => {
                         const source = sources.find((s: any) => s.id === sourceRef.sourceId);
                         return source ? (
                           <Link href={`/bibliography?source=${source?.getId()}`} key={idx}>
@@ -388,7 +388,7 @@ export default function JinsTranspositions() {
             </>
           )}
 
-          <h2 className="jins-transpositions__title">Taṣwīr (transpositions): {`${selectedJinsTemplate.getName()}`}</h2>
+          <h2 className="jins-transpositions__title">Taṣwīr (transpositions): {`${selectedJinsData.getName()}`}</h2>
 
           <table className="jins-transpositions__table">
             <colgroup>
@@ -406,18 +406,18 @@ export default function JinsTranspositions() {
         </div>
       </>
     );
-  }, [allPitchClasses, selectedJinsTemplate, centsTolerance, filters, soundSettings]);
+  }, [allPitchClasses, selectedJinsData, centsTolerance, filters, soundSettings]);
 
   // Listen for custom event to scroll to header when jins/transposition changes (event-driven)
   useEffect(() => {
     function handleJinsTranspositionChange(e: CustomEvent) {
-      scrollToJinsHeader(e.detail?.firstNote, selectedJinsTemplate);
+      scrollToJinsHeader(e.detail?.firstNote, selectedJinsData);
     }
     window.addEventListener("jinsTranspositionChange", handleJinsTranspositionChange as EventListener);
     return () => {
       window.removeEventListener("jinsTranspositionChange", handleJinsTranspositionChange as EventListener);
     };
-  }, [selectedJinsTemplate]);
+  }, [selectedJinsData]);
 
   // Scroll to header on mount if jinsFirstNote is in the URL
   useEffect(() => {
@@ -426,10 +426,10 @@ export default function JinsTranspositions() {
     const jinsFirstNote = params.get("jinsFirstNote");
     if (jinsFirstNote) {
       setTimeout(() => {
-        scrollToJinsHeader(decodeURIComponent(jinsFirstNote), selectedJinsTemplate);
+        scrollToJinsHeader(decodeURIComponent(jinsFirstNote), selectedJinsData);
       }, 200);
     }
-  }, [selectedJinsTemplate]);
+  }, [selectedJinsData]);
 
   return (
     <>

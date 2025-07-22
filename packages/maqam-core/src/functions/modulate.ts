@@ -2,13 +2,13 @@ import { octaveOneNoteNames, octaveTwoNoteNames } from "../models/NoteName";
 import { getJinsTranspositions, getMaqamTranspositions } from "./transpose";
 import shawwaMapping from "../functions/shawwaMapping";
 import PitchClass from "../models/PitchClass";
-import JinsTemplate, { Jins, AjnasModulations } from "../models/Jins";
-import MaqamTemplate, { Maqam, MaqamatModulations } from "../models/Maqam";
+import JinsData, { Jins, AjnasModulations } from "../models/Jins";
+import MaqamData, { Maqam, MaqamatModulations } from "../models/Maqam";
 
 export default function modulate(
   allPitchClasses: PitchClass[],
-  allAjnas: JinsTemplate[],
-  allMaqamat: MaqamTemplate[],
+  allAjnas: JinsData[],
+  allMaqamat: MaqamData[],
   sourceMaqamTransposition: Maqam,
   ajnasModulationsMode: boolean,
   centsTolerance: number = 5
@@ -69,7 +69,7 @@ export default function modulate(
   for (const maqamOrJins of ajnasModulationsMode ? allAjnas : allMaqamat) {
     let transpositions: (Maqam | Jins)[] = [];
 
-    if (maqamOrJins instanceof JinsTemplate) {
+    if (maqamOrJins instanceof JinsData) {
       if (!maqamOrJins.isJinsSelectable(allPitchClasses.map((pitchClass) => pitchClass.noteName))) continue;
 
       const currentNotes = maqamOrJins.getNoteNames();

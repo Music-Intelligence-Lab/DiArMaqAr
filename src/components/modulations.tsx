@@ -14,13 +14,13 @@ export default function Modulations() {
   const {
     maqamat,
     ajnas,
-    selectedMaqamTemplate,
-    setSelectedMaqamTemplate,
+    selectedMaqamData,
+    setSelectedMaqamData,
     selectedMaqam,
     setSelectedMaqam,
     selectedJins,
     setSelectedJins,
-    setSelectedJinsTemplate,
+    setSelectedJinsData,
     allPitchClasses,
     setSelectedPitchClasses,
     handleClickMaqam,
@@ -46,10 +46,10 @@ export default function Modulations() {
   }
 
   useEffect(() => {
-    if (sourceMaqamStack.length === 0 && selectedMaqamTemplate) {
+    if (sourceMaqamStack.length === 0 && selectedMaqamData) {
       let transposition: Maqam;
       if (selectedMaqam) transposition = selectedMaqam;
-      else transposition = selectedMaqamTemplate.getTahlil(allPitchClasses);
+      else transposition = selectedMaqamData.getTahlil(allPitchClasses);
       setSourceMaqamStack([transposition]);
       setModulationsStack([getBothModulations(transposition)]);
       setModulationModes([false]); // default to maqamat for first hop
@@ -61,16 +61,16 @@ export default function Modulations() {
     if (selectedMaqam) {
       const maqam = maqamat.find((m) => m.getId() === selectedMaqam.maqamId);
       if (maqam) {
-        setSelectedMaqamTemplate(maqam);
-        setSelectedJinsTemplate(null);
+        setSelectedMaqamData(maqam);
+        setSelectedJinsData(null);
       }
       setSelectedPitchClasses([]); // Clear first
       setSelectedPitchClasses(selectedMaqam.ascendingPitchClasses);
     } else if (selectedJins) {
       const jins = ajnas.find((j) => j.getId() === selectedJins.jinsId);
       if (jins) {
-        setSelectedJinsTemplate(jins);
-        setSelectedMaqamTemplate(null);
+        setSelectedJinsData(jins);
+        setSelectedMaqamData(null);
       }
       setSelectedPitchClasses([]); // Clear first
       setSelectedPitchClasses(selectedJins.jinsPitchClasses);
@@ -160,13 +160,13 @@ export default function Modulations() {
       // Pass only maqamId and tonic to handleClickMaqam, let main system handle lookup and transposition
       const maqamId = hop.maqamId || (hop.getId && hop.getId());
       const tonic = hop.ascendingPitchClasses?.[0]?.noteName || (hop.getAscendingNoteNames && hop.getAscendingNoteNames()[0]);
-      const selectedId = selectedMaqamTemplate?.getId ? selectedMaqamTemplate.getId() : undefined;
-      const selectedTonic = selectedMaqamTemplate?.getAscendingNoteNames
-        ? selectedMaqamTemplate.getAscendingNoteNames()[0]
-        : selectedMaqamTemplate?.ascendingPitchClasses?.[0]?.noteName;
+      const selectedId = selectedMaqamData?.getId ? selectedMaqamData.getId() : undefined;
+      const selectedTonic = selectedMaqamData?.getAscendingNoteNames
+        ? selectedMaqamData.getAscendingNoteNames()[0]
+        : selectedMaqamData?.ascendingPitchClasses?.[0]?.noteName;
 
-      // TypeScript expects a MaqamTemplate or the new object type; cast for type safety
-      if (!selectedMaqamTemplate || maqamId !== selectedId || tonic !== selectedTonic) {
+      // TypeScript expects a MaqamData or the new object type; cast for type safety
+      if (!selectedMaqamData || maqamId !== selectedId || tonic !== selectedTonic) {
         handleClickMaqam({ maqamId, tonic } as any);
         clearHangingNotes();
       }

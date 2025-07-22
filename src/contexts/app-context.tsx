@@ -2,10 +2,10 @@
 
 import React, { createContext, useState, useEffect, useMemo, useContext, useCallback } from "react";
 import TuningSystem from "@/models/TuningSystem";
-import JinsTemplate, { Jins, AjnasModulations } from "@/models/Jins";
+import JinsData, { Jins, AjnasModulations } from "@/models/Jins";
 import NoteName, { TransliteratedNoteNameOctaveOne, TransliteratedNoteNameOctaveTwo, Cell } from "@/models/NoteName";
 import { octaveOneNoteNames, octaveTwoNoteNames } from "@/models/NoteName";
-import MaqamTemplate, { Maqam, MaqamatModulations } from "@/models/Maqam";
+import MaqamData, { Maqam, MaqamatModulations } from "@/models/Maqam";
 import { Source } from "@/models/bibliography/Source";
 import Pattern from "@/models/Pattern";
 import getFirstNoteName from "@/functions/getFirstNoteName";
@@ -37,18 +37,18 @@ interface AppContextInterface {
   setTuningSystemStringLength: React.Dispatch<React.SetStateAction<number>>;
   referenceFrequencies: { [noteName: string]: number };
   setReferenceFrequencies: React.Dispatch<React.SetStateAction<{ [noteName: string]: number }>>;
-  ajnas: JinsTemplate[];
-  setAjnas: React.Dispatch<React.SetStateAction<JinsTemplate[]>>;
-  selectedJinsTemplate: JinsTemplate | null;
-  setSelectedJinsTemplate: React.Dispatch<React.SetStateAction<JinsTemplate | null>>;
-  handleClickJins: (jins: JinsTemplate) => void;
+  ajnas: JinsData[];
+  setAjnas: React.Dispatch<React.SetStateAction<JinsData[]>>;
+  selectedJinsData: JinsData | null;
+  setSelectedJinsData: React.Dispatch<React.SetStateAction<JinsData | null>>;
+  handleClickJins: (jins: JinsData) => void;
   selectedJins: Jins | null;
   setSelectedJins: React.Dispatch<React.SetStateAction<Jins | null>>;
-  maqamat: MaqamTemplate[];
-  setMaqamat: React.Dispatch<React.SetStateAction<MaqamTemplate[]>>;
-  selectedMaqamTemplate: MaqamTemplate | null;
-  setSelectedMaqamTemplate: React.Dispatch<React.SetStateAction<MaqamTemplate | null>>;
-  handleClickMaqam: (maqam: MaqamTemplate) => void;
+  maqamat: MaqamData[];
+  setMaqamat: React.Dispatch<React.SetStateAction<MaqamData[]>>;
+  selectedMaqamData: MaqamData | null;
+  setSelectedMaqamData: React.Dispatch<React.SetStateAction<MaqamData | null>>;
+  handleClickMaqam: (maqam: MaqamData) => void;
   selectedMaqam: Maqam | null;
   setSelectedMaqam: React.Dispatch<React.SetStateAction<Maqam | null>>;
   maqamSayrId: string;
@@ -56,7 +56,7 @@ interface AppContextInterface {
   centsTolerance: number;
   setCentsTolerance: React.Dispatch<React.SetStateAction<number>>;
   clearSelections: () => void;
-  handleUrlParams: (params: { tuningSystemId?: string; jinsTemplateId?: string; maqamTemplateId?: string; sayrId?: string; firstNote?: string; maqamFirstNote?: string; jinsFirstNote?: string }) => void;
+  handleUrlParams: (params: { tuningSystemId?: string; jinsDataId?: string; maqamDataId?: string; sayrId?: string; firstNote?: string; maqamFirstNote?: string; jinsFirstNote?: string }) => void;
   sources: Source[];
   setSources: React.Dispatch<React.SetStateAction<Source[]>>;
   patterns: Pattern[];
@@ -85,12 +85,12 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     [noteName: string]: number;
   }>({});
 
-  const [ajnas, setAjnas] = useState<JinsTemplate[]>([]);
-  const [selectedJinsTemplate, setSelectedJinsTemplate] = useState<JinsTemplate | null>(null);
+  const [ajnas, setAjnas] = useState<JinsData[]>([]);
+  const [selectedJinsData, setSelectedJinsData] = useState<JinsData | null>(null);
   const [selectedJins, setSelectedJins] = useState<Jins | null>(null);
 
-  const [maqamat, setMaqamat] = useState<MaqamTemplate[]>([]);
-  const [selectedMaqamTemplate, setSelectedMaqamTemplate] = useState<MaqamTemplate | null>(null);
+  const [maqamat, setMaqamat] = useState<MaqamData[]>([]);
+  const [selectedMaqamData, setSelectedMaqamData] = useState<MaqamData | null>(null);
   const [selectedMaqam, setSelectedMaqam] = useState<Maqam | null>(null);
   const [maqamSayrId, setMaqamSayrId] = useState<string>("");
 
@@ -137,27 +137,27 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       const allThePitchClasses = getTuningSystemCells(selectedTuningSystem, getFirstNoteName(selectedIndices));
       const usedNoteNames = allThePitchClasses.map((pitchClass) => pitchClass.noteName);
       if (!selectedTuningSystem.isSaved()) return;
-      if (selectedJinsTemplate) {
-        if (selectedJinsTemplate.isJinsSelectable(usedNoteNames)) {
+      if (selectedJinsData) {
+        if (selectedJinsData.isJinsSelectable(usedNoteNames)) {
           let foundJins: Jins | null = null;
 
           if (selectedJins) {
-            const jinsTranspositions = getJinsTranspositions(allThePitchClasses, selectedJinsTemplate, true, centsTolerance);
+            const jinsTranspositions = getJinsTranspositions(allThePitchClasses, selectedJinsData, true, centsTolerance);
             foundJins = jinsTranspositions.find((j) => j.jinsPitchClasses[0].noteName === selectedJins.jinsPitchClasses[0].noteName) || null;
           }
 
-          handleClickJins(selectedJinsTemplate, allThePitchClasses, foundJins);
+          handleClickJins(selectedJinsData, allThePitchClasses, foundJins);
         } else clearSelections();
-      } else if (selectedMaqamTemplate) {
-        if (selectedMaqamTemplate.isMaqamSelectable(usedNoteNames)) {
+      } else if (selectedMaqamData) {
+        if (selectedMaqamData.isMaqamSelectable(usedNoteNames)) {
           let foundMaqam: Maqam | null = null;
 
           if (selectedMaqam) {
-            const maqamTranspositions = getMaqamTranspositions(allThePitchClasses, ajnas, selectedMaqamTemplate, true, centsTolerance);
+            const maqamTranspositions = getMaqamTranspositions(allThePitchClasses, ajnas, selectedMaqamData, true, centsTolerance);
             foundMaqam = maqamTranspositions.find((m) => m.ascendingPitchClasses[0].noteName === selectedMaqam.ascendingPitchClasses[0].noteName) || null;
           }
 
-          handleClickMaqam(selectedMaqamTemplate, allThePitchClasses, foundMaqam);
+          handleClickMaqam(selectedMaqamData, allThePitchClasses, foundMaqam);
         } else clearSelections();
       }
     } else clearSelections();
@@ -165,8 +165,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
   const clearSelections = () => {
     setSelectedPitchClasses([]);
-    setSelectedJinsTemplate(null);
-    setSelectedMaqamTemplate(null);
+    setSelectedJinsData(null);
+    setSelectedMaqamData(null);
     setMaqamSayrId("");
     setSelectedJins(null);
     setSelectedMaqam(null);
@@ -230,11 +230,11 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     return [];
   };
 
-  const handleClickJins = (jinsTemplate: JinsTemplate, givenPitchClasses: PitchClass[] = [], jins: Jins | null = null) => {
+  const handleClickJins = (jinsData: JinsData, givenPitchClasses: PitchClass[] = [], jins: Jins | null = null) => {
     const usedCells = givenPitchClasses.length ? givenPitchClasses : allPitchClasses;
 
-    setSelectedJinsTemplate(jinsTemplate);
-    setSelectedMaqamTemplate(null);
+    setSelectedJinsData(jinsData);
+    setSelectedMaqamData(null);
     setMaqamSayrId("");
     setSelectedJins(jins);
     setSelectedMaqam(null);
@@ -244,7 +244,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       return;
     }
 
-    const jinsNoteNames = jinsTemplate.getNoteNames();
+    const jinsNoteNames = jinsData.getNoteNames();
 
     const newSelectedCells: PitchClass[] = [];
 
@@ -255,27 +255,27 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     setSelectedPitchClasses(newSelectedCells);
   };
 
-  // Accepts either a MaqamTemplate object (legacy) or an object { maqamId, tonic }
-  const handleClickMaqam = (maqamOrParams: MaqamTemplate | { maqamId: string; tonic: string }, givenPitchClasses: PitchClass[] = [], maqam: Maqam | null = null) => {
-    // If called with { maqamId, tonic }, look up MaqamTemplate and perform transposition
+  // Accepts either a MaqamData object (legacy) or an object { maqamId, tonic }
+  const handleClickMaqam = (maqamOrParams: MaqamData | { maqamId: string; tonic: string }, givenPitchClasses: PitchClass[] = [], maqam: Maqam | null = null) => {
+    // If called with { maqamId, tonic }, look up MaqamData and perform transposition
     if (typeof maqamOrParams === "object" && "maqamId" in maqamOrParams && "tonic" in maqamOrParams) {
       const { maqamId, tonic } = maqamOrParams;
-      const maqamTemplate = maqamat.find((m) => m.getId() === maqamId);
-      if (!maqamTemplate) return;
+      const maqamData = maqamat.find((m) => m.getId() === maqamId);
+      if (!maqamData) return;
       // Find the correct transposition for the tonic
-      const maqamTranspositions = getMaqamTranspositions(allPitchClasses, ajnas, maqamTemplate, true, centsTolerance);
+      const maqamTranspositions = getMaqamTranspositions(allPitchClasses, ajnas, maqamData, true, centsTolerance);
       const foundMaqam = maqamTranspositions.find((m) => m.ascendingPitchClasses[0].noteName === tonic);
-      // Call the original logic with the looked-up MaqamTemplate and transposed Maqam
-      handleClickMaqam(maqamTemplate, allPitchClasses, foundMaqam || null);
+      // Call the original logic with the looked-up MaqamData and transposed Maqam
+      handleClickMaqam(maqamData, allPitchClasses, foundMaqam || null);
       return;
     }
 
-    // Legacy: called with MaqamTemplate
-    const maqamTemplate = maqamOrParams as MaqamTemplate;
+    // Legacy: called with MaqamData
+    const maqamData = maqamOrParams as MaqamData;
     const usedCells = givenPitchClasses.length ? givenPitchClasses : allPitchClasses;
 
-    setSelectedMaqamTemplate(maqamTemplate);
-    setSelectedJinsTemplate(null);
+    setSelectedMaqamData(maqamData);
+    setSelectedJinsData(null);
     setSelectedJins(null);
     setMaqamSayrId("");
     setSelectedMaqam(maqam);
@@ -285,7 +285,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       return;
     }
 
-    const maqamNoteNames = maqamTemplate.getAscendingNoteNames();
+    const maqamNoteNames = maqamData.getAscendingNoteNames();
 
     const newSelectedCells: PitchClass[] = [];
 
@@ -306,16 +306,16 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   const handleUrlParams = useCallback(
     ({
       tuningSystemId,
-      jinsTemplateId,
-      maqamTemplateId,
+      jinsDataId,
+      maqamDataId,
       sayrId,
       firstNote,
       maqamFirstNote,
       jinsFirstNote,
     }: {
       tuningSystemId?: string;
-      jinsTemplateId?: string;
-      maqamTemplateId?: string;
+      jinsDataId?: string;
+      maqamDataId?: string;
       sayrId?: string;
       firstNote?: string;
       maqamFirstNote?: string;
@@ -332,27 +332,27 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
             handleStartNoteNameChange(firstNote ?? "", found.getNoteNames(), found.getPitchClasses().length);
             const allPitchClasses = getTuningSystemCells(found, firstNote || "");
 
-            if (jinsTemplateId) {
-              const foundJinsTemplate = ajnas.find((j) => j.getId() === jinsTemplateId);
-              if (foundJinsTemplate && foundJinsTemplate.isJinsSelectable(allPitchClasses.map((pc) => pc.noteName))) {
-                const JinsTranspositions = getJinsTranspositions(allPitchClasses, foundJinsTemplate, true, 10);
+            if (jinsDataId) {
+              const foundJinsData = ajnas.find((j) => j.getId() === jinsDataId);
+              if (foundJinsData && foundJinsData.isJinsSelectable(allPitchClasses.map((pc) => pc.noteName))) {
+                const JinsTranspositions = getJinsTranspositions(allPitchClasses, foundJinsData, true, 10);
                 let foundJins: Jins | null = null;
                 if (jinsFirstNote) {
                   foundJins = JinsTranspositions.find((j) => j.jinsPitchClasses[0].noteName === jinsFirstNote) || null;
                 }
 
-                handleClickJins(foundJinsTemplate, allPitchClasses, foundJins);
+                handleClickJins(foundJinsData, allPitchClasses, foundJins);
               }
-            } else if (maqamTemplateId) {
-              const foundMaqamTemplate = maqamat.find((m) => m.getId() === maqamTemplateId);
-              if (foundMaqamTemplate && foundMaqamTemplate.isMaqamSelectable(allPitchClasses.map((pc) => pc.noteName))) {
-                const maqamTranspositions = getMaqamTranspositions(allPitchClasses, ajnas, foundMaqamTemplate, true, 10);
+            } else if (maqamDataId) {
+              const foundMaqamData = maqamat.find((m) => m.getId() === maqamDataId);
+              if (foundMaqamData && foundMaqamData.isMaqamSelectable(allPitchClasses.map((pc) => pc.noteName))) {
+                const maqamTranspositions = getMaqamTranspositions(allPitchClasses, ajnas, foundMaqamData, true, 10);
                 let foundMaqam: Maqam | null = null;
                 if (maqamFirstNote) {
                   foundMaqam = maqamTranspositions.find((m) => m.ascendingPitchClasses[0].noteName === maqamFirstNote) || null;
                 }
 
-                handleClickMaqam(foundMaqamTemplate, allPitchClasses, foundMaqam);
+                handleClickMaqam(foundMaqamData, allPitchClasses, foundMaqam);
 
                 if (sayrId) {
                   setMaqamSayrId(sayrId);
@@ -392,15 +392,15 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         setReferenceFrequencies,
         ajnas,
         setAjnas,
-        selectedJinsTemplate,
-        setSelectedJinsTemplate,
+        selectedJinsData,
+        setSelectedJinsData,
         handleClickJins,
         selectedJins,
         setSelectedJins,
         maqamat,
         setMaqamat,
-        selectedMaqamTemplate,
-        setSelectedMaqamTemplate,
+        selectedMaqamData,
+        setSelectedMaqamData,
         handleClickMaqam,
         selectedMaqam,
         setSelectedMaqam,

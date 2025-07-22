@@ -8,7 +8,7 @@ import romanToNumber from "@/functions/romanToNumber";
 import PitchClass from "@/models/PitchClass";
 import { initializeCustomWaves, PERIODIC_WAVES, APERIODIC_WAVES } from "@/audio/waves";
 import shiftPitchClass from "@/functions/shiftPitchClass";
-import extendPitchClasses from "@/functions/extendPitchClasses";
+import extendSelectedPitchClasses from "@/functions/extendSelectedPitchClasses";
 type InputMode = "tuningSystem" | "selection";
 type OutputMode = "mute" | "waveform" | "midi";
 
@@ -66,7 +66,7 @@ interface SoundContextInterface {
 const SoundContext = createContext<SoundContextInterface | null>(null);
 
 export function SoundContextProvider({ children }: { children: React.ReactNode }) {
-  const { selectedTuningSystem, selectedMaqamTemplate, selectedMaqam, allPitchClasses, selectedPitchClasses } = useAppContext();
+  const { selectedTuningSystem, selectedMaqamData, selectedMaqam, allPitchClasses, selectedPitchClasses } = useAppContext();
 
   const [soundSettings, setSoundSettings] = useState<SoundSettings>({
     attack: 0.01,
@@ -142,16 +142,16 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
   const keyToPitchClassMapping = useMemo<Record<string, PitchClass>>(() => {
     const mapping: Record<string, PitchClass> = {};
 
-    if (selectedMaqam || selectedMaqamTemplate) {
+    if (selectedMaqam || selectedMaqamData) {
       let ascendingMaqamPitchClasses: PitchClass[] = [];
       let descendingMaqamPitchClasses: PitchClass[] = [];
 
       if (selectedMaqam) {
         ascendingMaqamPitchClasses = selectedMaqam.ascendingPitchClasses;
         descendingMaqamPitchClasses = [...selectedMaqam.descendingPitchClasses].reverse();
-      } else if (selectedMaqamTemplate) {
-        const ascendingNoteNames = selectedMaqamTemplate.getAscendingNoteNames();
-        const descendingNoteNames = selectedMaqamTemplate.getDescendingNoteNames();
+      } else if (selectedMaqamData) {
+        const ascendingNoteNames = selectedMaqamData.getAscendingNoteNames();
+        const descendingNoteNames = selectedMaqamData.getDescendingNoteNames();
 
         ascendingMaqamPitchClasses = allPitchClasses.filter((pitchClass) => ascendingNoteNames.includes(pitchClass.noteName));
         descendingMaqamPitchClasses = allPitchClasses.filter((pitchClass) => descendingNoteNames.includes(pitchClass.noteName));
@@ -215,7 +215,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     }
 
     return mapping;
-  }, [selectedMaqam, selectedMaqamTemplate, selectedPitchClasses, allPitchClasses]);
+  }, [selectedMaqam, selectedMaqamData, selectedPitchClasses, allPitchClasses]);
 
   // Centralized keyboard mapping: PitchClass fraction -> Key display string
   const pitchClassToKeyMapping = useMemo<Record<string, string>>(() => {
@@ -252,7 +252,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         }
       }
     } else if (soundSettings.inputMode === "selection") {
-      const extendedPitchClasses = extendPitchClasses(allPitchClasses, selectedPitchClasses);
+      const extendedPitchClasses = extendSelectedPitchClasses(allPitchClasses, selectedPitchClasses);
 
       // For selection mode, map based on english note names
       for (const pitchClass of extendedPitchClasses) {

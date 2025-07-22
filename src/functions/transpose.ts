@@ -1,6 +1,6 @@
 import PitchClass, { calculateInterval, PitchClassInterval, matchingListOfIntervals } from "@/models/PitchClass";
-import MaqamTemplate, { Maqam } from "@/models/Maqam";
-import JinsTemplate, { Jins } from "@/models/Jins";
+import MaqamData, { Maqam } from "@/models/Maqam";
+import JinsData, { Jins } from "@/models/Jins";
 import shiftPitchClass from "./shiftPitchClass";
 
 export function getPitchClassIntervals(pitchClasses: PitchClass[]) {
@@ -80,16 +80,16 @@ export function mergeTranspositions(ascendingSequences: PitchClass[][], descendi
 
 export function getMaqamTranspositions(
   allPitchClasses: PitchClass[],
-  allAjnas: JinsTemplate[],
-  maqamTemplate: MaqamTemplate | null,
+  allAjnas: JinsData[],
+  maqamData: MaqamData | null,
   withTahlil: boolean,
   centsTolerance: number = 5,
   onlyOctaveOne: boolean = false
 ): Maqam[] {
-  if (allPitchClasses.length === 0 || !maqamTemplate) return [];
+  if (allPitchClasses.length === 0 || !maqamData) return [];
 
-  const ascendingNoteNames = maqamTemplate.getAscendingNoteNames();
-  const descendingNoteNames = maqamTemplate.getDescendingNoteNames();
+  const ascendingNoteNames = maqamData.getAscendingNoteNames();
+  const descendingNoteNames = maqamData.getDescendingNoteNames();
 
   if (ascendingNoteNames.length < 2 || descendingNoteNames.length < 2) return [];
 
@@ -111,7 +111,7 @@ export function getMaqamTranspositions(
 
   const descendingSequences: PitchClass[][] = getPitchClassTranspositions(allPitchClasses, descendingIntervalPattern, false, useRatio, centsTolerance);
 
-  const ajnasIntervals: { jins: JinsTemplate; intervals: PitchClassInterval[] }[] = [];
+  const ajnasIntervals: { jins: JinsData; intervals: PitchClassInterval[] }[] = [];
 
   for (const jins of allAjnas) {
     const jinsCells = allPitchClasses.filter((pitchClass) => jins.getNoteNames().includes(pitchClass.noteName));
@@ -210,8 +210,8 @@ export function getMaqamTranspositions(
     }
 
     return {
-      maqamId: maqamTemplate.getId(),
-      name: `${maqamTemplate.getName()} al-${sequencePair.ascendingSequence[0].noteName}`,
+      maqamId: maqamData.getId(),
+      name: `${maqamData.getName()} al-${sequencePair.ascendingSequence[0].noteName}`,
       transposition: true,
       ascendingPitchClasses,
       ascendingPitchClassIntervals,
@@ -225,17 +225,17 @@ export function getMaqamTranspositions(
   const tahlilTransposition = maqamTranspositions.find((transposition) => transposition.ascendingPitchClasses[0].noteName === ascendingNoteNames[0]);
   const maqamTranspositionsWithoutTahlil = maqamTranspositions.filter((transposition) => transposition !== tahlilTransposition);
 
-  // if (maqamTemplate.getId() === "12")
+  // if (maqamData.getId() === "12")
 
   if (withTahlil && tahlilTransposition) {
     return [{ ...tahlilTransposition, transposition: false }, ...maqamTranspositionsWithoutTahlil];
   } else return maqamTranspositionsWithoutTahlil;
 }
 
-export function getJinsTranspositions(allPitchClasses: PitchClass[], jinsTemplate: JinsTemplate | null, withTahlil: boolean, centsTolerance: number = 5, onlyOctaveOne: boolean = false): Jins[] {
-  if (allPitchClasses.length === 0 || !jinsTemplate) return [];
+export function getJinsTranspositions(allPitchClasses: PitchClass[], jinsData: JinsData | null, withTahlil: boolean, centsTolerance: number = 5, onlyOctaveOne: boolean = false): Jins[] {
+  if (allPitchClasses.length === 0 || !jinsData) return [];
 
-  const jinsNoteNames = jinsTemplate.getNoteNames();
+  const jinsNoteNames = jinsData.getNoteNames();
 
   if (jinsNoteNames.length < 2) return [];
 
@@ -250,8 +250,8 @@ export function getJinsTranspositions(allPitchClasses: PitchClass[], jinsTemplat
     .filter((sequence) => !onlyOctaveOne || sequence[0].octave === 1)
     .map((sequence) => {
       return {
-        jinsId: jinsTemplate.getId(),
-        name: `${jinsTemplate.getName()} al-${sequence[0].noteName}`,
+        jinsId: jinsData.getId(),
+        name: `${jinsData.getName()} al-${sequence[0].noteName}`,
         transposition: true,
         jinsPitchClasses: sequence,
         jinsPitchClassIntervals: getPitchClassIntervals(sequence),

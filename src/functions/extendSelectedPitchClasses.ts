@@ -1,6 +1,6 @@
 import PitchClass from "@/models/PitchClass";
 
-export default function extendPitchClasses(allPitchClasses: PitchClass[], selectedPitchClasses: PitchClass[]) {
+export default function extendSelectedPitchClasses(allPitchClasses: PitchClass[], selectedPitchClasses: PitchClass[]) {
   const extendedPitchClasses = [];
 
   let sliceIndex = 0;

@@ -4,6 +4,7 @@ import { SoundContextProvider } from "@/contexts/sound-context";
 import { FilterContextProvider } from "@/contexts/filter-context";
 import { MenuContextProvider } from "@/contexts/menu-context";
 import Navbar from "@/components/navbar";
+import MobileWarning from "@/components/mobile-warning";
 import { Readex_Pro } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.scss";
@@ -32,6 +33,7 @@ export default function RootLayout({
         <meta name="google" content="notranslate" />
       </head>
       <body className={`${readexPro.variable}`}>
+        <MobileWarning />
         <AppContextProvider>
           <SoundContextProvider>
             <MenuContextProvider>
