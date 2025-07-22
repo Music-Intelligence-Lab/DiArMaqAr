@@ -33,10 +33,10 @@ function computeAnalyticsForSystem(tuningSystem: TuningSystem, allAjnas: ReturnT
     const allPitchClasses = getTuningSystemCells(tuningSystem, starting);
     const possibleAjnas = [];
     const possibleAjnasTrans = [];
-    for (const jinsTemplate of allAjnas) {
-      if (jinsTemplate.isJinsSelectable(allPitchClasses.map((pc) => pc.noteName))) {
-        possibleAjnas.push(jinsTemplate);
-        getJinsTranspositions(allPitchClasses, jinsTemplate, false).forEach((tr) => possibleAjnasTrans.push(tr));
+    for (const jinsData of allAjnas) {
+      if (jinsData.isJinsSelectable(allPitchClasses.map((pc) => pc.noteName))) {
+        possibleAjnas.push(jinsData);
+        getJinsTranspositions(allPitchClasses, jinsData, false).forEach((tr) => possibleAjnasTrans.push(tr));
       }
     }
     let totalSuyur = 0;
@@ -44,11 +44,11 @@ function computeAnalyticsForSystem(tuningSystem: TuningSystem, allAjnas: ReturnT
     const possibleMaqamatTrans = [];
     let totalAjnasMod = 0;
     let totalMaqamatMod = 0;
-    for (const maqamTemplate of allMaqamat) {
-      if (maqamTemplate.isMaqamSelectable(allPitchClasses.map((pc) => pc.noteName))) {
-        possibleMaqamat.push(maqamTemplate);
-        totalSuyur += maqamTemplate.getSuyūr().length;
-        getMaqamTranspositions(allPitchClasses, allAjnas, maqamTemplate, false).forEach((transposition) => {
+    for (const maqamData of allMaqamat) {
+      if (maqamData.isMaqamSelectable(allPitchClasses.map((pc) => pc.noteName))) {
+        possibleMaqamat.push(maqamData);
+        totalSuyur += maqamData.getSuyūr().length;
+        getMaqamTranspositions(allPitchClasses, allAjnas, maqamData, false).forEach((transposition) => {
           possibleMaqamatTrans.push(transposition);
           totalAjnasMod += calculateNumberOfModulations(modulate(allPitchClasses, allAjnas, allMaqamat, transposition, true));
           totalMaqamatMod += calculateNumberOfModulations(modulate(allPitchClasses, allAjnas, allMaqamat, transposition, false));

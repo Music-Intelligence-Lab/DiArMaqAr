@@ -22,8 +22,8 @@ export default function AppClient() {
     maqamat,
     handleUrlParams,
     selectedTuningSystem,
-    selectedJinsTemplate,
-    selectedMaqamTemplate,
+    selectedJinsData,
+    selectedMaqamData,
     maqamSayrId,
     selectedIndices,
     selectedMaqam,
@@ -36,21 +36,21 @@ export default function AppClient() {
   const router = useRouter();
 
   useEffect(() => {
-    const maqamTemplateId = searchParams.get("maqamTemplate") ?? undefined;
-    const jinsTemplateId = searchParams.get("jinsTemplate") ?? undefined;
+    const maqamDataId = searchParams.get("maqamData") ?? undefined;
+    const jinsDataId = searchParams.get("jinsData") ?? undefined;
 
     handleUrlParams({
       tuningSystemId: searchParams.get("tuningSystem") ?? undefined,
-      jinsTemplateId,
-      maqamTemplateId,
+      jinsDataId,
+      maqamDataId,
       jinsFirstNote: searchParams.get("jinsFirstNote") ?? undefined,
       maqamFirstNote: searchParams.get("maqamFirstNote") ?? undefined,
       sayrId: searchParams.get("sayr") ?? undefined,
       firstNote: searchParams.get("firstNote") ?? undefined,
     });
 
-    if (maqamTemplateId) setSelectedMenu("maqam");
-    else if (jinsTemplateId) setSelectedMenu("jins");
+    if (maqamDataId) setSelectedMenu("maqam");
+    else if (jinsDataId) setSelectedMenu("jins");
   }, [tuningSystems, ajnas, maqamat]);
 
   useEffect(() => {
@@ -62,8 +62,8 @@ export default function AppClient() {
       if (first) params.push(`firstNote=${first}`);
     }
 
-    if (selectedJinsTemplate) params.push(`jinsTemplate=${selectedJinsTemplate.getId()}`);
-    if (selectedMaqamTemplate) params.push(`maqamTemplate=${selectedMaqamTemplate.getId()}`);
+    if (selectedJinsData) params.push(`jinsData=${selectedJinsData.getId()}`);
+    if (selectedMaqamData) params.push(`maqamData=${selectedMaqamData.getId()}`);
     if (maqamSayrId) params.push(`sayr=${maqamSayrId}`);
 
     if (selectedJins) params.push(`jinsFirstNote=${selectedJins.jinsPitchClasses[0].noteName}`);
@@ -72,7 +72,7 @@ export default function AppClient() {
     if (typeof window !== "undefined" && window.location.pathname === "/app") {
       router.replace(`/app?${params.join("&")}`, { scroll: false });
     }
-  }, [selectedTuningSystem, selectedJinsTemplate, selectedMaqamTemplate, maqamSayrId, selectedIndices, selectedMaqam, selectedJins]);
+  }, [selectedTuningSystem, selectedJinsData, selectedMaqamData, maqamSayrId, selectedIndices, selectedMaqam, selectedJins]);
 
   return (
     <div className="tools-page">
@@ -85,8 +85,8 @@ export default function AppClient() {
       {selectedTuningSystem && (!["tuningSystem", "tuningSystem-admin", "bibliography", "bibliography-admin", "pattern-admin"].includes(selectedMenu)) && <PitchClassBar />}
       {(selectedMenu === "maqam" || selectedMenu === "maqam-admin") && selectedTuningSystem && <MaqamTranspositions />}
       {(selectedMenu === "jins" || selectedMenu === "jins-admin") && selectedTuningSystem && <JinsTranspositions />}
-      {selectedMenu === "sayr" && selectedMaqamTemplate && <SayrManager admin={false} />}
-      {selectedMenu === "sayr-admin" && selectedMaqamTemplate && <SayrManager admin />}
+      {selectedMenu === "sayr" && selectedMaqamData && <SayrManager admin={false} />}
+      {selectedMenu === "sayr-admin" && selectedMaqamData && <SayrManager admin />}
       {selectedMenu === "modulation" && <Modulations />}
       {selectedMenu === "pattern-admin" && <PatternsManager />}
       <KeyboardControls />

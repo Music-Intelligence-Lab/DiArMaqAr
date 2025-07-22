@@ -1,1 +1,0 @@
-{"version":3,"file":"midiToNoteNumber.d.ts","sourceRoot":"","sources":["../../src/functions/midiToNoteNumber.ts"],"names":[],"mappings":"AAAA,MAAM,CAAC,OAAO,UAAU,oBAAoB,CAAC,UAAU,EAAE,MAAM,GAAG;IAAC,IAAI,EAAE,MAAM,CAAC;IAAC,GAAG,CAAC,EAAE,MAAM,CAAC;IAAC,MAAM,EAAE,MAAM,CAAA;CAAE,CA+B9G"}

@@ -5,8 +5,8 @@ export type { default as PitchClass, PitchClassInterval } from './models/PitchCl
 export { calculateInterval } from './models/PitchClass';
 
 export type { default as TuningSystem } from './models/TuningSystem';
-export type { default as JinsTemplate, Jins, JinsTemplateInterface } from './models/Jins';
-export type { default as MaqamTemplate, Maqam, MaqamTemplateInterface } from './models/Maqam';
+export type { default as JinsData, Jins, JinsDataInterface } from './models/Jins';
+export type { default as MaqamData, Maqam, MaqamDataInterface } from './models/Maqam';
 export type { default as NoteName } from './models/NoteName';
 export type { default as Pattern } from './models/Pattern';
 
@@ -27,7 +27,7 @@ export * from './functions/transpose';
 export { default as shiftPitchClass } from './functions/shiftPitchClass';
 export { default as modulate } from './functions/modulate';
 export * from './functions/convertPitchClass';
-export { default as extendPitchClasses } from './functions/extendPitchClasses';
+export { default as extendSelectedPitchClasses } from './functions/extendSelectedPitchClasses';
 
 // Export analysis functions
 export { default as calculateNumberOfModulations } from './functions/calculateNumberOfModulations';

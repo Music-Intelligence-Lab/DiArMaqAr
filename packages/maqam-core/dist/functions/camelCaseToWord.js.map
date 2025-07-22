@@ -1,1 +1,0 @@
-{"version":3,"file":"camelCaseToWord.js","sourceRoot":"","sources":["../../src/functions/camelCaseToWord.ts"],"names":[],"mappings":";;AAAA,kCAKC;AALD,SAAwB,eAAe,CAAC,KAAa;IACnD,OAAO,KAAK;SACT,OAAO,CAAC,UAAU,EAAE,KAAK,CAAC;SAC1B,OAAO,CAAC,IAAI,EAAE,CAAC,GAAG,EAAE,EAAE,CAAC,GAAG,CAAC,WAAW,EAAE,CAAC;SACzC,IAAI,EAAE,CAAC;AACZ,CAAC"}

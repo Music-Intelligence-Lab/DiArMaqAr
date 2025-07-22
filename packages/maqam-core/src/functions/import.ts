@@ -5,8 +5,8 @@ import sourcesData from "../data/sources.json";
 import patternsData from "../data/patterns.json";
 
 import TuningSystem from "../models/TuningSystem";
-import JinsTemplate from "../models/Jins";
-import MaqamTemplate from "../models/Maqam";
+import JinsData from "../models/Jins";
+import MaqamData from "../models/Maqam";
 import { Source } from "../models/bibliography/Source";
 import Book from "../models/bibliography/Book";
 import Article from "../models/bibliography/Article";
@@ -40,12 +40,12 @@ export function getTuningSystems(): TuningSystem[] {
   );
 }
 
-export function getAjnas(): JinsTemplate[] {
-  return (ajnasData as any[]).map((d) => new JinsTemplate(d.id, d.name, d.noteNames, d.commentsEnglish, d.commentsArabic, d.sourcePageReferences));
+export function getAjnas(): JinsData[] {
+  return (ajnasData as any[]).map((d) => new JinsData(d.id, d.name, d.noteNames, d.commentsEnglish, d.commentsArabic, d.sourcePageReferences));
 }
 
-export function getMaqamat(): MaqamTemplate[] {
-  return (maqamatData as any[]).map((d) => new MaqamTemplate(d.id, d.name, d.ascendingNoteNames, d.descendingNoteNames, d.suyūr, d.commentsEnglish, d.commentsArabic, d.sourcePageReferences));
+export function getMaqamat(): MaqamData[] {
+  return (maqamatData as any[]).map((d) => new MaqamData(d.id, d.name, d.ascendingNoteNames, d.descendingNoteNames, d.suyūr, d.commentsEnglish, d.commentsArabic, d.sourcePageReferences));
 }
 
 export function getSources(): Source[] {

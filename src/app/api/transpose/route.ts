@@ -55,21 +55,21 @@ export async function POST(request: Request) {
     const allPitchClasses: PitchClass[] = getTuningSystemCells(selectedTuningSystem, firstNote);
 
     if (maqamID) {
-      const selectedMaqamTemplate = maqamat.find((maqam) => maqam.getId() === maqamID);
-      if (!selectedMaqamTemplate) {
+      const selectedMaqamData = maqamat.find((maqam) => maqam.getId() === maqamID);
+      if (!selectedMaqamData) {
         return NextResponse.json({ error: "Invalid maqamID" }, { status: 400 });
       }
 
-      const maqamTranspositions = getMaqamTranspositions(allPitchClasses, ajnas, selectedMaqamTemplate, true, centsTolerance ?? 5);
+      const maqamTranspositions = getMaqamTranspositions(allPitchClasses, ajnas, selectedMaqamData, true, centsTolerance ?? 5);
 
       return NextResponse.json(maqamTranspositions);
     } else if (jinsID) {
-      const selectedJinsTemplate = ajnas.find((jins) => jins.getId() === jinsID);
-      if (!selectedJinsTemplate) {
+      const selectedJinsData = ajnas.find((jins) => jins.getId() === jinsID);
+      if (!selectedJinsData) {
         return NextResponse.json({ error: "Invalid jinsID" }, { status: 400 });
       }
 
-      const jinsTranspositions = getJinsTranspositions(allPitchClasses, selectedJinsTemplate, true, centsTolerance ?? 5);
+      const jinsTranspositions = getJinsTranspositions(allPitchClasses, selectedJinsData, true, centsTolerance ?? 5);
 
       return NextResponse.json(jinsTranspositions);
     }

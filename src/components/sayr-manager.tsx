@@ -9,19 +9,10 @@ import { updateMaqamat } from "@/functions/update";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import NorthEastIcon from "@mui/icons-material/NorthEast";
 import SouthEastIcon from "@mui/icons-material/SouthEast";
-import JinsTemplate from "@/models/Jins";
+import JinsData from "@/models/Jins";
 import Link from "next/link";
 export default function SayrManager({ admin }: { admin: boolean }) {
-  const {
-    selectedMaqamTemplate,
-    setSelectedMaqamTemplate,
-    ajnas,
-    maqamSayrId,
-    setMaqamSayrId,
-    sources,
-    maqamat,
-    setMaqamat /* handleClickJins, handleClickMaqam */,
-  } = useAppContext();
+  const { selectedMaqamData, setSelectedMaqamData, ajnas, maqamSayrId, setMaqamSayrId, sources, maqamat, setMaqamat /* handleClickJins, handleClickMaqam */ } = useAppContext();
 
   const [creatorEnglish, setCreatorEnglish] = useState("");
   const [creatorArabic, setCreatorArabic] = useState("");
@@ -42,8 +33,8 @@ export default function SayrManager({ admin }: { admin: boolean }) {
   };
 
   useEffect(() => {
-    if (selectedMaqamTemplate && maqamSayrId) {
-      const sel = selectedMaqamTemplate.getSuyūr().find((s) => s.id === maqamSayrId);
+    if (selectedMaqamData && maqamSayrId) {
+      const sel = selectedMaqamData.getSuyūr().find((s) => s.id === maqamSayrId);
       if (sel) {
         setCreatorEnglish(sel.creatorEnglish ?? "");
         setCreatorArabic(sel.creatorArabic ?? "");
@@ -56,10 +47,10 @@ export default function SayrManager({ admin }: { admin: boolean }) {
       }
     }
     resetForm();
-  }, [maqamSayrId, selectedMaqamTemplate]);
+  }, [maqamSayrId, selectedMaqamData]);
 
-  if (!selectedMaqamTemplate) return null;
-  const existingSuyūr = selectedMaqamTemplate.getSuyūr();
+  if (!selectedMaqamData) return null;
+  const existingSuyūr = selectedMaqamData.getSuyūr();
 
   const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => setMaqamSayrId(e.target.value);
   const addStop = () => setStops((prev) => [...prev, { type: "note", value: "" }]);
@@ -81,11 +72,9 @@ export default function SayrManager({ admin }: { admin: boolean }) {
       commentsArabic,
       stops,
     };
-    const updated = existingSuyūr.some((s) => s.id === idUse)
-      ? existingSuyūr.map((s) => (s.id === idUse ? newSayr : s))
-      : [...existingSuyūr, newSayr];
-    const updatedMaqam = selectedMaqamTemplate.createMaqamWithNewSuyūr(updated);
-    setSelectedMaqamTemplate(updatedMaqam);
+    const updated = existingSuyūr.some((s) => s.id === idUse) ? existingSuyūr.map((s) => (s.id === idUse ? newSayr : s)) : [...existingSuyūr, newSayr];
+    const updatedMaqam = selectedMaqamData.createMaqamWithNewSuyūr(updated);
+    setSelectedMaqamData(updatedMaqam);
     setMaqamSayrId(idUse);
 
     const others = maqamat.filter((m) => m.getId() !== updatedMaqam.getId());
@@ -96,8 +85,8 @@ export default function SayrManager({ admin }: { admin: boolean }) {
   const handleDelete = async () => {
     if (!maqamSayrId) return;
     const filtered = existingSuyūr.filter((s) => s.id !== maqamSayrId);
-    const updatedMaqam = selectedMaqamTemplate.createMaqamWithNewSuyūr(filtered);
-    setSelectedMaqamTemplate(updatedMaqam);
+    const updatedMaqam = selectedMaqamData.createMaqamWithNewSuyūr(filtered);
+    setSelectedMaqamData(updatedMaqam);
     setMaqamSayrId("");
 
     const others = maqamat.filter((m) => m.getId() !== updatedMaqam.getId());
@@ -206,15 +195,15 @@ export default function SayrManager({ admin }: { admin: boolean }) {
               })()}
             <span className="sayr-manager__comments-english">{commentsEnglish}</span>
           </div>
-{admin && (
-          <h3 className="sayr-manager__stops-header">
-            Stops{" "}
-            <button type="button" className="sayr-manager__add-stop" onClick={addStop}>
-              + Add Stop
-            </button>
-          </h3>
-        )}
-          
+          {admin && (
+            <h3 className="sayr-manager__stops-header">
+              Stops{" "}
+              <button type="button" className="sayr-manager__add-stop" onClick={addStop}>
+                + Add Stop
+              </button>
+            </h3>
+          )}
+
           <div className="sayr-manager__admin-stops">
             {admin &&
               stops.map((stop, i) => (
@@ -256,11 +245,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                         ))}
                       </select>
                       {/* Optional direction for note stop */}
-                      <select
-                        className="sayr-manager__stop-value"
-                        value={stop.direction ?? ""}
-                        onChange={(e) => updateStop(i, "direction", e.target.value)}
-                      >
+                      <select className="sayr-manager__stop-value" value={stop.direction ?? ""} onChange={(e) => updateStop(i, "direction", e.target.value)}>
                         <option value="">(no direction)</option>
                         <option value="ascending">ascending</option>
                         <option value="descending">descending</option>
@@ -284,11 +269,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                       </select>
 
                       {/* 2) optional starting note for this jins */}
-                      <select
-                        className="sayr-manager__stop-value"
-                        value={stop.startingNote ?? ""}
-                        onChange={(e) => updateStop(i, "startingNote", e.target.value)}
-                      >
+                      <select className="sayr-manager__stop-value" value={stop.startingNote ?? ""} onChange={(e) => updateStop(i, "startingNote", e.target.value)}>
                         <option value="">(none)</option>
                         {octaveOneNoteNames.map((n) => (
                           <option key={n} value={n}>
@@ -304,11 +285,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                       </select>
 
                       {/* 3) optional direction for this jins */}
-                      <select
-                        className="sayr-manager__stop-value"
-                        value={stop.direction ?? ""}
-                        onChange={(e) => updateStop(i, "direction", e.target.value)}
-                      >
+                      <select className="sayr-manager__stop-value" value={stop.direction ?? ""} onChange={(e) => updateStop(i, "direction", e.target.value)}>
                         <option value="">(none)</option>
                         <option value="ascending">ascending</option>
                         <option value="descending">descending</option>
@@ -332,11 +309,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                       </select>
 
                       {/* 2) optional starting note for this maqam */}
-                      <select
-                        className="sayr-manager__stop-value"
-                        value={stop.startingNote ?? ""}
-                        onChange={(e) => updateStop(i, "startingNote", e.target.value)}
-                      >
+                      <select className="sayr-manager__stop-value" value={stop.startingNote ?? ""} onChange={(e) => updateStop(i, "startingNote", e.target.value)}>
                         <option value="">(none)</option>
                         {octaveOneNoteNames.map((n) => (
                           <option key={n} value={n}>
@@ -352,11 +325,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                       </select>
 
                       {/* 3) optional direction for this maqam */}
-                      <select
-                        className="sayr-manager__stop-value"
-                        value={stop.direction ?? ""}
-                        onChange={(e) => updateStop(i, "direction", e.target.value)}
-                      >
+                      <select className="sayr-manager__stop-value" value={stop.direction ?? ""} onChange={(e) => updateStop(i, "direction", e.target.value)}>
                         <option value="">(none)</option>
                         <option value="ascending">ascending</option>
                         <option value="descending">descending</option>
@@ -384,19 +353,19 @@ export default function SayrManager({ admin }: { admin: boolean }) {
           <div className="sayr-manager__stops">
             {!admin &&
               stops.map((stop, i) => {
-                let jinsTemplate: JinsTemplate | undefined;
-                let maqamTemplate: any | undefined;
+                let jinsData: JinsData | undefined;
+                let maqamData: any | undefined;
                 let sentence = "";
                 // Patch: support for maqam stop type (type assertion workaround)
                 if (stop.type === "note") {
                   sentence += `${stop.value}`;
                 } else if (stop.type === "jins") {
-                  jinsTemplate = ajnas.find((j) => j.getId() === stop.value);
-                  const jinsName = jinsTemplate ? jinsTemplate.getName() : stop.value;
+                  jinsData = ajnas.find((j) => j.getId() === stop.value);
+                  const jinsName = jinsData ? jinsData.getName() : stop.value;
                   sentence += `${jinsName}${stop.startingNote ? " al-" + stop.startingNote : ""}`;
                 } else if ((stop as any).type === "maqam") {
-                  maqamTemplate = maqamat.find((m) => m.getId() === stop.value);
-                  const maqamName = maqamTemplate ? maqamTemplate.getName() : stop.value;
+                  maqamData = maqamat.find((m) => m.getId() === stop.value);
+                  const maqamName = maqamData ? maqamData.getName() : stop.value;
                   sentence += `${maqamName}${stop.startingNote ? " al-" + stop.startingNote : ""}`;
                 } else if (stop.type === "direction") {
                   if (stop.value === "ascending") {
@@ -449,11 +418,11 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                       className="sayr-manager__stop"
                       style={stop.type === "jins" || (stop as any).type === "maqam" ? { cursor: "default" } : undefined}
                       onClick={() => {
-                        if (stop.type === "jins" && jinsTemplate) {
-                          // handleClickJins(jinsTemplate);
-                        } else if ((stop as any).type === "maqam" && maqamTemplate) {
+                        if (stop.type === "jins" && jinsData) {
+                          // handleClickJins(jinsData);
+                        } else if ((stop as any).type === "maqam" && maqamData) {
                           // Optionally, implement a handler for maqam click
-                          // handleClickMaqam(maqamTemplate);
+                          // handleClickMaqam(maqamData);
                         }
                       }}
                     >
