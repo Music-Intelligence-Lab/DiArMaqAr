@@ -73,6 +73,11 @@
     padding-top: 10px;
     padding-bottom: 10px;
 
+    // RTL support
+    [dir="rtl"] & {
+      direction: rtl;
+    }
+
     &::-webkit-scrollbar {
       height: 6px;
       position: relative;
@@ -129,10 +134,22 @@
 
     .carousel-button-prev {
       left: 0;
+
+      // RTL support
+      [dir="rtl"] & {
+        left: auto;
+        right: 0;
+      }
     }
 
     .carousel-button-next {
       right: 0;
+
+      // RTL support  
+      [dir="rtl"] & {
+        right: auto;
+        left: 0;
+      }
     }
   }
 
@@ -146,6 +163,11 @@
     color: $text;
     cursor: pointer;
     transition: 0.2s;
+
+    // RTL support
+    [dir="rtl"] & {
+      text-align: right;
+    }
 
     &_active {
       background-color: rgba($primary, 0.4);
@@ -171,9 +193,19 @@
     justify-content: left;
     font-weight: 300;
 
+    // RTL support
+    [dir="rtl"] & {
+      text-align: right;
+    }
+
     &-transpositions {
       font-weight: 200;
       margin-top: 3px;
+
+      // RTL support
+      [dir="rtl"] & {
+        text-align: right;
+      }
     }
   }
 
@@ -218,6 +250,12 @@
     gap: 20px;
     padding: 20px;
     font-size: 20px;
+
+    // RTL support
+    [dir="rtl"] & {
+      align-items: flex-end;
+      text-align: right;
+    }
   }
 
   &__maqam-input {
@@ -237,6 +275,12 @@
     cursor: pointer;
     transition: 0.3s;
     color: white;
+
+    // RTL support
+    [dir="rtl"] & {
+      margin-right: 0;
+      margin-left: 20px;
+    }
 
     &:hover {
       border-radius: 10px;
@@ -323,11 +367,21 @@
     display: flex;
     gap: 0.5rem;
     width: 100%;
+
+    // RTL support
+    [dir="rtl"] & {
+      flex-direction: row-reverse;
+    }
   }
 
   &__label {
     margin-bottom: 0.4rem;
     font-weight: bold;
+
+    // RTL support
+    [dir="rtl"] & {
+      text-align: right;
+    }
   }
 
   &__input,
@@ -344,6 +398,12 @@
     gap: 5px;
     margin-bottom: -10px;
     margin-left: 25px;
+
+    // RTL support
+    [dir="rtl"] & {
+      margin-left: 0;
+      margin-right: 25px;
+    }
   }
 
   &__tab {
@@ -357,6 +417,11 @@
 
     font-weight: 400;
     cursor: pointer;
+
+    // RTL support
+    [dir="rtl"] & {
+      text-align: right;
+    }
 
     &:hover {
       background: darken($color: $medium-grey, $amount: 10);
@@ -376,6 +441,12 @@
     font-size: 0.95em;
     color: silver;
     margin-left: 2px;
+
+    // RTL support
+    [dir="rtl"] & {
+      margin-left: 0;
+      margin-right: 2px;
+    }
   }
 
   &__export-container {
@@ -386,6 +457,13 @@
     margin-right: 20px;
     margin-bottom: 0px;
     margin-left: auto;
+
+    // RTL support
+    [dir="rtl"] & {
+      float: left;
+      margin-right: auto;
+      margin-left: 20px;
+    }
   }
 
   &__export-button {
@@ -397,6 +475,12 @@
     border-radius: 0px;
     color: $text;
     margin-left: 0px;
+
+    // RTL support
+    [dir="rtl"] & {
+      margin-left: auto;
+      margin-right: 0px;
+    }
 
     &:hover {
       background-color: rgba($primary, 1);

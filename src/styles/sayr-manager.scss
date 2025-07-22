@@ -21,6 +21,11 @@
     display: flex;
     gap: 1rem;
     margin-bottom: 1rem;
+
+    // RTL support
+    [dir="rtl"] & {
+      flex-direction: row-reverse;
+    }
   }
 
   &__input-container {
@@ -32,6 +37,11 @@
   &__label {
     margin-bottom: 0.5rem;
     font-weight: 600;
+
+    // RTL support
+    [dir="rtl"] & {
+      text-align: right;
+    }
   }
 
   &__list {
@@ -53,6 +63,12 @@
     cursor: pointer;
     // box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
     transition: 0.3s;
+
+    // RTL support
+    [dir="rtl"] & {
+      align-items: right;
+      text-align: right;
+    }
 
     &_active {
       background-color: rgba($primary, 0.4);
@@ -113,6 +129,11 @@
   &__admin-stops {
     display: flex;
     gap: 10px;
+
+    // RTL support
+    [dir="rtl"] & {
+      flex-direction: row-reverse;
+    }
   }
 
   &__stops {
@@ -120,6 +141,11 @@
     gap: 10px;
     align-items: center;
     flex-wrap: wrap;
+
+    // RTL support
+    [dir="rtl"] & {
+      text-align: right;
+    }
   }
 
   &__admin-stop {
@@ -223,6 +249,11 @@
     flex-direction: column;
     justify-content: space-between;
     padding: 0px 0px;
+
+    // RTL support
+    [dir="rtl"] & {
+      text-align: right;
+    }
   }
 
   &__comments-english {

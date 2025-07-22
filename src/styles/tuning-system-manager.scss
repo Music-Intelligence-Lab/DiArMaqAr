@@ -58,6 +58,22 @@
     display: flex;
     flex-direction: column;
     gap: 5px;
+    
+    // RTL support
+    [dir="rtl"] & {
+      direction: rtl;
+      text-align: right;
+    }
+  }
+  
+  // Row header styling for octave tables
+  &__row-header {
+    text-align: left;
+    
+    // RTL support
+    [dir="rtl"] & {
+      text-align: right;
+    }
   }
 
   &__source-select-item {
@@ -171,6 +187,11 @@
     font-size: 14px;
     font-weight: 300;
     width: 100%;
+
+    // RTL support
+    [dir="rtl"] & {
+      direction: rtl;
+    }
   }
 
   &__sorting-options {
@@ -179,6 +200,11 @@
     float: left;
     gap: 10px;
     margin: 0px 0px 0px 0px;
+
+    // RTL support
+    [dir="rtl"] & {
+      float: right;
+    }
   }
   &__sorting-label {
     margin-bottom: 0px;
@@ -322,6 +348,11 @@
     width: 100%;
     margin-top: 0px;
     padding: 0px 20px;
+    
+    // RTL support
+    [dir="rtl"] & {
+      direction: rtl;
+    }
   }
 
   &__comments-english {
@@ -335,6 +366,15 @@
     float: left;
     margin-bottom: 0px;
     line-height: calc(20px);
+    
+    // RTL support - when Arabic is selected, adjust layout
+    [dir="rtl"] & {
+      float: right;
+      padding-right: 0;
+      padding-left: 30px;
+      text-align: right;
+      direction: rtl;
+    }
   }
 
   &__comments-arabic {
@@ -357,6 +397,15 @@
     vertical-align: top;
     padding-right: 30px;
     float: left;
+    
+    // RTL support - when Arabic is selected, adjust layout
+    [dir="rtl"] & {
+      float: right;
+      padding-right: 0;
+      padding-left: 30px;
+      text-align: right;
+      direction: rtl;
+    }
   }
 
   &__sources-arabic {
@@ -387,6 +436,11 @@
     padding-top: 10px;
     padding-bottom: 10px;
 
+    // RTL support
+    [dir="rtl"] & {
+      direction: rtl;
+    }
+
     &::-webkit-scrollbar {
       height: 6px;
       position: relative;
@@ -410,6 +464,11 @@
     align-items: center;
     position: relative;
     width: 100%;
+
+    // RTL support
+    [dir="rtl"] & {
+      direction: rtl;
+    }
 
     .carousel-button {
       background: none;
@@ -443,10 +502,22 @@
 
     .carousel-button-prev {
       left: 0;
+      
+      // RTL support - swap positions
+      [dir="rtl"] & {
+        left: auto;
+        right: 0;
+      }
     }
 
     .carousel-button-next {
       right: 0;
+      
+      // RTL support - swap positions
+      [dir="rtl"] & {
+        right: auto;
+        left: 0;
+      }
     }
   }
 
@@ -455,6 +526,11 @@
     align-items: center;
     position: relative;
     width: calc(100% - 0px);
+
+    // RTL support
+    [dir="rtl"] & {
+      direction: rtl;
+    }
 
     .carousel-button {
       background: none;
@@ -491,11 +567,27 @@
     .carousel-button-prev {
       left: 0;
       border-left: 1px solid $grey;
+      
+      // RTL support - swap positions and borders
+      [dir="rtl"] & {
+        left: auto;
+        right: 0;
+        border-left: none;
+        border-right: 1px solid $grey;
+      }
     }
 
     .carousel-button-next {
       right: 0;
       border-right: 1px solid $grey;
+      
+      // RTL support - swap positions and borders
+      [dir="rtl"] & {
+        right: auto;
+        left: 0;
+        border-right: none;
+        border-left: 1px solid $grey;
+      }
     }
   }
 
@@ -514,6 +606,13 @@
     cursor: pointer;
     transition: 0.2s;
     font-weight: 400;
+
+    // RTL support
+    [dir="rtl"] & {
+      text-align: right;
+      
+      justify-content: right;
+    }
 
     &_disabled {
       background-color: rgba($primary, 0.1) !important;
@@ -736,6 +835,7 @@
       width: 120px !important;
       background-color: $medium-grey;
       text-transform: capitalize;
+      text-align: left; // Default for LTR
     }
 
     &__detectedPitchClassType {
@@ -883,6 +983,13 @@
     gap: 10px;
     margin-right: 20px;
     margin-bottom: 0px;
+
+    // RTL support
+    [dir="rtl"] & {
+      float: left;
+      margin-right: 0;
+      margin-left: 20px;
+    }
   }
 
   &__export-button {
@@ -902,6 +1009,11 @@
   &__sources-english {
     display: flex;
     flex-direction: column;
+    
+    // RTL support
+    [dir="rtl"] & {
+      direction: rtl;
+    }
   }
 
   &__tabs {
@@ -909,6 +1021,13 @@
     gap: 5px;
     margin-bottom: 0px;
     margin-left: 25px;
+
+    // RTL support
+    [dir="rtl"] & {
+      margin-left: 0;
+      margin-right: 25px;
+      direction: rtl;
+    }
   }
 
   &__tab {
@@ -919,9 +1038,13 @@
     border: none;
     background: $medium-grey;
     color: $text;
-
     font-weight: 400;
     cursor: pointer;
+
+    // RTL support
+    [dir="rtl"] & {
+      text-align: right;
+    }
 
     &:hover {
       background: darken($color: $medium-grey, $amount: 10);
@@ -941,5 +1064,19 @@
     font-size: 0.95em;
     color: silver;
     margin-left: 2px;
+
+    // RTL support
+    [dir="rtl"] & {
+      margin-left: 0;
+      margin-right: 2px;
+    }
   }
+}
+
+.tuning-system-manager__row-header {
+  text-align: left; // Default for LTR
+}
+
+[dir="rtl"] .tuning-system-manager__row-header {
+  text-align: right; // RTL alignment for Arabic
 }

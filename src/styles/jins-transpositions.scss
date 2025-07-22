@@ -16,6 +16,11 @@
     text-align: left;
     padding: 10px 20px;
     border: solid 1px $grey;
+
+    // RTL support
+    [dir="rtl"] & {
+      text-align: right;
+    }
   }
 
   &__play-circle-icon.MuiSvgIcon-root {
@@ -43,6 +48,12 @@
     vertical-align: middle;
     text-align: center;
 
+    // RTL support
+    [dir="rtl"] & {
+      margin-right: 0;
+      margin-left: 10px;
+    }
+
     &:focus {
       outline: transparent;
       border: white solid 1px;
@@ -63,6 +74,11 @@
     display: flex;
     width: 100%;
     margin-top: 0px;
+
+    // RTL support
+    [dir="rtl"] & {
+      flex-direction: row-reverse;
+    }
   }
 
   &__comments-english {
@@ -126,6 +142,11 @@
       padding: 10px;
       border: solid 1px $grey;
       font-weight: 200;
+
+      // RTL support
+      [dir="rtl"] & {
+        text-align: right;
+      }
     }
 
     td {
@@ -135,6 +156,11 @@
       padding: 10px;
       border: solid 1px $grey;
       font-weight: 200;
+
+      // RTL support
+      [dir="rtl"] & {
+        text-align: right;
+      }
     }
   }
 
@@ -143,6 +169,12 @@
     font-weight: 300;
     padding-left: 10px;
     padding-right: 20px;
+
+    // RTL support
+    [dir="rtl"] & {
+      padding-left: 20px;
+      padding-right: 10px;
+    }
   }
 
   &__transposition-number {
@@ -170,11 +202,21 @@
     text-align: left;
     background-color: transparent;
     scroll-margin-top: calc($top-navbar-height - 30px + 50px); // Adjusted for navbar height
+
+    // RTL support
+    [dir="rtl"] & {
+      text-align: right;
+    }
   }
 
   &__cell {
     text-align: left;
     background-color: transparent;
+
+    // RTL support
+    [dir="rtl"] & {
+      text-align: right;
+    }
 
     &_highlighted {
       background-color: rgba($secondary, 0.2) !important;
@@ -205,12 +247,23 @@
     display: flex;
     justify-content: space-between;
     padding: 0 30px;
+
+    // RTL support
+    [dir="rtl"] & {
+      flex-direction: row-reverse;
+      padding: 0 30px;
+    }
   }
 
   &__sources {
     width: 100%;
     display: flex;
     padding: 10px 30px;
+
+    // RTL support
+    [dir="rtl"] & {
+      flex-direction: row-reverse;
+    }
   }
 
   .jins-transpositions__spacer {

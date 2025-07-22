@@ -6,7 +6,7 @@
       "rāst",
       "dūgāh",
       "segāh",
-      "chahargāh",
+      "chahārgāh",
       "nawā",
       "ḥusaynī",
       "awj"
@@ -15,7 +15,7 @@
       "ʿajam",
       "ḥusaynī",
       "nawā",
-      "chahargāh",
+      "chahārgāh",
       "segāh",
       "dūgāh",
       "rāst"
@@ -27,7 +27,7 @@
         "creatorArabic": "صبّاغ",
         "sourceId": "YQh0gMMk0mKbUKc-FMgrZ",
         "page": "41",
-        "commentsEnglish": "Known in Tunis as Ṭabe' Al-Dhīl, also Ṭabe' al-Sharqī and Inqilāb al-'irāq.\n\nThe melodies that are close to the melodies of maqām rāst that can be utilised during composition or taqsīm are nahāwand, nawā athar, nikrīz or chahārgāh all on rāst, ṣabā ḥusaynī, ḥijāz nawā and bayāt nawā. Sometimes after chahārgāh, a transposition of segāh on rāst, then a return to chahargāh and then to rāst. ",
+        "commentsEnglish": "Known in Tunis as Ṭabe' Al-Dhīl, also Ṭabe' al-Sharqī and Inqilāb al-'irāq.\n\nThe melodies that are close to the melodies of maqām rāst that can be utilised during composition or taqsīm are nahāwand, nawā athar, nikrīz or chahārgāh all on rāst, ṣabā ḥusaynī, ḥijāz nawā and bayāt nawā. Sometimes after chahārgāh, a transposition of segāh on rāst, then a return to chahārgāh and then to rāst. ",
         "commentsArabic": "",
         "stops": [
           {
@@ -125,7 +125,7 @@
     "ascendingNoteNames": [
       "dūgāh",
       "kurdī",
-      "chahargāh",
+      "chahārgāh",
       "nawā",
       "ḥusaynī",
       "ʿajam",
@@ -136,7 +136,7 @@
       "ʿajam",
       "ḥusaynī",
       "nawā",
-      "chahargāh",
+      "chahārgāh",
       "kurdī",
       "dūgāh"
     ],
@@ -152,7 +152,7 @@
       "rāst",
       "zirguleh",
       "kurdī",
-      "chahargāh",
+      "chahārgāh",
       "nawā",
       "ḥiṣār",
       "ʿajam"
@@ -161,7 +161,7 @@
       "ʿajam",
       "ḥiṣār",
       "nawā",
-      "chahargāh",
+      "chahārgāh",
       "kurdī",
       "zirguleh",
       "rāst"
@@ -229,7 +229,7 @@
     "ascendingNoteNames": [
       "dūgāh",
       "segāh",
-      "chahargāh",
+      "chahārgāh",
       "nawā",
       "ḥusaynī",
       "awj",
@@ -240,7 +240,7 @@
       "ʿajam",
       "ḥusaynī",
       "nawā",
-      "chahargāh",
+      "chahārgāh",
       "segāh",
       "dūgāh"
     ],
@@ -255,7 +255,7 @@
     "ascendingNoteNames": [
       "dūgāh",
       "segāh",
-      "chahargāh",
+      "chahārgāh",
       "nawā",
       "tīk ḥiṣār",
       "ʿajam",
@@ -266,7 +266,7 @@
       "ʿajam",
       "tīk ḥiṣār",
       "nawā",
-      "chahargāh",
+      "chahārgāh",
       "segāh",
       "dūgāh"
     ],
@@ -281,7 +281,7 @@
     "ascendingNoteNames": [
       "dūgāh",
       "kurdī",
-      "chahargāh",
+      "chahārgāh",
       "nawā",
       "ḥiṣār",
       "ʿajam",
@@ -292,7 +292,7 @@
       "ʿajam",
       "ḥiṣār",
       "nawā",
-      "chahargāh",
+      "chahārgāh",
       "kurdī",
       "dūgāh"
     ],
@@ -308,7 +308,7 @@
       "rāst",
       "dūgāh",
       "kurdī",
-      "chahargāh",
+      "chahārgāh",
       "nawā",
       "ḥiṣār",
       "nīm māhūr"
@@ -317,7 +317,7 @@
       "ʿajam",
       "ḥiṣār",
       "nawā",
-      "chahargāh",
+      "chahārgāh",
       "kurdī",
       "dūgāh",
       "rāst"
@@ -329,7 +329,7 @@
         "creatorArabic": "",
         "sourceId": "oY8WnTdP5msak8o1G_N7f",
         "page": "49",
-        "commentsEnglish": "Starts on the note chahargāh or nawā and after a descent to the note rāst the ascent begins from nawā using jins ḥijāz until kurdān, then  ascend to muḥayyar, sunbuleh, jawāb chahargāh (mahūran) until saham/ramal tūtī followed by a descent along it's scale degrees until its qarār which is rāst. ",
+        "commentsEnglish": "Starts on the note chahārgāh or nawā and after a descent to the note rāst the ascent begins from nawā using jins ḥijāz until kurdān, then  ascend to muḥayyar, sunbuleh, jawāb chahārgāh (mahūran) until saham/ramal tūtī followed by a descent along it's scale degrees until its qarār which is rāst. ",
         "commentsArabic": "",
         "stops": [
           {
@@ -338,7 +338,7 @@
           },
           {
             "type": "note",
-            "value": "chahargāh",
+            "value": "chahārgāh",
             "direction": "descending"
           },
           {
@@ -368,7 +368,7 @@
           },
           {
             "type": "note",
-            "value": "mahurān",
+            "value": "māhūrān",
             "direction": "ascending"
           },
           {
@@ -399,7 +399,7 @@
       "rāst",
       "dūgāh",
       "kurdī",
-      "chahargāh",
+      "chahārgāh",
       "nawā",
       "ḥiṣār",
       "māhūr"
@@ -408,7 +408,7 @@
       "māhūr",
       "ḥusaynī",
       "nawā",
-      "chahargāh",
+      "chahārgāh",
       "kurdī",
       "dūgāh",
       "rāst"
@@ -420,7 +420,7 @@
         "creatorArabic": "",
         "sourceId": "oY8WnTdP5msak8o1G_N7f",
         "page": "50",
-        "commentsEnglish": "Starts from the note ḥijāz to render ḥijaz on nawā and it continues ascending until rendering nahāwand on kurdān. Then during the descent one renders nahāwand on nawā, then nawā on chahargāh after which the note ḥusaynī is swapped for ḥiṣār and the descent continues until its qarār which is rāst, but before the end one must briefly utilise ḥijāz on yegāh.",
+        "commentsEnglish": "Starts from the note ḥijāz to render ḥijaz on nawā and it continues ascending until rendering nahāwand on kurdān. Then during the descent one renders nahāwand on nawā, then nawā on chahārgāh after which the note ḥusaynī is swapped for ḥiṣār and the descent continues until its qarār which is rāst, but before the end one must briefly utilise ḥijāz on yegāh.",
         "commentsArabic": "",
         "stops": [
           {
@@ -455,7 +455,7 @@
           {
             "type": "jins",
             "value": "6",
-            "startingNote": "chahargāh",
+            "startingNote": "chahārgāh",
             "direction": "descending"
           },
           {
@@ -495,7 +495,7 @@
     "ascendingNoteNames": [
       "dūgāh",
       "kurdī",
-      "chahargāh",
+      "chahārgāh",
       "ḥiṣār",
       "ḥusaynī",
       "ʿajam",
@@ -506,7 +506,7 @@
       "ʿajam",
       "ḥusaynī",
       "ḥiṣār",
-      "chahargāh",
+      "chahārgāh",
       "kurdī",
       "dūgāh"
     ],
@@ -530,7 +530,7 @@
     "ascendingNoteNames": [
       "dūgāh",
       "segāh",
-      "chahargāh",
+      "chahārgāh",
       "nawā",
       "ḥiṣār",
       "māhūr",
@@ -541,7 +541,7 @@
       "māhūr",
       "ḥiṣār",
       "nawā",
-      "chahargāh",
+      "chahārgāh",
       "segāh",
       "dūgāh"
     ],
@@ -557,7 +557,7 @@
       "rāst",
       "tīk zirguleh",
       "buselīk/ʿushshāq",
-      "chahargāh",
+      "chahārgāh",
       "nawā",
       "tīk ḥiṣār",
       "ʿajam"
@@ -566,7 +566,7 @@
       "ʿajam",
       "ḥiṣār",
       "nawā",
-      "chahargāh",
+      "chahārgāh",
       "buselīk/ʿushshāq",
       "tīk zirguleh",
       "rāst"
@@ -582,7 +582,7 @@
     "ascendingNoteNames": [
       "dūgāh",
       "segāh",
-      "chahargāh",
+      "chahārgāh",
       "ḥijāz",
       "ḥusaynī",
       "ʿajam",
@@ -593,7 +593,7 @@
       "ʿajam",
       "ḥusaynī",
       "ḥijāz",
-      "chahargāh",
+      "chahārgāh",
       "segāh",
       "dūgāh"
     ],
@@ -608,7 +608,7 @@
     "ascendingNoteNames": [
       "dūgāh",
       "kurdī",
-      "chahargāh",
+      "chahārgāh",
       "ḥijāz",
       "ḥusaynī",
       "ʿajam",
@@ -619,7 +619,7 @@
       "ʿajam",
       "ḥusaynī",
       "ḥijāz",
-      "chahargāh",
+      "chahārgāh",
       "kurdī",
       "dūgāh"
     ],
@@ -636,14 +636,14 @@
       "rāst",
       "dūgāh",
       "kurdī",
-      "chahargāh",
+      "chahārgāh",
       "nawā",
       "ḥusaynī"
     ],
     "descendingNoteNames": [
       "ḥusaynī",
       "nawā",
-      "chahargāh",
+      "chahārgāh",
       "kurdī",
       "dūgāh",
       "rāst",
@@ -666,7 +666,7 @@
       "rāst",
       "dūgāh",
       "segāh",
-      "chahargāh",
+      "chahārgāh",
       "nawā",
       "tīk ḥiṣār",
       "ʿajam"
@@ -675,7 +675,7 @@
       "ʿajam",
       "tīk ḥiṣār",
       "nawā",
-      "chahargāh",
+      "chahārgāh",
       "segāh",
       "dūgāh",
       "rāst"
@@ -690,7 +690,7 @@
     "name": "maqām segāh",
     "ascendingNoteNames": [
       "segāh",
-      "chahargāh",
+      "chahārgāh",
       "nawā",
       "ḥusaynī",
       "awj",
@@ -703,7 +703,7 @@
       "awj",
       "ḥusaynī",
       "nawā",
-      "chahargāh",
+      "chahārgāh",
       "segāh"
     ],
     "suyūr": [],
@@ -716,7 +716,7 @@
     "name": "maqām huzām",
     "ascendingNoteNames": [
       "segāh",
-      "chahargāh",
+      "chahārgāh",
       "nawā",
       "ḥiṣār",
       "māhūr",
@@ -729,7 +729,7 @@
       "māhūr",
       "ḥiṣār",
       "nawā",
-      "chahargāh",
+      "chahārgāh",
       "segāh"
     ],
     "suyūr": [],
@@ -814,7 +814,7 @@
       "rāst",
       "dūgāh",
       "segāh",
-      "chahargāh",
+      "chahārgāh",
       "nawā",
       "ḥusaynī",
       "ʿajam"
@@ -823,7 +823,7 @@
       "ʿajam",
       "ḥusaynī",
       "nawā",
-      "chahargāh",
+      "chahārgāh",
       "nīm buselīk",
       "dūgāh",
       "rāst"
@@ -835,7 +835,7 @@
         "creatorArabic": "",
         "sourceId": "oY8WnTdP5msak8o1G_N7f",
         "page": "43",
-        "commentsEnglish": "Starts from rāst and plays jins chahargāh on rāst until nawā. Then jins chahargāh on chahargāh ascending to render bayyātī on ḥusaynī, then rāst on kurdān. During descent it uses chahargāh on kurdān instead of rāst, and touches nīm buselīk instead of segāh. Towards the end it uses yegāh and its qarār is rāst",
+        "commentsEnglish": "Starts from rāst and plays jins chahārgāh on rāst until nawā. Then jins chahārgāh on chahārgāh ascending to render bayyātī on ḥusaynī, then rāst on kurdān. During descent it uses chahārgāh on kurdān instead of rāst, and touches nīm buselīk instead of segāh. Towards the end it uses yegāh and its qarār is rāst",
         "commentsArabic": "",
         "stops": [
           {
@@ -855,7 +855,7 @@
           {
             "type": "jins",
             "value": "10",
-            "startingNote": "chahargāh",
+            "startingNote": "chahārgāh",
             "direction": ""
           },
           {
@@ -909,7 +909,7 @@
       "rāst",
       "zirguleh",
       "buselīk/ʿushshāq",
-      "chahargāh",
+      "chahārgāh",
       "nawā",
       "ḥiṣār",
       "māhūr"
@@ -918,7 +918,7 @@
       "māhūr",
       "ḥiṣār",
       "nawā",
-      "chahargāh",
+      "chahārgāh",
       "buselīk/ʿushshāq",
       "zirguleh",
       "rāst"
@@ -942,7 +942,7 @@
     ],
     "descendingNoteNames": [
       "nawā",
-      "chahargāh",
+      "chahārgāh",
       "buselīk/ʿushshāq",
       "dūgāh",
       "rāst",
@@ -988,14 +988,14 @@
       "rāst",
       "dūgāh",
       "segāh",
-      "chahargāh",
+      "chahārgāh",
       "nawā",
       "ḥusaynī"
     ],
     "descendingNoteNames": [
       "ḥusaynī",
       "nawā",
-      "chahargāh",
+      "chahārgāh",
       "segāh",
       "dūgāh",
       "rāst",
@@ -1056,7 +1056,7 @@
       "rāst",
       "dūgāh",
       "segāh",
-      "chahargāh",
+      "chahārgāh",
       "nawā",
       "ḥiṣār",
       "nīm māhūr",
@@ -1071,7 +1071,7 @@
       "ʿajam",
       "ḥusaynī",
       "nawā",
-      "chahargāh",
+      "chahārgāh",
       "segāh",
       "dūgāh",
       "rāst"
@@ -1139,7 +1139,7 @@
       "rāst",
       "tīk zirguleh",
       "kurdī",
-      "chahargāh",
+      "chahārgāh",
       "nawā",
       "tīk ḥiṣār",
       "ʿajam"
@@ -1148,7 +1148,7 @@
       "ʿajam",
       "ḥiṣār",
       "nawā",
-      "chahargāh",
+      "chahārgāh",
       "kurdī",
       "tīk zirguleh",
       "rāst"
@@ -1171,7 +1171,7 @@
       "nīm ḥijāz"
     ],
     "descendingNoteNames": [
-      "chahargāh",
+      "chahārgāh",
       "segāh",
       "dūgāh",
       "rāst",
@@ -1190,7 +1190,7 @@
         "stops": [
           {
             "type": "note",
-            "value": "chahargāh"
+            "value": "chahārgāh"
           },
           {
             "type": "jins",
@@ -1206,7 +1206,7 @@
           },
           {
             "type": "note",
-            "value": "chahargāh"
+            "value": "chahārgāh"
           },
           {
             "type": "note",
@@ -1250,7 +1250,7 @@
       "rāst",
       "dūgāh",
       "kurdī",
-      "chahargāh"
+      "chahārgāh"
     ],
     "descendingNoteNames": [
       "ḥijāz",
@@ -1289,7 +1289,7 @@
           },
           {
             "type": "note",
-            "value": "chahargāh"
+            "value": "chahārgāh"
           },
           {
             "type": "note",
@@ -1344,7 +1344,7 @@
       "ḥijāz"
     ],
     "descendingNoteNames": [
-      "chahargāh",
+      "chahārgāh",
       "kurdī",
       "dūgāh",
       "rāst",
@@ -1373,7 +1373,7 @@
           },
           {
             "type": "note",
-            "value": "chahargāh"
+            "value": "chahārgāh"
           },
           {
             "type": "note",
@@ -1482,14 +1482,14 @@
       "rāst",
       "dūgāh",
       "segāh",
-      "chahargāh",
+      "chahārgāh",
       "nawā",
       "ḥusaynī"
     ],
     "descendingNoteNames": [
       "ḥusaynī",
       "nawā",
-      "chahargāh",
+      "chahārgāh",
       "segāh",
       "dūgāh",
       "rāst",
@@ -1567,7 +1567,7 @@
       "ḥijāz"
     ],
     "descendingNoteNames": [
-      "chahargāh",
+      "chahārgāh",
       "segāh",
       "dūgāh",
       "rāst",
@@ -1648,12 +1648,12 @@
       "rāst",
       "dūgāh",
       "segāh",
-      "chahargāh",
+      "chahārgāh",
       "nawā"
     ],
     "descendingNoteNames": [
       "nawā",
-      "chahargāh",
+      "chahārgāh",
       "nīm buselīk",
       "dūgāh",
       "rāst",
@@ -1763,7 +1763,7 @@
       "rāst",
       "dūgāh",
       "segāh",
-      "chahargāh",
+      "chahārgāh",
       "nawā",
       "ḥusaynī",
       "ʿajam",
@@ -1776,7 +1776,7 @@
       "awj",
       "ḥusaynī",
       "nawā",
-      "chahargāh",
+      "chahārgāh",
       "nīm buselīk",
       "dūgāh",
       "rāst",
@@ -1835,7 +1835,7 @@
           },
           {
             "type": "note",
-            "value": "chahargāh"
+            "value": "chahārgāh"
           },
           {
             "type": "note",
@@ -1878,7 +1878,7 @@
       "rāst",
       "dūgāh",
       "segāh",
-      "chahargāh",
+      "chahārgāh",
       "nawā"
     ],
     "descendingNoteNames": [
@@ -1938,7 +1938,7 @@
       "zirguleh",
       "dūgāh",
       "nīm buselīk",
-      "chahargāh",
+      "chahārgāh",
       "ḥiṣār",
       "ḥusaynī",
       "ʿajam",
@@ -1951,7 +1951,7 @@
       "ʿajam",
       "ḥusaynī",
       "ḥiṣār",
-      "chahargāh",
+      "chahārgāh",
       "nīm buselīk",
       "dūgāh",
       "zirguleh",
@@ -2015,24 +2015,24 @@
       "rāst",
       "dūgāh",
       "segāh",
-      "chahargāh",
+      "chahārgāh",
       "ḥijāz",
       "ḥusaynī",
       "ʿajam",
       "kurdān",
       "shahnāz",
       "jawāb nīm buselīk",
-      "mahurān"
+      "māhūrān"
     ],
     "descendingNoteNames": [
-      "mahurān",
+      "māhūrān",
       "buzurk",
       "muḥayyar",
       "kurdān",
       "ʿajam",
       "ḥusaynī",
       "nawā",
-      "chahargāh",
+      "chahārgāh",
       "kurdī",
       "dūgāh",
       "rāst",
@@ -2046,11 +2046,11 @@
         "sourceEnglish": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
         "year": 1946,
         "page": 28,
-        "commentsEnglish": "Starts on chahargāh to render maqām ṣabā on dūgāh with a highlighting of maqām ḥijāz on chahargāh, then ascending to render bayāt on muḥayyar followed by a descent in nahāwand on nawā followed by kurdī on dūgāh and it ends on its qarār with a rendering of maqām kurdī on ʿushayrān. In modern Turkish it is known as makam Şevkutarab.",
+        "commentsEnglish": "Starts on chahārgāh to render maqām ṣabā on dūgāh with a highlighting of maqām ḥijāz on chahārgāh, then ascending to render bayāt on muḥayyar followed by a descent in nahāwand on nawā followed by kurdī on dūgāh and it ends on its qarār with a rendering of maqām kurdī on ʿushayrān. In modern Turkish it is known as makam Şevkutarab.",
         "stops": [
           {
             "type": "note",
-            "value": "chahargāh"
+            "value": "chahārgāh"
           },
           {
             "type": "jins",
@@ -2061,7 +2061,7 @@
           {
             "type": "jins",
             "value": "jins ḥijāz",
-            "startingNote": "chahargāh",
+            "startingNote": "chahārgāh",
             "direction": "none"
           },
           {
@@ -2120,10 +2120,10 @@
       "kurdān",
       "muḥayyar",
       "buzurk",
-      "mahurān"
+      "māhūrān"
     ],
     "descendingNoteNames": [
-      "mahurān",
+      "māhūrān",
       "buzurk",
       "muḥayyar",
       "kurdān",
@@ -2210,24 +2210,24 @@
       "rāst",
       "dūgāh",
       "segāh",
-      "chahargāh",
+      "chahārgāh",
       "ḥijāz",
       "ḥusaynī",
       "ʿajam",
       "kurdān",
       "muḥayyar",
       "sunbuleh/zawāl",
-      "mahurān"
+      "māhūrān"
     ],
     "descendingNoteNames": [
-      "mahurān",
+      "māhūrān",
       "jawāb nīm buselīk",
       "shahnāz",
       "kurdān",
       "ʿajam",
       "ḥusaynī",
       "ḥijāz",
-      "chahargāh",
+      "chahārgāh",
       "kurdī",
       "dūgāh",
       "rāst",
@@ -2240,12 +2240,12 @@
         "sourceEnglish": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
         "year": 1946,
         "page": 31,
-        "commentsEnglish": "Starts on chahargāh ascending to kurdān and above to render ḥijāz chahargāh, then descends from chahargāh until it's qarār 'ajam 'ushayrān",
+        "commentsEnglish": "Starts on chahārgāh ascending to kurdān and above to render ḥijāz chahārgāh, then descends from chahārgāh until it's qarār 'ajam 'ushayrān",
         "stops": [
           {
             "type": "jins",
             "value": "jins ḥijāz",
-            "startingNote": "chahargāh",
+            "startingNote": "chahārgāh",
             "direction": "ascending"
           },
           {
@@ -2254,7 +2254,7 @@
           },
           {
             "type": "note",
-            "value": "chahargāh"
+            "value": "chahārgāh"
           },
           {
             "type": "jins",
@@ -2295,17 +2295,17 @@
       "kurdān",
       "muḥayyar",
       "sunbuleh/zawāl",
-      "mahurān"
+      "māhūrān"
     ],
     "descendingNoteNames": [
-      "mahurān",
+      "māhūrān",
       "sunbuleh/zawāl",
       "muḥayyar",
       "kurdān",
       "ʿajam",
       "ḥiṣār",
       "nawā",
-      "chahargāh",
+      "chahārgāh",
       "kurdī",
       "dūgāh",
       "rāst",
@@ -2318,7 +2318,7 @@
         "creatorArabic": "",
         "sourceId": "oY8WnTdP5msak8o1G_N7f",
         "page": 32,
-        "commentsEnglish": "Starts on kurdān ascending to jawāb nawā (saham/ramal tuti) then descends from nawā to its qarār using chahargāh and kurdī. In the \"analysis\" it states that one must descend at the end to qarār ḥijāz before ending on 'ajam 'ushayrān.",
+        "commentsEnglish": "Starts on kurdān ascending to jawāb nawā (saham/ramal tuti) then descends from nawā to its qarār using chahārgāh and kurdī. In the \"analysis\" it states that one must descend at the end to qarār ḥijāz before ending on 'ajam 'ushayrān.",
         "commentsArabic": "",
         "stops": [
           {
@@ -2335,7 +2335,7 @@
           },
           {
             "type": "note",
-            "value": "chahargāh"
+            "value": "chahārgāh"
           },
           {
             "type": "note",
@@ -2375,14 +2375,14 @@
       "rāst",
       "dūgāh",
       "segāh",
-      "chahargāh",
+      "chahārgāh",
       "nawā",
       "ḥusaynī"
     ],
     "descendingNoteNames": [
       "ḥusaynī",
       "nawā",
-      "chahargāh",
+      "chahārgāh",
       "segāh",
       "dūgāh",
       "rāst",
@@ -2395,11 +2395,11 @@
         "sourceEnglish": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
         "year": 1946,
         "page": 34,
-        "commentsEnglish": "Starts on chahargāh until nawā to render bayāt dūgāh, followed by rāst nawā, followed by bayāt muḥayyar, then descends to render rāst nawā, followed by nahāwand nawā, followed by bayāt dūgāh and from dūgāh descends until the qarār which is 'irāq.",
+        "commentsEnglish": "Starts on chahārgāh until nawā to render bayāt dūgāh, followed by rāst nawā, followed by bayāt muḥayyar, then descends to render rāst nawā, followed by nahāwand nawā, followed by bayāt dūgāh and from dūgāh descends until the qarār which is 'irāq.",
         "stops": [
           {
             "type": "note",
-            "value": "chahargāh"
+            "value": "chahārgāh"
           },
           {
             "type": "note",
@@ -2537,7 +2537,7 @@
       "rāst",
       "dūgāh",
       "segāh",
-      "chahargāh",
+      "chahārgāh",
       "ḥijāz",
       "ḥusaynī",
       "ʿajam",
@@ -2550,7 +2550,7 @@
       "ʿajam",
       "ḥusaynī",
       "ḥijāz",
-      "chahargāh",
+      "chahārgāh",
       "segāh",
       "dūgāh",
       "rāst",
@@ -2700,7 +2700,7 @@
       "ʿajam",
       "ḥusaynī",
       "nawā",
-      "chahargāh",
+      "chahārgāh",
       "segāh",
       "kurdī",
       "rāst",
@@ -2777,7 +2777,7 @@
     "ascendingNoteNames": [
       "dūgāh",
       "nīm buselīk",
-      "chahargāh",
+      "chahārgāh",
       "nawā",
       "ḥusaynī",
       "ʿajam",
@@ -2788,7 +2788,7 @@
       "ʿajam",
       "ḥusaynī",
       "nawā",
-      "chahargāh",
+      "chahārgāh",
       "nīm buselīk",
       "dūgāh"
     ],
@@ -2804,9 +2804,9 @@
   },
   {
     "id": "49",
-    "name": "maqām chahargāh (Al-Shawwā)",
+    "name": "maqām chahārgāh (Al-Shawwā)",
     "ascendingNoteNames": [
-      "chahargāh",
+      "chahārgāh",
       "nawā",
       "ḥusaynī",
       "ʿajam",
@@ -2821,7 +2821,7 @@
       "ʿajam",
       "ḥusaynī",
       "nawā",
-      "chahargāh"
+      "chahārgāh"
     ],
     "suyūr": [],
     "commentsEnglish": "",
@@ -2835,9 +2835,9 @@
   },
   {
     "id": "50",
-    "name": "maqām chahargāh/girkah",
+    "name": "maqām chahārgāh/girkah",
     "ascendingNoteNames": [
-      "chahargāh",
+      "chahārgāh",
       "nawā",
       "nīm ḥusaynī",
       "ʿajam",
@@ -2852,7 +2852,7 @@
       "ʿajam",
       "nīm ḥusaynī",
       "nawā",
-      "chahargāh"
+      "chahārgāh"
     ],
     "suyūr": [],
     "commentsEnglish": "",
@@ -2866,7 +2866,7 @@
       "rāst",
       "zirguleh",
       "segāh",
-      "chahargāh",
+      "chahārgāh",
       "nawā",
       "ḥiṣār",
       "nīm māhūr"
@@ -2875,7 +2875,7 @@
       "nīm māhūr",
       "ḥiṣār",
       "nawā",
-      "chahargāh",
+      "chahārgāh",
       "segāh",
       "dūgāh",
       "rāst"
@@ -2904,7 +2904,7 @@
           },
           {
             "type": "note",
-            "value": "chahargāh"
+            "value": "chahārgāh"
           },
           {
             "type": "note",
@@ -2961,7 +2961,7 @@
       "rāst",
       "dūgāh",
       "segāh",
-      "chahargāh",
+      "chahārgāh",
       "nawā",
       "ḥusaynī",
       "awj",
@@ -2974,7 +2974,7 @@
       "awj",
       "ḥusaynī",
       "nawā",
-      "chahargāh",
+      "chahārgāh",
       "segāh",
       "dūgāh",
       "rāst",
@@ -3037,7 +3037,7 @@
       "nīm ḥijāz"
     ],
     "descendingNoteNames": [
-      "chahargāh",
+      "chahārgāh",
       "buselīk/ʿushshāq",
       "dūgāh",
       "rāst",
@@ -3083,7 +3083,7 @@
       "rāst",
       "dūgāh",
       "segāh",
-      "chahargāh",
+      "chahārgāh",
       "nawā",
       "ḥusaynī",
       "nīm māhūr"
@@ -3092,7 +3092,7 @@
       "ʿajam",
       "ḥusaynī",
       "nawā",
-      "chahargāh",
+      "chahārgāh",
       "segāh",
       "dūgāh",
       "rāst"
@@ -3148,7 +3148,7 @@
       "rāst",
       "dūgāh",
       "segāh",
-      "chahargāh",
+      "chahārgāh",
       "nawā",
       "ḥusaynī",
       "awj"
@@ -3157,7 +3157,7 @@
       "ʿajam",
       "ḥusaynī",
       "nawā",
-      "chahargāh",
+      "chahārgāh",
       "nīm buselīk",
       "kurdī",
       "rāst"
@@ -3234,7 +3234,7 @@
       "rāst",
       "dūgāh",
       "segāh",
-      "chahargāh",
+      "chahārgāh",
       "nawā",
       "ḥiṣār",
       "nīm māhūr"
@@ -3265,7 +3265,7 @@
       "rāst",
       "dūgāh",
       "segāh",
-      "chahargāh",
+      "chahārgāh",
       "nawā",
       "ḥiṣār",
       "nīm māhūr"
@@ -3351,10 +3351,10 @@
       "kurdān",
       "muḥayyar",
       "sunbuleh/zawāl",
-      "mahurān"
+      "māhūrān"
     ],
     "descendingNoteNames": [
-      "mahurān",
+      "māhūrān",
       "sunbuleh/zawāl",
       "muḥayyar",
       "kurdān",

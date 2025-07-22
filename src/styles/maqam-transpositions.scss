@@ -14,6 +14,11 @@
     text-align: left;
     padding: 10px 20px;
     border: solid 1px $grey;
+
+    // RTL support
+    [dir="rtl"] & {
+      text-align: right;
+    }
   }
 
   &__play-circle-icon.MuiSvgIcon-root {
@@ -67,6 +72,11 @@
       padding: 10px;
       border: solid 1px $grey;
       font-weight: 200;
+
+      // RTL support
+      [dir="rtl"] & {
+        text-align: right;
+      }
     }
     tr {
       height: 100%;
@@ -112,11 +122,21 @@
     text-align: left;
     background-color: black;
     scroll-margin-top: calc($top-navbar-height - 30px + 50px);
+
+    // RTL support
+    [dir="rtl"] & {
+      text-align: right;
+    }
   }
 
   &__header-cell {
     text-align: left;
     background-color: transparent;
+
+    // RTL support
+    [dir="rtl"] & {
+      text-align: right;
+    }
 
     &_unique {
       background-color: rgba($primary, 0.5);
@@ -182,6 +202,12 @@
     justify-content: flex-start; // (optional) aligns to left horizontally
     cursor: pointer;
     margin-bottom: 0px;
+
+    // RTL support
+    [dir="rtl"] & {
+      text-align: right;
+      justify-content: flex-end;
+    }
   }
 
   h3 {

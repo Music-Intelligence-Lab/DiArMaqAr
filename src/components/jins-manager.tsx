@@ -3,6 +3,7 @@
 import useAppContext from "@/contexts/app-context";
 import useFilterContext from "@/contexts/filter-context";
 import useSoundContext from "@/contexts/sound-context";
+import useLanguageContext from "@/contexts/language-context";
 import JinsData from "@/models/Jins";
 import React, { useState, useEffect, useMemo } from "react";
 import { getJinsTranspositions } from "@/functions/transpose";
@@ -14,6 +15,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
 
   const { ajnasFilter, setAjnasFilter } = useFilterContext();
   const { clearHangingNotes } = useSoundContext();
+  const { t, language, isRTL, getDisplayName } = useLanguageContext();
 
   // Local state for comments
   const [commentsEnglishLocal, setCommentsEnglishLocal] = useState<string>(selectedJinsData?.getCommentsEnglish() ?? "");
@@ -106,13 +108,13 @@ export default function JinsManager({ admin }: { admin: boolean }) {
   const filteredAjnas = useMemo(() => {
     if (ajnasFilter === "all") return sortedAjnas;
     return sortedAjnas.filter((jins) => jins.getNoteNames()[0]?.toLowerCase() === ajnasFilter.toLowerCase());
-  }, [sortedAjnas, ajnasFilter]);
+  }, [sortedAjnas, ajnasFilter, language]);
 
   const numberOfRows = 3; // Fixed number of rows
   const numberOfColumns = Math.ceil(filteredAjnas.length / numberOfRows); // Calculate columns dynamically
 
   return (
-    <div className="jins-manager">
+    <div className="jins-manager" key={language}>
       <div className="jins-manager__tabs">
         {tabs.map((tab) => {
           let count = 0;
@@ -123,7 +125,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
           }
           return (
             <button key={tab} className={"jins-manager__tab" + (ajnasFilter === tab ? " jins-manager__tab_active" : "")} onClick={() => setAjnasFilter(tab)}>
-              {tab} <span className="jins-manager__tab-count">({count})</span>
+              {tab === "all" ? t('jins.all') : getDisplayName(tab, 'note')} <span className="jins-manager__tab-count">({count})</span>
             </button>
           );
         })}
@@ -133,14 +135,14 @@ export default function JinsManager({ admin }: { admin: boolean }) {
           className="carousel-button carousel-button-prev"
           onClick={() => {
             const container = document.querySelector(".jins-manager__list");
-            if (container) container.scrollBy({ left: -670, behavior: "smooth" });
+            if (container) container.scrollBy({ left: isRTL ? 670 : -670, behavior: "smooth" });
           }}
         >
           ‹
         </button>
         <div className="jins-manager__list" style={{ gridTemplateColumns: `repeat(${numberOfColumns}, minmax(250px, 1fr))` }}>
           {filteredAjnas.length === 0 ? (
-            <p>No ajnas available.</p>
+            <p>{t('jins.noAjnasAvailable')}</p>
           ) : (
             filteredAjnas.map((jinsData, index) => {
               const selectable = jinsData.isJinsSelectable(allPitchClasses.map((pitchClass) => pitchClass.noteName));
@@ -157,8 +159,8 @@ export default function JinsManager({ admin }: { admin: boolean }) {
                   }}
                 >
                   <div className="jins-manager__item-name">
-                    <strong>{jinsData.getName()}</strong>
-                    {selectable && <strong className="jins-manager__item-name-transpositions">{`Transpositions: ${numberOfTranspositions}/${numberOfPitchClasses}`}</strong>}
+                    <strong>{getDisplayName(jinsData.getName(), 'jins')}</strong>
+                    {selectable && <strong className="jins-manager__item-name-transpositions">{`${t('jins.transpositions')}: ${numberOfTranspositions}/${numberOfPitchClasses}`}</strong>}
                   </div>
                 </div>
               );
@@ -169,7 +171,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
           className="carousel-button carousel-button-next"
           onClick={() => {
             const container = document.querySelector(".jins-manager__list");
-            if (container) container.scrollBy({ left: 520, behavior: "smooth" });
+            if (container) container.scrollBy({ left: isRTL ? -520 : 520, behavior: "smooth" });
           }}
         >
           ›
@@ -178,7 +180,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
 
       {admin && !selectedJinsData && (
         <button onClick={() => setSelectedJinsData(new JinsData(newJinsId, "", [], "", "", []))} className="jins-manager__create-new-jins-button">
-          Create New Jins
+          {t('jins.createNewJins')}
         </button>
       )}
 
@@ -200,24 +202,24 @@ export default function JinsManager({ admin }: { admin: boolean }) {
                   )
                 )
               }
-              placeholder="Enter new jins name"
+              placeholder={t('jins.enterNewJinsName')}
               className="jins-manager__jins-input"
             />
             <button onClick={handleSaveJins} className="jins-manager__save-button">
-              Save
+              {t('jins.save')}
             </button>
             <button onClick={handleDeleteJins} className="jins-manager__delete-button">
-              Delete
+              {t('jins.delete')}
             </button>
             <button onClick={clearSelections} className="jins-manager__clear-button">
-              Clear
+              {t('jins.clear')}
             </button>
           </div>
 
           <div className="jins-manager__group">
             {selectedJinsData && (
               <button className="jins-manager__source-add-button" onClick={addSourceRef}>
-                Add Source
+                {t('jins.addSource')}
               </button>
             )}
             {selectedJinsData.getSourcePageReferences().map((ref, idx) => (
@@ -227,7 +229,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
                   value={ref.sourceId}
                   onChange={(e) => updateSourceRefs(selectedJinsData.getSourcePageReferences(), idx, { sourceId: e.target.value })}
                 >
-                  <option value="">Select source</option>
+                  <option value="">{t('jins.selectSource')}</option>
                   {sources.map((s) => (
                     <option key={s.getId()} value={s.getId()}>
                       {s.getTitleEnglish()}
@@ -238,11 +240,11 @@ export default function JinsManager({ admin }: { admin: boolean }) {
                   className="jins-manager__source-input"
                   type="text"
                   value={ref.page}
-                  placeholder="Page"
+                  placeholder={t('jins.page')}
                   onChange={(e) => updateSourceRefs(selectedJinsData.getSourcePageReferences(), idx, { page: e.target.value })}
                 />
                 <button className="jins-manager__source-delete-button" onClick={() => removeSourceRef(idx)}>
-                  Delete
+                  {t('jins.delete')}
                 </button>
               </div>
             ))}
@@ -252,14 +254,14 @@ export default function JinsManager({ admin }: { admin: boolean }) {
           <div className="jins-manager__group">
             <div className="jins-manager__input-container">
               <label className="jins-manager__label" htmlFor="commentsEnglishField">
-                Comments (English)
+                {t('jins.commentsEnglish')}
               </label>
               <textarea rows={5} className="jins-manager__input" id="commentsEnglishField" value={commentsEnglishLocal} onChange={(e) => setCommentsEnglishLocal(e.target.value)} />
             </div>
 
             <div className="jins-manager__input-container">
               <label className="jins-manager__label" htmlFor="commentsArabicField">
-                Comments (Arabic)
+                {t('jins.commentsArabic')}
               </label>
               <textarea rows={5} className="jins-manager__input" id="commentsArabicField" value={commentsArabicLocal} onChange={(e) => setCommentsArabicLocal(e.target.value)} />
             </div>

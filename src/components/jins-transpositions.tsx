@@ -4,11 +4,11 @@ import React, { useMemo, useEffect, useState } from "react";
 import useAppContext from "@/contexts/app-context";
 import useSoundContext, { defaultNoteVelocity } from "@/contexts/sound-context";
 import useFilterContext from "@/contexts/filter-context";
+import useLanguageContext from "@/contexts/language-context";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { getJinsTranspositions } from "@/functions/transpose";
 import { Jins } from "@/models/Jins";
-import camelCaseToWord from "@/functions/camelCaseToWord";
 import Link from "next/link";
 import StaffNotation from "./staff-notation";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
@@ -20,6 +20,8 @@ export default function JinsTranspositions() {
   const { noteOn, noteOff, playSequence, soundSettings } = useSoundContext();
 
   const { filters, setFilters } = useFilterContext();
+
+  const { t, language, getDisplayName } = useLanguageContext();
 
   // Export modal state
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
@@ -84,7 +86,7 @@ export default function JinsTranspositions() {
 
             <td className="jins-transpositions__jins-name-row" colSpan={2 + (pitchClasses.length - 1) * 2}>
               {!transposition ? (
-                <span className="jins-transpositions__transposition-title">Darajat al-Istiqrār (tonic/finalis): {pitchClasses[0].noteName + ` (${getEnglishNoteName(pitchClasses[0].noteName)})`}</span>
+                <span className="jins-transpositions__transposition-title">{t('jins.darajatAlIstiqrar')}: {getDisplayName(pitchClasses[0].noteName, 'note') + ` (${getEnglishNoteName(pitchClasses[0].noteName)})`}</span>
               ) : (
                 <span className="jins-transpositions__transposition-title">{jins.name}</span>
               )}
@@ -103,7 +105,7 @@ export default function JinsTranspositions() {
                   }, 0);
                 }}
               >
-                Select & Load to Keyboard
+                {t('jins.selectLoadToKeyboard')}
               </button>
 
               <button
@@ -112,29 +114,29 @@ export default function JinsTranspositions() {
                   playSequence(pitchClasses, true);
                 }}
               >
-                <PlayCircleIcon className="jins-transpositions__play-circle-icon" /> Play jins
+                <PlayCircleIcon className="jins-transpositions__play-circle-icon" /> {t('jins.playJins')}
               </button>
               
               <button
                 className="jins-transpositions__button"
                 onClick={() => handleJinsExport(jins)}
               >
-                <FileDownloadIcon className="jins-transpositions__export-icon" /> Export
+                <FileDownloadIcon className="jins-transpositions__export-icon" /> {t('jins.export')}
               </button>
             </td>
           </tr>
           <tr>
-            <th className="jins-transposition s__row-header">Note Names </th>
+            <th className="jins-transpositions__row-header">{t('jins.noteNames')}</th>
             {pitchClasses.map(({ noteName }, i) => (
               <React.Fragment key={i}>
                 {i !== 0 && <th className="jins-transpositions__header-cell"></th>}
-                <th className="jins-transpositions__header-cell">{noteName}</th>
+                <th className="jins-transpositions__header-cell">{getDisplayName(noteName, 'note')}</th>
               </React.Fragment>
             ))}
           </tr>
           {filters["abjadName"] && (
             <tr>
-              <th className="jins-transpositions__row-header">Abjad Name</th>
+              <th className="jins-transpositions__row-header">{t('jins.abjadName')}</th>
               <th className="jins-transpositions__header-pitchClass">{pitchClasses[0].abjadName || "--"}</th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
@@ -146,7 +148,7 @@ export default function JinsTranspositions() {
           )}
           {filters["englishName"] && (
             <tr>
-              <th className="jins-transpositions__row-header">English Name</th>
+              <th className="jins-transpositions__row-header">{t('jins.englishName')}</th>
               <th className="jins-transpositions__header-pitchClass">{pitchClasses[0].englishName}</th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
@@ -157,7 +159,7 @@ export default function JinsTranspositions() {
             </tr>
           )}
           <tr>
-            <th className="jins-transpositions__row-header">{camelCaseToWord(valueType)}</th>
+            <th className="jins-transpositions__row-header">{t(`jins.${valueType}`)}</th>
             <th className="jins-transpositions__header-pitchClass">{pitchClasses[0].originalValue}</th>
             {intervals.map((interval, i) => (
               <React.Fragment key={i}>
@@ -168,7 +170,7 @@ export default function JinsTranspositions() {
           </tr>
           {valueType !== "fraction" && filters["fraction"] && (
             <tr>
-              <th className="jins-transpositions__row-header">fraction</th>
+              <th className="jins-transpositions__row-header">{t('jins.fraction')}</th>
               <th className="jins-transpositions__header-pitchClass">{pitchClasses[0].fraction}</th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
@@ -180,7 +182,7 @@ export default function JinsTranspositions() {
           )}
           {valueType !== "cents" && filters["cents"] && (
             <tr>
-              <th className="jins-transpositions__row-header">cents (¢)</th>
+              <th className="jins-transpositions__row-header">{t('jins.cents')}</th>
               <th className="jins-transpositions__header-pitchClass">{parseFloat(pitchClasses[0].cents).toFixed(3)}</th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
@@ -192,7 +194,7 @@ export default function JinsTranspositions() {
           )}
           {valueType !== "decimalRatio" && filters["decimalRatio"] && (
             <tr>
-              <th className="jins-transpositions__row-header">decimal ratio</th>
+              <th className="jins-transpositions__row-header">{t('jins.decimalRatio')}</th>
               <th className="jins-transpositions__header-pitchClass">{parseFloat(pitchClasses[0].decimalRatio).toFixed(3)}</th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
@@ -204,7 +206,7 @@ export default function JinsTranspositions() {
           )}
           {valueType !== "stringLength" && filters["stringLength"] && (
             <tr>
-              <th className="jins-transpositions__row-header">string length</th>
+              <th className="jins-transpositions__row-header">{t('jins.stringLength')}</th>
               <th className="jins-transpositions__header-pitchClass">{parseFloat(pitchClasses[0].stringLength).toFixed(3)}</th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
@@ -216,7 +218,7 @@ export default function JinsTranspositions() {
           )}
           {valueType !== "fretDivision" && filters["fretDivision"] && (
             <tr>
-              <th className="jins-transpositions__row-header">fret division</th>
+              <th className="jins-transpositions__row-header">{t('jins.fretDivision')}</th>
               <th className="jins-transpositions__header-pitchClass">{parseFloat(pitchClasses[0].fretDivision).toFixed(3)}</th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
@@ -228,7 +230,7 @@ export default function JinsTranspositions() {
           )}
           {filters["midiNote"] && (
             <tr>
-              <th className="jins-transpositions__row-header">MIDI Note</th>
+              <th className="jins-transpositions__row-header">{t('jins.midiNote')}</th>
               <th className="jins-transpositions__header-pitchClass">{pitchClasses[0].midiNoteNumber.toFixed(3)}</th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
@@ -240,7 +242,7 @@ export default function JinsTranspositions() {
           )}
           {filters["frequency"] && (
             <tr>
-              <th className="jins-transpositions__row-header">Freq (Hz)</th>
+              <th className="jins-transpositions__row-header">{t('jins.frequency')}</th>
               <th className="jins-transpositions__header-pitchClass">{parseFloat(pitchClasses[0].frequency).toFixed(3)}</th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
@@ -251,7 +253,7 @@ export default function JinsTranspositions() {
             </tr>
           )}
           <tr>
-            <th className="jins-transpositions__row-header">Play</th>
+            <th className="jins-transpositions__row-header">{t('jins.play')}</th>
             {pitchClasses.map((pitchClass, i) => (
               <React.Fragment key={i}>
                 {i !== 0 && <th className="jins-transpositions__header-cell"></th>}
@@ -274,7 +276,7 @@ export default function JinsTranspositions() {
           </tr>
           {filters.staffNotation && (
             <tr>
-              <th className="jins-transpositions__row-header">Staff Notation</th>
+              <th className="jins-transpositions__row-header">{t('jins.staffNotation')}</th>
               <td className="staff-notation-cell" colSpan={pitchClasses.length * 2 - 1}>
                 <StaffNotation 
                   pitchClasses={pitchClasses}
@@ -291,13 +293,13 @@ export default function JinsTranspositions() {
 
     return (
       <>
-        <div className="jins-transpositions">
+        <div className="jins-transpositions" key={language}>
           <h2 className="jins-transpositions__title">
-            Taḥlīl (analysis): {`${selectedJinsData.getName()}`}{" "}
+            {t('jins.analysis')}: {`${selectedJinsData.getName()}`}{" "}
             {!useRatio && (
               <>
                 {" "}
-                / Cents Tolerance: <input className="jins-transpositions__input" type="number" value={centsTolerance ?? 0} onChange={(e) => setCentsTolerance(Number(e.target.value))} />
+                / {t('jins.centsTolerance')}: <input className="jins-transpositions__input" type="number" value={centsTolerance ?? 0} onChange={(e) => setCentsTolerance(Number(e.target.value))} />
               </>
             )}
             <span className="tuning-system-manager__filter-menu">
@@ -336,15 +338,7 @@ export default function JinsTranspositions() {
                       }}
                     />
                     <span className="tuning-system-manager__filter-label">
-                      {filterKey
-                        .replace(/([A-Z])/g, " $1")
-                        .trim()
-                        .charAt(0)
-                        .toUpperCase() +
-                        filterKey
-                          .replace(/([A-Z])/g, " $1")
-                          .trim()
-                          .slice(1)}
+                      {t(`jins.${filterKey}`)}
                     </span>
                   </label>
                 );
@@ -365,12 +359,12 @@ export default function JinsTranspositions() {
             <>
               <div className="jins-transpositions__comments-sources-container">
                 <div className="jins-transpositions__comments-english">
-                  <h3>Comments:</h3>
+                  <h3>{t('jins.comments')}:</h3>
                   <div className="jins-transpositions__comments-text">{selectedJinsData.getCommentsEnglish()}</div>
                 </div>
 
                 <div className="jins-transpositions__sources-english">
-                  <h3>Sources:</h3>
+                  <h3>{t('jins.sources')}:</h3>
                   <div className="jins-transpositions__sources-text">
                     {selectedJinsData?.getSourcePageReferences().length > 0 &&
                       selectedJinsData.getSourcePageReferences().map((sourceRef, idx) => {
@@ -388,7 +382,7 @@ export default function JinsTranspositions() {
             </>
           )}
 
-          <h2 className="jins-transpositions__title">Taṣwīr (transpositions): {`${selectedJinsData.getName()}`}</h2>
+          <h2 className="jins-transpositions__title">{t('jins.transpositionsTitle')}: {`${selectedJinsData.getName()}`}</h2>
 
           <table className="jins-transpositions__table">
             <colgroup>
@@ -406,7 +400,7 @@ export default function JinsTranspositions() {
         </div>
       </>
     );
-  }, [allPitchClasses, selectedJinsData, centsTolerance, filters, soundSettings]);
+  }, [allPitchClasses, selectedJinsData, centsTolerance, filters, soundSettings, language]);
 
   // Listen for custom event to scroll to header when jins/transposition changes (event-driven)
   useEffect(() => {

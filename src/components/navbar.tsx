@@ -15,7 +15,7 @@ import calculateNumberOfModulations from "@/functions/calculateNumberOfModulatio
 export default function Navbar() {
   const { showAdminTabs, setShowAdminTabs, selectedMenu, setSelectedMenu } =
     useMenuContext();
-  const { t, isRTL } = useLanguageContext();
+  const { t, isRTL, language, getDisplayName } = useLanguageContext();
   const {
     selectedTuningSystem,
     selectedJinsData,
@@ -118,13 +118,18 @@ export default function Navbar() {
             {selectedTuningSystem ? (
               <>
                 <span className="navbar__bottom-bar-item_tab-title">
-                  {selectedTuningSystem.getCreatorEnglish()} (
-                  {selectedTuningSystem.getYear()})
+                  {language === 'ar' && selectedTuningSystem.getCreatorArabic() 
+                    ? `${selectedTuningSystem.getCreatorArabic()} (${selectedTuningSystem.getYear()})`
+                    : `${selectedTuningSystem.getCreatorEnglish()} (${selectedTuningSystem.getYear()})`
+                  }
                 </span>
                 <span className="navbar__bottom-bar-item_tab-subtitle">
-                  {selectedTuningSystem.getTitleEnglish()} 
+                  {language === 'ar' && selectedTuningSystem.getTitleArabic()
+                    ? selectedTuningSystem.getTitleArabic()
+                    : selectedTuningSystem.getTitleEnglish()
+                  }
                   <br />
-                  [{octaveOneNoteNames[selectedIndices[0]] ?? "none"}]
+                  [{octaveOneNoteNames[selectedIndices[0]] ? getDisplayName(octaveOneNoteNames[selectedIndices[0]], 'note') : t('octave.none')}]
                 </span>
               </>
             ) : (
@@ -192,18 +197,18 @@ export default function Navbar() {
               {!selectedJinsData
                 ? ""
                 : selectedJins
-                ? `${selectedJinsData.getName()} al-${
+                ? `${getDisplayName(selectedJinsData.getName(), 'jins')} al-${getDisplayName(
                     selectedJins.jinsPitchClasses.map(
                       (pitchClass) => pitchClass.noteName
-                    )[0]
-                  } (${getEnglishNoteName(
+                    )[0], 'note'
+                  )} (${getEnglishNoteName(
                     selectedJins.jinsPitchClasses.map(
                       (pitchClass) => pitchClass.noteName
                     )[0]
                   )})`
-                : `${selectedJinsData.getName()} (${
-                    selectedJinsData.getNoteNames()[0]
-                  }/${getEnglishNoteName(
+                : `${getDisplayName(selectedJinsData.getName(), 'jins')} (${getDisplayName(
+                    selectedJinsData.getNoteNames()[0], 'note'
+                  )}/${getEnglishNoteName(
                     selectedJinsData.getNoteNames()[0]
                   )})`}
             </span>
@@ -271,10 +276,10 @@ export default function Navbar() {
               {!selectedMaqamData
                 ? ""
                 : selectedMaqam
-                ? selectedMaqam.name
-                : `${selectedMaqamData.getName()} (${
-                    selectedMaqamData.getAscendingNoteNames()[0]
-                  }/${getEnglishNoteName(
+                ? getDisplayName(selectedMaqam.name, 'maqam')
+                : `${getDisplayName(selectedMaqamData.getName(), 'maqam')} (${getDisplayName(
+                    selectedMaqamData.getAscendingNoteNames()[0], 'note'
+                  )}/${getEnglishNoteName(
                     selectedMaqamData.getAscendingNoteNames()[0]
                   )})`}
             </span>

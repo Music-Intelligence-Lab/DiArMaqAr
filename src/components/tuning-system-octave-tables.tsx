@@ -4,6 +4,7 @@ import React, { useEffect, useState, useRef } from "react";
 import useAppContext from "@/contexts/app-context";
 import useSoundContext from "@/contexts/sound-context";
 import useFilterContext from "@/contexts/filter-context";
+import useLanguageContext from "@/contexts/language-context";
 import detectPitchClassType from "@/functions/detectPitchClassType";
 import {
   octaveOneNoteNames,
@@ -20,6 +21,8 @@ import { abjadNames } from "@/functions/noteNameMappings";
 import getFirstNoteName from "@/functions/getFirstNoteName";
 
 export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) {
+  const { t, getDisplayName } = useLanguageContext();
+  
   const {
     selectedTuningSystem,
     tuningSystemPitchClasses,
@@ -374,7 +377,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
               }));
             }}
           >
-            Dīwān (octave) {octave}{" "}
+            {t('octave.title')} {octave}{" "}
           </span>
           {admin && ((octave === 1 && openedOctaveRows[1]) || (octave === 2 && openedOctaveRows[2])) && (
             <button
@@ -384,7 +387,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                 setCascade((c) => !c);
               }}
             >
-              {cascade ? "Cascade Enabled" : "Cascade Disabled"}
+              {cascade ? t('octave.cascadeEnabled') : t('octave.cascadeDisabled')}
             </button>
           )}
           {octave === 1 && openedOctaveRows[1] && (
@@ -418,15 +421,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                       }}
                     />
                     <span className="tuning-system-manager__filter-label">
-                      {filterKey
-                        .replace(/([A-Z])/g, " $1")
-                        .trim()
-                        .charAt(0)
-                        .toUpperCase() +
-                        filterKey
-                          .replace(/([A-Z])/g, " $1")
-                          .trim()
-                          .slice(1)}
+                      {t(`filter.${filterKey}`)}
                     </span>
                   </label>
                 );
@@ -463,7 +458,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                 {/* Row 1: Pitch Class */}
                 {filters.pitchClass && (
                   <tr>
-                    <td>Pitch Class</td>
+                    <td className="tuning-system-manager__row-header">{t('octave.pitchClass')}</td>
                     {tuningSystemPitchClassesArray.map((_, colIndex) => (
                       <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                         {colIndex}
@@ -479,16 +474,16 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                     height: "50px",
                   }}
                 >
-                  <td>Note Name</td>
+                  <td className="tuning-system-manager__row-header">{t('octave.noteNames')}</td>
                   {rowCells.map((pitchClass, colIndex) => {
                     if (octave === 1 && admin) {
                       return (
                         <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                           <select className="tuning-system-manager__select-note" value={getOctaveNoteName(octave, colIndex) ?? ""} onChange={(e) => handleSelectOctaveNote(colIndex, e.target.value)}>
-                            <option value="none">(none)</option>
+                            <option value="none">{t('octave.none')}</option>
                             {octaveOneNoteNames.map((nm) => (
                               <option key={nm} value={nm}>
-                                {nm.replace(/\//g, "/\u200B")}
+                                {getDisplayName(nm, 'note')}
                               </option>
                             ))}
                             {colIndex !== 0 && (
@@ -496,7 +491,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                                 <option value="none">---</option>
                                 {octaveTwoNoteNames.map((nm) => (
                                   <option key={nm} value={nm}>
-                                    {nm.replace(/\//g, "/\u200B")}
+                                    {getDisplayName(nm, 'note')}
                                   </option>
                                 ))}
                               </>
@@ -507,7 +502,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                     } else {
                       return (
                         <td key={colIndex} className={getCellClassName(octave, colIndex)}>
-                          {pitchClass.noteName === "none" ? "(none)" : pitchClass.noteName.replace(/\//g, "/\u200B")}
+                          {pitchClass.noteName === "none" ? t('octave.none') : getDisplayName(pitchClass.noteName, 'note')}
                         </td>
                       );
                     }
@@ -516,7 +511,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                 {/* Row 3: Abjad Name */}
                 {filters.abjadName && (
                   <tr>
-                    <td>Abjad Name</td>
+                    <td className="tuning-system-manager__row-header">{t('octave.abjadName')}</td>
                     {tuningSystemPitchClassesArray.map((_, colIndex) => (
                       <td
                         key={colIndex}
@@ -548,7 +543,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                 {/* Row 4: English Name */}
                 {filters.englishName && (
                   <tr>
-                    <td>English Name</td>
+                    <td className="tuning-system-manager__row-header">{t('octave.englishName')}</td>
                     {rowCells.map((pitchClass, colIndex) => {
                       return (
                         <td key={colIndex} className={getCellClassName(octave, colIndex)}>
@@ -561,15 +556,10 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
 
                 {pitchClassType !== "unknown" && (
                   <tr className="tuning-system-manager__octave-table__detectedPitchClassType">
-                    <td>
-                      {
-                        {
-                          fraction: "Fraction Ratio",
-                          cents: "Cents (¢)",
-                          decimalRatio: "Decimal Ratio",
-                          stringLength: "String Length",
-                        }[pitchClassType]
-                      }
+                    <td className="tuning-system-manager__row-header">
+                      {t(`octave.${pitchClassType === 'fraction' ? 'fractionRatio' : 
+                           pitchClassType === 'decimalRatio' ? 'decimalRatio' : 
+                           pitchClassType === 'stringLength' ? 'stringLength' : 'cents'}`)}
                     </td>
                     {rowCells.map((pitchClass, colIndex) => (
                       <td key={colIndex} className={getCellClassName(octave, colIndex)}>
@@ -582,7 +572,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                 {/* Row 5: Cents (¢) */}
                 {filters.cents && pitchClassType !== "cents" && (
                   <tr>
-                    <td>Cents (¢)</td>
+                    <td className="tuning-system-manager__row-header">{t('octave.cents')}</td>
                     {rowCells.map((pitchClass, colIndex) => (
                       <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                         {displayStringValue(pitchClass.cents)}
@@ -594,7 +584,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                 {/* Row 6: Fraction Ratio */}
                 {filters.fraction && pitchClassType !== "fraction" && (
                   <tr>
-                    <td>Fraction Ratio</td>
+                    <td className="tuning-system-manager__row-header">{t('octave.fractionRatio')}</td>
                     {rowCells.map((pitchClass, colIndex) => (
                       <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                         {displayStringValue(pitchClass.fraction)}
@@ -606,7 +596,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                 {/* Row 7: String Length */}
                 {filters.stringLength && pitchClassType !== "stringLength" && (
                   <tr>
-                    <td>String Length</td>
+                    <td className="tuning-system-manager__row-header">{t('octave.stringLength')}</td>
                     {rowCells.map((pitchClass, colIndex) => (
                       <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                         {displayStringValue(pitchClass.stringLength)}
@@ -617,7 +607,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
 
                 {filters.fretDivision && (
                   <tr>
-                    <td>Fret Division</td>
+                    <td className="tuning-system-manager__row-header">{t('octave.fretDivision')}</td>
                     {rowCells.map((pitchClass, colIndex) => (
                       <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                         {displayStringValue(pitchClass.fretDivision)}
@@ -629,7 +619,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                 {/* Row 8: Decimal Ratio */}
                 {filters.decimalRatio && pitchClassType !== "decimalRatio" && (
                   <tr>
-                    <td>Decimal Ratio</td>
+                    <td className="tuning-system-manager__row-header">{t('octave.decimalRatio')}</td>
                     {rowCells.map((pitchClass, colIndex) => (
                       <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                         {displayStringValue(pitchClass.decimalRatio)}
@@ -641,7 +631,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                 {/* Row 9: Midi Note */}
                 {filters.midiNote && (
                   <tr>
-                    <td>Midi Note</td>
+                    <td className="tuning-system-manager__row-header">{t('octave.midiNote')}</td>
                     {rowCells.map((pitchClass, colIndex) => (
                       <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                         {displayStringValue(pitchClass.midiNoteNumber)}
@@ -653,7 +643,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                 {/* Row 10: Freq (Hz) */}
                 {filters.frequency && (
                   <tr>
-                    <td>Freq (Hz)</td>
+                    <td className="tuning-system-manager__row-header">{t('octave.frequency')}</td>
                     {rowCells.map((pitchClass, colIndex) => {
                       const isEditing = editingCell?.octave === octave && editingCell.index === colIndex;
                       return (
@@ -698,7 +688,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
 
                 {/* Row 11: Play */}
                 <tr>
-                  <td>Play</td>
+                  <td className="tuning-system-manager__row-header">{t('octave.play')}</td>
                   {rowCells.map((pitchClass, colIndex) => (
                     <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                       <PlayCircleIcon className="tuning-system-manager__play-circle-icon" onMouseUp={() => noteOff(pitchClass)} onMouseDown={() => noteOn(pitchClass)} />
@@ -708,7 +698,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
 
                 {/* Row 12: Select (checkbox) */}
                 <tr>
-                  <td>Select</td>
+                  <td className="tuning-system-manager__row-header">{t('octave.select')}</td>
                   {tuningSystemPitchClassesArray.map((_, colIndex) => (
                     <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                       <input
