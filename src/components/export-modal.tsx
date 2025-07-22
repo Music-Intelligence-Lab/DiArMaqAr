@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import useAppContext from "@/contexts/app-context";
 import { exportTuningSystem, exportJins, exportMaqam } from "@/functions/export";
-import { exportToScala, exportToScalaKeymap, generateExportFilename } from "@/functions/scala-export";
+import { exportToScala, exportToScalaKeymap, exportJinsToScala, exportJinsToScalaKeymap, exportMaqamToScala, exportMaqamToScalaKeymap, generateExportFilename } from "@/functions/scala-export";
 import NoteName from "@/models/NoteName";
 import { Jins } from "@/models/Jins";
 import { Maqam } from "@/models/Maqam";
@@ -203,7 +203,7 @@ export default function ExportModal({ isOpen, onClose, exportType, specificJins,
   };
 
   const downloadFile = async (data: any, options: ExportOptions) => {
-    let content: string;
+    let content: string = '';
     let mimeType: string;
     let fileExtension: string;
 
@@ -239,19 +239,47 @@ export default function ExportModal({ isOpen, onClose, exportType, specificJins,
         break;
 
       case "scala":
-        if (!selectedTuningSystem || selectedIndices.length === 0) {
-          throw new Error("Scala export requires a tuning system and starting note");
+        if (exportType === 'tuning-system') {
+          if (!selectedTuningSystem || selectedIndices.length === 0) {
+            throw new Error("Scala export requires a tuning system and starting note");
+          }
+          content = exportToScala(selectedTuningSystem, selectedIndices[0] as unknown as NoteName);
+        } else if (exportType === 'jins') {
+          if (!jinsToExport || !selectedTuningSystem) {
+            throw new Error("Scala export requires a jins and tuning system");
+          }
+          const startingNote = selectedIndices.length > 0 ? selectedIndices[0] as unknown as NoteName : undefined;
+          content = exportJinsToScala(jinsToExport, selectedTuningSystem, startingNote);
+        } else if (exportType === 'maqam') {
+          if (!maqamToExport || !selectedTuningSystem) {
+            throw new Error("Scala export requires a maqam and tuning system");
+          }
+          const startingNote = selectedIndices.length > 0 ? selectedIndices[0] as unknown as NoteName : undefined;
+          content = exportMaqamToScala(maqamToExport, selectedTuningSystem, startingNote);
         }
-        content = exportToScala(selectedTuningSystem, selectedIndices[0] as unknown as NoteName);
         mimeType = "text/plain";
         fileExtension = "scl";
         break;
 
       case "scala-keymap":
-        if (!selectedTuningSystem || selectedIndices.length === 0) {
-          throw new Error("Scala keymap export requires a tuning system and starting note");
+        if (exportType === 'tuning-system') {
+          if (!selectedTuningSystem || selectedIndices.length === 0) {
+            throw new Error("Scala keymap export requires a tuning system and starting note");
+          }
+          content = exportToScalaKeymap(selectedTuningSystem, selectedIndices[0] as unknown as NoteName);
+        } else if (exportType === 'jins') {
+          if (!jinsToExport || !selectedTuningSystem) {
+            throw new Error("Scala keymap export requires a jins and tuning system");
+          }
+          const startingNote = selectedIndices.length > 0 ? selectedIndices[0] as unknown as NoteName : undefined;
+          content = exportJinsToScalaKeymap(jinsToExport, selectedTuningSystem, startingNote);
+        } else if (exportType === 'maqam') {
+          if (!maqamToExport || !selectedTuningSystem) {
+            throw new Error("Scala keymap export requires a maqam and tuning system");
+          }
+          const startingNote = selectedIndices.length > 0 ? selectedIndices[0] as unknown as NoteName : undefined;
+          content = exportMaqamToScalaKeymap(maqamToExport, selectedTuningSystem, startingNote);
         }
-        content = exportToScalaKeymap(selectedTuningSystem, selectedIndices[0] as unknown as NoteName);
         mimeType = "text/plain";
         fileExtension = "kbm";
         break;
@@ -725,13 +753,6 @@ export default function ExportModal({ isOpen, onClose, exportType, specificJins,
             <label className="export-modal__label">Export Format</label>
             <div className="export-modal__format-grid">
               {Object.entries(formatDescriptions)
-                .filter(([format]) => {
-                  // Scala formats only available for tuning-system exports
-                  if (format === 'scala' || format === 'scala-keymap') {
-                    return exportType === 'tuning-system';
-                  }
-                  return true;
-                })
                 .map(([format, description]) => (
                   <div
                     key={format}

@@ -25,47 +25,28 @@ const WheelCell = React.memo<WheelCellProps>(
   ({ pitchClass, isSelected, isActive, isDescending, isTonic, isCurrentTonic, mapping, inputType, isBlackKey, isMapped, onClick }) => {
     const baseClassName = "pitch-class-bar__cell";
     let className = "pitch-class-bar__cell";
+    
     if (isDescending) className = baseClassName + " pitch-class-bar__cell_descending";
 
-    // Highlight all possible tonics
-    if (isTonic) {
-      className = baseClassName + " pitch-class-bar__cell_tonic";
-    }
-    // Add a special class if this is the tonic of the current selected jins or maqam
-    if (isCurrentTonic) {
-      className = baseClassName + " pitch-class-bar__cell_tonic_current";
-    }
+    if (isTonic) className = baseClassName + " pitch-class-bar__cell_tonic";
 
-    if (isCurrentTonic && isActive) {
-      className = baseClassName + " pitch-class-bar__cell_tonic_current_active";
-    }
+    if (isCurrentTonic) className = baseClassName + " pitch-class-bar__cell_tonic_current";
 
     if (isSelected) className = baseClassName + " pitch-class-bar__cell_selected";
 
-    // Add MIDI-specific classes for black/white keys when in MIDI mode
     if (inputType === "MIDI" && isMapped) {
-      if (isBlackKey) {
-        className = baseClassName + " pitch-class-bar__cell_midi_black";
-      } else {
-        className = baseClassName + " pitch-class-bar__cell_midi_white";
-      }
-    }
+      if (isBlackKey) className = baseClassName + " pitch-class-bar__cell_midi_black";
+      else className = baseClassName + " pitch-class-bar__cell_midi_white";
 
-    // Add MIDI mode styles similar to tonic styles
-    if (inputType === "MIDI" && isTonic) {
-      if (isBlackKey) {
-      className = baseClassName + " pitch-class-bar__cell_midi_tonic_black";
-      } else {
-      className = baseClassName + " pitch-class-bar__cell_midi_tonic_white";
-      }
-    }
-    
-    if (inputType === "MIDI" && isCurrentTonic) {
-      className = baseClassName + " pitch-class-bar__cell_midi_tonic_current";
-    }
+      if (isTonic) {
+        if (isBlackKey) className = baseClassName + " pitch-class-bar__cell_midi_tonic_black";
+        else className = baseClassName + " pitch-class-bar__cell_midi_tonic_white";
 
-    if (inputType === "MIDI" && isCurrentTonic && isActive) {
-      className = baseClassName + " pitch-class-bar__cell_midi_tonic_current_active";
+        if (isCurrentTonic) {
+          className = baseClassName + " pitch-class-bar__cell_midi_tonic_current";
+          if (isActive) className = baseClassName + " pitch-class-bar__cell_midi_tonic_current_active";
+        }
+      }
     }
 
     if (isActive) className = baseClassName + " pitch-class-bar__cell_active";
@@ -78,8 +59,6 @@ const WheelCell = React.memo<WheelCellProps>(
           <span className="pitch-class-bar__cell-english">{pitchClass.englishName}</span>
           {inputType === "QWERTY" && mapping && <span className="pitch-class-bar__cell-mapping">{mapping}</span>}
         </span>
-        
-        
       </div>
     );
   },
