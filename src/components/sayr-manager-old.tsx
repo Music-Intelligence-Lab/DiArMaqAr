@@ -3,7 +3,6 @@
 import React, { FormEvent, useEffect, useState, useRef } from "react";
 import useAppContext from "@/contexts/app-context";
 import useLanguageContext from "@/contexts/language-context";
-import useSoundContext from "@/contexts/sound-context";
 import { Sayr, SayrStop } from "@/models/Maqam";
 import { octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames, octaveThreeNoteNames } from "@/models/NoteName";
 import PitchClass from "@/models/PitchClass";
@@ -21,9 +20,8 @@ export default function SayrManager({ admin }: { admin: boolean }) {
   const { t, getDisplayName, language } = useLanguageContext();
   const { 
     selectedMaqamData, setSelectedMaqamData, ajnas, maqamSayrId, setMaqamSayrId, sources, maqamat, setMaqamat, selectedMaqam, allPitchClasses, 
-    centsTolerance
+    centsTolerance, setSelectedJinsData, setSelectedJins, setSelectedPitchClasses, setSelectedMaqam
   } = useAppContext();
-  const { playSequence } = useSoundContext();
 
   const [creatorEnglish, setCreatorEnglish] = useState("");
   const [creatorArabic, setCreatorArabic] = useState("");
@@ -94,11 +92,13 @@ export default function SayrManager({ admin }: { admin: boolean }) {
     loadSayrData();
   }, []);
 
-  // Click handlers for sayr stops in non-admin mode - simplified to just play sequences
+  // Click handlers for sayr stops in non-admin mode
   const handleJinsStopClick = (jinsData: JinsData, startingNote?: string) => {
     if (admin || !allPitchClasses) return;
     
-    let pitchClasses: PitchClass[] = [];
+    // Set the jins data as selected, but DON'T change selectedMaqamData or maqamSayrId
+    setSelectedJinsData(jinsData);
+    setSelectedMaqam(null);
     
     if (startingNote) {
       // Find the transposition that starts with the specified note
@@ -106,32 +106,32 @@ export default function SayrManager({ admin }: { admin: boolean }) {
       const targetTransposition = jinsTranspositions.find(jins => jins.jinsPitchClasses[0].noteName === startingNote);
       
       if (targetTransposition) {
-        pitchClasses = targetTransposition.jinsPitchClasses;
+        setSelectedJins(targetTransposition);
+        setSelectedPitchClasses(targetTransposition.jinsPitchClasses);
+        return;
       }
     }
     
-    // Fallback to default behavior (tahlil) - get all notes of the jins
-    if (pitchClasses.length === 0) {
-      const jinsNoteNames = jinsData.getNoteNames();
-      for (const pitchClass of allPitchClasses) {
-        if (jinsNoteNames.includes(pitchClass.noteName)) pitchClasses.push(pitchClass);
-      }
+    // Fallback to default behavior (tahlil) - select all notes of the jins
+    setSelectedJins(null);
+    const jinsNoteNames = jinsData.getNoteNames();
+    const newSelectedCells: PitchClass[] = [];
+    for (const pitchClass of allPitchClasses) {
+      if (jinsNoteNames.includes(pitchClass.noteName)) newSelectedCells.push(pitchClass);
     }
-    
-    // Play the sequence
-    if (pitchClasses.length > 0) {
-      playSequence(pitchClasses);
-    }
+    setSelectedPitchClasses(newSelectedCells);
   };
 
   const handleMaqamStopClick = (maqamId: string, startingNote?: string) => {
     if (admin || !allPitchClasses) return;
     
-    // Find the maqam data
+    // Find the maqam data but don't set it as selectedMaqamData to avoid triggering useEffect
     const maqamData = maqamat.find(m => m.getId() === maqamId);
     if (!maqamData) return;
     
-    let pitchClasses: PitchClass[] = [];
+    // Clear jins selection
+    setSelectedJinsData(null);
+    setSelectedJins(null);
     
     if (startingNote) {
       // Find the transposition that starts with the specified note
@@ -139,22 +139,20 @@ export default function SayrManager({ admin }: { admin: boolean }) {
       const targetTransposition = maqamTranspositions.find(m => m.ascendingPitchClasses[0].noteName === startingNote);
       
       if (targetTransposition) {
-        pitchClasses = targetTransposition.ascendingPitchClasses;
+        setSelectedMaqam(targetTransposition);
+        setSelectedPitchClasses(targetTransposition.ascendingPitchClasses);
+        return;
       }
     }
     
-    // Fallback to default behavior (tahlil) - get all notes of the maqam
-    if (pitchClasses.length === 0) {
-      const maqamNoteNames = maqamData.getAscendingNoteNames();
-      for (const pitchClass of allPitchClasses) {
-        if (maqamNoteNames.includes(pitchClass.noteName)) pitchClasses.push(pitchClass);
-      }
+    // Fallback to default behavior (tahlil) - select all notes of the maqam
+    setSelectedMaqam(null);
+    const maqamNoteNames = maqamData.getAscendingNoteNames();
+    const newSelectedCells: PitchClass[] = [];
+    for (const pitchClass of allPitchClasses) {
+      if (maqamNoteNames.includes(pitchClass.noteName)) newSelectedCells.push(pitchClass);
     }
-    
-    // Play the sequence
-    if (pitchClasses.length > 0) {
-      playSequence(pitchClasses);
-    }
+    setSelectedPitchClasses(newSelectedCells);
   };
 
   if (!selectedMaqamData) return null;
