@@ -104,6 +104,8 @@ export default function PitchClassBar() {
   const startX = useRef(0);
   const scrollLeftStart = useRef(0);
   const [grabbing, setGrabbing] = useState(false);
+  const isDragging = useRef(false);
+  const dragThreshold = 5; // pixels - minimum movement to consider it a drag
 
   useEffect(() => {
     if (!rowRef.current) return;
@@ -173,6 +175,11 @@ export default function PitchClassBar() {
       const isCurrentTonic = Boolean((maqamTonic && maqamTonic === originalValue) || (jinsTonic && jinsTonic === originalValue));
 
       const onClick = () => {
+        // Don't trigger transposition if we were dragging
+        if (isDragging.current) {
+          return;
+        }
+        
         if (maqamTransposition && selectedMaqamData) {
           setSelectedPitchClasses([]); // Clear first
           setTimeout(() => {
@@ -245,6 +252,7 @@ export default function PitchClassBar() {
       onMouseDown={(e) => {
         if (!rowRef.current) return;
         isDown.current = true;
+        isDragging.current = false;
         setGrabbing(true);
         startX.current = e.pageX - rowRef.current.offsetLeft;
         scrollLeftStart.current = rowRef.current.scrollLeft;
@@ -253,15 +261,36 @@ export default function PitchClassBar() {
         if (!isDown.current || !rowRef.current) return;
         e.preventDefault();
         const x = e.pageX - rowRef.current.offsetLeft;
+        const distance = Math.abs(x - startX.current);
+        
+        // Mark as dragging if we've moved beyond the threshold
+        if (distance > dragThreshold) {
+          isDragging.current = true;
+        }
+        
         rowRef.current.scrollLeft = scrollLeftStart.current - (x - startX.current);
       }}
       onMouseUp={() => {
         isDown.current = false;
         setGrabbing(false);
+        // Reset dragging flag after a short delay to allow click events to check it
+        setTimeout(() => {
+          isDragging.current = false;
+        }, 50);
       }}
       onMouseLeave={() => {
         isDown.current = false;
         setGrabbing(false);
+        // Reset dragging flag after a short delay to allow click events to check it
+        setTimeout(() => {
+          isDragging.current = false;
+        }, 50);
+      }}
+      // Prevent context menu on right click during drag
+      onContextMenu={(e) => {
+        if (isDragging.current) {
+          e.preventDefault();
+        }
       }}
     >
       {wheelCells.map(({ key, ...props }) => (

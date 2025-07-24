@@ -269,6 +269,7 @@ const translations = {
     'sayr.saveSayr': 'Save Sayr',
     'sayr.deleteSayr': 'Delete Sayr',
     'sayr.definiteArticle': ' al-',
+    'sayr.transpositionWarning': 'Some notes in this sayr could not be transposed due to tuning system limitations.',
   },
   ar: {
     // Navigation Menu 
@@ -522,6 +523,7 @@ const translations = {
     'sayr.saveSayr': 'حفظ السير',
     'sayr.deleteSayr': 'حذف السير',
     'sayr.definiteArticle': ' ال',
+    'sayr.transpositionWarning': 'لا يمكن نقل بعض النغمات في هذا السير بسبب قيود نظام الضبط.',
   }
 };
 

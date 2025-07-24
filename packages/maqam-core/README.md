@@ -57,11 +57,6 @@ const pitchClass: PitchClass = {
 // Calculate intervals
 const interval = calculateInterval(pitchClass1, pitchClass2);
 
-// Access curated data
-console.log(`Loaded ${ajnasData.length} jins`);
-console.log(`Loaded ${maqamatData.length} maqamat`);
-console.log(`Loaded ${tuningSystemsData.length} tuning systems`);
-
 // Perform transpositions
 const jinsTranspositions = getJinsTranspositions(allPitchClasses, selectedJins);
 const maqamTranspositions = getMaqamTranspositions(allPitchClasses, selectedMaqam);

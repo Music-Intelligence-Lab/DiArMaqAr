@@ -7,6 +7,7 @@ import { Sayr, SayrStop } from "@/models/Maqam";
 import { octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames, octaveThreeNoteNames } from "@/models/NoteName";
 import { nanoid } from "nanoid";
 import { updateMaqamat } from "@/functions/update";
+import { transposeSayr } from "@/functions/transpose";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import NorthEastIcon from "@mui/icons-material/NorthEast";
 import SouthEastIcon from "@mui/icons-material/SouthEast";
@@ -14,7 +15,8 @@ import JinsData from "@/models/Jins";
 import Link from "next/link";
 export default function SayrManager({ admin }: { admin: boolean }) {
   const { t, getDisplayName, language } = useLanguageContext();
-  const { selectedMaqamData, setSelectedMaqamData, ajnas, maqamSayrId, setMaqamSayrId, sources, maqamat, setMaqamat /* handleClickJins, handleClickMaqam */ } = useAppContext();
+  const { selectedMaqamData, setSelectedMaqamData, ajnas, maqamSayrId, setMaqamSayrId, sources, maqamat, setMaqamat, selectedMaqam, allPitchClasses /* handleClickJins, handleClickMaqam */ } =
+    useAppContext();
 
   const [creatorEnglish, setCreatorEnglish] = useState("");
   const [creatorArabic, setCreatorArabic] = useState("");
@@ -23,6 +25,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
   const [commentsEnglish, setCommentsEnglish] = useState("");
   const [commentsArabic, setCommentsArabic] = useState("");
   const [stops, setStops] = useState<SayrStop[]>([]);
+  const [hasTranspositionIssues, setHasTranspositionIssues] = useState(false);
 
   const resetForm = () => {
     setCreatorEnglish("");
@@ -32,12 +35,28 @@ export default function SayrManager({ admin }: { admin: boolean }) {
     setCommentsEnglish("");
     setCommentsArabic("");
     setStops([]);
+    setHasTranspositionIssues(false);
   };
 
   useEffect(() => {
     if (selectedMaqamData && maqamSayrId) {
-      const sel = selectedMaqamData.getSuyūr().find((s) => s.id === maqamSayrId);
+      let sel: Sayr | undefined = selectedMaqamData.getSuyūr().find((s) => s.id === maqamSayrId);
+
       if (sel) {
+        if (!admin && selectedMaqam && allPitchClasses) {
+          try {
+            const transpositionResult = transposeSayr(sel, allPitchClasses, selectedMaqamData, selectedMaqam);
+            sel = transpositionResult.transposedSayr;
+            setHasTranspositionIssues(transpositionResult.hasOutOfBoundsNotes);
+            console.log("Transposed sayr:", sel, "Has issues:", transpositionResult.hasOutOfBoundsNotes);
+          } catch (error) {
+            console.warn("Failed to transpose sayr:", error);
+            setHasTranspositionIssues(true);
+          }
+        } else {
+          setHasTranspositionIssues(false);
+        }
+        
         setCreatorEnglish(sel.creatorEnglish ?? "");
         setCreatorArabic(sel.creatorArabic ?? "");
         setSourceId(sel.sourceId ?? "");
@@ -49,7 +68,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
       }
     }
     resetForm();
-  }, [maqamSayrId, selectedMaqamData]);
+  }, [maqamSayrId, selectedMaqamData, selectedMaqam]);
 
   if (!selectedMaqamData) return null;
   const existingSuyūr = selectedMaqamData.getSuyūr();
@@ -102,10 +121,10 @@ export default function SayrManager({ admin }: { admin: boolean }) {
         <div className="sayr-manager__group">
           <div className="sayr-manager__input-container">
             <label className="sayr-manager__label" htmlFor="sayrSelect">
-              {t('sayr.selectOrCreate')}
+              {t("sayr.selectOrCreate")}
             </label>
             <select id="sayrSelect" className="sayr-manager__select" value={maqamSayrId} onChange={handleSelect}>
-              <option value="">{t('sayr.newSayr')}</option>
+              <option value="">{t("sayr.newSayr")}</option>
               {existingSuyūr.map((s) => (
                 <option key={s.id} value={s.id}>
                   {s.creatorEnglish}
@@ -119,7 +138,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
       {!admin && (
         <div className="sayr-manager__list">
           {existingSuyūr.length === 0 ? (
-            <p>{t('sayr.noSuyurAvailable')}</p>
+            <p>{t("sayr.noSuyurAvailable")}</p>
           ) : (
             existingSuyūr.map((sayr, index) => (
               <div
@@ -132,13 +151,16 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                 {sayr.sourceId
                   ? (() => {
                       const source = sources.find((s) => s.getId() === sayr.sourceId);
-                      const authorName = language === 'ar' 
-                        ? `${source?.getContributors()[0]?.firstNameArabic || source?.getContributors()[0]?.firstNameEnglish || ""} ${source?.getContributors()[0]?.lastNameArabic || source?.getContributors()[0]?.lastNameEnglish || ""}`.trim()
-                        : `${source?.getContributors()[0]?.firstNameEnglish || ""} ${source?.getContributors()[0]?.lastNameEnglish || ""}`.trim();
+                      const authorName =
+                        language === "ar"
+                          ? `${source?.getContributors()[0]?.firstNameArabic || source?.getContributors()[0]?.firstNameEnglish || ""} ${
+                              source?.getContributors()[0]?.lastNameArabic || source?.getContributors()[0]?.lastNameEnglish || ""
+                            }`.trim()
+                          : `${source?.getContributors()[0]?.firstNameEnglish || ""} ${source?.getContributors()[0]?.lastNameEnglish || ""}`.trim();
                       const publicationDate = source?.getPublicationDateEnglish() || "";
                       return `${authorName} (${publicationDate}`;
                     })()
-                  : t('sayr.noSource')}
+                  : t("sayr.noSource")}
                 :{sayr.page})
               </div>
             ))
@@ -150,24 +172,24 @@ export default function SayrManager({ admin }: { admin: boolean }) {
         {admin && (
           <div className="sayr-manager__group">
             <div className="sayr-manager__input-container">
-              <label className="sayr-manager__label">{t('sayr.source')}</label>
+              <label className="sayr-manager__label">{t("sayr.source")}</label>
               <select className="sayr-manager__select" value={sourceId} onChange={(e) => setSourceId(e.target.value)}>
-                <option value="">{t('sayr.selectSource')}</option>
+                <option value="">{t("sayr.selectSource")}</option>
                 {[...sources]
                   .sort((a, b) => {
-                    const titleA = language === 'ar' ? a.getTitleArabic() || a.getTitleEnglish() : a.getTitleEnglish();
-                    const titleB = language === 'ar' ? b.getTitleArabic() || b.getTitleEnglish() : b.getTitleEnglish();
+                    const titleA = language === "ar" ? a.getTitleArabic() || a.getTitleEnglish() : a.getTitleEnglish();
+                    const titleB = language === "ar" ? b.getTitleArabic() || b.getTitleEnglish() : b.getTitleEnglish();
                     return titleA.localeCompare(titleB);
                   })
                   .map((s) => (
                     <option key={s.getId()} value={s.getId()}>
-                      {language === 'ar' ? (s.getTitleArabic() || s.getTitleEnglish()) : s.getTitleEnglish()}
+                      {language === "ar" ? s.getTitleArabic() || s.getTitleEnglish() : s.getTitleEnglish()}
                     </option>
                   ))}
               </select>
             </div>
             <div className="sayr-manager__input-container">
-              <label className="sayr-manager__label">{t('sayr.page')}</label>
+              <label className="sayr-manager__label">{t("sayr.page")}</label>
               <input className="sayr-manager__input" type="text" value={page} onChange={(e) => setPage(e.target.value)} />
             </div>
           </div>
@@ -176,11 +198,11 @@ export default function SayrManager({ admin }: { admin: boolean }) {
         {admin && (
           <div className="sayr-manager__group">
             <div className="sayr-manager__input-container">
-              <label className="sayr-manager__label">{t('sayr.commentsEnglish')}</label>
+              <label className="sayr-manager__label">{t("sayr.commentsEnglish")}</label>
               <textarea className="sayr-manager__textarea" rows={3} value={commentsEnglish} onChange={(e) => setCommentsEnglish(e.target.value)} />
             </div>
             <div className="sayr-manager__input-container">
-              <label className="sayr-manager__label">{t('sayr.commentsArabic')}</label>
+              <label className="sayr-manager__label">{t("sayr.commentsArabic")}</label>
               <textarea className="sayr-manager__textarea" rows={3} value={commentsArabic} onChange={(e) => setCommentsArabic(e.target.value)} />
             </div>
           </div>
@@ -192,12 +214,15 @@ export default function SayrManager({ admin }: { admin: boolean }) {
               (() => {
                 const source = sources.find((s) => s.getId() === sourceId);
                 const year = source?.getPublicationDateEnglish() || "";
-                const creatorName = language === 'ar'
-                  ? `${source?.getContributors()[0]?.firstNameArabic || source?.getContributors()[0]?.firstNameEnglish || ""} ${source?.getContributors()[0]?.lastNameArabic || source?.getContributors()[0]?.lastNameEnglish || ""}`.trim()
-                  : `${source?.getContributors()[0]?.firstNameEnglish || ""} ${source?.getContributors()[0]?.lastNameEnglish || ""}`.trim();
+                const creatorName =
+                  language === "ar"
+                    ? `${source?.getContributors()[0]?.firstNameArabic || source?.getContributors()[0]?.firstNameEnglish || ""} ${
+                        source?.getContributors()[0]?.lastNameArabic || source?.getContributors()[0]?.lastNameEnglish || ""
+                      }`.trim()
+                    : `${source?.getContributors()[0]?.firstNameEnglish || ""} ${source?.getContributors()[0]?.lastNameEnglish || ""}`.trim();
                 return (
                   <span className="sayr-manager__comments-english_title">
-                    {t('sayr.commentsOnSayr')}{" "}
+                    {t("sayr.commentsOnSayr")}{" "}
                     <Link href={`/bibliography?source=${sourceId}`}>
                       {creatorName}
                       {year ? ` (${year}` : ""}
@@ -206,15 +231,20 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                   </span>
                 );
               })()}
-            <span className="sayr-manager__comments-english">
-              {language === 'ar' ? (commentsArabic || commentsEnglish) : commentsEnglish}
-            </span>
+            <span className="sayr-manager__comments-english">{language === "ar" ? commentsArabic || commentsEnglish : commentsEnglish}</span>
           </div>
+          
+          {!admin && hasTranspositionIssues && (
+            <div className="sayr-manager__transposition-warning">
+              ⚠️ {t('sayr.transpositionWarning')}
+            </div>
+          )}
+          
           {admin && (
             <h3 className="sayr-manager__stops-header">
-              {t('sayr.stops')}{" "}
+              {t("sayr.stops")}{" "}
               <button type="button" className="sayr-manager__add-stop" onClick={addStop}>
-                {t('sayr.addStop')}
+                {t("sayr.addStop")}
               </button>
             </h3>
           )}
@@ -224,46 +254,46 @@ export default function SayrManager({ admin }: { admin: boolean }) {
               stops.map((stop, i) => (
                 <div key={i} className="sayr-manager__admin-stop">
                   <select className="sayr-manager__stop-type" value={stop.type} onChange={(e) => updateStop(i, "type", e.target.value)}>
-                    <option value="note">{t('sayr.note')}</option>
-                    <option value="jins">{t('sayr.jins')}</option>
-                    <option value="maqam">{t('sayr.maqam')}</option>
-                    <option value="direction">{t('sayr.direction')}</option>
+                    <option value="note">{t("sayr.note")}</option>
+                    <option value="jins">{t("sayr.jins")}</option>
+                    <option value="maqam">{t("sayr.maqam")}</option>
+                    <option value="direction">{t("sayr.direction")}</option>
                   </select>
 
                   {/* --- note stop --- */}
                   {stop.type === "note" && (
                     <>
                       <select className="sayr-manager__stop-value" value={stop.value} onChange={(e) => updateStop(i, "value", e.target.value)}>
-                        <option value="">{t('sayr.none')}</option>
+                        <option value="">{t("sayr.none")}</option>
                         {octaveZeroNoteNames.map((n) => (
                           <option key={n} value={n}>
-                            {getDisplayName(n, 'note')}
+                            {getDisplayName(n, "note")}
                           </option>
                         ))}
                         <option disabled>---</option>
                         {octaveOneNoteNames.map((n) => (
                           <option key={n} value={n}>
-                            {getDisplayName(n, 'note')}
+                            {getDisplayName(n, "note")}
                           </option>
                         ))}
                         <option disabled>---</option>
                         {octaveTwoNoteNames.map((n) => (
                           <option key={n} value={n}>
-                            {getDisplayName(n, 'note')}
+                            {getDisplayName(n, "note")}
                           </option>
                         ))}
                         <option disabled>---</option>
                         {octaveThreeNoteNames.map((n) => (
                           <option key={n} value={n}>
-                            {getDisplayName(n, 'note')}
+                            {getDisplayName(n, "note")}
                           </option>
                         ))}
                       </select>
                       {/* Optional direction for note stop */}
                       <select className="sayr-manager__stop-value" value={stop.direction ?? ""} onChange={(e) => updateStop(i, "direction", e.target.value)}>
-                        <option value="">{t('sayr.noDirection')}</option>
-                        <option value="ascending">{t('sayr.ascending')}</option>
-                        <option value="descending">{t('sayr.descending')}</option>
+                        <option value="">{t("sayr.noDirection")}</option>
+                        <option value="ascending">{t("sayr.ascending")}</option>
+                        <option value="descending">{t("sayr.descending")}</option>
                       </select>
                     </>
                   )}
@@ -273,37 +303,37 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                     <>
                       {/* 1) select which jins */}
                       <select className="sayr-manager__stop-value" value={stop.value} onChange={(e) => updateStop(i, "value", e.target.value)}>
-                        <option value="">{t('sayr.none')}</option>
+                        <option value="">{t("sayr.none")}</option>
                         {[...ajnas]
                           .sort((a, b) => a.getName().localeCompare(b.getName()))
                           .map((j) => (
                             <option key={j.getId()} value={j.getId()}>
-                              {getDisplayName(j.getName(), 'jins')}
+                              {getDisplayName(j.getName(), "jins")}
                             </option>
                           ))}
                       </select>
 
                       {/* 2) optional starting note for this jins */}
                       <select className="sayr-manager__stop-value" value={stop.startingNote ?? ""} onChange={(e) => updateStop(i, "startingNote", e.target.value)}>
-                        <option value="">{t('sayr.none')}</option>
+                        <option value="">{t("sayr.none")}</option>
                         {octaveOneNoteNames.map((n) => (
                           <option key={n} value={n}>
-                            {getDisplayName(n, 'note')}
+                            {getDisplayName(n, "note")}
                           </option>
                         ))}
                         <option disabled>---</option>
                         {octaveTwoNoteNames.map((n) => (
                           <option key={n} value={n}>
-                            {getDisplayName(n, 'note')}
+                            {getDisplayName(n, "note")}
                           </option>
                         ))}
                       </select>
 
                       {/* 3) optional direction for this jins */}
                       <select className="sayr-manager__stop-value" value={stop.direction ?? ""} onChange={(e) => updateStop(i, "direction", e.target.value)}>
-                        <option value="">{t('sayr.none')}</option>
-                        <option value="ascending">{t('sayr.ascending')}</option>
-                        <option value="descending">{t('sayr.descending')}</option>
+                        <option value="">{t("sayr.none")}</option>
+                        <option value="ascending">{t("sayr.ascending")}</option>
+                        <option value="descending">{t("sayr.descending")}</option>
                       </select>
                     </>
                   )}
@@ -313,37 +343,37 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                     <>
                       {/* 1) select which maqam */}
                       <select className="sayr-manager__stop-value" value={stop.value} onChange={(e) => updateStop(i, "value", e.target.value)}>
-                        <option value="">{t('sayr.none')}</option>
+                        <option value="">{t("sayr.none")}</option>
                         {[...maqamat]
                           .sort((a, b) => a.getName().localeCompare(b.getName()))
                           .map((m) => (
                             <option key={m.getId()} value={m.getId()}>
-                              {getDisplayName(m.getName(), 'maqam')}
+                              {getDisplayName(m.getName(), "maqam")}
                             </option>
                           ))}
                       </select>
 
                       {/* 2) optional starting note for this maqam */}
                       <select className="sayr-manager__stop-value" value={stop.startingNote ?? ""} onChange={(e) => updateStop(i, "startingNote", e.target.value)}>
-                        <option value="">{t('sayr.none')}</option>
+                        <option value="">{t("sayr.none")}</option>
                         {octaveOneNoteNames.map((n) => (
                           <option key={n} value={n}>
-                            {getDisplayName(n, 'note')}
+                            {getDisplayName(n, "note")}
                           </option>
                         ))}
                         <option disabled>---</option>
                         {octaveTwoNoteNames.map((n) => (
                           <option key={n} value={n}>
-                            {getDisplayName(n, 'note')}
+                            {getDisplayName(n, "note")}
                           </option>
                         ))}
                       </select>
 
                       {/* 3) optional direction for this maqam */}
                       <select className="sayr-manager__stop-value" value={stop.direction ?? ""} onChange={(e) => updateStop(i, "direction", e.target.value)}>
-                        <option value="">{t('sayr.none')}</option>
-                        <option value="ascending">{t('sayr.ascending')}</option>
-                        <option value="descending">{t('sayr.descending')}</option>
+                        <option value="">{t("sayr.none")}</option>
+                        <option value="ascending">{t("sayr.ascending")}</option>
+                        <option value="descending">{t("sayr.descending")}</option>
                       </select>
                     </>
                   )}
@@ -351,15 +381,15 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                   {/* --- direction stop --- */}
                   {stop.type === "direction" && (
                     <select className="sayr-manager__stop-value" value={stop.value} onChange={(e) => updateStop(i, "value", e.target.value)}>
-                      <option value="">{t('sayr.none')}</option>
-                      <option value="ascending">{t('sayr.ascending')}</option>
-                      <option value="descending">{t('sayr.descending')}</option>
+                      <option value="">{t("sayr.none")}</option>
+                      <option value="ascending">{t("sayr.ascending")}</option>
+                      <option value="descending">{t("sayr.descending")}</option>
                     </select>
                   )}
 
                   {admin && (
                     <button type="button" className="sayr-manager__delete-stop" onClick={() => removeStop(i)}>
-                      {t('sayr.delete')}
+                      {t("sayr.delete")}
                     </button>
                   )}
                 </div>
@@ -373,20 +403,20 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                 let sentence = "";
                 // Patch: support for maqam stop type (type assertion workaround)
                 if (stop.type === "note") {
-                  sentence += `${getDisplayName(stop.value, 'note')}`;
+                  sentence += `${getDisplayName(stop.value, "note")}`;
                 } else if (stop.type === "jins") {
                   jinsData = ajnas.find((j) => j.getId() === stop.value);
-                  const jinsName = jinsData ? getDisplayName(jinsData.getName(), 'jins') : getDisplayName(stop.value, 'jins');
-                  sentence += `${jinsName}${stop.startingNote ? t('sayr.definiteArticle') + getDisplayName(stop.startingNote, 'note') : ""}`;
+                  const jinsName = jinsData ? getDisplayName(jinsData.getName(), "jins") : getDisplayName(stop.value, "jins");
+                  sentence += `${jinsName}${stop.startingNote ? t("sayr.definiteArticle") + getDisplayName(stop.startingNote, "note") : ""}`;
                 } else if ((stop as any).type === "maqam") {
                   maqamData = maqamat.find((m) => m.getId() === stop.value);
-                  const maqamName = maqamData ? getDisplayName(maqamData.getName(), 'maqam') : getDisplayName(stop.value, 'maqam');
-                  sentence += `${maqamName}${stop.startingNote ? t('sayr.definiteArticle') + getDisplayName(stop.startingNote, 'note') : ""}`;
+                  const maqamName = maqamData ? getDisplayName(maqamData.getName(), "maqam") : getDisplayName(stop.value, "maqam");
+                  sentence += `${maqamName}${stop.startingNote ? t("sayr.definiteArticle") + getDisplayName(stop.startingNote, "note") : ""}`;
                 } else if (stop.type === "direction") {
                   if (stop.value === "ascending") {
-                    sentence += t('sayr.ascend');
+                    sentence += t("sayr.ascend");
                   } else if (stop.value === "descending") {
-                    sentence += t('sayr.descend');
+                    sentence += t("sayr.descend");
                   } else {
                     sentence += `${stop.value}`;
                   }
@@ -412,10 +442,10 @@ export default function SayrManager({ admin }: { admin: boolean }) {
 
                   if (direction === "ascending") {
                     transitionIcon = NorthEastIcon;
-                    transitionLabel = t('sayr.ascendTo');
+                    transitionLabel = t("sayr.ascendTo");
                   } else if (direction === "descending") {
                     transitionIcon = SouthEastIcon;
-                    transitionLabel = t('sayr.descendTo');
+                    transitionLabel = t("sayr.descendTo");
                   }
                 }
                 // Only show the label if NEITHER the previous nor the current stop is a direction stop
@@ -452,11 +482,11 @@ export default function SayrManager({ admin }: { admin: boolean }) {
         {admin && (
           <div className="sayr-manager__buttons">
             <button type="submit" className="sayr-manager__save-button">
-              {maqamSayrId ? t('sayr.updateSayr') : t('sayr.saveSayr')}
+              {maqamSayrId ? t("sayr.updateSayr") : t("sayr.saveSayr")}
             </button>
             {maqamSayrId && (
               <button type="button" className="sayr-manager__delete-button" onClick={handleDelete}>
-                {t('sayr.deleteSayr')}
+                {t("sayr.deleteSayr")}
               </button>
             )}
           </div>

@@ -17,6 +17,24 @@
     margin-bottom: 1rem;
   }
 
+  &__transposition-warning {
+    background-color: #fff3cd;
+    color: #856404;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ffeaa7;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    // RTL support
+    [dir="rtl"] & {
+      text-align: right;
+    }
+  }
+
   &__group {
     display: flex;
     gap: 1rem;
