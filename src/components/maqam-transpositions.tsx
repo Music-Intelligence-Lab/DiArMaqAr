@@ -240,7 +240,9 @@ const MaqamTranspositions: React.FC = () => {
           )}
           <tr>
             <td className="maqam-transpositions__asc-desc-column" rowSpan={6 + numberOfFilterRows}>
-              {ascending ? "↗" : "↘"}
+              {language === 'ar' 
+                ? (ascending ? "↖" : "↙") 
+                : (ascending ? "↗" : "↘")}
             </td>
           </tr>
           <tr>
