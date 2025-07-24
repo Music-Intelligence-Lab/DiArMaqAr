@@ -1,10 +1,11 @@
 "use client";
 
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useState, useRef } from "react";
 import useAppContext from "@/contexts/app-context";
 import useLanguageContext from "@/contexts/language-context";
 import { Sayr, SayrStop } from "@/models/Maqam";
 import { octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames, octaveThreeNoteNames } from "@/models/NoteName";
+import PitchClass from "@/models/PitchClass";
 import { nanoid } from "nanoid";
 import { updateMaqamat } from "@/functions/update";
 import { transposeSayr } from "@/functions/transpose";
@@ -13,10 +14,14 @@ import NorthEastIcon from "@mui/icons-material/NorthEast";
 import SouthEastIcon from "@mui/icons-material/SouthEast";
 import JinsData from "@/models/Jins";
 import Link from "next/link";
+import { getJinsTranspositions, getMaqamTranspositions } from "@/functions/transpose";
+
 export default function SayrManager({ admin }: { admin: boolean }) {
   const { t, getDisplayName, language } = useLanguageContext();
-  const { selectedMaqamData, setSelectedMaqamData, ajnas, maqamSayrId, setMaqamSayrId, sources, maqamat, setMaqamat, selectedMaqam, allPitchClasses /* handleClickJins, handleClickMaqam */ } =
-    useAppContext();
+  const { 
+    selectedMaqamData, setSelectedMaqamData, ajnas, maqamSayrId, setMaqamSayrId, sources, maqamat, setMaqamat, selectedMaqam, allPitchClasses, 
+    centsTolerance, setSelectedJinsData, setSelectedJins, setSelectedPitchClasses, setSelectedMaqam
+  } = useAppContext();
 
   const [creatorEnglish, setCreatorEnglish] = useState("");
   const [creatorArabic, setCreatorArabic] = useState("");
@@ -26,6 +31,9 @@ export default function SayrManager({ admin }: { admin: boolean }) {
   const [commentsArabic, setCommentsArabic] = useState("");
   const [stops, setStops] = useState<SayrStop[]>([]);
   const [hasTranspositionIssues, setHasTranspositionIssues] = useState(false);
+  
+  // Track the last manually selected sayr ID to avoid re-running effect on context changes
+  const lastManualSayrId = useRef<string>("");
 
   const resetForm = () => {
     setCreatorEnglish("");
@@ -38,7 +46,8 @@ export default function SayrManager({ admin }: { admin: boolean }) {
     setHasTranspositionIssues(false);
   };
 
-  useEffect(() => {
+  // Load sayr data when manually selected (not when context changes)
+  const loadSayrData = () => {
     if (selectedMaqamData && maqamSayrId) {
       let sel: Sayr | undefined = selectedMaqamData.getSuyūr().find((s) => s.id === maqamSayrId);
 
@@ -68,12 +77,93 @@ export default function SayrManager({ admin }: { admin: boolean }) {
       }
     }
     resetForm();
-  }, [maqamSayrId, selectedMaqamData, selectedMaqam]);
+  };
+
+  useEffect(() => {
+    // Only run if this is a manual sayr ID change, not a context change
+    if (maqamSayrId !== lastManualSayrId.current) {
+      lastManualSayrId.current = maqamSayrId;
+      loadSayrData();
+    }
+  }, [maqamSayrId]);
+
+  // Initial load
+  useEffect(() => {
+    loadSayrData();
+  }, []);
+
+  // Click handlers for sayr stops in non-admin mode
+  const handleJinsStopClick = (jinsData: JinsData, startingNote?: string) => {
+    if (admin || !allPitchClasses) return;
+    
+    // Set the jins data as selected, but DON'T change selectedMaqamData or maqamSayrId
+    setSelectedJinsData(jinsData);
+    setSelectedMaqam(null);
+    
+    if (startingNote) {
+      // Find the transposition that starts with the specified note
+      const jinsTranspositions = getJinsTranspositions(allPitchClasses, jinsData, true, centsTolerance);
+      const targetTransposition = jinsTranspositions.find(jins => jins.jinsPitchClasses[0].noteName === startingNote);
+      
+      if (targetTransposition) {
+        setSelectedJins(targetTransposition);
+        setSelectedPitchClasses(targetTransposition.jinsPitchClasses);
+        return;
+      }
+    }
+    
+    // Fallback to default behavior (tahlil) - select all notes of the jins
+    setSelectedJins(null);
+    const jinsNoteNames = jinsData.getNoteNames();
+    const newSelectedCells: PitchClass[] = [];
+    for (const pitchClass of allPitchClasses) {
+      if (jinsNoteNames.includes(pitchClass.noteName)) newSelectedCells.push(pitchClass);
+    }
+    setSelectedPitchClasses(newSelectedCells);
+  };
+
+  const handleMaqamStopClick = (maqamId: string, startingNote?: string) => {
+    if (admin || !allPitchClasses) return;
+    
+    // Find the maqam data but don't set it as selectedMaqamData to avoid triggering useEffect
+    const maqamData = maqamat.find(m => m.getId() === maqamId);
+    if (!maqamData) return;
+    
+    // Clear jins selection
+    setSelectedJinsData(null);
+    setSelectedJins(null);
+    
+    if (startingNote) {
+      // Find the transposition that starts with the specified note
+      const maqamTranspositions = getMaqamTranspositions(allPitchClasses, ajnas, maqamData, true, centsTolerance);
+      const targetTransposition = maqamTranspositions.find(m => m.ascendingPitchClasses[0].noteName === startingNote);
+      
+      if (targetTransposition) {
+        setSelectedMaqam(targetTransposition);
+        setSelectedPitchClasses(targetTransposition.ascendingPitchClasses);
+        return;
+      }
+    }
+    
+    // Fallback to default behavior (tahlil) - select all notes of the maqam
+    setSelectedMaqam(null);
+    const maqamNoteNames = maqamData.getAscendingNoteNames();
+    const newSelectedCells: PitchClass[] = [];
+    for (const pitchClass of allPitchClasses) {
+      if (maqamNoteNames.includes(pitchClass.noteName)) newSelectedCells.push(pitchClass);
+    }
+    setSelectedPitchClasses(newSelectedCells);
+  };
 
   if (!selectedMaqamData) return null;
   const existingSuyūr = selectedMaqamData.getSuyūr();
 
-  const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => setMaqamSayrId(e.target.value);
+  const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newSayrId = e.target.value;
+    setMaqamSayrId(newSayrId);
+    lastManualSayrId.current = newSayrId;
+    loadSayrData();
+  };
   const addStop = () => setStops((prev) => [...prev, { type: "note", value: "" }]);
   const removeStop = (i: number) => setStops((prev) => prev.filter((_, idx) => idx !== i));
   const updateStop = (i: number, field: keyof SayrStop, val: string) => {
@@ -145,7 +235,10 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                 key={index}
                 className={"sayr-manager__item " + (sayr.id === maqamSayrId ? "sayr-manager__item_selected " : "")}
                 onClick={() => {
-                  setMaqamSayrId(sayr.id);
+                  const newSayrId = sayr.id;
+                  setMaqamSayrId(newSayrId);
+                  lastManualSayrId.current = newSayrId;
+                  loadSayrData();
                 }}
               >
                 {sayr.sourceId
@@ -461,13 +554,18 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                     )}
                     <div
                       className="sayr-manager__stop"
-                      style={stop.type === "jins" || (stop as any).type === "maqam" ? { cursor: "default" } : undefined}
+                      style={
+                        !admin && (stop.type === "jins" || (stop as any).type === "maqam") 
+                          ? { cursor: "pointer" } 
+                          : undefined
+                      }
                       onClick={() => {
-                        if (stop.type === "jins" && jinsData) {
-                          // handleClickJins(jinsData);
-                        } else if ((stop as any).type === "maqam" && maqamData) {
-                          // Optionally, implement a handler for maqam click
-                          // handleClickMaqam(maqamData);
+                        if (!admin) {
+                          if (stop.type === "jins" && jinsData) {
+                            handleJinsStopClick(jinsData, stop.startingNote);
+                          } else if ((stop as any).type === "maqam" && stop.value) {
+                            handleMaqamStopClick(stop.value, stop.startingNote);
+                          }
                         }
                       }}
                     >
