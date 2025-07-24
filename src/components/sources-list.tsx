@@ -38,8 +38,6 @@ export default function SourcesList() {
     }
   }, [highlighted]);
 
-  console.log("SourcesList rendered with highlighted:", highlighted);
-
   // Helper to format contributor names as "Last First؛ Last First؛ …" (using Arabic space and semicolon)
   const formatContributorsArabic = (contributors: Contributor[]): string => {
     if (contributors.length === 0) return "";

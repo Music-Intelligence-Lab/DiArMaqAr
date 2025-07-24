@@ -1,5 +1,5 @@
 import PitchClass, { calculateInterval, PitchClassInterval, matchingListOfIntervals } from "@/models/PitchClass";
-import MaqamData, { Maqam } from "@/models/Maqam";
+import MaqamData, { Maqam, Sayr } from "@/models/Maqam";
 import JinsData, { Jins } from "@/models/Jins";
 import shiftPitchClass from "./shiftPitchClass";
 
@@ -263,4 +263,45 @@ export function getJinsTranspositions(allPitchClasses: PitchClass[], jinsData: J
 
   if (withTahlil && tahlilTransposition) return [{ ...tahlilTransposition, transposition: false }, ...jinsTranspositionsWithoutTahlil];
   else return jinsTranspositionsWithoutTahlil;
+}
+
+export function transposeSayr(sayr: Sayr, allPitchClasses: PitchClass[], maqamData: MaqamData, maqam: Maqam): { transposedSayr: Sayr; hasOutOfBoundsNotes: boolean } {
+  const firstNoteInData = maqamData.getAscendingNoteNames()[0];
+  const firstNoteInMaqam = maqam.ascendingPitchClasses[0].noteName;
+
+  const firstNoteInDataIndex = allPitchClasses.findIndex((pitchClass) => pitchClass.noteName === firstNoteInData);
+  const firstNoteInMaqamIndex = allPitchClasses.findIndex((pitchClass) => pitchClass.noteName === firstNoteInMaqam);
+
+  const shift = firstNoteInMaqamIndex - firstNoteInDataIndex;
+  let hasOutOfBoundsNotes = false;
+
+  const shiftNoteName = (noteName: string) => {
+    const noteIndex = allPitchClasses.findIndex((pitchClass) => pitchClass.noteName === noteName);
+
+    if (noteIndex === -1) return noteName; // If the note is not found, return it unchanged
+    
+    const newIndex = noteIndex + shift;
+    
+    // If the shifted index is out of bounds, mark as out of bounds and return the original note name
+    if (newIndex < 0 || newIndex >= allPitchClasses.length) {
+      hasOutOfBoundsNotes = true;
+      return noteName;
+    }
+
+    return allPitchClasses[newIndex].noteName;
+  };
+
+  const originalStops = sayr.stops;
+
+  const newStops = originalStops.map((stop) => {
+    const newNoteName = stop.type === "note" ? shiftNoteName(stop.value) : stop.value;
+
+    const newStartingNote = (stop.type === "jins" || stop.type === "maqam") && stop.startingNote ? shiftNoteName(stop.startingNote) : stop.startingNote;
+    return { ...stop, value: newNoteName, startingNote: newStartingNote };
+  });
+
+  return { 
+    transposedSayr: { ...sayr, stops: newStops },
+    hasOutOfBoundsNotes
+  };
 }

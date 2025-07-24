@@ -286,11 +286,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
           !ascendingPitchClasses.find((ascendingPitchClass) => pc.originalValue === ascendingPitchClass.originalValue)
         );
 
-        console.log(uniqueDescendingPitchClasses);
-
         const extendedUniqueDescendingPitchClasses = extendSelectedPitchClasses(allPitchClasses, uniqueDescendingPitchClasses);
-
-        console.log(extendedUniqueDescendingPitchClasses)
 
         for (const pitchClass of extendedUniqueDescendingPitchClasses) {
           let baseMidi = Math.round(pitchClass.midiNoteNumber);
@@ -300,7 +296,6 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
           const accidental = englishName.slice(1);
 
           if (["-b", "--", "-"].includes(accidental)) baseMidi += 1;
-          console.log(pitchClass, baseMidi)
 
           if (baseMidi >= 0 && baseMidi <= 127) {
             mapping[baseMidi] = pitchClass;
@@ -308,7 +303,6 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         }
       }
     }
-    console.log("MIDI to PitchClass mapping:", mapping);
     return mapping;
   }, [soundSettings.inputMode, selectedTuningSystem, selectedPitchClasses, allPitchClasses]);
 
