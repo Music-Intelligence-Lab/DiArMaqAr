@@ -12,6 +12,9 @@ import { transposeSayr } from "@/functions/transpose";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import NorthEastIcon from "@mui/icons-material/NorthEast";
 import SouthEastIcon from "@mui/icons-material/SouthEast";
+import NorthWestIcon from "@mui/icons-material/NorthWest";
+import SouthWestIcon from "@mui/icons-material/SouthWest"
+
 import JinsData from "@/models/Jins";
 import Link from "next/link";
 import { getJinsTranspositions, getMaqamTranspositions } from "@/functions/transpose";
@@ -96,9 +99,9 @@ export default function SayrManager({ admin }: { admin: boolean }) {
   const handleJinsStopClick = (jinsData: JinsData, startingNote?: string) => {
     if (admin || !allPitchClasses) return;
     
-    // Set the jins data as selected, but DON'T change selectedMaqamData or maqamSayrId
-    setSelectedJinsData(jinsData);
+    // Clear all maqam selections including the source maqam
     setSelectedMaqam(null);
+    setSelectedJinsData(jinsData);
     
     if (startingNote) {
       // Find the transposition that starts with the specified note
@@ -129,7 +132,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
     const maqamData = maqamat.find(m => m.getId() === maqamId);
     if (!maqamData) return;
     
-    // Clear jins selection
+    // Clear all selections including the source maqam
     setSelectedJinsData(null);
     setSelectedJins(null);
     
@@ -237,8 +240,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                 onClick={() => {
                   const newSayrId = sayr.id;
                   setMaqamSayrId(newSayrId);
-                  lastManualSayrId.current = newSayrId;
-                  loadSayrData();
+                  // The useEffect will handle loading the data
                 }}
               >
                 {sayr.sourceId
@@ -315,7 +317,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                     : `${source?.getContributors()[0]?.firstNameEnglish || ""} ${source?.getContributors()[0]?.lastNameEnglish || ""}`.trim();
                 return (
                   <span className="sayr-manager__comments-english_title">
-                    {t("sayr.commentsOnSayr")}{" "}
+                    {t("sayr.commentsOnSayr")} {getDisplayName(selectedMaqamData.getName(), "maqam")}{language === "ar" ? " ل" : " by "}
                     <Link href={`/bibliography?source=${sourceId}`}>
                       {creatorName}
                       {year ? ` (${year}` : ""}
@@ -534,10 +536,10 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                   }
 
                   if (direction === "ascending") {
-                    transitionIcon = NorthEastIcon;
+                    transitionIcon = language === "ar" ? NorthWestIcon : NorthEastIcon;
                     transitionLabel = t("sayr.ascendTo");
                   } else if (direction === "descending") {
-                    transitionIcon = SouthEastIcon;
+                    transitionIcon = language === "ar" ? SouthWestIcon : SouthEastIcon;
                     transitionLabel = t("sayr.descendTo");
                   }
                 }

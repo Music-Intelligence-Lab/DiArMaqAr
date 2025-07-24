@@ -249,7 +249,7 @@ const translations = {
     'sayr.page': 'Page',
     'sayr.commentsEnglish': 'Comments (English)',
     'sayr.commentsArabic': 'Comments (Arabic)',
-    'sayr.commentsOnSayr': 'Comments on Sayr from',
+    'sayr.commentsOnSayr': 'Comments on Sayr of',
     'sayr.stops': 'Stops',
     'sayr.addStop': '+ Add Stop',
     'sayr.note': 'note',
@@ -444,7 +444,7 @@ const translations = {
     'tuningSystem.unsaved': 'غير محفوظ',
     
     // Tuning System Octave Tables (Arabic translations)
-    'octave.title': 'ديوان (أوكتاف)',
+    'octave.title': 'الديوان (أوكتاف)',
     'octave.cascadeEnabled': 'التتالي مُفعَّل',
     'octave.cascadeDisabled': 'التتالي مُعطَّل',
     'octave.pitchClass': 'فئة النغمة',
@@ -503,7 +503,7 @@ const translations = {
     'sayr.page': 'صفحة',
     'sayr.commentsEnglish': 'تعليقات (إنجليزية)',
     'sayr.commentsArabic': 'تعليقات (عربية)',
-    'sayr.commentsOnSayr': 'تعليقات على السير من',
+    'sayr.commentsOnSayr': 'تعليقات على سير',
     'sayr.stops': 'وقفات',
     'sayr.addStop': '+ إضافة وقفة',
     'sayr.note': 'نغمة',
