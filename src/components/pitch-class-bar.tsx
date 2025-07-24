@@ -27,33 +27,31 @@ const WheelCell = React.memo<WheelCellProps>(
     const { getDisplayName } = useLanguageContext();
     
     const baseClassName = "pitch-class-bar__cell";
-    let className = "pitch-class-bar__cell";
+    const classNames = [baseClassName];
     
-    if (isDescending) className = baseClassName + " pitch-class-bar__cell_descending";
-
-    if (isTonic) className = baseClassName + " pitch-class-bar__cell_tonic";
-
-    if (isCurrentTonic) className = baseClassName + " pitch-class-bar__cell_tonic_current";
-
-    if (isSelected) className = baseClassName + " pitch-class-bar__cell_selected";
-
+    if (isDescending) classNames.push("pitch-class-bar__cell_descending");
+    if (isTonic) classNames.push("pitch-class-bar__cell_tonic");
+    if (isCurrentTonic) classNames.push("pitch-class-bar__cell_tonic_current");
+    if (isSelected) classNames.push("pitch-class-bar__cell_selected");
+    
     if (inputType === "MIDI" && isMapped) {
-      if (isBlackKey) className = baseClassName + " pitch-class-bar__cell_midi_black";
-      else className = baseClassName + " pitch-class-bar__cell_midi_white";
-
-      if (isTonic) {
-        if (isBlackKey) className = baseClassName + " pitch-class-bar__cell_midi_tonic_black";
-        else className = baseClassName + " pitch-class-bar__cell_midi_tonic_white";
-
-        if (isCurrentTonic) {
-          className = baseClassName + " pitch-class-bar__cell_midi_tonic_current";
-          if (isActive) className = baseClassName + " pitch-class-bar__cell_midi_tonic_current_active";
-        }
+      if (isBlackKey) {
+        classNames.push("pitch-class-bar__cell_midi_black");
+        if (isTonic) classNames.push("pitch-class-bar__cell_midi_tonic_black");
+      } else {
+        classNames.push("pitch-class-bar__cell_midi_white");
+        if (isTonic) classNames.push("pitch-class-bar__cell_midi_tonic_white");
+      }
+      
+      if (isCurrentTonic) {
+        classNames.push("pitch-class-bar__cell_midi_tonic_current");
+        if (isActive) classNames.push("pitch-class-bar__cell_midi_tonic_current_active");
       }
     }
-
-    if (isActive) className = baseClassName + " pitch-class-bar__cell_active";
-
+    
+    if (isActive) classNames.push("pitch-class-bar__cell_active");
+    
+    const className = classNames.join(" ");
     const displayNoteName = getDisplayName(pitchClass.noteName, 'note');
 
     return (

@@ -53,8 +53,8 @@
     }
 
     &_tonic {
-      border-top: 3px rgb($tertiary, 0.8) solid;
-      border-bottom: 3px solid rgb($tertiary, 0.8);
+      border-top: 3px rgb($tertiary, 0.8) solid !important;
+      border-bottom: 3px solid rgb($tertiary, 0.8) !important;
     }
     &_tonic_current {
       background-color: rgb($tertiary, 0.8) !important;
