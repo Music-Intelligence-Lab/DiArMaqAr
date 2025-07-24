@@ -101,15 +101,16 @@ export default function Navbar() {
             onClick={() => {
               setSelectedMenu("tuningSystem");
               if (typeof window !== "undefined") {
-                const html = document.documentElement;
-                if (html && html.scrollIntoView) {
-                  html.scrollIntoView({ behavior: "smooth", block: "start" });
-                } else if (document.body && document.body.scrollIntoView) {
-                  document.body.scrollIntoView({
+                const tuningSystemSection = document.querySelector(
+                  ".tuning-system-manager"
+                );
+                if (tuningSystemSection) {
+                  tuningSystemSection.scrollIntoView({
                     behavior: "smooth",
                     block: "start",
                   });
                 } else {
+                  // Fallback: scroll to top if tuning system section not found
                   window.scrollTo({ top: 0, behavior: "smooth" });
                 }
               }
