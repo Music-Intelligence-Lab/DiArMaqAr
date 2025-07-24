@@ -406,10 +406,10 @@ const translations = {
     
     // Tuning System Manager (Arabic translations)
     'tuningSystem.all': 'جميع التناغيم',
-    'tuningSystem.8th10thCentury': 'القرن الثامن-العاشر الميلادي',
-    'tuningSystem.11th15thCentury': 'القرن الحادي عشر-الخامس عشر الميلادي',
-    'tuningSystem.16th19thCentury': 'القرن السادس عشر-التاسع عشر الميلادي',
-    'tuningSystem.20th21stCentury': 'القرن العشرون-الحادي والعشرون الميلادي',
+    'tuningSystem.8th10thCentury': 'القرن 8-10 م.',
+    'tuningSystem.11th15thCentury': 'القرن 11-15 م.',
+    'tuningSystem.16th19thCentury': 'القرن 16-19 م.',
+    'tuningSystem.20th21stCentury': 'القرن 20-21 م.',
     'tuningSystem.selectOrCreate': 'اختر نظام التنغيم أو أنشئ جديداً:',
     'tuningSystem.createNew': '-- إنشاء نظام جديد --',
     'tuningSystem.none': '-- لا شيء --',
