@@ -2,7 +2,7 @@
 
 .language-selector {
   position: fixed;
-  top: 20px;
+  top: 22px;
   right: 50px;
   display: flex;
   align-items: center;
@@ -10,9 +10,7 @@
   &__select {
     background-color: transparent;
     color: white;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 4px;
-    padding: 5px 8px;
+
     font-size: 14px;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -23,15 +21,14 @@
     }
 
     &:focus {
+      background-color: transparent;
+      color: white;
       outline: none;
-      border-color: white;
-      background-color: rgba(255, 255, 255, 0.15);
     }
 
     option {
-      background-color: $background;
+      background-color: transparent;
       color: white;
-      padding: 5px;
     }
   }
 }
