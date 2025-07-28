@@ -15,15 +15,17 @@ import getFirstNoteName from "@/functions/getFirstNoteName";
 import { SourcePageReference } from "@/models/bibliography/Source";
 import TuningSystemOctaveTables from "./tuning-system-octave-tables";
 import JinsData from "@/models/Jins";
-import MaqamData from "@/models/Maqam";
+import MaqamData, { Maqam } from "@/models/Maqam";
 import ExportModal from "./export-modal";
 import SelectedPitchClassTranspositions from "./selected-pitch-classes-transpositions";
 import Link from "next/link";
+import { canTransposeMaqamToNote } from "@/functions/transpose";
 
 function isTuningSystemDisabled(
   tuningSystem: TuningSystem,
   selectedJinsData: JinsData | null,
   selectedMaqamData: MaqamData | null,
+  selectedMaqam: Maqam | null,
   startingNoteName: NoteName = ""
 ): { disabled: boolean; noteName: string } {
   const shiftedNoteNames = tuningSystem.getSetsOfNoteNamesShiftedUpAndDown();
@@ -43,7 +45,9 @@ function isTuningSystemDisabled(
       if (selectedMaqamData.isMaqamSelectable(set)) {
         const firstNoteName = set[set.length / 3];
         if (startingNoteName && firstNoteName !== startingNoteName) continue;
-        return { disabled: false, noteName: firstNoteName };
+        if (selectedMaqam) {
+          if (canTransposeMaqamToNote(tuningSystem, firstNoteName, selectedMaqamData, selectedMaqam.ascendingPitchClasses[0].noteName)) return { disabled: false, noteName: firstNoteName };
+        } else return { disabled: false, noteName: firstNoteName };
       }
     }
   }
@@ -77,6 +81,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     setSelectedAbjadNames,
     selectedJinsData,
     selectedMaqamData,
+    selectedMaqam,
   } = useAppContext();
 
   const { tuningSystemsFilter, setTuningSystemsFilter } = useFilterContext();
@@ -508,7 +513,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         <div className="tuning-system-manager__group">
           <div className="tuning-system-manager__input-container">
             <label className="tuning-system-manager__label" htmlFor="tuningSystemSelect">
-              {t('tuningSystem.selectOrCreate')}
+              {t("tuningSystem.selectOrCreate")}
             </label>
             <select
               className="tuning-system-manager__select"
@@ -516,8 +521,8 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
               onChange={handleTuningSystemChange}
               value={selectedTuningSystem ? (selectedTuningSystem.isSaved() ? selectedTuningSystem.getId() : "new") : ""}
             >
-              <option value="">{t('tuningSystem.none')}</option>
-              <option value="new">{t('tuningSystem.createNew')}</option>
+              <option value="">{t("tuningSystem.none")}</option>
+              <option value="new">{t("tuningSystem.createNew")}</option>
               {sortedTuningSystems.map((system) => (
                 <option key={system.getId()} value={system.getId()}>
                   {system.stringify()}
@@ -527,12 +532,12 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
           </div>
           <div className="tuning-system-manager__input-container">
             <label className="tuning-system-manager__label" htmlFor="sortOptionSelect" style={{ marginRight: "8px" }}>
-              {t('tuningSystem.sortBy')}
+              {t("tuningSystem.sortBy")}
             </label>
             <select className="tuning-system-manager__select" id="sortOptionSelect" value={sortOption} onChange={(e) => setSortOption(e.target.value as "id" | "creatorEnglish" | "year")}>
-              <option value="id">{t('tuningSystem.id')}</option>
-              <option value="creatorEnglish">{t('tuningSystem.creator')}</option>
-              <option value="year">{t('tuningSystem.year')}</option>
+              <option value="id">{t("tuningSystem.id")}</option>
+              <option value="creatorEnglish">{t("tuningSystem.creator")}</option>
+              <option value="year">{t("tuningSystem.year")}</option>
             </select>
           </div>
         </div>
@@ -544,14 +549,14 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
           <div className="tuning-system-manager__group">
             <div className="tuning-system-manager__input-container">
               <label className="tuning-system-manager__label" htmlFor="titleEnglishField">
-                {t('tuningSystem.titleEnglish')}
+                {t("tuningSystem.titleEnglish")}
               </label>
               <input className="tuning-system-manager__input" id="titleEnglishField" type="text" value={titleEnglish ?? ""} onChange={(e) => setTitleEnglish(e.target.value)} />
             </div>
 
             <div className="tuning-system-manager__input-container">
               <label className="tuning-system-manager__label" htmlFor="titleArabicField">
-                {t('tuningSystem.titleArabic')}
+                {t("tuningSystem.titleArabic")}
               </label>
               <input className="tuning-system-manager__input" id="titleArabicField" type="text" value={titleArabic ?? ""} onChange={(e) => setTitleArabic(e.target.value)} />
             </div>
@@ -559,7 +564,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             {/* Year / Source / Creator */}
             <div className="tuning-system-manager__input-container">
               <label className="tuning-system-manager__label" htmlFor="yearField">
-                {t('tuningSystem.year')}
+                {t("tuningSystem.year")}
               </label>
               <input className="tuning-system-manager__input" id="yearField" type="text" value={year ?? ""} onChange={(e) => setYear(e.target.value)} />
             </div>
@@ -569,22 +574,28 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             <div className="tuning-system-manager__sources-select-container">
               {sourcePageReferences.length < 6 && (
                 <button className="tuning-system-manager__source-add-button" onClick={addSourceRef}>
-                  {t('tuningSystem.addSource')}
+                  {t("tuningSystem.addSource")}
                 </button>
               )}
               {sourcePageReferences.map((ref, idx) => (
                 <div key={idx} className="tuning-system-manager__source-select-item">
                   <select className="tuning-system-manager__source-select" value={ref.sourceId} onChange={(e) => updateSourceRefs(idx, { sourceId: e.target.value })}>
-                    <option value="">{t('tuningSystem.selectSource')}</option>
+                    <option value="">{t("tuningSystem.selectSource")}</option>
                     {sources.map((s) => (
                       <option key={s.getId()} value={s.getId()}>
                         {s.getTitleEnglish()}
                       </option>
                     ))}
                   </select>
-                  <input className="tuning-system-manager__source-input" type="text" value={ref.page} placeholder={t('tuningSystem.page')} onChange={(e) => updateSourceRefs(idx, { page: e.target.value })} />
+                  <input
+                    className="tuning-system-manager__source-input"
+                    type="text"
+                    value={ref.page}
+                    placeholder={t("tuningSystem.page")}
+                    onChange={(e) => updateSourceRefs(idx, { page: e.target.value })}
+                  />
                   <button className="jins-manager__source-delete-button" onClick={() => removeSourceRef(idx)}>
-                    {t('tuningSystem.delete')}
+                    {t("tuningSystem.delete")}
                   </button>
                 </div>
               ))}
@@ -592,13 +603,13 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
             <div className="tuning-system-manager__input-container">
               <label className="tuning-system-manager__label" htmlFor="creatorEnglishField">
-                {t('tuningSystem.creatorEnglish')}
+                {t("tuningSystem.creatorEnglish")}
               </label>
               <input className="tuning-system-manager__input" id="creatorEnglishField" type="text" value={creatorEnglish ?? ""} onChange={(e) => setCreatorEnglish(e.target.value)} />
             </div>
             <div className="tuning-system-manager__input-container">
               <label className="tuning-system-manager__label" htmlFor="creatorArabicField">
-                {t('tuningSystem.creatorArabic')}
+                {t("tuningSystem.creatorArabic")}
               </label>
               <input className="tuning-system-manager__input" id="creatorArabicField" type="text" value={creatorArabic ?? ""} onChange={(e) => setCreatorArabic(e.target.value)} />
             </div>
@@ -608,14 +619,14 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
           <div className="tuning-system-manager__group">
             <div className="tuning-system-manager__input-container">
               <label className="tuning-system-manager__label" htmlFor="commentsEnglishField">
-                {t('tuningSystem.commentsEnglish')}
+                {t("tuningSystem.commentsEnglish")}
               </label>
               <textarea rows={5} className="tuning-system-manager__input" id="commentsEnglishField" value={commentsEnglish} onChange={(e) => setCommentsEnglish(e.target.value)} />
             </div>
 
             <div className="tuning-system-manager__input-container">
               <label className="tuning-system-manager__label" htmlFor="commentsArabicField">
-                {t('tuningSystem.commentsArabic')}
+                {t("tuningSystem.commentsArabic")}
               </label>
               <textarea rows={5} className="tuning-system-manager__input" id="commentsArabicField" value={commentsArabic} onChange={(e) => setCommentsArabic(e.target.value)} />
             </div>
@@ -624,7 +635,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             {/* Pitch Classes (textarea, each line => one element in string[]) */}
             <div className="tuning-system-manager__input-container">
               <label className="tuning-system-manager__label" htmlFor="pitchClassesField">
-                {t('tuningSystem.pitchClasses')}{" "}
+                {t("tuningSystem.pitchClasses")}{" "}
                 {detectPitchClassType(tuningSystemPitchClasses.split("\n")) !== "unknown" && (
                   <span className="tuning-system-manager__pitch-class-type">{"// " + detectPitchClassType(tuningSystemPitchClasses.split("\n"))}</span>
                 )}
@@ -636,7 +647,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             <div className="tuning-system-manager__input-container">
               <div className="tuning-system-manager__input-container">
                 <label className="tuning-system-manager__label" htmlFor="stringLengthField">
-                  {t('tuningSystem.stringLength')}
+                  {t("tuningSystem.stringLength")}
                 </label>
                 <input
                   className="tuning-system-manager__input"
@@ -649,7 +660,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
               <div className="tuning-system-manager__input-container">
                 <label className="tuning-system-manager__label" htmlFor="refFreqField">
-                  {t('tuningSystem.defaultReferenceFrequency')}
+                  {t("tuningSystem.defaultReferenceFrequency")}
                 </label>
                 <input
                   className="tuning-system-manager__input"
@@ -665,11 +676,11 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
           {/* Buttons */}
           <div className="tuning-system-manager__buttons">
             <button className="tuning-system-manager__save-button" onClick={() => handleSaveTuningSystem()} disabled={!(!haveIndicesChanged() || getFirstNoteName(selectedIndices) === "none")}>
-              {selectedTuningSystem.isSaved() ? t('tuningSystem.save') : t('tuningSystem.create')}
+              {selectedTuningSystem.isSaved() ? t("tuningSystem.save") : t("tuningSystem.create")}
             </button>
             {selectedTuningSystem && (
               <button className="tuning-system-manager__delete-button" type="button" onClick={handleDelete}>
-                {t('tuningSystem.deleteTuningSystem')}
+                {t("tuningSystem.deleteTuningSystem")}
               </button>
             )}
           </div>
@@ -719,32 +730,28 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             }}
           >
             {filteredTuningSystems.length === 0 ? (
-              <p>{t('tuningSystem.noSystemsAvailable')}</p>
+              <p>{t("tuningSystem.noSystemsAvailable")}</p>
             ) : (
               filteredTuningSystems.map((tuningSystem, index) => (
                 <div
                   key={index}
                   className={
                     "tuning-system-manager__item " +
-                    (isTuningSystemDisabled(tuningSystem, selectedJinsData, selectedMaqamData).disabled ? "tuning-system-manager__item_disabled " : "") +
+                    (isTuningSystemDisabled(tuningSystem, selectedJinsData, selectedMaqamData, selectedMaqam).disabled ? "tuning-system-manager__item_disabled " : "") +
                     (tuningSystem.getId() === selectedTuningSystem?.getId() ? "tuning-system-manager__item_selected " : "")
                   }
                   onClick={() => {
-                    const { noteName } = isTuningSystemDisabled(tuningSystem, selectedJinsData, selectedMaqamData);
+                    const { noteName } = isTuningSystemDisabled(tuningSystem, selectedJinsData, selectedMaqamData, selectedMaqam);
                     handleTuningSystemClick(tuningSystem, noteName);
                   }}
                 >
                   <strong className="tuning-system-manager__item-english-creator">
-                    {language === 'ar' && tuningSystem.getCreatorArabic() 
+                    {language === "ar" && tuningSystem.getCreatorArabic()
                       ? `${tuningSystem.getCreatorArabic()} (${tuningSystem.getYear()})`
-                      : `${tuningSystem.getCreatorEnglish()} (${tuningSystem.getYear()})`
-                    }
+                      : `${tuningSystem.getCreatorEnglish()} (${tuningSystem.getYear()})`}
                   </strong>
                   <strong className="tuning-system-manager__item-english-title">
-                    {language === 'ar' && tuningSystem.getTitleArabic() 
-                      ? tuningSystem.getTitleArabic()
-                      : tuningSystem.getTitleEnglish()
-                    }
+                    {language === "ar" && tuningSystem.getTitleArabic() ? tuningSystem.getTitleArabic() : tuningSystem.getTitleEnglish()}
                   </strong>
                 </div>
               ))
@@ -812,12 +819,12 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         {tuningSystemPitchClassesArray.length !== 0 && selectedTuningSystem && (
           <div className="tuning-system-manager__starting-note-container">
             <div className="tuning-system-manager__starting-note-left">
-              {t('tuningSystem.startingNoteName')}
+              {t("tuningSystem.startingNoteName")}
               {[...selectedTuningSystem.getNoteNames()]
                 .sort((a, b) => getNoteNameIndex(a[0] ?? 0) - getNoteNameIndex(b[0] ?? 0))
                 .map((notes, index) => {
                   const startingNote = notes[0];
-                  const disabled = isTuningSystemDisabled(selectedTuningSystem, selectedJinsData, selectedMaqamData, startingNote).disabled;
+                  const disabled = isTuningSystemDisabled(selectedTuningSystem, selectedJinsData, selectedMaqamData, selectedMaqam, startingNote).disabled;
                   return (
                     <div className="tuning-system-manager__starting-note" key={index}>
                       <button
@@ -828,7 +835,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                         }
                         onClick={() => handleStartNoteNameChange(startingNote)}
                       >
-                        {getDisplayName(startingNote, 'note')}
+                        {getDisplayName(startingNote, "note")}
                       </button>
                       <label htmlFor="reference-frequency-input">
                         <input
@@ -852,10 +859,10 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
               {isCurrentConfigurationNew() && (
                 <div className="tuning-system-manager__starting-note">
                   <button className={"tuning-system-manager__starting-note-button tuning-system-manager__starting-note-button_unsaved tuning-system-manager__starting-note-button_selected"}>
-                    {getDisplayName(getFirstNoteName(selectedIndices), 'note')} ({t('tuningSystem.unsaved')})
+                    {getDisplayName(getFirstNoteName(selectedIndices), "note")} ({t("tuningSystem.unsaved")})
                   </button>
                   <label htmlFor="reference-frequency-input">
-                    {t('tuningSystem.frequency')}
+                    {t("tuningSystem.frequency")}
                     <input
                       type="number"
                       id="reference-frequency-input"
@@ -874,7 +881,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 </div>
               )}
               <label htmlFor="reference-frequency-input">
-                {t('tuningSystem.stringLength')}:
+                {t("tuningSystem.stringLength")}:
                 <input
                   type="number"
                   id="reference-frequency-input"
@@ -894,14 +901,14 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                   onClick={handleSaveStartingNoteConfiguration}
                   disabled={!haveIndicesChanged() || getFirstNoteName(selectedIndices) === "none"}
                 >
-                  {t('tuningSystem.saveNoteConfiguration')}
+                  {t("tuningSystem.saveNoteConfiguration")}
                 </button>
                 <button
                   className="tuning-system-manager__starting-note-button tuning-system-manager__starting-note-button_delete"
                   onClick={handleDeleteStartingNoteConfiguration}
                   disabled={getFirstNoteName(selectedIndices) === "none"}
                 >
-                  {t('tuningSystem.deleteNoteConfiguration')}
+                  {t("tuningSystem.deleteNoteConfiguration")}
                 </button>
               </div>
             )}
@@ -910,7 +917,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
         {selectedTuningSystem && (
           <div className="tuning-system-manager__export-container">
-            {t('tuningSystem.export')}
+            {t("tuningSystem.export")}
             <button className="tuning-system-manager__export-button" onClick={() => setIsExportModalOpen(true)}>
               <FileDownloadIcon style={{ fontSize: 18 }} />
             </button>
@@ -923,18 +930,13 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       <TuningSystemOctaveTables admin={admin} />
       <SelectedPitchClassTranspositions />
 
-      {(selectedTuningSystem?.getCommentsEnglish().trim() ||
-        selectedTuningSystem?.getCommentsArabic().trim() ||
-        (sourcePageReferences && sourcePageReferences.length > 0)) && (
+      {(selectedTuningSystem?.getCommentsEnglish().trim() || selectedTuningSystem?.getCommentsArabic().trim() || (sourcePageReferences && sourcePageReferences.length > 0)) && (
         <div className="tuning-system-manager__comments-sources-container">
           {(selectedTuningSystem?.getCommentsEnglish().trim() || selectedTuningSystem?.getCommentsArabic().trim()) && (
             <div className="tuning-system-manager__comments-english">
-              <h3>{t('tuningSystem.comments')}</h3>
+              <h3>{t("tuningSystem.comments")}</h3>
               <div>
-                {(language === 'ar' && selectedTuningSystem?.getCommentsArabic().trim() 
-                  ? selectedTuningSystem.getCommentsArabic()
-                  : selectedTuningSystem?.getCommentsEnglish()
-                )
+                {(language === "ar" && selectedTuningSystem?.getCommentsArabic().trim() ? selectedTuningSystem.getCommentsArabic() : selectedTuningSystem?.getCommentsEnglish())
                   .split("\n")
                   .map((line, index) => (
                     <span key={index}>
@@ -948,7 +950,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
           {sourcePageReferences && sourcePageReferences.length > 0 && (
             <div className="tuning-system-manager__sources-english">
-              <h3>{t('tuningSystem.sources')}</h3>
+              <h3>{t("tuningSystem.sources")}</h3>
               {[...sourcePageReferences]
                 .sort((a, b) => {
                   const srcA = sources.find((s) => s.getId() === a.sourceId);
@@ -971,16 +973,12 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                                   .map((w) => w.charAt(0))
                                   .join(". ") ?? ""
                               }. (${source.getPublicationDateEnglish() ?? ""}${
-                                source.getSourceType?.() === "Book" &&
-                                "getOriginalPublicationDateEnglish" in source &&
-                                source.getOriginalPublicationDateEnglish?.()
+                                source.getSourceType?.() === "Book" && "getOriginalPublicationDateEnglish" in source && source.getOriginalPublicationDateEnglish?.()
                                   ? "/" + source.getOriginalPublicationDateEnglish()
                                   : ""
                               }:${ref.page})`
                             : `{${source.getPublicationDateEnglish() ?? ""}${
-                                source.getSourceType?.() === "Book" &&
-                                "getOriginalPublicationDateEnglish" in source &&
-                                source.getOriginalPublicationDateEnglish?.()
+                                source.getSourceType?.() === "Book" && "getOriginalPublicationDateEnglish" in source && source.getOriginalPublicationDateEnglish?.()
                                   ? "/" + source.getOriginalPublicationDateEnglish()
                                   : ""
                               }:${ref.page})`}
