@@ -150,7 +150,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     const mapping: Record<string, PitchClass> = {};
 
     if (selectedMaqam || selectedMaqamData) {
-      // let ascendingNoteNames: string[];
+      const ascendingNoteNames: string[] = selectedPitchClasses.map((pc) => pc.noteName);
       let descendingNoteNames: string[];
 
       if (selectedMaqam) {
@@ -161,8 +161,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         descendingNoteNames = selectedMaqamData.getDescendingNoteNames();
       }
 
-      // const ascendingMaqamPitchClasses = allPitchClasses.filter((pitchClass) => ascendingNoteNames.includes(pitchClass.noteName)); // previous implementation where we looked at the maqam itself for hte ascending notes to map to the ASDF row
-      const ascendingMaqamPitchClasses = selectedPitchClasses;
+      const ascendingMaqamPitchClasses = allPitchClasses.filter((pitchClass) => ascendingNoteNames.includes(pitchClass.noteName)); // previous implementation where we looked at the maqam itself for hte ascending notes to map to the ASDF row
       const descendingMaqamPitchClasses = allPitchClasses.filter((pitchClass) => descendingNoteNames.includes(pitchClass.noteName));
 
       let sliceIndex = 0;
