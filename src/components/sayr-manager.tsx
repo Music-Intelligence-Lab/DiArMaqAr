@@ -19,6 +19,7 @@ import SouthWestIcon from "@mui/icons-material/SouthWest"
 import JinsData from "@/models/Jins";
 import Link from "next/link";
 import { getJinsTranspositions, getMaqamTranspositions } from "@/functions/transpose";
+import shiftPitchClass from "@/functions/shiftPitchClass";
 
 export default function SayrManager({ admin }: { admin: boolean }) {
   const { t, getDisplayName, language } = useLanguageContext();
@@ -26,7 +27,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
     selectedMaqamData, setSelectedMaqamData, ajnas, maqamSayrId, setMaqamSayrId, sources, maqamat, setMaqamat, selectedMaqam, allPitchClasses, 
     centsTolerance
   } = useAppContext();
-  const { playSequence } = useSoundContext();
+  const { playSequence, noteOn, noteOff } = useSoundContext();
 
   const [creatorEnglish, setCreatorEnglish] = useState("");
   const [creatorArabic, setCreatorArabic] = useState("");
@@ -153,10 +154,32 @@ export default function SayrManager({ admin }: { admin: boolean }) {
         if (maqamNoteNames.includes(pitchClass.noteName)) pitchClasses.push(pitchClass);
       }
     }
+
+    if (pitchClasses.length === 7) pitchClasses = [...pitchClasses, shiftPitchClass(allPitchClasses, pitchClasses[0], 1)];
     
     // Play the sequence
     if (pitchClasses.length > 0) {
       playSequence(pitchClasses);
+    }
+  };
+
+  const handleNoteStopClick = (noteName: string) => {
+    if (admin || !allPitchClasses) return;
+    
+    // Find the pitch class for this note name
+    const pitchClass = allPitchClasses.find(pc => pc.noteName === noteName);
+    if (pitchClass) {
+      noteOn(pitchClass);
+    }
+  };
+
+  const handleNoteStopRelease = (noteName: string) => {
+    if (admin || !allPitchClasses) return;
+    
+    // Find the pitch class for this note name
+    const pitchClass = allPitchClasses.find(pc => pc.noteName === noteName);
+    if (pitchClass) {
+      noteOff(pitchClass);
     }
   };
 
@@ -559,10 +582,25 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                     <div
                       className="sayr-manager__stop"
                       style={
-                        !admin && (stop.type === "jins" || (stop as any).type === "maqam") 
+                        !admin && (stop.type === "note" || stop.type === "jins" || (stop as any).type === "maqam") 
                           ? { cursor: "pointer" } 
                           : undefined
                       }
+                      onMouseDown={() => {
+                        if (!admin && stop.type === "note") {
+                          handleNoteStopClick(stop.value);
+                        }
+                      }}
+                      onMouseUp={() => {
+                        if (!admin && stop.type === "note") {
+                          handleNoteStopRelease(stop.value);
+                        }
+                      }}
+                      onMouseLeave={() => {
+                        if (!admin && stop.type === "note") {
+                          handleNoteStopRelease(stop.value);
+                        }
+                      }}
                       onClick={() => {
                         if (!admin) {
                           if (stop.type === "jins" && jinsData) {
