@@ -16,6 +16,7 @@ const emptyPitchClass: PitchClass = {
   abjadName: "",
   fretDivision: "",
   midiNoteNumber: 0,
+  centsDeviation: 0,
 };
 
 export default function shiftPitchClass(allPitchClasses: PitchClass[], pitchClass: PitchClass | undefined, octaveShift: number) {

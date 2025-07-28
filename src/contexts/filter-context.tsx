@@ -14,6 +14,7 @@ export interface FilterSettings {
   midiNote: boolean;
   frequency: boolean;
   staffNotation: boolean;
+  centsDeviation: boolean;
 }
 
 const defaultFilters: FilterSettings = {
@@ -28,6 +29,7 @@ const defaultFilters: FilterSettings = {
   midiNote: false,
   frequency: false,
   staffNotation: false,
+  centsDeviation: false,
 };
 
 interface FilterContextInterface {
