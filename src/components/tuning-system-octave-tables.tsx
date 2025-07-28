@@ -581,6 +581,18 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                   </tr>
                 )}
 
+                {/* Row 5.5: Cents Deviation from 12-EDO */}
+                {filters.centsDeviation && (
+                  <tr>
+                    <td className="tuning-system-manager__row-header">{t('octave.centsDeviation')}</td>
+                    {rowCells.map((pitchClass, colIndex) => (
+                      <td key={colIndex} className={getCellClassName(octave, colIndex)}>
+                        {pitchClass.centsDeviation > 0 ? '+' : ''}{pitchClass.centsDeviation.toFixed(1)}
+                      </td>
+                    ))}
+                  </tr>
+                )}
+
                 {/* Row 6: Fraction Ratio */}
                 {filters.fraction && pitchClassType !== "fraction" && (
                   <tr>

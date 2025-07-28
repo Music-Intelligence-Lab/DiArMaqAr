@@ -11,6 +11,7 @@ import NoteName, {
 import detectPitchClassType from "@/functions/detectPitchClassType";
 import convertPitchClass, { shiftPitchClassBaseValue, frequencyToMidiNoteNumber } from "@/functions/convertPitchClass";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
+import { calculateCentsDeviation } from "@/functions/calculateCentsDeviation";
 import PitchClass from "@/models/PitchClass";
 
 export default function getTuningSystemCells(
@@ -79,9 +80,14 @@ export default function getTuningSystemCells(
       // midi
       const midiNoteNumber = frequencyToMidiNoteNumber(parseFloat(conv.frequency));
 
+      // English note name and cents deviation
+      const englishNoteName = getEnglishNoteName(noteName);
+      const actualCents = parseFloat(conv.cents);
+      const centsDeviation = calculateCentsDeviation(actualCents, englishNoteName, octave); //todo need to implement this function correctly
+
       pitchClasses.push({
         noteName,
-        englishName: getEnglishNoteName(noteName),
+        englishName: englishNoteName,
         fraction: conv.fraction,
         cents: conv.cents,
         decimalRatio: conv.decimal,
@@ -94,6 +100,7 @@ export default function getTuningSystemCells(
         abjadName,
         fretDivision,
         midiNoteNumber,
+        centsDeviation,
       });
     }
   }

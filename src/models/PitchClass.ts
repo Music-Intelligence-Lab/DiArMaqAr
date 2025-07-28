@@ -15,6 +15,7 @@ export default interface PitchClass {
   abjadName: string;
   index: number;
   octave: number;
+  centsDeviation: number;
 }
 
 export interface PitchClassInterval {
