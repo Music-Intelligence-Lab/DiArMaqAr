@@ -149,19 +149,20 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     const mapping: Record<string, PitchClass> = {};
 
     if (selectedMaqam || selectedMaqamData) {
-      let ascendingMaqamPitchClasses: PitchClass[] = [];
-      let descendingMaqamPitchClasses: PitchClass[] = [];
+      // let ascendingNoteNames: string[];
+      let descendingNoteNames: string[];
 
       if (selectedMaqam) {
-        ascendingMaqamPitchClasses = selectedMaqam.ascendingPitchClasses;
-        descendingMaqamPitchClasses = [...selectedMaqam.descendingPitchClasses].reverse();
+        // ascendingNoteNames = selectedMaqam.ascendingPitchClasses.map((pc) => pc.noteName);
+        descendingNoteNames = [...selectedMaqam.descendingPitchClasses].reverse().map((pc) => pc.noteName);
       } else if (selectedMaqamData) {
-        const ascendingNoteNames = selectedMaqamData.getAscendingNoteNames();
-        const descendingNoteNames = selectedMaqamData.getDescendingNoteNames();
-
-        ascendingMaqamPitchClasses = allPitchClasses.filter((pitchClass) => ascendingNoteNames.includes(pitchClass.noteName));
-        descendingMaqamPitchClasses = allPitchClasses.filter((pitchClass) => descendingNoteNames.includes(pitchClass.noteName));
+        // ascendingNoteNames = selectedMaqamData.getAscendingNoteNames();
+        descendingNoteNames = selectedMaqamData.getDescendingNoteNames();
       }
+
+      // const ascendingMaqamPitchClasses = allPitchClasses.filter((pitchClass) => ascendingNoteNames.includes(pitchClass.noteName)); // previous implementation where we looked at the maqam itself for hte ascending notes to map to the ASDF row
+      const ascendingMaqamPitchClasses = selectedPitchClasses;
+      const descendingMaqamPitchClasses = allPitchClasses.filter((pitchClass) => descendingNoteNames.includes(pitchClass.noteName));
 
       let sliceIndex = 0;
       const lastAscendingPitchClass = ascendingMaqamPitchClasses[ascendingMaqamPitchClasses.length - 1];
