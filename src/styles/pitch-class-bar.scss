@@ -48,6 +48,7 @@
     &_selected {
       background-color: rgb($primary, 0.8) !important;
     }
+
     &_active {
       background-color: rgb($tertiary, 1) !important;
     }
@@ -56,18 +57,22 @@
       border-top: 3px rgb($tertiary, 0.8) solid !important;
       border-bottom: 3px solid rgb($tertiary, 0.8) !important;
     }
+
     &_tonic_current {
       background-color: rgb($tertiary, 0.8) !important;
       border: rgba($tertiary, 0.8) solid 3px 2px 2px 3px !important;
     }
+
     &_tonic_selected {
       border-top: 3px rgb($tertiary, 0.8) solid;
       border-bottom: 3px solid rgb($tertiary, 0.8);
       background-color: rgba($primary, 0.8) !important;
     }
+
     &_tonic_current_active {
       background-color: rgba($tertiary, 1) !important;
     }
+
     &_tonic:hover {
       background-color: rgba($tertiary, 1) !important;
     }
@@ -159,6 +164,7 @@
     margin-right: 2px;
     text-align: center;
   }
+
   &__cell-qwerty-englishname {
     width: 100%;
     height: 28px;

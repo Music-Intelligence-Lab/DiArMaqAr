@@ -3,7 +3,7 @@
 .tuning-system-manager {
   width: 100%;
   margin-top: 0px;
-    scroll-margin-top: 450px;
+  scroll-margin-top: 450px;
 
   //padding: 20px 10px;
 
@@ -58,18 +58,18 @@
     display: flex;
     flex-direction: column;
     gap: 5px;
-    
+
     // RTL support
     [dir="rtl"] & {
       direction: rtl;
       text-align: right;
     }
   }
-  
+
   // Row header styling for octave tables
   &__row-header {
     text-align: left;
-    
+
     // RTL support
     [dir="rtl"] & {
       text-align: right;
@@ -206,6 +206,7 @@
       float: right;
     }
   }
+
   &__sorting-label {
     margin-bottom: 0px;
   }
@@ -228,6 +229,7 @@
 
     &_selected {
       background-color: $secondary;
+
       &:hover {
         background-color: rgba($secondary, 1);
       }
@@ -300,6 +302,7 @@
 
     &_selected {
       background-color: $secondary;
+
       &:hover {
         background-color: rgba($secondary, 1);
       }
@@ -348,7 +351,7 @@
     width: 100%;
     margin-top: 0px;
     padding: 0px 20px;
-    
+
     // RTL support
     [dir="rtl"] & {
       direction: rtl;
@@ -366,7 +369,7 @@
     float: left;
     margin-bottom: 0px;
     line-height: calc(20px);
-    
+
     // RTL support - when Arabic is selected, adjust layout
     [dir="rtl"] & {
       float: right;
@@ -397,7 +400,7 @@
     vertical-align: top;
     padding-right: 30px;
     float: left;
-    
+
     // RTL support - when Arabic is selected, adjust layout
     [dir="rtl"] & {
       float: right;
@@ -502,7 +505,7 @@
 
     .carousel-button-prev {
       left: 0;
-      
+
       // RTL support - swap positions
       [dir="rtl"] & {
         left: auto;
@@ -512,7 +515,7 @@
 
     .carousel-button-next {
       right: 0;
-      
+
       // RTL support - swap positions
       [dir="rtl"] & {
         right: auto;
@@ -567,7 +570,7 @@
     .carousel-button-prev {
       left: 0;
       border-left: 1px solid $grey;
-      
+
       // RTL support - swap positions and borders
       [dir="rtl"] & {
         left: auto;
@@ -580,7 +583,7 @@
     .carousel-button-next {
       right: 0;
       border-right: 1px solid $grey;
-      
+
       // RTL support - swap positions and borders
       [dir="rtl"] & {
         right: auto;
@@ -610,7 +613,7 @@
     // RTL support
     [dir="rtl"] & {
       text-align: right;
-      
+
       justify-content: right;
     }
 
@@ -932,12 +935,14 @@
     background-color: $black !important;
     color: $text !important;
     padding: 0px 0px;
+
     // Remove default arrows in webkit browsers:
     &::-webkit-outer-spin-button,
     &::-webkit-inner-spin-button {
       -webkit-appearance: none;
       margin: 0;
     }
+
     // Remove default arrows in Firefox:
     -moz-appearance: textfield;
     appearance: textfield;
@@ -1001,6 +1006,7 @@
     border-radius: 0px;
     color: $text;
     margin-left: 0px;
+
     &:hover {
       background-color: rgba($primary, 1);
     }
@@ -1009,7 +1015,7 @@
   &__sources-english {
     display: flex;
     flex-direction: column;
-    
+
     // RTL support
     [dir="rtl"] & {
       direction: rtl;
@@ -1055,6 +1061,7 @@
     border: none;
     background: $black;
     font-weight: 300;
+
     &:hover {
       background: $black;
     }
