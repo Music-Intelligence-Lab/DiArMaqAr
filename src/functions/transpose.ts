@@ -1,6 +1,9 @@
 import PitchClass, { calculateInterval, PitchClassInterval, matchingListOfIntervals } from "@/models/PitchClass";
 import MaqamData, { Maqam, Sayr } from "@/models/Maqam";
 import JinsData, { Jins } from "@/models/Jins";
+import TuningSystem from "@/models/TuningSystem";
+import NoteName from "@/models/NoteName";
+import getTuningSystemCells from "@/functions/getTuningSystemCells";
 import shiftPitchClass from "./shiftPitchClass";
 
 export function getPitchClassIntervals(pitchClasses: PitchClass[]) {
@@ -265,6 +268,78 @@ export function getJinsTranspositions(allPitchClasses: PitchClass[], jinsData: J
   else return jinsTranspositionsWithoutTahlil;
 }
 
+export function canTransposeMaqamToNote(
+  tuningSystem: TuningSystem,
+  startingNote: NoteName,
+  maqamData: MaqamData, 
+  targetFirstNote: string, 
+  centsTolerance: number = 5
+): boolean {
+  if (!tuningSystem || !maqamData) return false;
+
+  // Generate pitch classes from the tuning system
+  const allPitchClasses = getTuningSystemCells(tuningSystem, startingNote);
+  
+  if (allPitchClasses.length === 0) return false;
+
+  // Check if the target note exists in the pitch classes
+  const targetNoteIndex = allPitchClasses.findIndex((pitchClass) => pitchClass.noteName === targetFirstNote);
+  if (targetNoteIndex === -1) return false;
+
+  const ascendingNoteNames = maqamData.getAscendingNoteNames();
+  if (ascendingNoteNames.length < 2) return false;
+
+  // Get the tahlil (source) maqam pitch classes
+  const sourceMaqam = maqamData.getTahlil(allPitchClasses);
+  if (!sourceMaqam || sourceMaqam.ascendingPitchClasses.length === 0) return false;
+
+  // Get the interval pattern from the source maqam
+  const intervalPattern = getPitchClassIntervals(sourceMaqam.ascendingPitchClasses);
+  
+  const valueType = allPitchClasses[0].originalValueType;
+  const useRatio = valueType === "fraction" || valueType === "decimalRatio";
+
+  // Find the starting pitch class for the target note
+  const startingCell = allPitchClasses.find((pitchClass) => pitchClass.noteName === targetFirstNote);
+  if (!startingCell) return false;
+
+  function buildSequence(pitchClasses: PitchClass[], cellIndex: number, intervalIndex: number): boolean {
+    if (intervalIndex === intervalPattern.length) {
+      return true; // Successfully built the complete sequence
+    }
+    
+    const lastCell = pitchClasses[pitchClasses.length - 1];
+
+    for (let i = cellIndex; i < allPitchClasses.length; i++) {
+      const candidateCell = allPitchClasses[i];
+
+      const cellInterval = intervalPattern[intervalIndex];
+      const computedInterval = calculateInterval(lastCell, candidateCell);
+
+      if (useRatio) {
+        const comp = computedInterval.decimalRatio;
+        const target = cellInterval.decimalRatio;
+
+        if (comp === target) {
+          return buildSequence([...pitchClasses, candidateCell], i + 1, intervalIndex + 1);
+        } else if (comp > target) {
+          break; // Ascending, so we've gone too far
+        }
+      } else {
+        if (Math.abs(computedInterval.cents - cellInterval.cents) <= centsTolerance) {
+          return buildSequence([...pitchClasses, candidateCell], i + 1, intervalIndex + 1);
+        } else if (Math.abs(cellInterval.cents) + centsTolerance < Math.abs(computedInterval.cents)) {
+          break; // We've gone too far
+        }
+      }
+    }
+    
+    return false; // Couldn't find a matching interval
+  }
+
+  return buildSequence([startingCell], targetNoteIndex + 1, 0);
+}
+
 export function transposeSayr(sayr: Sayr, allPitchClasses: PitchClass[], maqamData: MaqamData, maqam: Maqam): { transposedSayr: Sayr; hasOutOfBoundsNotes: boolean } {
   const firstNoteInData = maqamData.getAscendingNoteNames()[0];
   const firstNoteInMaqam = maqam.ascendingPitchClasses[0].noteName;
@@ -305,3 +380,4 @@ export function transposeSayr(sayr: Sayr, allPitchClasses: PitchClass[], maqamDa
     hasOutOfBoundsNotes
   };
 }
+
