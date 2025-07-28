@@ -108,7 +108,7 @@
       transition: 300ms;
     }
 
-    & input:checked ~ .checkmark {
+    & input:checked~.checkmark {
       background-color: $primary;
       border-radius: 5px;
       animation: pulse 500ms ease-in-out;
@@ -120,7 +120,7 @@
       display: none;
     }
 
-    & input:checked ~ .checkmark:after {
+    & input:checked~.checkmark:after {
       display: block;
     }
 
@@ -218,7 +218,8 @@
     cursor: pointer;
     background-color: rgba($primary, 0.5);
     color: $text;
-    &:hover{
+
+    &:hover {
       background-color: rgba($primary, 1);
     }
 

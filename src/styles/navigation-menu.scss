@@ -58,14 +58,15 @@
     padding: 10px 20px;
     border-top: 1px solid $grey;
     transition: all 0.1s ease-in-out;
+
     &:visited {
-    color: $text !important;
+      color: $text !important;
     }
 
 
     &:hover {
       background-color: $primary;
-          color: $text !important;
+      color: $text !important;
 
     }
   }

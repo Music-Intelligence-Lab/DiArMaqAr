@@ -57,7 +57,7 @@ body {
   -webkit-font-smoothing: antialiased;
   color: $text;
 
-  & * {
+  & *:not(.staff-notation):not(.staff-notation *) {
     font-family: inherit;
   }
 }

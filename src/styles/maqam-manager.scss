@@ -157,7 +157,7 @@
     display: flex;
     flex-direction: column;
     align-items: left;
-    padding: 5px 10px ;
+    padding: 5px 10px;
     background-color: rgba($black, 0.3);
     font-size: 14px;
     color: $text;
@@ -432,6 +432,7 @@
     border: none;
     background: $black;
     font-weight: 300;
+
     &:hover {
       background: $black;
     }

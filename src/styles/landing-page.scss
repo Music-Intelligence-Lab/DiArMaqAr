@@ -1,4 +1,5 @@
 @use "./variables" as *;
+
 .landing-page {
   display: flex;
   flex-direction: column;
@@ -13,8 +14,9 @@
     margin-bottom: 1.5rem;
     color: $text;
     font-weight: 400;
-//    text-align: center;
+    //    text-align: center;
   }
+
   p {
     font-size: 16px;
     line-height: 1.7;
@@ -22,6 +24,7 @@
     text-align: justify;
     margin-bottom: 20px;
   }
+
   ul {
 
     padding: 0;
@@ -32,17 +35,19 @@
     margin-left: auto;
     margin-right: auto;
   }
+
   ul li {
     position: relative;
     line-height: 1.5;
     font-size: 16px;
     color: $text;
-   //border-radius: 0.7rem;
+    //border-radius: 0.7rem;
     padding: 18px 24px 15px 52px;
     transition: background 0.2s;
     display: flex;
     align-items: center;
   }
+
   ul li::before {
     counter-increment: feature;
     content: counter(feature);
@@ -63,15 +68,17 @@
     border: 0px solid $text;
     z-index: 1;
   }
+
   ul li:last-child {
     margin-bottom: 0;
   }
 
-/*   .highlight {
+  /*   .highlight {
     background-color: rgb($secondary, 0.8);
     color: $text;
     font-weight: 200;
     padding: 1px 2px;
     margin: 0 0;
   }
- */}
+ */
+}

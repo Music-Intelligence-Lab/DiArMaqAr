@@ -10,7 +10,7 @@
   position: sticky;
   position: -webkit-sticky;
   scroll-margin-top: 0px;
-  
+
 
 
   &__center-panel {
@@ -34,7 +34,7 @@
     display: flex;
     width: 100%;
     justify-content: space-between;
-    align-items:center;
+    align-items: center;
     height: $top-navbar-height;
     color: white;
     padding: 20px;
@@ -72,7 +72,7 @@
     padding: 10px 20px;
     word-break: keep-all;
     overflow-wrap: anywhere;
-    
+
 
     &:not(:last-child) {
       border-right: 1px solid $grey;
@@ -103,7 +103,7 @@
       background-color: rgba($primary, 0.3);
 
       &:hover {
-      background-color: rgba($primary, 0.5);
+        background-color: rgba($primary, 0.5);
       }
     }
 

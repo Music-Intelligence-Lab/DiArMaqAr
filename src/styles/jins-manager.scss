@@ -5,7 +5,7 @@
   flex-direction: column;
   gap: 10px;
   width: 100%;
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 
   &__header {
     margin: 20px 0;
@@ -191,7 +191,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding: 5px 10px ;
+    padding: 5px 10px;
     background-color: rgba($black, 0.3);
     font-size: 14px;
     color: $text;
@@ -414,7 +414,6 @@
     margin-bottom: 0.4rem;
     font-weight: bold;
 
-    // RTL support
     [dir="rtl"] & {
       text-align: right;
     }
@@ -444,12 +443,12 @@
 
   &__tab {
     text-align: left;
-    width:max-content;
+    width: max-content;
     padding: 10px 10px;
     border-radius: 0px;
     border: none;
     background: $medium-grey;
-        color: $text;
+    color: $text;
 
     font-weight: 400;
     cursor: pointer;
@@ -468,7 +467,8 @@
     border: none;
     background: $black;
     font-weight: 300;
-     &:hover {
+
+    &:hover {
       background: $black;
     }
   }
@@ -517,7 +517,7 @@
       margin-left: auto;
       margin-right: 0px;
     }
-    
+
     &:hover {
       background-color: rgba($primary, 1);
     }
