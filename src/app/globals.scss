@@ -20,6 +20,7 @@
 @use "../styles/staff-notation.scss";
 @use "../styles/about-page.scss";
 @use "../styles/mobile-warning.scss";
+@use "../styles/frequency-knob.scss";
 
 
 :root {
@@ -57,7 +58,7 @@ body {
   -webkit-font-smoothing: antialiased;
   color: $text;
 
-  & *:not(.staff-notation):not(.staff-notation *) {
+  & *:not(.staff-notation):not(.staff-notation *):not(.frequency-knob-container):not(.frequency-knob-container *):not(.frequency-knob-headless):not(.frequency-knob-headless *) {
     font-family: inherit;
   }
 }
