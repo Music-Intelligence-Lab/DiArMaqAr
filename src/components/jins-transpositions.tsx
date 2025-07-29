@@ -192,6 +192,18 @@ export default function JinsTranspositions() {
               ))}
             </tr>
           )}
+          {filters["centsFromZero"] && (
+            <tr>
+              <th className="jins-transpositions__row-header">{t('jins.centsFromZero')}</th>
+              <th className="jins-transpositions__header-pitchClass">0.000</th>
+              {intervals.map((interval, i) => (
+                <React.Fragment key={i}>
+                  <th className="jins-transpositions__header-pitchClass">({interval.cents.toFixed(3)})</th>
+                  <th className="jins-transpositions__header-pitchClass">{(parseFloat(pitchClasses[i + 1].cents) - parseFloat(pitchClasses[0].cents)).toFixed(3)}</th>
+                </React.Fragment>
+              ))}
+            </tr>
+          )}
           {filters["centsDeviation"] && (
             <tr>
               <th className="jins-transpositions__row-header">{t('jins.centsDeviation')}</th>
@@ -320,7 +332,8 @@ export default function JinsTranspositions() {
                   (filterKey === "fraction" && valueType === "fraction") ||
                   (filterKey === "cents" && valueType === "cents") ||
                   (filterKey === "decimalRatio" && valueType === "decimalRatio") ||
-                  (filterKey === "stringLength" && valueType === "stringLength");
+                  (filterKey === "stringLength" && valueType === "stringLength") ||
+                  (filterKey === "centsFromZero" && valueType === "cents");
 
                 if (isDisabled) return null;
 
