@@ -107,8 +107,15 @@ export default function getTuningSystemCells(
 
   if (startingPitchClass) {
     const startingMidiNumber = startingPitchClass.midiNoteNumber;
+    const startingNoteName = startingPitchClass.englishName;
     pitchClasses.forEach(pc => {
-      pc.centsDeviation = calculateCentsDeviation(pc.midiNoteNumber, pc.cents, startingMidiNumber);
+      pc.centsDeviation = calculateCentsDeviation(
+        pc.midiNoteNumber, 
+        pc.cents, 
+        startingMidiNumber,
+        pc.englishName,
+        startingNoteName
+      );
     });
   }
 

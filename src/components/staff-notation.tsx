@@ -5,6 +5,7 @@ import { Renderer, Stave, StaveNote, Voice, Formatter, Accidental, TextNote } fr
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import PitchClass from "@/models/PitchClass";
 import midiNumberToNoteName from "@/functions/midiToNoteNumber";
+import useLanguageContext from "@/contexts/language-context";
 
 interface StaffNotationProps {
   pitchClasses: PitchClass[];
@@ -13,6 +14,7 @@ interface StaffNotationProps {
 export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const clef = "treble"; // Always use treble clef
+  const { language, getDisplayName } = useLanguageContext();
 
   useEffect(() => {
     if (!containerRef.current || !pitchClasses.length) return;
@@ -28,7 +30,7 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
           '<div style="text-align: center; font-size: 14px; color: #666; padding: 20px;">Unable to display staff notation</div>';
       }
     }
-  }, [pitchClasses]);
+  }, [pitchClasses, language]); // Add language as dependency
 
   const parseNote = (englishName: string) => {
     if (!englishName || englishName === "--") return null;
@@ -95,7 +97,7 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
     const staveMargin = 300;
     const rightMargin = 10;
     const calculatedWidth =  staveMargin + (notesCount * noteWidth) + rightMargin;
-    const calculatedHeight = 200; // Increased height to accommodate text notes below
+    const calculatedHeight = 220; // Increased height to accommodate text notes below
 
     const renderer = new Renderer(containerRef.current, Renderer.Backends.SVG);
     renderer.resize(calculatedWidth, calculatedHeight);
@@ -155,8 +157,9 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
       return;
     }
 
-    // Create text notes for cents deviation
-    const textNotes: TextNote[] = [];
+    // Create text notes for cents deviation and Arabic note names
+    const centsTextNotes: TextNote[] = [];
+    const arabicTextNotes: TextNote[] = [];
 
     pitchClasses.forEach((pitchClass) => {
       try {
@@ -168,18 +171,28 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
 
         if (!parsed) return;
 
-        // Create a text note showing the cents deviation
+        // Create a text note for note name (Arabic or English based on language)
+        const noteName = getDisplayName(pitchClass.noteName, 'note');
+        console.log('Language:', language, 'Note name:', noteName, 'Original:', pitchClass.noteName); // Debug log
+        const noteNameTextNote = new TextNote({
+          text: noteName,
+          duration: "q",
+        });
+        noteNameTextNote.setLine(13); // Position above cents deviation
+        noteNameTextNote.setJustification(TextNote.Justification.CENTER);
+        noteNameTextNote.setFont("Readex Pro", 10); // Set smaller font size
+        arabicTextNotes.push(noteNameTextNote);
+
+        // Create a text note for cents deviation
         const centsText = pitchClass.centsDeviation.toFixed(1) + "¢";
-        const textNote = new TextNote({
+        const centsTextNote = new TextNote({
           text: centsText,
           duration: "q",
         });
-        
-        // Position the text note below the staff
-        textNote.setLine(12); // Line 12 is below the staff
-        textNote.setJustification(TextNote.Justification.CENTER);
-        
-        textNotes.push(textNote);
+        centsTextNote.setLine(15); // Position below note name
+        centsTextNote.setJustification(TextNote.Justification.CENTER);
+        centsTextNote.setFont("Readex Pro", 10); // Set smaller font size
+        centsTextNotes.push(centsTextNote);
       } catch (error) {
         console.warn(`[StaffNotation] Could not create text note for ${pitchClass.noteName}:`, error);
       }
@@ -192,22 +205,30 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
     });
     voice.addTickables(vexFlowNotes);
 
-    // Create voice for text notes (cents deviation)
-    const textVoice = new Voice({
-      numBeats: textNotes.length,
+    // Create voice for note names (Arabic/English based on language)
+    const noteNameTextVoice = new Voice({
+      numBeats: arabicTextNotes.length,
       beatValue: 4,
     });
-    textVoice.addTickables(textNotes);
+    noteNameTextVoice.addTickables(arabicTextNotes);
+
+    // Create voice for cents deviation text
+    const centsTextVoice = new Voice({
+      numBeats: centsTextNotes.length,
+      beatValue: 4,
+    });
+    centsTextVoice.addTickables(centsTextNotes);
 
     const formatter = new Formatter();
-    formatter.joinVoices([voice, textVoice]).format([voice, textVoice], staveWidth - 20);
+    formatter.joinVoices([voice, noteNameTextVoice, centsTextVoice]).format([voice, noteNameTextVoice, centsTextVoice], staveWidth - 20);
     
     voice.draw(context, stave);
-    textVoice.draw(context, stave);
+    noteNameTextVoice.draw(context, stave);
+    centsTextVoice.draw(context, stave);
   };
 
   return (
-    <div className="staff-notation">
+    <div className="staff-notation" style={{ direction: 'ltr' }}>
       <div ref={containerRef} className="staff-notation__container" />
     </div>
   );
