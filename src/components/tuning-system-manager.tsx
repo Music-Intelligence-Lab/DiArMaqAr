@@ -20,6 +20,7 @@ import ExportModal from "./export-modal";
 import SelectedPitchClassTranspositions from "./selected-pitch-classes-transpositions";
 import Link from "next/link";
 import { canTransposeMaqamToNote } from "@/functions/transpose";
+import FrequencyKnob from "./frequency-knob";
 
 function isTuningSystemDisabled(
   tuningSystem: TuningSystem,
@@ -86,7 +87,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
   const { tuningSystemsFilter, setTuningSystemsFilter } = useFilterContext();
 
-  const { clearHangingNotes } = useSoundContext();
+  const { clearHangingNotes, updateAllActiveNotesByRatio, recalculateAllActiveNoteFrequencies } = useSoundContext();
 
   const alKindiPitchClasses = ["1/1", "256/243", "9/8", "32/27", "81/64", "4/3", "1024/729", "3/2", "128/81", "27/16", "16/9", "4096/2187"];
 
@@ -447,6 +448,20 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
   const haveIndicesChanged = () => {
     return JSON.stringify(originalIndices) !== JSON.stringify(selectedIndices) || JSON.stringify(selectedTuningSystem?.getReferenceFrequencies()) !== JSON.stringify(referenceFrequencies);
+  };
+
+  // Handle reference frequency changes and recalculate active note frequencies
+  const handleReferenceFrequencyChange = (noteName: string, newFrequency: number) => {
+    setReferenceFrequencies((prev) => ({
+      ...prev,
+      [noteName]: newFrequency,
+    }));
+
+    // After state update, recalculate all active notes to match their new pitch class frequencies
+    // Use setTimeout to ensure the state update and pitch class recalculation has completed
+    setTimeout(() => {
+      recalculateAllActiveNoteFrequencies();
+    }, 0);
   };
 
   const handleSaveStartingNoteConfiguration = () => {
@@ -827,57 +842,89 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                   const disabled = isTuningSystemDisabled(selectedTuningSystem, selectedJinsData, selectedMaqamData, selectedMaqam, startingNote).disabled;
                   return (
                     <div className="tuning-system-manager__starting-note" key={index}>
-                      <button
-                        className={
-                          "tuning-system-manager__starting-note-button " +
-                          (getFirstNoteName(selectedIndices) === startingNote ? "tuning-system-manager__starting-note-button_selected " : "") +
-                          (disabled ? "tuning-system-manager__starting-note-button_disabled " : "")
-                        }
-                        onClick={() => handleStartNoteNameChange(startingNote)}
-                      >
-                        {getDisplayName(startingNote, "note")}
-                      </button>
-                      <label htmlFor="reference-frequency-input">
-                        <input
-                          type="number"
-                          id="reference-frequency-input"
-                          value={referenceFrequencies[startingNote] ?? 0}
-                          onChange={(e) => {
-                            const val = Number(e.target.value);
-                            setReferenceFrequencies((prev) => ({
-                              ...prev,
-                              [startingNote]: val,
-                            }));
-                          }}
-                          className="tuning-system-manager__starting-note-input"
-                        />{" "}
-                        Hz
-                      </label>
+                      <div className="tuning-system-manager__starting-note-controls">
+                        <button
+                          className={
+                            "tuning-system-manager__starting-note-button " +
+                            (getFirstNoteName(selectedIndices) === startingNote ? "tuning-system-manager__starting-note-button_selected " : "") +
+                            (disabled ? "tuning-system-manager__starting-note-button_disabled " : "")
+                          }
+                          onClick={() => handleStartNoteNameChange(startingNote)}
+                        >
+                          {getDisplayName(startingNote, "note")}
+                        </button>
+                        {admin ? (
+                          <label htmlFor="reference-frequency-input">
+                            <input
+                              type="number"
+                              id="reference-frequency-input"
+                              value={referenceFrequencies[startingNote] ?? 0}
+                              onChange={(e) => {
+                                const val = Number(e.target.value);
+                                setReferenceFrequencies((prev) => ({
+                                  ...prev,
+                                  [startingNote]: val,
+                                }));
+                              }}
+                              className="tuning-system-manager__starting-note-input"
+                            />{" "}
+                            Hz
+                          </label>
+                        ) : (
+                          <FrequencyKnob
+                            value={referenceFrequencies[startingNote] ?? 220}
+                            onChange={(val) => {
+                              handleReferenceFrequencyChange(startingNote, val);
+                            }}
+                            onFrequencyRatioChange={updateAllActiveNotesByRatio}
+                            min={100}
+                            max={800}
+                            size={50}
+                            label="Hz"
+                          />
+                        )}
+                      </div>
                     </div>
                   );
                 })}
               {isCurrentConfigurationNew() && (
                 <div className="tuning-system-manager__starting-note">
-                  <button className={"tuning-system-manager__starting-note-button tuning-system-manager__starting-note-button_unsaved tuning-system-manager__starting-note-button_selected"}>
-                    {getDisplayName(getFirstNoteName(selectedIndices), "note")} ({t("tuningSystem.unsaved")})
-                  </button>
-                  <label htmlFor="reference-frequency-input">
-                    {t("tuningSystem.frequency")}
-                    <input
-                      type="number"
-                      id="reference-frequency-input"
-                      disabled={!admin}
-                      value={referenceFrequencies[getFirstNoteName(selectedIndices)] ?? 0}
-                      onChange={(e) => {
-                        const val = Number(e.target.value);
-                        setReferenceFrequencies((prev) => ({
-                          ...prev,
-                          [getFirstNoteName(selectedIndices)]: val,
-                        }));
-                      }}
-                      className="tuning-system-manager__starting-note-input"
-                    />
-                  </label>
+                  <div className="tuning-system-manager__starting-note-controls">
+                    <button className={"tuning-system-manager__starting-note-button tuning-system-manager__starting-note-button_unsaved tuning-system-manager__starting-note-button_selected"}>
+                      {getDisplayName(getFirstNoteName(selectedIndices), "note")} ({t("tuningSystem.unsaved")})
+                    </button>
+                    {admin ? (
+                      <label htmlFor="reference-frequency-input">
+                        {t("tuningSystem.frequency")}
+                        <input
+                          type="number"
+                          id="reference-frequency-input"
+                          disabled={!admin}
+                          value={referenceFrequencies[getFirstNoteName(selectedIndices)] ?? 0}
+                          onChange={(e) => {
+                            const val = Number(e.target.value);
+                            setReferenceFrequencies((prev) => ({
+                              ...prev,
+                              [getFirstNoteName(selectedIndices)]: val,
+                            }));
+                          }}
+                          className="tuning-system-manager__starting-note-input"
+                        />
+                      </label>
+                    ) : (
+                      <FrequencyKnob
+                        value={referenceFrequencies[getFirstNoteName(selectedIndices)] ?? 220}
+                        onChange={(val) => {
+                          handleReferenceFrequencyChange(getFirstNoteName(selectedIndices), val);
+                        }}
+                        onFrequencyRatioChange={updateAllActiveNotesByRatio}
+                        min={100}
+                        max={800}
+                        size={50}
+                        label="Hz"
+                      />
+                    )}
+                  </div>
                 </div>
               )}
               <label htmlFor="reference-frequency-input">

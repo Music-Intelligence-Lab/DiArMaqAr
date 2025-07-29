@@ -1,0 +1,182 @@
+/* Frequency Knob Styles - Protected from global styles */
+.frequency-knob-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  min-width: 80px;
+  
+  /* Reset any inherited font styles */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  font-weight: normal !important;
+  
+  /* Ensure all children inherit clean font */
+  * {
+    font-family: inherit !important;
+    font-weight: inherit !important;
+  }
+}
+
+.frequency-knob-headless {
+  position: relative;
+  outline: none;
+  touch-action: none; /* Required for react-knob-headless */
+  border-radius: 50%;
+  background: linear-gradient(145deg, #e6e6e6, #ffffff);
+  box-shadow: 
+    inset -3px -3px 6px rgba(0, 0, 0, 0.1),
+    inset 3px 3px 6px rgba(255, 255, 255, 0.9),
+    3px 3px 10px rgba(0, 0, 0, 0.15);
+  border: 2px solid #d4d4d4;
+  transition: all 0.1s ease;
+  user-select: none;
+  
+  /* Reset any global box-sizing or margin/padding issues */
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.frequency-knob-headless:hover {
+  background: linear-gradient(145deg, #e8e8e8, #ffffff);
+  box-shadow: 
+    inset -3px -3px 6px rgba(0, 0, 0, 0.15),
+    inset 3px 3px 6px rgba(255, 255, 255, 0.9),
+    3px 3px 14px rgba(0, 0, 0, 0.2);
+  border-color: #bbb;
+}
+
+.frequency-knob-headless:active {
+  cursor: grabbing !important;
+  background: linear-gradient(145deg, #ddd, #f5f5f5);
+  box-shadow: 
+    inset -2px -2px 4px rgba(0, 0, 0, 0.2),
+    inset 2px 2px 4px rgba(255, 255, 255, 0.8),
+    1px 1px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Knob internal elements - protected from global styles */
+.frequency-knob-indicator {
+  position: absolute;
+  width: 3px;
+  height: 20px;
+  background: #666;
+  border-radius: 2px;
+  transform-origin: bottom center;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+}
+
+.frequency-knob-center {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #333;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.3);
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+}
+
+/* Frequency display styling */
+.frequency-display {
+  font-size: 12px;
+  color: #555;
+  font-weight: 500;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  background: none !important;
+}
+
+.frequency-knob-indicator {
+  position: absolute;
+  top: 8%;
+  left: 50%;
+  width: 4px;
+  height: 26%;
+  background: linear-gradient(180deg, #444, #666);
+  border-radius: 2px;
+  transform-origin: 50% 300%;
+  transition: transform 0.05s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.frequency-knob-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  background: linear-gradient(145deg, #ccc, #f0f0f0);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 
+    inset -2px -2px 3px rgba(0, 0, 0, 0.1),
+    inset 2px 2px 3px rgba(255, 255, 255, 0.9);
+  border: 1px solid #bbb;
+}
+
+.frequency-knob-value {
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  text-align: center;
+  min-width: 60px;
+  white-space: nowrap;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 3px 8px;
+  border-radius: 3px;
+  border: 1px solid #333;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  margin-top: 2px;
+}
+
+/* Animation for smooth value changes */
+.frequency-knob-container.dragging .frequency-knob-indicator {
+  transition: none;
+}
+
+/* Integration with tuning system manager */
+.tuning-system-manager__starting-note .frequency-knob-container {
+  margin-left: 10px;
+  align-self: flex-start;
+}
+
+.tuning-system-manager__starting-note-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .frequency-knob-container {
+    min-width: 70px;
+  }
+  
+  .frequency-knob {
+    width: 50px !important;
+    height: 50px !important;
+  }
+  
+  .frequency-knob-value {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+  
+  .tuning-system-manager__starting-note-controls {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}

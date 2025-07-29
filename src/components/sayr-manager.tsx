@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FormEvent, useEffect, useState, useRef } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import useAppContext from "@/contexts/app-context";
 import useLanguageContext from "@/contexts/language-context";
 import useSoundContext from "@/contexts/sound-context";
@@ -39,8 +39,6 @@ export default function SayrManager({ admin }: { admin: boolean }) {
   const [hasTranspositionIssues, setHasTranspositionIssues] = useState(false);
   
   // Track the last manually selected sayr ID to avoid re-running effect on context changes
-  const lastManualSayrId = useRef<string>("");
-
   const resetForm = () => {
     setCreatorEnglish("");
     setCreatorArabic("");
@@ -61,6 +59,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
         if (!admin && selectedMaqam && allPitchClasses) {
           try {
             const transpositionResult = transposeSayr(sel, allPitchClasses, selectedMaqamData, selectedMaqam);
+            console.log("SAYR", sel, transpositionResult);
             sel = transpositionResult.transposedSayr;
             setHasTranspositionIssues(transpositionResult.hasOutOfBoundsNotes);
             console.log("Transposed sayr:", sel, "Has issues:", transpositionResult.hasOutOfBoundsNotes);
@@ -87,11 +86,8 @@ export default function SayrManager({ admin }: { admin: boolean }) {
 
   useEffect(() => {
     // Only run if this is a manual sayr ID change, not a context change
-    if (maqamSayrId !== lastManualSayrId.current) {
-      lastManualSayrId.current = maqamSayrId;
       loadSayrData();
-    }
-  }, [maqamSayrId]);
+  }, [maqamSayrId, selectedMaqamData, selectedMaqam]);
 
   // Initial load
   useEffect(() => {
@@ -189,7 +185,6 @@ export default function SayrManager({ admin }: { admin: boolean }) {
   const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newSayrId = e.target.value;
     setMaqamSayrId(newSayrId);
-    lastManualSayrId.current = newSayrId;
     loadSayrData();
   };
   const addStop = () => setStops((prev) => [...prev, { type: "note", value: "" }]);
@@ -342,7 +337,8 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                     : `${source?.getContributors()[0]?.firstNameEnglish || ""} ${source?.getContributors()[0]?.lastNameEnglish || ""}`.trim();
                 return (
                   <span className="sayr-manager__comments-english_title">
-                    {t("sayr.commentsOnSayr")} {getDisplayName(selectedMaqamData.getName(), "maqam")}{language === "ar" ? " ل" : " by "}
+                    {t("sayr.commentsOnSayr")} {getDisplayName(selectedMaqam ? selectedMaqam.name : selectedMaqamData.getName(), "maqam")}
+                    {language === "ar" ? " ل" : " by "}
                     <Link href={`/bibliography?source=${sourceId}`}>
                       {creatorName}
                       {year ? ` (${year}` : ""}

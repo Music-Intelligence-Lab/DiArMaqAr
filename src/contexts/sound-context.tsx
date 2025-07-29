@@ -68,6 +68,8 @@ interface SoundContextInterface {
   pitchClassToMidiMapping: Record<string, number>;
   pitchClassToBlackOrWhite: Record<string, "black" | "white">;
   updateFrequency: (oldPitchClass: PitchClass, newPitchClass: PitchClass) => void;
+  updateAllActiveNotesByRatio: (frequencyRatio: number) => void;
+  recalculateAllActiveNoteFrequencies: () => void;
 }
 
 const SoundContext = createContext<SoundContextInterface | null>(null);
@@ -96,13 +98,13 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
   });
 
   // Union type: oscillator can be OscillatorNode or OscillatorNode[]
-  const activeNotesRef = useRef<Map<number, { oscillator: OscillatorNode | OscillatorNode[]; gainNode: GainNode }[]>>(new Map());
+  const activeNotesRef = useRef<Map<string, { oscillator: OscillatorNode | OscillatorNode[]; gainNode: GainNode; frequency: number }[]>>(new Map());
   const timeoutsRef = useRef<number[]>([]);
-  const midiActiveNotesRef = useRef<Set<number>>(new Set()); // stores frequencies for MIDI notes
+  const midiActiveNotesRef = useRef<Map<string, number>>(new Map()); // stores pitch class fraction -> current frequency
 
   // MPE channel allocation
   const mpeChannelAllocatorRef = useRef<{
-    activeChannels: Map<number, { frequency: number; noteNumber: number }>; // channel -> note info
+    activeChannels: Map<number, { pitchClassFraction: string; noteNumber: number }>; // channel -> note info
     availableChannels: number[]; // available MPE channels (2-15, channel 1 is global)
   }>({
     activeChannels: new Map(),
@@ -373,7 +375,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     sendMidiMessage([0xe0 + channel, lsb, msb]);
   }
 
-  function allocateMPEChannel(frequency: number, noteNumber: number): number | null {
+  function allocateMPEChannel(pitchClassFraction: string, noteNumber: number): number | null {
     if (!soundSettings.useMPE) return 0; // Use channel 0 for non-MPE
 
     const allocator = mpeChannelAllocatorRef.current;
@@ -383,16 +385,16 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     }
 
     const channel = allocator.availableChannels.shift()!;
-    allocator.activeChannels.set(channel, { frequency, noteNumber });
+    allocator.activeChannels.set(channel, { pitchClassFraction, noteNumber });
     return channel;
   }
 
-  function releaseMPEChannel(frequency: number): number | null {
+  function releaseMPEChannel(pitchClassFraction: string): number | null {
     if (!soundSettings.useMPE) return 0;
 
     const allocator = mpeChannelAllocatorRef.current;
     for (const [channel, noteInfo] of allocator.activeChannels.entries()) {
-      if (noteInfo.frequency === frequency) {
+      if (noteInfo.pitchClassFraction === pitchClassFraction) {
         allocator.activeChannels.delete(channel);
         allocator.availableChannels.push(channel);
         allocator.availableChannels.sort(); // Keep channels sorted for consistent allocation
@@ -741,7 +743,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
       const detune = mf - note;
 
       // Allocate MPE channel if using MPE, otherwise use channel 0
-      const channel = allocateMPEChannel(frequency, note);
+      const channel = allocateMPEChannel(pitchClass.fraction, note);
       if (channel === null) {
         console.warn("Could not allocate MPE channel for note");
         return;
@@ -756,8 +758,8 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
       // Send note on with the allocated channel
       sendMidiMessage([0x90 + channel, note, vel]);
 
-      // Track the note with its channel for noteOff
-      midiActiveNotesRef.current.add(frequency);
+      // Track the note with its current frequency
+      midiActiveNotesRef.current.set(pitchClass.fraction, frequency);
       return;
     }
 
@@ -807,10 +809,10 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
       source.connect(gainNode).connect(masterGain);
 
-      const prev = activeNotesRef.current.get(frequency) || [];
+      const prev = activeNotesRef.current.get(pitchClass.fraction) || [];
       // Store the entire array of oscillators for this note
-      prev.push({ oscillator: oscs, gainNode });
-      activeNotesRef.current.set(frequency, prev);
+      prev.push({ oscillator: oscs, gainNode, frequency });
+      activeNotesRef.current.set(pitchClass.fraction, prev);
 
       // Start oscillators only (do not stop here)
       oscs.forEach((osc) => osc.start(startTime));
@@ -913,23 +915,26 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     source.connect(gainNode).connect(masterGain);
     osc.start(startTime);
 
-    const prev = activeNotesRef.current.get(frequency) || [];
-    prev.push({ oscillator: osc, gainNode });
-    activeNotesRef.current.set(frequency, prev);
+    const prev = activeNotesRef.current.get(pitchClass.fraction) || [];
+    prev.push({ oscillator: osc, gainNode, frequency });
+    activeNotesRef.current.set(pitchClass.fraction, prev);
   }
 
   function noteOff(pitchClass: PitchClass) {
     setActivePitchClasses((prev) => prev.filter((c) => !(c.frequency === pitchClass.frequency)));
-    const frequency = parseFloat(pitchClass.frequency);
 
     if (soundSettings.outputMode === "mute") return;
 
     if (soundSettings.outputMode === "midi") {
-      const mf = frequencyToMidiNoteNumber(frequency);
+      // Get current frequency for this pitch class
+      const currentFrequency = midiActiveNotesRef.current.get(pitchClass.fraction);
+      if (!currentFrequency) return;
+
+      const mf = frequencyToMidiNoteNumber(currentFrequency);
       const note = Math.floor(mf);
 
-      // Find and release the MPE channel for this frequency
-      const channel = releaseMPEChannel(frequency);
+      // Find and release the MPE channel for this pitch class
+      const channel = releaseMPEChannel(pitchClass.fraction);
       if (channel !== null) {
         // Send note off on the specific channel
         sendMidiMessage([0x80 + channel, note, 0]);
@@ -938,14 +943,16 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         sendMidiMessage([0x80, note, 0]);
       }
 
-      midiActiveNotesRef.current.delete(frequency);
+      midiActiveNotesRef.current.delete(pitchClass.fraction);
       return;
     }
 
     const audioCtx = audioCtxRef.current!;
     const now = audioCtx.currentTime;
     const { release } = soundSettings;
-    const queue = activeNotesRef.current.get(frequency) || [];
+    
+    // Get the voice queue for this pitch class
+    const queue = activeNotesRef.current.get(pitchClass.fraction) || [];
     if (!queue.length) return;
 
     const voice = queue.shift()!;
@@ -959,7 +966,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
       voice.oscillator.stop(now + release);
     }
 
-    activeNotesRef.current.set(frequency, queue);
+    activeNotesRef.current.set(pitchClass.fraction, queue);
   }
 
   function stopAllSounds() {
@@ -1050,109 +1057,284 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
   }
 
   function updateFrequency(oldPitchClass: PitchClass, newPitchClass: PitchClass) {
-    const oldFrequency = parseFloat(oldPitchClass.frequency);
-    const newFrequency = parseFloat(newPitchClass.frequency);
+    // This function is now handled by updateAllActiveNotesByRatio
+    // Keep for compatibility but the implementation is simplified
+    const frequencyRatio = parseFloat(newPitchClass.frequency) / parseFloat(oldPitchClass.frequency);
     
-    if (soundSettings.outputMode === "mute") return;
+    // Update the specific pitch class voices
+    const voices = activeNotesRef.current.get(oldPitchClass.fraction);
+    if (voices && voices.length > 0) {
+      const audioCtx = audioCtxRef.current;
+      if (!audioCtx) return;
 
-    if (soundSettings.outputMode === "midi") {
-      // For MIDI, we need to update pitch bend values for active notes
-      const oldMf = frequencyToMidiNoteNumber(oldFrequency);
-      const newMf = frequencyToMidiNoteNumber(newFrequency);
-      const oldNote = Math.floor(oldMf);
-      const newNote = Math.floor(newMf);
-      const newDetune = newMf - newNote;
+      const now = audioCtx.currentTime;
+      const TRANSITION_TIME = 0.01; // 10ms smooth transition
 
-      if (soundSettings.useMPE) {
-        // Find the MPE channel for this frequency and update pitch bend
-        const allocator = mpeChannelAllocatorRef.current;
-        for (const [channel, noteInfo] of allocator.activeChannels.entries()) {
-          if (noteInfo.frequency === oldFrequency) {
-            // Update the stored frequency
-            noteInfo.frequency = newFrequency;
+      voices.forEach((voice) => {
+        const newFrequency = voice.frequency * frequencyRatio;
+        voice.frequency = newFrequency;
+        
+        if (Array.isArray(voice.oscillator)) {
+          // Handle aperiodic waves (multiple oscillators)
+          const waveform = soundSettings.waveform;
+          if (APERIODIC_WAVES[waveform]) {
+            const aw = APERIODIC_WAVES[waveform];
+            const detunings = aw.detunings;
             
-            // If the base note changed, we need to send note off/on
-            if (oldNote !== newNote) {
-              sendMidiMessage([0x80 + channel, oldNote, 0]); // Note off old
-              sendPitchBend(newDetune, channel); // Set pitch bend for new note
-              sendMidiMessage([0x90 + channel, newNote, 127]); // Note on new
-              noteInfo.noteNumber = newNote;
-            } else {
-              // Just update pitch bend
-              sendPitchBend(newDetune, channel);
-            }
-            break;
+            voice.oscillator.forEach((osc, index) => {
+              const detunedNewFreq = newFrequency * Math.pow(2, detunings[index] / 1200);
+              try {
+                osc.frequency.cancelScheduledValues(now);
+                osc.frequency.setValueAtTime(osc.frequency.value, now);
+                osc.frequency.linearRampToValueAtTime(detunedNewFreq, now + TRANSITION_TIME);
+              } catch (e) {
+                console.warn("Could not update oscillator frequency:", e);
+              }
+            });
+          }
+        } else {
+          // Handle single oscillator (periodic waves)
+          try {
+            voice.oscillator.frequency.cancelScheduledValues(now);
+            voice.oscillator.frequency.setValueAtTime(voice.oscillator.frequency.value, now);
+            voice.oscillator.frequency.linearRampToValueAtTime(newFrequency, now + TRANSITION_TIME);
+          } catch (e) {
+            console.warn("Could not update oscillator frequency:", e);
           }
         }
-      } else {
-        // For non-MPE, update pitch bend on channel 0
-        if (midiActiveNotesRef.current.has(oldFrequency)) {
-          midiActiveNotesRef.current.delete(oldFrequency);
-          midiActiveNotesRef.current.add(newFrequency);
-          
-          if (oldNote !== newNote) {
-            sendMidiMessage([0x80, oldNote, 0]); // Note off old
-            sendPitchBend(newDetune, 0); // Set pitch bend for new note
-            sendMidiMessage([0x90, newNote, 127]); // Note on new
+      });
+
+      // Update MIDI if this pitch class is active
+      const currentMidiFreq = midiActiveNotesRef.current.get(oldPitchClass.fraction);
+      if (currentMidiFreq) {
+        const newMidiFreq = currentMidiFreq * frequencyRatio;
+        midiActiveNotesRef.current.set(oldPitchClass.fraction, newMidiFreq);
+        
+        // Update MIDI pitch bend
+        if (soundSettings.outputMode === "midi") {
+          const oldMf = frequencyToMidiNoteNumber(currentMidiFreq);
+          const newMf = frequencyToMidiNoteNumber(newMidiFreq);
+          const oldNote = Math.floor(oldMf);
+          const newNote = Math.floor(newMf);
+          const newDetune = newMf - newNote;
+
+          if (soundSettings.useMPE) {
+            const allocator = mpeChannelAllocatorRef.current;
+            for (const [channel, noteInfo] of allocator.activeChannels.entries()) {
+              if (noteInfo.pitchClassFraction === oldPitchClass.fraction) {
+                if (oldNote !== newNote) {
+                  sendMidiMessage([0x80 + channel, oldNote, 0]);
+                  sendPitchBend(newDetune, channel);
+                  sendMidiMessage([0x90 + channel, newNote, 127]);
+                  noteInfo.noteNumber = newNote;
+                } else {
+                  sendPitchBend(newDetune, channel);
+                }
+                break;
+              }
+            }
           } else {
-            sendPitchBend(newDetune, 0);
+            if (oldNote !== newNote) {
+              sendMidiMessage([0x80, oldNote, 0]);
+              sendPitchBend(newDetune, 0);
+              sendMidiMessage([0x90, newNote, 127]);
+            } else {
+              sendPitchBend(newDetune, 0);
+            }
           }
         }
       }
-      return;
     }
-
-    // For waveform output, update oscillator frequencies directly
-    const audioCtx = audioCtxRef.current;
-    if (!audioCtx) return;
-
-    const voices = activeNotesRef.current.get(oldFrequency);
-    if (!voices || voices.length === 0) return;
-
-    const now = audioCtx.currentTime;
-    const TRANSITION_TIME = 0.01; // 10ms smooth transition
-
-    voices.forEach(({ oscillator }) => {
-      if (Array.isArray(oscillator)) {
-        // Handle aperiodic waves (multiple oscillators)
-        const waveform = soundSettings.waveform;
-        if (APERIODIC_WAVES[waveform]) {
-          const aw = APERIODIC_WAVES[waveform];
-          const detunings = aw.detunings;
-          
-          oscillator.forEach((osc, index) => {
-            const detunedNewFreq = newFrequency * Math.pow(2, detunings[index] / 1200);
-            try {
-              osc.frequency.cancelScheduledValues(now);
-              osc.frequency.setValueAtTime(osc.frequency.value, now);
-              osc.frequency.linearRampToValueAtTime(detunedNewFreq, now + TRANSITION_TIME);
-            } catch (e) {
-              console.warn("Could not update oscillator frequency:", e);
-            }
-          });
-        }
-      } else {
-        // Handle single oscillator (periodic waves)
-        try {
-          oscillator.frequency.cancelScheduledValues(now);
-          oscillator.frequency.setValueAtTime(oscillator.frequency.value, now);
-          oscillator.frequency.linearRampToValueAtTime(newFrequency, now + TRANSITION_TIME);
-        } catch (e) {
-          console.warn("Could not update oscillator frequency:", e);
-        }
-      }
-    });
-
-    // Move the voices from old frequency to new frequency in our tracking
-    activeNotesRef.current.delete(oldFrequency);
-    activeNotesRef.current.set(newFrequency, voices);
 
     // Update active pitch classes
     setActivePitchClasses((prev) => 
       prev.map((pc) => 
-        pc.frequency === oldPitchClass.frequency ? newPitchClass : pc
+        pc.fraction === oldPitchClass.fraction ? newPitchClass : pc
       )
     );
+  }
+
+  // Simple function to update ALL active notes by a frequency ratio
+  function updateAllActiveNotesByRatio(frequencyRatio: number) {
+    const audioCtx = audioCtxRef.current;
+    if (!audioCtx) return;
+
+    const now = audioCtx.currentTime;
+    const TRANSITION_TIME = 0.005; // 5ms smooth transition
+
+    // Update all Web Audio oscillators
+    for (const voices of activeNotesRef.current.values()) {
+      voices.forEach((voice) => {
+        const newFrequency = voice.frequency * frequencyRatio;
+        voice.frequency = newFrequency; // Update stored frequency
+        
+        if (Array.isArray(voice.oscillator)) {
+          // Handle aperiodic waves (multiple oscillators)
+          const waveform = soundSettings.waveform;
+          if (APERIODIC_WAVES[waveform]) {
+            const aw = APERIODIC_WAVES[waveform];
+            const detunings = aw.detunings;
+            
+            voice.oscillator.forEach((osc, index) => {
+              const detunedNewFreq = newFrequency * Math.pow(2, detunings[index] / 1200);
+              try {
+                osc.frequency.cancelScheduledValues(now);
+                osc.frequency.setValueAtTime(osc.frequency.value, now);
+                osc.frequency.linearRampToValueAtTime(detunedNewFreq, now + TRANSITION_TIME);
+              } catch (e) {
+                console.warn("Could not update oscillator frequency:", e);
+              }
+            });
+          }
+        } else {
+          // Handle single oscillator (periodic waves)
+          try {
+            voice.oscillator.frequency.cancelScheduledValues(now);
+            voice.oscillator.frequency.setValueAtTime(voice.oscillator.frequency.value, now);
+            voice.oscillator.frequency.linearRampToValueAtTime(newFrequency, now + TRANSITION_TIME);
+          } catch (e) {
+            console.warn("Could not update oscillator frequency:", e);
+          }
+        }
+      });
+    }
+
+    // Update MIDI notes
+    if (soundSettings.outputMode === "midi") {
+      for (const [pitchClassFraction, frequency] of midiActiveNotesRef.current.entries()) {
+        const newFrequency = frequency * frequencyRatio;
+        const oldMf = frequencyToMidiNoteNumber(frequency);
+        const newMf = frequencyToMidiNoteNumber(newFrequency);
+        const oldNote = Math.floor(oldMf);
+        const newNote = Math.floor(newMf);
+        const newDetune = newMf - newNote;
+
+        if (soundSettings.useMPE) {
+          // Find the MPE channel for this pitch class
+          const allocator = mpeChannelAllocatorRef.current;
+          for (const [channel, noteInfo] of allocator.activeChannels.entries()) {
+            if (noteInfo.pitchClassFraction === pitchClassFraction) {
+              if (oldNote !== newNote) {
+                sendMidiMessage([0x80 + channel, oldNote, 0]);
+                sendPitchBend(newDetune, channel);
+                sendMidiMessage([0x90 + channel, newNote, 127]);
+                noteInfo.noteNumber = newNote;
+              } else {
+                sendPitchBend(newDetune, channel);
+              }
+              break;
+            }
+          }
+        } else {
+          if (oldNote !== newNote) {
+            sendMidiMessage([0x80, oldNote, 0]);
+            sendPitchBend(newDetune, 0);
+            sendMidiMessage([0x90, newNote, 127]);
+          } else {
+            sendPitchBend(newDetune, 0);
+          }
+        }
+
+        // Update the stored frequency for this pitch class
+        midiActiveNotesRef.current.set(pitchClassFraction, newFrequency);
+      }
+    }
+  }
+
+  // Function to recalculate all active note frequencies to match their current pitch class frequencies
+  function recalculateAllActiveNoteFrequencies() {
+    const audioCtx = audioCtxRef.current;
+    if (!audioCtx) return;
+
+    const now = audioCtx.currentTime;
+    const TRANSITION_TIME = 0.005; // 5ms smooth transition
+
+    // Update all Web Audio oscillators to their pitch class's current frequency
+    for (const [pitchClassFraction, voices] of activeNotesRef.current.entries()) {
+      // Find the current pitch class for this fraction
+      const currentPitchClass = activePitchClasses.find(pc => pc.fraction === pitchClassFraction);
+      if (!currentPitchClass) continue;
+
+      const targetFrequency = parseFloat(currentPitchClass.frequency);
+
+      voices.forEach((voice) => {
+        voice.frequency = targetFrequency; // Update stored frequency
+        
+        if (Array.isArray(voice.oscillator)) {
+          // Handle aperiodic waves (multiple oscillators)
+          const waveform = soundSettings.waveform;
+          if (APERIODIC_WAVES[waveform]) {
+            const aw = APERIODIC_WAVES[waveform];
+            const detunings = aw.detunings;
+            
+            voice.oscillator.forEach((osc, index) => {
+              const detunedTargetFreq = targetFrequency * Math.pow(2, detunings[index] / 1200);
+              try {
+                osc.frequency.cancelScheduledValues(now);
+                osc.frequency.setValueAtTime(osc.frequency.value, now);
+                osc.frequency.linearRampToValueAtTime(detunedTargetFreq, now + TRANSITION_TIME);
+              } catch (e) {
+                console.warn("Could not update oscillator frequency:", e);
+              }
+            });
+          }
+        } else {
+          // Handle single oscillator (periodic waves)
+          try {
+            voice.oscillator.frequency.cancelScheduledValues(now);
+            voice.oscillator.frequency.setValueAtTime(voice.oscillator.frequency.value, now);
+            voice.oscillator.frequency.linearRampToValueAtTime(targetFrequency, now + TRANSITION_TIME);
+          } catch (e) {
+            console.warn("Could not update oscillator frequency:", e);
+          }
+        }
+      });
+    }
+
+    // Update MIDI notes to their pitch class's current frequency
+    if (soundSettings.outputMode === "midi") {
+      for (const [pitchClassFraction, currentFreq] of midiActiveNotesRef.current.entries()) {
+        // Find the current pitch class for this fraction
+        const currentPitchClass = activePitchClasses.find(pc => pc.fraction === pitchClassFraction);
+        if (!currentPitchClass) continue;
+
+        const targetFrequency = parseFloat(currentPitchClass.frequency);
+        const oldMf = frequencyToMidiNoteNumber(currentFreq);
+        const newMf = frequencyToMidiNoteNumber(targetFrequency);
+        const oldNote = Math.floor(oldMf);
+        const newNote = Math.floor(newMf);
+        const newDetune = newMf - newNote;
+
+        if (soundSettings.useMPE) {
+          // Find the MPE channel for this pitch class
+          const allocator = mpeChannelAllocatorRef.current;
+          for (const [channel, noteInfo] of allocator.activeChannels.entries()) {
+            if (noteInfo.pitchClassFraction === pitchClassFraction) {
+              if (oldNote !== newNote) {
+                sendMidiMessage([0x80 + channel, oldNote, 0]);
+                sendPitchBend(newDetune, channel);
+                sendMidiMessage([0x90 + channel, newNote, 127]);
+                noteInfo.noteNumber = newNote;
+              } else {
+                sendPitchBend(newDetune, channel);
+              }
+              break;
+            }
+          }
+        } else {
+          if (oldNote !== newNote) {
+            sendMidiMessage([0x80, oldNote, 0]);
+            sendPitchBend(newDetune, 0);
+            sendMidiMessage([0x90, newNote, 127]);
+          } else {
+            sendPitchBend(newDetune, 0);
+          }
+        }
+
+        // Update the stored frequency for this pitch class
+        midiActiveNotesRef.current.set(pitchClassFraction, targetFrequency);
+      }
+    }
   }
 
   return (
@@ -1177,6 +1359,8 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         pitchClassToMidiMapping,
         pitchClassToBlackOrWhite,
         updateFrequency,
+        updateAllActiveNotesByRatio,
+        recalculateAllActiveNoteFrequencies,
       }}
     >
       {children}
