@@ -79,7 +79,7 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
       case "#-":
         return "#";
       case "#+":
-        return "#";
+        return "++";
       default:
         return "";
     }
