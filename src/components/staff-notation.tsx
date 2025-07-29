@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useEffect } from "react";
-import { Renderer, Stave, StaveNote, Voice, Formatter, Accidental } from "vexflow";
+import { Renderer, Stave, StaveNote, Voice, Formatter, Accidental, TextNote } from "vexflow";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import PitchClass from "@/models/PitchClass";
 import midiNumberToNoteName from "@/functions/midiToNoteNumber";
@@ -95,7 +95,7 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
     const staveMargin = 300;
     const rightMargin = 10;
     const calculatedWidth =  staveMargin + (notesCount * noteWidth) + rightMargin;
-    const calculatedHeight = 160;
+    const calculatedHeight = 200; // Increased height to accommodate text notes below
 
     const renderer = new Renderer(containerRef.current, Renderer.Backends.SVG);
     renderer.resize(calculatedWidth, calculatedHeight);
@@ -155,15 +155,55 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
       return;
     }
 
+    // Create text notes for cents deviation
+    const textNotes: TextNote[] = [];
+
+    pitchClasses.forEach((pitchClass) => {
+      try {
+        const englishName = pitchClass.englishName || getEnglishNoteName(pitchClass.noteName);
+
+        if (!englishName || englishName === "--") return;
+
+        const parsed = parseNote(englishName);
+
+        if (!parsed) return;
+
+        // Create a text note showing the cents deviation
+        const centsText = pitchClass.centsDeviation.toFixed(1) + "¢";
+        const textNote = new TextNote({
+          text: centsText,
+          duration: "q",
+        });
+        
+        // Position the text note below the staff
+        textNote.setLine(12); // Line 12 is below the staff
+        textNote.setJustification(TextNote.Justification.CENTER);
+        
+        textNotes.push(textNote);
+      } catch (error) {
+        console.warn(`[StaffNotation] Could not create text note for ${pitchClass.noteName}:`, error);
+      }
+    });
+
+    // Create voice for staff notes
     const voice = new Voice({
       numBeats: vexFlowNotes.length,
       beatValue: 4,
     });
     voice.addTickables(vexFlowNotes);
 
+    // Create voice for text notes (cents deviation)
+    const textVoice = new Voice({
+      numBeats: textNotes.length,
+      beatValue: 4,
+    });
+    textVoice.addTickables(textNotes);
+
     const formatter = new Formatter();
-    formatter.joinVoices([voice]).format([voice], staveWidth - 20);
+    formatter.joinVoices([voice, textVoice]).format([voice, textVoice], staveWidth - 20);
+    
     voice.draw(context, stave);
+    textVoice.draw(context, stave);
   };
 
   return (
