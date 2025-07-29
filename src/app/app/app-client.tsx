@@ -51,6 +51,7 @@ export default function AppClient() {
 
     if (maqamDataId) setSelectedMenu("maqam");
     else if (jinsDataId) setSelectedMenu("jins");
+    else setSelectedMenu("tuningSystem"); // Default to tuning system when no specific data is loaded
   }, [tuningSystems, ajnas, maqamat]);
 
   useEffect(() => {
