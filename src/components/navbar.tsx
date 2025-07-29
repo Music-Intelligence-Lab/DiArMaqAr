@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useMemo } from "react";
+import React, { useMemo } from "react";
 import SettingsCard from "@/components/settings-cards";
 import LanguageSelector from "@/components/language-selector";
 import useAppContext from "@/contexts/app-context";
@@ -26,7 +26,6 @@ export default function Navbar() {
     maqamat,
     maqamSayrId,
     sources,
-    selectedPitchClasses,
     setSelectedTuningSystem,
     clearSelections,
     setTuningSystemPitchClasses,
@@ -35,36 +34,6 @@ export default function Navbar() {
     selectedIndices,
     allPitchClasses,
   } = useAppContext();
-
-  const rowRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!rowRef.current) return;
-    const container = rowRef.current;
-    const selectedEls = container.querySelectorAll<HTMLElement>(
-      ".navbar__pc-cell_selected"
-    );
-    if (selectedEls.length === 0) return;
-
-    let minLeft = Infinity;
-    let maxRight = -Infinity;
-
-    selectedEls.forEach((el) => {
-      const elLeft = el.offsetLeft;
-      const elRight = elLeft + el.offsetWidth;
-      if (elLeft < minLeft) minLeft = elLeft;
-      if (elRight > maxRight) maxRight = elRight;
-    });
-
-    const selectedCenter = (minLeft + maxRight) / 2;
-    const containerWidth = container.clientWidth;
-    const targetScrollLeft = selectedCenter - containerWidth / 2;
-
-    container.scrollTo({
-      left: targetScrollLeft,
-      behavior: "smooth",
-    });
-  }, [selectedPitchClasses]);
 
   const selectedSayr: Sayr | null =
     selectedMaqamData && maqamSayrId

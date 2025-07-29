@@ -87,7 +87,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
   const { tuningSystemsFilter, setTuningSystemsFilter } = useFilterContext();
 
-  const { clearHangingNotes, updateAllActiveNotesByRatio, recalculateAllActiveNoteFrequencies } = useSoundContext();
+  const { clearHangingNotes, updateAllActiveNotesByReferenceFrequency, recalculateAllActiveNoteFrequencies } = useSoundContext();
 
   const alKindiPitchClasses = ["1/1", "256/243", "9/8", "32/27", "81/64", "4/3", "1024/729", "3/2", "128/81", "27/16", "16/9", "4096/2187"];
 
@@ -451,17 +451,20 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   };
 
   // Handle reference frequency changes and recalculate active note frequencies
-  const handleReferenceFrequencyChange = (noteName: string, newFrequency: number) => {
+  const handleReferenceFrequencyChange = (noteName: string, newFrequency: number, shouldRecalculateSound: boolean = true) => {
     setReferenceFrequencies((prev) => ({
       ...prev,
       [noteName]: newFrequency,
     }));
 
-    // After state update, recalculate all active notes to match their new pitch class frequencies
-    // Use setTimeout to ensure the state update and pitch class recalculation has completed
-    setTimeout(() => {
-      recalculateAllActiveNoteFrequencies();
-    }, 0);
+    // Only recalculate sound if explicitly requested (not for drag end)
+    if (shouldRecalculateSound) {
+      // After state update, recalculate all active notes to match their new pitch class frequencies
+      // Use setTimeout to ensure the state update and pitch class recalculation has completed
+      setTimeout(() => {
+        recalculateAllActiveNoteFrequencies();
+      }, 0);
+    }
   };
 
   const handleSaveStartingNoteConfiguration = () => {
@@ -873,14 +876,10 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                         ) : (
                           <FrequencyKnob
                             value={referenceFrequencies[startingNote] ?? 220}
-                            onChange={(val) => {
-                              handleReferenceFrequencyChange(startingNote, val);
+                            onChange={(val, shouldRecalculate) => {
+                              handleReferenceFrequencyChange(startingNote, val, shouldRecalculate);
                             }}
-                            onFrequencyRatioChange={updateAllActiveNotesByRatio}
-                            min={100}
-                            max={800}
-                            size={50}
-                            label="Hz"
+                            onNewReferenceFrequency={updateAllActiveNotesByReferenceFrequency}
                           />
                         )}
                       </div>
@@ -914,14 +913,10 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                     ) : (
                       <FrequencyKnob
                         value={referenceFrequencies[getFirstNoteName(selectedIndices)] ?? 220}
-                        onChange={(val) => {
-                          handleReferenceFrequencyChange(getFirstNoteName(selectedIndices), val);
+                        onChange={(val, shouldRecalculate) => {
+                          handleReferenceFrequencyChange(getFirstNoteName(selectedIndices), val, shouldRecalculate);
                         }}
-                        onFrequencyRatioChange={updateAllActiveNotesByRatio}
-                        min={100}
-                        max={800}
-                        size={50}
-                        label="Hz"
+                        onNewReferenceFrequency={updateAllActiveNotesByReferenceFrequency}
                       />
                     )}
                   </div>

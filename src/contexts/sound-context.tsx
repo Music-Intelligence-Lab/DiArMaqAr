@@ -67,15 +67,14 @@ interface SoundContextInterface {
   midiToPitchClassMapping: Record<number, PitchClass>;
   pitchClassToMidiMapping: Record<string, number>;
   pitchClassToBlackOrWhite: Record<string, "black" | "white">;
-  updateFrequency: (oldPitchClass: PitchClass, newPitchClass: PitchClass) => void;
-  updateAllActiveNotesByRatio: (frequencyRatio: number) => void;
+  updateAllActiveNotesByReferenceFrequency: (newReferenceFrequency: number) => void;
   recalculateAllActiveNoteFrequencies: () => void;
 }
 
 const SoundContext = createContext<SoundContextInterface | null>(null);
 
 export function SoundContextProvider({ children }: { children: React.ReactNode }) {
-  const { selectedTuningSystem, selectedMaqamData, selectedMaqam, allPitchClasses, selectedPitchClasses } = useAppContext();
+  const { selectedTuningSystem, selectedMaqamData, selectedMaqam, allPitchClasses, selectedPitchClasses, setSelectedPitchClasses } = useAppContext();
 
   const [soundSettings, setSoundSettings] = useState<SoundSettings>({
     attack: 0.01,
@@ -429,6 +428,27 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     timeoutsRef.current.push(id);
     return id;
   }
+
+  useEffect(() => {
+    const newSelectedPitchClasses = [];
+
+    for (const selectedPitchClass of selectedPitchClasses) {
+      const newSelectedPitchClass = allPitchClasses.find(pc => pc.index === selectedPitchClass.index && pc.octave === selectedPitchClass.octave)
+      if (newSelectedPitchClass) newSelectedPitchClasses.push(newSelectedPitchClass);
+    }
+
+    setSelectedPitchClasses(newSelectedPitchClasses);
+
+    const newActivePitchClasses = [];
+
+    for (const activePitchClass of activePitchClasses) {
+      const newActivePitchClass = allPitchClasses.find(pc => pc.index === activePitchClass.index && pc.octave === activePitchClass.octave);
+      if (newActivePitchClass) newActivePitchClasses.push(newActivePitchClass);
+    }
+
+    setActivePitchClasses(newActivePitchClasses);
+    
+  }, [allPitchClasses])
 
   useEffect(() => {
     const AudioContext = window.AudioContext;
@@ -1056,106 +1076,8 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     setActivePitchClasses([]);
   }
 
-  function updateFrequency(oldPitchClass: PitchClass, newPitchClass: PitchClass) {
-    // This function is now handled by updateAllActiveNotesByRatio
-    // Keep for compatibility but the implementation is simplified
-    const frequencyRatio = parseFloat(newPitchClass.frequency) / parseFloat(oldPitchClass.frequency);
-    
-    // Update the specific pitch class voices
-    const voices = activeNotesRef.current.get(oldPitchClass.fraction);
-    if (voices && voices.length > 0) {
-      const audioCtx = audioCtxRef.current;
-      if (!audioCtx) return;
-
-      const now = audioCtx.currentTime;
-      const TRANSITION_TIME = 0.01; // 10ms smooth transition
-
-      voices.forEach((voice) => {
-        const newFrequency = voice.frequency * frequencyRatio;
-        voice.frequency = newFrequency;
-        
-        if (Array.isArray(voice.oscillator)) {
-          // Handle aperiodic waves (multiple oscillators)
-          const waveform = soundSettings.waveform;
-          if (APERIODIC_WAVES[waveform]) {
-            const aw = APERIODIC_WAVES[waveform];
-            const detunings = aw.detunings;
-            
-            voice.oscillator.forEach((osc, index) => {
-              const detunedNewFreq = newFrequency * Math.pow(2, detunings[index] / 1200);
-              try {
-                osc.frequency.cancelScheduledValues(now);
-                osc.frequency.setValueAtTime(osc.frequency.value, now);
-                osc.frequency.linearRampToValueAtTime(detunedNewFreq, now + TRANSITION_TIME);
-              } catch (e) {
-                console.warn("Could not update oscillator frequency:", e);
-              }
-            });
-          }
-        } else {
-          // Handle single oscillator (periodic waves)
-          try {
-            voice.oscillator.frequency.cancelScheduledValues(now);
-            voice.oscillator.frequency.setValueAtTime(voice.oscillator.frequency.value, now);
-            voice.oscillator.frequency.linearRampToValueAtTime(newFrequency, now + TRANSITION_TIME);
-          } catch (e) {
-            console.warn("Could not update oscillator frequency:", e);
-          }
-        }
-      });
-
-      // Update MIDI if this pitch class is active
-      const currentMidiFreq = midiActiveNotesRef.current.get(oldPitchClass.fraction);
-      if (currentMidiFreq) {
-        const newMidiFreq = currentMidiFreq * frequencyRatio;
-        midiActiveNotesRef.current.set(oldPitchClass.fraction, newMidiFreq);
-        
-        // Update MIDI pitch bend
-        if (soundSettings.outputMode === "midi") {
-          const oldMf = frequencyToMidiNoteNumber(currentMidiFreq);
-          const newMf = frequencyToMidiNoteNumber(newMidiFreq);
-          const oldNote = Math.floor(oldMf);
-          const newNote = Math.floor(newMf);
-          const newDetune = newMf - newNote;
-
-          if (soundSettings.useMPE) {
-            const allocator = mpeChannelAllocatorRef.current;
-            for (const [channel, noteInfo] of allocator.activeChannels.entries()) {
-              if (noteInfo.pitchClassFraction === oldPitchClass.fraction) {
-                if (oldNote !== newNote) {
-                  sendMidiMessage([0x80 + channel, oldNote, 0]);
-                  sendPitchBend(newDetune, channel);
-                  sendMidiMessage([0x90 + channel, newNote, 127]);
-                  noteInfo.noteNumber = newNote;
-                } else {
-                  sendPitchBend(newDetune, channel);
-                }
-                break;
-              }
-            }
-          } else {
-            if (oldNote !== newNote) {
-              sendMidiMessage([0x80, oldNote, 0]);
-              sendPitchBend(newDetune, 0);
-              sendMidiMessage([0x90, newNote, 127]);
-            } else {
-              sendPitchBend(newDetune, 0);
-            }
-          }
-        }
-      }
-    }
-
-    // Update active pitch classes
-    setActivePitchClasses((prev) => 
-      prev.map((pc) => 
-        pc.fraction === oldPitchClass.fraction ? newPitchClass : pc
-      )
-    );
-  }
-
-  // Simple function to update ALL active notes by a frequency ratio
-  function updateAllActiveNotesByRatio(frequencyRatio: number) {
+  // Simple function to update ALL active notes using a new reference frequency
+  function updateAllActiveNotesByReferenceFrequency(newReferenceFrequency: number) {
     const audioCtx = audioCtxRef.current;
     if (!audioCtx) return;
 
@@ -1163,9 +1085,14 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     const TRANSITION_TIME = 0.005; // 5ms smooth transition
 
     // Update all Web Audio oscillators
-    for (const voices of activeNotesRef.current.values()) {
+    for (const [pitchClassFraction, voices] of activeNotesRef.current.entries()) {
+      // Find the current pitch class for this fraction to get its decimal ratio
+      const currentPitchClass = allPitchClasses.find(pc => pc.fraction === pitchClassFraction);
+      if (!currentPitchClass) continue;
+
+      const newFrequency = newReferenceFrequency * parseFloat(currentPitchClass.decimalRatio);
+
       voices.forEach((voice) => {
-        const newFrequency = voice.frequency * frequencyRatio;
         voice.frequency = newFrequency; // Update stored frequency
         
         if (Array.isArray(voice.oscillator)) {
@@ -1201,9 +1128,13 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
     // Update MIDI notes
     if (soundSettings.outputMode === "midi") {
-      for (const [pitchClassFraction, frequency] of midiActiveNotesRef.current.entries()) {
-        const newFrequency = frequency * frequencyRatio;
-        const oldMf = frequencyToMidiNoteNumber(frequency);
+      for (const [pitchClassFraction, oldFrequency] of midiActiveNotesRef.current.entries()) {
+        // Find the current pitch class for this fraction to get its decimal ratio
+        const currentPitchClass = allPitchClasses.find(pc => pc.fraction === pitchClassFraction);
+        if (!currentPitchClass) continue;
+
+        const newFrequency = newReferenceFrequency * parseFloat(currentPitchClass.decimalRatio);
+        const oldMf = frequencyToMidiNoteNumber(oldFrequency);
         const newMf = frequencyToMidiNoteNumber(newFrequency);
         const oldNote = Math.floor(oldMf);
         const newNote = Math.floor(newMf);
@@ -1251,8 +1182,8 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
     // Update all Web Audio oscillators to their pitch class's current frequency
     for (const [pitchClassFraction, voices] of activeNotesRef.current.entries()) {
-      // Find the current pitch class for this fraction
-      const currentPitchClass = activePitchClasses.find(pc => pc.fraction === pitchClassFraction);
+      // Find the current pitch class for this fraction in allPitchClasses (which has updated frequencies)
+      const currentPitchClass = allPitchClasses.find(pc => pc.fraction === pitchClassFraction);
       if (!currentPitchClass) continue;
 
       const targetFrequency = parseFloat(currentPitchClass.frequency);
@@ -1294,8 +1225,8 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     // Update MIDI notes to their pitch class's current frequency
     if (soundSettings.outputMode === "midi") {
       for (const [pitchClassFraction, currentFreq] of midiActiveNotesRef.current.entries()) {
-        // Find the current pitch class for this fraction
-        const currentPitchClass = activePitchClasses.find(pc => pc.fraction === pitchClassFraction);
+        // Find the current pitch class for this fraction in allPitchClasses (which has updated frequencies)
+        const currentPitchClass = allPitchClasses.find(pc => pc.fraction === pitchClassFraction);
         if (!currentPitchClass) continue;
 
         const targetFrequency = parseFloat(currentPitchClass.frequency);
@@ -1358,8 +1289,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         midiToPitchClassMapping,
         pitchClassToMidiMapping,
         pitchClassToBlackOrWhite,
-        updateFrequency,
-        updateAllActiveNotesByRatio,
+        updateAllActiveNotesByReferenceFrequency,
         recalculateAllActiveNoteFrequencies,
       }}
     >
