@@ -420,6 +420,7 @@ export default function Navbar() {
                 setSelectedTuningSystem(null);
                 setTuningSystemPitchClasses("");
                 setSelectedIndices([]);
+                setSelectedMenu("tuningSystem");
               }}
             >
               شبكة المقام العربي Arabic Maqām Network
