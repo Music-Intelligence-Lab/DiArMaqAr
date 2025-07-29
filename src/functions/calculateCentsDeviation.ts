@@ -1,80 +1,27 @@
-/**
- * Calculate the cents deviation from 12-EDO for a given pitch class
- */
-
-// 12-EDO chromatic scale starting from C = 0 cents
-const TWELVE_EDO_NOTES: { [key: string]: number } = {
-  'C': 0,
-  'C#': 100,
-  'Db': 100,
-  'D': 200,
-  'D#': 300,
-  'Eb': 300,
-  'E': 400,
-  'F': 500,
-  'F#': 600,
-  'Gb': 600,
-  'G': 700,
-  'G#': 800,
-  'Ab': 800,
-  'A': 900,
-  'A#': 1000,
-  'Bb': 1000,
-  'B': 1100,
-};
-
-/**
- * Extract the natural note name from an English note name
- * E.g., "E-b" -> "E", "F#+" -> "F#", "Ab--" -> "Ab"
- */
-function extractNaturalNoteName(englishNoteName: string): string {
-  if (!englishNoteName || englishNoteName === "--") return "";
-  
-  // Handle flat notes (Ab, Bb, Db, Eb, Gb)
-  if (englishNoteName.length >= 2 && englishNoteName[1] === 'b') {
-    return englishNoteName.substring(0, 2);
-  }
-  
-  // Handle sharp notes (C#, D#, F#, G#, A#)
-  if (englishNoteName.length >= 2 && englishNoteName[1] === '#') {
-    return englishNoteName.substring(0, 2);
-  }
-  
-  // Handle natural notes (C, D, E, F, G, A, B)
-  return englishNoteName[0];
-}
-
-/**
- * Calculate the 12-EDO cents value for a given English note name
- * This function maps any English note name to its 12-EDO equivalent
- */
-function getTwelveEdoCents(englishNoteName: string, octave: number): number {
-  const naturalNote = extractNaturalNoteName(englishNoteName);
-  
-  if (!naturalNote || !(naturalNote in TWELVE_EDO_NOTES)) {
-    return 0; // Default to C if note not found
-  }
-  
-  const baseCents = TWELVE_EDO_NOTES[naturalNote];
-  return baseCents + (octave * 1200);
-}
-
-/**
- * Calculate the cents deviation from 12-EDO
- * Positive values mean the note is sharp compared to 12-EDO
- * Negative values mean the note is flat compared to 12-EDO
- */
-export function calculateCentsDeviation(
-  actualCents: number,
-  englishNoteName: string,
-  octave: number
+export default function calculateCentsDeviation(
+  currentMidiNumber: number,
+  currentCents: string,
+  startingMidiNumber: number,
 ): number {
-  if (!englishNoteName || englishNoteName === "--") {
-    return 0;
+
+  // Special note sets
+  const d_sharp = [3, 15, 27, 39, 51, 63, 75, 87, 99, 111, 123];
+  const g_sharp = [8, 20, 32, 44, 56, 68, 80, 92, 104, 116];
+  const a_sharp = [10, 22, 34, 46, 58, 70, 82, 94, 106, 118];
+  const special_notes = new Set([...d_sharp, ...g_sharp, ...a_sharp]);
+
+
+  let roundedCurrent = Math.round(currentMidiNumber);
+  let roundedStarting = Math.round(startingMidiNumber);
+
+  if (special_notes.has(roundedCurrent)) {
+    roundedCurrent += 1;
   }
-  
-  const twelveEdoCents = getTwelveEdoCents(englishNoteName, octave);
-  return actualCents - twelveEdoCents;
+
+  if (special_notes.has(roundedStarting)) {
+    roundedStarting += 1;
+  }
+
+  return parseFloat(currentCents) - (roundedCurrent - roundedStarting) * 100;
 }
 
-export default calculateCentsDeviation;

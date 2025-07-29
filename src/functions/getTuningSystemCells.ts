@@ -11,7 +11,7 @@ import NoteName, {
 import detectPitchClassType from "@/functions/detectPitchClassType";
 import convertPitchClass, { shiftPitchClassBaseValue, frequencyToMidiNoteNumber } from "@/functions/convertPitchClass";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
-import { calculateCentsDeviation } from "@/functions/calculateCentsDeviation";
+import calculateCentsDeviation from "@/functions/calculateCentsDeviation";
 import PitchClass from "@/models/PitchClass";
 
 export default function getTuningSystemCells(
@@ -82,8 +82,6 @@ export default function getTuningSystemCells(
 
       // English note name and cents deviation
       const englishNoteName = getEnglishNoteName(noteName);
-      const actualCents = parseFloat(conv.cents);
-      const centsDeviation = calculateCentsDeviation(actualCents, englishNoteName, octave); //todo need to implement this function correctly
 
       pitchClasses.push({
         noteName,
@@ -100,9 +98,18 @@ export default function getTuningSystemCells(
         abjadName,
         fretDivision,
         midiNoteNumber,
-        centsDeviation,
+        centsDeviation: 0,
       });
     }
+  }
+
+  const startingPitchClass = pitchClasses.find(pc => pc.index === 0 && pc.octave === 1);
+
+  if (startingPitchClass) {
+    const startingMidiNumber = startingPitchClass.midiNoteNumber;
+    pitchClasses.forEach(pc => {
+      pc.centsDeviation = calculateCentsDeviation(pc.midiNoteNumber, pc.cents, startingMidiNumber);
+    });
   }
 
   return pitchClasses;
