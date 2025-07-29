@@ -8,6 +8,7 @@ export interface FilterSettings {
   abjadName: boolean;
   fraction: boolean;
   cents: boolean;
+  centsFromZero: boolean;
   stringLength: boolean;
   fretDivision: boolean;
   decimalRatio: boolean;
@@ -23,6 +24,7 @@ const defaultFilters: FilterSettings = {
   englishName: true,
   fraction: false,
   cents: true,
+  centsFromZero: false,
   stringLength: false,
   fretDivision: false,
   decimalRatio: false,

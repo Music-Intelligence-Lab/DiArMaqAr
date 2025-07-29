@@ -335,6 +335,19 @@ const MaqamTranspositions: React.FC = () => {
               ))}
             </tr>
           )}
+          {filters["centsFromZero"] && (
+            <tr>
+              <th className="maqam-transpositions__row-header">{t('maqam.centsFromZero')}</th>
+              <th className="maqam-transpositions__header-pitchClass">0.000</th>
+              {intervals.map((interval, i) => (
+                <React.Fragment key={i}>
+                  <th className="maqam-transpositions__header-pitchClass">({interval.cents.toFixed(3)})</th>
+                  <th className="maqam-transpositions__header-pitchClass">{(parseFloat(pitchClasses[i + 1].cents) - parseFloat(pitchClasses[0].cents)).toFixed(3)}</th>
+                  {i === intervals.length - 1 && <th className="maqam-transpositions__header-cell"></th>}
+                </React.Fragment>
+              ))}
+            </tr>
+          )}
           {filters["centsDeviation"] && (
             <tr>
               <th className="maqam-transpositions__row-header">{t('maqam.centsDeviation')}</th>
@@ -507,7 +520,8 @@ const MaqamTranspositions: React.FC = () => {
                     (filterKey === "fraction" && valueType === "fraction") ||
                     (filterKey === "cents" && valueType === "cents") ||
                     (filterKey === "decimalRatio" && valueType === "decimalRatio") ||
-                    (filterKey === "stringLength" && valueType === "stringLength");
+                    (filterKey === "stringLength" && valueType === "stringLength") ||
+                    (filterKey === "centsFromZero" && valueType === "cents");
 
                   if (isDisabled) return null;
 
