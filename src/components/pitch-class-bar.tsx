@@ -34,6 +34,11 @@ const WheelCell = React.memo<WheelCellProps>(
     if (isCurrentTonic) classNames.push("pitch-class-bar__cell_tonic_current");
     if (isSelected) classNames.push("pitch-class-bar__cell_selected");
     
+    // Add the combined tonic_current_active class when all three conditions are met
+    if (isTonic && isCurrentTonic && isActive) {
+      classNames.push("pitch-class-bar__cell_tonic_current_active");
+    }
+    
     if (inputType === "MIDI" && isMapped) {
       if (isBlackKey) {
         classNames.push("pitch-class-bar__cell_midi_black");
