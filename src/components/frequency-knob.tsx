@@ -2,41 +2,85 @@
 
 import React, { useEffect, useState, useRef } from "react";
 
+// Global counter for unique IDs when no ID is provided
+let globalKnobCounter = 0;
+
+// Helper functions for localStorage persistence
+const getStoredValue = (key: string): number | null => {
+  if (typeof window === 'undefined') return null;
+  try {
+    const stored = localStorage.getItem(`frequency-knob-${key}`);
+    return stored ? parseFloat(stored) : null;
+  } catch {
+    return null;
+  }
+};
+
+const setStoredValue = (key: string, value: number): void => {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem(`frequency-knob-${key}`, value.toString());
+  } catch {
+    // Ignore localStorage errors
+  }
+};
+
 interface FrequencyKnobProps {
   value: number;
   onChange: (value: number, shouldRecalculateSound?: boolean) => void;
   onNewReferenceFrequency?: (newReferenceFrequency: number) => void; // Direct reference frequency updates for all active notes
+  id?: string; // Add an ID to identify this specific knob
 }
 
 export default function FrequencyKnob({
   value,
   onChange,
-  onNewReferenceFrequency
+  onNewReferenceFrequency,
+  id
 }: FrequencyKnobProps) {
+  // Use provided ID directly, or generate a stable fallback
+  const knobIdRef = useRef<string>(
+    id || `frequency-knob-fallback-${globalKnobCounter++}`
+  );
+  const knobId = knobIdRef.current;
+  
   const [initialValue, setInitialValue] = useState<number | null>(null);
-  const [localValue, setLocalValue] = useState(value);
+  
+  // Check if we have a stored modified value for this knob
+  const storedValue = getStoredValue(knobId);
+  const [localValue, setLocalValue] = useState(storedValue || value);
+  
   const [isDragging, setIsDragging] = useState(false);
-  const [lastValue, setLastValue] = useState(value);
+  const [lastValue, setLastValue] = useState(storedValue || value);
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState('');
+  const [hasBeenModified, setHasBeenModified] = useState(storedValue !== null);
   const knobRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const dragStartRef = useRef<{ x: number; y: number; startValue: number } | null>(null);
+  const prevValueRef = useRef<number>(value);
   
-  // Set initial value on first render and calculate dynamic range
+  // Set initial value ONLY on first render
   useEffect(() => {
     if (initialValue === null && value !== undefined) {
       setInitialValue(value);
+      prevValueRef.current = value;
+      // Only set localValue if it hasn't been modified by user
+      if (!hasBeenModified) {
+        setLocalValue(value);
+        setLastValue(value);
+      }
     }
-  }, [value, initialValue]);
+  }, [value, initialValue, hasBeenModified]);
 
-  // Keep local value in sync with prop value when not dragging
+  // Keep local value in sync with prop value ONLY if user hasn't modified it
   useEffect(() => {
-    if (!isDragging) {
+    if (!isDragging && !hasBeenModified && value !== prevValueRef.current) {
       setLocalValue(value);
       setLastValue(value);
+      prevValueRef.current = value;
     }
-  }, [value, isDragging]);
+  }, [value, isDragging, hasBeenModified]);
 
   // Calculate dynamic min/max based on initial value (octave above/below)
   const dynamicMin = initialValue !== null ? Math.max(20, initialValue / 2) : 110; // Default fallback
@@ -102,6 +146,8 @@ export default function FrequencyKnob({
     if (isDragging) {
       setIsDragging(false);
       dragStartRef.current = null;
+      setHasBeenModified(true); // Mark as modified when user drags
+      setStoredValue(knobId, localValue); // Store modified value in localStorage
       // Update the underlying data (allPitchClasses) but don't recalculate sound
       onChange(localValue, false);
     }
@@ -182,6 +228,8 @@ export default function FrequencyKnob({
       const roundedValue = valueRawRoundFn(newValue);
       setLocalValue(roundedValue);
       setLastValue(roundedValue);
+      setHasBeenModified(true); // Mark as modified when user uses keyboard
+      setStoredValue(knobId, roundedValue); // Store modified value in localStorage
       
       // Immediately update the sound
       if (onNewReferenceFrequency) {
@@ -215,6 +263,8 @@ export default function FrequencyKnob({
       const roundedValue = valueRawRoundFn(newValue);
       setLocalValue(roundedValue);
       setLastValue(roundedValue);
+      setHasBeenModified(true); // Mark as modified when user types in input
+      setStoredValue(knobId, roundedValue); // Store modified value in localStorage
       
       // Immediately update the sound
       if (onNewReferenceFrequency) {
