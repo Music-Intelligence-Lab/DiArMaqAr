@@ -88,7 +88,7 @@ export default function JinsTranspositions() {
               {!transposition ? (
                 <span className="jins-transpositions__transposition-title">{t('jins.darajatAlIstiqrar')}: {getDisplayName(pitchClasses[0].noteName, 'note') + ` (${getEnglishNoteName(pitchClasses[0].noteName)})`}</span>
               ) : (
-                <span className="jins-transpositions__transposition-title">{jins.name}</span>
+                <span className="jins-transpositions__transposition-title">{`${getDisplayName(jins.name, 'jins')}`}</span>
               )}
               <button
                 className="jins-transpositions__button"
@@ -333,7 +333,7 @@ export default function JinsTranspositions() {
       <>
         <div className="jins-transpositions" key={language}>
           <h2 className="jins-transpositions__title">
-            {t('jins.analysis')}: {`${selectedJinsData.getName()}`}{" "}
+            {t('jins.analysis')}: {`${getDisplayName(selectedJinsData.getName(), 'jins')}`}{" "}
             {!useRatio && (
               <>
                 {" "}
@@ -421,7 +421,7 @@ export default function JinsTranspositions() {
             </>
           )}
 
-          <h2 className="jins-transpositions__title">{t('jins.transpositionsTitle')}: {`${selectedJinsData.getName()}`}</h2>
+          <h2 className="jins-transpositions__title">{t('jins.transpositionsTitle')}: {`${getDisplayName(selectedJinsData.getName(), 'jins')}`}</h2>
 
           <table className="jins-transpositions__table">
             <colgroup>
