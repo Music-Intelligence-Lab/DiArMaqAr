@@ -241,21 +241,10 @@ export default function FrequencyKnob({
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+    <div className="frequency-knob-wrapper">
       <div
         ref={knobRef}
-        style={{
-          width: 60,
-          height: 60,
-          borderRadius: '50%',
-          background: 'linear-gradient(145deg, #f0f0f0, #cacaca)',
-          border: '2px solid #ccc',
-          position: 'relative',
-          cursor: isDragging ? 'grabbing' : 'grab',
-          touchAction: 'none',
-          userSelect: 'none',
-          outline: 'none'
-        }}
+        className={`frequency-knob-dial ${isDragging ? 'dragging' : ''}`}
         onMouseDown={handlePointerDown}
         onTouchStart={handlePointerDown}
         onDoubleClick={handleDoubleClick}
@@ -269,60 +258,31 @@ export default function FrequencyKnob({
         title={`Range: ${dynamicMin.toFixed(1)} - ${dynamicMax.toFixed(1)} Hz | Double-click to reset to initial value`}
       >
         <div
+          className="frequency-knob-dial-indicator"
           style={{
-            position: 'absolute',
-            top: '10%',
-            left: '50%',
-            width: '3px',
-            height: '30%',
-            background: '#666',
-            borderRadius: '2px',
-            transformOrigin: 'bottom center',
-            transform: `translateX(-50%) rotate(${angle}deg)`,
-            pointerEvents: 'none'
+            transform: `translateX(-50%) rotate(${angle}deg)`
           }}
         />
       </div>
       {isEditing ? (
-        <input
-          ref={inputRef}
-          type="number"
-          value={editValue}
-          onChange={handleInputChange}
-          onKeyDown={handleInputKeyDown}
-          onBlur={handleInputBlur}
-          min={dynamicMin}
-          max={dynamicMax}
-          step="0.1"
-          style={{
-            fontSize: '12px',
-            color: '#555',
-            fontWeight: '500',
-            textAlign: 'center',
-            border: '1px solid #007acc',
-            borderRadius: '3px',
-            padding: '2px 4px',
-            width: '60px',
-            outline: 'none'
-          }}
-        />
+        <div className="frequency-input-container">
+          <input
+            ref={inputRef}
+            type="number"
+            value={editValue}
+            onChange={handleInputChange}
+            onKeyDown={handleInputKeyDown}
+            onBlur={handleInputBlur}
+            min={dynamicMin}
+            max={dynamicMax}
+            step="0.1"
+            className="frequency-input-field frequency-input-no-spinner"
+          />
+          <span className="frequency-unit-label">Hz</span>
+        </div>
       ) : (
         <div 
-          style={{ 
-            fontSize: '12px', 
-            color: '#555', 
-            fontWeight: '500',
-            cursor: 'pointer',
-            padding: '2px 4px',
-            borderRadius: '3px',
-            transition: 'background-color 0.15s ease'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = '#f0f0f0';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'transparent';
-          }}
+          className="frequency-display-field"
           onClick={handleLabelClick}
           title="Click to edit frequency directly"
         >
