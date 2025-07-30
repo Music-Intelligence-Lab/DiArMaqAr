@@ -351,11 +351,25 @@ const MaqamTranspositions: React.FC = () => {
           {filters["centsDeviation"] && (
             <tr>
               <th className="maqam-transpositions__row-header">{t('maqam.centsDeviation')}</th>
-              <th className="maqam-transpositions__header-pitchClass">{pitchClasses[0].centsDeviation > 0 ? '+' : ''}{pitchClasses[0].centsDeviation.toFixed(1)}</th>
+              <th className="maqam-transpositions__header-pitchClass">
+                {pitchClasses[0].referenceNoteName && (
+                  <span>
+                    {pitchClasses[0].referenceNoteName}
+                  </span>
+                )}
+                {pitchClasses[0].centsDeviation > 0 ? ' +' : ' '}{pitchClasses[0].centsDeviation.toFixed(1)}
+              </th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
                   <th className="maqam-transpositions__header-pitchClass"></th>
-                  <th className="maqam-transpositions__header-pitchClass">{pitchClasses[i + 1].centsDeviation > 0 ? '+' : ''}{pitchClasses[i + 1].centsDeviation.toFixed(1)}</th>
+                  <th className="maqam-transpositions__header-pitchClass">
+                    {pitchClasses[i + 1].referenceNoteName && (
+                      <span>
+                        {pitchClasses[i + 1].referenceNoteName}
+                      </span>
+                    )}
+                    {pitchClasses[i + 1].centsDeviation > 0 ? ' +' : ' '}{pitchClasses[i + 1].centsDeviation.toFixed(1)}
+                  </th>
                   {i === intervals.length - 1 && <th className="maqam-transpositions__header-cell"></th>}
                 </React.Fragment>
               ))}

@@ -207,11 +207,25 @@ export default function JinsTranspositions() {
           {filters["centsDeviation"] && (
             <tr>
               <th className="jins-transpositions__row-header">{t('jins.centsDeviation')}</th>
-              <th className="jins-transpositions__header-pitchClass">{pitchClasses[0].centsDeviation > 0 ? '+' : ''}{pitchClasses[0].centsDeviation.toFixed(1)}</th>
+              <th className="jins-transpositions__header-pitchClass">
+                {pitchClasses[0].referenceNoteName && (
+                  <span>
+                    {pitchClasses[0].referenceNoteName}
+                  </span>
+                )}
+                {pitchClasses[0].centsDeviation > 0 ? ' +' : ' '}{pitchClasses[0].centsDeviation.toFixed(1)}
+              </th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
                   <th className="jins-transpositions__header-pitchClass"></th>
-                  <th className="jins-transpositions__header-pitchClass">{pitchClasses[i + 1].centsDeviation > 0 ? '+' : ''}{pitchClasses[i + 1].centsDeviation.toFixed(1)}</th>
+                  <th className="jins-transpositions__header-pitchClass">
+                    {pitchClasses[i + 1].referenceNoteName && (
+                      <span>
+                        {pitchClasses[i + 1].referenceNoteName}
+                      </span>
+                    )}
+                    {pitchClasses[i + 1].centsDeviation > 0 ? ' +' : ' '}{pitchClasses[i + 1].centsDeviation.toFixed(1)}
+                  </th>
                 </React.Fragment>
               ))}
             </tr>

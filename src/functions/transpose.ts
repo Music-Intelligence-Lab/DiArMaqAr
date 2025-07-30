@@ -60,7 +60,8 @@ export function getPitchClassTranspositions(inputPitchClasses: PitchClass[], jin
       oct = sequence[sequence.length - 1].octave;
     }
 
-    return oct !== 4;
+    // Allow octaves 0, 1, 2, 3 but exclude anything beyond octave 3
+    return oct >= 0 && oct <= 3;
   });
 }
 
