@@ -397,26 +397,59 @@ export default function JinsTranspositions() {
           {selectedJinsData && (
             <>
               <div className="jins-transpositions__comments-sources-container">
-                <div className="jins-transpositions__comments-english">
-                  <h3>{t('jins.comments')}:</h3>
-                  <div className="jins-transpositions__comments-text">{selectedJinsData.getCommentsEnglish()}</div>
-                </div>
+                {language === 'ar' ? (
+                  <>
+                    <div className="jins-transpositions__sources-english">
+                      <h3>{t('jins.sources')}:</h3>
+                      <div className="jins-transpositions__sources-text">
+                        {selectedJinsData?.getSourcePageReferences().length > 0 &&
+                          selectedJinsData.getSourcePageReferences().map((sourceRef, idx) => {
+                            const source = sources.find((s: any) => s.id === sourceRef.sourceId);
+                            return source ? (
+                              <Link href={`/bibliography?source=${source?.getId()}`} key={idx}>
+                                {(language as string) === 'ar' 
+                                  ? `${source.getContributors()[0].lastNameArabic} (${source.getPublicationDateEnglish()}:${sourceRef.page})`
+                                  : `${source.getContributors()[0].lastNameEnglish} (${source.getPublicationDateEnglish()}:${sourceRef.page})`
+                                }
+                                <br />
+                              </Link>
+                            ) : null;
+                          })}
+                      </div>
+                    </div>
 
-                <div className="jins-transpositions__sources-english">
-                  <h3>{t('jins.sources')}:</h3>
-                  <div className="jins-transpositions__sources-text">
-                    {selectedJinsData?.getSourcePageReferences().length > 0 &&
-                      selectedJinsData.getSourcePageReferences().map((sourceRef, idx) => {
-                        const source = sources.find((s: any) => s.id === sourceRef.sourceId);
-                        return source ? (
-                          <Link href={`/bibliography?source=${source?.getId()}`} key={idx}>
-                            {source.getContributors()[0].lastNameEnglish} ({source.getPublicationDateEnglish()}:{sourceRef.page})
-                            <br />
-                          </Link>
-                        ) : null;
-                      })}
-                  </div>
-                </div>
+                    <div className="jins-transpositions__comments-english">
+                      <h3>{t('jins.comments')}:</h3>
+                      <div className="jins-transpositions__comments-text">{selectedJinsData.getCommentsEnglish()}</div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="jins-transpositions__comments-english">
+                      <h3>{t('jins.comments')}:</h3>
+                      <div className="jins-transpositions__comments-text">{selectedJinsData.getCommentsEnglish()}</div>
+                    </div>
+
+                    <div className="jins-transpositions__sources-english">
+                      <h3>{t('jins.sources')}:</h3>
+                      <div className="jins-transpositions__sources-text">
+                        {selectedJinsData?.getSourcePageReferences().length > 0 &&
+                          selectedJinsData.getSourcePageReferences().map((sourceRef, idx) => {
+                            const source = sources.find((s: any) => s.id === sourceRef.sourceId);
+                            return source ? (
+                              <Link href={`/bibliography?source=${source?.getId()}`} key={idx}>
+                                {(language as string) === 'ar' 
+                                  ? `${source.getContributors()[0].lastNameArabic} (${source.getPublicationDateEnglish()}:${sourceRef.page})`
+                                  : `${source.getContributors()[0].lastNameEnglish} (${source.getPublicationDateEnglish()}:${sourceRef.page})`
+                                }
+                                <br />
+                              </Link>
+                            ) : null;
+                          })}
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             </>
           )}

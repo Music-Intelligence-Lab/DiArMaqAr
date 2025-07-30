@@ -595,26 +595,59 @@ const MaqamTranspositions: React.FC = () => {
         {selectedMaqamData && (
           <>
             <div className="maqam-transpositions__comments-sources-container">
-              <div className="maqam-transpositions__comments-english">
-                <h3>{t('maqam.comments')}:</h3>
-                <div className="maqam-transpositions__comments-text">{selectedMaqamData.getCommentsEnglish()}</div>
-              </div>
+              {language === 'ar' ? (
+                <>
+                  <div className="maqam-transpositions__sources-english">
+                    <h3>{t('maqam.sources')}:</h3>
+                    <div className="maqam-transpositions__sources-text">
+                      {selectedMaqamData?.getSourcePageReferences().length > 0 &&
+                        selectedMaqamData.getSourcePageReferences().map((sourceRef, idx) => {
+                          const source = sources.find((s: any) => s.id === sourceRef.sourceId);
+                          return source ? (
+                            <Link key={idx} href={`/bibliography?source=${source.getId()}`}>
+                              {(language as string) === 'ar' 
+                                ? `${source.getContributors()[0].lastNameArabic} (${source.getPublicationDateEnglish()}:${sourceRef.page})`
+                                : `${source.getContributors()[0].lastNameEnglish} (${source.getPublicationDateEnglish()}:${sourceRef.page})`
+                              }
+                              <br />
+                            </Link>
+                          ) : null;
+                        })}
+                    </div>
+                  </div>
 
-              <div className="maqam-transpositions__sources-english">
-                <h3>{t('maqam.sources')}:</h3>
-                <div className="maqam-transpositions__sources-text">
-                  {selectedMaqamData?.getSourcePageReferences().length > 0 &&
-                    selectedMaqamData.getSourcePageReferences().map((sourceRef, idx) => {
-                      const source = sources.find((s: any) => s.id === sourceRef.sourceId);
-                      return source ? (
-                        <Link key={idx} href={`/bibliography?source=${source.getId()}`}>
-                          {source.getContributors()[0].lastNameEnglish} ({source.getPublicationDateEnglish()}:{sourceRef.page})
-                          <br />
-                        </Link>
-                      ) : null;
-                    })}
-                </div>
-              </div>
+                  <div className="maqam-transpositions__comments-english">
+                    <h3>{t('maqam.comments')}:</h3>
+                    <div className="maqam-transpositions__comments-text">{selectedMaqamData.getCommentsEnglish()}</div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="maqam-transpositions__comments-english">
+                    <h3>{t('maqam.comments')}:</h3>
+                    <div className="maqam-transpositions__comments-text">{selectedMaqamData.getCommentsEnglish()}</div>
+                  </div>
+
+                  <div className="maqam-transpositions__sources-english">
+                    <h3>{t('maqam.sources')}:</h3>
+                    <div className="maqam-transpositions__sources-text">
+                      {selectedMaqamData?.getSourcePageReferences().length > 0 &&
+                        selectedMaqamData.getSourcePageReferences().map((sourceRef, idx) => {
+                          const source = sources.find((s: any) => s.id === sourceRef.sourceId);
+                          return source ? (
+                            <Link key={idx} href={`/bibliography?source=${source.getId()}`}>
+                              {(language as string) === 'ar' 
+                                ? `${source.getContributors()[0].lastNameArabic} (${source.getPublicationDateEnglish()}:${sourceRef.page})`
+                                : `${source.getContributors()[0].lastNameEnglish} (${source.getPublicationDateEnglish()}:${sourceRef.page})`
+                              }
+                              <br />
+                            </Link>
+                          ) : null;
+                        })}
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           </>
         )}
