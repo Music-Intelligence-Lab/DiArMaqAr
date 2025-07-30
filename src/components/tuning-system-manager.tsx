@@ -166,7 +166,30 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       setTuningSystemPitchClasses(selectedTuningSystem.getPitchClasses().join("\n"));
       setSelectedAbjadNames(selectedTuningSystem.getAbjadNames());
       setTuningSystemStringLength(selectedTuningSystem.getStringLength());
-      setReferenceFrequencies(selectedTuningSystem.getReferenceFrequencies());
+      
+      // Merge stored user modifications with default reference frequencies
+      const defaultFreqs = selectedTuningSystem.getReferenceFrequencies();
+      const mergedFreqs = { ...defaultFreqs };
+      
+      // Check localStorage for user-modified frequencies for this tuning system
+      if (typeof window !== 'undefined') {
+        Object.keys(defaultFreqs).forEach(noteName => {
+          const knobId = `tuning-system-${selectedTuningSystem.getId()}-note-${noteName}`;
+          try {
+            const stored = localStorage.getItem(`frequency-knob-${knobId}`);
+            if (stored) {
+              const storedValue = parseFloat(stored);
+              if (!isNaN(storedValue)) {
+                mergedFreqs[noteName] = storedValue;
+              }
+            }
+          } catch {
+            // Ignore localStorage errors
+          }
+        });
+      }
+      
+      setReferenceFrequencies(mergedFreqs);
       setDefaultReferenceFrequency(selectedTuningSystem.getDefaultReferenceFrequency());
     }
   }, [selectedTuningSystem]);
@@ -880,6 +903,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                               handleReferenceFrequencyChange(startingNote, val, shouldRecalculate);
                             }}
                             onNewReferenceFrequency={updateAllActiveNotesByReferenceFrequency}
+                            id={`tuning-system-${selectedTuningSystem?.getId()}-note-${startingNote}`}
                           />
                         )}
                       </div>
@@ -917,6 +941,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                           handleReferenceFrequencyChange(getFirstNoteName(selectedIndices), val, shouldRecalculate);
                         }}
                         onNewReferenceFrequency={updateAllActiveNotesByReferenceFrequency}
+                        id={`tuning-system-${selectedTuningSystem?.getId()}-note-${getFirstNoteName(selectedIndices)}`}
                       />
                     )}
                   </div>
