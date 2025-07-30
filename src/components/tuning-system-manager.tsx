@@ -1031,12 +1031,8 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 .sort((a, b) => {
                   const srcA = sources.find((s) => s.getId() === a.sourceId);
                   const srcB = sources.find((s) => s.getId() === b.sourceId);
-                  const nameA = language === 'ar' && srcA?.getContributors()[0]?.lastNameArabic
-                    ? srcA.getContributors()[0].lastNameArabic
-                    : srcA?.getContributors()[0]?.lastNameEnglish || "";
-                  const nameB = language === 'ar' && srcB?.getContributors()[0]?.lastNameArabic
-                    ? srcB.getContributors()[0].lastNameArabic
-                    : srcB?.getContributors()[0]?.lastNameEnglish || "";
+                  const nameA = srcA?.getContributors()[0]?.lastNameEnglish || "";
+                  const nameB = srcB?.getContributors()[0]?.lastNameEnglish || "";
                   return nameA.localeCompare(nameB);
                 })
                 .map((ref, idx) => {
@@ -1045,35 +1041,23 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                     <Link href={`/bibliography?source=${source?.getId()}`} key={idx} className="tuning-system-manager__source-item">
                       {source && source.getContributors().length !== 0 && (
                         <span>
-                          {(language === 'ar' ? source.getContributors()[0].lastNameArabic : source.getContributors()[0].lastNameEnglish)?.length
-                            ? language === 'ar'
-                              ? `${source.getContributors()[0]?.lastNameArabic ?? ""}, ${
-                                  source
-                                    .getContributors()[0]
-                                    ?.firstNameArabic?.split(" ")
-                                    .map((w) => w.charAt(0))
-                                    .join(". ") ?? ""
-                                }. (${source.getPublicationDateEnglish() ?? ""}${
-                                  source.getSourceType?.() === "Book" && "getOriginalPublicationDateEnglish" in source && source.getOriginalPublicationDateEnglish?.()
-                                    ? "/" + source.getOriginalPublicationDateEnglish()
-                                    : ""
-                                }:${ref.page})`
-                              : `${source.getContributors()[0]?.lastNameEnglish ?? ""}, ${
-                                  source
-                                    .getContributors()[0]
-                                    ?.firstNameEnglish?.split(" ")
-                                    .map((w) => w.charAt(0))
-                                    .join(". ") ?? ""
-                                }. (${source.getPublicationDateEnglish() ?? ""}${
-                                  source.getSourceType?.() === "Book" && "getOriginalPublicationDateEnglish" in source && source.getOriginalPublicationDateEnglish?.()
-                                    ? "/" + source.getOriginalPublicationDateEnglish()
-                                    : ""
-                                }:${ref.page})`
+                          {source.getContributors()[0].lastNameEnglish?.length
+                            ? `${source.getContributors()[0]?.lastNameEnglish ?? ""}, ${
+                                source
+                                  .getContributors()[0]
+                                  ?.firstNameEnglish?.split(" ")
+                                  .map((w) => w.charAt(0))
+                                  .join(". ") ?? ""
+                              }. (${source.getPublicationDateEnglish() ?? ""}${
+                                source.getSourceType?.() === "Book" && "getOriginalPublicationDateEnglish" in source && source.getOriginalPublicationDateEnglish?.()
+                                  ? "/" + source.getOriginalPublicationDateEnglish()
+                                  : ""
+                              }:${ref.page})`
                             : `{${source.getPublicationDateEnglish() ?? ""}${
                                 source.getSourceType?.() === "Book" && "getOriginalPublicationDateEnglish" in source && source.getOriginalPublicationDateEnglish?.()
                                   ? "/" + source.getOriginalPublicationDateEnglish()
                                   : ""
-                              }:${ref.page}}`}
+                              }:${ref.page})`}
                         </span>
                       )}
                     </Link>
