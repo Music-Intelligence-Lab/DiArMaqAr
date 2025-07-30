@@ -997,13 +997,13 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       <TuningSystemOctaveTables admin={admin} />
       <SelectedPitchClassTranspositions />
 
-      {(selectedTuningSystem?.getCommentsEnglish().trim() || selectedTuningSystem?.getCommentsArabic().trim() || (sourcePageReferences && sourcePageReferences.length > 0)) && (
+      {selectedTuningSystem && (selectedTuningSystem.getCommentsEnglish().trim() || selectedTuningSystem.getCommentsArabic().trim() || (sourcePageReferences && sourcePageReferences.length > 0)) && (
         <div className="tuning-system-manager__comments-sources-container">
-          {(selectedTuningSystem?.getCommentsEnglish().trim() || selectedTuningSystem?.getCommentsArabic().trim()) && (
+          {(selectedTuningSystem.getCommentsEnglish().trim() || selectedTuningSystem.getCommentsArabic().trim()) && (
             <div className="tuning-system-manager__comments-english">
               <h3>{t("tuningSystem.comments")}</h3>
               <div>
-                {(language === "ar" && selectedTuningSystem?.getCommentsArabic().trim() ? selectedTuningSystem.getCommentsArabic() : selectedTuningSystem?.getCommentsEnglish())
+                {(language === "ar" && selectedTuningSystem.getCommentsArabic().trim() ? selectedTuningSystem.getCommentsArabic() : selectedTuningSystem.getCommentsEnglish())
                   .split("\n")
                   .map((line, index) => (
                     <span key={index}>

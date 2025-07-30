@@ -70,14 +70,17 @@ export default function Navbar() {
             onClick={() => {
               setSelectedMenu("tuningSystem");
               if (typeof window !== "undefined") {
-                // Use requestAnimationFrame to ensure scroll happens after any layout changes
-                requestAnimationFrame(() => {
-                  window.scrollTo({ top: 0, behavior: "auto" });
-                  // Double-check with a small delay in case there are other scroll events
-                  setTimeout(() => {
-                    window.scrollTo({ top: 0, behavior: "auto" });
-                  }, 50);
-                });
+                const tuningSystemManager = document.querySelector(
+                  ".tuning-system-manager"
+                );
+                if (tuningSystemManager) {
+                  tuningSystemManager.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                  });
+                } else {
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }
               }
             }}
           >
