@@ -277,7 +277,7 @@ export function autoKeyColors(size: number) {
 }
 
 export function formatCents(x: number, fractionDigits = 3) {
-  return formatExponential(x, fractionDigits) + "¢";
+  return formatExponential(x, fractionDigits);
 }
 
 /**

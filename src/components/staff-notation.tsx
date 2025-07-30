@@ -217,7 +217,9 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
         englishTextNotes.push(englishNoteNameTextNote);
 
         // Create a text note for cents deviation
-        const centsText = pitchClass.centsDeviation.toFixed(1) + "¢";
+        const centsText = pitchClass.referenceNoteName 
+          ? `${pitchClass.referenceNoteName} ${pitchClass.centsDeviation > 0 ? '+' : ''}${pitchClass.centsDeviation.toFixed(1)}`
+          : `${pitchClass.centsDeviation > 0 ? '+' : ''}${pitchClass.centsDeviation.toFixed(1)}`;
         const centsTextNote = new TextNote({
           text: centsText,
           duration: "q",
