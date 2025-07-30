@@ -4,7 +4,6 @@ import React, { useRef, useEffect } from "react";
 import { Renderer, Stave, StaveNote, Voice, Formatter, Accidental, TextNote } from "vexflow";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import PitchClass from "@/models/PitchClass";
-import midiNumberToNoteName from "@/functions/midiToNoteNumber";
 import useLanguageContext from "@/contexts/language-context";
 
 interface StaffNotationProps {
@@ -81,7 +80,7 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
       case "#+":
         return "++";
       default:
-        return "";
+        return "n";
     }
   };
 
@@ -124,10 +123,32 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
 
         const midiNoteNumber = Math.round(pitchClass.midiNoteNumber);
 
-        const translatedMidiNote = midiNumberToNoteName(midiNoteNumber);
-        const noteLetter = translatedMidiNote.note[0].toLowerCase()
+        // Use the parsed note letter from the English name instead of MIDI conversion
+        const noteLetter = parsed.letter;
+        
+        // Calculate the correct octave for the parsed note letter
+        // MIDI note 60 = C4, so we can calculate from there
+        const baseOctave = Math.floor(midiNoteNumber / 12) - 1;
+        const semitoneInOctave = midiNoteNumber % 12;
+        
+        // Map note letters to their position in the chromatic scale (C=0, D=2, E=4, F=5, G=7, A=9, B=11)
+        const notePositions: { [key: string]: number } = {
+          'c': 0, 'd': 2, 'e': 4, 'f': 5, 'g': 7, 'a': 9, 'b': 11
+        };
+        
+        const expectedSemitone = notePositions[noteLetter];
+        
+        // Adjust octave if the note letter doesn't match the expected position
+        let adjustedOctave = baseOctave;
+        if (semitoneInOctave < expectedSemitone && (expectedSemitone - semitoneInOctave) > 6) {
+          // Note is in the next octave (e.g., B# in a higher octave)
+          adjustedOctave += 1;
+        } else if (semitoneInOctave > expectedSemitone && (semitoneInOctave - expectedSemitone) > 6) {
+          // Note is in the previous octave (e.g., Cb in a lower octave)
+          adjustedOctave += 1;
+        }
 
-        const noteSpec = `${noteLetter}/${translatedMidiNote.octave}`;
+        const noteSpec = `${noteLetter}/${adjustedOctave}`;
 
         const staveNote = new StaveNote({
           clef: clef,
@@ -157,9 +178,10 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
       return;
     }
 
-    // Create text notes for cents deviation and Arabic note names
+    // Create text notes for cents deviation and note names
     const centsTextNotes: TextNote[] = [];
     const arabicTextNotes: TextNote[] = [];
+    const englishTextNotes: TextNote[] = [];
 
     pitchClasses.forEach((pitchClass) => {
       try {
@@ -171,17 +193,28 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
 
         if (!parsed) return;
 
-        // Create a text note for note name (Arabic or English based on language)
+        // Create a text note for note name (Arabic or localized based on language)
         const noteName = getDisplayName(pitchClass.noteName, 'note');
         console.log('Language:', language, 'Note name:', noteName, 'Original:', pitchClass.noteName); // Debug log
         const noteNameTextNote = new TextNote({
           text: noteName,
           duration: "q",
         });
-        noteNameTextNote.setLine(13); // Position above cents deviation
+        noteNameTextNote.setLine(12); // Position above English note name
         noteNameTextNote.setJustification(TextNote.Justification.CENTER);
         noteNameTextNote.setFont("Readex Pro", 10); // Set smaller font size
         arabicTextNotes.push(noteNameTextNote);
+
+        // Create a text note for English note name
+        const englishNoteName = englishName;
+        const englishNoteNameTextNote = new TextNote({
+          text: englishNoteName,
+          duration: "q",
+        });
+        englishNoteNameTextNote.setLine(13.5); // Position between Arabic name and cents
+        englishNoteNameTextNote.setJustification(TextNote.Justification.CENTER);
+        englishNoteNameTextNote.setFont("Readex Pro", 9); // Slightly smaller font for English
+        englishTextNotes.push(englishNoteNameTextNote);
 
         // Create a text note for cents deviation
         const centsText = pitchClass.centsDeviation.toFixed(1) + "¢";
@@ -189,7 +222,7 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
           text: centsText,
           duration: "q",
         });
-        centsTextNote.setLine(15); // Position below note name
+        centsTextNote.setLine(15); // Position below English note name
         centsTextNote.setJustification(TextNote.Justification.CENTER);
         centsTextNote.setFont("Readex Pro", 10); // Set smaller font size
         centsTextNotes.push(centsTextNote);
@@ -205,12 +238,19 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
     });
     voice.addTickables(vexFlowNotes);
 
-    // Create voice for note names (Arabic/English based on language)
+    // Create voice for note names (Arabic/localized based on language)
     const noteNameTextVoice = new Voice({
       numBeats: arabicTextNotes.length,
       beatValue: 4,
     });
     noteNameTextVoice.addTickables(arabicTextNotes);
+
+    // Create voice for English note names
+    const englishNameTextVoice = new Voice({
+      numBeats: englishTextNotes.length,
+      beatValue: 4,
+    });
+    englishNameTextVoice.addTickables(englishTextNotes);
 
     // Create voice for cents deviation text
     const centsTextVoice = new Voice({
@@ -220,10 +260,11 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
     centsTextVoice.addTickables(centsTextNotes);
 
     const formatter = new Formatter();
-    formatter.joinVoices([voice, noteNameTextVoice, centsTextVoice]).format([voice, noteNameTextVoice, centsTextVoice], staveWidth - 20);
+    formatter.joinVoices([voice, noteNameTextVoice, englishNameTextVoice, centsTextVoice]).format([voice, noteNameTextVoice, englishNameTextVoice, centsTextVoice], staveWidth - 20);
     
     voice.draw(context, stave);
     noteNameTextVoice.draw(context, stave);
+    englishNameTextVoice.draw(context, stave);
     centsTextVoice.draw(context, stave);
   };
 

@@ -60,7 +60,7 @@ export function getPitchClassTranspositions(inputPitchClasses: PitchClass[], jin
       oct = sequence[sequence.length - 1].octave;
     }
 
-    return oct !== 3;
+    return oct !== 4;
   });
 }
 
