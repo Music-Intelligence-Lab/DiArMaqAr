@@ -167,8 +167,10 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       setSelectedAbjadNames(selectedTuningSystem.getAbjadNames());
       setTuningSystemStringLength(selectedTuningSystem.getStringLength());
       
-      // Merge stored user modifications with default reference frequencies
+      // Start with default reference frequencies from the tuning system
       const defaultFreqs = selectedTuningSystem.getReferenceFrequencies();
+      console.log('Default frequencies from tuning system:', defaultFreqs);
+      
       const mergedFreqs = { ...defaultFreqs };
       
       // Check localStorage for user-modified frequencies for this tuning system
@@ -179,7 +181,8 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             const stored = localStorage.getItem(`frequency-knob-${knobId}`);
             if (stored) {
               const storedValue = parseFloat(stored);
-              if (!isNaN(storedValue)) {
+              if (!isNaN(storedValue) && storedValue > 0) {
+                console.log(`Found stored frequency for ${noteName}: ${storedValue}`);
                 mergedFreqs[noteName] = storedValue;
               }
             }
@@ -189,8 +192,12 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         });
       }
       
+      console.log('Final merged frequencies:', mergedFreqs);
       setReferenceFrequencies(mergedFreqs);
       setDefaultReferenceFrequency(selectedTuningSystem.getDefaultReferenceFrequency());
+    } else {
+      // Clear frequencies when no tuning system is selected
+      setReferenceFrequencies({});
     }
   }, [selectedTuningSystem]);
 
@@ -898,6 +905,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                           </label>
                         ) : (
                           <FrequencyKnob
+                            key={`${selectedTuningSystem?.getId()}-${startingNote}`}
                             value={referenceFrequencies[startingNote] ?? 220}
                             onChange={(val, shouldRecalculate) => {
                               handleReferenceFrequencyChange(startingNote, val, shouldRecalculate);
@@ -936,6 +944,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                       </label>
                     ) : (
                       <FrequencyKnob
+                        key={`${selectedTuningSystem?.getId()}-${getFirstNoteName(selectedIndices)}`}
                         value={referenceFrequencies[getFirstNoteName(selectedIndices)] ?? 220}
                         onChange={(val, shouldRecalculate) => {
                           handleReferenceFrequencyChange(getFirstNoteName(selectedIndices), val, shouldRecalculate);
