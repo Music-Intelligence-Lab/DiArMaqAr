@@ -89,8 +89,12 @@ export default function FrequencyKnob({
   // Ensure value is within bounds
   const clampedValue = Math.max(dynamicMin, Math.min(dynamicMax, localValue || 220));
   
-  // Calculate normalized value for visual representation
-  const value01 = (clampedValue - dynamicMin) / (dynamicMax - dynamicMin);
+  // Calculate normalized value for visual representation using logarithmic scaling
+  // This provides better musical perception since frequency perception is logarithmic
+  const logMin = Math.log(dynamicMin);
+  const logMax = Math.log(dynamicMax);
+  const logValue = Math.log(clampedValue);
+  const value01 = (logValue - logMin) / (logMax - logMin);
   
   // Calculate angle for the indicator
   const angleMin = -135;
@@ -124,12 +128,15 @@ export default function FrequencyKnob({
     const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
     
     const deltaY = dragStartRef.current.y - clientY; // Inverted: up = positive
-    const sensitivity = 0.5; // Adjust for desired sensitivity
-    const valueRange = dynamicMax - dynamicMin;
-    const deltaValue = (deltaY * sensitivity * valueRange) / 100;
     
-    const newValue = Math.max(dynamicMin, Math.min(dynamicMax, dragStartRef.current.startValue + deltaValue));
-    const roundedValue = valueRawRoundFn(newValue);
+    // Use logarithmic scaling for drag movement
+    const logRange = Math.log(dynamicMax) - Math.log(dynamicMin);
+    const currentLogValue = Math.log(dragStartRef.current.startValue);
+    const newLogValue = currentLogValue + (deltaY / 100) * logRange;
+    const newValue = Math.exp(newLogValue);
+    
+    const clampedNewValue = Math.max(dynamicMin, Math.min(dynamicMax, newValue));
+    const roundedValue = valueRawRoundFn(clampedNewValue);
     
     setLocalValue(roundedValue);
 
@@ -200,19 +207,23 @@ export default function FrequencyKnob({
   // Handle keyboard controls
   const handleKeyDown = (e: React.KeyboardEvent) => {
     let newValue: number | null = null;
-    const stepSize = 0.5;
-    const stepLarger = 5.0;
+    
+    // Use logarithmic steps for more musical behavior
+    const currentLogValue = Math.log(clampedValue);
+    const logRange = Math.log(dynamicMax) - Math.log(dynamicMin);
+    const smallStep = logRange * 0.01; // 1% of the log range
+    const largeStep = logRange * 0.05; // 5% of the log range
 
     switch (e.key) {
       case 'ArrowUp':
       case 'ArrowRight':
         e.preventDefault();
-        newValue = Math.min(dynamicMax, clampedValue + (e.shiftKey ? stepLarger : stepSize));
+        newValue = Math.exp(currentLogValue + (e.shiftKey ? largeStep : smallStep));
         break;
       case 'ArrowDown':
       case 'ArrowLeft':
         e.preventDefault();
-        newValue = Math.max(dynamicMin, clampedValue - (e.shiftKey ? stepLarger : stepSize));
+        newValue = Math.exp(currentLogValue - (e.shiftKey ? largeStep : smallStep));
         break;
       case 'Home':
         e.preventDefault();
