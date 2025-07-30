@@ -11,6 +11,7 @@ import { nanoid } from "nanoid";
 import { updateMaqamat } from "@/functions/update";
 import { transposeSayr } from "@/functions/transpose";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import NorthEastIcon from "@mui/icons-material/NorthEast";
 import SouthEastIcon from "@mui/icons-material/SouthEast";
 import NorthWestIcon from "@mui/icons-material/NorthWest";
@@ -539,7 +540,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                 }
 
                 // Determine which icon to use for the transition before this stop
-                let transitionIcon = ArrowForwardIcon;
+                let transitionIcon = language === "ar" ? ArrowBackIcon : ArrowForwardIcon;
                 let transitionLabel = "";
                 let showTransitionLabel = false;
                 if (i !== 0) {
