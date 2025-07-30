@@ -40,7 +40,7 @@ export default function calculateCentsDeviation(
   return parseFloat(currentCents) - (roundedCurrent - roundedStarting) * 100;
 }
 
-function parseEnglishNoteName(englishName: string): { baseNote: string; chromaticSemitones: number } {
+function parseEnglishNoteName(englishName: string): { baseNote: string; chromaticSemitones: number; mainAccidental: string } {
   // Extract the base note (A, B, C, D, E, F, G)
   const baseNote = englishName.charAt(0).toUpperCase();
   
@@ -51,7 +51,18 @@ function parseEnglishNoteName(englishName: string): { baseNote: string; chromati
   
   const chromaticSemitones = baseNotePositions[baseNote];
   
-  return { baseNote, chromaticSemitones };
+  // Parse the main accidental (first significant accidental, ignoring microtonal modifiers)
+  const accidentals = englishName.slice(1);
+  let mainAccidental = '';
+  
+  // Look for the main accidental (b or #) - ignore microtonal modifiers like -, +
+  if (accidentals.includes('b') && !accidentals.startsWith('-') && !accidentals.startsWith('+')) {
+    mainAccidental = 'b';
+  } else if (accidentals.includes('#') && !accidentals.startsWith('-') && !accidentals.startsWith('+')) {
+    mainAccidental = '#';
+  }
+  
+  return { baseNote, chromaticSemitones, mainAccidental };
 }
 
 export function calculateCentsDeviationWithReferenceNote(
@@ -65,24 +76,33 @@ export function calculateCentsDeviationWithReferenceNote(
   
   // Parse the English note name to get the intended 12-EDO reference
   if (currentNoteName) {
-    const { baseNote, chromaticSemitones } = parseEnglishNoteName(currentNoteName);
+    const { baseNote, chromaticSemitones, mainAccidental } = parseEnglishNoteName(currentNoteName);
     
-    // Calculate the actual 12-EDO reference frequency and cents
     const midiNoteNumber = Math.round(currentMidiNumber);
     const baseOctave = Math.floor(midiNoteNumber / 12) - 1;
     
-    // Calculate the 12-EDO MIDI number for the base note in the same octave
-    const referenceMidiNumber = (baseOctave + 1) * 12 + chromaticSemitones;
+    // Determine the reference note based on the main accidental
+    let referenceMidiNumber: number;
+    let referenceNoteName: string;
     
-    // Calculate deviation from the intended base note (not the nearest chromatic semitone)
+    if (mainAccidental === 'b') {
+      // Use flat version: Eb, Ab, Bb, etc.
+      referenceMidiNumber = (baseOctave + 1) * 12 + chromaticSemitones - 1;
+      referenceNoteName = getNoteName(baseNote, -1);
+    } else if (mainAccidental === '#') {
+      // Use sharp version: C#, D#, F#, etc.
+      referenceMidiNumber = (baseOctave + 1) * 12 + chromaticSemitones + 1;
+      referenceNoteName = getNoteName(baseNote, 1);
+    } else {
+      // Use natural version: C, D, E, F, G, A, B
+      referenceMidiNumber = (baseOctave + 1) * 12 + chromaticSemitones;
+      referenceNoteName = baseNote;
+    }
+    
+    // Calculate deviation from the determined reference
     const referenceFrequency = 440 * Math.pow(2, (referenceMidiNumber - 69) / 12);
     const currentFrequency = 440 * Math.pow(2, (currentMidiNumber - 69) / 12);
-    
-    // Calculate cents deviation from the base note
     const actualDeviation = 1200 * Math.log2(currentFrequency / referenceFrequency);
-    
-    // Use just the base note letter as the reference (no accidentals)
-    const referenceNoteName = baseNote;
     
     return { deviation: actualDeviation, referenceNoteName };
   }
@@ -94,5 +114,27 @@ export function calculateCentsDeviationWithReferenceNote(
   const referenceNoteName = noteNamesSharp[semitone];
   
   return { deviation, referenceNoteName };
+}
+
+// Helper function to get note names with accidentals
+function getNoteName(baseNote: string, accidental: number): string {
+  if (accidental === 0) return baseNote;
+  
+  // Handle special cases where flat/sharp names might be enharmonic
+  const noteMap: { [key: string]: { flat: string; sharp: string } } = {
+    'C': { flat: 'B', sharp: 'C#' },
+    'D': { flat: 'Db', sharp: 'D#' },
+    'E': { flat: 'Eb', sharp: 'F' },
+    'F': { flat: 'E', sharp: 'F#' },
+    'G': { flat: 'Gb', sharp: 'G#' },
+    'A': { flat: 'Ab', sharp: 'A#' },
+    'B': { flat: 'Bb', sharp: 'C' }
+  };
+  
+  if (accidental < 0) {
+    return noteMap[baseNote]?.flat || `${baseNote}b`;
+  } else {
+    return noteMap[baseNote]?.sharp || `${baseNote}#`;
+  }
 }
 

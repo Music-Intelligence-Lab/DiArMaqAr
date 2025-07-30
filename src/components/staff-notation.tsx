@@ -200,7 +200,7 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
           text: noteName,
           duration: "q",
         });
-        noteNameTextNote.setLine(12); // Position above English note name
+        noteNameTextNote.setLine(15); // Position above English note name
         noteNameTextNote.setJustification(TextNote.Justification.CENTER);
         noteNameTextNote.setFont("Readex Pro", 10); // Set smaller font size
         arabicTextNotes.push(noteNameTextNote);
@@ -211,7 +211,7 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
           text: englishNoteName,
           duration: "q",
         });
-        englishNoteNameTextNote.setLine(13.5); // Position between Arabic name and cents
+        englishNoteNameTextNote.setLine(16.5); // Position between Arabic name and cents
         englishNoteNameTextNote.setJustification(TextNote.Justification.CENTER);
         englishNoteNameTextNote.setFont("Readex Pro", 9); // Slightly smaller font for English
         englishTextNotes.push(englishNoteNameTextNote);
@@ -224,7 +224,7 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
           text: centsText,
           duration: "q",
         });
-        centsTextNote.setLine(15); // Position below English note name
+        centsTextNote.setLine(18); // Position below English note name
         centsTextNote.setJustification(TextNote.Justification.CENTER);
         centsTextNote.setFont("Readex Pro", 10); // Set smaller font size
         centsTextNotes.push(centsTextNote);
