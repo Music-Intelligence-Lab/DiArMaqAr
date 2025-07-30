@@ -157,7 +157,7 @@ const translations = {
     'maqam.all': 'All Maqamat',
     
     // Tuning System Manager
-    'tuningSystem.all': 'all',
+    'tuningSystem.all': 'All Tuning Systems',
     'tuningSystem.8th10thCentury': '8th–10th c. CE',
     'tuningSystem.11th15thCentury': '11th–15th c. CE',
     'tuningSystem.16th19thCentury': '16th–19th c. CE',
