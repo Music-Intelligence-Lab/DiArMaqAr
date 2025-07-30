@@ -237,13 +237,13 @@
   }
 
   &__starting-note-container {
-    align-items: center;
+    align-items: baseline;
     gap: 10px;
   }
 
   &__starting-note-left {
     display: flex;
-    align-items: center;
+    align-items: baseline;
     gap: 10px;
     margin-left: 20px;
   }
@@ -281,7 +281,7 @@
 
   &__starting-note-right {
     display: flex;
-    align-items: top;
+    align-items: baseline;
     gap: 10px;
   }
 
