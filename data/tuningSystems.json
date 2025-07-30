@@ -178,7 +178,7 @@
     "defaultReferenceFrequency": 220,
     "referenceFrequencies": {
       "yegāh": 195.998,
-      "ʿushayrān": 220.5
+      "ʿushayrān": 220
     }
   },
   {
@@ -293,9 +293,9 @@
       "ل"
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 220.5,
+    "defaultReferenceFrequency": 220,
     "referenceFrequencies": {
-      "ʿushayrān": 220.5,
+      "ʿushayrān": 220,
       "yegāh": 195.998
     }
   },
@@ -382,7 +382,7 @@
     "stringLength": 1000,
     "defaultReferenceFrequency": 220,
     "referenceFrequencies": {
-      "ʿushayrān": 220.5
+      "ʿushayrān": 220
     }
   },
   {
@@ -650,7 +650,7 @@
     "defaultReferenceFrequency": 195.998,
     "referenceFrequencies": {
       "yegāh": 195.998,
-      "ʿushayrān": 220.5
+      "ʿushayrān": 220
     }
   },
   {
@@ -802,7 +802,7 @@
     "defaultReferenceFrequency": 195.998,
     "referenceFrequencies": {
       "yegāh": 195.998,
-      "ʿushayrān": 220.5
+      "ʿushayrān": 220
     }
   },
   {
@@ -1096,7 +1096,7 @@
     "stringLength": 1000,
     "defaultReferenceFrequency": 220,
     "referenceFrequencies": {
-      "ʿushayrān": 220.5,
+      "ʿushayrān": 220,
       "yegāh": 195.998
     }
   },
@@ -1240,7 +1240,7 @@
     "stringLength": 1000,
     "defaultReferenceFrequency": 220,
     "referenceFrequencies": {
-      "ʿushayrān": 220.5,
+      "ʿushayrān": 220,
       "yegāh": 195.998
     }
   },
@@ -1420,7 +1420,7 @@
     "defaultReferenceFrequency": 220,
     "referenceFrequencies": {
       "yegāh": 195.998,
-      "ʿushayrān": 220.5
+      "ʿushayrān": 220
     }
   },
   {
@@ -1617,7 +1617,7 @@
     "defaultReferenceFrequency": 195.998,
     "referenceFrequencies": {
       "yegāh": 195.998,
-      "ʿushayrān": 220.5
+      "ʿushayrān": 220
     }
   },
   {
@@ -1802,8 +1802,8 @@
     "defaultReferenceFrequency": 220,
     "referenceFrequencies": {
       "yegāh": 195.998,
-      "ʿushayrān": 220.5,
-      "shūrī": 240
+      "ʿushayrān": 220
+
     }
   },
   {
@@ -1951,7 +1951,7 @@
     "defaultReferenceFrequency": 195.998,
     "referenceFrequencies": {
       "yegāh": 195.998,
-      "ʿushayrān": 220.5
+      "ʿushayrān": 220
     }
   },
   {
@@ -2051,9 +2051,9 @@
       ""
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 220.5,
+    "defaultReferenceFrequency": 220,
     "referenceFrequencies": {
-      "ʿushayrān": 220.5,
+      "ʿushayrān": 220,
       "yegāh": 195.998
     }
   },
@@ -2479,7 +2479,7 @@
     "stringLength": 1000,
     "defaultReferenceFrequency": 220,
     "referenceFrequencies": {
-      "ʿushayrān": 220.5,
+      "ʿushayrān": 220,
       "yegāh": 195.998
     }
   },
@@ -2610,7 +2610,7 @@
     "defaultReferenceFrequency": 220,
     "referenceFrequencies": {
       "yegāh": 195.998,
-      "ʿushayrān": 220.5
+      "ʿushayrān": 220
     }
   },
   {
@@ -2756,7 +2756,7 @@
     "stringLength": 1000,
     "defaultReferenceFrequency": 220,
     "referenceFrequencies": {
-      "ʿushayrān": 220.5
+      "ʿushayrān": 220
     }
   },
   {
@@ -2875,7 +2875,7 @@
     "defaultReferenceFrequency": 220,
     "referenceFrequencies": {
       "yegāh": 195.998,
-      "ʿushayrān": 220.5
+      "ʿushayrān": 220
     }
   },
   {
@@ -3136,8 +3136,8 @@
     "defaultReferenceFrequency": 220,
     "referenceFrequencies": {
       "yegāh": 195.998,
-      "ʿushayrān": 220.5,
-      "shūrī": 240
+      "ʿushayrān": 220
+
     }
   },
   {
@@ -3244,8 +3244,8 @@
     "defaultReferenceFrequency": 220,
     "referenceFrequencies": {
       "yegāh": 195.998,
-      "ʿushayrān": 220.5,
-      "shūrī": 240
+      "ʿushayrān": 220
+
     }
   },
   {
@@ -3357,8 +3357,7 @@
     "defaultReferenceFrequency": 220,
     "referenceFrequencies": {
       "yegāh": 195.998,
-      "ʿushayrān": 220.5,
-      "shūrī": 240
+      "ʿushayrān": 220
     }
   },
   {
@@ -3470,8 +3469,8 @@
     "defaultReferenceFrequency": 220,
     "referenceFrequencies": {
       "yegāh": 195.998,
-      "ʿushayrān": 220.5,
-      "shūrī": 240
+      "ʿushayrān": 220
+
     }
   },
   {
@@ -3578,8 +3577,8 @@
     "defaultReferenceFrequency": 220,
     "referenceFrequencies": {
       "yegāh": 195.998,
-      "ʿushayrān": 220.5,
-      "shūrī": 240
+      "ʿushayrān": 220
+
     }
   },
   {
@@ -3691,8 +3690,8 @@
     "defaultReferenceFrequency": 220,
     "referenceFrequencies": {
       "yegāh": 195.998,
-      "ʿushayrān": 220.5,
-      "shūrī": 240
+      "ʿushayrān": 220
+
     }
   },
   {
@@ -3861,11 +3860,11 @@
       ""
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 220.5,
+    "defaultReferenceFrequency": 220,
     "referenceFrequencies": {
       "yegāh": 195.998,
-      "ʿushayrān": 220.5,
-      "shūrī": 240
+      "ʿushayrān": 220
+
     }
   },
   {
@@ -3985,7 +3984,7 @@
     "defaultReferenceFrequency": 261.33,
     "referenceFrequencies": {
       "yegāh": 195.998,
-      "ʿushayrān": 220.5,
+      "ʿushayrān": 220,
       "rāst": 261.33
     }
   },
@@ -4134,7 +4133,7 @@
     "defaultReferenceFrequency": 258,
     "referenceFrequencies": {
       "yegāh": 195.998,
-      "ʿushayrān": 220.5,
+      "ʿushayrān": 220,
       "rāst": 261.33
     }
   },
@@ -4247,8 +4246,7 @@
     "defaultReferenceFrequency": 261.33,
     "referenceFrequencies": {
       "yegāh": 195.998,
-      "ʿushayrān": 220.5,
-      "shūrī": 240,
+      "ʿushayrān": 220,
       "rāst": 261.33
     }
   },
