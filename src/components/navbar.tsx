@@ -93,11 +93,10 @@ export default function Navbar() {
                   }
                 </span>
                 <span className="navbar__bottom-bar-item_tab-subtitle">
-                  {language === 'ar' && selectedTuningSystem.getTitleArabic()
+                    {language === 'ar' && selectedTuningSystem.getTitleArabic()
                     ? selectedTuningSystem.getTitleArabic()
                     : selectedTuningSystem.getTitleEnglish()
-                  }
-                  <br />
+                    }{" "}
                   [{octaveOneNoteNames[selectedIndices[0]] ? getDisplayName(octaveOneNoteNames[selectedIndices[0]], 'note') : t('octave.none')}]
                 </span>
               </>
