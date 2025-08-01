@@ -382,7 +382,7 @@ export default function Navbar() {
             )}
           </div>
           <div className="navbar__center-panel">
-            <span
+            <h1
               className="navbar__title"
               onClick={() => {
                 clearSelections();
@@ -393,7 +393,7 @@ export default function Navbar() {
               }}
             >
               شبكة المقام العربي Arabic Maqām Network
-            </span>
+            </h1>
           </div>
           <div className="navbar__right-panel">
             <div className="navbar__right-panel-language">

@@ -9,9 +9,9 @@ export default function MobileWarning() {
         <div className="mobile-warning__icon">
           🖥️
         </div>
-        <h1 className="mobile-warning__title">
+        <h2 className="mobile-warning__title">
           Desktop Required
-        </h1>
+        </h2>
         <p className="mobile-warning__message">
           The Arabic Maqam Network is designed for laptop and desktop computers only.
         </p>
