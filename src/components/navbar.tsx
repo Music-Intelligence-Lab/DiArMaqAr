@@ -70,16 +70,15 @@ export default function Navbar() {
             onClick={() => {
               setSelectedMenu("tuningSystem");
               if (typeof window !== "undefined") {
-                const tuningSystemSection = document.querySelector(
+                const tuningSystemManager = document.querySelector(
                   ".tuning-system-manager"
                 );
-                if (tuningSystemSection) {
-                  tuningSystemSection.scrollIntoView({
+                if (tuningSystemManager) {
+                  tuningSystemManager.scrollIntoView({
                     behavior: "smooth",
                     block: "start",
                   });
                 } else {
-                  // Fallback: scroll to top if tuning system section not found
                   window.scrollTo({ top: 0, behavior: "smooth" });
                 }
               }
@@ -94,11 +93,10 @@ export default function Navbar() {
                   }
                 </span>
                 <span className="navbar__bottom-bar-item_tab-subtitle">
-                  {language === 'ar' && selectedTuningSystem.getTitleArabic()
+                    {language === 'ar' && selectedTuningSystem.getTitleArabic()
                     ? selectedTuningSystem.getTitleArabic()
                     : selectedTuningSystem.getTitleEnglish()
-                  }
-                  <br />
+                    }{" "}
                   [{octaveOneNoteNames[selectedIndices[0]] ? getDisplayName(octaveOneNoteNames[selectedIndices[0]], 'note') : t('octave.none')}]
                 </span>
               </>

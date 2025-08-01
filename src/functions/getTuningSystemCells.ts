@@ -11,7 +11,7 @@ import NoteName, {
 import detectPitchClassType from "@/functions/detectPitchClassType";
 import convertPitchClass, { shiftPitchClassBaseValue, frequencyToMidiNoteNumber } from "@/functions/convertPitchClass";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
-import calculateCentsDeviation from "@/functions/calculateCentsDeviation";
+import { calculateCentsDeviationWithReferenceNote } from "@/functions/calculateCentsDeviation";
 import PitchClass from "@/models/PitchClass";
 
 export default function getTuningSystemCells(
@@ -109,13 +109,15 @@ export default function getTuningSystemCells(
     const startingMidiNumber = startingPitchClass.midiNoteNumber;
     const startingNoteName = startingPitchClass.englishName;
     pitchClasses.forEach(pc => {
-      pc.centsDeviation = calculateCentsDeviation(
+      const deviationResult = calculateCentsDeviationWithReferenceNote(
         pc.midiNoteNumber, 
         pc.cents, 
         startingMidiNumber,
         pc.englishName,
         startingNoteName
       );
+      pc.centsDeviation = deviationResult.deviation;
+      pc.referenceNoteName = deviationResult.referenceNoteName;
     });
   }
 

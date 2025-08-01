@@ -3,7 +3,7 @@
 .tuning-system-manager {
   width: 100%;
   margin-top: 0px;
-  scroll-margin-top: 450px;
+  scroll-margin-top: 0px;
 
   //padding: 20px 10px;
 
@@ -237,13 +237,13 @@
   }
 
   &__starting-note-container {
-    align-items: center;
+    align-items: baseline;
     gap: 10px;
   }
 
   &__starting-note-left {
     display: flex;
-    align-items: center;
+    align-items: baseline;
     gap: 10px;
     margin-left: 20px;
   }
@@ -281,7 +281,7 @@
 
   &__starting-note-right {
     display: flex;
-    align-items: top;
+    align-items: baseline;
     gap: 10px;
   }
 
@@ -426,11 +426,10 @@
     width: 100%;
     background-color: $black;
     display: grid;
-    grid-template-columns: repeat(16, (300px, 1fr));
     grid-template-rows: repeat(3, auto);
     grid-auto-flow: column;
     gap: 10px;
-    height: 225px;
+    height: 200px;
     overflow-x: scroll;
     overflow-y: hidden;
     position: relative;
@@ -595,26 +594,19 @@
   }
 
   &__item {
-    height: 60px;
     display: flex;
     flex-direction: column;
-    justify-content: left;
-    align-items: left;
-    text-align: left;
-    padding: 10px;
+    align-items: flex-start;
+    padding: 5px 10px;
     background-color: rgba($primary, 0.4);
-    border-radius: 0px;
     font-size: 14px;
     color: $text;
     cursor: pointer;
     transition: 0.2s;
-    font-weight: 400;
 
     // RTL support
     [dir="rtl"] & {
       text-align: right;
-
-      justify-content: right;
     }
 
     &_disabled {
@@ -628,16 +620,24 @@
       }
     }
 
-    &_selected {
-      background-color: $secondary;
+    &_active {
+      background-color: rgba($primary, 0.4);
 
       &:hover {
-        background-color: $secondary !important;
+        background-color: rgba($primary, 0.9);
+      }
+    }
+
+    &_selected {
+      background-color: $tertiary;
+
+      &:hover {
+        background-color: $tertiary;
       }
     }
 
     &:hover {
-      background-color: rgba($primary, 1);
+      background-color: rgba($primary, 0.9);
     }
 
     &-english-creator {
