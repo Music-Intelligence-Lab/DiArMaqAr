@@ -18,8 +18,8 @@ const readexPro = Readex_Pro({
 });
 
 export const metadata: Metadata = {
-  title: "Maqam Network",
-  description: "Maqam Network",
+  title: "Arabic Maqām Network | Interactive Platform for Arabic Music Theory",
+  description: "An innovative open-access online platform for the study and exploration of the Arabic maqām system. Explore tuning systems, maqāmāt, ajnās, and melodic pathways with real-time audio synthesis and interactive tools for students, musicians, and researchers.",
 };
 
 export default function RootLayout({
