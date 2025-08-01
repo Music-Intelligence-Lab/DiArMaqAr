@@ -23,15 +23,16 @@ const defaultFilters: FilterSettings = {
   abjadName: false,
   englishName: true,
   fraction: false,
+  decimalRatio: false,
   cents: true,
   centsFromZero: false,
+  centsDeviation: false,
   stringLength: false,
   fretDivision: false,
-  decimalRatio: false,
   midiNote: false,
   frequency: false,
   staffNotation: false,
-  centsDeviation: false,
+  
 };
 
 interface FilterContextInterface {

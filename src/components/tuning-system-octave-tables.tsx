@@ -587,7 +587,12 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                     <td className="tuning-system-manager__row-header">{t('octave.centsDeviation')}</td>
                     {rowCells.map((pitchClass, colIndex) => (
                       <td key={colIndex} className={getCellClassName(octave, colIndex)}>
-                        {pitchClass.centsDeviation > 0 ? '+' : ''}{pitchClass.centsDeviation.toFixed(1)}
+                        {pitchClass.referenceNoteName && (
+                          <span>
+                            {pitchClass.referenceNoteName}
+                          </span>
+                        )}
+                        {pitchClass.centsDeviation > 0 ? ' +' : ' '}{pitchClass.centsDeviation.toFixed(1)}
                       </td>
                     ))}
                   </tr>

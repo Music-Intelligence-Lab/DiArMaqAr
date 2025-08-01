@@ -2,41 +2,85 @@
 
 import React, { useEffect, useState, useRef } from "react";
 
+// Global counter for unique IDs when no ID is provided
+let globalKnobCounter = 0;
+
+// Helper functions for localStorage persistence
+const getStoredValue = (key: string): number | null => {
+  if (typeof window === 'undefined') return null;
+  try {
+    const stored = localStorage.getItem(`frequency-knob-${key}`);
+    return stored ? parseFloat(stored) : null;
+  } catch {
+    return null;
+  }
+};
+
+const setStoredValue = (key: string, value: number): void => {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem(`frequency-knob-${key}`, value.toString());
+  } catch {
+    // Ignore localStorage errors
+  }
+};
+
 interface FrequencyKnobProps {
   value: number;
   onChange: (value: number, shouldRecalculateSound?: boolean) => void;
   onNewReferenceFrequency?: (newReferenceFrequency: number) => void; // Direct reference frequency updates for all active notes
+  id?: string; // Add an ID to identify this specific knob
 }
 
 export default function FrequencyKnob({
   value,
   onChange,
-  onNewReferenceFrequency
+  onNewReferenceFrequency,
+  id
 }: FrequencyKnobProps) {
+  // Use provided ID directly, or generate a stable fallback
+  const knobIdRef = useRef<string>(
+    id || `frequency-knob-fallback-${globalKnobCounter++}`
+  );
+  const knobId = knobIdRef.current;
+  
   const [initialValue, setInitialValue] = useState<number | null>(null);
-  const [localValue, setLocalValue] = useState(value);
+  
+  // Check if we have a stored modified value for this knob
+  const storedValue = getStoredValue(knobId);
+  const [localValue, setLocalValue] = useState(storedValue || value);
+  
   const [isDragging, setIsDragging] = useState(false);
-  const [lastValue, setLastValue] = useState(value);
+  const [lastValue, setLastValue] = useState(storedValue || value);
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState('');
+  const [hasBeenModified, setHasBeenModified] = useState(storedValue !== null);
   const knobRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const dragStartRef = useRef<{ x: number; y: number; startValue: number } | null>(null);
+  const prevValueRef = useRef<number>(value);
   
-  // Set initial value on first render and calculate dynamic range
+  // Set initial value ONLY on first render
   useEffect(() => {
     if (initialValue === null && value !== undefined) {
       setInitialValue(value);
+      prevValueRef.current = value;
+      // Only set localValue if it hasn't been modified by user
+      if (!hasBeenModified) {
+        setLocalValue(value);
+        setLastValue(value);
+      }
     }
-  }, [value, initialValue]);
+  }, [value, initialValue, hasBeenModified]);
 
-  // Keep local value in sync with prop value when not dragging
+  // Keep local value in sync with prop value ONLY if user hasn't modified it
   useEffect(() => {
-    if (!isDragging) {
+    if (!isDragging && !hasBeenModified && value !== prevValueRef.current) {
       setLocalValue(value);
       setLastValue(value);
+      prevValueRef.current = value;
     }
-  }, [value, isDragging]);
+  }, [value, isDragging, hasBeenModified]);
 
   // Calculate dynamic min/max based on initial value (octave above/below)
   const dynamicMin = initialValue !== null ? Math.max(20, initialValue / 2) : 110; // Default fallback
@@ -45,8 +89,12 @@ export default function FrequencyKnob({
   // Ensure value is within bounds
   const clampedValue = Math.max(dynamicMin, Math.min(dynamicMax, localValue || 220));
   
-  // Calculate normalized value for visual representation
-  const value01 = (clampedValue - dynamicMin) / (dynamicMax - dynamicMin);
+  // Calculate normalized value for visual representation using logarithmic scaling
+  // This provides better musical perception since frequency perception is logarithmic
+  const logMin = Math.log(dynamicMin);
+  const logMax = Math.log(dynamicMax);
+  const logValue = Math.log(clampedValue);
+  const value01 = (logValue - logMin) / (logMax - logMin);
   
   // Calculate angle for the indicator
   const angleMin = -135;
@@ -80,12 +128,15 @@ export default function FrequencyKnob({
     const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
     
     const deltaY = dragStartRef.current.y - clientY; // Inverted: up = positive
-    const sensitivity = 0.5; // Adjust for desired sensitivity
-    const valueRange = dynamicMax - dynamicMin;
-    const deltaValue = (deltaY * sensitivity * valueRange) / 100;
     
-    const newValue = Math.max(dynamicMin, Math.min(dynamicMax, dragStartRef.current.startValue + deltaValue));
-    const roundedValue = valueRawRoundFn(newValue);
+    // Use logarithmic scaling for drag movement
+    const logRange = Math.log(dynamicMax) - Math.log(dynamicMin);
+    const currentLogValue = Math.log(dragStartRef.current.startValue);
+    const newLogValue = currentLogValue + (deltaY / 100) * logRange;
+    const newValue = Math.exp(newLogValue);
+    
+    const clampedNewValue = Math.max(dynamicMin, Math.min(dynamicMax, newValue));
+    const roundedValue = valueRawRoundFn(clampedNewValue);
     
     setLocalValue(roundedValue);
 
@@ -102,6 +153,8 @@ export default function FrequencyKnob({
     if (isDragging) {
       setIsDragging(false);
       dragStartRef.current = null;
+      setHasBeenModified(true); // Mark as modified when user drags
+      setStoredValue(knobId, localValue); // Store modified value in localStorage
       // Update the underlying data (allPitchClasses) but don't recalculate sound
       onChange(localValue, false);
     }
@@ -154,19 +207,23 @@ export default function FrequencyKnob({
   // Handle keyboard controls
   const handleKeyDown = (e: React.KeyboardEvent) => {
     let newValue: number | null = null;
-    const stepSize = 0.5;
-    const stepLarger = 5.0;
+    
+    // Use logarithmic steps for more musical behavior
+    const currentLogValue = Math.log(clampedValue);
+    const logRange = Math.log(dynamicMax) - Math.log(dynamicMin);
+    const smallStep = logRange * 0.01; // 1% of the log range
+    const largeStep = logRange * 0.05; // 5% of the log range
 
     switch (e.key) {
       case 'ArrowUp':
       case 'ArrowRight':
         e.preventDefault();
-        newValue = Math.min(dynamicMax, clampedValue + (e.shiftKey ? stepLarger : stepSize));
+        newValue = Math.exp(currentLogValue + (e.shiftKey ? largeStep : smallStep));
         break;
       case 'ArrowDown':
       case 'ArrowLeft':
         e.preventDefault();
-        newValue = Math.max(dynamicMin, clampedValue - (e.shiftKey ? stepLarger : stepSize));
+        newValue = Math.exp(currentLogValue - (e.shiftKey ? largeStep : smallStep));
         break;
       case 'Home':
         e.preventDefault();
@@ -182,6 +239,8 @@ export default function FrequencyKnob({
       const roundedValue = valueRawRoundFn(newValue);
       setLocalValue(roundedValue);
       setLastValue(roundedValue);
+      setHasBeenModified(true); // Mark as modified when user uses keyboard
+      setStoredValue(knobId, roundedValue); // Store modified value in localStorage
       
       // Immediately update the sound
       if (onNewReferenceFrequency) {
@@ -215,6 +274,8 @@ export default function FrequencyKnob({
       const roundedValue = valueRawRoundFn(newValue);
       setLocalValue(roundedValue);
       setLastValue(roundedValue);
+      setHasBeenModified(true); // Mark as modified when user types in input
+      setStoredValue(knobId, roundedValue); // Store modified value in localStorage
       
       // Immediately update the sound
       if (onNewReferenceFrequency) {
@@ -241,21 +302,10 @@ export default function FrequencyKnob({
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+    <div className="frequency-knob-wrapper">
       <div
         ref={knobRef}
-        style={{
-          width: 60,
-          height: 60,
-          borderRadius: '50%',
-          background: 'linear-gradient(145deg, #f0f0f0, #cacaca)',
-          border: '2px solid #ccc',
-          position: 'relative',
-          cursor: isDragging ? 'grabbing' : 'grab',
-          touchAction: 'none',
-          userSelect: 'none',
-          outline: 'none'
-        }}
+        className={`frequency-knob-dial ${isDragging ? 'dragging' : ''}`}
         onMouseDown={handlePointerDown}
         onTouchStart={handlePointerDown}
         onDoubleClick={handleDoubleClick}
@@ -269,60 +319,31 @@ export default function FrequencyKnob({
         title={`Range: ${dynamicMin.toFixed(1)} - ${dynamicMax.toFixed(1)} Hz | Double-click to reset to initial value`}
       >
         <div
+          className="frequency-knob-dial-indicator"
           style={{
-            position: 'absolute',
-            top: '10%',
-            left: '50%',
-            width: '3px',
-            height: '30%',
-            background: '#666',
-            borderRadius: '2px',
-            transformOrigin: 'bottom center',
-            transform: `translateX(-50%) rotate(${angle}deg)`,
-            pointerEvents: 'none'
+            transform: `translateX(-50%) rotate(${angle}deg)`
           }}
         />
       </div>
       {isEditing ? (
-        <input
-          ref={inputRef}
-          type="number"
-          value={editValue}
-          onChange={handleInputChange}
-          onKeyDown={handleInputKeyDown}
-          onBlur={handleInputBlur}
-          min={dynamicMin}
-          max={dynamicMax}
-          step="0.1"
-          style={{
-            fontSize: '12px',
-            color: '#555',
-            fontWeight: '500',
-            textAlign: 'center',
-            border: '1px solid #007acc',
-            borderRadius: '3px',
-            padding: '2px 4px',
-            width: '60px',
-            outline: 'none'
-          }}
-        />
+        <div className="frequency-input-container">
+          <input
+            ref={inputRef}
+            type="number"
+            value={editValue}
+            onChange={handleInputChange}
+            onKeyDown={handleInputKeyDown}
+            onBlur={handleInputBlur}
+            min={dynamicMin}
+            max={dynamicMax}
+            step="0.1"
+            className="frequency-input-field frequency-input-no-spinner"
+          />
+          <span className="frequency-unit-label">Hz</span>
+        </div>
       ) : (
         <div 
-          style={{ 
-            fontSize: '12px', 
-            color: '#555', 
-            fontWeight: '500',
-            cursor: 'pointer',
-            padding: '2px 4px',
-            borderRadius: '3px',
-            transition: 'background-color 0.15s ease'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = '#f0f0f0';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'transparent';
-          }}
+          className="frequency-display-field"
           onClick={handleLabelClick}
           title="Click to edit frequency directly"
         >

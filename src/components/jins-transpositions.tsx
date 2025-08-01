@@ -88,7 +88,7 @@ export default function JinsTranspositions() {
               {!transposition ? (
                 <span className="jins-transpositions__transposition-title">{t('jins.darajatAlIstiqrar')}: {getDisplayName(pitchClasses[0].noteName, 'note') + ` (${getEnglishNoteName(pitchClasses[0].noteName)})`}</span>
               ) : (
-                <span className="jins-transpositions__transposition-title">{jins.name}</span>
+                <span className="jins-transpositions__transposition-title">{`${getDisplayName(jins.name, 'jins')}`}</span>
               )}
               <button
                 className="jins-transpositions__button"
@@ -207,11 +207,25 @@ export default function JinsTranspositions() {
           {filters["centsDeviation"] && (
             <tr>
               <th className="jins-transpositions__row-header">{t('jins.centsDeviation')}</th>
-              <th className="jins-transpositions__header-pitchClass">{pitchClasses[0].centsDeviation > 0 ? '+' : ''}{pitchClasses[0].centsDeviation.toFixed(1)}</th>
+              <th className="jins-transpositions__header-pitchClass">
+                {pitchClasses[0].referenceNoteName && (
+                  <span>
+                    {pitchClasses[0].referenceNoteName}
+                  </span>
+                )}
+                {pitchClasses[0].centsDeviation > 0 ? ' +' : ' '}{pitchClasses[0].centsDeviation.toFixed(1)}
+              </th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
                   <th className="jins-transpositions__header-pitchClass"></th>
-                  <th className="jins-transpositions__header-pitchClass">{pitchClasses[i + 1].centsDeviation > 0 ? '+' : ''}{pitchClasses[i + 1].centsDeviation.toFixed(1)}</th>
+                  <th className="jins-transpositions__header-pitchClass">
+                    {pitchClasses[i + 1].referenceNoteName && (
+                      <span>
+                        {pitchClasses[i + 1].referenceNoteName}
+                      </span>
+                    )}
+                    {pitchClasses[i + 1].centsDeviation > 0 ? ' +' : ' '}{pitchClasses[i + 1].centsDeviation.toFixed(1)}
+                  </th>
                 </React.Fragment>
               ))}
             </tr>
@@ -319,7 +333,7 @@ export default function JinsTranspositions() {
       <>
         <div className="jins-transpositions" key={language}>
           <h2 className="jins-transpositions__title">
-            {t('jins.analysis')}: {`${selectedJinsData.getName()}`}{" "}
+            {t('jins.analysis')}: {`${getDisplayName(selectedJinsData.getName(), 'jins')}`}{" "}
             {!useRatio && (
               <>
                 {" "}
@@ -383,31 +397,64 @@ export default function JinsTranspositions() {
           {selectedJinsData && (
             <>
               <div className="jins-transpositions__comments-sources-container">
-                <div className="jins-transpositions__comments-english">
-                  <h3>{t('jins.comments')}:</h3>
-                  <div className="jins-transpositions__comments-text">{selectedJinsData.getCommentsEnglish()}</div>
-                </div>
+                {language === 'ar' ? (
+                  <>
+                    <div className="jins-transpositions__sources-english">
+                      <h3>{t('jins.sources')}:</h3>
+                      <div className="jins-transpositions__sources-text">
+                        {selectedJinsData?.getSourcePageReferences().length > 0 &&
+                          selectedJinsData.getSourcePageReferences().map((sourceRef, idx) => {
+                            const source = sources.find((s: any) => s.id === sourceRef.sourceId);
+                            return source ? (
+                              <Link href={`/bibliography?source=${source?.getId()}`} key={idx}>
+                                {(language as string) === 'ar' 
+                                  ? `${source.getContributors()[0].lastNameArabic} (${source.getPublicationDateEnglish()}:${sourceRef.page})`
+                                  : `${source.getContributors()[0].lastNameEnglish} (${source.getPublicationDateEnglish()}:${sourceRef.page})`
+                                }
+                                <br />
+                              </Link>
+                            ) : null;
+                          })}
+                      </div>
+                    </div>
 
-                <div className="jins-transpositions__sources-english">
-                  <h3>{t('jins.sources')}:</h3>
-                  <div className="jins-transpositions__sources-text">
-                    {selectedJinsData?.getSourcePageReferences().length > 0 &&
-                      selectedJinsData.getSourcePageReferences().map((sourceRef, idx) => {
-                        const source = sources.find((s: any) => s.id === sourceRef.sourceId);
-                        return source ? (
-                          <Link href={`/bibliography?source=${source?.getId()}`} key={idx}>
-                            {source.getContributors()[0].lastNameEnglish} ({source.getPublicationDateEnglish()}:{sourceRef.page})
-                            <br />
-                          </Link>
-                        ) : null;
-                      })}
-                  </div>
-                </div>
+                    <div className="jins-transpositions__comments-english">
+                      <h3>{t('jins.comments')}:</h3>
+                      <div className="jins-transpositions__comments-text">{selectedJinsData.getCommentsEnglish()}</div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="jins-transpositions__comments-english">
+                      <h3>{t('jins.comments')}:</h3>
+                      <div className="jins-transpositions__comments-text">{selectedJinsData.getCommentsEnglish()}</div>
+                    </div>
+
+                    <div className="jins-transpositions__sources-english">
+                      <h3>{t('jins.sources')}:</h3>
+                      <div className="jins-transpositions__sources-text">
+                        {selectedJinsData?.getSourcePageReferences().length > 0 &&
+                          selectedJinsData.getSourcePageReferences().map((sourceRef, idx) => {
+                            const source = sources.find((s: any) => s.id === sourceRef.sourceId);
+                            return source ? (
+                              <Link href={`/bibliography?source=${source?.getId()}`} key={idx}>
+                                {(language as string) === 'ar' 
+                                  ? `${source.getContributors()[0].lastNameArabic} (${source.getPublicationDateEnglish()}:${sourceRef.page})`
+                                  : `${source.getContributors()[0].lastNameEnglish} (${source.getPublicationDateEnglish()}:${sourceRef.page})`
+                                }
+                                <br />
+                              </Link>
+                            ) : null;
+                          })}
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             </>
           )}
 
-          <h2 className="jins-transpositions__title">{t('jins.transpositionsTitle')}: {`${selectedJinsData.getName()}`}</h2>
+          <h2 className="jins-transpositions__title">{t('jins.transpositionsTitle')}: {`${getDisplayName(selectedJinsData.getName(), 'jins')}`}</h2>
 
           <table className="jins-transpositions__table">
             <colgroup>
