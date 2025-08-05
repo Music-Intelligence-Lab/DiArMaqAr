@@ -70,6 +70,8 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     setTuningSystemStringLength,
     referenceFrequencies,
     setReferenceFrequencies,
+    originalReferenceFrequencies,
+    setOriginalReferenceFrequencies,
     selectedIndices,
     setSelectedIndices,
     originalIndices,
@@ -166,35 +168,16 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       setTuningSystemPitchClasses(selectedTuningSystem.getPitchClasses().join("\n"));
       setSelectedAbjadNames(selectedTuningSystem.getAbjadNames());
       setTuningSystemStringLength(selectedTuningSystem.getStringLength());
-      
-      // Start with default reference frequencies from the tuning system
-      const defaultFreqs = selectedTuningSystem.getReferenceFrequencies();
-      console.log('Default frequencies from tuning system:', defaultFreqs);
-      
-      const mergedFreqs = { ...defaultFreqs };
-      
-      // Check localStorage for user-modified frequencies for this tuning system
-      if (typeof window !== 'undefined') {
-        Object.keys(defaultFreqs).forEach(noteName => {
-          const knobId = `tuning-system-${selectedTuningSystem.getId()}-note-${noteName}`;
-          try {
-            const stored = localStorage.getItem(`frequency-knob-${knobId}`);
-            if (stored) {
-              const storedValue = parseFloat(stored);
-              if (!isNaN(storedValue) && storedValue > 0) {
-                console.log(`Found stored frequency for ${noteName}: ${storedValue}`);
-                mergedFreqs[noteName] = storedValue;
-              }
-            }
-          } catch {
-            // Ignore localStorage errors
-          }
-        });
-      }
-      
-      console.log('Final merged frequencies:', mergedFreqs);
-      setReferenceFrequencies(mergedFreqs);
       setDefaultReferenceFrequency(selectedTuningSystem.getDefaultReferenceFrequency());
+      
+      const defaultFreqs = selectedTuningSystem.getReferenceFrequencies();
+      // Only set reference frequencies if this is a different tuning system
+      // or if referenceFrequencies is empty (first mount)
+      if (Object.keys(referenceFrequencies).length === 0 || 
+          JSON.stringify(defaultFreqs) !== JSON.stringify(originalReferenceFrequencies)) {
+        setReferenceFrequencies(defaultFreqs);
+        setOriginalReferenceFrequencies(defaultFreqs);
+      }
     } else {
       // Clear frequencies when no tuning system is selected
       setReferenceFrequencies({});
@@ -912,6 +895,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                             }}
                             onNewReferenceFrequency={updateAllActiveNotesByReferenceFrequency}
                             id={`tuning-system-${selectedTuningSystem?.getId()}-note-${startingNote}`}
+                            noteName={startingNote}
                           />
                         )}
                       </div>
@@ -951,6 +935,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                         }}
                         onNewReferenceFrequency={updateAllActiveNotesByReferenceFrequency}
                         id={`tuning-system-${selectedTuningSystem?.getId()}-note-${getFirstNoteName(selectedIndices)}`}
+                        noteName={getFirstNoteName(selectedIndices)}
                       />
                     )}
                   </div>

@@ -37,6 +37,8 @@ interface AppContextInterface {
   setTuningSystemStringLength: React.Dispatch<React.SetStateAction<number>>;
   referenceFrequencies: { [noteName: string]: number };
   setReferenceFrequencies: React.Dispatch<React.SetStateAction<{ [noteName: string]: number }>>;
+  originalReferenceFrequencies: { [noteName: string]: number };
+  setOriginalReferenceFrequencies: React.Dispatch<React.SetStateAction<{ [noteName: string]: number }>>;
   ajnas: JinsData[];
   setAjnas: React.Dispatch<React.SetStateAction<JinsData[]>>;
   selectedJinsData: JinsData | null;
@@ -82,6 +84,9 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
   const [tuningSystemStringLength, setTuningSystemStringLength] = useState(0);
   const [referenceFrequencies, setReferenceFrequencies] = useState<{
+    [noteName: string]: number;
+  }>({});
+  const [originalReferenceFrequencies, setOriginalReferenceFrequencies] = useState<{
     [noteName: string]: number;
   }>({});
 
@@ -390,6 +395,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         setTuningSystemStringLength,
         referenceFrequencies,
         setReferenceFrequencies,
+        originalReferenceFrequencies,
+        setOriginalReferenceFrequencies,
         ajnas,
         setAjnas,
         selectedJinsData,
