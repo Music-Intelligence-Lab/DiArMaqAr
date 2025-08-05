@@ -1,90 +1,81 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
-
-// Global counter for unique IDs when no ID is provided
-let globalKnobCounter = 0;
-
-// Helper functions for localStorage persistence
-const getStoredValue = (key: string): number | null => {
-  if (typeof window === 'undefined') return null;
-  try {
-    const stored = localStorage.getItem(`frequency-knob-${key}`);
-    return stored ? parseFloat(stored) : null;
-  } catch {
-    return null;
-  }
-};
-
-const setStoredValue = (key: string, value: number): void => {
-  if (typeof window === 'undefined') return;
-  try {
-    localStorage.setItem(`frequency-knob-${key}`, value.toString());
-  } catch {
-    // Ignore localStorage errors
-  }
-};
+import useAppContext from "@/contexts/app-context";
 
 interface FrequencyKnobProps {
   value: number;
   onChange: (value: number, shouldRecalculateSound?: boolean) => void;
   onNewReferenceFrequency?: (newReferenceFrequency: number) => void; // Direct reference frequency updates for all active notes
   id?: string; // Add an ID to identify this specific knob
+  noteName: string; // The note name to identify which frequency this knob controls
 }
 
 export default function FrequencyKnob({
   value,
   onChange,
   onNewReferenceFrequency,
-  id
+  noteName
 }: FrequencyKnobProps) {
-  // Use provided ID directly, or generate a stable fallback
-  const knobIdRef = useRef<string>(
-    id || `frequency-knob-fallback-${globalKnobCounter++}`
-  );
-  const knobId = knobIdRef.current;
+  const { originalReferenceFrequencies, setOriginalReferenceFrequencies } = useAppContext();
   
   const [initialValue, setInitialValue] = useState<number | null>(null);
   
-  // Check if we have a stored modified value for this knob
-  const storedValue = getStoredValue(knobId);
-  const [localValue, setLocalValue] = useState(storedValue || value);
+  // Check if we have a stored original value for this note
+  const originalValue = originalReferenceFrequencies[noteName];
+  const [localValue, setLocalValue] = useState(value);
   
   const [isDragging, setIsDragging] = useState(false);
-  const [lastValue, setLastValue] = useState(storedValue || value);
+  const [lastValue, setLastValue] = useState(value);
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState('');
-  const [hasBeenModified, setHasBeenModified] = useState(storedValue !== null);
+  const [hasBeenModified, setHasBeenModified] = useState(false); // Initialize as false, will be set properly in useEffect
   const knobRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const dragStartRef = useRef<{ x: number; y: number; startValue: number } | null>(null);
   const prevValueRef = useRef<number>(value);
   
-  // Set initial value ONLY on first render
+  // Set initial value ONLY on first render and store original if not already stored
   useEffect(() => {
     if (initialValue === null && value !== undefined) {
       setInitialValue(value);
       prevValueRef.current = value;
-      // Only set localValue if it hasn't been modified by user
-      if (!hasBeenModified) {
+      
+      // Store original value if not already stored
+      if (originalValue === undefined) {
+        setOriginalReferenceFrequencies(prev => ({
+          ...prev,
+          [noteName]: value
+        }));
+        // Since we're storing the current value as original, it hasn't been modified
+        setHasBeenModified(false);
+      } else {
+        // Original value exists, check if current value is different
+        setHasBeenModified(Math.abs(originalValue - value) > 0.1); // Allow small tolerance for floating point
+      }
+      
+      // Always set localValue to the current prop value on mount
+      setLocalValue(value);
+      setLastValue(value);
+    }
+  }, [value, initialValue, noteName, originalValue, setOriginalReferenceFrequencies]);
+
+  // Keep local value in sync with prop value when not dragging and when the prop changes from external sources
+  useEffect(() => {
+    if (!isDragging && value !== prevValueRef.current) {
+      // If we don't have an original value yet, or if this is a legitimate external change, update local value
+      if (originalValue === undefined || !hasBeenModified) {
         setLocalValue(value);
         setLastValue(value);
       }
-    }
-  }, [value, initialValue, hasBeenModified]);
-
-  // Keep local value in sync with prop value ONLY if user hasn't modified it
-  useEffect(() => {
-    if (!isDragging && !hasBeenModified && value !== prevValueRef.current) {
-      setLocalValue(value);
-      setLastValue(value);
       prevValueRef.current = value;
     }
-  }, [value, isDragging, hasBeenModified]);
+  }, [value, isDragging, hasBeenModified, originalValue]);
 
-  // Calculate dynamic min/max based on initial value (octave above/below)
-  const dynamicMin = initialValue !== null ? Math.max(20, initialValue / 2) : 110; // Default fallback
-  const dynamicMax = initialValue !== null ? initialValue * 2 : 440; // Default fallback
+  // Calculate dynamic min/max based on original value (octave above/below)
+  const originalFrequency = originalValue || initialValue;
+  const dynamicMin = originalFrequency !== null ? Math.max(20, originalFrequency / 2) : 110; // Default fallback
+  const dynamicMax = originalFrequency !== null ? originalFrequency * 2 : 440; // Default fallback
   
   // Ensure value is within bounds
   const clampedValue = Math.max(dynamicMin, Math.min(dynamicMax, localValue || 220));
@@ -154,7 +145,6 @@ export default function FrequencyKnob({
       setIsDragging(false);
       dragStartRef.current = null;
       setHasBeenModified(true); // Mark as modified when user drags
-      setStoredValue(knobId, localValue); // Store modified value in localStorage
       // Update the underlying data (allPitchClasses) but don't recalculate sound
       onChange(localValue, false);
     }
@@ -182,24 +172,26 @@ export default function FrequencyKnob({
     }
   }, [isDragging, lastValue, onNewReferenceFrequency, dynamicMin, dynamicMax]);
 
-  // Handle double-click to reset to initial value
+  // Handle double-click to reset to original value
   const handleDoubleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     
-    if (initialValue !== null) {
-      setLocalValue(initialValue);
+    const resetValue = originalValue || initialValue;
+    if (resetValue !== null) {
+      setLocalValue(resetValue);
       setIsDragging(false);
-      setLastValue(initialValue);
+      setLastValue(resetValue);
+      setHasBeenModified(false); // Mark as not modified since we're resetting
       
       // Immediately update the sound to the reset frequency
       if (onNewReferenceFrequency) {
-        onNewReferenceFrequency(initialValue);
+        onNewReferenceFrequency(resetValue);
       }
       
       // Update the underlying data after a brief moment to ensure sound update happens first
       setTimeout(() => {
-        onChange(initialValue, true); // DO recalculate sound for reset
+        onChange(resetValue, true); // DO recalculate sound for reset
       }, 10);
     }
   };
@@ -240,7 +232,6 @@ export default function FrequencyKnob({
       setLocalValue(roundedValue);
       setLastValue(roundedValue);
       setHasBeenModified(true); // Mark as modified when user uses keyboard
-      setStoredValue(knobId, roundedValue); // Store modified value in localStorage
       
       // Immediately update the sound
       if (onNewReferenceFrequency) {
@@ -275,7 +266,6 @@ export default function FrequencyKnob({
       setLocalValue(roundedValue);
       setLastValue(roundedValue);
       setHasBeenModified(true); // Mark as modified when user types in input
-      setStoredValue(knobId, roundedValue); // Store modified value in localStorage
       
       // Immediately update the sound
       if (onNewReferenceFrequency) {

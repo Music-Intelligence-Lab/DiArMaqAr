@@ -60,10 +60,8 @@ export default function SayrManager({ admin }: { admin: boolean }) {
         if (!admin && selectedMaqam && allPitchClasses) {
           try {
             const transpositionResult = transposeSayr(sel, allPitchClasses, selectedMaqamData, selectedMaqam);
-            console.log("SAYR", sel, transpositionResult);
             sel = transpositionResult.transposedSayr;
             setHasTranspositionIssues(transpositionResult.hasOutOfBoundsNotes);
-            console.log("Transposed sayr:", sel, "Has issues:", transpositionResult.hasOutOfBoundsNotes);
           } catch (error) {
             console.warn("Failed to transpose sayr:", error);
             setHasTranspositionIssues(true);

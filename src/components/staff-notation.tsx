@@ -195,7 +195,6 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
 
         // Create a text note for note name (Arabic or localized based on language)
         const noteName = getDisplayName(pitchClass.noteName, 'note');
-        console.log('Language:', language, 'Note name:', noteName, 'Original:', pitchClass.noteName); // Debug log
         const noteNameTextNote = new TextNote({
           text: noteName,
           duration: "q",
