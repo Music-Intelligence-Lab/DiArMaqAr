@@ -20,7 +20,7 @@ interface ExportedTuningSystem {
   numberOfPossibleMaqamat?: number;
   numberOfMaqamat?: number;
   possibleMaqamatOverview?: MaqamDataInterface[];
-  possibleMaqamat?: Maqam[];
+  possibleMaqamat?: MaqamWithAjnasAsObjects[];
 }
 
 export interface ExportOptions {
@@ -56,14 +56,50 @@ interface ExportedJins {
 }
 
 interface ExportedMaqam {
-  maqam?: Maqam; // Export the actual Maqam instance instead of MaqamData
+  maqam?: MaqamWithAjnasAsObjects; // Export modified Maqam with ajnas as objects
   tuningSystem?: TuningSystem;
   startingNote?: NoteName;
   fullRangeTuningSystemPitchClasses?: PitchClass[];
-  transpositions?: Maqam[];
+  transpositions?: MaqamWithAjnasAsObjects[];
   numberOfTranspositions?: number;
   modulations?: MaqamatModulations | AjnasModulations;
   numberOfHops?: number;
+}
+
+interface MaqamWithAjnasAsObjects extends Omit<Maqam, 'ascendingMaqamAjnas' | 'descendingMaqamAjnas'> {
+  ascendingMaqamAjnas?: { [noteName: string]: Jins | null };
+  descendingMaqamAjnas?: { [noteName: string]: Jins | null };
+}
+
+function convertMaqamAjnasToObjects(maqam: Maqam): MaqamWithAjnasAsObjects {
+  const { ascendingMaqamAjnas, descendingMaqamAjnas, ...restMaqam } = maqam;
+  const convertedMaqam: MaqamWithAjnasAsObjects = restMaqam;
+  
+  // Convert ascending ajnas array to object
+  if (ascendingMaqamAjnas) {
+    const ascendingAjnasObject: { [noteName: string]: Jins | null } = {};
+    ascendingMaqamAjnas.forEach((jins, index) => {
+      if (index < maqam.ascendingPitchClasses.length) {
+        const noteName = maqam.ascendingPitchClasses[index].noteName;
+        ascendingAjnasObject[noteName] = jins;
+      }
+    });
+    convertedMaqam.ascendingMaqamAjnas = ascendingAjnasObject;
+  }
+  
+  // Convert descending ajnas array to object
+  if (descendingMaqamAjnas) {
+    const descendingAjnasObject: { [noteName: string]: Jins | null } = {};
+    descendingMaqamAjnas.forEach((jins, index) => {
+      if (index < maqam.descendingPitchClasses.length) {
+        const noteName = maqam.descendingPitchClasses[index].noteName;
+        descendingAjnasObject[noteName] = jins;
+      }
+    });
+    convertedMaqam.descendingMaqamAjnas = descendingAjnasObject;
+  }
+  
+  return convertedMaqam;
 }
 
 export function exportTuningSystem(
@@ -130,7 +166,7 @@ export function exportTuningSystem(
 
   // Include maqamat details if requested
   if (options.includeMaqamatDetails) {
-    const possibleMaqamat: Maqam[] = [];
+    const possibleMaqamat: MaqamWithAjnasAsObjects[] = [];
 
     for (let i = 0; i < possibleMaqamatOverview.length; i++) {
       const maqam = possibleMaqamatOverview[i] as MaqamData;
@@ -145,7 +181,7 @@ export function exportTuningSystem(
           maqamTransposition.numberOfHops = numberOfHops;
         }
         
-        possibleMaqamat.push(maqamTransposition);
+        possibleMaqamat.push(convertMaqamAjnasToObjects(maqamTransposition));
         numberOfTranspositions++;
       }
 
@@ -262,8 +298,8 @@ export function exportMaqam(
     result.fullRangeTuningSystemPitchClasses = fullRangeTuningSystemPitchClasses;
   }
 
-  // Include the actual maqam instance
-  result.maqam = maqamToExport;
+  // Include the actual maqam instance converted to use objects for ajnas
+  result.maqam = convertMaqamAjnasToObjects(maqamToExport);
 
   // Include modulations if requested
   if (options.includeModulations) {
@@ -280,7 +316,7 @@ export function exportMaqam(
 
   // Include transpositions if requested and we have maqamData
   if (options.includeTranspositions && maqamData) {
-    const transpositions: Maqam[] = [];
+    const transpositions: MaqamWithAjnasAsObjects[] = [];
     let numberOfTranspositions = 0;
     const allAjnas = getAjnas();
     const allMaqamat = getMaqamat();
@@ -294,7 +330,7 @@ export function exportMaqam(
         maqamTransposition.numberOfHops = numberOfHops;
       }
       
-      transpositions.push(maqamTransposition);
+      transpositions.push(convertMaqamAjnasToObjects(maqamTransposition));
       numberOfTranspositions++;
     }
 
