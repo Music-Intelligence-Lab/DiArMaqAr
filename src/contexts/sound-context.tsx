@@ -49,12 +49,7 @@ interface SoundContextInterface {
   setSoundSettings: React.Dispatch<React.SetStateAction<SoundSettings>>;
   activePitchClasses: PitchClass[];
   setActivePitchClasses: React.Dispatch<React.SetStateAction<PitchClass[]>>;
-  playSequence: (
-    pitchClasses: PitchClass[],
-    ascending?: boolean,
-    ascendingPitchClasses?: PitchClass[],
-    velocity?: number | ((noteIdx: number, patternIdx: number) => number)
-  ) => Promise<void>;
+  playSequence: (pitchClasses: PitchClass[], ascending?: boolean, ascendingPitchClasses?: PitchClass[], velocity?: number | ((noteIdx: number, patternIdx: number) => number)) => Promise<void>;
   noteOn: (pitchClass: PitchClass, velocity?: number) => void;
   noteOff: (pitchClass: PitchClass) => void;
   midiInputs: MidiPortInfo[];
@@ -151,19 +146,19 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     const mapping: Record<string, PitchClass> = {};
 
     if (selectedMaqam || selectedMaqamData) {
-      const ascendingNoteNames: string[] = selectedPitchClasses.map((pc) => pc.noteName);
-      let descendingNoteNames: string[];
+      // const ascendingNoteNames: string[] = selectedPitchClasses.map((pc) => pc.noteName);
+      const ascendingMaqamPitchClasses = selectedPitchClasses; // previous implementation where we looked at the maqam itself for hte ascending notes to map to the ASDF row
+      let descendingMaqamPitchClasses: PitchClass[] = [];
 
       if (selectedMaqam) {
         // ascendingNoteNames = selectedMaqam.ascendingPitchClasses.map((pc) => pc.noteName);
-        descendingNoteNames = [...selectedMaqam.descendingPitchClasses].reverse().map((pc) => pc.noteName);
+        // descendingNoteNames = [...selectedMaqam.descendingPitchClasses].reverse().map((pc) => pc.noteName);
+        descendingMaqamPitchClasses = [...selectedMaqam.descendingPitchClasses].reverse();
       } else if (selectedMaqamData) {
         // ascendingNoteNames = selectedMaqamData.getAscendingNoteNames();
-        descendingNoteNames = selectedMaqamData.getDescendingNoteNames();
+        const descendingNoteNames = selectedMaqamData.getDescendingNoteNames();
+        descendingMaqamPitchClasses = allPitchClasses.filter((pitchClass) => descendingNoteNames.includes(pitchClass.noteName));
       }
-
-      const ascendingMaqamPitchClasses = allPitchClasses.filter((pitchClass) => ascendingNoteNames.includes(pitchClass.noteName)); // previous implementation where we looked at the maqam itself for hte ascending notes to map to the ASDF row
-      const descendingMaqamPitchClasses = allPitchClasses.filter((pitchClass) => descendingNoteNames.includes(pitchClass.noteName));
 
       let sliceIndex = 0;
       const lastAscendingPitchClass = ascendingMaqamPitchClasses[ascendingMaqamPitchClasses.length - 1];
@@ -284,9 +279,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
         const { ascendingPitchClasses, descendingPitchClasses } = maqam;
 
-        const uniqueDescendingPitchClasses = descendingPitchClasses.filter((pc) =>
-          !ascendingPitchClasses.find((ascendingPitchClass) => pc.originalValue === ascendingPitchClass.originalValue)
-        );
+        const uniqueDescendingPitchClasses = descendingPitchClasses.filter((pc) => !ascendingPitchClasses.find((ascendingPitchClass) => pc.originalValue === ascendingPitchClass.originalValue));
 
         const extendedUniqueDescendingPitchClasses = extendSelectedPitchClasses(allPitchClasses, uniqueDescendingPitchClasses);
 
@@ -433,7 +426,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     const newSelectedPitchClasses = [];
 
     for (const selectedPitchClass of selectedPitchClasses) {
-      const newSelectedPitchClass = allPitchClasses.find(pc => pc.index === selectedPitchClass.index && pc.octave === selectedPitchClass.octave)
+      const newSelectedPitchClass = allPitchClasses.find((pc) => pc.index === selectedPitchClass.index && pc.octave === selectedPitchClass.octave);
       if (newSelectedPitchClass) newSelectedPitchClasses.push(newSelectedPitchClass);
     }
 
@@ -442,13 +435,12 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     const newActivePitchClasses = [];
 
     for (const activePitchClass of activePitchClasses) {
-      const newActivePitchClass = allPitchClasses.find(pc => pc.index === activePitchClass.index && pc.octave === activePitchClass.octave);
+      const newActivePitchClass = allPitchClasses.find((pc) => pc.index === activePitchClass.index && pc.octave === activePitchClass.octave);
       if (newActivePitchClass) newActivePitchClasses.push(newActivePitchClass);
     }
 
     setActivePitchClasses(newActivePitchClasses);
-    
-  }, [allPitchClasses])
+  }, [allPitchClasses]);
 
   useEffect(() => {
     const AudioContext = window.AudioContext;
@@ -589,8 +581,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     timeoutsRef.current.forEach(clearTimeout);
     timeoutsRef.current = [];
 
-    const selectedPattern =
-      soundSettings.selectedPattern || new Pattern("Default", "Default", [{ scaleDegree: "I", noteDuration: "8n", isTarget: true }]);
+    const selectedPattern = soundSettings.selectedPattern || new Pattern("Default", "Default", [{ scaleDegree: "I", noteDuration: "8n", isTarget: true }]);
 
     return new Promise((resolve) => {
       const beatSec = 60 / soundSettings.tempo;
@@ -970,7 +961,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     const audioCtx = audioCtxRef.current!;
     const now = audioCtx.currentTime;
     const { release } = soundSettings;
-    
+
     // Get the voice queue for this pitch class
     const queue = activeNotesRef.current.get(pitchClass.fraction) || [];
     if (!queue.length) return;
@@ -1087,21 +1078,21 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     // Update all Web Audio oscillators
     for (const [pitchClassFraction, voices] of activeNotesRef.current.entries()) {
       // Find the current pitch class for this fraction to get its decimal ratio
-      const currentPitchClass = allPitchClasses.find(pc => pc.fraction === pitchClassFraction);
+      const currentPitchClass = allPitchClasses.find((pc) => pc.fraction === pitchClassFraction);
       if (!currentPitchClass) continue;
 
       const newFrequency = newReferenceFrequency * parseFloat(currentPitchClass.decimalRatio);
 
       voices.forEach((voice) => {
         voice.frequency = newFrequency; // Update stored frequency
-        
+
         if (Array.isArray(voice.oscillator)) {
           // Handle aperiodic waves (multiple oscillators)
           const waveform = soundSettings.waveform;
           if (APERIODIC_WAVES[waveform]) {
             const aw = APERIODIC_WAVES[waveform];
             const detunings = aw.detunings;
-            
+
             voice.oscillator.forEach((osc, index) => {
               const detunedNewFreq = newFrequency * Math.pow(2, detunings[index] / 1200);
               try {
@@ -1130,7 +1121,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     if (soundSettings.outputMode === "midi") {
       for (const [pitchClassFraction, oldFrequency] of midiActiveNotesRef.current.entries()) {
         // Find the current pitch class for this fraction to get its decimal ratio
-        const currentPitchClass = allPitchClasses.find(pc => pc.fraction === pitchClassFraction);
+        const currentPitchClass = allPitchClasses.find((pc) => pc.fraction === pitchClassFraction);
         if (!currentPitchClass) continue;
 
         const newFrequency = newReferenceFrequency * parseFloat(currentPitchClass.decimalRatio);
@@ -1183,21 +1174,21 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     // Update all Web Audio oscillators to their pitch class's current frequency
     for (const [pitchClassFraction, voices] of activeNotesRef.current.entries()) {
       // Find the current pitch class for this fraction in allPitchClasses (which has updated frequencies)
-      const currentPitchClass = allPitchClasses.find(pc => pc.fraction === pitchClassFraction);
+      const currentPitchClass = allPitchClasses.find((pc) => pc.fraction === pitchClassFraction);
       if (!currentPitchClass) continue;
 
       const targetFrequency = parseFloat(currentPitchClass.frequency);
 
       voices.forEach((voice) => {
         voice.frequency = targetFrequency; // Update stored frequency
-        
+
         if (Array.isArray(voice.oscillator)) {
           // Handle aperiodic waves (multiple oscillators)
           const waveform = soundSettings.waveform;
           if (APERIODIC_WAVES[waveform]) {
             const aw = APERIODIC_WAVES[waveform];
             const detunings = aw.detunings;
-            
+
             voice.oscillator.forEach((osc, index) => {
               const detunedTargetFreq = targetFrequency * Math.pow(2, detunings[index] / 1200);
               try {
@@ -1226,7 +1217,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     if (soundSettings.outputMode === "midi") {
       for (const [pitchClassFraction, currentFreq] of midiActiveNotesRef.current.entries()) {
         // Find the current pitch class for this fraction in allPitchClasses (which has updated frequencies)
-        const currentPitchClass = allPitchClasses.find(pc => pc.fraction === pitchClassFraction);
+        const currentPitchClass = allPitchClasses.find((pc) => pc.fraction === pitchClassFraction);
         if (!currentPitchClass) continue;
 
         const targetFrequency = parseFloat(currentPitchClass.frequency);
