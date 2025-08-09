@@ -21,7 +21,7 @@ import { abjadNames } from "@/functions/noteNameMappings";
 import getFirstNoteName from "@/functions/getFirstNoteName";
 
 export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) {
-  const { t, getDisplayName } = useLanguageContext();
+  const { t, getDisplayName, isRTL } = useLanguageContext();
   
   const {
     selectedTuningSystem,
@@ -436,8 +436,8 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
           <button
             className="carousel-button carousel-button-prev"
             onClick={() => {
-              const container = document.querySelector(".tuning-system-manager__octave-scroll");
-              if (container) container.scrollBy({ left: -635, behavior: "smooth" });
+              const container = octaveScrollRefs[octave as 0 | 1 | 2 | 3].current;
+              if (container) container.scrollBy({ left: isRTL ? 635 : -635, behavior: "smooth" });
             }}
           >
             ‹
@@ -734,8 +734,8 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
           <button
             className="carousel-button carousel-button-next"
             onClick={() => {
-              const container = document.querySelector(".tuning-system-manager__octave-scroll");
-              if (container) container.scrollBy({ left: 635, behavior: "smooth" });
+              const container = octaveScrollRefs[octave as 0 | 1 | 2 | 3].current;
+              if (container) container.scrollBy({ left: isRTL ? -635 : 635, behavior: "smooth" });
             }}
           >
             ›
