@@ -7,7 +7,8 @@ import useFilterContext from "@/contexts/filter-context";
 import useLanguageContext from "@/contexts/language-context";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
-import { getJinsTranspositions } from "@/functions/transpose";
+// Transpositions now sourced from context cache (no direct recomputation here)
+import useTranspositionsContext from "@/contexts/transpositions-context";
 import { Jins } from "@/models/Jins";
 import Link from "next/link";
 import StaffNotation from "./staff-notation";
@@ -16,6 +17,7 @@ import ExportModal from "./export-modal";
 
 export default function JinsTranspositions() {
   const { selectedJinsData, selectedTuningSystem, setSelectedPitchClasses, allPitchClasses, centsTolerance, setCentsTolerance, sources, setSelectedJins } = useAppContext();
+  const { jinsTranspositions } = useTranspositionsContext();
 
   const { noteOn, noteOff, playSequence, soundSettings } = useSoundContext();
 
@@ -59,17 +61,15 @@ export default function JinsTranspositions() {
 
   const transpositionTables = useMemo(() => {
     if (!selectedJinsData || !selectedTuningSystem) return null;
+  if (!jinsTranspositions.length) return null;
 
     const jinsNoteNames = selectedJinsData.getNoteNames();
-
     if (jinsNoteNames.length < 2) return null;
 
     const valueType = allPitchClasses[0].originalValueType;
     const useRatio = valueType === "fraction" || valueType === "decimalRatio";
 
     const numberOfFilterRows = Object.keys(filters).filter((key) => !disabledFilters.includes(key) && key !== valueType && filters[key as keyof typeof filters]).length;
-
-    const jinsTranspositions = getJinsTranspositions(allPitchClasses, selectedJinsData, true, centsTolerance);
 
     function renderTransposition(jins: Jins, index: number) {
       const transposition = jins.transposition;
@@ -472,7 +472,7 @@ export default function JinsTranspositions() {
         </div>
       </>
     );
-  }, [allPitchClasses, selectedJinsData, centsTolerance, filters, soundSettings, language]);
+  }, [allPitchClasses, selectedJinsData, filters, soundSettings, language, jinsTranspositions]);
 
   // Listen for custom event to scroll to header when jins/transposition changes (event-driven)
   useEffect(() => {

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { AppContextProvider } from "@/contexts/app-context";
 import { SoundContextProvider } from "@/contexts/sound-context";
+import { TranspositionsContextProvider } from "@/contexts/transpositions-context";
 import { FilterContextProvider } from "@/contexts/filter-context";
 import { MenuContextProvider } from "@/contexts/menu-context";
 import { LanguageContextProvider } from "@/contexts/language-context";
@@ -38,6 +39,7 @@ export default function RootLayout({
         <LanguageContextProvider>
           <AppContextProvider>
             <SoundContextProvider>
+              <TranspositionsContextProvider>
               <MenuContextProvider>
                 <FilterContextProvider>
                   <Navbar />
@@ -45,6 +47,7 @@ export default function RootLayout({
                   <Analytics />
                 </FilterContextProvider>
               </MenuContextProvider>
+              </TranspositionsContextProvider>
             </SoundContextProvider>
           </AppContextProvider>
         </LanguageContextProvider>

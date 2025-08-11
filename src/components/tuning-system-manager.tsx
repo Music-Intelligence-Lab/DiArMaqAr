@@ -749,7 +749,9 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             className="carousel-button carousel-button-prev"
             onClick={() => {
               const container = document.querySelector(".tuning-system-manager__list");
-              if (container) container.scrollBy({ left: -635, behavior: "smooth" });
+              // In Arabic (RTL) mode many browsers invert the meaning of scrollLeft; to keep UX intuitive,
+              // treat the "prev" button as moving visually right in RTL (positive delta) and left in LTR (negative delta).
+              if (container) container.scrollBy({ left: language === "ar" ? 635 : -635, behavior: "smooth" });
             }}
           >
             ‹
@@ -792,7 +794,8 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             className="carousel-button carousel-button-next"
             onClick={() => {
               const container = document.querySelector(".tuning-system-manager__list");
-              if (container) container.scrollBy({ left: 635, behavior: "smooth" });
+              // Mirror logic of prev button for RTL so "next" always moves visually left in RTL and right in LTR.
+              if (container) container.scrollBy({ left: language === "ar" ? -635 : 635, behavior: "smooth" });
             }}
           >
             ›
