@@ -4,7 +4,7 @@ import { octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames, octaveThre
 // 1. Define the parallel English-note arrays:
 const englishOctaveZero = [
   "G",
-  "Ab--",
+  "G+",
   "Ab-",
   "Ab",
   "A-b",
@@ -44,7 +44,7 @@ const englishOctaveZero = [
 
 const englishOctaveOne = [
   "G",
-  "Ab--",
+  "G+",
   "Ab-",
   "Ab",
   "A-b",
@@ -84,7 +84,7 @@ const englishOctaveOne = [
 
 const englishOctaveTwo = [
   "g",
-  "ab--",
+  "g+",
   "ab-",
   "ab",
   "a-b",
@@ -124,7 +124,7 @@ const englishOctaveTwo = [
 
 const englishOctaveThree = [
   "g",
-  "ab--",
+  "g+",
   "ab-",
   "ab",
   "a-b",
