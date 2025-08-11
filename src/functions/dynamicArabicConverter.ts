@@ -110,7 +110,7 @@ const MAQAM_SPECIAL_TERMS: Record<string, string> = {
   '/girkah': 'جركه',
   'nawā': 'نوى',
   'athar': 'أثر',
-  'awj': 'أوج',
+  'ʾawj': 'أوج',
   'segāh': 'سيكاه',
   'ʾārāʾ': 'آراء',
 };
