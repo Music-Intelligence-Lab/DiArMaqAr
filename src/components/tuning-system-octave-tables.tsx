@@ -581,7 +581,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                   </tr>
                 )}
 
-                {/* Row 5.5: Cents Deviation from 12-EDO */}
+                {/* Row 5.5: Cents +/- 12-EDO */}
                 {filters.centsDeviation && (
                   <tr>
                     <td className="tuning-system-manager__row-header">{t('octave.centsDeviation')}</td>
