@@ -1,10 +1,10 @@
 // NoteNameMappings.ts
-import { octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames, octaveThreeNoteNames } from "../models/NoteName";
+import { octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames, octaveThreeNoteNames, octaveFourNoteNames } from "../models/NoteName";
 
 // 1. Define the parallel English-note arrays:
 const englishOctaveZero = [
   "G",
-  "Ab--",
+  "G-#",
   "Ab-",
   "Ab",
   "A-b",
@@ -44,7 +44,7 @@ const englishOctaveZero = [
 
 const englishOctaveOne = [
   "G",
-  "Ab--",
+  "G-#",
   "Ab-",
   "Ab",
   "A-b",
@@ -84,7 +84,7 @@ const englishOctaveOne = [
 
 const englishOctaveTwo = [
   "g",
-  "ab--",
+  "g-#",
   "ab-",
   "ab",
   "a-b",
@@ -124,7 +124,7 @@ const englishOctaveTwo = [
 
 const englishOctaveThree = [
   "g",
-  "ab--",
+  "g-#",
   "ab-",
   "ab",
   "a-b",
@@ -162,6 +162,46 @@ const englishOctaveThree = [
   "g-",
 ];
 
+const englishOctaveFour = [
+  "g",
+  "g-#",
+  "ab-",
+  "ab",
+  "a-b",
+  "a-",
+  "a",
+  "a-#",
+  "bb",
+  "bb+",
+  "bb++",
+  "b-b",
+  "b--",
+  "b-",
+  "b",
+  "c-b",
+  "c",
+  "c+",
+  "c-#",
+  "c#",
+  "d-b",
+  "d",
+  "d-#",
+  "eb-",
+  "eb",
+  "eb+",
+  "e-b",
+  "e-",
+  "e",
+  "f-b",
+  "f",
+  "f+",
+  "f-#",
+  "f#-",
+  "f#",
+  "g-b",
+];
+
+
 // 2. A small helper to zip Arabic→English:
 function makeMap(arabic: string[], english: string[]) {
   if (arabic.length !== english.length) {
@@ -176,6 +216,7 @@ export const arabicToEnglishNoteMapping = {
   ...makeMap(octaveOneNoteNames, englishOctaveOne),
   ...makeMap(octaveTwoNoteNames, englishOctaveTwo),
   ...makeMap(octaveThreeNoteNames, englishOctaveThree),
+  ...makeMap(octaveFourNoteNames, englishOctaveFour),
 };
 
 function splitEnglishNoteName(englishNoteName: string) {

@@ -92,18 +92,18 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
       return englishName && englishName !== "--";
     }).length;
 
-    const noteWidth = 60;
+    const noteWidth = 80;
     const staveMargin = 300;
     const rightMargin = 10;
     const calculatedWidth =  staveMargin + (notesCount * noteWidth) + rightMargin;
-    const calculatedHeight = 220; // Increased height to accommodate text notes below
+    const calculatedHeight = 240; // Increased total height for high notes and text below
 
     const renderer = new Renderer(containerRef.current, Renderer.Backends.SVG);
     renderer.resize(calculatedWidth, calculatedHeight);
     const context = renderer.getContext();
 
     const staveX = 0;
-    const staveY = 15;
+    const staveY = 35; // Moved staff down to create space for high ledger lines
     const staveWidth = calculatedWidth - rightMargin;
     const stave = new Stave(staveX, staveY, staveWidth);
     stave.addClef(clef);
