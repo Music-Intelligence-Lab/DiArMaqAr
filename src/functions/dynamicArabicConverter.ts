@@ -7,9 +7,9 @@
 // Library of Congress Arabic Romanization to Arabic Script Mapping
 const LOC_TRANSLITERATION_MAP: Record<string, string> = {
   // Basic Arabic letters
-  'ʾ': 'ء',     // hamza
+  'āʾ': 'اء',     // hamza
   'ʾa': 'أ',     // hamza  
-  'ʾَā': 'آ',     // hamza  
+  'ʾā': 'آ',     // alif with madda  
   'ā': 'ا',     // alif with madda
   'a': '',     // short alif (when not handled by diacritics)
   'b': 'ب',     // ba
@@ -108,10 +108,10 @@ const ARABIC_DIACRITICS: Record<string, string> = {
 // Common maqam terminology that should be handled specially
 const MAQAM_SPECIAL_TERMS: Record<string, string> = {
   '/girkah': 'جركه',
-  'nawā': 'نوى',
   'athar': 'أثر',
   'ʾawj': 'أوج',
   'segāh': 'سيكاه',
+  'nawā': 'نوى',
   'ʾārāʾ': 'آراء',
 };
 
@@ -128,7 +128,8 @@ export function transliterateToArabic(text: string): string {
   for (const transliterated of specialTermKeys) {
     const arabic = MAQAM_SPECIAL_TERMS[transliterated];
     // Use more flexible matching that handles special characters like ā
-    const regex = new RegExp(`(^|\\s)${transliterated}(\\s|$)`, 'g');
+    // Also handle cases where the term appears at the beginning or end of strings
+    const regex = new RegExp(`(^|\\s|-)${transliterated.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(\\s|-|$)`, 'gi');
     result = result.replace(regex, `$1${arabic}$2`);
   }
   
