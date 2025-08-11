@@ -150,7 +150,7 @@
     "name": "maqām ḥijāz kār kurd",
     "ascendingNoteNames": [
       "rāst",
-      "zirguleh",
+      "zīrgūleh",
       "kurdī",
       "chahārgāh",
       "nawā",
@@ -163,7 +163,7 @@
       "nawā",
       "chahārgāh",
       "kurdī",
-      "zirguleh",
+      "zīrgūleh",
       "rāst"
     ],
     "suyūr": [],
@@ -555,7 +555,7 @@
     "name": "maqām ḥijāz binṣir",
     "ascendingNoteNames": [
       "rāst",
-      "tīk zirguleh",
+      "tīk zīrgūleh",
       "būselīk/ʿushshāq",
       "chahārgāh",
       "nawā",
@@ -568,7 +568,7 @@
       "nawā",
       "chahārgāh",
       "būselīk/ʿushshāq",
-      "tīk zirguleh",
+      "tīk zīrgūleh",
       "rāst"
     ],
     "suyūr": [],
@@ -907,7 +907,7 @@
     "name": "maqām ḥijāz kār binṣir",
     "ascendingNoteNames": [
       "rāst",
-      "zirguleh",
+      "zīrgūleh",
       "būselīk/ʿushshāq",
       "chahārgāh",
       "nawā",
@@ -920,7 +920,7 @@
       "nawā",
       "chahārgāh",
       "būselīk/ʿushshāq",
-      "zirguleh",
+      "zīrgūleh",
       "rāst"
     ],
     "suyūr": [],
@@ -1137,7 +1137,7 @@
     "name": "maqām bayāt rāst",
     "ascendingNoteNames": [
       "rāst",
-      "tīk zirguleh",
+      "tīk zīrgūleh",
       "kurdī",
       "chahārgāh",
       "nawā",
@@ -1150,7 +1150,7 @@
       "nawā",
       "chahārgāh",
       "kurdī",
-      "tīk zirguleh",
+      "tīk zīrgūleh",
       "rāst"
     ],
     "suyūr": [],
@@ -1737,7 +1737,7 @@
         "stops": [
           {
             "type": "note",
-            "value": "qarār zirguleh"
+            "value": "qarār zīrgūleh"
           },
           {
             "type": "note",
@@ -1936,7 +1936,7 @@
     "ascendingNoteNames": [
       "ʿushayrān",
       "ʿajam ʿushayrān",
-      "zirguleh",
+      "zīrgūleh",
       "dūgāh",
       "nīm būselīk",
       "chahārgāh",
@@ -1955,7 +1955,7 @@
       "chahārgāh",
       "nīm būselīk",
       "dūgāh",
-      "zirguleh",
+      "zīrgūleh",
       "ʿajam ʿushayrān",
       "ʿushayrān"
     ],
@@ -2865,7 +2865,7 @@
     "name": "maqām dilkishā",
     "ascendingNoteNames": [
       "rāst",
-      "zirguleh",
+      "zīrgūleh",
       "segāh",
       "chahārgāh",
       "nawā",
@@ -2897,7 +2897,7 @@
           },
           {
             "type": "note",
-            "value": "zirguleh"
+            "value": "zīrgūleh"
           },
           {
             "type": "note",

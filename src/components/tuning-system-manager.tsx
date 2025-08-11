@@ -98,7 +98,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     "ʿajam ʿushayrān",
     "kawasht",
     "rāst",
-    "zirguleh",
+    "zīrgūleh",
     "dūgāh",
     "kurdī",
     "būselīk/ʿushshāq",

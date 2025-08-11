@@ -17,9 +17,9 @@ export const octaveZeroNoteNames = [
   "qarār tīk kawasht",
   "qarār rāst",
   "qarār tīk rāst",
-  "qarār nīm zirguleh",
-  "qarār zirguleh",
-  "qarār tīk zirguleh",
+  "qarār nīm zīrgūleh",
+  "qarār zīrgūleh",
+  "qarār tīk zīrgūleh",
   "qarār dūgāh",
   "qarār nīm kurdī/nahāwand",
   "qarār nahāwand",
@@ -56,9 +56,9 @@ export const octaveOneNoteNames = [
   "tīk kawasht",
   "rāst", // 16
   "tīk rāst",
-  "nīm zirguleh", // 18
-  "zirguleh", // 19
-  "tīk zirguleh", // 20
+  "nīm zīrgūleh", // 18
+  "zīrgūleh", // 19
+  "tīk zīrgūleh", // 20
   "dūgāh", // 21
   "nīm kurdī/nahāwand", // 22
   "nahāwand",
@@ -97,7 +97,7 @@ export const octaveTwoNoteNames = [
   "tīk kurdān",
   "nīm shahnāz",
   "shahnāz",
-  "jawāb tīk zirguleh",
+  "jawāb tīk zīrgūleh",
   "muḥayyar",
   "nīm sunbuleh",
   "jawāb nahāwand",
@@ -136,7 +136,7 @@ export const octaveThreeNoteNames = [
   "jawāb tīk kurdān",
   "jawāb nīm shahnāz",
   "jawāb shahnāz",
-  "jawāb jawāb tīk zirguleh",
+  "jawāb jawāb tīk zīrgūleh",
   "jawāb muḥayyar",
   "jawāb nīm sunbuleh",
   "jawāb jawāb nahāwand",
@@ -175,7 +175,7 @@ export const octaveFourNoteNames = [
   "jawāb jawāb kurdān",
   "jawāb jawāb nīm shahnāz",
   "jawāb jawāb shahnāz",
-  "jawāb jawāb jawāb tīk zirguleh",
+  "jawāb jawāb jawāb tīk zīrgūleh",
   "jawāb jawāb muḥayyar",
   "jawāb jawāb nīm sunbuleh",
   "jawāb jawāb jawāb nahāwand",
