@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useEffect, useState } from "react";
+import React, { useMemo, useEffect, useState, useRef } from "react";
 import useAppContext from "@/contexts/app-context";
 import useSoundContext, { defaultNoteVelocity } from "@/contexts/sound-context";
 import useFilterContext from "@/contexts/filter-context";
@@ -12,7 +12,6 @@ import StaffNotation from "./staff-notation";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import ExportModal from "./export-modal";
 
-// --- Utility: getHeaderId ---
 const getHeaderId = (noteName: string): string => {
   if (typeof noteName !== "string") return "";
   return `maqam-transpositions__header--${noteName
@@ -21,7 +20,6 @@ const getHeaderId = (noteName: string): string => {
     .toLowerCase()}`;
 };
 
-// --- Utility: scroll to maqam header by note name ---
 export function scrollToMaqamHeader(firstNote: string, selectedMaqamData?: any) {
   if (!firstNote && selectedMaqamData) {
     firstNote = selectedMaqamData.getAscendingNoteNames?.()?.[0];
@@ -61,11 +59,9 @@ const MaqamTranspositions: React.FC = () => {
     noteNames: string[];
   }>({ index: -1, noteNames: [] });
 
-  // Export modal state
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [maqamToExport, setMaqamToExport] = useState<Maqam | null>(null);
 
-  // Export handler function for maqam transpositions - opens modal with specific maqam
   const handleMaqamExport = (maqam: Maqam) => {
     setMaqamToExport(maqam);
     setIsExportModalOpen(true);
@@ -77,8 +73,37 @@ const MaqamTranspositions: React.FC = () => {
 
   const disabledFilters = ["pitchClass"];
 
-  // Removed unused prevFirstNoteRef
   const { maqamTranspositions } = useTranspositionsContext();
+
+  const BATCH_SIZE = 5;
+  const [visibleCount, setVisibleCount] = useState<number>(BATCH_SIZE);
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+  const [targetFirstNote, setTargetFirstNote] = useState<string | null>(null);
+
+  useEffect(() => {
+    setVisibleCount(BATCH_SIZE);
+  }, [selectedMaqamData, selectedTuningSystem]);
+
+  useEffect(() => {
+    if (!sentinelRef.current) return;
+  if (!('IntersectionObserver' in window)) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setVisibleCount((prev) => {
+            if (!maqamTranspositions) return prev;
+            const remaining = Math.max(0, maqamTranspositions.length - 1 - prev);
+            if (remaining === 0) return prev;
+            return prev + Math.min(BATCH_SIZE, remaining);
+          });
+        }
+      });
+    }, { root: null, rootMargin: '600px 0px 0px 0px', threshold: 0 });
+
+    observer.observe(sentinelRef.current);
+    return () => observer.disconnect();
+  }, [maqamTranspositions]);
 
   const transpositionTables = useMemo(() => {
     if (!selectedMaqamData || !selectedTuningSystem) return null;
@@ -179,10 +204,9 @@ const MaqamTranspositions: React.FC = () => {
                 <button
                   className="maqam-transpositions__button"
                   onClick={() => {
-                    setSelectedPitchClasses([]); // Clear first
+                    setSelectedPitchClasses([]);
                     setSelectedPitchClasses(noOctaveMaqam ? pitchClasses.slice(0, -1) : pitchClasses);
                     setSelectedMaqam(transposition ? maqam : null);
-                    // Dispatch event for scroll after DOM update
                     setTimeout(() => {
                       window.dispatchEvent(
                         new CustomEvent("maqamTranspositionChange", {
@@ -442,7 +466,6 @@ const MaqamTranspositions: React.FC = () => {
                     className="maqam-transpositions__play-circle-icon"
                     onMouseDown={() => {
                       noteOn(pitchClass, defaultNoteVelocity);
-                      // Add global mouseup listener to ensure noteOff always fires
                       const handleMouseUp = () => {
                         noteOff(pitchClass);
                         window.removeEventListener("mouseup", handleMouseUp);
@@ -680,7 +703,7 @@ const MaqamTranspositions: React.FC = () => {
                 />
               </colgroup>
               <tbody>
-                {maqamTranspositions.slice(1).map((maqamTransposition, row) => {
+                {maqamTranspositions.slice(1, 1 + visibleCount).map((maqamTransposition, row) => {
                   return (
                     <React.Fragment key={row}>
                       {renderTransposition(maqamTransposition, row)}
@@ -692,22 +715,47 @@ const MaqamTranspositions: React.FC = () => {
                 })}
               </tbody>
             </table>
+            {visibleCount < maqamTranspositions.length - 1 && (
+              <div className="maqam-transpositions__load-more-wrapper">
+                <button
+                  type="button"
+                  className="maqam-transpositions__button maqam-transpositions__load-more"
+                  onClick={() => {
+                    const remaining = maqamTranspositions.length - 1 - visibleCount;
+                    setVisibleCount((c) => c + Math.min(BATCH_SIZE, remaining));
+                  }}
+                >
+                  {t('maqam.loadMore') || 'Load More'}
+                </button>
+              </div>
+            )}
           </>
         )}
       </div>
     );
-  }, [allPitchClasses, ajnas, selectedMaqamData, selectedTuningSystem, centsTolerance, filters, highlightedNotes, soundSettings, language]);
+  }, [allPitchClasses, ajnas, selectedMaqamData, selectedTuningSystem, centsTolerance, filters, highlightedNotes, soundSettings, language, maqamTranspositions, visibleCount, t]);
 
   // Listen for custom event to scroll to header when maqam/transposition changes (event-driven)
   useEffect(() => {
     function handleMaqamTranspositionChange(e: CustomEvent) {
-      scrollToMaqamHeader(e.detail?.firstNote, selectedMaqamData);
+      const firstNote: string | undefined = e.detail?.firstNote;
+      if (firstNote) {
+        setTargetFirstNote(firstNote);
+        // Ensure it's visible before scrolling
+        const index = maqamTranspositions.findIndex((m) => m.ascendingPitchClasses?.[0]?.noteName === firstNote);
+        if (index > 0) { // index 0 is the analysis table already visible
+          const needed = index; // because visibleCount counts slice(1)
+          setVisibleCount((prev) => (needed > prev ? Math.ceil(needed / BATCH_SIZE) * BATCH_SIZE : prev));
+        }
+        // Scroll after next paint (DOM update due to visibleCount change if any)
+        setTimeout(() => scrollToMaqamHeader(firstNote, selectedMaqamData), 60);
+      }
     }
     window.addEventListener("maqamTranspositionChange", handleMaqamTranspositionChange as EventListener);
     return () => {
       window.removeEventListener("maqamTranspositionChange", handleMaqamTranspositionChange as EventListener);
     };
-  }, [selectedMaqamData]);
+  }, [selectedMaqamData, maqamTranspositions]);
 
   // Scroll to header on mount if maqamFirstNote is in the URL
   useEffect(() => {
@@ -715,15 +763,32 @@ const MaqamTranspositions: React.FC = () => {
     const params = new URLSearchParams(window.location.search);
     const maqamFirstNote = params.get("maqamFirstNote");
     if (maqamFirstNote) {
-      setTimeout(() => {
-        scrollToMaqamHeader(decodeURIComponent(maqamFirstNote), selectedMaqamData);
-      }, 200);
+      const decoded = decodeURIComponent(maqamFirstNote);
+      setTargetFirstNote(decoded);
+      const index = maqamTranspositions.findIndex((m) => m.ascendingPitchClasses?.[0]?.noteName === decoded);
+      if (index > 0) {
+        const needed = index; // number of rows in slice(1) we need
+        setVisibleCount((prev) => (needed > prev ? Math.ceil(needed / BATCH_SIZE) * BATCH_SIZE : prev));
+      }
+      setTimeout(() => scrollToMaqamHeader(decoded, selectedMaqamData), 220);
     }
-  }, [selectedMaqamData]);
+  }, [selectedMaqamData, maqamTranspositions]);
+
+  // If targetFirstNote changes later (e.g., filters changing re-render), ensure still visible
+  useEffect(() => {
+    if (!targetFirstNote) return;
+    const index = maqamTranspositions.findIndex((m) => m.ascendingPitchClasses?.[0]?.noteName === targetFirstNote);
+    if (index > 0) {
+      const needed = index;
+      setVisibleCount((prev) => (needed > prev ? Math.ceil(needed / BATCH_SIZE) * BATCH_SIZE : prev));
+    }
+  }, [targetFirstNote, maqamTranspositions]);
   
   return (
     <>
-      {transpositionTables}
+  {transpositionTables}
+  {/* Sentinel for automatic lazy loading (invisible) */}
+  <div ref={sentinelRef} style={{ width: 1, height: 1 }} />
       
       {/* Export Modal */}
       <ExportModal 

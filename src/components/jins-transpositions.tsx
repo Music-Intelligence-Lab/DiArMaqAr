@@ -1,13 +1,12 @@
 "use client";
 
-import React, { useMemo, useEffect, useState } from "react";
+import React, { useMemo, useEffect, useState, useRef } from "react";
 import useAppContext from "@/contexts/app-context";
 import useSoundContext, { defaultNoteVelocity } from "@/contexts/sound-context";
 import useFilterContext from "@/contexts/filter-context";
 import useLanguageContext from "@/contexts/language-context";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
-// Transpositions now sourced from context cache (no direct recomputation here)
 import useTranspositionsContext from "@/contexts/transpositions-context";
 import { Jins } from "@/models/Jins";
 import Link from "next/link";
@@ -25,19 +24,16 @@ export default function JinsTranspositions() {
 
   const { t, language, getDisplayName } = useLanguageContext();
 
-  // Export modal state
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [jinsToExport, setJinsToExport] = useState<Jins | null>(null);
 
   const disabledFilters = ["pitchClass"];
 
-  // Export handler function for jins transpositions - opens modal with specific jins
   const handleJinsExport = (jins: Jins) => {
     setJinsToExport(jins);
     setIsExportModalOpen(true);
   };
 
-  // --- Utility: getHeaderId for jins ---
   const getJinsHeaderId = (noteName: string): string => {
     if (typeof noteName !== "string") return "";
     return `jins-transpositions__header--${noteName
@@ -46,7 +42,6 @@ export default function JinsTranspositions() {
       .toLowerCase()}`;
   };
 
-  // --- Utility: scroll to jins header by note name ---
   function scrollToJinsHeader(firstNote: string, selectedJinsData?: any) {
     if (!firstNote && selectedJinsData) {
       firstNote = selectedJinsData.getNoteNames?.()?.[0];
@@ -58,6 +53,33 @@ export default function JinsTranspositions() {
       el.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }
+
+  const BATCH_SIZE = 12; // tweakable
+  const [visibleCount, setVisibleCount] = useState<number>(BATCH_SIZE);
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+  const [targetFirstNote, setTargetFirstNote] = useState<string | null>(null);
+
+  useEffect(() => {
+    setVisibleCount(BATCH_SIZE);
+  }, [selectedJinsData, selectedTuningSystem]);
+
+  useEffect(() => {
+    if (!sentinelRef.current) return;
+    if (!('IntersectionObserver' in window)) return;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setVisibleCount((prev) => {
+            const remaining = Math.max(0, jinsTranspositions.length - 1 - prev);
+            if (remaining === 0) return prev;
+            return prev + Math.min(BATCH_SIZE, remaining);
+          });
+        }
+      });
+    }, { root: null, rootMargin: '600px 0px 0px 0px', threshold: 0 });
+    observer.observe(sentinelRef.current);
+    return () => observer.disconnect();
+  }, [jinsTranspositions]);
 
   const transpositionTables = useMemo(() => {
     if (!selectedJinsData || !selectedTuningSystem) return null;
@@ -93,7 +115,7 @@ export default function JinsTranspositions() {
               <button
                 className="jins-transpositions__button"
                 onClick={() => {
-                  setSelectedPitchClasses([]); // Clear first
+                  setSelectedPitchClasses([]);
                   setSelectedPitchClasses(pitchClasses);
                   setSelectedJins(transposition ? jins : null);
                   setTimeout(() => {
@@ -300,7 +322,6 @@ export default function JinsTranspositions() {
                     className="jins-transpositions__play-circle-icon"
                     onMouseDown={() => {
                       noteOn(pitchClass, defaultNoteVelocity);
-                      // Add global mouseup listener to ensure noteOff always fires
                       const handleMouseUp = () => {
                         noteOff(pitchClass);
                         window.removeEventListener("mouseup", handleMouseUp);
@@ -393,7 +414,6 @@ export default function JinsTranspositions() {
             <thead>{renderTransposition(jinsTranspositions[0], 0)}</thead>
           </table>
 
-          {/* COMMENTS AND SOURCES */}
           {selectedJinsData && (
             <>
               <div className="jins-transpositions__comments-sources-container">
@@ -464,26 +484,49 @@ export default function JinsTranspositions() {
 
             <thead></thead>
             <tbody>
-              {jinsTranspositions.slice(1).map((jinsTransposition, row) => {
+              {jinsTranspositions.slice(1, 1 + visibleCount).map((jinsTransposition, row) => {
                 return <React.Fragment key={row}>{renderTransposition(jinsTransposition, row + 1)}</React.Fragment>;
               })}
             </tbody>
           </table>
+          {visibleCount < jinsTranspositions.length - 1 && (
+            <div className="jins-transpositions__load-more-wrapper">
+              <button
+                type="button"
+                className="jins-transpositions__button jins-transpositions__load-more"
+                onClick={() => {
+                  const remaining = jinsTranspositions.length - 1 - visibleCount;
+                  setVisibleCount((c) => c + Math.min(BATCH_SIZE, remaining));
+                }}
+              >
+                {t('jins.loadMore') || 'Load More'}
+              </button>
+            </div>
+          )}
         </div>
       </>
     );
-  }, [allPitchClasses, selectedJinsData, filters, soundSettings, language, jinsTranspositions]);
+  }, [allPitchClasses, selectedJinsData, filters, soundSettings, language, jinsTranspositions, visibleCount, t]);
 
   // Listen for custom event to scroll to header when jins/transposition changes (event-driven)
   useEffect(() => {
     function handleJinsTranspositionChange(e: CustomEvent) {
-      scrollToJinsHeader(e.detail?.firstNote, selectedJinsData);
+      const firstNote: string | undefined = e.detail?.firstNote;
+      if (firstNote) {
+        setTargetFirstNote(firstNote);
+        const index = jinsTranspositions.findIndex((j) => j.jinsPitchClasses?.[0]?.noteName === firstNote);
+        if (index > 0) {
+          const needed = index; // because visibleCount covers slice(1)
+            setVisibleCount((prev) => (needed > prev ? Math.ceil(needed / BATCH_SIZE) * BATCH_SIZE : prev));
+        }
+        setTimeout(() => scrollToJinsHeader(firstNote, selectedJinsData), 60);
+      }
     }
     window.addEventListener("jinsTranspositionChange", handleJinsTranspositionChange as EventListener);
     return () => {
       window.removeEventListener("jinsTranspositionChange", handleJinsTranspositionChange as EventListener);
     };
-  }, [selectedJinsData]);
+  }, [selectedJinsData, jinsTranspositions]);
 
   // Scroll to header on mount if jinsFirstNote is in the URL
   useEffect(() => {
@@ -491,15 +534,31 @@ export default function JinsTranspositions() {
     const params = new URLSearchParams(window.location.search);
     const jinsFirstNote = params.get("jinsFirstNote");
     if (jinsFirstNote) {
-      setTimeout(() => {
-        scrollToJinsHeader(decodeURIComponent(jinsFirstNote), selectedJinsData);
-      }, 200);
+      const decoded = decodeURIComponent(jinsFirstNote);
+      setTargetFirstNote(decoded);
+      const index = jinsTranspositions.findIndex((j) => j.jinsPitchClasses?.[0]?.noteName === decoded);
+      if (index > 0) {
+        const needed = index;
+        setVisibleCount((prev) => (needed > prev ? Math.ceil(needed / BATCH_SIZE) * BATCH_SIZE : prev));
+      }
+      setTimeout(() => scrollToJinsHeader(decoded, selectedJinsData), 220);
     }
-  }, [selectedJinsData]);
+  }, [selectedJinsData, jinsTranspositions]);
+
+  // Keep target visible after re-renders (filters, etc.)
+  useEffect(() => {
+    if (!targetFirstNote) return;
+    const index = jinsTranspositions.findIndex((j) => j.jinsPitchClasses?.[0]?.noteName === targetFirstNote);
+    if (index > 0) {
+      const needed = index;
+      setVisibleCount((prev) => (needed > prev ? Math.ceil(needed / BATCH_SIZE) * BATCH_SIZE : prev));
+    }
+  }, [targetFirstNote, jinsTranspositions]);
 
   return (
     <>
-      {transpositionTables}
+  {transpositionTables}
+  <div ref={sentinelRef} style={{ width: 1, height: 1 }} />
       
       {/* Export Modal */}
       <ExportModal 
