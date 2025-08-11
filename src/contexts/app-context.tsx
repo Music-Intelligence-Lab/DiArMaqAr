@@ -168,16 +168,16 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     } else clearSelections();
   }, [selectedIndices]);
 
-  const clearSelections = () => {
+  const clearSelections = useCallback(() => {
     setSelectedPitchClasses([]);
     setSelectedJinsData(null);
     setSelectedMaqamData(null);
     setMaqamSayrId("");
     setSelectedJins(null);
     setSelectedMaqam(null);
-  };
+  }, []);
 
-  function mapIndices(notesToMap: NoteName[], givenNumberOfPitchClasses: number = 0, setOriginal: boolean = true) {
+  const mapIndices = useCallback(function mapIndices(notesToMap: NoteName[], givenNumberOfPitchClasses: number = 0, setOriginal: boolean = true) {
     const numberOfPitchClasses = givenNumberOfPitchClasses || tuningSystemPitchClassesArray.length || selectedTuningSystem?.getPitchClasses().length || 0;
 
     const O1_LEN = octaveOneNoteNames.length;
@@ -202,9 +202,9 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     setSelectedIndices(mappedIndices);
     if (setOriginal) setOriginalIndices([...mappedIndices]);
     return mappedIndices;
-  }
+  }, [tuningSystemPitchClassesArray, selectedTuningSystem?.getId()]);
 
-  const handleStartNoteNameChange = (startingNoteName: string, givenNoteNames: NoteName[][] = [], givenNumberOfPitchClasses: number = 0) => {
+  const handleStartNoteNameChange = useCallback((startingNoteName: string, givenNoteNames: NoteName[][] = [], givenNumberOfPitchClasses: number = 0) => {
     const noteNamesToSearch = givenNoteNames.length ? givenNoteNames : selectedTuningSystem?.getNoteNames() || [[]];
     const numberOfPitchClasses = givenNumberOfPitchClasses || tuningSystemPitchClassesArray.length || selectedTuningSystem?.getPitchClasses().length || 0;
 
@@ -233,9 +233,9 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     // If no config found, fallback:
     setSelectedIndices(Array(numberOfPitchClasses).fill(-1));
     return [];
-  };
+  }, [mapIndices, selectedTuningSystem, tuningSystemPitchClassesArray]);
 
-  const handleClickJins = (jinsData: JinsData, givenPitchClasses: PitchClass[] = [], jins: Jins | null = null) => {
+  const handleClickJins = useCallback((jinsData: JinsData, givenPitchClasses: PitchClass[] = [], jins: Jins | null = null) => {
     const usedCells = givenPitchClasses.length ? givenPitchClasses : allPitchClasses;
 
     setSelectedJinsData(jinsData);
@@ -258,10 +258,10 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     }
 
     setSelectedPitchClasses(newSelectedCells);
-  };
+  }, [allPitchClasses]);
 
   // Accepts either a MaqamData object (legacy) or an object { maqamId, tonic }
-  const handleClickMaqam = (maqamOrParams: MaqamData | { maqamId: string; tonic: string }, givenPitchClasses: PitchClass[] = [], maqam: Maqam | null = null) => {
+  const handleClickMaqam = useCallback((maqamOrParams: MaqamData | { maqamId: string; tonic: string }, givenPitchClasses: PitchClass[] = [], maqam: Maqam | null = null) => {
     // If called with { maqamId, tonic }, look up MaqamData and perform transposition
     if (typeof maqamOrParams === "object" && "maqamId" in maqamOrParams && "tonic" in maqamOrParams) {
       const { maqamId, tonic } = maqamOrParams;
@@ -299,13 +299,12 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     }
 
     setSelectedPitchClasses(newSelectedCells);
-  };
+  }, [ajnas, allPitchClasses, centsTolerance, maqamat]);
 
   const getModulations = useCallback(
-    (sourceMaqamTransposition: Maqam): MaqamatModulations | AjnasModulations => {
-      return modulate(allPitchClasses, ajnas, maqamat, sourceMaqamTransposition, ajnasModulationsMode, centsTolerance);
-    },
-    [allPitchClasses, maqamat, ajnas, selectedTuningSystem, ajnasModulationsMode, getMaqamTranspositions]
+    (sourceMaqamTransposition: Maqam): MaqamatModulations | AjnasModulations =>
+      modulate(allPitchClasses, ajnas, maqamat, sourceMaqamTransposition, ajnasModulationsMode, centsTolerance),
+    [allPitchClasses, ajnas, maqamat, ajnasModulationsMode, centsTolerance]
   );
 
   const handleUrlParams = useCallback(
@@ -368,64 +367,98 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         }
       }
     },
-    [tuningSystems, ajnas, maqamat, selectedTuningSystem, setSelectedTuningSystem, handleStartNoteNameChange, getJinsTranspositions, handleClickJins, getMaqamTranspositions, handleClickMaqam]
+    [tuningSystems, ajnas, maqamat, selectedTuningSystem, handleStartNoteNameChange, handleClickJins, handleClickMaqam]
+  );
+
+  // Memoize context value to avoid re-renders of all consumers when no referenced pieces change
+  const contextValue = useMemo(
+    () => ({
+      tuningSystems,
+      setTuningSystems,
+      selectedTuningSystem,
+      setSelectedTuningSystem,
+      tuningSystemPitchClasses,
+      setTuningSystemPitchClasses,
+      selectedAbjadNames,
+      setSelectedAbjadNames,
+      handleStartNoteNameChange,
+      selectedPitchClasses,
+      setSelectedPitchClasses,
+      allPitchClasses,
+      selectedIndices,
+      setSelectedIndices,
+      originalIndices,
+      setOriginalIndices,
+      mapIndices,
+      tuningSystemStringLength,
+      setTuningSystemStringLength,
+      referenceFrequencies,
+      setReferenceFrequencies,
+      originalReferenceFrequencies,
+      setOriginalReferenceFrequencies,
+      ajnas,
+      setAjnas,
+      selectedJinsData,
+      setSelectedJinsData,
+      handleClickJins,
+      selectedJins,
+      setSelectedJins,
+      maqamat,
+      setMaqamat,
+      selectedMaqamData,
+      setSelectedMaqamData,
+      handleClickMaqam,
+      selectedMaqam,
+      setSelectedMaqam,
+      maqamSayrId,
+      setMaqamSayrId,
+      centsTolerance,
+      setCentsTolerance,
+      clearSelections,
+      handleUrlParams,
+      sources,
+      setSources,
+      patterns,
+      setPatterns,
+      getModulations,
+      ajnasModulationsMode,
+      setAjnasModulationsMode,
+    }),
+    [
+      tuningSystems,
+      selectedTuningSystem,
+      tuningSystemPitchClasses,
+      selectedAbjadNames,
+      handleStartNoteNameChange,
+      selectedPitchClasses,
+      allPitchClasses,
+      selectedIndices,
+      originalIndices,
+      mapIndices,
+      tuningSystemStringLength,
+      referenceFrequencies,
+      originalReferenceFrequencies,
+      ajnas,
+      selectedJinsData,
+      handleClickJins,
+      selectedJins,
+      maqamat,
+      selectedMaqamData,
+      handleClickMaqam,
+      selectedMaqam,
+      maqamSayrId,
+      centsTolerance,
+      clearSelections,
+      handleUrlParams,
+      sources,
+      patterns,
+      getModulations,
+      ajnasModulationsMode,
+    ]
   );
 
   return (
-    <AppContext.Provider
-      value={{
-        tuningSystems,
-        setTuningSystems,
-        selectedTuningSystem,
-        setSelectedTuningSystem,
-        tuningSystemPitchClasses,
-        setTuningSystemPitchClasses,
-        selectedAbjadNames,
-        setSelectedAbjadNames,
-        handleStartNoteNameChange,
-        selectedPitchClasses,
-        setSelectedPitchClasses,
-        allPitchClasses,
-        selectedIndices,
-        setSelectedIndices,
-        originalIndices,
-        setOriginalIndices,
-        mapIndices,
-        tuningSystemStringLength,
-        setTuningSystemStringLength,
-        referenceFrequencies,
-        setReferenceFrequencies,
-        originalReferenceFrequencies,
-        setOriginalReferenceFrequencies,
-        ajnas,
-        setAjnas,
-        selectedJinsData,
-        setSelectedJinsData,
-        handleClickJins,
-        selectedJins,
-        setSelectedJins,
-        maqamat,
-        setMaqamat,
-        selectedMaqamData,
-        setSelectedMaqamData,
-        handleClickMaqam,
-        selectedMaqam,
-        setSelectedMaqam,
-        maqamSayrId,
-        setMaqamSayrId,
-        centsTolerance,
-        setCentsTolerance,
-        clearSelections,
-        handleUrlParams,
-        sources,
-        setSources,
-        patterns,
-        setPatterns,
-        getModulations,
-        ajnasModulationsMode,
-        setAjnasModulationsMode,
-      }}
-    >
+  <AppContext.Provider value={contextValue}>
       {children}
     </AppContext.Provider>
   );

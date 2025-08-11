@@ -7,7 +7,7 @@ import useFilterContext from "@/contexts/filter-context";
 import useLanguageContext from "@/contexts/language-context";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
-import { getMaqamTranspositions } from "@/functions/transpose";
+import useTranspositionsContext from "@/contexts/transpositions-context";
 import StaffNotation from "./staff-notation";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import ExportModal from "./export-modal";
@@ -78,10 +78,7 @@ const MaqamTranspositions: React.FC = () => {
   const disabledFilters = ["pitchClass"];
 
   // Removed unused prevFirstNoteRef
-  const maqamTranspositions = useMemo(() => {
-    const transpositions = getMaqamTranspositions(allPitchClasses, ajnas, selectedMaqamData, true, centsTolerance);
-    return transpositions;
-  }, [allPitchClasses, ajnas, selectedMaqamData, centsTolerance]);
+  const { maqamTranspositions } = useTranspositionsContext();
 
   const transpositionTables = useMemo(() => {
     if (!selectedMaqamData || !selectedTuningSystem) return null;

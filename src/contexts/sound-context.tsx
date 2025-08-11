@@ -1,7 +1,7 @@
 "use client";
 
 import useAppContext from "./app-context";
-import React, { createContext, useState, useEffect, useRef, useContext, useMemo } from "react";
+import React, { createContext, useState, useEffect, useRef, useContext, useMemo, useCallback } from "react";
 import { frequencyToMidiNoteNumber } from "@/functions/convertPitchClass";
 import Pattern from "@/models/Pattern";
 import romanToNumber from "@/functions/romanToNumber";
@@ -349,15 +349,15 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     return mapping;
   }, [soundSettings.inputMode, selectedTuningSystem, selectedPitchClasses, allPitchClasses]);
 
-  const sendMidiMessage = (bytes: number[]) => {
+  const sendMidiMessage = useCallback((bytes: number[]) => {
     const ma = midiAccessRef.current;
     if (!ma || !soundSettings.selectedMidiOutputId) return;
 
     const port = ma.outputs.get(soundSettings.selectedMidiOutputId);
     port?.send(bytes);
-  };
+  }, [soundSettings.selectedMidiOutputId]);
 
-  function sendPitchBend(detuneSemitones: number, channel: number = 0) {
+  const sendPitchBend = useCallback(function sendPitchBend(detuneSemitones: number, channel: number = 0) {
     const center = 8192;
     const bendOffset = Math.round((detuneSemitones / soundSettings.pitchBendRange) * center);
     const bendValue = Math.max(0, Math.min(16383, center + bendOffset));
@@ -365,9 +365,9 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     const msb = (bendValue >> 7) & 0x7f;
     // Use the specified channel (0xE0 + channel)
     sendMidiMessage([0xe0 + channel, lsb, msb]);
-  }
+  }, [sendMidiMessage, soundSettings.pitchBendRange]);
 
-  function allocateMPEChannel(pitchClassFraction: string, noteNumber: number): number | null {
+  const allocateMPEChannel = useCallback(function allocateMPEChannel(pitchClassFraction: string, noteNumber: number): number | null {
     if (!soundSettings.useMPE) return 0; // Use channel 0 for non-MPE
 
     const allocator = mpeChannelAllocatorRef.current;
@@ -379,9 +379,9 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     const channel = allocator.availableChannels.shift()!;
     allocator.activeChannels.set(channel, { pitchClassFraction, noteNumber });
     return channel;
-  }
+  }, [soundSettings.useMPE]);
 
-  function releaseMPEChannel(pitchClassFraction: string): number | null {
+  const releaseMPEChannel = useCallback(function releaseMPEChannel(pitchClassFraction: string): number | null {
     if (!soundSettings.useMPE) return 0;
 
     const allocator = mpeChannelAllocatorRef.current;
@@ -394,9 +394,9 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
       }
     }
     return null;
-  }
+  }, [soundSettings.useMPE]);
 
-  function initializeMPE() {
+  const initializeMPE = useCallback(function initializeMPE() {
     if (!soundSettings.useMPE || !soundSettings.selectedMidiOutputId) return;
 
     // Send MPE Configuration Message
@@ -414,13 +414,13 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
       sendMidiMessage([0xb0 + ch, 0x06, soundSettings.pitchBendRange]); // Data Entry MSB
       sendMidiMessage([0xb0 + ch, 0x26, 0x00]); // Data Entry LSB
     }
-  }
+  }, [sendMidiMessage, soundSettings.pitchBendRange, soundSettings.selectedMidiOutputId, soundSettings.useMPE]);
 
-  function scheduleTimeout(fn: () => void, ms: number) {
+  const scheduleTimeout = useCallback(function scheduleTimeout(fn: () => void, ms: number) {
     const id = window.setTimeout(fn, ms);
     timeoutsRef.current.push(id);
     return id;
-  }
+  }, []);
 
   useEffect(() => {
     const newSelectedPitchClasses = [];
@@ -536,7 +536,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     }
   }, [soundSettings.useMPE, soundSettings.selectedMidiOutputId, soundSettings.pitchBendRange]);
 
-  const handleMidiInput: NonNullable<MIDIInput["onmidimessage"]> = function (this: MIDIInput, ev: MIDIMessageEvent) {
+  const handleMidiInput: NonNullable<MIDIInput["onmidimessage"]> = useCallback(function (this: MIDIInput, ev: MIDIMessageEvent) {
     // Ignore MIDI messages unless inputType is "MIDI"
     if (soundSettings.inputType !== "MIDI") return;
     // only from our selected port
@@ -562,17 +562,165 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
       noteOff(pitchClass);
       setActivePitchClasses((prev) => prev.filter((c) => !(c.index === pitchClass.index && c.octave === pitchClass.octave)));
     }
-  };
+  }, [soundSettings.inputType, soundSettings.selectedMidiInputId, midiToPitchClassMapping]);
 
-  const playNote = (pitchClass: PitchClass, givenDuration: number = soundSettings.duration, velocity?: number) => {
+  // Define noteOn/noteOff before playNote/playSequence to satisfy hook dependency ordering.
+
+  const noteOn = useCallback(function noteOn(pitchClass: PitchClass, midiVelocity: number = defaultNoteVelocity) {
+    setActivePitchClasses((prev) => {
+      if (prev.some((c) => c.frequency === pitchClass.frequency)) return prev;
+      return [...prev, pitchClass];
+    });
+    const frequency = parseFloat(pitchClass.frequency);
+    if (soundSettings.outputMode === "mute") return;
+
+    // Use a quadratic velocity curve for more expressive dynamics
+    const velocityNorm = Math.max(0, Math.min(1, midiVelocity / 127));
+    const velocityCurve = velocityNorm * velocityNorm;
+
+    if (soundSettings.outputMode === "midi") {
+      const mf = frequencyToMidiNoteNumber(frequency);
+      const note = Math.floor(mf);
+      const detune = mf - note;
+
+      // Allocate MPE channel if using MPE, otherwise use channel 0
+      const channel = allocateMPEChannel(pitchClass.fraction, note);
+      if (channel === null) {
+        console.warn("Could not allocate MPE channel for note");
+        return;
+      }
+
+      // Send pitch bend on the allocated channel
+      sendPitchBend(detune, channel);
+
+      // For MIDI, pass velocity directly (scaled by volume if desired)
+      const vel = Math.round(velocityNorm * soundSettings.volume * 127);
+
+      // Send note on with the allocated channel
+      sendMidiMessage([0x90 + channel, note, vel]);
+
+      // Track the note with its current frequency
+      midiActiveNotesRef.current.set(pitchClass.fraction, frequency);
+      return;
+    }
+
+    // For waveform output, manually instantiate oscillator/gainNode with ADSR (no release) and store in activeNotesRef
+    if (!audioCtxRef.current || !masterGainRef.current) return;
+    const audioCtx = audioCtxRef.current;
+    const masterGain = masterGainRef.current;
+    const startTime = audioCtx.currentTime;
+    const { attack, decay, sustain, waveform } = soundSettings;
+    // Polyphony normalization: scale each voice so overlapping notes don’t clip
+    const upcomingCount = Array.from(activeNotesRef.current.values()).reduce((sum, v) => sum + v.length, 0) + 1;
+    const polyScale = (1 / Math.sqrt(upcomingCount)) * velocityCurve;
+
+    // Handle aperiodic waves
+    if (APERIODIC_WAVES[waveform]) {
+      const aw = APERIODIC_WAVES[waveform];
+      const pws = aw.periodicWaves;
+      const dets = aw.detunings;
+
+      const merger = audioCtx.createGain();
+      const oscs: OscillatorNode[] = [];
+
+      for (let i = 0; i < pws.length; i++) {
+        const oscNode = audioCtx.createOscillator();
+        oscNode.setPeriodicWave(pws[i]);
+        const detunedFreq = frequency * Math.pow(2, dets[i] / 1200);
+        oscNode.frequency.setValueAtTime(detunedFreq, startTime);
+        oscNode.connect(merger);
+        oscs.push(oscNode);
+      }
+
+      merger.gain.setValueAtTime(1 / Math.sqrt(pws.length), startTime);
+      const source = merger;
+
+      const gainNode = audioCtx.createGain();
+      const peakLevel = velocityCurve;
+      const sustainLevel = sustain * velocityCurve;
+      const attackEndTime = startTime + attack;
+      const decayEndTime = attackEndTime + decay;
+
+      gainNode.gain.setValueAtTime(0, startTime);
+      gainNode.gain.linearRampToValueAtTime(peakLevel, attackEndTime);
+      gainNode.gain.linearRampToValueAtTime(sustainLevel, decayEndTime);
+
+      source.connect(gainNode).connect(masterGain);
+
+      const prev = activeNotesRef.current.get(pitchClass.fraction) || [];
+      prev.push({ oscillator: oscs, gainNode, frequency });
+      activeNotesRef.current.set(pitchClass.fraction, prev);
+      oscs.forEach((osc) => osc.start(startTime));
+      return;
+    }
+
+    const osc = audioCtx.createOscillator();
+    function createZeroPhasePeriodicWave(type: string, ctx: AudioContext) {
+      let real, imag, N;
+      if (type === "sine") {
+        real = new Float32Array(2);
+        imag = new Float32Array(2);
+        real[0] = 0; real[1] = 1; imag[0] = 0; imag[1] = 0;
+        return ctx.createPeriodicWave(real, imag, { disableNormalization: false });
+      } else if (type === "triangle") {
+        N = 32; real = new Float32Array(N); imag = new Float32Array(N); real[0] = 0;
+        for (let n = 1; n < N; n++) if (n % 2 === 1) { real[n] = (8 / (Math.PI * Math.PI)) * (1 / (n * n)) * (n % 4 === 1 ? 1 : -1); imag[n] = 0; }
+        return ctx.createPeriodicWave(real, imag, { disableNormalization: false });
+      } else if (type === "square") {
+        N = 32; real = new Float32Array(N); imag = new Float32Array(N); real[0] = 0;
+        for (let n = 1; n < N; n++) if (n % 2 === 1) { real[n] = 4 / (Math.PI * n); imag[n] = 0; }
+        return ctx.createPeriodicWave(real, imag, { disableNormalization: false });
+      } else if (type === "sawtooth") {
+        N = 32; real = new Float32Array(N); imag = new Float32Array(N); real[0] = 0;
+        for (let n = 1; n < N; n++) { real[n] = 2 / (Math.PI * n); imag[n] = 0; }
+        return ctx.createPeriodicWave(real, imag, { disableNormalization: false });
+      }
+      return null;
+    }
+    let customWave: PeriodicWave | null = null;
+    if (["sine", "triangle", "square", "sawtooth"].includes(waveform)) {
+      customWave = createZeroPhasePeriodicWave(waveform, audioCtx);
+      if (customWave) osc.setPeriodicWave(customWave); else osc.type = waveform as OscillatorType;
+    } else if (PERIODIC_WAVES[waveform]) osc.setPeriodicWave(PERIODIC_WAVES[waveform]); else osc.type = waveform as OscillatorType;
+    try { osc.frequency.setValueAtTime(frequency ?? 0, startTime); } catch (e) { console.error("Error setting frequency on oscillator:", e, frequency, startTime, pitchClass); }
+    const gainNode = audioCtx.createGain();
+    const peakLevel = polyScale; const sustainLevel = sustain * polyScale; const attackEndTime = startTime + attack; const decayEndTime = attackEndTime + decay;
+    gainNode.gain.setValueAtTime(0, startTime);
+    gainNode.gain.linearRampToValueAtTime(peakLevel, attackEndTime);
+    gainNode.gain.linearRampToValueAtTime(sustainLevel, decayEndTime);
+    osc.connect(gainNode).connect(masterGain);
+    osc.start(startTime);
+    const prev = activeNotesRef.current.get(pitchClass.fraction) || [];
+    prev.push({ oscillator: osc, gainNode, frequency });
+    activeNotesRef.current.set(pitchClass.fraction, prev);
+  }, [allocateMPEChannel, sendMidiMessage, sendPitchBend, soundSettings.attack, soundSettings.decay, soundSettings.outputMode, soundSettings.pitchBendRange, soundSettings.sustain, soundSettings.useMPE, soundSettings.volume, soundSettings.waveform]);
+
+  const noteOff = useCallback(function noteOff(pitchClass: PitchClass) {
+    setActivePitchClasses((prev) => prev.filter((c) => !(c.frequency === pitchClass.frequency)));
+    if (soundSettings.outputMode === "mute") return;
+    if (soundSettings.outputMode === "midi") {
+      const currentFrequency = midiActiveNotesRef.current.get(pitchClass.fraction);
+      if (!currentFrequency) return;
+      const mf = frequencyToMidiNoteNumber(currentFrequency);
+      const note = Math.floor(mf);
+      const channel = releaseMPEChannel(pitchClass.fraction);
+      if (channel !== null) sendMidiMessage([0x80 + channel, note, 0]); else sendMidiMessage([0x80, note, 0]);
+      midiActiveNotesRef.current.delete(pitchClass.fraction);
+      return;
+    }
+    const audioCtx = audioCtxRef.current!; const now = audioCtx.currentTime; const { release } = soundSettings;
+    const queue = activeNotesRef.current.get(pitchClass.fraction) || []; if (!queue.length) return;
+    const voice = queue.shift()!; voice.gainNode.gain.cancelScheduledValues(now); voice.gainNode.gain.setValueAtTime(voice.gainNode.gain.value, now); voice.gainNode.gain.linearRampToValueAtTime(0, now + release);
+    if (Array.isArray(voice.oscillator)) voice.oscillator.forEach((osc) => osc.stop(now + release)); else voice.oscillator.stop(now + release);
+    activeNotesRef.current.set(pitchClass.fraction, queue);
+  }, [releaseMPEChannel, sendMidiMessage, soundSettings.outputMode, soundSettings.release, soundSettings.useMPE]);
+
+  const playNote = useCallback((pitchClass: PitchClass, givenDuration: number = soundSettings.duration, velocity?: number) => {
     noteOn(pitchClass, velocity);
-    // Schedule noteOff after the given duration
-    scheduleTimeout(() => {
-      noteOff(pitchClass);
-    }, givenDuration * 1000);
-  };
+    scheduleTimeout(() => noteOff(pitchClass), givenDuration * 1000);
+  }, [noteOn, noteOff, scheduleTimeout, soundSettings.duration]);
 
-  const playSequence = (
+  const playSequence = useCallback((
     pitchClasses: PitchClass[],
     ascending = true,
     ascendingPitchClasses: PitchClass[] = [],
@@ -734,253 +882,10 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         resolve();
       }, totalSeqMs);
     });
-  };
+  }, [allPitchClasses, noteOff, noteOn, scheduleTimeout, selectedMaqam, selectedMaqamData, selectedPitchClasses, soundSettings.drone, soundSettings.selectedPattern, soundSettings.tempo]);
 
-  function noteOn(pitchClass: PitchClass, midiVelocity: number = defaultNoteVelocity) {
-    setActivePitchClasses((prev) => {
-      if (prev.some((c) => c.frequency === pitchClass.frequency)) return prev;
-      return [...prev, pitchClass];
-    });
-    const frequency = parseFloat(pitchClass.frequency);
-    if (soundSettings.outputMode === "mute") return;
 
-    // Use a quadratic velocity curve for more expressive dynamics
-    const velocityNorm = Math.max(0, Math.min(1, midiVelocity / 127));
-    const velocityCurve = velocityNorm * velocityNorm;
-
-    if (soundSettings.outputMode === "midi") {
-      const mf = frequencyToMidiNoteNumber(frequency);
-      const note = Math.floor(mf);
-      const detune = mf - note;
-
-      // Allocate MPE channel if using MPE, otherwise use channel 0
-      const channel = allocateMPEChannel(pitchClass.fraction, note);
-      if (channel === null) {
-        console.warn("Could not allocate MPE channel for note");
-        return;
-      }
-
-      // Send pitch bend on the allocated channel
-      sendPitchBend(detune, channel);
-
-      // For MIDI, pass velocity directly (scaled by volume if desired)
-      const vel = Math.round(velocityNorm * soundSettings.volume * 127);
-
-      // Send note on with the allocated channel
-      sendMidiMessage([0x90 + channel, note, vel]);
-
-      // Track the note with its current frequency
-      midiActiveNotesRef.current.set(pitchClass.fraction, frequency);
-      return;
-    }
-
-    // For waveform output, manually instantiate oscillator/gainNode with ADSR (no release) and store in activeNotesRef
-    if (!audioCtxRef.current || !masterGainRef.current) return;
-    const audioCtx = audioCtxRef.current;
-    const masterGain = masterGainRef.current;
-    const startTime = audioCtx.currentTime;
-    const { attack, decay, sustain, waveform } = soundSettings;
-    // Polyphony normalization: scale each voice so overlapping notes don’t clip
-    const upcomingCount = Array.from(activeNotesRef.current.values()).reduce((sum, v) => sum + v.length, 0) + 1;
-    // const polyScale = 1 / Math.sqrt(upcomingCount);
-    const polyScale = (1 / Math.sqrt(upcomingCount)) * velocityCurve;
-
-    // Handle aperiodic waves
-    if (APERIODIC_WAVES[waveform]) {
-      const aw = APERIODIC_WAVES[waveform];
-      const pws = aw.periodicWaves;
-      const dets = aw.detunings;
-
-      const merger = audioCtx.createGain(); // to sum the oscillators
-      const oscs: OscillatorNode[] = [];
-
-      for (let i = 0; i < pws.length; i++) {
-        const oscNode = audioCtx.createOscillator();
-        oscNode.setPeriodicWave(pws[i]);
-        const detunedFreq = frequency * Math.pow(2, dets[i] / 1200);
-        oscNode.frequency.setValueAtTime(detunedFreq, startTime);
-        oscNode.connect(merger);
-        oscs.push(oscNode);
-      }
-
-      // Use square‑root compensation so perceived loudness matches periodic waves
-      // (≈ -3 dB when five oscillators are active instead of −14 dB).
-      merger.gain.setValueAtTime(1 / Math.sqrt(pws.length), startTime);
-      const source = merger;
-
-      const gainNode = audioCtx.createGain();
-      const peakLevel = velocityCurve;
-      const sustainLevel = sustain * velocityCurve;
-      const attackEndTime = startTime + attack;
-      const decayEndTime = attackEndTime + decay;
-
-      gainNode.gain.setValueAtTime(0, startTime);
-      gainNode.gain.linearRampToValueAtTime(peakLevel, attackEndTime);
-      gainNode.gain.linearRampToValueAtTime(sustainLevel, decayEndTime);
-
-      source.connect(gainNode).connect(masterGain);
-
-      const prev = activeNotesRef.current.get(pitchClass.fraction) || [];
-      // Store the entire array of oscillators for this note
-      prev.push({ oscillator: oscs, gainNode, frequency });
-      activeNotesRef.current.set(pitchClass.fraction, prev);
-
-      // Start oscillators only (do not stop here)
-      oscs.forEach((osc) => osc.start(startTime));
-      return;
-    }
-
-    // periodic
-    const osc = audioCtx.createOscillator();
-    // Utility to create 0-phase (cosine) PeriodicWave
-    function createZeroPhasePeriodicWave(type: string, ctx: AudioContext) {
-      let real, imag, N;
-      if (type === "sine") {
-        real = new Float32Array(2);
-        imag = new Float32Array(2);
-        real[0] = 0;
-        real[1] = 1;
-        imag[0] = 0;
-        imag[1] = 0;
-        return ctx.createPeriodicWave(real, imag, {
-          disableNormalization: false,
-        });
-      } else if (type === "triangle") {
-        N = 32; // number of harmonics
-        real = new Float32Array(N);
-        imag = new Float32Array(N);
-        real[0] = 0;
-        for (let n = 1; n < N; n++) {
-          if (n % 2 === 1) {
-            // Only odd harmonics
-            real[n] = (8 / (Math.PI * Math.PI)) * (1 / (n * n)) * (n % 4 === 1 ? 1 : -1);
-            imag[n] = 0;
-          }
-        }
-        return ctx.createPeriodicWave(real, imag, {
-          disableNormalization: false,
-        });
-      } else if (type === "square") {
-        N = 32;
-        real = new Float32Array(N);
-        imag = new Float32Array(N);
-        real[0] = 0;
-        for (let n = 1; n < N; n++) {
-          if (n % 2 === 1) {
-            real[n] = 4 / (Math.PI * n);
-            imag[n] = 0;
-          }
-        }
-        return ctx.createPeriodicWave(real, imag, {
-          disableNormalization: false,
-        });
-      } else if (type === "sawtooth") {
-        N = 32;
-        real = new Float32Array(N);
-        imag = new Float32Array(N);
-        real[0] = 0;
-        for (let n = 1; n < N; n++) {
-          real[n] = (2 / (Math.PI * n)) * (n % 2 === 0 ? 0 : 1) * (type === "sawtooth" ? 1 : 0);
-          // For sawtooth, all harmonics, but this keeps only odd for square
-          if (type === "sawtooth") real[n] = 2 / (Math.PI * n);
-          imag[n] = 0;
-        }
-        return ctx.createPeriodicWave(real, imag, {
-          disableNormalization: false,
-        });
-      }
-      return null;
-    }
-
-    let customWave: PeriodicWave | null = null;
-    if (["sine", "triangle", "square", "sawtooth"].includes(waveform)) {
-      customWave = createZeroPhasePeriodicWave(waveform, audioCtx);
-      if (customWave) {
-        osc.setPeriodicWave(customWave);
-      } else {
-        osc.type = waveform as OscillatorType;
-      }
-    } else if (PERIODIC_WAVES[waveform]) {
-      osc.setPeriodicWave(PERIODIC_WAVES[waveform]);
-    } else {
-      osc.type = waveform as OscillatorType;
-    }
-
-    try {
-      osc.frequency.setValueAtTime(frequency ?? 0, startTime);
-    } catch (e) {
-      console.error("Error setting frequency on oscillator:", e, frequency, startTime, pitchClass);
-    }
-    const source: AudioNode = osc;
-
-    const gainNode = audioCtx.createGain();
-    const peakLevel = polyScale;
-    const sustainLevel = sustain * polyScale;
-    const attackEndTime = startTime + attack;
-    const decayEndTime = attackEndTime + decay;
-
-    gainNode.gain.setValueAtTime(0, startTime);
-    gainNode.gain.linearRampToValueAtTime(peakLevel, attackEndTime);
-    gainNode.gain.linearRampToValueAtTime(sustainLevel, decayEndTime);
-
-    source.connect(gainNode).connect(masterGain);
-    osc.start(startTime);
-
-    const prev = activeNotesRef.current.get(pitchClass.fraction) || [];
-    prev.push({ oscillator: osc, gainNode, frequency });
-    activeNotesRef.current.set(pitchClass.fraction, prev);
-  }
-
-  function noteOff(pitchClass: PitchClass) {
-    setActivePitchClasses((prev) => prev.filter((c) => !(c.frequency === pitchClass.frequency)));
-
-    if (soundSettings.outputMode === "mute") return;
-
-    if (soundSettings.outputMode === "midi") {
-      // Get current frequency for this pitch class
-      const currentFrequency = midiActiveNotesRef.current.get(pitchClass.fraction);
-      if (!currentFrequency) return;
-
-      const mf = frequencyToMidiNoteNumber(currentFrequency);
-      const note = Math.floor(mf);
-
-      // Find and release the MPE channel for this pitch class
-      const channel = releaseMPEChannel(pitchClass.fraction);
-      if (channel !== null) {
-        // Send note off on the specific channel
-        sendMidiMessage([0x80 + channel, note, 0]);
-      } else {
-        // Fallback to channel 0 if MPE channel not found
-        sendMidiMessage([0x80, note, 0]);
-      }
-
-      midiActiveNotesRef.current.delete(pitchClass.fraction);
-      return;
-    }
-
-    const audioCtx = audioCtxRef.current!;
-    const now = audioCtx.currentTime;
-    const { release } = soundSettings;
-
-    // Get the voice queue for this pitch class
-    const queue = activeNotesRef.current.get(pitchClass.fraction) || [];
-    if (!queue.length) return;
-
-    const voice = queue.shift()!;
-    voice.gainNode.gain.cancelScheduledValues(now);
-    voice.gainNode.gain.setValueAtTime(voice.gainNode.gain.value, now);
-    voice.gainNode.gain.linearRampToValueAtTime(0, now + release);
-    // If the voice was created with aperiodic oscillators (multiple), stop them all
-    if (Array.isArray(voice.oscillator)) {
-      voice.oscillator.forEach((osc) => osc.stop(now + release));
-    } else {
-      voice.oscillator.stop(now + release);
-    }
-
-    activeNotesRef.current.set(pitchClass.fraction, queue);
-  }
-
-  function stopAllSounds() {
+  const stopAllSounds = useCallback(function stopAllSounds() {
     timeoutsRef.current.forEach(clearTimeout);
     timeoutsRef.current = [];
     const FADEOUT_MS = 5;
@@ -1022,9 +927,9 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     midiActiveNotesRef.current.clear();
 
     setActivePitchClasses([]);
-  }
+  }, [sendMidiMessage, soundSettings.useMPE]);
 
-  function clearHangingNotes() {
+  const clearHangingNotes = useCallback(function clearHangingNotes() {
     // Fade out all active voices over 5ms before stopping oscillators
     const FADEOUT_MS = 5;
     const audioCtx = audioCtxRef.current;
@@ -1065,10 +970,10 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     midiActiveNotesRef.current.clear();
 
     setActivePitchClasses([]);
-  }
+  }, [sendMidiMessage, soundSettings.useMPE]);
 
   // Simple function to update ALL active notes using a new reference frequency
-  function updateAllActiveNotesByReferenceFrequency(newReferenceFrequency: number) {
+  const updateAllActiveNotesByReferenceFrequency = useCallback(function updateAllActiveNotesByReferenceFrequency(newReferenceFrequency: number) {
     const audioCtx = audioCtxRef.current;
     if (!audioCtx) return;
 
@@ -1161,10 +1066,10 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         midiActiveNotesRef.current.set(pitchClassFraction, newFrequency);
       }
     }
-  }
+  }, [allPitchClasses, sendMidiMessage, sendPitchBend, soundSettings.outputMode, soundSettings.pitchBendRange, soundSettings.useMPE]);
 
   // Function to recalculate all active note frequencies to match their current pitch class frequencies
-  function recalculateAllActiveNoteFrequencies() {
+  const recalculateAllActiveNoteFrequencies = useCallback(function recalculateAllActiveNoteFrequencies() {
     const audioCtx = audioCtxRef.current;
     if (!audioCtx) return;
 
@@ -1257,33 +1162,51 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         midiActiveNotesRef.current.set(pitchClassFraction, targetFrequency);
       }
     }
-  }
+  }, [allPitchClasses, sendMidiMessage, sendPitchBend, soundSettings.outputMode, soundSettings.useMPE]);
+
+  const contextValue = useMemo(() => ({
+    playNote,
+    soundSettings,
+    setSoundSettings,
+    activePitchClasses,
+    setActivePitchClasses,
+    playSequence,
+    noteOn,
+    noteOff,
+    midiInputs,
+    midiOutputs,
+    setRefresh,
+    clearHangingNotes,
+    stopAllSounds,
+    keyToPitchClassMapping,
+    pitchClassToKeyMapping,
+    midiToPitchClassMapping,
+    pitchClassToMidiMapping,
+    pitchClassToBlackOrWhite,
+    updateAllActiveNotesByReferenceFrequency,
+    recalculateAllActiveNoteFrequencies,
+  }), [
+    playNote,
+    soundSettings,
+    activePitchClasses,
+    playSequence,
+    noteOn,
+    noteOff,
+    midiInputs,
+    midiOutputs,
+    clearHangingNotes,
+    stopAllSounds,
+    keyToPitchClassMapping,
+    pitchClassToKeyMapping,
+    midiToPitchClassMapping,
+    pitchClassToMidiMapping,
+    pitchClassToBlackOrWhite,
+    updateAllActiveNotesByReferenceFrequency,
+    recalculateAllActiveNoteFrequencies,
+  ]);
 
   return (
-    <SoundContext.Provider
-      value={{
-        playNote,
-        soundSettings,
-        setSoundSettings,
-        activePitchClasses,
-        setActivePitchClasses,
-        playSequence,
-        noteOn,
-        noteOff,
-        midiInputs,
-        midiOutputs,
-        setRefresh,
-        clearHangingNotes,
-        stopAllSounds,
-        keyToPitchClassMapping,
-        pitchClassToKeyMapping,
-        midiToPitchClassMapping,
-        pitchClassToMidiMapping,
-        pitchClassToBlackOrWhite,
-        updateAllActiveNotesByReferenceFrequency,
-        recalculateAllActiveNoteFrequencies,
-      }}
-    >
+  <SoundContext.Provider value={contextValue}>
       {children}
     </SoundContext.Provider>
   );

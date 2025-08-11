@@ -4,9 +4,7 @@ import useAppContext from "@/contexts/app-context";
 import useSoundContext from "@/contexts/sound-context";
 import useLanguageContext from "@/contexts/language-context";
 import PitchClass from "@/models/PitchClass";
-import { Maqam } from "@/models/Maqam";
-import { getJinsTranspositions, getMaqamTranspositions } from "@/functions/transpose";
-import { Jins } from "@/models/Jins";
+import useTranspositionsContext from "@/contexts/transpositions-context";
 
 interface WheelCellProps {
   pitchClass: PitchClass;
@@ -86,7 +84,6 @@ WheelCell.displayName = "WheelCell";
 
 export default function PitchClassBar() {
   const {
-    ajnas,
     selectedJinsData,
     selectedJins,
     setSelectedJins,
@@ -136,15 +133,7 @@ export default function PitchClassBar() {
     });
   }, [selectedPitchClasses]);
 
-  const filteredJinsTranspositions = useMemo<Jins[]>(
-    () => getJinsTranspositions(allPitchClasses, selectedJinsData, true, centsTolerance),
-    [allPitchClasses, selectedJinsData, centsTolerance]
-  );
-
-  const filteredMaqamTranspositions = useMemo<Maqam[]>(
-    () => getMaqamTranspositions(allPitchClasses, ajnas, selectedMaqamData, true, centsTolerance),
-    [allPitchClasses, selectedMaqamData, centsTolerance]
-  );
+  const { jinsTranspositions: filteredJinsTranspositions, maqamTranspositions: filteredMaqamTranspositions } = useTranspositionsContext();
 
   const wheelCells = useMemo(() => {
     // Determine the tonic of the current selected maqam or jins
