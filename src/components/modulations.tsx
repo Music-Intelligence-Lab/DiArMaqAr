@@ -525,15 +525,15 @@ export default function Modulations() {
                         ))}
                     </div>
                     {/* Only show descending if different from ascending */}
-                    <div className="modulations__modulations-list">
-                      <span className="modulations__header">
-                        <span className="modulations__header-text">
-                          {t('modulations.sixthDescending')}: <br />{" "}
+                    {ascendingNoteNames[5] !== descendingNoteNames[5] && (
+                      <div className="modulations__modulations-list">
+                        <span className="modulations__header">
+                          <span className="modulations__header-text">
+                            {t('modulations.sixthDescending')}: <br />{" "}
+                          </span>
+                          {getDisplayName(descendingNoteNames[5], 'note')} ({modulations?.modulationsOnSixDescending ? modulations.modulationsOnSixDescending.length : 0})
                         </span>
-                        {getDisplayName(descendingNoteNames[5], 'note')} ({modulations?.modulationsOnSixDescending ? modulations.modulationsOnSixDescending.length : 0})
-                      </span>
-                      {JSON.stringify(modulations.modulationsOnSixDescending) !== JSON.stringify(modulations.modulationsOnSixAscending) &&
-                        [...modulations.modulationsOnSixDescending]
+                        {[...modulations.modulationsOnSixDescending]
                           .sort((a, b) => a.name.localeCompare(b.name))
                           .map((hop, index) => (
                             <span
@@ -554,7 +554,8 @@ export default function Modulations() {
                               {getDisplayName(hop.name, modulationModes[stackIdx] ? 'jins' : 'maqam')}
                             </span>
                           ))}
-                    </div>
+                      </div>
+                    )}
                   </>
                 );
               })()}
