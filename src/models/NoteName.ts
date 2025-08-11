@@ -26,9 +26,9 @@ export const octaveZeroNoteNames = [
   "qarār kurdī",
   "qarār tīk kūrdī",
   "qarār segāh",
-  "qarār nīm buselīk",
-  "qarār buselīk/ʿushshāq",
-  "qarār tīk buselīk",
+  "qarār nīm būselīk",
+  "qarār būselīk/ʿushshāq",
+  "qarār tīk būselīk",
   "qarār chahārgāh",
   "qarār tīk chahārgāh",
   "qarār nīm ḥijāz",
@@ -65,9 +65,9 @@ export const octaveOneNoteNames = [
   "kurdī", // 24
   "tīk kūrdī",
   "segāh", // 26
-  "nīm buselīk", // 27
-  "buselīk/ʿushshāq", // 28
-  "tīk buselīk",
+  "nīm būselīk", // 27
+  "būselīk/ʿushshāq", // 28
+  "tīk būselīk",
   "chahārgāh", // 30
   "tīk chahārgāh",
   "nīm ḥijāz", // 32
@@ -104,9 +104,9 @@ export const octaveTwoNoteNames = [
   "sunbuleh/zawāl",
   "jawāb tīk kūrdī",
   "buzurk",
-  "jawāb nīm buselīk",
-  "jawāb buselīk",
-  "jawāb tīk buselīk",
+  "jawāb nīm būselīk",
+  "jawāb būselīk",
+  "jawāb tīk būselīk",
   "māhūrān",
   "tīk māhūrān",
   "jawāb nīm ḥijāz",
@@ -143,9 +143,9 @@ export const octaveThreeNoteNames = [
   "jawāb sunbuleh/zawāl",
   "jawāb jawāb tīk kūrdī",
   "jawāb buzurk",
-  "jawāb jawāb nīm buselīk",
-  "jawāb jawāb buselīk",
-  "jawāb jawāb tīk buselīk",
+  "jawāb jawāb nīm būselīk",
+  "jawāb jawāb būselīk",
+  "jawāb jawāb tīk būselīk",
   "jawāb māhūrān",
   "jawāb tīk māhūrān",
   "jawāb jawāb nīm ḥijāz",
@@ -182,9 +182,9 @@ export const octaveFourNoteNames = [
   "jawāb jawāb sunbuleh/zawāl",
   "jawāb jawāb jawāb tīk kūrdī",
   "jawāb jawāb buzurk",
-  "jawāb jawāb jawāb nīm buselīk",
-  "jawāb jawāb jawāb buselīk",
-  "jawāb jawāb jawāb tīk buselīk",
+  "jawāb jawāb jawāb nīm būselīk",
+  "jawāb jawāb jawāb būselīk",
+  "jawāb jawāb jawāb tīk būselīk",
   "jawāb jawāb māhūrān",
   "jawāb jawāb tīk māhūrān",
   "jawāb jawāb jawāb nīm ḥijāz",

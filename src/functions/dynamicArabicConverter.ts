@@ -95,6 +95,7 @@ const ARABIC_DIACRITICS: Record<string, string> = {
   'iyy': 'يّ',    // ya with shadda (as in rāstiyy)
   'uww': 'وّ',    // waw with shadda
   'zz': 'زّ',    // shadda with zay
+  'shsh': 'شّ',    // shadda with shin
   
   // Al- (definite article) patterns
   'al-': 'ال',    // definite article
