@@ -75,7 +75,8 @@ const MaqamTranspositions: React.FC = () => {
 
   const { maqamTranspositions } = useTranspositionsContext();
 
-  const BATCH_SIZE = 5;
+  const BATCH_SIZE = 10;
+  const PREFETCH_OFFSET = 5;
   const [visibleCount, setVisibleCount] = useState<number>(BATCH_SIZE);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const [targetFirstNote, setTargetFirstNote] = useState<string | null>(null);
@@ -86,7 +87,7 @@ const MaqamTranspositions: React.FC = () => {
 
   useEffect(() => {
     if (!sentinelRef.current) return;
-  if (!('IntersectionObserver' in window)) return;
+    if (!('IntersectionObserver' in window)) return;
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -99,11 +100,11 @@ const MaqamTranspositions: React.FC = () => {
           });
         }
       });
-    }, { root: null, rootMargin: '600px 0px 0px 0px', threshold: 0 });
+    }, { root: null, rootMargin: '200px 0px 0px 0px', threshold: 0 });
 
     observer.observe(sentinelRef.current);
     return () => observer.disconnect();
-  }, [maqamTranspositions]);
+  }, [maqamTranspositions, visibleCount]);
 
   const transpositionTables = useMemo(() => {
     if (!selectedMaqamData || !selectedTuningSystem) return null;
@@ -704,12 +705,22 @@ const MaqamTranspositions: React.FC = () => {
               </colgroup>
               <tbody>
                 {maqamTranspositions.slice(1, 1 + visibleCount).map((maqamTransposition, row) => {
+                  const isLastNeededForPrefetch =
+                    row === visibleCount - PREFETCH_OFFSET - 1 &&
+                    visibleCount < (maqamTranspositions.length - 1);
                   return (
                     <React.Fragment key={row}>
                       {renderTransposition(maqamTransposition, row)}
                       <tr>
                         <td className="maqam-transpositions__spacer" colSpan={2 + (maqamTransposition.ascendingPitchClasses.length - 1) * 2} />
                       </tr>
+                      {isLastNeededForPrefetch && (
+                        <tr>
+                          <td colSpan={2 + (maqamTransposition.ascendingPitchClasses.length - 1) * 2}>
+                            <div ref={sentinelRef} style={{ width: 1, height: 1 }} />
+                          </td>
+                        </tr>
+                      )}
                     </React.Fragment>
                   );
                 })}
@@ -787,8 +798,9 @@ const MaqamTranspositions: React.FC = () => {
   return (
     <>
   {transpositionTables}
-  {/* Sentinel for automatic lazy loading (invisible) */}
-  <div ref={sentinelRef} style={{ width: 1, height: 1 }} />
+  {visibleCount < (maqamTranspositions?.length || 0) - 1 && visibleCount <= PREFETCH_OFFSET && (
+    <div ref={sentinelRef} style={{ width: 1, height: 1 }} />
+  )}
       
       {/* Export Modal */}
       <ExportModal 

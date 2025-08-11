@@ -54,7 +54,8 @@ export default function JinsTranspositions() {
     }
   }
 
-  const BATCH_SIZE = 12; // tweakable
+  const BATCH_SIZE = 10;
+  const PREFETCH_OFFSET = 5;
   const [visibleCount, setVisibleCount] = useState<number>(BATCH_SIZE);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const [targetFirstNote, setTargetFirstNote] = useState<string | null>(null);
@@ -76,10 +77,10 @@ export default function JinsTranspositions() {
           });
         }
       });
-    }, { root: null, rootMargin: '600px 0px 0px 0px', threshold: 0 });
+    }, { root: null, rootMargin: '200px 0px 0px 0px', threshold: 0 });
     observer.observe(sentinelRef.current);
     return () => observer.disconnect();
-  }, [jinsTranspositions]);
+  }, [jinsTranspositions, visibleCount]);
 
   const transpositionTables = useMemo(() => {
     if (!selectedJinsData || !selectedTuningSystem) return null;
@@ -485,7 +486,19 @@ export default function JinsTranspositions() {
             <thead></thead>
             <tbody>
               {jinsTranspositions.slice(1, 1 + visibleCount).map((jinsTransposition, row) => {
-                return <React.Fragment key={row}>{renderTransposition(jinsTransposition, row + 1)}</React.Fragment>;
+                const isLastNeededForPrefetch = row === visibleCount - PREFETCH_OFFSET - 1 && visibleCount < (jinsTranspositions.length - 1);
+                return (
+                  <React.Fragment key={row}>
+                    {renderTransposition(jinsTransposition, row + 1)}
+                    {isLastNeededForPrefetch && (
+                      <tr>
+                        <td colSpan={jinsTranspositions[row + 1].jinsPitchClasses.length * 2}>
+                          <div ref={sentinelRef} style={{ width: 1, height: 1 }} />
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
+                );
               })}
             </tbody>
           </table>
@@ -558,7 +571,9 @@ export default function JinsTranspositions() {
   return (
     <>
   {transpositionTables}
-  <div ref={sentinelRef} style={{ width: 1, height: 1 }} />
+  {visibleCount < (jinsTranspositions.length - 1) && visibleCount <= PREFETCH_OFFSET && (
+    <div ref={sentinelRef} style={{ width: 1, height: 1 }} />
+  )}
       
       {/* Export Modal */}
       <ExportModal 
