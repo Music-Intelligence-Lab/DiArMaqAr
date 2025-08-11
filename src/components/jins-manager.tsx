@@ -6,9 +6,11 @@ import useSoundContext from "@/contexts/sound-context";
 import useLanguageContext from "@/contexts/language-context";
 import JinsData from "@/models/Jins";
 import React, { useState, useEffect, useMemo } from "react";
-import { getJinsTranspositions } from "@/functions/transpose";
+// Transpositions now provided via TranspositionsContext
+// import { getJinsTranspositions } from "@/functions/transpose";
 import { updateAjnas } from "@/functions/update";
 import { SourcePageReference } from "@/models/bibliography/Source";
+import useTranspositionsContext from "@/contexts/transpositions-context";
 
 export default function JinsManager({ admin }: { admin: boolean }) {
   const { ajnas, setAjnas, selectedTuningSystem, selectedJinsData, setSelectedJinsData, handleClickJins, selectedPitchClasses, clearSelections, allPitchClasses, sources } = useAppContext();
@@ -40,13 +42,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
     }
   }, [selectedJinsData]);
 
-  const jinsTranspositions = useMemo(() => {
-    const map = new Map<string, ReturnType<typeof getJinsTranspositions>>();
-    ajnas.forEach((jins) => {
-      map.set(jins.getId(), getJinsTranspositions(allPitchClasses, jins, true));
-    });
-    return map;
-  }, [ajnas, allPitchClasses]);
+  const { allJinsTranspositionsMap } = useTranspositionsContext();
 
   const sortedAjnas = [...ajnas].sort((a, b) => a.getName().localeCompare(b.getName()));
   const numberOfPitchClasses = selectedTuningSystem ? selectedTuningSystem.getPitchClasses().length : 0;
@@ -146,7 +142,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
           ) : (
             filteredAjnas.map((jinsData, index) => {
               const selectable = jinsData.isJinsSelectable(allPitchClasses.map((pitchClass) => pitchClass.noteName));
-              const numberOfTranspositions = jinsTranspositions.get(jinsData.getId())?.filter((transposition) => transposition.jinsPitchClasses[0]?.octave === 1).length || 0;
+              const numberOfTranspositions = allJinsTranspositionsMap.get(jinsData.getId())?.filter((transposition: any) => transposition.jinsPitchClasses[0]?.octave === 1).length || 0;
               return (
                 <div
                   key={index}

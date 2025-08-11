@@ -6,15 +6,16 @@ import useFilterContext from "@/contexts/filter-context";
 import useSoundContext from "@/contexts/sound-context";
 import useLanguageContext from "@/contexts/language-context";
 import MaqamData from "@/models/Maqam";
-import { getMaqamTranspositions } from "@/functions/transpose";
+// Transpositions now provided via TranspositionsContext
+// import { getMaqamTranspositions } from "@/functions/transpose";
 import { updateMaqamat } from "@/functions/update";
 import { SourcePageReference } from "@/models/bibliography/Source";
+import useTranspositionsContext from "@/contexts/transpositions-context";
 
 export default function MaqamManager({ admin }: { admin: boolean }) {
   const {
     maqamat,
     setMaqamat,
-    ajnas,
     selectedMaqamData,
     setSelectedMaqamData,
     selectedPitchClasses,
@@ -54,13 +55,8 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
     }
   }, [selectedMaqamData]);
 
-  const maqamTranspositions = useMemo(() => {
-    const map = new Map<string, ReturnType<typeof getMaqamTranspositions>>();
-    maqamat.forEach((maqam) => {
-      map.set(maqam.getId(), getMaqamTranspositions(allPitchClasses, ajnas, maqam, true));
-    });
-    return map;
-  }, [maqamat, allPitchClasses, ajnas]);
+  // Use cached map from context to avoid recomputation
+  const { allMaqamTranspositionsMap } = useTranspositionsContext();
 
   const numberOfPitchClasses = selectedTuningSystem ? selectedTuningSystem.getPitchClasses().length : 0;
 
@@ -194,7 +190,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
         >
           {filteredMaqamat.map((maqamData, idx) => {
             const selectable = maqamData.isMaqamSelectable(allPitchClasses.map((pitchClass) => pitchClass.noteName));
-            const numberOfTranspositions = maqamTranspositions.get(maqamData.getId())?.filter((transposition) => transposition.ascendingPitchClasses[0]?.octave === 1).length || 0;
+            const numberOfTranspositions = allMaqamTranspositionsMap.get(maqamData.getId())?.filter((transposition: any) => transposition.ascendingPitchClasses[0]?.octave === 1).length || 0;
             return (
               <div
                 key={idx}
