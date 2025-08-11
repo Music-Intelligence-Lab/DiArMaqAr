@@ -56,7 +56,7 @@ export function shiftPitchClassWithoutAllPitchClasses(pitchClass: PitchClass, oc
 
   return {
     ...pitchClass,
-    noteName: pitchClass.noteName + " shifted by " + octaves + " octaves",
+    noteName: "jawāb " + pitchClass.noteName, 
     originalValue: newOriginalValue,
     fraction: newFractionValue,
     octave: pitchClass.octave + octaves,
