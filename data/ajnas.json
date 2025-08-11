@@ -5,7 +5,7 @@
     "noteNames": [
       "nawā",
       "ḥusaynī",
-      "awj",
+      "ʾawj",
       "kurdān"
     ],
     "commentsEnglish": "",
@@ -103,8 +103,8 @@
     "name": "jins ḥijāz binṣir",
     "noteNames": [
       "rāst",
-      "tīk zirguleh",
-      "buselīk/ʿushshāq",
+      "tīk zīrgūleh",
+      "būselīk/ʿushshāq",
       "chahārgāh"
     ],
     "commentsEnglish": "",
@@ -169,9 +169,9 @@
     "name": "jins mustaʿār",
     "noteNames": [
       "ʿirāq",
-      "zirguleh",
+      "zīrgūleh",
       "dūgāh",
-      "buselīk/ʿushshāq"
+      "būselīk/ʿushshāq"
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -183,7 +183,7 @@
     "noteNames": [
       "nawā",
       "tīk ḥiṣār",
-      "awj",
+      "ʾawj",
       "kurdān"
     ],
     "commentsEnglish": "",
@@ -205,11 +205,11 @@
   },
   {
     "id": "16",
-    "name": "jins rāst binṣir (nīm buselīk)",
+    "name": "jins rāst binṣir (nīm būselīk)",
     "noteNames": [
       "rāst",
       "dūgāh",
-      "nīm buselīk",
+      "nīm būselīk",
       "chahārgāh"
     ],
     "commentsEnglish": "",
@@ -221,7 +221,7 @@
     "name": "jins kurd binṣir",
     "noteNames": [
       "rāst",
-      "tīk zirguleh",
+      "tīk zīrgūleh",
       "kurdī",
       "chahārgāh"
     ],
@@ -274,7 +274,7 @@
     "name": "jins būselīk (Al-Shawwā)",
     "noteNames": [
       "dūgāh",
-      "nīm buselīk",
+      "nīm būselīk",
       "chahārgāh",
       "nawā"
     ],
@@ -292,7 +292,7 @@
     "name": "jins būselīk (Al-Ḥilū)",
     "noteNames": [
       "dūgāh",
-      "buselīk/ʿushshāq",
+      "būselīk/ʿushshāq",
       "chahārgāh",
       "nawā"
     ],
