@@ -245,6 +245,8 @@ export function getJinsTranspositions(allPitchClasses: PitchClass[], jinsData: J
 
   const jinsCells = allPitchClasses.filter((pitchClass) => jinsNoteNames.includes(pitchClass.noteName));
 
+  if (jinsCells.length === 0) return [];
+
   const valueType = jinsCells[0].originalValueType;
   const useRatio = valueType === "fraction" || valueType === "decimalRatio";
 
