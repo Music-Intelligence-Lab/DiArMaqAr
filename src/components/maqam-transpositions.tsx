@@ -37,6 +37,15 @@ import shiftPitchClass from "@/functions/shiftPitchClass";
 import Link from "next/link";
 
 const MaqamTranspositions: React.FC = () => {
+  // Configurable constants (previous magic numbers)
+  const DISPATCH_EVENT_DELAY_MS = 10;              // delay before emitting maqamTranspositionChange
+  const SCROLL_TIMEOUT_MS = 60;                    // short timeout before scrolling after event
+  const URL_SCROLL_TIMEOUT_MS = 220;               // timeout used when scrolling from URL param
+  const ANALYSIS_SCROLL_MARGIN_TOP_PX = 160;       // scroll margin for top analysis header
+  const INTERSECTION_ROOT_MARGIN = '200px 0px 0px 0px'; // prefetch root margin
+  const BATCH_SIZE = 10;                           // number of transpositions to load at once
+  const PREFETCH_OFFSET = 5;                       // how many before end to prefetch more
+
   const {
     selectedMaqamData,
     selectedTuningSystem,
@@ -75,11 +84,11 @@ const MaqamTranspositions: React.FC = () => {
 
   const { maqamTranspositions } = useTranspositionsContext();
 
-  const BATCH_SIZE = 10;
-  const PREFETCH_OFFSET = 5;
   const [visibleCount, setVisibleCount] = useState<number>(BATCH_SIZE);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const [targetFirstNote, setTargetFirstNote] = useState<string | null>(null);
+  // Track pending scroll timeout so we can cancel if maqam changes
+  const scrollTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     setVisibleCount(BATCH_SIZE);
@@ -89,7 +98,7 @@ const MaqamTranspositions: React.FC = () => {
     if (!sentinelRef.current) return;
     if (!('IntersectionObserver' in window)) return;
 
-    const observer = new IntersectionObserver((entries) => {
+  const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           setVisibleCount((prev) => {
@@ -100,7 +109,7 @@ const MaqamTranspositions: React.FC = () => {
           });
         }
       });
-    }, { root: null, rootMargin: '200px 0px 0px 0px', threshold: 0 });
+  }, { root: null, rootMargin: INTERSECTION_ROOT_MARGIN, threshold: 0 });
 
     observer.observe(sentinelRef.current);
     return () => observer.disconnect();
@@ -193,7 +202,7 @@ const MaqamTranspositions: React.FC = () => {
                 className="maqam-transpositions__header"
                 id={getHeaderId(pitchClasses[0]?.noteName)}
                 colSpan={4 + (pitchClasses.length - 1) * 2}
-                style={rowIndex === 0 && ascending ? { scrollMarginTop: "160px" } : undefined}
+                style={rowIndex === 0 && ascending ? { scrollMarginTop: `${ANALYSIS_SCROLL_MARGIN_TOP_PX}px` } : undefined}
               >
                 {!transposition ? (
                   <span className="maqam-transpositions__transposition-title">{`${t('maqam.darajatAlIstiqrar')}: ${
@@ -214,7 +223,7 @@ const MaqamTranspositions: React.FC = () => {
                           detail: { firstNote: pitchClasses[0].noteName },
                         })
                       );
-                    }, 10);
+                    }, DISPATCH_EVENT_DELAY_MS);
                   }}
                 >
                   {t('maqam.selectLoadToKeyboard')}
@@ -759,11 +768,19 @@ const MaqamTranspositions: React.FC = () => {
           setVisibleCount((prev) => (needed > prev ? Math.ceil(needed / BATCH_SIZE) * BATCH_SIZE : prev));
         }
         // Scroll after next paint (DOM update due to visibleCount change if any)
-        setTimeout(() => scrollToMaqamHeader(firstNote, selectedMaqamData), 60);
+        if (scrollTimeoutRef.current) window.clearTimeout(scrollTimeoutRef.current);
+  scrollTimeoutRef.current = window.setTimeout(() => {
+          // Only scroll if the maqam still matches the target (avoid stale scroll after maqam change)
+          scrollToMaqamHeader(firstNote, selectedMaqamData);
+  }, SCROLL_TIMEOUT_MS);
       }
     }
     window.addEventListener("maqamTranspositionChange", handleMaqamTranspositionChange as EventListener);
     return () => {
+      if (scrollTimeoutRef.current) {
+        window.clearTimeout(scrollTimeoutRef.current);
+        scrollTimeoutRef.current = null;
+      }
       window.removeEventListener("maqamTranspositionChange", handleMaqamTranspositionChange as EventListener);
     };
   }, [selectedMaqamData, maqamTranspositions]);
@@ -781,7 +798,10 @@ const MaqamTranspositions: React.FC = () => {
         const needed = index; // number of rows in slice(1) we need
         setVisibleCount((prev) => (needed > prev ? Math.ceil(needed / BATCH_SIZE) * BATCH_SIZE : prev));
       }
-      setTimeout(() => scrollToMaqamHeader(decoded, selectedMaqamData), 220);
+      if (scrollTimeoutRef.current) window.clearTimeout(scrollTimeoutRef.current);
+      scrollTimeoutRef.current = window.setTimeout(() => {
+        scrollToMaqamHeader(decoded, selectedMaqamData);
+      }, URL_SCROLL_TIMEOUT_MS);
     }
   }, [selectedMaqamData, maqamTranspositions]);
 
@@ -794,6 +814,19 @@ const MaqamTranspositions: React.FC = () => {
       setVisibleCount((prev) => (needed > prev ? Math.ceil(needed / BATCH_SIZE) * BATCH_SIZE : prev));
     }
   }, [targetFirstNote, maqamTranspositions]);
+
+  // When the selected maqam changes, cancel any pending scroll from previous maqam & reset target note
+  useEffect(() => {
+    if (scrollTimeoutRef.current) {
+      window.clearTimeout(scrollTimeoutRef.current);
+      scrollTimeoutRef.current = null;
+    }
+    setTargetFirstNote(null);
+    // Optionally scroll to top so user starts at analysis of new maqam
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'auto' });
+    }
+  }, [selectedMaqamData]);
   
   return (
     <>

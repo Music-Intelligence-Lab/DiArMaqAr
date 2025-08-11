@@ -15,6 +15,14 @@ import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import ExportModal from "./export-modal";
 
 export default function JinsTranspositions() {
+  // Configurable constants (extracted magic numbers for easier tuning)
+  const DISPATCH_EVENT_DELAY_MS = 10;             // delay before emitting custom event
+  const SCROLL_TIMEOUT_MS = 60;                   // delay before performing scroll after event
+  const URL_SCROLL_TIMEOUT_MS = 220;              // delay for initial scroll from URL param
+  const HEADER_SCROLL_MARGIN_TOP_PX = 170;        // scroll margin top for first headers
+  const INTERSECTION_ROOT_MARGIN = '200px 0px 0px 0px'; // observer root margin
+  const BATCH_SIZE = 10;                          // batch size for lazy loading
+  const PREFETCH_OFFSET = 5;                      // offset to trigger prefetch
   const { selectedJinsData, selectedTuningSystem, setSelectedPitchClasses, allPitchClasses, centsTolerance, setCentsTolerance, sources, setSelectedJins } = useAppContext();
   const { jinsTranspositions } = useTranspositionsContext();
 
@@ -54,11 +62,10 @@ export default function JinsTranspositions() {
     }
   }
 
-  const BATCH_SIZE = 10;
-  const PREFETCH_OFFSET = 5;
   const [visibleCount, setVisibleCount] = useState<number>(BATCH_SIZE);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const [targetFirstNote, setTargetFirstNote] = useState<string | null>(null);
+  const scrollTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     setVisibleCount(BATCH_SIZE);
@@ -67,7 +74,7 @@ export default function JinsTranspositions() {
   useEffect(() => {
     if (!sentinelRef.current) return;
     if (!('IntersectionObserver' in window)) return;
-    const observer = new IntersectionObserver((entries) => {
+  const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           setVisibleCount((prev) => {
@@ -77,7 +84,7 @@ export default function JinsTranspositions() {
           });
         }
       });
-    }, { root: null, rootMargin: '200px 0px 0px 0px', threshold: 0 });
+  }, { root: null, rootMargin: INTERSECTION_ROOT_MARGIN, threshold: 0 });
     observer.observe(sentinelRef.current);
     return () => observer.disconnect();
   }, [jinsTranspositions, visibleCount]);
@@ -102,7 +109,7 @@ export default function JinsTranspositions() {
 
       return (
         <>
-          <tr className="jins-transpositions__header" id={getJinsHeaderId(pitchClasses[0]?.noteName)} style={index === 0 || index === 1 ? { scrollMarginTop: "170px" } : undefined}>
+          <tr className="jins-transpositions__header" id={getJinsHeaderId(pitchClasses[0]?.noteName)} style={index === 0 || index === 1 ? { scrollMarginTop: `${HEADER_SCROLL_MARGIN_TOP_PX}px` } : undefined}>
             <td className={`jins-transpositions__transposition-number jins-transpositions__transposition-number_${pitchClasses[0].octave}`} rowSpan={4 + numberOfFilterRows}>
               {index + 1}
             </td>
@@ -125,7 +132,7 @@ export default function JinsTranspositions() {
                         detail: { firstNote: pitchClasses[0].noteName },
                       })
                     );
-                  }, 0);
+                  }, DISPATCH_EVENT_DELAY_MS);
                 }}
               >
                 {t('jins.selectLoadToKeyboard')}
@@ -532,11 +539,18 @@ export default function JinsTranspositions() {
           const needed = index; // because visibleCount covers slice(1)
             setVisibleCount((prev) => (needed > prev ? Math.ceil(needed / BATCH_SIZE) * BATCH_SIZE : prev));
         }
-        setTimeout(() => scrollToJinsHeader(firstNote, selectedJinsData), 60);
+        if (scrollTimeoutRef.current) window.clearTimeout(scrollTimeoutRef.current);
+        scrollTimeoutRef.current = window.setTimeout(() => {
+          scrollToJinsHeader(firstNote, selectedJinsData);
+        }, SCROLL_TIMEOUT_MS);
       }
     }
     window.addEventListener("jinsTranspositionChange", handleJinsTranspositionChange as EventListener);
     return () => {
+      if (scrollTimeoutRef.current) {
+        window.clearTimeout(scrollTimeoutRef.current);
+        scrollTimeoutRef.current = null;
+      }
       window.removeEventListener("jinsTranspositionChange", handleJinsTranspositionChange as EventListener);
     };
   }, [selectedJinsData, jinsTranspositions]);
@@ -554,7 +568,10 @@ export default function JinsTranspositions() {
         const needed = index;
         setVisibleCount((prev) => (needed > prev ? Math.ceil(needed / BATCH_SIZE) * BATCH_SIZE : prev));
       }
-      setTimeout(() => scrollToJinsHeader(decoded, selectedJinsData), 220);
+      if (scrollTimeoutRef.current) window.clearTimeout(scrollTimeoutRef.current);
+      scrollTimeoutRef.current = window.setTimeout(() => {
+        scrollToJinsHeader(decoded, selectedJinsData);
+      }, URL_SCROLL_TIMEOUT_MS);
     }
   }, [selectedJinsData, jinsTranspositions]);
 
@@ -567,6 +584,18 @@ export default function JinsTranspositions() {
       setVisibleCount((prev) => (needed > prev ? Math.ceil(needed / BATCH_SIZE) * BATCH_SIZE : prev));
     }
   }, [targetFirstNote, jinsTranspositions]);
+
+  // When selected jins changes, cancel any pending scroll & reset target
+  useEffect(() => {
+    if (scrollTimeoutRef.current) {
+      window.clearTimeout(scrollTimeoutRef.current);
+      scrollTimeoutRef.current = null;
+    }
+    setTargetFirstNote(null);
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'auto' });
+    }
+  }, [selectedJinsData]);
 
   return (
     <>
