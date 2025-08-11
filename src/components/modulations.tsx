@@ -79,6 +79,27 @@ export default function Modulations() {
     }
   }, [selectedMaqam, selectedJins]);
 
+  useEffect(() => {
+    function handleMaqamTranspositionChange() {
+      if (!selectedMaqam) return;
+      setSourceMaqamStack((prev) => {
+        if (prev.length === 0) return [selectedMaqam];
+        if (prev[0].ascendingPitchClasses[0].noteName === selectedMaqam.ascendingPitchClasses[0].noteName && prev[0].maqamId === selectedMaqam.maqamId) {
+          return prev; // No change
+        }
+        return [selectedMaqam];
+      });
+      setModulationsStack(() => {
+        const first = getBothModulations(selectedMaqam);
+        return [first];
+      });
+      setModulationModes([false]);
+      setCollapsedHops([false]);
+    }
+    window.addEventListener("maqamTranspositionChange", handleMaqamTranspositionChange as EventListener);
+    return () => window.removeEventListener("maqamTranspositionChange", handleMaqamTranspositionChange as EventListener);
+  }, [selectedMaqam]);
+
   // Handles clicking the source maqam name (propagates tonic and details)
   function handleSourceMaqamClick(sourceMaqam: Maqam) {
     // Defensive: ensure ascendingPitchClasses exists and has at least one element
