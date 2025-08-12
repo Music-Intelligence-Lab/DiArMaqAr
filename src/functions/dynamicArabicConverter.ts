@@ -1,53 +1,77 @@
 /**
  * Dynamic Arabic Script Converter
- * Converts Library of Congress Arabic transliteration to Arabic script
- * This approach is dynamic and works with any transliterated text following LOC standards
+ * 
+ * Converts Library of Congress Arabic transliteration to Arabic script using
+ * dynamic pattern matching. This comprehensive converter handles the full range
+ * of LOC transliteration standards with contextual processing for different
+ * types of musical terminology.
+ * 
+ * Key Features:
+ * - Comprehensive LOC transliteration mapping
+ * - Multi-character sequence handling (e.g., "th" → "ث")
+ * - Context-aware diacritic processing
+ * - Persian/Turkish letter support for maqam names
+ * - Automatic word boundary detection
+ * - Longest-match-first algorithm for accuracy
+ * 
+ * This approach is dynamic and works with any transliterated text following
+ * Library of Congress standards, making it suitable for converting both
+ * classical Arabic terms and Ottoman/Persian musical terminology.
  */
 
-// Library of Congress Arabic Romanization to Arabic Script Mapping
+/**
+ * Library of Congress Arabic Romanization to Arabic Script Mapping
+ * 
+ * This comprehensive mapping covers:
+ * - All 28 Arabic letters in their various forms
+ * - Emphatic consonants with proper diacritical marks
+ * - Long and short vowels with appropriate representations
+ * - Persian and Turkish letters commonly used in maqam terminology
+ * - Special characters and combinations unique to musical terms
+ */
 const LOC_TRANSLITERATION_MAP: Record<string, string> = {
-  // Basic Arabic letters
-  'āʾ': 'اء',     // hamza
-  'ʾa': 'أ',     // hamza  
-  'ʾā': 'آ',     // alif with madda  
-  'ā': 'ا',     // alif with madda
-  'a': '',     // short alif (when not handled by diacritics)
-  'b': 'ب',     // ba
-  't': 'ت',     // ta
-  'th': 'ث',    // tha
-  'j': 'ج',     // jim
-  'ḥ': 'ح',     // ha (emphatic)
-  'kh': 'خ',    // kha
-  'd': 'د',     // dal
-  'dh': 'ذ',    // dhal
-  'r': 'ر',     // ra
-  'z': 'ز',     // zay
-  's': 'س',     // sin
-  'sh': 'ش',    // shin
-  'ṣ': 'ص',     // sad (emphatic)
-  'ḍ': 'ض',     // dad (emphatic)
-  'ṭ': 'ط',     // ta (emphatic)
-  'ẓ': 'ظ',     // za (emphatic)
-  'ʿ': 'ع',     // ayn
-  'gh': 'غ',    // ghayn
-  'f': 'ف',     // fa
-  'q': 'ق',     // qaf
-  'k': 'ك',     // kaf
-  'l': 'ل',     // lam
-  'm': 'م',     // mim
-  'n': 'ن',     // nun
-  'h': 'ه',     // ha
-  'w': 'و',     // waw
+  // Basic Arabic letters with their standard LOC transliterations
+  'āʾ': 'اء',     // hamza with alif
+  'ʾa': 'أ',     // hamza above alif  
+  'ʾā': 'آ',     // alif with madda (long a with hamza)
+  'ā': 'ا',     // alif (long a)
+  'a': '',     // short alif (usually handled by diacritics in context)
+  'b': 'ب',     // ba (b sound)
+  't': 'ت',     // ta (t sound)
+  'th': 'ث',    // tha (th sound as in "think")
+  'j': 'ج',     // jim (j sound)
+  'ḥ': 'ح',     // ha (emphatic h, pharyngeal fricative)
+  'kh': 'خ',    // kha (ch sound as in German "ach")
+  'd': 'د',     // dal (d sound)
+  'dh': 'ذ',    // dhal (th sound as in "this")
+  'r': 'ر',     // ra (r sound, rolled)
+  'z': 'ز',     // zay (z sound)
+  's': 'س',     // sin (s sound)
+  'sh': 'ش',    // shin (sh sound)
+  'ṣ': 'ص',     // sad (emphatic s)
+  'ḍ': 'ض',     // dad (emphatic d)
+  'ṭ': 'ط',     // ta (emphatic t)
+  'ẓ': 'ظ',     // za (emphatic z)
+  'ʿ': 'ع',     // ayn (pharyngeal stop)
+  'gh': 'غ',    // ghayn (voiced equivalent of kh)
+  'f': 'ف',     // fa (f sound)
+  'q': 'ق',     // qaf (uvular stop)
+  'k': 'ك',     // kaf (k sound)
+  'l': 'ل',     // lam (l sound)
+  'm': 'م',     // mim (m sound)
+  'n': 'ن',     // nun (n sound)
+  'h': 'ه',     // ha (h sound)
+  'w': 'و',     // waw (w sound)
   'ū': 'و',     // waw with damma (long u)
-  'u': '',     // short waw (when not handled by diacritics)
-  'y': 'ي',     // ya
+  'u': '',     // short waw (contextual, often handled by diacritics)
+  'y': 'ي',     // ya (y sound)
   'ī': 'ي',     // ya with kasra (long i)
-  'i': '',     // short ya (when not handled by diacritics)
-  'iy': 'ي',    // ya with kasra (variant)
-  'e': '',    // ya with kasra (variant)
+  'i': '',     // short ya (contextual, often handled by diacritics)
+  'iy': 'ي',    // ya with kasra (alternative long i)
+  'e': '',    // ya with kasra (colloquial variant)
   
   // Persian/Turkish letters commonly used in maqam terminology
-  'p': 'پ',     // pa (Persian)
+  'p': 'پ',     // pa (Persian p sound, used in Turkish/Persian maqam names)
   'ch': 'ج',    // che (Persian)
   'zh': 'ژ',    // zhe (Persian)
   'g': 'ك',     // gaf (Persian)
