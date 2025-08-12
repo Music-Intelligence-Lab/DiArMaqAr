@@ -27,7 +27,7 @@
         "creatorArabic": "صبّاغ",
         "sourceId": "YQh0gMMk0mKbUKc-FMgrZ",
         "page": "41",
-        "commentsEnglish": "Known in Tunis as Ṭabe' Al-Dhīl, also Ṭabe' al-Sharqī and Inqilāb al-'irāq.\n\nThe melodies that are close to the melodies of maqām rāst that can be utilised during composition or taqsīm are nahāwand, nawā athar, nikrīz or chahārgāh all on rāst, ṣabā ḥusaynī, ḥijāz nawā and bayāt nawā. Sometimes after chahārgāh, a transposition of segāh on rāst, then a return to chahārgāh and then to rāst. ",
+        "commentsEnglish": "Known in Tunis as Ṭabe' Al-Dhīl, also Ṭabe' al-Sharqī and Inqilāb al-'irāq.\n\nThe melodies that are close to the melodies of maqām rāst that can be utilised during composition or taqsīm are nahāwand, nawā athar, nikrīz or chahārgāh all on rāst, ṣabā ḥusaynī, ḥijāz nawā and bayyāt nawā. Sometimes after chahārgāh, a transposition of segāh on rāst, then a return to chahārgāh and then to rāst. ",
         "commentsArabic": "",
         "stops": [
           {
@@ -225,7 +225,7 @@
   },
   {
     "id": "7",
-    "name": "maqām bayāt",
+    "name": "maqām bayyāt",
     "ascendingNoteNames": [
       "dūgāh",
       "segāh",
@@ -251,7 +251,7 @@
   },
   {
     "id": "8",
-    "name": "maqām bayātayn",
+    "name": "maqām bayyātayn",
     "ascendingNoteNames": [
       "dūgāh",
       "segāh",
@@ -526,7 +526,7 @@
   },
   {
     "id": "13",
-    "name": "maqām bayāt shūrī",
+    "name": "maqām bayyāt shūrī",
     "ascendingNoteNames": [
       "dūgāh",
       "segāh",
@@ -556,7 +556,7 @@
     "ascendingNoteNames": [
       "rāst",
       "tīk zīrgūleh",
-      "būselīk/ʿushshāq",
+      "būsilīk/ʿushshāq",
       "chahārgāh",
       "nawā",
       "tīk ḥiṣār",
@@ -567,7 +567,7 @@
       "ḥiṣār",
       "nawā",
       "chahārgāh",
-      "būselīk/ʿushshāq",
+      "būsilīk/ʿushshāq",
       "tīk zīrgūleh",
       "rāst"
     ],
@@ -661,7 +661,7 @@
   },
   {
     "id": "18",
-    "name": "maqām nairūz",
+    "name": "maqām nayrūz",
     "ascendingNoteNames": [
       "rāst",
       "dūgāh",
@@ -765,7 +765,7 @@
         "sourceEnglish": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
         "year": 1946,
         "page": 36,
-        "commentsEnglish": "Starts with ḥijāz dūgāh, followed by rāst nawā. Descending it uses būselīk nawā, followed by ḥijāz dūgāh and ends on 'irāq",
+        "commentsEnglish": "Starts with ḥijāz dūgāh, followed by rāst nawā. Descending it uses būsilīk nawā, followed by ḥijāz dūgāh and ends on 'irāq",
         "stops": [
           {
             "type": "jins",
@@ -781,7 +781,7 @@
           },
           {
             "type": "jins",
-            "value": "jins nahāwand/būselīk",
+            "value": "jins nahāwand/būsilīk",
             "startingNote": "nawā",
             "direction": "descending"
           },
@@ -809,7 +809,7 @@
   },
   {
     "id": "22",
-    "name": "maqām sūzdalāra",
+    "name": "maqām sūzdalārah",
     "ascendingNoteNames": [
       "rāst",
       "dūgāh",
@@ -824,7 +824,7 @@
       "ḥusaynī",
       "nawā",
       "chahārgāh",
-      "nīm būselīk",
+      "nīm būsilīk",
       "dūgāh",
       "rāst"
     ],
@@ -835,7 +835,7 @@
         "creatorArabic": "",
         "sourceId": "oY8WnTdP5msak8o1G_N7f",
         "page": "43",
-        "commentsEnglish": "Starts from rāst and plays jins chahārgāh on rāst until nawā. Then jins chahārgāh on chahārgāh ascending to render bayyātī on ḥusaynī, then rāst on kurdān. During descent it uses chahārgāh on kurdān instead of rāst, and touches nīm būselīk instead of segāh. Towards the end it uses yegāh and its qarār is rāst",
+        "commentsEnglish": "Starts from rāst and plays jins chahārgāh on rāst until nawā. Then jins chahārgāh on chahārgāh ascending to render bayyātī on ḥusaynī, then rāst on kurdān. During descent it uses chahārgāh on kurdān instead of rāst, and touches nīm būsilīk instead of segāh. Towards the end it uses yegāh and its qarār is rāst",
         "commentsArabic": "",
         "stops": [
           {
@@ -880,7 +880,7 @@
           },
           {
             "type": "note",
-            "value": "nīm būselīk"
+            "value": "nīm būsilīk"
           },
           {
             "type": "note",
@@ -908,7 +908,7 @@
     "ascendingNoteNames": [
       "rāst",
       "zīrgūleh",
-      "būselīk/ʿushshāq",
+      "būsilīk/ʿushshāq",
       "chahārgāh",
       "nawā",
       "ḥiṣār",
@@ -919,7 +919,7 @@
       "ḥiṣār",
       "nawā",
       "chahārgāh",
-      "būselīk/ʿushshāq",
+      "būsilīk/ʿushshāq",
       "zīrgūleh",
       "rāst"
     ],
@@ -930,20 +930,20 @@
   },
   {
     "id": "24",
-    "name": "maqām bayāt ḥusaynī",
+    "name": "maqām bayyāt ḥusaynī",
     "ascendingNoteNames": [
       "ʿushayrān",
       "ʿirāq",
       "rāst",
       "dūgāh",
-      "būselīk/ʿushshāq",
+      "būsilīk/ʿushshāq",
       "nīm ḥijāz",
       "nawā"
     ],
     "descendingNoteNames": [
       "nawā",
       "chahārgāh",
-      "būselīk/ʿushshāq",
+      "būsilīk/ʿushshāq",
       "dūgāh",
       "rāst",
       "ʿirāq",
@@ -1007,7 +1007,7 @@
         "creatorEnglish": "Al-Shawwā, Sāmī",
         "sourceId": "",
         "page": 33,
-        "commentsEnglish": "Starts on 'iraq or dūgāh descending until yegāh, then bayāt dūgāh until nawā then rāst nawā and descends to the qarār which is 'irāq",
+        "commentsEnglish": "Starts on 'iraq or dūgāh descending until yegāh, then bayyāt dūgāh until nawā then rāst nawā and descends to the qarār which is 'irāq",
         "stops": [
           {
             "type": "note",
@@ -1019,7 +1019,7 @@
           },
           {
             "type": "jins",
-            "value": "jins bayāt",
+            "value": "jins bayyāt",
             "startingNote": "dūgāh",
             "direction": "none"
           },
@@ -1083,7 +1083,7 @@
         "creatorArabic": "",
         "sourceId": "oY8WnTdP5msak8o1G_N7f",
         "page": "44",
-        "commentsEnglish": "Starts by ascending from rāst to nawā followed by ḥijāz on nawā the nahāwand on kurdān, it then descends with būselīk on nawā until the qarār which is rāst ",
+        "commentsEnglish": "Starts by ascending from rāst to nawā followed by ḥijāz on nawā the nahāwand on kurdān, it then descends with būsilīk on nawā until the qarār which is rāst ",
         "commentsArabic": "",
         "stops": [
           {
@@ -1134,7 +1134,7 @@
   },
   {
     "id": "28",
-    "name": "maqām bayāt rāst",
+    "name": "maqām bayyāt rāst",
     "ascendingNoteNames": [
       "rāst",
       "tīk zīrgūleh",
@@ -1167,7 +1167,7 @@
       "ʿirāq",
       "rāst",
       "dūgāh",
-      "nīm būselīk",
+      "nīm būsilīk",
       "nīm ḥijāz"
     ],
     "descendingNoteNames": [
@@ -1444,7 +1444,7 @@
         "stops": [
           {
             "type": "jins",
-            "value": "jins nahāwand/būselīk",
+            "value": "jins nahāwand/būsilīk",
             "startingNote": "nawā",
             "direction": "none"
           },
@@ -1502,7 +1502,7 @@
         "creatorArabic": "",
         "sourceId": "oY8WnTdP5msak8o1G_N7f",
         "page": 22,
-        "commentsEnglish": "Start with jins bayāt on dūgāh, ending on 'irāq. Then ascend and descend ending on note 'ushayrān. Repeat jins bayāt on dūgāh, and descend to end on the qarār which is yegāh. This maqām name corresponds with a Persian Gushe also called Majlis Afrooz in the Dastgah Mahūr and Dastgāh Shūr. In Mahūr it bears no melodic or intervallic resemblance, but in Shūr the jins bayāt is prominent.",
+        "commentsEnglish": "Start with jins bayyāt on dūgāh, ending on 'irāq. Then ascend and descend ending on note 'ushayrān. Repeat jins bayyāt on dūgāh, and descend to end on the qarār which is yegāh. This maqām name corresponds with a Persian Gushe also called Majlis Afrooz in the Dastgah Mahūr and Dastgāh Shūr. In Mahūr it bears no melodic or intervallic resemblance, but in Shūr the jins bayyāt is prominent.",
         "commentsArabic": "",
         "stops": [
           {
@@ -1556,7 +1556,7 @@
   },
   {
     "id": "34",
-    "name": "maqām dilkeshīda",
+    "name": "maqām dilkeshīdah",
     "ascendingNoteNames": [
       "yegāh",
       "ʿushayrān",
@@ -1582,7 +1582,7 @@
         "creatorArabic": "",
         "sourceId": "oY8WnTdP5msak8o1G_N7f",
         "page": 23,
-        "commentsEnglish": "Start on nawā to huseinī and what's above it (jins kurd huseinī), then jins bayāt on dūgāh. After it's descent ascend bayāt dūgāh and during the descent use the note kurdī instead of segāh (i.e. jins kurd on dūgāh) and descend to end on yegāh using a touch of qarār ḥijāz. This maqām is Ottoman and not really utilised in Arabic music but Shawwā listed it either way.",
+        "commentsEnglish": "Start on nawā to huseinī and what's above it (jins kurd huseinī), then jins bayyāt on dūgāh. After it's descent ascend bayyāt dūgāh and during the descent use the note kurdī instead of segāh (i.e. jins kurd on dūgāh) and descend to end on yegāh using a touch of qarār ḥijāz. This maqām is Ottoman and not really utilised in Arabic music but Shawwā listed it either way.",
         "commentsArabic": "",
         "stops": [
           {
@@ -1654,7 +1654,7 @@
     "descendingNoteNames": [
       "nawā",
       "chahārgāh",
-      "nīm būselīk",
+      "nīm būsilīk",
       "dūgāh",
       "rāst",
       "ʿirāq",
@@ -1667,7 +1667,7 @@
         "sourceEnglish": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
         "year": 1946,
         "page": 24,
-        "commentsEnglish": "Begins on nawā to develop bayāt on dūgāh, then bayāt 'ushayrān and upon reaching muḥayyar in the ascent, it descends until dūgāh using 'ajam instead of ʾawj (jins kurd ḥusaynī) and its qarār is 'ushayrān.",
+        "commentsEnglish": "Begins on nawā to develop bayyāt on dūgāh, then bayyāt 'ushayrān and upon reaching muḥayyar in the ascent, it descends until dūgāh using 'ajam instead of ʾawj (jins kurd ḥusaynī) and its qarār is 'ushayrān.",
         "stops": [
           {
             "type": "note",
@@ -1675,25 +1675,25 @@
           },
           {
             "type": "jins",
-            "value": "jins bayāt",
+            "value": "jins bayyāt",
             "startingNote": "dūgāh",
             "direction": "none"
           },
           {
             "type": "jins",
-            "value": "jins bayāt",
+            "value": "jins bayyāt",
             "startingNote": "ʿushayrān",
             "direction": "ascending"
           },
           {
             "type": "jins",
-            "value": "jins bayāt",
+            "value": "jins bayyāt",
             "startingNote": "dūgāh",
             "direction": "ascending"
           },
           {
             "type": "jins",
-            "value": "jins bayāt",
+            "value": "jins bayyāt",
             "startingNote": "ḥusaynī",
             "direction": "ascending"
           },
@@ -1709,13 +1709,13 @@
           },
           {
             "type": "jins",
-            "value": "jins bayāt",
+            "value": "jins bayyāt",
             "startingNote": "dūgāh",
             "direction": "descending"
           },
           {
             "type": "jins",
-            "value": "jins bayāt",
+            "value": "jins bayyāt",
             "startingNote": "ʿushayrān",
             "direction": "descending"
           },
@@ -1777,7 +1777,7 @@
       "ḥusaynī",
       "nawā",
       "chahārgāh",
-      "nīm būselīk",
+      "nīm būsilīk",
       "dūgāh",
       "rāst",
       "ʿirāq",
@@ -1790,7 +1790,7 @@
         "creatorArabic": "",
         "sourceId": "oY8WnTdP5msak8o1G_N7f",
         "page": 30,
-        "commentsEnglish": "Starts on nawā to render maqām bayāt al-dūgāh and descends to ʿushayrān to render maqām bayāt al-ḥusaynī and descends stepwise until it's qarār ʿushayrān.",
+        "commentsEnglish": "Starts on nawā to render maqām bayyāt al-dūgāh and descends to ʿushayrān to render maqām bayyāt al-ḥusaynī and descends stepwise until it's qarār ʿushayrān.",
         "commentsArabic": "",
         "stops": [
           {
@@ -1839,7 +1839,7 @@
           },
           {
             "type": "note",
-            "value": "nīm būselīk"
+            "value": "nīm būsilīk"
           },
           {
             "type": "note",
@@ -1897,11 +1897,11 @@
         "sourceEnglish": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
         "year": 1946,
         "page": 26,
-        "commentsEnglish": "Starts with bayāt on ḥusaynī followed by nikrīz on rāst and returns to bayāt al-ḥusaynī so it's tonal centre is ḥusaynī but they have today made it's qarār ʿushayrān",
+        "commentsEnglish": "Starts with bayyāt on ḥusaynī followed by nikrīz on rāst and returns to bayyāt al-ḥusaynī so it's tonal centre is ḥusaynī but they have today made it's qarār ʿushayrān",
         "stops": [
           {
             "type": "jins",
-            "value": "jins bayāt",
+            "value": "jins bayyāt",
             "startingNote": "ḥusaynī",
             "direction": "none"
           },
@@ -1913,7 +1913,7 @@
           },
           {
             "type": "jins",
-            "value": "jins bayāt",
+            "value": "jins bayyāt",
             "startingNote": "ḥusaynī",
             "direction": "none"
           }
@@ -1937,7 +1937,7 @@
       "ʿajam ʿushayrān",
       "zīrgūleh",
       "dūgāh",
-      "nīm būselīk",
+      "nīm būsilīk",
       "chahārgāh",
       "ḥiṣār",
       "ḥusaynī",
@@ -1952,7 +1952,7 @@
       "ḥusaynī",
       "ḥiṣār",
       "chahārgāh",
-      "nīm būselīk",
+      "nīm būsilīk",
       "dūgāh",
       "zīrgūleh",
       "ʿajam ʿushayrān",
@@ -2021,7 +2021,7 @@
       "ʿajam",
       "kurdān",
       "shahnāz",
-      "jawāb nīm būselīk",
+      "jawāb nīm būsilīk",
       "māhūrān"
     ],
     "descendingNoteNames": [
@@ -2046,7 +2046,7 @@
         "sourceEnglish": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
         "year": 1946,
         "page": 28,
-        "commentsEnglish": "Starts on chahārgāh to render maqām ṣabā on dūgāh with a highlighting of maqām ḥijāz on chahārgāh, then ascending to render bayāt on muḥayyar followed by a descent in nahāwand on nawā followed by kurdī on dūgāh and it ends on its qarār with a rendering of maqām kurdī on ʿushayrān. In modern Turkish it is known as makam Şevkutarab.",
+        "commentsEnglish": "Starts on chahārgāh to render maqām ṣabā on dūgāh with a highlighting of maqām ḥijāz on chahārgāh, then ascending to render bayyāt on muḥayyar followed by a descent in nahāwand on nawā followed by kurdī on dūgāh and it ends on its qarār with a rendering of maqām kurdī on ʿushayrān. In modern Turkish it is known as makam Şevkutarab.",
         "stops": [
           {
             "type": "note",
@@ -2066,13 +2066,13 @@
           },
           {
             "type": "jins",
-            "value": "jins bayāt",
+            "value": "jins bayyāt",
             "startingNote": "muḥayyar",
             "direction": "none"
           },
           {
             "type": "jins",
-            "value": "jins nahāwand/būselīk",
+            "value": "jins nahāwand/būsilīk",
             "startingNote": "nawā",
             "direction": "descending"
           },
@@ -2112,7 +2112,7 @@
       "ʿirāq",
       "rāst",
       "dūgāh",
-      "nīm būselīk",
+      "nīm būsilīk",
       "nīm ḥijāz",
       "nawā",
       "ḥusaynī",
@@ -2144,7 +2144,7 @@
         "sourceEnglish": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
         "year": 1946,
         "page": 29,
-        "commentsEnglish": "There is a discrepancy in Shawwā's representation of this maqām. In the \"rules\" section it says: Starts on ḥijaz to render rāst al-dūgāh then ascends to muḥayyar and during the descent 'ajam is used to render bayāt dūgāh then kurd on dūgāh then ḥijaz on dūgāh and it ends on 'ushayrān. But in the \"analysis\" section it says: First, jins bayāt 'ushayrān, second, jins rāst dūgāh, third, bayāt ḥusaynī. Then ascend to render bayāt muḥayyar and descend to render rāst nawā, followed by kurdī or ḥijāz dūgāh, then nikrīz rāst and ends with bayāt 'ushayrān. Rāst dūgāh does not render in most tuning systems, and the note ḥijāz doesn't comply with it's jins. Needs to be researched",
+        "commentsEnglish": "There is a discrepancy in Shawwā's representation of this maqām. In the \"rules\" section it says: Starts on ḥijaz to render rāst al-dūgāh then ascends to muḥayyar and during the descent 'ajam is used to render bayyāt dūgāh then kurd on dūgāh then ḥijaz on dūgāh and it ends on 'ushayrān. But in the \"analysis\" section it says: First, jins bayyāt 'ushayrān, second, jins rāst dūgāh, third, bayyāt ḥusaynī. Then ascend to render bayyāt muḥayyar and descend to render rāst nawā, followed by kurdī or ḥijāz dūgāh, then nikrīz rāst and ends with bayyāt 'ushayrān. Rāst dūgāh does not render in most tuning systems, and the note ḥijāz doesn't comply with it's jins. Needs to be researched",
         "stops": [
           {
             "type": "note",
@@ -2162,7 +2162,7 @@
           },
           {
             "type": "jins",
-            "value": "jins bayāt",
+            "value": "jins bayyāt",
             "startingNote": "ḥusaynī",
             "direction": "none"
           },
@@ -2186,7 +2186,7 @@
           },
           {
             "type": "jins",
-            "value": "jins bayāt",
+            "value": "jins bayyāt",
             "startingNote": "ʿushayrān",
             "direction": "none"
           }
@@ -2221,7 +2221,7 @@
     ],
     "descendingNoteNames": [
       "māhūrān",
-      "jawāb nīm būselīk",
+      "jawāb nīm būsilīk",
       "shahnāz",
       "kurdān",
       "ʿajam",
@@ -2287,7 +2287,7 @@
       "ʿajam ʿushayrān",
       "rāst",
       "dūgāh",
-      "nīm būselīk",
+      "nīm būsilīk",
       "nīm ḥijāz",
       "nawā",
       "ḥusaynī",
@@ -2395,7 +2395,7 @@
         "sourceEnglish": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
         "year": 1946,
         "page": 34,
-        "commentsEnglish": "Starts on chahārgāh until nawā to render bayāt dūgāh, followed by rāst nawā, followed by bayāt muḥayyar, then descends to render rāst nawā, followed by nahāwand nawā, followed by bayāt dūgāh and from dūgāh descends until the qarār which is 'irāq.",
+        "commentsEnglish": "Starts on chahārgāh until nawā to render bayyāt dūgāh, followed by rāst nawā, followed by bayyāt muḥayyar, then descends to render rāst nawā, followed by nahāwand nawā, followed by bayyāt dūgāh and from dūgāh descends until the qarār which is 'irāq.",
         "stops": [
           {
             "type": "note",
@@ -2407,7 +2407,7 @@
           },
           {
             "type": "jins",
-            "value": "jins bayāt",
+            "value": "jins bayyāt",
             "startingNote": "dūgāh",
             "direction": "none"
           },
@@ -2419,7 +2419,7 @@
           },
           {
             "type": "jins",
-            "value": "jins bayāt",
+            "value": "jins bayyāt",
             "startingNote": "muḥayyar",
             "direction": "descending"
           },
@@ -2431,13 +2431,13 @@
           },
           {
             "type": "jins",
-            "value": "jins nahāwand/būselīk",
+            "value": "jins nahāwand/būsilīk",
             "startingNote": "nawā",
             "direction": "none"
           },
           {
             "type": "jins",
-            "value": "jins bayāt",
+            "value": "jins bayyāt",
             "startingNote": "dūgāh",
             "direction": "descending"
           },
@@ -2464,7 +2464,7 @@
       "ʿirāq",
       "rāst",
       "dūgāh",
-      "nīm būselīk",
+      "nīm būsilīk",
       "nīm ḥijāz",
       "nawā",
       "ḥusaynī"
@@ -2473,7 +2473,7 @@
       "ḥusaynī",
       "nawā",
       "nīm ḥijāz",
-      "nīm būselīk",
+      "nīm būsilīk",
       "dūgāh",
       "rāst",
       "ʿirāq"
@@ -2485,7 +2485,7 @@
         "creatorArabic": "",
         "sourceId": "oY8WnTdP5msak8o1G_N7f",
         "page": 35,
-        "commentsEnglish": "\"Rules\": Starts with rāst on dūgāh then descends to 'irāq and from there descends to yegāh and then ends on the qarār, 'irāq. Note: maqām bayāt muḥayyar should be rendered during the ascent. An alternative sayr is to start on ʾawj to render rāst kurdān, then 'irāq on ʾawj, then descending until its qarār, 'irāq.\"Analysis\": jins segāh on 'irāq, jins rāst on dūgāh, jins bayāt on muhayyar, then descends until 'irāq. Slightly conflicting directions. Must be clarified.",
+        "commentsEnglish": "\"Rules\": Starts with rāst on dūgāh then descends to 'irāq and from there descends to yegāh and then ends on the qarār, 'irāq. Note: maqām bayyāt muḥayyar should be rendered during the ascent. An alternative sayr is to start on ʾawj to render rāst kurdān, then 'irāq on ʾawj, then descending until its qarār, 'irāq.\"Analysis\": jins segāh on 'irāq, jins rāst on dūgāh, jins bayyāt on muhayyar, then descends until 'irāq. Slightly conflicting directions. Must be clarified.",
         "commentsArabic": "",
         "stops": [
           {
@@ -2713,7 +2713,7 @@
         "sourceEnglish": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
         "year": 1946,
         "page": 39,
-        "commentsEnglish": "Rules: Starts on kurdī to segāh and continues ascending to nawā, then from nawā ascends to buzurk, then descends to segāh and from segāh to it's qarār 'iraq. Analysis: jins ʾawj arā on 'irāq, jins nagham musta'ār on segāh, jins būselīk on nawā then ascends until buzurk and descends stepwise until it's qarār",
+        "commentsEnglish": "Rules: Starts on kurdī to segāh and continues ascending to nawā, then from nawā ascends to buzurk, then descends to segāh and from segāh to it's qarār 'iraq. Analysis: jins ʾawj arā on 'irāq, jins nagham musta'ār on segāh, jins būsilīk on nawā then ascends until buzurk and descends stepwise until it's qarār",
         "stops": [
           {
             "type": "note",
@@ -2735,7 +2735,7 @@
           },
           {
             "type": "jins",
-            "value": "jins nahāwand/būselīk",
+            "value": "jins nahāwand/būsilīk",
             "startingNote": "nawā",
             "direction": "ascending"
           },
@@ -2773,10 +2773,10 @@
   },
   {
     "id": "48",
-    "name": "maqām būselīk",
+    "name": "maqām būsilīk",
     "ascendingNoteNames": [
       "dūgāh",
-      "nīm būselīk",
+      "nīm būsilīk",
       "chahārgāh",
       "nawā",
       "ḥusaynī",
@@ -2789,7 +2789,7 @@
       "ḥusaynī",
       "nawā",
       "chahārgāh",
-      "nīm būselīk",
+      "nīm būsilīk",
       "dūgāh"
     ],
     "suyūr": [],
@@ -3033,12 +3033,12 @@
       "ʿirāq",
       "rāst",
       "dūgāh",
-      "būselīk/ʿushshāq",
+      "būsilīk/ʿushshāq",
       "nīm ḥijāz"
     ],
     "descendingNoteNames": [
       "chahārgāh",
-      "būselīk/ʿushshāq",
+      "būsilīk/ʿushshāq",
       "dūgāh",
       "rāst",
       "ʿirāq",
@@ -3158,7 +3158,7 @@
       "ḥusaynī",
       "nawā",
       "chahārgāh",
-      "nīm būselīk",
+      "nīm būsilīk",
       "kurdī",
       "rāst"
     ],
