@@ -91,6 +91,7 @@ const MAQAM_SPECIAL_TERMS: Record<string, string> = {
   'girkah': 'جركه',        // Egyptian dialect
   'bestenegār': 'بِستِنِكار',    // Persian term for a specific maqam
   'būselīk': 'بوسِليك',      // Persian term for a specific maqam
+  'zīrgūleh': 'زيركولِه',      // Persian term for a specific maqam
   'nawā' : 'نوى',          // alif baṭṭa
   'maqām': 'مقام',      // without tashkīl
   'jins': 'جنس',        // without tashkīl
