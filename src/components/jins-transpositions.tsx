@@ -422,16 +422,16 @@ export default function JinsTranspositions() {
             <thead>{renderTransposition(jinsTranspositions[0], 0)}</thead>
           </table>
 
-          {selectedJinsData && (
+          {selectedJinsData && (selectedJinsData.getCommentsEnglish()?.trim() || selectedJinsData.getSourcePageReferences()?.length > 0) && (
             <>
               <div className="jins-transpositions__comments-sources-container">
                 {language === 'ar' ? (
                   <>
-                    <div className="jins-transpositions__sources-english">
-                      <h3>{t('jins.sources')}:</h3>
-                      <div className="jins-transpositions__sources-text">
-                        {selectedJinsData?.getSourcePageReferences().length > 0 &&
-                          selectedJinsData.getSourcePageReferences().map((sourceRef, idx) => {
+                    {selectedJinsData.getSourcePageReferences()?.length > 0 && (
+                      <div className="jins-transpositions__sources-english">
+                        <h3>{t('jins.sources')}:</h3>
+                        <div className="jins-transpositions__sources-text">
+                          {selectedJinsData.getSourcePageReferences().map((sourceRef, idx) => {
                             const source = sources.find((s: any) => s.id === sourceRef.sourceId);
                             return source ? (
                               <Link href={`/bibliography?source=${source?.getId()}`} key={idx}>
@@ -443,26 +443,31 @@ export default function JinsTranspositions() {
                               </Link>
                             ) : null;
                           })}
+                        </div>
                       </div>
-                    </div>
+                    )}
 
-                    <div className="jins-transpositions__comments-english">
-                      <h3>{t('jins.comments')}:</h3>
-                      <div className="jins-transpositions__comments-text">{selectedJinsData.getCommentsEnglish()}</div>
-                    </div>
+                    {selectedJinsData.getCommentsEnglish()?.trim() && (
+                      <div className="jins-transpositions__comments-english">
+                        <h3>{t('jins.comments')}:</h3>
+                        <div className="jins-transpositions__comments-text">{selectedJinsData.getCommentsEnglish()}</div>
+                      </div>
+                    )}
                   </>
                 ) : (
                   <>
-                    <div className="jins-transpositions__comments-english">
-                      <h3>{t('jins.comments')}:</h3>
-                      <div className="jins-transpositions__comments-text">{selectedJinsData.getCommentsEnglish()}</div>
-                    </div>
+                    {selectedJinsData.getCommentsEnglish()?.trim() && (
+                      <div className="jins-transpositions__comments-english">
+                        <h3>{t('jins.comments')}:</h3>
+                        <div className="jins-transpositions__comments-text">{selectedJinsData.getCommentsEnglish()}</div>
+                      </div>
+                    )}
 
-                    <div className="jins-transpositions__sources-english">
-                      <h3>{t('jins.sources')}:</h3>
-                      <div className="jins-transpositions__sources-text">
-                        {selectedJinsData?.getSourcePageReferences().length > 0 &&
-                          selectedJinsData.getSourcePageReferences().map((sourceRef, idx) => {
+                    {selectedJinsData.getSourcePageReferences()?.length > 0 && (
+                      <div className="jins-transpositions__sources-english">
+                        <h3>{t('jins.sources')}:</h3>
+                        <div className="jins-transpositions__sources-text">
+                          {selectedJinsData.getSourcePageReferences().map((sourceRef, idx) => {
                             const source = sources.find((s: any) => s.id === sourceRef.sourceId);
                             return source ? (
                               <Link href={`/bibliography?source=${source?.getId()}`} key={idx}>
@@ -474,8 +479,9 @@ export default function JinsTranspositions() {
                               </Link>
                             ) : null;
                           })}
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </>
                 )}
               </div>

@@ -622,16 +622,16 @@ const MaqamTranspositions: React.FC = () => {
           </>
         )}
         {/* COMMENTS AND SOURCES */}
-        {selectedMaqamData && (
+        {selectedMaqamData && (selectedMaqamData.getCommentsEnglish()?.trim() || selectedMaqamData.getSourcePageReferences()?.length > 0) && (
           <>
             <div className="maqam-transpositions__comments-sources-container">
               {language === 'ar' ? (
                 <>
-                  <div className="maqam-transpositions__sources-english">
-                    <h3>{t('maqam.sources')}:</h3>
-                    <div className="maqam-transpositions__sources-text">
-                      {selectedMaqamData?.getSourcePageReferences().length > 0 &&
-                        selectedMaqamData.getSourcePageReferences().map((sourceRef, idx) => {
+                  {selectedMaqamData.getSourcePageReferences()?.length > 0 && (
+                    <div className="maqam-transpositions__sources-english">
+                      <h3>{t('maqam.sources')}:</h3>
+                      <div className="maqam-transpositions__sources-text">
+                        {selectedMaqamData.getSourcePageReferences().map((sourceRef, idx) => {
                           const source = sources.find((s: any) => s.id === sourceRef.sourceId);
                           return source ? (
                             <Link key={idx} href={`/bibliography?source=${source.getId()}`}>
@@ -643,26 +643,31 @@ const MaqamTranspositions: React.FC = () => {
                             </Link>
                           ) : null;
                         })}
+                      </div>
                     </div>
-                  </div>
+                  )}
 
-                  <div className="maqam-transpositions__comments-english">
-                    <h3>{t('maqam.comments')}:</h3>
-                    <div className="maqam-transpositions__comments-text">{selectedMaqamData.getCommentsEnglish()}</div>
-                  </div>
+                  {selectedMaqamData.getCommentsEnglish()?.trim() && (
+                    <div className="maqam-transpositions__comments-english">
+                      <h3>{t('maqam.comments')}:</h3>
+                      <div className="maqam-transpositions__comments-text">{selectedMaqamData.getCommentsEnglish()}</div>
+                    </div>
+                  )}
                 </>
               ) : (
                 <>
-                  <div className="maqam-transpositions__comments-english">
-                    <h3>{t('maqam.comments')}:</h3>
-                    <div className="maqam-transpositions__comments-text">{selectedMaqamData.getCommentsEnglish()}</div>
-                  </div>
+                  {selectedMaqamData.getCommentsEnglish()?.trim() && (
+                    <div className="maqam-transpositions__comments-english">
+                      <h3>{t('maqam.comments')}:</h3>
+                      <div className="maqam-transpositions__comments-text">{selectedMaqamData.getCommentsEnglish()}</div>
+                    </div>
+                  )}
 
-                  <div className="maqam-transpositions__sources-english">
-                    <h3>{t('maqam.sources')}:</h3>
-                    <div className="maqam-transpositions__sources-text">
-                      {selectedMaqamData?.getSourcePageReferences().length > 0 &&
-                        selectedMaqamData.getSourcePageReferences().map((sourceRef, idx) => {
+                  {selectedMaqamData.getSourcePageReferences()?.length > 0 && (
+                    <div className="maqam-transpositions__sources-english">
+                      <h3>{t('maqam.sources')}:</h3>
+                      <div className="maqam-transpositions__sources-text">
+                        {selectedMaqamData.getSourcePageReferences().map((sourceRef, idx) => {
                           const source = sources.find((s: any) => s.id === sourceRef.sourceId);
                           return source ? (
                             <Link key={idx} href={`/bibliography?source=${source.getId()}`}>
@@ -674,8 +679,9 @@ const MaqamTranspositions: React.FC = () => {
                             </Link>
                           ) : null;
                         })}
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </>
               )}
             </div>
