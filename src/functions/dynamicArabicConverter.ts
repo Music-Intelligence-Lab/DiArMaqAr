@@ -1,10 +1,4 @@
-/**
- * Dynamic Arabic Script Converter
- * Converts Library of Congress Arabic transliteration to Arabic script.
- * This approach is dynamic and works with any transliterated text following LOC standards.
- */
-
-/**
+/** 
  * Library of Congress Arabic Romanization to Arabic Script Mapping
  * 
  * This comprehensive mapping covers:
@@ -14,6 +8,7 @@
  * - Persian and Turkish letters commonly used in maqam terminology
  * - Special characters and combinations unique to musical terms
  */
+
 const LOC_TRANSLITERATION_MAP: Record<string, string> = {
   // Hamza patterns (must come first - longest patterns first)
   'āʾ': 'اء',     // hamza after long alif
@@ -94,6 +89,8 @@ const LOC_TRANSLITERATION_MAP: Record<string, string> = {
 // Dialect-specific terms that don't follow standard LOC
 const MAQAM_SPECIAL_TERMS: Record<string, string> = {
   'girkah': 'جركه',        // Egyptian dialect
+  'bestenegār': 'بِستِنِكار',    // Persian term for a specific maqam
+  'būselīk': 'بوسِليك',      // Persian term for a specific maqam
   'nawā' : 'نوى',          // alif baṭṭa
   'maqām': 'مقام',      // without tashkīl
   'jins': 'جنس',        // without tashkīl
@@ -101,10 +98,10 @@ const MAQAM_SPECIAL_TERMS: Record<string, string> = {
 };
 
 /**
- * Convert Library of Congress transliteration to Arabic script with full tashkīل
+ * Convert Library of Congress transliteration to Arabic script with full tashkīл
  */
 // Update transliteration logic to ensure proper handling of definite articles and sun letters
-export function transliterateToArabic(text: string): string {
+function transliterateToArabic(text: string): string {
   if (!text || typeof text !== 'string') return text;
 
   let result = text.toLowerCase();
@@ -168,7 +165,7 @@ result = result.replace(/(ال)u(?=[بتثجحخدذرزسشصضطظعغفقكل
 /**
  * Enhanced function that handles common maqam naming patterns
  */
-export function convertMaqamNameToArabic(name: string): string {
+function convertMaqamNameToArabic(name: string): string {
   if (!name) return name;
   
   // Handle specific patterns common in maqam names
@@ -186,7 +183,7 @@ export function convertMaqamNameToArabic(name: string): string {
 /**
  * Convert note names with special handling for octave indicators
  */
-export function convertNoteNameToArabic(name: string): string {
+function convertNoteNameToArabic(name: string): string {
   if (!name) return name;
   
   // Handle compound note names with slashes
@@ -213,28 +210,4 @@ export function getDynamicArabicName(name: string, type: 'note' | 'jins' | 'maqa
     default:
       return transliterateToArabic(name);
   }
-}
-
-/**
- * Batch convert an array of names
- */
-export function convertNamesArrayToArabic(names: string[], type: 'note' | 'jins' | 'maqam'): string[] {
-  return names.map(name => getDynamicArabicName(name, type));
-}
-
-/**
- * Validate if a string appears to be LOC transliteration
- */
-export function isLOCTransliteration(text: string): boolean {
-  if (!text) return false;
-  
-  // Check for characteristic LOC transliteration patterns
-  const locPatterns = [
-    /[ḥṣṭḍẓāīūʿʾ]/, // Characteristic diacritics
-    /\b(maqām|jins|qarār|jawāb)\b/, // Common maqam terms
-    /[āīū]/, // Long vowels
-    /(gh|kh|sh|th|dh)/, // Digraphs
-  ];
-  
-  return locPatterns.some(pattern => pattern.test(text));
 }

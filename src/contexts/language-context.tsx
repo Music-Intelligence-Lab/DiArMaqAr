@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useState, useContext, ReactNode, useEffect } from "react";
-import { getHybridArabicName } from '@/functions/hybridArabicConverter';
+import { getDynamicArabicName } from '@/functions/dynamicArabicConverter';
 
 export type Language = 'en' | 'ar';
 
@@ -589,7 +589,7 @@ export function LanguageContextProvider({ children }: { children: ReactNode }) {
   // Function to get display name based on current language
   const getDisplayName = (name: string, type: 'note' | 'jins' | 'maqam'): string => {
     if (language === 'ar') {
-      return getHybridArabicName(name, type);
+      return getDynamicArabicName(name, type);
     }
     return name; // Return transliterated name for English
   };
