@@ -92,9 +92,9 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
       return englishName && englishName !== "--";
     }).length;
 
-    const noteWidth = 80;
+    const noteWidth = 100;
     const staveMargin = 300;
-    const rightMargin = 10;
+    const rightMargin = 20;
     const calculatedWidth =  staveMargin + (notesCount * noteWidth) + rightMargin;
     const calculatedHeight = 240; // Increased total height for high notes and text below
 
