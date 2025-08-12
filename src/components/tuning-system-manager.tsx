@@ -778,6 +778,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                     // Toggle functionality: if clicking the same tuning system, deselect it
                     if (selectedTuningSystem?.getId() === tuningSystem.getId()) {
                       setSelectedTuningSystem(null);
+                      clearSelections();
                       clearHangingNotes();
                     } else {
                       handleTuningSystemClick(tuningSystem, noteName);
