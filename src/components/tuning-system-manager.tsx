@@ -999,7 +999,6 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       {/* TUNING OCTAVES TABLES GRID */}
 
       <TuningSystemOctaveTables admin={admin} />
-      <SelectedPitchClassTranspositions />
 
       {selectedTuningSystem && (selectedTuningSystem.getCommentsEnglish().trim() || selectedTuningSystem.getCommentsArabic().trim() || (sourcePageReferences && sourcePageReferences.length > 0)) && (
         <div className="tuning-system-manager__comments-sources-container">
@@ -1062,6 +1061,10 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
           )}
         </div>
       )}
+
+      <SelectedPitchClassTranspositions />
+
+
 
       {/* Export Modal */}
       <ExportModal isOpen={isExportModalOpen} onClose={() => setIsExportModalOpen(false)} exportType="tuning-system" />
