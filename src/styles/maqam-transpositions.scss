@@ -165,7 +165,8 @@
 
     &_scale-degrees-number {
       background-color: $medium-grey;
-      font-weight: 400;
+          font-weight: 400 !important;
+
     }
   }
 
@@ -183,6 +184,7 @@
   &__row-header {
     background-color: $medium-grey;
     text-transform: capitalize;
+    font-weight: 400 !important;
   }
 
   &__maqam-name-row {
@@ -233,7 +235,7 @@
     display: flex;
     width: 100%;
     margin-top: 0px;
-    
+
     // RTL support - reverse flex direction for Arabic
     [dir="rtl"] & {
       flex-direction: row-reverse;
@@ -251,7 +253,7 @@
     float: left;
     margin-bottom: 0px;
     line-height: calc(20px);
-    
+
     // RTL support - when in Arabic mode, adjust alignment and padding
     [dir="rtl"] & {
       direction: rtl;
@@ -271,7 +273,7 @@
     vertical-align: top;
     padding-right: 30px;
     float: left;
-    
+
     // RTL support - when in Arabic mode, adjust alignment and padding
     [dir="rtl"] & {
       direction: rtl;
