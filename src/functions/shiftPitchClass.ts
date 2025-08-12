@@ -111,10 +111,7 @@ export function shiftPitchClassWithoutAllPitchClasses(pitchClass: PitchClass, oc
 
   return {
     ...pitchClass,
-    // Update the note name to indicate the shift (for debugging)
-    noteName: pitchClass.noteName + " shifted by " + octaves + " octaves",
-    
-    // Update original value and fraction with calculated shifts
+    noteName: "jawāb " + pitchClass.noteName, 
     originalValue: newOriginalValue,
     fraction: newFractionValue,
     octave: pitchClass.octave + octaves,
