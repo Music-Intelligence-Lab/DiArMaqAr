@@ -775,7 +775,13 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                   }
                   onClick={() => {
                     const { noteName } = isTuningSystemDisabled(tuningSystem, selectedJinsData, selectedMaqamData, selectedMaqam);
-                    handleTuningSystemClick(tuningSystem, noteName);
+                    // Toggle functionality: if clicking the same tuning system, deselect it
+                    if (selectedTuningSystem?.getId() === tuningSystem.getId()) {
+                      setSelectedTuningSystem(null);
+                      clearHangingNotes();
+                    } else {
+                      handleTuningSystemClick(tuningSystem, noteName);
+                    }
                   }}
                 >
                   <strong className="tuning-system-manager__item-english-creator">
