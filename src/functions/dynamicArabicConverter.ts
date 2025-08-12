@@ -61,7 +61,7 @@ const LOC_TRANSLITERATION_MAP: Record<string, string> = {
   // Persian/Ottoman syllable patterns (common in maqam names)
   'ye': 'ي',       // Persian ye (as in yegāh → يگاه)
   'se': 'سي',      // Persian se (as in segāh → سه‌گاه)
-  'ai': 'ي',     // Persian ai (as in nayrūz → نيروز)
+  'kesh': 'كِش',     // Persian kesh (as in keshk → كشک)
 
   // Persian vowel handling
   'e': '',        // Persian e (often dropped in Arabic transliteration)
@@ -131,13 +131,13 @@ result = result.replace(/(ال)a(?=[بتثجحخدذرزسشصضطظعغفقكل
 result = result.replace(/(ال)i(?=[بتثجحخدذرزسشصضطظعغفقكلمنهوير])/g, '$1إ');
 result = result.replace(/(ال)u(?=[بتثجحخدذرزسشصضطظعغفقكلمنهوير])/g, '$1أ');
 
-  // Apply tashkīl only if a, i, u are preceded by a consonant and followed by a word boundary, space, or non-letter
+  // Apply tashkīl only if a, i, u are preceded by a consonant (including those with shadda) and followed by a word boundary, space, or non-letter
   // Fatha
-  result = result.replace(/([بتثجحخدذرزسشصضطظعغفقكلمنهوي])a(?=\b|\s|$|[^a-zāīūḥṣṭḍẓʿʾbtdjkhdrzssṣḍṭẓghfqklmnhwyوي])/g, '$1َ');
+  result = result.replace(/([بتثجحخدذرزسشصضطظعغفقكلمنهويّ])a(?=\b|\s|$|[^a-zāīūḥṣṭḍẓʿʾbtdjkhdrzssṣḍṭẓghfqklmnhwyوي])/g, '$1َ');
   // Kasra
-  result = result.replace(/([بتثجحخدذرزسشصضطظعغفقكلمنهوي])i(?=\b|\s|$|[^a-zāīūḥṣṭḍẓʿʾbtdjkhdrzssṣḍṭẓghfqklmnhwyوي])/g, '$1ِ');
+  result = result.replace(/([بتثجحخدذرزسشصضطظعغفقكلمنهويّ])i(?=\b|\s|$|[^a-zāīūḥṣṭḍẓʿʾbtdjkhdrzssṣḍṭẓghfqklmnhwyوي])/g, '$1ِ');
   // Damma
-  result = result.replace(/([بتثجحخدذرزسشصضطظعغفقكلمنهوي])u(?=\b|\s|$|[^a-zāīūḥṣṭḍẓʿʾbtdjkhdrzssṣḍṭẓghfqklmnhwyوي])/g, '$1ُ');
+  result = result.replace(/([بتثجحخدذرزسشصضطظعغفقكلمنهويّ])u(?=\b|\s|$|[^a-zāīūḥṣṭḍẓʿʾbtdjkhdrzssṣḍṭẓghfqklmnhwyوي])/g, '$1ُ');
 
   // Handle initial vowels that need hamza (LOC standard)
   result = result.replace(/(^|\s)([َُِ])([بتثجحخدذرزسشصضطظعغفقكلمنهويپژچگ])/g, '$1أ$3');

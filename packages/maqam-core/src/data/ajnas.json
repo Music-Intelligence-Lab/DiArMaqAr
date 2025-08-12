@@ -1,11 +1,11 @@
 [
   {
     "id": "1",
-    "name": "jins rāst muṭlaq",
+    "name": "jins rāst (muṭlaq)",
     "noteNames": [
       "nawā",
       "ḥusaynī",
-      "ʾawj",
+      "awj",
       "kurdān"
     ],
     "commentsEnglish": "",
@@ -74,7 +74,7 @@
   },
   {
     "id": "6",
-    "name": "jins nahāwand binṣir",
+    "name": "jins nahāwand (binṣir)",
     "noteNames": [
       "rāst",
       "dūgāh",
@@ -100,7 +100,7 @@
   },
   {
     "id": "8",
-    "name": "jins ḥijāz binṣir",
+    "name": "jins ḥijāz (binṣir)",
     "noteNames": [
       "rāst",
       "tīk zīrgūleh",
@@ -183,7 +183,7 @@
     "noteNames": [
       "nawā",
       "tīk ḥiṣār",
-      "ʾawj",
+      "awj",
       "kurdān"
     ],
     "commentsEnglish": "",
@@ -205,7 +205,7 @@
   },
   {
     "id": "16",
-    "name": "jins rāst binṣir (nīm būselīk)",
+    "name": "jins rāst (binṣir) (nīm būselīk)",
     "noteNames": [
       "rāst",
       "dūgāh",
@@ -218,7 +218,7 @@
   },
   {
     "id": "17",
-    "name": "jins kurd binṣir",
+    "name": "jins kurd (binṣir)",
     "noteNames": [
       "rāst",
       "tīk zīrgūleh",
@@ -245,7 +245,7 @@
   },
   {
     "id": "19",
-    "name": "jins rast binṣir",
+    "name": "jins rast (binṣir)",
     "noteNames": [
       "rāst",
       "dūgāh",
@@ -258,7 +258,7 @@
   },
   {
     "id": "20",
-    "name": "jins nahāwand muṭlaq",
+    "name": "jins nahāwand (muṭlaq)",
     "noteNames": [
       "nawā",
       "ḥusaynī",
