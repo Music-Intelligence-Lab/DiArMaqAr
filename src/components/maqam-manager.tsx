@@ -197,7 +197,13 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
                 className={`maqam-manager__item ${maqamData.getName() === selectedMaqamData?.getName() ? "maqam-manager__item_selected " : ""}${selectable ? "maqam-manager__item_active" : ""}`}
                 onClick={() => {
                   if (selectable) {
-                    handleClickMaqam(maqamData);
+                    // Toggle functionality: if clicking the same maqam, deselect it
+                    if (selectedMaqamData?.getName() === maqamData.getName()) {
+                      setSelectedMaqamData(null);
+                      setSelectedPitchClasses([]);
+                    } else {
+                      handleClickMaqam(maqamData);
+                    }
                     clearHangingNotes();
                   }
                 }}

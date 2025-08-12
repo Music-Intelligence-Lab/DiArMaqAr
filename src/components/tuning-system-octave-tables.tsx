@@ -171,7 +171,14 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
   const isCellSelected = (octave: number, colIndex: number) => selectedPitchClasses.some((pitchClasses) => pitchClasses.octave === octave && pitchClasses.index === colIndex);
   const isCellActive = (octave: number, colIndex: number) => activePitchClasses.some((pitchClasses) => pitchClasses.octave === octave && pitchClasses.index === colIndex);
   const isCellDescending = (octave: number, colIndex: number) => {
-    const originalValue = allPitchClasses[octave * tuningSystemPitchClassesArray.length + colIndex].originalValue;
+    const pitchClassIndex = octave * tuningSystemPitchClassesArray.length + colIndex;
+    
+    // Safety check: ensure allPitchClasses exists and has the required index
+    if (!allPitchClasses || pitchClassIndex >= allPitchClasses.length || !allPitchClasses[pitchClassIndex]) {
+      return false;
+    }
+    
+    const originalValue = allPitchClasses[pitchClassIndex].originalValue;
     return selectedMaqam
       ? selectedMaqam.descendingPitchClasses.map((pitchClass) => pitchClass.originalValue).includes(originalValue)
       : selectedMaqamData
@@ -193,7 +200,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
   const handleCheckboxChange = (octave: number, colIndex: number, checked: boolean) => {
     setSelectedPitchClasses((prevCells) => {
       const newCells = prevCells.filter((pitchClass) => !(pitchClass.octave === octave && pitchClass.index === colIndex));
-      if (checked) {
+      if (checked && allPitchClasses) {
         const existingCell = allPitchClasses.find((pitchClass) => pitchClass.octave === octave && pitchClass.index === colIndex);
         if (existingCell) newCells.push(existingCell);
       }
@@ -326,6 +333,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
   // MARK: Octave Rows
 
   const getOctavePitchClasses = (octave: number) => {
+    if (!allPitchClasses || allPitchClasses.length === 0) return [];
     if (allPitchClasses.length % numberOfPitchClasses !== 0) throw new Error("All pitchClasses must be evenly divisible by the number of pitch classes.");
     return allPitchClasses.slice(octave * numberOfPitchClasses, (octave + 1) * numberOfPitchClasses);
   };
@@ -743,6 +751,11 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
         </div>
       </details>
     );
+  }
+
+  // Don't render if no tuning system is selected to prevent errors
+  if (!selectedTuningSystem || !allPitchClasses || allPitchClasses.length === 0) {
+    return null;
   }
 
   return (

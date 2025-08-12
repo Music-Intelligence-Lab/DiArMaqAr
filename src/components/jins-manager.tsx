@@ -149,7 +149,13 @@ export default function JinsManager({ admin }: { admin: boolean }) {
                   className={"jins-manager__item " + (jinsData.getName() === selectedJinsData?.getName() ? "jins-manager__item_selected " : "") + (selectable ? "jins-manager__item_active" : "")}
                   onClick={() => {
                     if (selectable) {
-                      handleClickJins(jinsData);
+                      // Toggle functionality: if clicking the same jins, deselect it
+                      if (selectedJinsData?.getName() === jinsData.getName()) {
+                        setSelectedJinsData(null);
+                        clearSelections();
+                      } else {
+                        handleClickJins(jinsData);
+                      }
                       clearHangingNotes();
                     }
                   }}
