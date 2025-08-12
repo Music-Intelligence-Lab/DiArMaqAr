@@ -14,7 +14,7 @@
   },
   {
     "id": "2",
-    "name": "jins bayāt",
+    "name": "jins bayyāt",
     "noteNames": [
       "dūgāh",
       "segāh",
@@ -104,7 +104,7 @@
     "noteNames": [
       "rāst",
       "tīk zīrgūleh",
-      "būselīk/ʿushshāq",
+      "būsilīk/ʿushshāq",
       "chahārgāh"
     ],
     "commentsEnglish": "",
@@ -171,7 +171,7 @@
       "ʿirāq",
       "zīrgūleh",
       "dūgāh",
-      "būselīk/ʿushshāq"
+      "būsilīk/ʿushshāq"
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -205,11 +205,11 @@
   },
   {
     "id": "16",
-    "name": "jins rāst binṣir (nīm būselīk)",
+    "name": "jins rāst binṣir (nīm būsilīk)",
     "noteNames": [
       "rāst",
       "dūgāh",
-      "nīm būselīk",
+      "nīm būsilīk",
       "chahārgāh"
     ],
     "commentsEnglish": "",
@@ -271,10 +271,10 @@
   },
   {
     "id": "21",
-    "name": "jins būselīk (Al-Shawwā)",
+    "name": "jins būsilīk (Al-Shawwā)",
     "noteNames": [
       "dūgāh",
-      "nīm būselīk",
+      "nīm būsilīk",
       "chahārgāh",
       "nawā"
     ],
@@ -289,10 +289,10 @@
   },
   {
     "id": "22",
-    "name": "jins būselīk (Al-Ḥilū)",
+    "name": "jins būsilīk (Al-Ḥilū)",
     "noteNames": [
       "dūgāh",
-      "būselīk/ʿushshāq",
+      "būsilīk/ʿushshāq",
       "chahārgāh",
       "nawā"
     ],
