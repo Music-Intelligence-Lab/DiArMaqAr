@@ -6,10 +6,29 @@ import NoteName from "@/models/NoteName";
 import getTuningSystemCells from "@/functions/getTuningSystemCells";
 import shiftPitchClass from "./shiftPitchClass";
 
+/**
+ * Calculates intervals between consecutive pitch classes.
+ * 
+ * @param pitchClasses - Array of pitch classes to calculate intervals for
+ * @returns Array of intervals between consecutive pitch classes
+ */
 export function getPitchClassIntervals(pitchClasses: PitchClass[]) {
   return pitchClasses.slice(1).map((pitchClass, index) => calculateInterval(pitchClasses[index], pitchClass));
 }
 
+/**
+ * Finds all possible transpositions of a jins pattern within available pitch classes.
+ * 
+ * This function searches through all available pitch classes to find sequences
+ * that match the interval pattern of a given jins, enabling transposition analysis.
+ * 
+ * @param inputPitchClasses - Available pitch classes to search within
+ * @param jinsPitchClassIntervals - Interval pattern to match
+ * @param ascending - Whether to search in ascending or descending direction
+ * @param useRatio - Whether to use ratio-based interval matching
+ * @param centsTolerance - Tolerance in cents for interval matching
+ * @returns Array of pitch class sequences that match the jins pattern
+ */
 export function getPitchClassTranspositions(inputPitchClasses: PitchClass[], jinsPitchClassIntervals: PitchClassInterval[], ascending: boolean, useRatio: boolean, centsTolerance: number) {
   const allPitchClasses = ascending ? inputPitchClasses : [...inputPitchClasses].reverse();
 
@@ -65,6 +84,17 @@ export function getPitchClassTranspositions(inputPitchClasses: PitchClass[], jin
   });
 }
 
+/**
+ * Merges ascending and descending transposition sequences that share the same starting note.
+ * 
+ * This function pairs ascending and descending sequences that begin/end on the same
+ * note name, which is essential for creating complete jins transpositions that
+ * include both directional patterns.
+ * 
+ * @param ascendingSequences - Array of ascending pitch class sequences
+ * @param descendingSequences - Array of descending pitch class sequences
+ * @returns Array of objects containing paired ascending and descending sequences
+ */
 export function mergeTranspositions(ascendingSequences: PitchClass[][], descendingSequences: PitchClass[][]) {
   const filteredSequences: { ascendingSequence: PitchClass[]; descendingSequence: PitchClass[] }[] = [];
 
@@ -82,6 +112,24 @@ export function mergeTranspositions(ascendingSequences: PitchClass[][], descendi
   return filteredSequences;
 }
 
+/**
+ * Finds all possible transpositions of a maqam within available pitch classes.
+ * 
+ * This is a core analysis function that determines where a given maqam can be
+ * transposed within a tuning system. It analyzes both ascending and descending
+ * patterns and can optionally include tahlil (analytical) transpositions.
+ * 
+ * The function works by finding valid transpositions for each constituent jins
+ * of the maqam and then combining them into complete maqam structures.
+ * 
+ * @param allPitchClasses - Available pitch classes to search within
+ * @param allAjnas - All available ajnas for jins resolution
+ * @param maqamData - The maqam to find transpositions for
+ * @param withTahlil - Whether to include analytical (tahlil) transpositions
+ * @param centsTolerance - Tolerance in cents for pitch matching (default: 5)
+ * @param onlyOctaveOne - Whether to limit search to octave 1 only (default: false)
+ * @returns Array of all possible maqam transpositions
+ */
 export function getMaqamTranspositions(
   allPitchClasses: PitchClass[],
   allAjnas: JinsData[],
@@ -236,6 +284,23 @@ export function getMaqamTranspositions(
   } else return maqamTranspositionsWithoutTahlil;
 }
 
+/**
+ * Finds all possible transpositions of a jins (tetrachordal unit) within available pitch classes.
+ * 
+ * This function analyzes a jins pattern and finds all possible transpositions
+ * within the given pitch classes. It handles both ascending and descending
+ * patterns and can optionally include tahlil (original analytical) positions.
+ * 
+ * The analysis includes filtering by octave constraints and matching interval
+ * patterns with the specified cents tolerance.
+ * 
+ * @param allPitchClasses - Available pitch classes to search within
+ * @param jinsData - The jins data to find transpositions for
+ * @param withTahlil - Whether to include the original analytical position
+ * @param centsTolerance - Tolerance in cents for interval matching (default: 5)
+ * @param onlyOctaveOne - Whether to limit search to octave 1 only (default: false)
+ * @returns Array of all possible jins transpositions
+ */
 export function getJinsTranspositions(allPitchClasses: PitchClass[], jinsData: JinsData | null, withTahlil: boolean, centsTolerance: number = 5, onlyOctaveOne: boolean = false): Jins[] {
   if (allPitchClasses.length === 0 || !jinsData) return [];
 

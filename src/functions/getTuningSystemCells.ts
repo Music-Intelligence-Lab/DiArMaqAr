@@ -14,6 +14,25 @@ import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import { calculateCentsDeviationWithReferenceNote } from "@/functions/calculateCentsDeviation";
 import PitchClass from "@/models/PitchClass";
 
+/**
+ * Generates a complete array of PitchClass objects for a tuning system starting from a specific note.
+ * 
+ * This is a core function that creates the fundamental pitch collection for analysis.
+ * It takes a tuning system and starting note, then generates all pitch classes across
+ * multiple octaves with their frequencies, MIDI numbers, cents deviations, and other
+ * properties needed for maqam analysis.
+ * 
+ * The function handles various pitch class formats (ratios, frequencies, cents) and
+ * automatically detects the input type. It also manages reference frequencies and
+ * octave relationships to create a comprehensive pitch space.
+ * 
+ * @param tuningSystem - The tuning system to generate pitch classes for
+ * @param startingNote - The note to start the tuning system from
+ * @param tuningSystemPitchClasses - Optional custom pitch classes (default: from tuning system)
+ * @param inputStringLength - Optional length parameter for custom input
+ * @param inputReferenceFrequencies - Optional custom reference frequencies
+ * @returns Complete array of PitchClass objects spanning multiple octaves
+ */
 export default function getTuningSystemCells(
   tuningSystem: TuningSystem,
   startingNote: NoteName,

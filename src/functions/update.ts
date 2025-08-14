@@ -4,12 +4,30 @@ import Pattern from "@/models/Pattern";
 import { Source } from "@/models/bibliography/Source";
 import TuningSystem from "@/models/TuningSystem";
 
+/**
+ * Compares two string representations of numbers for sorting purposes.
+ * 
+ * @param a - First string number
+ * @param b - Second string number
+ * @returns Numeric comparison result for sorting
+ */
 function compareStringNumbers(a: string, b: string): number {
   const numA = parseFloat(a);
   const numB = parseFloat(b);
   return numA - numB;
 }
 
+/**
+ * Updates the tuning systems data by sending a PUT request to the API.
+ * 
+ * This function takes an array of TuningSystem objects, sorts them by ID,
+ * serializes them to JSON format, and sends them to the backend API
+ * for persistent storage. It handles the conversion of TuningSystem
+ * instances to plain objects suitable for JSON serialization.
+ * 
+ * @param newSystems - Array of TuningSystem objects to update
+ * @throws Error if the API request fails or returns a non-OK status
+ */
 export async function updateTuningSystems(newSystems: TuningSystem[]) {
   newSystems.sort((a, b) => compareStringNumbers(a.getId(), b.getId()));
   try {
@@ -55,6 +73,16 @@ export async function updateTuningSystems(newSystems: TuningSystem[]) {
   }
 }
 
+/**
+ * Updates the ajnas (tetrachordal units) data by sending a PUT request to the API.
+ * 
+ * This function takes an array of JinsData objects, sorts them by ID,
+ * and sends them to the backend API for persistent storage. It converts
+ * JinsData instances to the appropriate JSON format for database storage.
+ * 
+ * @param newAjnas - Array of JinsData objects to update
+ * @throws Error if the API request fails or returns a non-OK status
+ */
 export async function updateAjnas(newAjnas: JinsData[]) {
   newAjnas.sort((a, b) => compareStringNumbers(a.getId(), b.getId()));
   try {
@@ -80,6 +108,17 @@ export async function updateAjnas(newAjnas: JinsData[]) {
   }
 }
 
+/**
+ * Updates the maqamat (modal structures) data by sending a PUT request to the API.
+ * 
+ * This function takes an array of MaqamData objects, sorts them by ID,
+ * and sends them to the backend API for persistent storage. It handles
+ * the serialization of complex maqam structures including their constituent
+ * ajnas and melodic progressions (suyur).
+ * 
+ * @param newMaqamat - Array of MaqamData objects to update
+ * @throws Error if the API request fails or returns a non-OK status
+ */
 export async function updateMaqamat(newMaqamat: MaqamData[]) {
   newMaqamat.sort((a, b) => compareStringNumbers(a.getId(), b.getId()));
   try {
@@ -107,6 +146,16 @@ export async function updateMaqamat(newMaqamat: MaqamData[]) {
   }
 }
 
+/**
+ * Updates the sources (bibliographical references) data by sending a PUT request to the API.
+ * 
+ * This function takes an array of Source objects, sorts them by ID,
+ * and sends them to the backend API for persistent storage. Sources include
+ * books, articles, and other references used in maqam research.
+ * 
+ * @param sources - Array of Source objects to update
+ * @throws Error if the API request fails or returns a non-OK status
+ */
 export async function updateSources(sources: Source[]) {
   sources.sort((a, b) => compareStringNumbers(a.getId(), b.getId()));
   try {
@@ -123,6 +172,17 @@ export async function updateSources(sources: Source[]) {
   }
 }
 
+/**
+ * Updates the patterns data by sending a PUT request to the API.
+ * 
+ * This function takes an array of Pattern objects, sorts them by ID,
+ * and sends them to the backend API for persistent storage. Patterns
+ * represent recurring musical structures and melodic formulas used
+ * in maqam analysis.
+ * 
+ * @param patterns - Array of Pattern objects to update
+ * @throws Error if the API request fails or returns a non-OK status
+ */
 export async function updatePatterns(patterns: Pattern[]) {
   patterns.sort((a, b) => compareStringNumbers(a.getId(), b.getId()));
   try {

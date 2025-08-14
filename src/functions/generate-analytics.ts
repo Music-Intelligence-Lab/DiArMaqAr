@@ -21,6 +21,19 @@ interface AnalyticsRow {
   totalMaqamatModulations: number;
 }
 
+/**
+ * Computes comprehensive analytics for a specific tuning system.
+ * 
+ * This function analyzes a tuning system to calculate various metrics including
+ * the number of possible ajnas, maqamat, their transpositions, modulations, and
+ * total suyur (melodic progressions). The analysis is performed for each possible
+ * starting note in the tuning system.
+ * 
+ * @param tuningSystem - The tuning system to analyze
+ * @param allAjnas - Array of all available ajnas (tetrachordal units)
+ * @param allMaqamat - Array of all available maqamat (modal structures)
+ * @returns Array of analytics rows, one for each starting note in the tuning system
+ */
 function computeAnalyticsForSystem(tuningSystem: TuningSystem, allAjnas: ReturnType<typeof getAjnas>, allMaqamat: ReturnType<typeof getMaqamat>): AnalyticsRow[] {
   const rows: AnalyticsRow[] = [];
   const totalNumberOfAjnas = allAjnas.length;
@@ -72,6 +85,19 @@ function computeAnalyticsForSystem(tuningSystem: TuningSystem, allAjnas: ReturnT
   return rows;
 }
 
+/**
+ * Generates comprehensive analytics for all tuning systems and writes the results to a JSON file.
+ * 
+ * This function computes analytics for every available tuning system, combining the results
+ * into a single dataset that can be used for comparative analysis. The output is written
+ * to 'public/data/analytics.json' for use by the web application.
+ * 
+ * The analytics include metrics such as:
+ * - Number of possible ajnas and maqamat per tuning system
+ * - Transposition possibilities
+ * - Modulation counts
+ * - Total number of available suyur (melodic progressions)
+ */
 export function generateAndWriteAnalytics() {
   const systems = getTuningSystems();
   const allAjnas = getAjnas();

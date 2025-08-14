@@ -102,6 +102,20 @@ function convertMaqamAjnasToObjects(maqam: Maqam): MaqamWithAjnasAsObjects {
   return convertedMaqam;
 }
 
+/**
+ * Exports comprehensive data for a specific tuning system and starting note.
+ * 
+ * This function generates a complete export of a tuning system including all
+ * possible ajnas, maqamat, their transpositions, and modulation possibilities.
+ * The export can be customized through options to include/exclude specific data sets.
+ * 
+ * @param tuningSystem - The tuning system to export
+ * @param startingNote - The starting note for the analysis
+ * @param options - Export configuration options specifying what data to include
+ * @param centsTolerance - Tolerance in cents for matching pitches (default: 5)
+ * @returns Comprehensive export object containing all requested tuning system data
+ * 
+ */
 export function exportTuningSystem(
   tuningSystem: TuningSystem, 
   startingNote: NoteName, 
@@ -196,6 +210,22 @@ export function exportTuningSystem(
   return result;
 }
 
+/**
+ * Exports comprehensive data for a specific jins (tetrachordal unit).
+ * 
+ * This function generates a detailed export of a jins including its basic properties,
+ * all possible transpositions within a given tuning system, and optionally its
+ * modulation possibilities. The jins can be provided as either a Jins instance
+ * or JinsData object.
+ * 
+ * @param jinsInput - The jins to export (either Jins instance or JinsData)
+ * @param tuningSystem - The tuning system context for analysis
+ * @param startingNote - The starting note for the tuning system
+ * @param options - Export configuration options for jins-specific data
+ * @param centsTolerance - Tolerance in cents for matching pitches (default: 5)
+ * @returns Comprehensive export object containing all requested jins data
+
+ */
 export function exportJins(
   jinsInput: Jins | JinsData,
   tuningSystem: TuningSystem,
@@ -257,6 +287,22 @@ export function exportJins(
   return result;
 }
 
+/**
+ * Exports comprehensive data for a specific maqam (modal structure).
+ * 
+ * This function generates a detailed export of a maqam including its basic properties,
+ * constituent ajnas, all possible transpositions within a given tuning system, and
+ * optionally its modulation possibilities and suyur (melodic progressions). The maqam
+ * can be provided as either a Maqam instance or MaqamData object.
+ * 
+ * @param maqamInput - The maqam to export (either Maqam instance or MaqamData)
+ * @param tuningSystem - The tuning system context for analysis
+ * @param startingNote - The starting note for the tuning system
+ * @param options - Export configuration options for maqam-specific data
+ * @param centsTolerance - Tolerance in cents for matching pitches (default: 5)
+ * @returns Comprehensive export object containing all requested maqam data
+ * 
+ */
 export function exportMaqam(
   maqamInput: Maqam | MaqamData,
   tuningSystem: TuningSystem,

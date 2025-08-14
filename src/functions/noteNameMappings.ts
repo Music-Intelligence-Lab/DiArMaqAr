@@ -219,10 +219,29 @@ export const arabicToEnglishNoteMapping = {
   ...makeMap(octaveFourNoteNames, englishOctaveFour),
 };
 
+/**
+ * Splits an English note name into its natural note and accidental parts.
+ * 
+ * @param englishNoteName - The English note name to split (e.g., "Ab", "C#")
+ * @returns Object with natural note and accidental parts
+ */
 function splitEnglishNoteName(englishNoteName: string) {
   return { englishNoteNameNatural: englishNoteName[0], englishNoteNameAccidental: englishNoteName.slice(1) };
 }
 
+/**
+ * Converts an Arabic note name to its corresponding English note name.
+ * 
+ * This function provides a mapping from Arabic musical note names to
+ * their Western equivalent note names. It's essential for cross-cultural
+ * music theory communication and display purposes in the maqam analysis system.
+ * 
+ * The function uses a comprehensive mapping table to convert between
+ * Arabic musical terminology and Western notation systems.
+ * 
+ * @param arabicName - The Arabic note name to convert
+ * @returns The corresponding English note name, or "--" if not found
+ */
 export function getEnglishNoteName(arabicName: string): string {
   const mapping = arabicToEnglishNoteMapping[arabicName];
   if (mapping) return splitEnglishNoteName(mapping).englishNoteNameNatural + splitEnglishNoteName(mapping).englishNoteNameAccidental;
