@@ -5,6 +5,26 @@ import PitchClass from "@/models/PitchClass";
 import JinsData, { Jins, AjnasModulations } from "@/models/Jins";
 import MaqamData, { Maqam, MaqamatModulations } from "@/models/Maqam";
 
+/**
+ * Analyzes possible modulations from a source maqam to other maqamat or ajnas.
+ * 
+ * This function is central to maqam analysis, determining what modulations are
+ * possible from a given maqam transposition. It analyzes each scale degree to
+ * find valid transitions to other modal structures, which is fundamental to
+ * understanding maqam progression and improvisation possibilities.
+ * 
+ * The function can operate in two modes:
+ * - Ajnas modulations: finds possible jins transitions on each scale degree
+ * - Maqamat modulations: finds possible maqam transitions on each scale degree
+ * 
+ * @param allPitchClasses - Complete array of available pitch classes in the tuning system
+ * @param allAjnas - Array of all available ajnas for modulation analysis
+ * @param allMaqamat - Array of all available maqamat for modulation analysis
+ * @param sourceMaqamTransposition - The source maqam transposition to analyze from
+ * @param ajnasModulationsMode - If true, analyze ajnas modulations; if false, maqamat modulations
+ * @param centsTolerance - Tolerance in cents for pitch matching (default: 5)
+ * @returns Object containing all possible modulations organized by scale degree
+ */
 export default function modulate(
   allPitchClasses: PitchClass[],
   allAjnas: JinsData[],

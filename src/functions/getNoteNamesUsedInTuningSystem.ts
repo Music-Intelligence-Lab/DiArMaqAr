@@ -1,5 +1,19 @@
 import NoteName, { octaveFourNoteNames, octaveOneNoteNames, octaveThreeNoteNames, octaveTwoNoteNames, octaveZeroNoteNames } from "@/models/NoteName";
 
+/**
+ * Retrieves note names across multiple octaves for given pitch class indices.
+ * 
+ * This function maps pitch class indices to their corresponding note names
+ * across four octaves (0-3). It's essential for creating comprehensive pitch
+ * collections when working with tuning systems that span multiple octaves.
+ * 
+ * The function iterates through octaves 0-3 and maps each provided index
+ * to its note name equivalent in that octave, building a complete list
+ * of available note names for the tuning system.
+ * 
+ * @param indicesToSearch - Array of pitch class indices to map to note names (default: [])
+ * @returns Array of note names corresponding to the indices across all octaves
+ */
 export default function getNoteNamesUsedInTuningSystem(indicesToSearch: number[] = []): NoteName[] {
   const noteNames = [];
   const baseLength = octaveOneNoteNames.length;

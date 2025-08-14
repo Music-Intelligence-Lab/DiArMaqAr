@@ -83,13 +83,3 @@ export const SCALE_DEGREES: string[] = [
   "+VI",
   "+VII",
 ];
-
-export function reversePatternNotes(notes: PatternNote[]): PatternNote[] {
-  const reversedScaleDegrees = notes.map((note) => note.scaleDegree).reverse();
-  return notes.map((note, index) => ({
-    scaleDegree: reversedScaleDegrees[index],
-    noteDuration: note.noteDuration,
-    isTarget: note.isTarget,
-    velocity: note.velocity,
-  }));
-}
