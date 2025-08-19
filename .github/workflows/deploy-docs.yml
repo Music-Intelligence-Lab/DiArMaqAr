@@ -3,8 +3,6 @@ name: Deploy Documentation
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
@@ -29,14 +27,20 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'npm'
+          node-version: '20'
           
-      - name: Install dependencies
-        run: npm ci
+      - name: Clear npm cache
+        run: npm cache clean --force
         
+      - name: Install TypeDoc globally
+        run: npm install -g typedoc
+        
+      - name: Install minimal dependencies for TypeDoc
+        run: |
+          npm install --no-package-lock typescript@^5
+          
       - name: Build documentation
-        run: npm run docs
+        run: typedoc --entryPoints "./src/models/*.ts" "./src/functions/*.ts" --entryPointStrategy expand --out "./docs/api" --theme default --name "Arabic Maqām Network Documentation" --includeVersion true --excludePrivate true --excludeProtected false --excludeExternals true --readme "./README.md" --categorizeByGroup true --sort source-order --searchInComments true --skipErrorChecking true
         
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -44,7 +48,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './docs/api'
+          path: './docs'
 
   # Deployment job
   deploy:
