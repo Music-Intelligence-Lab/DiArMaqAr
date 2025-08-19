@@ -4,9 +4,9 @@
     "./src/functions/*.ts"
   ],
   "entryPointStrategy": "expand",
-  "out": "./docs/api",
+  "out": "./docs/library",
   "theme": "default",
-  "name": "Maqam Network Documentation",
+  "name": "Arabic Maqām Network - TypeScript Library Documentation",
   "includeVersion": true,
   "excludePrivate": true,
   "excludeProtected": false,
@@ -29,7 +29,7 @@
     "notDocumented": false
   },
   "navigationLinks": {
-    "GitHub": "https://github.com/Music-Intelligence-Lab/maqam-network",
-    "Website": "https://maqam.network"
+    "GitHub": "https://github.com/Music-Intelligence-Lab/arabic-maqam-network",
+    "NPM Package": "https://www.npmjs.com/package/arabic-maqam-core"
   }
 }

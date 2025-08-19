@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "docs": "typedoc",
-    "docs:serve": "typedoc && start docs/api/index.html",
+    "docs:serve": "typedoc && start docs/library/index.html",
     "docs:watch": "typedoc --watch"
   },
   "dependencies": {
