@@ -1,5 +1,5 @@
 import { getTuningSystems, getAjnas, getMaqamat } from "@/functions/import";
-import detectPitchClassType from "@/functions/detectPitchClassType";
+import detectPitchClassValueType from "@/functions/detectPitchClassType";
 import { NextResponse } from "next/server";
 import PitchClass from "@/models/PitchClass";
 import { getJinsTranspositions, getMaqamTranspositions } from "@/functions/transpose";
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     let noteNames: string[] = [];
 
     if (firstNote) {
-      for (const setOfNotes of selectedTuningSystem.getNoteNames()) {
+      for (const setOfNotes of selectedTuningSystem.getNoteNameSets()) {
         if (setOfNotes[0] === firstNote) {
           noteNames = setOfNotes;
           break;
@@ -40,13 +40,13 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Invalid firstNote" }, { status: 400 });
       }
     } else {
-      if (selectedTuningSystem.getNoteNames().length > 0) noteNames = selectedTuningSystem.getNoteNames()[0];
+      if (selectedTuningSystem.getNoteNameSets().length > 0) noteNames = selectedTuningSystem.getNoteNameSets()[0];
       else {
         return NextResponse.json({ error: "No note names available" }, { status: 400 });
       }
     }
 
-    const pitchClassType = detectPitchClassType(selectedTuningSystem.getPitchClasses());
+    const pitchClassType = detectPitchClassValueType(selectedTuningSystem.getOriginalPitchClassValues());
 
     if (pitchClassType === "unknown") {
       return NextResponse.json({ error: "Invalid pitch class type" }, { status: 400 });

@@ -45,7 +45,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
   const { allJinsTranspositionsMap } = useTranspositionsContext();
 
   const sortedAjnas = [...ajnas].sort((a, b) => a.getName().localeCompare(b.getName()));
-  const numberOfPitchClasses = selectedTuningSystem ? selectedTuningSystem.getPitchClasses().length : 0;
+  const numberOfPitchClasses = selectedTuningSystem ? selectedTuningSystem.getOriginalPitchClassValues().length : 0;
 
   // Generate a new unique ID for creating a Jins
   const setOfAjnas = new Set(ajnas.map((j) => j.getId()));

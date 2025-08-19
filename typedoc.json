@@ -1,0 +1,35 @@
+{
+  "entryPoints": [
+    "./src/models/*.ts",
+    "./src/functions/*.ts"
+  ],
+  "entryPointStrategy": "expand",
+  "out": "./docs/api",
+  "theme": "default",
+  "name": "Maqam Network Documentation",
+  "includeVersion": true,
+  "excludePrivate": true,
+  "excludeProtected": false,
+  "excludeExternals": true,
+  "readme": "./README.md",
+  "categorizeByGroup": true,
+  "groupOrder": [
+    "Models",
+    "Functions", 
+    "Components",
+    "Contexts",
+    "Audio"
+  ],
+  "sort": ["source-order"],
+  "searchInComments": true,
+  "skipErrorChecking": true,
+  "validation": {
+    "notExported": false,
+    "invalidLink": false,
+    "notDocumented": false
+  },
+  "navigationLinks": {
+    "GitHub": "https://github.com/Music-Intelligence-Lab/maqam-network",
+    "Website": "https://maqam.network"
+  }
+}

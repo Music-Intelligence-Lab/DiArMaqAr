@@ -1,0 +1,209 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="./"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>Maqam Network API Documentation - v0.1.0</title><meta name="description" content="Documentation for Maqam Network API Documentation"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/icons.js" id="tsd-icons-script"></script><script async src="assets/search.js" id="tsd-search-script"></script><script async src="assets/navigation.js" id="tsd-nav-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar"><div class="tsd-toolbar-contents container"><a href="index.html" class="title">Maqam Network API Documentation - v0.1.0</a><div id="tsd-toolbar-links"><a href="https://github.com/Music-Intelligence-Lab/maqam-network">GitHub</a><a href="https://maqam.network">Website</a></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/><ul role="listbox" id="tsd-search-results"></ul><div id="tsd-search-status" aria-live="polite" aria-atomic="true"><div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-menu"></use></svg></a></div></header><div class="container container-main"><div class="col-content"><div class="tsd-page-title"><h1>Maqam Network API Documentation - v0.1.0</h1></div><div class="tsd-panel tsd-typography"><h1 id="🎶-arabic-maqām-network" class="tsd-anchor-link">🎶 Arabic Maqām Network<a href="#🎶-arabic-maqām-network" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1><p>An innovative open-access online platform for the study and exploration of the Arabic maqām system, built with Next.js and TypeScript.</p>
+<h2 id="🌟-overview" class="tsd-anchor-link">🌟 Overview<a href="#🌟-overview" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>The <strong>Arabic Maqām Network</strong> is a comprehensive, interactive web application dedicated to preserving, analyzing, and exploring the rich musical heritage of the Arabic-speaking region. Developed by <strong>Dr. Khyam Allami</strong> and <strong>Ibrahim El Khansa</strong> at the <strong>Music Intelligence Lab</strong> at the <strong>American University of Beirut</strong>, this platform serves as an invaluable resource for students, musicians, composers, musicologists, educators, researchers, and anyone interested in Arabic music theory.</p>
+<h2 id="✨-features" class="tsd-anchor-link">✨ Features<a href="#✨-features" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><ul>
+<li><strong>Interactive Tuning Systems</strong>: Explore various historical and contemporary Arabic tuning systems</li>
+<li><strong>Comprehensive Maqām Database</strong>: Detailed catalog of maqāmāt with their ascending/descending forms</li>
+<li><strong>Ajnās Library</strong>: Collection of melodic fragments that form the building blocks of maqāmāt</li>
+<li><strong>Suyūr Analysis</strong>: Study melodic pathways and performance practices</li>
+<li><strong>Real-time Audio Synthesis</strong>: Play and hear scales using computer keyboard or MIDI</li>
+<li><strong>Modulation Analysis</strong>: Explore intiqālāt (modulations) between different maqāmāt</li>
+<li><strong>Academic References</strong>: Scholarly sources and citations for all musical data</li>
+<li><strong>Export Capabilities</strong>: Export scales to various formats including Scala (.scl)</li>
+<li><strong>Staff Notation</strong>: Visual representation using VexFlow</li>
+<li><strong>Transposition Tools</strong>: Analyze scales across different starting pitches</li>
+</ul>
+<h2 id="🏗️-architecture" class="tsd-anchor-link">🏗️ Architecture<a href="#🏗️-architecture" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><h3 id="core-technologies" class="tsd-anchor-link">Core Technologies<a href="#core-technologies" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
+<li><strong>Frontend</strong>: Next.js 15+ with React 19+</li>
+<li><strong>Language</strong>: TypeScript for type safety and better development experience</li>
+<li><strong>Styling</strong>: SCSS for modular styling</li>
+<li><strong>UI Components</strong>: Material-UI (MUI) for consistent design</li>
+<li><strong>Audio</strong>: Custom synthesis engine with WebMIDI support</li>
+<li><strong>Music Notation</strong>: VexFlow for staff notation rendering</li>
+<li><strong>Build System</strong>: Modern Next.js build pipeline with ESLint</li>
+</ul>
+<h3 id="project-structure" class="tsd-anchor-link">Project Structure<a href="#project-structure" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><pre><code><span class="hl-0">src</span><span class="hl-1">/</span><br/><span class="hl-1">├── </span><span class="hl-0">app</span><span class="hl-1">/                    # </span><span class="hl-0">Next</span><span class="hl-1">.</span><span class="hl-0">js</span><span class="hl-1"> </span><span class="hl-0">app</span><span class="hl-1"> </span><span class="hl-0">router</span><span class="hl-1"> </span><span class="hl-0">pages</span><br/><span class="hl-1">├── </span><span class="hl-0">components</span><span class="hl-1">/             # </span><span class="hl-0">Reusable</span><span class="hl-1"> </span><span class="hl-2">UI</span><span class="hl-1"> </span><span class="hl-0">components</span><br/><span class="hl-1">├── </span><span class="hl-0">contexts</span><span class="hl-1">/              # </span><span class="hl-0">React</span><span class="hl-1"> </span><span class="hl-0">Context</span><span class="hl-1"> </span><span class="hl-0">providers</span><br/><span class="hl-1">├── </span><span class="hl-0">functions</span><span class="hl-1">/             # </span><span class="hl-0">Core</span><span class="hl-1"> </span><span class="hl-0">business</span><span class="hl-1"> </span><span class="hl-0">logic</span><br/><span class="hl-1">├── </span><span class="hl-0">models</span><span class="hl-1">/                # </span><span class="hl-0">TypeScript</span><span class="hl-1"> </span><span class="hl-0">data</span><span class="hl-1"> </span><span class="hl-0">models</span><br/><span class="hl-1">├── </span><span class="hl-0">audio</span><span class="hl-1">/                 # </span><span class="hl-0">Audio</span><span class="hl-1"> </span><span class="hl-0">synthesis</span><span class="hl-1"> </span><span class="hl-0">and</span><span class="hl-1"> </span><span class="hl-0">utilities</span><br/><span class="hl-1">└── </span><span class="hl-0">styles</span><span class="hl-1">/               # </span><span class="hl-2">SCSS</span><span class="hl-1"> </span><span class="hl-0">stylesheets</span><br/><br/><span class="hl-0">data</span><span class="hl-1">/                      # </span><span class="hl-2">JSON</span><span class="hl-1"> </span><span class="hl-0">data</span><span class="hl-1"> </span><span class="hl-0">files</span><br/><span class="hl-1">├── </span><span class="hl-0">ajnas</span><span class="hl-1">.</span><span class="hl-0">json</span><span class="hl-1">            # </span><span class="hl-0">Jins</span><span class="hl-1"> </span><span class="hl-0">definitions</span><br/><span class="hl-1">├── </span><span class="hl-0">maqamat</span><span class="hl-1">.</span><span class="hl-0">json</span><span class="hl-1">          # </span><span class="hl-0">Maqam</span><span class="hl-1"> </span><span class="hl-0">definitions</span><br/><span class="hl-1">├── </span><span class="hl-0">tuningSystems</span><span class="hl-1">.</span><span class="hl-0">json</span><span class="hl-1">    # </span><span class="hl-0">Tuning</span><span class="hl-1"> </span><span class="hl-0">system</span><span class="hl-1"> </span><span class="hl-0">data</span><br/><span class="hl-1">├── </span><span class="hl-0">sources</span><span class="hl-1">.</span><span class="hl-0">json</span><span class="hl-1">          # </span><span class="hl-0">Academic</span><span class="hl-1"> </span><span class="hl-0">references</span><br/><span class="hl-1">└── </span><span class="hl-0">patterns</span><span class="hl-1">.</span><span class="hl-0">json</span><span class="hl-1">         # </span><span class="hl-0">Musical</span><span class="hl-1"> </span><span class="hl-0">patterns</span>
+</code><button>Copy</button></pre>
+
+<h2 id="🎼-core-musical-concepts" class="tsd-anchor-link">🎼 Core Musical Concepts<a href="#🎼-core-musical-concepts" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><h3 id="tuning-system-tanghīm" class="tsd-anchor-link">Tuning System (Tanghīm)<a href="#tuning-system-tanghīm" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>The foundation of the platform, defining pitch classes and their frequencies. Each tuning system includes:</p>
+<ul>
+<li>Metadata (title, creator, year, sources)</li>
+<li>Pitch classes (fractions, cents, or decimal ratios)</li>
+<li>Reference frequencies for accurate synthesis</li>
+<li>Traditional Arabic note names (Abjad notation)</li>
+<li>String length properties for instrument simulation</li>
+</ul>
+<h3 id="jins-details--jins" class="tsd-anchor-link">Jins Details &amp; Jins<a href="#jins-details--jins" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
+<li><strong>Jins Details</strong>: The theoretical definition of a melodic fragment (3-5 notes)</li>
+<li><strong>Jins</strong>: The practical implementation within a specific tuning system</li>
+<li>Building blocks that combine to form complete maqāmāt</li>
+<li>Each jins includes note names, sources, and theoretical comments</li>
+</ul>
+<h3 id="maqam-details--maqam" class="tsd-anchor-link">Maqam Details &amp; Maqam<a href="#maqam-details--maqam" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
+<li><strong>Maqam Details</strong>: The theoretical definition of a complete musical mode</li>
+<li><strong>Maqam</strong>: The practical implementation within a tuning system</li>
+<li>Contains ascending and descending note sequences</li>
+<li>Includes multiple suyūr (melodic pathways) for performance</li>
+</ul>
+<h3 id="sayr-melodic-pathways" class="tsd-anchor-link">Sayr (Melodic Pathways)<a href="#sayr-melodic-pathways" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>Performance routes through a maqam, defining:</p>
+<ul>
+<li>Starting and ending points</li>
+<li>Emphasis notes and pauses</li>
+<li>Directional movements (ascending/descending)</li>
+<li>Integration with specific ajnās</li>
+</ul>
+<h2 id="🔧-key-components" class="tsd-anchor-link">🔧 Key Components<a href="#🔧-key-components" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><h3 id="data-models" class="tsd-anchor-link">Data Models<a href="#data-models" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><h4 id="tuningsystem" class="tsd-anchor-link"><code>TuningSystem</code><a href="#tuningsystem" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Central class managing pitch definitions and frequency mappings</p>
+<ul>
+<li>Supports multiple pitch representation formats</li>
+<li>Handles note name transliterations across 5 octaves</li>
+<li>Provides synthesis-ready frequency calculations</li>
+</ul>
+<h4 id="jinsdetails--jins" class="tsd-anchor-link"><code>JinsDetails</code> / <code>Jins</code><a href="#jinsdetails--jins" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><ul>
+<li>Details: Abstract definition with note names and sources</li>
+<li>Instance: Concrete implementation with pitch classes and intervals</li>
+<li>Validation against tuning system compatibility</li>
+</ul>
+<h4 id="maqamdetails--maqam" class="tsd-anchor-link"><code>MaqamDetails</code> / <code>Maqam</code><a href="#maqamdetails--maqam" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><ul>
+<li>Details: Abstract definition with ascending/descending sequences</li>
+<li>Instance: Concrete implementation with pitch analysis</li>
+<li>Support for asymmetric scales (different ascending/descending patterns)</li>
+</ul>
+<h4 id="pitchclass" class="tsd-anchor-link"><code>PitchClass</code><a href="#pitchclass" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Individual pitch representation including:</p>
+<ul>
+<li>Note name, octave, and cents value</li>
+<li>Multiple ratio representations (fraction, decimal, string length)</li>
+<li>Synthesis frequency calculation</li>
+</ul>
+<h3 id="core-functions" class="tsd-anchor-link">Core Functions<a href="#core-functions" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><h4 id="analysis--computation" class="tsd-anchor-link">Analysis &amp; Computation<a href="#analysis--computation" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><ul>
+<li><strong>Transposition Engine</strong>: Generate all valid transpositions of maqāmāt and ajnās</li>
+<li><strong>Modulation Analysis</strong>: Calculate possible transitions between scales</li>
+<li><strong>Interval Computation</strong>: Precise microtonal interval calculations</li>
+<li><strong>Scale Validation</strong>: Ensure theoretical consistency with tuning systems</li>
+</ul>
+<h4 id="importexport" class="tsd-anchor-link">Import/Export<a href="#importexport" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><ul>
+<li><strong>Data Import</strong>: Load musical data from JSON files with validation</li>
+<li><strong>Scala Export</strong>: Generate industry-standard .scl files</li>
+<li><strong>Audio Export</strong>: Synthesize scales for audio analysis</li>
+<li><strong>Academic Export</strong>: Include scholarly references and metadata</li>
+</ul>
+<h4 id="user-interface" class="tsd-anchor-link">User Interface<a href="#user-interface" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><ul>
+<li><strong>Context Management</strong>: Global state management for musical selections</li>
+<li><strong>Real-time Updates</strong>: Dynamic recalculation of dependent properties</li>
+<li><strong>Interactive Controls</strong>: Keyboard and MIDI input handling</li>
+<li><strong>Visual Feedback</strong>: Staff notation and pitch class visualization</li>
+</ul>
+<h2 id="🎵-audio-system" class="tsd-anchor-link">🎵 Audio System<a href="#🎵-audio-system" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><h3 id="synthesis-engine" class="tsd-anchor-link">Synthesis Engine<a href="#synthesis-engine" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
+<li>Custom audio synthesis using Web Audio API</li>
+<li>Multiple timbre support (sine, sawtooth, etc.)</li>
+<li>Configurable attack/decay envelopes</li>
+<li>Real-time frequency modulation</li>
+</ul>
+<h3 id="midi-integration" class="tsd-anchor-link">MIDI Integration<a href="#midi-integration" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
+<li>WebMIDI API support for external controllers</li>
+<li>Note mapping to Arabic microtonal pitches</li>
+<li>Velocity and timing preservation</li>
+<li>Multi-device compatibility</li>
+</ul>
+<h3 id="playback-features" class="tsd-anchor-link">Playback Features<a href="#playback-features" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
+<li>Scale playback (ascending/descending)</li>
+<li>Individual note triggering</li>
+<li>Arpeggio and chord modes</li>
+<li>Real-time transposition</li>
+</ul>
+<h2 id="📊-data-management" class="tsd-anchor-link">📊 Data Management<a href="#📊-data-management" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><h3 id="json-data-structure" class="tsd-anchor-link">JSON Data Structure<a href="#json-data-structure" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>All musical data is stored in structured JSON files:</p>
+<ul>
+<li><strong>Validation</strong>: TypeScript interfaces ensure data integrity</li>
+<li><strong>Versioning</strong>: Academic sources track historical accuracy</li>
+<li><strong>Modularity</strong>: Separate files for different musical concepts</li>
+<li><strong>Scalability</strong>: Easy addition of new tuning systems and scales</li>
+</ul>
+<h3 id="academic-integrity" class="tsd-anchor-link">Academic Integrity<a href="#academic-integrity" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
+<li><strong>Source Tracking</strong>: Every musical element links to academic references</li>
+<li><strong>Page Citations</strong>: Specific page numbers for detailed research</li>
+<li><strong>Multi-language Support</strong>: English and Arabic metadata</li>
+<li><strong>Historical Context</strong>: Publication dates and scholarly attribution</li>
+</ul>
+<h2 id="🚀-getting-started" class="tsd-anchor-link">🚀 Getting Started<a href="#🚀-getting-started" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><h3 id="prerequisites" class="tsd-anchor-link">Prerequisites<a href="#prerequisites" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
+<li>Node.js 18+</li>
+<li>npm or yarn package manager</li>
+</ul>
+<h3 id="installation" class="tsd-anchor-link">Installation<a href="#installation" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><pre><code class="bash"><span class="hl-3"># Clone the repository</span><br/><span class="hl-4">git</span><span class="hl-1"> </span><span class="hl-5">clone</span><span class="hl-1"> </span><span class="hl-5">https://github.com/Music-Intelligence-Lab/maqam-network.git</span><br/><br/><span class="hl-3"># Navigate to project directory</span><br/><span class="hl-4">cd</span><span class="hl-1"> </span><span class="hl-5">maqam-network</span><br/><br/><span class="hl-3"># Install dependencies</span><br/><span class="hl-4">npm</span><span class="hl-1"> </span><span class="hl-5">install</span><br/><br/><span class="hl-3"># Start development server</span><br/><span class="hl-4">npm</span><span class="hl-1"> </span><span class="hl-5">run</span><span class="hl-1"> </span><span class="hl-5">dev</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="available-scripts" class="tsd-anchor-link">Available Scripts<a href="#available-scripts" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><pre><code class="bash"><span class="hl-4">npm</span><span class="hl-1"> </span><span class="hl-5">run</span><span class="hl-1"> </span><span class="hl-5">dev</span><span class="hl-1">     </span><span class="hl-3"># Start development server</span><br/><span class="hl-4">npm</span><span class="hl-1"> </span><span class="hl-5">run</span><span class="hl-1"> </span><span class="hl-5">build</span><span class="hl-1">   </span><span class="hl-3"># Build for production</span><br/><span class="hl-4">npm</span><span class="hl-1"> </span><span class="hl-5">run</span><span class="hl-1"> </span><span class="hl-5">start</span><span class="hl-1">   </span><span class="hl-3"># Start production server</span><br/><span class="hl-4">npm</span><span class="hl-1"> </span><span class="hl-5">run</span><span class="hl-1"> </span><span class="hl-5">lint</span><span class="hl-1">    </span><span class="hl-3"># Run ESLint checks</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="🎯-usage-examples" class="tsd-anchor-link">🎯 Usage Examples<a href="#🎯-usage-examples" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><h3 id="basic-scale-exploration" class="tsd-anchor-link">Basic Scale Exploration<a href="#basic-scale-exploration" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ol>
+<li>Select a tuning system from the dropdown</li>
+<li>Choose a starting note (pitch class)</li>
+<li>Browse available maqāmāt or ajnās</li>
+<li>Play scales using keyboard or MIDI</li>
+<li>Export to Scala format for external use</li>
+</ol>
+<h3 id="advanced-analysis" class="tsd-anchor-link">Advanced Analysis<a href="#advanced-analysis" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ol>
+<li>Compare transpositions of the same maqam</li>
+<li>Analyze modulation possibilities between scales</li>
+<li>Study interval structures and microtonal relationships</li>
+<li>Export detailed analytical data with academic references</li>
+</ol>
+<h3 id="educational-applications" class="tsd-anchor-link">Educational Applications<a href="#educational-applications" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ol>
+<li>Demonstrate historical tuning variations</li>
+<li>Compare theoretical vs. practical implementations</li>
+<li>Explore regional variations in maqam definitions</li>
+<li>Generate exercises for ear training and analysis</li>
+</ol>
+<h2 id="🔬-technical-details" class="tsd-anchor-link">🔬 Technical Details<a href="#🔬-technical-details" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><h3 id="performance-optimization" class="tsd-anchor-link">Performance Optimization<a href="#performance-optimization" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
+<li><strong>Lazy Loading</strong>: Components load on demand</li>
+<li><strong>Memoization</strong>: Expensive calculations are cached</li>
+<li><strong>Virtual Scrolling</strong>: Efficient handling of large datasets</li>
+<li><strong>Code Splitting</strong>: Reduced bundle sizes for faster loading</li>
+</ul>
+<h3 id="browser-compatibility" class="tsd-anchor-link">Browser Compatibility<a href="#browser-compatibility" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
+<li>Modern browsers with Web Audio API support</li>
+<li>WebMIDI support where available</li>
+<li>Progressive enhancement for missing features</li>
+<li>Responsive design for various screen sizes</li>
+</ul>
+<h3 id="accessibility" class="tsd-anchor-link">Accessibility<a href="#accessibility" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
+<li>Keyboard navigation support</li>
+<li>Screen reader compatibility</li>
+<li>High contrast mode support</li>
+<li>Configurable font sizes and colors</li>
+</ul>
+<h2 id="📈-future-development" class="tsd-anchor-link">📈 Future Development<a href="#📈-future-development" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><h3 id="planned-features" class="tsd-anchor-link">Planned Features<a href="#planned-features" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
+<li><strong>Comparative Analysis</strong>: Side-by-side tuning system comparison</li>
+<li><strong>Multiple Suyūr</strong>: Enhanced support for various melodic pathways</li>
+<li><strong>Machine Learning</strong>: Pattern recognition in maqam structures</li>
+<li><strong>Collaboration Tools</strong>: Shared workspaces for researchers</li>
+<li><strong>Mobile App</strong>: Native mobile application development</li>
+</ul>
+<h3 id="research-applications" class="tsd-anchor-link">Research Applications<a href="#research-applications" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
+<li><strong>Computational Musicology</strong>: Large-scale analysis of Arabic music theory</li>
+<li><strong>Historical Studies</strong>: Evolution of tuning systems over time</li>
+<li><strong>Cross-cultural Analysis</strong>: Comparison with other modal systems</li>
+<li><strong>Performance Practice</strong>: Integration of recorded musical examples</li>
+</ul>
+<h2 id="🤝-contributing" class="tsd-anchor-link">🤝 Contributing<a href="#🤝-contributing" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>We welcome contributions from the global community! Please see our contributing guidelines for:</p>
+<ul>
+<li>Code style and standards</li>
+<li>Data validation requirements</li>
+<li>Academic source verification</li>
+<li>Testing procedures</li>
+<li>Documentation standards</li>
+</ul>
+<h2 id="📄-license" class="tsd-anchor-link">📄 License<a href="#📄-license" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>This project is open-source and available under the appropriate license. Please refer to the LICENSE file for detailed terms.</p>
+<h2 id="🙏-acknowledgments" class="tsd-anchor-link">🙏 Acknowledgments<a href="#🙏-acknowledgments" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><ul>
+<li><strong>Dr. Khyam Allami</strong>: Research and development leadership</li>
+<li><strong>Ibrahim El Khansa</strong>: Technical implementation and design</li>
+<li><strong>Music Intelligence Lab</strong>: Research support and academic guidance</li>
+<li><strong>American University of Beirut</strong>: Institutional support</li>
+<li><strong>Arabic Music Community</strong>: Historical preservation and knowledge sharing</li>
+</ul>
+<h2 id="📞-contact" class="tsd-anchor-link">📞 Contact<a href="#📞-contact" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>For research collaborations, technical questions, or general inquiries:</p>
+<ul>
+<li><strong>Music Intelligence Lab</strong>: [Contact Information]</li>
+<li><strong>GitHub Issues</strong>: For bug reports and feature requests</li>
+<li><strong>Academic Inquiries</strong>: For research and educational partnerships</li>
+</ul>
+<hr>
+<p><strong>Arabic Maqām Network</strong> - Preserving and exploring the musical heritage of the Arabic-speaking world through innovative technology and rigorous scholarship.</p>
+</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#🎶-arabic-maqām-network"><span>🎶 <wbr/>Arabic <wbr/>Maqām <wbr/>Network</span></a><ul><li><a href="#🌟-overview"><span>🌟 <wbr/>Overview</span></a></li><li><a href="#✨-features"><span>✨ <wbr/>Features</span></a></li><li><a href="#🏗️-architecture"><span>🏗️ <wbr/>Architecture</span></a></li><li><ul><li><a href="#core-technologies"><span>Core <wbr/>Technologies</span></a></li><li><a href="#project-structure"><span>Project <wbr/>Structure</span></a></li></ul></li><li><a href="#🎼-core-musical-concepts"><span>🎼 <wbr/>Core <wbr/>Musical <wbr/>Concepts</span></a></li><li><ul><li><a href="#tuning-system-tanghīm"><span>Tuning <wbr/>System (<wbr/>Tanghīm)</span></a></li><li><a href="#jins-details--jins"><span>Jins <wbr/>Details &amp; <wbr/>Jins</span></a></li><li><a href="#maqam-details--maqam"><span>Maqam <wbr/>Details &amp; <wbr/>Maqam</span></a></li><li><a href="#sayr-melodic-pathways"><span>Sayr (<wbr/>Melodic <wbr/>Pathways)</span></a></li></ul></li><li><a href="#🔧-key-components"><span>🔧 <wbr/>Key <wbr/>Components</span></a></li><li><ul><li><a href="#data-models"><span>Data <wbr/>Models</span></a></li><li><ul><li><a href="#tuningsystem"><span>Tuning<wbr/>System</span></a></li><li><a href="#jinsdetails--jins"><span>Jins<wbr/>Details / <wbr/>Jins</span></a></li><li><a href="#maqamdetails--maqam"><span>Maqam<wbr/>Details / <wbr/>Maqam</span></a></li><li><a href="#pitchclass"><span>Pitch<wbr/>Class</span></a></li></ul></li><li><a href="#core-functions"><span>Core <wbr/>Functions</span></a></li><li><ul><li><a href="#analysis--computation"><span>Analysis &amp; <wbr/>Computation</span></a></li><li><a href="#importexport"><span>Import/<wbr/>Export</span></a></li><li><a href="#user-interface"><span>User <wbr/>Interface</span></a></li></ul></li></ul></li><li><a href="#🎵-audio-system"><span>🎵 <wbr/>Audio <wbr/>System</span></a></li><li><ul><li><a href="#synthesis-engine"><span>Synthesis <wbr/>Engine</span></a></li><li><a href="#midi-integration"><span>MIDI <wbr/>Integration</span></a></li><li><a href="#playback-features"><span>Playback <wbr/>Features</span></a></li></ul></li><li><a href="#📊-data-management"><span>📊 <wbr/>Data <wbr/>Management</span></a></li><li><ul><li><a href="#json-data-structure"><span>JSON <wbr/>Data <wbr/>Structure</span></a></li><li><a href="#academic-integrity"><span>Academic <wbr/>Integrity</span></a></li></ul></li><li><a href="#🚀-getting-started"><span>🚀 <wbr/>Getting <wbr/>Started</span></a></li><li><ul><li><a href="#prerequisites"><span>Prerequisites</span></a></li><li><a href="#installation"><span>Installation</span></a></li><li><a href="#available-scripts"><span>Available <wbr/>Scripts</span></a></li></ul></li><li><a href="#🎯-usage-examples"><span>🎯 <wbr/>Usage <wbr/>Examples</span></a></li><li><ul><li><a href="#basic-scale-exploration"><span>Basic <wbr/>Scale <wbr/>Exploration</span></a></li><li><a href="#advanced-analysis"><span>Advanced <wbr/>Analysis</span></a></li><li><a href="#educational-applications"><span>Educational <wbr/>Applications</span></a></li></ul></li><li><a href="#🔬-technical-details"><span>🔬 <wbr/>Technical <wbr/>Details</span></a></li><li><ul><li><a href="#performance-optimization"><span>Performance <wbr/>Optimization</span></a></li><li><a href="#browser-compatibility"><span>Browser <wbr/>Compatibility</span></a></li><li><a href="#accessibility"><span>Accessibility</span></a></li></ul></li><li><a href="#📈-future-development"><span>📈 <wbr/>Future <wbr/>Development</span></a></li><li><ul><li><a href="#planned-features"><span>Planned <wbr/>Features</span></a></li><li><a href="#research-applications"><span>Research <wbr/>Applications</span></a></li></ul></li><li><a href="#🤝-contributing"><span>🤝 <wbr/>Contributing</span></a></li><li><a href="#📄-license"><span>📄 <wbr/>License</span></a></li><li><a href="#🙏-acknowledgments"><span>🙏 <wbr/>Acknowledgments</span></a></li><li><a href="#📞-contact"><span>📞 <wbr/>Contact</span></a></li></ul></div></details></div><div class="site-menu"><nav id="tsd-sidebar-links" class="tsd-navigation"><a href="https://maqam.network/user-guide">User Guide</a><a href="https://maqam.network/about">About</a><a href="https://github.com/Music-Intelligence-Lab/maqam-network" class="tsd-nav-link">GitHub</a><a href="https://maqam.network" class="tsd-nav-link">Website</a></nav><nav class="tsd-navigation"><a href="modules.html">Maqam Network API Documentation - v0.1.0</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer><p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer><div class="overlay"></div></body></html>
