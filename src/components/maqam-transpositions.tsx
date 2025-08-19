@@ -681,9 +681,9 @@ const MaqamTranspositions: React.FC = () => {
                 <col style={{ width: "40px" }} />
                 <col
                   style={{
-                    minWidth: "100px",
-                    maxWidth: "100px",
-                    width: "100px",
+                    minWidth: "110px",
+                    maxWidth: "110px",
+                    width: "110px",
                   }}
                 />
               </colgroup>
@@ -775,9 +775,9 @@ const MaqamTranspositions: React.FC = () => {
                 <col style={{ width: "40px" }} />
                 <col
                   style={{
-                    minWidth: "100px",
-                    maxWidth: "100px",
-                    width: "100px",
+                    minWidth: "110px",
+                    maxWidth: "110px",
+                    width: "110px",
                   }}
                 />
               </colgroup>
