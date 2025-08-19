@@ -39,6 +39,9 @@ jobs:
         run: |
           npm install --no-package-lock typescript@^5
           
+      - name: Ensure API documentation directory exists
+        run: mkdir -p docs/api
+          
       - name: Build documentation
         run: typedoc --entryPoints "./src/models/*.ts" "./src/functions/*.ts" --entryPointStrategy expand --out "./docs/library" --theme default --name "Arabic Maqām Network - TypeScript Library Documentation" --includeVersion true --excludePrivate true --excludeProtected false --excludeExternals true --readme "./README.md" --categorizeByGroup true --sort source-order --searchInComments true --skipErrorChecking true
         
