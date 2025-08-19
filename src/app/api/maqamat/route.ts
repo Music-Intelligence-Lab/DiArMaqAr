@@ -4,6 +4,68 @@ import path from "path";
 
 const dataFilePath = path.join(process.cwd(), "data", "maqamat.json");
 
+/**
+ * @swagger
+ * /api/maqamat:
+ *   get:
+ *     summary: Retrieve all maqamat (melodic modes)
+ *     description: Returns a complete list of maqamat - the complete modal structures in Arabic music theory. Each maqam contains ascending and descending note sequences, suyur (melodic pathways), and source references.
+ *     tags:
+ *       - Maqamat
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved maqamat data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     description: Unique identifier for the maqam
+ *                     example: "maqam_bayati"
+ *                   name:
+ *                     type: string
+ *                     description: Name of the maqam
+ *                     example: "Bayātī"
+ *                   ascendingNoteNames:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                     description: Note names for ascending sequence (suʿūd)
+ *                     example: ["rāst", "dūgāh", "segāh", "chahārgāh", "nawā", "husaynī", "ʿajam", "gerdāniye"]
+ *                   descendingNoteNames:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                     description: Note names for descending sequence (hubūṭ)
+ *                     example: ["gerdāniye", "ʿajam", "husaynī", "nawā", "chahārgāh", "segāh", "dūgāh", "rāst"]
+ *                   suyūr:
+ *                     type: array
+ *                     items:
+ *                       type: object
+ *                     description: Melodic development pathways (suyūr) for performance practice
+ *                   commentsEnglish:
+ *                     type: string
+ *                     description: English commentary on the maqam
+ *                   commentsArabic:
+ *                     type: string
+ *                     description: Arabic commentary on the maqam
+ *                   sourcePageReferences:
+ *                     type: array
+ *                     items:
+ *                       type: object
+ *                     description: Academic source references
+ *       500:
+ *         description: Server error - failed to load maqamat data
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: "Failed to load Maqamat."
+ */
 export async function GET() {
   try {
     const fileContents = await fs.readFile(dataFilePath, "utf-8");
@@ -15,6 +77,74 @@ export async function GET() {
   }
 }
 
+/**
+ * @swagger
+ * /api/maqamat:
+ *   put:
+ *     summary: Update the complete maqamat dataset
+ *     description: Replaces the entire maqamat collection with new data. This endpoint is used for administrative updates to the maqamat database.
+ *     tags:
+ *       - Maqamat
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: array
+ *             items:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                   description: Unique identifier for the maqam
+ *                 name:
+ *                   type: string
+ *                   description: Name of the maqam
+ *                 ascendingNoteNames:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                   description: Note names for ascending sequence
+ *                 descendingNoteNames:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                   description: Note names for descending sequence
+ *                 suyūr:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                   description: Melodic development pathways
+ *                 commentsEnglish:
+ *                   type: string
+ *                   description: English commentary
+ *                 commentsArabic:
+ *                   type: string
+ *                   description: Arabic commentary
+ *                 sourcePageReferences:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                   description: Academic source references
+ *     responses:
+ *       200:
+ *         description: Maqamat data updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Maqamat updated successfully."
+ *       500:
+ *         description: Server error - failed to update maqamat data
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: "Failed to update Maqamat."
+ */
 export async function PUT(request: Request) {
   try {
     const updatedArray = await request.json();
