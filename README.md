@@ -1,179 +1,155 @@
-# 🎶 Arabic Maqām Network
+# Arabic Maqām Network
 
-An innovative open-access online platform for the study and exploration of the Arabic maqām system, built with Next.js and TypeScript.
+A comprehensive web-based application for the interactive exploration of Arabic maqām theory through computational modeling and visualization. The platform integrates historical tanāghīm (tuning systems), ajnās (tetrachords), maqāmāt (melodic modes), suyūr (melodic performance pathways), and intiqālāt (modulation practices) within a unified digital framework.
 
-## 🌟 Overview
+## Overview
 
-The **Arabic Maqām Network** is a comprehensive, interactive web application dedicated to preserving, analyzing, and exploring the rich musical heritage of the Arabic-speaking region. Developed by **Dr. Khyam Allami** and **Ibrahim El Khansa** at the **Music Intelligence Lab** at the **American University of Beirut**, this platform serves as an invaluable resource for students, musicians, composers, musicologists, educators, researchers, and anyone interested in Arabic music theory.
+The Arabic Maqām Network represents a significant advancement in computational musicology, providing the first comprehensive platform for interactive maqām analysis and exploration. Developed by **Dr. Khyam Allami** and **Ibrahim El Khansa** at the **Music Intelligence Lab** at the **American University of Beirut**, this application employs a culturally specific approach that prioritizes Arabic theoretical frameworks and epistemological systems.
 
-## ✨ Features
+Unlike existing resources that focus primarily on educational approaches or automatic classification, our platform provides dynamic representation and user-centered exploration of maqāmic concepts. The system serves as both an analytical tool and a repository of ground truth data that supports creative, educational, and research applications.
 
-- **Interactive Tuning Systems**: Explore various historical and contemporary Arabic tuning systems
-- **Comprehensive Maqām Database**: Detailed catalog of maqāmāt with their ascending/descending forms
-- **Ajnās Library**: Collection of melodic fragments that form the building blocks of maqāmāt
-- **Suyūr Analysis**: Study melodic pathways and performance practices
-- **Real-time Audio Synthesis**: Play and hear scales using computer keyboard or MIDI
-- **Modulation Analysis**: Explore intiqālāt (modulations) between different maqāmāt
-- **Academic References**: Scholarly sources and citations for all musical data
-- **Export Capabilities**: Export scales to various formats including Scala (.scl)
-- **Staff Notation**: Visual representation using VexFlow
-- **Transposition Tools**: Analyze scales across different starting pitches
+## Key Features
 
-## 🏗️ Architecture
+### Core Functionality
+- **Mathematical Modeling of Historical Tuning Systems**: Precise implementation of Arabic tuning systems
+- **Tuning-System-Sensitive Transposition**: Advanced algorithms that preserve intervallic relationships across different tonal centers
+- **Real-time Audio Synthesis**: Web Audio API integration enabling immediate auditory feedback
+- **Algorithmic Modulation Analysis**: First implementation of Sāmī Al-Shawwā's 1946 modulation guidelines
+- **Comprehensive Data Export**: Export capabilities to Scala (.scl), JSON, and custom formats
+
+### Interactive Exploration
+- **Dynamic Visualization**: Interactive representation of maqām hierarchies and relationships
+- **Staff Notation Rendering**: VexFlow integration for Western notation display
+- **MIDI Integration**: Support for external MIDI controllers and keyboard input
+- **Bilingual Interface**: Full Arabic and English language support
+- **Academic Source Integration**: Proper attribution and scholarly references throughout
+
+### Developer Resources
+- **NPM Package**: `arabic-maqam-core` library providing comprehensive maqām modeling
+- **TypeScript API**: Fully typed interfaces for all musical concepts
+- **Documentation**: Complete API documentation generated with TypeDoc
+- **Modular Architecture**: Tree-shakeable exports for selective functionality
+
+## Theoretical Framework
+
+The application's architecture reflects the traditional conceptual hierarchy of maqām theory as documented in historical sources:
+
+### 1. Pitch Classes
+Individual pitch representations using relational measurements (cents, ratios) rather than absolute frequencies, enabling systematic analysis of transpositions and modulations.
+
+### 2. Tanāghīm (Tuning Systems)
+Mathematical frameworks providing fundamental pitch relationships with assigned note names following the historical Arab-Ottoman-Persian convention (yegāh, ʿushayrān, rāst, dūgāh, etc.).
+
+### 3. Ajnās (Tetrachords)
+Melodic fragments of 3-5 pitch classes serving as building blocks for maqāmāt. The platform automatically determines compatibility with tuning systems and generates all possible transpositions.
+
+### 4. Maqāmāt (Modal Structures)
+Complete modal frameworks with ascending (ṣuʿūd) and descending (hubūṭ) sequences, analyzed for constituent ajnās and modulation possibilities.
+
+### 5. Suyūr (Melodic Pathways)
+Traditional performance practices and characteristic progressions that define how maqāmāt unfold in practice.
+
+### 6. Intiqālāt (Modulations)
+Systematic analysis of transitions between maqāmāt based on historical theoretical frameworks.
+
+## Technical Architecture
 
 ### Core Technologies
-
 - **Frontend**: Next.js 15+ with React 19+
-- **Language**: TypeScript for type safety and better development experience
-- **Styling**: SCSS for modular styling
-- **UI Components**: Material-UI (MUI) for consistent design
-- **Audio**: Custom synthesis engine with WebMIDI support
+- **Language**: TypeScript for comprehensive type safety
+- **Styling**: SCSS with modular component architecture
+- **UI Framework**: Material-UI (MUI) for consistent design
+- **Audio Engine**: Custom Web Audio API implementation
 - **Music Notation**: VexFlow for staff notation rendering
-- **Build System**: Modern Next.js build pipeline with ESLint
+- **Documentation**: TypeDoc for API documentation generation
 
 ### Project Structure
-
 ```
 src/
 ├── app/                    # Next.js app router pages
-├── components/             # Reusable UI components
+├── components/             # Interactive UI components
 ├── contexts/              # React Context providers
-├── functions/             # Core business logic
+├── functions/             # Core computational logic
 ├── models/                # TypeScript data models
 ├── audio/                 # Audio synthesis and utilities
 └── styles/               # SCSS stylesheets
+
+packages/
+└── arabic-maqam-core/     # NPM package for external use
+    ├── src/
+    │   ├── models/        # Core data structures
+    │   ├── functions/     # Utility functions
+    │   └── data/          # Static JSON datasets
+    └── dist/              # Compiled library
 
 data/                      # JSON data files
 ├── ajnas.json            # Jins definitions
 ├── maqamat.json          # Maqam definitions
 ├── tuningSystems.json    # Tuning system data
-├── sources.json          # Academic references
-└── patterns.json         # Musical patterns
+└── sources.json          # Academic references
 ```
 
-## 🎼 Core Musical Concepts
+## Arabic Maqam Core Library
 
-### Tuning System (Tanghīm)
-The foundation of the platform, defining pitch classes and their frequencies. Each tuning system includes:
-- Metadata (title, creator, year, sources)
-- Pitch classes (fractions, cents, or decimal ratios)
-- Reference frequencies for accurate synthesis
-- Traditional Arabic note names (Abjad notation)
-- String length properties for instrument simulation
+The platform includes a standalone NPM package `arabic-maqam-core` that provides comprehensive maqām modeling for developers and researchers:
 
-### Jins Details & Jins
-- **Jins Details**: The theoretical definition of a melodic fragment (3-5 notes)
-- **Jins**: The practical implementation within a specific tuning system
-- Building blocks that combine to form complete maqāmāt
-- Each jins includes note names, sources, and theoretical comments
+```bash
+npm install arabic-maqam-core
+```
 
-### Maqam Details & Maqam
-- **Maqam Details**: The theoretical definition of a complete musical mode
-- **Maqam**: The practical implementation within a tuning system
-- Contains ascending and descending note sequences
-- Includes multiple suyūr (melodic pathways) for performance
+### Key Features
+- **Complete Data Sets**: Pre-loaded JSON data for maqāmāt, ajnās, tuning systems, and academic sources
+- **TypeScript Models**: Fully typed interfaces for all musical concepts
+- **Utility Functions**: Comprehensive set of functions for music theory calculations
+- **Modular Design**: Import only what you need with organized subpath exports
+- **Tree-Shaking Friendly**: Only bundle what you actually use
 
-### Sayr (Melodic Pathways)
-Performance routes through a maqam, defining:
-- Starting and ending points
-- Emphasis notes and pauses
-- Directional movements (ascending/descending)
-- Integration with specific ajnās
+### Usage Examples
 
-## 🔧 Key Components
+```typescript
+// Import specific modules
+import { Maqam, Jins, TuningSystem } from 'arabic-maqam-core/models';
+import { transpose, modulate } from 'arabic-maqam-core/functions';
+import { maqamatData, ajnasData } from 'arabic-maqam-core/data';
 
-### Data Models
+// Work with maqām data
+const maqam = new Maqam(maqamatData[0]);
+const transpositions = transpose(maqam, tuningSystem);
+```
 
-#### `TuningSystem`
-Central class managing pitch definitions and frequency mappings
-- Supports multiple pitch representation formats
-- Handles note name transliterations across 5 octaves
-- Provides synthesis-ready frequency calculations
+## Core Algorithms
 
-#### `JinsDetails` / `Jins`
-- Details: Abstract definition with note names and sources
-- Instance: Concrete implementation with pitch classes and intervals
-- Validation against tuning system compatibility
+### Transposition System
+The platform implements sophisticated transposition algorithms that:
+- Search through tuning systems recursively to find valid starting points
+- Preserve intervallic relationships while adapting to different tonal centers
+- Generate systematic naming conventions (e.g., "jins kurd al-muhayyar")
+- Maintain authenticity through pattern matching rather than fixed interval shifts
 
-#### `MaqamDetails` / `Maqam`
-- Details: Abstract definition with ascending/descending sequences
-- Instance: Concrete implementation with pitch analysis
-- Support for asymmetric scales (different ascending/descending patterns)
+### Modulation Analysis
+Implementation of Al-Shawwā's 1946 modulation guidelines through:
+- Algorithmic analysis of shared pitch classes between maqāmāt
+- Identification of common ajnās serving as modulation pivots
+- Systematic generation of possible transition pathways
+- Historical validation against traditional performance practices
 
-#### `PitchClass`
-Individual pitch representation including:
-- Note name, octave, and cents value
-- Multiple ratio representations (fraction, decimal, string length)
-- Synthesis frequency calculation
+### Compatibility Detection
+Advanced algorithms determine:
+- Which ajnās can be constructed within specific tuning systems
+- Valid maqām transpositions across different tonal centers
+- Optimal starting points for melodic development
+- Relationships between different theoretical frameworks
 
-### Core Functions
-
-#### Analysis & Computation
-- **Transposition Engine**: Generate all valid transpositions of maqāmāt and ajnās
-- **Modulation Analysis**: Calculate possible transitions between scales
-- **Interval Computation**: Precise microtonal interval calculations
-- **Scale Validation**: Ensure theoretical consistency with tuning systems
-
-#### Import/Export
-- **Data Import**: Load musical data from JSON files with validation
-- **Scala Export**: Generate industry-standard .scl files
-- **Audio Export**: Synthesize scales for audio analysis
-- **Academic Export**: Include scholarly references and metadata
-
-#### User Interface
-- **Context Management**: Global state management for musical selections
-- **Real-time Updates**: Dynamic recalculation of dependent properties
-- **Interactive Controls**: Keyboard and MIDI input handling
-- **Visual Feedback**: Staff notation and pitch class visualization
-
-## 🎵 Audio System
-
-### Synthesis Engine
-- Custom audio synthesis using Web Audio API
-- Multiple timbre support (sine, sawtooth, etc.)
-- Configurable attack/decay envelopes
-- Real-time frequency modulation
-
-### MIDI Integration
-- WebMIDI API support for external controllers
-- Note mapping to Arabic microtonal pitches
-- Velocity and timing preservation
-- Multi-device compatibility
-
-### Playback Features
-- Scale playback (ascending/descending)
-- Individual note triggering
-- Arpeggio and chord modes
-- Real-time transposition
-
-## 📊 Data Management
-
-### JSON Data Structure
-All musical data is stored in structured JSON files:
-- **Validation**: TypeScript interfaces ensure data integrity
-- **Versioning**: Academic sources track historical accuracy
-- **Modularity**: Separate files for different musical concepts
-- **Scalability**: Easy addition of new tuning systems and scales
-
-### Academic Integrity
-- **Source Tracking**: Every musical element links to academic references
-- **Page Citations**: Specific page numbers for detailed research
-- **Multi-language Support**: English and Arabic metadata
-- **Historical Context**: Publication dates and scholarly attribution
-
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Node.js 18+ 
 - npm or yarn package manager
 
-### Installation
-
+### Development Setup
 ```bash
 # Clone the repository
 git clone https://github.com/Music-Intelligence-Lab/maqam-network.git
-
-# Navigate to project directory
 cd maqam-network
 
 # Install dependencies
@@ -181,101 +157,44 @@ npm install
 
 # Start development server
 npm run dev
+
+# Generate documentation
+npm run docs
 ```
 
-### Available Scripts
-
+### Building for Production
 ```bash
-npm run dev     # Start development server
-npm run build   # Build for production
-npm run start   # Start production server
-npm run lint    # Run ESLint checks
+# Build the application
+npm run build
+
+# Start production server
+npm start
 ```
 
-## 🎯 Usage Examples
+## Research Applications
 
-### Basic Scale Exploration
-1. Select a tuning system from the dropdown
-2. Choose a starting note (pitch class)
-3. Browse available maqāmāt or ajnās
-4. Play scales using keyboard or MIDI
-5. Export to Scala format for external use
+The platform serves multiple research purposes:
 
-### Advanced Analysis
-1. Compare transpositions of the same maqam
-2. Analyze modulation possibilities between scales
-3. Study interval structures and microtonal relationships
-4. Export detailed analytical data with academic references
+### Music Information Retrieval
+- Ground truth datasets for algorithm training and validation
+- Standardized representations of microtonal musical structures
+- Comprehensive metadata for cross-cultural music analysis
 
-### Educational Applications
-1. Demonstrate historical tuning variations
-2. Compare theoretical vs. practical implementations
-3. Explore regional variations in maqam definitions
-4. Generate exercises for ear training and analysis
+### Computational Musicology
+- Algorithmic implementation of historical theoretical frameworks
+- Digital preservation of endangered musical knowledge
+- Comparative analysis across different maqām traditions
 
-## 🔬 Technical Details
+### Educational Technology
+- Interactive learning tools for complex musical concepts
+- Visualization of abstract theoretical relationships
+- Multilingual access to specialized musical knowledge
 
-### Performance Optimization
-- **Lazy Loading**: Components load on demand
-- **Memoization**: Expensive calculations are cached
-- **Virtual Scrolling**: Efficient handling of large datasets
-- **Code Splitting**: Reduced bundle sizes for faster loading
+## Academic Context
 
-### Browser Compatibility
-- Modern browsers with Web Audio API support
-- WebMIDI support where available
-- Progressive enhancement for missing features
-- Responsive design for various screen sizes
+This work contributes to the growing field of culture-specific computational musicology, addressing the need for approaches that consider sociocultural specifics rather than imposing Anglo-European frameworks on global musical practices. The platform follows methodologies advocated by Serra et al. (2017) and addresses limitations identified in existing music information retrieval applications.
 
-### Accessibility
-- Keyboard navigation support
-- Screen reader compatibility
-- High contrast mode support
-- Configurable font sizes and colors
+## Links
 
-## 📈 Future Development
-
-### Planned Features
-- **Comparative Analysis**: Side-by-side tuning system comparison
-- **Multiple Suyūr**: Enhanced support for various melodic pathways
-- **Machine Learning**: Pattern recognition in maqam structures
-- **Collaboration Tools**: Shared workspaces for researchers
-- **Mobile App**: Native mobile application development
-
-### Research Applications
-- **Computational Musicology**: Large-scale analysis of Arabic music theory
-- **Historical Studies**: Evolution of tuning systems over time
-- **Cross-cultural Analysis**: Comparison with other modal systems
-- **Performance Practice**: Integration of recorded musical examples
-
-## 🤝 Contributing
-
-We welcome contributions from the global community! Please see our contributing guidelines for:
-- Code style and standards
-- Data validation requirements
-- Academic source verification
-- Testing procedures
-- Documentation standards
-
-## 📄 License
-
-This project is open-source and available under the appropriate license. Please refer to the LICENSE file for detailed terms.
-
-## 🙏 Acknowledgments
-
-- **Dr. Khyam Allami**: Research and development leadership
-- **Ibrahim El Khansa**: Technical implementation and design
-- **Music Intelligence Lab**: Research support and academic guidance
-- **American University of Beirut**: Institutional support
-- **Arabic Music Community**: Historical preservation and knowledge sharing
-
-## 📞 Contact
-
-For research collaborations, technical questions, or general inquiries:
-- **Music Intelligence Lab**: [Contact Information]
-- **GitHub Issues**: For bug reports and feature requests
-- **Academic Inquiries**: For research and educational partnerships
-
----
-
-**Arabic Maqām Network** - Preserving and exploring the musical heritage of the Arabic-speaking world through innovative technology and rigorous scholarship.
+- **Live Application**: [https://arabic-maqam-network.vercel.app/](https://arabic-maqam-network.vercel.app/)
+- **NPM Package**: [https://www.npmjs.com/package/arabic-maqam-core](https://www.npmjs.com/package/arabic-maqam-core)

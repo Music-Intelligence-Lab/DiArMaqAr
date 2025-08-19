@@ -246,7 +246,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     if (soundSettings.inputMode === "tuningSystem" && selectedTuningSystem) {
       const pitchClasses = allPitchClasses;
       const MIDI_BASE = 55;
-      const numberOfCellsPerRow = selectedTuningSystem.getPitchClasses().length;
+      const numberOfCellsPerRow = selectedTuningSystem.getOriginalPitchClassValues().length;
 
       for (let noteNumber = 0; noteNumber <= 127; noteNumber++) {
         const idx = noteNumber + numberOfCellsPerRow - MIDI_BASE;

@@ -5,7 +5,7 @@ import useAppContext from "@/contexts/app-context";
 import useSoundContext from "@/contexts/sound-context";
 import useFilterContext from "@/contexts/filter-context";
 import useLanguageContext from "@/contexts/language-context";
-import detectPitchClassType from "@/functions/detectPitchClassType";
+import detectPitchClassValueType from "@/functions/detectPitchClassType";
 import {
   octaveOneNoteNames,
   octaveTwoNoteNames,
@@ -252,7 +252,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
         return newArr;
       }
 
-      const noteNames = selectedTuningSystem?.getNoteNames() || [[]];
+      const noteNames = selectedTuningSystem?.getNoteNameSets() || [[]];
 
       // 2) If this is the *first column*, try to see if there's an existing config
       //    whose FIRST note is chosenName. If yes, we load that config in full.
@@ -328,7 +328,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
   }
 
   // figure out what the input type is (fraction, cents, decimal, stringLength, or unknown)
-  const pitchClassType = detectPitchClassType(tuningSystemPitchClassesArray);
+  const pitchClassType = detectPitchClassValueType(tuningSystemPitchClassesArray);
 
   // MARK: Octave Rows
 

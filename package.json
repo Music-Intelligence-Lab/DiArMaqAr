@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "docs": "typedoc",
+    "docs:serve": "typedoc && start docs/api/index.html",
+    "docs:watch": "typedoc --watch"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -33,6 +36,8 @@
     "eslint-config-next": "15.1.7",
     "path": "^0.12.7",
     "sass": "^1.89.0",
+    "typedoc": "^0.28.10",
+    "typedoc-plugin-markdown": "^4.8.1",
     "typescript": "^5"
   }
 }

@@ -16,13 +16,13 @@ import ExportModal from "./export-modal";
 
 export default function JinsTranspositions() {
   // Configurable constants (extracted magic numbers for easier tuning)
-  const DISPATCH_EVENT_DELAY_MS = 10;             // delay before emitting custom event
-  const SCROLL_TIMEOUT_MS = 60;                   // delay before performing scroll after event
-  const URL_SCROLL_TIMEOUT_MS = 220;              // delay for initial scroll from URL param
-  const HEADER_SCROLL_MARGIN_TOP_PX = 170;        // scroll margin top for first headers
-  const INTERSECTION_ROOT_MARGIN = '200px 0px 0px 0px'; // observer root margin
-  const BATCH_SIZE = 10;                          // batch size for lazy loading
-  const PREFETCH_OFFSET = 5;                      // offset to trigger prefetch
+  const DISPATCH_EVENT_DELAY_MS = 10; // delay before emitting custom event
+  const SCROLL_TIMEOUT_MS = 60; // delay before performing scroll after event
+  const URL_SCROLL_TIMEOUT_MS = 220; // delay for initial scroll from URL param
+  const HEADER_SCROLL_MARGIN_TOP_PX = 170; // scroll margin top for first headers
+  const INTERSECTION_ROOT_MARGIN = "200px 0px 0px 0px"; // observer root margin
+  const BATCH_SIZE = 10; // batch size for lazy loading
+  const PREFETCH_OFFSET = 5; // offset to trigger prefetch
   const { selectedJinsData, selectedTuningSystem, setSelectedPitchClasses, allPitchClasses, centsTolerance, setCentsTolerance, sources, setSelectedJins, selectedJins } = useAppContext();
   const { jinsTranspositions } = useTranspositionsContext();
 
@@ -70,52 +70,56 @@ export default function JinsTranspositions() {
   const [isToggling, setIsToggling] = useState<string | null>(null);
 
   // Debounced toggle function to prevent rapid clicking issues
-  const toggleTransposition = useCallback((jinsName: string) => {
-    if (isToggling) return; // Prevent rapid clicking
-    
-    setIsToggling(jinsName);
-    
-    // Small delay to show visual feedback before heavy computation
-    setTimeout(() => {
-      setOpenTranspositions(prev => {
-        const newSet = new Set(prev);
-        if (newSet.has(jinsName)) {
-          newSet.delete(jinsName);
-        } else {
-          newSet.add(jinsName);
-        }
-        return newSet;
-      });
-      setIsToggling(null);
-    }, 50); // Small delay for better UX
-  }, [isToggling]);
+  const toggleTransposition = useCallback(
+    (jinsName: string) => {
+      if (isToggling) return; // Prevent rapid clicking
+
+      setIsToggling(jinsName);
+
+      // Small delay to show visual feedback before heavy computation
+      setTimeout(() => {
+        setOpenTranspositions((prev) => {
+          const newSet = new Set<string>();
+          // If this transposition is currently open, close it (and all others)
+          // If it's closed, open only this one (close all others)
+          if (!prev.has(jinsName)) {
+            newSet.add(jinsName);
+          }
+          // If we're closing this one, all others are already closed due to single-expansion logic
+          return newSet;
+        });
+        setIsToggling(null);
+      }, 50); // Small delay for better UX
+    },
+    [isToggling]
+  );
 
   useEffect(() => {
     setVisibleCount(BATCH_SIZE);
-  }, [selectedJinsData, selectedTuningSystem]);
+    // Always open tahlil (first element) on load
+    if (jinsTranspositions && jinsTranspositions.length > 0) {
+      const tahlilName = jinsTranspositions[0].name;
+      setOpenTranspositions(new Set([tahlilName]));
+    }
+  }, [selectedJinsData, selectedTuningSystem, jinsTranspositions]);
 
   // Auto-open and scroll to selected transposition
   useEffect(() => {
     if (selectedJins && jinsTranspositions && jinsTranspositions.length > 0) {
       const selectedTranspositionName = selectedJins.name;
-      
+
       // Find the transposition in the list
-      const transpositionIndex = jinsTranspositions.findIndex(
-        (j) => j.name === selectedTranspositionName
-      );
-      
-      if (transpositionIndex > 0) { // Skip analysis table at index 0
-        // Auto-open the transposition
-        setOpenTranspositions(prev => {
-          const newSet = new Set(prev);
-          newSet.add(selectedTranspositionName);
-          return newSet;
-        });
-        
+      const transpositionIndex = jinsTranspositions.findIndex((j) => j.name === selectedTranspositionName);
+
+      if (transpositionIndex > 0) {
+        // Skip analysis table at index 0
+        // Auto-open the transposition (close all others)
+        setOpenTranspositions(new Set([selectedTranspositionName]));
+
         // Ensure it's visible
         const needed = transpositionIndex;
         setVisibleCount((prev) => (needed > prev ? Math.ceil(needed / BATCH_SIZE) * BATCH_SIZE : prev));
-        
+
         // Scroll to it after a short delay
         setTimeout(() => {
           const firstNote = selectedJins.jinsPitchClasses[0]?.noteName;
@@ -129,25 +133,28 @@ export default function JinsTranspositions() {
 
   useEffect(() => {
     if (!sentinelRef.current) return;
-    if (!('IntersectionObserver' in window)) return;
-  const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setVisibleCount((prev) => {
-            const remaining = Math.max(0, jinsTranspositions.length - 1 - prev);
-            if (remaining === 0) return prev;
-            return prev + Math.min(BATCH_SIZE, remaining);
-          });
-        }
-      });
-  }, { root: null, rootMargin: INTERSECTION_ROOT_MARGIN, threshold: 0 });
+    if (!("IntersectionObserver" in window)) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setVisibleCount((prev) => {
+              const remaining = Math.max(0, jinsTranspositions.length - 1 - prev);
+              if (remaining === 0) return prev;
+              return prev + Math.min(BATCH_SIZE, remaining);
+            });
+          }
+        });
+      },
+      { root: null, rootMargin: INTERSECTION_ROOT_MARGIN, threshold: 0 }
+    );
     observer.observe(sentinelRef.current);
     return () => observer.disconnect();
   }, [jinsTranspositions, visibleCount]);
 
   const transpositionTables = useMemo(() => {
     if (!selectedJinsData || !selectedTuningSystem) return null;
-  if (!jinsTranspositions.length) return null;
+    if (!jinsTranspositions.length) return null;
 
     const jinsNoteNames = selectedJinsData.getNoteNames();
     if (jinsNoteNames.length < 2) return null;
@@ -167,26 +174,40 @@ export default function JinsTranspositions() {
 
       return (
         <>
-          <tr 
-            className={`jins-transpositions__header ${isToggling === jins.name ? 'jins-transpositions__header--toggling' : ''}`} 
-            id={getJinsHeaderId(pitchClasses[0]?.noteName)} 
+          <tr
+            className={`jins-transpositions__header ${isToggling === jins.name ? "jins-transpositions__header--toggling" : ""}`}
+            id={getJinsHeaderId(pitchClasses[0]?.noteName)}
             style={index === 0 || index === 1 ? { scrollMarginTop: `${HEADER_SCROLL_MARGIN_TOP_PX}px` } : undefined}
           >
             <td className={`jins-transpositions__transposition-number jins-transpositions__transposition-number_${pitchClasses[0].octave}`} rowSpan={rowSpan}>
               {index + 1}
             </td>
 
-            <td 
-              className="jins-transpositions__jins-name-row" 
-              colSpan={2 + (pitchClasses.length - 1) * 2}
-              style={{ cursor: 'pointer' }}
-              onClick={() => toggleTransposition(jins.name)}
-            >
+            <td className="jins-transpositions__jins-name-row" colSpan={3 + (pitchClasses.length - 1) * 2}>
               {!transposition ? (
-                <span className="jins-transpositions__transposition-title">{t('jins.darajatAlIstiqrar')}: {getDisplayName(pitchClasses[0].noteName, 'note') + ` (${getEnglishNoteName(pitchClasses[0].noteName)})`}</span>
+                <span className="jins-transpositions__transposition-title">
+                  {t("jins.darajatAlIstiqrar")}: {getDisplayName(pitchClasses[0].noteName, "note") + ` (${getEnglishNoteName(pitchClasses[0].noteName)})`}
+                </span>
               ) : (
-                <span className="jins-transpositions__transposition-title">{`${getDisplayName(jins.name, 'jins')}`}</span>
+                <span className="jins-transpositions__transposition-title">{`${getDisplayName(jins.name, "jins")}`}</span>
               )}
+              <button
+                className="jins-transpositions__button jins-transpositions__button--toggle"
+                onClick={(e) => {
+                  e.stopPropagation();
+                    setOpenTranspositions((prev) => {
+                    const newSet = new Set(prev);
+                    if (newSet.has(jins.name)) {
+                      newSet.delete(jins.name);
+                    } else {
+                      newSet.add(jins.name);
+                    }
+                    return newSet;
+                    });
+                }}
+              >
+                {open ? t("jins.hideDetails") : t("jins.showDetails")}
+              </button>
               <button
                 className="jins-transpositions__button"
                 onClick={(e) => {
@@ -194,16 +215,12 @@ export default function JinsTranspositions() {
                   setSelectedPitchClasses([]);
                   setSelectedPitchClasses(pitchClasses);
                   setSelectedJins(transposition ? jins : null);
-                  
-                  // Auto-open the transposition when selecting it
+
+                  // Auto-open the transposition when selecting it (close all others)
                   if (transposition) {
-                    setOpenTranspositions(prev => {
-                      const newSet = new Set(prev);
-                      newSet.add(jins.name);
-                      return newSet;
-                    });
+                    setOpenTranspositions(new Set([jins.name]));
                   }
-                  
+
                   setTimeout(() => {
                     window.dispatchEvent(
                       new CustomEvent("jinsTranspositionChange", {
@@ -213,7 +230,7 @@ export default function JinsTranspositions() {
                   }, DISPATCH_EVENT_DELAY_MS);
                 }}
               >
-                {t('jins.selectLoadToKeyboard')}
+                {t("jins.selectLoadToKeyboard")}
               </button>
 
               <button
@@ -223,9 +240,9 @@ export default function JinsTranspositions() {
                   playSequence(pitchClasses, true);
                 }}
               >
-                <PlayCircleIcon className="jins-transpositions__play-circle-icon" /> {t('jins.playJins')}
+                <PlayCircleIcon className="jins-transpositions__play-circle-icon" /> {t("jins.playJins")}
               </button>
-              
+
               <button
                 className="jins-transpositions__button"
                 onClick={(e) => {
@@ -233,24 +250,24 @@ export default function JinsTranspositions() {
                   handleJinsExport(jins);
                 }}
               >
-                <FileDownloadIcon className="jins-transpositions__export-icon" /> {t('jins.export')}
+                <FileDownloadIcon className="jins-transpositions__export-icon" /> {t("jins.export")}
               </button>
             </td>
           </tr>
           {open && (
             <>
               <tr>
-                <th className="jins-transpositions__row-header">{t('jins.noteNames')}</th>
+                <th className="jins-transpositions__row-header">{t("jins.noteNames")}</th>
                 {pitchClasses.map(({ noteName }, i) => (
                   <React.Fragment key={i}>
                     {i !== 0 && <th className="jins-transpositions__header-cell"></th>}
-                    <th className="jins-transpositions__header-cell">{getDisplayName(noteName, 'note')}</th>
+                    <th className="jins-transpositions__header-cell">{getDisplayName(noteName, "note")}</th>
                   </React.Fragment>
                 ))}
               </tr>
               {filters["abjadName"] && (
                 <tr>
-                  <th className="jins-transpositions__row-header">{t('jins.abjadName')}</th>
+                  <th className="jins-transpositions__row-header">{t("jins.abjadName")}</th>
                   <th className="jins-transpositions__header-pitchClass">{pitchClasses[0].abjadName || "--"}</th>
                   {intervals.map((interval, i) => (
                     <React.Fragment key={i}>
@@ -262,7 +279,7 @@ export default function JinsTranspositions() {
               )}
               {filters["englishName"] && (
                 <tr>
-                  <th className="jins-transpositions__row-header">{t('jins.englishName')}</th>
+                  <th className="jins-transpositions__row-header">{t("jins.englishName")}</th>
                   <th className="jins-transpositions__header-pitchClass">{pitchClasses[0].englishName}</th>
                   {intervals.map((interval, i) => (
                     <React.Fragment key={i}>
@@ -284,7 +301,7 @@ export default function JinsTranspositions() {
               </tr>
               {valueType !== "fraction" && filters["fraction"] && (
                 <tr>
-                  <th className="jins-transpositions__row-header">{t('jins.fraction')}</th>
+                  <th className="jins-transpositions__row-header">{t("jins.fraction")}</th>
                   <th className="jins-transpositions__header-pitchClass">{pitchClasses[0].fraction}</th>
                   {intervals.map((interval, i) => (
                     <React.Fragment key={i}>
@@ -296,7 +313,7 @@ export default function JinsTranspositions() {
               )}
               {valueType !== "cents" && filters["cents"] && (
                 <tr>
-                  <th className="jins-transpositions__row-header">{t('jins.cents')}</th>
+                  <th className="jins-transpositions__row-header">{t("jins.cents")}</th>
                   <th className="jins-transpositions__header-pitchClass">{parseFloat(pitchClasses[0].cents).toFixed(3)}</th>
                   {intervals.map((interval, i) => (
                     <React.Fragment key={i}>
@@ -308,7 +325,7 @@ export default function JinsTranspositions() {
               )}
               {filters["centsFromZero"] && (
                 <tr>
-                  <th className="jins-transpositions__row-header">{t('jins.centsFromZero')}</th>
+                  <th className="jins-transpositions__row-header">{t("jins.centsFromZero")}</th>
                   <th className="jins-transpositions__header-pitchClass">0.000</th>
                   {intervals.map((interval, i) => (
                     <React.Fragment key={i}>
@@ -320,33 +337,27 @@ export default function JinsTranspositions() {
               )}
               {filters["centsDeviation"] && (
                 <tr>
-                  <th className="jins-transpositions__row-header">{t('jins.centsDeviation')}</th>
+                  <th className="jins-transpositions__row-header">{t("jins.centsDeviation")}</th>
                   <th className="jins-transpositions__header-pitchClass">
-                    {pitchClasses[0].referenceNoteName && (
-                      <span>
-                        {pitchClasses[0].referenceNoteName}
-                      </span>
-                    )}
-                    {pitchClasses[0].centsDeviation > 0 ? ' +' : ' '}{pitchClasses[0].centsDeviation.toFixed(1)}
+                    {pitchClasses[0].referenceNoteName && <span>{pitchClasses[0].referenceNoteName}</span>}
+                    {pitchClasses[0].centsDeviation > 0 ? " +" : " "}
+                    {pitchClasses[0].centsDeviation.toFixed(1)}
                   </th>
                   {intervals.map((interval, i) => (
                     <React.Fragment key={i}>
                       <th className="jins-transpositions__header-pitchClass"></th>
                       <th className="jins-transpositions__header-pitchClass">
-                        {pitchClasses[i + 1].referenceNoteName && (
-                          <span>
-                            {pitchClasses[i + 1].referenceNoteName}
-                          </span>
-                        )}
-                        {pitchClasses[i + 1].centsDeviation > 0 ? ' +' : ' '}{pitchClasses[i + 1].centsDeviation.toFixed(1)}
+                        {pitchClasses[i + 1].referenceNoteName && <span>{pitchClasses[i + 1].referenceNoteName}</span>}
+                        {pitchClasses[i + 1].centsDeviation > 0 ? " +" : " "}
+                        {pitchClasses[i + 1].centsDeviation.toFixed(1)}
                       </th>
                     </React.Fragment>
                   ))}
                 </tr>
-                  )}
+              )}
               {valueType !== "decimalRatio" && filters["decimalRatio"] && (
                 <tr>
-                  <th className="jins-transpositions__row-header">{t('jins.decimalRatio')}</th>
+                  <th className="jins-transpositions__row-header">{t("jins.decimalRatio")}</th>
                   <th className="jins-transpositions__header-pitchClass">{parseFloat(pitchClasses[0].decimalRatio).toFixed(3)}</th>
                   {intervals.map((interval, i) => (
                     <React.Fragment key={i}>
@@ -358,7 +369,7 @@ export default function JinsTranspositions() {
               )}
               {valueType !== "stringLength" && filters["stringLength"] && (
                 <tr>
-                  <th className="jins-transpositions__row-header">{t('jins.stringLength')}</th>
+                  <th className="jins-transpositions__row-header">{t("jins.stringLength")}</th>
                   <th className="jins-transpositions__header-pitchClass">{parseFloat(pitchClasses[0].stringLength).toFixed(3)}</th>
                   {intervals.map((interval, i) => (
                     <React.Fragment key={i}>
@@ -370,7 +381,7 @@ export default function JinsTranspositions() {
               )}
               {valueType !== "fretDivision" && filters["fretDivision"] && (
                 <tr>
-                  <th className="jins-transpositions__row-header">{t('jins.fretDivision')}</th>
+                  <th className="jins-transpositions__row-header">{t("jins.fretDivision")}</th>
                   <th className="jins-transpositions__header-pitchClass">{parseFloat(pitchClasses[0].fretDivision).toFixed(3)}</th>
                   {intervals.map((interval, i) => (
                     <React.Fragment key={i}>
@@ -382,7 +393,7 @@ export default function JinsTranspositions() {
               )}
               {filters["midiNote"] && (
                 <tr>
-                  <th className="jins-transpositions__row-header">{t('jins.midiNote')}</th>
+                  <th className="jins-transpositions__row-header">{t("jins.midiNote")}</th>
                   <th className="jins-transpositions__header-pitchClass">{pitchClasses[0].midiNoteNumber.toFixed(3)}</th>
                   {intervals.map((interval, i) => (
                     <React.Fragment key={i}>
@@ -394,7 +405,7 @@ export default function JinsTranspositions() {
               )}
               {filters["frequency"] && (
                 <tr>
-                  <th className="jins-transpositions__row-header">{t('jins.frequency')}</th>
+                  <th className="jins-transpositions__row-header">{t("jins.frequency")}</th>
                   <th className="jins-transpositions__header-pitchClass">{parseFloat(pitchClasses[0].frequency).toFixed(3)}</th>
                   {intervals.map((interval, i) => (
                     <React.Fragment key={i}>
@@ -405,7 +416,7 @@ export default function JinsTranspositions() {
                 </tr>
               )}
               <tr>
-                <th className="jins-transpositions__row-header">{t('jins.play')}</th>
+                <th className="jins-transpositions__row-header">{t("jins.play")}</th>
                 {pitchClasses.map((pitchClass, i) => (
                   <React.Fragment key={i}>
                     {i !== 0 && <th className="jins-transpositions__header-cell"></th>}
@@ -427,7 +438,7 @@ export default function JinsTranspositions() {
               </tr>
               {filters.staffNotation && (
                 <tr>
-                  <th className="jins-transpositions__row-header">{t('jins.staffNotation')}</th>
+                  <th className="jins-transpositions__row-header">{t("jins.staffNotation")}</th>
                   <td className="staff-notation-cell" colSpan={pitchClasses.length * 2 - 1}>
                     {/* Only render staff notation when actually open to improve performance */}
                     {open && <StaffNotation pitchClasses={pitchClasses} />}
@@ -447,11 +458,11 @@ export default function JinsTranspositions() {
       <>
         <div className="jins-transpositions" key={language}>
           <h2 className="jins-transpositions__title">
-            {t('jins.analysis')}: {`${getDisplayName(selectedJinsData.getName(), 'jins')}`}{" "}
+            {t("jins.analysis")}: {`${getDisplayName(selectedJinsData.getName(), "jins")}`}{" "}
             {!useRatio && (
               <>
                 {" "}
-                / {t('jins.centsTolerance')}: <input className="jins-transpositions__input" type="number" value={centsTolerance ?? 0} onChange={(e) => setCentsTolerance(Number(e.target.value))} />
+                / {t("jins.centsTolerance")}: <input className="jins-transpositions__input" type="number" value={centsTolerance ?? 0} onChange={(e) => setCentsTolerance(Number(e.target.value))} />
               </>
             )}
             <span className="tuning-system-manager__filter-menu">
@@ -490,9 +501,7 @@ export default function JinsTranspositions() {
                         }));
                       }}
                     />
-                    <span className="tuning-system-manager__filter-label">
-                      {t(`jins.${filterKey}`)}
-                    </span>
+                    <span className="tuning-system-manager__filter-label">{t(`jins.${filterKey}`)}</span>
                   </label>
                 );
               })}
@@ -510,20 +519,19 @@ export default function JinsTranspositions() {
           {selectedJinsData && (selectedJinsData.getCommentsEnglish()?.trim() || selectedJinsData.getSourcePageReferences()?.length > 0) && (
             <>
               <div className="jins-transpositions__comments-sources-container">
-                {language === 'ar' ? (
+                {language === "ar" ? (
                   <>
                     {selectedJinsData.getSourcePageReferences()?.length > 0 && (
                       <div className="jins-transpositions__sources-english">
-                        <h3>{t('jins.sources')}:</h3>
+                        <h3>{t("jins.sources")}:</h3>
                         <div className="jins-transpositions__sources-text">
                           {selectedJinsData.getSourcePageReferences().map((sourceRef, idx) => {
                             const source = sources.find((s: any) => s.id === sourceRef.sourceId);
                             return source ? (
                               <Link href={`/bibliography?source=${source?.getId()}`} key={idx}>
-                                {(language as string) === 'ar' 
+                                {(language as string) === "ar"
                                   ? `${source.getContributors()[0].lastNameArabic} (${source.getPublicationDateEnglish()}:${sourceRef.page})`
-                                  : `${source.getContributors()[0].lastNameEnglish} (${source.getPublicationDateEnglish()}:${sourceRef.page})`
-                                }
+                                  : `${source.getContributors()[0].lastNameEnglish} (${source.getPublicationDateEnglish()}:${sourceRef.page})`}
                                 <br />
                               </Link>
                             ) : null;
@@ -534,7 +542,7 @@ export default function JinsTranspositions() {
 
                     {selectedJinsData.getCommentsEnglish()?.trim() && (
                       <div className="jins-transpositions__comments-english">
-                        <h3>{t('jins.comments')}:</h3>
+                        <h3>{t("jins.comments")}:</h3>
                         <div className="jins-transpositions__comments-text">{selectedJinsData.getCommentsEnglish()}</div>
                       </div>
                     )}
@@ -543,23 +551,22 @@ export default function JinsTranspositions() {
                   <>
                     {selectedJinsData.getCommentsEnglish()?.trim() && (
                       <div className="jins-transpositions__comments-english">
-                        <h3>{t('jins.comments')}:</h3>
+                        <h3>{t("jins.comments")}:</h3>
                         <div className="jins-transpositions__comments-text">{selectedJinsData.getCommentsEnglish()}</div>
                       </div>
                     )}
 
                     {selectedJinsData.getSourcePageReferences()?.length > 0 && (
                       <div className="jins-transpositions__sources-english">
-                        <h3>{t('jins.sources')}:</h3>
+                        <h3>{t("jins.sources")}:</h3>
                         <div className="jins-transpositions__sources-text">
                           {selectedJinsData.getSourcePageReferences().map((sourceRef, idx) => {
                             const source = sources.find((s: any) => s.id === sourceRef.sourceId);
                             return source ? (
                               <Link href={`/bibliography?source=${source?.getId()}`} key={idx}>
-                                {(language as string) === 'ar' 
+                                {(language as string) === "ar"
                                   ? `${source.getContributors()[0].lastNameArabic} (${source.getPublicationDateEnglish()}:${sourceRef.page})`
-                                  : `${source.getContributors()[0].lastNameEnglish} (${source.getPublicationDateEnglish()}:${sourceRef.page})`
-                                }
+                                  : `${source.getContributors()[0].lastNameEnglish} (${source.getPublicationDateEnglish()}:${sourceRef.page})`}
                                 <br />
                               </Link>
                             ) : null;
@@ -573,7 +580,9 @@ export default function JinsTranspositions() {
             </>
           )}
 
-          <h2 className="jins-transpositions__title">{t('jins.transpositionsTitle')}: {`${getDisplayName(selectedJinsData.getName(), 'jins')}`}</h2>
+          <h2 className="jins-transpositions__title">
+            {t("jins.transpositionsTitle")}: {`${getDisplayName(selectedJinsData.getName(), "jins")}`}
+          </h2>
 
           <table className="jins-transpositions__table">
             <colgroup>
@@ -584,7 +593,7 @@ export default function JinsTranspositions() {
             <thead></thead>
             <tbody>
               {jinsTranspositions.slice(1, 1 + visibleCount).map((jinsTransposition, row) => {
-                const isLastNeededForPrefetch = row === visibleCount - PREFETCH_OFFSET - 1 && visibleCount < (jinsTranspositions.length - 1);
+                const isLastNeededForPrefetch = row === visibleCount - PREFETCH_OFFSET - 1 && visibleCount < jinsTranspositions.length - 1;
                 return (
                   <React.Fragment key={row}>
                     {renderTransposition(jinsTransposition, row + 1)}
@@ -610,14 +619,37 @@ export default function JinsTranspositions() {
                   setVisibleCount((c) => c + Math.min(BATCH_SIZE, remaining));
                 }}
               >
-                {t('jins.loadMore') || 'Load More'}
+                {t("jins.loadMore") || "Load More"}
               </button>
             </div>
           )}
         </div>
       </>
     );
-  }, [selectedJinsData, selectedTuningSystem, openTranspositions, isToggling, jinsTranspositions, visibleCount, t, getDisplayName, language, toggleTransposition, setSelectedPitchClasses, setSelectedJins, playSequence, handleJinsExport, noteOn, noteOff, filters, sources, allPitchClasses, centsTolerance, setCentsTolerance, setFilters]);
+  }, [
+    selectedJinsData,
+    selectedTuningSystem,
+    openTranspositions,
+    isToggling,
+    jinsTranspositions,
+    visibleCount,
+    t,
+    getDisplayName,
+    language,
+    toggleTransposition,
+    setSelectedPitchClasses,
+    setSelectedJins,
+    playSequence,
+    handleJinsExport,
+    noteOn,
+    noteOff,
+    filters,
+    sources,
+    allPitchClasses,
+    centsTolerance,
+    setCentsTolerance,
+    setFilters,
+  ]);
 
   // Listen for custom event to scroll to header when jins/transposition changes (event-driven)
   useEffect(() => {
@@ -628,7 +660,7 @@ export default function JinsTranspositions() {
         const index = jinsTranspositions.findIndex((j) => j.jinsPitchClasses?.[0]?.noteName === firstNote);
         if (index > 0) {
           const needed = index; // because visibleCount covers slice(1)
-            setVisibleCount((prev) => (needed > prev ? Math.ceil(needed / BATCH_SIZE) * BATCH_SIZE : prev));
+          setVisibleCount((prev) => (needed > prev ? Math.ceil(needed / BATCH_SIZE) * BATCH_SIZE : prev));
         }
         if (scrollTimeoutRef.current) window.clearTimeout(scrollTimeoutRef.current);
         scrollTimeoutRef.current = window.setTimeout(() => {
@@ -683,25 +715,23 @@ export default function JinsTranspositions() {
       scrollTimeoutRef.current = null;
     }
     setTargetFirstNote(null);
-    if (typeof window !== 'undefined') {
-      window.scrollTo({ top: 0, behavior: 'auto' });
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "auto" });
     }
   }, [selectedJinsData]);
 
   return (
     <>
-  {transpositionTables}
-  {visibleCount < (jinsTranspositions.length - 1) && visibleCount <= PREFETCH_OFFSET && (
-    <div ref={sentinelRef} style={{ width: 1, height: 1 }} />
-  )}
-      
+      {transpositionTables}
+      {visibleCount < jinsTranspositions.length - 1 && visibleCount <= PREFETCH_OFFSET && <div ref={sentinelRef} style={{ width: 1, height: 1 }} />}
+
       {/* Export Modal */}
-      <ExportModal 
-        isOpen={isExportModalOpen} 
+      <ExportModal
+        isOpen={isExportModalOpen}
         onClose={() => {
           setIsExportModalOpen(false);
           setJinsToExport(null);
-        }} 
+        }}
         exportType="jins"
         specificJins={jinsToExport || undefined}
       />

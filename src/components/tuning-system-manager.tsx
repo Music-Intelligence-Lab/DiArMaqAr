@@ -6,8 +6,8 @@ import useFilterContext from "@/contexts/filter-context";
 import useSoundContext from "@/contexts/sound-context";
 import useLanguageContext from "@/contexts/language-context";
 import TuningSystem from "@/models/TuningSystem";
-import detectPitchClassType from "@/functions/detectPitchClassType";
-import convertPitchClass from "@/functions/convertPitchClass";
+import detectPitchClassValueType from "@/functions/detectPitchClassType";
+import convertPitchClassValue from "@/functions/convertPitchClass";
 import NoteName, { octaveOneNoteNames, octaveTwoNoteNames, TransliteratedNoteNameOctaveOne, TransliteratedNoteNameOctaveTwo, getNoteNameIndex } from "@/models/NoteName";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { updateTuningSystems } from "@/functions/update";
@@ -29,7 +29,7 @@ function isTuningSystemDisabled(
   selectedMaqam: Maqam | null,
   startingNoteName: NoteName = ""
 ): { disabled: boolean; noteName: string } {
-  const shiftedNoteNames = tuningSystem.getSetsOfNoteNamesShiftedUpAndDown();
+  const shiftedNoteNames = tuningSystem.getNoteNameSetsShiftedUpAndDown();
 
   if (!selectedJinsData && !selectedMaqamData) return { disabled: false, noteName: "" };
 
@@ -165,7 +165,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       setCreatorArabic(selectedTuningSystem.getCreatorArabic());
       setCommentsEnglish(selectedTuningSystem.getCommentsEnglish());
       setCommentsArabic(selectedTuningSystem.getCommentsArabic());
-      setTuningSystemPitchClasses(selectedTuningSystem.getPitchClasses().join("\n"));
+      setTuningSystemPitchClasses(selectedTuningSystem.getOriginalPitchClassValues().join("\n"));
       setSelectedAbjadNames(selectedTuningSystem.getAbjadNames());
       setTuningSystemStringLength(selectedTuningSystem.getStringLength());
       setDefaultReferenceFrequency(selectedTuningSystem.getDefaultReferenceFrequency());
@@ -285,14 +285,14 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       if (chosen) {
         // set the chosen system
         setSelectedTuningSystem(chosen);
-        handleStartNoteNameChange("", chosen.getNoteNames(), chosen.getPitchClasses().length);
+        handleStartNoteNameChange("", chosen.getNoteNameSets(), chosen.getOriginalPitchClassValues().length);
       }
     }
   };
 
   const handleTuningSystemClick = (ts: TuningSystem, noteName: NoteName = "") => {
     setSelectedTuningSystem(ts);
-    handleStartNoteNameChange(noteName, ts.getNoteNames(), ts.getPitchClasses().length);
+    handleStartNoteNameChange(noteName, ts.getNoteNameSets(), ts.getOriginalPitchClassValues().length);
     clearHangingNotes();
   };
 
@@ -317,7 +317,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
   // Handle creating or updating a system:
   const handleSaveTuningSystem = (givenNoteNames: NoteName[][] = []) => {
-    const usedNoteNames = givenNoteNames.length > 0 ? givenNoteNames : selectedTuningSystem?.getNoteNames() || [[]];
+    const usedNoteNames = givenNoteNames.length > 0 ? givenNoteNames : selectedTuningSystem?.getNoteNameSets() || [[]];
 
     if (selectedTuningSystem) {
       const updated = new TuningSystem(
@@ -394,7 +394,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       .filter((p) => p.length > 0);
 
     // 2. Detect type (fraction/decimal/cents/stringLength/unknown)
-    const typeOfPitchClass = detectPitchClassType(newArr);
+    const typeOfPitchClass = detectPitchClassValueType(newArr);
 
     // 3. Build initial newSelectedIndices[] exactly as before:
     const newSelectedIndices = Array.from({ length: newArr.length }, () => -1);
@@ -402,7 +402,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     if (typeOfPitchClass !== "unknown") {
       for (let i = 0; i < newArr.length; i++) {
         const pitchClass = newArr[i];
-        const conv = convertPitchClass(pitchClass, typeOfPitchClass, tuningSystemStringLength, defaultReferenceFrequency);
+        const conv = convertPitchClassValue(pitchClass, typeOfPitchClass, tuningSystemStringLength, defaultReferenceFrequency);
         const fraction = conv?.fraction;
         if (fraction) {
           const idx = alKindiPitchClasses.indexOf(fraction);
@@ -495,7 +495,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
       const firstNote = newNoteSet[0];
 
-      const noteNames = selectedTuningSystem.getNoteNames();
+      const noteNames = selectedTuningSystem.getNoteNameSets();
 
       const newNoteNames = [...noteNames.filter((setOfNotes) => setOfNotes[0] !== firstNote)];
       newNoteNames.push(newNoteSet);
@@ -514,10 +514,10 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
     if (firstNote === "none") return;
 
-    const noteNames = selectedTuningSystem?.getNoteNames() || [[]];
+    const noteNames = selectedTuningSystem?.getNoteNameSets() || [[]];
 
     const newNoteNames = [...noteNames.filter((setOfNotes) => setOfNotes[0] !== firstNote)];
-    setSelectedTuningSystem(selectedTuningSystem.copyWithNewSetOfNoteNames(newNoteNames));
+    setSelectedTuningSystem(selectedTuningSystem.copyWithNewNoteNameSets(newNoteNames));
 
     setSelectedIndices(Array(selectedIndices.length).fill(-1));
     setOriginalIndices(Array(selectedIndices.length).fill(-1));
@@ -527,7 +527,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   const isCurrentConfigurationNew = () => {
     const currentFirst = getFirstNoteName(selectedIndices);
     if (currentFirst === "none") return false;
-    const noteNames = selectedTuningSystem?.getNoteNames() || [[]];
+    const noteNames = selectedTuningSystem?.getNoteNameSets() || [[]];
     return !noteNames.some((config) => config[0] === currentFirst);
   };
 
@@ -667,8 +667,8 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             <div className="tuning-system-manager__input-container">
               <label className="tuning-system-manager__label" htmlFor="pitchClassesField">
                 {t("tuningSystem.pitchClasses")}{" "}
-                {detectPitchClassType(tuningSystemPitchClasses.split("\n")) !== "unknown" && (
-                  <span className="tuning-system-manager__pitch-class-type">{"// " + detectPitchClassType(tuningSystemPitchClasses.split("\n"))}</span>
+                {detectPitchClassValueType(tuningSystemPitchClasses.split("\n")) !== "unknown" && (
+                  <span className="tuning-system-manager__pitch-class-type">{"// " + detectPitchClassValueType(tuningSystemPitchClasses.split("\n"))}</span>
                 )}
               </label>
               <textarea className="tuning-system-manager__textarea" id="pitchClassesField" rows={5} value={tuningSystemPitchClasses} onChange={handlePitchClassesChange} />
@@ -861,7 +861,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
           <div className="tuning-system-manager__starting-note-container">
             <div className="tuning-system-manager__starting-note-left">
               {t("tuningSystem.startingNoteName")}
-              {[...selectedTuningSystem.getNoteNames()]
+              {[...selectedTuningSystem.getNoteNameSets()]
                 .sort((a, b) => getNoteNameIndex(a[0] ?? 0) - getNoteNameIndex(b[0] ?? 0))
                 .map((notes, index) => {
                   const startingNote = notes[0];

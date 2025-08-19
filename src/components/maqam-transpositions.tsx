@@ -105,7 +105,12 @@ const MaqamTranspositions: React.FC = () => {
 
   useEffect(() => {
     setVisibleCount(BATCH_SIZE);
-  }, [selectedMaqamData, selectedTuningSystem]);
+    // Always open tahlil (first element) on load
+    if (maqamTranspositions && maqamTranspositions.length > 0) {
+      const tahlilName = maqamTranspositions[0].name;
+      setOpenTranspositions(new Set([tahlilName]));
+    }
+  }, [selectedMaqamData, selectedTuningSystem, maqamTranspositions]);
 
   // Auto-open and scroll to selected transposition
   useEffect(() => {
@@ -273,11 +278,10 @@ const MaqamTranspositions: React.FC = () => {
               <th
               className={`maqam-transpositions__header ${isToggling === maqam.name ? 'maqam-transpositions__header--toggling' : ''}`}
               id={getHeaderId(pitchClasses[0]?.noteName)}
-              colSpan={4 + (pitchClasses.length - 1) * 2}
+              colSpan={5 + (pitchClasses.length - 1) * 2}
               style={{
                 ...(rowIndex === 0 && ascending ? { scrollMarginTop: `${ANALYSIS_SCROLL_MARGIN_TOP_PX}px` } : {})
               }}
-              onClick={() => toggleTransposition(maqam.name)}
               >
               {!transposition ? (
                 <span className="maqam-transpositions__transposition-title">{`${t("maqam.darajatAlIstiqrar")}: ${getDisplayName(pitchClasses[0].noteName, "note")} (${getEnglishNoteName(
@@ -286,6 +290,15 @@ const MaqamTranspositions: React.FC = () => {
               ) : (
                 <span className="maqam-transpositions__transposition-title">{getDisplayName(maqam.name, "maqam")}</span>
               )}
+              <button
+                className="maqam-transpositions__button maqam-transpositions__button--toggle"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleTransposition(maqam.name);
+                }}
+              >
+                {open ? t("maqam.hideDetails") : t("maqam.showDetails")}
+              </button>
               <button
                 className="maqam-transpositions__button"
                 onClick={(e) => {

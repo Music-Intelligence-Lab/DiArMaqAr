@@ -58,7 +58,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
   // Use cached map from context to avoid recomputation
   const { allMaqamTranspositionsMap } = useTranspositionsContext();
 
-  const numberOfPitchClasses = selectedTuningSystem ? selectedTuningSystem.getPitchClasses().length : 0;
+  const numberOfPitchClasses = selectedTuningSystem ? selectedTuningSystem.getOriginalPitchClassValues().length : 0;
 
   const sortedMaqamat = [...maqamat].sort((a, b) => a.getName().localeCompare(b.getName()));
 

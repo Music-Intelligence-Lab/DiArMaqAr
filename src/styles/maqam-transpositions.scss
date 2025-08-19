@@ -66,6 +66,14 @@
     &:hover {
       background-color: rgba($primary, 1);
     }
+
+    &--toggle {
+      background-color: rgba($tertiary, 0.7);
+      
+      &:hover {
+        background-color: rgba($tertiary, 1);
+      }
+    }
   }
 
   &__table {
