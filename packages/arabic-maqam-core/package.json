@@ -50,11 +50,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Music-Intelligence-Lab/maqam-network.git",
+    "url": "https://github.com/Music-Intelligence-Lab/arabic-maqam-network.git",
     "directory": "packages/arabic-maqam-core"
   },
   "bugs": {
-    "url": "https://github.com/Music-Intelligence-Lab/maqam-network/issues"
+    "url": "https://github.com/Music-Intelligence-Lab/arabic-maqam-network/issues"
   },
-  "homepage": "https://github.com/Music-Intelligence-Lab/maqam-network#readme"
+  "homepage": "https://github.com/Music-Intelligence-Lab/arabic-maqam-network#readme"
 }

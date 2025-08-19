@@ -148,9 +148,10 @@ Advanced algorithms determine:
 
 ### Development Setup
 ```bash
+```bash
 # Clone the repository
-git clone https://github.com/Music-Intelligence-Lab/maqam-network.git
-cd maqam-network
+git clone https://github.com/Music-Intelligence-Lab/arabic-maqam-network.git
+cd arabic-maqam-network
 
 # Install dependencies
 npm install
@@ -198,3 +199,6 @@ This work contributes to the growing field of culture-specific computational mus
 
 - **Live Application**: [https://arabic-maqam-network.vercel.app/](https://arabic-maqam-network.vercel.app/)
 - **NPM Package**: [https://www.npmjs.com/package/arabic-maqam-core](https://www.npmjs.com/package/arabic-maqam-core)
+- **API Documentation**: [https://music-intelligence-lab.github.io/arabic-maqam-network/](https://music-intelligence-lab.github.io/arabic-maqam-network/)
+- **Source Code**: [https://github.com/Music-Intelligence-Lab/arabic-maqam-network](https://github.com/Music-Intelligence-Lab/arabic-maqam-network)
+- **Research Lab**: [https://music-intelligence-lab.org](https://music-intelligence-lab.org)
