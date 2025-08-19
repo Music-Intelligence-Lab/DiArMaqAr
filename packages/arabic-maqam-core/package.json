@@ -1,6 +1,6 @@
 {
   "name": "arabic-maqam-core",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Core library for Arabic maqam theory containing data, models, and utility functions",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
