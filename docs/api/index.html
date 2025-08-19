@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maqam Network API Documentation</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 600;
+        }
+        .header p {
+            margin: 10px 0 0 0;
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        .nav-link {
+            padding: 12px 24px;
+            background: white;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 8px;
+            border: 2px solid #667eea;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        .nav-link:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+        }
+        .endpoints-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        .endpoint-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: 1px solid #e1e5e9;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .endpoint-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .endpoint-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0 0 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .method-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .get { background: #d4edda; color: #155724; }
+        .post { background: #fff3cd; color: #856404; }
+        .put { background: #cce7ff; color: #004085; }
+        .endpoint-description {
+            color: #6c757d;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        .endpoint-features {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+        .endpoint-features li {
+            padding: 5px 0;
+            color: #495057;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .endpoint-features li:before {
+            content: "✓";
+            color: #28a745;
+            font-weight: bold;
+        }
+        .intro-section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        .intro-section h2 {
+            color: #2c3e50;
+            margin-top: 0;
+            font-size: 1.8rem;
+        }
+        .code-example {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9rem;
+            color: #495057;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Maqam Network API Documentation</h1>
+        <p>Comprehensive REST API for Arabic Maqam Theory & Analysis</p>
+    </div>
+
+    <div class="nav-links">
+        <a href="../library/index.html" class="nav-link">Library Documentation</a>
+        <a href="https://www.npmjs.com/package/arabic-maqam-core" class="nav-link">NPM Package</a>
+        <a href="https://github.com/SinanAkkoyun/maqam-network" class="nav-link">GitHub Repository</a>
+        <a href="/" class="nav-link">Live Application</a>
+    </div>
+
+    <div class="intro-section">
+        <h2>API Overview</h2>
+        <p>
+            The Maqam Network API provides programmatic access to a comprehensive database of Arabic maqam theory, 
+            including maqamat, ajnas, tuning systems, and sophisticated analytical tools for transposition, 
+            modulation analysis, and pattern recognition.
+        </p>
+        
+        <h3>Base URL</h3>
+        <div class="code-example">https://maqam-network.vercel.app/api/</div>
+        
+        <h3>Authentication</h3>
+        <p>This API is currently public and requires no authentication. All endpoints support CORS for browser usage.</p>
+        
+        <h3>Response Format</h3>
+        <p>All responses are in JSON format with appropriate HTTP status codes. Error responses include descriptive error messages.</p>
+    </div>
+
+    <div class="endpoints-grid">
+        <div class="endpoint-card">
+            <div class="endpoint-title">
+                <span class="method-badge get">GET</span>
+                /api/ajnas
+            </div>
+            <div class="endpoint-description">
+                Retrieve all ajnas (tetrachordal/pentachordal units) used in Arabic maqam theory. 
+                Each jins represents a fundamental building block of melodic construction.
+            </div>
+            <ul class="endpoint-features">
+                <li>Complete ajnas database with note sequences</li>
+                <li>Arabic and English commentary</li>
+                <li>Academic source references</li>
+                <li>Interval patterns and theoretical analysis</li>
+            </ul>
+        </div>
+
+        <div class="endpoint-card">
+            <div class="endpoint-title">
+                <span class="method-badge get">GET</span>
+                /api/maqamat
+            </div>
+            <div class="endpoint-description">
+                Access complete maqamat collection with ascending/descending sequences, suyūr (melodic pathways), 
+                and comprehensive performance practice information.
+            </div>
+            <ul class="endpoint-features">
+                <li>Full maqamat with note sequences</li>
+                <li>Suyūr melodic development patterns</li>
+                <li>Bilingual documentation</li>
+                <li>Historical and theoretical context</li>
+            </ul>
+        </div>
+
+        <div class="endpoint-card">
+            <div class="endpoint-title">
+                <span class="method-badge get">GET</span>
+                /api/tuningSystems
+            </div>
+            <div class="endpoint-description">
+                Retrieve tuning systems with microtonal pitch relationships, frequency ratios, 
+                and compatibility analysis with maqamat and ajnas.
+            </div>
+            <ul class="endpoint-features">
+                <li>Microtonal pitch class definitions</li>
+                <li>Frequency ratios and cents calculations</li>
+                <li>Compatibility with maqamat/ajnas</li>
+                <li>Multiple tuning system paradigms</li>
+            </ul>
+        </div>
+
+        <div class="endpoint-card">
+            <div class="endpoint-title">
+                <span class="method-badge post">POST</span>
+                /api/transpose
+            </div>
+            <div class="endpoint-description">
+                Generate sophisticated transpositions of maqamat and ajnas within specified tuning systems. 
+                Supports microtonal accuracy with cents tolerance parameters.
+            </div>
+            <ul class="endpoint-features">
+                <li>Microtonal transposition algorithms</li>
+                <li>Pitch class mapping optimization</li>
+                <li>Cents tolerance for accuracy</li>
+                <li>Multiple transposition candidates</li>
+            </ul>
+        </div>
+
+        <div class="endpoint-card">
+            <div class="endpoint-title">
+                <span class="method-badge post">POST</span>
+                /api/modulations
+            </div>
+            <div class="endpoint-description">
+                Perform advanced modulation analysis between maqamat, calculating optimal transition pathways, 
+                common tones, and theoretical relationships.
+            </div>
+            <ul class="endpoint-features">
+                <li>Maqamat-to-maqamat modulation paths</li>
+                <li>Ajnas-based modulation analysis</li>
+                <li>Common tone identification</li>
+                <li>Melodic transition optimization</li>
+            </ul>
+        </div>
+
+        <div class="endpoint-card">
+            <div class="endpoint-title">
+                <span class="method-badge post">POST</span>
+                /api/generate-analytics
+            </div>
+            <div class="endpoint-description">
+                Generate comprehensive statistical and analytical data across the entire maqam theory dataset 
+                for research and educational applications.
+            </div>
+            <ul class="endpoint-features">
+                <li>Intervallic pattern analysis</li>
+                <li>Frequency distribution statistics</li>
+                <li>Cross-reference mapping</li>
+                <li>Dataset completeness metrics</li>
+            </ul>
+        </div>
+
+        <div class="endpoint-card">
+            <div class="endpoint-title">
+                <span class="method-badge get">GET</span>
+                /api/sources
+            </div>
+            <div class="endpoint-description">
+                Access the complete academic bibliography and source references that provide scholarly 
+                foundation for the theoretical content.
+            </div>
+            <ul class="endpoint-features">
+                <li>Complete academic bibliography</li>
+                <li>Multiple citation formats</li>
+                <li>DOI and ISBN references</li>
+                <li>Categorized by subject keywords</li>
+            </ul>
+        </div>
+
+        <div class="endpoint-card">
+            <div class="endpoint-title">
+                <span class="method-badge get">GET</span>
+                /api/patterns
+            </div>
+            <div class="endpoint-description">
+                Retrieve musical patterns including rhythmic structures, melodic motifs, and compositional 
+                frameworks used in Arabic musical practice.
+            </div>
+            <ul class="endpoint-features">
+                <li>Rhythmic and melodic patterns</li>
+                <li>Notational representations</li>
+                <li>Cultural significance context</li>
+                <li>Pedagogical teaching notes</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="intro-section">
+        <h2>Example Usage</h2>
+        <h3>Fetching Maqamat</h3>
+        <div class="code-example">
+curl -X GET "https://maqam-network.vercel.app/api/maqamat" \
+  -H "Accept: application/json"
+        </div>
+        
+        <h3>Transposition Request</h3>
+        <div class="code-example">
+curl -X POST "https://maqam-network.vercel.app/api/transpose" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "tuningSystemID": "24TET_tuning",
+    "maqamID": "maqam_bayati",
+    "firstNote": {"numerator": 1, "denominator": 1, "cents": 0},
+    "centsTolerance": 10
+  }'
+        </div>
+        
+        <h3>Modulation Analysis</h3>
+        <div class="code-example">
+curl -X POST "https://maqam-network.vercel.app/api/modulations" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "tuningSystemID": "24TET_tuning",
+    "maqamID": "maqam_bayati", 
+    "tonic": "dūgāh",
+    "ajnasModulationsMode": true,
+    "centsTolerance": 10
+  }'
+        </div>
+    </div>
+
+    <div class="intro-section">
+        <h2>Technical Implementation</h2>
+        <p>
+            This API is built with Next.js 15+ and TypeScript, featuring comprehensive JSDoc/Swagger documentation 
+            for each endpoint. All algorithms are based on peer-reviewed ethnomusicological research and provide 
+            both theoretical accuracy and practical utility for musicians, researchers, and developers.
+        </p>
+        <p>
+            The core algorithms are also available as a standalone NPM package: 
+            <a href="https://www.npmjs.com/package/arabic-maqam-core">arabic-maqam-core</a>
+        </p>
+    </div>
+</body>
+</html>
