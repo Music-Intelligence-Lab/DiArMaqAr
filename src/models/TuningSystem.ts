@@ -127,7 +127,7 @@ export default class TuningSystem {
     saved: boolean
   ) {
     // Generate unique ID by combining creator, year, and title (sanitized)
-    this.id = `${creatorEnglish}-(${year})-${titleEnglish}`.replaceAll(" ", "").replaceAll("+", "");
+    this.id = `${creatorEnglish}-(${year})`.replaceAll(" ", "").replaceAll("+", "");
     this.titleEnglish = titleEnglish;
     this.titleArabic = titleArabic;
     this.year = year;
