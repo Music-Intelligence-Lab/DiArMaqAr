@@ -92,7 +92,7 @@ export default function JinsTranspositions() {
     },
     [isToggling]
   );
-  
+
   // Toggle show details function
   const toggleShowDetails = useCallback(
     (jinsName: string, e?: React.MouseEvent, isTransposition: boolean = false) => {
@@ -102,7 +102,7 @@ export default function JinsTranspositions() {
       setIsToggling(jinsName);
 
       // Get the jins object to check if it's a transposition
-      const jins = jinsTranspositions?.find(j => j.name === jinsName);
+      const jins = jinsTranspositions?.find((j) => j.name === jinsName);
       const isJinsTransposition = jins?.transposition === true || isTransposition;
 
       // Small delay to show visual feedback before heavy computation
@@ -110,7 +110,7 @@ export default function JinsTranspositions() {
         setOpenTranspositions((prev) => {
           const newArray = [...prev];
           const index = newArray.indexOf(jinsName);
-          
+
           if (index >= 0) {
             // If closing, just remove this one
             newArray.splice(index, 1);
@@ -118,13 +118,11 @@ export default function JinsTranspositions() {
             // If opening a transposition, close all others first
             if (isJinsTransposition) {
               // Keep only non-transposition items (like the analysis)
-              const nonTranspositions = jinsTranspositions
-                ?.filter(j => !j.transposition)
-                .map(j => j.name) || [];
-              
+              const nonTranspositions = jinsTranspositions?.filter((j) => !j.transposition).map((j) => j.name) || [];
+
               // Start with only non-transposition items
               newArray.length = 0;
-              nonTranspositions.forEach(name => {
+              nonTranspositions.forEach((name) => {
                 if (prev.includes(name)) {
                   newArray.push(name);
                 }
@@ -179,10 +177,10 @@ export default function JinsTranspositions() {
         // Open the tahlil (first element)
         const tahlilName = jinsTranspositions[0].name;
         setOpenTranspositions([tahlilName]);
-        
+
         // Ensure first batch is visible
         setVisibleCount(BATCH_SIZE);
-        
+
         // Scroll to tahlil
         setTimeout(() => {
           if (jinsTranspositions[0].jinsPitchClasses?.length > 0) {
@@ -246,75 +244,69 @@ export default function JinsTranspositions() {
               {index + 1}
             </td>
 
-            <td className="jins-transpositions__jins-name-row" colSpan={3 + (pitchClasses.length - 1) * 2}>
+            <td className="jins-transpositions__jins-name-row" colSpan={2 + (pitchClasses.length - 1) * 2} >
               {!transposition ? (
-                <span 
-                  className="jins-transpositions__transposition-title"
-                  onClick={(e) => toggleShowDetails(jins.name, e, false)}
-                  style={{ cursor: 'pointer' }}
-                >
+                <span className="jins-transpositions__transposition-title" onClick={(e) => toggleShowDetails(jins.name, e, false)} style={{ cursor: "pointer" }}>
                   {t("jins.darajatAlIstiqrar")}: {getDisplayName(pitchClasses[0].noteName, "note") + ` (${getEnglishNoteName(pitchClasses[0].noteName)})`}
                 </span>
               ) : (
-                <span 
-                  className="jins-transpositions__transposition-title"
-                  onClick={(e) => toggleShowDetails(jins.name, e, true)}
-                  style={{ cursor: 'pointer' }}
-                >{`${getDisplayName(jins.name, "jins")}`}</span>
+                <span className="jins-transpositions__transposition-title" onClick={(e) => toggleShowDetails(jins.name, e, true)} style={{ cursor: "pointer" }}>{`${getDisplayName(
+                  jins.name,
+                  "jins"
+                )}`}</span>
               )}
-              <button
-                className="jins-transpositions__button jins-transpositions__button--toggle"
-                onClick={(e) => toggleShowDetails(jins.name, e, transposition)}
-              >
-                {open ? t("jins.hideDetails") : t("jins.showDetails")}
-              </button>
+              <span className="jins-transpositions__buttons">
+                <button className="jins-transpositions__button jins-transpositions__button--toggle" onClick={(e) => toggleShowDetails(jins.name, e, transposition)}>
+                  {open ? t("jins.hideDetails") : t("jins.showDetails")}
+                </button>
                 <button
-                className="jins-transpositions__button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setSelectedPitchClasses([]);
-                  setSelectedPitchClasses(pitchClasses);
-                  setSelectedJins(transposition ? jins : null);
+                  className="jins-transpositions__button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedPitchClasses([]);
+                    setSelectedPitchClasses(pitchClasses);
+                    setSelectedJins(transposition ? jins : null);
 
-                  // Auto-open the transposition when selecting it (close all others)
-                  if (transposition) {
-                    setOpenTranspositions([jins.name]);
-                  } else {
-                    // This is the tahlil case (first transposition)
-                    // The useEffect will handle opening the first item when selectedJins becomes null
-                  }
-                  
-                  setTimeout(() => {
-                    window.dispatchEvent(
-                      new CustomEvent("jinsTranspositionChange", {
-                        detail: { firstNote: pitchClasses[0].noteName },
-                      })
-                    );
-                  }, DISPATCH_EVENT_DELAY_MS);
-                }}
-              >
-                {t("jins.selectLoadToKeyboard")}
-              </button>
+                    // Auto-open the transposition when selecting it (close all others)
+                    if (transposition) {
+                      setOpenTranspositions([jins.name]);
+                    } else {
+                      // This is the tahlil case (first transposition)
+                      // The useEffect will handle opening the first item when selectedJins becomes null
+                    }
 
-              <button
-                className="jins-transpositions__button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  playSequence(pitchClasses, true);
-                }}
-              >
-                <PlayCircleIcon className="jins-transpositions__play-circle-icon" /> {t("jins.playJins")}
-              </button>
+                    setTimeout(() => {
+                      window.dispatchEvent(
+                        new CustomEvent("jinsTranspositionChange", {
+                          detail: { firstNote: pitchClasses[0].noteName },
+                        })
+                      );
+                    }, DISPATCH_EVENT_DELAY_MS);
+                  }}
+                >
+                  {t("jins.selectLoadToKeyboard")}
+                </button>
 
-              <button
-                className="jins-transpositions__button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleJinsExport(jins);
-                }}
-              >
-                <FileDownloadIcon className="jins-transpositions__export-icon" /> {t("jins.export")}
-              </button>
+                <button
+                  className="jins-transpositions__button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    playSequence(pitchClasses, true);
+                  }}
+                >
+                  <PlayCircleIcon className="jins-transpositions__play-circle-icon" /> {t("jins.playJins")}
+                </button>
+
+                <button
+                  className="jins-transpositions__button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleJinsExport(jins);
+                  }}
+                >
+                  <FileDownloadIcon className="jins-transpositions__export-icon" /> {t("jins.export")}
+                </button>
+              </span>
             </td>
           </tr>
           {open && (
