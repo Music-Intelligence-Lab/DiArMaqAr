@@ -133,7 +133,7 @@ const translations = {
     'maqam.centsTolerance': 'Cents Tolerance',
     'maqam.darajatAlIstiqrar': 'Darajat al-Istiqrār (tonic/finalis)',
     'maqam.selectLoadToKeyboard': 'Select & Load to Keyboard',
-    'maqam.ascendingDescending': 'Ascending > Descending',
+    'maqam.ascendingDescending': 'Asc > Desc',
     'maqam.ascending': 'Ascending',
     'maqam.descending': 'Descending',
     'maqam.export': 'Export',
@@ -222,7 +222,7 @@ const translations = {
     // Selected Pitch Classes Transpositions
     'analysis.title': 'Taḥlīl (analysis)',
     'analysis.centsTolerance': 'Cents Tolerance',
-    'analysis.playSelectedPitchClasses': 'Play Selected Pitch Classes',
+    'analysis.playSelectedPitchClasses': 'Play Selections',
     'analysis.noteNames': 'Note Names',
     'analysis.abjadName': 'Abjad Name',
     'analysis.englishName': 'English Name',
@@ -489,7 +489,7 @@ const translations = {
     // Selected Pitch Classes Transpositions (Arabic translations)
     'analysis.title': 'تحليل',
     'analysis.centsTolerance': 'تساهل السنت',
-    'analysis.playSelectedPitchClasses': 'استمعوا للفئات النغمية المختارة',
+    'analysis.playSelectedPitchClasses': 'استمعوا للنغمات المختارة',
     'analysis.noteNames': 'أسماء النغمات',
     'analysis.abjadName': 'الإسم الأبجدي',
     'analysis.englishName': 'الإسم الإنجليزي',

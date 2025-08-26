@@ -66,7 +66,7 @@ export default function JinsTranspositions() {
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const [targetFirstNote, setTargetFirstNote] = useState<string | null>(null);
   const scrollTimeoutRef = useRef<number | null>(null);
-  const [openTranspositions, setOpenTranspositions] = useState<Set<string>>(new Set());
+  const [openTranspositions, setOpenTranspositions] = useState<string[]>([]);
   const [isToggling, setIsToggling] = useState<string | null>(null);
 
   // Debounced toggle function to prevent rapid clicking issues
@@ -79,19 +79,66 @@ export default function JinsTranspositions() {
       // Small delay to show visual feedback before heavy computation
       setTimeout(() => {
         setOpenTranspositions((prev) => {
-          const newSet = new Set<string>();
           // If this transposition is currently open, close it (and all others)
           // If it's closed, open only this one (close all others)
-          if (!prev.has(jinsName)) {
-            newSet.add(jinsName);
+          if (!prev.includes(jinsName)) {
+            return [jinsName];
           }
           // If we're closing this one, all others are already closed due to single-expansion logic
-          return newSet;
+          return [];
         });
         setIsToggling(null);
       }, 50); // Small delay for better UX
     },
     [isToggling]
+  );
+  
+  // Toggle show details function
+  const toggleShowDetails = useCallback(
+    (jinsName: string, e?: React.MouseEvent, isTransposition: boolean = false) => {
+      e?.stopPropagation();
+      if (isToggling) return; // Prevent rapid clicking
+
+      setIsToggling(jinsName);
+
+      // Get the jins object to check if it's a transposition
+      const jins = jinsTranspositions?.find(j => j.name === jinsName);
+      const isJinsTransposition = jins?.transposition === true || isTransposition;
+
+      // Small delay to show visual feedback before heavy computation
+      setTimeout(() => {
+        setOpenTranspositions((prev) => {
+          const newArray = [...prev];
+          const index = newArray.indexOf(jinsName);
+          
+          if (index >= 0) {
+            // If closing, just remove this one
+            newArray.splice(index, 1);
+          } else {
+            // If opening a transposition, close all others first
+            if (isJinsTransposition) {
+              // Keep only non-transposition items (like the analysis)
+              const nonTranspositions = jinsTranspositions
+                ?.filter(j => !j.transposition)
+                .map(j => j.name) || [];
+              
+              // Start with only non-transposition items
+              newArray.length = 0;
+              nonTranspositions.forEach(name => {
+                if (prev.includes(name)) {
+                  newArray.push(name);
+                }
+              });
+            }
+            // Add the new one
+            newArray.push(jinsName);
+          }
+          return newArray;
+        });
+        setIsToggling(null);
+      }, 50); // Small delay for better UX
+    },
+    [isToggling, jinsTranspositions]
   );
 
   useEffect(() => {
@@ -99,22 +146,22 @@ export default function JinsTranspositions() {
     // Always open tahlil (first element) on load
     if (jinsTranspositions && jinsTranspositions.length > 0) {
       const tahlilName = jinsTranspositions[0].name;
-      setOpenTranspositions(new Set([tahlilName]));
+      setOpenTranspositions([tahlilName]);
     }
   }, [selectedJinsData, selectedTuningSystem, jinsTranspositions]);
 
   // Auto-open and scroll to selected transposition
   useEffect(() => {
-    if (selectedJins && jinsTranspositions && jinsTranspositions.length > 0) {
-      const selectedTranspositionName = selectedJins.name;
+    if (jinsTranspositions && jinsTranspositions.length > 0) {
+      if (selectedJins) {
+        // Case 1: A specific jins is selected
+        const selectedTranspositionName = selectedJins.name;
 
-      // Find the transposition in the list
-      const transpositionIndex = jinsTranspositions.findIndex((j) => j.name === selectedTranspositionName);
+        // Find the transposition in the list
+        const transpositionIndex = jinsTranspositions.findIndex((j) => j.name === selectedTranspositionName);
 
-      if (transpositionIndex > 0) {
-        // Skip analysis table at index 0
-        // Auto-open the transposition (close all others)
-        setOpenTranspositions(new Set([selectedTranspositionName]));
+        // Auto-open the transposition
+        setOpenTranspositions([selectedTranspositionName]);
 
         // Ensure it's visible
         const needed = transpositionIndex;
@@ -124,6 +171,22 @@ export default function JinsTranspositions() {
         setTimeout(() => {
           const firstNote = selectedJins.jinsPitchClasses[0]?.noteName;
           if (firstNote) {
+            scrollToJinsHeader(firstNote, selectedJinsData);
+          }
+        }, URL_SCROLL_TIMEOUT_MS);
+      } else {
+        // Case 2: No jins is selected (tahlil case)
+        // Open the tahlil (first element)
+        const tahlilName = jinsTranspositions[0].name;
+        setOpenTranspositions([tahlilName]);
+        
+        // Ensure first batch is visible
+        setVisibleCount(BATCH_SIZE);
+        
+        // Scroll to tahlil
+        setTimeout(() => {
+          if (jinsTranspositions[0].jinsPitchClasses?.length > 0) {
+            const firstNote = jinsTranspositions[0].jinsPitchClasses[0].noteName;
             scrollToJinsHeader(firstNote, selectedJinsData);
           }
         }, URL_SCROLL_TIMEOUT_MS);
@@ -169,7 +232,7 @@ export default function JinsTranspositions() {
       const pitchClasses = jins.jinsPitchClasses;
       const intervals = jins.jinsPitchClassIntervals;
       const colCount = jins.jinsPitchClasses.length * 2;
-      const open = openTranspositions.has(jins.name);
+      const open = openTranspositions.includes(jins.name);
       const rowSpan = open ? 4 + numberOfFilterRows : 1;
 
       return (
@@ -185,30 +248,27 @@ export default function JinsTranspositions() {
 
             <td className="jins-transpositions__jins-name-row" colSpan={3 + (pitchClasses.length - 1) * 2}>
               {!transposition ? (
-                <span className="jins-transpositions__transposition-title">
+                <span 
+                  className="jins-transpositions__transposition-title"
+                  onClick={(e) => toggleShowDetails(jins.name, e, false)}
+                  style={{ cursor: 'pointer' }}
+                >
                   {t("jins.darajatAlIstiqrar")}: {getDisplayName(pitchClasses[0].noteName, "note") + ` (${getEnglishNoteName(pitchClasses[0].noteName)})`}
                 </span>
               ) : (
-                <span className="jins-transpositions__transposition-title">{`${getDisplayName(jins.name, "jins")}`}</span>
+                <span 
+                  className="jins-transpositions__transposition-title"
+                  onClick={(e) => toggleShowDetails(jins.name, e, true)}
+                  style={{ cursor: 'pointer' }}
+                >{`${getDisplayName(jins.name, "jins")}`}</span>
               )}
               <button
                 className="jins-transpositions__button jins-transpositions__button--toggle"
-                onClick={(e) => {
-                  e.stopPropagation();
-                    setOpenTranspositions((prev) => {
-                    const newSet = new Set(prev);
-                    if (newSet.has(jins.name)) {
-                      newSet.delete(jins.name);
-                    } else {
-                      newSet.add(jins.name);
-                    }
-                    return newSet;
-                    });
-                }}
+                onClick={(e) => toggleShowDetails(jins.name, e, transposition)}
               >
                 {open ? t("jins.hideDetails") : t("jins.showDetails")}
               </button>
-              <button
+                <button
                 className="jins-transpositions__button"
                 onClick={(e) => {
                   e.stopPropagation();
@@ -218,9 +278,12 @@ export default function JinsTranspositions() {
 
                   // Auto-open the transposition when selecting it (close all others)
                   if (transposition) {
-                    setOpenTranspositions(new Set([jins.name]));
+                    setOpenTranspositions([jins.name]);
+                  } else {
+                    // This is the tahlil case (first transposition)
+                    // The useEffect will handle opening the first item when selectedJins becomes null
                   }
-
+                  
                   setTimeout(() => {
                     window.dispatchEvent(
                       new CustomEvent("jinsTranspositionChange", {
