@@ -334,7 +334,7 @@ const MaqamTranspositions: React.FC = () => {
               <th
                 className={`maqam-transpositions__header ${isToggling === maqam.name ? "maqam-transpositions__header--toggling" : ""}`}
                 id={getHeaderId(pitchClasses[0]?.noteName)}
-                colSpan={5 + (pitchClasses.length - 1) * 2}
+                colSpan={4 + (pitchClasses.length - 1) * 2}
                 style={{
                   ...(rowIndex === 0 && ascending ? { scrollMarginTop: `${ANALYSIS_SCROLL_MARGIN_TOP_PX}px` } : {}),
                 }}
@@ -348,85 +348,87 @@ const MaqamTranspositions: React.FC = () => {
                     {getDisplayName(maqam.name, "maqam")}
                   </span>
                 )}
-                <button className="maqam-transpositions__button maqam-transpositions__button--toggle" onClick={(e) => toggleShowDetails(maqam.name, e, transposition)}>
-                  {open ? t("maqam.hideDetails") : t("maqam.showDetails")}
-                </button>
-                <button
-                  className="maqam-transpositions__button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setSelectedPitchClasses([]);
-                    setSelectedPitchClasses(noOctaveMaqam ? pitchClasses.slice(0, -1) : pitchClasses);
-                    setSelectedMaqam(transposition ? maqam : null);
+                <span className="maqam-transpositions__buttons">
+                  <button className="maqam-transpositions__button maqam-transpositions__button--toggle" onClick={(e) => toggleShowDetails(maqam.name, e, transposition)}>
+                    {open ? t("maqam.hideDetails") : t("maqam.showDetails")}
+                  </button>
+                  <button
+                    className="maqam-transpositions__button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedPitchClasses([]);
+                      setSelectedPitchClasses(noOctaveMaqam ? pitchClasses.slice(0, -1) : pitchClasses);
+                      setSelectedMaqam(transposition ? maqam : null);
 
-                    // Auto-open the transposition when selecting it
-                    if (transposition) {
-                      setOpenTranspositions((prev) => {
-                        if (!prev.includes(maqam.name)) {
-                          return [...prev, maqam.name];
-                        }
-                        return prev;
-                      });
-                    } else {
-                      // This is the tahlil case (first transposition)
-                      // The useEffect will handle opening the first item when selectedMaqam becomes null
-                    }
+                      // Auto-open the transposition when selecting it
+                      if (transposition) {
+                        setOpenTranspositions((prev) => {
+                          if (!prev.includes(maqam.name)) {
+                            return [...prev, maqam.name];
+                          }
+                          return prev;
+                        });
+                      } else {
+                        // This is the tahlil case (first transposition)
+                        // The useEffect will handle opening the first item when selectedMaqam becomes null
+                      }
 
-                    setTimeout(() => {
-                      window.dispatchEvent(
-                        new CustomEvent("maqamTranspositionChange", {
-                          detail: { firstNote: pitchClasses[0].noteName },
-                        })
-                      );
-                    }, DISPATCH_EVENT_DELAY_MS);
-                  }}
-                >
-                  {t("maqam.selectLoadToKeyboard")}
-                </button>
-                <button
-                  className="maqam-transpositions__button"
-                  onClick={async (e) => {
-                    e.stopPropagation();
-                    clearHangingNotes();
-                    await playSequence(pitchClasses, true);
-                    await playSequence([...oppositePitchClasses].reverse(), false, pitchClasses);
-                  }}
-                >
-                  <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
-                  {t("maqam.ascendingDescending")}
-                </button>
-                <button
-                  className="maqam-transpositions__button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    clearHangingNotes();
-                    playSequence(pitchClasses, true);
-                  }}
-                >
-                  <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
-                  {t("maqam.ascending")}
-                </button>
-                <button
-                  className="maqam-transpositions__button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    clearHangingNotes();
-                    playSequence([...oppositePitchClasses].reverse(), false, pitchClasses);
-                  }}
-                >
-                  <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
-                  {t("maqam.descending")}
-                </button>
-                <button
-                  className="maqam-transpositions__button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleMaqamExport(maqam);
-                  }}
-                >
-                  <FileDownloadIcon className="maqam-transpositions__export-icon" />
-                  {t("maqam.export")}
-                </button>
+                      setTimeout(() => {
+                        window.dispatchEvent(
+                          new CustomEvent("maqamTranspositionChange", {
+                            detail: { firstNote: pitchClasses[0].noteName },
+                          })
+                        );
+                      }, DISPATCH_EVENT_DELAY_MS);
+                    }}
+                  >
+                    {t("maqam.selectLoadToKeyboard")}
+                  </button>
+                  <button
+                    className="maqam-transpositions__button"
+                    onClick={async (e) => {
+                      e.stopPropagation();
+                      clearHangingNotes();
+                      await playSequence(pitchClasses, true);
+                      await playSequence([...oppositePitchClasses].reverse(), false, pitchClasses);
+                    }}
+                  >
+                    <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
+                    {t("maqam.ascendingDescending")}
+                  </button>
+                  <button
+                    className="maqam-transpositions__button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      clearHangingNotes();
+                      playSequence(pitchClasses, true);
+                    }}
+                  >
+                    <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
+                    {t("maqam.ascending")}
+                  </button>
+                  <button
+                    className="maqam-transpositions__button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      clearHangingNotes();
+                      playSequence([...oppositePitchClasses].reverse(), false, pitchClasses);
+                    }}
+                  >
+                    <PlayCircleIcon className="maqam-transpositions__play-circle-icon" />
+                    {t("maqam.descending")}
+                  </button>
+                  <button
+                    className="maqam-transpositions__button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleMaqamExport(maqam);
+                    }}
+                  >
+                    <FileDownloadIcon className="maqam-transpositions__export-icon" />
+                    {t("maqam.export")}
+                  </button>
+                </span>
               </th>
             </tr>
           )}
@@ -676,9 +678,9 @@ const MaqamTranspositions: React.FC = () => {
             </>
           )}
 
-          <tr>
+          {ascending && <tr>
             <td className="maqam-transpositions__spacer" colSpan={2 + (pitchClasses.length - 1) * 2} />
-          </tr>
+          </tr>}
         </>
       );
     }
@@ -859,9 +861,6 @@ const MaqamTranspositions: React.FC = () => {
                   return (
                     <React.Fragment key={row}>
                       {renderTransposition(maqamTransposition, row)}
-                      <tr>
-                        <td className="maqam-transpositions__spacer" colSpan={2 + (maqamTransposition.ascendingPitchClasses.length - 1) * 2} />
-                      </tr>
                       {isLastNeededForPrefetch && (
                         <tr>
                           <td colSpan={2 + (maqamTransposition.ascendingPitchClasses.length - 1) * 2}>
