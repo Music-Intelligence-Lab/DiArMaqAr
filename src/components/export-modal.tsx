@@ -29,7 +29,6 @@ export interface ExportOptions {
   includeTranspositions?: boolean; // For jins and maqam exports
   includeModulations: boolean;
   modulationType: 'maqamat' | 'ajnas';
-  prettifyJson: boolean;
   csvDelimiter: "," | ";" | "\t";
   filename: string;
 }
@@ -48,7 +47,6 @@ export default function ExportModal({ isOpen, onClose, exportType, specificJins,
       includePitchClasses: true,
       includeModulations: false,
       modulationType: 'maqamat' as 'maqamat' | 'ajnas',
-      prettifyJson: true,
       csvDelimiter: "," as "," | ";" | "\t",
       filename: '', // Will be set after we define the options
     };
@@ -180,8 +178,8 @@ export default function ExportModal({ isOpen, onClose, exportType, specificJins,
   const formatDescriptions = {
     json: "JavaScript Object Notation - Best for data interchange and web applications",
     csv: "Comma Separated Values - Great for spreadsheets and data analysis",
-    txt: "Plain text format - Human-readable and universal",
-    pdf: "Portable Document Format - Professional presentation and printing",
+    // txt: "Plain text format - Human-readable and universal",
+    // pdf: "Portable Document Format - Professional presentation and printing",
     scala: "Scala scale format (.scl) - For microtonal music software",
     "scala-keymap": "Scala keymap format (.kbm) - MIDI key mapping for Scala scales",
   };
@@ -253,7 +251,7 @@ export default function ExportModal({ isOpen, onClose, exportType, specificJins,
 
     switch (options.format) {
       case "json":
-        content = options.prettifyJson ? JSON.stringify(data, null, 2) : JSON.stringify(data);
+        content = JSON.stringify(data, null, 2);
         mimeType = "application/json";
         fileExtension = "json";
         break;
@@ -873,7 +871,7 @@ export default function ExportModal({ isOpen, onClose, exportType, specificJins,
                     return { ...newOptions, filename: generateCurrentFilename(newOptions) };
                   })} 
                 />
-                <span>Tuning System & Pitch Classes</span>
+                <span>Tuning System</span>
               </label>
               
               {/* Tuning System specific options */}
@@ -971,15 +969,6 @@ export default function ExportModal({ isOpen, onClose, exportType, specificJins,
                   <span>Ajnas Modulations</span>
                 </label>
               </div>
-            </div>
-          )}
-
-          {exportOptions.format === "json" && (
-            <div className="export-modal__section">
-              <label className="export-modal__checkbox">
-                <input type="checkbox" checked={exportOptions.prettifyJson} onChange={(e) => setExportOptions((prev) => ({ ...prev, prettifyJson: e.target.checked }))} />
-                <span>Prettify JSON (formatted with indentation)</span>
-              </label>
             </div>
           )}
 
