@@ -2,7 +2,7 @@
 
 import React from "react";
 import useAppContext from "@/contexts/app-context";
-import { Source } from "@/models/bibliography/Source";
+import { Source, stringifySource } from "@/models/bibliography/Source";
 import Book from "@/models/bibliography/Book";
 import Article from "@/models/bibliography/Article";
 import { Contributor } from "@/models/bibliography/AbstractSource";
@@ -20,11 +20,15 @@ export default function SourcesList() {
 
   useEffect(() => {
     if (pathname === "/bibliography") {
-      const sourceId = searchParams.get("source");
-      if (sourceId) setHighlighted(sourceId);
-      else setHighlighted(null);
-    } else {
-      setHighlighted(null);
+      const sourceParameter = searchParams.get("source");
+      if (sourceParameter) {
+        for (const source of sources) {
+          if (sourceParameter === stringifySource(source, true, null)) {
+            setHighlighted(source.getId());
+            break;
+          }
+        }
+      }
     }
   }, [pathname, searchParams]);
 

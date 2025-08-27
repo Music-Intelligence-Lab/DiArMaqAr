@@ -21,6 +21,7 @@ import JinsData from "@/models/Jins";
 import Link from "next/link";
 import { getJinsTranspositions, getMaqamTranspositions } from "@/functions/transpose";
 import shiftPitchClass from "@/functions/shiftPitchClass";
+import { stringifySource } from "@/models/bibliography/Source";
 
 export default function SayrManager({ admin }: { admin: boolean }) {
   const { t, getDisplayName, language } = useLanguageContext();
@@ -327,21 +328,13 @@ export default function SayrManager({ admin }: { admin: boolean }) {
             {sourceId &&
               (() => {
                 const source = sources.find((s) => s.getId() === sourceId);
-                const year = source?.getPublicationDateEnglish() || "";
-                const creatorName =
-                  language === "ar"
-                    ? `${source?.getContributors()[0]?.firstNameArabic || source?.getContributors()[0]?.firstNameEnglish || ""} ${
-                        source?.getContributors()[0]?.lastNameArabic || source?.getContributors()[0]?.lastNameEnglish || ""
-                      }`.trim()
-                    : `${source?.getContributors()[0]?.firstNameEnglish || ""} ${source?.getContributors()[0]?.lastNameEnglish || ""}`.trim();
+                if (!source) return null;
                 return (
                   <span className="sayr-manager__comments-english_title">
                     {t("sayr.commentsOnSayr")} {getDisplayName(selectedMaqam ? selectedMaqam.name : selectedMaqamData.getName(), "maqam")}
                     {language === "ar" ? " ل" : " by "}
-                    <Link href={`/bibliography?source=${sourceId}`}>
-                      {creatorName}
-                      {year ? ` (${year}` : ""}
-                      {page && `:${page})`}
+                    <Link href={`/bibliography?source=${stringifySource(source, true, null)}`}>
+                      {stringifySource(source, language === "en", page)}
                     </Link>
                   </span>
                 );
