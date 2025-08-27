@@ -35,6 +35,7 @@ import { Maqam } from "@/models/Maqam";
 import { calculateInterval } from "@/models/PitchClass";
 import shiftPitchClass from "@/functions/shiftPitchClass";
 import Link from "next/link";
+import { stringifySource } from "@/models/bibliography/Source";
 
 const MaqamTranspositions: React.FC = () => {
   // Configurable constants (previous magic numbers)
@@ -678,9 +679,11 @@ const MaqamTranspositions: React.FC = () => {
             </>
           )}
 
-          {ascending && <tr>
-            <td className="maqam-transpositions__spacer" colSpan={2 + (pitchClasses.length - 1) * 2} />
-          </tr>}
+          {ascending && (
+            <tr>
+              <td className="maqam-transpositions__spacer" colSpan={2 + (pitchClasses.length - 1) * 2} />
+            </tr>
+          )}
         </>
       );
     }
@@ -778,10 +781,8 @@ const MaqamTranspositions: React.FC = () => {
                         {selectedMaqamData.getSourcePageReferences().map((sourceRef, idx) => {
                           const source = sources.find((s: any) => s.id === sourceRef.sourceId);
                           return source ? (
-                            <Link key={idx} href={`/bibliography?source=${source.getId()}`}>
-                              {(language as string) === "ar"
-                                ? `${source.getContributors()[0].lastNameArabic} (${source.getPublicationDateEnglish()}:${sourceRef.page})`
-                                : `${source.getContributors()[0].lastNameEnglish} (${source.getPublicationDateEnglish()}:${sourceRef.page})`}
+                            <Link key={idx} href={`/bibliography?source=${stringifySource(source, true, null)}`}>
+                              {stringifySource(source, false, sourceRef.page)}
                               <br />
                             </Link>
                           ) : null;
@@ -813,10 +814,8 @@ const MaqamTranspositions: React.FC = () => {
                         {selectedMaqamData.getSourcePageReferences().map((sourceRef, idx) => {
                           const source = sources.find((s: any) => s.id === sourceRef.sourceId);
                           return source ? (
-                            <Link key={idx} href={`/bibliography?source=${source.getId()}`}>
-                              {(language as string) === "ar"
-                                ? `${source.getContributors()[0].lastNameArabic} (${source.getPublicationDateEnglish()}:${sourceRef.page})`
-                                : `${source.getContributors()[0].lastNameEnglish} (${source.getPublicationDateEnglish()}:${sourceRef.page})`}
+                            <Link key={idx} href={`/bibliography?source=${stringifySource(source, true, null)}`}>
+                              {stringifySource(source, true, sourceRef.page)}
                               <br />
                             </Link>
                           ) : null;

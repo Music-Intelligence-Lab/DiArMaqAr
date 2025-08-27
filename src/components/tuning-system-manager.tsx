@@ -12,7 +12,7 @@ import NoteName, { octaveOneNoteNames, octaveTwoNoteNames, TransliteratedNoteNam
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { updateTuningSystems } from "@/functions/update";
 import getFirstNoteName from "@/functions/getFirstNoteName";
-import { SourcePageReference } from "@/models/bibliography/Source";
+import { SourcePageReference, stringifySource } from "@/models/bibliography/Source";
 import TuningSystemOctaveTables from "./tuning-system-octave-tables";
 import JinsData from "@/models/Jins";
 import MaqamData, { Maqam } from "@/models/Maqam";
@@ -169,12 +169,11 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       setSelectedAbjadNames(selectedTuningSystem.getAbjadNames());
       setTuningSystemStringLength(selectedTuningSystem.getStringLength());
       setDefaultReferenceFrequency(selectedTuningSystem.getDefaultReferenceFrequency());
-      
+
       const defaultFreqs = selectedTuningSystem.getReferenceFrequencies();
       // Only set reference frequencies if this is a different tuning system
       // or if referenceFrequencies is empty (first mount)
-      if (Object.keys(referenceFrequencies).length === 0 || 
-          JSON.stringify(defaultFreqs) !== JSON.stringify(originalReferenceFrequencies)) {
+      if (Object.keys(referenceFrequencies).length === 0 || JSON.stringify(defaultFreqs) !== JSON.stringify(originalReferenceFrequencies)) {
         setReferenceFrequencies(defaultFreqs);
         setOriginalReferenceFrequencies(defaultFreqs);
       }
@@ -1031,29 +1030,10 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 })
                 .map((ref, idx) => {
                   const source = sources.find((s) => s.getId() === ref.sourceId);
+                  if (!source) return null;
                   return (
-                    <Link href={`/bibliography?source=${source?.getId()}`} key={idx} className="tuning-system-manager__source-item">
-                      {source && source.getContributors().length !== 0 && (
-                        <span>
-                          {source.getContributors()[0].lastNameEnglish?.length
-                            ? `${source.getContributors()[0]?.lastNameEnglish ?? ""}, ${
-                                source
-                                  .getContributors()[0]
-                                  ?.firstNameEnglish?.split(" ")
-                                  .map((w) => w.charAt(0))
-                                  .join(". ") ?? ""
-                              }. (${source.getPublicationDateEnglish() ?? ""}${
-                                source.getSourceType?.() === "Book" && "getOriginalPublicationDateEnglish" in source && source.getOriginalPublicationDateEnglish?.()
-                                  ? "/" + source.getOriginalPublicationDateEnglish()
-                                  : ""
-                              }:${ref.page})`
-                            : `{${source.getPublicationDateEnglish() ?? ""}${
-                                source.getSourceType?.() === "Book" && "getOriginalPublicationDateEnglish" in source && source.getOriginalPublicationDateEnglish?.()
-                                  ? "/" + source.getOriginalPublicationDateEnglish()
-                                  : ""
-                              }:${ref.page})`}
-                        </span>
-                      )}
+                    <Link href={`/bibliography?source=${stringifySource(source, true, null)}`} key={idx} className="tuning-system-manager__source-item">
+                      {<span>{stringifySource(source, language === "en", ref.page)}</span>}
                     </Link>
                   );
                 })}
@@ -1063,8 +1043,6 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       )}
 
       <SelectedPitchClassTranspositions />
-
-
 
       {/* Export Modal */}
       <ExportModal isOpen={isExportModalOpen} onClose={() => setIsExportModalOpen(false)} exportType="tuning-system" />

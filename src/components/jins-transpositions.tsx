@@ -13,6 +13,7 @@ import Link from "next/link";
 import StaffNotation from "./staff-notation";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import ExportModal from "./export-modal";
+import { stringifySource } from "@/models/bibliography/Source";
 
 export default function JinsTranspositions() {
   // Configurable constants (extracted magic numbers for easier tuning)
@@ -244,7 +245,7 @@ export default function JinsTranspositions() {
               {index + 1}
             </td>
 
-            <td className="jins-transpositions__jins-name-row" colSpan={2 + (pitchClasses.length - 1) * 2} >
+            <td className="jins-transpositions__jins-name-row" colSpan={2 + (pitchClasses.length - 1) * 2}>
               {!transposition ? (
                 <span className="jins-transpositions__transposition-title" onClick={(e) => toggleShowDetails(jins.name, e, false)} style={{ cursor: "pointer" }}>
                   {t("jins.darajatAlIstiqrar")}: {getDisplayName(pitchClasses[0].noteName, "note") + ` (${getEnglishNoteName(pitchClasses[0].noteName)})`}
@@ -583,10 +584,8 @@ export default function JinsTranspositions() {
                           {selectedJinsData.getSourcePageReferences().map((sourceRef, idx) => {
                             const source = sources.find((s: any) => s.id === sourceRef.sourceId);
                             return source ? (
-                              <Link href={`/bibliography?source=${source?.getId()}`} key={idx}>
-                                {(language as string) === "ar"
-                                  ? `${source.getContributors()[0].lastNameArabic} (${source.getPublicationDateEnglish()}:${sourceRef.page})`
-                                  : `${source.getContributors()[0].lastNameEnglish} (${source.getPublicationDateEnglish()}:${sourceRef.page})`}
+                              <Link key={idx} href={`/bibliography?source=${stringifySource(source, true, null)}`}>
+                                {stringifySource(source, false, sourceRef.page)}
                                 <br />
                               </Link>
                             ) : null;
@@ -618,10 +617,8 @@ export default function JinsTranspositions() {
                           {selectedJinsData.getSourcePageReferences().map((sourceRef, idx) => {
                             const source = sources.find((s: any) => s.id === sourceRef.sourceId);
                             return source ? (
-                              <Link href={`/bibliography?source=${source?.getId()}`} key={idx}>
-                                {(language as string) === "ar"
-                                  ? `${source.getContributors()[0].lastNameArabic} (${source.getPublicationDateEnglish()}:${sourceRef.page})`
-                                  : `${source.getContributors()[0].lastNameEnglish} (${source.getPublicationDateEnglish()}:${sourceRef.page})`}
+                              <Link key={idx} href={`/bibliography?source=${stringifySource(source, true, null)}`}>
+                                {stringifySource(source, true, sourceRef.page)}
                                 <br />
                               </Link>
                             ) : null;
