@@ -27,8 +27,8 @@ export interface ExportOptions {
   includeAjnasDetails?: boolean; // Only for tuning system exports
   includeMaqamatDetails?: boolean; // Only for tuning system exports
   includeTranspositions?: boolean; // For jins and maqam exports
-  includeModulations: boolean;
-  modulationType: 'maqamat' | 'ajnas';
+  includeMaqamatModulations: boolean;
+  includeAjnasModulations: boolean;
   csvDelimiter: "," | ";" | "\t";
   filename: string;
 }
@@ -45,8 +45,8 @@ export default function ExportModal({ isOpen, onClose, exportType, specificJins,
       format: "json" as ExportFormat,
       includeTuningSystemDetails: true,
       includePitchClasses: true,
-      includeModulations: false,
-      modulationType: 'maqamat' as 'maqamat' | 'ajnas',
+      includeMaqamatModulations: false,
+      includeAjnasModulations: false,
       csvDelimiter: "," as "," | ";" | "\t",
       filename: '', // Will be set after we define the options
     };
@@ -105,8 +105,11 @@ export default function ExportModal({ isOpen, onClose, exportType, specificJins,
         includedOptions.push('transpositions');
       }
       
-      if (opts.includeModulations) {
-        includedOptions.push(`modulations-${opts.modulationType}`);
+      if (opts.includeMaqamatModulations || opts.includeAjnasModulations) {
+        const modulationTypes = [];
+        if (opts.includeMaqamatModulations) modulationTypes.push('maqamat');
+        if (opts.includeAjnasModulations) modulationTypes.push('ajnas');
+        includedOptions.push(`modulations-${modulationTypes.join('-')}`);
       }
       
       if (includedOptions.length > 0) {
@@ -122,6 +125,33 @@ export default function ExportModal({ isOpen, onClose, exportType, specificJins,
   });
 
   const [isExporting, setIsExporting] = useState(false);
+
+  // Helper function to determine if any export options are selected
+  const hasAnyOptionsSelected = (): boolean => {
+    // Always include tuning system details and pitch classes (they're together)
+    if (exportOptions.includeTuningSystemDetails && exportOptions.includePitchClasses) {
+      return true;
+    }
+
+    // Check tuning system specific options
+    if (exportType === 'tuning-system') {
+      if (exportOptions.includeAjnasDetails || exportOptions.includeMaqamatDetails) {
+        return true;
+      }
+    }
+
+    // Check jins and maqam specific options
+    if ((exportType === 'jins' || exportType === 'maqam') && exportOptions.includeTranspositions) {
+      return true;
+    }
+
+    // Check modulation options
+    if (exportOptions.includeMaqamatModulations || exportOptions.includeAjnasModulations) {
+      return true;
+    }
+
+    return false;
+  };
 
   // Helper function to generate filename based on current options
   const generateCurrentFilename = (options: ExportOptions): string => {
@@ -163,8 +193,11 @@ export default function ExportModal({ isOpen, onClose, exportType, specificJins,
       includedOptions.push('transpositions');
     }
     
-    if (options.includeModulations) {
-      includedOptions.push(`modulations-${options.modulationType}`);
+    if (options.includeMaqamatModulations || options.includeAjnasModulations) {
+      const modulationTypes = [];
+      if (options.includeMaqamatModulations) modulationTypes.push('maqamat');
+      if (options.includeAjnasModulations) modulationTypes.push('ajnas');
+      includedOptions.push(`modulations-${modulationTypes.join('-')}`);
     }
     
     if (includedOptions.length > 0) {
@@ -215,8 +248,8 @@ export default function ExportModal({ isOpen, onClose, exportType, specificJins,
           includePitchClasses: exportOptions.includePitchClasses,
           includeAjnasDetails: exportOptions.includeAjnasDetails || false,
           includeMaqamatDetails: exportOptions.includeMaqamatDetails || false,
-          includeModulations: exportOptions.includeModulations,
-          modulationType: exportOptions.modulationType,
+          includeMaqamatModulations: exportOptions.includeMaqamatModulations,
+          includeAjnasModulations: exportOptions.includeAjnasModulations,
         });
       } else if (exportType === 'jins') {
         exportedData = exportJins(jinsToExport!, selectedTuningSystem!, startingNote, {
@@ -229,8 +262,8 @@ export default function ExportModal({ isOpen, onClose, exportType, specificJins,
           includeTuningSystemDetails: exportOptions.includeTuningSystemDetails,
           includePitchClasses: exportOptions.includePitchClasses,
           includeTranspositions: exportOptions.includeTranspositions || false,
-          includeModulations: exportOptions.includeModulations,
-          modulationType: exportOptions.modulationType,
+          includeMaqamatModulations: exportOptions.includeMaqamatModulations,
+          includeAjnasModulations: exportOptions.includeAjnasModulations,
         });
       }
 
@@ -510,27 +543,54 @@ export default function ExportModal({ isOpen, onClose, exportType, specificJins,
     }
 
     // Modulations
-    if (data.modulations) {
-      // Convert modulations object to an array for CSV export
+    const hasModulations = data.maqamatModulations || data.ajnasModulations;
+    if (hasModulations) {
+      // Convert modulations objects to arrays for CSV export
       const flatModulations: any[] = [];
-      if (typeof data.modulations === 'object' && data.modulations !== null) {
-        Object.entries(data.modulations).forEach(([key, value]) => {
+      
+      // Handle Maqamat modulations
+      if (data.maqamatModulations && typeof data.maqamatModulations === 'object') {
+        Object.entries(data.maqamatModulations).forEach(([key, value]) => {
           if (Array.isArray(value)) {
             value.forEach((mod: any) => {
               flatModulations.push({
+                ModulationCategory: 'Maqamat',
                 ModulationType: key,
                 ...mod
               });
             });
           } else {
             flatModulations.push({
+              ModulationCategory: 'Maqamat',
               ModulationType: key,
               Value: value
             });
           }
         });
       }
-      const modulationsOrder = ['ModulationType', 'titleEnglish', 'titleArabic', 'root', 'family'];
+
+      // Handle Ajnas modulations
+      if (data.ajnasModulations && typeof data.ajnasModulations === 'object') {
+        Object.entries(data.ajnasModulations).forEach(([key, value]) => {
+          if (Array.isArray(value)) {
+            value.forEach((mod: any) => {
+              flatModulations.push({
+                ModulationCategory: 'Ajnas',
+                ModulationType: key,
+                ...mod
+              });
+            });
+          } else {
+            flatModulations.push({
+              ModulationCategory: 'Ajnas',
+              ModulationType: key,
+              Value: value
+            });
+          }
+        });
+      }
+
+      const modulationsOrder = ['ModulationCategory', 'ModulationType', 'titleEnglish', 'titleArabic', 'root', 'family'];
       sections.push(arrayToCSV(flatModulations, 'Modulations', modulationsOrder));
     }
 
@@ -712,12 +772,30 @@ export default function ExportModal({ isOpen, onClose, exportType, specificJins,
     }
     
     // Modulations
-    if (data.modulations) {
+    const hasModulations = data.maqamatModulations || data.ajnasModulations;
+    if (hasModulations) {
       sections.push('MODULATIONS');
       sections.push('-'.repeat(40));
-      const modulationsFormatted = formatValue(data.modulations);
-      sections.push(modulationsFormatted);
-      sections.push('');
+      
+      if (data.maqamatModulations) {
+        sections.push('Maqamat Modulations:');
+        const maqamatModulationsFormatted = formatValue(data.maqamatModulations, 1);
+        sections.push(maqamatModulationsFormatted);
+        if (data.numberOfMaqamModulationHops !== undefined) {
+          sections.push(`Number of Maqam Modulation Hops: ${data.numberOfMaqamModulationHops}`);
+        }
+        sections.push('');
+      }
+      
+      if (data.ajnasModulations) {
+        sections.push('Ajnas Modulations:');
+        const ajnasModulationsFormatted = formatValue(data.ajnasModulations, 1);
+        sections.push(ajnasModulationsFormatted);
+        if (data.numberOfJinsModulationHops !== undefined) {
+          sections.push(`Number of Jins Modulation Hops: ${data.numberOfJinsModulationHops}`);
+        }
+        sections.push('');
+      }
     }
     
     // Summary Statistics
@@ -896,8 +974,9 @@ export default function ExportModal({ isOpen, onClose, exportType, specificJins,
                         const newOptions = { 
                           ...prev, 
                           includeMaqamatDetails: e.target.checked,
-                          // Auto-disable modulations if maqamat details is unchecked
-                          includeModulations: e.target.checked ? prev.includeModulations : false
+                          // Auto-disable both modulations if maqamat details is unchecked
+                          includeMaqamatModulations: e.target.checked ? prev.includeMaqamatModulations : false,
+                          includeAjnasModulations: e.target.checked ? prev.includeAjnasModulations : false
                         };
                         return { ...newOptions, filename: generateCurrentFilename(newOptions) };
                       })} 
@@ -922,55 +1001,35 @@ export default function ExportModal({ isOpen, onClose, exportType, specificJins,
                 </label>
               )}
               
-              {/* Modulations option - available for tuning system (with maqamat details) and maqam exports */}
+              {/* Modulations options - available for tuning system (with maqamat details) and maqam exports */}
               {((exportType === 'tuning-system' && exportOptions.includeMaqamatDetails) || exportType === 'maqam') && (
-                <label className="export-modal__checkbox">
-                  <input 
-                    type="checkbox" 
-                    checked={exportOptions.includeModulations} 
-                    onChange={(e) => setExportOptions((prev) => {
-                      const newOptions = { ...prev, includeModulations: e.target.checked };
-                      return { ...newOptions, filename: generateCurrentFilename(newOptions) };
-                    })} 
-                  />
-                  <span>Modulations</span>
-                </label>
+                <>
+                  <label className="export-modal__checkbox">
+                    <input 
+                      type="checkbox" 
+                      checked={exportOptions.includeMaqamatModulations} 
+                      onChange={(e) => setExportOptions((prev) => {
+                        const newOptions = { ...prev, includeMaqamatModulations: e.target.checked };
+                        return { ...newOptions, filename: generateCurrentFilename(newOptions) };
+                      })} 
+                    />
+                    <span>Maqamat Modulations</span>
+                  </label>
+                  <label className="export-modal__checkbox">
+                    <input 
+                      type="checkbox" 
+                      checked={exportOptions.includeAjnasModulations} 
+                      onChange={(e) => setExportOptions((prev) => {
+                        const newOptions = { ...prev, includeAjnasModulations: e.target.checked };
+                        return { ...newOptions, filename: generateCurrentFilename(newOptions) };
+                      })} 
+                    />
+                    <span>Ajnas Modulations</span>
+                  </label>
+                </>
               )}
             </div>
           </div>
-
-          {/* Modulation Type selection - show when modulations are enabled */}
-          {exportOptions.includeModulations && ((exportType === 'tuning-system' && exportOptions.includeMaqamatDetails) || exportType === 'maqam') && (
-            <div className="export-modal__section">
-              <label className="export-modal__label">Modulation Type</label>
-              <div className="export-modal__checkbox-group">
-                <label className="export-modal__checkbox">
-                  <input 
-                    type="radio" 
-                    name="modulationType"
-                    checked={exportOptions.modulationType === 'maqamat'} 
-                    onChange={() => setExportOptions((prev) => {
-                      const newOptions = { ...prev, modulationType: 'maqamat' as 'maqamat' | 'ajnas' };
-                      return { ...newOptions, filename: generateCurrentFilename(newOptions) };
-                    })} 
-                  />
-                  <span>Maqamat Modulations</span>
-                </label>
-                <label className="export-modal__checkbox">
-                  <input 
-                    type="radio" 
-                    name="modulationType"
-                    checked={exportOptions.modulationType === 'ajnas'} 
-                    onChange={() => setExportOptions((prev) => {
-                      const newOptions = { ...prev, modulationType: 'ajnas' as 'maqamat' | 'ajnas' };
-                      return { ...newOptions, filename: generateCurrentFilename(newOptions) };
-                    })} 
-                  />
-                  <span>Ajnas Modulations</span>
-                </label>
-              </div>
-            </div>
-          )}
 
           {exportOptions.format === "csv" && (
             <div className="export-modal__section">
@@ -999,7 +1058,11 @@ export default function ExportModal({ isOpen, onClose, exportType, specificJins,
           <button className="export-modal__button export-modal__button--secondary" onClick={onClose}>
             Cancel
           </button>
-          <button className="export-modal__button export-modal__button--primary" onClick={handleExport} disabled={isExporting || !selectedTuningSystem}>
+          <button 
+            className="export-modal__button export-modal__button--primary" 
+            onClick={handleExport} 
+            disabled={isExporting || !selectedTuningSystem || !hasAnyOptionsSelected()}
+          >
             {isExporting ? "Exporting..." : "Export"}
           </button>
         </div>
@@ -1007,3 +1070,7 @@ export default function ExportModal({ isOpen, onClose, exportType, specificJins,
     </div>
   );
 }
+function getFirstNote(selectedIndices: number[]) {
+  throw new Error("Function not implemented.");
+}
+

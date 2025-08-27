@@ -28,8 +28,8 @@ export interface ExportOptions {
   includePitchClasses: boolean;
   includeAjnasDetails: boolean;
   includeMaqamatDetails: boolean;
-  includeModulations: boolean;
-  modulationType: "maqamat" | "ajnas";
+  includeMaqamatModulations: boolean;
+  includeAjnasModulations: boolean;
 }
 
 export interface JinsExportOptions {
@@ -42,8 +42,8 @@ export interface MaqamExportOptions {
   includeTuningSystemDetails: boolean;
   includePitchClasses: boolean;
   includeTranspositions: boolean;
-  includeModulations: boolean;
-  modulationType: "maqamat" | "ajnas";
+  includeMaqamatModulations: boolean;
+  includeAjnasModulations: boolean;
 }
 
 interface ExportedJins {
@@ -62,8 +62,10 @@ interface ExportedMaqam {
   fullRangeTuningSystemPitchClasses?: PitchClass[];
   transpositions?: MaqamWithAjnasAsObjects[];
   numberOfTranspositions?: number;
-  modulations?: MaqamatModulations | AjnasModulations;
-  numberOfHops?: number;
+  maqamatModulations?: MaqamatModulations;
+  numberOfMaqamModulationHops?: number;
+  ajnasModulations?: AjnasModulations;
+  numberOfJinsModulationHops?: number;
 }
 
 interface MaqamWithAjnasAsObjects extends Omit<Maqam, "ascendingMaqamAjnas" | "descendingMaqamAjnas"> {
@@ -182,11 +184,20 @@ export function exportTuningSystem(tuningSystem: TuningSystem, startingNote: Not
       let numberOfTranspositions = 0;
       for (const maqamTransposition of getMaqamTranspositions(fullRangeTuningSystemPitchClasses, allAjnas, maqam, true, centsTolerance)) {
         // Include modulations if requested
-        if (options.includeModulations) {
-          const useAjnasModulations = options.modulationType === "ajnas";
-          const modulations = modulate(fullRangeTuningSystemPitchClasses, allAjnas, allMaqamat, maqamTransposition, useAjnasModulations, centsTolerance);
-          const numberOfHops = calculateNumberOfModulations(modulations as MaqamatModulations | AjnasModulations);
-          maqamTransposition.numberOfHops = numberOfHops;
+        if (options.includeMaqamatModulations || options.includeAjnasModulations) {
+          if (options.includeMaqamatModulations) {
+            const maqamatModulations = modulate(fullRangeTuningSystemPitchClasses, allAjnas, allMaqamat, maqamTransposition, false, centsTolerance) as MaqamatModulations;
+            const numberOfMaqamModulationHops = calculateNumberOfModulations(maqamatModulations);
+            (maqamTransposition as any).maqamatModulations = maqamatModulations;
+            (maqamTransposition as any).numberOfMaqamModulationHops = numberOfMaqamModulationHops;
+          }
+
+          if (options.includeAjnasModulations) {
+            const ajnasModulations = modulate(fullRangeTuningSystemPitchClasses, allAjnas, allMaqamat, maqamTransposition, true, centsTolerance) as AjnasModulations;
+            const numberOfJinsModulationHops = calculateNumberOfModulations(ajnasModulations);
+            (maqamTransposition as any).ajnasModulations = ajnasModulations;
+            (maqamTransposition as any).numberOfJinsModulationHops = numberOfJinsModulationHops;
+          }
         }
 
         possibleMaqamat.push(convertMaqamAjnasToObjects(maqamTransposition));
@@ -328,16 +339,27 @@ export function exportMaqam(maqamInput: Maqam | MaqamData, tuningSystem: TuningS
   result.maqam = convertMaqamAjnasToObjects(maqamToExport);
 
   // Include modulations if requested
-  if (options.includeModulations) {
+  if (options.includeMaqamatModulations || options.includeAjnasModulations) {
     const allAjnas = getAjnas();
     const allMaqamat = getMaqamat();
-    const useAjnasModulations = options.modulationType === "ajnas";
 
-    const modulations = modulate(fullRangeTuningSystemPitchClasses, allAjnas, allMaqamat, maqamToExport, useAjnasModulations, centsTolerance);
-    const numberOfHops = calculateNumberOfModulations(modulations as MaqamatModulations | AjnasModulations);
+    // Calculate Maqamat modulations if requested
+    if (options.includeMaqamatModulations) {
+      const maqamatModulations = modulate(fullRangeTuningSystemPitchClasses, allAjnas, allMaqamat, maqamToExport, false, centsTolerance) as MaqamatModulations;
+      const numberOfMaqamModulationHops = calculateNumberOfModulations(maqamatModulations);
 
-    result.modulations = modulations;
-    result.numberOfHops = numberOfHops;
+      result.maqamatModulations = maqamatModulations;
+      result.numberOfMaqamModulationHops = numberOfMaqamModulationHops;
+    }
+
+    // Calculate Ajnas modulations if requested
+    if (options.includeAjnasModulations) {
+      const ajnasModulations = modulate(fullRangeTuningSystemPitchClasses, allAjnas, allMaqamat, maqamToExport, true, centsTolerance) as AjnasModulations;
+      const numberOfJinsModulationHops = calculateNumberOfModulations(ajnasModulations);
+
+      result.ajnasModulations = ajnasModulations;
+      result.numberOfJinsModulationHops = numberOfJinsModulationHops;
+    }
   }
 
   // Include transpositions if requested and we have maqamData
@@ -349,11 +371,18 @@ export function exportMaqam(maqamInput: Maqam | MaqamData, tuningSystem: TuningS
 
     for (const maqamTransposition of getMaqamTranspositions(fullRangeTuningSystemPitchClasses, allAjnas, maqamData, true, centsTolerance)) {
       // Include modulations for each transposition if requested
-      if (options.includeModulations) {
-        const useAjnasModulations = options.modulationType === "ajnas";
-        const modulations = modulate(fullRangeTuningSystemPitchClasses, allAjnas, allMaqamat, maqamTransposition, useAjnasModulations, centsTolerance);
-        const numberOfHops = calculateNumberOfModulations(modulations as MaqamatModulations | AjnasModulations);
-        maqamTransposition.numberOfHops = numberOfHops;
+      if (options.includeMaqamatModulations) {
+        const maqamatModulations = modulate(fullRangeTuningSystemPitchClasses, allAjnas, allMaqamat, maqamTransposition, false, centsTolerance) as MaqamatModulations;
+        const numberOfMaqamModulationHops = calculateNumberOfModulations(maqamatModulations);
+        (maqamTransposition as any).maqamatModulations = maqamatModulations;
+        (maqamTransposition as any).numberOfMaqamModulationHops = numberOfMaqamModulationHops;
+      }
+
+      if (options.includeAjnasModulations) {
+        const ajnasModulations = modulate(fullRangeTuningSystemPitchClasses, allAjnas, allMaqamat, maqamTransposition, true, centsTolerance) as AjnasModulations;
+        const numberOfJinsModulationHops = calculateNumberOfModulations(ajnasModulations);
+        (maqamTransposition as any).ajnasModulations = ajnasModulations;
+        (maqamTransposition as any).numberOfJinsModulationHops = numberOfJinsModulationHops;
       }
 
       transpositions.push(convertMaqamAjnasToObjects(maqamTransposition));
