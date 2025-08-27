@@ -177,133 +177,156 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     setSelectedMaqam(null);
   }, []);
 
-  const mapIndices = useCallback(function mapIndices(notesToMap: NoteName[], givenNumberOfPitchClasses: number = 0, setOriginal: boolean = true) {
-    const numberOfPitchClasses = givenNumberOfPitchClasses || tuningSystemPitchClassesArray.length || selectedTuningSystem?.getOriginalPitchClassValues().length || 0;
+  const mapIndices = useCallback(
+    function mapIndices(notesToMap: NoteName[], givenNumberOfPitchClasses: number = 0, setOriginal: boolean = true) {
+      const numberOfPitchClasses = givenNumberOfPitchClasses || tuningSystemPitchClassesArray.length || selectedTuningSystem?.getOriginalPitchClassValues().length || 0;
 
-    const O1_LEN = octaveOneNoteNames.length;
-    const mappedIndices = notesToMap.map((arabicName) => {
-      const i1 = octaveOneNoteNames.indexOf(arabicName as TransliteratedNoteNameOctaveOne);
-      if (i1 >= 0) return i1;
+      const O1_LEN = octaveOneNoteNames.length;
+      const mappedIndices = notesToMap.map((arabicName) => {
+        const i1 = octaveOneNoteNames.indexOf(arabicName as TransliteratedNoteNameOctaveOne);
+        if (i1 >= 0) return i1;
 
-      const i2 = octaveTwoNoteNames.indexOf(arabicName as TransliteratedNoteNameOctaveTwo);
-      if (i2 >= 0) return O1_LEN + i2;
+        const i2 = octaveTwoNoteNames.indexOf(arabicName as TransliteratedNoteNameOctaveTwo);
+        if (i2 >= 0) return O1_LEN + i2;
 
-      return -1;
-    });
+        return -1;
+      });
 
-    while (mappedIndices.length < numberOfPitchClasses) {
-      mappedIndices.push(-1);
-    }
+      while (mappedIndices.length < numberOfPitchClasses) {
+        mappedIndices.push(-1);
+      }
 
-    if (mappedIndices.length > numberOfPitchClasses) {
-      mappedIndices.length = numberOfPitchClasses;
-    }
+      if (mappedIndices.length > numberOfPitchClasses) {
+        mappedIndices.length = numberOfPitchClasses;
+      }
 
-    setSelectedIndices(mappedIndices);
-    if (setOriginal) setOriginalIndices([...mappedIndices]);
-    return mappedIndices;
-  }, [tuningSystemPitchClassesArray, selectedTuningSystem?.getId()]);
+      setSelectedIndices(mappedIndices);
+      if (setOriginal) setOriginalIndices([...mappedIndices]);
+      return mappedIndices;
+    },
+    [tuningSystemPitchClassesArray, selectedTuningSystem?.getId()]
+  );
 
-  const handleStartNoteNameChange = useCallback((startingNoteName: string, givenNoteNames: NoteName[][] = [], givenNumberOfPitchClasses: number = 0) => {
-    const noteNamesToSearch = givenNoteNames.length ? givenNoteNames : selectedTuningSystem?.getNoteNameSets() || [[]];
-    const numberOfPitchClasses = givenNumberOfPitchClasses || tuningSystemPitchClassesArray.length || selectedTuningSystem?.getOriginalPitchClassValues().length || 0;
+  const handleStartNoteNameChange = useCallback(
+    (startingNoteName: string, givenNoteNames: NoteName[][] = [], givenNumberOfPitchClasses: number = 0) => {
+      const noteNamesToSearch = givenNoteNames.length ? givenNoteNames : selectedTuningSystem?.getNoteNameSets() || [[]];
+      const numberOfPitchClasses = givenNumberOfPitchClasses || tuningSystemPitchClassesArray.length || selectedTuningSystem?.getOriginalPitchClassValues().length || 0;
 
-    if (startingNoteName === "" && noteNamesToSearch.length > 0) {
-      for (const setOfNotes of noteNamesToSearch) {
-        if (setOfNotes[0] === "ʿushayrān") {
-          return mapIndices(setOfNotes, givenNumberOfPitchClasses);
+      if (startingNoteName === "" && noteNamesToSearch.length > 0) {
+        for (const setOfNotes of noteNamesToSearch) {
+          if (setOfNotes[0] === "ʿushayrān") {
+            return mapIndices(setOfNotes, givenNumberOfPitchClasses);
+          }
+        }
+
+        for (const setOfNotes of noteNamesToSearch) {
+          if (setOfNotes[0] === "yegāh") {
+            return mapIndices(setOfNotes, givenNumberOfPitchClasses);
+          }
+        }
+
+        return mapIndices(noteNamesToSearch[0], givenNumberOfPitchClasses);
+      } else {
+        for (const setOfNotes of noteNamesToSearch) {
+          if (setOfNotes[0] === startingNoteName) {
+            return mapIndices(setOfNotes, givenNumberOfPitchClasses);
+          }
         }
       }
 
-      for (const setOfNotes of noteNamesToSearch) {
-        if (setOfNotes[0] === "yegāh") {
-          return mapIndices(setOfNotes, givenNumberOfPitchClasses);
-        }
+      // If no config found, fallback:
+      setSelectedIndices(Array(numberOfPitchClasses).fill(-1));
+      return [];
+    },
+    [mapIndices, selectedTuningSystem, tuningSystemPitchClassesArray]
+  );
+
+  const handleClickJins = useCallback(
+    (jinsData: JinsData, givenPitchClasses: PitchClass[] = [], jins: Jins | null = null) => {
+      const usedCells = givenPitchClasses.length ? givenPitchClasses : allPitchClasses;
+
+      setSelectedJinsData(jinsData);
+      setSelectedMaqamData(null);
+      if (maqamSayrId) setMaqamSayrId("");
+      setSelectedJins(jins);
+      setSelectedMaqam(null);
+
+      if (jins) {
+        setSelectedPitchClasses(jins.jinsPitchClasses);
+        return;
       }
 
-      return mapIndices(noteNamesToSearch[0], givenNumberOfPitchClasses);
-    } else {
-      for (const setOfNotes of noteNamesToSearch) {
-        if (setOfNotes[0] === startingNoteName) {
-          return mapIndices(setOfNotes, givenNumberOfPitchClasses);
-        }
+      const jinsNoteNames = jinsData.getNoteNames();
+
+      const newSelectedCells: PitchClass[] = [];
+
+      for (const pitchClass of usedCells) {
+        if (jinsNoteNames.includes(pitchClass.noteName)) newSelectedCells.push(pitchClass);
       }
-    }
 
-    // If no config found, fallback:
-    setSelectedIndices(Array(numberOfPitchClasses).fill(-1));
-    return [];
-  }, [mapIndices, selectedTuningSystem, tuningSystemPitchClassesArray]);
-
-  const handleClickJins = useCallback((jinsData: JinsData, givenPitchClasses: PitchClass[] = [], jins: Jins | null = null) => {
-    const usedCells = givenPitchClasses.length ? givenPitchClasses : allPitchClasses;
-
-    setSelectedJinsData(jinsData);
-    setSelectedMaqamData(null);
-    setMaqamSayrId("");
-    setSelectedJins(jins);
-    setSelectedMaqam(null);
-
-    if (jins) {
-      setSelectedPitchClasses(jins.jinsPitchClasses);
-      return;
-    }
-
-    const jinsNoteNames = jinsData.getNoteNames();
-
-    const newSelectedCells: PitchClass[] = [];
-
-    for (const pitchClass of usedCells) {
-      if (jinsNoteNames.includes(pitchClass.noteName)) newSelectedCells.push(pitchClass);
-    }
-
-    setSelectedPitchClasses(newSelectedCells);
-  }, [allPitchClasses]);
+      setSelectedPitchClasses(newSelectedCells);
+    },
+    [allPitchClasses]
+  );
 
   // Accepts either a MaqamData object (legacy) or an object { maqamId, tonic }
-  const handleClickMaqam = useCallback((maqamOrParams: MaqamData | { maqamId: string; tonic: string }, givenPitchClasses: PitchClass[] = [], maqam: Maqam | null = null) => {
-    // If called with { maqamId, tonic }, look up MaqamData and perform transposition
-    if (typeof maqamOrParams === "object" && "maqamId" in maqamOrParams && "tonic" in maqamOrParams) {
-      const { maqamId, tonic } = maqamOrParams;
-      const maqamData = maqamat.find((m) => m.getId() === maqamId);
-      if (!maqamData) return;
-      // Find the correct transposition for the tonic
-      const maqamTranspositions = getMaqamTranspositions(allPitchClasses, ajnas, maqamData, true, centsTolerance);
-      const foundMaqam = maqamTranspositions.find((m) => m.ascendingPitchClasses[0].noteName === tonic);
-      // Call the original logic with the looked-up MaqamData and transposed Maqam
-      handleClickMaqam(maqamData, allPitchClasses, foundMaqam || null);
-      return;
-    }
+  const handleClickMaqam = useCallback(
+    (maqamOrParams: MaqamData | { maqamId: string; tonic: string }, givenPitchClasses: PitchClass[] = [], maqam: Maqam | null = null) => {
+      // If called with { maqamId, tonic }, look up MaqamData and perform transposition
+      if (typeof maqamOrParams === "object" && "maqamId" in maqamOrParams && "tonic" in maqamOrParams) {
+        const { maqamId, tonic } = maqamOrParams;
+        const maqamData = maqamat.find((m) => m.getId() === maqamId);
+        if (!maqamData) return;
+        // Find the correct transposition for the tonic
+        const maqamTranspositions = getMaqamTranspositions(allPitchClasses, ajnas, maqamData, true, centsTolerance);
+        const foundMaqam = maqamTranspositions.find((m) => m.ascendingPitchClasses[0].noteName === tonic);
+        // Call the original logic with the looked-up MaqamData and transposed Maqam
+        handleClickMaqam(maqamData, allPitchClasses, foundMaqam || null);
+        return;
+      }
 
-    // Legacy: called with MaqamData
-    const maqamData = maqamOrParams as MaqamData;
-    const usedCells = givenPitchClasses.length ? givenPitchClasses : allPitchClasses;
+      // Legacy: called with MaqamData
+      const maqamData = maqamOrParams as MaqamData;
+      const usedCells = givenPitchClasses.length ? givenPitchClasses : allPitchClasses;
 
-    setSelectedMaqamData(maqamData);
-    setSelectedJinsData(null);
-    setSelectedJins(null);
-    setMaqamSayrId("");
-    setSelectedMaqam(maqam);
+      setSelectedMaqamData(maqamData);
+      setSelectedJinsData(null);
+      setSelectedJins(null);
 
-    if (maqam) {
-      setSelectedPitchClasses(maqam.ascendingPitchClasses);
-      return;
-    }
+      if (maqamSayrId) {
+        let found = false;
+        for (const sayrId of maqamData.getSuyūr().map((sayr) => sayr.id)) {
+          if (sayrId === maqamSayrId) {
+            found = true;
+            break;
+          }
+        }
 
-    const maqamNoteNames = maqamData.getAscendingNoteNames();
+        if (!found) setMaqamSayrId("");
+      }
 
-    const newSelectedCells: PitchClass[] = [];
+      setSelectedMaqam(maqam);
 
-    for (const pitchClass of usedCells) {
-      if (maqamNoteNames.includes(pitchClass.noteName)) newSelectedCells.push(pitchClass);
-    }
+      if (maqam) {
+        setSelectedPitchClasses(maqam.ascendingPitchClasses);
+        return;
+      }
 
-    setSelectedPitchClasses(newSelectedCells);
-  }, [ajnas, allPitchClasses, centsTolerance, maqamat]);
+      const maqamNoteNames = maqamData.getAscendingNoteNames();
+
+      const newSelectedCells: PitchClass[] = [];
+
+      for (const pitchClass of usedCells) {
+        if (maqamNoteNames.includes(pitchClass.noteName)) newSelectedCells.push(pitchClass);
+      }
+
+      setSelectedPitchClasses(newSelectedCells);
+    },
+    [ajnas, allPitchClasses, centsTolerance, maqamat]
+  );
 
   const getModulations = useCallback(
-    (sourceMaqamTransposition: Maqam): MaqamatModulations | AjnasModulations =>
-      modulate(allPitchClasses, ajnas, maqamat, sourceMaqamTransposition, ajnasModulationsMode, centsTolerance),
+    (sourceMaqamTransposition: Maqam): MaqamatModulations | AjnasModulations => modulate(allPitchClasses, ajnas, maqamat, sourceMaqamTransposition, ajnasModulationsMode, centsTolerance),
     [allPitchClasses, ajnas, maqamat, ajnasModulationsMode, centsTolerance]
   );
 
@@ -357,7 +380,6 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
                 }
 
                 handleClickMaqam(foundMaqamData, allPitchClasses, foundMaqam);
-
                 if (sayrId) {
                   setMaqamSayrId(sayrId);
                 }
@@ -457,11 +479,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     ]
   );
 
-  return (
-  <AppContext.Provider value={contextValue}>
-      {children}
-    </AppContext.Provider>
-  );
+  return <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>;
 }
 
 export default function useAppContext() {
