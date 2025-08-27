@@ -6,12 +6,14 @@ import { Slider } from "@mui/material";
 import useAppContext from "@/contexts/app-context";
 import useSoundContext from "@/contexts/sound-context";
 import useMenuContext from "@/contexts/menu-context";
+import useLanguageContext from "@/contexts/language-context";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { BASIC_WAVEFORMS, APERIODIC_WAVEFORMS, CUSTOM_WAVEFORMS } from "@/audio/waves";
 
 const SettingsCard = () => {
   const { clearSelections, patterns } = useAppContext();
   const { soundSettings, setSoundSettings, midiInputs, midiOutputs, setRefresh, clearHangingNotes, stopAllSounds } = useSoundContext();
+  const { t } = useLanguageContext();
 
   const { openSettings, setOpenSettings, openNavigation, setOpenNavigation } = useMenuContext();
   const cardRef = useRef<HTMLDivElement>(null);
@@ -130,16 +132,16 @@ const SettingsCard = () => {
       className={`settings-card ${openSettings ? "settings-card--open" : ""}`}
       role="dialog"
       aria-modal="true"
-      aria-label="Sound and app settings"
+      aria-label={t('settings.title')}
       tabIndex={-1}
     >
       <div className="settings-card__content">
         {/* ...existing content... */}
         <details className="settings-card__details">
-          <summary className="settings-card__summary">Pattern</summary>
+          <summary className="settings-card__summary">{t('settings.pattern')}</summary>
           <div className="settings-card__input-container">
             <label htmlFor="tempo-input" className="settings-card__label">
-              Tempo (BPM):
+              {t('settings.tempo')}
             </label>
             <input
               type="number"
@@ -153,14 +155,14 @@ const SettingsCard = () => {
           </div>
           <div className="settings-card__input-container">
             <label className="settings-card__pattern-label">
-              Pattern Select:{" "}
+              {t('settings.patternSelect')}{" "}
               <button
                 onClick={() => {
                   setSoundSettings((prev) => ({ ...prev, drone: !prev.drone }));
                 }}
                 className={"settings-card__drone-button " + (soundSettings.drone ? "settings-card__drone-button_active" : "")}
               >
-                {soundSettings.drone ? "Drone On" : "Drone Off"}
+                {soundSettings.drone ? t('settings.droneOn') : t('settings.droneOff')}
               </button>
             </label>
             <select
@@ -189,13 +191,13 @@ const SettingsCard = () => {
         </details>
 
         <details className="settings-card__details">
-          <summary className="settings-card__summary">Live Input</summary>
+          <summary className="settings-card__summary">{t('settings.liveInput')}</summary>
 
           <div className="settings-card__input-container">
             <label htmlFor="midi-output-select" className="settings-card__label">
-              MIDI Input:{" "}
+              {t('settings.midiInput')}{" "}
               <button className="settings-card__refresh-button" onClick={() => setRefresh((prev) => !prev)}>
-                Refresh
+                {t('settings.refresh')}
               </button>
             </label>
             <select
@@ -209,7 +211,7 @@ const SettingsCard = () => {
               }
               className="settings-card__select"
             >
-              <option value="">– choose an input –</option>
+              <option value="">{t('settings.chooseInput')}</option>
               {midiInputs.map((o) => (
                 <option key={o.id} value={o.id}>
                   {o.name}
@@ -228,7 +230,7 @@ const SettingsCard = () => {
                   soundSettings.inputType === "QWERTY" ? "settings-card__sound-mode-button_selected" : ""
                 }`}
               >
-                QWERTY
+                {t('settings.qwerty')}
               </button>
               <button
                 onClick={() => setSoundSettings((prev) => ({ ...prev, inputType: "MIDI" }))}
@@ -236,7 +238,7 @@ const SettingsCard = () => {
                   soundSettings.inputType === "MIDI" ? "settings-card__sound-mode-button_selected" : ""
                 }`}
               >
-                MIDI
+                {t('settings.midi')}
               </button>
             </div>
             {soundSettings.inputType === "MIDI" && (
@@ -252,7 +254,7 @@ const SettingsCard = () => {
                     soundSettings.inputMode === "tuningSystem" ? "settings-card__sound-mode-button_selected" : ""
                   }`}
                 >
-                  Tuning System
+                  {t('settings.tuningSystem')}
                 </button>
                 <button
                   onClick={() =>
@@ -265,7 +267,7 @@ const SettingsCard = () => {
                     soundSettings.inputMode === "selection" ? "settings-card__sound-mode-button_selected" : ""
                   }`}
                 >
-                  Jins/Maqām
+                  {t('settings.jinsOrMaqam')}
                 </button>
               </div>
             )}
@@ -273,9 +275,9 @@ const SettingsCard = () => {
         </details>
 
         <details className="settings-card__details">
-          <summary className="settings-card__summary">Envelope</summary>
+          <summary className="settings-card__summary">{t('settings.envelope')}</summary>
           <div className="settings-card__input-container">
-            <p>Volume: {(soundSettings.volume * 100).toFixed(0)}%</p>
+            <p>{t('settings.volume')} {(soundSettings.volume * 100).toFixed(0)}%</p>
             <Slider
               size="small"
               value={soundSettings.volume}
@@ -292,7 +294,7 @@ const SettingsCard = () => {
           </div>
 
           <div className="settings-card__input-container">
-            <p>Attack (s): {soundSettings.attack.toFixed(2)}</p>
+            <p>{t('settings.attack')} {soundSettings.attack.toFixed(2)}</p>
             <Slider
               size="small"
               value={soundSettings.attack}
@@ -343,7 +345,7 @@ const SettingsCard = () => {
           </div>
 
           <div className="settings-card__input-container">
-            <p>Release (s): {soundSettings.release.toFixed(2)}</p>
+            <p>{t('settings.release')} {soundSettings.release.toFixed(2)}</p>
             <Slider
               size="small"
               value={soundSettings.release}
@@ -361,13 +363,13 @@ const SettingsCard = () => {
         </details>
 
         <details className="settings-card__details">
-          <summary className="settings-card__summary">Audio Output</summary>
+          <summary className="settings-card__summary">{t('settings.output')}</summary>
           <div className="settings-card__sound-mode">
             <button
               onClick={() => setSoundSettings((prev) => ({ ...prev, outputMode: "mute" }))}
               className={`settings-card__sound-mode-button ${soundSettings.outputMode === "mute" ? "settings-card__sound-mode-button_selected" : ""}`}
             >
-              Mute
+              {t('settings.mute')}
             </button>
             <button
               onClick={() =>
@@ -380,7 +382,7 @@ const SettingsCard = () => {
                 soundSettings.outputMode === "waveform" ? "settings-card__sound-mode-button_selected" : ""
               }`}
             >
-              Waveform
+              {t('settings.waveformMode')}
             </button>
             <button
               onClick={() => setSoundSettings((prev) => ({ ...prev, outputMode: "midi" }))}
@@ -393,7 +395,7 @@ const SettingsCard = () => {
           {soundSettings.outputMode === "waveform" && (
             <div className="settings-card__input-container">
               <label htmlFor="waveform-select" className="settings-card__label">
-                Waveform:
+                {t('settings.waveform')}
               </label>
               <select
                 id="waveform-select"
@@ -403,21 +405,21 @@ const SettingsCard = () => {
                 aria-hidden="true"
                 className="settings-card__select"
               >
-                <optgroup label="Basic">
+                <optgroup label={t('settings.basic')}>
                   {BASIC_WAVEFORMS.map((w) => (
                     <option key={w} value={w}>
                       {w}
                     </option>
                   ))}
                 </optgroup>
-                <optgroup label="Custom Periodic">
+                <optgroup label={t('settings.customPeriodic')}>
                   {CUSTOM_WAVEFORMS.map((w) => (
                     <option key={w} value={w}>
                       {w}
                     </option>
                   ))}
                 </optgroup>
-                <optgroup label="Aperiodic">
+                <optgroup label={t('settings.aperiodic')}>
                   {APERIODIC_WAVEFORMS.map((w) => (
                     <option key={w} value={w}>
                       {w}
@@ -432,7 +434,7 @@ const SettingsCard = () => {
             <>
               <div className="settings-card__input-container">
                 <label htmlFor="midi-output-select" className="settings-card__label">
-                  MIDI Output:{" "}
+                  {t('settings.midiOutput')}{" "}
                   <button className="settings-card__refresh-button" onClick={() => setRefresh((prev) => !prev)}>
                     Refresh
                   </button>
@@ -448,7 +450,7 @@ const SettingsCard = () => {
                   }
                   className="settings-card__select"
                 >
-                  <option value="">– choose an output –</option>
+                  <option value="">{t('settings.chooseOutput')}</option>
                   {midiOutputs.map((o) => (
                     <option key={o.id} value={o.id}>
                       {o.name}
@@ -458,7 +460,7 @@ const SettingsCard = () => {
               </div>
               <div className="settings-card__input-container">
                 <label htmlFor="tempo-input" className="settings-card__label">
-                  Pitch Bend Range (semitones):
+                  {t('settings.pitchBendRange')}
                 </label>
                 <input
                   type="number"
@@ -495,20 +497,20 @@ const SettingsCard = () => {
                     }}
                     className="settings-card__checkbox"
                   />
-                  Use MPE
+                  {t('settings.useMPE')}
                 </label>
               </div>
             </>
           )}
         </details>
         <button className="settings-card__clear-button" onClick={clearSelections}>
-          Clear Selections
+          {t('settings.clearSelections')}
         </button>
         <button className="settings-card__clear-button" onClick={clearHangingNotes}>
-          Clear Hanging Notes
+          {t('settings.clearHangingNotes')}
         </button>
         <button className="settings-card__clear-button" onClick={stopAllSounds}>
-          Stop All Sounds
+          {t('settings.stopAllSounds')}
         </button>
       </div>
     </div>
