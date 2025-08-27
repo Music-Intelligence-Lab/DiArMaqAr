@@ -71,15 +71,6 @@ arabic-maqam-core/
 
 ## Usage Examples
 
-### Data Access
-
-```typescript
-// Access pre-loaded data
-console.log(maqamatData); // Array of maqam definitions
-console.log(ajnasData);   // Array of jins definitions
-console.log(tuningSystemsData); // Array of tuning system definitions
-```
-
 ### Working with Models
 
 ```typescript

@@ -6,6 +6,7 @@ import LanguageSelector from "@/components/language-selector";
 import useAppContext from "@/contexts/app-context";
 import useMenuContext from "@/contexts/menu-context";
 import useLanguageContext from "@/contexts/language-context";
+import useSoundContext from "@/contexts/sound-context";
 import { Sayr } from "@/models/Maqam";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import NavigationMenu from "./navigation-menu";
@@ -16,6 +17,7 @@ export default function Navbar() {
   const { showAdminTabs, setShowAdminTabs, selectedMenu, setSelectedMenu } =
     useMenuContext();
   const { t, isRTL, language, getDisplayName } = useLanguageContext();
+  const { stopAllSounds } = useSoundContext();
   const {
     selectedTuningSystem,
     selectedJinsData,
@@ -399,6 +401,24 @@ export default function Navbar() {
             </div>
             <div className="navbar__right-panel-icon">
               <SettingsCard />
+            </div>
+            <div className="navbar__quick-actions">
+              <button 
+                className="navbar__quick-action-button" 
+                onClick={clearSelections}
+                aria-label={t('settings.clearSelections')}
+                title={t('settings.clearSelections')}
+              >
+                {t('settings.clearSelections')}
+              </button>
+              <button 
+                className="navbar__quick-action-button" 
+                onClick={stopAllSounds}
+                aria-label={t('settings.stopAllSounds')}
+                title={t('settings.stopAllSounds')}
+              >
+                {t('settings.stopAllSounds')}
+              </button>
             </div>
           </div>
         </header>

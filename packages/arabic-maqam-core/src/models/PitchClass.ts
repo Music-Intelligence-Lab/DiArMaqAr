@@ -114,14 +114,6 @@ function convertFractionToDecimal(fraction: string): number {
  * @param firstPitchClass - The starting pitch class
  * @param secondPitchClass - The ending pitch class
  * @returns A PitchClassInterval object containing the interval measurements in all supported formats
- * 
- * @example
- * ```typescript
- * const interval = calculateInterval(pitchClass1, pitchClass2);
- * console.log(`Interval: ${interval.cents} cents`);
- * console.log(`Fraction: ${interval.fraction}`);
- * console.log(`Decimal ratio: ${interval.decimalRatio}`);
- * ```
  */
 export function calculateInterval(firstPitchClass: PitchClass, secondPitchClass: PitchClass): PitchClassInterval {
   const fraction = computeFractionInterval(firstPitchClass.fraction, secondPitchClass.fraction);

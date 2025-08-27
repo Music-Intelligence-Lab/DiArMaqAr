@@ -80,7 +80,6 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
         }
       }
       setOpenedOctaveRows(rows);
-      console.log(rows);
     }
   }, [selectedPitchClasses]);
 

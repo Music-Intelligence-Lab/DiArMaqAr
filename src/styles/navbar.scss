@@ -168,6 +168,36 @@
       align-items: center;
     }
   }
+  
+  &__quick-actions {
+    position: fixed;
+    top: 50px;
+    right: 20px;
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    z-index: 10000;
+  }
+  
+  &__quick-action-button {
+    padding: 6px 12px;
+    background-color: rgba($primary, 0.8);
+    color: white;
+    border: 1px solid $grey;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    
+    &:hover {
+      background-color: $primary;
+    }
+    
+    &:active {
+      transform: translateY(1px);
+    }
+  }
 
 
   &__backdrop {
