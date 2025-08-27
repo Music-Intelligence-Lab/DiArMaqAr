@@ -32,7 +32,6 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
     setSelectedPitchClasses,
     selectedIndices,
     setSelectedIndices,
-    selectedJinsData,
     selectedMaqamData,
     allPitchClasses,
     selectedAbjadNames,
@@ -71,7 +70,6 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
     .filter((p) => p.length > 0);
 
   useEffect(() => {
-    if (!selectedJinsData || !selectedMaqamData) return;
     if (selectedPitchClasses.length === 0) {
       setOpenedOctaveRows({ 0: false, 1: true, 2: true, 3: false });
     } else {
@@ -82,6 +80,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
         }
       }
       setOpenedOctaveRows(rows);
+      console.log(rows);
     }
   }, [selectedPitchClasses]);
 
@@ -113,6 +112,29 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
       cleanups.forEach((cleanup) => cleanup());
     };
   }, [octaveScrollRefs]);
+  
+  // Handle scrolling to opened octave rows
+  useEffect(() => {
+    // Find the first open octave
+    const firstOpenOctave = [0, 1, 2, 3].find(octave => openedOctaveRows[octave as 0 | 1 | 2 | 3]);
+    
+    if (firstOpenOctave !== undefined) {
+      // Use a short timeout to allow the browser to finish rendering the expanded content
+      setTimeout(() => {
+        const detailsElement = document.querySelector(
+          `.tuning-system-manager__octave-details:nth-child(${firstOpenOctave + 1})`
+        ) as HTMLDetailsElement;
+        
+        if (detailsElement && detailsElement.open) {
+          // Scroll the details element into view with a smooth behavior
+          detailsElement.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start'
+          });
+        }
+      }, 50);
+    }
+  }, [openedOctaveRows]);
   function getOctaveNoteName(octave: number, colIndex: number) {
     const idx = selectedIndices[colIndex];
     if (idx < 0) return "none";
@@ -379,10 +401,16 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
             className="tuning-system-manager__octave-summary-title"
             onClick={(e) => {
               e.preventDefault();
-              setOpenedOctaveRows((rows) => ({
-                ...rows,
-                [octave]: !rows[octave as 0 | 1 | 2 | 3],
-              }));
+              
+              // Toggle the octave row
+              setOpenedOctaveRows((rows) => {
+                const newRows = {
+                  ...rows,
+                  [octave]: !rows[octave as 0 | 1 | 2 | 3],
+                };
+                
+                return newRows;
+              });
             }}
           >
             {t('octave.title')} {octave}{" "}
