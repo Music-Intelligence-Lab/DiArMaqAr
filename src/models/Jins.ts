@@ -1,7 +1,7 @@
 import { SourcePageReference } from "./bibliography/Source";
 import PitchClass, { PitchClassInterval } from "./PitchClass";
 import NoteName from "./NoteName";
-import { getPitchClassIntervals } from "@/functions/transpose";
+import { getPitchClassIntervals } from "@/functions/getPitchClassIntervals";
 
 /**
  * Interface for serializing JinsData to JSON format.

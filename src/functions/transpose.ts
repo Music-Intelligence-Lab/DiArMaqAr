@@ -5,19 +5,7 @@ import TuningSystem from "@/models/TuningSystem";
 import NoteName from "@/models/NoteName";
 import getTuningSystemCells from "@/functions/getTuningSystemCells";
 import shiftPitchClass from "./shiftPitchClass";
-
-/**
- * Calculates intervals between consecutive pitch classes.
- * 
- * Fundamental utility for extracting intervallic patterns from pitch sequences,
- * forming the basis for all transposition analysis.
- * 
- * @param pitchClasses - Array of pitch classes to calculate intervals for
- * @returns Array of intervals between consecutive pitch classes
- */
-export function getPitchClassIntervals(pitchClasses: PitchClass[]) {
-  return pitchClasses.slice(1).map((pitchClass, index) => calculateInterval(pitchClasses[index], pitchClass));
-}
+import { getPitchClassIntervals } from "./getPitchClassIntervals";
 
 /**
  * Universal Interval Pattern Transposition Algorithm

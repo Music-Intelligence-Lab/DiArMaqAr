@@ -1,4 +1,4 @@
-import { getPitchClassIntervals } from "@/functions/transpose";
+import { getPitchClassIntervals } from "../functions/getPitchClassIntervals";
 import PitchClass, { PitchClassInterval } from "./PitchClass";
 import { AjnasModulations, Jins } from "./Jins";
 import NoteName from "./NoteName";

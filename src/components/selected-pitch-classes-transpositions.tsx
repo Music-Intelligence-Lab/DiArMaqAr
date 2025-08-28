@@ -6,7 +6,7 @@ import useSoundContext, { defaultNoteVelocity } from "@/contexts/sound-context";
 import useFilterContext from "@/contexts/filter-context";
 import useLanguageContext from "@/contexts/language-context";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
-import { getPitchClassIntervals } from "@/functions/transpose";
+import { getPitchClassIntervals } from "@/functions/getPitchClassIntervals";
 
 export default function SelectedPitchClassTranspositions() {
   const { selectedPitchClasses, selectedTuningSystem, allPitchClasses, centsTolerance, setCentsTolerance } = useAppContext();
