@@ -3,7 +3,7 @@ import detectPitchClassValueType from "@/functions/detectPitchClassType";
 import { NextResponse } from "next/server";
 import PitchClass from "@/models/PitchClass";
 import { getMaqamTranspositions } from "@/functions/transpose";
-import getTuningSystemCells from "@/functions/getTuningSystemCells";
+import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import modulate from "@/functions/modulate";
 import { MaqamatModulations } from "@/models/Maqam";
 import { AjnasModulations } from "@/models/Jins";
@@ -207,7 +207,7 @@ export async function POST(request: Request) {
     }
 
     // Get all pitch classes
-    const allPitchClasses: PitchClass[] = getTuningSystemCells(selectedTuningSystem, firstNote);
+    const allPitchClasses: PitchClass[] = getTuningSystemPitchClasses(selectedTuningSystem, firstNote);
 
     // Get the maqam transpositions to find the specific transposition with the requested tonic
     const maqamTranspositions = getMaqamTranspositions(

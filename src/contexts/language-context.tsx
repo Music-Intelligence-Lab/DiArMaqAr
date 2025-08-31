@@ -3,19 +3,30 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect } from "react";
 import { getDynamicArabicName } from '@/functions/dynamicArabicConverter';
 
+/**
+ * Supported languages in the application
+ */
 export type Language = 'en' | 'ar';
 
+/**
+ * Interface for the language context that manages language state and translation functions
+ */
 interface LanguageContextInterface {
-  language: Language;
-  setLanguage: (language: Language) => void;
-  isRTL: boolean;
-  t: (key: string) => string;
-  getDisplayName: (name: string, type: 'note' | 'jins' | 'maqam') => string;
+  language: Language; // Current selected language
+  setLanguage: (language: Language) => void; // Function to change language
+  isRTL: boolean; // Whether current language is right-to-left
+  t: (key: string) => string; // Translation function for localized strings
+  getDisplayName: (name: string, type: 'note' | 'jins' | 'maqam') => string; // Get localized display name
 }
 
+/**
+ * React context for managing language state across the application
+ */
 const LanguageContext = createContext<LanguageContextInterface | undefined>(undefined);
 
-// Translation keys
+/**
+ * Translation dictionaries for English and Arabic
+ */
 const translations = {
   en: {
     // Navigation Menu
@@ -623,10 +634,16 @@ const translations = {
   }
 };
 
+/**
+ * Provider component that wraps the app and provides language context to all child components
+ * Manages language state, localStorage persistence, and document direction
+ */
 export function LanguageContextProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState<Language>('en');
 
-  // Load language from localStorage on mount
+  /**
+   * Load saved language from localStorage on component mount
+   */
   useEffect(() => {
     const savedLanguage = localStorage.getItem('maqam-network-language') as Language;
     if (savedLanguage && (savedLanguage === 'en' || savedLanguage === 'ar')) {
@@ -634,7 +651,10 @@ export function LanguageContextProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  // Save language to localStorage when it changes
+  /**
+   * Sets the language and persists it to localStorage
+   * Also updates document direction and language attributes
+   */
   const setLanguage = (newLanguage: Language) => {
     setLanguageState(newLanguage);
     localStorage.setItem('maqam-network-language', newLanguage);
@@ -648,7 +668,9 @@ export function LanguageContextProvider({ children }: { children: ReactNode }) {
     document.body.classList.add(newLanguage === 'ar' ? 'rtl' : 'ltr');
   };
 
-  // Set initial direction on mount
+  /**
+   * Set initial document direction and language on component mount
+   */
   useEffect(() => {
     document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
     document.documentElement.lang = language === 'ar' ? 'ar' : 'en';
@@ -660,11 +682,17 @@ export function LanguageContextProvider({ children }: { children: ReactNode }) {
 
   const isRTL = language === 'ar';
 
+  /**
+   * Translation function that returns localized string for a given key
+   */
   const t = (key: string): string => {
     return translations[language][key as keyof typeof translations[typeof language]] || key;
   };
 
-  // Function to get display name based on current language
+  /**
+   * Gets the appropriate display name based on current language
+   * For Arabic, uses dynamic Arabic name conversion; for English, returns transliterated name
+   */
   const getDisplayName = (name: string, type: 'note' | 'jins' | 'maqam'): string => {
     if (language === 'ar') {
       return getDynamicArabicName(name, type);
@@ -687,6 +715,10 @@ export function LanguageContextProvider({ children }: { children: ReactNode }) {
   );
 }
 
+/**
+ * Custom hook to access the language context
+ * Must be used within a LanguageContextProvider
+ */
 export default function useLanguageContext() {
   const context = useContext(LanguageContext);
   if (!context) {

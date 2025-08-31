@@ -5,13 +5,7 @@ type ModulationType = "all" | "ajnas" | "maqamat";
 
 /**
  * Calculates the total number of modulations in a modulations object.
- *
- * This function counts modulations across all scale degrees (1, 3, 4, 5, 6, etc.)
- * and can optionally filter by modulation type (ajnas vs maqamat).
- *
- * Modulations represent possible transitions from one maqam/jins to another
- * on different scale degrees, which is fundamental to maqam theory and analysis.
- *
+ * 
  * @param modulations - The modulations object containing arrays of possible modulations
  * @param type - Filter type: 'all' (default) counts everything, 'ajnas' only counts jins modulations, 'maqamat' only counts maqam modulations
  * @returns The total count of modulations matching the specified type

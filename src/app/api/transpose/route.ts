@@ -3,7 +3,7 @@ import detectPitchClassValueType from "@/functions/detectPitchClassType";
 import { NextResponse } from "next/server";
 import PitchClass from "@/models/PitchClass";
 import { getJinsTranspositions, getMaqamTranspositions } from "@/functions/transpose";
-import getTuningSystemCells from "@/functions/getTuningSystemCells";
+import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 
 /**
  * @swagger
@@ -178,7 +178,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Invalid pitch class type" }, { status: 400 });
     }
 
-    const allPitchClasses: PitchClass[] = getTuningSystemCells(selectedTuningSystem, firstNote);
+    const allPitchClasses: PitchClass[] = getTuningSystemPitchClasses(selectedTuningSystem, firstNote);
 
     if (maqamID) {
       const selectedMaqamData = maqamat.find((maqam) => maqam.getId() === maqamID);

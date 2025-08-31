@@ -12,9 +12,6 @@
  * The context optimizes the computationally intensive process of finding
  * all possible transpositions of musical scales and modes within a given
  * tuning system, enabling responsive musical analysis interfaces.
- * 
- * @author Maqam Network Team
- * @version 1.0.0
  */
 
 import React, { createContext, useContext, useMemo } from "react";
@@ -48,12 +45,6 @@ const TranspositionsContext = createContext<TranspositionsContextInterface | nul
  * 
  * Provides optimized transposition calculations for the Maqam Network application.
  * Pre-computes and caches transpositions to enable responsive musical analysis.
- * 
- * Key responsibilities:
- * - Calculate transpositions for selected ajnas and maqamat
- * - Maintain cached maps of all possible transpositions
- * - Respond to changes in tuning system and tolerance settings
- * - Optimize performance through memoization
  * 
  * @param children - Child components that will have access to the transpositions context
  * @returns JSX element providing the transpositions context
@@ -130,14 +121,6 @@ export function TranspositionsContextProvider({ children }: { children: React.Re
  * 
  * Provides convenient access to all transposition calculations
  * and cached maps for musical analysis components.
- * 
- * @throws Error if used outside of TranspositionsContextProvider
- * @returns TranspositionsContextInterface containing all transposition data
- * 
- * @example
- * ```tsx
- * const { jinsTranspositions, allMaqamTranspositionsMap } = useTranspositionsContext();
- * ```
  */
 export default function useTranspositionsContext(): TranspositionsContextInterface {
   const context = useContext(TranspositionsContext);

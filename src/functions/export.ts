@@ -2,7 +2,7 @@ import NoteName from "@/models/NoteName";
 import TuningSystem from "@/models/TuningSystem";
 import JinsData, { AjnasModulations, Jins, JinsDataInterface } from "@/models/Jins";
 import MaqamData, { Maqam, MaqamatModulations, MaqamDataInterface } from "@/models/Maqam";
-import getTuningSystemCells from "./getTuningSystemCells";
+import getTuningSystemPitchClasses from "./getTuningSystemPitchClasses";
 import { getAjnas, getMaqamat } from "./import";
 import { getJinsTranspositions, getMaqamTranspositions } from "./transpose";
 import PitchClass from "@/models/PitchClass";
@@ -133,7 +133,7 @@ export function exportTuningSystem(tuningSystem: TuningSystem, startingNote: Not
   }
 
   // Include pitch classes if requested
-  const fullRangeTuningSystemPitchClasses = getTuningSystemCells(tuningSystem, startingNote);
+  const fullRangeTuningSystemPitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote);
   if (options.includePitchClasses) {
     result.fullRangeTuningSystemPitchClasses = fullRangeTuningSystemPitchClasses;
   }
@@ -233,7 +233,7 @@ export function exportTuningSystem(tuningSystem: TuningSystem, startingNote: Not
 export function exportJins(jinsInput: Jins | JinsData, tuningSystem: TuningSystem, startingNote: NoteName, options: JinsExportOptions, centsTolerance: number = 5): ExportedJins {
   const result: ExportedJins = {};
 
-  const fullRangeTuningSystemPitchClasses = getTuningSystemCells(tuningSystem, startingNote);
+  const fullRangeTuningSystemPitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote);
 
   let jinsToExport: Jins;
   let jinsData: JinsData | undefined;
@@ -303,7 +303,7 @@ export function exportJins(jinsInput: Jins | JinsData, tuningSystem: TuningSyste
 export function exportMaqam(maqamInput: Maqam | MaqamData, tuningSystem: TuningSystem, startingNote: NoteName, options: MaqamExportOptions, centsTolerance: number = 5): ExportedMaqam {
   const result: ExportedMaqam = {};
 
-  const fullRangeTuningSystemPitchClasses = getTuningSystemCells(tuningSystem, startingNote);
+  const fullRangeTuningSystemPitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote);
 
   let maqamToExport: Maqam;
   let maqamData: MaqamData | undefined;

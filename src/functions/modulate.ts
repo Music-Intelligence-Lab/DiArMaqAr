@@ -9,31 +9,7 @@ import NoteName, { getNoteNameIndexAndOctave } from "@/models/NoteName";
  * Al-Shawwā Note Classification Function
  * 
  * This function implements Sāmī Al-Shawwā's 24-tone classification system as described 
- * in his 1946 work. Al-Shawwā classifies notes into four categories based on the 
- * Arab-Ottoman-Persian note naming framework:
- * 
- * Classification Categories:
- * - "aṣlīya" (original) or "ṭabīʿīya" (natural) → "n"
- *   These are stable, consonant scale degrees that form the foundation of maqām structure
- * 
- * - "anṣāf" (half-notes) → "2p" (two parts)
- *   These represent standard half-tone alterations (sharps/flats in Western terms)
- * 
- * - "arbāʿ" (one-fourth notes) → "1p" (one part)  
- *   These represent quarter-tone alterations, reflecting Al-Shawwā's understanding
- *   of whole tone division into four unequal segments using commas
- * 
- * - Invalid/undefined notes → "/"
- *   Notes that don't fit into Al-Shawwā's theoretical framework
- * 
- * The Shawwā Function: sh(n): N → {∅, o, 1p, 2p}
- * This mathematical formalization enables the algorithm to evaluate modulation validity
- * based on the specific classification of individual note names within the 24-tone system.
- * 
- * Index Mappings (based on Al-Shawwā's 24-tone list):
- * - Natural (aṣlīya/ṭabīʿīya): indices [0, 6, 11, 16, 21, 26, 30]
- * - One-part (arbāʿ): indices [1, 4, 7, 13, 18, 20, 22, 27, 32, 35] 
- * - Two-part (anṣāf): indices [3, 8, 14, 19, 24, 28, 34]
+ * in his 1946 work.
  * 
  * @param noteName - The note name to classify according to Al-Shawwā's system
  * @returns The Al-Shawwā classification category
@@ -78,25 +54,6 @@ function shawwaMapping(noteName: NoteName): "n" | "1p" | "2p" | "/" {
  * of Eastern and Western Music). Al-Shawwā, a Cairo-born Aleppine violinist, provided unique
  * guidelines for maqām modulation based on scale degree relationships within the
  * Arab-Ottoman-Persian note naming framework.
- *
- * Theoretical Foundation:
- * Al-Shawwā's method employs specific conditions based on the third, fourth, fifth, and
- * sixth scale degrees of the source maqām. His approach emphasizes melodic connection
- * rather than harmonic compatibility, reflecting the fundamentally melodic nature of
- * maqāmic practice. The algorithm maintains "good disposition" (ḥusn al-taṣarruf) and
- * avoids abrupt transitions that would be "hard on the ear" (ṣaʿb ʿalā al-udhun).
- *
- * Classification System:
- * Al-Shawwā classifies a 24-tone system using Arab-Ottoman-Persian note names into
- * four categories:
- * - "aṣlīya" (original) or "ṭabīʿīya" (natural) - represented as "n"
- * - "anṣāf" (half-notes) - represented as "2p" (two parts)
- * - "arbāʿ" (one-fourth notes) - represented as "1p" (one part)
- * - Invalid notes - represented as "/"
- *
- * This classification reflects Al-Shawwā's understanding of whole tone division into
- * four unequal segments using commas. The Shawwā function sh(n): N → {∅, o, 1p, 2p}
- * enables evaluation of modulation validity based on specific note name classifications.
  *
  * Modulation Rules Implemented:
  *

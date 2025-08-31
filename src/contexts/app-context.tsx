@@ -12,7 +12,7 @@ import getFirstNoteName from "@/functions/getFirstNoteName";
 import { getJinsTranspositions, getMaqamTranspositions } from "@/functions/transpose";
 import PitchClass from "@/models/PitchClass";
 import { getTuningSystems, getMaqamat, getAjnas, getSources, getPatterns } from "@/functions/import";
-import getTuningSystemCells from "@/functions/getTuningSystemCells";
+import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import modulate from "@/functions/modulate";
 
 interface AppContextInterface {
@@ -126,7 +126,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
     const firstNote = getFirstNoteName(selectedIndices);
 
-    return getTuningSystemCells(selectedTuningSystem, firstNote, tuningSystemPitchClassesArray, tuningSystemStringLength, referenceFrequencies);
+    return getTuningSystemPitchClasses(selectedTuningSystem, firstNote, tuningSystemPitchClassesArray, tuningSystemStringLength, referenceFrequencies);
   }, [selectedTuningSystem, selectedIndices, referenceFrequencies, tuningSystemPitchClassesArray, tuningSystemStringLength]);
 
   useEffect(() => {
@@ -139,7 +139,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
   useEffect(() => {
     if (selectedTuningSystem) {
-      const allThePitchClasses = getTuningSystemCells(selectedTuningSystem, getFirstNoteName(selectedIndices));
+      const allThePitchClasses = getTuningSystemPitchClasses(selectedTuningSystem, getFirstNoteName(selectedIndices));
       const usedNoteNames = allThePitchClasses.map((pitchClass) => pitchClass.noteName);
       if (!selectedTuningSystem.isSaved()) return;
       if (selectedJinsData) {
@@ -357,7 +357,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
           if (found) {
             setSelectedTuningSystem(found);
             handleStartNoteNameChange(firstNote ?? "", found.getNoteNameSets(), found.getOriginalPitchClassValues().length);
-            const allPitchClasses = getTuningSystemCells(found, firstNote || "");
+            const allPitchClasses = getTuningSystemPitchClasses(found, firstNote || "");
 
             if (jinsDataId) {
               const foundJinsData = ajnas.find((j) => j.getId() === jinsDataId);
