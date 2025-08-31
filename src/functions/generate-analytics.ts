@@ -1,7 +1,7 @@
 import { getTuningSystems, getAjnas, getMaqamat } from "@/functions/import";
 import { getJinsTranspositions, getMaqamTranspositions } from "@/functions/transpose";
 import modulate from "@/functions/modulate";
-import getTuningSystemCells from "@/functions/getTuningSystemCells";
+import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import calculateNumberOfModulations from "@/functions/calculateNumberOfModulations";
 import TuningSystem from "@/models/TuningSystem";
 import fs from "fs";
@@ -43,7 +43,7 @@ function computeAnalyticsForSystem(tuningSystem: TuningSystem, allAjnas: ReturnT
     const starting = noteNames[0];
     const rowId = tuningSystem.getId() + starting;
     const label = `${tuningSystem.stringify()} ${starting}`;
-    const allPitchClasses = getTuningSystemCells(tuningSystem, starting);
+    const allPitchClasses = getTuningSystemPitchClasses(tuningSystem, starting);
     const possibleAjnas = [];
     const possibleAjnasTrans = [];
     for (const jinsData of allAjnas) {

@@ -2,6 +2,9 @@
 
 import React, { createContext, useState, useContext, ReactNode } from "react";
 
+/**
+ * Interface defining which filter options are enabled/disabled for displaying pitch class data
+ */
 export interface FilterSettings {
   pitchClass: boolean;
   englishName: boolean;
@@ -18,6 +21,9 @@ export interface FilterSettings {
   centsDeviation: boolean;
 }
 
+/**
+ * Default filter settings - determines which data columns are shown by default
+ */
 const defaultFilters: FilterSettings = {
   pitchClass: false,
   abjadName: false,
@@ -35,18 +41,24 @@ const defaultFilters: FilterSettings = {
   
 };
 
+/**
+ * Interface for the filter context that manages all filter states and their setters
+ */
 interface FilterContextInterface {
   filters: FilterSettings;
   setFilters: React.Dispatch<React.SetStateAction<FilterSettings>>;
   toggleFilter: (field: keyof FilterSettings) => void;
-  tuningSystemsFilter: string;
+  tuningSystemsFilter: string; // Current selected tuning system filter
   setTuningSystemsFilter: React.Dispatch<React.SetStateAction<string>>;
-  ajnasFilter: string;
+  ajnasFilter: string; // Current selected ajnas (melodic modes) filter
   setAjnasFilter: React.Dispatch<React.SetStateAction<string>>;
-  maqamatFilter: string;
+  maqamatFilter: string; // Current selected maqamat (musical scales) filter
   setMaqamatFilter: React.Dispatch<React.SetStateAction<string>>;
 }
 
+/**
+ * React context for managing filter states across the application
+ */
 const FilterContext = createContext<FilterContextInterface>({
   filters: defaultFilters,
   setFilters: () => {},
@@ -59,12 +71,18 @@ const FilterContext = createContext<FilterContextInterface>({
   setMaqamatFilter: () => {},
 });
 
+/**
+ * Provider component that wraps the app and provides filter context to all child components
+ */
 export function FilterContextProvider({ children }: { children: ReactNode }) {
   const [filters, setFilters] = useState<FilterSettings>(defaultFilters);
   const [tuningSystemsFilter, setTuningSystemsFilter] = useState<string>("all");
   const [ajnasFilter, setAjnasFilter] = useState<string>("all");
   const [maqamatFilter, setMaqamatFilter] = useState<string>("all");
 
+  /**
+   * Toggles a specific filter setting on/off
+   */
   const toggleFilter = (field: keyof FilterSettings) => {
     setFilters((prev) => ({
       ...prev,
@@ -91,6 +109,10 @@ export function FilterContextProvider({ children }: { children: ReactNode }) {
   );
 }
 
+/**
+ * Custom hook to access the filter context
+ * Must be used within a FilterContextProvider
+ */
 export default function useFilterContext() {
   const context = useContext(FilterContext);
   if (!context) {

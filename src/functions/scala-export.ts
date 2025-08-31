@@ -1,7 +1,7 @@
 import TuningSystem from "@/models/TuningSystem";
 import NoteName from "@/models/NoteName";
 import PitchClass from "@/models/PitchClass";
-import getTuningSystemCells from "./getTuningSystemCells";
+import getTuningSystemPitchClasses from "./getTuningSystemPitchClasses";
 import { Jins } from "@/models/Jins";
 import { Maqam } from "@/models/Maqam";
 import JinsData from "@/models/Jins";
@@ -12,7 +12,7 @@ import MaqamData from "@/models/Maqam";
  * https://www.huygens-fokker.org/scala/scl_format.html
  */
 export function exportToScala(tuningSystem: TuningSystem, startingNote: NoteName, description?: string): string {
-  const pitchClasses = getTuningSystemCells(tuningSystem, startingNote);
+  const pitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote);
 
   // Get unique pitch classes within one octave, sorted by cents
   const octavePitchClasses = pitchClasses
@@ -62,7 +62,7 @@ export function exportToScala(tuningSystem: TuningSystem, startingNote: NoteName
  * https://www.huygens-fokker.org/scala/help.htm#mappings
  */
 export function exportToScalaKeymap(tuningSystem: TuningSystem, startingNote: NoteName, referenceNote: NoteName = startingNote, referenceFrequency?: number, mapSize?: number): string {
-  const pitchClasses = getTuningSystemCells(tuningSystem, startingNote);
+  const pitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote);
 
   // Get unique pitch classes within one octave, sorted by cents
   const octavePitchClasses = pitchClasses
@@ -132,7 +132,7 @@ export function exportJinsToScala(jinsInput: Jins | JinsData, tuningSystem: Tuni
     jins = jinsInput;
   } else {
     // It's a JinsData instance - convert to Jins using getTahlil
-    const fullRangeTuningSystemPitchClasses = getTuningSystemCells(tuningSystem, startingNote || tuningSystem.getNoteNameSets()[0]?.[0] || "");
+    const fullRangeTuningSystemPitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote || tuningSystem.getNoteNameSets()[0]?.[0] || "");
     jins = jinsInput.getTahlil(fullRangeTuningSystemPitchClasses);
   }
 
@@ -196,7 +196,7 @@ export function exportJinsToScalaKeymap(
     jins = jinsInput;
   } else {
     // It's a JinsData instance - convert to Jins using getTahlil
-    const fullRangeTuningSystemPitchClasses = getTuningSystemCells(tuningSystem, startingNote || tuningSystem.getNoteNameSets()[0]?.[0] || "");
+    const fullRangeTuningSystemPitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote || tuningSystem.getNoteNameSets()[0]?.[0] || "");
     jins = jinsInput.getTahlil(fullRangeTuningSystemPitchClasses);
   }
 
@@ -267,7 +267,7 @@ export function exportMaqamToScala(maqamInput: Maqam | MaqamData, tuningSystem: 
     maqam = maqamInput;
   } else {
     // It's a MaqamData instance - convert to Maqam using getTahlil
-    const fullRangeTuningSystemPitchClasses = getTuningSystemCells(tuningSystem, startingNote || tuningSystem.getNoteNameSets()[0]?.[0] || "");
+    const fullRangeTuningSystemPitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote || tuningSystem.getNoteNameSets()[0]?.[0] || "");
     maqam = maqamInput.getTahlil(fullRangeTuningSystemPitchClasses);
   }
 
@@ -333,7 +333,7 @@ export function exportMaqamToScalaKeymap(
     maqam = maqamInput;
   } else {
     // It's a MaqamData instance - convert to Maqam using getTahlil
-    const fullRangeTuningSystemPitchClasses = getTuningSystemCells(tuningSystem, startingNote || tuningSystem.getNoteNameSets()[0]?.[0] || "");
+    const fullRangeTuningSystemPitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote || tuningSystem.getNoteNameSets()[0]?.[0] || "");
     maqam = maqamInput.getTahlil(fullRangeTuningSystemPitchClasses);
   }
 

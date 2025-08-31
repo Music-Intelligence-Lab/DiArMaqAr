@@ -3,7 +3,7 @@ import MaqamData, { Maqam, Sayr } from "@/models/Maqam";
 import JinsData, { Jins } from "@/models/Jins";
 import TuningSystem from "@/models/TuningSystem";
 import NoteName from "@/models/NoteName";
-import getTuningSystemCells from "@/functions/getTuningSystemCells";
+import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import shiftPitchClass from "./shiftPitchClass";
 import { getPitchClassIntervals } from "./getPitchClassIntervals";
 
@@ -445,7 +445,7 @@ export function canTransposeMaqamToNote(
   if (!tuningSystem || !maqamData) return false;
 
   // Generate pitch classes from the tuning system
-  const allPitchClasses = getTuningSystemCells(tuningSystem, startingNote);
+  const allPitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote);
   
   if (allPitchClasses.length === 0) return false;
 

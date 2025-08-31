@@ -15,8 +15,13 @@ import { calculateCentsDeviationWithReferenceNote } from "@/functions/calculateC
 import PitchClass from "@/models/PitchClass";
 
 /**
+ * 
  * Generates a complete array of PitchClass objects for a tuning system starting from a specific note.
  *
+ * @remarks
+ * This is the most important function in the system because it is a generative function that creates the pitch classes
+ * that we work with throughout the application (view, select, play, highlight).
+ * 
  * This is a core function that creates the fundamental pitch collection for analysis.
  * It takes a tuning system and starting note, then generates all pitch classes across
  * multiple octaves with their frequencies, MIDI numbers, cents deviations, and other
@@ -33,7 +38,7 @@ import PitchClass from "@/models/PitchClass";
  * @param inputReferenceFrequencies - Optional custom reference frequencies
  * @returns Complete array of PitchClass objects spanning multiple octaves
  */
-export default function getTuningSystemCells(
+export default function getTuningSystemPitchClasses(
   tuningSystem: TuningSystem,
   startingNote: NoteName,
   tuningSystemPitchClasses: string[] = [],
