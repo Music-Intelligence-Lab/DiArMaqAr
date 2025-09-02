@@ -5,7 +5,7 @@ import { TranspositionsContextProvider } from "@/contexts/transpositions-context
 import { FilterContextProvider } from "@/contexts/filter-context";
 import { MenuContextProvider } from "@/contexts/menu-context";
 import { LanguageContextProvider } from "@/contexts/language-context";
-import Navbar from "@/components/navbar";
+import NavbarGuard from "@/components/navbar-guard";
 import MobileWarning from "@/components/mobile-warning";
 import { Readex_Pro } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
@@ -42,7 +42,7 @@ export default function RootLayout({
               <TranspositionsContextProvider>
               <MenuContextProvider>
                 <FilterContextProvider>
-                  <Navbar />
+                  <NavbarGuard />
                   <main className="center-container">{children}</main>
                   <Analytics />
                 </FilterContextProvider>

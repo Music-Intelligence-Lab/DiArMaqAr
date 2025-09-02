@@ -187,6 +187,10 @@ export default function AppClient() {
     // Only apply URL params once (initial load). This prevents stale searchParams
     // from re-applying and overriding user interactions (e.g. selecting a new tuning system).
     if (urlParamsApplied.current) return;
+  // Ensure necessary app data has been loaded before attempting to apply URL params.
+  // If we attempt to apply too early (before tuningSystems/ajnas/maqamat),
+  // handleUrlParams will return early and we'd incorrectly mark params as applied.
+  if (!tuningSystems.length || !ajnas.length || !maqamat.length) return;
     // Parse URL parameters
     let maqamId: string | undefined = undefined;
     let maqamFirstNote: string | undefined = undefined;
@@ -265,7 +269,6 @@ export default function AppClient() {
       sayrId: sayrId,
       firstNote: startingNoteName,
     });
-
   // Mark that we've applied URL params so we don't re-apply on subsequent searchParams changes
   urlParamsApplied.current = true;
 

@@ -4,17 +4,28 @@
   display: flex;
   flex-direction: column;
 
-  max-width: 65%;
+  max-width: 40%;
   margin: 30px auto;
   padding: 0rem;
   min-height: fit-content;
 
-  h3 {
-    font-size: 16px;
-    margin-bottom: 1.5rem;
+  h1 {
+    font-size: 34px;
+    margin-top: 20px;
+    margin-bottom: 50px;
     color: $text;
+    text-align: center;
     font-weight: 400;
     //    text-align: center;
+  }
+
+  h3 {
+    font-size: 24px;
+    margin-top: 24px;
+    margin-bottom: 1rem;
+    color: $text;
+    font-weight: 400;
+    text-align: center;
   }
 
   p {
@@ -26,11 +37,10 @@
   }
 
   ul {
-
     padding: 0;
     list-style: none;
     counter-reset: feature;
-    max-width: 60%;
+    max-width: 80%;
     text-align: justify;
     margin-left: auto;
     margin-right: auto;
@@ -73,12 +83,76 @@
     margin-bottom: 0;
   }
 
-  /*   .highlight {
-    background-color: rgb($secondary, 0.8);
+  .highlight {
+    //background-color: rgb($secondary, 0.8);
     color: $text;
-    font-weight: 200;
+    font-weight: 400;
     padding: 1px 2px;
     margin: 0 0;
   }
- */
+
+  .button-row {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin: 20px 0;
+    width: 100%;
+  }
+
+  .main-button {
+    display: inline-block;
+    background: $primary;
+    color: $text;
+    font-size: 24px;
+    text-align: center;
+    padding: 10px 18px;
+    border-radius: 0px;
+    cursor: pointer;
+    font-weight: 500;
+    width: 100%;
+  }
+  .main-button:hover {
+    background: $secondary;
+    transition: background 0.2s;
+  }
+
+  .button {
+    /* make buttons share the available width equally */
+    display: flex;
+    flex: 1 1 0;
+    justify-content: center;
+    align-items: center;
+    background: $primary;
+    color: $text;
+    padding: 12px 0;
+    border-radius: 0px;
+    cursor: pointer;
+    font-weight: 500;
+    text-align: center;
+    min-width: 0; /* prevents overflow in flex items */
+  }
+
+  .button:hover {
+    background: $secondary;
+    transition: background 0.2s;
+  }
+}
+
+/* If the button is an anchor, show it as a plain link */
+a.button,
+a.main-button {
+  background: none;
+  color: inherit !important;
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+  text-decoration: none;
+  display: inline;
+}
+
+a.button:hover,
+a.main-button:hover {
+  background: none;
+  box-shadow: none;
+  text-decoration: underline;
 }
