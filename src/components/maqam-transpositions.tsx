@@ -676,6 +676,8 @@ const MaqamTranspositions: React.FC = () => {
             </>
           )}
 
+
+
           {ascending && (
             <tr>
               <td className="maqam-transpositions__spacer" colSpan={2 + (pitchClasses.length - 1) * 2} />
@@ -762,6 +764,12 @@ const MaqamTranspositions: React.FC = () => {
                 />
               </colgroup>
               <thead>{renderTransposition(maqamTranspositions[0], 0)}</thead>
+              {/* Spacer under Taḥlīl (analysis) table to visually separate from following content */}
+              <tbody>
+                <tr>
+                  <td className="maqam-transpositions__spacer" colSpan={4 + (maqamConfig.numberOfMaqamNotes - 1) * 2} />
+                </tr>
+              </tbody>
             </table>
           </>
         )}
