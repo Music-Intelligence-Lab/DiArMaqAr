@@ -392,7 +392,7 @@ export default function Navbar() {
                 setSelectedMenu("tuningSystem");
               }}
             >
-              أرشيف المقام العربي • Arabic Maqām Archive
+              أرشيف المقامات العربية الرقمي • Digital Arabic Maqām Archive
             </h1>
           </div>
           <div className="navbar__right-panel">

@@ -12,7 +12,7 @@
   h1 {
     font-size: 34px;
     margin-top: 20px;
-    margin-bottom: 50px;
+    margin-bottom: 40px;
     color: $text;
     text-align: center;
     font-weight: 400;
@@ -77,6 +77,19 @@
     font-size: 14px;
     border: 0px solid $text;
     z-index: 1;
+  }
+
+  // RTL-specific styles for Arabic
+  &.rtl {
+    ul li {
+      padding: 18px 52px 15px 24px;
+      text-align: right;
+    }
+    
+    ul li::before {
+      left: auto;
+      right: 0px;
+    }
   }
 
   ul li:last-child {

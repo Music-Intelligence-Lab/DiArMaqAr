@@ -90,8 +90,7 @@ const NavigationMenu = () => {
 
   // Define navigation links with proper RTL ordering
   const navigationLinks = [
-    { href: "/", key: "nav.home" },
-    { href: "/app", key: "nav.tools" },
+    { href: "/app", key: "nav.home" },
     { href: "/bibliography", key: "nav.bibliography" },
     { href: "/analytics-data", key: "nav.analytics" },
     { href: "/user-guide", key: "nav.userGuide" },
