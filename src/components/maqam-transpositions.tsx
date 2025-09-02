@@ -345,9 +345,11 @@ const MaqamTranspositions: React.FC = () => {
                     "maqam.darajatAlIstiqrar"
                   )}: ${getDisplayName(pitchClasses[0].noteName, "note")} (${getEnglishNoteName(pitchClasses[0].noteName)})`}</span>
                 ) : (
-                  <span className="maqam-transpositions__transposition-title" onClick={(e) => toggleShowDetails(maqam.name, e, true)} style={{ cursor: "pointer" }}>
-                    {getDisplayName(maqam.name, "maqam")}
-                  </span>
+                    <span className="maqam-transpositions__transposition-title" onClick={(e) => toggleShowDetails(maqam.name, e, true)} style={{ cursor: "pointer" }}>
+                    {getDisplayName(maqam.name, 'maqam')}
+                    {" "}
+                    (<span style={{ cursor: "pointer" }} dir="ltr">{getEnglishNoteName(pitchClasses[0].noteName)}</span>)
+                    </span>
                 )}
                 <span className="maqam-transpositions__buttons">
                   <button className="maqam-transpositions__button maqam-transpositions__button--toggle" onClick={(e) => toggleShowDetails(maqam.name, e, transposition)}>

@@ -209,7 +209,7 @@ const MaqamTranspositions: React.FC = () => {
                     getDisplayName(pitchClasses[0].noteName, 'note')
                   } (${getEnglishNoteName(pitchClasses[0].noteName)})`}</span>
                 ) : (
-                  <span className="maqam-transpositions__transposition-title">{getDisplayName(maqam.name, 'maqam')}</span>
+                  <span className="maqam-transpositions__transposition-title">test</span>
                 )}
                 <button
                   className="maqam-transpositions__button"

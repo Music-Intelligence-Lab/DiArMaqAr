@@ -175,6 +175,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     setMaqamSayrId("");
     setSelectedJins(null);
     setSelectedMaqam(null);
+    setSelectedTuningSystem(null);
   }, []);
 
   const mapIndices = useCallback(
