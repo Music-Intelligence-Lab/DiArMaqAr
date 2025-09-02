@@ -18,6 +18,10 @@ export const defaultNoteVelocity = 70;
 export const defaultTargetVelocity = 90;
 export const defaultDroneVelocity = 30;
 
+// Maximum absolute gain for the dedicated drone gain node. This caps the audible
+// drone level so the slider's 100% doesn't produce an overly loud carrier.
+const MAX_DRONE_GAIN = 0.4; // 0..1 multiplier applied to droneVolume
+
 interface SoundSettings {
   attack: number;
   decay: number;
@@ -35,6 +39,7 @@ interface SoundSettings {
   selectedMidiOutputId: string | null;
   selectedPattern: Pattern | null;
   drone: boolean;
+  droneVolume?: number; // 0..1
   useMPE: boolean;
 }
 
@@ -87,7 +92,8 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     outputMode: "waveform",
     selectedMidiOutputId: null,
     selectedPattern: null,
-    drone: true,
+  drone: true,
+  droneVolume: 0.3,
     useMPE: false,
   });
 
@@ -109,6 +115,10 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
   const audioCtxRef = useRef<AudioContext | null>(null);
   const masterGainRef = useRef<GainNode | null>(null);
+  // Dedicated gain node for the drone (independent of masterGain to allow separate control)
+  const droneGainRef = useRef<GainNode | null>(null);
+  // Store the active drone oscillator(s) so we can stop them cleanly
+  const droneOscRef = useRef<{ oscillator: OscillatorNode | OscillatorNode[]; gainNode?: GainNode; fraction?: string; midiChannel?: number } | null>(null);
   const midiAccessRef = useRef<MIDIAccess | null>(null);
 
   const [midiInputs, setMidiInputs] = useState<MidiPortInfo[]>([]);
@@ -452,15 +462,35 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     masterGain.connect(audioCtx.destination);
     masterGainRef.current = masterGain;
 
+  // Create drone gain and connect it to masterGain so drone volume is independent
+  const droneGain = audioCtx.createGain();
+  droneGain.gain.value = (soundSettings.droneVolume ?? 0.3) * MAX_DRONE_GAIN;
+  droneGain.connect(masterGain);
+  droneGainRef.current = droneGain;
+
     // ← initialize *all* periodic & aperiodic waves here
     initializeCustomWaves(audioCtx);
   }, []);
 
   useEffect(() => {
-    if (masterGainRef.current) {
-      masterGainRef.current.gain.setValueAtTime(soundSettings.volume, audioCtxRef.current!.currentTime);
+    if (masterGainRef.current && audioCtxRef.current) {
+      masterGainRef.current.gain.setValueAtTime(soundSettings.volume, audioCtxRef.current.currentTime);
     }
-  }, [soundSettings.volume]);
+    // keep drone gain in sync with droneVolume (if created)
+    if (droneGainRef.current && audioCtxRef.current) {
+      // Use a short linear ramp to reduce clicks when adjusting drone volume
+      const now = audioCtxRef.current.currentTime;
+      try {
+  droneGainRef.current.gain.cancelScheduledValues(now);
+  droneGainRef.current.gain.setValueAtTime(droneGainRef.current.gain.value, now);
+  droneGainRef.current.gain.linearRampToValueAtTime((soundSettings.droneVolume ?? 0) * MAX_DRONE_GAIN, now + 0.02);
+      } catch (err) {
+        // Fallback to immediate set and log the error
+        console.warn("Could not apply gain ramp to droneGain:", err);
+  droneGainRef.current.gain.setValueAtTime((soundSettings.droneVolume ?? 0) * MAX_DRONE_GAIN, audioCtxRef.current.currentTime);
+      }
+    }
+  }, [soundSettings.volume, soundSettings.droneVolume]);
 
   useEffect(() => {
     if (!navigator.requestMIDIAccess) return;
@@ -796,7 +826,65 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
       let cumulativeTimeSec = 0;
 
       if (soundSettings.drone) {
-        noteOn(shiftPitchClass(allPitchClasses, pitchClasses[0], -1), defaultDroneVelocity);
+        // If output is MIDI, keep previous behavior using MIDI velocity
+        if (soundSettings.outputMode === "midi") {
+          const droneVel = typeof soundSettings.droneVolume === "number" ? Math.round(soundSettings.droneVolume * 127) : defaultDroneVelocity;
+          noteOn(shiftPitchClass(allPitchClasses, pitchClasses[0], -1), droneVel);
+        } else if (soundSettings.outputMode === "waveform") {
+          // Create a dedicated oscillator for the drone connected to droneGainRef
+          const audioCtx = audioCtxRef.current;
+          if (audioCtx && droneGainRef.current) {
+            // stop existing drone if present
+            if (droneOscRef.current) {
+              try {
+                if (Array.isArray(droneOscRef.current.oscillator)) droneOscRef.current.oscillator.forEach((o) => o.stop()); else droneOscRef.current.oscillator.stop();
+              } catch (err) {
+                console.warn("Error stopping existing drone oscillator:", err);
+              }
+              droneOscRef.current = null;
+            }
+
+            const osc = audioCtx.createOscillator();
+            const waveform = soundSettings.waveform;
+            if (["sine", "triangle", "square", "sawtooth"].includes(waveform)) {
+              // try to create zero-phase periodic wave like noteOn code
+              // reuse the internal helper by creating a simple periodic wave where possible
+              try {
+                // fallback to native oscillator type if creation not available
+                osc.type = waveform as OscillatorType;
+              } catch (err) {
+                osc.type = waveform as OscillatorType;
+                console.warn("Oscillator.type assignment fallback:", err);
+              }
+            } else {
+              // custom periodic waves exist on initialization
+              if (PERIODIC_WAVES[waveform]) {
+                try {
+                  osc.setPeriodicWave(PERIODIC_WAVES[waveform]);
+                } catch (err) {
+                  osc.type = "sine";
+                  console.warn("Failed to set periodic wave for drone, falling back to sine:", err);
+                }
+              } else {
+                osc.type = "sine";
+              }
+            }
+
+            const tonicPc = shiftPitchClass(allPitchClasses, pitchClasses[0], -1);
+            const freq = parseFloat(tonicPc.frequency);
+            try { osc.frequency.setValueAtTime(freq, audioCtx.currentTime); } catch (err) { console.warn("Could not set drone oscillator frequency:", err); }
+
+            osc.connect(droneGainRef.current);
+            osc.start();
+            droneOscRef.current = { oscillator: osc, fraction: tonicPc.fraction };
+          } else {
+            // Fallback: use noteOn which handles both waveform and MIDI in its own way
+            const droneVel = typeof soundSettings.droneVolume === "number" ? Math.round(soundSettings.droneVolume * 127) : defaultDroneVelocity;
+            noteOn(shiftPitchClass(allPitchClasses, pitchClasses[0], -1), droneVel);
+          }
+        } else {
+          // mute -> do nothing
+        }
       }
 
       // Refactored: playPattern always receives velocity as an explicit argument
@@ -874,7 +962,18 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
       if (soundSettings.drone) {
         scheduleTimeout(() => {
-          noteOff(shiftPitchClass(allPitchClasses, pitchClasses[0], -1));
+          // stop drone oscillator if waveform
+          if (soundSettings.outputMode === "waveform" && droneOscRef.current) {
+            try {
+              const d = droneOscRef.current;
+              if (Array.isArray(d.oscillator)) d.oscillator.forEach((o) => o.stop()); else d.oscillator.stop();
+            } catch (err) {
+              console.warn("Error stopping drone oscillator:", err);
+            }
+            droneOscRef.current = null;
+          } else {
+            noteOff(shiftPitchClass(allPitchClasses, pitchClasses[0], -1));
+          }
         }, totalSeqMs);
       }
 

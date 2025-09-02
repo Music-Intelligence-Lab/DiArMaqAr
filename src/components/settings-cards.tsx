@@ -294,6 +294,23 @@ const SettingsCard = () => {
           </div>
 
           <div className="settings-card__input-container">
+            <p>{t('settings.droneVolume')} {(soundSettings.droneVolume ? Math.round(soundSettings.droneVolume * 100) : 0)}%</p>
+            <Slider
+              size="small"
+              value={soundSettings.droneVolume ?? 0.3}
+              min={0}
+              max={1}
+              step={0.01}
+              onChange={(_e, newVal) => typeof newVal === "number" && setSoundSettings((prev) => ({ ...prev, droneVolume: newVal }))}
+              onChangeCommitted={() => {
+                const el = document.activeElement as HTMLElement | null;
+                el?.blur();
+              }}
+              valueLabelDisplay="off"
+            />
+          </div>
+
+          <div className="settings-card__input-container">
             <p>{t('settings.attack')} {soundSettings.attack.toFixed(2)}</p>
             <Slider
               size="small"
