@@ -9,7 +9,7 @@ import Link from "next/link";
 
 const NavigationMenu = () => {
   const { openSettings, setOpenSettings, openNavigation, setOpenNavigation } = useMenuContext();
-  const { t, isRTL } = useLanguageContext();
+  const { t } = useLanguageContext();
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -99,13 +99,10 @@ const NavigationMenu = () => {
     { href: "/credits", key: "nav.credits" },
   ];
 
-  // Reverse order for RTL languages
-  const orderedLinks = isRTL ? [...navigationLinks].reverse() : navigationLinks;
-
   const menuContent = (
     <div ref={menuRef} className={`navigation-menu-card ${openNavigation ? "navigation-menu-card--open" : ""}`} role="dialog" aria-modal="true" aria-label="Main navigation menu" tabIndex={-1}>
       <div className="navigation-menu-card__content">
-        {orderedLinks.map((link) => (
+        {navigationLinks.map((link) => (
           <Link 
             key={link.href} 
             href={link.href} 

@@ -62,7 +62,7 @@ const WheelCell = React.memo<WheelCellProps>(
         <span className="pitch-class-bar__cell-label">{displayNoteName.replace(/\//g, "/\u200B")}</span>
 
         <span className="pitch-class-bar__cell-qwerty-englishname">
-          <span className="pitch-class-bar__cell-english">{pitchClass.englishName}</span>
+          <span className="pitch-class-bar__cell-english" dir="ltr">{pitchClass.englishName}</span>
           {inputType === "QWERTY" && mapping && <span className="pitch-class-bar__cell-mapping">{mapping}</span>}
         </span>
       </div>

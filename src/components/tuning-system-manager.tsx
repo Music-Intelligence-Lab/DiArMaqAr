@@ -77,7 +77,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     originalIndices,
     setOriginalIndices,
     mapIndices,
-    clearSelections,
+  clearSelections,
     handleStartNoteNameChange,
     sources,
     selectedAbjadNames,
@@ -290,6 +290,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   };
 
   const handleTuningSystemClick = (ts: TuningSystem, noteName: NoteName = "") => {
+    clearSelections();
     setSelectedTuningSystem(ts);
     handleStartNoteNameChange(noteName, ts.getNoteNameSets(), ts.getOriginalPitchClassValues().length);
     clearHangingNotes();
@@ -773,13 +774,14 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                     (tuningSystem.getId() === selectedTuningSystem?.getId() ? "tuning-system-manager__item_selected " : "")
                   }
                   onClick={() => {
-                    const { noteName } = isTuningSystemDisabled(tuningSystem, selectedJinsData, selectedMaqamData, selectedMaqam);
                     // Toggle functionality: if clicking the same tuning system, deselect it
                     if (selectedTuningSystem?.getId() === tuningSystem.getId()) {
-                      setSelectedTuningSystem(null);
-                      clearSelections();
+                      clearSelections(); // This will clear tuning system and everything else
                       clearHangingNotes();
                     } else {
+                      // For different tuning systems, calculate noteName without stale state
+                      // by temporarily assuming no selections (since handleTuningSystemClick will clear them)
+                      const { noteName } = isTuningSystemDisabled(tuningSystem, null, null, null);
                       handleTuningSystemClick(tuningSystem, noteName);
                     }
                   }}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import useAppContext from "@/contexts/app-context";
 import useMenuContext from "@/contexts/menu-context";
@@ -181,8 +181,12 @@ export default function AppClient() {
 
   const searchParams = useSearchParams();
   const router = useRouter();
+  const urlParamsApplied = useRef(false);
 
   useEffect(() => {
+    // Only apply URL params once (initial load). This prevents stale searchParams
+    // from re-applying and overriding user interactions (e.g. selecting a new tuning system).
+    if (urlParamsApplied.current) return;
     // Parse URL parameters
     let maqamId: string | undefined = undefined;
     let maqamFirstNote: string | undefined = undefined;
@@ -251,8 +255,8 @@ export default function AppClient() {
       }
     }
 
-    // Pass the parsed parameters to the app context
-    handleUrlParams({
+  // Pass the parsed parameters to the app context
+  handleUrlParams({
       tuningSystemId: searchParams.get("tuningSystem") ?? undefined,
       jinsDataId: jinsId,
       maqamDataId: maqamId,
@@ -261,6 +265,9 @@ export default function AppClient() {
       sayrId: sayrId,
       firstNote: startingNoteName,
     });
+
+  // Mark that we've applied URL params so we don't re-apply on subsequent searchParams changes
+  urlParamsApplied.current = true;
 
     // Set the selected menu based on parameters
     // No need to change menu names since these are internal identifiers

@@ -251,10 +251,15 @@ export default function JinsTranspositions() {
                   {t("jins.darajatAlIstiqrar")}: {getDisplayName(pitchClasses[0].noteName, "note") + ` (${getEnglishNoteName(pitchClasses[0].noteName)})`}
                 </span>
               ) : (
-                <span className="jins-transpositions__transposition-title" onClick={(e) => toggleShowDetails(jins.name, e, true)} style={{ cursor: "pointer" }}>{`${getDisplayName(
-                  jins.name,
-                  "jins"
-                )}`}</span>
+                <span
+                  className="jins-transpositions__transposition-title"
+                  onClick={(e) => toggleShowDetails(jins.name, e, true)}
+                >
+                  {`${getDisplayName(jins.name, "jins")}`}{" "}
+                    <span style={{ cursor: "pointer" }} dir="ltr">
+                    {`(${getEnglishNoteName(pitchClasses[0].noteName)})`}
+                  </span>
+                </span>
               )}
               <span className="jins-transpositions__buttons">
                 <button className="jins-transpositions__button jins-transpositions__button--toggle" onClick={(e) => toggleShowDetails(jins.name, e, transposition)}>
