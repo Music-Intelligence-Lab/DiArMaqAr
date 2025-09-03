@@ -17,6 +17,7 @@ import PitchClassBar from "@/components/pitch-class-bar";
 import Modulations from "@/components/modulations";
 import { getSources } from "@/functions/import";
 import { Sayr } from "@/models/Maqam";
+import Footer from "@/components/footer";
 
 // URL parameter helper functions
 /**
@@ -344,6 +345,7 @@ export default function AppClient() {
       {selectedMenu === "sayr-admin" && selectedMaqamData && <SayrManager admin />}
       {selectedMenu === "modulation" && <Modulations />}
       {selectedMenu === "pattern-admin" && <PatternsManager />}
+      <Footer/>
       <KeyboardControls />
     </div>
   );

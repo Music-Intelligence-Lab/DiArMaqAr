@@ -21,6 +21,7 @@
 @use "../styles/about-page.scss";
 @use "../styles/mobile-warning.scss";
 @use "../styles/frequency-knob.scss";
+@use "../styles/footer.scss";
 
 
 :root {
@@ -167,5 +168,4 @@ select:focus {
     flex-direction: row-reverse;
   }
 }
-
 }

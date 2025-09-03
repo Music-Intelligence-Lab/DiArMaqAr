@@ -1,0 +1,136 @@
+@use "variables" as *;
+@use "sass:color";
+
+.footer {
+  background-color: $dark-grey;
+  color: $text;
+  padding: 2rem 0 1rem;
+  border-top: 1px solid $grey;
+
+  &__content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &__title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: $gold;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+  }
+
+  &__subtitle {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: $light-grey;
+    margin-bottom: 0.5rem;
+  }
+
+  &__description {
+    color: $light-grey;
+    line-height: 1.5;
+    margin-bottom: 0.5rem;
+  }
+
+  &__text {
+    color: $light-grey;
+    line-height: 1.4;
+    margin-bottom: 0.25rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__list-item {
+    margin: 0;
+  }
+
+  &__link {
+    color: $gold !important;
+    text-decoration: none !important;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: color.adjust($gold, $lightness: 20%) !important;
+      text-decoration: none !important;
+    }
+
+    &:visited {
+      color: color.adjust($gold, $saturation: -30%) !important;
+    }
+  }
+
+  &__logo {
+    margin-top: 0.5rem;
+    
+    img {
+      max-height: 40px;
+      width: auto;
+      filter: brightness(0.9);
+      transition: filter 0.2s ease;
+
+      &:hover {
+        filter: brightness(1.1);
+      }
+    }
+  }
+
+  &__bottom {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 1rem 0;
+    border-top: 1px solid $grey;
+    margin-top: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      text-align: center;
+      gap: 0.5rem;
+    }
+  }
+
+  &__copyright,
+  &__license {
+    font-size: 0.9rem;
+    color: $grey;
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  &__license {
+    @media (max-width: 768px) {
+      order: -1;
+    }
+  }
+}
