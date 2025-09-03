@@ -21,15 +21,16 @@ export default function LandingPage() {
             ? "أرشيف المقامات العربية الرقمي"
             : "Digital Arabic Maqām Archive"}
         </h1>
-      </header>
-
-      <section className="lead">
-        <h3>
+                <h3>
           {language === "ar"
             ? "منصة إلكترونية تفاعلية ومكتبة مفتوحة المصدر لاستكشاف نظام المقامات العربية"
             : "Open-source interactive online platform and library for exploring the Arabic maqām system"}
         </h3>
 
+
+      </header>
+
+      <section className="main">
         <div className="cta-row">
           <a className="main-button" href="/app">
             {language === "ar"
