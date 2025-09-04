@@ -3,6 +3,7 @@
 import useMenuContext from "@/contexts/menu-context";
 import SourcesManager from "@/components/sources-manager";
 import SourcesList from "@/components/sources-list";
+import Footer from "@/components/footer";
 
 export default function BibliographyClient() {
   const { showAdminTabs } = useMenuContext();
@@ -10,6 +11,7 @@ export default function BibliographyClient() {
   return (
     <div className="tools-page">
       {showAdminTabs ? <SourcesManager />: <SourcesList />}
+      <Footer />
     </div>
   );
 }

@@ -1,7 +1,7 @@
-
 "use client";
 
 import React, { useEffect, useState, useMemo } from "react";
+import Footer from "@/components/footer";
 
 interface AnalyticsRow {
   id: string;
@@ -26,16 +26,15 @@ function extractYearParts(label: string): { year: number; letter: string } {
     return { year: parseInt(match[1], 10), letter: match[2] || "" };
   }
   return { year: 0, letter: "" };
-
 }
 
 export default function AnalyticsPage() {
   const [rows, setRows] = useState<AnalyticsRow[]>([]);
   const [sortKey, setSortKey] = useState<keyof AnalyticsRow>("label");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
-//  const [loading, setLoading] = useState(false);
+  //  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-//  const [success, setSuccess] = useState<string | null>(null);
+  //  const [success, setSuccess] = useState<string | null>(null);
 
   // Fetch analytics data from JSON file
   const fetchAnalytics = async () => {
@@ -80,15 +79,11 @@ export default function AnalyticsPage() {
         const aParts = extractYearParts(a.label);
         const bParts = extractYearParts(b.label);
         if (aParts.year !== bParts.year) {
-          return sortDir === "asc"
-            ? aParts.year - bParts.year
-            : bParts.year - aParts.year;
+          return sortDir === "asc" ? aParts.year - bParts.year : bParts.year - aParts.year;
         }
         // If years are equal, compare the letter
         if (aParts.letter !== bParts.letter) {
-          return sortDir === "asc"
-            ? aParts.letter.localeCompare(bParts.letter)
-            : bParts.letter.localeCompare(aParts.letter);
+          return sortDir === "asc" ? aParts.letter.localeCompare(bParts.letter) : bParts.letter.localeCompare(aParts.letter);
         }
         return 0;
       } else {
@@ -164,6 +159,7 @@ export default function AnalyticsPage() {
           ))}
         </tbody>
       </table>
+      <Footer />
     </div>
   );
 }
