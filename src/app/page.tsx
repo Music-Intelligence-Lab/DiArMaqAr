@@ -64,11 +64,11 @@ export default function LandingPage() {
         ) : (
           <>
             <p>
-              Arabic Maqām Network is an innovative open-access and open-source online platform dedicated to the study and exploration of the Arabic
+              The Digital Arabic Maqām Archive is an innovative open-access and open-source online platform dedicated to the study and exploration of the Arabic
               maqām system.
             </p>
             <p>
-              The platform is designed as a resource for students, musicians, composers, musicologists, educators, researchers, developers, and anyone
+              The platform is designed as a resource for students, musicians, composers, musicologists, educators, researchers, coders/developers, and anyone
               interested in the rich music theory of the Arabic-speaking region.
             </p>
             <p>

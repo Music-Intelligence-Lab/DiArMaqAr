@@ -20,41 +20,42 @@ export default function Footer() {
               ? "منصة إلكترونية تفاعلية ومكتبة مفتوحة المصدر لاستكشاف نظام المقامات العربية"
               : "Open-source interactive online platform and library for exploring the Arabic maqām system"}
           </p>
+                    <div className="footer__logo">
+            <Image
+              src="https://www.aub.edu.lb/Style%20Library/AUB/images/American%20University%20of%20Beirut-AUB.png"
+              alt="American University of Beirut Logo"
+              width={200}
+              height={60}
+              style={{ maxHeight: "60px", width: "auto" }}
+            />
+          </div>
+
         </div>
 
         <div className="footer__section">
           <h4 className="footer__subtitle">{language === "ar" ? "روابط سريعة" : "Quick Links"}</h4>
           <ul className="footer__list">
-            <li className="footer__list-item"><a href="/app" className="footer__link">{language === "ar" ? "الأرشيف" : "Archive"}</a></li>
+            <li className="footer__list-item"><a href="/app" className="footer__link">{language === "ar" ? "استخدام الأرشيف" : "Access the Archive"}</a></li>
             <li className="footer__list-item"><a href="/about" className="footer__link">{language === "ar" ? "حول المشروع" : "About"}</a></li>
             <li className="footer__list-item"><a href="/user-guide" className="footer__link">{language === "ar" ? "دليل المستخدم" : "User Guide"}</a></li>
             <li className="footer__list-item"><a href="/bibliography" className="footer__link">{language === "ar" ? "المراجع" : "Bibliography"}</a></li>
           </ul>
         </div>
 
-        <div className="footer__section">
+{/*         <div className="footer__section">
           <h4 className="footer__subtitle">{language === "ar" ? "القائمون على المشروع" : "Project Team"}</h4>
           <p className="footer__text">
             {language === "ar"
               ? "الدكتور خيام علامي وإبراهيم الخنسا"
-              : "Dr. Khyam Allami & Ibrahim El Khansa"}
+              : "Khyam Allami & Ibrahim El Khansa"}
           </p>
           <p className="footer__text">
             {language === "ar"
-              ? "مختبر ذكاء الموسيقى"
-              : "Music Intelligence Lab"}
+              ? "مختبر الذكاء الموسيقي في الجامعة الأمريكية في بيروت"
+              : "AUB Music Intelligence Lab"}
           </p>
-          <div className="footer__logo">
-            <Image
-              src="https://www.aub.edu.lb/Style%20Library/AUB/images/American%20University%20of%20Beirut-AUB.png"
-              alt="American University of Beirut Logo"
-              width={150}
-              height={60}
-              style={{ maxHeight: "40px", width: "auto" }}
-            />
-          </div>
         </div>
-
+ */}
         <div className="footer__section">
           <h4 className="footer__subtitle">{language === "ar" ? "ساهموا" : "Contribute"}</h4>
           <p className="footer__text">
@@ -62,9 +63,7 @@ export default function Footer() {
               GitHub
             </a>
           </p>
-          <p className="footer__text">
-            {language === "ar" ? "تواصلوا معنا:" : "Contact us:"}
-          </p>
+          <h4 className="footer__subtitle">{language === "ar" ? "تواصلوا معنا:" : "Contact us"}</h4>
           <p className="footer__text">
             <a href="mailto:ka109&#64;aub&#46;edu&#46;lb" className="footer__link">ka109&#64;aub&#46;edu&#46;lb</a>
           </p>
@@ -74,15 +73,15 @@ export default function Footer() {
       <div className="footer__bottom">
         <p className="footer__copyright">
           {language === "ar"
-            ? `© ${new Date().getFullYear()} أرشيف المقامات العربية الرقمي. جميع الحقوق محفوظة.`
-            : `© ${new Date().getFullYear()} Digital Arabic Maqām Archive. All rights reserved.`}
+            ? `© ${new Date().getFullYear()} أرشيف المقامات العربية الرقمي/مختبر الذكاء الموسيقي في الجامعة الأمريكية في بيروت. جميع الحقوق محفوظة.`
+            : `© ${new Date().getFullYear()} Digital Arabic Maqām Archive/AUB Music Intelligence Lab. All rights reserved.`}
         </p>
-        <p className="footer__license">
+{/*         <p className="footer__license">
           {language === "ar"
             ? "مفتوح المصدر تحت رخصة MIT"
             : "Open source under MIT License"}
         </p>
-      </div>
+ */}      </div>
     </footer>
   );
 }
