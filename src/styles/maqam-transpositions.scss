@@ -361,7 +361,18 @@
     float: right;
   }
 
-  .maqam-transpositions__spacer {
+  // Specific spacer variants for debugging which spacer is visible
+  .maqam-transpositions__spacer-analysis {
+    height: 20px;
+    border: 0px;
+  }
+
+  .maqam-transpositions__spacer-between {
+    height: 12px;
+    border: 0px;
+  }
+
+  .maqam-transpositions__spacer-after {
     height: 20px;
     border: 0px;
   }

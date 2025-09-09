@@ -13,7 +13,7 @@ import { SourcePageReference } from "@/models/bibliography/Source";
 import useTranspositionsContext from "@/contexts/transpositions-context";
 
 export default function JinsManager({ admin }: { admin: boolean }) {
-  const { ajnas, setAjnas, selectedTuningSystem, selectedJinsData, setSelectedJinsData, handleClickJins, selectedPitchClasses, clearSelections, allPitchClasses, sources } = useAppContext();
+  const { ajnas, setAjnas, selectedTuningSystem, selectedJinsData, setSelectedJinsData, handleClickJins, selectedPitchClasses, clearJinsSelections, allPitchClasses, sources } = useAppContext();
 
   const { ajnasFilter, setAjnasFilter } = useFilterContext();
   const { clearHangingNotes } = useSoundContext();
@@ -152,7 +152,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
                       // Toggle functionality: if clicking the same jins, deselect it
                       if (selectedJinsData?.getName() === jinsData.getName()) {
                         setSelectedJinsData(null);
-                        clearSelections();
+                        clearJinsSelections();
                       } else {
                         handleClickJins(jinsData);
                       }
@@ -213,7 +213,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
             <button onClick={handleDeleteJins} className="jins-manager__delete-button">
               {t('jins.delete')}
             </button>
-            <button onClick={clearSelections} className="jins-manager__clear-button">
+            <button onClick={clearJinsSelections} className="jins-manager__clear-button">
               {t('jins.clear')}
             </button>
           </div>

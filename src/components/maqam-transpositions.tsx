@@ -678,19 +678,29 @@ const MaqamTranspositions: React.FC = () => {
 
 
 
-          {ascending && (
-            <tr>
-              <td className="maqam-transpositions__spacer" colSpan={2 + (pitchClasses.length - 1) * 2} />
-            </tr>
-          )}
+          {/* spacer removed from per-row placement; rendered once after both rows in renderTransposition */}
         </>
       );
     }
 
     function renderTransposition(maqam: Maqam, index: number) {
+      // Compute colSpan to match the table width for this transposition.
+      const pitchClassesCount = maqam.ascendingPitchClasses.length + (maqamConfig?.noOctaveMaqam ? 1 : 0);
+      const colSpan = 2 + (pitchClassesCount - 1) * 2;
+
+      const isOpen = openTranspositions.includes(maqam.name);
+
       return (
         <>
           {renderTranspositionRow(maqam, true, index)}
+
+          {/* spacer between ascending and descending sections of the same table - only when open */}
+          {isOpen && (
+            <tr>
+              <td className="maqam-transpositions__spacer-between" colSpan={colSpan} />
+            </tr>
+          )}
+
           {renderTranspositionRow(maqam, false, index)}
         </>
       );
@@ -764,12 +774,14 @@ const MaqamTranspositions: React.FC = () => {
                 />
               </colgroup>
               <thead>{renderTransposition(maqamTranspositions[0], 0)}</thead>
-              {/* Spacer under Taḥlīl (analysis) table to visually separate from following content */}
-              <tbody>
-                <tr>
-                  <td className="maqam-transpositions__spacer" colSpan={4 + (maqamConfig.numberOfMaqamNotes - 1) * 2} />
-                </tr>
-              </tbody>
+              {/* Spacer under Taḥlīl (analysis) table to visually separate from following content - only when there are transpositions */}
+              {maqamTranspositions.length > 1 && (
+                <tbody>
+                  <tr>
+                    <td className="maqam-transpositions__spacer-analysis" colSpan={4 + (maqamConfig.numberOfMaqamNotes - 1) * 2} />
+                  </tr>
+                </tbody>
+              )}
             </table>
           </>
         )}
@@ -847,23 +859,24 @@ const MaqamTranspositions: React.FC = () => {
                 )}
               </h2>
             </div>
-            <table className="maqam-transpositions__table">
-              <colgroup>
-                <col style={{ width: "30px" }} />
-                <col style={{ width: "40px" }} />
-                <col
-                  style={{
-                    minWidth: "110px",
-                    maxWidth: "110px",
-                    width: "110px",
-                  }}
-                />
-              </colgroup>
-              <tbody>
-                {maqamTranspositions.slice(1, 1 + visibleCount).map((maqamTransposition, row) => {
-                  const isLastNeededForPrefetch = row === visibleCount - PREFETCH_OFFSET - 1 && visibleCount < maqamTranspositions.length - 1;
-                  return (
-                    <React.Fragment key={row}>
+            {/* Render each transposition as its own table so the spacer can live outside the table element */}
+            {maqamTranspositions.slice(1, 1 + visibleCount).map((maqamTransposition, row) => {
+              const isLastNeededForPrefetch = row === visibleCount - PREFETCH_OFFSET - 1 && visibleCount < maqamTranspositions.length - 1;
+              return (
+                <React.Fragment key={row}>
+                  <table className="maqam-transpositions__table">
+                    <colgroup>
+                      <col style={{ width: "30px" }} />
+                      <col style={{ width: "40px" }} />
+                      <col
+                        style={{
+                          minWidth: "110px",
+                          maxWidth: "110px",
+                          width: "110px",
+                        }}
+                      />
+                    </colgroup>
+                    <tbody>
                       {renderTransposition(maqamTransposition, row)}
                       {isLastNeededForPrefetch && (
                         <tr>
@@ -872,11 +885,14 @@ const MaqamTranspositions: React.FC = () => {
                           </td>
                         </tr>
                       )}
-                    </React.Fragment>
-                  );
-                })}
-              </tbody>
-            </table>
+                    </tbody>
+                  </table>
+
+                  {/* Spacer outside the table so it remains when a table is open */}
+                  <div className="maqam-transpositions__spacer-after" aria-hidden="true" />
+                </React.Fragment>
+              );
+            })}
             {visibleCount < maqamTranspositions.length - 1 && (
               <div className="maqam-transpositions__load-more-wrapper">
                 <button

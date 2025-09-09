@@ -58,6 +58,7 @@ interface AppContextInterface {
   centsTolerance: number;
   setCentsTolerance: React.Dispatch<React.SetStateAction<number>>;
   clearSelections: () => void;
+  clearJinsSelections: () => void;
   handleUrlParams: (params: { tuningSystemId?: string; jinsDataId?: string; maqamDataId?: string; sayrId?: string; firstNote?: string; maqamFirstNote?: string; jinsFirstNote?: string }) => void;
   sources: Source[];
   setSources: React.Dispatch<React.SetStateAction<Source[]>>;
@@ -176,6 +177,13 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     setSelectedJins(null);
     setSelectedMaqam(null);
     setSelectedTuningSystem(null);
+  }, []);
+
+  const clearJinsSelections = useCallback(() => {
+    setSelectedPitchClasses([]);
+    setSelectedJinsData(null);
+    setSelectedJins(null);
+    // Keep tuning system, maqam data, and maqam sayr intact
   }, []);
 
   const mapIndices = useCallback(
@@ -438,6 +446,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       centsTolerance,
       setCentsTolerance,
       clearSelections,
+      clearJinsSelections,
       handleUrlParams,
       sources,
       setSources,
@@ -472,6 +481,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       maqamSayrId,
       centsTolerance,
       clearSelections,
+      clearJinsSelections,
       handleUrlParams,
       sources,
       patterns,
