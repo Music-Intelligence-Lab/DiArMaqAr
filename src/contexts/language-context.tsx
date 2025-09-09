@@ -143,7 +143,7 @@ const translations = {
     "jins.staffNotation": "Staff Notation",
     "jins.comments": "Comments",
     "jins.sources": "Sources",
-    "jins.transpositionsTitle": "Taṣwīr (transpositions)",
+    "jins.transpositionsTitle": "Taṣāwīr (transpositions)",
     "jins.all": "All Ajnas",
 
     // Value types
@@ -212,7 +212,7 @@ const translations = {
     "maqam.staffNotation": "Staff Notation",
     "maqam.comments": "Comments",
     "maqam.sources": "Sources",
-    "maqam.transpositionsTitle": "Taṣwīr (transpositions)",
+    "maqam.transpositionsTitle": "Taṣāwīr (transpositions)",
     "maqam.all": "All Maqamat",
 
     // Tuning System Manager
