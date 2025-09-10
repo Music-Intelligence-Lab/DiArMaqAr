@@ -335,7 +335,10 @@ export default function Navbar() {
             onClick={() => setSelectedMenu("modulation")}
             disabled={!selectedMaqamData}
           >
-            {t('tabs.intiqalat')}{selectedMaqamData ? ` (${totalModulations})` : ""}
+            <span className="navbar__bottom-bar-item_tab-title">
+              {t('tabs.intiqalat')}{selectedMaqamData ? ` (${totalModulations})` : ""}
+            </span>
+            <span className="navbar__bottom-bar-item_tab-subtitle"></span>
           </button>
         )
       },

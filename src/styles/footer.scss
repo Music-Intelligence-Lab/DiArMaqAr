@@ -2,12 +2,12 @@
 @use "sass:color";
 
 .footer {
-  background-color: $dark-grey;
+  background-color: rgb($black , 0.5);
   color: $text;
   padding: 1rem 0 1rem;
-  border-top: 1px solid $grey;
+  //border-top: 1px solid $grey;
   width: 100%;
-  margin-top: 100px;
+  //margin-top: 100px;
   margin-bottom: 10px;
 
   &__content {
@@ -107,8 +107,8 @@
   &__bottom {
     margin: 0 auto;
     padding: 1rem 1rem 0;
-    border-top: 1px solid $grey;
-    margin-top: 1rem;
+    //border-top: 1px solid $grey;
+    //margin-top: 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
