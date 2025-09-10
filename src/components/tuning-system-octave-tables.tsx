@@ -479,15 +479,21 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
           </button>
           <div className="tuning-system-manager__octave-scroll" ref={octaveScrollRefs[octave as 0 | 1 | 2 | 3]}>
             <table className="tuning-system-manager__octave-table" border={0}>
-              <colgroup>
-                <col
-                  style={{
-                    minWidth: "110px",
-                    maxWidth: "110px",
-                    width: "110px",
-                  }}
-                />
-              </colgroup>
+              {(() => {
+                // first column is the row header (fixed), remaining columns match pitch class count
+                const totalCols = 1 + tuningSystemPitchClassesArray.length;
+                const cols: React.ReactElement[] = [];
+                cols.push(
+                  <col
+                    key={`oct-col-0-${octave}`}
+                    style={{ minWidth: "110px", maxWidth: "110px", width: "110px" }}
+                  />
+                );
+                for (let i = 1; i < totalCols; i++) {
+                  cols.push(<col key={`oct-col-${i}-${octave}`} style={{ minWidth: "60px" }} />);
+                }
+                return <colgroup>{cols}</colgroup>;
+              })()}
 
               <tbody>
                 {/* Row 1: Pitch Class */}

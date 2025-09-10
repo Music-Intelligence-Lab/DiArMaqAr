@@ -145,7 +145,7 @@
     .carousel-button-next {
       right: 0;
 
-      // RTL support  
+      // RTL support
       [dir="rtl"] & {
         right: auto;
         left: 0;
@@ -192,6 +192,11 @@
     align-items: left;
     justify-content: left;
     font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Encourage variable font weight selection on Safari */
+    font-variation-settings: "wght" 300;
+    font-synthesis: none;
 
     // RTL support
     [dir="rtl"] & {
