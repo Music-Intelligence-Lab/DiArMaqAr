@@ -1046,6 +1046,7 @@
     color: $text;
     font-weight: 400;
     cursor: pointer;
+     font-size: 12px;
 
     // RTL support
     [dir="rtl"] & {
