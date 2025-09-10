@@ -9,7 +9,7 @@
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  z-index: 300; // Ensure above sidebar
+  z-index: 2001; // Ensure above sidebar
   pointer-events: auto;
 }
 
@@ -26,7 +26,7 @@
   overflow-y: auto;
   transform: translateX(-130%);
   transition: transform 0.3s ease-in-out;
-  z-index: 10;
+  z-index: 2000;
 
   &--open {
     transform: translateX(0);

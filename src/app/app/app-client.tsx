@@ -331,7 +331,7 @@ export default function AppClient() {
   }, [selectedTuningSystem, selectedJinsData, selectedMaqamData, maqamSayrId, selectedIndices, selectedMaqam, selectedJins, router]);
 
   return (
-    <div className="tools-page">
+    <div className="main-content">
       {selectedMenu === "tuningSystem" && <TuningSystemManager admin={false} />}
       {selectedMenu === "tuningSystem-admin" && <TuningSystemManager admin />}
       {selectedMenu === "maqam" && selectedTuningSystem && <MaqamManager admin={false} />}
@@ -347,6 +347,6 @@ export default function AppClient() {
       {selectedMenu === "pattern-admin" && <PatternsManager />}
       <Footer/>
       <KeyboardControls />
-    </div>
+  </div>
   );
 }

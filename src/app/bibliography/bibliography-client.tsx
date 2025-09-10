@@ -9,7 +9,7 @@ export default function BibliographyClient() {
   const { showAdminTabs } = useMenuContext();
 
   return (
-    <div className="tools-page">
+    <div className="main-content">
       {showAdminTabs ? <SourcesManager />: <SourcesList />}
       <Footer />
     </div>

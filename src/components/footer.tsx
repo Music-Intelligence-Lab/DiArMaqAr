@@ -25,8 +25,8 @@ export default function Footer() {
               src="https://www.aub.edu.lb/Style%20Library/AUB/images/American%20University%20of%20Beirut-AUB.png"
               alt="American University of Beirut Logo"
               width={200}
-              height={60}
-              style={{ maxHeight: "60px", width: "auto" }}
+              height={50}
+              style={{ maxHeight: "50px", width: "auto" }}
             />
           </div>
 
