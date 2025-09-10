@@ -18,6 +18,7 @@ import {
 
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { abjadNames } from "@/functions/noteNameMappings";
+import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import getFirstNoteName from "@/functions/getFirstNoteName";
 
 export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) {
@@ -585,13 +586,42 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                 {filters.englishName && (
                   <tr>
                     <td className="tuning-system-manager__row-header">{t('octave.englishName')}</td>
-                    {rowCells.map((pitchClass, colIndex) => {
-                      return (
+                    {(() => {
+                      // Build preferred mapping from current context (maqam/jins/selection)
+                      const preferredMap: Record<string, string> = {};
+                      let prevEnglish: string | undefined = undefined;
+                      const contextSeq: { noteName: string }[] | undefined =
+                        (selectedMaqam && selectedMaqam.ascendingPitchClasses) ||
+                        (selectedPitchClasses && selectedPitchClasses.length >= 2 ? selectedPitchClasses : undefined);
+
+                      if (contextSeq) {
+                        prevEnglish = undefined;
+                        for (const pc of contextSeq) {
+                          if (!pc || !pc.noteName) continue;
+                          const en = getEnglishNoteName(pc.noteName, { prevEnglish });
+                          preferredMap[pc.noteName] = en;
+                          prevEnglish = en;
+                        }
+                      }
+
+                      prevEnglish = undefined;
+                      const displays = rowCells.map((pc) => {
+                        const noteName = pc.noteName;
+                        if (preferredMap[noteName]) {
+                          prevEnglish = preferredMap[noteName];
+                          return preferredMap[noteName];
+                        }
+                        const en = getEnglishNoteName(noteName, { prevEnglish });
+                        prevEnglish = en;
+                        return en;
+                      });
+
+                      return displays.map((d, colIndex) => (
                         <td key={colIndex} className={getCellClassName(octave, colIndex)}>
-                          {pitchClass.englishName}
+                          {d}
                         </td>
-                      );
-                    })}
+                      ));
+                    })()}
                   </tr>
                 )}
 

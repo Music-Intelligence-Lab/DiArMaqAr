@@ -121,7 +121,7 @@ const translations = {
     // Jins Transpositions
     "jins.analysis": "Taḥlīl (analysis)",
     "jins.centsTolerance": "Cents Tolerance",
-    "jins.darajatAlIstiqrar": "Darajat al-Istiqrār (tonic/finalis)",
+    "jins.darajatAlIstiqrar": "Darajat al-Istiqrār Al-Taqlīdīya (conventional tonic/finalis)",
     "jins.selectLoadToKeyboard": "Select & Load to Keyboard",
     "jins.playJins": "Play jins",
     "jins.export": "Export",
@@ -186,7 +186,7 @@ const translations = {
     // Maqam Transpositions
     "maqam.analysis": "Taḥlīl (analysis)",
     "maqam.centsTolerance": "Cents Tolerance",
-    "maqam.darajatAlIstiqrar": "Darajat al-Istiqrār (tonic/finalis)",
+    "maqam.darajatAlIstiqrar": "Darajat al-Istiqrār Al-Taqlīdīya (conventional tonic/finalis)",
     "maqam.selectLoadToKeyboard": "Select & Load to Keyboard",
     "maqam.ascendingDescending": "Asc > Desc",
     "maqam.ascending": "Ascending",
@@ -490,7 +490,7 @@ const translations = {
     // Maqam Transpositions (Arabic translations)
     "maqam.analysis": "تحليل",
     "maqam.centsTolerance": "تساهل السنت",
-    "maqam.darajatAlIstiqrar": "درجة الاستقرار",
+    "maqam.darajatAlIstiqrar": "درجة الاستقرار التقليدية",
     "maqam.selectLoadToKeyboard": "اختر وحمّل على لوحة المفاتيح",
     "maqam.ascendingDescending": "صعوداً > هبوطاً",
     "maqam.ascending": "صعوداً",

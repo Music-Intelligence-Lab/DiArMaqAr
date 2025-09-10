@@ -3,6 +3,7 @@
 import React, { useRef, useEffect } from "react";
 import { Renderer, Stave, StaveNote, Voice, Formatter, Accidental, TextNote } from "vexflow";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
+import useAppContext from "@/contexts/app-context";
 import PitchClass from "@/models/PitchClass";
 import useLanguageContext from "@/contexts/language-context";
 
@@ -14,6 +15,7 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const clef = "treble"; // Always use treble clef
   const { language, getDisplayName } = useLanguageContext();
+  const { selectedMaqam, selectedJins, selectedPitchClasses: appSelectedPitchClasses } = useAppContext();
 
   useEffect(() => {
     if (!containerRef.current || !pitchClasses.length) return;
@@ -87,10 +89,39 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
   const renderStaff = () => {
     if (!containerRef.current) return;
 
-    const notesCount = pitchClasses.filter((pc) => {
-      const englishName = pc.englishName || getEnglishNoteName(pc.noteName);
-      return englishName && englishName !== "--";
-    }).length;
+    // Precompute context-aware english names for the pitchClasses array
+    const computedEnglishNames: string[] = (() => {
+      const preferredMap: Record<string, string> = {};
+      let prevEnglish: string | undefined = undefined;
+      const contextSeq: { noteName: string }[] | undefined =
+        (selectedMaqam && selectedMaqam.ascendingPitchClasses) ||
+        (selectedJins && selectedJins.jinsPitchClasses) ||
+        (appSelectedPitchClasses && appSelectedPitchClasses.length >= 2 ? appSelectedPitchClasses : undefined);
+
+      if (contextSeq) {
+        prevEnglish = undefined;
+        for (const pc of contextSeq) {
+          if (!pc || !pc.noteName) continue;
+          const en = getEnglishNoteName(pc.noteName, { prevEnglish });
+          preferredMap[pc.noteName] = en;
+          prevEnglish = en;
+        }
+      }
+
+      prevEnglish = undefined;
+      return pitchClasses.map((pc) => {
+        const noteName = pc.noteName;
+        if (preferredMap[noteName]) {
+          prevEnglish = preferredMap[noteName];
+          return preferredMap[noteName];
+        }
+        const en = getEnglishNoteName(noteName, { prevEnglish });
+        prevEnglish = en;
+        return en;
+      });
+    })();
+
+    const notesCount = computedEnglishNames.filter((en) => en && en !== "--").length;
 
     const noteWidth = 100;
     const staveMargin = 300;
@@ -111,13 +142,13 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
 
     const vexFlowNotes: StaveNote[] = [];
 
-    pitchClasses.forEach((pitchClass) => {
+  pitchClasses.forEach((pitchClass, idx) => {
       try {
-        const englishName = pitchClass.englishName || getEnglishNoteName(pitchClass.noteName);
+    const englishName = computedEnglishNames[idx];
 
-        if (!englishName || englishName === "--") return;
+    if (!englishName || englishName === "--") return;
 
-        const parsed = parseNote(englishName);
+    const parsed = parseNote(englishName);
 
         if (!parsed) return;
 
@@ -183,9 +214,9 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
     const arabicTextNotes: TextNote[] = [];
     const englishTextNotes: TextNote[] = [];
 
-    pitchClasses.forEach((pitchClass) => {
+  pitchClasses.forEach((pitchClass, idx) => {
       try {
-        const englishName = pitchClass.englishName || getEnglishNoteName(pitchClass.noteName);
+    const englishName = computedEnglishNames[idx];
 
         if (!englishName || englishName === "--") return;
 

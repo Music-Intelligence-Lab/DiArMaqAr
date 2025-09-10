@@ -7,6 +7,7 @@ import useFilterContext from "@/contexts/filter-context";
 import useLanguageContext from "@/contexts/language-context";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { getPitchClassIntervals } from "@/functions/getPitchClassIntervals";
+import { getEnglishNoteName } from "@/functions/noteNameMappings";
 
 export default function SelectedPitchClassTranspositions() {
   const { selectedPitchClasses, selectedTuningSystem, allPitchClasses, centsTolerance, setCentsTolerance } = useAppContext();
@@ -78,13 +79,25 @@ export default function SelectedPitchClassTranspositions() {
           {filters["englishName"] && (
             <tr>
               <th className="jins-transpositions__row-header">{t('analysis.englishName')}</th>
-              <th className="jins-transpositions__header-pitchClass">{pitchClasses[0].englishName}</th>
-              {intervals.map((interval, i) => (
-                <React.Fragment key={i}>
-                  <th className="jins-transpositions__header-pitchClass"></th>
-                  <th className="jins-transpositions__header-pitchClass">{pitchClasses[i + 1].englishName}</th>
-                </React.Fragment>
-              ))}
+              {(() => {
+                let prevEnglish: string | undefined = undefined;
+                const displays = pitchClasses.map((pc) => {
+                  const en = getEnglishNoteName(pc.noteName, { prevEnglish });
+                  prevEnglish = en;
+                  return en;
+                });
+                return (
+                  <>
+                    <th className="jins-transpositions__header-pitchClass">{displays[0]}</th>
+                    {intervals.map((interval, i) => (
+                      <React.Fragment key={i}>
+                        <th className="jins-transpositions__header-pitchClass"></th>
+                        <th className="jins-transpositions__header-pitchClass">{displays[i + 1]}</th>
+                      </React.Fragment>
+                    ))}
+                  </>
+                );
+              })()}
             </tr>
           )}
           <tr>
