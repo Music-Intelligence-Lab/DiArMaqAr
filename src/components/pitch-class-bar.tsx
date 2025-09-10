@@ -49,10 +49,15 @@ const WheelCell = React.memo<WheelCellProps>(
       if (isCurrentTonic) {
         classNames.push("pitch-class-bar__cell_midi_tonic_current");
         if (isActive) classNames.push("pitch-class-bar__cell_midi_tonic_current_active");
+      } else {
+        // For MIDI input, mark active non-tonic notes with midi_active
+        if (isActive) classNames.push("pitch-class-bar__cell_midi_active");
       }
     }
-    
-    if (isActive) classNames.push("pitch-class-bar__cell_active");
+    else {
+      // Non-MIDI (or unmapped) active state
+      if (isActive) classNames.push("pitch-class-bar__cell_active");
+    }
     
     const className = classNames.join(" ");
     const displayNoteName = getDisplayName(pitchClass.noteName, 'note');
