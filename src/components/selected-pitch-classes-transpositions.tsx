@@ -306,10 +306,15 @@ export default function SelectedPitchClassTranspositions() {
             </span>
           </h2>
           <table className="jins-transpositions__table">
-            <colgroup>
-              <col style={{ minWidth: "30px", maxWidth: "30px", width: "30px" }} />
-              <col style={{ minWidth: "150px", maxWidth: "150px", width: "150px" }} />
-            </colgroup>
+            {(() => {
+              const pcCount = selectedPitchClasses.length;
+              const totalCols = 2 + (pcCount - 1) * 2;
+              const cols: React.ReactElement[] = [];
+              cols.push(<col key={`c-0-sel`} style={{ minWidth: "30px", maxWidth: "30px", width: "30px" }} />);
+              cols.push(<col key={`c-1-sel`} style={{ minWidth: "150px", maxWidth: "150px", width: "150px" }} />);
+              for (let i = 2; i < totalCols; i++) cols.push(<col key={`c-sel-${i}`} style={{ minWidth: "30px" }} />);
+              return <colgroup>{cols}</colgroup>;
+            })()}
 
             <thead>{renderTable()}</thead>
           </table>

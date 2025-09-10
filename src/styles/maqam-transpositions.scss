@@ -27,7 +27,7 @@
     padding: 0px;
     margin: 0px;
     margin-right: 5px;
-    font-size: 24px;
+    font-size: 22px;
     cursor: pointer;
     vertical-align: middle;
   }
@@ -93,9 +93,9 @@
 
     th {
       vertical-align: top;
-      margin-bottom: 500px;
+      //margin-bottom: 500px;
       text-align: left;
-      padding: 10px;
+      padding: 8px;
       border: solid 1px $grey;
       font-weight: 200;
 
@@ -123,11 +123,10 @@
     padding-left: 10px;
     padding-right: 20px;
     max-width: 60%;
-    display: inline-block;
-    position: absolute;
-    left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
+  display: block;
+  position: static;
+  margin: 0;
+  align-self: center;
 
     // RTL support
     [dir="rtl"] & {
@@ -139,12 +138,12 @@
   }
   
   &__buttons {
-    float: right;
-    text-align: right;
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-end;
+  position: static;
+  margin: 0;
     
     // RTL support
     [dir="rtl"] & {

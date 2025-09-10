@@ -569,10 +569,16 @@ export default function JinsTranspositions() {
             </span>
           </h2>
           <table className="jins-transpositions__table">
-            <colgroup>
-              <col style={{ minWidth: "30px", maxWidth: "30px", width: "30px" }} />
-              <col style={{ minWidth: "150px", maxWidth: "150px", width: "150px" }} />
-            </colgroup>
+            {(() => {
+              // compute columns for the analysis table (index 0)
+              const pcCount = jinsTranspositions[0].jinsPitchClasses.length;
+              const totalCols = 2 + (pcCount - 1) * 2;
+              const cols: React.ReactElement[] = [];
+              cols.push(<col key={`c-0-anal`} style={{ minWidth: "30px", maxWidth: "30px", width: "30px" }} />);
+              cols.push(<col key={`c-1-anal`} style={{ minWidth: "150px", maxWidth: "150px", width: "150px" }} />);
+              for (let i = 2; i < totalCols; i++) cols.push(<col key={`c-anal-${i}`} style={{ minWidth: "30px" }} />);
+              return <colgroup>{cols}</colgroup>;
+            })()}
 
             <thead>{renderTransposition(jinsTranspositions[0], 0)}</thead>
           </table>
@@ -642,10 +648,17 @@ export default function JinsTranspositions() {
           </h2>
 
           <table className="jins-transpositions__table">
-            <colgroup>
-              <col style={{ minWidth: "30px", maxWidth: "30px", width: "30px" }} />
-              <col style={{ minWidth: "150px", maxWidth: "150px", width: "150px" }} />
-            </colgroup>
+            {(() => {
+              // default columns for subsequent transposition tables are computed per-row when rendering below
+              // but include a fallback flexible colgroup matching a typical minimum structure
+              const pcCountFallback = jinsTranspositions[1]?.jinsPitchClasses.length || 3;
+              const totalColsFallback = 2 + (pcCountFallback - 1) * 2;
+              const cols: React.ReactElement[] = [];
+              cols.push(<col key={`c-0-list`} style={{ minWidth: "30px", maxWidth: "30px", width: "30px" }} />);
+              cols.push(<col key={`c-1-list`} style={{ minWidth: "150px", maxWidth: "150px", width: "150px" }} />);
+              for (let i = 2; i < totalColsFallback; i++) cols.push(<col key={`c-list-${i}`} style={{ minWidth: "30px" }} />);
+              return <colgroup>{cols}</colgroup>;
+            })()}
 
             <thead></thead>
             <tbody>

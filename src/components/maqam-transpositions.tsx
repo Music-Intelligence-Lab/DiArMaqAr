@@ -762,16 +762,30 @@ const MaqamTranspositions: React.FC = () => {
             </h2>
 
             <table className="maqam-transpositions__table">
+              {/** Dynamic colgroup computed from the actual column count for this table. This ensures
+               * browsers compute column widths consistently even when rows use colSpan. */}
               <colgroup>
-                <col style={{ width: "30px" }} />
-                <col style={{ width: "40px" }} />
-                <col
-                  style={{
-                    minWidth: "110px",
-                    maxWidth: "110px",
-                    width: "110px",
-                  }}
-                />
+                {(() => {
+                  // compute pitch class count for analysis (index 0)
+                  const pcCount = maqamTranspositions[0].ascendingPitchClasses.length + (maqamConfig?.noOctaveMaqam ? 1 : 0);
+                  const totalCols = 2 + (pcCount - 1) * 2; // matches colSpan computation in renderTransposition
+                  const cols = [] as React.ReactElement[];
+                  // first two narrow columns
+                  cols.push(<col key={`c-0`} style={{ width: "30px" }} />);
+                  cols.push(<col key={`c-1`} style={{ width: "40px" }} />);
+                  // third column (name) fixed width
+                  cols.push(
+                    <col
+                      key={`c-2`}
+                      style={{ minWidth: "110px", maxWidth: "110px", width: "110px" }}
+                    />
+                  );
+                  // remaining columns get a flexible min width
+                  for (let i = 3; i < totalCols; i++) {
+                    cols.push(<col key={`c-${i}`} style={{ minWidth: "30px" }} />);
+                  }
+                  return cols;
+                })()}
               </colgroup>
               <thead>{renderTransposition(maqamTranspositions[0], 0)}</thead>
               {/* Spacer under Taḥlīl (analysis) table to visually separate from following content - only when there are transpositions */}
@@ -865,28 +879,27 @@ const MaqamTranspositions: React.FC = () => {
               return (
                 <React.Fragment key={row}>
                   <table className="maqam-transpositions__table">
-                    <colgroup>
-                      <col style={{ width: "30px" }} />
-                      <col style={{ width: "40px" }} />
-                      <col
-                        style={{
-                          minWidth: "110px",
-                          maxWidth: "110px",
-                          width: "110px",
-                        }}
-                      />
-                    </colgroup>
-                    <tbody>
-                      {renderTransposition(maqamTransposition, row)}
-                      {isLastNeededForPrefetch && (
-                        <tr>
-                          <td colSpan={2 + (maqamTransposition.ascendingPitchClasses.length - 1) * 2}>
-                            <div ref={sentinelRef} style={{ width: 1, height: 1 }} />
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
+                      {(() => {
+                        const pcCount = maqamTransposition.ascendingPitchClasses.length + (maqamConfig?.noOctaveMaqam ? 1 : 0);
+                        const totalCols = 2 + (pcCount - 1) * 2;
+                        const cols: React.ReactElement[] = [];
+                        cols.push(<col key={`c-0-${row}`} style={{ width: "30px" }} />);
+                        cols.push(<col key={`c-1-${row}`} style={{ width: "40px" }} />);
+                        cols.push(<col key={`c-2-${row}`} style={{ minWidth: "110px", maxWidth: "110px", width: "110px" }} />);
+                        for (let i = 3; i < totalCols; i++) cols.push(<col key={`c-${i}-${row}`} style={{ minWidth: "30px" }} />);
+                        return <colgroup>{cols}</colgroup>;
+                      })()}
+                      <tbody>
+                        {renderTransposition(maqamTransposition, row)}
+                        {isLastNeededForPrefetch && (
+                          <tr>
+                            <td colSpan={2 + (maqamTransposition.ascendingPitchClasses.length - 1) * 2}>
+                              <div ref={sentinelRef} style={{ width: 1, height: 1 }} />
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
 
                   {/* Spacer outside the table so it remains when a table is open */}
                   <div className="maqam-transpositions__spacer-after" aria-hidden="true" />

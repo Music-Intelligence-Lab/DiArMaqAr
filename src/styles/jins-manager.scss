@@ -39,7 +39,6 @@
     width: 100%;
     margin-top: 20px;
     margin-bottom: 150px;
-
   }
 
   &__comments-english {
@@ -87,7 +86,6 @@
     padding-left: 30px;
     float: right;
   }
-
 
   &__list {
     width: 100%;
@@ -146,7 +144,6 @@
         color: $tertiary;
         transition: background-color 0.2s ease-in-out;
       }
-
     }
 
     .carousel-button-prev,
@@ -163,7 +160,6 @@
         color: $tertiary;
         transition: color 0.1s ease-in-out;
       }
-
     }
 
     .carousel-button-prev {
@@ -179,7 +175,7 @@
     .carousel-button-next {
       right: 0;
 
-      // RTL support  
+      // RTL support
       [dir="rtl"] & {
         right: auto;
         left: 0;
@@ -226,6 +222,11 @@
     align-items: flex-start;
     justify-content: flex-start;
     font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Help variable / web fonts pick the intended weight on Safari */
+    font-variation-settings: "wght" 300;
+    font-synthesis: none;
 
     // RTL support
     [dir="rtl"] & {
