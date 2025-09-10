@@ -476,12 +476,21 @@ const MaqamTranspositions: React.FC = () => {
               {filters["englishName"] && (
                 <tr>
                   <th className="maqam-transpositions__row-header">{t("maqam.englishName")}</th>
-                  {pitchClasses.map((pitchClass, i) => (
-                    <React.Fragment key={i}>
-                      <th className="maqam-transpositions__header-pitchClass">{pitchClass.englishName}</th>
-                      <th className="maqam-transpositions__header-pitchClass"></th>
-                    </React.Fragment>
-                  ))}
+                  {(() => {
+                    const englishNames: string[] = [];
+                    let prev: string | undefined;
+                    for (const pc of pitchClasses) {
+                      const name = getEnglishNoteName(pc.noteName, prev ? { prevEnglish: prev } : undefined);
+                      englishNames.push(name);
+                      prev = name;
+                    }
+                    return englishNames.map((ename, i) => (
+                      <React.Fragment key={i}>
+                        <th className="maqam-transpositions__header-pitchClass">{ename}</th>
+                        <th className="maqam-transpositions__header-pitchClass"></th>
+                      </React.Fragment>
+                    ));
+                  })()}
                 </tr>
               )}
               <tr>

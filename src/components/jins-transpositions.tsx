@@ -341,13 +341,26 @@ export default function JinsTranspositions() {
               {filters["englishName"] && (
                 <tr>
                   <th className="jins-transpositions__row-header">{t("jins.englishName")}</th>
-                  <th className="jins-transpositions__header-pitchClass">{pitchClasses[0].englishName}</th>
-                  {intervals.map((interval, i) => (
-                    <React.Fragment key={i}>
-                      <th className="jins-transpositions__header-pitchClass"></th>
-                      <th className="jins-transpositions__header-pitchClass">{pitchClasses[i + 1].englishName}</th>
-                    </React.Fragment>
-                  ))}
+                  {(() => {
+                    // Compute display English names sequentially (one-letter-per-degree policy)
+                    let prevEnglish: string | undefined = undefined;
+                    const displays: string[] = pitchClasses.map((pc) => {
+                      const en = getEnglishNoteName(pc.noteName, { prevEnglish });
+                      prevEnglish = en;
+                      return en;
+                    });
+                    return (
+                      <>
+                        <th className="jins-transpositions__header-pitchClass">{displays[0]}</th>
+                        {intervals.map((interval, i) => (
+                          <React.Fragment key={i}>
+                            <th className="jins-transpositions__header-pitchClass"></th>
+                            <th className="jins-transpositions__header-pitchClass">{displays[i + 1]}</th>
+                          </React.Fragment>
+                        ))}
+                      </>
+                    );
+                  })()}
                 </tr>
               )}
               <tr>

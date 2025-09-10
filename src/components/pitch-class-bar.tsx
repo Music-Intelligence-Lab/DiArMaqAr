@@ -5,9 +5,11 @@ import useSoundContext from "@/contexts/sound-context";
 import useLanguageContext from "@/contexts/language-context";
 import PitchClass from "@/models/PitchClass";
 import useTranspositionsContext from "@/contexts/transpositions-context";
+import { getEnglishNoteName } from "@/functions/noteNameMappings";
 
 interface WheelCellProps {
   pitchClass: PitchClass;
+  englishName?: string;
   isSelected: boolean;
   isActive: boolean;
   isDescending: boolean;
@@ -21,7 +23,7 @@ interface WheelCellProps {
 }
 
 const WheelCell = React.memo<WheelCellProps>(
-  ({ pitchClass, isSelected, isActive, isDescending, isTonic, isCurrentTonic, mapping, inputType, isBlackKey, isMapped, onClick }) => {
+  ({ pitchClass, englishName, isSelected, isActive, isDescending, isTonic, isCurrentTonic, mapping, inputType, isBlackKey, isMapped, onClick }) => {
     const { getDisplayName } = useLanguageContext();
     
     const baseClassName = "pitch-class-bar__cell";
@@ -60,14 +62,15 @@ const WheelCell = React.memo<WheelCellProps>(
     }
     
     const className = classNames.join(" ");
-    const displayNoteName = getDisplayName(pitchClass.noteName, 'note');
+  const displayNoteName = getDisplayName(pitchClass.noteName, 'note');
+  const displayedEnglish = englishName ?? pitchClass.englishName;
 
     return (
       <div className={className} onClick={onClick} style={{ cursor: isTonic ? "pointer" : undefined }}>
         <span className="pitch-class-bar__cell-label">{displayNoteName.replace(/\//g, "/\u200B")}</span>
 
         <span className="pitch-class-bar__cell-qwerty-englishname">
-          <span className="pitch-class-bar__cell-english" dir="ltr">{pitchClass.englishName}</span>
+          <span className="pitch-class-bar__cell-english" dir="ltr">{displayedEnglish}</span>
           {inputType === "QWERTY" && mapping && <span className="pitch-class-bar__cell-mapping">{mapping}</span>}
         </span>
       </div>
@@ -150,7 +153,7 @@ export default function PitchClassBar() {
       ? selectedJins.jinsPitchClasses[0]?.originalValue
       : selectedJinsData?.getTahlil(allPitchClasses).jinsPitchClasses[0]?.originalValue;
 
-    return allPitchClasses.map((pitchClass: PitchClass) => {
+    const entries = allPitchClasses.map((pitchClass: PitchClass) => {
       const originalValue = pitchClass.originalValue;
       const isSelected = selectedPitchClasses.some((sc) => sc.originalValue === originalValue);
       const isActive = activePitchClasses.some((ac) => ac.index === pitchClass.index && ac.octave === pitchClass.octave);
@@ -225,6 +228,42 @@ export default function PitchClassBar() {
         onClick,
       };
     });
+
+    // First, try to compute a preferred enharmonic mapping from the current musical context
+    // (selected maqam, selected jins, or current selectedPitchClasses). This ensures that
+    // when a maqam is active (e.g., maqam ṣabā) we prefer the enharmonic spellings implied by it.
+    const preferredMap: Record<string, string> = {};
+    let prevEnglish: string | undefined = undefined;
+    const contextSeq: { noteName: string }[] | undefined =
+      (selectedMaqam && selectedMaqam.ascendingPitchClasses) ||
+      (selectedJins && selectedJins.jinsPitchClasses) ||
+      (selectedPitchClasses && selectedPitchClasses.length >= 2 ? selectedPitchClasses : undefined);
+
+    if (contextSeq) {
+      prevEnglish = undefined;
+      for (const pc of contextSeq) {
+        if (!pc || !pc.noteName) continue;
+        const en = getEnglishNoteName(pc.noteName, { prevEnglish });
+        preferredMap[pc.noteName] = en;
+        prevEnglish = en;
+      }
+    }
+
+    // Attach englishName: prefer preferredMap, else compute sequentially across entries
+    prevEnglish = undefined;
+    for (const entry of entries) {
+      const noteName = entry.pitchClass.noteName;
+      if (preferredMap[noteName]) {
+        (entry as any).englishName = preferredMap[noteName];
+        prevEnglish = preferredMap[noteName];
+        continue;
+      }
+      const en = getEnglishNoteName(noteName, { prevEnglish });
+      (entry as any).englishName = en;
+      prevEnglish = en;
+    }
+
+    return entries;
   }, [
     allPitchClasses,
     selectedPitchClasses,

@@ -241,10 +241,65 @@ function splitEnglishNoteName(englishNoteName: string) {
  * @param arabicName - The Arabic note name to convert
  * @returns The corresponding English note name, or "--" if not found
  */
-export function getEnglishNoteName(arabicName: string): string {
+export type EnglishNameOptions = { prevEnglish?: string; prefer?: "sharp" | "flat" | "auto" };
+
+function swapEnharmonicSimple(name: string): string | null {
+  // handle simple single-sharp / single-flat enharmonics, preserve case
+  const map: { [k: string]: string } = {
+    "C#": "Db",
+    "D#": "Eb",
+    "F#": "Gb",
+    "G#": "Ab",
+    "A#": "Bb",
+    "E#": "F",
+    "B#": "C",
+    "Db": "C#",
+    "Eb": "D#",
+    "Gb": "F#",
+    "Ab": "G#",
+    "Bb": "A#",
+    "Fb": "E",
+    "Cb": "B",
+  };
+
+  // Normalize case for lookup then restore case of original first char
+  const key = name.length >= 2 ? name[0].toUpperCase() + name.slice(1) : name.toUpperCase();
+  const swapped = map[key];
+  if (!swapped) return null;
+
+  // match case of original (if original first char was lowercase, return lowercase)
+  if (name[0] === name[0].toLowerCase()) return swapped.toLowerCase();
+  return swapped;
+}
+
+export function getEnglishNoteName(arabicName: string, opts?: EnglishNameOptions): string {
   const mapping = arabicToEnglishNoteMapping[arabicName];
-  if (mapping) return splitEnglishNoteName(mapping).englishNoteNameNatural + splitEnglishNoteName(mapping).englishNoteNameAccidental;
-  else return "--";
+  if (!mapping) return "--";
+
+  // By default just return the direct mapping
+  let candidate = mapping;
+
+  // If caller supplied a previous English name, avoid repeating the same diatonic letter
+  if (opts && opts.prevEnglish) {
+    try {
+      const prev = splitEnglishNoteName(opts.prevEnglish);
+      const cand = splitEnglishNoteName(candidate);
+      const prevLetter = prev.englishNoteNameNatural.toUpperCase();
+      const candLetter = cand.englishNoteNameNatural.toUpperCase();
+
+      if (prevLetter === candLetter) {
+        // try simple enharmonic swap (C# <-> Db, etc.) but only for simple tokens (no microtonal + / - tokens)
+        if (!/[+\-]{1,2}/.test(candidate) && !/[+\-]{1,2}/.test(opts.prevEnglish)) {
+          const swapped = swapEnharmonicSimple(candidate);
+          if (swapped) candidate = swapped;
+        }
+      }
+    } catch {
+      // fallback: ignore and return mapping
+    }
+  }
+
+  return splitEnglishNoteName(candidate).englishNoteNameNatural + splitEnglishNoteName(candidate).englishNoteNameAccidental;
 }
 
 // -----------------------
