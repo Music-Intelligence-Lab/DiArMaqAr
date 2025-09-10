@@ -221,11 +221,11 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
-    font-weight: 300;
+    font-weight: 400;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     /* Help variable / web fonts pick the intended weight on Safari */
-    font-variation-settings: "wght" 300;
+    font-variation-settings: "wght" 400;
     font-synthesis: none;
 
     // RTL support
@@ -238,6 +238,11 @@
       font-size: 14px;
       margin-top: 3px;
       font-weight: 200;
+        -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Help variable / web fonts pick the intended weight on Safari */
+    font-variation-settings: "wght" 200;
+    font-synthesis: none;
 
       // RTL support
       [dir="rtl"] & {
