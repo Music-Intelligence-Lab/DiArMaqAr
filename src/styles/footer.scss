@@ -2,12 +2,12 @@
 @use "sass:color";
 
 .footer {
-  background-color: rgb($black , 0.5);
+  background-color: rgb($black , 0.6);
   color: $text;
   padding: 1rem 0 1rem;
-  //border-top: 1px solid $grey;
+  border-top: 1px solid $grey;
   width: 100%;
-  //margin-top: 100px;
+  margin-top: 40px;
   margin-bottom: 10px;
 
   &__content {
@@ -35,7 +35,7 @@
     font-weight: 400;
     color: $text;
     margin-bottom: 0.5rem;
-    line-height: 1.3;
+    line-height: 1;
   }
 
   &__subtitle {
@@ -49,12 +49,15 @@
     color: $light-grey;
     line-height: 1.5;
     margin-bottom: 0.5rem;
+    font-size: 14px;
   }
 
   &__text {
     color: $light-grey;
     line-height: 1.4;
     margin-bottom: 0.25rem;
+     font-size: 14px;
+
 
     &:last-child {
       margin-bottom: 0;
@@ -72,6 +75,8 @@
 
   &__list-item {
     margin: 0;
+     font-size: 14px;
+
   }
 
   &__link {
@@ -90,10 +95,10 @@
   }
 
   &__logo {
-    margin-top: 0.5rem;
+    margin-top: 0rem;
     
     img {
-      max-height: 40px;
+      max-height: 50px;
       width: auto;
       filter: brightness(0.9);
       transition: filter 0.2s ease;
@@ -124,10 +129,10 @@
 
   &__copyright,
   &__license {
-    font-size: 0.9rem;
+    font-size: 12px;
     color: $light-grey;
     margin: 0;
-    line-height: 1.4;
+    line-height: 1;
   }
 
   &__license {
