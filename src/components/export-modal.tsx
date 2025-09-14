@@ -273,6 +273,7 @@ export default function ExportModal({ isOpen, onClose, exportType, specificJins,
 
     switch (options.format) {
       case "json":
+        console.log("Exported JSON data:", data); // For debugging
         content = JSON.stringify(data, null, 2);
         mimeType = "application/json";
         fileExtension = "json";
