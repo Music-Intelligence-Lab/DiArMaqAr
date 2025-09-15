@@ -35,6 +35,10 @@ export default function LandingPage() {
           <a className="button" href="#tour">
             {language === "ar" ? "ابدأوا جولة تفاعلية" : "Take an Interactive Tour"}
           </a>
+          <a className="button" href="/docs/index.html">
+            {language === "ar" ? "ابدأوا جولة تفاعلية" : "Take an Interactive Tour"}
+          </a>
+
           <a className="button" href="#code">
             {language === "ar" ? "اطّلعوا على الشيفرة المصدرية" : "Access the Source Code"}
           </a>
