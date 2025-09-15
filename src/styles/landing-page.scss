@@ -1,13 +1,40 @@
 @use "./variables" as *;
 
+// Prevent horizontal scrolling globally
+body {
+  overflow-x: hidden;
+}
+
 .landing-page {
   display: flex;
   flex-direction: column;
-
   max-width: 60%;
   margin: 30px auto;
   padding: 0rem;
   min-height: fit-content;
+  box-sizing: border-box;
+  overflow-x: hidden;
+
+  // Responsive design
+  @media (max-width: 1200px) {
+    max-width: 70%;
+  }
+
+  @media (max-width: 992px) {
+    max-width: 80%;
+  }
+
+  @media (max-width: 768px) {
+    max-width: 90%;
+    margin: 20px auto;
+    padding: 0 1rem;
+  }
+
+  @media (max-width: 576px) {
+    max-width: 95%;
+    margin: 15px auto;
+    padding: 0 0.5rem;
+  }
 
   h1 {
     font-size: 40px;
@@ -17,8 +44,15 @@
     text-align: center;
     font-weight: 400;
     
-    
-    //    text-align: center;
+    @media (max-width: 768px) {
+      font-size: 32px;
+      margin-top: 15px;
+      margin-bottom: 15px;
+    }
+
+    @media (max-width: 576px) {
+      font-size: 28px;
+    }
   }
 
 h2 {
@@ -35,6 +69,16 @@ h2 {
     color: $text;
     font-weight: 200;
     text-align: center;
+
+    @media (max-width: 768px) {
+      font-size: 20px;
+      margin-bottom: 30px;
+    }
+
+    @media (max-width: 576px) {
+      font-size: 18px;
+      margin-bottom: 25px;
+    }
   }
 
   p {
@@ -128,6 +172,14 @@ h2 {
     justify-content: center;
     margin-bottom: 50px;
     width: 100%;
+    box-sizing: border-box;
+    flex-wrap: wrap;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 40px;
+    }
   }
 
   .main-button {
@@ -155,12 +207,22 @@ h2 {
     align-items: center;
     background: $primary;
     color: $text;
-    padding: 12px 0;
+    padding: 12px 10px;
     border-radius: 0px;
     cursor: pointer;
     font-weight: 500;
     text-align: center;
     min-width: 0; /* prevents overflow in flex items */
+    box-sizing: border-box;
+    word-wrap: break-word;
+    hyphens: auto;
+
+    @media (max-width: 768px) {
+      flex: 1 1 100%;
+      min-width: 100%;
+      padding: 12px 8px;
+      font-size: 14px;
+    }
   }
 
   .button:hover {
@@ -191,9 +253,22 @@ a.main-button:hover {
 
   .features-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(30%, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
     margin: 2rem 0;
+    width: 100%;
+    box-sizing: border-box;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    @media (max-width: 576px) {
+      gap: 1rem;
+      margin: 1rem 0;
+    }
   }
 
   .feature-card {
@@ -202,19 +277,33 @@ a.main-button:hover {
     border-radius: 8px;
     padding: 1.5rem;
     transition: all 0.3s ease;
+    box-sizing: border-box;
+    width: 100%;
 
+    @media (max-width: 576px) {
+      padding: 1rem;
+    }
 
     h3 {
       color: $gold;
       margin-bottom: 1rem;
       font-size: 18px;
       font-weight: 400;
+
+      @media (max-width: 576px) {
+        font-size: 16px;
+        margin-bottom: 0.8rem;
+      }
     }
 
     p {
       margin-bottom: 0;
-      //text-align: left;
       font-size: 14px;
       line-height: 1.6;
+      word-wrap: break-word;
+
+      @media (max-width: 576px) {
+        font-size: 13px;
+      }
     }
   }
