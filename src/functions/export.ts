@@ -5,39 +5,84 @@ import MaqamData, { Maqam, MaqamatModulations, MaqamDataInterface } from "@/mode
 import getTuningSystemPitchClasses from "./getTuningSystemPitchClasses";
 import { getAjnas, getMaqamat } from "./import";
 import { getJinsTranspositions, getMaqamTranspositions } from "./transpose";
-import PitchClass from "@/models/PitchClass";
+import PitchClass, { PitchClassInterval } from "@/models/PitchClass";
 import modulate from "./modulate";
 import calculateNumberOfModulations from "./calculateNumberOfModulations";
+
+/**
+ * Converts a string with diacritics to their natural letters and replaces spaces with underscores
+ * @param text The input string to convert
+ * @returns The converted string with diacritics removed and spaces replaced with underscores
+ */
+export function englishify(text: string): string {
+  return (
+    text
+      // Normalize to decompose combined characters
+      .normalize("NFD")
+      // Remove diacritics (combining marks)
+      .replace(/[\u0300-\u036f]/g, "")
+      // Remove apostrophes
+      .replace(/'/g, "")
+      // Replace spaces with underscores
+      .replace(/\s+/g, "_")
+  );
+}
+
+export interface MergedJins {
+  jinsId: string;
+  name: string;
+  jinsPitchClasses: string[];
+  jinsPitchClassIntervals: PitchClassInterval[];
+  transposition: boolean;
+  commentsEnglish: string;
+  commentsArabic: string;
+  SourcePageReferences: any[];
+}
+
+export interface MergedMaqam {
+  maqamId: string;
+  name: string;
+  ascendingPitchClasses: string[];
+  descendingPitchClasses: string[];
+  descendingPitchClassIntervals: PitchClassInterval[];
+  ascendingPitchClassIntervals: PitchClassInterval[];
+  ascendingMaqamAjnas?: { [noteName: string]: string | null };
+  descendingMaqamAjnas?: { [noteName: string]: string | null };
+  transposition: boolean;
+  commentsEnglish: string;
+  commentsArabic: string;
+  SourcePageReferences: any[];
+}
 
 /**
  * Index-based modulations for Maqamat using array indices instead of full objects
  * to reduce JSON export size
  */
-export interface MaqamatModulationsWithIndices {
+export interface MaqamatModulationsWithKeys{
   /** Indices of modulations that occur on the first scale degree */
-  modulationsOnOne: number[];
-  
+  modulationsOnOne: string[];
+
   /** Indices of modulations that occur on the third scale degree */
-  modulationsOnThree: number[];
-  
+  modulationsOnThree: string[];
+
   /** Indices of modulations that occur on the third scale degree (second pattern) */
-  modulationsOnThree2p: number[];
-  
+  modulationsOnThree2p: string[];
+
   /** Indices of modulations that occur on the fourth scale degree */
-  modulationsOnFour: number[];
-  
+  modulationsOnFour: string[];
+
   /** Indices of modulations that occur on the fifth scale degree */
-  modulationsOnFive: number[];
-  
+  modulationsOnFive: string[];
+
   /** Indices of ascending modulations that occur on the sixth scale degree */
-  modulationsOnSixAscending: number[];
-  
+  modulationsOnSixAscending: string[];
+
   /** Indices of descending modulations that occur on the sixth scale degree */
-  modulationsOnSixDescending: number[];
-  
+  modulationsOnSixDescending: string[];
+
   /** Indices of modulations on the sixth scale degree without using the third */
-  modulationsOnSixNoThird: number[];
-  
+  modulationsOnSixNoThird: string[];
+
   /** The note name of the second degree (plus variations) */
   noteName2p: string;
 }
@@ -46,31 +91,31 @@ export interface MaqamatModulationsWithIndices {
  * Index-based modulations for Ajnas using array indices instead of full objects
  * to reduce JSON export size
  */
-export interface AjnasModulationsWithIndices {
+export interface AjnasModulationsWithKeys {
   /** Indices of modulations that occur on the first scale degree */
-  modulationsOnOne: number[];
-  
+  modulationsOnOne: string[];
+
   /** Indices of modulations that occur on the third scale degree */
-  modulationsOnThree: number[];
-  
+  modulationsOnThree: string[];
+
   /** Indices of modulations that occur on the third scale degree (second pattern) */
-  modulationsOnThree2p: number[];
-  
+  modulationsOnThree2p: string[];
+
   /** Indices of modulations that occur on the fourth scale degree */
-  modulationsOnFour: number[];
-  
+  modulationsOnFour: string[];
+
   /** Indices of modulations that occur on the fifth scale degree */
-  modulationsOnFive: number[];
-  
+  modulationsOnFive: string[];
+
   /** Indices of ascending modulations that occur on the sixth scale degree */
-  modulationsOnSixAscending: number[];
-  
+  modulationsOnSixAscending: string[];
+
   /** Indices of descending modulations that occur on the sixth scale degree */
-  modulationsOnSixDescending: number[];
-  
+  modulationsOnSixDescending: string[];
+
   /** Indices of modulations on the sixth scale degree without using the third */
-  modulationsOnSixNoThird: number[];
-  
+  modulationsOnSixNoThird: string[];
+
   /** The note name of the second degree (plus variations) */
   noteName2p: string;
 }
@@ -78,18 +123,16 @@ export interface AjnasModulationsWithIndices {
 interface ExportedTuningSystem {
   tuningSystem?: TuningSystem;
   startingNote?: NoteName;
+  pitchClassReference?: { [noteName: string]: PitchClass };
+  maqamReference?: { [maqamName: string]: MergedMaqam };
+  jinsReference?: { [ajnasName: string]: MergedJins };
   fullRangeTuningSystemPitchClasses?: PitchClass[];
   numberOfPossibleAjnas?: number;
   numberOfAjnas?: number;
-  possibleAjnasOverview?: JinsDataInterface[];
-  possibleAjnas?: Jins[];
+  possibleAjnas?: string[];
   numberOfPossibleMaqamat?: number;
   numberOfMaqamat?: number;
-  possibleMaqamatOverview?: MaqamDataInterface[];
-  possibleMaqamat?: MaqamWithAjnasAsObjects[];
-  // Index-based modulations ONLY for tuning system exports to handle large datasets
-  maqamatReference?: MaqamWithAjnasAsObjects[];
-  ajnasReference?: Jins[];
+  possibleMaqamat?: string[];
 }
 
 export interface ExportOptions {
@@ -116,128 +159,35 @@ export interface MaqamExportOptions {
 }
 
 interface ExportedJins {
-  jins?: Jins; // Export the actual Jins instance instead of JinsData
+  jins?: MergedJins; // Export as MergedJins for consistent pitch class referencing
   tuningSystem?: TuningSystem;
   startingNote?: NoteName;
-  fullRangeTuningSystemPitchClasses?: PitchClass[];
-  transpositions?: Jins[];
+  pitchClassReference?: { [noteName: string]: PitchClass };
+  jinsReference?: { [ajnasName: string]: MergedJins };
+  fullRangeTuningSystemPitchClasses?: string[];
+  transpositions?: string[];
   numberOfTranspositions?: number;
 }
 
 interface ExportedMaqam {
-  maqam?: MaqamWithAjnasAsObjects; // Export modified Maqam with ajnas as objects
+  maqam?: MergedMaqam; // Export as MergedMaqam for consistent pitch class referencing
   tuningSystem?: TuningSystem;
   startingNote?: NoteName;
-  fullRangeTuningSystemPitchClasses?: PitchClass[];
-  transpositions?: MaqamWithAjnasAsObjects[];
+  pitchClassReference?: { [noteName: string]: PitchClass };
+  jinsReference?: { [ajnasName: string]: MergedJins };
+  maqamReference?: { [maqamName: string]: MergedMaqam };
+  fullRangeTuningSystemPitchClasses?: string[];
+  transpositions?: string[];
   numberOfTranspositions?: number;
-  maqamatModulations?: MaqamatModulations; // Reverted to original format
+  maqamatModulations?: MaqamatModulationsWithKeys; // Reverted to original format
   numberOfMaqamModulationHops?: number;
-  ajnasModulations?: AjnasModulations; // Reverted to original format
+  ajnasModulations?: AjnasModulationsWithKeys; // Reverted to original format
   numberOfJinsModulationHops?: number;
 }
 
 interface MaqamWithAjnasAsObjects extends Omit<Maqam, "ascendingMaqamAjnas" | "descendingMaqamAjnas"> {
   ascendingMaqamAjnas?: { [noteName: string]: Jins | null };
   descendingMaqamAjnas?: { [noteName: string]: Jins | null };
-}
-
-/**
- * Converts a MaqamatModulations object to index-based format
- * @param modulations - The full modulations object
- * @param allMaqamat - Array of all available maqamat for reference
- * @returns Index-based modulations object
- */
-export function convertMaqamatModulationsToIndices(modulations: MaqamatModulations, allMaqamat: Maqam[]): MaqamatModulationsWithIndices {
-  const findMaqamIndex = (maqam: Maqam): number => {
-    const index = allMaqamat.findIndex(m => m.maqamId === maqam.maqamId);
-    return index !== -1 ? index : -1; // Return -1 if not found
-  };
-
-  return {
-    modulationsOnOne: modulations.modulationsOnOne.map(findMaqamIndex).filter(i => i !== -1),
-    modulationsOnThree: modulations.modulationsOnThree.map(findMaqamIndex).filter(i => i !== -1),
-    modulationsOnThree2p: modulations.modulationsOnThree2p.map(findMaqamIndex).filter(i => i !== -1),
-    modulationsOnFour: modulations.modulationsOnFour.map(findMaqamIndex).filter(i => i !== -1),
-    modulationsOnFive: modulations.modulationsOnFive.map(findMaqamIndex).filter(i => i !== -1),
-    modulationsOnSixAscending: modulations.modulationsOnSixAscending.map(findMaqamIndex).filter(i => i !== -1),
-    modulationsOnSixDescending: modulations.modulationsOnSixDescending.map(findMaqamIndex).filter(i => i !== -1),
-    modulationsOnSixNoThird: modulations.modulationsOnSixNoThird.map(findMaqamIndex).filter(i => i !== -1),
-    noteName2p: modulations.noteName2p
-  };
-}
-
-/**
- * Converts an AjnasModulations object to index-based format
- * @param modulations - The full modulations object
- * @param allAjnas - Array of all available ajnas for reference
- * @returns Index-based modulations object
- */
-export function convertAjnasModulationsToIndices(modulations: AjnasModulations, allAjnas: Jins[]): AjnasModulationsWithIndices {
-  const findJinsIndex = (jins: Jins): number => {
-    const index = allAjnas.findIndex(j => j.jinsId === jins.jinsId);
-    return index !== -1 ? index : -1; // Return -1 if not found
-  };
-
-  return {
-    modulationsOnOne: modulations.modulationsOnOne.map(findJinsIndex).filter(i => i !== -1),
-    modulationsOnThree: modulations.modulationsOnThree.map(findJinsIndex).filter(i => i !== -1),
-    modulationsOnThree2p: modulations.modulationsOnThree2p.map(findJinsIndex).filter(i => i !== -1),
-    modulationsOnFour: modulations.modulationsOnFour.map(findJinsIndex).filter(i => i !== -1),
-    modulationsOnFive: modulations.modulationsOnFive.map(findJinsIndex).filter(i => i !== -1),
-    modulationsOnSixAscending: modulations.modulationsOnSixAscending.map(findJinsIndex).filter(i => i !== -1),
-    modulationsOnSixDescending: modulations.modulationsOnSixDescending.map(findJinsIndex).filter(i => i !== -1),
-    modulationsOnSixNoThird: modulations.modulationsOnSixNoThird.map(findJinsIndex).filter(i => i !== -1),
-    noteName2p: modulations.noteName2p
-  };
-}
-
-/**
- * Resolves index-based MaqamatModulations back to full objects
- * @param indexModulations - The index-based modulations
- * @param allMaqamat - Array of all available maqamat for reference
- * @returns Full modulations object
- */
-export function resolveMaqamatModulationsFromIndices(indexModulations: MaqamatModulationsWithIndices, allMaqamat: Maqam[]): MaqamatModulations {
-  const getMaqamByIndex = (index: number): Maqam | null => {
-    return index >= 0 && index < allMaqamat.length ? allMaqamat[index] : null;
-  };
-
-  return {
-    modulationsOnOne: indexModulations.modulationsOnOne.map(getMaqamByIndex).filter(m => m !== null) as Maqam[],
-    modulationsOnThree: indexModulations.modulationsOnThree.map(getMaqamByIndex).filter(m => m !== null) as Maqam[],
-    modulationsOnThree2p: indexModulations.modulationsOnThree2p.map(getMaqamByIndex).filter(m => m !== null) as Maqam[],
-    modulationsOnFour: indexModulations.modulationsOnFour.map(getMaqamByIndex).filter(m => m !== null) as Maqam[],
-    modulationsOnFive: indexModulations.modulationsOnFive.map(getMaqamByIndex).filter(m => m !== null) as Maqam[],
-    modulationsOnSixAscending: indexModulations.modulationsOnSixAscending.map(getMaqamByIndex).filter(m => m !== null) as Maqam[],
-    modulationsOnSixDescending: indexModulations.modulationsOnSixDescending.map(getMaqamByIndex).filter(m => m !== null) as Maqam[],
-    modulationsOnSixNoThird: indexModulations.modulationsOnSixNoThird.map(getMaqamByIndex).filter(m => m !== null) as Maqam[],
-    noteName2p: indexModulations.noteName2p
-  };
-}
-
-/**
- * Resolves index-based AjnasModulations back to full objects
- * @param indexModulations - The index-based modulations
- * @param allAjnas - Array of all available ajnas for reference
- * @returns Full modulations object
- */
-export function resolveAjnasModulationsFromIndices(indexModulations: AjnasModulationsWithIndices, allAjnas: Jins[]): AjnasModulations {
-  const getJinsByIndex = (index: number): Jins | null => {
-    return index >= 0 && index < allAjnas.length ? allAjnas[index] : null;
-  };
-
-  return {
-    modulationsOnOne: indexModulations.modulationsOnOne.map(getJinsByIndex).filter(j => j !== null) as Jins[],
-    modulationsOnThree: indexModulations.modulationsOnThree.map(getJinsByIndex).filter(j => j !== null) as Jins[],
-    modulationsOnThree2p: indexModulations.modulationsOnThree2p.map(getJinsByIndex).filter(j => j !== null) as Jins[],
-    modulationsOnFour: indexModulations.modulationsOnFour.map(getJinsByIndex).filter(j => j !== null) as Jins[],
-    modulationsOnFive: indexModulations.modulationsOnFive.map(getJinsByIndex).filter(j => j !== null) as Jins[],
-    modulationsOnSixAscending: indexModulations.modulationsOnSixAscending.map(getJinsByIndex).filter(j => j !== null) as Jins[],
-    modulationsOnSixDescending: indexModulations.modulationsOnSixDescending.map(getJinsByIndex).filter(j => j !== null) as Jins[],
-    modulationsOnSixNoThird: indexModulations.modulationsOnSixNoThird.map(getJinsByIndex).filter(j => j !== null) as Jins[],
-    noteName2p: indexModulations.noteName2p
-  };
 }
 
 function convertMaqamAjnasToObjects(maqam: Maqam): MaqamWithAjnasAsObjects {
@@ -297,6 +247,12 @@ export function exportTuningSystem(tuningSystem: TuningSystem, startingNote: Not
   result.numberOfAjnas = allAjnas.length;
   result.numberOfMaqamat = allMaqamat.length;
 
+  const pitchClassReference: { [noteName: string]: PitchClass } = {};
+
+  const jinsReference: { [jinsName: string]: MergedJins } = {};
+
+  const maqamReference: { [maqamName: string]: MergedMaqam } = {};
+
   // Include tuning system details if requested
   if (options.includeTuningSystemDetails) {
     result.tuningSystem = tuningSystem;
@@ -309,23 +265,31 @@ export function exportTuningSystem(tuningSystem: TuningSystem, startingNote: Not
     result.fullRangeTuningSystemPitchClasses = fullRangeTuningSystemPitchClasses;
   }
 
+  fullRangeTuningSystemPitchClasses.forEach((pc) => {
+    pitchClassReference[englishify(pc.noteName)] = pc;
+  });
+
   // Filter possible ajnas and maqamat
-  const possibleAjnasOverview: (JinsData | JinsDataInterface)[] = allAjnas.filter((jins) =>
+  const possibleAjnasOverview: JinsData[] = allAjnas.filter((jins) =>
     jins.getNoteNames().every((noteName) => fullRangeTuningSystemPitchClasses.some((pitchClass) => pitchClass.noteName === noteName))
   );
 
-  const possibleMaqamatOverview: (MaqamData | MaqamDataInterface)[] = allMaqamat.filter(
+  const possibleAjnasOverviewInterfaces: JinsDataInterface[] = [];
+
+  const possibleMaqamatOverview: MaqamData[] = allMaqamat.filter(
     (maqam) =>
       maqam.getAscendingNoteNames().every((noteName) => fullRangeTuningSystemPitchClasses.some((pitchClass) => pitchClass.noteName === noteName)) &&
       maqam.getDescendingNoteNames().every((noteName) => fullRangeTuningSystemPitchClasses.some((pitchClass) => pitchClass.noteName === noteName))
   );
+
+  const possibleMaqamatOverviewInterfaces: MaqamDataInterface[] = [];
 
   // Always include the counts
   result.numberOfPossibleAjnas = possibleAjnasOverview.length;
   result.numberOfPossibleMaqamat = possibleMaqamatOverview.length;
 
   // Include ajnas details if requested
-  if (options.includeAjnasDetails) {
+  if (options.includeAjnasDetails || options.includeMaqamatDetails) {
     const possibleAjnas: Jins[] = [];
 
     for (let i = 0; i < possibleAjnasOverview.length; i++) {
@@ -337,50 +301,57 @@ export function exportTuningSystem(tuningSystem: TuningSystem, startingNote: Not
         numberOfTranspositions++;
       }
 
-      possibleAjnasOverview[i] = jins.convertToObject();
-      (possibleAjnasOverview[i] as JinsDataInterface).numberOfTranspositions = numberOfTranspositions;
+      const possibleJinsOverviewInterface = jins.convertToObject();
+      possibleJinsOverviewInterface.numberOfTranspositions = numberOfTranspositions;
+
+      possibleAjnasOverviewInterfaces.push(possibleJinsOverviewInterface);
     }
 
-    result.possibleAjnasOverview = possibleAjnasOverview as JinsDataInterface[];
-    result.possibleAjnas = possibleAjnas;
+    result.possibleAjnas = [];
+
+    for (const possibleJins of possibleAjnas) {
+      const jinsOverview = possibleAjnasOverview.find((j) => j.getId() === possibleJins.jinsId);
+
+      if (jinsOverview) {
+        const mergedJins: MergedJins = {
+          jinsId: possibleJins.jinsId,
+          name: possibleJins.name,
+          jinsPitchClasses: possibleJins.jinsPitchClasses.map((pc) => englishify(pc.noteName)),
+          jinsPitchClassIntervals: possibleJins.jinsPitchClassIntervals,
+          transposition: possibleJins.transposition,
+          commentsEnglish: jinsOverview.getCommentsEnglish(),
+          commentsArabic: jinsOverview.getCommentsArabic(),
+          SourcePageReferences: jinsOverview.getSourcePageReferences(),
+        };
+
+        jinsReference[englishify(possibleJins.name)] = mergedJins;
+        result.possibleAjnas.push(englishify(possibleJins.name));
+      }
+    }
   }
 
   // Include maqamat details if requested
   if (options.includeMaqamatDetails) {
     const possibleMaqamat: MaqamWithAjnasAsObjects[] = [];
-    const allMaqamatForModulations: Maqam[] = []; // For modulation reference
 
     for (let i = 0; i < possibleMaqamatOverview.length; i++) {
       const maqam = possibleMaqamatOverview[i] as MaqamData;
 
       let numberOfTranspositions = 0;
       for (const maqamTransposition of getMaqamTranspositions(fullRangeTuningSystemPitchClasses, allAjnas, maqam, true, centsTolerance)) {
-        allMaqamatForModulations.push(maqamTransposition); // Store for reference
-        
         // Include modulations if requested
         if (options.includeMaqamatModulations || options.includeAjnasModulations) {
           if (options.includeMaqamatModulations) {
             const maqamatModulations = modulate(fullRangeTuningSystemPitchClasses, allAjnas, allMaqamat, maqamTransposition, false, centsTolerance) as MaqamatModulations;
             const numberOfMaqamModulationHops = calculateNumberOfModulations(maqamatModulations);
-            // Convert to index-based modulations
-            const indexBasedMaqamatModulations = convertMaqamatModulationsToIndices(maqamatModulations, allMaqamatForModulations);
-            (maqamTransposition as any).maqamatModulations = indexBasedMaqamatModulations;
+            (maqamTransposition as any).maqamatModulations = maqamatModulations;
             (maqamTransposition as any).numberOfMaqamModulationHops = numberOfMaqamModulationHops;
           }
 
           if (options.includeAjnasModulations) {
             const ajnasModulations = modulate(fullRangeTuningSystemPitchClasses, allAjnas, allMaqamat, maqamTransposition, true, centsTolerance) as AjnasModulations;
             const numberOfJinsModulationHops = calculateNumberOfModulations(ajnasModulations);
-            // Get all possible ajnas for reference
-            const allAjnasInstances: Jins[] = [];
-            for (const jins of allAjnas) {
-              for (const jinsTransposition of getJinsTranspositions(fullRangeTuningSystemPitchClasses, jins, true, centsTolerance)) {
-                allAjnasInstances.push(jinsTransposition);
-              }
-            }
-            // Convert to index-based modulations
-            const indexBasedAjnasModulations = convertAjnasModulationsToIndices(ajnasModulations, allAjnasInstances);
-            (maqamTransposition as any).ajnasModulations = indexBasedAjnasModulations;
+            (maqamTransposition as any).ajnasModulations = ajnasModulations;
             (maqamTransposition as any).numberOfJinsModulationHops = numberOfJinsModulationHops;
           }
         }
@@ -389,28 +360,46 @@ export function exportTuningSystem(tuningSystem: TuningSystem, startingNote: Not
         numberOfTranspositions++;
       }
 
-      possibleMaqamatOverview[i] = maqam.convertToObject();
-      (possibleMaqamatOverview[i] as MaqamDataInterface).numberOfTranspositions = numberOfTranspositions;
+      const possibleMaqamOverviewInterface = maqam.convertToObject();
+      possibleMaqamOverviewInterface.numberOfTranspositions = numberOfTranspositions;
+
+      possibleMaqamatOverviewInterfaces.push(possibleMaqamOverviewInterface);
     }
 
-    result.possibleMaqamatOverview = possibleMaqamatOverview as MaqamDataInterface[];
-    result.possibleMaqamat = possibleMaqamat;
-    
-    // Add reference arrays for resolving indices
-    if (options.includeMaqamatModulations) {
-      result.maqamatReference = allMaqamatForModulations.map(convertMaqamAjnasToObjects);
-    }
-    if (options.includeAjnasModulations) {
-      // Get all possible ajnas for reference
-      const allAjnasInstances: Jins[] = [];
-      for (const jins of allAjnas) {
-        for (const jinsTransposition of getJinsTranspositions(fullRangeTuningSystemPitchClasses, jins, true, centsTolerance)) {
-          allAjnasInstances.push(jinsTransposition);
-        }
+    result.possibleMaqamat = [];
+
+    for (const possibleMaqam of possibleMaqamat) {
+      const maqamOverview = possibleMaqamatOverview.find((m) => m.getId() === possibleMaqam.maqamId);
+
+      if (maqamOverview) {
+        const mergedMaqam: MergedMaqam = {
+          maqamId: possibleMaqam.maqamId,
+          name: possibleMaqam.name,
+          ascendingPitchClasses: possibleMaqam.ascendingPitchClasses.map((pc) => englishify(pc.noteName)),
+          descendingPitchClasses: possibleMaqam.descendingPitchClasses.map((pc) => englishify(pc.noteName)),
+          ascendingPitchClassIntervals: possibleMaqam.ascendingPitchClassIntervals,
+          descendingPitchClassIntervals: possibleMaqam.descendingPitchClassIntervals,
+          ascendingMaqamAjnas: possibleMaqam.ascendingMaqamAjnas
+            ? Object.fromEntries(Object.entries(possibleMaqam.ascendingMaqamAjnas).map(([noteName, jins]) => [noteName, jins ? englishify(jins.name) : null]))
+            : undefined,
+          descendingMaqamAjnas: possibleMaqam.descendingMaqamAjnas
+            ? Object.fromEntries(Object.entries(possibleMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [noteName, jins ? englishify(jins.name) : null]))
+            : undefined,
+          transposition: possibleMaqam.transposition,
+          commentsEnglish: maqamOverview.getCommentsEnglish(),
+          commentsArabic: maqamOverview.getCommentsArabic(),
+          SourcePageReferences: maqamOverview.getSourcePageReferences(),
+        };
+
+        maqamReference[englishify(possibleMaqam.name)] = mergedMaqam;
+        result.possibleMaqamat.push(englishify(possibleMaqam.name));
       }
-      result.ajnasReference = allAjnasInstances;
     }
   }
+
+  result.pitchClassReference = pitchClassReference;
+  result.jinsReference = jinsReference;
+  result.maqamReference = maqamReference;
 
   return result;
 }
@@ -435,19 +424,26 @@ export function exportJins(jinsInput: Jins | JinsData, tuningSystem: TuningSyste
 
   const fullRangeTuningSystemPitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote);
 
+  const pitchClassReference: { [noteName: string]: PitchClass } = {};
+
+  const jinsReference: { [jinsName: string]: MergedJins } = {};
+
+  fullRangeTuningSystemPitchClasses.forEach((pc) => {
+    pitchClassReference[englishify(pc.noteName)] = pc;
+  });
+
   let jinsToExport: Jins;
   let jinsData: JinsData | undefined;
+
+  const allAjnas = getAjnas();
 
   // Check if input is a Jins instance or JinsData
   if ("jinsId" in jinsInput) {
     // It's a Jins instance - export this directly
     jinsToExport = jinsInput;
 
-    // Optionally get the details for transposition generation
-    if (options.includeTranspositions) {
-      const allAjnas = getAjnas();
-      jinsData = allAjnas.find((j) => j.getId() === jinsInput.jinsId);
-    }
+    // Find the jinsData for creating MergedJins
+    jinsData = allAjnas.find((j) => j.getId() === jinsInput.jinsId);
   } else {
     // It's a JinsData instance - convert to Jins using getTahlil
     jinsData = jinsInput;
@@ -462,25 +458,55 @@ export function exportJins(jinsInput: Jins | JinsData, tuningSystem: TuningSyste
 
   // Include pitch classes if requested
   if (options.includePitchClasses) {
-    result.fullRangeTuningSystemPitchClasses = fullRangeTuningSystemPitchClasses;
+    result.fullRangeTuningSystemPitchClasses = fullRangeTuningSystemPitchClasses.map((pc) => englishify(pc.noteName));
   }
 
-  // Include the actual jins instance
-  result.jins = jinsToExport;
+  // Include the actual jins instance as MergedJins
+  if (jinsData) {
+    const mergedJins: MergedJins = {
+      jinsId: jinsToExport.jinsId,
+      name: jinsToExport.name,
+      jinsPitchClasses: jinsToExport.jinsPitchClasses.map((pc) => englishify(pc.noteName)),
+      jinsPitchClassIntervals: jinsToExport.jinsPitchClassIntervals,
+      transposition: jinsToExport.transposition,
+      commentsEnglish: jinsData.getCommentsEnglish(),
+      commentsArabic: jinsData.getCommentsArabic(),
+      SourcePageReferences: jinsData.getSourcePageReferences(),
+    };
+    result.jins = mergedJins;
+  }
 
   // Include transpositions if requested and we have jinsData
   if (options.includeTranspositions && jinsData) {
-    const transpositions: Jins[] = [];
+    const transpositions: MergedJins[] = [];
     let numberOfTranspositions = 0;
 
     for (const jinsTransposition of getJinsTranspositions(fullRangeTuningSystemPitchClasses, jinsData, true, centsTolerance)) {
-      transpositions.push(jinsTransposition);
+      const jinsOverview = allAjnas.find((j) => j.getId() === jinsTransposition.jinsId);
+
+      if (jinsOverview) {
+        const mergedJins: MergedJins = {
+          jinsId: jinsTransposition.jinsId,
+          name: jinsTransposition.name,
+          jinsPitchClasses: jinsTransposition.jinsPitchClasses.map((pc) => englishify(pc.noteName)),
+          jinsPitchClassIntervals: jinsTransposition.jinsPitchClassIntervals,
+          transposition: jinsTransposition.transposition,
+          commentsEnglish: jinsOverview.getCommentsEnglish(),
+          commentsArabic: jinsOverview.getCommentsArabic(),
+          SourcePageReferences: jinsOverview.getSourcePageReferences(),
+        };
+
+        jinsReference[englishify(jinsTransposition.name)] = mergedJins;
+      transpositions.push(mergedJins);
       numberOfTranspositions++;
     }
 
-    result.transpositions = transpositions;
+    result.transpositions = transpositions.map((jins) => englishify(jins.name));
     result.numberOfTranspositions = numberOfTranspositions;
-  }
+  }}
+
+  result.pitchClassReference = pitchClassReference;
+  result.jinsReference = jinsReference;
 
   return result;
 }
@@ -509,6 +535,16 @@ export function exportMaqam(maqamInput: Maqam | MaqamData, tuningSystem: TuningS
 
   const fullRangeTuningSystemPitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote);
 
+  const pitchClassReference: { [noteName: string]: PitchClass } = {};
+
+  const jinsReference: { [jinsName: string]: MergedJins } = {};
+
+  const maqamReference: { [maqamName: string]: MergedMaqam } = {};
+
+  fullRangeTuningSystemPitchClasses.forEach((pc) => {
+    pitchClassReference[englishify(pc.noteName)] = pc;
+  });
+
   let maqamToExport: Maqam;
   let maqamData: MaqamData | undefined;
 
@@ -517,11 +553,9 @@ export function exportMaqam(maqamInput: Maqam | MaqamData, tuningSystem: TuningS
     // It's a Maqam instance - export this directly
     maqamToExport = maqamInput;
 
-    // Optionally get the details for transposition generation
-    if (options.includeTranspositions) {
-      const allMaqamat = getMaqamat();
-      maqamData = allMaqamat.find((m) => m.getId() === maqamInput.maqamId);
-    }
+    // Find the maqamData for creating MergedMaqam
+    const allMaqamat = getMaqamat();
+    maqamData = allMaqamat.find((m) => m.getId() === maqamInput.maqamId);
   } else {
     // It's a MaqamData instance - convert to Maqam using getTahlil
     maqamData = maqamInput;
@@ -536,11 +570,32 @@ export function exportMaqam(maqamInput: Maqam | MaqamData, tuningSystem: TuningS
 
   // Include pitch classes if requested
   if (options.includePitchClasses) {
-    result.fullRangeTuningSystemPitchClasses = fullRangeTuningSystemPitchClasses;
+    result.fullRangeTuningSystemPitchClasses = fullRangeTuningSystemPitchClasses.map((pc) => englishify(pc.noteName));
   }
 
-  // Include the actual maqam instance converted to use objects for ajnas
-  result.maqam = convertMaqamAjnasToObjects(maqamToExport);
+  // Include the actual maqam instance as MergedMaqam
+  if (maqamData) {
+    const convertedMaqam = convertMaqamAjnasToObjects(maqamToExport);
+    const mergedMaqam: MergedMaqam = {
+      maqamId: maqamToExport.maqamId,
+      name: maqamToExport.name,
+      ascendingPitchClasses: maqamToExport.ascendingPitchClasses.map((pc) => englishify(pc.noteName)),
+      descendingPitchClasses: maqamToExport.descendingPitchClasses.map((pc) => englishify(pc.noteName)),
+      ascendingPitchClassIntervals: maqamToExport.ascendingPitchClassIntervals,
+      descendingPitchClassIntervals: maqamToExport.descendingPitchClassIntervals,
+      ascendingMaqamAjnas: convertedMaqam.ascendingMaqamAjnas
+        ? Object.fromEntries(Object.entries(convertedMaqam.ascendingMaqamAjnas).map(([noteName, jins]) => [noteName, jins ? englishify(jins.name) : null]))
+        : undefined,
+      descendingMaqamAjnas: convertedMaqam.descendingMaqamAjnas
+        ? Object.fromEntries(Object.entries(convertedMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [noteName, jins ? englishify(jins.name) : null]))
+        : undefined,
+      transposition: maqamToExport.transposition,
+      commentsEnglish: maqamData.getCommentsEnglish(),
+      commentsArabic: maqamData.getCommentsArabic(),
+      SourcePageReferences: maqamData.getSourcePageReferences(),
+    };
+    result.maqam = mergedMaqam;
+  }
 
   // Include modulations if requested
   if (options.includeMaqamatModulations || options.includeAjnasModulations) {
@@ -552,7 +607,52 @@ export function exportMaqam(maqamInput: Maqam | MaqamData, tuningSystem: TuningS
       const maqamatModulations = modulate(fullRangeTuningSystemPitchClasses, allAjnas, allMaqamat, maqamToExport, false, centsTolerance) as MaqamatModulations;
       const numberOfMaqamModulationHops = calculateNumberOfModulations(maqamatModulations);
 
-      result.maqamatModulations = maqamatModulations; // Use original format
+      // Helper function to process maqam modulations and populate reference
+      const processMaqamModulations = (maqamList: Maqam[]) => {
+        return maqamList.map(maqam => {
+          const englishifiedName = englishify(maqam.name);
+          
+          // Find the original maqam data for additional details
+          const maqamOverview = allMaqamat.find((m) => m.getId() === maqam.maqamId);
+          if (maqamOverview) {
+            const mergedMaqam: MergedMaqam = {
+              maqamId: maqam.maqamId,
+              name: maqam.name,
+              ascendingPitchClasses: maqam.ascendingPitchClasses.map((pc) => englishify(pc.noteName)),
+              descendingPitchClasses: maqam.descendingPitchClasses.map((pc) => englishify(pc.noteName)),
+              ascendingPitchClassIntervals: maqam.ascendingPitchClassIntervals,
+              descendingPitchClassIntervals: maqam.descendingPitchClassIntervals,
+              ascendingMaqamAjnas: maqam.ascendingMaqamAjnas
+                ? Object.fromEntries(Object.entries(convertMaqamAjnasToObjects(maqam).ascendingMaqamAjnas || {}).map(([noteName, jins]) => [noteName, jins ? englishify(jins.name) : null]))
+                : undefined,
+              descendingMaqamAjnas: maqam.descendingMaqamAjnas
+                ? Object.fromEntries(Object.entries(convertMaqamAjnasToObjects(maqam).descendingMaqamAjnas || {}).map(([noteName, jins]) => [noteName, jins ? englishify(jins.name) : null]))
+                : undefined,
+              transposition: maqam.transposition,
+              commentsEnglish: maqamOverview.getCommentsEnglish(),
+              commentsArabic: maqamOverview.getCommentsArabic(),
+              SourcePageReferences: maqamOverview.getSourcePageReferences(),
+            };
+            maqamReference[englishifiedName] = mergedMaqam;
+          }
+          
+          return englishifiedName;
+        });
+      };
+
+      const maqamModulationWithKeys: MaqamatModulationsWithKeys = {
+        modulationsOnOne: processMaqamModulations(maqamatModulations.modulationsOnOne),
+        modulationsOnThree: processMaqamModulations(maqamatModulations.modulationsOnThree),
+        modulationsOnThree2p: processMaqamModulations(maqamatModulations.modulationsOnThree2p),
+        modulationsOnFour: processMaqamModulations(maqamatModulations.modulationsOnFour),
+        modulationsOnFive: processMaqamModulations(maqamatModulations.modulationsOnFive),
+        modulationsOnSixAscending: processMaqamModulations(maqamatModulations.modulationsOnSixAscending),
+        modulationsOnSixDescending: processMaqamModulations(maqamatModulations.modulationsOnSixDescending),
+        modulationsOnSixNoThird: processMaqamModulations(maqamatModulations.modulationsOnSixNoThird),
+        noteName2p: maqamatModulations.noteName2p,
+      }
+
+      result.maqamatModulations = maqamModulationWithKeys;
       result.numberOfMaqamModulationHops = numberOfMaqamModulationHops;
     }
 
@@ -561,14 +661,51 @@ export function exportMaqam(maqamInput: Maqam | MaqamData, tuningSystem: TuningS
       const ajnasModulations = modulate(fullRangeTuningSystemPitchClasses, allAjnas, allMaqamat, maqamToExport, true, centsTolerance) as AjnasModulations;
       const numberOfJinsModulationHops = calculateNumberOfModulations(ajnasModulations);
 
-      result.ajnasModulations = ajnasModulations; // Use original format
+      // Helper function to process jins modulations and populate reference
+      const processJinsModulations = (jinsList: Jins[]) => {
+        return jinsList.map(jins => {
+          const englishifiedName = englishify(jins.name);
+          
+          // Find the original jins data for additional details
+          const jinsOverview = allAjnas.find((j) => j.getId() === jins.jinsId);
+          if (jinsOverview) {
+            const mergedJins: MergedJins = {
+              jinsId: jins.jinsId,
+              name: jins.name,
+              jinsPitchClasses: jins.jinsPitchClasses.map((pc) => englishify(pc.noteName)),
+              jinsPitchClassIntervals: jins.jinsPitchClassIntervals,
+              transposition: jins.transposition,
+              commentsEnglish: jinsOverview.getCommentsEnglish(),
+              commentsArabic: jinsOverview.getCommentsArabic(),
+              SourcePageReferences: jinsOverview.getSourcePageReferences(),
+            };
+            jinsReference[englishifiedName] = mergedJins;
+          }
+          
+          return englishifiedName;
+        });
+      };
+
+      const ajnasModulationsWithKeys: AjnasModulationsWithKeys = {
+        modulationsOnOne: processJinsModulations(ajnasModulations.modulationsOnOne),
+        modulationsOnThree: processJinsModulations(ajnasModulations.modulationsOnThree),
+        modulationsOnThree2p: processJinsModulations(ajnasModulations.modulationsOnThree2p),
+        modulationsOnFour: processJinsModulations(ajnasModulations.modulationsOnFour),
+        modulationsOnFive: processJinsModulations(ajnasModulations.modulationsOnFive),
+        modulationsOnSixAscending: processJinsModulations(ajnasModulations.modulationsOnSixAscending),
+        modulationsOnSixDescending: processJinsModulations(ajnasModulations.modulationsOnSixDescending),
+        modulationsOnSixNoThird: processJinsModulations(ajnasModulations.modulationsOnSixNoThird),
+        noteName2p: ajnasModulations.noteName2p,
+      }
+
+      result.ajnasModulations = ajnasModulationsWithKeys;
       result.numberOfJinsModulationHops = numberOfJinsModulationHops;
     }
   }
 
   // Include transpositions if requested and we have maqamData
   if (options.includeTranspositions && maqamData) {
-    const transpositions: MaqamWithAjnasAsObjects[] = [];
+    const transpositionNames: string[] = [];
     let numberOfTranspositions = 0;
     const allAjnas = getAjnas();
     const allMaqamat = getMaqamat();
@@ -589,13 +726,44 @@ export function exportMaqam(maqamInput: Maqam | MaqamData, tuningSystem: TuningS
         (maqamTransposition as any).numberOfJinsModulationHops = numberOfJinsModulationHops;
       }
 
-      transpositions.push(convertMaqamAjnasToObjects(maqamTransposition));
+      // Create merged maqam and add to reference
+      const maqamOverview = allMaqamat.find((m) => m.getId() === maqamTransposition.maqamId);
+      if (maqamOverview) {
+        const convertedMaqam = convertMaqamAjnasToObjects(maqamTransposition);
+        const mergedMaqam: MergedMaqam = {
+          maqamId: maqamTransposition.maqamId,
+          name: maqamTransposition.name,
+          ascendingPitchClasses: maqamTransposition.ascendingPitchClasses.map((pc) => englishify(pc.noteName)),
+          descendingPitchClasses: maqamTransposition.descendingPitchClasses.map((pc) => englishify(pc.noteName)),
+          ascendingPitchClassIntervals: maqamTransposition.ascendingPitchClassIntervals,
+          descendingPitchClassIntervals: maqamTransposition.descendingPitchClassIntervals,
+          ascendingMaqamAjnas: convertedMaqam.ascendingMaqamAjnas
+            ? Object.fromEntries(Object.entries(convertedMaqam.ascendingMaqamAjnas).map(([noteName, jins]) => [noteName, jins ? englishify(jins.name) : null]))
+            : undefined,
+          descendingMaqamAjnas: convertedMaqam.descendingMaqamAjnas
+            ? Object.fromEntries(Object.entries(convertedMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [noteName, jins ? englishify(jins.name) : null]))
+            : undefined,
+          transposition: maqamTransposition.transposition,
+          commentsEnglish: maqamOverview.getCommentsEnglish(),
+          commentsArabic: maqamOverview.getCommentsArabic(),
+          SourcePageReferences: maqamOverview.getSourcePageReferences(),
+        };
+
+        const englishifiedName = englishify(maqamTransposition.name);
+        maqamReference[englishifiedName] = mergedMaqam;
+        transpositionNames.push(englishifiedName);
+      }
+      
       numberOfTranspositions++;
     }
 
-    result.transpositions = transpositions;
+    result.transpositions = transpositionNames;
     result.numberOfTranspositions = numberOfTranspositions;
   }
+
+  result.pitchClassReference = pitchClassReference;
+  result.jinsReference = jinsReference;
+  result.maqamReference = maqamReference;
 
   return result;
 }
