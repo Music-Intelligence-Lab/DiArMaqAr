@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 import "../app/globals.scss";
 import "../styles/landing-page.scss";
+import "../styles/footer.scss";
 import LanguageSelector from "@/components/language-selector";
 import useLanguageContext from "@/contexts/language-context";
 import Footer from "@/components/footer";
@@ -11,7 +11,8 @@ import Footer from "@/components/footer";
 export default function LandingPage() {
   const { language, isRTL }: { language: "ar" | "en"; isRTL: boolean } = useLanguageContext();
   return (
-    <div className={`landing-page ${isRTL ? "rtl" : "ltr"}`}>
+    <>
+      <div className={`landing-page ${isRTL ? "rtl" : "ltr"}`}>
       <header className="landing-header">
         <div style={{ position: "absolute", top: 12, right: 12 }}>
           <LanguageSelector />
@@ -36,10 +37,10 @@ export default function LandingPage() {
             {language === "ar" ? "ابدأوا جولة تفاعلية" : "Take an Interactive Tour"}
           </a>
           <a className="button" href="/docs/index.html">
-            {language === "ar" ? "ابدأوا جولة تفاعلية" : "Take an Interactive Tour"}
+            {language === "ar" ? "اطّلعوا على التوثيق" : "Access the Documentation"}
           </a>
 
-          <a className="button" href="#code">
+          <a className="button" href="https://github.com/Music-Intelligence-Lab/arabic-maqam-network">
             {language === "ar" ? "اطّلعوا على الشيفرة المصدرية" : "Access the Source Code"}
           </a>
           <a className="button" href="#paper">
@@ -177,17 +178,9 @@ export default function LandingPage() {
           </p>
         )}
 
-        <div style={{ marginTop: "40px" }}>
-          <Image
-            src="https://www.aub.edu.lb/Style%20Library/AUB/images/American%20University%20of%20Beirut-AUB.png"
-            alt="American University of Beirut Logo"
-            width={200}
-            height={80}
-            style={{ maxHeight: "60px", width: "auto" }}
-          />
-        </div>
       </section>
-      <Footer />
     </div>
+    <Footer />
+    </>
   );
 }

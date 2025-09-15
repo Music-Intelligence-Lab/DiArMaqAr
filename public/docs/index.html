@@ -3,68 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arabic Maqām Network Documentation</title>
+    <title>Digital Arabic Maqām Archive Documentation</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem;
+            max-width: 60%;
+            margin: 30px auto;
+            padding: 0;
             line-height: 1.6;
+            background-color: #222222;
+            color: #eeeeee;
+            min-height: fit-content;
         }
         .header {
             text-align: center;
             margin-bottom: 3rem;
+            padding: 2rem 0;
         }
         .logo {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
+            font-size: 40px;
+            margin: 20px 0;
+            color: #eeeeee;
+            font-weight: 400;
         }
         .subtitle {
-            color: #666;
-            margin-bottom: 2rem;
+            font-size: 24px;
+            color: #eeeeee;
+            font-weight: 200;
+            margin-bottom: 40px;
         }
         .links {
             display: grid;
-            gap: 1rem;
-            margin-top: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin: 2rem 0;
         }
         .link-card {
-            padding: 1.5rem;
-            border: 1px solid #ddd;
+            background-color: rgba(51, 51, 51, 0.7);
+            border: 1px solid rgba(90, 37, 133, 0.3);
             border-radius: 8px;
+            padding: 1.5rem;
             text-decoration: none;
             color: inherit;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
+            display: block;
         }
         .link-card:hover {
-            border-color: #0066cc;
-            box-shadow: 0 2px 8px rgba(0,102,204,0.1);
+            border-color: #5a2585;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            transform: translateY(-5px);
+            text-decoration: none;
         }
         .link-title {
-            font-weight: 600;
-            color: #0066cc;
-            margin-bottom: 0.5rem;
+            font-size: 18px;
+            font-weight: 400;
+            color: #d4af37;
+            margin-bottom: 1rem;
+            line-height: 1.2;
         }
         .link-description {
-            color: #666;
-            font-size: 0.9rem;
+            color: #eeeeee;
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 0;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            body {
+                max-width: 90%;
+                margin: 20px auto;
+                padding: 0 1rem;
+            }
+            .links {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            .logo {
+                font-size: 32px;
+            }
+            .subtitle {
+                font-size: 20px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <div class="logo">🎵 Arabic Maqām Network</div>
-        <div class="subtitle">Comprehensive web-based application for interactive exploration of Arabic maqām theory</div>
+        <h1 class="logo">Digital Arabic Maqām Archive - Documentation</h1>
+        <h3 class="subtitle">Open-source interactive online platform and library for exploring the Arabic maqām system</h3>
     </div>
 
     <div class="links">
-        <a href="./library/" class="link-card">
+        <a href="./library/index.html" class="link-card">
             <div class="link-title">📚 TypeScript Library Documentation</div>
             <div class="link-description">Complete documentation for TypeScript models, functions, and interfaces used in the Arabic Maqām Network</div>
         </a>
         
-        <a href="./api/" class="link-card">
+        <a href="./api/index.html" class="link-card">
             <div class="link-title">🔌 API Documentation</div>
             <div class="link-description">REST API endpoints for maqamat, ajnas, transposition, modulation analysis, and more</div>
         </a>
@@ -85,15 +121,5 @@
         </a>
     </div>
 
-    <script>
-        // Auto-redirect to library docs after 3 seconds if no user interaction
-        let redirectTimer = setTimeout(() => {
-            window.location.href = './library/';
-        }, 3000);
-
-        // Cancel redirect if user interacts with the page
-        document.addEventListener('click', () => clearTimeout(redirectTimer));
-        document.addEventListener('scroll', () => clearTimeout(redirectTimer));
-    </script>
 </body>
 </html>
