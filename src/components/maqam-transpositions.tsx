@@ -546,22 +546,75 @@ const MaqamTranspositions: React.FC = () => {
               {filters["centsDeviation"] && (
                 <tr>
                   <th className="maqam-transpositions__row-header">{t("maqam.centsDeviation")}</th>
-                  <th className="maqam-transpositions__header-pitchClass">
-                    {pitchClasses[0].referenceNoteName && <span>{pitchClasses[0].referenceNoteName}</span>}
-                    {pitchClasses[0].centsDeviation > 0 ? " +" : " "}
-                    {pitchClasses[0].centsDeviation.toFixed(1)}
-                  </th>
-                  {intervals.map((interval, i) => (
-                    <React.Fragment key={i}>
-                      <th className="maqam-transpositions__header-pitchClass"></th>
-                      <th className="maqam-transpositions__header-pitchClass">
-                        {pitchClasses[i + 1].referenceNoteName && <span>{pitchClasses[i + 1].referenceNoteName}</span>}
-                        {pitchClasses[i + 1].centsDeviation > 0 ? " +" : " "}
-                        {pitchClasses[i + 1].centsDeviation.toFixed(1)}
-                      </th>
-                      {i === intervals.length - 1 && <th className="maqam-transpositions__header-cell"></th>}
-                    </React.Fragment>
-                  ))}
+                  {(() => {
+                    // Build preferred mapping from current maqam context for enharmonic consistency
+                    const preferredMap: Record<string, string> = {};
+                    let prevEnglish: string | undefined = undefined;
+                    
+                    // Use the maqam pitch classes as context for enharmonic spelling
+                    if (pitchClasses && pitchClasses.length > 0) {
+                      prevEnglish = undefined;
+                      for (const pc of pitchClasses) {
+                        if (!pc || !pc.noteName) continue;
+                        const en = getEnglishNoteName(pc.noteName, { prevEnglish });
+                        preferredMap[pc.noteName] = en;
+                        prevEnglish = en;
+                      }
+                    }
+
+                    return (
+                      <>
+                        <th className="maqam-transpositions__header-pitchClass">
+                          {(() => {
+                            const noteName = pitchClasses[0].noteName;
+                            let referenceNoteName = pitchClasses[0].referenceNoteName;
+                            
+                            // Use preferred mapping if available, otherwise fall back to pitchClass.referenceNoteName
+                            if (preferredMap[noteName]) {
+                              referenceNoteName = preferredMap[noteName].replace(/[+-]/g, '');
+                            } else if (referenceNoteName) {
+                              referenceNoteName = referenceNoteName.replace(/[+-]/g, '');
+                            }
+                            
+                            return (
+                              <>
+                                {referenceNoteName && <span>{referenceNoteName}</span>}
+                                {pitchClasses[0].centsDeviation > 0 ? " +" : " "}
+                                {pitchClasses[0].centsDeviation.toFixed(1)}
+                              </>
+                            );
+                          })()}
+                        </th>
+                        {intervals.map((interval, i) => (
+                          <React.Fragment key={i}>
+                            <th className="maqam-transpositions__header-pitchClass"></th>
+                            <th className="maqam-transpositions__header-pitchClass">
+                              {(() => {
+                                const noteName = pitchClasses[i + 1].noteName;
+                                let referenceNoteName = pitchClasses[i + 1].referenceNoteName;
+                                
+                                // Use preferred mapping if available, otherwise fall back to pitchClass.referenceNoteName
+                                if (preferredMap[noteName]) {
+                                  referenceNoteName = preferredMap[noteName].replace(/[+-]/g, '');
+                                } else if (referenceNoteName) {
+                                  referenceNoteName = referenceNoteName.replace(/[+-]/g, '');
+                                }
+                                
+                                return (
+                                  <>
+                                    {referenceNoteName && <span>{referenceNoteName}</span>}
+                                    {pitchClasses[i + 1].centsDeviation > 0 ? " +" : " "}
+                                    {pitchClasses[i + 1].centsDeviation.toFixed(1)}
+                                  </>
+                                );
+                              })()}
+                            </th>
+                            {i === intervals.length - 1 && <th className="maqam-transpositions__header-cell"></th>}
+                          </React.Fragment>
+                        ))}
+                      </>
+                    );
+                  })()}
                 </tr>
               )}
               {valueType !== "decimalRatio" && filters["decimalRatio"] && (

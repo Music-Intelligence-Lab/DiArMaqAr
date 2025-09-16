@@ -410,6 +410,9 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
 
                 if (isDisabled) return null;
 
+                // Hide centsFromZero and staffNotation filters from tuning system octave tables
+                if (filterKey === 'centsFromZero' || filterKey === 'staffNotation') return null;
+
                 return (
                   <label
                     key={filterKey}
@@ -633,16 +636,50 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                 {filters.centsDeviation && (
                   <tr>
                     <td className="tuning-system-manager__row-header">{t('octave.centsDeviation')}</td>
-                    {rowCells.map((pitchClass, colIndex) => (
-                      <td key={colIndex} className={getCellClassName(octave, colIndex)}>
-                        {pitchClass.referenceNoteName && (
-                          <span>
-                            {pitchClass.referenceNoteName}
-                          </span>
-                        )}
-                        {pitchClass.centsDeviation > 0 ? ' +' : ' '}{pitchClass.centsDeviation.toFixed(1)}
-                      </td>
-                    ))}
+                    {(() => {
+                      // Build preferred mapping from current context (maqam/jins/selection) - same logic as English Name row
+                      const preferredMap: Record<string, string> = {};
+                      let prevEnglish: string | undefined = undefined;
+                      const contextSeq: { noteName: string }[] | undefined =
+                        (selectedMaqam && selectedMaqam.ascendingPitchClasses) ||
+                        (selectedPitchClasses && selectedPitchClasses.length >= 2 ? selectedPitchClasses : undefined);
+
+                      if (contextSeq) {
+                        prevEnglish = undefined;
+                        for (const pc of contextSeq) {
+                          if (!pc || !pc.noteName) continue;
+                          const en = getEnglishNoteName(pc.noteName, { prevEnglish });
+                          preferredMap[pc.noteName] = en;
+                          prevEnglish = en;
+                        }
+                      }
+
+                      return rowCells.map((pitchClass, colIndex) => {
+                        const noteName = pitchClass.noteName;
+                        
+                        // Use preferred mapping if available, otherwise fall back to pitchClass.referenceNoteName
+                        let referenceNoteName = pitchClass.referenceNoteName;
+                        if (preferredMap[noteName]) {
+                          // Extract just the base note and accidental from the preferred mapping (no microtonal markers)
+                          const preferredEnglish = preferredMap[noteName];
+                          referenceNoteName = preferredEnglish.replace(/[+-]/g, '');
+                        } else if (referenceNoteName) {
+                          // Clean the existing reference note name
+                          referenceNoteName = referenceNoteName.replace(/[+-]/g, '');
+                        }
+
+                        return (
+                          <td key={colIndex} className={getCellClassName(octave, colIndex)}>
+                            {referenceNoteName && (
+                              <span>
+                                {referenceNoteName}
+                              </span>
+                            )}
+                            {pitchClass.centsDeviation > 0 ? ' +' : ' '}{pitchClass.centsDeviation.toFixed(1)}
+                          </td>
+                        );
+                      });
+                    })()}
                   </tr>
                 )}
 
