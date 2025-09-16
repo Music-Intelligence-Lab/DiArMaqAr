@@ -1046,7 +1046,7 @@
     color: $text;
     font-weight: 400;
     cursor: pointer;
-     font-size: 12px;
+    font-size: 13px;
 
     // RTL support
     [dir="rtl"] & {
@@ -1061,7 +1061,7 @@
   &__tab_active {
     border: none;
     background: $black;
-    font-weight: 300;
+    font-weight: 400;
 
     &:hover {
       background: $black;
