@@ -561,8 +561,8 @@ export default function ExportModal({
         onClose();
       }, 800);
     } catch (error: any) {
-      console.error("Export failed:", error);
       if (error.message === "Export cancelled by user") {
+        // Handle cancellation silently - don't log as error or show alert
         setExportProgress({
           percentage: 0,
           currentStep: "Export cancelled",
@@ -572,6 +572,8 @@ export default function ExportModal({
           setExportProgress((prev) => ({ ...prev, isVisible: false }));
         }, 1500);
       } else {
+        // Handle actual errors
+        console.error("Export failed:", error);
         setExportProgress({
           percentage: 0,
           currentStep: "Export failed - please try again",
@@ -580,8 +582,8 @@ export default function ExportModal({
         setTimeout(() => {
           setExportProgress((prev) => ({ ...prev, isVisible: false }));
         }, 3000);
+        alert("Export failed. Please try again.");
       }
-      alert("Export failed. Please try again.");
     } finally {
       setIsExporting(false);
       isCancelledRef.current = false; // Reset ref as well
