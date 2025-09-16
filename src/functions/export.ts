@@ -23,6 +23,8 @@ export function englishify(text: string): string {
       .replace(/[\u0300-\u036f]/g, "")
       // Remove apostrophes
       .replace(/'/g, "")
+      // Remove Arabic ayn character
+      .replace(/ʿ/g, "")
       // Replace spaces with underscores
       .replace(/\s+/g, "_")
   );
@@ -48,6 +50,8 @@ export interface MergedMaqam {
   ascendingPitchClassIntervals: PitchClassInterval[];
   ascendingMaqamAjnas?: { [noteName: string]: string | null };
   descendingMaqamAjnas?: { [noteName: string]: string | null };
+  maqamatModulations?: MaqamatModulationsWithKeys;
+  ajnasModulations?: AjnasModulationsWithKeys;
   transposition: boolean;
   commentsEnglish: string;
   commentsArabic: string;
@@ -188,6 +192,8 @@ interface ExportedMaqam {
 interface MaqamWithAjnasAsObjects extends Omit<Maqam, "ascendingMaqamAjnas" | "descendingMaqamAjnas"> {
   ascendingMaqamAjnas?: { [noteName: string]: Jins | null };
   descendingMaqamAjnas?: { [noteName: string]: Jins | null };
+  maqamatModulations?: MaqamatModulationsWithKeys;
+  ajnasModulations?: AjnasModulationsWithKeys;
 }
 
 function convertMaqamAjnasToObjects(maqam: Maqam): MaqamWithAjnasAsObjects {
@@ -339,24 +345,60 @@ export function exportTuningSystem(tuningSystem: TuningSystem, startingNote: Not
 
       let numberOfTranspositions = 0;
       for (const maqamTransposition of getMaqamTranspositions(fullRangeTuningSystemPitchClasses, allAjnas, maqam, true, centsTolerance)) {
+        let maqamatModulations: MaqamatModulations | undefined = undefined;
+        let ajnasModulations: AjnasModulations | undefined = undefined;
         // Include modulations if requested
         if (options.includeMaqamatModulations || options.includeAjnasModulations) {
           if (options.includeMaqamatModulations) {
-            const maqamatModulations = modulate(fullRangeTuningSystemPitchClasses, allAjnas, allMaqamat, maqamTransposition, false, centsTolerance) as MaqamatModulations;
+            maqamatModulations = modulate(fullRangeTuningSystemPitchClasses, allAjnas, allMaqamat, maqamTransposition, false, centsTolerance) as MaqamatModulations;
             const numberOfMaqamModulationHops = calculateNumberOfModulations(maqamatModulations);
             (maqamTransposition as any).maqamatModulations = maqamatModulations;
             (maqamTransposition as any).numberOfMaqamModulationHops = numberOfMaqamModulationHops;
           }
 
           if (options.includeAjnasModulations) {
-            const ajnasModulations = modulate(fullRangeTuningSystemPitchClasses, allAjnas, allMaqamat, maqamTransposition, true, centsTolerance) as AjnasModulations;
+            ajnasModulations = modulate(fullRangeTuningSystemPitchClasses, allAjnas, allMaqamat, maqamTransposition, true, centsTolerance) as AjnasModulations;
             const numberOfJinsModulationHops = calculateNumberOfModulations(ajnasModulations);
             (maqamTransposition as any).ajnasModulations = ajnasModulations;
             (maqamTransposition as any).numberOfJinsModulationHops = numberOfJinsModulationHops;
           }
         }
 
-        possibleMaqamat.push(convertMaqamAjnasToObjects(maqamTransposition));
+        const maqamAjnasToObjects = convertMaqamAjnasToObjects(maqamTransposition)
+
+        if (maqamatModulations) {
+          const maqamModulationWithKeys: MaqamatModulationsWithKeys = {
+            modulationsOnOne: maqamatModulations.modulationsOnOne.map(maqam => englishify(maqam.name)),
+            modulationsOnThree: maqamatModulations.modulationsOnThree.map(maqam => englishify(maqam.name)),
+            modulationsOnThree2p: maqamatModulations.modulationsOnThree2p.map(maqam => englishify(maqam.name)),
+            modulationsOnFour: maqamatModulations.modulationsOnFour.map(maqam => englishify(maqam.name)),
+            modulationsOnFive: maqamatModulations.modulationsOnFive.map(maqam => englishify(maqam.name)),
+            modulationsOnSixAscending: maqamatModulations.modulationsOnSixAscending.map(maqam => englishify(maqam.name)),
+            modulationsOnSixDescending: maqamatModulations.modulationsOnSixDescending.map(maqam => englishify(maqam.name)),
+            modulationsOnSixNoThird: maqamatModulations.modulationsOnSixNoThird.map(maqam => englishify(maqam.name)),
+            noteName2p: maqamatModulations.noteName2p,
+          };
+
+          maqamAjnasToObjects.maqamatModulations = maqamModulationWithKeys;
+        }
+
+        if (ajnasModulations) {
+          const ajnasModulationsWithKeys: AjnasModulationsWithKeys = {
+            modulationsOnOne: ajnasModulations.modulationsOnOne.map(jins => englishify(jins.name)),
+            modulationsOnThree: ajnasModulations.modulationsOnThree.map(jins => englishify(jins.name)),
+            modulationsOnThree2p: ajnasModulations.modulationsOnThree2p.map(jins => englishify(jins.name)),
+            modulationsOnFour: ajnasModulations.modulationsOnFour.map(jins => englishify(jins.name)),
+            modulationsOnFive: ajnasModulations.modulationsOnFive.map(jins => englishify(jins.name)),
+            modulationsOnSixAscending: ajnasModulations.modulationsOnSixAscending.map(jins => englishify(jins.name)),
+            modulationsOnSixDescending: ajnasModulations.modulationsOnSixDescending.map(jins => englishify(jins.name)),
+            modulationsOnSixNoThird: ajnasModulations.modulationsOnSixNoThird.map(jins => englishify(jins.name)),
+            noteName2p: ajnasModulations.noteName2p,
+          };
+
+          maqamAjnasToObjects.ajnasModulations = ajnasModulationsWithKeys;
+        }
+
+        possibleMaqamat.push(maqamAjnasToObjects);
         numberOfTranspositions++;
       }
 
@@ -390,6 +432,9 @@ export function exportTuningSystem(tuningSystem: TuningSystem, startingNote: Not
           commentsArabic: maqamOverview.getCommentsArabic(),
           SourcePageReferences: maqamOverview.getSourcePageReferences(),
         };
+
+        if (possibleMaqam.maqamatModulations) mergedMaqam.maqamatModulations = possibleMaqam.maqamatModulations;
+        if (possibleMaqam.ajnasModulations) mergedMaqam.ajnasModulations = possibleMaqam.ajnasModulations;
 
         maqamReference[englishify(possibleMaqam.name)] = mergedMaqam;
         result.possibleMaqamat.push(englishify(possibleMaqam.name));
