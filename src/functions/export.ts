@@ -318,6 +318,12 @@ export async function exportTuningSystem(
     startingNote
   );
 
+  for (const tuningSystemPitchClass of fullRangeTuningSystemPitchClasses) {
+    if (tuningSystemPitchClass.noteName === "none") {
+      tuningSystemPitchClass.noteName = `none ${tuningSystemPitchClass.octave}/${tuningSystemPitchClass.index}`
+    }
+  }
+
   // Filter possible ajnas and maqamat
   updateProgress(66, "Filtering compatible ajnas...");
   const possibleAjnasOverview: JinsData[] = allAjnas.filter((jins) =>
@@ -800,6 +806,12 @@ export async function exportJins(
     startingNote
   );
 
+  for (const tuningSystemPitchClass of fullRangeTuningSystemPitchClasses) {
+    if (tuningSystemPitchClass.noteName === "none") {
+      tuningSystemPitchClass.noteName = `none ${tuningSystemPitchClass.octave}/${tuningSystemPitchClass.index}`
+    }
+  }
+
   const pitchClassReference: { [noteName: string]: PitchClass } = {};
 
   const jinsReference: { [jinsName: string]: MergedJins } = {};
@@ -1001,6 +1013,12 @@ export async function exportMaqam(
     tuningSystem,
     startingNote
   );
+
+  for (const tuningSystemPitchClass of fullRangeTuningSystemPitchClasses) {
+    if (tuningSystemPitchClass.noteName === "none") {
+      tuningSystemPitchClass.noteName = `none ${tuningSystemPitchClass.octave}/${tuningSystemPitchClass.index}`
+    }
+  }
 
   const pitchClassReference: { [noteName: string]: PitchClass } = {};
 
