@@ -230,10 +230,9 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
       return;
     }
 
-    // Create text notes for cents deviation and note names
-    const centsTextNotes: TextNote[] = [];
+    // Create text notes for note names and combined English name with cents
     const arabicTextNotes: TextNote[] = [];
-    const englishTextNotes: TextNote[] = [];
+    const combinedTextNotes: TextNote[] = [];
 
   pitchClasses.forEach((pitchClass, idx) => {
       try {
@@ -251,34 +250,21 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
           text: noteName,
           duration: "q",
         });
-        noteNameTextNote.setLine(15); // Position above English note name
+        noteNameTextNote.setLine(15); // Position above combined text
         noteNameTextNote.setJustification(TextNote.Justification.CENTER);
-        noteNameTextNote.setFont("Readex Pro", 10); // Set smaller font size
+        noteNameTextNote.setFont("Readex Pro", 12); // Set smaller font size
         arabicTextNotes.push(noteNameTextNote);
 
-        // Create a text note for English note name
-        const englishNoteName = englishName;
-        const englishNoteNameTextNote = new TextNote({
-          text: englishNoteName,
+        // Create a combined text note for English note name and cents deviation
+        const combinedText = `${englishName} ${pitchClass.centsDeviation > 0 ? '+' : ''}${pitchClass.centsDeviation.toFixed(1)}¢`;
+        const combinedTextNote = new TextNote({
+          text: combinedText,
           duration: "q",
         });
-        englishNoteNameTextNote.setLine(16.5); // Position between Arabic name and cents
-        englishNoteNameTextNote.setJustification(TextNote.Justification.CENTER);
-        englishNoteNameTextNote.setFont("Readex Pro", 9); // Slightly smaller font for English
-        englishTextNotes.push(englishNoteNameTextNote);
-
-        // Create a text note for cents deviation
-        const centsText = pitchClass.referenceNoteName 
-          ? `${pitchClass.referenceNoteName} ${pitchClass.centsDeviation > 0 ? '+' : ''}${pitchClass.centsDeviation.toFixed(1)}`
-          : `${pitchClass.centsDeviation > 0 ? '+' : ''}${pitchClass.centsDeviation.toFixed(1)}`;
-        const centsTextNote = new TextNote({
-          text: centsText,
-          duration: "q",
-        });
-        centsTextNote.setLine(18); // Position below English note name
-        centsTextNote.setJustification(TextNote.Justification.CENTER);
-        centsTextNote.setFont("Readex Pro", 10); // Set smaller font size
-        centsTextNotes.push(centsTextNote);
+        combinedTextNote.setLine(17); // Position below Arabic note name
+        combinedTextNote.setJustification(TextNote.Justification.CENTER);
+        combinedTextNote.setFont("Readex Pro", 10); // Set smaller font size
+        combinedTextNotes.push(combinedTextNote);
       } catch (error) {
         console.warn(`[StaffNotation] Could not create text note for ${pitchClass.noteName}:`, error);
       }
@@ -298,27 +284,19 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
     });
     noteNameTextVoice.addTickables(arabicTextNotes);
 
-    // Create voice for English note names
-    const englishNameTextVoice = new Voice({
-      numBeats: englishTextNotes.length,
+    // Create voice for combined English note names and cents deviation
+    const combinedTextVoice = new Voice({
+      numBeats: combinedTextNotes.length,
       beatValue: 4,
     });
-    englishNameTextVoice.addTickables(englishTextNotes);
-
-    // Create voice for cents deviation text
-    const centsTextVoice = new Voice({
-      numBeats: centsTextNotes.length,
-      beatValue: 4,
-    });
-    centsTextVoice.addTickables(centsTextNotes);
+    combinedTextVoice.addTickables(combinedTextNotes);
 
     const formatter = new Formatter();
-    formatter.joinVoices([voice, noteNameTextVoice, englishNameTextVoice, centsTextVoice]).format([voice, noteNameTextVoice, englishNameTextVoice, centsTextVoice], staveWidth - 20);
+    formatter.joinVoices([voice, noteNameTextVoice, combinedTextVoice]).format([voice, noteNameTextVoice, combinedTextVoice], staveWidth - 20);
     
     voice.draw(context, stave);
     noteNameTextVoice.draw(context, stave);
-    englishNameTextVoice.draw(context, stave);
-    centsTextVoice.draw(context, stave);
+    combinedTextVoice.draw(context, stave);
   };
 
   return (
