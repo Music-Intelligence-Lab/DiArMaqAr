@@ -11,6 +11,10 @@
   cursor: pointer;
   z-index: 2001; // Ensure above sidebar
   pointer-events: auto;
+
+  &:active {
+    background-color: $gold !important;
+  }
 }
 
 

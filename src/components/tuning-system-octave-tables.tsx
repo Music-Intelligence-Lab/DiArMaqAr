@@ -17,13 +17,14 @@ import {
 } from "@/models/NoteName";
 
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { abjadNames } from "@/functions/noteNameMappings";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import StaffNotation from "./staff-notation";
 import getFirstNoteName from "@/functions/getFirstNoteName";
 
 export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) {
-  const { t, getDisplayName, isRTL } = useLanguageContext();
+  const { t, getDisplayName, isRTL, language } = useLanguageContext();
   
   const {
     selectedTuningSystem,
@@ -197,6 +198,222 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
     }`;
   };
 
+  // Copy octave table to clipboard
+  const copyOctaveTableToClipboard = async (octave: number) => {
+    if (!selectedTuningSystem || !allPitchClasses) return;
+
+    try {
+      // Get pitch classes for this octave
+      const octavePitchClasses = allPitchClasses.filter(pc => pc.octave === octave);
+      
+      if (octavePitchClasses.length === 0) return;
+
+      const valueType = octavePitchClasses[0].originalValueType;
+
+      // Function to build rows for octave table
+      const buildOctaveRows = () => {
+        const rows: string[][] = [];
+
+        // Pitch Class row (if filter enabled)
+        if (filters["pitchClass"]) {
+          const pitchClassRow = [t("octave.pitchClass")];
+          octavePitchClasses.forEach((pc, index) => {
+            pitchClassRow.push(index.toString());
+          });
+          rows.push(pitchClassRow);
+        }
+
+        // Note names row
+        const noteNamesRow = [t("octave.noteNames")];
+        octavePitchClasses.forEach((pc) => {
+          noteNamesRow.push(getDisplayName(pc.noteName, "note"));
+        });
+        rows.push(noteNamesRow);
+
+        // Abjad names row (if filter enabled)
+        if (filters["abjadName"]) {
+          const abjadRow = [t("octave.abjadName")];
+          octavePitchClasses.forEach((pc) => {
+            abjadRow.push(pc.abjadName || "--");
+          });
+          rows.push(abjadRow);
+        }
+
+        // English names row (if filter enabled)
+        if (filters["englishName"]) {
+          const englishRow = [t("octave.englishName")];
+          const englishNames: string[] = [];
+          let prev: string | undefined;
+          for (const pc of octavePitchClasses) {
+            const name = getEnglishNoteName(pc.noteName, prev ? { prevEnglish: prev } : undefined);
+            englishNames.push(name);
+            prev = name;
+          }
+          englishNames.forEach((name) => {
+            englishRow.push(name);
+          });
+          rows.push(englishRow);
+        }
+
+        // Primary value type row
+        const valueRowHeader = valueType === 'fraction' ? 'fractionRatio' : 
+                              valueType === 'decimalRatio' ? 'decimalRatio' : 
+                              valueType === 'stringLength' ? 'stringLength' : 
+                              valueType === 'fretDivision' ? 'fretDivision' : 'cents';
+        const valueRow = [t(`octave.${valueRowHeader}`)];
+        octavePitchClasses.forEach((pc) => {
+          valueRow.push(pc.originalValue);
+        });
+        rows.push(valueRow);
+
+        // Additional filter rows
+        if (valueType !== "fraction" && filters["fraction"]) {
+          const fractionRow = [t("octave.fractionRatio")];
+          octavePitchClasses.forEach((pc) => {
+            fractionRow.push(pc.fraction);
+          });
+          rows.push(fractionRow);
+        }
+
+        if (valueType !== "cents" && filters["cents"]) {
+          const centsRow = [t("octave.cents")];
+          octavePitchClasses.forEach((pc) => {
+            centsRow.push(parseFloat(pc.cents).toFixed(3));
+          });
+          rows.push(centsRow);
+        }
+
+        if (filters["centsDeviation"]) {
+          const centsDeviationRow = [t("octave.centsDeviation")];
+          // Build preferred mapping for enharmonic consistency
+          const preferredMap: Record<string, string> = {};
+          let prevEnglish: string | undefined = undefined;
+          for (const pc of octavePitchClasses) {
+            if (!pc || !pc.noteName) continue;
+            const en = getEnglishNoteName(pc.noteName, { prevEnglish });
+            preferredMap[pc.noteName] = en;
+            prevEnglish = en;
+          }
+          
+          octavePitchClasses.forEach((pc) => {
+            let referenceNoteName = pc.referenceNoteName;
+            if (preferredMap[pc.noteName]) {
+              referenceNoteName = preferredMap[pc.noteName].replace(/[+-]/g, '');
+            } else if (referenceNoteName) {
+              referenceNoteName = referenceNoteName.replace(/[+-]/g, '');
+            }
+            const deviationText = `${referenceNoteName || ''}${pc.centsDeviation > 0 ? ' +' : ' '}${pc.centsDeviation.toFixed(1)}`;
+            centsDeviationRow.push(deviationText);
+          });
+          rows.push(centsDeviationRow);
+        }
+
+        if (valueType !== "decimalRatio" && filters["decimalRatio"]) {
+          const decimalRow = [t("octave.decimalRatio")];
+          octavePitchClasses.forEach((pc) => {
+            decimalRow.push(parseFloat(pc.decimalRatio).toFixed(3));
+          });
+          rows.push(decimalRow);
+        }
+
+        if (valueType !== "stringLength" && filters["stringLength"]) {
+          const stringLengthRow = [t("octave.stringLength")];
+          octavePitchClasses.forEach((pc) => {
+            stringLengthRow.push(parseFloat(pc.stringLength).toFixed(3));
+          });
+          rows.push(stringLengthRow);
+        }
+
+        if (valueType !== "fretDivision" && filters["fretDivision"]) {
+          const fretDivisionRow = [t("octave.fretDivision")];
+          octavePitchClasses.forEach((pc) => {
+            fretDivisionRow.push(parseFloat(pc.fretDivision).toFixed(3));
+          });
+          rows.push(fretDivisionRow);
+        }
+
+        if (filters["midiNote"]) {
+          const midiRow = [t("octave.midiNote")];
+          octavePitchClasses.forEach((pc) => {
+            midiRow.push(pc.midiNoteNumber.toFixed(3));
+          });
+          rows.push(midiRow);
+        }
+
+        if (filters["frequency"]) {
+          const frequencyRow = [t("octave.frequency")];
+          octavePitchClasses.forEach((pc) => {
+            frequencyRow.push(parseFloat(pc.frequency).toFixed(3));
+          });
+          rows.push(frequencyRow);
+        }
+
+        return rows;
+      };
+
+      // Build complete table
+      const allRows: string[][] = [];
+      
+      const octaveRows = buildOctaveRows();
+      allRows.push(...octaveRows);
+
+      // Convert to multiple formats for universal compatibility
+      // Create both TSV (for spreadsheets) and HTML (for documents)
+      
+      // Get max columns from data rows
+      const maxCols = Math.max(...allRows.filter(r => r.length > 1).map(r => r.length));
+      
+      // Start with octave title as a heading
+      const startingNote = getFirstNoteName(selectedIndices);
+      const creator = language === 'ar' ? selectedTuningSystem.getCreatorArabic() : selectedTuningSystem.getCreatorEnglish();
+      const title = language === 'ar' ? selectedTuningSystem.getTitleArabic() : selectedTuningSystem.getTitleEnglish();
+      const tuningSystemTitle = `${creator} (${selectedTuningSystem.getYear()}) ${title} [${getDisplayName(startingNote, "note")}]`;
+      const octaveTitle = `${tuningSystemTitle} - ${t("octave.title")} ${octave}`;
+      
+      // Build TSV format for spreadsheets
+      let tsvText = `${octaveTitle}\n\n`;
+      
+      // Build HTML format for documents
+      let htmlText = `<h3>${octaveTitle}</h3><table border="1" cellpadding="4" cellspacing="0"><tbody>`;
+      
+      for (const row of allRows) {
+        const paddedRow = [...row];
+        // Pad to max columns
+        while (paddedRow.length < maxCols) {
+          paddedRow.push('');
+        }
+        
+        // TSV format
+        tsvText += paddedRow.join('\t') + '\n';
+        
+        // HTML format
+        htmlText += '<tr>';
+        paddedRow.forEach((cell, index) => {
+          // First column is row header, style it differently
+          if (index === 0) {
+            htmlText += `<th style="background-color: #f8f8f8; text-align: left;">${cell || ''}</th>`;
+          } else {
+            htmlText += `<td style="text-align: center;">${cell || ''}</td>`;
+          }
+        });
+        htmlText += '</tr>';
+      }
+      
+      htmlText += '</tbody></table>';
+
+      // Copy both formats to clipboard using the modern Clipboard API
+      const clipboardItem = new ClipboardItem({
+        'text/plain': new Blob([tsvText], { type: 'text/plain' }),
+        'text/html': new Blob([htmlText], { type: 'text/html' })
+      });
+      
+      await navigator.clipboard.write([clipboardItem]);
+      
+    } catch (error) {
+      console.error('Failed to copy to clipboard:', error);
+    }
+  };
+
   const handleCheckboxChange = (octave: number, colIndex: number, checked: boolean) => {
     setSelectedPitchClasses((prevCells) => {
       const newCells = prevCells.filter((pitchClass) => !(pitchClass.octave === octave && pitchClass.index === colIndex));
@@ -364,7 +581,17 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
     const rowCells = getOctavePitchClasses(octave);
 
     return (
-      <details className="tuning-system-manager__octave-details" open={openedOctaveRows[octave as 0 | 1 | 2 | 3]}>
+      <details 
+        className="tuning-system-manager__octave-details" 
+        open={openedOctaveRows[octave as 0 | 1 | 2 | 3]}
+        onToggle={(e) => {
+          const isOpen = (e.target as HTMLDetailsElement).open;
+          setOpenedOctaveRows((rows) => ({
+            ...rows,
+            [octave]: isOpen,
+          }));
+        }}
+      >
         <summary
           className="tuning-system-manager__octave-summary"
           /*  onClick={(e) => {
@@ -444,6 +671,20 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                 );
               })}
             </span>
+          )}
+
+          {openedOctaveRows[octave as 0 | 1 | 2 | 3] && (
+            <button
+              className="tuning-system-manager__octave-copy-button"
+              onClick={(e: React.MouseEvent) => {
+                e.stopPropagation();
+                copyOctaveTableToClipboard(octave);
+              }}
+              title="Copy table to clipboard (Excel format)"
+            >
+              <ContentCopyIcon className="tuning-system-manager__copy-icon" />
+              {t("octave.copyTable")}
+            </button>
           )}
 
           <div className="tuning-system-manager__octave-summary-content"></div>
