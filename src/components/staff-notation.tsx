@@ -36,14 +36,27 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
   const parseNote = (englishName: string) => {
     if (!englishName || englishName === "--") return null;
 
-    const cleanName = englishName.trim().toLowerCase();
+    const cleanName = englishName.trim();
 
-    const noteLetter = cleanName.charAt(0);
+    const noteLetter = cleanName.charAt(0).toLowerCase();
     if (!"cdefgba".includes(noteLetter)) {
       return null;
     }
 
-    const accidental = cleanName.slice(1);
+    // Extract everything after the note letter
+    const remainder = cleanName.slice(1);
+    
+    // Find where the octave number starts (last digit(s) in the string)
+    const octaveMatch = remainder.match(/(\d+)$/);
+    
+    let accidental = "";
+    if (octaveMatch) {
+      // Remove the octave number to get just the accidental
+      accidental = remainder.slice(0, remainder.length - octaveMatch[0].length);
+    } else {
+      // No octave number found, everything after the letter is accidental
+      accidental = remainder;
+    }
 
     return {
       letter: noteLetter,
@@ -140,6 +153,10 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
     stave.addClef(clef);
     stave.setContext(context).draw();
 
+    // Add "8vb" marking below the treble clef to indicate octave transposition
+    context.setFont("Readex Pro", 10, "bold");
+    context.fillText("8", 16, staveY + 106); // Position "8" below the clef (further down)
+
     const vexFlowNotes: StaveNote[] = [];
 
   pitchClasses.forEach((pitchClass, idx) => {
@@ -179,7 +196,11 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
           adjustedOctave += 1;
         }
 
-        const noteSpec = `${noteLetter}/${adjustedOctave}`;
+        // For 8vb clef display: transpose up one octave for visual display
+        // (notes shown higher but sound lower)
+        const displayOctave = adjustedOctave + 1;
+
+        const noteSpec = `${noteLetter}/${displayOctave}`;
 
         const staveNote = new StaveNote({
           clef: clef,
