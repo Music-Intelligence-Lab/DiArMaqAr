@@ -155,16 +155,16 @@
 
   &__left-panel-admin {
     position: fixed;
-    top: 20px;
+    top: 23px;
     left: 50px;
-    font-size: 14px;
+    font-size: 11px;
     display: flex;
     align-items: left;
     justify-content: left;
     user-select: none;
     background-color: $primary;
-    padding: 5px;
-    border-radius: 5px;
+    padding: 2px 10px;
+    
   }
 
   &__right-panel {
