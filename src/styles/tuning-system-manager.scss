@@ -1,3 +1,4 @@
+@use "sass:color";
 @use "./variables" as *;
 
 .tuning-system-manager {
@@ -967,6 +968,22 @@
     margin: 0px;
   }
 
+  &__staff-notation-cell {
+    padding: 10px !important;
+    background-color: $dark-grey !important;
+    border: 1px solid rgb(86, 86, 86) !important;
+    
+    // Ensure staff notation displays correctly
+    .staff-notation {
+      width: 100%;
+      overflow-x: auto;
+      
+      &__container {
+        min-width: 300px;
+      }
+    }
+  }
+
   &__play-sequence-button {
     padding: 10px;
     background-color: rgba(0, 0, 0, 0.3);
@@ -1055,7 +1072,7 @@
     }
 
     &:hover {
-      background: darken($color: $medium-grey, $amount: 10);
+      background: color.adjust($medium-grey, $lightness: -10%);
     }
   }
 

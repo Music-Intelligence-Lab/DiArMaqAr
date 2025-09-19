@@ -272,6 +272,7 @@ const translations = {
     "octave.frequency": "Freq (Hz)",
     "octave.play": "Play",
     "octave.select": "Select",
+    "octave.staffNotation": "Staff Notation",
     "octave.none": "(none)",
 
     // Selected Pitch Classes Transpositions
@@ -576,6 +577,7 @@ const translations = {
     "octave.frequency": "التردد",
     "octave.play": "استماع",
     "octave.select": "اختيار",
+    "octave.staffNotation": "تدوين",
     "octave.none": "(لا شيء)",
 
     // Selected Pitch Classes Transpositions (Arabic translations)
