@@ -819,7 +819,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                 {filters.staffNotation && (
                   <tr>
                     <td className="tuning-system-manager__row-header">{t('octave.staffNotation')}</td>
-                    <td colSpan={tuningSystemPitchClassesArray.length} className="tuning-system-manager__staff-notation-cell">
+                    <td colSpan={tuningSystemPitchClassesArray.length} className="staff-notation-cell">
                       <StaffNotation pitchClasses={rowCells} />
                     </td>
                   </tr>
