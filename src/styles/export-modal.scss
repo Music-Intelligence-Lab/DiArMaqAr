@@ -340,6 +340,11 @@
     border: 2px solid;
     min-width: 120px;
 
+    &:active {
+      background-color: $gold !important;
+      border-color: $gold !important;
+    }
+
     &--secondary {
       background: $medium-grey;
       color: $text;

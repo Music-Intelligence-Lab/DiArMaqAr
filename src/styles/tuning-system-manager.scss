@@ -150,7 +150,7 @@
     font-size: 0.9rem;
     border-radius: 5px;
     cursor: pointer;
-    transition: 0.3s;
+    transition: 0.1s;
     color: white;
 
     &:hover {
@@ -228,6 +228,10 @@
       background-color: rgba($primary, 1);
     }
 
+    &:active {
+      background-color: $gold !important;
+    }
+
     &_selected {
       background-color: $secondary;
 
@@ -299,6 +303,10 @@
 
     &:hover {
       background-color: rgba($primary, 1);
+    }
+
+    &:active {
+      background-color: $gold !important;
     }
 
     &_selected {
@@ -700,6 +708,9 @@
     margin-bottom: 10px;
     cursor: pointer;
     user-select: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
 
   &__octave-summary-title {
@@ -714,8 +725,58 @@
     border-radius: 10px;
     color: $text;
     cursor: pointer;
-    transition: 0.3s;
+    transition: 0.1s;
     user-select: none;
+  }
+
+  &__octave-copy-button {
+    padding: 6px 12px;
+    background-color: rgba($primary, 0.5);
+    border-radius: 0px;
+    color: white;
+    cursor: pointer;
+    border: none;
+    font-size: 12px;
+    transition: 0.1s;
+    user-select: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: auto;
+
+    // RTL support
+    [dir="rtl"] & {
+      margin-left: 0;
+      margin-right: auto;
+    }
+
+    &:hover {
+      background-color: rgba($primary, 0.8);
+    }
+
+    &:active {
+      background-color: $gold !important;
+    }
+
+    &:focus {
+      outline: transparent;
+    }
+  }
+
+  &__copy-icon.MuiSvgIcon-root {
+    color: white;
+    padding: 0px;
+    margin: 0px;
+    margin-right: 3px;
+    font-size: 16px;
+    cursor: pointer;
+    vertical-align: middle;
+
+    // RTL support
+    [dir="rtl"] & {
+      margin-right: 0;
+      margin-left: 3px;
+    }
   }
 
   &__octave-scroll {
@@ -976,7 +1037,7 @@
     border-radius: 10px;
     color: $text;
     cursor: pointer;
-    transition: 0.3s;
+    transition: 0.1s;
 
     background-color: $primary;
 
