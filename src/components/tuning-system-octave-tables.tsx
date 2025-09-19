@@ -19,6 +19,7 @@ import {
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { abjadNames } from "@/functions/noteNameMappings";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
+import StaffNotation from "./staff-notation";
 import getFirstNoteName from "@/functions/getFirstNoteName";
 
 export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) {
@@ -410,8 +411,8 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
 
                 if (isDisabled) return null;
 
-                // Hide centsFromZero and staffNotation filters from tuning system octave tables
-                if (filterKey === 'centsFromZero' || filterKey === 'staffNotation') return null;
+                // Hide centsFromZero filters from tuning system octave tables
+                if (filterKey === 'centsFromZero') return null;
 
                 return (
                   <label
@@ -813,6 +814,16 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                     </td>
                   ))}
                 </tr>
+
+                {/* Row 13: Staff Notation */}
+                {filters.staffNotation && (
+                  <tr>
+                    <td className="tuning-system-manager__row-header">{t('octave.staffNotation')}</td>
+                    <td colSpan={tuningSystemPitchClassesArray.length} className="tuning-system-manager__staff-notation-cell">
+                      <StaffNotation pitchClasses={rowCells} />
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>

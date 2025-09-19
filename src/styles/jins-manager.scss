@@ -1,3 +1,4 @@
+@use "sass:color";
 @use "./variables" as *;
 
 .jins-manager {
@@ -465,7 +466,7 @@
     }
 
     &:hover {
-      background: darken($color: $medium-grey, $amount: 10);
+      background: color.adjust($medium-grey, $lightness: -10%);
     }
   }
 

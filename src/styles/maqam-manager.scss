@@ -1,3 +1,4 @@
+@use "sass:color";
 @use "./variables" as *;
 
 .maqam-manager {
@@ -435,7 +436,7 @@
     }
 
     &:hover {
-      background: darken($color: $medium-grey, $amount: 10);
+      background: color.adjust($medium-grey, $lightness: -10%);
     }
   }
 
