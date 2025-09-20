@@ -1,3 +1,4 @@
+@use "sass:color";
 @use "./variables" as *;
 
 .jins-manager {
@@ -238,11 +239,11 @@
       font-size: 14px;
       margin-top: 3px;
       font-weight: 200;
-        -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    /* Help variable / web fonts pick the intended weight on Safari */
-    font-variation-settings: "wght" 200;
-    font-synthesis: none;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      /* Help variable / web fonts pick the intended weight on Safari */
+      font-variation-settings: "wght" 200;
+      font-synthesis: none;
 
       // RTL support
       [dir="rtl"] & {
@@ -455,7 +456,7 @@
     border: none;
     background: $medium-grey;
     color: $text;
- font-size: 12px;
+    font-size: 13px;
     font-weight: 400;
     cursor: pointer;
 
@@ -465,14 +466,14 @@
     }
 
     &:hover {
-      background: darken($color: $medium-grey, $amount: 10);
+      background: color.adjust($medium-grey, $lightness: -10%);
     }
   }
 
   &__tab_active {
     border: none;
     background: $black;
-    font-weight: 300;
+    font-weight: 400;
 
     &:hover {
       background: $black;

@@ -10,6 +10,7 @@ import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import useTranspositionsContext from "@/contexts/transpositions-context";
 import StaffNotation from "./staff-notation";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import ExportModal from "./export-modal";
 
 const getHeaderId = (noteName: string): string => {
@@ -282,6 +283,347 @@ const MaqamTranspositions: React.FC = () => {
     };
   }, [selectedMaqamData, selectedTuningSystem, allPitchClasses, filters]);
 
+  // Copy maqam table to clipboard
+  const copyMaqamTableToClipboard = useCallback(
+    async (maqam: Maqam) => {
+      if (!maqam || !maqamConfig) return;
+
+      try {
+        let ascending = maqam.ascendingPitchClasses;
+        let descending = maqam.descendingPitchClasses;
+        let ascendingIntervals = maqam.ascendingPitchClassIntervals;
+        let descendingIntervals = maqam.descendingPitchClassIntervals;
+
+        const { romanNumerals, valueType, useRatio, noOctaveMaqam } = maqamConfig;
+
+        // Apply the same octave transformations as the UI rendering
+        if (noOctaveMaqam) {
+          const shiftedFirstCell = shiftPitchClass(allPitchClasses, maqam.ascendingPitchClasses[0], 1);
+          const lastCell = ascending[ascending.length - 1];
+
+          ascending = [...ascending, shiftedFirstCell];
+          descending = [shiftedFirstCell, ...descending];
+
+          const shiftedCellInterval = calculateInterval(lastCell, shiftedFirstCell);
+
+          ascendingIntervals = [...ascendingIntervals, shiftedCellInterval];
+          descendingIntervals = [shiftedCellInterval, ...descendingIntervals];
+        }
+
+        // Get jins data for each direction
+        let ascendingJins = maqam.ascendingMaqamAjnas;
+        let descendingJins = maqam.descendingMaqamAjnas;
+        
+        // Apply octave transformations to jins data as well
+        if (noOctaveMaqam && ascendingJins) {
+          let octaveTransposition = ascendingJins[0];
+          if (octaveTransposition) {
+            const shiftedFirstCell = shiftPitchClass(allPitchClasses, maqam.ascendingPitchClasses[0], 1);
+            const foundJinsData = ajnas.find((jins) => jins.getId() === octaveTransposition?.jinsId);
+            if (foundJinsData) {
+              octaveTransposition = {
+                ...octaveTransposition,
+                jinsPitchClasses: [shiftedFirstCell],
+                jinsPitchClassIntervals: [],
+                name: getDisplayName(foundJinsData.getName(), "jins") + " al-" + getDisplayName(shiftedFirstCell.noteName, "note"),
+              };
+            }
+          }
+          ascendingJins = [...ascendingJins, octaveTransposition];
+          descendingJins = [octaveTransposition, ...(descendingJins || [])];
+        }
+
+        // Function to build rows for one direction
+        const buildDirectionRows = (pitchClasses: any[], intervals: any[], ascending: boolean, jinsTranspositions?: any[]) => {
+          const rows: string[][] = [];
+          
+          // Scale degrees row
+          const scaleDegreesRow = [t("maqam.scaleDegrees")];
+          pitchClasses.forEach((_, i) => {
+            const degree = ascending ? romanNumerals[i] : romanNumerals[romanNumerals.length - 1 - i];
+            scaleDegreesRow.push(degree);
+            if (i < pitchClasses.length - 1) scaleDegreesRow.push(''); // interval column
+          });
+          rows.push(scaleDegreesRow);
+
+          // Note names row
+          const noteNamesRow = [t("maqam.noteNames")];
+          pitchClasses.forEach((pc, i) => {
+            noteNamesRow.push(getDisplayName(pc.noteName, "note"));
+            if (i < pitchClasses.length - 1) noteNamesRow.push(''); // interval column
+          });
+          rows.push(noteNamesRow);
+
+          // Abjad names row (if filter enabled)
+          if (filters["abjadName"]) {
+            const abjadRow = [t("maqam.abjadName")];
+            pitchClasses.forEach((pc, i) => {
+              abjadRow.push(pc.abjadName || "--");
+              if (i < pitchClasses.length - 1) abjadRow.push(''); // interval column
+            });
+            rows.push(abjadRow);
+          }
+
+          // English names row (if filter enabled)
+          if (filters["englishName"]) {
+            const englishRow = [t("maqam.englishName")];
+            const englishNames: string[] = [];
+            let prev: string | undefined;
+            for (const pc of pitchClasses) {
+              const name = getEnglishNoteName(pc.noteName, prev ? { prevEnglish: prev } : undefined);
+              englishNames.push(name);
+              prev = name;
+            }
+            englishNames.forEach((name, i) => {
+              englishRow.push(name);
+              if (i < englishNames.length - 1) englishRow.push(''); // interval column
+            });
+            rows.push(englishRow);
+          }
+
+          // Primary value type row
+          const valueRow = [t(`maqam.${valueType}`)];
+          pitchClasses.forEach((pc, i) => {
+            valueRow.push(pc.originalValue);
+            if (i < pitchClasses.length - 1) {
+              const interval = intervals[i];
+              const intervalValue = useRatio ? `(${interval.fraction.replace("/", ":")})` : `(${interval.cents.toFixed(3)})`;
+              valueRow.push(intervalValue);
+            }
+          });
+          rows.push(valueRow);
+
+          // Additional filter rows
+          if (valueType !== "fraction" && filters["fraction"]) {
+            const fractionRow = [t("maqam.fraction")];
+            pitchClasses.forEach((pc, i) => {
+              fractionRow.push(pc.fraction);
+              if (i < pitchClasses.length - 1) {
+                fractionRow.push(`(${intervals[i].fraction})`);
+              }
+            });
+            rows.push(fractionRow);
+          }
+
+          if (valueType !== "cents" && filters["cents"]) {
+            const centsRow = [t("maqam.cents")];
+            pitchClasses.forEach((pc, i) => {
+              centsRow.push(parseFloat(pc.cents).toFixed(3));
+              if (i < pitchClasses.length - 1) {
+                centsRow.push(`(${intervals[i].cents.toFixed(3)})`);
+              }
+            });
+            rows.push(centsRow);
+          }
+
+          if (filters["centsFromZero"]) {
+            const centsFromZeroRow = [t("maqam.centsFromZero")];
+            pitchClasses.forEach((pc, i) => {
+              if (i === 0) {
+                centsFromZeroRow.push("0.000");
+              } else {
+                const centsFromZero = (parseFloat(pc.cents) - parseFloat(pitchClasses[0].cents)).toFixed(3);
+                centsFromZeroRow.push(centsFromZero);
+              }
+              if (i < pitchClasses.length - 1) {
+                centsFromZeroRow.push(`(${intervals[i].cents.toFixed(3)})`);
+              }
+            });
+            rows.push(centsFromZeroRow);
+          }
+
+          if (filters["centsDeviation"]) {
+            const centsDeviationRow = [t("maqam.centsDeviation")];
+            // Build preferred mapping for enharmonic consistency
+            const preferredMap: Record<string, string> = {};
+            let prevEnglish: string | undefined = undefined;
+            for (const pc of pitchClasses) {
+              if (!pc || !pc.noteName) continue;
+              const en = getEnglishNoteName(pc.noteName, { prevEnglish });
+              preferredMap[pc.noteName] = en;
+              prevEnglish = en;
+            }
+            
+            pitchClasses.forEach((pc, i) => {
+              let referenceNoteName = pc.referenceNoteName;
+              if (preferredMap[pc.noteName]) {
+                referenceNoteName = preferredMap[pc.noteName].replace(/[+-]/g, '');
+              } else if (referenceNoteName) {
+                referenceNoteName = referenceNoteName.replace(/[+-]/g, '');
+              }
+              const deviationText = `${referenceNoteName || ''}${pc.centsDeviation > 0 ? ' +' : ' '}${pc.centsDeviation.toFixed(1)}`;
+              centsDeviationRow.push(deviationText);
+              if (i < pitchClasses.length - 1) {
+                centsDeviationRow.push(''); // interval column empty for cents deviation
+              }
+            });
+            rows.push(centsDeviationRow);
+          }
+
+          if (valueType !== "decimalRatio" && filters["decimalRatio"]) {
+            const decimalRow = [t("maqam.decimalRatio")];
+            pitchClasses.forEach((pc, i) => {
+              decimalRow.push(parseFloat(pc.decimalRatio).toFixed(3));
+              if (i < pitchClasses.length - 1) {
+                decimalRow.push(`(${intervals[i].decimalRatio.toFixed(3)})`);
+              }
+            });
+            rows.push(decimalRow);
+          }
+
+          if (valueType !== "stringLength" && filters["stringLength"]) {
+            const stringLengthRow = [t("maqam.stringLength")];
+            pitchClasses.forEach((pc, i) => {
+              stringLengthRow.push(parseFloat(pc.stringLength).toFixed(3));
+              if (i < pitchClasses.length - 1) {
+                stringLengthRow.push(`(${intervals[i].stringLength.toFixed(3)})`);
+              }
+            });
+            rows.push(stringLengthRow);
+          }
+
+          if (valueType !== "fretDivision" && filters["fretDivision"]) {
+            const fretDivisionRow = [t("maqam.fretDivision")];
+            pitchClasses.forEach((pc, i) => {
+              fretDivisionRow.push(parseFloat(pc.fretDivision).toFixed(3));
+              if (i < pitchClasses.length - 1) {
+                fretDivisionRow.push(`(${intervals[i].fretDivision.toFixed(3)})`);
+              }
+            });
+            rows.push(fretDivisionRow);
+          }
+
+          if (filters["midiNote"]) {
+            const midiRow = [t("maqam.midiNote")];
+            pitchClasses.forEach((pc, i) => {
+              midiRow.push(pc.midiNoteNumber.toFixed(3));
+              if (i < pitchClasses.length - 1) {
+                midiRow.push(''); // interval column empty for MIDI
+              }
+            });
+            rows.push(midiRow);
+          }
+
+          if (filters["frequency"]) {
+            const frequencyRow = [t("maqam.frequency")];
+            pitchClasses.forEach((pc, i) => {
+              frequencyRow.push(parseFloat(pc.frequency).toFixed(3));
+              if (i < pitchClasses.length - 1) {
+                frequencyRow.push(''); // interval column empty for frequency
+              }
+            });
+            rows.push(frequencyRow);
+          }
+
+          // Ajnas row
+          if (jinsTranspositions && jinsTranspositions.length > 0) {
+            const ajnasRow = [t("maqam.ajnas")];
+            jinsTranspositions.forEach((jinsTransposition) => {
+              if (jinsTransposition && jinsTransposition.name) {
+                ajnasRow.push(getDisplayName(jinsTransposition.name, "jins"));
+              } else {
+                ajnasRow.push('');
+              }
+              ajnasRow.push(''); // interval column
+            });
+            // Fill remaining columns if needed
+            while (ajnasRow.length - 1 < pitchClasses.length * 2 - 1) {
+              ajnasRow.push('');
+            }
+            rows.push(ajnasRow);
+          }
+
+          return rows;
+        };
+
+        // Build complete table
+        const allRows: string[][] = [];
+        
+        // Ascending section header
+        allRows.push([t("maqam.ascending")]);
+        const ascendingRows = buildDirectionRows(ascending, ascendingIntervals, true, ascendingJins);
+        allRows.push(...ascendingRows);
+        allRows.push([]); // Empty row for spacing
+
+        // Descending section header and data
+        allRows.push([t("maqam.descending")]);
+        const descendingRows = buildDirectionRows(descending, descendingIntervals, false, descendingJins);
+        allRows.push(...descendingRows);
+
+        // Convert to multiple formats for universal compatibility
+        // Create both TSV (for spreadsheets) and HTML (for documents)
+        
+        // Get max columns from data rows
+        const maxCols = Math.max(...allRows.filter(r => r.length > 1).map(r => r.length));
+        
+        // Start with maqam name as a heading
+        const maqamTitle = getDisplayName(maqam.name, 'maqam');
+        
+        // Build TSV format for spreadsheets
+        let tsvText = `${maqamTitle}\n\n`;
+        
+        // Build HTML format for documents
+        let htmlText = `<h3>${maqamTitle}</h3><table border="1" cellpadding="4" cellspacing="0"><tbody>`;
+        
+        for (const row of allRows) {
+          if (row.length === 0) {
+            // Skip empty rows - they were just for spacing in our array
+            continue;
+          } else if (row.length === 1) {
+            // Header row - span full table width
+            const headerRow = [row[0]];
+            // Fill remaining columns with empty strings
+            while (headerRow.length < maxCols) {
+              headerRow.push('');
+            }
+            
+            // TSV format
+            tsvText += headerRow.join('\t') + '\n';
+            
+            // HTML format - header row with colspan
+            htmlText += `<tr><th colspan="${maxCols}" style="background-color: #f0f0f0; font-weight: bold; text-align: center;">${row[0]}</th></tr>`;
+          } else {
+            // Data row
+            const paddedRow = [...row];
+            // Pad to max columns
+            while (paddedRow.length < maxCols) {
+              paddedRow.push('');
+            }
+            
+            // TSV format
+            tsvText += paddedRow.join('\t') + '\n';
+            
+            // HTML format
+            htmlText += '<tr>';
+            paddedRow.forEach((cell, index) => {
+              // First column is row header, style it differently
+              if (index === 0) {
+                htmlText += `<th style="background-color: #f8f8f8; text-align: left;">${cell || ''}</th>`;
+              } else {
+                htmlText += `<td style="text-align: center;">${cell || ''}</td>`;
+              }
+            });
+            htmlText += '</tr>';
+          }
+        }
+        
+        htmlText += '</tbody></table>';
+
+        // Copy both formats to clipboard using the modern Clipboard API
+        const clipboardItem = new ClipboardItem({
+          'text/plain': new Blob([tsvText], { type: 'text/plain' }),
+          'text/html': new Blob([htmlText], { type: 'text/html' })
+        });
+        
+        await navigator.clipboard.write([clipboardItem]);
+        
+      } catch (error) {
+        console.error('Failed to copy to clipboard:', error);
+      }
+    },
+    [filters, getDisplayName, getEnglishNoteName, t, maqamConfig, ajnas, allPitchClasses]
+  );
+
   const transpositionTables = useMemo(() => {
     if (!maqamConfig) return null;
 
@@ -426,6 +768,17 @@ const MaqamTranspositions: React.FC = () => {
                     <FileDownloadIcon className="maqam-transpositions__export-icon" />
                     {t("maqam.export")}
                   </button>
+                  <button
+                    className="maqam-transpositions__button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      copyMaqamTableToClipboard(maqam);
+                    }}
+                    title="Copy table to clipboard (Excel format)"
+                  >
+                    <ContentCopyIcon className="maqam-transpositions__copy-icon" />
+                    {t("maqam.copyTable")}
+                  </button>
                 </span>
               </th>
             </tr>
@@ -546,22 +899,75 @@ const MaqamTranspositions: React.FC = () => {
               {filters["centsDeviation"] && (
                 <tr>
                   <th className="maqam-transpositions__row-header">{t("maqam.centsDeviation")}</th>
-                  <th className="maqam-transpositions__header-pitchClass">
-                    {pitchClasses[0].referenceNoteName && <span>{pitchClasses[0].referenceNoteName}</span>}
-                    {pitchClasses[0].centsDeviation > 0 ? " +" : " "}
-                    {pitchClasses[0].centsDeviation.toFixed(1)}
-                  </th>
-                  {intervals.map((interval, i) => (
-                    <React.Fragment key={i}>
-                      <th className="maqam-transpositions__header-pitchClass"></th>
-                      <th className="maqam-transpositions__header-pitchClass">
-                        {pitchClasses[i + 1].referenceNoteName && <span>{pitchClasses[i + 1].referenceNoteName}</span>}
-                        {pitchClasses[i + 1].centsDeviation > 0 ? " +" : " "}
-                        {pitchClasses[i + 1].centsDeviation.toFixed(1)}
-                      </th>
-                      {i === intervals.length - 1 && <th className="maqam-transpositions__header-cell"></th>}
-                    </React.Fragment>
-                  ))}
+                  {(() => {
+                    // Build preferred mapping from current maqam context for enharmonic consistency
+                    const preferredMap: Record<string, string> = {};
+                    let prevEnglish: string | undefined = undefined;
+                    
+                    // Use the maqam pitch classes as context for enharmonic spelling
+                    if (pitchClasses && pitchClasses.length > 0) {
+                      prevEnglish = undefined;
+                      for (const pc of pitchClasses) {
+                        if (!pc || !pc.noteName) continue;
+                        const en = getEnglishNoteName(pc.noteName, { prevEnglish });
+                        preferredMap[pc.noteName] = en;
+                        prevEnglish = en;
+                      }
+                    }
+
+                    return (
+                      <>
+                        <th className="maqam-transpositions__header-pitchClass">
+                          {(() => {
+                            const noteName = pitchClasses[0].noteName;
+                            let referenceNoteName = pitchClasses[0].referenceNoteName;
+                            
+                            // Use preferred mapping if available, otherwise fall back to pitchClass.referenceNoteName
+                            if (preferredMap[noteName]) {
+                              referenceNoteName = preferredMap[noteName].replace(/[+-]/g, '');
+                            } else if (referenceNoteName) {
+                              referenceNoteName = referenceNoteName.replace(/[+-]/g, '');
+                            }
+                            
+                            return (
+                              <>
+                                {referenceNoteName && <span>{referenceNoteName}</span>}
+                                {pitchClasses[0].centsDeviation > 0 ? " +" : " "}
+                                {pitchClasses[0].centsDeviation.toFixed(1)}
+                              </>
+                            );
+                          })()}
+                        </th>
+                        {intervals.map((interval, i) => (
+                          <React.Fragment key={i}>
+                            <th className="maqam-transpositions__header-pitchClass"></th>
+                            <th className="maqam-transpositions__header-pitchClass">
+                              {(() => {
+                                const noteName = pitchClasses[i + 1].noteName;
+                                let referenceNoteName = pitchClasses[i + 1].referenceNoteName;
+                                
+                                // Use preferred mapping if available, otherwise fall back to pitchClass.referenceNoteName
+                                if (preferredMap[noteName]) {
+                                  referenceNoteName = preferredMap[noteName].replace(/[+-]/g, '');
+                                } else if (referenceNoteName) {
+                                  referenceNoteName = referenceNoteName.replace(/[+-]/g, '');
+                                }
+                                
+                                return (
+                                  <>
+                                    {referenceNoteName && <span>{referenceNoteName}</span>}
+                                    {pitchClasses[i + 1].centsDeviation > 0 ? " +" : " "}
+                                    {pitchClasses[i + 1].centsDeviation.toFixed(1)}
+                                  </>
+                                );
+                              })()}
+                            </th>
+                            {i === intervals.length - 1 && <th className="maqam-transpositions__header-cell"></th>}
+                          </React.Fragment>
+                        ))}
+                      </>
+                    );
+                  })()}
                 </tr>
               )}
               {valueType !== "decimalRatio" && filters["decimalRatio"] && (

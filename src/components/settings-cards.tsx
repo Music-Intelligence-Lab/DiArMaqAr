@@ -11,8 +11,8 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import { BASIC_WAVEFORMS, APERIODIC_WAVEFORMS, CUSTOM_WAVEFORMS } from "@/audio/waves";
 
 const SettingsCard = () => {
-  const { clearSelections, patterns } = useAppContext();
-  const { soundSettings, setSoundSettings, midiInputs, midiOutputs, setRefresh, clearHangingNotes, stopAllSounds } = useSoundContext();
+  const { patterns } = useAppContext();
+  const { soundSettings, setSoundSettings, midiInputs, midiOutputs, setRefresh, clearHangingNotes } = useSoundContext();
   const { t } = useLanguageContext();
 
   const { openSettings, setOpenSettings, openNavigation, setOpenNavigation } = useMenuContext();
@@ -520,15 +520,6 @@ const SettingsCard = () => {
             </>
           )}
         </details>
-        <button className="settings-card__clear-button" onClick={clearSelections}>
-          {t('settings.clearSelections')}
-        </button>
-        <button className="settings-card__clear-button" onClick={clearHangingNotes}>
-          {t('settings.clearHangingNotes')}
-        </button>
-        <button className="settings-card__clear-button" onClick={stopAllSounds}>
-          {t('settings.stopAllSounds')}
-        </button>
       </div>
     </div>
   );

@@ -12,6 +12,7 @@ import { Jins } from "@/models/Jins";
 import Link from "next/link";
 import StaffNotation from "./staff-notation";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import ExportModal from "./export-modal";
 import { stringifySource } from "@/models/bibliography/Source";
 
@@ -138,6 +139,255 @@ export default function JinsTranspositions() {
       }, 50); // Small delay for better UX
     },
     [isToggling, jinsTranspositions]
+  );
+
+  // Copy jins table to clipboard
+  const copyJinsTableToClipboard = useCallback(
+    async (jins: Jins) => {
+      if (!jins) return;
+
+      try {
+        const pitchClasses = jins.jinsPitchClasses;
+        const intervals = jins.jinsPitchClassIntervals;
+
+        const valueType = allPitchClasses[0].originalValueType;
+        const useRatio = valueType === "fraction" || valueType === "decimalRatio";
+
+        // Function to build rows for jins table
+        const buildJinsRows = () => {
+          const rows: string[][] = [];
+
+          // Note names row
+          const noteNamesRow = [t("jins.noteNames")];
+          pitchClasses.forEach((pc, i) => {
+            noteNamesRow.push(getDisplayName(pc.noteName, "note"));
+            if (i < pitchClasses.length - 1) noteNamesRow.push(''); // interval column
+          });
+          rows.push(noteNamesRow);
+
+          // Abjad names row (if filter enabled)
+          if (filters["abjadName"]) {
+            const abjadRow = [t("jins.abjadName")];
+            pitchClasses.forEach((pc, i) => {
+              abjadRow.push(pc.abjadName || "--");
+              if (i < pitchClasses.length - 1) abjadRow.push(''); // interval column
+            });
+            rows.push(abjadRow);
+          }
+
+          // English names row (if filter enabled)
+          if (filters["englishName"]) {
+            const englishRow = [t("jins.englishName")];
+            const englishNames: string[] = [];
+            let prev: string | undefined;
+            for (const pc of pitchClasses) {
+              const name = getEnglishNoteName(pc.noteName, prev ? { prevEnglish: prev } : undefined);
+              englishNames.push(name);
+              prev = name;
+            }
+            englishNames.forEach((name, i) => {
+              englishRow.push(name);
+              if (i < englishNames.length - 1) englishRow.push(''); // interval column
+            });
+            rows.push(englishRow);
+          }
+
+          // Primary value type row
+          const valueRow = [t(`jins.${valueType}`)];
+          pitchClasses.forEach((pc, i) => {
+            valueRow.push(pc.originalValue);
+            if (i < pitchClasses.length - 1) {
+              const interval = intervals[i];
+              const intervalValue = useRatio ? `(${interval.fraction.replace("/", ":")})` : `(${interval.cents.toFixed(3)})`;
+              valueRow.push(intervalValue);
+            }
+          });
+          rows.push(valueRow);
+
+          // Additional filter rows
+          if (valueType !== "fraction" && filters["fraction"]) {
+            const fractionRow = [t("jins.fraction")];
+            pitchClasses.forEach((pc, i) => {
+              fractionRow.push(pc.fraction);
+              if (i < pitchClasses.length - 1) {
+                fractionRow.push(`(${intervals[i].fraction})`);
+              }
+            });
+            rows.push(fractionRow);
+          }
+
+          if (valueType !== "cents" && filters["cents"]) {
+            const centsRow = [t("jins.cents")];
+            pitchClasses.forEach((pc, i) => {
+              centsRow.push(parseFloat(pc.cents).toFixed(3));
+              if (i < pitchClasses.length - 1) {
+                centsRow.push(`(${intervals[i].cents.toFixed(3)})`);
+              }
+            });
+            rows.push(centsRow);
+          }
+
+          if (filters["centsFromZero"]) {
+            const centsFromZeroRow = [t("jins.centsFromZero")];
+            pitchClasses.forEach((pc, i) => {
+              if (i === 0) {
+                centsFromZeroRow.push("0.000");
+              } else {
+                const centsFromZero = (parseFloat(pc.cents) - parseFloat(pitchClasses[0].cents)).toFixed(3);
+                centsFromZeroRow.push(centsFromZero);
+              }
+              if (i < pitchClasses.length - 1) {
+                centsFromZeroRow.push(`(${intervals[i].cents.toFixed(3)})`);
+              }
+            });
+            rows.push(centsFromZeroRow);
+          }
+
+          if (filters["centsDeviation"]) {
+            const centsDeviationRow = [t("jins.centsDeviation")];
+            // Build preferred mapping for enharmonic consistency
+            const preferredMap: Record<string, string> = {};
+            let prevEnglish: string | undefined = undefined;
+            for (const pc of pitchClasses) {
+              if (!pc || !pc.noteName) continue;
+              const en = getEnglishNoteName(pc.noteName, { prevEnglish });
+              preferredMap[pc.noteName] = en;
+              prevEnglish = en;
+            }
+            
+            pitchClasses.forEach((pc, i) => {
+              let referenceNoteName = pc.referenceNoteName;
+              if (preferredMap[pc.noteName]) {
+                referenceNoteName = preferredMap[pc.noteName].replace(/[+-]/g, '');
+              } else if (referenceNoteName) {
+                referenceNoteName = referenceNoteName.replace(/[+-]/g, '');
+              }
+              const deviationText = `${referenceNoteName || ''}${pc.centsDeviation > 0 ? ' +' : ' '}${pc.centsDeviation.toFixed(1)}`;
+              centsDeviationRow.push(deviationText);
+              if (i < pitchClasses.length - 1) {
+                centsDeviationRow.push(''); // interval column empty for cents deviation
+              }
+            });
+            rows.push(centsDeviationRow);
+          }
+
+          if (valueType !== "decimalRatio" && filters["decimalRatio"]) {
+            const decimalRow = [t("jins.decimalRatio")];
+            pitchClasses.forEach((pc, i) => {
+              decimalRow.push(parseFloat(pc.decimalRatio).toFixed(3));
+              if (i < pitchClasses.length - 1) {
+                decimalRow.push(`(${intervals[i].decimalRatio.toFixed(3)})`);
+              }
+            });
+            rows.push(decimalRow);
+          }
+
+          if (valueType !== "stringLength" && filters["stringLength"]) {
+            const stringLengthRow = [t("jins.stringLength")];
+            pitchClasses.forEach((pc, i) => {
+              stringLengthRow.push(parseFloat(pc.stringLength).toFixed(3));
+              if (i < pitchClasses.length - 1) {
+                stringLengthRow.push(`(${intervals[i].stringLength.toFixed(3)})`);
+              }
+            });
+            rows.push(stringLengthRow);
+          }
+
+          if (valueType !== "fretDivision" && filters["fretDivision"]) {
+            const fretDivisionRow = [t("jins.fretDivision")];
+            pitchClasses.forEach((pc, i) => {
+              fretDivisionRow.push(parseFloat(pc.fretDivision).toFixed(3));
+              if (i < pitchClasses.length - 1) {
+                fretDivisionRow.push(`(${intervals[i].fretDivision.toFixed(3)})`);
+              }
+            });
+            rows.push(fretDivisionRow);
+          }
+
+          if (filters["midiNote"]) {
+            const midiRow = [t("jins.midiNote")];
+            pitchClasses.forEach((pc, i) => {
+              midiRow.push(pc.midiNoteNumber.toFixed(3));
+              if (i < pitchClasses.length - 1) {
+                midiRow.push(''); // interval column empty for MIDI
+              }
+            });
+            rows.push(midiRow);
+          }
+
+          if (filters["frequency"]) {
+            const frequencyRow = [t("jins.frequency")];
+            pitchClasses.forEach((pc, i) => {
+              frequencyRow.push(parseFloat(pc.frequency).toFixed(3));
+              if (i < pitchClasses.length - 1) {
+                frequencyRow.push(''); // interval column empty for frequency
+              }
+            });
+            rows.push(frequencyRow);
+          }
+
+          return rows;
+        };
+
+        // Build complete table
+        const allRows: string[][] = [];
+        
+        const jinsRows = buildJinsRows();
+        allRows.push(...jinsRows);
+
+        // Convert to multiple formats for universal compatibility
+        // Create both TSV (for spreadsheets) and HTML (for documents)
+        
+        // Get max columns from data rows
+        const maxCols = Math.max(...allRows.filter(r => r.length > 1).map(r => r.length));
+        
+        // Start with jins name as a heading
+        const jinsTitle = getDisplayName(jins.name, 'jins');
+        
+        // Build TSV format for spreadsheets
+        let tsvText = `${jinsTitle}\n\n`;
+        
+        // Build HTML format for documents
+        let htmlText = `<h3>${jinsTitle}</h3><table border="1" cellpadding="4" cellspacing="0"><tbody>`;
+        
+        for (const row of allRows) {
+          const paddedRow = [...row];
+          // Pad to max columns
+          while (paddedRow.length < maxCols) {
+            paddedRow.push('');
+          }
+          
+          // TSV format
+          tsvText += paddedRow.join('\t') + '\n';
+          
+          // HTML format
+          htmlText += '<tr>';
+          paddedRow.forEach((cell, index) => {
+            // First column is row header, style it differently
+            if (index === 0) {
+              htmlText += `<th style="background-color: #f8f8f8; text-align: left;">${cell || ''}</th>`;
+            } else {
+              htmlText += `<td style="text-align: center;">${cell || ''}</td>`;
+            }
+          });
+          htmlText += '</tr>';
+        }
+        
+        htmlText += '</tbody></table>';
+
+        // Copy both formats to clipboard using the modern Clipboard API
+        const clipboardItem = new ClipboardItem({
+          'text/plain': new Blob([tsvText], { type: 'text/plain' }),
+          'text/html': new Blob([htmlText], { type: 'text/html' })
+        });
+        
+        await navigator.clipboard.write([clipboardItem]);
+        
+      } catch (error) {
+        console.error('Failed to copy to clipboard:', error);
+      }
+    },
+    [filters, getDisplayName, getEnglishNoteName, t, allPitchClasses, language]
   );
 
   useEffect(() => {
@@ -312,6 +562,17 @@ export default function JinsTranspositions() {
                 >
                   <FileDownloadIcon className="jins-transpositions__export-icon" /> {t("jins.export")}
                 </button>
+                <button
+                  className="jins-transpositions__button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    copyJinsTableToClipboard(jins);
+                  }}
+                  title="Copy table to clipboard (Excel format)"
+                >
+                  <ContentCopyIcon className="jins-transpositions__copy-icon" />
+                  {t("jins.copyTable")}
+                </button>
               </span>
             </td>
           </tr>
@@ -412,21 +673,74 @@ export default function JinsTranspositions() {
               {filters["centsDeviation"] && (
                 <tr>
                   <th className="jins-transpositions__row-header">{t("jins.centsDeviation")}</th>
-                  <th className="jins-transpositions__header-pitchClass">
-                    {pitchClasses[0].referenceNoteName && <span>{pitchClasses[0].referenceNoteName}</span>}
-                    {pitchClasses[0].centsDeviation > 0 ? " +" : " "}
-                    {pitchClasses[0].centsDeviation.toFixed(1)}
-                  </th>
-                  {intervals.map((interval, i) => (
-                    <React.Fragment key={i}>
-                      <th className="jins-transpositions__header-pitchClass"></th>
-                      <th className="jins-transpositions__header-pitchClass">
-                        {pitchClasses[i + 1].referenceNoteName && <span>{pitchClasses[i + 1].referenceNoteName}</span>}
-                        {pitchClasses[i + 1].centsDeviation > 0 ? " +" : " "}
-                        {pitchClasses[i + 1].centsDeviation.toFixed(1)}
-                      </th>
-                    </React.Fragment>
-                  ))}
+                  {(() => {
+                    // Build preferred mapping from current jins context for enharmonic consistency
+                    const preferredMap: Record<string, string> = {};
+                    let prevEnglish: string | undefined = undefined;
+                    
+                    // Use the jins pitch classes as context for enharmonic spelling
+                    if (pitchClasses && pitchClasses.length > 0) {
+                      prevEnglish = undefined;
+                      for (const pc of pitchClasses) {
+                        if (!pc || !pc.noteName) continue;
+                        const en = getEnglishNoteName(pc.noteName, { prevEnglish });
+                        preferredMap[pc.noteName] = en;
+                        prevEnglish = en;
+                      }
+                    }
+
+                    return (
+                      <>
+                        <th className="jins-transpositions__header-pitchClass">
+                          {(() => {
+                            const noteName = pitchClasses[0].noteName;
+                            let referenceNoteName = pitchClasses[0].referenceNoteName;
+                            
+                            // Use preferred mapping if available, otherwise fall back to pitchClass.referenceNoteName
+                            if (preferredMap[noteName]) {
+                              referenceNoteName = preferredMap[noteName].replace(/[+-]/g, '');
+                            } else if (referenceNoteName) {
+                              referenceNoteName = referenceNoteName.replace(/[+-]/g, '');
+                            }
+                            
+                            return (
+                              <>
+                                {referenceNoteName && <span>{referenceNoteName}</span>}
+                                {pitchClasses[0].centsDeviation > 0 ? " +" : " "}
+                                {pitchClasses[0].centsDeviation.toFixed(1)}
+                              </>
+                            );
+                          })()}
+                        </th>
+                        {intervals.map((interval, i) => (
+                          <React.Fragment key={i}>
+                            <th className="jins-transpositions__header-pitchClass"></th>
+                            <th className="jins-transpositions__header-pitchClass">
+                              {(() => {
+                                const noteName = pitchClasses[i + 1].noteName;
+                                let referenceNoteName = pitchClasses[i + 1].referenceNoteName;
+                                
+                                // Use preferred mapping if available, otherwise fall back to pitchClass.referenceNoteName
+                                if (preferredMap[noteName]) {
+                                  referenceNoteName = preferredMap[noteName].replace(/[+-]/g, '');
+                                } else if (referenceNoteName) {
+                                  referenceNoteName = referenceNoteName.replace(/[+-]/g, '');
+                                }
+                                
+                                return (
+                                  <>
+                                    {referenceNoteName && <span>{referenceNoteName}</span>}
+                                    {pitchClasses[i + 1].centsDeviation > 0 ? " +" : " "}
+                                    {pitchClasses[i + 1].centsDeviation.toFixed(1)}
+                                  </>
+                                );
+                              })()}
+                            </th>
+                          </React.Fragment>
+                        ))}
+                      </>
+                    );
+                  })()}
                 </tr>
               )}
               {valueType !== "decimalRatio" && filters["decimalRatio"] && (
