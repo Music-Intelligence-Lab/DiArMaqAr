@@ -12,6 +12,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
+        max-width: 100%;
+        min-width: 100%;
+        max-height: 340px !important;
+
   }
 
   &__svg {
@@ -24,7 +28,7 @@
 
   &-cell {
     text-align: center;
-    background: $text;
+    background: $text !important;
     border: 0px;
     vertical-align: middle;
     overflow: visible;

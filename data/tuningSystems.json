@@ -38,7 +38,7 @@
       "2403",
       "2334",
       "2268",
-      "2203",
+      "1103",
       "2140",
       "2079",
       "2020",
@@ -175,10 +175,10 @@
       ""
     ],
     "stringLength": 3600,
-    "defaultReferenceFrequency": 220,
+    "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "yegāh": 195.998,
-      "ʿushayrān": 220
+      "yegāh": 97.999,
+      "ʿushayrān": 110
     }
   },
   {
@@ -293,10 +293,10 @@
       "ل"
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 220,
+    "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "ʿushayrān": 220,
-      "yegāh": 195.998
+      "ʿushayrān": 110,
+      "yegāh": 97.999
     }
   },
   {
@@ -380,16 +380,16 @@
       ""
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 220,
+    "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "ʿushayrān": 220
+      "ʿushayrān": 110
     }
   },
   {
-    "id": "Al-Dīk-(1926)",
+    "id": "Al-Dīk-(1926a)",
     "titleEnglish": "Al-Sullam Al-Fārsī or Al-'Arabī (!!!)",
     "titleArabic": "السلم الفارسي او العربي",
-    "year": "1926",
+    "year": "1926a",
     "sourceEnglish": "",
     "sourceArabic": "",
     "sourcePageReferences": [
@@ -400,7 +400,7 @@
     ],
     "creatorEnglish": "Al-Dīk",
     "creatorArabic": "الديك، احمد امين",
-    "commentsEnglish": "In Shawqī (1969:43) the numbers for string length are given as 1,0000, 0,9716, etc... They are presented here as 10000, 9716 etc... for clarity.\n\nTypo in Shawqī (1969:43) lists the second pitch class as 0.7916. Most likely it is supposed to be 0.9716 and that is what is used here.\n\nThe note names for the string length divisions aren't mentioned in Shawqī (1969:43) and therefore presumably not in Al-Dīk's original (NEED TO VERIFY). Though in Shawqī's reproduction of a table from another publication by Al-Dīk (mulḥaq fī dhabdhabāt ṭabaqa sharqīya/ملحق في ذبذبات طبقة شيرقية), the text by Al-Dīk which refers to his calculations of frequencies for his tuning system mentions that he considered the Arabic note name dūgāh equivalent to A/La at 435 Hz. \n\nThis is in line with the Ottoman (and the modern Turkish convention) equates the fret (perde) dūgāh to the Anglo-European La/A at 220/440 Hz, and naming the oud string referred to by Arabs as nawā usually tuned to G at 196 Hz as dugāh because they tune up to A at 220 Hz. Therefore this tuning system is placed according to yegāh at 1/1.",
+    "commentsEnglish": "In Shawqī (1969:43) the numbers for string length are given as 1,0000, 0,9716, etc... They are presented here as 10000, 9716 etc... for clarity.\n\nTypo in Shawqī (1969:43) lists the second pitch class as 0.7916. Most likely it is supposed to be 0.9716 and that is what is used here.\n\nThe note names for the string length divisions aren't mentioned in Shawqī (1969:43) and therefore presumably not in Al-Dīk's original (NEED TO VERIFY). Though in Shawqī's reproduction of a table from another publication by Al-Dīk (mulḥaq fī dhabdhabāt ṭabaqa sharqīya/ملحق في ذبذبات طبقة شيرقية), the text by Al-Dīk which refers to his calculations of frequencies for his tuning system mentions that he considered the Arabic note name dūgāh equivalent to A/La at 435 Hz. \n\nThis is in line with the Ottoman (and the modern Turkish convention) equates the fret (perde) dūgāh to the Anglo-European La/A at 110/440 Hz, and naming the oud string referred to by Arabs as nawā usually tuned to G at 196 Hz as dugāh because they tune up to A at 110 Hz. Therefore this tuning system is placed according to yegāh at 1/1.",
     "commentsArabic": "",
     "tuningSystemPitchClasses": [
       "10000",
@@ -531,16 +531,16 @@
       ""
     ],
     "stringLength": 10000,
-    "defaultReferenceFrequency": 195.998,
+    "defaultReferenceFrequency": 97.999,
     "referenceFrequencies": {
-      "yegāh": 195.998
+      "yegāh": 97.999
     }
   },
   {
-    "id": "Al-Dīk-(1926)",
+    "id": "Al-Dīk-(1926b)",
     "titleEnglish": "Old Arabic Scale",
     "titleArabic": "السلم العربي القديم",
-    "year": "1926",
+    "year": "1926b",
     "sourceEnglish": "",
     "sourceArabic": "",
     "sourcePageReferences": [
@@ -647,10 +647,10 @@
       ""
     ],
     "stringLength": 10000,
-    "defaultReferenceFrequency": 195.998,
+    "defaultReferenceFrequency": 97.999,
     "referenceFrequencies": {
-      "yegāh": 195.998,
-      "ʿushayrān": 220
+      "yegāh": 97.999,
+      "ʿushayrān": 110
     }
   },
   {
@@ -799,10 +799,10 @@
       ""
     ],
     "stringLength": 10000,
-    "defaultReferenceFrequency": 195.998,
+    "defaultReferenceFrequency": 97.999,
     "referenceFrequencies": {
-      "yegāh": 195.998,
-      "ʿushayrān": 220
+      "yegāh": 97.999,
+      "ʿushayrān": 110
     }
   },
   {
@@ -951,9 +951,9 @@
       ""
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 195.998,
+    "defaultReferenceFrequency": 97.999,
     "referenceFrequencies": {
-      "yegāh": 195.998
+      "yegāh": 97.999
     }
   },
   {
@@ -1094,10 +1094,10 @@
       ""
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 220,
+    "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "ʿushayrān": 220,
-      "yegāh": 195.998
+      "ʿushayrān": 110,
+      "yegāh": 97.999
     }
   },
   {
@@ -1238,10 +1238,10 @@
       ""
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 220,
+    "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "ʿushayrān": 220,
-      "yegāh": 195.998
+      "ʿushayrān": 110,
+      "yegāh": 97.999
     }
   },
   {
@@ -1417,10 +1417,10 @@
       ""
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 220,
+    "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "yegāh": 195.998,
-      "ʿushayrān": 220
+      "yegāh": 97.999,
+      "ʿushayrān": 110
     }
   },
   {
@@ -1614,10 +1614,10 @@
       ""
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 195.998,
+    "defaultReferenceFrequency": 97.999,
     "referenceFrequencies": {
-      "yegāh": 195.998,
-      "ʿushayrān": 220
+      "yegāh": 97.999,
+      "ʿushayrān": 110
     }
   },
   {
@@ -1799,10 +1799,10 @@
       ""
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 220,
+    "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "yegāh": 195.998,
-      "ʿushayrān": 220
+      "yegāh": 97.999,
+      "ʿushayrān": 110
     }
   },
   {
@@ -1947,10 +1947,10 @@
       ""
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 195.998,
+    "defaultReferenceFrequency": 97.999,
     "referenceFrequencies": {
-      "yegāh": 195.998,
-      "ʿushayrān": 220
+      "yegāh": 97.999,
+      "ʿushayrān": 110
     }
   },
   {
@@ -2050,10 +2050,10 @@
       ""
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 220,
+    "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "ʿushayrān": 220,
-      "yegāh": 195.998
+      "ʿushayrān": 110,
+      "yegāh": 97.999
     }
   },
   {
@@ -2239,7 +2239,7 @@
     "defaultReferenceFrequency": 261.6256,
     "referenceFrequencies": {
       "rāst": 261.33,
-      "yegāh": 195.998
+      "yegāh": 97.999
     }
   },
   {
@@ -2388,9 +2388,9 @@
       "خ"
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 195.998,
+    "defaultReferenceFrequency": 97.999,
     "referenceFrequencies": {
-      "yegāh": 195.998
+      "yegāh": 97.999
     }
   },
   {
@@ -2476,10 +2476,10 @@
       "ي"
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 220,
+    "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "ʿushayrān": 220,
-      "yegāh": 195.998
+      "ʿushayrān": 110,
+      "yegāh": 97.999
     }
   },
   {
@@ -2606,10 +2606,10 @@
       ""
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 220,
+    "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "yegāh": 195.998,
-      "ʿushayrān": 220
+      "yegāh": 97.999,
+      "ʿushayrān": 110
     }
   },
   {
@@ -2753,9 +2753,9 @@
       ""
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 220,
+    "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "ʿushayrān": 220
+      "ʿushayrān": 110
     }
   },
   {
@@ -2871,10 +2871,10 @@
       ""
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 220,
+    "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "yegāh": 195.998,
-      "ʿushayrān": 220
+      "yegāh": 97.999,
+      "ʿushayrān": 110
     }
   },
   {
@@ -2912,7 +2912,7 @@
       "2403",
       "2334",
       "2268",
-      "2203",
+      "1103",
       "2140",
       "2079",
       "2020",
@@ -2999,9 +2999,9 @@
       ""
     ],
     "stringLength": 3600,
-    "defaultReferenceFrequency": 195.998,
+    "defaultReferenceFrequency": 97.999,
     "referenceFrequencies": {
-      "yegāh": 195.998
+      "yegāh": 97.999
     }
   },
   {
@@ -3132,10 +3132,10 @@
       ""
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 220,
+    "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "yegāh": 195.998,
-      "ʿushayrān": 220
+      "yegāh": 97.999,
+      "ʿushayrān": 110
     }
   },
   {
@@ -3239,10 +3239,10 @@
       ""
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 220,
+    "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "yegāh": 195.998,
-      "ʿushayrān": 220
+      "yegāh": 97.999,
+      "ʿushayrān": 110
     }
   },
   {
@@ -3351,10 +3351,10 @@
       ""
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 220,
+    "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "yegāh": 195.998,
-      "ʿushayrān": 220
+      "yegāh": 97.999,
+      "ʿushayrān": 110
     }
   },
   {
@@ -3463,10 +3463,10 @@
       ""
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 220,
+    "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "yegāh": 195.998,
-      "ʿushayrān": 220
+      "yegāh": 97.999,
+      "ʿushayrān": 110
     }
   },
   {
@@ -3570,10 +3570,10 @@
       ""
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 220,
+    "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "yegāh": 195.998,
-      "ʿushayrān": 220
+      "yegāh": 97.999,
+      "ʿushayrān": 110
     }
   },
   {
@@ -3682,10 +3682,10 @@
       ""
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 220,
+    "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "yegāh": 195.998,
-      "ʿushayrān": 220
+      "yegāh": 97.999,
+      "ʿushayrān": 110
     }
   },
   {
@@ -3854,10 +3854,10 @@
       ""
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 220,
+    "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "yegāh": 195.998,
-      "ʿushayrān": 220
+      "yegāh": 97.999,
+      "ʿushayrān": 110
     }
   },
   {
@@ -3976,8 +3976,8 @@
     "stringLength": 1000,
     "defaultReferenceFrequency": 261.33,
     "referenceFrequencies": {
-      "yegāh": 195.998,
-      "ʿushayrān": 220,
+      "yegāh": 97.999,
+      "ʿushayrān": 110,
       "rāst": 261.33
     }
   },
@@ -4125,8 +4125,8 @@
     "stringLength": 10000,
     "defaultReferenceFrequency": 258,
     "referenceFrequencies": {
-      "yegāh": 195.998,
-      "ʿushayrān": 220,
+      "yegāh": 97.999,
+      "ʿushayrān": 110,
       "rāst": 261.33
     }
   },
@@ -4238,8 +4238,8 @@
     "stringLength": 10000,
     "defaultReferenceFrequency": 261.33,
     "referenceFrequencies": {
-      "yegāh": 195.998,
-      "ʿushayrān": 220,
+      "yegāh": 97.999,
+      "ʿushayrān": 110,
       "rāst": 261.33
     }
   },
@@ -4377,7 +4377,16 @@
     "year": "2025",
     "sourceEnglish": "Unknown Source",
     "sourceArabic": "مصدر غير معروف",
-    "sourcePageReferences": [],
+    "sourcePageReferences": [
+      {
+        "sourceId": "YcVXQflykzViRp6e3tIHo",
+        "page": "47"
+      },
+      {
+        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "page": "13"
+      }
+    ],
     "creatorEnglish": "Allami, Khyam",
     "creatorArabic": "اللامي، خيّام",
     "commentsEnglish": "Created by using Ṣabbāgh (1954) 24-tone tuning system and including Shawwā's extra note names (1946:13) with the applicable one comma higher or one comma lower using the Syntonic comma 81/80 as utilised by Ṣabbāgh. Although Shawwā provides 5 extra note names we only need 4 becuase one of them, nahāwand, which is supposed to be lower than kūrdī by one comma (6/5 x 80/81) gives 32/27 which is already assigned to nīm kurdī/nahāwand.",

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, useMemo } from "react";
 import Footer from "@/components/footer";
+import useMenuContext from "@/contexts/menu-context";
 
 interface AnalyticsRow {
   id: string;
@@ -29,12 +30,13 @@ function extractYearParts(label: string): { year: number; letter: string } {
 }
 
 export default function AnalyticsPage() {
+  const { showAdminTabs } = useMenuContext();
   const [rows, setRows] = useState<AnalyticsRow[]>([]);
   const [sortKey, setSortKey] = useState<keyof AnalyticsRow>("label");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
-  //  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  //  const [success, setSuccess] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   // Fetch analytics data from JSON file
   const fetchAnalytics = async () => {
@@ -53,7 +55,7 @@ export default function AnalyticsPage() {
     fetchAnalytics();
   }, []);
 
-  /* // Handle re-generation
+  // Handle re-generation
   const handleReRender = async () => {
     setLoading(true);
     setError(null);
@@ -69,7 +71,7 @@ export default function AnalyticsPage() {
     } finally {
       setLoading(false);
     }
-  }; */
+  };
 
   // Sorting logic
   const sortedRows = useMemo(() => {
@@ -120,12 +122,14 @@ export default function AnalyticsPage() {
 
   return (
     <div className="analytics-page">
-      {/* <button onClick={handleReRender} disabled={loading} style={{ marginBottom: 16 }}>
-        {loading ? "Re-Rendering..." : "Re-Render Analytics"}
-      </button> */}
+      {showAdminTabs && (
+        <button onClick={handleReRender} disabled={loading} style={{ marginBottom: 16 }}>
+          {loading ? "Re-Rendering..." : "Re-Render Analytics"}
+        </button>
+      )}
 
       {error && <div style={{ color: "red" }}>{error}</div>}
-      {/* {success && <div style={{ color: "green" }}>{success}</div>} */}
+      {success && <div style={{ color: "green" }}>{success}</div>}
       <table>
         <thead>
           <tr>

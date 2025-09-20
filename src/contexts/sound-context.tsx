@@ -1006,6 +1006,20 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     }
     activeNotesRef.current.clear();
 
+    // Stop drone oscillator if it's running
+    if (droneOscRef.current) {
+      try {
+        if (Array.isArray(droneOscRef.current.oscillator)) {
+          droneOscRef.current.oscillator.forEach((osc) => osc.stop(audioCtx ? now + FADEOUT_MS / 1000 : undefined));
+        } else {
+          droneOscRef.current.oscillator.stop(audioCtx ? now + FADEOUT_MS / 1000 : undefined);
+        }
+      } catch (err) {
+        console.warn("Error stopping drone oscillator:", err);
+      }
+      droneOscRef.current = null;
+    }
+
     // Send note off for all active MIDI notes
     if (soundSettings.useMPE) {
       // For MPE, send note off on each active channel

@@ -29,7 +29,7 @@
     color: white;
     padding: 0px;
     margin: 0px;
-    font-size: 24px;
+    font-size: 21px;
     cursor: pointer;
     vertical-align: middle;
   }
@@ -40,7 +40,17 @@
     padding: 0px;
     margin: 0px;
     margin-right: 5px;
-    font-size: 24px;
+    font-size: 16px;
+    cursor: pointer;
+    vertical-align: middle;
+  }
+
+  &__copy-icon.MuiSvgIcon-root {
+    color: white;
+    padding: 0px;
+    margin: 0px;
+    margin-right: 5px;
+    font-size: 16px;
     cursor: pointer;
     vertical-align: middle;
   }
@@ -53,13 +63,13 @@
     background-color: rgba($primary, 0.5);
     color: white;
     padding: 0px 10px;
-    border-radius: 3px;
+    border-radius: 2px;
     cursor: pointer;
     margin-right: 10px;
     font-size: 12px;
     min-width: 120px;
     width: auto;
-    height: 36px; /* Slightly reduced for better visual balance */
+    height: 27px; /* Slightly reduced for better visual balance */
     vertical-align: middle;
     text-align: center;
     border: none;
@@ -73,7 +83,10 @@
 
     &:focus {
       outline: transparent;
-      border: white solid 1px;
+    }
+
+    &:active {
+      background-color: $gold !important;
     }
 
     &:hover {

@@ -28,7 +28,7 @@
     padding: 0px;
     margin: 0px;
     margin-right: 5px;
-    font-size: 22px;
+    font-size: 21px;
     cursor: pointer;
     vertical-align: middle;
   }
@@ -39,7 +39,17 @@
     padding: 0px;
     margin: 0px;
     margin-right: 5px;
-    font-size: 24px;
+    font-size: 16px;
+    cursor: pointer;
+    vertical-align: middle;
+  }
+
+  &__copy-icon.MuiSvgIcon-root {
+    color: white;
+    padding: 0px;
+    margin: 0px;
+    margin-right: 5px;
+    font-size: 16px;
     cursor: pointer;
     vertical-align: middle;
   }
@@ -48,13 +58,13 @@
     background-color: rgba($primary, 0.5);
     color: white;
     padding: 0px 10px;
-    border-radius: 3px;
+    border-radius: 2px;
     cursor: pointer;
     margin-right: 10px;
     font-size: 12px;
     min-width: 120px;
     width: auto;
-    height: 36px; /* Slightly reduced for better visual balance */
+    height: 27px; /* Slightly reduced for better visual balance */
     vertical-align: middle;
     text-align: center;
     border: none;
@@ -68,7 +78,10 @@
 
     &:focus {
       outline: transparent;
-      border: white solid 1px;
+    }
+
+    &:active {
+      background-color: $gold !important;
     }
 
     &:hover {
@@ -93,7 +106,7 @@
     font-weight: 200;
 
     th {
-      vertical-align: top;
+      vertical-align: middle;
       //margin-bottom: 500px;
       text-align: left;
       padding: 8px;
@@ -123,35 +136,33 @@
     font-weight: 300;
     padding-left: 10px;
     padding-right: 20px;
+    float: left;
+    line-height: 30px;
     max-width: 60%;
-  display: block;
-  position: static;
-  margin: 0;
-  align-self: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 
     // RTL support
     [dir="rtl"] & {
       padding-left: 20px;
       padding-right: 10px;
-      left: auto;
-      right: 15px;
+      float: right;
     }
   }
   
   &__buttons {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  justify-content: flex-end;
-  position: static;
-  margin: 0;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: flex-end;
+    float: right;
+    line-height: 30px;
     
     // RTL support
     [dir="rtl"] & {
       float: left;
-      text-align: left;
-      right: auto;
-      left: 15px;
+      justify-content: flex-start;
     }
   }
 

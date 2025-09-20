@@ -7,10 +7,10 @@
   background-color: transparent;
   color: $text !important;
   border: none;
-  border-radius: 10px;
   cursor: pointer;
   z-index: 2001; // Ensure above sidebar
   pointer-events: auto;
+
 }
 
 
@@ -23,7 +23,7 @@
   width: 288px;
   height: 100vh;
   max-height: 100vh;
-  overflow-y: auto;
+  overflow-y: hidden;
   transform: translateX(-130%);
   transition: transform 0.3s ease-in-out;
   z-index: 2000;
@@ -44,6 +44,8 @@
     background: $black;
     color: $text;
     font-size: 14px;
+      overflow-y: hidden;
+
   }
 
   &__link {
@@ -54,7 +56,7 @@
     flex-direction: column;
     justify-content: center;
     width: 100%;
-    min-height: 70px;
+    min-height: 80px;
     padding: 10px 20px;
     border-top: 1px solid $grey;
     transition: all 0.1s ease-in-out;
