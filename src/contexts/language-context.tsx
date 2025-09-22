@@ -49,7 +49,7 @@ const translations = {
     // Navbar Tabs
     "tabs.tuningSystem": "Tanāghīm (tuning systems)",
     "tabs.ajnas": "Ajnās",
-    "tabs.maqamat": "Maqamāt",
+    "tabs.maqamat": "Maqāmāt",
     "tabs.suyur": "Suyūr",
     "tabs.intiqalat": "Intiqālāt",
 
