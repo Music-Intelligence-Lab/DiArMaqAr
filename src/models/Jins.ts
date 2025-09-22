@@ -156,7 +156,7 @@ export default class JinsData {
    * @param allNoteNames - All note names available in the tuning system
    * @returns True if all required note names are available, false otherwise
    */
-  isJinsSelectable(allNoteNames: NoteName[]): boolean {
+  isJinsPossible(allNoteNames: NoteName[]): boolean {
     return this.noteNames.every((noteName) => allNoteNames.some((allNoteName) => allNoteName === noteName));
   }
 

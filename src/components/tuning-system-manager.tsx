@@ -35,7 +35,7 @@ function isTuningSystemDisabled(
 
   if (selectedJinsData) {
     for (const set of shiftedNoteNames) {
-      if (selectedJinsData.isJinsSelectable(set)) {
+      if (selectedJinsData.isJinsPossible(set)) {
         const firstNoteName = set[set.length / 3];
         if (startingNoteName && firstNoteName !== startingNoteName) continue;
         return { disabled: false, noteName: firstNoteName };
@@ -43,7 +43,7 @@ function isTuningSystemDisabled(
     }
   } else if (selectedMaqamData) {
     for (const set of shiftedNoteNames) {
-      if (selectedMaqamData.isMaqamSelectable(set)) {
+      if (selectedMaqamData.isMaqamPossible(set)) {
         const firstNoteName = set[set.length / 3];
         if (startingNoteName && firstNoteName !== startingNoteName) continue;
         if (selectedMaqam) {

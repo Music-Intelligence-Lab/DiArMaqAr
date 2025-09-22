@@ -141,7 +141,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
             <p>{t('jins.noAjnasAvailable')}</p>
           ) : (
             filteredAjnas.map((jinsData, index) => {
-              const selectable = jinsData.isJinsSelectable(allPitchClasses.map((pitchClass) => pitchClass.noteName));
+              const selectable = jinsData.isJinsPossible(allPitchClasses.map((pitchClass) => pitchClass.noteName));
               const numberOfTranspositions = allJinsTranspositionsMap.get(jinsData.getId())?.filter((transposition: any) => transposition.jinsPitchClasses[0]?.octave === 1).length || 0;
               return (
                 <div
