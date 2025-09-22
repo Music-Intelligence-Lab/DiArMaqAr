@@ -7,7 +7,6 @@ import useSoundContext from "@/contexts/sound-context";
 import { Sayr, SayrStop } from "@/models/Maqam";
 import { octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames, octaveThreeNoteNames } from "@/models/NoteName";
 import PitchClass from "@/models/PitchClass";
-import { nanoid } from "nanoid";
 import { updateMaqamat } from "@/functions/update";
 import { transposeSayr } from "@/functions/transpose";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
@@ -195,7 +194,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
 
   const handleSave = async (e: FormEvent) => {
     e.preventDefault();
-    const idUse = maqamSayrId || nanoid();
+    const idUse = `Sayr ${sourceId}`;
     const newSayr: Sayr = {
       id: idUse,
       creatorEnglish,

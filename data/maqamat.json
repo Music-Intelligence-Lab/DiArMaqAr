@@ -22,7 +22,7 @@
     ],
     "suyūr": [
       {
-        "id": "TX44wPOzOHjUvm-fCglz4",
+        "id": "Sayr Al-Ṣabbāgh-(1950)",
         "creatorEnglish": "Ṣabbāgh",
         "creatorArabic": "صبّاغ",
         "sourceId": "Al-Ṣabbāgh-(1950)",
@@ -53,7 +53,7 @@
         ]
       },
       {
-        "id": "v7CSV9aJh1f2o7lX2lsy9",
+        "id": "Sayr Al-Shawwā-(1946)",
         "creatorEnglish": "",
         "creatorArabic": "",
         "sourceId": "Al-Shawwā-(1946)",
@@ -324,7 +324,7 @@
     ],
     "suyūr": [
       {
-        "id": "_PJZNEo-BIKwIPz6buIyT",
+        "id": "Sayr Al-Shawwā-(1946)",
         "creatorEnglish": "",
         "creatorArabic": "",
         "sourceId": "Al-Shawwā-(1946)",
@@ -415,7 +415,7 @@
     ],
     "suyūr": [
       {
-        "id": "4KGp-L35_AHYXrBFnx_T9",
+        "id": "Sayr Al-Shawwā-(1946)",
         "creatorEnglish": "",
         "creatorArabic": "",
         "sourceId": "Al-Shawwā-(1946)",
@@ -760,12 +760,13 @@
     ],
     "suyūr": [
       {
-        "id": "337de5290e47439d8027",
+        "id": "Sayr Al-Shawwā-(1946)",
         "creatorEnglish": "Al-Shawwā, Sāmī",
-        "sourceEnglish": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
-        "year": 1946,
+        "creatorArabic": "",
+        "sourceId": "Al-Shawwā-(1946)",
         "page": 36,
         "commentsEnglish": "Starts with ḥijāz dūgāh, followed by rāst nawā. Descending it uses būselīk nawā, followed by ḥijāz dūgāh and ends on 'irāq",
+        "commentsArabic": "",
         "stops": [
           {
             "type": "jins",
@@ -830,7 +831,7 @@
     ],
     "suyūr": [
       {
-        "id": "Iwn9TU053BtYiEEuGOzNj",
+        "id": "Sayr Al-Shawwā-(1946)",
         "creatorEnglish": "",
         "creatorArabic": "",
         "sourceId": "Al-Shawwā-(1946)",
@@ -1003,11 +1004,13 @@
     ],
     "suyūr": [
       {
-        "id": "526f73d6d5e1423ab392",
+        "id": "Sayr Al-Shawwā-(1946)",
         "creatorEnglish": "Al-Shawwā, Sāmī",
-        "sourceId": "",
+        "creatorArabic": "",
+        "sourceId": "Al-Shawwā-(1946)",
         "page": 33,
         "commentsEnglish": "Starts on 'iraq or dūgāh descending until yegāh, then bayyāt dūgāh until nawā then rāst nawā and descends to the qarār which is 'irāq",
+        "commentsArabic": "",
         "stops": [
           {
             "type": "note",
@@ -1078,7 +1081,7 @@
     ],
     "suyūr": [
       {
-        "id": "a0Q3trZVat5Q0fByTt7JL",
+        "id": "Sayr Al-Shawwā-(1946)",
         "creatorEnglish": "",
         "creatorArabic": "",
         "sourceId": "Al-Shawwā-(1946)",
@@ -1181,12 +1184,13 @@
     ],
     "suyūr": [
       {
-        "id": "43bf91094c2e4995b17e",
+        "id": "Sayr Al-Shawwā-(1946)",
         "creatorEnglish": "Al-Shawwā, Sāmī",
-        "sourceEnglish": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
-        "year": 1946,
+        "creatorArabic": "",
+        "sourceId": "Al-Shawwā-(1946)",
         "page": 17,
         "commentsEnglish": "Sayr can start from chahārgāh or nawā, ascends and then descends until the qarār. Ascent is not defined, so it is assumed that it will be in jins rāst al-nawā following the construction of the maqām.",
+        "commentsArabic": "",
         "stops": [
           {
             "type": "note",
@@ -1263,7 +1267,7 @@
     ],
     "suyūr": [
       {
-        "id": "a4b9d74bd46d4170a292",
+        "id": "Sayr Al-Shawwā-(1946)",
         "creatorEnglish": "Al-Shawwā",
         "creatorArabic": "الشوّا",
         "sourceId": "Al-Shawwā-(1946)",
@@ -1354,12 +1358,13 @@
     ],
     "suyūr": [
       {
-        "id": "e8f160537be549d5972e",
+        "id": "Sayr Al-Shawwā-(1946)",
         "creatorEnglish": "Al-Shawwā, Sāmī",
-        "sourceEnglish": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
-        "year": 1946,
+        "creatorArabic": "",
+        "sourceId": "Al-Shawwā-(1946)",
         "page": 20,
         "commentsEnglish": "",
+        "commentsArabic": "",
         "stops": [
           {
             "type": "note",
@@ -1434,10 +1439,10 @@
     ],
     "suyūr": [
       {
-        "id": "72128ddd3a9f410d9d1e",
+        "id": "Sayr Al-Shawwā-(1946)",
         "creatorEnglish": "Al-Shawwā, Sāmī",
         "creatorArabic": "",
-        "sourceId": "HK6shRFzmS98eQ-u2MZ1E",
+        "sourceId": "Al-Shawwā-(1946)",
         "page": 21,
         "commentsEnglish": "nahāwand nawā, followed by ḥijāz dūgāh then the qarār, yegāh, with a touch of qarār ḥijāz",
         "commentsArabic": "",
@@ -1497,7 +1502,7 @@
     ],
     "suyūr": [
       {
-        "id": "619d403ca9714a888c72",
+        "id": "Sayr Al-Shawwā-(1946)",
         "creatorEnglish": "Al-Shawwā, Sāmī",
         "creatorArabic": "",
         "sourceId": "Al-Shawwā-(1946)",
@@ -1577,7 +1582,7 @@
     ],
     "suyūr": [
       {
-        "id": "71c36f6c27b548f3bbaf",
+        "id": "Sayr Al-Shawwā-(1946)",
         "creatorEnglish": "Al-Shawwā, Sāmī",
         "creatorArabic": "",
         "sourceId": "Al-Shawwā-(1946)",
@@ -1663,12 +1668,13 @@
     ],
     "suyūr": [
       {
-        "id": "0852bc14eddf4caaab32",
+        "id": "Sayr Al-Shawwā-(1946)",
         "creatorEnglish": "Al-Shawwā, Sāmī",
-        "sourceEnglish": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
-        "year": 1946,
+        "creatorArabic": "",
+        "sourceId": "Al-Shawwā-(1946)",
         "page": 24,
         "commentsEnglish": "Begins on nawā to develop bayyāt on dūgāh, then bayyāt 'ushayrān and upon reaching muḥayyar in the ascent, it descends until dūgāh using 'ajam instead of awj (jins kurd ḥusaynī) and its qarār is 'ushayrān.",
+        "commentsArabic": "",
         "stops": [
           {
             "type": "note",
@@ -1725,25 +1731,6 @@
             "value": "ʿushayrān"
           }
         ]
-      },
-      {
-        "id": "t1et5sZLc1Uo8zdS3GKCN",
-        "creatorEnglish": "test",
-        "creatorArabic": "test",
-        "sourceId": "Al-Urmawī-Al-Baghdādī-(2017)",
-        "page": "tete",
-        "commentsEnglish": "etetwet",
-        "commentsArabic": "wetwet",
-        "stops": [
-          {
-            "type": "note",
-            "value": "qarār zīrgūleh"
-          },
-          {
-            "type": "note",
-            "value": "qarār tīk ʿajam ʿushayrān"
-          }
-        ]
       }
     ],
     "commentsEnglish": "",
@@ -1786,7 +1773,7 @@
     ],
     "suyūr": [
       {
-        "id": "9fd0ee5666b5422db247",
+        "id": "Sayr Al-Shawwā-(1946)",
         "creatorEnglish": "Al-Shawwā, Sāmī",
         "creatorArabic": "",
         "sourceId": "Al-Shawwā-(1946)",
@@ -1893,12 +1880,13 @@
     ],
     "suyūr": [
       {
-        "id": "228c3a86e297476e8c94",
+        "id": "Sayr Al-Shawwā-(1946)",
         "creatorEnglish": "Al-Shawwā, Sāmī",
-        "sourceEnglish": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
-        "year": 1946,
+        "creatorArabic": "",
+        "sourceId": "Al-Shawwā-(1946)",
         "page": 26,
         "commentsEnglish": "Starts with bayyāt on ḥusaynī followed by nikrīz on rāst and returns to bayyāt al-ḥusaynī so it's tonal centre is ḥusaynī but they have today made it's qarār ʿushayrān",
+        "commentsArabic": "",
         "stops": [
           {
             "type": "jins",
@@ -1961,10 +1949,10 @@
     ],
     "suyūr": [
       {
-        "id": "1e9f40f699ae4c738327",
+        "id": "Sayr Al-Shawwā-(1946)",
         "creatorEnglish": "Al-Shawwā, Sāmī",
         "creatorArabic": "",
-        "sourceId": "",
+        "sourceId": "Al-Shawwā-(1946)",
         "page": 27,
         "commentsEnglish": "Starts on ḥiṣār to render ḥijāz  on ḥusaynī followed by maqām nawā athar al-dūgāh then ḥijāz on ʿushayrān and it ends on its qarār ʿushayrān",
         "commentsArabic": "",
@@ -2042,12 +2030,13 @@
     ],
     "suyūr": [
       {
-        "id": "4dd5110845684e959e2e",
+        "id": "Sayr Al-Shawwā-(1946)",
         "creatorEnglish": "Al-Shawwā, Sāmī",
-        "sourceEnglish": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
-        "year": 1946,
+        "creatorArabic": "",
+        "sourceId": "Al-Shawwā-(1946)",
         "page": 28,
         "commentsEnglish": "Starts on chahārgāh to render maqām ṣabā on dūgāh with a highlighting of maqām ḥijāz on chahārgāh, then ascending to render bayyāt on muḥayyar followed by a descent in nahāwand on nawā followed by kurdī on dūgāh and it ends on its qarār with a rendering of maqām kurdī on ʿushayrān. In modern Turkish it is known as makam Şevkutarab.",
+        "commentsArabic": "",
         "stops": [
           {
             "type": "note",
@@ -2140,12 +2129,13 @@
     ],
     "suyūr": [
       {
-        "id": "d323f080075e4640ab22",
+        "id": "Sayr Al-Shawwā-(1946)",
         "creatorEnglish": "Al-Shawwā, Sāmī",
-        "sourceEnglish": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
-        "year": 1946,
+        "creatorArabic": "",
+        "sourceId": "Al-Shawwā-(1946)",
         "page": 29,
         "commentsEnglish": "There is a discrepancy in Shawwā's representation of this maqām. In the \"rules\" section it says: Starts on ḥijaz to render rāst al-dūgāh then ascends to muḥayyar and during the descent 'ajam is used to render bayyāt dūgāh then kurd on dūgāh then ḥijaz on dūgāh and it ends on 'ushayrān. But in the \"analysis\" section it says: First, jins bayyāt 'ushayrān, second, jins rāst dūgāh, third, bayyāt ḥusaynī. Then ascend to render bayyāt muḥayyar and descend to render rāst nawā, followed by kurdī or ḥijāz dūgāh, then nikrīz rāst and ends with bayyāt 'ushayrān. Rāst dūgāh does not render in most tuning systems, and the note ḥijāz doesn't comply with it's jins. Needs to be researched",
+        "commentsArabic": "",
         "stops": [
           {
             "type": "note",
@@ -2236,12 +2226,13 @@
     ],
     "suyūr": [
       {
-        "id": "78195d77a5ca41aaaed5",
+        "id": "Sayr Al-Shawwā-(1946)",
         "creatorEnglish": "Al-Shawwā, Sāmī",
-        "sourceEnglish": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
-        "year": 1946,
+        "creatorArabic": "",
+        "sourceId": "Al-Shawwā-(1946)",
         "page": 31,
         "commentsEnglish": "Starts on chahārgāh ascending to kurdān and above to render ḥijāz chahārgāh, then descends from chahārgāh until it's qarār 'ajam 'ushayrān",
+        "commentsArabic": "",
         "stops": [
           {
             "type": "jins",
@@ -2314,7 +2305,7 @@
     ],
     "suyūr": [
       {
-        "id": "c621cf4a580446b6bebe",
+        "id": "Sayr Al-Shawwā-(1946)",
         "creatorEnglish": "Al-Shawwā, Sāmī",
         "creatorArabic": "",
         "sourceId": "Al-Shawwā-(1946)",
@@ -2391,12 +2382,13 @@
     ],
     "suyūr": [
       {
-        "id": "5bab4c42f4ea415eb389",
+        "id": "Sayr Al-Shawwā-(1946)",
         "creatorEnglish": "Al-Shawwā, Sāmī",
-        "sourceEnglish": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
-        "year": 1946,
+        "creatorArabic": "",
+        "sourceId": "Al-Shawwā-(1946)",
         "page": 34,
         "commentsEnglish": "Starts on chahārgāh until nawā to render bayyāt dūgāh, followed by rāst nawā, followed by bayyāt muḥayyar, then descends to render rāst nawā, followed by nahāwand nawā, followed by bayyāt dūgāh and from dūgāh descends until the qarār which is 'irāq.",
+        "commentsArabic": "",
         "stops": [
           {
             "type": "note",
@@ -2481,7 +2473,7 @@
     ],
     "suyūr": [
       {
-        "id": "2cb35c7c89bc4ac3aecb",
+        "id": "Sayr Al-Shawwā-(1946)",
         "creatorEnglish": "Al-Shawwā, Sāmī",
         "creatorArabic": "",
         "sourceId": "Al-Shawwā-(1946)",
@@ -2559,7 +2551,7 @@
     ],
     "suyūr": [
       {
-        "id": "ec2d66a078954d059120",
+        "id": "Sayr Al-Shawwā-(1946)",
         "creatorEnglish": "Al-Shawwā",
         "creatorArabic": "",
         "sourceId": "Al-Shawwā-(1946)",
@@ -2618,7 +2610,7 @@
     ],
     "suyūr": [
       {
-        "id": "b47fa1e5ed3a4fd792ae",
+        "id": "Sayr Al-Shawwā-(1946)",
         "creatorEnglish": "Al-Shawwā, Sāmī",
         "creatorArabic": "",
         "sourceId": "Al-Shawwā-(1946)",
@@ -2709,12 +2701,13 @@
     ],
     "suyūr": [
       {
-        "id": "c4664877ad284982b0a8",
+        "id": "Sayr Al-Shawwā-(1946)",
         "creatorEnglish": "Al-Shawwā, Sāmī",
-        "sourceEnglish": "Al-Qawa’id Al-Faniyya Fi Al-musica Al-Sharqiyyah Wal Gharbiyyah. Cairo: Jibra’īl Jabrā.",
-        "year": 1946,
+        "creatorArabic": "",
+        "sourceId": "Al-Shawwā-(1946)",
         "page": 39,
         "commentsEnglish": "Rules: Starts on kurdī to segāh and continues ascending to nawā, then from nawā ascends to buzurk, then descends to segāh and from segāh to it's qarār 'iraq. Analysis: jins awj arā on 'irāq, jins nagham musta'ār on segāh, jins būselīk on nawā then ascends until buzurk and descends stepwise until it's qarār",
+        "commentsArabic": "",
         "stops": [
           {
             "type": "note",
@@ -2883,7 +2876,7 @@
     ],
     "suyūr": [
       {
-        "id": "locGea9cyl0-KhikHKz4i",
+        "id": "Sayr Al-Shawwā-(1946)",
         "creatorEnglish": "",
         "creatorArabic": "",
         "sourceId": "Al-Shawwā-(1946)",
@@ -2984,7 +2977,7 @@
     ],
     "suyūr": [
       {
-        "id": "Mh3QKj9HKe-WN-nebWg0Z",
+        "id": "Sayr Al-Shawwā-(1946)",
         "creatorEnglish": "",
         "creatorArabic": "",
         "sourceId": "Al-Shawwā-(1946)",
@@ -3101,7 +3094,7 @@
     ],
     "suyūr": [
       {
-        "id": "q1g9Hf-RK4gnJSuyk75Cf",
+        "id": "Sayr Al-Shawwā-(1946)",
         "creatorEnglish": "",
         "creatorArabic": "",
         "sourceId": "Al-Shawwā-(1946)",
@@ -3166,7 +3159,7 @@
     ],
     "suyūr": [
       {
-        "id": "azIP3f-EIzT2dShd1DNL_",
+        "id": "Sayr Al-Shawwā-(1946)",
         "creatorEnglish": "",
         "creatorArabic": "",
         "sourceId": "Al-Shawwā-(1946)",
@@ -3283,7 +3276,7 @@
     ],
     "suyūr": [
       {
-        "id": "laJtmUde8ybWA7KSEsLF1",
+        "id": "Sayr Al-Shawwā-(1946)",
         "creatorEnglish": "",
         "creatorArabic": "",
         "sourceId": "Al-Shawwā-(1946)",
