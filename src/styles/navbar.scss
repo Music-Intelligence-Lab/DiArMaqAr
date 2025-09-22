@@ -1,67 +1,88 @@
 @use "./variables" as *;
+@use "./_buttons" as *;
 
 .navbar {
   width: 100%;
   display: flex;
   flex-direction: column;
   z-index: 1001;
-  top: 0; // ensure sticky works in Safari
-  padding-bottom: 30px !important;
-  background-color: $background;
+  top: 0;
+  padding-bottom: $space-6 !important;
+  
+  // Glassmorphism navbar
+  background: $surface-primary;
+  backdrop-filter: $backdrop-blur;
+  border-bottom: 1px solid $border-primary;
+  
   position: sticky;
   position: -webkit-sticky;
   scroll-margin-top: 0px;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-  -webkit-backdrop-filter: saturate(120%) blur(6px);
-  backdrop-filter: saturate(120%) blur(6px);
-
-
 
   &__center-panel {
     text-align: center;
   }
 
   &__title {
-    font-size: 30px;
-    font-weight: 300;
-    color: white;
+    font-size: $font-size-2xl; // Smaller, more minimal
+    font-weight: $font-weight-normal;
+    color: $text-primary;
     cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    // Gradient text effect like web3 platforms
+    background: $gradient-primary;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    
+    &:hover {
+      transform: translateY(-1px);
+    }
+    
+    &:focus-visible {
+      outline: 2px solid $focus-ring;
+      outline-offset: $focus-ring-offset;
+      border-radius: $space-1;
+    }
   }
 
   &__subtitle {
-    font-size: 14px;
-    color: white;
+    font-size: $font-size-sm;
+    color: $text-tertiary; // Much more subtle
     cursor: pointer;
+    transition: color 0.3s ease;
+    font-weight: $font-weight-normal;
+    
+    &:hover {
+      color: $text-secondary;
+    }
   }
 
   &__top-bar {
     display: flex;
     width: 100%;
+    max-width: 1600px; // Increased to match main content
+    margin: 0 auto;
     justify-content: space-between;
     align-items: center;
     height: $top-navbar-height;
-    color: white;
-    padding: 20px;
-    font-size: 20px;
-    border-bottom: $grey 1px solid;
-    background-color: $background;
+    color: $text-primary;
+    padding: $space-6 $space-4; // Reduced side padding
+    font-size: $font-size-lg;
+    background: transparent;
   }
 
   &__bottom-bar {
     display: flex;
     width: 100%;
-    justify-content: space-between;
+    max-width: 1600px; // Increased to match main content
+    margin: 0 auto;
+    justify-content: center; // Center the tabs
     align-items: center;
     height: $bottom-navbar-height;
-    color: white;
-    border-bottom: $grey 1px solid;
-    box-shadow: 0 20px 15px rgba(0, 0, 0, 0.6);
-    background-color: $background;
+    color: $text-primary;
+    background: transparent;
+    gap: $space-2; // Gaps between tabs instead of borders
 
     &--rtl {
       flex-direction: row-reverse;
@@ -69,152 +90,120 @@
   }
 
   &__bottom-bar-item {
+    @include nav-item-base;
+    @include nav-item-lg;
+    @include nav-item-default;
+    
     display: flex;
     flex-direction: column;
-    flex: 1;
-    vertical-align: top;
-    height: 100%;
-    background-color: transparent;
-    color: white;
-    cursor: pointer;
-    transition: 0.1s ease;
-    padding: 10px 20px;
-    word-break: keep-all;
-    overflow-wrap: anywhere;
-  min-width: 0; // allow flex children to shrink properly in Safari
-  -webkit-text-size-adjust: 100%; // prevent iOS Safari from auto-resizing text
-  text-size-adjust: 100%;
-
-
-    &:not(:last-child) {
-      border-right: 1px solid $grey;
-    }
-
-    &:hover {
-      background-color: rgba($secondary, 0.5);
-    }
+    align-items: center;
+    justify-content: center;
+    height: 60px; // Fixed height
+    min-width: 120px; // Minimum width for consistency
+    text-align: center;
+    border-radius: $space-3;
 
     &:disabled {
-      color: rgba(255, 255, 255, 0.521);
-      cursor: not-allowed;
-
-      &:hover {
-        background-color: transparent;
-      }
+      @include nav-item-disabled;
     }
 
     &_selected {
-      background-color: $primary !important;
-
-      &:hover {
-        background-color: $primary !important;
-      }
+      @include nav-item-selected;
     }
 
     &_active {
-      background-color: rgba($primary, 0.3);
-
-      &:hover {
-        background-color: rgba($primary, 0.5);
-      }
+      @include nav-item-active;
     }
 
     &_tab-title {
-      font-size: 14px;
-      font-weight: 500;
-      margin-bottom: 5px;
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
+      margin-bottom: $space-1;
+      line-height: $line-height-tight;
     }
 
     &_tab-subtitle {
-      font-size: 13px;
-      font-weight: 200;
+      font-size: $font-size-xs;
+      font-weight: $font-weight-normal;
+      opacity: 0.8;
+      line-height: $line-height-normal;
     }
-
-    // Safari sometimes applies different scaling to the last flex child; make explicit
-    &:last-child {
-      .navbar__bottom-bar-item_tab-title { font-size: 14px; }
-      .navbar__bottom-bar-item_tab-subtitle { font-size: 13px; }
-    }
-
   }
 
   &__left-panel {
-    width: 10%;
     display: flex;
-    flex-direction: row;
     align-items: center;
-    cursor: pointer;
-    z-index: 10;
+    gap: $space-4;
+    min-width: 120px; // Give it a minimum width for better layout
+    
+    &-menu-icon {
+      display: flex;
+      align-items: center;
+    }
 
     & svg {
       font-size: 40px;
       margin-bottom: 4px;
-      margin-right: 10px;
     }
   }
 
   &__left-panel-admin {
-    position: fixed;
-    top: 23px;
-    left: 50px;
-    font-size: 11px;
+    position: relative; // Changed from fixed to relative
+    top: auto; // Reset positioning
+    left: auto; // Reset positioning
+    font-size: $font-size-xs;
     display: flex;
-    align-items: left;
-    justify-content: left;
+    align-items: center;
+    justify-content: center;
     user-select: none;
     background-color: $primary;
-    padding: 2px 10px;
+    color: white;
+    padding: $space-1 $space-2;
+    border-radius: $space-1;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
     
+    &:hover {
+      background-color: rgba($primary, 0.8);
+      transform: translateY(-1px);
+    }
   }
 
   &__right-panel {
-    width: 10%;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 15px;
-    cursor: pointer;
-    z-index: 1000;
-
-    &-language {
-      display: flex;
-      align-items: center;
-    }
-
-    &-icon {
-      display: flex;
-      align-items: center;
-    }
+    position: relative; // Just a reference point
   }
-  
+
   &__quick-actions {
     position: fixed;
-    top: 50px;
-    right: 20px;
+    top: 70px; // Below the navbar
+    right: 35px;
     display: flex;
-    flex-direction: row;
-    gap: 8px;
-    z-index: 10000;
-  -webkit-overflow-scrolling: touch;
+    flex-direction: column;
+    gap: $space-3;
+    z-index: 1002; // Above other elements
   }
-  
+
   &__quick-action-button {
-    padding: 6px 12px;
+    padding: $space-1 $space-2;
     background-color: rgba($primary, 0.8);
     color: white;
-    //border: 1px solid $grey;
-    border-radius: 4px;
-    font-size: 12px;
+    border: none;
+    border-radius: $space-1;
+    font-size: $font-size-xs;
     cursor: pointer;
-    transition: background-color 0.2s ease;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    width: 136px;
+    height: 30px;
     
     &:hover {
       background-color: $primary;
+      transform: translateY(-1px);
     }
     
     &:active {
-      transform: translateY(1px);
+      transform: translateY(0);
     }
   }
 
@@ -236,7 +225,6 @@
     width: 190px;
     height: auto;
     background-color: rgba($primary, 0.9);
-    box-shadow: 2px 0 6px rgba(0, 0, 0, 0.2);
     z-index: 1001;
     border-radius: 0 0 10px 0;
 
@@ -306,5 +294,71 @@
     transition: 0.3s;
     user-select: none;
     text-decoration: none;
+  }
+
+  // Tooltip styles for disabled navbar items
+  &__tooltip-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+
+  &__tooltip {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: $space-2;
+    padding: $space-2 $space-3;
+    background: $gradient-accent;
+    backdrop-filter: $backdrop-blur;
+    border: 1px solid $border-primary;
+    border-radius: $space-2;
+    color: $text-primary;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-normal;
+    white-space: nowrap;
+    z-index: 2000;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+    // Arrow pointing up to the button
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-bottom: 6px solid $accent;
+    }
+
+    // RTL support
+    [dir="rtl"] & {
+      left: 50%;
+      right: auto;
+      transform: translateX(-50%);
+    }
+  }
+
+  &__tooltip-wrapper:hover &__tooltip {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  // Responsive adjustments for tooltips
+  @media (max-width: 768px) {
+    &__tooltip {
+      font-size: $font-size-xs;
+      padding: $space-1 $space-2;
+      white-space: normal;
+      max-width: 200px;
+      text-align: center;
+    }
   }
 }

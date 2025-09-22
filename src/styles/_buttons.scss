@@ -1,0 +1,339 @@
+@use "./variables" as *;
+
+// Unified Button System
+// This provides consistent button styling across the entire application
+// Use these classes or mixins to ensure uniform appearance and behavior
+
+// Base button mixin - use this to create consistent button styles
+@mixin button-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid $border-primary;
+  border-radius: $space-2;
+  font-family: inherit;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  
+  &:focus {
+    outline: 2px solid $primary;
+    outline-offset: 2px;
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+// Button size variations
+@mixin button-sm {
+  padding: $space-1 $space-3;
+  font-size: $font-size-sm;
+  gap: $space-1;
+}
+
+@mixin button-md {
+  padding: $space-2 $space-4;
+  font-size: $font-size-base;
+  gap: $space-2;
+}
+
+@mixin button-lg {
+  padding: $space-3 $space-6;
+  font-size: $font-size-lg;
+  gap: $space-2;
+}
+
+// Button variant mixins
+@mixin button-primary {
+  background: $glass-light;
+  border-color: $border-primary;
+  color: $text-primary;
+  
+  &:hover:not(:disabled) {
+    background: $gradient-primary;
+    border-color: transparent;
+    color: $text-primary;
+  }
+  
+}
+
+@mixin button-secondary {
+  background: transparent;
+  border-color: $border-secondary;
+  color: $text-secondary;
+  
+  &:hover:not(:disabled) {
+    background: $gradient-secondary;
+    border-color: transparent;
+    color: $text-primary;
+  }
+  
+}
+
+@mixin button-success {
+  background: rgba($secondary, 0.1);
+  border-color: $secondary;
+  color: $secondary;
+  
+  &:hover:not(:disabled) {
+    background: $secondary;
+    border-color: $secondary;
+    color: $text-primary;
+  }
+  
+}
+
+@mixin button-danger {
+  background: rgba($error, 0.1);
+  border-color: $error;
+  color: $error;
+  
+  &:hover:not(:disabled) {
+    background: $error;
+    border-color: $error;
+    color: white;
+  }
+  
+}
+
+@mixin button-ghost {
+  background: transparent;
+  border-color: transparent;
+  color: $text-secondary;
+  
+  &:hover:not(:disabled) {
+    background: rgba($surface-secondary, 0.6);
+    border-color: rgba($secondary, 0.4);
+    color: $text-primary;
+  }
+  
+  &:active {
+    background: rgba($surface-secondary, 0.8);
+  }
+}
+
+// Utility classes for direct use in HTML
+.btn {
+  @include button-base;
+  @include button-md;
+  @include button-primary;
+}
+
+.btn--sm {
+  @include button-sm;
+}
+
+.btn--lg {
+  @include button-lg;
+}
+
+.btn--secondary {
+  @include button-secondary;
+}
+
+.btn--success {
+  @include button-success;
+}
+
+.btn--danger {
+  @include button-danger;
+}
+
+.btn--ghost {
+  @include button-ghost;
+}
+
+// Icon button specific styling
+.btn--icon {
+  aspect-ratio: 1;
+  padding: $space-2;
+  
+  &.btn--sm {
+    padding: $space-1;
+  }
+  
+  &.btn--lg {
+    padding: $space-3;
+  }
+}
+
+// Button group styling
+.btn-group {
+  display: flex;
+  gap: $space-2;
+  flex-wrap: wrap;
+  align-items: center;
+  
+  &--vertical {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  &--centered {
+    justify-content: center;
+  }
+  
+  &--end {
+    justify-content: flex-end;
+  }
+}
+
+// =============================================================================
+// UNIFIED NAVIGATION COMPONENTS
+// =============================================================================
+// Consistent styling for navbar items, carousel tabs, and carousel items
+
+// Base navigation item mixin
+@mixin nav-item-base {
+  display: flex;
+  align-items: center;
+  border: 1px solid $border-primary;
+  border-radius: $space-1;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  text-decoration: none;
+  
+  &:focus {
+    outline: 2px solid $primary;
+    outline-offset: 2px;
+  }
+}
+
+// Navigation item variants
+@mixin nav-item-default {
+  background: rgba($surface-secondary, 0.4);
+  border-color: rgba($border-secondary, 0.3);
+  color: $text-tertiary;
+  
+  &:hover:not(:disabled) {
+    background: $gradient-secondary;
+    border-color: transparent;
+    color: $text-primary;  }
+}
+
+@mixin nav-item-active {
+  background: $glass-medium;
+  border-color: $primary;
+  color: $primary;
+  
+  &:hover:not(:disabled) {
+    background: $gradient-primary;
+    border-color: transparent;
+    color: $text-primary;
+  }
+}
+
+@mixin nav-item-selected {
+  background: $gradient-secondary !important;
+  border-color: $tertiary !important;
+  color: $text-primary !important;
+  
+  &:hover:not(:disabled) {
+    background: $gradient-secondary !important;
+  }
+}
+
+@mixin nav-item-disabled {
+  background: $glass-light !important;
+  color: $text-disabled !important;
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+  
+  &:hover {
+    background: $glass-light !important;
+    color: $text-disabled !important;
+  }
+}
+
+// Size variants for navigation items
+@mixin nav-item-sm {
+  padding: $space-1 $space-2;
+  font-size: $font-size-xs;
+  min-height: 28px;
+}
+
+@mixin nav-item-md {
+  padding: $space-2 $space-3;
+  font-size: $font-size-sm;
+  min-height: 36px;
+}
+
+@mixin nav-item-lg {
+  padding: $space-3 $space-4;
+  font-size: $font-size-base;
+  min-height: 44px;
+}
+
+// Utility classes for navigation components
+.nav-item {
+  @include nav-item-base;
+  @include nav-item-md;
+  @include nav-item-default;
+}
+
+.nav-item--sm {
+  @include nav-item-sm;
+}
+
+.nav-item--lg {
+  @include nav-item-lg;
+}
+
+.nav-item--active {
+  @include nav-item-active;
+}
+
+.nav-item--selected {
+  @include nav-item-selected;
+}
+
+.nav-item--disabled {
+  @include nav-item-disabled;
+}
+
+// Carousel-specific items (larger, more prominent)
+.carousel-item {
+  @include nav-item-base;
+  @include nav-item-lg;
+  @include nav-item-default;
+  width: 100%;
+  height: 80px;
+  justify-content: flex-start;
+  text-align: left;
+  
+  [dir="rtl"] & {
+    text-align: right;
+  }
+}
+
+// Carousel tab items (smaller, more subtle)
+.carousel-tab {
+  @include nav-item-base;
+  @include nav-item-sm;
+  @include nav-item-default;
+  backdrop-filter: blur(2px);
+  white-space: nowrap;
+  
+  [dir="rtl"] & {
+    text-align: right;
+  }
+}
+
+// Legacy button class overrides
+// These help transition existing buttons to the new system
+button,
+input[type="button"],
+input[type="submit"] {
+  @include button-base;
+  @include button-md;
+  @include button-primary;
+}

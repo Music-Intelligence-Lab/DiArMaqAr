@@ -1,9 +1,12 @@
 @use "../styles/variables.scss" as *;
+@use "../styles/_buttons.scss";
+@use "../styles/carousel.scss";
 @use "../styles/app.scss";
 @use "../styles/tuning-system-manager.scss";
 @use "../styles/settings-card.scss";
 @use "../styles/jins-manager.scss";
 @use "../styles/jins-transpositions.scss";
+@use "../styles/filters.scss";
 @use "../styles/maqam-manager.scss";
 @use "../styles/sayr-manager.scss";
 @use "../styles/maqam-transpositions.scss";
@@ -33,21 +36,45 @@
 
 html {
   overflow-y: auto;
+  font-size: 16px;
 }
 
 :focus {
-  outline: 0px solid rgb(gold, 100%);
+  outline: 2px solid $focus-ring;
+  outline-offset: $focus-ring-offset;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid $focus-ring;
+  outline-offset: $focus-ring-offset;
 }
 
 a {
-  color: rgb($text, 75%);
-  text-decoration: underline;
-  transition: color 0.1s ease-in-out;
+  color: $link;
+  text-decoration: none; // Remove underlines for cleaner look
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &:hover {
+    color: $link-hover;
+    transform: translateY(-1px); // Subtle lift effect
+  }
+  
+  &:focus-visible {
+    color: $link-hover;
+    outline: 2px solid $focus-ring;
+    outline-offset: $focus-ring-offset;
+  }
 }
 
 body {
-  font-family: var(--font-readex-pro), sans-serif;
-  font-weight: 200;
+  font-family: var(--font-readex-pro), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-weight: $font-weight-normal;
+  font-size: $font-size-base;
+  line-height: $line-height-relaxed; // More generous line height
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -55,9 +82,10 @@ body {
   width: 100vw;
   height: 100svh;
   overscroll-behavior: none;
-  background-color: $medium-grey;
+  background: $main-gradient; // Use the web3 gradient
   -webkit-font-smoothing: antialiased;
-  color: $text;
+  -moz-osx-font-smoothing: grayscale;
+  color: $text-primary;
 
   & *:not(.staff-notation):not(.staff-notation *):not(.frequency-knob-container):not(.frequency-knob-container *):not(.frequency-knob-headless):not(.frequency-knob-headless *) {
     font-family: inherit;
@@ -74,70 +102,65 @@ body {
 
 button {
   border: none;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: $space-2; // More rounded corners
+  
+  &:focus-visible {
+    outline: 2px solid $focus-ring;
+    outline-offset: $focus-ring-offset;
+  }
 }
 
-input,
+/* input,
 textarea,
 select {
-  background-color: #000;
-  color: #f0f0f0;
-  border: 0px;
-  border-radius: 5px;
+  background: $surface-primary;
+  backdrop-filter: $backdrop-blur-light;
+  color: $text-primary;
+  border: 1px solid $border-secondary;
+  border-radius: $space-2; // More rounded
+  padding: $space-3 $space-4; // More generous padding
+  font-family: inherit;
+  font-size: $font-size-base;
+  line-height: $line-height-normal;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &::placeholder {
+    color: $text-tertiary;
+  }
 }
 
 input:focus,
 textarea:focus,
 select:focus {
   outline: none;
-  box-shadow: none;
-  background-color: white;
-  color: black;
-}
+  border-color: $primary;
+  box-shadow: 0 0 0 3px rgba($primary, 0.1);
+  background: $surface-secondary;
+  color: $text-primary;
+} */
 
 .center-container {
-  background: $background;
+  background: transparent; // Remove solid background
   display: flex;
   flex-direction: column;
   align-items: center;
   overscroll-behavior: none;
   position: relative;
   width: 100%;
+  max-width: 1400px; // Constrain maximum width
+  margin: 0 auto;
+  padding: 0 $space-6; // Side padding
 
   &>* {
     width: 100%;
   }
 
-  input[type="checkbox"] {
-    appearance: none;
-    width: 10px;
-    height: 10px;
-    border: 1px solid rgb($text, 50%);
-    border-radius: 0px;
-    background-color: transparent;
-    cursor: pointer;
 
-    &:checked {
-      background-color: rgb(209, 164, 0);
-      border-color: rgb(209, 164, 0);
-      position: relative;
-
-      &:after {
-        content: "\2713";
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: black;
-        font-size: 10px;
-      }
-    }
-
-    &:focus {
-      outline: none;
-    }
-  }
-
-// RTL Support
+// Enhanced RTL Support
 [dir="rtl"] {
   .navbar__bottom-bar {
     direction: rtl;
@@ -147,11 +170,11 @@ select:focus {
   .navbar__bottom-bar-item {
     &:not(:last-child) {
       border-right: none;
-      border-left: 1px solid;
+      border-left: 1px solid $border-primary;
     }
     
     &:not(:first-child) {
-      border-right: 1px solid;
+      border-right: 1px solid $border-primary;
     }
   }
   
@@ -167,5 +190,21 @@ select:focus {
   .navbar__left-panel {
     flex-direction: row-reverse;
   }
+  
+  // Enhanced Arabic typography
+  * {
+    font-feature-settings: "kern" 1, "liga" 1;
+  }
+  
+  // Better spacing for Arabic text
+  p, li, div, span {
+    line-height: $line-height-relaxed;
+  }
+  
+  // RTL-specific margin and padding adjustments
+  .margin-left { margin-right: inherit; margin-left: 0; }
+  .margin-right { margin-left: inherit; margin-right: 0; }
+  .padding-left { padding-right: inherit; padding-left: 0; }
+  .padding-right { padding-left: inherit; padding-right: 0; }
 }
 }

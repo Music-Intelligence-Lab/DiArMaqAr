@@ -331,22 +331,24 @@ export default function AppClient() {
   }, [selectedTuningSystem, selectedJinsData, selectedMaqamData, maqamSayrId, selectedIndices, selectedMaqam, selectedJins, router]);
 
   return (
-    <div className="main-content">
-      {selectedMenu === "tuningSystem" && <TuningSystemManager admin={false} />}
-      {selectedMenu === "tuningSystem-admin" && <TuningSystemManager admin />}
-      {selectedMenu === "maqam" && selectedTuningSystem && <MaqamManager admin={false} />}
-      {selectedMenu === "maqam-admin" && selectedTuningSystem && <MaqamManager admin />}
-      {selectedMenu === "jins" && selectedTuningSystem && <JinsManager admin={false} />}
-      {selectedMenu === "jins-admin" && selectedTuningSystem && <JinsManager admin />}
-      {selectedTuningSystem && !["tuningSystem", "tuningSystem-admin", "bibliography", "bibliography-admin", "pattern-admin"].includes(selectedMenu) && <PitchClassBar />}
-      {(selectedMenu === "maqam" || selectedMenu === "maqam-admin") && selectedTuningSystem && <MaqamTranspositions />}
-      {(selectedMenu === "jins" || selectedMenu === "jins-admin") && selectedTuningSystem && <JinsTranspositions />}
-      {selectedMenu === "sayr" && selectedMaqamData && <SayrManager admin={false} />}
-      {selectedMenu === "sayr-admin" && selectedMaqamData && <SayrManager admin />}
-      {selectedMenu === "modulation" && <Modulations />}
-      {selectedMenu === "pattern-admin" && <PatternsManager />}
-      <Footer/>
-      <KeyboardControls />
-  </div>
+    <div className="scrollbar-right-container">
+      <div className="main-content">
+        {selectedMenu === "tuningSystem" && <TuningSystemManager admin={false} />}
+        {selectedMenu === "tuningSystem-admin" && <TuningSystemManager admin />}
+        {selectedMenu === "maqam" && selectedTuningSystem && <MaqamManager admin={false} />}
+        {selectedMenu === "maqam-admin" && selectedTuningSystem && <MaqamManager admin />}
+        {selectedMenu === "jins" && selectedTuningSystem && <JinsManager admin={false} />}
+        {selectedMenu === "jins-admin" && selectedTuningSystem && <JinsManager admin />}
+        {selectedTuningSystem && !["tuningSystem", "tuningSystem-admin", "bibliography", "bibliography-admin", "pattern-admin"].includes(selectedMenu) && <PitchClassBar />}
+        {(selectedMenu === "maqam" || selectedMenu === "maqam-admin") && selectedTuningSystem && <MaqamTranspositions />}
+        {(selectedMenu === "jins" || selectedMenu === "jins-admin") && selectedTuningSystem && <JinsTranspositions />}
+        {selectedMenu === "sayr" && selectedMaqamData && <SayrManager admin={false} />}
+        {selectedMenu === "sayr-admin" && selectedMaqamData && <SayrManager admin />}
+        {selectedMenu === "modulation" && <Modulations />}
+        {selectedMenu === "pattern-admin" && <PatternsManager />}
+        <Footer/>
+        <KeyboardControls />
+      </div>
+    </div>
   );
 }

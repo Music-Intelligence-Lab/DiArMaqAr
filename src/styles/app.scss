@@ -1,42 +1,78 @@
 @use "./variables" as *;
 
+// New scrollbar-right container system
+.scrollbar-right-container {
+  width: 100vw;
+  height: 100vh; // Keep viewport height to force scrollbar
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  
+  // Force scrollbar to absolute right edge - remove all margins/padding
+  box-sizing: border-box;
+  margin: 0 !important;
+  padding: 0 !important;
+  
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $gradient-primary;
+    border-radius: $space-2;
+    cursor: pointer;
+    border: 1px solid transparent;
+    background-clip: padding-box;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba($surface-primary, 0.3);
+    cursor: pointer;
+  }
+}
+
 .main-content {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  height: $page-height;
-  overflow-x: hidden;
-  color: $text;
-  //padding-top: 30px;
-  //padding-bottom: 50px;
-  padding-left: 12px;
-  padding-right: 12px;
-
-  &::-webkit-scrollbar {
-    width: 12px;
-    padding-right: 0px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: $primary;
-    cursor: pointer;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 0 25px 0 0;
-    cursor: pointer;
-  }
+  max-width: 1600px;
+  margin: 0 auto;
+  min-height: 100vh;
+  overflow: visible;
+  color: $text-primary;
+  padding: 20px $space-4 $footer-height $space-4; // Using variables for proper spacing
+  gap: $space-6;
 
   &__title {
-    font-size: 50px;
-    margin-bottom: 0px;
+    font-size: $font-size-4xl;
+    font-weight: $font-weight-light;
+    margin-bottom: $space-8; // Reduced from space-12
+    color: $text-primary;
+    text-align: center;
+    line-height: $line-height-tight;
+    background: $gradient-primary;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 }
 
 body {
   scroll-padding-top: 0px;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100vw !important;
+  overflow: hidden !important; // Prevent body scroll, let container handle it
+}
+
+html {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100vw !important;
+  overflow: hidden !important;
 }
 
 body.scrollbar-active {

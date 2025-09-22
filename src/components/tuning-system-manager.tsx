@@ -719,7 +719,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       )}
 
       {!admin && (
-        <div className="tuning-system-manager__tabs">
+        <div className="tabs">
           {tabs.map((tab) => {
             let count = 0;
             if (tab.label === "All") {
@@ -733,10 +733,10 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             return (
               <button
                 key={tab.label}
-                className={"tuning-system-manager__tab" + (tuningSystemsFilter === tab.label ? " tuning-system-manager__tab_active" : "")}
+                className={"tabs__tab" + (tuningSystemsFilter === tab.label ? " tabs__tab--active" : "")}
                 onClick={() => setTuningSystemsFilter(tab.label)}
               >
-                {t(tab.labelKey)} <span className="tuning-system-manager__tab-count">({count})</span>
+                {t(tab.labelKey)} <span className="tabs__count">({count})</span>
               </button>
             );
           })}
@@ -744,35 +744,33 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       )}
 
       {!admin && (
-        <div className="tuning-system-manager__carousel">
+        <div className="carousel__controls carousel--tuning-systems">
           <button
-            className="carousel-button carousel-button-prev"
+            className="carousel__button carousel__button--prev"
             onClick={() => {
-              const container = document.querySelector(".tuning-system-manager__list");
+              const container = document.querySelector(".carousel__list");
               // In Arabic (RTL) mode many browsers invert the meaning of scrollLeft; to keep UX intuitive,
               // treat the "prev" button as moving visually right in RTL (positive delta) and left in LTR (negative delta).
-              if (container) container.scrollBy({ left: language === "ar" ? 635 : -635, behavior: "smooth" });
+              if (container) container.scrollBy({ left: language === "ar" ? 600 : -600, behavior: "smooth" });
             }}
           >
             ‹
           </button>
           <div
-            className="tuning-system-manager__list"
-            style={{
-              gridTemplateColumns: `repeat(${Math.ceil(filteredTuningSystems.length / 3)}, minmax(430px, 1fr))`,
-            }}
+            className="carousel__list"
           >
             {filteredTuningSystems.length === 0 ? (
               <p>{t("tuningSystem.noSystemsAvailable")}</p>
             ) : (
-              filteredTuningSystems.map((tuningSystem, index) => (
+              filteredTuningSystems.map((tuningSystem, index) => {
+                const isDisabled = isTuningSystemDisabled(tuningSystem, selectedJinsData, selectedMaqamData, selectedMaqam).disabled;
+                const isSelected = tuningSystem.getId() === selectedTuningSystem?.getId();
+                const isSelectable = !isDisabled;
+                
+                return (
                 <div
                   key={index}
-                  className={
-                    "tuning-system-manager__item " +
-                    (isTuningSystemDisabled(tuningSystem, selectedJinsData, selectedMaqamData, selectedMaqam).disabled ? "tuning-system-manager__item_disabled " : "") +
-                    (tuningSystem.getId() === selectedTuningSystem?.getId() ? "tuning-system-manager__item_selected " : "")
-                  }
+                  className={`carousel__item${isSelected ? " carousel__item--selected" : ""}${isSelectable ? " carousel__item--active" : " carousel__item--disabled"}`}
                   onClick={() => {
                     // Toggle functionality: if clicking the same tuning system, deselect it
                     if (selectedTuningSystem?.getId() === tuningSystem.getId()) {
@@ -786,24 +784,27 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                     }
                   }}
                 >
-                  <strong className="tuning-system-manager__item-english-creator">
-                    {language === "ar" && tuningSystem.getCreatorArabic()
-                      ? `${tuningSystem.getCreatorArabic()} (${tuningSystem.getYear()})`
-                      : `${tuningSystem.getCreatorEnglish()} (${tuningSystem.getYear()})`}
-                  </strong>
-                  <strong className="tuning-system-manager__item-english-title">
-                    {language === "ar" && tuningSystem.getTitleArabic() ? tuningSystem.getTitleArabic() : tuningSystem.getTitleEnglish()}
-                  </strong>
+                  <div>
+                    <span className="carousel__item-name">
+                      {language === "ar" && tuningSystem.getCreatorArabic()
+                        ? `${tuningSystem.getCreatorArabic()} (${tuningSystem.getYear()})`
+                        : `${tuningSystem.getCreatorEnglish()} (${tuningSystem.getYear()})`}
+                    </span>
+                    <span className="carousel__item-name-title">
+                      {language === "ar" && tuningSystem.getTitleArabic() ? tuningSystem.getTitleArabic() : tuningSystem.getTitleEnglish()}
+                    </span>
+                  </div>
                 </div>
-              ))
+                );
+              })
             )}
           </div>
           <button
-            className="carousel-button carousel-button-next"
+            className="carousel__button carousel__button--next"
             onClick={() => {
-              const container = document.querySelector(".tuning-system-manager__list");
+              const container = document.querySelector(".carousel__list");
               // Mirror logic of prev button for RTL so "next" always moves visually left in RTL and right in LTR.
-              if (container) container.scrollBy({ left: language === "ar" ? -635 : 635, behavior: "smooth" });
+              if (container) container.scrollBy({ left: language === "ar" ? -600 : 600, behavior: "smooth" });
             }}
           >
             ›

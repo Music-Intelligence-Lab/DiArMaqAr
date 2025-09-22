@@ -9,7 +9,7 @@ body {
   display: flex;
   flex-direction: column;
   max-width: 60%;
-  margin: 30px auto;
+  margin: $space-8 auto;
   padding: 0rem;
   min-height: fit-content;
   box-sizing: border-box;
@@ -26,67 +26,70 @@ body {
 
   @media (max-width: 768px) {
     max-width: 90%;
-    margin: 20px auto;
-    padding: 0 1rem;
+    margin: $space-5 auto;
+    padding: 0 $space-4;
   }
 
   @media (max-width: 576px) {
     max-width: 95%;
-    margin: 15px auto;
-    padding: 0 0.5rem;
+    margin: $space-4 auto;
+    padding: 0 $space-2;
   }
 
   h1 {
-    font-size: 40px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    color: $text;
+    font-size: $font-size-4xl;
+    font-weight: $font-weight-light;
+    margin-top: $space-5;
+    margin-bottom: $space-5;
+    color: $text-primary;
     text-align: center;
-    font-weight: 400;
+    line-height: $line-height-tight;
     
     @media (max-width: 768px) {
-      font-size: 32px;
-      margin-top: 15px;
-      margin-bottom: 15px;
+      font-size: $font-size-3xl;
+      margin-top: $space-4;
+      margin-bottom: $space-4;
     }
 
     @media (max-width: 576px) {
-      font-size: 28px;
+      font-size: $font-size-2xl;
     }
   }
 
-h2 {
-    font-size: 24px;
-    margin-bottom: 10px;
-    color: $text;
-    font-weight: 300;
-    //text-align: left;
+  h2 {
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-normal;
+    margin-bottom: $space-3;
+    color: $text-primary;
+    line-height: $line-height-normal;
   }
 
   h3 {
-    font-size: 24px;
-    margin-bottom: 40px;
-    color: $text;
-    font-weight: 200;
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-light;
+    margin-bottom: $space-10;
+    color: $text-primary;
     text-align: center;
+    line-height: $line-height-normal;
 
     @media (max-width: 768px) {
-      font-size: 20px;
-      margin-bottom: 30px;
+      font-size: $font-size-xl;
+      margin-bottom: $space-8;
     }
 
     @media (max-width: 576px) {
-      font-size: 18px;
-      margin-bottom: 25px;
+      font-size: $font-size-lg;
+      margin-bottom: $space-6;
     }
   }
 
   p {
-    font-size: 16px;
-    line-height: 1.7;
-    color: $text;
+    font-size: $font-size-base;
+    font-weight: $font-weight-normal;
+    line-height: $line-height-relaxed;
+    color: $text-secondary;
     text-align: justify;
-    margin-bottom: 20px;
+    margin-bottom: $space-5;
   }
 
   ul {

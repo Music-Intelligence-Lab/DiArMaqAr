@@ -1,91 +1,92 @@
 @use "./variables" as *;
 
-// Ensure hops scroll into view below sticky pitch class wheel
-
 .modulations {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+  margin: $space-4 0;
+  
+  // Glassmorphism container
+  background: $surface-primary;
+  backdrop-filter: $backdrop-blur;
+  border: 1px solid $border-primary;
+  border-radius: $space-3;
+  padding: $space-4;
+
   &__container {
     width: 100%;
-    margin-top: 20px;
-      margin-bottom: 40px;
-
+    max-width: 1600px;
+    margin: 0 auto;
   }
 
   &__header {
-    font-weight: 400;
-    margin-bottom: 10px;
-    margin-left: 10px;
-    min-height: 40px;
-
-    // RTL support
-    [dir="rtl"] & {
-      margin-left: 0;
-      margin-right: 10px;
-    }
+    font-size: $font-size-lg;
+    font-weight: $font-weight-medium;
+    color: $text-primary;
+    text-align: center;
+    margin-bottom: $space-3;
+    
+    background: $gradient-primary;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
   &__header-text {
-    font-weight: 300;
+    font-weight: $font-weight-normal;
+    font-size: $font-size-base;
+    color: $text-secondary;
   }
 
   &__wrapper-modulations-header {
     text-align: center;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: $space-3;
   }
 
   &__source-maqam-name {
-    color: $text !important;
-    font-size: 24px;
-    font-weight: 400;
+    color: $text-primary !important;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-medium;
     text-decoration: none !important;
-    padding: 0px;
-    margin-bottom: 10px;
+    padding: $space-2 $space-3;
+    margin-bottom: $space-3;
     display: inline-flex;
+    background: $gradient-secondary;
+    border-radius: $space-2;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     &:hover {
-      text-decoration: underline !important;
-      outline: none;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba($tertiary, 0.3);
+      text-decoration: none !important;
     }
   }
 
   &__ajnas-count,
-  &__maqamat-count {
-    color: $text !important;
-    font-size: 14px;
-    font-weight: 400;
-    text-decoration: none !important;
-    background-color: rgba($primary, 0.5);
-    padding: 10px;
-    cursor: pointer;
-
-    &:hover {
-      background-color: rgba($primary, 1);
-      outline: none;
-    }
-
-    &_active {
-      background-color: rgba($tertiary, 0.5);
-      outline: none;
-    }
-  }
-
+  &__maqamat-count,
   &__delete-hop-btn {
-    color: $text !important;
-    font-size: 14px;
-    font-weight: 400;
+    color: $text-primary !important;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
     text-decoration: none !important;
-    background-color: rgba($primary, 0.5);
-    padding: 10px !important;
+    background: $glass-light;
+    border: 1px solid $border-primary;
+    padding: $space-2 $space-3;
+    border-radius: $space-2;
     cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     &:hover {
-      background-color: rgba($primary, 1);
-      outline: none;
+      background: $gradient-primary;
+      border-color: transparent;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba($primary, 0.3);
     }
 
     &_active {
-      background-color: rgba($tertiary, 0.5);
-      outline: none;
+      background: $gradient-secondary;
+      border-color: transparent;
     }
   }
 
@@ -96,35 +97,36 @@
   }
 
   &__modulations-list {
-    display: inline-flex; // makes each list of modulations appear side by side
+    display: flex;
     flex-direction: column;
-
-    &:not(:last-child) {
-      margin-right: 10px; // for column gap if you switch to row direction
-    }
-
-    gap: 10px;
-    width: calc(100% / 8 - 10px);
-    padding: 10px 0px;
+    gap: $space-2;
+    width: 100%;
+    padding: $space-3;
+    background: $glass-light;
+    border-radius: $space-2;
+    border: 1px solid $border-primary;
 
     // RTL support
     [dir="rtl"] & {
-      &:not(:last-child) {
-        margin-right: 0;
-        margin-left: 10px;
-      }
+      direction: rtl;
     }
   }
 
   &__modulation-item {
     text-align: left;
-    padding: 10px 10px;
-    font-size: 14px;
-    font-weight: 400;
-    background-color: rgba($primary, 0.3);
+    padding: $space-2 $space-3;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-normal;
+    background: $glass-medium;
+    border-radius: $space-2;
+    border: 1px solid transparent;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
 
     &:hover {
-      background-color: $primary;
+      background: $gradient-primary;
+      border-color: $primary;
+      transform: translateY(-1px);
     }
 
     // RTL support
@@ -135,65 +137,63 @@
 
   &__list {
     width: 100%;
-    background-color: $black;
+    background: $surface-primary;
+    backdrop-filter: $backdrop-blur;
+    border: 1px solid $border-primary;
+    border-radius: $space-3;
     display: grid;
-    grid-template-columns: repeat(16, (minmax(250px, 1fr)));
-    grid-template-rows: repeat(3, auto);
-    gap: 10px;
-    height: 225px;
-    overflow-x: scroll;
-    overflow-y: hidden;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: $space-3;
+    max-height: 320px;
+    overflow-x: hidden;
+    overflow-y: auto;
     position: relative;
-    padding-left: 25px;
-    padding-right: 25px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding: $space-4;
 
     &::-webkit-scrollbar {
-      height: 6px;
-      position: relative;
+      width: 6px;
     }
 
     &::-webkit-scrollbar-thumb {
-      background-color: $primary;
-      cursor: pointer;
-      position: relative;
+      background: $gradient-primary;
+      border-radius: $space-1;
     }
 
     &::-webkit-scrollbar-track {
-      background: $medium-grey;
-      cursor: pointer;
-      position: relative;
+      background: transparent;
     }
   }
 
   &__item {
     display: flex;
     flex-direction: column;
-    align-items: left;
-    padding: 10px;
-    background-color: rgba($primary, 0.5);
-    font-size: 14px;
-    color: $text;
+    align-items: flex-start;
+    padding: $space-3;
+    background: $glass-light;
+    border: 1px solid $border-primary;
+    border-radius: $space-2;
+    font-size: $font-size-sm;
+    color: $text-primary;
     cursor: pointer;
-    // box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-    transition: 0.3s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-height: 120px;
 
     &:hover {
-      background-color: $tertiary;
+      background: $glass-medium;
+      border-color: $primary;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba($primary, 0.2);
     }
 
-    &_active {
-      &:hover {
-        background-color: rgba($primary, 0.9);
-      }
-    }
-
+    &_active,
     &_selected {
-      background-color: $tertiary;
+      background: $gradient-secondary;
+      border-color: $tertiary;
 
       &:hover {
-        background-color: $tertiary;
+        background: $gradient-secondary;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba($tertiary, 0.3);
       }
     }
   }
@@ -201,15 +201,16 @@
   &__item-name {
     display: flex;
     flex-direction: column;
-    align-items: left;
-    justify-content: left;
-    font-weight: 400;
+    align-items: flex-start;
+    justify-content: flex-start;
+    font-weight: $font-weight-medium;
+    width: 100%;
 
     &-transpositions {
-      color: rgba(255, 255, 255, 1);
-      font-size: 14px;
-      margin-top: 3px;
-      font-weight: 200;
+      color: $text-secondary;
+      font-size: $font-size-xs;
+      margin-top: $space-1;
+      font-weight: $font-weight-normal;
     }
   }
 
@@ -220,16 +221,21 @@
     width: 100%;
 
     .carousel-button {
-      background: none;
-      border: none;
-      font-size: 30px;
+      background: $glass-light;
+      border: 1px solid $border-primary;
+      border-radius: $space-2;
+      font-size: $font-size-lg;
       cursor: pointer;
-      color: $text;
-      padding: 0px;
+      color: $text-primary;
+      padding: $space-2;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
       &:hover {
-        color: $tertiary;
-        transition: background-color 0.2s ease-in-out;
+        background: $gradient-primary;
+        border-color: transparent;
+        color: $text-primary;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba($primary, 0.3);
       }
     }
 
@@ -238,52 +244,66 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      z-index: 1;
-      height: calc(100% - 20px);
-      width: 25px;
-      background-color: $black;
-
-      &:hover {
-        color: $tertiary;
-        transition: color 0.1s ease-in-out;
-      }
+      z-index: 2;
+      height: 40px;
+      width: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .carousel-button-prev {
-      left: 0;
+      left: -20px;
     }
 
     .carousel-button-next {
-      right: 0;
+      right: -20px;
     }
   }
 
   &__collapse-arrow {
     display: inline-flex;
-    background: none;
-    border: none;
+    background: $glass-light;
+    border: 1px solid $border-primary;
+    border-radius: $space-1;
     cursor: pointer;
-    font-size: 16px;
-    margin-left: 10px;
-    color: #888;
-    outline: none;
-    //align-items: center;
-    padding: 0;
-    transition: color 0.2s;
+    font-size: $font-size-base;
+    margin-left: $space-2;
+    color: $text-secondary;
+    padding: $space-1;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     &:hover {
-      color: $primary;
+      background: $gradient-primary;
+      border-color: transparent;
+      color: $text-primary;
+      transform: translateY(-1px);
     }
 
     &-icon {
-      //display: inline-block;
-      transition: transform 0.2s;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     // RTL support
     [dir="rtl"] & {
       margin-left: 0;
-      margin-right: 10px;
+      margin-right: $space-2;
     }
+  }
+
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    &__list {
+      grid-template-columns: 1fr;
+      gap: $space-2;
+      padding: $space-3;
+    }
+    
+    &__item {
+      min-height: 100px;
+      padding: $space-2;
+    }
+    
+    padding: $space-3;
   }
 }

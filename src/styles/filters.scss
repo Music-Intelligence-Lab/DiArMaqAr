@@ -1,0 +1,96 @@
+@use "./variables" as *;
+
+/* Shared filter styles used across components
+   Provides neutral `.filter-*` classes so components can share visuals
+*/
+
+.filter-menu {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-left: 0px;
+  flex-wrap: wrap;
+  margin-bottom: $space-4;
+
+  // RTL support
+  [dir="rtl"] & {
+    margin-left: 0;
+    margin-right: 20px;
+    flex-direction: row-reverse;
+  }
+
+  .filter-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+    padding: 4px 4px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    transition: background 0.15s ease, border-color 0.15s ease;
+
+    &:hover {
+      background: rgba($primary, 0.04);
+    }
+
+    &.filter-item_active {
+      background: rgba($primary, 0.10);
+      border-color: rgba($primary, 0.18);
+    }
+
+    .filter-checkbox {
+      width: 14px;
+      height: 14px;
+      margin: 0 6px 0 0;
+      vertical-align: middle;
+      display: inline-block;
+
+      // Remove native appearance but keep layout (size & margin)
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      border: 1px solid $border-primary;
+      border-radius: 3px;
+      box-sizing: border-box;
+
+      // Show ring only for keyboard focus (avoid showing on mouse click)
+      &:focus:not(:focus-visible) {
+        outline: none;
+      }
+
+      &:focus-visible {
+        outline: 2px solid $focus-ring;
+        outline-offset: 2px;
+      }
+
+      // Checked state: fill with primary color and show a white checkmark
+      &:checked {
+        background-color: $primary;
+        border-color: $primary;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 10px 10px;
+        // Inline SVG checkmark
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 10'><polyline points='1 6 4 9 11 1' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+      }
+
+      // Disabled state
+      &:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+
+      // RTL support
+      [dir="rtl"] & {
+        margin: 0 0 0 6px;
+      }
+    }
+
+    .filter-label {
+      font-size: 12px;
+      color: $text-primary;
+      line-height: 1;
+    }
+  }
+}

@@ -22,7 +22,6 @@
   transform: translateX(130%);
   transition: transform 0.3s ease-in-out;
   z-index: 9999;
-  box-shadow: -10px 0 50px rgba($black, 0.75);
 
   &--open {
     transform: translateX(0);
@@ -81,60 +80,6 @@
     padding-right: 40px;
   }
 
-  &__filter-checkbox {
-    & input {
-      position: absolute;
-      opacity: 0;
-      cursor: pointer;
-      height: 0;
-      width: 0;
-    }
-
-    & {
-      display: block;
-      position: relative;
-      cursor: pointer;
-      font-size: 1.5rem;
-      user-select: none;
-    }
-
-    .checkmark {
-      position: relative;
-      top: 0;
-      left: 0;
-      height: 28px;
-      width: 28px;
-      background-color: $text;
-      border-radius: 50%;
-      transition: 300ms;
-    }
-
-    & input:checked~.checkmark {
-      background-color: $primary;
-      border-radius: 5px;
-      animation: pulse 500ms ease-in-out;
-    }
-
-    .checkmark:after {
-      content: "";
-      position: absolute;
-      display: none;
-    }
-
-    & input:checked~.checkmark:after {
-      display: block;
-    }
-
-    & .checkmark:after {
-      left: 0.45em;
-      top: 0.25em;
-      width: 0.25em;
-      height: 0.5em;
-      border: solid #e0e0e2;
-      border-width: 0 0.15em 0.15em 0;
-      transform: rotate(45deg);
-    }
-  }
 
   &__label {
     display: flex;
@@ -171,6 +116,8 @@
     cursor: pointer;
     user-select: none;
   }
+
+  // Shared `.filter-*` classes are styled in `src/styles/filters.scss`.
 
   &__number-input {
     width: 100%;
@@ -244,7 +191,6 @@
 
 @keyframes pulse {
   0% {
-    box-shadow: 0 0 0 #{$primary}90;
     rotate: 20deg;
   }
 
@@ -253,11 +199,10 @@
   }
 
   75% {
-    box-shadow: 0 0 0 10px #{$primary}60;
+    // removed box-shadow
   }
 
   100% {
-    box-shadow: 0 0 0 13px #{$primary}30;
     rotate: 0;
   }
 }

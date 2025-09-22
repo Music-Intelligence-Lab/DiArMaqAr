@@ -1,25 +1,60 @@
 @use "./variables" as *;
 
+
 .maqam-transpositions {
   width: 100%;
-  margin-top: 20px;
+  font-size: 0.9rem;
+  margin-top: 10px;
+  scroll-margin-top: $total-navbar-height;  // Increased from 100px for more space above target
   margin-bottom: 40px;
-  scroll-margin-top: 450px;
+
 
   &__title {
     width: 100%;
-    background-color: $secondary;
+    background: $gradient-primary; // Changed from background-color to background
     color: $text;
     font-size: 20px;
     font-weight: 300;
     text-align: left;
     padding: 10px 20px;
     border: solid 1px $grey;
+    position: sticky;
+    top: 100px; // Stick below navbar with some spacing
+    z-index: 40;
+    backdrop-filter: $backdrop-blur;
+    -webkit-backdrop-filter: $backdrop-blur;
 
     // RTL support
     [dir="rtl"] & {
       text-align: right;
     }
+    // Title parts for separate styling
+    .maqam-transpositions__title-label {
+      font-weight: 400;
+      margin-right: 6px;
+      color: $text-primary;
+    }
+    .maqam-transpositions__title-name {
+      font-weight: 200;
+      color: $text-primary;
+    }
+  }
+
+  // Filter menu (scoped for the jins/transpositions view)
+  &__filter-menu {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-left: 16px;
+    flex-wrap: wrap;
+
+    // RTL support
+    [dir="rtl"] & {
+      margin-left: 0;
+      margin-right: 20px;
+      flex-direction: row-reverse;
+    }
+
   }
 
   &__play-circle-icon.MuiSvgIcon-root {
@@ -27,7 +62,6 @@
     color: white;
     padding: 0px;
     margin: 0px;
-    margin-right: 5px;
     font-size: 21px;
     cursor: pointer;
     vertical-align: middle;
@@ -52,6 +86,10 @@
     font-size: 16px;
     cursor: pointer;
     vertical-align: middle;
+  }
+
+  &__buttons {
+    margin-left: auto;
   }
 
   &__button {
@@ -94,200 +132,6 @@
       &:hover {
         background-color: rgba($tertiary, 1);
       }
-    }
-  }
-
-  &__table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
-    margin-bottom: 0px;
-    font-size: 12px;
-    font-weight: 200;
-
-    th {
-      vertical-align: middle;
-      //margin-bottom: 500px;
-      text-align: left;
-      padding: 8px;
-      border: solid 1px $grey;
-      font-weight: 200;
-
-      // RTL support
-      [dir="rtl"] & {
-        text-align: right;
-      }
-    }
-
-    tr {
-      height: 100%;
-    }
-
-    td {
-      vertical-align: top;
-      border: solid 1px $grey;
-      height: 100%;
-      position: relative; // Optional: helpful if absolute children are used later
-    }
-  }
-
-  &__transposition-title {
-    font-size: 16px;
-    font-weight: 300;
-    padding-left: 10px;
-    padding-right: 20px;
-    float: left;
-    line-height: 30px;
-    max-width: 60%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-
-    // RTL support
-    [dir="rtl"] & {
-      padding-left: 20px;
-      padding-right: 10px;
-      float: right;
-    }
-  }
-  
-  &__buttons {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    justify-content: flex-end;
-    float: right;
-    line-height: 30px;
-    
-    // RTL support
-    [dir="rtl"] & {
-      float: left;
-      justify-content: flex-start;
-    }
-  }
-
-  &__transposition-number {
-    width: 34px !important;
-    font-size: 20px;
-    padding: 0 2px !important;
-    margin: 0px 0px 0px 0px;
-    text-align: center !important;
-    background-color: black;
-    vertical-align: middle !important;
-
-    &_0 {
-      background-color: $primary;
-    }
-
-    &_1 {
-      background-color: $secondary;
-    }
-
-    &_2 {
-      background-color: $tertiary;
-    }
-  }
-
-  &__header {
-    text-align: left;
-    background-color: black;
-    scroll-margin-top: calc($top-navbar-height - 30px + 50px);
-    cursor: pointer;
-    transition: opacity 0.2s ease;
-    height: 70px;
-    position: relative;
-    padding: 15px;
-
-    &--toggling {
-      opacity: 0.7;
-    }
-
-    // RTL support
-    [dir="rtl"] & {
-      text-align: right;
-    }
-  }
-
-  &__header-cell {
-    text-align: left;
-    background-color: transparent;
-
-    // RTL support
-    [dir="rtl"] & {
-      text-align: right;
-    }
-
-    &_unique {
-      background-color: rgba($primary, 0.5);
-    }
-
-    &_highlighted {
-      background-color: rgba($tertiary, 0.5) !important;
-    }
-
-    &_scale-degrees {
-      background-color: $medium-grey;
-    }
-
-    &_scale-degrees-number {
-      background-color: $medium-grey;
-          font-weight: 400 !important;
-
-    }
-  }
-
-  &__asc-desc-column {
-    font-family: inherit;
-    font-size: 24px;
-    font-weight: 400 !important;
-    padding: 0px 0px 0px 0px;
-    margin: 0px 0px 0px 0px;
-    text-align: center;
-    vertical-align: middle !important;
-    color: $text;
-  }
-
-  &__row-header {
-    background-color: $medium-grey;
-    text-transform: capitalize;
-    font-weight: 400 !important;
-  }
-
-  &__maqam-name-row {
-    background-color: black;
-    color: white;
-    padding: 15px;
-  }
-
-  &__input {
-    width: 50px;
-    font-size: 14px;
-    border: 1px solid $text;
-    border-radius: 0px;
-    resize: vertical;
-    padding: 5px;
-  }
-
-  &__jins-button {
-    width: 100%;
-    padding: 0px;
-    border-radius: 0px;
-    background-color: rgba($black, 0);
-    color: $text;
-    font-family: inherit;
-    font-weight: inherit;
-    font-size: 12px;
-    text-align: left;
-    display: flex; // Enables flex layout
-    align-items: flex-start; // Aligns content to top
-    justify-content: flex-start; // (optional) aligns to left horizontally
-    cursor: pointer;
-    margin-bottom: 0px;
-
-    // RTL support
-    [dir="rtl"] & {
-      text-align: right;
-      justify-content: flex-end;
     }
   }
 
@@ -372,19 +216,269 @@
     float: right;
   }
 
-  // Specific spacer variants for debugging which spacer is visible
-  .maqam-transpositions__spacer-analysis {
-    height: 20px;
+  &__table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
+    margin-bottom: 0px;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-normal;
+    
+    // Glassmorphism container
+    background: $surface-primary;
+    backdrop-filter: $backdrop-blur;
+    border: 0px;
+    
+    overflow: hidden;
+
+    th {
+      vertical-align: middle;
+      text-align: left;
+      padding: $space-4 $space-2;
+      background: $glass-medium;
+      border-bottom: 1px solid $border-primary;
+      font-weight: $font-weight-light;
+      font-size: $font-size-xs;
+      color: $text-primary;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+
+      &:not(:last-child) {
+        border-right: 1px solid $border-primary;
+      }
+
+      // RTL support
+      [dir="rtl"] & {
+        text-align: right;
+      }
+    }
+
+    tr {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+      &:hover:not(.maqam-transpositions__spacer) {
+        background: $glass-light;
+      }
+    }
+
+    td {
+      vertical-align: middle;
+      text-align: left;
+      padding: $space-2 $space-3;
+      border: 1px solid $border-primary;
+      background: transparent;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+      &:not(:last-child) {
+        border-right: 1px solid $border-primary;
+      }
+
+      &:hover:not(.maqam-transpositions__spacer):not(.maqam-transpositions__spacer-between) {
+        background: $glass-medium;
+      }
+
+      // RTL support
+      [dir="rtl"] & {
+        text-align: right;
+      }
+    }
+  }
+
+  &__transposition-title {
+    font-size: 16px;
+    font-weight: 300;
+    cursor: pointer;
+    display: block;
+    text-align: left;
+
+    // RTL support
+    [dir="rtl"] & {
+      text-align: right;
+    }
+  }
+
+  &__transposition-number {
+    width: 34px !important;
+    font-size: 20px;
+    padding: 0px 2px !important;
+    margin: 0px 0px 0px 0px;
+    text-align: center !important;
+    background-color: black;
+    // Normalize th styling to match td elements
+    font-weight: normal;
+    
+    &_0 {
+      background-color: $primary;
+    }
+
+    &_1 {
+      background-color: $secondary;
+    }
+
+    &_2 {
+      background-color: $tertiary;
+    }
+  }
+
+  &__header {
+    text-align: left;
+    background-color: transparent;
+    scroll-margin-top: calc(
+      $top-navbar-height - 30px + 50px
+    ); // Adjusted for navbar height
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+    // Normalize th styling to match td elements
+    font-weight: normal;
+
+    &--toggling {
+      opacity: 0.7;
+    }
+
+    // RTL support
+    [dir="rtl"] & {
+      text-align: right;
+    }
+  }
+
+  &__cell {
+    text-align: left;
+    background-color: transparent;
+
+    // RTL support
+    [dir="rtl"] & {
+      text-align: right;
+    }
+
+    &_highlighted {
+      background-color: rgba($secondary, 0.2) !important;
+    }
+  }
+
+  &__row-header {
+    background-color: $dark-grey;
+    text-transform: capitalize;
+    font-weight: 400 !important;
+  }
+
+  &__maqam-name-row {
+    background-color: black;
+    color: white;
+    padding: 15px;
+    position: relative;
+    height: 70px; /* Set a consistent height for all rows */
+  }
+  
+  &__buttons {
+    float: right;
+    text-align: right;
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    
+    // RTL support
+    [dir="rtl"] & {
+      float: left;
+      text-align: left;
+      right: auto;
+      left: 15px;
+    }
+  }
+
+  &__header-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 15px;
+    min-height: 70px;
+    
+    // RTL support
+    [dir="rtl"] & {
+      align-items: flex-end;
+    }
+  }
+
+  &__title-section {
+    margin-bottom: 10px;
+  }
+
+  &__buttons-section {
+    width: 100%;
+    
+    .maqam-transpositions__buttons {
+      float: none;
+      text-align: left;
+      position: static;
+      transform: none;
+      
+      // RTL support
+      [dir="rtl"] & {
+        text-align: right;
+      }
+    }
+  }
+
+  &__input {
+    width: 50px;
+    font-size: 14px;
+    border: 1px solid $text;
+    border-radius: 0px;
+    resize: vertical;
+    padding: 5px;
+  }
+
+  &__comments-sources-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 30px;
+
+    // RTL support
+    [dir="rtl"] & {
+      flex-direction: row-reverse;
+      padding: 0 30px;
+    }
+  }
+
+  &__sources {
+    width: 100%;
+    display: flex;
+    padding: 10px 30px;
+
+    // RTL support
+    [dir="rtl"] & {
+      flex-direction: row-reverse;
+    }
+  }
+
+  .maqam-transpositions__spacer {
+    padding: 10px !important;
     border: 0px;
   }
 
-  .maqam-transpositions__spacer-between {
-    height: 20px;
-    border: 0px;
+  // Anchor row used for scroll targets - keep in DOM but visually hidden
+  .maqam-transpositions__anchor-row {
+    visibility: hidden; /* keeps element in layout but invisible */
+    height: 0 !important;
+    line-height: 0 !important;
+    pointer-events: none;
   }
 
-  .maqam-transpositions__spacer-after {
-    height: 20px;
-    border: 0px;
+  .maqam-transpositions__anchor-row td {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 0 !important;
+    line-height: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+  }
+
+  .maqam-transpositions__anchor-row td > div {
+    display: block;
+    width: 0;
+    height: 0;
+    overflow: hidden;
   }
 }

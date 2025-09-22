@@ -1,12 +1,26 @@
 @use "sass:color";
 @use "./variables" as *;
 
-.tuning-system-manager {
-  width: 100%;
-  margin-top: 0px;
-  scroll-margin-top: 0px;
+// REFACTORING NOTE: 
+// The carousel sections (&__list, &__item, &__carousel) can now be replaced 
+// with the unified .carousel component from carousel.scss
+// 
+// To use: Apply .carousel class to the container and update class names:
+// - .tuning-system-manager__list → .carousel__list
+// - .tuning-system-manager__item → .carousel__item  
+// - .tuning-system-manager__carousel → .carousel__controls
+// - .carousel-button → .carousel__button
 
-  //padding: 20px 10px;
+// Ensure consistent spacing below the manager container
+.tuning-system-manager {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto $space-4 auto; // 16px bottom margin for consistency
+  margin-top: 0px;
+  scroll-margin-top: $total-navbar-height;  // Increased from 100px for more space above target
+
 
   &__header {
     font-size: 20px;
@@ -98,10 +112,7 @@
     background-color: $delete;
     color: white;
     transition: 0.1s;
-
-    &:hover {
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-    }
+    // removed empty hover state
   }
 
   &__bib-title {
@@ -155,7 +166,7 @@
 
     &:hover {
       border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+      // removed box-shadow for unified styling
     }
   }
 
@@ -432,108 +443,33 @@
     float: right;
   }
 
-  &__list {
-    width: 100%;
-    background-color: $black;
-    display: grid;
-    grid-template-rows: repeat(3, auto);
-    grid-auto-flow: column;
-    gap: 10px;
-    height: 200px;
-    overflow-x: scroll;
-    overflow-y: hidden;
-    position: relative;
-    padding-left: 25px;
-    padding-right: 25px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-
-    // RTL support
-    [dir="rtl"] & {
-      direction: rtl;
-    }
-
-    &::-webkit-scrollbar {
-      height: 6px;
-      position: relative;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background-color: $primary;
-      cursor: pointer;
-      position: relative;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: $medium-grey;
-      cursor: pointer;
-      position: relative;
-    }
-  }
-
-  &__carousel {
-    display: flex;
-    align-items: center;
-    position: relative;
-    width: 100%;
-
-    // RTL support
-    [dir="rtl"] & {
-      direction: rtl;
-    }
-
-    .carousel-button {
-      background: none;
-      border: none;
-      font-size: 30px;
-      cursor: pointer;
-      color: $text;
-      padding: 0px;
-
-      &:hover {
-        color: $tertiary;
-        transition: background-color 0.2s ease-in-out;
-      }
-    }
-
-    .carousel-button-prev,
-    .carousel-button-next {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 1;
-      height: calc(100% - 20px);
-      width: 25px;
-      background-color: $black;
-
-      &:hover {
-        color: $tertiary;
-        transition: color 0.1s ease-in-out;
-      }
-    }
-
-    .carousel-button-prev {
-      left: 0;
-
-      // RTL support - swap positions
-      [dir="rtl"] & {
-        left: auto;
-        right: 0;
-      }
-    }
-
-    .carousel-button-next {
-      right: 0;
-
-      // RTL support - swap positions
-      [dir="rtl"] & {
-        right: auto;
-        left: 0;
-      }
-    }
-  }
-
-  &__octaves-carousel {
+/* 
+ * CAROUSEL STYLES MIGRATED TO UNIFIED COMPONENT
+ * ===============================================
+ * 
+ * Location: src/styles/carousel.scss
+ * Import: Already included in globals.scss
+ * 
+ * REACT COMPONENT UPDATE REQUIRED:
+ * 
+ * Old Class Names → New Class Names:
+ * .tuning-system-manager__list      → .carousel__list
+ * .tuning-system-manager__item      → .carousel__item
+ * .tuning-system-manager__item_disabled → .carousel__item--disabled
+ * .tuning-system-manager__carousel  → .carousel__controls
+ * .carousel-button                  → .carousel__button
+ * .carousel-button-prev             → .carousel__button--prev
+ * .carousel-button-next             → .carousel__button--next
+ * 
+ * Layout Modifiers Available:
+ * .carousel--single-row (120px height)
+ * .carousel--triple-row (280px height)
+ * Default: two rows (200px height)
+ * 
+ * NOTE: The octaves-carousel remains specialized and unchanged.
+ * 
+ * Migration Guide: See CAROUSEL_MIGRATION.md
+ */  &__octaves-carousel {
     display: flex;
     align-items: center;
     position: relative;
@@ -544,7 +480,7 @@
       direction: rtl;
     }
 
-    .carousel-button {
+    .octaves-carousel-button {
       background: none;
       border: none;
       font-size: 30px;
@@ -552,46 +488,41 @@
       color: $text;
       padding: 0px;
 
-      &:hover {
-        color: $tertiary;
-        transition: background-color 0.2s ease-in-out;
-      }
     }
 
-    .carousel-button-prev,
-    .carousel-button-next {
+    .octaves-carousel-button-prev,
+    .octaves-carousel-button-next {
       position: absolute;
-      top: calc(50% - 8px);
+      top: calc(50% - 6px);
       transform: translateY(-50%);
       z-index: 1;
-      height: calc(100% - 16px);
+      height: calc(100% - 12px);
       width: 25px;
       background-color: $dark-grey;
-      border-top: 1px solid $grey;
-      border-bottom: 1px solid $grey;
+      border-top: 1px solid $border-primary;
+      border-bottom: 2px solid $border-primary;
 
-      &:hover {
-        color: $tertiary;
-        transition: color 0.1s ease-in-out;
-      }
     }
 
-    .carousel-button-prev {
+    .octaves-carousel-button-prev {
       left: 0;
-      border-left: 1px solid $grey;
+      border-left: 1px solid $border-primary;
+      border-radius: 5px 0 0 5px;
 
       // RTL support - swap positions and borders
       [dir="rtl"] & {
         left: auto;
         right: 0;
         border-left: none;
-        border-right: 1px solid $grey;
+        border-right: 1px solid $border-primary;
+        border-radius: 0 5px 5px 0;
       }
     }
 
-    .carousel-button-next {
+    .octaves-carousel-button-next {
       right: 0;
-      border-right: 1px solid $grey;
+      border-right: 1px solid $border-primary;
+      border-radius: 0 5px 5px 0;
 
       // RTL support - swap positions and borders
       [dir="rtl"] & {
@@ -599,57 +530,17 @@
         left: 0;
         border-right: none;
         border-left: 1px solid $grey;
+        border-radius: 5px 0 0 5px;
       }
     }
   }
 
+  // Item styles are now handled by the unified .carousel component
+  // Remove old &__item section and item-specific styles
+  // The item-specific content (&-english-creator, &-english-title) can be kept
+  // as specialized extensions if needed
+
   &__item {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 5px 10px;
-    background-color: rgba($primary, 0.4);
-    font-size: 14px;
-    color: $text;
-    cursor: pointer;
-    transition: 0.2s;
-
-    // RTL support
-    [dir="rtl"] & {
-      text-align: right;
-    }
-
-    &_disabled {
-      background-color: rgba($primary, 0.1) !important;
-      color: $text;
-
-      &:hover {
-        background-color: rgba($primary, 0.5);
-        box-shadow: none;
-        color: $text;
-      }
-    }
-
-    &_active {
-      background-color: rgba($primary, 0.4);
-
-      &:hover {
-        background-color: rgba($primary, 0.9);
-      }
-    }
-
-    &_selected {
-      background-color: $tertiary;
-
-      &:hover {
-        background-color: $tertiary;
-      }
-    }
-
-    &:hover {
-      background-color: rgba($primary, 0.9);
-    }
-
     &-english-creator {
       font-size: 14px;
       margin-bottom: 0px;
@@ -691,7 +582,7 @@
     width: 100%;
     padding: 10px 20px;
     background-color: rgba($black, 0.3);
-    border-radius: 0px;
+    border-radius: $space-2;
     margin-bottom: 10px;
     position: relative; // needed for the pseudo-element positioning
   }
@@ -743,6 +634,7 @@
     align-items: center;
     gap: 5px;
     margin-left: auto;
+    width: fit-content;
 
     // RTL support
     [dir="rtl"] & {
@@ -790,7 +682,7 @@
     padding: 10px 0;
 
     &::-webkit-scrollbar {
-      height: 6px;
+      height: 2px;
     }
 
     &::-webkit-scrollbar-thumb {
@@ -837,7 +729,8 @@
     }
 
     // disabled state via :has() (modern browsers)
-    &:has(> .tuning-system-manager__filter-checkbox:disabled) {
+    &:has(> .tuning-system-manager__filter-checkbox:disabled),
+    &:has(> .filter-checkbox:disabled) {
       background-color: $secondary;
       color: $text;
       cursor: not-allowed;
@@ -855,49 +748,71 @@
     /* inherit color from parent label */
   }
 
+  // Filter styles are centralized in `src/styles/filters.scss`.
+
   &__octave-table {
     width: calc(100% - 50px);
-    border-collapse: collapse;
+    border-collapse: separate;
     border-spacing: 0;
     overflow: auto;
-    background-color: $dark-grey;
-    color: white;
+    background: $surface-primary;
+    backdrop-filter: $backdrop-blur;
+    border: 2px solid $border-primary;
+    color: $text-primary;
     padding: 0px;
     margin: -10px 25px 0px 25px;
 
     th {
-      // text-align: left;
-      padding: 0px 0;
+      padding: $space-2;
       margin: 0px 0;
+      background: $glass-medium;
+      border-bottom: 1px solid $border-primary;
+      font-weight: $font-weight-medium;
+      color: $text-primary;
+
+      &:not(:last-child) {
+        border-right: 1px solid $border-primary;
+      }
     }
 
     tr {
       border: 0px;
       padding: 0px 0;
       margin: 0px 0;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+      &:hover {
+        background: $glass-light;
+      }
     }
 
     td {
-      font-size: 12px;
-      padding-left: 10px;
-      padding-top: 5px;
-      padding-right: 10px;
-      padding-bottom: 5px;
+      font-size: $font-size-xs;
+      padding: $space-2;
       text-align: center;
       vertical-align: middle;
-      // width: 70px;
       min-width: 80px;
       max-width: 80px;
       height: 28px;
-      border: 1px solid rgb(86, 86, 86);
+      border-bottom: 1px solid $border-primary;
       margin: 0px;
       white-space: normal;
       overflow-wrap: normal;
       word-break: normal;
+      background: transparent;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+      &:not(:last-child) {
+        border-right: 1px solid $border-primary;
+      }
+
+      &:hover {
+        background: $glass-medium;
+      }
     }
 
     &_row-header {
-      font-weight: bold;
+      font-weight: $font-weight-semibold;
       width: 120px !important;
       background-color: $medium-grey;
       text-transform: capitalize;

@@ -1,12 +1,26 @@
 @use "sass:color";
 @use "./variables" as *;
 
+// REFACTORING NOTE: 
+// The carousel sections (&__list, &__item, &__carousel) can now be replaced 
+// with the unified .carousel component from carousel.scss
+// 
+// To use: Apply .carousel class to the container and update class names:
+// - .jins-manager__list → .carousel__list
+// - .jins-manager__item → .carousel__item  
+// - .jins-manager__carousel → .carousel__controls
+// - .carousel-button → .carousel__button
+
+// Ensure consistent spacing below the manager container
+// Unified layout for all manager containers
+// Unified layout for all manager containers, using SCSS variables for spacing
 .jins-manager {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  
   width: 100%;
-  margin-bottom: 20px;
+  max-width: 1600px;
+  margin: 0 auto $space-4 auto; // 16px bottom margin for consistency
 
   &__header {
     margin: 20px 0;
@@ -88,171 +102,33 @@
     float: right;
   }
 
-  &__list {
-    width: 100%;
-    background-color: $black;
-    display: grid;
-    grid-template-rows: repeat(3, auto);
-    grid-auto-flow: column;
-    gap: 10px;
-    height: 200px;
-    overflow-x: scroll;
-    overflow-y: hidden;
-    position: relative;
-    padding-left: 25px;
-    padding-right: 25px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-
-    // RTL support
-    [dir="rtl"] & {
-      direction: rtl;
-    }
-
-    &::-webkit-scrollbar {
-      height: 6px;
-      position: relative;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background-color: $primary;
-      cursor: pointer;
-      position: relative;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: $medium-grey;
-      cursor: pointer;
-      position: relative;
-    }
-  }
-
-  &__carousel {
-    display: flex;
-    align-items: center;
-    position: relative;
-    width: 100%;
-
-    .carousel-button {
-      background: none;
-      border: none;
-      font-size: 30px;
-      cursor: pointer;
-      color: $text;
-      padding: 0px;
-
-      &:hover {
-        color: $tertiary;
-        transition: background-color 0.2s ease-in-out;
-      }
-    }
-
-    .carousel-button-prev,
-    .carousel-button-next {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 1;
-      height: calc(100% - 20px);
-      width: 25px;
-      background-color: $black;
-
-      &:hover {
-        color: $tertiary;
-        transition: color 0.1s ease-in-out;
-      }
-    }
-
-    .carousel-button-prev {
-      left: 0;
-
-      // RTL support
-      [dir="rtl"] & {
-        left: auto;
-        right: 0;
-      }
-    }
-
-    .carousel-button-next {
-      right: 0;
-
-      // RTL support
-      [dir="rtl"] & {
-        right: auto;
-        left: 0;
-      }
-    }
-  }
-
-  &__item {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 5px 10px;
-    background-color: rgba($black, 0.3);
-    font-size: 14px;
-    color: $text;
-    cursor: pointer;
-    transition: 0.2s;
-
-    // RTL support
-    [dir="rtl"] & {
-      text-align: right;
-    }
-
-    &_active {
-      background-color: rgba($primary, 0.4);
-
-      &:hover {
-        background-color: rgba($primary, 0.9);
-      }
-    }
-
-    &_selected {
-      background-color: $tertiary;
-
-      &:hover {
-        background-color: $tertiary;
-      }
-    }
-  }
-
-  &__item-name {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    font-weight: 400;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    /* Help variable / web fonts pick the intended weight on Safari */
-    font-variation-settings: "wght" 400;
-    font-synthesis: none;
-
-    // RTL support
-    [dir="rtl"] & {
-      text-align: right;
-    }
-
-    &-transpositions {
-      color: rgba(255, 255, 255, 1);
-      font-size: 14px;
-      margin-top: 3px;
-      font-weight: 200;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      /* Help variable / web fonts pick the intended weight on Safari */
-      font-variation-settings: "wght" 200;
-      font-synthesis: none;
-
-      // RTL support
-      [dir="rtl"] & {
-        text-align: right;
-      }
-    }
-  }
-
-  &__play-button {
+/* 
+ * CAROUSEL STYLES MIGRATED TO UNIFIED COMPONENT
+ * ===============================================
+ * 
+ * Location: src/styles/carousel.scss
+ * Import: Already included in globals.scss
+ * 
+ * REACT COMPONENT UPDATE REQUIRED:
+ * 
+ * Old Class Names → New Class Names:
+ * .jins-manager__list            → .carousel__list
+ * .jins-manager__item            → .carousel__item
+ * .jins-manager__item-name       → .carousel__item-name
+ * .jins-manager__item_active     → .carousel__item--active
+ * .jins-manager__item_selected   → .carousel__item--selected
+ * .jins-manager__carousel        → .carousel__controls
+ * .carousel-button               → .carousel__button
+ * .carousel-button-prev          → .carousel__button--prev
+ * .carousel-button-next          → .carousel__button--next
+ * 
+ * Layout Modifiers Available:
+ * .carousel--single-row (120px height)
+ * .carousel--triple-row (280px height)
+ * Default: two rows (200px height)
+ * 
+ * Migration Guide: See CAROUSEL_MIGRATION.md
+ */  &__play-button {
     margin: 0 10px;
     display: flex;
     align-items: center;

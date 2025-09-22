@@ -28,56 +28,75 @@
 
   table {
     width: 100%;
-    border-collapse: collapse;
-    background: $dark-grey;
-    border-bottom: 1px solid $grey;
-    margin-bottom: 40px;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: $surface-primary;
+    backdrop-filter: $backdrop-blur;
+    border: 1px solid $border-primary;
+    border-radius: $space-3;
+    margin-bottom: $space-8;
     max-height: 75vh;
-    overflow-y: scroll;
+    overflow-y: auto;
     table-layout: auto;
     display: block;
+    font-size: $font-size-sm;
   }
 
   th,
   td {
-    padding: 10px 20px;
+    padding: $space-3 $space-4;
     text-align: left;
-    font-size: 14px;
-
+    font-size: $font-size-sm;
   }
 
   td {
     white-space: nowrap;
+    border-bottom: 1px solid $border-primary;
+    background: transparent;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
+    &:not(:last-child) {
+      border-right: 1px solid $border-primary;
+    }
   }
 
   th {
-    background: $primary;
-    color: $text;
-    font-weight: 400;
+    background: $glass-medium;
+    color: $text-primary;
+    font-weight: $font-weight-medium;
     position: sticky;
     top: 0;
     z-index: 2;
     white-space: wrap;
     vertical-align: top;
-    box-shadow: 0 2px 0 0 $grey;
+    border-bottom: 1px solid $border-primary;
 
+    &:not(:last-child) {
+      border-right: 1px solid $border-primary;
+    }
 
+    &:first-child {
+      border-top-left-radius: $space-3;
+    }
+
+    &:last-child {
+      border-top-right-radius: $space-3;
+    }
   }
 
   tr {
-    transition: background 0.15s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     &:hover td {
-      background: rgb($primary, 0.5) !important;
-      color: $text;
+      background: $glass-light !important;
+      color: $text-primary;
     }
   }
 
   tr.selected-row td {
-    background: $secondary !important;
-    color: $text;
-    font-weight: 300;
+    background: $glass-medium !important;
+    color: $text-primary;
+    font-weight: $font-weight-medium;
   }
 
   tr:nth-child(even) td {

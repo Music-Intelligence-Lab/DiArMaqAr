@@ -19,7 +19,7 @@
   background: $background;
   border: 2px solid $grey;
   border-radius: 10px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  // removed box-shadow for unified styling
   max-width: 800px;
   width: 90vw;
   max-height: 90vh;
@@ -74,7 +74,7 @@
 
     &:hover:not(:disabled) {
       background: $grey;
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+      // removed box-shadow for unified styling
     }
 
     &:disabled {
@@ -151,7 +151,7 @@
     background: linear-gradient(90deg, $primary, $hovered-primary);
     border-radius: 3px;
     transition: width 0.3s ease-out;
-    box-shadow: 0 0 10px rgba(90, 37, 133, 0.3);
+    // removed box-shadow for unified styling
     position: relative;
     overflow: hidden;
 

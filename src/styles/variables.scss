@@ -2,48 +2,172 @@
 
 $top-navbar-height: 90px;
 $bottom-navbar-height: 80px;
+$navbar-padding: 24px; // $space-6 = 1.5rem = 24px for top/bottom padding
+$total-navbar-height: calc($top-navbar-height + $bottom-navbar-height + $navbar-padding + 20px); // Total including padding
+$footer-height: 200px; // Estimated footer height for bottom padding calculations
 $page-height: calc(100svh - $top-navbar-height - $bottom-navbar-height - 30px);
 
-$background: #222222;
-$primary: #5a2585;
-$secondary: #83105d;
-$tertiary: #a4079c;
-$quaternary: #9b7a0c;
-$gold: #d4af37; // Gold (optional accent)
+// Typography Scale (16px base, smooth incremental steps)
+$font-size-xs: 0.8rem;      // 12.8px
+$font-size-sm: 0.9rem;      // 14.4px
+$font-size-base: 1rem;      // 16px (base)
+$font-size-lg: 1.2rem;      // 19.2px
+$font-size-xl: 1.3rem;      // 20.8px
+$font-size-2xl: 1.4rem;     // 22.4px
+$font-size-3xl: 1.5rem;     // 24px
+$font-size-4xl: 1.6rem;     // 25.6px
+$font-size-5xl: 1.7rem;     // 27.2px
+
+// Font weights
+$font-weight-light: 200;
+$font-weight-normal: 300;
+$font-weight-medium: 400;
+$font-weight-semibold: 500;
+$font-weight-bold: 600;
+
+// Line heights for better readability
+$line-height-tight: 1.25;
+$line-height-normal: 1.5;
+$line-height-relaxed: 1.75;
+
+// Spacing scale (8px base)
+$space-1: 0.25rem;  // 4px
+$space-2: 0.5rem;   // 8px
+$space-3: 0.75rem;  // 12px
+$space-4: 1rem;     // 16px
+$space-5: 1.25rem;  // 20px
+$space-6: 1.5rem;   // 24px
+$space-8: 2rem;     // 32px
+$space-10: 2.5rem;  // 40px
+$space-12: 3rem;    // 48px
+$space-16: 4rem;    // 64px
+
+// Web3-Inspired Color System - Minimal & Clean
+$background: #0a0a0b;         // Deep space black like Uniswap
+$surface-primary: rgba(20, 20, 22, 0.8);    // Glassmorphism base
+$surface-secondary: rgba(30, 30, 35, 0.6);  // Semi-transparent layers
+$surface-tertiary: rgba(40, 40, 45, 0.4);   // Lightest glassmorphism
+
+// Web3 Gradient Colors - Inspired by Uniswap, Zora, Aave
+$primary: #6366f1;           // Indigo - modern web3 standard
+$secondary: #8b5cf6;         // Purple - premium feel like Aave
+$tertiary: #06b6d4;          // Cyan - tech-forward like Arbitrum
+$quaternary: #10b981;        // Emerald - success states
+$accent: #f59e0b;           // Amber - highlights and accents
+
+// Accent gradients for web3 feel
+$gradient-primary: linear-gradient(135deg, #6646cc 0%, #8b5cf6 100%);
+$gradient-secondary: linear-gradient(135deg, #075985 0%, #047857 100%); // Much darker cyan to emerald with high contrast
+$gradient-secondary-light: linear-gradient(135deg, #0284c7 0%, #059669 100%); // Medium tone between dark and light
+$gradient-accent: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+
+// Glassmorphism effects
+$glass-light: rgba(255, 255, 255, 0.1);
+$glass-medium: rgba(255, 255, 255, 0.05);
+$glass-dark: rgba(0, 0, 0, 0.2);
+
+// Minimal semantic colors
+$success: #10b981;           // Emerald
+$warning: #f59e0b;           // Amber  
+$error: #ef4444;             // Red
+$info: #06b6d4;              // Cyan
+
+// Typography - Mirror.xyz inspired minimal approach
+$text-primary: #ffffff;      // Pure white for primary text
+$text-secondary: rgba(255, 255, 255, 0.7);  // 70% opacity
+$text-tertiary: rgba(255, 255, 255, 0.5);   // 50% opacity for subtle text
+$text-disabled: rgba(255, 255, 255, 0.3);   // 30% for disabled
+
+// Musical concept colors - more minimal approach
+$maqam-family-1: $primary;   // Indigo
+$maqam-family-2: $tertiary;  // Cyan
+$maqam-family-3: $secondary; // Purple
+$note-tonic: #f59e0b;        // Warm amber for tonic
+$note-dominant: #06b6d4;     // Cool cyan for dominant
+
+// Legacy mappings - simplified
+$gold: $warning;
 $black: #000000;
-$text: #eeeeee;
-$success: #28a745;
-$delete: #C62300;
-$disabled: #3b3b3b;
-$dark-grey: #222222;
-$medium-grey: #333333;
-$grey: #555555;
-$light-grey: #dddddd;
+$text: $text-primary;
+$delete: $error;
+$disabled: rgba(255, 255, 255, 0.2);
+$dark-grey: $background;
+$medium-grey: $surface-secondary;
+$grey: rgba(255, 255, 255, 0.1);
+$light-grey: rgba(255, 255, 255, 0.8);
 
-$hovered-primary: color.adjust($primary, $lightness: 10%);
-$hovered-secondary: color.adjust($secondary, $lightness: -10%);
-$hovered-tertiary: color.adjust($tertiary, $lightness: 10%);
-$hovered-success: color.adjust($success, $lightness: -10%);
-$hovered-delete: color.adjust($delete, $lightness: -10%);
-$hovered-disabled: color.adjust($disabled, $lightness: -10%);
+// Interactive states - web3 minimal approach
+$hovered-primary: color.adjust($primary, $lightness: 15%);      
+$hovered-secondary: color.adjust($secondary, $lightness: 15%);  
+$hovered-tertiary: color.adjust($tertiary, $lightness: 15%);    
+$hovered-success: color.adjust($success, $lightness: 15%);      
+$hovered-warning: color.adjust($warning, $lightness: 15%);      
+$hovered-error: color.adjust($error, $lightness: 15%);          
+$hovered-disabled: rgba(255, 255, 255, 0.1);
 
-$main-gradient: linear-gradient(0deg, $dark-grey, $dark-grey);
+// Focus states - minimal and clean
+$focus-ring: $primary;                                         
+$focus-ring-offset: 2px;                                        
 
-$link: $gold; // Default link color
-$link-visited: color.adjust($link, $saturation: -30%);
+// Web3 background gradients
+$main-gradient: linear-gradient(135deg, #0a0a0b 0%, #1a1a1c 50%, #0a0a0b 100%);
+$card-gradient: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%);
+
+// Link colors - minimal web3 style
+$link: $primary;                                               
+$link-visited: color.adjust($primary, $saturation: -20%, $lightness: -10%);
+$link-hover: $hovered-primary;         
+
+// Border colors - glassmorphism inspired
+$border-primary: rgba(255, 255, 255, 0.1);                    
+$border-secondary: rgba(255, 255, 255, 0.05);                         
+$border-focus: $primary;                                     
+
+// Glassmorphism mixins support
+$backdrop-blur: blur(20px);
+$backdrop-blur-light: blur(10px);
 
 a {
     color: $link !important;
     text-decoration: none !important;
-    transition: color 0.2s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: $space-1;                                    
+    
+    &:focus {
+        outline: 2px solid $focus-ring;
+        outline-offset: $focus-ring-offset;
+    }
 
     &:hover,
-    &:focus {
+    &:focus-visible {
         text-decoration: none !important;
-        color: color.adjust($gold, $lightness: 20%) !important;
+        color: $link-hover !important;
+        transform: translateY(-1px);
     }
 
     &:visited {
-        color: $link-visited;
+        color: $link-visited !important;
+    }
+}
+
+a {
+    color: $link !important;
+    text-decoration: none !important;
+    transition: color 0.2s ease-in-out;
+    border-radius: $space-1;                                    // Subtle rounding for focus
+    
+    &:focus {
+        outline: 2px solid $focus-ring;
+        outline-offset: $focus-ring-offset;
+    }
+
+    &:hover,
+    &:focus-visible {
+        text-decoration: none !important;
+        color: $link-hover !important;
+    }
+
+    &:visited {
+        color: $link-visited !important;
     }
 }

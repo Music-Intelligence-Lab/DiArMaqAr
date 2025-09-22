@@ -53,6 +53,12 @@ const translations = {
     "tabs.suyur": "Suyūr",
     "tabs.intiqalat": "Intiqālāt",
 
+    // Navbar Tooltips
+    "tooltip.ajnas": "Please select a tuning system to explore ajnās",
+    "tooltip.maqamat": "Please select a tuning system to explore maqāmāt",
+    "tooltip.suyur": "Please select a maqām to explore its suyūr",
+    "tooltip.intiqalat": "Please select a maqām to explore its intiqālāt",
+
     // Admin Tabs
     "tabs.tuningSystemAdmin": "Tuning System Admin",
     "tabs.jinsAdmin": "Jins Admin",
@@ -121,8 +127,8 @@ const translations = {
     // Jins Transpositions
     "jins.analysis": "Taḥlīl (analysis)",
     "jins.centsTolerance": "Cents Tolerance",
-    "jins.darajatAlIstiqrar": "Darajat al-Istiqrār Al-Taqlīdīya (conventional tonic/finalis)",
-    "jins.selectLoadToKeyboard": "Select & Load to Keyboard",
+    "jins.darajatAlIstiqrar": "Darajat al-Istiqrār al-Taqlīdīya (conventional tonic/finalis)",
+    "jins.selectLoadToKeyboard": "Select & Load",
     "jins.playJins": "Play jins",
     "jins.export": "Export",
     "jins.copyTable": "Copy Table",
@@ -187,8 +193,8 @@ const translations = {
     // Maqam Transpositions
     "maqam.analysis": "Taḥlīl (analysis)",
     "maqam.centsTolerance": "Cents Tolerance",
-    "maqam.darajatAlIstiqrar": "Darajat al-Istiqrār Al-Taqlīdīya (conventional tonic/finalis)",
-    "maqam.selectLoadToKeyboard": "Select & Load to Keyboard",
+    "maqam.darajatAlIstiqrar": "Darajat al-Istiqrār al-Taqlīdīya (conventional tonic/finalis)",
+    "maqam.selectLoadToKeyboard": "Select & Load",
     "maqam.ascendingDescending": "Asc > Desc",
     "maqam.ascending": "Ascending",
     "maqam.descending": "Descending",
@@ -360,6 +366,12 @@ const translations = {
     "tabs.maqamat": "مقامات",
     "tabs.suyur": "سيور",
     "tabs.intiqalat": "إنتقالات",
+
+    // Navbar Tooltips
+    "tooltip.ajnas": "يرجى اختيار نظام تنغيم أولاً لاستكشاف الأجناس الموسيقية",
+    "tooltip.maqamat": "يرجى اختيار نظام تنغيم أولاً لاستكشاف المقامات الموسيقية",
+    "tooltip.suyur": "يرجى اختيار مقام أولاً لاستكشاف السيور اللحنية الخاصة به",
+    "tooltip.intiqalat": "يرجى اختيار مقام أولاً لاستكشاف الإنتقالات المقامية الخاصة به",
 
     // Admin Tabs
     "tabs.tuningSystemAdmin": "إدارة نظام التنغيم",

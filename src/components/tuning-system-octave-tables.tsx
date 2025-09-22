@@ -594,13 +594,6 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
       >
         <summary
           className="tuning-system-manager__octave-summary"
-          /*  onClick={(e) => {
-            e.preventDefault();
-             setOpenedOctaveRows((rows) => ({
-              ...rows,
-              [octave]: !rows[octave as 0 | 1 | 2 | 3],
-            }));
-          }} */
         >
           <span
             className="tuning-system-manager__octave-summary-title"
@@ -620,58 +613,6 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
           >
             {t('octave.title')} {octave}{" "}
           </span>
-          {admin && ((octave === 1 && openedOctaveRows[1]) || (octave === 2 && openedOctaveRows[2])) && (
-            <button
-              className="tuning-system-manager__octave-cascade-button"
-              onClick={(e: React.MouseEvent) => {
-                e.stopPropagation();
-                setCascade((c) => !c);
-              }}
-            >
-              {cascade ? t('octave.cascadeEnabled') : t('octave.cascadeDisabled')}
-            </button>
-          )}
-          {octave === 1 && openedOctaveRows[1] && (
-            <span className="tuning-system-manager__filter-menu">
-              {Object.keys(filters).map((filterKey) => {
-                const isDisabled = filterKey === pitchClassType;
-
-                if (isDisabled) return null;
-
-                // Hide centsFromZero filters from tuning system octave tables
-                if (filterKey === 'centsFromZero') return null;
-
-                return (
-                  <label
-                    key={filterKey}
-                    htmlFor={`filter-${filterKey}`}
-                    className={`tuning-system-manager__filter-item ${filters[filterKey as keyof typeof filters] ? "tuning-system-manager__filter-item_active" : ""}`}
-                    // prevent the drawer (or parent) click handler from firing
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <input
-                      id={`filter-${filterKey}`}
-                      type="checkbox"
-                      className="tuning-system-manager__filter-checkbox"
-                      checked={filters[filterKey as keyof typeof filters]}
-                      disabled={isDisabled}
-                      onChange={(e) => {
-                        // still stop propagation so only the checkbox toggles
-                        e.stopPropagation();
-                        setFilters((prev) => ({
-                          ...prev,
-                          [filterKey as keyof typeof filters]: e.target.checked,
-                        }));
-                      }}
-                    />
-                    <span className="tuning-system-manager__filter-label">
-                      {t(`filter.${filterKey}`)}
-                    </span>
-                  </label>
-                );
-              })}
-            </span>
-          )}
 
           {openedOctaveRows[octave as 0 | 1 | 2 | 3] && (
             <button
@@ -690,9 +631,67 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
           <div className="tuning-system-manager__octave-summary-content"></div>
         </summary>
 
+        {openedOctaveRows[octave as 0 | 1 | 2 | 3] && (
+          <div className="tuning-system-manager__octave-controls">
+            {admin && ((octave === 1 && openedOctaveRows[1]) || (octave === 2 && openedOctaveRows[2])) && (
+              <button
+                className="tuning-system-manager__octave-cascade-button"
+                onClick={(e: React.MouseEvent) => {
+                  e.stopPropagation();
+                  setCascade((c) => !c);
+                }}
+              >
+                {cascade ? t('octave.cascadeEnabled') : t('octave.cascadeDisabled')}
+              </button>
+            )}
+            
+            {octave === 1 && openedOctaveRows[1] && (
+              <span className="filter-menu">
+                {Object.keys(filters).map((filterKey) => {
+                  const isDisabled = filterKey === pitchClassType;
+
+                  if (isDisabled) return null;
+
+                  // Hide centsFromZero filters from tuning system octave tables
+                  if (filterKey === 'centsFromZero') return null;
+
+                  return (
+                    <label
+                      key={filterKey}
+                      htmlFor={`filter-${filterKey}`}
+                      className={`filter-item ${filters[filterKey as keyof typeof filters] ? "filter-item_active" : ""}`}
+                      // prevent the drawer (or parent) click handler from firing
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <input
+                        id={`filter-${filterKey}`}
+                        type="checkbox"
+                        className="filter-checkbox"
+                        checked={filters[filterKey as keyof typeof filters]}
+                        disabled={isDisabled}
+                        onChange={(e) => {
+                          // still stop propagation so only the checkbox toggles
+                          e.stopPropagation();
+                          setFilters((prev) => ({
+                            ...prev,
+                            [filterKey as keyof typeof filters]: e.target.checked,
+                          }));
+                        }}
+                      />
+                      <span className="filter-label">
+                        {t(`filter.${filterKey}`)}
+                      </span>
+                    </label>
+                  );
+                })}
+              </span>
+            )}
+          </div>
+        )}
+
         <div className="tuning-system-manager__octaves-carousel">
           <button
-            className="carousel-button carousel-button-prev"
+            className="octaves-carousel-button octaves-carousel-button-prev"
             onClick={() => {
               const container = octaveScrollRefs[octave as 0 | 1 | 2 | 3].current;
               if (container) container.scrollBy({ left: isRTL ? 635 : -635, behavior: "smooth" });
@@ -1069,7 +1068,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
             </table>
           </div>
           <button
-            className="carousel-button carousel-button-next"
+            className="octaves-carousel-button octaves-carousel-button-next"
             onClick={() => {
               const container = octaveScrollRefs[octave as 0 | 1 | 2 | 3].current;
               if (container) container.scrollBy({ left: isRTL ? -635 : 635, behavior: "smooth" });

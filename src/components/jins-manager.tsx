@@ -106,12 +106,9 @@ export default function JinsManager({ admin }: { admin: boolean }) {
     return sortedAjnas.filter((jins) => jins.getNoteNames()[0]?.toLowerCase() === ajnasFilter.toLowerCase());
   }, [sortedAjnas, ajnasFilter, language]);
 
-  const numberOfRows = 3; // Fixed number of rows
-  const numberOfColumns = Math.ceil(filteredAjnas.length / numberOfRows); // Calculate columns dynamically
-
   return (
     <div className="jins-manager" key={language}>
-      <div className="jins-manager__tabs">
+      <div className="tabs">
         {tabs.map((tab) => {
           let count = 0;
           if (tab === "all") {
@@ -120,23 +117,23 @@ export default function JinsManager({ admin }: { admin: boolean }) {
             count = sortedAjnas.filter((jins) => jins.getNoteNames()[0]?.toLowerCase() === tab.toLowerCase()).length;
           }
           return (
-            <button key={tab} className={"jins-manager__tab" + (ajnasFilter === tab ? " jins-manager__tab_active" : "")} onClick={() => setAjnasFilter(tab)}>
-              {tab === "all" ? t('jins.all') : getDisplayName(tab, 'note')} <span className="jins-manager__tab-count">({count})</span>
+            <button key={tab} className={"tabs__tab" + (ajnasFilter === tab ? " tabs__tab--active" : "")} onClick={() => setAjnasFilter(tab)}>
+              {tab === "all" ? t('jins.all') : getDisplayName(tab, 'note')} <span className="tabs__count">({count})</span>
             </button>
           );
         })}
       </div>
-      <div className="jins-manager__carousel">
+      <div className="carousel__controls">
         <button
-          className="carousel-button carousel-button-prev"
+          className="carousel__button carousel__button--prev"
           onClick={() => {
-            const container = document.querySelector(".jins-manager__list");
-            if (container) container.scrollBy({ left: isRTL ? 670 : -670, behavior: "smooth" });
+            const container = document.querySelector(".carousel__list");
+            if (container) container.scrollBy({ left: isRTL ? 600 : -600, behavior: "smooth" });
           }}
         >
           ‹
         </button>
-        <div className="jins-manager__list" style={{ gridTemplateColumns: `repeat(${numberOfColumns}, minmax(250px, 1fr))` }}>
+        <div className="carousel__list">
           {filteredAjnas.length === 0 ? (
             <p>{t('jins.noAjnasAvailable')}</p>
           ) : (
@@ -146,7 +143,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
               return (
                 <div
                   key={index}
-                  className={"jins-manager__item " + (jinsData.getName() === selectedJinsData?.getName() ? "jins-manager__item_selected " : "") + (selectable ? "jins-manager__item_active" : "")}
+                  className={`carousel__item${jinsData.getName() === selectedJinsData?.getName() ? " carousel__item--selected" : ""}${selectable ? " carousel__item--active" : " carousel__item--disabled"}`}
                   onClick={() => {
                     if (selectable) {
                       // Toggle functionality: if clicking the same jins, deselect it
@@ -160,9 +157,9 @@ export default function JinsManager({ admin }: { admin: boolean }) {
                     }
                   }}
                 >
-                  <div className="jins-manager__item-name">
+                  <div className="carousel__item-name">
                     <strong>{getDisplayName(jinsData.getName(), 'jins')}</strong>
-                    {selectable && <strong className="jins-manager__item-name-transpositions">{`${t('jins.transpositions')}: ${numberOfTranspositions}/${numberOfPitchClasses}`}</strong>}
+                    {selectable && <strong className="carousel__item-name-transpositions">{`${t('jins.transpositions')}: ${numberOfTranspositions}/${numberOfPitchClasses}`}</strong>}
                   </div>
                 </div>
               );
@@ -170,10 +167,10 @@ export default function JinsManager({ admin }: { admin: boolean }) {
           )}
         </div>
         <button
-          className="carousel-button carousel-button-next"
+          className="carousel__button carousel__button--next"
           onClick={() => {
-            const container = document.querySelector(".jins-manager__list");
-            if (container) container.scrollBy({ left: isRTL ? -520 : 520, behavior: "smooth" });
+            const container = document.querySelector(".carousel__list");
+            if (container) container.scrollBy({ left: isRTL ? -600 : 600, behavior: "smooth" });
           }}
         >
           ›

@@ -7,13 +7,33 @@
   display: flex;
   align-items: center;
 
+  // Override fixed positioning when inside navbar
+  .navbar__right-panel & {
+    position: fixed;
+    top: 25px;
+    right: 80px; // Position to the left of settings icon
+    z-index: 1002;
+  }
+
   &__select {
     background-color: transparent;
     color: white;
-
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: $space-1 $space-2;
+    border-radius: $space-1;
     font-size: 14px;
     cursor: pointer;
     transition: all 0.2s ease;
+
+    // Better styling when in navbar
+    .navbar__right-panel & {
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 13px;
+    }
 
     &:hover {
       border-color: rgba(255, 255, 255, 0.6);

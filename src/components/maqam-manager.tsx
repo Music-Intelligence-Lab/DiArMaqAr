@@ -147,13 +147,10 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
     return sortedMaqamat.filter((maqam) => maqam.getAscendingNoteNames()[0]?.toLowerCase() === maqamatFilter.toLowerCase());
   }, [sortedMaqamat, maqamatFilter, language]);
 
-  const numberOfRows = 3; // Fixed number of rows
-  const numberOfColumns = Math.ceil(filteredMaqamat.length / numberOfRows); // Calculate columns dynamically
-
   return (
     <div className="maqam-manager" key={language}>
       {/* Tabs for filtering maqamat by starting note name */}
-      <div className="maqam-manager__tabs">
+      <div className="tabs">
         {tabs.map((tab) => {
           let count = 0;
           if (tab === "all") {
@@ -163,30 +160,25 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
           }
           const displayName = tab === "all" ? t('maqam.all') : getDisplayName(tab, 'note');
           return (
-            <button key={tab} className={"maqam-manager__tab" + (maqamatFilter === tab ? " maqam-manager__tab_active" : "")} onClick={() => setMaqamatFilter(tab)}>
-              {displayName} <span className="maqam-manager__tab-count">({count})</span>
+            <button key={tab} className={"tabs__tab" + (maqamatFilter === tab ? " tabs__tab--active" : "")} onClick={() => setMaqamatFilter(tab)}>
+              {displayName} <span className="tabs__count">({count})</span>
             </button>
           );
         })}
-        
-
       </div>
 
-      <div className="maqam-manager__carousel">
+      <div className="carousel__controls">
         <button
-          className="carousel-button carousel-button-prev"
+          className="carousel__button carousel__button--prev"
           onClick={() => {
-            const c = document.querySelector(".maqam-manager__list");
-            if (c) c.scrollBy({ left: isRTL ? 670 : -670, behavior: "smooth" });
+            const c = document.querySelector(".carousel__list");
+            if (c) c.scrollBy({ left: isRTL ? 600 : -600, behavior: "smooth" });
           }}
         >
           ‹
         </button>
         <div
-          className="maqam-manager__list"
-          style={{
-            gridTemplateColumns: `repeat(${numberOfColumns}, minmax(250px, 1fr))`,
-          }}
+          className="carousel__list"
         >
           {filteredMaqamat.map((maqamData, idx) => {
             const selectable = maqamData.isMaqamSelectable(allPitchClasses.map((pitchClass) => pitchClass.noteName));
@@ -194,7 +186,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
             return (
               <div
                 key={idx}
-                className={`maqam-manager__item ${maqamData.getName() === selectedMaqamData?.getName() ? "maqam-manager__item_selected " : ""}${selectable ? "maqam-manager__item_active" : ""}`}
+                className={`carousel__item${maqamData.getName() === selectedMaqamData?.getName() ? " carousel__item--selected" : ""}${selectable ? " carousel__item--active" : " carousel__item--disabled"}`}
                 onClick={() => {
                   if (selectable) {
                     // Toggle functionality: if clicking the same maqam, deselect it
@@ -208,19 +200,19 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
                   }
                 }}
               >
-                <div className="maqam-manager__item-name">
+                <div className="carousel__item-name">
                   <strong>{`${getDisplayName(maqamData.getName(), 'maqam')}${!maqamData.isMaqamSymmetric() ? "*" : ""}`}</strong>
-                  {selectable && <strong className="maqam-manager__item-name-transpositions">{`${t('maqam.transpositions')}: ${numberOfTranspositions}/${numberOfPitchClasses}`}</strong>}
+                  {selectable && <strong className="carousel__item-name-transpositions">{`${t('maqam.transpositions')}: ${numberOfTranspositions}/${numberOfPitchClasses}`}</strong>}
                 </div>
               </div>
             );
           })}
         </div>
         <button
-          className="carousel-button carousel-button-next"
+          className="carousel__button carousel__button--next"
           onClick={() => {
-            const c = document.querySelector(".maqam-manager__list");
-            if (c) c.scrollBy({ left: isRTL ? -520 : 520, behavior: "smooth" });
+            const c = document.querySelector(".carousel__list");
+            if (c) c.scrollBy({ left: isRTL ? -600 : 600, behavior: "smooth" });
           }}
         >
           ›

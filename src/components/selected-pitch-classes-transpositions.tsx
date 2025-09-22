@@ -272,7 +272,7 @@ export default function SelectedPitchClassTranspositions() {
                 />
               </>
             )}
-            <span className="tuning-system-manager__filter-menu">
+            <span className="filter-menu">
               {Object.keys(filters).map((filterKey) => {
                 const isDisabled =
                   (filterKey === "fraction" && valueType === "fraction") ||
@@ -289,8 +289,8 @@ export default function SelectedPitchClassTranspositions() {
                   <label
                     key={filterKey}
                     htmlFor={`filter-${filterKey}`}
-                    className={`tuning-system-manager__filter-item ${
-                      filters[filterKey as keyof typeof filters] ? "tuning-system-manager__filter-item_active" : ""
+                    className={`filter-item ${
+                      filters[filterKey as keyof typeof filters] ? "filter-item_active" : ""
                     }`}
                     // prevent the drawer (or parent) click handler from firing
                     onClick={(e) => e.stopPropagation()}
@@ -298,7 +298,7 @@ export default function SelectedPitchClassTranspositions() {
                     <input
                       id={`filter-${filterKey}`}
                       type="checkbox"
-                      className="tuning-system-manager__filter-checkbox"
+                      className="filter-checkbox"
                       checked={filters[filterKey as keyof typeof filters]}
                       disabled={isDisabled}
                       onChange={(e) => {
@@ -310,7 +310,7 @@ export default function SelectedPitchClassTranspositions() {
                         }));
                       }}
                     />
-                    <span className="tuning-system-manager__filter-label">
+                    <span className="filter-label">
                       {t(`filter.${filterKey}`)}
                     </span>
                   </label>

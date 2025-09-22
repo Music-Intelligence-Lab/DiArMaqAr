@@ -72,14 +72,10 @@ export default function Navbar() {
             onClick={() => {
               setSelectedMenu("tuningSystem");
               if (typeof window !== "undefined") {
-                const tuningSystemManager = document.querySelector(
-                  ".tuning-system-manager"
-                );
-                if (tuningSystemManager) {
-                  tuningSystemManager.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start",
-                  });
+                // Simple approach: just scroll to top and let padding handle positioning
+                const scrollContainer = document.querySelector(".scrollbar-right-container");
+                if (scrollContainer) {
+                  scrollContainer.scrollTo({ top: 0, behavior: "smooth" });
                 } else {
                   window.scrollTo({ top: 0, behavior: "smooth" });
                 }
@@ -129,214 +125,252 @@ export default function Navbar() {
         key: "jins",
         condition: true,
         content: (
-          <button
-            key="jins"
-            className={`navbar__bottom-bar-item ${
-              selectedMenu === "jins" ? "navbar__bottom-bar-item_selected" : ""
-            } ${selectedJinsData ? "navbar__bottom-bar-item_active" : ""}`}
-            onClick={() => {
-              setSelectedMenu("jins");
-              if (typeof window !== "undefined") {
-                const jinsTranspositions = document.querySelector(
-                  ".jins-transpositions"
-                );
-                if (jinsTranspositions) {
-                  jinsTranspositions.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start",
-                  });
-                } else {
-                  window.scrollTo({ top: 0, behavior: "smooth" });
+          <div key="jins" className="navbar__tooltip-wrapper">
+            <button
+              className={`navbar__bottom-bar-item ${
+                selectedMenu === "jins" ? "navbar__bottom-bar-item_selected" : ""
+              } ${selectedJinsData ? "navbar__bottom-bar-item_active" : ""}`}
+              onClick={() => {
+                setSelectedMenu("jins");
+                if (typeof window !== "undefined") {
+                  // Simple approach: scroll to top and let CSS padding handle proper positioning
+                  const scrollContainer = document.querySelector(".scrollbar-right-container");
+                  if (scrollContainer) {
+                    scrollContainer.scrollTo({ top: 0, behavior: "smooth" });
+                  } else {
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }
                 }
-              }
-            }}
-            disabled={!selectedTuningSystem}
-          >
-            <span className="navbar__bottom-bar-item_tab-title">
-              {selectedTuningSystem
-                ? `${t('tabs.ajnas')} (${
-                    ajnas.filter((jinsData) =>
-                      jinsData.isJinsSelectable(
-                        allPitchClasses.map((pitchClass) => pitchClass.noteName)
-                      )
-                    ).length
-                  }/${ajnas.length})`
-                : t('tabs.ajnas')}
-            </span>
-            <span className="navbar__bottom-bar-item_tab-subtitle">
-              {!selectedJinsData
-                ? ""
-                : selectedJins
-                ? `${getDisplayName(selectedJinsData.getName(), 'jins')} al-${getDisplayName(
-                    selectedJins.jinsPitchClasses.map(
-                      (pitchClass) => pitchClass.noteName
-                    )[0], 'note'
-                  )} (${getEnglishNoteName(
-                    selectedJins.jinsPitchClasses.map(
-                      (pitchClass) => pitchClass.noteName
-                    )[0]
-                  )})`
-                : `${getDisplayName(selectedJinsData.getName(), 'jins')} (${getDisplayName(
-                    selectedJinsData.getNoteNames()[0], 'note'
-                  )}/${getEnglishNoteName(
-                    selectedJinsData.getNoteNames()[0]
-                  )})`}
-            </span>
-          </button>
+              }}
+              disabled={!selectedTuningSystem}
+            >
+              <span className="navbar__bottom-bar-item_tab-title">
+                {selectedTuningSystem
+                  ? `${t('tabs.ajnas')} (${
+                      ajnas.filter((jinsData) =>
+                        jinsData.isJinsSelectable(
+                          allPitchClasses.map((pitchClass) => pitchClass.noteName)
+                        )
+                      ).length
+                    }/${ajnas.length})`
+                  : t('tabs.ajnas')}
+              </span>
+              <span className="navbar__bottom-bar-item_tab-subtitle">
+                {!selectedJinsData
+                  ? ""
+                  : selectedJins
+                  ? `${getDisplayName(selectedJinsData.getName(), 'jins')} al-${getDisplayName(
+                      selectedJins.jinsPitchClasses.map(
+                        (pitchClass) => pitchClass.noteName
+                      )[0], 'note'
+                    )} (${getEnglishNoteName(
+                      selectedJins.jinsPitchClasses.map(
+                        (pitchClass) => pitchClass.noteName
+                      )[0]
+                    )})`
+                  : `${getDisplayName(selectedJinsData.getName(), 'jins')} (${getDisplayName(
+                      selectedJinsData.getNoteNames()[0], 'note'
+                    )}/${getEnglishNoteName(
+                      selectedJinsData.getNoteNames()[0]
+                    )})`}
+              </span>
+            </button>
+            {!selectedTuningSystem && (
+              <div className="navbar__tooltip">
+                {t('tooltip.ajnas')}
+              </div>
+            )}
+          </div>
         )
       },
       {
         key: "jins-admin",
         condition: showAdminTabs,
         content: (
-          <button
-            key="jins-admin"
-            className={`navbar__bottom-bar-item ${
-              selectedMenu === "jins-admin"
-                ? "navbar__bottom-bar-item_selected"
-                : ""
-            }`}
-            onClick={() => setSelectedMenu("jins-admin")}
-            disabled={!selectedTuningSystem}
-          >
-            {t('tabs.jinsAdmin')}
-          </button>
+          <div key="jins-admin" className="navbar__tooltip-wrapper">
+            <button
+              className={`navbar__bottom-bar-item ${
+                selectedMenu === "jins-admin"
+                  ? "navbar__bottom-bar-item_selected"
+                  : ""
+              }`}
+              onClick={() => setSelectedMenu("jins-admin")}
+              disabled={!selectedTuningSystem}
+            >
+              {t('tabs.jinsAdmin')}
+            </button>
+            {!selectedTuningSystem && (
+              <div className="navbar__tooltip">
+                {t('tooltip.ajnas')}
+              </div>
+            )}
+          </div>
         )
       },
       {
         key: "maqam",
         condition: true,
         content: (
-          <button
-            key="maqam"
-            className={`navbar__bottom-bar-item ${
-              selectedMenu === "maqam" ? "navbar__bottom-bar-item_selected" : ""
-            } ${selectedMaqamData ? "navbar__bottom-bar-item_active" : ""}`}
-            onClick={() => {
-              setSelectedMenu("maqam");
-              if (typeof window !== "undefined") {
-                const maqamTranspositions = document.querySelector(
-                  ".maqam-transpositions"
-                );
-                if (maqamTranspositions) {
-                  maqamTranspositions.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start",
-                  });
-                } else {
-                  window.scrollTo({ top: 0, behavior: "smooth" });
+          <div key="maqam" className="navbar__tooltip-wrapper">
+            <button
+              className={`navbar__bottom-bar-item ${
+                selectedMenu === "maqam" ? "navbar__bottom-bar-item_selected" : ""
+              } ${selectedMaqamData ? "navbar__bottom-bar-item_active" : ""}`}
+              onClick={() => {
+                setSelectedMenu("maqam");
+                if (typeof window !== "undefined") {
+                  const maqamTranspositions = document.querySelector(
+                    ".maqam-transpositions"
+                  );
+                  if (maqamTranspositions) {
+                    maqamTranspositions.scrollIntoView({
+                      behavior: "smooth",
+                      block: "center", // Changed from "start" to avoid navbar overlap
+                    });
+                  } else {
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }
                 }
-              }
-            }}
-            disabled={!selectedTuningSystem}
-          >
-            <span className="navbar__bottom-bar-item_tab-title">
-              {selectedTuningSystem
-                ? `${t('tabs.maqamat')} (${
-                    maqamat.filter((maqamData) =>
-                      maqamData.isMaqamSelectable(
-                        allPitchClasses.map((pitchClass) => pitchClass.noteName)
-                      )
-                    ).length
-                  }/${maqamat.length})`
-                : t('tabs.maqamat')}{" "}
-              <br />
-            </span>
-            <span className="navbar__bottom-bar-item_tab-subtitle">
-              {!selectedMaqamData
-                ? ""
-                : selectedMaqam
-                ? getDisplayName(selectedMaqam.name, 'maqam')
-                : `${getDisplayName(selectedMaqamData.getName(), 'maqam')} (${getDisplayName(
-                    selectedMaqamData.getAscendingNoteNames()[0], 'note'
-                  )}/${getEnglishNoteName(
-                    selectedMaqamData.getAscendingNoteNames()[0]
-                  )})`}
-            </span>
-          </button>
+              }}
+              disabled={!selectedTuningSystem}
+            >
+              <span className="navbar__bottom-bar-item_tab-title">
+                {selectedTuningSystem
+                  ? `${t('tabs.maqamat')} (${
+                      maqamat.filter((maqamData) =>
+                        maqamData.isMaqamSelectable(
+                          allPitchClasses.map((pitchClass) => pitchClass.noteName)
+                        )
+                      ).length
+                    }/${maqamat.length})`
+                  : t('tabs.maqamat')}{" "}
+                <br />
+              </span>
+              <span className="navbar__bottom-bar-item_tab-subtitle">
+                {!selectedMaqamData
+                  ? ""
+                  : selectedMaqam
+                  ? getDisplayName(selectedMaqam.name, 'maqam')
+                  : `${getDisplayName(selectedMaqamData.getName(), 'maqam')} (${getDisplayName(
+                      selectedMaqamData.getAscendingNoteNames()[0], 'note'
+                    )}/${getEnglishNoteName(
+                      selectedMaqamData.getAscendingNoteNames()[0]
+                    )})`}
+              </span>
+            </button>
+            {!selectedTuningSystem && (
+              <div className="navbar__tooltip">
+                {t('tooltip.maqamat')}
+              </div>
+            )}
+          </div>
         )
       },
       {
         key: "maqam-admin",
         condition: showAdminTabs,
         content: (
-          <button
-            key="maqam-admin"
-            className={`navbar__bottom-bar-item ${
-              selectedMenu === "maqam-admin"
-                ? "navbar__bottom-bar-item_selected"
-                : ""
-            }`}
-            onClick={() => setSelectedMenu("maqam-admin")}
-            disabled={!selectedTuningSystem}
-          >
-            {t('tabs.maqamAdmin')}
-          </button>
+          <div key="maqam-admin" className="navbar__tooltip-wrapper">
+            <button
+              className={`navbar__bottom-bar-item ${
+                selectedMenu === "maqam-admin"
+                  ? "navbar__bottom-bar-item_selected"
+                  : ""
+              }`}
+              onClick={() => setSelectedMenu("maqam-admin")}
+              disabled={!selectedTuningSystem}
+            >
+              {t('tabs.maqamAdmin')}
+            </button>
+            {!selectedTuningSystem && (
+              <div className="navbar__tooltip">
+                {t('tooltip.maqamat')}
+              </div>
+            )}
+          </div>
         )
       },
       {
         key: "sayr",
         condition: true,
         content: (
-          <button
-            key="sayr"
-            className={`navbar__bottom-bar-item ${
-              selectedMenu === "sayr" ? "navbar__bottom-bar-item_selected" : ""
-            } ${selectedSayr ? "navbar__bottom-bar-item_active" : ""}`}
-            onClick={() => setSelectedMenu("sayr")}
-            disabled={!selectedMaqamData}
-          >
-            <span className="navbar__bottom-bar-item_tab-title">
-              {selectedMaqamData
-                ? `${t('tabs.suyur')} (${selectedMaqamData.getSuyūr().length})`
-                : t('tabs.suyur')}{" "}
-              <br />
-            </span>
-            <span className="navbar__bottom-bar-item_tab-subtitle">
-              {selectedSayr &&
-                `${selectedSayr.creatorEnglish} ${
-                  selectedSayrSource
-                    ? `(${selectedSayrSource.getPublicationDateEnglish()})`
-                    : ""
-                }`}
-            </span>
-          </button>
+          <div key="sayr" className="navbar__tooltip-wrapper">
+            <button
+              className={`navbar__bottom-bar-item ${
+                selectedMenu === "sayr" ? "navbar__bottom-bar-item_selected" : ""
+              } ${selectedSayr ? "navbar__bottom-bar-item_active" : ""}`}
+              onClick={() => setSelectedMenu("sayr")}
+              disabled={!selectedMaqamData}
+            >
+              <span className="navbar__bottom-bar-item_tab-title">
+                {selectedMaqamData
+                  ? `${t('tabs.suyur')} (${selectedMaqamData.getSuyūr().length})`
+                  : t('tabs.suyur')}{" "}
+                <br />
+              </span>
+              <span className="navbar__bottom-bar-item_tab-subtitle">
+                {selectedSayr &&
+                  `${selectedSayr.creatorEnglish} ${
+                    selectedSayrSource
+                      ? `(${selectedSayrSource.getPublicationDateEnglish()})`
+                      : ""
+                  }`}
+              </span>
+            </button>
+            {!selectedMaqamData && (
+              <div className="navbar__tooltip">
+                {t('tooltip.suyur')}
+              </div>
+            )}
+          </div>
         )
       },
       {
         key: "sayr-admin",
         condition: showAdminTabs,
         content: (
-          <button
-            key="sayr-admin"
-            className={`navbar__bottom-bar-item ${
-              selectedMenu === "sayr-admin"
-                ? "navbar__bottom-bar-item_selected"
-                : ""
-            }`}
-            onClick={() => setSelectedMenu("sayr-admin")}
-            disabled={!selectedMaqamData}
-          >
-            {t('tabs.sayrAdmin')}
-          </button>
+          <div key="sayr-admin" className="navbar__tooltip-wrapper">
+            <button
+              className={`navbar__bottom-bar-item ${
+                selectedMenu === "sayr-admin"
+                  ? "navbar__bottom-bar-item_selected"
+                  : ""
+              }`}
+              onClick={() => setSelectedMenu("sayr-admin")}
+              disabled={!selectedMaqamData}
+            >
+              {t('tabs.sayrAdmin')}
+            </button>
+            {!selectedMaqamData && (
+              <div className="navbar__tooltip">
+                {t('tooltip.suyur')}
+              </div>
+            )}
+          </div>
         )
       },
       {
         key: "modulation",
         condition: true,
         content: (
-          <button
-            key="modulation"
-            className={`navbar__bottom-bar-item ${
-              selectedMenu === "modulation"
-                ? "navbar__bottom-bar-item_selected"
-                : ""
-            }`}
-            onClick={() => setSelectedMenu("modulation")}
-            disabled={!selectedMaqamData}
-          >
-            {t('tabs.intiqalat')}{selectedMaqamData ? ` (${totalModulations})` : ""}
-          </button>
+          <div key="modulation" className="navbar__tooltip-wrapper">
+            <button
+              className={`navbar__bottom-bar-item ${
+                selectedMenu === "modulation"
+                  ? "navbar__bottom-bar-item_selected"
+                  : ""
+              }`}
+              onClick={() => setSelectedMenu("modulation")}
+              disabled={!selectedMaqamData}
+            >
+              {t('tabs.intiqalat')}{selectedMaqamData ? ` (${totalModulations})` : ""}
+            </button>
+            {!selectedMaqamData && (
+              <div className="navbar__tooltip">
+                {t('tooltip.intiqalat')}
+              </div>
+            )}
+          </div>
         )
       },
       {
@@ -396,10 +430,8 @@ export default function Navbar() {
             </h1>
           </div>
           <div className="navbar__right-panel">
-            <div className="navbar__right-panel-language">
+            <div className="navbar__right-panel-top-row">
               <LanguageSelector />
-            </div>
-            <div className="navbar__right-panel-icon">
               <SettingsCard />
             </div>
             <div className="navbar__quick-actions">

@@ -4,154 +4,182 @@
   flex: none;
   user-select: none;
   width: 100%;
-  overflow-x: scroll;
+  max-width: 1600px; // Increased to match layout
+  margin: 0 auto 0 auto; // Reduced bottom margin
+  overflow-x: auto;
   overflow-y: hidden;
   display: flex;
   z-index: 5;
-  margin-bottom: 20px;
-  background-color: $background;
-  box-shadow: 0 20px 15px rgba(0, 0, 0, 0.6);
-  padding-top: 0px;
+  
+  // Glassmorphism container with reduced padding
+  background: rgba($surface-primary, 0.8); // Semi-transparent for glassmorphism effect
+  backdrop-filter: $backdrop-blur;
+  border: 1px solid $border-primary;
+  padding: $space-6; 
+  
   position: -webkit-sticky;
   position: sticky;
-  top: 0px;
+  top: -1px; // Stick below the navbar within scrollbar container
 
   &::-webkit-scrollbar {
-    height: 0px;
+    height: 2px; // Much thinner
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: $grey;
+    background: $gradient-primary;
+    border-radius: $space-1;
     cursor: pointer;
   }
 
   &::-webkit-scrollbar-track {
-    background: rgba($black, 0.5);
+    background: transparent;
     cursor: pointer;
   }
 
   &__cell {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    align-items: stretch;
+    justify-content: center; // Center content
+    align-items: center;
     flex: none;
-    border-top: 3px solid $grey;
-    border-left: 1px solid $grey !important;
-    border-right: 1px solid $grey;
-    border-bottom: 3px solid $grey;
-    border-left: 0px;
-    width: 80px;
-    height: 90px;
-    padding: 5px 6px 0px 6px;
+    
+    // More compact design for better content flow
+    border: 1px solid $border-secondary;
+    width: 90px; // Reduced from 100px for better fit
+    height: 80px; // Reduced from 80px
+    margin: 0 $space-1; // Smaller gaps
+    border-radius: $space-2;
+    background: transparent;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    position: relative;
+    padding: $space-2 $space-2 $space-1 $space-2; // Increased top padding
 
+    &:hover {
+      background: $glass-light;
+      border-color: $border-primary;
+      transform: translateY(-2px);
+    }
+    
+    &:focus-visible {
+      outline: 2px solid $focus-ring;
+      outline-offset: 2px;
+    }
+
+    // Simplified states - much less visual noise
     &_selected {
-      background-color: rgb($primary, 0.8) !important;
+      background: $gradient-primary !important;
+      border-color: $primary !important;
+      color: $text-primary !important;
     }
 
     &_active {
-      background-color: rgb($tertiary, 1) !important;
+      background: $gradient-secondary !important;
+      border-color: $tertiary !important;
+      color: $text-primary !important;
+      transform: translateY(-3px);
+      // removed box-shadow for unified styling
     }
 
     &_tonic {
-      border-top: 3px rgb($tertiary, 0.8) solid !important;
-      border-bottom: 3px solid rgb($tertiary, 0.8) !important;
+      border-color: $note-tonic !important;
+      // removed box-shadow for unified styling
     }
 
     &_tonic_current {
-      background-color: rgb($tertiary, 0.8) !important;
-      border: rgba($tertiary, 0.8) solid 3px 2px 2px 3px !important;
+      background: rgba($note-tonic, 0.2) !important;
+      border-color: $note-tonic !important;
+      color: $text-primary !important;
     }
 
     &_tonic_selected {
-      border-top: 3px rgb($tertiary, 0.8) solid;
-      border-bottom: 3px solid rgb($tertiary, 0.8);
-      background-color: rgba($primary, 0.8) !important;
+      background: $gradient-primary !important;
+      border-color: $note-tonic !important;
     }
 
     &_tonic_current_active {
-      background-color: rgba($tertiary, 1) !important;
+      background: $gradient-secondary !important; // Use gradient instead of orange
+      border-color: $note-tonic !important;
+      color: $text-primary !important;
     }
 
     &_tonic:hover {
-      background-color: rgba($tertiary, 1) !important;
-      color: $text !important;
+      background: rgba($note-tonic, 0.1) !important;
+      color: $text-primary !important;
     }
 
     &_descending {
-      background-color: rgba($primary, 0.4);
+      background: rgba($primary, 0.2);
+      border-color: rgba($primary, 0.5);
     }
 
-    // MIDI mode styling for black and white keys
+    // Simplified MIDI mode - much cleaner
     &_midi_black {
-      background-color: $black !important;
-      color: $text;
+      background: $surface-tertiary !important;
+      color: $text-primary;
+      border-color: $border-primary;
     }
 
     &_midi_white {
-      background-color: $text !important;
-      color: $black;
-      //border-top: 3px solid $grey;
+      background: rgba(255, 255, 255, 0.9) !important;
+      color: $background;
+      border-color: rgba(255, 255, 255, 0.3);
     }
 
-    // MIDI mode state modifiers
-    /*     &_midi_selected {
-      background-color: rgba($primary, 0.8) !important;
-      color: white !important;
-    }
- */
     &_midi_active {
-      background-color: rgba($tertiary, 1) !important;
-      color: white !important;
+      background: $gradient-secondary !important;
+      color: $text-primary !important;
+      transform: translateY(-3px);
+      // removed box-shadow for unified styling
     }
 
-    &_midi_descending {
-      background-color: rgba($primary, 0.4) !important;
-    }
-
-    &_midi_tonic_black {
-      border-top: 3px rgb($tertiary, 0.8) solid !important;
-      border-bottom: 3px solid rgb($tertiary, 0.8) !important;
-      background-color: $black !important;
-      color: $text;
-    }
-
+    &_midi_tonic_black,
     &_midi_tonic_white {
-      border-top: 3px rgb($tertiary, 0.8) solid !important;
-      border-bottom: 3px solid rgb($tertiary, 0.8) !important;
-      background-color: $text ;
-      color: black;
+      border-color: $note-tonic !important;
+      // removed box-shadow for unified styling
     }
 
     &_midi_tonic_current {
-      border: rgba($tertiary, 1) solid 3px !important;
-      background-color: white !important;
-      color: black !important;
+      background: rgba($note-tonic, 0.2) !important;
+      border-color: $note-tonic !important;
+      color: $text-primary !important;
     }
 
     &_midi_tonic_current_active {
-      background-color: rgba($tertiary, 1) !important;
-      color: white !important;
+      background: $gradient-secondary !important; // Use gradient instead of orange
+      border-color: $note-tonic !important;
+      color: $text-primary !important;
     }
   }
 
   &__cell-label {
     width: 100%;
-    word-break: break-word;
-    margin: 0px;
+    text-align: center;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-medium;
+    line-height: $line-height-tight;
+    color: inherit;
+    opacity: 0.9;
+  }
+
+  &__cell-qwerty-englishname {
+    width: 100%;
+    height: 28px;
     padding-bottom: 0px;
-    font-size: 12px;
-    font-weight: 300;
-    line-height: 16px;
-    align-self: flex-start;
+    display: flex;
+    flex-direction: row;
+    justify-content: center; // Center the content horizontally
+    align-items: center;
+    gap: 6px; // Slightly increased gap for better spacing
+    margin-top: auto;
   }
 
   &__cell-english {
-    width: 100%;
     line-height: 12px;
     padding: 0px;
     font-size: 12px;
     font-weight: 200;
+    text-align: center;
   }
 
   &__cell-mapping {
@@ -162,19 +190,8 @@
     width: 28px;
     height: 18px;
     padding: 1px 0px 0px 0px;
-    margin-right: 2px;
+    margin: 0; // Remove margin to allow flex centering
     text-align: center;
-  }
-
-  &__cell-qwerty-englishname {
-    width: 100%;
-    height: 28px;
-    padding-bottom: 0px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    align-items: center;
-    gap: 4px;
-    margin-top: auto;
+    flex-shrink: 0; // Prevent shrinking
   }
 }
