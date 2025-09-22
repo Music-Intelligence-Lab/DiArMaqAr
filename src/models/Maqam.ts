@@ -172,9 +172,7 @@ export default class MaqamData {
    * @returns Array of sayr objects
    */
   getSuyūr(): Sayr[] {
-    return this.suyūr.map(sayr => {return {
-      ...sayr, id: `Sayr ${sayr.sourceId}`
-    }});
+    return this.suyūr;
   }
 
   /**
