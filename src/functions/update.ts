@@ -1,7 +1,7 @@
 import JinsData from "@/models/Jins";
 import MaqamData from "@/models/Maqam";
 import Pattern from "@/models/Pattern";
-import { Source } from "@/models/bibliography/Source";
+import { Source, stringifySource } from "@/models/bibliography/Source";
 import TuningSystem from "@/models/TuningSystem";
 
 /**
@@ -162,7 +162,11 @@ export async function updateSources(sources: Source[]) {
     const response = await fetch("/api/sources", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(sources.map((source) => source.convertToJSON())),
+      body: JSON.stringify(
+        sources.map((source) => {
+          return { ...source.convertToJSON(), id: stringifySource(source, true, null)};
+        })
+      ),
     });
     if (!response.ok) {
       throw new Error("Failed to save updated Sources on the server.");
