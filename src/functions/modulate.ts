@@ -185,7 +185,7 @@ export default function modulate(
     // Process Jins (ajnas) modulations
     if (maqamOrJins instanceof JinsData) {
       // Skip if jins is not selectable in current tuning system
-      if (!maqamOrJins.isJinsSelectable(allPitchClasses.map((pitchClass) => pitchClass.noteName))) continue;
+      if (!maqamOrJins.isJinsPossible(allPitchClasses.map((pitchClass) => pitchClass.noteName))) continue;
 
       const currentNotes = maqamOrJins.getNoteNames();
 
@@ -201,7 +201,7 @@ export default function modulate(
     // Process Maqam modulations
     else {
       // Skip if maqam is not selectable in current tuning system
-      if (!maqamOrJins.isMaqamSelectable(allPitchClasses.map((pitchClass) => pitchClass.noteName))) continue;
+      if (!maqamOrJins.isMaqamPossible(allPitchClasses.map((pitchClass) => pitchClass.noteName))) continue;
 
       const currentAscendingNotes = maqamOrJins.getAscendingNoteNames();
 

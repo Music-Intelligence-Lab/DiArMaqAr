@@ -156,7 +156,7 @@ export default function Navbar() {
               {selectedTuningSystem
                 ? `${t('tabs.ajnas')} (${
                     ajnas.filter((jinsData) =>
-                      jinsData.isJinsSelectable(
+                      jinsData.isJinsPossible(
                         allPitchClasses.map((pitchClass) => pitchClass.noteName)
                       )
                     ).length
@@ -234,7 +234,7 @@ export default function Navbar() {
               {selectedTuningSystem
                 ? `${t('tabs.maqamat')} (${
                     maqamat.filter((maqamData) =>
-                      maqamData.isMaqamSelectable(
+                      maqamData.isMaqamPossible(
                         allPitchClasses.map((pitchClass) => pitchClass.noteName)
                       )
                     ).length

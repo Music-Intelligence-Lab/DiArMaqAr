@@ -275,11 +275,19 @@
     "DOI": ""
   },
   {
-    "id": "",
+    "id": "na.-(1933)",
     "titleEnglish": "Kitāb Muʼtamar al-Mūsīqā al-ʿArabiyah",
     "titleArabic": "كتاب مؤتمر الموسيقى العربية",
     "sourceType": "Book",
-    "contributors": [],
+    "contributors": [
+      {
+        "type": "Author",
+        "firstNameEnglish": "",
+        "lastNameEnglish": "na.",
+        "firstNameArabic": "",
+        "lastNameArabic": "na."
+      }
+    ],
     "editionEnglish": "",
     "editionArabic": "",
     "publicationDateEnglish": "1933",

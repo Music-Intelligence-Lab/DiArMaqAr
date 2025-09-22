@@ -242,7 +242,7 @@ export default class MaqamData {
    * @param allNoteNames - All note names available in the tuning system
    * @returns True if all required note names are available in both sequences, false otherwise
    */
-  isMaqamSelectable(allNoteNames: NoteName[]): boolean {
+  isMaqamPossible(allNoteNames: NoteName[]): boolean {
     return (
       this.ascendingNoteNames.every((noteName) => allNoteNames.includes(noteName)) &&
       this.descendingNoteNames.every((noteName) => allNoteNames.includes(noteName))

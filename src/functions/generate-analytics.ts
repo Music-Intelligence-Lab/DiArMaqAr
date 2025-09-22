@@ -51,7 +51,7 @@ function computeAnalyticsForSystem(tuningSystem: TuningSystem, allAjnas: ReturnT
     const possibleAjnas = [];
     const possibleAjnasTrans = [];
     for (const jinsData of allAjnas) {
-      if (jinsData.isJinsSelectable(allPitchClasses.map((pc) => pc.noteName))) {
+      if (jinsData.isJinsPossible(allPitchClasses.map((pc) => pc.noteName))) {
         possibleAjnas.push(jinsData);
         getJinsTranspositions(allPitchClasses, jinsData, false).forEach((tr) => possibleAjnasTrans.push(tr));
       }
@@ -62,7 +62,7 @@ function computeAnalyticsForSystem(tuningSystem: TuningSystem, allAjnas: ReturnT
     let totalAjnasMod = 0;
     let totalMaqamatMod = 0;
     for (const maqamData of allMaqamat) {
-      if (maqamData.isMaqamSelectable(allPitchClasses.map((pc) => pc.noteName))) {
+      if (maqamData.isMaqamPossible(allPitchClasses.map((pc) => pc.noteName))) {
         possibleMaqamat.push(maqamData);
         totalSuyur += maqamData.getSuyūr().length;
         getMaqamTranspositions(allPitchClasses, allAjnas, maqamData, false).forEach((transposition) => {

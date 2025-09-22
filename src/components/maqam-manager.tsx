@@ -189,7 +189,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
           }}
         >
           {filteredMaqamat.map((maqamData, idx) => {
-            const selectable = maqamData.isMaqamSelectable(allPitchClasses.map((pitchClass) => pitchClass.noteName));
+            const selectable = maqamData.isMaqamPossible(allPitchClasses.map((pitchClass) => pitchClass.noteName));
             const numberOfTranspositions = allMaqamTranspositionsMap.get(maqamData.getId())?.filter((transposition: any) => transposition.ascendingPitchClasses[0]?.octave === 1).length || 0;
             return (
               <div
