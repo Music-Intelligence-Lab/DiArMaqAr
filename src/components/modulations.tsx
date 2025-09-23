@@ -4,10 +4,10 @@ import useAppContext from "@/contexts/app-context";
 import useSoundContext from "@/contexts/sound-context";
 import useLanguageContext from "@/contexts/language-context";
 import React, { useState, useEffect, useRef } from "react";
-import { MaqamatModulations, Maqam } from "@/models/Maqam";
+import { MaqamatModulations, Maqam, shiftMaqamByOctaves } from "@/models/Maqam";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import calculateNumberOfModulations from "@/functions/calculateNumberOfModulations";
-import { AjnasModulations } from "@/models/Jins";
+import { AjnasModulations, shiftJinsByOctaves } from "@/models/Jins";
 import modulate from "@/functions/modulate";
 type ModulationsPair = { ajnas: AjnasModulations; maqamat: MaqamatModulations };
 
@@ -29,6 +29,7 @@ export default function Modulations() {
   } = useAppContext();
 
   const [modulationModes, setModulationModes] = useState<boolean[]>([false]);
+  const [octaveShiftEnabled, setOctaveShiftEnabled] = useState<boolean[]>([false]);
 
   const [collapsedHops, setCollapsedHops] = useState<boolean[]>([]);
   const { clearHangingNotes } = useSoundContext();
@@ -38,9 +39,45 @@ export default function Modulations() {
 
   const hopsRefs = useRef<Array<HTMLDivElement | null>>([]);
 
-  function getBothModulations(transposition: Maqam): ModulationsPair {
+  function getBothModulations(transposition: Maqam, stackIdx: number = 0): ModulationsPair {
     const ajnasMods = modulate(allPitchClasses, ajnas, maqamat, transposition, true) as AjnasModulations;
     const maqamatMods = modulate(allPitchClasses, ajnas, maqamat, transposition, false) as MaqamatModulations;
+    
+    // Apply octave shift if enabled for this stack index
+    const shouldShift = octaveShiftEnabled[stackIdx] || false;
+    if (shouldShift) {
+      // Shift all ajnas modulations down by one octave
+      const shiftedAjnasMods = {
+        ...ajnasMods,
+        modulationsOnOne: ajnasMods.modulationsOnOne.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)),
+        modulationsOnThree: ajnasMods.modulationsOnThree.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)),
+        modulationsOnThree2p: ajnasMods.modulationsOnThree2p.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)),
+        modulationsOnFour: ajnasMods.modulationsOnFour.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)),
+        modulationsOnFive: ajnasMods.modulationsOnFive.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)),
+        modulationsOnSixAscending: ajnasMods.modulationsOnSixAscending.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)),
+        modulationsOnSixDescending: ajnasMods.modulationsOnSixDescending.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)),
+        modulationsOnSixNoThird: ajnasMods.modulationsOnSixNoThird.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)),
+      };
+      
+      // Shift all maqamat modulations down by one octave
+      const shiftedMaqamatMods = {
+        ...maqamatMods,
+        modulationsOnOne: maqamatMods.modulationsOnOne.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)),
+        modulationsOnThree: maqamatMods.modulationsOnThree.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)),
+        modulationsOnThree2p: maqamatMods.modulationsOnThree2p.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)),
+        modulationsOnFour: maqamatMods.modulationsOnFour.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)),
+        modulationsOnFive: maqamatMods.modulationsOnFive.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)),
+        modulationsOnSixAscending: maqamatMods.modulationsOnSixAscending.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)),
+        modulationsOnSixDescending: maqamatMods.modulationsOnSixDescending.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)),
+        modulationsOnSixNoThird: maqamatMods.modulationsOnSixNoThird.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)),
+      };
+      
+      return {
+        ajnas: shiftedAjnasMods,
+        maqamat: shiftedMaqamatMods,
+      };
+    }
+    
     return {
       ajnas: ajnasMods,
       maqamat: maqamatMods,
@@ -53,9 +90,10 @@ export default function Modulations() {
       if (selectedMaqam) transposition = selectedMaqam;
       else transposition = selectedMaqamData.getTahlil(allPitchClasses);
       setSourceMaqamStack([transposition]);
-      setModulationsStack([getBothModulations(transposition)]);
+      setModulationsStack([getBothModulations(transposition, 0)]);
       setModulationModes([false]); // default to maqamat for first hop
       setCollapsedHops([false]); // not collapsed by default
+      setOctaveShiftEnabled([false]); // default to no octave shift
     }
   }, []);
 
@@ -90,11 +128,12 @@ export default function Modulations() {
         return [selectedMaqam];
       });
       setModulationsStack(() => {
-        const first = getBothModulations(selectedMaqam);
+        const first = getBothModulations(selectedMaqam, 0);
         return [first];
       });
       setModulationModes([false]);
       setCollapsedHops([false]);
+      setOctaveShiftEnabled([false]);
     }
     window.addEventListener("maqamTranspositionChange", handleMaqamTranspositionChange as EventListener);
     return () => window.removeEventListener("maqamTranspositionChange", handleMaqamTranspositionChange as EventListener);
@@ -115,12 +154,8 @@ export default function Modulations() {
   }
 
   const addHopsWrapper = (maqamTransposition: Maqam, stackIdx: number) => {
-    const ajnasMods = modulate(allPitchClasses, ajnas, maqamat, maqamTransposition, true) as AjnasModulations;
-    const maqamatMods = modulate(allPitchClasses, ajnas, maqamat, maqamTransposition, false) as MaqamatModulations;
-    const newModulations = {
-      ajnas: ajnasMods,
-      maqamat: maqamatMods,
-    };
+    const newStackIdx = stackIdx + 1;
+    const newModulations = getBothModulations(maqamTransposition, newStackIdx);
     setSourceMaqamStack((prev) => {
       const newStack = [...prev.slice(0, stackIdx + 1), maqamTransposition];
       return newStack;
@@ -138,6 +173,11 @@ export default function Modulations() {
       // When adding a hop, keep previous collapsed states, default new hop to not collapsed
       const newCollapsed = [...prev.slice(0, stackIdx + 1), false];
       return newCollapsed;
+    });
+    setOctaveShiftEnabled((prev) => {
+      // When adding a hop, keep previous octave shift states, default new hop to disabled
+      const newEnabled = [...prev.slice(0, stackIdx + 1), false];
+      return newEnabled;
     });
     // Scroll to the new hop after a short delay to ensure DOM update
     setTimeout(() => {
@@ -165,6 +205,10 @@ export default function Modulations() {
       const newCollapsed = prev.length > 1 ? prev.slice(0, -1) : prev;
       return newCollapsed;
     });
+    setOctaveShiftEnabled((prev) => {
+      const newEnabled = prev.length > 1 ? prev.slice(0, -1) : prev;
+      return newEnabled;
+    });
     // Scroll to the previous hop or first hop after a short delay
     setTimeout(() => {
       // Find the last non-null ref (should be the last hop in DOM)
@@ -173,6 +217,24 @@ export default function Modulations() {
         validRefs[validRefs.length - 1]?.scrollIntoView({ behavior: "smooth", block: "start" });
       }
     }, 100);
+  };
+
+  // Handles toggling octave shift for a specific stack index
+  const handleOctaveShiftToggle = (stackIdx: number) => {
+    setOctaveShiftEnabled((prev) => {
+      const newEnabled = [...prev];
+      newEnabled[stackIdx] = !newEnabled[stackIdx];
+      return newEnabled;
+    });
+    
+    // Rebuild modulations stack for affected indices
+    setModulationsStack((prev) => {
+      const newStack = [...prev];
+      for (let i = stackIdx; i < sourceMaqamStack.length; i++) {
+        newStack[i] = getBothModulations(sourceMaqamStack[i], i);
+      }
+      return newStack;
+    });
   };
 
   // Handles clicking any modulation hop (for all positions: tonic, third, etc)
@@ -283,6 +345,15 @@ export default function Modulations() {
                         }}
                       >
                         {totalMaqamatModulations} {t('modulations.maqamatModulations')}
+                      </button>
+                      <button
+                        className={`modulations__octave-shift ${(octaveShiftEnabled[stackIdx] || false) ? "modulations__octave-shift_active" : ""}`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleOctaveShiftToggle(stackIdx);
+                        }}
+                      >
+                        {(octaveShiftEnabled[stackIdx] || false) ? "✓ " : ""}{t('modulations.octaveShift')}
                       </button>
                       {/* Move delete button here, only on last hop and if more than one exists */}
                       {stackIdx === sourceMaqamStack.length - 1 && sourceMaqamStack.length > 1 && (

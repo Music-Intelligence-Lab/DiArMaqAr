@@ -1,6 +1,7 @@
 [
   {
     "id": "1",
+    "idName": "jins_rast_(mutlaq)",
     "name": "jins rāst (muṭlaq)",
     "noteNames": [
       "nawā",
@@ -14,6 +15,7 @@
   },
   {
     "id": "2",
+    "idName": "jins_bayyat",
     "name": "jins bayyāt",
     "noteNames": [
       "dūgāh",
@@ -27,6 +29,7 @@
   },
   {
     "id": "3",
+    "idName": "jins_segah",
     "name": "jins segāh",
     "noteNames": [
       "segāh",
@@ -39,6 +42,7 @@
   },
   {
     "id": "4",
+    "idName": "jins_saba",
     "name": "jins ṣabā",
     "noteNames": [
       "dūgāh",
@@ -61,6 +65,7 @@
   },
   {
     "id": "5",
+    "idName": "jins_ajam_ushayran_",
     "name": "jins ʿajam ʿushayrān ",
     "noteNames": [
       "ʿajam ʿushayrān",
@@ -74,6 +79,7 @@
   },
   {
     "id": "6",
+    "idName": "jins_nahawand_(binsir)",
     "name": "jins nahāwand (binṣir)",
     "noteNames": [
       "rāst",
@@ -87,6 +93,7 @@
   },
   {
     "id": "7",
+    "idName": "jins_kurd",
     "name": "jins kurd",
     "noteNames": [
       "dūgāh",
@@ -100,6 +107,7 @@
   },
   {
     "id": "8",
+    "idName": "jins_hijaz_(binsir)",
     "name": "jins ḥijāz (binṣir)",
     "noteNames": [
       "rāst",
@@ -113,6 +121,7 @@
   },
   {
     "id": "9",
+    "idName": "jins_saba_zamzam",
     "name": "jins ṣabā zamzam",
     "noteNames": [
       "dūgāh",
@@ -126,6 +135,7 @@
   },
   {
     "id": "10",
+    "idName": "jins_chahargah",
     "name": "jins chahārgāh",
     "noteNames": [
       "chahārgāh",
@@ -139,6 +149,7 @@
   },
   {
     "id": "11",
+    "idName": "jins_athar_kurd",
     "name": "jins athar kurd",
     "noteNames": [
       "dūgāh",
@@ -153,6 +164,7 @@
   },
   {
     "id": "12",
+    "idName": "jins_hijaz_1",
     "name": "jins ḥijāz 1",
     "noteNames": [
       "dūgāh",
@@ -166,6 +178,7 @@
   },
   {
     "id": "13",
+    "idName": "jins_mustaar",
     "name": "jins mustaʿār",
     "noteNames": [
       "ʿirāq",
@@ -179,6 +192,7 @@
   },
   {
     "id": "14",
+    "idName": "jins_segah_baladi",
     "name": "jins segāh baladī",
     "noteNames": [
       "nawā",
@@ -192,6 +206,7 @@
   },
   {
     "id": "15",
+    "idName": "jins_hijaz_2",
     "name": "jins ḥijāz 2",
     "noteNames": [
       "dūgāh",
@@ -205,6 +220,7 @@
   },
   {
     "id": "16",
+    "idName": "jins_rast_(binsir)_(nim_buselik)",
     "name": "jins rāst (binṣir) (nīm būselīk)",
     "noteNames": [
       "rāst",
@@ -218,6 +234,7 @@
   },
   {
     "id": "17",
+    "idName": "jins_kurd_(binsir)",
     "name": "jins kurd (binṣir)",
     "noteNames": [
       "rāst",
@@ -231,6 +248,7 @@
   },
   {
     "id": "18",
+    "idName": "jins_nikriz",
     "name": "jins nikrīz",
     "noteNames": [
       "rāst",
@@ -245,6 +263,7 @@
   },
   {
     "id": "19",
+    "idName": "jins_rast_(binsir)",
     "name": "jins rāst (binṣir)",
     "noteNames": [
       "rāst",
@@ -258,6 +277,7 @@
   },
   {
     "id": "20",
+    "idName": "jins_nahawand_(mutlaq)",
     "name": "jins nahāwand (muṭlaq)",
     "noteNames": [
       "nawā",
@@ -271,6 +291,7 @@
   },
   {
     "id": "21",
+    "idName": "jins_buselik_(Al-Shawwa)",
     "name": "jins būselīk (Al-Shawwā)",
     "noteNames": [
       "dūgāh",
@@ -289,6 +310,7 @@
   },
   {
     "id": "22",
+    "idName": "jins_buselik_(Al-Hilu)",
     "name": "jins būselīk (Al-Ḥilū)",
     "noteNames": [
       "dūgāh",

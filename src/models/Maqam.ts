@@ -3,6 +3,8 @@ import PitchClass, { PitchClassInterval } from "./PitchClass";
 import { AjnasModulations, Jins } from "./Jins";
 import NoteName from "./NoteName";
 import { SourcePageReference } from "./bibliography/Source";
+import { englishify } from "@/functions/export";
+import shiftPitchClass from "@/functions/shiftPitchClass";
 
 /**
  * Interface for serializing MaqamData to JSON format.
@@ -10,6 +12,7 @@ import { SourcePageReference } from "./bibliography/Source";
  */
 export interface MaqamDataInterface {
   id: string;
+  idName: string;
   name: string;
   ascendingNoteNames: NoteName[];
   descendingNoteNames: NoteName[];
@@ -51,6 +54,7 @@ export default class MaqamData {
   /** Unique identifier for this maqam */
   private id: string;
   
+  private idName: string;
   /** Name of the maqam (e.g., "Maqam Farahfazza", "Maqam Rast") */
   private name: string;
   
@@ -110,6 +114,7 @@ export default class MaqamData {
     sourcePageReferences: SourcePageReference[]
   ) {
     this.id = id;
+    this.idName = englishify(name);
     this.name = name;
     this.ascendingNoteNames = ascendingNoteNames;
     this.descendingNoteNames = descendingNoteNames;
@@ -126,6 +131,10 @@ export default class MaqamData {
    */
   getId(): string {
     return this.id;
+  }
+
+  getIdName(): string {
+    return this.idName;
   }
 
   /**
@@ -335,6 +344,7 @@ export default class MaqamData {
   convertToObject(): MaqamDataInterface {
     return {
       id: this.id,
+      idName: this.idName,
       name: this.name,
       ascendingNoteNames: this.ascendingNoteNames,
       descendingNoteNames: this.descendingNoteNames,
@@ -532,4 +542,46 @@ export interface MaqamatModulations {
   
   /** The note name of the second degree (plus variations) */
   noteName2p: string;
+}
+
+export function shiftMaqamByOctaves(allPitchClasses: PitchClass[], maqam: Maqam, octaveShift: number): Maqam {
+  const shiftedAscendingPitchClasses = maqam.ascendingPitchClasses.map((pc) => shiftPitchClass(allPitchClasses, pc, octaveShift));
+  const shiftedAscendingIntervals = getPitchClassIntervals(shiftedAscendingPitchClasses);
+  const shiftedDescendingPitchClasses = maqam.descendingPitchClasses.map((pc) => shiftPitchClass(allPitchClasses, pc, octaveShift));
+  const shiftedDescendingIntervals = getPitchClassIntervals(shiftedDescendingPitchClasses);
+
+  // Extract the base maqam name (remove any existing "al-" suffix and what follows)
+  let baseMaqamName = maqam.name;
+  const alIndex = baseMaqamName.indexOf(' al-');
+  if (alIndex !== -1) {
+    baseMaqamName = baseMaqamName.substring(0, alIndex);
+  }
+  
+  // Create new name with the shifted tonic
+  const newTonicName = shiftedAscendingPitchClasses[0]?.noteName || '';
+  const newName = `${baseMaqamName} al-${newTonicName}`;
+  
+  return {
+    maqamId: maqam.maqamId,
+    name: newName,
+    transposition: maqam.transposition,
+    ascendingPitchClasses: shiftedAscendingPitchClasses,
+    ascendingPitchClassIntervals: shiftedAscendingIntervals,
+    descendingPitchClasses: shiftedDescendingPitchClasses,
+    descendingPitchClassIntervals: shiftedDescendingIntervals,
+    ascendingMaqamAjnas: maqam.ascendingMaqamAjnas,
+    descendingMaqamAjnas: maqam.descendingMaqamAjnas,
+    modulations: maqam.modulations,
+    numberOfHops: maqam.numberOfHops,
+  };
+}
+
+export function maqamatAreEqual(maqamA: Maqam, maqamB: Maqam): boolean {
+  if (maqamA.maqamId !== maqamB.maqamId) return false;
+  else if (maqamA.transposition !== maqamB.transposition) return false;
+  else if (maqamA.ascendingPitchClasses.length !== maqamB.ascendingPitchClasses.length) return false;
+  else if (maqamA.descendingPitchClasses.length !== maqamB.descendingPitchClasses.length) return false;
+  else if (maqamA.ascendingPitchClasses[0].noteName !== maqamB.ascendingPitchClasses[0].noteName) return false;
+  else if (maqamA.descendingPitchClasses[0].noteName !== maqamB.descendingPitchClasses[0].noteName) return false;
+  return true;
 }

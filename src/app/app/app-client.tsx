@@ -23,7 +23,7 @@ import Footer from "@/components/footer";
 /**
  * Formats a name for URL by replacing spaces with hyphens
  */
-function formatNameForUrl(name: string): string {
+export function formatNameForUrl(name: string): string {
   return name.replace(/\s+/g, "-");
 }
 
