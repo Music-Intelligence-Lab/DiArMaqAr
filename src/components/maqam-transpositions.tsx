@@ -1215,7 +1215,7 @@ const MaqamTranspositions: React.FC = () => {
           </>
         )}
         {/* COMMENTS AND SOURCES */}
-        {selectedMaqamData && (selectedMaqamData.getCommentsEnglish()?.trim() || selectedMaqamData.getSourcePageReferences()?.length > 0) && (
+        {selectedMaqamData && (selectedMaqamData.getCommentsEnglish()?.trim() || selectedMaqamData.getCommentsArabic()?.trim() || selectedMaqamData.getSourcePageReferences()?.length > 0) && (
           <>
             <div className="maqam-transpositions__comments-sources-container">
               {language === "ar" ? (
@@ -1237,10 +1237,10 @@ const MaqamTranspositions: React.FC = () => {
                     </div>
                   )}
 
-                  {selectedMaqamData.getCommentsEnglish()?.trim() && (
-                    <div className="maqam-transpositions__comments-english">
+                  {selectedMaqamData.getCommentsArabic()?.trim() && (
+                    <div className="maqam-transpositions__comments-arabic">
                       <h3>{t("maqam.comments")}:</h3>
-                      <div className="maqam-transpositions__comments-text">{selectedMaqamData.getCommentsEnglish()}</div>
+                      <div className="maqam-transpositions__comments-text">{selectedMaqamData.getCommentsArabic()}</div>
                     </div>
                   )}
                 </>

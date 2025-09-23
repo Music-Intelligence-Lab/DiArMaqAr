@@ -1,4 +1,29 @@
+---
+applyTo: '**'
+---
 # Copilot Instructions — Maqām Network
+
+## Communication Style
+- **Concise Responses**: Do not provide summaries of actions taken unless explicitly requested. Focus on direct implementation without explanatory commentary.
+
+## Autonomous Implementation Protocol
+1. **Read Request** → Identify domain (maqam/jins/tuning/audio/UI)
+2. **Auto-Apply Architecture** → Use established patterns without asking
+3. **Integrate by Default** → Assume integration with existing systems
+4. **Validate Automatically** → Check against established conventions
+5. **Enhance Progressively** → Add bilingual/URL/performance features
+6. **Only Ask When** → Truly ambiguous choices or new architectural decisions
+
+**Rule: Implement first using established patterns, explain only if requested.**
+
+## Auto-Implementation Triggers
+- **Component Request**: Automatically follow manager pattern if request contains "component" + domain name
+- **Data Access**: Always use import functions if request involves maqamat/ajnas/tuning systems
+- **API Routes**: Auto-apply validation pattern from `/api/transpose` for any new API endpoint
+- **State Management**: Auto-implement context hooks when request involves "state" or "data sharing"
+
+## Documentation
+- **App Documentation**: The folder `public/docs` contains comprehensive documentation about the app's functions, models, and data structures. Always search this documentation first rather than searching the codebase to understand available functions, APIs, and data structures.
 
 ## Big Picture
 - **Architecture**: Next.js 15 + React 19 TypeScript app under `src/`, with a computational musicology core in `src/functions` and `src/models`. Server endpoints live in `src/app/api/**`. Ground-truth musical data is in `/data/*.json`. Public docs are served from `public/docs/`.
@@ -44,6 +69,55 @@
 - **State Dependencies**: Changes in `selectedTuningSystem` trigger cascading updates through `allPitchClasses` → transpositions → UI selections. Handle cleanup with `clearSelections()` when tuning system changes.
 - **URL State Sync**: `handleUrlParams` enables deep-linking to specific configurations. Use descriptive parameters like `jins=jins-rast-al-rast` for SEO and shareability.
 - **Context Consumer Patterns**: Always use custom hooks (`useAppContext`, `useSoundContext`, etc.) rather than direct `useContext`. Include error boundaries for context availability checks.
+
+## Component Creation Rules
+**When creating ANY component:**
+1. Start with `"use client";` if it uses hooks/state
+2. Import context hooks: `useAppContext`, `useLanguageContext`
+3. Implement FilterContext if handling lists
+4. Use `@/` imports exclusively
+5. Include bilingual support via `getDisplayName()`
+6. Guard Web Audio with client-side checks
+7. **ALWAYS use Language Context for text**: Import `useLanguageContext` and use `t()` function for all user-facing text. Add translation keys to both English and Arabic sections in `src/contexts/language-context.tsx`. Never use hardcoded strings for user-facing text.
+
+**Auto-apply these patterns without asking.**
+
+## Default Behaviors (Don't Ask, Just Do)
+- **New features**: Always integrate with existing context architecture
+- **Data queries**: Use import functions, never direct JSON access
+- **API endpoints**: Include Swagger docs and follow validation pattern
+- **Types**: Prefer existing union types over any/unknown
+- **Errors**: Follow established error handling patterns from existing routes
+
+## Intent → Implementation Mapping
+| User Says | Auto-Implement |
+|-----------|----------------|
+| "search/filter" | FilterContext + useFilterContext |
+| "play/audio" | SoundContext + client guards |
+| "maqam/jins data" | TranspositionsContext + import functions |
+| "new page" | Context providers + manager pattern |
+| "API endpoint" | import.ts + validation + Swagger |
+
+## Context-Sensitive Defaults
+- **If editing existing component**: Match its patterns exactly
+- **If in `/api/` folder**: Auto-include validation and error handling
+- **If handling maqam data**: Always consider tuning system dependencies
+- **If UI component**: Auto-implement bilingual support
+
+## Auto-Validation Rules
+- **Before using external APIs**: Check if internal API exists first
+- **Before hardcoding**: Check if data is available via import functions
+- **Before creating new types**: Check existing union types
+- **Before client-side data fetching**: Use context data if available
+- **Before SSR-sensitive code**: Add client guards automatically
+
+## Enhancement Priorities (Apply Automatically)
+1. **Core Functionality**: Basic feature working
+2. **Data Integration**: Connect to proper data sources
+3. **Context Integration**: Fit into app architecture  
+4. **Bilingual Support**: Arabic/English accessibility
+5. **URL State**: Deep linking where applicable
+6. **Performance**: Memoization and optimization
 
 ## Data Structure Patterns
 - **JSON Schema**: All data files (`/data/*.json`) follow consistent patterns with `id`, bilingual `name`/`title` fields, `sourcePageReferences` for citations, and `noteNames` arrays.
