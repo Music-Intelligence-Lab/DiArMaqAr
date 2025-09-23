@@ -1,5 +1,11 @@
 # Copilot Instructions — Maqām Network
 
+## Communication Style
+- **Concise Responses**: Do not provide summaries of actions taken unless explicitly requested. Focus on direct implementation without explanatory commentary.
+
+## Documentation
+- **App Documentation**: The folder `public/docs` contains comprehensive documentation about the app's functions, models, and data structures. Always search this documentation first rather than searching the codebase to understand available functions, APIs, and data structures.
+
 ## Big Picture
 - **Architecture**: Next.js 15 + React 19 TypeScript app under `src/`, with a computational musicology core in `src/functions` and `src/models`. Server endpoints live in `src/app/api/**`. Ground-truth musical data is in `/data/*.json`. Public docs are served from `public/docs/`.
 - **Cultural Framework**: Platform follows decolonial computing principles, prioritizing Arabic theoretical frameworks over Anglo-European-centric approaches. Grounded in Arab-Ottoman-Persian note naming convention and historical sources from 9th-century Al-Kindī through modern 20th-century theorists.

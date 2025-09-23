@@ -910,7 +910,7 @@ export default function JinsTranspositions() {
             <thead>{renderTransposition(jinsTranspositions[0], 0)}</thead>
           </table>
 
-          {selectedJinsData && (selectedJinsData.getCommentsEnglish()?.trim() || selectedJinsData.getSourcePageReferences()?.length > 0) && (
+          {selectedJinsData && (selectedJinsData.getCommentsEnglish()?.trim() || selectedJinsData.getCommentsArabic()?.trim() || selectedJinsData.getSourcePageReferences()?.length > 0) && (
             <>
               <div className="jins-transpositions__comments-sources-container">
                 {language === "ar" ? (
@@ -932,10 +932,10 @@ export default function JinsTranspositions() {
                       </div>
                     )}
 
-                    {selectedJinsData.getCommentsEnglish()?.trim() && (
-                      <div className="jins-transpositions__comments-english">
+                    {selectedJinsData.getCommentsArabic()?.trim() && (
+                      <div className="jins-transpositions__comments-arabic">
                         <h3>{t("jins.comments")}:</h3>
-                        <div className="jins-transpositions__comments-text">{selectedJinsData.getCommentsEnglish()}</div>
+                        <div className="jins-transpositions__comments-text">{selectedJinsData.getCommentsArabic()}</div>
                       </div>
                     )}
                   </>
@@ -968,9 +968,7 @@ export default function JinsTranspositions() {
                 )}
               </div>
             </>
-          )}
-
-          <h2 className="jins-transpositions__title">
+          )}          <h2 className="jins-transpositions__title">
             {t("jins.transpositionsTitle")}: {`${getDisplayName(selectedJinsData.getName(), "jins")}`}
           </h2>
 
