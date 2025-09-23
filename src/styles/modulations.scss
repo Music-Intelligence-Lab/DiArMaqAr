@@ -1,4 +1,5 @@
 @use "./variables" as *;
+@use "sass:color";
 
 // Ensure hops scroll into view below sticky pitch class wheel
 
@@ -96,8 +97,8 @@
       text-decoration: underline !important;
       
       &:hover {
-        background-color: darken($primary, 10%) !important;
-        border-color: darken($primary, 10%);
+        background-color: color.adjust($primary, $lightness: -10%) !important;
+        border-color: color.adjust($primary, $lightness: -10%);
       }
     }
   }
