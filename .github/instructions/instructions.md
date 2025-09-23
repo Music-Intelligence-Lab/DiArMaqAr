@@ -78,6 +78,7 @@ applyTo: '**'
 4. Use `@/` imports exclusively
 5. Include bilingual support via `getDisplayName()`
 6. Guard Web Audio with client-side checks
+7. **ALWAYS use Language Context for text**: Import `useLanguageContext` and use `t()` function for all user-facing text. Add translation keys to both English and Arabic sections in `src/contexts/language-context.tsx`. Never use hardcoded strings for user-facing text.
 
 **Auto-apply these patterns without asking.**
 
