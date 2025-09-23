@@ -29,7 +29,7 @@ function extractYearParts(label: string): { year: number; letter: string } {
   return { year: 0, letter: "" };
 }
 
-export default function AnalyticsPage() {
+export default function StatisticsPage() {
   const { showAdminTabs } = useMenuContext();
   const [rows, setRows] = useState<AnalyticsRow[]>([]);
   const [sortKey, setSortKey] = useState<keyof AnalyticsRow>("label");
@@ -121,15 +121,15 @@ export default function AnalyticsPage() {
   const [selectedRowId, setSelectedRowId] = useState<string | null>(null);
 
   return (
-    <div className="analytics-page">
+    <div className="statistics">
       {showAdminTabs && (
-        <button onClick={handleReRender} disabled={loading} style={{ marginBottom: 16 }}>
+        <button onClick={handleReRender} disabled={loading}>
           {loading ? "Re-Rendering..." : "Re-Render Analytics"}
         </button>
       )}
 
-      {error && <div style={{ color: "red" }}>{error}</div>}
-      {success && <div style={{ color: "green" }}>{success}</div>}
+      {error && <div className="status-message error">{error}</div>}
+      {success && <div className="status-message success">{success}</div>}
       <table>
         <thead>
           <tr>

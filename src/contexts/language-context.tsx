@@ -41,7 +41,7 @@ const translations = {
     "nav.home": "Home",
     "nav.tools": "Tools",
     "nav.bibliography": "Bibliography",
-    "nav.analytics": "Analytics",
+    "nav.statistics": "Statistics",
     "nav.userGuide": "User Guide",
     "nav.about": "About",
     "nav.credits": "Credits",

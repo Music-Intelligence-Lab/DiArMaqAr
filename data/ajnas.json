@@ -100,7 +100,7 @@
   },
   {
     "id": "8",
-    "name": "jins ḥijāz (binṣir)",
+    "name": "jins ḥijāz 4 (binṣir)",
     "noteNames": [
       "rāst",
       "tīk zīrgūleh",
@@ -153,15 +153,15 @@
   },
   {
     "id": "12",
-    "name": "jins ḥijāz 1",
+    "name": "jins ḥijāz 1 (muṭlaq)",
     "noteNames": [
       "dūgāh",
       "kurdī",
       "ḥijāz",
       "nawā"
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "Jins ḥijāz, and its maqām ḥijāz, is one of the most widely used maqāmāt across the Arabic speaking region. One major example of it's usage is in the Adhān (Muslim call to prayer).  It is also a jins and maqām that has many variations in intonation, even if it has been consistantly theorised as being constructed from the note names dūgāh, kurdī, ḥijāz, nawā. For this reason we have included multiple versions of it so that it can be heard and compared with intonational variants within a single or across multiple tuning systems.",
+    "commentsArabic": "جنس الحجاز ومقام الحجاز، هو من أكثر المقامات انتشاراً واستخداماً في المنطقة الناطقة بالعربية. ومن أبرز الأمثلة على استعماله في الأذان (النداء للصلاة في الإسلام). وهو أيضاً جنس ومقام له اختلافات كثيرة في الأداء النغمي، حتى ولو كان منظّراً بثبات على أنه مبني من الدرجات الصوتية: دوكاه، كردي، حجاز، نوى. لهذا السبب أدرجنا نسخاً متعددة منه ليُسمع ويُقارن مع المتغيرات النغمية ضمن نظام تسوية واحد أو عبر أنظمة تسوية متعددة.",
     "sourcePageReferences": []
   },
   {
@@ -192,7 +192,7 @@
   },
   {
     "id": "15",
-    "name": "jins ḥijāz 2",
+    "name": "jins ḥijāz 2 (muṭlaq)",
     "noteNames": [
       "dūgāh",
       "nīm kurdī/nahāwand",
@@ -304,5 +304,18 @@
         "page": "126"
       }
     ]
+  },
+  {
+    "id": "23",
+    "name": "jins ḥijāz 3 (binṣir)",
+    "noteNames": [
+      "rāst",
+      "zīrgūleh",
+      "būselīk/ʿushshāq",
+      "chahārgāh"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
   }
 ]
