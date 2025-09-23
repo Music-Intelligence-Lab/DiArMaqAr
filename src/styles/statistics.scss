@@ -1,13 +1,47 @@
 @use "./variables" as *;
 
 .statistics {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: calc(100vh - 120px); // Account for navbar height
   padding: 0;
   background: $background;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+
+  .admin-controls {
+    flex-shrink: 0;
+    padding: 12px;
+    background: $background;
+    border-bottom: 1px solid $grey;
+    z-index: 100;
+  }
+
+  .status-message {
+    flex-shrink: 0;
+    padding: 12px;
+    margin: 0;
+    z-index: 100;
+    
+    &.error {
+      background: rgba(255, 0, 0, 0.1);
+      color: #ff6b6b;
+      border: 1px solid rgba(255, 0, 0, 0.3);
+    }
+    
+    &.success {
+      background: rgba(0, 255, 0, 0.1);
+      color: #51cf66;
+      border: 1px solid rgba(0, 255, 0, 0.3);
+    }
+  }
+
+  .table-container {
+    flex: 1;
+    overflow: auto;
+    position: relative;
+    background: $dark-grey;
+  }
 
   button {
     font-size: 1rem;
@@ -18,8 +52,6 @@
     color: $text;
     cursor: pointer;
     transition: background 0.2s;
-    margin: 12px;
-    align-self: flex-start;
 
     &:hover:enabled {
       background: $hovered-primary;
@@ -31,51 +63,53 @@
     }
   }
 
-  table {
+  .statistics-table {
     width: 100%;
-    height: 100%;
     border-collapse: collapse;
     background: $dark-grey;
-    border-bottom: 1px solid $grey;
     margin: 0;
-    overflow: auto;
     table-layout: auto;
-    display: block;
-    flex: 1;
+    min-width: 100%;
   }
 
   th,
   td {
-    padding: 10px 20px;
+    padding: 12px 16px;
     text-align: left;
     font-size: 14px;
-
+    line-height: 1.4;
   }
 
   td {
     white-space: nowrap;
-
+    border-bottom: 1px solid $grey;
   }
 
   th {
     background: $primary;
     color: $text;
-    font-weight: 400;
+    font-weight: 500;
     position: sticky;
     top: 0;
-    z-index: 2;
-    white-space: wrap;
+    z-index: 500; // Below navbar (1001) but above content
+    white-space: nowrap;
     vertical-align: top;
-    box-shadow: 0 2px 0 0 $grey;
-
-
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    user-select: none;
+    border-bottom: 2px solid $grey;
+    
+    &:hover {
+      background: $hovered-primary;
+    }
   }
 
-  tr {
-    transition: background 0.15s;
+  tbody tr {
+    cursor: pointer;
+    transition: background 0.15s ease;
 
     &:hover td {
-      background: rgb($primary, 0.5) !important;
+      background: rgba($primary, 0.3) !important;
       color: $text;
     }
   }
@@ -83,40 +117,36 @@
   tr.selected-row td {
     background: $secondary !important;
     color: $text;
-    font-weight: 300;
+    font-weight: 400;
   }
 
-  tr:nth-child(even) td {
+  tbody tr:nth-child(even) td {
     background: $medium-grey;
   }
 
-  tr:nth-child(odd) td {
+  tbody tr:nth-child(odd) td {
     background: $dark-grey;
   }
 
-  td {
-    border-bottom: 1px solid $grey;
-  }
-
-  tr:last-child td {
+  tbody tr:last-child td {
     border-bottom: none;
   }
 
-  .status-message {
-    margin: 12px;
-    padding: 8px 12px;
-    border-radius: 4px;
-    
-    &.error {
-      color: #ff6b6b;
-      background: rgba(255, 107, 107, 0.1);
-      border: 1px solid rgba(255, 107, 107, 0.3);
+  // Responsive adjustments
+  @media (max-width: 1200px) {
+    th, td {
+      padding: 8px 12px;
+      font-size: 13px;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .table-container {
+      overflow-x: auto;
     }
     
-    &.success {
-      color: #51cf66;
-      background: rgba(81, 207, 102, 0.1);
-      border: 1px solid rgba(81, 207, 102, 0.3);
+    .statistics-table {
+      min-width: 800px;
     }
   }
 }
