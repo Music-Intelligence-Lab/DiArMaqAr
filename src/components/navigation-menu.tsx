@@ -92,7 +92,7 @@ const NavigationMenu = () => {
   const navigationLinks = [
     { href: "/app", key: "nav.home" },
     { href: "/bibliography", key: "nav.bibliography" },
-    { href: "/analytics-data", key: "nav.analytics" },
+    { href: "/statistics", key: "nav.statistics" },
     { href: "/user-guide", key: "nav.userGuide" },
     { href: "/about", key: "nav.about" },
     { href: "/credits", key: "nav.credits" },
