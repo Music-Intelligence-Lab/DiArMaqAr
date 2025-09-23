@@ -2,6 +2,8 @@ import { SourcePageReference } from "./bibliography/Source";
 import PitchClass, { PitchClassInterval } from "./PitchClass";
 import NoteName from "./NoteName";
 import { getPitchClassIntervals } from "@/functions/getPitchClassIntervals";
+import { englishify } from "@/functions/export";
+import shiftPitchClass from "@/functions/shiftPitchClass";
 
 /**
  * Interface for serializing JinsData to JSON format.
@@ -9,6 +11,7 @@ import { getPitchClassIntervals } from "@/functions/getPitchClassIntervals";
  */
 export interface JinsDataInterface {
   id: string;
+  idName: string;
   name: string;
   noteNames: NoteName[];
   commentsEnglish: string;
@@ -38,6 +41,8 @@ export default class JinsData {
   /** Unique identifier for this jins */
   private id: string;
   
+  /** Unique identifier for this jins */
+  private idName: string;
   /** Name of the jins (e.g., "Jins Kurd", "Jins Hijaz") */
   private name: string;
   
@@ -76,6 +81,7 @@ export default class JinsData {
     SourcePageReferences: SourcePageReference[]
   ) {
     this.id = id;
+    this.idName = englishify(name);
     this.name = name;
     this.noteNames = noteNames;
     this.commentsEnglish = commentsEnglish;
@@ -90,6 +96,10 @@ export default class JinsData {
    */
   getId(): string {
     return this.id;
+  }
+
+  getIdName(): string {
+    return this.idName;
   }
 
   /**
@@ -209,6 +219,7 @@ export default class JinsData {
   convertToObject(): JinsDataInterface {
     return {
       id: this.id,
+      idName: this.idName,
       name: this.name,
       noteNames: this.noteNames,
       commentsEnglish: this.commentsEnglish,
@@ -305,4 +316,34 @@ export interface AjnasModulations {
   
   /** The note name of the second degree (plus variations) */
   noteName2p: string;
+}
+
+export function shiftJinsByOctaves(allPitchClasses: PitchClass[], jins: Jins, octaveShift: number): Jins {
+  const shiftedPitchClasses = jins.jinsPitchClasses.map((pc) => shiftPitchClass(allPitchClasses, pc, octaveShift));
+  const shiftedPitchClassIntervals = getPitchClassIntervals(shiftedPitchClasses);
+  
+  // Extract the base jins name (remove any existing "al-" suffix and what follows)
+  let baseJinsName = jins.name;
+  const alIndex = baseJinsName.indexOf(' al-');
+  if (alIndex !== -1) {
+    baseJinsName = baseJinsName.substring(0, alIndex);
+  }
+  
+  // Create new name with the shifted tonic
+  const newTonicName = shiftedPitchClasses[0]?.noteName || '';
+  const newName = `${baseJinsName} al-${newTonicName}`;
+  
+  return {
+    jinsId: jins.jinsId,
+    name: newName,
+    transposition: jins.transposition,
+    jinsPitchClasses: shiftedPitchClasses,
+    jinsPitchClassIntervals: shiftedPitchClassIntervals,
+  };}
+
+export function ajnasAreEqual(jinsA: Jins, jinsB: Jins): boolean {
+  if (jinsA.jinsPitchClasses.length !== jinsB.jinsPitchClasses.length) return false;
+  else if (jinsA.jinsId !== jinsB.jinsId) return false;
+  else if (jinsA.jinsPitchClasses[0].noteName !== jinsB.jinsPitchClasses[0].noteName) return false;
+  else return true;
 }

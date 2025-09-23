@@ -182,7 +182,7 @@
     }
   },
   {
-    "id": "Al-Kindī-(874)",
+    "id": "Al-Kindi-(874)",
     "titleEnglish": "12-Tone",
     "titleArabic": "12-نغمة",
     "year": "874",
@@ -386,7 +386,7 @@
     }
   },
   {
-    "id": "Al-Dīk-(1926a)",
+    "id": "Al-Dik-(1926a)",
     "titleEnglish": "Al-Sullam Al-Fārsī or Al-'Arabī (!!!)",
     "titleArabic": "السلم الفارسي او العربي",
     "year": "1926a",
@@ -537,7 +537,7 @@
     }
   },
   {
-    "id": "Al-Dīk-(1926b)",
+    "id": "Al-Dik-(1926b)",
     "titleEnglish": "Old Arabic Scale",
     "titleArabic": "السلم العربي القديم",
     "year": "1926b",
@@ -957,7 +957,7 @@
     }
   },
   {
-    "id": "Al-Lādhiqī-(1495)",
+    "id": "Al-Ladhiqi-(1495)",
     "titleEnglish": "17-Tone",
     "titleArabic": "17 نغمة",
     "year": "1495",
@@ -1101,7 +1101,7 @@
     }
   },
   {
-    "id": "Al-Fārābī-(950i)",
+    "id": "Al-Farabi-(950i)",
     "titleEnglish": "Second Oud Tuning 22-Tone",
     "titleArabic": "",
     "year": "950i",
@@ -1621,7 +1621,7 @@
     }
   },
   {
-    "id": "Al-Fārābī-(950g)",
+    "id": "Al-Farabi-(950g)",
     "titleEnglish": "First Oud Tuning (Full First Octave) 27-Tone",
     "titleArabic": "تنغيم العود الأول (الديوان الأول الكامل) ٢٧-نغمة",
     "year": "950g",
@@ -1806,7 +1806,7 @@
     }
   },
   {
-    "id": "IbnSīnā-(1037)",
+    "id": "IbnSina-(1037)",
     "titleEnglish": "7-Fret Oud 17-Tone",
     "titleArabic": "7 نغمات 17 دستان على العود",
     "year": "1037",
@@ -1954,7 +1954,7 @@
     }
   },
   {
-    "id": "IsḥāqAl-Mawṣilī-(850)",
+    "id": "IshaqAl-Mawsili-(850)",
     "titleEnglish": "9-Tone",
     "titleArabic": "",
     "year": "850",
@@ -2243,7 +2243,7 @@
     }
   },
   {
-    "id": "Al-Khul'īandRāgheb-(1904)",
+    "id": "Al-KhuliandRagheb-(1904)",
     "titleEnglish": "",
     "titleArabic": "",
     "year": "1904",
@@ -2483,10 +2483,10 @@
     }
   },
   {
-    "id": "Al-Urmawī-(1294)",
+    "id": "Al-Urmawi-(1294a)",
     "titleEnglish": "First Oud Tuning 17-Tone",
     "titleArabic": "اول تنغيم على العود 17 نغمة",
-    "year": "1294",
+    "year": "1294a",
     "sourceEnglish": "",
     "sourceArabic": "",
     "sourcePageReferences": [
@@ -2759,10 +2759,10 @@
     }
   },
   {
-    "id": "Al-Urmawi-(1294)",
+    "id": "Al-Urmawi-(1294b)",
     "titleEnglish": "Second Oud Tuning 17-Tone",
     "titleArabic": "ثاني تنغيم على العود 17 نغمة",
-    "year": "1294",
+    "year": "1294b",
     "sourceEnglish": "",
     "sourceArabic": "",
     "sourcePageReferences": [
@@ -2878,7 +2878,7 @@
     }
   },
   {
-    "id": "Meshshāqa-(1899)",
+    "id": "Meshshaqa-(1899)",
     "titleEnglish": "Arabic Octave According to the Modernists",
     "titleArabic": "الديوان العربي عند المحدثين",
     "year": "1899",
@@ -3005,7 +3005,7 @@
     }
   },
   {
-    "id": "Al-Fārābī-(950a)",
+    "id": "Al-Farabi-(950a)",
     "titleEnglish": "First Oud Tuning 1: mujannab sabbāba 3 + wusṭa al-furs 20-Tone",
     "titleArabic": "",
     "year": "950a",
@@ -3139,7 +3139,7 @@
     }
   },
   {
-    "id": "Al-Fārābīi-(950c)",
+    "id": "Al-Farabii-(950c)",
     "titleEnglish": "First Oud Tuning 3: mujannab sabbāba 3 + alt wusṭa zalzal",
     "titleArabic": "",
     "year": "950c",
@@ -3246,7 +3246,7 @@
     }
   },
   {
-    "id": "Al-Fārābī-(950b)",
+    "id": "Al-Farabi-(950b)",
     "titleEnglish": "First Oud Tuning 2: mujannab sabbāba 3 + wuṣtā zalzal",
     "titleArabic": "",
     "year": "950b",
@@ -3358,7 +3358,7 @@
     }
   },
   {
-    "id": "Al-Fārābī-(950d)",
+    "id": "Al-Farabi-(950d)",
     "titleEnglish": "First Oud Tuning 4: mujannab sabbāba 4 + wusṭa al-furs",
     "titleArabic": "",
     "year": "950d",
@@ -3470,7 +3470,7 @@
     }
   },
   {
-    "id": "Al-Fārābī-(950f)",
+    "id": "Al-Farabi-(950f)",
     "titleEnglish": "First Oud Tuning 6: mujannab sabbāba 4 + alt wusṭa zalzal",
     "titleArabic": "",
     "year": "950f",
@@ -3577,7 +3577,7 @@
     }
   },
   {
-    "id": "Al-Fārābī-(950e)",
+    "id": "Al-Farabi-(950e)",
     "titleEnglish": "First Oud Tuning 5: mujannab sabbāba 4 + wusṭa zalzal",
     "titleArabic": "",
     "year": "950e",
@@ -3689,7 +3689,7 @@
     }
   },
   {
-    "id": "Al-Fārābī-(950h)",
+    "id": "Al-Farabi-(950h)",
     "titleEnglish": "First Oud Tuning (First and Second Octaves) 35-Tone",
     "titleArabic": "",
     "year": "950h",
@@ -3861,7 +3861,7 @@
     }
   },
   {
-    "id": "MashrafaandMukhtār-(1944)",
+    "id": "MashrafaandMukhtar-(1944)",
     "titleEnglish": "Egyptian Tuning 22-Tone",
     "titleArabic": "التنغيم المصري 22 نغمة",
     "year": "1944",
@@ -3982,7 +3982,7 @@
     }
   },
   {
-    "id": "Al-Ṣabbāgh-(1950)",
+    "id": "Al-Sabbagh-(1950)",
     "titleEnglish": "Contemporary Arabic 19-Tone",
     "titleArabic": "السلم العربي الحالي",
     "year": "1950",
@@ -4131,7 +4131,7 @@
     }
   },
   {
-    "id": "Al-Laythī-(1965)",
+    "id": "Al-Laythi-(1965)",
     "titleEnglish": "20-Tone",
     "titleArabic": "20 نغمة",
     "year": "1965",
@@ -4244,7 +4244,7 @@
     }
   },
   {
-    "id": "Al-Ṣabbāgh-(1954)",
+    "id": "Al-Sabbagh-(1954)",
     "titleEnglish": "Contemporary Arabic Tuning 24-Tone",
     "titleArabic": "السلم العربي الحالي ٢٤ نغمة",
     "year": "1954",

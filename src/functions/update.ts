@@ -92,6 +92,7 @@ export async function updateAjnas(newAjnas: JinsData[]) {
       body: JSON.stringify(
         newAjnas.map((j) => ({
           id: j.getId(),
+          idName: j.getIdName(),
           name: j.getName(),
           noteNames: j.getNoteNames(),
           commentsEnglish: j.getCommentsEnglish() || "",
@@ -128,6 +129,7 @@ export async function updateMaqamat(newMaqamat: MaqamData[]) {
       body: JSON.stringify(
         newMaqamat.map((m) => ({
           id: m.getId(),
+          idName: m.getIdName(),
           name: m.getName(),
           ascendingNoteNames: m.getAscendingNoteNames(),
           descendingNoteNames: m.getDescendingNoteNames(),

@@ -310,6 +310,7 @@ const translations = {
     "modulations.sixthIfNoThird": "Sixth (if no Third)",
     "modulations.sixthAscending": "Sixth (ascending)",
     "modulations.sixthDescending": "Sixth (descending)",
+    "modulations.octaveShift": "Octave Shift (-1)",
 
     // Sayr Manager
     "sayr.selectOrCreate": "Select Sayr or Create New:",
@@ -618,6 +619,7 @@ const translations = {
     "modulations.sixthIfNoThird": "السادسة (إذا لم توجد ثالثة)",
     "modulations.sixthAscending": "السادسة (صعوداًة)",
     "modulations.sixthDescending": "السادسة (هبوطاًة)",
+    "modulations.octaveShift": "إزاحة الأوكتاف (-١)",
 
     // Sayr Manager (Arabic translations)
     "sayr.selectOrCreate": "اختر السير أو أنشئ جديداً:",
