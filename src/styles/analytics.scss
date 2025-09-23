@@ -211,7 +211,7 @@
     border: 1px solid $delete;
     border-radius: 8px;
     padding: 16px;
-    color: lighten($delete, 20%);
+    color: #ff6b4d; // Lighter version of $delete (#C62300)
 
     h3 {
       margin: 0 0 8px 0;
