@@ -113,7 +113,7 @@ function showHelp(): void {
 Digital Arabic Maqām Archive - Proper Batch Export CLI
 
 Usage:
-  node scripts/batch-export-proper.js [options]
+  node scripts/batch-export/batch-export.js [options]
 
 Options:
   --help, -h                    Show this help message
@@ -134,16 +134,16 @@ Export Options (mirrors export modal exactly):
 
 Examples:
   # List all available tuning systems
-  node scripts/batch-export-proper.js --list-tuning-systems
+  node scripts/batch-export/batch-export.js --list-tuning-systems
 
   # Export specific tuning system with specific starting note (full data)
-  node scripts/batch-export-proper.js --tuning-system "Al-Farabi-(950g)" --starting-note "yegāh"
+  node scripts/batch-export/batch-export.js --tuning-system "Al-Farabi-(950g)" --starting-note "yegāh"
 
   # Export all tuning systems with all their starting notes
-  node scripts/batch-export-proper.js --tuning-system "all" --starting-note "all"
+  node scripts/batch-export/batch-export.js --tuning-system "all" --starting-note "all"
 
   # Export with modulations included (like advanced export modal options)
-  node scripts/batch-export-proper.js --tuning-system "Al-Farabi-(950g)" --starting-note "yegāh" --include-maqamat-modulations --include-ajnas-modulations
+  node scripts/batch-export/batch-export.js --tuning-system "Al-Farabi-(950g)" --starting-note "yegāh" --include-maqamat-modulations --include-ajnas-modulations
 \`);
 }
 

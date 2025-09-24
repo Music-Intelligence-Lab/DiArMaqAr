@@ -1,15 +1,31 @@
-# Digital Arabic Maqām Archive - Batch Export CLI
+# Digital Arabic Maqām Archive - Scripts
 
-This script allows batch export of tuning system data in JSON format from the command line, providing the same comprehensive data structure as the web export modal.
+This directory contains utility scripts for the Digital Arabic Maqām Archive project.
 
-## Quick Start
+## Available Scripts
 
+### Batch Export CLI
+**Location:** `batch-export/`
+
+A comprehensive command-line tool for batch exporting tuning system data in JSON format. Provides the same data structure as the web export modal but optimized for programmatic use.
+
+**Features:**
+- Export any tuning system with any starting note
+- Batch export all systems and configurations
+- Complete data structures including modulations
+- Progress tracking and error handling
+- Filename sanitization and organization
+
+**Quick Start:**
 ```bash
-# List all available tuning systems
-node scripts/batch-export.js --list-tuning-systems
+# List available tuning systems
+node scripts/batch-export/batch-export.js --list-tuning-systems
 
-# Export specific tuning system with full data including modulations
-node scripts/batch-export.js \
+# Basic export
+node scripts/batch-export/batch-export.js --tuning-system "Al-Farabi-(950g)" --starting-note "yegāh"
+
+# Complete export with modulations
+node scripts/batch-export/batch-export.js \
   --tuning-system "Al-Farabi-(950g)" \
   --starting-note "yegāh" \
   --include-ajnas-details \
@@ -18,158 +34,19 @@ node scripts/batch-export.js \
   --include-ajnas-modulations
 ```
 
-## Usage
+See `batch-export/README.md` for complete documentation.
 
-```bash
-node scripts/batch-export.js [options]
-```
+## Development
 
-### Required Options
+All scripts are designed to be run from the project root directory and automatically handle:
+- TypeScript compilation via `tsx`
+- Path resolution using project aliases
+- Access to the complete data model and functions
 
-- `--tuning-system, -t <id>` - Tuning system ID (use `"all"` for all systems)
-- `--starting-note, -s <note>` - Starting note name (use `"all"` for all available notes)
+## Contributing
 
-### Optional Options
-
-- `--output-dir, -o <dir>` - Output directory (default: `./exports`)
-- `--help, -h` - Show help message
-- `--list-tuning-systems` - List all available systems and starting notes
-
-### Export Options
-
-**Basic exports include only tuning system data and pitch classes by default.**
-
-- `--include-ajnas-details` - Include ajnas details (default: false)
-- `--include-maqamat-details` - Include maqamat details (default: false)
-- `--include-maqamat-modulations` - Include maqamat modulations (default: false)
-- `--include-ajnas-modulations` - Include ajnas modulations (default: false)
-
-## Examples
-
-### Basic Export (tuning system only)
-```bash
-# Export only tuning system data and pitch classes (~100KB)
-node scripts/batch-export.js \
-  --tuning-system "Al-Farabi-(950g)" \
-  --starting-note "yegāh"
-```
-
-### Export with Ajnas and Maqamat
-```bash
-# Export with ajnas and maqamat data (~2MB)
-node scripts/batch-export.js \
-  --tuning-system "Al-Farabi-(950g)" \
-  --starting-note "yegāh" \
-  --include-ajnas-details \
-  --include-maqamat-details
-```
-
-### Complete Export (with modulations)
-```bash
-# Export with full modulation analysis (~3MB, recommended for research)
-node scripts/batch-export.js \
-  --tuning-system "IbnSīnā-(1037)" \
-  --starting-note "all" \
-  --include-ajnas-details \
-  --include-maqamat-details \
-  --include-maqamat-modulations \
-  --include-ajnas-modulations
-```
-
-### Batch Exports
-```bash
-# Export all starting notes for one tuning system
-node scripts/batch-export.js \
-  --tuning-system "Al-Farabi-(950g)" \
-  --starting-note "all"
-
-# Export ALL tuning systems with ALL starting notes (many files!)
-node scripts/batch-export.js \
-  --tuning-system "all" \
-  --starting-note "all"
-
-# COMPLETE EXPORT - Everything possible (hundreds of files, many GB)
-node scripts/batch-export.js \
-  --tuning-system "all" \
-  --starting-note "all" \
-  --include-ajnas-details \
-  --include-maqamat-details \
-  --include-maqamat-modulations \
-  --include-ajnas-modulations
-```
-
-
-### Custom Output Directory
-```bash
-node scripts/batch-export.js \
-  --tuning-system "Al-Farabi-(950g)" \
-  --starting-note "yegāh" \
-  --output-dir "./my-exports"
-```
-
-## Output Files
-
-Files are named with the pattern:
-```
-{TuningSystemID}_{StartingNote}_{Date}_{Options}.json
-```
-
-**Filenames are sanitized** - diacritics and non-standard characters are normalized for filesystem compatibility.
-
-Examples:
-- Basic: `Al-Farabi-(950g)_yegah_2025-09-24.json`
-- With data: `Al-Farabi-(950g)_yegah_2025-09-24_ajnas_maqamat.json`
-- Complete: `Al-Farabi-(950g)_yegah_2025-09-24_ajnas_maqamat_maqamat-mod_ajnas-mod.json`
-
-**Batch exports** (using `--tuning-system "all"`) are organized in timestamped folders:
-```
-exports/batch_all_systems_2025-09-24/
-├── Al-Farabi-(950g)_ushayran_2025-09-24.json
-├── Al-Farabi-(950g)_yegah_2025-09-24.json
-├── Al-Sabbagh-1950_rast_2025-09-24.json
-└── ... (hundreds of files)
-```
-
-## Export Data Structure
-
-The exported JSON contains:
-
-- **exportInfo** - Timestamp and metadata
-- **tuningSystemData** - Complete tuning system details with source references
-- **summaryStats** - Statistics (pitch classes, transpositions, modulations)
-- **pitchClassReference** - Full pitch class objects with frequencies, cents, MIDI
-- **allAjnasData** - All ajnas with transpositions (if enabled)
-- **allMaqamatData** - All maqamat with transpositions and modulations (if enabled)
-
-## File Sizes
-
-- Basic export (tuning system only): ~100KB
-- With ajnas/maqamat: ~2MB
-- With modulations: ~3MB per configuration
-- Batch exports can generate many GB of data
-
-## Requirements
-
-The script automatically installs `tsx` if needed to run TypeScript code.
-
-## Troubleshooting
-
-**Tuning system not found:**
-```bash
-# List available systems first
-node scripts/batch-export.js --list-tuning-systems
-```
-
-**Starting note not available:**
-Each tuning system has specific starting notes. Use `--list-tuning-systems` to see available combinations.
-
-**Large exports:**
-Modulation calculations can take several minutes for complex tuning systems. Progress is shown during export.
-
-**Progress indicators:**
-The script provides detailed progress tracking including:
-- System-by-system progress (`[2/32] Processing: Al-Farabi-(950g)`)
-- Individual export progress (`(5/156) [2/3] → yegāh`)
-- Export statistics (pitch classes, ajnas, maqamat counts)
-- Overall completion percentage
-- Remaining items countdown
+When adding new scripts:
+1. Create a dedicated subdirectory
+2. Include a README with usage instructions
+3. Use the existing project conventions and imports
+4. Update this main README with the new script information
