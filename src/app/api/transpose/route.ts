@@ -51,6 +51,10 @@ import { englishify } from "@/functions/export";
  *                 example: 5
  *                 minimum: 0
  *                 maximum: 50
+ *               noteNameToTransposeTo:
+ *                 type: string
+ *                 description: Optional filter to return only the transposition that starts with this specific note name. If provided but the transposition doesn't exist, returns a 404 error. If empty or not provided, returns all transpositions as normal. Note name comparison uses englishified format (removes diacritics and replaces spaces with underscores).
+ *                 example: "rast"
  *             required:
  *               - tuningSystemID
  *               - tuningSystemStartingNoteName
@@ -108,6 +112,7 @@ import { englishify } from "@/functions/export";
  *                     - "Cannot provide multiple identifiers simultaneously"
  *                     - "tuningSystemStartingNoteName object is required"
  *                     - "centsTolerance must be a positive number"
+ *                     - "Note name 'invalidNote' does not exist in the selected tuning system"
  *       404:
  *         description: Requested resource not found
  *         content:
@@ -134,7 +139,7 @@ import { englishify } from "@/functions/export";
  */
 export async function POST(request: Request) {
   try {
-    const { tuningSystemID, maqamID, maqamName, jinsID, jinsName, tuningSystemStartingNoteName, centsTolerance } = await request.json();
+    const { tuningSystemID, maqamID, maqamName, jinsID, jinsName, tuningSystemStartingNoteName, centsTolerance, noteNameToTransposeTo } = await request.json();
     const tuningSystems = getTuningSystems();
     const maqamat = getMaqamat();
     const ajnas = getAjnas();
@@ -193,6 +198,15 @@ export async function POST(request: Request) {
 
     const allPitchClasses: PitchClass[] = getTuningSystemPitchClasses(selectedTuningSystem, tuningSystemStartingNoteName);
 
+    // Validate noteNameToTransposeTo if provided
+    if (noteNameToTransposeTo && noteNameToTransposeTo !== "") {
+      const englishifiedTargetNote = englishify(noteNameToTransposeTo);
+      const noteExists = allPitchClasses.some(pc => englishify(pc.noteName) === englishifiedTargetNote);
+      if (!noteExists) {
+        return NextResponse.json({ error: `Note name '${noteNameToTransposeTo}' does not exist in the selected tuning system` }, { status: 400 });
+      }
+    }
+
     if (hasMaqamID) {
       const selectedMaqamData = maqamat.find((maqam) => maqam.getId() === maqamID);
       if (!selectedMaqamData) {
@@ -200,6 +214,20 @@ export async function POST(request: Request) {
       }
 
       const maqamTranspositions = getMaqamTranspositions(allPitchClasses, ajnas, selectedMaqamData, true, centsTolerance ?? 5);
+
+      // Filter for specific note name if provided
+      if (noteNameToTransposeTo && noteNameToTransposeTo !== "") {
+        const englishifiedTargetNote = englishify(noteNameToTransposeTo);
+        const filteredTransposition = maqamTranspositions.find(maqam => 
+          englishify(maqam.ascendingPitchClasses[0].noteName) === englishifiedTargetNote
+        );
+        
+        if (!filteredTransposition) {
+          return NextResponse.json({ error: `Transposition to note '${noteNameToTransposeTo}' does not exist for this maqam` }, { status: 404 });
+        }
+        
+        return NextResponse.json([filteredTransposition]);
+      }
 
       return NextResponse.json(maqamTranspositions);
     } else if (hasMaqamName) {
@@ -210,6 +238,20 @@ export async function POST(request: Request) {
 
       const maqamTranspositions = getMaqamTranspositions(allPitchClasses, ajnas, selectedMaqamData, true, centsTolerance ?? 5);
 
+      // Filter for specific note name if provided
+      if (noteNameToTransposeTo && noteNameToTransposeTo !== "") {
+        const englishifiedTargetNote = englishify(noteNameToTransposeTo);
+        const filteredTransposition = maqamTranspositions.find(maqam => 
+          englishify(maqam.ascendingPitchClasses[0].noteName) === englishifiedTargetNote
+        );
+        
+        if (!filteredTransposition) {
+          return NextResponse.json({ error: `Transposition to note '${noteNameToTransposeTo}' does not exist for this maqam` }, { status: 404 });
+        }
+        
+        return NextResponse.json([filteredTransposition]);
+      }
+
       return NextResponse.json(maqamTranspositions);
     } else if (hasJinsID) {
       const selectedJinsData = ajnas.find((jins) => jins.getId() === jinsID);
@@ -219,6 +261,20 @@ export async function POST(request: Request) {
 
       const jinsTranspositions = getJinsTranspositions(allPitchClasses, selectedJinsData, true, centsTolerance ?? 5);
 
+      // Filter for specific note name if provided
+      if (noteNameToTransposeTo && noteNameToTransposeTo !== "") {
+        const englishifiedTargetNote = englishify(noteNameToTransposeTo);
+        const filteredTransposition = jinsTranspositions.find(jins => 
+          englishify(jins.jinsPitchClasses[0].noteName) === englishifiedTargetNote
+        );
+        
+        if (!filteredTransposition) {
+          return NextResponse.json({ error: `Transposition to note '${noteNameToTransposeTo}' does not exist for this jins` }, { status: 404 });
+        }
+        
+        return NextResponse.json([filteredTransposition]);
+      }
+
       return NextResponse.json(jinsTranspositions);
     } else if (hasJinsName) {
       const selectedJinsData = ajnas.find((jins) => englishify(jins.getName()) === englishify(jinsName));
@@ -227,6 +283,20 @@ export async function POST(request: Request) {
       }
 
       const jinsTranspositions = getJinsTranspositions(allPitchClasses, selectedJinsData, true, centsTolerance ?? 5);
+
+      // Filter for specific note name if provided
+      if (noteNameToTransposeTo && noteNameToTransposeTo !== "") {
+        const englishifiedTargetNote = englishify(noteNameToTransposeTo);
+        const filteredTransposition = jinsTranspositions.find(jins => 
+          englishify(jins.jinsPitchClasses[0].noteName) === englishifiedTargetNote
+        );
+        
+        if (!filteredTransposition) {
+          return NextResponse.json({ error: `Transposition to note '${noteNameToTransposeTo}' does not exist for this jins` }, { status: 404 });
+        }
+        
+        return NextResponse.json([filteredTransposition]);
+      }
 
       return NextResponse.json(jinsTranspositions);
     }
