@@ -1,124 +1,32 @@
 ---
 applyTo: '**'
+lastUpdated: '2025-09-24'
 ---
-# Copilot Instructions —## Conventions & Type## Conventions & Types
-- **Note Names**: Use canonical transliterated names from `src/models/NoteName.ts` across 5 octave arrays. Don't invent strings—accept/produce the `NoteName` union type.
-- **Pitch Class Formats**: Inputs may be fraction/cents/decimal/MIDI. Detect with `detectPitchClassType`, convert with `convertPitchClass` utilities. For matching, prefer a cents tolerance of 5–10 as used by APIs.
-- **Tuning Systems**: Never hardcode. Load via `getTuningSystems()`; select note-name set with `TuningSystem.getNoteNameSets()`.
-- **Cents Tolerance**: The `centsTolerance` parameter is used throughout the codebase as a (+/-) tolerance value for calculating possible transpositions within tuning systems that aren't based on frequency ratio fractions (e.g. 9/8, 4/3, 3/2) in their core data. ALWAYS default to 5 cents unless the specific context requires a different value. This applies to all APIs, functions, and components that perform pitch matching or transposition calculations.
-- **Imports**: Prefer `@/...` alias. Avoid referencing `packages/*`—`tsconfig.json` excludes it for the app build.*Note Names**: Use canonical transliterated names from `src/models/NoteName.ts` across 5 octave arrays. Don't invent strings—accept/produce the `NoteName` union type.
-- **Pitch Class Formats**: Inputs may be fraction/cents/decimal/MIDI. Detect with `detectPitchClassType`, convert with `convertPitchClass` utilities. For matching, prefer a cents tolerance of 5–10 as used by APIs.
-- **Tuning Systems**: Never hardcode. Load via `getTuningSystems()`; select note-name set with `TuningSystem.getNoteNameSets()`.
 
-### Starting Note Name Conventions and Theoretical Implications
-Starting note selection in Arabic tuning systems represents fundamental theoretical decisions that profoundly affect mathematical frameworks and maqām analysis:
+# Digital Arabic Maqām Archive - Development Instructions
 
-- **ʿushayrān-based systems**: Reflect oud tuning traditions with strings tuned in perfect fourths (4/3). The choice of ʿushayrān for 1/1 reflects practical oud application where strings from ʿushayrān onwards are tuned in perfect fourths.
-- **yegāh-based systems**: Derive from monochord/sonometer measurements, following theoretical frameworks from scholars like those at the 1932 Cairo Congress for Arabic Music.
-- **rāst-based systems**: Follow established theoretical frameworks from historical measurement traditions.
+## Table of Contents
+1. [Quick Reference](#quick-reference)
+2. [Core Principles](#core-principles)
+3. [Architecture Overview](#architecture-overview)
+4. [Development Conventions](#development-conventions)
+5. [Auto-Implementation Rules](#auto-implementation-rules)
+6. [Component Patterns](#component-patterns)
+7. [API Development](#api-development)
+8. [Data Flow & Context](#data-flow--context)
+9. [Troubleshooting](#troubleshooting)
 
-**Critical Understanding**: ʿushayrān vs yegāh are a 9/8 whole-tone apart. This is NOT simple transposition but represents fundamentally different approaches to organizing pitch space. Different starting points affect:
-- Mathematical relationships between intervals
-- Availability of specific maqāmāt and ajnās  
-- Modulation pathway possibilities
-- Theoretical analysis outcomes
-- Practical musical applications
+---
 
-The `tuningSystemStartingNoteName` parameter selects which theoretical framework to apply, fundamentally changing the mathematical basis of all calculations and available musical structures.ām Network
+## Quick Reference
 
-## Communication Style
-- **Concise Responses**: Do not provide summaries of actions taken unless explicitly requested. Focus on direct implementation without explanatory commentary.
-- **No Markdown Reports**: Never create standalone markdown report files (like API_PARAMETER_NAMING_REPORT.md) in the project root or anywhere else. Make changes directly to code and provide brief confirmation when requested.
-- **Minimal Token Usage**: Keep responses brief and avoid detailed conversation summaries or lengthy explanations. Be direct and focused.
-- **Complex Documentation Approval**: When writing complex, specific, or technical documentation (especially API documentation, theoretical explanations, or technical specifications), provide an example of the proposed text for user approval before implementing changes.
-- **Critical File Safety Protocol**: ALWAYS search properly and double-check the exact location where any code updates/changes will be applied. Use grep_search, read_file, and semantic_search tools to verify file contents and locations before making edits. This prevents file corruption and ensures changes are applied to the correct locations.
+### Communication Style
+- **Concise responses** - No summaries unless requested
+- **Direct implementation** - Use established patterns without asking
+- **Minimal tokens** - Brief, focused responses
+- **No markdown reports** - Make changes directly to code
 
-## Autonomous Implementation Protocol
-1. **Read Request** → Identify domain (maqam/jins/tuning/audio/UI)
-2. **Auto-Apply Architecture** → Use established patterns without asking
-3. **Integrate by Default** → Assume integration with existing systems
-4. **Validate Automatically** → Check against established conventions
-5. **Enhance Progressively** → Add bilingual/URL/performance features
-6. **Only Ask When** → Truly ambiguous choices or new architectural decisions
-
-**Rule: Implement first using established patterns, explain only if requested.**
-
-## Auto-Implementation Triggers
-- **Component Request**: Automatically follow manager pattern if request contains "component" + domain name
-- **Data Access**: Always use import functions if request involves maqamat/ajnas/tuning systems
-- **API Routes**: Auto-apply validation pattern from `/api/transpose` for any new API endpoint
-- **State Management**: Auto-implement context hooks when request involves "state" or "data sharing"
-
-## Documentation
-- **App Documentation**: The folder `public/docs` contains comprehensive documentation about the app's functions, models, and data structures. Always search this documentation first rather than searching the codebase to understand available functions, APIs, and data structures.
-
-## Big Picture
-- **Architecture**: Next.js 15 + React 19 TypeScript app under `src/`, with a computational musicology core in `src/functions` and `src/models`. Server endpoints live in `src/app/api/**`. Ground-truth musical data is in `/data/*.json`. Public docs are served from `public/docs/`.
-- **Cultural Framework**: Platform follows decolonial computing principles, prioritizing Arabic theoretical frameworks over Anglo-European-centric approaches. Grounded in Arab-Ottoman-Persian note naming convention and historical sources from 9th-century Al-Kindī through modern 20th-century theorists.
-- **Design Goal**: Separate cultural/theoretical abstractions (note names, jins, maqām) from concrete sound (pitch classes). Abstract classes (e.g., `MaqamData`, `JinsData`) become playable structures by combining with a tuning system via `getTuningSystemPitchClasses` and `MaqamData.getTahlil()`.
-- **Scholarly Methodology**: Systematic implementation of historical sources with comprehensive citation attribution. Platform enables analysis of traditional repertoire and comparative musicological research while maintaining cultural authenticity.
-- **Path Aliases**: Use `@/*` (see `tsconfig.json`) for imports like `"@/functions/getTuningSystemPitchClasses"`.
-
-## Core Data Flow
-- **Import JSON → Typed Models**: Use `src/functions/import.ts` (`getTuningSystems`, `getAjnas`, `getMaqamat`, `getSources`, `getPatterns`) to hydrate from `/data/*.json` into classes in `src/models/**`.
-- **Historical Tuning Systems**: Platform implements systems from 9th-century Al-Kindī through modern theorists like Al-Ṣabbāgh's comma-based systems. Each system affects transposition and modulation possibilities.
-- **Generate Pitch Space**: `getTuningSystemPitchClasses(ts, startingNote)` builds 4-octave `PitchClass[]` with `frequency`, `midiNoteNumber`, `centsDeviation`, `englishName` (see `src/functions/getTuningSystemPitchClasses.ts`).
-- **Build Playable Maqām/Jins**: 
-  - Jins: transpositions via `getJinsTranspositions`.
-  - Maqām: `MaqamData.getTahlil(allPitchClasses)` + `getMaqamTranspositions` produces directional sequences and interval patterns.
-- **Al-Shawwā Modulation Algorithm**: First systematic digital implementation of Sāmī Al-Shawwā's 1946 modulation guidelines, providing historically-accurate modulation matrices between maqāmāt.
-- **Export/Analytics**: `src/functions/export.ts` merges data for compact JSON; modulation structures use index-based keys (`MaqamatModulationsWithKeys`, `AjnasModulationsWithKeys`). Analytics utilities live in `generate-analytics.ts`.
-
-## Conventions & Types
-- **Note Names**: Use canonical transliterated names from `src/models/NoteName.ts` across 5 octave arrays. Don’t invent strings—accept/produce the `NoteName` union type.
-- **Pitch Class Formats**: Inputs may be fraction/cents/decimal/MIDI. Detect with `detectPitchClassType`, convert with `convertPitchClass` utilities. For matching, prefer a cents tolerance of 5–10 as used by APIs.
-- **Tuning Systems**: Never hardcode. Load via `getTuningSystems()`; select note-name set with `TuningSystem.getNoteNameSets()`.
-- **Imports**: Prefer `@/...` alias. Avoid referencing `packages/*`—`tsconfig.json` excludes it for the app build.
-
-## API Routes (Server)
-- **Pattern**: Routes under `src/app/api/**` read models via `functions/import.ts`, compute with `src/functions/**`, and return typed JSON (`NextResponse.json`).
-- **Example `/api/transpose`** (`src/app/api/transpose/route.ts`): POST body requires `tuningSystemID`, either `maqamID` or `jinsID`, `firstNote` (from note-name sets), and `centsTolerance`. Returns `transpositions`, selected `tuningSystem`, and the `originalSequence` metadata. Validate inputs and return 400/404 consistently as established in this route.
-- **Critical Documentation Rule**: For optional parameters that have default behavior (like `tuningSystemStartingNoteName`), ALWAYS document what happens when the parameter is omitted. Update BOTH Swagger documentation in route files AND HTML documentation in `public/docs/api/index.html`. Be specific about default behavior rather than just stating "optional".
-- **Tuning System ID Accuracy**: When updating documentation examples or API requests, ALWAYS verify the exact tuning system IDs from the actual data files (`/data/tuningSystems.json`). Tuning system IDs must be copied exactly as they appear in the data, including any suffixes (e.g., "Al-Farabi-(950g)" not "Al-Farabi-(950)"). Incorrect IDs will cause API failures. Use `grep_search` or `read_file` to verify IDs before making documentation changes.
-
-## Frontend Usage Expectations
-- **Components**: UIs (e.g., `src/components/*`) expect `PitchClass` items with `noteName`, `englishName`, `frequency`, `centsDeviation`, `midiNoteNumber`. Generate via `getTuningSystemPitchClasses` and keep arrays stable by index.
-- **Audio**: Client-side audio utilities in `src/audio/*` (`sonic-weave`, `sw-synth`). Guard SSR: only access Web Audio in client components/effects. Platform provides real-time microtonal synthesis with low latency for authentic maqāmic playback.
-- **Bilingual Support**: Interface supports English/Arabic accessibility, respecting cultural specificity while enabling cross-cultural engagement.
-
-## Specialized Platform Features
-- **Al-Shawwā Modulation Analysis**: Interactive modulation matrices based on historical guidelines. Tuning systems affect modulation availability—e.g., Al-Ṣabbāgh's comma-based system has limited transpositions but maintains intervallic authenticity.
-- **Starting Note Convention Comparison**: Systematic analysis between oud-based measurements (ʿushayrān) vs long-necked lute traditions (yegāh/rāst), revealing how historical instrument approaches affect theoretical accessibility.
-- **Tuning System Sensitivity**: All transpositions and modulations are tuning-system-dependent. A maqām successful across pitch classes in one system may have limited options in another, revealing practical implications of theoretical choices.
-- **Research Applications**: Platform enables analysis of traditional repertoire patterns, comparative theoretical frameworks, and pedagogical applications through comprehensive export and analytics capabilities.
-
-## Context Architecture & State Management
-- **Context Hierarchy**: App structured with nested providers: `AppContext` (global state) → `SoundContext` (audio) → `TranspositionsContext` (performance optimization) → `FilterContext`, `MenuContext`, `LanguageContext` (specialized UI state).
-- **Performance Optimization**: Use `useMemo` for expensive calculations and context values. `TranspositionsContext` pre-computes all maqām/jins transpositions to avoid repeated calculations during UI interactions.
-- **State Dependencies**: Changes in `selectedTuningSystem` trigger cascading updates through `allPitchClasses` → transpositions → UI selections. Handle cleanup with `clearSelections()` when tuning system changes.
-- **URL State Sync**: `handleUrlParams` enables deep-linking to specific configurations. Use descriptive parameters like `jins=jins-rast-al-rast` for SEO and shareability.
-- **Context Consumer Patterns**: Always use custom hooks (`useAppContext`, `useSoundContext`, etc.) rather than direct `useContext`. Include error boundaries for context availability checks.
-
-## Component Creation Rules
-**When creating ANY component:**
-1. Start with `"use client";` if it uses hooks/state
-2. Import context hooks: `useAppContext`, `useLanguageContext`
-3. Implement FilterContext if handling lists
-4. Use `@/` imports exclusively
-5. Include bilingual support via `getDisplayName()`
-6. Guard Web Audio with client-side checks
-7. **ALWAYS use Language Context for text**: Import `useLanguageContext` and use `t()` function for all user-facing text. Add translation keys to both English and Arabic sections in `src/contexts/language-context.tsx`. Never use hardcoded strings for user-facing text.
-
-**Auto-apply these patterns without asking.**
-
-## Default Behaviors (Don't Ask, Just Do)
-- **New features**: Always integrate with existing context architecture
-- **Data queries**: Use import functions, never direct JSON access
-- **API endpoints**: Include Swagger docs and follow validation pattern
-- **Types**: Prefer existing union types over any/unknown
-- **Errors**: Follow established error handling patterns from existing routes
-
-## Intent → Implementation Mapping
+### Auto-Implementation Triggers
 | User Says | Auto-Implement |
 |-----------|----------------|
 | "search/filter" | FilterContext + useFilterContext |
@@ -126,61 +34,367 @@ The `tuningSystemStartingNoteName` parameter selects which theoretical framework
 | "maqam/jins data" | TranspositionsContext + import functions |
 | "new page" | Context providers + manager pattern |
 | "API endpoint" | import.ts + validation + Swagger |
+| "component" + domain | Follow manager pattern |
 
-## Context-Sensitive Defaults
-- **If editing existing component**: Match its patterns exactly
-- **If in `/api/` folder**: Auto-include validation and error handling
-- **If handling maqam data**: Always consider tuning system dependencies
-- **If UI component**: Auto-implement bilingual support
+### Critical Defaults
+- **Default cents tolerance**: 5 (always unless specified)
+- **Path imports**: Use `@/*` alias exclusively
+- **Language support**: Auto-implement bilingual via `useLanguageContext`
+- **Client-side audio**: Always guard Web Audio with client checks
+- **File safety**: Always search and verify locations before edits
 
-## Auto-Validation Rules
-- **Before using external APIs**: Check if internal API exists first
-- **Before hardcoding**: Check if data is available via import functions
-- **Before creating new types**: Check existing union types
-- **Before client-side data fetching**: Use context data if available
-- **Before SSR-sensitive code**: Add client guards automatically
+---
 
-## Enhancement Priorities (Apply Automatically)
-1. **Core Functionality**: Basic feature working
-2. **Data Integration**: Connect to proper data sources
-3. **Context Integration**: Fit into app architecture  
-4. **Bilingual Support**: Arabic/English accessibility
-5. **URL State**: Deep linking where applicable
-6. **Performance**: Memoization and optimization
+## Core Principles
 
-## Data Structure Patterns
-- **JSON Schema**: All data files (`/data/*.json`) follow consistent patterns with `id`, bilingual `name`/`title` fields, `sourcePageReferences` for citations, and `noteNames` arrays.
-- **State Synchronization**: Core selections (`selectedTuningSystem`, `selectedMaqamData`, `selectedJins`) drive derived state. Changes cascade through `allPitchClasses` → `selectedPitchClasses` → UI updates.
-- **Index Mapping**: `mapIndices()` translates between note names and array positions. Use `selectedIndices` for UI state, `originalIndices` to track tuning system defaults.
-- **Tolerance Handling**: Default `centsTolerance: 5` for pitch matching. Increase for historical sources with measurement variations, decrease for precise theoretical analysis.
-- **Multi-language Support**: All user-facing strings support English/Arabic via `getDisplayName()`. Components automatically handle RTL layout when `language === "ar"`.
+### Cultural Framework
+- **Decolonial computing** - Prioritize Arabic theoretical frameworks
+- **Historical authenticity** - Ground in Arab-Ottoman-Persian traditions
+- **Scholarly methodology** - Systematic implementation with citations
+- **Cultural specificity** - Avoid Anglo-European-centric approaches
 
-## Audio & MIDI Integration
-- **Web Audio Architecture**: `SoundContext` manages audio synthesis with support for custom waveforms, microtonal playback, and MPE (MIDI Polyphonic Expression).
-- **Real-time Synthesis**: Audio calculations use precise frequency values from `PitchClass.frequency`. Avoid MIDI note number approximations for microtonal accuracy.
-- **Performance Audio**: Guard Web Audio calls with client-side checks. Never access `AudioContext` during SSR—use `useEffect` hooks in components.
-- **MIDI I/O**: Supports both traditional MIDI and MPE for microtonal expression. Channel allocation managed automatically for MPE devices.
-## Component Architecture Patterns
-- **Manager Components**: Follow pattern of `tuning-system-manager.tsx`, `maqam-manager.tsx`, `jins-manager.tsx`—each handles CRUD operations for its domain with admin/user modes.
-- **Transposition Components**: Use `TranspositionsContext` for pre-computed transpositions rather than calling `getJinsTranspositions`/`getMaqamTranspositions` directly.
-- **Filter Integration**: Components accessing lists should implement `FilterContext` for search/filter functionality. See `useFilterContext` pattern.
-- **State Cleanup**: Call `clearSelections()` when changing tuning systems. Use `clearJinsSelections()` for partial cleanup when switching between jins/maqām.
-- **URL Parameter Handling**: Components with selections should support deep-linking via `handleUrlParams`. Use descriptive IDs like `maqam-rast-al-rast` format.
+### Starting Note Conventions
+**Critical Understanding**: Different starting points represent fundamentally different theoretical approaches:
 
-## Developer Workflows
-- **Install/Run**: `npm i` → `npm run dev` (Next.js). Build with `npm run build`; start with `npm start`. Lint via `npm run lint`.
-- **Docs**: `npm run docs` (TypeDoc) outputs to `public/docs/library`. The Windows helper `generate-docs.bat` opens `docs/api/index.html`, but the configured output is `public/docs/library` (see `typedoc.json`).
-- **Python Toolkit**: A complete Python mirror exists in `python/` with tests and local data. Quick checks:
-  - `python python/test_core_functions.py`
-  - `python python/test_functions.py`
-  - `python python/test_models.py`
+- **ʿushayrān-based**: Oud tuning traditions (perfect fourths)
+- **yegāh-based**: Monochord/sonometer measurements
+- **rāst-based**: Established theoretical frameworks
 
-## Gotchas
-- **Images**: Remote image host allowlist is limited to `www.aub.edu.lb` (see `next.config.ts`).
-- **Data Files**: Treat `/data/*.json` as ground-truth sources; prefer `export.ts` / update utilities rather than mutating at runtime.
-- **Strict TS**: Project is `strict: true`. Keep types explicit, use model methods (e.g., `MaqamData.getTahlil`) rather than ad-hoc shapes.
-- **Docs Navigation**: TypeDoc name/link config is in `typedoc.json`; keep entries in sync when adding models/functions.
+⚠️ **Not simple transposition** - affects mathematical relationships, available maqāmāt, and modulation possibilities.
 
-## Pointers
-- Key files: `src/functions/getTuningSystemPitchClasses.ts`, `src/functions/export.ts`, `src/functions/transpose.ts`, `src/functions/import.ts`, `src/models/Maqam.ts`, `src/models/Jins.ts`, `src/models/NoteName.ts`.
-- Data: `/data/ajnas.json`, `/data/maqamat.json`, `/data/tuningSystems.json`, `/data/patterns.json`, `/data/sources.json`.
+---
+
+## Architecture Overview
+
+### Tech Stack
+- **Frontend**: Next.js 15 + React 19 + TypeScript
+- **Styling**: SCSS with modular components
+- **Audio**: Custom Web Audio API + VexFlow notation
+- **Documentation**: TypeDoc for API generation
+
+### Project Structure
+```
+src/
+├── app/
+│   ├── api/**        # Server endpoints (Next.js 15 app router)
+│   ├── (pages)/      # Page components and layouts
+│   └── globals.css   # Global styles
+├── audio/           # Web Audio API utilities and synthesis
+├── components/       # Reusable UI components
+├── contexts/         # React context providers for state management
+├── functions/        # Core computational musicology functions
+├── models/           # TypeScript classes and data models
+└── styles/          # SCSS modules and styling
+
+data/                # Ground-truth musical data (JSON files)
+public/
+├── docs/            # Comprehensive documentation
+└── images/          # Static assets
+scripts/             # Build and utility scripts (including batch export)
+python/              # Python mirror for validation and testing
+```
+
+### Path Aliases
+Always use `@/*` for imports (see `tsconfig.json`):
+```typescript
+import { getTuningSystems } from '@/functions/import';
+import NoteName from '@/models/NoteName';
+```
+
+---
+
+## Development Conventions
+
+### Note Names & Pitch Classes
+```typescript
+// ✅ Use canonical transliterated names
+import NoteName from '@/models/NoteName';
+const note: NoteName = "rāst_5";
+
+// ✅ Detect and convert pitch class formats
+import { detectPitchClassType, convertPitchClass } from '@/functions/utilities';
+
+// ✅ Default cents tolerance
+const tolerance = 5; // Always default to 5 unless context requires different
+```
+
+### Tuning Systems
+```typescript
+// ✅ Never hardcode - always load dynamically
+const tuningSystems = getTuningSystems();
+const noteNameSets = tuningSystem.getNoteNameSets();
+
+// ✅ Generate pitch space
+const pitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote);
+```
+
+### Component Creation Checklist
+```typescript
+"use client"; // 1. If using hooks/state
+
+// 2. Import context hooks
+import { useAppContext } from '@/contexts/app-context';
+import { useLanguageContext } from '@/contexts/language-context';
+
+// 3. Implement FilterContext if handling lists
+import { useFilterContext } from '@/contexts/filter-context';
+
+// 4. Use bilingual support
+const { t, language } = useLanguageContext();
+
+// 5. Guard Web Audio
+useEffect(() => {
+  // Client-side audio code only
+}, []);
+```
+
+---
+
+## Auto-Implementation Rules
+
+### Implementation Protocol
+1. **Read Request** → Identify domain (maqam/jins/tuning/audio/UI)
+2. **Auto-Apply Architecture** → Use established patterns
+3. **Integrate by Default** → Assume integration with existing systems
+4. **Validate Automatically** → Check against conventions
+5. **Enhance Progressively** → Add bilingual/URL/performance features
+
+### When to Auto-Implement (Don't Ask)
+- **New features** → Integrate with context architecture
+- **Data queries** → Use import functions, never direct JSON
+- **API endpoints** → Include Swagger docs + validation
+- **Types** → Use existing union types over any/unknown
+- **Errors** → Follow established error patterns
+
+### When to Ask
+- **Truly ambiguous choices** or architectural decisions
+- **Breaking changes** to existing patterns
+- **New theoretical frameworks** not covered in data
+
+---
+
+## Component Patterns
+
+### Manager Components
+Follow pattern of `tuning-system-manager.tsx`:
+```typescript
+// Manager handles CRUD operations with admin/user modes
+// Uses FilterContext for search
+// Implements bilingual support
+// Connects to proper data sources
+```
+
+### Context Integration
+```typescript
+// Context hierarchy
+AppContext (global state)
+└── SoundContext (audio)
+    └── TranspositionsContext (performance optimization)
+        └── FilterContext, MenuContext, LanguageContext (UI state)
+```
+
+### Performance Optimization
+```typescript
+// Use useMemo for expensive calculations
+const expensiveData = useMemo(() =>
+  computeComplexCalculation(), [dependencies]);
+
+// Pre-compute transpositions in context
+const { allTranspositions } = useTranspositionsContext();
+```
+
+---
+
+## API Development
+
+### Standard API Pattern
+```typescript
+// Route: src/app/api/[endpoint]/route.ts
+import { NextResponse } from 'next/server';
+import { getTuningSystems } from '@/functions/import';
+
+export async function POST(request: Request) {
+  try {
+    // 1. Parse and validate input
+    const body = await request.json();
+
+    // 2. Load data via import functions
+    const data = getTuningSystems();
+
+    // 3. Compute with src/functions/**
+    const result = processData(data, body);
+
+    // 4. Return typed JSON
+    return NextResponse.json(result);
+  } catch (error) {
+    return NextResponse.json(
+      { error: 'Invalid request' },
+      { status: 400 }
+    );
+  }
+}
+```
+
+### Validation Requirements
+- **Required parameters**: Return 400 if missing
+- **Invalid IDs**: Return 404 with helpful message
+- **Default behavior**: Always document what happens when optional parameters omitted
+- **Tuning system IDs**: Verify exact IDs from data files (includes suffixes)
+
+### Documentation Standards
+- **Swagger docs** in route files
+- **HTML documentation** in `public/docs/api/index.html`
+- **Example requests** with verified IDs from actual data
+
+---
+
+## Data Flow & Context
+
+### Core Data Flow
+```typescript
+// 1. Import JSON → Typed Models
+const tuningSystems = getTuningSystems();
+const ajnas = getAjnas();
+const maqamat = getMaqamat();
+
+// 2. Generate Pitch Space
+const pitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote);
+
+// 3. Build Playable Structures
+const jinsTranspositions = getJinsTranspositions(pitchClasses, jins);
+const maqamTahlil = maqamData.getTahlil(pitchClasses);
+```
+
+### State Dependencies
+```typescript
+// Changes trigger cascading updates:
+selectedTuningSystem → allPitchClasses → transpositions → UI selections
+
+// Handle cleanup when tuning system changes
+clearSelections(); // Full cleanup
+clearJinsSelections(); // Partial cleanup
+```
+
+### URL State Synchronization
+```typescript
+// Enable deep-linking with descriptive parameters
+handleUrlParams({
+  maqam: 'maqam-rast-al-rast',
+  tuningSystem: 'Al-Farabi-(950g)',
+  startingNote: 'yegah_5'
+});
+```
+
+---
+
+## Troubleshooting
+
+### Common Issues & Solutions
+
+**File Edit Failures**
+```typescript
+// ✅ Always use Read tool before editing
+// ✅ Verify exact file locations with grep/search
+// ✅ Double-check content matches before edits
+```
+
+**Audio Issues**
+```typescript
+// ✅ Guard all Web Audio with client-side checks
+useEffect(() => {
+  if (typeof window !== 'undefined') {
+    // Audio code here
+  }
+}, []);
+```
+
+**Import/Path Issues**
+```typescript
+// ✅ Use @/* alias exclusively
+// ❌ Don't reference packages/* (excluded from build)
+import { function } from '@/functions/example';
+```
+
+**Tuning System Matching**
+```typescript
+// ✅ Use exact IDs from data files
+const systemId = "Al-Farabi-(950g)"; // Note: includes suffix
+
+// ✅ Check available systems
+const systems = getTuningSystems();
+console.log(systems.map(s => s.getId()));
+```
+
+### Performance Considerations
+- **Modulation calculations** can take minutes for complex systems
+- **TranspositionsContext** pre-computes to avoid repeated calculations
+- **Yield control** with setTimeout(resolve, 0) for UI updates
+- **Memory management** for large data exports
+
+### Context Availability
+```typescript
+// ✅ Always use custom hooks
+const { selectedTuningSystem } = useAppContext();
+
+// ✅ Include error boundaries
+if (!selectedTuningSystem) {
+  throw new Error('TuningSystem context not available');
+}
+```
+
+---
+
+## Development Workflows
+
+### Setup & Development
+```bash
+npm install          # Install dependencies
+npm run dev         # Start development server
+npm run build       # Production build
+npm run lint        # Code linting
+npm run docs        # Generate TypeDoc documentation
+```
+
+### Documentation Generation
+```bash
+npm run docs        # Outputs to public/docs/library
+```
+
+### Testing
+```bash
+# Python toolkit for validation
+python python/test_core_functions.py
+python python/test_functions.py
+python python/test_models.py
+```
+
+---
+
+## Data Structure Reference
+
+### Key Models
+- **TuningSystem**: Historical tuning systems with source citations
+- **MaqamData/JinsData**: Abstract musical structures
+- **PitchClass**: Concrete sound with frequency/cents/MIDI
+- **NoteName**: Canonical transliterated note names
+
+### Export Structure
+```typescript
+interface ExportedTuningSystem {
+  exportInfo: { timestamp: string };
+  tuningSystemData: TuningSystem;
+  summaryStats: ComprehensiveStatistics;
+  pitchClassReference: { [noteName: string]: PitchClass };
+  allAjnasData?: { [name: string]: MergedJins };
+  allMaqamatData?: { [name: string]: MergedMaqam };
+}
+```
+
+### Modulation Analysis
+- **Al-Shawwā Algorithm**: First systematic digital implementation
+- **Historical Guidelines**: Based on 1946 modulation principles
+- **Tuning System Dependent**: Different systems have different modulation possibilities
+
+---
+
+*This document should be reviewed quarterly to ensure examples remain current and accurate.*
