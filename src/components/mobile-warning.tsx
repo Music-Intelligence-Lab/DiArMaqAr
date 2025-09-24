@@ -13,7 +13,7 @@ export default function MobileWarning() {
           Desktop Required
         </h2>
         <p className="mobile-warning__message">
-          The Arabic Maqam Network is designed for laptop and desktop computers only.
+          The Digital Arabic Maqām Archive is designed for laptop and desktop computers only.
         </p>
         <p>
           Please access this application from a device with a larger screen for the best experience.

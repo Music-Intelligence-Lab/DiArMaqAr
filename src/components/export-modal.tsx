@@ -1478,7 +1478,7 @@ export default function ExportModal({
       <!DOCTYPE html>
       <html>
       <head>
-        <title>Arabic Maqam Network Export</title>
+        <title>Digital Arabic Maqām Archive Export</title>
         <style>
           body { 
             font-family: 'Times New Roman', serif; 
@@ -1531,7 +1531,7 @@ export default function ExportModal({
         </style>
       </head>
       <body>
-        <h1>Arabic Maqam Network Export</h1>
+        <h1>Digital Arabic Maqām Archive Export</h1>
         <div class="export-info">
           Generated on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}
         </div>
