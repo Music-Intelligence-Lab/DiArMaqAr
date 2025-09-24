@@ -209,10 +209,22 @@ export type TransliteratedNoteNameOctaveTwo = (typeof octaveTwoNoteNames)[number
 export type TransliteratedNoteNameOctaveThree = (typeof octaveThreeNoteNames)[number];
 export type TransliteratedNoteNameOctaveFour = (typeof octaveFourNoteNames)[number];
 
+/**
+ * Gets the global index of a note name across all octaves.
+ * 
+ * @param noteName - The note name to find
+ * @returns The index in the combined array of all note names
+ */
 export function getNoteNameIndex(noteName: NoteName): number {
   return allNotes.indexOf(noteName);
 }
 
+/**
+ * Gets the octave and index within that octave for a note name.
+ * 
+ * @param noteName - The note name to analyze
+ * @returns Cell object containing octave and index within that octave
+ */
 export function getNoteNameIndexAndOctave(noteName: NoteName): Cell {
   if (octaveZeroNoteNames.includes(noteName)) return { octave: 0, index: octaveZeroNoteNames.indexOf(noteName) };
   if (octaveOneNoteNames.includes(noteName)) return { octave: 1, index: octaveOneNoteNames.indexOf(noteName) };
@@ -222,6 +234,12 @@ export function getNoteNameIndexAndOctave(noteName: NoteName): Cell {
   return { index: -1, octave: -1 };
 }
 
+/**
+ * Gets the note name from octave and index coordinates.
+ * 
+ * @param cell - Cell object containing octave and index
+ * @returns The corresponding note name
+ */
 export function getNoteNameFromIndexAndOctave(cell: Cell): NoteName {
   const { octave, index } = cell;
   if (octave === 0) return octaveZeroNoteNames[index];
@@ -232,6 +250,13 @@ export function getNoteNameFromIndexAndOctave(cell: Cell): NoteName {
   else return "none";
 }
 
+/**
+ * Shifts a note name by the specified number of octaves.
+ * 
+ * @param noteName - The note name to shift
+ * @param shift - Number of octaves to shift (positive = up, negative = down)
+ * @returns The shifted note name
+ */
 export function shiftNoteName(noteName: NoteName, shift: number): NoteName {
   const { index, octave } = getNoteNameIndexAndOctave(noteName);
 
