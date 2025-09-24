@@ -25,7 +25,7 @@ const dataFilePath = path.join(process.cwd(), "data", "ajnas.json");
  *                   id:
  *                     type: string
  *                     description: Unique identifier for the jins
- *                     example: "jins_bayati"
+ *                     example: "1"
  *                   name:
  *                     type: string
  *                     description: Name of the jins

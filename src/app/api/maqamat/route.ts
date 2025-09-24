@@ -25,7 +25,7 @@ const dataFilePath = path.join(process.cwd(), "data", "maqamat.json");
  *                   id:
  *                     type: string
  *                     description: Unique identifier for the maqam
- *                     example: "maqam_bayati"
+ *                     example: "1"
  *                   name:
  *                     type: string
  *                     description: Name of the maqam

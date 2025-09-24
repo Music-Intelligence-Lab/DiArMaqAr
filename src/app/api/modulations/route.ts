@@ -7,6 +7,7 @@ import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses
 import modulate from "@/functions/modulate";
 import { MaqamatModulations } from "@/models/Maqam";
 import { AjnasModulations } from "@/models/Jins";
+import { englishify } from "@/functions/export";
 
 /**
  * @swagger
@@ -26,18 +27,22 @@ import { AjnasModulations } from "@/models/Jins";
  *               tuningSystemID:
  *                 type: string
  *                 description: Unique identifier for the tuning system context
- *                 example: "24TET_tuning"
+ *                 example: "Ronzevalle-(1904)"
  *               maqamID:
  *                 type: string
- *                 description: Unique identifier for the source maqam
- *                 example: "maqam_bayati"
- *               firstNote:
+ *                 description: Unique identifier for the maqam (mutually exclusive with maqamName)
+ *                 example: "2"
+ *               maqamName:
  *                 type: string
- *                 description: Starting note name for modulation analysis
- *                 example: "rāst"
- *               tonic:
+ *                 description: Name of the maqam (mutually exclusive with maqamID)
+ *                 example: "maqām ḥijāz"
+ *               tuningSystemStartingNoteName:
  *                 type: string
- *                 description: Tonic note for the modulation context
+ *                 description: Starting note name for tuning system note naming convention (must match first element in tuning system). If not provided, defaults to the first available note naming convention in the tuning system core data. This parameter affects the theoretical framework used for modulation analysis.
+ *                 example: "ʿushayrān"
+ *               noteNameToModulateFrom:
+ *                 type: string
+ *                 description: Which note name within the maqam to find modulations from
  *                 example: "dūgāh"
  *               ajnasModulationsMode:
  *                 type: boolean
@@ -45,14 +50,16 @@ import { AjnasModulations } from "@/models/Jins";
  *                 example: true
  *               centsTolerance:
  *                 type: number
- *                 description: Acceptable deviation in cents for pitch matching
- *                 example: 10
+ *                 description: Tolerance value used as (+/-) for calculating possible transpositions within tuning systems that aren't based on frequency ratio fractions (e.g. 9/8, 4/3, 3/2) in their core data. This affects the modulation possibilities: more transpositions allow for more modulations (0-50, default: 5)
+ *                 example: 5
  *                 minimum: 0
  *                 maximum: 50
  *             required:
  *               - tuningSystemID
- *               - maqamID
- *               - tonic
+ *               - noteNameToModulateFrom
+ *             oneOf:
+ *               - required: [maqamID]
+ *               - required: [maqamName]
  *     responses:
  *       200:
  *         description: Modulation analysis completed successfully
@@ -124,11 +131,12 @@ import { AjnasModulations } from "@/models/Jins";
  *                   type: string
  *                   examples:
  *                     - "tuningSystemID (string) is required"
- *                     - "maqamID (string) is required"
- *                     - "tonic (string) is required"
+ *                     - "Either maqamID or maqamName must be provided"
+ *                     - "Cannot provide both maqamID and maqamName. Please provide only one"
+ *                     - "noteNameToModulateFrom (string) is required"
  *                     - "Invalid tuningSystemID"
- *                     - "Invalid maqamID"
- *                     - "Invalid firstNote"
+ *                     - "Maqam not found"
+ *                     - "Invalid tuningSystemStartingNoteName"
  *       500:
  *         description: Server error during modulation calculation
  *         content:
@@ -145,8 +153,9 @@ export async function POST(request: Request) {
     const { 
       tuningSystemID, 
       maqamID, 
-      firstNote, 
-      tonic, 
+      maqamName,
+      tuningSystemStartingNoteName, 
+      noteNameToModulateFrom, 
       ajnasModulationsMode, 
       centsTolerance 
     } = await request.json();
@@ -160,12 +169,20 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "tuningSystemID (string) is required" }, { status: 400 });
     }
 
-    if (typeof maqamID !== "string") {
-      return NextResponse.json({ error: "maqamID (string) is required" }, { status: 400 });
+    // Validate maqam identification - user must provide exactly one of maqamID or maqamName
+    const hasMaqamID = maqamID !== undefined && maqamID !== null && maqamID !== "";
+    const hasMaqamName = maqamName !== undefined && maqamName !== null && maqamName !== "";
+
+    if (!hasMaqamID && !hasMaqamName) {
+      return NextResponse.json({ error: "Either maqamID or maqamName must be provided" }, { status: 400 });
     }
 
-    if (typeof tonic !== "string") {
-      return NextResponse.json({ error: "tonic (string) is required" }, { status: 400 });
+    if (hasMaqamID && hasMaqamName) {
+      return NextResponse.json({ error: "Cannot provide both maqamID and maqamName. Please provide only one" }, { status: 400 });
+    }
+
+    if (typeof noteNameToModulateFrom !== "string") {
+      return NextResponse.json({ error: "noteNameToModulateFrom (string) is required" }, { status: 400 });
     }
 
     // Find the tuning system
@@ -175,22 +192,30 @@ export async function POST(request: Request) {
     }
 
     // Find the maqam
-    const selectedMaqamData = maqamat.find((maqam) => maqam.getId() === maqamID);
-    if (!selectedMaqamData) {
-      return NextResponse.json({ error: "Invalid maqamID" }, { status: 400 });
+    let selectedMaqamData;
+    if (hasMaqamID) {
+      selectedMaqamData = maqamat.find((maqam) => maqam.getId() === maqamID);
+      if (!selectedMaqamData) {
+        return NextResponse.json({ error: "Maqam not found" }, { status: 400 });
+      }
+    } else if (hasMaqamName) {
+      selectedMaqamData = maqamat.find((maqam) => englishify(maqam.getName()) === englishify(maqamName));
+      if (!selectedMaqamData) {
+        return NextResponse.json({ error: "Maqam not found" }, { status: 400 });
+      }
     }
 
     // Determine note names to use
     let noteNames: string[] = [];
-    if (firstNote) {
+    if (tuningSystemStartingNoteName) {
       for (const setOfNotes of selectedTuningSystem.getNoteNameSets()) {
-        if (setOfNotes[0] === firstNote) {
+        if (setOfNotes[0] === tuningSystemStartingNoteName) {
           noteNames = setOfNotes;
           break;
         }
       }
       if (noteNames.length === 0) {
-        return NextResponse.json({ error: "Invalid firstNote" }, { status: 400 });
+        return NextResponse.json({ error: "Invalid tuningSystemStartingNoteName" }, { status: 400 });
       }
     } else {
       if (selectedTuningSystem.getNoteNameSets().length > 0) {
@@ -207,25 +232,24 @@ export async function POST(request: Request) {
     }
 
     // Get all pitch classes
-    const allPitchClasses: PitchClass[] = getTuningSystemPitchClasses(selectedTuningSystem, firstNote);
+    const allPitchClasses: PitchClass[] = getTuningSystemPitchClasses(selectedTuningSystem, tuningSystemStartingNoteName);
 
     // Get the maqam transpositions to find the specific transposition with the requested tonic
     const maqamTranspositions = getMaqamTranspositions(
       allPitchClasses, 
       ajnas, 
-      selectedMaqamData, 
+      selectedMaqamData!, 
       true, 
       centsTolerance ?? 5
-    );
-
-    // Find the specific transposition that starts with the requested tonic
+    );    // Find the specific transposition that starts with the requested tonic
     const sourceMaqamTransposition = maqamTranspositions.find(
-      (maqam) => maqam.ascendingPitchClasses[0]?.noteName === tonic
+      (maqam) => maqam.ascendingPitchClasses[0]?.noteName === noteNameToModulateFrom
     );
 
     if (!sourceMaqamTransposition) {
+      const maqamIdentifier = hasMaqamID ? maqamID : maqamName;
       return NextResponse.json({ 
-        error: `No transposition found for maqam ${maqamID} with tonic ${tonic}` 
+        error: `No transposition found for maqam ${maqamIdentifier} with tonic ${noteNameToModulateFrom}` 
       }, { status: 400 });
     }
 
