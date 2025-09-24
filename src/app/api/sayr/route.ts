@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
-import { englishify } from "@/functions/export";
+import { standardizeText } from "@/functions/export";
 
 const dataFilePath = path.join(process.cwd(), "data", "maqamat.json");
 
@@ -43,7 +43,7 @@ export async function POST(request: Request) {
       if (hasMaqamId) {
         maqam = maqamat.find((m: any) => m.id === maqamId);
       } else if (hasMaqamName) {
-        maqam = maqamat.find((m: any) => englishify(m.name) === englishify(maqamName));
+        maqam = maqamat.find((m: any) => standardizeText(m.name) === standardizeText(maqamName));
       }
       
       if (!maqam) {

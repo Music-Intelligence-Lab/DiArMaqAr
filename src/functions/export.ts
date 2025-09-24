@@ -14,7 +14,7 @@ import calculateNumberOfModulations from "./calculateNumberOfModulations";
  * @param text The input string to convert
  * @returns The converted string with diacritics removed and spaces replaced with underscores
  */
-export function englishify(text: string): string {
+export function standardizeText(text: string): string {
   return (
     text
       // Normalize to decompose combined characters
@@ -363,7 +363,7 @@ export async function exportTuningSystem(
 
   if (options.includePitchClasses) {
     // Store only note names - users can resolve full objects via pitchClassReference
-    result.tuningSystemPitchClasses = fullRangeTuningSystemPitchClasses.map((pc) => englishify(pc.noteName));
+    result.tuningSystemPitchClasses = fullRangeTuningSystemPitchClasses.map((pc) => standardizeText(pc.noteName));
   }
 
   // === SUMMARY STATISTICS ===
@@ -385,7 +385,7 @@ export async function exportTuningSystem(
   updateProgress(69, "Building pitch class references...");
   const pitchClassReference: { [noteName: string]: PitchClass } = {};
   fullRangeTuningSystemPitchClasses.forEach((pc) => {
-    pitchClassReference[englishify(pc.noteName)] = pc;
+    pitchClassReference[standardizeText(pc.noteName)] = pc;
   });
   result.pitchClassReference = pitchClassReference;
 
@@ -443,7 +443,7 @@ export async function exportTuningSystem(
         const mergedJins: MergedJins = {
           jinsId: possibleJins.jinsId,
           name: possibleJins.name,
-          jinsPitchClasses: possibleJins.jinsPitchClasses.map((pc) => englishify(pc.noteName)),
+          jinsPitchClasses: possibleJins.jinsPitchClasses.map((pc) => standardizeText(pc.noteName)),
           jinsPitchClassIntervals: possibleJins.jinsPitchClassIntervals,
           transposition: possibleJins.transposition,
           commentsEnglish: jinsOverview.getCommentsEnglish(),
@@ -451,7 +451,7 @@ export async function exportTuningSystem(
           SourcePageReferences: jinsOverview.getSourcePageReferences(),
         };
 
-        jinsReference[englishify(possibleJins.name)] = mergedJins;
+        jinsReference[standardizeText(possibleJins.name)] = mergedJins;
       }
     }
   }
@@ -535,14 +535,14 @@ export async function exportTuningSystem(
 
         if (maqamatModulations) {
           const maqamModulationWithKeys: MaqamatModulationsWithKeys = {
-            modulationsOnOne: maqamatModulations.modulationsOnOne.map((maqam) => englishify(maqam.name)),
-            modulationsOnThree: maqamatModulations.modulationsOnThree.map((maqam) => englishify(maqam.name)),
-            modulationsOnThree2p: maqamatModulations.modulationsOnThree2p.map((maqam) => englishify(maqam.name)),
-            modulationsOnFour: maqamatModulations.modulationsOnFour.map((maqam) => englishify(maqam.name)),
-            modulationsOnFive: maqamatModulations.modulationsOnFive.map((maqam) => englishify(maqam.name)),
-            modulationsOnSixAscending: maqamatModulations.modulationsOnSixAscending.map((maqam) => englishify(maqam.name)),
-            modulationsOnSixDescending: maqamatModulations.modulationsOnSixDescending.map((maqam) => englishify(maqam.name)),
-            modulationsOnSixNoThird: maqamatModulations.modulationsOnSixNoThird.map((maqam) => englishify(maqam.name)),
+            modulationsOnOne: maqamatModulations.modulationsOnOne.map((maqam) => standardizeText(maqam.name)),
+            modulationsOnThree: maqamatModulations.modulationsOnThree.map((maqam) => standardizeText(maqam.name)),
+            modulationsOnThree2p: maqamatModulations.modulationsOnThree2p.map((maqam) => standardizeText(maqam.name)),
+            modulationsOnFour: maqamatModulations.modulationsOnFour.map((maqam) => standardizeText(maqam.name)),
+            modulationsOnFive: maqamatModulations.modulationsOnFive.map((maqam) => standardizeText(maqam.name)),
+            modulationsOnSixAscending: maqamatModulations.modulationsOnSixAscending.map((maqam) => standardizeText(maqam.name)),
+            modulationsOnSixDescending: maqamatModulations.modulationsOnSixDescending.map((maqam) => standardizeText(maqam.name)),
+            modulationsOnSixNoThird: maqamatModulations.modulationsOnSixNoThird.map((maqam) => standardizeText(maqam.name)),
             noteName2p: maqamatModulations.noteName2p,
           };
 
@@ -551,14 +551,14 @@ export async function exportTuningSystem(
 
         if (ajnasModulations) {
           const ajnasModulationsWithKeys: AjnasModulationsWithKeys = {
-            modulationsOnOne: ajnasModulations.modulationsOnOne.map((jins) => englishify(jins.name)),
-            modulationsOnThree: ajnasModulations.modulationsOnThree.map((jins) => englishify(jins.name)),
-            modulationsOnThree2p: ajnasModulations.modulationsOnThree2p.map((jins) => englishify(jins.name)),
-            modulationsOnFour: ajnasModulations.modulationsOnFour.map((jins) => englishify(jins.name)),
-            modulationsOnFive: ajnasModulations.modulationsOnFive.map((jins) => englishify(jins.name)),
-            modulationsOnSixAscending: ajnasModulations.modulationsOnSixAscending.map((jins) => englishify(jins.name)),
-            modulationsOnSixDescending: ajnasModulations.modulationsOnSixDescending.map((jins) => englishify(jins.name)),
-            modulationsOnSixNoThird: ajnasModulations.modulationsOnSixNoThird.map((jins) => englishify(jins.name)),
+            modulationsOnOne: ajnasModulations.modulationsOnOne.map((jins) => standardizeText(jins.name)),
+            modulationsOnThree: ajnasModulations.modulationsOnThree.map((jins) => standardizeText(jins.name)),
+            modulationsOnThree2p: ajnasModulations.modulationsOnThree2p.map((jins) => standardizeText(jins.name)),
+            modulationsOnFour: ajnasModulations.modulationsOnFour.map((jins) => standardizeText(jins.name)),
+            modulationsOnFive: ajnasModulations.modulationsOnFive.map((jins) => standardizeText(jins.name)),
+            modulationsOnSixAscending: ajnasModulations.modulationsOnSixAscending.map((jins) => standardizeText(jins.name)),
+            modulationsOnSixDescending: ajnasModulations.modulationsOnSixDescending.map((jins) => standardizeText(jins.name)),
+            modulationsOnSixNoThird: ajnasModulations.modulationsOnSixNoThird.map((jins) => standardizeText(jins.name)),
             noteName2p: ajnasModulations.noteName2p,
           };
 
@@ -582,18 +582,18 @@ export async function exportTuningSystem(
         const mergedMaqam: MergedMaqam = {
           maqamId: possibleMaqam.maqamId,
           name: possibleMaqam.name,
-          ascendingPitchClasses: possibleMaqam.ascendingPitchClasses.map((pc) => englishify(pc.noteName)),
-          descendingPitchClasses: possibleMaqam.descendingPitchClasses.map((pc) => englishify(pc.noteName)),
+          ascendingPitchClasses: possibleMaqam.ascendingPitchClasses.map((pc) => standardizeText(pc.noteName)),
+          descendingPitchClasses: possibleMaqam.descendingPitchClasses.map((pc) => standardizeText(pc.noteName)),
           ascendingPitchClassIntervals: possibleMaqam.ascendingPitchClassIntervals,
           descendingPitchClassIntervals: possibleMaqam.descendingPitchClassIntervals,
           ascendingMaqamAjnas: possibleMaqam.ascendingMaqamAjnas
             ? Object.fromEntries(
-                Object.entries(possibleMaqam.ascendingMaqamAjnas).map(([noteName, jins]) => [noteName, jins ? englishify(jins.name) : null])
+                Object.entries(possibleMaqam.ascendingMaqamAjnas).map(([noteName, jins]) => [noteName, jins ? standardizeText(jins.name) : null])
               )
             : undefined,
           descendingMaqamAjnas: possibleMaqam.descendingMaqamAjnas
             ? Object.fromEntries(
-                Object.entries(possibleMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [noteName, jins ? englishify(jins.name) : null])
+                Object.entries(possibleMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [noteName, jins ? standardizeText(jins.name) : null])
               )
             : undefined,
           transposition: possibleMaqam.transposition,
@@ -605,7 +605,7 @@ export async function exportTuningSystem(
         if (possibleMaqam.maqamatModulations) mergedMaqam.maqamatModulations = possibleMaqam.maqamatModulations;
         if (possibleMaqam.ajnasModulations) mergedMaqam.ajnasModulations = possibleMaqam.ajnasModulations;
 
-        maqamReference[englishify(possibleMaqam.name)] = mergedMaqam;
+        maqamReference[standardizeText(possibleMaqam.name)] = mergedMaqam;
       }
     }
   }
@@ -686,7 +686,7 @@ export async function exportJins(
   const jinsReference: { [jinsName: string]: MergedJins } = {};
 
   fullRangeTuningSystemPitchClasses.forEach((pc) => {
-    pitchClassReference[englishify(pc.noteName)] = pc;
+    pitchClassReference[standardizeText(pc.noteName)] = pc;
   });
 
   let jinsToExport: Jins;
@@ -753,7 +753,7 @@ export async function exportJins(
 
   // Include pitch classes if requested
   if (options.includePitchClasses) {
-    result.tuningSystemPitchClasses = fullRangeTuningSystemPitchClasses.map((pc) => englishify(pc.noteName));
+    result.tuningSystemPitchClasses = fullRangeTuningSystemPitchClasses.map((pc) => standardizeText(pc.noteName));
   }
 
   // Include the actual jins instance as MergedJins
@@ -761,7 +761,7 @@ export async function exportJins(
     const mergedJins: MergedJins = {
       jinsId: jinsToExport.jinsId,
       name: jinsToExport.name,
-      jinsPitchClasses: jinsToExport.jinsPitchClasses.map((pc) => englishify(pc.noteName)),
+      jinsPitchClasses: jinsToExport.jinsPitchClasses.map((pc) => standardizeText(pc.noteName)),
       jinsPitchClassIntervals: jinsToExport.jinsPitchClassIntervals,
       transposition: jinsToExport.transposition,
       commentsEnglish: jinsData.getCommentsEnglish(),
@@ -797,7 +797,7 @@ export async function exportJins(
         const mergedJins: MergedJins = {
           jinsId: jinsTransposition.jinsId,
           name: jinsTransposition.name,
-          jinsPitchClasses: jinsTransposition.jinsPitchClasses.map((pc) => englishify(pc.noteName)),
+          jinsPitchClasses: jinsTransposition.jinsPitchClasses.map((pc) => standardizeText(pc.noteName)),
           jinsPitchClassIntervals: jinsTransposition.jinsPitchClassIntervals,
           transposition: jinsTransposition.transposition,
           commentsEnglish: jinsOverview.getCommentsEnglish(),
@@ -805,14 +805,14 @@ export async function exportJins(
           SourcePageReferences: jinsOverview.getSourcePageReferences(),
         };
 
-        jinsReference[englishify(jinsTransposition.name)] = mergedJins;
+        jinsReference[standardizeText(jinsTransposition.name)] = mergedJins;
         transpositions.push(mergedJins);
         numberOfTranspositions++;
       }
     }
 
     updateProgress(94, "Finalizing jins transpositions...");
-    result.transpositions = transpositions.map((jins) => englishify(jins.name));
+    result.transpositions = transpositions.map((jins) => standardizeText(jins.name));
     result.numberOfTranspositions = numberOfTranspositions;
   }
 
@@ -880,7 +880,7 @@ export async function exportMaqam(
   const maqamReference: { [maqamName: string]: MergedMaqam } = {};
 
   fullRangeTuningSystemPitchClasses.forEach((pc) => {
-    pitchClassReference[englishify(pc.noteName)] = pc;
+    pitchClassReference[standardizeText(pc.noteName)] = pc;
   });
 
   let maqamToExport: Maqam;
@@ -952,7 +952,7 @@ export async function exportMaqam(
 
   // Include pitch classes if requested
   if (options.includePitchClasses) {
-    result.tuningSystemPitchClasses = fullRangeTuningSystemPitchClasses.map((pc) => englishify(pc.noteName));
+    result.tuningSystemPitchClasses = fullRangeTuningSystemPitchClasses.map((pc) => standardizeText(pc.noteName));
   }
 
   // Include the actual maqam instance as MergedMaqam
@@ -961,18 +961,18 @@ export async function exportMaqam(
     const mergedMaqam: MergedMaqam = {
       maqamId: maqamToExport.maqamId,
       name: maqamToExport.name,
-      ascendingPitchClasses: maqamToExport.ascendingPitchClasses.map((pc) => englishify(pc.noteName)),
-      descendingPitchClasses: maqamToExport.descendingPitchClasses.map((pc) => englishify(pc.noteName)),
+      ascendingPitchClasses: maqamToExport.ascendingPitchClasses.map((pc) => standardizeText(pc.noteName)),
+      descendingPitchClasses: maqamToExport.descendingPitchClasses.map((pc) => standardizeText(pc.noteName)),
       ascendingPitchClassIntervals: maqamToExport.ascendingPitchClassIntervals,
       descendingPitchClassIntervals: maqamToExport.descendingPitchClassIntervals,
       ascendingMaqamAjnas: convertedMaqam.ascendingMaqamAjnas
         ? Object.fromEntries(
-            Object.entries(convertedMaqam.ascendingMaqamAjnas).map(([noteName, jins]) => [noteName, jins ? englishify(jins.name) : null])
+            Object.entries(convertedMaqam.ascendingMaqamAjnas).map(([noteName, jins]) => [noteName, jins ? standardizeText(jins.name) : null])
           )
         : undefined,
       descendingMaqamAjnas: convertedMaqam.descendingMaqamAjnas
         ? Object.fromEntries(
-            Object.entries(convertedMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [noteName, jins ? englishify(jins.name) : null])
+            Object.entries(convertedMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [noteName, jins ? standardizeText(jins.name) : null])
           )
         : undefined,
       transposition: maqamToExport.transposition,
@@ -1003,7 +1003,7 @@ export async function exportMaqam(
       // Helper function to process maqam modulations and populate reference
       const processMaqamModulations = (maqamList: Maqam[]) => {
         return maqamList.map((maqam) => {
-          const englishifiedName = englishify(maqam.name);
+          const englishifiedName = standardizeText(maqam.name);
 
           // Find the original maqam data for additional details
           const maqamOverview = allMaqamat.find((m) => m.getId() === maqam.maqamId);
@@ -1011,15 +1011,15 @@ export async function exportMaqam(
             const mergedMaqam: MergedMaqam = {
               maqamId: maqam.maqamId,
               name: maqam.name,
-              ascendingPitchClasses: maqam.ascendingPitchClasses.map((pc) => englishify(pc.noteName)),
-              descendingPitchClasses: maqam.descendingPitchClasses.map((pc) => englishify(pc.noteName)),
+              ascendingPitchClasses: maqam.ascendingPitchClasses.map((pc) => standardizeText(pc.noteName)),
+              descendingPitchClasses: maqam.descendingPitchClasses.map((pc) => standardizeText(pc.noteName)),
               ascendingPitchClassIntervals: maqam.ascendingPitchClassIntervals,
               descendingPitchClassIntervals: maqam.descendingPitchClassIntervals,
               ascendingMaqamAjnas: maqam.ascendingMaqamAjnas
                 ? Object.fromEntries(
                     Object.entries(convertMaqamAjnasToObjects(maqam).ascendingMaqamAjnas || {}).map(([noteName, jins]) => [
                       noteName,
-                      jins ? englishify(jins.name) : null,
+                      jins ? standardizeText(jins.name) : null,
                     ])
                   )
                 : undefined,
@@ -1027,7 +1027,7 @@ export async function exportMaqam(
                 ? Object.fromEntries(
                     Object.entries(convertMaqamAjnasToObjects(maqam).descendingMaqamAjnas || {}).map(([noteName, jins]) => [
                       noteName,
-                      jins ? englishify(jins.name) : null,
+                      jins ? standardizeText(jins.name) : null,
                     ])
                   )
                 : undefined,
@@ -1074,7 +1074,7 @@ export async function exportMaqam(
       // Helper function to process jins modulations and populate reference
       const processJinsModulations = (jinsList: Jins[]) => {
         return jinsList.map((jins) => {
-          const englishifiedName = englishify(jins.name);
+          const englishifiedName = standardizeText(jins.name);
 
           // Find the original jins data for additional details
           const jinsOverview = allAjnas.find((j) => j.getId() === jins.jinsId);
@@ -1082,7 +1082,7 @@ export async function exportMaqam(
             const mergedJins: MergedJins = {
               jinsId: jins.jinsId,
               name: jins.name,
-              jinsPitchClasses: jins.jinsPitchClasses.map((pc) => englishify(pc.noteName)),
+              jinsPitchClasses: jins.jinsPitchClasses.map((pc) => standardizeText(pc.noteName)),
               jinsPitchClassIntervals: jins.jinsPitchClassIntervals,
               transposition: jins.transposition,
               commentsEnglish: jinsOverview.getCommentsEnglish(),
@@ -1171,18 +1171,18 @@ export async function exportMaqam(
         const mergedMaqam: MergedMaqam = {
           maqamId: maqamTransposition.maqamId,
           name: maqamTransposition.name,
-          ascendingPitchClasses: maqamTransposition.ascendingPitchClasses.map((pc) => englishify(pc.noteName)),
-          descendingPitchClasses: maqamTransposition.descendingPitchClasses.map((pc) => englishify(pc.noteName)),
+          ascendingPitchClasses: maqamTransposition.ascendingPitchClasses.map((pc) => standardizeText(pc.noteName)),
+          descendingPitchClasses: maqamTransposition.descendingPitchClasses.map((pc) => standardizeText(pc.noteName)),
           ascendingPitchClassIntervals: maqamTransposition.ascendingPitchClassIntervals,
           descendingPitchClassIntervals: maqamTransposition.descendingPitchClassIntervals,
           ascendingMaqamAjnas: convertedMaqam.ascendingMaqamAjnas
             ? Object.fromEntries(
-                Object.entries(convertedMaqam.ascendingMaqamAjnas).map(([noteName, jins]) => [noteName, jins ? englishify(jins.name) : null])
+                Object.entries(convertedMaqam.ascendingMaqamAjnas).map(([noteName, jins]) => [noteName, jins ? standardizeText(jins.name) : null])
               )
             : undefined,
           descendingMaqamAjnas: convertedMaqam.descendingMaqamAjnas
             ? Object.fromEntries(
-                Object.entries(convertedMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [noteName, jins ? englishify(jins.name) : null])
+                Object.entries(convertedMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [noteName, jins ? standardizeText(jins.name) : null])
               )
             : undefined,
           transposition: maqamTransposition.transposition,
@@ -1191,7 +1191,7 @@ export async function exportMaqam(
           SourcePageReferences: maqamOverview.getSourcePageReferences(),
         };
 
-        const englishifiedName = englishify(maqamTransposition.name);
+        const englishifiedName = standardizeText(maqamTransposition.name);
         maqamReference[englishifiedName] = mergedMaqam;
         transpositionNames.push(englishifiedName);
       }

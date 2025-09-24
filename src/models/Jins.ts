@@ -2,7 +2,7 @@ import { SourcePageReference } from "./bibliography/Source";
 import PitchClass, { PitchClassInterval } from "./PitchClass";
 import NoteName from "./NoteName";
 import { getPitchClassIntervals } from "@/functions/getPitchClassIntervals";
-import { englishify } from "@/functions/export";
+import { standardizeText } from "@/functions/export";
 import shiftPitchClass from "@/functions/shiftPitchClass";
 
 /**
@@ -81,7 +81,7 @@ export default class JinsData {
     SourcePageReferences: SourcePageReference[]
   ) {
     this.id = id;
-    this.idName = englishify(name);
+    this.idName = standardizeText(name);
     this.name = name;
     this.noteNames = noteNames;
     this.commentsEnglish = commentsEnglish;

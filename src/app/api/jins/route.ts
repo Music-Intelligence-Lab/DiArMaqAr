@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getTuningSystems, getAjnas } from "@/functions/import";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { getJinsTranspositions } from "@/functions/transpose";
-import { englishify } from "@/functions/export";
+import { standardizeText } from "@/functions/export";
 
 /**
  * @swagger
@@ -102,7 +102,7 @@ export async function POST(request: Request) {
     const selectedTuningSystem = filteredTuningSystems[0];
     const availableStartingNotes = selectedTuningSystem.getNoteNameSets().map((list) => list[0]);
 
-    if (!availableStartingNotes.some((noteName) => englishify(noteName) === englishify(tuningSystemStartingNoteName))) {
+    if (!availableStartingNotes.some((noteName) => standardizeText(noteName) === standardizeText(tuningSystemStartingNoteName))) {
       return new NextResponse(
         `Starting note name '${tuningSystemStartingNoteName}' not available for tuning system '${tuningSystemID}'. Available starting notes: ${availableStartingNotes.join(", ")}.`,
         { status: 400 }
@@ -120,7 +120,7 @@ export async function POST(request: Request) {
       return new NextResponse("Jins not found.", { status: 404 });
     }
   } else if (hasJinsName) {
-    jins = ajnas.find((j) => englishify(j.getName()) === englishify(jinsName));
+    jins = ajnas.find((j) => standardizeText(j.getName()) === standardizeText(jinsName));
     if (!jins) {
       return new NextResponse("Jins not found.", { status: 404 });
     }
@@ -143,7 +143,7 @@ export async function POST(request: Request) {
       const startingNoteNames = tuningSystem.getNoteNameSets().map((list) => list[0]);
 
       // Filter starting note names if tuningSystemStartingNoteName is provided
-      const filteredStartingNoteNames = tuningSystemStartingNoteName ? startingNoteNames.filter((noteName) => englishify(noteName) === englishify(tuningSystemStartingNoteName)) : startingNoteNames;
+      const filteredStartingNoteNames = tuningSystemStartingNoteName ? startingNoteNames.filter((noteName) => standardizeText(noteName) === standardizeText(tuningSystemStartingNoteName)) : startingNoteNames;
 
       for (const noteName of filteredStartingNoteNames) {
         const tuningSystemPitchClasses = getTuningSystemPitchClasses(tuningSystem, noteName);
@@ -153,9 +153,9 @@ export async function POST(request: Request) {
 
         if (isJinsPossible) {
           if (inputNewTonicForTransposition) {
-            if (tuningSystemPitchClasses.find((pc) => englishify(pc.noteName) === englishify(inputNewTonicForTransposition))) {
+            if (tuningSystemPitchClasses.find((pc) => standardizeText(pc.noteName) === standardizeText(inputNewTonicForTransposition))) {
               const transpositions = getJinsTranspositions(tuningSystemPitchClasses, jins, true, inputCentsTolerance);
-              const transposition = transpositions.find((t) => englishify(t.jinsPitchClasses[0].noteName) === englishify(inputNewTonicForTransposition));
+              const transposition = transpositions.find((t) => standardizeText(t.jinsPitchClasses[0].noteName) === standardizeText(inputNewTonicForTransposition));
 
               if (transposition) {
                 // When specific tonic is requested, return only that transposition
