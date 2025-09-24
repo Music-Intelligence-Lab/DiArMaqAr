@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import PitchClass from "@/models/PitchClass";
 import { getJinsTranspositions, getMaqamTranspositions } from "@/functions/transpose";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
-import { englishify } from "@/functions/export";
+import { standardizeText } from "@/functions/export";
 
 /**
  * @swagger
@@ -200,8 +200,8 @@ export async function POST(request: Request) {
 
     // Validate noteNameToTransposeTo if provided
     if (noteNameToTransposeTo && noteNameToTransposeTo !== "") {
-      const englishifiedTargetNote = englishify(noteNameToTransposeTo);
-      const noteExists = allPitchClasses.some(pc => englishify(pc.noteName) === englishifiedTargetNote);
+      const englishifiedTargetNote = standardizeText(noteNameToTransposeTo);
+      const noteExists = allPitchClasses.some(pc => standardizeText(pc.noteName) === englishifiedTargetNote);
       if (!noteExists) {
         return NextResponse.json({ error: `Note name '${noteNameToTransposeTo}' does not exist in the selected tuning system` }, { status: 400 });
       }
@@ -217,9 +217,9 @@ export async function POST(request: Request) {
 
       // Filter for specific note name if provided
       if (noteNameToTransposeTo && noteNameToTransposeTo !== "") {
-        const englishifiedTargetNote = englishify(noteNameToTransposeTo);
+        const englishifiedTargetNote = standardizeText(noteNameToTransposeTo);
         const filteredTransposition = maqamTranspositions.find(maqam => 
-          englishify(maqam.ascendingPitchClasses[0].noteName) === englishifiedTargetNote
+          standardizeText(maqam.ascendingPitchClasses[0].noteName) === englishifiedTargetNote
         );
         
         if (!filteredTransposition) {
@@ -231,7 +231,7 @@ export async function POST(request: Request) {
 
       return NextResponse.json(maqamTranspositions);
     } else if (hasMaqamName) {
-      const selectedMaqamData = maqamat.find((maqam) => englishify(maqam.getName()) === englishify(maqamName));
+      const selectedMaqamData = maqamat.find((maqam) => standardizeText(maqam.getName()) === standardizeText(maqamName));
       if (!selectedMaqamData) {
         return NextResponse.json({ error: "Maqam not found" }, { status: 400 });
       }
@@ -240,9 +240,9 @@ export async function POST(request: Request) {
 
       // Filter for specific note name if provided
       if (noteNameToTransposeTo && noteNameToTransposeTo !== "") {
-        const englishifiedTargetNote = englishify(noteNameToTransposeTo);
+        const englishifiedTargetNote = standardizeText(noteNameToTransposeTo);
         const filteredTransposition = maqamTranspositions.find(maqam => 
-          englishify(maqam.ascendingPitchClasses[0].noteName) === englishifiedTargetNote
+          standardizeText(maqam.ascendingPitchClasses[0].noteName) === englishifiedTargetNote
         );
         
         if (!filteredTransposition) {
@@ -263,9 +263,9 @@ export async function POST(request: Request) {
 
       // Filter for specific note name if provided
       if (noteNameToTransposeTo && noteNameToTransposeTo !== "") {
-        const englishifiedTargetNote = englishify(noteNameToTransposeTo);
+        const englishifiedTargetNote = standardizeText(noteNameToTransposeTo);
         const filteredTransposition = jinsTranspositions.find(jins => 
-          englishify(jins.jinsPitchClasses[0].noteName) === englishifiedTargetNote
+          standardizeText(jins.jinsPitchClasses[0].noteName) === englishifiedTargetNote
         );
         
         if (!filteredTransposition) {
@@ -277,7 +277,7 @@ export async function POST(request: Request) {
 
       return NextResponse.json(jinsTranspositions);
     } else if (hasJinsName) {
-      const selectedJinsData = ajnas.find((jins) => englishify(jins.getName()) === englishify(jinsName));
+      const selectedJinsData = ajnas.find((jins) => standardizeText(jins.getName()) === standardizeText(jinsName));
       if (!selectedJinsData) {
         return NextResponse.json({ error: "Jins not found" }, { status: 400 });
       }
@@ -286,9 +286,9 @@ export async function POST(request: Request) {
 
       // Filter for specific note name if provided
       if (noteNameToTransposeTo && noteNameToTransposeTo !== "") {
-        const englishifiedTargetNote = englishify(noteNameToTransposeTo);
+        const englishifiedTargetNote = standardizeText(noteNameToTransposeTo);
         const filteredTransposition = jinsTranspositions.find(jins => 
-          englishify(jins.jinsPitchClasses[0].noteName) === englishifiedTargetNote
+          standardizeText(jins.jinsPitchClasses[0].noteName) === englishifiedTargetNote
         );
         
         if (!filteredTransposition) {

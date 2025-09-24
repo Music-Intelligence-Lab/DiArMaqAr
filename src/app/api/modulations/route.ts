@@ -7,7 +7,7 @@ import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses
 import modulate from "@/functions/modulate";
 import { MaqamatModulations } from "@/models/Maqam";
 import { AjnasModulations } from "@/models/Jins";
-import { englishify } from "@/functions/export";
+import { standardizeText } from "@/functions/export";
 
 /**
  * @swagger
@@ -199,7 +199,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Maqam not found" }, { status: 400 });
       }
     } else if (hasMaqamName) {
-      selectedMaqamData = maqamat.find((maqam) => englishify(maqam.getName()) === englishify(maqamName));
+      selectedMaqamData = maqamat.find((maqam) => standardizeText(maqam.getName()) === standardizeText(maqamName));
       if (!selectedMaqamData) {
         return NextResponse.json({ error: "Maqam not found" }, { status: 400 });
       }

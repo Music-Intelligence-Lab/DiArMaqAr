@@ -3,7 +3,7 @@ import PitchClass, { PitchClassInterval } from "./PitchClass";
 import { AjnasModulations, Jins } from "./Jins";
 import NoteName from "./NoteName";
 import { SourcePageReference } from "./bibliography/Source";
-import { englishify } from "@/functions/export";
+import { standardizeText } from "@/functions/export";
 import shiftPitchClass from "@/functions/shiftPitchClass";
 
 /**
@@ -114,7 +114,7 @@ export default class MaqamData {
     sourcePageReferences: SourcePageReference[]
   ) {
     this.id = id;
-    this.idName = englishify(name);
+    this.idName = standardizeText(name);
     this.name = name;
     this.ascendingNoteNames = ascendingNoteNames;
     this.descendingNoteNames = descendingNoteNames;

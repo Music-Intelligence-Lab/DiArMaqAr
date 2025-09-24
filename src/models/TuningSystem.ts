@@ -1,4 +1,4 @@
-import { englishify } from "@/functions/export";
+import { standardizeText } from "@/functions/export";
 import NoteName, { shiftNoteName } from "./NoteName";
 import { SourcePageReference } from "./bibliography/Source";
 
@@ -128,7 +128,7 @@ export default class TuningSystem {
     saved: boolean
   ) {
     // Generate unique ID by combining creator, year, and title (sanitized)
-    this.id = englishify(`${creatorEnglish}-(${year})`.replaceAll(" ", "").replaceAll("+", ""));
+    this.id = standardizeText(`${creatorEnglish}-(${year})`.replaceAll(" ", "").replaceAll("+", ""));
     this.titleEnglish = titleEnglish;
     this.titleArabic = titleArabic;
     this.year = year;

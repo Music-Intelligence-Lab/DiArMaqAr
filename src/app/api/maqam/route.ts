@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getTuningSystems, getMaqamat, getAjnas } from "@/functions/import";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { getMaqamTranspositions } from "@/functions/transpose";
-import { englishify } from "@/functions/export";
+import { standardizeText } from "@/functions/export";
 import modulate from "@/functions/modulate";
 
 /**
@@ -120,7 +120,7 @@ export async function POST(request: Request) {
     const selectedTuningSystem = filteredTuningSystems[0];
     const availableStartingNotes = selectedTuningSystem.getNoteNameSets().map((list) => list[0]);
 
-    if (!availableStartingNotes.some((noteName) => englishify(noteName) === englishify(tuningSystemStartingNoteName))) {
+    if (!availableStartingNotes.some((noteName) => standardizeText(noteName) === standardizeText(tuningSystemStartingNoteName))) {
       return new NextResponse(
         `Starting note name '${tuningSystemStartingNoteName}' not available for tuning system '${tuningSystemID}'. Available starting notes: ${availableStartingNotes.join(", ")}.`,
         { status: 400 }
@@ -138,7 +138,7 @@ export async function POST(request: Request) {
       return new NextResponse("Maqam not found.", { status: 404 });
     }
   } else if (hasMaqamName) {
-    maqam = maqamat.find((m) => englishify(m.getName()) === englishify(maqamName));
+    maqam = maqamat.find((m) => standardizeText(m.getName()) === standardizeText(maqamName));
     if (!maqam) {
       return new NextResponse("Maqam not found.", { status: 404 });
     }
@@ -160,7 +160,7 @@ export async function POST(request: Request) {
       const startingNoteNames = tuningSystem.getNoteNameSets().map((list) => list[0]);
 
       // Filter starting note names if tuningSystemStartingNoteName is provided
-      const filteredStartingNoteNames = tuningSystemStartingNoteName ? startingNoteNames.filter((noteName) => englishify(noteName) === englishify(tuningSystemStartingNoteName)) : startingNoteNames;
+      const filteredStartingNoteNames = tuningSystemStartingNoteName ? startingNoteNames.filter((noteName) => standardizeText(noteName) === standardizeText(tuningSystemStartingNoteName)) : startingNoteNames;
 
       for (const noteName of filteredStartingNoteNames) {
         const tuningSystemPitchClasses = getTuningSystemPitchClasses(tuningSystem, noteName);
@@ -170,9 +170,9 @@ export async function POST(request: Request) {
 
         if (isMaqamPossible) {
           if (inputNewTonicForTransposition) {
-            if (tuningSystemPitchClasses.find((pc) => englishify(pc.noteName) === englishify(inputNewTonicForTransposition))) {
+            if (tuningSystemPitchClasses.find((pc) => standardizeText(pc.noteName) === standardizeText(inputNewTonicForTransposition))) {
               const transpositions = getMaqamTranspositions(tuningSystemPitchClasses, ajnas, maqam, true, inputCentsTolerance);
-              const transposition = transpositions.find((t) => englishify(t.ascendingPitchClasses[0].noteName) === englishify(inputNewTonicForTransposition));
+              const transposition = transpositions.find((t) => standardizeText(t.ascendingPitchClasses[0].noteName) === standardizeText(inputNewTonicForTransposition));
 
               if (transposition) {
                 // Add modulations if requested
