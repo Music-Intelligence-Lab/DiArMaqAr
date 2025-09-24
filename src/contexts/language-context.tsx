@@ -42,7 +42,7 @@ const translations = {
     "nav.tools": "Tools",
     "nav.bibliography": "Bibliography",
     "nav.statistics": "Statistics",
-    "nav.userGuide": "User Guide",
+    "nav.documentation": "Documentation",
     "nav.about": "About",
     "nav.credits": "Credits",
 
@@ -351,7 +351,7 @@ const translations = {
     "nav.tools": "الأدوات",
     "nav.bibliography": "المراجع",
     "nav.analytics": "التحليلات",
-    "nav.userGuide": "دليل المستخدم",
+    "nav.documentation": "التوثيق",
     "nav.about": "حول المنصة",
     "nav.credits": "صفحة الإعتمادات",
 
