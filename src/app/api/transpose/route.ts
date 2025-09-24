@@ -35,8 +35,12 @@ import { englishify } from "@/functions/export";
  *                 example: "maqam bayātī"
  *               jinsID:
  *                 type: string
- *                 description: Unique identifier for the jins to transpose (mutually exclusive with maqamID)
+ *                 description: Unique identifier for the jins to transpose (mutually exclusive with maqamID and jinsName)
  *                 example: "1"
+ *               jinsName:
+ *                 type: string
+ *                 description: Name of the jins to transpose (mutually exclusive with maqamID and jinsID)
+ *                 example: "jins rāst"
  *               tuningSystemStartingNoteName:
  *                 type: string
  *                 description: Starting note name for tuning system note naming convention (must match first element in tuning system). If not provided, defaults to the first available note naming convention in the tuning system core data. This parameter affects the theoretical framework used for transposition analysis.
@@ -55,6 +59,7 @@ import { englishify } from "@/functions/export";
  *               - required: [maqamID]
  *               - required: [maqamName]
  *               - required: [jinsID]
+ *               - required: [jinsName]
  *     responses:
  *       200:
  *         description: Transpositions calculated successfully
@@ -99,7 +104,7 @@ import { englishify } from "@/functions/export";
  *                   type: string
  *                   examples:
  *                     - "tuningSystemID (string) is required"
- *                     - "Either maqamID, maqamName, or jinsID must be provided"
+ *                     - "Either maqamID, maqamName, jinsID, or jinsName must be provided"
  *                     - "Cannot provide multiple identifiers simultaneously"
  *                     - "tuningSystemStartingNoteName object is required"
  *                     - "centsTolerance must be a positive number"
@@ -129,7 +134,7 @@ import { englishify } from "@/functions/export";
  */
 export async function POST(request: Request) {
   try {
-    const { tuningSystemID, maqamID, maqamName, jinsID, tuningSystemStartingNoteName, centsTolerance } = await request.json();
+    const { tuningSystemID, maqamID, maqamName, jinsID, jinsName, tuningSystemStartingNoteName, centsTolerance } = await request.json();
     const tuningSystems = getTuningSystems();
     const maqamat = getMaqamat();
     const ajnas = getAjnas();
@@ -142,11 +147,12 @@ export async function POST(request: Request) {
     const hasMaqamID = maqamID !== undefined && maqamID !== null && maqamID !== "";
     const hasMaqamName = maqamName !== undefined && maqamName !== null && maqamName !== "";
     const hasJinsID = jinsID !== undefined && jinsID !== null && jinsID !== "";
+    const hasJinsName = jinsName !== undefined && jinsName !== null && jinsName !== "";
 
-    const identifierCount = [hasMaqamID, hasMaqamName, hasJinsID].filter(Boolean).length;
+    const identifierCount = [hasMaqamID, hasMaqamName, hasJinsID, hasJinsName].filter(Boolean).length;
     
     if (identifierCount === 0) {
-      return NextResponse.json({ error: "Either maqamID, maqamName, or jinsID must be provided" }, { status: 400 });
+      return NextResponse.json({ error: "Either maqamID, maqamName, jinsID, or jinsName must be provided" }, { status: 400 });
     }
 
     if (identifierCount > 1) {
@@ -214,6 +220,15 @@ export async function POST(request: Request) {
       const jinsTranspositions = getJinsTranspositions(allPitchClasses, selectedJinsData, true, centsTolerance ?? 5);
 
       return NextResponse.json(jinsTranspositions);
+    } else if (hasJinsName) {
+      const selectedJinsData = ajnas.find((jins) => englishify(jins.getName()) === englishify(jinsName));
+      if (!selectedJinsData) {
+        return NextResponse.json({ error: "Jins not found" }, { status: 400 });
+      }
+
+      const jinsTranspositions = getJinsTranspositions(allPitchClasses, selectedJinsData, true, centsTolerance ?? 5);
+
+      return NextResponse.json(jinsTranspositions);
     }
 
     return NextResponse.json({
@@ -222,6 +237,7 @@ export async function POST(request: Request) {
       maqamID: maqamID ?? null,
       maqamName: maqamName ?? null,
       jinsID: jinsID ?? null,
+      jinsName: jinsName ?? null,
     });
   } catch (error) {
     console.error("Error in POST /api/tuningSystems:", error);
