@@ -37,6 +37,14 @@ export interface SourcePageReference {
   page: string;
 }
 
+/**
+ * Creates a standardized string representation of a bibliographic source.
+ * 
+ * @param source - The source to stringify
+ * @param english - Whether to use English or Arabic field values
+ * @param page - Optional page reference to include in the citation
+ * @returns Formatted citation string
+ */
 export function stringifySource(source: Source, english: boolean, page: string | null): string {
   //here if we don't have a page reference, I assume we are creating a url parameter and therefor replace spaces with dashes
   if (source.getContributors().length === 0) return "";

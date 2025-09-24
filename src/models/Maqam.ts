@@ -544,6 +544,14 @@ export interface MaqamatModulations {
   noteName2p: string;
 }
 
+/**
+ * Shifts a maqam to a different octave while maintaining intervallic relationships.
+ * 
+ * @param allPitchClasses - All available pitch classes in the tuning system
+ * @param maqam - The maqam to shift
+ * @param octaveShift - Number of octaves to shift (positive = up, negative = down)
+ * @returns New Maqam instance shifted by the specified number of octaves
+ */
 export function shiftMaqamByOctaves(allPitchClasses: PitchClass[], maqam: Maqam, octaveShift: number): Maqam {
   const shiftedAscendingPitchClasses = maqam.ascendingPitchClasses.map((pc) => shiftPitchClass(allPitchClasses, pc, octaveShift));
   const shiftedAscendingIntervals = getPitchClassIntervals(shiftedAscendingPitchClasses);
@@ -576,6 +584,13 @@ export function shiftMaqamByOctaves(allPitchClasses: PitchClass[], maqam: Maqam,
   };
 }
 
+/**
+ * Compares two maqam instances for equality based on ID, transposition, and sequences.
+ * 
+ * @param maqamA - First maqam to compare
+ * @param maqamB - Second maqam to compare
+ * @returns True if the maqamat are considered equal, false otherwise
+ */
 export function maqamatAreEqual(maqamA: Maqam, maqamB: Maqam): boolean {
   if (maqamA.maqamId !== maqamB.maqamId) return false;
   else if (maqamA.transposition !== maqamB.transposition) return false;

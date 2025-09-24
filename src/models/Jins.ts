@@ -98,6 +98,11 @@ export default class JinsData {
     return this.id;
   }
 
+  /**
+   * Gets the standardized ID name of this jins.
+   * 
+   * @returns The jins ID name
+   */
   getIdName(): string {
     return this.idName;
   }
@@ -318,6 +323,14 @@ export interface AjnasModulations {
   noteName2p: string;
 }
 
+/**
+ * Shifts a jins to a different octave while maintaining intervallic relationships.
+ * 
+ * @param allPitchClasses - All available pitch classes in the tuning system
+ * @param jins - The jins to shift
+ * @param octaveShift - Number of octaves to shift (positive = up, negative = down)
+ * @returns New Jins instance shifted by the specified number of octaves
+ */
 export function shiftJinsByOctaves(allPitchClasses: PitchClass[], jins: Jins, octaveShift: number): Jins {
   const shiftedPitchClasses = jins.jinsPitchClasses.map((pc) => shiftPitchClass(allPitchClasses, pc, octaveShift));
   const shiftedPitchClassIntervals = getPitchClassIntervals(shiftedPitchClasses);
@@ -341,6 +354,13 @@ export function shiftJinsByOctaves(allPitchClasses: PitchClass[], jins: Jins, oc
     jinsPitchClassIntervals: shiftedPitchClassIntervals,
   };}
 
+/**
+ * Compares two jins instances for equality based on ID, length, and starting note.
+ * 
+ * @param jinsA - First jins to compare
+ * @param jinsB - Second jins to compare
+ * @returns True if the jins are considered equal, false otherwise
+ */
 export function ajnasAreEqual(jinsA: Jins, jinsB: Jins): boolean {
   if (jinsA.jinsPitchClasses.length !== jinsB.jinsPitchClasses.length) return false;
   else if (jinsA.jinsId !== jinsB.jinsId) return false;

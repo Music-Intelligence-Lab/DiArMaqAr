@@ -30,14 +30,17 @@ export class Scale {
     return this.intervalRatios.length
   }
 
+  /** Ratio of equivalence (typically 2:1 for octave equivalence) */
   get equaveRatio() {
     return this.intervalRatios[this.intervalRatios.length - 1]
   }
 
+  /** Size of equave in cents */
   get equaveCents() {
     return valueToCents(this.equaveRatio)
   }
 
+  /** Create a deep copy of this scale */
   clone() {
     return new Scale([...this.intervalRatios], this.baseFrequency, this.baseMidiNote, this.title)
   }
@@ -151,6 +154,13 @@ export class Scale {
     return result
   }
 
+  /**
+   * Obtain a range of cents values in the scale.
+   * More efficient to compute than getting individual cents values.
+   * @param start The MIDI index of the lowest note to include.
+   * @param end The MIDI index of the end point (`end` itself not included in the result).
+   * @returns An array of cents values corresponding to the specified range.
+   */
   getCentsRange(start: number, end: number) {
     // Deal with implicit 1/1
     start -= 1

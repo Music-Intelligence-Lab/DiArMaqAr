@@ -4,7 +4,7 @@
     "./src/functions/*.ts"
   ],
   "entryPointStrategy": "expand",
-  "out": "./docs/library",
+  "out": "./public/docs/library",
   "theme": "default",
   "name": "Arabic Maqām Network - TypeScript Library Documentation",
   "includeVersion": true,
