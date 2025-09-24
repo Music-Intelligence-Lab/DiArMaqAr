@@ -483,6 +483,7 @@
                 <li><a href="#tuning-systems">GET /api/tuningSystems</a></li>
                 <li><a href="#jins">POST /api/jins</a></li>
                 <li><a href="#maqam">POST /api/maqam</a></li>
+                <li><a href="#sayr">POST /api/sayr</a></li>
                 <li><a href="#modulations">POST /api/modulations</a></li>
                 <li><a href="#transpose">POST /api/transpose</a></li>
             </ul>
@@ -893,6 +894,124 @@
   }'</pre>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div id="sayr" class="endpoint">
+            <div class="endpoint-header">
+                <h2 class="endpoint-title">Get Suyūr (Melodic Pathways)</h2>
+                <div class="method-url">
+                    <span class="method post">POST</span>
+                    <span class="url">/api/sayr</span>
+                </div>
+                <p class="description">Retrieve suyūr (melodic pathways) for a specific maqam or from a particular academic source. Suyūr represent traditional melodic progressions and ornamentations within maqamat.</p>
+            </div>
+            <div class="endpoint-content">
+                <div class="section">
+                    <h3>Request Parameters</h3>
+                    <table class="parameter-table">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>maqamId</td>
+                                <td>String</td>
+                                <td class="optional">Optional*</td>
+                                <td>Unique identifier for the maqam to retrieve suyūr from (mutually exclusive with sourceId)</td>
+                            </tr>
+                            <tr>
+                                <td>sourceId</td>
+                                <td>String</td>
+                                <td class="optional">Optional*</td>
+                                <td>Unique identifier for the academic source to retrieve suyūr from across all maqamat (mutually exclusive with maqamId)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p><em>* Either maqamId or sourceId must be provided, but not both.</em></p>
+                </div>
+
+                <div class="section">
+                    <h3>Example Request (by Maqam ID)</h3>
+                    <div class="code-block">
+                        <pre>curl -X POST "http://localhost:3000/api/sayr" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "maqamId": "1"
+  }'</pre>
+                    </div>
+
+                    <h3>Example Request (by Source ID)</h3>
+                    <div class="code-block">
+                        <pre>curl -X POST "http://localhost:3000/api/sayr" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "sourceId": "Shawqi-(1969)"
+  }'</pre>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Example Response (by Maqam ID)</h3>
+                    <div class="code-block">
+                        <pre>{
+  "maqamId": "1",
+  "maqamName": "maqām rāst (binṣir)",
+  "suyūr": [
+    {
+      "id": "sayr_1",
+      "name": "Basic Rast Progression",
+      "noteSequence": ["rāst", "dūgāh", "segāh", "chahārgāh"],
+      "sourceId": "Al-Farabi-(950g)",
+      "description": "Fundamental melodic pathway in Rast maqam"
+    }
+  ]
+}</pre>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Example Response (by Source ID)</h3>
+                    <div class="code-block">
+                        <pre>{
+  "sourceId": "Shawqi-(1969)",
+  "maqams": [
+    {
+      "maqamId": "1",
+      "maqamName": "maqām rāst (binṣir)",
+      "suyūr": [
+        {
+          "id": "sayr_1",
+          "name": "Rast Opening Formula",
+          "noteSequence": ["rāst", "dūgāh", "segāh"],
+          "sourceId": "Shawqi-(1969)",
+          "description": "Traditional opening phrase"
+        }
+      ]
+    },
+    {
+      "maqamId": "2",
+      "maqamName": "maqām bayātī",
+      "suyūr": [
+        {
+          "id": "sayr_2",
+          "name": "Bayati Cadence",
+          "noteSequence": ["bayātī", "segāh", "dūgāh"],
+          "sourceId": "Shawqi-(1969)",
+          "description": "Common closing pattern"
+        }
+      ]
+    }
+  ]
+}</pre>
+                    </div>
+                </div>
+                <a href="#toc" class="back-to-top">↑ Back to Top</a>
             </div>
         </div>
 
@@ -1388,6 +1507,27 @@ curl -X POST "http://localhost:3000/api/transpose" \
   "ajnasModulations": [...]
 }`
           },
+          sayr: {
+            method: 'POST',
+            url: '/api/sayr',
+            params: [
+              { name: 'maqamId', label: 'Maqam ID (optional)', type: 'text', value: '1' },
+              { name: 'sourceId', label: 'Source ID (optional)', type: 'text', value: '' }
+            ],
+            exampleResponse: `{
+  "maqamId": "1",
+  "maqamName": "maqām rāst (binṣir)",
+  "suyūr": [
+    {
+      "id": "sayr_1",
+      "name": "Basic Rast Progression",
+      "noteSequence": ["rāst", "dūgāh", "segāh", "chahārgāh"],
+      "sourceId": "Al-Farabi-(950g)",
+      "description": "Fundamental melodic pathway in Rast maqam"
+    }
+  ]
+}`
+          },
           transpose: {
             method: 'POST',
             url: '/api/transpose',
@@ -1507,6 +1647,7 @@ curl -X POST "http://localhost:3000/api/transpose" \
               <option value="tuningSystems">GET /api/tuningSystems</option>
               <option value="jins">POST /api/jins</option>
               <option value="maqam">POST /api/maqam</option>
+              <option value="sayr">POST /api/sayr</option>
               <option value="modulations">POST /api/modulations</option>
               <option value="transpose">POST /api/transpose</option>
             </select>
