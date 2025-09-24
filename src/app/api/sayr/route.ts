@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
+import { englishify } from "@/functions/export";
 
 const dataFilePath = path.join(process.cwd(), "data", "maqamat.json");
 
@@ -8,19 +9,25 @@ const dataFilePath = path.join(process.cwd(), "data", "maqamat.json");
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { maqamId, sourceId } = body;
+    const { maqamId, maqamName, sourceId } = body;
 
-    // Validate that exactly one parameter is provided
-    if (!maqamId && !sourceId) {
+    // Validate input parameters
+    const hasMaqamId = maqamId !== undefined && maqamId !== null && maqamId !== "";
+    const hasMaqamName = maqamName !== undefined && maqamName !== null && maqamName !== "";
+    const hasSourceId = sourceId !== undefined && sourceId !== null && sourceId !== "";
+
+    const identifierCount = [hasMaqamId, hasMaqamName, hasSourceId].filter(Boolean).length;
+    
+    if (identifierCount === 0) {
       return NextResponse.json(
-        { error: "Please provide either maqamId or sourceId" },
+        { error: "Please provide either maqamId, maqamName, or sourceId" },
         { status: 400 }
       );
     }
 
-    if (maqamId && sourceId) {
+    if (identifierCount > 1) {
       return NextResponse.json(
-        { error: "Please provide either maqamId or sourceId, but not both" },
+        { error: "Please provide only one of: maqamId, maqamName, or sourceId" },
         { status: 400 }
       );
     }
@@ -29,9 +36,15 @@ export async function POST(request: Request) {
     const fileContent = await fs.readFile(dataFilePath, "utf8");
     const maqamat = JSON.parse(fileContent);
 
-    if (maqamId) {
+    if (hasMaqamId || hasMaqamName) {
       // Find the specific maqam and return its suyūr
-      const maqam = maqamat.find((m: any) => m.id === maqamId);
+      let maqam;
+      
+      if (hasMaqamId) {
+        maqam = maqamat.find((m: any) => m.id === maqamId);
+      } else if (hasMaqamName) {
+        maqam = maqamat.find((m: any) => englishify(m.name) === englishify(maqamName));
+      }
       
       if (!maqam) {
         return NextResponse.json(
@@ -47,7 +60,7 @@ export async function POST(request: Request) {
       });
     }
 
-    if (sourceId) {
+    if (hasSourceId) {
       // Find all maqams that contain suyūr from the specified source
       const maqamsWithSource = maqamat
         .map((maqam: any) => {
