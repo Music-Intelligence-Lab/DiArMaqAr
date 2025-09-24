@@ -90,7 +90,8 @@ data/                # Ground-truth musical data (JSON files)
 public/
 ├── docs/            # Comprehensive documentation
 └── images/          # Static assets
-scripts/             # Build and utility scripts (including batch export)
+scripts/             # Utility scripts and tools
+├── batch-export/    # CLI tool for batch data export
 python/              # Python mirror for validation and testing
 ```
 
