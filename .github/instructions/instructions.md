@@ -1,10 +1,37 @@
 ---
 applyTo: '**'
 ---
-# Copilot Instructions — Maqām Network
+# Copilot Instructions —## Conventions & Type## Conventions & Types
+- **Note Names**: Use canonical transliterated names from `src/models/NoteName.ts` across 5 octave arrays. Don't invent strings—accept/produce the `NoteName` union type.
+- **Pitch Class Formats**: Inputs may be fraction/cents/decimal/MIDI. Detect with `detectPitchClassType`, convert with `convertPitchClass` utilities. For matching, prefer a cents tolerance of 5–10 as used by APIs.
+- **Tuning Systems**: Never hardcode. Load via `getTuningSystems()`; select note-name set with `TuningSystem.getNoteNameSets()`.
+- **Cents Tolerance**: The `centsTolerance` parameter is used throughout the codebase as a (+/-) tolerance value for calculating possible transpositions within tuning systems that aren't based on frequency ratio fractions (e.g. 9/8, 4/3, 3/2) in their core data. ALWAYS default to 5 cents unless the specific context requires a different value. This applies to all APIs, functions, and components that perform pitch matching or transposition calculations.
+- **Imports**: Prefer `@/...` alias. Avoid referencing `packages/*`—`tsconfig.json` excludes it for the app build.*Note Names**: Use canonical transliterated names from `src/models/NoteName.ts` across 5 octave arrays. Don't invent strings—accept/produce the `NoteName` union type.
+- **Pitch Class Formats**: Inputs may be fraction/cents/decimal/MIDI. Detect with `detectPitchClassType`, convert with `convertPitchClass` utilities. For matching, prefer a cents tolerance of 5–10 as used by APIs.
+- **Tuning Systems**: Never hardcode. Load via `getTuningSystems()`; select note-name set with `TuningSystem.getNoteNameSets()`.
+
+### Starting Note Name Conventions and Theoretical Implications
+Starting note selection in Arabic tuning systems represents fundamental theoretical decisions that profoundly affect mathematical frameworks and maqām analysis:
+
+- **ʿushayrān-based systems**: Reflect oud tuning traditions with strings tuned in perfect fourths (4/3). The choice of ʿushayrān for 1/1 reflects practical oud application where strings from ʿushayrān onwards are tuned in perfect fourths.
+- **yegāh-based systems**: Derive from monochord/sonometer measurements, following theoretical frameworks from scholars like those at the 1932 Cairo Congress for Arabic Music.
+- **rāst-based systems**: Follow established theoretical frameworks from historical measurement traditions.
+
+**Critical Understanding**: ʿushayrān vs yegāh are a 9/8 whole-tone apart. This is NOT simple transposition but represents fundamentally different approaches to organizing pitch space. Different starting points affect:
+- Mathematical relationships between intervals
+- Availability of specific maqāmāt and ajnās  
+- Modulation pathway possibilities
+- Theoretical analysis outcomes
+- Practical musical applications
+
+The `tuningSystemStartingNoteName` parameter selects which theoretical framework to apply, fundamentally changing the mathematical basis of all calculations and available musical structures.ām Network
 
 ## Communication Style
 - **Concise Responses**: Do not provide summaries of actions taken unless explicitly requested. Focus on direct implementation without explanatory commentary.
+- **No Markdown Reports**: Never create standalone markdown report files (like API_PARAMETER_NAMING_REPORT.md) in the project root or anywhere else. Make changes directly to code and provide brief confirmation when requested.
+- **Minimal Token Usage**: Keep responses brief and avoid detailed conversation summaries or lengthy explanations. Be direct and focused.
+- **Complex Documentation Approval**: When writing complex, specific, or technical documentation (especially API documentation, theoretical explanations, or technical specifications), provide an example of the proposed text for user approval before implementing changes.
+- **Critical File Safety Protocol**: ALWAYS search properly and double-check the exact location where any code updates/changes will be applied. Use grep_search, read_file, and semantic_search tools to verify file contents and locations before making edits. This prevents file corruption and ensures changes are applied to the correct locations.
 
 ## Autonomous Implementation Protocol
 1. **Read Request** → Identify domain (maqam/jins/tuning/audio/UI)
@@ -51,6 +78,8 @@ applyTo: '**'
 ## API Routes (Server)
 - **Pattern**: Routes under `src/app/api/**` read models via `functions/import.ts`, compute with `src/functions/**`, and return typed JSON (`NextResponse.json`).
 - **Example `/api/transpose`** (`src/app/api/transpose/route.ts`): POST body requires `tuningSystemID`, either `maqamID` or `jinsID`, `firstNote` (from note-name sets), and `centsTolerance`. Returns `transpositions`, selected `tuningSystem`, and the `originalSequence` metadata. Validate inputs and return 400/404 consistently as established in this route.
+- **Critical Documentation Rule**: For optional parameters that have default behavior (like `tuningSystemStartingNoteName`), ALWAYS document what happens when the parameter is omitted. Update BOTH Swagger documentation in route files AND HTML documentation in `public/docs/api/index.html`. Be specific about default behavior rather than just stating "optional".
+- **Tuning System ID Accuracy**: When updating documentation examples or API requests, ALWAYS verify the exact tuning system IDs from the actual data files (`/data/tuningSystems.json`). Tuning system IDs must be copied exactly as they appear in the data, including any suffixes (e.g., "Al-Farabi-(950g)" not "Al-Farabi-(950)"). Incorrect IDs will cause API failures. Use `grep_search` or `read_file` to verify IDs before making documentation changes.
 
 ## Frontend Usage Expectations
 - **Components**: UIs (e.g., `src/components/*`) expect `PitchClass` items with `noteName`, `englishName`, `frequency`, `centsDeviation`, `midiNoteNumber`. Generate via `getTuningSystemPitchClasses` and keep arrays stable by index.

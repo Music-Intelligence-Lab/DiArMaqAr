@@ -5,17 +5,89 @@ import { getMaqamTranspositions } from "@/functions/transpose";
 import { englishify } from "@/functions/export";
 import modulate from "@/functions/modulate";
 
+/**
+ * @swagger
+ * /api/maqam:
+ *   post:
+ *     summary: Analyze a specific maqam
+ *     description: Analyze a specific maqam within tuning systems, including transpositions, modulations, and pitch class analysis.
+ *     tags:
+ *       - Maqam
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               maqamID:
+ *                 type: string
+ *                 description: Unique identifier for the maqam (mutually exclusive with maqamName)
+ *                 example: "1"
+ *               maqamName:
+ *                 type: string
+ *                 description: Name of the maqam (mutually exclusive with maqamID)
+ *                 example: "maqam segah"
+ *               includeTranspositions:
+ *                 type: boolean
+ *                 description: Whether to include all transpositions (ignored if newTonicForTransposition is specified). Defaults to false.
+ *                 example: false
+ *               newTonicForTransposition:
+ *                 type: string
+ *                 description: If specified, returns only the transposition to this tonic note (overrides includeTranspositions)
+ *                 example: "rāst"
+ *                 example: false
+ *               newTonicForTransposition:
+ *                 type: string
+ *                 description: New tonic note name for transposing the maqam structure
+ *                 example: "rāst"
+ *               centsTolerance:
+ *                 type: number
+ *                 description: Tolerance value used as (+/-) for calculating possible transpositions within tuning systems that aren't based on frequency ratio fractions (e.g. 9/8, 4/3, 3/2) in their core data. This affects the modulation possibilities: more transpositions allow for more modulations (0-50, default: 5)
+ *                 example: 5
+ *               tuningSystemID:
+ *                 type: string
+ *                 description: Specific tuning system to analyze
+ *                 example: "Ronzevalle-(1904)"
+ *               tuningSystemStartingNoteName:
+ *                 type: string
+ *                 description: Starting note name for tuning system note naming convention (must match first element in tuning system). If not provided, defaults to the first available note naming convention in the tuning system core data. This parameter affects the theoretical framework used for maqam analysis.
+ *                 example: "ʿushayrān"
+ *               includeMaqamatModulations:
+ *                 type: boolean
+ *                 description: Include maqam-to-maqam modulations
+ *                 example: true
+ *               includeAjnasModulations:
+ *                 type: boolean
+ *                 description: Include ajnas-based modulations
+ *                 example: false
+ *             required:
+ *               - includeTranspositions
+ *             oneOf:
+ *               - required: [maqamID]
+ *               - required: [maqamName]
+ *     responses:
+ *       200:
+ *         description: Maqam analysis completed successfully
+ *       400:
+ *         description: Invalid request parameters
+ *       404:
+ *         description: Maqam or tuning system not found
+ */
 export async function POST(request: Request) {
-  const { maqamID, maqamName, includeTranspositions, qararNoteName, centsTolerance, tuningSystemId, tuningSystemStartingNoteName, includeMaqamatModulations, includeAjnasModulations } =
+  const { maqamID, maqamName, includeTranspositions, newTonicForTransposition, centsTolerance, tuningSystemID, tuningSystemStartingNoteName, includeMaqamatModulations, includeAjnasModulations } =
     await request.json();
 
   const inputCentsTolerance = typeof centsTolerance === "number" ? centsTolerance : 5;
 
-  if (includeTranspositions !== true && includeTranspositions !== false) {
+  // Set default value for includeTranspositions if not provided
+  const inputIncludeTranspositions = includeTranspositions === undefined ? false : includeTranspositions;
+  
+  if (inputIncludeTranspositions !== true && inputIncludeTranspositions !== false) {
     return new NextResponse("Invalid includeTranspositions value.", { status: 400 });
   }
 
-  const inputQararNoteName = typeof qararNoteName === "string" ? qararNoteName : null;
+  const inputNewTonicForTransposition = typeof newTonicForTransposition === "string" ? newTonicForTransposition : null;
 
   // Validate maqam identification - user must provide exactly one of maqamID or maqamName
   const hasMaqamID = maqamID !== undefined && maqamID !== null && maqamID !== "";
@@ -35,27 +107,27 @@ export async function POST(request: Request) {
   const maqamat = getMaqamat();
   const ajnas = getAjnas();
 
-  // Filter tuning systems if tuningSystemId is provided
-  const filteredTuningSystems = tuningSystemId ? tuningSystems.filter((ts) => ts.getId() === tuningSystemId) : tuningSystems;
+  // Filter tuning systems if tuningSystemID is provided
+  const filteredTuningSystems = tuningSystemID ? tuningSystems.filter((ts) => ts.getId() === tuningSystemID) : tuningSystems;
 
   // Check if specific tuning system was requested but not found
-  if (tuningSystemId && filteredTuningSystems.length === 0) {
+  if (tuningSystemID && filteredTuningSystems.length === 0) {
     return new NextResponse("Tuning system not found.", { status: 404 });
   }
 
   // Validate tuningSystemStartingNoteName if provided
-  if (tuningSystemStartingNoteName && tuningSystemId) {
+  if (tuningSystemStartingNoteName && tuningSystemID) {
     const selectedTuningSystem = filteredTuningSystems[0];
     const availableStartingNotes = selectedTuningSystem.getNoteNameSets().map((list) => list[0]);
 
     if (!availableStartingNotes.some((noteName) => englishify(noteName) === englishify(tuningSystemStartingNoteName))) {
       return new NextResponse(
-        `Starting note name '${tuningSystemStartingNoteName}' not available for tuning system '${tuningSystemId}'. Available starting notes: ${availableStartingNotes.join(", ")}.`,
+        `Starting note name '${tuningSystemStartingNoteName}' not available for tuning system '${tuningSystemID}'. Available starting notes: ${availableStartingNotes.join(", ")}.`,
         { status: 400 }
       );
     }
-  } else if (tuningSystemStartingNoteName && !tuningSystemId) {
-    return new NextResponse("tuningSystemStartingNoteName requires tuningSystemId to be specified.", { status: 400 });
+  } else if (tuningSystemStartingNoteName && !tuningSystemID) {
+    return new NextResponse("tuningSystemStartingNoteName requires tuningSystemID to be specified.", { status: 400 });
   }
 
   // Find maqam by ID or name
@@ -97,10 +169,10 @@ export async function POST(request: Request) {
         const key = `${tuningSystem.getId()}_${noteName}`;
 
         if (isMaqamPossible) {
-          if (inputQararNoteName) {
-            if (tuningSystemPitchClasses.find((pc) => englishify(pc.noteName) === englishify(inputQararNoteName))) {
+          if (inputNewTonicForTransposition) {
+            if (tuningSystemPitchClasses.find((pc) => englishify(pc.noteName) === englishify(inputNewTonicForTransposition))) {
               const transpositions = getMaqamTranspositions(tuningSystemPitchClasses, ajnas, maqam, true, inputCentsTolerance);
-              const transposition = transpositions.find((t) => englishify(t.ascendingPitchClasses[0].noteName) === englishify(inputQararNoteName));
+              const transposition = transpositions.find((t) => englishify(t.ascendingPitchClasses[0].noteName) === englishify(inputNewTonicForTransposition));
 
               if (transposition) {
                 // Add modulations if requested
@@ -136,15 +208,13 @@ export async function POST(request: Request) {
                   }
                 }
 
-                if (includeTranspositions) {
-                  resultTuningSystems[key] = transpositions;
-                } else {
-                  resultTuningSystems[key] = transposition;
-                }
+                // When specific tonic is requested, return only that transposition
+                resultTuningSystems[key] = transposition;
               }
             }
           } else {
-            if (includeTranspositions) {
+            // When no specific tonic is requested, use includeTranspositions flag
+            if (inputIncludeTranspositions) {
               const transpositions = getMaqamTranspositions(tuningSystemPitchClasses, ajnas, maqam, true, inputCentsTolerance);
 
               // Add modulations to each transposition if requested

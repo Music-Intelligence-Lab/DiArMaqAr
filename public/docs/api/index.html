@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maqam Network API Documentation</title>
+    <title>Digital Arabic Maqām Archive • API Documentation</title>
     <style>
         * {
             margin: 0;
@@ -342,7 +342,7 @@
             border-radius: 4px;
             font-size: 0.9rem;
             width: 100%;
-            max-width: 400px;
+            max-width: 100%;
             margin-top: 0.5rem;
         }
 
@@ -355,7 +355,7 @@
             font-size: 0.9rem;
             line-height: 1.4;
             width: 100%;
-            max-width: 800px;
+            max-width: 100%;
             margin-top: 0.5rem;
             background: #f8f9fa;
         }
@@ -365,10 +365,6 @@
             overflow-y: auto;
         }
 
-        #api-curl {
-            height: 80px;
-        }
-
         .api-explorer {
             background: #fffbe6;
             border: 2px solid #ffe58f;
@@ -376,7 +372,7 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.04);
             margin-bottom: 2.5rem;
             padding: 2rem 2.5rem 2rem 2.5rem;
-            max-width: 800px;
+            max-width: 100%;
         }
 .api-explorer h2 {
   margin-top: 0;
@@ -409,6 +405,7 @@
 .api-explorer input[type="checkbox"] {
   margin-left: 0.5rem;
   accent-color: #ad8b00;
+  width: auto !important;
 }
 .api-explorer textarea {
   border: 1.5px solid #ffe58f;
@@ -439,30 +436,55 @@
 .api-explorer .endpoint-content {
   margin-top: 1.2rem;
 }
+
+        /* Back to Top Button */
+        .back-to-top {
+            background: #667eea;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-top: 1.5rem;
+            display: inline-block;
+        }
+
+        .back-to-top:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            color: white;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
     <a href="../index.html" class="back-link">← Back to Documentation</a>
     
-    <div class="container">
+    <div id="toc" class="container">
         <header>
-            <h1>Maqam Network API</h1>
-            <p class="subtitle">Comprehensive API for Arabic Music Theory, Maqamat, and Microtonal Analysis</p>
+            <h1>Digital Arabic Maqām Archive API</h1>
+            <p class="subtitle">Comprehensive API for Arabic Maqām Theory</p>
         </header>
 
         <div class="toc">
             <h2>Table of Contents</h2>
             <ul>
                 <li><a href="#overview">API Overview</a></li>
+                <li><a href="#notes">Notes</a></li>
+                <li><a href="#interactive-explorer">Interactive API Explorer</a></li>
                 <li><a href="#base-url">Base URL</a></li>
                 <li><a href="#ajnas">GET /api/ajnas</a></li>
-                <li><a href="#jins">POST /api/jins</a></li>
                 <li><a href="#maqamat">GET /api/maqamat</a></li>
+                <li><a href="#sources">GET /api/sources</a></li>
+                <li><a href="#tuning-systems">GET /api/tuningSystems</a></li>
+                <li><a href="#jins">POST /api/jins</a></li>
                 <li><a href="#maqam">POST /api/maqam</a></li>
                 <li><a href="#modulations">POST /api/modulations</a></li>
-                <li><a href="#sources">GET /api/sources</a></li>
                 <li><a href="#transpose">POST /api/transpose</a></li>
-                <li><a href="#tuning-systems">GET /api/tuningSystems</a></li>
             </ul>
         </div>
 
@@ -471,7 +493,7 @@
                 <h2 class="endpoint-title">API Overview</h2>
             </div>
             <div class="endpoint-content">
-                <p>The Maqam Network API provides comprehensive access to Arabic music theory data, including maqamat (melodic modes), ajnas (tetrachordal structures), tuning systems, and advanced analysis tools for modulation and transposition. This API is designed for researchers, musicians, and developers working with microtonal music theory.</p>
+                <p>The Digital Arabic Maqām Archive API provides comprehensive access to Arabic music theory data, including maqamat (melodic modes), ajnas (tetrachordal structures), tuning systems, and advanced analysis tools for modulation and transposition. This API is designed for researchers, musicians, and developers working with microtonal music theory.</p>
                 
                 <div class="note">
                     <div class="note-title">Key Features</div>
@@ -483,6 +505,23 @@
                         <li>Academic source documentation</li>
                     </ul>
                 </div>
+            </div>
+        </div>
+
+        <div id="notes" class="endpoint">
+            <div class="endpoint-header">
+                <h2 class="endpoint-title">Notes</h2>
+            </div>
+            <div class="endpoint-content">
+                <ul>
+                    <li>All endpoints return JSON responses with appropriate HTTP status codes</li>
+                    <li>Cents tolerance parameters accept values between 0-50 cents</li>
+                    <li>Note names use Arabic transliteration with diacritical marks in responses</li>
+                    <li><strong>Names can be provided with or without diacritics:</strong> All name parameters (note names, maqam names, jins names, tuning system names) accept both diacritical and non-diacritical versions (e.g., "maqam bayyat" = "maqām bayyāt")</li>
+                    <li>Modulation analysis provides both theoretical and practical relationships</li>
+                    <li>Academic sources include full bibliographic information for scholarly reference</li>
+                    <li>Pitch classes are defined using frequency ratios (numerator/denominator) and cents values</li>
+                </ul>
             </div>
         </div>
 
@@ -563,6 +602,7 @@
 ]</pre>
                     </div>
                 </div>
+                <a href="#toc" class="back-to-top">↑ Back to Top</a>
             </div>
         </div>
 
@@ -603,23 +643,23 @@
                             <tr>
                                 <td>includeTranspositions</td>
                                 <td>Boolean</td>
-                                <td class="required">Required</td>
-                                <td>Whether to include all transpositions or just the analysis</td>
+                                <td class="optional">Optional</td>
+                                <td>Whether to include all transpositions (ignored if newTonicForTransposition is specified). Defaults to false.</td>
                             </tr>
                             <tr>
-                                <td>qararNoteName</td>
+                                <td>newTonicForTransposition</td>
                                 <td>String</td>
                                 <td class="optional">Optional</td>
-                                <td>Starting note name for specific transposition</td>
+                                <td>If specified, returns only the transposition to this tonic note (overrides includeTranspositions)</td>
                             </tr>
                             <tr>
                                 <td>centsTolerance</td>
                                 <td>Number</td>
                                 <td class="optional">Optional</td>
-                                <td>Acceptable deviation in cents (default: 5)</td>
+                                <td>Tolerance value used as (+/-) for calculating possible transpositions within tuning systems that aren't based on frequency ratio fractions (e.g. 9/8, 4/3, 3/2) in their core data (0-50, default: 5)</td>
                             </tr>
                             <tr>
-                                <td>tuningSystemId</td>
+                                <td>tuningSystemID</td>
                                 <td>String</td>
                                 <td class="optional">Optional</td>
                                 <td>Specific tuning system to analyze</td>
@@ -628,7 +668,7 @@
                                 <td>tuningSystemStartingNoteName</td>
                                 <td>String</td>
                                 <td class="optional">Optional</td>
-                                <td>Starting note for tuning system analysis</td>
+                                <td>Starting note name for tuning system note naming convention (must match first element in tuning system). If not provided, defaults to the first available note naming convention in the tuning system core data. This parameter affects the theoretical framework used for jins analysis.</td>
                             </tr>
                         </tbody>
                     </table>
@@ -637,18 +677,35 @@
                 </div>
 
                 <div class="section">
-                    <h3>Example Request</h3>
+                    <h3>Example Request (by Name)</h3>
                     <div class="code-block">
                         <pre>curl -X POST "http://localhost:3000/api/jins" \
   -H "Content-Type: application/json" \
   -d '{
     "jinsName": "jins bayyāt",
     "includeTranspositions": true,
+    "newTonicForTransposition": "dūgāh",
     "centsTolerance": 5,
-    "tuningSystemId": "Ronzevalle-(1904)"
+    "tuningSystemID": "Al-Farabi-(950g)",
+    "tuningSystemStartingNoteName": "ʿushayrān"
+  }'</pre>
+                    </div>
+
+                    <h3>Example Request (by ID)</h3>
+                    <div class="code-block">
+                        <pre>curl -X POST "http://localhost:3000/api/jins" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jinsID": "1",
+    "includeTranspositions": true,
+    "newTonicForTransposition": "dūgāh",
+    "centsTolerance": 5,
+    "tuningSystemID": "IbnSina-(1037)",
+    "tuningSystemStartingNoteName": "ʿushayrān"
   }'</pre>
                     </div>
                 </div>
+                <a href="#toc" class="back-to-top">↑ Back to Top</a>
             </div>
         </div>
 
@@ -717,6 +774,7 @@
 ]</pre>
                     </div>
                 </div>
+                <a href="#toc" class="back-to-top">↑ Back to Top</a>
             </div>
         </div>
 
@@ -757,26 +815,32 @@
                             <tr>
                                 <td>includeTranspositions</td>
                                 <td>Boolean</td>
-                                <td class="required">Required</td>
-                                <td>Whether to include all transpositions</td>
+                                <td class="optional">Optional</td>
+                                <td>Whether to include all transpositions (ignored if newTonicForTransposition is specified). Defaults to false.</td>
                             </tr>
                             <tr>
-                                <td>qararNoteName</td>
+                                <td>newTonicForTransposition</td>
                                 <td>String</td>
                                 <td class="optional">Optional</td>
-                                <td>Starting note name for specific transposition</td>
+                                <td>If specified, returns only the transposition to this tonic note (overrides includeTranspositions)</td>
                             </tr>
                             <tr>
                                 <td>centsTolerance</td>
                                 <td>Number</td>
                                 <td class="optional">Optional</td>
-                                <td>Acceptable deviation in cents (default: 5)</td>
+                                <td>Tolerance value used as (+/-) for calculating possible transpositions within tuning systems that aren't based on frequency ratio fractions (e.g. 9/8, 4/3, 3/2) in their core data. This affects the modulation possibilities: more transpositions allow for more modulations (0-50, default: 5)</td>
                             </tr>
                             <tr>
-                                <td>tuningSystemId</td>
+                                <td>tuningSystemID</td>
                                 <td>String</td>
                                 <td class="optional">Optional</td>
                                 <td>Specific tuning system to analyze</td>
+                            </tr>
+                            <tr>
+                                <td>tuningSystemStartingNoteName</td>
+                                <td>String</td>
+                                <td class="optional">Optional</td>
+                                <td>Starting note name for tuning system note naming convention (must match first element in tuning system). If not provided, defaults to the first available note naming convention in the tuning system core data. This parameter affects the theoretical framework used for maqam analysis.</td>
                             </tr>
                             <tr>
                                 <td>includeMaqamatModulations</td>
@@ -797,17 +861,35 @@
                 </div>
 
                 <div class="section">
-                    <h3>Example Request</h3>
+                    <h3>Example Request (by Name)</h3>
                     <div class="code-block">
                         <pre>curl -X POST "http://localhost:3000/api/maqam" \
   -H "Content-Type: application/json" \
   -d '{
     "maqamName": "maqam segah",
     "includeTranspositions": false,
-    "qararNoteName": "rāst",
-    "tuningSystemId": "Ronzevalle-(1904)",
+    "newTonicForTransposition": "rāst",
+    "centsTolerance": 5,
+    "tuningSystemID": "Al-Sabbagh-(1954)",
+    "tuningSystemStartingNoteName": "rāst",
     "includeMaqamatModulations": true,
     "includeAjnasModulations": false
+  }'</pre>
+                    </div>
+
+                    <h3>Example Request (by ID)</h3>
+                    <div class="code-block">
+                        <pre>curl -X POST "http://localhost:3000/api/maqam" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "maqamID": "7",
+    "includeTranspositions": true,
+    "newTonicForTransposition": "dūgāh",
+    "centsTolerance": 5,
+    "tuningSystemID": "Al-Kindi-(874)",
+    "tuningSystemStartingNoteName": "ʿushayrān",
+    "includeMaqamatModulations": false,
+    "includeAjnasModulations": true
   }'</pre>
                     </div>
                 </div>
@@ -845,20 +927,26 @@
                             <tr>
                                 <td>maqamID</td>
                                 <td>String</td>
-                                <td class="required">Required</td>
-                                <td>Unique identifier for the source maqam</td>
+                                <td class="optional">Optional*</td>
+                                <td>Unique identifier for the source maqam (mutually exclusive with maqamName)</td>
                             </tr>
                             <tr>
-                                <td>firstNote</td>
+                                <td>maqamName</td>
+                                <td>String</td>
+                                <td class="optional">Optional*</td>
+                                <td>Name of the source maqam (mutually exclusive with maqamID)</td>
+                            </tr>
+                            <tr>
+                                <td>tuningSystemStartingNoteName</td>
                                 <td>String</td>
                                 <td class="optional">Optional</td>
-                                <td>Starting note name for modulation analysis</td>
+                                <td>Starting note name for tuning system note naming convention (must match first element in tuning system). If not provided, defaults to the first available note naming convention in the tuning system core data. This parameter affects the theoretical framework used for modulation analysis.</td>
                             </tr>
                             <tr>
-                                <td>tonic</td>
+                                <td>noteNameToModulateFrom</td>
                                 <td>String</td>
                                 <td class="required">Required</td>
-                                <td>Tonic note for the modulation context</td>
+                                <td>Which note name within the maqam to find modulations from</td>
                             </tr>
                             <tr>
                                 <td>ajnasModulationsMode</td>
@@ -870,10 +958,11 @@
                                 <td>centsTolerance</td>
                                 <td>Number</td>
                                 <td class="optional">Optional</td>
-                                <td>Acceptable deviation in cents (0-50, default: 10)</td>
+                                <td>Tolerance value used as (+/-) for calculating possible transpositions within tuning systems that aren't based on frequency ratio fractions (e.g. 9/8, 4/3, 3/2) in their core data. This affects the modulation possibilities: more transpositions allow for more modulations (0-50, default: 5)</td>
                             </tr>
                         </tbody>
                     </table>
+                    <p><em>* Either maqamID or maqamName must be provided, but not both.</em></p>
                     <p><em>* Note names, maqam names, and tuning system IDs can be provided with or without Arabic diacritics (e.g., both "dūgāh" and "dugah" are accepted).</em></p>
                 </div>
 
@@ -883,12 +972,23 @@
                         <pre>curl -X POST "http://localhost:3000/api/modulations" \
   -H "Content-Type: application/json" \
   -d '{
-    "tuningSystemID": "Ronzevalle-(1904)",
-    "maqamID": "7", 
-    "firstNote": "rāst",
-    "tonic": "dūgāh",
+    "tuningSystemID": "Al-Farabi-(950g)",
+    "maqamID": "2", 
+    "noteNameToModulateFrom": "dūgāh",
     "ajnasModulationsMode": true,
-    "centsTolerance": 10
+    "centsTolerance": 5
+  }'</pre>
+                    </div>
+                    <div class="code-block">
+                        <pre># Alternative using maqamName
+curl -X POST "http://localhost:3000/api/modulations" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "tuningSystemID": "Al-Farabi-(950g)",
+    "maqamName": "maqām ḥijāz", 
+    "noteNameToModulateFrom": "dūgāh",
+    "ajnasModulationsMode": true,
+    "centsTolerance": 5
   }'</pre>
                     </div>
                 </div>
@@ -915,6 +1015,7 @@
 }</pre>
                     </div>
                 </div>
+                <a href="#toc" class="back-to-top">↑ Back to Top</a>
             </div>
         </div>
 
@@ -982,19 +1083,37 @@
                     <div class="code-block">
                         <pre>[
   {
-    "id": "source_powers_2005",
-    "title": "A Taxonomy of Middle Eastern Music",
-    "author": "Powers, Harold S.",
-    "publicationYear": 2005,
-    "publisher": "Cambridge University Press",
-    "publicationType": "book",
-    "pages": "1-150",
-    "isbn": "978-0521123456",
-    "doi": "10.1017/CBO9780511123456"
+    "id": "Shawqi-(1969)",
+    "titleEnglish": "Qiyās Al-Sullam Al-Mūsīqī Al-ʿArabī",
+    "titleArabic": "قياس السلم الموسيقي العربي",
+    "sourceType": "Book",
+    "contributors": [
+      {
+        "type": "Author",
+        "firstNameEnglish": "Youssef",
+        "lastNameEnglish": "Shawqi",
+        "firstNameArabic": "يوسف",
+        "lastNameArabic": "شوقي"
+      }
+    ],
+    "editionEnglish": "",
+    "editionArabic": "",
+    "publicationDateEnglish": "1969",
+    "publicationDateArabic": "١٩٦٩",
+    "url": "",
+    "dateAccessed": "",
+    "originalPublicationDateEnglish": "",
+    "originalPublicationDateArabic": "",
+    "publisherEnglish": "Dar Al-Kutub",
+    "publisherArabic": "دار الكتب",
+    "placeEnglish": "Cairo",
+    "placeArabic": "القاهرة",
+    "ISBN": ""
   }
 ]</pre>
                     </div>
                 </div>
+                <a href="#toc" class="back-to-top">↑ Back to Top</a>
             </div>
         </div>
 
@@ -1030,49 +1149,72 @@
                                 <td>maqamID</td>
                                 <td>String</td>
                                 <td class="optional">Optional*</td>
-                                <td>Unique identifier for the maqam to transpose</td>
+                                <td>Unique identifier for the maqam to transpose (mutually exclusive with jinsID and maqamName)</td>
+                            </tr>
+                            <tr>
+                                <td>maqamName</td>
+                                <td>String</td>
+                                <td class="optional">Optional*</td>
+                                <td>Name of the maqam to transpose (mutually exclusive with jinsID and maqamID)</td>
                             </tr>
                             <tr>
                                 <td>jinsID</td>
                                 <td>String</td>
                                 <td class="optional">Optional*</td>
-                                <td>Unique identifier for the jins to transpose</td>
+                                <td>Unique identifier for the jins to transpose (mutually exclusive with maqamID and maqamName)</td>
                             </tr>
                             <tr>
-                                <td>firstNote</td>
-                                <td>Object</td>
+                                <td>tuningSystemStartingNoteName</td>
+                                <td>String</td>
                                 <td class="optional">Optional</td>
-                                <td>Starting pitch class with numerator, denominator, and cents</td>
+                                <td>Starting note name for tuning system note naming convention (must match first element in tuning system). If not provided, defaults to the first available note naming convention in the tuning system core data. This parameter affects the theoretical framework used for transposition analysis.</td>
                             </tr>
                             <tr>
                                 <td>centsTolerance</td>
                                 <td>Number</td>
                                 <td class="optional">Optional</td>
-                                <td>Acceptable deviation in cents for pitch matching</td>
+                                <td>Tolerance value used as (+/-) for calculating possible transpositions within tuning systems that aren't based on frequency ratio fractions (e.g. 9/8, 4/3, 3/2) in their core data (0-50, default: 5)</td>
                             </tr>
                         </tbody>
                     </table>
-                    <p><em>* Either maqamID or jinsID must be provided, but not both.</em></p>
+                    <p><em>* Either maqamID, maqamName, or jinsID must be provided, but only one at a time.</em></p>
                     <p><em>** Names and tuning system IDs can be provided with or without Arabic diacritics.</em></p>
                 </div>
 
                 <div class="section">
-                    <h3>Example Request</h3>
+                    <h3>Example Request (Maqam)</h3>
                     <div class="code-block">
                         <pre>curl -X POST "http://localhost:3000/api/transpose" \
   -H "Content-Type: application/json" \
   -d '{
-    "tuningSystemID": "24TET_tuning",
-    "maqamID": "1",
-    "firstNote": {
-      "numerator": 1,
-      "denominator": 1,
-      "cents": 0
-    },
+    "tuningSystemID": "Al-Farabi-(950g)",
+    "maqamID": "2",
+    "centsTolerance": 5
+  }'</pre>
+                    </div>
+                    <div class="code-block">
+                        <pre># Alternative using maqamName
+curl -X POST "http://localhost:3000/api/transpose" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "tuningSystemID": "Al-Farabi-(950g)",
+    "maqamName": "maqām ḥijāz",
+    "centsTolerance": 5
+  }'</pre>
+                    </div>
+
+                    <h3>Example Request (Jins)</h3>
+                    <div class="code-block">
+                        <pre>curl -X POST "http://localhost:3000/api/transpose" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "tuningSystemID": "Al-Farabi-(950g)",
+    "jinsID": "1",
     "centsTolerance": 5
   }'</pre>
                     </div>
                 </div>
+                <a href="#toc" class="back-to-top">↑ Back to Top</a>
             </div>
         </div>
 
@@ -1113,7 +1255,7 @@
                     <div class="code-block">
                         <pre>[
   {
-    "id": "Ronzevalle-(1904)-ModernistArabicTuning",
+    "id": "Al-Farabi-(950g)-ClassicalArabicTuning",
     "name": "24-Tone Equal Temperament",
     "pitchClasses": [
       {
@@ -1135,20 +1277,8 @@
 ]</pre>
                     </div>
                 </div>
+                <a href="#toc" class="back-to-top">↑ Back to Top</a>
             </div>
-        </div>
-
-        <div class="note">
-            <div class="note-title">Additional Notes</div>
-            <ul>
-                <li>All endpoints return JSON responses with appropriate HTTP status codes</li>
-                <li>Cents tolerance parameters accept values between 0-50 cents</li>
-                <li>Note names use Arabic transliteration with diacritical marks in responses</li>
-                <li><strong>Names can be provided with or without diacritics:</strong> All name parameters (note names, maqam names, jins names, tuning system names) accept both diacritical and non-diacritical versions (e.g., "maqam bayati" = "maqām bayyātī")</li>
-                <li>Modulation analysis provides both theoretical and practical relationships</li>
-                <li>Academic sources include full bibliographic information for scholarly reference</li>
-                <li>Pitch classes are defined using frequency ratios (numerator/denominator) and cents values</li>
-            </ul>
         </div>
 
         <!-- --- Interactive API Explorer --- -->
@@ -1164,20 +1294,6 @@
   { "id": "2", "name": "jins bayyāt", "noteNames": ["dūgāh", "segāh", "chahārgāh", "nawā"] }
 ]`
           },
-          jins: {
-            method: 'POST',
-            url: '/api/jins',
-            params: [
-              { name: 'jinsName', label: 'Jins Name', type: 'text', value: 'jins bayyāt' },
-              { name: 'includeTranspositions', label: 'Include Transpositions', type: 'checkbox', value: true },
-              { name: 'centsTolerance', label: 'Cents Tolerance', type: 'number', value: 5 },
-              { name: 'tuningSystemId', label: 'Tuning System', type: 'text', value: 'Ronzevalle-(1904)' }
-            ],
-            exampleResponse: `{
-  "jins": { "name": "jins bayyāt", ... },
-  "tuningSystems": { "Ronzevalle-(1904)_rāst": [...] }
-}`
-          },
           maqamat: {
             method: 'GET',
             url: '/api/maqamat',
@@ -1187,14 +1303,65 @@
   { "id": "2", "name": "maqām segāh", "ascendingNoteNames": ["segāh", ...] }
 ]`
           },
+          sources: {
+            method: 'GET',
+            url: '/api/sources',
+            params: [],
+            exampleResponse: `[
+  {
+    "id": "Shawqi-(1969)",
+    "titleEnglish": "Qiyās Al-Sullam Al-Mūsīqī Al-ʿArabī",
+    "titleArabic": "قياس السلم الموسيقي العربي",
+    "sourceType": "Book",
+    "contributors": [
+      {
+        "type": "Author",
+        "firstNameEnglish": "Youssef",
+        "lastNameEnglish": "Shawqi",
+        "firstNameArabic": "يوسف",
+        "lastNameArabic": "شوقي"
+      }
+    ],
+    "publicationDateEnglish": "1969",
+    "publisherEnglish": "Dar Al-Kutub",
+    "placeEnglish": "Cairo"
+  }
+]`
+          },
+          tuningSystems: {
+            method: 'GET',
+            url: '/api/tuningSystems',
+            params: [],
+            exampleResponse: `[
+  { "id": "1", "name": "Al-Farabi-(950g)", "notes": ["rāst", "dūgāh", ...] },
+  { "id": "2", "name": "Abdel-Rahim-(1965)", "notes": ["rāst", "dūgāh", ...] }
+]`
+          },
+          jins: {
+            method: 'POST',
+            url: '/api/jins',
+            params: [
+              { name: 'jinsName', label: 'Jins Name', type: 'text', value: 'jins bayyāt' },
+              { name: 'includeTranspositions', label: 'Include Transpositions', type: 'checkbox', value: true },
+              { name: 'newTonicForTransposition', label: 'New Tonic for Transposition', type: 'text', value: 'rāst' },
+              { name: 'centsTolerance', label: 'Cents Tolerance', type: 'number', value: 5 },
+              { name: 'tuningSystemID', label: 'Tuning System', type: 'text', value: 'Al-Sabbagh-(1954)' },
+              { name: 'tuningSystemStartingNoteName', label: 'Tuning System Starting Note', type: 'text', value: 'rāst' }
+            ],
+            exampleResponse: `{
+  "jins": { "name": "jins bayyāt", ... },
+  "tuningSystems": { "Al-Sabbagh-(1954)_rāst": [...] }
+}`
+          },
           maqam: {
             method: 'POST',
             url: '/api/maqam',
             params: [
               { name: 'maqamName', label: 'Maqam Name', type: 'text', value: 'maqam segah' },
               { name: 'includeTranspositions', label: 'Include Transpositions', type: 'checkbox', value: false },
-              { name: 'qararNoteName', label: 'Qarar Note Name', type: 'text', value: 'rāst' },
-              { name: 'tuningSystemId', label: 'Tuning System', type: 'text', value: 'Ronzevalle-(1904)' },
+              { name: 'newTonicForTransposition', label: 'New Tonic for Transposition', type: 'text', value: 'rāst' },
+              { name: 'tuningSystemID', label: 'Tuning System', type: 'text', value: 'Al-Farabi-(950g)' },
+              { name: 'tuningSystemStartingNoteName', label: 'Tuning System Starting Note', type: 'text', value: 'ʿushayrān' },
               { name: 'includeMaqamatModulations', label: 'Include Maqamat Modulations', type: 'checkbox', value: true },
               { name: 'includeAjnasModulations', label: 'Include Ajnas Modulations', type: 'checkbox', value: false }
             ],
@@ -1208,48 +1375,32 @@
             method: 'POST',
             url: '/api/modulations',
             params: [
-              { name: 'tuningSystemID', label: 'Tuning System', type: 'text', value: 'Ronzevalle-(1904)' },
-              { name: 'maqamID', label: 'Maqam ID', type: 'text', value: '7' },
-              { name: 'firstNote', label: 'First Note', type: 'text', value: 'rāst' },
-              { name: 'tonic', label: 'Tonic', type: 'text', value: 'dūgāh' },
+              { name: 'tuningSystemID', label: 'Tuning System', type: 'text', value: 'IbnSina-(1037)' },
+              { name: 'maqamID', label: 'Maqam ID (optional)', type: 'text', value: '7' },
+              { name: 'maqamName', label: 'Maqam Name (optional)', type: 'text', value: '' },
+              { name: 'tuningSystemStartingNoteName', label: 'Tuning System Starting Note', type: 'text', value: 'ʿushayrān' },
+              { name: 'noteNameToModulateFrom', label: 'Note Name to Modulate From', type: 'text', value: 'dūgāh' },
               { name: 'ajnasModulationsMode', label: 'Ajnas Modulations Mode', type: 'checkbox', value: true },
-              { name: 'centsTolerance', label: 'Cents Tolerance', type: 'number', value: 10 }
+              { name: 'centsTolerance', label: 'Cents Tolerance', type: 'number', value: 5 }
             ],
             exampleResponse: `{
   "maqamatModulations": [...],
   "ajnasModulations": [...]
 }`
           },
-          sources: {
-            method: 'GET',
-            url: '/api/sources',
-            params: [],
-            exampleResponse: `[
-  { "id": "1", "title": "Al-Fārābī: Kitāb al-Mūsīqī al-Kabīr", "author": "Al-Fārābī" },
-  { "id": "2", "title": "Al-Urmawī: Kitāb al-Adwār", "author": "Al-Urmawī" }
-]`
-          },
           transpose: {
             method: 'POST',
             url: '/api/transpose',
             params: [
-              { name: 'tuningSystemID', label: 'Tuning System', type: 'text', value: '24TET_tuning' },
-              { name: 'maqamID', label: 'Maqam ID', type: 'text', value: '1' },
-              { name: 'firstNote', label: 'First Note (object)', type: 'text', value: '{"numerator": 1, "denominator": 1, "cents": 0}' },
+              { name: 'tuningSystemID', label: 'Tuning System', type: 'text', value: 'Al-Kindi-(874)' },
+              { name: 'maqamID', label: 'Maqam ID (optional)', type: 'text', value: '1' },
+              { name: 'maqamName', label: 'Maqam Name (optional)', type: 'text', value: '' },
+              { name: 'tuningSystemStartingNoteName', label: 'Tuning System Starting Note', type: 'text', value: 'ʿushayrān' },
               { name: 'centsTolerance', label: 'Cents Tolerance', type: 'number', value: 5 }
             ],
             exampleResponse: `{
   "transpositions": [...]
 }`
-          },
-          tuningSystems: {
-            method: 'GET',
-            url: '/api/tuningSystems',
-            params: [],
-            exampleResponse: `[
-  { "id": "1", "name": "Ronzevalle-(1904)", "notes": ["rāst", "dūgāh", ...] },
-  { "id": "2", "name": "24TET_tuning", "notes": ["rāst", "dūgāh", ...] }
-]`
           }
         };
 
@@ -1287,6 +1438,11 @@
           updateCurlAndOutput();
         }
 
+        function autoResizeTextarea(textarea) {
+          textarea.style.height = 'auto';
+          textarea.style.height = Math.max(textarea.scrollHeight, 60) + 'px';
+        }
+
         function updateCurlAndOutput() {
           const endpoint = document.getElementById('api-endpoint').value;
           const opts = apiOptions[endpoint];
@@ -1303,8 +1459,31 @@
           if (opts.method === 'POST' || opts.method === 'PUT') {
             curl += ` \\\n  -d '` + JSON.stringify(body, null, 2) + `'`;
           }
-          document.getElementById('api-curl').value = curl;
-          document.getElementById('api-output').value = opts.exampleResponse;
+          const curlTextarea = document.getElementById('api-curl');
+          const outputTextarea = document.getElementById('api-output');
+          
+          curlTextarea.value = curl;
+          outputTextarea.value = opts.exampleResponse;
+          
+          // Auto-resize both textareas
+          autoResizeTextarea(curlTextarea);
+          autoResizeTextarea(outputTextarea);
+        }
+
+        // Copy to clipboard function
+        function copyToClipboard(button, text) {
+          navigator.clipboard.writeText(text).then(function() {
+            const originalText = button.textContent;
+            button.textContent = '✓ Copied!';
+            button.style.background = '#6c757d';
+            
+            setTimeout(function() {
+              button.textContent = originalText;
+              button.style.background = '#28a745';
+            }, 2000);
+          }).catch(function(err) {
+            console.error('Failed to copy text: ', err);
+          });
         }
 
         window.addEventListener('DOMContentLoaded', function() {
@@ -1314,7 +1493,7 @@
         });
         </script>
 
-        <div class="api-explorer">
+        <div id="interactive-explorer" class="api-explorer">
           <div class="endpoint-header">
             <h2 class="endpoint-title">🔎 Interactive API Explorer</h2>
             <p class="description">Select an endpoint and options below to see a generated <b>curl</b> request and example output. <br>Names (note names, ajnas, maqamat, tuning systems) can be entered with or without diacritics.</p>
@@ -1323,25 +1502,34 @@
             <label for="api-endpoint" style="font-weight:600;">Endpoint:</label>
             <select id="api-endpoint" style="margin-bottom:1rem;">
               <option value="ajnas">GET /api/ajnas</option>
-              <option value="jins">POST /api/jins</option>
               <option value="maqamat">GET /api/maqamat</option>
+              <option value="sources">GET /api/sources</option>
+              <option value="tuningSystems">GET /api/tuningSystems</option>
+              <option value="jins">POST /api/jins</option>
               <option value="maqam">POST /api/maqam</option>
               <option value="modulations">POST /api/modulations</option>
-              <option value="sources">GET /api/sources</option>
               <option value="transpose">POST /api/transpose</option>
-              <option value="tuningSystems">GET /api/tuningSystems</option>
             </select>
             <div id="api-method-url" style="margin-bottom:1rem;">
               <span class="method" id="api-method">GET</span>
               <span class="url" id="api-url">/api/ajnas</span>
             </div>
             <div id="api-params"></div>
-            <label for="api-curl" style="font-weight:600; margin-top:1rem;">Generated curl request:</label>
-            <textarea id="api-curl" style="width:100%;height:80px;" readonly></textarea>
+            <div style="display: flex; align-items: center; gap: 1rem; margin-top: 1rem;">
+                <label for="api-curl" style="font-weight:600; margin:0; flex-grow:1;">Generated curl request:</label>
+                <button onclick="copyToClipboard(this, document.getElementById('api-curl').value)" style="background: #28a745; color: white; padding: 0.25rem 0.75rem; border: none; border-radius: 4px; font-size: 0.8rem; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.background='#218838'; this.style.transform='translateY(-1px)'" onmouseout="this.style.background='#28a745'; this.style.transform='translateY(0)'">Copy</button>
+            </div>
+            <textarea id="api-curl" style="width:100%;min-height:60px;" readonly></textarea>
             <label for="api-output" style="font-weight:600; margin-top:1rem;">Example Output:</label>
-            <textarea id="api-output" style="width:100%;height:120px;" readonly></textarea>
-          </div>
+            <textarea id="api-output" style="width:100%;min-height:60px;" readonly></textarea>
+  </div>
+                <a href="#toc" class="back-to-top">↑ Back to Top</a>
+            </div>
         </div>
+                        
+        </div>
+        
     </div>
+    
 </body>
 </html>
