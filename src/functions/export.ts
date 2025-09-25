@@ -91,6 +91,64 @@ export interface StandardModulationsStructure {
 }
 
 /**
+ * Maps each modulation degree to its corresponding note name
+ */
+export interface ModulationDegreesNoteNames {
+  /** Note name for modulations on the first scale degree */
+  modulationsOnFirstDegree: string;
+
+  /** Note name for modulations on the third scale degree */
+  modulationsOnThirdDegree: string;
+
+  /** Note name for modulations on the alternative third scale degree */
+  modulationsOnAltThirdDegree: string;
+
+  /** Note name for modulations on the fourth scale degree */
+  modulationsOnFourthDegree: string;
+
+  /** Note name for modulations on the fifth scale degree */
+  modulationsOnFifthDegree: string;
+
+  /** Note name for ascending modulations on the sixth scale degree */
+  modulationsOnSixthDegreeAsc: string;
+
+  /** Note name for descending modulations on the sixth scale degree */
+  modulationsOnSixthDegreeDesc: string;
+
+  /** Note name for modulations on the sixth scale degree without using the third */
+  modulationsOnSixthDegreeIfNoThird: string;
+}
+
+/**
+ * Maps each modulation degree to its corresponding octave-below note name
+ */
+export interface ModulationDegrees8vbNoteNames {
+  /** Octave-below note name for modulations on the first scale degree */
+  modulationsOnFirstDegree8vb: string;
+
+  /** Octave-below note name for modulations on the third scale degree */
+  modulationsOnThirdDegree8vb: string;
+
+  /** Octave-below note name for modulations on the alternative third scale degree */
+  modulationsOnAltThirdDegree8vb: string;
+
+  /** Octave-below note name for modulations on the fourth scale degree */
+  modulationsOnFourthDegree8vb: string;
+
+  /** Octave-below note name for modulations on the fifth scale degree */
+  modulationsOnFifthDegree8vb: string;
+
+  /** Octave-below note name for ascending modulations on the sixth scale degree */
+  modulationsOnSixthDegreeAsc8vb: string;
+
+  /** Octave-below note name for descending modulations on the sixth scale degree */
+  modulationsOnSixthDegreeDesc8vb: string;
+
+  /** Octave-below note name for modulations on the sixth scale degree without using the third */
+  modulationsOnSixthDegreeIfNoThird8vb: string;
+}
+
+/**
  * Lower octave modulations structure (8vb versions)
  */
 export interface LowerOctaveModulationsStructure {
@@ -127,6 +185,12 @@ export interface LowerOctaveModulationsStructure {
  * to reduce JSON export size
  */
 export interface MaqamatModulationsWithKeys {
+  /** Maps each modulation degree to its corresponding note name */
+  modulationDegreesNoteNames: ModulationDegreesNoteNames;
+
+  /** Maps each modulation degree to its corresponding octave-below note name (only when 8vb is requested) */
+  modulationsLowerOctaveDegreesNoteNames?: ModulationDegrees8vbNoteNames;
+
   /** Standard modulations in normal octave positions */
   modulations: StandardModulationsStructure;
 
@@ -139,6 +203,12 @@ export interface MaqamatModulationsWithKeys {
  * to reduce JSON export size
  */
 export interface AjnasModulationsWithKeys {
+  /** Maps each modulation degree to its corresponding note name */
+  modulationDegreesNoteNames: ModulationDegreesNoteNames;
+
+  /** Maps each modulation degree to its corresponding octave-below note name (only when 8vb is requested) */
+  modulationsLowerOctaveDegreesNoteNames?: ModulationDegrees8vbNoteNames;
+
   /** Standard modulations in normal octave positions */
   modulations: StandardModulationsStructure;
 
@@ -296,6 +366,99 @@ function convertMaqamAjnasToObjects(maqam: Maqam): MaqamWithAjnasAsObjects {
  * @param centsTolerance - Tolerance in cents for matching cents values (default: 5)
  * @returns Comprehensive export object containing all requested tuning system data
  */
+
+/**
+ * Helper function to create modulation degrees note names mapping
+ */
+function createModulationDegreesNoteNames(
+  ascendingPitchClasses: string[],
+  descendingPitchClasses: string[],
+  noteName2pBelowThird: string
+): ModulationDegreesNoteNames {
+  return {
+    modulationsOnFirstDegree: standardizeText(ascendingPitchClasses[0] || ''),
+    modulationsOnThirdDegree: standardizeText(ascendingPitchClasses[2] || ''),
+    modulationsOnAltThirdDegree: standardizeText(noteName2pBelowThird),
+    modulationsOnFourthDegree: standardizeText(ascendingPitchClasses[3] || ''),
+    modulationsOnFifthDegree: standardizeText(ascendingPitchClasses[4] || ''),
+    modulationsOnSixthDegreeAsc: standardizeText(ascendingPitchClasses[5] || ''),
+    modulationsOnSixthDegreeDesc: standardizeText(descendingPitchClasses[1] || ''), // Second from start in descending (reverse order)
+    modulationsOnSixthDegreeIfNoThird: standardizeText(ascendingPitchClasses[5] || ''), // Same as ascending sixth
+  };
+}
+
+/**
+ * Helper function to map note names to their octave-below equivalents
+ */
+function mapNoteToOctaveBelow(noteName: string): string {
+  // Handle empty/invalid input
+  if (!noteName) return '';
+
+  // Create a mapping based on the pitch class relationships
+  // This mimics the logic used in the actual maqam octave shifting
+  const noteNameLower = noteName.toLowerCase();
+  
+  // Define the standard octave mapping patterns observed in the data
+  const octaveMapping: Record<string, string> = {
+    // Main pitch classes to their octave-below equivalents
+    'rast': 'qarar_rast',
+    'dugah': 'qarar_dugah', 
+    'segah': 'qarar_segah',
+    'chahargah': 'qarar_chahargah',
+    'nawa': 'yegah',           // Special case: nawa → yegah
+    'husayni': 'ushayran',     // Special case: husayni → ushayran
+    'awj': 'qarar_awj',
+    'kurdi': 'qarar_kurdi',
+    'kurdī': 'qarar_kurdi',    // Handle diacritical variants
+    
+    // Additional common pitch classes
+    'ajam': 'qarar_ajam',
+    'iraq': 'qarar_iraq',
+    'muhayyer': 'buzurk',
+    'muhayar': 'buzurk',       // Alternative spelling
+    'buzurk': 'kurdan',
+    'mahur': 'qarar_mahur',
+    'mahuran': 'qarar_mahuran',
+    
+    // Handle some already-octave-below names (pass through)
+    'yegah': 'qarar_yegah',
+    'ushayran': 'qarar_ushayran',
+    'ushshaq': 'qarar_ushshaq',
+    'buselik': 'qarar_buselik',
+    'kawasht': 'qarar_kawasht',
+    'hijaz': 'qarar_hijaz',
+  };
+
+  // Try direct mapping first
+  const directMapping = octaveMapping[noteNameLower];
+  if (directMapping) {
+    return directMapping;
+  }
+
+  // If no direct mapping found, construct qarar_ prefix for most cases
+  // This handles the general pattern where most notes become qarar_[notename]
+  return `qarar_${noteName}`;
+}
+
+/**
+ * Helper function to create octave-below modulation degrees note names mapping
+ */
+function createModulationDegrees8vbNoteNames(
+  ascendingPitchClasses: string[],
+  descendingPitchClasses: string[],
+  noteName2pBelowThird: string
+): ModulationDegrees8vbNoteNames {
+  return {
+    modulationsOnFirstDegree8vb: standardizeText(mapNoteToOctaveBelow(standardizeText(ascendingPitchClasses[0] || ''))),
+    modulationsOnThirdDegree8vb: standardizeText(mapNoteToOctaveBelow(standardizeText(ascendingPitchClasses[2] || ''))),
+    modulationsOnAltThirdDegree8vb: standardizeText(mapNoteToOctaveBelow(standardizeText(noteName2pBelowThird))),
+    modulationsOnFourthDegree8vb: standardizeText(mapNoteToOctaveBelow(standardizeText(ascendingPitchClasses[3] || ''))),
+    modulationsOnFifthDegree8vb: standardizeText(mapNoteToOctaveBelow(standardizeText(ascendingPitchClasses[4] || ''))),
+    modulationsOnSixthDegreeAsc8vb: standardizeText(mapNoteToOctaveBelow(standardizeText(ascendingPitchClasses[5] || ''))),
+    modulationsOnSixthDegreeDesc8vb: standardizeText(mapNoteToOctaveBelow(standardizeText(descendingPitchClasses[1] || ''))),
+    modulationsOnSixthDegreeIfNoThird8vb: standardizeText(mapNoteToOctaveBelow(standardizeText(ascendingPitchClasses[5] || ''))),
+  };
+}
 
 /**
  * Helper function to create standard modulations structure
@@ -508,7 +671,7 @@ export async function exportTuningSystem(
       commentsEnglish: tuningSystem.getCommentsEnglish(),
       commentsArabic: tuningSystem.getCommentsArabic(),
       // Starting note for this export
-      startingNote: startingNote,
+      startingNote: standardizeText(startingNote),
 
       // Musical data with explicit ordering
       originalPitchClassValues: tuningSystem.getOriginalPitchClassValues(),
@@ -697,9 +860,24 @@ export async function exportTuningSystem(
 
         if (maqamatModulations) {
           const maqamModulationWithKeys: MaqamatModulationsWithKeys = {
+            modulationDegreesNoteNames: createModulationDegreesNoteNames(
+              maqamTransposition.ascendingPitchClasses.map(pc => pc.noteName),
+              maqamTransposition.descendingPitchClasses.map(pc => pc.noteName),
+              maqamatModulations.noteName2pBelowThird || ''
+            ),
+            ...(options.includeModulations8vb && {
+              modulationsLowerOctaveDegreesNoteNames: createModulationDegrees8vbNoteNames(
+                maqamTransposition.ascendingPitchClasses.map(pc => pc.noteName),
+                maqamTransposition.descendingPitchClasses.map(pc => pc.noteName),
+                maqamatModulations.noteName2pBelowThird || ''
+              )
+            }),
             modulations: createStandardModulations(maqamatModulations),
             ...(options.includeModulations8vb && {
-              modulationsLowerOctave: createLowerOctaveModulations(maqamatModulations, fullRangeTuningSystemPitchClasses)
+              modulationsLowerOctave: createLowerOctaveModulations(
+                maqamatModulations, 
+                fullRangeTuningSystemPitchClasses
+              )
             })
           };
 
@@ -708,9 +886,24 @@ export async function exportTuningSystem(
 
         if (ajnasModulations) {
           const ajnasModulationsWithKeys: AjnasModulationsWithKeys = {
+            modulationDegreesNoteNames: createModulationDegreesNoteNames(
+              maqamTransposition.ascendingPitchClasses.map(pc => pc.noteName),
+              maqamTransposition.descendingPitchClasses.map(pc => pc.noteName),
+              ajnasModulations.noteName2pBelowThird || ''
+            ),
+            ...(options.includeModulations8vb && {
+              modulationsLowerOctaveDegreesNoteNames: createModulationDegrees8vbNoteNames(
+                maqamTransposition.ascendingPitchClasses.map(pc => pc.noteName),
+                maqamTransposition.descendingPitchClasses.map(pc => pc.noteName),
+                ajnasModulations.noteName2pBelowThird || ''
+              )
+            }),
             modulations: createStandardModulations(ajnasModulations),
             ...(options.includeModulations8vb && {
-              modulationsLowerOctave: createLowerOctaveModulations(ajnasModulations, fullRangeTuningSystemPitchClasses)
+              modulationsLowerOctave: createLowerOctaveModulations(
+                ajnasModulations, 
+                fullRangeTuningSystemPitchClasses
+              )
             })
           };
 
@@ -740,12 +933,12 @@ export async function exportTuningSystem(
           descendingPitchClassIntervals: possibleMaqam.descendingPitchClassIntervals,
           ascendingMaqamAjnas: possibleMaqam.ascendingMaqamAjnas
             ? Object.fromEntries(
-                Object.entries(possibleMaqam.ascendingMaqamAjnas).map(([noteName, jins]) => [noteName, jins ? standardizeText(jins.name) : null])
+                Object.entries(possibleMaqam.ascendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins ? standardizeText(jins.name) : null])
               )
             : undefined,
           descendingMaqamAjnas: possibleMaqam.descendingMaqamAjnas
             ? Object.fromEntries(
-                Object.entries(possibleMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [noteName, jins ? standardizeText(jins.name) : null])
+                Object.entries(possibleMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins ? standardizeText(jins.name) : null])
               )
             : undefined,
           transposition: possibleMaqam.transposition,
@@ -1119,12 +1312,12 @@ export async function exportMaqam(
       descendingPitchClassIntervals: maqamToExport.descendingPitchClassIntervals,
       ascendingMaqamAjnas: convertedMaqam.ascendingMaqamAjnas
         ? Object.fromEntries(
-            Object.entries(convertedMaqam.ascendingMaqamAjnas).map(([noteName, jins]) => [noteName, jins ? standardizeText(jins.name) : null])
+            Object.entries(convertedMaqam.ascendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins ? standardizeText(jins.name) : null])
           )
         : undefined,
       descendingMaqamAjnas: convertedMaqam.descendingMaqamAjnas
         ? Object.fromEntries(
-            Object.entries(convertedMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [noteName, jins ? standardizeText(jins.name) : null])
+            Object.entries(convertedMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins ? standardizeText(jins.name) : null])
           )
         : undefined,
       transposition: maqamToExport.transposition,
@@ -1153,9 +1346,24 @@ export async function exportMaqam(
       const numberOfMaqamModulationHops = calculateNumberOfModulations(maqamatModulations);
 
       const maqamModulationWithKeys: MaqamatModulationsWithKeys = {
+        modulationDegreesNoteNames: createModulationDegreesNoteNames(
+          maqamToExport.ascendingPitchClasses.map(pc => pc.noteName),
+          maqamToExport.descendingPitchClasses.map(pc => pc.noteName),
+          maqamatModulations.noteName2pBelowThird || ''
+        ),
+        ...(options.includeModulations8vb && {
+          modulationsLowerOctaveDegreesNoteNames: createModulationDegrees8vbNoteNames(
+            maqamToExport.ascendingPitchClasses.map(pc => pc.noteName),
+            maqamToExport.descendingPitchClasses.map(pc => pc.noteName),
+            maqamatModulations.noteName2pBelowThird || ''
+          )
+        }),
         modulations: createStandardModulations(maqamatModulations),
         ...(options.includeModulations8vb && {
-          modulationsLowerOctave: createLowerOctaveModulations(maqamatModulations, fullRangeTuningSystemPitchClasses)
+          modulationsLowerOctave: createLowerOctaveModulations(
+            maqamatModulations, 
+            fullRangeTuningSystemPitchClasses
+          )
         })
       };
 
@@ -1176,9 +1384,24 @@ export async function exportMaqam(
       const numberOfJinsModulationHops = calculateNumberOfModulations(ajnasModulations);
 
       const ajnasModulationsWithKeys: AjnasModulationsWithKeys = {
+        modulationDegreesNoteNames: createModulationDegreesNoteNames(
+          maqamToExport.ascendingPitchClasses.map(pc => pc.noteName),
+          maqamToExport.descendingPitchClasses.map(pc => pc.noteName),
+          ajnasModulations.noteName2pBelowThird || ''
+        ),
+        ...(options.includeModulations8vb && {
+          modulationsLowerOctaveDegreesNoteNames: createModulationDegrees8vbNoteNames(
+            maqamToExport.ascendingPitchClasses.map(pc => pc.noteName),
+            maqamToExport.descendingPitchClasses.map(pc => pc.noteName),
+            ajnasModulations.noteName2pBelowThird || ''
+          )
+        }),
         modulations: createStandardModulations(ajnasModulations),
         ...(options.includeModulations8vb && {
-          modulationsLowerOctave: createLowerOctaveModulations(ajnasModulations, fullRangeTuningSystemPitchClasses)
+          modulationsLowerOctave: createLowerOctaveModulations(
+            ajnasModulations, 
+            fullRangeTuningSystemPitchClasses
+          )
         })
       };
 
@@ -1251,12 +1474,12 @@ export async function exportMaqam(
           descendingPitchClassIntervals: maqamTransposition.descendingPitchClassIntervals,
           ascendingMaqamAjnas: convertedMaqam.ascendingMaqamAjnas
             ? Object.fromEntries(
-                Object.entries(convertedMaqam.ascendingMaqamAjnas).map(([noteName, jins]) => [noteName, jins ? standardizeText(jins.name) : null])
+                Object.entries(convertedMaqam.ascendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins ? standardizeText(jins.name) : null])
               )
             : undefined,
           descendingMaqamAjnas: convertedMaqam.descendingMaqamAjnas
             ? Object.fromEntries(
-                Object.entries(convertedMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [noteName, jins ? standardizeText(jins.name) : null])
+                Object.entries(convertedMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins ? standardizeText(jins.name) : null])
               )
             : undefined,
           transposition: maqamTransposition.transposition,
