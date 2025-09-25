@@ -3073,8 +3073,8 @@
   },
   {
     "id": "53",
-    "idName": "maqam_rast_(mutlaq)",
-    "name": "maqām rāst (muṭlaq)",
+    "idName": "maqam_rast_yegah",
+    "name": "maqām rāst yegāh",
     "ascendingNoteNames": [
       "yegāh",
       "ʿushayrān",
@@ -3414,6 +3414,33 @@
       "kurdān",
       "ʿajam",
       "ḥusaynī",
+      "nawā"
+    ],
+    "suyūr": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "60",
+    "idName": "maqam_bayyat_nawa",
+    "name": "maqām bayyāt nawā",
+    "ascendingNoteNames": [
+      "nawā",
+      "tīk ḥiṣār",
+      "ʿajam",
+      "kurdān",
+      "muḥayyar",
+      "buzurk",
+      "māhūrān"
+    ],
+    "descendingNoteNames": [
+      "māhūrān",
+      "sunbuleh/zawāl",
+      "muḥayyar",
+      "kurdān",
+      "ʿajam",
+      "tīk ḥiṣār",
       "nawā"
     ],
     "suyūr": [],
