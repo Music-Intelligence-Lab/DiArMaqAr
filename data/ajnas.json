@@ -1,8 +1,8 @@
 [
   {
     "id": "1",
-    "idName": "jins_rast_(mutlaq)",
-    "name": "jins rāst (muṭlaq)",
+    "idName": "jins_rast_nawa",
+    "name": "jins rāst nawā",
     "noteNames": [
       "nawā",
       "ḥusaynī",
@@ -54,11 +54,11 @@
     "commentsArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "Al-Khulʿī-(2011)",
+        "sourceId": "al-Khulʿī-(2011)",
         "page": "55"
       },
       {
-        "sourceId": "Al-Urmawī-Al-Baghdādī-(2017)",
+        "sourceId": "al-Urmawī-al-Baghdādī-(2017)",
         "page": "23"
       }
     ]
@@ -277,8 +277,8 @@
   },
   {
     "id": "20",
-    "idName": "jins_nahawand_(mutlaq)",
-    "name": "jins nahāwand (muṭlaq)",
+    "idName": "jins_nahawand_nawa",
+    "name": "jins nahāwand nawā",
     "noteNames": [
       "nawā",
       "ḥusaynī",
@@ -291,8 +291,8 @@
   },
   {
     "id": "21",
-    "idName": "jins_buselik_(Al-Shawwa)",
-    "name": "jins būselīk (Al-Shawwā)",
+    "idName": "jins_buselik_(al-Shawwa)",
+    "name": "jins būselīk (al-Shawwā)",
     "noteNames": [
       "dūgāh",
       "nīm būselīk",
@@ -303,15 +303,15 @@
     "commentsArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "Al-Shawwā-(1946)",
+        "sourceId": "al-Shawwā-(1946)",
         "page": "70"
       }
     ]
   },
   {
     "id": "22",
-    "idName": "jins_buselik_(Al-Hilu)",
-    "name": "jins būselīk (Al-Ḥilū)",
+    "idName": "jins_buselik_(al-Hilu)",
+    "name": "jins būselīk (al-Ḥilū)",
     "noteNames": [
       "dūgāh",
       "būselīk/ʿushshāq",
@@ -322,7 +322,7 @@
     "commentsArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "Al-Ḥilū-(1961)",
+        "sourceId": "al-Ḥilū-(1961)",
         "page": "126"
       }
     ]
@@ -355,7 +355,7 @@
     "commentsArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "Al-Shawwā-(1946)",
+        "sourceId": "al-Shawwā-(1946)",
         "page": "38"
       }
     ]
@@ -389,8 +389,8 @@
   },
   {
     "id": "27",
-    "idName": "jins_hijaz_yegah",
-    "name": "jins ḥijāz yegāh",
+    "idName": "jins_hijaz_nawa",
+    "name": "jins ḥijāz nawā",
     "noteNames": [
       "yegāh",
       "qarār ḥiṣār",
@@ -438,6 +438,20 @@
       "ʿajam ʿushayrān",
       "rāst",
       "dūgāh"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "31",
+    "idName": "jins_chahargah_(al-Shawwa)",
+    "name": "jins chahārgāh (al-Shawwā)",
+    "noteNames": [
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "ʿajam"
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
