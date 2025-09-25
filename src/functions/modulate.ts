@@ -102,21 +102,21 @@ export default function modulate(
   type ModulationType = Maqam | Jins;
 
   // Initialize modulation arrays for each scale degree according to Al-Shawwā's categories
-  const modulationsOnOne: ModulationType[] = []; // Tonic correspondence modulations
-  const modulationsOnThree: ModulationType[] = []; // Standard third-degree modulations
-  const modulationsOnThree2p: ModulationType[] = []; // Alternative third-degree (2p) modulations
-  const modulationsOnFour: ModulationType[] = []; // Fourth-degree modulations
-  const modulationsOnFive: ModulationType[] = []; // Fifth-degree modulations
-  const modulationsOnSixAscending: ModulationType[] = []; // Sixth-degree ascending modulations (between naturals)
-  const modulationsOnSixDescending: ModulationType[] = []; // Sixth-degree descending modulations (between naturals)
-  const modulationsOnSixNoThird: ModulationType[] = []; // Sixth-degree modulations when third is invalid
+  const modulationsOnFirstDegree: ModulationType[] = []; // Tonic correspondence modulations
+  const modulationsOnThirdDegree: ModulationType[] = []; // Standard third-degree modulations
+  const modulationsOnAltThirdDegree: ModulationType[] = []; // Alternative third-degree (2p) modulations
+  const modulationsOnFourthDegree: ModulationType[] = []; // Fourth-degree modulations
+  const modulationsOnFifthDegree: ModulationType[] = []; // Fifth-degree modulations
+  const modulationsOnSixthDegreeAsc: ModulationType[] = []; // Sixth-degree ascending modulations (between naturals)
+  const modulationsOnSixthDegreeDesc: ModulationType[] = []; // Sixth-degree descending modulations (between naturals)
+  const modulationsOnSixthDegreeIfNoThird: ModulationType[] = []; // Sixth-degree modulations when third is invalid
 
   // Extract note names from source maqam for analysis
   const sourceAscendingNotes = sourceMaqamTransposition.ascendingPitchClasses.map((pitchClass: PitchClass) => pitchClass.noteName);
   const sourceDescendingNotes = [...sourceMaqamTransposition.descendingPitchClasses.map((pitchClass: PitchClass) => pitchClass.noteName)].reverse();
 
   // Al-Shawwā rule validation flags
-  let check2p = false; // Flag for alternative third-degree modulation validity
+  let check2pBelowThird = false; // Flag for alternative third-degree modulation validity
   let checkSixthNoThird = false; // Flag for sixth-degree modulation when third is invalid
   let checkSixAscending = false; // Flag for sixth-degree modulation between naturals (ascending)
   let checkSixDescending = false; // Flag for sixth-degree modulation between naturals (descending)
@@ -134,7 +134,7 @@ export default function modulate(
   const thirdDegreeNoteName = sourceAscendingNotes[2]; // Third degree
   const thirdDegreeCellSIndex = allPitchClasses.findIndex((cd) => cd.noteName === thirdDegreeNoteName);
 
-  let noteName2p = ""; // Store the alternative third-degree note (2p classification)
+  let noteName2pBelowThird = ""; // Store the alternative third-degree note (2p classification)
 
   // Calculate pitch class segments for 2p note search
   const numberOfPitchClasses = allPitchClasses.length / 4;
@@ -144,14 +144,14 @@ export default function modulate(
   // Search for a 2p (half-note) immediately below the third degree
   for (const pitchClasses of slice) {
     if (shawwaMapping(pitchClasses.noteName) === "2p") {
-      noteName2p = pitchClasses.noteName;
-      const first2pBeforeShawwaIndex = shawwaList.findIndex((noteName) => noteName === noteName2p);
+      noteName2pBelowThird = pitchClasses.noteName;
+      const first2pBeforeShawwaIndex = shawwaList.findIndex((noteName) => noteName === noteName2pBelowThird);
 
       // Validate Al-Shawwā's specific distance requirements:
       // a) Sixth pitch class from tonic (distance = 6)
       // b) Two pitch classes from second degree (distance = 2)
       if (first2pBeforeShawwaIndex - firstDegreeShawwaIndex === 6 && first2pBeforeShawwaIndex - secondDegreeShawwaIndex === 2) {
-        check2p = true;
+        check2pBelowThird = true;
       }
       break;
     }
@@ -228,38 +228,38 @@ export default function modulate(
 
       // RULE 1: TONIC CORRESPONDENCE - Same tonic modulations
       if (currentAscendingNotes[0] === sourceAscendingNotes[0]) {
-        modulationsOnOne.push(transposition);
+        modulationsOnFirstDegree.push(transposition);
       }
 
       // RULE 4: FOURTH-DEGREE MODULATION - Fourth degree becomes tonic
       if (currentAscendingNotes[0] === sourceAscendingNotes[3] && shawwaMapping(sourceAscendingNotes[3]) !== "/") {
-        modulationsOnFour.push(transposition);
+        modulationsOnFourthDegree.push(transposition);
       }
 
       // RULE 4: FIFTH-DEGREE MODULATION - Fifth degree becomes tonic
       if (currentAscendingNotes[0] === sourceAscendingNotes[4] && shawwaMapping(sourceAscendingNotes[4]) !== "/") {
-        modulationsOnFive.push(transposition);
+        modulationsOnFifthDegree.push(transposition);
       }
 
       // RULE 2: STANDARD THIRD-DEGREE MODULATION - Third degree becomes tonic
       if (currentAscendingNotes[0] === sourceAscendingNotes[2] && shawwaMapping(sourceAscendingNotes[2]) !== "/") {
-        modulationsOnThree.push(transposition);
+        modulationsOnThirdDegree.push(transposition);
       }
       // RULE 3: ALTERNATIVE THIRD-DEGREE MODULATION - 2p note becomes tonic
-      else if (check2p && currentAscendingNotes[0] === noteName2p) {
-        modulationsOnThree2p.push(transposition);
+      else if (check2pBelowThird && currentAscendingNotes[0] === noteName2pBelowThird) {
+        modulationsOnAltThirdDegree.push(transposition);
       }
       // RULE 5: SIXTH-DEGREE NO-THIRD MODULATION - When third options are invalid
       else if (checkSixthNoThird && currentAscendingNotes[0] === sourceAscendingNotes[5]) {
-        modulationsOnSixNoThird.push(transposition);
+        modulationsOnSixthDegreeIfNoThird.push(transposition);
       }
 
       // RULE 6: SIXTH-DEGREE BETWEEN NATURALS MODULATIONS
       if (checkSixAscending && currentAscendingNotes[0] === sourceAscendingNotes[5]) {
-        modulationsOnSixAscending.push(transposition);
+        modulationsOnSixthDegreeAsc.push(transposition);
       }
       if (checkSixDescending && currentAscendingNotes[0] === sourceDescendingNotes[5]) {
-        modulationsOnSixDescending.push(transposition);
+        modulationsOnSixthDegreeDesc.push(transposition);
       }
     }
   }
@@ -269,27 +269,27 @@ export default function modulate(
   // and both third options take priority over sixth-degree no-third modulations
   if (ajnasModulationsMode) {
     return {
-      modulationsOnOne,
-      modulationsOnThree,
-      modulationsOnThree2p: modulationsOnThree.length === 0 ? modulationsOnThree2p : [],
-      modulationsOnSixNoThird: modulationsOnThree.length === 0 && modulationsOnThree2p.length === 0 ? modulationsOnSixNoThird : [],
-      modulationsOnFour,
-      modulationsOnFive,
-      modulationsOnSixAscending,
-      modulationsOnSixDescending,
-      noteName2p,
+      modulationsOnFirstDegree: modulationsOnFirstDegree,
+      modulationsOnThirdDegree: modulationsOnThirdDegree,
+      modulationsOnAltThirdDegree: modulationsOnThirdDegree.length === 0 ? modulationsOnAltThirdDegree : [],
+      modulationsOnSixthDegreeIfNoThird: modulationsOnThirdDegree.length === 0 && modulationsOnAltThirdDegree.length === 0 ? modulationsOnSixthDegreeIfNoThird : [],
+      modulationsOnFourthDegree: modulationsOnFourthDegree,
+      modulationsOnFifthDegree: modulationsOnFifthDegree,
+      modulationsOnSixthDegreeAsc: modulationsOnSixthDegreeAsc,
+      modulationsOnSixthDegreeDesc: modulationsOnSixthDegreeDesc,
+      noteName2pBelowThird: noteName2pBelowThird,
     } as AjnasModulations;
   } else {
     return {
-      modulationsOnOne,
-      modulationsOnThree,
-      modulationsOnThree2p: modulationsOnThree.length === 0 ? modulationsOnThree2p : [],
-      modulationsOnSixNoThird: modulationsOnThree.length === 0 && modulationsOnThree2p.length === 0 ? modulationsOnSixNoThird : [],
-      modulationsOnFour,
-      modulationsOnFive,
-      modulationsOnSixAscending,
-      modulationsOnSixDescending,
-      noteName2p,
+      modulationsOnFirstDegree: modulationsOnFirstDegree,
+      modulationsOnThirdDegree: modulationsOnThirdDegree,
+      modulationsOnAltThirdDegree: modulationsOnThirdDegree.length === 0 ? modulationsOnAltThirdDegree : [],
+      modulationsOnSixthDegreeIfNoThird: modulationsOnThirdDegree.length === 0 && modulationsOnAltThirdDegree.length === 0 ? modulationsOnSixthDegreeIfNoThird : [],
+      modulationsOnFourthDegree: modulationsOnFourthDegree,
+      modulationsOnFifthDegree: modulationsOnFifthDegree,
+      modulationsOnSixthDegreeAsc: modulationsOnSixthDegreeAsc,
+      modulationsOnSixthDegreeDesc: modulationsOnSixthDegreeDesc,
+      noteName2pBelowThird: noteName2pBelowThird,
     } as MaqamatModulations;
   }
 }

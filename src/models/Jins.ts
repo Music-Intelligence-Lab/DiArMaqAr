@@ -296,31 +296,31 @@ export interface Jins {
  */
 export interface AjnasModulations {
   /** Modulations that occur on the first scale degree */
-  modulationsOnOne: Jins[];
+  modulationsOnFirstDegree: Jins[];
   
   /** Modulations that occur on the third scale degree */
-  modulationsOnThree: Jins[];
+  modulationsOnThirdDegree: Jins[];
   
   /** Modulations that occur on the third scale degree (second pattern) */
-  modulationsOnThree2p: Jins[];
+  modulationsOnAltThirdDegree: Jins[];
   
   /** Modulations that occur on the fourth scale degree */
-  modulationsOnFour: Jins[];
+  modulationsOnFourthDegree: Jins[];
   
   /** Modulations that occur on the fifth scale degree */
-  modulationsOnFive: Jins[];
+  modulationsOnFifthDegree: Jins[];
   
   /** Ascending modulations that occur on the sixth scale degree */
-  modulationsOnSixAscending: Jins[];
+  modulationsOnSixthDegreeAsc: Jins[];
   
   /** Descending modulations that occur on the sixth scale degree */
-  modulationsOnSixDescending: Jins[];
+  modulationsOnSixthDegreeDesc: Jins[];
   
   /** Modulations on the sixth scale degree without using the third */
-  modulationsOnSixNoThird: Jins[];
+  modulationsOnSixthDegreeIfNoThird: Jins[];
   
   /** The note name of the second degree (plus variations) */
-  noteName2p: string;
+  noteName2pBelowThird: string;
 }
 
 /**

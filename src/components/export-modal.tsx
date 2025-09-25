@@ -511,6 +511,7 @@ export default function ExportModal({
             includeMaqamatDetails: exportOptions.includeMaqamatDetails || false,
             includeMaqamatModulations: exportOptions.includeMaqamatModulations,
             includeAjnasModulations: exportOptions.includeAjnasModulations,
+            includeModulations8vb: false, // TODO: Add UI control for this option
             progressCallback: updateProgress,
           }
         );
@@ -539,6 +540,7 @@ export default function ExportModal({
             includeTranspositions: exportOptions.includeTranspositions || false,
             includeMaqamatModulations: exportOptions.includeMaqamatModulations,
             includeAjnasModulations: exportOptions.includeAjnasModulations,
+            includeModulations8vb: false, // TODO: Add UI control for this option
             progressCallback: updateProgress,
           }
         );

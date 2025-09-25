@@ -180,30 +180,30 @@ export async function POST(request: Request) {
                   if (includeMaqamatModulations) {
                     const maqamatModulations = modulate(tuningSystemPitchClasses, ajnas, maqamat, transposition, false, inputCentsTolerance);
                     (transposition as any).maqamatModulations = {
-                      modulationsOnOne: maqamatModulations.modulationsOnOne.map((m: any) => m.name),
-                      modulationsOnThree: maqamatModulations.modulationsOnThree.map((m: any) => m.name),
-                      modulationsOnThree2p: maqamatModulations.modulationsOnThree2p.map((m: any) => m.name),
-                      modulationsOnFour: maqamatModulations.modulationsOnFour.map((m: any) => m.name),
-                      modulationsOnFive: maqamatModulations.modulationsOnFive.map((m: any) => m.name),
-                      modulationsOnSixAscending: maqamatModulations.modulationsOnSixAscending.map((m: any) => m.name),
-                      modulationsOnSixDescending: maqamatModulations.modulationsOnSixDescending.map((m: any) => m.name),
-                      modulationsOnSixNoThird: maqamatModulations.modulationsOnSixNoThird.map((m: any) => m.name),
-                      noteName2p: maqamatModulations.noteName2p,
+                      modulationsOnFirstDegree: maqamatModulations.modulationsOnFirstDegree.map((m: any) => m.name),
+                      modulationsOnThirdDegree: maqamatModulations.modulationsOnThirdDegree.map((m: any) => m.name),
+                      modulationsOnAltThirdDegree: maqamatModulations.modulationsOnAltThirdDegree.map((m: any) => m.name),
+                      modulationsOnFourthDegree: maqamatModulations.modulationsOnFourthDegree.map((m: any) => m.name),
+                      modulationsOnFifthDegree: maqamatModulations.modulationsOnFifthDegree.map((m: any) => m.name),
+                      modulationsOnSixthDegreeAsc: maqamatModulations.modulationsOnSixthDegreeAsc.map((m: any) => m.name),
+                      modulationsOnSixthDegreeDesc: maqamatModulations.modulationsOnSixthDegreeDesc.map((m: any) => m.name),
+                      modulationsOnSixthDegreeIfNoThird: maqamatModulations.modulationsOnSixthDegreeIfNoThird.map((m: any) => m.name),
+                      noteName2pBelowThird: maqamatModulations.noteName2pBelowThird,
                     };
                   }
 
                   if (includeAjnasModulations) {
                     const ajnasModulations = modulate(tuningSystemPitchClasses, ajnas, maqamat, transposition, true, inputCentsTolerance);
                     (transposition as any).ajnasModulations = {
-                      modulationsOnOne: ajnasModulations.modulationsOnOne.map((j: any) => j.name),
-                      modulationsOnThree: ajnasModulations.modulationsOnThree.map((j: any) => j.name),
-                      modulationsOnThree2p: ajnasModulations.modulationsOnThree2p.map((j: any) => j.name),
-                      modulationsOnFour: ajnasModulations.modulationsOnFour.map((j: any) => j.name),
-                      modulationsOnFive: ajnasModulations.modulationsOnFive.map((j: any) => j.name),
-                      modulationsOnSixAscending: ajnasModulations.modulationsOnSixAscending.map((j: any) => j.name),
-                      modulationsOnSixDescending: ajnasModulations.modulationsOnSixDescending.map((j: any) => j.name),
-                      modulationsOnSixNoThird: ajnasModulations.modulationsOnSixNoThird.map((j: any) => j.name),
-                      noteName2p: ajnasModulations.noteName2p,
+                      modulationsOnFirstDegree: ajnasModulations.modulationsOnFirstDegree.map((j: any) => j.name),
+                      modulationsOnThirdDegree: ajnasModulations.modulationsOnThirdDegree.map((j: any) => j.name),
+                      modulationsOnAltThirdDegree: ajnasModulations.modulationsOnAltThirdDegree.map((j: any) => j.name),
+                      modulationsOnFourthDegree: ajnasModulations.modulationsOnFourthDegree.map((j: any) => j.name),
+                      modulationsOnFifthDegree: ajnasModulations.modulationsOnFifthDegree.map((j: any) => j.name),
+                      modulationsOnSixthDegreeAsc: ajnasModulations.modulationsOnSixthDegreeAsc.map((j: any) => j.name),
+                      modulationsOnSixthDegreeDesc: ajnasModulations.modulationsOnSixthDegreeDesc.map((j: any) => j.name),
+                      modulationsOnSixthDegreeIfNoThird: ajnasModulations.modulationsOnSixthDegreeIfNoThird.map((j: any) => j.name),
+                      noteName2pBelowThird: ajnasModulations.noteName2pBelowThird,
                     };
                   }
                 }
@@ -223,30 +223,30 @@ export async function POST(request: Request) {
                   if (includeMaqamatModulations) {
                     const maqamatModulations = modulate(tuningSystemPitchClasses, ajnas, maqamat, transposition, false, inputCentsTolerance);
                     (transposition as any).maqamatModulations = {
-                      modulationsOnOne: maqamatModulations.modulationsOnOne.map((m: any) => m.name),
-                      modulationsOnThree: maqamatModulations.modulationsOnThree.map((m: any) => m.name),
-                      modulationsOnThree2p: maqamatModulations.modulationsOnThree2p.map((m: any) => m.name),
-                      modulationsOnFour: maqamatModulations.modulationsOnFour.map((m: any) => m.name),
-                      modulationsOnFive: maqamatModulations.modulationsOnFive.map((m: any) => m.name),
-                      modulationsOnSixAscending: maqamatModulations.modulationsOnSixAscending.map((m: any) => m.name),
-                      modulationsOnSixDescending: maqamatModulations.modulationsOnSixDescending.map((m: any) => m.name),
-                      modulationsOnSixNoThird: maqamatModulations.modulationsOnSixNoThird.map((m: any) => m.name),
-                      noteName2p: maqamatModulations.noteName2p,
+                      modulationsOnFirstDegree: maqamatModulations.modulationsOnFirstDegree.map((m: any) => m.name),
+                      modulationsOnThirdDegree: maqamatModulations.modulationsOnThirdDegree.map((m: any) => m.name),
+                      modulationsOnAltThirdDegree: maqamatModulations.modulationsOnAltThirdDegree.map((m: any) => m.name),
+                      modulationsOnFourthDegree: maqamatModulations.modulationsOnFourthDegree.map((m: any) => m.name),
+                      modulationsOnFifthDegree: maqamatModulations.modulationsOnFifthDegree.map((m: any) => m.name),
+                      modulationsOnSixthDegreeAsc: maqamatModulations.modulationsOnSixthDegreeAsc.map((m: any) => m.name),
+                      modulationsOnSixthDegreeDesc: maqamatModulations.modulationsOnSixthDegreeDesc.map((m: any) => m.name),
+                      modulationsOnSixthDegreeIfNoThird: maqamatModulations.modulationsOnSixthDegreeIfNoThird.map((m: any) => m.name),
+                      noteName2pBelowThird: maqamatModulations.noteName2pBelowThird,
                     };
                   }
 
                   if (includeAjnasModulations) {
                     const ajnasModulations = modulate(tuningSystemPitchClasses, ajnas, maqamat, transposition, true, inputCentsTolerance);
                     (transposition as any).ajnasModulations = {
-                      modulationsOnOne: ajnasModulations.modulationsOnOne.map((j: any) => j.name),
-                      modulationsOnThree: ajnasModulations.modulationsOnThree.map((j: any) => j.name),
-                      modulationsOnThree2p: ajnasModulations.modulationsOnThree2p.map((j: any) => j.name),
-                      modulationsOnFour: ajnasModulations.modulationsOnFour.map((j: any) => j.name),
-                      modulationsOnFive: ajnasModulations.modulationsOnFive.map((j: any) => j.name),
-                      modulationsOnSixAscending: ajnasModulations.modulationsOnSixAscending.map((j: any) => j.name),
-                      modulationsOnSixDescending: ajnasModulations.modulationsOnSixDescending.map((j: any) => j.name),
-                      modulationsOnSixNoThird: ajnasModulations.modulationsOnSixNoThird.map((j: any) => j.name),
-                      noteName2p: ajnasModulations.noteName2p,
+                      modulationsOnFirstDegree: ajnasModulations.modulationsOnFirstDegree.map((j: any) => j.name),
+                      modulationsOnThirdDegree: ajnasModulations.modulationsOnThirdDegree.map((j: any) => j.name),
+                      modulationsOnAltThirdDegree: ajnasModulations.modulationsOnAltThirdDegree.map((j: any) => j.name),
+                      modulationsOnFourthDegree: ajnasModulations.modulationsOnFourthDegree.map((j: any) => j.name),
+                      modulationsOnFifthDegree: ajnasModulations.modulationsOnFifthDegree.map((j: any) => j.name),
+                      modulationsOnSixthDegreeAsc: ajnasModulations.modulationsOnSixthDegreeAsc.map((j: any) => j.name),
+                      modulationsOnSixthDegreeDesc: ajnasModulations.modulationsOnSixthDegreeDesc.map((j: any) => j.name),
+                      modulationsOnSixthDegreeIfNoThird: ajnasModulations.modulationsOnSixthDegreeIfNoThird.map((j: any) => j.name),
+                      noteName2pBelowThird: ajnasModulations.noteName2pBelowThird,
                     };
                   }
                 }
