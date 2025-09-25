@@ -1,16 +1,19 @@
 #!/usr/bin/env node
 
 /**
- * Proper Batch Export CLI for Digital Arabic Maqām Archive
+ * Digital Arabic Maqām Archive - Proper Batch Export CLI
  *
+ * This is a wrapper script that delegates to the TypeScript version for actual functionality.
  * This script uses the actual exportTuningSystem function to generate complete exports
- * with all the data structures, pitch class references, and modulations that the
+ * that match the data structures and options that the frontend application's
  * export modal provides.
  */
 
+/* eslint-disable @typescript-eslint/no-require-imports */
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+/* eslint-enable @typescript-eslint/no-require-imports */
 
 // We need to compile and run the TypeScript version
 function runTypeScriptVersion() {
@@ -34,6 +37,7 @@ interface CLIOptions {
   includeMaqamatDetails: boolean;
   includeMaqamatModulations: boolean;
   includeAjnasModulations: boolean;
+  includeModulations8vb: boolean;
   outputDir: string;
 }
 
@@ -48,6 +52,7 @@ function parseArguments(): CLIOptions {
     includeMaqamatDetails: false,
     includeMaqamatModulations: false,
     includeAjnasModulations: false,
+    includeModulations8vb: false,
     outputDir: './exports'
   };
 
@@ -97,6 +102,12 @@ function parseArguments(): CLIOptions {
       case '--no-ajnas-modulations':
         options.includeAjnasModulations = false;
         break;
+      case '--include-modulations-8vb':
+        options.includeModulations8vb = true;
+        break;
+      case '--no-modulations-8vb':
+        options.includeModulations8vb = false;
+        break;
       case '--output-dir':
       case '-o':
         options.outputDir = nextArg;
@@ -131,6 +142,8 @@ Export Options (mirrors export modal exactly):
   --no-maqamat-modulations     Exclude maqamat modulations
   --include-ajnas-modulations   Include ajnas modulations (default: false)
   --no-ajnas-modulations       Exclude ajnas modulations
+  --include-modulations-8vb     Include lower octave modulations (default: false)
+  --no-modulations-8vb         Exclude lower octave modulations
 
 Examples:
   # List all available tuning systems
@@ -201,6 +214,7 @@ async function main(): Promise<void> {
       includeMaqamatDetails: options.includeMaqamatDetails,
       includeMaqamatModulations: options.includeMaqamatModulations,
       includeAjnasModulations: options.includeAjnasModulations,
+      includeModulations8vb: options.includeModulations8vb,
       progressCallback: (percentage: number, step: string) => {
         process.stdout.write(\`\\r\${step} (\${Math.round(percentage)}%)\`);
       }
@@ -422,7 +436,7 @@ if (require.main === module) {
       stdio: 'inherit',
       cwd: path.dirname(__dirname)
     });
-  } catch (error) {
+  } catch {
     // Try with ts-node if tsx fails
     try {
       const args = process.argv.slice(2).map(arg => `"${arg}"`).join(' ');
@@ -430,7 +444,7 @@ if (require.main === module) {
         stdio: 'inherit',
         cwd: path.dirname(__dirname)
       });
-    } catch (error2) {
+    } catch {
       console.error('Failed to run TypeScript version. Make sure tsx or ts-node is available:');
       console.error('npm install -g tsx');
       console.error('or');
