@@ -923,17 +923,23 @@
                                 <td>maqamId</td>
                                 <td>String</td>
                                 <td class="optional">Optional*</td>
-                                <td>Unique identifier for the maqam to retrieve suyūr from (mutually exclusive with sourceId)</td>
+                                <td>Unique identifier for the maqam to retrieve suyūr from (mutually exclusive with maqamName and sourceId)</td>
+                            </tr>
+                            <tr>
+                                <td>maqamName</td>
+                                <td>String</td>
+                                <td class="optional">Optional*</td>
+                                <td>Name of the maqam to retrieve suyūr from (mutually exclusive with maqamId and sourceId). Can be provided with or without Arabic diacritics.</td>
                             </tr>
                             <tr>
                                 <td>sourceId</td>
                                 <td>String</td>
                                 <td class="optional">Optional*</td>
-                                <td>Unique identifier for the academic source to retrieve suyūr from across all maqamat (mutually exclusive with maqamId)</td>
+                                <td>Unique identifier for the academic source to retrieve suyūr from across all maqamat (mutually exclusive with maqamId and maqamName)</td>
                             </tr>
                         </tbody>
                     </table>
-                    <p><em>* Either maqamId or sourceId must be provided, but not both.</em></p>
+                    <p><em>* Either maqamId, maqamName, or sourceId must be provided, but only one at a time.</em></p>
                 </div>
 
                 <div class="section">
@@ -942,7 +948,16 @@
                         <pre>curl -X POST "http://localhost:3000/api/sayr" \
   -H "Content-Type: application/json" \
   -d '{
-    "maqamId": "1"
+    "maqamId": "30"
+  }'</pre>
+                    </div>
+
+                    <h3>Example Request (by Maqam Name)</h3>
+                    <div class="code-block">
+                        <pre>curl -X POST "http://localhost:3000/api/sayr" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "maqamName": "maqām faraḥfazzā"
   }'</pre>
                     </div>
 
@@ -951,7 +966,7 @@
                         <pre>curl -X POST "http://localhost:3000/api/sayr" \
   -H "Content-Type: application/json" \
   -d '{
-    "sourceId": "Shawqi-(1969)"
+    "sourceId": "Al-Shawwā-(1946)"
   }'</pre>
                     </div>
                 </div>
@@ -960,15 +975,35 @@
                     <h3>Example Response (by Maqam ID)</h3>
                     <div class="code-block">
                         <pre>{
-  "maqamId": "1",
-  "maqamName": "maqām rāst (binṣir)",
+  "maqamId": "30",
+  "maqamName": "maqām faraḥfazzā",
   "suyūr": [
     {
-      "id": "sayr_1",
-      "name": "Basic Rast Progression",
-      "noteSequence": ["rāst", "dūgāh", "segāh", "chahārgāh"],
-      "sourceId": "Al-Farabi-(950g)",
-      "description": "Fundamental melodic pathway in Rast maqam"
+      "id": "Sayr Al-Shawwā-(1946)",
+      "creatorEnglish": "Al-Shawwā",
+      "creatorArabic": "الشوّا",
+      "sourceId": "Al-Shawwā-(1946)",
+      "page": 19,
+      "commentsEnglish": "Begins on nawā, then ḥusaynī and 'ajam until muḥayyar ascending and descending, then descends from nawā until yegāh with a touch of qarār ḥijāz before ending on its qarār, yegāh. Therefore it is assumed that the initial ascents and descents are in jins nahāwand nawā as per the construction of the maqām.",
+      "commentsArabic": "",
+      "stops": [
+        {
+          "type": "jins",
+          "value": "6",
+          "startingNote": "nawā",
+          "direction": "ascending"
+        },
+        {
+          "type": "jins",
+          "value": "6",
+          "startingNote": "nawā",
+          "direction": "descending"
+        },
+        {
+          "type": "note",
+          "value": "nawā"
+        }
+      ]
     }
   ]
 }</pre>
@@ -979,31 +1014,28 @@
                     <h3>Example Response (by Source ID)</h3>
                     <div class="code-block">
                         <pre>{
-  "sourceId": "Shawqi-(1969)",
+  "sourceId": "Al-Shawwā-(1946)",
   "maqams": [
     {
-      "maqamId": "1",
-      "maqamName": "maqām rāst (binṣir)",
+      "maqamId": "30",
+      "maqamName": "maqām faraḥfazzā",
       "suyūr": [
         {
-          "id": "sayr_1",
-          "name": "Rast Opening Formula",
-          "noteSequence": ["rāst", "dūgāh", "segāh"],
-          "sourceId": "Shawqi-(1969)",
-          "description": "Traditional opening phrase"
-        }
-      ]
-    },
-    {
-      "maqamId": "2",
-      "maqamName": "maqām bayātī",
-      "suyūr": [
-        {
-          "id": "sayr_2",
-          "name": "Bayati Cadence",
-          "noteSequence": ["bayātī", "segāh", "dūgāh"],
-          "sourceId": "Shawqi-(1969)",
-          "description": "Common closing pattern"
+          "id": "Sayr Al-Shawwā-(1946)",
+          "creatorEnglish": "Al-Shawwā",
+          "creatorArabic": "الشوّا",
+          "sourceId": "Al-Shawwā-(1946)",
+          "page": 19,
+          "commentsEnglish": "Begins on nawā, then ḥusaynī and 'ajam until muḥayyar ascending and descending...",
+          "commentsArabic": "",
+          "stops": [
+            {
+              "type": "jins",
+              "value": "6",
+              "startingNote": "nawā",
+              "direction": "ascending"
+            }
+          ]
         }
       ]
     }
@@ -1511,19 +1543,30 @@ curl -X POST "http://localhost:3000/api/transpose" \
             method: 'POST',
             url: '/api/sayr',
             params: [
-              { name: 'maqamId', label: 'Maqam ID (optional)', type: 'text', value: '1' },
+              { name: 'maqamId', label: 'Maqam ID (optional)', type: 'text', value: '30' },
+              { name: 'maqamName', label: 'Maqam Name (optional)', type: 'text', value: '' },
               { name: 'sourceId', label: 'Source ID (optional)', type: 'text', value: '' }
             ],
             exampleResponse: `{
-  "maqamId": "1",
-  "maqamName": "maqām rāst (binṣir)",
+  "maqamId": "30",
+  "maqamName": "maqām faraḥfazzā",
   "suyūr": [
     {
-      "id": "sayr_1",
-      "name": "Basic Rast Progression",
-      "noteSequence": ["rāst", "dūgāh", "segāh", "chahārgāh"],
-      "sourceId": "Al-Farabi-(950g)",
-      "description": "Fundamental melodic pathway in Rast maqam"
+      "id": "Sayr Al-Shawwā-(1946)",
+      "creatorEnglish": "Al-Shawwā",
+      "creatorArabic": "الشوّا",
+      "sourceId": "Al-Shawwā-(1946)",
+      "page": 19,
+      "commentsEnglish": "Begins on nawā, then ḥusaynī and 'ajam until muḥayyar ascending and descending...",
+      "commentsArabic": "",
+      "stops": [
+        {
+          "type": "jins",
+          "value": "6",
+          "startingNote": "nawā",
+          "direction": "ascending"
+        }
+      ]
     }
   ]
 }`
