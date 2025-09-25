@@ -49,27 +49,27 @@ export default function Modulations() {
       // Shift all ajnas modulations down by one octave
       const shiftedAjnasMods = {
         ...ajnasMods,
-        modulationsOnOne: ajnasMods.modulationsOnOne.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)),
-        modulationsOnThree: ajnasMods.modulationsOnThree.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)),
-        modulationsOnThree2p: ajnasMods.modulationsOnThree2p.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)),
-        modulationsOnFour: ajnasMods.modulationsOnFour.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)),
-        modulationsOnFive: ajnasMods.modulationsOnFive.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)),
-        modulationsOnSixAscending: ajnasMods.modulationsOnSixAscending.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)),
-        modulationsOnSixDescending: ajnasMods.modulationsOnSixDescending.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)),
-        modulationsOnSixNoThird: ajnasMods.modulationsOnSixNoThird.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)),
+        modulationsOnFirstDegree: ajnasMods.modulationsOnFirstDegree.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)),
+        modulationsOnThirdDegree: ajnasMods.modulationsOnThirdDegree.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)),
+        modulationsOnAltThirdDegree: ajnasMods.modulationsOnAltThirdDegree.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)),
+        modulationsOnFourthDegree: ajnasMods.modulationsOnFourthDegree.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)),
+        modulationsOnFifthDegree: ajnasMods.modulationsOnFifthDegree.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)),
+        modulationsOnSixthDegreeAsc: ajnasMods.modulationsOnSixthDegreeAsc.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)),
+        modulationsOnSixthDegreeDesc: ajnasMods.modulationsOnSixthDegreeDesc.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)),
+        modulationsOnSixthDegreeIfNoThird: ajnasMods.modulationsOnSixthDegreeIfNoThird.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)),
       };
       
       // Shift all maqamat modulations down by one octave
       const shiftedMaqamatMods = {
         ...maqamatMods,
-        modulationsOnOne: maqamatMods.modulationsOnOne.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)),
-        modulationsOnThree: maqamatMods.modulationsOnThree.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)),
-        modulationsOnThree2p: maqamatMods.modulationsOnThree2p.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)),
-        modulationsOnFour: maqamatMods.modulationsOnFour.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)),
-        modulationsOnFive: maqamatMods.modulationsOnFive.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)),
-        modulationsOnSixAscending: maqamatMods.modulationsOnSixAscending.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)),
-        modulationsOnSixDescending: maqamatMods.modulationsOnSixDescending.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)),
-        modulationsOnSixNoThird: maqamatMods.modulationsOnSixNoThird.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)),
+        modulationsOnFirstDegree: maqamatMods.modulationsOnFirstDegree.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)),
+        modulationsOnThirdDegree: maqamatMods.modulationsOnThirdDegree.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)),
+        modulationsOnAltThirdDegree: maqamatMods.modulationsOnAltThirdDegree.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)),
+        modulationsOnFourthDegree: maqamatMods.modulationsOnFourthDegree.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)),
+        modulationsOnFifthDegree: maqamatMods.modulationsOnFifthDegree.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)),
+        modulationsOnSixthDegreeAsc: maqamatMods.modulationsOnSixthDegreeAsc.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)),
+        modulationsOnSixthDegreeDesc: maqamatMods.modulationsOnSixthDegreeDesc.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)),
+        modulationsOnSixthDegreeIfNoThird: maqamatMods.modulationsOnSixthDegreeIfNoThird.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)),
       };
       
       return {
@@ -312,7 +312,7 @@ export default function Modulations() {
               !collapsedHops[stackIdx] &&
               (() => {
                 const modulations = modulationModes[stackIdx] ? modulationsStack[stackIdx].ajnas : modulationsStack[stackIdx].maqamat;
-                const { noteName2p } = modulations;
+                const { noteName2pBelowThird: noteName2p } = modulations;
                 return (
                   <>
                     <div style={{ display: "flex", gap: "8px", marginBottom: "12px", alignItems: "center", justifyContent: "center" }}>
@@ -397,9 +397,9 @@ export default function Modulations() {
                           {t('modulations.tonic')}:
                           <br />{" "}
                         </span>
-                        {getDisplayName(ascendingNoteNames[0], 'note')} ({modulations?.modulationsOnOne ? modulations.modulationsOnOne.length : 0})
+                        {getDisplayName(ascendingNoteNames[0], 'note')} ({modulations?.modulationsOnFirstDegree ? modulations.modulationsOnFirstDegree.length : 0})
                       </span>
-                      {[...modulations.modulationsOnOne]
+                      {[...modulations.modulationsOnFirstDegree]
                         .sort((a: any, b: any) => a.name.localeCompare(b.name))
                         .map((hop, index) => (
                           <span
@@ -428,9 +428,9 @@ export default function Modulations() {
                           {t('modulations.third')}:
                           <br />{" "}
                         </span>
-                        {getDisplayName(ascendingNoteNames[2], 'note')} ({modulations?.modulationsOnThree ? modulations.modulationsOnThree.length : 0})
+                        {getDisplayName(ascendingNoteNames[2], 'note')} ({modulations?.modulationsOnThirdDegree ? modulations.modulationsOnThirdDegree.length : 0})
                       </span>
-                      {[...modulations.modulationsOnThree]
+                      {[...modulations.modulationsOnThirdDegree]
                         .sort((a, b) => a.name.localeCompare(b.name))
                         .map((hop, index) => (
                           <span
@@ -458,9 +458,9 @@ export default function Modulations() {
                           {t('modulations.thirdAlternative')}:
                           <br />{" "}
                         </span>
-                        {getDisplayName(noteName2p, 'note')} ({modulations?.modulationsOnThree2p ? modulations.modulationsOnThree2p.length : 0})
+                        {getDisplayName(noteName2p, 'note')} ({modulations?.modulationsOnAltThirdDegree ? modulations.modulationsOnAltThirdDegree.length : 0})
                       </span>
-                      {[...modulations.modulationsOnThree2p]
+                      {[...modulations.modulationsOnAltThirdDegree]
                         .sort((a, b) => a.name.localeCompare(b.name))
                         .map((hop, index) => (
                           <span
@@ -488,9 +488,9 @@ export default function Modulations() {
                           {t('modulations.fourth')}:
                           <br />{" "}
                         </span>
-                        {getDisplayName(ascendingNoteNames[3], 'note')} ({modulations?.modulationsOnFour ? modulations.modulationsOnFour.length : 0})
+                        {getDisplayName(ascendingNoteNames[3], 'note')} ({modulations?.modulationsOnFourthDegree ? modulations.modulationsOnFourthDegree.length : 0})
                       </span>
-                      {[...modulations.modulationsOnFour]
+                      {[...modulations.modulationsOnFourthDegree]
                         .sort((a, b) => a.name.localeCompare(b.name))
                         .map((hop, index) => (
                           <span
@@ -518,9 +518,9 @@ export default function Modulations() {
                           {t('modulations.fifth')}:
                           <br />{" "}
                         </span>
-                        {getDisplayName(ascendingNoteNames[4], 'note')} ({modulations?.modulationsOnFive ? modulations.modulationsOnFive.length : 0})
+                        {getDisplayName(ascendingNoteNames[4], 'note')} ({modulations?.modulationsOnFifthDegree ? modulations.modulationsOnFifthDegree.length : 0})
                       </span>
-                      {[...modulations.modulationsOnFive]
+                      {[...modulations.modulationsOnFifthDegree]
                         .sort((a, b) => a.name.localeCompare(b.name))
                         .map((hop, index) => (
                           <span
@@ -548,9 +548,9 @@ export default function Modulations() {
                           {t('modulations.sixthIfNoThird')}:
                           <br />{" "}
                         </span>
-                        {getDisplayName(ascendingNoteNames[5], 'note')} ({modulations?.modulationsOnSixNoThird ? modulations.modulationsOnSixNoThird.length : 0})
+                        {getDisplayName(ascendingNoteNames[5], 'note')} ({modulations?.modulationsOnSixthDegreeIfNoThird ? modulations.modulationsOnSixthDegreeIfNoThird.length : 0})
                       </span>
-                      {[...modulations.modulationsOnSixNoThird]
+                      {[...modulations.modulationsOnSixthDegreeIfNoThird]
                         .sort((a, b) => a.name.localeCompare(b.name))
                         .map((hop, index) => (
                           <span
@@ -578,9 +578,9 @@ export default function Modulations() {
                           {t('modulations.sixthAscending')}:
                           <br />{" "}
                         </span>
-                        {getDisplayName(ascendingNoteNames[5], 'note')} ({modulations?.modulationsOnSixAscending ? modulations.modulationsOnSixAscending.length : 0})
+                        {getDisplayName(ascendingNoteNames[5], 'note')} ({modulations?.modulationsOnSixthDegreeAsc ? modulations.modulationsOnSixthDegreeAsc.length : 0})
                       </span>
-                      {[...modulations.modulationsOnSixAscending]
+                      {[...modulations.modulationsOnSixthDegreeAsc]
                         .sort((a, b) => a.name.localeCompare(b.name))
                         .map((hop, index) => (
                           <span
@@ -609,9 +609,9 @@ export default function Modulations() {
                           <span className="modulations__header-text">
                             {t('modulations.sixthDescending')}: <br />{" "}
                           </span>
-                          {getDisplayName(descendingNoteNames[5], 'note')} ({modulations?.modulationsOnSixDescending ? modulations.modulationsOnSixDescending.length : 0})
+                          {getDisplayName(descendingNoteNames[5], 'note')} ({modulations?.modulationsOnSixthDegreeDesc ? modulations.modulationsOnSixthDegreeDesc.length : 0})
                         </span>
-                        {[...modulations.modulationsOnSixDescending]
+                        {[...modulations.modulationsOnSixthDegreeDesc]
                           .sort((a, b) => a.name.localeCompare(b.name))
                           .map((hop, index) => (
                             <span

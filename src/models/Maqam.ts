@@ -517,31 +517,31 @@ export interface Maqam {
  */
 export interface MaqamatModulations {
   /** Modulations that occur on the first scale degree */
-  modulationsOnOne: Maqam[];
+  modulationsOnFirstDegree: Maqam[];
   
   /** Modulations that occur on the third scale degree */
-  modulationsOnThree: Maqam[];
+  modulationsOnThirdDegree: Maqam[];
   
   /** Modulations that occur on the third scale degree (second pattern) */
-  modulationsOnThree2p: Maqam[];
+  modulationsOnAltThirdDegree: Maqam[];
   
   /** Modulations that occur on the fourth scale degree */
-  modulationsOnFour: Maqam[];
+  modulationsOnFourthDegree: Maqam[];
   
   /** Modulations that occur on the fifth scale degree */
-  modulationsOnFive: Maqam[];
+  modulationsOnFifthDegree: Maqam[];
   
   /** Ascending modulations that occur on the sixth scale degree */
-  modulationsOnSixAscending: Maqam[];
+  modulationsOnSixthDegreeAsc: Maqam[];
   
   /** Descending modulations that occur on the sixth scale degree */
-  modulationsOnSixDescending: Maqam[];
+  modulationsOnSixthDegreeDesc: Maqam[];
   
   /** Modulations on the sixth scale degree without using the third */
-  modulationsOnSixNoThird: Maqam[];
+  modulationsOnSixthDegreeIfNoThird: Maqam[];
   
   /** The note name of the second degree (plus variations) */
-  noteName2p: string;
+  noteName2pBelowThird: string;
 }
 
 /**
