@@ -79,8 +79,8 @@
   },
   {
     "id": "6",
-    "idName": "jins_nahawand_(binsir)",
-    "name": "jins nahāwand (binṣir)",
+    "idName": "jins_nahawand",
+    "name": "jins nahāwand",
     "noteNames": [
       "rāst",
       "dūgāh",
@@ -220,8 +220,8 @@
   },
   {
     "id": "16",
-    "idName": "jins_rast_(binsir)_(nim_buselik)",
-    "name": "jins rāst (binṣir) (nīm būselīk)",
+    "idName": "jins_rast_(nim_buselik)",
+    "name": "jins rāst (nīm būselīk)",
     "noteNames": [
       "rāst",
       "dūgāh",
@@ -263,8 +263,8 @@
   },
   {
     "id": "19",
-    "idName": "jins_rast_(binsir)",
-    "name": "jins rāst (binṣir)",
+    "idName": "jins_rast",
+    "name": "jins rāst",
     "noteNames": [
       "rāst",
       "dūgāh",
@@ -329,12 +329,115 @@
   },
   {
     "id": "23",
+    "idName": "jins_hijaz_3_(binsir)",
     "name": "jins ḥijāz 3 (binṣir)",
     "noteNames": [
       "rāst",
       "zīrgūleh",
       "būselīk/ʿushshāq",
       "chahārgāh"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "24",
+    "idName": "jins_awj_ʾaraʾ",
+    "name": "jins awj ʾārāʾ",
+    "noteNames": [
+      "ʿirāq",
+      "rāst",
+      "kurdī",
+      "segāh"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "Al-Shawwā-(1946)",
+        "page": "38"
+      }
+    ]
+  },
+  {
+    "id": "25",
+    "idName": "jins_kurd_(binsir)",
+    "name": "jins kurd (binṣir)",
+    "noteNames": [
+      "rāst",
+      "zīrgūleh",
+      "kurdī",
+      "chahārgāh"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "26",
+    "idName": "jins_iraq",
+    "name": "jins ʿirāq",
+    "noteNames": [
+      "ʿirāq",
+      "rāst",
+      "dūgāh"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "27",
+    "idName": "jins_hijaz_yegah",
+    "name": "jins ḥijāz yegāh",
+    "noteNames": [
+      "yegāh",
+      "qarār ḥiṣār",
+      "nīm kawasht",
+      "rāst"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "28",
+    "idName": "jins_bayyat_ushayran",
+    "name": "jins bayyāt ʿushayrān",
+    "noteNames": [
+      "ʿushayrān",
+      "ʿirāq",
+      "rāst",
+      "dūgāh"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "29",
+    "idName": "jins_hijaz_ushayran",
+    "name": "jins ḥijāz ʿushayrān",
+    "noteNames": [
+      "ʿushayrān",
+      "ʿajam ʿushayrān",
+      "zīrgūleh",
+      "dūgāh"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "30",
+    "idName": "jins_kurd_ushayran",
+    "name": "jins kurd ʿushayrān",
+    "noteNames": [
+      "ʿushayrān",
+      "ʿajam ʿushayrān",
+      "rāst",
+      "dūgāh"
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
