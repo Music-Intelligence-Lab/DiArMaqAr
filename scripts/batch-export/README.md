@@ -1,6 +1,27 @@
 # Digital Arabic Maqām Archive - Batch Export CLI
 
-This script allows batch export of tuning system data in JSON format from the command line, providing the same comprehensive data structure as the web export modal.
+This script allows b### Complete Export (with modulations)
+```bash
+# Export with full modulation analysis (~3MB, recommended for research)
+node scripts/batch-export/batch-export.js \
+  --tuning-system "IbnSīnā-(1037)" \
+  --starting-note "all" \
+  --include-ajnas-details \
+  --include-maqamat-details \
+  --include-maqamat-modulations \
+  --include-ajnas-modulations
+```
+
+### Export with Octave Shift Modulations (8vb)
+```bash
+# Export with lower octave modulations for advanced analysis
+node scripts/batch-export/batch-export.js \
+  --tuning-system "Al-Farabi-(950g)" \
+  --starting-note "yegāh" \
+  --include-maqamat-details \
+  --include-maqamat-modulations \
+  --include-modulations-8vb
+``` of tuning system data in JSON format from the command line, providing the same comprehensive data structure as the web export modal.
 
 ## Quick Start
 
@@ -47,6 +68,7 @@ node batch-export.js [options]
 - `--include-maqamat-details` - Include maqamat details (default: false)
 - `--include-maqamat-modulations` - Include maqamat modulations (default: false)
 - `--include-ajnas-modulations` - Include ajnas modulations (default: false)
+- `--include-modulations-8vb` - Include lower octave (8vb) modulations for maqamat (default: false)
 
 ## Examples
 
@@ -99,7 +121,8 @@ node scripts/batch-export/batch-export.js \
   --include-ajnas-details \
   --include-maqamat-details \
   --include-maqamat-modulations \
-  --include-ajnas-modulations
+  --include-ajnas-modulations \
+  --include-modulations-8vb
 ```
 
 
@@ -144,6 +167,30 @@ The exported JSON contains:
 - **pitchClassReference** - Full pitch class objects with frequencies, cents, MIDI
 - **allAjnasData** - All ajnas with transpositions (if enabled)
 - **allMaqamatData** - All maqamat with transpositions and modulations (if enabled)
+
+### Octave Shift Modulations (8vb)
+
+When `--include-modulations-8vb` is used, maqamat export data includes additional octave-shifted modulation data:
+
+```json
+{
+  "maqamatModulations": {
+    "modulations": {
+      "modulationsOnFirstDegree": ["maqam_rast_rast"],
+      "modulationsOnThirdDegree": ["maqam_hijaz_rast"]
+    },
+    "modulationsLowerOctave": {
+      "modulationsOnFirstDegree8vb": ["maqam_rast_rast_8vb"],
+      "modulationsOnThirdDegree8vb": ["maqam_hijaz_rast_8vb"]
+    }
+  }
+}
+```
+
+**Important Notes:**
+- Only **maqamat** get octave shift data - ajnas do not modulate FROM themselves
+- All octave shift properties use the "8vb" suffix (musical notation for "octave below")
+- This provides transposed modulation data shifted down one octave (-1 octave shift)
 
 ## File Sizes
 
