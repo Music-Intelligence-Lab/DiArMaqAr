@@ -36,16 +36,147 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
   const [commentsEnglishLocal, setCommentsEnglishLocal] = useState<string>(selectedMaqamData?.getCommentsEnglish() ?? "");
   const [commentsArabicLocal, setCommentsArabicLocal] = useState<string>(selectedMaqamData?.getCommentsArabic() ?? "");
 
-  // Dynamic note names for tabs ordered by allPitchClasses.noteName
+  // Toggle state for filtering mode: 'note' or 'jins' - default to 'jins'
+  const [filterMode, setFilterMode] = useState<'note' | 'jins'>('jins');
+
+  // Use cached map from context to avoid recomputation
+  const { allMaqamTranspositionsMap } = useTranspositionsContext();
+
+  // Helper function to get first jins name for a maqam
+  const getFirstJinsNameForMaqam = (maqam: MaqamData): string | null => {
+    const transpositions = allMaqamTranspositionsMap.get(maqam.getId());
+    if (!transpositions || transpositions.length === 0) return null;
+
+    // Get the tahlil (original form, transposition: false) to get the first jins
+    const tahlil = transpositions.find(t => !t.transposition);
+    if (!tahlil) return null;
+
+    // First, try to get jins from ascending ajnas (first scale degree)
+    if (tahlil.ascendingMaqamAjnas && tahlil.ascendingMaqamAjnas.length > 0) {
+      const firstAscendingJins = tahlil.ascendingMaqamAjnas[0];
+      if (firstAscendingJins?.name) {
+        return firstAscendingJins.name;
+      }
+    }
+
+    // If no jins found in ascending, try descending ajnas
+    // Descending ajnas are in reverse order, so the "first scale degree"
+    // (which is the last note of the maqam) is at the END of the descending array
+    if (tahlil.descendingMaqamAjnas && tahlil.descendingMaqamAjnas.length > 0) {
+      const lastDescendingJins = tahlil.descendingMaqamAjnas[tahlil.descendingMaqamAjnas.length - 1];
+      if (lastDescendingJins?.name) {
+        return lastDescendingJins.name;
+      }
+    }
+
+    return null;
+  };
+
+  // Helper function to extract base jins name (remove transposition suffix and group by first word)
+  const getBaseJinsName = (jinsName: string): string => {
+    // First, remove " al-" and everything after it to get the base jins name
+    let baseName = jinsName;
+    const alIndex = jinsName.indexOf(' al-');
+    if (alIndex !== -1) {
+      baseName = jinsName.substring(0, alIndex);
+    }
+
+    // Remove "Jins " or "جنس " prefix if present
+    baseName = baseName.replace(/^(Jins\s+|جنس\s+)/i, '');
+
+    // Special exceptions: keep these separate from their base forms
+    const lowerBaseName = baseName.toLowerCase();
+
+    // ṣabā exception
+    if (lowerBaseName.includes('ṣabā')) {
+      if (lowerBaseName.includes('zamzam')) {
+        return 'ṣabā zamzam';
+      } else {
+        return 'ṣabā';
+      }
+    }
+
+    // athar exception
+    if (lowerBaseName.includes('athar')) {
+      if (lowerBaseName.includes('kurd')) {
+        return 'athar kurd';
+      } else {
+        return 'athar';
+      }
+    }
+
+    // awj exception
+    if (lowerBaseName.includes('awj')) {
+      if (lowerBaseName.includes('ʾārāʾ') || lowerBaseName.includes('araa')) {
+        return 'awj ʾārāʾ';
+      } else {
+        return 'awj';
+      }
+    }
+
+    // For all other jins, group by first word
+    const firstWord = baseName.split(/\s+/)[0];
+    return firstWord || baseName;
+  };
+
+  // Dynamic tabs based on filter mode
   const tabs = useMemo(() => {
-    const uniqueNoteNames = new Set<string>();
-    maqamat.forEach((maqam) => {
-      const firstNote = maqam.getAscendingNoteNames()[0]?.toLowerCase();
-      if (firstNote) uniqueNoteNames.add(firstNote);
-    });
-    const orderedByPitchClasses = allPitchClasses.map((pc) => pc.noteName.toLowerCase()).filter((name) => uniqueNoteNames.has(name));
-    return ["all", ...orderedByPitchClasses];
-  }, [maqamat, allPitchClasses, language]);
+    if (filterMode === 'note') {
+      const uniqueNoteNames = new Set<string>();
+      maqamat.forEach((maqam) => {
+        const firstNote = maqam.getAscendingNoteNames()[0]?.toLowerCase();
+        if (firstNote) uniqueNoteNames.add(firstNote);
+      });
+      const orderedByPitchClasses = allPitchClasses.map((pc) => pc.noteName.toLowerCase()).filter((name) => uniqueNoteNames.has(name));
+      return ["all", ...orderedByPitchClasses];
+    } else {
+      // Jins mode - sort by pitch class order like notes
+      const jinsToStartingNote = new Map<string, string>();
+      const uniqueBaseJinsNames = new Set<string>();
+
+      maqamat.forEach((maqam) => {
+        const firstJinsName = getFirstJinsNameForMaqam(maqam);
+        if (firstJinsName) {
+          const baseJinsName = getBaseJinsName(firstJinsName);
+          uniqueBaseJinsNames.add(baseJinsName.toLowerCase());
+
+          // Map this base jins name to the first note of the maqam for sorting
+          const firstNote = maqam.getAscendingNoteNames()[0];
+          if (firstNote && !jinsToStartingNote.has(baseJinsName.toLowerCase())) {
+            jinsToStartingNote.set(baseJinsName.toLowerCase(), firstNote.toLowerCase());
+          }
+        } else {
+          uniqueBaseJinsNames.add('no-jins'); // For maqamat with no jins on first degree
+        }
+      });
+
+      // Sort jins names by their corresponding pitch class order
+      const sortedJinsNames = Array.from(uniqueBaseJinsNames)
+        .filter(name => name !== 'no-jins') // Handle 'no-jins' separately
+        .sort((a, b) => {
+          const noteA = jinsToStartingNote.get(a);
+          const noteB = jinsToStartingNote.get(b);
+
+          // Find indices in allPitchClasses
+          const indexA = noteA ? allPitchClasses.findIndex(pc => pc.noteName.toLowerCase() === noteA) : -1;
+          const indexB = noteB ? allPitchClasses.findIndex(pc => pc.noteName.toLowerCase() === noteB) : -1;
+
+          // If both found, sort by pitch class order
+          if (indexA !== -1 && indexB !== -1) {
+            return indexA - indexB;
+          }
+          // Fallback to alphabetical if pitch class not found
+          return a.localeCompare(b);
+        });
+
+      // Add 'no-jins' at the end if it exists
+      const result = ["all", ...sortedJinsNames];
+      if (uniqueBaseJinsNames.has('no-jins')) {
+        result.push('no-jins');
+      }
+      return result;
+    }
+  }, [maqamat, allPitchClasses, filterMode, language, allMaqamTranspositionsMap]);
 
   // Sync local state when a different maqam is selected
   useEffect(() => {
@@ -54,9 +185,6 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
       setCommentsArabicLocal(selectedMaqamData.getCommentsArabic());
     }
   }, [selectedMaqamData]);
-
-  // Use cached map from context to avoid recomputation
-  const { allMaqamTranspositionsMap } = useTranspositionsContext();
 
   const numberOfPitchClasses = selectedTuningSystem ? selectedTuningSystem.getOriginalPitchClassValues().length : 0;
 
@@ -144,32 +272,88 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
 
   const filteredMaqamat = useMemo(() => {
     if (maqamatFilter === "all") return sortedMaqamat;
-    return sortedMaqamat.filter((maqam) => maqam.getAscendingNoteNames()[0]?.toLowerCase() === maqamatFilter.toLowerCase());
-  }, [sortedMaqamat, maqamatFilter, language]);
+
+    if (filterMode === 'note') {
+      return sortedMaqamat.filter((maqam) => maqam.getAscendingNoteNames()[0]?.toLowerCase() === maqamatFilter.toLowerCase());
+    } else {
+      // Jins filtering
+      if (maqamatFilter === 'no-jins') {
+        return sortedMaqamat.filter((maqam) => !getFirstJinsNameForMaqam(maqam));
+      }
+      return sortedMaqamat.filter((maqam) => {
+        const firstJinsName = getFirstJinsNameForMaqam(maqam);
+        if (!firstJinsName) return false;
+        const baseJinsName = getBaseJinsName(firstJinsName);
+        return baseJinsName.toLowerCase() === maqamatFilter.toLowerCase();
+      });
+    }
+  }, [sortedMaqamat, maqamatFilter, filterMode, language, getFirstJinsNameForMaqam]);
 
   const numberOfRows = 3; // Fixed number of rows
   const numberOfColumns = Math.ceil(filteredMaqamat.length / numberOfRows); // Calculate columns dynamically
 
   return (
     <div className="maqam-manager" key={language}>
-      {/* Tabs for filtering maqamat by starting note name */}
-      <div className="maqam-manager__tabs">
+      {/* Tabs for filtering maqamat with toggle button */}
+      <div className="maqam-manager__tabs-container">
+        <div className="maqam-manager__tabs">
         {tabs.map((tab) => {
           let count = 0;
           if (tab === "all") {
             count = sortedMaqamat.length;
-          } else {
+          } else if (filterMode === 'note') {
             count = sortedMaqamat.filter((maqam) => maqam.getAscendingNoteNames()[0]?.toLowerCase() === tab.toLowerCase()).length;
+          } else {
+            // Jins mode
+            if (tab === 'no-jins') {
+              count = sortedMaqamat.filter((maqam) => !getFirstJinsNameForMaqam(maqam)).length;
+            } else {
+              count = sortedMaqamat.filter((maqam) => {
+                const firstJinsName = getFirstJinsNameForMaqam(maqam);
+                if (!firstJinsName) return false;
+                const baseJinsName = getBaseJinsName(firstJinsName);
+                return baseJinsName.toLowerCase() === tab.toLowerCase();
+              }).length;
+            }
           }
-          const displayName = tab === "all" ? t('maqam.all') : getDisplayName(tab, 'note');
+
+          let displayName: string;
+          if (tab === "all") {
+            displayName = t('maqam.all');
+          } else if (filterMode === 'note') {
+            displayName = getDisplayName(tab, 'note');
+          } else {
+            // Jins mode
+            if (tab === 'no-jins') {
+              displayName = t('maqam.noJins') || 'No Jins';
+            } else {
+              // Remove "Jins " prefix from display name to save space
+              const fullJinsName = getDisplayName(tab, 'jins');
+              displayName = fullJinsName.replace(/^(Jins\s+|جنس\s+)/i, '');
+            }
+          }
+
           return (
             <button key={tab} className={"maqam-manager__tab" + (maqamatFilter === tab ? " maqam-manager__tab_active" : "")} onClick={() => setMaqamatFilter(tab)}>
               {displayName} <span className="maqam-manager__tab-count">({count})</span>
             </button>
           );
         })}
-        
+        </div>
 
+        {/* Single toggle button positioned far right */}
+        <button
+          className="maqam-manager__group-toggle-button"
+          onClick={() => {
+            setFilterMode(filterMode === 'note' ? 'jins' : 'note');
+            setMaqamatFilter('all');
+          }}
+        >
+          {filterMode === 'note'
+            ? (t('maqam.groupByJins') || 'Group by Jins')
+            : (t('maqam.groupByStartingNote') || 'Group by Starting Note')
+          }
+        </button>
       </div>
 
       <div className="maqam-manager__carousel">

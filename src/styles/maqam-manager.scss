@@ -4,7 +4,7 @@
 .maqam-manager {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  
   width: 100%;
   margin-bottom: 20px;
 
@@ -54,6 +54,50 @@
     &:hover {
       border-radius: 10px;
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  // Tabs container with toggle button
+  &__tabs-container {
+    display: flex;
+    align-items:flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    height: 38px;
+    
+    vertical-align: top;
+
+    
+  }
+
+  // Group toggle button (styled like maqam-transpositions buttons)
+  &__group-toggle-button {
+    background-color: rgba($tertiary, 0.7);
+    color: white;
+    padding: 0px 10px;
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 12px;
+    min-width: 150px;
+    width: auto;
+    height: 30px;
+    vertical-align: middle;
+    text-align: center;
+    border: none;
+    display: inline-block;
+    flex-shrink: 0; // Prevent shrinking
+    margin-bottom: 10px;
+
+    &:focus {
+      outline: transparent;
+    }
+
+    &:active {
+      background-color: $gold !important;
+    }
+
+    &:hover {
+      background-color: rgba($tertiary, 1);
     }
   }
 
@@ -406,8 +450,10 @@
 
   &__tabs {
     display: flex;
+    flex-wrap: wrap;
     gap: 5px;
-    margin-bottom: -10px;
+    flex-grow: 1; // Take up remaining space
+    min-width: 0; // Allow shrinking
     margin-left: 25px;
 
     // RTL support
@@ -426,6 +472,7 @@
     background: $medium-grey;
     color: $text;
     font-size: 13px;
+    height:38px ;
 
     font-weight: 400;
     cursor: pointer;
