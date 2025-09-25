@@ -395,6 +395,10 @@ interface ExportedTuningSystem {
 - **Al-Shawwā Algorithm**: First systematic digital implementation
 - **Historical Guidelines**: Based on 1946 modulation principles
 - **Tuning System Dependent**: Different systems have different modulation possibilities
+- **Maqamat vs Ajnas Modulations**:
+  - **Maqamat**: Have modulation data (can modulate FROM maqamat TO other maqamat)
+  - **Ajnas**: Do NOT have modulation data (we only modulate TO ajnas, never FROM ajnas)
+  - **Export Implication**: Only maqamat exports include `modulationsLowerOctave` (8vb data)
 
 ---
 
