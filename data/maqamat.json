@@ -1,8 +1,8 @@
 [
   {
     "id": "1",
-    "idName": "maqam_rast_(binsir)",
-    "name": "maqām rāst (binṣir)",
+    "idName": "maqam_rast",
+    "name": "maqām rāst",
     "ascendingNoteNames": [
       "rāst",
       "dūgāh",
@@ -312,8 +312,8 @@
   },
   {
     "id": "10",
-    "idName": "maqam_nahawand_(binsir)",
-    "name": "maqām nahāwand (binṣir)",
+    "idName": "maqam_nahawand",
+    "name": "maqām nahāwand",
     "ascendingNoteNames": [
       "rāst",
       "dūgāh",
@@ -404,8 +404,8 @@
   },
   {
     "id": "11",
-    "idName": "maqam_nahawand_kabir_(binsir)",
-    "name": "maqām nahāwand kabīr (binṣir)",
+    "idName": "maqam_nahawand_kabir",
+    "name": "maqām nahāwand kabīr",
     "ascendingNoteNames": [
       "rāst",
       "dūgāh",
@@ -927,8 +927,8 @@
   },
   {
     "id": "23",
-    "idName": "maqam_hijaz_kar_(binsir)",
-    "name": "maqām ḥijāz kār (binṣir)",
+    "idName": "maqam_hijaz_kar",
+    "name": "maqām ḥijāz kār",
     "ascendingNoteNames": [
       "rāst",
       "zīrgūleh",
