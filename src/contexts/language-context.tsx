@@ -121,7 +121,7 @@ const translations = {
     // Jins Transpositions
     "jins.analysis": "Taḥlīl (analysis)",
     "jins.centsTolerance": "Cents Tolerance",
-    "jins.darajatAlIstiqrar": "Darajat al-Istiqrār Al-Taqlīdīya (conventional tonic/finalis)",
+    "jins.darajatAlIstiqrar": "Darajat al-Istiqrār al-Taqlīdīya (conventional tonic/finalis)",
     "jins.selectLoadToKeyboard": "Select & Load to Keyboard",
     "jins.playJins": "Play jins",
     "jins.export": "Export",
@@ -187,7 +187,7 @@ const translations = {
     // Maqam Transpositions
     "maqam.analysis": "Taḥlīl (analysis)",
     "maqam.centsTolerance": "Cents Tolerance",
-    "maqam.darajatAlIstiqrar": "Darajat al-Istiqrār Al-Taqlīdīya (conventional tonic/finalis)",
+    "maqam.darajatAlIstiqrar": "Darajat al-Istiqrār al-Taqlīdīya (conventional tonic/finalis)",
     "maqam.selectLoadToKeyboard": "Select & Load to Keyboard",
     "maqam.ascendingDescending": "Asc > Desc",
     "maqam.ascending": "Ascending",
@@ -216,6 +216,9 @@ const translations = {
     "maqam.sources": "Sources",
     "maqam.transpositionsTitle": "Taṣāwīr (transpositions)",
     "maqam.all": "All Maqamat",
+    "maqam.groupByJins": "Group by Jins",
+    "maqam.groupByStartingNote": "Group by Starting Note",
+    "maqam.noJins": "no jins",
 
     // Tuning System Manager
     "tuningSystem.all": "All Tuning Systems",
@@ -525,6 +528,9 @@ const translations = {
     "maqam.sources": "مصادر",
     "maqam.transpositionsTitle": "تصوير",
     "maqam.all": "جميع المقامات",
+    "maqam.groupByJins": "تجميع بالأجناس",
+    "maqam.groupByStartingNote": "تجميع بالنغمة الأولى",
+    "maqam.noJins": "بلا جنس",
 
     // Tuning System Manager (Arabic translations)
     "tuningSystem.all": "جميع التناغيم",
