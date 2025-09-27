@@ -486,6 +486,7 @@
                 <li><a href="#sayr">POST /api/sayr</a></li>
                 <li><a href="#modulations">POST /api/modulations</a></li>
                 <li><a href="#transpose">POST /api/transpose</a></li>
+                <li><a href="#patterns">PUT /api/patterns</a></li>
             </ul>
         </div>
 
@@ -576,7 +577,7 @@
                         <pre>[
   {
     "id": "1",
-    "name": "jins rāst (muṭlaq)",
+    "name": "jins rāst nawā",
     "noteNames": [
       "nawā",
       "ḥusaynī",
@@ -687,7 +688,7 @@
     "includeTranspositions": true,
     "newTonicForTransposition": "dūgāh",
     "centsTolerance": 5,
-    "tuningSystemID": "Al-Farabi-(950g)",
+    "tuningSystemID": "al-Farabi-(950g)",
     "tuningSystemStartingNoteName": "ʿushayrān"
   }'</pre>
                     </div>
@@ -748,7 +749,7 @@
                         <pre>[
   {
     "id": "1",
-    "name": "maqām rāst (binṣir)",
+    "name": "maqām rāst",
     "ascendingNoteNames": [
       "rāst",
       "dūgāh",
@@ -867,11 +868,11 @@
                         <pre>curl -X POST "http://localhost:3000/api/maqam" \
   -H "Content-Type: application/json" \
   -d '{
-    "maqamName": "maqam segah",
+    "maqamName": "maqām bayyāt",
     "includeTranspositions": false,
     "newTonicForTransposition": "rāst",
     "centsTolerance": 5,
-    "tuningSystemID": "Al-Sabbagh-(1954)",
+    "tuningSystemID": "al-Ṣabbāgh-(1954)",
     "tuningSystemStartingNoteName": "rāst",
     "includeMaqamatModulations": true,
     "includeAjnasModulations": false
@@ -883,11 +884,11 @@
                         <pre>curl -X POST "http://localhost:3000/api/maqam" \
   -H "Content-Type: application/json" \
   -d '{
-    "maqamID": "7",
+    "maqamID": "2",
     "includeTranspositions": true,
     "newTonicForTransposition": "dūgāh",
     "centsTolerance": 5,
-    "tuningSystemID": "Al-Kindi-(874)",
+    "tuningSystemID": "IbnSina-(1037)",
     "tuningSystemStartingNoteName": "ʿushayrān",
     "includeMaqamatModulations": false,
     "includeAjnasModulations": true
@@ -1123,8 +1124,8 @@
                         <pre>curl -X POST "http://localhost:3000/api/modulations" \
   -H "Content-Type: application/json" \
   -d '{
-    "tuningSystemID": "Al-Farabi-(950g)",
-    "maqamID": "2", 
+    "tuningSystemID": "al-Farabi-(950g)",
+    "maqamID": "2",
     "noteNameToModulateFrom": "dūgāh",
     "ajnasModulationsMode": true,
     "centsTolerance": 5
@@ -1135,8 +1136,8 @@
 curl -X POST "http://localhost:3000/api/modulations" \
   -H "Content-Type: application/json" \
   -d '{
-    "tuningSystemID": "Al-Farabi-(950g)",
-    "maqamName": "maqām ḥijāz", 
+    "tuningSystemID": "al-Farabi-(950g)",
+    "maqamName": "maqām bayyāt",
     "noteNameToModulateFrom": "dūgāh",
     "ajnasModulationsMode": true,
     "centsTolerance": 5
@@ -1338,7 +1339,7 @@ curl -X POST "http://localhost:3000/api/modulations" \
                         <pre>curl -X POST "http://localhost:3000/api/transpose" \
   -H "Content-Type: application/json" \
   -d '{
-    "tuningSystemID": "Al-Farabi-(950g)",
+    "tuningSystemID": "al-Farabi-(950g)",
     "maqamID": "2",
     "centsTolerance": 5
   }'</pre>
@@ -1348,8 +1349,8 @@ curl -X POST "http://localhost:3000/api/modulations" \
 curl -X POST "http://localhost:3000/api/transpose" \
   -H "Content-Type: application/json" \
   -d '{
-    "tuningSystemID": "Al-Farabi-(950g)",
-    "maqamName": "maqām ḥijāz",
+    "tuningSystemID": "al-Farabi-(950g)",
+    "maqamName": "maqām bayyāt",
     "centsTolerance": 5
   }'</pre>
                     </div>
@@ -1359,7 +1360,7 @@ curl -X POST "http://localhost:3000/api/transpose" \
                         <pre>curl -X POST "http://localhost:3000/api/transpose" \
   -H "Content-Type: application/json" \
   -d '{
-    "tuningSystemID": "Al-Farabi-(950g)",
+    "tuningSystemID": "al-Farabi-(950g)",
     "jinsID": "1",
     "centsTolerance": 5
   }'</pre>
@@ -1406,8 +1407,8 @@ curl -X POST "http://localhost:3000/api/transpose" \
                     <div class="code-block">
                         <pre>[
   {
-    "id": "Al-Farabi-(950g)-ClassicalArabicTuning",
-    "name": "24-Tone Equal Temperament",
+    "id": "Ronzevalle-(1904)",
+    "name": "Modernist Arabic Tuning",
     "pitchClasses": [
       {
         "noteName": "rāst",
@@ -1422,7 +1423,7 @@ curl -X POST "http://localhost:3000/api/transpose" \
         "cents": 204
       }
     ],
-    "description": "24-tone equal temperament tuning system",
+    "description": "24-tone quarter-tone tuning system",
     "octaveDivisions": 24
   }
 ]</pre>
@@ -1492,11 +1493,11 @@ curl -X POST "http://localhost:3000/api/transpose" \
             method: 'POST',
             url: '/api/jins',
             params: [
-              { name: 'jinsName', label: 'Jins Name', type: 'text', value: 'jins bayyāt' },
+              { name: 'jinsName', label: 'Jins Name', type: 'text', value: 'jins rāst' },
               { name: 'includeTranspositions', label: 'Include Transpositions', type: 'checkbox', value: true },
               { name: 'newTonicForTransposition', label: 'New Tonic for Transposition', type: 'text', value: 'rāst' },
               { name: 'centsTolerance', label: 'Cents Tolerance', type: 'number', value: 5 },
-              { name: 'tuningSystemID', label: 'Tuning System', type: 'text', value: 'Al-Sabbagh-(1954)' },
+              { name: 'tuningSystemID', label: 'Tuning System', type: 'text', value: 'IbnSina-(1037)' },
               { name: 'tuningSystemStartingNoteName', label: 'Tuning System Starting Note', type: 'text', value: 'rāst' }
             ],
             exampleResponse: `{
@@ -1508,10 +1509,10 @@ curl -X POST "http://localhost:3000/api/transpose" \
             method: 'POST',
             url: '/api/maqam',
             params: [
-              { name: 'maqamName', label: 'Maqam Name', type: 'text', value: 'maqam segah' },
+              { name: 'maqamName', label: 'Maqam Name', type: 'text', value: 'maqām bayyāt' },
               { name: 'includeTranspositions', label: 'Include Transpositions', type: 'checkbox', value: false },
               { name: 'newTonicForTransposition', label: 'New Tonic for Transposition', type: 'text', value: 'rāst' },
-              { name: 'tuningSystemID', label: 'Tuning System', type: 'text', value: 'Al-Farabi-(950g)' },
+              { name: 'tuningSystemID', label: 'Tuning System', type: 'text', value: 'al-Farabi-(950g)' },
               { name: 'tuningSystemStartingNoteName', label: 'Tuning System Starting Note', type: 'text', value: 'ʿushayrān' },
               { name: 'includeMaqamatModulations', label: 'Include Maqamat Modulations', type: 'checkbox', value: true },
               { name: 'includeAjnasModulations', label: 'Include Ajnas Modulations', type: 'checkbox', value: false }
@@ -1575,8 +1576,8 @@ curl -X POST "http://localhost:3000/api/transpose" \
             method: 'POST',
             url: '/api/transpose',
             params: [
-              { name: 'tuningSystemID', label: 'Tuning System', type: 'text', value: 'Al-Kindi-(874)' },
-              { name: 'maqamID', label: 'Maqam ID (optional)', type: 'text', value: '1' },
+              { name: 'tuningSystemID', label: 'Tuning System', type: 'text', value: 'IbnSina-(1037)' },
+              { name: 'maqamID', label: 'Maqam ID (optional)', type: 'text', value: '2' },
               { name: 'maqamName', label: 'Maqam Name (optional)', type: 'text', value: '' },
               { name: 'tuningSystemStartingNoteName', label: 'Tuning System Starting Note', type: 'text', value: 'ʿushayrān' },
               { name: 'centsTolerance', label: 'Cents Tolerance', type: 'number', value: 5 }
