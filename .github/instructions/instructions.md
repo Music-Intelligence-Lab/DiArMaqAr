@@ -3,7 +3,7 @@ applyTo: '**'
 lastUpdated: '2025-09-24'
 ---
 
-# Digital Arabic Maqām Archive - Development Instructions
+# Digital Arabic Maqām Archive (DiArMaqAr) - Development Instructions
 
 ## Table of Contents
 1. [Quick Reference](#quick-reference)
