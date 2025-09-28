@@ -36,6 +36,21 @@ lastUpdated: '2025-09-24'
 | "API endpoint" | import.ts + validation + Swagger |
 | "component" + domain | Follow manager pattern |
 
+### Systematic Debugging Protocol
+**When bugs involve multiple layers (UI + functions + exports):**
+
+1. **Isolate the Layer** - Determine if issue is in UI state, core functions, or export logic
+2. **Test Core Functions First** - Verify mathematical/computational functions work in isolation
+3. **Check Data Flow** - Trace data from source → processing → display/export
+4. **Validate Both Paths** - UI and export systems may use different code paths for same functionality
+5. **Document Findings** - Complex bugs often reveal architectural insights worth preserving
+
+**Red Flags That Indicate Multi-Layer Issues:**
+- Inconsistent behavior between UI and exports
+- Character encoding/normalization problems
+- Type errors that seem to "work" but produce wrong output
+- Progress/performance issues that seem unrelated to core logic
+
 ### Critical Defaults
 - **Default cents tolerance**: 5 (always unless specified)
 - **Path imports**: Use `@/*` alias exclusively
@@ -325,6 +340,41 @@ const systemId = "Al-Farabi-(950g)"; // Note: includes suffix
 const systems = getTuningSystems();
 console.log(systems.map(s => s.getId()));
 ```
+
+### Debugging Complex Multi-Layer Issues
+
+**Character Normalization Debugging Pattern**
+```bash
+# 1. Check current state
+grep -c "ʾ" export.json  # Count problematic characters
+grep -n "maqam_awj_.*ara.*" export.json  # Find specific examples
+
+# 2. Test normalization function
+node -e "console.log(standardizeText('ʾaraʾ'))"  # Test directly
+
+# 3. Verify both UI and export systems
+# UI: Check component state management
+# Export: Check TypeScript function application
+```
+
+**Octave Shift Implementation Lessons**
+- **UI vs Export Consistency**: Different approaches can diverge - UI may use state management while exports use pure functions
+- **Type Discrimination**: Use runtime property checking (`'ascendingPitchClasses' in object`) rather than TypeScript types for data differentiation
+- **Error Propagation**: `map().filter()` pattern to cleanly remove failed operations (`filter((x): x is T => x !== null)`)
+- **Progress Tracking**: Always update progress during long operations with `setTimeout(resolve, 0)` for UI responsiveness
+
+**Character Standardization Architecture**
+- **Dual Standardization**: 
+  - **Keys/IDs**: Apply `standardizeText()` for clean programming identifiers
+  - **Display Names**: Preserve original diacritics for scholarly accuracy
+- **Function Scope**: `standardizeText()` should be simple and focused - avoid over-engineering
+- **Testing Strategy**: Test with actual data exports, not just unit tests
+
+**Export System Complexity Management**
+- **Filename vs Content**: Separate normalization for filenames (comprehensive) vs content (selective)
+- **Timestamp Consistency**: Use local time for user-friendly filenames, UTC for internal timestamps
+- **Progress Callbacks**: Essential for large exports - implement early, not as afterthought
+- **Memory Efficiency**: Use streaming/chunking for large data sets
 
 ### Performance Considerations
 - **Modulation calculations** can take minutes for complex systems

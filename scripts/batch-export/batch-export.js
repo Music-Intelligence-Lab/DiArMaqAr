@@ -311,25 +311,62 @@ async function main(): Promise<void> {
           );
 
           // Generate filename matching export modal pattern
-          // Strip diacritics and normalize characters for safe filenames
+          // Comprehensive character normalization for safe filenames
           const stripDiacritics = (str) => {
             return str
-              .normalize('NFD')
-              .replace(/[\\u0300-\\u036f]/g, '') // Remove diacritics
-              .replace(/[āīūḥṣṭḍẓʿʾ]/g, match => { // Arabic transliteration
-                const map = {'ā':'a','ī':'i','ū':'u','ḥ':'h','ṣ':'s','ṭ':'t','ḍ':'d','ẓ':'z','ʿ':'','ʾ':''};
-                return map[match] || match;
-              })
-              .replace(/[^a-zA-Z0-9\\-_()]/g, '_') // Replace remaining non-standard chars
-              .replace(/_{2,}/g, '_') // Replace multiple underscores with single
-              .replace(/^_+|_+$/g, ''); // Remove leading/trailing underscores
+              .normalize('NFD') // Unicode normalization
+              .replace(/[\u0300-\u036f]/g, '') // Remove combining diacritics
+              .replace(/[\u0590-\u05FF]/g, '') // Remove Hebrew characters
+              .replace(/[\u0600-\u06FF]/g, '') // Remove Arabic characters
+              .replace(/[\u0750-\u077F]/g, '') // Remove Arabic Supplement
+              .replace(/[\u08A0-\u08FF]/g, '') // Remove Arabic Extended-A
+              .replace(/[\uFB50-\uFDFF]/g, '') // Remove Arabic Presentation Forms-A
+              .replace(/[\uFE70-\uFEFF]/g, '') // Remove Arabic Presentation Forms-B
+              // Comprehensive Arabic/Persian transliteration mapping
+              .replace(/[āáàâäãåăąǎǟǡǻȁȃạảấầẩẫậắằẳẵặ]/gi, 'a')
+              .replace(/[ēéèêëĕėęěȅȇẹẻẽếềểễệ]/gi, 'e')
+              .replace(/[īíìîïĩĭįǐȉȋịỉĩ]/gi, 'i')
+              .replace(/[ōóòôöõŏőǒǫȍȏọỏốồổỗộớờởỡợ]/gi, 'o')
+              .replace(/[ūúùûüũŭůűųǔǖǘǚǜȕȗụủứừửữự]/gi, 'u')
+              .replace(/[ýỳŷÿỹȳẏỵỷ]/gi, 'y')
+              // Arabic transliteration characters
+              .replace(/[ḥḤ]/g, 'h') // ḥā'
+              .replace(/[ṣṢ]/g, 's') // ṣād
+              .replace(/[ṭṬ]/g, 't') // ṭā'
+              .replace(/[ḍḌ]/g, 'd') // ḍād
+              .replace(/[ẓẒ]/g, 'z') // ẓā'
+              .replace(/[ʿ]/g, '') // ʿayn (remove)
+              .replace(/[ʾ]/g, '') // hamza (remove)
+              .replace(/[ḏḎ]/g, 'd') // dhāl
+              .replace(/[ṯṮ]/g, 't') // thā'
+              .replace(/[ḫḪ]/g, 'kh') // khā'
+              .replace(/[ġĠ]/g, 'gh') // ghayn
+              .replace(/[šŠ]/g, 'sh') // shīn
+              .replace(/[žŽ]/g, 'zh') // zhē
+              .replace(/[čČ]/g, 'ch') // chē
+              .replace(/[ñÑ]/g, 'n') // eñe
+              .replace(/[çÇ]/g, 'c') // cedilla
+              .replace(/[ßẞ]/g, 'ss') // eszett
+              // Remove remaining non-ASCII, keep alphanumeric, hyphens, underscores, parentheses
+              .replace(/[^a-zA-Z0-9\-_()]/g, '_')
+              .replace(/_{2,}/g, '_') // Collapse multiple underscores
+              .replace(/^_+|_+$/g, ''); // Trim leading/trailing underscores
           };
 
           const safeSystemId = stripDiacritics(tuningSystem.getId());
           const safeStartingNote = stripDiacritics(startingNote);
-          const timestamp = new Date().toISOString().split('T')[0];
+          
+          // Create local timestamp with date and time (YYYY-MM-DD_HH-MM-SS format)
+          const now = new Date();
+          const year = now.getFullYear();
+          const month = String(now.getMonth() + 1).padStart(2, '0');
+          const day = String(now.getDate()).padStart(2, '0');
+          const hours = String(now.getHours()).padStart(2, '0');
+          const minutes = String(now.getMinutes()).padStart(2, '0');
+          const seconds = String(now.getSeconds()).padStart(2, '0');
+          const timestamp = year + '-' + month + '-' + day + '_' + hours + '-' + minutes + '-' + seconds;
 
-          let filename = \`\${safeSystemId}_\${safeStartingNote}_\${timestamp}\`;
+          let filename = safeSystemId + '_' + safeStartingNote + '_' + timestamp;
 
           // Add options to filename for clarity
           const optionFlags = [];
