@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# exports
+/scripts/batch-export/batch-export-ts-runner.ts
+/exports/*.json
+/scripts/exports/*/*.json
