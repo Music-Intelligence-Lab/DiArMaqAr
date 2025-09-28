@@ -417,7 +417,7 @@ export function getJinsTranspositions(allPitchClasses: PitchClass[], jinsData: J
   const tahlilTransposition = jinsTranspositions.find((transposition) => transposition.jinsPitchClasses[0].noteName === jinsNoteNames[0]);
   const jinsTranspositionsWithoutTahlil = jinsTranspositions.filter((transposition) => transposition !== tahlilTransposition);
 
-  if (withTahlil && tahlilTransposition) return [{ ...tahlilTransposition, transposition: false }, ...jinsTranspositionsWithoutTahlil];
+  if (withTahlil && tahlilTransposition) return [{ ...tahlilTransposition, name: jinsData.getName(), transposition: false }, ...jinsTranspositionsWithoutTahlil];
   else return jinsTranspositionsWithoutTahlil;
 }
 
