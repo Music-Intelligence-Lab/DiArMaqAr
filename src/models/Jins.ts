@@ -331,8 +331,17 @@ export interface AjnasModulations {
  * @param octaveShift - Number of octaves to shift (positive = up, negative = down)
  * @returns New Jins instance shifted by the specified number of octaves
  */
-export function shiftJinsByOctaves(allPitchClasses: PitchClass[], jins: Jins, octaveShift: number): Jins {
+export function shiftJinsByOctaves(allPitchClasses: PitchClass[], jins: Jins, octaveShift: number): Jins | null {
   const shiftedPitchClasses = jins.jinsPitchClasses.map((pc) => shiftPitchClass(allPitchClasses, pc, octaveShift));
+  
+  // Check if any pitch class shift failed (indicated by empty noteName)
+  const allValid = shiftedPitchClasses.every(pc => pc.noteName !== "");
+  
+  if (!allValid) {
+    // Return null if octave shift would put any note out of bounds
+    return null;
+  }
+
   const shiftedPitchClassIntervals = getPitchClassIntervals(shiftedPitchClasses);
   
   // Extract the base jins name (remove any existing "al-" suffix and what follows)
@@ -343,7 +352,7 @@ export function shiftJinsByOctaves(allPitchClasses: PitchClass[], jins: Jins, oc
   }
   
   // Create new name with the shifted tonic
-  const newTonicName = shiftedPitchClasses[0]?.noteName || '';
+  const newTonicName = shiftedPitchClasses[0].noteName;
   const newName = `${baseJinsName} al-${newTonicName}`;
   
   return {

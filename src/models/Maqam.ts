@@ -552,10 +552,20 @@ export interface MaqamatModulations {
  * @param octaveShift - Number of octaves to shift (positive = up, negative = down)
  * @returns New Maqam instance shifted by the specified number of octaves
  */
-export function shiftMaqamByOctaves(allPitchClasses: PitchClass[], maqam: Maqam, octaveShift: number): Maqam {
+export function shiftMaqamByOctaves(allPitchClasses: PitchClass[], maqam: Maqam, octaveShift: number): Maqam | null {
   const shiftedAscendingPitchClasses = maqam.ascendingPitchClasses.map((pc) => shiftPitchClass(allPitchClasses, pc, octaveShift));
-  const shiftedAscendingIntervals = getPitchClassIntervals(shiftedAscendingPitchClasses);
   const shiftedDescendingPitchClasses = maqam.descendingPitchClasses.map((pc) => shiftPitchClass(allPitchClasses, pc, octaveShift));
+
+  // Check if any pitch class shift failed (indicated by empty noteName)
+  const ascendingValid = shiftedAscendingPitchClasses.every(pc => pc.noteName !== "");
+  const descendingValid = shiftedDescendingPitchClasses.every(pc => pc.noteName !== "");
+  
+  if (!ascendingValid || !descendingValid) {
+    // Return null if octave shift would put any note out of bounds
+    return null;
+  }
+
+  const shiftedAscendingIntervals = getPitchClassIntervals(shiftedAscendingPitchClasses);
   const shiftedDescendingIntervals = getPitchClassIntervals(shiftedDescendingPitchClasses);
 
   // Extract the base maqam name (remove any existing "al-" suffix and what follows)
@@ -566,7 +576,7 @@ export function shiftMaqamByOctaves(allPitchClasses: PitchClass[], maqam: Maqam,
   }
   
   // Create new name with the shifted tonic
-  const newTonicName = shiftedAscendingPitchClasses[0]?.noteName || '';
+  const newTonicName = shiftedAscendingPitchClasses[0].noteName;
   const newName = `${baseMaqamName} al-${newTonicName}`;
   
   return {
