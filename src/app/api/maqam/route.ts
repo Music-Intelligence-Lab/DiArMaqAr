@@ -56,11 +56,11 @@ export const OPTIONS = handleCorsPreflightRequest;
  *                 type: string
  *                 description: Starting note name for tuning system note naming convention (must match first element in tuning system). If not provided, defaults to the first available note naming convention in the tuning system core data. This parameter affects the theoretical framework used for maqam analysis.
  *                 example: "ʿushayrān"
- *               includeMaqamatModulations:
+ *               includeMaqamToMaqamModulations:
  *                 type: boolean
  *                 description: Include maqam-to-maqam modulations
  *                 example: true
- *               includeAjnasModulations:
+ *               includeMaqamToJinsModulations:
  *                 type: boolean
  *                 description: Include ajnas-based modulations
  *                 example: false
@@ -78,7 +78,7 @@ export const OPTIONS = handleCorsPreflightRequest;
  *         description: Maqam or tuning system not found
  */
 export async function POST(request: Request) {
-  const { maqamID, maqamName, includeTranspositions, newTonicForTransposition, centsTolerance, tuningSystemID, tuningSystemStartingNoteName, includeMaqamatModulations, includeAjnasModulations } =
+  const { maqamID, maqamName, includeTranspositions, newTonicForTransposition, centsTolerance, tuningSystemID, tuningSystemStartingNoteName, includeMaqamToMaqamModulations, includeMaqamToJinsModulations } =
     await request.json();
 
   const inputCentsTolerance = typeof centsTolerance === "number" ? centsTolerance : 5;
@@ -179,8 +179,8 @@ export async function POST(request: Request) {
 
               if (transposition) {
                 // Add modulations if requested
-                if (includeMaqamatModulations || includeAjnasModulations) {
-                  if (includeMaqamatModulations) {
+                if (includeMaqamToMaqamModulations || includeMaqamToJinsModulations) {
+                  if (includeMaqamToMaqamModulations) {
                     const maqamatModulations = modulate(tuningSystemPitchClasses, ajnas, maqamat, transposition, false, inputCentsTolerance);
                     (transposition as any).maqamatModulations = {
                       modulationsOnFirstDegree: maqamatModulations.modulationsOnFirstDegree.map((m: any) => m.name),
@@ -195,7 +195,7 @@ export async function POST(request: Request) {
                     };
                   }
 
-                  if (includeAjnasModulations) {
+                  if (includeMaqamToJinsModulations) {
                     const ajnasModulations = modulate(tuningSystemPitchClasses, ajnas, maqamat, transposition, true, inputCentsTolerance);
                     (transposition as any).ajnasModulations = {
                       modulationsOnFirstDegree: ajnasModulations.modulationsOnFirstDegree.map((j: any) => j.name),
@@ -221,9 +221,9 @@ export async function POST(request: Request) {
               const transpositions = getMaqamTranspositions(tuningSystemPitchClasses, ajnas, maqam, true, inputCentsTolerance);
 
               // Add modulations to each transposition if requested
-              if (includeMaqamatModulations || includeAjnasModulations) {
+              if (includeMaqamToMaqamModulations || includeMaqamToJinsModulations) {
                 for (const transposition of transpositions) {
-                  if (includeMaqamatModulations) {
+                  if (includeMaqamToMaqamModulations) {
                     const maqamatModulations = modulate(tuningSystemPitchClasses, ajnas, maqamat, transposition, false, inputCentsTolerance);
                     (transposition as any).maqamatModulations = {
                       modulationsOnFirstDegree: maqamatModulations.modulationsOnFirstDegree.map((m: any) => m.name),
@@ -238,7 +238,7 @@ export async function POST(request: Request) {
                     };
                   }
 
-                  if (includeAjnasModulations) {
+                  if (includeMaqamToJinsModulations) {
                     const ajnasModulations = modulate(tuningSystemPitchClasses, ajnas, maqamat, transposition, true, inputCentsTolerance);
                     (transposition as any).ajnasModulations = {
                       modulationsOnFirstDegree: ajnasModulations.modulationsOnFirstDegree.map((j: any) => j.name),

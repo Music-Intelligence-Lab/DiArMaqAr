@@ -35,8 +35,8 @@ interface CLIOptions {
   startingNote: string | null;
   includeAjnasDetails: boolean;
   includeMaqamatDetails: boolean;
-  includeMaqamatModulations: boolean;
-  includeAjnasModulations: boolean;
+  includeMaqamToMaqamModulations: boolean;
+  includeMaqamToJinsModulations: boolean;
   includeModulations8vb: boolean;
   outputDir: string;
 }
@@ -50,8 +50,8 @@ function parseArguments(): CLIOptions {
     startingNote: null,
     includeAjnasDetails: false,
     includeMaqamatDetails: false,
-    includeMaqamatModulations: false,
-    includeAjnasModulations: false,
+    includeMaqamToMaqamModulations: false,
+    includeMaqamToJinsModulations: false,
     includeModulations8vb: false,
     outputDir: './exports'
   };
@@ -91,16 +91,16 @@ function parseArguments(): CLIOptions {
         options.includeMaqamatDetails = false;
         break;
       case '--include-maqamat-modulations':
-        options.includeMaqamatModulations = true;
+        options.includeMaqamToMaqamModulations = true;
         break;
       case '--no-maqamat-modulations':
-        options.includeMaqamatModulations = false;
+        options.includeMaqamToMaqamModulations = false;
         break;
       case '--include-ajnas-modulations':
-        options.includeAjnasModulations = true;
+        options.includeMaqamToJinsModulations = true;
         break;
       case '--no-ajnas-modulations':
-        options.includeAjnasModulations = false;
+        options.includeMaqamToJinsModulations = false;
         break;
       case '--include-modulations-8vb':
         options.includeModulations8vb = true;
@@ -212,8 +212,8 @@ async function main(): Promise<void> {
       includePitchClasses: true,
       includeAjnasDetails: options.includeAjnasDetails,
       includeMaqamatDetails: options.includeMaqamatDetails,
-      includeMaqamatModulations: options.includeMaqamatModulations,
-      includeAjnasModulations: options.includeAjnasModulations,
+      includeMaqamToMaqamModulations: options.includeMaqamToMaqamModulations,
+      includeMaqamToJinsModulations: options.includeMaqamToJinsModulations,
       includeModulations8vb: options.includeModulations8vb,
       progressCallback: (percentage: number, step: string) => {
         process.stdout.write(\`\\r\${step} (\${Math.round(percentage)}%)\`);
@@ -268,7 +268,7 @@ async function main(): Promise<void> {
     console.log(\`Output directory: \${path.resolve(options.outputDir)}\`);
     console.log(\`Systems to process: \${tuningSystemsToProcess.length}\`);
     console.log(\`Mode: \${options.tuningSystem === 'all' ? 'BATCH (all systems)' : 'SINGLE SYSTEM'}\`);
-    if (options.includeMaqamatModulations || options.includeAjnasModulations) {
+    if (options.includeMaqamToMaqamModulations || options.includeMaqamToJinsModulations) {
       console.log('⚠️  Modulations enabled - this will take significantly longer');
     }
     console.log('\\n' + '='.repeat(60));
@@ -372,8 +372,8 @@ async function main(): Promise<void> {
           const optionFlags = [];
           if (exportOptions.includeAjnasDetails) optionFlags.push('ajnas');
           if (exportOptions.includeMaqamatDetails) optionFlags.push('maqamat');
-          if (exportOptions.includeMaqamatModulations) optionFlags.push('maqamat-mod');
-          if (exportOptions.includeAjnasModulations) optionFlags.push('ajnas-mod');
+          if (exportOptions.includeMaqamToMaqamModulations) optionFlags.push('maqamat-mod');
+          if (exportOptions.includeMaqamToJinsModulations) optionFlags.push('ajnas-mod');
 
           if (optionFlags.length > 0) {
             filename += \`_\${optionFlags.join('_')}\`;
