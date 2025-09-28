@@ -44,3 +44,4 @@ next-env.d.ts
 /scripts/batch-export/batch-export-ts-runner.ts
 /exports/*.json
 /scripts/exports/*/*.json
+/scripts/exports/*.json
