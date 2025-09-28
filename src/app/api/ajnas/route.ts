@@ -1,8 +1,14 @@
-import { NextResponse } from "next/server";
+  import { NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
+import { handleCorsPreflightRequest, addCorsHeaders } from "../cors";
 
 const dataFilePath = path.join(process.cwd(), "data", "ajnas.json");
+
+// Handle CORS preflight requests
+export async function OPTIONS() {
+  return handleCorsPreflightRequest();
+}
 
 /**
  * @swagger
@@ -59,10 +65,12 @@ export async function GET() {
   try {
     const fileContents = await fs.readFile(dataFilePath, "utf-8");
     const ajnas = JSON.parse(fileContents);
-    return NextResponse.json(ajnas);
+    const response = NextResponse.json(ajnas);
+    return addCorsHeaders(response);
   } catch (error) {
     console.error("Error loading Ajnas:", error);
-    return new NextResponse("Failed to load Ajnas.", { status: 500 });
+    const errorResponse = new NextResponse("Failed to load Ajnas.", { status: 500 });
+    return addCorsHeaders(errorResponse);
   }
 }
 
@@ -128,9 +136,11 @@ export async function PUT(request: Request) {
   try {
     const updatedArray = await request.json();
     await fs.writeFile(dataFilePath, JSON.stringify(updatedArray, null, 2), "utf-8");
-    return NextResponse.json({ message: "Ajnas updated successfully." });
+    const response = NextResponse.json({ message: "Ajnas updated successfully." });
+    return addCorsHeaders(response);
   } catch (error) {
     console.error("Error updating Ajnas:", error);
-    return new NextResponse("Failed to update Ajnas.", { status: 500 });
+    const errorResponse = new NextResponse("Failed to update Ajnas.", { status: 500 });
+    return addCorsHeaders(errorResponse);
   }
 }

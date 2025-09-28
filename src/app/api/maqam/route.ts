@@ -4,6 +4,9 @@ import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses
 import { getMaqamTranspositions } from "@/functions/transpose";
 import { standardizeText } from "@/functions/export";
 import modulate from "@/functions/modulate";
+import { handleCorsPreflightRequest, addCorsHeaders } from "../cors";
+
+export const OPTIONS = handleCorsPreflightRequest;
 
 /**
  * @swagger
@@ -262,9 +265,11 @@ export async function POST(request: Request) {
       }
     }
 
-    return NextResponse.json(result);
+    const response = NextResponse.json(result);
+    return addCorsHeaders(response);
   } catch (error) {
     console.error("Error loading Maqam:", error);
-    return new NextResponse("Failed to load Maqam.", { status: 500 });
+    const errorResponse = new NextResponse("Failed to load Maqam.", { status: 500 });
+    return addCorsHeaders(errorResponse);
   }
 }

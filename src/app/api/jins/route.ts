@@ -3,6 +3,9 @@ import { getTuningSystems, getAjnas } from "@/functions/import";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { getJinsTranspositions } from "@/functions/transpose";
 import { standardizeText } from "@/functions/export";
+import { handleCorsPreflightRequest, addCorsHeaders } from "../cors";
+
+export const OPTIONS = handleCorsPreflightRequest;
 
 /**
  * @swagger
@@ -176,9 +179,11 @@ export async function POST(request: Request) {
       }
     }
 
-    return NextResponse.json(result);
+    const response = NextResponse.json(result);
+    return addCorsHeaders(response);
   } catch (error) {
     console.error("Error loading Jins:", error);
-    return new NextResponse("Failed to load Jins.", { status: 500 });
+    const errorResponse = new NextResponse("Failed to load Jins.", { status: 500 });
+    return addCorsHeaders(errorResponse);
   }
 }

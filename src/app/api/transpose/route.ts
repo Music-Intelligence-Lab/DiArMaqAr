@@ -5,6 +5,9 @@ import PitchClass from "@/models/PitchClass";
 import { getJinsTranspositions, getMaqamTranspositions } from "@/functions/transpose";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { standardizeText } from "@/functions/export";
+import { handleCorsPreflightRequest, addCorsHeaders } from "../cors";
+
+export const OPTIONS = handleCorsPreflightRequest;
 
 /**
  * @swagger
@@ -145,7 +148,8 @@ export async function POST(request: Request) {
     const ajnas = getAjnas();
 
     if (typeof tuningSystemID !== "string") {
-      return NextResponse.json({ error: "tuningSystemID (string) is required" }, { status: 400 });
+      const errorResponse = NextResponse.json({ error: "tuningSystemID (string) is required" }, { status: 400 });
+      return addCorsHeaders(errorResponse);
     }
 
     // Validate that exactly one identifier is provided
@@ -157,7 +161,8 @@ export async function POST(request: Request) {
     const identifierCount = [hasMaqamID, hasMaqamName, hasJinsID, hasJinsName].filter(Boolean).length;
     
     if (identifierCount === 0) {
-      return NextResponse.json({ error: "Either maqamID, maqamName, jinsID, or jinsName must be provided" }, { status: 400 });
+      const errorResponse = NextResponse.json({ error: "Either maqamID, maqamName, jinsID, or jinsName must be provided" }, { status: 400 });
+      return addCorsHeaders(errorResponse);
     }
 
     if (identifierCount > 1) {
@@ -226,10 +231,12 @@ export async function POST(request: Request) {
           return NextResponse.json({ error: `Transposition to note '${noteNameToTransposeTo}' does not exist for this maqam` }, { status: 404 });
         }
         
-        return NextResponse.json([filteredTransposition]);
+        const successResponse = NextResponse.json([filteredTransposition]);
+        return addCorsHeaders(successResponse);
       }
 
-      return NextResponse.json(maqamTranspositions);
+      const maqamResponse = NextResponse.json(maqamTranspositions);
+      return addCorsHeaders(maqamResponse);
     } else if (hasMaqamName) {
       const selectedMaqamData = maqamat.find((maqam) => standardizeText(maqam.getName()) === standardizeText(maqamName));
       if (!selectedMaqamData) {
@@ -311,6 +318,7 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     console.error("Error in POST /api/tuningSystems:", error);
-    return new NextResponse("Internal Server Error", { status: 500 });
+    const errorResponse = new NextResponse("Internal Server Error", { status: 500 });
+    return addCorsHeaders(errorResponse);
   }
 }

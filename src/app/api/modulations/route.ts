@@ -8,6 +8,9 @@ import modulate from "@/functions/modulate";
 import { MaqamatModulations } from "@/models/Maqam";
 import { AjnasModulations } from "@/models/Jins";
 import { standardizeText } from "@/functions/export";
+import { handleCorsPreflightRequest, addCorsHeaders } from "../cors";
+
+export const OPTIONS = handleCorsPreflightRequest;
 
 /**
  * @swagger
@@ -275,7 +278,7 @@ export async function POST(request: Request) {
         centsTolerance ?? 5
       ) as MaqamatModulations;
 
-      return NextResponse.json({
+      const response = NextResponse.json({
         ajnas: ajnasModulations,
         maqamat: maqamatModulations,
         sourceMaqam: {
@@ -286,6 +289,7 @@ export async function POST(request: Request) {
           descendingNoteNames: sourceMaqamTransposition.descendingPitchClasses.map(pc => pc.noteName)
         }
       });
+      return addCorsHeaders(response);
     } else {
       const maqamatModulations = modulations as MaqamatModulations;
       const ajnasModulations = modulate(
@@ -312,6 +316,7 @@ export async function POST(request: Request) {
 
   } catch (error) {
     console.error("Error in POST /api/modulations:", error);
-    return new NextResponse("Internal Server Error", { status: 500 });
+    const errorResponse = new NextResponse("Internal Server Error", { status: 500 });
+    return addCorsHeaders(errorResponse);
   }
 }
