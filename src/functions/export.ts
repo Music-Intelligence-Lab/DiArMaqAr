@@ -26,6 +26,8 @@ export function standardizeText(text: string): string {
       .replace(/'/g, "")
       // Remove Arabic ayn character
       .replace(/ʿ/g, "")
+      // Remove Arabic hamza character
+      .replace(/ʾ/g, "")
       // Replace spaces with underscores
       .replace(/\s+/g, "_")
   );
@@ -475,83 +477,65 @@ function createLowerOctaveModulations(
   modulations: MaqamatModulations | AjnasModulations,
   allPitchClasses: PitchClass[]
 ): LowerOctaveModulationsStructure {
-  if ('modulationsOnFirstDegree' in modulations) {
+  // Better type discrimination: check if the first element is a Maqam or Jins
+  const hasModulations = modulations.modulationsOnFirstDegree && modulations.modulationsOnFirstDegree.length > 0;
+  const isMaqamModulations = hasModulations && 'ascendingPitchClasses' in modulations.modulationsOnFirstDegree[0];
+  
+  if (isMaqamModulations) {
     // It's MaqamatModulations
     const maqamatMods = modulations as MaqamatModulations;
+    
     return {
       modulationsOnFirstDegree8vb: (maqamatMods.modulationsOnFirstDegree || [])
         .map((maqam) => {
-          try {
-            const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
-            return shifted ? standardizeText(shifted.name) : standardizeText(maqam.name + ' (shift failed)');
-          } catch {
-            return standardizeText(maqam.name + ' (error)');
-          }
-        }),
+          const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
+          return shifted ? standardizeText(shifted.name) : null;
+        })
+        .filter((name): name is string => name !== null),
       modulationsOnThirdDegree8vb: (maqamatMods.modulationsOnThirdDegree || [])
         .map((maqam) => {
-          try {
-            const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
-            return shifted ? standardizeText(shifted.name) : standardizeText(maqam.name + ' (shift failed)');
-          } catch {
-            return standardizeText(maqam.name + ' (error)');
-          }
-        }),
+          const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
+          return shifted ? standardizeText(shifted.name) : null;
+        })
+        .filter((name): name is string => name !== null),
       modulationsOnAltThirdDegree8vb: (maqamatMods.modulationsOnAltThirdDegree || [])
         .map((maqam) => {
-          try {
-            const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
-            return shifted ? standardizeText(shifted.name) : standardizeText(maqam.name + ' (shift failed)');
-          } catch {
-            return standardizeText(maqam.name + ' (error)');
-          }
-        }),
+          const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
+          return shifted ? standardizeText(shifted.name) : null;
+        })
+        .filter((name): name is string => name !== null),
       modulationsOnFourthDegree8vb: (maqamatMods.modulationsOnFourthDegree || [])
         .map((maqam) => {
-          try {
-            const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
-            return shifted ? standardizeText(shifted.name) : standardizeText(maqam.name + ' (shift failed)');
-          } catch {
-            return standardizeText(maqam.name + ' (error)');
-          }
-        }),
+          const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
+          return shifted ? standardizeText(shifted.name) : null;
+        })
+        .filter((name): name is string => name !== null),
       modulationsOnFifthDegree8vb: (maqamatMods.modulationsOnFifthDegree || [])
         .map((maqam) => {
-          try {
-            const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
-            return shifted ? standardizeText(shifted.name) : standardizeText(maqam.name + ' (shift failed)');
-          } catch {
-            return standardizeText(maqam.name + ' (error)');
-          }
-        }),
+          const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
+          return shifted ? standardizeText(shifted.name) : null;
+        })
+        .filter((name): name is string => name !== null),
       modulationsOnSixthDegreeAsc8vb: (maqamatMods.modulationsOnSixthDegreeAsc || [])
         .map((maqam) => {
-          try {
-            const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
-            return shifted ? standardizeText(shifted.name) : standardizeText(maqam.name + ' (shift failed)');
-          } catch {
-            return standardizeText(maqam.name + ' (error)');
-          }
-        }),
+          const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
+          return shifted ? standardizeText(shifted.name) : null;
+        })
+        .filter((name): name is string => name !== null),
       modulationsOnSixthDegreeDesc8vb: (maqamatMods.modulationsOnSixthDegreeDesc || [])
         .map((maqam) => {
-          try {
-            const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
-            return shifted ? standardizeText(shifted.name) : standardizeText(maqam.name + ' (shift failed)');
-          } catch {
-            return standardizeText(maqam.name + ' (error)');
-          }
-        }),
+          const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
+          return shifted ? standardizeText(shifted.name) : null;
+        })
+        .filter((name): name is string => name !== null),
       modulationsOnSixthDegreeIfNoThird8vb: (maqamatMods.modulationsOnSixthDegreeIfNoThird || [])
         .map((maqam) => {
-          try {
-            const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
-            return shifted ? standardizeText(shifted.name) : standardizeText(maqam.name + ' (shift failed)');
-          } catch {
-            return standardizeText(maqam.name + ' (error)');
-          }
-        }),
-      noteName2pBelowThird8vb: maqamatMods.noteName2pBelowThird || '',
+          const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
+          return shifted ? standardizeText(shifted.name) : null;
+        })
+        .filter((name): name is string => name !== null),
+      noteName2pBelowThird8vb: maqamatMods.noteName2pBelowThird ? 
+        mapNoteToOctaveBelow(standardizeText(maqamatMods.noteName2pBelowThird), allPitchClasses) : '',
     };
   } else {
     // It's AjnasModulations - return empty structure since we don't include 8vb data for ajnas

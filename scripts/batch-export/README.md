@@ -9,7 +9,8 @@ node scripts/batch-export/batch-export.js \
   --include-ajnas-details \
   --include-maqamat-details \
   --include-maqamat-modulations \
-  --include-ajnas-modulations
+  --include-ajnas-modulations \
+  --include-modulations-8vb
 ```
 
 ### Export with Octave Shift Modulations (8vb)
