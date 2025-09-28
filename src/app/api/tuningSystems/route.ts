@@ -8,10 +8,16 @@ import NoteName, {
   TransliteratedNoteNameOctaveTwo,
 } from "@/models/NoteName";
 import getNoteNamesUsedInTuningSystem from "@/functions/getNoteNamesUsedInTuningSystem";
+import { handleCorsPreflightRequest, addCorsHeaders } from "../cors";
 
 const dataFilePath = path.join(process.cwd(), "data", "tuningSystems.json");
 const maqamat = path.join(process.cwd(), "data", "maqamat.json");
 const ajnas = path.join(process.cwd(), "data", "ajnas.json");
+
+// Handle CORS preflight requests
+export async function OPTIONS() {
+  return handleCorsPreflightRequest();
+}
 
 /**
  * @swagger
@@ -147,10 +153,12 @@ export async function GET() {
       }
     }
 
-    return NextResponse.json(tuningSystems);
+    const response = NextResponse.json(tuningSystems);
+    return addCorsHeaders(response);
   } catch (error) {
     console.error("Error loading Tuning Systems:", error);
-    return new NextResponse("Failed to load Tuning Systems.", { status: 500 });
+    const errorResponse = new NextResponse("Failed to load Tuning Systems.", { status: 500 });
+    return addCorsHeaders(errorResponse);
   }
 }
 
@@ -225,9 +233,11 @@ export async function PUT(request: Request) {
   try {
     const updatedArray = await request.json();
     await fs.writeFile(dataFilePath, JSON.stringify(updatedArray, null, 2), "utf-8");
-    return NextResponse.json({ message: "Tuning Systems updated successfully." });
+    const response = NextResponse.json({ message: "Tuning Systems updated successfully." });
+    return addCorsHeaders(response);
   } catch (error) {
     console.error("Error updating Tuning Systems:", error);
-    return new NextResponse("Failed to update Tuning Systems.", { status: 500 });
+    const errorResponse = new NextResponse("Failed to update Tuning Systems.", { status: 500 });
+    return addCorsHeaders(errorResponse);
   }
 }

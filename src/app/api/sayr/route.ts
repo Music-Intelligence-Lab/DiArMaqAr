@@ -2,8 +2,11 @@ import { NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
 import { standardizeText } from "@/functions/export";
+import { handleCorsPreflightRequest, addCorsHeaders } from "../cors";
 
 const dataFilePath = path.join(process.cwd(), "data", "maqamat.json");
+
+export const OPTIONS = handleCorsPreflightRequest;
 
 
 export async function POST(request: Request) {
@@ -53,11 +56,12 @@ export async function POST(request: Request) {
         );
       }
 
-      return NextResponse.json({
+      const successResponse = NextResponse.json({
         maqamId: maqam.id,
         maqamName: maqam.name,
         suyūr: maqam.suyūr || []
       });
+      return addCorsHeaders(successResponse);
     }
 
     if (hasSourceId) {
@@ -86,23 +90,26 @@ export async function POST(request: Request) {
         );
       }
 
-      return NextResponse.json({
+      const successResponse = NextResponse.json({
         sourceId: sourceId,
         maqams: maqamsWithSource
       });
+      return addCorsHeaders(successResponse);
     }
 
     // This should never be reached due to earlier validation
-    return NextResponse.json(
+    const errorResponse = NextResponse.json(
       { error: "Invalid request" },
       { status: 400 }
     );
+    return addCorsHeaders(errorResponse);
 
   } catch (error) {
     console.error("Error in sayr API:", error);
-    return NextResponse.json(
+    const errorResponse = NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
     );
+    return addCorsHeaders(errorResponse);
   }
 }
