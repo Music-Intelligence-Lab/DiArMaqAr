@@ -160,6 +160,18 @@ Examples:
 \`);
 }
 
+// Normalize input for flexible matching
+function normalizeForMatching(str: string): string {
+  return str
+    .normalize('NFD')
+    .replace(/[\\u0300-\\u036f]/g, '') // Remove diacritics
+    .replace(/[āīūḥṣṭḍẓʿʾ]/g, (match: string) => { // Arabic transliteration
+      const map: { [key: string]: string } = {'ā':'a','ī':'i','ū':'u','ḥ':'h','ṣ':'s','ṭ':'t','ḍ':'d','ẓ':'z','ʿ':'','ʾ':''};
+      return map[match] || match;
+    })
+    .toLowerCase();
+}
+
 async function main(): Promise<void> {
   const options = parseArguments();
 
@@ -225,18 +237,6 @@ async function main(): Promise<void> {
     if (options.tuningSystem === 'all') {
       tuningSystemsToProcess = tuningSystems;
     } else {
-      // Normalize input for flexible matching
-      const normalizeForMatching = (str) => {
-        return str
-          .normalize('NFD')
-          .replace(/[\\u0300-\\u036f]/g, '') // Remove diacritics
-          .replace(/[āīūḥṣṭḍẓʿʾ]/g, match => { // Arabic transliteration
-            const map = {'ā':'a','ī':'i','ū':'u','ḥ':'h','ṣ':'s','ṭ':'t','ḍ':'d','ẓ':'z','ʿ':'','ʾ':''};
-            return map[match] || match;
-          })
-          .toLowerCase();
-      };
-
       const normalizedInput = normalizeForMatching(options.tuningSystem);
 
       const selectedSystem = tuningSystems.find(ts => {
@@ -286,12 +286,20 @@ async function main(): Promise<void> {
         startingNotesToProcess = tuningSystem.getNoteNameSets().map(set => set[0]);
       } else {
         const availableStartingNotes = tuningSystem.getNoteNameSets().map(set => set[0]);
-        if (!availableStartingNotes.includes(options.startingNote as NoteName)) {
+
+        // Apply the same normalization to starting note matching
+        const normalizedStartingNote = normalizeForMatching(options.startingNote);
+        const matchedNote = availableStartingNotes.find(note => {
+          const normalizedNote = normalizeForMatching(note);
+          return normalizedNote === normalizedStartingNote || note === options.startingNote;
+        });
+
+        if (!matchedNote) {
           console.error(\`\\nError: Starting note "\${options.startingNote}" not available for tuning system "\${tuningSystem.getId()}".\`);
           console.log(\`Available starting notes: \${availableStartingNotes.join(', ')}\`);
           continue;
         }
-        startingNotesToProcess = [options.startingNote as NoteName];
+        startingNotesToProcess = [matchedNote as NoteName];
       }
 
       let noteIndex = 0;
@@ -312,7 +320,7 @@ async function main(): Promise<void> {
 
           // Generate filename matching export modal pattern
           // Comprehensive character normalization for safe filenames
-          const stripDiacritics = (str) => {
+          const stripDiacritics = (str: string): string => {
             return str
               .normalize('NFD') // Unicode normalization
               .replace(/[\u0300-\u036f]/g, '') // Remove combining diacritics
