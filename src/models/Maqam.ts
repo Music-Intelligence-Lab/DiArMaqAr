@@ -553,6 +553,18 @@ export interface MaqamatModulations {
  * @returns New Maqam instance shifted by the specified number of octaves
  */
 export function shiftMaqamByOctaves(allPitchClasses: PitchClass[], maqam: Maqam, octaveShift: number): Maqam | null {
+  // Defensive check for undefined maqam or pitch class arrays
+  if (!maqam || !maqam.ascendingPitchClasses || !maqam.descendingPitchClasses) {
+    console.warn('⚠️ shiftMaqamByOctaves: maqam or pitch class arrays are undefined', {
+      maqamExists: !!maqam,
+      maqamId: maqam?.maqamId,
+      maqamName: maqam?.name,
+      ascendingPitchClassesExists: !!maqam?.ascendingPitchClasses,
+      descendingPitchClassesExists: !!maqam?.descendingPitchClasses
+    });
+    return null;
+  }
+  
   const shiftedAscendingPitchClasses = maqam.ascendingPitchClasses.map((pc) => shiftPitchClass(allPitchClasses, pc, octaveShift));
   const shiftedDescendingPitchClasses = maqam.descendingPitchClasses.map((pc) => shiftPitchClass(allPitchClasses, pc, octaveShift));
 

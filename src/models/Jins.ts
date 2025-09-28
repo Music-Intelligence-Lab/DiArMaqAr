@@ -332,6 +332,17 @@ export interface AjnasModulations {
  * @returns New Jins instance shifted by the specified number of octaves
  */
 export function shiftJinsByOctaves(allPitchClasses: PitchClass[], jins: Jins, octaveShift: number): Jins | null {
+  // Defensive check for undefined jins or jinsPitchClasses
+  if (!jins || !jins.jinsPitchClasses) {
+    console.warn('⚠️ shiftJinsByOctaves: jins or jinsPitchClasses is undefined', {
+      jinsExists: !!jins,
+      jinsId: jins?.jinsId,
+      jinsName: jins?.name,
+      jinsPitchClassesExists: !!jins?.jinsPitchClasses
+    });
+    return null;
+  }
+  
   const shiftedPitchClasses = jins.jinsPitchClasses.map((pc) => shiftPitchClass(allPitchClasses, pc, octaveShift));
   
   // Check if any pitch class shift failed (indicated by empty noteName)

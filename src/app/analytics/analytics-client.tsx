@@ -13,8 +13,8 @@ interface AnalyticsFormData {
   tuningSystemStartingNoteName: string;
   qararNoteName: string;
   includeTranspositions: boolean;
-  includeMaqamatModulations: boolean;
-  includeAjnasModulations: boolean;
+  includeMaqamToMaqamModulations: boolean;
+  includeMaqamToJinsModulations: boolean;
   centsTolerance: number;
 }
 
@@ -38,8 +38,8 @@ function AnalyticsClient() {
     tuningSystemStartingNoteName: "",
     qararNoteName: "",
     includeTranspositions: true,
-    includeMaqamatModulations: false,
-    includeAjnasModulations: false,
+    includeMaqamToMaqamModulations: false,
+    includeMaqamToJinsModulations: false,
     centsTolerance: 5,
   });
 
@@ -136,8 +136,8 @@ function AnalyticsClient() {
         tuningSystemStartingNoteName: formData.tuningSystemStartingNoteName,
         qararNoteName: formData.qararNoteName || undefined,
         includeTranspositions: formData.includeTranspositions,
-        includeMaqamatModulations: formData.includeMaqamatModulations,
-        includeAjnasModulations: formData.includeAjnasModulations,
+        includeMaqamToMaqamModulations: formData.includeMaqamToMaqamModulations,
+        includeMaqamToJinsModulations: formData.includeMaqamToJinsModulations,
         centsTolerance: formData.centsTolerance,
       };
 
@@ -173,8 +173,8 @@ function AnalyticsClient() {
       tuningSystemStartingNoteName: "",
       qararNoteName: "",
       includeTranspositions: true,
-      includeMaqamatModulations: false,
-      includeAjnasModulations: false,
+      includeMaqamToMaqamModulations: false,
+      includeMaqamToJinsModulations: false,
       centsTolerance: 5,
     });
   };
@@ -192,7 +192,7 @@ function AnalyticsClient() {
       selectedMaqam: (result.maqam as any).name,
       tuningSystemsAnalyzed: tuningSystemKeys.length,
       totalTranspositions,
-      hasModulations: formData.includeMaqamatModulations || formData.includeAjnasModulations,
+      hasModulations: formData.includeMaqamToMaqamModulations || formData.includeMaqamToJinsModulations,
     };
   };
 
@@ -312,16 +312,16 @@ function AnalyticsClient() {
               <label className="analytics-client__checkbox-label">
                 <input
                   type="checkbox"
-                  checked={formData.includeMaqamatModulations}
-                  onChange={(e) => handleFormChange("includeMaqamatModulations", e.target.checked)}
+                  checked={formData.includeMaqamToMaqamModulations}
+                  onChange={(e) => handleFormChange("includeMaqamToMaqamModulations", e.target.checked)}
                 />
                 Include Maqāmāt Modulations
               </label>
               <label className="analytics-client__checkbox-label">
                 <input
                   type="checkbox"
-                  checked={formData.includeAjnasModulations}
-                  onChange={(e) => handleFormChange("includeAjnasModulations", e.target.checked)}
+                  checked={formData.includeMaqamToJinsModulations}
+                  onChange={(e) => handleFormChange("includeMaqamToJinsModulations", e.target.checked)}
                 />
                 Include Ajnās Modulations
               </label>

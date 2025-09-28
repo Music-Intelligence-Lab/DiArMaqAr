@@ -45,8 +45,8 @@ export interface ExportOptions {
   includeAjnasDetails?: boolean; // Only for tuning system exports
   includeMaqamatDetails?: boolean; // Only for tuning system exports
   includeTranspositions?: boolean; // For jins and maqam exports
-  includeMaqamatModulations: boolean;
-  includeAjnasModulations: boolean;
+  includeMaqamToMaqamModulations: boolean;
+  includeMaqamToJinsModulations: boolean;
   csvDelimiter: "," | ";" | "\t";
   filename: string;
 }
@@ -74,8 +74,8 @@ export default function ExportModal({
       format: "json" as ExportFormat,
       includeTuningSystemDetails: true, // Always true by default
       includePitchClasses: true, // Always true by default
-      includeMaqamatModulations: false,
-      includeAjnasModulations: false,
+      includeMaqamToMaqamModulations: false,
+      includeMaqamToJinsModulations: false,
       csvDelimiter: "," as "," | ";" | "\t",
       filename: "", // Will be set by useEffect
     };
@@ -121,10 +121,10 @@ export default function ExportModal({
       if (opts.includeMaqamatDetails) {
         parts.push("maqāmāt");
       }
-      if (opts.includeMaqamatModulations) {
+      if (opts.includeMaqamToMaqamModulations) {
         parts.push("maqāmāt-modulations");
       }
-      if (opts.includeAjnasModulations) {
+      if (opts.includeMaqamToJinsModulations) {
         parts.push("ajnās-modulations");
       }
     } else if (exportType === "jins") {
@@ -163,10 +163,10 @@ export default function ExportModal({
       if (opts.includeTranspositions) {
         parts.push("transpositions");
       }
-      if (opts.includeMaqamatModulations) {
+      if (opts.includeMaqamToMaqamModulations) {
         parts.push("maqāmāt-modulations");
       }
-      if (opts.includeAjnasModulations) {
+      if (opts.includeMaqamToJinsModulations) {
         parts.push("ajnās-modulations");
       }
     }
@@ -189,8 +189,8 @@ export default function ExportModal({
     exportOptions.includeAjnasDetails,
     exportOptions.includeMaqamatDetails,
     exportOptions.includeTranspositions,
-    exportOptions.includeMaqamatModulations,
-    exportOptions.includeAjnasModulations,
+    exportOptions.includeMaqamToMaqamModulations,
+    exportOptions.includeMaqamToJinsModulations,
     exportOptions.includeTuningSystemDetails,
   ]);
 
@@ -239,8 +239,8 @@ export default function ExportModal({
 
     // Check modulation options
     if (
-      exportOptions.includeMaqamatModulations ||
-      exportOptions.includeAjnasModulations
+      exportOptions.includeMaqamToMaqamModulations ||
+      exportOptions.includeMaqamToJinsModulations
     ) {
       return true;
     }
@@ -360,8 +360,8 @@ export default function ExportModal({
         }
 
         if (
-          exportOptions.includeMaqamatModulations ||
-          exportOptions.includeAjnasModulations
+          exportOptions.includeMaqamToMaqamModulations ||
+          exportOptions.includeMaqamToJinsModulations
         ) {
           steps.push({
             percent: 80,
@@ -444,8 +444,8 @@ export default function ExportModal({
         }
 
         if (
-          exportOptions.includeMaqamatModulations ||
-          exportOptions.includeAjnasModulations
+          exportOptions.includeMaqamToMaqamModulations ||
+          exportOptions.includeMaqamToJinsModulations
         ) {
           steps.push({
             percent: 40,
@@ -509,8 +509,8 @@ export default function ExportModal({
             includePitchClasses: exportOptions.includePitchClasses,
             includeAjnasDetails: exportOptions.includeAjnasDetails || false,
             includeMaqamatDetails: exportOptions.includeMaqamatDetails || false,
-            includeMaqamatModulations: exportOptions.includeMaqamatModulations,
-            includeAjnasModulations: exportOptions.includeAjnasModulations,
+            includeMaqamToMaqamModulations: exportOptions.includeMaqamToMaqamModulations,
+            includeMaqamToJinsModulations: exportOptions.includeMaqamToJinsModulations,
             includeModulations8vb: false, // TODO: Add UI control for this option
             progressCallback: updateProgress,
           }
@@ -538,8 +538,8 @@ export default function ExportModal({
               exportOptions.includeTuningSystemDetails,
             includePitchClasses: exportOptions.includePitchClasses,
             includeTranspositions: exportOptions.includeTranspositions || false,
-            includeMaqamatModulations: exportOptions.includeMaqamatModulations,
-            includeAjnasModulations: exportOptions.includeAjnasModulations,
+            includeMaqamToMaqamModulations: exportOptions.includeMaqamToMaqamModulations,
+            includeMaqamToJinsModulations: exportOptions.includeMaqamToJinsModulations,
             includeModulations8vb: false, // TODO: Add UI control for this option
             progressCallback: updateProgress,
           }
@@ -1671,11 +1671,11 @@ export default function ExportModal({
                           ...prev,
                           includeMaqamatDetails: e.target.checked,
                           // Auto-disable both modulations if maqamat details is unchecked
-                          includeMaqamatModulations: e.target.checked
-                            ? prev.includeMaqamatModulations
+                          includeMaqamToMaqamModulations: e.target.checked
+                            ? prev.includeMaqamToMaqamModulations
                             : false,
-                          includeAjnasModulations: e.target.checked
-                            ? prev.includeAjnasModulations
+                          includeMaqamToJinsModulations: e.target.checked
+                            ? prev.includeMaqamToJinsModulations
                             : false,
                         }))
                       }
@@ -1710,11 +1710,11 @@ export default function ExportModal({
                   <label className="export-modal__checkbox">
                     <input
                       type="checkbox"
-                      checked={exportOptions.includeAjnasModulations}
+                      checked={exportOptions.includeMaqamToJinsModulations}
                       onChange={(e) =>
                         setExportOptions((prev) => ({
                           ...prev,
-                          includeAjnasModulations: e.target.checked,
+                          includeMaqamToJinsModulations: e.target.checked,
                         }))
                       }
                     />
@@ -1723,11 +1723,11 @@ export default function ExportModal({
                   <label className="export-modal__checkbox">
                     <input
                       type="checkbox"
-                      checked={exportOptions.includeMaqamatModulations}
+                      checked={exportOptions.includeMaqamToMaqamModulations}
                       onChange={(e) =>
                         setExportOptions((prev) => ({
                           ...prev,
-                          includeMaqamatModulations: e.target.checked,
+                          includeMaqamToMaqamModulations: e.target.checked,
                         }))
                       }
                     />
