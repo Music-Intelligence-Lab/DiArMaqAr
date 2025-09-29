@@ -41,7 +41,7 @@ yarn-error.log*
 next-env.d.ts
 
 # exports
-/scripts/batch-export/batch-export-ts-runner.ts
-/exports/*.json
+/scripts/batch-export/batch-export-runner.ts
+/exports/
 /scripts/exports/*/*.json
 /scripts/exports/*.json

@@ -1,19 +1,5 @@
 [
   {
-    "id": "1",
-    "idName": "jins_rast_nawa",
-    "name": "jins rāst nawā",
-    "noteNames": [
-      "nawā",
-      "ḥusaynī",
-      "awj",
-      "kurdān"
-    ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "sourcePageReferences": []
-  },
-  {
     "id": "2",
     "idName": "jins_bayyat",
     "name": "jins bayyāt",
@@ -164,8 +150,8 @@
   },
   {
     "id": "12",
-    "idName": "jins_hijaz_1",
-    "name": "jins ḥijāz 1",
+    "idName": "jins_hijaz",
+    "name": "jins ḥijāz",
     "noteNames": [
       "dūgāh",
       "kurdī",
@@ -276,20 +262,6 @@
     "sourcePageReferences": []
   },
   {
-    "id": "20",
-    "idName": "jins_nahawand_nawa",
-    "name": "jins nahāwand nawā",
-    "noteNames": [
-      "nawā",
-      "ḥusaynī",
-      "ʿajam",
-      "kurdān"
-    ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "sourcePageReferences": []
-  },
-  {
     "id": "21",
     "idName": "jins_buselik_(al-Shawwa)",
     "name": "jins būselīk (al-Shawwā)",
@@ -343,7 +315,7 @@
   },
   {
     "id": "24",
-    "idName": "jins_awj_ʾaraʾ",
+    "idName": "jins_awj_ara",
     "name": "jins awj ʾārāʾ",
     "noteNames": [
       "ʿirāq",
@@ -452,20 +424,6 @@
       "nawā",
       "ḥusaynī",
       "ʿajam"
-    ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "sourcePageReferences": []
-  },
-  {
-    "id": "32",
-    "idName": "jins_bayyat_nawa",
-    "name": "jins bayyāt nawā",
-    "noteNames": [
-      "nawā",
-      "tīk ḥiṣār",
-      "ʿajam",
-      "kurdān"
     ],
     "commentsEnglish": "",
     "commentsArabic": "",

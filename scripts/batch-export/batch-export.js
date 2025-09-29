@@ -1,49 +1,20 @@
 #!/usr/bin/env node
 
 /**
- * Digital Arabic Maqām Archive - Proper Batch Export CLI
+ * Digital Arabic Maqām Archive - Batch Export CLI
  *
- * This is a wrapper script that delegates to the TypeScript version for actual functionality.
- * This script uses the actual exportTuningSystem function to generate complete exports
- * that match the data structures and options that the frontend application's
- * export modal provides.
+ * This script allows batch export of tuning system data in JSON format from the command line,
+ * providing the same comprehensive data structure as the web export modal.
  */
 
-/* eslint-disable @typescript-eslint/no-require-imports */
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
-/* eslint-enable @typescript-eslint/no-require-imports */
 
-// We need to compile and run the TypeScript version
-function runTypeScriptVersion() {
-  const tsFilePath = path.join(__dirname, 'batch-export-ts-runner.ts');
-  const jsFilePath = path.join(__dirname, 'batch-export-ts-runner.js');
-
-  // Create a TypeScript runner file
-  const tsRunnerContent = `
-import { getTuningSystems } from '@/functions/import';
-import { exportTuningSystem, ExportOptions } from '@/functions/export';
-import NoteName from '@/models/NoteName';
-import * as fs from 'fs';
-import * as path from 'path';
-
-interface CLIOptions {
-  help: boolean;
-  listTuningSystems: boolean;
-  tuningSystem: string | null;
-  startingNote: string | null;
-  includeAjnasDetails: boolean;
-  includeMaqamatDetails: boolean;
-  includeMaqamToMaqamModulations: boolean;
-  includeMaqamToJinsModulations: boolean;
-  includeModulations8vb: boolean;
-  outputDir: string;
-}
-
-function parseArguments(): CLIOptions {
+// Parse command line arguments
+function parseArguments() {
   const args = process.argv.slice(2);
-  const options: CLIOptions = {
+  const options = {
     help: false,
     listTuningSystems: false,
     tuningSystem: null,
@@ -81,32 +52,17 @@ function parseArguments(): CLIOptions {
       case '--include-ajnas-details':
         options.includeAjnasDetails = true;
         break;
-      case '--no-ajnas-details':
-        options.includeAjnasDetails = false;
-        break;
       case '--include-maqamat-details':
         options.includeMaqamatDetails = true;
-        break;
-      case '--no-maqamat-details':
-        options.includeMaqamatDetails = false;
         break;
       case '--include-maqamat-modulations':
         options.includeMaqamToMaqamModulations = true;
         break;
-      case '--no-maqamat-modulations':
-        options.includeMaqamToMaqamModulations = false;
-        break;
       case '--include-ajnas-modulations':
         options.includeMaqamToJinsModulations = true;
         break;
-      case '--no-ajnas-modulations':
-        options.includeMaqamToJinsModulations = false;
-        break;
       case '--include-modulations-8vb':
         options.includeModulations8vb = true;
-        break;
-      case '--no-modulations-8vb':
-        options.includeModulations8vb = false;
         break;
       case '--output-dir':
       case '-o':
@@ -119,9 +75,9 @@ function parseArguments(): CLIOptions {
   return options;
 }
 
-function showHelp(): void {
-  console.log(\`
-Digital Arabic Maqām Archive - Proper Batch Export CLI
+function showHelp() {
+  console.log(`
+Digital Arabic Maqām Archive - Batch Export CLI
 
 Usage:
   node scripts/batch-export/batch-export.js [options]
@@ -129,50 +85,39 @@ Usage:
 Options:
   --help, -h                    Show this help message
   --list-tuning-systems         List all available tuning systems and their starting notes
-  --tuning-system, -t <id>      Tuning system ID (use 'all' for all systems)
-  --starting-note, -s <note>    Starting note name (use 'all' for all available notes)
+  --tuning-system, -t <id>      Tuning system ID (use "all" for all systems)
+  --starting-note, -s <note>    Starting note name (use "all" for all available notes)
   --output-dir, -o <dir>        Output directory (default: ./exports)
 
-Export Options (mirrors export modal exactly):
-  --include-ajnas-details       Include ajnas details (default: true)
-  --no-ajnas-details           Exclude ajnas details
-  --include-maqamat-details     Include maqamat details (default: true)
-  --no-maqamat-details         Exclude maqamat details
+Export Options:
+  --include-ajnas-details       Include ajnas details (default: false)
+  --include-maqamat-details     Include maqamat details (default: false)
   --include-maqamat-modulations Include maqamat modulations (default: false)
-  --no-maqamat-modulations     Exclude maqamat modulations
   --include-ajnas-modulations   Include ajnas modulations (default: false)
-  --no-ajnas-modulations       Exclude ajnas modulations
-  --include-modulations-8vb     Include lower octave modulations (default: false)
-  --no-modulations-8vb         Exclude lower octave modulations
+  --include-modulations-8vb     Include lower octave (8vb) modulations (default: false)
 
 Examples:
   # List all available tuning systems
   node scripts/batch-export/batch-export.js --list-tuning-systems
 
-  # Export specific tuning system with specific starting note (full data)
-  node scripts/batch-export/batch-export.js --tuning-system "Al-Farabi-(950g)" --starting-note "yegāh"
+  # Export specific tuning system with basic data
+  node scripts/batch-export/batch-export.js --tuning-system "al-Kindi-(874)" --starting-note "yegāh"
 
-  # Export all tuning systems with all their starting notes
+  # Export with full data including modulations
+  node scripts/batch-export/batch-export.js \\
+    --tuning-system "al-Kindi-(874)" \\
+    --starting-note "yegāh" \\
+    --include-ajnas-details \\
+    --include-maqamat-details \\
+    --include-maqamat-modulations \\
+    --include-ajnas-modulations
+
+  # Export all systems with all starting notes (batch export)
   node scripts/batch-export/batch-export.js --tuning-system "all" --starting-note "all"
-
-  # Export with modulations included (like advanced export modal options)
-  node scripts/batch-export/batch-export.js --tuning-system "Al-Farabi-(950g)" --starting-note "yegāh" --include-maqamat-modulations --include-ajnas-modulations
-\`);
+`);
 }
 
-// Normalize input for flexible matching
-function normalizeForMatching(str: string): string {
-  return str
-    .normalize('NFD')
-    .replace(/[\\u0300-\\u036f]/g, '') // Remove diacritics
-    .replace(/[āīūḥṣṭḍẓʿʾ]/g, (match: string) => { // Arabic transliteration
-      const map: { [key: string]: string } = {'ā':'a','ī':'i','ū':'u','ḥ':'h','ṣ':'s','ṭ':'t','ḍ':'d','ẓ':'z','ʿ':'','ʾ':''};
-      return map[match] || match;
-    })
-    .toLowerCase();
-}
-
-async function main(): Promise<void> {
+async function main() {
   const options = parseArguments();
 
   if (options.help) {
@@ -180,8 +125,46 @@ async function main(): Promise<void> {
     return;
   }
 
+  // Determine output options for memory allocation
+  const outputOptions = [];
+  if (options.includeAjnasDetails) outputOptions.push('ajnas');
+  if (options.includeMaqamatDetails) outputOptions.push('maqamat');
+  if (options.includeMaqamToMaqamModulations) outputOptions.push('maqamat-mod');
+  if (options.includeMaqamToJinsModulations) outputOptions.push('ajnas-mod');
+
+  // Dynamic memory allocation based on export complexity
+  const isFullBatchExport = options.tuningSystem === 'all' && options.startingNote === 'all';
+  const MAX_MEMORY = outputOptions.includes('maqamat-mod') || outputOptions.includes('ajnas-mod') ? '12288' : '8192'; // Increased memory for modulations
+  const executionOptions = `--max-old-space-size=${MAX_MEMORY}`;
+
+  // Create TypeScript runner that uses the actual export function
+  const tsFilePath = path.join(__dirname, 'batch-export-runner.ts');
+
+  const tsRunnerContent = `
+import { getTuningSystems } from '@/functions/import';
+import { exportTuningSystem, ExportOptions } from '@/functions/export';
+import NoteName from '@/models/NoteName';
+import * as fs from 'fs';
+import * as path from 'path';
+
+// Normalize input for flexible matching
+function normalizeForMatching(str: string): string {
+  return str
+    .normalize('NFD')
+    .replace(/[\\u0300-\\u036f]/g, '') // Remove diacritics
+    .replace(/[āīūḥṣṭḍẓʿʾ]/g, (match: string) => {
+      const map: { [key: string]: string } = {'ā':'a','ī':'i','ū':'u','ḥ':'h','ṣ':'s','ṭ':'t','ḍ':'d','ẓ':'z','ʿ':'','ʾ':''};
+      return map[match] || match;
+    })
+    .toLowerCase();
+}
+
+async function run() {
+  const options = ${JSON.stringify(options)};
+
   try {
-    // Load tuning systems using the proper import function
+    console.log('Running proper export with full data structures...\\n');
+
     const tuningSystems = getTuningSystems();
 
     if (options.listTuningSystems) {
@@ -217,8 +200,6 @@ async function main(): Promise<void> {
       fs.mkdirSync(actualOutputDir, { recursive: true });
     }
 
-    options.outputDir = actualOutputDir;
-
     const exportOptions: ExportOptions = {
       includeTuningSystemDetails: true,
       includePitchClasses: true,
@@ -238,7 +219,6 @@ async function main(): Promise<void> {
       tuningSystemsToProcess = tuningSystems;
     } else {
       const normalizedInput = normalizeForMatching(options.tuningSystem);
-
       const selectedSystem = tuningSystems.find(ts => {
         const normalizedId = normalizeForMatching(ts.getId());
         return normalizedId === normalizedInput || ts.getId() === options.tuningSystem;
@@ -265,7 +245,7 @@ async function main(): Promise<void> {
     }
 
     console.log(\`Starting batch export of \${totalExports} configurations...\`);
-    console.log(\`Output directory: \${path.resolve(options.outputDir)}\`);
+    console.log(\`Output directory: \${path.resolve(actualOutputDir)}\`);
     console.log(\`Systems to process: \${tuningSystemsToProcess.length}\`);
     console.log(\`Mode: \${options.tuningSystem === 'all' ? 'BATCH (all systems)' : 'SINGLE SYSTEM'}\`);
     if (options.includeMaqamToMaqamModulations || options.includeMaqamToJinsModulations) {
@@ -280,14 +260,13 @@ async function main(): Promise<void> {
       console.log(\`\\n[\${systemIndex}/\${tuningSystemsToProcess.length}] Processing: \${tuningSystem.getId()}\`);
       console.log(\`Title: \${tuningSystem.getTitleEnglish()}\`);
       console.log('-'.repeat(50));
+
       let startingNotesToProcess: NoteName[] = [];
 
       if (options.startingNote === 'all') {
         startingNotesToProcess = tuningSystem.getNoteNameSets().map(set => set[0]);
       } else {
         const availableStartingNotes = tuningSystem.getNoteNameSets().map(set => set[0]);
-
-        // Apply the same normalization to starting note matching
         const normalizedStartingNote = normalizeForMatching(options.startingNote);
         const matchedNote = availableStartingNotes.find(note => {
           const normalizedNote = normalizeForMatching(note);
@@ -302,15 +281,31 @@ async function main(): Promise<void> {
         startingNotesToProcess = [matchedNote as NoteName];
       }
 
-      let noteIndex = 0;
+      let j = 0;
       for (const startingNote of startingNotesToProcess) {
-        noteIndex++;
+        j++;
         const overallProgress = \`(\${completedExports + 1}/\${totalExports})\`;
-        const systemProgress = startingNotesToProcess.length > 1 ? \` [\${noteIndex}/\${startingNotesToProcess.length}]\` : '';
+        const systemProgress = startingNotesToProcess.length > 1 ? \` [\${j}/\${startingNotesToProcess.length}]\` : '';
 
         console.log(\`\\n  \${overallProgress}\${systemProgress} → \${startingNote}\`);
 
         try {
+          // Force garbage collection before each export if available
+          if (global.gc) {
+            global.gc();
+          }
+
+          // Additional memory management for large batch exports
+          if (${isFullBatchExport} && completedExports > 0 && completedExports % 5 === 0) {
+            console.log(\`\\n🧹 Running memory cleanup after \${completedExports} exports...\`);
+            if (global.gc) {
+              global.gc();
+              // Force multiple garbage collection cycles for large exports
+              setTimeout(() => global.gc && global.gc(), 100);
+              setTimeout(() => global.gc && global.gc(), 200);
+            }
+          }
+
           // Use the ACTUAL exportTuningSystem function from the export modal
           const exportData = await exportTuningSystem(
             tuningSystem,
@@ -323,13 +318,13 @@ async function main(): Promise<void> {
           const stripDiacritics = (str: string): string => {
             return str
               .normalize('NFD') // Unicode normalization
-              .replace(/[\u0300-\u036f]/g, '') // Remove combining diacritics
-              .replace(/[\u0590-\u05FF]/g, '') // Remove Hebrew characters
-              .replace(/[\u0600-\u06FF]/g, '') // Remove Arabic characters
-              .replace(/[\u0750-\u077F]/g, '') // Remove Arabic Supplement
-              .replace(/[\u08A0-\u08FF]/g, '') // Remove Arabic Extended-A
-              .replace(/[\uFB50-\uFDFF]/g, '') // Remove Arabic Presentation Forms-A
-              .replace(/[\uFE70-\uFEFF]/g, '') // Remove Arabic Presentation Forms-B
+              .replace(/[\\u0300-\\u036f]/g, '') // Remove combining diacritics
+              .replace(/[\\u0590-\\u05FF]/g, '') // Remove Hebrew characters
+              .replace(/[\\u0600-\\u06FF]/g, '') // Remove Arabic characters
+              .replace(/[\\u0750-\\u077F]/g, '') // Remove Arabic Supplement
+              .replace(/[\\u08A0-\\u08FF]/g, '') // Remove Arabic Extended-A
+              .replace(/[\\uFB50-\\uFDFF]/g, '') // Remove Arabic Presentation Forms-A
+              .replace(/[\\uFE70-\\uFEFF]/g, '') // Remove Arabic Presentation Forms-B
               // Comprehensive Arabic/Persian transliteration mapping
               .replace(/[āáàâäãåăąǎǟǡǻȁȃạảấầẩẫậắằẳẵặ]/gi, 'a')
               .replace(/[ēéèêëĕėęěȅȇẹẻẽếềểễệ]/gi, 'e')
@@ -356,14 +351,14 @@ async function main(): Promise<void> {
               .replace(/[çÇ]/g, 'c') // cedilla
               .replace(/[ßẞ]/g, 'ss') // eszett
               // Remove remaining non-ASCII, keep alphanumeric, hyphens, underscores, parentheses
-              .replace(/[^a-zA-Z0-9\-_()]/g, '_')
+              .replace(/[^a-zA-Z0-9\\-_()]/g, '_')
               .replace(/_{2,}/g, '_') // Collapse multiple underscores
               .replace(/^_+|_+$/g, ''); // Trim leading/trailing underscores
           };
 
           const safeSystemId = stripDiacritics(tuningSystem.getId());
           const safeStartingNote = stripDiacritics(startingNote);
-          
+
           // Create local timestamp with date and time (YYYY-MM-DD_HH-MM-SS format)
           const now = new Date();
           const year = now.getFullYear();
@@ -389,7 +384,7 @@ async function main(): Promise<void> {
 
           filename += '.json';
 
-          const filePath = path.join(options.outputDir, filename);
+          const filePath = path.join(actualOutputDir, filename);
 
           // Write the JSON file with proper structure
           fs.writeFileSync(filePath, JSON.stringify(exportData, null, 2));
@@ -425,15 +420,28 @@ async function main(): Promise<void> {
             console.log(\`    ⏳ \${remaining} configurations remaining...\`);
           }
 
+          // Explicit cleanup after each export
+          // exportData = null; // Skip explicit nulling since it's const
+
         } catch (error) {
-          console.error(\`\\n✗ Failed to export \${tuningSystem.getId()} with \${startingNote}:\`, (error as Error).message);
+          console.error(\`\\n✗ Failed to export \${tuningSystem.getId()} with \${startingNote}:\`, error.message);
         }
+
+        // Force garbage collection after each export to prevent memory buildup
+        if (global.gc) {
+          global.gc();
+        }
+      }
+
+      // Clean up after each tuning system
+      if (global.gc) {
+        global.gc();
       }
     }
 
     console.log('\\n' + '='.repeat(60));
     console.log(\`🎉 Batch export completed! \${completedExports}/\${totalExports} exports successful.\`);
-    console.log(\`📁 Files saved to: \${path.resolve(options.outputDir)}\`);
+    console.log(\`📁 Files saved to: \${path.resolve(actualOutputDir)}\`);
 
     if (options.tuningSystem === 'all') {
       console.log(\`📦 Batch folder created to organize \${completedExports} files\`);
@@ -445,8 +453,8 @@ async function main(): Promise<void> {
     }
 
   } catch (error) {
-    console.error('Fatal error:', (error as Error).message);
-    console.error('Stack trace:', (error as Error).stack);
+    console.error('Fatal error:', error.message);
+    console.error('Stack trace:', error.stack);
     process.exit(1);
   }
 }
@@ -462,34 +470,40 @@ process.on('SIGTERM', () => {
   process.exit(0);
 });
 
-if (require.main === module) {
-  main().catch(error => {
-    console.error('Unhandled error:', error);
-    process.exit(1);
-  });
-}
+run().catch(error => {
+  console.error('Unhandled error:', error);
+  process.exit(1);
+});
 `;
 
-  // Write the TypeScript runner
+  // Write the TypeScript file
   fs.writeFileSync(tsFilePath, tsRunnerContent);
 
   try {
-    // Compile and run using ts-node or tsx with proper argument escaping
-    console.log('Running proper export with full data structures...\n');
+    // Run with increased memory and tsx
     const args = process.argv.slice(2).map(arg => `"${arg}"`).join(' ');
-    execSync(`npx tsx "${tsFilePath}" ${args}`, {
+    const projectRoot = path.resolve(__dirname, '..', '..');
+
+    // Use tsx with the memory options
+    execSync(`node ${executionOptions} --expose-gc $(npm root -g)/tsx/dist/cli.mjs "${tsFilePath}"`, {
       stdio: 'inherit',
-      cwd: path.dirname(__dirname)
+      cwd: projectRoot,
+      env: { ...process.env, NODE_OPTIONS: `${executionOptions} --expose-gc` }
     });
-  } catch {
+
+  } catch (tsxError) {
     // Try with ts-node if tsx fails
     try {
       const args = process.argv.slice(2).map(arg => `"${arg}"`).join(' ');
-      execSync(`npx ts-node "${tsFilePath}" ${args}`, {
+      const projectRoot = path.resolve(__dirname, '..', '..');
+
+      execSync(`node ${executionOptions} --expose-gc $(npm root -g)/ts-node/dist/bin.js "${tsFilePath}"`, {
         stdio: 'inherit',
-        cwd: path.dirname(__dirname)
+        cwd: projectRoot,
+        env: { ...process.env, NODE_OPTIONS: `${executionOptions} --expose-gc` }
       });
-    } catch {
+
+    } catch (tsNodeError) {
       console.error('Failed to run TypeScript version. Make sure tsx or ts-node is available:');
       console.error('npm install -g tsx');
       console.error('or');
@@ -500,9 +514,6 @@ if (require.main === module) {
     // Clean up the temporary TypeScript file
     if (fs.existsSync(tsFilePath)) {
       fs.unlinkSync(tsFilePath);
-    }
-    if (fs.existsSync(jsFilePath)) {
-      fs.unlinkSync(jsFilePath);
     }
   }
 }
@@ -519,5 +530,8 @@ process.on('SIGTERM', () => {
 });
 
 if (require.main === module) {
-  runTypeScriptVersion();
+  main().catch(error => {
+    console.error('Unhandled error:', error);
+    process.exit(1);
+  });
 }
