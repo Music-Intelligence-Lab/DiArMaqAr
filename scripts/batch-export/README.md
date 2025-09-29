@@ -1,28 +1,6 @@
 # Digital Arabic Maqām Archive - Batch Export CLI
 
-This script allows b### Complete Export (with modulations)
-```bash
-# Export with full modulation analysis (~3MB, recommended for research)
-node scripts/batch-export/batch-export.js \
-  --tuning-system "IbnSīnā-(1037)" \
-  --starting-note "all" \
-  --include-ajnas-details \
-  --include-maqamat-details \
-  --include-maqamat-modulations \
-  --include-ajnas-modulations \
-  --include-modulations-8vb
-```
-
-### Export with Octave Shift Modulations (8vb)
-```bash
-# Export with lower octave modulations for advanced analysis
-node scripts/batch-export/batch-export.js \
-  --tuning-system "Al-Farabi-(950g)" \
-  --starting-note "yegāh" \
-  --include-maqamat-details \
-  --include-maqamat-modulations \
-  --include-modulations-8vb
-``` of tuning system data in JSON format from the command line, providing the same comprehensive data structure as the web export modal.
+This script allows batch export of tuning system data in JSON format from the command line, providing the same comprehensive data structure as the web export modal.
 
 ## Quick Start
 
@@ -77,7 +55,7 @@ node batch-export.js [options]
 ```bash
 # Export only tuning system data and pitch classes (~100KB)
 node scripts/batch-export/batch-export.js \
-  --tuning-system "Al-Farabi-(950g)" \
+  --tuning-system "al-Kindi-(874)" \
   --starting-note "yegāh"
 ```
 
@@ -85,7 +63,7 @@ node scripts/batch-export/batch-export.js \
 ```bash
 # Export with ajnas and maqamat data (~2MB)
 node scripts/batch-export/batch-export.js \
-  --tuning-system "Al-Farabi-(950g)" \
+  --tuning-system "al-Kindi-(874)" \
   --starting-note "yegāh" \
   --include-ajnas-details \
   --include-maqamat-details
@@ -95,7 +73,7 @@ node scripts/batch-export/batch-export.js \
 ```bash
 # Export with full modulation analysis (~3MB, recommended for research)
 node scripts/batch-export/batch-export.js \
-  --tuning-system "IbnSīnā-(1037)" \
+  --tuning-system "Ronzevalle-(1904)" \
   --starting-note "all" \
   --include-ajnas-details \
   --include-maqamat-details \
@@ -103,11 +81,22 @@ node scripts/batch-export/batch-export.js \
   --include-ajnas-modulations
 ```
 
+### Export with Octave Shift Modulations (8vb)
+```bash
+# Export with lower octave modulations for advanced analysis
+node scripts/batch-export/batch-export.js \
+  --tuning-system "al-Kindi-(874)" \
+  --starting-note "yegāh" \
+  --include-maqamat-details \
+  --include-maqamat-modulations \
+  --include-modulations-8vb
+```
+
 ### Batch Exports
 ```bash
 # Export all starting notes for one tuning system
 node scripts/batch-export/batch-export.js \
-  --tuning-system "Al-Farabi-(950g)" \
+  --tuning-system "al-Kindi-(874)" \
   --starting-note "all"
 
 # Export ALL tuning systems with ALL starting notes (many files!)
@@ -126,35 +115,44 @@ node scripts/batch-export/batch-export.js \
   --include-modulations-8vb
 ```
 
-
 ### Custom Output Directory
 ```bash
 node scripts/batch-export/batch-export.js \
-  --tuning-system "Al-Farabi-(950g)" \
+  --tuning-system "al-Kindi-(874)" \
   --starting-note "yegāh" \
   --output-dir "./my-exports"
 ```
+
+## Memory Optimization
+
+The script automatically optimizes memory usage:
+
+- **Automatic memory management**: Sets Node.js memory limit to 4GB
+- **Garbage collection**: Forces cleanup between exports to prevent memory buildup
+- **Progress-aware allocation**: Uses more memory for modulation processing when needed
+
+For very large batch exports, the script handles memory efficiently without requiring manual intervention.
 
 ## Output Files
 
 Files are named with the pattern:
 ```
-{TuningSystemID}_{StartingNote}_{Date}_{Options}.json
+{TuningSystemID}_{StartingNote}_{Date}_{Time}_{Options}.json
 ```
 
 **Filenames are sanitized** - diacritics and non-standard characters are normalized for filesystem compatibility.
 
 Examples:
-- Basic: `Al-Farabi-(950g)_yegah_2025-09-24.json`
-- With data: `Al-Farabi-(950g)_yegah_2025-09-24_ajnas_maqamat.json`
-- Complete: `Al-Farabi-(950g)_yegah_2025-09-24_ajnas_maqamat_maqamat-mod_ajnas-mod.json`
+- Basic: `al-Kindi-(874)_yegah_2025-09-29_12-15-30.json`
+- With data: `al-Kindi-(874)_yegah_2025-09-29_12-15-30_ajnas_maqamat.json`
+- Complete: `al-Kindi-(874)_yegah_2025-09-29_12-15-30_ajnas_maqamat_maqamat-mod_ajnas-mod.json`
 
 **Batch exports** (using `--tuning-system "all"`) are organized in timestamped folders:
 ```
-exports/batch_all_systems_2025-09-24/
-├── Al-Farabi-(950g)_ushayran_2025-09-24.json
-├── Al-Farabi-(950g)_yegah_2025-09-24.json
-├── Al-Sabbagh-1950_rast_2025-09-24.json
+exports/batch_all_systems_2025-09-29/
+├── Ronzevalle-(1904)_ushayran_2025-09-29_12-15-30.json
+├── Ronzevalle-(1904)_yegah_2025-09-29_12-15-30.json
+├── al-Kindi-(874)_ushayran_2025-09-29_12-15-30.json
 └── ... (hundreds of files)
 ```
 
@@ -193,6 +191,23 @@ When `--include-modulations-8vb` is used, maqamat export data includes additiona
 - All octave shift properties use the "8vb" suffix (musical notation for "octave below")
 - This provides transposed modulation data shifted down one octave (-1 octave shift)
 
+## Progress Tracking
+
+The script provides detailed progress tracking with improved accuracy:
+
+### Progress Distribution
+- **Without modulations**: 1-9% setup, 10-40% ajnas, 50-75% maqamat, 90-98% finalization
+- **With modulations**: 1-9% setup, 10-30% ajnas, 45-85% maqamat, 90-98% finalization
+
+### Progress Information Includes
+- System-by-system progress (`[2/32] Processing: al-Kindi-(874)`)
+- Individual export progress (`(5/156) [2/3] → yegāh`)
+- Real-time processing steps (`Processing maqam 15/41... (85%)`)
+- Export statistics (pitch classes, ajnas, maqamat counts)
+- Modulation counts when enabled
+- Overall completion percentage
+- Remaining items countdown
+
 ## File Sizes
 
 - Basic export (tuning system only): ~100KB
@@ -202,7 +217,9 @@ When `--include-modulations-8vb` is used, maqamat export data includes additiona
 
 ## Requirements
 
-The script automatically installs `tsx` if needed to run TypeScript code.
+The script automatically installs and manages dependencies:
+- **tsx**: TypeScript execution (installed automatically)
+- **Node.js**: Version 18+ recommended for optimal memory handling
 
 ## Troubleshooting
 
@@ -215,13 +232,58 @@ node scripts/batch-export/batch-export.js --list-tuning-systems
 **Starting note not available:**
 Each tuning system has specific starting notes. Use `--list-tuning-systems` to see available combinations.
 
-**Large exports:**
-Modulation calculations can take several minutes for complex tuning systems. Progress is shown during export.
+**Large exports taking too long:**
+- Modulation calculations can take several minutes for complex tuning systems
+- Progress is shown during export with improved accuracy
+- Memory is automatically optimized to prevent crashes
+- Consider exporting single systems first before attempting full batch exports
 
-**Progress indicators:**
-The script provides detailed progress tracking including:
-- System-by-system progress (`[2/32] Processing: Al-Farabi-(950g)`)
-- Individual export progress (`(5/156) [2/3] → yegāh`)
-- Export statistics (pitch classes, ajnas, maqamat counts)
-- Overall completion percentage
-- Remaining items countdown
+**Memory issues:**
+The script now automatically handles memory optimization, but for very large exports:
+- Use smaller batch sizes by exporting one tuning system at a time
+- Disable modulations (`--include-maqamat-modulations` and `--include-ajnas-modulations`) for faster exports
+- Monitor progress to see which processing step is taking the most time
+
+## Performance Tips
+
+1. **Start small**: Test with a single tuning system before batch exports
+2. **Use modulations selectively**: They significantly increase processing time and file size
+3. **Monitor progress**: The improved progress bars show exactly what's happening
+4. **Batch organization**: Full batch exports create timestamped folders to organize hundreds of files
+
+
+
+
+ Ishaqal-Mawsili-(850)
+  al-Kindi-(874)
+  IbnMunajjim-(912)
+  al-Farabi-(950a)
+  al-Farabi-(950b)
+  al-Farabii-(950c)
+  al-Farabi-(950d)
+  al-Farabi-(950e)
+  al-Farabi-(950f)
+  al-Farabi-(950g)
+  al-Farabi-(950h)
+  al-Farabi-(950i)
+  IbnSina-(1037)
+  al-Urmawi-(1294a)
+  al-Urmawi-(1294b)
+  al-Ladhiqi-(1495)
+  Anglo-European-(1700)
+  Anglo-European-(1800)
+  Meshshaqa-(1899)
+  Ronzevalle-(1904)
+  al-KhuliandRagheb-(1904)
+  al-Dik-(1926a)
+  al-Dik-(1926b)
+  CairoCongressTuningCommittee-(1929)
+  CairoCongressTuningCommittee-(1932a)
+  CairoCongressTuningCommittee-(1932b)
+  MashrafaandMukhtar-(1944)
+  al-Sabbagh-(1950)
+  al-Sabbagh-(1954)
+  al-Laythi-(1965)
+  Allami-(2022)
+  Allami-(2024)
+  Allami-(2025)
