@@ -539,9 +539,9 @@ const SettingsCard = () => {
           <button
             onClick={resetToDefaults}
             className="settings-card__reset-button"
-            title={t('settings.resetToDefaults')}
+            title={t('settings.resetEnvelope')}
           >
-            {t('settings.resetToDefaults')}
+            {t('settings.resetEnvelope')}
           </button>
         </div>
       </div>
