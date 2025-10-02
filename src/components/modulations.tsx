@@ -334,9 +334,15 @@ export default function Modulations() {
                   displayAscendingNoteNames = sourceMaqam.ascendingPitchClasses.map(getShiftedNoteName);
                   displayDescendingNoteNames = sourceMaqam.descendingPitchClasses.map(getShiftedNoteName).reverse();
                   
-                  // For noteName2p, we keep the original since it comes from the modulation calculation
-                  // and may not correspond directly to a specific pitch class index
-                  displayNoteName2p = noteName2p;
+                  // For noteName2p, we need to shift it as well to match other note names
+                  // Find the pitch class that matches noteName2p and shift it
+                  const noteName2pPitchClass = allPitchClasses.find(pc => pc.noteName === noteName2p);
+                  if (noteName2pPitchClass) {
+                    const shiftedNoteName2p = shiftPitchClass(allPitchClasses, noteName2pPitchClass, -1);
+                    displayNoteName2p = shiftedNoteName2p.noteName === "" ? "Octave Shift is beyond tuning system range" : shiftedNoteName2p.noteName;
+                  } else {
+                    displayNoteName2p = noteName2p;
+                  }
                 }
                 
                 return (

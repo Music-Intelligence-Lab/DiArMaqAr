@@ -125,6 +125,39 @@ const SettingsCard = () => {
     if (!isNaN(val)) setSoundSettings((prev) => ({ ...prev, pitchBendRange: val }));
   };
 
+  const resetToDefaults = () => {
+    // Find the default pattern
+    const defaultPattern = patterns.find((p) => p.getName() === "Default") || null;
+    
+    // Reset all sound settings to their default values
+    setSoundSettings({
+      attack: 0.01,
+      decay: 0.2,
+      sustain: 0.5,
+      release: 0.4,
+      waveform: "triangle",
+      volume: 0.75,
+      duration: 0.1,
+      tempo: 150,
+      pitchBendRange: 2,
+      inputType: "QWERTY",
+      inputMode: "selection",
+      selectedMidiInputId: null,
+      outputMode: "waveform",
+      selectedMidiOutputId: null,
+      selectedPattern: defaultPattern,
+      drone: true,
+      droneVolume: 0.3,
+      useMPE: false,
+    });
+
+    // Reset original pitch bend value
+    setOriginalPitchBend(2);
+    
+    // Clear any hanging notes
+    clearHangingNotes();
+  };
+
   // The settings card content to be portaled
   const settingsContent = (
     <div
@@ -136,7 +169,6 @@ const SettingsCard = () => {
       tabIndex={-1}
     >
       <div className="settings-card__content">
-        {/* ...existing content... */}
         <details className="settings-card__details">
           <summary className="settings-card__summary">{t('settings.pattern')}</summary>
           <div className="settings-card__input-container">
@@ -520,6 +552,17 @@ const SettingsCard = () => {
             </>
           )}
         </details>
+
+        {/* Reset Button */}
+        <div className="settings-card__reset-container">
+          <button
+            onClick={resetToDefaults}
+            className="settings-card__reset-button"
+            title={t('settings.resetToDefaults')}
+          >
+            {t('settings.resetToDefaults')}
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -78,7 +78,7 @@ export default function FrequencyKnob({
   const dynamicMax = originalFrequency !== null ? originalFrequency * 2 : 440; // Default fallback
   
   // Ensure value is within bounds
-  const clampedValue = Math.max(dynamicMin, Math.min(dynamicMax, localValue || 220));
+  const clampedValue = Math.max(dynamicMin, Math.min(dynamicMax, localValue || 110));
   
   // Calculate normalized value for visual representation using logarithmic scaling
   // This provides better musical perception since frequency perception is logarithmic

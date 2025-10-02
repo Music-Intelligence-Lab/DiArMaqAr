@@ -1,9 +1,6 @@
 "use client";
 
 import React from "react";
-import "../app/globals.scss";
-import "../styles/landing-page.scss";
-import "../styles/footer.scss";
 import LanguageSelector from "@/components/language-selector";
 import useLanguageContext from "@/contexts/language-context";
 import Footer from "@/components/footer";
@@ -38,6 +35,9 @@ export default function LandingPage() {
           </a>
           <a className="button" href="/docs/index.html">
             {language === "ar" ? "اطّلعوا على التوثيق" : "Access the Documentation"}
+          </a>
+          <a className="button" href="/api-test">
+            {language === "ar" ? "اختبروا واجهة برمجة التطبيقات" : "Test the API"}
           </a>
 
           <a className="button" href="https://github.com/Music-Intelligence-Lab/arabic-maqam-network">

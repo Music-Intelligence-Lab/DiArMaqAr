@@ -99,6 +99,7 @@ const translations = {
     "settings.aperiodic": "Aperiodic",
     "settings.mute": "Mute",
     "settings.waveformMode": "Waveform",
+    "settings.resetToDefaults": "Reset to Defaults",
 
     // Language selector
     "language.english": "English",
@@ -411,6 +412,7 @@ const translations = {
     "settings.aperiodic": "غير دوري",
     "settings.mute": "كتم الصوت",
     "settings.waveformMode": "شكل الموجة",
+    "settings.resetToDefaults": "إعادة تعيين للافتراضي",
 
     // Language selector
     "language.english": "English",
