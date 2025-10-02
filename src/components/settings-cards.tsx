@@ -126,33 +126,14 @@ const SettingsCard = () => {
   };
 
   const resetToDefaults = () => {
-    // Find the default pattern
-    const defaultPattern = patterns.find((p) => p.getName() === "Default") || null;
-    
-    // Reset all sound settings to their default values
-    setSoundSettings({
+    // Reset only envelope settings to their default values
+    setSoundSettings((prev) => ({
+      ...prev,
       attack: 0.01,
       decay: 0.2,
       sustain: 0.5,
       release: 0.4,
-      waveform: "triangle",
-      volume: 0.75,
-      duration: 0.1,
-      tempo: 150,
-      pitchBendRange: 2,
-      inputType: "QWERTY",
-      inputMode: "selection",
-      selectedMidiInputId: null,
-      outputMode: "waveform",
-      selectedMidiOutputId: null,
-      selectedPattern: defaultPattern,
-      drone: true,
-      droneVolume: 0.3,
-      useMPE: false,
-    });
-
-    // Reset original pitch bend value
-    setOriginalPitchBend(2);
+    }));
     
     // Clear any hanging notes
     clearHangingNotes();
