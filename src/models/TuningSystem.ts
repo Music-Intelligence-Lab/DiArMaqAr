@@ -67,7 +67,7 @@ export default class TuningSystem {
   private noteNameSets: NoteName[][];
   
   /** 
-   * Default reference frequency in Hz (e.g., 440 for A4, 220 for ʿushayrān).
+   * Default reference frequency in Hz (e.g., 440 for A4, 110 for ʿushayrān).
    * This converts mathematical ratios into actual audible frequencies.
    */
   private defaultReferenceFrequency: number;
@@ -305,7 +305,7 @@ export default class TuningSystem {
    * Gets the default reference frequency for the tuning system.
    * 
    * This is the primary frequency anchor (e.g., 440 Hz for A4 in Western music,
-   * or 220 Hz for ʿushayrān in Al-Kindī's system) used to convert mathematical
+   * or 110 Hz for ʿushayrān in Al-Kindī's system) used to convert mathematical
    * ratios into actual audible frequencies.
    * 
    * @returns Default reference frequency in Hz

@@ -171,8 +171,9 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       setDefaultReferenceFrequency(selectedTuningSystem.getDefaultReferenceFrequency());
 
       const defaultFreqs = selectedTuningSystem.getReferenceFrequencies();
-      // Only set reference frequencies if this is a different tuning system
-      // or if referenceFrequencies is empty (first mount)
+      // Set reference frequencies if:
+      // 1. referenceFrequencies is empty (first mount or after deselection)
+      // 2. This is a different tuning system (originalReferenceFrequencies changed)
       if (Object.keys(referenceFrequencies).length === 0 || JSON.stringify(defaultFreqs) !== JSON.stringify(originalReferenceFrequencies)) {
         setReferenceFrequencies(defaultFreqs);
         setOriginalReferenceFrequencies(defaultFreqs);
@@ -900,7 +901,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                         ) : (
                           <FrequencyKnob
                             key={`${selectedTuningSystem?.getId()}-${startingNote}`}
-                            value={referenceFrequencies[startingNote] ?? 220}
+                            value={referenceFrequencies[startingNote] ?? 110}
                             onChange={(val, shouldRecalculate) => {
                               handleReferenceFrequencyChange(startingNote, val, shouldRecalculate);
                             }}
@@ -940,7 +941,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                     ) : (
                       <FrequencyKnob
                         key={`${selectedTuningSystem?.getId()}-${getFirstNoteName(selectedIndices)}`}
-                        value={referenceFrequencies[getFirstNoteName(selectedIndices)] ?? 220}
+                        value={referenceFrequencies[getFirstNoteName(selectedIndices)] ?? 110}
                         onChange={(val, shouldRecalculate) => {
                           handleReferenceFrequencyChange(getFirstNoteName(selectedIndices), val, shouldRecalculate);
                         }}
