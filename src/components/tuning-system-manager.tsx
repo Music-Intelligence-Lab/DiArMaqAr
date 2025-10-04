@@ -378,7 +378,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     ts: TuningSystem,
     noteName: NoteName = ""
   ) => {
-    clearSelections();
+    console.log(ts, noteName);
     setSelectedTuningSystem(ts);
     handleStartNoteNameChange(
       noteName,
@@ -1085,9 +1085,9 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                       // by temporarily assuming no selections (since handleTuningSystemClick will clear them)
                       const { noteName } = isTuningSystemDisabled(
                         tuningSystem,
-                        null,
-                        null,
-                        null
+                        selectedJinsData,
+                        selectedMaqamData,
+                        selectedMaqam
                       );
                       handleTuningSystemClick(tuningSystem, noteName);
                     }
