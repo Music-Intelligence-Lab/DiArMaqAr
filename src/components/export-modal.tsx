@@ -47,6 +47,8 @@ export interface ExportOptions {
   includeTranspositions?: boolean; // For jins and maqam exports
   includeMaqamToMaqamModulations: boolean;
   includeMaqamToJinsModulations: boolean;
+  includeModulations8vb: boolean; // Lower Octave modulations
+  exportSeparateFilesPerStartingNote?: boolean; // Only for tuning system exports
   csvDelimiter: "," | ";" | "\t";
   filename: string;
 }
@@ -76,6 +78,7 @@ export default function ExportModal({
       includePitchClasses: true, // Always true by default
       includeMaqamToMaqamModulations: false,
       includeMaqamToJinsModulations: false,
+      includeModulations8vb: false, // Lower Octave modulations
       csvDelimiter: "," as "," | ";" | "\t",
       filename: "", // Will be set by useEffect
     };
@@ -85,6 +88,7 @@ export default function ExportModal({
         ...baseOptions,
         includeAjnasDetails: true,
         includeMaqamatDetails: true,
+        exportSeparateFilesPerStartingNote: false,
       };
     } else {
       return {
@@ -127,6 +131,12 @@ export default function ExportModal({
       if (opts.includeMaqamToJinsModulations) {
         parts.push("ajnās-modulations");
       }
+      if (opts.includeModulations8vb) {
+        parts.push("lower-octave");
+      }
+      if (opts.exportSeparateFilesPerStartingNote) {
+        parts.push("all-starting-notes");
+      }
     } else if (exportType === "jins") {
       // For jins: use jins name instead of ID
       if (specificJins) {
@@ -144,6 +154,9 @@ export default function ExportModal({
       // Add included options
       if (opts.includeTranspositions) {
         parts.push("transpositions");
+      }
+      if (opts.includeModulations8vb) {
+        parts.push("lower-octave");
       }
     } else if (exportType === "maqam") {
       // For maqam: use maqam name instead of ID
@@ -169,6 +182,9 @@ export default function ExportModal({
       if (opts.includeMaqamToJinsModulations) {
         parts.push("ajnās-modulations");
       }
+      if (opts.includeModulations8vb) {
+        parts.push("lower-octave");
+      }
     }
 
     return parts.join("_");
@@ -191,6 +207,8 @@ export default function ExportModal({
     exportOptions.includeTranspositions,
     exportOptions.includeMaqamToMaqamModulations,
     exportOptions.includeMaqamToJinsModulations,
+    exportOptions.includeModulations8vb,
+    exportOptions.exportSeparateFilesPerStartingNote,
     exportOptions.includeTuningSystemDetails,
   ]);
 
@@ -223,7 +241,8 @@ export default function ExportModal({
     if (exportType === "tuning-system") {
       if (
         exportOptions.includeAjnasDetails ||
-        exportOptions.includeMaqamatDetails
+        exportOptions.includeMaqamatDetails ||
+        exportOptions.exportSeparateFilesPerStartingNote
       ) {
         return true;
       }
@@ -240,7 +259,8 @@ export default function ExportModal({
     // Check modulation options
     if (
       exportOptions.includeMaqamToMaqamModulations ||
-      exportOptions.includeMaqamToJinsModulations
+      exportOptions.includeMaqamToJinsModulations ||
+      exportOptions.includeModulations8vb
     ) {
       return true;
     }
@@ -258,6 +278,83 @@ export default function ExportModal({
     }));
   };
 
+  // Handle separate files export for tuning systems
+  const handleSeparateFilesExport = async (updateProgress: (percentage: number, step: string) => void) => {
+    if (!selectedTuningSystem) return;
+
+    // Get all available starting notes
+    const noteNameSets = selectedTuningSystem.getNoteNameSets();
+    const startingNotes = noteNameSets.map(set => set[0]);
+
+    // Safety check for large number of files
+    if (startingNotes.length > 50) {
+      const confirmed = window.confirm(
+        `This will export ${startingNotes.length} files. This may take a while and use significant bandwidth. Continue?`
+      );
+      if (!confirmed) {
+        setExportProgress({ percentage: 0, currentStep: "", isVisible: false });
+        return;
+      }
+    }
+
+    updateProgress(5, `Preparing to export ${startingNotes.length} files...`);
+    
+    const exports: Array<{ filename: string; data: any }> = [];
+    const baseFilename = exportOptions.filename.replace(/_all-starting-notes$/, '');
+    let successCount = 0;
+
+    for (let i = 0; i < startingNotes.length; i++) {
+      const startingNote = startingNotes[i];
+      const progress = 10 + (i / startingNotes.length) * 80; // Progress from 10% to 90%
+      
+      updateProgress(progress, `Exporting ${startingNote} (${i + 1}/${startingNotes.length})...`);
+
+      try {
+        const exportedData = await exportTuningSystem(
+          selectedTuningSystem,
+          startingNote,
+          {
+            includeTuningSystemDetails: exportOptions.includeTuningSystemDetails,
+            includePitchClasses: exportOptions.includePitchClasses,
+            includeAjnasDetails: exportOptions.includeAjnasDetails || false,
+            includeMaqamatDetails: exportOptions.includeMaqamatDetails || false,
+            includeMaqamToMaqamModulations: exportOptions.includeMaqamToMaqamModulations,
+            includeMaqamToJinsModulations: exportOptions.includeMaqamToJinsModulations,
+            includeModulations8vb: exportOptions.includeModulations8vb,
+            progressCallback: () => {}, // Disable inner progress for batch export
+          }
+        );
+
+        const filename = `${baseFilename}_(${startingNote})`;
+        exports.push({ filename, data: exportedData });
+        successCount++;
+      } catch (error) {
+        console.error(`Failed to export ${startingNote}:`, error);
+        // Continue with other exports
+      }
+
+      // Check for cancellation
+      if (isCancelledRef.current) {
+        throw new Error("Export cancelled by user");
+      }
+    }
+
+    updateProgress(95, "Preparing downloads...");
+
+    // Download all files
+    for (const exportItem of exports) {
+      await downloadFile(exportItem.data, { ...exportOptions, filename: exportItem.filename }, () => {});
+    }
+
+    updateProgress(100, `Successfully exported ${successCount}/${startingNotes.length} files!`);
+
+    // Brief delay to show completion before closing
+    setTimeout(() => {
+      setExportProgress({ percentage: 0, currentStep: "", isVisible: false });
+      onClose();
+    }, 1500);
+  };
+
   const formatDescriptions = {
     json: "JavaScript Object Notation - Best for data interchange and web applications",
     csv: "Comma Separated Values - Great for spreadsheets and data analysis",
@@ -271,8 +368,13 @@ export default function ExportModal({
   const handleExport = async () => {
     // Validation based on export type
     if (exportType === "tuning-system") {
-      if (!selectedTuningSystem || selectedIndices.length === 0) {
+      if (!selectedTuningSystem) {
         alert("Please select a tuning system first");
+        return;
+      }
+      // For separate files export, we don't need selectedIndices to be set
+      if (!exportOptions.exportSeparateFilesPerStartingNote && selectedIndices.length === 0) {
+        alert("Please select a starting note first");
         return;
       }
     } else if (exportType === "jins") {
@@ -478,6 +580,12 @@ export default function ExportModal({
     };
 
     try {
+      // Handle separate files export for tuning systems
+      if (exportType === "tuning-system" && exportOptions.exportSeparateFilesPerStartingNote) {
+        await handleSeparateFilesExport(updateProgress);
+        return;
+      }
+
       const startingNote = getFirstNoteName(selectedIndices);
       let exportedData: any;
 
@@ -511,7 +619,7 @@ export default function ExportModal({
             includeMaqamatDetails: exportOptions.includeMaqamatDetails || false,
             includeMaqamToMaqamModulations: exportOptions.includeMaqamToMaqamModulations,
             includeMaqamToJinsModulations: exportOptions.includeMaqamToJinsModulations,
-            includeModulations8vb: false, // TODO: Add UI control for this option
+            includeModulations8vb: exportOptions.includeModulations8vb,
             progressCallback: updateProgress,
           }
         );
@@ -540,7 +648,7 @@ export default function ExportModal({
             includeTranspositions: exportOptions.includeTranspositions || false,
             includeMaqamToMaqamModulations: exportOptions.includeMaqamToMaqamModulations,
             includeMaqamToJinsModulations: exportOptions.includeMaqamToJinsModulations,
-            includeModulations8vb: false, // TODO: Add UI control for this option
+            includeModulations8vb: exportOptions.includeModulations8vb,
             progressCallback: updateProgress,
           }
         );
@@ -1645,9 +1753,9 @@ export default function ExportModal({
             <div className="export-modal__checkbox-group">
               {/* Tuning System data is always included by default */}
 
-              {/* Tuning System specific options */}
+              {/* Tuning System specific options - Details on same line */}
               {exportType === "tuning-system" && (
-                <>
+                <div className="export-modal__inline-options">
                   <label className="export-modal__checkbox">
                     <input
                       type="checkbox"
@@ -1681,7 +1789,7 @@ export default function ExportModal({
                     />
                     <span>Maqāmat Details</span>
                   </label>
-                </>
+                </div>
               )}
 
               {/* Jins and Maqam specific options */}
@@ -1701,11 +1809,36 @@ export default function ExportModal({
                 </label>
               )}
 
+              {/* Separate files export option - Full width */}
+              {exportType === "tuning-system" && (
+                <div className="export-modal__option-group">
+                  <label className="export-modal__checkbox">
+                    <input
+                      type="checkbox"
+                      checked={exportOptions.exportSeparateFilesPerStartingNote || false}
+                      onChange={(e) =>
+                        setExportOptions((prev) => ({
+                          ...prev,
+                          exportSeparateFilesPerStartingNote: e.target.checked,
+                        }))
+                      }
+                    />
+                    <span>Export Separate Files for Each Starting Note Name</span>
+                  </label>
+                  <div className="export-modal__option-description">
+                    {exportOptions.exportSeparateFilesPerStartingNote && selectedTuningSystem
+                      ? `Will export ${selectedTuningSystem.getNoteNameSets().length} files, one for each available starting note`
+                      : "Creates individual export files for each possible starting note in the tuning system"
+                    }
+                  </div>
+                </div>
+              )}
+
               {/* Modulations options - available for tuning system (with maqamat details) and maqam exports */}
               {((exportType === "tuning-system" &&
                 exportOptions.includeMaqamatDetails) ||
                 exportType === "maqam") && (
-                <>
+                <div className="export-modal__inline-options">
                   <label className="export-modal__checkbox">
                     <input
                       type="checkbox"
@@ -1732,7 +1865,31 @@ export default function ExportModal({
                     />
                     <span>Maqāmat Modulations</span>
                   </label>
-                </>
+                </div>
+              )}
+
+              {/* Lower octave modulations option - Full width */}
+              {((exportType === "tuning-system" &&
+                exportOptions.includeMaqamatDetails) ||
+                exportType === "maqam") && (
+                <div className="export-modal__option-group">
+                  <label className="export-modal__checkbox">
+                    <input
+                      type="checkbox"
+                      checked={exportOptions.includeModulations8vb}
+                      onChange={(e) =>
+                        setExportOptions((prev) => ({
+                          ...prev,
+                          includeModulations8vb: e.target.checked,
+                        }))
+                      }
+                    />
+                    <span>Lower Octave Maqāmat & Ajnās</span>
+                  </label>
+                  <div className="export-modal__option-description">
+                    Include modulations that use pitches in the lower octave range (8vb)
+                  </div>
+                </div>
               )}
             </div>
           </div>
@@ -1769,8 +1926,17 @@ export default function ExportModal({
                   filename: e.target.value,
                 }))
               }
-              placeholder="Enter filename (without extension)"
+              placeholder={
+                exportType === "tuning-system" && exportOptions.exportSeparateFilesPerStartingNote
+                  ? "Base filename (starting note names will be appended)"
+                  : "Enter filename (without extension)"
+              }
             />
+            {exportType === "tuning-system" && exportOptions.exportSeparateFilesPerStartingNote && (
+              <div className="export-modal__filename-example">
+                Example files: {exportOptions.filename}_(&lt;starting-note&gt;).{exportOptions.format}
+              </div>
+            )}
           </div>
         </div>
 
