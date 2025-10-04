@@ -58,7 +58,7 @@ export default function FrequencyKnob({
       setLocalValue(value);
       setLastValue(value);
     }
-  }, [value, initialValue, noteName, originalValue, setOriginalReferenceFrequencies]);
+  }, [value, initialValue, noteName, originalValue, originalReferenceFrequencies, setOriginalReferenceFrequencies]);
 
   // Keep local value in sync with prop value when not dragging and when the prop changes from external sources
   useEffect(() => {
