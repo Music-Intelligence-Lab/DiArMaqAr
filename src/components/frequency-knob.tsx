@@ -37,7 +37,9 @@ export default function FrequencyKnob({
   
   // Set initial value ONLY on first render and store original if not already stored
   useEffect(() => {
+    console.log("BEFORE CHECK")
     if (initialValue === null && value !== undefined) {
+      console.log(`[FrequencyKnob ${noteName}] Render:`, { propValue: value, originalReferenceFrequencies });
       setInitialValue(value);
       prevValueRef.current = value;
       
@@ -53,11 +55,10 @@ export default function FrequencyKnob({
         // Original value exists, check if current value is different
         setHasBeenModified(Math.abs(originalValue - value) > 0.1); // Allow small tolerance for floating point
       }
-      
-      // Always set localValue to the current prop value on mount
+    }
+    // Always set localValue to the current prop value on mount
       setLocalValue(value);
       setLastValue(value);
-    }
   }, [value, initialValue, noteName, originalValue, originalReferenceFrequencies, setOriginalReferenceFrequencies]);
 
   // Keep local value in sync with prop value when not dragging and when the prop changes from external sources
