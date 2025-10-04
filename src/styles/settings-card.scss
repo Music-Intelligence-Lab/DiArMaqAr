@@ -242,36 +242,28 @@
   }
 
   &__reset-container {
-    padding: 15px 20px 0;
+    display: flex;
+    justify-content: center;
     width: 100%;
   }
 
-  &__reset-button {
-    width: 100%;
-    padding: 10px 15px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    color: $text;
-    background-color: rgba($primary, 0.7);
-    border: 1px solid $primary;
+  &__quick-action-button {
+    padding: 6px 12px;
+    background-color: rgba($primary, 0.8);
+    color: white;
+    //border: 1px solid $grey;
     border-radius: 4px;
-
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    
     &:hover {
       background-color: $primary;
-      border-color: $secondary;
-      box-shadow: 0 2px 8px rgba($primary, 0.3);
     }
-
+    
     &:active {
-      background-color: $secondary;
       transform: translateY(1px);
-    }
-
-    &:focus {
-      outline: 2px solid $secondary;
-      outline-offset: 2px;
     }
   }
 }

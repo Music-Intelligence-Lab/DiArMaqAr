@@ -390,6 +390,17 @@ const SettingsCard = () => {
               valueLabelDisplay="off"
             />
           </div>
+
+          {/* Reset Button */}
+        <div className="settings-card__reset-container">
+          <button
+            onClick={resetToDefaults}
+            className="settings-card__quick-action-button"
+            title={t('settings.resetEnvelope')}
+          >
+            {t('settings.resetEnvelope')}
+          </button>
+        </div>
         </details>
 
         <details className="settings-card__details">
@@ -533,17 +544,6 @@ const SettingsCard = () => {
             </>
           )}
         </details>
-
-        {/* Reset Button */}
-        <div className="settings-card__reset-container">
-          <button
-            onClick={resetToDefaults}
-            className="settings-card__reset-button"
-            title={t('settings.resetEnvelope')}
-          >
-            {t('settings.resetEnvelope')}
-          </button>
-        </div>
       </div>
     </div>
   );
