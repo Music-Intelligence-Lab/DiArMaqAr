@@ -37,9 +37,7 @@ export default function FrequencyKnob({
   
   // Set initial value ONLY on first render and store original if not already stored
   useEffect(() => {
-    console.log("BEFORE CHECK")
     if (initialValue === null && value !== undefined) {
-      console.log(`[FrequencyKnob ${noteName}] Render:`, { propValue: value, originalReferenceFrequencies });
       setInitialValue(value);
       prevValueRef.current = value;
       

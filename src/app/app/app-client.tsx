@@ -249,7 +249,6 @@ export default function AppClient() {
         const parsedSayrParameter = parseSayrParameter(sayrParam, maqamData);
 
         for (const sayr of maqamData.getSuyūr()) {
-          console.log(createSayrParameter(sayr.id, maqamData), parsedSayrParameter);
           if (createSayrParameter(sayr.id, maqamData) === parsedSayrParameter) {
             sayrId = sayr.id;
             break;

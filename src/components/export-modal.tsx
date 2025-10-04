@@ -608,7 +608,6 @@ export default function ExportModal({
       case "json":
         updateProgress(97.5, "Serializing to JSON...");
         await new Promise((resolve) => setTimeout(resolve, 50));
-        console.log("Exported JSON data:", data); // For debugging
         content = JSON.stringify(data, null, 2);
         mimeType = "application/json";
         fileExtension = "json";
