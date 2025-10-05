@@ -806,8 +806,8 @@
 
   &__filter-menu {
     gap: 10px;
-    height: 100%;
-    margin: 0 10px;
+    margin: 0 0px;
+    float: right;
   }
 
   &__filter-item {

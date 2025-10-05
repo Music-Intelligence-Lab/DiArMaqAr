@@ -20,7 +20,7 @@ export default function JinsTranspositions() {
   // Configurable constants (extracted magic numbers for easier tuning)
   const DISPATCH_EVENT_DELAY_MS = 10; // delay before emitting custom event
   const SCROLL_TIMEOUT_MS = 60; // delay before performing scroll after event
-  const URL_SCROLL_TIMEOUT_MS = 220; // delay for initial scroll from URL param
+  const URL_SCROLL_TIMEOUT_MS = 220; // delay for initial scroll from URL param (increased to wait for comments to render)
   const HEADER_SCROLL_MARGIN_TOP_PX = 170; // scroll margin top for first headers
   const INTERSECTION_ROOT_MARGIN = "200px 0px 0px 0px"; // observer root margin
   const BATCH_SIZE = 10; // batch size for lazy loading
@@ -390,6 +390,30 @@ export default function JinsTranspositions() {
     [filters, getDisplayName, getEnglishNoteName, t, allPitchClasses, language]
   );
 
+  // Create a unified list of all tables (analysis + transpositions) sorted by tonic pitch class
+  const sortedTables = useMemo(() => {
+    if (!jinsTranspositions || jinsTranspositions.length === 0) return [];
+    
+    // Map each jins to include its sorting info
+    const tablesWithSortInfo = jinsTranspositions.map((jins, originalIndex) => {
+      const firstPitchClass = jins.jinsPitchClasses[0];
+      const isAnalysis = !jins.transposition; // First item is analysis (no transposition flag)
+      
+      return {
+        jins,
+        originalIndex,
+        isAnalysis,
+        sortKey: parseFloat(firstPitchClass?.cents || '0'), // Sort by cents value of first pitch class
+        firstNoteName: firstPitchClass?.noteName || '',
+      };
+    });
+    
+    // Sort by cents value (tonic pitch class)
+    tablesWithSortInfo.sort((a, b) => a.sortKey - b.sortKey);
+    
+    return tablesWithSortInfo;
+  }, [jinsTranspositions]);
+
   useEffect(() => {
     setVisibleCount(BATCH_SIZE);
     // Always open tahlil (first element) on load
@@ -401,13 +425,13 @@ export default function JinsTranspositions() {
 
   // Auto-open and scroll to selected transposition
   useEffect(() => {
-    if (jinsTranspositions && jinsTranspositions.length > 0) {
+    if (sortedTables && sortedTables.length > 0) {
       if (selectedJins) {
         // Case 1: A specific jins is selected
         const selectedTranspositionName = selectedJins.name;
 
-        // Find the transposition in the list
-        const transpositionIndex = jinsTranspositions.findIndex((j) => j.name === selectedTranspositionName);
+        // Find the transposition in the sorted list
+        const transpositionIndex = sortedTables.findIndex((t) => t.jins.name === selectedTranspositionName);
 
         // Auto-open the transposition
         setOpenTranspositions([selectedTranspositionName]);
@@ -425,23 +449,27 @@ export default function JinsTranspositions() {
         }, URL_SCROLL_TIMEOUT_MS);
       } else {
         // Case 2: No jins is selected (tahlil case)
-        // Open the tahlil (first element)
-        const tahlilName = jinsTranspositions[0].name;
-        setOpenTranspositions([tahlilName]);
+        // Find and open the analysis table (where transposition is falsy)
+        const analysisTable = sortedTables.find((t) => !t.jins.transposition);
+        if (analysisTable) {
+          const analysisIndex = sortedTables.findIndex((t) => !t.jins.transposition);
+          setOpenTranspositions([analysisTable.jins.name]);
 
-        // Ensure first batch is visible
-        setVisibleCount(BATCH_SIZE);
+          // Ensure first batch is visible (or enough to include the analysis table)
+          const needed = Math.max(BATCH_SIZE, analysisIndex + 1);
+          setVisibleCount((prev) => (needed > prev ? Math.ceil(needed / BATCH_SIZE) * BATCH_SIZE : prev));
 
-        // Scroll to tahlil
-        setTimeout(() => {
-          if (jinsTranspositions[0].jinsPitchClasses?.length > 0) {
-            const firstNote = jinsTranspositions[0].jinsPitchClasses[0].noteName;
-            scrollToJinsHeader(firstNote, selectedJinsData);
-          }
-        }, URL_SCROLL_TIMEOUT_MS);
+          // Scroll to analysis table
+          setTimeout(() => {
+            if (analysisTable.jins.jinsPitchClasses?.length > 0) {
+              const firstNote = analysisTable.jins.jinsPitchClasses[0].noteName;
+              scrollToJinsHeader(firstNote, selectedJinsData);
+            }
+          }, URL_SCROLL_TIMEOUT_MS);
+        }
       }
     }
-  }, [selectedJins, jinsTranspositions, selectedJinsData]);
+  }, [selectedJins, sortedTables, selectedJinsData]);
 
   useEffect(() => {
     if (!sentinelRef.current) return;
@@ -451,7 +479,7 @@ export default function JinsTranspositions() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setVisibleCount((prev) => {
-              const remaining = Math.max(0, jinsTranspositions.length - 1 - prev);
+              const remaining = Math.max(0, sortedTables.length - prev);
               if (remaining === 0) return prev;
               return prev + Math.min(BATCH_SIZE, remaining);
             });
@@ -462,7 +490,7 @@ export default function JinsTranspositions() {
     );
     observer.observe(sentinelRef.current);
     return () => observer.disconnect();
-  }, [jinsTranspositions, visibleCount]);
+  }, [sortedTables, visibleCount]);
 
   const transpositionTables = useMemo(() => {
     if (!selectedJinsData || !selectedTuningSystem) return null;
@@ -498,16 +526,25 @@ export default function JinsTranspositions() {
             <td className="jins-transpositions__jins-name-row" colSpan={2 + (pitchClasses.length - 1) * 2}>
               {!transposition ? (
                 <span className="jins-transpositions__transposition-title" onClick={(e) => toggleShowDetails(jins.name, e, false)} style={{ cursor: "pointer" }}>
-                  {t("jins.darajatAlIstiqrar")}: {getDisplayName(pitchClasses[0].noteName, "note") + ` (${getEnglishNoteName(pitchClasses[0].noteName)})`}
+                  <span>
+                    {getDisplayName(jins.name, 'jins')}
+                    {" "}
+                    ({getDisplayName(pitchClasses[0].noteName, "note")} / <span dir="ltr">{getEnglishNoteName(pitchClasses[0].noteName)}</span>)
+                  </span>
+                  <span className="jins-transpositions__darajat-al-istiqrar">
+                    {t("jins.darajatAlIstiqrar")}
+                  </span>
                 </span>
               ) : (
                 <span
                   className="jins-transpositions__transposition-title"
                   onClick={(e) => toggleShowDetails(jins.name, e, true)}
                 >
-                  {`${getDisplayName(jins.name, "jins")}`}{" "}
+                  <span>
+                    {`${getDisplayName(jins.name, "jins")}`}{" "}
                     <span style={{ cursor: "pointer" }} dir="ltr">
-                    {`(${getEnglishNoteName(pitchClasses[0].noteName)})`}
+                      {`(${getEnglishNoteName(pitchClasses[0].noteName)})`}
+                    </span>
                   </span>
                 </span>
               )}
@@ -895,20 +932,60 @@ export default function JinsTranspositions() {
               })}
             </span>
           </h2>
-          <table className="jins-transpositions__table">
-            {(() => {
-              // compute columns for the analysis table (index 0)
-              const pcCount = jinsTranspositions[0].jinsPitchClasses.length;
-              const totalCols = 2 + (pcCount - 1) * 2;
-              const cols: React.ReactElement[] = [];
-              cols.push(<col key={`c-0-anal`} style={{ minWidth: "30px", maxWidth: "30px", width: "30px" }} />);
-              cols.push(<col key={`c-1-anal`} style={{ minWidth: "150px", maxWidth: "150px", width: "150px" }} />);
-              for (let i = 2; i < totalCols; i++) cols.push(<col key={`c-anal-${i}`} style={{ minWidth: "30px" }} />);
-              return <colgroup>{cols}</colgroup>;
-            })()}
 
-            <thead>{renderTransposition(jinsTranspositions[0], 0)}</thead>
-          </table>
+          {/* Render all tables (analysis + transpositions) in sorted order */}
+          {sortedTables.slice(0, visibleCount).map((tableInfo, displayIndex) => {
+            const { jins, isAnalysis, firstNoteName } = tableInfo;
+            const isLastNeededForPrefetch = displayIndex === visibleCount - PREFETCH_OFFSET - 1 && visibleCount < sortedTables.length;
+            
+            return (
+              <React.Fragment key={`${isAnalysis ? 'analysis' : 'transposition'}-${jins.name}`}>
+                <table 
+                  className={`jins-transpositions__table ${isAnalysis ? 'jins-transpositions__table--analysis' : 'jins-transpositions__table--transposition'}`}
+                  data-table-type={isAnalysis ? "analysis" : "transposition"}
+                  data-jins-name={jins.name}
+                  data-first-note={firstNoteName}
+                  data-transposition-index={displayIndex + 1}
+                >
+                  {(() => {
+                    const pcCount = jins.jinsPitchClasses.length;
+                    const totalCols = 2 + (pcCount - 1) * 2;
+                    const cols: React.ReactElement[] = [];
+                    cols.push(<col key={`c-0-${displayIndex}`} style={{ minWidth: "30px", maxWidth: "30px", width: "30px" }} />);
+                    cols.push(<col key={`c-1-${displayIndex}`} style={{ minWidth: "150px", maxWidth: "150px", width: "150px" }} />);
+                    for (let i = 2; i < totalCols; i++) cols.push(<col key={`c-${i}-${displayIndex}`} style={{ minWidth: "30px" }} />);
+                    return <colgroup>{cols}</colgroup>;
+                  })()}
+
+                  <thead></thead>
+                  <tbody>
+                    {renderTransposition(jins, displayIndex)}
+                    {isLastNeededForPrefetch && (
+                      <tr>
+                        <td colSpan={jins.jinsPitchClasses.length * 2}>
+                          <div ref={sentinelRef} style={{ width: 1, height: 1 }} />
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </React.Fragment>
+            );
+          })}
+          {visibleCount < sortedTables.length && (
+            <div className="jins-transpositions__load-more-wrapper">
+              <button
+                type="button"
+                className="jins-transpositions__button jins-transpositions__load-more"
+                onClick={() => {
+                  const remaining = sortedTables.length - visibleCount;
+                  setVisibleCount((c) => c + Math.min(BATCH_SIZE, remaining));
+                }}
+              >
+                {t("jins.loadMore") || "Load More"}
+              </button>
+            </div>
+          )}
 
           {selectedJinsData && (selectedJinsData.getCommentsEnglish()?.trim() || selectedJinsData.getCommentsArabic()?.trim() || selectedJinsData.getSourcePageReferences()?.length > 0) && (
             <>
@@ -968,65 +1045,15 @@ export default function JinsTranspositions() {
                 )}
               </div>
             </>
-          )}          <h2 className="jins-transpositions__title">
-            {t("jins.transpositionsTitle")}: {`${getDisplayName(selectedJinsData.getName(), "jins")}`}
-          </h2>
-
-          <table className="jins-transpositions__table">
-            {(() => {
-              // default columns for subsequent transposition tables are computed per-row when rendering below
-              // but include a fallback flexible colgroup matching a typical minimum structure
-              const pcCountFallback = jinsTranspositions[1]?.jinsPitchClasses.length || 3;
-              const totalColsFallback = 2 + (pcCountFallback - 1) * 2;
-              const cols: React.ReactElement[] = [];
-              cols.push(<col key={`c-0-list`} style={{ minWidth: "30px", maxWidth: "30px", width: "30px" }} />);
-              cols.push(<col key={`c-1-list`} style={{ minWidth: "150px", maxWidth: "150px", width: "150px" }} />);
-              for (let i = 2; i < totalColsFallback; i++) cols.push(<col key={`c-list-${i}`} style={{ minWidth: "30px" }} />);
-              return <colgroup>{cols}</colgroup>;
-            })()}
-
-            <thead></thead>
-            <tbody>
-              {jinsTranspositions.slice(1, 1 + visibleCount).map((jinsTransposition, row) => {
-                const isLastNeededForPrefetch = row === visibleCount - PREFETCH_OFFSET - 1 && visibleCount < jinsTranspositions.length - 1;
-                return (
-                  <React.Fragment key={row}>
-                    {renderTransposition(jinsTransposition, row + 1)}
-                    {isLastNeededForPrefetch && (
-                      <tr>
-                        <td colSpan={jinsTranspositions[row + 1].jinsPitchClasses.length * 2}>
-                          <div ref={sentinelRef} style={{ width: 1, height: 1 }} />
-                        </td>
-                      </tr>
-                    )}
-                  </React.Fragment>
-                );
-              })}
-            </tbody>
-          </table>
-          {visibleCount < jinsTranspositions.length - 1 && (
-            <div className="jins-transpositions__load-more-wrapper">
-              <button
-                type="button"
-                className="jins-transpositions__button jins-transpositions__load-more"
-                onClick={() => {
-                  const remaining = jinsTranspositions.length - 1 - visibleCount;
-                  setVisibleCount((c) => c + Math.min(BATCH_SIZE, remaining));
-                }}
-              >
-                {t("jins.loadMore") || "Load More"}
-              </button>
-            </div>
           )}
         </div>
       </>
     );
   }, [
-    selectedJinsData,
     selectedTuningSystem,
     openTranspositions,
     isToggling,
-    jinsTranspositions,
+    sortedTables,
     visibleCount,
     t,
     getDisplayName,
@@ -1052,9 +1079,9 @@ export default function JinsTranspositions() {
       const firstNote: string | undefined = e.detail?.firstNote;
       if (firstNote) {
         setTargetFirstNote(firstNote);
-        const index = jinsTranspositions.findIndex((j) => j.jinsPitchClasses?.[0]?.noteName === firstNote);
+        const index = sortedTables.findIndex((t) => t.jins.jinsPitchClasses?.[0]?.noteName === firstNote);
         if (index > 0) {
-          const needed = index; // because visibleCount covers slice(1)
+          const needed = index;
           setVisibleCount((prev) => (needed > prev ? Math.ceil(needed / BATCH_SIZE) * BATCH_SIZE : prev));
         }
         if (scrollTimeoutRef.current) window.clearTimeout(scrollTimeoutRef.current);
@@ -1071,7 +1098,7 @@ export default function JinsTranspositions() {
       }
       window.removeEventListener("jinsTranspositionChange", handleJinsTranspositionChange as EventListener);
     };
-  }, [selectedJinsData, jinsTranspositions]);
+  }, [selectedJinsData, sortedTables]);
 
   // Scroll to header on mount if jinsFirstNote is in the URL
   useEffect(() => {
@@ -1081,7 +1108,7 @@ export default function JinsTranspositions() {
     if (jinsFirstNote) {
       const decoded = decodeURIComponent(jinsFirstNote);
       setTargetFirstNote(decoded);
-      const index = jinsTranspositions.findIndex((j) => j.jinsPitchClasses?.[0]?.noteName === decoded);
+      const index = sortedTables.findIndex((t) => t.jins.jinsPitchClasses?.[0]?.noteName === decoded);
       if (index > 0) {
         const needed = index;
         setVisibleCount((prev) => (needed > prev ? Math.ceil(needed / BATCH_SIZE) * BATCH_SIZE : prev));
@@ -1091,17 +1118,17 @@ export default function JinsTranspositions() {
         scrollToJinsHeader(decoded, selectedJinsData);
       }, URL_SCROLL_TIMEOUT_MS);
     }
-  }, [selectedJinsData, jinsTranspositions]);
+  }, [selectedJinsData, sortedTables]);
 
   // Keep target visible after re-renders (filters, etc.)
   useEffect(() => {
     if (!targetFirstNote) return;
-    const index = jinsTranspositions.findIndex((j) => j.jinsPitchClasses?.[0]?.noteName === targetFirstNote);
+    const index = sortedTables.findIndex((t) => t.jins.jinsPitchClasses?.[0]?.noteName === targetFirstNote);
     if (index > 0) {
       const needed = index;
       setVisibleCount((prev) => (needed > prev ? Math.ceil(needed / BATCH_SIZE) * BATCH_SIZE : prev));
     }
-  }, [targetFirstNote, jinsTranspositions]);
+  }, [targetFirstNote, sortedTables]);
 
   // When selected jins changes, cancel any pending scroll & reset target
   useEffect(() => {
