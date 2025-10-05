@@ -227,7 +227,7 @@ const MaqamTranspositions: React.FC = () => {
           if (entry.isIntersecting) {
             setVisibleCount((prev) => {
               if (!maqamTranspositions) return prev;
-              const remaining = Math.max(0, maqamTranspositions.length - 1 - prev);
+              const remaining = Math.max(0, maqamTranspositions.length - prev);
               if (remaining === 0) return prev;
               return prev + Math.min(BATCH_SIZE, remaining);
             });
@@ -624,6 +624,30 @@ const MaqamTranspositions: React.FC = () => {
     [filters, getDisplayName, getEnglishNoteName, t, maqamConfig, ajnas, allPitchClasses]
   );
 
+  // Create a unified list of all tables (analysis + transpositions) sorted by tonic pitch class
+  const sortedTables = useMemo(() => {
+    if (!maqamTranspositions || maqamTranspositions.length === 0) return [];
+    
+    // Map each maqam to include its sorting info
+    const tablesWithSortInfo = maqamTranspositions.map((maqam, originalIndex) => {
+      const firstPitchClass = maqam.ascendingPitchClasses[0];
+      const isAnalysis = !maqam.transposition; // First item is analysis (no transposition flag)
+      
+      return {
+        maqam,
+        originalIndex,
+        isAnalysis,
+        sortKey: parseFloat(firstPitchClass?.cents || '0'), // Sort by cents value of first pitch class
+        firstNoteName: firstPitchClass?.noteName || '',
+      };
+    });
+    
+    // Sort by cents value (tonic pitch class)
+    tablesWithSortInfo.sort((a, b) => a.sortKey - b.sortKey);
+    
+    return tablesWithSortInfo;
+  }, [maqamTranspositions]);
+
   const transpositionTables = useMemo(() => {
     if (!maqamConfig) return null;
 
@@ -691,14 +715,23 @@ const MaqamTranspositions: React.FC = () => {
                 }}
               >
                 {!transposition ? (
-                  <span className="maqam-transpositions__transposition-title" onClick={(e) => toggleShowDetails(maqam.name, e, false)} style={{ cursor: "pointer" }}>{`${t(
-                    "maqam.darajatAlIstiqrar"
-                  )}: ${getDisplayName(pitchClasses[0].noteName, "note")} (${getEnglishNoteName(pitchClasses[0].noteName)})`}</span>
+                  <span className="maqam-transpositions__transposition-title" onClick={(e) => toggleShowDetails(maqam.name, e, false)} style={{ cursor: "pointer" }}>
+                    <span>
+                      {getDisplayName(maqam.name, 'maqam')}
+                      {" "}
+                      ({getDisplayName(pitchClasses[0].noteName, "note")} / <span dir="ltr">{getEnglishNoteName(pitchClasses[0].noteName)}</span>)
+                    </span>
+                    <span className="maqam-transpositions__darajat-al-istiqrar">
+                      {t("maqam.darajatAlIstiqrar")}
+                    </span>
+                  </span>
                 ) : (
                     <span className="maqam-transpositions__transposition-title" onClick={(e) => toggleShowDetails(maqam.name, e, true)} style={{ cursor: "pointer" }}>
-                    {getDisplayName(maqam.name, 'maqam')}
-                    {" "}
-                    (<span style={{ cursor: "pointer" }} dir="ltr">{getEnglishNoteName(pitchClasses[0].noteName)}</span>)
+                    <span>
+                      {getDisplayName(maqam.name, 'maqam')}
+                      {" "}
+                      (<span style={{ cursor: "pointer" }} dir="ltr">{getEnglishNoteName(pitchClasses[0].noteName)}</span>)
+                    </span>
                     </span>
                 )}
                 <span className="maqam-transpositions__buttons">
@@ -1176,42 +1209,49 @@ const MaqamTranspositions: React.FC = () => {
               </span>
             </h2>
 
-            <table className="maqam-transpositions__table">
-              {/** Dynamic colgroup computed from the actual column count for this table. This ensures
-               * browsers compute column widths consistently even when rows use colSpan. */}
-              <colgroup>
-                {(() => {
-                  // compute pitch class count for analysis (index 0)
-                  const pcCount = maqamTranspositions[0].ascendingPitchClasses.length + (maqamConfig?.noOctaveMaqam ? 1 : 0);
-                  const totalCols = 2 + (pcCount - 1) * 2; // matches colSpan computation in renderTransposition
-                  const cols = [] as React.ReactElement[];
-                  // first two narrow columns
-                  cols.push(<col key={`c-0`} style={{ width: "30px" }} />);
-                  cols.push(<col key={`c-1`} style={{ width: "40px" }} />);
-                  // third column (name) fixed width
-                  cols.push(
-                    <col
-                      key={`c-2`}
-                      style={{ minWidth: "110px", maxWidth: "110px", width: "110px" }}
-                    />
-                  );
-                  // remaining columns get a flexible min width
-                  for (let i = 3; i < totalCols; i++) {
-                    cols.push(<col key={`c-${i}`} style={{ minWidth: "30px" }} />);
-                  }
-                  return cols;
-                })()}
-              </colgroup>
-              <thead>{renderTransposition(maqamTranspositions[0], 0)}</thead>
-              {/* Spacer under Taḥlīl (analysis) table to visually separate from following content - only when there are transpositions */}
-              {maqamTranspositions.length > 1 && (
-                <tbody>
-                  <tr>
-                    <td className="maqam-transpositions__spacer-analysis" colSpan={4 + (maqamConfig.numberOfMaqamNotes - 1) * 2} />
-                  </tr>
-                </tbody>
-              )}
-            </table>
+            {/* Render all tables (analysis + transpositions) in sorted order */}
+            {sortedTables.slice(0, visibleCount).map((tableInfo, displayIndex) => {
+              const { maqam, isAnalysis, firstNoteName } = tableInfo;
+              const isLastNeededForPrefetch = displayIndex === visibleCount - PREFETCH_OFFSET - 1 && visibleCount < sortedTables.length;
+              
+              return (
+                <React.Fragment key={`${isAnalysis ? 'analysis' : 'transposition'}-${maqam.name}`}>
+                  <table 
+                    className={`maqam-transpositions__table ${isAnalysis ? 'maqam-transpositions__table--analysis' : 'maqam-transpositions__table--transposition'}`}
+                    data-table-type={isAnalysis ? "analysis" : "transposition"}
+                    data-maqam-name={maqam.name}
+                    data-first-note={firstNoteName}
+                    data-transposition-index={displayIndex + 1}
+                  >
+                    {(() => {
+                      const pcCount = maqam.ascendingPitchClasses.length + (maqamConfig?.noOctaveMaqam ? 1 : 0);
+                      const totalCols = 2 + (pcCount - 1) * 2;
+                      const cols: React.ReactElement[] = [];
+                      cols.push(<col key={`c-0-${displayIndex}`} style={{ width: "30px" }} />);
+                      cols.push(<col key={`c-1-${displayIndex}`} style={{ width: "40px" }} />);
+                      cols.push(<col key={`c-2-${displayIndex}`} style={{ minWidth: "110px", maxWidth: "110px", width: "110px" }} />);
+                      for (let i = 3; i < totalCols; i++) {
+                        cols.push(<col key={`c-${i}-${displayIndex}`} style={{ minWidth: "30px" }} />);
+                      }
+                      return <colgroup>{cols}</colgroup>;
+                    })()}
+                    <tbody>
+                      {renderTransposition(maqam, displayIndex)}
+                      {isLastNeededForPrefetch && (
+                        <tr>
+                          <td colSpan={2 + (maqam.ascendingPitchClasses.length - 1) * 2}>
+                            <div ref={sentinelRef} style={{ width: 1, height: 1 }} />
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+
+                  {/* Spacer after each table */}
+                  <div className="maqam-transpositions__spacer-after" aria-hidden="true" />
+                </React.Fragment>
+              );
+            })}
           </>
         )}
         {/* COMMENTS AND SOURCES */}
@@ -1274,68 +1314,20 @@ const MaqamTranspositions: React.FC = () => {
             </div>
           </>
         )}
-        {maqamTranspositions.length > 1 && (
-          <>
-            <div className="maqam-transpositions__title-container">
-              <h2 className="maqam-transpositions__title">
-                {t("maqam.transpositionsTitle")}: {`${getDisplayName(selectedMaqamData?.getName() || "", "maqam")}`}
-                {!useRatio && (
-                  <>
-                    {" "}
-                    / {t("maqam.centsTolerance")}:{" "}
-                    <input className="maqam-transpositions__input" type="number" value={centsTolerance ?? 0} onChange={(e) => setCentsTolerance(Number(e.target.value))} />
-                  </>
-                )}
-              </h2>
-            </div>
-            {/* Render each transposition as its own table so the spacer can live outside the table element */}
-            {maqamTranspositions.slice(1, 1 + visibleCount).map((maqamTransposition, row) => {
-              const isLastNeededForPrefetch = row === visibleCount - PREFETCH_OFFSET - 1 && visibleCount < maqamTranspositions.length - 1;
-              return (
-                <React.Fragment key={row}>
-                  <table className="maqam-transpositions__table">
-                      {(() => {
-                        const pcCount = maqamTransposition.ascendingPitchClasses.length + (maqamConfig?.noOctaveMaqam ? 1 : 0);
-                        const totalCols = 2 + (pcCount - 1) * 2;
-                        const cols: React.ReactElement[] = [];
-                        cols.push(<col key={`c-0-${row}`} style={{ width: "30px" }} />);
-                        cols.push(<col key={`c-1-${row}`} style={{ width: "40px" }} />);
-                        cols.push(<col key={`c-2-${row}`} style={{ minWidth: "110px", maxWidth: "110px", width: "110px" }} />);
-                        for (let i = 3; i < totalCols; i++) cols.push(<col key={`c-${i}-${row}`} style={{ minWidth: "30px" }} />);
-                        return <colgroup>{cols}</colgroup>;
-                      })()}
-                      <tbody>
-                        {renderTransposition(maqamTransposition, row)}
-                        {isLastNeededForPrefetch && (
-                          <tr>
-                            <td colSpan={2 + (maqamTransposition.ascendingPitchClasses.length - 1) * 2}>
-                              <div ref={sentinelRef} style={{ width: 1, height: 1 }} />
-                            </td>
-                          </tr>
-                        )}
-                      </tbody>
-                    </table>
-
-                  {/* Spacer outside the table so it remains when a table is open */}
-                  <div className="maqam-transpositions__spacer-after" aria-hidden="true" />
-                </React.Fragment>
-              );
-            })}
-            {visibleCount < maqamTranspositions.length - 1 && (
-              <div className="maqam-transpositions__load-more-wrapper">
-                <button
-                  type="button"
-                  className="maqam-transpositions__button maqam-transpositions__load-more"
-                  onClick={() => {
-                    const remaining = maqamTranspositions.length - 1 - visibleCount;
-                    setVisibleCount((c) => c + Math.min(BATCH_SIZE, remaining));
-                  }}
-                >
-                  {t("maqam.loadMore") || "Load More"}
-                </button>
-              </div>
-            )}
-          </>
+        {/* Load More button */}
+        {visibleCount < sortedTables.length && (
+          <div className="maqam-transpositions__load-more-wrapper">
+            <button
+              type="button"
+              className="maqam-transpositions__button maqam-transpositions__load-more"
+              onClick={() => {
+                const remaining = sortedTables.length - visibleCount;
+                setVisibleCount((c) => c + Math.min(BATCH_SIZE, remaining));
+              }}
+            >
+              {t("maqam.loadMore") || "Load More"}
+            </button>
+          </div>
         )}
       </div>
     );
@@ -1344,6 +1336,7 @@ const MaqamTranspositions: React.FC = () => {
     openTranspositions,
     isToggling,
     maqamTranspositions,
+    sortedTables,
     visibleCount,
     highlightedNotes,
     t,

@@ -10,13 +10,18 @@
 
   &__title {
     width: 100%;
-    background-color: $secondary;
+    background-color: darken($color: $secondary, $amount: 5);
     color: $text;
     font-size: 20px;
     font-weight: 300;
     text-align: left;
     padding: 10px 20px;
     border: solid 1px $grey;
+    position: sticky;
+    top: $top-navbar-height - 2px;
+    z-index: 10;
+    margin-top: 10px;
+    margin-bottom: 10px;
 
     // RTL support
     [dir="rtl"] & {
@@ -223,20 +228,32 @@
     font-weight: 300;
     padding-left: 10px;
     padding-right: 20px;
+    float: left;
     max-width: 60%;
-    display: inline-block;
-    position: absolute;
-    left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 40px;
+    line-height: 1.4;
+
+    > span:first-child {
+      white-space: nowrap;
+    }
 
     // RTL support
     [dir="rtl"] & {
       padding-left: 20px;
       padding-right: 10px;
-      left: auto;
-      right: 15px;
+      float: right;
     }
+  }
+
+  &__darajat-al-istiqrar {
+    display: block;
+    font-size: 14px;
+    font-weight: 200;
+    margin-top: 2px;
+    opacity: 0.85;
   }
 
   &__transposition-number {
@@ -264,8 +281,8 @@
     text-align: left;
     background-color: transparent;
     scroll-margin-top: calc(
-      $top-navbar-height - 30px + 50px
-    ); // Adjusted for navbar height
+      $top-navbar-height + 60px
+    ); // Adjusted for navbar height + sticky title (increased to accommodate comments)
     cursor: pointer;
     transition: opacity 0.2s ease;
 
@@ -308,19 +325,17 @@
   }
   
   &__buttons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: flex-end;
     float: right;
-    text-align: right;
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
+    height: 40px;
     
     // RTL support
     [dir="rtl"] & {
       float: left;
-      text-align: left;
-      right: auto;
-      left: 15px;
+      justify-content: flex-start;
     }
   }
 
@@ -337,6 +352,7 @@
     display: flex;
     justify-content: space-between;
     padding: 0 30px;
+    margin-top: 40px;
 
     // RTL support
     [dir="rtl"] & {
