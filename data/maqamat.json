@@ -1809,10 +1809,10 @@
     ],
     "suyūr": [
       {
-        "id": "Sayr al-Shawwā-(1946)",
+        "id": "Sayr Al-Shawwā-(1946)",
         "creatorEnglish": "al-Shawwā, Sāmī",
         "creatorArabic": "",
-        "sourceId": "al-Shawwā-(1946)",
+        "sourceId": "Al-Shawwā-(1946)",
         "page": 30,
         "commentsEnglish": "Starts on nawā to render maqām bayyāt al-dūgāh and descends to ʿushayrān to render maqām bayyāt al-ḥusaynī and descends stepwise until it's qarār ʿushayrān.",
         "commentsArabic": "",
@@ -2628,7 +2628,7 @@
   },
   {
     "id": "46",
-    "idName": "maqam_awj_ʾaraʾ",
+    "idName": "maqam_awj_ara",
     "name": "maqām awj ʾārāʾ",
     "ascendingNoteNames": [
       "ʿirāq",

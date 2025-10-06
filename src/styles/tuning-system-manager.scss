@@ -808,6 +808,11 @@
     gap: 10px;
     margin: 0 0px;
     float: right;
+
+    // RTL support
+    [dir="rtl"] & {
+      float: left;
+    }
   }
 
   &__filter-item {
@@ -822,6 +827,12 @@
     transition: 0s;
     margin-left: 10px;
     font-size: 14px;
+
+    // RTL support
+    [dir="rtl"] & {
+      margin-left: 0;
+      margin-right: 10px;
+    }
 
     // hover (when not disabled)
     &:hover {

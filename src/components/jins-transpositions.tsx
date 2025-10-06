@@ -867,7 +867,7 @@ export default function JinsTranspositions() {
     return (
       <>
         <div className="jins-transpositions" key={language}>
-          <h2 className="jins-transpositions__title">
+          <h2 className="jins-transpositions__title" dir={language === "ar" ? "rtl" : "ltr"}>
             {t("jins.analysis")}: {`${getDisplayName(selectedJinsData.getName(), "jins")}`}{" "}
             {!useRatio && (
               <>

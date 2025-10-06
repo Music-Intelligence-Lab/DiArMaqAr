@@ -1154,7 +1154,7 @@ const MaqamTranspositions: React.FC = () => {
       <div className="maqam-transpositions" key={language}>
         {maqamTranspositions.length > 0 && (
           <>
-            <h2 className="maqam-transpositions__title">
+            <h2 className="maqam-transpositions__title" dir={language === "ar" ? "rtl" : "ltr"}>
               {t("maqam.analysis")}: {`${getDisplayName(selectedMaqamData?.getName() || "", "maqam")}`}
               {!useRatio && (
                 <>
