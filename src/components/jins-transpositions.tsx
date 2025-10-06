@@ -97,7 +97,7 @@ export default function JinsTranspositions() {
 
   // Toggle show details function
   const toggleShowDetails = useCallback(
-    (jinsName: string, e?: React.MouseEvent, isTransposition: boolean = false) => {
+    (jinsName: string, e?: React.MouseEvent) => {
       e?.stopPropagation();
       if (isToggling) return; // Prevent rapid clicking
 
@@ -105,7 +105,6 @@ export default function JinsTranspositions() {
 
       // Get the jins object to check if it's a transposition
       const jins = jinsTranspositions?.find((j) => j.name === jinsName);
-      const isJinsTransposition = jins?.transposition === true || isTransposition;
 
       // Check if we're opening (not already in the list)
       const isOpening = !openTranspositions.includes(jinsName);
@@ -113,30 +112,15 @@ export default function JinsTranspositions() {
       // Small delay to show visual feedback before heavy computation
       setTimeout(() => {
         setOpenTranspositions((prev) => {
-          const newArray = [...prev];
-          const index = newArray.indexOf(jinsName);
+          const isCurrentlyOpen = prev.includes(jinsName);
 
-          if (index >= 0) {
+          if (isCurrentlyOpen) {
             // If closing, just remove this one
-            newArray.splice(index, 1);
+            return prev.filter((name) => name !== jinsName);
           } else {
-            // If opening a transposition, close all others first
-            if (isJinsTransposition) {
-              // Keep only non-transposition items (like the analysis)
-              const nonTranspositions = jinsTranspositions?.filter((j) => !j.transposition).map((j) => j.name) || [];
-
-              // Start with only non-transposition items
-              newArray.length = 0;
-              nonTranspositions.forEach((name) => {
-                if (prev.includes(name)) {
-                  newArray.push(name);
-                }
-              });
-            }
-            // Add the new one
-            newArray.push(jinsName);
+            // If opening, close all others and open only this one
+            return [jinsName];
           }
-          return newArray;
         });
         setIsToggling(null);
 
@@ -542,7 +526,7 @@ export default function JinsTranspositions() {
 
             <td className="jins-transpositions__jins-name-row" colSpan={2 + (pitchClasses.length - 1) * 2}>
               {!transposition ? (
-                <span className="jins-transpositions__transposition-title" onClick={(e) => toggleShowDetails(jins.name, e, false)} style={{ cursor: "pointer" }}>
+                <span className="jins-transpositions__transposition-title" onClick={(e) => toggleShowDetails(jins.name, e)} style={{ cursor: "pointer" }}>
                   <span>
                     {getDisplayName(jins.name, 'jins')}
                     {" "}
@@ -555,7 +539,7 @@ export default function JinsTranspositions() {
               ) : (
                 <span
                   className="jins-transpositions__transposition-title"
-                  onClick={(e) => toggleShowDetails(jins.name, e, true)}
+                  onClick={(e) => toggleShowDetails(jins.name, e)}
                 >
                   <span>
                     {`${getDisplayName(jins.name, "jins")}`}{" "}
@@ -566,7 +550,7 @@ export default function JinsTranspositions() {
                 </span>
               )}
               <span className="jins-transpositions__buttons">
-                <button className="jins-transpositions__button jins-transpositions__button--toggle" onClick={(e) => toggleShowDetails(jins.name, e, transposition)}>
+                <button className="jins-transpositions__button jins-transpositions__button--toggle" onClick={(e) => toggleShowDetails(jins.name, e)}>
                   {open ? t("jins.hideDetails") : t("jins.showDetails")}
                 </button>
                 <button
