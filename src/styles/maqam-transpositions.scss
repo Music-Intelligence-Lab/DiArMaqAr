@@ -33,6 +33,12 @@
       height: 21px;
       background-color: $dark-grey;
       z-index: -1;
+
+      // RTL support
+      [dir="rtl"] & {
+        left: 0;
+        right: -1px;
+      }
     }
 
     // RTL support
@@ -50,6 +56,12 @@
     font-size: 21px;
     cursor: pointer;
     vertical-align: middle;
+
+    // RTL support
+    [dir="rtl"] & {
+      margin-right: 0;
+      margin-left: 5px;
+    }
   }
 
   &__export-icon.MuiSvgIcon-root {
@@ -61,6 +73,12 @@
     font-size: 16px;
     cursor: pointer;
     vertical-align: middle;
+
+    // RTL support
+    [dir="rtl"] & {
+      margin-right: 0;
+      margin-left: 5px;
+    }
   }
 
   &__copy-icon.MuiSvgIcon-root {
@@ -71,6 +89,12 @@
     font-size: 16px;
     cursor: pointer;
     vertical-align: middle;
+
+    // RTL support
+    [dir="rtl"] & {
+      margin-right: 0;
+      margin-left: 5px;
+    }
   }
 
   &__button {
