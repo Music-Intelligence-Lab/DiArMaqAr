@@ -107,6 +107,9 @@ export default function JinsTranspositions() {
       const jins = jinsTranspositions?.find((j) => j.name === jinsName);
       const isJinsTransposition = jins?.transposition === true || isTransposition;
 
+      // Check if we're opening (not already in the list)
+      const isOpening = !openTranspositions.includes(jinsName);
+
       // Small delay to show visual feedback before heavy computation
       setTimeout(() => {
         setOpenTranspositions((prev) => {
@@ -136,9 +139,23 @@ export default function JinsTranspositions() {
           return newArray;
         });
         setIsToggling(null);
+
+        // If opening, dispatch scroll event after a delay
+        if (isOpening && jins) {
+          setTimeout(() => {
+            const firstNote = jins.jinsPitchClasses[0]?.noteName;
+            if (firstNote) {
+              window.dispatchEvent(
+                new CustomEvent("jinsTranspositionChange", {
+                  detail: { firstNote },
+                })
+              );
+            }
+          }, DISPATCH_EVENT_DELAY_MS);
+        }
       }, 50); // Small delay for better UX
     },
-    [isToggling, jinsTranspositions]
+    [isToggling, jinsTranspositions, openTranspositions]
   );
 
   // Copy jins table to clipboard

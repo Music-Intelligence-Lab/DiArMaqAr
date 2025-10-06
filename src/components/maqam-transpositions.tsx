@@ -46,6 +46,7 @@ const MaqamTranspositions: React.FC = () => {
   const INTERSECTION_ROOT_MARGIN = "200px 0px 0px 0px"; // prefetch root margin
   const BATCH_SIZE = 10; // number of transpositions to load at once
   const PREFETCH_OFFSET = 5; // how many before end to prefetch more
+  const DISPATCH_EVENT_DELAY_MS = 10; // delay before emitting custom event
 
   const { selectedMaqamData, selectedTuningSystem, setSelectedPitchClasses, allPitchClasses, centsTolerance, setCentsTolerance, ajnas, setSelectedMaqam, selectedMaqam, sources } = useAppContext();
 
@@ -122,6 +123,9 @@ const MaqamTranspositions: React.FC = () => {
       const maqam = maqamTranspositions?.find((m) => m.name === maqamName);
       const isMaqamTransposition = maqam?.transposition === true || isTransposition;
 
+      // Check if we're opening (not already in the list)
+      const isOpening = !openTranspositions.includes(maqamName);
+
       // Small delay to show visual feedback before heavy computation
       setTimeout(() => {
         setOpenTranspositions((prev) => {
@@ -151,9 +155,23 @@ const MaqamTranspositions: React.FC = () => {
           return newArray;
         });
         setIsToggling(null);
+
+        // If opening, dispatch scroll event after a delay
+        if (isOpening && maqam) {
+          setTimeout(() => {
+            const firstNote = maqam.ascendingPitchClasses[0]?.noteName;
+            if (firstNote) {
+              window.dispatchEvent(
+                new CustomEvent("maqamTranspositionChange", {
+                  detail: { firstNote },
+                })
+              );
+            }
+          }, DISPATCH_EVENT_DELAY_MS);
+        }
       }, 50); // Small delay for better UX
     },
-    [isToggling, maqamTranspositions]
+    [isToggling, maqamTranspositions, openTranspositions]
   );
 
   useEffect(() => {
@@ -742,17 +760,25 @@ const MaqamTranspositions: React.FC = () => {
                     className="maqam-transpositions__button"
                     onClick={(e) => {
                       e.stopPropagation();
-                      // Prevent the auto-open effect below from opening this transposition's details
-                      // when the user only wants to "Select / Load to Keyboard".
-                      skipAutoOpenRef.current = true;
                       setSelectedPitchClasses([]);
                       setSelectedPitchClasses(noOctaveMaqam ? pitchClasses.slice(0, -1) : pitchClasses);
                       setSelectedMaqam(transposition ? maqam : null);
 
-                      // Do not auto-open the transposition when selecting/loading to keyboard.
-                      // We still set the selected maqam and dispatch the change event, but leave
-                      // the open/closed state of transposition panels unchanged.
+                      // Auto-open the transposition when selecting it (close all others)
+                      if (transposition) {
+                        setOpenTranspositions([maqam.name]);
+                      } else {
+                        // This is the tahlil case (first transposition/analysis)
+                        // The useEffect will handle opening the first item when selectedMaqam becomes null
+                      }
 
+                      setTimeout(() => {
+                        window.dispatchEvent(
+                          new CustomEvent("maqamTranspositionChange", {
+                            detail: { firstNote: pitchClasses[0].noteName },
+                          })
+                        );
+                      }, DISPATCH_EVENT_DELAY_MS);
                     }}
                   >
                     {t("maqam.selectLoadToKeyboard")}
