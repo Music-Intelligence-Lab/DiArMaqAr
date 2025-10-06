@@ -41,6 +41,7 @@ interface SoundSettings {
   drone: boolean;
   droneVolume?: number; // 0..1
   useMPE: boolean;
+  octaveShift: number; // Number of octaves to shift (-3 to +3)
 }
 
 interface MidiPortInfo {
@@ -95,6 +96,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
   drone: true,
   droneVolume: 0.3,
     useMPE: false,
+    octaveShift: 0,
   });
 
   // Union type: oscillator can be OscillatorNode or OscillatorNode[]
@@ -601,7 +603,9 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
       if (prev.some((c) => c.frequency === pitchClass.frequency)) return prev;
       return [...prev, pitchClass];
     });
-    const frequency = parseFloat(pitchClass.frequency);
+    const baseFrequency = parseFloat(pitchClass.frequency);
+    // Apply octave shift: multiply by 2^octaveShift
+    const frequency = baseFrequency * Math.pow(2, soundSettings.octaveShift);
     if (soundSettings.outputMode === "mute") return;
 
     // Use a quadratic velocity curve for more expressive dynamics
@@ -723,7 +727,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     const prev = activeNotesRef.current.get(pitchClass.fraction) || [];
     prev.push({ oscillator: osc, gainNode, frequency });
     activeNotesRef.current.set(pitchClass.fraction, prev);
-  }, [allocateMPEChannel, sendMidiMessage, sendPitchBend, soundSettings.attack, soundSettings.decay, soundSettings.outputMode, soundSettings.pitchBendRange, soundSettings.sustain, soundSettings.useMPE, soundSettings.volume, soundSettings.waveform]);
+  }, [allocateMPEChannel, sendMidiMessage, sendPitchBend, soundSettings.attack, soundSettings.decay, soundSettings.octaveShift, soundSettings.outputMode, soundSettings.pitchBendRange, soundSettings.sustain, soundSettings.useMPE, soundSettings.volume, soundSettings.waveform]);
 
   const noteOff = useCallback(function noteOff(pitchClass: PitchClass) {
     setActivePitchClasses((prev) => prev.filter((c) => !(c.frequency === pitchClass.frequency)));
