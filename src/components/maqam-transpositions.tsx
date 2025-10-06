@@ -113,7 +113,7 @@ const MaqamTranspositions: React.FC = () => {
 
   // Toggle show details function
   const toggleShowDetails = useCallback(
-    (maqamName: string, e?: React.MouseEvent, isTransposition: boolean = false) => {
+    (maqamName: string, e?: React.MouseEvent) => {
       e?.stopPropagation();
       if (isToggling) return; // Prevent rapid clicking
 
@@ -121,7 +121,6 @@ const MaqamTranspositions: React.FC = () => {
 
       // Get the maqam object to check if it's a transposition
       const maqam = maqamTranspositions?.find((m) => m.name === maqamName);
-      const isMaqamTransposition = maqam?.transposition === true || isTransposition;
 
       // Check if we're opening (not already in the list)
       const isOpening = !openTranspositions.includes(maqamName);
@@ -129,30 +128,15 @@ const MaqamTranspositions: React.FC = () => {
       // Small delay to show visual feedback before heavy computation
       setTimeout(() => {
         setOpenTranspositions((prev) => {
-          const newArray = [...prev];
-          const index = newArray.indexOf(maqamName);
+          const isCurrentlyOpen = prev.includes(maqamName);
 
-          if (index >= 0) {
+          if (isCurrentlyOpen) {
             // If closing, just remove this one
-            newArray.splice(index, 1);
+            return prev.filter((name) => name !== maqamName);
           } else {
-            // If opening a transposition, close all others first
-            if (isMaqamTransposition) {
-              // Keep only non-transposition items (like the analysis)
-              const nonTranspositions = maqamTranspositions?.filter((m) => !m.transposition).map((m) => m.name) || [];
-
-              // Start with only non-transposition items
-              newArray.length = 0;
-              nonTranspositions.forEach((name) => {
-                if (prev.includes(name)) {
-                  newArray.push(name);
-                }
-              });
-            }
-            // Add the new one
-            newArray.push(maqamName);
+            // If opening, close all others and open only this one
+            return [maqamName];
           }
-          return newArray;
         });
         setIsToggling(null);
 
@@ -733,7 +717,7 @@ const MaqamTranspositions: React.FC = () => {
                 }}
               >
                 {!transposition ? (
-                  <span className="maqam-transpositions__transposition-title" onClick={(e) => toggleShowDetails(maqam.name, e, false)} style={{ cursor: "pointer" }}>
+                  <span className="maqam-transpositions__transposition-title" onClick={(e) => toggleShowDetails(maqam.name, e)} style={{ cursor: "pointer" }}>
                     <span>
                       {getDisplayName(maqam.name, 'maqam')}
                       {" "}
@@ -744,7 +728,7 @@ const MaqamTranspositions: React.FC = () => {
                     </span>
                   </span>
                 ) : (
-                    <span className="maqam-transpositions__transposition-title" onClick={(e) => toggleShowDetails(maqam.name, e, true)} style={{ cursor: "pointer" }}>
+                    <span className="maqam-transpositions__transposition-title" onClick={(e) => toggleShowDetails(maqam.name, e)} style={{ cursor: "pointer" }}>
                     <span>
                       {getDisplayName(maqam.name, 'maqam')}
                       {" "}
@@ -753,7 +737,7 @@ const MaqamTranspositions: React.FC = () => {
                     </span>
                 )}
                 <span className="maqam-transpositions__buttons">
-                  <button className="maqam-transpositions__button maqam-transpositions__button--toggle" onClick={(e) => toggleShowDetails(maqam.name, e, transposition)}>
+                  <button className="maqam-transpositions__button maqam-transpositions__button--toggle" onClick={(e) => toggleShowDetails(maqam.name, e)}>
                     {open ? t("maqam.hideDetails") : t("maqam.showDetails")}
                   </button>
                   <button
