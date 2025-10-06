@@ -576,22 +576,6 @@ export default function JinsTranspositions() {
                     setSelectedPitchClasses([]);
                     setSelectedPitchClasses(pitchClasses);
                     setSelectedJins(transposition ? jins : null);
-
-                    // Auto-open the transposition when selecting it (close all others)
-                    if (transposition) {
-                      setOpenTranspositions([jins.name]);
-                    } else {
-                      // This is the tahlil case (first transposition)
-                      // The useEffect will handle opening the first item when selectedJins becomes null
-                    }
-
-                    setTimeout(() => {
-                      window.dispatchEvent(
-                        new CustomEvent("jinsTranspositionChange", {
-                          detail: { firstNote: pitchClasses[0].noteName },
-                        })
-                      );
-                    }, DISPATCH_EVENT_DELAY_MS);
                   }}
                 >
                   {t("jins.selectLoadToKeyboard")}

@@ -760,25 +760,11 @@ const MaqamTranspositions: React.FC = () => {
                     className="maqam-transpositions__button"
                     onClick={(e) => {
                       e.stopPropagation();
+                      // Prevent auto-open/scroll effect from triggering
+                      skipAutoOpenRef.current = true;
                       setSelectedPitchClasses([]);
                       setSelectedPitchClasses(noOctaveMaqam ? pitchClasses.slice(0, -1) : pitchClasses);
                       setSelectedMaqam(transposition ? maqam : null);
-
-                      // Auto-open the transposition when selecting it (close all others)
-                      if (transposition) {
-                        setOpenTranspositions([maqam.name]);
-                      } else {
-                        // This is the tahlil case (first transposition/analysis)
-                        // The useEffect will handle opening the first item when selectedMaqam becomes null
-                      }
-
-                      setTimeout(() => {
-                        window.dispatchEvent(
-                          new CustomEvent("maqamTranspositionChange", {
-                            detail: { firstNote: pitchClasses[0].noteName },
-                          })
-                        );
-                      }, DISPATCH_EVENT_DELAY_MS);
                     }}
                   >
                     {t("maqam.selectLoadToKeyboard")}
