@@ -9,11 +9,12 @@ import useMenuContext from "@/contexts/menu-context";
 import useLanguageContext from "@/contexts/language-context";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { BASIC_WAVEFORMS, APERIODIC_WAVEFORMS, CUSTOM_WAVEFORMS } from "@/audio/waves";
+import getFirstNoteName from "@/functions/getFirstNoteName";
 
 const SettingsCard = () => {
-  const { patterns } = useAppContext();
+  const { patterns, selectedTuningSystem, allPitchClasses, referenceFrequencies, selectedIndices } = useAppContext();
   const { soundSettings, setSoundSettings, midiInputs, midiOutputs, setRefresh, clearHangingNotes } = useSoundContext();
-  const { t } = useLanguageContext();
+  const { t, language, getDisplayName } = useLanguageContext();
 
   const { openSettings, setOpenSettings, openNavigation, setOpenNavigation } = useMenuContext();
   const cardRef = useRef<HTMLDivElement>(null);
@@ -138,6 +139,31 @@ const SettingsCard = () => {
     // Clear any hanging notes
     clearHangingNotes();
   };
+
+  // Get reference frequency info for octave shift display
+  const getReferenceInfo = () => {
+    if (!selectedTuningSystem || allPitchClasses.length === 0) return null;
+    
+    // Get the starting note name from the tuning system
+    const startingNoteName = getFirstNoteName(selectedIndices);
+    if (startingNoteName === "none") return null;
+    
+    // Find the pitch class that matches the starting note name
+    const startingPitchClass = allPitchClasses.find(pc => pc.noteName === startingNoteName);
+    if (!startingPitchClass) return null;
+    
+    // Get the reference frequency for the starting note
+    const baseFrequency = referenceFrequencies[startingNoteName] || selectedTuningSystem.getDefaultReferenceFrequency();
+    
+    return {
+      noteName: startingPitchClass.noteName,
+      englishName: startingPitchClass.englishName,
+      baseFrequency,
+      currentFrequency: baseFrequency * Math.pow(2, soundSettings.octaveShift),
+    };
+  };
+
+  const refInfo = getReferenceInfo();
 
   // The settings card content to be portaled
   const settingsContent = (
@@ -405,6 +431,78 @@ const SettingsCard = () => {
 
         <details className="settings-card__details">
           <summary className="settings-card__summary">{t('settings.output')}</summary>
+          
+          {/* Octave Shift Controls */}
+          {refInfo && (
+            <div className="settings-card__input-container">
+              <label className="settings-card__label">{t('settings.octaveShift')}</label>
+              <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginTop: '5px', flexDirection: language === 'ar' ? 'row-reverse' : 'row' }}>
+                <button
+                  onClick={() => {
+                    setSoundSettings((prev) => ({
+                      ...prev,
+                      octaveShift: Math.max(-3, prev.octaveShift - 1),
+                    }));
+                  }}
+                  className="settings-card__quick-action-button"
+                  disabled={soundSettings.octaveShift <= -3}
+                  style={{ flex: 1 }}
+                >
+                  {t('settings.octaveDown')}
+                </button>
+                <button
+                  onClick={() => {
+                    setSoundSettings((prev) => ({
+                      ...prev,
+                      octaveShift: 0,
+                    }));
+                  }}
+                  className="settings-card__quick-action-button"
+                  disabled={soundSettings.octaveShift === 0}
+                  style={{ flex: 1 }}
+                >
+                  {t('settings.reset')}
+                </button>
+                <button
+                  onClick={() => {
+                    setSoundSettings((prev) => ({
+                      ...prev,
+                      octaveShift: Math.min(3, prev.octaveShift + 1),
+                    }));
+                  }}
+                  className="settings-card__quick-action-button"
+                  disabled={soundSettings.octaveShift >= 3}
+                  style={{ flex: 1 }}
+                >
+                  {t('settings.octaveUp')}
+                </button>
+              </div>
+              <p style={{ fontSize: '0.9em', marginTop: '8px', textAlign: 'center' }}>
+                {language === 'ar' ? (
+                  <>
+                    <bdi>{getDisplayName(refInfo.noteName, 'note')} {refInfo.englishName} = {refInfo.baseFrequency.toFixed(2)} Hz</bdi>
+                    {soundSettings.octaveShift !== 0 && (
+                      <>
+                        <br />
+                        <bdi>{soundSettings.octaveShift > 0 ? '+' : ''}{soundSettings.octaveShift} {t('settings.octaves')} = {refInfo.currentFrequency.toFixed(2)} Hz</bdi>
+                      </>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <bdi>{getDisplayName(refInfo.noteName, 'note')} {refInfo.englishName} = {refInfo.baseFrequency.toFixed(2)} Hz</bdi>
+                    {soundSettings.octaveShift !== 0 && (
+                      <>
+                        <br />
+                        <bdi>{soundSettings.octaveShift > 0 ? '+' : ''}{soundSettings.octaveShift} {t('settings.octaves')} = {refInfo.currentFrequency.toFixed(2)} Hz</bdi>
+                      </>
+                    )}
+                  </>
+                )}
+              </p>
+            </div>
+          )}
+
           <div className="settings-card__sound-mode">
             <button
               onClick={() => setSoundSettings((prev) => ({ ...prev, outputMode: "mute" }))}

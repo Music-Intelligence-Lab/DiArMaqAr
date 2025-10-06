@@ -100,6 +100,11 @@ const translations = {
     "settings.mute": "Mute",
     "settings.waveformMode": "Waveform",
     "settings.resetEnvelope": "Reset Envelope",
+    "settings.octaveShift": "Octave Shift",
+    "settings.octaveDown": "↓",
+    "settings.octaveUp": "↑",
+    "settings.reset": "Reset",
+    "settings.octaves": "octave(s)",
 
     // Language selector
     "language.english": "English",
@@ -413,6 +418,11 @@ const translations = {
     "settings.mute": "كتم الصوت",
     "settings.waveformMode": "شكل الموجة",
     "settings.resetEnvelope": "إعادة تعيين المُغلّف",
+    "settings.octaveShift": "إزاحة الأوكتاف",
+    "settings.octaveDown": "↓",
+    "settings.octaveUp": "↑",
+    "settings.reset": "إعادة",
+    "settings.octaves": "أوكتاف",
 
     // Language selector
     "language.english": "English",
