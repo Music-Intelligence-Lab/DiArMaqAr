@@ -122,18 +122,14 @@ export default function PitchClassBar() {
     if (selectedEls.length === 0) return;
 
     let minLeft = Infinity;
-    let maxRight = -Infinity;
 
     selectedEls.forEach((el) => {
       const elLeft = el.offsetLeft;
-      const elRight = elLeft + el.offsetWidth;
       if (elLeft < minLeft) minLeft = elLeft;
-      if (elRight > maxRight) maxRight = elRight;
     });
 
-    const selectedCenter = (minLeft + maxRight) / 2;
-    const containerWidth = container.clientWidth;
-    const targetScrollLeft = selectedCenter - containerWidth / 2;
+    // Position the first (leftmost) selected note at the left edge of the container with 20px offset
+    const targetScrollLeft = minLeft - 30;
 
     container.scrollTo({
       left: targetScrollLeft,
