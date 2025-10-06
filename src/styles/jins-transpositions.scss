@@ -18,10 +18,27 @@
     padding: 10px 20px;
     border: solid 1px $grey;
     position: sticky;
-    top: $top-navbar-height - 2px;
-    z-index: 10;
+    position: -webkit-sticky;
+    top: $top-navbar-height + 20px;
+    margin-bottom: 20px;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 1);
+    z-index: 10;    
     margin-top: 10px;
-    margin-bottom: 10px;
+    
+
+        // Pseudo-element to fill the gap above when sticky
+    &::before {
+      content: "";
+      position: absolute;
+      top: -22px;
+      left: -1px;
+      right: 0;
+      width: calc(100% + 2px);
+      height: 21px;
+      background-color: $dark-grey;
+      z-index: -1;
+    }
+
 
     // RTL support
     [dir="rtl"] & {
@@ -281,7 +298,7 @@
     text-align: left;
     background-color: transparent;
     scroll-margin-top: calc(
-      $top-navbar-height + 60px
+      $top-navbar-height + 88px
     ); // Adjusted for navbar height + sticky title (increased to accommodate comments)
     cursor: pointer;
     transition: opacity 0.2s ease;
