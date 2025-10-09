@@ -8,7 +8,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "Al-Khulʿī-(2011)",
+        "sourceId": "al-Khulʿī-(2011)",
         "page": "55-56"
       },
       {
@@ -4516,5 +4516,114 @@
     "referenceFrequencies": {
       "rāst": 130.6653
     }
+  },
+  {
+    "id": "UnknownCreator-(600)",
+    "titleEnglish": "Ṭanbūr Baghdādi/Mīzānī (pre-Islamic)",
+    "titleArabic": "الطنبور البغدادي/الميزاني",
+    "year": "600",
+    "sourceEnglish": "Unknown Source",
+    "sourceArabic": "مصدر غير معروف",
+    "sourcePageReferences": [
+      {
+        "sourceId": "Farmer-(1937)",
+        "page": "243"
+      }
+    ],
+    "creatorEnglish": "Unknown Creator",
+    "creatorArabic": "مؤلف غير معروف",
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "tuningSystemPitchClasses": [
+      "1/1",
+      "40/39",
+      "20/19",
+      "40/37",
+      "10/9",
+      "8/7",
+      "20/17",
+      "40/33",
+      "5/4",
+      "40/31",
+      "4/3",
+      "40/29",
+      "10/7",
+      "40/27",
+      "20/13",
+      "8/5",
+      "5/3",
+      "40/23",
+      "20/11",
+      "40/21"
+    ],
+    "noteNames": [
+      [
+        "ʿushayrān",
+        "nīm ʿajam ʿushayrān",
+        "ʿajam ʿushayrān",
+        "ʿirāq",
+        "kawasht",
+        "tīk kawasht",
+        "rāst",
+        "nīm zīrgūleh",
+        "zīrgūleh",
+        "tīk zīrgūleh",
+        "dūgāh",
+        "nīm kurdī/nahāwand",
+        "kurdī",
+        "būselīk/ʿushshāq",
+        "tīk būselīk",
+        "chahārgāh",
+        "ḥijāz",
+        "tīk ḥijāz/ṣabā",
+        "nīm nawā",
+        "nawā"
+      ]
+    ],
+    "abjadNames": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "stringLength": 0,
+    "defaultReferenceFrequency": 440,
+    "referenceFrequencies": {}
   }
 ]
