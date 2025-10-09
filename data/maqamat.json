@@ -818,6 +818,45 @@
             "value": "ʿirāq"
           }
         ]
+      },
+      {
+        "id": "Sayr al-Shawwā-(1946)",
+        "creatorEnglish": "al-Shawwā, Sāmī",
+        "creatorArabic": "",
+        "sourceId": "al-Shawwā-(1946)",
+        "page": 36,
+        "commentsEnglish": "Starts with ḥijāz dūgāh, followed by rāst nawā. Descending it uses būselīk nawā, followed by ḥijāz dūgāh and ends on 'irāq",
+        "commentsArabic": "",
+        "stops": [
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "dūgāh",
+            "direction": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā",
+            "direction": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "21",
+            "startingNote": "nawā",
+            "direction": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "dūgāh",
+            "direction": "descending"
+          },
+          {
+            "type": "note",
+            "value": "ʿirāq"
+          }
+        ]
       }
     ],
     "commentsEnglish": "",
@@ -1809,10 +1848,10 @@
     ],
     "suyūr": [
       {
-        "id": "Sayr Al-Shawwā-(1946)",
+        "id": "Sayr al-Shawwā-(1946)",
         "creatorEnglish": "al-Shawwā, Sāmī",
         "creatorArabic": "",
-        "sourceId": "Al-Shawwā-(1946)",
+        "sourceId": "al-Shawwā-(1946)",
         "page": 30,
         "commentsEnglish": "Starts on nawā to render maqām bayyāt al-dūgāh and descends to ʿushayrān to render maqām bayyāt al-ḥusaynī and descends stepwise until it's qarār ʿushayrān.",
         "commentsArabic": "",

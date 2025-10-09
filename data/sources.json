@@ -28,15 +28,15 @@
     "ISBN": "9780811874076"
   },
   {
-    "id": "Al-Urmawī-Al-Baghdādī-(2017)",
+    "id": "al-Urmawī-al-Baghdādī-(2017)",
     "titleEnglish": "Kitāb al-Adwār fī al-Mūsīqā",
     "titleArabic": "كتاب الادوار في الموسيقى",
     "sourceType": "Book",
     "contributors": [
       {
         "type": "Author",
-        "firstNameEnglish": "Ṣafī Al-Dīn",
-        "lastNameEnglish": "Al-Urmawī Al-Baghdādī",
+        "firstNameEnglish": "Ṣafī al-Dīn",
+        "lastNameEnglish": "al-Urmawī al-Baghdādī",
         "firstNameArabic": "صفي الدين",
         "lastNameArabic": "الأرموي البغدادي"
       },
@@ -70,7 +70,7 @@
     "ISBN": "9789779112459"
   },
   {
-    "id": "Al-Khulʿī-(2011)",
+    "id": "al-Khulʿī-(2011)",
     "titleEnglish": "Kitāb al-Mūsiqā al-Sharqī",
     "titleArabic": "كتاب الموسيقى الشرقي",
     "sourceType": "Book",
@@ -78,7 +78,7 @@
       {
         "type": "Author",
         "firstNameEnglish": "Mohammad Kāmil",
-        "lastNameEnglish": "Al-Khulʿī",
+        "lastNameEnglish": "al-Khulʿī",
         "firstNameArabic": "محمد كامل",
         "lastNameArabic": "الخلعي"
       }
@@ -127,7 +127,7 @@
   },
   {
     "id": "Meshshāqa-(1899)",
-    "titleEnglish": "Al-Risālah al-Shihābīyah fī al-Ṣināʻah al-Mūsīqīyah",
+    "titleEnglish": "al-Risālah al-Shihābīyah fī al-Ṣināʻah al-Mūsīqīyah",
     "titleArabic": "الرسالة الشهابية في الصناعة الموسيقية",
     "sourceType": "Book",
     "contributors": [
@@ -154,7 +154,7 @@
     "dateAccessed": "",
     "originalPublicationDateEnglish": "",
     "originalPublicationDateArabic": "",
-    "publisherEnglish": "Al-Ābā’ Al-Yasūʿīyīn",
+    "publisherEnglish": "al-Ābā’ al-Yasūʿīyīn",
     "publisherArabic": "الآباء اليسوعيين",
     "placeEnglish": "Beirut",
     "placeArabic": "بيروت",
@@ -162,7 +162,7 @@
   },
   {
     "id": "Shawqi-(1969)",
-    "titleEnglish": "Qiyās Al-Sullam Al-Mūsīqī Al-ʿArabī",
+    "titleEnglish": "Qiyās al-Sullam al-Mūsīqī al-ʿArabī",
     "titleArabic": "قياس السلم الموسيقي العربي",
     "sourceType": "Book",
     "contributors": [
@@ -182,7 +182,7 @@
     "dateAccessed": "",
     "originalPublicationDateEnglish": "",
     "originalPublicationDateArabic": "",
-    "publisherEnglish": "Dar Al-Kutub",
+    "publisherEnglish": "Dar al-Kutub",
     "publisherArabic": "دار الكتب",
     "placeEnglish": "Cairo",
     "placeArabic": "القاهرة",
@@ -217,15 +217,15 @@
     "ISBN": ""
   },
   {
-    "id": "Al-Shawwā-(1946)",
-    "titleEnglish": "Al-Qawaʿid al-Fannīya fī al-Mūsiqa al-Sharqīya wa al-Gharbīya",
+    "id": "al-Shawwā-(1946)",
+    "titleEnglish": "al-Qawaʿid al-Fannīya fī al-Mūsiqa al-Sharqīya wa al-Gharbīya",
     "titleArabic": "القواعد الفنيّة في الموسيقى الشرقيّة والغربيّة",
     "sourceType": "Book",
     "contributors": [
       {
         "type": "Author",
         "firstNameEnglish": "Sami",
-        "lastNameEnglish": "Al-Shawwā",
+        "lastNameEnglish": "al-Shawwā",
         "firstNameArabic": "سامي",
         "lastNameArabic": "الشوا"
       }
@@ -387,15 +387,15 @@
     "ISBN": ""
   },
   {
-    "id": "Al-Ṣabbāgh-(1950)",
-    "titleEnglish": "Al-Dalīl al-Mūsīqī al-ʿĀm fi Aṭrab al-Anghām",
+    "id": "al-Ṣabbāgh-(1950)",
+    "titleEnglish": "al-Dalīl al-Mūsīqī al-ʿĀm fi Aṭrab al-Anghām",
     "titleArabic": "الدليل الموسيقي العام في أطرب الأنغام",
     "sourceType": "Book",
     "contributors": [
       {
         "type": "Author",
         "firstNameEnglish": "Tawfīq",
-        "lastNameEnglish": "Al-Ṣabbāgh",
+        "lastNameEnglish": "al-Ṣabbāgh",
         "firstNameArabic": "توفيق ",
         "lastNameArabic": "الصبّاغ"
       }
@@ -415,15 +415,15 @@
     "ISBN": ""
   },
   {
-    "id": "Al-Ṣabbāgh-(1954)",
-    "titleEnglish": "Al-Anghām al-Sharqīya: al-Qism al-Thānī min kitāb Al-Dalīl al-Mūsīqī al-ʿĀm fi Aṭrab al-Anghām",
+    "id": "al-Ṣabbāgh-(1954)",
+    "titleEnglish": "al-Anghām al-Sharqīya: al-Qism al-Thānī min kitāb al-Dalīl al-Mūsīqī al-ʿĀm fi Aṭrab al-Anghām",
     "titleArabic": "الأنغام الشرقيّة: القسم الثاني من كتاب الديلي العام في اطرب الأنغام",
     "sourceType": "Book",
     "contributors": [
       {
         "type": "Author",
         "firstNameEnglish": "Tawfīq",
-        "lastNameEnglish": "Al-Ṣabbāgh",
+        "lastNameEnglish": "al-Ṣabbāgh",
         "firstNameArabic": "توفيق",
         "lastNameArabic": "الصبّاغ"
       }
@@ -436,22 +436,22 @@
     "dateAccessed": "",
     "originalPublicationDateEnglish": "",
     "originalPublicationDateArabic": "",
-    "publisherEnglish": "Maṭbaʿat Al-Maʿārif",
+    "publisherEnglish": "Maṭbaʿat al-Maʿārif",
     "publisherArabic": "مطبعة المعارف",
     "placeEnglish": "Aleppo",
     "placeArabic": "حلب",
     "ISBN": ""
   },
   {
-    "id": "Al-Ḥilū-(1961)",
-    "titleEnglish": "Al-Mūsīqah al-Nazarīya",
+    "id": "al-Ḥilū-(1961)",
+    "titleEnglish": "al-Mūsīqah al-Nazarīya",
     "titleArabic": "الموسيقى النَّظريَّة",
     "sourceType": "Book",
     "contributors": [
       {
         "type": "Author",
         "firstNameEnglish": "Salīm",
-        "lastNameEnglish": "Al-Ḥilū",
+        "lastNameEnglish": "al-Ḥilū",
         "firstNameArabic": "سليم ",
         "lastNameArabic": "الحلو"
       }
