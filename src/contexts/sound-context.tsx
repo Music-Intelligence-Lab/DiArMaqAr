@@ -6,10 +6,11 @@ import { frequencyToMidiNoteNumber } from "@/functions/convertPitchClass";
 import Pattern from "@/models/Pattern";
 import romanToNumber from "@/functions/romanToNumber";
 import PitchClass from "@/models/PitchClass";
-import { initializeCustomWaves, PERIODIC_WAVES, APERIODIC_WAVES } from "@/audio/waves";
+import { initializeCustomWaves, PERIODIC_WAVES, APERIODIC_WAVES, APERIODIC_WAVEFORMS } from "@/audio/waves";
 import shiftPitchClass from "@/functions/shiftPitchClass";
 import extendSelectedPitchClasses from "@/functions/extendSelectedPitchClasses";
 import { Maqam } from "@/models/Maqam";
+import * as Tone from "tone";
 type InputMode = "tuningSystem" | "selection";
 type OutputMode = "mute" | "waveform" | "midi";
 
@@ -99,8 +100,8 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     octaveShift: 0,
   });
 
-  // Union type: oscillator can be OscillatorNode or OscillatorNode[]
-  const activeNotesRef = useRef<Map<string, { oscillator: OscillatorNode | OscillatorNode[]; gainNode: GainNode; frequency: number }[]>>(new Map());
+  // Union type: synth can be Tone.Synth or Tone.Synth[] for aperiodic waves
+  const activeNotesRef = useRef<Map<string, { synth: Tone.Synth | Tone.Synth[]; frequency: number; isAperiodic?: boolean }[]>>(new Map());
   const timeoutsRef = useRef<number[]>([]);
   const midiActiveNotesRef = useRef<Map<string, number>>(new Map()); // stores pitch class fraction -> current frequency
 
@@ -115,12 +116,13 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
   const [activePitchClasses, setActivePitchClasses] = useState<PitchClass[]>([]);
 
+  const masterVolumeRef = useRef<Tone.Volume | null>(null);
+  // Dedicated volume node for the drone (independent of masterVolume to allow separate control)
+  const droneVolumeRef = useRef<Tone.Volume | null>(null);
+  // Store the active drone synth(s) so we can stop them cleanly
+  const droneSynthRef = useRef<{ synth: Tone.Synth | Tone.Synth[]; fraction?: string; midiChannel?: number } | null>(null);
+  // Keep Web Audio Context for custom waves
   const audioCtxRef = useRef<AudioContext | null>(null);
-  const masterGainRef = useRef<GainNode | null>(null);
-  // Dedicated gain node for the drone (independent of masterGain to allow separate control)
-  const droneGainRef = useRef<GainNode | null>(null);
-  // Store the active drone oscillator(s) so we can stop them cleanly
-  const droneOscRef = useRef<{ oscillator: OscillatorNode | OscillatorNode[]; gainNode?: GainNode; fraction?: string; midiChannel?: number } | null>(null);
   const midiAccessRef = useRef<MIDIAccess | null>(null);
 
   const [midiInputs, setMidiInputs] = useState<MidiPortInfo[]>([]);
@@ -434,6 +436,138 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     return id;
   }, []);
 
+  // Helper function to create aperiodic wave synths using Tone.js
+  const createAperiodicSynths = useCallback(function createAperiodicSynths(
+    waveform: string, 
+    baseFrequency: number, 
+    envelope: { attack: number; decay: number; sustain: number; release: number },
+    volume: number
+  ): Tone.Synth[] {
+    const aperiodicWave = APERIODIC_WAVES[waveform];
+    if (!aperiodicWave) {
+      console.warn(`Aperiodic wave '${waveform}' not found, falling back to sine`);
+      return [new Tone.Synth({ oscillator: { type: "sine" }, envelope }).connect(masterVolumeRef.current!)];
+    }
+
+    // Since AperiodicWave has periodicWaves and detunings like in the original code,
+    // we need to access them. Let's try to get them from the object
+    const periodicWaves = (aperiodicWave as any).periodicWaves || [];
+    const detunings = (aperiodicWave as any).detunings || [];
+    
+    // Create multiple synths for each periodic wave component
+    const synths: Tone.Synth[] = [];
+    const maxVoices = Math.min(periodicWaves.length, detunings.length, 8); // Limit to 8 voices for performance
+    
+    if (maxVoices === 0) {
+      // Fallback: if we can't access the components, create a single synth
+      return [new Tone.Synth({ oscillator: { type: "sine" }, envelope }).connect(masterVolumeRef.current!)];
+    }
+    
+    for (let i = 0; i < maxVoices; i++) {
+      const synth = new Tone.Synth({
+        oscillator: { type: "sine" }, // Use sine waves for each component
+        envelope: envelope
+      }).connect(masterVolumeRef.current!);
+      
+      // Set individual volume based on equal amplitude distribution
+      synth.volume.value = Tone.gainToDb(volume * (1 / Math.sqrt(maxVoices)));
+      
+      synths.push(synth);
+    }
+    
+    return synths;
+  }, []);
+
+  // Helper function to create a custom Web Audio oscillator for custom periodic waves
+  const createCustomOscillator = useCallback(function createCustomOscillator(
+    waveform: string,
+    frequency: number,
+    envelope: { attack: number; decay: number; sustain: number; release: number },
+    volume: number,
+    startTime: number = Tone.now(),
+    destinationNode?: Tone.ToneAudioNode
+  ): { oscillator: OscillatorNode; gain: GainNode; stop: () => void } {
+    const oscillator = Tone.context.createOscillator();
+    const gainNode = Tone.context.createGain();
+    
+    // Set the custom periodic wave
+    if (PERIODIC_WAVES[waveform]) {
+      oscillator.setPeriodicWave(PERIODIC_WAVES[waveform]);
+    }
+    
+    oscillator.frequency.value = frequency;
+    oscillator.connect(gainNode);
+    
+    // Connect to specified destination or default to master volume
+    const targetNode = destinationNode || masterVolumeRef.current!;
+    gainNode.connect((targetNode.input as any).input);
+    
+    // Apply ADSR envelope with null checks
+    const safeVolume = Math.max(0, Math.min(1, volume || 0));
+    const safeSustain = Math.max(0, Math.min(1, envelope.sustain || 0.5));
+    const safeAttack = Math.max(0, envelope.attack || 0.01);
+    const safeDecay = Math.max(0, envelope.decay || 0.1);
+    
+    gainNode.gain.setValueAtTime(0, startTime);
+    gainNode.gain.linearRampToValueAtTime(safeVolume, startTime + safeAttack);
+    gainNode.gain.exponentialRampToValueAtTime(safeSustain * safeVolume, startTime + safeAttack + safeDecay);
+    
+    oscillator.start(startTime);
+    
+    const stop = () => {
+      const now = Tone.now();
+      const safeRelease = Math.max(0.001, envelope.release || 0.1);
+      gainNode.gain.cancelScheduledValues(now);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, now + safeRelease);
+      oscillator.stop(now + safeRelease);
+    };
+    
+    return { oscillator, gain: gainNode, stop };
+  }, []);
+
+  // Helper function to create periodic wave synth
+  const createPeriodicSynth = useCallback(function createPeriodicSynth(
+    waveform: string,
+    envelope: { attack: number; decay: number; sustain: number; release: number },
+    volume: number,
+    destinationNode?: Tone.ToneAudioNode
+  ): Tone.Synth | any {
+    const targetNode = destinationNode || masterVolumeRef.current!;
+    
+    // For basic waveforms, use Tone.js built-in oscillators
+    if (["sine", "square", "sawtooth", "triangle"].includes(waveform)) {
+      const synth = new Tone.Synth({
+        oscillator: { type: waveform as any },
+        envelope: envelope
+      }).connect(targetNode);
+      
+      synth.volume.value = Tone.gainToDb(volume);
+      return synth;
+    }
+    
+    // For custom periodic waves, return a custom object that mimics Tone.Synth interface
+    let currentCustomOsc: { oscillator: OscillatorNode; gain: GainNode; stop: () => void } | null = null;
+    
+    return {
+      triggerAttack: (frequency: number) => {
+        currentCustomOsc = createCustomOscillator(waveform, frequency, envelope, volume, Tone.now(), destinationNode);
+      },
+      triggerRelease: () => {
+        if (currentCustomOsc) {
+          currentCustomOsc.stop();
+          currentCustomOsc = null;
+        }
+      },
+      disconnect: () => {
+        // Custom oscillators handle their own connections
+      },
+      connect: (node: any) => {
+        // Custom oscillators handle their own connections
+        return node;
+      }
+    };
+  }, [createCustomOscillator]);
+
   useEffect(() => {
     const newSelectedPitchClasses = [];
 
@@ -455,41 +589,41 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
   }, [allPitchClasses]);
 
   useEffect(() => {
+    // Initialize Tone.js
+    Tone.start();
+
+    // Create master volume control
+    const masterVolume = new Tone.Volume().toDestination();
+    masterVolume.volume.value = Tone.gainToDb(soundSettings.volume);
+    masterVolumeRef.current = masterVolume;
+
+    // Create drone volume control
+    const droneVolume = new Tone.Volume();
+    droneVolume.connect(masterVolume);
+    droneVolume.volume.value = Tone.gainToDb((soundSettings.droneVolume ?? 0.3) * MAX_DRONE_GAIN);
+    droneVolumeRef.current = droneVolume;
+
+    // Also initialize Web Audio Context for custom waves
     const AudioContext = window.AudioContext;
     const audioCtx = new AudioContext();
     audioCtxRef.current = audioCtx;
-
-    const masterGain = audioCtx.createGain();
-    masterGain.gain.value = soundSettings.volume;
-    masterGain.connect(audioCtx.destination);
-    masterGainRef.current = masterGain;
-
-  // Create drone gain and connect it to masterGain so drone volume is independent
-  const droneGain = audioCtx.createGain();
-  droneGain.gain.value = (soundSettings.droneVolume ?? 0.3) * MAX_DRONE_GAIN;
-  droneGain.connect(masterGain);
-  droneGainRef.current = droneGain;
-
-    // ← initialize *all* periodic & aperiodic waves here
+    
+    // Initialize custom periodic and aperiodic waves
     initializeCustomWaves(audioCtx);
   }, []);
 
   useEffect(() => {
-    if (masterGainRef.current && audioCtxRef.current) {
-      masterGainRef.current.gain.setValueAtTime(soundSettings.volume, audioCtxRef.current.currentTime);
+    if (masterVolumeRef.current) {
+      masterVolumeRef.current.volume.value = Tone.gainToDb(soundSettings.volume);
     }
-    // keep drone gain in sync with droneVolume (if created)
-    if (droneGainRef.current && audioCtxRef.current) {
-      // Use a short linear ramp to reduce clicks when adjusting drone volume
-      const now = audioCtxRef.current.currentTime;
+    // keep drone volume in sync with droneVolume (if created)
+    if (droneVolumeRef.current) {
       try {
-  droneGainRef.current.gain.cancelScheduledValues(now);
-  droneGainRef.current.gain.setValueAtTime(droneGainRef.current.gain.value, now);
-  droneGainRef.current.gain.linearRampToValueAtTime((soundSettings.droneVolume ?? 0) * MAX_DRONE_GAIN, now + 0.02);
+        droneVolumeRef.current.volume.rampTo(Tone.gainToDb((soundSettings.droneVolume ?? 0) * MAX_DRONE_GAIN), 0.02);
       } catch (err) {
         // Fallback to immediate set and log the error
-        console.warn("Could not apply gain ramp to droneGain:", err);
-  droneGainRef.current.gain.setValueAtTime((soundSettings.droneVolume ?? 0) * MAX_DRONE_GAIN, audioCtxRef.current.currentTime);
+        console.warn("Could not apply volume ramp to droneVolume:", err);
+        droneVolumeRef.current.volume.value = Tone.gainToDb((soundSettings.droneVolume ?? 0) * MAX_DRONE_GAIN);
       }
     }
   }, [soundSettings.volume, soundSettings.droneVolume]);
@@ -638,95 +772,51 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
       return;
     }
 
-    // For waveform output, manually instantiate oscillator/gainNode with ADSR (no release) and store in activeNotesRef
-    if (!audioCtxRef.current || !masterGainRef.current) return;
-    const audioCtx = audioCtxRef.current;
-    const masterGain = masterGainRef.current;
-    const startTime = audioCtx.currentTime;
+    // For waveform output using Tone.js
+    if (!masterVolumeRef.current) return;
     const { attack, decay, sustain, waveform } = soundSettings;
     // Polyphony normalization: scale each voice so overlapping notes don’t clip
     const upcomingCount = Array.from(activeNotesRef.current.values()).reduce((sum, v) => sum + v.length, 0) + 1;
     const polyScale = (1 / Math.sqrt(upcomingCount)) * velocityCurve;
 
-    // Handle aperiodic waves
-    if (APERIODIC_WAVES[waveform]) {
-      const aw = APERIODIC_WAVES[waveform];
-      const pws = aw.periodicWaves;
-      const dets = aw.detunings;
+    const envelope = {
+      attack: attack,
+      decay: decay,
+      sustain: sustain,
+      release: soundSettings.release
+    };
 
-      const merger = audioCtx.createGain();
-      const oscs: OscillatorNode[] = [];
-
-      for (let i = 0; i < pws.length; i++) {
-        const oscNode = audioCtx.createOscillator();
-        oscNode.setPeriodicWave(pws[i]);
-        const detunedFreq = frequency * Math.pow(2, dets[i] / 1200);
-        oscNode.frequency.setValueAtTime(detunedFreq, startTime);
-        oscNode.connect(merger);
-        oscs.push(oscNode);
-      }
-
-      merger.gain.setValueAtTime(1 / Math.sqrt(pws.length), startTime);
-      const source = merger;
-
-      const gainNode = audioCtx.createGain();
-      const peakLevel = velocityCurve;
-      const sustainLevel = sustain * velocityCurve;
-      const attackEndTime = startTime + attack;
-      const decayEndTime = attackEndTime + decay;
-
-      gainNode.gain.setValueAtTime(0, startTime);
-      gainNode.gain.linearRampToValueAtTime(peakLevel, attackEndTime);
-      gainNode.gain.linearRampToValueAtTime(sustainLevel, decayEndTime);
-
-      source.connect(gainNode).connect(masterGain);
-
-      const prev = activeNotesRef.current.get(pitchClass.fraction) || [];
-      prev.push({ oscillator: oscs, gainNode, frequency });
-      activeNotesRef.current.set(pitchClass.fraction, prev);
-      oscs.forEach((osc) => osc.start(startTime));
-      return;
+    // Check if this is an aperiodic waveform
+    const isAperiodic = APERIODIC_WAVEFORMS.includes(waveform);
+    
+    let synths: Tone.Synth | Tone.Synth[];
+    
+    if (isAperiodic) {
+      // Create multiple synths for aperiodic waves
+      synths = createAperiodicSynths(waveform, frequency, envelope, polyScale);
+      
+      // Trigger all synths with their detuned frequencies
+      const aperiodicWave = APERIODIC_WAVES[waveform];
+      const detunings = aperiodicWave?.detunings || [];
+      
+      synths.forEach((synth, index) => {
+        const detuneCents = detunings[index] || 0;
+        const safeDetuneCents = Math.max(-1200, Math.min(1200, detuneCents)); // Limit to ±1 octave
+        const detuneRatio = Math.pow(2, safeDetuneCents / 1200);
+        const synthFreq = Math.max(20, frequency * detuneRatio); // Ensure frequency is above 20Hz
+        synth.triggerAttack(synthFreq);
+      });
+    } else {
+      // Create single synth for periodic waves
+      synths = createPeriodicSynth(waveform, envelope, polyScale);
+      (synths as any).triggerAttack(frequency);
     }
 
-    const osc = audioCtx.createOscillator();
-    function createZeroPhasePeriodicWave(type: string, ctx: AudioContext) {
-      let real, imag, N;
-      if (type === "sine") {
-        real = new Float32Array(2);
-        imag = new Float32Array(2);
-        real[0] = 0; real[1] = 1; imag[0] = 0; imag[1] = 0;
-        return ctx.createPeriodicWave(real, imag, { disableNormalization: false });
-      } else if (type === "triangle") {
-        N = 32; real = new Float32Array(N); imag = new Float32Array(N); real[0] = 0;
-        for (let n = 1; n < N; n++) if (n % 2 === 1) { real[n] = (8 / (Math.PI * Math.PI)) * (1 / (n * n)) * (n % 4 === 1 ? 1 : -1); imag[n] = 0; }
-        return ctx.createPeriodicWave(real, imag, { disableNormalization: false });
-      } else if (type === "square") {
-        N = 32; real = new Float32Array(N); imag = new Float32Array(N); real[0] = 0;
-        for (let n = 1; n < N; n++) if (n % 2 === 1) { real[n] = 4 / (Math.PI * n); imag[n] = 0; }
-        return ctx.createPeriodicWave(real, imag, { disableNormalization: false });
-      } else if (type === "sawtooth") {
-        N = 32; real = new Float32Array(N); imag = new Float32Array(N); real[0] = 0;
-        for (let n = 1; n < N; n++) { real[n] = 2 / (Math.PI * n); imag[n] = 0; }
-        return ctx.createPeriodicWave(real, imag, { disableNormalization: false });
-      }
-      return null;
-    }
-    let customWave: PeriodicWave | null = null;
-    if (["sine", "triangle", "square", "sawtooth"].includes(waveform)) {
-      customWave = createZeroPhasePeriodicWave(waveform, audioCtx);
-      if (customWave) osc.setPeriodicWave(customWave); else osc.type = waveform as OscillatorType;
-    } else if (PERIODIC_WAVES[waveform]) osc.setPeriodicWave(PERIODIC_WAVES[waveform]); else osc.type = waveform as OscillatorType;
-    try { osc.frequency.setValueAtTime(frequency ?? 0, startTime); } catch (e) { console.error("Error setting frequency on oscillator:", e, frequency, startTime, pitchClass); }
-    const gainNode = audioCtx.createGain();
-    const peakLevel = polyScale; const sustainLevel = sustain * polyScale; const attackEndTime = startTime + attack; const decayEndTime = attackEndTime + decay;
-    gainNode.gain.setValueAtTime(0, startTime);
-    gainNode.gain.linearRampToValueAtTime(peakLevel, attackEndTime);
-    gainNode.gain.linearRampToValueAtTime(sustainLevel, decayEndTime);
-    osc.connect(gainNode).connect(masterGain);
-    osc.start(startTime);
     const prev = activeNotesRef.current.get(pitchClass.fraction) || [];
-    prev.push({ oscillator: osc, gainNode, frequency });
+    prev.push({ synth: synths, frequency, isAperiodic });
     activeNotesRef.current.set(pitchClass.fraction, prev);
+
+
   }, [allocateMPEChannel, sendMidiMessage, sendPitchBend, soundSettings.attack, soundSettings.decay, soundSettings.octaveShift, soundSettings.outputMode, soundSettings.pitchBendRange, soundSettings.sustain, soundSettings.useMPE, soundSettings.volume, soundSettings.waveform]);
 
   const noteOff = useCallback(function noteOff(pitchClass: PitchClass) {
@@ -742,10 +832,17 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
       midiActiveNotesRef.current.delete(pitchClass.fraction);
       return;
     }
-    const audioCtx = audioCtxRef.current!; const now = audioCtx.currentTime; const { release } = soundSettings;
-    const queue = activeNotesRef.current.get(pitchClass.fraction) || []; if (!queue.length) return;
-    const voice = queue.shift()!; voice.gainNode.gain.cancelScheduledValues(now); voice.gainNode.gain.setValueAtTime(voice.gainNode.gain.value, now); voice.gainNode.gain.linearRampToValueAtTime(0, now + release);
-    if (Array.isArray(voice.oscillator)) voice.oscillator.forEach((osc) => osc.stop(now + release)); else voice.oscillator.stop(now + release);
+    const queue = activeNotesRef.current.get(pitchClass.fraction) || []; 
+    if (!queue.length) return;
+    const voice = queue.shift()!; 
+    
+    // Trigger release with Tone.js
+    if (Array.isArray(voice.synth)) {
+      voice.synth.forEach((synth) => synth.triggerRelease());
+    } else {
+      voice.synth.triggerRelease();
+    }
+    
     activeNotesRef.current.set(pitchClass.fraction, queue);
   }, [releaseMPEChannel, sendMidiMessage, soundSettings.outputMode, soundSettings.release, soundSettings.useMPE]);
 
@@ -835,52 +932,67 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
           const droneVel = typeof soundSettings.droneVolume === "number" ? Math.round(soundSettings.droneVolume * 127) : defaultDroneVelocity;
           noteOn(shiftPitchClass(allPitchClasses, pitchClasses[0], -1), droneVel);
         } else if (soundSettings.outputMode === "waveform") {
-          // Create a dedicated oscillator for the drone connected to droneGainRef
-          const audioCtx = audioCtxRef.current;
-          if (audioCtx && droneGainRef.current) {
+          // Create a dedicated drone synth using our helper functions
+          if (droneVolumeRef.current) {
             // stop existing drone if present
-            if (droneOscRef.current) {
+            if (droneSynthRef.current) {
               try {
-                if (Array.isArray(droneOscRef.current.oscillator)) droneOscRef.current.oscillator.forEach((o) => o.stop()); else droneOscRef.current.oscillator.stop();
-              } catch (err) {
-                console.warn("Error stopping existing drone oscillator:", err);
-              }
-              droneOscRef.current = null;
-            }
-
-            const osc = audioCtx.createOscillator();
-            const waveform = soundSettings.waveform;
-            if (["sine", "triangle", "square", "sawtooth"].includes(waveform)) {
-              // try to create zero-phase periodic wave like noteOn code
-              // reuse the internal helper by creating a simple periodic wave where possible
-              try {
-                // fallback to native oscillator type if creation not available
-                osc.type = waveform as OscillatorType;
-              } catch (err) {
-                osc.type = waveform as OscillatorType;
-                console.warn("Oscillator.type assignment fallback:", err);
-              }
-            } else {
-              // custom periodic waves exist on initialization
-              if (PERIODIC_WAVES[waveform]) {
-                try {
-                  osc.setPeriodicWave(PERIODIC_WAVES[waveform]);
-                } catch (err) {
-                  osc.type = "sine";
-                  console.warn("Failed to set periodic wave for drone, falling back to sine:", err);
+                if (Array.isArray(droneSynthRef.current.synth)) {
+                  droneSynthRef.current.synth.forEach((s) => s.triggerRelease());
+                } else {
+                  droneSynthRef.current.synth.triggerRelease();
                 }
-              } else {
-                osc.type = "sine";
+              } catch (err) {
+                console.warn("Error stopping existing drone synth:", err);
               }
+              droneSynthRef.current = null;
             }
 
             const tonicPc = shiftPitchClass(allPitchClasses, pitchClasses[0], -1);
-            const freq = parseFloat(tonicPc.frequency);
-            try { osc.frequency.setValueAtTime(freq, audioCtx.currentTime); } catch (err) { console.warn("Could not set drone oscillator frequency:", err); }
+            const freq = Math.max(20, parseFloat(tonicPc.frequency) || 440); // Fallback to 440Hz if invalid
+            const droneVolume = Math.max(0, Math.min(1, soundSettings.droneVolume ?? 0.3));
 
-            osc.connect(droneGainRef.current);
-            osc.start();
-            droneOscRef.current = { oscillator: osc, fraction: tonicPc.fraction };
+            // Drone envelope - long sustain for continuous sound
+            const droneEnvelope = {
+              attack: 0.1,
+              decay: 0,
+              sustain: 1,
+              release: 0.1
+            };
+
+            // Check if this is an aperiodic waveform and create appropriate synth(s)
+            const isAperiodic = APERIODIC_WAVEFORMS.includes(soundSettings.waveform);
+            
+            let droneSynth: Tone.Synth | Tone.Synth[];
+            
+            if (isAperiodic) {
+              // Create multiple synths for aperiodic drone waves
+              droneSynth = createAperiodicSynths(soundSettings.waveform, freq, droneEnvelope, droneVolume);
+              
+              // Connect to drone volume and trigger with detuned frequencies
+              const aperiodicWave = APERIODIC_WAVES[soundSettings.waveform];
+              const detunings = aperiodicWave?.detunings || [];
+              
+              droneSynth.forEach((synth, index) => {
+                // Disconnect from master volume and connect to drone volume
+                synth.disconnect();
+                synth.connect(droneVolumeRef.current!);
+                
+                const detuneCents = detunings[index] || 0;
+                const safeDetuneCents = Math.max(-1200, Math.min(1200, detuneCents)); // Limit to ±1 octave
+                const detuneRatio = Math.pow(2, safeDetuneCents / 1200);
+                const synthFreq = Math.max(20, freq * detuneRatio); // Ensure frequency is above 20Hz
+                synth.triggerAttack(synthFreq);
+              });
+            } else {
+              // Create single synth for periodic drone waves, connected to drone volume
+              droneSynth = createPeriodicSynth(soundSettings.waveform, droneEnvelope, droneVolume, droneVolumeRef.current!);
+              
+              // Trigger the drone synth
+              (droneSynth as any).triggerAttack(freq);
+            }
+
+            droneSynthRef.current = { synth: droneSynth, fraction: tonicPc.fraction };
           } else {
             // Fallback: use noteOn which handles both waveform and MIDI in its own way
             const droneVel = typeof soundSettings.droneVolume === "number" ? Math.round(soundSettings.droneVolume * 127) : defaultDroneVelocity;
@@ -966,15 +1078,19 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
       if (soundSettings.drone) {
         scheduleTimeout(() => {
-          // stop drone oscillator if waveform
-          if (soundSettings.outputMode === "waveform" && droneOscRef.current) {
+          // stop drone synth if waveform
+          if (soundSettings.outputMode === "waveform" && droneSynthRef.current) {
             try {
-              const d = droneOscRef.current;
-              if (Array.isArray(d.oscillator)) d.oscillator.forEach((o) => o.stop()); else d.oscillator.stop();
+              const d = droneSynthRef.current;
+              if (Array.isArray(d.synth)) {
+                d.synth.forEach((s) => s.triggerRelease());
+              } else {
+                d.synth.triggerRelease();
+              }
             } catch (err) {
-              console.warn("Error stopping drone oscillator:", err);
+              console.warn("Error stopping drone synth:", err);
             }
-            droneOscRef.current = null;
+            droneSynthRef.current = null;
           } else {
             noteOff(shiftPitchClass(allPitchClasses, pitchClasses[0], -1));
           }
@@ -991,37 +1107,31 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
   const stopAllSounds = useCallback(function stopAllSounds() {
     timeoutsRef.current.forEach(clearTimeout);
     timeoutsRef.current = [];
-    const FADEOUT_MS = 5;
-    const audioCtx = audioCtxRef.current;
-    const now = audioCtx ? audioCtx.currentTime : 0;
+    
+    // Stop all active synths using Tone.js
     for (const voices of activeNotesRef.current.values()) {
-      voices.forEach(({ oscillator, gainNode }) => {
-        if (audioCtx) {
-          gainNode.gain.cancelScheduledValues(now);
-          gainNode.gain.setValueAtTime(gainNode.gain.value, now);
-          gainNode.gain.linearRampToValueAtTime(0, now + FADEOUT_MS / 1000);
-        }
-        if (Array.isArray(oscillator)) {
-          oscillator.forEach((osc) => osc.stop(audioCtx ? now + FADEOUT_MS / 1000 : undefined));
+      voices.forEach(({ synth }) => {
+        if (Array.isArray(synth)) {
+          synth.forEach((s) => s.triggerRelease());
         } else {
-          oscillator.stop(audioCtx ? now + FADEOUT_MS / 1000 : undefined);
+          synth.triggerRelease();
         }
       });
     }
     activeNotesRef.current.clear();
 
-    // Stop drone oscillator if it's running
-    if (droneOscRef.current) {
+    // Stop drone synth if it's running
+    if (droneSynthRef.current) {
       try {
-        if (Array.isArray(droneOscRef.current.oscillator)) {
-          droneOscRef.current.oscillator.forEach((osc) => osc.stop(audioCtx ? now + FADEOUT_MS / 1000 : undefined));
+        if (Array.isArray(droneSynthRef.current.synth)) {
+          droneSynthRef.current.synth.forEach((s) => s.triggerRelease());
         } else {
-          droneOscRef.current.oscillator.stop(audioCtx ? now + FADEOUT_MS / 1000 : undefined);
+          droneSynthRef.current.synth.triggerRelease();
         }
       } catch (err) {
-        console.warn("Error stopping drone oscillator:", err);
+        console.warn("Error stopping drone synth:", err);
       }
-      droneOscRef.current = null;
+      droneSynthRef.current = null;
     }
 
     // Send note off for all active MIDI notes
@@ -1047,21 +1157,13 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
   }, [sendMidiMessage, soundSettings.useMPE]);
 
   const clearHangingNotes = useCallback(function clearHangingNotes() {
-    // Fade out all active voices over 5ms before stopping oscillators
-    const FADEOUT_MS = 5;
-    const audioCtx = audioCtxRef.current;
-    const now = audioCtx ? audioCtx.currentTime : 0;
+    // Release all active synths using Tone.js
     for (const voices of activeNotesRef.current.values()) {
-      voices.forEach(({ oscillator, gainNode }) => {
-        if (audioCtx) {
-          gainNode.gain.cancelScheduledValues(now);
-          gainNode.gain.setValueAtTime(gainNode.gain.value, now);
-          gainNode.gain.linearRampToValueAtTime(0, now + FADEOUT_MS / 1000);
-        }
-        if (Array.isArray(oscillator)) {
-          oscillator.forEach((osc) => osc.stop(audioCtx ? now + FADEOUT_MS / 1000 : undefined));
+      voices.forEach(({ synth }) => {
+        if (Array.isArray(synth)) {
+          synth.forEach((s) => s.triggerRelease());
         } else {
-          oscillator.stop(audioCtx ? now + FADEOUT_MS / 1000 : undefined);
+          synth.triggerRelease();
         }
       });
     }
@@ -1091,13 +1193,9 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
   // Simple function to update ALL active notes using a new reference frequency
   const updateAllActiveNotesByReferenceFrequency = useCallback(function updateAllActiveNotesByReferenceFrequency(newReferenceFrequency: number) {
-    const audioCtx = audioCtxRef.current;
-    if (!audioCtx) return;
-
-    const now = audioCtx.currentTime;
     const TRANSITION_TIME = 0.005; // 5ms smooth transition
 
-    // Update all Web Audio oscillators
+    // Update all Tone.js synths
     for (const [pitchClassFraction, voices] of activeNotesRef.current.entries()) {
       // Find the current pitch class for this fraction to get its decimal ratio
       const currentPitchClass = allPitchClasses.find((pc) => pc.fraction === pitchClassFraction);
@@ -1108,32 +1206,21 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
       voices.forEach((voice) => {
         voice.frequency = newFrequency; // Update stored frequency
 
-        if (Array.isArray(voice.oscillator)) {
-          // Handle aperiodic waves (multiple oscillators)
-          const waveform = soundSettings.waveform;
-          if (APERIODIC_WAVES[waveform]) {
-            const aw = APERIODIC_WAVES[waveform];
-            const detunings = aw.detunings;
-
-            voice.oscillator.forEach((osc, index) => {
-              const detunedNewFreq = newFrequency * Math.pow(2, detunings[index] / 1200);
-              try {
-                osc.frequency.cancelScheduledValues(now);
-                osc.frequency.setValueAtTime(osc.frequency.value, now);
-                osc.frequency.linearRampToValueAtTime(detunedNewFreq, now + TRANSITION_TIME);
-              } catch (e) {
-                console.warn("Could not update oscillator frequency:", e);
-              }
-            });
-          }
+        if (Array.isArray(voice.synth)) {
+          // Handle multiple synths
+          voice.synth.forEach((synth) => {
+            try {
+              synth.frequency.rampTo(newFrequency, TRANSITION_TIME);
+            } catch (e) {
+              console.warn("Could not update synth frequency:", e);
+            }
+          });
         } else {
-          // Handle single oscillator (periodic waves)
+          // Handle single synth
           try {
-            voice.oscillator.frequency.cancelScheduledValues(now);
-            voice.oscillator.frequency.setValueAtTime(voice.oscillator.frequency.value, now);
-            voice.oscillator.frequency.linearRampToValueAtTime(newFrequency, now + TRANSITION_TIME);
+            voice.synth.frequency.rampTo(newFrequency, TRANSITION_TIME);
           } catch (e) {
-            console.warn("Could not update oscillator frequency:", e);
+            console.warn("Could not update synth frequency:", e);
           }
         }
       });
@@ -1187,13 +1274,9 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
   // Function to recalculate all active note frequencies to match their current pitch class frequencies
   const recalculateAllActiveNoteFrequencies = useCallback(function recalculateAllActiveNoteFrequencies() {
-    const audioCtx = audioCtxRef.current;
-    if (!audioCtx) return;
-
-    const now = audioCtx.currentTime;
     const TRANSITION_TIME = 0.005; // 5ms smooth transition
 
-    // Update all Web Audio oscillators to their pitch class's current frequency
+    // Update all Tone.js synths to their pitch class's current frequency
     for (const [pitchClassFraction, voices] of activeNotesRef.current.entries()) {
       // Find the current pitch class for this fraction in allPitchClasses (which has updated frequencies)
       const currentPitchClass = allPitchClasses.find((pc) => pc.fraction === pitchClassFraction);
@@ -1204,32 +1287,21 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
       voices.forEach((voice) => {
         voice.frequency = targetFrequency; // Update stored frequency
 
-        if (Array.isArray(voice.oscillator)) {
-          // Handle aperiodic waves (multiple oscillators)
-          const waveform = soundSettings.waveform;
-          if (APERIODIC_WAVES[waveform]) {
-            const aw = APERIODIC_WAVES[waveform];
-            const detunings = aw.detunings;
-
-            voice.oscillator.forEach((osc, index) => {
-              const detunedTargetFreq = targetFrequency * Math.pow(2, detunings[index] / 1200);
-              try {
-                osc.frequency.cancelScheduledValues(now);
-                osc.frequency.setValueAtTime(osc.frequency.value, now);
-                osc.frequency.linearRampToValueAtTime(detunedTargetFreq, now + TRANSITION_TIME);
-              } catch (e) {
-                console.warn("Could not update oscillator frequency:", e);
-              }
-            });
-          }
+        if (Array.isArray(voice.synth)) {
+          // Handle multiple synths
+          voice.synth.forEach((synth) => {
+            try {
+              synth.frequency.rampTo(targetFrequency, TRANSITION_TIME);
+            } catch (e) {
+              console.warn("Could not update synth frequency:", e);
+            }
+          });
         } else {
-          // Handle single oscillator (periodic waves)
+          // Handle single synth
           try {
-            voice.oscillator.frequency.cancelScheduledValues(now);
-            voice.oscillator.frequency.setValueAtTime(voice.oscillator.frequency.value, now);
-            voice.oscillator.frequency.linearRampToValueAtTime(targetFrequency, now + TRANSITION_TIME);
+            voice.synth.frequency.rampTo(targetFrequency, TRANSITION_TIME);
           } catch (e) {
-            console.warn("Could not update oscillator frequency:", e);
+            console.warn("Could not update synth frequency:", e);
           }
         }
       });
