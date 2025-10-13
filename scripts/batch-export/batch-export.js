@@ -154,12 +154,45 @@ import * as path from 'path';
 function normalizeForMatching(str: string): string {
   return str
     .normalize('NFD')
-    .replace(/[\\u0300-\\u036f]/g, '') // Remove diacritics
-    .replace(/[āīūḥṣṭḍẓʿʾ]/g, (match: string) => {
-      const map: { [key: string]: string } = {'ā':'a','ī':'i','ū':'u','ḥ':'h','ṣ':'s','ṭ':'t','ḍ':'d','ẓ':'z','ʿ':'','ʾ':''};
-      return map[match] || match;
-    })
-    .toLowerCase();
+    .replace(/[\\u0300-\\u036f]/g, '') // Remove combining diacritics
+    .replace(/[āáàâäãåăąǎǟǡǻȁȃạảấầẩẫậắằẳẵặ]/gi, 'a')
+    .replace(/[ēéèêëĕėęěȅȇẹẻẽếềểễệ]/gi, 'e')
+    .replace(/[īíìîïĩĭįǐȉȋịỉĩ]/gi, 'i')
+    .replace(/[ōóòôöõŏőǒǫȍȏọỏốồổỗộớờởỡợ]/gi, 'o')
+    .replace(/[ūúùûüũŭůűųǔǖǘǚǜȕȗụủứừửữự]/gi, 'u')
+    .replace(/[ýỳŷÿỹȳẏỵỷ]/gi, 'y')
+    // Arabic transliteration characters
+    .replace(/[ḥḤ]/g, 'h') // ḥā'
+    .replace(/[ṣṢ]/g, 's') // ṣād
+    .replace(/[ṭṬ]/g, 't') // ṭā'
+    .replace(/[ḍḌ]/g, 'd') // ḍād
+    .replace(/[ẓẒ]/g, 'z') // ẓā'
+    .replace(/[ʿ]/g, '') // ʿayn (remove)
+    .replace(/[ʾ]/g, '') // hamza (remove)
+    .replace(/[ḏḎ]/g, 'd') // dhāl
+    .replace(/[ṯṮ]/g, 't') // thā'
+    .replace(/[ḫḪ]/g, 'kh') // khā'
+    .replace(/[ġĠ]/g, 'gh') // ghayn
+    .replace(/[šŠ]/g, 'sh') // shīn
+    .replace(/[žŽ]/g, 'zh') // zhē
+    .replace(/[čČ]/g, 'ch') // chē
+    .toLowerCase()
+    .trim();
+}
+
+// Format duration in human-readable format
+function formatDuration(seconds: number): string {
+  if (seconds < 60) {
+    return \`\${seconds.toFixed(2)}s\`;
+  }
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = (seconds % 60).toFixed(0);
+  if (minutes < 60) {
+    return \`\${minutes}m \${remainingSeconds}s\`;
+  }
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+  return \`\${hours}h \${remainingMinutes}m \${remainingSeconds}s\`;
 }
 
 async function run() {
@@ -202,6 +235,22 @@ async function run() {
     if (!fs.existsSync(actualOutputDir)) {
       fs.mkdirSync(actualOutputDir, { recursive: true });
     }
+
+    // Initialize log data structure
+    const logData = {
+      exportStartTime: new Date().toISOString(),
+      exportEndTime: null,
+      totalDurationSeconds: 0,
+      exportOptions: {
+        includeAjnasDetails: options.includeAjnasDetails,
+        includeMaqamatDetails: options.includeMaqamatDetails,
+        includeMaqamToMaqamModulations: options.includeMaqamToMaqamModulations,
+        includeMaqamToJinsModulations: options.includeMaqamToJinsModulations,
+        includeModulations8vb: options.includeModulations8vb,
+      },
+      tuningSystems: []
+    };
+    const exportStartTime = Date.now();
 
     const exportOptions: ExportOptions = {
       includeTuningSystemDetails: true,
@@ -259,10 +308,21 @@ async function run() {
     let systemIndex = 0;
     for (const tuningSystem of tuningSystemsToProcess) {
       systemIndex++;
+      const systemStartTime = Date.now();
 
       console.log(\`\\n[\${systemIndex}/\${tuningSystemsToProcess.length}] Processing: \${tuningSystem.getId()}\`);
       console.log(\`Title: \${tuningSystem.getTitleEnglish()}\`);
       console.log('-'.repeat(50));
+
+      // Initialize log entry for this tuning system
+      const systemLogEntry = {
+        tuningSystemId: tuningSystem.getId(),
+        tuningSystemTitle: tuningSystem.getTitleEnglish(),
+        startTime: new Date().toISOString(),
+        endTime: null,
+        durationSeconds: 0,
+        startingNotes: []
+      };
 
       let startingNotesToProcess: NoteName[] = [];
 
@@ -287,10 +347,22 @@ async function run() {
       let j = 0;
       for (const startingNote of startingNotesToProcess) {
         j++;
+        const noteStartTime = Date.now();
         const overallProgress = \`(\${completedExports + 1}/\${totalExports})\`;
         const systemProgress = startingNotesToProcess.length > 1 ? \` [\${j}/\${startingNotesToProcess.length}]\` : '';
 
         console.log(\`\\n  \${overallProgress}\${systemProgress} → \${startingNote}\`);
+
+        // Initialize log entry for this starting note
+        const noteLogEntry = {
+          startingNote: startingNote,
+          startTime: new Date().toISOString(),
+          endTime: null,
+          durationSeconds: 0,
+          success: false,
+          errorMessage: null,
+          stats: null
+        };
 
         try {
           // Force garbage collection before each export if available
@@ -414,6 +486,9 @@ async function run() {
             if (stats.totalMaqamModulations > 0 || stats.totalAjnasModulations > 0) {
               console.log(\`    🔄 Modulations: Maqam=\${stats.totalMaqamModulations}, Ajnas=\${stats.totalAjnasModulations}\`);
             }
+
+            // Store stats in log
+            noteLogEntry.stats = stats;
           }
 
           console.log(\`    📈 Overall Progress: \${completedExports}/\${totalExports} (\${progressPercent}%) completed\`);
@@ -423,12 +498,24 @@ async function run() {
             console.log(\`    ⏳ \${remaining} configurations remaining...\`);
           }
 
+          // Mark as successful
+          noteLogEntry.success = true;
+
           // Explicit cleanup after each export
           // exportData = null; // Skip explicit nulling since it's const
 
         } catch (error) {
           console.error(\`\\n✗ Failed to export \${tuningSystem.getId()} with \${startingNote}:\`, error.message);
+          noteLogEntry.errorMessage = error.message;
         }
+
+        // Record end time and duration for this starting note
+        const noteEndTime = Date.now();
+        noteLogEntry.endTime = new Date().toISOString();
+        noteLogEntry.durationSeconds = Number(((noteEndTime - noteStartTime) / 1000).toFixed(2));
+        systemLogEntry.startingNotes.push(noteLogEntry);
+
+        console.log(\`    ⏱️  Export time: \${noteLogEntry.durationSeconds}s\`);
 
         // Force garbage collection after each export to prevent memory buildup
         if (global.gc) {
@@ -440,6 +527,14 @@ async function run() {
       if (global.gc) {
         global.gc();
       }
+
+      // Record end time and duration for this tuning system
+      const systemEndTime = Date.now();
+      systemLogEntry.endTime = new Date().toISOString();
+      systemLogEntry.durationSeconds = Number(((systemEndTime - systemStartTime) / 1000).toFixed(2));
+      logData.tuningSystems.push(systemLogEntry);
+
+      console.log(\`\\n  ⏱️  Total system time: \${systemLogEntry.durationSeconds}s\`);
     }
 
     console.log('\\n' + '='.repeat(60));
@@ -454,6 +549,33 @@ async function run() {
     if (failedExports > 0) {
       console.log(\`⚠️  \${failedExports} exports failed - check error messages above\`);
     }
+
+    // Finalize log data
+    const exportEndTime = Date.now();
+    logData.exportEndTime = new Date().toISOString();
+    logData.totalDurationSeconds = Number(((exportEndTime - exportStartTime) / 1000).toFixed(2));
+
+    // Calculate summary statistics
+    logData.summary = {
+      totalTuningSystems: logData.tuningSystems.length,
+      totalStartingNotes: logData.tuningSystems.reduce((sum, ts) => sum + ts.startingNotes.length, 0),
+      successfulExports: completedExports,
+      failedExports: failedExports,
+      averageTimePerExport: logData.tuningSystems.length > 0 
+        ? Number((logData.totalDurationSeconds / completedExports).toFixed(2))
+        : 0,
+      totalDurationFormatted: formatDuration(logData.totalDurationSeconds)
+    };
+
+    // Write log file
+    const logFileName = 'export-log_' + new Date().toISOString().replace(/[:.]/g, '-').split('T')[0] + '_' + 
+                        new Date().toISOString().replace(/[:.]/g, '-').split('T')[1].split('.')[0] + '.json';
+    const logFilePath = path.join(actualOutputDir, logFileName);
+    fs.writeFileSync(logFilePath, JSON.stringify(logData, null, 2));
+
+    console.log(\`\\n📊 Export log saved: \${logFileName}\`);
+    console.log(\`⏱️  Total export time: \${logData.summary.totalDurationFormatted}\`);
+    console.log(\`📈 Average time per export: \${logData.summary.averageTimePerExport}s\`);
 
   } catch (error) {
     console.error('Fatal error:', error.message);
