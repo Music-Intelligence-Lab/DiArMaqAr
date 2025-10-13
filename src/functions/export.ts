@@ -15,24 +15,27 @@ import { classifyMaqamFamily } from "./classifyMaqamFamily";
  * Multi-method maqam family classification for research and analysis.
  * Each classification method provides a different perspective on how to group maqamat.
  * All methods are optional - only calculated methods will be present in exports.
+ * 
+ * Family names reference the maqamFamilyReference lookup for display names.
  */
 export interface ExportMaqamFamilyClassification {
   /** Classification by first jins at scale degree 1 */
   firstJins?: {
+    /** Normalized family name (references maqamFamilyReference for display) */
     familyName: string;
   };
   
   // Future classification methods can be added here:
   // predominantJins?: {
-  //   familyName: string;
+  //   familyName: string; // references maqamFamilyReference
   //   occurrences?: number;
   // };
   // finalJins?: {
-  //   familyName: string;
+  //   familyName: string; // references maqamFamilyReference
   //   scaleDegree?: number;
   // };
   // tonicRelationship?: {
-  //   familyName: string;
+  //   familyName: string; // references maqamFamilyReference
   // };
 }
 
@@ -391,6 +394,7 @@ interface ExportedTuningSystem {
 
   // Lookup references
   pitchClassReference?: { [noteName: string]: PitchClass };
+  maqamFamilyReference?: { [familyName: string]: { displayName: string } };
 
   // Main musical data
   allAjnasData?: { [ajnasName: string]: MergedJins };
@@ -447,6 +451,7 @@ interface ExportedMaqam {
   tuningSystemData?: TuningSystem;
   startingNote?: NoteName;
   pitchClassReference?: { [noteName: string]: PitchClass };
+  maqamFamilyReference?: { [familyName: string]: { displayName: string } };
   allAjnasData?: { [ajnasName: string]: MergedJins };
   allMaqamatData?: { [maqamName: string]: MergedMaqam };
   tuningSystemPitchClasses?: string[];
@@ -932,6 +937,9 @@ export async function exportTuningSystem(
   });
   result.pitchClassReference = pitchClassReference;
 
+  // Initialize maqam family reference dictionary
+  const maqamFamilyReference: { [familyName: string]: { displayName: string } } = {};
+
   // === 6. MUSICAL DATA SECTION (Core Content) ===
   const jinsReference: { [jinsName: string]: MergedJins } = {};
   const maqamReference: { [maqamName: string]: MergedMaqam } = {};
@@ -1228,9 +1236,18 @@ export async function exportTuningSystem(
             if (tahlil) {
               try {
                 const classification = classifyMaqamFamily(tahlil);
+                const normalizedFamilyName = standardizeText(classification.familyName);
+                
+                // Add to family reference dictionary if not already present
+                if (!maqamFamilyReference[normalizedFamilyName]) {
+                  maqamFamilyReference[normalizedFamilyName] = {
+                    displayName: classification.familyName
+                  };
+                }
+                
                 return {
                   firstJins: {
-                    familyName: classification.familyName,
+                    familyName: normalizedFamilyName,
                   }
                 };
               } catch (error) {
@@ -1238,9 +1255,12 @@ export async function exportTuningSystem(
               }
             }
             // Fallback if classification fails
+            if (!maqamFamilyReference["no_jins"]) {
+              maqamFamilyReference["no_jins"] = { displayName: "no jins" };
+            }
             return {
               firstJins: {
-                familyName: "no jins",
+                familyName: "no_jins",
               }
             };
           })(),
@@ -1274,6 +1294,8 @@ export async function exportTuningSystem(
   // Only include maqamat data if it was requested in the export options
   if (options.includeMaqamatDetails) {
     result.allMaqamatData = maqamReference;
+    // Only include family reference if we have maqamat
+    result.maqamFamilyReference = maqamFamilyReference;
   }
 
   updateProgress(98, "Export compilation complete!");
@@ -1599,10 +1621,15 @@ export async function exportMaqam(
     result.tuningSystemPitchClasses = fullRangeTuningSystemPitchClasses.map((pc) => standardizeText(pc.noteName));
   }
 
+  // Initialize maqam family reference dictionary
+  const maqamFamilyReference: { [familyName: string]: { displayName: string } } = {
+    "no_jins": { displayName: "no jins" }
+  };
+
   // Calculate classification once - will be reused for main maqam and all transpositions
   let maqamClassification: ExportMaqamFamilyClassification = {
     firstJins: {
-      familyName: "no jins",
+      familyName: "no_jins",
     }
   };
   
@@ -1615,16 +1642,25 @@ export async function exportMaqam(
       // This IS the tahlil, classify it directly
       try {
         const result = classifyMaqamFamily(maqamToExport);
+        const normalizedFamilyName = standardizeText(result.familyName);
+        
+        // Add to family reference dictionary
+        if (!maqamFamilyReference[normalizedFamilyName]) {
+          maqamFamilyReference[normalizedFamilyName] = {
+            displayName: result.familyName
+          };
+        }
+        
         maqamClassification = {
           firstJins: {
-            familyName: result.familyName,
+            familyName: normalizedFamilyName,
           }
         };
       } catch (error) {
         console.warn(`⚠️ Could not classify maqam ${maqamToExport.name}:`, error);
         maqamClassification = {
           firstJins: {
-            familyName: "no jins",
+            familyName: "no_jins",
           }
         };
       }
@@ -1637,23 +1673,32 @@ export async function exportMaqam(
       if (tahlil) {
         try {
           const result = classifyMaqamFamily(tahlil);
+          const normalizedFamilyName = standardizeText(result.familyName);
+          
+          // Add to family reference dictionary
+          if (!maqamFamilyReference[normalizedFamilyName]) {
+            maqamFamilyReference[normalizedFamilyName] = {
+              displayName: result.familyName
+            };
+          }
+          
           maqamClassification = {
             firstJins: {
-              familyName: result.familyName,
+              familyName: normalizedFamilyName,
             }
           };
         } catch (error) {
           console.warn(`⚠️ Could not classify maqam ${maqamToExport.name}:`, error);
           maqamClassification = {
             firstJins: {
-              familyName: "no jins",
+              familyName: "no_jins",
             }
           };
         }
       } else {
         maqamClassification = {
           firstJins: {
-            familyName: "no jins",
+            familyName: "no_jins",
           }
         };
       }
@@ -1781,7 +1826,7 @@ export async function exportMaqam(
 
     // Reuse classification calculated above, or calculate it now if not done yet
     let sharedClassification: ExportMaqamFamilyClassification;
-    if (maqamClassification.firstJins && maqamClassification.firstJins.familyName !== "no jins") {
+    if (maqamClassification.firstJins && maqamClassification.firstJins.familyName !== "no_jins") {
       sharedClassification = maqamClassification;
     } else {
       // Calculate classification ONCE from the tahlil - all transpositions inherit it
@@ -1790,23 +1835,32 @@ export async function exportMaqam(
       if (tahlil) {
         try {
           const result = classifyMaqamFamily(tahlil);
+          const normalizedFamilyName = standardizeText(result.familyName);
+          
+          // Add to family reference dictionary
+          if (!maqamFamilyReference[normalizedFamilyName]) {
+            maqamFamilyReference[normalizedFamilyName] = {
+              displayName: result.familyName
+            };
+          }
+          
           sharedClassification = {
             firstJins: {
-              familyName: result.familyName,
+              familyName: normalizedFamilyName,
             }
           };
         } catch (error) {
           console.warn(`⚠️ Could not classify maqam ${tahlil.name}:`, error);
           sharedClassification = {
             firstJins: {
-              familyName: "no jins",
+              familyName: "no_jins",
             }
           };
         }
       } else {
         sharedClassification = {
           firstJins: {
-            familyName: "no jins",
+            familyName: "no_jins",
           }
         };
       }
