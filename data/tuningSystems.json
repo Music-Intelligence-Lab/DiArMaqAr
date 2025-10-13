@@ -192,6 +192,10 @@
       {
         "sourceId": "Farmer-(1937)",
         "page": "248"
+      },
+      {
+        "sourceId": "Forster-(2010)",
+        "page": "615"
       }
     ],
     "creatorEnglish": "al-Kindī",
@@ -4518,10 +4522,10 @@
     }
   },
   {
-    "id": "UnknownCreator-(600)",
-    "titleEnglish": "Ṭanbūr Baghdādi/Mīzānī (pre-Islamic)",
+    "id": "al-Farabi-(950aa)",
+    "titleEnglish": "al-Ṭanbūr al-Baghdādi/al-Mīzānī (pre-Islamic)",
     "titleArabic": "الطنبور البغدادي/الميزاني",
-    "year": "600",
+    "year": "950aa",
     "sourceEnglish": "Unknown Source",
     "sourceArabic": "مصدر غير معروف",
     "sourcePageReferences": [
@@ -4530,8 +4534,8 @@
         "page": "243"
       }
     ],
-    "creatorEnglish": "Unknown Creator",
-    "creatorArabic": "مؤلف غير معروف",
+    "creatorEnglish": "al-Fārābī",
+    "creatorArabic": "الفارابي",
     "commentsEnglish": "",
     "commentsArabic": "",
     "tuningSystemPitchClasses": [
@@ -4575,9 +4579,53 @@
         "tīk būselīk",
         "chahārgāh",
         "ḥijāz",
-        "tīk ḥijāz/ṣabā",
-        "nīm nawā",
-        "nawā"
+        "nawā",
+        "none",
+        "none"
+      ],
+      [
+        "yegāh",
+        "qarār nīm ḥiṣār",
+        "qarār ḥiṣār",
+        "nīm ʿushayrān",
+        "ʿushayrān",
+        "nīm ʿajam ʿushayrān",
+        "ʿajam ʿushayrān",
+        "ʿirāq",
+        "kawasht",
+        "tīk kawasht",
+        "rāst",
+        "nīm zīrgūleh",
+        "zīrgūleh",
+        "dūgāh",
+        "nīm kurdī/nahāwand",
+        "kurdī",
+        "nīm būselīk",
+        "būselīk/ʿushshāq",
+        "chahārgāh",
+        "ḥijāz"
+      ],
+      [
+        "rāst",
+        "nīm zīrgūleh",
+        "zīrgūleh",
+        "tīk zīrgūleh",
+        "dūgāh",
+        "nīm kurdī/nahāwand",
+        "kurdī",
+        "segāh",
+        "būselīk/ʿushshāq",
+        "tīk būselīk",
+        "chahārgāh",
+        "tīk chahārgāh",
+        "ḥijāz",
+        "nawā",
+        "ḥiṣār",
+        "ḥusaynī",
+        "ʿajam",
+        "jawāb nayrūz",
+        "māhūr",
+        "tīk māhūr"
       ]
     ],
     "abjadNames": [
@@ -4623,7 +4671,11 @@
       ""
     ],
     "stringLength": 0,
-    "defaultReferenceFrequency": 440,
-    "referenceFrequencies": {}
+    "defaultReferenceFrequency": 97.999,
+    "referenceFrequencies": {
+      "yegāh": 97.999,
+      "ʿushayrān": 110,
+      "rāst": 130.665
+    }
   }
 ]
