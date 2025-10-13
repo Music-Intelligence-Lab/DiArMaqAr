@@ -600,33 +600,65 @@ run().catch(error => {
 
   try {
     // Run with increased memory and tsx
-    const args = process.argv.slice(2).map(arg => `"${arg}"`).join(' ');
     const projectRoot = path.resolve(__dirname, '..', '..');
 
-    // Use tsx with the memory options
-    execSync(`node ${executionOptions} --expose-gc $(npm root -g)/tsx/dist/cli.mjs "${tsFilePath}"`, {
-      stdio: 'inherit',
-      cwd: projectRoot,
-      env: { ...process.env, NODE_OPTIONS: `${executionOptions} --expose-gc` }
-    });
-
-  } catch (tsxError) {
-    // Try with ts-node if tsx fails
+    // Get npm global root in a cross-platform way
+    let npmGlobalRoot;
     try {
-      const args = process.argv.slice(2).map(arg => `"${arg}"`).join(' ');
-      const projectRoot = path.resolve(__dirname, '..', '..');
+      npmGlobalRoot = execSync('npm root -g', { encoding: 'utf-8' }).trim();
+    } catch (error) {
+      console.error('Failed to get npm global root directory');
+      throw error;
+    }
 
-      execSync(`node ${executionOptions} --expose-gc $(npm root -g)/ts-node/dist/bin.js "${tsFilePath}"`, {
+    // Try tsx first (cross-platform path handling)
+    const tsxPath = path.join(npmGlobalRoot, 'tsx', 'dist', 'cli.mjs');
+
+    if (fs.existsSync(tsxPath)) {
+      execSync(`node ${executionOptions} --expose-gc "${tsxPath}" "${tsFilePath}"`, {
         stdio: 'inherit',
         cwd: projectRoot,
         env: { ...process.env, NODE_OPTIONS: `${executionOptions} --expose-gc` }
       });
+    } else {
+      throw new Error('tsx not found');
+    }
+
+  } catch (tsxError) {
+    // Try with ts-node if tsx fails
+    try {
+      const projectRoot = path.resolve(__dirname, '..', '..');
+
+      // Get npm global root in a cross-platform way
+      let npmGlobalRoot;
+      try {
+        npmGlobalRoot = execSync('npm root -g', { encoding: 'utf-8' }).trim();
+      } catch (error) {
+        console.error('Failed to get npm global root directory');
+        throw error;
+      }
+
+      const tsNodePath = path.join(npmGlobalRoot, 'ts-node', 'dist', 'bin.js');
+
+      if (fs.existsSync(tsNodePath)) {
+        execSync(`node ${executionOptions} --expose-gc "${tsNodePath}" "${tsFilePath}"`, {
+          stdio: 'inherit',
+          cwd: projectRoot,
+          env: { ...process.env, NODE_OPTIONS: `${executionOptions} --expose-gc` }
+        });
+      } else {
+        throw new Error('ts-node not found');
+      }
 
     } catch (tsNodeError) {
       console.error('Failed to run TypeScript version. Make sure tsx or ts-node is available:');
       console.error('npm install -g tsx');
       console.error('or');
       console.error('npm install -g ts-node');
+      console.error('\nError details:', tsxError.message);
+      if (tsNodeError.message !== 'ts-node not found') {
+        console.error('Stack trace:', tsNodeError.stack);
+      }
       process.exit(1);
     }
   } finally {
