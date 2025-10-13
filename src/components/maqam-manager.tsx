@@ -11,6 +11,7 @@ import MaqamData from "@/models/Maqam";
 import { updateMaqamat } from "@/functions/update";
 import { SourcePageReference } from "@/models/bibliography/Source";
 import useTranspositionsContext from "@/contexts/transpositions-context";
+import { getBaseJinsName, getFirstJinsNameForMaqamData } from "@/functions/classifyMaqamFamily";
 
 export default function MaqamManager({ admin }: { admin: boolean }) {
   const {
@@ -42,83 +43,6 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
   // Use cached map from context to avoid recomputation
   const { allMaqamTranspositionsMap } = useTranspositionsContext();
 
-  // Helper function to get first jins name for a maqam
-  const getFirstJinsNameForMaqam = (maqam: MaqamData): string | null => {
-    const transpositions = allMaqamTranspositionsMap.get(maqam.getId());
-    if (!transpositions || transpositions.length === 0) return null;
-
-    // Get the tahlil (original form, transposition: false) to get the first jins
-    const tahlil = transpositions.find(t => !t.transposition);
-    if (!tahlil) return null;
-
-    // First, try to get jins from ascending ajnas (first scale degree)
-    if (tahlil.ascendingMaqamAjnas && tahlil.ascendingMaqamAjnas.length > 0) {
-      const firstAscendingJins = tahlil.ascendingMaqamAjnas[0];
-      if (firstAscendingJins?.name) {
-        return firstAscendingJins.name;
-      }
-    }
-
-    // If no jins found in ascending, try descending ajnas
-    // Descending ajnas are in reverse order, so the "first scale degree"
-    // (which is the last note of the maqam) is at the END of the descending array
-    if (tahlil.descendingMaqamAjnas && tahlil.descendingMaqamAjnas.length > 0) {
-      const lastDescendingJins = tahlil.descendingMaqamAjnas[tahlil.descendingMaqamAjnas.length - 1];
-      if (lastDescendingJins?.name) {
-        return lastDescendingJins.name;
-      }
-    }
-
-    return null;
-  };
-
-  // Helper function to extract base jins name (remove transposition suffix and group by first word)
-  const getBaseJinsName = (jinsName: string): string => {
-    // First, remove " al-" and everything after it to get the base jins name
-    let baseName = jinsName;
-    const alIndex = jinsName.indexOf(' al-');
-    if (alIndex !== -1) {
-      baseName = jinsName.substring(0, alIndex);
-    }
-
-    // Remove "Jins " or "جنس " prefix if present
-    baseName = baseName.replace(/^(Jins\s+|جنس\s+)/i, '');
-
-    // Special exceptions: keep these separate from their base forms
-    const lowerBaseName = baseName.toLowerCase();
-
-    // ṣabā exception
-    if (lowerBaseName.includes('ṣabā')) {
-      if (lowerBaseName.includes('zamzam')) {
-        return 'ṣabā zamzam';
-      } else {
-        return 'ṣabā';
-      }
-    }
-
-    // athar exception
-    if (lowerBaseName.includes('athar')) {
-      if (lowerBaseName.includes('kurd')) {
-        return 'athar kurd';
-      } else {
-        return 'athar';
-      }
-    }
-
-    // awj exception
-    if (lowerBaseName.includes('awj')) {
-      if (lowerBaseName.includes('ʾārāʾ') || lowerBaseName.includes('araa')) {
-        return 'awj ʾārāʾ';
-      } else {
-        return 'awj';
-      }
-    }
-
-    // For all other jins, group by first word
-    const firstWord = baseName.split(/\s+/)[0];
-    return firstWord || baseName;
-  };
-
   // Dynamic tabs based on filter mode
   const tabs = useMemo(() => {
     if (filterMode === 'note') {
@@ -135,24 +59,24 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
       const uniqueBaseJinsNames = new Set<string>();
 
       maqamat.forEach((maqam) => {
-        const firstJinsName = getFirstJinsNameForMaqam(maqam);
+        const firstJinsName = getFirstJinsNameForMaqamData(maqam, allMaqamTranspositionsMap);
         if (firstJinsName) {
-          const baseJinsName = getBaseJinsName(firstJinsName);
-          uniqueBaseJinsNames.add(baseJinsName.toLowerCase());
+          const baseJinsName = getBaseJinsName(firstJinsName).toLowerCase();
+          uniqueBaseJinsNames.add(baseJinsName);
 
           // Map this base jins name to the first note of the maqam for sorting
           const firstNote = maqam.getAscendingNoteNames()[0];
-          if (firstNote && !jinsToStartingNote.has(baseJinsName.toLowerCase())) {
-            jinsToStartingNote.set(baseJinsName.toLowerCase(), firstNote.toLowerCase());
+          if (firstNote && !jinsToStartingNote.has(baseJinsName)) {
+            jinsToStartingNote.set(baseJinsName, firstNote.toLowerCase());
           }
         } else {
-          uniqueBaseJinsNames.add('no-jins'); // For maqamat with no jins on first degree
+          uniqueBaseJinsNames.add('no jins'); // For maqamat with no jins on first degree
         }
       });
 
       // Sort jins names by their corresponding pitch class order
       const sortedJinsNames = Array.from(uniqueBaseJinsNames)
-        .filter(name => name !== 'no-jins') // Handle 'no-jins' separately
+        .filter(name => name !== 'no jins') // Handle 'no jins' separately
         .sort((a, b) => {
           const noteA = jinsToStartingNote.get(a);
           const noteB = jinsToStartingNote.get(b);
@@ -169,10 +93,10 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
           return a.localeCompare(b);
         });
 
-      // Add 'no-jins' at the end if it exists
+      // Add 'no jins' at the end if it exists
       const result = ["all", ...sortedJinsNames];
-      if (uniqueBaseJinsNames.has('no-jins')) {
-        result.push('no-jins');
+      if (uniqueBaseJinsNames.has('no jins')) {
+        result.push('no jins');
       }
       return result;
     }
@@ -277,17 +201,17 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
       return sortedMaqamat.filter((maqam) => maqam.getAscendingNoteNames()[0]?.toLowerCase() === maqamatFilter.toLowerCase());
     } else {
       // Jins filtering
-      if (maqamatFilter === 'no-jins') {
-        return sortedMaqamat.filter((maqam) => !getFirstJinsNameForMaqam(maqam));
+      if (maqamatFilter === 'no jins') {
+        return sortedMaqamat.filter((maqam) => !getFirstJinsNameForMaqamData(maqam, allMaqamTranspositionsMap));
       }
       return sortedMaqamat.filter((maqam) => {
-        const firstJinsName = getFirstJinsNameForMaqam(maqam);
+        const firstJinsName = getFirstJinsNameForMaqamData(maqam, allMaqamTranspositionsMap);
         if (!firstJinsName) return false;
         const baseJinsName = getBaseJinsName(firstJinsName);
         return baseJinsName.toLowerCase() === maqamatFilter.toLowerCase();
       });
     }
-  }, [sortedMaqamat, maqamatFilter, filterMode, language, getFirstJinsNameForMaqam]);
+  }, [sortedMaqamat, maqamatFilter, filterMode, language, allMaqamTranspositionsMap]);
 
   const numberOfRows = 3; // Fixed number of rows
   const numberOfColumns = Math.ceil(filteredMaqamat.length / numberOfRows); // Calculate columns dynamically
@@ -305,11 +229,11 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
             count = sortedMaqamat.filter((maqam) => maqam.getAscendingNoteNames()[0]?.toLowerCase() === tab.toLowerCase()).length;
           } else {
             // Jins mode
-            if (tab === 'no-jins') {
-              count = sortedMaqamat.filter((maqam) => !getFirstJinsNameForMaqam(maqam)).length;
+            if (tab === 'no jins') {
+              count = sortedMaqamat.filter((maqam) => !getFirstJinsNameForMaqamData(maqam, allMaqamTranspositionsMap)).length;
             } else {
               count = sortedMaqamat.filter((maqam) => {
-                const firstJinsName = getFirstJinsNameForMaqam(maqam);
+                const firstJinsName = getFirstJinsNameForMaqamData(maqam, allMaqamTranspositionsMap);
                 if (!firstJinsName) return false;
                 const baseJinsName = getBaseJinsName(firstJinsName);
                 return baseJinsName.toLowerCase() === tab.toLowerCase();
@@ -324,7 +248,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
             displayName = getDisplayName(tab, 'note');
           } else {
             // Jins mode
-            if (tab === 'no-jins') {
+            if (tab === 'no jins') {
               displayName = t('maqam.noJins') || 'No Jins';
             } else {
               // Remove "Jins " prefix from display name to save space

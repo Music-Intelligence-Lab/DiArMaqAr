@@ -9,6 +9,32 @@ import PitchClass, { PitchClassInterval } from "@/models/PitchClass";
 import modulate from "./modulate";
 import calculateNumberOfModulations from "./calculateNumberOfModulations";
 import shiftPitchClass from "./shiftPitchClass";
+import { classifyMaqamFamily } from "./classifyMaqamFamily";
+
+/**
+ * Multi-method maqam family classification for research and analysis.
+ * Each classification method provides a different perspective on how to group maqamat.
+ * All methods are optional - only calculated methods will be present in exports.
+ */
+export interface ExportMaqamFamilyClassification {
+  /** Classification by first jins at scale degree 1 */
+  firstJins?: {
+    familyName: string;
+  };
+  
+  // Future classification methods can be added here:
+  // predominantJins?: {
+  //   familyName: string;
+  //   occurrences?: number;
+  // };
+  // finalJins?: {
+  //   familyName: string;
+  //   scaleDegree?: number;
+  // };
+  // tonicRelationship?: {
+  //   familyName: string;
+  // };
+}
 
 /**
  * Converts a string with diacritics to their natural letters and replaces spaces with underscores
@@ -59,6 +85,7 @@ export interface MergedMaqam {
   commentsEnglish: string;
   commentsArabic: string;
   SourcePageReferences: any[];
+  maqamFamilyClassification: ExportMaqamFamilyClassification;
 }
 
 /**
@@ -915,6 +942,9 @@ export async function exportTuningSystem(
   let totalMaqamModulations = 0;
   let totalAjnasModulations = 0;
 
+  // Store tahlil (original maqam) for classification
+  const maqamTahlilMap = new Map<string, Maqam>();
+
   // Include ajnas details if requested
   if (options.includeAjnasDetails || options.includeMaqamatDetails) {
     const possibleAjnas: Jins[] = [];
@@ -998,6 +1028,11 @@ export async function exportTuningSystem(
 
       for (let j = 0; j < maqamTranspositions.length; j++) {
         const maqamTransposition = maqamTranspositions[j];
+
+        // Store tahlil for family classification (original form only)
+        if (!maqamTransposition.transposition) {
+          maqamTahlilMap.set(maqamTransposition.maqamId, maqamTransposition);
+        }
 
         // Yield control every few transpositions to allow UI updates
         if (j % 10 === 0) {
@@ -1187,6 +1222,28 @@ export async function exportTuningSystem(
           commentsEnglish: maqamOverview.getCommentsEnglish(),
           commentsArabic: maqamOverview.getCommentsArabic(),
           SourcePageReferences: maqamOverview.getSourcePageReferences(),
+          // Family classification - always included, inherited from tahlil
+          maqamFamilyClassification: (() => {
+            const tahlil = maqamTahlilMap.get(possibleMaqam.maqamId);
+            if (tahlil) {
+              try {
+                const classification = classifyMaqamFamily(tahlil);
+                return {
+                  firstJins: {
+                    familyName: classification.familyName,
+                  }
+                };
+              } catch (error) {
+                console.warn(`⚠️ Could not classify maqam ${possibleMaqam.name}:`, error);
+              }
+            }
+            // Fallback if classification fails
+            return {
+              firstJins: {
+                familyName: "no jins",
+              }
+            };
+          })(),
         };
 
         if (possibleMaqam.maqamToMaqamModulations) mergedMaqam.maqamToMaqamModulations = possibleMaqam.maqamToMaqamModulations;
@@ -1542,9 +1599,66 @@ export async function exportMaqam(
     result.tuningSystemPitchClasses = fullRangeTuningSystemPitchClasses.map((pc) => standardizeText(pc.noteName));
   }
 
+  // Calculate classification once - will be reused for main maqam and all transpositions
+  let maqamClassification: ExportMaqamFamilyClassification = {
+    firstJins: {
+      familyName: "no jins",
+    }
+  };
+  
   // Include the actual maqam instance as MergedMaqam
   if (maqamData) {
     const convertedMaqam = convertMaqamAjnasToObjects(maqamToExport);
+    
+    // Get classification - calculate once from tahlil
+    if (!maqamToExport.transposition) {
+      // This IS the tahlil, classify it directly
+      try {
+        const result = classifyMaqamFamily(maqamToExport);
+        maqamClassification = {
+          firstJins: {
+            familyName: result.familyName,
+          }
+        };
+      } catch (error) {
+        console.warn(`⚠️ Could not classify maqam ${maqamToExport.name}:`, error);
+        maqamClassification = {
+          firstJins: {
+            familyName: "no jins",
+          }
+        };
+      }
+    } else {
+      // This is a transposition - need to get tahlil and classify that
+      const allAjnas = getAjnas();
+      const allMaqamTranspositions = getMaqamTranspositions(fullRangeTuningSystemPitchClasses, allAjnas, maqamData, true, centsTolerance);
+      const tahlil = allMaqamTranspositions.find(m => !m.transposition);
+      
+      if (tahlil) {
+        try {
+          const result = classifyMaqamFamily(tahlil);
+          maqamClassification = {
+            firstJins: {
+              familyName: result.familyName,
+            }
+          };
+        } catch (error) {
+          console.warn(`⚠️ Could not classify maqam ${maqamToExport.name}:`, error);
+          maqamClassification = {
+            firstJins: {
+              familyName: "no jins",
+            }
+          };
+        }
+      } else {
+        maqamClassification = {
+          firstJins: {
+            familyName: "no jins",
+          }
+        };
+      }
+    }
+    
     const mergedMaqam: MergedMaqam = {
       maqamId: maqamToExport.maqamId,
       name: maqamToExport.name,
@@ -1566,6 +1680,7 @@ export async function exportMaqam(
       commentsEnglish: maqamData.getCommentsEnglish(),
       commentsArabic: maqamData.getCommentsArabic(),
       SourcePageReferences: maqamData.getSourcePageReferences(),
+      maqamFamilyClassification: maqamClassification,
     };
     result.maqam = mergedMaqam;
   }
@@ -1664,6 +1779,39 @@ export async function exportMaqam(
 
     const maqamTranspositions = Array.from(getMaqamTranspositions(fullRangeTuningSystemPitchClasses, allAjnas, maqamData, true, centsTolerance));
 
+    // Reuse classification calculated above, or calculate it now if not done yet
+    let sharedClassification: ExportMaqamFamilyClassification;
+    if (maqamClassification.firstJins && maqamClassification.firstJins.familyName !== "no jins") {
+      sharedClassification = maqamClassification;
+    } else {
+      // Calculate classification ONCE from the tahlil - all transpositions inherit it
+      const tahlil = maqamTranspositions.find(m => !m.transposition);
+      
+      if (tahlil) {
+        try {
+          const result = classifyMaqamFamily(tahlil);
+          sharedClassification = {
+            firstJins: {
+              familyName: result.familyName,
+            }
+          };
+        } catch (error) {
+          console.warn(`⚠️ Could not classify maqam ${tahlil.name}:`, error);
+          sharedClassification = {
+            firstJins: {
+              familyName: "no jins",
+            }
+          };
+        }
+      } else {
+        sharedClassification = {
+          firstJins: {
+            familyName: "no jins",
+          }
+        };
+      }
+    }
+
     for (let i = 0; i < maqamTranspositions.length; i++) {
       const maqamTransposition = maqamTranspositions[i];
 
@@ -1709,6 +1857,8 @@ export async function exportMaqam(
       const maqamOverview = allMaqamat.find((m) => m.getId() === maqamTransposition.maqamId);
       if (maqamOverview) {
         const convertedMaqam = convertMaqamAjnasToObjects(maqamTransposition);
+        
+        // Use the shared classification calculated once from the tahlil
         const mergedMaqam: MergedMaqam = {
           maqamId: maqamTransposition.maqamId,
           name: maqamTransposition.name,
@@ -1730,6 +1880,7 @@ export async function exportMaqam(
           commentsEnglish: maqamOverview.getCommentsEnglish(),
           commentsArabic: maqamOverview.getCommentsArabic(),
           SourcePageReferences: maqamOverview.getSourcePageReferences(),
+          maqamFamilyClassification: sharedClassification,
         };
 
         const englishifiedName = standardizeText(maqamTransposition.name);
