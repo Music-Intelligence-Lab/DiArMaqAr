@@ -8,26 +8,11 @@ This script allows batch export of tuning system data in JSON format from the co
 # List all available tuning systems
 node scripts/batch-export/batch-export.js --list-tuning-systems
 
-# Complete export of everything to music intelligence lab google drive repo
-
-node /Users/khyamallami/Offline\ Files/vscode\ projects/DiArMaqAr/scripts/batch-export/batch-export.js \
-  --tuning-system "all" \
-  --starting-note "all" \
-  --output-dir "/Users/khyamallami/Library/CloudStorage/GoogleDrive-kallami@gmail.com/.shortcut-targets-by-id/1qLH9SFg6Xkhx04GTBa15eGUi6C5UvT02/music lab repo/Data" \
-  --include-ajnas-details \
-  --include-maqamat-details \
-  --include-maqamat-modulations \
-  --include-ajnas-modulations \
-  --include-modulations-8vb
+# Complete export of everything to music intelligence lab google drive repo (macOS/Linux)
+node scripts/batch-export/batch-export.js --tuning-system "all" --starting-note "all" --output-dir "PATH" --include-ajnas-details --include-maqamat-details --include-maqamat-modulations --include-ajnas-modulations --include-modulations-8vb
 
 # Export specific tuning system with full data including modulations
-node scripts/batch-export/batch-export.js \
-  --tuning-system "Al-Farabi-(950g)" \
-  --starting-note "yegāh" \
-  --include-ajnas-details \
-  --include-maqamat-details \
-  --include-maqamat-modulations \
-  --include-ajnas-modulations
+node scripts/batch-export/batch-export.js --tuning-system "Al-Farabi-(950g)" --starting-note "yegāh" --include-ajnas-details --include-maqamat-details --include-maqamat-modulations --include-ajnas-modulations
 ```
 
 ## Usage
@@ -66,73 +51,42 @@ node batch-export.js [options]
 ### Basic Export (tuning system only)
 ```bash
 # Export only tuning system data and pitch classes (~100KB)
-node scripts/batch-export/batch-export.js \
-  --tuning-system "al-Kindi-(874)" \
-  --starting-note "yegāh"
+node scripts/batch-export/batch-export.js --tuning-system "al-Kindi-(874)" --starting-note "yegāh"
 ```
 
 ### Export with Ajnas and Maqamat
 ```bash
 # Export with ajnas and maqamat data (~2MB)
-node scripts/batch-export/batch-export.js \
-  --tuning-system "al-Kindi-(874)" \
-  --starting-note "yegāh" \
-  --include-ajnas-details \
-  --include-maqamat-details
+node scripts/batch-export/batch-export.js --tuning-system "al-Kindi-(874)" --starting-note "yegāh" --include-ajnas-details --include-maqamat-details
 ```
 
 ### Complete Export (with modulations)
 ```bash
 # Export with full modulation analysis (~3MB, recommended for research)
-node scripts/batch-export/batch-export.js \
-  --tuning-system "Ronzevalle-(1904)" \
-  --starting-note "all" \
-  --include-ajnas-details \
-  --include-maqamat-details \
-  --include-maqamat-modulations \
-  --include-ajnas-modulations
+node scripts/batch-export/batch-export.js --tuning-system "Ronzevalle-(1904)" --starting-note "all" --include-ajnas-details --include-maqamat-details --include-maqamat-modulations --include-ajnas-modulations
 ```
 
 ### Export with Octave Shift Modulations (8vb)
 ```bash
 # Export with lower octave modulations for advanced analysis
-node scripts/batch-export/batch-export.js \
-  --tuning-system "al-Kindi-(874)" \
-  --starting-note "yegāh" \
-  --include-maqamat-details \
-  --include-maqamat-modulations \
-  --include-modulations-8vb
+node scripts/batch-export/batch-export.js --tuning-system "al-Kindi-(874)" --starting-note "yegāh" --include-maqamat-details --include-maqamat-modulations --include-modulations-8vb
 ```
 
 ### Batch Exports
 ```bash
 # Export all starting notes for one tuning system
-node scripts/batch-export/batch-export.js \
-  --tuning-system "al-Kindi-(874)" \
-  --starting-note "all"
+node scripts/batch-export/batch-export.js --tuning-system "al-Kindi-(874)" --starting-note "all"
 
 # Export ALL tuning systems with ALL starting notes (many files!)
-node scripts/batch-export/batch-export.js \
-  --tuning-system "all" \
-  --starting-note "all"
+node scripts/batch-export/batch-export.js --tuning-system "all" --starting-note "all"
 
 # COMPLETE EXPORT - Everything possible (hundreds of files, many GB)
-node scripts/batch-export/batch-export.js \
-  --tuning-system "all" \
-  --starting-note "all" \
-  --include-ajnas-details \
-  --include-maqamat-details \
-  --include-maqamat-modulations \
-  --include-ajnas-modulations \
-  --include-modulations-8vb
+node scripts/batch-export/batch-export.js --tuning-system "all" --starting-note "all" --include-ajnas-details --include-maqamat-details --include-maqamat-modulations --include-ajnas-modulations --include-modulations-8vb
 ```
 
 ### Custom Output Directory
 ```bash
-node scripts/batch-export/batch-export.js \
-  --tuning-system "al-Kindi-(874)" \
-  --starting-note "yegāh" \
-  --output-dir "./my-exports"
+node scripts/batch-export/batch-export.js --tuning-system "al-Kindi-(874)" --starting-note "yegāh" --output-dir "./my-exports"
 ```
 
 ## Memory Optimization
