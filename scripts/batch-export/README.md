@@ -8,6 +8,18 @@ This script allows batch export of tuning system data in JSON format from the co
 # List all available tuning systems
 node scripts/batch-export/batch-export.js --list-tuning-systems
 
+# Complete export of everything to music intelligence lab google drive repo
+
+node /Users/khyamallami/Offline\ Files/vscode\ projects/DiArMaqAr/scripts/batch-export/batch-export.js \
+  --tuning-system "all" \
+  --starting-note "all" \
+  --output-dir "/Users/khyamallami/Library/CloudStorage/GoogleDrive-kallami@gmail.com/.shortcut-targets-by-id/1qLH9SFg6Xkhx04GTBa15eGUi6C5UvT02/music lab repo/Data" \
+  --include-ajnas-details \
+  --include-maqamat-details \
+  --include-maqamat-modulations \
+  --include-ajnas-modulations \
+  --include-modulations-8vb
+
 # Export specific tuning system with full data including modulations
 node scripts/batch-export/batch-export.js \
   --tuning-system "Al-Farabi-(950g)" \
