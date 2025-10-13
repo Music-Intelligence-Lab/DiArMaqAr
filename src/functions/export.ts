@@ -939,6 +939,11 @@ export async function exportTuningSystem(
 
   // Initialize maqam family reference dictionary
   const maqamFamilyReference: { [familyName: string]: { displayName: string } } = {};
+  // Add maqamFamilyReference to result immediately after pitchClassReference to control JSON order
+  // It will be populated later if maqamat details are included
+  if (options.includeMaqamatDetails) {
+    result.maqamFamilyReference = maqamFamilyReference;
+  }
 
   // === 6. MUSICAL DATA SECTION (Core Content) ===
   const jinsReference: { [jinsName: string]: MergedJins } = {};
@@ -1294,8 +1299,7 @@ export async function exportTuningSystem(
   // Only include maqamat data if it was requested in the export options
   if (options.includeMaqamatDetails) {
     result.allMaqamatData = maqamReference;
-    // Only include family reference if we have maqamat
-    result.maqamFamilyReference = maqamFamilyReference;
+    // maqamFamilyReference was already added to result earlier (line 945) to control JSON property order
   }
 
   updateProgress(98, "Export compilation complete!");
@@ -1952,6 +1956,7 @@ export async function exportMaqam(
 
   updateProgress(95, "Compiling maqam export data...");
   result.pitchClassReference = pitchClassReference;
+  result.maqamFamilyReference = maqamFamilyReference;
   result.allAjnasData = jinsReference;
   result.allMaqamatData = maqamReference;
 
