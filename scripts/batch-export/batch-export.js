@@ -6,7 +6,7 @@
 /**
  * Digital Arabic Maqām Archive - Batch Export CLI
  *
- * This script allows batch export of tuning system data in JSON format from the command line,
+ * This script allows batch export of tuning system data in text format from the command line,
  * providing the same comprehensive data structure as the web export modal.
  */
 
@@ -451,12 +451,12 @@ async function run() {
             filename += \`_\${optionFlags.join('_')}\`;
           }
 
-          filename += '.json';
+          filename += '.txt';
 
           const filePath = path.join(actualOutputDir, filename);
 
-          // Write the JSON file with proper structure
-          fs.writeFileSync(filePath, JSON.stringify(exportData, null, 2));
+          // Write the text file with JSON structure
+          fs.writeFileSync(filePath, JSON.stringify(exportData, null, 2), 'utf-8');
 
           completedExports++;
           const progressPercent = Math.round((completedExports / totalExports) * 100);
@@ -561,11 +561,11 @@ async function run() {
       totalDurationFormatted: formatDuration(logData.totalDurationSeconds)
     };
 
-    // Write log file
+    // Write log file as text file
     const logFileName = 'export-log_' + new Date().toISOString().replace(/[:.]/g, '-').split('T')[0] + '_' + 
-                        new Date().toISOString().replace(/[:.]/g, '-').split('T')[1].split('.')[0] + '.json';
+                        new Date().toISOString().replace(/[:.]/g, '-').split('T')[1].split('.')[0] + '.txt';
     const logFilePath = path.join(actualOutputDir, logFileName);
-    fs.writeFileSync(logFilePath, JSON.stringify(logData, null, 2));
+    fs.writeFileSync(logFilePath, JSON.stringify(logData, null, 2), 'utf-8');
 
     console.log(\`\\n📊 Export log saved: \${logFileName}\`);
     console.log(\`⏱️  Total export time: \${logData.summary.totalDurationFormatted}\`);
