@@ -8,25 +8,21 @@
     margin-bottom: 40px;
 
 
-  &__title {
+  &__sticky-header {
     width: 100%;
     background-color: darken($color: $secondary, $amount: 5);
     color: $text;
-    font-size: 20px;
-    font-weight: 300;
-    text-align: left;
-    padding: 10px 20px;
     border: solid 1px $grey;
     position: sticky;
     position: -webkit-sticky;
     top: $top-navbar-height + 20px;
     margin-bottom: 20px;
     box-shadow: 0px 10px 20px rgba(0, 0, 0, 1);
-    z-index: 10;    
+    z-index: 10;
     margin-top: 10px;
-    
+    padding: 10px 20px;
 
-        // Pseudo-element to fill the gap above when sticky
+    // Pseudo-element to fill the gap above when sticky
     &::before {
       content: "";
       position: absolute;
@@ -44,11 +40,58 @@
         right: -1px;
       }
     }
+  }
 
+  &__title-row {
+    font-size: 20px;
+    font-weight: 300;
+    text-align: left;
+    margin-bottom: 10px;
 
     // RTL support
     [dir="rtl"] & {
       text-align: right;
+    }
+  }
+
+  &__filter-menu {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+
+  &__filter-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 0px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background-color 0.2s;
+  }
+
+  &__filter-checkbox {
+    cursor: pointer;
+    margin-right: 2px;
+
+    // RTL support
+    [dir="rtl"] & {
+      margin-right: 0;
+      margin-left: 2px;
+    }
+  }
+
+  &__filter-label {
+    cursor: pointer;
+    user-select: none;
+    padding-right: 5px;
+
+    // RTL support
+    [dir="rtl"] & {
+      padding-right: 0;
+      padding-left: 5px;
     }
   }
 
@@ -322,8 +365,8 @@
     text-align: left;
     background-color: transparent;
     scroll-margin-top: calc(
-      $top-navbar-height + 88px
-    ); // Adjusted for navbar height + sticky title (increased to accommodate comments)
+      $top-navbar-height + 120px
+    ); // Adjusted for navbar height + sticky header (title row + filter menu)
     cursor: pointer;
     transition: opacity 0.2s ease;
 

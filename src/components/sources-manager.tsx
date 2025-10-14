@@ -259,16 +259,26 @@ export default function SourcesManager() {
           </label>
           <select id="sourceSelect" className="sources-manager__select" value={selectedSourceId} onChange={handleSelectChange}>
             <option value="new">-- Create New Source --</option>
-            {sources.map((s: Source) => {
-              const contribs = s.getContributors();
-              const firstContributor = contribs && contribs.length > 0 ? contribs[0] : null;
-              const lastName = firstContributor ? firstContributor.lastNameEnglish : "n.a.";
-              return (
-                <option key={s.getId()} value={s.getId()}>
-                  {`${lastName} (${s.getPublicationDateEnglish()}) ${s.getTitleEnglish()} (${s.getSourceType()})`}
-                </option>
-              );
-            })}
+            {sources
+              .slice()
+              .sort((a: Source, b: Source) => {
+                // Sort alphabetically by last name, or by title if no contributors
+                const aContribs = a.getContributors();
+                const bContribs = b.getContributors();
+                const aKey = aContribs && aContribs.length > 0 ? aContribs[0].lastNameEnglish.toLowerCase() : a.getTitleEnglish().toLowerCase();
+                const bKey = bContribs && bContribs.length > 0 ? bContribs[0].lastNameEnglish.toLowerCase() : b.getTitleEnglish().toLowerCase();
+                return aKey.localeCompare(bKey);
+              })
+              .map((s: Source) => {
+                const contribs = s.getContributors();
+                const firstContributor = contribs && contribs.length > 0 ? contribs[0] : null;
+                const lastName = firstContributor ? firstContributor.lastNameEnglish : "n.a.";
+                return (
+                  <option key={s.getId()} value={s.getId()}>
+                    {`${lastName} (${s.getPublicationDateEnglish()}) ${s.getTitleEnglish()} (${s.getSourceType()})`}
+                  </option>
+                );
+              })}
           </select>
         </div>
       </div>
