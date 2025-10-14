@@ -410,12 +410,24 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
                 >
                   <option value="">{t('maqam.selectSource')}</option>
                   {[...sources]
-                    .sort((a, b) => a.getTitleEnglish().localeCompare(b.getTitleEnglish()))
-                    .map((s) => (
-                      <option key={s.getId()} value={s.getId()}>
-                        {s.getTitleEnglish()}
-                      </option>
-                    ))}
+                    .sort((a, b) => {
+                      // Sort alphabetically by last name, or by title if no contributors
+                      const aContribs = a.getContributors();
+                      const bContribs = b.getContributors();
+                      const aKey = aContribs && aContribs.length > 0 ? aContribs[0].lastNameEnglish.toLowerCase() : a.getTitleEnglish().toLowerCase();
+                      const bKey = bContribs && bContribs.length > 0 ? bContribs[0].lastNameEnglish.toLowerCase() : b.getTitleEnglish().toLowerCase();
+                      return aKey.localeCompare(bKey);
+                    })
+                    .map((s) => {
+                      const contribs = s.getContributors();
+                      const firstContributor = contribs && contribs.length > 0 ? contribs[0] : null;
+                      const lastName = firstContributor ? firstContributor.lastNameEnglish : "n.a.";
+                      return (
+                        <option key={s.getId()} value={s.getId()}>
+                          {`${lastName} (${s.getPublicationDateEnglish()}) ${s.getTitleEnglish()} (${s.getSourceType()})`}
+                        </option>
+                      );
+                    })}
                 </select>
                 <input
                   className="maqam-manager__source-input"

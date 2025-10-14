@@ -1154,15 +1154,18 @@ const MaqamTranspositions: React.FC = () => {
       <div className="maqam-transpositions" key={language}>
         {maqamTranspositions.length > 0 && (
           <>
-            <h2 className="maqam-transpositions__title" dir={language === "ar" ? "rtl" : "ltr"}>
-              {t("maqam.analysis")}: {`${getDisplayName(selectedMaqamData?.getName() || "", "maqam")}`}
-              {!useRatio && (
-                <>
-                  {" "}
-                  / {t("maqam.centsTolerance")}: <input className="maqam-transpositions__input" type="number" value={centsTolerance ?? 0} onChange={(e) => setCentsTolerance(Number(e.target.value))} />
-                </>
-              )}
-              <span className="tuning-system-manager__filter-menu">
+            <div className="maqam-transpositions__sticky-header">
+              <div className="maqam-transpositions__title-row" dir={language === "ar" ? "rtl" : "ltr"}>
+                {t("maqam.analysis")}: {`${getDisplayName(selectedMaqamData?.getName() || "", "maqam")}`}
+                {!useRatio && (
+                  <>
+                    {" "}
+                    / {t("maqam.centsTolerance")}: <input className="maqam-transpositions__input" type="number" value={centsTolerance ?? 0} onChange={(e) => setCentsTolerance(Number(e.target.value))} />
+                  </>
+                )}
+              </div>
+
+              <div className="maqam-transpositions__filter-menu">
                 {Object.keys(filters).map((filterKey) => {
                   const isDisabled =
                     (filterKey === "fraction" && valueType === "fraction") ||
@@ -1179,14 +1182,14 @@ const MaqamTranspositions: React.FC = () => {
                     <label
                       key={filterKey}
                       htmlFor={`filter-${filterKey}`}
-                      className={`tuning-system-manager__filter-item ${filters[filterKey as keyof typeof filters] ? "tuning-system-manager__filter-item_active" : ""}`}
+                      className={`maqam-transpositions__filter-item ${filters[filterKey as keyof typeof filters] ? "maqam-transpositions__filter-item_active" : ""}`}
                       // prevent the drawer (or parent) click handler from firing
                       onClick={(e) => e.stopPropagation()}
                     >
                       <input
                         id={`filter-${filterKey}`}
                         type="checkbox"
-                        className="tuning-system-manager__filter-checkbox"
+                        className="maqam-transpositions__filter-checkbox"
                         checked={filters[filterKey as keyof typeof filters]}
                         disabled={isDisabled}
                         onChange={(e) => {
@@ -1198,12 +1201,12 @@ const MaqamTranspositions: React.FC = () => {
                           }));
                         }}
                       />
-                      <span className="tuning-system-manager__filter-label">{t(`maqam.${filterKey}`)}</span>
+                      <span className="maqam-transpositions__filter-label">{t(`maqam.${filterKey}`)}</span>
                     </label>
                   );
                 })}
-              </span>
-            </h2>
+              </div>
+            </div>
 
             {/* Render all tables (analysis + transpositions) in sorted order */}
             {sortedTables.slice(0, visibleCount).map((tableInfo, displayIndex) => {

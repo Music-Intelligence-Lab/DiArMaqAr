@@ -75,9 +75,21 @@ export default function SourcesList() {
     const contribSegment = noContribs ? "n.a." : contribLine;
 
     // 2) Year (assume releaseDateEnglish is "YYYY" or "YYYY-MM-DD")
+    // Include original publication date if this is a Book with one
     const pubDateEng = source.getPublicationDateEnglish() || "";
     const yearMatch = pubDateEng.match(/^\d{4}/);
-    const year = yearMatch ? yearMatch[0] : pubDateEng;
+    const pubYear = yearMatch ? yearMatch[0] : pubDateEng;
+
+    let year = pubYear;
+    if (source.getSourceType() === "Book") {
+      const book = source as Book;
+      const originalPubDateEng = book.getOriginalPublicationDateEnglish();
+      if (originalPubDateEng) {
+        const originalYearMatch = originalPubDateEng.match(/^\d{4}/);
+        const originalYear = originalYearMatch ? originalYearMatch[0] : originalPubDateEng;
+        year = `${originalYear}/${pubYear}`;
+      }
+    }
 
     // 3) Title
     const title = (

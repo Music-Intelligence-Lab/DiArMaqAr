@@ -39,11 +39,15 @@ export interface SourcePageReference {
 
 /**
  * Creates a standardized string representation of a bibliographic source.
- * 
+ *
  * @param source - The source to stringify
  * @param english - Whether to use English or Arabic field values
  * @param page - Optional page reference to include in the citation
  * @returns Formatted citation string
+ *
+ * Format examples:
+ * - Without original date: "Author (2020:45)"
+ * - With original date: "Author (1950/2020:45)"
  */
 export function stringifySource(source: Source, english: boolean, page: string | null): string {
   //here if we don't have a page reference, I assume we are creating a url parameter and therefor replace spaces with dashes
@@ -53,7 +57,26 @@ export function stringifySource(source: Source, english: boolean, page: string |
 
   resultString += english ? source.getContributors()[0].lastNameEnglish : source.getContributors()[0].lastNameArabic;
 
-  resultString += " (" + (english ? source.getPublicationDateEnglish() : source.getPublicationDateArabic());
+  resultString += " (";
+
+  // Check if this is a Book with an original publication date
+  if (source.getSourceType() === "Book") {
+    const book = source as Book;
+    const originalDate = english ? book.getOriginalPublicationDateEnglish() : book.getOriginalPublicationDateArabic();
+
+    if (originalDate) {
+      // Extract year from original publication date
+      const originalYearMatch = originalDate.match(/^\d{4}/);
+      const originalYear = originalYearMatch ? originalYearMatch[0] : originalDate;
+      resultString += originalYear + "/";
+    }
+  }
+
+  // Add publication date
+  const pubDate = english ? source.getPublicationDateEnglish() : source.getPublicationDateArabic();
+  const yearMatch = pubDate.match(/^\d{4}/);
+  const year = yearMatch ? yearMatch[0] : pubDate;
+  resultString += year;
 
   if (page) resultString += ":" + page + ")";
   else resultString += ")";

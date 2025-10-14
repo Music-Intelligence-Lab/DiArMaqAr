@@ -867,15 +867,18 @@ export default function JinsTranspositions() {
     return (
       <>
         <div className="jins-transpositions" key={language}>
-          <h2 className="jins-transpositions__title" dir={language === "ar" ? "rtl" : "ltr"}>
-            {t("jins.analysis")}: {`${getDisplayName(selectedJinsData.getName(), "jins")}`}{" "}
-            {!useRatio && (
-              <>
-                {" "}
-                / {t("jins.centsTolerance")}: <input className="jins-transpositions__input" type="number" value={centsTolerance ?? 0} onChange={(e) => setCentsTolerance(Number(e.target.value))} />
-              </>
-            )}
-            <span className="tuning-system-manager__filter-menu">
+          <div className="jins-transpositions__sticky-header">
+            <div className="jins-transpositions__title-row" dir={language === "ar" ? "rtl" : "ltr"}>
+              {t("jins.analysis")}: {`${getDisplayName(selectedJinsData.getName(), "jins")}`}{" "}
+              {!useRatio && (
+                <>
+                  {" "}
+                  / {t("jins.centsTolerance")}: <input className="jins-transpositions__input" type="number" value={centsTolerance ?? 0} onChange={(e) => setCentsTolerance(Number(e.target.value))} />
+                </>
+              )}
+            </div>
+
+            <div className="jins-transpositions__filter-menu">
               {Object.keys(filters).map((filterKey) => {
                 const isDisabled =
                   (filterKey === "fraction" && valueType === "fraction") ||
@@ -892,14 +895,14 @@ export default function JinsTranspositions() {
                   <label
                     key={filterKey}
                     htmlFor={`filter-${filterKey}`}
-                    className={`tuning-system-manager__filter-item ${filters[filterKey as keyof typeof filters] ? "tuning-system-manager__filter-item_active" : ""}`}
+                    className={`jins-transpositions__filter-item ${filters[filterKey as keyof typeof filters] ? "jins-transpositions__filter-item_active" : ""}`}
                     // prevent the drawer (or parent) click handler from firing
                     onClick={(e) => e.stopPropagation()}
                   >
                     <input
                       id={`filter-${filterKey}`}
                       type="checkbox"
-                      className="tuning-system-manager__filter-checkbox"
+                      className="jins-transpositions__filter-checkbox"
                       checked={filters[filterKey as keyof typeof filters]}
                       disabled={isDisabled}
                       onChange={(e) => {
@@ -911,12 +914,12 @@ export default function JinsTranspositions() {
                         }));
                       }}
                     />
-                    <span className="tuning-system-manager__filter-label">{t(`jins.${filterKey}`)}</span>
+                    <span className="jins-transpositions__filter-label">{t(`jins.${filterKey}`)}</span>
                   </label>
                 );
               })}
-            </span>
-          </h2>
+            </div>
+          </div>
 
           {/* Render all tables (analysis + transpositions) in sorted order */}
           {sortedTables.slice(0, visibleCount).map((tableInfo, displayIndex) => {
