@@ -361,7 +361,7 @@
     }
   }
 
-  &__header {
+  &__transposition-row {
     text-align: left;
     background-color: transparent;
     scroll-margin-top: calc(
@@ -380,7 +380,7 @@
     }
   }
 
-  &__cell {
+  &__table-cell {
     text-align: left;
     background-color: transparent;
 
@@ -389,7 +389,11 @@
       text-align: right;
     }
 
-    &_highlighted {
+    &--pitch-class {
+      background-color: transparent;
+    }
+
+    &--highlighted {
       background-color: rgba($secondary, 0.2) !important;
     }
   }
@@ -456,8 +460,8 @@
     }
   }
 
-  .jins-transpositions__spacer {
+  &__transposition-spacer {
     padding: 10px !important;
-    border: 0px;
+    border: 0px !important;
   }
 }

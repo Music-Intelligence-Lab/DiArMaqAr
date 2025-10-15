@@ -181,13 +181,13 @@ export default function JinsManager({ admin }: { admin: boolean }) {
       </div>
 
       {admin && !selectedJinsData && (
-        <button onClick={() => setSelectedJinsData(new JinsData(newJinsId, "", [], "", "", []))} className="jins-manager__create-new-jins-button">
+        <button onClick={() => setSelectedJinsData(new JinsData(newJinsId, "", [], "", "", []))} className="jins-manager__create-button">
           {t('jins.createNewJins')}
         </button>
       )}
 
       {admin && selectedJinsData && (
-        <div className="jins-manager__jins-form">
+        <div className="jins-manager__admin-form">
           <div className="jins-manager__group">
             <input
               type="text"
@@ -205,7 +205,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
                 )
               }
               placeholder={t('jins.enterNewJinsName')}
-              className="jins-manager__jins-input"
+              className="jins-manager__name-input"
             />
             <button onClick={handleSaveJins} className="jins-manager__save-button">
               {t('jins.save')}

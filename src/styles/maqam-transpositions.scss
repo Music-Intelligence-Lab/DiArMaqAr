@@ -290,7 +290,7 @@
     }
   }
 
-  &__header {
+  &__transposition-row {
     text-align: left;
     background-color: black;
     scroll-margin-top: calc($top-navbar-height + 120px); // Adjusted for navbar height + sticky header (title row + filter menu)
@@ -310,7 +310,7 @@
     }
   }
 
-  &__header-cell {
+  &__table-cell {
     text-align: left;
     background-color: transparent;
 
@@ -319,21 +319,21 @@
       text-align: right;
     }
 
-    &_unique {
+    &--unique {
       background-color: rgba($primary, 0.5);
     }
 
-    &_highlighted {
+    &--highlighted {
       background-color: rgba($tertiary, 0.5) !important;
     }
 
-    &_scale-degrees {
-      background-color: $medium-grey;
-    }
-
-    &_scale-degrees-number {
+    &--scale-degree {
       background-color: $medium-grey;
       font-weight: 400 !important;
+    }
+
+    &--pitch-class {
+      background-color: transparent;
     }
   }
 
@@ -473,18 +473,13 @@
     float: right;
   }
 
-  // Specific spacer variants for debugging which spacer is visible
-  .maqam-transpositions__spacer-analysis {
-    height: 20px;
-    border: 0px;
+  // Specific spacer variants
+  &__direction-spacer {
+    padding: 10px 0 !important;
+    border: 0px !important;
   }
 
-  .maqam-transpositions__spacer-between {
-    height: 20px;
-    border: 0px;
-  }
-
-  .maqam-transpositions__spacer-after {
+  &__transposition-spacer {
     height: 20px;
     border: 0px;
   }
