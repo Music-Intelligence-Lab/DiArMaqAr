@@ -506,67 +506,6 @@
   }
 
   // -------------------------
-  // Action buttons
-  // -------------------------
-  &__buttons {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    justify-content: flex-end;
-    float: right;
-    height: 40px;
-
-    // RTL support
-    [dir="rtl"] & {
-      float: left;
-      justify-content: flex-start;
-    }
-  }
-
-  &__button {
-    background-color: rgba($primary, 0.5);
-    color: white;
-    padding: 0px 10px;
-    border-radius: 2px;
-    cursor: pointer;
-    margin-right: 10px;
-    font-size: 12px;
-    min-width: 120px;
-    width: auto;
-    height: 27px;
-    vertical-align: middle;
-    text-align: center;
-    border: none;
-    display: inline-block;
-
-    // RTL support
-    [dir="rtl"] & {
-      margin-right: 0;
-      margin-left: 10px;
-    }
-
-    &:focus {
-      outline: transparent;
-    }
-
-    &:active {
-      background-color: $gold !important;
-    }
-
-    &:hover {
-      background-color: rgba($primary, 1);
-    }
-
-    &--toggle {
-      background-color: rgba($tertiary, 0.7);
-
-      &:hover {
-        background-color: rgba($tertiary, 1);
-      }
-    }
-  }
-
-  // -------------------------
   // Icons
   // -------------------------
   &__play-circle-icon.MuiSvgIcon-root {
@@ -618,9 +557,9 @@
   }
 
   // -------------------------
-  // Table structure
+  // Table structure (shared across maqam and jins)
   // -------------------------
-  &__table {
+  [class*="__table"] {
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
@@ -656,16 +595,22 @@
   }
 
   // -------------------------
+  // Table caption (screen reader only for accessibility)
+  // Visually hidden but accessible to screen readers
+  // Note: Selector removed since caption element was removed from tables
+  // -------------------------
+
+  // -------------------------
   // Transposition row (clickable header)
   // -------------------------
-  &__transposition-row {
+  [class*="__transposition-row"] {
     text-align: left;
     background-color: transparent;
     scroll-margin-top: calc($top-navbar-height + 120px);
     cursor: pointer;
     transition: opacity 0.2s ease;
 
-    &--toggling {
+    &[class*="--toggling"] {
       opacity: 0.7;
     }
 
@@ -678,7 +623,7 @@
   // -------------------------
   // Title cell (entity name)
   // -------------------------
-  &__title-cell {
+  [class*="__title-cell"] {
     background-color: black;
     color: white;
     padding: 15px;
@@ -686,7 +631,7 @@
     position: relative;
   }
 
-  &__transposition-title {
+  [class*="__transposition-title"] {
     font-size: 16px;
     font-weight: 300;
     padding-left: 10px;
@@ -698,6 +643,17 @@
     justify-content: center;
     height: 40px;
     line-height: 1.4;
+    
+    // Button reset styles for accessibility
+    background: none;
+    border: none;
+    margin: 0;
+    padding: 0;
+    font-family: inherit;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    width: auto;
 
     > span:first-child {
       white-space: nowrap;
@@ -708,10 +664,11 @@
       padding-left: 20px;
       padding-right: 10px;
       float: right;
+      text-align: right;
     }
   }
 
-  &__darajat-al-istiqrar {
+  [class*="__darajat-al-istiqrar"] {
     display: block;
     font-size: 14px;
     font-weight: 200;
@@ -722,7 +679,7 @@
   // -------------------------
   // Transposition number with octave colors
   // -------------------------
-  &__transposition-number {
+  [class*="__transposition-number"] {
     width: 34px !important;
     font-size: 20px;
     padding: 0px 2px !important;
@@ -731,15 +688,15 @@
     background-color: black;
     vertical-align: middle !important;
 
-    &_0 {
+    &[class*="_0"] {
       background-color: $primary;
     }
 
-    &_1 {
+    &[class*="_1"] {
       background-color: $secondary;
     }
 
-    &_2 {
+    &[class*="_2"] {
       background-color: $tertiary;
     }
   }
@@ -747,7 +704,7 @@
   // -------------------------
   // Table cells
   // -------------------------
-  &__table-cell {
+  [class*="__table-cell"] {
     text-align: left;
     background-color: transparent;
 
@@ -756,24 +713,165 @@
       text-align: right;
     }
 
-    &--highlighted {
-      background-color: rgba($secondary, 0.2) !important;
+    &[class*="--highlighted"] {
+      background-color: rgba($secondary, 0.8) !important;
     }
 
-    &--scale-degree {
+    &[class*="--unique"] {
+      background-color: rgba($primary, 0.5);
+    }
+
+    &[class*="--scale-degree"] {
       background-color: $medium-grey;
       font-weight: 400 !important;
     }
 
-    &--pitch-class {
+    &[class*="--pitch-class"] {
       // Default pitch class styling
+      background-color: transparent;
     }
   }
 
-  &__row-header {
+  // -------------------------
+  // Row type-specific cell styling (via data-row-type attribute)
+  // -------------------------
+  // The TSX files now include data-row-type attributes on each <tr> element.
+  // This allows for granular styling based on the row type.
+  // 
+  // Available row types:
+  // - noteNames: Note name cells
+  // - abjadName: Abjad/Arabic letter name cells
+  // - englishName: English note name cells
+  // - scaleDegrees: Roman numeral scale degree cells (maqamat only)
+  // - primaryValue: Primary value type (fraction/cents/etc.)
+  // - fraction: Fraction value cells
+  // - cents: Cents value cells
+  // - centsFromZero: Cents from zero cells
+  // - centsDeviation: Cents deviation cells
+  // - decimalRatio: Decimal ratio cells
+  // - stringLength: String length cells
+  // - fretDivision: Fret division cells
+  // - midiNote: MIDI note number cells
+  // - frequency: Frequency cells
+  // - play: Play button cells
+  // - ajnas: Ajnas button cells (maqamat only)
+  // - staffNotation: Staff notation cells
+  //
+  // Usage example:
+  // tr[data-row-type="abjadName"] [class*="__table-cell--pitch-class"] {
+  //   font-style: italic;
+  //   color: blue;
+  // }
+  //
+  // Add your custom styles below as needed:
+
+  // Note names cells - make them bold and add background (jins only, matches scale degrees styling)
+  tr[data-row-type="noteNames"] th[data-column-type="note-name"],
+  tr[data-row-type="noteNames"] th[data-column-type="empty"] {
+    background-color: $medium-grey;
+    font-weight: 400;
+  }
+
+  // -------------------------
+  // Ascending/Descending column
+  // -------------------------
+  [class*="__asc-desc-column"] {
+    font-family: inherit;
+    font-size: 24px;
+    font-weight: 400 !important;
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+    text-align: center;
+    vertical-align: middle !important;
+    color: $text;
+  }
+
+  // -------------------------
+  // Row header
+  // -------------------------
+  [class*="__row-header"] {
     background-color: $medium-grey;
     text-transform: capitalize;
     font-weight: 400 !important;
+  }
+
+  // -------------------------
+  // Name row (jins-name-row / maqam-name-row)
+  // -------------------------
+  [class*="-name-row"] {
+    background-color: black;
+    color: white;
+    padding: 15px;
+  }
+
+  // -------------------------
+  // Buttons container
+  // -------------------------
+  [class*="__buttons"] {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: flex-end;
+    float: right;
+    height: 40px;
+    
+    // RTL support
+    [dir="rtl"] & {
+      float: left;
+      justify-content: flex-start;
+    }
+  }
+
+  // -------------------------
+  // Button styling (for transposition buttons only)
+  // Matches: jins-transpositions__button, maqam-transpositions__button, and their --toggle variants
+  // Excludes: other button types like __save-button, __delete-button, __jins-button, __buttons (container), etc.
+  // -------------------------
+  [class$="transpositions__button"],
+  [class*="transpositions__button "],
+  [class*=" transpositions__button"],
+  [class*="transpositions__button--toggle"] {
+    background-color: rgba($primary, 0.5);
+    color: white;
+    padding: 0px 10px;
+    border-radius: 2px;
+    cursor: pointer;
+    margin-right: 10px;
+    font-size: 12px;
+    min-width: 120px;
+    width: auto;
+    height: 27px;
+    vertical-align: middle;
+    text-align: center;
+    border: none;
+    display: inline-block;
+
+    // RTL support
+    [dir="rtl"] & {
+      margin-right: 0;
+      margin-left: 10px;
+    }
+
+    &:focus {
+      outline: transparent;
+    }
+
+    &:active {
+      background-color: $gold !important;
+    }
+
+    &:hover {
+      background-color: rgba($primary, 1);
+    }
+  }
+  
+  // Toggle button variant (override base button background)
+  [class*="transpositions__button--toggle"] {
+    background-color: rgba($tertiary, 0.7);
+    
+    &:hover {
+      background-color: rgba($tertiary, 1);
+    }
   }
 
   &__input {
@@ -783,6 +881,38 @@
     border-radius: 0px;
     resize: vertical;
     padding: 5px;
+  }
+
+  // -------------------------
+  // Cents Tolerance Input
+  // -------------------------
+  &__cents-tolerance-input {
+    width: 4ch; // Two digits wide
+    font-size: 13px;
+    border: 1px solid rgba($text, 0.5);
+    border-radius: 2px;
+    padding: 2px 4px;
+    text-align: center;
+    background-color: rgba($medium-grey, 0.3);
+    color: $text;
+    font-family: inherit;
+    
+    // Remove spinner arrows
+    appearance: textfield;
+    -moz-appearance: textfield;
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    
+    &:focus {
+      outline: none;
+    }
+
+    &:hover {
+      border-color: rgba($text, 0.7);
+    }
   }
 
   // -------------------------
@@ -889,5 +1019,89 @@
 
   &__load-more {
     // Inherits from __button styles
+  }
+
+  // -------------------------
+  // UI/UX Enhancements
+  // -------------------------
+
+  // 1. Primary value type row identification (left border accent) & Row hover effects
+  [class*="__table"] tbody tr:has(> th[class*="__row-header"]) {
+    transition: background-color 0.2s ease;
+    
+    // Row hover effect for data rows - increased visibility
+    // Exclude ajnas row (contains buttons) and play row (contains play icons)
+    &:not(:has([class*="__jins-button"])):not(:has([class*="__play-circle-icon"])):hover {
+      background-color: rgba($primary, 0.2);
+    }
+    
+    // Primary value type row - enhanced visual prominence
+    &:has(> th[class*="--primary-value"]) {
+      
+      th:first-child {
+        background-color: $medium-grey !important;
+        border-left: 4px solid rgba($tertiary, 0.9);
+        font-weight: 500 !important;
+      }
+      
+      // Enhanced hover for primary value row
+      &:hover th:first-child {
+        background-color: rgba($tertiary, 0.3) !important;
+      }
+    }
+  }
+
+  // 2. Play icon hover effects (gold color, no transform)
+  [class*="__play-circle-icon"].MuiSvgIcon-root {
+    transition: color 0.2s ease;
+    
+    &:hover {
+      color: $gold;
+    }
+  }
+
+  // 3. Ajnas buttons styling - matches main button style (maqam-specific)
+  [class*="__jins-button"] {
+    background-color: rgba($primary, 0.5);
+    color: $text;
+    padding: 0px 10px;
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 12px;
+    min-width: 120px;
+    width: auto;
+    height: 27px;
+    vertical-align: middle;
+    text-align: center;
+    border: none;
+    display: inline-block;
+    transition: background-color 0.2s ease;
+    font-weight: 400;
+    line-height: 27px;
+    
+    &:focus {
+      outline: transparent;
+    }
+
+    &:hover {
+      background-color: rgba($primary, 1);
+    }
+    
+    &:active {
+      background-color: rgba($gold, 0.8) !important;
+    }
+    
+    // Active/highlighted state (similar to toggle button)
+    &[class*="--active"] {
+      background-color: rgba($tertiary, 0.7);
+      
+      &:hover {
+        background-color: rgba($tertiary, 1);
+      }
+      
+      &:active {
+        background-color: $gold !important;
+      }
+    }
   }
 }
