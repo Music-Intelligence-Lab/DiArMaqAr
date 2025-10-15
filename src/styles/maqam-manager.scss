@@ -4,10 +4,10 @@
 .maqam-manager {
   display: flex;
   flex-direction: column;
-  
   width: 100%;
   margin-bottom: 20px;
 
+  // Maqam-specific unique styles
   &__header {
     margin: 10px 0;
     display: flex;
@@ -17,7 +17,6 @@
   &__selections {
     display: flex;
     align-items: center;
-    // font-size: 18px;
   }
 
   &__rows {
@@ -57,20 +56,18 @@
     }
   }
 
-  // Tabs container with toggle button
-  &__tabs-container {
+  // Filter controls container (was __tabs-container)
+  &__filter-controls {
     display: flex;
-    align-items:flex-start;
+    align-items: flex-start;
     justify-content: space-between;
     gap: 20px;
     height: auto;
     vertical-align: top;
-
-    
   }
 
-  // Group toggle button (styled like maqam-transpositions buttons)
-  &__group-toggle-button {
+  // Filter mode toggle button (was __group-toggle-button)
+  &__filter-mode-toggle {
     background-color: rgba($tertiary, 0.7);
     color: white;
     padding: 0px 10px;
@@ -84,7 +81,7 @@
     text-align: center;
     border: none;
     display: inline-block;
-    flex-shrink: 0; // Prevent shrinking
+    flex-shrink: 0;
     margin-bottom: 10px;
 
     &:focus {
@@ -100,43 +97,60 @@
     }
   }
 
-  &__list {
-    width: 100%;
-    background-color: $black;
-    display: grid;
-    grid-template-columns: repeat(16, (minmax(250px, 1fr)));
-    grid-template-rows: repeat(3, auto);
-    grid-auto-flow: column;
-    gap: 10px;
-    height: 200px;
-    overflow-x: scroll;
-    overflow-y: hidden;
-    position: relative;
-    padding-left: 25px;
-    padding-right: 25px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+  &__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    flex-grow: 1;
+    min-width: 0;
+    margin-left: 25px;
 
-    // RTL support
     [dir="rtl"] & {
-      direction: rtl;
+      margin-left: 0;
+      margin-right: 25px;
+    }
+  }
+
+  &__tab {
+    text-align: left;
+    width: max-content;
+    padding: 10px 10px;
+    border-radius: 0px;
+    border: none;
+    background: $medium-grey;
+    color: $text;
+    font-size: 13px;
+    height: 38px;
+    font-weight: 400;
+    cursor: pointer;
+
+    [dir="rtl"] & {
+      text-align: right;
     }
 
-    &::-webkit-scrollbar {
-      height: 6px;
-      position: relative;
+    &:hover {
+      background: color.adjust($medium-grey, $lightness: -10%);
     }
+  }
 
-    &::-webkit-scrollbar-thumb {
-      background-color: $primary;
-      cursor: pointer;
-      position: relative;
+  &__tab_active {
+    border: none;
+    background: $black;
+    font-weight: 400;
+
+    &:hover {
+      background: $black;
     }
+  }
 
-    &::-webkit-scrollbar-track {
-      background: $medium-grey;
-      cursor: pointer;
-      position: relative;
+  &__tab-count {
+    font-size: 0.95em;
+    color: silver;
+    margin-left: 2px;
+
+    [dir="rtl"] & {
+      margin-left: 0;
+      margin-right: 2px;
     }
   }
 
@@ -179,7 +193,6 @@
     .carousel-button-prev {
       left: 0;
 
-      // RTL support
       [dir="rtl"] & {
         left: auto;
         right: 0;
@@ -189,11 +202,49 @@
     .carousel-button-next {
       right: 0;
 
-      // RTL support
       [dir="rtl"] & {
         right: auto;
         left: 0;
       }
+    }
+  }
+
+  &__list {
+    width: 100%;
+    background-color: $black;
+    display: grid;
+    grid-template-columns: repeat(16, (minmax(250px, 1fr)));
+    grid-template-rows: repeat(3, auto);
+    grid-auto-flow: column;
+    gap: 10px;
+    height: 200px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    position: relative;
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    [dir="rtl"] & {
+      direction: rtl;
+    }
+
+    &::-webkit-scrollbar {
+      height: 6px;
+      position: relative;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: $primary;
+      cursor: pointer;
+      position: relative;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: $medium-grey;
+      cursor: pointer;
+      position: relative;
     }
   }
 
@@ -208,7 +259,6 @@
     cursor: pointer;
     transition: 0.2s;
 
-    // RTL support
     [dir="rtl"] & {
       text-align: right;
     }
@@ -238,11 +288,9 @@
     font-weight: 400;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    /* Encourage variable font weight selection on Safari */
     font-variation-settings: "wght" 400;
     font-synthesis: none;
 
-    // RTL support
     [dir="rtl"] & {
       text-align: right;
     }
@@ -252,11 +300,9 @@
       margin-top: 3px;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-      /* Help variable / web fonts pick the intended weight on Safari */
       font-variation-settings: "wght" 200;
       font-synthesis: none;
 
-      // RTL support
       [dir="rtl"] & {
         text-align: right;
       }
@@ -280,7 +326,8 @@
     }
   }
 
-  &__create-new-maqam-button {
+  // Create button (was __create-new-maqam-button)
+  &__create-button {
     width: fit-content;
     margin: 20px auto;
     font-size: 20px;
@@ -297,7 +344,8 @@
     }
   }
 
-  &__maqam-form {
+  // Admin form (was __maqam-form)
+  &__admin-form {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -305,17 +353,16 @@
     padding: 20px;
     font-size: 20px;
 
-    // RTL support
     [dir="rtl"] & {
       align-items: flex-end;
       text-align: right;
     }
   }
 
-  &__maqam-input {
+  // Name input (was __maqam-input)
+  &__name-input {
     padding: 0.4rem;
     font-size: 1rem;
-    // border: 1px solid #ccc;
     border-radius: 4px;
   }
 
@@ -330,7 +377,6 @@
     transition: 0.3s;
     color: white;
 
-    // RTL support
     [dir="rtl"] & {
       margin-right: 0;
       margin-left: 20px;
@@ -422,7 +468,6 @@
     gap: 0.5rem;
     width: 100%;
 
-    // RTL support
     [dir="rtl"] & {
       flex-direction: row-reverse;
     }
@@ -432,7 +477,6 @@
     margin-bottom: 0.4rem;
     font-weight: bold;
 
-    // RTL support
     [dir="rtl"] & {
       text-align: right;
     }
@@ -441,71 +485,7 @@
   &__input,
   &__textarea {
     padding: 0.4rem;
-    // font-size: 0.9rem;
-    // border: 1px solid #ccc;
-    // border-radius: 4px;
     resize: vertical;
-  }
-
-  &__tabs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    flex-grow: 1; // Take up remaining space
-    min-width: 0; // Allow shrinking
-    margin-left: 25px;
-
-    // RTL support
-    [dir="rtl"] & {
-      margin-left: 0;
-      margin-right: 25px;
-    }
-  }
-
-  &__tab {
-    text-align: left;
-    width: max-content;
-    padding: 10px 10px;
-    border-radius: 0px;
-    border: none;
-    background: $medium-grey;
-    color: $text;
-    font-size: 13px;
-    height:38px ;
-
-    font-weight: 400;
-    cursor: pointer;
-
-    // RTL support
-    [dir="rtl"] & {
-      text-align: right;
-    }
-
-    &:hover {
-      background: color.adjust($medium-grey, $lightness: -10%);
-    }
-  }
-
-  &__tab_active {
-    border: none;
-    background: $black;
-    font-weight: 400;
-
-    &:hover {
-      background: $black;
-    }
-  }
-
-  &__tab-count {
-    font-size: 0.95em;
-    color: silver;
-    margin-left: 2px;
-
-    // RTL support
-    [dir="rtl"] & {
-      margin-left: 0;
-      margin-right: 2px;
-    }
   }
 
   &__export-container {
@@ -517,7 +497,6 @@
     margin-bottom: 0px;
     margin-left: auto;
 
-    // RTL support
     [dir="rtl"] & {
       float: left;
       margin-right: auto;
@@ -535,7 +514,6 @@
     color: $text;
     margin-left: 0px;
 
-    // RTL support
     [dir="rtl"] & {
       margin-left: auto;
       margin-right: 0px;

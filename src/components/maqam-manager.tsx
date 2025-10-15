@@ -219,7 +219,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
   return (
     <div className="maqam-manager" key={language}>
       {/* Tabs for filtering maqamat with toggle button */}
-      <div className="maqam-manager__tabs-container">
+      <div className="maqam-manager__filter-controls">
         <div className="maqam-manager__tabs">
         {tabs.map((tab) => {
           let count = 0;
@@ -267,7 +267,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
 
         {/* Single toggle button positioned far right */}
         <button
-          className="maqam-manager__group-toggle-button"
+          className="maqam-manager__filter-mode-toggle"
           onClick={() => {
             setFilterMode(filterMode === 'note' ? 'jins' : 'note');
             setMaqamatFilter('all');
@@ -336,13 +336,13 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
       </div>
 
       {admin && !selectedMaqamData && (
-        <button onClick={() => setSelectedMaqamData(new MaqamData(newMaqamId, "", [], [], [], "", "", []))} className="maqam-manager__create-new-maqam-button">
+        <button onClick={() => setSelectedMaqamData(new MaqamData(newMaqamId, "", [], [], [], "", "", []))} className="maqam-manager__create-button">
           {t('maqam.createNewMaqam')}
         </button>
       )}
 
       {admin && selectedMaqamData && (
-        <div className="maqam-manager__maqam-form">
+        <div className="maqam-manager__admin-form">
           <div className="maqam-manager__group">
             <input
               type="text"
@@ -362,7 +362,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
                 )
               }
               placeholder={t('maqam.enterMaqamName')}
-              className="maqam-manager__maqam-input"
+              className="maqam-manager__name-input"
             />
             <button
               onClick={() => {

@@ -17,7 +17,6 @@
   &__selections {
     display: flex;
     align-items: center;
-    //font-size: 18px;
     font-weight: bold;
   }
 
@@ -68,7 +67,6 @@
     font-size: 14px;
     width: 50%;
     min-height: 80px;
-
     direction: ltr;
     text-align: left;
     vertical-align: top;
@@ -80,7 +78,6 @@
     font-size: 14px;
     width: 50%;
     min-height: 80px;
-
     text-align: right;
     direction: rtl;
     vertical-align: top;
@@ -104,7 +101,6 @@
     padding-top: 10px;
     padding-bottom: 10px;
 
-    // RTL support
     [dir="rtl"] & {
       direction: rtl;
     }
@@ -166,7 +162,6 @@
     .carousel-button-prev {
       left: 0;
 
-      // RTL support
       [dir="rtl"] & {
         left: auto;
         right: 0;
@@ -176,7 +171,6 @@
     .carousel-button-next {
       right: 0;
 
-      // RTL support
       [dir="rtl"] & {
         right: auto;
         left: 0;
@@ -195,7 +189,6 @@
     cursor: pointer;
     transition: 0.2s;
 
-    // RTL support
     [dir="rtl"] & {
       text-align: right;
     }
@@ -225,11 +218,9 @@
     font-weight: 400;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    /* Help variable / web fonts pick the intended weight on Safari */
     font-variation-settings: "wght" 400;
     font-synthesis: none;
 
-    // RTL support
     [dir="rtl"] & {
       text-align: right;
     }
@@ -241,11 +232,9 @@
       font-weight: 200;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-      /* Help variable / web fonts pick the intended weight on Safari */
       font-variation-settings: "wght" 200;
       font-synthesis: none;
 
-      // RTL support
       [dir="rtl"] & {
         text-align: right;
       }
@@ -269,7 +258,8 @@
     }
   }
 
-  &__create-new-jins-button {
+  // Create button (was __create-new-jins-button)
+  &__create-button {
     width: fit-content;
     margin: 20px auto;
     font-size: 20px;
@@ -286,7 +276,8 @@
     }
   }
 
-  &__jins-form {
+  // Admin form (was __jins-form)
+  &__admin-form {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -294,17 +285,16 @@
     padding: 20px;
     font-size: 20px;
 
-    // RTL support
     [dir="rtl"] & {
       align-items: flex-end;
       text-align: right;
     }
   }
 
-  &__jins-input {
+  // Name input (was __jins-input)
+  &__name-input {
     padding: 0.4rem;
     font-size: 1rem;
-    // border: 1px solid #ccc;
     border-radius: 4px;
   }
 
@@ -319,7 +309,6 @@
     transition: 0.1s;
     color: white;
 
-    // RTL support
     [dir="rtl"] & {
       margin-right: 0;
       margin-left: 20px;
@@ -411,7 +400,6 @@
     gap: 0.5rem;
     width: 100%;
 
-    // RTL support
     [dir="rtl"] & {
       flex-direction: row-reverse;
     }
@@ -429,9 +417,6 @@
   &__input,
   &__textarea {
     padding: 0.4rem;
-    // font-size: 0.9rem;
-    // border: 1px solid #ccc;
-    // border-radius: 4px;
     resize: vertical;
   }
 
@@ -441,7 +426,6 @@
     margin-bottom: -10px;
     margin-left: 25px;
 
-    // RTL support
     [dir="rtl"] & {
       margin-left: 0;
       margin-right: 25px;
@@ -460,7 +444,6 @@
     font-weight: 400;
     cursor: pointer;
 
-    // RTL support
     [dir="rtl"] & {
       text-align: right;
     }
@@ -485,7 +468,6 @@
     color: silver;
     margin-left: 2px;
 
-    // RTL support
     [dir="rtl"] & {
       margin-left: 0;
       margin-right: 2px;
@@ -501,7 +483,6 @@
     margin-bottom: 0px;
     margin-left: auto;
 
-    // RTL support
     [dir="rtl"] & {
       float: left;
       margin-right: auto;
@@ -519,7 +500,6 @@
     color: $text;
     margin-left: 0px;
 
-    // RTL support
     [dir="rtl"] & {
       margin-left: auto;
       margin-right: 0px;
