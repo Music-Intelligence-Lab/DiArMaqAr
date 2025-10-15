@@ -1,4 +1,5 @@
 @use "./variables" as *;
+@use "./maqam-jins-shared-ui";
 
 .jins-transpositions {
   width: 100%;
@@ -144,53 +145,6 @@
     }
   }
 
-  &__buttons {
-    margin-left: auto;
-  }
-
-  &__button {
-    background-color: rgba($primary, 0.5);
-    color: white;
-    padding: 0px 10px;
-    border-radius: 2px;
-    cursor: pointer;
-    margin-right: 10px;
-    font-size: 12px;
-    min-width: 120px;
-    width: auto;
-    height: 27px; /* Slightly reduced for better visual balance */
-    vertical-align: middle;
-    text-align: center;
-    border: none;
-    display: inline-block;
-
-    // RTL support
-    [dir="rtl"] & {
-      margin-right: 0;
-      margin-left: 10px;
-    }
-
-    &:focus {
-      outline: transparent;
-    }
-
-    &:active {
-      background-color: $gold !important;
-    }
-
-    &:hover {
-      background-color: rgba($primary, 1);
-    }
-
-    &--toggle {
-      background-color: rgba($tertiary, 0.7);
-      
-      &:hover {
-        background-color: rgba($tertiary, 1);
-      }
-    }
-  }
-
   h3 {
     font-size: 18px;
     margin-bottom: 10px;
@@ -272,170 +226,7 @@
     float: right;
   }
 
-  &__table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
-    margin-bottom: 0px;
-    font-size: 12px;
-    font-weight: 200;
-
-    th {
-      vertical-align: middle;
-      text-align: left;
-      padding: 10px;
-      border: solid 1px $grey;
-      font-weight: 200;
-
-      // RTL support
-      [dir="rtl"] & {
-        text-align: right;
-      }
-    }
-
-    td {
-      vertical-align: middle;
-      text-align: left;
-      padding: 10px;
-      border: solid 1px $grey;
-      font-weight: 200;
-
-      // RTL support
-      [dir="rtl"] & {
-        text-align: right;
-      }
-    }
-  }
-
-  &__transposition-title {
-    font-size: 16px;
-    font-weight: 300;
-    padding-left: 10px;
-    padding-right: 20px;
-    float: left;
-    max-width: 60%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 40px;
-    line-height: 1.4;
-
-    > span:first-child {
-      white-space: nowrap;
-    }
-
-    // RTL support
-    [dir="rtl"] & {
-      padding-left: 20px;
-      padding-right: 10px;
-      float: right;
-    }
-  }
-
-  &__darajat-al-istiqrar {
-    display: block;
-    font-size: 14px;
-    font-weight: 200;
-    margin-top: 2px;
-    opacity: 0.85;
-  }
-
-  &__transposition-number {
-    width: 34px !important;
-    font-size: 20px;
-    padding: 0px 2px !important;
-    margin: 0px 0px 0px 0px;
-    text-align: center !important;
-    background-color: black;
-
-    &_0 {
-      background-color: $primary;
-    }
-
-    &_1 {
-      background-color: $secondary;
-    }
-
-    &_2 {
-      background-color: $tertiary;
-    }
-  }
-
-  &__transposition-row {
-    text-align: left;
-    background-color: transparent;
-    scroll-margin-top: calc(
-      $top-navbar-height + 120px
-    ); // Adjusted for navbar height + sticky header (title row + filter menu)
-    cursor: pointer;
-    transition: opacity 0.2s ease;
-
-    &--toggling {
-      opacity: 0.7;
-    }
-
-    // RTL support
-    [dir="rtl"] & {
-      text-align: right;
-    }
-  }
-
-  &__table-cell {
-    text-align: left;
-    background-color: transparent;
-
-    // RTL support
-    [dir="rtl"] & {
-      text-align: right;
-    }
-
-    &--pitch-class {
-      background-color: transparent;
-    }
-
-    &--highlighted {
-      background-color: rgba($secondary, 0.2) !important;
-    }
-  }
-
-  &__row-header {
-    background-color: $medium-grey;
-    text-transform: capitalize;
-    font-weight: 400 !important;
-  }
-
-  &__jins-name-row {
-    background-color: black;
-    color: white;
-    padding: 15px;
-    position: relative;
-    height: 70px; /* Set a consistent height for all rows */
-  }
   
-  &__buttons {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    justify-content: flex-end;
-    float: right;
-    height: 40px;
-    
-    // RTL support
-    [dir="rtl"] & {
-      float: left;
-      justify-content: flex-start;
-    }
-  }
-
-  &__input {
-    width: 50px;
-    font-size: 14px;
-    border: 1px solid $text;
-    border-radius: 0px;
-    resize: vertical;
-    padding: 5px;
-  }
-
   &__comments-sources-container {
     display: flex;
     justify-content: space-between;
@@ -465,3 +256,4 @@
     border: 0px !important;
   }
 }
+
