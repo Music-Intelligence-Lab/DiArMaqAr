@@ -1,4 +1,5 @@
 @use "./variables" as *;
+@use "./maqam-jins-shared-ui";
 
 
 .maqam-transpositions {
@@ -9,20 +10,44 @@
   margin-bottom: 40px;
 
 
-  &__title {
+  &__sticky-header {
     width: 100%;
-    background: $gradient-primary; // Changed from background-color to background
+    background-color: darken($color: $secondary, $amount: 5);
     color: $text;
+    border: solid 1px $grey;
+    position: sticky;
+    position: -webkit-sticky;
+    top: $top-navbar-height + 20px;
+    margin-bottom: 20px;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 1);
+    z-index: 10;
+    padding: 10px 20px;
+
+    // Pseudo-element to fill the gap above when sticky
+    &::before {
+      content: "";
+      position: absolute;
+      top: -22px;
+      left: -1px;
+      right: 0;
+      width: calc(100% + 2px);
+      height: 21px;
+      background-color: $dark-grey;
+      z-index: -1;
+
+      // RTL support
+      [dir="rtl"] & {
+        left: 0;
+        right: -1px;
+      }
+    }
+  }
+
+  &__title-row {
     font-size: 20px;
     font-weight: 300;
     text-align: left;
-    padding: 10px 20px;
-    border: solid 1px $grey;
-    position: sticky;
-    top: 100px; // Stick below navbar with some spacing
-    z-index: 40;
-    backdrop-filter: $backdrop-blur;
-    -webkit-backdrop-filter: $backdrop-blur;
+    margin-bottom: 10px;
 
     // RTL support
     [dir="rtl"] & {
@@ -57,6 +82,47 @@
 
   }
 
+  &__filter-menu {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+
+  &__filter-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 0px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background-color 0.2s;
+  }
+
+  &__filter-checkbox {
+    cursor: pointer;
+    margin-right: 2px;
+
+    // RTL support
+    [dir="rtl"] & {
+      margin-right: 0;
+      margin-left: 2px;
+    }
+  }
+
+  &__filter-label {
+    cursor: pointer;
+    user-select: none;
+    padding-right: 5px;
+
+    // RTL support
+    [dir="rtl"] & {
+      padding-right: 0;
+      padding-left: 5px;
+    }
+  }
+
   &__play-circle-icon.MuiSvgIcon-root {
     //    background-color: $tertiary;
     color: white;
@@ -65,6 +131,12 @@
     font-size: 21px;
     cursor: pointer;
     vertical-align: middle;
+
+    // RTL support
+    [dir="rtl"] & {
+      margin-right: 0;
+      margin-left: 5px;
+    }
   }
 
   &__export-icon.MuiSvgIcon-root {
@@ -76,6 +148,12 @@
     font-size: 16px;
     cursor: pointer;
     vertical-align: middle;
+
+    // RTL support
+    [dir="rtl"] & {
+      margin-right: 0;
+      margin-left: 5px;
+    }
   }
 
   &__copy-icon.MuiSvgIcon-root {
@@ -86,52 +164,64 @@
     font-size: 16px;
     cursor: pointer;
     vertical-align: middle;
-  }
-
-  &__buttons {
-    margin-left: auto;
-  }
-
-  &__button {
-    background-color: rgba($primary, 0.5);
-    color: white;
-    padding: 0px 10px;
-    border-radius: 2px;
-    cursor: pointer;
-    margin-right: 10px;
-    font-size: 12px;
-    min-width: 120px;
-    width: auto;
-    height: 27px; /* Slightly reduced for better visual balance */
-    vertical-align: middle;
-    text-align: center;
-    border: none;
-    display: inline-block;
 
     // RTL support
     [dir="rtl"] & {
       margin-right: 0;
-      margin-left: 10px;
+      margin-left: 5px;
+    }
+  }
+
+  // Table structure - component-specific overrides
+  &__table {
+    tr {
+      height: 100%;
     }
 
-    &:focus {
-      outline: transparent;
+    td {
+      vertical-align: top;
+      height: 100%;
+      position: relative;
     }
+  }
 
-    &:active {
-      background-color: $gold !important;
+  // Transposition row - maqam-specific styling
+  &__transposition-row {
+    background-color: black;
+    height: 70px;
+    padding: 15px;
+  }
+
+  // Table cell - maqam-specific highlighted color
+  &__table-cell {
+    &--highlighted {
+      background-color: rgba($tertiary, 0.5) !important;
     }
+  }
 
-    &:hover {
-      background-color: rgba($primary, 1);
-    }
+  // Maqam-specific: no additional overrides needed for maqam-name-row
+  // (inherits all styling from shared [class*="-name-row"])
 
-    &--toggle {
-      background-color: rgba($tertiary, 0.7);
-      
-      &:hover {
-        background-color: rgba($tertiary, 1);
-      }
+  &__jins-button {
+    width: 100%;
+    padding: 0px;
+    border-radius: 0px;
+    background-color: rgba($black, 0);
+    color: $text;
+    font-family: inherit;
+    font-weight: inherit;
+    font-size: 12px;
+    text-align: left;
+    display: flex; // Enables flex layout
+    align-items: flex-start; // Aligns content to top
+    justify-content: flex-start; // (optional) aligns to left horizontally
+    cursor: pointer;
+    margin-bottom: 0px;
+
+    // RTL support
+    [dir="rtl"] & {
+      text-align: right;
+      justify-content: flex-end;
     }
   }
 
@@ -216,269 +306,15 @@
     float: right;
   }
 
-  &__table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    table-layout: fixed;
-    margin-bottom: 0px;
-    font-size: $font-size-sm;
-    font-weight: $font-weight-normal;
-    
-    // Glassmorphism container
-    background: $surface-primary;
-    backdrop-filter: $backdrop-blur;
+  // Specific spacer variants
+  &__direction-spacer {
+    padding: 10px 0 !important;
+    border: 0px !important;
+  }
+
+  &__transposition-spacer {
+    height: 20px;
     border: 0px;
-    
-    overflow: hidden;
-
-    th {
-      vertical-align: middle;
-      text-align: left;
-      padding: $space-4 $space-2;
-      background: $glass-medium;
-      border-bottom: 1px solid $border-primary;
-      font-weight: $font-weight-light;
-      font-size: $font-size-xs;
-      color: $text-primary;
-      position: sticky;
-      top: 0;
-      z-index: 1;
-
-      &:not(:last-child) {
-        border-right: 1px solid $border-primary;
-      }
-
-      // RTL support
-      [dir="rtl"] & {
-        text-align: right;
-      }
-    }
-
-    tr {
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-      &:hover:not(.maqam-transpositions__spacer) {
-        background: $glass-light;
-      }
-    }
-
-    td {
-      vertical-align: middle;
-      text-align: left;
-      padding: $space-2 $space-3;
-      border: 1px solid $border-primary;
-      background: transparent;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-      &:not(:last-child) {
-        border-right: 1px solid $border-primary;
-      }
-
-      &:hover:not(.maqam-transpositions__spacer):not(.maqam-transpositions__spacer-between) {
-        background: $glass-medium;
-      }
-
-      // RTL support
-      [dir="rtl"] & {
-        text-align: right;
-      }
-    }
-  }
-
-  &__transposition-title {
-    font-size: 16px;
-    font-weight: 300;
-    cursor: pointer;
-    display: block;
-    text-align: left;
-
-    // RTL support
-    [dir="rtl"] & {
-      text-align: right;
-    }
-  }
-
-  &__transposition-number {
-    width: 34px !important;
-    font-size: 20px;
-    padding: 0px 2px !important;
-    margin: 0px 0px 0px 0px;
-    text-align: center !important;
-    background-color: black;
-    // Normalize th styling to match td elements
-    font-weight: normal;
-    
-    &_0 {
-      background-color: $primary;
-    }
-
-    &_1 {
-      background-color: $secondary;
-    }
-
-    &_2 {
-      background-color: $tertiary;
-    }
-  }
-
-  &__header {
-    text-align: left;
-    background-color: transparent;
-    scroll-margin-top: calc(
-      $top-navbar-height - 30px + 50px
-    ); // Adjusted for navbar height
-    cursor: pointer;
-    transition: opacity 0.2s ease;
-    // Normalize th styling to match td elements
-    font-weight: normal;
-
-    &--toggling {
-      opacity: 0.7;
-    }
-
-    // RTL support
-    [dir="rtl"] & {
-      text-align: right;
-    }
-  }
-
-  &__cell {
-    text-align: left;
-    background-color: transparent;
-
-    // RTL support
-    [dir="rtl"] & {
-      text-align: right;
-    }
-
-    &_highlighted {
-      background-color: rgba($secondary, 0.2) !important;
-    }
-  }
-
-  &__row-header {
-    background-color: $dark-grey;
-    text-transform: capitalize;
-    font-weight: 400 !important;
-  }
-
-  &__maqam-name-row {
-    background-color: black;
-    color: white;
-    padding: 15px;
-    position: relative;
-    height: 70px; /* Set a consistent height for all rows */
-  }
-  
-  &__buttons {
-    float: right;
-    text-align: right;
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    
-    // RTL support
-    [dir="rtl"] & {
-      float: left;
-      text-align: left;
-      right: auto;
-      left: 15px;
-    }
-  }
-
-  &__header-content {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 10px 15px;
-    min-height: 70px;
-    
-    // RTL support
-    [dir="rtl"] & {
-      align-items: flex-end;
-    }
-  }
-
-  &__title-section {
-    margin-bottom: 10px;
-  }
-
-  &__buttons-section {
-    width: 100%;
-    
-    .maqam-transpositions__buttons {
-      float: none;
-      text-align: left;
-      position: static;
-      transform: none;
-      
-      // RTL support
-      [dir="rtl"] & {
-        text-align: right;
-      }
-    }
-  }
-
-  &__input {
-    width: 50px;
-    font-size: 14px;
-    border: 1px solid $text;
-    border-radius: 0px;
-    resize: vertical;
-    padding: 5px;
-  }
-
-  &__comments-sources-container {
-    display: flex;
-    justify-content: space-between;
-    padding: 0 30px;
-
-    // RTL support
-    [dir="rtl"] & {
-      flex-direction: row-reverse;
-      padding: 0 30px;
-    }
-  }
-
-  &__sources {
-    width: 100%;
-    display: flex;
-    padding: 10px 30px;
-
-    // RTL support
-    [dir="rtl"] & {
-      flex-direction: row-reverse;
-    }
-  }
-
-  .maqam-transpositions__spacer {
-    padding: 10px !important;
-    border: 0px;
-  }
-
-  // Anchor row used for scroll targets - keep in DOM but visually hidden
-  .maqam-transpositions__anchor-row {
-    visibility: hidden; /* keeps element in layout but invisible */
-    height: 0 !important;
-    line-height: 0 !important;
-    pointer-events: none;
-  }
-
-  .maqam-transpositions__anchor-row td {
-    padding: 0 !important;
-    margin: 0 !important;
-    height: 0 !important;
-    line-height: 0 !important;
-    border: 0 !important;
-    background: transparent !important;
-  }
-
-  .maqam-transpositions__anchor-row td > div {
-    display: block;
-    width: 0;
-    height: 0;
-    overflow: hidden;
   }
 }
+

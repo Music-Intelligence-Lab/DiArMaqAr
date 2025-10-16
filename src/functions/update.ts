@@ -1,7 +1,7 @@
 import JinsData from "@/models/Jins";
 import MaqamData from "@/models/Maqam";
 import Pattern from "@/models/Pattern";
-import { Source } from "@/models/bibliography/Source";
+import { Source, stringifySource } from "@/models/bibliography/Source";
 import TuningSystem from "@/models/TuningSystem";
 
 /**
@@ -92,6 +92,7 @@ export async function updateAjnas(newAjnas: JinsData[]) {
       body: JSON.stringify(
         newAjnas.map((j) => ({
           id: j.getId(),
+          idName: j.getIdName(),
           name: j.getName(),
           noteNames: j.getNoteNames(),
           commentsEnglish: j.getCommentsEnglish() || "",
@@ -128,6 +129,7 @@ export async function updateMaqamat(newMaqamat: MaqamData[]) {
       body: JSON.stringify(
         newMaqamat.map((m) => ({
           id: m.getId(),
+          idName: m.getIdName(),
           name: m.getName(),
           ascendingNoteNames: m.getAscendingNoteNames(),
           descendingNoteNames: m.getDescendingNoteNames(),
@@ -162,7 +164,11 @@ export async function updateSources(sources: Source[]) {
     const response = await fetch("/api/sources", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(sources.map((source) => source.convertToJSON())),
+      body: JSON.stringify(
+        sources.map((source) => {
+          return { ...source.convertToJSON(), id: stringifySource(source, true, null)};
+        })
+      ),
     });
     if (!response.ok) {
       throw new Error("Failed to save updated Sources on the server.");

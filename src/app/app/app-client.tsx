@@ -23,7 +23,7 @@ import Footer from "@/components/footer";
 /**
  * Formats a name for URL by replacing spaces with hyphens
  */
-function formatNameForUrl(name: string): string {
+export function formatNameForUrl(name: string): string {
   return name.replace(/\s+/g, "-");
 }
 
@@ -249,7 +249,6 @@ export default function AppClient() {
         const parsedSayrParameter = parseSayrParameter(sayrParam, maqamData);
 
         for (const sayr of maqamData.getSuyūr()) {
-          console.log(createSayrParameter(sayr.id, maqamData), parsedSayrParameter);
           if (createSayrParameter(sayr.id, maqamData) === parsedSayrParameter) {
             sayrId = sayr.id;
             break;

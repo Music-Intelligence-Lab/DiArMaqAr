@@ -141,46 +141,41 @@ export default function Navbar() {
                     window.scrollTo({ top: 0, behavior: "smooth" });
                   }
                 }
-              }}
-              disabled={!selectedTuningSystem}
-            >
-              <span className="navbar__bottom-bar-item_tab-title">
-                {selectedTuningSystem
-                  ? `${t('tabs.ajnas')} (${
-                      ajnas.filter((jinsData) =>
-                        jinsData.isJinsSelectable(
-                          allPitchClasses.map((pitchClass) => pitchClass.noteName)
-                        )
-                      ).length
-                    }/${ajnas.length})`
-                  : t('tabs.ajnas')}
-              </span>
-              <span className="navbar__bottom-bar-item_tab-subtitle">
-                {!selectedJinsData
-                  ? ""
-                  : selectedJins
-                  ? `${getDisplayName(selectedJinsData.getName(), 'jins')} al-${getDisplayName(
-                      selectedJins.jinsPitchClasses.map(
-                        (pitchClass) => pitchClass.noteName
-                      )[0], 'note'
-                    )} (${getEnglishNoteName(
-                      selectedJins.jinsPitchClasses.map(
-                        (pitchClass) => pitchClass.noteName
-                      )[0]
-                    )})`
-                  : `${getDisplayName(selectedJinsData.getName(), 'jins')} (${getDisplayName(
-                      selectedJinsData.getNoteNames()[0], 'note'
-                    )}/${getEnglishNoteName(
-                      selectedJinsData.getNoteNames()[0]
-                    )})`}
-              </span>
-            </button>
-            {!selectedTuningSystem && (
-              <div className="navbar__tooltip">
-                {t('tooltip.ajnas')}
-              </div>
-            )}
-          </div>
+              }
+            }}
+            disabled={!selectedTuningSystem}
+          >
+            <span className="navbar__bottom-bar-item_tab-title">
+              {selectedTuningSystem
+                ? `${t('tabs.ajnas')} (${
+                    ajnas.filter((jinsData) =>
+                      jinsData.isJinsPossible(
+                        allPitchClasses.map((pitchClass) => pitchClass.noteName)
+                      )
+                    ).length
+                  }/${ajnas.length})`
+                : t('tabs.ajnas')}
+            </span>
+            <span className="navbar__bottom-bar-item_tab-subtitle">
+              {!selectedJinsData
+                ? ""
+                : selectedJins
+                ? `${getDisplayName(selectedJinsData.getName(), 'jins')} al-${getDisplayName(
+                    selectedJins.jinsPitchClasses.map(
+                      (pitchClass) => pitchClass.noteName
+                    )[0], 'note'
+                  )} (${getEnglishNoteName(
+                    selectedJins.jinsPitchClasses.map(
+                      (pitchClass) => pitchClass.noteName
+                    )[0]
+                  )})`
+                : `${getDisplayName(selectedJinsData.getName(), 'jins')} (${getDisplayName(
+                    selectedJinsData.getNoteNames()[0], 'note'
+                  )}/${getEnglishNoteName(
+                    selectedJinsData.getNoteNames()[0]
+                  )})`}
+            </span>
+          </button>
         )
       },
       {
@@ -231,39 +226,34 @@ export default function Navbar() {
                     window.scrollTo({ top: 0, behavior: "smooth" });
                   }
                 }
-              }}
-              disabled={!selectedTuningSystem}
-            >
-              <span className="navbar__bottom-bar-item_tab-title">
-                {selectedTuningSystem
-                  ? `${t('tabs.maqamat')} (${
-                      maqamat.filter((maqamData) =>
-                        maqamData.isMaqamSelectable(
-                          allPitchClasses.map((pitchClass) => pitchClass.noteName)
-                        )
-                      ).length
-                    }/${maqamat.length})`
-                  : t('tabs.maqamat')}{" "}
-                <br />
-              </span>
-              <span className="navbar__bottom-bar-item_tab-subtitle">
-                {!selectedMaqamData
-                  ? ""
-                  : selectedMaqam
-                  ? getDisplayName(selectedMaqam.name, 'maqam')
-                  : `${getDisplayName(selectedMaqamData.getName(), 'maqam')} (${getDisplayName(
-                      selectedMaqamData.getAscendingNoteNames()[0], 'note'
-                    )}/${getEnglishNoteName(
-                      selectedMaqamData.getAscendingNoteNames()[0]
-                    )})`}
-              </span>
-            </button>
-            {!selectedTuningSystem && (
-              <div className="navbar__tooltip">
-                {t('tooltip.maqamat')}
-              </div>
-            )}
-          </div>
+              }
+            }}
+            disabled={!selectedTuningSystem}
+          >
+            <span className="navbar__bottom-bar-item_tab-title">
+              {selectedTuningSystem
+                ? `${t('tabs.maqamat')} (${
+                    maqamat.filter((maqamData) =>
+                      maqamData.isMaqamPossible(
+                        allPitchClasses.map((pitchClass) => pitchClass.noteName)
+                      )
+                    ).length
+                  }/${maqamat.length})`
+                : t('tabs.maqamat')}{" "}
+              <br />
+            </span>
+            <span className="navbar__bottom-bar-item_tab-subtitle">
+              {!selectedMaqamData
+                ? ""
+                : selectedMaqam
+                ? getDisplayName(selectedMaqam.name, 'maqam')
+                : `${getDisplayName(selectedMaqamData.getName(), 'maqam')} (${getDisplayName(
+                    selectedMaqamData.getAscendingNoteNames()[0], 'note'
+                  )}/${getEnglishNoteName(
+                    selectedMaqamData.getAscendingNoteNames()[0]
+                  )})`}
+            </span>
+          </button>
         )
       },
       {

@@ -1,0 +1,1107 @@
+// Maqam/Jins Shared UI - Common styles for maqam and jins display components
+// Used by: maqam-manager.scss, jins-manager.scss,
+//          maqam-transpositions.scss, jins-transpositions.scss
+
+@use "sass:color";
+@use "./variables" as *;
+
+// ============================================================================
+// SECTION 1: MANAGER SHARED STYLES
+// Carousel-based browser with filtering, selection, and CRUD operations
+// ============================================================================
+
+.maqam-jins-manager-shared {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 20px;
+
+  // -------------------------
+  // Tabs for filtering
+  // -------------------------
+  &__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-left: 25px;
+
+    // RTL support
+    [dir="rtl"] & {
+      margin-left: 0;
+      margin-right: 25px;
+    }
+  }
+
+  &__tab {
+    text-align: left;
+    width: max-content;
+    padding: 10px 10px;
+    border-radius: 0px;
+    border: none;
+    background: $medium-grey;
+    color: $text;
+    font-size: 13px;
+    height: 38px;
+    font-weight: 400;
+    cursor: pointer;
+
+    // RTL support
+    [dir="rtl"] & {
+      text-align: right;
+    }
+
+    &:hover {
+      background: color.adjust($medium-grey, $lightness: -10%);
+    }
+  }
+
+  &__tab_active {
+    border: none;
+    background: $black;
+    font-weight: 400;
+
+    &:hover {
+      background: $black;
+    }
+  }
+
+  &__tab-count {
+    font-size: 0.95em;
+    color: silver;
+    margin-left: 2px;
+
+    // RTL support
+    [dir="rtl"] & {
+      margin-left: 0;
+      margin-right: 2px;
+    }
+  }
+
+  // -------------------------
+  // Carousel for horizontal scrolling
+  // -------------------------
+  &__carousel {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+
+    .carousel-button {
+      background: none;
+      border: none;
+      font-size: 30px;
+      cursor: pointer;
+      color: $text;
+      padding: 0px;
+
+      &:hover {
+        color: $tertiary;
+        transition: background-color 0.2s ease-in-out;
+      }
+    }
+
+    .carousel-button-prev,
+    .carousel-button-next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1;
+      height: calc(100% - 20px);
+      width: 25px;
+      background-color: $black;
+
+      &:hover {
+        color: $tertiary;
+        transition: color 0.1s ease-in-out;
+      }
+    }
+
+    .carousel-button-prev {
+      left: 0;
+
+      // RTL support
+      [dir="rtl"] & {
+        left: auto;
+        right: 0;
+      }
+    }
+
+    .carousel-button-next {
+      right: 0;
+
+      // RTL support
+      [dir="rtl"] & {
+        right: auto;
+        left: 0;
+      }
+    }
+  }
+
+  // -------------------------
+  // Item grid (3 rows, dynamic columns)
+  // -------------------------
+  &__list {
+    width: 100%;
+    background-color: $black;
+    display: grid;
+    grid-template-rows: repeat(3, auto);
+    grid-auto-flow: column;
+    gap: 10px;
+    height: 200px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    position: relative;
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    // RTL support
+    [dir="rtl"] & {
+      direction: rtl;
+    }
+
+    &::-webkit-scrollbar {
+      height: 6px;
+      position: relative;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: $primary;
+      cursor: pointer;
+      position: relative;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: $medium-grey;
+      cursor: pointer;
+      position: relative;
+    }
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 5px 10px;
+    background-color: rgba($black, 0.3);
+    font-size: 14px;
+    color: $text;
+    cursor: pointer;
+    transition: 0.2s;
+
+    // RTL support
+    [dir="rtl"] & {
+      text-align: right;
+    }
+
+    &_active {
+      background-color: rgba($primary, 0.4);
+
+      &:hover {
+        background-color: rgba($primary, 0.9);
+      }
+    }
+
+    &_selected {
+      background-color: $tertiary;
+
+      &:hover {
+        background-color: $tertiary;
+      }
+    }
+  }
+
+  &__item-name {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Help variable / web fonts pick the intended weight on Safari */
+    font-variation-settings: "wght" 400;
+    font-synthesis: none;
+
+    // RTL support
+    [dir="rtl"] & {
+      text-align: right;
+    }
+
+    &-transpositions {
+      color: rgba(255, 255, 255, 1);
+      font-size: 14px;
+      margin-top: 3px;
+      font-weight: 200;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      /* Help variable / web fonts pick the intended weight on Safari */
+      font-variation-settings: "wght" 200;
+      font-synthesis: none;
+
+      // RTL support
+      [dir="rtl"] & {
+        text-align: right;
+      }
+    }
+  }
+
+  // -------------------------
+  // Admin form for CRUD operations
+  // -------------------------
+  &__admin-form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px;
+    font-size: 20px;
+
+    // RTL support
+    [dir="rtl"] & {
+      align-items: flex-end;
+      text-align: right;
+    }
+  }
+
+  &__name-input {
+    padding: 0.4rem;
+    font-size: 1rem;
+    border-radius: 4px;
+  }
+
+  &__create-button {
+    width: fit-content;
+    margin: 20px auto;
+    font-size: 20px;
+    padding: 10px;
+    background-color: $secondary;
+    border-radius: 10px;
+    color: $text;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    transition: 0.3s;
+
+    &:hover {
+      background-color: $primary;
+    }
+  }
+
+  // -------------------------
+  // Form action buttons
+  // -------------------------
+  &__save-button,
+  &__delete-button,
+  &__clear-button {
+    margin-right: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    color: white;
+
+    // RTL support
+    [dir="rtl"] & {
+      margin-right: 0;
+      margin-left: 20px;
+    }
+
+    &:hover {
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  &__save-button {
+    background-color: $secondary;
+  }
+
+  &__delete-button {
+    background-color: $delete;
+  }
+
+  &__clear-button {
+    background-color: $primary;
+  }
+
+  // -------------------------
+  // Source reference management
+  // -------------------------
+  &__source-add-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  &__source-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100px;
+  }
+
+  &__source-select,
+  &__source-input {
+    padding: 5px;
+    font-size: 14px;
+  }
+
+  &__source-delete-button {
+    padding: 5px;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: $delete;
+    color: white;
+    transition: 0.1s;
+
+    &:hover {
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  // -------------------------
+  // Comments and input fields
+  // -------------------------
+  &__input-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  &__group {
+    display: flex;
+    gap: 0.5rem;
+    width: 100%;
+
+    // RTL support
+    [dir="rtl"] & {
+      flex-direction: row-reverse;
+    }
+  }
+
+  &__label {
+    margin-bottom: 0.4rem;
+    font-weight: bold;
+
+    // RTL support
+    [dir="rtl"] & {
+      text-align: right;
+    }
+  }
+
+  &__input,
+  &__textarea {
+    padding: 0.4rem;
+    resize: vertical;
+  }
+}
+
+// ============================================================================
+// SECTION 2: TRANSPOSITIONS SHARED STYLES
+// Table-based display of all valid transpositions with expandable details
+// ============================================================================
+
+.maqam-jins-transpositions-shared {
+  width: 100%;
+  font-size: 0.9rem;
+  margin-top: 10px;
+  margin-bottom: 40px;
+  scroll-margin-top: 450px;
+
+  // -------------------------
+  // Sticky header with filters
+  // -------------------------
+  &__sticky-header {
+    width: 100%;
+    background-color: darken($color: $secondary, $amount: 5);
+    color: $text;
+    border: solid 1px $grey;
+    position: sticky;
+    position: -webkit-sticky;
+    top: $top-navbar-height + 20px;
+    margin-bottom: 20px;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 1);
+    z-index: 10;
+    margin-top: 10px;
+    padding: 10px 20px;
+
+    // Pseudo-element to fill the gap above when sticky
+    &::before {
+      content: "";
+      position: absolute;
+      top: -22px;
+      left: -1px;
+      right: 0;
+      width: calc(100% + 2px);
+      height: 21px;
+      background-color: $dark-grey;
+      z-index: -1;
+
+      // RTL support
+      [dir="rtl"] & {
+        left: 0;
+        right: -1px;
+      }
+    }
+  }
+
+  &__title-row {
+    font-size: 20px;
+    font-weight: 300;
+    text-align: left;
+    margin-bottom: 10px;
+
+    // RTL support
+    [dir="rtl"] & {
+      text-align: right;
+    }
+  }
+
+  // -------------------------
+  // Filter menu
+  // -------------------------
+  &__filter-menu {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+
+  &__filter-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 0px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background-color 0.2s;
+  }
+
+  &__filter-checkbox {
+    cursor: pointer;
+    margin-right: 2px;
+
+    // RTL support
+    [dir="rtl"] & {
+      margin-right: 0;
+      margin-left: 2px;
+    }
+  }
+
+  &__filter-label {
+    cursor: pointer;
+    user-select: none;
+    padding-right: 5px;
+
+    // RTL support
+    [dir="rtl"] & {
+      padding-right: 0;
+      padding-left: 5px;
+    }
+  }
+
+  // -------------------------
+  // Icons
+  // -------------------------
+  &__play-circle-icon.MuiSvgIcon-root {
+    color: white;
+    padding: 0px;
+    margin: 0px;
+    margin-right: 5px;
+    font-size: 21px;
+    cursor: pointer;
+    vertical-align: middle;
+
+    // RTL support
+    [dir="rtl"] & {
+      margin-right: 0;
+      margin-left: 5px;
+    }
+  }
+
+  &__export-icon.MuiSvgIcon-root {
+    color: white;
+    padding: 0px;
+    margin: 0px;
+    margin-right: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    vertical-align: middle;
+
+    // RTL support
+    [dir="rtl"] & {
+      margin-right: 0;
+      margin-left: 5px;
+    }
+  }
+
+  &__copy-icon.MuiSvgIcon-root {
+    color: white;
+    padding: 0px;
+    margin: 0px;
+    margin-right: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    vertical-align: middle;
+
+    // RTL support
+    [dir="rtl"] & {
+      margin-right: 0;
+      margin-left: 5px;
+    }
+  }
+
+  // -------------------------
+  // Table structure (shared across maqam and jins)
+  // -------------------------
+  [class*="__table"] {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin-bottom: 0px;
+    font-size: 12px;
+    font-weight: 200;
+
+    th {
+      vertical-align: middle;
+      text-align: left;
+      padding: 8px;
+      border: solid 1px $grey;
+      font-weight: 200;
+
+      // RTL support
+      [dir="rtl"] & {
+        text-align: right;
+      }
+    }
+
+    td {
+      vertical-align: middle;
+      text-align: left;
+      padding: 10px;
+      border: solid 1px $grey;
+      font-weight: 200;
+
+      // RTL support
+      [dir="rtl"] & {
+        text-align: right;
+      }
+    }
+  }
+
+  // -------------------------
+  // Table caption (screen reader only for accessibility)
+  // Visually hidden but accessible to screen readers
+  // Note: Selector removed since caption element was removed from tables
+  // -------------------------
+
+  // -------------------------
+  // Transposition row (clickable header)
+  // -------------------------
+  [class*="__transposition-row"] {
+    text-align: left;
+    background-color: transparent;
+    scroll-margin-top: calc($top-navbar-height + 120px);
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+
+    &[class*="--toggling"] {
+      opacity: 0.7;
+    }
+
+    // RTL support
+    [dir="rtl"] & {
+      text-align: right;
+    }
+  }
+
+  // -------------------------
+  // Title cell (entity name)
+  // -------------------------
+  [class*="__title-cell"] {
+    background-color: black;
+    color: white;
+    padding: 15px;
+    height: 70px;
+    position: relative;
+  }
+
+  [class*="__transposition-title"] {
+    font-size: 16px;
+    font-weight: 300;
+    padding-left: 10px;
+    padding-right: 20px;
+    float: left;
+    max-width: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 40px;
+    line-height: 1.4;
+    
+    // Button reset styles for accessibility
+    background: none;
+    border: none;
+    margin: 0;
+    padding: 0;
+    font-family: inherit;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    width: auto;
+
+    > span:first-child {
+      white-space: nowrap;
+    }
+
+    // RTL support
+    [dir="rtl"] & {
+      padding-left: 20px;
+      padding-right: 10px;
+      float: right;
+      text-align: right;
+    }
+  }
+
+  [class*="__darajat-al-istiqrar"] {
+    display: block;
+    font-size: 14px;
+    font-weight: 200;
+    margin-top: 2px;
+    opacity: 0.85;
+  }
+
+  // -------------------------
+  // Transposition number with octave colors
+  // -------------------------
+  [class*="__transposition-number"] {
+    width: 34px !important;
+    font-size: 20px;
+    padding: 0px 2px !important;
+    margin: 0px 0px 0px 0px;
+    text-align: center !important;
+    background-color: black;
+    vertical-align: middle !important;
+
+    &[class*="_0"] {
+      background-color: $primary;
+    }
+
+    &[class*="_1"] {
+      background-color: $secondary;
+    }
+
+    &[class*="_2"] {
+      background-color: $tertiary;
+    }
+  }
+
+  // -------------------------
+  // Table cells
+  // -------------------------
+  [class*="__table-cell"] {
+    text-align: left;
+    background-color: transparent;
+
+    // RTL support
+    [dir="rtl"] & {
+      text-align: right;
+    }
+
+    &[class*="--highlighted"] {
+      background-color: rgba($secondary, 0.8) !important;
+    }
+
+    &[class*="--unique"] {
+      background-color: rgba($primary, 0.5);
+    }
+
+    &[class*="--scale-degree"] {
+      background-color: $medium-grey;
+      font-weight: 400 !important;
+    }
+
+    &[class*="--pitch-class"] {
+      // Default pitch class styling
+      background-color: transparent;
+    }
+  }
+
+  // -------------------------
+  // Row type-specific cell styling (via data-row-type attribute)
+  // -------------------------
+  // The TSX files now include data-row-type attributes on each <tr> element.
+  // This allows for granular styling based on the row type.
+  // 
+  // Available row types:
+  // - noteNames: Note name cells
+  // - abjadName: Abjad/Arabic letter name cells
+  // - englishName: English note name cells
+  // - scaleDegrees: Roman numeral scale degree cells (maqamat only)
+  // - primaryValue: Primary value type (fraction/cents/etc.)
+  // - fraction: Fraction value cells
+  // - cents: Cents value cells
+  // - centsFromZero: Cents from zero cells
+  // - centsDeviation: Cents deviation cells
+  // - decimalRatio: Decimal ratio cells
+  // - stringLength: String length cells
+  // - fretDivision: Fret division cells
+  // - midiNote: MIDI note number cells
+  // - frequency: Frequency cells
+  // - play: Play button cells
+  // - ajnas: Ajnas button cells (maqamat only)
+  // - staffNotation: Staff notation cells
+  //
+  // Usage example:
+  // tr[data-row-type="abjadName"] [class*="__table-cell--pitch-class"] {
+  //   font-style: italic;
+  //   color: blue;
+  // }
+  //
+  // Add your custom styles below as needed:
+
+  // Note names cells - make them bold and add background (jins only, matches scale degrees styling)
+  tr[data-row-type="noteNames"] th[data-column-type="note-name"],
+  tr[data-row-type="noteNames"] th[data-column-type="empty"] {
+    background-color: $medium-grey;
+    font-weight: 400;
+  }
+
+  // -------------------------
+  // Ascending/Descending column
+  // -------------------------
+  [class*="__asc-desc-column"] {
+    font-family: inherit;
+    font-size: 24px;
+    font-weight: 400 !important;
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+    text-align: center;
+    vertical-align: middle !important;
+    color: $text;
+  }
+
+  // -------------------------
+  // Row header
+  // -------------------------
+  [class*="__row-header"] {
+    background-color: $medium-grey;
+    text-transform: capitalize;
+    font-weight: 400 !important;
+  }
+
+  // -------------------------
+  // Name row (jins-name-row / maqam-name-row)
+  // -------------------------
+  [class*="-name-row"] {
+    background-color: black;
+    color: white;
+    padding: 15px;
+  }
+
+  // -------------------------
+  // Buttons container
+  // -------------------------
+  [class*="__buttons"] {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: flex-end;
+    float: right;
+    height: 40px;
+    
+    // RTL support
+    [dir="rtl"] & {
+      float: left;
+      justify-content: flex-start;
+    }
+  }
+
+  // -------------------------
+  // Button styling (for transposition buttons only)
+  // Matches: jins-transpositions__button, maqam-transpositions__button, and their --toggle variants
+  // Excludes: other button types like __save-button, __delete-button, __jins-button, __buttons (container), etc.
+  // -------------------------
+  [class$="transpositions__button"],
+  [class*="transpositions__button "],
+  [class*=" transpositions__button"],
+  [class*="transpositions__button--toggle"] {
+    background-color: rgba($primary, 0.5);
+    color: white;
+    padding: 0px 10px;
+    border-radius: 2px;
+    cursor: pointer;
+    margin-right: 10px;
+    font-size: 12px;
+    min-width: 120px;
+    width: auto;
+    height: 27px;
+    vertical-align: middle;
+    text-align: center;
+    border: none;
+    display: inline-block;
+
+    // RTL support
+    [dir="rtl"] & {
+      margin-right: 0;
+      margin-left: 10px;
+    }
+
+    &:focus {
+      outline: transparent;
+    }
+
+    &:active {
+      background-color: $gold !important;
+    }
+
+    &:hover {
+      background-color: rgba($primary, 1);
+    }
+  }
+  
+  // Toggle button variant (override base button background)
+  [class*="transpositions__button--toggle"] {
+    background-color: rgba($tertiary, 0.7);
+    
+    &:hover {
+      background-color: rgba($tertiary, 1);
+    }
+  }
+
+  &__input {
+    width: 50px;
+    font-size: 14px;
+    border: 1px solid $text;
+    border-radius: 0px;
+    resize: vertical;
+    padding: 5px;
+  }
+
+  // -------------------------
+  // Cents Tolerance Input
+  // -------------------------
+  &__cents-tolerance-input {
+    width: 4ch; // Two digits wide
+    font-size: 13px;
+    border: 1px solid rgba($text, 0.5);
+    border-radius: 2px;
+    padding: 2px 4px;
+    text-align: center;
+    background-color: rgba($medium-grey, 0.3);
+    color: $text;
+    font-family: inherit;
+    
+    // Remove spinner arrows
+    appearance: textfield;
+    -moz-appearance: textfield;
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    
+    &:focus {
+      outline: none;
+    }
+
+    &:hover {
+      border-color: rgba($text, 0.7);
+    }
+  }
+
+  // -------------------------
+  // Comments and sources
+  // -------------------------
+  h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    font-weight: 300;
+  }
+
+  &__comments-sources-container {
+    display: flex;
+    width: 100%;
+    margin-top: 40px;
+    padding: 0 30px;
+
+    // RTL support - reverse flex direction for Arabic
+    [dir="rtl"] & {
+      flex-direction: row-reverse;
+    }
+  }
+
+  &__comments-english {
+    font-size: 14px;
+    width: 50%;
+    min-height: 80px;
+    direction: ltr;
+    text-align: left;
+    vertical-align: top;
+    padding-right: 30px;
+    float: left;
+    margin-bottom: 0px;
+    line-height: calc(20px);
+
+    // RTL support - when in Arabic mode, adjust alignment and padding
+    [dir="rtl"] & {
+      direction: rtl;
+      text-align: right;
+      padding-right: 0px;
+      padding-left: 30px;
+      float: right;
+    }
+  }
+
+  &__sources-english {
+    font-size: 14px;
+    width: 50%;
+    min-height: 80px;
+    direction: ltr;
+    text-align: left;
+    vertical-align: top;
+    padding-right: 30px;
+    float: left;
+
+    // RTL support - when in Arabic mode, adjust alignment and padding
+    [dir="rtl"] & {
+      direction: rtl;
+      text-align: right;
+      padding-right: 0px;
+      padding-left: 30px;
+      float: right;
+    }
+  }
+
+  &__comments-arabic {
+    font-size: 14px;
+    width: 50%;
+    min-height: 80px;
+    text-align: right;
+    direction: rtl;
+    vertical-align: top;
+    padding-left: 30px;
+    float: right;
+  }
+
+  &__sources-arabic {
+    font-size: 14px;
+    width: 50%;
+    min-height: 80px;
+    text-align: right;
+    direction: rtl;
+    vertical-align: top;
+    padding-left: 30px;
+    float: right;
+  }
+
+  // -------------------------
+  // Spacers
+  // -------------------------
+  &__transposition-spacer {
+    height: 20px;
+    border: 0px;
+  }
+
+  // -------------------------
+  // Load more functionality
+  // -------------------------
+  &__load-more-wrapper {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+  }
+
+  &__load-more {
+    // Inherits from __button styles
+  }
+
+  // -------------------------
+  // UI/UX Enhancements
+  // -------------------------
+
+  // 1. Primary value type row identification (left border accent) & Row hover effects
+  [class*="__table"] tbody tr:has(> th[class*="__row-header"]) {
+    transition: background-color 0.2s ease;
+    
+    // Row hover effect for data rows - increased visibility
+    // Exclude ajnas row (contains buttons) and play row (contains play icons)
+    &:not(:has([class*="__jins-button"])):not(:has([class*="__play-circle-icon"])):hover {
+      background-color: rgba($primary, 0.2);
+    }
+    
+    // Primary value type row - enhanced visual prominence
+    &:has(> th[class*="--primary-value"]) {
+      
+      th:first-child {
+        background-color: $medium-grey !important;
+        border-left: 4px solid rgba($tertiary, 0.9);
+        font-weight: 500 !important;
+      }
+      
+      // Enhanced hover for primary value row
+      &:hover th:first-child {
+        background-color: rgba($tertiary, 0.3) !important;
+      }
+    }
+  }
+
+  // 2. Play icon hover effects (gold color, no transform)
+  [class*="__play-circle-icon"].MuiSvgIcon-root {
+    transition: color 0.2s ease;
+    
+    &:hover {
+      color: $gold;
+    }
+  }
+
+  // 3. Ajnas buttons styling - matches main button style (maqam-specific)
+  [class*="__jins-button"] {
+    background-color: rgba($primary, 0.5);
+    color: $text;
+    padding: 0px 10px;
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 12px;
+    min-width: 120px;
+    width: auto;
+    height: 27px;
+    vertical-align: middle;
+    text-align: center;
+    border: none;
+    display: inline-block;
+    transition: background-color 0.2s ease;
+    font-weight: 400;
+    line-height: 27px;
+    
+    &:focus {
+      outline: transparent;
+    }
+
+    &:hover {
+      background-color: rgba($primary, 1);
+    }
+    
+    &:active {
+      background-color: rgba($gold, 0.8) !important;
+    }
+    
+    // Active/highlighted state (similar to toggle button)
+    &[class*="--active"] {
+      background-color: rgba($tertiary, 0.7);
+      
+      &:hover {
+        background-color: rgba($tertiary, 1);
+      }
+      
+      &:active {
+        background-color: $gold !important;
+      }
+    }
+  }
+}

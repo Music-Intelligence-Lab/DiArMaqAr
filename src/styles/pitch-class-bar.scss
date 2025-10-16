@@ -9,14 +9,11 @@
   overflow-x: auto;
   overflow-y: hidden;
   display: flex;
-  z-index: 5;
-  
-  // Glassmorphism container with reduced padding
-  background: rgba($surface-primary, 0.8); // Semi-transparent for glassmorphism effect
-  backdrop-filter: $backdrop-blur;
-  border: 1px solid $border-primary;
-  padding: $space-6; 
-  
+  z-index: 50;
+  //margin-bottom: 20px;
+  background-color: $background;
+  box-shadow: 0 15px 20px rgba(0, 0, 0, 0.6);
+  padding-top: 0px;
   position: -webkit-sticky;
   position: sticky;
   top: -1px; // Stick below the navbar within scrollbar container

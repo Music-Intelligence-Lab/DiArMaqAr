@@ -1,4 +1,5 @@
 @use "./variables" as *;
+@use "sass:color";
 
 .modulations {
   display: flex;
@@ -20,22 +21,20 @@
   }
 
   &__header {
-    font-size: $font-size-lg;
-    font-weight: $font-weight-medium;
-    color: $text-primary;
-    text-align: center;
-    margin-bottom: $space-3;
-    
-    background: $gradient-primary;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    font-weight: 300;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    min-height: 40px;
+
+    // RTL support
+    [dir="rtl"] & {
+      margin-left: 0;
+      margin-right: 10px;
+    }
   }
 
   &__header-text {
-    font-weight: $font-weight-normal;
-    font-size: $font-size-base;
-    color: $text-secondary;
+    font-weight: 400;
   }
 
   &__wrapper-modulations-header {
@@ -49,8 +48,8 @@
     font-size: $font-size-lg;
     font-weight: $font-weight-medium;
     text-decoration: none !important;
-    padding: $space-2 $space-3;
-    margin-bottom: $space-3;
+    padding: 0px;
+    margin-bottom: 20px;
     display: inline-flex;
     background: $gradient-secondary;
     border-radius: $space-2;
@@ -64,7 +63,46 @@
   }
 
   &__ajnas-count,
-  &__maqamat-count,
+  &__maqamat-count {
+    color: $text !important;
+    font-size: 14px;
+    font-weight: 400;
+    text-decoration: none !important;
+    background-color: rgba($primary, 0.5);
+    padding: 10px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgba($primary, 1);
+      outline: none;
+    }
+
+    &_active {
+      background-color: rgba($tertiary, 0.5);
+      outline: none;
+    }
+  }
+
+  &__octave-shift {
+    color: $text !important;
+    font-size: 14px;
+    font-weight: 400;
+    text-decoration: none !important;
+    background-color: rgba($primary, 0.5);
+    padding: 10px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgba($primary, 1);
+      outline: none;
+    }
+
+    &_active {
+      background-color: rgba($tertiary, 0.5);
+      outline: none;
+    }
+  }
+
   &__delete-hop-btn {
     color: $text-primary !important;
     font-size: $font-size-sm;
@@ -93,7 +131,7 @@
   &__hops-wrapper {
     width: 100%;
     margin-bottom: 0px;
-    scroll-margin-top: 100px;
+    scroll-margin-top: 120px;
   }
 
   &__modulations-list {

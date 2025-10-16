@@ -41,15 +41,15 @@ const translations = {
     "nav.home": "Home",
     "nav.tools": "Tools",
     "nav.bibliography": "Bibliography",
-    "nav.analytics": "Analytics",
-    "nav.userGuide": "User Guide",
+    "nav.statistics": "Statistics",
+    "nav.documentation": "Documentation",
     "nav.about": "About",
     "nav.credits": "Credits",
 
     // Navbar Tabs
     "tabs.tuningSystem": "Tanāghīm (tuning systems)",
     "tabs.ajnas": "Ajnās",
-    "tabs.maqamat": "Maqamāt",
+    "tabs.maqamat": "Maqāmāt",
     "tabs.suyur": "Suyūr",
     "tabs.intiqalat": "Intiqālāt",
 
@@ -105,6 +105,12 @@ const translations = {
     "settings.aperiodic": "Aperiodic",
     "settings.mute": "Mute",
     "settings.waveformMode": "Waveform",
+    "settings.resetEnvelope": "Reset Envelope",
+    "settings.octaveShift": "Octave Shift",
+    "settings.octaveDown": "↓",
+    "settings.octaveUp": "↑",
+    "settings.reset": "Reset",
+    "settings.octaves": "octave(s)",
 
     // Language selector
     "language.english": "English",
@@ -128,7 +134,7 @@ const translations = {
     "jins.analysis": "Taḥlīl (analysis)",
     "jins.centsTolerance": "Cents Tolerance",
     "jins.darajatAlIstiqrar": "Darajat al-Istiqrār al-Taqlīdīya (conventional tonic/finalis)",
-    "jins.selectLoadToKeyboard": "Select & Load",
+    "jins.selectLoadToKeyboard": "Select & Load to Keyboard",
     "jins.playJins": "Play jins",
     "jins.export": "Export",
     "jins.copyTable": "Copy Table",
@@ -194,7 +200,7 @@ const translations = {
     "maqam.analysis": "Taḥlīl (analysis)",
     "maqam.centsTolerance": "Cents Tolerance",
     "maqam.darajatAlIstiqrar": "Darajat al-Istiqrār al-Taqlīdīya (conventional tonic/finalis)",
-    "maqam.selectLoadToKeyboard": "Select & Load",
+    "maqam.selectLoadToKeyboard": "Select & Load to Keyboard",
     "maqam.ascendingDescending": "Asc > Desc",
     "maqam.ascending": "Ascending",
     "maqam.descending": "Descending",
@@ -222,6 +228,9 @@ const translations = {
     "maqam.sources": "Sources",
     "maqam.transpositionsTitle": "Taṣāwīr (transpositions)",
     "maqam.all": "All Maqamat",
+    "maqam.groupByJins": "Group by Jins",
+    "maqam.groupByStartingNote": "Group by Starting Note",
+    "maqam.noJins": "no jins",
 
     // Tuning System Manager
     "tuningSystem.all": "All Tuning Systems",
@@ -316,6 +325,7 @@ const translations = {
     "modulations.sixthIfNoThird": "Sixth (if no Third)",
     "modulations.sixthAscending": "Sixth (ascending)",
     "modulations.sixthDescending": "Sixth (descending)",
+    "modulations.octaveShift": "Octave Shift (-1)",
 
     // Sayr Manager
     "sayr.selectOrCreate": "Select Sayr or Create New:",
@@ -356,7 +366,7 @@ const translations = {
     "nav.tools": "الأدوات",
     "nav.bibliography": "المراجع",
     "nav.analytics": "التحليلات",
-    "nav.userGuide": "دليل المستخدم",
+    "nav.documentation": "التوثيق",
     "nav.about": "حول المنصة",
     "nav.credits": "صفحة الإعتمادات",
 
@@ -419,6 +429,12 @@ const translations = {
     "settings.aperiodic": "غير دوري",
     "settings.mute": "كتم الصوت",
     "settings.waveformMode": "شكل الموجة",
+    "settings.resetEnvelope": "إعادة تعيين المُغلّف",
+    "settings.octaveShift": "إزاحة الأوكتاف",
+    "settings.octaveDown": "↓",
+    "settings.octaveUp": "↑",
+    "settings.reset": "إعادة",
+    "settings.octaves": "أوكتاف",
 
     // Language selector
     "language.english": "English",
@@ -455,7 +471,7 @@ const translations = {
     "jins.cents": "سنت",
     "jins.centsFromZero": "سنت من الصفر",
     "jins.centsDeviation": "الإنحراف",
-    "jins.decimalRatio": "النسبة عشرية",
+    "jins.decimalRatio": "النسبة العشرية",
     "jins.stringLength": "طول الوتر",
     "jins.fretDivision": "تقسيم الوتر",
     "jins.midiNote": "نوطة ميدي",
@@ -470,7 +486,7 @@ const translations = {
     // Value types (Arabic translations)
     "valueType.fraction": "النسبة",
     "valueType.cents": "سنت",
-    "valueType.decimalRatio": "النسبة عشرية",
+    "valueType.decimalRatio": "النسبة العشرية",
     "valueType.stringLength": "طول الوتر",
     "valueType.fretDivision": "تقسيم الوتر",
 
@@ -481,7 +497,7 @@ const translations = {
     "filter.fraction": "النسبة",
     "filter.cents": "سنت",
     "filter.centsFromZero": "سنت من الصفر",
-    "filter.decimalRatio": "النسبة عشرية",
+    "filter.decimalRatio": "النسبة العشرية",
     "filter.stringLength": "طول الوتر",
     "filter.fretDivision": "تقسيم الوتر",
     "filter.midiNote": "نوطة ميدي",
@@ -524,7 +540,7 @@ const translations = {
     "maqam.cents": "سنت",
     "maqam.centsFromZero": "سنت من الصفر",
     "maqam.centsDeviation": "الإنحراف",
-    "maqam.decimalRatio": "النسبة عشرية",
+    "maqam.decimalRatio": "النسبة العشرية",
     "maqam.stringLength": "طول الوتر",
     "maqam.fretDivision": "تقسيم الوتر",
     "maqam.midiNote": "نوطة ميدي",
@@ -536,6 +552,9 @@ const translations = {
     "maqam.sources": "مصادر",
     "maqam.transpositionsTitle": "تصوير",
     "maqam.all": "جميع المقامات",
+    "maqam.groupByJins": "تجميع بالأجناس",
+    "maqam.groupByStartingNote": "تجميع بالنغمة الأولى",
+    "maqam.noJins": "بلا جنس",
 
     // Tuning System Manager (Arabic translations)
     "tuningSystem.all": "جميع التناغيم",
@@ -566,7 +585,7 @@ const translations = {
     "tuningSystem.save": "حفظ تعديلات نظام التنغيم",
     "tuningSystem.create": "إنشاء نظام تنغيم جديد",
     "tuningSystem.deleteTuningSystem": "حذف نظام التنغيم",
-    "tuningSystem.startingNoteName": "اسم النغمة البدائية:",
+    "tuningSystem.startingNoteName": "اسم اول نغمة في بنية التنغيم:",
     "tuningSystem.frequency": "الالتردد (هرتز):",
     "tuningSystem.saveNoteConfiguration": "حفظ إعداد أسماء النغمات",
     "tuningSystem.deleteNoteConfiguration": "حذف إعداد أسماء النغمات",
@@ -587,7 +606,7 @@ const translations = {
     "octave.fractionRatio": "النسبة",
     "octave.cents": "سنت",
     "octave.centsDeviation": "الإنحراف",
-    "octave.decimalRatio": "النسبة عشرية",
+    "octave.decimalRatio": "النسبة العشرية",
     "octave.stringLength": "طول الوتر",
     "octave.fretDivision": "تقسيم الوتر",
     "octave.midiNote": "نوطة ميدي",
@@ -609,7 +628,7 @@ const translations = {
     "analysis.cents": "سنت",
     "analysis.centsFromZero": "سنت من الصفر",
     "analysis.centsDeviation": "الإنحراف",
-    "analysis.decimalRatio": "النسبة عشرية",
+    "analysis.decimalRatio": "النسبة العشرية",
     "analysis.stringLength": "طول الوتر",
     "analysis.fretDivision": "تقسيم الوتر",
     "analysis.midiNote": "نوطة ميدي",
@@ -630,6 +649,7 @@ const translations = {
     "modulations.sixthIfNoThird": "السادسة (إذا لم توجد ثالثة)",
     "modulations.sixthAscending": "السادسة (صعوداًة)",
     "modulations.sixthDescending": "السادسة (هبوطاًة)",
+    "modulations.octaveShift": "إزاحة الأوكتاف (-١)",
 
     // Sayr Manager (Arabic translations)
     "sayr.selectOrCreate": "اختر السير أو أنشئ جديداً:",

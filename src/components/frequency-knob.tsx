@@ -53,12 +53,11 @@ export default function FrequencyKnob({
         // Original value exists, check if current value is different
         setHasBeenModified(Math.abs(originalValue - value) > 0.1); // Allow small tolerance for floating point
       }
-      
-      // Always set localValue to the current prop value on mount
+    }
+    // Always set localValue to the current prop value on mount
       setLocalValue(value);
       setLastValue(value);
-    }
-  }, [value, initialValue, noteName, originalValue, setOriginalReferenceFrequencies]);
+  }, [value, initialValue, noteName, originalValue, originalReferenceFrequencies, setOriginalReferenceFrequencies]);
 
   // Keep local value in sync with prop value when not dragging and when the prop changes from external sources
   useEffect(() => {
@@ -78,7 +77,7 @@ export default function FrequencyKnob({
   const dynamicMax = originalFrequency !== null ? originalFrequency * 2 : 440; // Default fallback
   
   // Ensure value is within bounds
-  const clampedValue = Math.max(dynamicMin, Math.min(dynamicMax, localValue || 220));
+  const clampedValue = Math.max(dynamicMin, Math.min(dynamicMax, localValue || 110));
   
   // Calculate normalized value for visual representation using logarithmic scaling
   // This provides better musical perception since frequency perception is logarithmic

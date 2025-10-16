@@ -1,6 +1,6 @@
 [
   {
-    "id": "vfTln54gK68IgHo2tlULX",
+    "id": "Forster-(2010)",
     "titleEnglish": "Musical Mathematics: On the Art and Science of Acoustic Instruments",
     "titleArabic": "الرياضيات الموسيقية: عن فن وعلم الآلات الصوتية",
     "sourceType": "Book",
@@ -28,15 +28,15 @@
     "ISBN": "9780811874076"
   },
   {
-    "id": "VmShC7ciSIikhGlZwUUJC",
+    "id": "al-Urmawī-al-Baghdādī-(1986/2017)",
     "titleEnglish": "Kitāb al-Adwār fī al-Mūsīqā",
     "titleArabic": "كتاب الادوار في الموسيقى",
     "sourceType": "Book",
     "contributors": [
       {
         "type": "Author",
-        "firstNameEnglish": "Ṣafī Al-Dīn",
-        "lastNameEnglish": "Al-Urmawī Al-Baghdādī",
+        "firstNameEnglish": "Ṣafī al-Dīn",
+        "lastNameEnglish": "al-Urmawī al-Baghdādī",
         "firstNameArabic": "صفي الدين",
         "lastNameArabic": "الأرموي البغدادي"
       },
@@ -70,7 +70,7 @@
     "ISBN": "9789779112459"
   },
   {
-    "id": "SZNw4epqCZe7VhE5eWT3L",
+    "id": "al-Khulʿī-(1904/2011)",
     "titleEnglish": "Kitāb al-Mūsiqā al-Sharqī",
     "titleArabic": "كتاب الموسيقى الشرقي",
     "sourceType": "Book",
@@ -78,7 +78,7 @@
       {
         "type": "Author",
         "firstNameEnglish": "Mohammad Kāmil",
-        "lastNameEnglish": "Al-Khulʿī",
+        "lastNameEnglish": "al-Khulʿī",
         "firstNameArabic": "محمد كامل",
         "lastNameArabic": "الخلعي"
       }
@@ -98,7 +98,7 @@
     "ISBN": "9789776416543"
   },
   {
-    "id": "GJwpuIRbQ8bxNFoA-FxWK",
+    "id": "Allāh-Wīrdī-(1949)",
     "titleEnglish": "Falsafat al-Mūsīqā al-Sharqīyah fī Asrār al-Fann al-ʻArabī",
     "titleArabic": " فلسفة الموسيقى الشرقية في أسرار الفن العربي",
     "sourceType": "Book",
@@ -126,8 +126,8 @@
     "ISBN": ""
   },
   {
-    "id": "npR7tB33uFtyZiJyrXbPx",
-    "titleEnglish": "Al-Risālah al-Shihābīyah fī al-Ṣināʻah al-Mūsīqīyah",
+    "id": "Meshshāqa-(1899)",
+    "titleEnglish": "al-Risālah al-Shihābīyah fī al-Ṣināʻah al-Mūsīqīyah",
     "titleArabic": "الرسالة الشهابية في الصناعة الموسيقية",
     "sourceType": "Book",
     "contributors": [
@@ -154,15 +154,15 @@
     "dateAccessed": "",
     "originalPublicationDateEnglish": "",
     "originalPublicationDateArabic": "",
-    "publisherEnglish": "Al-Ābā’ Al-Yasūʿīyīn",
+    "publisherEnglish": "al-Ābā’ al-Yasūʿīyīn",
     "publisherArabic": "الآباء اليسوعيين",
     "placeEnglish": "Beirut",
     "placeArabic": "بيروت",
     "ISBN": ""
   },
   {
-    "id": "IDE6rHb6y71_H8_0p5nh1",
-    "titleEnglish": "Qiyās Al-Sullam Al-Mūsīqī Al-ʿArabī",
+    "id": "Shawqi-(1969)",
+    "titleEnglish": "Qiyās al-Sullam al-Mūsīqī al-ʿArabī",
     "titleArabic": "قياس السلم الموسيقي العربي",
     "sourceType": "Book",
     "contributors": [
@@ -182,17 +182,17 @@
     "dateAccessed": "",
     "originalPublicationDateEnglish": "",
     "originalPublicationDateArabic": "",
-    "publisherEnglish": "Dar Al-Kutub",
+    "publisherEnglish": "Dar al-Kutub",
     "publisherArabic": "دار الكتب",
     "placeEnglish": "Cairo",
     "placeArabic": "القاهرة",
     "ISBN": ""
   },
   {
-    "id": "HhRIZW8WYgYJJVgHrdt3y",
+    "id": "Allami-(2022)",
     "titleEnglish": "Échos-monde: Towards a hybrid repertoire of contemporary and experimental acoustic, electroacoustic and electronic Arabic music",
-    "titleArabic": "",
-    "sourceType": "Book",
+    "titleArabic": "‎عالم الأصداء: نحو رصيدٍ هجينٍ للموسيقى العربية المعاصرة والتجريبية، صوتياً وكهروصوتياً وإلكترونياً",
+    "sourceType": "Thesis",
     "contributors": [
       {
         "type": "Author",
@@ -205,27 +205,20 @@
     "editionEnglish": "",
     "editionArabic": "",
     "publicationDateEnglish": "2022",
-    "publicationDateArabic": "٢٠٢٢",
-    "url": "",
-    "dateAccessed": "",
-    "originalPublicationDateEnglish": "",
-    "originalPublicationDateArabic": "",
-    "publisherEnglish": "Birmingham City University",
-    "publisherArabic": "جامعة مدينة برمنغهام",
-    "placeEnglish": "",
-    "placeArabic": "",
-    "ISBN": ""
+    "publicationDateArabic": "",
+    "url": "https://www.open-access.bcu.ac.uk/14036/",
+    "dateAccessed": "16-10-2025"
   },
   {
-    "id": "oY8WnTdP5msak8o1G_N7f",
-    "titleEnglish": "Al-Qawaʿid al-Fannīya fī al-Mūsiqa al-Sharqīya wa al-Gharbīya",
+    "id": "al-Shawwā-(1946)",
+    "titleEnglish": "al-Qawaʿid al-Fannīya fī al-Mūsiqa al-Sharqīya wa al-Gharbīya",
     "titleArabic": "القواعد الفنيّة في الموسيقى الشرقيّة والغربيّة",
     "sourceType": "Book",
     "contributors": [
       {
         "type": "Author",
         "firstNameEnglish": "Sami",
-        "lastNameEnglish": "Al-Shawwā",
+        "lastNameEnglish": "al-Shawwā",
         "firstNameArabic": "سامي",
         "lastNameArabic": "الشوا"
       }
@@ -245,7 +238,7 @@
     "ISBN": ""
   },
   {
-    "id": "63Ao66cM9W2M-4NhIIHgv",
+    "id": "Farmer-(1937)",
     "titleEnglish": "The Lute Scale of Avicenna",
     "titleArabic": "سلم العود لإبن سينا",
     "sourceType": "Article",
@@ -275,11 +268,19 @@
     "DOI": ""
   },
   {
-    "id": "zQU1LvEwGBICtY09uE5Rj",
+    "id": "na.-(1933)",
     "titleEnglish": "Kitāb Muʼtamar al-Mūsīqā al-ʿArabiyah",
     "titleArabic": "كتاب مؤتمر الموسيقى العربية",
     "sourceType": "Book",
-    "contributors": [],
+    "contributors": [
+      {
+        "type": "Author",
+        "firstNameEnglish": "",
+        "lastNameEnglish": "na.",
+        "firstNameArabic": "",
+        "lastNameArabic": "na."
+      }
+    ],
     "editionEnglish": "",
     "editionArabic": "",
     "publicationDateEnglish": "1933",
@@ -295,7 +296,7 @@
     "ISBN": ""
   },
   {
-    "id": "zH7tN7EXXSSXNmYXyY-TK",
+    "id": "Land-(1885)",
     "titleEnglish": "Actes du Sixième Congrès International Des Orientalistes tenu en 1883 à Leide. Deuxième Partie",
     "titleArabic": "",
     "sourceType": "Book",
@@ -323,7 +324,7 @@
     "ISBN": ""
   },
   {
-    "id": "I1lrMQizwLfs8wwA17rRv",
+    "id": "d'Erlanger-(1930)",
     "titleEnglish": "La Musique Arabe, Tome 1",
     "titleArabic": "الموسيقى العربية، المجلد ١",
     "sourceType": "Book",
@@ -351,7 +352,7 @@
     "ISBN": ""
   },
   {
-    "id": "uLBA69pin8YrIQVTwCHjF",
+    "id": "Mofakham-(2022)",
     "titleEnglish": "Holographic Composition Technique: Revisiting the Medieval Treatises on Iranian Music",
     "titleArabic": "تقنية التأليف الثلاثي الأبعاد: إعادة النظر في رسائل العصور الوسطى عن الموسيقى الإيرانية",
     "sourceType": "Book",
@@ -379,15 +380,15 @@
     "ISBN": ""
   },
   {
-    "id": "YQh0gMMk0mKbUKc-FMgrZ",
-    "titleEnglish": "Al-Dalīl al-Mūsīqī al-ʿĀm fi Aṭrab al-Anghām",
+    "id": "al-Ṣabbāgh-(1950)",
+    "titleEnglish": "al-Dalīl al-Mūsīqī al-ʿĀm fi Aṭrab al-Anghām",
     "titleArabic": "الدليل الموسيقي العام في أطرب الأنغام",
     "sourceType": "Book",
     "contributors": [
       {
         "type": "Author",
         "firstNameEnglish": "Tawfīq",
-        "lastNameEnglish": "Al-Ṣabbāgh",
+        "lastNameEnglish": "al-Ṣabbāgh",
         "firstNameArabic": "توفيق ",
         "lastNameArabic": "الصبّاغ"
       }
@@ -407,15 +408,15 @@
     "ISBN": ""
   },
   {
-    "id": "YcVXQflykzViRp6e3tIHo",
-    "titleEnglish": "Al-Anghām al-Sharqīya: al-Qism al-Thānī min kitāb Al-Dalīl al-Mūsīqī al-ʿĀm fi Aṭrab al-Anghām",
+    "id": "al-Ṣabbāgh-(1954)",
+    "titleEnglish": "al-Anghām al-Sharqīya: al-Qism al-Thānī min kitāb al-Dalīl al-Mūsīqī al-ʿĀm fi Aṭrab al-Anghām",
     "titleArabic": "الأنغام الشرقيّة: القسم الثاني من كتاب الديلي العام في اطرب الأنغام",
     "sourceType": "Book",
     "contributors": [
       {
         "type": "Author",
         "firstNameEnglish": "Tawfīq",
-        "lastNameEnglish": "Al-Ṣabbāgh",
+        "lastNameEnglish": "al-Ṣabbāgh",
         "firstNameArabic": "توفيق",
         "lastNameArabic": "الصبّاغ"
       }
@@ -428,22 +429,22 @@
     "dateAccessed": "",
     "originalPublicationDateEnglish": "",
     "originalPublicationDateArabic": "",
-    "publisherEnglish": "Maṭbaʿat Al-Maʿārif",
+    "publisherEnglish": "Maṭbaʿat al-Maʿārif",
     "publisherArabic": "مطبعة المعارف",
     "placeEnglish": "Aleppo",
     "placeArabic": "حلب",
     "ISBN": ""
   },
   {
-    "id": "zzowyMMW095bTuaDEyH6M",
-    "titleEnglish": "Al-Mūsīqah al-Nazarīya",
+    "id": "al-Ḥilū-(1957/1961)",
+    "titleEnglish": "al-Mūsīqah al-Nazarīya",
     "titleArabic": "الموسيقى النَّظريَّة",
     "sourceType": "Book",
     "contributors": [
       {
         "type": "Author",
         "firstNameEnglish": "Salīm",
-        "lastNameEnglish": "Al-Ḥilū",
+        "lastNameEnglish": "al-Ḥilū",
         "firstNameArabic": "سليم ",
         "lastNameArabic": "الحلو"
       }

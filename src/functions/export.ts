@@ -1,20 +1,50 @@
 import NoteName from "@/models/NoteName";
 import TuningSystem from "@/models/TuningSystem";
-import JinsData, { AjnasModulations, Jins, JinsDataInterface } from "@/models/Jins";
-import MaqamData, { Maqam, MaqamatModulations, MaqamDataInterface } from "@/models/Maqam";
+import JinsData, { AjnasModulations, Jins, JinsDataInterface, shiftJinsByOctaves } from "@/models/Jins";
+import MaqamData, { Maqam, MaqamatModulations, MaqamDataInterface, shiftMaqamByOctaves } from "@/models/Maqam";
 import getTuningSystemPitchClasses from "./getTuningSystemPitchClasses";
 import { getAjnas, getMaqamat } from "./import";
 import { getJinsTranspositions, getMaqamTranspositions } from "./transpose";
 import PitchClass, { PitchClassInterval } from "@/models/PitchClass";
 import modulate from "./modulate";
 import calculateNumberOfModulations from "./calculateNumberOfModulations";
+import shiftPitchClass from "./shiftPitchClass";
+import { classifyMaqamFamily } from "./classifyMaqamFamily";
+
+/**
+ * Multi-method maqam family classification for research and analysis.
+ * Each classification method provides a different perspective on how to group maqamat.
+ * All methods are optional - only calculated methods will be present in exports.
+ * 
+ * Family names reference the maqamFamilyReference lookup for display names.
+ */
+export interface ExportMaqamFamilyClassification {
+  /** Classification by first jins at scale degree 1 */
+  firstJins?: {
+    /** Normalized family name (references maqamFamilyReference for display) */
+    familyName: string;
+  };
+  
+  // Future classification methods can be added here:
+  // predominantJins?: {
+  //   familyName: string; // references maqamFamilyReference
+  //   occurrences?: number;
+  // };
+  // finalJins?: {
+  //   familyName: string; // references maqamFamilyReference
+  //   scaleDegree?: number;
+  // };
+  // tonicRelationship?: {
+  //   familyName: string; // references maqamFamilyReference
+  // };
+}
 
 /**
  * Converts a string with diacritics to their natural letters and replaces spaces with underscores
  * @param text The input string to convert
  * @returns The converted string with diacritics removed and spaces replaced with underscores
  */
-export function englishify(text: string): string {
+export function standardizeText(text: string): string {
   return (
     text
       // Normalize to decompose combined characters
@@ -25,6 +55,8 @@ export function englishify(text: string): string {
       .replace(/'/g, "")
       // Remove Arabic ayn character
       .replace(/ʿ/g, "")
+      // Remove Arabic hamza character
+      .replace(/ʾ/g, "")
       // Replace spaces with underscores
       .replace(/\s+/g, "_")
   );
@@ -50,78 +82,289 @@ export interface MergedMaqam {
   ascendingPitchClassIntervals: PitchClassInterval[];
   ascendingMaqamAjnas?: { [noteName: string]: string | null };
   descendingMaqamAjnas?: { [noteName: string]: string | null };
-  maqamatModulations?: MaqamatModulationsWithKeys;
-  ajnasModulations?: AjnasModulationsWithKeys;
+  maqamToMaqamModulations?: MaqamToMaqamModulationsWithKeys;
+  maqamToJinsModulations?: MaqamToJinsModulationsWithKeys;
   transposition: boolean;
   commentsEnglish: string;
   commentsArabic: string;
   SourcePageReferences: any[];
+  maqamFamilyClassification: ExportMaqamFamilyClassification;
 }
 
 /**
- * Index-based modulations for Maqamat using array indices instead of full objects
- * to reduce JSON export size
+ * Standard maqam-to-maqam modulations structure for a specific degree/position
  */
-export interface MaqamatModulationsWithKeys {
+export interface MaqamToMaqamModulationsStructure {
   /** Indices of modulations that occur on the first scale degree */
-  modulationsOnOne: string[];
+  maqamToMaqamModulationsOnFirstDegree: string[];
 
   /** Indices of modulations that occur on the third scale degree */
-  modulationsOnThree: string[];
+  maqamToMaqamModulationsOnThirdDegree: string[];
 
-  /** Indices of modulations that occur on the third scale degree (second pattern) */
-  modulationsOnThree2p: string[];
+  /** Indices of modulations that occur on the alternative third scale degree */
+  maqamToMaqamModulationsOnAltThirdDegree: string[];
 
   /** Indices of modulations that occur on the fourth scale degree */
-  modulationsOnFour: string[];
+  maqamToMaqamModulationsOnFourthDegree: string[];
 
   /** Indices of modulations that occur on the fifth scale degree */
-  modulationsOnFive: string[];
+  maqamToMaqamModulationsOnFifthDegree: string[];
 
   /** Indices of ascending modulations that occur on the sixth scale degree */
-  modulationsOnSixAscending: string[];
+  maqamToMaqamModulationsOnSixthDegreeAsc: string[];
 
   /** Indices of descending modulations that occur on the sixth scale degree */
-  modulationsOnSixDescending: string[];
+  maqamToMaqamModulationsOnSixthDegreeDesc: string[];
 
   /** Indices of modulations on the sixth scale degree without using the third */
-  modulationsOnSixNoThird: string[];
+  maqamToMaqamModulationsOnSixthDegreeIfNoThird: string[];
 
   /** The note name of the second degree (plus variations) */
-  noteName2p: string;
+  maqamToMaqamModulations2pBelowThirdNoteName: string;
 }
 
 /**
- * Index-based modulations for Ajnas using array indices instead of full objects
- * to reduce JSON export size
+ * Standard maqam-to-jins modulations structure for a specific degree/position  
  */
-export interface AjnasModulationsWithKeys {
+export interface MaqamToJinsModulationsStructure {
   /** Indices of modulations that occur on the first scale degree */
-  modulationsOnOne: string[];
+  maqamToJinsModulationsOnFirstDegree: string[];
 
   /** Indices of modulations that occur on the third scale degree */
-  modulationsOnThree: string[];
+  maqamToJinsModulationsOnThirdDegree: string[];
 
-  /** Indices of modulations that occur on the third scale degree (second pattern) */
-  modulationsOnThree2p: string[];
+  /** Indices of modulations that occur on the alternative third scale degree */
+  maqamToJinsModulationsOnAltThirdDegree: string[];
 
   /** Indices of modulations that occur on the fourth scale degree */
-  modulationsOnFour: string[];
+  maqamToJinsModulationsOnFourthDegree: string[];
 
   /** Indices of modulations that occur on the fifth scale degree */
-  modulationsOnFive: string[];
+  maqamToJinsModulationsOnFifthDegree: string[];
 
   /** Indices of ascending modulations that occur on the sixth scale degree */
-  modulationsOnSixAscending: string[];
+  maqamToJinsModulationsOnSixthDegreeAsc: string[];
 
   /** Indices of descending modulations that occur on the sixth scale degree */
-  modulationsOnSixDescending: string[];
+  maqamToJinsModulationsOnSixthDegreeDesc: string[];
 
   /** Indices of modulations on the sixth scale degree without using the third */
-  modulationsOnSixNoThird: string[];
+  maqamToJinsModulationsOnSixthDegreeIfNoThird: string[];
 
   /** The note name of the second degree (plus variations) */
-  noteName2p: string;
+  maqamToJinsNoteName2pBelowThird: string;
+}
+
+/**
+ * Maps each modulation degree to its corresponding note name
+ */
+export interface ModulationDegreesNoteNames {
+  /** Note name for modulations on the first scale degree */
+  maqamModulationsOnFirstDegreeNoteName: string;
+
+  /** Note name for modulations on the third scale degree */
+  maqamModulationsOnThirdDegreeNoteName: string;
+
+  /** Note name for modulations on the alternative third scale degree */
+  maqamModulationsOnAltThirdDegreeNoteName: string;
+
+  /** Note name for modulations on the fourth scale degree */
+  maqamModulationsOnFourthDegreeNoteName: string;
+
+  /** Note name for modulations on the fifth scale degree */
+  maqamModulationsOnFifthDegreeNoteName: string;
+
+  /** Note name for ascending modulations on the sixth scale degree */
+  maqamModulationsOnSixthDegreeAscNoteName: string;
+
+  /** Note name for descending modulations on the sixth scale degree */
+  maqamModulationsOnSixthDegreeDescNoteName: string;
+
+  /** Note name for modulations on the sixth scale degree without using the third */
+  maqamModulationsOnSixthDegreeIfNoThirdNoteName: string;
+}
+
+/**
+ * Maps each maqam-to-jins modulation degree to its corresponding note name
+ */
+export interface JinsModulationDegreesNoteNames {
+  /** Note name for modulations on the first scale degree */
+  maqamToJinsModulationsOnFirstDegreeNoteName: string;
+
+  /** Note name for modulations on the third scale degree */
+  maqamToJinsModulationsOnThirdDegreeNoteName: string;
+
+  /** Note name for modulations on the alternative third scale degree */
+  maqamToJinsModulationsOnAltThirdDegreeNoteName: string;
+
+  /** Note name for modulations on the fourth scale degree */
+  maqamToJinsModulationsOnFourthDegreeNoteName: string;
+
+  /** Note name for modulations on the fifth scale degree */
+  maqamToJinsModulationsOnFifthDegreeNoteName: string;
+
+  /** Note name for ascending modulations on the sixth scale degree */
+  maqamToJinsModulationsOnSixthDegreeAscNoteName: string;
+
+  /** Note name for descending modulations on the sixth scale degree */
+  maqamToJinsModulationsOnSixthDegreeDescNoteName: string;
+
+  /** Note name for modulations on the sixth scale degree without using the third */
+  maqamToJinsModulationsOnSixthDegreeIfNoThirdNoteName: string;
+}
+
+/**
+ * Maps each maqam-to-jins modulation degree to its corresponding octave-below note name
+ */
+export interface JinsModulationDegrees8vbNoteNames {
+  /** Octave-below note name for modulations on the first scale degree */
+  maqamToJinsModulationsOnFirstDegree8vbNoteName: string;
+
+  /** Octave-below note name for modulations on the third scale degree */
+  maqamToJinsModulationsOnThirdDegree8vbNoteName: string;
+
+  /** Octave-below note name for modulations on the alternative third scale degree */
+  maqamToJinsModulationsOnAltThirdDegree8vbNoteName: string;
+
+  /** Octave-below note name for modulations on the fourth scale degree */
+  maqamToJinsModulationsOnFourthDegree8vbNoteName: string;
+
+  /** Octave-below note name for modulations on the fifth scale degree */
+  maqamToJinsModulationsOnFifthDegree8vbNoteName: string;
+
+  /** Octave-below note name for ascending modulations on the sixth scale degree */
+  maqamToJinsModulationsOnSixthDegreeAsc8vbNoteName: string;
+
+  /** Octave-below note name for descending modulations on the sixth scale degree */
+  maqamToJinsModulationsOnSixthDegreeDesc8vbNoteName: string;
+
+  /** Octave-below note name for modulations on the sixth scale degree without using the third */
+  maqamToJinsModulationsOnSixthDegreeIfNoThird8vbNoteName: string;
+}
+export interface ModulationDegrees8vbNoteNames {
+  /** Octave-below note name for modulations on the first scale degree */
+  maqamModulationsOnFirstDegree8vbNoteName: string;
+
+  /** Octave-below note name for modulations on the third scale degree */
+  maqamModulationsOnThirdDegree8vbNoteName: string;
+
+  /** Octave-below note name for modulations on the alternative third scale degree */
+  maqamModulationsOnAltThirdDegree8vbNoteName: string;
+
+  /** Octave-below note name for modulations on the fourth scale degree */
+  maqamModulationsOnFourthDegree8vbNoteName: string;
+
+  /** Octave-below note name for modulations on the fifth scale degree */
+  maqamModulationsOnFifthDegree8vbNoteName: string;
+
+  /** Octave-below note name for ascending modulations on the sixth scale degree */
+  maqamModulationsOnSixthDegreeAsc8vbNoteName: string;
+
+  /** Octave-below note name for descending modulations on the sixth scale degree */
+  maqamModulationsOnSixthDegreeDesc8vbNoteName: string;
+
+  /** Octave-below note name for modulations on the sixth scale degree without using the third */
+  maqamModulationsOnSixthDegreeIfNoThird8vbNoteName: string;
+}
+
+/**
+ * Maqam-to-maqam lower octave modulations structure (8vb versions)
+ */
+export interface MaqamToMaqamLowerOctaveModulationsStructure {
+  /** Indices of maqam-to-maqam modulations that occur on the first scale degree (8vb) */
+  maqamToMaqamModulationsOnFirstDegree8vb: string[];
+
+  /** Indices of maqam-to-maqam modulations that occur on the third scale degree (8vb) */
+  maqamToMaqamModulationsOnThirdDegree8vb: string[];
+
+  /** Indices of maqam-to-maqam modulations that occur on the alternative third scale degree (8vb) */
+  maqamToMaqamModulationsOnAltThirdDegree8vb: string[];
+
+  /** Indices of maqam-to-maqam modulations that occur on the fourth scale degree (8vb) */
+  maqamToMaqamModulationsOnFourthDegree8vb: string[];
+
+  /** Indices of maqam-to-maqam modulations that occur on the fifth scale degree (8vb) */
+  maqamToMaqamModulationsOnFifthDegree8vb: string[];
+
+  /** Indices of ascending maqam-to-maqam modulations that occur on the sixth scale degree (8vb) */
+  maqamToMaqamModulationsOnSixthDegreeAsc8vb: string[];
+
+  /** Indices of descending maqam-to-maqam modulations that occur on the sixth scale degree (8vb) */
+  maqamToMaqamModulationsOnSixthDegreeDesc8vb: string[];
+
+  /** Indices of maqam-to-maqam modulations on the sixth scale degree without using the third (8vb) */
+  maqamToMaqamModulationsOnSixthDegreeIfNoThird8vb: string[];
+
+  /** The note name of the second degree (plus variations) (8vb) */
+  maqamToMaqamModulations2pBelowThird8vb: string;
+}
+
+/**
+ * Maqam-to-jins lower octave modulations structure (8vb versions)
+ */
+export interface MaqamToJinsLowerOctaveModulationsStructure {
+  /** Indices of maqam-to-jins modulations that occur on the first scale degree (8vb) */
+  maqamToJinsModulationsOnFirstDegree8vb: string[];
+
+  /** Indices of maqam-to-jins modulations that occur on the third scale degree (8vb) */
+  maqamToJinsModulationsOnThirdDegree8vb: string[];
+
+  /** Indices of maqam-to-jins modulations that occur on the alternative third scale degree (8vb) */
+  maqamToJinsModulationsOnAltThirdDegree8vb: string[];
+
+  /** Indices of maqam-to-jins modulations that occur on the fourth scale degree (8vb) */
+  maqamToJinsModulationsOnFourthDegree8vb: string[];
+
+  /** Indices of maqam-to-jins modulations that occur on the fifth scale degree (8vb) */
+  maqamToJinsModulationsOnFifthDegree8vb: string[];
+
+  /** Indices of ascending maqam-to-jins modulations that occur on the sixth scale degree (8vb) */
+  maqamToJinsModulationsOnSixthDegreeAsc8vb: string[];
+
+  /** Indices of descending maqam-to-jins modulations that occur on the sixth scale degree (8vb) */
+  maqamToJinsModulationsOnSixthDegreeDesc8vb: string[];
+
+  /** Indices of maqam-to-jins modulations on the sixth scale degree without using the third (8vb) */
+  maqamToJinsModulationsOnSixthDegreeIfNoThird8vb: string[];
+
+  /** The note name of the second degree (plus variations) (8vb) */
+  maqamToJinsNoteName2pBelowThird8vb: string;
+}
+
+/**
+ * Index-based modulations for Maqam-to-Maqam relationships using array indices instead of full objects
+ * to reduce JSON export size
+ */
+export interface MaqamToMaqamModulationsWithKeys {
+  /** Maps each modulation degree to its corresponding note name */
+  maqamToMaqamModulationsDegreesNoteNames: ModulationDegreesNoteNames;
+
+  /** Maps each modulation degree to its corresponding octave-below note name (only when 8vb is requested) */
+  maqamToMaqamModulationsLowerOctaveDegreesNoteNames?: ModulationDegrees8vbNoteNames;
+
+  /** Standard modulations in normal octave positions */
+  maqamToMaqamModulations: MaqamToMaqamModulationsStructure;
+
+  /** Optional lower octave modulations (only when requested via CLI flag) */
+  maqamToMaqamModulationsLowerOctave?: MaqamToMaqamLowerOctaveModulationsStructure;
+}
+
+/**
+ * Index-based modulations for Maqam-to-Jins relationships using array indices instead of full objects
+ * to reduce JSON export size
+ */
+export interface MaqamToJinsModulationsWithKeys {
+  /** Maps each modulation degree to its corresponding note name */
+  maqamToJinsModulationDegreesNoteNames: JinsModulationDegreesNoteNames;
+
+  /** Maps each modulation degree to its corresponding octave-below note name (only when 8vb is requested) */
+  maqamToJinsModulationsLowerOctaveDegreesNoteNames?: JinsModulationDegrees8vbNoteNames;
+
+  /** Standard modulations in normal octave positions */
+  maqamToJinsModulations: MaqamToJinsModulationsStructure;
+
+  /** Optional lower octave modulations (only when requested via CLI flag) */
+  maqamToJinsModulationsLowerOctave?: MaqamToJinsLowerOctaveModulationsStructure;
 }
 
 interface ExportedTuningSystem {
@@ -151,6 +394,7 @@ interface ExportedTuningSystem {
 
   // Lookup references
   pitchClassReference?: { [noteName: string]: PitchClass };
+  maqamFamilyReference?: { [familyName: string]: { displayName: string } };
 
   // Main musical data
   allAjnasData?: { [ajnasName: string]: MergedJins };
@@ -162,8 +406,9 @@ export interface ExportOptions {
   includePitchClasses: boolean;
   includeAjnasDetails: boolean;
   includeMaqamatDetails: boolean;
-  includeMaqamatModulations: boolean;
-  includeAjnasModulations: boolean;
+  includeMaqamToMaqamModulations: boolean;
+  includeMaqamToJinsModulations: boolean;
+  includeModulations8vb: boolean;
   progressCallback?: (percentage: number, step: string) => void;
 }
 
@@ -178,8 +423,9 @@ export interface MaqamExportOptions {
   includeTuningSystemDetails: boolean;
   includePitchClasses: boolean;
   includeTranspositions: boolean;
-  includeMaqamatModulations: boolean;
-  includeAjnasModulations: boolean;
+  includeMaqamToMaqamModulations: boolean;
+  includeMaqamToJinsModulations: boolean;
+  includeModulations8vb: boolean;
   progressCallback?: (percentage: number, step: string) => void;
 }
 
@@ -205,22 +451,23 @@ interface ExportedMaqam {
   tuningSystemData?: TuningSystem;
   startingNote?: NoteName;
   pitchClassReference?: { [noteName: string]: PitchClass };
+  maqamFamilyReference?: { [familyName: string]: { displayName: string } };
   allAjnasData?: { [ajnasName: string]: MergedJins };
   allMaqamatData?: { [maqamName: string]: MergedMaqam };
   tuningSystemPitchClasses?: string[];
   transpositions?: string[];
   numberOfTranspositions?: number;
-  maqamatModulations?: MaqamatModulationsWithKeys;
+  maqamToMaqamModulations?: MaqamToMaqamModulationsWithKeys;
   numberOfMaqamModulationHops?: number;
-  ajnasModulations?: AjnasModulationsWithKeys;
+  maqamToJinsModulations?: MaqamToJinsModulationsWithKeys;
   numberOfJinsModulationHops?: number;
 }
 
 interface MaqamWithAjnasAsObjects extends Omit<Maqam, "ascendingMaqamAjnas" | "descendingMaqamAjnas"> {
   ascendingMaqamAjnas?: { [noteName: string]: Jins | null };
   descendingMaqamAjnas?: { [noteName: string]: Jins | null };
-  maqamatModulations?: MaqamatModulationsWithKeys;
-  ajnasModulations?: AjnasModulationsWithKeys;
+  maqamToMaqamModulations?: MaqamToMaqamModulationsWithKeys;
+  maqamToJinsModulations?: MaqamToJinsModulationsWithKeys;
 }
 
 function convertMaqamAjnasToObjects(maqam: Maqam): MaqamWithAjnasAsObjects {
@@ -272,6 +519,307 @@ function convertMaqamAjnasToObjects(maqam: Maqam): MaqamWithAjnasAsObjects {
  * @param centsTolerance - Tolerance in cents for matching cents values (default: 5)
  * @returns Comprehensive export object containing all requested tuning system data
  */
+
+/**
+ * Helper function to create modulation degrees note names mapping
+ */
+function createModulationDegreesNoteNames(
+  ascendingPitchClasses: string[],
+  descendingPitchClasses: string[],
+  noteName2pBelowThird: string
+): ModulationDegreesNoteNames {
+  return {
+    maqamModulationsOnFirstDegreeNoteName: standardizeText(ascendingPitchClasses[0] || ''),
+    maqamModulationsOnThirdDegreeNoteName: standardizeText(ascendingPitchClasses[2] || ''),
+    maqamModulationsOnAltThirdDegreeNoteName: standardizeText(noteName2pBelowThird),
+    maqamModulationsOnFourthDegreeNoteName: standardizeText(ascendingPitchClasses[3] || ''),
+    maqamModulationsOnFifthDegreeNoteName: standardizeText(ascendingPitchClasses[4] || ''),
+    maqamModulationsOnSixthDegreeAscNoteName: standardizeText(ascendingPitchClasses[5] || ''),
+    maqamModulationsOnSixthDegreeDescNoteName: standardizeText(descendingPitchClasses[1] || ''), // Second from start in descending (reverse order)
+    maqamModulationsOnSixthDegreeIfNoThirdNoteName: standardizeText(ascendingPitchClasses[5] || ''), // Same as ascending sixth
+  };
+}
+
+/**
+ * Helper function to create jins modulation degrees note names mapping
+ */
+function createJinsModulationDegreesNoteNames(
+  ascendingPitchClasses: string[],
+  descendingPitchClasses: string[],
+  noteName2pBelowThird: string
+): JinsModulationDegreesNoteNames {
+  return {
+    maqamToJinsModulationsOnFirstDegreeNoteName: standardizeText(ascendingPitchClasses[0] || ''),
+    maqamToJinsModulationsOnThirdDegreeNoteName: standardizeText(ascendingPitchClasses[2] || ''),
+    maqamToJinsModulationsOnAltThirdDegreeNoteName: standardizeText(noteName2pBelowThird),
+    maqamToJinsModulationsOnFourthDegreeNoteName: standardizeText(ascendingPitchClasses[3] || ''),
+    maqamToJinsModulationsOnFifthDegreeNoteName: standardizeText(ascendingPitchClasses[4] || ''),
+    maqamToJinsModulationsOnSixthDegreeAscNoteName: standardizeText(ascendingPitchClasses[5] || ''),
+    maqamToJinsModulationsOnSixthDegreeDescNoteName: standardizeText(descendingPitchClasses[1] || ''), // Second from start in descending (reverse order)
+    maqamToJinsModulationsOnSixthDegreeIfNoThirdNoteName: standardizeText(ascendingPitchClasses[5] || ''), // Same as ascending sixth
+  };
+}
+
+/**
+ * Helper function to map note names to their octave-below equivalents
+ * Uses the proper pitch class system instead of hardcoded mappings
+ */
+function mapNoteToOctaveBelow(noteName: string, allPitchClasses: PitchClass[]): string {
+  // Handle empty/invalid input
+  if (!noteName) return '';
+
+  // Find the pitch class with this note name, comparing standardized versions
+  // since the input noteName is already standardized but pitch class noteNames may have diacritics
+  const pitchClass = allPitchClasses.find(pc => standardizeText(pc.noteName) === noteName);
+  if (!pitchClass) {
+    // If not found, return empty string
+    return '';
+  }
+
+  // Use the proper shift function to get the octave-below version
+  const shiftedPitchClass = shiftPitchClass(allPitchClasses, pitchClass, -1);
+  
+  // Return the standardized note name of the shifted pitch class, or empty if shift failed
+  return shiftedPitchClass?.noteName ? standardizeText(shiftedPitchClass.noteName) : '';
+}
+
+/**
+ * Helper function to create octave-below modulation degrees note names mapping
+ */
+function createModulationDegrees8vbNoteNames(
+  ascendingPitchClasses: string[],
+  descendingPitchClasses: string[],
+  noteName2pBelowThird: string,
+  allPitchClasses: PitchClass[]
+): ModulationDegrees8vbNoteNames {
+  return {
+    maqamModulationsOnFirstDegree8vbNoteName: standardizeText(mapNoteToOctaveBelow(standardizeText(ascendingPitchClasses[0] || ''), allPitchClasses)),
+    maqamModulationsOnThirdDegree8vbNoteName: standardizeText(mapNoteToOctaveBelow(standardizeText(ascendingPitchClasses[2] || ''), allPitchClasses)),
+    maqamModulationsOnAltThirdDegree8vbNoteName: standardizeText(mapNoteToOctaveBelow(standardizeText(noteName2pBelowThird), allPitchClasses)),
+    maqamModulationsOnFourthDegree8vbNoteName: standardizeText(mapNoteToOctaveBelow(standardizeText(ascendingPitchClasses[3] || ''), allPitchClasses)),
+    maqamModulationsOnFifthDegree8vbNoteName: standardizeText(mapNoteToOctaveBelow(standardizeText(ascendingPitchClasses[4] || ''), allPitchClasses)),
+    maqamModulationsOnSixthDegreeAsc8vbNoteName: standardizeText(mapNoteToOctaveBelow(standardizeText(ascendingPitchClasses[5] || ''), allPitchClasses)),
+    maqamModulationsOnSixthDegreeDesc8vbNoteName: standardizeText(mapNoteToOctaveBelow(standardizeText(descendingPitchClasses[1] || ''), allPitchClasses)),
+    maqamModulationsOnSixthDegreeIfNoThird8vbNoteName: standardizeText(mapNoteToOctaveBelow(standardizeText(ascendingPitchClasses[5] || ''), allPitchClasses)),
+  };
+}
+
+/**
+ * Helper function to create jins octave-below modulation degrees note names mapping
+ */
+function createJinsModulationDegrees8vbNoteNames(
+  ascendingPitchClasses: string[],
+  descendingPitchClasses: string[],
+  noteName2pBelowThird: string,
+  allPitchClasses: PitchClass[]
+): JinsModulationDegrees8vbNoteNames {
+  return {
+    maqamToJinsModulationsOnFirstDegree8vbNoteName: standardizeText(mapNoteToOctaveBelow(standardizeText(ascendingPitchClasses[0] || ''), allPitchClasses)),
+    maqamToJinsModulationsOnThirdDegree8vbNoteName: standardizeText(mapNoteToOctaveBelow(standardizeText(ascendingPitchClasses[2] || ''), allPitchClasses)),
+    maqamToJinsModulationsOnAltThirdDegree8vbNoteName: standardizeText(mapNoteToOctaveBelow(standardizeText(noteName2pBelowThird), allPitchClasses)),
+    maqamToJinsModulationsOnFourthDegree8vbNoteName: standardizeText(mapNoteToOctaveBelow(standardizeText(ascendingPitchClasses[3] || ''), allPitchClasses)),
+    maqamToJinsModulationsOnFifthDegree8vbNoteName: standardizeText(mapNoteToOctaveBelow(standardizeText(ascendingPitchClasses[4] || ''), allPitchClasses)),
+    maqamToJinsModulationsOnSixthDegreeAsc8vbNoteName: standardizeText(mapNoteToOctaveBelow(standardizeText(ascendingPitchClasses[5] || ''), allPitchClasses)),
+    maqamToJinsModulationsOnSixthDegreeDesc8vbNoteName: standardizeText(mapNoteToOctaveBelow(standardizeText(descendingPitchClasses[1] || ''), allPitchClasses)),
+    maqamToJinsModulationsOnSixthDegreeIfNoThird8vbNoteName: standardizeText(mapNoteToOctaveBelow(standardizeText(ascendingPitchClasses[5] || ''), allPitchClasses)),
+  };
+}
+
+/**
+ * Helper function to create maqam-to-maqam modulations structure
+ */
+function createMaqamToMaqamModulations(modulations: MaqamatModulations): MaqamToMaqamModulationsStructure {
+  const maqamatMods = modulations as MaqamatModulations;
+  return {
+    maqamToMaqamModulationsOnFirstDegree: (maqamatMods.modulationsOnFirstDegree || []).map((maqam) => standardizeText(maqam.name)),
+    maqamToMaqamModulationsOnThirdDegree: (maqamatMods.modulationsOnThirdDegree || []).map((maqam) => standardizeText(maqam.name)),
+    maqamToMaqamModulationsOnAltThirdDegree: (maqamatMods.modulationsOnAltThirdDegree || []).map((maqam) => standardizeText(maqam.name)),
+    maqamToMaqamModulationsOnFourthDegree: (maqamatMods.modulationsOnFourthDegree || []).map((maqam) => standardizeText(maqam.name)),
+    maqamToMaqamModulationsOnFifthDegree: (maqamatMods.modulationsOnFifthDegree || []).map((maqam) => standardizeText(maqam.name)),
+    maqamToMaqamModulationsOnSixthDegreeAsc: (maqamatMods.modulationsOnSixthDegreeAsc || []).map((maqam) => standardizeText(maqam.name)),
+    maqamToMaqamModulationsOnSixthDegreeDesc: (maqamatMods.modulationsOnSixthDegreeDesc || []).map((maqam) => standardizeText(maqam.name)),
+    maqamToMaqamModulationsOnSixthDegreeIfNoThird: (maqamatMods.modulationsOnSixthDegreeIfNoThird || []).map((maqam) => standardizeText(maqam.name)),
+    maqamToMaqamModulations2pBelowThirdNoteName: maqamatMods.noteName2pBelowThird || '',
+  };
+}
+
+/**
+ * Helper function to create maqam-to-jins modulations structure
+ */
+function createMaqamToJinsModulations(modulations: AjnasModulations): MaqamToJinsModulationsStructure {
+  const ajnasMods = modulations as AjnasModulations;
+  
+  // Extra safety check for undefined ajnas modulations
+  if (!ajnasMods) {
+    return {
+      maqamToJinsModulationsOnFirstDegree: [],
+      maqamToJinsModulationsOnThirdDegree: [],
+      maqamToJinsModulationsOnAltThirdDegree: [],
+      maqamToJinsModulationsOnFourthDegree: [],
+      maqamToJinsModulationsOnFifthDegree: [],
+      maqamToJinsModulationsOnSixthDegreeAsc: [],
+      maqamToJinsModulationsOnSixthDegreeDesc: [],
+      maqamToJinsModulationsOnSixthDegreeIfNoThird: [],
+      maqamToJinsNoteName2pBelowThird: '',
+    };
+  }
+  
+  return {
+    maqamToJinsModulationsOnFirstDegree: (ajnasMods.modulationsOnFirstDegree || []).map((jins) => standardizeText(jins.name)),
+    maqamToJinsModulationsOnThirdDegree: (ajnasMods.modulationsOnThirdDegree || []).map((jins) => standardizeText(jins.name)),
+    maqamToJinsModulationsOnAltThirdDegree: (ajnasMods.modulationsOnAltThirdDegree || []).map((jins) => standardizeText(jins.name)),
+    maqamToJinsModulationsOnFourthDegree: (ajnasMods.modulationsOnFourthDegree || []).map((jins) => standardizeText(jins.name)),
+    maqamToJinsModulationsOnFifthDegree: (ajnasMods.modulationsOnFifthDegree || []).map((jins) => standardizeText(jins.name)),
+    maqamToJinsModulationsOnSixthDegreeAsc: (ajnasMods.modulationsOnSixthDegreeAsc || []).map((jins) => standardizeText(jins.name)),
+    maqamToJinsModulationsOnSixthDegreeDesc: (ajnasMods.modulationsOnSixthDegreeDesc || []).map((jins) => standardizeText(jins.name)),
+    maqamToJinsModulationsOnSixthDegreeIfNoThird: (ajnasMods.modulationsOnSixthDegreeIfNoThird || []).map((jins) => standardizeText(jins.name)),
+    maqamToJinsNoteName2pBelowThird: ajnasMods.noteName2pBelowThird || '',
+  };
+}
+
+/**
+ * Helper function to create maqam-to-maqam lower octave modulations structure.
+ * Creates proper 8vb (octave-below) data for maqam modulations.
+ */
+function createMaqamToMaqamLowerOctaveModulations(
+  modulations: MaqamatModulations,
+  allPitchClasses: PitchClass[]
+): MaqamToMaqamLowerOctaveModulationsStructure {
+  const maqamatMods = modulations as MaqamatModulations;
+  
+  return {
+    maqamToMaqamModulationsOnFirstDegree8vb: (maqamatMods.modulationsOnFirstDegree || [])
+      .map((maqam) => {
+        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
+        return shifted ? standardizeText(shifted.name) : null;
+      })
+      .filter((name): name is string => name !== null),
+    maqamToMaqamModulationsOnThirdDegree8vb: (maqamatMods.modulationsOnThirdDegree || [])
+      .map((maqam) => {
+        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
+        return shifted ? standardizeText(shifted.name) : null;
+      })
+      .filter((name): name is string => name !== null),
+    maqamToMaqamModulationsOnAltThirdDegree8vb: (maqamatMods.modulationsOnAltThirdDegree || [])
+      .map((maqam) => {
+        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
+        return shifted ? standardizeText(shifted.name) : null;
+      })
+      .filter((name): name is string => name !== null),
+    maqamToMaqamModulationsOnFourthDegree8vb: (maqamatMods.modulationsOnFourthDegree || [])
+      .map((maqam) => {
+        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
+        return shifted ? standardizeText(shifted.name) : null;
+      })
+      .filter((name): name is string => name !== null),
+    maqamToMaqamModulationsOnFifthDegree8vb: (maqamatMods.modulationsOnFifthDegree || [])
+      .map((maqam) => {
+        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
+        return shifted ? standardizeText(shifted.name) : null;
+      })
+      .filter((name): name is string => name !== null),
+    maqamToMaqamModulationsOnSixthDegreeAsc8vb: (maqamatMods.modulationsOnSixthDegreeAsc || [])
+      .map((maqam) => {
+        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
+        return shifted ? standardizeText(shifted.name) : null;
+      })
+      .filter((name): name is string => name !== null),
+    maqamToMaqamModulationsOnSixthDegreeDesc8vb: (maqamatMods.modulationsOnSixthDegreeDesc || [])
+      .map((maqam) => {
+        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
+        return shifted ? standardizeText(shifted.name) : null;
+      })
+      .filter((name): name is string => name !== null),
+    maqamToMaqamModulationsOnSixthDegreeIfNoThird8vb: (maqamatMods.modulationsOnSixthDegreeIfNoThird || [])
+      .map((maqam) => {
+        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
+        return shifted ? standardizeText(shifted.name) : null;
+      })
+      .filter((name): name is string => name !== null),
+    maqamToMaqamModulations2pBelowThird8vb: maqamatMods.noteName2pBelowThird ? 
+      mapNoteToOctaveBelow(standardizeText(maqamatMods.noteName2pBelowThird), allPitchClasses) : '',
+  };
+}
+
+/**
+ * Helper function to create maqam-to-jins lower octave modulations structure.
+ * Creates proper 8vb (octave-below) data for jins modulations.
+ */
+function createMaqamToJinsLowerOctaveModulations(
+  modulations: AjnasModulations,
+  allPitchClasses: PitchClass[]
+): MaqamToJinsLowerOctaveModulationsStructure {
+  const ajnasMods = modulations as AjnasModulations;
+  
+  // Extra safety check for undefined modulations object
+  if (!ajnasMods) {
+    return {
+      maqamToJinsModulationsOnFirstDegree8vb: [],
+      maqamToJinsModulationsOnThirdDegree8vb: [],
+      maqamToJinsModulationsOnAltThirdDegree8vb: [],
+      maqamToJinsModulationsOnFourthDegree8vb: [],
+      maqamToJinsModulationsOnFifthDegree8vb: [],
+      maqamToJinsModulationsOnSixthDegreeAsc8vb: [],
+      maqamToJinsModulationsOnSixthDegreeDesc8vb: [],
+      maqamToJinsModulationsOnSixthDegreeIfNoThird8vb: [],
+      maqamToJinsNoteName2pBelowThird8vb: '',
+    };
+  }
+  
+  return {
+    maqamToJinsModulationsOnFirstDegree8vb: (ajnasMods.modulationsOnFirstDegree || [])
+      .map((jins) => {
+        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1);
+        return shifted ? standardizeText(shifted.name) : null;
+      })
+      .filter((name): name is string => name !== null),
+    maqamToJinsModulationsOnThirdDegree8vb: (ajnasMods.modulationsOnThirdDegree || [])
+      .map((jins) => {
+        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1);
+        return shifted ? standardizeText(shifted.name) : null;
+      })
+      .filter((name): name is string => name !== null),
+    maqamToJinsModulationsOnAltThirdDegree8vb: (ajnasMods.modulationsOnAltThirdDegree || [])
+      .map((jins) => {
+        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1);
+        return shifted ? standardizeText(shifted.name) : null;
+      })
+      .filter((name): name is string => name !== null),
+    maqamToJinsModulationsOnFourthDegree8vb: (ajnasMods.modulationsOnFourthDegree || [])
+      .map((jins) => {
+        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1);
+        return shifted ? standardizeText(shifted.name) : null;
+      })
+      .filter((name): name is string => name !== null),
+    maqamToJinsModulationsOnFifthDegree8vb: (ajnasMods.modulationsOnFifthDegree || [])
+      .map((jins) => {
+        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1);
+        return shifted ? standardizeText(shifted.name) : null;
+      })
+      .filter((name): name is string => name !== null),
+    maqamToJinsModulationsOnSixthDegreeAsc8vb: (ajnasMods.modulationsOnSixthDegreeAsc || [])
+      .map((jins) => {
+        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1);
+        return shifted ? standardizeText(shifted.name) : null;
+      })
+      .filter((name): name is string => name !== null),
+    maqamToJinsModulationsOnSixthDegreeDesc8vb: (ajnasMods.modulationsOnSixthDegreeDesc || [])
+      .map((jins) => {
+        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1);
+        return shifted ? standardizeText(shifted.name) : null;
+      })
+      .filter((name): name is string => name !== null),
+    maqamToJinsModulationsOnSixthDegreeIfNoThird8vb: (ajnasMods.modulationsOnSixthDegreeIfNoThird || [])
+      .map((jins) => {
+        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1);
+        return shifted ? standardizeText(shifted.name) : null;
+      })
+      .filter((name): name is string => name !== null),
+    maqamToJinsNoteName2pBelowThird8vb: ajnasMods.noteName2pBelowThird ? 
+      mapNoteToOctaveBelow(standardizeText(ajnasMods.noteName2pBelowThird), allPitchClasses) : '',
+  };
+}
+
 export async function exportTuningSystem(
   tuningSystem: TuningSystem,
   startingNote: NoteName,
@@ -346,7 +894,7 @@ export async function exportTuningSystem(
       commentsEnglish: tuningSystem.getCommentsEnglish(),
       commentsArabic: tuningSystem.getCommentsArabic(),
       // Starting note for this export
-      startingNote: startingNote,
+      startingNote: standardizeText(startingNote),
 
       // Musical data with explicit ordering
       originalPitchClassValues: tuningSystem.getOriginalPitchClassValues(),
@@ -363,7 +911,7 @@ export async function exportTuningSystem(
 
   if (options.includePitchClasses) {
     // Store only note names - users can resolve full objects via pitchClassReference
-    result.tuningSystemPitchClasses = fullRangeTuningSystemPitchClasses.map((pc) => englishify(pc.noteName));
+    result.tuningSystemPitchClasses = fullRangeTuningSystemPitchClasses.map((pc) => standardizeText(pc.noteName));
   }
 
   // === SUMMARY STATISTICS ===
@@ -385,9 +933,17 @@ export async function exportTuningSystem(
   updateProgress(69, "Building pitch class references...");
   const pitchClassReference: { [noteName: string]: PitchClass } = {};
   fullRangeTuningSystemPitchClasses.forEach((pc) => {
-    pitchClassReference[englishify(pc.noteName)] = pc;
+    pitchClassReference[standardizeText(pc.noteName)] = pc;
   });
   result.pitchClassReference = pitchClassReference;
+
+  // Initialize maqam family reference dictionary
+  const maqamFamilyReference: { [familyName: string]: { displayName: string } } = {};
+  // Add maqamFamilyReference to result immediately after pitchClassReference to control JSON order
+  // It will be populated later if maqamat details are included
+  if (options.includeMaqamatDetails) {
+    result.maqamFamilyReference = maqamFamilyReference;
+  }
 
   // === 6. MUSICAL DATA SECTION (Core Content) ===
   const jinsReference: { [jinsName: string]: MergedJins } = {};
@@ -398,6 +954,9 @@ export async function exportTuningSystem(
   let totalMaqamatTranspositions = 0;
   let totalMaqamModulations = 0;
   let totalAjnasModulations = 0;
+
+  // Store tahlil (original maqam) for classification
+  const maqamTahlilMap = new Map<string, Maqam>();
 
   // Include ajnas details if requested
   if (options.includeAjnasDetails || options.includeMaqamatDetails) {
@@ -443,7 +1002,7 @@ export async function exportTuningSystem(
         const mergedJins: MergedJins = {
           jinsId: possibleJins.jinsId,
           name: possibleJins.name,
-          jinsPitchClasses: possibleJins.jinsPitchClasses.map((pc) => englishify(pc.noteName)),
+          jinsPitchClasses: possibleJins.jinsPitchClasses.map((pc) => standardizeText(pc.noteName)),
           jinsPitchClassIntervals: possibleJins.jinsPitchClassIntervals,
           transposition: possibleJins.transposition,
           commentsEnglish: jinsOverview.getCommentsEnglish(),
@@ -451,7 +1010,7 @@ export async function exportTuningSystem(
           SourcePageReferences: jinsOverview.getSourcePageReferences(),
         };
 
-        jinsReference[englishify(possibleJins.name)] = mergedJins;
+        jinsReference[standardizeText(possibleJins.name)] = mergedJins;
       }
     }
   }
@@ -483,6 +1042,11 @@ export async function exportTuningSystem(
       for (let j = 0; j < maqamTranspositions.length; j++) {
         const maqamTransposition = maqamTranspositions[j];
 
+        // Store tahlil for family classification (original form only)
+        if (!maqamTransposition.transposition) {
+          maqamTahlilMap.set(maqamTransposition.maqamId, maqamTransposition);
+        }
+
         // Yield control every few transpositions to allow UI updates
         if (j % 10 === 0) {
           await new Promise((resolve) => setTimeout(resolve, 0));
@@ -492,77 +1056,138 @@ export async function exportTuningSystem(
         let ajnasModulations: AjnasModulations | undefined = undefined;
 
         // Include modulations if requested
-        if (options.includeMaqamatModulations || options.includeAjnasModulations) {
-          if (options.includeMaqamatModulations) {
-            maqamatModulations = modulate(
-              fullRangeTuningSystemPitchClasses,
-              allAjnas,
-              allMaqamat,
-              maqamTransposition,
-              false,
-              centsTolerance
-            ) as MaqamatModulations;
-            const numberOfMaqamModulationHops = calculateNumberOfModulations(maqamatModulations);
-            (maqamTransposition as any).maqamatModulations = maqamatModulations;
-            (maqamTransposition as any).numberOfMaqamModulationHops = numberOfMaqamModulationHops;
+        if (options.includeMaqamToMaqamModulations || options.includeMaqamToJinsModulations) {
+          try {
+            if (options.includeMaqamToMaqamModulations) {
+              maqamatModulations = modulate(
+                fullRangeTuningSystemPitchClasses,
+                allAjnas,
+                allMaqamat,
+                maqamTransposition,
+                false,
+                centsTolerance
+              ) as MaqamatModulations;
+              const numberOfMaqamModulationHops = calculateNumberOfModulations(maqamatModulations);
+              (maqamTransposition as any).maqamatModulations = maqamatModulations;
+              (maqamTransposition as any).numberOfMaqamModulationHops = numberOfMaqamModulationHops;
 
-            // Count modulations for statistics
-            totalMaqamModulations += numberOfMaqamModulationHops;
-          }
+              // Count modulations for statistics
+              totalMaqamModulations += numberOfMaqamModulationHops;
+            }
 
-          if (options.includeAjnasModulations) {
-            ajnasModulations = modulate(
-              fullRangeTuningSystemPitchClasses,
-              allAjnas,
-              allMaqamat,
-              maqamTransposition,
-              true,
-              centsTolerance
-            ) as AjnasModulations;
-            const numberOfJinsModulationHops = calculateNumberOfModulations(ajnasModulations);
-            (maqamTransposition as any).ajnasModulations = ajnasModulations;
-            (maqamTransposition as any).numberOfJinsModulationHops = numberOfJinsModulationHops;
+            if (options.includeMaqamToJinsModulations) {
+              ajnasModulations = modulate(
+                fullRangeTuningSystemPitchClasses,
+                allAjnas,
+                allMaqamat,
+                maqamTransposition,
+                true,
+                centsTolerance
+              ) as AjnasModulations;
+              const numberOfJinsModulationHops = calculateNumberOfModulations(ajnasModulations);
+              (maqamTransposition as any).ajnasModulations = ajnasModulations;
+              (maqamTransposition as any).numberOfJinsModulationHops = numberOfJinsModulationHops;
 
-            // Count modulations for statistics
-            totalAjnasModulations += numberOfJinsModulationHops;
+              // Count modulations for statistics
+              totalAjnasModulations += numberOfJinsModulationHops;
+            }
+          } catch (error) {
+            console.error(`🚨 Error processing modulations for maqam ${maqamTransposition.name}:`, error);
+            console.error(`Maqam details:`, {
+              name: maqamTransposition.name,
+              ascending: maqamTransposition.ascendingPitchClasses?.length,
+              descending: maqamTransposition.descendingPitchClasses?.length,
+              maqamId: maqamTransposition.maqamId
+            });
+            // Skip this maqam transposition if there's an error
+            continue;
           }
         }
 
         // Count maqam transpositions for statistics
         totalMaqamatTranspositions++;
 
-        const maqamAjnasToObjects = convertMaqamAjnasToObjects(maqamTransposition);
-
-        if (maqamatModulations) {
-          const maqamModulationWithKeys: MaqamatModulationsWithKeys = {
-            modulationsOnOne: maqamatModulations.modulationsOnOne.map((maqam) => englishify(maqam.name)),
-            modulationsOnThree: maqamatModulations.modulationsOnThree.map((maqam) => englishify(maqam.name)),
-            modulationsOnThree2p: maqamatModulations.modulationsOnThree2p.map((maqam) => englishify(maqam.name)),
-            modulationsOnFour: maqamatModulations.modulationsOnFour.map((maqam) => englishify(maqam.name)),
-            modulationsOnFive: maqamatModulations.modulationsOnFive.map((maqam) => englishify(maqam.name)),
-            modulationsOnSixAscending: maqamatModulations.modulationsOnSixAscending.map((maqam) => englishify(maqam.name)),
-            modulationsOnSixDescending: maqamatModulations.modulationsOnSixDescending.map((maqam) => englishify(maqam.name)),
-            modulationsOnSixNoThird: maqamatModulations.modulationsOnSixNoThird.map((maqam) => englishify(maqam.name)),
-            noteName2p: maqamatModulations.noteName2p,
-          };
-
-          maqamAjnasToObjects.maqamatModulations = maqamModulationWithKeys;
+        let maqamAjnasToObjects: MaqamWithAjnasAsObjects;
+        try {
+          maqamAjnasToObjects = convertMaqamAjnasToObjects(maqamTransposition);
+        } catch (error) {
+          console.error(`🚨 Error converting maqam ajnas for ${maqamTransposition.name}:`, error);
+          continue;
         }
 
-        if (ajnasModulations) {
-          const ajnasModulationsWithKeys: AjnasModulationsWithKeys = {
-            modulationsOnOne: ajnasModulations.modulationsOnOne.map((jins) => englishify(jins.name)),
-            modulationsOnThree: ajnasModulations.modulationsOnThree.map((jins) => englishify(jins.name)),
-            modulationsOnThree2p: ajnasModulations.modulationsOnThree2p.map((jins) => englishify(jins.name)),
-            modulationsOnFour: ajnasModulations.modulationsOnFour.map((jins) => englishify(jins.name)),
-            modulationsOnFive: ajnasModulations.modulationsOnFive.map((jins) => englishify(jins.name)),
-            modulationsOnSixAscending: ajnasModulations.modulationsOnSixAscending.map((jins) => englishify(jins.name)),
-            modulationsOnSixDescending: ajnasModulations.modulationsOnSixDescending.map((jins) => englishify(jins.name)),
-            modulationsOnSixNoThird: ajnasModulations.modulationsOnSixNoThird.map((jins) => englishify(jins.name)),
-            noteName2p: ajnasModulations.noteName2p,
-          };
+        try {
+          if (maqamatModulations) {
+            // Defensive checks for pitch classes before mapping
+            if (!maqamTransposition.ascendingPitchClasses || !maqamTransposition.descendingPitchClasses) {
+              console.warn(`⚠️ Skipping maqam modulations for ${maqamTransposition.name} due to undefined pitch classes`);
+            } else {
+              const maqamModulationWithKeys: MaqamToMaqamModulationsWithKeys = {
+                maqamToMaqamModulationsDegreesNoteNames: createModulationDegreesNoteNames(
+                  maqamTransposition.ascendingPitchClasses.map(pc => pc.noteName),
+                  maqamTransposition.descendingPitchClasses.map(pc => pc.noteName),
+                  maqamatModulations.noteName2pBelowThird || ''
+                ),
+                ...(options.includeModulations8vb && {
+                  maqamToMaqamModulationsLowerOctaveDegreesNoteNames: createModulationDegrees8vbNoteNames(
+                    maqamTransposition.ascendingPitchClasses.map(pc => pc.noteName),
+                    maqamTransposition.descendingPitchClasses.map(pc => pc.noteName),
+                    maqamatModulations.noteName2pBelowThird || '',
+                    fullRangeTuningSystemPitchClasses
+                  )
+                }),
+                maqamToMaqamModulations: createMaqamToMaqamModulations(maqamatModulations),
+                ...(options.includeModulations8vb && {
+                  maqamToMaqamModulationsLowerOctave: createMaqamToMaqamLowerOctaveModulations(
+                    maqamatModulations, 
+                    fullRangeTuningSystemPitchClasses
+                  )
+                })
+              };
 
-          maqamAjnasToObjects.ajnasModulations = ajnasModulationsWithKeys;
+              maqamAjnasToObjects.maqamToMaqamModulations = maqamModulationWithKeys;
+            }
+          }
+
+          if (ajnasModulations) {
+            // Defensive checks for pitch classes before mapping
+            if (!maqamTransposition.ascendingPitchClasses || !maqamTransposition.descendingPitchClasses) {
+              console.warn(`⚠️ Skipping ajnas modulations for ${maqamTransposition.name} due to undefined pitch classes`);
+            } else {
+              const ajnasModulationsWithKeys: MaqamToJinsModulationsWithKeys = {
+                maqamToJinsModulationDegreesNoteNames: createJinsModulationDegreesNoteNames(
+                  maqamTransposition.ascendingPitchClasses.map(pc => pc.noteName),
+                  maqamTransposition.descendingPitchClasses.map(pc => pc.noteName),
+                  ajnasModulations.noteName2pBelowThird || ''
+                ),
+                ...(options.includeModulations8vb && {
+                  maqamToJinsModulationsLowerOctaveDegreesNoteNames: createJinsModulationDegrees8vbNoteNames(
+                    maqamTransposition.ascendingPitchClasses.map(pc => pc.noteName),
+                    maqamTransposition.descendingPitchClasses.map(pc => pc.noteName),
+                    ajnasModulations.noteName2pBelowThird || '',
+                    fullRangeTuningSystemPitchClasses
+                  )
+                }),
+                maqamToJinsModulations: createMaqamToJinsModulations(ajnasModulations),
+                ...(options.includeModulations8vb && {
+                  maqamToJinsModulationsLowerOctave: createMaqamToJinsLowerOctaveModulations(
+                    ajnasModulations, 
+                    fullRangeTuningSystemPitchClasses
+                  )
+                })
+              };
+
+              maqamAjnasToObjects.maqamToJinsModulations = ajnasModulationsWithKeys;
+            }
+          }
+        } catch (error) {
+          console.error(`🚨 Error creating modulation data for ${maqamTransposition.name}:`, error);
+          console.error(`Modulation context:`, {
+            hasMaqamModulations: !!maqamatModulations,
+            hasAjnasModulations: !!ajnasModulations,
+            ascendingLength: maqamTransposition.ascendingPitchClasses?.length,
+            descendingLength: maqamTransposition.descendingPitchClasses?.length
+          });
+          // Continue without modulations for this maqam
         }
 
         possibleMaqamat.push(maqamAjnasToObjects);
@@ -579,33 +1204,77 @@ export async function exportTuningSystem(
       const maqamOverview = possibleMaqamatOverview.find((m) => m.getId() === possibleMaqam.maqamId);
 
       if (maqamOverview) {
+        // Defensive checks for undefined pitch classes arrays
+        if (!possibleMaqam.ascendingPitchClasses || !possibleMaqam.descendingPitchClasses) {
+          console.warn(`⚠️ Skipping maqam ${possibleMaqam.name} due to undefined pitch classes:`, {
+            ascendingDefined: !!possibleMaqam.ascendingPitchClasses,
+            descendingDefined: !!possibleMaqam.descendingPitchClasses,
+            maqamId: possibleMaqam.maqamId
+          });
+          continue;
+        }
+
         const mergedMaqam: MergedMaqam = {
           maqamId: possibleMaqam.maqamId,
           name: possibleMaqam.name,
-          ascendingPitchClasses: possibleMaqam.ascendingPitchClasses.map((pc) => englishify(pc.noteName)),
-          descendingPitchClasses: possibleMaqam.descendingPitchClasses.map((pc) => englishify(pc.noteName)),
+          ascendingPitchClasses: possibleMaqam.ascendingPitchClasses.map((pc) => standardizeText(pc.noteName)),
+          descendingPitchClasses: possibleMaqam.descendingPitchClasses.map((pc) => standardizeText(pc.noteName)),
           ascendingPitchClassIntervals: possibleMaqam.ascendingPitchClassIntervals,
           descendingPitchClassIntervals: possibleMaqam.descendingPitchClassIntervals,
           ascendingMaqamAjnas: possibleMaqam.ascendingMaqamAjnas
             ? Object.fromEntries(
-                Object.entries(possibleMaqam.ascendingMaqamAjnas).map(([noteName, jins]) => [noteName, jins ? englishify(jins.name) : null])
+                Object.entries(possibleMaqam.ascendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins ? standardizeText(jins.name) : null])
               )
             : undefined,
           descendingMaqamAjnas: possibleMaqam.descendingMaqamAjnas
             ? Object.fromEntries(
-                Object.entries(possibleMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [noteName, jins ? englishify(jins.name) : null])
+                Object.entries(possibleMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins ? standardizeText(jins.name) : null])
               )
             : undefined,
           transposition: possibleMaqam.transposition,
           commentsEnglish: maqamOverview.getCommentsEnglish(),
           commentsArabic: maqamOverview.getCommentsArabic(),
           SourcePageReferences: maqamOverview.getSourcePageReferences(),
+          // Family classification - always included, inherited from tahlil
+          maqamFamilyClassification: (() => {
+            const tahlil = maqamTahlilMap.get(possibleMaqam.maqamId);
+            if (tahlil) {
+              try {
+                const classification = classifyMaqamFamily(tahlil);
+                const normalizedFamilyName = standardizeText(classification.familyName);
+                
+                // Add to family reference dictionary if not already present
+                if (!maqamFamilyReference[normalizedFamilyName]) {
+                  maqamFamilyReference[normalizedFamilyName] = {
+                    displayName: classification.familyName
+                  };
+                }
+                
+                return {
+                  firstJins: {
+                    familyName: normalizedFamilyName,
+                  }
+                };
+              } catch (error) {
+                console.warn(`⚠️ Could not classify maqam ${possibleMaqam.name}:`, error);
+              }
+            }
+            // Fallback if classification fails
+            if (!maqamFamilyReference["no_jins"]) {
+              maqamFamilyReference["no_jins"] = { displayName: "no jins" };
+            }
+            return {
+              firstJins: {
+                familyName: "no_jins",
+              }
+            };
+          })(),
         };
 
-        if (possibleMaqam.maqamatModulations) mergedMaqam.maqamatModulations = possibleMaqam.maqamatModulations;
-        if (possibleMaqam.ajnasModulations) mergedMaqam.ajnasModulations = possibleMaqam.ajnasModulations;
+        if (possibleMaqam.maqamToMaqamModulations) mergedMaqam.maqamToMaqamModulations = possibleMaqam.maqamToMaqamModulations;
+        if (possibleMaqam.maqamToJinsModulations) mergedMaqam.maqamToJinsModulations = possibleMaqam.maqamToJinsModulations;
 
-        maqamReference[englishify(possibleMaqam.name)] = mergedMaqam;
+        maqamReference[standardizeText(possibleMaqam.name)] = mergedMaqam;
       }
     }
   }
@@ -630,6 +1299,7 @@ export async function exportTuningSystem(
   // Only include maqamat data if it was requested in the export options
   if (options.includeMaqamatDetails) {
     result.allMaqamatData = maqamReference;
+    // maqamFamilyReference was already added to result earlier (line 945) to control JSON property order
   }
 
   updateProgress(98, "Export compilation complete!");
@@ -686,7 +1356,7 @@ export async function exportJins(
   const jinsReference: { [jinsName: string]: MergedJins } = {};
 
   fullRangeTuningSystemPitchClasses.forEach((pc) => {
-    pitchClassReference[englishify(pc.noteName)] = pc;
+    pitchClassReference[standardizeText(pc.noteName)] = pc;
   });
 
   let jinsToExport: Jins;
@@ -753,7 +1423,7 @@ export async function exportJins(
 
   // Include pitch classes if requested
   if (options.includePitchClasses) {
-    result.tuningSystemPitchClasses = fullRangeTuningSystemPitchClasses.map((pc) => englishify(pc.noteName));
+    result.tuningSystemPitchClasses = fullRangeTuningSystemPitchClasses.map((pc) => standardizeText(pc.noteName));
   }
 
   // Include the actual jins instance as MergedJins
@@ -761,7 +1431,7 @@ export async function exportJins(
     const mergedJins: MergedJins = {
       jinsId: jinsToExport.jinsId,
       name: jinsToExport.name,
-      jinsPitchClasses: jinsToExport.jinsPitchClasses.map((pc) => englishify(pc.noteName)),
+      jinsPitchClasses: jinsToExport.jinsPitchClasses.map((pc) => standardizeText(pc.noteName)),
       jinsPitchClassIntervals: jinsToExport.jinsPitchClassIntervals,
       transposition: jinsToExport.transposition,
       commentsEnglish: jinsData.getCommentsEnglish(),
@@ -797,7 +1467,7 @@ export async function exportJins(
         const mergedJins: MergedJins = {
           jinsId: jinsTransposition.jinsId,
           name: jinsTransposition.name,
-          jinsPitchClasses: jinsTransposition.jinsPitchClasses.map((pc) => englishify(pc.noteName)),
+          jinsPitchClasses: jinsTransposition.jinsPitchClasses.map((pc) => standardizeText(pc.noteName)),
           jinsPitchClassIntervals: jinsTransposition.jinsPitchClassIntervals,
           transposition: jinsTransposition.transposition,
           commentsEnglish: jinsOverview.getCommentsEnglish(),
@@ -805,14 +1475,14 @@ export async function exportJins(
           SourcePageReferences: jinsOverview.getSourcePageReferences(),
         };
 
-        jinsReference[englishify(jinsTransposition.name)] = mergedJins;
+        jinsReference[standardizeText(jinsTransposition.name)] = mergedJins;
         transpositions.push(mergedJins);
         numberOfTranspositions++;
       }
     }
 
     updateProgress(94, "Finalizing jins transpositions...");
-    result.transpositions = transpositions.map((jins) => englishify(jins.name));
+    result.transpositions = transpositions.map((jins) => standardizeText(jins.name));
     result.numberOfTranspositions = numberOfTranspositions;
   }
 
@@ -880,7 +1550,7 @@ export async function exportMaqam(
   const maqamReference: { [maqamName: string]: MergedMaqam } = {};
 
   fullRangeTuningSystemPitchClasses.forEach((pc) => {
-    pitchClassReference[englishify(pc.noteName)] = pc;
+    pitchClassReference[standardizeText(pc.noteName)] = pc;
   });
 
   let maqamToExport: Maqam;
@@ -952,44 +1622,125 @@ export async function exportMaqam(
 
   // Include pitch classes if requested
   if (options.includePitchClasses) {
-    result.tuningSystemPitchClasses = fullRangeTuningSystemPitchClasses.map((pc) => englishify(pc.noteName));
+    result.tuningSystemPitchClasses = fullRangeTuningSystemPitchClasses.map((pc) => standardizeText(pc.noteName));
   }
 
+  // Initialize maqam family reference dictionary
+  const maqamFamilyReference: { [familyName: string]: { displayName: string } } = {
+    "no_jins": { displayName: "no jins" }
+  };
+
+  // Calculate classification once - will be reused for main maqam and all transpositions
+  let maqamClassification: ExportMaqamFamilyClassification = {
+    firstJins: {
+      familyName: "no_jins",
+    }
+  };
+  
   // Include the actual maqam instance as MergedMaqam
   if (maqamData) {
     const convertedMaqam = convertMaqamAjnasToObjects(maqamToExport);
+    
+    // Get classification - calculate once from tahlil
+    if (!maqamToExport.transposition) {
+      // This IS the tahlil, classify it directly
+      try {
+        const result = classifyMaqamFamily(maqamToExport);
+        const normalizedFamilyName = standardizeText(result.familyName);
+        
+        // Add to family reference dictionary
+        if (!maqamFamilyReference[normalizedFamilyName]) {
+          maqamFamilyReference[normalizedFamilyName] = {
+            displayName: result.familyName
+          };
+        }
+        
+        maqamClassification = {
+          firstJins: {
+            familyName: normalizedFamilyName,
+          }
+        };
+      } catch (error) {
+        console.warn(`⚠️ Could not classify maqam ${maqamToExport.name}:`, error);
+        maqamClassification = {
+          firstJins: {
+            familyName: "no_jins",
+          }
+        };
+      }
+    } else {
+      // This is a transposition - need to get tahlil and classify that
+      const allAjnas = getAjnas();
+      const allMaqamTranspositions = getMaqamTranspositions(fullRangeTuningSystemPitchClasses, allAjnas, maqamData, true, centsTolerance);
+      const tahlil = allMaqamTranspositions.find(m => !m.transposition);
+      
+      if (tahlil) {
+        try {
+          const result = classifyMaqamFamily(tahlil);
+          const normalizedFamilyName = standardizeText(result.familyName);
+          
+          // Add to family reference dictionary
+          if (!maqamFamilyReference[normalizedFamilyName]) {
+            maqamFamilyReference[normalizedFamilyName] = {
+              displayName: result.familyName
+            };
+          }
+          
+          maqamClassification = {
+            firstJins: {
+              familyName: normalizedFamilyName,
+            }
+          };
+        } catch (error) {
+          console.warn(`⚠️ Could not classify maqam ${maqamToExport.name}:`, error);
+          maqamClassification = {
+            firstJins: {
+              familyName: "no_jins",
+            }
+          };
+        }
+      } else {
+        maqamClassification = {
+          firstJins: {
+            familyName: "no_jins",
+          }
+        };
+      }
+    }
+    
     const mergedMaqam: MergedMaqam = {
       maqamId: maqamToExport.maqamId,
       name: maqamToExport.name,
-      ascendingPitchClasses: maqamToExport.ascendingPitchClasses.map((pc) => englishify(pc.noteName)),
-      descendingPitchClasses: maqamToExport.descendingPitchClasses.map((pc) => englishify(pc.noteName)),
+      ascendingPitchClasses: maqamToExport.ascendingPitchClasses.map((pc) => standardizeText(pc.noteName)),
+      descendingPitchClasses: maqamToExport.descendingPitchClasses.map((pc) => standardizeText(pc.noteName)),
       ascendingPitchClassIntervals: maqamToExport.ascendingPitchClassIntervals,
       descendingPitchClassIntervals: maqamToExport.descendingPitchClassIntervals,
       ascendingMaqamAjnas: convertedMaqam.ascendingMaqamAjnas
         ? Object.fromEntries(
-            Object.entries(convertedMaqam.ascendingMaqamAjnas).map(([noteName, jins]) => [noteName, jins ? englishify(jins.name) : null])
+            Object.entries(convertedMaqam.ascendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins ? standardizeText(jins.name) : null])
           )
         : undefined,
       descendingMaqamAjnas: convertedMaqam.descendingMaqamAjnas
         ? Object.fromEntries(
-            Object.entries(convertedMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [noteName, jins ? englishify(jins.name) : null])
+            Object.entries(convertedMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins ? standardizeText(jins.name) : null])
           )
         : undefined,
       transposition: maqamToExport.transposition,
       commentsEnglish: maqamData.getCommentsEnglish(),
       commentsArabic: maqamData.getCommentsArabic(),
       SourcePageReferences: maqamData.getSourcePageReferences(),
+      maqamFamilyClassification: maqamClassification,
     };
     result.maqam = mergedMaqam;
   }
 
   // Include modulations if requested
-  if (options.includeMaqamatModulations || options.includeAjnasModulations) {
+  if (options.includeMaqamToMaqamModulations || options.includeMaqamToJinsModulations) {
     const allAjnas = getAjnas();
     const allMaqamat = getMaqamat();
 
     // Calculate Maqamat modulations if requested
-    if (options.includeMaqamatModulations) {
+    if (options.includeMaqamToMaqamModulations) {
       const maqamatModulations = modulate(
         fullRangeTuningSystemPitchClasses,
         allAjnas,
@@ -1000,67 +1751,35 @@ export async function exportMaqam(
       ) as MaqamatModulations;
       const numberOfMaqamModulationHops = calculateNumberOfModulations(maqamatModulations);
 
-      // Helper function to process maqam modulations and populate reference
-      const processMaqamModulations = (maqamList: Maqam[]) => {
-        return maqamList.map((maqam) => {
-          const englishifiedName = englishify(maqam.name);
-
-          // Find the original maqam data for additional details
-          const maqamOverview = allMaqamat.find((m) => m.getId() === maqam.maqamId);
-          if (maqamOverview) {
-            const mergedMaqam: MergedMaqam = {
-              maqamId: maqam.maqamId,
-              name: maqam.name,
-              ascendingPitchClasses: maqam.ascendingPitchClasses.map((pc) => englishify(pc.noteName)),
-              descendingPitchClasses: maqam.descendingPitchClasses.map((pc) => englishify(pc.noteName)),
-              ascendingPitchClassIntervals: maqam.ascendingPitchClassIntervals,
-              descendingPitchClassIntervals: maqam.descendingPitchClassIntervals,
-              ascendingMaqamAjnas: maqam.ascendingMaqamAjnas
-                ? Object.fromEntries(
-                    Object.entries(convertMaqamAjnasToObjects(maqam).ascendingMaqamAjnas || {}).map(([noteName, jins]) => [
-                      noteName,
-                      jins ? englishify(jins.name) : null,
-                    ])
-                  )
-                : undefined,
-              descendingMaqamAjnas: maqam.descendingMaqamAjnas
-                ? Object.fromEntries(
-                    Object.entries(convertMaqamAjnasToObjects(maqam).descendingMaqamAjnas || {}).map(([noteName, jins]) => [
-                      noteName,
-                      jins ? englishify(jins.name) : null,
-                    ])
-                  )
-                : undefined,
-              transposition: maqam.transposition,
-              commentsEnglish: maqamOverview.getCommentsEnglish(),
-              commentsArabic: maqamOverview.getCommentsArabic(),
-              SourcePageReferences: maqamOverview.getSourcePageReferences(),
-            };
-            maqamReference[englishifiedName] = mergedMaqam;
-          }
-
-          return englishifiedName;
-        });
+      const maqamModulationWithKeys: MaqamToMaqamModulationsWithKeys = {
+        maqamToMaqamModulationsDegreesNoteNames: createModulationDegreesNoteNames(
+          maqamToExport.ascendingPitchClasses.map(pc => pc.noteName),
+          maqamToExport.descendingPitchClasses.map(pc => pc.noteName),
+          maqamatModulations.noteName2pBelowThird || ''
+        ),
+        ...(options.includeModulations8vb && {
+          maqamToMaqamModulationsLowerOctaveDegreesNoteNames: createModulationDegrees8vbNoteNames(
+            maqamToExport.ascendingPitchClasses.map(pc => pc.noteName),
+            maqamToExport.descendingPitchClasses.map(pc => pc.noteName),
+            maqamatModulations.noteName2pBelowThird || '',
+            fullRangeTuningSystemPitchClasses
+          )
+        }),
+        maqamToMaqamModulations: createMaqamToMaqamModulations(maqamatModulations),
+        ...(options.includeModulations8vb && {
+          maqamToMaqamModulationsLowerOctave: createMaqamToMaqamLowerOctaveModulations(
+            maqamatModulations, 
+            fullRangeTuningSystemPitchClasses
+          )
+        })
       };
 
-      const maqamModulationWithKeys: MaqamatModulationsWithKeys = {
-        modulationsOnOne: processMaqamModulations(maqamatModulations.modulationsOnOne),
-        modulationsOnThree: processMaqamModulations(maqamatModulations.modulationsOnThree),
-        modulationsOnThree2p: processMaqamModulations(maqamatModulations.modulationsOnThree2p),
-        modulationsOnFour: processMaqamModulations(maqamatModulations.modulationsOnFour),
-        modulationsOnFive: processMaqamModulations(maqamatModulations.modulationsOnFive),
-        modulationsOnSixAscending: processMaqamModulations(maqamatModulations.modulationsOnSixAscending),
-        modulationsOnSixDescending: processMaqamModulations(maqamatModulations.modulationsOnSixDescending),
-        modulationsOnSixNoThird: processMaqamModulations(maqamatModulations.modulationsOnSixNoThird),
-        noteName2p: maqamatModulations.noteName2p,
-      };
-
-      result.maqamatModulations = maqamModulationWithKeys;
+      result.maqamToMaqamModulations = maqamModulationWithKeys;
       result.numberOfMaqamModulationHops = numberOfMaqamModulationHops;
     }
 
     // Calculate Ajnas modulations if requested
-    if (options.includeAjnasModulations) {
+    if (options.includeMaqamToJinsModulations) {
       const ajnasModulations = modulate(
         fullRangeTuningSystemPitchClasses,
         allAjnas,
@@ -1071,44 +1790,30 @@ export async function exportMaqam(
       ) as AjnasModulations;
       const numberOfJinsModulationHops = calculateNumberOfModulations(ajnasModulations);
 
-      // Helper function to process jins modulations and populate reference
-      const processJinsModulations = (jinsList: Jins[]) => {
-        return jinsList.map((jins) => {
-          const englishifiedName = englishify(jins.name);
-
-          // Find the original jins data for additional details
-          const jinsOverview = allAjnas.find((j) => j.getId() === jins.jinsId);
-          if (jinsOverview) {
-            const mergedJins: MergedJins = {
-              jinsId: jins.jinsId,
-              name: jins.name,
-              jinsPitchClasses: jins.jinsPitchClasses.map((pc) => englishify(pc.noteName)),
-              jinsPitchClassIntervals: jins.jinsPitchClassIntervals,
-              transposition: jins.transposition,
-              commentsEnglish: jinsOverview.getCommentsEnglish(),
-              commentsArabic: jinsOverview.getCommentsArabic(),
-              SourcePageReferences: jinsOverview.getSourcePageReferences(),
-            };
-            jinsReference[englishifiedName] = mergedJins;
-          }
-
-          return englishifiedName;
-        });
+      const ajnasModulationsWithKeys: MaqamToJinsModulationsWithKeys = {
+        maqamToJinsModulationDegreesNoteNames: createJinsModulationDegreesNoteNames(
+          maqamToExport.ascendingPitchClasses.map(pc => pc.noteName),
+          maqamToExport.descendingPitchClasses.map(pc => pc.noteName),
+          ajnasModulations.noteName2pBelowThird || ''
+        ),
+        ...(options.includeModulations8vb && {
+          maqamToJinsModulationsLowerOctaveDegreesNoteNames: createJinsModulationDegrees8vbNoteNames(
+            maqamToExport.ascendingPitchClasses.map(pc => pc.noteName),
+            maqamToExport.descendingPitchClasses.map(pc => pc.noteName),
+            ajnasModulations.noteName2pBelowThird || '',
+            fullRangeTuningSystemPitchClasses
+          )
+        }),
+        maqamToJinsModulations: createMaqamToJinsModulations(ajnasModulations),
+        ...(options.includeModulations8vb && {
+          maqamToJinsModulationsLowerOctave: createMaqamToJinsLowerOctaveModulations(
+            ajnasModulations, 
+            fullRangeTuningSystemPitchClasses
+          )
+        })
       };
 
-      const ajnasModulationsWithKeys: AjnasModulationsWithKeys = {
-        modulationsOnOne: processJinsModulations(ajnasModulations.modulationsOnOne),
-        modulationsOnThree: processJinsModulations(ajnasModulations.modulationsOnThree),
-        modulationsOnThree2p: processJinsModulations(ajnasModulations.modulationsOnThree2p),
-        modulationsOnFour: processJinsModulations(ajnasModulations.modulationsOnFour),
-        modulationsOnFive: processJinsModulations(ajnasModulations.modulationsOnFive),
-        modulationsOnSixAscending: processJinsModulations(ajnasModulations.modulationsOnSixAscending),
-        modulationsOnSixDescending: processJinsModulations(ajnasModulations.modulationsOnSixDescending),
-        modulationsOnSixNoThird: processJinsModulations(ajnasModulations.modulationsOnSixNoThird),
-        noteName2p: ajnasModulations.noteName2p,
-      };
-
-      result.ajnasModulations = ajnasModulationsWithKeys;
+      result.maqamToJinsModulations = ajnasModulationsWithKeys;
       result.numberOfJinsModulationHops = numberOfJinsModulationHops;
     }
   }
@@ -1123,6 +1828,48 @@ export async function exportMaqam(
 
     const maqamTranspositions = Array.from(getMaqamTranspositions(fullRangeTuningSystemPitchClasses, allAjnas, maqamData, true, centsTolerance));
 
+    // Reuse classification calculated above, or calculate it now if not done yet
+    let sharedClassification: ExportMaqamFamilyClassification;
+    if (maqamClassification.firstJins && maqamClassification.firstJins.familyName !== "no_jins") {
+      sharedClassification = maqamClassification;
+    } else {
+      // Calculate classification ONCE from the tahlil - all transpositions inherit it
+      const tahlil = maqamTranspositions.find(m => !m.transposition);
+      
+      if (tahlil) {
+        try {
+          const result = classifyMaqamFamily(tahlil);
+          const normalizedFamilyName = standardizeText(result.familyName);
+          
+          // Add to family reference dictionary
+          if (!maqamFamilyReference[normalizedFamilyName]) {
+            maqamFamilyReference[normalizedFamilyName] = {
+              displayName: result.familyName
+            };
+          }
+          
+          sharedClassification = {
+            firstJins: {
+              familyName: normalizedFamilyName,
+            }
+          };
+        } catch (error) {
+          console.warn(`⚠️ Could not classify maqam ${tahlil.name}:`, error);
+          sharedClassification = {
+            firstJins: {
+              familyName: "no_jins",
+            }
+          };
+        }
+      } else {
+        sharedClassification = {
+          firstJins: {
+            familyName: "no_jins",
+          }
+        };
+      }
+    }
+
     for (let i = 0; i < maqamTranspositions.length; i++) {
       const maqamTransposition = maqamTranspositions[i];
 
@@ -1136,7 +1883,7 @@ export async function exportMaqam(
       }
 
       // Include modulations for each transposition if requested
-      if (options.includeMaqamatModulations) {
+      if (options.includeMaqamToMaqamModulations) {
         const maqamatModulations = modulate(
           fullRangeTuningSystemPitchClasses,
           allAjnas,
@@ -1150,7 +1897,7 @@ export async function exportMaqam(
         (maqamTransposition as any).numberOfMaqamModulationHops = numberOfMaqamModulationHops;
       }
 
-      if (options.includeAjnasModulations) {
+      if (options.includeMaqamToJinsModulations) {
         const ajnasModulations = modulate(
           fullRangeTuningSystemPitchClasses,
           allAjnas,
@@ -1168,30 +1915,33 @@ export async function exportMaqam(
       const maqamOverview = allMaqamat.find((m) => m.getId() === maqamTransposition.maqamId);
       if (maqamOverview) {
         const convertedMaqam = convertMaqamAjnasToObjects(maqamTransposition);
+        
+        // Use the shared classification calculated once from the tahlil
         const mergedMaqam: MergedMaqam = {
           maqamId: maqamTransposition.maqamId,
           name: maqamTransposition.name,
-          ascendingPitchClasses: maqamTransposition.ascendingPitchClasses.map((pc) => englishify(pc.noteName)),
-          descendingPitchClasses: maqamTransposition.descendingPitchClasses.map((pc) => englishify(pc.noteName)),
+          ascendingPitchClasses: maqamTransposition.ascendingPitchClasses.map((pc) => standardizeText(pc.noteName)),
+          descendingPitchClasses: maqamTransposition.descendingPitchClasses.map((pc) => standardizeText(pc.noteName)),
           ascendingPitchClassIntervals: maqamTransposition.ascendingPitchClassIntervals,
           descendingPitchClassIntervals: maqamTransposition.descendingPitchClassIntervals,
           ascendingMaqamAjnas: convertedMaqam.ascendingMaqamAjnas
             ? Object.fromEntries(
-                Object.entries(convertedMaqam.ascendingMaqamAjnas).map(([noteName, jins]) => [noteName, jins ? englishify(jins.name) : null])
+                Object.entries(convertedMaqam.ascendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins ? standardizeText(jins.name) : null])
               )
             : undefined,
           descendingMaqamAjnas: convertedMaqam.descendingMaqamAjnas
             ? Object.fromEntries(
-                Object.entries(convertedMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [noteName, jins ? englishify(jins.name) : null])
+                Object.entries(convertedMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins ? standardizeText(jins.name) : null])
               )
             : undefined,
           transposition: maqamTransposition.transposition,
           commentsEnglish: maqamOverview.getCommentsEnglish(),
           commentsArabic: maqamOverview.getCommentsArabic(),
           SourcePageReferences: maqamOverview.getSourcePageReferences(),
+          maqamFamilyClassification: sharedClassification,
         };
 
-        const englishifiedName = englishify(maqamTransposition.name);
+        const englishifiedName = standardizeText(maqamTransposition.name);
         maqamReference[englishifiedName] = mergedMaqam;
         transpositionNames.push(englishifiedName);
       }
@@ -1206,6 +1956,7 @@ export async function exportMaqam(
 
   updateProgress(95, "Compiling maqam export data...");
   result.pitchClassReference = pitchClassReference;
+  result.maqamFamilyReference = maqamFamilyReference;
   result.allAjnasData = jinsReference;
   result.allMaqamatData = maqamReference;
 

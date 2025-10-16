@@ -23,14 +23,14 @@ export default function calculateNumberOfModulations(modulations: MaqamatModulat
   // Collect all modulation arrays from different scale degrees
   // Each array represents modulations possible on a specific scale degree
   const arrays = [
-    modulations.modulationsOnOne ?? [], // Modulations on the first degree (tonic)
-    modulations.modulationsOnThree ?? [], // Modulations on the third degree
-    modulations.modulationsOnThree2p ?? [], // Modulations on the third degree (2-part variant)
-    modulations.modulationsOnFour ?? [], // Modulations on the fourth degree
-    modulations.modulationsOnFive ?? [], // Modulations on the fifth degree
-    modulations.modulationsOnSixNoThird ?? [], // Modulations on the sixth degree without third
-    modulations.modulationsOnSixAscending ?? [], // Modulations on the sixth degree (ascending)
-    modulations.modulationsOnSixDescending ?? [], // Modulations on the sixth degree (descending)
+    modulations.modulationsOnFirstDegree ?? [], // Modulations on the first degree (tonic)
+    modulations.modulationsOnThirdDegree ?? [], // Modulations on the third degree
+    modulations.modulationsOnAltThirdDegree ?? [], // Modulations on the third degree (2-part variant)
+    modulations.modulationsOnFourthDegree ?? [], // Modulations on the fourth degree
+    modulations.modulationsOnFifthDegree ?? [], // Modulations on the fifth degree
+    modulations.modulationsOnSixthDegreeIfNoThird ?? [], // Modulations on the sixth degree without third
+    modulations.modulationsOnSixthDegreeAsc ?? [], // Modulations on the sixth degree (ascending)
+    modulations.modulationsOnSixthDegreeDesc ?? [], // Modulations on the sixth degree (descending)
   ];
 
   // If counting all modulations, simply sum the lengths of all arrays

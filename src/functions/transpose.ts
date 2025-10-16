@@ -280,10 +280,11 @@ export function getMaqamTranspositions(
             const firstJinsNote = jins.getNoteNames()[0];
             const firstCell = extendedAscendingPitchClasses[i];
 
+            const isTransposed = firstJinsNote !== firstCell.noteName;
             const jinsTransposition = {
               jinsId: jins.getId(),
-              name: `${jins.getName()} al-${firstCell.noteName}`,
-              transposition: firstJinsNote !== firstCell.noteName,
+              name: isTransposed ? `${jins.getName()} al-${firstCell.noteName}` : jins.getName(),
+              transposition: isTransposed,
               jinsPitchClasses: extendedAscendingPitchClasses.slice(i, i + lengthOfInterval + 1),
               jinsPitchClassIntervals: extendedAscendingPitchClassIntervals.slice(i, i + lengthOfInterval),
             };
@@ -309,10 +310,11 @@ export function getMaqamTranspositions(
             const firstJinsNote = jins.getNoteNames()[0];
             const firstCell = extendedDescendingPitchClasses[i];
 
+            const isTransposed = firstJinsNote !== firstCell.noteName;
             const jinsTransposition = {
               jinsId: jins.getId(),
-              name: `${jins.getName()} al-${firstCell.noteName}`,
-              transposition: firstJinsNote !== firstCell.noteName,
+              name: isTransposed ? `${jins.getName()} al-${firstCell.noteName}` : jins.getName(),
+              transposition: isTransposed,
               jinsPitchClasses: extendedDescendingPitchClasses.slice(i, i + lengthOfInterval + 1),
               jinsPitchClassIntervals: extendedDescendingPitchClassIntervals.slice(i, i + lengthOfInterval),
             };
@@ -329,10 +331,14 @@ export function getMaqamTranspositions(
       }
     }
 
+    const firstMaqamNote = ascendingNoteNames[0];
+    const firstTransposedNote = sequencePair.ascendingSequence[0].noteName;
+    const isTransposed = firstMaqamNote !== firstTransposedNote;
+
     return {
       maqamId: maqamData.getId(),
-      name: `${maqamData.getName()} al-${sequencePair.ascendingSequence[0].noteName}`,
-      transposition: true,
+      name: isTransposed ? `${maqamData.getName()} al-${firstTransposedNote}` : maqamData.getName(),
+      transposition: isTransposed,
       ascendingPitchClasses,
       ascendingPitchClassIntervals,
       ascendingMaqamAjnas,
@@ -348,7 +354,7 @@ export function getMaqamTranspositions(
   // if (maqamData.getId() === "12")
 
   if (withTahlil && tahlilTransposition) {
-    return [{ ...tahlilTransposition, transposition: false }, ...maqamTranspositionsWithoutTahlil];
+    return [tahlilTransposition, ...maqamTranspositionsWithoutTahlil];
   } else return maqamTranspositionsWithoutTahlil;
 }
 
@@ -411,7 +417,7 @@ export function getJinsTranspositions(allPitchClasses: PitchClass[], jinsData: J
   const tahlilTransposition = jinsTranspositions.find((transposition) => transposition.jinsPitchClasses[0].noteName === jinsNoteNames[0]);
   const jinsTranspositionsWithoutTahlil = jinsTranspositions.filter((transposition) => transposition !== tahlilTransposition);
 
-  if (withTahlil && tahlilTransposition) return [{ ...tahlilTransposition, transposition: false }, ...jinsTranspositionsWithoutTahlil];
+  if (withTahlil && tahlilTransposition) return [{ ...tahlilTransposition, name: jinsData.getName(), transposition: false }, ...jinsTranspositionsWithoutTahlil];
   else return jinsTranspositionsWithoutTahlil;
 }
 

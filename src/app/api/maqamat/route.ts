@@ -1,8 +1,14 @@
 import { NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
+import { handleCorsPreflightRequest, addCorsHeaders } from "../cors";
 
 const dataFilePath = path.join(process.cwd(), "data", "maqamat.json");
+
+// Handle CORS preflight requests
+export async function OPTIONS() {
+  return handleCorsPreflightRequest();
+}
 
 /**
  * @swagger
@@ -25,7 +31,7 @@ const dataFilePath = path.join(process.cwd(), "data", "maqamat.json");
  *                   id:
  *                     type: string
  *                     description: Unique identifier for the maqam
- *                     example: "maqam_bayati"
+ *                     example: "1"
  *                   name:
  *                     type: string
  *                     description: Name of the maqam
@@ -70,10 +76,12 @@ export async function GET() {
   try {
     const fileContents = await fs.readFile(dataFilePath, "utf-8");
     const maqamat = JSON.parse(fileContents);
-    return NextResponse.json(maqamat);
+    const response = NextResponse.json(maqamat);
+    return addCorsHeaders(response);
   } catch (error) {
     console.error("Error loading Maqamat:", error);
-    return new NextResponse("Failed to load Maqamat.", { status: 500 });
+    const errorResponse = new NextResponse("Failed to load Maqamat.", { status: 500 });
+    return addCorsHeaders(errorResponse);
   }
 }
 

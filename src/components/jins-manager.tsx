@@ -138,7 +138,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
             <p>{t('jins.noAjnasAvailable')}</p>
           ) : (
             filteredAjnas.map((jinsData, index) => {
-              const selectable = jinsData.isJinsSelectable(allPitchClasses.map((pitchClass) => pitchClass.noteName));
+              const selectable = jinsData.isJinsPossible(allPitchClasses.map((pitchClass) => pitchClass.noteName));
               const numberOfTranspositions = allJinsTranspositionsMap.get(jinsData.getId())?.filter((transposition: any) => transposition.jinsPitchClasses[0]?.octave === 1).length || 0;
               return (
                 <div
@@ -178,13 +178,13 @@ export default function JinsManager({ admin }: { admin: boolean }) {
       </div>
 
       {admin && !selectedJinsData && (
-        <button onClick={() => setSelectedJinsData(new JinsData(newJinsId, "", [], "", "", []))} className="jins-manager__create-new-jins-button">
+        <button onClick={() => setSelectedJinsData(new JinsData(newJinsId, "", [], "", "", []))} className="jins-manager__create-button">
           {t('jins.createNewJins')}
         </button>
       )}
 
       {admin && selectedJinsData && (
-        <div className="jins-manager__jins-form">
+        <div className="jins-manager__admin-form">
           <div className="jins-manager__group">
             <input
               type="text"
@@ -202,7 +202,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
                 )
               }
               placeholder={t('jins.enterNewJinsName')}
-              className="jins-manager__jins-input"
+              className="jins-manager__name-input"
             />
             <button onClick={handleSaveJins} className="jins-manager__save-button">
               {t('jins.save')}
@@ -229,11 +229,26 @@ export default function JinsManager({ admin }: { admin: boolean }) {
                   onChange={(e) => updateSourceRefs(selectedJinsData.getSourcePageReferences(), idx, { sourceId: e.target.value })}
                 >
                   <option value="">{t('jins.selectSource')}</option>
-                  {sources.map((s) => (
-                    <option key={s.getId()} value={s.getId()}>
-                      {s.getTitleEnglish()}
-                    </option>
-                  ))}
+                  {sources
+                    .slice()
+                    .sort((a, b) => {
+                      // Sort alphabetically by last name, or by title if no contributors
+                      const aContribs = a.getContributors();
+                      const bContribs = b.getContributors();
+                      const aKey = aContribs && aContribs.length > 0 ? aContribs[0].lastNameEnglish.toLowerCase() : a.getTitleEnglish().toLowerCase();
+                      const bKey = bContribs && bContribs.length > 0 ? bContribs[0].lastNameEnglish.toLowerCase() : b.getTitleEnglish().toLowerCase();
+                      return aKey.localeCompare(bKey);
+                    })
+                    .map((s) => {
+                      const contribs = s.getContributors();
+                      const firstContributor = contribs && contribs.length > 0 ? contribs[0] : null;
+                      const lastName = firstContributor ? firstContributor.lastNameEnglish : "n.a.";
+                      return (
+                        <option key={s.getId()} value={s.getId()}>
+                          {`${lastName} (${s.getPublicationDateEnglish()}) ${s.getTitleEnglish()} (${s.getSourceType()})`}
+                        </option>
+                      );
+                    })}
                 </select>
                 <input
                   className="jins-manager__source-input"

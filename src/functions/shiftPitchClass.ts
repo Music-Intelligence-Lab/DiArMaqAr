@@ -1,5 +1,4 @@
 import PitchClass from "@/models/PitchClass";
-import { shiftPitchClassBaseValue } from "@/functions/convertPitchClass";
 
 /**
  * Empty pitch class object used as a fallback when shifting operations fail.
@@ -60,69 +59,10 @@ export default function shiftPitchClass(allPitchClasses: PitchClass[], pitchClas
 
   // Check if the new index is within bounds
   if (newIndex < 0 || newIndex >= allPitchClasses.length) {
-    // Fall back to calculation-based shifting if out of bounds
-    return shiftPitchClassWithoutAllPitchClasses(pitchClass, octaveShift);
+    // Return empty pitch class if out of bounds - octave shift not possible within system
+    return emptyPitchClass;
   }
 
   // Return the pitch class at the calculated index with updated octave
   return { ...allPitchClasses[newIndex], octave: pitchClass.octave + octaveShift };
-}
-
-/**
- * Shifts a given PitchClass by octaves using mathematical calculation.
- * 
- * This function shifts pitch classes by recalculating their tuning data
- * rather than using array lookup. It's used as a fallback when the
- * array-based method isn't available or when the target is out of bounds.
- * 
- * All pitch relationships are maintained:
- * - Frequency multiplied/divided by 2^octaves
- * - String length inversely related to frequency
- * - Cents shifted by 1200 * octaves
- * - MIDI note numbers shifted by 12 * octaves
- * 
- * @param pitchClass - The original PitchClass object to shift
- * @param octaves - Number of octaves to shift (positive shifts upward, negative shifts downward)
- * @returns A new PitchClass with updated tuning data
- * 
- * @example
- * // Calculate a pitch class two octaves higher
- * const higher = shiftPitchClassWithoutAllPitchClasses(originalPitch, 2);
- * // Frequency doubled twice, cents increased by 2400
- */
-function shiftPitchClassWithoutAllPitchClasses(pitchClass: PitchClass, octaves: number): PitchClass {
-  // Calculate the octave multiplication factor
-  // factor = 2^octaves (e.g., 1 octave up = 2x frequency)
-  const factor = Math.pow(2, octaves);
-
-  // Shift the original value using the appropriate method for its type
-  const newOriginalValue = shiftPitchClassBaseValue(
-    pitchClass.originalValue,
-    pitchClass.originalValueType as "fraction" | "cents" | "decimalRatio" | "stringLength",
-    (octaves + pitchClass.octave - 1) as 0 | 1 | 2 | 3 | 4
-  );
-
-  // Shift the fraction representation
-  const newFractionValue = shiftPitchClassBaseValue(
-    pitchClass.fraction, 
-    "fraction", 
-    (octaves + pitchClass.octave - 1) as 0 | 1 | 2 | 3 | 4
-  );
-
-  return {
-    ...pitchClass,
-    noteName: "jawāb " + pitchClass.noteName, 
-    originalValue: newOriginalValue,
-    fraction: newFractionValue,
-    octave: pitchClass.octave + octaves,
-    
-    // Update frequency-related values
-    frequency: (parseFloat(pitchClass.frequency) * factor).toString(),
-    stringLength: (parseFloat(pitchClass.stringLength) / factor).toString(), // Inverse relationship
-    
-    // Update ratio and interval values
-    decimalRatio: (parseFloat(pitchClass.decimalRatio) * factor).toString(),
-    cents: (parseFloat(pitchClass.cents) + octaves * 1200).toString(), // 1200 cents per octave
-    midiNoteNumber: pitchClass.midiNoteNumber + octaves * 12, // 12 semitones per octave
-  };
 }

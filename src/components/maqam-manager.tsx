@@ -11,6 +11,7 @@ import MaqamData from "@/models/Maqam";
 import { updateMaqamat } from "@/functions/update";
 import { SourcePageReference } from "@/models/bibliography/Source";
 import useTranspositionsContext from "@/contexts/transpositions-context";
+import { getBaseJinsName, getFirstJinsNameForMaqamData } from "@/functions/classifyMaqamFamily";
 
 export default function MaqamManager({ admin }: { admin: boolean }) {
   const {
@@ -36,16 +37,70 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
   const [commentsEnglishLocal, setCommentsEnglishLocal] = useState<string>(selectedMaqamData?.getCommentsEnglish() ?? "");
   const [commentsArabicLocal, setCommentsArabicLocal] = useState<string>(selectedMaqamData?.getCommentsArabic() ?? "");
 
-  // Dynamic note names for tabs ordered by allPitchClasses.noteName
+  // Toggle state for filtering mode: 'note' or 'jins' - default to 'jins'
+  const [filterMode, setFilterMode] = useState<'note' | 'jins'>('jins');
+
+  // Use cached map from context to avoid recomputation
+  const { allMaqamTranspositionsMap } = useTranspositionsContext();
+
+  // Dynamic tabs based on filter mode
   const tabs = useMemo(() => {
-    const uniqueNoteNames = new Set<string>();
-    maqamat.forEach((maqam) => {
-      const firstNote = maqam.getAscendingNoteNames()[0]?.toLowerCase();
-      if (firstNote) uniqueNoteNames.add(firstNote);
-    });
-    const orderedByPitchClasses = allPitchClasses.map((pc) => pc.noteName.toLowerCase()).filter((name) => uniqueNoteNames.has(name));
-    return ["all", ...orderedByPitchClasses];
-  }, [maqamat, allPitchClasses, language]);
+    if (filterMode === 'note') {
+      const uniqueNoteNames = new Set<string>();
+      maqamat.forEach((maqam) => {
+        const firstNote = maqam.getAscendingNoteNames()[0]?.toLowerCase();
+        if (firstNote) uniqueNoteNames.add(firstNote);
+      });
+      const orderedByPitchClasses = allPitchClasses.map((pc) => pc.noteName.toLowerCase()).filter((name) => uniqueNoteNames.has(name));
+      return ["all", ...orderedByPitchClasses];
+    } else {
+      // Jins mode - sort by pitch class order like notes
+      const jinsToStartingNote = new Map<string, string>();
+      const uniqueBaseJinsNames = new Set<string>();
+
+      maqamat.forEach((maqam) => {
+        const firstJinsName = getFirstJinsNameForMaqamData(maqam, allMaqamTranspositionsMap);
+        if (firstJinsName) {
+          const baseJinsName = getBaseJinsName(firstJinsName).toLowerCase();
+          uniqueBaseJinsNames.add(baseJinsName);
+
+          // Map this base jins name to the first note of the maqam for sorting
+          const firstNote = maqam.getAscendingNoteNames()[0];
+          if (firstNote && !jinsToStartingNote.has(baseJinsName)) {
+            jinsToStartingNote.set(baseJinsName, firstNote.toLowerCase());
+          }
+        } else {
+          uniqueBaseJinsNames.add('no jins'); // For maqamat with no jins on first degree
+        }
+      });
+
+      // Sort jins names by their corresponding pitch class order
+      const sortedJinsNames = Array.from(uniqueBaseJinsNames)
+        .filter(name => name !== 'no jins') // Handle 'no jins' separately
+        .sort((a, b) => {
+          const noteA = jinsToStartingNote.get(a);
+          const noteB = jinsToStartingNote.get(b);
+
+          // Find indices in allPitchClasses
+          const indexA = noteA ? allPitchClasses.findIndex(pc => pc.noteName.toLowerCase() === noteA) : -1;
+          const indexB = noteB ? allPitchClasses.findIndex(pc => pc.noteName.toLowerCase() === noteB) : -1;
+
+          // If both found, sort by pitch class order
+          if (indexA !== -1 && indexB !== -1) {
+            return indexA - indexB;
+          }
+          // Fallback to alphabetical if pitch class not found
+          return a.localeCompare(b);
+        });
+
+      // Add 'no jins' at the end if it exists
+      const result = ["all", ...sortedJinsNames];
+      if (uniqueBaseJinsNames.has('no jins')) {
+        result.push('no jins');
+      }
+      return result;
+    }
+  }, [maqamat, allPitchClasses, filterMode, language, allMaqamTranspositionsMap]);
 
   // Sync local state when a different maqam is selected
   useEffect(() => {
@@ -54,9 +109,6 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
       setCommentsArabicLocal(selectedMaqamData.getCommentsArabic());
     }
   }, [selectedMaqamData]);
-
-  // Use cached map from context to avoid recomputation
-  const { allMaqamTranspositionsMap } = useTranspositionsContext();
 
   const numberOfPitchClasses = selectedTuningSystem ? selectedTuningSystem.getOriginalPitchClassValues().length : 0;
 
@@ -144,27 +196,85 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
 
   const filteredMaqamat = useMemo(() => {
     if (maqamatFilter === "all") return sortedMaqamat;
-    return sortedMaqamat.filter((maqam) => maqam.getAscendingNoteNames()[0]?.toLowerCase() === maqamatFilter.toLowerCase());
-  }, [sortedMaqamat, maqamatFilter, language]);
+
+    if (filterMode === 'note') {
+      return sortedMaqamat.filter((maqam) => maqam.getAscendingNoteNames()[0]?.toLowerCase() === maqamatFilter.toLowerCase());
+    } else {
+      // Jins filtering
+      if (maqamatFilter === 'no jins') {
+        return sortedMaqamat.filter((maqam) => !getFirstJinsNameForMaqamData(maqam, allMaqamTranspositionsMap));
+      }
+      return sortedMaqamat.filter((maqam) => {
+        const firstJinsName = getFirstJinsNameForMaqamData(maqam, allMaqamTranspositionsMap);
+        if (!firstJinsName) return false;
+        const baseJinsName = getBaseJinsName(firstJinsName);
+        return baseJinsName.toLowerCase() === maqamatFilter.toLowerCase();
+      });
+    }
+  }, [sortedMaqamat, maqamatFilter, filterMode, language, allMaqamTranspositionsMap]);
 
   return (
     <div className="maqam-manager" key={language}>
-      {/* Tabs for filtering maqamat by starting note name */}
-      <div className="tabs">
+      {/* Tabs for filtering maqamat with toggle button */}
+      <div className="maqam-manager__filter-controls">
+        <div className="maqam-manager__tabs">
         {tabs.map((tab) => {
           let count = 0;
           if (tab === "all") {
             count = sortedMaqamat.length;
-          } else {
+          } else if (filterMode === 'note') {
             count = sortedMaqamat.filter((maqam) => maqam.getAscendingNoteNames()[0]?.toLowerCase() === tab.toLowerCase()).length;
+          } else {
+            // Jins mode
+            if (tab === 'no jins') {
+              count = sortedMaqamat.filter((maqam) => !getFirstJinsNameForMaqamData(maqam, allMaqamTranspositionsMap)).length;
+            } else {
+              count = sortedMaqamat.filter((maqam) => {
+                const firstJinsName = getFirstJinsNameForMaqamData(maqam, allMaqamTranspositionsMap);
+                if (!firstJinsName) return false;
+                const baseJinsName = getBaseJinsName(firstJinsName);
+                return baseJinsName.toLowerCase() === tab.toLowerCase();
+              }).length;
+            }
           }
-          const displayName = tab === "all" ? t('maqam.all') : getDisplayName(tab, 'note');
+
+          let displayName: string;
+          if (tab === "all") {
+            displayName = t('maqam.all');
+          } else if (filterMode === 'note') {
+            displayName = getDisplayName(tab, 'note');
+          } else {
+            // Jins mode
+            if (tab === 'no jins') {
+              displayName = t('maqam.noJins') || 'No Jins';
+            } else {
+              // Remove "Jins " prefix from display name to save space
+              const fullJinsName = getDisplayName(tab, 'jins');
+              displayName = fullJinsName.replace(/^(Jins\s+|جنس\s+)/i, '');
+            }
+          }
+
           return (
             <button key={tab} className={"tabs__tab" + (maqamatFilter === tab ? " tabs__tab--active" : "")} onClick={() => setMaqamatFilter(tab)}>
               {displayName} <span className="tabs__count">({count})</span>
             </button>
           );
         })}
+        </div>
+
+        {/* Single toggle button positioned far right */}
+        <button
+          className="maqam-manager__filter-mode-toggle"
+          onClick={() => {
+            setFilterMode(filterMode === 'note' ? 'jins' : 'note');
+            setMaqamatFilter('all');
+          }}
+        >
+          {filterMode === 'note'
+            ? (t('maqam.groupByJins') || 'Group by Jins')
+            : (t('maqam.groupByStartingNote') || 'Group by Starting Note')
+          }
+        </button>
       </div>
 
       <div className="carousel__controls">
@@ -181,7 +291,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
           className="carousel__list"
         >
           {filteredMaqamat.map((maqamData, idx) => {
-            const selectable = maqamData.isMaqamSelectable(allPitchClasses.map((pitchClass) => pitchClass.noteName));
+            const selectable = maqamData.isMaqamPossible(allPitchClasses.map((pitchClass) => pitchClass.noteName));
             const numberOfTranspositions = allMaqamTranspositionsMap.get(maqamData.getId())?.filter((transposition: any) => transposition.ascendingPitchClasses[0]?.octave === 1).length || 0;
             return (
               <div
@@ -220,13 +330,13 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
       </div>
 
       {admin && !selectedMaqamData && (
-        <button onClick={() => setSelectedMaqamData(new MaqamData(newMaqamId, "", [], [], [], "", "", []))} className="maqam-manager__create-new-maqam-button">
+        <button onClick={() => setSelectedMaqamData(new MaqamData(newMaqamId, "", [], [], [], "", "", []))} className="maqam-manager__create-button">
           {t('maqam.createNewMaqam')}
         </button>
       )}
 
       {admin && selectedMaqamData && (
-        <div className="maqam-manager__maqam-form">
+        <div className="maqam-manager__admin-form">
           <div className="maqam-manager__group">
             <input
               type="text"
@@ -246,7 +356,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
                 )
               }
               placeholder={t('maqam.enterMaqamName')}
-              className="maqam-manager__maqam-input"
+              className="maqam-manager__name-input"
             />
             <button
               onClick={() => {
@@ -294,12 +404,24 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
                 >
                   <option value="">{t('maqam.selectSource')}</option>
                   {[...sources]
-                    .sort((a, b) => a.getTitleEnglish().localeCompare(b.getTitleEnglish()))
-                    .map((s) => (
-                      <option key={s.getId()} value={s.getId()}>
-                        {s.getTitleEnglish()}
-                      </option>
-                    ))}
+                    .sort((a, b) => {
+                      // Sort alphabetically by last name, or by title if no contributors
+                      const aContribs = a.getContributors();
+                      const bContribs = b.getContributors();
+                      const aKey = aContribs && aContribs.length > 0 ? aContribs[0].lastNameEnglish.toLowerCase() : a.getTitleEnglish().toLowerCase();
+                      const bKey = bContribs && bContribs.length > 0 ? bContribs[0].lastNameEnglish.toLowerCase() : b.getTitleEnglish().toLowerCase();
+                      return aKey.localeCompare(bKey);
+                    })
+                    .map((s) => {
+                      const contribs = s.getContributors();
+                      const firstContributor = contribs && contribs.length > 0 ? contribs[0] : null;
+                      const lastName = firstContributor ? firstContributor.lastNameEnglish : "n.a.";
+                      return (
+                        <option key={s.getId()} value={s.getId()}>
+                          {`${lastName} (${s.getPublicationDateEnglish()}) ${s.getTitleEnglish()} (${s.getSourceType()})`}
+                        </option>
+                      );
+                    })}
                 </select>
                 <input
                   className="maqam-manager__source-input"

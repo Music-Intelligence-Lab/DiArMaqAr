@@ -1,4 +1,4 @@
-# 🎼 Arabic Maqam Network - Complete Python Package
+# 🎼 Digital Arabic Maqām Archive - Complete Python Package
 
 ## 🏆 PROJECT STATUS: CONVERSION COMPLETE!
 

@@ -3,6 +3,8 @@ import PitchClass, { PitchClassInterval } from "./PitchClass";
 import { AjnasModulations, Jins } from "./Jins";
 import NoteName from "./NoteName";
 import { SourcePageReference } from "./bibliography/Source";
+import { standardizeText } from "@/functions/export";
+import shiftPitchClass from "@/functions/shiftPitchClass";
 
 /**
  * Interface for serializing MaqamData to JSON format.
@@ -10,6 +12,7 @@ import { SourcePageReference } from "./bibliography/Source";
  */
 export interface MaqamDataInterface {
   id: string;
+  idName: string;
   name: string;
   ascendingNoteNames: NoteName[];
   descendingNoteNames: NoteName[];
@@ -51,6 +54,7 @@ export default class MaqamData {
   /** Unique identifier for this maqam */
   private id: string;
   
+  private idName: string;
   /** Name of the maqam (e.g., "Maqam Farahfazza", "Maqam Rast") */
   private name: string;
   
@@ -110,6 +114,7 @@ export default class MaqamData {
     sourcePageReferences: SourcePageReference[]
   ) {
     this.id = id;
+    this.idName = standardizeText(name);
     this.name = name;
     this.ascendingNoteNames = ascendingNoteNames;
     this.descendingNoteNames = descendingNoteNames;
@@ -126,6 +131,10 @@ export default class MaqamData {
    */
   getId(): string {
     return this.id;
+  }
+
+  getIdName(): string {
+    return this.idName;
   }
 
   /**
@@ -242,7 +251,7 @@ export default class MaqamData {
    * @param allNoteNames - All note names available in the tuning system
    * @returns True if all required note names are available in both sequences, false otherwise
    */
-  isMaqamSelectable(allNoteNames: NoteName[]): boolean {
+  isMaqamPossible(allNoteNames: NoteName[]): boolean {
     return (
       this.ascendingNoteNames.every((noteName) => allNoteNames.includes(noteName)) &&
       this.descendingNoteNames.every((noteName) => allNoteNames.includes(noteName))
@@ -335,6 +344,7 @@ export default class MaqamData {
   convertToObject(): MaqamDataInterface {
     return {
       id: this.id,
+      idName: this.idName,
       name: this.name,
       ascendingNoteNames: this.ascendingNoteNames,
       descendingNoteNames: this.descendingNoteNames,
@@ -507,29 +517,108 @@ export interface Maqam {
  */
 export interface MaqamatModulations {
   /** Modulations that occur on the first scale degree */
-  modulationsOnOne: Maqam[];
+  modulationsOnFirstDegree: Maqam[];
   
   /** Modulations that occur on the third scale degree */
-  modulationsOnThree: Maqam[];
+  modulationsOnThirdDegree: Maqam[];
   
   /** Modulations that occur on the third scale degree (second pattern) */
-  modulationsOnThree2p: Maqam[];
+  modulationsOnAltThirdDegree: Maqam[];
   
   /** Modulations that occur on the fourth scale degree */
-  modulationsOnFour: Maqam[];
+  modulationsOnFourthDegree: Maqam[];
   
   /** Modulations that occur on the fifth scale degree */
-  modulationsOnFive: Maqam[];
+  modulationsOnFifthDegree: Maqam[];
   
   /** Ascending modulations that occur on the sixth scale degree */
-  modulationsOnSixAscending: Maqam[];
+  modulationsOnSixthDegreeAsc: Maqam[];
   
   /** Descending modulations that occur on the sixth scale degree */
-  modulationsOnSixDescending: Maqam[];
+  modulationsOnSixthDegreeDesc: Maqam[];
   
   /** Modulations on the sixth scale degree without using the third */
-  modulationsOnSixNoThird: Maqam[];
+  modulationsOnSixthDegreeIfNoThird: Maqam[];
   
   /** The note name of the second degree (plus variations) */
-  noteName2p: string;
+  noteName2pBelowThird: string;
+}
+
+/**
+ * Shifts a maqam to a different octave while maintaining intervallic relationships.
+ * 
+ * @param allPitchClasses - All available pitch classes in the tuning system
+ * @param maqam - The maqam to shift
+ * @param octaveShift - Number of octaves to shift (positive = up, negative = down)
+ * @returns New Maqam instance shifted by the specified number of octaves
+ */
+export function shiftMaqamByOctaves(allPitchClasses: PitchClass[], maqam: Maqam, octaveShift: number): Maqam | null {
+  // Defensive check for undefined maqam or pitch class arrays
+  if (!maqam || !maqam.ascendingPitchClasses || !maqam.descendingPitchClasses) {
+    console.warn('⚠️ shiftMaqamByOctaves: maqam or pitch class arrays are undefined', {
+      maqamExists: !!maqam,
+      maqamId: maqam?.maqamId,
+      maqamName: maqam?.name,
+      ascendingPitchClassesExists: !!maqam?.ascendingPitchClasses,
+      descendingPitchClassesExists: !!maqam?.descendingPitchClasses
+    });
+    return null;
+  }
+  
+  const shiftedAscendingPitchClasses = maqam.ascendingPitchClasses.map((pc) => shiftPitchClass(allPitchClasses, pc, octaveShift));
+  const shiftedDescendingPitchClasses = maqam.descendingPitchClasses.map((pc) => shiftPitchClass(allPitchClasses, pc, octaveShift));
+
+  // Check if any pitch class shift failed (indicated by empty noteName)
+  const ascendingValid = shiftedAscendingPitchClasses.every(pc => pc.noteName !== "");
+  const descendingValid = shiftedDescendingPitchClasses.every(pc => pc.noteName !== "");
+  
+  if (!ascendingValid || !descendingValid) {
+    // Return null if octave shift would put any note out of bounds
+    return null;
+  }
+
+  const shiftedAscendingIntervals = getPitchClassIntervals(shiftedAscendingPitchClasses);
+  const shiftedDescendingIntervals = getPitchClassIntervals(shiftedDescendingPitchClasses);
+
+  // Extract the base maqam name (remove any existing "al-" suffix and what follows)
+  let baseMaqamName = maqam.name;
+  const alIndex = baseMaqamName.indexOf(' al-');
+  if (alIndex !== -1) {
+    baseMaqamName = baseMaqamName.substring(0, alIndex);
+  }
+  
+  // Create new name with the shifted tonic
+  const newTonicName = shiftedAscendingPitchClasses[0].noteName;
+  const newName = `${baseMaqamName} al-${newTonicName}`;
+  
+  return {
+    maqamId: maqam.maqamId,
+    name: newName,
+    transposition: maqam.transposition,
+    ascendingPitchClasses: shiftedAscendingPitchClasses,
+    ascendingPitchClassIntervals: shiftedAscendingIntervals,
+    descendingPitchClasses: shiftedDescendingPitchClasses,
+    descendingPitchClassIntervals: shiftedDescendingIntervals,
+    ascendingMaqamAjnas: maqam.ascendingMaqamAjnas,
+    descendingMaqamAjnas: maqam.descendingMaqamAjnas,
+    modulations: maqam.modulations,
+    numberOfHops: maqam.numberOfHops,
+  };
+}
+
+/**
+ * Compares two maqam instances for equality based on ID, transposition, and sequences.
+ * 
+ * @param maqamA - First maqam to compare
+ * @param maqamB - Second maqam to compare
+ * @returns True if the maqamat are considered equal, false otherwise
+ */
+export function maqamatAreEqual(maqamA: Maqam, maqamB: Maqam): boolean {
+  if (maqamA.maqamId !== maqamB.maqamId) return false;
+  else if (maqamA.transposition !== maqamB.transposition) return false;
+  else if (maqamA.ascendingPitchClasses.length !== maqamB.ascendingPitchClasses.length) return false;
+  else if (maqamA.descendingPitchClasses.length !== maqamB.descendingPitchClasses.length) return false;
+  else if (maqamA.ascendingPitchClasses[0].noteName !== maqamB.ascendingPitchClasses[0].noteName) return false;
+  else if (maqamA.descendingPitchClasses[0].noteName !== maqamB.descendingPitchClasses[0].noteName) return false;
+  return true;
 }

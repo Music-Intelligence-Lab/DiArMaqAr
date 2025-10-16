@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import Footer from "@/components/footer";
 import useMenuContext from "@/contexts/menu-context";
+import "@/styles/statistics.scss";
 
 interface AnalyticsRow {
   id: string;
@@ -29,7 +30,7 @@ function extractYearParts(label: string): { year: number; letter: string } {
   return { year: 0, letter: "" };
 }
 
-export default function AnalyticsPage() {
+export default function StatisticsPage() {
   const { showAdminTabs } = useMenuContext();
   const [rows, setRows] = useState<AnalyticsRow[]>([]);
   const [sortKey, setSortKey] = useState<keyof AnalyticsRow>("label");
@@ -121,48 +122,52 @@ export default function AnalyticsPage() {
   const [selectedRowId, setSelectedRowId] = useState<string | null>(null);
 
   return (
-    <div className="analytics-page">
+    <div className="statistics">
       {showAdminTabs && (
-        <button onClick={handleReRender} disabled={loading} style={{ marginBottom: 16 }}>
-          {loading ? "Re-Rendering..." : "Re-Render Analytics"}
-        </button>
+        <div className="admin-controls">
+          <button onClick={handleReRender} disabled={loading}>
+            {loading ? "Re-Rendering..." : "Re-Render Analytics"}
+          </button>
+        </div>
       )}
 
-      {error && <div style={{ color: "red" }}>{error}</div>}
-      {success && <div style={{ color: "green" }}>{success}</div>}
-      <table>
-        <thead>
-          <tr>
-            {renderSortableHeader("Tuning System", "label")}
-            {renderSortableHeader("Possible Ajnās", "possibleAjnasCount")}
-            {renderSortableHeader("Possible Ajnās Transpositions", "possibleAjnasTranspositionsCount")}
-            {renderSortableHeader("Possible Maqāmāt", "possibleMaqamatCount")}
-            {renderSortableHeader("Possible Maqāmāt Transpositions", "possibleMaqamatTranspositionsCount")}
-            {renderSortableHeader("Total Suyūr", "totalSuyur")}
-            {renderSortableHeader("Total Possible Ajnās Modulations", "totalAjnasModulations")}
-            {renderSortableHeader("Total Possible Maqāmāt Modulations", "totalMaqamatModulations")}
-          </tr>
-        </thead>
-        <tbody>
-          {sortedRows.map((row) => (
-            <tr
-              key={row.id}
-              className={selectedRowId === row.id ? "selected-row" : ""}
-              onClick={() => setSelectedRowId(selectedRowId === row.id ? null : row.id)}
-              style={{ cursor: "pointer" }}
-            >
-              <td>{row.label}</td>
-              <td>{`${row.possibleAjnasCount}/${row.totalAjnas}`}</td>
-              <td>{row.possibleAjnasTranspositionsCount}</td>
-              <td>{`${row.possibleMaqamatCount}/${row.totalMaqamat}`}</td>
-              <td>{row.possibleMaqamatTranspositionsCount}</td>
-              <td>{row.totalSuyur}</td>
-              <td>{row.totalAjnasModulations}</td>
-              <td>{row.totalMaqamatModulations}</td>
+      {error && <div className="status-message error">{error}</div>}
+      {success && <div className="status-message success">{success}</div>}
+      
+      <div className="table-container">
+        <table className="statistics-table">
+          <thead>
+            <tr>
+              {renderSortableHeader("Tuning System", "label")}
+              {renderSortableHeader("Possible Ajnās", "possibleAjnasCount")}
+              {renderSortableHeader("Possible Ajnās Transpositions", "possibleAjnasTranspositionsCount")}
+              {renderSortableHeader("Possible Maqāmāt", "possibleMaqamatCount")}
+              {renderSortableHeader("Possible Maqāmāt Transpositions", "possibleMaqamatTranspositionsCount")}
+              {renderSortableHeader("Total Suyūr", "totalSuyur")}
+              {renderSortableHeader("Total Possible Ajnās Modulations", "totalAjnasModulations")}
+              {renderSortableHeader("Total Possible Maqāmāt Modulations", "totalMaqamatModulations")}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {sortedRows.map((row) => (
+              <tr
+                key={row.id}
+                className={selectedRowId === row.id ? "selected-row" : ""}
+                onClick={() => setSelectedRowId(selectedRowId === row.id ? null : row.id)}
+              >
+                <td>{row.label}</td>
+                <td>{`${row.possibleAjnasCount}/${row.totalAjnas}`}</td>
+                <td>{row.possibleAjnasTranspositionsCount}</td>
+                <td>{`${row.possibleMaqamatCount}/${row.totalMaqamat}`}</td>
+                <td>{row.possibleMaqamatTranspositionsCount}</td>
+                <td>{row.totalSuyur}</td>
+                <td>{row.totalAjnasModulations}</td>
+                <td>{row.totalMaqamatModulations}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <Footer />
     </div>
   );

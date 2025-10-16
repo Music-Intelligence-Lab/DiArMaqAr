@@ -4,6 +4,10 @@ import { NextResponse } from "next/server";
 import PitchClass from "@/models/PitchClass";
 import { getJinsTranspositions, getMaqamTranspositions } from "@/functions/transpose";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
+import { standardizeText } from "@/functions/export";
+import { handleCorsPreflightRequest, addCorsHeaders } from "../cors";
+
+export const OPTIONS = handleCorsPreflightRequest;
 
 /**
  * @swagger
@@ -23,42 +27,46 @@ import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses
  *               tuningSystemID:
  *                 type: string
  *                 description: Unique identifier for the target tuning system
- *                 example: "24TET_tuning"
+ *                 example: "Al-Kindi-(874)"
  *               maqamID:
  *                 type: string
- *                 description: Unique identifier for the maqam to transpose (mutually exclusive with jinsID)
- *                 example: "maqam_bayati"
+ *                 description: Unique identifier for the maqam to transpose (mutually exclusive with jinsID and maqamName)
+ *                 example: "1"
+ *               maqamName:
+ *                 type: string
+ *                 description: Name of the maqam to transpose (mutually exclusive with jinsID and maqamID)
+ *                 example: "maqam bayātī"
  *               jinsID:
  *                 type: string
- *                 description: Unique identifier for the jins to transpose (mutually exclusive with maqamID)
- *                 example: "jins_bayati"
- *               firstNote:
- *                 type: object
- *                 properties:
- *                   numerator:
- *                     type: number
- *                     description: Frequency ratio numerator for starting pitch
- *                   denominator:
- *                     type: number
- *                     description: Frequency ratio denominator for starting pitch
- *                   cents:
- *                     type: number
- *                     description: Cents value of starting pitch
- *                 description: The starting pitch class for transposition calculations
- *                 example: {"numerator": 1, "denominator": 1, "cents": 0}
+ *                 description: Unique identifier for the jins to transpose (mutually exclusive with maqamID and jinsName)
+ *                 example: "1"
+ *               jinsName:
+ *                 type: string
+ *                 description: Name of the jins to transpose (mutually exclusive with maqamID and jinsID)
+ *                 example: "jins rāst"
+ *               tuningSystemStartingNoteName:
+ *                 type: string
+ *                 description: Starting note name for tuning system note naming convention (must match first element in tuning system). If not provided, defaults to the first available note naming convention in the tuning system core data. This parameter affects the theoretical framework used for transposition analysis.
+ *                 example: "ʿushayrān"
  *               centsTolerance:
  *                 type: number
- *                 description: Acceptable deviation in cents for pitch matching (microtonal precision)
- *                 example: 10
+ *                 description: Tolerance value used as (+/-) for calculating possible transpositions within tuning systems that aren't based on frequency ratio fractions (e.g. 9/8, 4/3, 3/2) in their core data (0-50, default: 5)
+ *                 example: 5
  *                 minimum: 0
  *                 maximum: 50
+ *               noteNameToTransposeTo:
+ *                 type: string
+ *                 description: Optional filter to return only the transposition that starts with this specific note name. If provided but the transposition doesn't exist, returns a 404 error. If empty or not provided, returns all transpositions as normal. Note name comparison uses englishified format (removes diacritics and replaces spaces with underscores).
+ *                 example: "rast"
  *             required:
  *               - tuningSystemID
- *               - firstNote
+ *               - tuningSystemStartingNoteName
  *               - centsTolerance
  *             oneOf:
  *               - required: [maqamID]
+ *               - required: [maqamName]
  *               - required: [jinsID]
+ *               - required: [jinsName]
  *     responses:
  *       200:
  *         description: Transpositions calculated successfully
@@ -103,10 +111,11 @@ import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses
  *                   type: string
  *                   examples:
  *                     - "tuningSystemID (string) is required"
- *                     - "Either maqamID or jinsID must be provided"
- *                     - "Both maqamID and jinsID cannot be provided simultaneously"
- *                     - "firstNote object is required"
+ *                     - "Either maqamID, maqamName, jinsID, or jinsName must be provided"
+ *                     - "Cannot provide multiple identifiers simultaneously"
+ *                     - "tuningSystemStartingNoteName object is required"
  *                     - "centsTolerance must be a positive number"
+ *                     - "Note name 'invalidNote' does not exist in the selected tuning system"
  *       404:
  *         description: Requested resource not found
  *         content:
@@ -133,17 +142,31 @@ import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses
  */
 export async function POST(request: Request) {
   try {
-    const { tuningSystemID, maqamID, jinsID, firstNote, centsTolerance } = await request.json();
+    const { tuningSystemID, maqamID, maqamName, jinsID, jinsName, tuningSystemStartingNoteName, centsTolerance, noteNameToTransposeTo } = await request.json();
     const tuningSystems = getTuningSystems();
     const maqamat = getMaqamat();
     const ajnas = getAjnas();
 
     if (typeof tuningSystemID !== "string") {
-      return NextResponse.json({ error: "tuningSystemID (string) is required" }, { status: 400 });
+      const errorResponse = NextResponse.json({ error: "tuningSystemID (string) is required" }, { status: 400 });
+      return addCorsHeaders(errorResponse);
     }
 
-    if (!maqamID && !jinsID) {
-      return NextResponse.json({ error: "Either maqamID or jinsID must be provided" }, { status: 400 });
+    // Validate that exactly one identifier is provided
+    const hasMaqamID = maqamID !== undefined && maqamID !== null && maqamID !== "";
+    const hasMaqamName = maqamName !== undefined && maqamName !== null && maqamName !== "";
+    const hasJinsID = jinsID !== undefined && jinsID !== null && jinsID !== "";
+    const hasJinsName = jinsName !== undefined && jinsName !== null && jinsName !== "";
+
+    const identifierCount = [hasMaqamID, hasMaqamName, hasJinsID, hasJinsName].filter(Boolean).length;
+    
+    if (identifierCount === 0) {
+      const errorResponse = NextResponse.json({ error: "Either maqamID, maqamName, jinsID, or jinsName must be provided" }, { status: 400 });
+      return addCorsHeaders(errorResponse);
+    }
+
+    if (identifierCount > 1) {
+      return NextResponse.json({ error: "Cannot provide multiple identifiers simultaneously" }, { status: 400 });
     }
 
     const selectedTuningSystem = tuningSystems.find((ts) => ts.getId() === tuningSystemID);
@@ -154,16 +177,16 @@ export async function POST(request: Request) {
 
     let noteNames: string[] = [];
 
-    if (firstNote) {
+    if (tuningSystemStartingNoteName) {
       for (const setOfNotes of selectedTuningSystem.getNoteNameSets()) {
-        if (setOfNotes[0] === firstNote) {
+        if (setOfNotes[0] === tuningSystemStartingNoteName) {
           noteNames = setOfNotes;
           break;
         }
       }
 
       if (noteNames.length === 0) {
-        return NextResponse.json({ error: "Invalid firstNote" }, { status: 400 });
+        return NextResponse.json({ error: "Invalid tuningSystemStartingNoteName" }, { status: 400 });
       }
     } else {
       if (selectedTuningSystem.getNoteNameSets().length > 0) noteNames = selectedTuningSystem.getNoteNameSets()[0];
@@ -178,24 +201,109 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Invalid pitch class type" }, { status: 400 });
     }
 
-    const allPitchClasses: PitchClass[] = getTuningSystemPitchClasses(selectedTuningSystem, firstNote);
+    const allPitchClasses: PitchClass[] = getTuningSystemPitchClasses(selectedTuningSystem, tuningSystemStartingNoteName);
 
-    if (maqamID) {
+    // Validate noteNameToTransposeTo if provided
+    if (noteNameToTransposeTo && noteNameToTransposeTo !== "") {
+      const englishifiedTargetNote = standardizeText(noteNameToTransposeTo);
+      const noteExists = allPitchClasses.some(pc => standardizeText(pc.noteName) === englishifiedTargetNote);
+      if (!noteExists) {
+        return NextResponse.json({ error: `Note name '${noteNameToTransposeTo}' does not exist in the selected tuning system` }, { status: 400 });
+      }
+    }
+
+    if (hasMaqamID) {
       const selectedMaqamData = maqamat.find((maqam) => maqam.getId() === maqamID);
       if (!selectedMaqamData) {
-        return NextResponse.json({ error: "Invalid maqamID" }, { status: 400 });
+        return NextResponse.json({ error: "Maqam not found" }, { status: 400 });
       }
 
       const maqamTranspositions = getMaqamTranspositions(allPitchClasses, ajnas, selectedMaqamData, true, centsTolerance ?? 5);
 
+      // Filter for specific note name if provided
+      if (noteNameToTransposeTo && noteNameToTransposeTo !== "") {
+        const englishifiedTargetNote = standardizeText(noteNameToTransposeTo);
+        const filteredTransposition = maqamTranspositions.find(maqam => 
+          standardizeText(maqam.ascendingPitchClasses[0].noteName) === englishifiedTargetNote
+        );
+        
+        if (!filteredTransposition) {
+          return NextResponse.json({ error: `Transposition to note '${noteNameToTransposeTo}' does not exist for this maqam` }, { status: 404 });
+        }
+        
+        const successResponse = NextResponse.json([filteredTransposition]);
+        return addCorsHeaders(successResponse);
+      }
+
+      const maqamResponse = NextResponse.json(maqamTranspositions);
+      return addCorsHeaders(maqamResponse);
+    } else if (hasMaqamName) {
+      const selectedMaqamData = maqamat.find((maqam) => standardizeText(maqam.getName()) === standardizeText(maqamName));
+      if (!selectedMaqamData) {
+        return NextResponse.json({ error: "Maqam not found" }, { status: 400 });
+      }
+
+      const maqamTranspositions = getMaqamTranspositions(allPitchClasses, ajnas, selectedMaqamData, true, centsTolerance ?? 5);
+
+      // Filter for specific note name if provided
+      if (noteNameToTransposeTo && noteNameToTransposeTo !== "") {
+        const englishifiedTargetNote = standardizeText(noteNameToTransposeTo);
+        const filteredTransposition = maqamTranspositions.find(maqam => 
+          standardizeText(maqam.ascendingPitchClasses[0].noteName) === englishifiedTargetNote
+        );
+        
+        if (!filteredTransposition) {
+          return NextResponse.json({ error: `Transposition to note '${noteNameToTransposeTo}' does not exist for this maqam` }, { status: 404 });
+        }
+        
+        return NextResponse.json([filteredTransposition]);
+      }
+
       return NextResponse.json(maqamTranspositions);
-    } else if (jinsID) {
+    } else if (hasJinsID) {
       const selectedJinsData = ajnas.find((jins) => jins.getId() === jinsID);
       if (!selectedJinsData) {
-        return NextResponse.json({ error: "Invalid jinsID" }, { status: 400 });
+        return NextResponse.json({ error: "Jins not found" }, { status: 400 });
       }
 
       const jinsTranspositions = getJinsTranspositions(allPitchClasses, selectedJinsData, true, centsTolerance ?? 5);
+
+      // Filter for specific note name if provided
+      if (noteNameToTransposeTo && noteNameToTransposeTo !== "") {
+        const englishifiedTargetNote = standardizeText(noteNameToTransposeTo);
+        const filteredTransposition = jinsTranspositions.find(jins => 
+          standardizeText(jins.jinsPitchClasses[0].noteName) === englishifiedTargetNote
+        );
+        
+        if (!filteredTransposition) {
+          return NextResponse.json({ error: `Transposition to note '${noteNameToTransposeTo}' does not exist for this jins` }, { status: 404 });
+        }
+        
+        return NextResponse.json([filteredTransposition]);
+      }
+
+      return NextResponse.json(jinsTranspositions);
+    } else if (hasJinsName) {
+      const selectedJinsData = ajnas.find((jins) => standardizeText(jins.getName()) === standardizeText(jinsName));
+      if (!selectedJinsData) {
+        return NextResponse.json({ error: "Jins not found" }, { status: 400 });
+      }
+
+      const jinsTranspositions = getJinsTranspositions(allPitchClasses, selectedJinsData, true, centsTolerance ?? 5);
+
+      // Filter for specific note name if provided
+      if (noteNameToTransposeTo && noteNameToTransposeTo !== "") {
+        const englishifiedTargetNote = standardizeText(noteNameToTransposeTo);
+        const filteredTransposition = jinsTranspositions.find(jins => 
+          standardizeText(jins.jinsPitchClasses[0].noteName) === englishifiedTargetNote
+        );
+        
+        if (!filteredTransposition) {
+          return NextResponse.json({ error: `Transposition to note '${noteNameToTransposeTo}' does not exist for this jins` }, { status: 404 });
+        }
+        
+        return NextResponse.json([filteredTransposition]);
+      }
 
       return NextResponse.json(jinsTranspositions);
     }
@@ -204,10 +312,13 @@ export async function POST(request: Request) {
       message: "POST payload received",
       tuningSystemID,
       maqamID: maqamID ?? null,
+      maqamName: maqamName ?? null,
       jinsID: jinsID ?? null,
+      jinsName: jinsName ?? null,
     });
   } catch (error) {
     console.error("Error in POST /api/tuningSystems:", error);
-    return new NextResponse("Internal Server Error", { status: 500 });
+    const errorResponse = new NextResponse("Internal Server Error", { status: 500 });
+    return addCorsHeaders(errorResponse);
   }
 }

@@ -8,18 +8,18 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "SZNw4epqCZe7VhE5eWT3L",
+        "sourceId": "al-Khulʿī-(2011)",
         "page": "55-56"
       },
       {
-        "sourceId": "IDE6rHb6y71_H8_0p5nh1",
+        "sourceId": "Shawqi-(1969)",
         "page": "32-33"
       }
     ],
     "creatorEnglish": "Ronzevalle",
     "creatorArabic": "رونزيفال",
-    "commentsEnglish": "Also in: Shawqi, Youssef. Qiyās Al-Sullam Al-Mūsīqī Al-'Arabī. Dar Al-Kutub, Cairo, 1969. pp. 32-33\t\t\t\t\t\t\t\t\t",
-    "commentsArabic": "ايضاً في شوقي ",
+    "commentsEnglish": "",
+    "commentsArabic": "",
     "tuningSystemPitchClasses": [
       "3600",
       "3498",
@@ -38,7 +38,7 @@
       "2403",
       "2334",
       "2268",
-      "1103",
+      "2203",
       "2140",
       "2079",
       "2020",
@@ -182,7 +182,7 @@
     }
   },
   {
-    "id": "Al-Kindī-(874)",
+    "id": "al-Kindi-(874)",
     "titleEnglish": "12-Tone",
     "titleArabic": "12-نغمة",
     "year": "874",
@@ -190,13 +190,17 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "63Ao66cM9W2M-4NhIIHgv",
+        "sourceId": "Farmer-(1937)",
         "page": "248"
+      },
+      {
+        "sourceId": "Forster-(2010)",
+        "page": "615"
       }
     ],
-    "creatorEnglish": "Al-Kindī",
+    "creatorEnglish": "al-Kindī",
     "creatorArabic": "الكندي",
-    "commentsEnglish": "Abu Yusuf Ya‘qub ibn Ishaq Al-Kindi (ca. 800–870) \nhttps://plato.stanford.edu/entries/al-kindi/",
+    "commentsEnglish": "Abu Yusuf Ya‘qub ibn Ishaq al-Kindi (ca. 800–870) \nhttps://plato.stanford.edu/entries/al-kindi/",
     "commentsArabic": "اسداسداسدا",
     "tuningSystemPitchClasses": [
       "1/1",
@@ -295,8 +299,8 @@
     "stringLength": 1000,
     "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "ʿushayrān": 110,
-      "yegāh": 97.999
+      "yegāh": 97.999,
+      "ʿushayrān": 110
     }
   },
   {
@@ -386,21 +390,21 @@
     }
   },
   {
-    "id": "Al-Dīk-(1926a)",
-    "titleEnglish": "Al-Sullam Al-Fārsī or Al-'Arabī (!!!)",
+    "id": "al-Dik-(1926a)",
+    "titleEnglish": "al-Sullam al-Fārsī or al-'Arabī (!!!)",
     "titleArabic": "السلم الفارسي او العربي",
     "year": "1926a",
     "sourceEnglish": "",
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "IDE6rHb6y71_H8_0p5nh1",
+        "sourceId": "Shawqi-(1969)",
         "page": "43"
       }
     ],
-    "creatorEnglish": "Al-Dīk",
+    "creatorEnglish": "al-Dīk",
     "creatorArabic": "الديك، احمد امين",
-    "commentsEnglish": "In Shawqī (1969:43) the numbers for string length are given as 1,0000, 0,9716, etc... They are presented here as 10000, 9716 etc... for clarity.\n\nTypo in Shawqī (1969:43) lists the second pitch class as 0.7916. Most likely it is supposed to be 0.9716 and that is what is used here.\n\nThe note names for the string length divisions aren't mentioned in Shawqī (1969:43) and therefore presumably not in Al-Dīk's original (NEED TO VERIFY). Though in Shawqī's reproduction of a table from another publication by Al-Dīk (mulḥaq fī dhabdhabāt ṭabaqa sharqīya/ملحق في ذبذبات طبقة شيرقية), the text by Al-Dīk which refers to his calculations of frequencies for his tuning system mentions that he considered the Arabic note name dūgāh equivalent to A/La at 435 Hz. \n\nThis is in line with the Ottoman (and the modern Turkish convention) equates the fret (perde) dūgāh to the Anglo-European La/A at 110/440 Hz, and naming the oud string referred to by Arabs as nawā usually tuned to G at 196 Hz as dugāh because they tune up to A at 110 Hz. Therefore this tuning system is placed according to yegāh at 1/1.",
+    "commentsEnglish": "In Shawqī (1969:43) the numbers for string length are given as 1,0000, 0,9716, etc... They are presented here as 10000, 9716 etc... for clarity.\n\nTypo in Shawqī (1969:43) lists the second pitch class as 0.7916. Most likely it is supposed to be 0.9716 and that is what is used here.\n\nThe note names for the string length divisions aren't mentioned in Shawqī (1969:43) and therefore presumably not in al-Dīk's original (NEED TO VERIFY). Though in Shawqī's reproduction of a table from another publication by al-Dīk (mulḥaq fī dhabdhabāt ṭabaqa sharqīya/ملحق في ذبذبات طبقة شيرقية), the text by al-Dīk which refers to his calculations of frequencies for his tuning system mentions that he considered the Arabic note name dūgāh equivalent to A/La at 435 Hz. \n\nThis is in line with the Ottoman (and the modern Turkish convention) equates the fret (perde) dūgāh to the Anglo-European La/A at 110/440 Hz, and naming the oud string referred to by Arabs as nawā usually tuned to G at 196 Hz as dugāh because they tune up to A at 110 Hz. Therefore this tuning system is placed according to yegāh at 1/1.",
     "commentsArabic": "",
     "tuningSystemPitchClasses": [
       "10000",
@@ -537,7 +541,7 @@
     }
   },
   {
-    "id": "Al-Dīk-(1926b)",
+    "id": "al-Dik-(1926b)",
     "titleEnglish": "Old Arabic Scale",
     "titleArabic": "السلم العربي القديم",
     "year": "1926b",
@@ -545,11 +549,11 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "IDE6rHb6y71_H8_0p5nh1",
+        "sourceId": "Shawqi-(1969)",
         "page": "41"
       }
     ],
-    "creatorEnglish": "Al-Dīk",
+    "creatorEnglish": "al-Dīk",
     "creatorArabic": "الديك، احمد امين",
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -662,7 +666,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "zQU1LvEwGBICtY09uE5Rj",
+        "sourceId": "na.-(1933)",
         "page": "336"
       }
     ],
@@ -807,14 +811,14 @@
   },
   {
     "id": "CairoCongressTuningCommittee-(1932b)",
-    "titleEnglish": "Arab Intervals according to Al-Dīk",
+    "titleEnglish": "Arab Intervals according to al-Dīk",
     "titleArabic": "الأبعاد العربية حسب الديك",
     "year": "1932b",
     "sourceEnglish": "",
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "zQU1LvEwGBICtY09uE5Rj",
+        "sourceId": "na.-(1933)",
         "page": "336"
       }
     ],
@@ -957,7 +961,7 @@
     }
   },
   {
-    "id": "Al-Lādhiqī-(1495)",
+    "id": "al-Ladhiqi-(1495)",
     "titleEnglish": "17-Tone",
     "titleArabic": "17 نغمة",
     "year": "1495",
@@ -965,11 +969,11 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "GJwpuIRbQ8bxNFoA-FxWK",
+        "sourceId": "Allāh-Wīrdī-(1949)",
         "page": "163-164"
       }
     ],
-    "creatorEnglish": "Al-Lādhiqī",
+    "creatorEnglish": "al-Lādhiqī",
     "creatorArabic": "اللاذقي",
     "commentsEnglish": "Rejab (1986) gives the names for the pitch classes 12, 13, 14 as nīm ḥijāz (128/81), ḥijāz (32768/19683) and ḥijāz + (27/16) as opposed to chahārgāh (128/81), nīm ḥijāz (32768/19683) and ḥijāz (27/16).\n\nThis doesn't make sense to me because the interval distance between 32/27 (rāst) and 128/81 is a 4/3 perfect forth, and both the ratios 32/27 and 128/81 are the main intervals derived from a sequence of successive fourths 4:3 + 4:3 (16/9) + 4:3 (32:27) + 4:3 (128:81). Therefore 128/81 should be labeled chahārgāh as in the modern Arab-Persian-Ottoman naming convention.",
     "commentsArabic": "",
@@ -1096,12 +1100,12 @@
     "stringLength": 1000,
     "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "ʿushayrān": 110,
-      "yegāh": 97.999
+      "yegāh": 97.999,
+      "ʿushayrān": 110
     }
   },
   {
-    "id": "Al-Fārābī-(950i)",
+    "id": "al-Farabi-(950i)",
     "titleEnglish": "Second Oud Tuning 22-Tone",
     "titleArabic": "",
     "year": "950i",
@@ -1109,11 +1113,11 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "vfTln54gK68IgHo2tlULX",
+        "sourceId": "Forster-(2010)",
         "page": "643"
       }
     ],
-    "creatorEnglish": "Al-Fārābī",
+    "creatorEnglish": "al-Fārābī",
     "creatorArabic": "الفارابي",
     "commentsEnglish": "Abū Naṣr al-Fārābī b. 870 d. 950 \nhttps://plato.stanford.edu/entries/al-farabi/",
     "commentsArabic": "",
@@ -1240,26 +1244,26 @@
     "stringLength": 1000,
     "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "ʿushayrān": 110,
-      "yegāh": 97.999
+      "yegāh": 97.999,
+      "ʿushayrān": 110
     }
   },
   {
-    "id": "Allami,Khyam-(2022)",
-    "titleEnglish": "Al-Kindi with Al-Farabi's 22/27",
+    "id": "Allami-(2022)",
+    "titleEnglish": "al-Kindi with al-Farabi's 22/27",
     "titleArabic": "تنغيم الكندي مع اضافة نسبة 22/27 للفارابي",
     "year": "2022",
     "sourceEnglish": "",
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "HhRIZW8WYgYJJVgHrdt3y",
+        "sourceId": "Allami-(2022)",
         "page": "215"
       }
     ],
-    "creatorEnglish": "Allami, Khyam",
-    "creatorArabic": "اللامي، خيّام",
-    "commentsEnglish": "Created using Al-Kindi's 12-tone system and adding Al-Farabi's 27:22 to each chromatic interval creating a \"segāh\" for each note",
+    "creatorEnglish": "Allami",
+    "creatorArabic": "اللامي",
+    "commentsEnglish": "Created using al-Kindi's 12-tone system and adding al-Farabi's 27:22 to each chromatic interval creating a \"segāh\" for each note",
     "commentsArabic": "تچربة",
     "tuningSystemPitchClasses": [
       "1/1",
@@ -1621,7 +1625,7 @@
     }
   },
   {
-    "id": "Al-Fārābī-(950g)",
+    "id": "al-Farabi-(950g)",
     "titleEnglish": "First Oud Tuning (Full First Octave) 27-Tone",
     "titleArabic": "تنغيم العود الأول (الديوان الأول الكامل) ٢٧-نغمة",
     "year": "950g",
@@ -1629,30 +1633,30 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "63Ao66cM9W2M-4NhIIHgv",
+        "sourceId": "Farmer-(1937)",
         "page": "249"
       },
       {
-        "sourceId": "zH7tN7EXXSSXNmYXyY-TK",
+        "sourceId": "Land-(1885)",
         "page": "134-137"
       },
       {
-        "sourceId": "I1lrMQizwLfs8wwA17rRv",
+        "sourceId": "d'Erlanger-(1930)",
         "page": "165-185"
       },
       {
-        "sourceId": "uLBA69pin8YrIQVTwCHjF",
+        "sourceId": "Mofakham-(2022)",
         "page": "14"
       },
       {
-        "sourceId": "vfTln54gK68IgHo2tlULX",
+        "sourceId": "Forster-(2010)",
         "page": "639"
       }
     ],
-    "creatorEnglish": "Al-Fārābī",
+    "creatorEnglish": "al-Fārābī",
     "creatorArabic": "الفارابي",
-    "commentsEnglish": "This is Al-Fārābī's first oud tuning system, created by placing frets to divide four oud strings. Although rendered in most musicological publications as a tuning system of 10-frets and 25-tones per octave (Farmer 1937:249 renders it as 9-frets and 21-tones), it doesn't include second octave equivalents for all the notes in the first octave - a fact explicitly stated by Al-Fārābī himself (see original Arabic in Land 1855:139). For this reason Al-Fārābī adds a theoretical fifth string (ḥādd) in order to rectify the problem and render his second oud tuning of 22-Tones which includes double octaves.\n\nAdditionally, for the first oud tuning, Al-Fārābī explicitly states that his placement of the frets renders 10 unique notes per string using 9-frets (Land 1855:136), but ultimately gives 11-fret divisions including an alternative placement for the 27/22 wuṣta zalzal fret as 19683/16384 labelled lj (لج) whilst explicitly stating that not all the frets are used at any one time. Only one of the two frets labelled kd (كد) at 162/149 and kḥ (كح) at 54/49 are used, and only one of the two frets labelled th (ث) at 81/68 and ẓ (ظ) at 27/22 should be used (or its alternative lj (لج) at 19683/16384). The full list of divisions produced from the 11-frets gives us 27-tones in the first octave.\n\nWith this in mind, we deduce that there are 6 possible combinations for fretting an oud according to Al-Fārābī's first oud tuning method, with each combination using 8 frets to produce 9-tones per string.  \n\nThe Abjad note naming is based on this author's re-reading of Al-Farabi's original Arabic first printed in Land (1855:134-137), alongside d'Erlanger (1930:165-185), Forster, C. (2010:639) and Mofakham (2022:40). Mofakham gives a wrong Abjad naming to some frets as per d'Erlanger (1930:173). We can spot this perculior error by d'Erlanger because Al-Fārābī states that b (ب) is given to the end of the bamm 1/1 string, whilst j (ج), d (د) and h (ه), are given to the remaining open strings (see original Arabic in Land 1855:134) even if d'Erlanger also includes it in his French translation (1930:167).\n\nThe second octave has missing abjad deliniations because Al-Fārābī's first oud tuning system does not provide octave equivalents for all the notes in the first octave, as previously mentioned.\n\nAbū Naṣr al-Fārābī b. 870 d. 950 \nhttps://plato.stanford.edu/entries/al-farabi/",
-    "commentsArabic": "",
+    "commentsEnglish": "This is al-Fārābī's first oud tuning system, created by placing frets to divide four oud strings. Although rendered in most musicological publications as a tuning system of 10-frets and 25-tones per octave (Farmer 1937:249 renders it as 9-frets and 21-tones), it doesn't include second octave equivalents for all the notes in the first octave - a fact explicitly stated by al-Fārābī himself (see original Arabic in Land 1855:139). For this reason al-Fārābī adds a theoretical fifth string (ḥādd) in order to rectify the problem and render his second oud tuning of 22-Tones which includes double octaves.\n\nAdditionally, for the first oud tuning, al-Fārābī explicitly states that his placement of the frets renders 10 unique notes per string using 9-frets (Land 1855:136), but ultimately gives 11-fret divisions including an alternative placement for the 27/22 wuṣta zalzal fret as 19683/16384 labelled lj (لج) whilst explicitly stating that not all the frets are used at any one time. Only one of the two frets labelled kd (كد) at 162/149 and kḥ (كح) at 54/49 are used, and only one of the two frets labelled th (ث) at 81/68 and ẓ (ظ) at 27/22 should be used (or its alternative lj (لج) at 19683/16384). The full list of divisions produced from the 11-frets gives us 27-tones in the first octave.\n\nWith this in mind, we deduce that there are 6 possible combinations for fretting an oud according to al-Fārābī's first oud tuning method, with each combination using 8 frets to produce 9-tones per string.  \n\nThe Abjad note naming is based on this author's re-reading of al-Farabi's original Arabic first printed in Land (1855:134-137), alongside d'Erlanger (1930:165-185), Forster, C. (2010:639) and Mofakham (2022:40). Mofakham gives a wrong Abjad naming to some frets as per d'Erlanger (1930:173). We can spot this perculior error by d'Erlanger because al-Fārābī states that b (ب) is given to the end of the bamm 1/1 string, whilst j (ج), d (د) and h (ه), are given to the remaining open strings (see original Arabic in Land 1855:134) even if d'Erlanger also includes it in his French translation (1930:167).\n\nThe second octave has missing abjad deliniations because al-Fārābī's first oud tuning system does not provide octave equivalents for all the notes in the first octave, as previously mentioned.\n\nAbū Naṣr al-Fārābī b. 870 d. 950 \nhttps://plato.stanford.edu/entries/al-farabi/",
+    "commentsArabic": "تجريب تجريب",
     "tuningSystemPitchClasses": [
       "1/1",
       "256/243",
@@ -1806,7 +1810,7 @@
     }
   },
   {
-    "id": "IbnSīnā-(1037)",
+    "id": "IbnSina-(1037)",
     "titleEnglish": "7-Fret Oud 17-Tone",
     "titleArabic": "7 نغمات 17 دستان على العود",
     "year": "1037",
@@ -1954,7 +1958,7 @@
     }
   },
   {
-    "id": "IsḥāqAl-Mawṣilī-(850)",
+    "id": "Ishaqal-Mawsili-(850)",
     "titleEnglish": "9-Tone",
     "titleArabic": "",
     "year": "850",
@@ -1962,11 +1966,11 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "63Ao66cM9W2M-4NhIIHgv",
+        "sourceId": "Farmer-(1937)",
         "page": "247"
       }
     ],
-    "creatorEnglish": "Isḥāq Al-Mawṣilī",
+    "creatorEnglish": "Isḥāq al-Mawṣilī",
     "creatorArabic": "الموصلي, اسحاق",
     "commentsEnglish": "TEST ",
     "commentsArabic": "",
@@ -2052,8 +2056,8 @@
     "stringLength": 1000,
     "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "ʿushayrān": 110,
-      "yegāh": 97.999
+      "yegāh": 97.999,
+      "ʿushayrān": 110
     }
   },
   {
@@ -2065,21 +2069,21 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "IDE6rHb6y71_H8_0p5nh1",
+        "sourceId": "Shawqi-(1969)",
         "page": "48-49"
       },
       {
-        "sourceId": "zQU1LvEwGBICtY09uE5Rj",
+        "sourceId": "na.-(1933)",
         "page": "336"
       },
       {
-        "sourceId": "GJwpuIRbQ8bxNFoA-FxWK",
+        "sourceId": "Allāh-Wīrdī-(1949)",
         "page": "80"
       }
     ],
     "creatorEnglish": "Cairo Congress Tuning Committee",
     "creatorArabic": "لجنة التنغيم في مؤتمر القاهرة",
-    "commentsEnglish": "\"This committee was put together before the congress to undertake these measurements in preparation for the congress and consisted of the members: Muṣtafā Riḍā, Najīb Naḥḥās, Ṣafar 'Ali, Muḥammad Al-'Aqqād, Aḥmad Amīn Al-Dīk, Muṣtafā Al-'Aqqād, Kantonā, Muḥammad 'Abd Al-Wahāb, Darwīsh Al-Ḥarīrī, Kostakī, Armanāk, Muḥammad Fatḥī, Ya'qūb 'Abd Al-Wahāb and Maḥmūd Zakī. These measurements were obtained by asking Muṣtafā Riḍā and Muḥammad Al-'Aqād to separately tune their qanūns to a tuning fork resonating at the frequency of the note \"rāst\". The committee then measured both of their qanūns with a sonometer and only found a differencof 1/10 cm (1 mm) only between the commentsEnglish dūgāh, nawā and ḥusaynī\" Shawqi (1969:48).\n\nThe tuning system in this table has been moved down from the note rāst to yegāh, making the difference between the two qanūns on the pitch classes 'ushayrān, rāst and dūgāh.\n\nNeither Shawqī nor the original Congress text mention if the 1mm difference was higher or lower in pitch. By analysing the string length measurements and comparing them to the pitch classes produced by using ratios, the difference is indeed negligible. For reference, on a string of 1000 mm, 1 mm equals 0.173 cents.\n\n'ushayrān - 9/8 - 8888.9 mm\nrāst - 4/3 - 750 mm\ndūgāh - 3/2 - 6666.6 mm\n\nShawqi (1969:52) further comments that according to Badrān (1957:157) the measurements that the committee of the 1932 Congress documented amounted to a difference of 18/100 of a centimeter (1 4/5 of a mm) for the comments segāh and awj, and between 6/100 and 9/100 of a centimeter for all the other comments except rāst and kurdān - the octave of rāst. Though again whether the differences were higher or lower is not mentioned.\n\nBadrān, Muḥammad Tawfīq Muṣtafa (1957)\nhttps://search.worldcat.org/search?q=ti=H%CC%A3alqah%20...%20li-Bah%CC%A3th%20al-Mu%CC%84si%CC%84qa%CC%81%20al-%CA%BBArabi%CC%84yah\t\t\t\t\t\t\t\t\t",
+    "commentsEnglish": "\"This committee was put together before the congress to undertake these measurements in preparation for the congress and consisted of the members: Muṣtafā Riḍā, Najīb Naḥḥās, Ṣafar 'Ali, Muḥammad al-'Aqqād, Aḥmad Amīn al-Dīk, Muṣtafā al-'Aqqād, Kantonā, Muḥammad 'Abd al-Wahāb, Darwīsh al-Ḥarīrī, Kostakī, Armanāk, Muḥammad Fatḥī, Ya'qūb 'Abd al-Wahāb and Maḥmūd Zakī. These measurements were obtained by asking Muṣtafā Riḍā and Muḥammad al-'Aqād to separately tune their qanūns to a tuning fork resonating at the frequency of the note \"rāst\". The committee then measured both of their qanūns with a sonometer and only found a differencof 1/10 cm (1 mm) only between the commentsEnglish dūgāh, nawā and ḥusaynī\" Shawqi (1969:48).\n\nThe tuning system in this table has been moved down from the note rāst to yegāh, making the difference between the two qanūns on the pitch classes 'ushayrān, rāst and dūgāh.\n\nNeither Shawqī nor the original Congress text mention if the 1mm difference was higher or lower in pitch. By analysing the string length measurements and comparing them to the pitch classes produced by using ratios, the difference is indeed negligible. For reference, on a string of 1000 mm, 1 mm equals 0.173 cents.\n\n'ushayrān - 9/8 - 8888.9 mm\nrāst - 4/3 - 750 mm\ndūgāh - 3/2 - 6666.6 mm\n\nShawqi (1969:52) further comments that according to Badrān (1957:157) the measurements that the committee of the 1932 Congress documented amounted to a difference of 18/100 of a centimeter (1 4/5 of a mm) for the comments segāh and awj, and between 6/100 and 9/100 of a centimeter for all the other comments except rāst and kurdān - the octave of rāst. Though again whether the differences were higher or lower is not mentioned.\n\nBadrān, Muḥammad Tawfīq Muṣtafa (1957)\nhttps://search.worldcat.org/search?q=ti=H%CC%A3alqah%20...%20li-Bah%CC%A3th%20al-Mu%CC%84si%CC%84qa%CC%81%20al-%CA%BBArabi%CC%84yah\t\t\t\t\t\t\t\t\t",
     "commentsArabic": "",
     "tuningSystemPitchClasses": [
       "10000",
@@ -2238,12 +2242,12 @@
     "stringLength": 10000,
     "defaultReferenceFrequency": 261.6256,
     "referenceFrequencies": {
-      "rāst": 261.33,
-      "yegāh": 97.999
+      "yegāh": 97.999,
+      "rāst": 130.665
     }
   },
   {
-    "id": "Al-Khul'īandRāgheb-(1904)",
+    "id": "al-KhuliandRagheb-(1904)",
     "titleEnglish": "",
     "titleArabic": "",
     "year": "1904",
@@ -2251,13 +2255,13 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "SZNw4epqCZe7VhE5eWT3L",
+        "sourceId": "al-Khulʿī-(2011)",
         "page": "51-52"
       }
     ],
-    "creatorEnglish": "Al-Khul'ī and Rāgheb",
+    "creatorEnglish": "al-Khul'ī and Rāgheb",
     "creatorArabic": "الخلعي وراحب",
-    "commentsEnglish": "Also in Shawqi, Youssef. Qiyās Al-Sullam Al-Mūsīqī Al-'Arabī. Dar Al-Kutub, Cairo, 1969. pp. 28-29.\n\nShawqi says that whole tone (888 mm) doesn't add up to 10:9 or 9:8 as one would expect (1969:29) but the descrepency is only -1.732 cents and is infact the same as the descrepency between the perfect fourth (750 mm / 4:3) and the perfect fifth (666 mm / 3:2) which he states are correct in Khulī's measurements.",
+    "commentsEnglish": "Also in Shawqi, Youssef. Qiyās al-Sullam al-Mūsīqī al-'Arabī. Dar al-Kutub, Cairo, 1969. pp. 28-29.\n\nShawqi says that whole tone (888 mm) doesn't add up to 10:9 or 9:8 as one would expect (1969:29) but the descrepency is only -1.732 cents and is infact the same as the descrepency between the perfect fourth (750 mm / 4:3) and the perfect fifth (666 mm / 3:2) which he states are correct in Khulī's measurements.",
     "commentsArabic": "",
     "tuningSystemPitchClasses": [
       "1000",
@@ -2478,30 +2482,30 @@
     "stringLength": 1000,
     "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "ʿushayrān": 110,
-      "yegāh": 97.999
+      "yegāh": 97.999,
+      "ʿushayrān": 110
     }
   },
   {
-    "id": "Al-Urmawī-(1294)",
+    "id": "al-Urmawi-(1294a)",
     "titleEnglish": "First Oud Tuning 17-Tone",
     "titleArabic": "اول تنغيم على العود 17 نغمة",
-    "year": "1294",
+    "year": "1294a",
     "sourceEnglish": "",
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "vfTln54gK68IgHo2tlULX",
+        "sourceId": "Forster-(2010)",
         "page": "716"
       },
       {
-        "sourceId": "VmShC7ciSIikhGlZwUUJC",
+        "sourceId": "al-Urmawī-al-Baghdādī-(2017)",
         "page": "102-105"
       }
     ],
-    "creatorEnglish": "Al-Urmawī",
+    "creatorEnglish": "al-Urmawī",
     "creatorArabic": "الأرموي",
-    "commentsEnglish": "Abjad note names delineation in Al-Urmawī, Y. (2017) Kitāb Al-Adwār fi Al-Mūsīqā, Cairo: al-Hayʼah al-Miṣrīyah al-ʻĀmmah lil-Kitāb, pp. 102-105.",
+    "commentsEnglish": "Abjad note names delineation in al-Urmawī, Y. (2017) Kitāb al-Adwār fi al-Mūsīqā, Cairo: al-Hayʼah al-Miṣrīyah al-ʻĀmmah lil-Kitāb, pp. 102-105.",
     "commentsArabic": "",
     "tuningSystemPitchClasses": [
       "1/1",
@@ -2613,16 +2617,16 @@
     }
   },
   {
-    "id": "Allami,Khyam-(2024)",
-    "titleEnglish": "Al-Kindi with Ibn Sina's 39/32",
+    "id": "Allami-(2024)",
+    "titleEnglish": "al-Kindi with Ibn Sina's 39/32",
     "titleArabic": "تنغيم الكندي مع اضافة نسبة 32/39 لإبن سينا",
     "year": "2024",
     "sourceEnglish": "",
     "sourceArabic": "",
     "sourcePageReferences": [],
-    "creatorEnglish": "Allami, Khyam",
-    "creatorArabic": "اللامي، خيّام",
-    "commentsEnglish": "Created using Al-Kindi's 12-tone system and adding Ibn Sīnā's 39/32 to each chromatic interval creating a \"segāh\" for each note",
+    "creatorEnglish": "Allami",
+    "creatorArabic": "اللامي",
+    "commentsEnglish": "Created using al-Kindi's 12-tone system and adding Ibn Sīnā's 39/32 to each chromatic interval creating a \"segāh\" for each note",
     "commentsArabic": "تجربة",
     "tuningSystemPitchClasses": [
       "1/1",
@@ -2759,19 +2763,19 @@
     }
   },
   {
-    "id": "Al-Urmawi-(1294)",
+    "id": "al-Urmawi-(1294b)",
     "titleEnglish": "Second Oud Tuning 17-Tone",
     "titleArabic": "ثاني تنغيم على العود 17 نغمة",
-    "year": "1294",
+    "year": "1294b",
     "sourceEnglish": "",
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "vfTln54gK68IgHo2tlULX",
+        "sourceId": "Forster-(2010)",
         "page": "716"
       }
     ],
-    "creatorEnglish": "Al-Urmawi",
+    "creatorEnglish": "al-Urmawi",
     "creatorArabic": "الأرموي",
     "commentsEnglish": "Forster, C. (2010) Musical Mathematics: On the Art and Science of Acoustic Instruments. San Francisco, Calif: Chronicle Books, pp. 716.",
     "commentsArabic": "",
@@ -2878,7 +2882,7 @@
     }
   },
   {
-    "id": "Meshshāqa-(1899)",
+    "id": "Meshshaqa-(1899)",
     "titleEnglish": "Arabic Octave According to the Modernists",
     "titleArabic": "الديوان العربي عند المحدثين",
     "year": "1899",
@@ -2886,7 +2890,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "npR7tB33uFtyZiJyrXbPx",
+        "sourceId": "Meshshāqa-(1899)",
         "page": "18"
       }
     ],
@@ -2912,7 +2916,7 @@
       "2403",
       "2334",
       "2268",
-      "1103",
+      "2203",
       "2140",
       "2079",
       "2020",
@@ -3005,7 +3009,7 @@
     }
   },
   {
-    "id": "Al-Fārābī-(950a)",
+    "id": "al-Farabi-(950a)",
     "titleEnglish": "First Oud Tuning 1: mujannab sabbāba 3 + wusṭa al-furs 20-Tone",
     "titleArabic": "",
     "year": "950a",
@@ -3013,11 +3017,11 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "zH7tN7EXXSSXNmYXyY-TK",
+        "sourceId": "Land-(1885)",
         "page": "134-137"
       }
     ],
-    "creatorEnglish": "Al-Fārābī ",
+    "creatorEnglish": "al-Fārābī ",
     "creatorArabic": "الفارابي",
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -3139,14 +3143,14 @@
     }
   },
   {
-    "id": "Al-Fārābīi-(950c)",
+    "id": "al-Farabii-(950c)",
     "titleEnglish": "First Oud Tuning 3: mujannab sabbāba 3 + alt wusṭa zalzal",
     "titleArabic": "",
     "year": "950c",
     "sourceEnglish": "",
     "sourceArabic": "",
     "sourcePageReferences": [],
-    "creatorEnglish": "Al-Fārābīi",
+    "creatorEnglish": "al-Fārābīi",
     "creatorArabic": "الفارابي",
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -3246,7 +3250,7 @@
     }
   },
   {
-    "id": "Al-Fārābī-(950b)",
+    "id": "al-Farabi-(950b)",
     "titleEnglish": "First Oud Tuning 2: mujannab sabbāba 3 + wuṣtā zalzal",
     "titleArabic": "",
     "year": "950b",
@@ -3254,11 +3258,11 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "zH7tN7EXXSSXNmYXyY-TK",
+        "sourceId": "Land-(1885)",
         "page": "134-137"
       }
     ],
-    "creatorEnglish": "Al-Fārābī",
+    "creatorEnglish": "al-Fārābī",
     "creatorArabic": "الفارابي",
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -3358,7 +3362,7 @@
     }
   },
   {
-    "id": "Al-Fārābī-(950d)",
+    "id": "al-Farabi-(950d)",
     "titleEnglish": "First Oud Tuning 4: mujannab sabbāba 4 + wusṭa al-furs",
     "titleArabic": "",
     "year": "950d",
@@ -3366,11 +3370,11 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "zH7tN7EXXSSXNmYXyY-TK",
+        "sourceId": "Land-(1885)",
         "page": "134-137"
       }
     ],
-    "creatorEnglish": "Al-Fārābī",
+    "creatorEnglish": "al-Fārābī",
     "creatorArabic": "الفارابي",
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -3470,14 +3474,14 @@
     }
   },
   {
-    "id": "Al-Fārābī-(950f)",
+    "id": "al-Farabi-(950f)",
     "titleEnglish": "First Oud Tuning 6: mujannab sabbāba 4 + alt wusṭa zalzal",
     "titleArabic": "",
     "year": "950f",
     "sourceEnglish": "",
     "sourceArabic": "",
     "sourcePageReferences": [],
-    "creatorEnglish": "Al-Fārābī",
+    "creatorEnglish": "al-Fārābī",
     "creatorArabic": "الفارابي",
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -3577,7 +3581,7 @@
     }
   },
   {
-    "id": "Al-Fārābī-(950e)",
+    "id": "al-Farabi-(950e)",
     "titleEnglish": "First Oud Tuning 5: mujannab sabbāba 4 + wusṭa zalzal",
     "titleArabic": "",
     "year": "950e",
@@ -3585,11 +3589,11 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "zH7tN7EXXSSXNmYXyY-TK",
+        "sourceId": "Land-(1885)",
         "page": "134-137"
       }
     ],
-    "creatorEnglish": "Al-Fārābī",
+    "creatorEnglish": "al-Fārābī",
     "creatorArabic": "الفارابي",
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -3689,7 +3693,7 @@
     }
   },
   {
-    "id": "Al-Fārābī-(950h)",
+    "id": "al-Farabi-(950h)",
     "titleEnglish": "First Oud Tuning (First and Second Octaves) 35-Tone",
     "titleArabic": "",
     "year": "950h",
@@ -3697,11 +3701,11 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "zH7tN7EXXSSXNmYXyY-TK",
+        "sourceId": "Land-(1885)",
         "page": "134-137"
       }
     ],
-    "creatorEnglish": "Al-Fārābī",
+    "creatorEnglish": "al-Fārābī",
     "creatorArabic": "الفارابي",
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -3861,7 +3865,7 @@
     }
   },
   {
-    "id": "MashrafaandMukhtār-(1944)",
+    "id": "MashrafaandMukhtar-(1944)",
     "titleEnglish": "Egyptian Tuning 22-Tone",
     "titleArabic": "التنغيم المصري 22 نغمة",
     "year": "1944",
@@ -3869,13 +3873,13 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "IDE6rHb6y71_H8_0p5nh1",
+        "sourceId": "Shawqi-(1969)",
         "page": "139"
       }
     ],
     "creatorEnglish": "Mashrafa and Mukhtār",
     "creatorArabic": "مشرفة ومختار",
-    "commentsEnglish": "According to Shawqī (1969:135) quoting from Mukhtār (1944) the research project began in 1935. The researchers Alī Muṣṭafā Mashrafa and Maḥmūd Mukhtār asked the musicians Muṣṭafā Riḍā, Muṣṭafā Al-'Aqqād and Ibrahīm Farūz to each tune their own Qanūn and prepare it for the performance of a specific maqām, and then oversee the recording and tuning analysis of each note. \n\nThe results are given as a table with multiple columns that is confusing. The list includes measurements with a partial list of the note names in Arabic (14 note names) because the tests were undertook on a limited selection of maqāmāt including maqāmāt iraq, ḥijāz, nahāwand, ṣabā and ḥijāz kār and therefore only the note names from those maqāmāt were used. These are presented alongside another column that includes a full list of 23 note names in solfege alongside their measurements. The confusion arises because some notes have two different values in columns marked as Results of the Experiment, and Full List, something which Shawqī does not address.\n\nThe version saved here takes the 14 measurements from the Arabic note names list (Results of the Experiment column), and the remaining rest from the Full List of 23 . \n\nThe original values reprinted by Shawqī are given as frequencies in Hz starting from 1000, which is a bizarre choice (see below). We have converted them to cents in order to enter them accurately in this database.\n\nOriginal values in Hz:\n1000, 1057, 1080, 1123, 1171, 1190, 1228, 1274, 1302, 1330, 1417, 1440, 1498, 1562, 1590, 1685, 1738, 1779, 1831, 1880, 1920, 1955, 2000.\n\nMaḥmūd Mukhtār (1944) Al-Salālem al-Muūṣīqīya al-Musta'mala fi Miṣr, Maṭbū'āt al-Jam'īya al-Miṣrīya li Huwāt al-Mūsīqā",
+    "commentsEnglish": "According to Shawqī (1969:135) quoting from Mukhtār (1944) the research project began in 1935. The researchers Alī Muṣṭafā Mashrafa and Maḥmūd Mukhtār asked the musicians Muṣṭafā Riḍā, Muṣṭafā al-'Aqqād and Ibrahīm Farūz to each tune their own Qanūn and prepare it for the performance of a specific maqām, and then oversee the recording and tuning analysis of each note. \n\nThe results are given as a table with multiple columns that is confusing. The list includes measurements with a partial list of the note names in Arabic (14 note names) because the tests were undertook on a limited selection of maqāmāt including maqāmāt iraq, ḥijāz, nahāwand, ṣabā and ḥijāz kār and therefore only the note names from those maqāmāt were used. These are presented alongside another column that includes a full list of 23 note names in solfege alongside their measurements. The confusion arises because some notes have two different values in columns marked as Results of the Experiment, and Full List, something which Shawqī does not address.\n\nThe version saved here takes the 14 measurements from the Arabic note names list (Results of the Experiment column), and the remaining rest from the Full List of 23 . \n\nThe original values reprinted by Shawqī are given as frequencies in Hz starting from 1000, which is a bizarre choice (see below). We have converted them to cents in order to enter them accurately in this database.\n\nOriginal values in Hz:\n1000, 1057, 1080, 1123, 1171, 1190, 1228, 1274, 1302, 1330, 1417, 1440, 1498, 1562, 1590, 1685, 1738, 1779, 1831, 1880, 1920, 1955, 2000.\n\nMaḥmūd Mukhtār (1944) al-Salālem al-Muūṣīqīya al-Musta'mala fi Miṣr, Maṭbū'āt al-Jam'īya al-Miṣrīya li Huwāt al-Mūsīqā",
     "commentsArabic": "",
     "tuningSystemPitchClasses": [
       "0.000",
@@ -3974,15 +3978,15 @@
       ""
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 261.33,
+    "defaultReferenceFrequency": 130.665,
     "referenceFrequencies": {
       "yegāh": 97.999,
       "ʿushayrān": 110,
-      "rāst": 261.33
+      "rāst": 130.665
     }
   },
   {
-    "id": "Al-Ṣabbāgh-(1950)",
+    "id": "al-Sabbagh-(1950)",
     "titleEnglish": "Contemporary Arabic 19-Tone",
     "titleArabic": "السلم العربي الحالي",
     "year": "1950",
@@ -3990,17 +3994,17 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "IDE6rHb6y71_H8_0p5nh1",
+        "sourceId": "Shawqi-(1969)",
         "page": "160"
       },
       {
-        "sourceId": "YQh0gMMk0mKbUKc-FMgrZ",
+        "sourceId": "al-Ṣabbāgh-(1950)",
         "page": "173"
       }
     ],
-    "creatorEnglish": "Al-Ṣabbāgh",
+    "creatorEnglish": "al-Ṣabbāgh",
     "creatorArabic": "الصبّاغ، توفيق",
-    "commentsEnglish": "This tuning system by Tawfīq Al-Ṣabbāgh is built on a theoretical 53-comma per octave division, resulting in 19-tones that are used in the maqāmāt he recounts in his book. Ṣabbāgh gives the comma a value of 1/81th of a string length of 10,000 = 123.4567901235 (1950:38, defined in error by Shawqī as 0,012346 in 1969:147). This is a syntonic comma, also known as the Didymus' comma, the meantone comma or the Ptolemaic comma, with a frequency ratio of 81/80. Al-Ṣabbāgh proceeds to calculate the notes of many maqāmāt based on the principle distances between the fundamental notes as follows:\n\nrāst (9 commas) dūgāh (7) segāh (6) chahārgāh (9) nawā (9) ḥusaynī (7) awj (6) kurdān\n\nThe final 19-tone system is then given as as string lengths and frequency in Hz starting from rāst at 10000 and 516 Hz plus the number of commas per interval between the 19-tones (which are either 5,4,3,2 or 1 commas).\n\nHere we have set the default frequency at 258 Hz for rast (an octave lower than Ṣabbāgh) but the frequency of rāst-10000-1/1 as 261.33 to match other tuning systems in the database for the sake of clarity and comparison.\n\nṢabbāgh also uses the note names kurdī wāṭī and kurdī ʿālī instead of nīm kurdī and kurdī, nīm būseḹīk instead of būselīk, ḥiṣār wāṭī and ḥiṣār ʿālī instead of nīm ḥiṣār and ḥiṣār, and nīm māhūr wāṭī and nīm māhūr ʿālī instead of nīm māhūr and tīk mahūr.",
+    "commentsEnglish": "This tuning system by Tawfīq al-Ṣabbāgh is built on a theoretical 53-comma per octave division, resulting in 19-tones that are used in the maqāmāt he recounts in his book. Ṣabbāgh gives the comma a value of 1/81th of a string length of 10,000 = 123.4567901235 (1950:38, defined in error by Shawqī as 0,012346 in 1969:147). This is a syntonic comma, also known as the Didymus' comma, the meantone comma or the Ptolemaic comma, with a frequency ratio of 81/80. al-Ṣabbāgh proceeds to calculate the notes of many maqāmāt based on the principle distances between the fundamental notes as follows:\n\nrāst (9 commas) dūgāh (7) segāh (6) chahārgāh (9) nawā (9) ḥusaynī (7) awj (6) kurdān\n\nThe final 19-tone system is then given as as string lengths and frequency in Hz starting from rāst at 10000 and 516 Hz plus the number of commas per interval between the 19-tones (which are either 5,4,3,2 or 1 commas).\n\nHere we have set the default frequency at 258 Hz for rast (an octave lower than Ṣabbāgh) but the frequency of rāst-10000-1/1 as 130.665 to match other tuning systems in the database for the sake of clarity and comparison.\n\nṢabbāgh also uses the note names kurdī wāṭī and kurdī ʿālī instead of nīm kurdī and kurdī, nīm būseḹīk instead of būselīk, ḥiṣār wāṭī and ḥiṣār ʿālī instead of nīm ḥiṣār and ḥiṣār, and nīm māhūr wāṭī and nīm māhūr ʿālī instead of nīm māhūr and tīk mahūr.",
     "commentsArabic": "",
     "tuningSystemPitchClasses": [
       "10000",
@@ -4127,11 +4131,11 @@
     "referenceFrequencies": {
       "yegāh": 97.999,
       "ʿushayrān": 110,
-      "rāst": 261.33
+      "rāst": 130.665
     }
   },
   {
-    "id": "Al-Laythī-(1965)",
+    "id": "al-Laythi-(1965)",
     "titleEnglish": "20-Tone",
     "titleArabic": "20 نغمة",
     "year": "1965",
@@ -4139,11 +4143,11 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "IDE6rHb6y71_H8_0p5nh1",
+        "sourceId": "Shawqi-(1969)",
         "page": "190"
       }
     ],
-    "creatorEnglish": "Al-Laythī",
+    "creatorEnglish": "al-Laythī",
     "creatorArabic": "الليثي",
     "commentsEnglish": "Gives the name tīk kūrdi (zalzal) for 39/32, here renamed segāh and segāh as 5/4, here named būselīk and būseḹik as 81/63 here named tīk būselīk",
     "commentsArabic": "",
@@ -4236,15 +4240,15 @@
       ""
     ],
     "stringLength": 10000,
-    "defaultReferenceFrequency": 261.33,
+    "defaultReferenceFrequency": 130.665,
     "referenceFrequencies": {
       "yegāh": 97.999,
       "ʿushayrān": 110,
-      "rāst": 261.33
+      "rāst": 130.665
     }
   },
   {
-    "id": "Al-Ṣabbāgh-(1954)",
+    "id": "al-Sabbagh-(1954)",
     "titleEnglish": "Contemporary Arabic Tuning 24-Tone",
     "titleArabic": "السلم العربي الحالي ٢٤ نغمة",
     "year": "1954",
@@ -4252,11 +4256,11 @@
     "sourceArabic": "مصدر غير معروف",
     "sourcePageReferences": [
       {
-        "sourceId": "YcVXQflykzViRp6e3tIHo",
+        "sourceId": "al-Ṣabbāgh-(1954)",
         "page": "47"
       }
     ],
-    "creatorEnglish": "Al-Ṣabbāgh",
+    "creatorEnglish": "al-Ṣabbāgh",
     "creatorArabic": "الصبّاغ، توفيق",
     "commentsEnglish": "In Ṣabbāgh's previous book (1950:173) he gives The Contemporary Arabic tuning system as one of 19 tones. In his follow up book (1954:47) he states the following:\n\n\"It appears from the preceding pitch tables that our primary and secondary tones consist of nineteen degrees, and it has been stated in al-Dalīl al-Mūsīqī al-ʿĀmm (The General Musical Guide) that these are, by default, considered the current Arabic scale.\n\nAfter that, I observed a tendency among many to preserve the names of the well-known twenty-four quarter-tones familiar to us. So I proceeded to add seven additional degrees, thereby allowing our scale to encompass the conventional theoretical tones as well. In this way, we have preserved the names of the twenty-four quarters used in our tradition, leaving no room for objection by anyone.\n\nThus, our current Arabic scale becomes composed of twenty-five degrees, among which are twenty-four unequal intervals, as defined in the following table.\"\n\nṢabbāgh then proceeds to give the 24-tone tuning system in fret divisions as fractions ratios, vibrating string length, number of commas between each pitch class and the note names for each pitch class starting from rāst.\n\nThe tuning values inputted here are inversions of Ṣabbāgh's fret divisions fraction ratios into string length fraction ratios, for example: 1/9 becomes 9/8 but we provide the originals here for reference:\n\n0, 13/256, 1/16, 17/201, 1/9, 5/32, 1/6, 19/102, 1/5, 17/81, 1/4, 31/112, 13/45, 217/729, 1/3, 47/128, 71/189, 235/603, 11/27, 7/16, 393/883, 549/1200, 7/15, 115/243, 1/2\n\n10000, 9492, 9375, 9155, 8889, 8438, 8333, 8137, 8000, 7901, 7500, 7233, 7111, 7023, 6667, 6328, 6243, 6103, 5926, 5625, 5549, 5425, 5333, 5267, 5000",
     "commentsArabic": "",
@@ -4365,30 +4369,30 @@
       ""
     ],
     "stringLength": 10000,
-    "defaultReferenceFrequency": 261.33,
+    "defaultReferenceFrequency": 130.665,
     "referenceFrequencies": {
-      "rāst": 261.33
+      "rāst": 130.665
     }
   },
   {
-    "id": "Allami,Khyam-(2025)",
-    "titleEnglish": "Ṣabbāgh-Shawwā 28-Tone",
-    "titleArabic": "صبّاغ شوا ٢٨ نغمة",
+    "id": "Allami-(2025)",
+    "titleEnglish": "al-Ṣabbāgh with al-Shawwā's 28-Tones",
+    "titleArabic": "الصبّاغ الشوا ٢٨ نغمة",
     "year": "2025",
     "sourceEnglish": "Unknown Source",
     "sourceArabic": "مصدر غير معروف",
     "sourcePageReferences": [
       {
-        "sourceId": "YcVXQflykzViRp6e3tIHo",
+        "sourceId": "al-Ṣabbāgh-(1954)",
         "page": "47"
       },
       {
-        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "sourceId": "al-Shawwā-(1946)",
         "page": "13"
       }
     ],
-    "creatorEnglish": "Allami, Khyam",
-    "creatorArabic": "اللامي، خيّام",
+    "creatorEnglish": "Allami",
+    "creatorArabic": "اللامي",
     "commentsEnglish": "Created by using Ṣabbāgh (1954) 24-tone tuning system and including Shawwā's extra note names (1946:13) with the applicable one comma higher or one comma lower using the Syntonic comma 81/80 as utilised by Ṣabbāgh. Although Shawwā provides 5 extra note names we only need 4 becuase one of them, nahāwand, which is supposed to be lower than kūrdī by one comma (6/5 x 80/81) gives 32/27 which is already assigned to nīm kurdī/nahāwand.",
     "commentsArabic": "",
     "tuningSystemPitchClasses": [
@@ -4512,9 +4516,166 @@
       ""
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 261.333,
+    "defaultReferenceFrequency": 130.665,
     "referenceFrequencies": {
-      "rāst": 261.333
+      "rāst": 130.6653
+    }
+  },
+  {
+    "id": "al-Farabi-(950aa)",
+    "titleEnglish": "al-Ṭanbūr al-Baghdādi/al-Mīzānī (pre-Islamic)",
+    "titleArabic": "الطنبور البغدادي/الميزاني",
+    "year": "950aa",
+    "sourceEnglish": "Unknown Source",
+    "sourceArabic": "مصدر غير معروف",
+    "sourcePageReferences": [
+      {
+        "sourceId": "Farmer-(1937)",
+        "page": "243"
+      }
+    ],
+    "creatorEnglish": "al-Fārābī",
+    "creatorArabic": "الفارابي",
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "tuningSystemPitchClasses": [
+      "1/1",
+      "40/39",
+      "20/19",
+      "40/37",
+      "10/9",
+      "8/7",
+      "20/17",
+      "40/33",
+      "5/4",
+      "40/31",
+      "4/3",
+      "40/29",
+      "10/7",
+      "40/27",
+      "20/13",
+      "8/5",
+      "5/3",
+      "40/23",
+      "20/11",
+      "40/21"
+    ],
+    "noteNames": [
+      [
+        "ʿushayrān",
+        "nīm ʿajam ʿushayrān",
+        "ʿajam ʿushayrān",
+        "ʿirāq",
+        "kawasht",
+        "tīk kawasht",
+        "rāst",
+        "nīm zīrgūleh",
+        "zīrgūleh",
+        "tīk zīrgūleh",
+        "dūgāh",
+        "nīm kurdī/nahāwand",
+        "kurdī",
+        "būselīk/ʿushshāq",
+        "tīk būselīk",
+        "chahārgāh",
+        "ḥijāz",
+        "nawā",
+        "none",
+        "none"
+      ],
+      [
+        "yegāh",
+        "qarār nīm ḥiṣār",
+        "qarār ḥiṣār",
+        "nīm ʿushayrān",
+        "ʿushayrān",
+        "nīm ʿajam ʿushayrān",
+        "ʿajam ʿushayrān",
+        "ʿirāq",
+        "kawasht",
+        "tīk kawasht",
+        "rāst",
+        "nīm zīrgūleh",
+        "zīrgūleh",
+        "dūgāh",
+        "nīm kurdī/nahāwand",
+        "kurdī",
+        "nīm būselīk",
+        "būselīk/ʿushshāq",
+        "chahārgāh",
+        "ḥijāz"
+      ],
+      [
+        "rāst",
+        "nīm zīrgūleh",
+        "zīrgūleh",
+        "tīk zīrgūleh",
+        "dūgāh",
+        "nīm kurdī/nahāwand",
+        "kurdī",
+        "segāh",
+        "būselīk/ʿushshāq",
+        "tīk būselīk",
+        "chahārgāh",
+        "tīk chahārgāh",
+        "ḥijāz",
+        "nawā",
+        "ḥiṣār",
+        "ḥusaynī",
+        "ʿajam",
+        "jawāb nayrūz",
+        "māhūr",
+        "tīk māhūr"
+      ]
+    ],
+    "abjadNames": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "stringLength": 0,
+    "defaultReferenceFrequency": 97.999,
+    "referenceFrequencies": {
+      "yegāh": 97.999,
+      "ʿushayrān": 110,
+      "rāst": 130.665
     }
   }
 ]

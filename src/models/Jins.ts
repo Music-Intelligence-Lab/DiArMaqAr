@@ -2,6 +2,8 @@ import { SourcePageReference } from "./bibliography/Source";
 import PitchClass, { PitchClassInterval } from "./PitchClass";
 import NoteName from "./NoteName";
 import { getPitchClassIntervals } from "@/functions/getPitchClassIntervals";
+import { standardizeText } from "@/functions/export";
+import shiftPitchClass from "@/functions/shiftPitchClass";
 
 /**
  * Interface for serializing JinsData to JSON format.
@@ -9,6 +11,7 @@ import { getPitchClassIntervals } from "@/functions/getPitchClassIntervals";
  */
 export interface JinsDataInterface {
   id: string;
+  idName: string;
   name: string;
   noteNames: NoteName[];
   commentsEnglish: string;
@@ -38,6 +41,8 @@ export default class JinsData {
   /** Unique identifier for this jins */
   private id: string;
   
+  /** Unique identifier for this jins */
+  private idName: string;
   /** Name of the jins (e.g., "Jins Kurd", "Jins Hijaz") */
   private name: string;
   
@@ -76,6 +81,7 @@ export default class JinsData {
     SourcePageReferences: SourcePageReference[]
   ) {
     this.id = id;
+    this.idName = standardizeText(name);
     this.name = name;
     this.noteNames = noteNames;
     this.commentsEnglish = commentsEnglish;
@@ -90,6 +96,15 @@ export default class JinsData {
    */
   getId(): string {
     return this.id;
+  }
+
+  /**
+   * Gets the standardized ID name of this jins.
+   * 
+   * @returns The jins ID name
+   */
+  getIdName(): string {
+    return this.idName;
   }
 
   /**
@@ -156,7 +171,7 @@ export default class JinsData {
    * @param allNoteNames - All note names available in the tuning system
    * @returns True if all required note names are available, false otherwise
    */
-  isJinsSelectable(allNoteNames: NoteName[]): boolean {
+  isJinsPossible(allNoteNames: NoteName[]): boolean {
     return this.noteNames.every((noteName) => allNoteNames.some((allNoteName) => allNoteName === noteName));
   }
 
@@ -209,6 +224,7 @@ export default class JinsData {
   convertToObject(): JinsDataInterface {
     return {
       id: this.id,
+      idName: this.idName,
       name: this.name,
       noteNames: this.noteNames,
       commentsEnglish: this.commentsEnglish,
@@ -280,29 +296,94 @@ export interface Jins {
  */
 export interface AjnasModulations {
   /** Modulations that occur on the first scale degree */
-  modulationsOnOne: Jins[];
+  modulationsOnFirstDegree: Jins[];
   
   /** Modulations that occur on the third scale degree */
-  modulationsOnThree: Jins[];
+  modulationsOnThirdDegree: Jins[];
   
   /** Modulations that occur on the third scale degree (second pattern) */
-  modulationsOnThree2p: Jins[];
+  modulationsOnAltThirdDegree: Jins[];
   
   /** Modulations that occur on the fourth scale degree */
-  modulationsOnFour: Jins[];
+  modulationsOnFourthDegree: Jins[];
   
   /** Modulations that occur on the fifth scale degree */
-  modulationsOnFive: Jins[];
+  modulationsOnFifthDegree: Jins[];
   
   /** Ascending modulations that occur on the sixth scale degree */
-  modulationsOnSixAscending: Jins[];
+  modulationsOnSixthDegreeAsc: Jins[];
   
   /** Descending modulations that occur on the sixth scale degree */
-  modulationsOnSixDescending: Jins[];
+  modulationsOnSixthDegreeDesc: Jins[];
   
   /** Modulations on the sixth scale degree without using the third */
-  modulationsOnSixNoThird: Jins[];
+  modulationsOnSixthDegreeIfNoThird: Jins[];
   
   /** The note name of the second degree (plus variations) */
-  noteName2p: string;
+  noteName2pBelowThird: string;
+}
+
+/**
+ * Shifts a jins to a different octave while maintaining intervallic relationships.
+ * 
+ * @param allPitchClasses - All available pitch classes in the tuning system
+ * @param jins - The jins to shift
+ * @param octaveShift - Number of octaves to shift (positive = up, negative = down)
+ * @returns New Jins instance shifted by the specified number of octaves
+ */
+export function shiftJinsByOctaves(allPitchClasses: PitchClass[], jins: Jins, octaveShift: number): Jins | null {
+  // Defensive check for undefined jins or jinsPitchClasses
+  if (!jins || !jins.jinsPitchClasses) {
+    console.warn('⚠️ shiftJinsByOctaves: jins or jinsPitchClasses is undefined', {
+      jinsExists: !!jins,
+      jinsId: jins?.jinsId,
+      jinsName: jins?.name,
+      jinsPitchClassesExists: !!jins?.jinsPitchClasses
+    });
+    return null;
+  }
+  
+  const shiftedPitchClasses = jins.jinsPitchClasses.map((pc) => shiftPitchClass(allPitchClasses, pc, octaveShift));
+  
+  // Check if any pitch class shift failed (indicated by empty noteName)
+  const allValid = shiftedPitchClasses.every(pc => pc.noteName !== "");
+  
+  if (!allValid) {
+    // Return null if octave shift would put any note out of bounds
+    return null;
+  }
+
+  const shiftedPitchClassIntervals = getPitchClassIntervals(shiftedPitchClasses);
+  
+  // Extract the base jins name (remove any existing "al-" suffix and what follows)
+  let baseJinsName = jins.name;
+  const alIndex = baseJinsName.indexOf(' al-');
+  if (alIndex !== -1) {
+    baseJinsName = baseJinsName.substring(0, alIndex);
+  }
+  
+  // Create new name with the shifted tonic
+  const newTonicName = shiftedPitchClasses[0].noteName;
+  const newName = `${baseJinsName} al-${newTonicName}`;
+  
+  return {
+    jinsId: jins.jinsId,
+    name: newName,
+    transposition: jins.transposition,
+    jinsPitchClasses: shiftedPitchClasses,
+    jinsPitchClassIntervals: shiftedPitchClassIntervals,
+  };}
+
+/**
+ * Compares two jins instances for equality based on ID, length, and starting note.
+ * 
+ * @param jinsA - First jins to compare
+ * @param jinsB - Second jins to compare
+ * @returns True if the jins are considered equal, false otherwise
+ */
+export function ajnasAreEqual(jinsA: Jins, jinsB: Jins): boolean {
+  if (jinsA.jinsPitchClasses.length !== jinsB.jinsPitchClasses.length) return false;
+  else if (jinsA.jinsId !== jinsB.jinsId) return false;
+  else if (jinsA.jinsPitchClasses[0].noteName !== jinsB.jinsPitchClasses[0].noteName) return false;
+  else return true;
 }

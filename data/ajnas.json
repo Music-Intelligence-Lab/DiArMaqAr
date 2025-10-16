@@ -1,19 +1,7 @@
 [
   {
-    "id": "1",
-    "name": "jins rāst (muṭlaq)",
-    "noteNames": [
-      "nawā",
-      "ḥusaynī",
-      "awj",
-      "kurdān"
-    ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "sourcePageReferences": []
-  },
-  {
     "id": "2",
+    "idName": "jins_bayyat",
     "name": "jins bayyāt",
     "noteNames": [
       "dūgāh",
@@ -27,6 +15,7 @@
   },
   {
     "id": "3",
+    "idName": "jins_segah",
     "name": "jins segāh",
     "noteNames": [
       "segāh",
@@ -39,6 +28,7 @@
   },
   {
     "id": "4",
+    "idName": "jins_saba",
     "name": "jins ṣabā",
     "noteNames": [
       "dūgāh",
@@ -50,17 +40,18 @@
     "commentsArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "SZNw4epqCZe7VhE5eWT3L",
+        "sourceId": "al-Khulʿī-(2011)",
         "page": "55"
       },
       {
-        "sourceId": "VmShC7ciSIikhGlZwUUJC",
+        "sourceId": "al-Urmawī-al-Baghdādī-(2017)",
         "page": "23"
       }
     ]
   },
   {
     "id": "5",
+    "idName": "jins_ajam_ushayran_",
     "name": "jins ʿajam ʿushayrān ",
     "noteNames": [
       "ʿajam ʿushayrān",
@@ -74,7 +65,8 @@
   },
   {
     "id": "6",
-    "name": "jins nahāwand (binṣir)",
+    "idName": "jins_nahawand",
+    "name": "jins nahāwand",
     "noteNames": [
       "rāst",
       "dūgāh",
@@ -87,6 +79,7 @@
   },
   {
     "id": "7",
+    "idName": "jins_kurd",
     "name": "jins kurd",
     "noteNames": [
       "dūgāh",
@@ -100,6 +93,7 @@
   },
   {
     "id": "8",
+    "idName": "jins_hijaz_(binsir)",
     "name": "jins ḥijāz (binṣir)",
     "noteNames": [
       "rāst",
@@ -113,6 +107,7 @@
   },
   {
     "id": "9",
+    "idName": "jins_saba_zamzam",
     "name": "jins ṣabā zamzam",
     "noteNames": [
       "dūgāh",
@@ -126,6 +121,7 @@
   },
   {
     "id": "10",
+    "idName": "jins_chahargah",
     "name": "jins chahārgāh",
     "noteNames": [
       "chahārgāh",
@@ -139,6 +135,7 @@
   },
   {
     "id": "11",
+    "idName": "jins_athar_kurd",
     "name": "jins athar kurd",
     "noteNames": [
       "dūgāh",
@@ -153,19 +150,21 @@
   },
   {
     "id": "12",
-    "name": "jins ḥijāz 1",
+    "idName": "jins_hijaz",
+    "name": "jins ḥijāz",
     "noteNames": [
       "dūgāh",
       "kurdī",
       "ḥijāz",
       "nawā"
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "Jins ḥijāz, and its maqām ḥijāz, is one of the most widely used maqāmāt across the Arabic speaking region. One major example of it's usage is in the Adhān (Muslim call to prayer).  It is also a jins and maqām that has many variations in intonation, even if it has been consistantly theorised as being constructed from the note names dūgāh, kurdī, ḥijāz, nawā. For this reason we have included multiple versions of it so that it can be heard and compared with intonational variants within a single or across multiple tuning systems.",
+    "commentsArabic": "جنس الحجاز ومقام الحجاز، هو من أكثر المقامات انتشاراً واستخداماً في المنطقة الناطقة بالعربية. ومن أبرز الأمثلة على استعماله في الأذان (النداء للصلاة في الإسلام). وهو أيضاً جنس ومقام له اختلافات كثيرة في الأداء النغمي، حتى ولو كان منظّراً بثبات على أنه مبني من الدرجات الصوتية: دوكاه، كردي، حجاز، نوى. لهذا السبب أدرجنا نسخاً متعددة منه ليُسمع ويُقارن مع المتغيرات النغمية ضمن نظام تسوية واحد أو عبر أنظمة تسوية متعددة.",
     "sourcePageReferences": []
   },
   {
     "id": "13",
+    "idName": "jins_mustaar",
     "name": "jins mustaʿār",
     "noteNames": [
       "ʿirāq",
@@ -179,6 +178,7 @@
   },
   {
     "id": "14",
+    "idName": "jins_segah_baladi",
     "name": "jins segāh baladī",
     "noteNames": [
       "nawā",
@@ -192,6 +192,7 @@
   },
   {
     "id": "15",
+    "idName": "jins_hijaz_2",
     "name": "jins ḥijāz 2",
     "noteNames": [
       "dūgāh",
@@ -205,7 +206,8 @@
   },
   {
     "id": "16",
-    "name": "jins rāst (binṣir) (nīm būselīk)",
+    "idName": "jins_rast_(nim_buselik)",
+    "name": "jins rāst (nīm būselīk)",
     "noteNames": [
       "rāst",
       "dūgāh",
@@ -218,6 +220,7 @@
   },
   {
     "id": "17",
+    "idName": "jins_kurd_(binsir)",
     "name": "jins kurd (binṣir)",
     "noteNames": [
       "rāst",
@@ -231,6 +234,7 @@
   },
   {
     "id": "18",
+    "idName": "jins_nikriz",
     "name": "jins nikrīz",
     "noteNames": [
       "rāst",
@@ -245,7 +249,8 @@
   },
   {
     "id": "19",
-    "name": "jins rāst (binṣir)",
+    "idName": "jins_rast",
+    "name": "jins rāst",
     "noteNames": [
       "rāst",
       "dūgāh",
@@ -257,21 +262,9 @@
     "sourcePageReferences": []
   },
   {
-    "id": "20",
-    "name": "jins nahāwand (muṭlaq)",
-    "noteNames": [
-      "nawā",
-      "ḥusaynī",
-      "ʿajam",
-      "kurdān"
-    ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "sourcePageReferences": []
-  },
-  {
     "id": "21",
-    "name": "jins būselīk (Al-Shawwā)",
+    "idName": "jins_buselik_(al-Shawwa)",
+    "name": "jins būselīk (al-Shawwā)",
     "noteNames": [
       "dūgāh",
       "nīm būselīk",
@@ -282,14 +275,15 @@
     "commentsArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "oY8WnTdP5msak8o1G_N7f",
+        "sourceId": "al-Shawwā-(1946)",
         "page": "70"
       }
     ]
   },
   {
     "id": "22",
-    "name": "jins būselīk (Al-Ḥilū)",
+    "idName": "jins_buselik_(al-Hilu)",
+    "name": "jins būselīk (al-Ḥilū)",
     "noteNames": [
       "dūgāh",
       "būselīk/ʿushshāq",
@@ -300,9 +294,139 @@
     "commentsArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "zzowyMMW095bTuaDEyH6M",
+        "sourceId": "al-Ḥilū-(1961)",
         "page": "126"
       }
     ]
+  },
+  {
+    "id": "23",
+    "idName": "jins_hijaz_3_(binsir)",
+    "name": "jins ḥijāz 3 (binṣir)",
+    "noteNames": [
+      "rāst",
+      "zīrgūleh",
+      "būselīk/ʿushshāq",
+      "chahārgāh"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "24",
+    "idName": "jins_awj_ara",
+    "name": "jins awj ʾārāʾ",
+    "noteNames": [
+      "ʿirāq",
+      "rāst",
+      "kurdī",
+      "segāh"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "al-Shawwā-(1946)",
+        "page": "38"
+      }
+    ]
+  },
+  {
+    "id": "25",
+    "idName": "jins_kurd_(binsir)",
+    "name": "jins kurd (binṣir)",
+    "noteNames": [
+      "rāst",
+      "zīrgūleh",
+      "kurdī",
+      "chahārgāh"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "26",
+    "idName": "jins_iraq",
+    "name": "jins ʿirāq",
+    "noteNames": [
+      "ʿirāq",
+      "rāst",
+      "dūgāh"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "27",
+    "idName": "jins_hijaz_yegah",
+    "name": "jins ḥijāz yegāh",
+    "noteNames": [
+      "yegāh",
+      "qarār ḥiṣār",
+      "nīm kawasht",
+      "rāst"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "28",
+    "idName": "jins_bayyat_ushayran",
+    "name": "jins bayyāt ʿushayrān",
+    "noteNames": [
+      "ʿushayrān",
+      "ʿirāq",
+      "rāst",
+      "dūgāh"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "29",
+    "idName": "jins_hijaz_ushayran",
+    "name": "jins ḥijāz ʿushayrān",
+    "noteNames": [
+      "ʿushayrān",
+      "ʿajam ʿushayrān",
+      "zīrgūleh",
+      "dūgāh"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "30",
+    "idName": "jins_kurd_ushayran",
+    "name": "jins kurd ʿushayrān",
+    "noteNames": [
+      "ʿushayrān",
+      "ʿajam ʿushayrān",
+      "rāst",
+      "dūgāh"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
+  },
+  {
+    "id": "31",
+    "idName": "jins_chahargah_(al-Shawwa)",
+    "name": "jins chahārgāh (al-Shawwā)",
+    "noteNames": [
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "ʿajam"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": []
   }
 ]

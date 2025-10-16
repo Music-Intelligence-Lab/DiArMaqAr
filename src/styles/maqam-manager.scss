@@ -23,6 +23,7 @@
   max-width: 1600px;
   margin: 0 auto $space-4 auto; // 16px bottom margin for consistency
 
+  // Maqam-specific unique styles
   &__header {
     margin: $space-4 0; // Reduced spacing
     text-align: center;
@@ -34,24 +35,6 @@
   &__selections {
     display: flex;
     align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: $space-2;
-    font-size: $font-size-base;
-    font-weight: $font-weight-normal;
-    line-height: $line-height-normal;
-    padding: $space-4;
-    background: $surface-primary;
-    backdrop-filter: $backdrop-blur-light;
-    border: 1px solid $border-primary;
-    border-radius: $space-3;
-    margin-bottom: 0; // Remove any extra space below selections
-  }
-
-  // Pitch class bar spacing: no transparent gap above, but clear separation
-  &__pitch-class-bar-wrapper {
-    margin-top: $space-3; // 12px above
-    margin-bottom: $space-3; // 12px below
   }
 
   &__rows {
@@ -123,33 +106,259 @@
     }
   }
 
-/* 
- * CAROUSEL STYLES MIGRATED TO UNIFIED COMPONENT
- * ===============================================
- * 
- * Location: src/styles/carousel.scss
- * Import: Already included in globals.scss
- * 
- * REACT COMPONENT UPDATE REQUIRED:
- * 
- * Old Class Names → New Class Names:
- * .maqam-manager__list           → .carousel__list
- * .maqam-manager__item           → .carousel__item
- * .maqam-manager__item-name      → .carousel__item-name
- * .maqam-manager__item_active    → .carousel__item--active
- * .maqam-manager__item_selected  → .carousel__item--selected
- * .maqam-manager__carousel       → .carousel__controls
- * .carousel-button               → .carousel__button
- * .carousel-button-prev          → .carousel__button--prev
- * .carousel-button-next          → .carousel__button--next
- * 
- * Layout Modifiers Available:
- * .carousel--single-row (120px height)
- * .carousel--triple-row (280px height)
- * Default: two rows (200px height)
- * 
- * Migration Guide: See CAROUSEL_MIGRATION.md
- */  &__play-button {
+  // Filter controls container (was __tabs-container)
+  &__filter-controls {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    height: auto;
+    vertical-align: top;
+  }
+
+  // Filter mode toggle button (was __group-toggle-button)
+  &__filter-mode-toggle {
+    background-color: rgba($tertiary, 0.7);
+    color: white;
+    padding: 0px 10px;
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 12px;
+    min-width: 150px;
+    width: auto;
+    height: 30px;
+    vertical-align: middle;
+    text-align: center;
+    border: none;
+    display: inline-block;
+    flex-shrink: 0;
+
+    &:focus {
+      outline: transparent;
+    }
+
+    &:active {
+      background-color: $gold !important;
+    }
+
+    &:hover {
+      background-color: rgba($tertiary, 1);
+    }
+  }
+
+  &__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    flex-grow: 1;
+    min-width: 0;
+    margin-left: 25px;
+
+    [dir="rtl"] & {
+      margin-left: 0;
+      margin-right: 25px;
+    }
+  }
+
+  &__tab {
+    text-align: left;
+    width: max-content;
+    padding: 10px 10px;
+    border-radius: 0px;
+    border: none;
+    background: $medium-grey;
+    color: $text;
+    font-size: 13px;
+    height: 38px;
+    font-weight: 400;
+    cursor: pointer;
+
+    [dir="rtl"] & {
+      text-align: right;
+    }
+
+    &:hover {
+      background: color.adjust($medium-grey, $lightness: -10%);
+    }
+  }
+
+  &__tab_active {
+    border: none;
+    background: $black;
+    font-weight: 400;
+
+    &:hover {
+      background: $black;
+    }
+  }
+
+  &__tab-count {
+    font-size: 0.95em;
+    color: silver;
+    margin-left: 2px;
+
+    [dir="rtl"] & {
+      margin-left: 0;
+      margin-right: 2px;
+    }
+  }
+
+  &__carousel {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+
+    .carousel-button {
+      background: none;
+      border: none;
+      font-size: 30px;
+      cursor: pointer;
+      color: $text;
+      padding: 0px;
+
+      &:hover {
+        color: $tertiary;
+        transition: background-color 0.2s ease-in-out;
+      }
+    }
+
+    .carousel-button-prev,
+    .carousel-button-next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1;
+      height: calc(100% - 20px);
+      width: 25px;
+      background-color: $black;
+
+      &:hover {
+        color: $tertiary;
+        transition: color 0.1s ease-in-out;
+      }
+    }
+
+    .carousel-button-prev {
+      left: 0;
+
+      [dir="rtl"] & {
+        left: auto;
+        right: 0;
+      }
+    }
+
+    .carousel-button-next {
+      right: 0;
+
+      [dir="rtl"] & {
+        right: auto;
+        left: 0;
+      }
+    }
+  }
+
+  &__list {
+    width: 100%;
+    background-color: $black;
+    display: grid;
+    grid-template-columns: repeat(16, (minmax(250px, 1fr)));
+    grid-template-rows: repeat(3, auto);
+    grid-auto-flow: column;
+    gap: 10px;
+    height: 200px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    position: relative;
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    [dir="rtl"] & {
+      direction: rtl;
+    }
+
+    &::-webkit-scrollbar {
+      height: 6px;
+      position: relative;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: $primary;
+      cursor: pointer;
+      position: relative;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: $medium-grey;
+      cursor: pointer;
+      position: relative;
+    }
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    padding: 5px 10px;
+    background-color: rgba($black, 0.3);
+    font-size: 14px;
+    color: $text;
+    cursor: pointer;
+    transition: 0.2s;
+
+    [dir="rtl"] & {
+      text-align: right;
+    }
+
+    &_active {
+      background-color: rgba($primary, 0.4);
+
+      &:hover {
+        background-color: rgba($primary, 0.9);
+      }
+    }
+
+    &_selected {
+      background-color: $tertiary;
+
+      &:hover {
+        background-color: $tertiary;
+      }
+    }
+  }
+
+  &__item-name {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: left;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-variation-settings: "wght" 400;
+    font-synthesis: none;
+
+    [dir="rtl"] & {
+      text-align: right;
+    }
+
+    &-transpositions {
+      font-weight: 200;
+      margin-top: 3px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-variation-settings: "wght" 200;
+      font-synthesis: none;
+
+      [dir="rtl"] & {
+        text-align: right;
+      }
+    }
+  }
+
+  &__play-button {
     margin: 0 10px;
     display: flex;
     align-items: center;
@@ -162,7 +371,8 @@
     transition: 0.3s;
   }
 
-  &__create-new-maqam-button {
+  // Create button (was __create-new-maqam-button)
+  &__create-button {
     width: fit-content;
     margin: 20px auto;
     font-size: 20px;
@@ -178,7 +388,8 @@
     }
   }
 
-  &__maqam-form {
+  // Admin form (was __maqam-form)
+  &__admin-form {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -186,17 +397,16 @@
     padding: 20px;
     font-size: 20px;
 
-    // RTL support
     [dir="rtl"] & {
       align-items: flex-end;
       text-align: right;
     }
   }
 
-  &__maqam-input {
+  // Name input (was __maqam-input)
+  &__name-input {
     padding: 0.4rem;
     font-size: 1rem;
-    // border: 1px solid #ccc;
     border-radius: 4px;
   }
 
@@ -211,7 +421,6 @@
     transition: 0.3s;
     color: white;
 
-    // RTL support
     [dir="rtl"] & {
       margin-right: 0;
       margin-left: 20px;
@@ -300,7 +509,6 @@
     gap: 0.5rem;
     width: 100%;
 
-    // RTL support
     [dir="rtl"] & {
       flex-direction: row-reverse;
     }
@@ -310,7 +518,6 @@
     margin-bottom: 0.4rem;
     font-weight: bold;
 
-    // RTL support
     [dir="rtl"] & {
       text-align: right;
     }
@@ -319,68 +526,7 @@
   &__input,
   &__textarea {
     padding: 0.4rem;
-    // font-size: 0.9rem;
-    // border: 1px solid #ccc;
-    // border-radius: 4px;
     resize: vertical;
-  }
-
-  &__tabs {
-    display: flex;
-    gap: 5px;
-    margin-bottom: -10px;
-    margin-left: 25px;
-
-    // RTL support
-    [dir="rtl"] & {
-      margin-left: 0;
-      margin-right: 25px;
-    }
-  }
-
-  &__tab {
-    text-align: left;
-    width: max-content;
-    padding: 10px 10px;
-    border-radius: 0px;
-    border: none;
-    background: $medium-grey;
-    color: $text;
-    font-size: 13px;
-
-    font-weight: 400;
-    cursor: pointer;
-
-    // RTL support
-    [dir="rtl"] & {
-      text-align: right;
-    }
-
-    &:hover {
-      background: color.adjust($medium-grey, $lightness: -10%);
-    }
-  }
-
-  &__tab_active {
-    border: none;
-    background: $black;
-    font-weight: 400;
-
-    &:hover {
-      background: $black;
-    }
-  }
-
-  &__tab-count {
-    font-size: 0.95em;
-    color: silver;
-    margin-left: 2px;
-
-    // RTL support
-    [dir="rtl"] & {
-      margin-left: 0;
-      margin-right: 2px;
-    }
   }
 
   &__export-container {
@@ -392,7 +538,6 @@
     margin-bottom: 0px;
     margin-left: auto;
 
-    // RTL support
     [dir="rtl"] & {
       float: left;
       margin-right: auto;
@@ -410,7 +555,6 @@
     color: $text;
     margin-left: 0px;
 
-    // RTL support
     [dir="rtl"] & {
       margin-left: auto;
       margin-right: 0px;

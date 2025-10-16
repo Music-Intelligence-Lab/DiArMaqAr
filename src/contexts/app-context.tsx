@@ -144,7 +144,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       const usedNoteNames = allThePitchClasses.map((pitchClass) => pitchClass.noteName);
       if (!selectedTuningSystem.isSaved()) return;
       if (selectedJinsData) {
-        if (selectedJinsData.isJinsSelectable(usedNoteNames)) {
+        if (selectedJinsData.isJinsPossible(usedNoteNames)) {
           let foundJins: Jins | null = null;
 
           if (selectedJins) {
@@ -155,7 +155,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
           handleClickJins(selectedJinsData, allThePitchClasses, foundJins);
         } else clearSelections();
       } else if (selectedMaqamData) {
-        if (selectedMaqamData.isMaqamSelectable(usedNoteNames)) {
+        if (selectedMaqamData.isMaqamPossible(usedNoteNames)) {
           let foundMaqam: Maqam | null = null;
 
           if (selectedMaqam) {
@@ -370,7 +370,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
             if (jinsDataId) {
               const foundJinsData = ajnas.find((j) => j.getId() === jinsDataId);
-              if (foundJinsData && foundJinsData.isJinsSelectable(allPitchClasses.map((pc) => pc.noteName))) {
+              if (foundJinsData && foundJinsData.isJinsPossible(allPitchClasses.map((pc) => pc.noteName))) {
                 const JinsTranspositions = getJinsTranspositions(allPitchClasses, foundJinsData, true, 10);
                 let foundJins: Jins | null = null;
                 if (jinsFirstNote) {
@@ -381,7 +381,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
               }
             } else if (maqamDataId) {
               const foundMaqamData = maqamat.find((m) => m.getId() === maqamDataId);
-              if (foundMaqamData && foundMaqamData.isMaqamSelectable(allPitchClasses.map((pc) => pc.noteName))) {
+              if (foundMaqamData && foundMaqamData.isMaqamPossible(allPitchClasses.map((pc) => pc.noteName))) {
                 const maqamTranspositions = getMaqamTranspositions(allPitchClasses, ajnas, foundMaqamData, true, 10);
                 let foundMaqam: Maqam | null = null;
                 if (maqamFirstNote) {

@@ -27,23 +27,8 @@
     font-weight: $font-weight-normal;
     color: $text-primary;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    
-    // Gradient text effect like web3 platforms
-    background: $gradient-primary;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    
-    &:hover {
-      transform: translateY(-1px);
-    }
-    
-    &:focus-visible {
-      outline: 2px solid $focus-ring;
-      outline-offset: $focus-ring-offset;
-      border-radius: $space-1;
-    }
+    direction: ltr !important;
+    text-align: center !important;
   }
 
   &__subtitle {

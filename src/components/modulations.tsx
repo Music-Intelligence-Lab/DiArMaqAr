@@ -4,10 +4,11 @@ import useAppContext from "@/contexts/app-context";
 import useSoundContext from "@/contexts/sound-context";
 import useLanguageContext from "@/contexts/language-context";
 import React, { useState, useEffect, useRef } from "react";
-import { MaqamatModulations, Maqam } from "@/models/Maqam";
+import { MaqamatModulations, Maqam, shiftMaqamByOctaves } from "@/models/Maqam";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import calculateNumberOfModulations from "@/functions/calculateNumberOfModulations";
-import { AjnasModulations } from "@/models/Jins";
+import { AjnasModulations, shiftJinsByOctaves, Jins } from "@/models/Jins";
+import shiftPitchClass from "@/functions/shiftPitchClass";
 import modulate from "@/functions/modulate";
 type ModulationsPair = { ajnas: AjnasModulations; maqamat: MaqamatModulations };
 
@@ -29,6 +30,7 @@ export default function Modulations() {
   } = useAppContext();
 
   const [modulationModes, setModulationModes] = useState<boolean[]>([false]);
+  const [octaveShiftEnabled, setOctaveShiftEnabled] = useState<boolean[]>([false]);
 
   const [collapsedHops, setCollapsedHops] = useState<boolean[]>([]);
   const { clearHangingNotes } = useSoundContext();
@@ -38,9 +40,45 @@ export default function Modulations() {
 
   const hopsRefs = useRef<Array<HTMLDivElement | null>>([]);
 
-  function getBothModulations(transposition: Maqam): ModulationsPair {
+  function getBothModulations(transposition: Maqam, stackIdx: number = 0, overrideOctaveShift?: boolean): ModulationsPair {
     const ajnasMods = modulate(allPitchClasses, ajnas, maqamat, transposition, true) as AjnasModulations;
     const maqamatMods = modulate(allPitchClasses, ajnas, maqamat, transposition, false) as MaqamatModulations;
+    
+    // Apply octave shift if enabled for this stack index
+    const shouldShift = overrideOctaveShift ?? (octaveShiftEnabled[stackIdx] || false);
+    if (shouldShift) {
+      // Shift all ajnas modulations down by one octave
+      const shiftedAjnasMods = {
+        ...ajnasMods,
+        modulationsOnFirstDegree: ajnasMods.modulationsOnFirstDegree.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)).filter((jins): jins is Jins => jins !== null),
+        modulationsOnThirdDegree: ajnasMods.modulationsOnThirdDegree.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)).filter((jins): jins is Jins => jins !== null),
+        modulationsOnAltThirdDegree: ajnasMods.modulationsOnAltThirdDegree.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)).filter((jins): jins is Jins => jins !== null),
+        modulationsOnFourthDegree: ajnasMods.modulationsOnFourthDegree.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)).filter((jins): jins is Jins => jins !== null),
+        modulationsOnFifthDegree: ajnasMods.modulationsOnFifthDegree.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)).filter((jins): jins is Jins => jins !== null),
+        modulationsOnSixthDegreeAsc: ajnasMods.modulationsOnSixthDegreeAsc.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)).filter((jins): jins is Jins => jins !== null),
+        modulationsOnSixthDegreeDesc: ajnasMods.modulationsOnSixthDegreeDesc.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)).filter((jins): jins is Jins => jins !== null),
+        modulationsOnSixthDegreeIfNoThird: ajnasMods.modulationsOnSixthDegreeIfNoThird.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)).filter((jins): jins is Jins => jins !== null),
+      };
+      
+      // Shift all maqamat modulations down by one octave
+      const shiftedMaqamatMods = {
+        ...maqamatMods,
+        modulationsOnFirstDegree: maqamatMods.modulationsOnFirstDegree.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)).filter((maqam): maqam is Maqam => maqam !== null),
+        modulationsOnThirdDegree: maqamatMods.modulationsOnThirdDegree.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)).filter((maqam): maqam is Maqam => maqam !== null),
+        modulationsOnAltThirdDegree: maqamatMods.modulationsOnAltThirdDegree.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)).filter((maqam): maqam is Maqam => maqam !== null),
+        modulationsOnFourthDegree: maqamatMods.modulationsOnFourthDegree.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)).filter((maqam): maqam is Maqam => maqam !== null),
+        modulationsOnFifthDegree: maqamatMods.modulationsOnFifthDegree.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)).filter((maqam): maqam is Maqam => maqam !== null),
+        modulationsOnSixthDegreeAsc: maqamatMods.modulationsOnSixthDegreeAsc.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)).filter((maqam): maqam is Maqam => maqam !== null),
+        modulationsOnSixthDegreeDesc: maqamatMods.modulationsOnSixthDegreeDesc.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)).filter((maqam): maqam is Maqam => maqam !== null),
+        modulationsOnSixthDegreeIfNoThird: maqamatMods.modulationsOnSixthDegreeIfNoThird.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)).filter((maqam): maqam is Maqam => maqam !== null),
+      };
+      
+      return {
+        ajnas: shiftedAjnasMods,
+        maqamat: shiftedMaqamatMods,
+      };
+    }
+    
     return {
       ajnas: ajnasMods,
       maqamat: maqamatMods,
@@ -53,9 +91,10 @@ export default function Modulations() {
       if (selectedMaqam) transposition = selectedMaqam;
       else transposition = selectedMaqamData.getTahlil(allPitchClasses);
       setSourceMaqamStack([transposition]);
-      setModulationsStack([getBothModulations(transposition)]);
+      setModulationsStack([getBothModulations(transposition, 0)]);
       setModulationModes([false]); // default to maqamat for first hop
       setCollapsedHops([false]); // not collapsed by default
+      setOctaveShiftEnabled([false]); // default to no octave shift
     }
   }, []);
 
@@ -90,11 +129,12 @@ export default function Modulations() {
         return [selectedMaqam];
       });
       setModulationsStack(() => {
-        const first = getBothModulations(selectedMaqam);
+        const first = getBothModulations(selectedMaqam, 0);
         return [first];
       });
       setModulationModes([false]);
       setCollapsedHops([false]);
+      setOctaveShiftEnabled([false]);
     }
     window.addEventListener("maqamTranspositionChange", handleMaqamTranspositionChange as EventListener);
     return () => window.removeEventListener("maqamTranspositionChange", handleMaqamTranspositionChange as EventListener);
@@ -115,12 +155,8 @@ export default function Modulations() {
   }
 
   const addHopsWrapper = (maqamTransposition: Maqam, stackIdx: number) => {
-    const ajnasMods = modulate(allPitchClasses, ajnas, maqamat, maqamTransposition, true) as AjnasModulations;
-    const maqamatMods = modulate(allPitchClasses, ajnas, maqamat, maqamTransposition, false) as MaqamatModulations;
-    const newModulations = {
-      ajnas: ajnasMods,
-      maqamat: maqamatMods,
-    };
+    const newStackIdx = stackIdx + 1;
+    const newModulations = getBothModulations(maqamTransposition, newStackIdx);
     setSourceMaqamStack((prev) => {
       const newStack = [...prev.slice(0, stackIdx + 1), maqamTransposition];
       return newStack;
@@ -138,6 +174,11 @@ export default function Modulations() {
       // When adding a hop, keep previous collapsed states, default new hop to not collapsed
       const newCollapsed = [...prev.slice(0, stackIdx + 1), false];
       return newCollapsed;
+    });
+    setOctaveShiftEnabled((prev) => {
+      // When adding a hop, keep previous octave shift states, default new hop to disabled
+      const newEnabled = [...prev.slice(0, stackIdx + 1), false];
+      return newEnabled;
     });
     // Scroll to the new hop after a short delay to ensure DOM update
     setTimeout(() => {
@@ -165,6 +206,10 @@ export default function Modulations() {
       const newCollapsed = prev.length > 1 ? prev.slice(0, -1) : prev;
       return newCollapsed;
     });
+    setOctaveShiftEnabled((prev) => {
+      const newEnabled = prev.length > 1 ? prev.slice(0, -1) : prev;
+      return newEnabled;
+    });
     // Scroll to the previous hop or first hop after a short delay
     setTimeout(() => {
       // Find the last non-null ref (should be the last hop in DOM)
@@ -173,6 +218,31 @@ export default function Modulations() {
         validRefs[validRefs.length - 1]?.scrollIntoView({ behavior: "smooth", block: "start" });
       }
     }, 100);
+  };
+
+  // Handles toggling octave shift for a specific stack index
+  const handleOctaveShiftToggle = (stackIdx: number) => {
+    setOctaveShiftEnabled((prev) => {
+      const newEnabled = [...prev];
+      // Ensure the array is long enough
+      while (newEnabled.length <= stackIdx) {
+        newEnabled.push(false);
+      }
+      const newValue = !newEnabled[stackIdx];
+      newEnabled[stackIdx] = newValue;
+      
+      // Rebuild modulations stack for affected indices using the new state
+      setModulationsStack((prevStack) => {
+        const newStack = [...prevStack];
+        for (let i = stackIdx; i < sourceMaqamStack.length; i++) {
+          const octaveShiftForIndex = i === stackIdx ? newValue : newEnabled[i] || false;
+          newStack[i] = getBothModulations(sourceMaqamStack[i], i, octaveShiftForIndex);
+        }
+        return newStack;
+      });
+      
+      return newEnabled;
+    });
   };
 
   // Handles clicking any modulation hop (for all positions: tonic, third, etc)
@@ -243,7 +313,38 @@ export default function Modulations() {
               !collapsedHops[stackIdx] &&
               (() => {
                 const modulations = modulationModes[stackIdx] ? modulationsStack[stackIdx].ajnas : modulationsStack[stackIdx].maqamat;
-                const { noteName2p } = modulations;
+                const { noteName2pBelowThird: noteName2p } = modulations;
+                
+                // Calculate display note names (shifted if octave shift is enabled)
+                let displayAscendingNoteNames = ascendingNoteNames;
+                let displayDescendingNoteNames = descendingNoteNames;
+                let displayNoteName2p = noteName2p;
+                
+                if (octaveShiftEnabled[stackIdx]) {
+                  // When octave shift is enabled, we need to check each pitch class individually
+                  // Some may be shiftable while others are out of bounds
+                  
+                  // Helper function to get shifted note name or fallback message
+                  const getShiftedNoteName = (pitchClass: any): string => {
+                    const shifted = shiftPitchClass(allPitchClasses, pitchClass, -1);
+                    return shifted.noteName === "" ? "Octave Shift is beyond tuning system range" : shifted.noteName;
+                  };
+                  
+                  // Check each ascending pitch class individually
+                  displayAscendingNoteNames = sourceMaqam.ascendingPitchClasses.map(getShiftedNoteName);
+                  displayDescendingNoteNames = sourceMaqam.descendingPitchClasses.map(getShiftedNoteName).reverse();
+                  
+                  // For noteName2p, we need to shift it as well to match other note names
+                  // Find the pitch class that matches noteName2p and shift it
+                  const noteName2pPitchClass = allPitchClasses.find(pc => pc.noteName === noteName2p);
+                  if (noteName2pPitchClass) {
+                    const shiftedNoteName2p = shiftPitchClass(allPitchClasses, noteName2pPitchClass, -1);
+                    displayNoteName2p = shiftedNoteName2p.noteName === "" ? "Octave Shift is beyond tuning system range" : shiftedNoteName2p.noteName;
+                  } else {
+                    displayNoteName2p = noteName2p;
+                  }
+                }
+                
                 return (
                   <>
                     <div style={{ display: "flex", gap: "8px", marginBottom: "12px", alignItems: "center", justifyContent: "center" }}>
@@ -284,6 +385,15 @@ export default function Modulations() {
                       >
                         {totalMaqamatModulations} {t('modulations.maqamatModulations')}
                       </button>
+                      <button
+                        className={`modulations__octave-shift ${octaveShiftEnabled[stackIdx] ? "modulations__octave-shift_active" : ""}`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleOctaveShiftToggle(stackIdx);
+                        }}
+                      >
+                        {octaveShiftEnabled[stackIdx] ? "✓ " : ""}{t('modulations.octaveShift')}
+                      </button>
                       {/* Move delete button here, only on last hop and if more than one exists */}
                       {stackIdx === sourceMaqamStack.length - 1 && sourceMaqamStack.length > 1 && (
                         <button
@@ -319,9 +429,9 @@ export default function Modulations() {
                           {t('modulations.tonic')}:
                           <br />{" "}
                         </span>
-                        {getDisplayName(ascendingNoteNames[0], 'note')} ({modulations?.modulationsOnOne ? modulations.modulationsOnOne.length : 0})
+                        {getDisplayName(displayAscendingNoteNames[0], 'note')} ({modulations?.modulationsOnFirstDegree ? modulations.modulationsOnFirstDegree.length : 0})
                       </span>
-                      {[...modulations.modulationsOnOne]
+                      {[...modulations.modulationsOnFirstDegree]
                         .sort((a: any, b: any) => a.name.localeCompare(b.name))
                         .map((hop, index) => (
                           <span
@@ -350,9 +460,9 @@ export default function Modulations() {
                           {t('modulations.third')}:
                           <br />{" "}
                         </span>
-                        {getDisplayName(ascendingNoteNames[2], 'note')} ({modulations?.modulationsOnThree ? modulations.modulationsOnThree.length : 0})
+                        {getDisplayName(displayAscendingNoteNames[2], 'note')} ({modulations?.modulationsOnThirdDegree ? modulations.modulationsOnThirdDegree.length : 0})
                       </span>
-                      {[...modulations.modulationsOnThree]
+                      {[...modulations.modulationsOnThirdDegree]
                         .sort((a, b) => a.name.localeCompare(b.name))
                         .map((hop, index) => (
                           <span
@@ -380,9 +490,9 @@ export default function Modulations() {
                           {t('modulations.thirdAlternative')}:
                           <br />{" "}
                         </span>
-                        {getDisplayName(noteName2p, 'note')} ({modulations?.modulationsOnThree2p ? modulations.modulationsOnThree2p.length : 0})
+                        {getDisplayName(displayNoteName2p, 'note')} ({modulations?.modulationsOnAltThirdDegree ? modulations.modulationsOnAltThirdDegree.length : 0})
                       </span>
-                      {[...modulations.modulationsOnThree2p]
+                      {[...modulations.modulationsOnAltThirdDegree]
                         .sort((a, b) => a.name.localeCompare(b.name))
                         .map((hop, index) => (
                           <span
@@ -410,9 +520,9 @@ export default function Modulations() {
                           {t('modulations.fourth')}:
                           <br />{" "}
                         </span>
-                        {getDisplayName(ascendingNoteNames[3], 'note')} ({modulations?.modulationsOnFour ? modulations.modulationsOnFour.length : 0})
+                        {getDisplayName(displayAscendingNoteNames[3], 'note')} ({modulations?.modulationsOnFourthDegree ? modulations.modulationsOnFourthDegree.length : 0})
                       </span>
-                      {[...modulations.modulationsOnFour]
+                      {[...modulations.modulationsOnFourthDegree]
                         .sort((a, b) => a.name.localeCompare(b.name))
                         .map((hop, index) => (
                           <span
@@ -440,9 +550,9 @@ export default function Modulations() {
                           {t('modulations.fifth')}:
                           <br />{" "}
                         </span>
-                        {getDisplayName(ascendingNoteNames[4], 'note')} ({modulations?.modulationsOnFive ? modulations.modulationsOnFive.length : 0})
+                        {getDisplayName(displayAscendingNoteNames[4], 'note')} ({modulations?.modulationsOnFifthDegree ? modulations.modulationsOnFifthDegree.length : 0})
                       </span>
-                      {[...modulations.modulationsOnFive]
+                      {[...modulations.modulationsOnFifthDegree]
                         .sort((a, b) => a.name.localeCompare(b.name))
                         .map((hop, index) => (
                           <span
@@ -470,9 +580,9 @@ export default function Modulations() {
                           {t('modulations.sixthIfNoThird')}:
                           <br />{" "}
                         </span>
-                        {getDisplayName(ascendingNoteNames[5], 'note')} ({modulations?.modulationsOnSixNoThird ? modulations.modulationsOnSixNoThird.length : 0})
+                        {getDisplayName(displayAscendingNoteNames[5], 'note')} ({modulations?.modulationsOnSixthDegreeIfNoThird ? modulations.modulationsOnSixthDegreeIfNoThird.length : 0})
                       </span>
-                      {[...modulations.modulationsOnSixNoThird]
+                      {[...modulations.modulationsOnSixthDegreeIfNoThird]
                         .sort((a, b) => a.name.localeCompare(b.name))
                         .map((hop, index) => (
                           <span
@@ -500,9 +610,9 @@ export default function Modulations() {
                           {t('modulations.sixthAscending')}:
                           <br />{" "}
                         </span>
-                        {getDisplayName(ascendingNoteNames[5], 'note')} ({modulations?.modulationsOnSixAscending ? modulations.modulationsOnSixAscending.length : 0})
+                        {getDisplayName(displayAscendingNoteNames[5], 'note')} ({modulations?.modulationsOnSixthDegreeAsc ? modulations.modulationsOnSixthDegreeAsc.length : 0})
                       </span>
-                      {[...modulations.modulationsOnSixAscending]
+                      {[...modulations.modulationsOnSixthDegreeAsc]
                         .sort((a, b) => a.name.localeCompare(b.name))
                         .map((hop, index) => (
                           <span
@@ -525,15 +635,15 @@ export default function Modulations() {
                         ))}
                     </div>
                     {/* Only show descending if different from ascending */}
-                    {ascendingNoteNames[5] !== descendingNoteNames[5] && (
+                    {displayAscendingNoteNames[5] !== displayDescendingNoteNames[5] && (
                       <div className="modulations__modulations-list">
                         <span className="modulations__header">
                           <span className="modulations__header-text">
                             {t('modulations.sixthDescending')}: <br />{" "}
                           </span>
-                          {getDisplayName(descendingNoteNames[5], 'note')} ({modulations?.modulationsOnSixDescending ? modulations.modulationsOnSixDescending.length : 0})
+                          {getDisplayName(displayDescendingNoteNames[5], 'note')} ({modulations?.modulationsOnSixthDegreeDesc ? modulations.modulationsOnSixthDegreeDesc.length : 0})
                         </span>
-                        {[...modulations.modulationsOnSixDescending]
+                        {[...modulations.modulationsOnSixthDegreeDesc]
                           .sort((a, b) => a.name.localeCompare(b.name))
                           .map((hop, index) => (
                             <span

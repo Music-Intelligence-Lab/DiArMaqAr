@@ -107,6 +107,8 @@ export default function PitchClassBar() {
 
   const { activePitchClasses, soundSettings, pitchClassToKeyMapping, pitchClassToBlackOrWhite } = useSoundContext();
 
+  const { language } = useLanguageContext();
+
   const rowRef = useRef<HTMLDivElement>(null);
   const isDown = useRef(false);
   const startX = useRef(0);
@@ -121,25 +123,39 @@ export default function PitchClassBar() {
     const selectedEls = container.querySelectorAll<HTMLElement>(".pitch-class-bar__cell_selected");
     if (selectedEls.length === 0) return;
 
-    let minLeft = Infinity;
-    let maxRight = -Infinity;
+    const isRTL = language === "ar";
 
-    selectedEls.forEach((el) => {
-      const elLeft = el.offsetLeft;
-      const elRight = elLeft + el.offsetWidth;
-      if (elLeft < minLeft) minLeft = elLeft;
-      if (elRight > maxRight) maxRight = elRight;
-    });
+    if (isRTL) {
+      // In RTL, find rightmost selected element and position at right edge
+      let maxRight = -Infinity;
+      selectedEls.forEach((el) => {
+        const elRight = el.offsetLeft + el.offsetWidth;
+        if (elRight > maxRight) maxRight = elRight;
+      });
 
-    const selectedCenter = (minLeft + maxRight) / 2;
-    const containerWidth = container.clientWidth;
-    const targetScrollLeft = selectedCenter - containerWidth / 2;
+      const containerWidth = container.offsetWidth;
+      const targetScrollLeft = maxRight - containerWidth + 30;
 
-    container.scrollTo({
-      left: targetScrollLeft,
-      behavior: "smooth",
-    });
-  }, [selectedPitchClasses]);
+      container.scrollTo({
+        left: targetScrollLeft,
+        behavior: "smooth",
+      });
+    } else {
+      // In LTR, find leftmost selected element and position at left edge
+      let minLeft = Infinity;
+      selectedEls.forEach((el) => {
+        const elLeft = el.offsetLeft;
+        if (elLeft < minLeft) minLeft = elLeft;
+      });
+
+      const targetScrollLeft = minLeft - 30;
+
+      container.scrollTo({
+        left: targetScrollLeft,
+        behavior: "smooth",
+      });
+    }
+  }, [selectedPitchClasses, language]);
 
   const { jinsTranspositions: filteredJinsTranspositions, maqamTranspositions: filteredMaqamTranspositions } = useTranspositionsContext();
 
@@ -284,6 +300,7 @@ export default function PitchClassBar() {
     <div
       ref={rowRef}
       className="pitch-class-bar"
+      dir={language === "ar" ? "rtl" : "ltr"}
       style={{ cursor: grabbing ? "grabbing" : "grab" }}
       onMouseDown={(e) => {
         if (!rowRef.current) return;

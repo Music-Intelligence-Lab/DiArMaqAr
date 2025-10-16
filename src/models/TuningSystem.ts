@@ -1,3 +1,4 @@
+import { standardizeText } from "@/functions/export";
 import NoteName, { shiftNoteName } from "./NoteName";
 import { SourcePageReference } from "./bibliography/Source";
 
@@ -66,7 +67,7 @@ export default class TuningSystem {
   private noteNameSets: NoteName[][];
   
   /** 
-   * Default reference frequency in Hz (e.g., 440 for A4, 220 for ʿushayrān).
+   * Default reference frequency in Hz (e.g., 440 for A4, 110 for ʿushayrān).
    * This converts mathematical ratios into actual audible frequencies.
    */
   private defaultReferenceFrequency: number;
@@ -127,7 +128,7 @@ export default class TuningSystem {
     saved: boolean
   ) {
     // Generate unique ID by combining creator, year, and title (sanitized)
-    this.id = `${creatorEnglish}-(${year})`.replaceAll(" ", "").replaceAll("+", "");
+    this.id = standardizeText(`${creatorEnglish}-(${year})`.replaceAll(" ", "").replaceAll("+", ""));
     this.titleEnglish = titleEnglish;
     this.titleArabic = titleArabic;
     this.year = year;
@@ -304,7 +305,7 @@ export default class TuningSystem {
    * Gets the default reference frequency for the tuning system.
    * 
    * This is the primary frequency anchor (e.g., 440 Hz for A4 in Western music,
-   * or 220 Hz for ʿushayrān in Al-Kindī's system) used to convert mathematical
+   * or 110 Hz for ʿushayrān in Al-Kindī's system) used to convert mathematical
    * ratios into actual audible frequencies.
    * 
    * @returns Default reference frequency in Hz

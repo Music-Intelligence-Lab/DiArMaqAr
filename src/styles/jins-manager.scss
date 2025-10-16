@@ -31,7 +31,6 @@
   &__selections {
     display: flex;
     align-items: center;
-    //font-size: 18px;
     font-weight: bold;
   }
 
@@ -82,7 +81,6 @@
     font-size: 14px;
     width: 50%;
     min-height: 80px;
-
     direction: ltr;
     text-align: left;
     vertical-align: top;
@@ -94,7 +92,6 @@
     font-size: 14px;
     width: 50%;
     min-height: 80px;
-
     text-align: right;
     direction: rtl;
     vertical-align: top;
@@ -102,33 +99,163 @@
     float: right;
   }
 
-/* 
- * CAROUSEL STYLES MIGRATED TO UNIFIED COMPONENT
- * ===============================================
- * 
- * Location: src/styles/carousel.scss
- * Import: Already included in globals.scss
- * 
- * REACT COMPONENT UPDATE REQUIRED:
- * 
- * Old Class Names → New Class Names:
- * .jins-manager__list            → .carousel__list
- * .jins-manager__item            → .carousel__item
- * .jins-manager__item-name       → .carousel__item-name
- * .jins-manager__item_active     → .carousel__item--active
- * .jins-manager__item_selected   → .carousel__item--selected
- * .jins-manager__carousel        → .carousel__controls
- * .carousel-button               → .carousel__button
- * .carousel-button-prev          → .carousel__button--prev
- * .carousel-button-next          → .carousel__button--next
- * 
- * Layout Modifiers Available:
- * .carousel--single-row (120px height)
- * .carousel--triple-row (280px height)
- * Default: two rows (200px height)
- * 
- * Migration Guide: See CAROUSEL_MIGRATION.md
- */  &__play-button {
+  &__list {
+    width: 100%;
+    background-color: $black;
+    display: grid;
+    grid-template-rows: repeat(3, auto);
+    grid-auto-flow: column;
+    gap: 10px;
+    height: 200px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    position: relative;
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    [dir="rtl"] & {
+      direction: rtl;
+    }
+
+    &::-webkit-scrollbar {
+      height: 6px;
+      position: relative;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: $primary;
+      cursor: pointer;
+      position: relative;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: $medium-grey;
+      cursor: pointer;
+      position: relative;
+    }
+  }
+
+  &__carousel {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+
+    .carousel-button {
+      background: none;
+      border: none;
+      font-size: 30px;
+      cursor: pointer;
+      color: $text;
+      padding: 0px;
+
+      &:hover {
+        color: $tertiary;
+        transition: background-color 0.2s ease-in-out;
+      }
+    }
+
+    .carousel-button-prev,
+    .carousel-button-next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1;
+      height: calc(100% - 20px);
+      width: 25px;
+      background-color: $black;
+
+      &:hover {
+        color: $tertiary;
+        transition: color 0.1s ease-in-out;
+      }
+    }
+
+    .carousel-button-prev {
+      left: 0;
+
+      [dir="rtl"] & {
+        left: auto;
+        right: 0;
+      }
+    }
+
+    .carousel-button-next {
+      right: 0;
+
+      [dir="rtl"] & {
+        right: auto;
+        left: 0;
+      }
+    }
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 5px 10px;
+    background-color: rgba($black, 0.3);
+    font-size: 14px;
+    color: $text;
+    cursor: pointer;
+    transition: 0.2s;
+
+    [dir="rtl"] & {
+      text-align: right;
+    }
+
+    &_active {
+      background-color: rgba($primary, 0.4);
+
+      &:hover {
+        background-color: rgba($primary, 0.9);
+      }
+    }
+
+    &_selected {
+      background-color: $tertiary;
+
+      &:hover {
+        background-color: $tertiary;
+      }
+    }
+  }
+
+  &__item-name {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-variation-settings: "wght" 400;
+    font-synthesis: none;
+
+    [dir="rtl"] & {
+      text-align: right;
+    }
+
+    &-transpositions {
+      color: rgba(255, 255, 255, 1);
+      font-size: 14px;
+      margin-top: 3px;
+      font-weight: 200;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-variation-settings: "wght" 200;
+      font-synthesis: none;
+
+      [dir="rtl"] & {
+        text-align: right;
+      }
+    }
+  }
+
+  &__play-button {
     margin: 0 10px;
     display: flex;
     align-items: center;
@@ -145,7 +272,8 @@
     }
   }
 
-  &__create-new-jins-button {
+  // Create button (was __create-new-jins-button)
+  &__create-button {
     width: fit-content;
     margin: 20px auto;
     font-size: 20px;
@@ -162,7 +290,8 @@
     }
   }
 
-  &__jins-form {
+  // Admin form (was __jins-form)
+  &__admin-form {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -170,17 +299,16 @@
     padding: 20px;
     font-size: 20px;
 
-    // RTL support
     [dir="rtl"] & {
       align-items: flex-end;
       text-align: right;
     }
   }
 
-  &__jins-input {
+  // Name input (was __jins-input)
+  &__name-input {
     padding: 0.4rem;
     font-size: 1rem;
-    // border: 1px solid #ccc;
     border-radius: 4px;
   }
 
@@ -195,7 +323,6 @@
     transition: 0.1s;
     color: white;
 
-    // RTL support
     [dir="rtl"] & {
       margin-right: 0;
       margin-left: 20px;
@@ -287,7 +414,6 @@
     gap: 0.5rem;
     width: 100%;
 
-    // RTL support
     [dir="rtl"] & {
       flex-direction: row-reverse;
     }
@@ -305,9 +431,6 @@
   &__input,
   &__textarea {
     padding: 0.4rem;
-    // font-size: 0.9rem;
-    // border: 1px solid #ccc;
-    // border-radius: 4px;
     resize: vertical;
   }
 
@@ -317,7 +440,6 @@
     margin-bottom: -10px;
     margin-left: 25px;
 
-    // RTL support
     [dir="rtl"] & {
       margin-left: 0;
       margin-right: 25px;
@@ -336,7 +458,6 @@
     font-weight: 400;
     cursor: pointer;
 
-    // RTL support
     [dir="rtl"] & {
       text-align: right;
     }
@@ -361,7 +482,6 @@
     color: silver;
     margin-left: 2px;
 
-    // RTL support
     [dir="rtl"] & {
       margin-left: 0;
       margin-right: 2px;
@@ -377,7 +497,6 @@
     margin-bottom: 0px;
     margin-left: auto;
 
-    // RTL support
     [dir="rtl"] & {
       float: left;
       margin-right: auto;
@@ -395,7 +514,6 @@
     color: $text;
     margin-left: 0px;
 
-    // RTL support
     [dir="rtl"] & {
       margin-left: auto;
       margin-right: 0px;

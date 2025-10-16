@@ -201,7 +201,14 @@ const englishOctaveFour = [
   "G-b6",
 ];
 
-// 2. A small helper to zip Arabic→English:
+/**
+ * Creates a mapping object from Arabic note names to English note names.
+ * 
+ * @param arabic - Array of Arabic note names
+ * @param english - Array of corresponding English note names
+ * @returns Object mapping Arabic names to English names
+ * @throws Error if arrays have different lengths
+ */
 function makeMap(arabic: string[], english: string[]) {
   if (arabic.length !== english.length) {
     throw new Error("octave arrays and english arrays must be same length");
