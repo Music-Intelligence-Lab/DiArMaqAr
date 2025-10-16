@@ -11,7 +11,7 @@
  * Used to categorize sources in the bibliography system and enable
  * type-specific processing and formatting.
  */
-export type SourceType = "Book" | "Article";
+export type SourceType = "Book" | "Article" | "Thesis";
 
 /**
  * Enumeration of contributor roles in academic publications.

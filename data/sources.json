@@ -28,7 +28,7 @@
     "ISBN": "9780811874076"
   },
   {
-    "id": "al-Urmawī-al-Baghdādī-(2017)",
+    "id": "al-Urmawī-al-Baghdādī-(1986/2017)",
     "titleEnglish": "Kitāb al-Adwār fī al-Mūsīqā",
     "titleArabic": "كتاب الادوار في الموسيقى",
     "sourceType": "Book",
@@ -70,7 +70,7 @@
     "ISBN": "9789779112459"
   },
   {
-    "id": "al-Khulʿī-(2011)",
+    "id": "al-Khulʿī-(1904/2011)",
     "titleEnglish": "Kitāb al-Mūsiqā al-Sharqī",
     "titleArabic": "كتاب الموسيقى الشرقي",
     "sourceType": "Book",
@@ -191,8 +191,8 @@
   {
     "id": "Allami-(2022)",
     "titleEnglish": "Échos-monde: Towards a hybrid repertoire of contemporary and experimental acoustic, electroacoustic and electronic Arabic music",
-    "titleArabic": "",
-    "sourceType": "Book",
+    "titleArabic": "‎عالم الأصداء: نحو رصيدٍ هجينٍ للموسيقى العربية المعاصرة والتجريبية، صوتياً وكهروصوتياً وإلكترونياً",
+    "sourceType": "Thesis",
     "contributors": [
       {
         "type": "Author",
@@ -205,16 +205,9 @@
     "editionEnglish": "",
     "editionArabic": "",
     "publicationDateEnglish": "2022",
-    "publicationDateArabic": "٢٠٢٢",
-    "url": "",
-    "dateAccessed": "",
-    "originalPublicationDateEnglish": "",
-    "originalPublicationDateArabic": "",
-    "publisherEnglish": "Birmingham City University",
-    "publisherArabic": "جامعة مدينة برمنغهام",
-    "placeEnglish": "",
-    "placeArabic": "",
-    "ISBN": ""
+    "publicationDateArabic": "",
+    "url": "https://www.open-access.bcu.ac.uk/14036/",
+    "dateAccessed": "16-10-2025"
   },
   {
     "id": "al-Shawwā-(1946)",
@@ -443,7 +436,7 @@
     "ISBN": ""
   },
   {
-    "id": "al-Ḥilū-(1961)",
+    "id": "al-Ḥilū-(1957/1961)",
     "titleEnglish": "al-Mūsīqah al-Nazarīya",
     "titleArabic": "الموسيقى النَّظريَّة",
     "sourceType": "Book",

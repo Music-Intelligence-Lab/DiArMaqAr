@@ -5,6 +5,7 @@ import useAppContext from "@/contexts/app-context";
 import { Contributor } from "@/models/bibliography/AbstractSource";
 import Book from "@/models/bibliography/Book";
 import Article from "@/models/bibliography/Article";
+import Thesis from "@/models/bibliography/Thesis";
 import { Source } from "@/models/bibliography/Source";
 import { nanoid } from "nanoid";
 import { updateSources } from "@/functions/update";
@@ -12,14 +13,14 @@ import { updateSources } from "@/functions/update";
 export default function SourcesManager() {
   const { sources, setSources } = useAppContext();
 
-  // “selectedSourceId” can be “new” or the id of an existing Book/Article
+  // "selectedSourceId" can be "new" or the id of an existing Book/Article/Thesis
   const [selectedSourceId, setSelectedSourceId] = useState<string>("new");
 
   // Shared fields:
   const [id, setId] = useState<string>("");
   const [titleEnglish, setTitleEnglish] = useState<string>("");
   const [titleArabic, setTitleArabic] = useState<string>("");
-  const [sourceType, setSourceType] = useState<"Book" | "Article">("Book");
+  const [sourceType, setSourceType] = useState<"Book" | "Article" | "Thesis">("Book");
   const [contributors, setContributors] = useState<Contributor[]>([]);
   const [editionEnglish, setEditionEnglish] = useState<string>("");
   const [editionArabic, setEditionArabic] = useState<string>("");
@@ -47,6 +48,16 @@ export default function SourcesManager() {
   const [pageRangeEnglish, setPageRangeEnglish] = useState<string>("");
   const [pageRangeArabic, setPageRangeArabic] = useState<string>("");
   const [DOI, setDOI] = useState<string>("");
+
+  // --- Thesis‐only fields ---
+  const [degreeTypeEnglish, setDegreeTypeEnglish] = useState<string>("");
+  const [degreeTypeArabic, setDegreeTypeArabic] = useState<string>("");
+  const [universityEnglish, setUniversityEnglish] = useState<string>("");
+  const [universityArabic, setUniversityArabic] = useState<string>("");
+  const [departmentEnglish, setDepartmentEnglish] = useState<string>("");
+  const [departmentArabic, setDepartmentArabic] = useState<string>("");
+  const [databaseIdentifier, setDatabaseIdentifier] = useState<string>("");
+  const [databaseName, setDatabaseName] = useState<string>("");
 
   // Whenever selectedSourceId or sources change, populate (or clear) all fields:
   useEffect(() => {
@@ -83,8 +94,18 @@ export default function SourcesManager() {
       setPageRangeEnglish("");
       setPageRangeArabic("");
       setDOI("");
+
+      // Clear Thesis‐only:
+      setDegreeTypeEnglish("");
+      setDegreeTypeArabic("");
+      setUniversityEnglish("");
+      setUniversityArabic("");
+      setDepartmentEnglish("");
+      setDepartmentArabic("");
+      setDatabaseIdentifier("");
+      setDatabaseName("");
     } else {
-      // Find the existing Book or Article from context:
+      // Find the existing Book, Article, or Thesis from context:
       const found = sources.find((s: Source) => s.getId() === selectedSourceId);
       if (!found) return;
 
@@ -120,6 +141,15 @@ export default function SourcesManager() {
       setPageRangeArabic("");
       setDOI("");
 
+      setDegreeTypeEnglish("");
+      setDegreeTypeArabic("");
+      setUniversityEnglish("");
+      setUniversityArabic("");
+      setDepartmentEnglish("");
+      setDepartmentArabic("");
+      setDatabaseIdentifier("");
+      setDatabaseName("");
+
       // Now cast to the correct subclass and populate its own fields:
       if (found.getSourceType() === "Book") {
         const book = found as Book;
@@ -130,7 +160,7 @@ export default function SourcesManager() {
         setPlaceEnglish(book.getPlaceEnglish());
         setPlaceArabic(book.getPlaceArabic());
         setISBN(book.getISBN());
-      } else {
+      } else if (found.getSourceType() === "Article") {
         // Article
         const article = found as Article;
         setJournalEnglish(article.getJournalEnglish());
@@ -142,6 +172,17 @@ export default function SourcesManager() {
         setPageRangeEnglish(article.getPageRangeEnglish());
         setPageRangeArabic(article.getPageRangeArabic());
         setDOI(article.getDOI());
+      } else if (found.getSourceType() === "Thesis") {
+        // Thesis
+        const thesis = found as Thesis;
+        setDegreeTypeEnglish(thesis.getDegreeTypeEnglish());
+        setDegreeTypeArabic(thesis.getDegreeTypeArabic());
+        setUniversityEnglish(thesis.getUniversityEnglish());
+        setUniversityArabic(thesis.getUniversityArabic());
+        setDepartmentEnglish(thesis.getDepartmentEnglish());
+        setDepartmentArabic(thesis.getDepartmentArabic());
+        setDatabaseIdentifier(thesis.getDatabaseIdentifier());
+        setDatabaseName(thesis.getDatabaseName());
       }
     }
   }, [selectedSourceId, sources]);
@@ -198,7 +239,7 @@ export default function SourcesManager() {
         url,
         dateAccessed
       );
-    } else {
+    } else if (sourceType === "Article") {
       // Article
       newSource = new Article(
         id,
@@ -219,6 +260,29 @@ export default function SourcesManager() {
         pageRangeEnglish,
         pageRangeArabic,
         DOI,
+        url,
+        dateAccessed
+      );
+    } else {
+      // Thesis
+      newSource = new Thesis(
+        id,
+        titleEnglish,
+        titleArabic,
+        contributors,
+        editionEnglish,
+        editionArabic,
+        publicationDateEnglish,
+        publicationDateArabic,
+        // Thesis‐only:
+        degreeTypeEnglish,
+        degreeTypeArabic,
+        universityEnglish,
+        universityArabic,
+        departmentEnglish,
+        departmentArabic,
+        databaseIdentifier,
+        databaseName,
         url,
         dateAccessed
       );
@@ -304,9 +368,10 @@ export default function SourcesManager() {
             <label className="sources-manager__label" htmlFor="sourceTypeField">
               Type
             </label>
-            <select id="sourceTypeField" className="sources-manager__select" value={sourceType} onChange={(e) => setSourceType(e.target.value as "Book" | "Article")}>
+            <select id="sourceTypeField" className="sources-manager__select" value={sourceType} onChange={(e) => setSourceType(e.target.value as "Book" | "Article" | "Thesis")}>
               <option value="Book">Book</option>
               <option value="Article">Article</option>
+              <option value="Thesis">Thesis</option>
             </select>
           </div>
         </div>
@@ -475,6 +540,68 @@ export default function SourcesManager() {
                   DOI
                 </label>
                 <input id="doiField" className="sources-manager__input" type="text" value={DOI} onChange={(e) => setDOI(e.target.value)} />
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* ───────────────────────────────────────── */}
+        {/* Thesis‐Only: Degree Type, University, Department, Database Info */}
+        {/* ...rendered only if sourceType === "Thesis" */}
+        {/* ───────────────────────────────────────── */}
+        {sourceType === "Thesis" && (
+          <>
+            <div className="sources-manager__group">
+              <div className="sources-manager__input-container">
+                <label className="sources-manager__label" htmlFor="degreeTypeEnglishField">
+                  Degree Type (English)
+                </label>
+                <input id="degreeTypeEnglishField" className="sources-manager__input" type="text" placeholder="e.g., Master's thesis, PhD dissertation" value={degreeTypeEnglish} onChange={(e) => setDegreeTypeEnglish(e.target.value)} />
+              </div>
+              <div className="sources-manager__input-container">
+                <label className="sources-manager__label" htmlFor="degreeTypeArabicField">
+                  Degree Type (Arabic)
+                </label>
+                <input id="degreeTypeArabicField" className="sources-manager__input" type="text" placeholder="e.g., رسالة ماجستير، أطروحة دكتوراه" value={degreeTypeArabic} onChange={(e) => setDegreeTypeArabic(e.target.value)} />
+              </div>
+              <div className="sources-manager__input-container">
+                <label className="sources-manager__label" htmlFor="universityEnglishField">
+                  University (English)
+                </label>
+                <input id="universityEnglishField" className="sources-manager__input" type="text" value={universityEnglish} onChange={(e) => setUniversityEnglish(e.target.value)} />
+              </div>
+              <div className="sources-manager__input-container">
+                <label className="sources-manager__label" htmlFor="universityArabicField">
+                  University (Arabic)
+                </label>
+                <input id="universityArabicField" className="sources-manager__input" type="text" value={universityArabic} onChange={(e) => setUniversityArabic(e.target.value)} />
+              </div>
+            </div>
+
+            <div className="sources-manager__group">
+              <div className="sources-manager__input-container">
+                <label className="sources-manager__label" htmlFor="departmentEnglishField">
+                  Department (English)
+                </label>
+                <input id="departmentEnglishField" className="sources-manager__input" type="text" value={departmentEnglish} onChange={(e) => setDepartmentEnglish(e.target.value)} />
+              </div>
+              <div className="sources-manager__input-container">
+                <label className="sources-manager__label" htmlFor="departmentArabicField">
+                  Department (Arabic)
+                </label>
+                <input id="departmentArabicField" className="sources-manager__input" type="text" value={departmentArabic} onChange={(e) => setDepartmentArabic(e.target.value)} />
+              </div>
+              <div className="sources-manager__input-container">
+                <label className="sources-manager__label" htmlFor="databaseNameField">
+                  Database Name
+                </label>
+                <input id="databaseNameField" className="sources-manager__input" type="text" placeholder="e.g., ProQuest, PQDT" value={databaseName} onChange={(e) => setDatabaseName(e.target.value)} />
+              </div>
+              <div className="sources-manager__input-container">
+                <label className="sources-manager__label" htmlFor="databaseIdentifierField">
+                  Database Identifier
+                </label>
+                <input id="databaseIdentifierField" className="sources-manager__input" type="text" placeholder="e.g., ProQuest ID" value={databaseIdentifier} onChange={(e) => setDatabaseIdentifier(e.target.value)} />
               </div>
             </div>
           </>
