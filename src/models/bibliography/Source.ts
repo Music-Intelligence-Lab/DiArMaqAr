@@ -3,7 +3,7 @@
  *
  * This module provides the core type definitions for the bibliography system,
  * including the Source union type that encompasses all possible bibliographic
- * source types (Books and Articles) and the SourcePageReference interface
+ * source types (Books, Articles, and Theses) and the SourcePageReference interface
  * for linking musical content to specific pages in sources.
  *
  * Used throughout the maqam network for academic citations and source attribution.
@@ -11,16 +11,17 @@
 
 import Book from "./Book";
 import Article from "./Article";
+import Thesis from "./Thesis";
 
 /**
  * Union type representing all possible bibliographic source types.
  *
- * The Source type is a discriminated union that can be either a Book
- * or an Article. This allows the bibliography system to handle different
+ * The Source type is a discriminated union that can be a Book,
+ * an Article, or a Thesis. This allows the bibliography system to handle different
  * types of academic sources in a type-safe manner while providing
  * common interfaces through the AbstractSource base class.
  */
-export type Source = Book | Article;
+export type Source = Book | Article | Thesis;
 
 /**
  * Interface for referencing specific pages within a bibliographic source.

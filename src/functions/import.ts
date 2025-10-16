@@ -18,6 +18,7 @@ import MaqamData from "@/models/Maqam";
 import { Source } from "@/models/bibliography/Source";
 import Book from "@/models/bibliography/Book";
 import Article from "@/models/bibliography/Article";
+import Thesis from "@/models/bibliography/Thesis";
 import Pattern from "@/models/Pattern";
 import { NoteDuration } from "@/models/Pattern";
 
@@ -106,11 +107,11 @@ export function getMaqamat(): MaqamData[] {
 /**
  * Imports and instantiates source objects from JSON data.
  *
- * Creates Source instances (Book or Article) from the raw JSON data.
+ * Creates Source instances (Book, Article, or Thesis) from the raw JSON data.
  * Uses a factory pattern to create the appropriate subclass based on
  * the sourceType property in the data.
  *
- * @returns Array of Source objects (Books and Articles)
+ * @returns Array of Source objects (Books, Articles, and Theses)
  * @throws Error if unknown sourceType is encountered
  */
 export function getSources(): Source[] {
@@ -120,6 +121,8 @@ export function getSources(): Source[] {
         return Book.fromJSON(d); // Create Book instance
       case "Article":
         return Article.fromJSON(d); // Create Article instance
+      case "Thesis":
+        return Thesis.fromJSON(d); // Create Thesis instance
       default:
         throw new Error(`Unknown sourceType "${d.sourceType}"`);
     }
