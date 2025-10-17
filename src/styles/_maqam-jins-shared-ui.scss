@@ -824,13 +824,17 @@
 
   // -------------------------
   // Button styling (for transposition buttons only)
-  // Matches: jins-transpositions__button, maqam-transpositions__button, and their --toggle variants
+  // Matches: jins-transpositions__button, maqam-transpositions__button, maqam-jins-transpositions-shared__button, and their --toggle variants
   // Excludes: other button types like __save-button, __delete-button, __jins-button, __buttons (container), etc.
   // -------------------------
   [class$="transpositions__button"],
   [class*="transpositions__button "],
   [class*=" transpositions__button"],
-  [class*="transpositions__button--toggle"] {
+  [class*="transpositions__button--toggle"],
+  [class$="transpositions-shared__button"],
+  [class*="transpositions-shared__button "],
+  [class*=" transpositions-shared__button"],
+  [class*="transpositions-shared__button--toggle"] {
     background-color: rgba($primary, 0.5);
     color: white;
     padding: 0px 10px;
@@ -866,7 +870,8 @@
   }
   
   // Toggle button variant (override base button background)
-  [class*="transpositions__button--toggle"] {
+  [class*="transpositions__button--toggle"],
+  [class*="transpositions-shared__button--toggle"] {
     background-color: rgba($tertiary, 0.7);
     
     &:hover {
@@ -1017,9 +1022,7 @@
     margin: 20px 0;
   }
 
-  &__load-more {
-    // Inherits from __button styles
-  }
+  // Load more button inherits from __button styles above
 
   // -------------------------
   // UI/UX Enhancements
