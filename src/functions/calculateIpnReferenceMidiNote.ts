@@ -1,12 +1,28 @@
 /**
- * Calculate the reference MIDI note number from a pitch class's reference note name.
- * This function parses the reference note name (e.g., "E", "F#", "Bb") and finds
- * the closest MIDI note number that matches that chromatic pitch class.
- * 
- * @param pitchClass - The pitch class object containing referenceNoteName and midiNoteNumber
- * @returns The MIDI note number of the reference note
+ * Calculates the International Pitch Notation reference MIDI note for a microtonal pitch.
+ *
+ * **Purpose**: Given a microtonal pitch (like E-b3), finds the nearest standard International Pitch Notation MIDI note
+ * that the pitch theoretically relates to for cents deviation calculations.
+ *
+ * **Simple Logic**:
+ * 1. Parse the reference note name (e.g., "E-b" → base note "E", modifier "-b")
+ * 2. Extract just the 12-EDO part (e.g., "E" without microtonal modifiers)
+ * 3. Convert to chromatic position (C=0, C#/Db=1, D=2, ... B=11)
+ * 4. Find which octave the microtonal pitch is in
+ * 5. Check 3 candidate MIDI notes: same octave, one below, one above
+ * 6. Pick the closest one by MIDI distance
+ *
+ * **Example**:
+ * - Input: E-b3 (MIDI 51.366)
+ * - Base note: "E" (chromatic position 4)
+ * - Candidates: E3 (40), E4 (52), E5 (64)
+ * - Closest: E4 (52)
+ * - Deviation: 51.366 - 52 = -0.634 semitones = -63.4 cents
+ *
+ * @param pitchClass - Pitch class object with referenceNoteName and midiNoteNumber
+ * @returns The 12-EDO reference MIDI note number
  */
-export function calculateReferenceMidiNote(pitchClass: any): number {
+export function calculate12EdoReferenceMidiNote(pitchClass: any): number {
   const referenceNoteName = pitchClass.referenceNoteName;
   
   // Parse the reference note to get base note and accidental

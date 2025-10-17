@@ -93,7 +93,6 @@ export default function SelectedPitchClassesAnalysis() {
       // Apply sequential English name spellings for melodic sequences
       const pitchClasses = renderPitchClassSpellings(selectedPitchClasses);
       const intervals = pitchClassIntervals;
-      const colCount = 2 + (pitchClasses.length - 1) * 2;
       const rowSpan = 4 + numberOfFilterRows;
 
       return (

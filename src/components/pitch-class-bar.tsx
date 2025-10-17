@@ -6,6 +6,7 @@ import useLanguageContext from "@/contexts/language-context";
 import PitchClass from "@/models/PitchClass";
 import useTranspositionsContext from "@/contexts/transpositions-context";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
+import { renderPitchClassSpellings } from "@/functions/renderPitchClassIpnSpellings";
 
 interface WheelCellProps {
   pitchClass: PitchClass;
@@ -249,34 +250,23 @@ export default function PitchClassBar() {
     // (selected maqam, selected jins, or current selectedPitchClasses). This ensures that
     // when a maqam is active (e.g., maqam ṣabā) we prefer the enharmonic spellings implied by it.
     const preferredMap: Record<string, string> = {};
-    let prevEnglish: string | undefined = undefined;
     const contextSeq: { noteName: string }[] | undefined =
       (selectedMaqam && selectedMaqam.ascendingPitchClasses) ||
       (selectedJins && selectedJins.jinsPitchClasses) ||
       (selectedPitchClasses && selectedPitchClasses.length >= 2 ? selectedPitchClasses : undefined);
 
     if (contextSeq) {
-      prevEnglish = undefined;
-      for (const pc of contextSeq) {
-        if (!pc || !pc.noteName) continue;
-        const en = getEnglishNoteName(pc.noteName, { prevEnglish });
-        preferredMap[pc.noteName] = en;
-        prevEnglish = en;
-      }
+      // Apply sequential naming for melodic sequences
+      const renderedSeq = renderPitchClassSpellings(contextSeq);
+      renderedSeq.forEach((pc) => {
+        preferredMap[pc.noteName] = pc.englishName;
+      });
     }
 
-    // Attach englishName: prefer preferredMap, else compute sequentially across entries
-    prevEnglish = undefined;
+    // Attach englishName: prefer preferredMap, else use default mapping
     for (const entry of entries) {
       const noteName = entry.pitchClass.noteName;
-      if (preferredMap[noteName]) {
-        (entry as any).englishName = preferredMap[noteName];
-        prevEnglish = preferredMap[noteName];
-        continue;
-      }
-      const en = getEnglishNoteName(noteName, { prevEnglish });
-      (entry as any).englishName = en;
-      prevEnglish = en;
+      (entry as any).englishName = preferredMap[noteName] || getEnglishNoteName(noteName);
     }
 
     return entries;

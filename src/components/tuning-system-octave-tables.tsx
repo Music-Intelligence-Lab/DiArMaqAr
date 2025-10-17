@@ -20,6 +20,9 @@ import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { abjadNames } from "@/functions/noteNameMappings";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
+import { renderPitchClassSpellings } from "@/functions/renderPitchClassIpnSpellings";
+import { calculate12EdoReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
+import { getIpnReferenceNoteNameWithOctave } from "@/functions/getIpnReferenceNoteName";
 import StaffNotation from "./staff-notation";
 import getFirstNoteName from "@/functions/getFirstNoteName";
 
@@ -214,15 +217,10 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
         // English names row (if filter enabled)
         if (filters["englishName"]) {
           const englishRow = [t("octave.englishName")];
-          const englishNames: string[] = [];
-          let prev: string | undefined;
-          for (const pc of octavePitchClasses) {
-            const name = getEnglishNoteName(pc.noteName, prev ? { prevEnglish: prev } : undefined);
-            englishNames.push(name);
-            prev = name;
-          }
-          englishNames.forEach((name) => {
-            englishRow.push(name);
+          // Apply sequential naming for the octave pitch classes
+          const rendered = renderPitchClassSpellings(octavePitchClasses);
+          rendered.forEach((pc) => {
+            englishRow.push(pc.englishName);
           });
           rows.push(englishRow);
         }
@@ -250,31 +248,19 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
         if (valueType !== "cents" && filters["cents"]) {
           const centsRow = [t("octave.cents")];
           octavePitchClasses.forEach((pc) => {
-            centsRow.push(parseFloat(pc.cents).toFixed(3));
+            centsRow.push(parseFloat(pc.cents).toFixed(2));
           });
           rows.push(centsRow);
         }
 
         if (filters["centsDeviation"]) {
           const centsDeviationRow = [t("octave.centsDeviation")];
-          // Build preferred mapping for enharmonic consistency
-          const preferredMap: Record<string, string> = {};
-          let prevEnglish: string | undefined = undefined;
-          for (const pc of octavePitchClasses) {
-            if (!pc || !pc.noteName) continue;
-            const en = getEnglishNoteName(pc.noteName, { prevEnglish });
-            preferredMap[pc.noteName] = en;
-            prevEnglish = en;
-          }
-          
-          octavePitchClasses.forEach((pc) => {
-            let referenceNoteName = pc.referenceNoteName;
-            if (preferredMap[pc.noteName]) {
-              referenceNoteName = preferredMap[pc.noteName].replace(/[+-]/g, '');
-            } else if (referenceNoteName) {
-              referenceNoteName = referenceNoteName.replace(/[+-]/g, '');
-            }
-            const deviationText = `${referenceNoteName || ''}${pc.centsDeviation > 0 ? ' +' : ' '}${pc.centsDeviation.toFixed(1)}`;
+          // Apply sequential naming for the octave pitch classes
+          const rendered = renderPitchClassSpellings(octavePitchClasses);
+
+          rendered.forEach((pc) => {
+            const referenceNoteWithOctave = getIpnReferenceNoteNameWithOctave(pc);
+            const deviationText = `${referenceNoteWithOctave}${pc.centsDeviation > 0 ? ' +' : ' '}${pc.centsDeviation.toFixed(2)}`;
             centsDeviationRow.push(deviationText);
           });
           rows.push(centsDeviationRow);
@@ -283,7 +269,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
         if (valueType !== "decimalRatio" && filters["decimalRatio"]) {
           const decimalRow = [t("octave.decimalRatio")];
           octavePitchClasses.forEach((pc) => {
-            decimalRow.push(parseFloat(pc.decimalRatio).toFixed(3));
+            decimalRow.push(parseFloat(pc.decimalRatio).toFixed(2));
           });
           rows.push(decimalRow);
         }
@@ -291,7 +277,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
         if (valueType !== "stringLength" && filters["stringLength"]) {
           const stringLengthRow = [t("octave.stringLength")];
           octavePitchClasses.forEach((pc) => {
-            stringLengthRow.push(parseFloat(pc.stringLength).toFixed(3));
+            stringLengthRow.push(parseFloat(pc.stringLength).toFixed(2));
           });
           rows.push(stringLengthRow);
         }
@@ -299,7 +285,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
         if (valueType !== "fretDivision" && filters["fretDivision"]) {
           const fretDivisionRow = [t("octave.fretDivision")];
           octavePitchClasses.forEach((pc) => {
-            fretDivisionRow.push(parseFloat(pc.fretDivision).toFixed(3));
+            fretDivisionRow.push(parseFloat(pc.fretDivision).toFixed(2));
           });
           rows.push(fretDivisionRow);
         }
@@ -307,15 +293,28 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
         if (filters["midiNote"]) {
           const midiRow = [t("octave.midiNote")];
           octavePitchClasses.forEach((pc) => {
-            midiRow.push(pc.midiNoteNumber.toFixed(3));
+            midiRow.push(pc.midiNoteNumber.toFixed(2));
           });
           rows.push(midiRow);
+        }
+
+        if (filters["midiNoteDeviation"]) {
+          const midiDeviationRow = [t("octave.midiNoteDeviation")];
+          // Apply sequential naming for the octave pitch classes
+          const rendered = renderPitchClassSpellings(octavePitchClasses);
+
+          rendered.forEach((pc) => {
+            const referenceMidiNote = calculate12EdoReferenceMidiNote(pc);
+            const deviationText = `${referenceMidiNote} ${pc.centsDeviation > 0 ? '+' : ''}${pc.centsDeviation.toFixed(2)}`;
+            midiDeviationRow.push(deviationText);
+          });
+          rows.push(midiDeviationRow);
         }
 
         if (filters["frequency"]) {
           const frequencyRow = [t("octave.frequency")];
           octavePitchClasses.forEach((pc) => {
-            frequencyRow.push(parseFloat(pc.frequency).toFixed(3));
+            frequencyRow.push(parseFloat(pc.frequency).toFixed(2));
           });
           rows.push(frequencyRow);
         }
@@ -783,31 +782,21 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                     {(() => {
                       // Build preferred mapping from current context (maqam/jins/selection)
                       const preferredMap: Record<string, string> = {};
-                      let prevEnglish: string | undefined = undefined;
-                      const contextSeq: { noteName: string }[] | undefined =
+                      const contextSeq = 
                         (selectedMaqam && selectedMaqam.ascendingPitchClasses) ||
                         (selectedPitchClasses && selectedPitchClasses.length >= 2 ? selectedPitchClasses : undefined);
 
                       if (contextSeq) {
-                        prevEnglish = undefined;
-                        for (const pc of contextSeq) {
-                          if (!pc || !pc.noteName) continue;
-                          const en = getEnglishNoteName(pc.noteName, { prevEnglish });
-                          preferredMap[pc.noteName] = en;
-                          prevEnglish = en;
-                        }
+                        // Apply sequential naming for melodic sequences
+                        const renderedSeq = renderPitchClassSpellings(contextSeq);
+                        renderedSeq.forEach((pc) => {
+                          preferredMap[pc.noteName] = pc.englishName;
+                        });
                       }
 
-                      prevEnglish = undefined;
                       const displays = rowCells.map((pc) => {
                         const noteName = pc.noteName;
-                        if (preferredMap[noteName]) {
-                          prevEnglish = preferredMap[noteName];
-                          return preferredMap[noteName];
-                        }
-                        const en = getEnglishNoteName(noteName, { prevEnglish });
-                        prevEnglish = en;
-                        return en;
+                        return preferredMap[noteName] || getEnglishNoteName(noteName);
                       });
 
                       return displays.map((d, colIndex) => (
@@ -850,50 +839,16 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                 {filters.centsDeviation && (
                   <tr>
                     <td className="tuning-system-manager__row-header">{t('octave.centsDeviation')}</td>
-                    {(() => {
-                      // Build preferred mapping from current context (maqam/jins/selection) - same logic as English Name row
-                      const preferredMap: Record<string, string> = {};
-                      let prevEnglish: string | undefined = undefined;
-                      const contextSeq: { noteName: string }[] | undefined =
-                        (selectedMaqam && selectedMaqam.ascendingPitchClasses) ||
-                        (selectedPitchClasses && selectedPitchClasses.length >= 2 ? selectedPitchClasses : undefined);
+                    {rowCells.map((pitchClass, colIndex) => {
+                      const referenceNoteWithOctave = getIpnReferenceNoteNameWithOctave(pitchClass);
 
-                      if (contextSeq) {
-                        prevEnglish = undefined;
-                        for (const pc of contextSeq) {
-                          if (!pc || !pc.noteName) continue;
-                          const en = getEnglishNoteName(pc.noteName, { prevEnglish });
-                          preferredMap[pc.noteName] = en;
-                          prevEnglish = en;
-                        }
-                      }
-
-                      return rowCells.map((pitchClass, colIndex) => {
-                        const noteName = pitchClass.noteName;
-                        
-                        // Use preferred mapping if available, otherwise fall back to pitchClass.referenceNoteName
-                        let referenceNoteName = pitchClass.referenceNoteName;
-                        if (preferredMap[noteName]) {
-                          // Extract just the base note and accidental from the preferred mapping (no microtonal markers)
-                          const preferredEnglish = preferredMap[noteName];
-                          referenceNoteName = preferredEnglish.replace(/[+-]/g, '');
-                        } else if (referenceNoteName) {
-                          // Clean the existing reference note name
-                          referenceNoteName = referenceNoteName.replace(/[+-]/g, '');
-                        }
-
-                        return (
-                          <td key={colIndex} className={getCellClassName(octave, colIndex)}>
-                            {referenceNoteName && (
-                              <span>
-                                {referenceNoteName}
-                              </span>
-                            )}
-                            {pitchClass.centsDeviation > 0 ? ' +' : ' '}{pitchClass.centsDeviation.toFixed(1)}
-                          </td>
-                        );
-                      });
-                    })()}
+                      return (
+                        <td key={colIndex} className={getCellClassName(octave, colIndex)}>
+                          <span>{referenceNoteWithOctave}</span>
+                          {pitchClass.centsDeviation > 0 ? ' +' : ' '}{pitchClass.centsDeviation.toFixed(2)}
+                        </td>
+                      );
+                    })}
                   </tr>
                 )}
 
@@ -953,6 +908,44 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                         {displayStringValue(pitchClass.midiNoteNumber)}
                       </td>
                     ))}
+                  </tr>
+                )}
+
+                {/* Row 9.5: MIDI Note Deviation */}
+                {filters.midiNoteDeviation && (
+                  <tr>
+                    <td className="tuning-system-manager__row-header">{t('octave.midiNoteDeviation')}</td>
+                    {(() => {
+                      // Build preferred mapping from current context (maqam/jins/selection)
+                      const preferredMap: Record<string, string> = {};
+                      const contextSeq = 
+                        (selectedMaqam && selectedMaqam.ascendingPitchClasses) ||
+                        (selectedPitchClasses && selectedPitchClasses.length >= 2 ? selectedPitchClasses : undefined);
+
+                      if (contextSeq) {
+                        // Apply sequential naming for melodic sequences
+                        const renderedSeq = renderPitchClassSpellings(contextSeq);
+                        renderedSeq.forEach((pc) => {
+                          preferredMap[pc.noteName] = pc.englishName;
+                        });
+                      }
+
+                      return rowCells.map((pitchClass, colIndex) => {
+                        // Create pitch class with appropriate reference note name
+                        const pcWithRef = { ...pitchClass };
+                        if (preferredMap[pitchClass.noteName]) {
+                          pcWithRef.referenceNoteName = preferredMap[pitchClass.noteName].replace(/[+-]/g, '');
+                        }
+
+                        const referenceMidiNote = calculate12EdoReferenceMidiNote(pcWithRef);
+
+                        return (
+                          <td key={colIndex} className={getCellClassName(octave, colIndex)}>
+                            {referenceMidiNote} {pitchClass.centsDeviation > 0 ? '+' : ''}{pitchClass.centsDeviation.toFixed(2)}
+                          </td>
+                        );
+                      });
+                    })()}
                   </tr>
                 )}
 

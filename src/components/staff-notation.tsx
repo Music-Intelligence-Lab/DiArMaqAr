@@ -3,6 +3,9 @@
 import React, { useRef, useEffect } from "react";
 import { Renderer, Stave, StaveNote, Voice, Formatter, Accidental, TextNote } from "vexflow";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
+import { renderPitchClassSpellings } from "@/functions/renderPitchClassIpnSpellings";
+import { calculate12EdoReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
+import { getIpnReferenceNoteNameWithOctave } from "@/functions/getIpnReferenceNoteName";
 import useAppContext from "@/contexts/app-context";
 import PitchClass from "@/models/PitchClass";
 import useLanguageContext from "@/contexts/language-context";
@@ -105,32 +108,22 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
     // Precompute context-aware english names for the pitchClasses array
     const computedEnglishNames: string[] = (() => {
       const preferredMap: Record<string, string> = {};
-      let prevEnglish: string | undefined = undefined;
-      const contextSeq: { noteName: string }[] | undefined =
+      const contextSeq = 
         (selectedMaqam && selectedMaqam.ascendingPitchClasses) ||
         (selectedJins && selectedJins.jinsPitchClasses) ||
         (appSelectedPitchClasses && appSelectedPitchClasses.length >= 2 ? appSelectedPitchClasses : undefined);
 
       if (contextSeq) {
-        prevEnglish = undefined;
-        for (const pc of contextSeq) {
-          if (!pc || !pc.noteName) continue;
-          const en = getEnglishNoteName(pc.noteName, { prevEnglish });
-          preferredMap[pc.noteName] = en;
-          prevEnglish = en;
-        }
+        // Apply sequential naming for melodic sequences
+        const renderedSeq = renderPitchClassSpellings(contextSeq);
+        renderedSeq.forEach((pc) => {
+          preferredMap[pc.noteName] = pc.englishName;
+        });
       }
 
-      prevEnglish = undefined;
+      // Map pitchClasses to their English names, using the preferred map where available
       return pitchClasses.map((pc) => {
-        const noteName = pc.noteName;
-        if (preferredMap[noteName]) {
-          prevEnglish = preferredMap[noteName];
-          return preferredMap[noteName];
-        }
-        const en = getEnglishNoteName(noteName, { prevEnglish });
-        prevEnglish = en;
-        return en;
+        return preferredMap[pc.noteName] || getEnglishNoteName(pc.noteName);
       });
     })();
 
@@ -169,15 +162,16 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
 
         if (!parsed) return;
 
-        const midiNoteNumber = Math.round(pitchClass.midiNoteNumber);
+        // Use the IPN reference MIDI note instead of the microtonal MIDI note
+        const referenceMidiNote = calculate12EdoReferenceMidiNote(pitchClass);
 
         // Use the parsed note letter from the English name instead of MIDI conversion
         const noteLetter = parsed.letter;
         
-        // Calculate the correct octave for the parsed note letter
+        // Calculate the correct octave for the parsed note letter using the reference MIDI note
         // MIDI note 60 = C4, so we can calculate from there
-        const baseOctave = Math.floor(midiNoteNumber / 12) - 1;
-        const semitoneInOctave = midiNoteNumber % 12;
+        const baseOctave = Math.floor(referenceMidiNote / 12) - 1;
+        const semitoneInOctave = referenceMidiNote % 12;
         
         // Map note letters to their position in the chromatic scale (C=0, D=2, E=4, F=5, G=7, A=9, B=11)
         const notePositions: { [key: string]: number } = {
@@ -255,8 +249,9 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
         noteNameTextNote.setFont("Readex Pro", 12); // Set smaller font size
         arabicTextNotes.push(noteNameTextNote);
 
-        // Create a combined text note for English note name and cents deviation
-        const combinedText = `${pitchClass.referenceNoteName} ${pitchClass.centsDeviation > 0 ? '+' : ''}${pitchClass.centsDeviation.toFixed(1)}¢`;
+        // Create a combined text note for IPN reference note name with octave and cents deviation
+        const referenceNoteWithOctave = getIpnReferenceNoteNameWithOctave(pitchClass);
+        const combinedText = `${referenceNoteWithOctave} ${pitchClass.centsDeviation > 0 ? '+' : ''}${pitchClass.centsDeviation.toFixed(1)}¢`;
         const combinedTextNote = new TextNote({
           text: combinedText,
           duration: "q",

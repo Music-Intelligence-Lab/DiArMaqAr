@@ -7,7 +7,9 @@ import useFilterContext from "@/contexts/filter-context";
 import useLanguageContext from "@/contexts/language-context";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import { standardizeText } from "@/functions/export";
-import { calculateReferenceMidiNote } from "@/functions/calculateReferenceMidiNote";
+import { calculate12EdoReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
+import { getIpnReferenceNoteNameWithOctave } from "@/functions/getIpnReferenceNoteName";
+import { renderPitchClassSpellings } from "@/functions/renderPitchClassIpnSpellings";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import useTranspositionsContext from "@/contexts/transpositions-context";
 import { Jins } from "@/models/Jins";
@@ -110,7 +112,8 @@ export default function JinsTranspositions() {
       if (!jins) return;
 
       try {
-        const pitchClasses = jins.jinsPitchClasses;
+        // Apply sequential English name spellings for melodic sequences
+        const pitchClasses = renderPitchClassSpellings(jins.jinsPitchClasses);
         const intervals = jins.jinsPitchClassIntervals;
 
         const valueType = allPitchClasses[0].originalValueType;
@@ -141,16 +144,9 @@ export default function JinsTranspositions() {
           // English names row (if filter enabled)
           if (filters["englishName"]) {
             const englishRow = [t("jins.englishName")];
-            const englishNames: string[] = [];
-            let prev: string | undefined;
-            for (const pc of pitchClasses) {
-              const name = getEnglishNoteName(pc.noteName, prev ? { prevEnglish: prev } : undefined);
-              englishNames.push(name);
-              prev = name;
-            }
-            englishNames.forEach((name, i) => {
-              englishRow.push(name);
-              if (i < englishNames.length - 1) englishRow.push(''); // interval column
+            pitchClasses.forEach((pc, i) => {
+              englishRow.push(pc.englishName);
+              if (i < pitchClasses.length - 1) englishRow.push(''); // interval column
             });
             rows.push(englishRow);
           }
@@ -267,7 +263,7 @@ export default function JinsTranspositions() {
           if (filters["midiNoteDeviation"]) {
             const midiDeviationRow = [t("jins.midiNoteDeviation")];
             pitchClasses.forEach((pc, i) => {
-              const referenceMidiNote = calculateReferenceMidiNote(pc);
+              const referenceMidiNote = calculate12EdoReferenceMidiNote(pc);
               const deviation = `${referenceMidiNote} ${pc.centsDeviation > 0 ? "+" : ""}${pc.centsDeviation.toFixed(1)}`;
               midiDeviationRow.push(deviation);
               if (i < pitchClasses.length - 1) {
@@ -468,7 +464,8 @@ export default function JinsTranspositions() {
 
     function renderTransposition(jins: Jins, index: number) {
       const transposition = jins.transposition;
-      const pitchClasses = jins.jinsPitchClasses;
+      // Apply sequential English name spellings for melodic sequences
+      const pitchClasses = renderPitchClassSpellings(jins.jinsPitchClasses);
       const intervals = jins.jinsPitchClassIntervals;
       const colCount = 2 + (pitchClasses.length - 1) * 2;
       const open = openTranspositions.includes(jins.name);
@@ -588,26 +585,13 @@ export default function JinsTranspositions() {
               {filters["englishName"] && (
                 <tr data-row-type="englishName">
                   <th scope="row" id={`jins-${standardizeText(jins.name)}-englishName-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.englishName")}</th>
-                  {(() => {
-                    // Compute display English names sequentially (one-letter-per-degree policy)
-                    let prevEnglish: string | undefined = undefined;
-                    const displays: string[] = pitchClasses.map((pc) => {
-                      const en = getEnglishNoteName(pc.noteName, { prevEnglish });
-                      prevEnglish = en;
-                      return en;
-                    });
-                    return (
-                      <>
-                        <td className="jins-transpositions__table-cell--pitch-class" data-column-type="note-name">{displays[0]}</td>
-                        {intervals.map((interval, i) => (
-                          <React.Fragment key={i}>
-                            <td className="jins-transpositions__table-cell" data-column-type="empty"></td>
-                            <td className="jins-transpositions__table-cell--pitch-class" data-column-type="note-name">{displays[i + 1]}</td>
-                          </React.Fragment>
-                        ))}
-                      </>
-                    );
-                  })()}
+                  <td className="jins-transpositions__table-cell--pitch-class" data-column-type="note-name">{pitchClasses[0].englishName}</td>
+                  {intervals.map((interval, i) => (
+                    <React.Fragment key={i}>
+                      <td className="jins-transpositions__table-cell" data-column-type="empty"></td>
+                      <td className="jins-transpositions__table-cell--pitch-class" data-column-type="note-name">{pitchClasses[i + 1].englishName}</td>
+                    </React.Fragment>
+                  ))}
                 </tr>
               )}
               <tr data-row-type={valueType}>
@@ -659,43 +643,21 @@ export default function JinsTranspositions() {
               {filters["centsDeviation"] && (
                 <tr data-row-type="centsDeviation">
                   <th scope="row" id={`jins-${standardizeText(jins.name)}-centsDeviation-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.centsDeviation")}</th>
-                  {(() => {
-                    return (
-                      <>
-                        <td className="jins-transpositions__table-cell--pitch-class" data-column-type="cents-deviation">
-                          {(() => {
-                            const referenceNoteName = pitchClasses[0].referenceNoteName;
-
-                            return (
-                              <>
-                                {referenceNoteName && <span>{referenceNoteName}</span>}
-                                {pitchClasses[0].centsDeviation > 0 ? " +" : " "}
-                                {pitchClasses[0].centsDeviation.toFixed(1)}
-                              </>
-                            );
-                          })()}
-                        </td>
-                        {intervals.map((interval, i) => (
-                          <React.Fragment key={i}>
-                            <td className="jins-transpositions__table-cell" data-column-type="empty"></td>
-                            <td className="jins-transpositions__table-cell--pitch-class" data-column-type="cents-deviation">
-                              {(() => {
-                                const referenceNoteName = pitchClasses[i + 1].referenceNoteName;
-
-                                return (
-                                  <>
-                                    {referenceNoteName && <span>{referenceNoteName}</span>}
-                                    {pitchClasses[i + 1].centsDeviation > 0 ? " +" : " "}
-                                    {pitchClasses[i + 1].centsDeviation.toFixed(1)}
-                                  </>
-                                );
-                              })()}
-                            </td>
-                          </React.Fragment>
-                        ))}
-                      </>
-                    );
-                  })()}
+                  <td className="jins-transpositions__table-cell--pitch-class" data-column-type="cents-deviation">
+                    <span>{getIpnReferenceNoteNameWithOctave(pitchClasses[0])}</span>
+                    {pitchClasses[0].centsDeviation > 0 ? " +" : " "}
+                    {pitchClasses[0].centsDeviation.toFixed(1)}
+                  </td>
+                  {intervals.map((interval, i) => (
+                    <React.Fragment key={i}>
+                      <td className="jins-transpositions__table-cell" data-column-type="empty"></td>
+                      <td className="jins-transpositions__table-cell--pitch-class" data-column-type="cents-deviation">
+                        <span>{getIpnReferenceNoteNameWithOctave(pitchClasses[i + 1])}</span>
+                        {pitchClasses[i + 1].centsDeviation > 0 ? " +" : " "}
+                        {pitchClasses[i + 1].centsDeviation.toFixed(1)}
+                      </td>
+                    </React.Fragment>
+                  ))}
                 </tr>
               )}
               {valueType !== "decimalRatio" && filters["decimalRatio"] && (
@@ -750,13 +712,13 @@ export default function JinsTranspositions() {
                 <tr data-row-type="midiNoteDeviation">
                   <th scope="row" id={`jins-${standardizeText(jins.name)}-midiNoteDeviation-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.midiNoteDeviation")}</th>
                   <td className="jins-transpositions__table-cell--pitch-class" data-column-type="midi-note-deviation">
-                    {calculateReferenceMidiNote(pitchClasses[0])} {pitchClasses[0].centsDeviation > 0 ? "+" : ""}{pitchClasses[0].centsDeviation.toFixed(1)}
+                    {calculate12EdoReferenceMidiNote(pitchClasses[0])} {pitchClasses[0].centsDeviation > 0 ? "+" : ""}{pitchClasses[0].centsDeviation.toFixed(1)}
                   </td>
                   {intervals.map((interval, i) => (
                     <React.Fragment key={i}>
                       <td className="jins-transpositions__table-cell" data-column-type="empty"></td>
                       <td className="jins-transpositions__table-cell--pitch-class" data-column-type="midi-note-deviation">
-                        {calculateReferenceMidiNote(pitchClasses[i + 1])} {pitchClasses[i + 1].centsDeviation > 0 ? "+" : ""}{pitchClasses[i + 1].centsDeviation.toFixed(1)}
+                        {calculate12EdoReferenceMidiNote(pitchClasses[i + 1])} {pitchClasses[i + 1].centsDeviation > 0 ? "+" : ""}{pitchClasses[i + 1].centsDeviation.toFixed(1)}
                       </td>
                     </React.Fragment>
                   ))}

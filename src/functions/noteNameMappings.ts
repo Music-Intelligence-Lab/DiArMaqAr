@@ -319,6 +319,148 @@ export function getEnglishNoteName(arabicName: string, opts?: EnglishNameOptions
   return splitEnglishNoteName(candidate).englishNoteNameNatural + splitEnglishNoteName(candidate).englishNoteNameAccidental;
 }
 
+/**
+ * Determines the expected letter sequence for a melodic sequence.
+ * For diatonic scales, the natural letter sequence should follow alphabetical order.
+ *
+ * @param startLetter - The starting letter (A-G)
+ * @param count - Number of notes in the sequence
+ * @returns Array of expected letters in sequence
+ */
+function getExpectedLetterSequence(startLetter: string, count: number): string[] {
+  const letters = ["A", "B", "C", "D", "E", "F", "G"];
+  const startIndex = letters.indexOf(startLetter.toUpperCase());
+  if (startIndex === -1) return [];
+
+  const sequence: string[] = [];
+  for (let i = 0; i < count; i++) {
+    sequence.push(letters[(startIndex + i) % 7]);
+  }
+  return sequence;
+}
+
+/**
+ * Finds the best enharmonic spelling that matches a target letter.
+ *
+ * @param noteName - The English note name (e.g., "Ab3", "F#4")
+ * @param targetLetter - The desired letter (A-G)
+ * @returns The note name with the target letter, or null if impossible
+ */
+function findEnharmonicWithLetter(noteName: string, targetLetter: string): string | null {
+  // Extract note part and octave part
+  const match = noteName.match(/^([A-Ga-g][#b+-]*)(.*)$/);
+  if (!match) return null;
+
+  const notePart = match[1];
+  const octavePart = match[2];
+
+  // Normalize: first letter uppercase, rest as-is (e.g., "Ab", "C#", "Bb")
+  const key = notePart.charAt(0).toUpperCase() + notePart.slice(1).toLowerCase();
+
+  // Don't provide alternatives for microtonal notes (with + or - symbols)
+  if (/[+-]/.test(notePart)) {
+    return null;
+  }
+
+  // Simple enharmonic map (only common single sharps/flats)
+  const enharmonicMap: { [key: string]: string[] } = {
+    "C": ["C", "B#"],
+    "C#": ["C#", "Db"],
+    "Db": ["Db", "C#"],
+    "D": ["D"],
+    "D#": ["D#", "Eb"],
+    "Eb": ["Eb", "D#"],
+    "E": ["E", "Fb"],
+    "F": ["F", "E#"],
+    "F#": ["F#", "Gb"],
+    "Gb": ["Gb", "F#"],
+    "G": ["G"],
+    "G#": ["G#", "Ab"],
+    "Ab": ["Ab", "G#"],
+    "A": ["A"],
+    "A#": ["A#", "Bb"],
+    "Bb": ["Bb", "A#"],
+    "B": ["B", "Cb"],
+  };
+
+  const alternatives = enharmonicMap[key] || [key];
+
+  // Find the alternative that starts with the target letter
+  for (const alt of alternatives) {
+    if (alt[0].toUpperCase() === targetLetter.toUpperCase()) {
+      // Preserve case and add octave
+      const result = notePart[0] === notePart[0].toLowerCase()
+        ? alt.toLowerCase() + octavePart
+        : alt + octavePart;
+      return result;
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Resolves enharmonic spellings for a sequence of notes to ensure sequential natural letters.
+ * This follows Western music notation convention where scales use consecutive letters (D-E-F-G-A-B-C-D).
+ *
+ * The algorithm:
+ * 1. Determines the expected letter sequence from the first note
+ * 2. For each note, finds the enharmonic spelling that matches the expected letter
+ * 3. Falls back to the default mapping if no suitable enharmonic exists
+ *
+ * @param arabicNames - Array of Arabic note names to convert
+ * @returns Array of English note names with sequential natural letters
+ */
+export function getSequentialEnglishNames(arabicNames: string[]): string[] {
+  if (arabicNames.length === 0) return [];
+
+  // Get default mappings
+  const defaultNames = arabicNames.map(name => {
+    const mapping = arabicToEnglishNoteMapping[name];
+    return mapping || "--";
+  });
+
+  // Handle single note or invalid cases
+  if (arabicNames.length === 1 || defaultNames[0] === "--") {
+    return defaultNames;
+  }
+
+  // Determine expected letter sequence from the first note
+  const firstLetter = defaultNames[0][0].toUpperCase();
+  const expectedLetters = getExpectedLetterSequence(firstLetter, arabicNames.length);
+
+  const result: string[] = [];
+
+  for (let i = 0; i < defaultNames.length; i++) {
+    const defaultName = defaultNames[i];
+
+    if (defaultName === "--") {
+      result.push("--");
+      continue;
+    }
+
+    const expectedLetter = expectedLetters[i];
+    const actualLetter = defaultName[0].toUpperCase();
+
+    // If the default already matches the expected letter, use it
+    if (actualLetter === expectedLetter) {
+      result.push(defaultName);
+      continue;
+    }
+
+    // Try to find an enharmonic spelling with the expected letter
+    const enharmonic = findEnharmonicWithLetter(defaultName, expectedLetter);
+    if (enharmonic) {
+      result.push(enharmonic);
+    } else {
+      // No enharmonic found, use default (this handles microtonal notes or complex cases)
+      result.push(defaultName);
+    }
+  }
+
+  return result;
+}
+
 // -----------------------
 // Abjad arrays
 // -----------------------
