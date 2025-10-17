@@ -293,8 +293,13 @@ const translations = {
 
     // Selected Pitch Classes Transpositions
     "analysis.title": "Taḥlīl (analysis)",
+    "analysis.selectedPitchClasses": "Selected Pitch Classes",
     "analysis.centsTolerance": "Cents Tolerance",
     "analysis.playSelectedPitchClasses": "Play Selections",
+    "analysis.copyTable": "Copy Table",
+    "analysis.copyTableToClipboard": "Copy Table to Clipboard",
+    "analysis.tableCopied": "Table copied to clipboard!",
+    "analysis.copyFailed": "Failed to copy table.",
     "analysis.noteNames": "Note Names",
     "analysis.abjadName": "Abjad Name",
     "analysis.englishName": "English Name",
@@ -308,6 +313,7 @@ const translations = {
     "analysis.midiNote": "MIDI Note",
     "analysis.midiNoteDeviation": "MIDI Note Deviation",
     "analysis.frequency": "Freq (Hz)",
+    "analysis.staffNotation": "Staff Notation",
     "analysis.play": "Play",
 
     // Modulations
@@ -616,8 +622,13 @@ const translations = {
 
     // Selected Pitch Classes Transpositions (Arabic translations)
     "analysis.title": "تحليل",
+    "analysis.selectedPitchClasses": "الدرجات الصوتية المختارة",
     "analysis.centsTolerance": "تساهل السنت",
     "analysis.playSelectedPitchClasses": "استمعوا للنغمات المختارة",
+    "analysis.copyTable": "نسخ الجدول",
+    "analysis.copyTableToClipboard": "نسخ الجدول إلى الحافظة",
+    "analysis.tableCopied": "تم نسخ الجدول إلى الحافظة!",
+    "analysis.copyFailed": "فشل نسخ الجدول.",
     "analysis.noteNames": "أسماء النغمات",
     "analysis.abjadName": "الإسم الأبجدي",
     "analysis.englishName": "الإسم الإنجليزي",
@@ -631,6 +642,7 @@ const translations = {
     "analysis.midiNote": "نوطة ميدي",
     "analysis.midiNoteDeviation": "انحراف نوطة ميدي",
     "analysis.frequency": "التردد (هرتز)",
+    "analysis.staffNotation": "تدوين",
     "analysis.play": "استماع",
 
     // Modulations (Arabic translations)
