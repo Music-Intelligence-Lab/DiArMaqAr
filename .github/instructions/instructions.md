@@ -277,7 +277,7 @@ const maqamat = getMaqamat();
 const pitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote);
 
 // 3. Build Playable Structures
-const jinsTranspositions = getJinsTranspositions(pitchClasses, jins);
+const jinsTranspositions = calculateJinsTranspositions(pitchClasses, jins);
 const maqamTahlil = maqamData.getTahlil(pitchClasses);
 ```
 

@@ -171,12 +171,12 @@ LanguageContextProvider
 ### Transposition Algorithms
 
 **Jins Transposition** (`src/functions/transpose.ts`):
-- `getJinsTranspositions()`: Finds all valid starting positions for a jins within a tuning system
+- `calculateJinsTranspositions()`: Finds all valid starting positions for a jins within a tuning system
 - Pattern matches interval sequences within cents tolerance
 - Returns array of `Jins` instances with concrete pitch classes
 
 **Maqam Transposition**:
-- `getMaqamTranspositions()`: Separately processes ascending and descending sequences
+- `calculateMaqamTranspositions()`: Separately processes ascending and descending sequences
 - Both sequences must be fully constructible within the tuning system
 - Embedded ajnas analysis optional (computationally expensive)
 
@@ -242,9 +242,9 @@ LanguageContextProvider
 
 **MaqamData** + **PitchClass[]** → realizes → **Maqam** (via `getTahlil()`)
 
-**JinsData** + **PitchClass[]** → transposes → **Jins[]** (via `getJinsTranspositions()`)
+**JinsData** + **PitchClass[]** → transposes → **Jins[]** (via `calculateJinsTranspositions()`)
 
-**MaqamData** + **PitchClass[]** → transposes → **Maqam[]** (via `getMaqamTranspositions()`)
+**MaqamData** + **PitchClass[]** → transposes → **Maqam[]** (via `calculateMaqamTranspositions()`)
 
 **Maqam** + **PitchClass[]** + **JinsData[]** + **MaqamData[]** → modulates → **MaqamatModulations | AjnasModulations** (via `modulate()`)
 

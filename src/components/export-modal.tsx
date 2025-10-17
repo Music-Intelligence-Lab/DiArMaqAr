@@ -8,8 +8,8 @@ import {
   exportMaqam,
 } from "@/functions/export";
 import {
-  exportToScala,
-  exportToScalaKeymap,
+  exportTuningSystemToScala,
+  exportTuningSystemToScalaKeymap,
   exportJinsToScala,
   exportJinsToScalaKeymap,
   exportMaqamToScala,
@@ -746,7 +746,7 @@ export default function ExportModal({
               "Scala export requires a tuning system and starting note"
             );
           }
-          content = exportToScala(
+          content = exportTuningSystemToScala(
             selectedTuningSystem,
             selectedIndices[0] as unknown as NoteName
           );
@@ -790,7 +790,7 @@ export default function ExportModal({
               "Scala keymap export requires a tuning system and starting note"
             );
           }
-          content = exportToScalaKeymap(
+          content = exportTuningSystemToScalaKeymap(
             selectedTuningSystem,
             selectedIndices[0] as unknown as NoteName
           );

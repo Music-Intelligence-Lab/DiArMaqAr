@@ -3,7 +3,7 @@ import PitchClass, { PitchClassInterval } from "./PitchClass";
 import NoteName from "./NoteName";
 import { getPitchClassIntervals } from "@/functions/getPitchClassIntervals";
 import { standardizeText } from "@/functions/export";
-import shiftPitchClass from "@/functions/shiftPitchClass";
+import shiftPitchClassByOctave from "@/functions/shiftPitchClassByOctave";
 
 /**
  * Interface for serializing JinsData to JSON format.
@@ -343,7 +343,7 @@ export function shiftJinsByOctaves(allPitchClasses: PitchClass[], jins: Jins, oc
     return null;
   }
   
-  const shiftedPitchClasses = jins.jinsPitchClasses.map((pc) => shiftPitchClass(allPitchClasses, pc, octaveShift));
+  const shiftedPitchClasses = jins.jinsPitchClasses.map((pc) => shiftPitchClassByOctave(allPitchClasses, pc, octaveShift));
   
   // Check if any pitch class shift failed (indicated by empty noteName)
   const allValid = shiftedPitchClasses.every(pc => pc.noteName !== "");

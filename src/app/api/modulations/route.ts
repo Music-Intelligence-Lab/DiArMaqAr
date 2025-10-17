@@ -2,7 +2,7 @@ import { getTuningSystems, getAjnas, getMaqamat } from "@/functions/import";
 import detectPitchClassValueType from "@/functions/detectPitchClassType";
 import { NextResponse } from "next/server";
 import PitchClass from "@/models/PitchClass";
-import { getMaqamTranspositions } from "@/functions/transpose";
+import { calculateMaqamTranspositions } from "@/functions/transpose";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import modulate from "@/functions/modulate";
 import { MaqamatModulations } from "@/models/Maqam";
@@ -238,7 +238,7 @@ export async function POST(request: Request) {
     const allPitchClasses: PitchClass[] = getTuningSystemPitchClasses(selectedTuningSystem, tuningSystemStartingNoteName);
 
     // Get the maqam transpositions to find the specific transposition with the requested tonic
-    const maqamTranspositions = getMaqamTranspositions(
+    const maqamTranspositions = calculateMaqamTranspositions(
       allPitchClasses, 
       ajnas, 
       selectedMaqamData!, 

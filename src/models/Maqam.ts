@@ -4,7 +4,7 @@ import { AjnasModulations, Jins } from "./Jins";
 import NoteName from "./NoteName";
 import { SourcePageReference } from "./bibliography/Source";
 import { standardizeText } from "@/functions/export";
-import shiftPitchClass from "@/functions/shiftPitchClass";
+import shiftPitchClassByOctave from "@/functions/shiftPitchClassByOctave";
 
 /**
  * Interface for serializing MaqamData to JSON format.
@@ -565,8 +565,8 @@ export function shiftMaqamByOctaves(allPitchClasses: PitchClass[], maqam: Maqam,
     return null;
   }
   
-  const shiftedAscendingPitchClasses = maqam.ascendingPitchClasses.map((pc) => shiftPitchClass(allPitchClasses, pc, octaveShift));
-  const shiftedDescendingPitchClasses = maqam.descendingPitchClasses.map((pc) => shiftPitchClass(allPitchClasses, pc, octaveShift));
+  const shiftedAscendingPitchClasses = maqam.ascendingPitchClasses.map((pc) => shiftPitchClassByOctave(allPitchClasses, pc, octaveShift));
+  const shiftedDescendingPitchClasses = maqam.descendingPitchClasses.map((pc) => shiftPitchClassByOctave(allPitchClasses, pc, octaveShift));
 
   // Check if any pitch class shift failed (indicated by empty noteName)
   const ascendingValid = shiftedAscendingPitchClasses.every(pc => pc.noteName !== "");

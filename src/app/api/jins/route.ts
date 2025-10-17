@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getTuningSystems, getAjnas } from "@/functions/import";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
-import { getJinsTranspositions } from "@/functions/transpose";
+import { calculateJinsTranspositions } from "@/functions/transpose";
 import { standardizeText } from "@/functions/export";
 import { handleCorsPreflightRequest, addCorsHeaders } from "../cors";
 
@@ -157,7 +157,7 @@ export async function POST(request: Request) {
         if (isJinsPossible) {
           if (inputNewTonicForTransposition) {
             if (tuningSystemPitchClasses.find((pc) => standardizeText(pc.noteName) === standardizeText(inputNewTonicForTransposition))) {
-              const transpositions = getJinsTranspositions(tuningSystemPitchClasses, jins, true, inputCentsTolerance);
+              const transpositions = calculateJinsTranspositions(tuningSystemPitchClasses, jins, true, inputCentsTolerance);
               const transposition = transpositions.find((t) => standardizeText(t.jinsPitchClasses[0].noteName) === standardizeText(inputNewTonicForTransposition));
 
               if (transposition) {
@@ -168,7 +168,7 @@ export async function POST(request: Request) {
           } else {
             // When no specific tonic is requested, use includeTranspositions flag
             if (inputIncludeTranspositions) {
-              const transpositions = getJinsTranspositions(tuningSystemPitchClasses, jins, true, inputCentsTolerance);
+              const transpositions = calculateJinsTranspositions(tuningSystemPitchClasses, jins, true, inputCentsTolerance);
               resultTuningSystems[key] = transpositions;
             } else {
               const jinsAnalysis = jins.getTahlil(tuningSystemPitchClasses);

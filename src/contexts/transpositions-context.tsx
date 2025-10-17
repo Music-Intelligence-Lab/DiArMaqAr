@@ -16,7 +16,7 @@
 
 import React, { createContext, useContext, useMemo } from "react";
 import useAppContext from "./app-context";
-import { getJinsTranspositions, getMaqamTranspositions } from "@/functions/transpose";
+import { calculateJinsTranspositions, calculateMaqamTranspositions } from "@/functions/transpose";
 import { Jins } from "@/models/Jins";
 import { Maqam } from "@/models/Maqam";
 
@@ -60,7 +60,7 @@ export function TranspositionsContextProvider({ children }: { children: React.Re
    */
   const jinsTranspositions = useMemo(() => {
     if (!selectedJinsData) return [];
-    return getJinsTranspositions(allPitchClasses, selectedJinsData, true, centsTolerance);
+    return calculateJinsTranspositions(allPitchClasses, selectedJinsData, true, centsTolerance);
   }, [allPitchClasses, selectedJinsData, centsTolerance]);
 
   /**
@@ -69,7 +69,7 @@ export function TranspositionsContextProvider({ children }: { children: React.Re
    */
   const maqamTranspositions = useMemo(() => {
     if (!selectedMaqamData) return [];
-    return getMaqamTranspositions(allPitchClasses, ajnas, selectedMaqamData, true, centsTolerance);
+    return calculateMaqamTranspositions(allPitchClasses, ajnas, selectedMaqamData, true, centsTolerance);
   }, [allPitchClasses, ajnas, selectedMaqamData, centsTolerance]);
 
   // ==================== COMPREHENSIVE TRANSPOSITION MAPS ====================
@@ -83,7 +83,7 @@ export function TranspositionsContextProvider({ children }: { children: React.Re
     if (!ajnas || ajnas.length === 0 || allPitchClasses.length === 0) return map;
     
     for (const jins of ajnas) {
-      map.set(jins.getId(), getJinsTranspositions(allPitchClasses, jins, true, centsTolerance));
+      map.set(jins.getId(), calculateJinsTranspositions(allPitchClasses, jins, true, centsTolerance));
     }
     return map;
   }, [ajnas, allPitchClasses, centsTolerance]);
@@ -97,7 +97,7 @@ export function TranspositionsContextProvider({ children }: { children: React.Re
     if (!maqamat || maqamat.length === 0 || allPitchClasses.length === 0) return map;
     
     for (const maqam of maqamat) {
-      map.set(maqam.getId(), getMaqamTranspositions(allPitchClasses, ajnas, maqam, true, centsTolerance));
+      map.set(maqam.getId(), calculateMaqamTranspositions(allPitchClasses, ajnas, maqam, true, centsTolerance));
     }
     return map;
   }, [maqamat, ajnas, allPitchClasses, centsTolerance]);

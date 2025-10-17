@@ -4,11 +4,11 @@ import JinsData, { AjnasModulations, Jins, JinsDataInterface, shiftJinsByOctaves
 import MaqamData, { Maqam, MaqamatModulations, MaqamDataInterface, shiftMaqamByOctaves } from "@/models/Maqam";
 import getTuningSystemPitchClasses from "./getTuningSystemPitchClasses";
 import { getAjnas, getMaqamat } from "./import";
-import { getJinsTranspositions, getMaqamTranspositions } from "./transpose";
+import { calculateJinsTranspositions, calculateMaqamTranspositions } from "./transpose";
 import PitchClass, { PitchClassInterval } from "@/models/PitchClass";
 import modulate from "./modulate";
 import calculateNumberOfModulations from "./calculateNumberOfModulations";
-import shiftPitchClass from "./shiftPitchClass";
+import shiftPitchClassByOctave from "./shiftPitchClassByOctave";
 import { classifyMaqamFamily } from "./classifyMaqamFamily";
 
 /**
@@ -577,7 +577,7 @@ function mapNoteToOctaveBelow(noteName: string, allPitchClasses: PitchClass[]): 
   }
 
   // Use the proper shift function to get the octave-below version
-  const shiftedPitchClass = shiftPitchClass(allPitchClasses, pitchClass, -1);
+  const shiftedPitchClass = shiftPitchClassByOctave(allPitchClasses, pitchClass, -1);
   
   // Return the standardized note name of the shifted pitch class, or empty if shift failed
   return shiftedPitchClass?.noteName ? standardizeText(shiftedPitchClass.noteName) : '';
@@ -980,7 +980,7 @@ export async function exportTuningSystem(
       }
 
       let numberOfTranspositions = 0;
-      for (const jinsTransposition of getJinsTranspositions(fullRangeTuningSystemPitchClasses, jins, true, centsTolerance)) {
+      for (const jinsTransposition of calculateJinsTranspositions(fullRangeTuningSystemPitchClasses, jins, true, centsTolerance)) {
         possibleAjnas.push(jinsTransposition);
         numberOfTranspositions++;
       }
@@ -1037,7 +1037,7 @@ export async function exportTuningSystem(
       }
 
       let numberOfTranspositions = 0;
-      const maqamTranspositions = getMaqamTranspositions(fullRangeTuningSystemPitchClasses, allAjnas, maqam, true, centsTolerance);
+      const maqamTranspositions = calculateMaqamTranspositions(fullRangeTuningSystemPitchClasses, allAjnas, maqam, true, centsTolerance);
 
       for (let j = 0; j < maqamTranspositions.length; j++) {
         const maqamTransposition = maqamTranspositions[j];
@@ -1447,7 +1447,7 @@ export async function exportJins(
     const transpositions: MergedJins[] = [];
     let numberOfTranspositions = 0;
 
-    const jinsTranspositions = Array.from(getJinsTranspositions(fullRangeTuningSystemPitchClasses, jinsData, true, centsTolerance));
+    const jinsTranspositions = Array.from(calculateJinsTranspositions(fullRangeTuningSystemPitchClasses, jinsData, true, centsTolerance));
 
     for (let i = 0; i < jinsTranspositions.length; i++) {
       const jinsTransposition = jinsTranspositions[i];
@@ -1671,7 +1671,7 @@ export async function exportMaqam(
     } else {
       // This is a transposition - need to get tahlil and classify that
       const allAjnas = getAjnas();
-      const allMaqamTranspositions = getMaqamTranspositions(fullRangeTuningSystemPitchClasses, allAjnas, maqamData, true, centsTolerance);
+      const allMaqamTranspositions = calculateMaqamTranspositions(fullRangeTuningSystemPitchClasses, allAjnas, maqamData, true, centsTolerance);
       const tahlil = allMaqamTranspositions.find(m => !m.transposition);
       
       if (tahlil) {
@@ -1826,7 +1826,7 @@ export async function exportMaqam(
     const allAjnas = getAjnas();
     const allMaqamat = getMaqamat();
 
-    const maqamTranspositions = Array.from(getMaqamTranspositions(fullRangeTuningSystemPitchClasses, allAjnas, maqamData, true, centsTolerance));
+    const maqamTranspositions = Array.from(calculateMaqamTranspositions(fullRangeTuningSystemPitchClasses, allAjnas, maqamData, true, centsTolerance));
 
     // Reuse classification calculated above, or calculate it now if not done yet
     let sharedClassification: ExportMaqamFamilyClassification;

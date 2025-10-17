@@ -2,7 +2,7 @@ import { getTuningSystems, getAjnas, getMaqamat } from "@/functions/import";
 import detectPitchClassValueType from "@/functions/detectPitchClassType";
 import { NextResponse } from "next/server";
 import PitchClass from "@/models/PitchClass";
-import { getJinsTranspositions, getMaqamTranspositions } from "@/functions/transpose";
+import { calculateJinsTranspositions, calculateMaqamTranspositions } from "@/functions/transpose";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { standardizeText } from "@/functions/export";
 import { handleCorsPreflightRequest, addCorsHeaders } from "../cors";
@@ -218,7 +218,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Maqam not found" }, { status: 400 });
       }
 
-      const maqamTranspositions = getMaqamTranspositions(allPitchClasses, ajnas, selectedMaqamData, true, centsTolerance ?? 5);
+      const maqamTranspositions = calculateMaqamTranspositions(allPitchClasses, ajnas, selectedMaqamData, true, centsTolerance ?? 5);
 
       // Filter for specific note name if provided
       if (noteNameToTransposeTo && noteNameToTransposeTo !== "") {
@@ -243,7 +243,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Maqam not found" }, { status: 400 });
       }
 
-      const maqamTranspositions = getMaqamTranspositions(allPitchClasses, ajnas, selectedMaqamData, true, centsTolerance ?? 5);
+      const maqamTranspositions = calculateMaqamTranspositions(allPitchClasses, ajnas, selectedMaqamData, true, centsTolerance ?? 5);
 
       // Filter for specific note name if provided
       if (noteNameToTransposeTo && noteNameToTransposeTo !== "") {
@@ -266,7 +266,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Jins not found" }, { status: 400 });
       }
 
-      const jinsTranspositions = getJinsTranspositions(allPitchClasses, selectedJinsData, true, centsTolerance ?? 5);
+      const jinsTranspositions = calculateJinsTranspositions(allPitchClasses, selectedJinsData, true, centsTolerance ?? 5);
 
       // Filter for specific note name if provided
       if (noteNameToTransposeTo && noteNameToTransposeTo !== "") {
@@ -289,7 +289,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Jins not found" }, { status: 400 });
       }
 
-      const jinsTranspositions = getJinsTranspositions(allPitchClasses, selectedJinsData, true, centsTolerance ?? 5);
+      const jinsTranspositions = calculateJinsTranspositions(allPitchClasses, selectedJinsData, true, centsTolerance ?? 5);
 
       // Filter for specific note name if provided
       if (noteNameToTransposeTo && noteNameToTransposeTo !== "") {
