@@ -1048,7 +1048,7 @@
     // Row hover effect for data rows - increased visibility
     // Exclude ajnas row (contains buttons) and play row (contains play icons)
     &:not(:has([class*="__jins-button"])):not(:has([class*="__play-circle-icon"])):hover {
-      background-color: rgba($primary, 0.2);
+      background-color: rgba($grey, 0.2);
     }
     
     // Primary value type row - enhanced visual prominence
@@ -1056,13 +1056,13 @@
       
       th:first-child {
         background-color: $medium-grey !important;
-        border-left: 4px solid rgba($tertiary, 0.9);
+        border-right: 4px solid rgba($tertiary, 0.9);
         font-weight: 500 !important;
       }
       
       // Enhanced hover for primary value row
       &:hover th:first-child {
-        background-color: rgba($tertiary, 0.3) !important;
+        background-color: rgba($grey, 0.2) !important;
       }
     }
   }
