@@ -141,9 +141,8 @@ export default function Navbar() {
                     window.scrollTo({ top: 0, behavior: "smooth" });
                   }
                 }
-              }
-            }}
-            disabled={!selectedTuningSystem}
+              }}
+              disabled={!selectedTuningSystem}
           >
             <span className="navbar__bottom-bar-item_tab-title">
               {selectedTuningSystem
@@ -176,6 +175,12 @@ export default function Navbar() {
                   )})`}
             </span>
           </button>
+          {!selectedTuningSystem && (
+            <div className="navbar__tooltip">
+              {t('tooltip.ajnas')}
+            </div>
+          )}
+          </div>
         )
       },
       {
@@ -214,21 +219,16 @@ export default function Navbar() {
               onClick={() => {
                 setSelectedMenu("maqam");
                 if (typeof window !== "undefined") {
-                  const maqamTranspositions = document.querySelector(
-                    ".maqam-transpositions"
-                  );
-                  if (maqamTranspositions) {
-                    maqamTranspositions.scrollIntoView({
-                      behavior: "smooth",
-                      block: "center", // Changed from "start" to avoid navbar overlap
-                    });
+                  // Simple approach: scroll to top and let CSS padding handle proper positioning
+                  const scrollContainer = document.querySelector(".scrollbar-right-container");
+                  if (scrollContainer) {
+                    scrollContainer.scrollTo({ top: 0, behavior: "smooth" });
                   } else {
                     window.scrollTo({ top: 0, behavior: "smooth" });
                   }
                 }
-              }
-            }}
-            disabled={!selectedTuningSystem}
+              }}
+              disabled={!selectedTuningSystem}
           >
             <span className="navbar__bottom-bar-item_tab-title">
               {selectedTuningSystem
@@ -254,6 +254,12 @@ export default function Navbar() {
                   )})`}
             </span>
           </button>
+          {!selectedTuningSystem && (
+            <div className="navbar__tooltip">
+              {t('tooltip.maqamat')}
+            </div>
+          )}
+          </div>
         )
       },
       {

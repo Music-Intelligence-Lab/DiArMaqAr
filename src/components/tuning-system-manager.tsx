@@ -1009,15 +1009,15 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
               <button
                 key={tab.label}
                 className={
-                  "tuning-system-manager__tab" +
+                  "tabs__tab" +
                   (tuningSystemsFilter === tab.label
-                    ? " tuning-system-manager__tab_active"
+                    ? " tabs__tab--active"
                     : "")
                 }
                 onClick={() => setTuningSystemsFilter(tab.label)}
               >
                 {t(tab.labelKey)}{" "}
-                <span className="tuning-system-manager__tab-count">
+                <span className="tabs__count">
                   ({count})
                 </span>
               </button>
@@ -1027,87 +1027,70 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       )}
 
       {!admin && (
-        <div className="carousel__controls carousel--tuning-systems">
+        <div className="carousel__controls">
           <button
             className="carousel__button carousel__button--prev"
             onClick={() => {
               const container = document.querySelector(
-                ".tuning-system-manager__list"
+                ".carousel__list"
               );
-              // In Arabic (RTL) mode many browsers invert the meaning of scrollLeft; to keep UX intuitive,
-              // treat the "prev" button as moving visually right in RTL (positive delta) and left in LTR (negative delta).
               if (container)
                 container.scrollBy({
-                  left: language === "ar" ? 635 : -635,
+                  left: language === "ar" ? 600 : -600,
                   behavior: "smooth",
                 });
             }}
           >
             ‹
           </button>
-          <div
-            className="tuning-system-manager__list"
-            style={{
-              gridTemplateColumns: `repeat(${Math.ceil(
-                filteredTuningSystems.length / 3
-              )}, minmax(430px, 1fr))`,
-            }}
-          >
+          <div className="carousel__list">
             {filteredTuningSystems.length === 0 ? (
               <p>{t("tuningSystem.noSystemsAvailable")}</p>
             ) : (
               filteredTuningSystems.map((tuningSystem, index) => {
-                const isDisabled = isTuningSystemDisabled(tuningSystem, selectedJinsData, selectedMaqamData, selectedMaqam).disabled;
-                const isSelected = tuningSystem.getId() === selectedTuningSystem?.getId();
-                const isSelectable = !isDisabled;
-                
+                const disabled = isTuningSystemDisabled(
+                  tuningSystem,
+                  selectedJinsData,
+                  selectedMaqamData,
+                  selectedMaqam
+                ).disabled;
+                const selected = tuningSystem.getId() === selectedTuningSystem?.getId();
                 return (
                 <div
                   key={index}
-                  className={
-                    "tuning-system-manager__item " +
-                    (isTuningSystemDisabled(
-                      tuningSystem,
-                      selectedJinsData,
-                      selectedMaqamData,
-                      selectedMaqam
-                    ).disabled
-                      ? "tuning-system-manager__item_disabled "
-                      : "") +
-                    (tuningSystem.getId() === selectedTuningSystem?.getId()
-                      ? "tuning-system-manager__item_selected "
-                      : "")
-                  }
+                  className={`carousel__item${selected ? " carousel__item--selected" : ""}${disabled ? " carousel__item--disabled" : " carousel__item--active"}`}
                   onClick={() => {
-                    // Toggle functionality: if clicking the same tuning system, deselect it
-                    if (
-                      selectedTuningSystem?.getId() === tuningSystem.getId()
-                    ) {
-                      clearSelections(); // This will clear tuning system and everything else
-                      clearHangingNotes();
-                    } else {
-                      // For different tuning systems, calculate noteName without stale state
-                      // by temporarily assuming no selections (since handleTuningSystemClick will clear them)
-                      const { noteName } = isTuningSystemDisabled(
-                        tuningSystem,
-                        selectedJinsData,
-                        selectedMaqamData,
-                        selectedMaqam
-                      );
-                      handleTuningSystemClick(tuningSystem, noteName);
+                    if (!disabled) {
+                      // Toggle functionality: if clicking the same tuning system, deselect it
+                      if (selected) {
+                        clearSelections(); // This will clear tuning system and everything else
+                        clearHangingNotes();
+                      } else {
+                        // For different tuning systems, calculate noteName without stale state
+                        // by temporarily assuming no selections (since handleTuningSystemClick will clear them)
+                        const { noteName } = isTuningSystemDisabled(
+                          tuningSystem,
+                          selectedJinsData,
+                          selectedMaqamData,
+                          selectedMaqam
+                        );
+                        handleTuningSystemClick(tuningSystem, noteName);
+                      }
                     }
                   }}
                 >
-                  <strong className="tuning-system-manager__item-english-creator">
-                    {language === "ar" && tuningSystem.getCreatorArabic()
-                      ? `${tuningSystem.getCreatorArabic()} (${tuningSystem.getYear()})`
-                      : `${tuningSystem.getCreatorEnglish()} (${tuningSystem.getYear()})`}
-                  </strong>
-                  <strong className="tuning-system-manager__item-english-title">
-                    {language === "ar" && tuningSystem.getTitleArabic()
-                      ? tuningSystem.getTitleArabic()
-                      : tuningSystem.getTitleEnglish()}
-                  </strong>
+                  <div className="carousel__item-name">
+                    <strong>
+                      {language === "ar" && tuningSystem.getCreatorArabic()
+                        ? tuningSystem.getCreatorArabic()
+                        : tuningSystem.getCreatorEnglish()}
+                    </strong>
+                    <strong className="carousel__item-name-title">
+                      {language === "ar" && tuningSystem.getTitleArabic()
+                        ? tuningSystem.getTitleArabic()
+                        : tuningSystem.getTitleEnglish()}
+                    </strong>
+                  </div>
                 </div>
                 );
               })
@@ -1117,12 +1100,11 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             className="carousel__button carousel__button--next"
             onClick={() => {
               const container = document.querySelector(
-                ".tuning-system-manager__list"
+                ".carousel__list"
               );
-              // Mirror logic of prev button for RTL so "next" always moves visually left in RTL and right in LTR.
               if (container)
                 container.scrollBy({
-                  left: language === "ar" ? -635 : 635,
+                  left: language === "ar" ? -600 : 600,
                   behavior: "smooth",
                 });
             }}

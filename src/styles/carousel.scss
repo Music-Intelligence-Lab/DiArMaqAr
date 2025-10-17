@@ -50,7 +50,7 @@
     }
 
     &::-webkit-scrollbar-thumb {
-      background: $gradient-primary;
+      background: $light-grey;
       border-radius: $space-1;
     }
 
@@ -290,14 +290,19 @@
   }
 }
 
-// Tabs component - clean and minimal design
-// Following modern minimalism with cultural warmth principles
+// Tabs component - minimal border-only design
+// Matches pitch class bar aesthetic for visual consistency
 .tabs {
   display: flex;
-  gap: $space-1;
-  margin-bottom: 0;
-  margin-left: $space-4;
+  flex-wrap: wrap;
+  gap: $space-2;
+  margin-bottom: $space-2; // More separation from carousel
   position: relative;
+  
+  // Fixed height container prevents layout shift when switching between modes
+  // Accommodates up to 2 rows of tabs (note mode = 1 row, jins mode = 2 rows)
+  min-height: 64px;
+  align-content: flex-start; // Align rows to top
 
   // RTL support
   [dir="rtl"] & {
@@ -306,62 +311,98 @@
   }
 
   &__tab {
-    @include nav-item-base;
-    @include nav-item-sm;
-    position: relative;
+    // Minimal filter button - clean border style matching pitch class bar
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: $space-2 $space-3;
+    font-size: $font-size-xs;
     font-weight: $font-weight-normal;
     white-space: nowrap;
-    border-radius: $space-1 $space-1 0 0;
-
-    // Simple inactive state
-    background: rgba($surface-secondary, 0.6);
-    border: 1px solid rgba($border-secondary, 0.4);
-    border-bottom: none;
+    
+    // Clean minimal default state
+    background: transparent;
+    border: 1px solid rgba($border-secondary, 0.5);
+    border-radius: $space-2;
     color: $text-secondary;
+    
+    // Interaction
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+    position: relative;
+    
+    // Accessibility
+    &:focus-visible {
+      outline: 2px solid $primary;
+      outline-offset: 2px;
+      z-index: 3;
+    }
 
+    // RTL text alignment
     [dir="rtl"] & {
       text-align: right;
     }
 
-    // Simple hover for inactive tabs
+    // Hover state - cyan hint matching carousel theme
     &:hover:not(&--active) {
-      background: rgba($surface-primary, 0.8);
+      border-color: rgba($tertiary, 0.6);
       color: $text-primary;
+      transform: translateY(-1px);
     }
 
-    // Clean active state - just connected and bright
+    // Active state - strong cyan border like carousel items
     &--active {
-      background: $surface-primary;
-      border: 1px solid $border-primary;
-      border-bottom: 1px solid $surface-primary;
+      background: transparent;
+      border: 2px solid $tertiary; // Thicker cyan border
       color: $text-primary;
       font-weight: $font-weight-medium;
-
+      // Compensate padding for thicker border to maintain size
+      padding: calc($space-2 - 1px) calc($space-3 - 1px);
+      
       &:hover {
-        background: $surface-primary;
+        background: transparent;
+        border-color: $tertiary;
         color: $text-primary;
+        transform: translateY(-1px);
       }
     }
+  }
 
-    // Simple count badge
-    &-count {
-      background: rgba($secondary, 0.8);
-      color: white;
-      border-radius: $space-1;
-      padding: 1px 6px;
-      font-size: 10px;
-      font-weight: $font-weight-medium;
-      margin-left: $space-1;
-      min-width: 16px;
-      text-align: center;
+  // Count badge - subtle and integrated
+  &__count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba($text-tertiary, 0.1);
+    border: 1px solid rgba($text-tertiary, 0.15);
+    color: $text-tertiary;
+    border-radius: $space-2;
+    padding: 2px 6px;
+    font-size: 10px;
+    font-weight: $font-weight-medium;
+    margin-left: $space-1;
+    min-width: 18px;
+    transition: all 0.2s ease;
 
-      // RTL support
-      [dir="rtl"] & {
-        margin-left: 0;
-        margin-right: $space-1;
-      }
+    // RTL support
+    [dir="rtl"] & {
+      margin-left: 0;
+      margin-right: $space-1;
+    }
+
+    // Cyan tint in active button
+    .tabs__tab--active & {
+      background: rgba($tertiary, 0.15);
+      border-color: rgba($tertiary, 0.3);
+      color: $tertiary;
+    }
+
+    // Brighter on hover
+    .tabs__tab:hover:not(.tabs__tab--active) & {
+      background: rgba($text-secondary, 0.15);
+      border-color: rgba($text-secondary, 0.2);
+      color: $text-secondary;
     }
   }
 }

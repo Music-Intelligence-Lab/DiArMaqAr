@@ -153,7 +153,7 @@ select:focus {
   overscroll-behavior: none;
   position: relative;
   width: 100%;
-  max-width: 1400px; // Constrain maximum width
+  max-width: 80%; // Constrain maximum width
   margin: 0 auto;
   padding: 0 $space-6; // Side padding
 

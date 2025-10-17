@@ -1,310 +1,38 @@
 @use "./variables" as *;
 @use "./maqam-jins-shared-ui";
 
+// Jins-specific overrides and additions to the shared maqam-jins-transpositions styles
+// Most styles are inherited from _maqam-jins-shared-ui.scss
+// Only component-specific overrides and truly unique styles are defined here
+
 .jins-transpositions {
-  width: 100%;
-  font-size: 0.9rem;
-  margin-top: 10px;
-  scroll-margin-top: $total-navbar-height;  // Increased from 100px for more space above target
-    margin-bottom: 40px;
-
-
-  &__sticky-header {
-    width: 100%;
-    background-color: darken($color: $secondary, $amount: 5);
-    color: $text;
-    border: solid 1px $grey;
-    position: sticky;
-    position: -webkit-sticky;
-    top: $top-navbar-height + 20px;
-    margin-bottom: 20px;
-    box-shadow: 0px 10px 20px rgba(0, 0, 0, 1);
-    z-index: 10;
-    margin-top: 10px;
-    padding: 10px 20px;
-
-    // Pseudo-element to fill the gap above when sticky
-    &::before {
-      content: "";
-      position: absolute;
-      top: -22px;
-      left: -1px;
-      right: 0;
-      width: calc(100% + 2px);
-      height: 21px;
-      background-color: $dark-grey;
-      z-index: -1;
-
-      // RTL support
-      [dir="rtl"] & {
-        left: 0;
-        right: -1px;
-      }
-    }
-  }
-
-  &__title-row {
-    font-size: 20px;
-    font-weight: 300;
-    text-align: left;
-    margin-bottom: 10px;
-
-    // RTL support
-    [dir="rtl"] & {
-      text-align: right;
-    }
-    // Title parts for separate styling
-    .jins-transpositions__title-label {
-      font-weight: 400;
-      margin-right: 6px;
-      color: $text-primary;
-    }
-    .jins-transpositions__title-name {
-      font-weight: 200;
-      color: $text-primary;
-    }
-  }
-
-  // Filter menu (scoped for the jins/transpositions view)
-  &__filter-menu {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    margin-left: 16px;
-    flex-wrap: wrap;
-
-    // RTL support
-    [dir="rtl"] & {
-      margin-left: 0;
-      margin-right: 20px;
-      flex-direction: row-reverse;
-    }
-
-  }
-
-  &__filter-menu {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    align-items: center;
-  }
-
-  &__filter-item {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 5px 0px;
-    border-radius: 3px;
-    cursor: pointer;
-    font-size: 13px;
-    transition: background-color 0.2s;
-  }
-
-  &__filter-checkbox {
-    cursor: pointer;
-    margin-right: 2px;
-
-    // RTL support
-    [dir="rtl"] & {
-      margin-right: 0;
-      margin-left: 2px;
-    }
-  }
-
-  &__filter-label {
-    cursor: pointer;
-    user-select: none;
-    padding-right: 5px;
-
-    // RTL support
-    [dir="rtl"] & {
-      padding-right: 0;
-      padding-left: 5px;
-    }
-  }
-
-  &__play-circle-icon.MuiSvgIcon-root {
-    //    background-color: $tertiary;
-    color: white;
-    padding: 0px;
-    margin: 0px;
-    font-size: 21px;
-    cursor: pointer;
-    vertical-align: middle;
-
-    // RTL support
-    [dir="rtl"] & {
-      margin-right: 0;
-      margin-left: 5px;
-    }
-  }
-
-  &__export-icon.MuiSvgIcon-root {
-    //    background-color: $tertiary;
-    color: white;
-    padding: 0px;
-    margin: 0px;
-    margin-right: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    vertical-align: middle;
-
-    // RTL support
-    [dir="rtl"] & {
-      margin-right: 0;
-      margin-left: 5px;
-    }
-  }
-
-  &__copy-icon.MuiSvgIcon-root {
-    color: white;
-    padding: 0px;
-    margin: 0px;
-    margin-right: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    vertical-align: middle;
-
-    // RTL support
-    [dir="rtl"] & {
-      margin-right: 0;
-      margin-left: 5px;
-    }
-  }
-
-  h3 {
-    font-size: 18px;
-    margin-bottom: 10px;
-    font-weight: 300;
-  }
-
-  &__comments-sources-container {
-    display: flex;
-    width: 100%;
-    margin-top: 0px;
-
-    // RTL support - reverse flex direction for Arabic
-    [dir="rtl"] & {
-      flex-direction: row-reverse;
-    }
-  }
-
-  &__comments-english {
-    font-size: 14px;
-    width: 50%;
-    min-height: 80px;
-    direction: ltr;
-    text-align: left;
-    vertical-align: top;
-    padding-right: 30px;
-    float: left;
-    margin-bottom: 0px;
-    line-height: calc(20px);
-
-    // RTL support - when in Arabic mode, adjust alignment and padding
-    [dir="rtl"] & {
-      direction: rtl;
-      text-align: right;
-      padding-right: 0px;
-      padding-left: 30px;
-      float: right;
-    }
-  }
-
-  &__sources-english {
-    font-size: 14px;
-    width: 50%;
-    min-height: 80px;
-    direction: ltr;
-    text-align: left;
-    vertical-align: top;
-    padding-right: 30px;
-    float: left;
-
-    // RTL support - when in Arabic mode, adjust alignment and padding
-    [dir="rtl"] & {
-      direction: rtl;
-      text-align: right;
-      padding-right: 0px;
-      padding-left: 30px;
-      float: right;
-    }
-  }
-
-  &__comments-arabic {
-    font-size: 14px;
-    width: 50%;
-    min-height: 80px;
-    text-align: right;
-    direction: rtl;
-    vertical-align: top;
-    padding-left: 30px;
-    float: right;
-  }
-
-  &__sources-arabic {
-    font-size: 14px;
-    width: 50%;
-    min-height: 80px;
-    text-align: right;
-    direction: rtl;
-    vertical-align: top;
-    padding-left: 30px;
-    float: right;
-  }
-
-  
-  &__comments-sources-container {
-    display: flex;
-    justify-content: space-between;
-    padding: 0 30px;
-    margin-top: 40px;
-
-    // RTL support
-    [dir="rtl"] & {
-      flex-direction: row-reverse;
-      padding: 0 30px;
-    }
-  }
-
-  &__sources {
-    width: 100%;
-    display: flex;
-    padding: 10px 30px;
-
-    // RTL support
-    [dir="rtl"] & {
-      flex-direction: row-reverse;
-    }
-  }
-
+  // Jins-specific: transposition spacer
   &__transposition-spacer {
     padding: 10px !important;
     border: 0px !important;
   }
 
   // Anchor row used for scroll targets - keep in DOM but visually hidden
-  .jins-transpositions__anchor-row {
+  &__anchor-row {
     visibility: hidden; /* keeps element in layout but invisible */
     height: 0 !important;
     line-height: 0 !important;
     pointer-events: none;
-  }
 
-  .jins-transpositions__anchor-row td {
-    padding: 0 !important;
-    margin: 0 !important;
-    height: 0 !important;
-    line-height: 0 !important;
-    border: 0 !important;
-    background: transparent !important;
-  }
+    td {
+      padding: 0 !important;
+      margin: 0 !important;
+      height: 0 !important;
+      line-height: 0 !important;
+      border: 0 !important;
+      background: transparent !important;
 
-  .jins-transpositions__anchor-row td > div {
-    display: block;
-    width: 0;
-    height: 0;
-    overflow: hidden;
+      > div {
+        display: block;
+        width: 0;
+        height: 0;
+        overflow: hidden;
+      }
+    }
   }
 }
-

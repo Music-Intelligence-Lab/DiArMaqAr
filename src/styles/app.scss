@@ -38,13 +38,14 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 1600px;
+  max-width: 1800px;
   margin: 0 auto;
   min-height: 100vh;
   overflow: visible;
   color: $text-primary;
-  padding: 20px $space-4 $footer-height $space-4; // Using variables for proper spacing
-  gap: $space-6;
+  padding: $space-4 $space-8 0px $space-8; // Using variables for proper spacing
+  margin-bottom: $footer-height - 5px;
+  //gap: $space-6;
 
   &__title {
     font-size: $font-size-4xl;

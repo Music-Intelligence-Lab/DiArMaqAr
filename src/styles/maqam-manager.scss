@@ -21,7 +21,7 @@
   flex-direction: column;
   width: 100%;
   max-width: 1600px;
-  margin: 0 auto $space-4 auto; // 16px bottom margin for consistency
+  margin: 0 auto $space-2 auto; // 16px bottom margin for consistency
 
   // Maqam-specific unique styles
   &__header {
@@ -111,8 +111,8 @@
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 20px;
-    height: auto;
+   margin-bottom: $space-2; // More separation from carousel
+    min-height: 64px; // Match tabs min-height for consistent spacing
     vertical-align: top;
   }
 
@@ -126,7 +126,7 @@
     font-size: 12px;
     min-width: 150px;
     width: auto;
-    height: 30px;
+    height: 24px;
     vertical-align: middle;
     text-align: center;
     border: none;
@@ -134,7 +134,8 @@
     flex-shrink: 0;
 
     &:focus {
-      outline: transparent;
+      outline: 2px solid $focus-ring;
+      outline-offset: $focus-ring-offset;
     }
 
     &:active {
@@ -146,62 +147,9 @@
     }
   }
 
-  &__tabs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    flex-grow: 1;
-    min-width: 0;
-    margin-left: 25px;
-
-    [dir="rtl"] & {
-      margin-left: 0;
-      margin-right: 25px;
-    }
-  }
-
-  &__tab {
-    text-align: left;
-    width: max-content;
-    padding: 10px 10px;
-    border-radius: 0px;
-    border: none;
-    background: $medium-grey;
-    color: $text;
-    font-size: 13px;
-    height: 38px;
-    font-weight: 400;
-    cursor: pointer;
-
-    [dir="rtl"] & {
-      text-align: right;
-    }
-
-    &:hover {
-      background: color.adjust($medium-grey, $lightness: -10%);
-    }
-  }
-
-  &__tab_active {
-    border: none;
-    background: $black;
-    font-weight: 400;
-
-    &:hover {
-      background: $black;
-    }
-  }
-
-  &__tab-count {
-    font-size: 0.95em;
-    color: silver;
-    margin-left: 2px;
-
-    [dir="rtl"] & {
-      margin-left: 0;
-      margin-right: 2px;
-    }
-  }
+  // Note: Tab button styles (&__tab, &__tab_active, &__tab-count) have been
+  // removed in favor of shared .tabs__tab, .tabs__tab--active, and .tabs__count
+  // from carousel.scss. The maqam-manager now uses the shared carousel component.
 
   &__carousel {
     display: flex;

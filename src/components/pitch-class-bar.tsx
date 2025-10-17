@@ -110,12 +110,37 @@ export default function PitchClassBar() {
   const { language } = useLanguageContext();
 
   const rowRef = useRef<HTMLDivElement>(null);
+  const sentinelRef = useRef<HTMLDivElement>(null);
   const isDown = useRef(false);
   const startX = useRef(0);
   const scrollLeftStart = useRef(0);
   const [grabbing, setGrabbing] = useState(false);
   const isDragging = useRef(false);
   const dragThreshold = 5; // pixels - minimum movement to consider it a drag
+  const [isStuck, setIsStuck] = useState(false);
+
+  // Detect when the element becomes sticky using sentinel element
+  // This is the cross-browser best practice approach
+  useEffect(() => {
+    if (!sentinelRef.current) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        // When sentinel is NOT intersecting (not visible), the sticky element is stuck
+        setIsStuck(!entry.isIntersecting);
+      },
+      {
+        threshold: [0],
+        rootMargin: '0px'
+      }
+    );
+
+    observer.observe(sentinelRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     if (!rowRef.current) return;
@@ -297,11 +322,23 @@ export default function PitchClassBar() {
   ]);
 
   return (
-    <div
-      ref={rowRef}
-      className="pitch-class-bar"
-      dir={language === "ar" ? "rtl" : "ltr"}
-      style={{ cursor: grabbing ? "grabbing" : "grab" }}
+    <>
+      {/* Sentinel element to detect when sticky element becomes stuck */}
+      {/* Positioned just before the sticky element with negative margin to sit at sticky threshold */}
+      <div 
+        ref={sentinelRef} 
+        style={{ 
+          height: '1px',
+          marginTop: '-1px',
+          pointerEvents: 'none',
+          visibility: 'hidden'
+        }} 
+      />
+      <div
+        ref={rowRef}
+        className={`pitch-class-bar${isStuck ? ' pitch-class-bar_stuck' : ''}`}
+        dir={language === "ar" ? "rtl" : "ltr"}
+        style={{ cursor: grabbing ? "grabbing" : "grab" }}
       onMouseDown={(e) => {
         if (!rowRef.current) return;
         isDown.current = true;
@@ -350,5 +387,6 @@ export default function PitchClassBar() {
         <WheelCell key={key} {...props} />
       ))}
     </div>
+    </>
   );
 }

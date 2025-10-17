@@ -66,6 +66,10 @@ $glass-light: rgba(255, 255, 255, 0.1);
 $glass-medium: rgba(255, 255, 255, 0.05);
 $glass-dark: rgba(0, 0, 0, 0.2);
 
+// Table hover effects - glassmorphism inspired
+$table-row-hover: rgba(255, 255, 255, 0.08);      // Subtle row highlight
+$table-cell-hover: rgba(255, 255, 255, 0.15);     // More prominent cell highlight
+
 // Minimal semantic colors
 $success: #10b981;           // Emerald
 $warning: #f59e0b;           // Amber  
@@ -86,7 +90,7 @@ $note-tonic: #f59e0b;        // Warm amber for tonic
 $note-dominant: #06b6d4;     // Cool cyan for dominant
 
 // Legacy mappings - simplified
-$gold: $warning;
+$gold: #e5ba2b;              // True gold color
 $black: #000000;
 $text: $text-primary;
 $delete: $error;
@@ -94,7 +98,7 @@ $disabled: rgba(255, 255, 255, 0.2);
 $dark-grey: $background;
 $medium-grey: $surface-secondary;
 $grey: rgba(255, 255, 255, 0.1);
-$light-grey: rgba(255, 255, 255, 0.8);
+$light-grey: rgba(255, 255, 255, 0.451);
 
 // Interactive states - web3 minimal approach
 $hovered-primary: color.adjust($primary, $lightness: 15%);      

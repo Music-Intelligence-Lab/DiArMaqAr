@@ -1013,63 +1013,9 @@
     }
   }
 
-  &__tabs {
-    display: flex;
-    gap: 5px;
-    margin-bottom: 0px;
-    margin-left: 25px;
-
-    // RTL support
-    [dir="rtl"] & {
-      margin-left: 0;
-      margin-right: 25px;
-      direction: rtl;
-    }
-  }
-
-  &__tab {
-    text-align: left;
-    width: fit-content;
-    padding: 10px 10px;
-    border-radius: 0px;
-    border: none;
-    background: $medium-grey;
-    color: $text;
-    font-weight: 400;
-    cursor: pointer;
-    font-size: 13px;
-
-    // RTL support
-    [dir="rtl"] & {
-      text-align: right;
-    }
-
-    &:hover {
-      background: color.adjust($medium-grey, $lightness: -10%);
-    }
-  }
-
-  &__tab_active {
-    border: none;
-    background: $black;
-    font-weight: 400;
-
-    &:hover {
-      background: $black;
-    }
-  }
-
-  &__tab-count {
-    font-size: 0.95em;
-    color: silver;
-    margin-left: 2px;
-
-    // RTL support
-    [dir="rtl"] & {
-      margin-left: 0;
-      margin-right: 2px;
-    }
-  }
+  // Note: Tab styles (&__tabs, &__tab, &__tab_active, &__tab-count) have been
+  // removed in favor of shared .tabs, .tabs__tab, .tabs__tab--active, and .tabs__count
+  // from carousel.scss. The tuning-system-manager now uses the shared carousel component.
 }
 
 .tuning-system-manager__row-header {

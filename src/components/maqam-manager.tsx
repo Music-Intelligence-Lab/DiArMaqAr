@@ -74,24 +74,10 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
         }
       });
 
-      // Sort jins names by their corresponding pitch class order
+      // Sort jins names alphabetically
       const sortedJinsNames = Array.from(uniqueBaseJinsNames)
         .filter(name => name !== 'no jins') // Handle 'no jins' separately
-        .sort((a, b) => {
-          const noteA = jinsToStartingNote.get(a);
-          const noteB = jinsToStartingNote.get(b);
-
-          // Find indices in allPitchClasses
-          const indexA = noteA ? allPitchClasses.findIndex(pc => pc.noteName.toLowerCase() === noteA) : -1;
-          const indexB = noteB ? allPitchClasses.findIndex(pc => pc.noteName.toLowerCase() === noteB) : -1;
-
-          // If both found, sort by pitch class order
-          if (indexA !== -1 && indexB !== -1) {
-            return indexA - indexB;
-          }
-          // Fallback to alphabetical if pitch class not found
-          return a.localeCompare(b);
-        });
+        .sort((a, b) => a.localeCompare(b)); // Simple alphabetical sort
 
       // Add 'no jins' at the end if it exists
       const result = ["all", ...sortedJinsNames];
@@ -217,7 +203,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
     <div className="maqam-manager" key={language}>
       {/* Tabs for filtering maqamat with toggle button */}
       <div className="maqam-manager__filter-controls">
-        <div className="maqam-manager__tabs">
+        <div className="tabs">
         {tabs.map((tab) => {
           let count = 0;
           if (tab === "all") {
@@ -281,8 +267,8 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
         <button
           className="carousel__button carousel__button--prev"
           onClick={() => {
-            const c = document.querySelector(".carousel__list");
-            if (c) c.scrollBy({ left: isRTL ? 600 : -600, behavior: "smooth" });
+            const container = document.querySelector(".carousel__list");
+            if (container) container.scrollBy({ left: isRTL ? 600 : -600, behavior: "smooth" });
           }}
         >
           ‹
@@ -321,8 +307,8 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
         <button
           className="carousel__button carousel__button--next"
           onClick={() => {
-            const c = document.querySelector(".carousel__list");
-            if (c) c.scrollBy({ left: isRTL ? -600 : 600, behavior: "smooth" });
+            const container = document.querySelector(".carousel__list");
+            if (container) container.scrollBy({ left: isRTL ? -600 : 600, behavior: "smooth" });
           }}
         >
           ›

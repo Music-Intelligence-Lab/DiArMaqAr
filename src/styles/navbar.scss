@@ -9,6 +9,7 @@
   top: 0;
   padding-bottom: $space-6 !important;
   
+  
   // Glassmorphism navbar
   background: $surface-primary;
   backdrop-filter: $backdrop-blur;
@@ -16,10 +17,14 @@
   
   position: sticky;
   position: -webkit-sticky;
-  scroll-margin-top: 0px;
+  scroll-margin-top: 450px;
 
   &__center-panel {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     text-align: center;
+    z-index: 1;
   }
 
   &__title {
@@ -44,6 +49,7 @@
   }
 
   &__top-bar {
+    position: relative; // Enable absolute positioning for children
     display: flex;
     width: 100%;
     max-width: 1600px; // Increased to match main content
@@ -120,6 +126,7 @@
     align-items: center;
     gap: $space-4;
     min-width: 120px; // Give it a minimum width for better layout
+    z-index: 2; // Above center panel
     
     &-menu-icon {
       display: flex;
@@ -157,6 +164,7 @@
 
   &__right-panel {
     position: relative; // Just a reference point
+    z-index: 2; // Above center panel
   }
 
   &__quick-actions {

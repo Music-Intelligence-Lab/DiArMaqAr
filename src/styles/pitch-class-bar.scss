@@ -5,25 +5,37 @@
   user-select: none;
   width: 100%;
   max-width: 1600px; // Increased to match layout
-  margin: 0 auto 0 auto; // Reduced bottom margin
+  margin-bottom: $space-2;
   overflow-x: auto;
   overflow-y: hidden;
   display: flex;
   z-index: 50;
-  //margin-bottom: 20px;
-  background-color: $background;
-  box-shadow: 0 15px 20px rgba(0, 0, 0, 0.6);
-  padding-top: 0px;
+background: rgba(0, 0, 0, 0.7); // Semi-transparent background
+backdrop-filter: blur(30px); // Blur the background
+border: 1px solid rgba(255, 255, 255, 0.1); // Subtle border
+box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); // Depth
+  padding: $space-6 $space-2 $space-4 $space-2;
   position: -webkit-sticky;
   position: sticky;
-  top: -1px; // Stick below the navbar within scrollbar container
+  top: 0px; // Stick below the navbar within scrollbar container
+  border-radius: 10px;
+  transition: box-shadow 0.2s ease;
+  
+  // Remove shadow when stuck using a modifier class
+  // Add 'pitch-class-bar_stuck' class via IntersectionObserver in the component
+  &_stuck {
+    box-shadow: none;
+    border-radius: 0px 0px 0px 0px;
+    border: 1px solid rgba(255, 255, 255, 0.1); // Subtle border
+    margin-bottom: $space-2;
+  }
 
   &::-webkit-scrollbar {
     height: 2px; // Much thinner
   }
 
   &::-webkit-scrollbar-thumb {
-    background: $gradient-primary;
+    background: $light-grey;
     border-radius: $space-1;
     cursor: pointer;
   }
@@ -65,13 +77,13 @@
 
     // Simplified states - much less visual noise
     &_selected {
-      background: $gradient-primary !important;
+      background: $gradient-secondary !important;
       border-color: $primary !important;
       color: $text-primary !important;
     }
 
     &_active {
-      background: $gradient-secondary !important;
+      background: $gradient-secondary-light !important;
       border-color: $tertiary !important;
       color: $text-primary !important;
       transform: translateY(-3px);
@@ -84,7 +96,7 @@
     }
 
     &_tonic_current {
-      background: rgba($note-tonic, 0.2) !important;
+      background: $gradient-primary !important;
       border-color: $note-tonic !important;
       color: $text-primary !important;
     }
@@ -95,7 +107,7 @@
     }
 
     &_tonic_current_active {
-      background: $gradient-secondary !important; // Use gradient instead of orange
+      background: $gradient-secondary-light !important; // Use gradient instead of orange
       border-color: $note-tonic !important;
       color: $text-primary !important;
     }
