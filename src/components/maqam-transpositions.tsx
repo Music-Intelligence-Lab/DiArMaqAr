@@ -23,7 +23,7 @@ const getHeaderId = (noteName: string): string => {
 };
 
 export function scrollToMaqamHeader(firstNote: string, selectedMaqamData?: any) {
-  const HEADER_SCROLL_MARGIN_TOP_PX = 240; // scroll margin for headers (matches $total-navbar-height)
+  const HEADER_SCROLL_MARGIN_TOP_PX = 215; // scroll margin for headers (matches $total-navbar-height)
   
   if (!firstNote && selectedMaqamData) {
     firstNote = selectedMaqamData.getAscendingNoteNames?.()?.[0];
@@ -860,7 +860,7 @@ const MaqamTranspositions: React.FC = () => {
                   <React.Fragment key={i}>
                     <td
                       className={
-                        (!oppositePitchClasses.includes(pitchClass) ? "maqam-jins-transpositions-shared__table-cell--unique " : "maqam-jins-transpositions-shared__table-cell--pitch-class ") +
+                        (!oppositePitchClasses.some(pc => pc.noteName === pitchClass.noteName && pc.cents === pitchClass.cents) ? "maqam-jins-transpositions-shared__table-cell--unique " : "maqam-jins-transpositions-shared__table-cell--pitch-class ") +
                         (isCellHighlighted(rowIndex + (ascending ? 0 : 0.5), pitchClass.noteName) ? "maqam-jins-transpositions-shared__table-cell--highlighted" : "")
                       }
                       data-column-type="note-name"
