@@ -16,6 +16,7 @@ export interface FilterSettings {
   fretDivision: boolean;
   decimalRatio: boolean;
   midiNote: boolean;
+  midiNoteDeviation: boolean;
   frequency: boolean;
   staffNotation: boolean;
   centsDeviation: boolean;
@@ -36,6 +37,7 @@ const defaultFilters: FilterSettings = {
   stringLength: false,
   fretDivision: false,
   midiNote: false,
+  midiNoteDeviation: false,
   frequency: false,
   staffNotation: false,
   

@@ -256,7 +256,7 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
         arabicTextNotes.push(noteNameTextNote);
 
         // Create a combined text note for English note name and cents deviation
-        const combinedText = `${englishName} ${pitchClass.centsDeviation > 0 ? '+' : ''}${pitchClass.centsDeviation.toFixed(1)}¢`;
+        const combinedText = `${pitchClass.referenceNoteName} ${pitchClass.centsDeviation > 0 ? '+' : ''}${pitchClass.centsDeviation.toFixed(1)}¢`;
         const combinedTextNote = new TextNote({
           text: combinedText,
           duration: "q",

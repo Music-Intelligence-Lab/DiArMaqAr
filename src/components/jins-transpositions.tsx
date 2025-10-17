@@ -7,6 +7,7 @@ import useFilterContext from "@/contexts/filter-context";
 import useLanguageContext from "@/contexts/language-context";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import { standardizeText } from "@/functions/export";
+import { calculateReferenceMidiNote } from "@/functions/calculateReferenceMidiNote";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import useTranspositionsContext from "@/contexts/transpositions-context";
 import { Jins } from "@/models/Jins";
@@ -207,23 +208,9 @@ export default function JinsTranspositions() {
 
           if (filters["centsDeviation"]) {
             const centsDeviationRow = [t("jins.centsDeviation")];
-            // Build preferred mapping for enharmonic consistency
-            const preferredMap: Record<string, string> = {};
-            let prevEnglish: string | undefined = undefined;
-            for (const pc of pitchClasses) {
-              if (!pc || !pc.noteName) continue;
-              const en = getEnglishNoteName(pc.noteName, { prevEnglish });
-              preferredMap[pc.noteName] = en;
-              prevEnglish = en;
-            }
             
             pitchClasses.forEach((pc, i) => {
-              let referenceNoteName = pc.referenceNoteName;
-              if (preferredMap[pc.noteName]) {
-                referenceNoteName = preferredMap[pc.noteName].replace(/[+-]/g, '');
-              } else if (referenceNoteName) {
-                referenceNoteName = referenceNoteName.replace(/[+-]/g, '');
-              }
+              const referenceNoteName = pc.referenceNoteName;
               const deviationText = `${referenceNoteName || ''}${pc.centsDeviation > 0 ? ' +' : ' '}${pc.centsDeviation.toFixed(1)}`;
               centsDeviationRow.push(deviationText);
               if (i < pitchClasses.length - 1) {
@@ -275,6 +262,19 @@ export default function JinsTranspositions() {
               }
             });
             rows.push(midiRow);
+          }
+
+          if (filters["midiNoteDeviation"]) {
+            const midiDeviationRow = [t("jins.midiNoteDeviation")];
+            pitchClasses.forEach((pc, i) => {
+              const referenceMidiNote = calculateReferenceMidiNote(pc);
+              const deviation = `${referenceMidiNote} ${pc.centsDeviation > 0 ? "+" : ""}${pc.centsDeviation.toFixed(1)}`;
+              midiDeviationRow.push(deviation);
+              if (i < pitchClasses.length - 1) {
+                midiDeviationRow.push(''); // interval column empty
+              }
+            });
+            rows.push(midiDeviationRow);
           }
 
           if (filters["frequency"]) {
@@ -660,34 +660,11 @@ export default function JinsTranspositions() {
                 <tr data-row-type="centsDeviation">
                   <th scope="row" id={`jins-${standardizeText(jins.name)}-centsDeviation-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.centsDeviation")}</th>
                   {(() => {
-                    // Build preferred mapping from current jins context for enharmonic consistency
-                    const preferredMap: Record<string, string> = {};
-                    let prevEnglish: string | undefined = undefined;
-                    
-                    // Use the jins pitch classes as context for enharmonic spelling
-                    if (pitchClasses && pitchClasses.length > 0) {
-                      prevEnglish = undefined;
-                      for (const pc of pitchClasses) {
-                        if (!pc || !pc.noteName) continue;
-                        const en = getEnglishNoteName(pc.noteName, { prevEnglish });
-                        preferredMap[pc.noteName] = en;
-                        prevEnglish = en;
-                      }
-                    }
-
                     return (
                       <>
                         <td className="jins-transpositions__table-cell--pitch-class" data-column-type="cents-deviation">
                           {(() => {
-                            const noteName = pitchClasses[0].noteName;
-                            let referenceNoteName = pitchClasses[0].referenceNoteName;
-
-                            // Use preferred mapping if available, otherwise fall back to pitchClass.referenceNoteName
-                            if (preferredMap[noteName]) {
-                              referenceNoteName = preferredMap[noteName].replace(/[+-]/g, '');
-                            } else if (referenceNoteName) {
-                              referenceNoteName = referenceNoteName.replace(/[+-]/g, '');
-                            }
+                            const referenceNoteName = pitchClasses[0].referenceNoteName;
 
                             return (
                               <>
@@ -703,15 +680,7 @@ export default function JinsTranspositions() {
                             <td className="jins-transpositions__table-cell" data-column-type="empty"></td>
                             <td className="jins-transpositions__table-cell--pitch-class" data-column-type="cents-deviation">
                               {(() => {
-                                const noteName = pitchClasses[i + 1].noteName;
-                                let referenceNoteName = pitchClasses[i + 1].referenceNoteName;
-
-                                // Use preferred mapping if available, otherwise fall back to pitchClass.referenceNoteName
-                                if (preferredMap[noteName]) {
-                                  referenceNoteName = preferredMap[noteName].replace(/[+-]/g, '');
-                                } else if (referenceNoteName) {
-                                  referenceNoteName = referenceNoteName.replace(/[+-]/g, '');
-                                }
+                                const referenceNoteName = pitchClasses[i + 1].referenceNoteName;
 
                                 return (
                                   <>
@@ -773,6 +742,22 @@ export default function JinsTranspositions() {
                     <React.Fragment key={i}>
                       <td className="jins-transpositions__table-cell" data-column-type="empty"></td>
                       <td className="jins-transpositions__table-cell--pitch-class" data-column-type="midi-note">{pitchClasses[i + 1].midiNoteNumber.toFixed(3)}</td>
+                    </React.Fragment>
+                  ))}
+                </tr>
+              )}
+              {filters["midiNoteDeviation"] && (
+                <tr data-row-type="midiNoteDeviation">
+                  <th scope="row" id={`jins-${standardizeText(jins.name)}-midiNoteDeviation-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.midiNoteDeviation")}</th>
+                  <td className="jins-transpositions__table-cell--pitch-class" data-column-type="midi-note-deviation">
+                    {calculateReferenceMidiNote(pitchClasses[0])} {pitchClasses[0].centsDeviation > 0 ? "+" : ""}{pitchClasses[0].centsDeviation.toFixed(1)}
+                  </td>
+                  {intervals.map((interval, i) => (
+                    <React.Fragment key={i}>
+                      <td className="jins-transpositions__table-cell" data-column-type="empty"></td>
+                      <td className="jins-transpositions__table-cell--pitch-class" data-column-type="midi-note-deviation">
+                        {calculateReferenceMidiNote(pitchClasses[i + 1])} {pitchClasses[i + 1].centsDeviation > 0 ? "+" : ""}{pitchClasses[i + 1].centsDeviation.toFixed(1)}
+                      </td>
                     </React.Fragment>
                   ))}
                 </tr>
@@ -856,6 +841,7 @@ export default function JinsTranspositions() {
                 "stringLength",
                 "fretDivision",
                 "midiNote",
+                "midiNoteDeviation",
                 "frequency",
                 "staffNotation",
               ].map((filterKey) => {

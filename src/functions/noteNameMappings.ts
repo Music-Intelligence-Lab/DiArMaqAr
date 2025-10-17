@@ -269,14 +269,24 @@ function swapEnharmonicSimple(name: string): string | null {
     "Cb": "B",
   };
 
-  // Normalize case for lookup then restore case of original first char
-  const key = name.length >= 2 ? name[0].toUpperCase() + name.slice(1) : name.toUpperCase();
+  // Extract the note part (without octave number) and the octave part
+  // E.g., "F#3" -> notePart: "F#", octavePart: "3"
+  const match = name.match(/^([A-Ga-g][#b]?)(.*)$/);
+  if (!match) return null;
+  
+  const notePart = match[1];
+  const octavePart = match[2];
+
+  // Normalize case for lookup
+  const key = notePart.length >= 2 ? notePart[0].toUpperCase() + notePart.slice(1) : notePart.toUpperCase();
   const swapped = map[key];
   if (!swapped) return null;
 
   // match case of original (if original first char was lowercase, return lowercase)
-  if (name[0] === name[0].toLowerCase()) return swapped.toLowerCase();
-  return swapped;
+  const finalSwapped = notePart[0] === notePart[0].toLowerCase() ? swapped.toLowerCase() : swapped;
+  
+  // Append the octave part back
+  return finalSwapped + octavePart;
 }
 
 export function getEnglishNoteName(arabicName: string, opts?: EnglishNameOptions): string {

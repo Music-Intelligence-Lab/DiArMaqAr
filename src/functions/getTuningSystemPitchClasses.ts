@@ -11,7 +11,7 @@ import NoteName, {
 import detectPitchClassValueType from "@/functions/detectPitchClassType";
 import convertPitchClassValue, { shiftPitchClassBaseValue, frequencyToMidiNoteNumber } from "@/functions/convertPitchClass";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
-import { calculateCentsDeviationWithReferenceNote } from "@/functions/calculateCentsDeviation";
+import { calculateCentsDeviationWithReferenceNote, swapEnharmonicForReference } from "@/functions/calculateCentsDeviation";
 import PitchClass from "@/models/PitchClass";
 
 /**
@@ -132,10 +132,29 @@ export default function getTuningSystemPitchClasses(
   if (startingPitchClass) {
     const startingMidiNumber = startingPitchClass.midiNoteNumber;
     const startingNoteName = startingPitchClass.englishName;
+    let prevReferenceNoteName: string | undefined = undefined;
+    
     pitchClasses.forEach((pc) => {
       const deviationResult = calculateCentsDeviationWithReferenceNote(pc.midiNoteNumber, pc.cents, startingMidiNumber, pc.englishName, startingNoteName);
       pc.centsDeviation = deviationResult.deviation;
-      pc.referenceNoteName = deviationResult.referenceNoteName;
+      
+      // Apply enharmonic logic to avoid repeating the same letter
+      let referenceNoteName = deviationResult.referenceNoteName;
+      if (prevReferenceNoteName) {
+        const prevLetter = prevReferenceNoteName.charAt(0).toUpperCase();
+        const currLetter = referenceNoteName.charAt(0).toUpperCase();
+        
+        if (prevLetter === currLetter) {
+          // Try to swap enharmonic equivalent using the same logic from noteNameMappings
+          const swapped = swapEnharmonicForReference(referenceNoteName);
+          if (swapped) {
+            referenceNoteName = swapped;
+          }
+        }
+      }
+      
+      pc.referenceNoteName = referenceNoteName;
+      prevReferenceNoteName = referenceNoteName;
     });
   }
 
