@@ -250,7 +250,7 @@ export default function PitchClassBar() {
     // (selected maqam, selected jins, or current selectedPitchClasses). This ensures that
     // when a maqam is active (e.g., maqam ṣabā) we prefer the enharmonic spellings implied by it.
     const preferredMap: Record<string, string> = {};
-    const contextSeq: { noteName: string }[] | undefined =
+    const contextSeq: PitchClass[] | undefined =
       (selectedMaqam && selectedMaqam.ascendingPitchClasses) ||
       (selectedJins && selectedJins.jinsPitchClasses) ||
       (selectedPitchClasses && selectedPitchClasses.length >= 2 ? selectedPitchClasses : undefined);
