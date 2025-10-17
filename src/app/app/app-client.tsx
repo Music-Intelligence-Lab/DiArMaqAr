@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import useAppContext from "@/contexts/app-context";
 import useMenuContext from "@/contexts/menu-context";
@@ -183,6 +183,26 @@ export default function AppClient() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const urlParamsApplied = useRef(false);
+  
+  // Loading state for tab transitions
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [previousMenu, setPreviousMenu] = useState(selectedMenu);
+  
+  // Handle tab transition loading
+  useEffect(() => {
+    if (selectedMenu !== previousMenu) {
+      setIsTransitioning(true);
+      
+      if (typeof window !== "undefined") {
+        window.scrollTo({ top: 0, behavior: "auto" });
+      }
+      
+      setTimeout(() => {
+        setIsTransitioning(false);
+        setPreviousMenu(selectedMenu);
+      }, 5);
+    }
+  }, [selectedMenu, previousMenu]);
 
   useEffect(() => {
     // Only apply URL params once (initial load). This prevents stale searchParams
@@ -331,21 +351,36 @@ export default function AppClient() {
 
   return (
     <div className="main-content">
-      {selectedMenu === "tuningSystem" && <TuningSystemManager admin={false} />}
-      {selectedMenu === "tuningSystem-admin" && <TuningSystemManager admin />}
-      {selectedMenu === "maqam" && selectedTuningSystem && <MaqamManager admin={false} />}
-      {selectedMenu === "maqam-admin" && selectedTuningSystem && <MaqamManager admin />}
-      {selectedMenu === "jins" && selectedTuningSystem && <JinsManager admin={false} />}
-      {selectedMenu === "jins-admin" && selectedTuningSystem && <JinsManager admin />}
-      {selectedTuningSystem && !["tuningSystem", "tuningSystem-admin", "bibliography", "bibliography-admin", "pattern-admin"].includes(selectedMenu) && <PitchClassBar />}
-      {(selectedMenu === "maqam" || selectedMenu === "maqam-admin") && selectedTuningSystem && <MaqamTranspositions />}
-      {(selectedMenu === "jins" || selectedMenu === "jins-admin") && selectedTuningSystem && <JinsTranspositions />}
-      {selectedMenu === "sayr" && selectedMaqamData && <SayrManager admin={false} />}
-      {selectedMenu === "sayr-admin" && selectedMaqamData && <SayrManager admin />}
-      {selectedMenu === "modulation" && <Modulations />}
-      {selectedMenu === "pattern-admin" && <PatternsManager />}
+      {isTransitioning ? (
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          height: '200px',
+          fontSize: '16px',
+          color: '#666'
+        }}>
+          Loading...
+        </div>
+      ) : (
+        <>
+          {selectedMenu === "tuningSystem" && <TuningSystemManager admin={false} />}
+          {selectedMenu === "tuningSystem-admin" && <TuningSystemManager admin />}
+          {selectedMenu === "maqam" && selectedTuningSystem && <MaqamManager admin={false} />}
+          {selectedMenu === "maqam-admin" && selectedTuningSystem && <MaqamManager admin />}
+          {selectedMenu === "jins" && selectedTuningSystem && <JinsManager admin={false} />}
+          {selectedMenu === "jins-admin" && selectedTuningSystem && <JinsManager admin />}
+          {selectedTuningSystem && !["tuningSystem", "tuningSystem-admin", "bibliography", "bibliography-admin", "pattern-admin"].includes(selectedMenu) && <PitchClassBar />}
+          {(selectedMenu === "maqam" || selectedMenu === "maqam-admin") && selectedTuningSystem && <MaqamTranspositions />}
+          {(selectedMenu === "jins" || selectedMenu === "jins-admin") && selectedTuningSystem && <JinsTranspositions />}
+          {selectedMenu === "sayr" && selectedMaqamData && <SayrManager admin={false} />}
+          {selectedMenu === "sayr-admin" && selectedMaqamData && <SayrManager admin />}
+          {selectedMenu === "modulation" && <Modulations />}
+          {selectedMenu === "pattern-admin" && <PatternsManager />}
+        </>
+      )}
       <Footer/>
       <KeyboardControls />
-  </div>
+    </div>
   );
 }

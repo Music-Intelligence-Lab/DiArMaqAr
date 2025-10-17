@@ -72,11 +72,10 @@ export default function Navbar() {
             onClick={() => {
               setSelectedMenu("tuningSystem");
               if (typeof window !== "undefined") {
-                const tuningSystemManager = document.querySelector(
-                  ".tuning-system-manager"
-                );
-                if (tuningSystemManager) {
-                  tuningSystemManager.scrollIntoView({
+                // Scroll to top of main content area instead of specific component
+                const mainContent = document.querySelector(".main-content");
+                if (mainContent) {
+                  mainContent.scrollIntoView({
                     behavior: "smooth",
                     block: "start",
                   });
@@ -137,11 +136,10 @@ export default function Navbar() {
             onClick={() => {
               setSelectedMenu("jins");
               if (typeof window !== "undefined") {
-                const jinsTranspositions = document.querySelector(
-                  ".jins-transpositions"
-                );
-                if (jinsTranspositions) {
-                  jinsTranspositions.scrollIntoView({
+                // Scroll to top of main content area instead of specific component
+                const mainContent = document.querySelector(".main-content");
+                if (mainContent) {
+                  mainContent.scrollIntoView({
                     behavior: "smooth",
                     block: "start",
                   });
@@ -215,11 +213,10 @@ export default function Navbar() {
             onClick={() => {
               setSelectedMenu("maqam");
               if (typeof window !== "undefined") {
-                const maqamTranspositions = document.querySelector(
-                  ".maqam-transpositions"
-                );
-                if (maqamTranspositions) {
-                  maqamTranspositions.scrollIntoView({
+                // Scroll to top of main content area instead of specific component
+                const mainContent = document.querySelector(".main-content");
+                if (mainContent) {
+                  mainContent.scrollIntoView({
                     behavior: "smooth",
                     block: "start",
                   });

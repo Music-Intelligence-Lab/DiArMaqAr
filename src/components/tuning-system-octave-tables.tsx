@@ -86,34 +86,6 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
     }
   }, [selectedPitchClasses]);
 
-  useEffect(() => {
-    const syncScroll = (sourceIdx: number, newScrollLeft: number) => {
-      octaveScrollRefs.forEach((r, idx) => {
-        if (idx !== sourceIdx && r.current) {
-          if (r.current.scrollLeft !== newScrollLeft) {
-            r.current.scrollLeft = newScrollLeft;
-          }
-        }
-      });
-    };
-
-    const cleanups = octaveScrollRefs.map((ref, idx) => {
-      const el = ref.current;
-      if (!el) return () => {};
-      const handler = () => {
-        const x = el.scrollLeft;
-        syncScroll(idx, x);
-      };
-      el.addEventListener("scroll", handler, { passive: true });
-      return () => {
-        el.removeEventListener("scroll", handler);
-      };
-    });
-
-    return () => {
-      cleanups.forEach((cleanup) => cleanup());
-    };
-  }, [octaveScrollRefs]);
   function getOctaveNoteName(octave: number, colIndex: number) {
     const idx = selectedIndices[colIndex];
     if (idx < 0) return "none";
@@ -695,7 +667,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
             className="carousel-button carousel-button-prev"
             onClick={() => {
               const container = octaveScrollRefs[octave as 0 | 1 | 2 | 3].current;
-              if (container) container.scrollBy({ left: isRTL ? 635 : -635, behavior: "smooth" });
+              if (container) container.scrollBy({ left: isRTL ? 635 : -635 });
             }}
           >
             ‹
@@ -1072,7 +1044,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
             className="carousel-button carousel-button-next"
             onClick={() => {
               const container = octaveScrollRefs[octave as 0 | 1 | 2 | 3].current;
-              if (container) container.scrollBy({ left: isRTL ? -635 : 635, behavior: "smooth" });
+              if (container) container.scrollBy({ left: isRTL ? -635 : 635 });
             }}
           >
             ›

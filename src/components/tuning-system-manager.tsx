@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef, useMemo } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import useAppContext from "@/contexts/app-context";
 import useFilterContext from "@/contexts/filter-context";
 import useSoundContext from "@/contexts/sound-context";
@@ -211,13 +211,6 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   const [defaultReferenceFrequency, setDefaultReferenceFrequency] =
     useState<number>(0);
 
-  const octaveScrollRefs = [
-    useRef<HTMLDivElement>(null),
-    useRef<HTMLDivElement>(null),
-    useRef<HTMLDivElement>(null),
-    useRef<HTMLDivElement>(null),
-  ];
-
   const tuningSystemPitchClassesArray = tuningSystemPitchClasses
     .split("\n")
     .map((p) => p.trim())
@@ -262,34 +255,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     }
   }, [selectedTuningSystem]);
 
-  useEffect(() => {
-    const syncScroll = (sourceIdx: number, newScrollLeft: number) => {
-      octaveScrollRefs.forEach((r, idx) => {
-        if (idx !== sourceIdx && r.current) {
-          if (r.current.scrollLeft !== newScrollLeft) {
-            r.current.scrollLeft = newScrollLeft;
-          }
-        }
-      });
-    };
 
-    const cleanups = octaveScrollRefs.map((ref, idx) => {
-      const el = ref.current;
-      if (!el) return () => {};
-      const handler = () => {
-        const x = el.scrollLeft;
-        syncScroll(idx, x);
-      };
-      el.addEventListener("scroll", handler, { passive: true });
-      return () => {
-        el.removeEventListener("scroll", handler);
-      };
-    });
-
-    return () => {
-      cleanups.forEach((cleanup) => cleanup());
-    };
-  }, [octaveScrollRefs]);
 
   const sortedTuningSystems = [...tuningSystems].sort((a, b) => {
     switch (sortOption) {
@@ -1039,7 +1005,6 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
               if (container)
                 container.scrollBy({
                   left: language === "ar" ? 635 : -635,
-                  behavior: "smooth",
                 });
             }}
           >
@@ -1117,7 +1082,6 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
               if (container)
                 container.scrollBy({
                   left: language === "ar" ? -635 : 635,
-                  behavior: "smooth",
                 });
             }}
           >
