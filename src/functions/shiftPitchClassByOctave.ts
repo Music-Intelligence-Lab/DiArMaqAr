@@ -36,13 +36,13 @@ const emptyPitchClass: PitchClass = {
  * 
  * @example
  * // Shift a pitch class up one octave
- * const shifted = shiftPitchClass(allPitches, originalPitch, 1);
+ * const shifted = shiftPitchClassByOctave(allPitches, originalPitch, 1);
  * 
  * @example
  * // Shift a pitch class down two octaves  
- * const shifted = shiftPitchClass(allPitches, originalPitch, -2);
+ * const shifted = shiftPitchClassByOctave(allPitches, originalPitch, -2);
  */
-export default function shiftPitchClass(allPitchClasses: PitchClass[], pitchClass: PitchClass | undefined, octaveShift: number) {
+export default function shiftPitchClassByOctave(allPitchClasses: PitchClass[], pitchClass: PitchClass | undefined, octaveShift: number) {
   // Validate input pitch class
   if (!pitchClass || typeof pitchClass.index !== "number" || typeof pitchClass.octave !== "number") {
     return emptyPitchClass;

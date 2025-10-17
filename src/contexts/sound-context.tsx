@@ -7,7 +7,7 @@ import Pattern from "@/models/Pattern";
 import romanToNumber from "@/functions/romanToNumber";
 import PitchClass from "@/models/PitchClass";
 import { initializeCustomWaves, PERIODIC_WAVES, APERIODIC_WAVES } from "@/audio/waves";
-import shiftPitchClass from "@/functions/shiftPitchClass";
+import shiftPitchClassByOctave from "@/functions/shiftPitchClassByOctave";
 import extendSelectedPitchClasses from "@/functions/extendSelectedPitchClasses";
 import { Maqam } from "@/models/Maqam";
 type InputMode = "tuningSystem" | "selection";
@@ -183,20 +183,20 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
       const extendedAscendingPitchClasses = [
         ...ascendingMaqamPitchClasses,
-        ...ascendingMaqamPitchClasses.slice(sliceIndex).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 1)),
-        ...ascendingMaqamPitchClasses.slice(sliceIndex).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 2)),
+        ...ascendingMaqamPitchClasses.slice(sliceIndex).map((pitchClass) => shiftPitchClassByOctave(allPitchClasses, pitchClass, 1)),
+        ...ascendingMaqamPitchClasses.slice(sliceIndex).map((pitchClass) => shiftPitchClassByOctave(allPitchClasses, pitchClass, 2)),
       ];
 
       const extendedDescendingPitchClasses = [
         ...descendingMaqamPitchClasses,
-        ...descendingMaqamPitchClasses.slice(sliceIndex).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 1)),
-        ...descendingMaqamPitchClasses.slice(sliceIndex).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 2)),
+        ...descendingMaqamPitchClasses.slice(sliceIndex).map((pitchClass) => shiftPitchClassByOctave(allPitchClasses, pitchClass, 1)),
+        ...descendingMaqamPitchClasses.slice(sliceIndex).map((pitchClass) => shiftPitchClassByOctave(allPitchClasses, pitchClass, 2)),
       ];
 
       for (let i = 0; i <= 12; i++) {
         const ascendingPitchClass = extendedAscendingPitchClasses[i];
         const descendingPitchClass = extendedDescendingPitchClasses[i];
-        const ascendingShiftedPitchClass = shiftPitchClass(allPitchClasses, ascendingPitchClass, -1);
+        const ascendingShiftedPitchClass = shiftPitchClassByOctave(allPitchClasses, ascendingPitchClass, -1);
 
         // First assign first and third row mappings (lower priority)
         if (firstRowCodes[i] && descendingPitchClass && !mapping[firstRowCodes[i]]) {
@@ -215,7 +215,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     } else {
       for (let i = 0; i < selectedPitchClasses.length; i++) {
         const pitchClass = selectedPitchClasses[i];
-        const loweredOctavePitchClass = shiftPitchClass(allPitchClasses, pitchClass, -1);
+        const loweredOctavePitchClass = shiftPitchClassByOctave(allPitchClasses, pitchClass, -1);
 
         // Assign third row first (lower priority)
         if (thirdRowCodes[i] && loweredOctavePitchClass && !mapping[thirdRowCodes[i]]) {
@@ -820,10 +820,10 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
       const lowerExtension = ascendingPitchClasses.length ? ascendingPitchClasses : pitchClasses; //here we want to make sure that descending sequences have the lower extension using ascending pitch classes
 
       const extendedPitchClasses = [
-        ...lowerExtension.slice(0, descendingSliceIndex - 1).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, -1)),
+        ...lowerExtension.slice(0, descendingSliceIndex - 1).map((pitchClass) => shiftPitchClassByOctave(allPitchClasses, pitchClass, -1)),
         ...pitchClasses,
-        ...pitchClasses.slice(ascendingSliceIndex).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 1)),
-        ...pitchClasses.slice(ascendingSliceIndex).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 2)),
+        ...pitchClasses.slice(ascendingSliceIndex).map((pitchClass) => shiftPitchClassByOctave(allPitchClasses, pitchClass, 1)),
+        ...pitchClasses.slice(ascendingSliceIndex).map((pitchClass) => shiftPitchClassByOctave(allPitchClasses, pitchClass, 2)),
       ];
 
       const n = pitchClasses.length;
@@ -833,7 +833,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         // If output is MIDI, keep previous behavior using MIDI velocity
         if (soundSettings.outputMode === "midi") {
           const droneVel = typeof soundSettings.droneVolume === "number" ? Math.round(soundSettings.droneVolume * 127) : defaultDroneVelocity;
-          noteOn(shiftPitchClass(allPitchClasses, pitchClasses[0], -1), droneVel);
+          noteOn(shiftPitchClassByOctave(allPitchClasses, pitchClasses[0], -1), droneVel);
         } else if (soundSettings.outputMode === "waveform") {
           // Create a dedicated oscillator for the drone connected to droneGainRef
           const audioCtx = audioCtxRef.current;
@@ -874,7 +874,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
               }
             }
 
-            const tonicPc = shiftPitchClass(allPitchClasses, pitchClasses[0], -1);
+            const tonicPc = shiftPitchClassByOctave(allPitchClasses, pitchClasses[0], -1);
             const freq = parseFloat(tonicPc.frequency);
             try { osc.frequency.setValueAtTime(freq, audioCtx.currentTime); } catch (err) { console.warn("Could not set drone oscillator frequency:", err); }
 
@@ -884,7 +884,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
           } else {
             // Fallback: use noteOn which handles both waveform and MIDI in its own way
             const droneVel = typeof soundSettings.droneVolume === "number" ? Math.round(soundSettings.droneVolume * 127) : defaultDroneVelocity;
-            noteOn(shiftPitchClass(allPitchClasses, pitchClasses[0], -1), droneVel);
+            noteOn(shiftPitchClassByOctave(allPitchClasses, pitchClasses[0], -1), droneVel);
           }
         } else {
           // mute -> do nothing
@@ -919,10 +919,10 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
                 if (scaleDegree.startsWith("-")) {
                   // negative degree, e.g. "-II" → play the previous octave
-                  pitchClassToPlay = shiftPitchClass(allPitchClasses, pitchClassToPlay, -1);
+                  pitchClassToPlay = shiftPitchClassByOctave(allPitchClasses, pitchClassToPlay, -1);
                 } else if (scaleDegree.startsWith("+")) {
                   // positive degree, e.g. "+II" → play the next octave
-                  pitchClassToPlay = shiftPitchClass(allPitchClasses, pitchClassToPlay, 1);
+                  pitchClassToPlay = shiftPitchClassByOctave(allPitchClasses, pitchClassToPlay, 1);
                 }
               }
 
@@ -976,7 +976,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
             }
             droneOscRef.current = null;
           } else {
-            noteOff(shiftPitchClass(allPitchClasses, pitchClasses[0], -1));
+            noteOff(shiftPitchClassByOctave(allPitchClasses, pitchClasses[0], -1));
           }
         }, totalSeqMs);
       }

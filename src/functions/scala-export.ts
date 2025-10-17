@@ -11,7 +11,7 @@ import MaqamData from "@/models/Maqam";
  * Exports a tuning system to Scala (.scl) format
  * https://www.huygens-fokker.org/scala/scl_format.html
  */
-export function exportToScala(tuningSystem: TuningSystem, startingNote: NoteName, description?: string): string {
+export function exportTuningSystemToScala(tuningSystem: TuningSystem, startingNote: NoteName, description?: string): string {
   const pitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote);
 
   // Get unique pitch classes within one octave, sorted by cents
@@ -61,7 +61,7 @@ export function exportToScala(tuningSystem: TuningSystem, startingNote: NoteName
  * Exports a tuning system to Scala keymap (.kbm) format
  * https://www.huygens-fokker.org/scala/help.htm#mappings
  */
-export function exportToScalaKeymap(tuningSystem: TuningSystem, startingNote: NoteName, referenceNote: NoteName = startingNote, referenceFrequency?: number, mapSize?: number): string {
+export function exportTuningSystemToScalaKeymap(tuningSystem: TuningSystem, startingNote: NoteName, referenceNote: NoteName = startingNote, referenceFrequency?: number, mapSize?: number): string {
   const pitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote);
 
   // Get unique pitch classes within one octave, sorted by cents

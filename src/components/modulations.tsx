@@ -8,7 +8,7 @@ import { MaqamatModulations, Maqam, shiftMaqamByOctaves } from "@/models/Maqam";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import calculateNumberOfModulations from "@/functions/calculateNumberOfModulations";
 import { AjnasModulations, shiftJinsByOctaves, Jins } from "@/models/Jins";
-import shiftPitchClass from "@/functions/shiftPitchClass";
+import shiftPitchClassByOctave from "@/functions/shiftPitchClassByOctave";
 import modulate from "@/functions/modulate";
 type ModulationsPair = { ajnas: AjnasModulations; maqamat: MaqamatModulations };
 
@@ -326,7 +326,7 @@ export default function Modulations() {
                   
                   // Helper function to get shifted note name or fallback message
                   const getShiftedNoteName = (pitchClass: any): string => {
-                    const shifted = shiftPitchClass(allPitchClasses, pitchClass, -1);
+                    const shifted = shiftPitchClassByOctave(allPitchClasses, pitchClass, -1);
                     return shifted.noteName === "" ? "Octave Shift is beyond tuning system range" : shifted.noteName;
                   };
                   
@@ -338,7 +338,7 @@ export default function Modulations() {
                   // Find the pitch class that matches noteName2p and shift it
                   const noteName2pPitchClass = allPitchClasses.find(pc => pc.noteName === noteName2p);
                   if (noteName2pPitchClass) {
-                    const shiftedNoteName2p = shiftPitchClass(allPitchClasses, noteName2pPitchClass, -1);
+                    const shiftedNoteName2p = shiftPitchClassByOctave(allPitchClasses, noteName2pPitchClass, -1);
                     displayNoteName2p = shiftedNoteName2p.noteName === "" ? "Octave Shift is beyond tuning system range" : shiftedNoteName2p.noteName;
                   } else {
                     displayNoteName2p = noteName2p;

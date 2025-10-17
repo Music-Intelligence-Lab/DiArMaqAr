@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getTuningSystems, getMaqamat, getAjnas } from "@/functions/import";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
-import { getMaqamTranspositions } from "@/functions/transpose";
+import { calculateMaqamTranspositions } from "@/functions/transpose";
 import { standardizeText } from "@/functions/export";
 import modulate from "@/functions/modulate";
 import { handleCorsPreflightRequest, addCorsHeaders } from "../cors";
@@ -174,7 +174,7 @@ export async function POST(request: Request) {
         if (isMaqamPossible) {
           if (inputNewTonicForTransposition) {
             if (tuningSystemPitchClasses.find((pc) => standardizeText(pc.noteName) === standardizeText(inputNewTonicForTransposition))) {
-              const transpositions = getMaqamTranspositions(tuningSystemPitchClasses, ajnas, maqam, true, inputCentsTolerance);
+              const transpositions = calculateMaqamTranspositions(tuningSystemPitchClasses, ajnas, maqam, true, inputCentsTolerance);
               const transposition = transpositions.find((t) => standardizeText(t.ascendingPitchClasses[0].noteName) === standardizeText(inputNewTonicForTransposition));
 
               if (transposition) {
@@ -218,7 +218,7 @@ export async function POST(request: Request) {
           } else {
             // When no specific tonic is requested, use includeTranspositions flag
             if (inputIncludeTranspositions) {
-              const transpositions = getMaqamTranspositions(tuningSystemPitchClasses, ajnas, maqam, true, inputCentsTolerance);
+              const transpositions = calculateMaqamTranspositions(tuningSystemPitchClasses, ajnas, maqam, true, inputCentsTolerance);
 
               // Add modulations to each transposition if requested
               if (includeMaqamToMaqamModulations || includeMaqamToJinsModulations) {

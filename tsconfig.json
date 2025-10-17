@@ -22,6 +22,21 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "next.config.ts"],
-  "exclude": ["node_modules", "khyam", "packages"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "next.config.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "khyam",
+    "packages",
+    ".next",
+    "out",
+    "dist",
+    "build",
+    ".git"
+  ]
 }

@@ -1,5 +1,5 @@
 import { octaveOneNoteNames, octaveTwoNoteNames } from "@/models/NoteName";
-import { getJinsTranspositions, getMaqamTranspositions } from "./transpose";
+import { calculateJinsTranspositions, calculateMaqamTranspositions } from "./transpose";
 import PitchClass from "@/models/PitchClass";
 import JinsData, { Jins, AjnasModulations } from "@/models/Jins";
 import MaqamData, { Maqam, MaqamatModulations } from "@/models/Maqam";
@@ -193,7 +193,7 @@ export default function modulate(
       transpositions = JSON.stringify(currentNotes) !== JSON.stringify(sourceAscendingNotes) ? [maqamOrJins.getTahlil(allPitchClasses)] : [];
 
       // Add all valid transpositions of this jins
-      getJinsTranspositions(allPitchClasses, maqamOrJins, true, centsTolerance).forEach((jinsTransposition: Jins) => {
+      calculateJinsTranspositions(allPitchClasses, maqamOrJins, true, centsTolerance).forEach((jinsTransposition: Jins) => {
         if (JSON.stringify(currentNotes) === JSON.stringify(jinsTransposition.jinsPitchClasses.map((pitchClass: PitchClass) => pitchClass.noteName))) return;
         transpositions.push(jinsTransposition);
       });
@@ -209,7 +209,7 @@ export default function modulate(
       transpositions = JSON.stringify(currentAscendingNotes) !== JSON.stringify(sourceAscendingNotes) ? [maqamOrJins.getTahlil(allPitchClasses)] : [];
 
       // Add all valid transpositions of this maqam
-      getMaqamTranspositions(allPitchClasses, allAjnas, maqamOrJins, true, centsTolerance).forEach((maqamTransposition: Maqam) => {
+      calculateMaqamTranspositions(allPitchClasses, allAjnas, maqamOrJins, true, centsTolerance).forEach((maqamTransposition: Maqam) => {
         if (JSON.stringify(currentAscendingNotes) === JSON.stringify(maqamTransposition.ascendingPitchClasses.map((pitchClass: PitchClass) => pitchClass.noteName))) return;
         transpositions.push(maqamTransposition);
       });

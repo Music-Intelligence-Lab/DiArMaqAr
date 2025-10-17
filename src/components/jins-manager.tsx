@@ -7,7 +7,7 @@ import useLanguageContext from "@/contexts/language-context";
 import JinsData from "@/models/Jins";
 import React, { useState, useEffect, useMemo } from "react";
 // Transpositions now provided via TranspositionsContext
-// import { getJinsTranspositions } from "@/functions/transpose";
+// import { calculateJinsTranspositions } from "@/functions/transpose";
 import { updateAjnas } from "@/functions/update";
 import { SourcePageReference } from "@/models/bibliography/Source";
 import useTranspositionsContext from "@/contexts/transpositions-context";

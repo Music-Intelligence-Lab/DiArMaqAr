@@ -4,7 +4,7 @@ import JinsData, { Jins } from "@/models/Jins";
 import TuningSystem from "@/models/TuningSystem";
 import NoteName from "@/models/NoteName";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
-import shiftPitchClass from "./shiftPitchClass";
+import shiftPitchClassByOctave from "./shiftPitchClassByOctave";
 import { getPitchClassIntervals } from "./getPitchClassIntervals";
 
 /**
@@ -29,7 +29,7 @@ import { getPitchClassIntervals } from "./getPitchClassIntervals";
  * @param centsTolerance - Tolerance in cents for fuzzy matching (typically ±5 cents)
  * @returns Array of pitch class sequences that match the interval pattern
  */
-function getPitchClassTranspositions(inputPitchClasses: PitchClass[], pitchClassIntervals: PitchClassInterval[], ascending: boolean, useRatio: boolean, centsTolerance: number) {
+function calculatePitchClassTranspositions(inputPitchClasses: PitchClass[], pitchClassIntervals: PitchClassInterval[], ascending: boolean, useRatio: boolean, centsTolerance: number) {
   // Determine search direction: use original order for ascending, reverse for descending
   const allPitchClasses = ascending ? inputPitchClasses : [...inputPitchClasses].reverse();
 
@@ -198,7 +198,7 @@ function mergeSequences(ascendingSequences: PitchClass[][], descendingSequences:
  * @param onlyOctaveOne - Restrict search to first octave only
  * @returns Array of all possible maqām transpositions with embedded jins analysis
  */
-export function getMaqamTranspositions(
+export function calculateMaqamTranspositions(
   allPitchClasses: PitchClass[],
   allAjnas: JinsData[],
   maqamData: MaqamData | null,
@@ -225,11 +225,11 @@ export function getMaqamTranspositions(
 
   const descendingIntervalPattern: PitchClassInterval[] = getPitchClassIntervals(descendingMaqamCells);
 
-  const ascendingSequences: PitchClass[][] = getPitchClassTranspositions(allPitchClasses, ascendingIntervalPattern, true, useRatio, centsTolerance).filter(
+  const ascendingSequences: PitchClass[][] = calculatePitchClassTranspositions(allPitchClasses, ascendingIntervalPattern, true, useRatio, centsTolerance).filter(
     (sequence) => !onlyOctaveOne || sequence[0].octave === 1
   );
 
-  const descendingSequences: PitchClass[][] = getPitchClassTranspositions(allPitchClasses, descendingIntervalPattern, false, useRatio, centsTolerance);
+  const descendingSequences: PitchClass[][] = calculatePitchClassTranspositions(allPitchClasses, descendingIntervalPattern, false, useRatio, centsTolerance);
 
   const ajnasIntervals: { jins: JinsData; intervals: PitchClassInterval[] }[] = [];
 
@@ -254,14 +254,14 @@ export function getMaqamTranspositions(
 
     if (sliceIndex === 0) sliceIndex = -1;
 
-    const extendedAscendingPitchClasses = [...ascendingPitchClasses, ...ascendingPitchClasses.slice(sliceIndex + 1).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 1))];
+    const extendedAscendingPitchClasses = [...ascendingPitchClasses, ...ascendingPitchClasses.slice(sliceIndex + 1).map((pitchClass) => shiftPitchClassByOctave(allPitchClasses, pitchClass, 1))];
 
     const ascendingPitchClassIntervals = getPitchClassIntervals(ascendingPitchClasses);
     const ascendingMaqamAjnas: (Jins | null)[] = [];
 
     const descendingPitchClasses = [...sequencePair.descendingSequence].reverse();
 
-    const extendedDescendingPitchClasses = [...descendingPitchClasses, ...descendingPitchClasses.slice(sliceIndex + 1).map((pitchClass) => shiftPitchClass(allPitchClasses, pitchClass, 1))];
+    const extendedDescendingPitchClasses = [...descendingPitchClasses, ...descendingPitchClasses.slice(sliceIndex + 1).map((pitchClass) => shiftPitchClassByOctave(allPitchClasses, pitchClass, 1))];
 
     const descendingPitchClassIntervals = getPitchClassIntervals(descendingPitchClasses);
     const descendingMaqamAjnas: (Jins | null)[] = [];
@@ -386,7 +386,7 @@ export function getMaqamTranspositions(
  * @param onlyOctaveOne - Restrict search to first octave only
  * @returns Array of all possible jins transpositions following traditional naming
  */
-export function getJinsTranspositions(allPitchClasses: PitchClass[], jinsData: JinsData | null, withTahlil: boolean, centsTolerance: number = 5, onlyOctaveOne: boolean = false): Jins[] {
+export function calculateJinsTranspositions(allPitchClasses: PitchClass[], jinsData: JinsData | null, withTahlil: boolean, centsTolerance: number = 5, onlyOctaveOne: boolean = false): Jins[] {
   if (allPitchClasses.length === 0 || !jinsData) return [];
 
   const jinsNoteNames = jinsData.getNoteNames();
@@ -402,7 +402,7 @@ export function getJinsTranspositions(allPitchClasses: PitchClass[], jinsData: J
 
   const intervalPattern: PitchClassInterval[] = getPitchClassIntervals(jinsCells);
 
-  const jinsTranspositions: Jins[] = getPitchClassTranspositions(allPitchClasses, intervalPattern, true, useRatio, centsTolerance)
+  const jinsTranspositions: Jins[] = calculatePitchClassTranspositions(allPitchClasses, intervalPattern, true, useRatio, centsTolerance)
     .filter((sequence) => !onlyOctaveOne || sequence[0].octave === 1)
     .map((sequence) => {
       return {

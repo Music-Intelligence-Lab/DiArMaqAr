@@ -18,8 +18,8 @@ import SouthWestIcon from "@mui/icons-material/SouthWest"
 
 import JinsData from "@/models/Jins";
 import Link from "next/link";
-import { getJinsTranspositions, getMaqamTranspositions } from "@/functions/transpose";
-import shiftPitchClass from "@/functions/shiftPitchClass";
+import { calculateJinsTranspositions, calculateMaqamTranspositions } from "@/functions/transpose";
+import shiftPitchClassByOctave from "@/functions/shiftPitchClassByOctave";
 import { stringifySource } from "@/models/bibliography/Source";
 
 export default function SayrManager({ admin }: { admin: boolean }) {
@@ -101,7 +101,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
     
     if (startingNote) {
       // Find the transposition that starts with the specified note
-      const jinsTranspositions = getJinsTranspositions(allPitchClasses, jinsData, true, centsTolerance);
+      const jinsTranspositions = calculateJinsTranspositions(allPitchClasses, jinsData, true, centsTolerance);
       const targetTransposition = jinsTranspositions.find(jins => jins.jinsPitchClasses[0].noteName === startingNote);
       
       if (targetTransposition) {
@@ -134,7 +134,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
     
     if (startingNote) {
       // Find the transposition that starts with the specified note
-      const maqamTranspositions = getMaqamTranspositions(allPitchClasses, ajnas, maqamData, true, centsTolerance);
+      const maqamTranspositions = calculateMaqamTranspositions(allPitchClasses, ajnas, maqamData, true, centsTolerance);
       const targetTransposition = maqamTranspositions.find(m => m.ascendingPitchClasses[0].noteName === startingNote);
       
       if (targetTransposition) {
@@ -150,7 +150,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
       }
     }
 
-    if (pitchClasses.length === 7) pitchClasses = [...pitchClasses, shiftPitchClass(allPitchClasses, pitchClasses[0], 1)];
+    if (pitchClasses.length === 7) pitchClasses = [...pitchClasses, shiftPitchClassByOctave(allPitchClasses, pitchClasses[0], 1)];
     
     // Play the sequence
     if (pitchClasses.length > 0) {
