@@ -26,7 +26,7 @@ import TuningSystemOctaveTables from "./tuning-system-octave-tables";
 import JinsData from "@/models/Jins";
 import MaqamData, { Maqam } from "@/models/Maqam";
 import ExportModal from "./export-modal";
-import SelectedPitchClassTranspositions from "./selected-pitch-classes-transpositions";
+import SelectedPitchClassesAnalysis from "./tuning-system-selected-pitch-classes-analysis";
 import Link from "next/link";
 import { canTransposeMaqamToNote } from "@/functions/transpose";
 import FrequencyKnob from "./frequency-knob";
@@ -1407,7 +1407,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
           </div>
         )}
 
-      <SelectedPitchClassTranspositions />
+      <SelectedPitchClassesAnalysis />
 
       {/* Export Modal */}
       <ExportModal

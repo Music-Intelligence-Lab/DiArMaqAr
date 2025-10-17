@@ -462,6 +462,19 @@
   }
 
   // -------------------------
+  // Analysis header (non-sticky variant of sticky header from jins-transpositions)
+  // Used by: tuning-system-selected-pitch-classes-analysis
+  // -------------------------
+  &__analysis-header {
+    width: 100%;
+    background-color: darken($color: $secondary, $amount: 5);
+    color: $text;
+    border: solid 1px $grey;
+    margin-top: 0px;
+    padding: 10px 20px;
+  }
+
+  // -------------------------
   // Filter menu
   // -------------------------
   &__filter-menu {
