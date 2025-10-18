@@ -10,6 +10,7 @@ import modulate from "./modulate";
 import calculateNumberOfModulations from "./calculateNumberOfModulations";
 import shiftPitchClassByOctave from "./shiftPitchClassByOctave";
 import { classifyMaqamFamily } from "./classifyMaqamFamily";
+import { getIpnReferenceNoteNameWithOctave } from "./getIpnReferenceNoteName";
 
 /**
  * Multi-method maqam family classification for research and analysis.
@@ -958,7 +959,7 @@ export async function exportTuningSystem(
 
       // MIDI values
       midiNoteDecimal: pc.midiNoteDecimal,
-      ...(pc.referenceNoteName && { referenceNoteName: pc.referenceNoteName }),
+      ...(pc.referenceNoteName && { referenceNoteName: getIpnReferenceNoteNameWithOctave(pc) }),
       ...(pc.midiNoteDeviation && { midiNoteDeviation: pc.midiNoteDeviation }),
 
       // Frequency
@@ -1411,7 +1412,7 @@ export async function exportJins(
 
       // MIDI values
       midiNoteDecimal: pc.midiNoteDecimal,
-      ...(pc.referenceNoteName && { referenceNoteName: pc.referenceNoteName }),
+      ...(pc.referenceNoteName && { referenceNoteName: getIpnReferenceNoteNameWithOctave(pc) }),
       ...(pc.midiNoteDeviation && { midiNoteDeviation: pc.midiNoteDeviation }),
 
       // Frequency
@@ -1635,7 +1636,7 @@ export async function exportMaqam(
 
       // MIDI values
       midiNoteDecimal: pc.midiNoteDecimal,
-      ...(pc.referenceNoteName && { referenceNoteName: pc.referenceNoteName }),
+      ...(pc.referenceNoteName && { referenceNoteName: getIpnReferenceNoteNameWithOctave(pc) }),
       ...(pc.midiNoteDeviation && { midiNoteDeviation: pc.midiNoteDeviation }),
 
       // Frequency

@@ -18,6 +18,7 @@ These JSON exports contain complete musical data for a specific historical tunin
   - [Tuning System Pitch Classes](#tuning-system-pitch-classes)
   - [Summary Statistics](#summary-statistics)
 - [Pitch Class Reference](#pitch-class-reference)
+- [Maqām Family Reference](#maqām-family-reference)
 - [Ajnās Data](#ajnās-data)
 - [Maqāmāt Data](#maqāmāt-data)
 - [JSON Structure Elements](#json-structure-elements)
@@ -73,7 +74,11 @@ tuning-system-export.json
 ├── pitchClassReference
 │   ├── qarar_ushayran {}
 │   ├── ... (all pitch classes across 4 octaves)
-│   └── jawab_jawab_mahur {}
+│   └── jawab_jawab_tik_hisar {}
+├── maqamFamilyReference
+│   ├── rast {}
+│   ├── ... (all maqām families)
+│   └── chahargah {}
 ├── allAjnasData
 │   ├── jins_rast_nawa
 │   │   ├── jinsId
@@ -317,22 +322,56 @@ The pitchClassReference section contains detailed information for each pitch cla
   "pitchClassReference": {
     "qarar_ushayran": { // Reference Key: Arab-ottoman-persian note name without diacritics or spaces
       "noteName": "qarār ʿushayrān", // Property: Arab-ottoman-persian note name to be used for display (includes diacritics and spaces)
-      "englishName": "G", // Property: English note name equivalent
+      "abjadName": "", // Property: Arabic abjad delineation (if applicable). Only populated for octaves 1 and 2 in tuning systems that use abjad notation. Empty for octaves 0 and 3, and for tuning systems without abjad notation.
+      "englishName": "A1", // Property: English note name equivalent using International Pitch Notation (IPN). Based on expanded modern Arabic maqām theory where note names use modifiers to indicate inflections (e.g., segāh = E-b). For historical tuning systems with more, or slight variations on, pitch classes than the 24-tone modern Arabic system, the same logic is extended as needed.
+      "pitchClassIndex": 0, // Property: 0-based index position within the tuning system's pitch class array. This same index repeats across all octaves, allowing grouping of the same pitch class type regardless of octave (e.g., pitchClassIndex 5 in octave 0 represents the same pitch class type as pitchClassIndex 5 in octaves 1, 2, and 3).
+      "octave": 0, // Property: Octave number (0-3). Arabic maqām theory traditionally uses two octaves (octaves 1 and 2). This system extends to four octaves total: octave 0 (qarār/lower), octave 1 (normal/first), octave 2 (jawāb/second), and octave 3 (jawāb jawāb/upper), to accommodate the full range of traditional Arab instruments.
+      "originalValue": "1/2", // Property: Original value from tuning system definition as per bibliographic source
+      "originalValueType": "fraction", // Property: Format type of original value as per bibliographic source
+      "cents": "-1200", // Property: Cents value relative to the fundamental reference pitch class of 0 cents
+      "centsDeviation": 0, // Property: Deviation in cents from the 12-EDO reference note specified in referenceNoteName, following Arabic maqām theory logic where pitches with modifiers (e.g., E-b, F+#) are measured relative to their natural note (E, F), not the mathematically closest 12-EDO pitch.
       "fraction": "1/2", // Property: Frequency ratio as fraction relative to the fundamental reference pitch class (0 cents or 1/1 frequency ratio)
-      "cents": "-1200", // Property: Cents value relative to the fundamental reference pitch class (0 cents or 1/1 frequency ratio)
       "decimalRatio": "0.5", // Property: Frequency ratio as decimal relative to the fundamental reference pitch class (0 cents or 1/1 frequency ratio)
       "stringLength": "2000", // Property: String length relative to tuning system string length
-      "frequency": "97.999", // Property: Frequency in Hz based on reference frequency of starting note
-      "originalValue": "1/2", // Property: Original input value from tuning system definition as per bibliographic source
-      "originalValueType": "fraction", // Property: Format type of original input value as per bibliographic source
-      "index": 0, // Property: Sequential position in tuning system (0-based)
-      "octave": 0, // Property: Octave number (0=qarār, 1=normal, 2=jawāb, 3=jawāb jawāb)
-      "abjadName": "", // Property: Arabic abjad delineation (if applicable)
       "fretDivision": "-1000.000", // Property: Fret position calculation relative to stringLength (negative indicates theoretical position beyond open string)
-      "midiNoteNumber": 43.000024909649646, // Property: MIDI note number with decimal precision for unequal divisions
-      "centsDeviation": 0.0024909649644093727, // Property: Deviation in cents from closest 12-tone equal temperament note specified in referenceNoteName
-      "referenceNoteName": "G" // Property: Closest Western note name in 12-tone equal temperament (12-TET) for reference
+      "midiNoteDecimal": 33, // Property: MIDI note number with decimal/fractional precision e.g., 51.366 for a pitch between MIDI notes 51 and 52. As this number can only be positive it is different from the MIDI note number calculated in midiNoteDeviation.
+      "referenceNoteName": "A", // Property: 12-EDO reference note name in International Pitch Notation (without octave number) determined by Arabic maqām theory logic. For pitches with modifiers (e.g., E-b, F+#), this is the natural note (E, F), NOT the mathematically closest 12-EDO pitch. For standard sharps/flats (e.g., Eb, F#) or natural notes, this follows standard International Pitch Notation naming.
+      "midiNoteDeviation": "33 0", // Property: Formatted string showing the 12-EDO reference MIDI note number (based on referenceNoteName following Arabic maqām theory logic) followed by the cents deviation (e.g., "52 -63.4" means 63.4 cents below MIDI note 52). The deviation can be positive or negative, and may exceed ±50 cents because the reference is determined by maqām theory, not mathematical proximity.
+      "frequency": "55" // Property: Frequency in Hz based on reference frequency of starting note
     }
+  }
+}
+```
+
+## Maqām Family Reference
+
+The maqamFamilyReference section provides a lookup table for maqām family display names used throughout the export. Each maqām belongs to a family (e.g., Maqām Rāst belongs to the Rāst family, Maqām Māhūr belongs to the Rāst family, etc.). This reference allows quick lookup of properly formatted family names with diacritics.
+
+```json
+{
+  "maqamFamilyReference": {
+    "rast": { // Reference Key: Maqām family identifier without diacritics or spaces
+      "displayName": "rāst" // Property: Display name with proper diacritics for UI presentation
+    },
+    "hijaz": {
+      "displayName": "ḥijāz"
+    },
+    "kurd": {
+      "displayName": "kurd"
+    },
+    "nikriz": {
+      "displayName": "nikrīz"
+    },
+    "bayyat": {
+      "displayName": "bayyāt"
+    },
+    "nahawand": {
+      "displayName": "nahāwand"
+    },
+    "saba": {
+      "displayName": "ṣabā"
+    }
+    // ... additional maqām families
   }
 }
 ```
@@ -355,7 +394,7 @@ The allAjnasData section contains all melodic genera available in the tuning sys
           "decimalRatio": 1.0833333333333333, // Property: Interval value as decimal ratio
           "stringLength": -57.692307692307736, // Property: String length relative to tuning system string length
           "fretDivision": 57.69200000000001, // Property: Fret position calculation
-          "index": 2, // Property: Sequential position in tuning system
+          "pitchClassIndex": 2, // Property: Pitch class index difference considering octaves
           "originalValue": "13/12", // Property: Interval value calculated from the original tuning system definition
           "originalValueType": "fraction" // Property: Format type of original input value (e.g., "fraction", "decimal", "cents")
         },
@@ -365,7 +404,7 @@ The allAjnasData section contains all melodic genera available in the tuning sys
           "decimalRatio": 1.0940170940170941, // Property: Interval value as decimal ratio
           "stringLength": -59.495192307692264, // Property: String length relative to tuning system string length
           "fretDivision": 59.49599999999998, // Property: Fret position calculation
-          "index": 2, // Property: Sequential position in tuning system
+          "pitchClassIndex": 2, // Property: Pitch class index difference considering octaves
           "originalValue": "128/117", // Property: Interval value calculated from the original tuning system definition
           "originalValueType": "fraction" // Property: Format type of original input value
         },
@@ -375,7 +414,7 @@ The allAjnasData section contains all melodic genera available in the tuning sys
           "decimalRatio": 1.125, // Property: Interval value as decimal ratio
           "stringLength": -70.3125, // Property: String length relative to tuning system string length
           "fretDivision": 70.31200000000001, // Property: Fret position calculation
-          "index": 3, // Property: Sequential position in tuning system
+          "pitchClassIndex": 3, // Property: Pitch class index difference considering octaves
           "originalValue": "9/8", // Property: Interval value calculated from the original tuning system definition
           "originalValueType": "fraction" // Property: Format type of original input value
         }
@@ -408,7 +447,7 @@ The allMaqamatData section contains complete scale information:
           "decimalRatio": 1.125, // Property: Interval value as decimal ratio
           "stringLength": -93.75, // Property: String length relative to tuning system string length
           "fretDivision": 93.75, // Property: Fret position calculation
-          "index": 3, // Property: Sequential position in tuning system
+          "pitchClassIndex": 3, // Property: Pitch class index difference considering octaves
           "originalValue": "9/8", // Property: Interval value from original tuning system definition
           "originalValueType": "fraction" // Property: Format type of original input value
         },
@@ -418,7 +457,7 @@ The allMaqamatData section contains complete scale information:
           "decimalRatio": 1.0833333333333333, // Property: Interval value as decimal ratio
           "stringLength": -57.692307692307736, // Property: String length relative to tuning system
           "fretDivision": 57.69200000000001, // Property: Fret position calculation
-          "index": 2, // Property: Sequential position in tuning system
+          "pitchClassIndex": 2, // Property: Pitch class index difference considering octaves
           "originalValue": "13/12", // Property: Interval value from original tuning system definition
           "originalValueType": "fraction" // Property: Format type of original input value
         }
@@ -431,7 +470,7 @@ The allMaqamatData section contains complete scale information:
           "decimalRatio": 1.06640625, // Property: Interval value as decimal ratio
           "stringLength": -31.135531135531153, // Property: String length relative to tuning system
           "fretDivision": 31.135999999999967, // Property: Fret position calculation
-          "index": 2, // Property: Sequential position in tuning system
+          "pitchClassIndex": 2, // Property: Pitch class index difference considering octaves
           "originalValue": "273/256", // Property: Interval value from original tuning system definition
           "originalValueType": "fraction" // Property: Format type of original input value
         }
