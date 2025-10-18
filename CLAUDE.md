@@ -379,3 +379,81 @@ Recent commits show focus on:
 - Documentation improvements
 
 Main branch: `main` (use this for PRs)
+
+---
+
+## Documentation & Cultural Accuracy Guidelines (2025-10-19)
+
+### Key Learning: Eliminating Anglo-European Centric Language Patterns
+
+**Pattern to Avoid**: Parenthetical explanations using Western music terminology after Arabic terms.
+
+❌ **Incorrect**:
+- "maqāmāt (scales), ajnās (melodic genera)"
+- "Melodic genera (building blocks of maqāmāt)"
+- "Total count of distinct maqāmāt (scales) in the database"
+
+✅ **Correct**:
+- "maqāmāt and ajnās"
+- "Ajnās that form the basis of maqāmāt"
+- "Total count of distinct maqāmāt in the database"
+
+**Rationale**: Parenthetical definitions in English framing Arabic terms as deviations from a Western default. Removing them treats Arabic terminology as primary and self-contained, trusting readers to understand through context and fuller documentation sections.
+
+### Documentation Best Practices
+
+**Progressive Disclosure Architecture**:
+1. **Quick Start** (2-3 minutes): Essential facts without definitions
+2. **Common Tasks** (5-10 minutes): Navigation patterns with concrete examples
+3. **Detailed Reference** (ongoing): Property tables and comprehensive explanations
+4. **Real Data Examples**: Always use actual export data, never hypothetical examples
+
+**Property Reference Tables Strategy**:
+- Use tables consistently across all sections (80+ properties documented)
+- Include `Type` column for clarity
+- Use ⭐ marker for "core properties" needed for basic understanding
+- Preserve detailed logic/rationale in `Logic` column when relevant
+- Replace inline JSON comments with structured table rows
+
+**Data Accuracy Protocol**:
+- Verify all examples against actual export files before documentation
+- For optional fields: Explicitly mark in descriptions (e.g., "present only for jins and maqam types")
+- Never hallucinate property definitions—check actual data structure
+- Document all default values and edge cases explicitly
+
+**Terminology Consistency**:
+- Replace vague language with specific data properties
+  - ❌ "frequencies" → ✅ "fractions, cents, string lengths" (actual properties)
+  - ❌ "intervals" → ✅ "pitch class intervals arrays" (specific reference)
+  - ❌ "scale" → ✅ "maqām" (proper terminology)
+- Avoid Western music theory naming for interval examples
+  - ❌ "9/8 = major tone" → ✅ "3/2", "9/8" (neutral examples)
+
+**Octave System Explanation**:
+- Include cultural context: "Arabic maqām theory traditionally spans 2 octaves. This system extends to 4 for broader instrument compatibility"
+- Provide reference table with all octave names, prefixes, and examples
+- Always use Arabic terminology (qarār, ʿushayrān, jawāb, jawāb jawāb)
+
+### Common Documentation Pitfalls to Avoid
+
+1. **Assuming English definitions are helpful**: Arabic terms need context, not Western music equivalents
+2. **Mixing theoretical frameworks**: Don't compare to 12-EDO unless explicitly discussing compatibility
+3. **Vague property references**: Always reference actual data properties, not generic categories
+4. **Incomplete stop object documentation**: Mark optional fields (startingNote present only for specific types)
+5. **Inconsistent example formatting**: Use Property Reference Tables throughout, not mixed inline+table format
+6. **Hallucinated data structure**: Verify every property description against actual export files
+
+### Testing Documentation Changes
+
+**Verification Checklist**:
+- [ ] No Anglo-European music terminology parentheticals
+- [ ] All examples use real export data in verified order
+- [ ] All property descriptions match actual export structure
+- [ ] "Frequencies" replaced with specific properties (fractions/cents/string lengths)
+- [ ] "Intervals" disambiguated with full property references
+- [ ] Version timestamps documented at all hierarchical levels
+- [ ] Optional fields clearly marked
+- [ ] Cross-references (table of contents links) all valid
+- [ ] Cultural terminology preserved and capitalized correctly (maqām, ajnās, etc.)
+
+```

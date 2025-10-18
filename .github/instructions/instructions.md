@@ -457,4 +457,110 @@ interface ExportedTuningSystem {
 
 ---
 
+## Documentation Standards (Updated 2025-10-19)
+
+### Cultural-Linguistic Accuracy in Technical Documentation
+
+**Critical Pattern**: Eliminate parenthetical English definitions after Arabic terminology. This pattern—while seemingly helpful—implicitly frames Arabic terms as requiring Western translation for legitimacy.
+
+### Documentation Approach
+
+**✅ When introducing Arabic terms:**
+- Use full section headings and property descriptions
+- Provide context through structured examples and tables
+- Trust reader to understand through comprehensive documentation
+- Let Arabic terminology stand as primary
+
+**❌ Avoid:**
+- "maqāmāt (scales)" - parenthetical definitions
+- "Melodic genera (building blocks)" - Western categorical framing
+- "frequencies" without specifying actual properties
+- "intervals" without indicating what type
+
+**✅ Use instead:**
+- "maqāmāt and ajnās" - simple, clean
+- "Ajnās that form the basis of maqāmāt" - contextual explanation
+- "fractions, cents, string lengths" - specific properties
+- "pitch class intervals arrays" - precise terminology
+
+### Real Data Integration
+
+**Requirement**: All documentation examples must be from actual export files:
+
+1. **Verification Process**:
+   - Locate relevant export file (e.g., `IbnSina-(1037)_(ʿushayrān)_ajnās_maqāmāt.json`)
+   - Extract exact data (don't approximate or generalize)
+   - Verify order matches export structure
+   - Document the source/line numbers if complex
+
+2. **Example Quality**:
+   - Use consistent data sources across section
+   - Include `...` notation to compress large arrays, not omit important information
+   - Maintain JSON formatting exactly (syntax/structure)
+   - Include enough context for readers to find in their own exports
+
+### Property Documentation
+
+**Property Reference Tables** (preferred over inline comments):
+
+| Property | Description | Type |
+|----------|-------------|------|
+| `propertyName` | Clear, specific description referencing actual data structure | dataType |
+
+**Guidelines**:
+- Describe WHAT the property contains, not assumptions about how it's used
+- If optional, explicitly state when/where it appears (e.g., "present only for jins and maqam types")
+- Include examples showing actual values from real data
+- Mark core properties with ⭐ when appropriate
+- For complex properties, reference dedicated sections rather than inline explanation
+
+### Version Property Documentation
+
+**Template**: Version properties at all hierarchical levels should be documented:
+
+- **Level 1**: `exportInfo.timestamp` - When export was generated
+- **Level 2**: `tuningSystemData.version` - When tuning system was last modified
+- **Level 3**: `allAjnasData[jins].version` - When specific jins was last modified
+- **Level 4**: `allMaqamatData[maqam].suyur[].version` - When specific sayr was last modified
+
+### Octave System Explanation
+
+**Always include**:
+1. Cultural context (traditional 2-octave span)
+2. System rationale (4-octave for instrument compatibility)
+3. Reference table with names, prefixes, examples
+4. Arabic terminology with proper diacritics
+
+### Terminology Precision
+
+**Replace vague with specific**:
+- "frequencies" → "fractions, cents, string lengths" (actual properties)
+- "intervals" → "pitch class intervals arrays" (specific structure)
+- "scale" → "maqām" (correct terminology)
+- "melodic fragments" → "ajnās" (canonical term)
+
+**Avoid Western music theory framing**:
+- Don't use "major", "minor", "semitone", "tone", "mode" without cultural context
+- Don't compare intervals to 12-EDO unless explicitly discussing compatibility
+- Don't use "microtonal" (see Core Principles section)
+
+### Validation Checklist for Documentation
+
+Before publishing documentation:
+
+- [ ] No parenthetical English definitions after Arabic terms
+- [ ] All examples sourced from real export files
+- [ ] All properties match actual data structure (verified against export)
+- [ ] Optional fields clearly marked with presence conditions
+- [ ] "Frequencies" replaced with specific properties
+- [ ] "Intervals" disambiguated with full property references
+- [ ] Version timestamps documented at all 4 levels
+- [ ] Table of contents links all validate
+- [ ] Arabic terminology consistent and properly formatted
+- [ ] No Western music theory defaults assumed
+- [ ] Cultural context preserved in explanations
+- [ ] No hallucinated properties or structures
+
+---
+
 *This document should be reviewed quarterly to ensure examples remain current and accurate.*
