@@ -68,6 +68,11 @@ lastUpdated: '2025-09-24'
 - **Scholarly methodology** - Systematic implementation with citations
 - **Cultural specificity** - Avoid Anglo-European-centric approaches
 
+### Terminology Standards
+- **NEVER use "microtonal"** - This is a Western-centric term that implies deviation from equal temperament as the norm
+- **Use culturally appropriate terms**: "unequal divisions", "non-12-EDO pitches", "pitches with fractional precision", or describe the specific theoretical framework (e.g., "following Arabic maqām theory")
+- **Rationale**: Arabic maqām theory is not a deviation from Western tuning—it represents independent theoretical frameworks with their own logic and historical development
+
 ### Starting Note Conventions
 **Critical Understanding**: Different starting points represent fundamentally different theoretical approaches:
 

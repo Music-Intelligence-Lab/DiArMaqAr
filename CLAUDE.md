@@ -6,7 +6,26 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 The **Digital Arabic Maqām Archive** (DiArMaqAr) is a comprehensive web-based platform for interactive exploration of Arabic maqām theory through computational modeling. The system integrates historical tuning systems (tanāghīm), melodic fragments (ajnās), complete modal frameworks (maqāmāt), and modulation practices within a unified digital framework. The project prioritizes culturally specific Arabic theoretical frameworks and epistemological systems.
 
-**Live Application**: https://arabic-maqam-network.vercel.app/
+**Live Application**: https://arabic-maqam-archive.netlify.app/
+
+## Critical Terminology Standards
+
+**NEVER use the term "microtonal"** - This is a Western-centric term that implies deviation from equal temperament as the norm. Arabic maqām theory is not a deviation from Western tuning—it represents independent theoretical frameworks with their own logic and historical development.
+
+**Use culturally appropriate alternatives:**
+- "unequal divisions"
+- "non-12-EDO pitches"
+- "pitches with fractional precision"
+- "pitches with decimal/fractional MIDI values"
+- Or describe the specific theoretical framework (e.g., "following Arabic maqām theory")
+
+**This applies to all:**
+- Code comments
+- Documentation
+- Variable names
+- Function descriptions
+- Export data comments
+- User-facing text
 
 ## Common Commands
 
