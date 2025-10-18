@@ -1,7 +1,7 @@
 import NoteName from "@/models/NoteName";
 import TuningSystem from "@/models/TuningSystem";
 import JinsData, { AjnasModulations, Jins, JinsDataInterface, shiftJinsByOctaves } from "@/models/Jins";
-import MaqamData, { Maqam, MaqamatModulations, MaqamDataInterface, shiftMaqamByOctaves } from "@/models/Maqam";
+import MaqamData, { Maqam, MaqamatModulations, MaqamDataInterface, shiftMaqamByOctaves, Sayr } from "@/models/Maqam";
 import getTuningSystemPitchClasses from "./getTuningSystemPitchClasses";
 import { getAjnas, getMaqamat } from "./import";
 import { calculateJinsTranspositions, calculateMaqamTranspositions } from "./transpose";
@@ -86,6 +86,7 @@ export interface MergedMaqam {
   descendingMaqamAjnas?: { [noteName: string]: string | null };
   maqamToMaqamModulations?: MaqamToMaqamModulationsWithKeys;
   maqamToJinsModulations?: MaqamToJinsModulationsWithKeys;
+  suyur?: Sayr[];
   transposition: boolean;
   commentsEnglish: string;
   commentsArabic: string;
@@ -1266,6 +1267,7 @@ export async function exportTuningSystem(
                 Object.entries(possibleMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins ? standardizeText(jins.name) : null])
               )
             : undefined,
+          suyur: maqamOverview.getSuyur(),
           transposition: possibleMaqam.transposition,
           commentsEnglish: maqamOverview.getCommentsEnglish(),
           commentsArabic: maqamOverview.getCommentsArabic(),
@@ -1825,6 +1827,7 @@ export async function exportMaqam(
             Object.entries(convertedMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins ? standardizeText(jins.name) : null])
           )
         : undefined,
+      suyur: maqamData.getSuyur(),
       transposition: maqamToExport.transposition,
       commentsEnglish: maqamData.getCommentsEnglish(),
       commentsArabic: maqamData.getCommentsArabic(),
