@@ -14,7 +14,7 @@ const emptyPitchClass: PitchClass = {
   englishName: "",
   originalValue: "",
   originalValueType: "",
-  index: -1,
+  pitchClassIndex: -1,
   octave: -1,
   abjadName: "",
   fretDivision: "",
@@ -44,12 +44,12 @@ const emptyPitchClass: PitchClass = {
  */
 export default function shiftPitchClassByOctave(allPitchClasses: PitchClass[], pitchClass: PitchClass | undefined, octaveShift: number) {
   // Validate input pitch class
-  if (!pitchClass || typeof pitchClass.index !== "number" || typeof pitchClass.octave !== "number") {
+  if (!pitchClass || typeof pitchClass.pitchClassIndex !== "number" || typeof pitchClass.octave !== "number") {
     return emptyPitchClass;
   }
 
-  // Find the pitch class in the array using index and octave
-  const pitchClassIndex = allPitchClasses.findIndex((c) => c.index === pitchClass.index && c.octave === pitchClass.octave);
+  // Find the pitch class in the array using pitchClassIndex and octave
+  const pitchClassIndex = allPitchClasses.findIndex((c) => c.pitchClassIndex === pitchClass.pitchClassIndex && c.octave === pitchClass.octave);
   if (pitchClassIndex === -1) return emptyPitchClass;
 
   // Calculate the new array index after octave shift

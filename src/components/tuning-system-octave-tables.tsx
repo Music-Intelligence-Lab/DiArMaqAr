@@ -144,8 +144,8 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
     }
   }
 
-  const isCellSelected = (octave: number, colIndex: number) => selectedPitchClasses.some((pitchClasses) => pitchClasses.octave === octave && pitchClasses.index === colIndex);
-  const isCellActive = (octave: number, colIndex: number) => activePitchClasses.some((pitchClasses) => pitchClasses.octave === octave && pitchClasses.index === colIndex);
+  const isCellSelected = (octave: number, colIndex: number) => selectedPitchClasses.some((pitchClasses) => pitchClasses.octave === octave && pitchClasses.pitchClassIndex === colIndex);
+  const isCellActive = (octave: number, colIndex: number) => activePitchClasses.some((pitchClasses) => pitchClasses.octave === octave && pitchClasses.pitchClassIndex === colIndex);
   const isCellDescending = (octave: number, colIndex: number) => {
     const pitchClassIndex = octave * tuningSystemPitchClassesArray.length + colIndex;
     
@@ -387,12 +387,12 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
 
   const handleCheckboxChange = (octave: number, colIndex: number, checked: boolean) => {
     setSelectedPitchClasses((prevCells) => {
-      const newCells = prevCells.filter((pitchClass) => !(pitchClass.octave === octave && pitchClass.index === colIndex));
+      const newCells = prevCells.filter((pitchClass) => !(pitchClass.octave === octave && pitchClass.pitchClassIndex === colIndex));
       if (checked && allPitchClasses) {
-        const existingCell = allPitchClasses.find((pitchClass) => pitchClass.octave === octave && pitchClass.index === colIndex);
+        const existingCell = allPitchClasses.find((pitchClass) => pitchClass.octave === octave && pitchClass.pitchClassIndex === colIndex);
         if (existingCell) newCells.push(existingCell);
       }
-      newCells.sort((a, b) => (a.octave === b.octave ? a.index - b.index : a.octave - b.octave));
+      newCells.sort((a, b) => (a.octave === b.octave ? a.pitchClassIndex - b.pitchClassIndex : a.octave - b.octave));
       return newCells;
     });
   };

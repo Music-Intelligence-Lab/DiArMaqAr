@@ -173,7 +173,7 @@ export default function PitchClassBar() {
     const entries = allPitchClasses.map((pitchClass: PitchClass) => {
       const originalValue = pitchClass.originalValue;
       const isSelected = selectedPitchClasses.some((sc) => sc.originalValue === originalValue);
-      const isActive = activePitchClasses.some((ac) => ac.index === pitchClass.index && ac.octave === pitchClass.octave);
+      const isActive = activePitchClasses.some((ac) => ac.pitchClassIndex === pitchClass.pitchClassIndex && ac.octave === pitchClass.octave);
 
       const jinsTransposition = filteredJinsTranspositions.find((transposition) => transposition.jinsPitchClasses[0].originalValue === originalValue);
       const maqamTransposition = filteredMaqamTranspositions.find(
@@ -231,7 +231,7 @@ export default function PitchClassBar() {
       const mapping = pitchClassToKeyMapping[pitchClass.fraction] || "";
 
       return {
-        key: `${pitchClass.index}-${pitchClass.octave}`,
+        key: `${pitchClass.pitchClassIndex}-${pitchClass.octave}`,
         pitchClass,
         isSelected,
         isActive,
