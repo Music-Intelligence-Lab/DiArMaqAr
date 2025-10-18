@@ -81,11 +81,11 @@ function createSayrParameter(sayrId: string, selectedMaqamData: any): string {
   try {
     const sources = getSources();
 
-    // Find the sayr in the maqam's suyūr array
-    const suyūr = selectedMaqamData.getSuyūr();
-    if (!suyūr || !Array.isArray(suyūr)) return sayrId;
+    // Find the sayr in the maqam's suyur array
+    const suyur = selectedMaqamData.getSuyur();
+    if (!suyur || !Array.isArray(suyur)) return sayrId;
 
-    const sayr = suyūr.find((s: Sayr) => s.id === sayrId);
+    const sayr = suyur.find((s: Sayr) => s.id === sayrId);
 
     if (!sayr) return sayrId; // Fall back to ID if not found
 
@@ -141,13 +141,13 @@ function parseSayrParameter(param: string, maqamData: any): string | undefined {
 
     if (!sayrAuthor || !sayrYear || !sayrPage) return param; // Return original if parts are missing
 
-    // Find all suyūr for this maqam
-    const suyūr = maqamData.getSuyūr();
+    // Find all suyur for this maqam
+    const suyur = maqamData.getSuyur();
 
-    if (!suyūr || !Array.isArray(suyūr)) return param; // Return original if suyūr not found
+    if (!suyur || !Array.isArray(suyur)) return param; // Return original if suyur not found
 
     // Try to find the matching sayr
-    for (const sayr of suyūr) {
+    for (const sayr of suyur) {
       if (!sayr || !sayr.sourceId) continue;
 
       const source = sources.find((s) => s.getId() === sayr.sourceId);
@@ -268,7 +268,7 @@ export default function AppClient() {
       if (maqamData) {
         const parsedSayrParameter = parseSayrParameter(sayrParam, maqamData);
 
-        for (const sayr of maqamData.getSuyūr()) {
+        for (const sayr of maqamData.getSuyur()) {
           if (createSayrParameter(sayr.id, maqamData) === parsedSayrParameter) {
             sayrId = sayr.id;
             break;

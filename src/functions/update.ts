@@ -174,7 +174,7 @@ export async function updateMaqamat(newMaqamat: MaqamData[], modifiedIds?: strin
           name: m.getName(),
           ascendingNoteNames: m.getAscendingNoteNames(),
           descendingNoteNames: m.getDescendingNoteNames(),
-          suyūr: m.getSuyūr(),
+          suyur: m.getSuyur(),
           commentsEnglish: m.getCommentsEnglish() || "",
           commentsArabic: m.getCommentsArabic() || "",
           sourcePageReferences: m.getSourcePageReferences(),

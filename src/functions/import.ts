@@ -98,7 +98,7 @@ export function getMaqamat(): MaqamData[] {
         d.name, // Name of the maqam
         d.ascendingNoteNames, // Note names for ascending form
         d.descendingNoteNames, // Note names for descending form
-        d.suyūr, // Melodic progressions (suyur)
+        d.suyur, // Melodic progressions (suyur)
         d.commentsEnglish, // English commentary
         d.commentsArabic, // Arabic commentary
         d.sourcePageReferences, // Source page references

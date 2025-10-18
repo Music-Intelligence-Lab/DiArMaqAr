@@ -54,7 +54,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
   // Load sayr data when manually selected (not when context changes)
   const loadSayrData = () => {
     if (selectedMaqamData && maqamSayrId) {
-      let sel: Sayr | undefined = selectedMaqamData.getSuyūr().find((s) => s.id === maqamSayrId);
+      let sel: Sayr | undefined = selectedMaqamData.getSuyur().find((s) => s.id === maqamSayrId);
 
       if (sel) {
         if (!admin && selectedMaqam && allPitchClasses) {
@@ -179,7 +179,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
   };
 
   if (!selectedMaqamData) return null;
-  const existingSuyūr = selectedMaqamData.getSuyūr();
+  const existingSuyur = selectedMaqamData.getSuyur();
 
   const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newSayrId = e.target.value;
@@ -208,12 +208,12 @@ export default function SayrManager({ admin }: { admin: boolean }) {
       version: new Date().toISOString(), // Always update sayr version on save
     };
 
-    // Update suyūr list: if exists replace it, otherwise add it
-    const updated = existingSuyūr.some((s) => s.id === idUse)
-      ? existingSuyūr.map((s) => (s.id === idUse ? newSayr : s))
-      : [...existingSuyūr, newSayr];
+    // Update suyur list: if exists replace it, otherwise add it
+    const updated = existingSuyur.some((s) => s.id === idUse)
+      ? existingSuyur.map((s) => (s.id === idUse ? newSayr : s))
+      : [...existingSuyur, newSayr];
 
-    const updatedMaqam = selectedMaqamData.createMaqamWithNewSuyūr(updated);
+    const updatedMaqam = selectedMaqamData.createMaqamWithNewSuyur(updated);
     setSelectedMaqamData(updatedMaqam);
     setMaqamSayrId(idUse);
 
@@ -224,8 +224,8 @@ export default function SayrManager({ admin }: { admin: boolean }) {
 
   const handleDelete = async () => {
     if (!maqamSayrId) return;
-    const filtered = existingSuyūr.filter((s) => s.id !== maqamSayrId);
-    const updatedMaqam = selectedMaqamData.createMaqamWithNewSuyūr(filtered);
+    const filtered = existingSuyur.filter((s) => s.id !== maqamSayrId);
+    const updatedMaqam = selectedMaqamData.createMaqamWithNewSuyur(filtered);
     setSelectedMaqamData(updatedMaqam);
     setMaqamSayrId("");
 
@@ -244,7 +244,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
             </label>
             <select id="sayrSelect" className="sayr-manager__select" value={maqamSayrId} onChange={handleSelect}>
               <option value="">{t("sayr.newSayr")}</option>
-              {existingSuyūr.map((s) => (
+              {existingSuyur.map((s) => (
                 <option key={s.id} value={s.id}>
                   {s.creatorEnglish}
                 </option>
@@ -256,10 +256,10 @@ export default function SayrManager({ admin }: { admin: boolean }) {
 
       {!admin && (
         <div className="sayr-manager__list">
-          {existingSuyūr.length === 0 ? (
+          {existingSuyur.length === 0 ? (
             <p>{t("sayr.noSuyurAvailable")}</p>
           ) : (
-            existingSuyūr.map((sayr, index) => (
+            existingSuyur.map((sayr, index) => (
               <div
                 key={index}
                 className={"sayr-manager__item " + (sayr.id === maqamSayrId ? "sayr-manager__item_selected " : "")}
