@@ -12,13 +12,13 @@ export default function KeyboardControls() {
       // Use defaultNoteVelocity for QWERTY input
       noteOn(pitchClass, defaultNoteVelocity);
       setActivePitchClasses((prev) =>
-        prev.some((c) => c.index === pitchClass.index && c.octave === pitchClass.octave) ? prev : [...prev, pitchClass]
+        prev.some((c) => c.pitchClassIndex === pitchClass.pitchClassIndex && c.octave === pitchClass.octave) ? prev : [...prev, pitchClass]
       );
     };
 
     const removeActive = (pitchClass: PitchClass) => {
       noteOff(pitchClass);
-      setActivePitchClasses((prev) => prev.filter((c) => !(c.index === pitchClass.index && c.octave === pitchClass.octave)));
+      setActivePitchClasses((prev) => prev.filter((c) => !(c.pitchClassIndex === pitchClass.pitchClassIndex && c.octave === pitchClass.octave)));
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {

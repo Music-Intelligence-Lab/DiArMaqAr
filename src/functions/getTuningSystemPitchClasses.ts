@@ -109,26 +109,37 @@ export default function getTuningSystemPitchClasses(
       const englishNoteName = getEnglishNoteName(noteName);
 
       pitchClasses.push({
+        // Core identifiers (matching UI table order)
         noteName,
+        abjadName,
         englishName: englishNoteName,
-        fraction: conv.fraction,
-        cents: conv.cents,
-        decimalRatio: conv.decimal,
-        stringLength: conv.stringLength,
-        frequency: conv.frequency,
+
+        // Position identifiers
+        pitchClassIndex: idx,
+        octave,
+
+        // Primary value
         originalValue: shifted,
         originalValueType: type,
-        index: idx,
-        octave,
-        abjadName,
+
+        // Interval measurements
+        cents: conv.cents,
+        centsDeviation: 0, // Will be calculated later
+        fraction: conv.fraction,
+        decimalRatio: conv.decimal,
+        stringLength: conv.stringLength,
         fretDivision,
+
+        // MIDI values
         midiNoteDecimal,
-        centsDeviation: 0,
+
+        // Frequency
+        frequency: conv.frequency,
       });
     }
   }
 
-  const startingPitchClass = pitchClasses.find((pc) => pc.index === 0 && pc.octave === 1);
+  const startingPitchClass = pitchClasses.find((pc) => pc.pitchClassIndex === 0 && pc.octave === 1);
 
   if (startingPitchClass) {
     const startingMidiNumber = startingPitchClass.midiNoteDecimal;

@@ -856,7 +856,7 @@ export async function exportTuningSystem(
 
   for (const tuningSystemPitchClass of fullRangeTuningSystemPitchClasses) {
     if (tuningSystemPitchClass.noteName === "none") {
-      tuningSystemPitchClass.noteName = `none ${tuningSystemPitchClass.octave}/${tuningSystemPitchClass.index}`;
+      tuningSystemPitchClass.noteName = `none ${tuningSystemPitchClass.octave}/${tuningSystemPitchClass.pitchClassIndex}`;
     }
   }
 
@@ -933,7 +933,37 @@ export async function exportTuningSystem(
   updateProgress(69, "Building pitch class references...");
   const pitchClassReference: { [noteName: string]: PitchClass } = {};
   fullRangeTuningSystemPitchClasses.forEach((pc) => {
-    pitchClassReference[standardizeText(pc.noteName)] = pc;
+    // Rebuild pitch class object with explicit property order
+    pitchClassReference[standardizeText(pc.noteName)] = {
+      // Core identifiers
+      noteName: pc.noteName,
+      abjadName: pc.abjadName,
+      englishName: pc.englishName,
+
+      // Position identifiers
+      pitchClassIndex: pc.pitchClassIndex,
+      octave: pc.octave,
+
+      // Primary value
+      originalValue: pc.originalValue,
+      originalValueType: pc.originalValueType,
+
+      // Interval measurements
+      cents: pc.cents,
+      centsDeviation: pc.centsDeviation,
+      fraction: pc.fraction,
+      decimalRatio: pc.decimalRatio,
+      stringLength: pc.stringLength,
+      fretDivision: pc.fretDivision,
+
+      // MIDI values
+      midiNoteDecimal: pc.midiNoteDecimal,
+      ...(pc.referenceNoteName && { referenceNoteName: pc.referenceNoteName }),
+      ...(pc.midiNoteDeviation && { midiNoteDeviation: pc.midiNoteDeviation }),
+
+      // Frequency
+      frequency: pc.frequency,
+    };
   });
   result.pitchClassReference = pitchClassReference;
 
@@ -1347,7 +1377,7 @@ export async function exportJins(
 
   for (const tuningSystemPitchClass of fullRangeTuningSystemPitchClasses) {
     if (tuningSystemPitchClass.noteName === "none") {
-      tuningSystemPitchClass.noteName = `none ${tuningSystemPitchClass.octave}/${tuningSystemPitchClass.index}`;
+      tuningSystemPitchClass.noteName = `none ${tuningSystemPitchClass.octave}/${tuningSystemPitchClass.pitchClassIndex}`;
     }
   }
 
@@ -1356,7 +1386,37 @@ export async function exportJins(
   const jinsReference: { [jinsName: string]: MergedJins } = {};
 
   fullRangeTuningSystemPitchClasses.forEach((pc) => {
-    pitchClassReference[standardizeText(pc.noteName)] = pc;
+    // Rebuild pitch class object with explicit property order
+    pitchClassReference[standardizeText(pc.noteName)] = {
+      // Core identifiers
+      noteName: pc.noteName,
+      abjadName: pc.abjadName,
+      englishName: pc.englishName,
+
+      // Position identifiers
+      pitchClassIndex: pc.pitchClassIndex,
+      octave: pc.octave,
+
+      // Primary value
+      originalValue: pc.originalValue,
+      originalValueType: pc.originalValueType,
+
+      // Interval measurements
+      cents: pc.cents,
+      centsDeviation: pc.centsDeviation,
+      fraction: pc.fraction,
+      decimalRatio: pc.decimalRatio,
+      stringLength: pc.stringLength,
+      fretDivision: pc.fretDivision,
+
+      // MIDI values
+      midiNoteDecimal: pc.midiNoteDecimal,
+      ...(pc.referenceNoteName && { referenceNoteName: pc.referenceNoteName }),
+      ...(pc.midiNoteDeviation && { midiNoteDeviation: pc.midiNoteDeviation }),
+
+      // Frequency
+      frequency: pc.frequency,
+    };
   });
 
   let jinsToExport: Jins;
@@ -1373,7 +1433,7 @@ export async function exportJins(
 
     for (const pc of jinsToExport.jinsPitchClasses) {
       if (pc.noteName === "none") {
-        pc.noteName = `none ${pc.octave}/${pc.index}`;
+        pc.noteName = `none ${pc.octave}/${pc.pitchClassIndex}`;
       }
     }
 
@@ -1539,7 +1599,7 @@ export async function exportMaqam(
 
   for (const tuningSystemPitchClass of fullRangeTuningSystemPitchClasses) {
     if (tuningSystemPitchClass.noteName === "none") {
-      tuningSystemPitchClass.noteName = `none ${tuningSystemPitchClass.octave}/${tuningSystemPitchClass.index}`;
+      tuningSystemPitchClass.noteName = `none ${tuningSystemPitchClass.octave}/${tuningSystemPitchClass.pitchClassIndex}`;
     }
   }
 
@@ -1550,7 +1610,37 @@ export async function exportMaqam(
   const maqamReference: { [maqamName: string]: MergedMaqam } = {};
 
   fullRangeTuningSystemPitchClasses.forEach((pc) => {
-    pitchClassReference[standardizeText(pc.noteName)] = pc;
+    // Rebuild pitch class object with explicit property order
+    pitchClassReference[standardizeText(pc.noteName)] = {
+      // Core identifiers
+      noteName: pc.noteName,
+      abjadName: pc.abjadName,
+      englishName: pc.englishName,
+
+      // Position identifiers
+      pitchClassIndex: pc.pitchClassIndex,
+      octave: pc.octave,
+
+      // Primary value
+      originalValue: pc.originalValue,
+      originalValueType: pc.originalValueType,
+
+      // Interval measurements
+      cents: pc.cents,
+      centsDeviation: pc.centsDeviation,
+      fraction: pc.fraction,
+      decimalRatio: pc.decimalRatio,
+      stringLength: pc.stringLength,
+      fretDivision: pc.fretDivision,
+
+      // MIDI values
+      midiNoteDecimal: pc.midiNoteDecimal,
+      ...(pc.referenceNoteName && { referenceNoteName: pc.referenceNoteName }),
+      ...(pc.midiNoteDeviation && { midiNoteDeviation: pc.midiNoteDeviation }),
+
+      // Frequency
+      frequency: pc.frequency,
+    };
   });
 
   let maqamToExport: Maqam;
@@ -1565,11 +1655,11 @@ export async function exportMaqam(
       const ascendingPitchClass = maqamToExport.ascendingPitchClasses[i];
       const descendingPitchClass = maqamToExport.descendingPitchClasses[i];
       if (ascendingPitchClass.noteName === "none") {
-        ascendingPitchClass.noteName = `none ${ascendingPitchClass.octave}/${ascendingPitchClass.index}`;
+        ascendingPitchClass.noteName = `none ${ascendingPitchClass.octave}/${ascendingPitchClass.pitchClassIndex}`;
       }
 
       if (descendingPitchClass.noteName === "none") {
-        descendingPitchClass.noteName = `none ${descendingPitchClass.octave}/${descendingPitchClass.index}`;
+        descendingPitchClass.noteName = `none ${descendingPitchClass.octave}/${descendingPitchClass.pitchClassIndex}`;
       }
     }
 

@@ -49,10 +49,15 @@ export default interface PitchClass {
   
   /** Arabic/Abjad name of the note */
   abjadName: string;
-  
-  /** Position index within the scale or tuning system */
-  index: number;
-  
+
+  /**
+   * Pitch class index within the tuning system (0-based).
+   * This identifies the pitch class position independent of octave,
+   * allowing grouping of the same pitch class across all octaves.
+   * Example: pitchClassIndex 5 in octave 0 = same pitch class type as pitchClassIndex 5 in octave 1
+   */
+  pitchClassIndex: number;
+
   /** Octave number */
   octave: number;
   
@@ -86,10 +91,10 @@ export interface PitchClassInterval {
   
   /** Fret division difference */
   fretDivision: number;
-  
-  /** Index difference considering octaves */
-  index: number;
-  
+
+  /** Pitch class index difference considering octaves */
+  pitchClassIndex: number;
+
   /** String representation of the interval in its original format */
   originalValue: string;
   
@@ -127,7 +132,7 @@ export function calculateInterval(firstPitchClass: PitchClass, secondPitchClass:
   const decimalRatio = convertFractionToDecimal(fraction);
   const stringLength = parseFloat(secondPitchClass.stringLength) - parseFloat(firstPitchClass.stringLength);
   const fretDivision = parseFloat(secondPitchClass.fretDivision) - parseFloat(firstPitchClass.fretDivision);
-  const index = secondPitchClass.index * secondPitchClass.octave - firstPitchClass.index * firstPitchClass.octave;
+  const pitchClassIndex = secondPitchClass.pitchClassIndex * secondPitchClass.octave - firstPitchClass.pitchClassIndex * firstPitchClass.octave;
 
   const originalValueType = secondPitchClass.originalValueType;
   let originalValue = "";
@@ -143,7 +148,7 @@ export function calculateInterval(firstPitchClass: PitchClass, secondPitchClass:
     decimalRatio,
     stringLength,
     fretDivision,
-    index,
+    pitchClassIndex,
     originalValue,
     originalValueType,
   };

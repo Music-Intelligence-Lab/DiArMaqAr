@@ -438,7 +438,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     const newSelectedPitchClasses = [];
 
     for (const selectedPitchClass of selectedPitchClasses) {
-      const newSelectedPitchClass = allPitchClasses.find((pc) => pc.index === selectedPitchClass.index && pc.octave === selectedPitchClass.octave);
+      const newSelectedPitchClass = allPitchClasses.find((pc) => pc.pitchClassIndex === selectedPitchClass.pitchClassIndex && pc.octave === selectedPitchClass.octave);
       if (newSelectedPitchClass) newSelectedPitchClasses.push(newSelectedPitchClass);
     }
 
@@ -447,7 +447,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     const newActivePitchClasses = [];
 
     for (const activePitchClass of activePitchClasses) {
-      const newActivePitchClass = allPitchClasses.find((pc) => pc.index === activePitchClass.index && pc.octave === activePitchClass.octave);
+      const newActivePitchClass = allPitchClasses.find((pc) => pc.pitchClassIndex === activePitchClass.pitchClassIndex && pc.octave === activePitchClass.octave);
       if (newActivePitchClass) newActivePitchClasses.push(newActivePitchClass);
     }
 
@@ -587,12 +587,12 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     if (cmd === 0x90 && velocity > 0) {
       noteOn(pitchClass, velocity);
       setActivePitchClasses((prev) => {
-        if (prev.some((c) => c.index === pitchClass.index && c.octave === pitchClass.octave)) return prev;
+        if (prev.some((c) => c.pitchClassIndex === pitchClass.pitchClassIndex && c.octave === pitchClass.octave)) return prev;
         return [...prev, pitchClass];
       });
     } else if (cmd === 0x80 || (cmd === 0x90 && velocity === 0)) {
       noteOff(pitchClass);
-      setActivePitchClasses((prev) => prev.filter((c) => !(c.index === pitchClass.index && c.octave === pitchClass.octave)));
+      setActivePitchClasses((prev) => prev.filter((c) => !(c.pitchClassIndex === pitchClass.pitchClassIndex && c.octave === pitchClass.octave)));
     }
   }, [soundSettings.inputType, soundSettings.selectedMidiInputId, midiToPitchClassMapping]);
 

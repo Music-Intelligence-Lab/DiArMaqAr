@@ -40,21 +40,21 @@ export default function extendSelectedPitchClasses(allPitchClasses: PitchClass[]
 
   // Process each pitch class in the complete set
   for (const pitchClass of allPitchClasses) {
-    const currentIndex = pitchClass.index;
+    const currentIndex = pitchClass.pitchClassIndex;
 
-    // Find all selected pitch classes that share the same index
+    // Find all selected pitch classes that share the same pitchClassIndex
     // (same pitch class, different octaves)
-    const filteredPitchClassIndices = selectedPitchClasses.filter((pc) => pc.index === currentIndex);
+    const filteredPitchClassIndices = selectedPitchClasses.filter((pc) => pc.pitchClassIndex === currentIndex);
 
     if (filteredPitchClassIndices.length > 0) {
-      // Check if this exact pitch class (same index and octave) exists in selection
+      // Check if this exact pitch class (same pitchClassIndex and octave) exists in selection
       if (filteredPitchClassIndices.some((pc) => pc.octave === pitchClass.octave)) {
         // Direct match - include this pitch class
         extendedPitchClasses.push(pitchClass);
       } else {
-        // No direct match - check if any matching index qualifies for extension
+        // No direct match - check if any matching pitchClassIndex qualifies for extension
         for (const filteredPitchClass of filteredPitchClassIndices) {
-          const indexInSelected = selectedPitchClasses.findIndex((pc) => pc.index === filteredPitchClass.index && pc.octave === filteredPitchClass.octave);
+          const indexInSelected = selectedPitchClasses.findIndex((pc) => pc.pitchClassIndex === filteredPitchClass.pitchClassIndex && pc.octave === filteredPitchClass.octave);
 
           // If the matching pitch class is in the extension range (>= sliceIndex),
           // include this octave equivalent
