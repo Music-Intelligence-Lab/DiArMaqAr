@@ -282,7 +282,7 @@ const translations = {
     "octave.decimalRatio": "Decimal Ratio",
     "octave.stringLength": "String Length",
     "octave.fretDivision": "Fret Division",
-    "octave.midiNote": "Midi Note",
+    "octave.midiNote": "MIDI Note",
     "octave.midiNoteDeviation": "MIDI Note Deviation",
     "octave.frequency": "Freq (Hz)",
     "octave.play": "Play",

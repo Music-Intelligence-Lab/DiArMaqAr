@@ -353,7 +353,7 @@ export default function SelectedPitchClassesAnalysis() {
         <div className="tuning-system-pitch-classes-analysis maqam-jins-transpositions-shared">
           <div className="maqam-jins-transpositions-shared__analysis-header">
             <div className="maqam-jins-transpositions-shared__title-row">
-              {t('analysis.title')}:
+              {t('analysis.title')}
               {!useRatio && (
                 <>
                   {" "}
