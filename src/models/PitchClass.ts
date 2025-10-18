@@ -31,10 +31,13 @@ export default interface PitchClass {
   
   /** Absolute frequency in Hz */
   frequency: string;
-  
-  /** MIDI note number representation */
-  midiNoteNumber: number;
-  
+
+  /** MIDI note as a decimal value with fractional precision (e.g., 51.366 for E-b3) */
+  midiNoteDecimal: number;
+
+  /** @deprecated Legacy field - use midiNoteDeviation instead */
+  midiNoteCentsDeviation?: number;
+
   /** The original input value used to create this pitch class */
   originalValue: string;
   
@@ -55,9 +58,12 @@ export default interface PitchClass {
   
   /** Deviation in cents from the nearest equal-tempered pitch */
   centsDeviation: number;
-  
+
   /** Optional reference note name for relative calculations */
   referenceNoteName?: string;
+
+  /** MIDI Note Deviation: 12-EDO reference MIDI note + cents deviation (e.g., "52 -63.4") */
+  midiNoteDeviation?: string;
 }
 
 /**

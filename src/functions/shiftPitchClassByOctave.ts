@@ -18,7 +18,7 @@ const emptyPitchClass: PitchClass = {
   octave: -1,
   abjadName: "",
   fretDivision: "",
-  midiNoteNumber: 0,
+  midiNoteDecimal: 0,
   centsDeviation: 0,
 };
 

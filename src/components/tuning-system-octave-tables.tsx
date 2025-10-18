@@ -21,7 +21,7 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { abjadNames } from "@/functions/noteNameMappings";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import { renderPitchClassSpellings } from "@/functions/renderPitchClassIpnSpellings";
-import { calculate12EdoReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
+import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
 import { getIpnReferenceNoteNameWithOctave } from "@/functions/getIpnReferenceNoteName";
 import StaffNotation from "./staff-notation";
 import getFirstNoteName from "@/functions/getFirstNoteName";
@@ -293,7 +293,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
         if (filters["midiNote"]) {
           const midiRow = [t("octave.midiNote")];
           octavePitchClasses.forEach((pc) => {
-            midiRow.push(pc.midiNoteNumber.toFixed(2));
+            midiRow.push(pc.midiNoteDecimal.toFixed(2));
           });
           rows.push(midiRow);
         }
@@ -304,7 +304,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
           const rendered = renderPitchClassSpellings(octavePitchClasses);
 
           rendered.forEach((pc) => {
-            const referenceMidiNote = calculate12EdoReferenceMidiNote(pc);
+            const referenceMidiNote = calculateIpnReferenceMidiNote(pc);
             const deviationText = `${referenceMidiNote} ${pc.centsDeviation > 0 ? '+' : ''}${pc.centsDeviation.toFixed(2)}`;
             midiDeviationRow.push(deviationText);
           });
@@ -905,7 +905,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                     <td className="tuning-system-manager__row-header">{t('octave.midiNote')}</td>
                     {rowCells.map((pitchClass, colIndex) => (
                       <td key={colIndex} className={getCellClassName(octave, colIndex)}>
-                        {displayStringValue(pitchClass.midiNoteNumber)}
+                        {displayStringValue(pitchClass.midiNoteDecimal)}
                       </td>
                     ))}
                   </tr>
@@ -937,7 +937,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                           pcWithRef.referenceNoteName = preferredMap[pitchClass.noteName].replace(/[+-]/g, '');
                         }
 
-                        const referenceMidiNote = calculate12EdoReferenceMidiNote(pcWithRef);
+                        const referenceMidiNote = calculateIpnReferenceMidiNote(pcWithRef);
 
                         return (
                           <td key={colIndex} className={getCellClassName(octave, colIndex)}>

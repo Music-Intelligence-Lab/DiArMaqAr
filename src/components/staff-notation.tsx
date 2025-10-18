@@ -4,7 +4,7 @@ import React, { useRef, useEffect } from "react";
 import { Renderer, Stave, StaveNote, Voice, Formatter, Accidental, TextNote } from "vexflow";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import { renderPitchClassSpellings } from "@/functions/renderPitchClassIpnSpellings";
-import { calculate12EdoReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
+import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
 import { getIpnReferenceNoteNameWithOctave } from "@/functions/getIpnReferenceNoteName";
 import useAppContext from "@/contexts/app-context";
 import PitchClass from "@/models/PitchClass";
@@ -163,7 +163,7 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
         if (!parsed) return;
 
         // Use the IPN reference MIDI note instead of the microtonal MIDI note
-        const referenceMidiNote = calculate12EdoReferenceMidiNote(pitchClass);
+        const referenceMidiNote = calculateIpnReferenceMidiNote(pitchClass);
 
         // Use the parsed note letter from the English name instead of MIDI conversion
         const noteLetter = parsed.letter;

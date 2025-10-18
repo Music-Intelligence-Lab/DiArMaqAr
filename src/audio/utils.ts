@@ -129,7 +129,7 @@ const MIDI_NOTE_NAMES = ["C♮", "C♯", "D♮", "D♯", "E♮", "F♮", "F♯",
  * @param octaveOffset Defaults to the English standard: 69 = A4. An offset of zero results in the French standard 69 = A5.
  * @returns String representation of the MIDI note number.
  */
-export function midiNoteNumberToName(noteNumber: number, octaveOffset = -1, accidentalStyle: AccidentalStyle = "ASCII") {
+export function midiNoteDecimalToName(noteNumber: number, octaveOffset = -1, accidentalStyle: AccidentalStyle = "ASCII") {
   const remainder = mmod(noteNumber, 12);
   const quotient = (noteNumber - remainder) / 12 + octaveOffset;
   const result = MIDI_NOTE_NAMES[remainder] + quotient.toString();
@@ -441,7 +441,7 @@ const ENHARMONICS = [
 ];
 
 // Find a set of Pythagorean enharmonics corresponding to a MIDI note number
-export function midiNoteNumberToEnharmonics(noteNumber: number, style: AccidentalStyle = "double", octaveOffset = -1) {
+export function midiNoteDecimalToEnharmonics(noteNumber: number, style: AccidentalStyle = "double", octaveOffset = -1) {
   const remainder = mmod(noteNumber, 12);
   const quotient = (noteNumber - remainder) / 12 + octaveOffset;
   const enharmonics = ENHARMONICS[remainder];

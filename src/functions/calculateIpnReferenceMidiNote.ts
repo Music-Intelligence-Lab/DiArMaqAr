@@ -19,15 +19,15 @@
  * - Closest: E4 (52)
  * - Deviation: 51.366 - 52 = -0.634 semitones = -63.4 cents
  *
- * @param pitchClass - Pitch class object with referenceNoteName and midiNoteNumber
+ * @param pitchClass - Pitch class object with referenceNoteName and midiNoteDecimal
  * @returns The 12-EDO reference MIDI note number
  */
-export function calculate12EdoReferenceMidiNote(pitchClass: any): number {
+export function calculateIpnReferenceMidiNote(pitchClass: any): number {
   const referenceNoteName = pitchClass.referenceNoteName;
   
   // Parse the reference note to get base note and accidental
   const baseNoteMatch = referenceNoteName?.match(/^([A-G])(#|b)?/);
-  let referenceMidiNote = Math.round(pitchClass.midiNoteNumber); // fallback
+  let referenceMidiNote = Math.round(pitchClass.midiNoteDecimal); // fallback
   
   if (baseNoteMatch) {
     const baseNote = baseNoteMatch[1];
@@ -44,7 +44,7 @@ export function calculate12EdoReferenceMidiNote(pitchClass: any): number {
     chroma = ((chroma % 12) + 12) % 12; // normalize to 0-11
     
     // Find the closest MIDI note with this chroma value
-    const currentMidi = pitchClass.midiNoteNumber;
+    const currentMidi = pitchClass.midiNoteDecimal;
     const currentOctave = Math.floor(currentMidi / 12);
     
     // Try current octave, one below, and one above
