@@ -1267,7 +1267,10 @@ export async function exportTuningSystem(
                 Object.entries(possibleMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins ? standardizeText(jins.name) : null])
               )
             : undefined,
-          suyur: maqamOverview.getSuyur(),
+          suyur: maqamOverview.getSuyur().map(sayr => ({
+            ...sayr,
+            version: sayr.version || maqamOverview.getVersion()
+          })),
           transposition: possibleMaqam.transposition,
           commentsEnglish: maqamOverview.getCommentsEnglish(),
           commentsArabic: maqamOverview.getCommentsArabic(),
@@ -1827,7 +1830,10 @@ export async function exportMaqam(
             Object.entries(convertedMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins ? standardizeText(jins.name) : null])
           )
         : undefined,
-      suyur: maqamData.getSuyur(),
+      suyur: maqamData.getSuyur().map(sayr => ({
+        ...sayr,
+        version: sayr.version || maqamData.getVersion()
+      })),
       transposition: maqamToExport.transposition,
       commentsEnglish: maqamData.getCommentsEnglish(),
       commentsArabic: maqamData.getCommentsArabic(),
