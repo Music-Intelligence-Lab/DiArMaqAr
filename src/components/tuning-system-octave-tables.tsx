@@ -89,6 +89,35 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
     }
   }, [selectedPitchClasses]);
 
+  // Ensure current value type is always checked, uncheck value types not in current tuning system
+  useEffect(() => {
+    if (selectedPitchClasses && selectedPitchClasses.length > 0) {
+      const currentValueType = selectedPitchClasses[0].originalValueType;
+      
+      // Collect all available value types in current tuning system
+      const availableValueTypes = new Set<string>();
+      selectedPitchClasses.forEach((pc) => {
+        availableValueTypes.add(pc.originalValueType);
+      });
+
+      setFilters((prev) => {
+        const updated = { ...prev };
+        
+        // Uncheck value types that aren't in the current tuning system
+        const valueTypeFilters = ['fraction', 'cents', 'decimalRatio', 'stringLength', 'fretDivision'];
+        valueTypeFilters.forEach((vt) => {
+          if (!availableValueTypes.has(vt)) {
+            updated[vt as keyof typeof updated] = false;
+          }
+        });
+        
+        // Always ensure current value type is checked
+        updated[currentValueType as keyof typeof updated] = true;
+        return updated;
+      });
+    }
+  }, [selectedPitchClasses, setFilters]);
+
   function getOctaveNoteName(octave: number, colIndex: number) {
     const idx = selectedIndices[colIndex];
     if (idx < 0) return "none";
@@ -605,6 +634,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
           {octave === 1 && openedOctaveRows[1] && (
             <span className="tuning-system-manager__filter-menu">
               {Object.keys(filters).map((filterKey) => {
+                const valueType = allPitchClasses && allPitchClasses.length > 0 ? allPitchClasses[0].originalValueType : null;
                 const isDisabled = filterKey === pitchClassType;
 
                 if (isDisabled) return null;
@@ -612,7 +642,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                 // Hide centsFromZero filters from tuning system octave tables
                 if (filterKey === 'centsFromZero') return null;
 
-                return (
+                const filterElement = (
                   <label
                     key={filterKey}
                     htmlFor={`filter-${filterKey}`}
@@ -640,6 +670,40 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                     </span>
                   </label>
                 );
+
+                // Add original value type checkbox after englishName
+                if (filterKey === "englishName" && valueType) {
+                  return (
+                    <React.Fragment key={`englishName-with-valuetype`}>
+                      {filterElement}
+                      <label
+                        key={`originalValue-${valueType}`}
+                        htmlFor={`filter-${valueType}`}
+                        className={`tuning-system-manager__filter-item ${filters[valueType as keyof typeof filters] ? "tuning-system-manager__filter-item_active" : ""}`}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <input
+                          id={`filter-${valueType}`}
+                          type="checkbox"
+                          className="tuning-system-manager__filter-checkbox"
+                          checked={filters[valueType as keyof typeof filters]}
+                          onChange={(e) => {
+                            e.stopPropagation();
+                            setFilters((prev) => ({
+                              ...prev,
+                              [valueType as keyof typeof filters]: e.target.checked,
+                            }));
+                          }}
+                        />
+                        <span className="tuning-system-manager__filter-label">
+                          {t(`filter.${valueType}`)}
+                        </span>
+                      </label>
+                    </React.Fragment>
+                  );
+                }
+
+                return filterElement;
               })}
             </span>
           )}
