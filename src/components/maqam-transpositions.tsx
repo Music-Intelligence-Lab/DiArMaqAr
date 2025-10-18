@@ -112,7 +112,7 @@ const MaqamTranspositions: React.FC = () => {
     return highlightedNotes.index === index && highlightedNotes.noteNames.includes(noteName);
   };
 
-  const disabledFilters = ["pitchClass"];
+  const disabledFilters: string[] = [];
 
   const { maqamTranspositions } = useTranspositionsContext();
 
@@ -126,6 +126,35 @@ const MaqamTranspositions: React.FC = () => {
   const [openTranspositions, setOpenTranspositions] = useState<string[]>([]);
   const [isToggling, setIsToggling] = useState<string | null>(null);
   const skipAutoOpenRef = useRef(false);
+
+  // Ensure current value type is always checked, uncheck value types not in current tuning system
+  useEffect(() => {
+    if (allPitchClasses && allPitchClasses.length > 0) {
+      const currentValueType = allPitchClasses[0].originalValueType;
+      
+      // Collect all available value types in current tuning system
+      const availableValueTypes = new Set<string>();
+      allPitchClasses.forEach((pc) => {
+        availableValueTypes.add(pc.originalValueType);
+      });
+
+      setFilters((prev) => {
+        const updated = { ...prev };
+        
+        // Uncheck value types that aren't in the current tuning system
+        const valueTypeFilters = ['fraction', 'cents', 'decimalRatio', 'stringLength', 'fretDivision'];
+        valueTypeFilters.forEach((vt) => {
+          if (!availableValueTypes.has(vt)) {
+            updated[vt as keyof typeof updated] = false;
+          }
+        });
+        
+        // Always ensure current value type is checked
+        updated[currentValueType as keyof typeof updated] = true;
+        return updated;
+      });
+    }
+  }, [allPitchClasses, setFilters]);
 
   // Toggle show details function (single-open mode: opening one closes all others)
   const toggleShowDetails = useCallback(
@@ -893,6 +922,7 @@ const MaqamTranspositions: React.FC = () => {
                   ))}
                 </tr>
               )}
+              {filters[valueType as keyof typeof filters] && (
               <tr data-row-type={valueType}>
                 <th scope="row" id={`maqam-${standardizeText(maqam.name)}-${ascending ? 'ascending' : 'descending'}-primaryValue-header`} className="maqam-jins-transpositions-shared__row-header maqam-jins-transpositions-shared__row-header--primary-value" data-column-type="row-header">{t(`maqam.${valueType}`)}</th>
                 <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type={valueType}>{pitchClasses[0].originalValue}</td>
@@ -904,6 +934,7 @@ const MaqamTranspositions: React.FC = () => {
                   </React.Fragment>
                 ))}
               </tr>
+              )}
               {valueType !== "fraction" && filters["fraction"] && (
                 <tr data-row-type="fraction">
                   <th scope="row" id={`maqam-${standardizeText(maqam.name)}-${ascending ? 'ascending' : 'descending'}-fraction-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.fraction")}</th>
@@ -1199,32 +1230,64 @@ const MaqamTranspositions: React.FC = () => {
 
                 if (disabledFilters.includes(filterKey)) return null;
 
+                const filterElement = (
+                  <label
+                    key={filterKey}
+                    htmlFor={`filter-${filterKey}`}
+                    className={`maqam-jins-transpositions-shared__filter-item ${filters[filterKey as keyof typeof filters] ? "maqam-jins-transpositions-shared__filter-item_active" : ""}`}
+                    // prevent the drawer (or parent) click handler from firing
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <input
+                      id={`filter-${filterKey}`}
+                      type="checkbox"
+                      className="maqam-jins-transpositions-shared__filter-checkbox"
+                      checked={filters[filterKey as keyof typeof filters]}
+                      disabled={isDisabled}
+                      onChange={(e) => {
+                        // still stop propagation so only the checkbox toggles
+                        e.stopPropagation();
+                        setFilters((prev) => ({
+                          ...prev,
+                          [filterKey as keyof typeof filters]: e.target.checked,
+                        }));
+                      }}
+                    />
+                    <span className="maqam-jins-transpositions-shared__filter-label">{t(`maqam.${filterKey}`)}</span>
+                  </label>
+                );
+
+                // Add original value type checkbox after englishName
+                if (filterKey === "englishName" && valueType) {
                   return (
-                    <label
-                      key={filterKey}
-                      htmlFor={`filter-${filterKey}`}
-                      className={`maqam-jins-transpositions-shared__filter-item ${filters[filterKey as keyof typeof filters] ? "maqam-jins-transpositions-shared__filter-item_active" : ""}`}
-                      // prevent the drawer (or parent) click handler from firing
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <input
-                        id={`filter-${filterKey}`}
-                        type="checkbox"
-                        className="maqam-jins-transpositions-shared__filter-checkbox"
-                        checked={filters[filterKey as keyof typeof filters]}
-                        disabled={isDisabled}
-                        onChange={(e) => {
-                          // still stop propagation so only the checkbox toggles
-                          e.stopPropagation();
-                          setFilters((prev) => ({
-                            ...prev,
-                            [filterKey as keyof typeof filters]: e.target.checked,
-                          }));
-                        }}
-                      />
-                      <span className="maqam-jins-transpositions-shared__filter-label">{t(`maqam.${filterKey}`)}</span>
-                    </label>
+                    <React.Fragment key={`englishName-with-valuetype`}>
+                      {filterElement}
+                      <label
+                        key={`originalValue-${valueType}`}
+                        htmlFor={`filter-${valueType}`}
+                        className={`maqam-jins-transpositions-shared__filter-item ${filters[valueType as keyof typeof filters] ? "maqam-jins-transpositions-shared__filter-item_active" : ""}`}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <input
+                          id={`filter-${valueType}`}
+                          type="checkbox"
+                          className="maqam-jins-transpositions-shared__filter-checkbox"
+                          checked={filters[valueType as keyof typeof filters]}
+                          onChange={(e) => {
+                            e.stopPropagation();
+                            setFilters((prev) => ({
+                              ...prev,
+                              [valueType as keyof typeof filters]: e.target.checked,
+                            }));
+                          }}
+                        />
+                        <span className="maqam-jins-transpositions-shared__filter-label">{t(`maqam.${valueType}`)}</span>
+                      </label>
+                    </React.Fragment>
                   );
+                }
+
+                return filterElement;
                 })}
               </div>
             </div>

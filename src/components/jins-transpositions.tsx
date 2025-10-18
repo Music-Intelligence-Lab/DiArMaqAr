@@ -41,7 +41,7 @@ export default function JinsTranspositions() {
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [jinsToExport, setJinsToExport] = useState<Jins | null>(null);
 
-  const disabledFilters = ["pitchClass"];
+  const disabledFilters: string[] = [];
 
   const handleJinsExport = (jins: Jins) => {
     setJinsToExport(jins);
@@ -71,6 +71,35 @@ export default function JinsTranspositions() {
   const scrollTimeoutRef = useRef<number | null>(null);
   const [openTranspositions, setOpenTranspositions] = useState<string[]>([]);
   const [isToggling, setIsToggling] = useState<string | null>(null);
+
+  // Ensure current value type is always checked, uncheck value types not in current tuning system
+  useEffect(() => {
+    if (allPitchClasses && allPitchClasses.length > 0) {
+      const currentValueType = allPitchClasses[0].originalValueType;
+      
+      // Collect all available value types in current tuning system
+      const availableValueTypes = new Set<string>();
+      allPitchClasses.forEach((pc) => {
+        availableValueTypes.add(pc.originalValueType);
+      });
+
+      setFilters((prev) => {
+        const updated = { ...prev };
+        
+        // Uncheck value types that aren't in the current tuning system
+        const valueTypeFilters = ['fraction', 'cents', 'decimalRatio', 'stringLength', 'fretDivision'];
+        valueTypeFilters.forEach((vt) => {
+          if (!availableValueTypes.has(vt)) {
+            updated[vt as keyof typeof updated] = false;
+          }
+        });
+        
+        // Always ensure current value type is checked
+        updated[currentValueType as keyof typeof updated] = true;
+        return updated;
+      });
+    }
+  }, [allPitchClasses, setFilters]);
 
   // Toggle show details function (single-open mode: opening one closes all others)
   const toggleShowDetails = useCallback(
@@ -594,6 +623,7 @@ export default function JinsTranspositions() {
                   ))}
                 </tr>
               )}
+              {filters[valueType as keyof typeof filters] && (
               <tr data-row-type={valueType}>
                 <th scope="row" id={`jins-${standardizeText(jins.name)}-primaryValue-header`} className="jins-transpositions__row-header jins-transpositions__row-header--primary-value" data-column-type="row-header">{t(`jins.${valueType}`)}</th>
                 <td className="jins-transpositions__table-cell--pitch-class" data-column-type={valueType}>{pitchClasses[0].originalValue}</td>
@@ -604,6 +634,7 @@ export default function JinsTranspositions() {
                   </React.Fragment>
                 ))}
               </tr>
+              )}
               {valueType !== "fraction" && filters["fraction"] && (
                 <tr data-row-type="fraction">
                   <th scope="row" id={`jins-${standardizeText(jins.name)}-fraction-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.fraction")}</th>
@@ -819,7 +850,7 @@ export default function JinsTranspositions() {
 
                 if (disabledFilters.includes(filterKey)) return null;
 
-                return (
+                const filterElement = (
                   <label
                     key={filterKey}
                     htmlFor={`filter-${filterKey}`}
@@ -845,7 +876,39 @@ export default function JinsTranspositions() {
                     <span className="jins-transpositions__filter-label">{t(`jins.${filterKey}`)}</span>
                   </label>
                 );
-              })}
+
+                // Add original value type checkbox after englishName
+                if (filterKey === "englishName" && valueType) {
+                  return (
+                    <React.Fragment key={`englishName-with-valuetype`}>
+                      {filterElement}
+                      <label
+                        key={`originalValue-${valueType}`}
+                        htmlFor={`filter-${valueType}`}
+                        className={`jins-transpositions__filter-item ${filters[valueType as keyof typeof filters] ? "jins-transpositions__filter-item_active" : ""}`}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <input
+                          id={`filter-${valueType}`}
+                          type="checkbox"
+                          className="jins-transpositions__filter-checkbox"
+                          checked={filters[valueType as keyof typeof filters]}
+                          onChange={(e) => {
+                            e.stopPropagation();
+                            setFilters((prev) => ({
+                              ...prev,
+                              [valueType as keyof typeof filters]: e.target.checked,
+                            }));
+                          }}
+                        />
+                        <span className="jins-transpositions__filter-label">{t(`jins.${valueType}`)}</span>
+                      </label>
+                    </React.Fragment>
+                  );
+                }
+
+                return filterElement;
+                })}
             </div>
           </div>
 

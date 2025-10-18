@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import useAppContext from "@/contexts/app-context";
 import useSoundContext, { defaultNoteVelocity } from "@/contexts/sound-context";
 import useLanguageContext from "@/contexts/language-context";
@@ -37,7 +37,36 @@ export default function SelectedPitchClassesAnalysis() {
     pitchClass: false,
   });
 
-  const disabledFilters = ["pitchClass"];
+  // Ensure current value type is always checked, uncheck value types not in current tuning system
+  useEffect(() => {
+    if (selectedPitchClasses && selectedPitchClasses.length > 0) {
+      const currentValueType = selectedPitchClasses[0].originalValueType;
+      
+      // Collect all available value types in current tuning system
+      const availableValueTypes = new Set<string>();
+      selectedPitchClasses.forEach((pc) => {
+        availableValueTypes.add(pc.originalValueType);
+      });
+
+      setLocalFilters((prev) => {
+        const updated = { ...prev };
+        
+        // Uncheck value types that aren't in the current tuning system
+        const valueTypeFilters = ['fraction', 'cents', 'decimalRatio', 'stringLength', 'fretDivision'];
+        valueTypeFilters.forEach((vt) => {
+          if (!availableValueTypes.has(vt)) {
+            updated[vt as keyof typeof updated] = false;
+          }
+        });
+        
+        // Always ensure current value type is checked
+        updated[currentValueType as keyof typeof updated] = true;
+        return updated;
+      });
+    }
+  }, [selectedPitchClasses]);
+
+  const disabledFilters: string[] = [];
 
   const copyTableToClipboard = async () => {
     try {
@@ -380,7 +409,7 @@ export default function SelectedPitchClassesAnalysis() {
 
                 if (disabledFilters.includes(filterKey)) return null;
 
-                return (
+                const filterElement = (
                   <label
                     key={filterKey}
                     className={`maqam-jins-transpositions-shared__filter-item ${
@@ -413,6 +442,45 @@ export default function SelectedPitchClassesAnalysis() {
                     </span>
                   </label>
                 );
+
+                // Add original value type checkbox after englishName
+                if (filterKey === "englishName" && valueType) {
+                  return (
+                    <React.Fragment key={`englishName-with-valuetype`}>
+                      {filterElement}
+                      <label
+                        key={`originalValue-${valueType}`}
+                        className={`maqam-jins-transpositions-shared__filter-item ${
+                          localFilters[valueType as keyof typeof localFilters] ? "maqam-jins-transpositions-shared__filter-item_active" : ""
+                        }`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setLocalFilters((prev) => ({
+                            ...prev,
+                            [valueType as keyof typeof localFilters]: !prev[valueType as keyof typeof localFilters],
+                          }));
+                        }}
+                      >
+                        <input
+                          type="checkbox"
+                          className="maqam-jins-transpositions-shared__filter-checkbox"
+                          checked={localFilters[valueType as keyof typeof localFilters]}
+                          onChange={() => {
+                            // Handled by label onClick to avoid scroll jump
+                          }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                          }}
+                        />
+                        <span className="maqam-jins-transpositions-shared__filter-label">
+                          {t(`filter.${valueType}`)}
+                        </span>
+                      </label>
+                    </React.Fragment>
+                  );
+                }
+
+                return filterElement;
               })}
             </div>
             
