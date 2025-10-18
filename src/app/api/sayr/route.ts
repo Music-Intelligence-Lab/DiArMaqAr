@@ -59,7 +59,7 @@ export async function POST(request: Request) {
       const successResponse = NextResponse.json({
         maqamId: maqam.id,
         maqamName: maqam.name,
-        suyūr: maqam.suyūr || []
+        suyur: maqam.suyur || []
       });
       return addCorsHeaders(successResponse);
     }
@@ -68,7 +68,7 @@ export async function POST(request: Request) {
       // Find all maqams that contain suyūr from the specified source
       const maqamsWithSource = maqamat
         .map((maqam: any) => {
-          const suyurFromSource = (maqam.suyūr || []).filter(
+          const suyurFromSource = (maqam.suyur || []).filter(
             (sayr: any) => sayr.sourceId === sourceId
           );
           
@@ -76,7 +76,7 @@ export async function POST(request: Request) {
             return {
               maqamId: maqam.id,
               maqamName: maqam.name,
-              suyūr: suyurFromSource
+              suyur: suyurFromSource
             };
           }
           return null;

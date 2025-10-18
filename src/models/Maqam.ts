@@ -16,7 +16,7 @@ export interface MaqamDataInterface {
   name: string;
   ascendingNoteNames: NoteName[];
   descendingNoteNames: NoteName[];
-  suyūr: Sayr[];
+  suyur: Sayr[];
   commentsEnglish: string;
   commentsArabic: string;
   sourcePageReferences: SourcePageReference[];
@@ -45,7 +45,7 @@ export interface MaqamDataInterface {
  *   descending sequences
  * - **Embedded ajnas analysis**: Algorithm identifies all possible ajnās patterns within
  *   both sequences using cents tolerance matching
- * - **Suyūr integration**: Traditional melodic development pathways defining performance practice
+ * - **suyur integration**: Traditional melodic development pathways defining performance practice
  * 
  * **Key Distinction**: MaqamData contains only note names (cultural/theoretical
  * identifiers), while the Maqam interface contains actual pitch classes with
@@ -74,11 +74,11 @@ export default class MaqamData {
   private descendingNoteNames: NoteName[];
   
   /** 
-   * Suyūr (traditional melodic development pathways).
+   * suyur (traditional melodic development pathways).
    * Define how the maqam unfolds in performance practice, including characteristic
    * progressions, emphasis points, and developmental patterns beyond basic sequences.
    */
-  private suyūr: Sayr[];
+  private suyur: Sayr[];
   
   /** English-language comments or description */
   private commentsEnglish: string;
@@ -102,7 +102,7 @@ export default class MaqamData {
    * @param name - Name of the maqam (e.g., "Maqam Farahfazza")
    * @param ascendingNoteNames - Ascending sequence (ṣuʿūd) of note names
    * @param descendingNoteNames - Descending sequence (hubūṭ) of note names
-   * @param suyūr - Traditional melodic development pathways
+   * @param suyur - Traditional melodic development pathways
    * @param commentsEnglish - English description or comments
    * @param commentsArabic - Arabic description or comments
    * @param sourcePageReferences - References to source documents
@@ -113,7 +113,7 @@ export default class MaqamData {
     name: string,
     ascendingNoteNames: NoteName[],
     descendingNoteNames: NoteName[],
-    suyūr: Sayr[],
+    suyur: Sayr[],
     commentsEnglish: string,
     commentsArabic: string,
     sourcePageReferences: SourcePageReference[],
@@ -124,7 +124,7 @@ export default class MaqamData {
     this.name = name;
     this.ascendingNoteNames = ascendingNoteNames;
     this.descendingNoteNames = descendingNoteNames;
-    this.suyūr = suyūr;
+    this.suyur = suyur;
     this.commentsEnglish = commentsEnglish;
     this.commentsArabic = commentsArabic;
     this.sourcePageReferences = sourcePageReferences;
@@ -179,16 +179,16 @@ export default class MaqamData {
   }
 
   /**
-   * Gets the suyūr (traditional melodic development pathways).
+   * Gets the suyur (traditional melodic development pathways).
    * 
-   * Suyūr define how the maqam unfolds in performance practice, going beyond
+   * suyur define how the maqam unfolds in performance practice, going beyond
    * basic ascending/descending sequences to describe characteristic progressions,
    * emphasis points, and developmental patterns.
    * 
    * @returns Array of sayr objects
    */
-  getSuyūr(): Sayr[] {
-    return this.suyūr;
+  getSuyur(): Sayr[] {
+    return this.suyur;
   }
 
   /**
@@ -294,7 +294,7 @@ export default class MaqamData {
    * - Actual frequency values for both sequences
    * - Intervallic relationships between consecutive pitches in both directions
    * - Playable musical content with directional characteristics
-   * - Foundation for embedded ajnas analysis and suyūr transposition
+   * - Foundation for embedded ajnas analysis and suyur transposition
    * 
    * The resulting Maqam represents the "tahlil" (original/root form) of the maqam,
    * as opposed to "taswir" (transpositions) which would start from different
@@ -320,22 +320,22 @@ export default class MaqamData {
   }
 
   /**
-   * Creates a copy of this maqam with new suyūr pathways.
+   * Creates a copy of this maqam with new suyur pathways.
    * 
-   * This method preserves all other properties while allowing for suyūr
+   * This method preserves all other properties while allowing for suyur
    * modifications, useful for exploring different performance traditions
    * or creating variants with alternative melodic development patterns.
    * 
-   * @param newSuyūr - New suyūr pathways to use in the copy
-   * @returns New MaqamData instance with updated suyūr
+   * @param newsuyur - New suyur pathways to use in the copy
+   * @returns New MaqamData instance with updated suyur
    */
-  createMaqamWithNewSuyūr(newSuyūr: Sayr[]): MaqamData {
+  createMaqamWithNewSuyur(newsuyur: Sayr[]): MaqamData {
     return new MaqamData(
       this.id,
       this.name,
       this.ascendingNoteNames,
       this.descendingNoteNames,
-      newSuyūr,
+      newsuyur,
       this.commentsEnglish,
       this.commentsArabic,
       this.sourcePageReferences
@@ -354,7 +354,7 @@ export default class MaqamData {
       this.name,
       this.ascendingNoteNames,
       this.descendingNoteNames,
-      this.suyūr,
+      this.suyur,
       this.commentsEnglish,
       this.commentsArabic,
       newSourcePageReferences
@@ -373,7 +373,7 @@ export default class MaqamData {
       name: this.name,
       ascendingNoteNames: this.ascendingNoteNames,
       descendingNoteNames: this.descendingNoteNames,
-      suyūr: this.suyūr,
+      suyur: this.suyur,
       commentsEnglish: this.commentsEnglish,
       commentsArabic: this.commentsArabic,
       sourcePageReferences: this.sourcePageReferences,
@@ -384,7 +384,7 @@ export default class MaqamData {
 /**
  * Represents a structured melodic development pathway (sayr) within a maqam.
  * 
- * Suyūr (plural of sayr) represent traditional melodic development pathways that
+ * suyur (plural of sayr) represent traditional melodic development pathways that
  * define how a maqam unfolds in performance practice, going beyond basic ascending
  * and descending sequences to describe characteristic melodic progressions,
  * emphasis points, and developmental patterns. When a maqām is transposed, the
@@ -461,7 +461,7 @@ export interface SayrStop {
  *   within both ascending and descending sequences using cents tolerance matching
  * - **Automatic transposition**: Both sequences and embedded ajnas are systematically
  *   transposed while maintaining authentic intervallic structure
- * - **Suyūr integration**: Associated melodic development pathways are automatically
+ * - **suyur integration**: Associated melodic development pathways are automatically
  *   transposed with note name conversion and jins/maqam reference adjustment
  * 
  * The transposition algorithm separately processes both sequences, ensuring all

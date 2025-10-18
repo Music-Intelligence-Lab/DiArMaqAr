@@ -64,7 +64,7 @@ function computeAnalyticsForSystem(tuningSystem: TuningSystem, allAjnas: ReturnT
     for (const maqamData of allMaqamat) {
       if (maqamData.isMaqamPossible(allPitchClasses.map((pc) => pc.noteName))) {
         possibleMaqamat.push(maqamData);
-        totalSuyur += maqamData.getSuyūr().length;
+        totalSuyur += maqamData.getSuyur().length;
         calculateMaqamTranspositions(allPitchClasses, allAjnas, maqamData, false).forEach((transposition) => {
           possibleMaqamatTrans.push(transposition);
           totalAjnasMod += calculateNumberOfModulations(modulate(allPitchClasses, allAjnas, allMaqamat, transposition, true));

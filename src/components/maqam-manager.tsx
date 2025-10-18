@@ -140,7 +140,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
       selectedMaqamData.getName(),
       selectedCellNoteNames,
       descendingNames,
-      selectedMaqamData.getSuyūr(),
+      selectedMaqamData.getSuyur(),
       commentsEnglishLocal,
       commentsArabicLocal,
       selectedMaqamData.getSourcePageReferences(),
@@ -157,7 +157,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
       selectedMaqamData.getName(),
       selectedMaqamData.getAscendingNoteNames(),
       [...selectedCellNoteNames].reverse(),
-      selectedMaqamData.getSuyūr(),
+      selectedMaqamData.getSuyur(),
       commentsEnglishLocal,
       commentsArabicLocal,
       selectedMaqamData.getSourcePageReferences(),
@@ -356,7 +356,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
                     e.target.value,
                     selectedMaqamData.getAscendingNoteNames(),
                     selectedMaqamData.getDescendingNoteNames(),
-                    selectedMaqamData.getSuyūr(),
+                    selectedMaqamData.getSuyur(),
                     selectedMaqamData.getCommentsEnglish(), // comments unchanged
                     selectedMaqamData.getCommentsArabic(),
                     selectedMaqamData.getSourcePageReferences()
@@ -374,7 +374,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
                   selectedMaqamData.getName(),
                   selectedMaqamData.getAscendingNoteNames(),
                   selectedMaqamData.getDescendingNoteNames(),
-                  selectedMaqamData.getSuyūr(),
+                  selectedMaqamData.getSuyur(),
                   commentsEnglishLocal,
                   commentsArabicLocal,
                   selectedMaqamData.getSourcePageReferences()

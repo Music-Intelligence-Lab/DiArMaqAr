@@ -304,7 +304,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
       if (maqamSayrId) {
         let found = false;
-        for (const sayrId of maqamData.getSuyūr().map((sayr) => sayr.id)) {
+        for (const sayrId of maqamData.getSuyur().map((sayr) => sayr.id)) {
           if (sayrId === maqamSayrId) {
             found = true;
             break;

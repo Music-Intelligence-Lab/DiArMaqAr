@@ -40,7 +40,7 @@ export default function Navbar() {
   const selectedSayr: Sayr | null =
     selectedMaqamData && maqamSayrId
       ? selectedMaqamData
-          .getSuyūr()
+          .getSuyur()
           .find((sayr) => sayr.id === maqamSayrId) || null
       : null;
 
@@ -285,7 +285,7 @@ export default function Navbar() {
           >
             <span className="navbar__bottom-bar-item_tab-title">
               {selectedMaqamData
-                ? `${t('tabs.suyur')} (${selectedMaqamData.getSuyūr().length})`
+                ? `${t('tabs.suyur')} (${selectedMaqamData.getSuyur().length})`
                 : t('tabs.suyur')}{" "}
               <br />
             </span>
