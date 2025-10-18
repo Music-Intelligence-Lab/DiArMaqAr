@@ -195,6 +195,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
   const handleSave = async (e: FormEvent) => {
     e.preventDefault();
     const idUse = `Sayr ${sourceId}`;
+
     const newSayr: Sayr = {
       id: idUse,
       creatorEnglish,
@@ -204,14 +205,20 @@ export default function SayrManager({ admin }: { admin: boolean }) {
       commentsEnglish,
       commentsArabic,
       stops,
+      version: new Date().toISOString(), // Always update sayr version on save
     };
-    const updated = existingSuyūr.some((s) => s.id === idUse) ? existingSuyūr.map((s) => (s.id === idUse ? newSayr : s)) : [...existingSuyūr, newSayr];
+
+    // Update suyūr list: if exists replace it, otherwise add it
+    const updated = existingSuyūr.some((s) => s.id === idUse)
+      ? existingSuyūr.map((s) => (s.id === idUse ? newSayr : s))
+      : [...existingSuyūr, newSayr];
+
     const updatedMaqam = selectedMaqamData.createMaqamWithNewSuyūr(updated);
     setSelectedMaqamData(updatedMaqam);
     setMaqamSayrId(idUse);
 
     const others = maqamat.filter((m) => m.getId() !== updatedMaqam.getId());
-    await updateMaqamat([...others, updatedMaqam]);
+    await updateMaqamat([...others, updatedMaqam], [updatedMaqam.getId()]);
     setMaqamat([...others, updatedMaqam]);
   };
 
@@ -223,7 +230,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
     setMaqamSayrId("");
 
     const others = maqamat.filter((m) => m.getId() !== updatedMaqam.getId());
-    await updateMaqamat([...others, updatedMaqam]);
+    await updateMaqamat([...others, updatedMaqam], [updatedMaqam.getId()]);
     setMaqamat([...others, updatedMaqam]);
   };
 

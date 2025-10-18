@@ -179,7 +179,8 @@
     "referenceFrequencies": {
       "yegāh": 97.999,
       "ʿushayrān": 110
-    }
+    },
+    "version": "2025-10-18T19:42:23.643Z"
   },
   {
     "id": "al-Kindi-(874)",
@@ -301,7 +302,8 @@
     "referenceFrequencies": {
       "yegāh": 97.999,
       "ʿushayrān": 110
-    }
+    },
+    "version": "2025-10-18T19:42:23.643Z"
   },
   {
     "id": "Anglo-European-(1700)",
@@ -387,7 +389,8 @@
     "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
       "ʿushayrān": 110
-    }
+    },
+    "version": "2025-10-18T19:42:23.643Z"
   },
   {
     "id": "al-Dik-(1926a)",
@@ -538,7 +541,8 @@
     "defaultReferenceFrequency": 97.999,
     "referenceFrequencies": {
       "yegāh": 97.999
-    }
+    },
+    "version": "2025-10-18T19:42:23.643Z"
   },
   {
     "id": "al-Dik-(1926b)",
@@ -655,7 +659,8 @@
     "referenceFrequencies": {
       "yegāh": 97.999,
       "ʿushayrān": 110
-    }
+    },
+    "version": "2025-10-18T19:42:23.643Z"
   },
   {
     "id": "CairoCongressTuningCommittee-(1932a)",
@@ -807,7 +812,8 @@
     "referenceFrequencies": {
       "yegāh": 97.999,
       "ʿushayrān": 110
-    }
+    },
+    "version": "2025-10-18T19:42:23.643Z"
   },
   {
     "id": "CairoCongressTuningCommittee-(1932b)",
@@ -958,7 +964,8 @@
     "defaultReferenceFrequency": 97.999,
     "referenceFrequencies": {
       "yegāh": 97.999
-    }
+    },
+    "version": "2025-10-18T19:42:23.643Z"
   },
   {
     "id": "al-Ladhiqi-(1495)",
@@ -1102,7 +1109,8 @@
     "referenceFrequencies": {
       "yegāh": 97.999,
       "ʿushayrān": 110
-    }
+    },
+    "version": "2025-10-18T19:42:23.643Z"
   },
   {
     "id": "al-Farabi-(950i)",
@@ -1246,7 +1254,8 @@
     "referenceFrequencies": {
       "yegāh": 97.999,
       "ʿushayrān": 110
-    }
+    },
+    "version": "2025-10-18T19:42:23.643Z"
   },
   {
     "id": "Allami-(2022)",
@@ -1425,7 +1434,8 @@
     "referenceFrequencies": {
       "yegāh": 97.999,
       "ʿushayrān": 110
-    }
+    },
+    "version": "2025-10-18T19:42:23.643Z"
   },
   {
     "id": "Anglo-European-(1800)",
@@ -1622,7 +1632,8 @@
     "referenceFrequencies": {
       "yegāh": 97.999,
       "ʿushayrān": 110
-    }
+    },
+    "version": "2025-10-18T19:42:23.643Z"
   },
   {
     "id": "al-Farabi-(950g)",
@@ -1807,7 +1818,8 @@
     "referenceFrequencies": {
       "yegāh": 97.999,
       "ʿushayrān": 110
-    }
+    },
+    "version": "2025-10-18T19:42:23.643Z"
   },
   {
     "id": "IbnSina-(1037)",
@@ -1955,7 +1967,8 @@
     "referenceFrequencies": {
       "yegāh": 97.999,
       "ʿushayrān": 110
-    }
+    },
+    "version": "2025-10-18T19:42:23.643Z"
   },
   {
     "id": "Ishaqal-Mawsili-(850)",
@@ -1972,7 +1985,7 @@
     ],
     "creatorEnglish": "Isḥāq al-Mawṣilī",
     "creatorArabic": "الموصلي, اسحاق",
-    "commentsEnglish": "TEST ",
+    "commentsEnglish": "TESTING VERSION TIMESTAMP",
     "commentsArabic": "",
     "tuningSystemPitchClasses": [
       "1/1",
@@ -2058,7 +2071,8 @@
     "referenceFrequencies": {
       "yegāh": 97.999,
       "ʿushayrān": 110
-    }
+    },
+    "version": "2025-10-18T19:43:01.864Z"
   },
   {
     "id": "CairoCongressTuningCommittee-(1929)",
@@ -2244,7 +2258,8 @@
     "referenceFrequencies": {
       "yegāh": 97.999,
       "rāst": 130.665
-    }
+    },
+    "version": "2025-10-18T19:42:23.643Z"
   },
   {
     "id": "al-KhuliandRagheb-(1904)",
@@ -2395,7 +2410,8 @@
     "defaultReferenceFrequency": 97.999,
     "referenceFrequencies": {
       "yegāh": 97.999
-    }
+    },
+    "version": "2025-10-18T19:42:23.643Z"
   },
   {
     "id": "IbnMunajjim-(912)",
@@ -2484,7 +2500,8 @@
     "referenceFrequencies": {
       "yegāh": 97.999,
       "ʿushayrān": 110
-    }
+    },
+    "version": "2025-10-18T19:42:23.643Z"
   },
   {
     "id": "al-Urmawi-(1294a)",
@@ -2614,7 +2631,8 @@
     "referenceFrequencies": {
       "yegāh": 97.999,
       "ʿushayrān": 110
-    }
+    },
+    "version": "2025-10-18T19:42:23.643Z"
   },
   {
     "id": "Allami-(2024)",
@@ -2760,7 +2778,8 @@
     "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
       "ʿushayrān": 110
-    }
+    },
+    "version": "2025-10-18T19:42:23.643Z"
   },
   {
     "id": "al-Urmawi-(1294b)",
@@ -2879,7 +2898,8 @@
     "referenceFrequencies": {
       "yegāh": 97.999,
       "ʿushayrān": 110
-    }
+    },
+    "version": "2025-10-18T19:42:23.643Z"
   },
   {
     "id": "Meshshaqa-(1899)",
@@ -3006,7 +3026,8 @@
     "defaultReferenceFrequency": 97.999,
     "referenceFrequencies": {
       "yegāh": 97.999
-    }
+    },
+    "version": "2025-10-18T19:42:23.643Z"
   },
   {
     "id": "al-Farabi-(950a)",
@@ -3140,7 +3161,8 @@
     "referenceFrequencies": {
       "yegāh": 97.999,
       "ʿushayrān": 110
-    }
+    },
+    "version": "2025-10-18T19:42:23.643Z"
   },
   {
     "id": "al-Farabii-(950c)",
@@ -3247,7 +3269,8 @@
     "referenceFrequencies": {
       "yegāh": 97.999,
       "ʿushayrān": 110
-    }
+    },
+    "version": "2025-10-18T19:42:23.643Z"
   },
   {
     "id": "al-Farabi-(950b)",
@@ -3359,7 +3382,8 @@
     "referenceFrequencies": {
       "yegāh": 97.999,
       "ʿushayrān": 110
-    }
+    },
+    "version": "2025-10-18T19:42:23.643Z"
   },
   {
     "id": "al-Farabi-(950d)",
@@ -3471,7 +3495,8 @@
     "referenceFrequencies": {
       "yegāh": 97.999,
       "ʿushayrān": 110
-    }
+    },
+    "version": "2025-10-18T19:42:23.643Z"
   },
   {
     "id": "al-Farabi-(950f)",
@@ -3578,7 +3603,8 @@
     "referenceFrequencies": {
       "yegāh": 97.999,
       "ʿushayrān": 110
-    }
+    },
+    "version": "2025-10-18T19:42:23.643Z"
   },
   {
     "id": "al-Farabi-(950e)",
@@ -3690,7 +3716,8 @@
     "referenceFrequencies": {
       "yegāh": 97.999,
       "ʿushayrān": 110
-    }
+    },
+    "version": "2025-10-18T19:42:23.643Z"
   },
   {
     "id": "al-Farabi-(950h)",
@@ -3862,7 +3889,8 @@
     "referenceFrequencies": {
       "yegāh": 97.999,
       "ʿushayrān": 110
-    }
+    },
+    "version": "2025-10-18T19:42:23.643Z"
   },
   {
     "id": "MashrafaandMukhtar-(1944)",
@@ -3983,7 +4011,8 @@
       "yegāh": 97.999,
       "ʿushayrān": 110,
       "rāst": 130.665
-    }
+    },
+    "version": "2025-10-18T19:42:23.643Z"
   },
   {
     "id": "al-Sabbagh-(1950)",
@@ -4132,7 +4161,8 @@
       "yegāh": 97.999,
       "ʿushayrān": 110,
       "rāst": 130.665
-    }
+    },
+    "version": "2025-10-18T19:42:23.643Z"
   },
   {
     "id": "al-Laythi-(1965)",
@@ -4245,7 +4275,8 @@
       "yegāh": 97.999,
       "ʿushayrān": 110,
       "rāst": 130.665
-    }
+    },
+    "version": "2025-10-18T19:42:23.643Z"
   },
   {
     "id": "al-Sabbagh-(1954)",
@@ -4372,7 +4403,8 @@
     "defaultReferenceFrequency": 130.665,
     "referenceFrequencies": {
       "rāst": 130.665
-    }
+    },
+    "version": "2025-10-18T19:42:23.643Z"
   },
   {
     "id": "Allami-(2025)",
@@ -4519,7 +4551,8 @@
     "defaultReferenceFrequency": 130.665,
     "referenceFrequencies": {
       "rāst": 130.6653
-    }
+    },
+    "version": "2025-10-18T19:42:23.643Z"
   },
   {
     "id": "al-Farabi-(950aa)",
@@ -4676,6 +4709,7 @@
       "yegāh": 97.999,
       "ʿushayrān": 110,
       "rāst": 130.665
-    }
+    },
+    "version": "2025-10-18T19:42:23.643Z"
   }
 ]

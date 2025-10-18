@@ -401,14 +401,15 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         Number(tuningSystemStringLength),
         referenceFrequencies,
         Number(defaultReferenceFrequency),
-        true
+        true,
+        selectedTuningSystem.getVersion()
       );
       const updatedList = selectedTuningSystem.isSaved()
         ? tuningSystems.map((ts) =>
             ts.getId() === selectedTuningSystem.getId() ? updated : ts
           )
         : [...tuningSystems, updated];
-      updateTuningSystems(updatedList);
+      updateTuningSystems(updatedList, [updated.getId()]);
       setTuningSystems(updatedList);
       setSelectedTuningSystem(updated);
       clearSelections();
@@ -434,7 +435,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         true
       );
       const updatedList = [...tuningSystems, newSystem];
-      updateTuningSystems(updatedList);
+      updateTuningSystems(updatedList, [newSystem.getId()]);
       setTuningSystems(updatedList);
       setSelectedTuningSystem(newSystem);
     }

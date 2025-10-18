@@ -22,24 +22,29 @@
 export default class Pattern {
   /** Unique identifier for the pattern */
   private id: string;
-  
+
   /** Human-readable name of the pattern */
   private name: string;
-  
+
   /** Array of notes that make up this pattern */
   private notes: PatternNote[];
 
+  /** ISO 8601 timestamp of last modification */
+  private version!: string;
+
   /**
    * Creates a new Pattern instance.
-   * 
+   *
    * @param id - Unique identifier for this pattern
    * @param name - Human-readable name for this pattern
    * @param notes - Array of PatternNote objects that define the melodic sequence
+   * @param version - ISO 8601 timestamp of last modification (defaults to current time)
    */
-  constructor(id: string, name: string, notes: PatternNote[]) {
+  constructor(id: string, name: string, notes: PatternNote[], version?: string) {
     this.id = id;
     this.name = name;
     this.notes = notes;
+    this.version = version || new Date().toISOString();
   }
 
   /**
@@ -62,7 +67,7 @@ export default class Pattern {
 
   /**
    * Gets the array of notes that make up this pattern.
-   * 
+   *
    * @returns Array of PatternNote objects
    */
   getNotes(): PatternNote[] {
@@ -70,11 +75,29 @@ export default class Pattern {
   }
 
   /**
+   * Gets the version timestamp of this pattern.
+   *
+   * @returns ISO 8601 timestamp string
+   */
+  getVersion(): string {
+    return this.version;
+  }
+
+  /**
+   * Sets the version timestamp of this pattern.
+   *
+   * @param version - ISO 8601 timestamp string
+   */
+  setVersion(version: string): void {
+    this.version = version;
+  }
+
+  /**
    * Converts the pattern to a JSON-serializable object.
-   * 
+   *
    * This method is useful for saving patterns to files, sending them over
    * network requests, or storing them in databases.
-   * 
+   *
    * @returns A plain object representation of the pattern
    */
   convertToJSON() {
@@ -82,6 +105,7 @@ export default class Pattern {
       id: this.id,
       name: this.name,
       notes: this.notes,
+      version: this.version,
     };
   }
 }

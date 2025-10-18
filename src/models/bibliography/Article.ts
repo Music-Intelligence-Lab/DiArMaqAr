@@ -82,7 +82,8 @@ export default class Article extends AbstractSource {
     pageRangeArabic: string,
     DOI: string,
     url: string,
-    dateAccessed: string
+    dateAccessed: string,
+    version?: string
   ) {
     super(
       id,
@@ -95,7 +96,8 @@ export default class Article extends AbstractSource {
       publicationDateEnglish,
       publicationDateArabic,
       url,
-      dateAccessed
+      dateAccessed,
+      version
     );
     this.journalEnglish = journalEnglish;
     this.journalArabic = journalArabic;
@@ -241,7 +243,8 @@ export default class Article extends AbstractSource {
       json.pageRangeArabic,
       json.DOI,
       json.url,
-      json.dateAccessed
+      json.dateAccessed,
+      json.version
     );
   }
 }

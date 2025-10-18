@@ -77,7 +77,8 @@ export default class Thesis extends AbstractSource {
     databaseIdentifier: string,
     databaseName: string,
     url: string,
-    dateAccessed: string
+    dateAccessed: string,
+    version?: string
   ) {
     super(
       id,
@@ -90,7 +91,8 @@ export default class Thesis extends AbstractSource {
       publicationDateEnglish,
       publicationDateArabic,
       url,
-      dateAccessed
+      dateAccessed,
+      version
     );
 
     this.degreeTypeEnglish = degreeTypeEnglish;
@@ -230,7 +232,8 @@ export default class Thesis extends AbstractSource {
       json.databaseIdentifier || "",
       json.databaseName || "",
       json.url || "",
-      json.dateAccessed || ""
+      json.dateAccessed || "",
+      json.version
     );
   }
 }

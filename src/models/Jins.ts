@@ -18,6 +18,7 @@ export interface JinsDataInterface {
   commentsArabic: string;
   SourcePageReferences: SourcePageReference[];
   numberOfTranspositions?: number;
+  version?: string;
 }
 
 /**
@@ -40,37 +41,41 @@ export interface JinsDataInterface {
 export default class JinsData {
   /** Unique identifier for this jins */
   private id: string;
-  
+
   /** Unique identifier for this jins */
   private idName: string;
   /** Name of the jins (e.g., "Jins Kurd", "Jins Hijaz") */
   private name: string;
-  
-  /** 
+
+  /**
    * Array of note names that define this jins.
    * These are cultural/theoretical identifiers (dūgāh, kurdī, etc.)
    * without any connection to specific frequencies or tuning systems.
    */
   private noteNames: NoteName[];
-  
+
   /** English-language comments or description */
   private commentsEnglish: string;
-  
+
   /** Arabic-language comments or description */
   private commentsArabic: string;
-  
+
   /** References to source documents where this jins is documented */
   private SourcePageReferences: SourcePageReference[];
 
+  /** ISO 8601 timestamp of last modification */
+  private version!: string;
+
   /**
    * Creates a new JinsData instance with abstract note names.
-   * 
+   *
    * @param id - Unique identifier for this jins
    * @param name - Name of the jins (e.g., "Jins Kurd")
    * @param noteNames - Array of note name strings (not yet typed as NoteName)
    * @param commentsEnglish - English description or comments
    * @param commentsArabic - Arabic description or comments
    * @param SourcePageReferences - References to source documents
+   * @param version - ISO 8601 timestamp of last modification (defaults to current time)
    */
   constructor(
     id: string,
@@ -78,7 +83,8 @@ export default class JinsData {
     noteNames: string[],
     commentsEnglish: string,
     commentsArabic: string,
-    SourcePageReferences: SourcePageReference[]
+    SourcePageReferences: SourcePageReference[],
+    version?: string
   ) {
     this.id = id;
     this.idName = standardizeText(name);
@@ -87,6 +93,7 @@ export default class JinsData {
     this.commentsEnglish = commentsEnglish;
     this.commentsArabic = commentsArabic;
     this.SourcePageReferences = SourcePageReferences;
+    this.version = version || new Date().toISOString();
   }
 
   /**
@@ -149,11 +156,29 @@ export default class JinsData {
 
   /**
    * Gets the source page references for this jins.
-   * 
+   *
    * @returns Array of source page references
    */
   getSourcePageReferences(): SourcePageReference[] {
     return this.SourcePageReferences;
+  }
+
+  /**
+   * Gets the version timestamp of this jins.
+   *
+   * @returns ISO 8601 timestamp string
+   */
+  getVersion(): string {
+    return this.version;
+  }
+
+  /**
+   * Sets the version timestamp of this jins.
+   *
+   * @param version - ISO 8601 timestamp string
+   */
+  setVersion(version: string): void {
+    this.version = version;
   }
 
   /**
@@ -177,12 +202,12 @@ export default class JinsData {
 
   /**
    * Creates a copy of this jins with new source page references.
-   * 
+   *
    * @param newSourcePageReferences - New source page references to use
    * @returns New JinsData instance with updated references
    */
   createJinsWithNewSourcePageReferences(newSourcePageReferences: SourcePageReference[]): JinsData {
-    return new JinsData(this.id, this.name, this.noteNames, this.commentsEnglish, this.commentsArabic, newSourcePageReferences);
+    return new JinsData(this.id, this.name, this.noteNames, this.commentsEnglish, this.commentsArabic, newSourcePageReferences, this.version);
   }
 
   /**
@@ -218,7 +243,7 @@ export default class JinsData {
 
   /**
    * Converts this JinsData to a plain object for JSON serialization.
-   * 
+   *
    * @returns Plain object representation suitable for JSON storage
    */
   convertToObject(): JinsDataInterface {
@@ -230,6 +255,7 @@ export default class JinsData {
       commentsEnglish: this.commentsEnglish,
       commentsArabic: this.commentsArabic,
       SourcePageReferences: this.SourcePageReferences,
+      version: this.version,
     };
   }
 }
