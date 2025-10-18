@@ -1,7 +1,34 @@
+/**
+ * Note Name Mappings Module
+ * 
+ * Provides bidirectional mapping between Arabic transliterated note names and
+ * International Pitch Notation (IPN) equivalents across all four octaves.
+ * 
+ * This module serves as the canonical reference for converting between the culturally-specific
+ * Arabic note nomenclature (rāst, dūgāh, segāh, etc.) and their Western pitch notation equivalents
+ * (G2, A2, B-b2, etc.). The mappings are organized by octave to support the four-octave system
+ * used throughout the platform.
+ * 
+ * **Octave Organization:**
+ * - Octave 0 (qarār): Lower octave, MIDI range ~G1-G2
+ * - Octave 1 (ʿushayrān): Primary octave, MIDI range ~G2-G3
+ * - Octave 2 (jawāb): Second octave, MIDI range ~G3-G4
+ * - Octave 3 (jawāb jawāb): Upper octave, MIDI range ~G4-G5
+ * 
+ * **Musicological Note:**
+ * IPN spellings (e.g., E-b for "half-flat E") follow Arabic maqām theory logic where
+ * microtonal modifiers indicate what the pitch is a variant OF, not mathematical
+ * proximity to 12-EDO semitones. For example, E-b is a variant of E natural, not Eb.
+ */
+
 // NoteNameMappings.ts
 import { octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames, octaveThreeNoteNames, octaveFourNoteNames } from "../models/NoteName";
 
-// 1. Define the parallel English-note arrays:
+/**
+ * International Pitch Notation equivalents for qarār (lower) octave notes.
+ * Maps to octaveZeroNoteNames from NoteName model.
+ * Range: ~G1 to G2 (MIDI 31-43)
+ */
 const englishOctaveZero = [
   "G1",
   "G-#1",
@@ -42,6 +69,12 @@ const englishOctaveZero = [
   "G-2",
 ];
 
+/**
+ * International Pitch Notation equivalents for ʿushayrān (primary/first) octave notes.
+ * Maps to octaveOneNoteNames from NoteName model.
+ * Range: ~G2 to G3 (MIDI 43-55)
+ * This is the primary octave used in most Arabic maqām theory.
+ */
 const englishOctaveOne = [
   "G2",
   "G-#2",
@@ -82,6 +115,11 @@ const englishOctaveOne = [
   "G-3",
 ];
 
+/**
+ * International Pitch Notation equivalents for jawāb (second) octave notes.
+ * Maps to octaveTwoNoteNames from NoteName model.
+ * Range: ~G3 to G4 (MIDI 55-67)
+ */
 const englishOctaveTwo = [
   "G3",
   "G-#3",
@@ -122,6 +160,11 @@ const englishOctaveTwo = [
   "G-4",
 ];
 
+/**
+ * International Pitch Notation equivalents for jawāb jawāb (upper/third) octave notes.
+ * Maps to octaveThreeNoteNames from NoteName model.
+ * Range: ~G4 to G5 (MIDI 67-79)
+ */
 const englishOctaveThree = [
   "G4",
   "G-#4",
@@ -162,6 +205,12 @@ const englishOctaveThree = [
   "G-5",
 ];
 
+/**
+ * International Pitch Notation equivalents for the extended fourth octave notes.
+ * Maps to octaveFourNoteNames from NoteName model.
+ * Range: ~G5 to G6 (MIDI 79-91)
+ * This octave extends beyond traditional Arabic maqām theory for broader instrument compatibility.
+ */
 const englishOctaveFour = [
   "G5",
   "G-#5",
@@ -216,7 +265,12 @@ function makeMap(arabic: string[], english: string[]) {
   return Object.fromEntries(arabic.map((a, i) => [a, english[i]]));
 }
 
-// 3. Build the single mapping by merging all four octaves:
+/**
+ * Complete bidirectional mapping from Arabic note names to International Pitch Notation.
+ * Combines all four octaves (qarār, ʿushayrān, jawāb, jawāb jawāb) into a single lookup table.
+ * 
+ * Used by conversion functions to translate between cultural nomenclature systems.
+ */
 const arabicToEnglishNoteMapping = {
   ...makeMap(octaveZeroNoteNames, englishOctaveZero),
   ...makeMap(octaveOneNoteNames, englishOctaveOne),
@@ -236,20 +290,31 @@ function splitEnglishNoteName(englishNoteName: string) {
 }
 
 /**
- * Converts an Arabic note name to its corresponding English note name.
- *
- * This function provides a mapping from Arabic musical note names to
- * their Western equivalent note names. It's essential for cross-cultural
- * music theory communication and display purposes in the maqam analysis system.
- *
- * The function uses a comprehensive mapping table to convert between
- * Arabic musical terminology and Western notation systems.
- *
- * @param arabicName - The Arabic note name to convert
- * @returns The corresponding English note name, or "--" if not found
+ * Options for controlling English note name conversion behavior.
+ * 
+ * @property prevEnglish - Previous English note name for avoiding diatonic letter repetition
+ * @property prefer - Preferred accidental spelling ("sharp", "flat", or "auto")
  */
 export type EnglishNameOptions = { prevEnglish?: string; prefer?: "sharp" | "flat" | "auto" };
 
+/**
+ * Swaps simple enharmonic equivalents while preserving octave and case.
+ * Handles single sharps/flats only (C#/Db, F#/Gb, etc.), not microtonal notes.
+ * 
+ * This function is used to avoid repeating diatonic letters in melodic sequences,
+ * following Western notation conventions where consecutive notes typically use
+ * different letter names (e.g., C-D-E rather than C-C#-D).
+ * 
+ * @param name - The English note name to swap (e.g., "F#3", "Db4")
+ * @returns The enharmonic equivalent, or null if not found or not applicable
+ * 
+ * @example
+ * ```typescript
+ * swapEnharmonicSimple("C#3");  // "Db3"
+ * swapEnharmonicSimple("Ab2");  // "G#2"
+ * swapEnharmonicSimple("F+3");  // null (microtonal not supported)
+ * ```
+ */
 function swapEnharmonicSimple(name: string): string | null {
   // handle simple single-sharp / single-flat enharmonics, preserve case
   const map: { [k: string]: string } = {
@@ -289,6 +354,33 @@ function swapEnharmonicSimple(name: string): string | null {
   return finalSwapped + octavePart;
 }
 
+/**
+ * Converts an Arabic note name to its International Pitch Notation equivalent.
+ * 
+ * Provides bidirectional cultural translation between Arabic maqām nomenclature
+ * (e.g., rāst, dūgāh, segāh) and Western International Pitch Notation (e.g., G3, A3, B-b3).
+ * 
+ * Optionally avoids repeating diatonic letters when provided with the previous note,
+ * following Western notation conventions for melodic sequences. For example, if the
+ * previous note was "C3" and the mapping returns "C#3", it will swap to "Db3" to
+ * avoid consecutive C letters.
+ * 
+ * @param arabicName - The Arabic note name to convert (from NoteName model)
+ * @param opts - Optional conversion options
+ * @param opts.prevEnglish - Previous English note for avoiding letter repetition
+ * @param opts.prefer - Preferred accidental spelling (currently unused, reserved for future)
+ * @returns The International Pitch Notation equivalent, or "--" if not found
+ * 
+ * @example
+ * ```typescript
+ * getEnglishNoteName("rāst");           // "G3"
+ * getEnglishNoteName("dūgāh");          // "A3"
+ * getEnglishNoteName("segāh-b");        // "Bb3"
+ * 
+ * // Avoiding letter repetition:
+ * getEnglishNoteName("rāst-#", { prevEnglish: "G3" });  // "Ab3" instead of "G#3"
+ * ```
+ */
 export function getEnglishNoteName(arabicName: string, opts?: EnglishNameOptions): string {
   const mapping = arabicToEnglishNoteMapping[arabicName];
   if (!mapping) return "--";
@@ -461,9 +553,19 @@ export function getSequentialEnglishNames(arabicNames: string[]): string[] {
   return result;
 }
 
-// -----------------------
-// Abjad arrays
-// -----------------------
+/**
+ * Arabic Abjad numerals used in traditional music notation systems.
+ * 
+ * Abjad is the Arabic alphabetical ordering system where letters represent numerical values,
+ * historically used for numbering and ordering. In Arabic music theory, these letters are
+ * sometimes used to label scale degrees, frets, or pitch positions.
+ * 
+ * The array includes:
+ * - Single letters: آ ب ج د ه و ز ح ط ي ك ل م ن س ع ف ص ق ر ش ت ث خ ذ ض ظ غ
+ * - Compound forms: يا يب يج... (yā combinations), كا كب كج... (kāf combinations), لا لب لج... (lām combinations)
+ * 
+ * Used for compatibility with historical treatises and traditional notation systems.
+ */
 export const abjadNames = [
   "آ",
   "ب",

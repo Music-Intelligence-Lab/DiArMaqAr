@@ -155,7 +155,7 @@ export interface PatternNote {
  * Duration hierarchy from shortest to longest:
  * 32nd notes → 16th notes → 8th notes → quarter notes → half notes → whole notes
  * 
- * @constant
+ * @readonly
  */
 export const DURATION_OPTIONS: string[] = [
   "32n",  // Thirty-second note
@@ -195,7 +195,7 @@ export type NoteDuration = (typeof DURATION_OPTIONS)[number];
  * This system allows for patterns that span multiple octaves and include
  * both ascending and descending melodic movements.
  * 
- * @constant
+ * @readonly
  */
 export const SCALE_DEGREES: string[] = [
   "-I",   // One octave below tonic
