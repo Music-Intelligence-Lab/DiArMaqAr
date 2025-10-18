@@ -72,6 +72,7 @@ export interface MergedJins {
   commentsEnglish: string;
   commentsArabic: string;
   SourcePageReferences: any[];
+  version: string;
 }
 
 export interface MergedMaqam {
@@ -90,6 +91,7 @@ export interface MergedMaqam {
   commentsArabic: string;
   SourcePageReferences: any[];
   maqamFamilyClassification: ExportMaqamFamilyClassification;
+  version: string;
 }
 
 /**
@@ -894,6 +896,7 @@ export async function exportTuningSystem(
       creatorArabic: tuningSystem.getCreatorArabic(),
       commentsEnglish: tuningSystem.getCommentsEnglish(),
       commentsArabic: tuningSystem.getCommentsArabic(),
+      version: tuningSystem.getVersion(),
       // Starting note for this export
       startingNote: standardizeText(startingNote),
 
@@ -1039,6 +1042,7 @@ export async function exportTuningSystem(
           commentsEnglish: jinsOverview.getCommentsEnglish(),
           commentsArabic: jinsOverview.getCommentsArabic(),
           SourcePageReferences: jinsOverview.getSourcePageReferences(),
+          version: jinsOverview.getVersion(),
         };
 
         jinsReference[standardizeText(possibleJins.name)] = mergedJins;
@@ -1266,6 +1270,7 @@ export async function exportTuningSystem(
           commentsEnglish: maqamOverview.getCommentsEnglish(),
           commentsArabic: maqamOverview.getCommentsArabic(),
           SourcePageReferences: maqamOverview.getSourcePageReferences(),
+          version: maqamOverview.getVersion(),
           // Family classification - always included, inherited from tahlil
           maqamFamilyClassification: (() => {
             const tahlil = maqamTahlilMap.get(possibleMaqam.maqamId);
@@ -1466,6 +1471,7 @@ export async function exportJins(
       creatorArabic: tuningSystem.getCreatorArabic(),
       commentsEnglish: tuningSystem.getCommentsEnglish(),
       commentsArabic: tuningSystem.getCommentsArabic(),
+      version: tuningSystem.getVersion(),
       // Starting note for this export
       startingNote: startingNote,
 
@@ -1498,6 +1504,7 @@ export async function exportJins(
       commentsEnglish: jinsData.getCommentsEnglish(),
       commentsArabic: jinsData.getCommentsArabic(),
       SourcePageReferences: jinsData.getSourcePageReferences(),
+      version: jinsData.getVersion(),
     };
     result.jins = mergedJins;
   }
@@ -1534,6 +1541,7 @@ export async function exportJins(
           commentsEnglish: jinsOverview.getCommentsEnglish(),
           commentsArabic: jinsOverview.getCommentsArabic(),
           SourcePageReferences: jinsOverview.getSourcePageReferences(),
+          version: jinsOverview.getVersion(),
         };
 
         jinsReference[standardizeText(jinsTransposition.name)] = mergedJins;
@@ -1695,6 +1703,7 @@ export async function exportMaqam(
       creatorArabic: tuningSystem.getCreatorArabic(),
       commentsEnglish: tuningSystem.getCommentsEnglish(),
       commentsArabic: tuningSystem.getCommentsArabic(),
+      version: tuningSystem.getVersion(),
       // Starting note for this export
       startingNote: startingNote,
 
@@ -1820,6 +1829,7 @@ export async function exportMaqam(
       commentsEnglish: maqamData.getCommentsEnglish(),
       commentsArabic: maqamData.getCommentsArabic(),
       SourcePageReferences: maqamData.getSourcePageReferences(),
+      version: maqamData.getVersion(),
       maqamFamilyClassification: maqamClassification,
     };
     result.maqam = mergedMaqam;
@@ -2029,6 +2039,7 @@ export async function exportMaqam(
           commentsEnglish: maqamOverview.getCommentsEnglish(),
           commentsArabic: maqamOverview.getCommentsArabic(),
           SourcePageReferences: maqamOverview.getSourcePageReferences(),
+          version: maqamOverview.getVersion(),
           maqamFamilyClassification: sharedClassification,
         };
 
