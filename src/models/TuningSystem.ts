@@ -83,13 +83,16 @@ export default class TuningSystem {
   
   /** String length parameter for instruments (if applicable) */
   private stringLength: number;
-  
+
   /** Whether this tuning system has been saved to persistent storage */
   private saved: boolean;
 
+  /** ISO 8601 timestamp of last modification */
+  private version!: string;
+
   /**
    * Creates a new TuningSystem instance.
-   * 
+   *
    * @param titleEnglish - English title of the tuning system
    * @param titleArabic - Arabic title of the tuning system
    * @param year - Year the system was documented or created
@@ -107,6 +110,7 @@ export default class TuningSystem {
    * @param referenceFrequencies - Mapping of note names to reference frequencies
    * @param defaultReferenceFrequency - Default frequency anchor (e.g., 440 Hz)
    * @param saved - Whether the system has been saved to storage
+   * @param version - ISO 8601 timestamp of last modification (defaults to current time)
    */
   constructor(
     titleEnglish: string,
@@ -125,7 +129,8 @@ export default class TuningSystem {
     stringLength: number,
     referenceFrequencies: { [noteName: string]: number },
     defaultReferenceFrequency: number,
-    saved: boolean
+    saved: boolean,
+    version?: string
   ) {
     // Generate unique ID by combining creator, year, and title (sanitized)
     this.id = standardizeText(`${creatorEnglish}-(${year})`.replaceAll(" ", "").replaceAll("+", ""));
@@ -146,6 +151,7 @@ export default class TuningSystem {
     this.referenceFrequencies = referenceFrequencies;
     this.defaultReferenceFrequency = defaultReferenceFrequency;
     this.saved = saved;
+    this.version = version || new Date().toISOString();
   }
 
   /**
@@ -303,11 +309,11 @@ export default class TuningSystem {
 
   /**
    * Gets the default reference frequency for the tuning system.
-   * 
+   *
    * This is the primary frequency anchor (e.g., 440 Hz for A4 in Western music,
    * or 110 Hz for ʿushayrān in Al-Kindī's system) used to convert mathematical
    * ratios into actual audible frequencies.
-   * 
+   *
    * @returns Default reference frequency in Hz
    */
   getDefaultReferenceFrequency(): number {
@@ -316,11 +322,29 @@ export default class TuningSystem {
 
   /**
    * Checks whether this tuning system has been saved to persistent storage.
-   * 
+   *
    * @returns True if saved, false otherwise
    */
   isSaved(): boolean {
     return this.saved;
+  }
+
+  /**
+   * Gets the version timestamp of this tuning system.
+   *
+   * @returns ISO 8601 timestamp string
+   */
+  getVersion(): string {
+    return this.version;
+  }
+
+  /**
+   * Sets the version timestamp of this tuning system.
+   *
+   * @param version - ISO 8601 timestamp string
+   */
+  setVersion(version: string): void {
+    this.version = version;
   }
 
   /**

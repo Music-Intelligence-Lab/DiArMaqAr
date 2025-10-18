@@ -65,10 +65,11 @@ export default function JinsManager({ admin }: { admin: boolean }) {
       selectedNoteNames,
       commentsEnglishLocal,
       commentsArabicLocal,
-      selectedJinsData.getSourcePageReferences()
+      selectedJinsData.getSourcePageReferences(),
+      selectedJinsData.getVersion()
     );
     const newAjnas = ajnas.filter((jins) => jins.getId() !== newJins.getId());
-    await updateAjnas([...newAjnas, newJins]);
+    await updateAjnas([...newAjnas, newJins], [newJins.getId()]);
     setAjnas([...newAjnas, newJins]);
   };
 

@@ -53,7 +53,8 @@ export function getTuningSystems(): TuningSystem[] {
         Number(d.stringLength), // Reference string length
         d.referenceFrequencies, // Reference frequency data
         Number(d.defaultReferenceFrequency), // Default reference frequency
-        true // Enable full functionality
+        true, // Enable full functionality
+        d.version // Version timestamp (optional, defaults to current time)
       )
   );
 }
@@ -75,7 +76,8 @@ export function getAjnas(): JinsData[] {
         d.noteNames, // Note names that comprise the jins
         d.commentsEnglish, // English commentary
         d.commentsArabic, // Arabic commentary
-        d.sourcePageReferences // Source page references
+        d.sourcePageReferences, // Source page references
+        d.version // Version timestamp (optional, defaults to current time)
       )
   );
 }
@@ -99,7 +101,8 @@ export function getMaqamat(): MaqamData[] {
         d.suyūr, // Melodic progressions (suyur)
         d.commentsEnglish, // English commentary
         d.commentsArabic, // Arabic commentary
-        d.sourcePageReferences // Source page references
+        d.sourcePageReferences, // Source page references
+        d.version // Version timestamp (optional, defaults to current time)
       )
   );
 }
@@ -157,7 +160,8 @@ export function getPatterns(): Pattern[] {
             return { ...base, velocity: note.velocity };
           }
           return base;
-        })
+        }),
+        (data as any).version // Version timestamp (optional, defaults to current time)
       )
   );
 }

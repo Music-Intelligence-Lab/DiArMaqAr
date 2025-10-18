@@ -75,6 +75,8 @@ export abstract class AbstractSource {
   protected url: string;
   /** Date when online source was accessed */
   protected dateAccessed: string;
+  /** ISO 8601 timestamp of last modification */
+  protected version!: string;
 
   /**
    * Creates a new AbstractSource instance.
@@ -93,6 +95,7 @@ export abstract class AbstractSource {
    * @param publicationDateArabic - Publication date in Arabic format
    * @param url - URL for online sources (empty string if not applicable)
    * @param dateAccessed - Date when online source was accessed (empty string if not applicable)
+   * @param version - ISO 8601 timestamp of last modification (defaults to current time)
    */
   constructor(
     id: string,
@@ -105,7 +108,8 @@ export abstract class AbstractSource {
     publicationDateEnglish: string,
     publicationDateArabic: string,
     url: string,
-    dateAccessed: string
+    dateAccessed: string,
+    version?: string
   ) {
     this.id = id;
     this.titleEnglish = titleEnglish;
@@ -118,6 +122,7 @@ export abstract class AbstractSource {
     this.publicationDateArabic = publicationDateArabic;
     this.url = url;
     this.dateAccessed = dateAccessed;
+    this.version = version || new Date().toISOString();
   }
 
   /** @returns The unique identifier for this source */
@@ -175,6 +180,16 @@ export abstract class AbstractSource {
     return this.dateAccessed;
   }
 
+  /** @returns Version timestamp of this source */
+  public getVersion(): string {
+    return this.version;
+  }
+
+  /** Sets the version timestamp of this source */
+  public setVersion(version: string): void {
+    this.version = version;
+  }
+
   /**
    * Converts this source to a JSON-serializable object.
    *
@@ -196,6 +211,7 @@ export abstract class AbstractSource {
       publicationDateArabic: this.publicationDateArabic,
       url: this.url,
       dateAccessed: this.dateAccessed,
+      version: this.version,
     };
   }
 }

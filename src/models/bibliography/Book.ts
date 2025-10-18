@@ -36,7 +36,7 @@ export default class Book extends AbstractSource {
 
   /**
    * Creates a new Book instance with comprehensive bibliographic metadata.
-   * 
+   *
    * @param id - Unique identifier for this book
    * @param titleEnglish - Book title in English
    * @param titleArabic - Book title in Arabic
@@ -54,6 +54,7 @@ export default class Book extends AbstractSource {
    * @param ISBN - International Standard Book Number
    * @param url - URL for online access
    * @param dateAccessed - Date when the book was last accessed online
+   * @param version - ISO 8601 timestamp of last modification (defaults to current time)
    */
   constructor(
     id: string,
@@ -72,7 +73,8 @@ export default class Book extends AbstractSource {
     placeArabic: string,
     ISBN: string,
     url: string,
-    dateAccessed: string
+    dateAccessed: string,
+    version?: string
   ) {
     super(
       id,
@@ -85,7 +87,8 @@ export default class Book extends AbstractSource {
       publicationDateEnglish,
       publicationDateArabic,
       url,
-      dateAccessed
+      dateAccessed,
+      version
     );
     this.originalPublicationDateEnglish = originalPublicationDateEnglish;
     this.originalPublicationDateArabic = originalPublicationDateArabic;
@@ -184,10 +187,10 @@ export default class Book extends AbstractSource {
 
   /**
    * Creates a Book instance from a JSON object.
-   * 
+   *
    * Static factory method for deserializing book data from JSON format,
    * useful for loading book bibliography data from files or APIs.
-   * 
+   *
    * @param json - JSON object containing book data
    * @returns New Book instance created from the JSON data
    */
@@ -209,7 +212,8 @@ export default class Book extends AbstractSource {
       json.placeArabic,
       json.ISBN,
       json.url,
-      json.dateAccessed
+      json.dateAccessed,
+      json.version
     );
   }
 }

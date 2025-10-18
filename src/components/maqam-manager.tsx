@@ -125,7 +125,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
   // Base save logic
   const handleSaveMaqam = async (maqam: MaqamData) => {
     const others = maqamat.filter((m) => m.getId() !== maqam.getId());
-    await updateMaqamat([...others, maqam]);
+    await updateMaqamat([...others, maqam], [maqam.getId()]);
     setMaqamat([...others, maqam]);
     setSelectedMaqamData(maqam);
   };
@@ -143,7 +143,8 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
       selectedMaqamData.getSuyūr(),
       commentsEnglishLocal,
       commentsArabicLocal,
-      selectedMaqamData.getSourcePageReferences()
+      selectedMaqamData.getSourcePageReferences(),
+      selectedMaqamData.getVersion()
     );
     handleSaveMaqam(updated);
   };
@@ -159,7 +160,8 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
       selectedMaqamData.getSuyūr(),
       commentsEnglishLocal,
       commentsArabicLocal,
-      selectedMaqamData.getSourcePageReferences()
+      selectedMaqamData.getSourcePageReferences(),
+      selectedMaqamData.getVersion()
     );
     handleSaveMaqam(updated);
   };

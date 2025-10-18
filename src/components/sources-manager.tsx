@@ -217,6 +217,12 @@ export default function SourcesManager() {
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Get existing version if editing
+    const existingSource = selectedSourceId !== "new"
+      ? sources.find((s: Source) => s.getId() === selectedSourceId)
+      : undefined;
+    const existingVersion = existingSource?.getVersion();
+
     let newSource: Source;
     if (sourceType === "Book") {
       newSource = new Book(
@@ -237,7 +243,8 @@ export default function SourcesManager() {
         placeArabic,
         ISBN,
         url,
-        dateAccessed
+        dateAccessed,
+        existingVersion
       );
     } else if (sourceType === "Article") {
       // Article
@@ -261,7 +268,8 @@ export default function SourcesManager() {
         pageRangeArabic,
         DOI,
         url,
-        dateAccessed
+        dateAccessed,
+        existingVersion
       );
     } else {
       // Thesis
@@ -284,7 +292,8 @@ export default function SourcesManager() {
         databaseIdentifier,
         databaseName,
         url,
-        dateAccessed
+        dateAccessed,
+        existingVersion
       );
     }
 
@@ -296,8 +305,8 @@ export default function SourcesManager() {
     }
 
     setSources(updatedSources);
-    updateSources(updatedSources);
-    setSelectedSourceId("new"); // reset to “new” if you want
+    updateSources(updatedSources, [newSource.getId()]);
+    setSelectedSourceId("new"); // reset to "new" if you want
   };
 
   const handleDelete = (e: React.FormEvent) => {

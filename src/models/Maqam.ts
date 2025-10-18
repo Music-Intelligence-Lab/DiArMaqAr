@@ -21,6 +21,7 @@ export interface MaqamDataInterface {
   commentsArabic: string;
   sourcePageReferences: SourcePageReference[];
   numberOfTranspositions?: number;
+  version?: string;
 }
 
 /**
@@ -87,13 +88,16 @@ export default class MaqamData {
   
   /** References to source documents where this maqam is documented */
   private sourcePageReferences: SourcePageReference[];
-  
+
+  /** ISO 8601 timestamp of last modification */
+  private version!: string;
+
   /** Legacy property - consider removing in future refactoring */
   ascendingPitchClasses: any;
 
   /**
    * Creates a new MaqamData instance with abstract note names.
-   * 
+   *
    * @param id - Unique identifier for this maqam
    * @param name - Name of the maqam (e.g., "Maqam Farahfazza")
    * @param ascendingNoteNames - Ascending sequence (ṣuʿūd) of note names
@@ -102,6 +106,7 @@ export default class MaqamData {
    * @param commentsEnglish - English description or comments
    * @param commentsArabic - Arabic description or comments
    * @param sourcePageReferences - References to source documents
+   * @param version - ISO 8601 timestamp of last modification (defaults to current time)
    */
   constructor(
     id: string,
@@ -111,7 +116,8 @@ export default class MaqamData {
     suyūr: Sayr[],
     commentsEnglish: string,
     commentsArabic: string,
-    sourcePageReferences: SourcePageReference[]
+    sourcePageReferences: SourcePageReference[],
+    version?: string
   ) {
     this.id = id;
     this.idName = standardizeText(name);
@@ -122,6 +128,7 @@ export default class MaqamData {
     this.commentsEnglish = commentsEnglish;
     this.commentsArabic = commentsArabic;
     this.sourcePageReferences = sourcePageReferences;
+    this.version = version || new Date().toISOString();
   }
 
   /**
@@ -204,11 +211,29 @@ export default class MaqamData {
 
   /**
    * Gets the source page references for this maqam.
-   * 
+   *
    * @returns Array of source page references
    */
   getSourcePageReferences(): SourcePageReference[] {
     return this.sourcePageReferences;
+  }
+
+  /**
+   * Gets the version timestamp of this maqam.
+   *
+   * @returns ISO 8601 timestamp string
+   */
+  getVersion(): string {
+    return this.version;
+  }
+
+  /**
+   * Sets the version timestamp of this maqam.
+   *
+   * @param version - ISO 8601 timestamp string
+   */
+  setVersion(version: string): void {
+    this.version = version;
   }
 
   /**
@@ -369,27 +394,30 @@ export default class MaqamData {
 export interface Sayr {
   /** Unique identifier for this sayr */
   id: string;
-  
+
   /** English name of the sayr's creator/documenter */
   creatorEnglish: string;
-  
+
   /** Arabic name of the sayr's creator/documenter */
   creatorArabic: string;
-  
+
   /** ID of the source document where this sayr is documented */
   sourceId: string;
-  
+
   /** Page reference within the source document */
   page: string;
-  
+
   /** English comments about this sayr */
   commentsEnglish: string;
-  
+
   /** Arabic comments about this sayr */
   commentsArabic: string;
-  
+
   /** Array of stops defining the melodic development pathway */
   stops: SayrStop[];
+
+  /** ISO 8601 timestamp of last modification */
+  version?: string;
 }
 
 /**

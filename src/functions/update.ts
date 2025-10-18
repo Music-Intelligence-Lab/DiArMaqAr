@@ -24,12 +24,25 @@ function compareStringNumbers(a: string, b: string): number {
  * serializes them to JSON format, and sends them to the backend API
  * for persistent storage. It handles the conversion of TuningSystem
  * instances to plain objects suitable for JSON serialization.
+ * Automatically updates the version timestamp only for modified tuning systems.
  *
  * @param newSystems - Array of TuningSystem objects to update
+ * @param modifiedIds - Optional array of IDs that were actually modified (gets timestamp update)
  * @throws Error if the API request fails or returns a non-OK status
  */
-export async function updateTuningSystems(newSystems: TuningSystem[]) {
+export async function updateTuningSystems(newSystems: TuningSystem[], modifiedIds?: string[]) {
   newSystems.sort((a, b) => compareStringNumbers(a.getId(), b.getId()));
+  const currentTimestamp = new Date().toISOString();
+
+  // Update version timestamp only for modified entities
+  if (modifiedIds && modifiedIds.length > 0) {
+    newSystems.forEach((ts) => {
+      if (modifiedIds.includes(ts.getId())) {
+        ts.setVersion(currentTimestamp);
+      }
+    });
+  }
+
   try {
     const response = await fetch("/api/tuningSystems", {
       method: "PUT",
@@ -62,6 +75,7 @@ export async function updateTuningSystems(newSystems: TuningSystem[]) {
           stringLength: ts.getStringLength(),
           defaultReferenceFrequency: ts.getDefaultReferenceFrequency(),
           referenceFrequencies: ts.getReferenceFrequencies(),
+          version: ts.getVersion(),
         }))
       ),
     });
@@ -79,12 +93,25 @@ export async function updateTuningSystems(newSystems: TuningSystem[]) {
  * This function takes an array of JinsData objects, sorts them by ID,
  * and sends them to the backend API for persistent storage. It converts
  * JinsData instances to the appropriate JSON format for database storage.
+ * Automatically updates the version timestamp only for modified ajnas.
  *
  * @param newAjnas - Array of JinsData objects to update
+ * @param modifiedIds - Optional array of IDs that were actually modified (gets timestamp update)
  * @throws Error if the API request fails or returns a non-OK status
  */
-export async function updateAjnas(newAjnas: JinsData[]) {
+export async function updateAjnas(newAjnas: JinsData[], modifiedIds?: string[]) {
   newAjnas.sort((a, b) => compareStringNumbers(a.getId(), b.getId()));
+  const currentTimestamp = new Date().toISOString();
+
+  // Update version timestamp only for modified entities
+  if (modifiedIds && modifiedIds.length > 0) {
+    newAjnas.forEach((j) => {
+      if (modifiedIds.includes(j.getId())) {
+        j.setVersion(currentTimestamp);
+      }
+    });
+  }
+
   try {
     const response = await fetch("/api/ajnas", {
       method: "PUT",
@@ -98,6 +125,7 @@ export async function updateAjnas(newAjnas: JinsData[]) {
           commentsEnglish: j.getCommentsEnglish() || "",
           commentsArabic: j.getCommentsArabic() || "",
           sourcePageReferences: j.getSourcePageReferences(),
+          version: j.getVersion(),
         }))
       ),
     });
@@ -116,12 +144,25 @@ export async function updateAjnas(newAjnas: JinsData[]) {
  * and sends them to the backend API for persistent storage. It handles
  * the serialization of complex maqam structures including their constituent
  * ajnas and melodic progressions (suyur).
+ * Automatically updates the version timestamp only for modified maqamat.
  *
  * @param newMaqamat - Array of MaqamData objects to update
+ * @param modifiedIds - Optional array of IDs that were actually modified (gets timestamp update)
  * @throws Error if the API request fails or returns a non-OK status
  */
-export async function updateMaqamat(newMaqamat: MaqamData[]) {
+export async function updateMaqamat(newMaqamat: MaqamData[], modifiedIds?: string[]) {
   newMaqamat.sort((a, b) => compareStringNumbers(a.getId(), b.getId()));
+  const currentTimestamp = new Date().toISOString();
+
+  // Update version timestamp only for modified entities
+  if (modifiedIds && modifiedIds.length > 0) {
+    newMaqamat.forEach((m) => {
+      if (modifiedIds.includes(m.getId())) {
+        m.setVersion(currentTimestamp);
+      }
+    });
+  }
+
   try {
     const response = await fetch("/api/maqamat", {
       method: "PUT",
@@ -137,6 +178,7 @@ export async function updateMaqamat(newMaqamat: MaqamData[]) {
           commentsEnglish: m.getCommentsEnglish() || "",
           commentsArabic: m.getCommentsArabic() || "",
           sourcePageReferences: m.getSourcePageReferences(),
+          version: m.getVersion(),
         }))
       ),
     });
@@ -154,12 +196,25 @@ export async function updateMaqamat(newMaqamat: MaqamData[]) {
  * This function takes an array of Source objects, sorts them by ID,
  * and sends them to the backend API for persistent storage. Sources include
  * books, articles, and other references used in maqam research.
+ * Automatically updates the version timestamp only for modified sources.
  *
  * @param sources - Array of Source objects to update
+ * @param modifiedIds - Optional array of IDs that were actually modified (gets timestamp update)
  * @throws Error if the API request fails or returns a non-OK status
  */
-export async function updateSources(sources: Source[]) {
+export async function updateSources(sources: Source[], modifiedIds?: string[]) {
   sources.sort((a, b) => compareStringNumbers(a.getId(), b.getId()));
+  const currentTimestamp = new Date().toISOString();
+
+  // Update version timestamp only for modified entities
+  if (modifiedIds && modifiedIds.length > 0) {
+    sources.forEach((source) => {
+      if (modifiedIds.includes(source.getId())) {
+        source.setVersion(currentTimestamp);
+      }
+    });
+  }
+
   try {
     const response = await fetch("/api/sources", {
       method: "PUT",
@@ -185,12 +240,25 @@ export async function updateSources(sources: Source[]) {
  * and sends them to the backend API for persistent storage. Patterns
  * represent recurring musical structures and melodic formulas used
  * in maqam analysis.
+ * Automatically updates the version timestamp only for modified patterns.
  *
  * @param patterns - Array of Pattern objects to update
+ * @param modifiedIds - Optional array of IDs that were actually modified (gets timestamp update)
  * @throws Error if the API request fails or returns a non-OK status
  */
-export async function updatePatterns(patterns: Pattern[]) {
+export async function updatePatterns(patterns: Pattern[], modifiedIds?: string[]) {
   patterns.sort((a, b) => compareStringNumbers(a.getId(), b.getId()));
+  const currentTimestamp = new Date().toISOString();
+
+  // Update version timestamp only for modified entities
+  if (modifiedIds && modifiedIds.length > 0) {
+    patterns.forEach((pattern) => {
+      if (modifiedIds.includes(pattern.getId())) {
+        pattern.setVersion(currentTimestamp);
+      }
+    });
+  }
+
   try {
     const response = await fetch("/api/patterns", {
       method: "PUT",

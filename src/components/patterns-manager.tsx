@@ -96,9 +96,11 @@ export default function PatternsManager() {
   const handleSave = (e: FormEvent) => {
     e.preventDefault();
     const idUse = patternId || nanoid();
-    const newPattern = new Pattern(idUse, name, notes);
+    const existingPattern = patterns.find((p) => p.getId() === idUse);
+    const existingVersion = existingPattern?.getVersion();
+    const newPattern = new Pattern(idUse, name, notes, existingVersion);
     const updatedList = patterns.some((p) => p.getId() === idUse) ? patterns.map((p) => (p.getId() === idUse ? newPattern : p)) : [...patterns, newPattern];
-    updatePatterns(updatedList);
+    updatePatterns(updatedList, [newPattern.getId()]);
     setPatterns(updatedList);
     setPatternId(idUse);
   };
