@@ -9,7 +9,7 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { getPitchClassIntervals } from "@/functions/getPitchClassIntervals";
 import { renderPitchClassSpellings } from "@/functions/renderPitchClassIpnSpellings";
 import { getIpnReferenceNoteNameWithOctave } from "@/functions/getIpnReferenceNoteName";
-import { calculate12EdoReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
+import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
 import StaffNotation from "./staff-notation";
 
 export default function SelectedPitchClassesAnalysis() {
@@ -277,11 +277,11 @@ export default function SelectedPitchClassesAnalysis() {
           {localFilters["midiNote"] && (
             <tr data-row-type="midiNote">
               <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.midiNote')}</th>
-              <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="midi-note">{pitchClasses[0].midiNoteNumber.toFixed(3)}</th>
+              <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="midi-note">{pitchClasses[0].midiNoteDecimal.toFixed(3)}</th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
                   <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="empty"></th>
-                  <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="midi-note">{pitchClasses[i + 1].midiNoteNumber.toFixed(3)}</th>
+                  <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="midi-note">{pitchClasses[i + 1].midiNoteDecimal.toFixed(3)}</th>
                 </React.Fragment>
               ))}
             </tr>
@@ -290,13 +290,13 @@ export default function SelectedPitchClassesAnalysis() {
             <tr data-row-type="midiNoteDeviation">
               <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.midiNoteDeviation')}</th>
               <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="midi-note-deviation">
-                {calculate12EdoReferenceMidiNote(pitchClasses[0])} {pitchClasses[0].centsDeviation > 0 ? "+" : ""}{pitchClasses[0].centsDeviation.toFixed(1)}
+                {calculateIpnReferenceMidiNote(pitchClasses[0])} {pitchClasses[0].centsDeviation > 0 ? "+" : ""}{pitchClasses[0].centsDeviation.toFixed(1)}
               </th>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
                   <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="empty"></th>
                   <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="midi-note-deviation">
-                    {calculate12EdoReferenceMidiNote(pitchClasses[i + 1])} {pitchClasses[i + 1].centsDeviation > 0 ? "+" : ""}{pitchClasses[i + 1].centsDeviation.toFixed(1)}
+                    {calculateIpnReferenceMidiNote(pitchClasses[i + 1])} {pitchClasses[i + 1].centsDeviation > 0 ? "+" : ""}{pitchClasses[i + 1].centsDeviation.toFixed(1)}
                   </th>
                 </React.Fragment>
               ))}

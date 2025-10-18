@@ -7,7 +7,7 @@ import useFilterContext from "@/contexts/filter-context";
 import useLanguageContext from "@/contexts/language-context";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import { standardizeText } from "@/functions/export";
-import { calculate12EdoReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
+import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
 import { getIpnReferenceNoteName, getIpnReferenceNoteNameWithOctave } from "@/functions/getIpnReferenceNoteName";
 import { renderPitchClassSpellings } from "@/functions/renderPitchClassIpnSpellings";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
@@ -501,7 +501,7 @@ const MaqamTranspositions: React.FC = () => {
           if (filters["midiNote"]) {
             const midiRow = [t("maqam.midiNote")];
             pitchClasses.forEach((pc, i) => {
-              midiRow.push(pc.midiNoteNumber.toFixed(3));
+              midiRow.push(pc.midiNoteDecimal.toFixed(3));
               if (i < pitchClasses.length - 1) {
                 midiRow.push(''); // interval column empty for MIDI
               }
@@ -512,7 +512,7 @@ const MaqamTranspositions: React.FC = () => {
           if (filters["midiNoteDeviation"]) {
             const midiDeviationRow = [t("maqam.midiNoteDeviation")];
             pitchClasses.forEach((pc, i) => {
-              const referenceMidiNote = calculate12EdoReferenceMidiNote(pc);
+              const referenceMidiNote = calculateIpnReferenceMidiNote(pc);
               const deviation = pc.centsDeviation;
               const sign = deviation > 0 ? "+" : "";
               midiDeviationRow.push(`${referenceMidiNote} ${sign}${deviation.toFixed(1)}`);
@@ -1008,7 +1008,7 @@ const MaqamTranspositions: React.FC = () => {
                   <th scope="row" id={`maqam-${standardizeText(maqam.name)}-${ascending ? 'ascending' : 'descending'}-midiNote-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.midiNote")}</th>
                   {pitchClasses.map((pitchClass, i) => (
                     <React.Fragment key={i}>
-                      <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="midi-note">{pitchClass.midiNoteNumber.toFixed(3)}</td>
+                      <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="midi-note">{pitchClass.midiNoteDecimal.toFixed(3)}</td>
                       <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="empty"></td>
                     </React.Fragment>
                   ))}
@@ -1018,7 +1018,7 @@ const MaqamTranspositions: React.FC = () => {
                 <tr data-row-type="midiNoteDeviation">
                   <th scope="row" id={`maqam-${standardizeText(maqam.name)}-${ascending ? 'ascending' : 'descending'}-midiNoteDeviation-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.midiNoteDeviation")}</th>
                   {pitchClasses.map((pitchClass, i) => {
-                    const referenceMidiNote = calculate12EdoReferenceMidiNote(pitchClass);
+                    const referenceMidiNote = calculateIpnReferenceMidiNote(pitchClass);
 
                     return (
                       <React.Fragment key={i}>

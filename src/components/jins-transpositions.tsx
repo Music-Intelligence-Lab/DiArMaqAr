@@ -7,7 +7,7 @@ import useFilterContext from "@/contexts/filter-context";
 import useLanguageContext from "@/contexts/language-context";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import { standardizeText } from "@/functions/export";
-import { calculate12EdoReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
+import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
 import { getIpnReferenceNoteNameWithOctave } from "@/functions/getIpnReferenceNoteName";
 import { renderPitchClassSpellings } from "@/functions/renderPitchClassIpnSpellings";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
@@ -252,7 +252,7 @@ export default function JinsTranspositions() {
           if (filters["midiNote"]) {
             const midiRow = [t("jins.midiNote")];
             pitchClasses.forEach((pc, i) => {
-              midiRow.push(pc.midiNoteNumber.toFixed(3));
+              midiRow.push(pc.midiNoteDecimal.toFixed(3));
               if (i < pitchClasses.length - 1) {
                 midiRow.push(''); // interval column empty for MIDI
               }
@@ -263,7 +263,7 @@ export default function JinsTranspositions() {
           if (filters["midiNoteDeviation"]) {
             const midiDeviationRow = [t("jins.midiNoteDeviation")];
             pitchClasses.forEach((pc, i) => {
-              const referenceMidiNote = calculate12EdoReferenceMidiNote(pc);
+              const referenceMidiNote = calculateIpnReferenceMidiNote(pc);
               const deviation = `${referenceMidiNote} ${pc.centsDeviation > 0 ? "+" : ""}${pc.centsDeviation.toFixed(1)}`;
               midiDeviationRow.push(deviation);
               if (i < pitchClasses.length - 1) {
@@ -699,11 +699,11 @@ export default function JinsTranspositions() {
               {filters["midiNote"] && (
                 <tr data-row-type="midiNote">
                   <th scope="row" id={`jins-${standardizeText(jins.name)}-midiNote-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.midiNote")}</th>
-                  <td className="jins-transpositions__table-cell--pitch-class" data-column-type="midi-note">{pitchClasses[0].midiNoteNumber.toFixed(3)}</td>
+                  <td className="jins-transpositions__table-cell--pitch-class" data-column-type="midi-note">{pitchClasses[0].midiNoteDecimal.toFixed(3)}</td>
                   {intervals.map((interval, i) => (
                     <React.Fragment key={i}>
                       <td className="jins-transpositions__table-cell" data-column-type="empty"></td>
-                      <td className="jins-transpositions__table-cell--pitch-class" data-column-type="midi-note">{pitchClasses[i + 1].midiNoteNumber.toFixed(3)}</td>
+                      <td className="jins-transpositions__table-cell--pitch-class" data-column-type="midi-note">{pitchClasses[i + 1].midiNoteDecimal.toFixed(3)}</td>
                     </React.Fragment>
                   ))}
                 </tr>
@@ -712,13 +712,13 @@ export default function JinsTranspositions() {
                 <tr data-row-type="midiNoteDeviation">
                   <th scope="row" id={`jins-${standardizeText(jins.name)}-midiNoteDeviation-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.midiNoteDeviation")}</th>
                   <td className="jins-transpositions__table-cell--pitch-class" data-column-type="midi-note-deviation">
-                    {calculate12EdoReferenceMidiNote(pitchClasses[0])} {pitchClasses[0].centsDeviation > 0 ? "+" : ""}{pitchClasses[0].centsDeviation.toFixed(1)}
+                    {calculateIpnReferenceMidiNote(pitchClasses[0])} {pitchClasses[0].centsDeviation > 0 ? "+" : ""}{pitchClasses[0].centsDeviation.toFixed(1)}
                   </td>
                   {intervals.map((interval, i) => (
                     <React.Fragment key={i}>
                       <td className="jins-transpositions__table-cell" data-column-type="empty"></td>
                       <td className="jins-transpositions__table-cell--pitch-class" data-column-type="midi-note-deviation">
-                        {calculate12EdoReferenceMidiNote(pitchClasses[i + 1])} {pitchClasses[i + 1].centsDeviation > 0 ? "+" : ""}{pitchClasses[i + 1].centsDeviation.toFixed(1)}
+                        {calculateIpnReferenceMidiNote(pitchClasses[i + 1])} {pitchClasses[i + 1].centsDeviation > 0 ? "+" : ""}{pitchClasses[i + 1].centsDeviation.toFixed(1)}
                       </td>
                     </React.Fragment>
                   ))}

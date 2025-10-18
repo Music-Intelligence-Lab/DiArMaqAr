@@ -12,6 +12,7 @@ import detectPitchClassValueType from "@/functions/detectPitchClassType";
 import convertPitchClassValue, { shiftPitchClassBaseValue, frequencyToMidiNoteNumber } from "@/functions/convertPitchClass";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import { calculateCentsDeviationWithReferenceNote, swapEnharmonicForReference } from "@/functions/calculateCentsDeviation";
+import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
 import PitchClass from "@/models/PitchClass";
 
 /**
@@ -102,7 +103,7 @@ export default function getTuningSystemPitchClasses(
       const fretDivision = (openLen - thisLen).toFixed(3);
 
       // midi
-      const midiNoteNumber = frequencyToMidiNoteNumber(parseFloat(conv.frequency));
+      const midiNoteDecimal = frequencyToMidiNoteNumber(parseFloat(conv.frequency));
 
       // English note name and cents deviation
       const englishNoteName = getEnglishNoteName(noteName);
@@ -121,7 +122,7 @@ export default function getTuningSystemPitchClasses(
         octave,
         abjadName,
         fretDivision,
-        midiNoteNumber,
+        midiNoteDecimal,
         centsDeviation: 0,
       });
     }
@@ -130,12 +131,12 @@ export default function getTuningSystemPitchClasses(
   const startingPitchClass = pitchClasses.find((pc) => pc.index === 0 && pc.octave === 1);
 
   if (startingPitchClass) {
-    const startingMidiNumber = startingPitchClass.midiNoteNumber;
+    const startingMidiNumber = startingPitchClass.midiNoteDecimal;
     const startingNoteName = startingPitchClass.englishName;
     let prevReferenceNoteName: string | undefined = undefined;
     
     pitchClasses.forEach((pc) => {
-      const deviationResult = calculateCentsDeviationWithReferenceNote(pc.midiNoteNumber, pc.cents, startingMidiNumber, pc.englishName, startingNoteName);
+      const deviationResult = calculateCentsDeviationWithReferenceNote(pc.midiNoteDecimal, pc.cents, startingMidiNumber, pc.englishName, startingNoteName);
       pc.centsDeviation = deviationResult.deviation;
       
       // Apply enharmonic logic to avoid repeating the same letter
@@ -155,6 +156,11 @@ export default function getTuningSystemPitchClasses(
       
       pc.referenceNoteName = referenceNoteName;
       prevReferenceNoteName = referenceNoteName;
+
+      // Calculate MIDI Note Deviation (formatted string for display/export)
+      const referenceMidiNote = calculateIpnReferenceMidiNote(pc);
+      const sign = pc.centsDeviation > 0 ? "+" : "";
+      pc.midiNoteDeviation = `${referenceMidiNote} ${sign}${pc.centsDeviation}`;
     });
   }
 

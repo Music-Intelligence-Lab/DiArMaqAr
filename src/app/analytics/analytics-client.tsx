@@ -479,7 +479,7 @@ function AnalyticsClient() {
                                         {transposition.ascendingPitchClasses.map((pc: any, i: number) => (
                                           <React.Fragment key={i}>
                                             <th className="analytics-client__header-pitchClass">
-                                              {typeof pc.midiNoteNumber === 'number' ? pc.midiNoteNumber.toFixed(3) : 'N/A'}
+                                              {typeof pc.midiNoteDecimal === 'number' ? pc.midiNoteDecimal.toFixed(3) : 'N/A'}
                                             </th>
                                             {i < transposition.ascendingPitchClasses.length - 1 && (
                                               <th className="analytics-client__header-pitchClass"></th>
@@ -570,7 +570,7 @@ function AnalyticsClient() {
                                         {transposition.descendingPitchClasses.map((pc: any, i: number) => (
                                           <React.Fragment key={i}>
                                             <th className="analytics-client__header-pitchClass">
-                                              {typeof pc.midiNoteNumber === 'number' ? pc.midiNoteNumber.toFixed(3) : 'N/A'}
+                                              {typeof pc.midiNoteDecimal === 'number' ? pc.midiNoteDecimal.toFixed(3) : 'N/A'}
                                             </th>
                                             {i < transposition.descendingPitchClasses.length - 1 && (
                                               <th className="analytics-client__header-pitchClass"></th>
@@ -704,7 +704,7 @@ function AnalyticsClient() {
                                         {data.ascendingPitchClasses.map((pc: any, i: number) => (
                                           <React.Fragment key={i}>
                                             <th className="analytics-client__header-pitchClass">
-                                              {typeof pc.midiNoteNumber === 'number' ? pc.midiNoteNumber.toFixed(3) : 'N/A'}
+                                              {typeof pc.midiNoteDecimal === 'number' ? pc.midiNoteDecimal.toFixed(3) : 'N/A'}
                                             </th>
                                             {i < data.ascendingPitchClasses.length - 1 && (
                                               <th className="analytics-client__header-pitchClass"></th>

@@ -270,7 +270,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
       const extendedPitchClasses = extendSelectedPitchClasses(allPitchClasses, selectedPitchClasses);
 
       for (const pitchClass of extendedPitchClasses) {
-        let baseMidi = Math.round(pitchClass.midiNoteNumber);
+        let baseMidi = Math.round(pitchClass.midiNoteDecimal);
 
         const englishName = pitchClass.englishName;
 
@@ -296,7 +296,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         const extendedUniqueDescendingPitchClasses = extendSelectedPitchClasses(allPitchClasses, uniqueDescendingPitchClasses);
 
         for (const pitchClass of extendedUniqueDescendingPitchClasses) {
-          let baseMidi = Math.round(pitchClass.midiNoteNumber);
+          let baseMidi = Math.round(pitchClass.midiNoteDecimal);
 
           const englishName = pitchClass.englishName;
 
