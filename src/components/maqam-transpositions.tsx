@@ -703,8 +703,8 @@ const MaqamTranspositions: React.FC = () => {
 
     function renderTranspositionRow(maqam: Maqam, ascending: boolean, rowIndex: number) {
       // Apply sequential English name spellings for melodic sequences
-      let ascendingTranspositionPitchClasses = renderPitchClassSpellings(maqam.ascendingPitchClasses);
-      let descendingTranspositionPitchClasses = renderPitchClassSpellings(maqam.descendingPitchClasses);
+      let ascendingTranspositionPitchClasses = renderPitchClassSpellings(maqam.ascendingPitchClasses, true);
+      let descendingTranspositionPitchClasses = renderPitchClassSpellings(maqam.descendingPitchClasses, false);
 
       let ascendingIntervals = maqam.ascendingPitchClassIntervals;
       let descendingIntervals = maqam.descendingPitchClassIntervals;

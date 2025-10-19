@@ -17,6 +17,7 @@ import { getSequentialEnglishNames } from "@/functions/noteNameMappings";
  * - Critical for display, export, and API endpoints
  *
  * @param pitchClasses - Array of pitch classes from a melodic sequence (jins or maqam)
+ * @param ascending - Direction of the sequence (true for ascending, false for descending). Defaults to true.
  * @returns New array of pitch classes with sequential English name spellings
  *
  * @example
@@ -27,14 +28,14 @@ import { getSequentialEnglishNames } from "@/functions/noteNameMappings";
  * // Result: D, Eb, F, G#, A, Bb, C#, D (sequential letters, not Ab)
  * ```
  */
-export function renderPitchClassSpellings(pitchClasses: PitchClass[]): PitchClass[] {
+export function renderPitchClassSpellings(pitchClasses: PitchClass[], ascending: boolean = true): PitchClass[] {
   if (pitchClasses.length === 0) {
     return [];
   }
 
   // Calculate sequential English names for the entire sequence
   const noteNames = pitchClasses.map(pc => pc.noteName);
-  const sequentialNames = getSequentialEnglishNames(noteNames);
+  const sequentialNames = getSequentialEnglishNames(noteNames, ascending);
 
   // Return new pitch class objects with updated English names
   // Note: We do NOT override referenceNoteName here - that is calculated separately
