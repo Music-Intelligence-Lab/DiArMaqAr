@@ -97,15 +97,7 @@ For any pitch name (e.g., "rast"):
 
 ### Understand the 4-octave system
 
-Arabic maqām theory traditionally spans 2 octaves. This system extends to 4 for broader instrument compatibility:
-
-| Octave | Arabic Name | Prefix | Example |
-|--------|-------------|--------|---------|
-| 0 | Qarār (lower) | `qarar_` | `qarar_rast` |
-| 1 | ʿUshayrān (first) | (none) | `rast` |
-| 2 | Jawāb (second) | `jawab_` | `jawab_rast` |
-| 3 | Jawāb Jawāb (upper) | `jawab_jawab_` | `jawab_jawab_rast` |
-
+Arabic maqām theory traditionally spans 2 octaves. This system extends to 4 for broader instrument compatibility and extra detail. 
 
 
 ## File Structure
