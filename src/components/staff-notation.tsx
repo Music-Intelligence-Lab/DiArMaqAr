@@ -142,7 +142,7 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
         if (!englishName || englishName === "--") return;
         
         // Measure note name text (line 1)
-        measureCtx.font = '11pt "Readex Pro"';
+        measureCtx.font = '10pt "Readex Pro"';
         const noteName = getDisplayName(pitchClass.noteName, 'note');
         const noteNameWidth = measureCtx.measureText(noteName).width;
         
@@ -170,7 +170,7 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
     // Calculate staff dimensions first
     const clefAndMarginWidth = 100; // Space needed for clef at the beginning
     const endMargin = - actualNoteWidth + actualNoteWidth / 4; // Minimal margin after the last note
-    const notesFormattingWidth = (notesCount - 1) * actualNoteWidth; // Space between notes for formatting
+    const notesFormattingWidth = (notesCount - 1) * actualNoteWidth - actualNoteWidth / 4; // Space between notes for formatting
     const staveWidth = clefAndMarginWidth + notesFormattingWidth + endMargin;
     
     // Calculate SVG dimensions to exactly fit the staff (no scaling)
@@ -343,7 +343,7 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
         });
         noteNameTextNote.setLine(textLine1Position);
         noteNameTextNote.setJustification(TextNote.Justification.CENTER);
-        noteNameTextNote.setFont("Readex Pro", 11);
+        noteNameTextNote.setFont("Readex Pro", 10);
         arabicTextNotes.push(noteNameTextNote);
 
         // Create a combined text note for IPN reference note name with octave and cents deviation
