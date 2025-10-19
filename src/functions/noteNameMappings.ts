@@ -417,16 +417,21 @@ export function getEnglishNoteName(arabicName: string, opts?: EnglishNameOptions
  *
  * @param startLetter - The starting letter (A-G)
  * @param count - Number of notes in the sequence
+ * @param ascending - Direction of the sequence (true for ascending, false for descending)
  * @returns Array of expected letters in sequence
  */
-function getExpectedLetterSequence(startLetter: string, count: number): string[] {
+function getExpectedLetterSequence(startLetter: string, count: number, ascending: boolean = true): string[] {
   const letters = ["A", "B", "C", "D", "E", "F", "G"];
   const startIndex = letters.indexOf(startLetter.toUpperCase());
   if (startIndex === -1) return [];
 
   const sequence: string[] = [];
   for (let i = 0; i < count; i++) {
-    sequence.push(letters[(startIndex + i) % 7]);
+    const offset = ascending ? i : -i;
+    // JavaScript modulo doesn't handle negative numbers the way we need for descending
+    // So we add a large multiple of 7 to ensure positive values before modulo
+    const index = ((startIndex + offset) % 7 + 7) % 7;
+    sequence.push(letters[index]);
   }
   return sequence;
 }
@@ -501,9 +506,10 @@ function findEnharmonicWithLetter(noteName: string, targetLetter: string): strin
  * 3. Falls back to the default mapping if no suitable enharmonic exists
  *
  * @param arabicNames - Array of Arabic note names to convert
+ * @param ascending - Direction of the sequence (true for ascending, false for descending). Defaults to true.
  * @returns Array of English note names with sequential natural letters
  */
-export function getSequentialEnglishNames(arabicNames: string[]): string[] {
+export function getSequentialEnglishNames(arabicNames: string[], ascending: boolean = true): string[] {
   if (arabicNames.length === 0) return [];
 
   // Get default mappings
@@ -517,9 +523,18 @@ export function getSequentialEnglishNames(arabicNames: string[]): string[] {
     return defaultNames;
   }
 
-  // Determine expected letter sequence from the first note
-  const firstLetter = defaultNames[0][0].toUpperCase();
-  const expectedLetters = getExpectedLetterSequence(firstLetter, arabicNames.length);
+  // For descending sequences, determine the expected letter sequence from the LAST note
+  // going upward, then reverse it to get the descending sequence
+  let expectedLetters: string[];
+  if (ascending) {
+    const firstLetter = defaultNames[0][0].toUpperCase();
+    expectedLetters = getExpectedLetterSequence(firstLetter, arabicNames.length, true);
+  } else {
+    // For descending: start from last note, calculate ascending sequence, then reverse
+    const lastLetter = defaultNames[defaultNames.length - 1][0].toUpperCase();
+    const ascendingFromLast = getExpectedLetterSequence(lastLetter, arabicNames.length, true);
+    expectedLetters = ascendingFromLast.reverse();
+  }
 
   const result: string[] = [];
 
