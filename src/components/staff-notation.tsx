@@ -129,26 +129,70 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
 
     const notesCount = computedEnglishNames.filter((en) => en && en !== "--").length;
 
-    const noteWidth = 100;
-    const staveMargin = 300;
-    const rightMargin = 20;
-    const calculatedWidth =  staveMargin + (notesCount * noteWidth) + rightMargin;
-    const calculatedHeight = 240; // Increased total height for high notes and text below
+    // Pre-calculate text widths to determine optimal note spacing
+    // Create a temporary canvas context for measuring text
+    const measureCanvas = document.createElement('canvas');
+    const measureCtx = measureCanvas.getContext('2d');
+    
+    let maxTextWidth = 0;
+    
+    if (measureCtx) {
+      pitchClasses.forEach((pitchClass, idx) => {
+        const englishName = computedEnglishNames[idx];
+        if (!englishName || englishName === "--") return;
+        
+        // Measure note name text (line 1)
+        measureCtx.font = '11pt "Readex Pro"';
+        const noteName = getDisplayName(pitchClass.noteName, 'note');
+        const noteNameWidth = measureCtx.measureText(noteName).width;
+        
+        // Measure combined text (line 2) - IPN + cents
+        measureCtx.font = '10pt "Readex Pro"';
+        const referenceNoteWithOctave = getIpnReferenceNoteNameWithOctave(pitchClass);
+        const combinedText = `${referenceNoteWithOctave} ${pitchClass.centsDeviation > 0 ? '+' : ''}${pitchClass.centsDeviation.toFixed(1)}¢`;
+        const combinedTextWidth = measureCtx.measureText(combinedText).width;
+        
+        // Take the maximum of both text lines
+        maxTextWidth = Math.max(maxTextWidth, noteNameWidth, combinedTextWidth);
+      });
+    }
+    
+    // Use strictly fixed note spacing for visual consistency across all staves
+    const fixedNoteSpacing = 120; // Fixed spacing between notes
+    
+    // Calculate the actual width needed per note based on text
+    const textPadding = 40; // Padding around text
+    const minWidthNeededForText = maxTextWidth + textPadding;
+    
+    // Use the larger of fixed spacing or text requirement for the actual rendering width
+    const actualNoteWidth = Math.max(fixedNoteSpacing, minWidthNeededForText);
+    
+    // Calculate staff dimensions first
+    const clefAndMarginWidth = 100; // Space needed for clef at the beginning
+    const endMargin = - actualNoteWidth + actualNoteWidth / 4; // Minimal margin after the last note
+    const notesFormattingWidth = (notesCount - 1) * actualNoteWidth; // Space between notes for formatting
+    const staveWidth = clefAndMarginWidth + notesFormattingWidth + endMargin;
+    
+    // Calculate SVG dimensions to exactly fit the staff (no scaling)
+    const leftPadding = 20; // Small padding on left side of SVG
+    const rightPadding = 20; // Small padding on right side of SVG
+    const calculatedWidth = leftPadding + staveWidth + rightPadding;
+    const initialHeight = 500; // Generous initial height
 
     const renderer = new Renderer(containerRef.current, Renderer.Backends.SVG);
-    renderer.resize(calculatedWidth, calculatedHeight);
+    renderer.resize(calculatedWidth, initialHeight);
     const context = renderer.getContext();
 
-    const staveX = 0;
-    const staveY = 35; // Moved staff down to create space for high ledger lines
-    const staveWidth = calculatedWidth - rightMargin;
+    // Position staff with minimal left padding (no centering needed as SVG is sized to content)
+    const staveX = leftPadding;
+    const staveY = 50; // Fixed initial position with generous top padding
     const stave = new Stave(staveX, staveY, staveWidth);
     stave.addClef(clef);
     stave.setContext(context).draw();
 
     // Add "8vb" marking below the treble clef to indicate octave transposition
     context.setFont("Readex Pro", 10, "bold");
-    context.fillText("8", 16, staveY + 106); // Position "8" below the clef (further down)
+    context.fillText("8", staveX + 16, staveY + 105); // Position "8" below the clef, relative to staff position
 
     const vexFlowNotes: StaveNote[] = [];
 
@@ -219,18 +263,71 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
     if (vexFlowNotes.length === 0) {
       if (containerRef.current) {
         containerRef.current.innerHTML =
-          '<div style="text-align: center; font-size: 14px; color: #666; padding: 20px;">No valid notes to display</div>';
+          '<div style="text-align: center; font-size: 12px; color: #666; padding: 20px;">No valid notes to display</div>';
       }
       return;
+    }
+
+    // Create voice for staff notes
+    const voice = new Voice({
+      numBeats: vexFlowNotes.length,
+      beatValue: 4,
+    });
+    voice.addTickables(vexFlowNotes);
+
+    const formatter = new Formatter();
+    formatter.joinVoices([voice]).format([voice], staveWidth - 20);
+    
+    // Draw notes first to get their bounding box
+    voice.draw(context, stave);
+
+    // After rendering notes, calculate text positions based on their bounding box
+    let textLine1Position = 10; // Default
+    let textLine2Position = 15; // Default
+    
+    if (containerRef.current) {
+      const svgElement = containerRef.current.querySelector('svg');
+      if (svgElement) {
+        // Get the bounding box of just the notes (before text is added)
+        const notesBBox = svgElement.getBBox();
+        
+        console.log('Notes BBox:', notesBBox);
+        console.log('Stave Y:', staveY);
+        
+        // Calculate dynamic text line positions based on the bottom of the notes
+        const gapBelowNotes = -20; // Space between bottom of notes and first text line (adjust this!)
+        const textLineSpacing = 20; // Space between text lines in pixels (adjust this!)
+        
+        const notesBottom = notesBBox.y + notesBBox.height;
+        
+        // Calculate absolute Y positions for text
+        const text1Y = notesBottom + gapBelowNotes;
+        const text2Y = text1Y + textLineSpacing;
+        
+        // VexFlow's setLine uses staff space units where middle line (B4) = 0
+        // Each staff space is 10 pixels (distance between two staff lines)
+        // Staff center is at staveY + 20 (middle of 5-line staff)
+        const staffCenter = staveY + 20;
+        
+        // Convert absolute Y to staff-relative line position
+        textLine1Position = (text1Y - staffCenter) / 10;
+        textLine2Position = (text2Y - staffCenter) / 10;
+        
+        console.log('Notes Bottom:', notesBottom);
+        console.log('Text 1 Y:', text1Y);
+        console.log('Text 2 Y:', text2Y);
+        console.log('Line 1 Position:', textLine1Position);
+        console.log('Line 2 Position:', textLine2Position);
+      }
     }
 
     // Create text notes for note names and combined English name with cents
     const arabicTextNotes: TextNote[] = [];
     const combinedTextNotes: TextNote[] = [];
 
-  pitchClasses.forEach((pitchClass, idx) => {
+    pitchClasses.forEach((pitchClass, idx) => {
       try {
-    const englishName = computedEnglishNames[idx];
+        const englishName = computedEnglishNames[idx];
 
         if (!englishName || englishName === "--") return;
 
@@ -244,9 +341,9 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
           text: noteName,
           duration: "q",
         });
-        noteNameTextNote.setLine(15); // Position above combined text
+        noteNameTextNote.setLine(textLine1Position);
         noteNameTextNote.setJustification(TextNote.Justification.CENTER);
-        noteNameTextNote.setFont("Readex Pro", 12); // Set smaller font size
+        noteNameTextNote.setFont("Readex Pro", 11);
         arabicTextNotes.push(noteNameTextNote);
 
         // Create a combined text note for IPN reference note name with octave and cents deviation
@@ -256,21 +353,14 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
           text: combinedText,
           duration: "q",
         });
-        combinedTextNote.setLine(17); // Position below Arabic note name
+        combinedTextNote.setLine(textLine2Position);
         combinedTextNote.setJustification(TextNote.Justification.CENTER);
-        combinedTextNote.setFont("Readex Pro", 10); // Set smaller font size
+        combinedTextNote.setFont("Readex Pro", 10);
         combinedTextNotes.push(combinedTextNote);
       } catch (error) {
         console.warn(`[StaffNotation] Could not create text note for ${pitchClass.noteName}:`, error);
       }
     });
-
-    // Create voice for staff notes
-    const voice = new Voice({
-      numBeats: vexFlowNotes.length,
-      beatValue: 4,
-    });
-    voice.addTickables(vexFlowNotes);
 
     // Create voice for note names (Arabic/localized based on language)
     const noteNameTextVoice = new Voice({
@@ -286,12 +376,42 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
     });
     combinedTextVoice.addTickables(combinedTextNotes);
 
-    const formatter = new Formatter();
-    formatter.joinVoices([voice, noteNameTextVoice, combinedTextVoice]).format([voice, noteNameTextVoice, combinedTextVoice], staveWidth - 20);
+    // Calculate the exact width needed for notes (without extra spreading)
+    // This prevents the formatter from distributing notes across the full staff width
+    const formatterWidth = notesFormattingWidth;
+    
+    // Format all voices together to ensure horizontal alignment
+    // Use the exact width needed for notes, not the full stave width
+    formatter.joinVoices([voice, noteNameTextVoice, combinedTextVoice]).format([voice, noteNameTextVoice, combinedTextVoice], formatterWidth);
+    
+    // Clear and redraw everything with aligned formatting
+    context.clear();
+    stave.setContext(context).draw();
+    context.setFont("Readex Pro", 10, "bold");
+    context.fillText("8", staveX + 16, staveY + 105); // Position "8" below the clef, relative to staff position
     
     voice.draw(context, stave);
     noteNameTextVoice.draw(context, stave);
     combinedTextVoice.draw(context, stave);
+    
+    // Get final bounding box after everything is rendered
+    if (containerRef.current) {
+      const svgElement = containerRef.current.querySelector('svg');
+      if (svgElement) {
+        const finalBBox = svgElement.getBBox();
+        
+        // Add comfortable padding at the bottom
+        const bottomPadding = 20;
+        
+        // Calculate optimal height based on actual rendered content
+        const optimalHeight = finalBBox.y + finalBBox.height + bottomPadding;
+        
+        // Only resize if the new height is significantly different (avoid tiny adjustments)
+        if (Math.abs(optimalHeight - initialHeight) > 10) {
+          renderer.resize(calculatedWidth, optimalHeight);
+        }
+      }
+    }
   };
 
   return (
