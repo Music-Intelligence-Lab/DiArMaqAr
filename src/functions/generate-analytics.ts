@@ -150,9 +150,9 @@ export function generateAndWriteAnalytics(useTimestamp: boolean = true, showProg
   if (showProgress) {
     console.log(`💾 Writing ${analyticsRows.length} analytics rows to ${filename}...`);
   }
-  
+
   fs.writeFileSync(outputPath, JSON.stringify(analyticsRows, null, 2), "utf-8");
-  
+
   if (showProgress) {
     console.log(`✅ Analytics file created: ${outputPath}`);
     console.timeEnd("Total generation time");

@@ -344,7 +344,6 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     ts: TuningSystem,
     noteName: NoteName = ""
   ) => {
-    console.log(ts, noteName);
     setSelectedTuningSystem(ts);
     handleStartNoteNameChange(
       noteName,

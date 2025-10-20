@@ -291,8 +291,7 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
         // Get the bounding box of just the notes (before text is added)
         const notesBBox = svgElement.getBBox();
         
-        console.log('Notes BBox:', notesBBox);
-        console.log('Stave Y:', staveY);
+  // Debug logs removed: computed bounding box and positions are used below
         
         // Calculate dynamic text line positions based on the bottom of the notes
         const gapBelowNotes = -20; // Space between bottom of notes and first text line (adjust this!)
@@ -313,11 +312,7 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
         textLine1Position = (text1Y - staffCenter) / 10;
         textLine2Position = (text2Y - staffCenter) / 10;
         
-        console.log('Notes Bottom:', notesBottom);
-        console.log('Text 1 Y:', text1Y);
-        console.log('Text 2 Y:', text2Y);
-        console.log('Line 1 Position:', textLine1Position);
-        console.log('Line 2 Position:', textLine2Position);
+  // Debug logs removed: final positions are set in textLine1Position/textLine2Position
       }
     }
 
