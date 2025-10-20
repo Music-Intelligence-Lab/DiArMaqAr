@@ -184,26 +184,35 @@ export default function AppClient() {
   const router = useRouter();
   const urlParamsApplied = useRef(false);
   
-  // Loading state for tab transitions
-  const [isTransitioning, setIsTransitioning] = useState(false);
+  // Track previous menu for smooth transitions
   const [previousMenu, setPreviousMenu] = useState(selectedMenu);
   
-  // Handle tab transition loading
+  // Handle tab transitions smoothly
   useEffect(() => {
     if (selectedMenu !== previousMenu) {
-      setIsTransitioning(true);
-      
+      // Update previous menu after state change
+      setPreviousMenu(selectedMenu);
+      // Scroll to top when menu changes
       if (typeof window !== "undefined") {
         window.scrollTo({ top: 0, behavior: "auto" });
       }
-      
-      setTimeout(() => {
-        setIsTransitioning(false);
-        setPreviousMenu(selectedMenu);
-      }, 5);
     }
   }, [selectedMenu, previousMenu]);
 
+  // Ensure deterministic scroll-to-top when switching back to the tuningSystem page.
+  // This covers cases where a focused element in Maqam/Jins causes the page to remain
+  // scrolled when returning to the tuning-system tab.
+  useEffect(() => {
+    if (previousMenu !== selectedMenu && selectedMenu === "tuningSystem") {
+      if (typeof window !== "undefined") {
+        const main = document.querySelector('.main-content');
+        if (main && typeof (main as HTMLElement).scrollTo === 'function') {
+          (main as HTMLElement).scrollTo({ top: 0, behavior: 'auto' });
+        }
+        window.scrollTo({ top: 0, behavior: 'auto' });
+      }
+    }
+  }, [selectedMenu, previousMenu]);
   useEffect(() => {
     // Only apply URL params once (initial load). This prevents stale searchParams
     // from re-applying and overriding user interactions (e.g. selecting a new tuning system).
@@ -292,11 +301,15 @@ export default function AppClient() {
   // Mark that we've applied URL params so we don't re-apply on subsequent searchParams changes
   urlParamsApplied.current = true;
 
-    // Set the selected menu based on parameters
-    // No need to change menu names since these are internal identifiers
-    if (maqamId) setSelectedMenu("maqam");
-    else if (jinsId) setSelectedMenu("jins");
-    else setSelectedMenu("tuningSystem"); // Default to tuning system when no specific data is loaded
+  // Set the selected menu based on parameters.
+  // If the URL explicitly contains a tuningSystem parameter, prefer showing the tuningSystem page
+  // even if jins/maqam parameters are present. This keeps descriptive params in the URL but
+  // ensures the tuning system view loads when the user expects it.
+  const hasTuningSystemParam = Boolean(searchParams.get("tuningSystem"));
+  if (hasTuningSystemParam) setSelectedMenu("tuningSystem");
+  else if (maqamId) setSelectedMenu("maqam");
+  else if (jinsId) setSelectedMenu("jins");
+  else setSelectedMenu("tuningSystem"); // Default to tuning system when no specific data is loaded
   }, [tuningSystems, ajnas, maqamat, searchParams, handleUrlParams, setSelectedMenu]);
 
   useEffect(() => {
@@ -351,34 +364,21 @@ export default function AppClient() {
 
   return (
     <div className="main-content">
-      {isTransitioning ? (
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          alignItems: 'center', 
-          height: '200px',
-          fontSize: '16px',
-          color: '#666'
-        }}>
-          Loading...
-        </div>
-      ) : (
-        <>
-          {selectedMenu === "tuningSystem" && <TuningSystemManager admin={false} />}
-          {selectedMenu === "tuningSystem-admin" && <TuningSystemManager admin />}
-          {selectedMenu === "maqam" && selectedTuningSystem && <MaqamManager admin={false} />}
-          {selectedMenu === "maqam-admin" && selectedTuningSystem && <MaqamManager admin />}
-          {selectedMenu === "jins" && selectedTuningSystem && <JinsManager admin={false} />}
-          {selectedMenu === "jins-admin" && selectedTuningSystem && <JinsManager admin />}
-          {selectedTuningSystem && !["tuningSystem", "tuningSystem-admin", "bibliography", "bibliography-admin", "pattern-admin"].includes(selectedMenu) && <PitchClassBar />}
-          {(selectedMenu === "maqam" || selectedMenu === "maqam-admin") && selectedTuningSystem && <MaqamTranspositions />}
-          {(selectedMenu === "jins" || selectedMenu === "jins-admin") && selectedTuningSystem && <JinsTranspositions />}
-          {selectedMenu === "sayr" && selectedMaqamData && <SayrManager admin={false} />}
-          {selectedMenu === "sayr-admin" && selectedMaqamData && <SayrManager admin />}
-          {selectedMenu === "modulation" && <Modulations />}
-          {selectedMenu === "pattern-admin" && <PatternsManager />}
-        </>
-      )}
+      <>
+        {selectedMenu === "tuningSystem" && <TuningSystemManager admin={false} />}
+        {selectedMenu === "tuningSystem-admin" && <TuningSystemManager admin />}
+        {selectedMenu === "maqam" && selectedTuningSystem && <MaqamManager admin={false} />}
+        {selectedMenu === "maqam-admin" && selectedTuningSystem && <MaqamManager admin />}
+        {selectedMenu === "jins" && selectedTuningSystem && <JinsManager admin={false} />}
+        {selectedMenu === "jins-admin" && selectedTuningSystem && <JinsManager admin />}
+        {selectedTuningSystem && !["tuningSystem", "tuningSystem-admin", "bibliography", "bibliography-admin", "pattern-admin"].includes(selectedMenu) && <PitchClassBar />}
+        {(selectedMenu === "maqam" || selectedMenu === "maqam-admin") && selectedTuningSystem && <MaqamTranspositions />}
+        {(selectedMenu === "jins" || selectedMenu === "jins-admin") && selectedTuningSystem && <JinsTranspositions />}
+        {selectedMenu === "sayr" && selectedMaqamData && <SayrManager admin={false} />}
+        {selectedMenu === "sayr-admin" && selectedMaqamData && <SayrManager admin />}
+        {selectedMenu === "modulation" && <Modulations />}
+        {selectedMenu === "pattern-admin" && <PatternsManager />}
+      </>
       <Footer/>
       <KeyboardControls />
     </div>

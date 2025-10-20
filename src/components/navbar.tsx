@@ -55,6 +55,27 @@ export default function Navbar() {
     return calculateNumberOfModulations(modulations);
   }, [selectedMaqamData, getModulations]);
 
+  // Helper function to handle tab clicks with scroll behavior
+  const handleTabClick = (tabName: typeof selectedMenu) => {
+    const isAlreadySelected = selectedMenu === tabName;
+    if (typeof window !== "undefined") {
+      if (isAlreadySelected) {
+        // Second click on same tab - scroll to top with smooth behavior
+        const mainContent = document.querySelector(".main-content");
+        if (mainContent) {
+          mainContent.scrollTo({ top: 0, behavior: "smooth" });
+        } else {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+      } else {
+        // First click on new tab - set menu and let the page scroll to top naturally
+        setSelectedMenu(tabName);
+      }
+    } else {
+      setSelectedMenu(tabName);
+    }
+  };
+
   // Helper function to create navbar tabs array and handle RTL ordering
   const getNavbarTabs = () => {
     const tabs = [
@@ -69,21 +90,7 @@ export default function Navbar() {
                 ? "navbar__bottom-bar-item_selected "
                 : ""
             } ${selectedTuningSystem ? "navbar__bottom-bar-item_active" : ""}`}
-            onClick={() => {
-              setSelectedMenu("tuningSystem");
-              if (typeof window !== "undefined") {
-                // Scroll to top of main content area instead of specific component
-                const mainContent = document.querySelector(".main-content");
-                if (mainContent) {
-                  mainContent.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start",
-                  });
-                } else {
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                }
-              }
-            }}
+            onClick={() => handleTabClick("tuningSystem")}
           >
             {selectedTuningSystem ? (
               <>
@@ -133,21 +140,7 @@ export default function Navbar() {
             className={`navbar__bottom-bar-item ${
               selectedMenu === "jins" ? "navbar__bottom-bar-item_selected" : ""
             } ${selectedJinsData ? "navbar__bottom-bar-item_active" : ""}`}
-            onClick={() => {
-              setSelectedMenu("jins");
-              if (typeof window !== "undefined") {
-                // Scroll to top of main content area instead of specific component
-                const mainContent = document.querySelector(".main-content");
-                if (mainContent) {
-                  mainContent.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start",
-                  });
-                } else {
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                }
-              }
-            }}
+            onClick={() => handleTabClick("jins")}
             disabled={!selectedTuningSystem}
           >
             <span className="navbar__bottom-bar-item_tab-title">
@@ -210,21 +203,7 @@ export default function Navbar() {
             className={`navbar__bottom-bar-item ${
               selectedMenu === "maqam" ? "navbar__bottom-bar-item_selected" : ""
             } ${selectedMaqamData ? "navbar__bottom-bar-item_active" : ""}`}
-            onClick={() => {
-              setSelectedMenu("maqam");
-              if (typeof window !== "undefined") {
-                // Scroll to top of main content area instead of specific component
-                const mainContent = document.querySelector(".main-content");
-                if (mainContent) {
-                  mainContent.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start",
-                  });
-                } else {
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                }
-              }
-            }}
+            onClick={() => handleTabClick("maqam")}
             disabled={!selectedTuningSystem}
           >
             <span className="navbar__bottom-bar-item_tab-title">
