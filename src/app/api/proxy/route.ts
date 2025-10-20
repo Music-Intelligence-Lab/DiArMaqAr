@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     const REMOTE_API_BASE = 'https://arabic-maqam-network.vercel.app/api';
     const targetUrl = `${REMOTE_API_BASE}${endpoint}`;
     
-    console.log(`Proxying request to: ${targetUrl}`);
+  // Intentionally not logging proxy target to avoid noisy server logs in production
     
     // Server-to-server call - no CORS issues!
     const response = await fetch(targetUrl, {
