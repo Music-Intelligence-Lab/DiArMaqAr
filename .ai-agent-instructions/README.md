@@ -64,19 +64,23 @@ These files contain instructions specific to the DiArMaqAr project:
 ### For General Development Tasks
 
 1. Read **`00-ai-agent-personality.md`** first (if first time)
+   - **Note**: Includes important guidance on using MCP servers (Context7, Playwright)
 2. Skim **`01-project-overview.md`** to understand the project
 3. Reference **`02-architecture.md`** and **`03-development-conventions.md`** as needed
+   - **Note**: `03-development-conventions.md` has MCP usage guidelines
 4. Consult **`04-musicological-principles.md`** when working with music theory logic
 
 ### For Testing Tasks
 
 1. Use **`05-testing-guide.md`** for comprehensive testing protocols
-2. Reference **`04-musicological-principles.md`** to understand expected behaviors
+2. Consider using **Playwright MCP** for automated browser testing
+3. Reference **`04-musicological-principles.md`** to understand expected behaviors
 
 ### For Documentation Tasks
 
 1. Follow **`06-documentation-standards.md`** for all documentation
-2. Reference **`00-ai-agent-personality.md`** for cultural sensitivity guidelines
+2. Use **Context7 MCP** to fetch current library documentation when needed
+3. Reference **`00-ai-agent-personality.md`** for cultural sensitivity guidelines
 
 ### For Bug Fixes
 

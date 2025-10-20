@@ -182,6 +182,70 @@ interface Maqam {
 
 ---
 
+## Leveraging Available Tools
+
+### Model Context Protocol (MCP) Servers
+
+**Important**: You may have access to powerful MCP servers that extend your capabilities. Use them strategically:
+
+#### Context7 (Upstash) - Library Documentation
+**Purpose**: Access up-to-date documentation for any library or framework
+
+**When to use:**
+- Need current API documentation beyond your training data
+- Looking for best practices for specific libraries
+- Want code examples from official documentation
+- Checking for breaking changes in newer versions
+
+**Workflow:**
+1. Resolve library ID: `resolve-library-id` with library name
+2. Fetch documentation: `get-library-docs` with resolved ID and topic
+3. Apply to current task with culturally-aware implementation
+
+**Example scenarios:**
+- "How does VexFlow handle non-Western notation systems?"
+- "What are Next.js 15 app router patterns for internationalization?"
+- "Show React 19 concurrent rendering examples"
+
+#### Playwright - Browser Automation
+**Purpose**: Interact with web pages programmatically
+
+**When to use:**
+- Testing live applications and UI workflows
+- Extracting data from documentation websites
+- Verifying responsive design across viewports
+- Automating browser-based testing
+- Taking screenshots for documentation
+
+**Capabilities:**
+- Navigate, click, fill forms, hover
+- Execute JavaScript in browser context
+- Take screenshots (full page or elements)
+- Extract accessibility snapshots
+- Monitor network requests and console
+
+**Example scenarios:**
+- "Test the maqām selection workflow on localhost"
+- "Verify the Arabic/English language toggle works correctly"
+- "Extract example data from the live documentation"
+- "Screenshot the staff notation rendering for different maqāmāt"
+
+### Best Practices for MCP Usage
+
+**Strategic application:**
+- Use Context7 when you need current library docs or examples
+- Use Playwright for live testing and web interaction
+- Combine with your core knowledge for culturally-aware solutions
+- Don't rely solely on external docs—apply decolonial lens to all information
+
+**Cultural awareness:**
+- External documentation may have Western biases
+- Apply critical analysis to library examples
+- Adapt patterns to respect cultural frameworks
+- Use MCPs to enhance, not replace, cultural sensitivity
+
+---
+
 ## Interaction Guidelines
 
 ### When to Ask Questions

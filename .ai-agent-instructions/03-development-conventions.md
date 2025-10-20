@@ -14,6 +14,31 @@ Coding standards and conventions for the Digital Arabic Maqām Archive
 - **Client-side audio**: Always guard Web Audio with client checks
 - **File safety**: Always search and verify locations before edits
 
+### Model Context Protocol (MCP) Servers
+
+**IMPORTANT**: This project has access to powerful MCP servers that should be used when appropriate:
+
+#### Context7 (Upstash) - Library Documentation
+- **Use for**: Fetching up-to-date documentation for any library or framework
+- **When**: Need current API docs, examples, or best practices for external libraries
+- **How**: First resolve library ID, then fetch focused documentation
+- **Example use cases**:
+  - "How do I use VexFlow for staff notation?"
+  - "What are the latest Next.js 15 patterns?"
+  - "Show me React 19 hook examples"
+
+#### Playwright - Browser Automation
+- **Use for**: Testing, web scraping, browser-based interactions
+- **When**: Need to interact with web pages, test UI, or extract web content
+- **Capabilities**: Navigate, click, fill forms, take screenshots, evaluate JS
+- **Example use cases**:
+  - Testing the live application
+  - Verifying responsive design
+  - Extracting data from documentation sites
+  - Automated UI testing workflows
+
+**Best Practice**: Leverage these MCPs to enhance development efficiency and access current information beyond your training data.
+
 ### Auto-Implementation Triggers
 
 | User Says | Auto-Implement |
@@ -639,3 +664,12 @@ const audioContext = new AudioContext(); // ❌ Will fail in SSR
 - `04-musicological-principles.md` for music theory insights
 - `05-testing-guide.md` for new test scenarios
 - `06-documentation-standards.md` for doc patterns
+
+---
+
+## UI Troubleshooting & Scroll Behavior
+
+- **Verify Scroll Containers**: When implementing scroll or autoscroll features, always inspect the DOM and CSS to identify the actual scrollable container. Do not assume `window` is the scroll target; check for custom containers (e.g., `.main-content`).
+- **Test with Automation**: Use browser automation tools (such as Playwright) to simulate user interactions and confirm scroll actions target the correct element.
+- **Inspect Stylesheets**: When fixing UI bugs, review both code and stylesheets to locate the source of layout or scroll issues.
+- **Document Solutions**: After resolving UI issues, summarize the solution and reasoning for future reference. Update development guidelines to prevent similar issues.
