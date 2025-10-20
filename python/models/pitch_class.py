@@ -117,6 +117,8 @@ def calculate_interval(first_pitch_class: PitchClass, second_pitch_class: PitchC
         original_value = f"{decimal_ratio:.2f}"
     elif original_value_type == "stringLength":
         original_value = f"{string_length:.2f}"
+    elif original_value_type == "fretDivision":
+        original_value = f"{fret_division:.2f}"
 
     return PitchClassInterval(
         fraction=fraction,

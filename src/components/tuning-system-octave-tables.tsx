@@ -877,7 +877,8 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                     <td className="tuning-system-manager__row-header">
                       {t(`octave.${pitchClassType === 'fraction' ? 'fractionRatio' : 
                            pitchClassType === 'decimalRatio' ? 'decimalRatio' : 
-                           pitchClassType === 'stringLength' ? 'stringLength' : 'cents'}`)}
+                           pitchClassType === 'stringLength' ? 'stringLength' : 
+                           pitchClassType === 'fretDivision' ? 'fretDivision' : 'cents'}`)}
                     </td>
                     {rowCells.map((pitchClass, colIndex) => (
                       <td key={colIndex} className={getCellClassName(octave, colIndex)}>
@@ -940,7 +941,8 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                   </tr>
                 )}
 
-                {filters.fretDivision && (
+                {/* Row 7.5: Fret Division */}
+                {filters.fretDivision && pitchClassType !== "fretDivision" && (
                   <tr>
                     <td className="tuning-system-manager__row-header">{t('octave.fretDivision')}</td>
                     {rowCells.map((pitchClass, colIndex) => (
