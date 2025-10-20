@@ -41,7 +41,7 @@ export default interface PitchClass {
   /** The original input value used to create this pitch class */
   originalValue: string;
   
-  /** The type of the original value ("fraction", "cents", "decimalRatio", "stringLength") */
+  /** The type of the original value ("fraction", "fretDivision", "cents", "decimalRatio", "stringLength") */
   originalValueType: string;
   
   /** English name of the note */
@@ -141,6 +141,7 @@ export function calculateInterval(firstPitchClass: PitchClass, secondPitchClass:
   else if (originalValueType === "cents") originalValue = cents.toFixed(2);
   else if (originalValueType === "decimalRatio") originalValue = decimalRatio.toFixed(2);
   else if (originalValueType === "stringLength") originalValue = stringLength.toFixed(2);
+  else if (originalValueType === "fretDivision") originalValue = fretDivision.toFixed(2);
 
   return {
     fraction,

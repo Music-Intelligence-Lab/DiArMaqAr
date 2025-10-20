@@ -7,15 +7,19 @@
  *
  * The detection logic follows this priority:
  * 1. Fraction patterns (e.g., "3/2", "4:3")
- * 2. Cents values (ascending numbers < 1200)
- * 3. Decimal ratios (ascending numbers 1.0-2.0)
- * 4. String lengths (descending numbers)
+ * 2. Fret division values (ascending numbers ending at 1000 or > 1200)
+ * 3. Cents values (ascending numbers < 1200)
+ * 4. Decimal ratios (ascending numbers 1.0-2.0)
+ * 5. String lengths (descending numbers)
  *
  * @param values - Array of pitch class values as strings
  * @returns The detected format type or "unknown" if indeterminate
  *
  * @example
  * detectPitchClassType(["1/1", "9/8", "5/4", "4/3"]) // Returns "fraction"
+ *
+ * @example
+ * detectPitchClassType(["0", "102", "201", "298", "1000"]) // Returns "fretDivision"
  *
  * @example
  * detectPitchClassType(["0", "204", "386", "498"]) // Returns "cents"
@@ -26,7 +30,7 @@
  * @example
  * detectPitchClassType(["10000", "9600", "8700", "7000"]) // Returns "stringLength"
  */
-export default function detectPitchClassValueType(values: string[]): "fraction" | "cents" | "decimalRatio" | "stringLength" | "unknown" {
+export default function detectPitchClassValueType(values: string[]): "fraction" | "fretDivision" | "cents" | "decimalRatio" | "stringLength" | "unknown" {
   // Handle empty or invalid input
   if (!values.length) return "unknown";
 
@@ -60,6 +64,20 @@ export default function detectPitchClassValueType(values: string[]): "fraction" 
   // Check if values are in ascending or descending order
   const ascending = numericVals.every((val, i, arr) => (i === 0 ? true : val >= arr[i - 1]));
   const descending = numericVals.every((val, i, arr) => (i === 0 ? true : val <= arr[i - 1]));
+
+  // Test for fret division format (ascending values ending at 1000 or exceeding 1200)
+  // Fret divisions are distinguishable from cents by either:
+  // 1. Having a last value at or near 1000 (fixed end point)
+  // 2. Having values that exceed 1200 (beyond one octave in cents)
+  if (ascending) {
+    const lastValue = numericVals[numericVals.length - 1];
+    const hasFixedEndpoint = Math.abs(lastValue - 1000) < 50; // Within 50 of 1000
+    const exceedsOctave = numericVals.some((v) => v > 1200);
+    
+    if (hasFixedEndpoint || exceedsOctave) {
+      return "fretDivision";
+    }
+  }
 
   // Test for cents format (ascending values within 0-1200 range)
   if (ascending && numericVals.every((v) => v >= 0 && v < 1200)) {
