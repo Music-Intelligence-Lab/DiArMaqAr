@@ -302,13 +302,12 @@ export default function AppClient() {
   urlParamsApplied.current = true;
 
   // Set the selected menu based on parameters.
-  // If the URL explicitly contains a tuningSystem parameter, prefer showing the tuningSystem page
-  // even if jins/maqam parameters are present. This keeps descriptive params in the URL but
-  // ensures the tuning system view loads when the user expects it.
-  const hasTuningSystemParam = Boolean(searchParams.get("tuningSystem"));
-  if (hasTuningSystemParam) setSelectedMenu("tuningSystem");
+  // Priority: jins > maqam > sayr > tuningSystem (default)
+  // If jins, maqam, or sayr params are present, navigate to that page
+  // Otherwise show tuning system
+  if (jinsId) setSelectedMenu("jins");
+  else if (maqamId && sayrId) setSelectedMenu("sayr");
   else if (maqamId) setSelectedMenu("maqam");
-  else if (jinsId) setSelectedMenu("jins");
   else setSelectedMenu("tuningSystem"); // Default to tuning system when no specific data is loaded
   }, [tuningSystems, ajnas, maqamat, searchParams, handleUrlParams, setSelectedMenu]);
 
