@@ -8,8 +8,8 @@
  * The detection logic follows this priority:
  * 1. Fraction patterns (e.g., "3/2", "4:3")
  * 2. Fret division values (ascending numbers ending at 1000 or > 1200)
- * 3. Cents values (ascending numbers < 1200)
- * 4. Decimal ratios (ascending numbers 1.0-2.0)
+ * 3. Decimal ratios (ascending numbers 1.0-2.0) - checked before cents since it's more specific
+ * 4. Cents values (ascending numbers >= 0 and < 1200, excluding decimal ratio range)
  * 5. String lengths (descending numbers)
  *
  * @param values - Array of pitch class values as strings
@@ -79,14 +79,17 @@ export default function detectPitchClassValueType(values: string[]): "fraction" 
     }
   }
 
-  // Test for cents format (ascending values within 0-1200 range)
-  if (ascending && numericVals.every((v) => v >= 0 && v < 1200)) {
-    return "cents";
-  }
-
-  // Test for decimal ratio format (ascending values in typical ratio range)
+  // Test for decimal ratio format BEFORE cents (ascending values in typical ratio range)
+  // Must be checked before cents since decimal ratios in range [1.0, 2.0) also fall within
+  // the cents range [0, 1200), so decimal ratio is more specific and should take priority
   if (ascending && numericVals.every((v) => v >= 1.0 && v < 2.0)) {
     return "decimalRatio";
+  }
+
+  // Test for cents format (ascending values within 0-1200 range)
+  // Note: This check excludes values >= 1.0 since those should be caught as decimal ratios
+  if (ascending && numericVals.every((v) => v >= 0 && v < 1200)) {
+    return "cents";
   }
 
   // Test for string length format (descending values)

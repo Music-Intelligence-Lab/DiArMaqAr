@@ -3893,7 +3893,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "MashrafaandMukhtar-(1944)",
+    "id": "MukhtarandMushrrafa-(1944)",
     "titleEnglish": "Egyptian Tuning 22-Tone",
     "titleArabic": "التنغيم المصري 22 نغمة",
     "year": "1944",
@@ -3905,9 +3905,9 @@
         "page": "139"
       }
     ],
-    "creatorEnglish": "Mashrafa and Mukhtār",
+    "creatorEnglish": "Mukhtār and Mushrrafa",
     "creatorArabic": "مشرفة ومختار",
-    "commentsEnglish": "According to Shawqī (1969:135) quoting from Mukhtār (1944) the research project began in 1935. The researchers Alī Muṣṭafā Mashrafa and Maḥmūd Mukhtār asked the musicians Muṣṭafā Riḍā, Muṣṭafā al-'Aqqād and Ibrahīm Farūz to each tune their own Qanūn and prepare it for the performance of a specific maqām, and then oversee the recording and tuning analysis of each note. \n\nThe results are given as a table with multiple columns that is confusing. The list includes measurements with a partial list of the note names in Arabic (14 note names) because the tests were undertook on a limited selection of maqāmāt including maqāmāt iraq, ḥijāz, nahāwand, ṣabā and ḥijāz kār and therefore only the note names from those maqāmāt were used. These are presented alongside another column that includes a full list of 23 note names in solfege alongside their measurements. The confusion arises because some notes have two different values in columns marked as Results of the Experiment, and Full List, something which Shawqī does not address.\n\nThe version saved here takes the 14 measurements from the Arabic note names list (Results of the Experiment column), and the remaining rest from the Full List of 23 . \n\nThe original values reprinted by Shawqī are given as frequencies in Hz starting from 1000, which is a bizarre choice (see below). We have converted them to cents in order to enter them accurately in this database.\n\nOriginal values in Hz:\n1000, 1057, 1080, 1123, 1171, 1190, 1228, 1274, 1302, 1330, 1417, 1440, 1498, 1562, 1590, 1685, 1738, 1779, 1831, 1880, 1920, 1955, 2000.\n\nMaḥmūd Mukhtār (1944) al-Salālem al-Muūṣīqīya al-Musta'mala fi Miṣr, Maṭbū'āt al-Jam'īya al-Miṣrīya li Huwāt al-Mūsīqā",
+    "commentsEnglish": "According to Shawqī (1969:135), quoting from Mukhtār (1944), the research project began in 1935. The researchers Alī Muṣṭafā Mushrrafa and Maḥmūd Mukhtār asked the musicians Muṣṭafā Riḍā, Muṣṭafā al-'Aqqād and Ibrahīm Farūz to each tune their own Qanūn and prepare it for the performance of a specific maqām, and then oversee the recording and tuning analysis of each note. \n\nThe values in Shawqī are given as a table with multiple columns that is confusing. The tables includes measurements aligning with a partial list of the note names in Arabic (14 note names) because \"the tests were undertook on a limited selection of maqāmāt including maqāmāt iraq, ḥijāz, nahāwand, ṣabā and ḥijāz kār and therefore only the note names from those maqāmāt were used\". These are presented alongside another column that includes a full list of 23 note names in solfege alongside their measurements. The confusion arises because some notes have two different values in columns marked as Results of the Experiment, and Full List, something which Shawqī does not address.\n\nThe version saved here takes the 14 measurements from the Arabic note names list (Results of the Experiment column), and the remaining rest from the Full List of 23. \n\nThe original values reprinted by Shawqī are given as frequencies in Hz starting from 1000, as listed below. \n\nOriginal values in Hz:\n1000, 1057, 1080, 1123, 1171, 1190, 1228, 1274, 1302, 1330, 1417, 1440, 1498, 1562, 1590, 1685, 1738, 1779, 1831, 1880, 1920, 1955, 2000.\n\nWe have converted them to cents in order to enter them accurately in this database. The cents conversion can be verified by changing the Frequency value of the first pitch class to 1000 Hz. \n\nWe have been unable to source a copy of Mukhtār (1944), but we do have access to Mokhtar and Mosharrafa (1937) which is where the original 14 measurements were published, and listed as decimal ratios. We have included it in our database, in the original decimals ratios values, under Mokhtar and Mosharrafa (1937) because it is an English language article and that's how their names are spelled. ",
     "commentsArabic": "",
     "tuningSystemPitchClasses": [
       "0.000",
@@ -4010,9 +4010,9 @@
     "referenceFrequencies": {
       "yegāh": 97.999,
       "ʿushayrān": 110,
-      "rāst": 130.665
+      "rāst": 130.7
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2025-10-23T21:23:15.543Z"
   },
   {
     "id": "al-Sabbagh-(1950)",
@@ -4834,5 +4834,88 @@
       "yegāh": 98
     },
     "version": "2025-10-20T23:39:35.568Z"
+  },
+  {
+    "id": "MokhtarandMosharrafa-(1937)",
+    "titleEnglish": "Modes in Modern Egyptian Music",
+    "titleArabic": "غير مسمى",
+    "year": "1937",
+    "sourceEnglish": "Unknown Source",
+    "sourceArabic": "مصدر غير معروف",
+    "sourcePageReferences": [],
+    "creatorEnglish": "Mokhtar and Mosharrafa",
+    "creatorArabic": "مختار ومشرّفة",
+    "commentsEnglish": "\"We have been engaged on determining the frequency ratios involved in the principal musical scales or modes in current use in Egypt to-day. Those scales were the subject of a controversial discussion at an international congress held in Cairo in March 1932.' In the present investigation, three expert tuners (appointed by the Royal Institute of Oriental Music)  tuned a Qanun, an instrument consisting of strings stretched on a sounding board, to the different modes, and the frequencies were then measured by means of an audio-frequency valve oscillator to which a calibration curve was plotted by means of a set of standard tuning forks. The actual determination of each frequency was carried out using the method of beats. The notes constituting each scale were taken in ascending and then in descending order, so as to correct for possible variation in temperature. The experimental error is of the order of 0 ·1 per cent. The results for each of the three tuners were recorded separately and an average was then taken. The following table gives the fourteen recognizable intervals into which an octave was found to be subdivided compared with the diatonic and equitempered scales. The four principal modes correspond to the following groups of notes (quoted by their numbers): (l, 3, 5, 7, 9, 11, 13), (3, 4, 8, 9, 11, 13, 1'), (3, 5, 7, 8, 11, 12, 1'), (1, 3, 4, 7, 9, 10, 14). Of these the last is the same as the minor scale in European music. Other modes are obtained by changing the first note (key-note) in a group. The most characteristic feature of the scheme is the appearance of neutral thirds and neutral sevenths. A fuller account will appear elsewhere.\"",
+    "commentsArabic": "",
+    "tuningSystemPitchClasses": [
+      "1.000",
+      "1.057",
+      "1.123",
+      "1.200",
+      "1.228",
+      "1.274",
+      "1.330",
+      "1.417",
+      "1.498",
+      "1.590",
+      "1.685",
+      "1.779",
+      "1.831",
+      "1.880"
+    ],
+    "noteNames": [
+      [
+        "rāst",
+        "zīrgūleh",
+        "dūgāh",
+        "kurdī",
+        "segāh",
+        "nīm būselīk",
+        "chahārgāh",
+        "ḥijāz",
+        "nawā",
+        "ḥiṣār",
+        "ḥusaynī",
+        "ʿajam",
+        "awj",
+        "nīm māhūr"
+      ]
+    ],
+    "abjadNames": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "stringLength": 1000,
+    "defaultReferenceFrequency": 440,
+    "referenceFrequencies": {
+      "rāst": 130.7
+    },
+    "version": "2025-10-23T21:29:33.604Z"
   }
 ]

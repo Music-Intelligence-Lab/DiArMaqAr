@@ -928,7 +928,7 @@ const MaqamTranspositions: React.FC = () => {
                 <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type={valueType}>{pitchClasses[0].originalValue}</td>
                 {intervals.map((interval, i) => (
                   <React.Fragment key={i}>
-                    <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type={`${valueType}-interval`}>{useRatio ? `(${interval.fraction.replace("/", ":")})` : `(${interval.cents.toFixed(3)})`}</td>
+                    <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type={`${valueType}-interval`}>{valueType === "decimalRatio" ? `(${interval.decimalRatio.toFixed(3)})` : valueType === "fraction" ? `(${interval.fraction.replace("/", ":")})` : `(${interval.cents.toFixed(3)})`}</td>
                     <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type={valueType}>{pitchClasses[i + 1].originalValue}</td>
                     {i === intervals.length - 1 && <td className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></td>}
                   </React.Fragment>
