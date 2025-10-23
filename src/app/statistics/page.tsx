@@ -5,7 +5,7 @@ import Footer from "@/components/footer";
 import useMenuContext from "@/contexts/menu-context";
 import "@/styles/statistics.scss";
 
-interface AnalyticsRow {
+interface StatisticsRow {
   id: string;
   label: string;
   possibleAjnasCount: number;
@@ -19,7 +19,7 @@ interface AnalyticsRow {
   totalMaqamatModulations: number;
 }
 
-const ANALYTICS_PATH = "/data/analytics.json";
+const STATISTICS_PATH = "/data/statistics.json";
 
 // Extracts the first number and optional trailing letter inside parentheses, e.g. (950g) or (950)
 function extractYearParts(label: string): { year: number; letter: string } {
@@ -32,28 +32,28 @@ function extractYearParts(label: string): { year: number; letter: string } {
 
 export default function StatisticsPage() {
   const { showAdminTabs } = useMenuContext();
-  const [rows, setRows] = useState<AnalyticsRow[]>([]);
-  const [sortKey, setSortKey] = useState<keyof AnalyticsRow>("label");
+  const [rows, setRows] = useState<StatisticsRow[]>([]);
+  const [sortKey, setSortKey] = useState<keyof StatisticsRow>("label");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  // Fetch analytics data from JSON file
-  const fetchAnalytics = async () => {
+  // Fetch statistics data from JSON file
+  const fetchStatistics = async () => {
     setError(null);
     try {
-      const res = await fetch(`${ANALYTICS_PATH}?t=${Date.now()}`);
-      if (!res.ok) throw new Error("Failed to load analytics data");
+      const res = await fetch(`${STATISTICS_PATH}?t=${Date.now()}`);
+      if (!res.ok) throw new Error("Failed to load statistics data");
       const data = await res.json();
       setRows(data);
     } catch (e: any) {
-      setError(e.message || "Error loading analytics data");
+      setError(e.message || "Error loading statistics data");
     }
   };
 
   useEffect(() => {
-    fetchAnalytics();
+    fetchStatistics();
   }, []);
 
   // Handle re-generation
@@ -62,13 +62,13 @@ export default function StatisticsPage() {
     setError(null);
     setSuccess(null);
     try {
-      const res = await fetch("/api/generate-analytics", { method: "POST" });
-      if (!res.ok) throw new Error("Failed to re-generate analytics");
-      await fetchAnalytics();
-      setSuccess("Analytics re-generated successfully!");
+      const res = await fetch("/api/generate-statistics", { method: "POST" });
+      if (!res.ok) throw new Error("Failed to re-generate statistics");
+      await fetchStatistics();
+      setSuccess("Statistics re-generated successfully!");
       setTimeout(() => setSuccess(null), 30000);
     } catch (e: any) {
-      setError(e.message || "Error re-generating analytics");
+      setError(e.message || "Error re-generating statistics");
     } finally {
       setLoading(false);
     }
@@ -100,7 +100,7 @@ export default function StatisticsPage() {
     return sorted;
   }, [rows, sortKey, sortDir]);
 
-  function renderSortableHeader(label: string, key: keyof AnalyticsRow) {
+  function renderSortableHeader(label: string, key: keyof StatisticsRow) {
     return (
       <th
         key={key}
@@ -126,7 +126,7 @@ export default function StatisticsPage() {
       {showAdminTabs && (
         <div className="admin-controls">
           <button onClick={handleReRender} disabled={loading}>
-            {loading ? "Re-Rendering..." : "Re-Render Analytics"}
+            {loading ? "Re-Rendering..." : "Re-Render Statistics"}
           </button>
         </div>
       )}
