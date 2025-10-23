@@ -7,7 +7,7 @@ import MaqamData from "@/models/Maqam";
 
 type NoteName = string;
 
-interface AnalyticsFormData {
+interface StatisticsFormData {
   maqamID: string;
   tuningSystemId: string;
   tuningSystemStartingNoteName: string;
@@ -18,21 +18,21 @@ interface AnalyticsFormData {
   centsTolerance: number;
 }
 
-interface AnalyticsResult {
+interface StatisticsResult {
   maqam: MaqamData;
   tuningSystems: { [key: string]: any };
 }
 
-function AnalyticsClient() {
+function StatisticsClient() {
   const [tuningSystems, setTuningSystems] = useState<TuningSystem[]>([]);
   const [maqamat, setMaqamat] = useState<MaqamData[]>([]);
   const [availableStartingNotes, setAvailableStartingNotes] = useState<NoteName[]>([]);
   const [availableQararNotes, setAvailableQararNotes] = useState<NoteName[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<AnalyticsResult | null>(null);
+  const [result, setResult] = useState<StatisticsResult | null>(null);
 
-  const [formData, setFormData] = useState<AnalyticsFormData>({
+  const [formData, setFormData] = useState<StatisticsFormData>({
     maqamID: "",
     tuningSystemId: "",
     tuningSystemStartingNoteName: "",
@@ -115,7 +115,7 @@ function AnalyticsClient() {
     }
   }, [formData.tuningSystemId, formData.tuningSystemStartingNoteName, tuningSystems]);
 
-  const handleFormChange = (field: keyof AnalyticsFormData, value: any) => {
+  const handleFormChange = (field: keyof StatisticsFormData, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
@@ -197,19 +197,19 @@ function AnalyticsClient() {
   };
 
   return (
-    <div className="analytics-client">
+    <div className="statistics-client">
       {/* Analysis Form */}
-      <section className="analytics-client__form-section">
-        <h2 className="analytics-client__section-title">Analysis Configuration</h2>
+      <section className="statistics-client__form-section">
+        <h2 className="statistics-client__section-title">Analysis Configuration</h2>
         
-        <div className="analytics-client__form">
-          <div className="analytics-client__form-grid">
+        <div className="statistics-client__form">
+          <div className="statistics-client__form-grid">
             {/* Maqam Selection */}
-            <div className="analytics-client__form-group">
-              <label className="analytics-client__label">
+            <div className="statistics-client__form-group">
+              <label className="statistics-client__label">
                 Maqām
                 <select
-                  className="analytics-client__select"
+                  className="statistics-client__select"
                   value={formData.maqamID}
                   onChange={(e) => handleFormChange("maqamID", e.target.value)}
                 >
@@ -224,11 +224,11 @@ function AnalyticsClient() {
             </div>
 
             {/* Tuning System Selection */}
-            <div className="analytics-client__form-group">
-              <label className="analytics-client__label">
+            <div className="statistics-client__form-group">
+              <label className="statistics-client__label">
                 Tuning System
                 <select
-                  className="analytics-client__select"
+                  className="statistics-client__select"
                   value={formData.tuningSystemId}
                   onChange={(e) => handleFormChange("tuningSystemId", e.target.value)}
                 >
@@ -243,11 +243,11 @@ function AnalyticsClient() {
             </div>
 
             {/* Starting Note Selection */}
-            <div className="analytics-client__form-group">
-              <label className="analytics-client__label">
+            <div className="statistics-client__form-group">
+              <label className="statistics-client__label">
                 Starting Note
                 <select
-                  className="analytics-client__select"
+                  className="statistics-client__select"
                   value={formData.tuningSystemStartingNoteName}
                   onChange={(e) => handleFormChange("tuningSystemStartingNoteName", e.target.value)}
                 >
@@ -262,11 +262,11 @@ function AnalyticsClient() {
             </div>
 
             {/* Qarar Note Selection (Optional) */}
-            <div className="analytics-client__form-group">
-              <label className="analytics-client__label">
+            <div className="statistics-client__form-group">
+              <label className="statistics-client__label">
                 Qarar Note (Optional)
                 <select
-                  className="analytics-client__select"
+                  className="statistics-client__select"
                   value={formData.qararNoteName}
                   onChange={(e) => handleFormChange("qararNoteName", e.target.value)}
                   disabled={!formData.tuningSystemStartingNoteName}
@@ -282,12 +282,12 @@ function AnalyticsClient() {
             </div>
 
             {/* Cents Tolerance */}
-            <div className="analytics-client__form-group">
-              <label className="analytics-client__label">
+            <div className="statistics-client__form-group">
+              <label className="statistics-client__label">
                 Cents Tolerance
                 <input
                   type="number"
-                  className="analytics-client__input"
+                  className="statistics-client__input"
                   value={formData.centsTolerance}
                   onChange={(e) => handleFormChange("centsTolerance", parseInt(e.target.value) || 5)}
                   min="1"
@@ -298,10 +298,10 @@ function AnalyticsClient() {
           </div>
 
           {/* Options */}
-          <div className="analytics-client__options">
-            <h3 className="analytics-client__options-title">Analysis Options</h3>
-            <div className="analytics-client__checkboxes">
-              <label className="analytics-client__checkbox-label">
+          <div className="statistics-client__options">
+            <h3 className="statistics-client__options-title">Analysis Options</h3>
+            <div className="statistics-client__checkboxes">
+              <label className="statistics-client__checkbox-label">
                 <input
                   type="checkbox"
                   checked={formData.includeTranspositions}
@@ -309,7 +309,7 @@ function AnalyticsClient() {
                 />
                 Include All Transpositions
               </label>
-              <label className="analytics-client__checkbox-label">
+              <label className="statistics-client__checkbox-label">
                 <input
                   type="checkbox"
                   checked={formData.includeMaqamToMaqamModulations}
@@ -317,7 +317,7 @@ function AnalyticsClient() {
                 />
                 Include Maqāmāt Modulations
               </label>
-              <label className="analytics-client__checkbox-label">
+              <label className="statistics-client__checkbox-label">
                 <input
                   type="checkbox"
                   checked={formData.includeMaqamToJinsModulations}
@@ -329,16 +329,16 @@ function AnalyticsClient() {
           </div>
 
           {/* Action Buttons */}
-          <div className="analytics-client__actions">
+          <div className="statistics-client__actions">
             <button
-              className="analytics-client__button analytics-client__button--primary"
+              className="statistics-client__button statistics-client__button--primary"
               onClick={executeAnalysis}
               disabled={isLoading || !formData.maqamID}
             >
               {isLoading ? "Analyzing..." : "Run Analysis"}
             </button>
             <button
-              className="analytics-client__button analytics-client__button--secondary"
+              className="statistics-client__button statistics-client__button--secondary"
               onClick={resetForm}
               disabled={isLoading}
             >
@@ -350,7 +350,7 @@ function AnalyticsClient() {
 
       {/* Error Display */}
       {error && (
-        <section className="analytics-client__error">
+        <section className="statistics-client__error">
           <h3>Error</h3>
           <p>{error}</p>
         </section>
@@ -358,31 +358,31 @@ function AnalyticsClient() {
 
       {/* Results Section */}
       {result && (
-        <section className="analytics-client__results">
-          <h2 className="analytics-client__section-title">Analysis Results</h2>
+        <section className="statistics-client__results">
+          <h2 className="statistics-client__section-title">Analysis Results</h2>
           
           {/* Statistics Summary */}
           {(() => {
             const stats = getStatistics();
             return stats ? (
-              <div className="analytics-client__stats">
+              <div className="statistics-client__stats">
                 <h3>Summary Statistics</h3>
-                <div className="analytics-client__stats-grid">
-                  <div className="analytics-client__stat">
-                    <span className="analytics-client__stat-label">Maqām:</span>
-                    <span className="analytics-client__stat-value">{stats.selectedMaqam}</span>
+                <div className="statistics-client__stats-grid">
+                  <div className="statistics-client__stat">
+                    <span className="statistics-client__stat-label">Maqām:</span>
+                    <span className="statistics-client__stat-value">{stats.selectedMaqam}</span>
                   </div>
-                  <div className="analytics-client__stat">
-                    <span className="analytics-client__stat-label">Tuning Systems Analyzed:</span>
-                    <span className="analytics-client__stat-value">{stats.tuningSystemsAnalyzed}</span>
+                  <div className="statistics-client__stat">
+                    <span className="statistics-client__stat-label">Tuning Systems Analyzed:</span>
+                    <span className="statistics-client__stat-value">{stats.tuningSystemsAnalyzed}</span>
                   </div>
-                  <div className="analytics-client__stat">
-                    <span className="analytics-client__stat-label">Total Transpositions:</span>
-                    <span className="analytics-client__stat-value">{stats.totalTranspositions}</span>
+                  <div className="statistics-client__stat">
+                    <span className="statistics-client__stat-label">Total Transpositions:</span>
+                    <span className="statistics-client__stat-value">{stats.totalTranspositions}</span>
                   </div>
-                  <div className="analytics-client__stat">
-                    <span className="analytics-client__stat-label">Modulations Included:</span>
-                    <span className="analytics-client__stat-value">{stats.hasModulations ? "Yes" : "No"}</span>
+                  <div className="statistics-client__stat">
+                    <span className="statistics-client__stat-label">Modulations Included:</span>
+                    <span className="statistics-client__stat-value">{stats.hasModulations ? "Yes" : "No"}</span>
                   </div>
                 </div>
               </div>
@@ -390,56 +390,56 @@ function AnalyticsClient() {
           })()}
 
           {/* Detailed Results */}
-          <div className="analytics-client__detailed-results">
+          <div className="statistics-client__detailed-results">
             <h3>Detailed Results</h3>
               {Object.entries(result.tuningSystems).map(([key, data]) => {
                 const [tuningSystemId, startingNote] = key.split('_');
                 const tuningSystemName = tuningSystems.find(ts => ts.getId() === tuningSystemId)?.getTitleEnglish() || tuningSystemId;
                 
                 return (
-                  <div key={key} className="analytics-client__tuning-system-result">
-                    <h4 className="analytics-client__tuning-system-title">
+                  <div key={key} className="statistics-client__tuning-system-result">
+                    <h4 className="statistics-client__tuning-system-title">
                       {tuningSystemName} → {startingNote}
                     </h4>
-                    <div className="analytics-client__result-content">
+                    <div className="statistics-client__result-content">
                       {Array.isArray(data) ? (
                         // Multiple transpositions - display each in maqam-transpositions style
-                        <div className="analytics-client__transpositions">
-                          <p className="analytics-client__transpositions-summary">
+                        <div className="statistics-client__transpositions">
+                          <p className="statistics-client__transpositions-summary">
                             Found {data.length} possible transposition{data.length !== 1 ? 's' : ''}
                           </p>
                           
                           {data.map((transposition: any, idx: number) => (
-                            <div key={idx} className="analytics-client__transposition-section">
-                              <h5 className="analytics-client__transposition-title">
+                            <div key={idx} className="statistics-client__transposition-section">
+                              <h5 className="statistics-client__transposition-title">
                                 Transposition {idx + 1}: {transposition.ascendingPitchClasses?.[0]?.noteName || 'Unknown'}
                               </h5>
                               
                               {/* Use maqam-transpositions table structure */}
-                              <table className="analytics-client__maqam-table">
+                              <table className="statistics-client__maqam-table">
                                 <tbody>
                                   {/* Ascending Section */}
                                   {transposition.ascendingPitchClasses && (
                                     <>
                                       <tr>
-                                        <th className="analytics-client__section-header" colSpan={2 + transposition.ascendingPitchClasses.length * 2}>
+                                        <th className="statistics-client__section-header" colSpan={2 + transposition.ascendingPitchClasses.length * 2}>
                                           Ascending
                                         </th>
                                       </tr>
                                       <tr>
-                                        <td className="analytics-client__asc-desc-column" rowSpan={6}>↗</td>
+                                        <td className="statistics-client__asc-desc-column" rowSpan={6}>↗</td>
                                       </tr>
                                       
                                       {/* Scale Degrees */}
                                       <tr>
-                                        <th className="analytics-client__row-header">Scale Degrees</th>
+                                        <th className="statistics-client__row-header">Scale Degrees</th>
                                         {transposition.ascendingPitchClasses.map((_: any, i: number) => (
                                           <React.Fragment key={i}>
-                                            <th className="analytics-client__header-pitchClass">
+                                            <th className="statistics-client__header-pitchClass">
                                               {['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'][i] || (i + 1)}
                                             </th>
                                             {i < transposition.ascendingPitchClasses.length - 1 && (
-                                              <th className="analytics-client__header-pitchClass"></th>
+                                              <th className="statistics-client__header-pitchClass"></th>
                                             )}
                                           </React.Fragment>
                                         ))}
@@ -447,12 +447,12 @@ function AnalyticsClient() {
                                       
                                       {/* Note Names */}
                                       <tr>
-                                        <th className="analytics-client__row-header">Note Names</th>
+                                        <th className="statistics-client__row-header">Note Names</th>
                                         {transposition.ascendingPitchClasses.map((pc: any, i: number) => (
                                           <React.Fragment key={i}>
-                                            <th className="analytics-client__header-pitchClass">{pc.noteName}</th>
+                                            <th className="statistics-client__header-pitchClass">{pc.noteName}</th>
                                             {i < transposition.ascendingPitchClasses.length - 1 && (
-                                              <th className="analytics-client__header-pitchClass"></th>
+                                              <th className="statistics-client__header-pitchClass"></th>
                                             )}
                                           </React.Fragment>
                                         ))}
@@ -460,14 +460,14 @@ function AnalyticsClient() {
                                       
                                       {/* Frequencies */}
                                       <tr>
-                                        <th className="analytics-client__row-header">Frequency</th>
+                                        <th className="statistics-client__row-header">Frequency</th>
                                         {transposition.ascendingPitchClasses.map((pc: any, i: number) => (
                                           <React.Fragment key={i}>
-                                            <th className="analytics-client__header-pitchClass">
+                                            <th className="statistics-client__header-pitchClass">
                                               {typeof pc.frequency === 'number' ? pc.frequency.toFixed(3) : 'N/A'}
                                             </th>
                                             {i < transposition.ascendingPitchClasses.length - 1 && (
-                                              <th className="analytics-client__header-pitchClass"></th>
+                                              <th className="statistics-client__header-pitchClass"></th>
                                             )}
                                           </React.Fragment>
                                         ))}
@@ -475,14 +475,14 @@ function AnalyticsClient() {
                                       
                                       {/* MIDI Notes */}
                                       <tr>
-                                        <th className="analytics-client__row-header">MIDI Note</th>
+                                        <th className="statistics-client__row-header">MIDI Note</th>
                                         {transposition.ascendingPitchClasses.map((pc: any, i: number) => (
                                           <React.Fragment key={i}>
-                                            <th className="analytics-client__header-pitchClass">
+                                            <th className="statistics-client__header-pitchClass">
                                               {typeof pc.midiNoteDecimal === 'number' ? pc.midiNoteDecimal.toFixed(3) : 'N/A'}
                                             </th>
                                             {i < transposition.ascendingPitchClasses.length - 1 && (
-                                              <th className="analytics-client__header-pitchClass"></th>
+                                              <th className="statistics-client__header-pitchClass"></th>
                                             )}
                                           </React.Fragment>
                                         ))}
@@ -490,14 +490,14 @@ function AnalyticsClient() {
                                       
                                       {/* Cents Deviation */}
                                       <tr>
-                                        <th className="analytics-client__row-header">Cents Deviation</th>
+                                        <th className="statistics-client__row-header">Cents Deviation</th>
                                         {transposition.ascendingPitchClasses.map((pc: any, i: number) => (
                                           <React.Fragment key={i}>
-                                            <th className="analytics-client__header-pitchClass">
+                                            <th className="statistics-client__header-pitchClass">
                                               {typeof pc.centsDeviation === 'number' ? pc.centsDeviation.toFixed(1) : 'N/A'}
                                             </th>
                                             {i < transposition.ascendingPitchClasses.length - 1 && (
-                                              <th className="analytics-client__header-pitchClass"></th>
+                                              <th className="statistics-client__header-pitchClass"></th>
                                             )}
                                           </React.Fragment>
                                         ))}
@@ -509,7 +509,7 @@ function AnalyticsClient() {
                                   {transposition.descendingPitchClasses && 
                                    JSON.stringify(transposition.descendingPitchClasses) !== JSON.stringify(transposition.ascendingPitchClasses) && (
                                     <tr>
-                                      <td className="analytics-client__spacer-between" colSpan={2 + (transposition.ascendingPitchClasses?.length || 0) * 2}></td>
+                                      <td className="statistics-client__spacer-between" colSpan={2 + (transposition.ascendingPitchClasses?.length || 0) * 2}></td>
                                     </tr>
                                   )}
                                   
@@ -518,19 +518,19 @@ function AnalyticsClient() {
                                    JSON.stringify(transposition.descendingPitchClasses) !== JSON.stringify(transposition.ascendingPitchClasses) && (
                                     <>
                                       <tr>
-                                        <td className="analytics-client__asc-desc-column" rowSpan={6}>↘</td>
+                                        <td className="statistics-client__asc-desc-column" rowSpan={6}>↘</td>
                                       </tr>
                                       
                                       {/* Scale Degrees */}
                                       <tr>
-                                        <th className="analytics-client__row-header">Scale Degrees</th>
+                                        <th className="statistics-client__row-header">Scale Degrees</th>
                                         {transposition.descendingPitchClasses.map((_: any, i: number) => (
                                           <React.Fragment key={i}>
-                                            <th className="analytics-client__header-pitchClass">
+                                            <th className="statistics-client__header-pitchClass">
                                               {['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'].reverse()[i] || (transposition.descendingPitchClasses.length - i)}
                                             </th>
                                             {i < transposition.descendingPitchClasses.length - 1 && (
-                                              <th className="analytics-client__header-pitchClass"></th>
+                                              <th className="statistics-client__header-pitchClass"></th>
                                             )}
                                           </React.Fragment>
                                         ))}
@@ -538,12 +538,12 @@ function AnalyticsClient() {
                                       
                                       {/* Note Names */}
                                       <tr>
-                                        <th className="analytics-client__row-header">Note Names</th>
+                                        <th className="statistics-client__row-header">Note Names</th>
                                         {transposition.descendingPitchClasses.map((pc: any, i: number) => (
                                           <React.Fragment key={i}>
-                                            <th className="analytics-client__header-pitchClass">{pc.noteName}</th>
+                                            <th className="statistics-client__header-pitchClass">{pc.noteName}</th>
                                             {i < transposition.descendingPitchClasses.length - 1 && (
-                                              <th className="analytics-client__header-pitchClass"></th>
+                                              <th className="statistics-client__header-pitchClass"></th>
                                             )}
                                           </React.Fragment>
                                         ))}
@@ -551,14 +551,14 @@ function AnalyticsClient() {
                                       
                                       {/* Frequencies */}
                                       <tr>
-                                        <th className="analytics-client__row-header">Frequency</th>
+                                        <th className="statistics-client__row-header">Frequency</th>
                                         {transposition.descendingPitchClasses.map((pc: any, i: number) => (
                                           <React.Fragment key={i}>
-                                            <th className="analytics-client__header-pitchClass">
+                                            <th className="statistics-client__header-pitchClass">
                                               {typeof pc.frequency === 'number' ? pc.frequency.toFixed(3) : 'N/A'}
                                             </th>
                                             {i < transposition.descendingPitchClasses.length - 1 && (
-                                              <th className="analytics-client__header-pitchClass"></th>
+                                              <th className="statistics-client__header-pitchClass"></th>
                                             )}
                                           </React.Fragment>
                                         ))}
@@ -566,14 +566,14 @@ function AnalyticsClient() {
                                       
                                       {/* MIDI Notes */}
                                       <tr>
-                                        <th className="analytics-client__row-header">MIDI Note</th>
+                                        <th className="statistics-client__row-header">MIDI Note</th>
                                         {transposition.descendingPitchClasses.map((pc: any, i: number) => (
                                           <React.Fragment key={i}>
-                                            <th className="analytics-client__header-pitchClass">
+                                            <th className="statistics-client__header-pitchClass">
                                               {typeof pc.midiNoteDecimal === 'number' ? pc.midiNoteDecimal.toFixed(3) : 'N/A'}
                                             </th>
                                             {i < transposition.descendingPitchClasses.length - 1 && (
-                                              <th className="analytics-client__header-pitchClass"></th>
+                                              <th className="statistics-client__header-pitchClass"></th>
                                             )}
                                           </React.Fragment>
                                         ))}
@@ -581,14 +581,14 @@ function AnalyticsClient() {
                                       
                                       {/* Cents Deviation */}
                                       <tr>
-                                        <th className="analytics-client__row-header">Cents Deviation</th>
+                                        <th className="statistics-client__row-header">Cents Deviation</th>
                                         {transposition.descendingPitchClasses.map((pc: any, i: number) => (
                                           <React.Fragment key={i}>
-                                            <th className="analytics-client__header-pitchClass">
+                                            <th className="statistics-client__header-pitchClass">
                                               {typeof pc.centsDeviation === 'number' ? pc.centsDeviation.toFixed(1) : 'N/A'}
                                             </th>
                                             {i < transposition.descendingPitchClasses.length - 1 && (
-                                              <th className="analytics-client__header-pitchClass"></th>
+                                              <th className="statistics-client__header-pitchClass"></th>
                                             )}
                                           </React.Fragment>
                                         ))}
@@ -600,15 +600,15 @@ function AnalyticsClient() {
                               
                               {/* Modulations */}
                               {(transposition.maqamatModulations || transposition.ajnasModulations) && (
-                                <div className="analytics-client__modulations">
+                                <div className="statistics-client__modulations">
                                   <h6>Available Modulations</h6>
                                   {transposition.maqamatModulations && (
-                                    <div className="analytics-client__modulation-section">
+                                    <div className="statistics-client__modulation-section">
                                       <strong>Maqāmāt Modulations:</strong>
-                                      <div className="analytics-client__modulation-grid">
+                                      <div className="statistics-client__modulation-grid">
                                         {Object.entries(transposition.maqamatModulations).map(([key, value]: [string, any]) => (
                                           key !== 'noteName2p' && Array.isArray(value) && value.length > 0 && (
-                                            <div key={key} className="analytics-client__modulation-item">
+                                            <div key={key} className="statistics-client__modulation-item">
                                               <strong>{key}:</strong> {value.join(', ')}
                                             </div>
                                           )
@@ -617,12 +617,12 @@ function AnalyticsClient() {
                                     </div>
                                   )}
                                   {transposition.ajnasModulations && (
-                                    <div className="analytics-client__modulation-section">
+                                    <div className="statistics-client__modulation-section">
                                       <strong>Ajnās Modulations:</strong>
-                                      <div className="analytics-client__modulation-grid">
+                                      <div className="statistics-client__modulation-grid">
                                         {Object.entries(transposition.ajnasModulations).map(([key, value]: [string, any]) => (
                                           key !== 'noteName2p' && Array.isArray(value) && value.length > 0 && (
-                                            <div key={key} className="analytics-client__modulation-item">
+                                            <div key={key} className="statistics-client__modulation-item">
                                               <strong>{key}:</strong> {value.join(', ')}
                                             </div>
                                           )
@@ -637,34 +637,34 @@ function AnalyticsClient() {
                         </div>
                       ) : (
                         // Single result (tahlil or single transposition)
-                        <div className="analytics-client__single-result">
+                        <div className="statistics-client__single-result">
                           {data.ascendingPitchClasses ? (
                             // Single transposition - same maqam-transpositions format
-                            <div className="analytics-client__transposition-section">
-                              <table className="analytics-client__maqam-table">
+                            <div className="statistics-client__transposition-section">
+                              <table className="statistics-client__maqam-table">
                                 <tbody>
                                   {/* Ascending Section */}
                                   {data.ascendingPitchClasses && (
                                     <>
                                       <tr>
-                                        <th className="analytics-client__section-header" colSpan={2 + data.ascendingPitchClasses.length * 2}>
+                                        <th className="statistics-client__section-header" colSpan={2 + data.ascendingPitchClasses.length * 2}>
                                           Ascending
                                         </th>
                                       </tr>
                                       <tr>
-                                        <td className="analytics-client__asc-desc-column" rowSpan={6}>↗</td>
+                                        <td className="statistics-client__asc-desc-column" rowSpan={6}>↗</td>
                                       </tr>
                                       
                                       {/* Scale Degrees */}
                                       <tr>
-                                        <th className="analytics-client__row-header">Scale Degrees</th>
+                                        <th className="statistics-client__row-header">Scale Degrees</th>
                                         {data.ascendingPitchClasses.map((_: any, i: number) => (
                                           <React.Fragment key={i}>
-                                            <th className="analytics-client__header-pitchClass">
+                                            <th className="statistics-client__header-pitchClass">
                                               {['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'][i] || (i + 1)}
                                             </th>
                                             {i < data.ascendingPitchClasses.length - 1 && (
-                                              <th className="analytics-client__header-pitchClass"></th>
+                                              <th className="statistics-client__header-pitchClass"></th>
                                             )}
                                           </React.Fragment>
                                         ))}
@@ -672,12 +672,12 @@ function AnalyticsClient() {
                                       
                                       {/* Note Names */}
                                       <tr>
-                                        <th className="analytics-client__row-header">Note Names</th>
+                                        <th className="statistics-client__row-header">Note Names</th>
                                         {data.ascendingPitchClasses.map((pc: any, i: number) => (
                                           <React.Fragment key={i}>
-                                            <th className="analytics-client__header-pitchClass">{pc.noteName}</th>
+                                            <th className="statistics-client__header-pitchClass">{pc.noteName}</th>
                                             {i < data.ascendingPitchClasses.length - 1 && (
-                                              <th className="analytics-client__header-pitchClass"></th>
+                                              <th className="statistics-client__header-pitchClass"></th>
                                             )}
                                           </React.Fragment>
                                         ))}
@@ -685,14 +685,14 @@ function AnalyticsClient() {
                                       
                                       {/* Frequencies */}
                                       <tr>
-                                        <th className="analytics-client__row-header">Frequency</th>
+                                        <th className="statistics-client__row-header">Frequency</th>
                                         {data.ascendingPitchClasses.map((pc: any, i: number) => (
                                           <React.Fragment key={i}>
-                                            <th className="analytics-client__header-pitchClass">
+                                            <th className="statistics-client__header-pitchClass">
                                               {typeof pc.frequency === 'number' ? pc.frequency.toFixed(3) : 'N/A'}
                                             </th>
                                             {i < data.ascendingPitchClasses.length - 1 && (
-                                              <th className="analytics-client__header-pitchClass"></th>
+                                              <th className="statistics-client__header-pitchClass"></th>
                                             )}
                                           </React.Fragment>
                                         ))}
@@ -700,14 +700,14 @@ function AnalyticsClient() {
                                       
                                       {/* MIDI Notes */}
                                       <tr>
-                                        <th className="analytics-client__row-header">MIDI Note</th>
+                                        <th className="statistics-client__row-header">MIDI Note</th>
                                         {data.ascendingPitchClasses.map((pc: any, i: number) => (
                                           <React.Fragment key={i}>
-                                            <th className="analytics-client__header-pitchClass">
+                                            <th className="statistics-client__header-pitchClass">
                                               {typeof pc.midiNoteDecimal === 'number' ? pc.midiNoteDecimal.toFixed(3) : 'N/A'}
                                             </th>
                                             {i < data.ascendingPitchClasses.length - 1 && (
-                                              <th className="analytics-client__header-pitchClass"></th>
+                                              <th className="statistics-client__header-pitchClass"></th>
                                             )}
                                           </React.Fragment>
                                         ))}
@@ -715,14 +715,14 @@ function AnalyticsClient() {
                                       
                                       {/* Cents Deviation */}
                                       <tr>
-                                        <th className="analytics-client__row-header">Cents Deviation</th>
+                                        <th className="statistics-client__row-header">Cents Deviation</th>
                                         {data.ascendingPitchClasses.map((pc: any, i: number) => (
                                           <React.Fragment key={i}>
-                                            <th className="analytics-client__header-pitchClass">
+                                            <th className="statistics-client__header-pitchClass">
                                               {typeof pc.centsDeviation === 'number' ? pc.centsDeviation.toFixed(1) : 'N/A'}
                                             </th>
                                             {i < data.ascendingPitchClasses.length - 1 && (
-                                              <th className="analytics-client__header-pitchClass"></th>
+                                              <th className="statistics-client__header-pitchClass"></th>
                                             )}
                                           </React.Fragment>
                                         ))}
@@ -734,15 +734,15 @@ function AnalyticsClient() {
                               
                               {/* Modulations */}
                               {(data.maqamatModulations || data.ajnasModulations) && (
-                                <div className="analytics-client__modulations">
+                                <div className="statistics-client__modulations">
                                   <h6>Available Modulations</h6>
                                   {data.maqamatModulations && (
-                                    <div className="analytics-client__modulation-section">
+                                    <div className="statistics-client__modulation-section">
                                       <strong>Maqāmāt Modulations:</strong>
-                                      <div className="analytics-client__modulation-grid">
+                                      <div className="statistics-client__modulation-grid">
                                         {Object.entries(data.maqamatModulations).map(([key, value]: [string, any]) => (
                                           key !== 'noteName2p' && Array.isArray(value) && value.length > 0 && (
-                                            <div key={key} className="analytics-client__modulation-item">
+                                            <div key={key} className="statistics-client__modulation-item">
                                               <strong>{key}:</strong> {value.join(', ')}
                                             </div>
                                           )
@@ -751,12 +751,12 @@ function AnalyticsClient() {
                                     </div>
                                   )}
                                   {data.ajnasModulations && (
-                                    <div className="analytics-client__modulation-section">
+                                    <div className="statistics-client__modulation-section">
                                       <strong>Ajnās Modulations:</strong>
-                                      <div className="analytics-client__modulation-grid">
+                                      <div className="statistics-client__modulation-grid">
                                         {Object.entries(data.ajnasModulations).map(([key, value]: [string, any]) => (
                                           key !== 'noteName2p' && Array.isArray(value) && value.length > 0 && (
-                                            <div key={key} className="analytics-client__modulation-item">
+                                            <div key={key} className="statistics-client__modulation-item">
                                               <strong>{key}:</strong> {value.join(', ')}
                                             </div>
                                           )
@@ -769,9 +769,9 @@ function AnalyticsClient() {
                             </div>
                           ) : (
                             // Tahlil result - show raw JSON for now
-                            <div className="analytics-client__tahlil-result">
+                            <div className="statistics-client__tahlil-result">
                               <h5>Maqām Analysis (Tahlīl)</h5>
-                              <pre className="analytics-client__json-display">
+                              <pre className="statistics-client__json-display">
                                 {JSON.stringify(data, null, 2)}
                               </pre>
                             </div>
@@ -789,4 +789,4 @@ function AnalyticsClient() {
   );
 }
 
-export default AnalyticsClient;
+export default StatisticsClient;
