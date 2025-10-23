@@ -22,7 +22,7 @@ interface AnalyticsRow {
 }
 
 /**
- * Computes comprehensive analytics for a specific tuning system.
+ * Computes comprehensive statistics for a specific tuning system.
  *
  * This function analyzes a tuning system to calculate various metrics including
  * the number of possible ajnas, maqamat, their transpositions, modulations, and
@@ -33,7 +33,7 @@ interface AnalyticsRow {
  * @param allAjnas - Array of all available ajnas (tetrachordal units)
  * @param allMaqamat - Array of all available maqamat (modal structures)
  * @param showProgress - Whether to show progress logging
- * @returns Array of analytics rows, one for each starting note in the tuning system
+ * @returns Array of statistics rows, one for each starting note in the tuning system
  */
 function computeAnalyticsForSystem(tuningSystem: TuningSystem, allAjnas: ReturnType<typeof getAjnas>, allMaqamat: ReturnType<typeof getMaqamat>, showProgress: boolean = false): AnalyticsRow[] {
   const rows: AnalyticsRow[] = [];
@@ -90,13 +90,13 @@ function computeAnalyticsForSystem(tuningSystem: TuningSystem, allAjnas: ReturnT
 }
 
 /**
- * Generates comprehensive analytics for all tuning systems and writes the results to a JSON file.
+ * Generates comprehensive statistics for all tuning systems and writes the results to a JSON file.
  *
- * This function computes analytics for every available tuning system, combining the results
+ * This function computes statistics for every available tuning system, combining the results
  * into a single dataset that can be used for comparative analysis. The output is written
- * to 'public/data/analytics-[timestamp].json' for use by the web application.
+ * to 'public/data/statistics-[timestamp].json' for use by the web application.
  *
- * The analytics include metrics such as:
+ * The statistics include metrics such as:
  * - Number of possible ajnas and maqamat per tuning system
  * - Transposition possibilities
  * - Modulation counts
@@ -108,7 +108,7 @@ function computeAnalyticsForSystem(tuningSystem: TuningSystem, allAjnas: ReturnT
  */
 export function generateAndWriteAnalytics(useTimestamp: boolean = true, showProgress: boolean = true): string {
   if (showProgress) {
-    console.log("🎵 Starting maqam analytics generation...");
+    console.log("🎵 Starting maqam statistics generation...");
     console.time("Total generation time");
   }
 
@@ -121,14 +121,14 @@ export function generateAndWriteAnalytics(useTimestamp: boolean = true, showProg
     console.log("🔄 Processing tuning systems...");
   }
 
-  const analyticsRows: AnalyticsRow[] = [];
+  const statisticsRows: AnalyticsRow[] = [];
   
   systems.forEach((ts, index) => {
     if (showProgress) {
       console.log(`  [${index + 1}/${systems.length}] ${ts.stringify()}`);
     }
     const systemRows = computeAnalyticsForSystem(ts, allAjnas, allMaqamat, showProgress);
-    analyticsRows.push(...systemRows);
+    statisticsRows.push(...systemRows);
   });
 
   // Create output directory
@@ -142,16 +142,16 @@ export function generateAndWriteAnalytics(useTimestamp: boolean = true, showProg
   const dateStr = timestamp[0]; // YYYY-MM-DD
   const timeStr = timestamp[1].split('.')[0]; // HH-MM-SS
   const filename = useTimestamp 
-    ? `analytics-${dateStr}-${timeStr}.json`
-    : "analytics.json";
+    ? `statistics-${dateStr}-${timeStr}.json`
+    : "statistics.json";
   
   const outputPath = path.join(outputDir, filename);
   
   if (showProgress) {
-    console.log(`💾 Writing ${analyticsRows.length} analytics rows to ${filename}...`);
+    console.log(`💾 Writing ${statisticsRows.length} statistics rows to ${filename}...`);
   }
 
-  fs.writeFileSync(outputPath, JSON.stringify(analyticsRows, null, 2), "utf-8");
+  fs.writeFileSync(outputPath, JSON.stringify(statisticsRows, null, 2), "utf-8");
 
   if (showProgress) {
     console.log(`✅ Analytics file created: ${outputPath}`);
@@ -162,9 +162,9 @@ export function generateAndWriteAnalytics(useTimestamp: boolean = true, showProg
 }
 
 // To run this script from the command line:
-// npm run generate-analytics
+// npm run generate-statistics
 // or with custom options:
-// npm run generate-analytics -- --no-timestamp --no-progress
+// npm run generate-statistics -- --no-timestamp --no-progress
 
 if (require.main === module) {
   // Parse command line arguments
