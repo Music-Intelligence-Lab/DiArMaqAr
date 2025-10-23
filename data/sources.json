@@ -214,7 +214,15 @@
     "publicationDateArabic": "",
     "url": "https://www.open-access.bcu.ac.uk/14036/",
     "dateAccessed": "16-10-2025",
-    "version": "2025-10-18T19:52:33.218Z"
+    "version": "2025-10-23T22:32:56.276Z",
+    "degreeTypeEnglish": "PhD Dissertation",
+    "degreeTypeArabic": "أطروحة دكتوراه",
+    "universityEnglish": "Birmingham City University",
+    "universityArabic": "جامعة برمنغهام سيتي",
+    "departmentEnglish": "Royal Birmingham Conservatoire",
+    "departmentArabic": "معهد برمنغهام الملكي",
+    "databaseIdentifier": "",
+    "databaseName": ""
   },
   {
     "id": "al-Shawwā-(1946)",
@@ -478,5 +486,43 @@
     "placeEnglish": "Beirut",
     "placeArabic": "بيروت",
     "ISBN": ""
+  },
+  {
+    "id": "Mokhtar-(1937)",
+    "titleEnglish": "Modes in Modern Egyptian Music",
+    "titleArabic": "المقامات في الموسيقى العربية الحديثة",
+    "sourceType": "Article",
+    "contributors": [
+      {
+        "type": "Author",
+        "firstNameEnglish": "Maḥmūd",
+        "lastNameEnglish": "Mokhtar",
+        "firstNameArabic": "محمود",
+        "lastNameArabic": "مختار"
+      },
+      {
+        "type": "Author",
+        "firstNameEnglish": "Alī Muṣṭafā",
+        "lastNameEnglish": "Mosharrafa",
+        "firstNameArabic": "علي مصطفى",
+        "lastNameArabic": "مشرّفة"
+      }
+    ],
+    "editionEnglish": "",
+    "editionArabic": "",
+    "publicationDateEnglish": "1937",
+    "publicationDateArabic": "",
+    "url": "https://www.nature.com/articles/140548b0",
+    "dateAccessed": "18-09-2025",
+    "version": "2025-10-23T22:16:18.241Z",
+    "journalEnglish": "Nature",
+    "journalArabic": "نيتشور",
+    "volumeEnglish": "140",
+    "volumeArabic": "",
+    "issueEnglish": "3543",
+    "issueArabic": "",
+    "pageRangeEnglish": "548–549",
+    "pageRangeArabic": "",
+    "DOI": ""
   }
 ]

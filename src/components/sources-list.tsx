@@ -206,33 +206,34 @@ const formatContributorsArabic = (contributors: Contributor[]): string => {
       const issueEng = article.getIssueEnglish();
       const pageRangeEng = article.getPageRangeEnglish();
 
-      // Build journal line: Journal Title, 20(4), pp. 332-348.
-      const journalLineParts: string[] = [];
-      if (journalEng) {
-        let line = journalEng;
-        if (volumeEng) line += `, ${volumeEng}`;
-        if (issueEng) line += `(${issueEng})`;
-        if (pageRangeEng) line += `, pp. ${pageRangeEng}`;
-        journalLineParts.push(line);
-      }
+      // Build journal metadata: 20(4), pp. 332-348.
+      let journalMetadata = "";
+      if (volumeEng) journalMetadata += volumeEng;
+      if (issueEng) journalMetadata += `(${issueEng})`;
+      if (pageRangeEng) journalMetadata += `, pp. ${pageRangeEng}`;
 
       return (
         <>
           {contribSegment} ({year}) {source.getTitleEnglish()}.{" "}
-          <span className="citation-journal">
-            {journalLineParts.join(", ")}
-          </span>
+          {journalEng && (
+            <>
+              <span className="citation-journal">
+                <em>{journalEng}</em>
+              </span>
+              {journalMetadata && `, ${journalMetadata}`}
+            </>
+          )}
           .
           {url && (
             <>
-              URL:{" "}
+              {" "}Available at:{" "}
               <a href={url} target="_blank" rel="noopener noreferrer">
                 {url}
               </a>
               .
             </>
           )}
-          {dateAcc && ` Accessed: ${formattedDateAcc}.`}
+          {dateAcc && ` [Accessed ${formattedDateAcc}]`}
         </>
       );
     } else {
@@ -244,22 +245,43 @@ const formatContributorsArabic = (contributors: Contributor[]): string => {
       const databaseName = thesis.getDatabaseName();
       const databaseIdentifier = thesis.getDatabaseIdentifier();
 
+      // Build institution info: "PhD, University of X, Department of Y"
+      let institutionInfo = "";
+      if (degreeTypeEng) institutionInfo += degreeTypeEng;
+      if (universityEng) institutionInfo += `${institutionInfo ? ", " : ""}${universityEng}`;
+      if (departmentEng) institutionInfo += `${institutionInfo ? ", " : ""}${departmentEng}`;
+
+      // For theses, build contributor segment without the trailing period
+      const thesisCitation = (
+        <>
+          {authors.length > 0 ? (
+            <>
+              {authors.map(formatName).join(" and ")} ({year}).{" "}
+            </>
+          ) : (
+            <>n.a. ({year}).{" "}</>
+          )}
+        </>
+      );
+
       return (
         <>
-          {contribSegment} ({year}) {source.getTitleEnglish()}.{" "}
-          {degreeTypeEng && <>{degreeTypeEng}, </>}
-          {universityEng && <>{universityEng}</>}
-          {departmentEng && <>, {departmentEng}</>}
-          {universityEng && <>.</>}
+          {thesisCitation}
+          <span className="citation-thesis-title">
+            <em>{source.getTitleEnglish()}</em>
+          </span>
+          {institutionInfo && <>. {institutionInfo}</>}
           {databaseName && databaseIdentifier && (
-            <> {databaseName} ({databaseIdentifier}).</>
+            <>. {databaseName} ({databaseIdentifier})</>
           )}
+          .
           {url && (
             <>
               {" "}Available at:{" "}
               <a href={url} target="_blank" rel="noopener noreferrer">
                 {url}
               </a>
+              .
             </>
           )}
           {dateAcc && ` [Accessed ${formattedDateAcc}]`}
