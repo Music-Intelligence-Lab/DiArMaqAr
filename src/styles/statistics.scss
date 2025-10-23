@@ -3,7 +3,7 @@
 .statistics {
   width: 100%;
   height: calc(100vh - 120px); // Account for navbar height
-  padding: 0;
+  padding: 0px;
   background: $background;
   display: flex;
   flex-direction: column;
@@ -41,6 +41,7 @@
     overflow: auto;
     position: relative;
     background: $dark-grey;
+    padding-bottom: 100px;
   }
 
   button {
