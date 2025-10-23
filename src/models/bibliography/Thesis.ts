@@ -204,6 +204,28 @@ export default class Thesis extends AbstractSource {
   }
 
   /**
+   * Converts this thesis to a JSON-serializable object.
+   * 
+   * Includes all shared fields from AbstractSource plus thesis-specific
+   * fields like degree type, university, department, and database information.
+   * 
+   * @returns Object containing all thesis fields for JSON serialization
+   */
+  public convertToJSON(): object {
+    return {
+      ...super.convertToJSON(),
+      degreeTypeEnglish: this.degreeTypeEnglish,
+      degreeTypeArabic: this.degreeTypeArabic,
+      universityEnglish: this.universityEnglish,
+      universityArabic: this.universityArabic,
+      departmentEnglish: this.departmentEnglish,
+      departmentArabic: this.departmentArabic,
+      databaseIdentifier: this.databaseIdentifier,
+      databaseName: this.databaseName,
+    };
+  }
+
+  /**
    * Creates a Thesis instance from a plain JavaScript object.
    * 
    * Static factory method for deserialization from JSON. Reconstructs
