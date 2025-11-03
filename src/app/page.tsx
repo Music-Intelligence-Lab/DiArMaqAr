@@ -33,14 +33,10 @@ export default function LandingPage() {
           <a className="button" href="#tour">
             {language === "ar" ? "ابدأوا جولة تفاعلية" : "Take an Interactive Tour"}
           </a>
-          <a className="button" href="/docs/index.html">
+          <a className="button" href="/docs/">
             {language === "ar" ? "اطّلعوا على التوثيق" : "Access the Documentation"}
           </a>
-          <a className="button" href="/api-test">
-            {language === "ar" ? "اختبروا واجهة برمجة التطبيقات" : "Test the API"}
-          </a>
-
-          <a className="button" href="https://github.com/Music-Intelligence-Lab/arabic-maqam-network">
+          <a className="button" href="https://github.com/Music-Intelligence-Lab/diarmaqar">
             {language === "ar" ? "اطّلعوا على الشيفرة المصدرية" : "Access the Source Code"}
           </a>
           <a className="button" href="#paper">
