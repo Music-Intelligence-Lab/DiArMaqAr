@@ -79,6 +79,10 @@ export default defineConfig({
           collapsed: false,
           items: [
             { text: 'Overview', link: '/api/' },
+            { text: 'Base URL', link: '/api/#base-url' },
+            { text: 'Authentication', link: '/api/#authentication' },
+            { text: 'Response Format', link: '/api/#response-format' },
+            { text: 'Rate Limiting', link: '/api/#rate-limiting' },
           ]
         },
         {
@@ -175,11 +179,8 @@ export default defineConfig({
       }
     },
 
-    // Table of contents (outline) configuration
-    outline: {
-      level: [2, 3],        // Show h2 and h3 headings
-      label: 'On this page'
-    },
+    // Table of contents (outline) configuration - disabled to remove right sidebar
+    outline: false,
 
     // Back to top button
     returnToTopLabel: 'Back to top',
