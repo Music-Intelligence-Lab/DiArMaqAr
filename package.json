@@ -7,9 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "docs": "typedoc",
-    "docs:serve": "typedoc && start docs/library/index.html",
-    "docs:watch": "typedoc --watch"
+    "docs:openapi": "node scripts/generate-openapi-json.js",
+    "docs:ts": "typedoc",
+    "docs:dev": "npm run docs:openapi && vitepress dev docs",
+    "docs:build": "npm run docs:openapi && npm run docs:ts && vitepress build docs",
+    "docs:preview": "vitepress preview docs",
+    "docs:typecheck": "vitepress typecheck docs"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -36,10 +39,13 @@
     "@types/uuid": "^10.0.0",
     "eslint": "^9",
     "eslint-config-next": "15.1.7",
-    "path": "^0.12.7",
+    "js-yaml": "^4.1.0",
+    "process": "^0.11.10",
     "sass": "^1.89.0",
-    "typedoc": "^0.28.10",
-    "typedoc-plugin-markdown": "^4.8.1",
-    "typescript": "^5"
+    "typedoc": "^0.28.14",
+    "typedoc-plugin-markdown": "^4.9.0",
+    "typescript": "^5",
+    "vitepress": "^1.6.4",
+    "vitepress-openapi": "^0.1.10"
   }
 }

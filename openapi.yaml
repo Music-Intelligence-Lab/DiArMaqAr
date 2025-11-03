@@ -1,0 +1,1047 @@
+openapi: 3.1.0
+info:
+  title: DiArMaqAr API
+  version: 1.0.0
+  description: |
+    Digital Archive of Maqām and Ajnās — programmatic access to maqām, jins, and tuning-system data
+
+    Key features:
+    - Comprehensive maqāmāt and ajnās data with historical source attribution
+    - Multiple tuning systems and starting-note contexts
+    - Multiple pitch-data formats (frequency, cents, fraction, decimalRatio, stringLength, MIDI, and more)
+    - Ajnās are included by default in maqām responses to support musicological analysis
+    - Modulation networks and transposition support
+
+    Documentation follows the project's standards: Arabic terminology is primary and examples are taken from real export files.
+  contact:
+    name: DiArMaqAr Project
+    url: https://github.com/Music-Intelligence-Lab/DiArMaqAr
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:3000/api
+    description: Production API
+  - url: http://localhost:3000/api
+    description: Local development
+paths:
+  /maqamat:
+    get:
+      tags:
+        - Maqāmāt
+      summary: List all maqāmāt
+      description: |
+        Retrieve a list of all available maqāmāt with optional filtering and sorting.
+        Returns basic metadata without pitch data.
+      operationId: listMaqamat
+      parameters:
+        - name: sort
+          in: query
+          description: Sort field for results
+          schema:
+            type: string
+            enum: [id, name, family, transpositions, maqamModulations, ajnasModulations]
+            default: id
+        - name: order
+          in: query
+          description: Sort order
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: asc
+        - name: family
+          in: query
+          description: Filter by maqām family name
+          schema:
+            type: string
+            example: rast
+        - name: search
+          in: query
+          description: Search by maqām name (partial match)
+          schema:
+            type: string
+            example: hijaz
+      responses:
+        '200':
+          description: List of maqāmāt retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MaqamatListResponse'
+              example:
+                count: 60
+                data:
+                  - id: "29"
+                    idName: "maqam_yegah"
+                    displayName: "maqām yegāh"
+                    version: "2025-10-18T19:41:17.132Z"
+                    familyId: "no_jins"
+                    familyDisplay: "no jins"
+                    tonicId: "yegah"
+                    tonicDisplay: "yegāh"
+                    numberOfPitchClasses: 7
+                    isOctaveRepeating: true
+                    hasAsymmetricDescending: true
+                    hasSuyur: true
+                    availableInTuningSystems: 4
+                    tuningSystemsAvailability:
+                      - tuningSystemId: "al-Farabi-(950g)"
+                        tuningSystemStartingNoteNames: ["ʿushayrān"]
+                      - tuningSystemId: "CairoCongressTuningCommittee-(1929)"
+                        tuningSystemStartingNoteNames: ["yegāh"]
+                      - tuningSystemId: "al-Sabbagh-(1954)"
+                        tuningSystemStartingNoteNames: ["rāst"]
+                      - tuningSystemId: "Allami-(2025)"
+                        tuningSystemStartingNoteNames: ["rāst"]
+                    maqamDetailsUrl: "/api/maqamat/maqam_yegah"
+                  - id: "30"
+                    idName: "maqam_farahfazza"
+                    displayName: "maqām faraḥfazzā"
+                    version: "2025-10-18T19:41:17.132Z"
+                    familyId: "no_jins"
+                    familyDisplay: "no jins"
+                    tonicId: "yegah"
+                    tonicDisplay: "yegāh"
+                    numberOfPitchClasses: 7
+                    isOctaveRepeating: true
+                    hasAsymmetricDescending: true
+                    hasSuyur: true
+                    availableInTuningSystems: 35
+                    tuningSystemsAvailability:
+                      - tuningSystemId: "Ronzevalle-(1904)"
+                        tuningSystemStartingNoteNames: ["ʿushayrān", "yegāh"]
+                      - tuningSystemId: "al-Farabi-(950g)"
+                        tuningSystemStartingNoteNames: ["ʿushayrān"]
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /maqamat/{id}:
+    get:
+      tags:
+        - Maqāmāt
+      summary: Get detailed maqām data
+      description: |
+        Retrieve comprehensive data for a specific maqām including:
+        - Pitch data in the requested tuning system and starting note
+        - **Ajnās data** (always included)
+        - Optional intervals, modulations, and suyūr
+
+        The response includes both ascending and descending pitch sequences with their 
+        corresponding ajnās structures.
+      operationId: getMaqam
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: URL-safe maqām identifier
+          schema:
+            type: string
+          examples:
+            rast:
+              value: maqam_rast
+              summary: Maqām Rāst
+            hijaz:
+              value: maqam_hijaz
+              summary: Maqām Ḥijāz
+        - name: tuningSystem
+          in: query
+          required: true
+          description: Tuning system identifier
+          schema:
+            type: string
+          examples:
+            ibnsina:
+              value: "IbnSina-(1037)"
+              summary: Ibn Sīnā 17-tone system
+            farabi:
+              value: "al-Farabi-(950g)"
+              summary: al-Fārābī 24-tone system
+            edo12:
+              value: "12-EDO"
+              summary: 12-tone equal temperament
+        - name: startingNote
+          in: query
+          required: false
+          description: Starting note for transposition (diacritics-insensitive). If omitted, API may return transposition options in meta/context.
+          schema:
+            type: string
+          examples:
+            ushayran:
+              value: "ushayran"
+              summary: ʿushayrān
+            rast:
+              value: "rast"
+              summary: rāst
+            dugah:
+              value: "dugah"
+              summary: dūgāh
+        - name: pitchClassDataType
+          in: query
+          description: |
+            Specifies which pitch class data type to return for each pitch. Use `all` for complete pitch class data. 
+            Default is `frequency`. Each option returns the specified data type for all pitch classes in the maqām.
+          schema:
+            type: string
+            enum: [all, frequency, cents, fraction, decimalRatio, stringLength, abjadName, fretDivision, midiNoteNumber, midiNoteDeviation, centsDeviation, referenceNoteName, englishName]
+            default: frequency
+        - name: view
+          in: query
+          description: Data level to return
+          schema:
+            type: string
+            enum: [simple, intervals]
+            default: simple
+        - name: transposeToNote
+          in: query
+          description: Transpose the maqām to a specific tonic note (URL-safe)
+          schema:
+            type: string
+        - name: intervals
+          in: query
+          description: Include interval data between scale degrees
+          schema:
+            type: boolean
+            default: false
+        - name: includeModulations
+          in: query
+          description: Include modulation possibilities to other maqāmāt and ajnās
+          schema:
+            type: boolean
+            default: false
+        - name: includeLowerOctaveModulations
+          in: query
+          description: Include modulations in the lower octave
+          schema:
+            type: boolean
+            default: false
+        - name: includeSuyur
+          in: query
+          description: Include suyūr (melodic paths) data
+          schema:
+            type: boolean
+            default: false
+        # Note: ajnas are included by default and are not controlled by a query parameter
+      responses:
+        '200':
+          description: Maqām data retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MaqamDetailResponse'
+              examples:
+                basic:
+                  summary: Basic maqām data with ajnās (default)
+                  value:
+                    maqam:
+                      id: "1"
+                      idName: "maqam_rast"
+                      displayName: "maqām rāst"
+                      version: "2025-10-18T19:41:17.132Z"
+                      tonicName: "rast"
+                      tonicDisplayName: "rāst"
+                      transposition: false
+                      maqamFamilyName: "rast"
+                      maqamFamilyDisplayName: "rāst"
+                      numberOfTranspositions: 3
+                      numberOfMaqamModulations: 28
+                      numberOfAjnasModulations: 29
+                      commentsEnglish: null
+                      commentsArabic: null
+                      sources: []
+                    context:
+                      tuningSystem:
+                        id: "IbnSina-(1037)"
+                        displayName: "Ibn Sīnā  (1037) 7-Fret Oud 17-Tone"
+                        version: "2025-10-18T19:42:23.643Z"
+                        originalValueType: "fraction"
+                        numberOfPitchClassesSingleOctave: 17
+                        numberOfPitchClassesAllOctaves: 68
+                      startingNote: "ushayran"
+                      referenceFrequency: 97.999
+                      pitchClassDataType: "all"
+                      includeIntervals: false
+                    pitchData:
+                      ascending:
+                        - pitchClassIndex: 4
+                          scaleDegree: "I"
+                          noteName: "rast"
+                          noteNameDisplay: "rāst"
+                          englishName: "C3"
+                          fraction: "32/27"
+                          cents: 294.135
+                          decimalRatio: 1.185
+                          stringLength: 843.75
+                          frequency: 130.370
+                          fretDivision: "156.250"
+                          midiNoteDecimal: 47.941
+                          midiNotePlusCentsDeviation: "48 -5.9"
+                          centsDeviation: -5.865
+                          ipnReferenceNoteName: "C"
+                        - pitchClassIndex: 7
+                          scaleDegree: "II"
+                          noteName: "dugah"
+                          noteNameDisplay: "dūgāh"
+                          englishName: "D3"
+                          fraction: "4/3"
+                          cents: 498.045
+                          decimalRatio: 1.333
+                          frequency: 146.667
+                      descending:
+                        - pitchClassIndex: 16
+                          scaleDegree: "VII"
+                          noteName: "ajam"
+                          noteNameDisplay: "ʿajam"
+                          frequency: 195.998
+                    ajnas:
+                      ascending:
+                        rast: { id: "3", idName: "jins_rast", displayName: "jins rāst" }
+                        dugah: null
+                      descending:
+                        ajam: { id: "7", idName: "jins_ajam", displayName: "jins ʿajam" }
+                withModulations:
+                  summary: With modulation networks
+                  value:
+                    maqam:
+                      id: "1"
+                      idName: "maqam_rast"
+                      displayName: "maqām rāst"
+                    context:
+                      tuningSystem:
+                        id: "IbnSina-(1037)"
+                        displayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
+                      startingNote: "ushayran"
+                    pitchData:
+                      ascending: []
+                      descending: []
+                    ajnas:
+                      ascending:
+                        rast: { id: "3", idName: "jins_rast", displayName: "jins rāst" }
+                        dugah: { id: "5", idName: "jins_bayyat", displayName: "jins bayyāt" }
+                        segah: { id: "6", idName: "jins_segah", displayName: "jins segāh" }
+                      descending:
+                        kurd: { id: "9", idName: "jins_kurd", displayName: "jins kurd" }
+                        nahawand: { id: "4", idName: "jins_nahawand", displayName: "jins nahāwand" }
+                        chahargah: { id: "12", idName: "jins_chahargah_(al-Shawwa)", displayName: "jins chahārgāh (al‑Shawwā)" }
+                    modulations:
+                      maqamat:
+                        onFirstDegree: ["maqam_mahur", "maqam_suznak"]
+                        onSecondDegree: ["maqam_bayyat", "maqam_husayni"]
+                        onThirdDegree: ["maqam_sikah", "maqam_huzam"]
+                      ajnas:
+                        onFirstDegree: ["jins_rast", "jins_mahur"]
+                        onSecondDegree: ["jins_bayyat", "jins_husayni"]
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "Missing required parameters"
+                details: "tuningSystem and startingNote are required"
+        '404':
+          description: Maqām not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "Maqām not found"
+                details: "No maqām with id 'maqam_invalid' exists"
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /maqamat/{id}/availability:
+    get:
+      tags:
+        - Maqāmāt
+      summary: Check maqām availability across tuning systems
+      description: |
+        Returns which tuning systems support a specific maqām and the valid starting notes
+        for each tuning system. This provides fast availability information without 
+        generating full pitch data.
+        
+        **Important**: Uses 3-octave checking to correctly handle non-octave-repeating maqāmāt
+        (those with >7 pitch classes).
+      operationId: getMaqamAvailability
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: URL-safe maqām identifier
+          schema:
+            type: string
+          example: "maqam_rast"
+      responses:
+        '200':
+          description: Availability information retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - maqam
+                  - availability
+                properties:
+                  maqam:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      idName:
+                        type: string
+                      name:
+                        type: string
+                      version:
+                        type: string
+                  availability:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                        description: Number of tuning systems supporting this maqām
+                      tuningSystems:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/TuningSystemAvailability'
+              example:
+                maqam:
+                  id: "1"
+                  idName: "maqam_rast"
+                  name: "maqām rāst"
+                  version: "2025-10-18T19:41:17.132Z"
+                availability:
+                  count: 29
+                  tuningSystems:
+                    - tuningSystemId: "IbnSina-(1037)"
+                      tuningSystemStartingNoteNames: ["ʿushayrān", "yegāh"]
+                    - tuningSystemId: "al-Farabi-(950g)"
+                      tuningSystemStartingNoteNames: ["ʿushayrān", "yegāh"]
+                    - tuningSystemId: "al-Sabbagh-(1954)"
+                      tuningSystemStartingNoteNames: ["rāst"]
+        '404':
+          description: Maqām not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "Maqām 'maqam_invalid' not found"
+                hint: "Use /api/maqamat to see all available maqāmāt"
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /tuning-systems:
+    get:
+      tags:
+        - Tuning Systems
+      summary: List all tuning systems
+      description: Retrieve metadata for all available tuning systems
+      operationId: listTuningSystems
+      responses:
+        '200':
+          description: List of tuning systems
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tuningSystems:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TuningSystemMetadata'
+                  meta:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                        description: Total number of tuning systems
+              example:
+                tuningSystems:
+                  - id: "IbnSina-(1037)"
+                    displayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
+                    version: "2025-10-18T19:42:23.643Z"
+                    year: "1037"
+                    numberOfPitchClassesSingleOctave: 17
+                    tuningSystemStartingNoteNames: ["ʿushayrān", "yegāh"]
+                    numberOfTuningSystemStartingNoteNames: 2
+                  - id: "al-Farabi-(950g)"
+                    displayName: "al-Fārābī (950) 27-Tone System"
+                    version: "2025-10-18T19:42:23.643Z"
+                    year: "950"
+                    numberOfPitchClassesSingleOctave: 27
+                    tuningSystemStartingNoteNames: ["ʿushayrān", "yegāh"]
+                    numberOfTuningSystemStartingNoteNames: 2
+                meta:
+                  total: 35
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /availability:
+    get:
+      tags:
+        - Availability
+      summary: Check maqām availability in tuning system
+      description: |
+        Check if a specific maqām can be represented in a given tuning system.
+        Returns availability status and reasoning.
+      operationId: checkAvailability
+      parameters:
+        - name: maqamId
+          in: query
+          required: true
+          schema:
+            type: string
+          example: maqam_rast
+        - name: tuningSystemId
+          in: query
+          required: true
+          schema:
+            type: string
+          example: "IbnSina-(1037)"
+      responses:
+        '200':
+          description: Availability check result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  available:
+                    type: boolean
+                  maqam:
+                    type: string
+                  tuningSystem:
+                    type: string
+                  reason:
+                    type: string
+                    nullable: true
+              example:
+                available: true
+                maqam: "maqam_rast"
+                tuningSystem: "IbnSina-(1037)"
+                reason: null
+        '400':
+          description: Missing parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+components:
+  schemas:
+    MaqamatListResponse:
+      type: object
+      required:
+        - count
+        - data
+      properties:
+        count:
+          type: integer
+          description: Total number of maqāmāt
+          example: 60
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/MaqamMetadata'
+
+    MaqamMetadata:
+      type: object
+      required:
+        - id
+        - idName
+        - displayName
+        - version
+        - familyId
+        - familyDisplay
+        - tonicId
+        - tonicDisplay
+        - numberOfPitchClasses
+        - isOctaveRepeating
+        - hasAsymmetricDescending
+        - hasSuyur
+        - availableInTuningSystems
+        - tuningSystemsAvailability
+        - maqamDetailsUrl
+      properties:
+        id:
+          type: string
+          description: Numeric ID
+          example: "29"
+        idName:
+          type: string
+          description: URL-safe identifier
+          example: "maqam_yegah"
+        displayName:
+          type: string
+          description: Human-readable name with diacritics
+          example: "maqām yegāh"
+        version:
+          type: string
+          description: Version timestamp (ISO 8601)
+          example: "2025-10-18T19:41:17.132Z"
+        familyId:
+          type: string
+          description: URL-safe family identifier
+          example: "no_jins"
+        familyDisplay:
+          type: string
+          description: Human-readable family name
+          example: "no jins"
+        tonicId:
+          type: string
+          description: URL-safe tonic name
+          example: "yegah"
+        tonicDisplay:
+          type: string
+          description: Tonic name with diacritics
+          example: "yegāh"
+        numberOfPitchClasses:
+          type: integer
+          description: Count of pitch classes in ascending sequence
+          example: 7
+        isOctaveRepeating:
+          type: boolean
+          description: True when numberOfPitchClasses ≤ 7
+          example: true
+        hasAsymmetricDescending:
+          type: boolean
+          description: True when descending sequence differs from ascending
+          example: true
+        hasSuyur:
+          type: boolean
+          description: True when suyūr (melodic paths) are documented
+          example: true
+        availableInTuningSystems:
+          type: integer
+          description: Count of tuning systems supporting this maqām
+          example: 4
+        tuningSystemsAvailability:
+          type: array
+          description: Tuning systems where maqām is available with their valid tuning system starting notes
+          items:
+            $ref: '#/components/schemas/TuningSystemAvailability'
+          example:
+            - tuningSystemId: "al-Farabi-(950g)"
+              tuningSystemStartingNoteNames: ["ʿushayrān"]
+            - tuningSystemId: "IbnSina-(1037)"
+              tuningSystemStartingNoteNames: ["ʿushayrān", "yegāh"]
+        maqamDetailsUrl:
+          type: string
+          description: Relative URL to maqām detail endpoint
+          example: "/api/maqamat/maqam_yegah"
+
+    TuningSystemAvailability:
+      type: object
+      required:
+        - tuningSystemId
+        - tuningSystemStartingNoteNames
+      properties:
+        tuningSystemId:
+          type: string
+          description: Tuning system identifier
+          example: "IbnSina-(1037)"
+        tuningSystemStartingNoteNames:
+          type: array
+          description: Tuning system starting note names where this maqām is available in this tuning system. These represent different theoretical frameworks, not simple transpositions.
+          items:
+            type: string
+          example: ["ʿushayrān", "yegāh"]
+
+    MaqamDetailResponse:
+      type: object
+      required:
+        - maqam
+        - context
+        - pitchData
+        - ajnas
+      properties:
+        maqam:
+          $ref: '#/components/schemas/MaqamMetadata'
+        context:
+          $ref: '#/components/schemas/MaqamContext'
+        pitchData:
+          $ref: '#/components/schemas/PitchData'
+        ajnas:
+          $ref: '#/components/schemas/AjnasData'
+          description: Always included for maqām analysis
+        intervals:
+          $ref: '#/components/schemas/IntervalsData'
+          description: Optional - included when intervals=true
+        modulations:
+          $ref: '#/components/schemas/ModulationsData'
+          description: Optional - included when includeModulations=true
+        suyur:
+          type: array
+          description: Optional - included when includeSuyur=true
+          items:
+            $ref: '#/components/schemas/Sayr'
+
+    MaqamContext:
+      type: object
+      required:
+        - tuningSystem
+        - referenceFrequency
+        - pitchClassDataType
+      properties:
+        tuningSystem:
+          $ref: '#/components/schemas/TuningSystemMetadata'
+        startingNote:
+          type: string
+          description: URL-safe starting note name (diacritics-insensitive)
+          example: "ushayran"
+          deprecated: true
+        referenceFrequency:
+          type: number
+          format: float
+          description: Reference frequency in Hz
+          example: 97.999
+        pitchClassDataType:
+          type: string
+          description: Type of pitch-data representation returned (matches `format` parameter)
+          example: "all"
+        version:
+          type: string
+          description: Version or timestamp for the context data
+          example: "2025-10-18T19:42:23.643Z"
+
+    TuningSystemMetadata:
+      type: object
+      required:
+        - id
+        - displayName
+        - numberOfPitchClassesSingleOctave
+        - tuningSystemStartingNoteNames
+        - numberOfTuningSystemStartingNoteNames
+      properties:
+        id:
+          type: string
+          description: URL-safe tuning system identifier
+          example: "IbnSina-(1037)"
+        displayName:
+          type: string
+          description: Human-readable name
+          example: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
+        version:
+          type: string
+          description: Version timestamp (ISO 8601)
+          example: "2025-10-18T19:42:23.643Z"
+        year:
+          type: string
+          description: Year the tuning system was documented or created
+          example: "1037"
+        numberOfPitchClassesSingleOctave:
+          type: integer
+          description: Number of pitch classes per octave
+          example: 17
+        tuningSystemStartingNoteNames:
+          type: array
+          description: Available tuning system starting note names (first note in each note name set). These represent different theoretical traditions (ʿushayrān for oud tuning, yegāh for monochord measurements, rāst for pedagogical frameworks).
+          items:
+            type: string
+          example: ["ʿushayrān", "yegāh"]
+        numberOfTuningSystemStartingNoteNames:
+          type: integer
+          description: Count of available tuning system starting note name configurations
+          example: 2
+        numberOfPitchClassesAllOctaves:
+          type: integer
+          description: Total pitch-class count across available octaves (used for non-octave-repeating maqāmāt)
+          example: 51
+        originalValueType:
+          type: string
+          description: The original numeric representation for pitch classes in this tuning system
+          example: "fraction"
+        startingNoteName:
+          type: string
+          description: The selected tuning system starting note for this context (preferred over deprecated context.startingNote)
+          example: "ushayran"
+
+    PitchData:
+      type: object
+      required:
+        - ascending
+        - descending
+      properties:
+        ascending:
+          type: array
+          description: Ascending scale pitch classes
+          items:
+            $ref: '#/components/schemas/PitchClass'
+        descending:
+          type: array
+          description: Descending scale pitch classes
+          items:
+            $ref: '#/components/schemas/PitchClass'
+
+    PitchClass:
+      type: object
+      description: Pitch class data (fields vary by format parameter)
+      properties:
+        pitchClassIndex:
+          type: integer
+          description: Index in tuning system
+          example: 0
+        scaleDegree:
+          type: string
+          description: Roman numeral scale degree
+          example: "I"
+        noteName:
+          type: string
+          description: URL-safe note name
+          example: "ushayran"
+        noteNameDisplay:
+          type: string
+          description: Note name with diacritics
+          example: "ʿushayrān"
+        englishName:
+          type: string
+          description: English transliteration
+          example: "ushayran"
+        abjadName:
+          type: string
+          description: Arabic script name
+          example: "عشيران"
+        frequency:
+          type: number
+          format: float
+          description: Frequency in Hz (when pitchClassDataType=frequency or all)
+          example: 97.999
+        cents:
+          type: number
+          format: float
+          description: Cents above reference (when pitchClassDataType=cents or all)
+          example: 0.0
+        fraction:
+          type: string
+          description: Interval fraction ratio (when pitchClassDataType=fraction or all)
+          example: "1/1"
+        decimalRatio:
+          type: number
+          format: float
+          description: Decimal frequency ratio (when pitchClassDataType=decimalRatio or all)
+          example: 1.0
+        stringLength:
+          type: number
+          format: float
+          description: Relative string length (when pitchClassDataType=stringLength or all)
+          example: 1.0
+        midiNoteDecimal:
+          type: number
+          format: float
+          description: MIDI note with decimal cents (when format=midi or all)
+          example: 38.0
+        midiNotePlusCentsDeviation:
+          type: string
+          description: MIDI note ± cents deviation (when format=all)
+          example: "D2 +0.0"
+        centsDeviation:
+          type: number
+          format: float
+          description: Cents deviation from equal temperament (when format=all)
+          example: 0.0
+        ipnReferenceNoteName:
+          type: string
+          description: IPN reference note (when format=all)
+          example: "D2"
+
+    EntityRef:
+      type: object
+      required: [id, idName, displayName]
+      properties:
+        id:
+          type: string
+          description: Numeric or canonical identifier
+        idName:
+          type: string
+          description: URL-safe identifier
+        displayName:
+          type: string
+          description: Human-readable name with diacritics and transposition suffixes when applicable
+
+    AjnasData:
+      type: object
+      required:
+        - ascending
+        - descending
+      properties:
+        ascending:
+          type: object
+          additionalProperties:
+            oneOf:
+              - $ref: '#/components/schemas/EntityRef'
+              - type: 'null'
+          description: Note-name keyed map of ajnās present at each ascending scale degree
+          example:
+            rast: { id: "3", idName: "jins_rast", displayName: "jins rāst" }
+            dugah: null
+        descending:
+          type: object
+          additionalProperties:
+            oneOf:
+              - $ref: '#/components/schemas/EntityRef'
+              - type: 'null'
+          description: Note-name keyed map of ajnās present at each descending scale degree
+          example:
+            kurd: { id: "9", idName: "jins_kurd", displayName: "jins kurd" }
+            nahawand: { id: "4", idName: "jins_nahawand", displayName: "jins nahāwand" }
+      description: |
+        Ajnās present on each scale degree, keyed by standardized note names. Values are full entity objects
+        `{ id, idName, displayName }` when a jins is present, or `null` when no jins is assigned.
+
+    IntervalsData:
+      type: object
+      properties:
+        ascending:
+          type: array
+          description: Interval data between ascending scale degrees
+          items:
+            type: object
+            properties:
+              fromDegree:
+                type: string
+              toDegree:
+                type: string
+              cents:
+                type: number
+              ratio:
+                type: number
+        descending:
+          type: array
+          description: Interval data between descending scale degrees
+          items:
+            type: object
+
+    ModulationsData:
+      type: object
+      properties:
+        maqamat:
+          type: object
+          description: Possible maqām modulations by scale degree
+          properties:
+            onFirstDegree:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityRef'
+              example:
+                - { id: "21", idName: "maqam_mahur", displayName: "maqām māhūr" }
+                - { id: "22", idName: "maqam_suznak", displayName: "maqām sūznāk" }
+            onSecondDegree:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityRef'
+            onThirdDegree:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityRef'
+            onFourthDegree:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityRef'
+            onFifthDegree:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityRef'
+            onSixthDegree:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityRef'
+            onSeventhDegree:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityRef'
+        ajnas:
+          type: object
+          description: Possible jins modulations by scale degree
+          properties:
+            onFirstDegree:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityRef'
+              example:
+                - { id: "3", idName: "jins_rast", displayName: "jins rāst" }
+                - { id: "14", idName: "jins_mahur", displayName: "jins māhūr" }
+            onSecondDegree:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityRef'
+            onThirdDegree:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityRef'
+            onFourthDegree:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityRef'
+            onFifthDegree:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityRef'
+            onSixthDegree:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityRef'
+            onSeventhDegree:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityRef'
+        degreesNoteNames:
+          type: object
+          description: Note-name mappings for modulation degrees (URL-safe note names)
+          properties:
+            maqamat:
+              type: object
+            ajnas:
+              type: object
+
+    Sayr:
+      type: object
+      description: Melodic path (sayr) through the maqām
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        path:
+          type: array
+          items:
+            type: string
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: Error message
+          example: "Invalid request"
+        details:
+          type: string
+          description: Additional error details
+          example: "Parameter 'tuningSystem' is required"
+
+  responses:
+    ServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: "Internal server error"
+            details: "An unexpected error occurred"
+
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API key for authenticated requests (if implemented in future)
+
+security: []  # Currently no authentication required
