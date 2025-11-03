@@ -1,165 +1,312 @@
 import { NextResponse } from "next/server";
-import { promises as fs } from "fs";
+import { getMaqamat, getTuningSystems, getAjnas } from "@/functions/import";
+import { standardizeText } from "@/functions/export";
+import { addCorsHeaders, handleCorsPreflightRequest } from "@/app/api/cors";
+import { safeWriteFile } from "@/app/api/backup-utils";
 import path from "path";
-import { handleCorsPreflightRequest, addCorsHeaders } from "../cors";
+import { calculateMaqamTranspositions } from "@/functions/transpose";
+import { classifyMaqamFamily } from "@/functions/classifyMaqamFamily";
+import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
+import { 
+  octaveZeroNoteNames, 
+  octaveOneNoteNames, 
+  octaveTwoNoteNames, 
+  octaveThreeNoteNames,
+  octaveFourNoteNames 
+} from "@/models/NoteName";
 
-const dataFilePath = path.join(process.cwd(), "data", "maqamat.json");
-
-// Handle CORS preflight requests
-export async function OPTIONS() {
-  return handleCorsPreflightRequest();
-}
+export const OPTIONS = handleCorsPreflightRequest;
 
 /**
- * @swagger
- * /api/maqamat:
- *   get:
- *     summary: Retrieve all maqamat (melodic modes)
- *     description: Returns a complete list of maqamat - the complete modal structures in Arabic music theory. Each maqam contains ascending and descending note sequences, suyur (melodic pathways), and source references.
- *     tags:
- *       - Maqamat
- *     responses:
- *       200:
- *         description: Successfully retrieved maqamat data
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: string
- *                     description: Unique identifier for the maqam
- *                     example: "1"
- *                   name:
- *                     type: string
- *                     description: Name of the maqam
- *                     example: "Bayātī"
- *                   ascendingNoteNames:
- *                     type: array
- *                     items:
- *                       type: string
- *                     description: Note names for ascending sequence (suʿūd)
- *                     example: ["rāst", "dūgāh", "segāh", "chahārgāh", "nawā", "husaynī", "ʿajam", "gerdāniye"]
- *                   descendingNoteNames:
- *                     type: array
- *                     items:
- *                       type: string
- *                     description: Note names for descending sequence (hubūṭ)
- *                     example: ["gerdāniye", "ʿajam", "husaynī", "nawā", "chahārgāh", "segāh", "dūgāh", "rāst"]
- *                   suyūr:
- *                     type: array
- *                     items:
- *                       type: object
- *                     description: Melodic development pathways (suyūr) for performance practice
- *                   commentsEnglish:
- *                     type: string
- *                     description: English commentary on the maqam
- *                   commentsArabic:
- *                     type: string
- *                     description: Arabic commentary on the maqam
- *                   sourcePageReferences:
- *                     type: array
- *                     items:
- *                       type: object
- *                     description: Academic source references
- *       500:
- *         description: Server error - failed to load maqamat data
- *         content:
- *           text/plain:
- *             schema:
- *               type: string
- *               example: "Failed to load Maqamat."
+ * GET /api/maqamat
+ * 
+ * Returns all maqāmāt with availability summary statistics.
+ * Supports filtering by family or starting note, and sorting options.
+ * 
+ * Query Parameters:
+ * - family: Filter by maqām family (e.g., "rast", "hijaz", "bayat")
+ * - tonic: Filter by maqām tonic/first note (e.g., "rast", "dūgāh", "segāh")
+ * - sortBy: Sort order - "noteName" (default, by NoteName.ts order) or "alphabetical" (by display name)
  */
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const fileContents = await fs.readFile(dataFilePath, "utf-8");
-    const maqamat = JSON.parse(fileContents);
-    const response = NextResponse.json(maqamat);
+    const { searchParams } = new URL(request.url);
+    const familyFilter = searchParams.get("family");
+    const tonicFilter = searchParams.get("tonic");
+    const sortBy = searchParams.get("sortBy") || "noteName";
+
+    // Validate that filter parameters are not empty strings
+    if (familyFilter !== null && familyFilter.trim() === "") {
+      return addCorsHeaders(
+        NextResponse.json(
+          {
+            error: "Invalid parameter: family",
+            message: "The 'family' parameter cannot be empty. Either omit it or provide a valid maqām family name.",
+            hint: "Remove '?family=' from your URL or specify a family like '?family=rast'"
+          },
+          { status: 400 }
+        )
+      );
+    }
+
+    if (tonicFilter !== null && tonicFilter.trim() === "") {
+      return addCorsHeaders(
+        NextResponse.json(
+          {
+            error: "Invalid parameter: tonic",
+            message: "The 'tonic' parameter cannot be empty. Either omit it or provide a valid tonic note name.",
+            hint: "Remove '?tonic=' from your URL or specify a tonic like '?tonic=rast'"
+          },
+          { status: 400 }
+        )
+      );
+    }
+
+    const maqamat = getMaqamat();
+    const tuningSystems = getTuningSystems();
+    const ajnas = getAjnas();
+
+    // Create NoteName order lookup for sorting (all octaves)
+    // Use standardized text for note names to handle diacritics (ʿ, ʾ) consistently
+    const noteNameOrder = [
+      ...octaveZeroNoteNames,
+      ...octaveOneNoteNames, 
+      ...octaveTwoNoteNames,
+      ...octaveThreeNoteNames,
+      ...octaveFourNoteNames
+    ].map(name => standardizeText(name));
+    
+    const getNotePriority = (noteName: string) => {
+      const index = noteNameOrder.indexOf(noteName);
+      return index === -1 ? 999 : index; // Unknown notes go to the end
+    };
+
+    // Calculate availability for each maqām
+    const maqamatWithAvailability = maqamat.map((maqam) => {
+      // Count how many tuning systems support this maqām and collect their IDs with tuning system starting note names
+      let availableInTuningSystems = 0;
+      interface TuningSystemWithStartingNoteNames {
+        tuningSystemId: string;
+        tuningSystemStartingNoteNames: string[];
+      }
+      const tuningSystemsWithStartingNoteNames: TuningSystemWithStartingNoteNames[] = [];
+      
+      for (const tuningSystem of tuningSystems) {
+        // Get both the original note name sets and their 3-octave expansions
+        const noteNameSets = tuningSystem.getNoteNameSets();
+        const shiftedNoteNameSets = tuningSystem.getNoteNameSetsWithAdjacentOctaves();
+        
+        // Track which tuning system starting note names work for this maqām
+        const validTuningSystemStartingNoteNames: string[] = [];
+        
+        for (let i = 0; i < shiftedNoteNameSets.length; i++) {
+          if (maqam.isMaqamPossible(shiftedNoteNameSets[i])) {
+            // The first note in the original (non-shifted) set is the tuning system starting note name
+            const tuningSystemStartingNoteName = noteNameSets[i]?.[0];
+            if (tuningSystemStartingNoteName) {
+              validTuningSystemStartingNoteNames.push(tuningSystemStartingNoteName);
+            }
+          }
+        }
+        
+        if (validTuningSystemStartingNoteNames.length > 0) {
+          availableInTuningSystems++;
+          tuningSystemsWithStartingNoteNames.push({
+            tuningSystemId: tuningSystem.getId(),
+            tuningSystemStartingNoteNames: validTuningSystemStartingNoteNames
+          });
+        }
+      }
+
+      // Classify maqām family using proper jins analysis
+      // Use canonical reference tuning system (al-Ṣabbāgh 1954) with maqām's canonical starting note
+      let familyDisplay = "unknown";
+      let familyId = "unknown";
+      
+      try {
+        // Get canonical reference tuning system
+        const referenceTuningSystem = tuningSystems.find(ts => ts.getId() === "al-Sabbagh-(1954)");
+        
+        if (referenceTuningSystem) {
+          // Use the maqām's canonical starting note (first note of ascending scale)
+          const ascNotes = maqam.getAscendingNoteNames();
+          const canonicalStartingNote = ascNotes[0];
+          
+          if (canonicalStartingNote) {
+            // Get pitch classes starting from the maqām's canonical position
+            const pitchClasses = getTuningSystemPitchClasses(
+              referenceTuningSystem, 
+              canonicalStartingNote as any  // NoteName type
+            );
+            
+            // Calculate transpositions to get ajnas analysis
+            const transpositions = calculateMaqamTranspositions(
+              pitchClasses,
+              ajnas,
+              maqam,
+              true, // withTahlil
+              5    // centsTolerance
+            );
+            
+            // Get the tahlil (original form, not transposed)
+            const tahlil = transpositions.find(t => !t.transposition);
+            
+            if (tahlil) {
+              // Use proper classification function
+              const classification = classifyMaqamFamily(tahlil);
+              familyDisplay = classification.familyName;
+              familyId = standardizeText(familyDisplay);
+            }
+          }
+        }
+      } catch (error) {
+        console.warn(`Could not classify family for maqām ${maqam.getName()}:`, error);
+        // Fallback to "unknown" if classification fails
+      }
+
+      // Check if has asymmetric descending (different from ascending)
+      const ascNotes = maqam.getAscendingNoteNames();
+      const descNotes = maqam.getDescendingNoteNames();
+      const hasAsymmetricDescending = JSON.stringify(ascNotes) !== JSON.stringify([...descNotes].reverse());
+
+      // Check if has suyūr
+      const hasSuyur = maqam.getSuyur().length > 0;
+      
+      // Get tonic (first note of ascending scale)
+      const tonicDisplay = ascNotes[0] || "unknown";
+      
+      // URL-safe version of tonic
+      const tonicId = standardizeText(tonicDisplay);
+      
+      // Count pitch classes (number of unique notes in ascending scale)
+      const numberOfPitchClasses = ascNotes.length;
+      
+      // Determine if octave repeating (follows rule: numberOfPitchClasses <= 7)
+      const isOctaveRepeating = numberOfPitchClasses <= 7;
+
+      // Generate idName (standardized URL-safe version)
+      const idName = standardizeText(maqam.getName());
+
+      return {
+        id: maqam.getId(),
+        idName,
+        displayName: maqam.getName(),
+        version: maqam.getVersion(),
+        familyId,
+        familyDisplay,
+        tonicId,
+        tonicDisplay,
+        numberOfPitchClasses,
+        isOctaveRepeating,
+        hasAsymmetricDescending,
+        hasSuyur,
+        availableInTuningSystems,
+        tuningSystemsAvailability: tuningSystemsWithStartingNoteNames,
+        maqamDetailsUrl: `/api/maqamat/${idName}`
+      };
+    });
+
+    // Apply filters if provided
+    let filteredMaqamat = maqamatWithAvailability;
+    if (familyFilter) {
+      filteredMaqamat = filteredMaqamat.filter(
+        (m) => standardizeText(m.familyDisplay) === standardizeText(familyFilter)
+      );
+    }
+    if (tonicFilter) {
+      filteredMaqamat = filteredMaqamat.filter(
+        (m) => standardizeText(m.tonicDisplay) === standardizeText(tonicFilter)
+      );
+    }
+
+    // Apply sorting
+    if (sortBy === "alphabetical") {
+      // Sort alphabetically by display name (using standardized text for consistency)
+      filteredMaqamat.sort((a, b) => 
+        standardizeText(a.displayName).localeCompare(standardizeText(b.displayName))
+      );
+    } else {
+      // Default: Sort by NoteName order (first note of ascending scale)
+      // Use standardized text for note name comparison to handle diacritics consistently
+      filteredMaqamat.sort((a, b) => {
+        const priorityA = getNotePriority(standardizeText(a.tonicDisplay));
+        const priorityB = getNotePriority(standardizeText(b.tonicDisplay));
+        return priorityA - priorityB;
+      });
+    }
+
+    const response = NextResponse.json({
+      count: filteredMaqamat.length,
+      data: filteredMaqamat
+    });
+
     return addCorsHeaders(response);
   } catch (error) {
-    console.error("Error loading Maqamat:", error);
-    const errorResponse = new NextResponse("Failed to load Maqamat.", { status: 500 });
+    console.error("Error in GET /api/maqamat:", error);
+    const errorResponse = NextResponse.json(
+      { error: "Failed to retrieve maqāmāt" },
+      { status: 500 }
+    );
     return addCorsHeaders(errorResponse);
   }
 }
 
 /**
- * @swagger
- * /api/maqamat:
- *   put:
- *     summary: Update the complete maqamat dataset
- *     description: Replaces the entire maqamat collection with new data. This endpoint is used for administrative updates to the maqamat database.
- *     tags:
- *       - Maqamat
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: array
- *             items:
- *               type: object
- *               properties:
- *                 id:
- *                   type: string
- *                   description: Unique identifier for the maqam
- *                 name:
- *                   type: string
- *                   description: Name of the maqam
- *                 ascendingNoteNames:
- *                   type: array
- *                   items:
- *                     type: string
- *                   description: Note names for ascending sequence
- *                 descendingNoteNames:
- *                   type: array
- *                   items:
- *                     type: string
- *                   description: Note names for descending sequence
- *                 suyūr:
- *                   type: array
- *                   items:
- *                     type: object
- *                   description: Melodic development pathways
- *                 commentsEnglish:
- *                   type: string
- *                   description: English commentary
- *                 commentsArabic:
- *                   type: string
- *                   description: Arabic commentary
- *                 sourcePageReferences:
- *                   type: array
- *                   items:
- *                     type: object
- *                   description: Academic source references
- *     responses:
- *       200:
- *         description: Maqamat data updated successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Maqamat updated successfully."
- *       500:
- *         description: Server error - failed to update maqamat data
- *         content:
- *           text/plain:
- *             schema:
- *               type: string
- *               example: "Failed to update Maqamat."
+ * PUT /api/maqamat
+ * 
+ * Updates the maqamat database.
+ * Accepts an array of maqam objects and writes them to data/maqamat.json.
+ * 
+ * Request Body: Array of maqam objects
  */
 export async function PUT(request: Request) {
   try {
-    const updatedArray = await request.json();
-    await fs.writeFile(dataFilePath, JSON.stringify(updatedArray, null, 2), "utf-8");
-    return NextResponse.json({ message: "Maqamat updated successfully." });
+    const maqamat = await request.json();
+    
+    if (!Array.isArray(maqamat)) {
+      const errorResponse = NextResponse.json(
+        { error: "Invalid request: body must be an array of maqamat" },
+        { status: 400 }
+      );
+      return addCorsHeaders(errorResponse);
+    }
+
+    // CRITICAL: Prevent data loss - reject empty arrays
+    if (maqamat.length === 0) {
+      const errorResponse = NextResponse.json(
+        { 
+          error: "Cannot save empty array",
+          message: "Refusing to save empty array to prevent data loss. If you want to clear all data, use a delete endpoint or explicitly confirm.",
+          hint: "This endpoint requires at least one maqam object"
+        },
+        { status: 400 }
+      );
+      return addCorsHeaders(errorResponse);
+    }
+
+    // Get the path to data/maqamat.json
+    const dataPath = path.join(process.cwd(), "data", "maqamat.json");
+
+    // Write with backup
+    const writeResult = safeWriteFile(dataPath, maqamat, true);
+
+    if (!writeResult.success) {
+      throw new Error(writeResult.error || "Failed to write file");
+    }
+
+    const response = NextResponse.json({
+      message: "Maqamat updated successfully",
+      count: maqamat.length,
+      backupCreated: writeResult.backupPath !== null,
+    });
+
+    return addCorsHeaders(response);
   } catch (error) {
-    console.error("Error updating Maqamat:", error);
-    return new NextResponse("Failed to update Maqamat.", { status: 500 });
+    console.error("Error updating maqamat:", error);
+    const errorResponse = NextResponse.json(
+      { error: "Failed to update maqamat" },
+      { status: 500 }
+    );
+    return addCorsHeaders(errorResponse);
   }
 }
