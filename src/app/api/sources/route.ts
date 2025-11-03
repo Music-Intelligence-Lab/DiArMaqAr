@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSources } from "@/functions/import";
+import { stringifySource } from "@/models/bibliography/Source";
 import { addCorsHeaders, handleCorsPreflightRequest } from "@/app/api/cors";
 import { safeWriteFile } from "@/app/api/backup-utils";
 import path from "path";
@@ -20,7 +21,7 @@ export async function GET() {
     const sourcesData = sources.map((source) => {
       return {
         id: source.getId(),
-        displayName: source.stringify(),
+        displayName: stringifySource(source, true, null),
         sourceType: source.getSourceType(),
         titleEnglish: source.getTitleEnglish(),
         titleArabic: source.getTitleArabic(),
