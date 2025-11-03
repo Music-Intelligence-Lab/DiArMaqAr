@@ -38,7 +38,7 @@ function isTuningSystemDisabled(
   selectedMaqam: Maqam | null,
   startingNoteName: NoteName = ""
 ): { disabled: boolean; noteName: string } {
-  const shiftedNoteNames = tuningSystem.getNoteNameSetsShiftedUpAndDown();
+  const shiftedNoteNames = tuningSystem.getNoteNameSetsWithAdjacentOctaves();
 
   if (!selectedJinsData && !selectedMaqamData)
     return { disabled: false, noteName: "" };
