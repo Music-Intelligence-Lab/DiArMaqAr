@@ -368,7 +368,7 @@ export default class TuningSystem {
    * 
    * @returns Expanded note name sets with three octaves of coverage
    */
-  getNoteNameSetsShiftedUpAndDown(): NoteName[][] {
+  getNoteNameSetsWithAdjacentOctaves(): NoteName[][] {
     const usedNoteNames: NoteName[][] = [];
     for (const set of this.noteNameSets) {
       usedNoteNames.push([...set.map((noteName) => shiftNoteName(noteName, -1)), ...set, ...set.map((noteName) => shiftNoteName(noteName, 1))] as NoteName[]);
