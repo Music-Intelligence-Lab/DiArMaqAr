@@ -74,7 +74,15 @@ export default function Footer() {
         <p className="footer__copyright">
           {language === "ar"
             ? `© ${new Date().getFullYear()} أرشيف المقامات العربية الرقمي/مختبر الذكاء الموسيقي في الجامعة الأمريكية في بيروت. جميع الحقوق محفوظة.`
-            : `© ${new Date().getFullYear()} Digital Arabic Maqām Archive/AUB Music Intelligence Lab. All rights reserved.`}
+            :
+          <>
+            Digital Arabic Maqam Archive (DiArMaqAr) © 2025 by <a href="https://musicintelligencelab.com" className="footer__link">Khyam Allami/Music Intelligence Lab</a> is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" className="footer__link">CC BY-NC-SA 4.0</a>
+            <img src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt="" style={{ maxWidth: "1em", maxHeight: "1em", marginLeft: ".2em" }} />
+            <img src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt="" style={{ maxWidth: "1em", maxHeight: "1em", marginLeft: ".2em" }} />
+            <img src="https://mirrors.creativecommons.org/presskit/icons/nc.svg" alt="" style={{ maxWidth: "1em", maxHeight: "1em", marginLeft: ".2em" }} />
+            <img src="https://mirrors.creativecommons.org/presskit/icons/sa.svg" alt="" style={{ maxWidth: "1em", maxHeight: "1em", marginLeft: ".2em" }} />
+          </>
+          }
         </p>
 {/*         <p className="footer__license">
           {language === "ar"
