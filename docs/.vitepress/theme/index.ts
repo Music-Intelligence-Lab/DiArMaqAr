@@ -3,6 +3,7 @@ import type { Theme } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import { useOpenapi, theme as openApiTheme } from 'vitepress-openapi/client'
 import 'vitepress-openapi/dist/style.css'
+import './custom.css'
 
 export default {
   extends: DefaultTheme,

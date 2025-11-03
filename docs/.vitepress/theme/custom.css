@@ -1,0 +1,121 @@
+/* Increase content width for wider layout */
+:root {
+  --vp-layout-max-width: 100%;
+  --vp-content-max-width: 100%;
+}
+
+/* Target the specific content div */
+.content {
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+/* Widen the main content area, especially after removing right sidebar */
+.VPDoc.has-aside .content-container,
+.VPDoc .content-container {
+  max-width: 100% !important;
+}
+
+/* Make the content area wider */
+.VPDoc .container {
+  max-width: 100% !important;
+}
+
+/* Target all VitePress doc content wrappers */
+.vp-doc,
+.vp-doc .content,
+.vp-doc .vp-doc-content {
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+/* Ensure API spec component uses full available width */
+.vp-doc .openapi-component,
+.openapi-component {
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+/* Remove max-width constraints on the main content */
+.main {
+  max-width: 100% !important;
+}
+
+/* Adjust the layout to use more width */
+.VPContent {
+  max-width: 100% !important;
+}
+
+/* Ensure content containers expand fully */
+.VPDoc {
+  max-width: 100% !important;
+}
+
+/* Target the page content wrapper */
+.VPDoc .content,
+div.content[data-v-39a288b8] {
+  max-width: 100% !important;
+  width: 100% !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Override any nested max-width constraints */
+.content > * {
+  max-width: 100% !important;
+}
+
+/* Ensure the layout uses full width */
+.VPLayout {
+  max-width: 100% !important;
+}
+
+/* Remove padding/margin constraints that might restrict width */
+.VPDoc .content-wrapper,
+.VPDoc .vp-doc-content {
+  max-width: 100% !important;
+  padding: 0 24px !important;
+}
+
+/* Hide the aside-container (right sidebar) completely */
+.aside-container,
+div.aside-container,
+div.aside-container[data-v-39a288b8] {
+  display: none !important;
+  width: 0 !important;
+  visibility: hidden !important;
+}
+
+/* Hide any aside elements */
+.aside,
+.VPDocAside,
+.VPDocAsideContent {
+  display: none !important;
+}
+
+/* Adjust layout when aside is hidden - remove reserved space */
+.VPDoc.has-aside .content-container {
+  margin-right: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Make content take full width when aside is hidden */
+.VPDoc:not(.has-aside) .content-container,
+.VPDoc .content-container {
+  max-width: 100% !important;
+  margin-right: 0 !important;
+}
+
+/* Ensure the layout doesn't reserve space for aside */
+.VPDoc.has-aside {
+  grid-template-columns: 1fr 0 !important;
+}
+
+/* Hide the entire aside section */
+.VPDoc .aside,
+.VPDoc .VPDocAside {
+  display: none !important;
+  width: 0 !important;
+  min-width: 0 !important;
+}
+
