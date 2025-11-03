@@ -9,6 +9,7 @@ import Thesis from "@/models/bibliography/Thesis";
 import { Source } from "@/models/bibliography/Source";
 import { nanoid } from "nanoid";
 import { updateSources } from "@/functions/update";
+import { standardizeText } from "@/functions/export";
 
 export default function SourcesManager() {
   const { sources, setSources } = useAppContext();
@@ -336,10 +337,15 @@ export default function SourcesManager() {
               .slice()
               .sort((a: Source, b: Source) => {
                 // Sort alphabetically by last name, or by title if no contributors
+                // Use standardizeText to remove diacritics for consistent sorting
                 const aContribs = a.getContributors();
                 const bContribs = b.getContributors();
-                const aKey = aContribs && aContribs.length > 0 ? aContribs[0].lastNameEnglish.toLowerCase() : a.getTitleEnglish().toLowerCase();
-                const bKey = bContribs && bContribs.length > 0 ? bContribs[0].lastNameEnglish.toLowerCase() : b.getTitleEnglish().toLowerCase();
+                const aKey = aContribs && aContribs.length > 0 
+                  ? standardizeText(aContribs[0].lastNameEnglish.toLowerCase()) 
+                  : standardizeText(a.getTitleEnglish().toLowerCase());
+                const bKey = bContribs && bContribs.length > 0 
+                  ? standardizeText(bContribs[0].lastNameEnglish.toLowerCase()) 
+                  : standardizeText(b.getTitleEnglish().toLowerCase());
                 return aKey.localeCompare(bKey);
               })
               .map((s: Source) => {

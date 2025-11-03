@@ -9,6 +9,7 @@ import Thesis from "@/models/bibliography/Thesis";
 import { Contributor } from "@/models/bibliography/AbstractSource";
 import { useEffect, useState, useRef } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
+import { standardizeText } from "@/functions/export";
 
 export default function SourcesList() {
   const { sources } = useAppContext();
@@ -58,9 +59,17 @@ const formatContributorsArabic = (contributors: Contributor[]): string => {
 
   // Build an English citation as JSX for either Book or Article
   const buildEnglishCitation = (source: Source): React.ReactNode => {
-    // Helper to format individual names: "Last, F."
-    const formatName = (c: Contributor) =>
-      `${c.lastNameEnglish}, ${c.firstNameEnglish[0]}.`;
+    // Helper to format individual names: "Last, F." or "Last, F. M." if first name contains multiple parts
+    const formatName = (c: Contributor) => {
+      // Split first name by spaces and extract first character of each part as initials
+      const firstName = (c.firstNameEnglish || "").trim();
+      if (!firstName) {
+        return `${c.lastNameEnglish},`;
+      }
+      const nameParts = firstName.split(/\s+/).filter(part => part.length > 0);
+      const initials = nameParts.map(part => part[0].toUpperCase()).join(". ") + ".";
+      return `${c.lastNameEnglish}, ${initials}`;
+    };
 
     // Separate contributors by type: authors, editors, translators, reviewers
     const allContribs = source.getContributors();
@@ -81,7 +90,7 @@ const formatContributorsArabic = (contributors: Contributor[]): string => {
     const primaryAuthors = authors.map(formatName).join(" and ");
     const contribLine = (
       <>
-        {primaryAuthors && <>{primaryAuthors}.</>}
+        {primaryAuthors && <>{primaryAuthors}</>}
         {editors.length > 0 && (
           <> Edited by {editors.map(formatName).join(" and ")}.</>
         )}
@@ -405,19 +414,18 @@ const formatContributorsArabic = (contributors: Contributor[]): string => {
         .slice()
         .sort((a: Source, b: Source) => {
           // Determine primary sort key: first contributor's lastNameEnglish or title if no contributors
+          // Use standardizeText to remove diacritics for consistent sorting
           const aContribs = a.getContributors();
           const bContribs = b.getContributors();
           const aKey =
             aContribs && aContribs.length > 0
-              ? aContribs[0].lastNameEnglish.toLowerCase()
-              : a.getTitleEnglish().toLowerCase();
+              ? standardizeText(aContribs[0].lastNameEnglish.toLowerCase())
+              : standardizeText(a.getTitleEnglish().toLowerCase());
           const bKey =
             bContribs && bContribs.length > 0
-              ? bContribs[0].lastNameEnglish.toLowerCase()
-              : b.getTitleEnglish().toLowerCase();
-          if (aKey < bKey) return -1;
-          if (aKey > bKey) return 1;
-          return 0;
+              ? standardizeText(bContribs[0].lastNameEnglish.toLowerCase())
+              : standardizeText(b.getTitleEnglish().toLowerCase());
+          return aKey.localeCompare(bKey);
         })
         .map((src: Source) => (
           <div
