@@ -45,9 +45,23 @@ next-env.d.ts
 /scripts/batch-export/batch-export-runner.ts
 /scripts/exports/*/*.json
 /scripts/exports/*.json
+/public/data/full_json_exports/*
 
 # serena mcp
 .serena/
 
 # playwright mcp
 .playwright-mcp/
+
+# article
+
+/article/*
+
+# VitePress
+docs/.vitepress/dist
+docs/.vitepress/cache
+docs/library/api
+# Generated OpenAPI JSON files (source of truth is openapi.yaml)
+docs/openapi.json
+docs/public/openapi.json
+public/docs/openapi.json
