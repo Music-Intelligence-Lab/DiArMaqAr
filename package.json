@@ -8,9 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "docs:openapi": "node scripts/generate-openapi-json.js",
-    "docs:ts": "typedoc",
     "docs:dev": "npm run docs:openapi && vitepress dev docs",
-    "docs:build": "npm run docs:openapi && npm run docs:ts && vitepress build docs",
+    "docs:build": "npm run docs:openapi && vitepress build docs",
     "docs:preview": "vitepress preview docs",
     "docs:typecheck": "vitepress typecheck docs"
   },
@@ -42,8 +41,6 @@
     "js-yaml": "^4.1.0",
     "process": "^0.11.10",
     "sass": "^1.89.0",
-    "typedoc": "^0.28.14",
-    "typedoc-plugin-markdown": "^4.9.0",
     "typescript": "^5",
     "vitepress": "^1.6.4",
     "vitepress-openapi": "^0.1.10"
