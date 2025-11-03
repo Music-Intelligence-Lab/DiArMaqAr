@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import LanguageSelector from "@/components/language-selector";
 import useLanguageContext from "@/contexts/language-context";
 import Footer from "@/components/footer";
@@ -24,18 +25,18 @@ export default function LandingPage() {
 
       <section className="main">
         <div className="cta-row">
-          <a className="main-button" href="/app">
+          <Link className="main-button" href="/app">
             {language === "ar" ? "ادخلوا إلى الأرشيف" : "Enter the Archive"}
-          </a>
+          </Link>
         </div>
 
         <div className="button-row">
           <a className="button" href="#tour">
             {language === "ar" ? "ابدأوا جولة تفاعلية" : "Take an Interactive Tour"}
           </a>
-          <a className="button" href="/docs/">
+          <Link className="button" href="/docs/">
             {language === "ar" ? "اطّلعوا على التوثيق" : "Access the Documentation"}
-          </a>
+          </Link>
           <a className="button" href="https://github.com/Music-Intelligence-Lab/diarmaqar">
             {language === "ar" ? "اطّلعوا على الشيفرة المصدرية" : "Access the Source Code"}
           </a>
