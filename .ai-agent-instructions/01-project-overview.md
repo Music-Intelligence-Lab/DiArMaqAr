@@ -54,7 +54,6 @@ The **Digital Arabic Maqām Archive** (DiArMaqAr) is a comprehensive web-based p
 - **Documentation**: TypeDoc for API generation
 
 ### Backend/Processing
-- **Python**: Data processing, batch exports, analytics
 - **Node.js**: CLI tools, batch export utilities
 
 ---
@@ -75,7 +74,7 @@ The **Digital Arabic Maqām Archive** (DiArMaqAr) is a comprehensive web-based p
 - `sources.json` - Bibliography and source references
 - `patterns.json` - Melodic patterns for analysis
 
-**2. Model Layer (TypeScript/Python)**
+**2. Model Layer (TypeScript)**
 - Classes bridge abstract data with concrete implementations
 - Convert mathematical intervals to playable frequencies
 - Transform abstract note names into concrete pitch classes
@@ -152,10 +151,6 @@ The **Digital Arabic Maqām Archive** (DiArMaqAr) is a comprehensive web-based p
 │   ├── data/                  # Analytics data
 │   ├── docs/                  # Public API and export documentation
 │   └── fonts/
-├── python/                     # Python mirror for validation/processing
-│   ├── models/
-│   ├── functions/
-│   └── test_*.py
 ├── scripts/                    # Utility scripts
 │   └── batch-export/          # CLI batch export tool
 ├── src/                        # Main TypeScript source
@@ -196,7 +191,30 @@ The **Digital Arabic Maqām Archive** (DiArMaqAr) is a comprehensive web-based p
 - Suyūr (melodic development pathways)
 - Embedded ajnas identification
 
-### 4. Modulation Analysis
+### 4. Computational Transposition of Suyūr
+**Key Innovation**: DiArMaqAr implements the first computational transposition of suyūr (melodic development pathways), addressing a fundamental limitation in historical Arabic music theory sources.
+
+**Historical Context:**
+- In historical sources (Meshshāqa 1899, Al-Shawwā 1946, Al-Ṣabbāgh 1950, Al-Ḥilū 1961), suyūr are always presented as prose text
+- Suyūr are never represented for transpositions of any given maqām in historical literature
+- This limitation prevented systematic exploration of melodic pathways across different pitch centers
+
+**DiArMaqAr's Solution:**
+- Automatically transposes suyūr along with maqām transpositions
+- The `transposeSayr()` function operates through three stages:
+  1. **Calculate Transposition Interval**: Compares first notes of original and target maqāmāt
+  2. **Apply Intelligent Note Shifting**: Shifts note stops by calculated interval with bounds checking
+  3. **Process Different Stop Types**: Handles notes, jins, maqām, and directional instructions appropriately
+- Enables systematic exploration of all possible melodic pathways across pitch centers
+- Supports comparative analysis and theoretical investigation of suyūr relationships
+
+**Implementation Details:**
+- Suyūr stops can be: notes, jins references, maqām references, or directional instructions
+- Bounds safety mechanism ensures transposed suyūr remain within practical tuning system limits
+- Maintains structural identity for jins/maqām references while transposing starting notes
+- Preserves bilingual support (Arabic/English) in transposed forms
+
+### 5. Modulation Analysis
 - First digital implementation of al-Shawwā algorithm (1946)
 - Maqamat-to-maqamat modulations
 - Ajnas-to-ajnas modulations
@@ -208,13 +226,13 @@ The **Digital Arabic Maqām Archive** (DiArMaqAr) is a comprehensive web-based p
 - JSON format with comprehensive metadata
 - Progress tracking for large exports
 
-### 6. Audio Synthesis
+### 7. Audio Synthesis
 - Web Audio API implementation
 - Multiple timbres
 - Individual pitch class playback
 - Sequence playback
 
-### 7. Staff Notation
+### 8. Staff Notation
 - VexFlow rendering
 - Enharmonic spelling algorithm
 - Sequential letter resolution
@@ -239,13 +257,6 @@ npm run docs:serve   # Generate and open in browser
 npm run docs:watch   # Watch mode for docs
 ```
 
-### Python Environment
-```bash
-cd python
-python test_models.py         # Test data models
-python test_functions.py      # Test core functions
-python test_import.py         # Test data import
-```
 
 ### Batch Export CLI
 ```bash
@@ -296,6 +307,7 @@ node scripts/batch-export/batch-export.js \
 - **Musicological Principles**: `.ai-agent-instructions/04-musicological-principles.md`
 - **Testing Guide**: `.ai-agent-instructions/05-testing-guide.md`
 - **Documentation Standards**: `.ai-agent-instructions/06-documentation-standards.md`
-- **API Documentation**: `public/docs/api/index.html`
+- **API Specification**: `openapi.yaml`
+- **API Playground**: `src/app/api/playground/page.tsx`
 - **Export Documentation**: `public/docs/README DiArMaqAr Tuning System JSON Data Export.md`
 - **TypeDoc**: `docs/library/index.html` (generated)

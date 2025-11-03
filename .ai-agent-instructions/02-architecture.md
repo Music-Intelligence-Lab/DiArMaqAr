@@ -17,7 +17,6 @@ Complete technical architecture for the Digital Arabic Maqām Archive
 
 ### Backend/Processing
 - **Runtime**: Node.js (for CLI tools and SSR)
-- **Data Processing**: Python (mirror implementation)
 - **Data Format**: JSON
 
 ---
@@ -91,11 +90,6 @@ data/                          # Ground-truth JSON data
 ├── patterns.json             # Melodic patterns
 ├── sources.json              # Bibliography
 └── tuningSystems.json        # Historical tuning systems
-
-python/                        # Python mirror implementation
-├── models/                   # Python equivalents
-├── functions/                # Python processing
-└── test_*.py                 # Test suites
 
 scripts/                       # Utility scripts
 └── batch-export/             # CLI batch export tool
@@ -269,6 +263,15 @@ const modulations = modulate(
 );
 ```
 
+**7. Maqam → Family Classification**
+```typescript
+// Function: classifyMaqamFamily()
+const classification = classifyMaqamFamily(maqam);
+// Returns: { method, familyName, fullJinsName, scaleDegree, source }
+```
+
+**CRITICAL**: Family classification requires a `Maqam` object (not `MaqamData`), which means it needs ajnās analysis. For consistent classification across all maqāmāt, always use **al-Ṣabbāgh (1954)** as the canonical tuning system reference with each maqām's own canonical starting note. See `03-development-conventions.md` → "Family Classification Pattern" for implementation details.
+
 ---
 
 ## Note Name System
@@ -317,7 +320,91 @@ import { getTuningSystems } from '../../../functions/import';
 
 ---
 
-## API Pattern
+## API Design Patterns
+
+### Progressive Disclosure Pattern
+
+**Pattern**: Users discover → check availability → commit to data retrieval
+
+```
+1. LIST      → Browse all maqāmāt/ajnās (metadata only)
+2. AVAILABLE → Check compatibility with tuning systems
+3. DATA      → Get full data with flexible formatting
+```
+
+**Benefits:**
+- Reduced bandwidth for exploratory queries
+- Clear separation of concerns
+- Supports both casual exploration and deep analysis
+
+**Example Implementation:**
+```typescript
+// Step 1: List all maqāmāt (metadata only, no pitch data)
+GET /api/maqamat
+→ Returns: id, name, family, availability count
+
+// Step 2: Check availability for specific maqām
+GET /api/maqamat/{id}/availability
+→ Returns: which (tuningSystem, startingNote) combinations support this maqām
+
+// Step 3: Get full maqām data (commits to full data retrieval)
+GET /api/maqamat/{id}?tuningSystem=X&startingNote=Y&format=all
+→ Returns: complete pitch classes, intervals, embedded ajnās, modulations
+```
+
+### Format Negotiation Pattern
+
+**Pattern**: Single endpoint, multiple representations
+
+**Available Formats:**
+- `format=cents` - Western notation (default visualization)
+- `format=frequency` - Synthesis/audio applications
+- `format=fraction` - Theoretical analysis (ratios)
+- `format=midi` - MIDI controllers
+- `format=stringLength` - Lute/oud instruments
+- `format=all` - All representations
+
+**Benefits:**
+- Single endpoint serves multiple use cases
+- Reduces API complexity
+- Clear separation of data vs presentation
+
+**Implementation:**
+```typescript
+GET /api/maqamat/{id}?tuningSystem=X&startingNote=Y&format=cents
+→ Returns only cents values
+
+GET /api/maqamat/{id}?tuningSystem=X&startingNote=Y&format=all
+→ Returns all format representations
+```
+
+### Diacritics Insensitivity Pattern
+
+**Pattern**: All text matching uses `standardizeText()` utility function
+
+**Purpose**: Reduce API friction for non-Arabic keyboards
+
+**Examples:**
+- "yegah" matches "yegāh"
+- "rast" matches "rāst"
+- "Sabbagh" matches "Ṣabbāgh"
+
+**Implementation:**
+```typescript
+import { standardizeText } from '@/functions/utilities';
+
+// Matching
+if (standardizeText(family) === standardizeText(maqam.family)) { ... }
+
+// Sorting
+families.sort((a, b) =>
+  standardizeText(a).localeCompare(standardizeText(b))
+);
+```
+
+---
+
+## API Route Implementation
 
 ### Standard API Route Structure
 
@@ -508,16 +595,6 @@ handleUrlParams({
 
 ---
 
-## Python-TypeScript Parity
-
-### Parallel Implementations
-
-**Purpose**: Validation, testing, batch processing
-
-**Structure**:
-- `python/models/` ↔ `src/models/`
-- `python/functions/` ↔ `src/functions/`
-- Both share `data/*.json`
 
 **Use Cases:**
 - Data processing and analytics generation
@@ -588,3 +665,199 @@ When adding new features:
 - [ ] Test across multiple tuning systems
 - [ ] Verify URL parameter integration
 - [ ] Document significant patterns discovered
+
+---
+
+## API Design Principles & Lessons Learned
+
+### Entity Object Pattern (CRITICAL)
+
+**Rule**: Always return complete entity objects with `{id, idName, displayName}` structure. Never return flat string arrays or bare IDs for entity references.
+
+**Why**:
+- Prevents additional API calls to retrieve display information
+- Enables proper rendering of Arabic diacritics in UI without lookups
+- Follows "Always include both display and URL-safe IDs" architectural principle
+- Provides complete semantic information in single response
+
+**Bad Example** ❌:
+```typescript
+ajnas: {
+  ascending: ["jins_bayyat", "jins_segah"]
+}
+```
+
+**Good Example** ✅:
+```typescript
+ajnas: {
+  ascending: [
+    { id: "2", idName: "jins_bayyat", displayName: "jins bayyāt" },
+    { id: "3", idName: "jins_segah", displayName: "jins segāh" }
+  ]
+}
+```
+
+**Implementation Pattern**:
+```typescript
+// Create entity lookup Maps
+const jinsIdToEntity = new Map<string, any>();
+for (const jins of ajnas) {
+  jinsIdToEntity.set(jins.getId(), {
+    id: jins.getId(),
+    idName: jins.getIdName(),
+    displayName: jins.getName()
+  });
+}
+
+// Map to full objects with filter for null safety
+responseData.ajnas = {
+  ascending: transposition.ascendingMaqamAjnas
+    .map(jins => jinsIdToEntity.get(jins.jinsId))
+    .filter(Boolean) || []
+};
+```
+
+### Context Object Nesting
+
+**Rule**: Related configuration data should be nested logically within parent objects, not spread across the root level.
+
+**Bad Example** ❌:
+```json
+{
+  "context": {
+    "tuningSystem": {...},
+    "startingNote": "ushayran",
+    "referenceFrequency": 97.999
+  }
+}
+```
+
+**Good Example** ✅:
+```json
+{
+  "context": {
+    "tuningSystem": {
+      "id": "IbnSina-(1037)",
+      "displayName": "Ibn Sīnā (1037) 7-Fret Oud 17-Tone",
+      "startingNoteName": "ushayran",
+      "referenceFrequency": 97.999
+    }
+  }
+}
+```
+
+### Metadata Fields in Formatted Data
+
+**Rule**: When returning formatted pitch/interval data, always include positioning metadata regardless of requested format.
+
+**Required Metadata**:
+```typescript
+{
+  pitchClassIndex: number,      // Position in tuning system
+  scaleDegree: string,          // Roman numeral (I, II, III)
+  noteName: string,             // URL-safe identifier
+  noteNameDisplay: string,      // With diacritics
+  // ... then format-specific fields
+}
+```
+
+### Field Naming Consistency
+
+**Patterns to follow**:
+- Use `[field]Name` suffix when referring to name strings: `startingNoteName`, `displayName`, `idName`
+- Consistent entity structure: `{id, idName, displayName}`
+- Boolean fields: `includeIntervals`, `isDescending`
+- Never abbreviate unless established convention exists
+
+### Legacy Alias Policy
+
+**Rule**: Do not maintain legacy aliases "for backward compatibility" without proper API versioning.
+
+**Why**: Creates confusion, increases test burden, bloats documentation.
+
+**Action**: Clean removal is better than indefinite maintenance. If backward compatibility is required, implement proper API versioning (v1, v2).
+
+### API-UI Synchronization Checklist
+
+When adding/removing/changing API format options, update ALL components:
+
+1. ✅ API route handler (`formatPitchData()` case statements)
+2. ✅ UI dropdown options (Material-UI `MenuItem` components)
+3. ✅ Test suite (add/remove test cases)
+4. ✅ OpenAPI specification (parameter descriptions)
+5. ✅ Documentation (README, API guides)
+6. ✅ TypeScript types/interfaces (if applicable)
+
+**Why**: Prevents UI-API drift that causes user confusion and failed requests.
+
+### Response Verification Workflow
+
+**Rule**: After API structural changes, verify responses with actual HTTP requests.
+
+**Tools & Commands**:
+```bash
+# Check entity object structure
+curl -s "http://localhost:3000/api/maqamat/maqam_bayyat?..." | jq '.ajnas.ascending[0:2]'
+
+# Verify context nesting
+curl -s "http://localhost:3000/api/maqamat/maqam_bayyat?..." | jq '.context'
+
+# Check modulations
+curl -s "http://localhost:3000/api/maqamat/maqam_bayyat?..." | jq '.modulations.maqamat.onFirstDegree[0:3]'
+```
+
+**What to verify**:
+- ✅ Arabic diacritics render correctly (`maqām ḥijāz`)
+- ✅ Entity objects contain all three fields
+- ✅ Context structure is properly nested
+- ✅ No `null`/`undefined` in arrays
+- ✅ Field names match documentation
+
+### UI Label Formatting
+
+**Rule**: Dropdown labels should be clean and user-friendly.
+
+**Bad** ❌: `<MenuItem value="stringLength">stringLength - String lengths</MenuItem>`
+
+**Good** ✅: `<MenuItem value="stringLength">String Lengths</MenuItem>`
+
+**Why**: Field name already exists as value attribute; reduces visual clutter.
+
+### Current API Format Count
+
+**Total**: 15 pitch class data types
+
+1. `all` - Complete pitch class data
+2. `pitchClassIndex` - Index in tuning system
+3. `scaleDegree` - Roman numeral position
+4. `englishName` - English note names
+5. `fraction` - Interval fractions
+6. `cents` - Cent values
+7. `decimalRatio` - Decimal ratios
+8. `stringLength` - String lengths
+9. `frequency` - Frequencies in Hz
+10. `abjadName` - Abjad notation names
+11. `fretDivision` - Fret divisions
+12. `midiNoteNumber` - MIDI note numbers
+13. `midiNoteDeviation` - MIDI + cents deviation
+14. `centsDeviation` - Cents deviation from ET
+15. `referenceNoteName` - IPN reference names
+
+**Legacy aliases removed**: 5 (frequencies, fractions, ratios, midi, stringLengths)
+
+---
+
+## Additional Resources
+
+**For detailed API implementation notes**, see:
+- `src/app/api/playground/SESSION_SUMMARY.md` - Comprehensive v2 API development session notes including:
+  - Progressive disclosure pattern implementation
+  - Validation patterns and error handling
+  - 27 automated test cases
+  - API playground UX design decisions
+  - Real-world examples of all endpoints
+  - Testing framework and quality metrics
+
+---
+
+*Last Updated: 2025-10-29*

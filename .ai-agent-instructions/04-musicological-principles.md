@@ -10,6 +10,80 @@ Arabic maqām theory is **not** a variant of Western music theory. It represents
 
 ---
 
+## 0. Octave-Repeating vs Non-Octave-Repeating Structures
+
+### Critical Distinction
+
+Maqamat and ajnās fall into two categories based on their pitch class count:
+
+**Octave-Repeating**: ≤7 pitch classes
+- These structures repeat every octave
+- Can be found entirely within a single octave
+- Example: Maqām Rāst (7 pitch classes)
+
+**Non-Octave-Repeating**: >7 pitch classes  
+- These structures span **multiple octaves** before repeating
+- **Cannot** be found entirely within a single octave
+- Examples:
+  - Maqām Bayyātī ʿUshayrān (11 pitch classes)
+  - Maqām Sūzdāl (11 pitch classes)
+  - Maqām Shawq Ṭarab (13 pitch classes)
+  - Maqām Bestenegār (10 pitch classes)
+
+### Critical Programming Implication
+
+**When checking if a maqām or jins is available in a tuning system, you MUST check across 3 octaves** (octave below + current octave + octave above), not just a single octave.
+
+**❌ WRONG - Only checks single octave:**
+```typescript
+const noteNameSets = tuningSystem.getNoteNameSets();
+if (maqam.isMaqamPossible(noteNameSets[0])) {
+  // This will fail for non-octave-repeating maqāmāt!
+}
+```
+
+**✅ CORRECT - Checks 3 octaves:**
+```typescript
+const shiftedNoteNameSets = tuningSystem.getNoteNameSetsWithAdjacentOctaves();
+for (const noteNameSet of shiftedNoteNameSets) {
+  if (maqam.isMaqamPossible(noteNameSet)) {
+    // This works for both octave-repeating AND non-octave-repeating
+    return true;
+  }
+}
+```
+
+### Why This Matters
+
+Non-octave-repeating maqāmāt require notes that may not all appear within the same octave in a tuning system. For example, a 13-pitch-class maqām spans nearly two full octaves. The required notes might be split across:
+- Some notes in octave 1 (e.g., qarār register)
+- Other notes in octave 2 (e.g., muṭlaq register)  
+- Final notes in octave 3 (e.g., jawāb register)
+
+Single-octave checking would incorrectly report these maqāmāt as "unavailable" because no single octave contains all the required pitch classes.
+
+### Where to Apply
+
+**This pattern must be used in:**
+- All API endpoints checking maqām availability
+- All API endpoints checking jins availability
+- All UI components checking if a maqām/jins is possible
+- Any transposition or modulation calculations
+
+**Reference Implementation**: See `/src/components/tuning-system-manager.tsx` line 42 for the established pattern used in the main UI.
+
+### Test Verification
+
+After implementing availability checks:
+1. Query all maqāmāt: `GET /api/maqamat`
+2. Verify **no maqām has zero availability** (every maqām should exist in at least one tuning system)
+3. Test specific non-octave-repeating maqāmāt (>7 pitch classes) to ensure they show availability
+4. If any maqām shows zero availability, check if you're using `getNoteNameSetsWithAdjacentOctaves()` correctly
+
+**Historical Context**: This issue was discovered when 10 maqāmāt incorrectly showed zero availability. After applying the 3-octave pattern, all 60 maqāmāt correctly showed availability ranging from 4 to 35 tuning systems.
+
+---
+
 ## 1. Asymmetric Melodic Paths (ṣuʿūd vs hubūṭ)
 
 ### Critical Insight
@@ -159,6 +233,65 @@ The same maqam (or jins) can be realized in different tuning systems **only if a
 | **Ibn Sīnā (1037)** | 11th century | Different theoretical framework | 17 |
 | **Meshshāqa (1899)** | 19th century | String length-based | Variable |
 | **Cairo Congress (1932a)** | 20th century | Standardization attempt | 24 |
+
+### Tuning System Starting Notes
+
+**Critical Distinction**: Tuning system starting notes are **NOT** the same as maqām tonics.
+
+#### Tuning System Starting Note
+The **theoretical framework anchor** - the first note in each note name set of a tuning system. Represents different historical/theoretical traditions:
+
+- **ʿushayrān**: Oud tuning tradition (instrument-based)
+- **yegāh**: Monochord measurement tradition (scientific)
+- **rāst**: Pedagogical/theoretical frameworks (didactic)
+
+```typescript
+// Example: Ibn Sīnā (1037) has two theoretical frameworks
+tuningSystem.getNoteNameSets() = [
+  ["ʿushayrān", "nawā", "dūgāh", ...],  // Oud tuning framework
+  ["yegāh", "husaynī", "ʿirāq", ...]    // Monochord framework
+]
+
+// Starting notes are the FIRST element of each set
+tuningSystemStartingNoteNames = ["ʿushayrān", "yegāh"]
+```
+
+#### Maqām Tonic
+The **first note of the melodic scale** - defines the musical content of a specific maqām:
+
+```typescript
+// Maqām Rāst always starts on rāst (the note)
+maqamRast.getAscendingNoteNames()[0] === "rāst"  // Tonic
+
+// But can be played in different tuning systems
+// each starting from different theoretical anchors
+```
+
+#### Why This Matters for APIs
+
+**When returning tuning system availability**, you must indicate which theoretical frameworks (starting notes) support the maqām, because:
+
+1. **Different frameworks may have different note availability** even within the same tuning system
+2. **Musicians choose frameworks** based on their instrument or theoretical tradition
+3. **3-octave checking** happens independently for each framework
+
+```typescript
+// ✅ CORRECT: Distinguish the concepts
+interface TuningSystemAvailability {
+  tuningSystemId: string;
+  tuningSystemStartingNoteNames: string[];  // Theoretical framework anchors
+}
+
+interface MaqamMetadata {
+  maqamTonic: string;                       // First note of scale
+  tuningSystemsAvailability: TuningSystemAvailability[];
+}
+
+// ❌ WRONG: Conflating concepts
+interface MaqamData {
+  startingNote: string;  // Ambiguous - tuning system or maqām?
+}
+```
 
 ### Availability Implications
 
@@ -398,6 +531,104 @@ When transposing maqamat:
 
 ---
 
+## 11. Maqām Family Classification (Canonical Reference Requirement)
+
+### Critical Insight
+
+Maqām families are determined by analyzing the **first jins at scale degree 1** within a realized maqām. Since family classification depends on ajnās analysis, and ajnās analysis depends on pitch classes from a tuning system, **using different tuning systems for different maqāmāt produces inconsistent family classifications**.
+
+### The Problem
+
+Family classification requires:
+1. A `Maqam` object (not `MaqamData`)
+2. Which requires `calculateMaqamTranspositions()` to analyze ajnās
+3. Which requires `getTuningSystemPitchClasses()` from a tuning system
+4. Which requires selecting a tuning system + starting note
+
+**If you use different tuning systems** for different maqāmāt, the same maqām could be classified into different families depending on which tuning system was chosen.
+
+### The Solution: Canonical Reference Approach
+
+**Always use al-Ṣabbāgh (1954) as the canonical tuning system reference** for ALL family classifications:
+
+```typescript
+// 1. Get the canonical reference (supports 59/60 maqāmāt)
+const referenceTuningSystem = tuningSystems.find(
+  ts => ts.getId() === "al-Sabbagh-(1954)"
+);
+
+// 2. For each maqām, use its OWN canonical starting note
+const canonicalStartingNote = maqam.getAscendingNoteNames()[0];
+
+// 3. Generate pitch classes from canonical system + starting note
+const pitchClasses = getTuningSystemPitchClasses(
+  referenceTuningSystem,
+  canonicalStartingNote
+);
+
+// 4. Calculate transpositions (returns Maqam objects with ajnās)
+const transpositions = calculateMaqamTranspositions(
+  pitchClasses,
+  ajnas,
+  maqam,
+  true,  // withTahlil = true
+  5      // centsTolerance = 5
+);
+
+// 5. Find the non-transposed instance (tahlil)
+const tahlil = transpositions.find(t => !t.transposition);
+
+// 6. Classify the family
+if (tahlil) {
+  const classification = classifyMaqamFamily(tahlil);
+  familyName = classification.familyName;
+}
+```
+
+### Why al-Ṣabbāgh (1954)?
+
+- **Comprehensive**: Supports 59 out of 60 maqāmāt in their canonical starting positions
+- **Modern**: Represents mid-20th century standardization efforts
+- **Consistent**: Using one reference ensures all maqāmāt are classified within the same theoretical framework
+
+### Wrong Approaches
+
+```typescript
+// ❌ Using first available tuning system (inconsistent)
+const firstAvailableSystem = availableTuningSystems[0];
+
+// ❌ Iterating through noteNameSets checking availability
+noteNameSets.forEach(noteNames => {
+  if (isMaqamPossible(maqam, noteNames)) { /* ... */ }
+});
+
+// ❌ Hardcoding family logic
+if (jinsName === "rāst") family = "rāst";
+```
+
+### Programming Implications
+
+1. **One system for all**: Use al-Ṣabbāgh (1954) universally for classification
+2. **Maqām's own starting note**: Use `maqam.getAscendingNoteNames()[0]`, not iterating noteNameSets
+3. **No pre-checking needed**: Don't check `isMaqamPossible()` first - just generate and calculate
+4. **Mirrors main application**: This is exactly how the UI/app performs classification
+
+### Validated Results (October 2025)
+
+- **60 maqāmāt** total in database
+- **51 maqāmāt** successfully classified into **16 distinct families**
+- **9 maqāmāt** with "no jins" classification (incomplete ajnās database - expected)
+- **100% consistency** across all API calls and UI operations
+
+### Musicological Significance
+
+This principle highlights that **family classification is tuning-system-relative**: a maqām's family membership depends on the theoretical framework (tuning system) used to analyze it. By standardizing on al-Ṣabbāgh (1954), we ensure:
+- **Consistency**: Same maqām always yields same family
+- **Comparability**: All family relationships analyzed within one coherent system
+- **Historical validity**: Using a recognized modern theoretical framework
+
+---
+
 ## Summary of Key Principles
 
 1. **Asymmetric Sequences**: Ascending ≠ Descending (reversed)
@@ -409,6 +640,12 @@ When transposing maqamat:
 7. **Modulation Structure**: Maqamat modulate, ajnas don't (they're targets)
 8. **JavaScript Gotchas**: Double-modulo for negative numbers
 9. **Embedded Analysis**: Pattern matching finds ajnas within maqamat
-10. **Suyūr Transposition**: Melodic pathways follow parent maqam
+10. **Computational Transposition of Suyūr**: DiArMaqAr implements the first computational transposition of suyūr, addressing a fundamental limitation in historical sources where suyūr were only documented for canonical forms (tahlīl) and never for transpositions (taṣwīr). The `transposeSayr()` function intelligently shifts note stops, maintains structural identity for jins/maqām references, and handles directional instructions, enabling systematic exploration of melodic pathways across all valid maqām transpositions.
+11. **Family Classification**: Requires canonical tuning system reference (al-Ṣabbāgh 1954)
+12. **Tuning System Starting Notes**: Theoretical framework anchors (ʿushayrān/yegāh/rāst) distinct from maqām tonics
 
 These principles ensure computational implementations respect the independent theoretical logic of Arabic maqām theory rather than imposing Western musical frameworks.
+
+---
+
+*Last Updated: 2025-10-29 (Added tuning system starting notes: theoretical significance, distinction from maqām tonic, API implications)*

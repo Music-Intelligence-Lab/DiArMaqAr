@@ -41,6 +41,42 @@ Parenthetical definitions frame Arabic terms as deviations from a Western defaul
 - Trusts readers to understand through context and fuller documentation sections
 - Respects the independent theoretical framework of Arabic maqām theory
 
+### Headings and Titles
+
+**CRITICAL**: Do not use parenthetical English definitions in headings, section titles, or page titles.
+
+#### ❌ Incorrect Heading Examples
+
+```markdown
+### 2. Ajnās (Tetrachords/Tri-chords)
+### 3. Maqāmāt (Melodic Modes)
+### 4. Suyūr (Melodic Performance Pathways)
+title: Ajnās (Tetrachords)
+title: Maqāmāt (Melodic Modes)
+```
+
+#### ✅ Correct Heading Examples
+
+```markdown
+### 2. Ajnās
+### 3. Maqāmāt
+### 4. Suyūr
+title: Ajnās
+title: Maqāmāt
+```
+
+**Note**: The description/metadata can include explanatory text, but headings should use Arabic terminology alone. Definitions belong in the body text using the precise language from `07-musicological-definitions.md`.
+
+### Using Musicological Definitions
+
+**ALWAYS** reference `07-musicological-definitions.md` when writing about Arabic music theory terms. Use the exact definitions provided there rather than creating approximations.
+
+**For Ajnās specifically:**
+- ❌ "A jins is a melodic fragment typically consisting of three to five pitch classes..."
+- ✅ "A jins is a unique sequence of 3, 4, or 5 notes (trichord, tetrachord, or pentachord), each defined by its characteristic interval pattern. The plural, ajnās, refers to multiple jins. Ajnās are the foundational building blocks of maqāmāt."
+
+**Pattern**: When documenting Arabic theoretical concepts, copy the precise definition from `07-musicological-definitions.md` rather than paraphrasing.
+
 ---
 
 ## Documentation Architecture

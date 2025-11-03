@@ -1,141 +1,262 @@
 # Development Conventions & Best Practices
 
-Coding standards and conventions for the Digital Arabic Maqām Archive
+**Coding standards, TDD workflow, and patterns for DiArMaqAr**
 
 ---
 
-## Quick Reference
+## 🚀 Quick Reference
 
-### Critical Defaults
+### Must-Know Defaults
+```typescript
+const DEFAULTS = {
+  centsTolerance: 5,              // Always use 5 unless specified
+  pathImports: '@/*',             // Never use relative paths
+  testingMode: 'red-green-refactor', // TDD cycle
+  validate: 'before-commit'       // Run tests before committing
+};
+```
 
-- **Default cents tolerance**: 5 (always unless specified otherwise)
-- **Path imports**: Use `@/*` alias exclusively
-- **Language support**: Auto-implement bilingual via `useLanguageContext`
-- **Client-side audio**: Always guard Web Audio with client checks
-- **File safety**: Always search and verify locations before edits
-
-### Model Context Protocol (MCP) Servers
-
-**IMPORTANT**: This project has access to powerful MCP servers that should be used when appropriate:
-
-#### Context7 (Upstash) - Library Documentation
-- **Use for**: Fetching up-to-date documentation for any library or framework
-- **When**: Need current API docs, examples, or best practices for external libraries
-- **How**: First resolve library ID, then fetch focused documentation
-- **Example use cases**:
-  - "How do I use VexFlow for staff notation?"
-  - "What are the latest Next.js 15 patterns?"
-  - "Show me React 19 hook examples"
-
-#### Playwright - Browser Automation
-- **Use for**: Testing, web scraping, browser-based interactions
-- **When**: Need to interact with web pages, test UI, or extract web content
-- **Capabilities**: Navigate, click, fill forms, take screenshots, evaluate JS
-- **Example use cases**:
-  - Testing the live application
-  - Verifying responsive design
-  - Extracting data from documentation sites
-  - Automated UI testing workflows
-
-**Best Practice**: Leverage these MCPs to enhance development efficiency and access current information beyond your training data.
+### Critical Rules
+| Rule | Why |
+|------|-----|
+| ✅ Test BEFORE committing | User should never discover bugs |
+| ✅ Use `getNoteNameSetsWithAdjacentOctaves()` | Handles non-octave-repeating maqāmāt |
+| ✅ Never use "microtonal" | Western-centric, culturally insensitive |
+| ✅ Always validate empty strings | `param === ""` returns silent errors |
+| ✅ Check if dev server is running | Never start/restart without checking first |
+| ✅ Force user choices in UI | No defaults for critical parameters - conscious decision-making |
+| ❌ Never skip consistency checks | Check similar code for patterns |
+| ❌ Avoid `sleep` with curl | Only use when absolutely necessary for server startup |
 
 ### Auto-Implementation Triggers
-
-| User Says | Auto-Implement |
-|-----------|----------------|
+| User Says | Implement |
+|-----------|-----------|
 | "search/filter" | FilterContext + useFilterContext |
 | "play/audio" | SoundContext + client guards |
-| "maqam/jins data" | TranspositionsContext + import functions |
-| "new page" | Context providers + manager pattern |
-| "API endpoint" | import.ts + validation + Swagger |
-| "component" + domain | Follow manager pattern |
+| "API endpoint" | Validation + error handling + tests |
+| "new component" | Follow manager pattern + bilingual |
+
+### API Development Checklist
+| Action | Requirement |
+|--------|-------------|
+| ✅ Add format option | Update API handler, UI dropdown, tests, docs, OpenAPI spec |
+| ✅ Return entity references | Use `{id, idName, displayName}` objects, never string arrays |
+| ✅ Nest context data | Group related fields in parent objects |
+| ✅ Include metadata | Always add `pitchClassIndex`, `scaleDegree`, `noteName` fields |
+| ✅ Verify with curl | Test actual HTTP responses with jq |
+| ✅ Check diacritics | Ensure Arabic characters render properly |
+| ✅ Filter null values | Use `.filter(Boolean)` after Map lookups |
+| ❌ Never keep legacy aliases | Remove immediately unless API is versioned |
 
 ---
 
-## Terminology Standards
+## 🔴🟢🔵 Test-Driven Development (TDD)
 
-### Arabic Maqām Theory Terms
+### The TDD Cycle
 
-**NEVER use "microtonal"**: This Western-centric term implies deviation from equal temperament as the norm.
-
-**✅ Use instead:**
-- "unequal divisions"
-- "non-12-EDO pitches"
-- "pitches with fractional precision"
-- "pitches with decimal/fractional MIDI values"
-- Or describe the specific theoretical framework
-
-**Applies to ALL:**
-- Code comments
-- Documentation
-- Variable names
-- Function names
-- Export data comments
-- User-facing text
-
-### Note Names & Pitch Classes
-
-```typescript
-// ✅ Use canonical transliterated names
-import NoteName from '@/models/NoteName';
-const note: NoteName = "rāst_5";
-
-// ✅ Detect and convert pitch class formats
-import { detectPitchClassType, convertPitchClass } from '@/functions/utilities';
-
-// ✅ Default cents tolerance
-const tolerance = 5; // Always default to 5 unless context requires different
+```
+┌─────────────────────────────────────────────┐
+│  1. RED: Write failing test                 │
+│     ↓                                        │
+│  2. GREEN: Write minimal code to pass       │
+│     ↓                                        │
+│  3. REFACTOR: Clean up code                 │
+│     ↓                                        │
+│  4. COMMIT: Only when all tests pass        │
+└─────────────────────────────────────────────┘
 ```
 
----
+### TDD Workflow
 
-## Component Creation Checklist
-
+**Step 1: RED (Write Failing Test)**
 ```typescript
-"use client"; // 1. If using hooks/state
+// 1. Define expected behavior FIRST
+describe('calculateMaqamTranspositions', () => {
+  it('should return empty array for unavailable maqam', () => {
+    const pitchClasses = getTuningSystemPitchClasses(alKindi874, 'yegah');
+    const result = calculateMaqamTranspositions(
+      pitchClasses,
+      ajnas,
+      maqamBestenegarData,
+      true,
+      5
+    );
+    expect(result).toEqual([]);
+  });
+});
 
-// 2. Import context hooks
-import { useAppContext } from '@/contexts/app-context';
-import { useLanguageContext } from '@/contexts/language-context';
+// Run: npm test
+// ✗ Expected: [] Received: undefined
+```
 
-// 3. Implement FilterContext if handling lists
-import { useFilterContext } from '@/contexts/filter-context';
-
-// 4. Use bilingual support
-const { t, language } = useLanguageContext();
-
-// 5. Guard Web Audio
-useEffect(() => {
-  if (typeof window !== 'undefined') {
-    // Client-side audio code only
+**Step 2: GREEN (Minimal Implementation)**
+```typescript
+// 2. Write ONLY enough code to pass
+export function calculateMaqamTranspositions(
+  pitchClasses: PitchClass[],
+  ajnas: JinsData[],
+  maqamData: MaqamData,
+  withTahlil: boolean,
+  tolerance: number
+): Maqam[] {
+  // Minimal implementation
+  if (!maqamData.isMaqamPossible(pitchClasses)) {
+    return [];
   }
-}, []);
+  // ... rest of implementation
+}
+
+// Run: npm test
+// ✓ Test passes
 ```
 
-### Component Structure Template
+**Step 3: REFACTOR (Clean & Optimize)**
+```typescript
+// 3. Improve code quality while tests stay green
+export function calculateMaqamTranspositions(
+  pitchClasses: PitchClass[],
+  ajnas: JinsData[],
+  maqamData: MaqamData,
+  withTahlil: boolean = true,
+  tolerance: number = 5
+): Maqam[] {
+  // Check availability with proper method
+  const shiftedSets = getNoteNameSetsWithAdjacentOctaves(pitchClasses);
+  const isAvailable = shiftedSets.some(set =>
+    maqamData.isMaqamPossible(set)
+  );
+
+  if (!isAvailable) return [];
+
+  // ... rest with better structure
+}
+
+// Run: npm test
+// ✓ All tests still pass
+```
+
+**Step 4: COMMIT (When All Green)**
+```bash
+# Only commit when all tests pass
+npm test && git add . && git commit -m "Add maqam availability check"
+```
+
+### TDD for API Development
+
+**1. Write API Test First**
+```bash
+# Create test file first
+cat > scripts/test-api-endpoint.sh << 'EOF'
+#!/bin/bash
+# Test: GET /api/maqamat with empty family parameter
+
+response=$(curl -s "http://localhost:3000/api/maqamat?family=")
+error=$(echo "$response" | jq -r '.error')
+
+if [ "$error" = "Invalid parameter: family" ]; then
+  echo "✓ Test passed"
+  exit 0
+else
+  echo "✗ Test failed: $response"
+  exit 1
+fi
+EOF
+
+chmod +x scripts/test-api-endpoint.sh
+./scripts/test-api-endpoint.sh
+# ✗ Test failed (endpoint doesn't exist yet)
+```
+
+**2. Implement API Endpoint**
+```typescript
+// src/app/api/maqamat/route.ts
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const family = searchParams.get("family");
+
+  // Validate empty string
+  if (family !== null && family.trim() === "") {
+    return NextResponse.json(
+      { error: "Invalid parameter: family" },
+      { status: 400 }
+    );
+  }
+
+  // ... rest of implementation
+}
+```
+
+**3. Run Test**
+```bash
+npm run dev &  # Start server
+sleep 2
+./scripts/test-api-endpoint.sh
+# ✓ Test passed
+```
+
+**4. Add to Test Suite**
+```bash
+# Add to scripts/test-api-errors.sh
+echo "Test: Empty family parameter" >> test-log.txt
+./scripts/test-api-endpoint.sh >> test-log.txt
+```
+
+### TDD Best Practices
+
+**Do:**
+- ✅ Write test before implementation
+- ✅ Start with simplest test case
+- ✅ Test one behavior at a time
+- ✅ Keep tests fast (< 1 second each)
+- ✅ Use descriptive test names
+- ✅ Test edge cases (empty, null, invalid)
+- ✅ Run full test suite before committing
+
+**Don't:**
+- ❌ Write multiple features before testing
+- ❌ Skip tests for "simple" code
+- ❌ Commit failing tests
+- ❌ Test implementation details (test behavior)
+- ❌ Make tests depend on each other
+
+### Integration with Manual Testing
+
+**When to use each:**
+- **TDD/Automated**: API endpoints, utility functions, data models
+- **Manual Testing**: UI interactions, visual elements, musicological accuracy
+
+See `05-testing-guide.md` for manual testing protocols.
+
+---
+
+## 📋 Component Creation Checklist
 
 ```typescript
-"use client";
+"use client";  // 1. Add if using hooks/state
 
+// 2. Import contexts (in this order)
 import { useAppContext } from '@/contexts/app-context';
 import { useLanguageContext } from '@/contexts/language-context';
 import { useFilterContext } from '@/contexts/filter-context';
-import styles from '@/styles/component-name.module.scss';
+import styles from '@/styles/component.module.scss';
 
 export default function ComponentName() {
-  const { 
-    selectedTuningSystem, 
-    allPitchClasses 
-  } = useAppContext();
-  
+  // 3. Extract context values
+  const { selectedTuningSystem } = useAppContext();
   const { t, language } = useLanguageContext();
-  const { searchTerm, setSearchTerm } = useFilterContext();
+  const { searchTerm } = useFilterContext();
 
-  // Component logic
-  
+  // 4. Guard Web Audio (if needed)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      // Client-only code
+    }
+  }, []);
+
+  // 5. Return JSX with bilingual support
   return (
     <div className={styles.container}>
-      {/* Component JSX */}
+      <h1>{t('title')}</h1>
     </div>
   );
 }
@@ -143,190 +264,303 @@ export default function ComponentName() {
 
 ---
 
-## Import & Data Loading
+## 🔧 Core Conventions
 
-### Always Use Import Functions
-
+### Import Patterns
 ```typescript
-// ✅ Correct - use import functions
-import { getTuningSystems, getAjnas, getMaqamat } from '@/functions/import';
+// ✅ Always use @/* imports
+import { getTuningSystems } from '@/functions/import';
+import NoteName from '@/models/NoteName';
 
+// ❌ Never use relative paths
+import { getTuningSystems } from '../../../functions/import';
+```
+
+### Data Loading
+```typescript
+// ✅ Use import functions
 const tuningSystems = getTuningSystems();
 const ajnas = getAjnas();
 const maqamat = getMaqamat();
 
-// ❌ Wrong - never load JSON directly
-import tuningSystems from '@/data/tuningSystems.json';
+// ❌ Never import JSON directly
+import maqamat from '@/data/maqamat.json';
 ```
 
-### Tuning System Pattern
-
+### Octave-Repeating Availability (CRITICAL)
 ```typescript
-// ✅ Never hardcode - always load dynamically
-const tuningSystems = getTuningSystems();
+// ✅ CORRECT - Checks 3 octaves for all maqām types
+const shiftedSets = tuningSystem.getNoteNameSetsWithAdjacentOctaves();
+for (const noteNameSet of shiftedSets) {
+  if (maqam.isMaqamPossible(noteNameSet)) {
+    return true;
+  }
+}
+
+// ❌ WRONG - Fails for non-octave-repeating (>7 pitch classes)
 const noteNameSets = tuningSystem.getNoteNameSets();
+if (maqam.isMaqamPossible(noteNameSets[0])) { ... }
+```
 
-// ✅ Generate pitch space
-import { getTuningSystemPitchClasses } from '@/functions/import';
+### Terminology Standards
+```typescript
+// ✅ Culturally appropriate
+"unequal divisions"
+"non-12-EDO pitches"
+"pitches with fractional precision"
 
-const pitchClasses = getTuningSystemPitchClasses(
-  tuningSystem,
-  startingNote,
-  referenceFrequency
-);
+// ❌ Western-centric (NEVER USE)
+"microtonal"  // Implies deviation from equal temperament
 ```
 
 ---
 
-## API Development Standards
+## 🌐 API Development Standards
 
-### Route Structure
-
+### Standard Route Pattern
 ```typescript
-// src/app/api/[endpoint]/route.ts
 import { NextResponse } from 'next/server';
-import { getTuningSystems } from '@/functions/import';
+import { getMaqamat } from '@/functions/import';
 
-/**
- * @swagger
- * /api/endpoint:
- *   post:
- *     summary: Brief description
- *     description: Detailed description
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - requiredParam
- *             properties:
- *               requiredParam:
- *                 type: string
- *     responses:
- *       200:
- *         description: Success response
- *       400:
- *         description: Bad request
- */
-export async function POST(request: Request) {
+export async function GET(
+  request: Request,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
-    // 1. Parse and validate input
-    const body = await request.json();
-    const { requiredParam } = body;
-    
-    if (!requiredParam) {
-      return NextResponse.json(
-        { error: 'Missing required parameter: requiredParam' },
-        { status: 400 }
-      );
+    // 1. Parse parameters
+    const { id } = await context.params;
+    const { searchParams } = new URL(request.url);
+    const param = searchParams.get("param");
+
+    // 2. Validate (in order user encounters them)
+    if (!id || id.trim() === "") {
+      return NextResponse.json({
+        error: "Invalid path parameter: id",
+        hint: "Provide valid ID in URL"
+      }, { status: 400 });
     }
 
-    // 2. Load data via import functions
-    const data = getTuningSystems();
+    if (param !== null && param.trim() === "") {
+      return NextResponse.json({
+        error: "Invalid parameter: param",
+        hint: "Remove '?param=' or provide value"
+      }, { status: 400 });
+    }
 
-    // 3. Compute with src/functions/**
-    const result = processData(data, body);
+    // 3. Load data
+    const data = getMaqamat();
 
-    // 4. Return typed JSON
+    // 4. Process
+    const result = processData(data);
+
+    // 5. Return
     return NextResponse.json(result);
-    
+
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Invalid request' },
-      { status: 400 }
+      { status: 500 }
     );
   }
 }
 ```
 
-### API Documentation Requirements
+### Validation Rules (MANDATORY)
 
-- **Swagger docs** in route files
-- **HTML documentation** in `public/docs/api/index.html`
-- **Example requests** with verified IDs from actual data
-- **Default behavior** explicitly documented
+**Three-Step Validation Pattern:**
+
+For every parameter, validate in this exact order:
+
+```typescript
+// Step 1: Check if required parameter is missing (null)
+if (param === null) {
+  return NextResponse.json({
+    error: "Missing required parameter: param",
+    hint: "Include '?param=value' in the URL"
+  }, { status: 400 });
+}
+
+// Step 2: Check if parameter is empty string
+if (param.trim() === "") {
+  return NextResponse.json({
+    error: "Invalid parameter: param",
+    message: "Parameter cannot be empty",
+    hint: "Remove '?param=' or provide value like '?param=example'"
+  }, { status: 400 });
+}
+
+// Step 3: Validate the actual value
+const validOptions = ["option1", "option2", "option3"];
+if (!validOptions.includes(param)) {
+  return NextResponse.json({
+    error: "Invalid parameter value: param",
+    message: `'${param}' is not a valid option`,
+    hint: "Use one of the valid options",
+    validOptions
+  }, { status: 400 });
+}
+```
+
+**Order of Validation Across Parameters:**
+
+Validate in the order users encounter problems:
+
+```typescript
+// 1. Path parameters (closest to user's initial choice)
+if (!maqamId) { return 404; }
+
+// 2. Required query params (in dependency order)
+if (!tuningSystem) { return 400; }
+if (!startingNote) { return 400; }  // Depends on tuningSystem
+
+// 3. Optional params (only if provided)
+if (format !== null && format.trim() === "") { return 400; }
+```
+
+**Why This Order Matters:**
+- Users select path first (maqām ID), then tuning system, then starting note
+- Validating in this order provides the most helpful error messages
+- Dependency order ensures users fix foundational parameters first
+
+### Error Response Format
+```json
+{
+  "error": "Brief identifier (sentence case, no period)",
+  "message": "Optional human-readable explanation",
+  "hint": "Actionable suggestion with real examples",
+  "validOptions": ["array", "of", "options"]
+}
+```
+
+### Response Requirements
+
+**Identity Fields:**
+```typescript
+// ✅ Always include both display and URL-safe IDs
+{
+  id: maqam.getId(),
+  idName: maqam.getIdName(),  // URL-safe
+  name: maqam.getName()        // Display with diacritics
+}
+```
+
+**Starting Note Information (Tuning Systems):**
+```typescript
+// ✅ Include starting note arrays for tuning system calculations
+{
+  tuningSystemId: "IbnSina-(1037)",
+  startingNotes: ["yegāh", "ʿushayrān", "rāst"],
+  numberOfStartingNotes: 3
+}
+```
+
+**Availability Information:**
+```typescript
+// ✅ Split by (tuningSystem, startingNote) pairs, not bundled
+// ❌ WRONG: Single entry per tuning system
+{
+  tuningSystemId: "IbnSina-(1037)",
+  startingNotes: ["yegāh", "ʿushayrān"]  // Bundled - hard to use
+}
+
+// ✅ CORRECT: Separate entries per combination
+[
+  {
+    tuningSystemId: "IbnSina-(1037)",
+    startingNote: "yegāh",
+    transpositionsInOctave: 12,
+    modulationsAvailable: 25
+  },
+  {
+    tuningSystemId: "IbnSina-(1037)",
+    startingNote: "ʿushayrān",
+    transpositionsInOctave: 10,
+    modulationsAvailable: 27
+  }
+]
+```
 
 ---
 
-## TypeScript Conventions
+## 🎯 Common Patterns (Quick Reference)
 
-### Type Safety
-
+### Family Classification
 ```typescript
-// ✅ Use existing union types
-import NoteName from '@/models/NoteName';
-const note: NoteName = "dūgāh";
-
-// ✅ Use proper interfaces
-interface MaqamProps {
-  maqamData: MaqamData;
-  pitchClasses: PitchClass[];
-  tolerance?: number;
+// Use al-Ṣabbāgh (1954) as canonical reference for ALL maqāmāt
+const referenceTuningSystem = tuningSystems.find(
+  ts => ts.getId() === "al-Sabbagh-(1954)"
+);
+const canonicalStartingNote = maqam.getAscendingNoteNames()[0];
+const pitchClasses = getTuningSystemPitchClasses(
+  referenceTuningSystem,
+  canonicalStartingNote
+);
+const transpositions = calculateMaqamTranspositions(pitchClasses, ajnas, maqam, true, 5);
+const tahlil = transpositions.find(t => !t.transposition);
+if (tahlil) {
+  const classification = classifyMaqamFamily(tahlil);
 }
-
-// ❌ Avoid any/unknown unless absolutely necessary
-const data: any; // ❌
-const data: unknown; // ❌ (unless for external data)
 ```
 
-### Null Safety
+### Sorting by Data Type
+| Data Type | Default Sort | Why |
+|-----------|-------------|-----|
+| **Note names** | NoteName.ts order | Theoretical pitch sequence |
+| **Families** | Alphabetical | Categorical data |
+| **Maqām names** | Alphabetical | Categorical data |
+| **Tuning systems** | By date | Chronological |
 
 ```typescript
-// ✅ Always check for null/undefined
-if (!selectedTuningSystem) {
-  throw new Error('TuningSystem context not available');
-}
+// Note names: Use NoteName order
+import { octaveZeroNoteNames, octaveOneNoteNames } from '@/models/NoteName';
+import { standardizeText } from '@/functions/export';
 
-// ✅ Use optional chaining
-const name = tuningSystem?.getName(language);
+const noteNameOrder = [
+  ...octaveZeroNoteNames,
+  ...octaveOneNoteNames,
+  // ... more octaves
+].map(name => standardizeText(name));
 
-// ✅ Use nullish coalescing
-const tolerance = userTolerance ?? 5;
+const getNotePriority = (name: string) =>
+  noteNameOrder.indexOf(standardizeText(name));
+
+pitchClasses.sort((a, b) =>
+  getNotePriority(a.noteName) - getNotePriority(b.noteName)
+);
+
+// Everything else: Alphabetical
+families.sort((a, b) =>
+  standardizeText(a).localeCompare(standardizeText(b))
+);
 ```
 
----
-
-## Performance Optimization
-
-### Memoization
-
+### State Management
 ```typescript
-import { useMemo } from 'react';
+// ✅ Use custom hooks
+const { selectedTuningSystem } = useAppContext();
 
+// ✅ Clear related state on dependency changes
+const handleTuningSystemChange = (system: TuningSystem) => {
+  setSelectedTuningSystem(system);
+  clearSelections(); // Clear dependents
+};
+```
+
+### Performance Optimization
+```typescript
 // ✅ Memoize expensive calculations
-const transpositions = useMemo(() => {
-  return calculateJinsTranspositions(
-    pitchClasses,
-    jinsData,
-    tolerance
-  );
-}, [pitchClasses, jinsData, tolerance]);
-```
+const transpositions = useMemo(() =>
+  calculateJinsTranspositions(pitchClasses, jinsData, tolerance),
+  [pitchClasses, jinsData, tolerance]
+);
 
-### Context Pre-computation
-
-```typescript
-// ✅ Use TranspositionsContext for expensive operations
+// ✅ Use pre-computed context
 const { allTranspositions } = useTranspositionsContext();
 
-// ❌ Don't recalculate on every render
-const transpositions = calculateJinsTranspositions(...); // ❌
-```
-
-### Long Operations
-
-```typescript
-// ✅ Yield control to UI during long operations
+// ✅ Yield control during long operations
 for (let i = 0; i < items.length; i++) {
-  // Process item
-  
-  // Yield control every 100 items
   if (i % 100 === 0) {
     await new Promise(resolve => setTimeout(resolve, 0));
-    
-    // Update progress
     updateProgress((i / items.length) * 100);
   }
 }
@@ -334,342 +568,445 @@ for (let i = 0; i < items.length; i++) {
 
 ---
 
-## Error Handling
+## 📱 UI/UX Patterns
 
-### Standard Error Pattern
+### Form Progressive Disclosure
+**Two-level pattern:**
+1. **Level 1**: Show/hide field groups by primary context (endpoint)
+2. **Level 2**: Within groups, show all fields but disable until dependencies met
 
-```typescript
-try {
-  // Operation
-} catch (error) {
-  if (error instanceof SpecificError) {
-    // Handle specific error
-  } else {
-    console.error('Unexpected error:', error);
-    // Fallback handling
-  }
-}
+```tsx
+{/* Level 1: Show group for relevant endpoints only */}
+{(endpoint === "data" || endpoint === "tuning-system") && (
+  <>
+    {/* Always visible within this context */}
+    <select value={tuningSystem} onChange={...}>
+      <option value="">Select tuning system...</option>
+    </select>
+
+    {/* Level 2: Always visible, but disabled until parent selected */}
+    <select
+      value={startingNote}
+      disabled={!tuningSystem}
+      className={styles.fieldIndented}
+    >
+      <option value="">
+        {!tuningSystem
+          ? "Select tuning system first..."
+          : "Select starting note..."}
+      </option>
+    </select>
+  </>
+)}
 ```
 
-### User-Facing Errors
-
-```typescript
-// ✅ Helpful error messages
-throw new Error(`Maqām "${id}" not found in tuning system "${systemId}"`);
-
-// ❌ Vague error messages
-throw new Error('Not found'); // ❌
-```
-
----
-
-## State Management
-
-### Context Usage
-
-```typescript
-// ✅ Always use custom hooks
-const { selectedTuningSystem } = useAppContext();
-
-// ❌ Don't use context directly
-import { AppContext } from '@/contexts/app-context';
-const context = useContext(AppContext); // ❌
-```
-
-### State Updates
-
-```typescript
-// ✅ Clear related state when dependencies change
-const handleTuningSystemChange = (system: TuningSystem) => {
-  setSelectedTuningSystem(system);
-  clearSelections(); // Clear dependent selections
-};
-
-// ✅ Batch state updates
-setSelectedJins(jins);
-setSelectedMaqam(null); // Clear conflicting state
-```
-
----
-
-## Styling Conventions
-
-### SCSS Modules
-
-```typescript
-// ✅ Use SCSS modules
-import styles from '@/styles/component-name.module.scss';
-
-<div className={styles.container}>
-  <h1 className={styles.title}>{title}</h1>
-</div>
-
-// ❌ Don't use global styles in components
-<div className="container"> // ❌
-```
-
-### Class Naming
-
+**Visual styling:**
 ```scss
-// component-name.module.scss
-
-.container {
-  // Container styles
+select:disabled {
+  background-color: #f5f5f5;
+  color: #999;
+  cursor: not-allowed;
 }
 
-.title {
-  // Title styles
-}
-
-.itemList {
-  // List styles
-}
-
-.item {
-  // Item styles
-  
-  &--selected {
-    // Selected variant
+.fieldIndented {
+  padding-left: 1.5rem;
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0.5rem;
+    border-left: 2px dashed #d0d0d0;
   }
-  
-  &--disabled {
-    // Disabled variant
-  }
+}
+```
+
+### URL Generation (API Playground)
+**CRITICAL: Always generate URLs, never show guidance messages**
+
+```typescript
+// ✅ CORRECT - Always build URL
+const maqamPart = selectedMaqam || "{id}";
+newUrl = `/api/maqamat/${maqamPart}?tuningSystem=${tuningSystem || ""}`;
+
+// ❌ WRONG - Don't use guidance as URL
+if (!selectedMaqam) {
+  newUrl = "Select a maqām above";  // NEVER DO THIS
 }
 ```
 
 ---
 
-## Bilingual Support
+## 🧪 Testing Requirements
 
-### Language Context
-
-```typescript
-import { useLanguageContext } from '@/contexts/language-context';
-
-const { t, language } = useLanguageContext();
-
-// ✅ Use t() for static strings
-<h1>{t('welcomeMessage')}</h1>
-
-// ✅ Access language-specific properties
-<p>{tuningSystem.getName(language)}</p>
-```
-
-### Translations Pattern
-
-```typescript
-// Define translations in component or context
-const translations = {
-  en: {
-    welcomeMessage: 'Welcome',
-    selectSystem: 'Select Tuning System'
-  },
-  ar: {
-    welcomeMessage: 'مرحبا',
-    selectSystem: 'اختر نظام التوتير'
-  }
-};
-```
-
----
-
-## File Organization
-
-### Import Order
-
-```typescript
-// 1. External dependencies
-import { useState, useEffect, useMemo } from 'react';
-import { NextResponse } from 'next/server';
-
-// 2. Models
-import TuningSystem from '@/models/TuningSystem';
-import NoteName from '@/models/NoteName';
-
-// 3. Functions
-import { getTuningSystems } from '@/functions/import';
-import { calculateJinsTranspositions } from '@/functions/transpose';
-
-// 4. Contexts
-import { useAppContext } from '@/contexts/app-context';
-import { useLanguageContext } from '@/contexts/language-context';
-
-// 5. Components
-import NavigationMenu from '@/components/navigation/navigation-menu';
-
-// 6. Styles
-import styles from '@/styles/component.module.scss';
-
-// 7. Types (if separate file)
-import type { ComponentProps } from './types';
-```
-
----
-
-## Testing Approach
-
-### Manual Testing
-
-**See**: `.ai-agent-instructions/05-testing-guide.md`
-
-**Key areas:**
-- Availability testing across tuning systems
-- Asymmetric maqāmāt handling
-- Enharmonic spelling algorithm
-- Transposition calculations
-- Modulation analysis
-
-### Python Tests
-
+### Before Committing
 ```bash
-cd python
-python test_models.py         # Model tests
-python test_functions.py      # Function tests
-python test_import.py          # Data loading tests
+# 1. Run automated tests
+npm test
+
+# 2. Test API endpoints (if changed)
+bash scripts/test-api-errors.sh
+
+# 3. Manual smoke test
+npm run dev
+# - Test affected endpoints in browser
+# - Verify UI changes
+# - Check console for errors
+
+# 4. Commit only when all pass
+git add . && git commit -m "message"
 ```
+
+### What to Test
+| Change Type | Test Required |
+|-------------|---------------|
+| API endpoint | Automated + manual API playground |
+| UI component | Manual browser testing |
+| Core function | Automated unit tests |
+| Data model | TypeScript tests |
+| Export logic | Generate export, validate structure |
+
+See `05-testing-guide.md` for comprehensive testing protocols.
 
 ---
 
-## Documentation Standards
+## 🛠️ Tools & MCP Servers
+
+### Context7 (Library Docs)
+```bash
+# Use when you need current library documentation
+"Show me VexFlow examples for non-Western notation"
+"What are Next.js 15 App Router patterns?"
+```
+
+### Playwright (Browser Testing)
+```bash
+# Use for automated UI testing
+"Test the maqām selection workflow on localhost"
+"Verify responsive design on mobile viewport"
+```
+
+**Best Practice:** Use MCPs to enhance, not replace, your core knowledge. Apply decolonial lens to external docs.
+
+---
+
+## 📝 Documentation Standards
 
 ### Code Comments
-
 ```typescript
 // ✅ Explain WHY, not WHAT
 // Arabic maqām theory uses independent ascending/descending sequences
-// These are NOT simply reversed - fundamentally different melodic paths
+// NOT simply reversed - fundamentally different melodic paths
 const ascendingPitchClasses = [...];
-const descendingPitchClasses = [...]; // Independent array
 
 // ❌ Don't state the obvious
-// Set the variable to 5
-const tolerance = 5; // ❌
+const tolerance = 5; // Set tolerance to 5
 ```
 
-### JSDoc Comments
-
+### JSDoc
 ```typescript
 /**
- * Calculates all valid transpositions of a jins within a tuning system.
- * 
- * @param pitchClasses - Available pitch classes from the tuning system
- * @param jinsData - Abstract jins definition
- * @param tolerance - Cents tolerance for pattern matching (default: 5)
- * @returns Array of Jins instances, one per valid transposition
- * 
+ * Brief description of what function does
+ *
+ * @param pitchClasses - Description
+ * @param tolerance - Description (default: 5)
+ * @returns Description of return value
+ *
  * @remarks
- * Uses pattern matching to find all starting positions where the jins
- * intervals can be constructed within the cents tolerance.
+ * Important implementation notes or cultural context
  */
-function calculateJinsTranspositions(
-  pitchClasses: PitchClass[],
-  jinsData: JinsData,
-  tolerance: number = 5
-): Jins[] {
-  // Implementation
+```
+
+See `06-documentation-standards.md` for comprehensive docs standards.
+
+---
+
+## 🎯 API Design Principles
+
+### Semantic Clarity in Naming
+
+**Field names must be self-documenting and semantically precise.**
+
+#### Type Qualifiers Pattern
+When a field contains values that could be confused with objects of a different type, include a type qualifier:
+
+```typescript
+// ✅ GOOD: Clear that these are string values (names)
+tuningSystemStartingNoteNames: string[]          // Name values like "ʿushayrān"
+numberOfTuningSystemStartingNoteNames: number
+
+// ❌ AVOID: Ambiguous - could be note objects with pitch data
+tuningSystemStartingNotes: string[]              // Unclear if names or objects
+```
+
+**Rationale**: In a music theory API, `note` could mean:
+- A string name ("rāst")
+- An object with pitch data (`{ name: "rāst", frequency: 293.66, cents: 0 }`)
+- An object with interval relationships
+
+Adding "Names" clarifies we're returning the string identifiers, not complex objects.
+
+#### Context Qualifiers Pattern
+Follow existing patterns like `numberOfPitchClassesSingleOctave`:
+
+```typescript
+// ✅ GOOD: Complete semantic context
+numberOfPitchClassesSingleOctave       // Clarifies scope (single octave vs. multi-octave)
+tuningSystemStartingNoteNames          // Clarifies domain (tuning system vs. maqām)
+numberOfTuningSystemStartingNoteNames  // Combined pattern
+
+// ❌ AVOID: Ambiguous scope
+numberOfPitchClasses                   // Single octave? Multiple?
+startingNotes                          // From what? For what?
+```
+
+#### Avoid Generic Parameter Names
+
+**Generic names like "format", "type", or "mode" are anti-patterns.** Parameter names must describe WHAT is being specified:
+
+```typescript
+// ✅ GOOD: Describes what is being specified
+pitchClassDataType: "frequency" | "cents" | "fraction"  // Clear: data type for pitch classes
+responseEncoding: "json" | "xml"                        // Clear: encoding of response
+tuningSystemScale: "equal" | "pythagorean"              // Clear: scale type for tuning
+
+// ❌ AVOID: Generic, ambiguous names
+format: "frequency" | "cents"           // Format of what? Pitch? Response? File?
+type: "equal" | "pythagorean"          // Type of what? Tuning? Scale? Output?
+mode: "json" | "xml"                   // Mode of what? Display? Encoding?
+```
+
+**Rationale**: "format" could mean:
+- Data format (JSON vs XML)
+- Display format (table vs grid)
+- Pitch data representation (frequency vs cents)
+- File format (CSV vs JSON)
+- Number format (decimal vs fraction)
+
+"pitchClassDataType" is precise: it specifies the data type for pitch class objects in the response.
+
+**Test by removal**: If you remove everything before the parameter, would you know what it specifies?
+- ❌ `format=cents` - Format of what?
+- ✅ `pitchClassDataType=cents` - Clear on its own
+
+#### Domain-Specific Distinctions
+
+**Critical**: Distinguish theoretically different concepts even when they seem similar:
+
+```typescript
+// ✅ GOOD: Clear distinction
+interface MaqamData {
+  tuningSystemStartingNoteNames: string[];  // Where tuning system begins (theoretical anchor)
+  maqamTonic: string;                       // First note of maqām scale (musical content)
+}
+
+// ❌ AVOID: Conflating different concepts
+interface MaqamData {
+  startingNotes: string[];  // Starting what? Tuning system or maqām?
+  firstNote: string;        // Ambiguous
 }
 ```
 
----
+**Why this matters**: In Arabic music theory:
+- **Tuning system starting note** = theoretical framework anchor (e.g., ʿushayrān for oud tuning)
+- **Maqām tonic** = first note of the melodic scale (e.g., rāst for Maqām Rāst)
 
-## Git Workflow
+These are fundamentally different concepts that happen to be represented as strings.
 
-### Commit Messages
+### Array Field Naming
+
+**Always use plural nouns for array fields**, even in compound names:
+
+```typescript
+// ✅ CORRECT
+tuningSystemStartingNoteNames: string[]  // Plural "Names"
+maqamSuyur: Sayr[]                       // Plural "Suyur"
+
+// ❌ INCORRECT
+tuningSystemStartingNoteName: string[]   // Singular with array type
+```
+
+### Consistency Checking Protocol
+
+**Before finalizing any API field name:**
+
+1. **Search for similar fields** in the codebase
+2. **Extract the naming pattern** (qualifiers, structure, conventions)
+3. **Apply the pattern consistently** to your new field
+4. **Document the rationale** if establishing a new pattern
 
 ```bash
-# ✅ Clear, descriptive commits
-git commit -m "Fix enharmonic spelling for descending asymmetric maqāmāt"
-git commit -m "Add batch export progress tracking"
-git commit -m "Update documentation for octave system"
-
-# ❌ Vague commits
-git commit -m "Fix bug" # ❌
-git commit -m "Update" # ❌
+# Example: Checking naming patterns
+grep -r "numberOfPitchClasses" src/
+# Found: numberOfPitchClassesSingleOctave
+# Pattern: number + Of + Concept + ScopeQualifier
+# Apply: numberOfTuningSystemStartingNoteNames
 ```
 
-### Branch Strategy
+### Testing Strategy for API Changes
 
-- **Main branch**: `main`
-- Feature branches as needed
-- PR to main after testing
+**Shell scripts with jq provide fast, focused validation:**
+
+```bash
+#!/bin/bash
+# Fast validation without full integration test overhead
+
+echo "Test: Field exists and is array"
+response=$(curl -s "http://localhost:3000/api/tuning-systems")
+field=$(echo "$response" | jq -r '.tuningSystems[0].tuningSystemStartingNoteNames')
+
+if [ "$field" != "null" ] && [ ! -z "$field" ]; then
+  echo "✓ PASS"
+else
+  echo "✗ FAIL"
+fi
+```
+
+**When to use:**
+- ✅ API response structure validation
+- ✅ Field presence/absence checks
+- ✅ Data type verification
+- ✅ Quick regression testing
+- ❌ Complex business logic (use unit tests)
+- ❌ Async operations (use integration tests)
 
 ---
 
-## Common Pitfalls
+## ⚠️ Common Pitfalls
 
-### File Edit Failures
-
-```typescript
-// ✅ Always verify file locations first
-// Use grep_search or file_search before editing
-
-// ✅ Read file content before editing
-// Use read_file to verify exact content
-
-// ✅ Include sufficient context in edits
-// Include 3-5 lines before/after for replace_string_in_file
-```
-
-### Import Issues
-
-```typescript
-// ✅ Use @/* alias exclusively
-import { function } from '@/functions/example';
-
-// ❌ Don't reference packages/* (excluded from build)
-import { function } from '@/packages/example'; // ❌
-
-// ❌ Don't use relative paths
-import { function } from '../../../functions/example'; // ❌
-```
-
-### Audio Issues
-
-```typescript
-// ✅ Guard all Web Audio with client-side checks
-"use client";
-
-useEffect(() => {
-  if (typeof window !== 'undefined') {
-    // Audio code here
-  }
-}, []);
-
-// ❌ Don't use Web Audio in server components
-const audioContext = new AudioContext(); // ❌ Will fail in SSR
-```
+| Pitfall | Solution |
+|---------|----------|
+| Using `getNoteNameSets()` | Use `getNoteNameSetsWithAdjacentOctaves()` |
+| JavaScript negative modulo | Use `((n % 7) + 7) % 7` |
+| Assuming symmetric sequences | Check for asterisk, handle independently |
+| Hardcoding intervals | Always load from tuning system |
+| Skipping empty string validation | Check `param.trim() === ""` |
+| Web Audio in SSR | Guard with `typeof window !== 'undefined'` |
+| Relative imports | Always use `@/*` |
+| Starting dev server without checking | Check if server is already running on port before starting |
+| Using `sleep` unnecessarily with curl | Only use when absolutely necessary; prefer direct testing |
+| Pre-selecting critical UI parameters | Force conscious decisions; use empty defaults with placeholders |
 
 ---
 
-## Knowledge Preservation Protocol
+## 🖥️ Development Server Guidelines
 
-**After completing any task successfully:**
+### Check Before Starting
+**ALWAYS check if the dev server is already running before starting/restarting:**
 
-1. **Review the completed work** for unique insights
-2. **Document significant findings** in appropriate instruction files
-3. **Include specific examples** from the implementation
-4. **Explain implications** for future development
+```bash
+# ❌ DON'T: Blindly start server
+npm run dev
 
-**What qualifies as documentation-worthy:**
-- Musicological principles discovered
-- Algorithmic patterns specific to Arabic maqām theory
-- Common pitfalls and solutions
+# ✅ DO: Check for running process first
+lsof -i :3000  # Check if port is in use
+# or
+ps aux | grep "next dev"  # Check for Next.js process
+```
+
+**Why this matters:**
+- Avoids port conflicts and error messages
+- Prevents disrupting active development sessions
+- Saves time waiting for unnecessary restarts
+- Professional development practice
+
+### Testing with curl
+**Avoid unnecessary `sleep` delays:**
+
+```bash
+# ❌ AVOID: Unnecessary delay
+sleep 3 && curl http://localhost:3000/api/endpoint
+
+# ✅ PREFER: Direct request (server should be stable)
+curl http://localhost:3000/api/endpoint
+
+# ✅ ACCEPTABLE: Only when testing fresh server startup
+npm run dev & sleep 2 && curl http://localhost:3000/api/health
+```
+
+**When `sleep` is justified:**
+- Testing immediately after starting a new server process
+- Waiting for database connections to initialize
+- Testing time-dependent behavior
+
+**When `sleep` is NOT needed:**
+- Server is already running (most common case)
+- Making multiple sequential requests
+- Testing stable endpoints
+
+---
+
+## 🎨 UX Design Principles
+
+### Conscious Decision-Making
+**Force user choices for critical parameters rather than providing defaults:**
+
+```tsx
+// ❌ AVOID: Pre-selected defaults for important choices
+const [pitchClassDataType, setPitchClassDataType] = useState("frequency");
+
+// ✅ GOOD: Empty state requiring explicit selection
+const [pitchClassDataType, setPitchClassDataType] = useState("");
+
+// With placeholder in UI:
+<MenuItem value="">
+  <em>Select a data format...</em>
+</MenuItem>
+```
+
+**Why this matters:**
+- **Prevents autopilot behavior**: Users must think about what they need
+- **Reduces errors**: No silent defaults that might be wrong for their use case
+- **Better UX**: Users understand what choices are available
+- **Documentation through UI**: Placeholder text educates users
+
+**When to force choices:**
+- ✅ Data format selection (frequency, cents, fractions, etc.)
+- ✅ Tuning system selection
+- ✅ Critical calculation parameters
+- ❌ UI preferences (theme, layout)
+- ❌ Optional features (advanced mode)
+
+**Pattern:**
+1. Initialize state with empty string: `useState("")`
+2. Add placeholder as first option: `<MenuItem value=""><em>Select...</em></MenuItem>`
+3. Check for selection before processing: `if (value) { ... }`
+4. Provide clear error messages if required but not selected
+
+---
+
+## 🔍 Knowledge Preservation
+
+**After completing tasks:**
+1. Review for unique insights
+2. Document in appropriate file
+3. Include specific examples
+4. Explain implications
+
+**Document-worthy findings:**
+- Musicological principles
+- Algorithmic patterns
+- Common pitfalls & solutions
 - Data structure insights
 - Integration patterns
-- Terminology clarifications
-
-**Update these files:**
-- This file (`03-development-conventions.md`) for coding patterns
-- `04-musicological-principles.md` for music theory insights
-- `05-testing-guide.md` for new test scenarios
-- `06-documentation-standards.md` for doc patterns
 
 ---
 
-## UI Troubleshooting & Scroll Behavior
+## 📚 Cross-References
 
-- **Verify Scroll Containers**: When implementing scroll or autoscroll features, always inspect the DOM and CSS to identify the actual scrollable container. Do not assume `window` is the scroll target; check for custom containers (e.g., `.main-content`).
-- **Test with Automation**: Use browser automation tools (such as Playwright) to simulate user interactions and confirm scroll actions target the correct element.
-- **Inspect Stylesheets**: When fixing UI bugs, review both code and stylesheets to locate the source of layout or scroll issues.
-- **Document Solutions**: After resolving UI issues, summarize the solution and reasoning for future reference. Update development guidelines to prevent similar issues.
+- **Architecture**: `02-architecture.md` - Technical stack, context providers, data models
+- **Musicological Principles**: `04-musicological-principles.md` - Arabic maqām theory essentials
+- **Testing Guide**: `05-testing-guide.md` - Manual testing protocols
+- **Documentation Standards**: `06-documentation-standards.md` - JSDoc and property documentation
+- **API Implementation Details**: `src/app/api/playground/SESSION_SUMMARY.md` - Comprehensive API development notes, validation patterns, testing framework, design decisions
+
+**For API Development**: The SESSION_SUMMARY.md contains detailed notes on:
+- All 6 maqāmāt API endpoints with examples
+- 27 automated test cases
+- Error handling standardization
+- Progressive disclosure implementation
+- API playground UX patterns
+- Real-world validation scenarios
+- Semantic naming conventions and rationale
+
+---
+
+*Last Updated: 2025-01-27 (Added: Development server guidelines, conscious decision-making UX pattern, avoid unnecessary sleep with curl)*
