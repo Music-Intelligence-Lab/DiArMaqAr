@@ -44,7 +44,7 @@ export async function updateTuningSystems(newSystems: TuningSystem[], modifiedId
   }
 
   try {
-    const response = await fetch("/api/tuningSystems", {
+    const response = await fetch("/api/tuning-systems", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(
@@ -80,7 +80,9 @@ export async function updateTuningSystems(newSystems: TuningSystem[], modifiedId
       ),
     });
     if (!response.ok) {
-      throw new Error("Failed to save updated TuningSystems on the server.");
+      const errorText = await response.text();
+      console.error("API Error Response:", errorText);
+      throw new Error(`Failed to save updated TuningSystems on the server. Status: ${response.status}, Message: ${errorText}`);
     }
   } catch (error) {
     console.error("Error updating all TuningSystems:", error);
@@ -130,7 +132,9 @@ export async function updateAjnas(newAjnas: JinsData[], modifiedIds?: string[]) 
       ),
     });
     if (!response.ok) {
-      throw new Error("Failed to save updated Ajnas on the server.");
+      const errorText = await response.text();
+      console.error("API Error Response:", errorText);
+      throw new Error(`Failed to save updated Ajnas on the server. Status: ${response.status}, Message: ${errorText}`);
     }
   } catch (error) {
     console.error("Error updating all Ajnas:", error);
@@ -183,7 +187,9 @@ export async function updateMaqamat(newMaqamat: MaqamData[], modifiedIds?: strin
       ),
     });
     if (!response.ok) {
-      throw new Error("Failed to save updated Maqamat on the server.");
+      const errorText = await response.text();
+      console.error("API Error Response:", errorText);
+      throw new Error(`Failed to save updated Maqamat on the server. Status: ${response.status}, Message: ${errorText}`);
     }
   } catch (error) {
     console.error("Error updating all Maqamat:", error);
@@ -226,7 +232,9 @@ export async function updateSources(sources: Source[], modifiedIds?: string[]) {
       ),
     });
     if (!response.ok) {
-      throw new Error("Failed to save updated Sources on the server.");
+      const errorText = await response.text();
+      console.error("API Error Response:", errorText);
+      throw new Error(`Failed to save updated Sources on the server. Status: ${response.status}, Message: ${errorText}`);
     }
   } catch (error) {
     console.error("Error updating all Sources:", error);
@@ -266,7 +274,9 @@ export async function updatePatterns(patterns: Pattern[], modifiedIds?: string[]
       body: JSON.stringify(patterns.map((pattern) => pattern.convertToJSON())),
     });
     if (!response.ok) {
-      throw new Error("Failed to save updated Patterns on the server.");
+      const errorText = await response.text();
+      console.error("API Error Response:", errorText);
+      throw new Error(`Failed to save updated Patterns on the server. Status: ${response.status}, Message: ${errorText}`);
     }
   } catch (error) {
     console.error("Error updating all Patterns:", error);
