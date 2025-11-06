@@ -64,11 +64,46 @@ Always wrap primary entities, related identifiers, statistics, availability, and
 - Makes bilingual extensions (`displayNameAr`) predictable—Arabic variants stay next to their transliterated counterparts
 - Aligns API, documentation, and clients with the shared serializer helpers (`buildEntityNamespace`, `buildIdentifierNamespace`, `buildStringArrayNamespace`, `buildLinksNamespace`)
 
+### List Response Structure (CRITICAL)
+
+**All list endpoints MUST use consistent structure:**
+
+```json
+{
+  "count": 29,
+  "data": [
+```
+
+**Never use nested `meta` object:**
+```json
+// ❌ WRONG - Do not use this structure
+{
+  "meta": { "count": 29 },
+  "data": [...]
+}
+
+// ❌ WRONG - Do not use this structure  
+{
+  "meta": { "total": 29 },
+  "data": [...]
+}
+```
+
+**Why:**
+- Consistency across all endpoints (`/maqamat`, `/ajnas`, `/tuning-systems`, `/sources`)
+- Simpler client-side access (`response.count` vs `response.meta.count`)
+- `buildListResponse()` helper automatically provides this structure
+- Custom meta fields (like `filteredByTransposition`, `totalComparisons`) are flattened to top level alongside `count`
+
+**Implementation:**
+- Use `buildListResponse(items)` for standard list responses
+- Custom meta fields are added at top level: `buildListResponse(items, { meta: { customField: value } })` → `{ count, customField, data }`
+
 ### Example
 
 ```json
 {
-  "meta": { "count": 29 },
+  "count": 29,
   "data": [
     {
       "jins": {
@@ -203,6 +238,7 @@ responseData.ajnas = {
 
 ### Required Metadata
 
+**For Maqamat and Ajnās:**
 ```typescript
 {
   pitchClassIndex: number,      // Position in tuning system
@@ -213,14 +249,27 @@ responseData.ajnas = {
 }
 ```
 
+**For Pitch Classes (fundamental building blocks):**
+```typescript
+{
+  pitchClassIndex: number,      // Position in tuning system
+  octave: number,               // Octave number (0, 1, 2, 3)
+  noteName: string,             // URL-safe identifier
+  noteNameDisplay: string,      // With diacritics
+  // ... then format-specific fields
+  // NOTE: scaleDegree is NOT included - pitch classes are fundamental building blocks, not scale degrees
+}
+```
+
 ### Why
 
 - Clients always need positioning information for display/analysis
 - Avoids forcing clients to request `format=all` just for metadata
 - Provides complete semantic context for each pitch
 - Enables proper UI rendering without additional lookups
+- **Pitch classes are fundamental building blocks** - they don't have scale degrees (that's a maqam/jins concept)
 
-### Example
+### Example: Maqam Response
 
 ```json
 {
@@ -236,6 +285,183 @@ responseData.ajnas = {
   ]
 }
 ```
+
+### Example: Pitch Class Response
+
+```json
+{
+  "pitchClasses": [
+    {
+      "pitchClassIndex": 0,
+      "octave": 1,
+      "noteName": "yegah",
+      "noteNameDisplay": "yegāh",
+      "cents": 0,
+      "frequency": 97.999
+    }
+  ]
+}
+```
+
+---
+
+## Standard Endpoint Pattern (List, Detail, Availability, Compare)
+
+### Rule
+
+**Most entities follow a consistent four-endpoint pattern for comprehensive API coverage.**
+
+### Standard Pattern
+
+1. **LIST** - `GET /api/{entities}` - Browse all entities with metadata and availability stats
+2. **DETAIL** - `GET /api/{entities}/{id}` - Get full entity data (requires `tuningSystem` and `startingNote` for context-dependent entities)
+3. **AVAILABILITY** - `GET /api/{entities}/{id}/availability` - Check which tuning systems support this entity
+4. **COMPARE** - `GET /api/{entities}/{id}/compare` - Compare entity across multiple tuning systems
+
+### Entities Following This Pattern
+
+- ✅ **Maqāmāt**: `/api/maqamat`, `/api/maqamat/{id}`, `/api/maqamat/{id}/availability`, `/api/maqamat/{id}/compare`
+- ✅ **Ajnās**: `/api/ajnas`, `/api/ajnas/{id}`, `/api/ajnas/{id}/availability`, `/api/ajnas/{id}/compare`
+- ✅ **Pitch Classes**: `/api/pitch-classes`, `/api/pitch-classes/{id}`, `/api/pitch-classes/{id}/availability`, `/api/pitch-classes/{id}/compare`
+
+### Special Endpoints
+
+**Transpositions** (maqamat/ajnas only):
+- `GET /api/{entities}/{id}/transpositions` - List available transpositions
+
+**Tuning System Details**:
+- `GET /api/tuning-systems/{id}/{startingNote}/pitch-classes` - Get all pitch classes for a tuning system (essential for tuning system operations)
+
+### Key Differences: Pitch Classes vs Maqamat/Ajnās
+
+| Feature | Maqamat/Ajnās | Pitch Classes |
+|---------|---------------|---------------|
+| Transpositions | ✅ Supported | ❌ Not applicable (fundamental building blocks) |
+| Scale Degree | ✅ Included in response | ❌ Not included (not relevant) |
+| Octave Filter | ❌ Not applicable | ✅ Supports `octave=all` (default) or specific octave (0, 1, 2, 3) |
+| Required Params | `tuningSystem`, `startingNote` | `tuningSystem`, `startingNote` (for detail endpoint) |
+
+### Why This Pattern
+
+- **Progressive Disclosure**: Users can browse → check compatibility → get full data → compare across systems
+- **Consistency**: Same pattern across all entities reduces cognitive load
+- **Completeness**: Covers all common use cases (browsing, details, compatibility, comparison)
+- **Discoverability**: Clear endpoint structure makes API self-documenting
+
+### Implementation Checklist
+
+When creating new entity endpoints:
+- [ ] Create list endpoint with availability stats
+- [ ] Create detail endpoint (require `tuningSystem` and `startingNote` if context-dependent)
+- [ ] Create availability endpoint
+- [ ] Create compare endpoint
+- [ ] Add endpoints to sidebar in `docs/.vitepress/config.mts`
+- [ ] Update OpenAPI specification
+- [ ] Follow namespaced response pattern
+- [ ] For pitch class endpoints: Support `octave=all` (default) to return all octaves, or specific octave numbers
+
+---
+
+## Source-Based Query Endpoints
+
+### Pattern
+
+**Query entities by their bibliographic source relationship.**
+
+### Endpoints
+
+Three endpoints allow users to discover which tuning systems, maqamat, and ajnas are documented in a specific source:
+
+1. **Tuning Systems by Source** - `GET /api/sources/{id}/tuning-systems`
+2. **Maqamat by Source** - `GET /api/sources/{id}/maqamat`
+3. **Ajnās by Source** - `GET /api/sources/{id}/ajnas`
+
+### Purpose
+
+These endpoints provide an easy way to access which information in the data has been taken from a specific source. This is essential for:
+- **Scholarly verification**: Researchers can see which sources contributed which data
+- **Source attribution**: Understanding the provenance of musical data
+- **Bibliographic research**: Finding all content from a particular historical source
+
+### Implementation Pattern
+
+**Filtering Logic:**
+- Tuning systems: Match if any `sourcePageReferences` contain the source ID
+- Maqamat: Match if any `sourcePageReferences` contain the source ID
+- Ajnās: Match if any `SourcePageReferences` contain the source ID
+
+**Response Structure:**
+```json
+{
+  "context": {
+    "source": {
+      "id": "Farmer-(1937)",
+      "idName": "Farmer-(1937)",
+      "displayName": "The Lute Scale of Avicenna"
+    }
+  },
+  "data": [
+    {
+      "tuningSystem": { /* EntityRef */ },
+      "sourceReferences": [
+        { "page": "245" }
+      ],
+      "startingNotes": ["ushayran", "yegah"],
+      "links": { /* Links */ }
+    }
+  ],
+  "count": 5
+}
+```
+
+### Key Features
+
+1. **Source Context**: Always include the source entity in the `context` namespace
+2. **Relevant References**: Only include page references for the queried source (filter `sourcePageReferences` by `sourceId`)
+3. **Complete Entity Data**: Return full entity objects (not just IDs) for immediate use
+4. **Links**: Include links to both the entity detail endpoint and the source detail endpoint
+
+### Implementation Checklist
+
+When creating source-based query endpoints:
+- [ ] Validate source exists (return 404 if not found)
+- [ ] Filter entities by matching `sourceId` in their `sourcePageReferences`
+- [ ] Include only relevant page references (filter by source ID)
+- [ ] Return source context in response
+- [ ] Use `buildListResponse()` helper for consistent structure (returns `{count, data}` not `{meta: {count}, data}`)
+- [ ] Include links to entity detail and source detail endpoints
+- [ ] Support `inArabic` parameter (defaults to "true")
+- [ ] Add to sidebar in `docs/.vitepress/config.mts`
+- [ ] Update OpenAPI specification
+
+### Example: Tuning Systems by Source
+
+```typescript
+// Filter tuning systems that reference this source
+const matchingTuningSystems = tuningSystems.filter(ts => {
+  const sourcePageReferences = ts.getSourcePageReferences();
+  return sourcePageReferences.some(ref => ref.sourceId === id);
+});
+
+// Build response with only relevant page references
+const tuningSystemsData = matchingTuningSystems.map(ts => {
+  const sourcePageReferences = ts.getSourcePageReferences();
+  const relevantRefs = sourcePageReferences.filter(ref => ref.sourceId === id);
+  
+  return {
+    tuningSystem: buildEntityNamespace(/* ... */),
+    sourceReferences: relevantRefs.map(ref => ({ page: ref.page })),
+    // ... other fields
+  };
+});
+```
+
+### Why This Pattern
+
+- **Discoverability**: Easy to find all content from a specific source
+- **Academic Integrity**: Clear source attribution for scholarly use
+- **Data Provenance**: Users can trace where information came from
+- **Bibliographic Research**: Supports research workflows that start from sources
 
 ---
 

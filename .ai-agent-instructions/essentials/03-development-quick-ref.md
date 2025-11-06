@@ -49,12 +49,16 @@ const DEFAULTS = {
 | ✅ Add format option | Update API handler, UI dropdown, tests, docs, OpenAPI spec |
 | ✅ Return entity references | Use `{id, idName, displayName}` objects, never string arrays |
 | ✅ Nest context data | Group related fields in parent objects |
-| ✅ Include metadata | Always add `pitchClassIndex`, `scaleDegree`, `noteName` fields |
+| ✅ Include metadata | Always add `pitchClassIndex`, `noteName` fields. Include `scaleDegree` for maqamat/ajnas, but NOT for pitch classes (they're fundamental building blocks) |
+| ✅ Include source references | Add `sources` array with `{sourceId, page}` when `includeSources=true` (optional parameter, defaults to false for performance) |
+| ✅ Use consistent list structure | Always use `{count, data}` format, never `{meta: {count/total}, data}` |
 | ✅ Verify with curl | Test actual HTTP responses with jq |
 | ✅ Check diacritics | Ensure Arabic characters render properly |
 | ✅ Filter null values | Use `.filter(Boolean)` after Map lookups |
+| ✅ Add to sidebar | Update `docs/.vitepress/config.mts` when adding new API endpoints |
 | ❌ Never keep legacy aliases | Remove immediately unless API is versioned |
 | ❌ **NEVER document PUT endpoints** | PUT endpoints are internal only, never in OpenAPI |
+| ❌ Never nest count in meta | Use `count` at top level, not `meta.count` or `meta.total` |
 
 **For detailed API standards**: See [reference/openapi-formatting-guide.md](../reference/openapi-formatting-guide.md)
 

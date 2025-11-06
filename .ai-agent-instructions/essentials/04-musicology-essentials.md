@@ -250,7 +250,71 @@ The `renderPitchClassSpellings()` function determines correct spelling based on 
 
 ---
 
-## 6. Starting Note Significance
+## 6. Note Names and Pitch Class Ordering (Abstract vs Tuning System Context)
+
+### Critical Distinction
+
+**Note names exist in two contexts:**
+1. **Abstract (without tuning system)**: Note names from `NoteName.ts` arrays define canonical ordering
+2. **Tuning system context**: Note names map to specific pitch class indices within a tuning system
+
+### Abstract Note Name Ordering
+
+**Source of Truth:** The octave arrays in `NoteName.ts` (`octaveZeroNoteNames`, `octaveOneNoteNames`, `octaveTwoNoteNames`, `octaveThreeNoteNames`, `octaveFourNoteNames`) define the canonical ordering of note names.
+
+**Key Principles:**
+- **Note names are unique per octave**: The same note name string in different octaves represents different pitch classes (e.g., "rāst" in octave 1 vs "kurdān" in octave 2)
+- **Same index = same pitch class position**: The array index represents the pitch class position. The same index across different octaves represents the same pitch class position (e.g., index 16 in octave 1 and index 16 in octave 2 both represent the same pitch class position, just in different octaves)
+- **Use `getNoteNameIndexAndOctave()`**: This function returns `{octave, index}` where `index` is the canonical order/position in the note name arrays
+- **Without a tuning system, this is the only way to determine order**: The array index from `getNoteNameIndexAndOctave()` is the canonical note name order, independent of any tuning system
+
+### Tuning System Context
+
+**When a note name is used within a tuning system:**
+- The note name maps to a specific `pitchClassIndex` within that tuning system
+- The same note name may have different `pitchClassIndex` values in different tuning systems
+- The `pitchClassIndex` is determined by the tuning system's structure and starting note
+
+### Programming Implications
+
+**For abstract note name operations (no tuning system):**
+```typescript
+// ✅ CORRECT - Use getNoteNameIndexAndOctave() for canonical ordering
+import { getNoteNameIndexAndOctave } from "@/models/NoteName";
+
+const { octave, index } = getNoteNameIndexAndOctave(noteName);
+// index = canonical order/position (0-based)
+// octave = which octave array contains this note name
+```
+
+**For tuning system operations:**
+```typescript
+// ✅ CORRECT - Find pitch class by note name within tuning system
+const pitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote);
+const pitchClass = pitchClasses.find(
+  pc => standardizeText(pc.noteName) === standardizeText(noteName)
+);
+// pitchClass.pitchClassIndex = position within this tuning system
+```
+
+**For URL-safe matching:**
+```typescript
+// ✅ CORRECT - Always use standardizeText() for matching
+if (standardizeText(userInput) === standardizeText(dbValue)) {
+  // Match found
+}
+```
+
+### Why This Matters
+
+- **API endpoints querying by note name** need to support note names from all octaves
+- **The octave parameter is optional** when querying by note name because the note name itself identifies the octave
+- **Pitch class index in intervals** is not meaningful when querying by note names (should be excluded from interval responses)
+- **Canonical ordering** comes from `NoteName.ts` arrays, not from tuning system pitch class indices
+
+---
+
+## 7. Starting Note Significance
 
 **Different starting notes represent fundamentally different theoretical approaches**, NOT simple transposition.
 
@@ -258,7 +322,7 @@ The `renderPitchClassSpellings()` function determines correct spelling based on 
 
 ---
 
-## 7. Modulation Structure
+## 8. Modulation Structure
 
 ### Key Insight
 
@@ -274,7 +338,7 @@ Modulation analysis identifies:
 
 ---
 
-## 8. Common Programming Pitfalls
+## 9. Common Programming Pitfalls
 
 ### JavaScript Modulo for Negative Numbers
 
@@ -326,7 +390,7 @@ if (pitchClasses.length === 7) {  // Doesn't guarantee octave equivalence
 
 ---
 
-## 9. Embedded Ajnas Analysis
+## 10. Embedded Ajnas Analysis
 
 ### Principle
 
@@ -352,7 +416,7 @@ Embedded ajnas analysis is **computationally expensive**:
 
 ---
 
-## 10. Suyūr (Melodic Development Pathways)
+## 11. Suyūr (Melodic Development Pathways)
 
 ### Definition
 
@@ -376,7 +440,7 @@ The `transposeSayr()` function intelligently shifts note stops, maintains struct
 
 ---
 
-## 11. Maqām Family Classification (Canonical Reference)
+## 12. Maqām Family Classification (Canonical Reference)
 
 ### Critical Insight
 
@@ -446,12 +510,13 @@ This highlights that **family classification is tuning-system-relative**: a maq�
 4. **Sequential Letters**: Staff notation requires consecutive natural letters
 5. **Tuning Independence**: Same maqam, different realizations across systems
 6. **Enharmonic Context**: C# vs Db depends on melodic direction
-7. **Starting Note Significance**: Not simple transposition, different frameworks
-8. **Modulation Structure**: Maqamat modulate, ajnas don't (they're targets)
-9. **JavaScript Gotchas**: Double-modulo for negative numbers
-10. **Embedded Analysis**: Pattern matching finds ajnas within maqamat
-11. **Computational Transposition of Suyūr**: First implementation enabling systematic exploration of melodic pathways
-12. **Family Classification**: Requires canonical tuning system reference (al-Ṣabbāgh 1954)
+7. **Note Names and Ordering**: Abstract note name order from `NoteName.ts` arrays; tuning system context maps to `pitchClassIndex`
+8. **Starting Note Significance**: Not simple transposition, different frameworks
+9. **Modulation Structure**: Maqamat modulate, ajnas don't (they're targets)
+10. **JavaScript Gotchas**: Double-modulo for negative numbers
+11. **Embedded Analysis**: Pattern matching finds ajnas within maqamat
+12. **Computational Transposition of Suyūr**: First implementation enabling systematic exploration of melodic pathways
+13. **Family Classification**: Requires canonical tuning system reference (al-Ṣabbāgh 1954)
 
 These principles ensure computational implementations respect the independent theoretical logic of Arabic maqām theory rather than imposing Western musical frameworks.
 

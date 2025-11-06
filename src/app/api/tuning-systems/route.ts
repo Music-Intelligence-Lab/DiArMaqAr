@@ -22,6 +22,7 @@ export const dynamic = "force-static";
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
+    const includeSources = searchParams.get("includeSources") === "true";
     
     // Parse inArabic parameter
     let inArabic = false;
@@ -79,13 +80,24 @@ export async function GET(request: Request) {
         displayNamesAr: startingNoteDisplayNamesAr,
       });
 
-      return {
+      const result: any = {
         tuningSystem: tuningSystemNamespace,
         startingNotes: startingNotesNamespace,
         stats: {
           numberOfPitchClassesSingleOctave: ts.getOriginalPitchClassValues().length,
         },
       };
+
+      if (includeSources) {
+        const sourcePageReferences = ts.getSourcePageReferences();
+        const sourceReferences = sourcePageReferences.map((src) => ({
+          sourceId: src.sourceId,
+          page: src.page,
+        }));
+        result.sources = sourceReferences;
+      }
+
+      return result;
     });
 
     const response = NextResponse.json(

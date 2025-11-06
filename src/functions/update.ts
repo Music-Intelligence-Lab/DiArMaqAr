@@ -1,8 +1,9 @@
 import JinsData from "@/models/Jins";
-import MaqamData from "@/models/Maqam";
+import MaqamData, { Sayr } from "@/models/Maqam";
 import Pattern from "@/models/Pattern";
-import { Source, stringifySource } from "@/models/bibliography/Source";
+import { Source, stringifySource, SourcePageReference } from "@/models/bibliography/Source";
 import TuningSystem from "@/models/TuningSystem";
+import { getSources } from "@/functions/import";
 
 /**
  * Compares two string representations of numbers for sorting purposes.
@@ -15,6 +16,70 @@ function compareStringNumbers(a: string, b: string): number {
   const numA = parseFloat(a);
   const numB = parseFloat(b);
   return numA - numB;
+}
+
+/**
+ * Converts a sourceId to URL-safe format by looking up the source and using stringifySource.
+ * Tries multiple matching strategies to find the source even if the ID format differs.
+ * If the source is not found, returns the original sourceId.
+ *
+ * @param sourceId - The source ID to convert
+ * @param sources - Array of all sources to search
+ * @returns URL-safe source ID
+ */
+function getUrlSafeSourceId(sourceId: string, sources: Source[]): string {
+  if (!sourceId) return sourceId;
+  
+  // First, try exact match by source ID
+  let source = sources.find((s) => s.getId() === sourceId);
+  
+  // If not found, try to find by matching the stringified version
+  // This handles cases where the sourceId might be in a different format
+  if (!source) {
+    source = sources.find((s) => {
+      const urlSafeId = stringifySource(s, true, null);
+      return urlSafeId === sourceId;
+    });
+  }
+  
+  if (source) {
+    // Use stringifySource to get URL-safe ID (same as updateSources does)
+    return stringifySource(source, true, null);
+  }
+  
+  // If source not found, return original (might be already URL-safe or invalid)
+  return sourceId;
+}
+
+/**
+ * Converts all sourceIds in sourcePageReferences to URL-safe format.
+ *
+ * @param sourcePageReferences - Array of source page references
+ * @param sources - Array of all sources to search
+ * @returns Array of source page references with URL-safe sourceIds
+ */
+function convertSourcePageReferencesToUrlSafe(
+  sourcePageReferences: SourcePageReference[],
+  sources: Source[]
+): SourcePageReference[] {
+  return sourcePageReferences.map((ref) => ({
+    ...ref,
+    sourceId: getUrlSafeSourceId(ref.sourceId, sources),
+  }));
+}
+
+/**
+ * Converts all sourceIds in suyur to URL-safe format.
+ *
+ * @param suyur - Array of sayr objects
+ * @param sources - Array of all sources to search
+ * @returns Array of sayr objects with URL-safe sourceIds
+ */
+function convertSuyurSourceIdsToUrlSafe(suyur: Sayr[], sources: Source[]): Sayr[] {
+  return suyur.map((sayr) => ({
+    ...sayr,
+    sourceId: getUrlSafeSourceId(sayr.sourceId, sources),
+  }));
 }
 
 /**
@@ -43,6 +108,9 @@ export async function updateTuningSystems(newSystems: TuningSystem[], modifiedId
     });
   }
 
+  // Get all sources to convert sourceIds to URL-safe format
+  const sources = getSources();
+
   try {
     const response = await fetch("/api/tuning-systems", {
       method: "PUT",
@@ -55,7 +123,7 @@ export async function updateTuningSystems(newSystems: TuningSystem[], modifiedId
           year: ts.getYear(),
           sourceEnglish: ts.getSourceEnglish(),
           sourceArabic: ts.getSourceArabic(),
-          sourcePageReferences: ts.getSourcePageReferences(),
+          sourcePageReferences: convertSourcePageReferencesToUrlSafe(ts.getSourcePageReferences(), sources),
           creatorEnglish: ts.getCreatorEnglish(),
           creatorArabic: ts.getCreatorArabic(),
           commentsEnglish: ts.getCommentsEnglish(),
@@ -114,6 +182,9 @@ export async function updateAjnas(newAjnas: JinsData[], modifiedIds?: string[]) 
     });
   }
 
+  // Get all sources to convert sourceIds to URL-safe format
+  const sources = getSources();
+
   try {
     const response = await fetch("/api/ajnas", {
       method: "PUT",
@@ -126,7 +197,7 @@ export async function updateAjnas(newAjnas: JinsData[], modifiedIds?: string[]) 
           noteNames: j.getNoteNames(),
           commentsEnglish: j.getCommentsEnglish() || "",
           commentsArabic: j.getCommentsArabic() || "",
-          sourcePageReferences: j.getSourcePageReferences(),
+          sourcePageReferences: convertSourcePageReferencesToUrlSafe(j.getSourcePageReferences(), sources),
           version: j.getVersion(),
         }))
       ),
@@ -167,6 +238,9 @@ export async function updateMaqamat(newMaqamat: MaqamData[], modifiedIds?: strin
     });
   }
 
+  // Get all sources to convert sourceIds to URL-safe format
+  const sources = getSources();
+
   try {
     const response = await fetch("/api/maqamat", {
       method: "PUT",
@@ -178,10 +252,10 @@ export async function updateMaqamat(newMaqamat: MaqamData[], modifiedIds?: strin
           name: m.getName(),
           ascendingNoteNames: m.getAscendingNoteNames(),
           descendingNoteNames: m.getDescendingNoteNames(),
-          suyur: m.getSuyur(),
+          suyur: convertSuyurSourceIdsToUrlSafe(m.getSuyur(), sources),
           commentsEnglish: m.getCommentsEnglish() || "",
           commentsArabic: m.getCommentsArabic() || "",
-          sourcePageReferences: m.getSourcePageReferences(),
+          sourcePageReferences: convertSourcePageReferencesToUrlSafe(m.getSourcePageReferences(), sources),
           version: m.getVersion(),
         }))
       ),
