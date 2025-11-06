@@ -119,3 +119,257 @@ div.aside-container[data-v-39a288b8] {
   min-width: 0 !important;
 }
 
+/* Increase left padding on playground variables to match other column padding */
+/* Use maximum specificity to override Vue component styles */
+.OAPlaygroundParameters > details[data-v-40b66d57],
+.OAPlaygroundParameters > details[data-v-40b66d57][open],
+div.OAPlaygroundParameters > details[data-v-40b66d57],
+div.OAPlaygroundParameters > details[data-v-40b66d57][open] {
+  padding-left: 12px !important;
+}
+
+/* Target the content container inside details - use both padding and margin for maximum effect */
+.OAPlaygroundParameters > details[data-v-40b66d57] > *:not(summary),
+.OAPlaygroundParameters > details[data-v-40b66d57][open] > *:not(summary),
+.OAPlaygroundParameters > details[data-v-40b66d57] > div,
+.OAPlaygroundParameters > details[data-v-40b66d57][open] > div,
+.OAPlaygroundParameters > details[data-v-40b66d57] > .flex,
+.OAPlaygroundParameters > details[data-v-40b66d57][open] > .flex,
+.OAPlaygroundParameters > details[data-v-40b66d57] > .flex-col,
+.OAPlaygroundParameters > details[data-v-40b66d57][open] > .flex-col {
+  padding-left: 12px !important;
+  margin-left: 12px !important;
+}
+
+/* Balance navigation bars across responsive formats */
+/* Align navigation bars with main content padding */
+/* Override container margin to prevent auto centering */
+/* Use multiple selectors with high specificity to override Vue scoped styles */
+header[role="header"] .container[data-v-6aa21345],
+header .container[data-v-6aa21345],
+.container[data-v-6aa21345] {
+  margin: 0 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* Override local navigation container margin to prevent auto centering */
+.VPLocalNav .container[data-v-a6f0e41e],
+.VPLocalNav .container,
+.container[data-v-a6f0e41e] {
+  margin: 0 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* Main header container: align with main content padding */
+header[role="header"] > div > div > div {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  width: 100% !important;
+}
+
+/* Title on left - align with main content left padding */
+a.title {
+  flex: 0 0 auto !important;
+  margin-right: auto !important;
+}
+
+/* Content body (search + nav links) on right - align with main content right padding */
+div.content-body {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  flex: 0 0 auto !important;
+  justify-content: flex-end !important;
+  margin-left: auto !important;
+  flex-shrink: 0 !important;
+}
+
+/* VPLocalNav: align Menu (left) and Back to top (right) with main content padding */
+.VPLocalNav {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  width: 100% !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.VPLocalNav > div {
+  display: flex !important;
+  width: 100% !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+/* Responsive adjustments */
+/* Align all navigation with main content padding */
+@media (max-width: 768px) {
+  /* Mobile: Reset padding on all header parent containers */
+  header[role="header"],
+  header[role="header"] > div,
+  header[role="header"] > div > div {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  
+  /* Mobile: Remove auto margin from container to fix alignment */
+  header[role="header"] .container,
+  header[role="header"] .container[data-v-6aa21345] {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    margin: 0 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  
+  /* Mobile: Remove auto margin and padding from local navigation container to fix alignment */
+  .VPLocalNav .container,
+  .VPLocalNav .container[data-v-a6f0e41e] {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    margin: 0 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  
+  /* Mobile: align with main content padding (24px from .vp-doc-content) */
+  header[role="header"] > div > div > div {
+    flex-wrap: nowrap !important;
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+    gap: 8px !important;
+  }
+  
+  /* Title aligned with main content left padding */
+  a.title {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-left: 0 !important;
+    font-size: 0.9em !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    white-space: normal !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+  }
+  
+  /* Content body aligned with main content right padding */
+  div.content-body {
+    width: auto !important;
+    flex: 0 0 auto !important;
+    justify-content: flex-end !important;
+    margin-top: 0 !important;
+    gap: 6px !important;
+    flex-shrink: 0 !important;
+    padding-right: 0 !important;
+  }
+  
+  /* VPLocalNav: Reset padding on parent containers */
+  .VPLocalNav {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  
+  /* VPLocalNav: Menu aligned with left padding, Back to top with right padding */
+  .VPLocalNav > div {
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+  }
+  
+  .VPLocalNav button {
+    margin: 0 !important;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 960px) {
+  /* Tablet: align with main content padding (24px from .vp-doc-content) */
+  header[role="header"] > div > div > div {
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+  }
+  
+  /* Title aligned with main content left padding */
+  a.title {
+    padding-right: 0 !important;
+  }
+  
+  /* Content body aligned with main content right padding */
+  div.content-body {
+    gap: 12px !important;
+    flex: 0 0 auto !important;
+    padding-right: 0 !important;
+  }
+  
+  /* VPLocalNav: Menu aligned with left padding + sidebar, Back to top with right padding */
+  .VPLocalNav > div {
+    padding-left: calc(var(--vp-sidebar-width, 272px) + 24px) !important;
+    padding-right: 24px !important;
+  }
+}
+
+@media (min-width: 961px) and (max-width: 1280px) {
+  /* Medium desktop: align with main content padding */
+  header[role="header"] > div > div > div {
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+  }
+  
+  /* Title aligned with main content left padding */
+  a.title {
+    padding-right: 0 !important;
+  }
+  
+  /* Content body aligned with main content right padding */
+  div.content-body {
+    gap: 16px !important;
+    padding-right: 0 !important;
+  }
+  
+  /* VPLocalNav: Menu aligned with left padding + sidebar, Back to top with right padding */
+  .VPLocalNav > div {
+    padding-left: calc(var(--vp-sidebar-width, 272px) + 24px) !important;
+    padding-right: 24px !important;
+  }
+}
+
+@media (min-width: 1281px) {
+  /* Large desktop: align with main content padding */
+  header[role="header"] > div > div > div {
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+  }
+  
+  /* Title aligned with main content left padding */
+  a.title {
+    padding-right: 0 !important;
+  }
+  
+  /* Content body aligned with main content right padding */
+  div.content-body {
+    gap: 20px !important;
+    padding-right: 0 !important;
+  }
+  
+  /* VPLocalNav: Menu aligned with left padding + sidebar, Back to top with right padding */
+  .VPLocalNav > div {
+    padding-left: calc(var(--vp-sidebar-width, 272px) + 24px) !important;
+    padding-right: 24px !important;
+  }
+}
+
+/* OpenAPI response styling - Now handled by theme configuration (jsonViewer.renderer: 'shiki') */

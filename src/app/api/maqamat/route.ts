@@ -14,6 +14,14 @@ import {
   octaveThreeNoteNames,
   octaveFourNoteNames 
 } from "@/models/NoteName";
+import { parseInArabic, getMaqamNameDisplayAr, getNoteNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
+import {
+  buildEntityNamespace,
+  buildIdentifierNamespace,
+  buildLinksNamespace,
+  buildListResponse,
+  buildStringArrayNamespace
+} from "@/app/api/response-shapes";
 
 export const OPTIONS = handleCorsPreflightRequest;
 
@@ -24,25 +32,41 @@ export const OPTIONS = handleCorsPreflightRequest;
  * Supports filtering by family or starting note, and sorting options.
  * 
  * Query Parameters:
- * - family: Filter by maqām family (e.g., "rast", "hijaz", "bayat")
- * - tonic: Filter by maqām tonic/first note (e.g., "rast", "dūgāh", "segāh")
- * - sortBy: Sort order - "noteName" (default, by NoteName.ts order) or "alphabetical" (by display name)
+ * - filterByFamily: Filter by maqām family (e.g., "rast", "hijaz", "bayat")
+ * - filterByTonic: Filter by maqām tonic/first note (e.g., "rast", "dūgāh", "segāh")
+ * - sortBy: Sort order - "tonic" (by tonic note priority, NoteName.ts order) or "alphabetical" (default, by display name)
  */
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const familyFilter = searchParams.get("family");
-    const tonicFilter = searchParams.get("tonic");
-    const sortBy = searchParams.get("sortBy") || "noteName";
+    const familyFilter = searchParams.get("filterByFamily");
+    const tonicFilter = searchParams.get("filterByTonic");
+    const sortBy = searchParams.get("sortBy") || "alphabetical";
+    
+    // Parse inArabic parameter
+    let inArabic = false;
+    try {
+      inArabic = parseInArabic(searchParams);
+    } catch (error) {
+      return addCorsHeaders(
+        NextResponse.json(
+          {
+            error: error instanceof Error ? error.message : "Invalid inArabic parameter",
+            hint: "Use ?inArabic=true or ?inArabic=false"
+          },
+          { status: 400 }
+        )
+      );
+    }
 
     // Validate that filter parameters are not empty strings
     if (familyFilter !== null && familyFilter.trim() === "") {
       return addCorsHeaders(
         NextResponse.json(
           {
-            error: "Invalid parameter: family",
-            message: "The 'family' parameter cannot be empty. Either omit it or provide a valid maqām family name.",
-            hint: "Remove '?family=' from your URL or specify a family like '?family=rast'"
+            error: "Invalid parameter: filterByFamily",
+            message: "The 'filterByFamily' parameter cannot be empty. Either omit it or provide a valid maqām family name.",
+            hint: "Remove '?filterByFamily=' from your URL or specify a family like '?filterByFamily=rast'"
           },
           { status: 400 }
         )
@@ -53,9 +77,9 @@ export async function GET(request: Request) {
       return addCorsHeaders(
         NextResponse.json(
           {
-            error: "Invalid parameter: tonic",
-            message: "The 'tonic' parameter cannot be empty. Either omit it or provide a valid tonic note name.",
-            hint: "Remove '?tonic=' from your URL or specify a tonic like '?tonic=rast'"
+            error: "Invalid parameter: filterByTonic",
+            message: "The 'filterByTonic' parameter cannot be empty. Either omit it or provide a valid tonic note name.",
+            hint: "Remove '?filterByTonic=' from your URL or specify a tonic like '?filterByTonic=rast'"
           },
           { status: 400 }
         )
@@ -83,37 +107,34 @@ export async function GET(request: Request) {
 
     // Calculate availability for each maqām
     const maqamatWithAvailability = maqamat.map((maqam) => {
-      // Count how many tuning systems support this maqām and collect their IDs with tuning system starting note names
+      type AvailabilityAccumulator = {
+        tuningSystem: any;
+        startingNoteNames: string[];
+      };
+
       let availableInTuningSystems = 0;
-      interface TuningSystemWithStartingNoteNames {
-        tuningSystemId: string;
-        tuningSystemStartingNoteNames: string[];
-      }
-      const tuningSystemsWithStartingNoteNames: TuningSystemWithStartingNoteNames[] = [];
-      
+      const availabilityEntries: AvailabilityAccumulator[] = [];
+
       for (const tuningSystem of tuningSystems) {
-        // Get both the original note name sets and their 3-octave expansions
         const noteNameSets = tuningSystem.getNoteNameSets();
         const shiftedNoteNameSets = tuningSystem.getNoteNameSetsWithAdjacentOctaves();
-        
-        // Track which tuning system starting note names work for this maqām
+
         const validTuningSystemStartingNoteNames: string[] = [];
-        
+
         for (let i = 0; i < shiftedNoteNameSets.length; i++) {
           if (maqam.isMaqamPossible(shiftedNoteNameSets[i])) {
-            // The first note in the original (non-shifted) set is the tuning system starting note name
             const tuningSystemStartingNoteName = noteNameSets[i]?.[0];
             if (tuningSystemStartingNoteName) {
               validTuningSystemStartingNoteNames.push(tuningSystemStartingNoteName);
             }
           }
         }
-        
+
         if (validTuningSystemStartingNoteNames.length > 0) {
           availableInTuningSystems++;
-          tuningSystemsWithStartingNoteNames.push({
-            tuningSystemId: tuningSystem.getId(),
-            tuningSystemStartingNoteNames: validTuningSystemStartingNoteNames
+          availabilityEntries.push({
+            tuningSystem,
+            startingNoteNames: validTuningSystemStartingNoteNames,
           });
         }
       }
@@ -173,36 +194,123 @@ export async function GET(request: Request) {
       const hasSuyur = maqam.getSuyur().length > 0;
       
       // Get tonic (first note of ascending scale)
-      const tonicDisplay = ascNotes[0] || "unknown";
+      const tonicDisplayRaw = ascNotes[0] || "unknown";
       
-      // URL-safe version of tonic
-      const tonicId = standardizeText(tonicDisplay);
+      // URL-safe version of tonic (always use transliterated for IDs)
+      const tonicId = standardizeText(tonicDisplayRaw);
       
+      // Display version of tonic (always transliterated)
       // Count pitch classes (number of unique notes in ascending scale)
       const numberOfPitchClasses = ascNotes.length;
       
       // Determine if octave repeating (follows rule: numberOfPitchClasses <= 7)
       const isOctaveRepeating = numberOfPitchClasses <= 7;
 
-      // Generate idName (standardized URL-safe version)
+      // Generate idName (standardized URL-safe version - always transliterated)
       const idName = standardizeText(maqam.getName());
+      
+      // Display name (always transliterated)
+      const displayName = maqam.getName();
+      
+      // Family display (always transliterated)
+      const familyDisplayFinal = familyDisplay;
+      const maqamNamespace = buildEntityNamespace(
+        {
+          id: maqam.getId(),
+          idName,
+          displayName,
+        },
+        {
+          version: maqam.getVersion(),
+          inArabic,
+          displayNameAr: inArabic ? getMaqamNameDisplayAr(displayName) : undefined,
+        }
+      );
+
+      const familyNamespace = buildIdentifierNamespace(
+        {
+          idName: familyId,
+          displayName: familyDisplayFinal,
+        },
+        {
+          inArabic,
+          displayAr:
+            inArabic && familyDisplayFinal !== "unknown"
+              ? getMaqamNameDisplayAr(familyDisplayFinal)
+              : undefined,
+        }
+      );
+
+      const tonicNamespace = buildIdentifierNamespace(
+        {
+          idName: tonicId,
+          displayName: tonicDisplayRaw,
+        },
+        {
+          inArabic,
+          displayAr: inArabic ? getNoteNameDisplayAr(tonicDisplayRaw) : undefined,
+        }
+      );
+
+      const availability = availabilityEntries.map(({ tuningSystem, startingNoteNames }) => {
+        const startingNoteIdNames = startingNoteNames.map((name) => standardizeText(name));
+        const startingNoteDisplayNames = startingNoteNames;
+        const startingNoteDisplayNamesAr = inArabic
+          ? startingNoteNames.map((name) => getNoteNameDisplayAr(name))
+          : undefined;
+
+        const tuningSystemNamespace = buildEntityNamespace(
+          {
+            id: tuningSystem.getId(),
+            idName: standardizeText(tuningSystem.getId()),
+            displayName: tuningSystem.stringify(),
+          },
+          {
+            version: tuningSystem.getVersion(),
+            inArabic,
+            displayNameAr: inArabic
+              ? getTuningSystemDisplayNameAr(
+                  tuningSystem.getCreatorArabic() || "",
+                  tuningSystem.getCreatorEnglish() || "",
+                  tuningSystem.getYear(),
+                  tuningSystem.getTitleArabic() || "",
+                  tuningSystem.getTitleEnglish() || ""
+                )
+              : undefined,
+          }
+        );
+
+        const startingNotesNamespace = buildStringArrayNamespace(startingNoteIdNames, {
+          inArabic,
+          displayNames: startingNoteDisplayNames,
+          displayNamesAr: startingNoteDisplayNamesAr,
+        });
+
+        return {
+          tuningSystem: tuningSystemNamespace,
+          startingNotes: startingNotesNamespace,
+        };
+      });
 
       return {
-        id: maqam.getId(),
-        idName,
-        displayName: maqam.getName(),
-        version: maqam.getVersion(),
-        familyId,
-        familyDisplay,
-        tonicId,
-        tonicDisplay,
-        numberOfPitchClasses,
-        isOctaveRepeating,
-        hasAsymmetricDescending,
-        hasSuyur,
-        availableInTuningSystems,
-        tuningSystemsAvailability: tuningSystemsWithStartingNoteNames,
-        maqamDetailsUrl: `/api/maqamat/${idName}`
+        maqam: maqamNamespace,
+        family: familyNamespace,
+        tonic: tonicNamespace,
+        stats: {
+          numberOfPitchClasses,
+          availableInTuningSystems,
+        },
+        characteristics: {
+          isOctaveRepeating,
+          hasAsymmetricDescending,
+          hasSuyur,
+        },
+        availability: {
+          tuningSystems: availability,
+        },
+        links: buildLinksNamespace({
+          detail: `/api/maqamat/${idName}`,
+        }),
       };
     });
 
@@ -210,35 +318,34 @@ export async function GET(request: Request) {
     let filteredMaqamat = maqamatWithAvailability;
     if (familyFilter) {
       filteredMaqamat = filteredMaqamat.filter(
-        (m) => standardizeText(m.familyDisplay) === standardizeText(familyFilter)
+        (m) => m.family.idName === standardizeText(familyFilter)
       );
     }
     if (tonicFilter) {
       filteredMaqamat = filteredMaqamat.filter(
-        (m) => standardizeText(m.tonicDisplay) === standardizeText(tonicFilter)
+        (m) => m.tonic.idName === standardizeText(tonicFilter)
       );
     }
 
     // Apply sorting
-    if (sortBy === "alphabetical") {
-      // Sort alphabetically by display name (using standardized text for consistency)
-      filteredMaqamat.sort((a, b) => 
-        standardizeText(a.displayName).localeCompare(standardizeText(b.displayName))
-      );
-    } else {
-      // Default: Sort by NoteName order (first note of ascending scale)
+    if (sortBy === "tonic") {
+      // Sort by tonic note priority (NoteName.ts order)
       // Use standardized text for note name comparison to handle diacritics consistently
       filteredMaqamat.sort((a, b) => {
-        const priorityA = getNotePriority(standardizeText(a.tonicDisplay));
-        const priorityB = getNotePriority(standardizeText(b.tonicDisplay));
+        const priorityA = getNotePriority(a.tonic.idName);
+        const priorityB = getNotePriority(b.tonic.idName);
         return priorityA - priorityB;
       });
+    } else {
+      // Default: Sort alphabetically by display name (using standardized text for consistency)
+      filteredMaqamat.sort((a, b) => 
+        standardizeText(a.maqam.displayName).localeCompare(standardizeText(b.maqam.displayName))
+      );
     }
 
-    const response = NextResponse.json({
-      count: filteredMaqamat.length,
-      data: filteredMaqamat
-    });
+    const response = NextResponse.json(
+      buildListResponse(filteredMaqamat)
+    );
 
     return addCorsHeaders(response);
   } catch (error) {

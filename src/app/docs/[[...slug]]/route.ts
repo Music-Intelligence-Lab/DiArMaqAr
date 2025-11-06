@@ -11,6 +11,31 @@ export async function GET(
     const slug = params.slug || []
     const requestedPath = slug.join('/')
     
+    // Special handling for openapi.json - serve directly from source with no-cache
+    if (requestedPath === 'openapi.json') {
+      const openapiPath = path.join(process.cwd(), 'public', 'docs', 'openapi.json')
+      if (!fs.existsSync(openapiPath)) {
+        return NextResponse.json(
+          { error: 'OpenAPI specification not found' },
+          { status: 404 }
+        )
+      }
+      
+      const fileContents = fs.readFileSync(openapiPath, 'utf8')
+      const stats = fs.statSync(openapiPath)
+      
+      return new NextResponse(fileContents, {
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+          'Last-Modified': stats.mtime.toUTCString(),
+          'ETag': `"${stats.mtime.getTime()}-${stats.size}"`,
+        },
+      })
+    }
+    
     // Build the file path
     let filePath: string
     if (!requestedPath || requestedPath === '') {

@@ -8,8 +8,23 @@ description: Complete REST API documentation for the Digital Arabic Maqām Archi
 The DiArMaqAr API provides programmatic access to maqām, jins, and tuning-system data with comprehensive documentation and examples.
 
 <ClientOnly>
-  <OASpec spec-url="/docs/openapi.json" />
+  <OASpec :spec-url="openApiUrl" />
 </ClientOnly>
+
+<script setup>
+import { ref, onMounted } from 'vue'
+
+// Generate cache-busting URL once on mount
+// The API route at /api/openapi.json already has strict no-cache headers,
+// but this provides an extra layer of cache-busting for browser/client-side caches
+const openApiUrl = ref('/api/openapi.json')
+
+onMounted(() => {
+  // Add timestamp query parameter to ensure fresh fetch on each page load
+  // The API route reads this parameter and includes it in response headers
+  openApiUrl.value = `/api/openapi.json?v=${Date.now()}`
+})
+</script>
 
 ## Base URL
 

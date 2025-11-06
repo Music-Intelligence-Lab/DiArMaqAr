@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
 import { getPatterns } from "@/functions/import";
+import { standardizeText } from "@/functions/export";
 import { addCorsHeaders, handleCorsPreflightRequest } from "@/app/api/cors";
 import { safeWriteFile } from "@/app/api/backup-utils";
 import path from "path";
+import { buildEntityNamespace, buildListResponse } from "@/app/api/response-shapes";
 
 export const OPTIONS = handleCorsPreflightRequest;
 
@@ -15,20 +17,22 @@ export async function GET() {
   try {
     const patterns = getPatterns();
     
-    const patternsData = patterns.map((pattern) => {
-      return {
-        id: pattern.getId(),
-        displayName: pattern.getName(),
-        version: pattern.getVersion(),
-      };
-    });
+    const patternItems = patterns.map((pattern) => ({
+      pattern: buildEntityNamespace(
+        {
+          id: pattern.getId(),
+          idName: standardizeText(pattern.getName()).toLowerCase(),
+          displayName: pattern.getName(),
+        },
+        {
+          version: pattern.getVersion(),
+        }
+      ),
+    }));
 
-    const response = NextResponse.json({
-      patterns: patternsData,
-      meta: {
-        total: patternsData.length,
-      },
-    });
+    const response = NextResponse.json(
+      buildListResponse(patternItems)
+    );
 
     return addCorsHeaders(response);
   } catch (error) {

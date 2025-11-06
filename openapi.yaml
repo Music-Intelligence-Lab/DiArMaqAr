@@ -3,22 +3,20 @@ info:
   title: DiArMaqAr API
   version: 1.0.0
   description: |
-    Digital Archive of Maqām and Ajnās — programmatic access to maqām, jins, and tuning-system data
+    Digital Arabic Maqām Archive (DiArMaqAr) — programmatic access to Arabic maqāmāt, ajnās, and tuning systems data
 
     Key features:
-    - Comprehensive maqāmāt and ajnās data with historical source attribution
-    - Multiple tuning systems and starting-note contexts
-    - Multiple pitch-data formats (frequency, cents, fraction, decimalRatio, stringLength, MIDI, and more)
-    - Ajnās are included by default in maqām responses to support musicological analysis
-    - Modulation networks and transposition support
+    - Comprehensive maqāmāt and ajnās database with bibliographic source attribution
+    - Tuning systems spanning 1000+ years with multiple starting note contexts
+    - Comprehensive pitch class data formats (fractions ratios, decimal ratio, string length, fret divisions, frequency, cents, MIDI notes, and more)
+    - Tuning system sensitive transpositions and modulations via al-Shawwā's 1946 modulation guidelines
 
-    Documentation follows the project's standards: Arabic terminology is primary and examples are taken from real export files.
   contact:
-    name: DiArMaqAr Project
+    name: DiArMaqAr 
     url: https://github.com/Music-Intelligence-Lab/DiArMaqAr
   license:
-    name: MIT
-    url: https://opensource.org/licenses/MIT
+    name: CC-BY-NC-SA 4.0
+    url: https://creativecommons.org/licenses/by-nc-sa/4.0/
 
 servers:
   - url: http://localhost:3000/api
@@ -32,36 +30,86 @@ paths:
         - Maqāmāt
       summary: List all maqāmāt
       description: |
-        Retrieve a list of all available maqāmāt with optional filtering and sorting.
-        Returns basic metadata without pitch data.
+        Retrieve all available maqāmāt with optional filtering and sorting.
+        
+        Returns concise metadata (no pitch class data) including:
+        - URL-safe identifiers and display names for each maqām
+        - Maqām family and maqām tonic identifiers (both URL-safe and display formats)
+        - Availability counts across tuning systems with their valid starting note names (e.g., "ʿushayrān", "yegāh" etc...)
+        - Filter values must be URL-safe; see parameter enums for complete list of valid options
       operationId: listMaqamat
       parameters:
-        - name: sort
+        - name: filterByFamily
           in: query
-          description: Sort field for results
+          description: Filter by maqām family name (URL-safe, case-insensitive, diacritics-insensitive)
           schema:
             type: string
-            enum: [id, name, family, transpositions, maqamModulations, ajnasModulations]
-            default: id
-        - name: order
+            enum:
+              - ajam
+              - athar_kurd
+              - awj_ara
+              - bayyat
+              - buselik
+              - chahargah
+              - hijaz
+              - iraq
+              - kurd
+              - nahawand
+              - nikriz
+              - no_jins
+              - rast
+              - saba
+              - saba_zamzam
+              - segah
+          example: rast
+        - name: filterByTonic
           in: query
-          description: Sort order
+          description: Filter by maqām tonic/first note (URL-safe, case-insensitive, diacritics-insensitive)
           schema:
             type: string
-            enum: [asc, desc]
-            default: asc
-        - name: family
-          in: query
-          description: Filter by maqām family name
-          schema:
-            type: string
+            enum:
+              - ajam_ushayran
+              - chahargah
+              - dugah
+              - iraq
+              - nawa
+              - rast
+              - segah
+              - ushayran
+              - yegah
             example: rast
-        - name: search
+        - name: sortBy
           in: query
-          description: Search by maqām name (partial match)
+          description: Sort order for results
           schema:
             type: string
-            example: hijaz
+            enum: [tonic, alphabetical]
+            default: alphabetical
+          examples:
+            tonic:
+              value: tonic
+              summary: Sort by tonic note priority (NoteName.ts order)
+            alphabetical:
+              value: alphabetical
+              summary: Sort alphabetically by display name
+        - name: inArabic
+          in: query
+          required: false
+          description: |
+            Return bilingual responses with Arabic script when true.
+            
+            When true:
+            - All English/transliteration fields remain unchanged
+            - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+            - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+            - Comments get Arabic versions in commentsAr if available
+            - Tuning system display names get Arabic versions in displayNameAr if available
+            - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "false"
+          example: "false"
       responses:
         '200':
           description: List of maqāmāt retrieved successfully
@@ -69,69 +117,133 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MaqamatListResponse'
-              example:
-                count: 60
-                data:
-                  - id: "29"
-                    idName: "maqam_yegah"
-                    displayName: "maqām yegāh"
-                    version: "2025-10-18T19:41:17.132Z"
-                    familyId: "no_jins"
-                    familyDisplay: "no jins"
-                    tonicId: "yegah"
-                    tonicDisplay: "yegāh"
-                    numberOfPitchClasses: 7
-                    isOctaveRepeating: true
-                    hasAsymmetricDescending: true
-                    hasSuyur: true
-                    availableInTuningSystems: 4
-                    tuningSystemsAvailability:
-                      - tuningSystemId: "al-Farabi-(950g)"
-                        tuningSystemStartingNoteNames: ["ʿushayrān"]
-                      - tuningSystemId: "CairoCongressTuningCommittee-(1929)"
-                        tuningSystemStartingNoteNames: ["yegāh"]
-                      - tuningSystemId: "al-Sabbagh-(1954)"
-                        tuningSystemStartingNoteNames: ["rāst"]
-                      - tuningSystemId: "Allami-(2025)"
-                        tuningSystemStartingNoteNames: ["rāst"]
-                    maqamDetailsUrl: "/api/maqamat/maqam_yegah"
-                  - id: "30"
-                    idName: "maqam_farahfazza"
-                    displayName: "maqām faraḥfazzā"
-                    version: "2025-10-18T19:41:17.132Z"
-                    familyId: "no_jins"
-                    familyDisplay: "no jins"
-                    tonicId: "yegah"
-                    tonicDisplay: "yegāh"
-                    numberOfPitchClasses: 7
-                    isOctaveRepeating: true
-                    hasAsymmetricDescending: true
-                    hasSuyur: true
-                    availableInTuningSystems: 35
-                    tuningSystemsAvailability:
-                      - tuningSystemId: "Ronzevalle-(1904)"
-                        tuningSystemStartingNoteNames: ["ʿushayrān", "yegāh"]
-                      - tuningSystemId: "al-Farabi-(950g)"
-                        tuningSystemStartingNoteNames: ["ʿushayrān"]
+              examples:
+                default:
+                  summary: Default response (inArabic=false)
+                  value:
+                    count: 60
+                    data:
+                      - id: "29"
+                        idName: "maqam_yegah"
+                        displayName: "maqām yegāh"
+                        version: "2025-10-18T19:41:17.132Z"
+                        familyId: "no_jins"
+                        familyDisplay: "no jins"
+                        tonicId: "yegah"
+                        tonicDisplay: "yegāh"
+                        numberOfPitchClasses: 7
+                        isOctaveRepeating: true
+                        hasAsymmetricDescending: true
+                        hasSuyur: true
+                        availableInTuningSystems: 4
+                        tuningSystemsAvailability:
+                          - tuningSystemId: "al-Farabi-(950g)"
+                            tuningSystemStartingNoteNames: ["ʿushayrān"]
+                          - tuningSystemId: "CairoCongressTuningCommittee-(1929)"
+                            tuningSystemStartingNoteNames: ["yegāh"]
+                          - tuningSystemId: "al-Sabbagh-(1954)"
+                            tuningSystemStartingNoteNames: ["rāst"]
+                          - tuningSystemId: "Allami-(2025)"
+                            tuningSystemStartingNoteNames: ["rāst"]
+                        maqamDetailsUrl: "/api/maqamat/maqam_yegah"
+                      - id: "30"
+                        idName: "maqam_farahfazza"
+                        displayName: "maqām faraḥfazzā"
+                        version: "2025-10-18T19:41:17.132Z"
+                        familyId: "no_jins"
+                        familyDisplay: "no jins"
+                        tonicId: "yegah"
+                        tonicDisplay: "yegāh"
+                        numberOfPitchClasses: 7
+                        isOctaveRepeating: true
+                        hasAsymmetricDescending: true
+                        hasSuyur: true
+                        availableInTuningSystems: 35
+                        tuningSystemsAvailability:
+                          - tuningSystemId: "Ronzevalle-(1904)"
+                            tuningSystemStartingNoteNames: ["ʿushayrān", "yegāh"]
+                          - tuningSystemId: "al-Farabi-(950g)"
+                            tuningSystemStartingNoteNames: ["ʿushayrān"]
+                        maqamDetailsUrl: "/api/maqamat/maqam_farahfazza"
+                bilingual:
+                  summary: Bilingual response (inArabic=true)
+                  value:
+                    count: 60
+                    data:
+                      - id: "29"
+                        idName: "maqam_yegah"
+                        displayName: "maqām yegāh"
+                        displayNameAr: "مقام يگاه"
+                        version: "2025-10-18T19:41:17.132Z"
+                        familyId: "no_jins"
+                        familyDisplay: "no jins"
+                        familyDisplayAr: "لا جنس"
+                        tonicId: "yegah"
+                        tonicDisplay: "yegāh"
+                        tonicDisplayAr: "يگاه"
+                        numberOfPitchClasses: 7
+                        isOctaveRepeating: true
+                        hasAsymmetricDescending: true
+                        hasSuyur: true
+                        availableInTuningSystems: 4
+                        tuningSystemsAvailability:
+                          - tuningSystemId: "al-Farabi-(950g)"
+                            tuningSystemStartingNoteNames: ["ʿushayrān"]
+                            tuningSystemStartingNoteNamesAr: ["عشيران"]
+                          - tuningSystemId: "CairoCongressTuningCommittee-(1929)"
+                            tuningSystemStartingNoteNames: ["yegāh"]
+                            tuningSystemStartingNoteNamesAr: ["يگاه"]
+                        maqamDetailsUrl: "/api/maqamat/maqam_yegah"
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                emptyFamily:
+                  summary: Empty filterByFamily parameter
+                  value:
+                    error: "Invalid parameter: filterByFamily"
+                    message: "The 'filterByFamily' parameter cannot be empty. Either omit it or provide a valid maqām family name."
+                    hint: "Remove '?filterByFamily=' from your URL or specify a family like '?filterByFamily=rast'"
+                emptyTonic:
+                  summary: Empty filterByTonic parameter
+                  value:
+                    error: "Invalid parameter: filterByTonic"
+                    message: "The 'filterByTonic' parameter cannot be empty. Either omit it or provide a valid tonic note name."
+                    hint: "Remove '?filterByTonic=' from your URL or specify a tonic like '?filterByTonic=rast'"
         '500':
           $ref: '#/components/responses/ServerError'
 
-  /maqamat/{id}:
+  /maqamat/{idName}:
     get:
       tags:
         - Maqāmāt
       summary: Get detailed maqām data
       description: |
-        Retrieve comprehensive data for a specific maqām including:
-        - Pitch data in the requested tuning system and starting note
-        - **Ajnās data** (always included)
-        - Optional intervals, modulations, and suyūr
-
-        The response includes both ascending and descending pitch sequences with their 
-        corresponding ajnās structures.
+        Retrieve comprehensive data for a specific maqām on its conventional or a transposed tonic, in a specific tuning system on a specific starting note name.
+        
+        Returns:
+        - Comprehensive pitch class data in the requested tuning system and starting note name
+        - All ajnās present at each maqām degree in the ascending and descending maqām structure, organized by their maqām degree note names
+        - Optional intervals data, transposition to different tonics, tuning-system-specific modulations (including lower octave), and suyūr
+        
+        Parameter Discovery:
+        - Use options=true to discover valid values for all parameters including dynamically calculated transposition options
+        - Especially useful for finding valid tuning system starting notes and transposition tonics for a specific maqām
+        
+        Important:
+        - When options=true, the endpoint returns parameter discovery metadata instead of maqām data
+        - This mode is mutually exclusive with data-returning parameters (transpose to, include modulations, include lower octave modulations, include suyūr, pitch class data type, intervals)
+        - If data-returning parameters are provided with options=true, the API returns a 400 Bad Request error with details about conflicting parameters
+        
+        Requirements:
+        - Tuning system and starting note are required for all requests (both data retrieval and discovery mode)
+        - These are fundamental to all pitch class calculations
       operationId: getMaqam
       parameters:
-        - name: id
+        - name: idName
           in: path
           required: true
           description: URL-safe maqām identifier
@@ -147,7 +259,7 @@ paths:
         - name: tuningSystem
           in: query
           required: true
-          description: Tuning system identifier
+          description: Tuning system identifier (e.g., 'IbnSina-(1037)', 'al-Farabi-(950i)', 'Anglo-European-(1700)')
           schema:
             type: string
           examples:
@@ -155,15 +267,20 @@ paths:
               value: "IbnSina-(1037)"
               summary: Ibn Sīnā 17-tone system
             farabi:
-              value: "al-Farabi-(950g)"
-              summary: al-Fārābī 24-tone system
-            edo12:
-              value: "12-EDO"
+              value: "al-Farabi-(950i)"
+              summary: al-Fārābī tuning system
+            angloEuropean:
+              value: "Anglo-European-(1700)"
               summary: 12-tone equal temperament
         - name: startingNote
           in: query
-          required: false
-          description: Starting note for transposition (diacritics-insensitive). If omitted, API may return transposition options in meta/context.
+          required: true
+          description: |
+            Tuning system starting note name (URL-safe, diacritics-insensitive).
+            
+            - Mandatory for all pitch class calculations
+            - Different starting notes represent different theoretical frameworks within the same tuning system
+            - Examples: ʿushayrān for oud tuning, yegāh for monochord measurements
           schema:
             type: string
           examples:
@@ -176,55 +293,102 @@ paths:
             dugah:
               value: "dugah"
               summary: dūgāh
-        - name: pitchClassDataType
+        - name: options
           in: query
           description: |
-            Specifies which pitch class data type to return for each pitch. Use `all` for complete pitch class data. 
-            Default is `frequency`. Each option returns the specified data type for all pitch classes in the maqām.
+            When true, returns available parameter options instead of maqām data.
+            
+            - Useful for discovering valid values for tuning systems, starting notes, and other parameters
+            - Tuning system and starting note are required for all requests (both data retrieval and discovery mode)
+            - These are fundamental to all pitch class calculations and calculate valid starting note options and transposition tonics
+            - Mutually exclusive with data-returning parameters (transpose to, include modulations, include lower octave modulations, include suyūr, pitch class data type, intervals)
+            - Transposition options are dynamically calculated based on the specific maqām, tuning system, and starting note combination
+            - Only tonics where the maqām can be validly transposed (preserving interval pattern) are included, not all possible pitch classes
+            - If data-returning parameters are provided, returns 400 Bad Request error with details about conflicting parameters
+          schema:
+            type: string
+            enum: [true, false]
+            default: false
+          example: "true"
+        - name: pitchClassDataType
+          in: query
+          required: false
+          description: |
+            Specifies which pitch class data type to return for each pitch class.
+            
+            - Required for data retrieval (when options is not set or false)
+            - Optional for discovery mode (when options=true) since discovery returns parameter metadata, not formatted data
+            - Use 'all' for complete pitch class data across all available formats
+            - Each option returns the specified data type for all pitch classes in the maqām
           schema:
             type: string
             enum: [all, frequency, cents, fraction, decimalRatio, stringLength, abjadName, fretDivision, midiNoteNumber, midiNoteDeviation, centsDeviation, referenceNoteName, englishName]
-            default: frequency
-        - name: view
+          example: "cents"
+        - name: transposeTo
           in: query
-          description: Data level to return
+          description: |
+            Transpose the maqām to a new tonic by preserving the interval patterns (URL-safe, diacritics-insensitive).
+            
+            - Only tonics where the maqām can be validly transposed in the specified tuning system and starting note are valid
+            - To see all valid transposition options, request available parameter options instead of maqām data
           schema:
             type: string
-            enum: [simple, intervals]
-            default: simple
-        - name: transposeToNote
-          in: query
-          description: Transpose the maqām to a specific tonic note (URL-safe)
-          schema:
-            type: string
+          example: nawa
         - name: intervals
           in: query
-          description: Include interval data between scale degrees
+          description: Include interval data between maqām degrees
           schema:
-            type: boolean
+            type: string
+            enum: [true, false]
             default: false
+          example: "true"
         - name: includeModulations
           in: query
           description: Include modulation possibilities to other maqāmāt and ajnās
           schema:
-            type: boolean
+            type: string
+            enum: [true, false]
             default: false
-        - name: includeLowerOctaveModulations
+          example: "true"
+        - name: includeModulations8vb
           in: query
-          description: Include modulations in the lower octave
+          description: Include available modulations an octave below
           schema:
-            type: boolean
+            type: string
+            enum: [true, false]
             default: false
+          example: "true"
         - name: includeSuyur
           in: query
           description: Include suyūr (melodic paths) data
           schema:
-            type: boolean
+            type: string
+            enum: [true, false]
             default: false
+          example: "true"
+        - name: inArabic
+          in: query
+          required: false
+          description: |
+            Return response data in Arabic script when true.
+            
+            When true:
+            - Note names, maqām names, and jins names are converted to Arabic script
+            - Comments return Arabic versions if available
+            - Tuning system display names use Arabic creator/title if available
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "false"
+          example: "false"
         # Note: ajnas are included by default and are not controlled by a query parameter
       responses:
         '200':
-          description: Maqām data retrieved successfully
+          description: |
+            Maqām data retrieved successfully.
+            
+            - When options is true, the response structure differs and returns available parameter options instead of maqām data
+            - In that case, transposition options contain only valid transposition tonics for this specific maqām, tuning system, and starting note combination
           content:
             application/json:
               schema:
@@ -238,17 +402,19 @@ paths:
                       idName: "maqam_rast"
                       displayName: "maqām rāst"
                       version: "2025-10-18T19:41:17.132Z"
-                      tonicName: "rast"
-                      tonicDisplayName: "rāst"
+                      tonicId: "rast"
+                      tonicDisplay: "rāst"
                       transposition: false
-                      maqamFamilyName: "rast"
-                      maqamFamilyDisplayName: "rāst"
+                      familyId: "rast"
+                      familyDisplay: "rāst"
                       numberOfTranspositions: 3
                       numberOfMaqamModulations: 28
                       numberOfAjnasModulations: 29
                       commentsEnglish: null
                       commentsArabic: null
                       sources: []
+                      pitchClassDataType: "cents"
+                      includeIntervals: false
                     context:
                       tuningSystem:
                         id: "IbnSina-(1037)"
@@ -257,13 +423,55 @@ paths:
                         originalValueType: "fraction"
                         numberOfPitchClassesSingleOctave: 17
                         numberOfPitchClassesAllOctaves: 68
-                      startingNote: "ushayran"
-                      referenceFrequency: 97.999
+                        tuningSystemStartingNoteNames: ["ʿushayrān", "yegāh"]
+                        tuningSystemStartingNoteNamesIds: ["ushayran", "yegah"]
+                        startingNoteName: "ushayran"
+                        referenceFrequency: 110
+                      pitchClassDataType: "cents"
+                      includeIntervals: false
+                transposed:
+                  summary: Transposed maqām (taṣwīr)
+                  value:
+                    maqam:
+                      id: "1"
+                      idName: "maqam_rast"
+                      displayName: "maqām rāst"
+                      version: "2025-10-18T19:41:17.132Z"
+                      tonicId: "nawa"
+                      tonicDisplay: "nawā"
+                      transposition: true
+                      originalTonicId: "rast"
+                      originalTonicDisplay: "rāst"
+                      transposedTonicId: "nawa"
+                      transposedTonicDisplay: "nawā"
+                      familyId: "rast"
+                      familyDisplay: "rāst"
+                      numberOfTranspositions: 3
+                      numberOfMaqamModulations: 28
+                      numberOfAjnasModulations: 29
+                      commentsEnglish: null
+                      commentsArabic: null
+                      sources: []
+                      pitchClassDataType: "all"
+                      includeIntervals: false
+                    context:
+                      tuningSystem:
+                        id: "IbnSina-(1037)"
+                        displayName: "Ibn Sīnā  (1037) 7-Fret Oud 17-Tone"
+                        version: "2025-10-18T19:42:23.643Z"
+                        originalValueType: "fraction"
+                        numberOfPitchClassesSingleOctave: 17
+                        numberOfPitchClassesAllOctaves: 68
+                        tuningSystemStartingNoteNames: ["ʿushayrān", "yegāh"]
+                        tuningSystemStartingNoteNamesIds: ["ushayran", "yegah"]
+                        startingNoteName: "ushayran"
+                        referenceFrequency: 110
                       pitchClassDataType: "all"
                       includeIntervals: false
                     pitchData:
                       ascending:
                         - pitchClassIndex: 4
+                          octave: 1
                           scaleDegree: "I"
                           noteName: "rast"
                           noteNameDisplay: "rāst"
@@ -279,6 +487,7 @@ paths:
                           centsDeviation: -5.865
                           ipnReferenceNoteName: "C"
                         - pitchClassIndex: 7
+                          octave: 1
                           scaleDegree: "II"
                           noteName: "dugah"
                           noteNameDisplay: "dūgāh"
@@ -289,6 +498,7 @@ paths:
                           frequency: 146.667
                       descending:
                         - pitchClassIndex: 16
+                          octave: 2
                           scaleDegree: "VII"
                           noteName: "ajam"
                           noteNameDisplay: "ʿajam"
@@ -300,46 +510,169 @@ paths:
                       descending:
                         ajam: { id: "7", idName: "jins_ajam", displayName: "jins ʿajam" }
                 withModulations:
-                  summary: With modulation networks
+                  summary: With modulation networks (reorganized structure)
                   value:
                     maqam:
                       id: "1"
                       idName: "maqam_rast"
                       displayName: "maqām rāst"
+                      tonicName: "rast"
+                      tonicDisplayName: "rāst"
+                      transposition: false
+                      pitchClassDataType: "cents"
+                      includeIntervals: false
                     context:
                       tuningSystem:
                         id: "IbnSina-(1037)"
                         displayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
-                      startingNote: "ushayran"
+                        startingNoteName: "ushayran"
                     pitchData:
                       ascending: []
                       descending: []
                     ajnas:
                       ascending:
-                        rast: { id: "3", idName: "jins_rast", displayName: "jins rāst" }
-                        dugah: { id: "5", idName: "jins_bayyat", displayName: "jins bayyāt" }
-                        segah: { id: "6", idName: "jins_segah", displayName: "jins segāh" }
+                        rast: { id: "19", idName: "jins_rast", displayName: "jins rāst" }
+                        dugah: { id: "2", idName: "jins_bayyat", displayName: "jins bayyāt" }
+                        segah: { id: "3", idName: "jins_segah", displayName: "jins segāh" }
                       descending:
-                        kurd: { id: "9", idName: "jins_kurd", displayName: "jins kurd" }
-                        nahawand: { id: "4", idName: "jins_nahawand", displayName: "jins nahāwand" }
-                        chahargah: { id: "12", idName: "jins_chahargah_(al-Shawwa)", displayName: "jins chahārgāh (al‑Shawwā)" }
+                        ajam: null
+                        husayni: { id: "7", idName: "jins_kurd_al-husayni", displayName: "jins kurd al-ḥusaynī" }
                     modulations:
                       maqamat:
-                        onFirstDegree: ["maqam_mahur", "maqam_suznak"]
-                        onSecondDegree: ["maqam_bayyat", "maqam_husayni"]
-                        onThirdDegree: ["maqam_sikah", "maqam_huzam"]
+                        - maqamDegree: "I"
+                          noteNameId: "rast"
+                          noteNameDisplay: "rāst"
+                          pitchClassIndex: 4
+                          count: 8
+                          modulations:
+                            - id: "4"
+                              idName: "maqam_hijaz_kar_kurd"
+                              displayName: "maqām ḥijāz kār kurd"
+                            - id: "5"
+                              idName: "maqam_nikriz"
+                              displayName: "maqām nikrīz"
+                        - maqamDegree: "III"
+                          noteNameId: "segah"
+                          noteNameDisplay: "segāh"
+                          pitchClassIndex: 9
+                          count: 5
+                          modulations:
+                            - id: "19"
+                              idName: "maqam_segah"
+                              displayName: "maqām segāh"
+                            - id: "20"
+                              idName: "maqam_huzam"
+                              displayName: "maqām huzām"
+                        - maqamDegree: "VI"
+                          noteNameId: "husayni"
+                          noteNameDisplay: "ḥusaynī"
+                          pitchClassIndex: 0
+                          maqamDegreeDirection: "ascending"
+                          count: 3
+                          modulations:
+                            - id: "13"
+                              idName: "maqam_bayyat_shuri_al-husayni"
+                              displayName: "maqām bayyāt shūrī al-ḥusaynī"
                       ajnas:
-                        onFirstDegree: ["jins_rast", "jins_mahur"]
-                        onSecondDegree: ["jins_bayyat", "jins_husayni"]
+                        - jinsDegree: "I"
+                          noteNameId: "rast"
+                          noteNameDisplay: "rāst"
+                          pitchClassIndex: 4
+                          count: 5
+                          modulations:
+                            - id: "6"
+                              idName: "jins_nahawand"
+                              displayName: "jins nahāwand"
+                            - id: "19"
+                              idName: "jins_rast"
+                              displayName: "jins rāst"
+                        - jinsDegree: "III"
+                          noteNameId: "segah"
+                          noteNameDisplay: "segāh"
+                          pitchClassIndex: 9
+                          count: 4
+                          modulations:
+                            - id: "3"
+                              idName: "jins_segah"
+                              displayName: "jins segāh"
+                withOptions:
+                  summary: Options response (when options=true)
+                  value:
+                    maqam: "maqām rāst"
+                    tuningSystem: "IbnSina-(1037)"
+                    availableParameters:
+                      tuningSystem:
+                        required: true
+                        description: "ID of tuning system (see /availability for options)"
+                      startingNote:
+                        options: ["ushayran", "yegah"]
+                        default: "ushayran"
+                        description: "Theoretical framework for note naming"
+                      pitchClassDataType:
+                        options: ["all", "frequency", "cents", "fraction", "decimalRatio", "stringLength", "abjadName", "fretDivision", "midiNoteNumber", "midiNoteDeviation", "centsDeviation", "referenceNoteName", "englishName"]
+                        default: "cents"
+                        description: "Output format for pitch data. Use 'all' for complete pitch class information."
+                      intervals:
+                        type: "boolean"
+                        default: false
+                        description: "Include interval data between pitch classes"
+                      transposeTo:
+                        options: ["rast", "nawa", "dugah"]
+                        default: null
+                        description: "Transpose to specific tonic (taṣwīr) - only valid transpositions shown"
+                      includeModulations:
+                        type: "boolean"
+                        default: false
+                        description: "Include modulation analysis (maqāmāt and ajnās)"
+                      includeModulations8vb:
+                        type: "boolean"
+                        default: false
+                        description: "Include available modulations an octave below"
+                      includeSuyur:
+                        type: "boolean"
+                        default: false
+                        description: "Include documented performance practices (suyūr)"
+                    notes:
+                      ajnasData: "Ajnās (constituent melodic structures) are always included in the response for maqām analysis"
+                      formatOptions: "The 'pitchClassDataType' parameter controls which pitch class properties are returned. Use 'all' for comprehensive data or specific formats like 'cents', 'fraction', etc. for targeted data."
+                    examples:
+                      - "/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=ushayran&pitchClassDataType=cents&intervals=true"
+                      - "/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=ushayran&transposeTo=nawa&includeModulations=true"
         '400':
           description: Invalid request parameters
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-              example:
-                error: "Missing required parameters"
-                details: "tuningSystem and startingNote are required"
+              examples:
+                conflictingParametersWithOptions:
+                  summary: Conflicting parameters with options=true
+                  description: When options=true is used with data-returning parameters, the API returns a 400 Bad Request error
+                  value:
+                    error: "Conflicting parameters with options=true"
+                    message: "The following data-returning parameters cannot be used with options=true (parameter discovery mode): intervals"
+                    hint: "Use options=true for parameter discovery. Contextual parameters (tuningSystem, startingNote) are optional but enhance discovery (e.g., show actual transposition options). Remove all data-returning parameters to use discovery mode, or remove options=true to retrieve maqām data."
+                    conflictingParameters: ["intervals"]
+                    contextualParametersAllowed: ["tuningSystem", "startingNote"]
+                missingTuningSystem:
+                  summary: Missing required tuningSystem parameter
+                  value:
+                    error: "tuningSystem parameter is required"
+                    hint: "Use /api/maqamat/{idName}/availability to see available tuning systems"
+                    availabilityUrl: "/api/maqamat/{idName}/availability"
+                missingStartingNote:
+                  summary: Missing required startingNote parameter
+                  value:
+                    error: "startingNote parameter is required"
+                    message: "A tuning system starting note must be specified. This is mandatory for all pitch class calculations."
+                    validOptions: ["ʿushayrān", "yegāh"]
+                    hint: "Add &startingNote=ʿushayrān to your request"
+                invalidStartingNote:
+                  summary: Invalid startingNote value
+                  value:
+                    error: "Invalid startingNote 'invalid_note'"
+                    validOptions: ["ʿushayrān", "yegāh"]
+                    hint: "Valid starting notes for this tuning system: ʿushayrān, yegāh"
         '404':
           description: Maqām not found
           content:
@@ -347,32 +680,63 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
               example:
-                error: "Maqām not found"
-                details: "No maqām with id 'maqam_invalid' exists"
+                error: "Maqām 'maqam_invalid' not found"
+                hint: "Use /api/maqamat to see all available maqāmāt"
+        '422':
+          description: Maqām cannot be realized in the specified tuning system
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "Maqām 'maqam_bestenegar' cannot be realized in tuning system 'IbnSina-(1037)' with starting note 'ushayran'"
+                hint: "Use /api/maqamat/{idName}/availability to see compatible tuning systems"
         '500':
           $ref: '#/components/responses/ServerError'
 
-  /maqamat/{id}/availability:
+  /maqamat/{idName}/availability:
     get:
       tags:
         - Maqāmāt
       summary: Check maqām availability across tuning systems
       description: |
-        Returns which tuning systems support a specific maqām and the valid starting notes
-        for each tuning system. This provides fast availability information without 
-        generating full pitch data.
+        Return tuning-system availability for a maqām.
         
-        **Important**: Uses 3-octave checking to correctly handle non-octave-repeating maqāmāt
-        (those with >7 pitch classes).
+        - Shows which tuning systems on which starting note names can realize the specified maqām
+        - If `transpositionNoteName` is provided, filters results to show only tuning systems where the maqām can be transposed to that specific note
+        - Validity is computed against each tuning system's note name sets and the maqām's pitch class intervals
+        - Tuning system starting note names are returned as both display values (with diacritics) and URL-safe identifiers
       operationId: getMaqamAvailability
       parameters:
-        - name: id
+        - name: idName
           in: path
           required: true
           description: URL-safe maqām identifier
           schema:
             type: string
           example: "maqam_rast"
+        - name: transpositionNoteName
+          in: query
+          required: false
+          description: Filter results to show only tuning systems where the maqām can be transposed to this specific note (URL-safe, diacritics-insensitive)
+          schema:
+            type: string
+          example: "nawa"
+        - name: inArabic
+          in: query
+          required: false
+          description: |
+            Return response data in Arabic script when true.
+            
+            When true:
+            - Note names, maqām names, and jins names are converted to Arabic script
+            - Comments return Arabic versions if available
+            - Tuning system display names use Arabic creator/title if available
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "false"
+          example: "false"
       responses:
         '200':
           description: Availability information retrieved successfully
@@ -389,37 +753,84 @@ paths:
                     properties:
                       id:
                         type: string
+                        description: Numeric identifier for the maqām
                       idName:
                         type: string
-                      name:
+                        description: URL-safe identifier for the maqām (e.g., "maqam_rast")
+                      displayName:
                         type: string
+                        description: Display name with diacritics (e.g., "Maqam Rāst")
+                      transpositionNoteName:
+                        type: string
+                        description: The transposition note name filter applied (present only when transpositionNoteName parameter is provided)
+                        example: "nawa"
                       version:
                         type: string
+                        description: ISO 8601 timestamp of last modification
                   availability:
                     type: object
                     properties:
                       count:
                         type: integer
-                        description: Number of tuning systems supporting this maqām
+                        description: Number of tuning systems supporting this maqām (or supporting the specified transposition if transpositionNoteName is provided)
                       tuningSystems:
                         type: array
+                        description: Array of tuning systems where this maqām is available (filtered by transposition if transpositionNoteName is provided)
                         items:
                           $ref: '#/components/schemas/TuningSystemAvailability'
-              example:
-                maqam:
-                  id: "1"
-                  idName: "maqam_rast"
-                  name: "maqām rāst"
-                  version: "2025-10-18T19:41:17.132Z"
-                availability:
-                  count: 29
-                  tuningSystems:
-                    - tuningSystemId: "IbnSina-(1037)"
-                      tuningSystemStartingNoteNames: ["ʿushayrān", "yegāh"]
-                    - tuningSystemId: "al-Farabi-(950g)"
-                      tuningSystemStartingNoteNames: ["ʿushayrān", "yegāh"]
-                    - tuningSystemId: "al-Sabbagh-(1954)"
-                      tuningSystemStartingNoteNames: ["rāst"]
+              examples:
+                withoutTransposition:
+                  summary: Without transposition filter
+                  value:
+                    maqam:
+                      id: "1"
+                      idName: "maqam_rast"
+                      displayName: "Maqam Rāst"
+                      version: "2025-10-18T19:41:17.132Z"
+                    availability:
+                      count: 29
+                      tuningSystems:
+                        - tuningSystemId: "IbnSina-(1037)"
+                          tuningSystemDisplayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
+                          tuningSystemStartingNoteNames: ["ʿushayrān", "yegāh"]
+                          tuningSystemStartingNoteNamesIds: ["ushayran", "yegah"]
+                        - tuningSystemId: "al-Farabi-(950g)"
+                          tuningSystemDisplayName: "al-Fārābī (950g) First Oud Tuning (Full First Octave)"
+                          tuningSystemStartingNoteNames: ["ʿushayrān", "yegāh"]
+                          tuningSystemStartingNoteNamesIds: ["ushayran", "yegah"]
+                withTransposition:
+                  summary: With transposition filter (transpositionNoteName=nawa)
+                  value:
+                    maqam:
+                      id: "1"
+                      idName: "maqam_rast"
+                      displayName: "Maqam Rāst"
+                      transpositionNoteName: "nawa"
+                      version: "2025-10-18T19:41:17.132Z"
+                    availability:
+                      count: 15
+                      tuningSystems:
+                        - tuningSystemId: "IbnSina-(1037)"
+                          tuningSystemDisplayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
+                          tuningSystemStartingNoteNames: ["ʿushayrān"]
+                          tuningSystemStartingNoteNamesIds: ["ushayran"]
+                        - tuningSystemId: "al-Farabi-(950g)"
+                          tuningSystemDisplayName: "al-Fārābī (950g) First Oud Tuning (Full First Octave)"
+                          tuningSystemStartingNoteNames: ["ʿushayrān", "yegāh"]
+                          tuningSystemStartingNoteNamesIds: ["ushayran", "yegah"]
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                emptyTranspositionNoteName:
+                  summary: Empty transpositionNoteName parameter
+                  value:
+                    error: "Invalid parameter: transpositionNoteName"
+                    message: "The 'transpositionNoteName' parameter cannot be empty."
+                    hint: "Provide a valid note name like ?transpositionNoteName=nawa or remove the parameter"
         '404':
           description: Maqām not found
           content:
@@ -437,8 +848,29 @@ paths:
       tags:
         - Tuning Systems
       summary: List all tuning systems
-      description: Retrieve metadata for all available tuning systems
+      description: |
+        Retrieve metadata for all available tuning systems.
+        
+        - Includes identifiers, display names, version information, primary value type, and pitch class counts per octave
+        - Responses include available starting note names for each tuning system
+        - Different starting notes represent different theoretical frameworks (e.g., ʿushayrān for oud tuning, yegāh for monochord measurements)
       operationId: listTuningSystems
+      parameters:
+        - name: inArabic
+          in: query
+          required: false
+          description: |
+            Return response data in Arabic script when true.
+            
+            When true:
+            - Note names, maqām names, and jins names are converted to Arabic script
+            - Comments return Arabic versions if available
+            - Tuning system display names use Arabic creator/title if available
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "false"
+          example: "false"
       responses:
         '200':
           description: List of tuning systems
@@ -446,7 +878,13 @@ paths:
             application/json:
               schema:
                 type: object
+                required:
+                  - count
+                  - tuningSystems
                 properties:
+                  count:
+                    type: integer
+                    description: Total number of tuning systems in the dataset
                   tuningSystems:
                     type: array
                     items:
@@ -457,77 +895,2245 @@ paths:
                       total:
                         type: integer
                         description: Total number of tuning systems
-              example:
-                tuningSystems:
-                  - id: "IbnSina-(1037)"
-                    displayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
-                    version: "2025-10-18T19:42:23.643Z"
-                    year: "1037"
-                    numberOfPitchClassesSingleOctave: 17
-                    tuningSystemStartingNoteNames: ["ʿushayrān", "yegāh"]
-                    numberOfTuningSystemStartingNoteNames: 2
-                  - id: "al-Farabi-(950g)"
-                    displayName: "al-Fārābī (950) 27-Tone System"
-                    version: "2025-10-18T19:42:23.643Z"
-                    year: "950"
-                    numberOfPitchClassesSingleOctave: 27
-                    tuningSystemStartingNoteNames: ["ʿushayrān", "yegāh"]
-                    numberOfTuningSystemStartingNoteNames: 2
-                meta:
-                  total: 35
+              examples:
+                english:
+                  summary: English display names (default, inArabic=false)
+                  value:
+                    count: 35
+                    tuningSystems:
+                      - id: "IbnSina-(1037)"
+                        displayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
+                        version: "2025-10-18T19:42:23.643Z"
+                        year: "1037"
+                        numberOfPitchClassesSingleOctave: 17
+                        tuningSystemStartingNoteNames: ["ʿushayrān", "yegāh"]
+                        tuningSystemStartingNoteNamesIds: ["ushayran", "yegah"]
+                      - id: "al-Farabi-(950g)"
+                        displayName: "al-Fārābī (950g) First Oud Tuning (Full First Octave) 27-Tone"
+                        version: "2025-10-18T19:42:23.643Z"
+                        year: "950g"
+                        numberOfPitchClassesSingleOctave: 27
+                        tuningSystemStartingNoteNames: ["ʿushayrān", "yegāh"]
+                        tuningSystemStartingNoteNamesIds: ["ushayran", "yegah"]
+                    meta:
+                      total: 35
+                arabic:
+                  summary: Arabic display names (inArabic=true)
+                  value:
+                    count: 35
+                    tuningSystems:
+                      - id: "IbnSina-(1037)"
+                        displayName: "ابن سينا (1037) 7-Fret Oud 17-Tone"
+                        version: "2025-10-18T19:42:23.643Z"
+                        year: "1037"
+                        numberOfPitchClassesSingleOctave: 17
+                        tuningSystemStartingNoteNames: ["عشيران", "يگاه"]
+                        tuningSystemStartingNoteNamesIds: ["ushayran", "yegah"]
+                      - id: "al-Farabi-(950g)"
+                        displayName: "الفارابي (950g) تنغيم العود الأول (الديوان الأول الكامل) ٢٧-نغمة"
+                        version: "2025-10-18T19:42:23.643Z"
+                        year: "950g"
+                        numberOfPitchClassesSingleOctave: 27
+                        tuningSystemStartingNoteNames: ["عشيران", "يگاه"]
+                        tuningSystemStartingNoteNamesIds: ["ushayran", "yegah"]
+                    meta:
+                      total: 35
         '500':
           $ref: '#/components/responses/ServerError'
 
-  /availability:
+  /maqamat/{idName}/transpositions:
     get:
       tags:
-        - Availability
-      summary: Check maqām availability in tuning system
+        - Maqāmāt
+      summary: List transpositions for a maqām
       description: |
-        Check if a specific maqām can be represented in a given tuning system.
-        Returns availability status and reasoning.
-      operationId: checkAvailability
+        List all available transposition options for a maqām within a specific tuning system and starting note.
+        
+        Returns all tonic transpositions that are feasible under the tuning system across all octaves.
+      operationId: listMaqamTranspositions
       parameters:
-        - name: maqamId
-          in: query
+        - name: idName
+          in: path
           required: true
+          description: URL-safe maqām identifier
           schema:
             type: string
-          example: maqam_rast
-        - name: tuningSystemId
+          example: "maqam_rast"
+        - name: tuningSystem
           in: query
           required: true
+          description: Tuning system identifier (e.g., 'IbnSina-(1037)', 'al-Farabi-(950i)', 'Anglo-European-(1700)')
           schema:
             type: string
           example: "IbnSina-(1037)"
+        - name: startingNote
+          in: query
+          required: true
+          description: Tuning system starting note name (URL-safe, diacritics-insensitive)
+          schema:
+            type: string
+          example: "yegah"
+        - name: inArabic
+          in: query
+          required: false
+          description: |
+            Return response data in Arabic script when true.
+            
+            When true:
+            - Note names, maqām names, and jins names are converted to Arabic script
+            - Comments return Arabic versions if available
+            - Tuning system display names use Arabic creator/title if available
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "false"
+          example: "false"
       responses:
         '200':
-          description: Availability check result
+          description: Transpositions retrieved successfully
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  available:
-                    type: boolean
                   maqam:
-                    type: string
-                  tuningSystem:
-                    type: string
-                  reason:
-                    type: string
-                    nullable: true
-              example:
-                available: true
-                maqam: "maqam_rast"
-                tuningSystem: "IbnSina-(1037)"
-                reason: null
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: Numeric identifier for the maqām
+                      idName:
+                        type: string
+                        description: URL-safe identifier for the maqām
+                      displayName:
+                        type: string
+                        description: Display name with diacritics (e.g., "Maqam Rāst")
+                      version:
+                        type: string
+                        description: ISO 8601 timestamp of last modification
+                  context:
+                    type: object
+                    properties:
+                      tuningSystem:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            description: Tuning system identifier
+                          displayName:
+                            type: string
+                            description: Display name formatted as "Creator (Year) Title" (e.g., "Ibn Sīnā (1037) 7-Fret Oud 17-Tone")
+                          version:
+                            type: string
+                            description: ISO 8601 timestamp of last modification
+                      startingNote:
+                        type: string
+                        description: Tuning system starting note name with diacritics
+                      pitchClassesInOctave:
+                        type: integer
+                        description: Number of pitch classes in a single octave (not counting adjacent octaves)
+                  transpositions:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                        description: Total number of transpositions available
+                      list:
+                        type: array
+                        description: Array of transposition options
+                        items:
+                          type: object
+                          properties:
+                            tonicId:
+                              type: string
+                              description: URL-safe tonic note identifier
+                            tonicDisplay:
+                              type: string
+                              description: Tonic note name with diacritics
+                            pitchClassIndex:
+                              type: integer
+                              description: Index of the tonic pitch class in the tuning system
+                            octave:
+                              type: integer
+                              description: Octave number of the tonic (1 = primary octave, 2 = octave above, etc.)
+                            dataHref:
+                              type: string
+                              description: URL to retrieve full maqām data for this transposition
         '400':
-          description: Missing parameters
+          description: Invalid request parameters
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Maqām or tuning system not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /maqamat/{idName}/compare:
+    get:
+      tags:
+        - Maqāmāt
+      summary: Compare maqām data across multiple tuning systems
+      description: |
+        Compare comprehensive maqām data across multiple tuning systems and starting note configurations in a single request.
+        
+        Returns comprehensive data similar to `/maqamat/{idName}` but without modulations and suyur. Each comparison includes:
+        - Pitch class data (ascending and descending sequences)
+        - Optional interval data
+        - Ajnās (constituent melodic structures) mapping
+        - Maqām metadata (family classification, tonic, transposition status)
+        - Context information (tuning system, starting note, reference frequency)
+        
+        This endpoint is ideal for comparative musicological analysis across different historical tuning systems.
+      operationId: compareMaqam
+      parameters:
+        - name: idName
+          in: path
+          required: true
+          description: URL-safe maqām identifier
+          schema:
+            type: string
+          example: "maqam_rast"
+        - name: tuningSystems
+          in: query
+          required: true
+          description: |
+            Comma-separated tuning system IDs. All tuning systems will use the same starting note and optional transposition.
+          schema:
+            type: string
+          example: "IbnSina-(1037),al-Farabi-(950g)"
+        - name: startingNote
+          in: query
+          required: true
+          description: Starting note name (URL-safe, diacritics-insensitive) - applies to all tuning systems
+          schema:
+            type: string
+          example: "yegah"
+        - name: pitchClassDataType
+          in: query
+          required: true
+          description: Output format for pitch class data
+          schema:
+            type: string
+            enum:
+              - all
+              - englishName
+              - fraction
+              - cents
+              - decimalRatio
+              - stringLength
+              - frequency
+              - abjadName
+              - fretDivision
+              - midiNoteNumber
+              - midiNoteDeviation
+              - centsDeviation
+              - referenceNoteName
+          example: "cents"
+        - name: intervals
+          in: query
+          required: false
+          description: Include interval data between pitch classes
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "false"
+          example: "true"
+        - name: transposeTo
+          in: query
+          required: false
+          description: Transpose to specific tonic note (applies to all tuning systems)
+          schema:
+            type: string
+          example: "nawa"
+        - name: inArabic
+          in: query
+          required: false
+          description: |
+            Return response data in Arabic script when true.
+            
+            When true:
+            - Note names, maqām names, and jins names are converted to Arabic script
+            - Comments return Arabic versions if available
+            - Tuning system display names use Arabic creator/title if available
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "false"
+          example: "false"
+      responses:
+        '200':
+          description: Comparison data retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - maqam
+                  - comparisons
+                  - meta
+                properties:
+                  maqam:
+                    type: object
+                    description: Original maqām identifier information
+                    properties:
+                      id:
+                        type: string
+                        description: Numeric identifier for the maqām
+                      idName:
+                        type: string
+                        description: URL-safe identifier for the maqām
+                      displayName:
+                        type: string
+                        description: Display name with diacritics
+                      version:
+                        type: string
+                        description: ISO 8601 timestamp of last modification
+                  comparisons:
+                    type: array
+                    description: Array of comparison results (one per configuration)
+                    items:
+                      type: object
+                      properties:
+                        tuningSystem:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              description: Tuning system identifier
+                            displayName:
+                              type: string
+                              description: Display name formatted as "Creator (Year) Title"
+                            version:
+                              type: string
+                              description: ISO 8601 timestamp of last modification
+                        maqam:
+                          type: object
+                          description: Maqām data for this comparison (may include transposition info)
+                          properties:
+                            id:
+                              type: string
+                            idName:
+                              type: string
+                            displayName:
+                              type: string
+                            version:
+                              type: string
+                            tonicId:
+                              type: string
+                              description: URL-safe tonic note identifier
+                            tonicName:
+                              type: string
+                              description: Tonic note name with diacritics
+                            transposition:
+                              type: boolean
+                              description: Whether this is a transposition from the original tonic
+                            originalTonicId:
+                              type: string
+                              description: Original tonic identifier (present only if transposed)
+                            originalTonicDisplay:
+                              type: string
+                              description: Original tonic name (present only if transposed)
+                            familyId:
+                              type: string
+                              description: URL-safe maqām family identifier
+                            familyDisplay:
+                              type: string
+                              description: Maqām family name with diacritics
+                            numberOfPitchClasses:
+                              type: integer
+                              description: Number of pitch classes in this maqām
+                            isOctaveRepeating:
+                              type: boolean
+                              description: Whether the maqām structure repeats within an octave
+                            pitchClassDataType:
+                              type: string
+                              description: Format used for pitch class data
+                            includeIntervals:
+                              type: boolean
+                              description: Whether intervals are included
+                        context:
+                          type: object
+                          properties:
+                            tuningSystem:
+                              type: object
+                              properties:
+                                id:
+                                  type: string
+                                  description: Tuning system identifier
+                            displayName:
+                              type: string
+                              description: Display name formatted as "Creator (Year) Title"
+                            version:
+                              type: string
+                              description: ISO 8601 timestamp of last modification
+                            numberOfPitchClassesSingleOctave:
+                              type: integer
+                              description: Number of pitch classes in one octave of the selected tuning system (from tuning system's original pitch class values)
+                            startingNoteName:
+                              type: string
+                              description: Starting note name (URL-safe)
+                            referenceFrequency:
+                              type: number
+                              description: Reference frequency in Hz associated with the starting note name (falls back to tuning system default if not specified for this note)
+                        pitchData:
+                          type: object
+                          properties:
+                            ascending:
+                              type: array
+                              description: Ascending pitch class sequence
+                              items:
+                                type: object
+                            descending:
+                              type: array
+                              description: Descending pitch class sequence
+                              items:
+                                type: object
+                        intervals:
+                          type: object
+                          description: Interval data (present only if intervals=true)
+                          properties:
+                            ascending:
+                              type: array
+                              items:
+                                type: object
+                            descending:
+                              type: array
+                              items:
+                                type: object
+                        ajnas:
+                          type: object
+                          description: Ajnās mapping for each note position
+                          properties:
+                            ascending:
+                              type: object
+                              description: Ascending ajnās mapping (note name to jins entity object or null)
+                            descending:
+                              type: object
+                              description: Descending ajnās mapping (note name to jins entity object or null)
+                        error:
+                          type: string
+                          description: Error message if this comparison failed
+                  meta:
+                    type: object
+                    properties:
+                      totalComparisons:
+                        type: integer
+                        description: Total number of comparisons requested
+                      successfulComparisons:
+                        type: integer
+                        description: Number of successful comparisons
+                      failedComparisons:
+                        type: integer
+                        description: Number of failed comparisons
+              examples:
+                twoTuningSystems:
+                  summary: Compare across two tuning systems
+                  value:
+                    maqam:
+                      id: "1"
+                      idName: "maqam_rast"
+                      displayName: "Maqam Rāst"
+                      version: "2025-10-18T19:41:17.132Z"
+                    comparisons:
+                      - maqam:
+                          id: "1"
+                          idName: "maqam_rast"
+                          displayName: "Maqam Rāst"
+                          version: "2025-10-18T19:41:17.132Z"
+                          tonicId: "rast"
+                          tonicDisplay: "rāst"
+                          transposition: false
+                          familyId: "rast"
+                          familyDisplay: "Rāst"
+                          numberOfPitchClasses: 7
+                          isOctaveRepeating: true
+                          pitchClassDataType: "cents"
+                          includeIntervals: true
+                        context:
+                          tuningSystem:
+                            id: "al-Farabi-(950g)"
+                            displayName: "al-Fārābī (950g) First Oud Tuning (Full First Octave)"
+                            version: "2025-10-18T19:41:17.132Z"
+                            numberOfPitchClassesSingleOctave: 7
+                            tuningSystemStartingNoteNames: ["ʿushayrān", "yegāh"]
+                            tuningSystemStartingNoteNamesIds: ["ushayran", "yegah"]
+                            startingNoteName: "yegah"
+                            referenceFrequency: 440.0
+                        pitchData:
+                          ascending:
+                            - pitchClassIndex: 0
+                              octave: 1
+                              scaleDegree: "I"
+                              noteName: "rast"
+                              noteNameDisplay: "rāst"
+                              cents: 0.0
+                            - pitchClassIndex: 1
+                              octave: 1
+                              scaleDegree: "II"
+                              noteName: "dugah"
+                              noteNameDisplay: "dūgāh"
+                              cents: 204.0
+                        intervals:
+                          ascending:
+                            - cents: 204.0
+                        ajnas:
+                          ascending:
+                            rāst:
+                              id: "1"
+                              idName: "jins_rast"
+                              displayName: "Jins Rāst"
+                            dūgāh: null
+                      - maqam:
+                          id: "1"
+                          idName: "maqam_rast"
+                          displayName: "Maqam Rāst"
+                          version: "2025-10-18T19:41:17.132Z"
+                          tonicId: "rast"
+                          tonicName: "rāst"
+                          transposition: false
+                          maqamFamilyId: "rast"
+                          maqamFamilyDisplayName: "Rāst"
+                          numberOfPitchClasses: 7
+                          isOctaveRepeating: true
+                          pitchClassDataType: "cents"
+                          includeIntervals: true
+                        context:
+                          tuningSystem:
+                            id: "IbnSina-(1037)"
+                            displayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
+                            version: "2025-10-18T19:41:17.132Z"
+                            numberOfPitchClassesSingleOctave: 17
+                            startingNoteName: "yegah"
+                            referenceFrequency: 110
+                        pitchData:
+                          ascending:
+                            - pitchClassIndex: 0
+                              octave: 1
+                              scaleDegree: "I"
+                              noteName: "rast"
+                              noteNameDisplay: "rāst"
+                              cents: 0.0
+                            - pitchClassIndex: 1
+                              octave: 1
+                              scaleDegree: "II"
+                              noteName: "dugah"
+                              noteNameDisplay: "dūgāh"
+                              cents: 211.7
+                        intervals:
+                          ascending:
+                            - cents: 211.7
+                        ajnas:
+                          ascending:
+                            rāst:
+                              id: "1"
+                              idName: "jins_rast"
+                              displayName: "Jins Rāst"
+                            dūgāh: null
+                    meta:
+                      totalComparisons: 2
+                      successfulComparisons: 2
+                      failedComparisons: 0
+                withTransposition:
+                  summary: Compare with transposition
+                  value:
+                    maqam:
+                      id: "1"
+                      idName: "maqam_rast"
+                      displayName: "Maqam Rāst"
+                      version: "2025-10-18T19:41:17.132Z"
+                    comparisons:
+                      - maqam:
+                          id: "1"
+                          idName: "maqam_rast_al-nawa"
+                          displayName: "Maqam Rāst al-Nawā"
+                          version: "2025-10-18T19:41:17.132Z"
+                          tonicId: "nawa"
+                          tonicName: "nawā"
+                          transposition: true
+                          originalTonicId: "rast"
+                          originalTonicName: "rāst"
+                          maqamFamilyId: "rast"
+                          maqamFamilyDisplayName: "Rāst"
+                          numberOfPitchClasses: 7
+                          isOctaveRepeating: true
+                          pitchClassDataType: "cents"
+                          includeIntervals: false
+                        context:
+                          tuningSystem:
+                            id: "IbnSina-(1037)"
+                            displayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
+                            version: "2025-10-18T19:41:17.132Z"
+                            numberOfPitchClassesSingleOctave: 17
+                            startingNoteName: "yegah"
+                            referenceFrequency: 110
+                        pitchData:
+                          ascending:
+                            - pitchClassIndex: 3
+                              octave: 1
+                              scaleDegree: "I"
+                              noteName: "nawa"
+                              noteNameDisplay: "nawā"
+                              cents: 498.0
+                        ajnas:
+                          ascending:
+                            nawā:
+                              id: "1"
+                              idName: "jins_rast"
+                              displayName: "Jins Rāst"
+                    meta:
+                      totalComparisons: 1
+                      successfulComparisons: 1
+                      failedComparisons: 0
+                withErrors:
+                  summary: Comparison with some failures
+                  value:
+                    maqam:
+                      id: "1"
+                      idName: "maqam_rast"
+                      displayName: "Maqam Rāst"
+                      version: "2025-10-18T19:41:17.132Z"
+                    comparisons:
+                      - maqam:
+                          id: "1"
+                          idName: "maqam_rast"
+                          displayName: "Maqam Rāst"
+                          version: "2025-10-18T19:41:17.132Z"
+                          tonicId: "rast"
+                          tonicName: "rāst"
+                          transposition: false
+                          maqamFamilyId: "rast"
+                          maqamFamilyDisplayName: "Rāst"
+                          numberOfPitchClasses: 7
+                          isOctaveRepeating: true
+                          pitchClassDataType: "cents"
+                          includeIntervals: false
+                        context:
+                          tuningSystem:
+                            id: "IbnSina-(1037)"
+                            displayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
+                            version: "2025-10-18T19:41:17.132Z"
+                            numberOfPitchClassesSingleOctave: 17
+                            startingNoteName: "yegah"
+                            referenceFrequency: 110
+                        pitchData:
+                          ascending:
+                            - pitchClassIndex: 0
+                              octave: 1
+                              scaleDegree: "I"
+                              noteName: "rast"
+                              noteNameDisplay: "rāst"
+                              cents: 0.0
+                        ajnas:
+                          ascending:
+                            rāst:
+                              id: "1"
+                              idName: "jins_rast"
+                              displayName: "Jins Rāst"
+                      - error: "Tuning system 'InvalidSystem' not found"
+                    meta:
+                      totalComparisons: 2
+                      successfulComparisons: 1
+                      failedComparisons: 1
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                missingTuningSystems:
+                  summary: Missing tuningSystems parameter
+                  value:
+                    error: "tuningSystems parameter is required"
+                    message: "Provide comma-separated tuning system IDs"
+                    hint: 'Format: ?tuningSystems=IbnSina-(1037),al-Farabi-(950g)'
+                    example: "/api/maqamat/maqam_rast/compare?tuningSystems=IbnSina-(1037),al-Farabi-(950g)&startingNote=yegah&pitchClassDataType=cents"
+                missingStartingNote:
+                  summary: Missing startingNote parameter
+                  value:
+                    error: "startingNote parameter is required"
+                    message: "A starting note must be specified for all tuning systems"
+                    hint: "Add &startingNote=yegah to your request"
+                invalidIntervals:
+                  summary: Invalid intervals parameter
+                  value:
+                    error: "Invalid parameter: intervals"
+                    message: "The 'intervals' parameter must be 'true' or 'false'."
+                    validOptions: ["true", "false"]
+                    hint: "Use ?intervals=true or ?intervals=false"
+        '404':
+          description: Maqām not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "Maqām 'maqam_invalid' not found"
+                hint: "Use /api/maqamat to see all available maqāmāt"
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /tuning-systems/{id}/{startingNote}/maqamat:
+    get:
+      tags:
+        - Tuning Systems
+      summary: List maqāmāt available in a tuning system
+      description: |
+        Return all maqāmāt that can be realized in a given tuning system beginning on a specific starting note name.
+        
+        - Feasibility is determined by comparing maqām pitch classes to the tuning system's note name sets (including adjacent octave context)
+      operationId: listTuningSystemMaqamat
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Tuning system identifier (e.g., 'IbnSina-(1037)', 'al-Farabi-(950i)', 'Anglo-European-(1700)')
+          schema:
+                    type: string
+          example: "IbnSina-(1037)"
+        - name: startingNote
+          in: path
+          required: true
+          description: Tuning system starting note name (URL-safe, diacritics-insensitive)
+          schema:
+            type: string
+          example: "yegah"
+        - name: inArabic
+          in: query
+          required: false
+          description: |
+            Return response data in Arabic script when true.
+            
+            When true:
+            - Note names, maqām names, and jins names are converted to Arabic script
+            - Comments return Arabic versions if available
+            - Tuning system display names use Arabic creator/title if available
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "false"
+          example: "false"
+      responses:
+        '200':
+          description: Maqāmāt list retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - totalNumberOfMaqamat
+                  - tuningSystem
+                  - data
+                properties:
+                  totalNumberOfMaqamat:
+                    type: integer
+                    description: Total number of maqāmāt available in this tuning system with the specified starting note
+                  tuningSystem:
+                    type: object
+                  data:
+                    type: array
+                    items:
+                      type: object
+                  meta:
+                    type: object
+                  links:
+                    type: object
+        '400':
+          description: Invalid path parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Tuning system not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /ajnas:
+    get:
+      tags:
+        - Ajnās
+      summary: List all ajnās
+      description: |
+        Return all ajnās (singular: jins) with metadata.
+        
+        - Includes URL-safe identifiers, display names, and structural information
+        - Structural information includes note sequences needed for maqām construction and analysis
+      operationId: listAjnas
+      parameters:
+        - name: filterByTonic
+          in: query
+          description: Filter by jins tonic/first note (URL-safe, case-insensitive, diacritics-insensitive)
+          schema:
+            type: string
+          example: rast
+        - name: sortBy
+          in: query
+          description: Sort order for results
+          schema:
+            type: string
+            enum: [tonic, alphabetical]
+            default: alphabetical
+          examples:
+            tonic:
+              value: tonic
+              summary: Sort by tonic note priority (NoteName.ts order)
+            alphabetical:
+              value: alphabetical
+              summary: Sort alphabetically by display name
+        - name: inArabic
+          in: query
+          required: false
+          description: |
+            Return response data in Arabic script when true.
+            
+            When true:
+            - Note names, maqām names, and jins names are converted to Arabic script
+            - Comments return Arabic versions if available
+            - Tuning system display names use Arabic creator/title if available
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "false"
+          example: "false"
+      responses:
+        '200':
+          description: List of ajnās retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ajnas:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        idName:
+                          type: string
+                        displayName:
+                          type: string
+                        noteNames:
+                          type: array
+                          items:
+                            type: string
+                        version:
+                          type: string
+                  meta:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /ajnas/{idName}:
+    get:
+      tags:
+        - Ajnās
+      summary: Get detailed jins data
+      description: |
+        Retrieve comprehensive data for a specific jins on its conventional or a transposed tonic, in a specific tuning system on a specific starting note name.
+        
+        Returns:
+        - Comprehensive pitch class data in the requested tuning system and starting note name
+        - Optional intervals data, transposition to different tonics, and tuning-system-specific modulations (including lower octave)
+        
+        Parameter Discovery:
+        - Use options=true to discover valid values for all parameters including dynamically calculated transposition options
+        - Especially useful for finding valid tuning system starting notes and transposition tonics for a specific jins
+        
+        Important:
+        - When options=true, the endpoint returns parameter discovery metadata instead of jins data
+        - This mode is mutually exclusive with data-returning parameters (transpose to, include modulations, include lower octave modulations, pitch class data type, intervals)
+        - If data-returning parameters are provided with options=true, the API returns a 400 Bad Request error with details about conflicting parameters
+        
+        Requirements:
+        - Tuning system and starting note are required for all requests (both data retrieval and discovery mode)
+        - These are fundamental to all pitch class calculations
+      operationId: getJins
+      parameters:
+        - name: idName
+          in: path
+          required: true
+          description: URL-safe jins identifier
+          schema:
+            type: string
+          examples:
+            kurd:
+              value: jins_kurd
+              summary: Jins Kurd
+            rast:
+              value: jins_rast
+              summary: Jins Rāst
+        - name: tuningSystem
+          in: query
+          required: true
+          description: Tuning system identifier (e.g., 'IbnSina-(1037)', 'al-Farabi-(950i)', 'Anglo-European-(1700)')
+          schema:
+            type: string
+          examples:
+            ibnsina:
+              value: "IbnSina-(1037)"
+              summary: Ibn Sīnā 17-tone system
+            farabi:
+              value: "al-Farabi-(950i)"
+              summary: al-Fārābī tuning system
+            angloEuropean:
+              value: "Anglo-European-(1700)"
+              summary: 12-tone equal temperament
+        - name: startingNote
+          in: query
+          required: true
+          description: |
+            Tuning system starting note name (URL-safe, diacritics-insensitive).
+            
+            - Mandatory for all pitch class calculations
+            - Different starting notes represent different theoretical frameworks within the same tuning system
+            - Examples: ʿushayrān for oud tuning, yegāh for monochord measurements
+          schema:
+            type: string
+          examples:
+            ushayran:
+              value: "ushayran"
+              summary: ʿushayrān
+            rast:
+              value: "rast"
+              summary: rāst
+            yegah:
+              value: "yegah"
+              summary: yegāh
+        - name: options
+          in: query
+          description: |
+            When true, returns available parameter options instead of jins data.
+            
+            - Useful for discovering valid values for tuning systems, starting notes, and other parameters
+            - Tuning system and starting note are required for all requests (both data retrieval and discovery mode)
+            - These are fundamental to all pitch class calculations and calculate valid starting note options and transposition tonics
+            - Mutually exclusive with data-returning parameters (transpose to, include modulations, include lower octave modulations, pitch class data type, intervals)
+            - Transposition options are dynamically calculated based on the specific jins, tuning system, and starting note combination
+            - Only tonics where the jins can be validly transposed (preserving interval pattern) are included, not all possible pitch classes
+            - If data-returning parameters are provided, returns 400 Bad Request error with details about conflicting parameters
+          schema:
+            type: string
+            enum: [true, false]
+            default: false
+          example: "true"
+        - name: pitchClassDataType
+          in: query
+          required: false
+          description: |
+            Specifies which pitch class data type to return for each pitch class.
+            
+            - Required for data retrieval (when options is not set or false)
+            - Optional for discovery mode (when options=true) since discovery returns parameter metadata, not formatted data
+            - Use 'all' for complete pitch class data across all available formats
+            - Each option returns the specified data type for all pitch classes in the jins
+          schema:
+            type: string
+            enum: [all, frequency, cents, fraction, decimalRatio, stringLength, abjadName, fretDivision, midiNoteNumber, midiNoteDeviation, centsDeviation, referenceNoteName, englishName]
+          example: "cents"
+        - name: transposeTo
+          in: query
+          description: |
+            Transpose the jins to a new tonic by preserving the interval patterns (URL-safe, diacritics-insensitive).
+            
+            - Only tonics where the jins can be validly transposed in the specified tuning system and starting note are valid
+            - To see all valid transposition options, request available parameter options instead of jins data
+          schema:
+            type: string
+          example: nawa
+        - name: intervals
+          in: query
+          description: Include interval data between jins degrees
+          schema:
+            type: string
+            enum: [true, false]
+            default: false
+          example: "true"
+        - name: includeModulations
+          in: query
+          description: Include modulation possibilities to other ajnās
+          schema:
+            type: string
+            enum: [true, false]
+            default: false
+          example: "true"
+        - name: includeModulations8vb
+          in: query
+          description: Include available modulations an octave below
+          schema:
+            type: string
+            enum: [true, false]
+            default: false
+          example: "true"
+        - name: inArabic
+          in: query
+          required: false
+          description: |
+            Return response data in Arabic script when true.
+            
+            When true:
+            - Note names, maqām names, and jins names are converted to Arabic script
+            - Comments return Arabic versions if available
+            - Tuning system display names use Arabic creator/title if available
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "false"
+          example: "false"
+      responses:
+        '200':
+          description: |
+            Jins data retrieved successfully.
+            
+            - When options is true, the response structure differs and returns available parameter options instead of jins data
+            - In that case, transposition options contain only valid transposition tonics for this specific jins, tuning system, and starting note combination
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JinsDetailResponse'
+              examples:
+                basic:
+                  summary: Basic jins data
+                  value:
+                    jins:
+                      id: "5"
+                      idName: "jins_kurd"
+                      displayName: "Jins Kurd"
+                      version: "2025-10-18T19:41:17.132Z"
+                      tonicId: "rast"
+                      tonicName: "rāst"
+                      transposition: false
+                      numberOfTranspositions: 17
+                      numberOfPitchClasses: 4
+                      commentsEnglish: null
+                      commentsArabic: null
+                      sources: []
+                      pitchClassDataType: "all"
+                      includeIntervals: false
+                    context:
+                      tuningSystem:
+                        id: "IbnSina-(1037)"
+                        displayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
+                        version: "2025-10-18T19:41:17.132Z"
+                        originalValueType: "fraction"
+                        numberOfPitchClassesSingleOctave: 17
+                        numberOfPitchClassesAllOctaves: 68
+                        startingNoteName: "yegah"
+                        referenceFrequency: 440.0
+                    pitchData:
+                      - pitchClassIndex: 0
+                        octave: 1
+                        scaleDegree: "I"
+                        noteName: "rast"
+                        noteNameDisplay: "rāst"
+                        englishName: "C3"
+                        fraction: "1/1"
+                        cents: 0.0
+                        decimalRatio: 1.0
+                        stringLength: 1000.0
+                        frequency: 440.0
+                        fretDivision: "0.000"
+                        midiNoteDecimal: 48.0
+                        midiNotePlusCentsDeviation: "48 +0.0"
+                        centsDeviation: 0.0
+                        ipnReferenceNoteName: "C"
+                      - pitchClassIndex: 1
+                        octave: 1
+                        scaleDegree: "II"
+                        noteName: "dugah"
+                        noteNameDisplay: "dūgāh"
+                        englishName: "D3"
+                        fraction: "204/182"
+                        cents: 204.0
+                        decimalRatio: 1.120
+                        frequency: 492.8
+                transposed:
+                  summary: Transposed jins (taṣwīr)
+                  value:
+                    jins:
+                      id: "5"
+                      idName: "jins_kurd"
+                      displayName: "Jins Kurd al-Nawā"
+                      version: "2025-10-18T19:41:17.132Z"
+                      tonicId: "nawa"
+                      tonicName: "nawā"
+                      transposition: true
+                      originalTonicId: "rast"
+                      originalTonicName: "rāst"
+                      transposedTonicId: "nawa"
+                      transposedTonicName: "nawā"
+                      numberOfTranspositions: 17
+                      numberOfPitchClasses: 4
+                      commentsEnglish: null
+                      commentsArabic: null
+                      sources: []
+                      pitchClassDataType: "all"
+                      includeIntervals: false
+                    context:
+                      tuningSystem:
+                        id: "IbnSina-(1037)"
+                        displayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
+                        version: "2025-10-18T19:41:17.132Z"
+                        originalValueType: "fraction"
+                        numberOfPitchClassesSingleOctave: 17
+                        numberOfPitchClassesAllOctaves: 68
+                        startingNoteName: "yegah"
+                        referenceFrequency: 440.0
+                    pitchData:
+                      - pitchClassIndex: 3
+                        octave: 1
+                        scaleDegree: "I"
+                        noteName: "nawa"
+                        noteNameDisplay: "nawā"
+                        englishName: "F3"
+                        fraction: "498/415"
+                        cents: 498.0
+                withModulations:
+                  summary: With modulation networks
+                  value:
+                    jins:
+                      id: "5"
+                      idName: "jins_kurd"
+                      displayName: "Jins Kurd"
+                      tonicId: "rast"
+                      tonicName: "rāst"
+                      transposition: false
+                      pitchClassDataType: "cents"
+                      includeIntervals: false
+                    context:
+                      tuningSystem:
+                        id: "IbnSina-(1037)"
+                        displayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
+                        startingNoteName: "yegah"
+                    pitchData:
+                      - pitchClassIndex: 0
+                        octave: 1
+                        scaleDegree: "I"
+                        noteName: "rast"
+                        noteNameDisplay: "rāst"
+                        cents: 0.0
+                      - pitchClassIndex: 1
+                        octave: 1
+                        scaleDegree: "II"
+                        noteName: "dugah"
+                        noteNameDisplay: "dūgāh"
+                        cents: 204.0
+                    modulations:
+                      ajnas:
+                        - jinsDegree: "I"
+                          noteNameId: "rast"
+                          noteNameDisplay: "rāst"
+                          pitchClassIndex: 0
+                          count: 5
+                          modulations:
+                            - id: "6"
+                              idName: "jins_nahawand"
+                              displayName: "jins nahāwand"
+                            - id: "19"
+                              idName: "jins_rast"
+                              displayName: "jins rāst"
+                        - jinsDegree: "III"
+                          noteNameId: "kurd"
+                          noteNameDisplay: "kurd"
+                          pitchClassIndex: 2
+                          count: 4
+                          modulations:
+                            - id: "3"
+                              idName: "jins_segah"
+                              displayName: "jins segāh"
+                withOptions:
+                  summary: Options response (when options=true)
+                  value:
+                    jins: "Jins Kurd"
+                    tuningSystem: "IbnSina-(1037)"
+                    availableParameters:
+                      tuningSystem:
+                        required: true
+                        description: "ID of tuning system (see /availability for options)"
+                      startingNote:
+                        options: ["ushayran", "yegah"]
+                        default: "ushayran"
+                        description: "Theoretical framework for note naming"
+                      pitchClassDataType:
+                        options: ["all", "frequency", "cents", "fraction", "decimalRatio", "stringLength", "abjadName", "fretDivision", "midiNoteNumber", "midiNoteDeviation", "centsDeviation", "referenceNoteName", "englishName"]
+                        default: "cents"
+                        description: "Output format for pitch data. Use 'all' for complete pitch class information."
+                      intervals:
+                        type: "boolean"
+                        default: false
+                        description: "Include interval data between pitch classes"
+                      transposeTo:
+                        options: ["rast", "nawa", "dugah"]
+                        default: null
+                        description: "Transpose to specific tonic (taṣwīr) - only valid transpositions shown"
+                      includeModulations:
+                        type: "boolean"
+                        default: false
+                        description: "Include modulation analysis (ajnās)"
+                      includeModulations8vb:
+                        type: "boolean"
+                        default: false
+                        description: "Include available modulations an octave below"
+                    notes:
+                      formatOptions: "The 'pitchClassDataType' parameter controls which pitch class properties are returned. Use 'all' for comprehensive data or specific formats like 'cents', 'fraction', etc. for targeted data."
+                    examples:
+                      - "/api/ajnas/jins_kurd?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents&intervals=true"
+                      - "/api/ajnas/jins_kurd?tuningSystem=IbnSina-(1037)&startingNote=yegah&transposeTo=nawa&includeModulations=true"
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                conflictingParametersWithOptions:
+                  summary: Conflicting parameters with options=true
+                  value:
+                    error: "Conflicting parameters with options=true"
+                    message: "The following data-returning parameters cannot be used with options=true (parameter discovery mode): intervals"
+                    hint: "Remove all data-returning parameters to use discovery mode, or remove options=true to retrieve jins data."
+                    conflictingParameters: ["intervals"]
+                    contextualParametersAllowed: ["tuningSystem", "startingNote"]
+                missingTuningSystem:
+                  summary: Missing required tuningSystem parameter
+                  value:
+                    error: "tuningSystem parameter is required"
+                    hint: "Use /api/ajnas/{idName}/availability to see available tuning systems"
+                    availabilityUrl: "/api/ajnas/{idName}/availability"
+                missingStartingNote:
+                  summary: Missing required startingNote parameter
+                  value:
+                    error: "startingNote parameter is required"
+                    message: "A tuning system starting note must be specified. This is mandatory for all pitch class calculations."
+                    validOptions: ["ʿushayrān", "yegāh"]
+                    hint: "Add &startingNote=ʿushayrān to your request"
+                invalidStartingNote:
+                  summary: Invalid startingNote value
+                  value:
+                    error: "Invalid startingNote 'invalid_note'"
+                    validOptions: ["ʿushayrān", "yegāh"]
+                    hint: "Valid starting notes for this tuning system: ʿushayrān, yegāh"
+        '404':
+          description: Jins not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "Jins 'jins_invalid' not found"
+                hint: "Use /api/ajnas to see all available ajnās"
+        '422':
+          description: Jins cannot be realized in the specified tuning system
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "Jins 'Jins Kurd' cannot be realized in tuning system 'IbnSina-(1037)' with starting note 'ushayran'"
+                hint: "Use /api/ajnas/{idName}/availability to see compatible tuning systems"
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /ajnas/{idName}/availability:
+    get:
+      tags:
+        - Ajnās
+      summary: Check jins availability across tuning systems
+      description: |
+        Return tuning-system availability for a jins.
+        
+        - Shows which tuning systems on which starting note names can realize the specified jins
+        - If `transpositionNoteName` is provided, filters results to show only tuning systems where the jins can be transposed to that specific note
+        - Validity is computed against each tuning system's note name sets and the jins's pitch class intervals
+        - Availability checking spans 3 octaves to correctly handle ajnās that may span multiple octaves
+      operationId: getJinsAvailability
+      parameters:
+        - name: idName
+          in: path
+          required: true
+          description: URL-safe jins identifier
+          schema:
+            type: string
+          example: "jins_kurd"
+        - name: transpositionNoteName
+          in: query
+          required: false
+          description: Filter results to show only tuning systems where the jins can be transposed to this specific note (URL-safe, diacritics-insensitive)
+          schema:
+            type: string
+          example: "nawa"
+        - name: inArabic
+          in: query
+          required: false
+          description: |
+            Return response data in Arabic script when true.
+            
+            When true:
+            - Note names, maqām names, and jins names are converted to Arabic script
+            - Comments return Arabic versions if available
+            - Tuning system display names use Arabic creator/title if available
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "false"
+          example: "false"
+      responses:
+        '200':
+          description: Availability information retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - jins
+                  - availability
+                properties:
+                  jins:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: Numeric identifier for the jins
+                      idName:
+                        type: string
+                        description: URL-safe identifier for the jins (e.g., "jins_kurd")
+                      displayName:
+                        type: string
+                        description: Display name with diacritics (e.g., "Jins Kurd")
+                      transpositionNoteName:
+                        type: string
+                        description: The transposition note name filter applied (present only when transpositionNoteName parameter is provided)
+                        example: "nawa"
+                      version:
+                        type: string
+                        description: ISO 8601 timestamp of last modification
+                  availability:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                        description: Number of tuning systems supporting this jins (or supporting the specified transposition if transpositionNoteName is provided)
+                      tuningSystems:
+                        type: array
+                        description: Array of tuning systems where this jins is available (filtered by transposition if transpositionNoteName is provided)
+                        items:
+                          $ref: '#/components/schemas/TuningSystemAvailability'
+              examples:
+                withoutTransposition:
+                  summary: Without transposition filter
+                  value:
+                    jins:
+                      id: "5"
+                      idName: "jins_kurd"
+                      displayName: "Jins Kurd"
+                      version: "2025-10-18T19:41:17.132Z"
+                    availability:
+                      count: 29
+                      tuningSystems:
+                        - tuningSystemId: "IbnSina-(1037)"
+                          tuningSystemDisplayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
+                          tuningSystemStartingNoteNames: ["ʿushayrān", "yegāh"]
+                          tuningSystemStartingNoteNamesIds: ["ushayran", "yegah"]
+                        - tuningSystemId: "al-Farabi-(950g)"
+                          tuningSystemDisplayName: "al-Fārābī (950g) First Oud Tuning (Full First Octave)"
+                          tuningSystemStartingNoteNames: ["ʿushayrān", "yegāh"]
+                          tuningSystemStartingNoteNamesIds: ["ushayran", "yegah"]
+                withTransposition:
+                  summary: With transposition filter (transpositionNoteName=nawa)
+                  value:
+                    jins:
+                      id: "5"
+                      idName: "jins_kurd"
+                      displayName: "Jins Kurd"
+                      transpositionNoteName: "nawa"
+                      version: "2025-10-18T19:41:17.132Z"
+                    availability:
+                      count: 15
+                      tuningSystems:
+                        - tuningSystemId: "IbnSina-(1037)"
+                          tuningSystemDisplayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
+                          tuningSystemStartingNoteNames: ["ʿushayrān"]
+                          tuningSystemStartingNoteNamesIds: ["ushayran"]
+                        - tuningSystemId: "al-Farabi-(950g)"
+                          tuningSystemDisplayName: "al-Fārābī (950g) First Oud Tuning (Full First Octave)"
+                          tuningSystemStartingNoteNames: ["ʿushayrān", "yegāh"]
+                          tuningSystemStartingNoteNamesIds: ["ushayran", "yegah"]
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                emptyTranspositionNoteName:
+                  summary: Empty transpositionNoteName parameter
+                  value:
+                    error: "Invalid parameter: transpositionNoteName"
+                    message: "The 'transpositionNoteName' parameter cannot be empty."
+                    hint: "Provide a valid note name like ?transpositionNoteName=nawa or remove the parameter"
+        '404':
+          description: Jins not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "Jins 'jins_invalid' not found"
+                hint: "Use /api/ajnas to see all available ajnās"
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /ajnas/{idName}/transpositions:
+    get:
+      tags:
+        - Ajnās
+      summary: List transpositions for a jins
+      description: |
+        List all available transposition options for a jins within a specific tuning system and starting note.
+        
+        Returns all tonic transpositions that are feasible under the tuning system across all octaves.
+      operationId: listJinsTranspositions
+      parameters:
+        - name: idName
+          in: path
+          required: true
+          description: URL-safe jins identifier
+          schema:
+            type: string
+          example: "jins_kurd"
+        - name: tuningSystem
+          in: query
+          required: true
+          description: Tuning system identifier (e.g., 'IbnSina-(1037)', 'al-Farabi-(950i)', 'Anglo-European-(1700)')
+          schema:
+            type: string
+          example: "IbnSina-(1037)"
+        - name: startingNote
+          in: query
+          required: true
+          description: Tuning system starting note name (URL-safe, diacritics-insensitive)
+          schema:
+            type: string
+          example: "yegah"
+        - name: inArabic
+          in: query
+          required: false
+          description: |
+            Return response data in Arabic script when true.
+            
+            When true:
+            - Note names, maqām names, and jins names are converted to Arabic script
+            - Comments return Arabic versions if available
+            - Tuning system display names use Arabic creator/title if available
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "false"
+          example: "false"
+      responses:
+        '200':
+          description: Transpositions retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  jins:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: Numeric identifier for the jins
+                      idName:
+                        type: string
+                        description: URL-safe identifier for the jins
+                      displayName:
+                        type: string
+                        description: Display name with diacritics (e.g., "Jins Kurd")
+                      version:
+                        type: string
+                        description: ISO 8601 timestamp of last modification
+                  context:
+                    type: object
+                    properties:
+                      tuningSystem:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            description: Tuning system identifier
+                          displayName:
+                            type: string
+                            description: Display name formatted as "Creator (Year) Title" (e.g., "Ibn Sīnā (1037) 7-Fret Oud 17-Tone")
+                          version:
+                            type: string
+                            description: ISO 8601 timestamp of last modification
+                      startingNote:
+                        type: string
+                        description: Tuning system starting note name with diacritics
+                      pitchClassesInOctave:
+                        type: integer
+                        description: Number of pitch classes in a single octave (not counting adjacent octaves)
+                  transpositions:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                        description: Total number of transpositions available
+                      list:
+                        type: array
+                        description: Array of transposition options
+                        items:
+                          type: object
+                          properties:
+                            tonicId:
+                              type: string
+                              description: URL-safe tonic note identifier
+                            tonicName:
+                              type: string
+                              description: Tonic note name with diacritics
+                            pitchClassIndex:
+                              type: integer
+                              description: Index of the tonic pitch class in the tuning system
+                            octave:
+                              type: integer
+                              description: Octave number of the tonic (1 = primary octave, 2 = octave above, etc.)
+                            dataHref:
+                              type: string
+                              description: URL to retrieve full jins data for this transposition
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        description: Link to this endpoint
+                      availability:
+                        type: string
+                        description: Link to availability endpoint
+                      jins:
+                        type: string
+                        description: Link to jins detail endpoint
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                missingTuningSystem:
+                  summary: Missing tuningSystem parameter
+                  value:
+                    error: "tuningSystem parameter is required"
+                    hint: "Add ?tuningSystem=IbnSina-(1037) to your request. Use /api/ajnas/{id}/availability to see available tuning systems"
+                missingStartingNote:
+                  summary: Missing startingNote parameter
+                  value:
+                    error: "startingNote parameter is required"
+                    hint: "Add &startingNote=yegah to your request. Use /api/ajnas/{id}/availability to see available starting notes"
+                invalidStartingNote:
+                  summary: Invalid starting note for tuning system
+                  value:
+                    error: "Starting note 'invalid' is not valid for tuning system 'IbnSina-(1037)'"
+                    validOptions: ["ʿushayrān", "yegāh"]
+                jinsNotPossible:
+                  summary: Jins not possible in this context
+                  value:
+                    error: "Jins 'Jins Kurd' is not possible in tuning system 'IbnSina-(1037)' with starting note 'yegāh'"
+                    hint: "Use /api/ajnas/{id}/availability to find compatible combinations"
+        '404':
+          description: Jins or tuning system not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                jinsNotFound:
+                  summary: Jins not found
+                  value:
+                    error: "Jins 'jins_invalid' not found"
+                    hint: "Use /api/ajnas to see all available ajnās"
+                tuningSystemNotFound:
+                  summary: Tuning system not found
+                  value:
+                    error: "Tuning system 'invalid' not found"
+                    hint: "Use /api/tuning-systems to see all available tuning systems"
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /ajnas/{idName}/compare:
+    get:
+      tags:
+        - Ajnās
+      summary: Compare jins data across multiple tuning systems
+      description: |
+        Compare comprehensive jins data across multiple tuning systems and starting note configurations in a single request.
+        
+        Returns comprehensive data similar to `/ajnas/{idName}` but without modulations. Each comparison includes:
+        - Pitch class data (single sequence, as ajnās are unidirectional)
+        - Optional interval data
+        - Jins metadata (tonic, transposition status)
+        - Context information (tuning system, starting note, reference frequency)
+        
+        This endpoint is ideal for comparative musicological analysis of melodic structures across different historical tuning systems.
+      operationId: compareJins
+      parameters:
+        - name: idName
+          in: path
+          required: true
+          description: URL-safe jins identifier
+          schema:
+            type: string
+          example: "jins_kurd"
+        - name: tuningSystems
+          in: query
+          required: true
+          description: |
+            Comma-separated tuning system IDs. All tuning systems will use the same starting note and optional transposition.
+          schema:
+            type: string
+          example: "IbnSina-(1037),al-Farabi-(950g)"
+        - name: startingNote
+          in: query
+          required: true
+          description: Starting note name (URL-safe, diacritics-insensitive) - applies to all tuning systems
+          schema:
+            type: string
+          example: "yegah"
+        - name: pitchClassDataType
+          in: query
+          required: true
+          description: Output format for pitch class data
+          schema:
+            type: string
+            enum:
+              - all
+              - englishName
+              - fraction
+              - cents
+              - decimalRatio
+              - stringLength
+              - frequency
+              - abjadName
+              - fretDivision
+              - midiNoteNumber
+              - midiNoteDeviation
+              - centsDeviation
+              - referenceNoteName
+          example: "cents"
+        - name: intervals
+          in: query
+          required: false
+          description: Include interval data between pitch classes
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "false"
+          example: "true"
+        - name: transposeTo
+          in: query
+          required: false
+          description: Transpose to specific tonic note (applies to all tuning systems)
+          schema:
+            type: string
+          example: "nawa"
+        - name: inArabic
+          in: query
+          required: false
+          description: |
+            Return response data in Arabic script when true.
+            
+            When true:
+            - Note names, maqām names, and jins names are converted to Arabic script
+            - Comments return Arabic versions if available
+            - Tuning system display names use Arabic creator/title if available
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "false"
+          example: "false"
+      responses:
+        '200':
+          description: Comparison data retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - jins
+                  - comparisons
+                  - meta
+                properties:
+                  jins:
+                    type: object
+                    description: Original jins identifier information
+                    properties:
+                      id:
+                        type: string
+                        description: Numeric identifier for the jins
+                      idName:
+                        type: string
+                        description: URL-safe identifier for the jins
+                      displayName:
+                        type: string
+                        description: Display name with diacritics
+                      version:
+                        type: string
+                        description: ISO 8601 timestamp of last modification
+                  comparisons:
+                    type: array
+                    description: Array of comparison results (one per configuration)
+                    items:
+                      type: object
+                      properties:
+                        jins:
+                          type: object
+                          description: Jins data for this comparison (may include transposition info)
+                          properties:
+                            id:
+                              type: string
+                            idName:
+                              type: string
+                            displayName:
+                              type: string
+                            version:
+                              type: string
+                            tonicId:
+                              type: string
+                              description: URL-safe tonic note identifier
+                            tonicName:
+                              type: string
+                              description: Tonic note name with diacritics
+                            transposition:
+                              type: boolean
+                              description: Whether this is a transposition from the original tonic
+                            originalTonicId:
+                              type: string
+                              description: Original tonic identifier (present only if transposed)
+                            originalTonicName:
+                              type: string
+                              description: Original tonic name (present only if transposed)
+                            numberOfPitchClasses:
+                              type: integer
+                              description: Number of pitch classes in this jins
+                            pitchClassDataType:
+                              type: string
+                              description: Format used for pitch class data
+                            includeIntervals:
+                              type: boolean
+                              description: Whether intervals are included
+                        context:
+                          type: object
+                          properties:
+                            tuningSystem:
+                              type: object
+                              properties:
+                                id:
+                                  type: string
+                                  description: Tuning system identifier
+                            displayName:
+                              type: string
+                              description: Display name formatted as "Creator (Year) Title"
+                            version:
+                              type: string
+                              description: ISO 8601 timestamp of last modification
+                            numberOfPitchClassesSingleOctave:
+                              type: integer
+                              description: Number of pitch classes in one octave of the selected tuning system (from tuning system's original pitch class values)
+                            startingNoteName:
+                              type: string
+                              description: Starting note name (URL-safe)
+                            referenceFrequency:
+                              type: number
+                              description: Reference frequency in Hz associated with the starting note name (falls back to tuning system default if not specified for this note)
+                        pitchData:
+                          type: array
+                          description: Pitch class sequence (ajnās are unidirectional)
+                          items:
+                            type: object
+                        intervals:
+                          type: array
+                          description: Interval data (present only if intervals=true)
+                          items:
+                            type: object
+                        error:
+                          type: string
+                          description: Error message if this comparison failed
+                  meta:
+                    type: object
+                    properties:
+                      totalComparisons:
+                        type: integer
+                        description: Total number of comparisons requested
+                      successfulComparisons:
+                        type: integer
+                        description: Number of successful comparisons
+                      failedComparisons:
+                        type: integer
+                        description: Number of failed comparisons
+              examples:
+                twoTuningSystems:
+                  summary: Compare across two tuning systems
+                  value:
+                    jins:
+                      id: "5"
+                      idName: "jins_kurd"
+                      displayName: "Jins Kurd"
+                      version: "2025-10-18T19:41:17.132Z"
+                    comparisons:
+                      - jins:
+                          id: "5"
+                          idName: "jins_kurd"
+                          displayName: "Jins Kurd"
+                          version: "2025-10-18T19:41:17.132Z"
+                          tonicId: "rast"
+                          tonicName: "rāst"
+                          transposition: false
+                          numberOfPitchClasses: 4
+                          pitchClassDataType: "cents"
+                          includeIntervals: true
+                        context:
+                          tuningSystem:
+                            id: "IbnSina-(1037)"
+                            displayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
+                            version: "2025-10-18T19:41:17.132Z"
+                            numberOfPitchClassesSingleOctave: 17
+                            startingNoteName: "yegah"
+                            referenceFrequency: 440.0
+                        pitchData:
+                          - pitchClassIndex: 0
+                            octave: 1
+                            scaleDegree: "I"
+                            noteName: "rast"
+                            noteNameDisplay: "rāst"
+                            cents: 0.0
+                          - pitchClassIndex: 1
+                            octave: 1
+                            scaleDegree: "II"
+                            noteName: "dugah"
+                            noteNameDisplay: "dūgāh"
+                            cents: 204.0
+                          - pitchClassIndex: 2
+                            octave: 1
+                            scaleDegree: "III"
+                            noteName: "kurd"
+                            noteNameDisplay: "kurd"
+                            cents: 294.0
+                          - pitchClassIndex: 3
+                            octave: 1
+                            scaleDegree: "IV"
+                            noteName: "nawa"
+                            noteNameDisplay: "nawā"
+                            cents: 498.0
+                        intervals:
+                          - cents: 204.0
+                          - cents: 90.0
+                          - cents: 204.0
+                      - jins:
+                          id: "5"
+                          idName: "jins_kurd"
+                          displayName: "Jins Kurd"
+                          version: "2025-10-18T19:41:17.132Z"
+                          tonicId: "rast"
+                          tonicName: "rāst"
+                          transposition: false
+                          numberOfPitchClasses: 4
+                          pitchClassDataType: "cents"
+                          includeIntervals: true
+                        context:
+                          tuningSystem:
+                            id: "IbnSina-(1037)"
+                            displayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
+                            version: "2025-10-18T19:41:17.132Z"
+                            numberOfPitchClassesSingleOctave: 17
+                            startingNoteName: "yegah"
+                            referenceFrequency: 440.0
+                        pitchData:
+                          - pitchClassIndex: 0
+                            octave: 1
+                            scaleDegree: "I"
+                            noteName: "rast"
+                            noteNameDisplay: "rāst"
+                            cents: 0.0
+                          - pitchClassIndex: 1
+                            octave: 1
+                            scaleDegree: "II"
+                            noteName: "dugah"
+                            noteNameDisplay: "dūgāh"
+                            cents: 211.7
+                          - pitchClassIndex: 2
+                            octave: 1
+                            scaleDegree: "III"
+                            noteName: "kurd"
+                            noteNameDisplay: "kurd"
+                            cents: 294.1
+                          - pitchClassIndex: 3
+                            octave: 1
+                            scaleDegree: "IV"
+                            noteName: "nawa"
+                            noteNameDisplay: "nawā"
+                            cents: 498.0
+                        intervals:
+                          - cents: 211.7
+                          - cents: 82.4
+                          - cents: 203.9
+                    meta:
+                      totalComparisons: 2
+                      successfulComparisons: 2
+                      failedComparisons: 0
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                missingTuningSystems:
+                  summary: Missing tuningSystems parameter
+                  value:
+                    error: "tuningSystems parameter is required"
+                    message: "Provide comma-separated tuning system IDs"
+                    hint: 'Format: ?tuningSystems=IbnSina-(1037),al-Farabi-(950g)'
+                    example: "/api/ajnas/jins_kurd/compare?tuningSystems=IbnSina-(1037),al-Farabi-(950g)&startingNote=yegah&pitchClassDataType=cents"
+                missingStartingNote:
+                  summary: Missing startingNote parameter
+                  value:
+                    error: "startingNote parameter is required"
+                    message: "A starting note must be specified for all tuning systems"
+                    hint: "Add &startingNote=yegah to your request"
+                invalidIntervals:
+                  summary: Invalid intervals parameter
+                  value:
+                    error: "Invalid parameter: intervals"
+                    message: "The 'intervals' parameter must be 'true' or 'false'."
+                    validOptions: ["true", "false"]
+                    hint: "Use ?intervals=true or ?intervals=false"
+        '404':
+          description: Jins not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "Jins 'jins_invalid' not found"
+                hint: "Use /api/ajnas to see all available ajnās"
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /sources:
+    get:
+      tags:
+        - Sources
+      summary: List all bibliographic sources
+      description: |
+        Return all bibliographic sources (books, articles, theses) with comprehensive metadata.
+        
+        - Includes titles, contributors, publication information, and version timestamps
+        - Sources document the historical and scholarly foundation for the archive's musical data
+        - All sources include common fields (edition, publication date, URL, etc.)
+        - Type-specific fields are included based on sourceType:
+          - Books: publisher, place, ISBN, original publication date
+          - Articles: journal, volume, issue, page range, DOI
+          - Theses: degree type, university, department, database information
+      operationId: listSources
+      parameters:
+        - name: inArabic
+          in: query
+          required: false
+          description: |
+            Return bilingual responses with Arabic script when true.
+            
+            When true:
+            - All English/transliteration fields remain unchanged
+            - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+            - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+            - Comments get Arabic versions in commentsAr if available
+            - Tuning system display names get Arabic versions in displayNameAr if available
+            - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "false"
+          example: "false"
+      responses:
+        '200':
+          description: List of sources retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sources:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SourceResponse'
+                  meta:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                        description: Total number of sources
+              examples:
+                comprehensive:
+                  summary: Comprehensive source data with all fields
+                  value:
+                    sources:
+                      - id: "al-Khulʿī-(1904/2011)"
+                        displayName: "al-Khulʿī-(1904/2011)"
+                        sourceType: "Book"
+                        title: "Kitāb al-Mūsiqā al-Sharqī"
+                        titleAr: "كتاب الموسيقى الشرقي"
+                        contributors:
+                          - type: "Author"
+                            firstName: "Mohammad Kāmil"
+                            lastName: "al-Khulʿī"
+                            firstNameAr: "محمد كامل"
+                            lastNameAr: "الخلعي"
+                        edition: ""
+                        editionAr: ""
+                        publicationDate: "2011"
+                        publicationDateAr: "٢٠١١"
+                        url: "https://www.hindawi.org/books/46319638/"
+                        dateAccessed: "21-05-2025"
+                        version: "2025-10-18T19:50:31.664Z"
+                        originalPublicationDate: "1904"
+                        originalPublicationDateAr: "١٩٠٤"
+                        publisher: "Hindawi Foundation for Education and Culture"
+                        publisherAr: "مؤسسة هنداوي للتعليم والثقافة"
+                        place: "Cairo"
+                        placeAr: "القاهرة"
+                        ISBN: "9789776416543"
+                      - id: "Farmer-(1937)"
+                        displayName: "Farmer-(1937)"
+                        sourceType: "Article"
+                        title: "The Lute Scale of Avicenna"
+                        titleAr: "سلم العود لإبن سينا"
+                        contributors:
+                          - type: "Author"
+                            firstName: "Henry George"
+                            lastName: "Farmer"
+                            firstNameAr: "هنري جورج"
+                            lastNameAr: "فارمر"
+                        edition: ""
+                        editionAr: ""
+                        publicationDate: "1937"
+                        publicationDateAr: "١٩٣٧"
+                        url: ""
+                        dateAccessed: ""
+                        version: "2025-10-18T19:50:31.664Z"
+                        journal: "The Journal of the Royal Asiatic Society of Great Britain and Ireland"
+                        journalAr: "مجلة الجمعية الملكية الآسيوية في بريطانيا العظمى وأيرلندا"
+                        volume: "2"
+                        volumeAr: "٢"
+                        issue: ""
+                        issueAr: ""
+                        pageRange: "245–257"
+                        pageRangeAr: "٢٤٥-٢٥٧"
+                        DOI: ""
+                      - id: "Allami-(2022)"
+                        displayName: "Allami-(2022)"
+                        sourceType: "Thesis"
+                        title: "Échos-monde: Towards a hybrid repertoire of contemporary and experimental acoustic, electroacoustic and electronic Arabic music"
+                        titleAr: "‎عالم الأصداء: نحو رصيدٍ هجينٍ للموسيقى العربية المعاصرة والتجريبية، صوتياً وكهروصوتياً وإلكترونياً"
+                        contributors:
+                          - type: "Author"
+                            firstName: "Khyam"
+                            lastName: "Allami"
+                            firstNameAr: "خيّام"
+                            lastNameAr: "اللامي"
+                        edition: ""
+                        editionAr: ""
+                        publicationDate: "2022"
+                        publicationDateAr: ""
+                        url: "https://www.open-access.bcu.ac.uk/14036/"
+                        dateAccessed: "16-10-2025"
+                        version: "2025-10-23T22:32:56.276Z"
+                        degreeType: "PhD Dissertation"
+                        degreeTypeAr: "أطروحة دكتوراه"
+                        university: "Birmingham City University"
+                        universityAr: "جامعة برمنغهام سيتي"
+                        department: "Royal Birmingham Conservatoire"
+                        departmentAr: "معهد برمنغهام الملكي"
+                        databaseIdentifier: ""
+                        databaseName: ""
+                    meta:
+                      total: 17
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /sources/{id}:
+    get:
+      tags:
+        - Sources
+      summary: Get a single bibliographic source
+      description: |
+        Return detailed information for a single bibliographic source by ID.
+
+        - Returns comprehensive bibliographic metadata for the specified source
+        - Includes all common fields (title, contributors, publication date, etc.)
+        - Includes type-specific fields based on sourceType:
+          - Books: publisher, place, ISBN, original publication date
+          - Articles: journal, volume, issue, page range, DOI
+          - Theses: degree type, university, department, database information
+        - Supports bilingual responses (English/Arabic) via inArabic parameter
+      operationId: getSource
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: |
+            The unique identifier for the bibliographic source.
+
+            Examples:
+            - `al-Khuli-(2011)` - Book source ID (URL-safe, diacritics removed)
+            - `Farmer-(1937)` - Article source ID
+            - `Allami-(2022)` - Thesis source ID
+
+            **Note**: Source IDs use only the publication date (not original publication date)
+            and are URL-safe with diacritics removed for compatibility.
+
+            Use the `/api/sources` endpoint to retrieve all available source IDs.
+          schema:
+            type: string
+          example: "Farmer-(1937)"
+        - name: inArabic
+          in: query
+          required: false
+          description: |
+            Return bilingual responses with Arabic script when true.
+
+            When true:
+            - All English/transliteration fields remain unchanged
+            - Arabic versions are added with "Ar" suffix (e.g., titleAr, firstNameAr, lastNameAr)
+            - Contributors get Arabic name versions in firstNameAr and lastNameAr fields
+            - Type-specific fields get Arabic versions (e.g., publisherAr, journalAr, universityAr)
+            - Display name gets Arabic version in displayNameAr field
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "false"
+          example: "false"
+      responses:
+        '200':
+          description: Source retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  source:
+                    $ref: '#/components/schemas/SourceResponse'
+              examples:
+                book:
+                  summary: Book source example
+                  value:
+                    source:
+                      id: "al-Khuli-(2011)"
+                      displayName: "al-Khuli-(2011)"
+                      sourceType: "Book"
+                      title: "Kitāb al-Mūsiqā al-Sharqī"
+                      contributors:
+                        - type: "Author"
+                          firstName: "Mohammad Kāmil"
+                          lastName: "al-Khulʿī"
+                      edition: ""
+                      publicationDate: "2011"
+                      url: "https://www.hindawi.org/books/46319638/"
+                      dateAccessed: "21-05-2025"
+                      version: "2025-10-18T19:50:31.664Z"
+                      originalPublicationDate: "1904"
+                      publisher: "Hindawi Foundation for Education and Culture"
+                      place: "Cairo"
+                      ISBN: "9789776416543"
+                article:
+                  summary: Article source example
+                  value:
+                    source:
+                      id: "Farmer-(1937)"
+                      displayName: "Farmer-(1937)"
+                      sourceType: "Article"
+                      title: "The Lute Scale of Avicenna"
+                      contributors:
+                        - type: "Author"
+                          firstName: "Henry George"
+                          lastName: "Farmer"
+                      edition: ""
+                      publicationDate: "1937"
+                      url: ""
+                      dateAccessed: ""
+                      version: "2025-10-18T19:50:31.664Z"
+                      journal: "The Journal of the Royal Asiatic Society of Great Britain and Ireland"
+                      volume: "2"
+                      issue: ""
+                      pageRange: "245–257"
+                      DOI: ""
+                thesis:
+                  summary: Thesis source example
+                  value:
+                    source:
+                      id: "Allami-(2022)"
+                      displayName: "Allami-(2022)"
+                      sourceType: "Thesis"
+                      title: "Échos-monde: Towards a hybrid repertoire of contemporary and experimental acoustic, electroacoustic and electronic Arabic music"
+                      contributors:
+                        - type: "Author"
+                          firstName: "Khyam"
+                          lastName: "Allami"
+                      edition: ""
+                      publicationDate: "2022"
+                      url: "https://www.open-access.bcu.ac.uk/14036/"
+                      dateAccessed: "16-10-2025"
+                      version: "2025-10-23T22:32:56.276Z"
+                      degreeType: "PhD Dissertation"
+                      university: "Birmingham City University"
+                      department: "Royal Birmingham Conservatoire"
+                      databaseIdentifier: ""
+                      databaseName: ""
+        '400':
+          description: Bad request - Invalid or missing source ID
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  hint:
+                    type: string
+                  example:
+                    type: string
+              example:
+                error: "No source ID provided"
+                hint: "Please specify a source ID"
+                example: "/api/sources/Farmer-(1937)"
+        '404':
+          description: Source not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  hint:
+                    type: string
+              example:
+                error: "Source 'invalid-id' not found"
+                hint: "Use /api/sources to see all available sources"
         '500':
           $ref: '#/components/responses/ServerError'
 
@@ -621,9 +3227,18 @@ components:
           example: 4
         tuningSystemsAvailability:
           type: array
-          description: Tuning systems where maqām is available with their valid tuning system starting notes
+          description: Tuning systems where maqām is available with their valid tuning system starting notes (simplified structure without transposition counts for list endpoint)
           items:
-            $ref: '#/components/schemas/TuningSystemAvailability'
+            type: object
+            properties:
+              tuningSystemId:
+                type: string
+                example: "al-Farabi-(950g)"
+              tuningSystemStartingNoteNames:
+                type: array
+                items:
+                  type: string
+                example: ["ʿushayrān"]
           example:
             - tuningSystemId: "al-Farabi-(950g)"
               tuningSystemStartingNoteNames: ["ʿushayrān"]
@@ -638,18 +3253,30 @@ components:
       type: object
       required:
         - tuningSystemId
+        - tuningSystemDisplayName
         - tuningSystemStartingNoteNames
+        - tuningSystemStartingNoteNamesIds
       properties:
         tuningSystemId:
           type: string
-          description: Tuning system identifier
+          description: Tuning system identifier (e.g., 'IbnSina-(1037)', 'al-Farabi-(950i)', 'Anglo-European-(1700)')
           example: "IbnSina-(1037)"
+        tuningSystemDisplayName:
+          type: string
+          description: Display name formatted as "Creator (Year) Title" (e.g., "Ibn Sīnā (1037) 7-Fret Oud 17-Tone")
+          example: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
         tuningSystemStartingNoteNames:
           type: array
-          description: Tuning system starting note names where this maqām is available in this tuning system. These represent different theoretical frameworks, not simple transpositions.
+          description: Tuning system starting note names where this maqām is available (display values with diacritics). These represent different theoretical frameworks, not simple transpositions.
           items:
             type: string
           example: ["ʿushayrān", "yegāh"]
+        tuningSystemStartingNoteNamesIds:
+          type: array
+          description: URL-safe identifiers for tuning system starting note names (for use in API calls)
+          items:
+            type: string
+          example: ["ushayran", "yegah"]
 
     MaqamDetailResponse:
       type: object
@@ -680,33 +3307,324 @@ components:
           items:
             $ref: '#/components/schemas/Sayr'
 
+    JinsDetailResponse:
+      type: object
+      required:
+        - jins
+        - context
+        - pitchData
+      properties:
+        jins:
+          type: object
+          required:
+            - id
+            - idName
+            - displayName
+            - version
+            - tonicId
+            - tonicName
+            - transposition
+            - numberOfTranspositions
+            - numberOfPitchClasses
+            - pitchClassDataType
+            - includeIntervals
+          properties:
+            id:
+              type: string
+              description: Numeric identifier for the jins
+            idName:
+              type: string
+              description: URL-safe identifier for the jins
+            displayName:
+              type: string
+              description: Display name with diacritics
+            version:
+              type: string
+              description: ISO 8601 timestamp of last modification
+            tonicId:
+              type: string
+              description: URL-safe tonic note identifier
+            tonicName:
+              type: string
+              description: Tonic note name with diacritics
+            transposition:
+              type: boolean
+              description: Whether this is a transposition from the original tonic
+            originalTonicId:
+              type: string
+              description: Original tonic identifier (present only if transposed)
+            originalTonicName:
+              type: string
+              description: Original tonic name (present only if transposed)
+            transposedTonicId:
+              type: string
+              description: Transposed tonic identifier (present only if transposed)
+            transposedTonicName:
+              type: string
+              description: Transposed tonic name (present only if transposed)
+            numberOfTranspositions:
+              type: integer
+              description: Total number of available transpositions
+            numberOfPitchClasses:
+              type: integer
+              description: Number of pitch classes in this jins
+            commentsEnglish:
+              type: string
+              nullable: true
+              description: English commentary
+            commentsArabic:
+              type: string
+              nullable: true
+              description: Arabic commentary
+            sources:
+              type: array
+              description: Bibliographic source references
+              items:
+                type: object
+                properties:
+                  sourceId:
+                    type: string
+                  page:
+                    type: string
+            pitchClassDataType:
+              type: string
+              description: Format used for pitch class data
+            includeIntervals:
+              type: boolean
+              description: Whether intervals are included
+        context:
+          $ref: '#/components/schemas/MaqamContext'
+        pitchData:
+          type: array
+          description: Pitch class sequence (ajnās are unidirectional, not ascending/descending)
+          items:
+            $ref: '#/components/schemas/PitchClass'
+        intervals:
+          type: array
+          description: Optional - included when intervals=true. Interval data between consecutive pitch classes.
+          items:
+            type: object
+            description: Interval data (fields vary by format parameter)
+        modulations:
+          type: object
+          description: Optional - included when includeModulations=true
+          properties:
+            ajnas:
+              type: array
+              description: Modulation possibilities to other ajnās
+              items:
+                type: object
+                properties:
+                  jinsDegree:
+                    type: string
+                    description: Scale degree where modulation occurs
+                  noteNameId:
+                    type: string
+                    description: URL-safe note name identifier
+                  noteNameDisplay:
+                    type: string
+                    description: Note name with diacritics
+                  pitchClassIndex:
+                    type: integer
+                    description: Pitch class index at this degree
+                  count:
+                    type: integer
+                    description: Number of modulation options
+                  modulations:
+                    type: array
+                    description: Array of ajnās that can be modulated to
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        idName:
+                          type: string
+                        displayName:
+                          type: string
+        lowerOctaveModulations:
+          type: object
+          description: Optional - included when includeModulations8vb=true
+          properties:
+            degreesNoteNames:
+              type: object
+              properties:
+                ajnas:
+                  type: object
+            ajnas:
+              type: object
+              description: Lower octave modulation possibilities organized by degree
+
+    SourceResponse:
+      type: object
+      description: |
+        Comprehensive bibliographic source information. Includes common fields for all source types
+        and type-specific fields based on sourceType (Book, Article, or Thesis). Arabic-language
+        fields are suffixed with "Ar" and are returned only when the `inArabic` parameter is true.
+      required:
+        - id
+        - displayName
+        - sourceType
+        - title
+        - contributors
+        - edition
+        - publicationDate
+        - url
+        - dateAccessed
+        - version
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the source
+        displayName:
+          type: string
+          description: Formatted citation string (e.g., "Author (Year) Title")
+        displayNameAr:
+          type: string
+          description: Arabic formatted citation string (present when inArabic=true)
+        sourceType:
+          type: string
+          enum: [Book, Article, Thesis]
+          description: Type discriminator for the source
+        title:
+          type: string
+          description: Source title in English/transliteration
+        titleAr:
+          type: string
+          description: Source title in Arabic (present when inArabic=true)
+        contributors:
+          type: array
+          description: Array of contributors (authors, editors, translators, etc.)
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                description: Contributor role (e.g., "Author", "Editor", "Reviewer")
+              firstName:
+                type: string
+                description: First name in English/transliteration
+              lastName:
+                type: string
+                description: Last name in English/transliteration
+              firstNameAr:
+                type: string
+                description: First name in Arabic (present when inArabic=true)
+              lastNameAr:
+                type: string
+                description: Last name in Arabic (present when inArabic=true)
+        edition:
+          type: string
+          description: Edition information in English/transliteration
+        editionAr:
+          type: string
+          description: Edition information in Arabic (present when inArabic=true)
+        publicationDate:
+          type: string
+          description: Publication date (string, e.g., "2025" or ISO date)
+        publicationDateAr:
+          type: string
+          description: Publication date in Arabic (present when inArabic=true)
+        url:
+          type: string
+          description: URL for online sources (empty string if not applicable)
+        dateAccessed:
+          type: string
+          description: Date when online source was accessed (empty string if not applicable)
+        version:
+          type: string
+          description: ISO 8601 timestamp of last modification
+        # Book-specific fields (present only when sourceType is "Book")
+        originalPublicationDate:
+          type: string
+          description: Original publication date (for reprints and editions)
+        originalPublicationDateAr:
+          type: string
+          description: Original publication date in Arabic (present when inArabic=true)
+        publisher:
+          type: string
+          description: Publisher name
+        publisherAr:
+          type: string
+          description: Publisher name in Arabic (present when inArabic=true)
+        place:
+          type: string
+          description: Publication place
+        placeAr:
+          type: string
+          description: Publication place in Arabic (present when inArabic=true)
+        ISBN:
+          type: string
+          description: International Standard Book Number
+        # Article-specific fields (present only when sourceType is "Article")
+        journal:
+          type: string
+          description: Journal name
+        journalAr:
+          type: string
+          description: Journal name in Arabic (present when inArabic=true)
+        volume:
+          type: string
+          description: Volume number
+        volumeAr:
+          type: string
+          description: Volume number in Arabic (present when inArabic=true)
+        issue:
+          type: string
+          description: Issue number
+        issueAr:
+          type: string
+          description: Issue number in Arabic (present when inArabic=true)
+        pageRange:
+          type: string
+          description: Page range (e.g., "45–67")
+        pageRangeAr:
+          type: string
+          description: Page range in Arabic (present when inArabic=true)
+        DOI:
+          type: string
+          description: Digital Object Identifier
+        # Thesis-specific fields (present only when sourceType is "Thesis")
+        degreeType:
+          type: string
+          description: Type of degree (e.g., "Master's thesis", "PhD dissertation")
+        degreeTypeAr:
+          type: string
+          description: Type of degree in Arabic (present when inArabic=true)
+        university:
+          type: string
+          description: University or institution name
+        universityAr:
+          type: string
+          description: University or institution name in Arabic (present when inArabic=true)
+        department:
+          type: string
+          description: Department name
+        departmentAr:
+          type: string
+          description: Department name in Arabic (present when inArabic=true)
+        databaseIdentifier:
+          type: string
+          description: Database identifier (e.g., ProQuest ID)
+        databaseName:
+          type: string
+          description: Name of the database (e.g., "ProQuest", "PQDT")
+
+    SourceDetailResponse:
+      type: object
+      required:
+        - source
+      properties:
+        source:
+          $ref: '#/components/schemas/SourceResponse'
+
     MaqamContext:
       type: object
       required:
         - tuningSystem
-        - referenceFrequency
-        - pitchClassDataType
       properties:
         tuningSystem:
           $ref: '#/components/schemas/TuningSystemMetadata'
-        startingNote:
-          type: string
-          description: URL-safe starting note name (diacritics-insensitive)
-          example: "ushayran"
-          deprecated: true
-        referenceFrequency:
-          type: number
-          format: float
-          description: Reference frequency in Hz
-          example: 97.999
-        pitchClassDataType:
-          type: string
-          description: Type of pitch-data representation returned (matches `format` parameter)
-          example: "all"
-        version:
-          type: string
-          description: Version or timestamp for the context data
-          example: "2025-10-18T19:42:23.643Z"
 
     TuningSystemMetadata:
       type: object
@@ -715,7 +3633,7 @@ components:
         - displayName
         - numberOfPitchClassesSingleOctave
         - tuningSystemStartingNoteNames
-        - numberOfTuningSystemStartingNoteNames
+        - tuningSystemStartingNoteNamesIds
       properties:
         id:
           type: string
@@ -739,14 +3657,16 @@ components:
           example: 17
         tuningSystemStartingNoteNames:
           type: array
-          description: Available tuning system starting note names (first note in each note name set). These represent different theoretical traditions (ʿushayrān for oud tuning, yegāh for monochord measurements, rāst for pedagogical frameworks).
+          description: Available tuning system starting note names (first note in each note name set) with diacritics. These represent different theoretical traditions (ʿushayrān for oud tuning, yegāh for monochord measurements, rāst for pedagogical frameworks).
           items:
             type: string
           example: ["ʿushayrān", "yegāh"]
-        numberOfTuningSystemStartingNoteNames:
-          type: integer
-          description: Count of available tuning system starting note name configurations
-          example: 2
+        tuningSystemStartingNoteNamesIds:
+          type: array
+          description: URL-safe identifiers for tuning system starting note names (for use in API calls)
+          items:
+            type: string
+          example: ["ushayran", "yegah"]
         numberOfPitchClassesAllOctaves:
           type: integer
           description: Total pitch-class count across available octaves (used for non-octave-repeating maqāmāt)
@@ -785,9 +3705,13 @@ components:
           type: integer
           description: Index in tuning system
           example: 0
+        octave:
+          type: integer
+          description: Octave number (0, 1, 2, or 3) indicating which octave this pitch class belongs to
+          example: 1
         scaleDegree:
           type: string
-          description: Roman numeral scale degree
+          description: Roman numeral maqām degree
           example: "I"
         noteName:
           type: string
@@ -874,7 +3798,7 @@ components:
             oneOf:
               - $ref: '#/components/schemas/EntityRef'
               - type: 'null'
-          description: Note-name keyed map of ajnās present at each ascending scale degree
+          description: Note-name keyed map of ajnās present at each ascending maqām degree
           example:
             rast: { id: "3", idName: "jins_rast", displayName: "jins rāst" }
             dugah: null
@@ -884,12 +3808,12 @@ components:
             oneOf:
               - $ref: '#/components/schemas/EntityRef'
               - type: 'null'
-          description: Note-name keyed map of ajnās present at each descending scale degree
+          description: Note-name keyed map of ajnās present at each descending maqām degree
           example:
             kurd: { id: "9", idName: "jins_kurd", displayName: "jins kurd" }
             nahawand: { id: "4", idName: "jins_nahawand", displayName: "jins nahāwand" }
       description: |
-        Ajnās present on each scale degree, keyed by standardized note names. Values are full entity objects
+        Ajnās present on each maqām degree, keyed by standardized note names. Values are full entity objects
         `{ id, idName, displayName }` when a jins is present, or `null` when no jins is assigned.
 
     IntervalsData:
@@ -897,7 +3821,7 @@ components:
       properties:
         ascending:
           type: array
-          description: Interval data between ascending scale degrees
+          description: Interval data between ascending maqām degrees
           items:
             type: object
             properties:
@@ -911,91 +3835,93 @@ components:
                 type: number
         descending:
           type: array
-          description: Interval data between descending scale degrees
+          description: Interval data between descending maqām degrees
           items:
             type: object
 
     ModulationsData:
       type: object
+      description: Modulation networks organized by note name (darajat al-istiqrār), not technical degrees
       properties:
         maqamat:
-          type: object
-          description: Possible maqām modulations by scale degree
-          properties:
-            onFirstDegree:
-              type: array
-              items:
-                $ref: '#/components/schemas/EntityRef'
-              example:
-                - { id: "21", idName: "maqam_mahur", displayName: "maqām māhūr" }
-                - { id: "22", idName: "maqam_suznak", displayName: "maqām sūznāk" }
-            onSecondDegree:
-              type: array
-              items:
-                $ref: '#/components/schemas/EntityRef'
-            onThirdDegree:
-              type: array
-              items:
-                $ref: '#/components/schemas/EntityRef'
-            onFourthDegree:
-              type: array
-              items:
-                $ref: '#/components/schemas/EntityRef'
-            onFifthDegree:
-              type: array
-              items:
-                $ref: '#/components/schemas/EntityRef'
-            onSixthDegree:
-              type: array
-              items:
-                $ref: '#/components/schemas/EntityRef'
-            onSeventhDegree:
-              type: array
-              items:
-                $ref: '#/components/schemas/EntityRef'
+          type: array
+          description: Maqām modulations organized by note name, each entry includes the maqām degree, note name, pitch class index, count, and list of available modulations
+          items:
+            type: object
+            required:
+              - maqamDegree
+              - noteNameId
+              - noteNameDisplay
+              - count
+              - modulations
+            properties:
+              maqamDegree:
+                type: string
+                description: Maqām degree in Roman numerals (I, II, III, etc.)
+                example: "I"
+              noteNameId:
+                type: string
+                description: URL-safe note name identifier (darajat al-istiqrār)
+                example: "rast"
+              noteNameDisplay:
+                type: string
+                description: Display note name with diacritics
+                example: "rāst"
+              pitchClassIndex:
+                type: integer
+                description: Pitch class index within the tuning system (0-based)
+                example: 4
+              count:
+                type: integer
+                description: Number of available modulations at this degree
+                example: 8
+              maqamDegreeDirection:
+                type: string
+                enum: [ascending, descending]
+                description: Direction for degree VI modulations (only present when applicable)
+                example: "ascending"
+              modulations:
+                type: array
+                description: List of maqāmāt available for modulation at this note name
+                items:
+                  $ref: '#/components/schemas/EntityRef'
         ajnas:
-          type: object
-          description: Possible jins modulations by scale degree
-          properties:
-            onFirstDegree:
-              type: array
-              items:
-                $ref: '#/components/schemas/EntityRef'
-              example:
-                - { id: "3", idName: "jins_rast", displayName: "jins rāst" }
-                - { id: "14", idName: "jins_mahur", displayName: "jins māhūr" }
-            onSecondDegree:
-              type: array
-              items:
-                $ref: '#/components/schemas/EntityRef'
-            onThirdDegree:
-              type: array
-              items:
-                $ref: '#/components/schemas/EntityRef'
-            onFourthDegree:
-              type: array
-              items:
-                $ref: '#/components/schemas/EntityRef'
-            onFifthDegree:
-              type: array
-              items:
-                $ref: '#/components/schemas/EntityRef'
-            onSixthDegree:
-              type: array
-              items:
-                $ref: '#/components/schemas/EntityRef'
-            onSeventhDegree:
-              type: array
-              items:
-                $ref: '#/components/schemas/EntityRef'
-        degreesNoteNames:
-          type: object
-          description: Note-name mappings for modulation degrees (URL-safe note names)
-          properties:
-            maqamat:
-              type: object
-            ajnas:
-              type: object
+          type: array
+          description: Jins modulations organized by note name, each entry includes the jins degree, note name, pitch class index, count, and list of available modulations
+          items:
+            type: object
+            required:
+              - jinsDegree
+              - noteNameId
+              - noteNameDisplay
+              - count
+              - modulations
+            properties:
+              jinsDegree:
+                type: string
+                description: Maqām degree in Roman numerals where jins modulation occurs
+                example: "I"
+              noteNameId:
+                type: string
+                description: URL-safe note name identifier (darajat al-istiqrār)
+                example: "rast"
+              noteNameDisplay:
+                type: string
+                description: Display note name with diacritics
+                example: "rāst"
+              pitchClassIndex:
+                type: integer
+                description: Pitch class index within the tuning system (0-based)
+                example: 4
+              count:
+                type: integer
+                description: Number of available modulations at this degree
+                example: 5
+              modulations:
+                type: array
+                description: List of ajnās available for modulation at this note name
+                items:
+                  $ref: '#/components/schemas/EntityRef'
 
     Sayr:
       type: object
@@ -1020,11 +3946,29 @@ components:
         error:
           type: string
           description: Error message
-          example: "Invalid request"
+          example: "Failed to retrieve maqāmāt"
+        message:
+          type: string
+          description: Additional detailed message explaining the error (not always present)
+          example: "An unexpected error occurred while processing the request"
         details:
           type: string
-          description: Additional error details
-          example: "Parameter 'tuningSystem' is required"
+          description: Additional error details (for some error types, not always present)
+          example: "Database connection failed"
+        hint:
+          type: string
+          description: Helpful hint for resolving the error (not always present)
+          example: "Please try again later or contact support"
+        availabilityUrl:
+          type: string
+          description: URL to check availability (only for missing parameter errors, not always present)
+          example: "/api/maqamat/{id}/availability"
+        validOptions:
+          type: array
+          description: List of valid values (only for invalid parameter errors, not always present). These are display values (with diacritics) as returned by the tuning system.
+          items:
+            type: string
+          example: ["ʿushayrān", "yegāh"]
 
   responses:
     ServerError:
@@ -1034,8 +3978,7 @@ components:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
           example:
-            error: "Internal server error"
-            details: "An unexpected error occurred"
+            error: "Failed to retrieve maqāmāt"
 
   securitySchemes:
     ApiKeyAuth:

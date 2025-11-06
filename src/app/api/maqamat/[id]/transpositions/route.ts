@@ -4,6 +4,13 @@ import { standardizeText } from "@/functions/export";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { calculateMaqamTranspositions } from "@/functions/transpose";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
+import { parseInArabic, getMaqamNameDisplayAr, getNoteNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
+import {
+  buildEntityNamespace,
+  buildIdentifierNamespace,
+  buildLinksNamespace,
+  buildStringArrayNamespace
+} from "@/app/api/response-shapes";
 
 export const OPTIONS = handleCorsPreflightRequest;
 
@@ -16,7 +23,6 @@ export const OPTIONS = handleCorsPreflightRequest;
  * Query parameters:
  * - tuningSystem (required): The tuning system ID
  * - startingNote (required): The starting note
- * - octave (optional): Filter to single octave only (default: false, shows all octaves)
  */
 export async function GET(
   request: Request,
@@ -26,7 +32,22 @@ export async function GET(
     const { searchParams } = new URL(request.url);
     const tuningSystemId = searchParams.get("tuningSystem");
     const startingNote = searchParams.get("startingNote");
-    const octaveOnly = searchParams.get("octave") === "true";
+    
+    // Parse inArabic parameter
+    let inArabic = false;
+    try {
+      inArabic = parseInArabic(searchParams);
+    } catch (error) {
+      return addCorsHeaders(
+        NextResponse.json(
+          {
+            error: error instanceof Error ? error.message : "Invalid inArabic parameter",
+            hint: "Use ?inArabic=true or ?inArabic=false"
+          },
+          { status: 400 }
+        )
+      );
+    }
 
     // Validate tuningSystem parameter
     if (tuningSystemId === null) {
@@ -161,66 +182,110 @@ export async function GET(
       5 // default tolerance
     );
 
-    // Group by tonic note for single-octave view
-    let transpositionsList;
-    
-    if (octaveOnly) {
-      // Group by tonic pitch class and take first occurrence
-      const seenTonicIndices = new Set();
-      transpositionsList = transpositions
-        .filter((t) => {
-          const tonicIndex = t.ascendingPitchClasses[0].pitchClassIndex % pitchClasses.length;
-          if (seenTonicIndices.has(tonicIndex)) {
-            return false;
-          }
-          seenTonicIndices.add(tonicIndex);
-          return true;
-        })
-        .map((t) => ({
-          tonic: t.ascendingPitchClasses[0].noteName,
-          tonicFrequency: parseFloat(t.ascendingPitchClasses[0].frequency),
-          tonicCents: parseFloat(t.ascendingPitchClasses[0].cents),
-          pitchClassIndex: t.ascendingPitchClasses[0].pitchClassIndex,
-          octave: t.ascendingPitchClasses[0].octave,
-          dataHref: `/api/maqamat/${maqamId}?tuningSystem=${tuningSystemId}&startingNote=${actualStartingNote}&transpose=${t.ascendingPitchClasses[0].noteName}`
-        }));
-    } else {
-      // All transpositions across all octaves
-      transpositionsList = transpositions.map((t) => ({
-        tonic: t.ascendingPitchClasses[0].noteName,
-        tonicFrequency: parseFloat(t.ascendingPitchClasses[0].frequency),
-        tonicCents: parseFloat(t.ascendingPitchClasses[0].cents),
+    // Build transpositions list with tonicId (URL-safe) and tonicName (with diacritics or Arabic)
+    const transpositionItems = transpositions.map((t) => {
+      const tonicNoteName = t.ascendingPitchClasses[0].noteName;
+      const tonicNamespace = buildIdentifierNamespace(
+        {
+          idName: standardizeText(tonicNoteName),
+          displayName: tonicNoteName,
+        },
+        {
+          inArabic,
+          displayAr: inArabic ? getNoteNameDisplayAr(tonicNoteName) : undefined,
+        }
+      );
+
+      const pitchClassNamespace = {
         pitchClassIndex: t.ascendingPitchClasses[0].pitchClassIndex,
         octave: t.ascendingPitchClasses[0].octave,
-        dataHref: `/api/maqamat/${maqamId}?tuningSystem=${tuningSystemId}&startingNote=${actualStartingNote}&transpose=${t.ascendingPitchClasses[0].noteName}`
-      }));
-    }
+      };
+
+      return {
+        tonic: tonicNamespace,
+        pitchClass: pitchClassNamespace,
+        links: buildLinksNamespace({
+          detail: `/api/maqamat/${maqam.getIdName()}?tuningSystem=${encodeURIComponent(tuningSystemId)}&startingNote=${encodeURIComponent(actualStartingNote)}&transposeTo=${standardizeText(tonicNoteName)}`
+        })
+      };
+    });
+
+    // Get single octave pitch class count (from original pitch class values, not note name sets which may include multiple octaves)
+    const pitchClassesInSingleOctave = tuningSystem.getOriginalPitchClassValues().length;
+
+    const maqamNamespace = buildEntityNamespace(
+      {
+        id: maqam.getId(),
+        idName: maqam.getIdName(),
+        displayName: maqam.getName(),
+      },
+      {
+        version: maqam.getVersion(),
+        inArabic,
+        displayNameAr: inArabic ? getMaqamNameDisplayAr(maqam.getName()) : undefined,
+      }
+    );
+
+    const tuningSystemNamespace = buildEntityNamespace(
+      {
+        id: tuningSystem.getId(),
+        idName: standardizeText(tuningSystem.getId()),
+        displayName: tuningSystem.stringify(),
+      },
+      {
+        version: tuningSystem.getVersion(),
+        extras: {
+          numberOfPitchClassesSingleOctave: pitchClassesInSingleOctave,
+        },
+        inArabic,
+        displayNameAr: inArabic
+          ? getTuningSystemDisplayNameAr(
+              tuningSystem.getCreatorArabic() || "",
+              tuningSystem.getCreatorEnglish() || "",
+              tuningSystem.getYear(),
+              tuningSystem.getTitleArabic() || "",
+              tuningSystem.getTitleEnglish() || ""
+            )
+          : undefined,
+      }
+    );
+
+    const startingNoteNamespace = buildIdentifierNamespace(
+      {
+        idName: standardizeText(actualStartingNote),
+        displayName: actualStartingNote,
+      },
+      {
+        inArabic,
+        displayAr: inArabic ? getNoteNameDisplayAr(actualStartingNote) : undefined,
+      }
+    );
+
+    const transpositionSummary = buildStringArrayNamespace(
+      transpositions.map((t) => standardizeText(t.ascendingPitchClasses[0].noteName)),
+      {
+        inArabic,
+        displayNames: transpositions.map((t) => t.ascendingPitchClasses[0].noteName),
+        displayNamesAr: inArabic
+          ? transpositions.map((t) => getNoteNameDisplayAr(t.ascendingPitchClasses[0].noteName))
+          : undefined,
+      }
+    );
 
     const response = NextResponse.json({
-      maqam: {
-        id: maqam.getId(),
-        name: maqam.getName(),
-        version: maqam.getVersion()
-      },
-      context: {
-        tuningSystem: {
-          id: tuningSystemId,
-          name: tuningSystem.getTitleEnglish(),
-          version: tuningSystem.getVersion()
-        },
-        startingNote: actualStartingNote,
-        pitchClassesInOctave: pitchClasses.length
-      },
+      maqam: maqamNamespace,
+      tuningSystem: tuningSystemNamespace,
+      startingNote: startingNoteNamespace,
       transpositions: {
-        total: transpositionsList.length,
-        octaveOnly: octaveOnly,
-        list: transpositionsList
+        total: transpositionItems.length,
+        options: transpositionSummary,
+        detailed: transpositionItems,
       },
-      links: {
-        self: `/api/maqamat/${maqamId}/transpositions?tuningSystem=${tuningSystemId}&startingNote=${actualStartingNote}${octaveOnly ? '&octave=true' : ''}`,
-        availability: `/api/maqamat/${maqamId}/availability`,
-        maqam: `/api/maqamat/${maqamId}`
-      }
+      links: buildLinksNamespace({
+        self: `/api/maqamat/${maqam.getIdName()}/transpositions?tuningSystem=${encodeURIComponent(tuningSystemId)}&startingNote=${encodeURIComponent(actualStartingNote)}`,
+        availability: `/api/maqamat/${maqam.getIdName()}/availability`,
+        detail: `/api/maqamat/${maqam.getIdName()}`,
+      }),
     });
 
     return addCorsHeaders(response);
