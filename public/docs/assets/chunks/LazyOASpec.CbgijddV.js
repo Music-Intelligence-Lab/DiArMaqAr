@@ -1,0 +1,1 @@
+import{d as p,C as s,b as n,o as r}from"./framework.Cnsi11we.js";const _=p({__name:"LazyOASpec",props:{specUrl:{}},setup(e){const o=e;return(t,a)=>{const c=s("OASpec");return r(),n(c,{"spec-url":o.specUrl},null,8,["spec-url"])}}});export{_ as default};

@@ -33,7 +33,7 @@ export async function GET(
     const tuningSystemId = searchParams.get("tuningSystem");
     const startingNote = searchParams.get("startingNote");
     
-    // Parse inArabic parameter
+    // Parse includeArabic parameter
     let inArabic = false;
     try {
       inArabic = parseInArabic(searchParams);
@@ -41,8 +41,8 @@ export async function GET(
       return addCorsHeaders(
         NextResponse.json(
           {
-            error: error instanceof Error ? error.message : "Invalid inArabic parameter",
-            hint: "Use ?inArabic=true or ?inArabic=false"
+            error: error instanceof Error ? error.message : "Invalid includeArabic parameter",
+            hint: "Use ?includeArabic=true or ?inArabic=false"
           },
           { status: 400 }
         )

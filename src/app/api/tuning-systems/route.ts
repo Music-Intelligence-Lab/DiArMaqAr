@@ -23,9 +23,9 @@ export const dynamic = "force-dynamic";
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const includeSources = searchParams.get("includeSources") === "true";
+    const includeSources = searchParams.get("includeSources") !== "false";
     
-    // Parse inArabic parameter
+    // Parse includeArabic parameter
     let inArabic = false;
     try {
       inArabic = parseInArabic(searchParams);
@@ -33,8 +33,8 @@ export async function GET(request: Request) {
       return addCorsHeaders(
         NextResponse.json(
           {
-            error: error instanceof Error ? error.message : "Invalid inArabic parameter",
-            hint: "Use ?inArabic=true or ?inArabic=false"
+            error: error instanceof Error ? error.message : "Invalid includeArabic parameter",
+            hint: "Use ?includeArabic=true or ?inArabic=false"
           },
           { status: 400 }
         )

@@ -9,13 +9,20 @@ import './custom.css'
 export default {
   extends: DefaultTheme,
   enhanceApp({ app }) {
-    // Configure OpenAPI theme to use Shiki (code blocks) instead of vue-json-pretty (tree view)
-    // This ensures all JSON responses render consistently as formatted code blocks
+    // Configure OpenAPI theme with performance optimizations
     useOpenapi({
       config: {
         jsonViewer: {
           renderer: 'shiki', // Use Shiki for formatted code blocks instead of tree view
         },
+        // Performance optimizations: only expand first level by default
+        // This reduces initial render time for large API specs
+        defaultExpandDepth: 1,
+        // Keep request/response payloads visible but optimize rendering
+        hideRequestPayload: false,
+        hideResponsePayload: false,
+        // Optimize rendering of large schemas
+        hideSchemaExamples: false,
       },
     })
     

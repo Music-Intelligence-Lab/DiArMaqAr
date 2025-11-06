@@ -129,28 +129,33 @@ async function makeRequest(url: string, isExternal: boolean = false): Promise<Me
               console.warn(`  ⚠️  External API returned error response: ${JSON.stringify(json).substring(0, 150)}`);
             }
             // Log if response structure looks wrong (e.g., always the same data)
+            // Note: This detection is kept for debugging but should not trigger now that
+            // the external API is configured for dynamic rendering
             if (json.count !== undefined && json.data !== undefined) {
-              // This looks like a list response - check if it's always the same
-              const responseHash = responseText.substring(0, 1000); // Larger sample for better comparison
+              // Track response patterns for debugging (but don't warn unless we see multiple identical responses)
+              const responseHash = responseText.substring(0, 1000);
               if (!(makeRequest as any).lastExternalResponse) {
                 (makeRequest as any).lastExternalResponse = responseHash;
                 (makeRequest as any).lastExternalUrl = url;
                 (makeRequest as any).lastExternalSize = size;
+                (makeRequest as any).identicalResponseCount = 0;
               } else {
-                // Check if response is identical (same hash and size)
+                // Check if response is identical (same hash and size) for different URLs
                 const isIdentical = (makeRequest as any).lastExternalResponse === responseHash && 
                                    (makeRequest as any).lastExternalSize === size &&
                                    url !== (makeRequest as any).lastExternalUrl;
                 
                 if (isIdentical) {
-                  // Only warn once per endpoint to avoid spam
-                  if (!(makeRequest as any).warnedAboutStatic) {
-                    console.warn(`  ⚠️  External API appears to be serving static/pre-rendered responses:`);
-                    console.warn(`      Different query parameters return identical responses`);
-                    console.warn(`      This suggests Netlify static generation - query params not processed`);
-                    console.warn(`      External API comparison may not be meaningful for filtered endpoints`);
+                  (makeRequest as any).identicalResponseCount = ((makeRequest as any).identicalResponseCount || 0) + 1;
+                  // Only warn if we see multiple identical responses (3+) to avoid false positives
+                  if ((makeRequest as any).identicalResponseCount >= 3 && !(makeRequest as any).warnedAboutStatic) {
+                    console.warn(`  ⚠️  External API may be serving identical responses for different query parameters`);
+                    console.warn(`      This could indicate caching or configuration issues`);
                     (makeRequest as any).warnedAboutStatic = true;
                   }
+                } else {
+                  // Reset counter if we see different responses
+                  (makeRequest as any).identicalResponseCount = 0;
                 }
               }
             }
@@ -242,6 +247,26 @@ function parseOpenAPISpec(): Endpoint[] {
   }
   
   return endpoints;
+}
+
+// Discover valid starting notes per tuning system
+async function discoverTuningSystemStartingNotes(): Promise<Record<string, string[]>> {
+  const mapping: Record<string, string[]> = {};
+  try {
+    const response = await fetch(`${LOCAL_API_BASE}/tuning-systems`);
+    const data = await response.json();
+    if (data.data && Array.isArray(data.data)) {
+      for (const item of data.data) {
+        const tuningSystemId = item.tuningSystem?.id || item.id;
+        if (tuningSystemId && item.startingNotes?.idNames) {
+          mapping[tuningSystemId] = item.startingNotes.idNames;
+        }
+      }
+    }
+  } catch (e) {
+    console.warn(`Failed to discover tuning system starting notes: ${e}`);
+  }
+  return mapping;
 }
 
 // Discover dynamic route values
@@ -420,7 +445,14 @@ function generateParameterCombinations(
       }
     } else {
       if (param.name === 'idName' || param.name === 'id') {
-        pathParamValues[param.name] = ['all'];
+        // Don't use 'all' for availability endpoints (they don't support it)
+        // If no values discovered for availability, we can't generate valid combinations
+        if (endpoint.path.includes('/availability')) {
+          // Don't generate any combinations - availability requires specific IDs
+          pathParamValues[param.name] = [];
+        } else {
+          pathParamValues[param.name] = ['all'];
+        }
       } else {
         pathParamValues[param.name] = ['unknown'];
       }
@@ -454,6 +486,12 @@ function generateParameterCombinations(
   } else {
     const pathKeys = Object.keys(pathParamValues);
     const pathValues = pathKeys.map(k => pathParamValues[k]);
+    
+    // Check if any path param has no values (e.g., availability endpoint without discovered IDs)
+    if (pathValues.some(vals => vals.length === 0)) {
+      // Can't generate valid combinations - return empty array
+      return [];
+    }
     
     function cartesianProduct(arrays: string[][]): string[][] {
       if (arrays.length === 0) return [[]];
@@ -666,8 +704,7 @@ async function runAudit() {
   if (SKIP_EXTERNAL_API) {
     console.log('⚠️  External API testing is DISABLED (set SKIP_EXTERNAL_API = false to enable)\n');
   } else {
-    console.log('✓ External API testing is ENABLED');
-    console.log('  Note: External API may serve static responses (query params may be ignored)\n');
+    console.log('✓ External API testing is ENABLED\n');
   }
   console.log('Starting tests...\n');
   
@@ -682,6 +719,12 @@ async function runAudit() {
       const combinations = generateParameterCombinations(endpoint, discovered);
       
       console.log(`  Found ${combinations.length} parameter combinations`);
+      
+      // Cache tuning system starting notes mapping for this endpoint (if needed)
+      let tuningSystemNotes: Record<string, string[]> = {};
+      if (endpoint.path.includes('/tuning-systems/') || endpoint.parameters.some(p => p.name === 'tuningSystem')) {
+        tuningSystemNotes = await discoverTuningSystemStartingNotes();
+      }
       
       for (const combo of combinations) {
         const pathParams: Record<string, string> = {};
@@ -709,6 +752,41 @@ async function runAudit() {
         const missingRequiredQuery = requiredQueryParams.some(p => !queryParams[p.name] || queryParams[p.name] === 'required-param-placeholder');
         if (missingRequiredQuery) {
           continue;
+        }
+        
+        // Note: /maqamat/all/availability combinations are now prevented during generation
+        // (availability endpoints return empty pathParamValues if no IDs discovered)
+        
+        // VALIDATION: Check if starting note is valid for tuning system
+        // This applies to endpoints like /tuning-systems/{id}/{startingNote}/...
+        if (pathParams.id && pathParams.startingNote && endpoint.path.includes('/tuning-systems/')) {
+          // Get tuning system ID from path
+          const tuningSystemId = pathParams.id;
+          // Check if we have mapping and if starting note is valid
+          if (tuningSystemNotes[tuningSystemId]) {
+            const validNotes = tuningSystemNotes[tuningSystemId];
+            // Normalize for comparison (remove diacritics)
+            const normalize = (s: string) => s.toLowerCase().replace(/[ʿʾ]/g, '');
+            const normalizedStartingNote = normalize(pathParams.startingNote);
+            const isValid = validNotes.some(note => normalize(note) === normalizedStartingNote);
+            if (!isValid) {
+              continue; // Skip invalid combination
+            }
+          }
+        }
+        
+        // VALIDATION: Check if starting note is valid for tuning system in query params
+        // This applies to endpoints that take tuningSystem and startingNote as query params
+        if (queryParams.tuningSystem && queryParams.startingNote) {
+          if (tuningSystemNotes[queryParams.tuningSystem]) {
+            const validNotes = tuningSystemNotes[queryParams.tuningSystem];
+            const normalize = (s: string) => s.toLowerCase().replace(/[ʿʾ]/g, '');
+            const normalizedStartingNote = normalize(queryParams.startingNote);
+            const isValid = validNotes.some(note => normalize(note) === normalizedStartingNote);
+            if (!isValid) {
+              continue; // Skip invalid combination
+            }
+          }
         }
         
         const endpointPath = buildEndpointPath(endpoint, pathParams);

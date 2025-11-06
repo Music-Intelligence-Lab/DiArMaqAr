@@ -45,7 +45,7 @@ function formatIntervalData(interval: ReturnType<typeof calculateInterval>) {
  * - tuningSystems: Required - Comma-separated tuning system IDs
  * - startingNote: Required - Starting note (applies to all tuning systems), or "all" to include all available starting notes for each tuning system.
  *   When "all" is used, the endpoint returns results for all valid starting notes in each tuning system, allowing comprehensive comparison across all theoretical frameworks.
- * - inArabic: true/false - Include Arabic display names
+ * - includeArabic: true/false - Include Arabic display names (default: true)
  * 
  * Note: Since note names are unique per octave, each note name already identifies its octave. No octave parameter is needed.
  */
@@ -56,7 +56,7 @@ export async function GET(request: Request) {
     const tuningSystemsParam = searchParams.get("tuningSystems");
     const startingNoteParam = searchParams.get("startingNote");
     
-    // Parse inArabic parameter
+    // Parse includeArabic parameter
     let inArabic = false;
     try {
       inArabic = parseInArabic(searchParams);
@@ -64,8 +64,8 @@ export async function GET(request: Request) {
       return addCorsHeaders(
         NextResponse.json(
           {
-            error: error instanceof Error ? error.message : "Invalid inArabic parameter",
-            hint: "Use ?inArabic=true or ?inArabic=false"
+            error: error instanceof Error ? error.message : "Invalid includeArabic parameter",
+            hint: "Use ?includeArabic=true or ?includeArabic=false"
           },
           { status: 400 }
         )

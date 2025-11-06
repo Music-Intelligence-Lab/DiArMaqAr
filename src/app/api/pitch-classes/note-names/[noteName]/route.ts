@@ -190,7 +190,7 @@ function formatPitchData(pitchClass: PitchClass, format: string, inArabic: boole
  * - startingNote: Required if tuningSystem is provided - Starting note for the tuning system, or "all" to include all available starting notes for that tuning system
  * - pitchClassDataType: Optional - Format (all, cents, fraction, etc.) - defaults to "all"
  * - octave: Optional - Octave number (0-4). Note: Since note names are unique per octave, the note name itself already identifies the octave. This parameter can be used for validation.
- * - inArabic: true/false - Include Arabic display names
+ * - includeArabic: true/false - Include Arabic display names (default: true)
  */
 export async function GET(
   request: Request,
@@ -203,7 +203,7 @@ export async function GET(
     const startingNoteParam = searchParams.get("startingNote");
     const pitchClassDataType = searchParams.get("pitchClassDataType") || "all";
     
-    // Parse inArabic parameter
+    // Parse includeArabic parameter
     let inArabic = false;
     try {
       inArabic = parseInArabic(searchParams);
@@ -211,8 +211,8 @@ export async function GET(
       return addCorsHeaders(
         NextResponse.json(
           {
-            error: error instanceof Error ? error.message : "Invalid inArabic parameter",
-            hint: "Use ?inArabic=true or ?inArabic=false"
+            error: error instanceof Error ? error.message : "Invalid includeArabic parameter",
+            hint: "Use ?includeArabic=true or ?includeArabic=false"
           },
           { status: 400 }
         )

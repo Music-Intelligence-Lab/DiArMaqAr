@@ -159,10 +159,10 @@ export async function GET(
     const tuningSystemsParam = searchParams.get("tuningSystems");
     const startingNoteParam = searchParams.get("startingNote");
     const pitchClassDataType = searchParams.get("pitchClassDataType") || "all";
-    const intervalsParam = searchParams.get("intervals");
+    const intervalsParam = searchParams.get("includeIntervals");
     const transposeToNote = searchParams.get("transposeTo");
     
-    // Parse inArabic parameter
+    // Parse includeArabic parameter
     let inArabic = false;
     try {
       inArabic = parseInArabic(searchParams);
@@ -170,8 +170,8 @@ export async function GET(
       return addCorsHeaders(
         NextResponse.json(
           {
-            error: error instanceof Error ? error.message : "Invalid inArabic parameter",
-            hint: "Use ?inArabic=true or ?inArabic=false"
+            error: error instanceof Error ? error.message : "Invalid includeArabic parameter",
+            hint: "Use ?includeArabic=true or ?includeArabic=false"
           },
           { status: 400 }
         )
@@ -179,15 +179,15 @@ export async function GET(
     }
 
     // Validate intervals parameter (3-step validation: null -> empty string -> invalid value)
-    let includeIntervals = false;
+    let includeIntervals = true; // Default to true
     if (intervalsParam !== null) {
       if (intervalsParam === "") {
         return addCorsHeaders(
           NextResponse.json(
             {
-              error: "Invalid parameter: intervals",
-              message: "The 'intervals' parameter cannot be empty. Use 'true' or 'false'.",
-              hint: "Use ?intervals=true or ?intervals=false"
+              error: "Invalid parameter: includeIntervals",
+              message: "The 'includeIntervals' parameter cannot be empty. Use 'true' or 'false'.",
+              hint: "Use ?includeIntervals=true or ?includeIntervals=false"
             },
             { status: 400 }
           )
@@ -197,16 +197,16 @@ export async function GET(
         return addCorsHeaders(
           NextResponse.json(
             {
-              error: "Invalid parameter: intervals",
-              message: "The 'intervals' parameter must be 'true' or 'false'.",
+              error: "Invalid parameter: includeIntervals",
+              message: "The 'includeIntervals' parameter must be 'true' or 'false'.",
               validOptions: ["true", "false"],
-              hint: "Use ?intervals=true or ?intervals=false"
+              hint: "Use ?includeIntervals=true or ?includeIntervals=false"
             },
             { status: 400 }
           )
         );
       }
-      includeIntervals = intervalsParam === "true";
+      includeIntervals = intervalsParam !== "false";
     }
 
     // Validate tuningSystems parameter

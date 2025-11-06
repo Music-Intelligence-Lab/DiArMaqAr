@@ -187,7 +187,8 @@ function formatPitchData(pitchClasses: PitchClass[], format: string, inArabic: b
  *   - all, englishName, fraction, cents, decimalRatio, stringLength, frequency,
  *     abjadName, fretDivision, midiNoteNumber, midiNoteDeviation, centsDeviation, referenceNoteName
  * - octave: Filter by octave number - "all" (default) returns all octaves, or specific octave (0, 1, 2, 3)
- * - inArabic: Include Arabic display names (optional, defaults to false)
+ * - includeSources: Include bibliographic source references (sourceId and page) for the tuning system (optional, defaults to true)
+ * - includeArabic: Include Arabic display names (optional, defaults to true)
  */
 export async function GET(
   request: NextRequest,
@@ -197,7 +198,7 @@ export async function GET(
     const { id: tuningSystemId, startingNote: startingNoteParam } = await context.params;
     const { searchParams } = new URL(request.url);
     
-    // Parse inArabic parameter
+    // Parse includeArabic parameter
     let inArabic = false;
     try {
       inArabic = parseInArabic(searchParams);
@@ -205,8 +206,8 @@ export async function GET(
       return addCorsHeaders(
         NextResponse.json(
           {
-            error: error instanceof Error ? error.message : "Invalid inArabic parameter",
-            hint: "Use ?inArabic=true or ?inArabic=false"
+            error: error instanceof Error ? error.message : "Invalid includeArabic parameter",
+            hint: "Use ?includeArabic=true or ?inArabic=false"
           },
           { status: 400 }
         )
@@ -240,6 +241,7 @@ export async function GET(
 
     const pitchClassDataType = searchParams.get("pitchClassDataType") || "all";
     const octaveFilter = searchParams.get("octave") || "all";
+    const includeSources = searchParams.get("includeSources") !== "false";
 
     // Define valid pitch class data types
     const validPitchClassDataTypes = [
@@ -425,19 +427,12 @@ export async function GET(
       octaves: octaveFilter === "all" ? [0, 1, 2, 3] : [parseInt(octaveFilter, 10)]
     };
 
-    const sourcePageReferences = tuningSystem.getSourcePageReferences();
-    const sourceReferences = sourcePageReferences.map((src) => ({
-      sourceId: src.sourceId,
-      page: src.page,
-    }));
-
-    const response = NextResponse.json({
+    const responseData: any = {
       tuningSystem: tuningSystemNamespace,
       startingNotes: startingNotesNamespace,
       selectedStartingNote: selectedStartingNoteNamespace,
       stats,
       pitchClasses: formattedPitchClasses,
-      sources: sourceReferences,
       context: {
         pitchClassDataType: pitchClassDataType,
         octave: octaveFilter
@@ -446,7 +441,18 @@ export async function GET(
         self: `/api/tuning-systems/${tuningSystemId}/${startingNoteParam}/pitch-classes`,
         tuningSystem: `/api/tuning-systems/${tuningSystemId}`,
       }),
-    });
+    };
+
+    if (includeSources) {
+      const sourcePageReferences = tuningSystem.getSourcePageReferences();
+      const sourceReferences = sourcePageReferences.map((src) => ({
+        sourceId: src.sourceId,
+        page: src.page,
+      }));
+      responseData.sources = sourceReferences;
+    }
+
+    const response = NextResponse.json(responseData);
 
     return addCorsHeaders(response);
   } catch (error) {

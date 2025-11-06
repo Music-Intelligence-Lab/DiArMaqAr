@@ -3,7 +3,7 @@ import { getDynamicArabicName, getInArabicFlag } from "@/functions/dynamicArabic
 /**
  * Helper utilities for Arabic language support in API responses
  * 
- * When inArabic=true, responses are bilingual - English/transliteration fields remain,
+ * When includeArabic=true, responses are bilingual - English/transliteration fields remain,
  * and Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
  */
 
@@ -58,13 +58,13 @@ export function getTuningSystemDisplayNameAr(
 }
 
 /**
- * Adds Arabic fields to an object when inArabic=true
+ * Adds Arabic fields to an object when includeArabic=true
  * @param obj - The object to add Arabic fields to
- * @param inArabic - Whether to add Arabic fields
+ * @param includeArabic - Whether to add Arabic fields
  * @param fields - Object mapping of field names to their Arabic values
  */
-export function addArabicFields(obj: any, inArabic: boolean, fields: Record<string, string | null>): any {
-  if (!inArabic) return obj;
+export function addArabicFields(obj: any, includeArabic: boolean, fields: Record<string, string | null>): any {
+  if (!includeArabic) return obj;
   const result = { ...obj };
   for (const [fieldName, arabicValue] of Object.entries(fields)) {
     if (arabicValue !== null && arabicValue !== undefined) {
@@ -75,7 +75,7 @@ export function addArabicFields(obj: any, inArabic: boolean, fields: Record<stri
 }
 
 /**
- * Validates and parses the inArabic query parameter
+ * Validates and parses the includeArabic query parameter
  */
 export function parseInArabic(searchParams: URLSearchParams): boolean {
   return getInArabicFlag(searchParams);
