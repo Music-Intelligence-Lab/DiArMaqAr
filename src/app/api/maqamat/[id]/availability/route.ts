@@ -33,7 +33,7 @@ export async function GET(
     const { searchParams } = new URL(request.url);
     const transpositionNoteName = searchParams.get("transpositionNoteName");
     
-    // Parse inArabic parameter
+    // Parse includeArabic parameter
     let inArabic = false;
     try {
       inArabic = parseInArabic(searchParams);
@@ -41,8 +41,8 @@ export async function GET(
       return addCorsHeaders(
         NextResponse.json(
           {
-            error: error instanceof Error ? error.message : "Invalid inArabic parameter",
-            hint: "Use ?inArabic=true or ?inArabic=false"
+            error: error instanceof Error ? error.message : "Invalid includeArabic parameter",
+            hint: "Use ?includeArabic=true or ?inArabic=false"
           },
           { status: 400 }
         )

@@ -15,7 +15,7 @@ export const OPTIONS = handleCorsPreflightRequest;
  * Returns details of a single bibliographic source by ID.
  *
  * Query Parameters:
- * - inArabic: true|false (default: false) - Include Arabic language fields
+ * - includeArabic: true|false (default: true) - Include Arabic language fields
  *
  * Response includes source metadata with bilingual support (English/Arabic).
  * Returns comprehensive bibliographic information including publication details,
@@ -29,7 +29,7 @@ export async function GET(
     const { id: sourceId } = await context.params;
     const { searchParams } = new URL(request.url);
 
-    // Parse inArabic parameter
+    // Parse includeArabic parameter
     let inArabic = false;
     try {
       inArabic = parseInArabic(searchParams);
@@ -37,8 +37,8 @@ export async function GET(
       return addCorsHeaders(
         NextResponse.json(
           {
-            error: error instanceof Error ? error.message : "Invalid inArabic parameter",
-            hint: "Use ?inArabic=true or ?inArabic=false"
+            error: error instanceof Error ? error.message : "Invalid includeArabic parameter",
+            hint: "Use ?includeArabic=true or ?includeArabic=false"
           },
           { status: 400 }
         )
@@ -77,7 +77,7 @@ export async function GET(
     }
 
     // Common fields from AbstractSource
-    // Always return English/transliteration, add Arabic with "Ar" suffix when inArabic=true
+    // Always return English/transliteration, add Arabic with "Ar" suffix when includeArabic=true
     const sourceData: any = {
       id: source.getId(),
       displayName: stringifySource(source, true, null), // Always English
@@ -118,7 +118,7 @@ export async function GET(
       sourceData.databaseName = thesis.getDatabaseName();
     }
 
-    // Add Arabic versions when inArabic=true
+    // Add Arabic versions when includeArabic=true
     if (inArabic) {
       sourceData.displayNameAr = stringifySource(source, false, null);
       sourceData.titleAr = source.getTitleArabic();

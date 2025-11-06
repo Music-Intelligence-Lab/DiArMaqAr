@@ -27,7 +27,7 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     
-    // Parse inArabic parameter
+    // Parse includeArabic parameter
     let inArabic = false;
     try {
       inArabic = parseInArabic(searchParams);
@@ -35,8 +35,8 @@ export async function GET(request: Request) {
       return addCorsHeaders(
         NextResponse.json(
           {
-            error: error instanceof Error ? error.message : "Invalid inArabic parameter",
-            hint: "Use ?inArabic=true or ?inArabic=false"
+            error: error instanceof Error ? error.message : "Invalid includeArabic parameter",
+            hint: "Use ?includeArabic=true or ?inArabic=false"
           },
           { status: 400 }
         )
@@ -47,7 +47,7 @@ export async function GET(request: Request) {
     
     const sourcesData = sources.map((source) => {
       // Common fields from AbstractSource
-      // Always return English/transliteration, add Arabic with "Ar" suffix when inArabic=true
+      // Always return English/transliteration, add Arabic with "Ar" suffix when includeArabic=true
       const baseData: any = {
         id: source.getId(),
         displayName: stringifySource(source, true, null), // Always English
@@ -88,7 +88,7 @@ export async function GET(request: Request) {
         baseData.databaseName = thesis.getDatabaseName();
       }
 
-      // Add Arabic versions when inArabic=true
+      // Add Arabic versions when includeArabic=true
       if (inArabic) {
         baseData.displayNameAr = stringifySource(source, false, null);
         baseData.titleAr = source.getTitleArabic();

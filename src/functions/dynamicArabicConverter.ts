@@ -237,11 +237,11 @@ export function getDynamicArabicName(name: string, type: "note" | "jins" | "maqa
 }
 
 /**
- * Parse the `inArabic` query flag in a consistent, centralized manner.
+ * Parse the `includeArabic` query flag in a consistent, centralized manner.
  * Allows optional custom parameter name for future reuse.
  */
-export function parseInArabicFlag(value: string | null, fieldName: string = "inArabic"): boolean {
-  if (value === null) return false;
+export function parseInArabicFlag(value: string | null, fieldName: string = "includeArabic"): boolean {
+  if (value === null) return true; // Default to true
 
   const trimmed = value.trim();
   if (trimmed === "") {
@@ -256,9 +256,9 @@ export function parseInArabicFlag(value: string | null, fieldName: string = "inA
 }
 
 /**
- * Convenience helper: read and parse the `inArabic` flag directly from URLSearchParams.
+ * Convenience helper: read and parse the `includeArabic` flag directly from URLSearchParams.
  */
-export function getInArabicFlag(searchParams: URLSearchParams, fieldName: string = "inArabic"): boolean {
+export function getInArabicFlag(searchParams: URLSearchParams, fieldName: string = "includeArabic"): boolean {
   const raw = searchParams.get(fieldName);
   return parseInArabicFlag(raw, fieldName);
 }

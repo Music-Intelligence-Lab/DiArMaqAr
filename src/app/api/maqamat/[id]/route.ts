@@ -372,9 +372,11 @@ function formatIntervalData(intervals: any[], format: string) {
  *   - intervals: Pitch Class and Intervals Data (filtered by format parameter)
  *   - Legacy: pitchClasses|full
  * - transpose: Transpose to specific tonic note (URL-friendly)
- * - includeModulations: true|false (returns URL-safe maqām/jins names, default: false)
+ * - includeIntervals: true|false (include interval data, default: true)
+ * - includeModulations: true|false (returns URL-safe maqām/jins names, default: true)
  * - includeAjnas: true|false (returns URL-safe jins names, default: false)
- * - includeSuyur: true|false (default: false)
+ * - includeSuyur: true|false (default: true)
+ * - includeArabic: true|false (include Arabic display names, default: true)
  * - options: true returns available parameters instead of data
  * 
  * Response includes:
@@ -404,15 +406,17 @@ export async function GET(
     const tuningSystemId = searchParams.get("tuningSystem");
     const startingNote = searchParams.get("startingNote");
     const pitchClassDataType = searchParams.get("pitchClassDataType");
-    const includeIntervals = searchParams.get("intervals") === "true";
+    const includeIntervals = searchParams.get("includeIntervals") !== "false";
     const transposeToNote = searchParams.get("transposeTo");
-    const includeModulations = searchParams.get("includeModulations") === "true";
+    const includeModulations = searchParams.get("includeModulations") !== "false";
     // Handle both parameter names for backward compatibility
-    const includeLowerOctaveModulations = searchParams.get("includeModulations8vb") === "true" || searchParams.get("includeLowerOctaveModulations") === "true";
-    const includeSuyur = searchParams.get("includeSuyur") === "true";
+    const mod8vb = searchParams.get("includeModulations8vb");
+    const modLower = searchParams.get("includeLowerOctaveModulations");
+    const includeLowerOctaveModulations = (mod8vb === null && modLower === null) || mod8vb === "true" || modLower === "true" || (mod8vb !== "false" && modLower !== "false");
+    const includeSuyur = searchParams.get("includeSuyur") !== "false";
     const showOptions = searchParams.get("options") === "true";
     
-    // Parse inArabic parameter
+    // Parse includeArabic parameter
     let inArabic = false;
     try {
       inArabic = parseInArabic(searchParams);
@@ -420,8 +424,8 @@ export async function GET(
       return addCorsHeaders(
         NextResponse.json(
           {
-            error: error instanceof Error ? error.message : "Invalid inArabic parameter",
-            hint: "Use ?inArabic=true or ?inArabic=false"
+            error: error instanceof Error ? error.message : "Invalid includeArabic parameter",
+            hint: "Use ?includeArabic=true or ?inArabic=false"
           },
           { status: 400 }
         )

@@ -269,10 +269,13 @@ RED (write test) → GREEN (minimal code) → REFACTOR → COMMIT
 
 After successful task completion:
 1. Review for unique insights
-2. Document in appropriate tier/file with examples
-3. Explain implications for future development
-4. Add to testing scenarios if applicable
-5. **Ask user**: "Would you like me to integrate these insights into .ai-agent-instructions?"
+2. **Emphasize generalizable principles** - Extract reusable patterns, not just specific implementations
+3. Document in appropriate tier/file with examples
+4. Explain implications for future development
+5. Add to testing scenarios if applicable
+6. **Ask user**: "Would you like me to integrate these insights into .ai-agent-instructions?"
+
+**Documentation Principle**: When writing notes, focus on generalizable insights that apply across multiple contexts, not just specifics of a single implementation. Use specific examples to illustrate the general principle, but structure the documentation so the principle can be applied elsewhere.
 
 ---
 

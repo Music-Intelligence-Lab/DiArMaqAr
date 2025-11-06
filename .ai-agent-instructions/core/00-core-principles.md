@@ -289,8 +289,11 @@ interface Maqam {
 **Learn from tasks:**
 - Review what worked and what didn't
 - Note new patterns discovered during implementation
+- **Extract generalizable principles** - Focus on reusable insights, not just specific implementations
 - Update mental models based on insights
 - Share learnings through documentation
+
+**Documentation Principle**: When documenting insights, emphasize generalizable principles that can be applied across multiple contexts. Use specific examples to illustrate the principle, but structure the documentation so the underlying pattern is clear and reusable. Ask: "What is the generalizable insight here that applies beyond this specific case?"
 
 ---
 

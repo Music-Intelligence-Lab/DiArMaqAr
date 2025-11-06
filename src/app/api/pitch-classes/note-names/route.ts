@@ -31,7 +31,7 @@ export const dynamic = "force-dynamic";
  * 
  * Query Parameters:
  * - sortBy: "order" (default) or "alphabetical" - Sort order
- * - inArabic: true/false - Include Arabic display names
+ * - includeArabic: true/false - Include Arabic display names (default: true)
  * - filterByTuningSystem: Optional tuning system ID to filter note names that exist in that system
  */
 export async function GET(request: Request) {
@@ -40,7 +40,7 @@ export async function GET(request: Request) {
     const sortBy = searchParams.get("sortBy") || "order";
     const filterByTuningSystem = searchParams.get("filterByTuningSystem");
     
-    // Parse inArabic parameter
+    // Parse includeArabic parameter
     let inArabic = false;
     try {
       inArabic = parseInArabic(searchParams);
@@ -48,8 +48,8 @@ export async function GET(request: Request) {
       return addCorsHeaders(
         NextResponse.json(
           {
-            error: error instanceof Error ? error.message : "Invalid inArabic parameter",
-            hint: "Use ?inArabic=true or ?inArabic=false"
+            error: error instanceof Error ? error.message : "Invalid includeArabic parameter",
+            hint: "Use ?includeArabic=true or ?includeArabic=false"
           },
           { status: 400 }
         )

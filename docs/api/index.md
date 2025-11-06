@@ -8,11 +8,38 @@ description: Complete REST API documentation for the Digital Arabic Maqām Archi
 The DiArMaqAr API provides programmatic access to maqām, jins, and tuning-system data with comprehensive documentation and examples.
 
 <ClientOnly>
-  <OASpec :spec-url="openApiUrl" />
+  <Suspense>
+    <template #default>
+      <LazyOASpec :spec-url="openApiUrl" />
+    </template>
+    <template #fallback>
+      <div class="api-loading">
+        <p>Loading API documentation...</p>
+      </div>
+    </template>
+  </Suspense>
 </ClientOnly>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, defineAsyncComponent } from 'vue'
+
+// Lazy load the OpenAPI component wrapper to improve initial page load
+// This defers loading the component and its dependencies until needed
+const LazyOASpec = defineAsyncComponent({
+  loader: () => import('../.vitepress/components/LazyOASpec.vue'),
+  delay: 200, // Show fallback after 200ms delay for better UX
+  timeout: 10000, // Timeout after 10 seconds
+  onError: (error, retry, fail, attempts) => {
+    // Log error for debugging
+    console.error('Failed to load OpenAPI component:', error)
+    if (attempts <= 3) {
+      // Retry up to 3 times
+      retry()
+    } else {
+      fail()
+    }
+  }
+})
 
 // Generate cache-busting URL once on mount
 // The API route at /api/openapi.json already has strict no-cache headers,
@@ -25,6 +52,23 @@ onMounted(() => {
   openApiUrl.value = `/api/openapi.json?v=${Date.now()}`
 })
 </script>
+
+<style scoped>
+.api-loading {
+  padding: 2rem;
+  text-align: center;
+  color: var(--vp-c-text-2);
+}
+
+.api-error {
+  padding: 2rem;
+  text-align: center;
+  color: var(--vp-c-danger-1);
+  background: var(--vp-c-danger-soft);
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+</style>
 
 ## Base URL
 

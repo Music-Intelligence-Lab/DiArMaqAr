@@ -36,6 +36,50 @@ function formatIntervalData(interval: ReturnType<typeof calculateInterval>) {
 }
 
 /**
+ * Build tuning system context object with all related tuning system data grouped together
+ */
+function buildTuningSystemContext(
+  tuningSystem: ReturnType<typeof getTuningSystems>[0],
+  startingNote: string,
+  referenceFrequency: number,
+  inArabic: boolean
+) {
+  return {
+    tuningSystem: buildEntityNamespace(
+      {
+        id: tuningSystem.getId(),
+        idName: standardizeText(tuningSystem.getId()),
+        displayName: tuningSystem.stringify(),
+      },
+      {
+        version: tuningSystem.getVersion(),
+        inArabic,
+        displayNameAr: inArabic
+          ? getTuningSystemDisplayNameAr(
+              tuningSystem.getCreatorArabic() || "",
+              tuningSystem.getCreatorEnglish() || "",
+              tuningSystem.getYear(),
+              tuningSystem.getTitleArabic() || "",
+              tuningSystem.getTitleEnglish() || ""
+            )
+          : undefined,
+      }
+    ),
+    startingNote: buildIdentifierNamespace(
+      {
+        idName: standardizeText(startingNote),
+        displayName: startingNote
+      },
+      {
+        inArabic,
+        displayAr: inArabic ? getNoteNameDisplayAr(startingNote) : undefined
+      }
+    ),
+    referenceFrequency
+  };
+}
+
+/**
  * GET /api/intervals
  * 
  * Get interval calculations for 2 or more pitch classes by listing their note names.
@@ -44,7 +88,7 @@ function formatIntervalData(interval: ReturnType<typeof calculateInterval>) {
  * - noteNames: Required - Comma-separated note names (e.g., "rast,dugah,segah"). Note names can come from any octave.
  * - tuningSystem: Optional - If provided, calculates in that tuning system only. If omitted, calculates in all tuning systems.
  * - startingNote: Required if tuningSystem is provided - Starting note, or "all" to include all available starting notes for that tuning system
- * - inArabic: true/false - Include Arabic display names
+ * - includeArabic: true/false - Include Arabic display names (default: true)
  * 
  * Note: Since note names are unique per octave, each note name already identifies its octave. No octave parameter is needed.
  */
@@ -55,7 +99,7 @@ export async function GET(request: Request) {
     const tuningSystemId = searchParams.get("tuningSystem");
     const startingNoteParam = searchParams.get("startingNote");
     
-    // Parse inArabic parameter
+    // Parse includeArabic parameter
     let inArabic = false;
     try {
       inArabic = parseInArabic(searchParams);
@@ -63,8 +107,8 @@ export async function GET(request: Request) {
       return addCorsHeaders(
         NextResponse.json(
           {
-            error: error instanceof Error ? error.message : "Invalid inArabic parameter",
-            hint: "Use ?inArabic=true or ?inArabic=false"
+            error: error instanceof Error ? error.message : "Invalid includeArabic parameter",
+            hint: "Use ?includeArabic=true or ?includeArabic=false"
           },
           { status: 400 }
         )
@@ -252,11 +296,19 @@ export async function GET(request: Request) {
 
           // If we found all note names, calculate intervals
           if (foundPitchClasses.length === matchingNoteNames.length) {
-            const intervals = [];
+            const referenceFrequency = (typeof foundPitchClasses[0].frequency === 'number' ? foundPitchClasses[0].frequency : parseFloat(String(foundPitchClasses[0].frequency || '0'))) / (parseFloat(String(foundPitchClasses[0].decimalRatio || '1')));
+            const tuningSystemContext = buildTuningSystemContext(
+              selectedTuningSystem,
+              startingNote,
+              referenceFrequency,
+              inArabic
+            );
+
             for (let i = 0; i < foundPitchClasses.length - 1; i++) {
               const interval = calculateInterval(foundPitchClasses[i], foundPitchClasses[i + 1]);
-              intervals.push({
-                from: buildIdentifierNamespace(
+              results.push({
+                tuningSystemContext,
+                fromNote: buildIdentifierNamespace(
                   {
                     idName: standardizeText(foundPitchClasses[i].noteName),
                     displayName: foundPitchClasses[i].noteName
@@ -266,7 +318,7 @@ export async function GET(request: Request) {
                     displayAr: inArabic ? getNoteNameDisplayAr(foundPitchClasses[i].noteName) : undefined
                   }
                 ),
-                to: buildIdentifierNamespace(
+                toNote: buildIdentifierNamespace(
                   {
                     idName: standardizeText(foundPitchClasses[i + 1].noteName),
                     displayName: foundPitchClasses[i + 1].noteName
@@ -276,46 +328,7 @@ export async function GET(request: Request) {
                     displayAr: inArabic ? getNoteNameDisplayAr(foundPitchClasses[i + 1].noteName) : undefined
                   }
                 ),
-                interval: formatIntervalData(interval)
-              });
-            }
-
-            if (intervals.length > 0) {
-              results.push({
-                intervals,
-                context: {
-                  tuningSystem: buildEntityNamespace(
-                    {
-                      id: selectedTuningSystem.getId(),
-                      idName: standardizeText(selectedTuningSystem.getId()),
-                      displayName: selectedTuningSystem.stringify(),
-                    },
-                    {
-                      version: selectedTuningSystem.getVersion(),
-                      inArabic,
-                      displayNameAr: inArabic
-                        ? getTuningSystemDisplayNameAr(
-                            selectedTuningSystem.getCreatorArabic() || "",
-                            selectedTuningSystem.getCreatorEnglish() || "",
-                            selectedTuningSystem.getYear(),
-                            selectedTuningSystem.getTitleArabic() || "",
-                            selectedTuningSystem.getTitleEnglish() || ""
-                          )
-                        : undefined,
-                    }
-                  ),
-                  startingNote: buildIdentifierNamespace(
-                    {
-                      idName: standardizeText(startingNote),
-                      displayName: startingNote
-                    },
-                    {
-                      inArabic,
-                      displayAr: inArabic ? getNoteNameDisplayAr(startingNote) : undefined
-                    }
-                  ),
-                  referenceFrequency: (typeof foundPitchClasses[0].frequency === 'number' ? foundPitchClasses[0].frequency : parseFloat(String(foundPitchClasses[0].frequency || '0'))) / (parseFloat(String(foundPitchClasses[0].decimalRatio || '1')))
-                }
+                intervalData: formatIntervalData(interval)
               });
             }
           }
@@ -379,11 +392,20 @@ export async function GET(request: Request) {
       }
 
       // Calculate intervals
+      const referenceFrequency = (typeof foundPitchClasses[0].frequency === 'number' ? foundPitchClasses[0].frequency : parseFloat(String(foundPitchClasses[0].frequency || '0'))) / (parseFloat(String(foundPitchClasses[0].decimalRatio || '1')));
+      const tuningSystemContext = buildTuningSystemContext(
+        selectedTuningSystem,
+        selectedStartingNote,
+        referenceFrequency,
+        inArabic
+      );
+
       const intervals = [];
       for (let i = 0; i < foundPitchClasses.length - 1; i++) {
         const interval = calculateInterval(foundPitchClasses[i], foundPitchClasses[i + 1]);
         intervals.push({
-          from: buildIdentifierNamespace(
+          tuningSystemContext,
+          fromNote: buildIdentifierNamespace(
             {
               idName: standardizeText(foundPitchClasses[i].noteName),
               displayName: foundPitchClasses[i].noteName
@@ -393,7 +415,7 @@ export async function GET(request: Request) {
               displayAr: inArabic ? getNoteNameDisplayAr(foundPitchClasses[i].noteName) : undefined
             }
           ),
-          to: buildIdentifierNamespace(
+          toNote: buildIdentifierNamespace(
             {
               idName: standardizeText(foundPitchClasses[i + 1].noteName),
               displayName: foundPitchClasses[i + 1].noteName
@@ -403,45 +425,14 @@ export async function GET(request: Request) {
               displayAr: inArabic ? getNoteNameDisplayAr(foundPitchClasses[i + 1].noteName) : undefined
             }
           ),
-          interval: formatIntervalData(interval)
+          intervalData: formatIntervalData(interval)
         });
       }
 
       return addCorsHeaders(
         NextResponse.json({
           context: {
-            noteNames: noteNameArray,
-            tuningSystem: buildEntityNamespace(
-              {
-                id: selectedTuningSystem.getId(),
-                idName: standardizeText(selectedTuningSystem.getId()),
-                displayName: selectedTuningSystem.stringify(),
-              },
-              {
-                version: selectedTuningSystem.getVersion(),
-                inArabic,
-                displayNameAr: inArabic
-                  ? getTuningSystemDisplayNameAr(
-                      selectedTuningSystem.getCreatorArabic() || "",
-                      selectedTuningSystem.getCreatorEnglish() || "",
-                      selectedTuningSystem.getYear(),
-                      selectedTuningSystem.getTitleArabic() || "",
-                      selectedTuningSystem.getTitleEnglish() || ""
-                    )
-                  : undefined,
-              }
-            ),
-            startingNote: buildIdentifierNamespace(
-              {
-                idName: standardizeText(selectedStartingNote),
-                displayName: selectedStartingNote
-              },
-              {
-                inArabic,
-                displayAr: inArabic ? getNoteNameDisplayAr(selectedStartingNote) : undefined
-              }
-            ),
-            referenceFrequency: (typeof foundPitchClasses[0].frequency === 'number' ? foundPitchClasses[0].frequency : parseFloat(String(foundPitchClasses[0].frequency || '0'))) / (parseFloat(String(foundPitchClasses[0].decimalRatio || '1')))
+            noteNames: noteNameArray
           },
           intervals,
           links: buildLinksNamespace({
@@ -477,11 +468,19 @@ export async function GET(request: Request) {
 
         // If we found all note names, calculate intervals
         if (foundPitchClasses.length === matchingNoteNames.length) {
-          const intervals = [];
+          const referenceFrequency = (typeof foundPitchClasses[0].frequency === 'number' ? foundPitchClasses[0].frequency : parseFloat(String(foundPitchClasses[0].frequency || '0'))) / (parseFloat(String(foundPitchClasses[0].decimalRatio || '1')));
+          const tuningSystemContext = buildTuningSystemContext(
+            tuningSystem,
+            startingNote,
+            referenceFrequency,
+            inArabic
+          );
+
           for (let i = 0; i < foundPitchClasses.length - 1; i++) {
             const interval = calculateInterval(foundPitchClasses[i], foundPitchClasses[i + 1]);
-            intervals.push({
-              from: buildIdentifierNamespace(
+            results.push({
+              tuningSystemContext,
+              fromNote: buildIdentifierNamespace(
                 {
                   idName: standardizeText(foundPitchClasses[i].noteName),
                   displayName: foundPitchClasses[i].noteName
@@ -491,7 +490,7 @@ export async function GET(request: Request) {
                   displayAr: inArabic ? getNoteNameDisplayAr(foundPitchClasses[i].noteName) : undefined
                 }
               ),
-              to: buildIdentifierNamespace(
+              toNote: buildIdentifierNamespace(
                 {
                   idName: standardizeText(foundPitchClasses[i + 1].noteName),
                   displayName: foundPitchClasses[i + 1].noteName
@@ -501,46 +500,7 @@ export async function GET(request: Request) {
                   displayAr: inArabic ? getNoteNameDisplayAr(foundPitchClasses[i + 1].noteName) : undefined
                 }
               ),
-              interval: formatIntervalData(interval)
-            });
-          }
-
-          if (intervals.length > 0) {
-            results.push({
-              intervals,
-              context: {
-                tuningSystem: buildEntityNamespace(
-                  {
-                    id: tuningSystem.getId(),
-                    idName: standardizeText(tuningSystem.getId()),
-                    displayName: tuningSystem.stringify(),
-                  },
-                  {
-                    version: tuningSystem.getVersion(),
-                    inArabic,
-                    displayNameAr: inArabic
-                      ? getTuningSystemDisplayNameAr(
-                          tuningSystem.getCreatorArabic() || "",
-                          tuningSystem.getCreatorEnglish() || "",
-                          tuningSystem.getYear(),
-                          tuningSystem.getTitleArabic() || "",
-                          tuningSystem.getTitleEnglish() || ""
-                        )
-                      : undefined,
-                  }
-                ),
-                startingNote: buildIdentifierNamespace(
-                  {
-                    idName: standardizeText(startingNote),
-                    displayName: startingNote
-                  },
-                  {
-                    inArabic,
-                    displayAr: inArabic ? getNoteNameDisplayAr(startingNote) : undefined
-                  }
-                ),
-                referenceFrequency: (typeof foundPitchClasses[0].frequency === 'number' ? foundPitchClasses[0].frequency : parseFloat(String(foundPitchClasses[0].frequency || '0'))) / (parseFloat(String(foundPitchClasses[0].decimalRatio || '1')))
-              }
+              intervalData: formatIntervalData(interval)
             });
           }
         }

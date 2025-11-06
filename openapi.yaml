@@ -19,7 +19,7 @@ info:
     url: https://creativecommons.org/licenses/by-nc-sa/4.0/
 
 servers:
-  - url: http://localhost:3000/api
+  - url: https://diarmaqar.netlify.app/api
     description: Production API
   - url: http://localhost:3000/api
     description: Local development
@@ -100,9 +100,9 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
-          example: "false"
-        - name: inArabic
+            default: "true"
+          example: "true"
+        - name: includeArabic
           in: query
           required: false
           description: |
@@ -129,7 +129,7 @@ paths:
                 $ref: '#/components/schemas/MaqamatListResponse'
               examples:
                 default:
-                  summary: Default response (inArabic=false)
+                  summary: Default response (includeArabic=false)
                   value:
                     count: 60
                     data:
@@ -182,7 +182,7 @@ paths:
                           - sourceId: "al-Shawwa-(1946)"
                             page: "50"
                 bilingual:
-                  summary: Bilingual response (inArabic=true)
+                  summary: Bilingual response (includeArabic=true)
                   value:
                     count: 60
                     data:
@@ -246,7 +246,7 @@ paths:
         Returns:
         - Comprehensive pitch class data in the requested tuning system and starting note name
         - All ajnās present at each maqām degree in the ascending and descending maqām structure, organized by their maqām degree note names
-        - Optional intervals data, transposition to different tonics, tuning-system-specific modulations (including lower octave), and suyūr
+        - Optional includeIntervals data, transposition to different tonics, tuning-system-specific modulations (including lower octave), and suyūr
         
         Parameter Discovery:
         - Use options=true to discover valid values for all parameters including dynamically calculated transposition options
@@ -254,7 +254,7 @@ paths:
         
         Important:
         - When options=true, the endpoint returns parameter discovery metadata instead of maqām data
-        - This mode is mutually exclusive with data-returning parameters (transpose to, include modulations, include lower octave modulations, include suyūr, pitch class data type, intervals)
+        - This mode is mutually exclusive with data-returning parameters (transpose to, include modulations, include lower octave modulations, include suyūr, pitch class data type, includeIntervals)
         - If data-returning parameters are provided with options=true, the API returns a 400 Bad Request error with details about conflicting parameters
         
         Requirements:
@@ -320,7 +320,7 @@ paths:
             - Useful for discovering valid values for tuning systems, starting notes, and other parameters
             - Tuning system and starting note are required for all requests (both data retrieval and discovery mode)
             - These are fundamental to all pitch class calculations and calculate valid starting note options and transposition tonics
-            - Mutually exclusive with data-returning parameters (transpose to, include modulations, include lower octave modulations, include suyūr, pitch class data type, intervals)
+            - Mutually exclusive with data-returning parameters (transpose to, include modulations, include lower octave modulations, include suyūr, pitch class data type, includeIntervals)
             - Transposition options are dynamically calculated based on the specific maqām, tuning system, and starting note combination
             - Only tonics where the maqām can be validly transposed (preserving interval pattern) are included, not all possible pitch classes
             - If data-returning parameters are provided, returns 400 Bad Request error with details about conflicting parameters
@@ -331,7 +331,7 @@ paths:
           example: "true"
         - name: pitchClassDataType
           in: query
-          required: false
+          required: true
           description: |
             Specifies which pitch class data type to return for each pitch class.
             
@@ -353,13 +353,13 @@ paths:
           schema:
             type: string
           example: nawa
-        - name: intervals
+        - name: includeIntervals
           in: query
           description: Include interval data between maqām degrees
           schema:
             type: string
             enum: [true, false]
-            default: false
+            default: true
           example: "true"
         - name: includeModulations
           in: query
@@ -367,7 +367,7 @@ paths:
           schema:
             type: string
             enum: [true, false]
-            default: false
+            default: true
           example: "true"
         - name: includeModulations8vb
           in: query
@@ -375,7 +375,7 @@ paths:
           schema:
             type: string
             enum: [true, false]
-            default: false
+            default: true
           example: "true"
         - name: includeSuyur
           in: query
@@ -383,9 +383,9 @@ paths:
           schema:
             type: string
             enum: [true, false]
-            default: false
+            default: true
           example: "true"
-        - name: inArabic
+        - name: includeArabic
           in: query
           required: false
           description: |
@@ -631,9 +631,9 @@ paths:
                         options: ["all", "frequency", "cents", "fraction", "decimalRatio", "stringLength", "abjadName", "fretDivision", "midiNoteNumber", "midiNoteDeviation", "centsDeviation", "referenceNoteName", "englishName"]
                         default: "cents"
                         description: "Output format for pitch data. Use 'all' for complete pitch class information."
-                      intervals:
+                      includeIntervals:
                         type: "boolean"
-                        default: false
+                        default: true
                         description: "Include interval data between pitch classes"
                       transposeTo:
                         options: ["rast", "nawa", "dugah"]
@@ -641,21 +641,21 @@ paths:
                         description: "Transpose to specific tonic (taṣwīr) - only valid transpositions shown"
                       includeModulations:
                         type: "boolean"
-                        default: false
+                        default: true
                         description: "Include modulation analysis (maqāmāt and ajnās)"
                       includeModulations8vb:
                         type: "boolean"
-                        default: false
+                        default: true
                         description: "Include available modulations an octave below"
                       includeSuyur:
                         type: "boolean"
-                        default: false
+                        default: true
                         description: "Include documented performance practices (suyūr)"
                     notes:
                       ajnasData: "Ajnās (constituent melodic structures) are always included in the response for maqām analysis"
                       formatOptions: "The 'pitchClassDataType' parameter controls which pitch class properties are returned. Use 'all' for comprehensive data or specific formats like 'cents', 'fraction', etc. for targeted data."
                     examples:
-                      - "/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=ushayran&pitchClassDataType=cents&intervals=true"
+                      - "/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=ushayran&pitchClassDataType=cents&includeIntervals=true"
                       - "/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=ushayran&transposeTo=nawa&includeModulations=true"
         '400':
           description: Invalid request parameters
@@ -669,9 +669,9 @@ paths:
                   description: When options=true is used with data-returning parameters, the API returns a 400 Bad Request error
                   value:
                     error: "Conflicting parameters with options=true"
-                    message: "The following data-returning parameters cannot be used with options=true (parameter discovery mode): intervals"
+                    message: "The following data-returning parameters cannot be used with options=true (parameter discovery mode): includeIntervals"
                     hint: "Use options=true for parameter discovery. Contextual parameters (tuningSystem, startingNote) are optional but enhance discovery (e.g., show actual transposition options). Remove all data-returning parameters to use discovery mode, or remove options=true to retrieve maqām data."
-                    conflictingParameters: ["intervals"]
+                    conflictingParameters: ["includeIntervals"]
                     contextualParametersAllowed: ["tuningSystem", "startingNote"]
                 missingTuningSystem:
                   summary: Missing required tuningSystem parameter
@@ -741,7 +741,7 @@ paths:
           schema:
             type: string
           example: "nawa"
-        - name: inArabic
+        - name: includeArabic
           in: query
           required: false
           description: |
@@ -883,9 +883,9 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
-          example: "false"
-        - name: inArabic
+            default: "true"
+          example: "true"
+        - name: includeArabic
           in: query
           required: false
           description: |
@@ -960,7 +960,7 @@ paths:
                                 example: "49"
               examples:
                 english:
-                  summary: English display names (default, inArabic=false)
+                  summary: English display names (default, includeArabic=false)
                   value:
                     count: 35
                     data:
@@ -993,7 +993,7 @@ paths:
                           - sourceId: "al-Shawwa-(1946)"
                             page: "50"
                 arabic:
-                  summary: Arabic display names (inArabic=true)
+                  summary: Arabic display names (includeArabic=true)
                   value:
                     count: 35
                     data:
@@ -1042,8 +1042,6 @@ paths:
         
         This endpoint is essential for tuning system operations, providing comprehensive pitch class data
         across all octaves with full formatting options.
-        
-        - Includes bibliographic source references (sourceId and page) for the tuning system
       operationId: getTuningSystemPitchClasses
       parameters:
         - name: id
@@ -1093,7 +1091,16 @@ paths:
             enum: ["all", "0", "1", "2", "3"]
           default: "all"
           example: "all"
-        - name: inArabic
+        - name: includeSources
+          in: query
+          required: false
+          description: Include bibliographic source references (sourceId and page) for the tuning system
+          schema:
+            type: string
+            enum: ["true", "false"]
+          default: "true"
+          example: "true"
+        - name: includeArabic
           in: query
           required: false
           description: |
@@ -1234,7 +1241,7 @@ paths:
           schema:
             type: string
           example: "yegah"
-        - name: inArabic
+        - name: includeArabic
           in: query
           required: false
           description: |
@@ -1396,7 +1403,7 @@ paths:
               - centsDeviation
               - referenceNoteName
           example: "cents"
-        - name: intervals
+        - name: includeIntervals
           in: query
           required: false
           description: Include interval data between pitch classes
@@ -1412,7 +1419,7 @@ paths:
           schema:
             type: string
           example: "nawa"
-        - name: inArabic
+        - name: includeArabic
           in: query
           required: false
           description: |
@@ -1557,7 +1564,7 @@ paths:
                                 type: object
                         intervals:
                           type: object
-                          description: Interval data (present only if intervals=true)
+                          description: Interval data (present only if includeIntervals=true)
                           properties:
                             ascending:
                               type: array
@@ -1822,12 +1829,12 @@ paths:
                     message: "A starting note must be specified for all tuning systems"
                     hint: "Add &startingNote=yegah to your request"
                 invalidIntervals:
-                  summary: Invalid intervals parameter
+                  summary: Invalid includeIntervals parameter
                   value:
-                    error: "Invalid parameter: intervals"
-                    message: "The 'intervals' parameter must be 'true' or 'false'."
+                    error: "Invalid parameter: includeIntervals"
+                    message: "The 'includeIntervals' parameter must be 'true' or 'false'."
                     validOptions: ["true", "false"]
-                    hint: "Use ?intervals=true or ?intervals=false"
+                    hint: "Use ?includeIntervals=true or ?includeIntervals=false"
         '404':
           description: Maqām not found
           content:
@@ -1865,7 +1872,7 @@ paths:
           schema:
             type: string
           example: "yegah"
-        - name: inArabic
+        - name: includeArabic
           in: query
           required: false
           description: |
@@ -1960,9 +1967,9 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
-          example: "false"
-        - name: inArabic
+            default: "true"
+          example: "true"
+        - name: includeArabic
           in: query
           required: false
           description: |
@@ -2041,7 +2048,7 @@ paths:
         
         Returns:
         - Comprehensive pitch class data in the requested tuning system and starting note name
-        - Optional intervals data, transposition to different tonics, and tuning-system-specific modulations (including lower octave)
+        - Optional includeIntervals data, transposition to different tonics, and tuning-system-specific modulations (including lower octave)
         
         Parameter Discovery:
         - Use options=true to discover valid values for all parameters including dynamically calculated transposition options
@@ -2049,7 +2056,7 @@ paths:
         
         Important:
         - When options=true, the endpoint returns parameter discovery metadata instead of jins data
-        - This mode is mutually exclusive with data-returning parameters (transpose to, include modulations, include lower octave modulations, pitch class data type, intervals)
+        - This mode is mutually exclusive with data-returning parameters (transpose to, include modulations, include lower octave modulations, pitch class data type, includeIntervals)
         - If data-returning parameters are provided with options=true, the API returns a 400 Bad Request error with details about conflicting parameters
         
         Requirements:
@@ -2148,13 +2155,13 @@ paths:
           schema:
             type: string
           example: nawa
-        - name: intervals
+        - name: includeIntervals
           in: query
           description: Include interval data between jins degrees
           schema:
             type: string
             enum: [true, false]
-            default: false
+            default: true
           example: "true"
         - name: includeModulations
           in: query
@@ -2162,7 +2169,7 @@ paths:
           schema:
             type: string
             enum: [true, false]
-            default: false
+            default: true
           example: "true"
         - name: includeModulations8vb
           in: query
@@ -2170,9 +2177,9 @@ paths:
           schema:
             type: string
             enum: [true, false]
-            default: false
+            default: true
           example: "true"
-        - name: inArabic
+        - name: includeArabic
           in: query
           required: false
           description: |
@@ -2365,9 +2372,9 @@ paths:
                         options: ["all", "frequency", "cents", "fraction", "decimalRatio", "stringLength", "abjadName", "fretDivision", "midiNoteNumber", "midiNoteDeviation", "centsDeviation", "referenceNoteName", "englishName"]
                         default: "cents"
                         description: "Output format for pitch data. Use 'all' for complete pitch class information."
-                      intervals:
+                      includeIntervals:
                         type: "boolean"
-                        default: false
+                        default: true
                         description: "Include interval data between pitch classes"
                       transposeTo:
                         options: ["rast", "nawa", "dugah"]
@@ -2375,16 +2382,16 @@ paths:
                         description: "Transpose to specific tonic (taṣwīr) - only valid transpositions shown"
                       includeModulations:
                         type: "boolean"
-                        default: false
+                        default: true
                         description: "Include modulation analysis (ajnās)"
                       includeModulations8vb:
                         type: "boolean"
-                        default: false
+                        default: true
                         description: "Include available modulations an octave below"
                     notes:
                       formatOptions: "The 'pitchClassDataType' parameter controls which pitch class properties are returned. Use 'all' for comprehensive data or specific formats like 'cents', 'fraction', etc. for targeted data."
                     examples:
-                      - "/api/ajnas/jins_kurd?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents&intervals=true"
+                      - "/api/ajnas/jins_kurd?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents&includeIntervals=true"
                       - "/api/ajnas/jins_kurd?tuningSystem=IbnSina-(1037)&startingNote=yegah&transposeTo=nawa&includeModulations=true"
         '400':
           description: Invalid request parameters
@@ -2397,9 +2404,9 @@ paths:
                   summary: Conflicting parameters with options=true
                   value:
                     error: "Conflicting parameters with options=true"
-                    message: "The following data-returning parameters cannot be used with options=true (parameter discovery mode): intervals"
+                    message: "The following data-returning parameters cannot be used with options=true (parameter discovery mode): includeIntervals"
                     hint: "Remove all data-returning parameters to use discovery mode, or remove options=true to retrieve jins data."
-                    conflictingParameters: ["intervals"]
+                    conflictingParameters: ["includeIntervals"]
                     contextualParametersAllowed: ["tuningSystem", "startingNote"]
                 missingTuningSystem:
                   summary: Missing required tuningSystem parameter
@@ -2469,7 +2476,7 @@ paths:
           schema:
             type: string
           example: "nawa"
-        - name: inArabic
+        - name: includeArabic
           in: query
           required: false
           description: |
@@ -2622,7 +2629,7 @@ paths:
           schema:
             type: string
           example: "yegah"
-        - name: inArabic
+        - name: includeArabic
           in: query
           required: false
           description: |
@@ -2827,7 +2834,7 @@ paths:
               - centsDeviation
               - referenceNoteName
           example: "cents"
-        - name: intervals
+        - name: includeIntervals
           in: query
           required: false
           description: Include interval data between pitch classes
@@ -2843,7 +2850,7 @@ paths:
           schema:
             type: string
           example: "nawa"
-        - name: inArabic
+        - name: includeArabic
           in: query
           required: false
           description: |
@@ -2959,7 +2966,7 @@ paths:
                             type: object
                         intervals:
                           type: array
-                          description: Interval data (present only if intervals=true)
+                          description: Interval data (present only if includeIntervals=true)
                           items:
                             type: object
                         error:
@@ -3108,12 +3115,12 @@ paths:
                     message: "A starting note must be specified for all tuning systems"
                     hint: "Add &startingNote=yegah to your request"
                 invalidIntervals:
-                  summary: Invalid intervals parameter
+                  summary: Invalid includeIntervals parameter
                   value:
-                    error: "Invalid parameter: intervals"
-                    message: "The 'intervals' parameter must be 'true' or 'false'."
+                    error: "Invalid parameter: includeIntervals"
+                    message: "The 'includeIntervals' parameter must be 'true' or 'false'."
                     validOptions: ["true", "false"]
-                    hint: "Use ?intervals=true or ?intervals=false"
+                    hint: "Use ?includeIntervals=true or ?includeIntervals=false"
         '404':
           description: Jins not found
           content:
@@ -3170,7 +3177,7 @@ paths:
           schema:
             type: string
           example: "IbnSina-(1037)"
-        - name: inArabic
+        - name: includeArabic
           in: query
           required: false
           description: |
@@ -3283,7 +3290,7 @@ paths:
             enum: [all, englishName, fraction, cents, decimalRatio, stringLength, frequency, abjadName, fretDivision, midiNoteNumber, midiNoteDeviation, centsDeviation, referenceNoteName]
             default: all
           example: "all"
-        - name: inArabic
+        - name: includeArabic
           in: query
           required: false
           description: |
@@ -3385,7 +3392,7 @@ paths:
           schema:
             type: string
           example: "rast"
-        - name: inArabic
+        - name: includeArabic
           in: query
           required: false
           description: |
@@ -3494,7 +3501,7 @@ paths:
             enum: [all, englishName, fraction, cents, decimalRatio, stringLength, frequency, abjadName, fretDivision, midiNoteNumber, midiNoteDeviation, centsDeviation, referenceNoteName]
             default: all
           example: "all"
-        - name: inArabic
+        - name: includeArabic
           in: query
           required: false
           description: |
@@ -3608,7 +3615,7 @@ paths:
           schema:
             type: string
           example: "yegah"
-        - name: inArabic
+        - name: includeArabic
           in: query
           required: false
           description: |
@@ -3765,7 +3772,7 @@ paths:
           schema:
             type: string
           example: "yegah"
-        - name: inArabic
+        - name: includeArabic
           in: query
           required: false
           description: |
@@ -3876,7 +3883,7 @@ paths:
           - Theses: degree type, university, department, database information
       operationId: listSources
       parameters:
-        - name: inArabic
+        - name: includeArabic
           in: query
           required: false
           description: |
@@ -4015,7 +4022,7 @@ paths:
           - Books: publisher, place, ISBN, original publication date
           - Articles: journal, volume, issue, page range, DOI
           - Theses: degree type, university, department, database information
-        - Supports bilingual responses (English/Arabic) via inArabic parameter
+        - Supports bilingual responses (English/Arabic) via includeArabic parameter
       operationId: getSource
       parameters:
         - name: id
@@ -4036,7 +4043,7 @@ paths:
           schema:
             type: string
           example: "Farmer-(1937)"
-        - name: inArabic
+        - name: includeArabic
           in: query
           required: false
           description: |
@@ -4185,7 +4192,7 @@ paths:
           schema:
             type: string
           example: "Farmer-(1937)"
-        - name: inArabic
+        - name: includeArabic
           in: query
           required: false
           description: |
@@ -4266,7 +4273,7 @@ paths:
           schema:
             type: string
           example: "Farmer-(1937)"
-        - name: inArabic
+        - name: includeArabic
           in: query
           required: false
           description: |
@@ -4343,7 +4350,7 @@ paths:
           schema:
             type: string
           example: "Farmer-(1937)"
-        - name: inArabic
+        - name: includeArabic
           in: query
           required: false
           description: |
@@ -4575,7 +4582,7 @@ components:
           description: Always included for maqām analysis
         intervals:
           $ref: '#/components/schemas/IntervalsData'
-          description: Optional - included when intervals=true
+          description: Optional - included when includeIntervals=true
         modulations:
           $ref: '#/components/schemas/ModulationsData'
           description: Optional - included when includeModulations=true
@@ -4679,7 +4686,7 @@ components:
             $ref: '#/components/schemas/PitchClass'
         intervals:
           type: array
-          description: Optional - included when intervals=true. Interval data between consecutive pitch classes.
+          description: Optional - included when includeIntervals=true. Interval data between consecutive pitch classes.
           items:
             type: object
             description: Interval data (fields vary by format parameter)
@@ -4738,7 +4745,7 @@ components:
       description: |
         Comprehensive bibliographic source information. Includes common fields for all source types
         and type-specific fields based on sourceType (Book, Article, or Thesis). Arabic-language
-        fields are suffixed with "Ar" and are returned only when the `inArabic` parameter is true.
+        fields are suffixed with "Ar" and are returned only when the `includeArabic` parameter is true.
       required:
         - id
         - displayName
@@ -4759,7 +4766,7 @@ components:
           description: Formatted citation string (e.g., "Author (Year) Title")
         displayNameAr:
           type: string
-          description: Arabic formatted citation string (present when inArabic=true)
+          description: Arabic formatted citation string (present when includeArabic=true)
         sourceType:
           type: string
           enum: [Book, Article, Thesis]
@@ -4769,7 +4776,7 @@ components:
           description: Source title in English/transliteration
         titleAr:
           type: string
-          description: Source title in Arabic (present when inArabic=true)
+          description: Source title in Arabic (present when includeArabic=true)
         contributors:
           type: array
           description: Array of contributors (authors, editors, translators, etc.)
@@ -4787,22 +4794,22 @@ components:
                 description: Last name in English/transliteration
               firstNameAr:
                 type: string
-                description: First name in Arabic (present when inArabic=true)
+                description: First name in Arabic (present when includeArabic=true)
               lastNameAr:
                 type: string
-                description: Last name in Arabic (present when inArabic=true)
+                description: Last name in Arabic (present when includeArabic=true)
         edition:
           type: string
           description: Edition information in English/transliteration
         editionAr:
           type: string
-          description: Edition information in Arabic (present when inArabic=true)
+          description: Edition information in Arabic (present when includeArabic=true)
         publicationDate:
           type: string
           description: Publication date (string, e.g., "2025" or ISO date)
         publicationDateAr:
           type: string
-          description: Publication date in Arabic (present when inArabic=true)
+          description: Publication date in Arabic (present when includeArabic=true)
         url:
           type: string
           description: URL for online sources (empty string if not applicable)
@@ -4818,19 +4825,19 @@ components:
           description: Original publication date (for reprints and editions)
         originalPublicationDateAr:
           type: string
-          description: Original publication date in Arabic (present when inArabic=true)
+          description: Original publication date in Arabic (present when includeArabic=true)
         publisher:
           type: string
           description: Publisher name
         publisherAr:
           type: string
-          description: Publisher name in Arabic (present when inArabic=true)
+          description: Publisher name in Arabic (present when includeArabic=true)
         place:
           type: string
           description: Publication place
         placeAr:
           type: string
-          description: Publication place in Arabic (present when inArabic=true)
+          description: Publication place in Arabic (present when includeArabic=true)
         ISBN:
           type: string
           description: International Standard Book Number
@@ -4840,25 +4847,25 @@ components:
           description: Journal name
         journalAr:
           type: string
-          description: Journal name in Arabic (present when inArabic=true)
+          description: Journal name in Arabic (present when includeArabic=true)
         volume:
           type: string
           description: Volume number
         volumeAr:
           type: string
-          description: Volume number in Arabic (present when inArabic=true)
+          description: Volume number in Arabic (present when includeArabic=true)
         issue:
           type: string
           description: Issue number
         issueAr:
           type: string
-          description: Issue number in Arabic (present when inArabic=true)
+          description: Issue number in Arabic (present when includeArabic=true)
         pageRange:
           type: string
           description: Page range (e.g., "45–67")
         pageRangeAr:
           type: string
-          description: Page range in Arabic (present when inArabic=true)
+          description: Page range in Arabic (present when includeArabic=true)
         DOI:
           type: string
           description: Digital Object Identifier
@@ -4868,19 +4875,19 @@ components:
           description: Type of degree (e.g., "Master's thesis", "PhD dissertation")
         degreeTypeAr:
           type: string
-          description: Type of degree in Arabic (present when inArabic=true)
+          description: Type of degree in Arabic (present when includeArabic=true)
         university:
           type: string
           description: University or institution name
         universityAr:
           type: string
-          description: University or institution name in Arabic (present when inArabic=true)
+          description: University or institution name in Arabic (present when includeArabic=true)
         department:
           type: string
           description: Department name
         departmentAr:
           type: string
-          description: Department name in Arabic (present when inArabic=true)
+          description: Department name in Arabic (present when includeArabic=true)
         databaseIdentifier:
           type: string
           description: Database identifier (e.g., ProQuest ID)
@@ -5081,7 +5088,7 @@ components:
           example: "rāst"
         displayNameAr:
           type: string
-          description: Arabic display name (present when inArabic=true)
+          description: Arabic display name (present when includeArabic=true)
           example: "راست"
 
     Links:

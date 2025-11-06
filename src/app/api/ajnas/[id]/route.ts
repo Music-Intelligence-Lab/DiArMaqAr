@@ -277,9 +277,10 @@ function formatIntervalData(intervals: any[], format: string) {
  *   - all: All data types
  *   - englishName, fraction, cents, decimalRatio, stringLength, frequency,
  *     abjadName, fretDivision, midiNoteNumber, midiNoteDeviation, centsDeviation, referenceNoteName
- * - intervals: true|false (include interval data, default: false)
+ * - includeIntervals: true|false (include interval data, default: true)
  * - transposeTo: Transpose to specific tonic note (URL-friendly)
- * - includeModulations: true|false (returns URL-safe jins names, default: false)
+ * - includeModulations: true|false (returns URL-safe jins names, default: true)
+ * - includeArabic: true|false (include Arabic display names, default: true)
  * - options: true returns available parameters instead of data
  * 
  * Response includes:
@@ -303,10 +304,12 @@ export async function GET(
     const tuningSystemId = searchParams.get("tuningSystem");
     const startingNote = searchParams.get("startingNote");
     const pitchClassDataType = searchParams.get("pitchClassDataType");
-    const includeIntervals = searchParams.get("intervals") === "true";
+    const includeIntervals = searchParams.get("includeIntervals") !== "false";
     const transposeToNote = searchParams.get("transposeTo");
-    const includeModulations = searchParams.get("includeModulations") === "true";
-    const includeLowerOctaveModulations = searchParams.get("includeModulations8vb") === "true" || searchParams.get("includeLowerOctaveModulations") === "true";
+    const includeModulations = searchParams.get("includeModulations") !== "false";
+    const mod8vb = searchParams.get("includeModulations8vb");
+    const modLower = searchParams.get("includeLowerOctaveModulations");
+    const includeLowerOctaveModulations = (mod8vb === null && modLower === null) || mod8vb === "true" || modLower === "true" || (mod8vb !== "false" && modLower !== "false");
     const showOptions = searchParams.get("options") === "true";
 
     let inArabic = false;
@@ -316,8 +319,8 @@ export async function GET(
       return addCorsHeaders(
         NextResponse.json(
           {
-            error: error instanceof Error ? error.message : "Invalid inArabic parameter",
-            hint: "Use ?inArabic=true or ?inArabic=false"
+            error: error instanceof Error ? error.message : "Invalid includeArabic parameter",
+            hint: "Use ?includeArabic=true or ?inArabic=false"
           },
           { status: 400 }
         )

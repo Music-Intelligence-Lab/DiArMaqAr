@@ -230,6 +230,150 @@ responseData.ajnas = {
 
 ---
 
+## Context-First Response Ordering
+
+### Rule
+
+**When returning calculated or derived data, structure responses with configuration context first, then identifiers, then calculated results. Use semantically descriptive field names that indicate purpose.**
+
+### General Principle
+
+**Information hierarchy for calculated data:**
+1. **Configuration Context** (first) - All parameters/settings that produced the result
+2. **Entity Identifiers** (second) - The entities being compared/calculated
+3. **Calculated Data** (third) - The derived measurements or results
+
+### Why
+
+- **Context-first reading**: Users understand the theoretical framework before interpreting calculations
+- **Self-documenting structure**: Field order tells a story (what was configured → what was measured → what was calculated)
+- **Logical grouping**: All configuration that affects the result belongs together
+- **Progressive disclosure**: Follows natural information hierarchy from general to specific
+- **Reduced cognitive load**: Context establishes mental model before processing data
+
+### Bad Example ❌
+
+```json
+{
+  "results": [
+    {
+      "value": 203.91,
+      "from": { "id": "rast" },
+      "to": { "id": "dugah" },
+      "config": {
+        "system": {...},
+        "version": "2025-10-18",
+        "reference": 110
+      }
+    }
+  ]
+}
+```
+
+**Problems:**
+- Configuration appears last, after results
+- Generic field names (`value`, `from`, `to`, `config`) lack semantic clarity
+- Unclear what configuration produced which result
+- No clear information hierarchy
+
+### Good Example ✅
+
+```json
+{
+  "results": [
+    {
+      "systemContext": {
+        "system": {
+          "id": "IbnSina-(1037)",
+          "displayName": "Ibn Sīnā (1037) 7-Fret Oud 17-Tone",
+          "version": "2025-10-18T19:42:23.643Z"
+        },
+        "startingNote": {
+          "idName": "ushayran",
+          "displayName": "ʿushayrān"
+        },
+        "referenceFrequency": 110
+      },
+      "fromEntity": {
+        "idName": "rast",
+        "displayName": "rāst"
+      },
+      "toEntity": {
+        "idName": "dugah",
+        "displayName": "dūgāh"
+      },
+      "calculatedData": {
+        "fraction": "9/8",
+        "cents": 203.91,
+        "decimalRatio": 1.125
+      }
+    }
+  ]
+}
+```
+
+**Benefits:**
+- Configuration context appears first, establishing framework
+- Semantic field names (`systemContext`, `fromEntity`, `toEntity`, `calculatedData`) are self-documenting
+- Clear information hierarchy: context → identifiers → data
+- Each result object is self-contained with complete context
+
+### Generalizable Patterns
+
+**1. Context Grouping Pattern**
+- Group all configuration that affects the calculation in a single namespace
+- Use `[Entity]Context` suffix (e.g., `tuningSystemContext`, `calculationContext`, `queryContext`)
+- Include version, parameters, and reference values together
+
+**2. Identifier Naming Pattern**
+- Use `[Direction/Type]Entity` pattern for relationship endpoints (e.g., `fromEntity`, `toEntity`, `sourceEntity`, `targetEntity`)
+- Use `[Type]Note` for note-specific endpoints (e.g., `fromNote`, `toNote`, `startingNote`)
+- Be specific about what the identifier represents
+
+**3. Data Naming Pattern**
+- Use `[Type]Data` suffix for calculated/derived data (e.g., `intervalData`, `pitchData`, `calculationData`)
+- Use `[Type]Result` for comparison/analysis results (e.g., `comparisonResult`, `analysisResult`)
+- Distinguish between raw data and processed results
+
+### Implementation Pattern
+
+```typescript
+// Build context helper - groups all configuration together
+function buildCalculationContext(
+  system: System,
+  parameters: Parameters,
+  reference: Reference
+) {
+  return {
+    system: buildEntityNamespace(/* ... */),
+    parameters: { /* ... */ },
+    reference: reference
+  };
+}
+
+// Structure response with context first
+results.push({
+  calculationContext: buildCalculationContext(/* ... */),
+  fromEntity: buildIdentifierNamespace(/* ... */),
+  toEntity: buildIdentifierNamespace(/* ... */),
+  calculatedData: formatCalculationData(result)
+});
+```
+
+### When to Apply
+
+- **Calculated relationships**: Endpoints returning intervals, distances, comparisons
+- **Derived measurements**: Results that depend on configuration parameters
+- **Context-dependent data**: Any response where configuration affects interpretation
+- **Multi-system comparisons**: When same calculation appears across different contexts
+- **Progressive disclosure endpoints**: Where users need context to understand results
+
+### Key Insight
+
+**The order of fields in a response should mirror the order of understanding**: First establish what framework/system produced the result, then identify what entities were involved, then present the calculated outcome. This creates self-documenting responses that reduce cognitive load.
+
+---
+
 ## Metadata Fields in Formatted Data
 
 ### Rule
