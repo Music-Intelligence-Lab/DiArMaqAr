@@ -22,36 +22,38 @@
 
 ## OpenAPI JSON Caching Solution
 
-**The OpenAPI JSON file is served from `/docs/openapi.json` with strict no-cache headers.**
+**The OpenAPI JSON file is served from `/api/openapi.json` with strict no-cache headers.**
 
 ### Key Implementation Details
 
-**1. Route Handler**: `src/app/docs/[[...slug]]/route.ts`
-- Serves the JSON file from `public/docs/openapi.json` when requested as `/docs/openapi.json`
+**1. API Route**: `src/app/api/openapi.json/route.ts`
+- Serves the JSON file from `public/docs/openapi.json`
 - Sets strict no-cache headers: `Cache-Control: no-store, no-cache, must-revalidate, max-age=0`
 - Includes file modification time in ETag header
-- Works for both static file serving and Next.js route handling
+- Accepts optional `?v=<timestamp>` query parameter for cache-busting
+- Returns the query parameter value in `X-OpenAPI-Version` response header
+- Works reliably on Netlify as a Next.js API route
 
 **2. VitePress Integration**: `docs/api/index.md`
 - Uses `<OASpec :spec-url="openApiUrl" />` component with dynamic URL
-- Generates URL with timestamp query parameter on mount: `/docs/openapi.json?v=<timestamp>`
+- Generates URL with timestamp query parameter on mount: `/api/openapi.json?v=<timestamp>`
 - Uses Vue's `onMounted` hook to set URL once per page load
 
 **3. Why This Approach:**
-- Works with static file serving on Netlify (file exists at `public/docs/openapi.json`)
-- Route handler provides no-cache headers when served through Next.js
+- API route has server-side no-cache headers (prevents HTTP caching)
 - Timestamp query parameter prevents client-side JavaScript caching
-- Works from VitePress base path `/docs/` because `/docs/openapi.json` is absolute
+- Works from VitePress base path `/docs/` because `/api/openapi.json` is absolute
+- Next.js API routes work reliably on Netlify with `@netlify/plugin-nextjs`
 - No rebuild needed when spec changes - just regenerate JSON with `npm run docs:openapi`
 
 **4. File Locations:**
 - Source: `openapi.yaml`
 - Generated: `public/docs/openapi.json` and `docs/openapi.json`
-- Served from: `/docs/openapi.json` (accessible as static file or via Next.js route handler)
+- Served from: `/api/openapi.json` (Next.js API route with no-cache headers)
 
-**Note**: On Netlify, the file is served as a static file from `public/docs/openapi.json`, which works correctly for the documentation pages.
+**Note**: The API route is preferred over static file serving because it provides consistent no-cache headers and works reliably across different deployment scenarios.
 
-**To verify**: `curl -I "http://localhost:3000/docs/openapi.json?v=test"`
+**To verify**: `curl -I "http://localhost:3000/api/openapi.json?v=test"`
 
 ---
 
