@@ -1,0 +1,18 @@
+# Netlify configuration for Next.js deployment
+# This ensures API routes are handled as serverless functions with proper query parameter support
+
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+# Use Netlify's Next.js plugin for proper serverless function handling
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Cache control for API routes - prevent caching to ensure dynamic responses
+[[headers]]
+  for = "/api/*"
+  [headers.values]
+    Cache-Control = "no-store, no-cache, must-revalidate, max-age=0"
+    X-Content-Type-Options = "nosniff"
+

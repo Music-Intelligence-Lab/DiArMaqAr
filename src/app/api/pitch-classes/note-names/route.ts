@@ -21,6 +21,9 @@ import {
 
 export const OPTIONS = handleCorsPreflightRequest;
 
+// Force dynamic rendering to process query parameters at runtime
+export const dynamic = "force-dynamic";
+
 /**
  * GET /api/pitch-classes/note-names
  * 
