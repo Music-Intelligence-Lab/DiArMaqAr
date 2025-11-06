@@ -115,29 +115,23 @@ export function buildLinksNamespace(links: LinksNamespace): LinksNamespace {
   return stripUndefined(links);
 }
 
-interface BuildListResponseOptions<M extends Record<string, unknown>> {
-  meta?: M;
+interface BuildListResponseOptions {
+  meta?: Record<string, unknown>;
 }
 
-export interface ListResponse<
-  T,
-  M extends Record<string, unknown> = { count: number }
-> {
+export interface ListResponse<T> {
   count: number;
   data: T[];
   [key: string]: unknown;
 }
 
-export function buildListResponse<
-  T,
-  M extends Record<string, unknown> = { count: number }
->(
+export function buildListResponse<T>(
   items: T[],
-  options: BuildListResponseOptions<M> = {}
-): ListResponse<T, M> {
+  options: BuildListResponseOptions = {}
+): ListResponse<T> {
   const { meta } = options;
   const baseMeta: Record<string, unknown> = { count: items.length };
-  const allMeta = stripUndefined({ ...baseMeta, ...meta }) as M;
+  const allMeta = stripUndefined({ ...baseMeta, ...meta });
 
   return {
     count: items.length,
@@ -152,7 +146,11 @@ export function withArabicFields<T extends Record<string, unknown>>(
   fields: Record<string, Nullable<string>>
 ): T {
   if (!inArabic) return base;
-  return addArabicFields(base, true, fields);
+  // Filter out undefined values to match addArabicFields signature
+  const filteredFields: Record<string, string | null> = Object.fromEntries(
+    Object.entries(fields).filter(([, value]) => value !== undefined)
+  ) as Record<string, string | null>;
+  return addArabicFields(base, true, filteredFields);
 }
 
 

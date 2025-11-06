@@ -5,7 +5,6 @@ import { addCorsHeaders, handleCorsPreflightRequest } from "@/app/api/cors";
 import { parseInArabic, getMaqamNameDisplayAr } from "@/app/api/arabic-helpers";
 import {
   buildEntityNamespace,
-  buildIdentifierNamespace,
   buildLinksNamespace,
   buildListResponse
 } from "@/app/api/response-shapes";

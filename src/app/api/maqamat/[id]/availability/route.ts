@@ -89,13 +89,6 @@ export async function GET(
     // Calculate availability - which tuning systems support this maqām
     // A tuning system is available if ANY of its note name sets can realize the maqām
     // Use shifted note name sets (3 octaves) to handle non-octave-repeating maqāmāt
-    interface TuningSystemAvailability {
-      tuningSystemId: string;
-      tuningSystemDisplayName: string;
-      tuningSystemStartingNoteNames: string[];
-      tuningSystemStartingNoteNamesIds: string[];
-    }
-    
     const ajnas = getAjnas();
     const availableTuningSystems: any[] = [];
     

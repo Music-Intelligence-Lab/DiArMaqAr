@@ -474,7 +474,7 @@ function generateParameterCombinations(
   
   // 2. Each filter param individually (1-2 sample values)
   for (const filterParam of filterParams) {
-    let sampleValues: (string | null)[] = [];
+    let sampleValues: string[] = [];
     if (filterParam.schema.enum) {
       const enumValues = filterParam.schema.enum.map(v => String(v));
       // Sample 1-2 values from enum
@@ -486,6 +486,7 @@ function generateParameterCombinations(
     }
     
     for (const value of sampleValues) {
+      if (value === null || value === undefined) continue;
       for (const baseCombo of combinations.slice(0, Math.min(combinations.length, 10))) {
         const newCombo = { ...baseCombo };
         newCombo[filterParam.name] = value;
@@ -552,7 +553,7 @@ function generateParameterCombinations(
   
   // 6. Other params: test a few key values
   for (const otherParam of otherParams) {
-    let testValues: (string | null)[] = [];
+    let testValues: string[] = [];
     if (otherParam.schema.enum) {
       const enumValues = otherParam.schema.enum.map(v => String(v));
       if (enumValues.length <= 3) {
@@ -566,11 +567,12 @@ function generateParameterCombinations(
         ];
       }
     } else if (discovered[otherParam.name] && discovered[otherParam.name].length > 0) {
-      testValues = discovered[otherParam.name].slice(0, 3);
+      testValues = discovered[otherParam.name].slice(0, 3).filter((v): v is string => v !== null && v !== undefined);
     }
     
     if (testValues.length > 0) {
       for (const value of testValues) {
+        if (value === null || value === undefined) continue;
         for (const baseCombo of combinations.slice(0, Math.min(combinations.length, 3))) {
           const newCombo = { ...baseCombo };
           newCombo[otherParam.name] = value;
@@ -791,16 +793,17 @@ async function runAudit() {
             `ETA: ${etaMinutes}m ${etaSeconds}s`
           );
           
-          // Show external comparison if available
-          if (externalStats && !SKIP_EXTERNAL_API) {
-            const extSizeKB = (externalSizeStats.avg / 1024).toFixed(2);
-            const timeDiff = ((externalStats.avg - localStats.avg) / localStats.avg * 100).toFixed(1);
-            console.log(
-              `  └─ External: ${externalStats.avg.toFixed(0)}ms (${timeDiff > 0 ? '+' : ''}${timeDiff}%) | ` +
-              `${extSizeKB}KB`
-            );
-          }
-        } catch (error) {
+        // Show external comparison if available
+        if (externalStats && externalSizeStats && !SKIP_EXTERNAL_API) {
+          const extSizeKB = (externalSizeStats.avg / 1024).toFixed(2);
+          const timeDiffValue = ((externalStats.avg - localStats.avg) / localStats.avg * 100);
+          const timeDiff = timeDiffValue.toFixed(1);
+          console.log(
+            `  └─ External: ${externalStats.avg.toFixed(0)}ms (${timeDiffValue > 0 ? '+' : ''}${timeDiff}%) | ` +
+            `${extSizeKB}KB`
+          );
+        }
+      } catch (error) {
           results.push({
             endpoint: fullPath,
             method: endpoint.method,
