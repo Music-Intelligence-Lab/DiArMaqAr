@@ -871,7 +871,7 @@ export async function GET(
         pitchClassDataType,
         includeIntervals,
         includeModulations,
-        includeModulations8vb,
+        includeModulations8vb: includeLowerOctaveModulations,
       },
       context: {
         tuningSystem: {
@@ -894,11 +894,11 @@ export async function GET(
     };
 
     // Always include pitch data (ajnās are unidirectional)
-    responseData.pitchData = formatPitchData(selectedTransposition.jinsPitchClasses, pitchClassDataType, inArabic);
+    responseData.pitchData = formatPitchData(selectedTransposition.jinsPitchClasses, pitchClassDataType || "all", inArabic);
 
     // Add intervals if requested
     if (includeIntervals) {
-      responseData.intervals = formatIntervalData(selectedTransposition.jinsPitchClassIntervals, pitchClassDataType);
+      responseData.intervals = formatIntervalData(selectedTransposition.jinsPitchClassIntervals, pitchClassDataType || "all");
     }
 
     // Add modulations if requested
@@ -914,7 +914,7 @@ export async function GET(
         descendingMaqamAjnas: null
       };
 
-      const ajnasModulations = modulate(pitchClasses, ajnasData, [], tempMaqam, true, 5) as AjnasModulations;
+      const ajnasModulations = modulate(pitchClasses, ajnasData, [], tempMaqam as any, true, 5) as AjnasModulations;
       
       // Create lookup map from numeric IDs to full entity data
       const jinsIdToEntity = new Map<string, any>();

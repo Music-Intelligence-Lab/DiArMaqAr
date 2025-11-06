@@ -16,11 +16,6 @@ import {
 export const OPTIONS = handleCorsPreflightRequest;
 
 /**
- * Roman numeral conversion for scale degrees
- */
-const romanNumerals = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV"];
-
-/**
  * Format pitch data according to requested format
  * @param pitchClasses - Array of pitch classes to format
  * @param format - Output format type

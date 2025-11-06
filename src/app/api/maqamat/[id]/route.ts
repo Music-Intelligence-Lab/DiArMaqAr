@@ -610,15 +610,15 @@ export async function GET(
 
           // Add pitch data according to pitchClassDataType
           maqamData.pitchData = {
-            ascending: formatPitchData(tahlil.ascendingPitchClasses, pitchClassDataType, false, inArabic),
-            descending: formatPitchData(tahlil.descendingPitchClasses, pitchClassDataType, true, inArabic)
+            ascending: formatPitchData(tahlil.ascendingPitchClasses, pitchClassDataType || "all", false, inArabic),
+            descending: formatPitchData(tahlil.descendingPitchClasses, pitchClassDataType || "all", true, inArabic)
           };
 
           // Add intervals if requested
           if (includeIntervals) {
             maqamData.intervals = {
-              ascending: formatIntervalData(tahlil.ascendingPitchClassIntervals, pitchClassDataType),
-              descending: formatIntervalData(tahlil.descendingPitchClassIntervals, pitchClassDataType)
+              ascending: formatIntervalData(tahlil.ascendingPitchClassIntervals, pitchClassDataType || "all"),
+              descending: formatIntervalData(tahlil.descendingPitchClassIntervals, pitchClassDataType || "all")
             };
           }
 
@@ -1286,15 +1286,15 @@ export async function GET(
 
     // Always include pitch data
     responseData.pitchData = {
-      ascending: formatPitchData(selectedTransposition.ascendingPitchClasses, pitchClassDataType, false, inArabic),
-      descending: formatPitchData(selectedTransposition.descendingPitchClasses, pitchClassDataType, true, inArabic)
+      ascending: formatPitchData(selectedTransposition.ascendingPitchClasses, pitchClassDataType || "all", false, inArabic),
+      descending: formatPitchData(selectedTransposition.descendingPitchClasses, pitchClassDataType || "all", true, inArabic)
     };
 
     // Add intervals if requested
     if (includeIntervals) {
       responseData.intervals = {
-        ascending: formatIntervalData(selectedTransposition.ascendingPitchClassIntervals, pitchClassDataType),
-        descending: formatIntervalData(selectedTransposition.descendingPitchClassIntervals, pitchClassDataType)
+        ascending: formatIntervalData(selectedTransposition.ascendingPitchClassIntervals, pitchClassDataType || "all"),
+        descending: formatIntervalData(selectedTransposition.descendingPitchClassIntervals, pitchClassDataType || "all")
       };
     }
 

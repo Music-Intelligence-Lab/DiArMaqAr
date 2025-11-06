@@ -9,15 +9,13 @@ import {
   octaveOneNoteNames,
   octaveTwoNoteNames,
   octaveThreeNoteNames,
-  octaveFourNoteNames,
-  getNoteNameIndexAndOctave
+  octaveFourNoteNames
 } from "@/models/NoteName";
 import {
   buildEntityNamespace,
   buildIdentifierNamespace,
   buildLinksNamespace,
-  buildListResponse,
-  buildStringArrayNamespace
+  buildListResponse
 } from "@/app/api/response-shapes";
 import { getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
 
@@ -90,8 +88,6 @@ export async function GET(
         )
       );
     }
-
-    const { octave, index } = getNoteNameIndexAndOctave(matchingNoteName);
 
     // Calculate availability - which tuning systems support this note name
     const availableTuningSystems: any[] = [];

@@ -11,8 +11,7 @@ import {
   octaveOneNoteNames,
   octaveTwoNoteNames,
   octaveThreeNoteNames,
-  octaveFourNoteNames,
-  getNoteNameIndexAndOctave
+  octaveFourNoteNames
 } from "@/models/NoteName";
 import {
   buildEntityNamespace,
@@ -311,9 +310,9 @@ export async function GET(
                   displayAr: inArabic ? getNoteNameDisplayAr(startingNote) : undefined
                 }
               ),
-              pitchClass: formatPitchData(matchingPitchClass, pitchClassDataType, inArabic),
+              pitchClass: formatPitchData(matchingPitchClass, pitchClassDataType || "all", inArabic),
               context: {
-                referenceFrequency: matchingPitchClass.frequency / parseFloat(matchingPitchClass.decimalRatio),
+                referenceFrequency: (typeof matchingPitchClass.frequency === 'number' ? matchingPitchClass.frequency : parseFloat(String(matchingPitchClass.frequency || '0'))) / (parseFloat(String(matchingPitchClass.decimalRatio || '1'))),
                 pitchClassDataType: pitchClassDataType
               }
             });
@@ -374,9 +373,9 @@ export async function GET(
                 displayAr: inArabic ? getNoteNameDisplayAr(selectedStartingNote) : undefined
               }
             ),
-            pitchClass: formatPitchData(matchingPitchClass, pitchClassDataType, inArabic),
+              pitchClass: formatPitchData(matchingPitchClass, pitchClassDataType || "all", inArabic),
             context: {
-              referenceFrequency: matchingPitchClass.frequency / parseFloat(matchingPitchClass.decimalRatio),
+              referenceFrequency: (typeof matchingPitchClass.frequency === 'number' ? matchingPitchClass.frequency : parseFloat(String(matchingPitchClass.frequency || '0'))) / (parseFloat(String(matchingPitchClass.decimalRatio || '1'))),
               pitchClassDataType: pitchClassDataType
             }
           });

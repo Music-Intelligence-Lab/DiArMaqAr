@@ -10,8 +10,7 @@ import {
   octaveOneNoteNames,
   octaveTwoNoteNames,
   octaveThreeNoteNames,
-  octaveFourNoteNames,
-  getNoteNameIndexAndOctave
+  octaveFourNoteNames
 } from "@/models/NoteName";
 import {
   buildEntityNamespace,
@@ -315,7 +314,7 @@ export async function GET(request: Request) {
                       displayAr: inArabic ? getNoteNameDisplayAr(startingNote) : undefined
                     }
                   ),
-                  referenceFrequency: foundPitchClasses[0].frequency / parseFloat(foundPitchClasses[0].decimalRatio)
+                  referenceFrequency: (typeof foundPitchClasses[0].frequency === 'number' ? foundPitchClasses[0].frequency : parseFloat(String(foundPitchClasses[0].frequency || '0'))) / (parseFloat(String(foundPitchClasses[0].decimalRatio || '1')))
                 }
               });
             }
@@ -442,7 +441,7 @@ export async function GET(request: Request) {
                 displayAr: inArabic ? getNoteNameDisplayAr(selectedStartingNote) : undefined
               }
             ),
-            referenceFrequency: foundPitchClasses[0].frequency / parseFloat(foundPitchClasses[0].decimalRatio)
+            referenceFrequency: (typeof foundPitchClasses[0].frequency === 'number' ? foundPitchClasses[0].frequency : parseFloat(String(foundPitchClasses[0].frequency || '0'))) / (parseFloat(String(foundPitchClasses[0].decimalRatio || '1')))
           },
           intervals,
           links: buildLinksNamespace({
@@ -540,7 +539,7 @@ export async function GET(request: Request) {
                     displayAr: inArabic ? getNoteNameDisplayAr(startingNote) : undefined
                   }
                 ),
-                referenceFrequency: foundPitchClasses[0].frequency / parseFloat(foundPitchClasses[0].decimalRatio)
+                referenceFrequency: (typeof foundPitchClasses[0].frequency === 'number' ? foundPitchClasses[0].frequency : parseFloat(String(foundPitchClasses[0].frequency || '0'))) / (parseFloat(String(foundPitchClasses[0].decimalRatio || '1')))
               }
             });
           }
