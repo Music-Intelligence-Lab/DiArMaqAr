@@ -21,7 +21,7 @@ The DiArMaqAr API provides programmatic access to maqām, jins, and tuning-syste
 </ClientOnly>
 
 <script setup>
-import { ref, onMounted, defineAsyncComponent } from 'vue'
+import { ref, defineAsyncComponent } from 'vue'
 
 // Lazy load the OpenAPI component wrapper to improve initial page load
 // This defers loading the component and its dependencies until needed
@@ -41,16 +41,11 @@ const LazyOASpec = defineAsyncComponent({
   }
 })
 
-// Generate cache-busting URL once on mount
+// Generate cache-busting URL immediately (not in onMounted)
 // Use /api/openapi.json which is a Next.js API route that works reliably on Netlify
 // The API route serves the file from public/docs/openapi.json with proper no-cache headers
-const openApiUrl = ref('/api/openapi.json')
-
-onMounted(() => {
-  // Add timestamp query parameter to ensure fresh fetch on each page load
-  // The API route reads this parameter and includes it in response headers
-  openApiUrl.value = `/api/openapi.json?v=${Date.now()}`
-})
+// Set the URL with query parameter immediately so it's ready when the component loads
+const openApiUrl = ref(`/api/openapi.json?v=${Date.now()}`)
 </script>
 
 <style scoped>
