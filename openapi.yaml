@@ -36,6 +36,7 @@ paths:
         - URL-safe identifiers and display names for each maqām
         - Maqām family and maqām tonic identifiers (both URL-safe and display formats)
         - Availability counts across tuning systems with their valid starting note names (e.g., "ʿushayrān", "yegāh" etc...)
+        - Optional bibliographic source references (sourceId and page) when `includeSources=true`
         - Filter values must be URL-safe; see parameter enums for complete list of valid options
       operationId: listMaqamat
       parameters:
@@ -92,6 +93,15 @@ paths:
             alphabetical:
               value: alphabetical
               summary: Sort alphabetically by display name
+        - name: includeSources
+          in: query
+          required: false
+          description: Include bibliographic source references (sourceId and page) for each maqām
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "false"
+          example: "false"
         - name: inArabic
           in: query
           required: false
@@ -108,8 +118,8 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
-          example: "false"
+            default: "true"
+          example: "true"
       responses:
         '200':
           description: List of maqāmāt retrieved successfully
@@ -146,6 +156,9 @@ paths:
                           - tuningSystemId: "Allami-(2025)"
                             tuningSystemStartingNoteNames: ["rāst"]
                         maqamDetailsUrl: "/api/maqamat/maqam_yegah"
+                        sources:
+                          - sourceId: "al-Shawwa-(1946)"
+                            page: "49"
                       - id: "30"
                         idName: "maqam_farahfazza"
                         displayName: "maqām faraḥfazzā"
@@ -165,6 +178,9 @@ paths:
                           - tuningSystemId: "al-Farabi-(950g)"
                             tuningSystemStartingNoteNames: ["ʿushayrān"]
                         maqamDetailsUrl: "/api/maqamat/maqam_farahfazza"
+                        sources:
+                          - sourceId: "al-Shawwa-(1946)"
+                            page: "50"
                 bilingual:
                   summary: Bilingual response (inArabic=true)
                   value:
@@ -194,6 +210,9 @@ paths:
                             tuningSystemStartingNoteNames: ["yegāh"]
                             tuningSystemStartingNoteNamesAr: ["يگاه"]
                         maqamDetailsUrl: "/api/maqamat/maqam_yegah"
+                        sources:
+                          - sourceId: "al-Shawwa-(1946)"
+                            page: "49"
         '400':
           description: Invalid request parameters
           content:
@@ -379,8 +398,8 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
-          example: "false"
+            default: "true"
+          example: "true"
         # Note: ajnas are included by default and are not controlled by a query parameter
       responses:
         '200':
@@ -735,8 +754,8 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
-          example: "false"
+            default: "true"
+          example: "true"
       responses:
         '200':
           description: Availability information retrieved successfully
@@ -854,8 +873,18 @@ paths:
         - Includes identifiers, display names, version information, primary value type, and pitch class counts per octave
         - Responses include available starting note names for each tuning system
         - Different starting notes represent different theoretical frameworks (e.g., ʿushayrān for oud tuning, yegāh for monochord measurements)
+        - Optional bibliographic source references (sourceId and page) when `includeSources=true`
       operationId: listTuningSystems
       parameters:
+        - name: includeSources
+          in: query
+          required: false
+          description: Include bibliographic source references (sourceId and page) for each tuning system
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "false"
+          example: "false"
         - name: inArabic
           in: query
           required: false
@@ -869,8 +898,8 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
-          example: "false"
+            default: "true"
+          example: "true"
       responses:
         '200':
           description: List of tuning systems
@@ -880,64 +909,296 @@ paths:
                 type: object
                 required:
                   - count
-                  - tuningSystems
+                  - data
                 properties:
                   count:
                     type: integer
                     description: Total number of tuning systems in the dataset
-                  tuningSystems:
+                  data:
                     type: array
+                    description: Array of tuning system objects
                     items:
-                      $ref: '#/components/schemas/TuningSystemMetadata'
-                  meta:
-                    type: object
-                    properties:
-                      total:
-                        type: integer
-                        description: Total number of tuning systems
+                      type: object
+                      required:
+                        - tuningSystem
+                        - startingNotes
+                        - stats
+                        - sources
+                      properties:
+                        tuningSystem:
+                          $ref: '#/components/schemas/EntityRef'
+                        startingNotes:
+                          type: object
+                          properties:
+                            idNames:
+                              type: array
+                              items:
+                                type: string
+                            displayNames:
+                              type: array
+                              items:
+                                type: string
+                        stats:
+                          type: object
+                          properties:
+                            numberOfPitchClassesSingleOctave:
+                              type: integer
+                              description: Number of pitch classes per octave
+                        sources:
+                          type: array
+                          description: Bibliographic source references for this tuning system
+                          items:
+                            type: object
+                            properties:
+                              sourceId:
+                                type: string
+                                description: URL-safe source identifier
+                                example: "al-Shawwa-(1946)"
+                              page:
+                                type: string
+                                description: Page number or range where the tuning system is documented
+                                example: "49"
               examples:
                 english:
                   summary: English display names (default, inArabic=false)
                   value:
                     count: 35
-                    tuningSystems:
-                      - id: "IbnSina-(1037)"
-                        displayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
-                        version: "2025-10-18T19:42:23.643Z"
-                        year: "1037"
-                        numberOfPitchClassesSingleOctave: 17
-                        tuningSystemStartingNoteNames: ["ʿushayrān", "yegāh"]
-                        tuningSystemStartingNoteNamesIds: ["ushayran", "yegah"]
-                      - id: "al-Farabi-(950g)"
-                        displayName: "al-Fārābī (950g) First Oud Tuning (Full First Octave) 27-Tone"
-                        version: "2025-10-18T19:42:23.643Z"
-                        year: "950g"
-                        numberOfPitchClassesSingleOctave: 27
-                        tuningSystemStartingNoteNames: ["ʿushayrān", "yegāh"]
-                        tuningSystemStartingNoteNamesIds: ["ushayran", "yegah"]
-                    meta:
-                      total: 35
+                    data:
+                      - tuningSystem:
+                          id: "IbnSina-(1037)"
+                          idName: "IbnSina-(1037)"
+                          displayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
+                          version: "2025-10-18T19:42:23.643Z"
+                          year: "1037"
+                        startingNotes:
+                          idNames: ["ushayran", "yegah"]
+                          displayNames: ["ʿushayrān", "yegāh"]
+                        stats:
+                          numberOfPitchClassesSingleOctave: 17
+                        sources:
+                          - sourceId: "al-Shawwa-(1946)"
+                            page: "49"
+                      - tuningSystem:
+                          id: "al-Farabi-(950g)"
+                          idName: "al-Farabi-(950g)"
+                          displayName: "al-Fārābī (950g) First Oud Tuning (Full First Octave) 27-Tone"
+                          version: "2025-10-18T19:42:23.643Z"
+                          year: "950g"
+                        startingNotes:
+                          idNames: ["ushayran", "yegah"]
+                          displayNames: ["ʿushayrān", "yegāh"]
+                        stats:
+                          numberOfPitchClassesSingleOctave: 27
+                        sources:
+                          - sourceId: "al-Shawwa-(1946)"
+                            page: "50"
                 arabic:
                   summary: Arabic display names (inArabic=true)
                   value:
                     count: 35
-                    tuningSystems:
-                      - id: "IbnSina-(1037)"
-                        displayName: "ابن سينا (1037) 7-Fret Oud 17-Tone"
-                        version: "2025-10-18T19:42:23.643Z"
-                        year: "1037"
-                        numberOfPitchClassesSingleOctave: 17
-                        tuningSystemStartingNoteNames: ["عشيران", "يگاه"]
-                        tuningSystemStartingNoteNamesIds: ["ushayran", "yegah"]
-                      - id: "al-Farabi-(950g)"
-                        displayName: "الفارابي (950g) تنغيم العود الأول (الديوان الأول الكامل) ٢٧-نغمة"
-                        version: "2025-10-18T19:42:23.643Z"
-                        year: "950g"
-                        numberOfPitchClassesSingleOctave: 27
-                        tuningSystemStartingNoteNames: ["عشيران", "يگاه"]
-                        tuningSystemStartingNoteNamesIds: ["ushayran", "yegah"]
-                    meta:
-                      total: 35
+                    data:
+                      - tuningSystem:
+                          id: "IbnSina-(1037)"
+                          idName: "IbnSina-(1037)"
+                          displayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
+                          displayNameAr: "ابن سينا (1037) 7-Fret Oud 17-Tone"
+                          version: "2025-10-18T19:42:23.643Z"
+                          year: "1037"
+                        startingNotes:
+                          idNames: ["ushayran", "yegah"]
+                          displayNames: ["ʿushayrān", "yegāh"]
+                          displayNamesAr: ["عشيران", "يگاه"]
+                        stats:
+                          numberOfPitchClassesSingleOctave: 17
+                        sources:
+                          - sourceId: "al-Shawwa-(1946)"
+                            page: "49"
+                      - tuningSystem:
+                          id: "al-Farabi-(950g)"
+                          idName: "al-Farabi-(950g)"
+                          displayName: "al-Fārābī (950g) First Oud Tuning (Full First Octave) 27-Tone"
+                          displayNameAr: "الفارابي (950g) تنغيم العود الأول (الديوان الأول الكامل) ٢٧-نغمة"
+                          version: "2025-10-18T19:42:23.643Z"
+                          year: "950g"
+                        startingNotes:
+                          idNames: ["ushayran", "yegah"]
+                          displayNames: ["ʿushayrān", "yegāh"]
+                          displayNamesAr: ["عشيران", "يگاه"]
+                        stats:
+                          numberOfPitchClassesSingleOctave: 27
+                        sources:
+                          - sourceId: "al-Shawwa-(1946)"
+                            page: "50"
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /tuning-systems/{id}/{startingNote}/pitch-classes:
+    get:
+      tags:
+        - Tuning Systems
+      summary: Get Tuning System Details
+      description: |
+        Get Tuning System Details - Returns all pitch classes for a specific tuning system and starting note.
+        
+        This endpoint is essential for tuning system operations, providing comprehensive pitch class data
+        across all octaves with full formatting options.
+        
+        - Includes bibliographic source references (sourceId and page) for the tuning system
+      operationId: getTuningSystemPitchClasses
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Tuning system identifier
+          schema:
+            type: string
+          example: "IbnSina-(1037)"
+        - name: startingNote
+          in: path
+          required: true
+          description: Tuning system starting note name (URL-safe, diacritics-insensitive)
+          schema:
+            type: string
+          example: "yegah"
+        - name: pitchClassDataType
+          in: query
+          required: false
+          description: Pitch class data format (optional, defaults to "all")
+          schema:
+            type: string
+            enum:
+              - all
+              - englishName
+              - fraction
+              - cents
+              - decimalRatio
+              - stringLength
+              - frequency
+              - abjadName
+              - fretDivision
+              - midiNoteNumber
+              - midiNoteDeviation
+              - centsDeviation
+              - referenceNoteName
+          default: "all"
+          example: "cents"
+        - name: octave
+          in: query
+          required: false
+          description: |
+            Filter by octave number. Use "all" to return pitch classes from all octaves (default).
+            Use a specific octave number (0, 1, 2, 3) to filter to that octave only.
+          schema:
+            type: string
+            enum: ["all", "0", "1", "2", "3"]
+          default: "all"
+          example: "all"
+        - name: inArabic
+          in: query
+          required: false
+          description: |
+            Return bilingual responses with Arabic script when true.
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "true"
+          example: "true"
+      responses:
+        '200':
+          description: Tuning system pitch classes retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - tuningSystem
+                  - startingNotes
+                  - selectedStartingNote
+                  - stats
+                  - pitchClasses
+                  - context
+                  - links
+                properties:
+                  tuningSystem:
+                    $ref: '#/components/schemas/EntityRef'
+                  startingNotes:
+                    type: object
+                    properties:
+                      idNames:
+                        type: array
+                        items:
+                          type: string
+                      displayNames:
+                        type: array
+                        items:
+                          type: string
+                  selectedStartingNote:
+                    type: object
+                    properties:
+                      idName:
+                        type: string
+                      displayName:
+                        type: string
+                  stats:
+                    type: object
+                    properties:
+                      totalPitchClasses:
+                        type: integer
+                      numberOfPitchClassesSingleOctave:
+                        type: integer
+                      referenceFrequency:
+                        type: number
+                      octaves:
+                        type: array
+                        items:
+                          type: integer
+                  pitchClasses:
+                    type: array
+                    description: Array of formatted pitch class data
+                    items:
+                      type: object
+                  sources:
+                    type: array
+                    description: Bibliographic source references for this tuning system
+                    items:
+                      type: object
+                      properties:
+                        sourceId:
+                          type: string
+                          description: URL-safe source identifier
+                          example: "al-Shawwa-(1946)"
+                        page:
+                          type: string
+                          description: Page number or range where the tuning system is documented
+                          example: "49"
+                  context:
+                    type: object
+                    properties:
+                      pitchClassDataType:
+                        type: string
+                      octave:
+                        type: string
+                        nullable: true
+                        description: '"all" if all octaves, or specific octave number'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                      tuningSystem:
+                        type: string
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Tuning system not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '500':
           $ref: '#/components/responses/ServerError'
 
@@ -986,8 +1247,8 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
-          example: "false"
+            default: "true"
+          example: "true"
       responses:
         '200':
           description: Transpositions retrieved successfully
@@ -1142,7 +1403,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
+            default: "true"
           example: "true"
         - name: transposeTo
           in: query
@@ -1164,8 +1425,8 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
-          example: "false"
+            default: "true"
+          example: "true"
       responses:
         '200':
           description: Comparison data retrieved successfully
@@ -1617,8 +1878,8 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
-          example: "false"
+            default: "true"
+          example: "true"
       responses:
         '200':
           description: Maqāmāt list retrieved successfully
@@ -1669,6 +1930,7 @@ paths:
         
         - Includes URL-safe identifiers, display names, and structural information
         - Structural information includes note sequences needed for maqām construction and analysis
+        - Optional bibliographic source references (sourceId and page) when `includeSources=true`
       operationId: listAjnas
       parameters:
         - name: filterByTonic
@@ -1691,6 +1953,15 @@ paths:
             alphabetical:
               value: alphabetical
               summary: Sort alphabetically by display name
+        - name: includeSources
+          in: query
+          required: false
+          description: Include bibliographic source references (sourceId and page) for each jins
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "false"
+          example: "false"
         - name: inArabic
           in: query
           required: false
@@ -1704,8 +1975,8 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
-          example: "false"
+            default: "true"
+          example: "true"
       responses:
         '200':
           description: List of ajnās retrieved successfully
@@ -1713,29 +1984,50 @@ paths:
             application/json:
               schema:
                 type: object
+                required:
+                  - count
+                  - data
                 properties:
-                  ajnas:
+                  count:
+                    type: integer
+                    description: Total number of ajnās
+                  data:
                     type: array
                     items:
                       type: object
                       properties:
-                        id:
-                          type: string
-                        idName:
-                          type: string
-                        displayName:
-                          type: string
-                        noteNames:
+                        jins:
+                          $ref: '#/components/schemas/EntityRef'
+                        tonic:
+                          $ref: '#/components/schemas/IdentifierRef'
+                        stats:
+                          type: object
+                          properties:
+                            numberOfPitchClasses:
+                              type: integer
+                            availableInTuningSystems:
+                              type: integer
+                        availability:
+                          type: object
+                          properties:
+                            tuningSystems:
+                              type: array
+                        sources:
                           type: array
+                          description: Bibliographic source references for this jins
                           items:
-                            type: string
-                        version:
-                          type: string
-                  meta:
-                    type: object
-                    properties:
-                      total:
-                        type: integer
+                            type: object
+                            properties:
+                              sourceId:
+                                type: string
+                                description: URL-safe source identifier
+                                example: "al-Shawwa-(1946)"
+                              page:
+                                type: string
+                                description: Page number or range where the jins is documented
+                                example: "49"
+                        links:
+                          $ref: '#/components/schemas/Links'
         '500':
           $ref: '#/components/responses/ServerError'
 
@@ -1893,8 +2185,8 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
-          example: "false"
+            default: "true"
+          example: "true"
       responses:
         '200':
           description: |
@@ -2190,8 +2482,8 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
-          example: "false"
+            default: "true"
+          example: "true"
       responses:
         '200':
           description: Availability information retrieved successfully
@@ -2343,8 +2635,8 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
-          example: "false"
+            default: "true"
+          example: "true"
       responses:
         '200':
           description: Transpositions retrieved successfully
@@ -2542,7 +2834,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
+            default: "true"
           example: "true"
         - name: transposeTo
           in: query
@@ -2564,8 +2856,8 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
-          example: "false"
+            default: "true"
+          example: "true"
       responses:
         '200':
           description: Comparison data retrieved successfully
@@ -2834,6 +3126,739 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
 
+  /pitch-classes/note-names:
+    get:
+      tags:
+        - Pitch Classes
+      summary: List all note names
+      description: |
+        Returns all note names used in the app, bilingually, sortable by note name order or alphabetically.
+        
+        Note names are sourced from all octave arrays in NoteName.ts (octaveZeroNoteNames, octaveOneNoteNames, 
+        octaveTwoNoteNames, octaveThreeNoteNames, octaveFourNoteNames). Each note name includes:
+        - Canonical order (index within its octave array)
+        - Octave number (0-4)
+        - English IPN equivalent
+        
+        Note names are unique per octave, so the same note name string in different octaves represents 
+        different pitch classes.
+        
+        **Note**: Availability data is not included in this endpoint (it's expensive to calculate). 
+        Use the availability endpoint (`/api/pitch-classes/note-names/{noteName}/availability`) to get 
+        availability information for a specific note name.
+      operationId: listNoteNames
+      parameters:
+        - name: sortBy
+          in: query
+          required: false
+          description: Sort order for results
+          schema:
+            type: string
+            enum: [order, alphabetical]
+            default: order
+          examples:
+            order:
+              value: order
+              summary: Sort by canonical note name order (from NoteName.ts arrays)
+            alphabetical:
+              value: alphabetical
+              summary: Sort alphabetically by display name
+        - name: filterByTuningSystem
+          in: query
+          required: false
+          description: Filter by tuning system ID to show only note names that exist in that system (URL-safe, case-insensitive)
+          schema:
+            type: string
+          example: "IbnSina-(1037)"
+        - name: inArabic
+          in: query
+          required: false
+          description: |
+            Return bilingual responses with Arabic script when true.
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "true"
+          example: "true"
+      responses:
+        '200':
+          description: List of note names retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        noteName:
+                          $ref: '#/components/schemas/IdentifierRef'
+                        englishName:
+                          type: string
+                          description: International Pitch Notation equivalent
+                          example: "G3"
+                        order:
+                          type: integer
+                          description: Canonical order (index within octave array)
+                          example: 16
+                        octave:
+                          type: integer
+                          description: Octave number (0-4)
+                          example: 1
+                        links:
+                          $ref: '#/components/schemas/Links'
+                          description: Links to detail and availability endpoints (availability data is only in the availability endpoint)
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Tuning system not found (when filterByTuningSystem is used)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /pitch-classes/note-names/{noteName}:
+    get:
+      tags:
+        - Pitch Classes
+      summary: Get pitch class details by note name
+      description: |
+        Get pitch class details for a note name, across all tuning systems or a specific one.
+        
+        When querying by note name, the note name itself identifies the octave (note names are unique per octave).
+        The octave parameter is optional and can be used for validation.
+        
+        Supports:
+        - Single tuning system with specific starting note
+        - Single tuning system with startingNote="all" (returns array for all starting notes)
+        - All tuning systems (returns array for all tuning systems and starting notes)
+      operationId: getPitchClassByNoteName
+      parameters:
+        - name: noteName
+          in: path
+          required: true
+          description: URL-safe note name (e.g., "rast", "dugah", "nawa")
+          schema:
+            type: string
+          example: "rast"
+        - name: tuningSystem
+          in: query
+          required: false
+          description: Tuning system ID. If provided, returns data for that tuning system only. If omitted, returns data for all tuning systems.
+          schema:
+            type: string
+          example: "IbnSina-(1037)"
+        - name: startingNote
+          in: query
+          required: false
+          description: |
+            Starting note for the tuning system. Required if tuningSystem is provided.
+            
+            - Use a specific starting note name (URL-safe) for single result
+            - Use "all" to include all available starting notes for that tuning system (returns array of results, one per starting note)
+            
+            Note: Since note names are unique per octave, the note name itself identifies the octave. No octave parameter is needed.
+          schema:
+            type: string
+          example: "yegah"
+        - name: pitchClassDataType
+          in: query
+          required: false
+          description: Pitch class data format
+          schema:
+            type: string
+            enum: [all, englishName, fraction, cents, decimalRatio, stringLength, frequency, abjadName, fretDivision, midiNoteNumber, midiNoteDeviation, centsDeviation, referenceNoteName]
+            default: all
+          example: "all"
+        - name: inArabic
+          in: query
+          required: false
+          description: |
+            Return bilingual responses with Arabic script when true.
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "true"
+          example: "true"
+      responses:
+        '200':
+          description: Pitch class data retrieved successfully
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    description: Single tuning system response
+                    properties:
+                      context:
+                        type: object
+                        properties:
+                          tuningSystem:
+                            $ref: '#/components/schemas/EntityRef'
+                          startingNote:
+                            $ref: '#/components/schemas/IdentifierRef'
+                          noteName:
+                            $ref: '#/components/schemas/IdentifierRef'
+                          referenceFrequency:
+                            type: number
+                          pitchClassDataType:
+                            type: string
+                      pitchClass:
+                        $ref: '#/components/schemas/PitchClass'
+                      links:
+                        $ref: '#/components/schemas/Links'
+                  - type: object
+                    description: Multiple tuning systems or starting notes response
+                    properties:
+                      context:
+                        type: object
+                        properties:
+                          noteName:
+                            $ref: '#/components/schemas/IdentifierRef'
+                      pitchClasses:
+                        type: array
+                        description: Array of pitch class data, one per tuning system/starting note combination
+                        items:
+                          type: object
+                          properties:
+                            context:
+                              type: object
+                              properties:
+                                tuningSystem:
+                                  $ref: '#/components/schemas/EntityRef'
+                                startingNote:
+                                  $ref: '#/components/schemas/IdentifierRef'
+                                referenceFrequency:
+                                  type: number
+                                pitchClassDataType:
+                                  type: string
+                            pitchClassData:
+                              $ref: '#/components/schemas/PitchClass'
+                      links:
+                        $ref: '#/components/schemas/Links'
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Note name or tuning system not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /pitch-classes/note-names/{noteName}/availability:
+    get:
+      tags:
+        - Pitch Classes
+      summary: Check note name availability across tuning systems
+      description: |
+        Check which tuning systems support a specific note name and what pitch class index it has in each tuning system.
+        
+        Returns for each tuning system:
+        - All starting notes where the note name exists
+        - The pitch class index for each starting note
+        - The octave where the note name was found
+      operationId: getNoteNameAvailability
+      parameters:
+        - name: noteName
+          in: path
+          required: true
+          description: URL-safe note name (e.g., "rast", "dugah", "nawa")
+          schema:
+            type: string
+          example: "rast"
+        - name: inArabic
+          in: query
+          required: false
+          description: |
+            Return bilingual responses with Arabic script when true.
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "true"
+          example: "true"
+      responses:
+        '200':
+          description: Availability data retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  noteName:
+                    $ref: '#/components/schemas/IdentifierRef'
+                  availability:
+                    type: object
+                    properties:
+                      meta:
+                        type: object
+                        properties:
+                          count:
+                            type: integer
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            tuningSystem:
+                              $ref: '#/components/schemas/EntityRef'
+                            startingNotes:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  startingNote:
+                                    $ref: '#/components/schemas/IdentifierRef'
+                                  pitchClassIndex:
+                                    type: integer
+                                    description: Pitch class index within this tuning system
+                                  octave:
+                                    type: integer
+                                    description: Octave where the note name was found
+                  links:
+                    $ref: '#/components/schemas/Links'
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Note name not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /pitch-classes/note-names/{noteName}/compare:
+    get:
+      tags:
+        - Pitch Classes
+      summary: Compare pitch class by note name across tuning systems
+      description: |
+        Compare a pitch class (by note name) across different tuning systems.
+        
+        Returns comprehensive data for each tuning system including:
+        - Pitch class data in the requested format
+        - Context information (tuning system, starting note, reference frequency)
+      operationId: comparePitchClassByNoteName
+      parameters:
+        - name: noteName
+          in: path
+          required: true
+          description: URL-safe note name (e.g., "rast", "dugah", "nawa")
+          schema:
+            type: string
+          example: "rast"
+        - name: tuningSystems
+          in: query
+          required: true
+          description: Comma-separated tuning system IDs
+          schema:
+            type: string
+          example: "IbnSina-(1037),al-Farabi-(950g)"
+        - name: startingNote
+          in: query
+          required: true
+          description: |
+            Starting note (applies to all tuning systems), or "all" to include all available starting notes for each tuning system
+          schema:
+            type: string
+          example: "yegah"
+        - name: pitchClassDataType
+          in: query
+          required: false
+          description: Pitch class data format
+          schema:
+            type: string
+            enum: [all, englishName, fraction, cents, decimalRatio, stringLength, frequency, abjadName, fretDivision, midiNoteNumber, midiNoteDeviation, centsDeviation, referenceNoteName]
+            default: all
+          example: "all"
+        - name: inArabic
+          in: query
+          required: false
+          description: |
+            Return bilingual responses with Arabic script when true.
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "true"
+          example: "true"
+      responses:
+        '200':
+          description: Comparison data retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  context:
+                    type: object
+                    properties:
+                      noteName:
+                        $ref: '#/components/schemas/IdentifierRef'
+                  comparisons:
+                    type: array
+                    description: Array of comparison results, one per tuning system/starting note combination
+                    items:
+                      type: object
+                      properties:
+                        tuningSystem:
+                          $ref: '#/components/schemas/EntityRef'
+                        startingNote:
+                          $ref: '#/components/schemas/IdentifierRef'
+                        pitchClass:
+                          $ref: '#/components/schemas/PitchClass'
+                        context:
+                          type: object
+                          properties:
+                            referenceFrequency:
+                              type: number
+                            pitchClassDataType:
+                              type: string
+                  meta:
+                    type: object
+                    properties:
+                      totalComparisons:
+                        type: integer
+                      successfulComparisons:
+                        type: integer
+                      failedComparisons:
+                        type: integer
+                  links:
+                    $ref: '#/components/schemas/Links'
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Note name not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /intervals:
+    get:
+      tags:
+        - Intervals
+      summary: Calculate intervals by note names
+      description: |
+        Get interval calculations for 2 or more pitch classes by listing their note names.
+        
+        Calculates intervals between consecutive note names: [0→1, 1→2, 2→3, ...]
+        
+        Supports:
+        - Single tuning system with specific starting note
+        - Single tuning system with startingNote="all" (returns array for all starting notes)
+        - All tuning systems (returns array for all tuning systems and starting notes)
+        
+        Note: When querying by note names, the pitchClassIndex field is excluded from interval responses 
+        as it is not meaningful in this context.
+      operationId: calculateIntervalsByNoteNames
+      parameters:
+        - name: noteNames
+          in: query
+          required: true
+          description: Comma-separated note names (e.g., "rast,dugah,segah"). Note names can come from any octave.
+          schema:
+            type: string
+          example: "rast,dugah,segah"
+        - name: tuningSystem
+          in: query
+          required: false
+          description: Tuning system ID. If provided, calculates in that tuning system only. If omitted, calculates in all tuning systems.
+          schema:
+            type: string
+          example: "IbnSina-(1037)"
+        - name: startingNote
+          in: query
+          required: false
+          description: |
+            Starting note. Required if tuningSystem is provided.
+            
+            - Use a specific starting note name (URL-safe) for single result
+            - Use "all" to include all available starting notes for that tuning system (returns array of results, one per starting note)
+            
+            Note: Since note names are unique per octave, each note name already identifies its octave. No octave parameter is needed.
+          schema:
+            type: string
+          example: "yegah"
+        - name: inArabic
+          in: query
+          required: false
+          description: |
+            Return bilingual responses with Arabic script when true.
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "true"
+          example: "true"
+      responses:
+        '200':
+          description: Interval calculations retrieved successfully
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    description: Single tuning system response
+                    properties:
+                      context:
+                        type: object
+                        properties:
+                          noteNames:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/IdentifierRef'
+                          tuningSystem:
+                            $ref: '#/components/schemas/EntityRef'
+                          startingNote:
+                            $ref: '#/components/schemas/IdentifierRef'
+                          referenceFrequency:
+                            type: number
+                      intervals:
+                        type: array
+                        description: Array of intervals between consecutive note names [0→1, 1→2, 2→3, ...]
+                        items:
+                          type: object
+                          properties:
+                            from:
+                              $ref: '#/components/schemas/IdentifierRef'
+                            to:
+                              $ref: '#/components/schemas/IdentifierRef'
+                            interval:
+                              type: object
+                              description: Interval data (excludes pitchClassIndex when querying by note names)
+                              properties:
+                                fraction:
+                                  type: string
+                                cents:
+                                  type: number
+                                decimalRatio:
+                                  type: number
+                                stringLength:
+                                  type: number
+                                fretDivision:
+                                  type: number
+                                originalValue:
+                                  type: string
+                                originalValueType:
+                                  type: string
+                      links:
+                        $ref: '#/components/schemas/Links'
+                  - type: object
+                    description: Multiple tuning systems or starting notes response
+                    properties:
+                      context:
+                        type: object
+                        properties:
+                          noteNames:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/IdentifierRef'
+                      intervals:
+                        type: array
+                        description: Array of interval calculations, one per tuning system/starting note combination
+                        items:
+                          type: object
+                          properties:
+                            intervals:
+                              type: array
+                              description: Array of intervals between consecutive note names [0→1, 1→2, 2→3, ...]
+                              items:
+                                type: object
+                                properties:
+                                  from:
+                                    $ref: '#/components/schemas/IdentifierRef'
+                                  to:
+                                    $ref: '#/components/schemas/IdentifierRef'
+                                  interval:
+                                    type: object
+                            context:
+                              type: object
+                              properties:
+                                tuningSystem:
+                                  $ref: '#/components/schemas/EntityRef'
+                                startingNote:
+                                  $ref: '#/components/schemas/IdentifierRef'
+                                referenceFrequency:
+                                  type: number
+                      links:
+                        $ref: '#/components/schemas/Links'
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Note name or tuning system not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /intervals/compare:
+    get:
+      tags:
+        - Intervals
+      summary: Compare intervals across tuning systems
+      description: |
+        Compare interval calculations for 2+ pitch classes across different tuning systems by listing their note names.
+        
+        Calculates intervals between consecutive note names: [0→1, 1→2, 2→3, ...]
+        
+        Note: When querying by note names, the pitchClassIndex field is excluded from interval responses 
+        as it is not meaningful in this context.
+      operationId: compareIntervalsByNoteNames
+      parameters:
+        - name: noteNames
+          in: query
+          required: true
+          description: Comma-separated note names. Note names can come from any octave.
+          schema:
+            type: string
+          example: "rast,dugah,segah"
+        - name: tuningSystems
+          in: query
+          required: true
+          description: Comma-separated tuning system IDs
+          schema:
+            type: string
+          example: "IbnSina-(1037),al-Farabi-(950g)"
+        - name: startingNote
+          in: query
+          required: true
+          description: |
+            Starting note (applies to all tuning systems), or "all" to include all available starting notes for each tuning system.
+            
+            When "all" is used, the endpoint returns results for all valid starting notes in each tuning system, allowing comprehensive comparison across all theoretical frameworks.
+            
+            Note: Since note names are unique per octave, each note name already identifies its octave. No octave parameter is needed.
+          schema:
+            type: string
+          example: "yegah"
+        - name: inArabic
+          in: query
+          required: false
+          description: |
+            Return bilingual responses with Arabic script when true.
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "true"
+          example: "true"
+      responses:
+        '200':
+          description: Comparison data retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  context:
+                    type: object
+                    properties:
+                      noteNames:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/IdentifierRef'
+                  comparisons:
+                    type: array
+                    description: Array of comparison results, one per tuning system/starting note combination
+                    items:
+                      type: object
+                      properties:
+                        tuningSystem:
+                          $ref: '#/components/schemas/EntityRef'
+                        startingNote:
+                          $ref: '#/components/schemas/IdentifierRef'
+                        intervals:
+                          type: array
+                          description: Array of intervals between consecutive note names [0→1, 1→2, 2→3, ...]
+                          items:
+                            type: object
+                            properties:
+                              from:
+                                $ref: '#/components/schemas/IdentifierRef'
+                              to:
+                                $ref: '#/components/schemas/IdentifierRef'
+                              interval:
+                                type: object
+                                description: Interval data (excludes pitchClassIndex when querying by note names)
+                                properties:
+                                  fraction:
+                                    type: string
+                                  cents:
+                                    type: number
+                                  decimalRatio:
+                                    type: number
+                                  stringLength:
+                                    type: number
+                                  fretDivision:
+                                    type: number
+                                  originalValue:
+                                    type: string
+                                  originalValueType:
+                                    type: string
+                        context:
+                          type: object
+                          properties:
+                            referenceFrequency:
+                              type: number
+                  meta:
+                    type: object
+                    properties:
+                      totalComparisons:
+                        type: integer
+                      successfulComparisons:
+                        type: integer
+                      failedComparisons:
+                        type: integer
+                  links:
+                    $ref: '#/components/schemas/Links'
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Note name not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
   /sources:
     get:
       tags:
@@ -2867,8 +3892,8 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
-          example: "false"
+            default: "true"
+          example: "true"
       responses:
         '200':
           description: List of sources retrieved successfully
@@ -2876,22 +3901,23 @@ paths:
             application/json:
               schema:
                 type: object
+                required:
+                  - count
+                  - data
                 properties:
-                  sources:
+                  count:
+                    type: integer
+                    description: Total number of sources
+                  data:
                     type: array
                     items:
                       $ref: '#/components/schemas/SourceResponse'
-                  meta:
-                    type: object
-                    properties:
-                      total:
-                        type: integer
-                        description: Total number of sources
               examples:
                 comprehensive:
                   summary: Comprehensive source data with all fields
                   value:
-                    sources:
+                    count: 2
+                    data:
                       - id: "al-Khulʿī-(1904/2011)"
                         displayName: "al-Khulʿī-(1904/2011)"
                         sourceType: "Book"
@@ -3025,8 +4051,8 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
-          example: "false"
+            default: "true"
+          example: "true"
       responses:
         '200':
           description: Source retrieved successfully
@@ -3134,6 +4160,241 @@ paths:
               example:
                 error: "Source 'invalid-id' not found"
                 hint: "Use /api/sources to see all available sources"
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /sources/{id}/tuning-systems:
+    get:
+      tags:
+        - Sources
+      summary: List tuning systems by source
+      description: |
+        Returns all tuning systems that reference the specified source.
+        
+        A tuning system is included if any of its sourcePageReferences match the source ID.
+        This endpoint provides an easy way to see which tuning systems have been derived from a specific source.
+      operationId: listTuningSystemsBySource
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: |
+            The unique identifier for the bibliographic source.
+            
+            Use the `/api/sources` endpoint to retrieve all available source IDs.
+          schema:
+            type: string
+          example: "Farmer-(1937)"
+        - name: inArabic
+          in: query
+          required: false
+          description: |
+            Return bilingual responses with Arabic script when true.
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "true"
+          example: "true"
+      responses:
+        '200':
+          description: Tuning systems retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  context:
+                    type: object
+                    properties:
+                      source:
+                        $ref: '#/components/schemas/EntityRef'
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        tuningSystem:
+                          $ref: '#/components/schemas/EntityRef'
+                        sourceReferences:
+                          type: array
+                          description: Page references for this source within the tuning system
+                          items:
+                            type: object
+                            properties:
+                              page:
+                                type: string
+                                description: Page number or range where the tuning system is documented
+                        startingNotes:
+                          type: array
+                          items:
+                            type: string
+                        links:
+                          $ref: '#/components/schemas/Links'
+                  meta:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+        '404':
+          description: Source not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /sources/{id}/maqamat:
+    get:
+      tags:
+        - Sources
+      summary: List maqamat by source
+      description: |
+        Returns all maqamat that reference the specified source.
+        
+        A maqam is included if any of its sourcePageReferences match the source ID.
+        This endpoint provides an easy way to see which maqamat have been documented in a specific source.
+      operationId: listMaqamatBySource
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: |
+            The unique identifier for the bibliographic source.
+            
+            Use the `/api/sources` endpoint to retrieve all available source IDs.
+          schema:
+            type: string
+          example: "Farmer-(1937)"
+        - name: inArabic
+          in: query
+          required: false
+          description: |
+            Return bilingual responses with Arabic script when true.
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "true"
+          example: "true"
+      responses:
+        '200':
+          description: Maqamat retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  context:
+                    type: object
+                    properties:
+                      source:
+                        $ref: '#/components/schemas/EntityRef'
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        maqam:
+                          $ref: '#/components/schemas/EntityRef'
+                        sourceReferences:
+                          type: array
+                          description: Page references for this source within the maqam
+                          items:
+                            type: object
+                            properties:
+                              page:
+                                type: string
+                                description: Page number or range where the maqam is documented
+                        links:
+                          $ref: '#/components/schemas/Links'
+                  meta:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+        '404':
+          description: Source not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /sources/{id}/ajnas:
+    get:
+      tags:
+        - Sources
+      summary: List ajnas by source
+      description: |
+        Returns all ajnas that reference the specified source.
+        
+        A jins is included if any of its SourcePageReferences match the source ID.
+        This endpoint provides an easy way to see which ajnas have been documented in a specific source.
+      operationId: listAjnasBySource
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: |
+            The unique identifier for the bibliographic source.
+            
+            Use the `/api/sources` endpoint to retrieve all available source IDs.
+          schema:
+            type: string
+          example: "Farmer-(1937)"
+        - name: inArabic
+          in: query
+          required: false
+          description: |
+            Return bilingual responses with Arabic script when true.
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "true"
+          example: "true"
+      responses:
+        '200':
+          description: Ajnas retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  context:
+                    type: object
+                    properties:
+                      source:
+                        $ref: '#/components/schemas/EntityRef'
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        jins:
+                          $ref: '#/components/schemas/EntityRef'
+                        sourceReferences:
+                          type: array
+                          description: Page references for this source within the jins
+                          items:
+                            type: object
+                            properties:
+                              page:
+                                type: string
+                                description: Page number or range where the jins is documented
+                        links:
+                          $ref: '#/components/schemas/Links'
+                  meta:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+        '404':
+          description: Source not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '500':
           $ref: '#/components/responses/ServerError'
 
@@ -3248,6 +4509,23 @@ components:
           type: string
           description: Relative URL to maqām detail endpoint
           example: "/api/maqamat/maqam_yegah"
+        sources:
+          type: array
+          description: Bibliographic source references for this maqām
+          items:
+            type: object
+            properties:
+              sourceId:
+                type: string
+                description: URL-safe source identifier
+                example: "al-Shawwa-(1946)"
+              page:
+                type: string
+                description: Page number or range where the maqām is documented
+                example: "49"
+          example:
+            - sourceId: "al-Shawwa-(1946)"
+              page: "49"
 
     TuningSystemAvailability:
       type: object
@@ -3785,6 +5063,46 @@ components:
         displayName:
           type: string
           description: Human-readable name with diacritics and transposition suffixes when applicable
+
+    IdentifierRef:
+      type: object
+      required: [idName, displayName]
+      properties:
+        id:
+          type: string
+          description: Optional numeric or canonical identifier
+        idName:
+          type: string
+          description: URL-safe identifier
+          example: "rast"
+        displayName:
+          type: string
+          description: Human-readable name with diacritics
+          example: "rāst"
+        displayNameAr:
+          type: string
+          description: Arabic display name (present when inArabic=true)
+          example: "راست"
+
+    Links:
+      type: object
+      description: Navigation links for related endpoints
+      properties:
+        self:
+          type: string
+          description: Current endpoint URL
+        detail:
+          type: string
+          description: Link to detail endpoint
+        availability:
+          type: string
+          description: Link to availability endpoint
+        compare:
+          type: string
+          description: Link to compare endpoint
+        intervals:
+          type: string
+          description: Link to intervals endpoint
 
     AjnasData:
       type: object

@@ -114,7 +114,24 @@ export default defineConfig({
               text: 'Tuning Systems',
               items: [
                 { text: 'List Tuning Systems', link: '/api/#listTuningSystems' },
+                { text: 'Get Tuning System Details', link: '/api/#getTuningSystemPitchClasses' },
                 { text: 'List Maqāmāt in Tuning System', link: '/api/#listTuningSystemMaqamat' },
+              ]
+            },
+            {
+              text: 'Pitch Classes (by Note Names)',
+              items: [
+                { text: 'List Note Names', link: '/api/#listNoteNames' },
+                { text: 'Get Pitch Class by Note Name', link: '/api/#getPitchClassByNoteName' },
+                { text: 'Check Note Name Availability', link: '/api/#getNoteNameAvailability' },
+                { text: 'Compare by Note Name', link: '/api/#comparePitchClassByNoteName' },
+              ]
+            },
+            {
+              text: 'Intervals',
+              items: [
+                { text: 'Calculate Intervals by Note Names', link: '/api/#calculateIntervalsByNoteNames' },
+                { text: 'Compare Intervals Across Tuning Systems', link: '/api/#compareIntervalsByNoteNames' },
               ]
             },
             {
@@ -122,6 +139,9 @@ export default defineConfig({
               items: [
                 { text: 'List Sources', link: '/api/#listSources' },
                 { text: 'Get Source Details', link: '/api/#getSource' },
+                { text: 'List Tuning Systems by Source', link: '/api/#listTuningSystemsBySource' },
+                { text: 'List Maqamat by Source', link: '/api/#listMaqamatBySource' },
+                { text: 'List Ajnas by Source', link: '/api/#listAjnasBySource' },
               ]
             },
           ]

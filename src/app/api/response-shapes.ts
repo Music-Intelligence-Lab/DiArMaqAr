@@ -123,8 +123,9 @@ export interface ListResponse<
   T,
   M extends Record<string, unknown> = { count: number }
 > {
-  meta: M;
+  count: number;
   data: T[];
+  [key: string]: unknown;
 }
 
 export function buildListResponse<
@@ -136,9 +137,11 @@ export function buildListResponse<
 ): ListResponse<T, M> {
   const { meta } = options;
   const baseMeta: Record<string, unknown> = { count: items.length };
+  const allMeta = stripUndefined({ ...baseMeta, ...meta }) as M;
 
   return {
-    meta: stripUndefined({ ...baseMeta, ...meta }) as M,
+    count: items.length,
+    ...allMeta,
     data: items,
   };
 }

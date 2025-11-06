@@ -120,10 +120,8 @@ export async function GET(request: Request) {
     });
 
     const response = NextResponse.json({
-      sources: sourcesData,
-      meta: {
-        total: sourcesData.length,
-      },
+      count: sourcesData.length,
+      data: sourcesData,
     });
 
     return addCorsHeaders(response);

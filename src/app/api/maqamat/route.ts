@@ -42,6 +42,7 @@ export async function GET(request: Request) {
     const familyFilter = searchParams.get("filterByFamily");
     const tonicFilter = searchParams.get("filterByTonic");
     const sortBy = searchParams.get("sortBy") || "alphabetical";
+    const includeSources = searchParams.get("includeSources") === "true";
     
     // Parse inArabic parameter
     let inArabic = false;
@@ -292,7 +293,7 @@ export async function GET(request: Request) {
         };
       });
 
-      return {
+      const result: any = {
         maqam: maqamNamespace,
         family: familyNamespace,
         tonic: tonicNamespace,
@@ -312,6 +313,17 @@ export async function GET(request: Request) {
           detail: `/api/maqamat/${idName}`,
         }),
       };
+
+      if (includeSources) {
+        const sourcePageReferences = maqam.getSourcePageReferences();
+        const sourceReferences = sourcePageReferences.map((src) => ({
+          sourceId: src.sourceId,
+          page: src.page,
+        }));
+        result.sources = sourceReferences;
+      }
+
+      return result;
     });
 
     // Apply filters if provided

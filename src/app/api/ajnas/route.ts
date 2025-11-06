@@ -42,6 +42,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const tonicFilter = searchParams.get("filterByTonic");
     const sortBy = searchParams.get("sortBy") || "alphabetical";
+    const includeSources = searchParams.get("includeSources") === "true";
     
     // Parse inArabic parameter
     let inArabic = false;
@@ -195,7 +196,7 @@ export async function GET(request: Request) {
         };
       });
 
-      return {
+      const result: any = {
         jins: jinsNamespace,
         tonic: tonicNamespace,
         stats: {
@@ -209,6 +210,17 @@ export async function GET(request: Request) {
           detail: `/api/ajnas/${idName}`,
         }),
       };
+
+      if (includeSources) {
+        const sourcePageReferences = jins.getSourcePageReferences();
+        const sourceReferences = sourcePageReferences.map((src) => ({
+          sourceId: src.sourceId,
+          page: src.page,
+        }));
+        result.sources = sourceReferences;
+      }
+
+      return result;
     });
 
     // Apply filters if provided
