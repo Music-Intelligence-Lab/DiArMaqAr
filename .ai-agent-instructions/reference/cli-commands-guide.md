@@ -350,6 +350,54 @@ npm audit fix
 
 ## Utility Scripts
 
+### API Cost Audit
+
+**Purpose**: Comprehensive performance audit of all API endpoints, measuring response time and size across all parameter combinations.
+
+**Location**: `scripts/api-cost-audit.ts`
+
+**Usage**:
+```bash
+# Ensure Next.js dev server is running first
+npm run dev
+
+# In another terminal, run the audit
+tsx scripts/api-cost-audit.ts
+```
+
+**What it does**:
+1. Parses OpenAPI spec (`docs/openapi.json`) to discover all endpoints
+2. Discovers dynamic route values (maqamat IDs, ajnas IDs, tuning systems, etc.)
+3. Generates all valid parameter combinations for each endpoint
+4. Tests each combination 10 times to get average metrics
+5. Measures response time (avg, min, max, std dev) and response size (avg, min, max, std dev)
+6. Compares local API vs external API (`https://diarmaqar.netlify.app/api/`)
+7. Generates timestamped CSV file with all results
+8. Generates markdown analysis report with efficiency recommendations
+
+**Output files**:
+- `scripts/api-cost-audit-YYYY-MM-DD-HH-MM-SS.csv` - Raw test results
+- `scripts/api-cost-analysis-YYYY-MM-DD-HH-MM-SS.md` - Analysis report
+
+**Configuration** (in script):
+- `NUM_RUNS_PER_TEST = 10` - Number of requests per combination
+- `DELAY_BETWEEN_REQUESTS = 100` - ms delay between requests
+- `DELAY_BETWEEN_TESTS = 200` - ms delay between test combinations
+- `LOCAL_API_BASE = 'http://localhost:3000/api'`
+- `EXTERNAL_API_BASE = 'https://diarmaqar.netlify.app/api'`
+
+**Analysis includes**:
+- Top 10 slowest endpoints
+- Top 10 largest responses
+- External vs internal performance comparison
+- Efficiency recommendations (caching, pagination, optimization)
+
+**Notes**:
+- Script automatically limits parameter combinations to avoid explosion (max 100 per endpoint, then sampling)
+- Skips invalid combinations (missing required parameters)
+- Handles errors gracefully and continues testing
+- Provides progress updates during execution
+
 ### Custom Scripts
 
 **If you create custom scripts**, add them to `scripts/` directory and document here.
@@ -399,9 +447,11 @@ NEXT_PUBLIC_DEBUG=true
 2. `npm run build` - Build for production
 3. `npm run docs` - Generate documentation
 4. `node scripts/batch-export/batch-export.js --list-tuning-systems` - Export utilities
-5. `git status && git add . && git commit -m "message"` - Git workflow
+5. `tsx scripts/api-cost-audit.ts` - Run API performance audit
+6. `git status && git add . && git commit -m "message"` - Git workflow
 
 **For further details:**
 - See `package.json` for all available scripts
 - See `scripts/batch-export/README.md` for export documentation
+- See `scripts/api-cost-audit.ts` for API audit tool
 - See Next.js docs for deployment options

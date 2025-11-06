@@ -13,7 +13,8 @@ import {
 
 export const OPTIONS = handleCorsPreflightRequest;
 
-export const dynamic = "force-static";
+// Force dynamic rendering to process query parameters at runtime
+export const dynamic = "force-dynamic";
 
 /**
  * GET /api/tuning-systems

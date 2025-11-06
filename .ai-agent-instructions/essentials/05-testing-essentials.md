@@ -436,4 +436,46 @@ node -e "console.log(standardizeText('ʾaraʾ'))"  # Test directly
 
 ---
 
+## Performance Testing & Auditing
+
+### API Cost Audit
+
+**Automated performance audit tool** for comprehensive API endpoint testing.
+
+**Location**: `scripts/api-cost-audit.ts`
+
+**When to use**:
+- Before major releases
+- After adding new endpoints
+- When optimizing API performance
+- To compare local vs production performance
+
+**What it tests**:
+- All API endpoints from OpenAPI spec
+- All parameter combinations (with intelligent limits)
+- Response time (10 runs per combination for statistical accuracy)
+- Response size (bytes)
+- Local vs external API comparison
+
+**Output**:
+- CSV file with detailed metrics for all tests
+- Markdown analysis report with:
+  - Slowest endpoints identification
+  - Largest responses identification
+  - External API performance comparison
+  - Efficiency recommendations (caching, pagination, etc.)
+
+**Usage**:
+```bash
+# Start dev server
+npm run dev
+
+# Run audit (in another terminal)
+tsx scripts/api-cost-audit.ts
+```
+
+**See**: [`reference/cli-commands-guide.md`](../reference/cli-commands-guide.md) for detailed documentation.
+
+---
+
 *Last Updated: Based on October 2025 debugging sessions and enharmonic spelling algorithm fixes*

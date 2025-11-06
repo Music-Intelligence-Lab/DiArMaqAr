@@ -35,6 +35,7 @@ Load files based on your task type for optimal context efficiency:
 | **API endpoint** | 00 | 03 | api-retrospective, openapi-formatting-guide | - |
 | **Documentation** | 00 | 03 | - | 06, 07 |
 | **Testing** | 00 | 05 | - | - |
+| **Performance audit** | 00 | 05 | cli-commands-guide | - |
 | **MCP usage** | 00 | - | mcp-servers-guide | - |
 | **Naming/semantics** | 00 | 03 | naming-conventions-deep-dive | 07 |
 
@@ -213,6 +214,7 @@ RED (write test) → GREEN (minimal code) → REFACTOR → COMMIT
 | **Family classification** | essentials/04 Section 11 | Essential |
 | **Context providers** | essentials/02 | Essential |
 | **Testing protocols** | essentials/05 | Essential |
+| **Performance audit** | essentials/05, reference/cli-commands-guide | Essential/Reference |
 | **Property docs** | glossary/06 | Glossary |
 | **Term definitions** | glossary/07 | Glossary |
 

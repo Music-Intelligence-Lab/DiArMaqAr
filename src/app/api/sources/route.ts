@@ -11,6 +11,9 @@ import { parseInArabic } from "@/app/api/arabic-helpers";
 
 export const OPTIONS = handleCorsPreflightRequest;
 
+// Force dynamic rendering to process query parameters at runtime
+export const dynamic = "force-dynamic";
+
 /**
  * GET /api/sources
  * 
