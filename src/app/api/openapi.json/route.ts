@@ -9,6 +9,10 @@ import path from 'path'
  * This route is used by VitePress documentation to load the OpenAPI spec
  * and ensures browsers always fetch the latest version.
  */
+
+// Force dynamic rendering to ensure file is read at runtime
+export const dynamic = "force-dynamic";
+
 export async function GET(request: Request) {
   try {
     const openapiPath = path.join(process.cwd(), 'public', 'docs', 'openapi.json')
