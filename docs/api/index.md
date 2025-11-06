@@ -42,13 +42,14 @@ const LazyOASpec = defineAsyncComponent({
 })
 
 // Generate cache-busting URL once on mount
-// Use /docs/openapi.json which is served by the /docs/[[...slug]] route handler
-// This works better for static file serving on Netlify
-const openApiUrl = ref('/docs/openapi.json')
+// Use /api/openapi.json which is a Next.js API route that works reliably on Netlify
+// The API route serves the file from public/docs/openapi.json with proper no-cache headers
+const openApiUrl = ref('/api/openapi.json')
 
 onMounted(() => {
   // Add timestamp query parameter to ensure fresh fetch on each page load
-  openApiUrl.value = `/docs/openapi.json?v=${Date.now()}`
+  // The API route reads this parameter and includes it in response headers
+  openApiUrl.value = `/api/openapi.json?v=${Date.now()}`
 })
 </script>
 
