@@ -1,44 +1,17 @@
-# DiArMaqAr Project Overview
+# DiArMaqAr Project Essentials
 
 **Digital Arabic Maqām Archive** - Computational modeling of Arabic maqām theory
+
+**LOAD**: For most development tasks, especially when starting new features or needing project context.
 
 ---
 
 ## Project Description
 
-The **Digital Arabic Maqām Archive** (DiArMaqAr) is a comprehensive web-based platform for interactive exploration of Arabic maqām theory through computational modeling. The system integrates historical tuning systems (tanāghīm), melodic fragments (ajnās), complete modal frameworks (maqāmāt), and modulation practices within a unified digital framework.
+The **Digital Arabic Maqām Archive** (DiArMaqAr) is a Open-source bilingual platform integrating historically documented Arabic maqām theory within a unified computational framework
+
 
 **Live Application**: https://arabic-maqam-archive.netlify.app/
-
----
-
-## Cultural Framework
-
-### Decolonial Computing Principles
-
-- **Prioritize Arabic theoretical frameworks**: Ground all implementations in Arab-Ottoman-Persian traditions
-- **Avoid Western-centrism**: Arabic maqām theory is not a deviation from Western tuning—it represents independent theoretical frameworks
-- **Historical authenticity**: Base implementations on historical sources and scholarly literature
-- **Cultural specificity**: Avoid Anglo-European-centric approaches and terminology
-
-### Critical Terminology Standards
-
-**NEVER use "microtonal"**: This Western-centric term implies deviation from equal temperament as the norm.
-
-**Use culturally appropriate alternatives:**
-- "unequal divisions"
-- "non-12-EDO pitches"
-- "pitches with fractional precision"
-- "pitches with decimal/fractional MIDI values"
-- Or describe the specific theoretical framework (e.g., "following Arabic maqām theory")
-
-**This applies to ALL:**
-- Code comments
-- Documentation
-- Variable names
-- Function descriptions
-- Export data
-- User-facing text
 
 ---
 
@@ -124,11 +97,14 @@ The **Digital Arabic Maqām Archive** (DiArMaqAr) is a comprehensive web-based p
 
 **Critical**: Different starting points represent fundamentally different theoretical approaches, NOT simple transposition.
 
+**Common systems:**
 - **ʿushayrān-based**: Oud tuning traditions (perfect fourths)
 - **yegāh-based**: Monochord/sonometer measurements
 - **rāst-based**: Established theoretical frameworks
 
 **Implications**: Affects mathematical relationships, available maqāmāt, and modulation possibilities.
+
+**For detailed explanation**: See [glossary/07-musicological-definitions.md](../glossary/07-musicological-definitions.md#starting-note-name)
 
 ---
 
@@ -137,7 +113,10 @@ The **Digital Arabic Maqām Archive** (DiArMaqAr) is a comprehensive web-based p
 ```
 /
 ├── .ai-agent-instructions/     # AI agent instruction documents
-├── .github/instructions/       # Legacy instructions (being deprecated)
+│   ├── core/                   # Always load
+│   ├── essentials/             # Load for most tasks
+│   ├── reference/              # Load on demand
+│   └── glossary/               # Load when needed
 ├── data/                       # Ground-truth musical data (JSON)
 │   ├── ajnas.json
 │   ├── maqamat.json
@@ -146,10 +125,9 @@ The **Digital Arabic Maqām Archive** (DiArMaqAr) is a comprehensive web-based p
 │   └── tuningSystems.json
 ├── docs/                       # Generated TypeDoc documentation
 ├── exports/                    # Export output directory
-├── packages/                   # Package experiments (excluded from build)
-├── public/                     # Static assets and public documentation
+├── public/                     # Static assets and documentation
 │   ├── data/                  # Analytics data
-│   ├── docs/                  # Public API and export documentation
+│   ├── docs/                  # Public API/export documentation
 │   └── fonts/
 ├── scripts/                    # Utility scripts
 │   └── batch-export/          # CLI batch export tool
@@ -163,7 +141,7 @@ The **Digital Arabic Maqām Archive** (DiArMaqAr) is a comprehensive web-based p
 │   ├── functions/             # Core computational functions
 │   ├── models/                # TypeScript data models
 │   └── styles/                # SCSS modules
-├── CLAUDE.md                   # Claude-specific guidance (points to .ai-agent-instructions/)
+├── CLAUDE.md                   # Claude guidance (→ .ai-agent-instructions/)
 ├── package.json
 ├── tsconfig.json
 └── next.config.ts
@@ -192,35 +170,35 @@ The **Digital Arabic Maqām Archive** (DiArMaqAr) is a comprehensive web-based p
 - Embedded ajnas identification
 
 ### 4. Computational Transposition of Suyūr
-**Key Innovation**: DiArMaqAr implements the first computational transposition of suyūr (melodic development pathways), addressing a fundamental limitation in historical Arabic music theory sources.
+
+**Key Innovation**: DiArMaqAr implements the first computational transposition of suyūr (melodic development pathways).
 
 **Historical Context:**
 - In historical sources (Meshshāqa 1899, Al-Shawwā 1946, Al-Ṣabbāgh 1950, Al-Ḥilū 1961), suyūr are always presented as prose text
-- Suyūr are never represented for transpositions of any given maqām in historical literature
-- This limitation prevented systematic exploration of melodic pathways across different pitch centers
+- Suyūr are never represented for transpositions in historical literature
+- This prevented systematic exploration of melodic pathways across pitch centers
 
 **DiArMaqAr's Solution:**
 - Automatically transposes suyūr along with maqām transpositions
-- The `transposeSayr()` function operates through three stages:
-  1. **Calculate Transposition Interval**: Compares first notes of original and target maqāmāt
-  2. **Apply Intelligent Note Shifting**: Shifts note stops by calculated interval with bounds checking
-  3. **Process Different Stop Types**: Handles notes, jins, maqām, and directional instructions appropriately
-- Enables systematic exploration of all possible melodic pathways across pitch centers
-- Supports comparative analysis and theoretical investigation of suyūr relationships
+- `transposeSayr()` function operates through three stages:
+  1. Calculate transposition interval between original and target
+  2. Apply intelligent note shifting with bounds checking
+  3. Process different stop types appropriately
+- Enables systematic exploration of melodic pathways across pitch centers
 
-**Implementation Details:**
-- Suyūr stops can be: notes, jins references, maqām references, or directional instructions
-- Bounds safety mechanism ensures transposed suyūr remain within practical tuning system limits
-- Maintains structural identity for jins/maqām references while transposing starting notes
-- Preserves bilingual support (Arabic/English) in transposed forms
+**Implementation:**
+- Suyūr stops: notes, jins references, maqām references, directional instructions
+- Bounds safety ensures transposed suyūr remain within practical limits
+- Maintains structural identity for jins/maqām references
+- Preserves bilingual support (Arabic/English)
 
 ### 5. Modulation Analysis
 - First digital implementation of al-Shawwā algorithm (1946)
 - Maqamat-to-maqamat modulations
 - Ajnas-to-ajnas modulations
-- Organized by scale degree
+- Organized by maqām degree
 
-### 5. Export System
+### 6. Export System
 - Web UI export modal
 - CLI batch export tool
 - JSON format with comprehensive metadata
@@ -242,41 +220,22 @@ The **Digital Arabic Maqām Archive** (DiArMaqAr) is a comprehensive web-based p
 
 ## Common Commands
 
-### Development
+**For full command reference**: See [reference/cli-commands-guide.md](../reference/cli-commands-guide.md)
+
+### Quick Reference
+
 ```bash
-npm run dev          # Start Next.js dev server (http://localhost:3000)
-npm run build        # Build production application
-npm start            # Start production server
+# Development
+npm run dev          # Start dev server (localhost:3000)
+npm run build        # Build production
 npm run lint         # Run ESLint
-```
 
-### Documentation
-```bash
-npm run docs         # Generate TypeDoc documentation
-npm run docs:serve   # Generate and open in browser
-npm run docs:watch   # Watch mode for docs
-```
+# Documentation
+npm run docs         # Generate TypeDoc
+npm run docs:serve   # Generate and open
 
-
-### Batch Export CLI
-```bash
-# List all tuning systems
+# Batch Export
 node scripts/batch-export/batch-export.js --list-tuning-systems
-
-# Export specific system with full data
-node scripts/batch-export/batch-export.js \
-  --tuning-system "Al-Farabi-(950g)" \
-  --starting-note "yegāh" \
-  --include-ajnas-details \
-  --include-maqamat-details \
-  --include-maqamat-modulations \
-  --include-ajnas-modulations
-
-# Batch export all systems (generates many GB of data)
-node scripts/batch-export/batch-export.js \
-  --tuning-system "all" \
-  --starting-note "all" \
-  --output-dir "./exports"
 ```
 
 ---
@@ -284,9 +243,9 @@ node scripts/batch-export/batch-export.js \
 ## Development Workflow
 
 1. **Read relevant instructions**: Check `.ai-agent-instructions/` for specific guidance
-2. **Understand context**: Review existing code patterns before implementing
-3. **Follow conventions**: Use established patterns (see `02-architecture.md`, `03-development-conventions.md`)
-4. **Test thoroughly**: Use manual testing guide (`05-testing-guide.md`)
+2. **Understand context**: Review existing code patterns
+3. **Follow conventions**: Use established patterns (see architecture and development guides)
+4. **Test thoroughly**: Use manual testing guide
 5. **Document findings**: Update instructions with significant discoveries
 
 ---
@@ -295,19 +254,26 @@ node scripts/batch-export/batch-export.js \
 
 - **Repository**: Music-Intelligence-Lab/DiArMaqAr
 - **Branch**: main
-- **License**: (check repository)
 - **Live Site**: https://arabic-maqam-archive.netlify.app/
 
 ---
 
-## Key Resources
+## Navigation
 
-- **Architecture Details**: `.ai-agent-instructions/02-architecture.md`
-- **Development Conventions**: `.ai-agent-instructions/03-development-conventions.md`
-- **Musicological Principles**: `.ai-agent-instructions/04-musicological-principles.md`
-- **Testing Guide**: `.ai-agent-instructions/05-testing-guide.md`
-- **Documentation Standards**: `.ai-agent-instructions/06-documentation-standards.md`
-- **API Specification**: `openapi.yaml`
-- **API Playground**: `src/app/api/playground/page.tsx`
-- **Export Documentation**: `public/docs/README DiArMaqAr Tuning System JSON Data Export.md`
-- **TypeDoc**: `docs/library/index.html` (generated)
+### Core Files (Always Load)
+- [core/00-core-principles.md](../core/00-core-principles.md)
+
+### Essential Files (Most Tasks)
+- [essentials/02-architecture-essentials.md](02-architecture-essentials.md)
+- [essentials/03-development-quick-ref.md](03-development-quick-ref.md)
+- [essentials/04-musicology-essentials.md](04-musicology-essentials.md)
+- [essentials/05-testing-essentials.md](05-testing-essentials.md)
+
+### Reference Files (On Demand)
+- [reference/api-design-patterns.md](../reference/api-design-patterns.md)
+- [reference/cli-commands-guide.md](../reference/cli-commands-guide.md)
+- [reference/mcp-servers-guide.md](../reference/mcp-servers-guide.md)
+
+### Glossary (When Needed)
+- [glossary/06-documentation-standards.md](../glossary/06-documentation-standards.md)
+- [glossary/07-musicological-definitions.md](../glossary/07-musicological-definitions.md)

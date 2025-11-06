@@ -87,8 +87,9 @@ export default class JinsData {
     version?: string
   ) {
     this.id = id;
-    this.idName = standardizeText(name);
-    this.name = name;
+    const cleanName = name.trim();
+    this.idName = standardizeText(cleanName);
+    this.name = cleanName;
     this.noteNames = noteNames;
     this.commentsEnglish = commentsEnglish;
     this.commentsArabic = commentsArabic;

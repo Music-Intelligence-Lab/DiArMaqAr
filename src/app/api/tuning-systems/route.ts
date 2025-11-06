@@ -2,7 +2,14 @@ import { NextResponse } from "next/server";
 import { getTuningSystems } from "@/functions/import";
 import { addCorsHeaders, handleCorsPreflightRequest } from "@/app/api/cors";
 import { safeWriteFile } from "@/app/api/backup-utils";
+import { standardizeText } from "@/functions/export";
 import path from "path";
+import { parseInArabic, getNoteNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
+import {
+  buildEntityNamespace,
+  buildListResponse,
+  buildStringArrayNamespace
+} from "@/app/api/response-shapes";
 
 export const OPTIONS = handleCorsPreflightRequest;
 
@@ -12,32 +19,78 @@ export const dynamic = "force-static";
  * GET /api/tuning-systems
  * List all available tuning systems
  */
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    
+    // Parse inArabic parameter
+    let inArabic = false;
+    try {
+      inArabic = parseInArabic(searchParams);
+    } catch (error) {
+      return addCorsHeaders(
+        NextResponse.json(
+          {
+            error: error instanceof Error ? error.message : "Invalid inArabic parameter",
+            hint: "Use ?inArabic=true or ?inArabic=false"
+          },
+          { status: 400 }
+        )
+      );
+    }
+    
     const tuningSystems = getTuningSystems();
     
     const systems = tuningSystems.map((ts) => {
-      // Extract starting note names from each note name set
       const noteNameSets = ts.getNoteNameSets();
-      const tuningSystemStartingNoteNames = noteNameSets.map(set => set[0]).filter(Boolean);
-      
+      const startingNoteDisplayNames = noteNameSets.map((set) => set[0]).filter((name): name is string => Boolean(name));
+      const startingNoteIdNames = startingNoteDisplayNames.map((name) => standardizeText(name));
+      const startingNoteDisplayNamesAr = inArabic
+        ? startingNoteDisplayNames.map((name) => getNoteNameDisplayAr(name))
+        : undefined;
+
+      const tuningSystemNamespace = buildEntityNamespace(
+        {
+          id: ts.getId(),
+          idName: standardizeText(ts.getId()),
+          displayName: ts.stringify(),
+        },
+        {
+          version: ts.getVersion(),
+          extras: {
+            year: ts.getYear(),
+          },
+          inArabic,
+          displayNameAr: inArabic
+            ? getTuningSystemDisplayNameAr(
+                ts.getCreatorArabic() || "",
+                ts.getCreatorEnglish() || "",
+                ts.getYear(),
+                ts.getTitleArabic() || "",
+                ts.getTitleEnglish() || ""
+              )
+            : undefined,
+        }
+      );
+
+      const startingNotesNamespace = buildStringArrayNamespace(startingNoteIdNames, {
+        inArabic,
+        displayNames: startingNoteDisplayNames,
+        displayNamesAr: startingNoteDisplayNamesAr,
+      });
+
       return {
-        id: ts.getId(),
-        displayName: ts.stringify(), // Using stringify() which formats as "Creator (Year) Title"
-        version: ts.getVersion(),
-        year: ts.getYear(),
-        numberOfPitchClassesSingleOctave: ts.getOriginalPitchClassValues().length,
-        tuningSystemStartingNoteNames: tuningSystemStartingNoteNames,
-        numberOfTuningSystemStartingNoteNames: tuningSystemStartingNoteNames.length
+        tuningSystem: tuningSystemNamespace,
+        startingNotes: startingNotesNamespace,
+        stats: {
+          numberOfPitchClassesSingleOctave: ts.getOriginalPitchClassValues().length,
+        },
       };
     });
 
-    const response = NextResponse.json({
-      tuningSystems: systems,
-      meta: {
-        total: systems.length,
-      },
-    });
+    const response = NextResponse.json(
+      buildListResponse(systems)
+    );
 
     return addCorsHeaders(response);
   } catch (error) {

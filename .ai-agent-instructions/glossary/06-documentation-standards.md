@@ -158,7 +158,7 @@ Structure documentation for different reader needs:
 - "major", "minor"
 - "semitone", "tone"
 - "mode" (unless specifically discussing Western modal theory)
-- "scale degree" (use "scale degree" with Arabic context)
+- "scale degree" (always use "maqām degree" instead)
 - "microtonal" (NEVER - see terminology standards)
 
 **Don't compare intervals to 12-EDO** unless explicitly discussing compatibility:
@@ -318,12 +318,101 @@ This hierarchical versioning enables tracking changes at different granularities
  */
 ```
 
+### ⚠️ CRITICAL: Parameter Description Formatting Ruleset
+
+**Principle**: Always prefer bullets and conciseness, but not at the expense of accuracy. Use natural language, not parameter names.
+
+**Rule 1: Format Selection (Prefer Bullets)**
+
+- **Single-line**: For simple parameters (one sentence, ~80-100 chars)
+- **Bullet points**: For 2+ distinct points, requirements, or behaviors (PREFERRED)
+- **Paragraphs**: Only for continuous narrative that cannot be broken into discrete points
+
+**Rule 2: Natural Language (Not Parameter Names)**
+
+- ✅ Use natural language that describes functionality: "Transpose the maqām to a different tonic"
+- ❌ Never reference parameter names unless clarifying relationships: "Use the `transposeTo` parameter"
+- ✅ Exception: Can reference parameter names when clarifying relationships between parameters
+- ✅ Reason: Parameter names are visible in UI; descriptions should explain purpose/behavior
+
+**Rule 3: Bullet Point Format**
+
+```yaml
+description: |
+  Main purpose statement.
+  
+  - First requirement or behavior
+  - Second requirement or behavior
+  - Third requirement or behavior
+```
+
+**Rule 4: Line Break Rules**
+
+**Never break:**
+- Mid-phrase ("tuning system" → keep together)
+- Between article and noun ("the tuning" → keep together)
+- In compound terms ("pitch class" → keep together)
+- Between word and modifier ("the same tuning" → keep together)
+
+**Always break:**
+- At sentence endings (periods)
+- After commas (when appropriate)
+- At natural pause points
+- Before bullet points (blank line before list)
+
+**Rule 5: Parameter Type Patterns**
+
+**Boolean Flags:**
+```yaml
+description: Include [feature description]
+```
+
+**Identifiers:**
+```yaml
+description: [Entity] identifier (format constraints, e.g., 'example-id')
+```
+
+**Format/Type Selectors:**
+```yaml
+description: |
+  Specifies which [format/type] to return.
+  - Option 1: [description]
+  - Option 2: [description]
+  Use 'all' for complete data.
+```
+
+**Complex Parameters:**
+```yaml
+description: |
+  Main purpose statement.
+  
+  - Requirement 1: [description]
+  - Requirement 2: [description]
+  - Behavior: [description]
+```
+
+**Rule 6: Examples**
+
+- Inline: `(e.g., 'example1', 'example2')`
+- Don't duplicate schema `examples` field
+- Use actual IDs from data, never hypothetical examples
+
+**Check Before Committing:**
+1. ✅ Prefer bullets over paragraphs for multiple points
+2. ✅ Use natural language, not parameter names
+3. ✅ Verify line breaks are at natural points
+4. ✅ Test rendering in Swagger UI
+5. ✅ Ensure compound terms stay together
+
 ### API Example Requirements
 
-- **Verified IDs**: Use actual IDs from data files
+- **Verified IDs**: Use actual IDs from data files - ALWAYS verify against API responses (`curl` the endpoint) or data files before using examples
+- **Parameter descriptions**: All examples in parameter descriptions MUST use real IDs from the data
 - **Complete examples**: Show full request/response structure
 - **Default behavior**: Explicitly document what happens when optional parameters omitted
 - **Error cases**: Document common error scenarios
+- **❌ NEVER**: Use display names (e.g., '12-EDO') when you need IDs (e.g., 'Anglo-European-(1700)')
+- **✅ ALWAYS**: Query the API or check data files to get actual IDs before documenting examples
 
 ---
 
@@ -436,6 +525,7 @@ Before publishing documentation:
 - [ ] All properties match actual data structure
 - [ ] Optional fields clearly marked with presence conditions
 - [ ] "Frequencies" replaced with specific properties (fractions/cents/string lengths)
+- [ ] No API defaults use "frequency" for pitch class data (see Frequency Usage Restriction in 07-musicological-definitions.md)
 - [ ] "Intervals" disambiguated with full property references
 - [ ] Version timestamps documented at all hierarchical levels
 - [ ] Table of contents links all validate

@@ -7,9 +7,35 @@ import Book from "@/models/bibliography/Book";
 import Article from "@/models/bibliography/Article";
 import Thesis from "@/models/bibliography/Thesis";
 import { Source } from "@/models/bibliography/Source";
-import { nanoid } from "nanoid";
 import { updateSources } from "@/functions/update";
 import { standardizeText } from "@/functions/export";
+
+/**
+ * Generate a URL-safe source ID from contributor and publication date
+ * Format: standardized-lastname-(year)
+ * Uses only the publication date (not original publication date) for consistency
+ * Removes special characters and diacritics to ensure URL safety
+ */
+function generateSourceId(contributors: Contributor[], publicationDateEnglish: string): string {
+  let baseName = "na";
+
+  // Get first contributor's last name
+  if (contributors && contributors.length > 0) {
+    const firstContributor = contributors[0];
+    if (firstContributor.lastNameEnglish) {
+      // Standardize text to remove diacritics and make URL-safe
+      baseName = standardizeText(firstContributor.lastNameEnglish);
+      // Additional URL safety: remove any remaining problematic characters
+      baseName = baseName.replace(/[^a-zA-Z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+    }
+  }
+
+  // Extract year from publication date (handles formats like "2011", "2011-05", etc.)
+  const yearMatch = publicationDateEnglish.match(/\d{4}/);
+  const year = yearMatch ? yearMatch[0] : "unknown";
+
+  return `${baseName}-(${year})`;
+}
 
 export default function SourcesManager() {
   const { sources, setSources } = useAppContext();
@@ -64,7 +90,8 @@ export default function SourcesManager() {
   useEffect(() => {
     if (selectedSourceId === "new") {
       // Reset everything for a brand‐new source
-      setId(nanoid());
+      // Note: ID will be generated when saving based on contributor and publication date
+      setId("");
       setTitleEnglish("");
       setTitleArabic("");
       setSourceType("Book");
@@ -218,6 +245,10 @@ export default function SourcesManager() {
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Generate URL-safe ID based on contributor and publication date
+    const generatedId = generateSourceId(contributors, publicationDateEnglish);
+    const finalId = selectedSourceId === "new" ? generatedId : id;
+
     // Get existing version if editing
     const existingSource = selectedSourceId !== "new"
       ? sources.find((s: Source) => s.getId() === selectedSourceId)
@@ -227,7 +258,7 @@ export default function SourcesManager() {
     let newSource: Source;
     if (sourceType === "Book") {
       newSource = new Book(
-        id,
+        finalId,
         titleEnglish,
         titleArabic,
         contributors,
@@ -250,7 +281,7 @@ export default function SourcesManager() {
     } else if (sourceType === "Article") {
       // Article
       newSource = new Article(
-        id,
+        finalId,
         titleEnglish,
         titleArabic,
         contributors,
@@ -275,7 +306,7 @@ export default function SourcesManager() {
     } else {
       // Thesis
       newSource = new Thesis(
-        id,
+        finalId,
         titleEnglish,
         titleArabic,
         contributors,

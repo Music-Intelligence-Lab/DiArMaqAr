@@ -88,7 +88,7 @@ This document defines key musicological terms as they are used within the Digita
 **Arabic maqām theory**: Maqām is a complete modal framework built from:
 - An ordered sequence of pitch classes (typically 7–13+ notes)
 - Ascending (ṣuʿūd) and descending (hubūṭ) sequences, which may differ
-- Positioning of multiple ajnās at specific scale degrees
+- Positioning of multiple ajnās at specific maqām degrees
 - Melodic development pathways (suyūr)
 - Unique theoretical and aesthetic properties
 
@@ -143,7 +143,7 @@ Translation of maqām to “scale” erases these distinctions and imposes Anglo
 
 **Key characteristics:**
 - Tonic requirement: Target tonic (darajat al-istiqrār/al-rukūz) must exist in the current pitch class set
-- Permitted scale degrees (al-Shawwā): 1st, 3rd, 4th, 5th, or 6th (and/or alternative third)
+- Permitted maqām degrees (al-Shawwā): 1st, 3rd, 4th, 5th, or 6th (and/or alternative third)
 - Context-dependent, based on pitch class presence and theoretical relationships
 - Specific maqāmāt prescribe allowable modulation pathways (suyūr)
 - Maintains modal identity: The new maqām establishes its own structure
@@ -203,7 +203,32 @@ Translation of maqām to “scale” erases these distinctions and imposes Anglo
 - Transposability possible wherever interval pattern can be maintained
 - Reference pitch is a contextual, performative choice
 
-**Anglo-European difference**: While Anglo-European theory also recognizes relative pitch and transposition, it often emphasizes standard reference pitches (A=440Hz, key signatures). For Arabic maqām theory, interval pattern is primary, and there is no concept of an absolute concert pitch or “correct” frequency.
+**Anglo-European difference**: While Anglo-European theory also recognizes relative pitch and transposition, it often emphasizes standard reference pitches (A=440Hz, key signatures). For Arabic maqām theory, interval pattern is primary, and there is no concept of an absolute concert pitch or "correct" frequency.
+
+**⚠️ CRITICAL: Frequency Usage Restriction**
+
+**NEVER use frequency (Hz) as a default, example, or primary reference for pitch class data** except for the specific context of Reference Frequency for Tuning System Starting Note Name.
+
+**Why frequency should not be the default:**
+- **Frequency is absolute/hardcoded**: Frequency values (Hz) represent fixed, absolute pitch measurements that lock pitch classes to specific values
+- **Arabic maqām theory is relative**: The theoretical framework is based on intervallic relationships and relative measurements, not absolute pitch
+- **Frequency introduces cultural bias**: Defaulting to Hz implies an absolute concert pitch standard, which contradicts the relative nature of Arabic maqām theory
+- **Frequency limits transposability**: Absolute frequencies make it harder to understand that maqāmāt are transposable based on interval patterns
+
+**When frequency IS appropriate:**
+- ✅ **Reference Frequency for Tuning System Starting Note Name**: When documenting or displaying the reference frequency used for calculations (e.g., A4 = 440 Hz). This is metadata about the tuning system's computational context, not the primary data format.
+- ✅ **Context/metadata fields**: Reference frequency can appear in response context to show what frequency was used for calculations
+
+**What to use instead:**
+- ✅ **Cents**: Relative measurements from a reference (0 cents = starting note). This is relative and maintains the theoretical framework.
+- ✅ **Fraction**: Ratio-based representations (e.g., 9/8, 3/2) that express pure intervallic relationships
+- ✅ **String length**: Relative string length measurements from monochord traditions
+- ✅ **Any relative measurement**: Any format that preserves intervallic relationships without fixing absolute pitch
+
+**API Design Implication:**
+- Default values for `pitchClassDataType` should NEVER be "frequency"
+- Examples and documentation should prioritize relative formats (cents, fraction, stringLength)
+- Frequency should be available as an option but never presented as the primary or recommended format
 
 ***
 
@@ -325,15 +350,15 @@ The choice of starting note name is not arbitrary—it represents a fundamental 
 
 ***
 
-### Scale Degree (Darajah)
+### Maqām Degree (Darajah)
 
-**Arabic maqām theory**: Scale degrees are positional indicators within a jins or maqām sequence, designated using Roman numerals (I, II, III...) and “I+” for octave equivalents. They never imply Anglo-European harmonic functions.
+**Arabic maqām theory**: Maqām degrees are positional indicators within a jins or maqām sequence, designated using Roman numerals (I, II, III...) and "I+" for octave equivalents. They never imply Anglo-European harmonic functions.
 
 **Key characteristics:**
 - Show structural position, not tonic/dominant relationships
 - May range beyond VII for non-octave-repeating structures
 
-**Anglo-European difference**: Anglo-European theory associates scale degrees with harmonic functions (“V” is dominant, “VII” is leading tone). Arabic maqām theory uses them only for structural position, entirely separated from harmonic or functional meaning.
+**Anglo-European difference**: Anglo-European theory associates scale degrees with harmonic functions ("V" is dominant, "VII" is leading tone). Arabic maqām theory uses maqām degrees only for structural position, entirely separated from harmonic or functional meaning.
 
 ***
 

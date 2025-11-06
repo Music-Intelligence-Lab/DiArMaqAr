@@ -199,7 +199,7 @@ All maqāmāt are marked with one of these patterns:
 
 **Steps:**
 1. Select maqām
-2. View scale degree row in analysis table
+2. View maqām degree row in analysis table
 3. Check if last degree is marked "I+" (octave equivalence)
 4. Count unique pitch classes (excluding octave repeat)
 
@@ -262,12 +262,12 @@ All maqāmāt are marked with one of these patterns:
 1. Select maqām
 2. Click "Intiqālāt" button
 3. Check available modulations
-4. Verify categorization by scale degree (I, III, IV, V, VI)
+4. Verify categorization by maqām degree (I, III, IV, V, VI)
 5. Test both maqāmāt and ajnās modulation modes
 6. Check ascending/descending variants for sixth degree
 
 **Expected Results:**
-- Modulations organized by scale degree
+- Modulations organized by maqām degree
 - Shared pitch classes identified correctly
 - Al-Shawwā algorithm rules applied
 - Only maqāmāt have modulation data (ajnās do not modulate FROM, only TO)
@@ -288,7 +288,7 @@ All maqāmāt are marked with one of these patterns:
 7. Play both versions audibly
 
 **Expected Results:**
-- Same maqām has consistent structure (same Arabic note names, scale degrees)
+- Same maqām has consistent structure (same Arabic note names, maqām degrees)
 - Pitch class values differ according to tuning system
 - Transposition counts may differ (depends on available pitch classes)
 - Interval ratios may differ slightly

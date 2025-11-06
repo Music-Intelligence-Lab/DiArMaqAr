@@ -63,7 +63,10 @@ export function stringifySource(source: Source, english: boolean, page: string |
   // Check if this is a Book with an original publication date
   if (source.getSourceType() === "Book") {
     const book = source as Book;
-    const originalDate = english ? book.getOriginalPublicationDateEnglish() : book.getOriginalPublicationDateArabic();
+    // Fall back to English if Arabic is empty
+    const originalDate = english 
+      ? book.getOriginalPublicationDateEnglish() 
+      : (book.getOriginalPublicationDateArabic() || book.getOriginalPublicationDateEnglish());
 
     if (originalDate) {
       // Extract year from original publication date
@@ -74,7 +77,10 @@ export function stringifySource(source: Source, english: boolean, page: string |
   }
 
   // Add publication date
-  const pubDate = english ? source.getPublicationDateEnglish() : source.getPublicationDateArabic();
+  // Fall back to English if Arabic is empty
+  const pubDate = english 
+    ? source.getPublicationDateEnglish() 
+    : (source.getPublicationDateArabic() || source.getPublicationDateEnglish());
   const yearMatch = pubDate.match(/^\d{4}/);
   const year = yearMatch ? yearMatch[0] : pubDate;
   resultString += year;

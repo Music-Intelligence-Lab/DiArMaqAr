@@ -5,6 +5,13 @@ import { calculateMaqamTranspositions } from "@/functions/transpose";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { classifyMaqamFamily } from "@/functions/classifyMaqamFamily";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
+import { parseInArabic, getMaqamNameDisplayAr, getNoteNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
+import {
+  buildEntityNamespace,
+  buildIdentifierNamespace,
+  buildLinksNamespace,
+  buildStringArrayNamespace
+} from "@/app/api/response-shapes";
 
 export const OPTIONS = handleCorsPreflightRequest;
 
@@ -14,6 +21,23 @@ export async function GET(
 ) {
   try {
     const { id: tuningSystemId, startingNote: startingNoteParam } = await context.params;
+    const { searchParams } = new URL(request.url);
+    
+    // Parse inArabic parameter
+    let inArabic = false;
+    try {
+      inArabic = parseInArabic(searchParams);
+    } catch (error) {
+      return addCorsHeaders(
+        NextResponse.json(
+          {
+            error: error instanceof Error ? error.message : "Invalid inArabic parameter",
+            hint: "Use ?inArabic=true or ?inArabic=false"
+          },
+          { status: 400 }
+        )
+      );
+    }
 
     // Validate that path parameters are not empty
     if (!tuningSystemId || tuningSystemId.trim() === "") {
@@ -151,20 +175,57 @@ export async function GET(
         const suyur = maqam.getSuyur();
         const hasSuyur = suyur && suyur.length > 0;
 
+        const maqamNamespace = buildEntityNamespace(
+          {
+            id: maqam.getId(),
+            idName: maqam.getIdName(),
+            displayName: maqam.getName(),
+          },
+          {
+            version: maqam.getVersion(),
+            inArabic,
+            displayNameAr: inArabic ? getMaqamNameDisplayAr(maqam.getName()) : undefined,
+          }
+        );
+
+        const familyId = standardizeText(classification.familyName);
+        const familyNamespace = buildIdentifierNamespace(
+          {
+            idName: familyId,
+            displayName: classification.familyName,
+          },
+          {
+            inArabic,
+            displayAr: inArabic ? getMaqamNameDisplayAr(classification.familyName) : undefined,
+          }
+        );
+
+        const tonicNamespace = buildIdentifierNamespace(
+          {
+            idName: standardizeText(canonicalStartingNote),
+            displayName: canonicalStartingNote,
+          },
+          {
+            inArabic,
+            displayAr: inArabic ? getNoteNameDisplayAr(canonicalStartingNote) : undefined,
+          }
+        );
+
         availableMaqamat.push({
-          id: maqam.getId(),
-          idName: standardizeText(maqam.getName()),
-          displayName: maqam.getName(),
-          version: maqam.getVersion(),
-          familyId: standardizeText(classification.familyName),
-          familyDisplayName: classification.familyName,
-          tonicIdName: standardizeText(canonicalStartingNote),
-          tonicDisplayName: canonicalStartingNote,
-          numberOfPitchClasses: ascendingNotes.length,
-          isOctaveRepeating: ascendingNotes.length <= 7,
-          hasAsymmetricDescending,
-          hasSuyur,
-          href: `/api/maqamat/${standardizeText(maqam.getName())}`,
+          maqam: maqamNamespace,
+          family: familyNamespace,
+          tonic: tonicNamespace,
+          stats: {
+            numberOfPitchClasses: ascendingNotes.length,
+          },
+          characteristics: {
+            isOctaveRepeating: ascendingNotes.length <= 7,
+            hasAsymmetricDescending,
+            hasSuyur,
+          },
+          links: buildLinksNamespace({
+            detail: `/api/maqamat/${maqam.getIdName()}`,
+          }),
         });
       }
     }
@@ -173,50 +234,94 @@ export async function GET(
     availableMaqamat.sort((a: any, b: any) => {
       // First sort by tonic
       const noteOrder = ["yegah", "asiran", "iraq", "rast", "dugah", "sikah", "jaharkah"];
-      const aIndex = noteOrder.indexOf(a.tonicIdName);
-      const bIndex = noteOrder.indexOf(b.tonicIdName);
+      const aIndex = noteOrder.indexOf(a.tonic.idName);
+      const bIndex = noteOrder.indexOf(b.tonic.idName);
       
       if (aIndex !== -1 && bIndex !== -1 && aIndex !== bIndex) {
         return aIndex - bIndex;
       }
       
       // Then sort alphabetically by display name
-      return a.displayName.localeCompare(b.displayName, "ar");
+      return a.maqam.displayName.localeCompare(b.maqam.displayName, "ar");
     });
 
     // Build response
-    const response = NextResponse.json({
-      tuningSystem: {
+    const tuningSystemNoteNameSets = tuningSystem.getNoteNameSets();
+    const tuningSystemStartingNoteNames = Array.from(
+      new Set(
+        tuningSystemNoteNameSets
+          .map((set: string[]) => set[0])
+          .filter((name): name is string => Boolean(name))
+      )
+    );
+    const tuningSystemStartingNoteNamesIds = tuningSystemStartingNoteNames.map((name) => standardizeText(name));
+    const selectedStartingNoteDisplay = tuningSystemNoteNameSets
+      .find((set: string[]) => standardizeText(set[0]) === normalizedParam)?.[0] || startingNoteParam;
+    const referenceFrequency = tuningSystem.getReferenceFrequencies()[selectedStartingNoteDisplay] ?? tuningSystem.getDefaultReferenceFrequency();
+
+    const tuningSystemNamespace = buildEntityNamespace(
+      {
         id: tuningSystemId,
+        idName: standardizeText(tuningSystemId),
         displayName: tuningSystem.stringify(),
+      },
+      {
         version: tuningSystem.getVersion(),
-        year: tuningSystem.getYear(),
-        numberOfPitchClassesSingleOctave: tuningSystem.getOriginalPitchClassValues().length,
-        tuningSystemStartingNoteName: tuningSystem.getNoteNameSets()
-          .find((set: string[]) => standardizeText(set[0]) === normalizedParam)?.[0],
-        numberOfAvailableMaqamat: availableMaqamat.length,
+        extras: {
+          year: tuningSystem.getYear(),
+          numberOfPitchClassesSingleOctave: tuningSystem.getOriginalPitchClassValues().length,
+        },
+        inArabic,
+        displayNameAr: inArabic
+          ? getTuningSystemDisplayNameAr(
+              tuningSystem.getCreatorArabic() || "",
+              tuningSystem.getCreatorEnglish() || "",
+              tuningSystem.getYear(),
+              tuningSystem.getTitleArabic() || "",
+              tuningSystem.getTitleEnglish() || ""
+            )
+          : undefined,
+      }
+    );
+
+    const startingNotesNamespace = buildStringArrayNamespace(tuningSystemStartingNoteNamesIds, {
+      inArabic,
+      displayNames: tuningSystemStartingNoteNames,
+      displayNamesAr: inArabic
+        ? tuningSystemStartingNoteNames.map((name) => getNoteNameDisplayAr(name))
+        : undefined,
+    });
+
+    const selectedStartingNoteNamespace = buildIdentifierNamespace(
+      {
+        idName: normalizedParam,
+        displayName: selectedStartingNoteDisplay,
       },
+      {
+        inArabic,
+        displayAr: inArabic ? getNoteNameDisplayAr(selectedStartingNoteDisplay) : undefined,
+      }
+    );
+
+    const stats = {
+      totalMaqamatForStartingNote: availableMaqamat.length,
+      totalMaqamatInLibrary: maqamatData.length,
+      uniqueTonicCount: new Set(availableMaqamat.map((m: any) => m.tonic.idName)).size,
+      uniqueFamilyCount: new Set(availableMaqamat.map((m: any) => m.family.idName)).size,
+      referenceFrequency,
+    };
+
+    const response = NextResponse.json({
+      tuningSystem: tuningSystemNamespace,
+      startingNotes: startingNotesNamespace,
+      selectedStartingNote: selectedStartingNoteNamespace,
+      stats,
       data: availableMaqamat,
-      meta: {
-        totalMaqamat: availableMaqamat.length,
-        totalMaqamatInDatabase: maqamatData.length,
-        uniqueTonics: [
-          ...new Set(
-            availableMaqamat.map((m: any) => m.tonicIdName)
-          ),
-        ].length,
-        uniqueFamilies: [
-          ...new Set(availableMaqamat.map((m: any) => m.familyId)),
-        ].length,
-      },
-      context: {
-        tuningSystemStartingNote: startingNoteParam,
-      },
-      links: {
+      links: buildLinksNamespace({
         self: `/api/tuning-systems/${tuningSystemId}/${startingNoteParam}/maqamat`,
-        tuningSystemData: `/api/tuning-systems/${tuningSystemId}`,
-        allMaqamat: "/api/maqamat",
-      },
+        tuningSystem: `/api/tuning-systems/${tuningSystemId}`,
+        collection: `/api/maqamat`,
+      }),
     });
 
     return addCorsHeaders(response);

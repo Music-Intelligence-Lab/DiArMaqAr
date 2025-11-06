@@ -4,91 +4,131 @@
 
 ---
 
-## 📊 Recent Updates (2025-10-29)
+## 📊 Recent Updates (2025-11-06)
 
-**Major Improvements:**
-- ✅ Added comprehensive TDD (Test-Driven Development) workflow to 03-development-conventions.md
-- ✅ Reduced 03-development-conventions.md from 1,353 to 680 lines (50% reduction)
-- ✅ Restructured SESSION_SUMMARY.md from 1,330 to 547 lines (59% reduction)
-- ✅ Added quick reference sections for faster scanning
-- ✅ Consolidated cultural principles and removed redundancy
-- ✅ Improved table-based formats for better scanability
+**Major Restructuring:**
+- ✅ Implemented hierarchical structure (core/ essentials/ reference/ glossary/)
+- ✅ Reduced core context load by ~50-60% through extraction and consolidation
+- ✅ Eliminated redundancy across files ("never use microtonal" now in 2 locations vs. 6)
+- ✅ Created task-based loading strategy for conditional context
+- ✅ Extracted detailed guides to reference/ directory (load on demand)
+- ✅ Total optimization: ~9,650 lines → ~4,500-5,500 core lines
 
 ---
 
 ## 🚀 Quick Start
 
 ### For First-Time AI Assistants
-1. **Read** [`00-ai-agent-personality.md`](./00-ai-agent-personality.md) - Universal principles
-2. **Skim** [`01-project-overview.md`](./01-project-overview.md) - Project context
-3. **Bookmark** [`03-development-conventions.md`](./03-development-conventions.md) - Most-used reference
 
-### For Specific Tasks
-| Task Type | Primary File | Quick Reference |
-|-----------|--------------|-----------------|
-| **New feature** | 03-development-conventions.md | TDD workflow, component patterns |
-| **Bug fix** | 04-musicological-principles.md | Common pitfalls section |
-| **API endpoint** | 03-development-conventions.md → API section | Standard route pattern |
-| **Documentation** | 06-documentation-standards.md | Property tables, JSDoc |
-| **Testing** | 05-testing-guide.md + 03 TDD section | Manual + automated testing |
-| **Terminology** | 07-musicological-definitions.md | All term definitions |
+1. **Read** [`core/00-core-principles.md`](./core/00-core-principles.md) - Universal principles (ALWAYS LOAD)
+2. **Skim** [`essentials/01-project-essentials.md`](./essentials/01-project-essentials.md) - Project context
+3. **Bookmark** [`essentials/03-development-quick-ref.md`](./essentials/03-development-quick-ref.md) - Most-used reference
+
+### Task-Based Loading Strategy
+
+Load files based on your task type for optimal context efficiency:
+
+| Task Type | Core | Essentials | Reference | Glossary |
+|-----------|------|------------|-----------|----------|
+| **New feature** | 00 | 01, 03, 04 | - | - |
+| **Bug fix** | 00 | 03, 04, 05 | - | - |
+| **API endpoint** | 00 | 03 | api-retrospective, openapi-formatting-guide | - |
+| **Documentation** | 00 | 03 | - | 06, 07 |
+| **Testing** | 00 | 05 | - | - |
+| **MCP usage** | 00 | - | mcp-servers-guide | - |
+| **Naming/semantics** | 00 | 03 | naming-conventions-deep-dive | 07 |
 
 ---
 
-## 📁 File Organization
+## 📁 New Hierarchical Structure
 
-### Universal Principles
-**[`00-ai-agent-personality.md`](./00-ai-agent-personality.md)** (358 lines)
+### Tier 1: Core (Always Load)
+
+**[`core/00-core-principles.md`](./core/00-core-principles.md)** (~290 lines)
+- Personality & philosophy
 - Decolonial computing framework
-- Cultural sensitivity in computational musicology
-- Development philosophy
+- Cultural sensitivity principles
+- Post-task reflection protocol
 - Communication style
+- **ALWAYS load this file for all tasks**
 
-### Project-Specific Instructions
+### Tier 2: Essentials (Load for Most Tasks)
 
-**[`01-project-overview.md`](./01-project-overview.md)** (302 lines)
-- Project description and goals
-- Tech stack overview
-- Common commands
-- Repository information
+**[`essentials/01-project-essentials.md`](./essentials/01-project-essentials.md)** (~240 lines)
+- Project overview & tech stack
+- High-level architecture
+- Core conceptual model
+- Common commands reference
 
-**[`02-architecture.md`](./02-architecture.md)** (600 lines)
-- Technical architecture
+**[`essentials/02-architecture-essentials.md`](./essentials/02-architecture-essentials.md)** (~450 lines)
 - Context provider hierarchy
 - Data model relationships
-- Integration patterns
+- Component patterns
+- Performance considerations
 
-**[`03-development-conventions.md`](./03-development-conventions.md)** ⭐ (680 lines) - **MOST USED**
-- **Quick reference section** (new)
-- **TDD workflow** (new)
-- Component creation patterns
-- API development standards
+**[`essentials/03-development-quick-ref.md`](./essentials/03-development-quick-ref.md)** ⭐ (~550 lines) - **MOST USED**
+- Quick reference tables
+- TDD workflow
+- Component creation checklist
+- Core conventions
 - Common patterns
-- MCP server usage
+- UI/UX patterns
 
-**[`04-musicological-principles.md`](./04-musicological-principles.md)** (588 lines)
-- Arabic maqām theory fundamentals
-- Critical implementation requirements
+**[`essentials/04-musicology-essentials.md`](./essentials/04-musicology-essentials.md)** (~450 lines)
+- Octave-repeating vs non-octave-repeating (CRITICAL)
+- Asymmetric melodic paths
+- Tuning system independence
 - Common programming pitfalls
-- Octave-repeating vs non-octave-repeating
 
-**[`05-testing-guide.md`](./05-testing-guide.md)** (440 lines)
+**[`essentials/05-testing-essentials.md`](./essentials/05-testing-essentials.md)** (~440 lines)
 - Manual testing protocols
 - Priority test cases
 - Debugging procedures
-- Integration with TDD (see 03)
 
-**[`06-documentation-standards.md`](./06-documentation-standards.md)** (495 lines)
+### Tier 3: Reference (Load on Demand)
+
+**[`reference/api-retrospective.md`](./reference/api-retrospective.md)** (~600 lines)
+- Entity object pattern
+- Context object nesting
+- API design lessons learned
+- Progressive disclosure pattern
+
+**[`reference/openapi-formatting-guide.md`](./reference/openapi-formatting-guide.md)** (~470 lines)
+- OpenAPI specification standards
+- Parameter description consistency
+- URL-safe values requirements
+- Options parameter pattern
+
+**[`reference/naming-conventions-deep-dive.md`](./reference/naming-conventions-deep-dive.md)** (~470 lines)
+- Semantic clarity principles
+- Type qualifiers pattern
+- Context qualifiers pattern
+- Field name construction
+
+**[`reference/cli-commands-guide.md`](./reference/cli-commands-guide.md)** (~330 lines)
+- Development commands
+- Documentation commands
+- Batch export CLI
+- Git workflow
+
+**[`reference/mcp-servers-guide.md`](./reference/mcp-servers-guide.md)** (~300 lines)
+- Context7 (library documentation)
+- Playwright (browser automation)
+- MCP best practices
+
+### Tier 4: Glossary (Load When Needed)
+
+**[`glossary/06-documentation-standards.md`](./glossary/06-documentation-standards.md)** (~620 lines)
 - Cultural-linguistic accuracy
 - Property documentation patterns
 - JSDoc standards
 - API documentation requirements
 
-**[`07-musicological-definitions.md`](./07-musicological-definitions.md)** ⭐ (NEW)
-- Comprehensive definitions of all musicological terms
-- Grounded in Arabic maqām theory logic
-- Clarifications on differences from Anglo-European concepts
-- Essential reference for understanding terminology
+**[`glossary/07-musicological-definitions.md`](./glossary/07-musicological-definitions.md)** ⭐ (~400 lines)
+- Comprehensive term definitions
+- Grounded in Arabic maqām theory
+- Differences from Anglo-European concepts
+- Essential reference for terminology
 
 ---
 
@@ -96,48 +136,62 @@
 
 ### Before Starting Any Task
 
-**1. Check the quick reference in 03-development-conventions.md**
+**1. Determine what to load:**
+- ALWAYS: `core/00-core-principles.md`
+- For most tasks: `essentials/03-development-quick-ref.md`
+- For specific needs: See task-based loading table above
+
+**2. Check quick references:**
 - Must-know defaults
 - Critical rules
 - Auto-implementation triggers
 
-**2. Follow TDD workflow (in 03)**
+**3. Follow TDD workflow:**
 ```
 RED (write test) → GREEN (minimal code) → REFACTOR → COMMIT
 ```
 
-**3. Validate before committing**
-- Run automated tests
-- Check consistency with similar code
-- Verify in browser/API playground
-
 ### During Development
 
-**Component creation?** → 03: Component Checklist
-**API endpoint?** → 03: Standard Route Pattern + TDD for APIs
-**Maqām logic?** → 04: Musicological Principles
-**Documentation?** → 06: Documentation Standards
+**Component creation?** → essentials/03: Component Checklist
+**API endpoint?** → essentials/03 + reference/api-retrospective
+**Maqām logic?** → essentials/04: Musicological Principles
+**Documentation?** → glossary/06: Documentation Standards
+**Naming fields?** → reference/naming-conventions-deep-dive
 
 ### After Completing Tasks
 
 **Document significant findings** in appropriate file:
-- New patterns → 03-development-conventions.md
-- Music theory insights → 04-musicological-principles.md
-- Testing scenarios → 05-testing-guide.md
+- New patterns → essentials/03-development-quick-ref.md
+- Music theory insights → essentials/04-musicology-essentials.md
+- API lessons → reference/api-retrospective.md
 
 ---
 
-## 📊 File Size & Scannability
+## 📊 File Size & Optimization
 
-| File | Lines | Status | Scanability |
-|------|-------|--------|-------------|
-| 00-ai-agent-personality.md | 358 | ✅ Optimized | ⭐⭐⭐⭐⭐ |
-| 01-project-overview.md | 302 | ✅ Optimized | ⭐⭐⭐⭐⭐ |
-| 02-architecture.md | 600 | ✅ Good | ⭐⭐⭐⭐ |
-| 03-development-conventions.md | 680 | ✅ **Improved** | ⭐⭐⭐⭐⭐ |
-| 04-musicological-principles.md | 588 | ✅ Good | ⭐⭐⭐⭐ |
-| 05-testing-guide.md | 440 | ✅ Good | ⭐⭐⭐⭐ |
-| 06-documentation-standards.md | 495 | ✅ Good | ⭐⭐⭐⭐ |
+### Context Load Reduction
+
+| Tier | Files | Total Lines | Load Strategy |
+|------|-------|-------------|---------------|
+| **Core** | 1 | ~290 | Always load |
+| **Essentials** | 5 | ~2,130 | Load for most tasks |
+| **Reference** | 5 | ~2,170 | Load on demand |
+| **Glossary** | 2 | ~1,020 | Load when needed |
+| **Total** | 13 | ~5,610 | Conditional loading |
+
+**Before optimization:** ~9,650 lines loaded upfront
+**After optimization:** ~2,420 lines default load (Core + Dev Quick Ref)
+**Reduction:** ~75% in default context load
+
+### Benefits
+
+- ✅ Faster agent initialization
+- ✅ Reduced token usage
+- ✅ Task-optimized context
+- ✅ Eliminated redundancy
+- ✅ Single source of truth for concepts
+- ✅ Easier maintenance
 
 ---
 
@@ -145,49 +199,51 @@ RED (write test) → GREEN (minimal code) → REFACTOR → COMMIT
 
 ### By Topic Quick Index
 
-| Topic | File | Section |
-|-------|------|---------|
-| **TDD workflow** | 03 | Test-Driven Development |
-| **API patterns** | 03 | API Development Standards |
-| **Error handling** | 03 | API Development → Validation |
-| **Component patterns** | 03 | Component Creation Checklist |
-| **MCP servers usage** | 03 | Tools & MCP Servers |
-| **Cultural sensitivity** | 00 | Decolonial Computing Framework |
-| **Octave-repeating maqāmāt** | 04 | Section 0 |
-| **Asymmetric sequences** | 04 | Section 1 |
-| **Family classification** | 04 | Section 11 + 03 Common Patterns |
-| **Context providers** | 02 | Context Provider Hierarchy |
-| **Enharmonic spelling** | 04 | Section 3 |
-| **Testing protocols** | 05 | Testing Protocols |
-| **Property docs** | 06 | Property Documentation |
+| Topic | File | Tier |
+|-------|------|------|
+| **TDD workflow** | essentials/03 | Essential |
+| **API patterns** | reference/api-retrospective | Reference |
+| **Naming conventions** | reference/naming-conventions-deep-dive | Reference |
+| **OpenAPI standards** | reference/openapi-formatting-guide | Reference |
+| **MCP servers** | reference/mcp-servers-guide | Reference |
+| **CLI commands** | reference/cli-commands-guide | Reference |
+| **Cultural sensitivity** | core/00 | Core |
+| **Octave-repeating** | essentials/04 Section 0 | Essential |
+| **Asymmetric sequences** | essentials/04 Section 1 | Essential |
+| **Family classification** | essentials/04 Section 11 | Essential |
+| **Context providers** | essentials/02 | Essential |
+| **Testing protocols** | essentials/05 | Essential |
+| **Property docs** | glossary/06 | Glossary |
+| **Term definitions** | glossary/07 | Glossary |
 
 ### By Question Type
 
 **"How do I...?"**
-- Create a component → 03: Component Creation Checklist
-- Build an API → 03: API Development Standards + TDD
-- Test my code → 03: TDD + 05: Manual Testing
-- Document this → 06: Documentation Standards
+- Create a component → essentials/03: Component Creation Checklist
+- Build an API → essentials/03 + reference/api-retrospective + reference/openapi-formatting-guide
+- Test my code → essentials/03: TDD + essentials/05: Manual Testing
+- Document this → glossary/06: Documentation Standards
+- Use MCP servers → reference/mcp-servers-guide
 
 **"Why is...?"**
-- Check musicological principles → 04
-- Understand architecture → 02
-- Learn cultural context → 00
+- Check musicological principles → essentials/04
+- Understand architecture → essentials/02
+- Learn cultural context → core/00
 
 **"What's the pattern for...?"**
-- 03: Common Patterns (Quick Reference)
-- Search file for specific pattern name
+- essentials/03: Common Patterns (Quick Reference)
+- Search specific file for pattern name
 
 ---
 
 ## ⚠️ Common Mistakes to Avoid
 
-**Read these sections first to avoid common issues:**
+**Read these sections first:**
 
-1. **03: Critical Rules table** - Most common mistakes
-2. **04: Section 0** - Octave-repeating availability (CRITICAL)
-3. **04: Common Programming Pitfalls** - JavaScript gotchas
-4. **03: Common Pitfalls table** - Quick reference
+1. **essentials/03: Critical Rules table** - Most common mistakes
+2. **essentials/04: Section 0** - Octave-repeating availability (CRITICAL)
+3. **essentials/04: Common Programming Pitfalls** - JavaScript gotchas
+4. **core/00: Never use "microtonal"** - Cultural terminology
 
 ---
 
@@ -203,7 +259,7 @@ RED (write test) → GREEN (minimal code) → REFACTOR → COMMIT
 
 **Quarterly review:**
 - Verify examples match current code
-- Check cross-references
+- Check cross-references work with new structure
 - Update testing scenarios
 - Refresh based on evolved patterns
 
@@ -211,30 +267,37 @@ RED (write test) → GREEN (minimal code) → REFACTOR → COMMIT
 
 After successful task completion:
 1. Review for unique insights
-2. Document in appropriate file with examples
+2. Document in appropriate tier/file with examples
 3. Explain implications for future development
 4. Add to testing scenarios if applicable
+5. **Ask user**: "Would you like me to integrate these insights into .ai-agent-instructions?"
 
 ---
 
 ## 🎯 Key Success Principles
 
-### 1. Test-Driven Development
+### 1. Conditional Loading
+- Load only what you need for the task
+- Start with core + relevant essentials
+- Pull in reference files as needed
+- Access glossary for definitions
+
+### 2. Test-Driven Development
 - Write tests BEFORE implementation
 - Red → Green → Refactor → Commit
 - Only commit when all tests pass
 
-### 2. Cultural Sensitivity
+### 3. Cultural Sensitivity
 - Never use "microtonal"
 - Respect Arabic terminology as primary
 - Apply decolonial computing principles
 
-### 3. Consistency
+### 4. Consistency
 - Check similar code for patterns
 - Follow established conventions
 - Validate before committing
 
-### 4. Musicological Accuracy
+### 5. Musicological Accuracy
 - Always use `getNoteNameSetsWithAdjacentOctaves()`
 - Never assume symmetric sequences
 - Tuning system starting note is MANDATORY
@@ -247,7 +310,7 @@ After successful task completion:
 - **Context7**: Current library documentation
 - **Playwright**: Browser automation for testing
 
-See `03-development-conventions.md` → Tools & MCP Servers for usage guidelines.
+**See**: [`reference/mcp-servers-guide.md`](./reference/mcp-servers-guide.md) for detailed usage
 
 ---
 
@@ -255,14 +318,42 @@ See `03-development-conventions.md` → Tools & MCP Servers for usage guidelines
 
 These instructions embody:
 
-1. **Test-Driven Development**: Quality through systematic testing
-2. **Cultural Sensitivity**: Decolonial computing in practice
-3. **Knowledge Preservation**: Insights become lasting wisdom
-4. **Progressive Disclosure**: Quick reference → detailed reference
-5. **Practical Focus**: Real examples, real scenarios
-6. **Living Documentation**: Continuously evolved
+1. **Hierarchical Organization**: Core → Essentials → Reference → Glossary
+2. **Conditional Loading**: Load only what you need
+3. **Test-Driven Development**: Quality through systematic testing
+4. **Cultural Sensitivity**: Decolonial computing in practice
+5. **Knowledge Preservation**: Insights become lasting wisdom
+6. **Progressive Disclosure**: Quick reference → detailed reference
+7. **Practical Focus**: Real examples, real scenarios
+8. **Living Documentation**: Continuously evolved
 
 ---
 
-*Last Updated: 2025-10-29*
-*Major revision: Added TDD workflow, improved scanability, reduced redundancy*
+## 🗺️ Directory Structure
+
+```
+.ai-agent-instructions/
+├── README.md (this file)
+├── core/
+│   └── 00-core-principles.md
+├── essentials/
+│   ├── 01-project-essentials.md
+│   ├── 02-architecture-essentials.md
+│   ├── 03-development-quick-ref.md ⭐
+│   ├── 04-musicology-essentials.md
+│   └── 05-testing-essentials.md
+├── reference/
+│   ├── api-retrospective.md
+│   ├── cli-commands-guide.md
+│   ├── mcp-servers-guide.md
+│   ├── naming-conventions-deep-dive.md
+│   └── openapi-formatting-guide.md
+└── glossary/
+    ├── 06-documentation-standards.md
+    └── 07-musicological-definitions.md
+```
+
+---
+
+*Last Updated: 2025-11-06*
+*Major revision: Hierarchical restructuring, conditional loading, 75% context reduction*

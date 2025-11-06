@@ -235,3 +235,30 @@ export function getDynamicArabicName(name: string, type: "note" | "jins" | "maqa
       return transliterateToArabic(name);
   }
 }
+
+/**
+ * Parse the `inArabic` query flag in a consistent, centralized manner.
+ * Allows optional custom parameter name for future reuse.
+ */
+export function parseInArabicFlag(value: string | null, fieldName: string = "inArabic"): boolean {
+  if (value === null) return false;
+
+  const trimmed = value.trim();
+  if (trimmed === "") {
+    throw new Error(`Invalid parameter: ${fieldName} cannot be empty. Use 'true' or 'false'.`);
+  }
+
+  const normalized = trimmed.toLowerCase();
+  if (normalized === "true") return true;
+  if (normalized === "false") return false;
+
+  throw new Error(`Invalid parameter: ${fieldName} must be 'true' or 'false', got '${value}'`);
+}
+
+/**
+ * Convenience helper: read and parse the `inArabic` flag directly from URLSearchParams.
+ */
+export function getInArabicFlag(searchParams: URLSearchParams, fieldName: string = "inArabic"): boolean {
+  const raw = searchParams.get(fieldName);
+  return parseInArabicFlag(raw, fieldName);
+}

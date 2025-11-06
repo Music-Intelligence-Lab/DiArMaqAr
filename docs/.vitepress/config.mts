@@ -96,18 +96,32 @@ export default defineConfig({
                 { text: 'List Maqāmāt', link: '/api/#listMaqamat' },
                 { text: 'Get Maqām Details', link: '/api/#getMaqam' },
                 { text: 'Check Availability', link: '/api/#getMaqamAvailability' },
+                { text: 'List Transpositions', link: '/api/#listMaqamTranspositions' },
+                { text: 'Compare Across Tuning Systems', link: '/api/#compareMaqam' },
+              ]
+            },
+            {
+              text: 'Ajnās',
+              items: [
+                { text: 'List Ajnās', link: '/api/#listAjnas' },
+                { text: 'Get Jins Details', link: '/api/#getJins' },
+                { text: 'Check Availability', link: '/api/#getJinsAvailability' },
+                { text: 'List Transpositions', link: '/api/#listJinsTranspositions' },
+                { text: 'Compare Across Tuning Systems', link: '/api/#compareJins' },
               ]
             },
             {
               text: 'Tuning Systems',
               items: [
                 { text: 'List Tuning Systems', link: '/api/#listTuningSystems' },
+                { text: 'List Maqāmāt in Tuning System', link: '/api/#listTuningSystemMaqamat' },
               ]
             },
             {
-              text: 'Availability',
+              text: 'Sources',
               items: [
-                { text: 'Check Availability', link: '/api/#checkAvailability' },
+                { text: 'List Sources', link: '/api/#listSources' },
+                { text: 'Get Source Details', link: '/api/#getSource' },
               ]
             },
           ]
@@ -141,7 +155,6 @@ export default defineConfig({
             { text: 'TuningSystem', link: '/library/api/models/TuningSystem/README' },
             { text: 'PitchClass', link: '/library/api/models/PitchClass/README' },
             { text: 'NoteName', link: '/library/api/models/NoteName/README' },
-            { text: 'Pattern', link: '/library/api/models/Pattern/README' },
           ]
         },
         {
