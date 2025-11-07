@@ -41,6 +41,36 @@ npm run lint
 
 ## Documentation Commands
 
+### OpenAPI Documentation
+
+```bash
+# Generate OpenAPI JSON from YAML
+npm run docs:openapi
+# → Converts openapi.yaml to openapi.json
+# → Outputs to public/docs/openapi.json
+# → Required before building docs
+
+# Generate static API documentation
+npm run docs:api
+# → Generates docs/api/index.md from openapi.yaml
+# → Creates static markdown for LLM consumption
+# → Includes all endpoints, parameters, examples
+# → Automatically runs in docs:dev and docs:build
+
+# Build VitePress documentation
+npm run docs:build
+# → Runs: docs:openapi → docs:api → vitepress build
+# → Generates public/docs/ directory
+# → Static documentation site
+# → Deployed to live site
+
+# Start VitePress dev server
+npm run docs:dev
+# → Runs: docs:openapi → docs:api → vitepress dev
+# → Hot reload for documentation changes
+# → Serves at http://localhost:5173/docs/
+```
+
 ### TypeDoc
 
 ```bash
@@ -60,12 +90,6 @@ npm run docs:serve
 npm run docs:watch
 # → Regenerates docs on file changes
 # → Useful during documentation writing
-
-# Build VitePress documentation
-npm run docs:build
-# → Generates public/docs/ directory
-# → Static documentation site
-# → Deployed to live site
 ```
 
 ---
@@ -445,10 +469,11 @@ NEXT_PUBLIC_DEBUG=true
 **Most Common Commands:**
 1. `npm run dev` - Start development
 2. `npm run build` - Build for production
-3. `npm run docs` - Generate documentation
-4. `node scripts/batch-export/batch-export.js --list-tuning-systems` - Export utilities
-5. `tsx scripts/api-cost-audit.ts` - Run API performance audit
-6. `git status && git add . && git commit -m "message"` - Git workflow
+3. `npm run docs:dev` - Start documentation dev server
+4. `npm run docs:api` - Generate static API documentation
+5. `node scripts/batch-export/batch-export.js --list-tuning-systems` - Export utilities
+6. `tsx scripts/api-cost-audit.ts` - Run API performance audit
+7. `git status && git add . && git commit -m "message"` - Git workflow
 
 **For further details:**
 - See `package.json` for all available scripts

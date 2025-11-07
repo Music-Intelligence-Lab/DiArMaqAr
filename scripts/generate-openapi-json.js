@@ -40,10 +40,19 @@ try {
   fs.writeFileSync(docsPublicJsonPath, jsonContent, 'utf8');
   fs.writeFileSync(docsJsonPath, jsonContent, 'utf8');
   
+  // Also copy the YAML file to public/docs for direct access
+  const publicYamlPath = path.join(__dirname, '..', 'public', 'docs', 'openapi.yaml');
+  const docsPublicYamlPath = path.join(__dirname, '..', 'docs', 'public', 'openapi.yaml');
+  fs.copyFileSync(yamlPath, publicYamlPath);
+  fs.copyFileSync(yamlPath, docsPublicYamlPath);
+  
   console.log(`✅ Successfully converted openapi.yaml to:`);
   console.log(`   - ${publicJsonPath}`);
   console.log(`   - ${docsPublicJsonPath} (VitePress public - will be copied to output)`);
   console.log(`   - ${docsJsonPath}`);
+  console.log(`✅ Copied openapi.yaml to:`);
+  console.log(`   - ${publicYamlPath}`);
+  console.log(`   - ${docsPublicYamlPath} (VitePress public - will be copied to output)`);
 } catch (error) {
   console.error('❌ Error generating openapi.json:', error.message);
   process.exit(1);

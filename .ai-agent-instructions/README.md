@@ -33,6 +33,7 @@ Load files based on your task type for optimal context efficiency:
 | **New feature** | 00 | 01, 03, 04 | - | - |
 | **Bug fix** | 00 | 03, 04, 05 | - | - |
 | **API endpoint** | 00 | 03 | api-retrospective, openapi-formatting-guide | - |
+| **API documentation** | 00 | 03 | openapi-formatting-guide | - |
 | **Documentation** | 00 | 03 | - | 06, 07 |
 | **Testing** | 00 | 05 | - | - |
 | **Performance audit** | 00 | 05 | cli-commands-guide | - |
@@ -206,6 +207,7 @@ RED (write test) → GREEN (minimal code) → REFACTOR → COMMIT
 | **API patterns** | reference/api-retrospective | Reference |
 | **Naming conventions** | reference/naming-conventions-deep-dive | Reference |
 | **OpenAPI standards** | reference/openapi-formatting-guide | Reference |
+| **API doc generation** | reference/openapi-formatting-guide | Reference |
 | **MCP servers** | reference/mcp-servers-guide | Reference |
 | **CLI commands** | reference/cli-commands-guide | Reference |
 | **Cultural sensitivity** | core/00 | Core |
@@ -223,6 +225,7 @@ RED (write test) → GREEN (minimal code) → REFACTOR → COMMIT
 **"How do I...?"**
 - Create a component → essentials/03: Component Creation Checklist
 - Build an API → essentials/03 + reference/api-retrospective + reference/openapi-formatting-guide
+- Generate API documentation → reference/openapi-formatting-guide: Static API Documentation Generation
 - Test my code → essentials/03: TDD + essentials/05: Manual Testing
 - Document this → glossary/06: Documentation Standards
 - Use MCP servers → reference/mcp-servers-guide

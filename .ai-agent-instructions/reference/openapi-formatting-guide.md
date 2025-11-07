@@ -360,6 +360,139 @@ if (showOptions) {
 
 ---
 
+## Static API Documentation Generation
+
+**The API documentation is generated in two formats: interactive (playground) and static (index) for LLM consumption.**
+
+### Dual Documentation System
+
+**1. Interactive Documentation** (`docs/api/playground.md`):
+- Uses `<OASpec>` Vue component to dynamically render OpenAPI spec
+- Provides interactive testing interface
+- Loads spec from `/openapi.json` at runtime
+- Best for human users exploring the API
+
+**2. Static Documentation** (`docs/api/index.md`):
+- Generated as static markdown from OpenAPI spec
+- Perfect for LLM consumption (no JavaScript required)
+- Contains all endpoint details, parameters, examples
+- Automatically generated from `openapi.yaml`
+
+### Generation Script
+
+**Location**: `scripts/generate-api-docs.js`
+
+**Purpose**: Converts OpenAPI YAML specification into comprehensive static markdown documentation.
+
+**What it generates**:
+- Complete endpoint documentation with descriptions
+- All parameters (path and query) with types, defaults, examples
+- Example curl commands for each endpoint
+- Response descriptions
+- Organized by resource type (Maqāmāt, Ajnās, Tuning Systems, etc.)
+
+**How it works**:
+1. Reads `openapi.yaml` from project root
+2. Parses OpenAPI 3.1.0 specification
+3. Groups endpoints by tags
+4. Generates markdown for each endpoint with:
+   - HTTP method and path
+   - Description (preserves multi-line formatting)
+   - Path parameters with examples
+   - Query parameters with types, enums, defaults
+   - Example curl commands (includes required params + key optional params)
+   - Response descriptions
+
+**Key Features**:
+- Handles multi-line parameter descriptions intelligently
+- Truncates long enum lists (shows first 5, indicates total count)
+- Generates realistic example URLs with actual parameter values
+- Preserves all formatting and structure from OpenAPI spec
+- Maintains consistency with playground.md content
+
+### Build Integration
+
+**Scripts**:
+```bash
+# Generate static API documentation
+npm run docs:api
+
+# Full documentation build (includes API docs)
+npm run docs:build
+# → Runs: docs:openapi → docs:api → vitepress build
+```
+
+**Automatic generation**:
+- Runs automatically in `docs:dev` and `docs:build` scripts
+- Ensures `index.md` stays in sync with `openapi.yaml`
+- No manual editing of `index.md` needed
+
+**File locations**:
+- Source: `openapi.yaml` (project root)
+- Generated: `docs/api/index.md`
+- Interactive: `docs/api/playground.md` (uses OASpec component)
+
+### Synchronization
+
+**Both documentation formats stay in sync because**:
+- Both are generated from the same source (`openapi.yaml`)
+- Changes to OpenAPI spec automatically reflected in both
+- Static markdown preserves all content from interactive version
+- Same endpoint descriptions, parameters, examples
+
+**When to regenerate**:
+- After modifying `openapi.yaml`
+- After adding new endpoints
+- After changing parameter descriptions
+- Before committing OpenAPI changes
+
+**Workflow**:
+1. Edit `openapi.yaml`
+2. Run `npm run docs:openapi` (generates JSON)
+3. Run `npm run docs:api` (generates static markdown)
+4. Both `index.md` and `playground.md` now reflect changes
+
+### LLM Optimization
+
+**Why static markdown for LLMs**:
+- ✅ No JavaScript execution required
+- ✅ Complete content in single file
+- ✅ Easy to parse and index
+- ✅ All endpoint details preserved
+- ✅ Example commands included
+
+**vitepress-plugin-llms integration**:
+- Plugin processes `index.md` during build
+- Generates `llms.txt` and `llms-full.txt` files
+- Provides additional LLM-optimized formats
+- Configured to ignore `playground.md` (interactive only)
+
+**Result**: LLMs can access API documentation in multiple formats:
+1. Direct markdown: `/docs/api/` (static `index.md`)
+2. LLM-optimized text: `/docs/llms.txt` and `/docs/llms-full.txt`
+3. Interactive playground: `/docs/api/playground` (for humans)
+
+### Maintenance Guidelines
+
+**When modifying the generation script**:
+- Preserve existing markdown structure
+- Maintain consistency with playground.md output
+- Test with full OpenAPI spec to ensure all endpoints included
+- Verify example URLs are valid and realistic
+
+**When updating OpenAPI spec**:
+- Always regenerate documentation after changes
+- Verify both `index.md` and `playground.md` reflect updates
+- Check that example values match actual API responses
+- Ensure parameter descriptions follow formatting standards
+
+**Troubleshooting**:
+- If `index.md` is out of sync: Run `npm run docs:api`
+- If examples are wrong: Check `openapi.yaml` examples match actual data
+- If formatting is broken: Check script handles multi-line descriptions correctly
+
+---
+
 ## Summary
 
 ### Critical Rules
@@ -371,6 +504,7 @@ if (showOptions) {
 5. **Options parameter mutually exclusive** with data parameters
 6. **Verify all examples** against actual data
 7. **No default values** for required parameters in discovery mode
+8. **Regenerate static docs** after OpenAPI changes (`npm run docs:api`)
 
 ### Quick Checklist
 
@@ -385,5 +519,6 @@ When adding/modifying OpenAPI documentation:
 - [ ] Multi-line descriptions only when needed
 - [ ] Boolean flags start with "Include" or "When"
 - [ ] Options parameter properly implemented
+- [ ] Static documentation regenerated after OpenAPI changes
 
 **Apply these standards to maintain high-quality, consistent API documentation.**
