@@ -68,7 +68,7 @@ const openApiUrl = ref(`/docs/openapi.json?v=${Date.now()}`)
 
 ## Base URL
 
-- **Production**: `http://localhost:3000/api`
+- **Production**: `https://diarmaqar.netlify.app/api`
 - **Development**: `http://localhost:3000/api`
 
 ## Authentication
