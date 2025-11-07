@@ -5,6 +5,27 @@ import path from 'path'
 // Force dynamic rendering to ensure files are read at runtime
 export const dynamic = "force-dynamic";
 
+// Helper to get the correct base path for files
+function getBasePath(): string {
+  // In Netlify, files are in the build directory
+  // Try multiple possible locations
+  const possiblePaths = [
+    process.cwd(),
+    path.join(process.cwd(), '.next'),
+    path.join(process.cwd(), '..'),
+  ]
+  
+  for (const basePath of possiblePaths) {
+    const testPath = path.join(basePath, 'public', 'docs', 'index.html')
+    if (fs.existsSync(testPath)) {
+      return basePath
+    }
+  }
+  
+  // Fallback to process.cwd()
+  return process.cwd()
+}
+
 export async function GET(
   request: Request,
   { params }: { params: { slug?: string[] } }
@@ -16,10 +37,15 @@ export async function GET(
     
     // Special handling for openapi.json - serve directly from source with no-cache
     if (requestedPath === 'openapi.json') {
-      const openapiPath = path.join(process.cwd(), 'public', 'docs', 'openapi.json')
+      const basePath = getBasePath()
+      const openapiPath = path.join(basePath, 'public', 'docs', 'openapi.json')
+      
       if (!fs.existsSync(openapiPath)) {
+        console.error(`OpenAPI file not found at: ${openapiPath}`)
+        console.error(`Current working directory: ${process.cwd()}`)
+        console.error(`Base path resolved to: ${basePath}`)
         return NextResponse.json(
-          { error: 'OpenAPI specification not found' },
+          { error: 'OpenAPI specification not found', path: openapiPath },
           { status: 404 }
         )
       }
@@ -40,15 +66,16 @@ export async function GET(
     }
     
     // Build the file path
+    const basePath = getBasePath()
     let filePath: string
     if (!requestedPath || requestedPath === '') {
       // Root /docs -> serve index.html
-      filePath = path.join(process.cwd(), 'public', 'docs', 'index.html')
+      filePath = path.join(basePath, 'public', 'docs', 'index.html')
     } else {
       // Check if it's a directory (needs index.html) or a file
-      const potentialDir = path.join(process.cwd(), 'public', 'docs', requestedPath)
-      const potentialFile = path.join(process.cwd(), 'public', 'docs', requestedPath + '.html')
-      const potentialDirIndex = path.join(process.cwd(), 'public', 'docs', requestedPath, 'index.html')
+      const potentialDir = path.join(basePath, 'public', 'docs', requestedPath)
+      const potentialFile = path.join(basePath, 'public', 'docs', requestedPath + '.html')
+      const potentialDirIndex = path.join(basePath, 'public', 'docs', requestedPath, 'index.html')
       
       if (fs.existsSync(potentialDirIndex)) {
         filePath = potentialDirIndex
@@ -59,14 +86,17 @@ export async function GET(
         filePath = path.join(potentialDir, 'index.html')
       } else {
         // Try as index.html in the directory
-        filePath = path.join(process.cwd(), 'public', 'docs', requestedPath, 'index.html')
+        filePath = path.join(basePath, 'public', 'docs', requestedPath, 'index.html')
       }
     }
     
     // Check if file exists
     if (!fs.existsSync(filePath)) {
+      console.error(`File not found: ${filePath}`)
+      console.error(`Requested path: ${requestedPath}`)
+      console.error(`Base path: ${basePath}`)
       return NextResponse.json(
-        { error: 'Page not found' },
+        { error: 'Page not found', path: filePath },
         { status: 404 }
       )
     }
@@ -88,9 +118,16 @@ export async function GET(
     })
   } catch (error) {
     console.error('Error serving docs:', error)
+    const errorMessage = error instanceof Error ? error.message : String(error)
+    const errorStack = error instanceof Error ? error.stack : undefined
     return NextResponse.json(
-      { error: 'Documentation not found' },
-      { status: 404 }
+      { 
+        error: 'Documentation not found',
+        message: errorMessage,
+        stack: errorStack,
+        cwd: process.cwd()
+      },
+      { status: 500 }
     )
   }
 }
