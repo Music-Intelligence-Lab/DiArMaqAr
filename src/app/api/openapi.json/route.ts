@@ -29,7 +29,7 @@ export async function GET(request: Request) {
           foundPath = openapiPath
           break
         }
-      } catch (e) {
+      } catch {
         continue
       }
     }
