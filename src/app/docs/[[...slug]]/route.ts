@@ -26,7 +26,7 @@ function getBasePath(): string {
         console.log(`Found docs at base path: ${basePath}`)
         return basePath
       }
-    } catch (e) {
+    } catch {
       // Path doesn't exist, continue
       continue
     }
@@ -66,7 +66,7 @@ export async function GET(
             foundPath = altPath
             break
           }
-        } catch (e) {
+        } catch {
           continue
         }
       }
