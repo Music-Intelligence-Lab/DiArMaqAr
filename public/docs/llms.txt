@@ -33,9 +33,7 @@ Open-source bilingual platform integrating historically documented Arabic maqām
 - [Cultural Framework](/docs/guide/cultural-framework.md): Decolonial computing principles and culturally-specific methodology
 - [Bibliographic Sources](/docs/guide/bibliographic-sources.md): Comprehensive source attribution and scholarly verification
 
-### API Reference
 
-- [API Reference](/docs/api.md): Complete REST API documentation for the Digital Arabic Maqām Archive
 
 
 ### TypeScript Library
@@ -70,6 +68,7 @@ Open-source bilingual platform integrating historically documented Arabic maqām
 
 ### Other
 
+- [API Documentation](/docs/api.md): Interactive API documentation and testing for the Digital Arabic Maqām Archive
 - [Class: default](/docs/library/api/models/Jins/classes/default.md)
 - [Class: default](/docs/library/api/models/Maqam/classes/default.md)
 - [Class: default](/docs/library/api/models/Pattern/classes/default.md)

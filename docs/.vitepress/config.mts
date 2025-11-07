@@ -24,7 +24,10 @@ export default defineConfig({
       llmstxt({
         template: {
           introduction: 'Digital Arabic Maqām Archive (DiArMaqAr) - Open-source platform for Arabic maqām theory providing REST API and TypeScript library. Includes 60 historically documented maqāmāt, 29 ajnās, and 35 tuning systems spanning from al-Kindī (874 CE) to contemporary approaches. All data includes comprehensive bibliographic attribution following decolonial computing principles.',
-        }
+        },
+        // Ignore the playground page as it's interactive and not needed for LLM documentation
+        // index.md contains all static API documentation for optimal LLM accessibility
+        ignoreFiles: ['api/playground.md'],
       })
     ]
   },
@@ -86,15 +89,24 @@ export default defineConfig({
       ],
       '/api/': [
         {
-          text: 'API Reference',
+          text: 'API Documentation',
+          items: [
+            { text: 'Overview', link: '/api/#overview' },
+            { text: 'Quick Start', link: '/api/#quick-start' },
+            { text: 'Interactive API Playground', link: '/api/#interactive-api-playground' },
+          ]
+        },
+        {
+          text: 'Quick Reference',
           collapsible: true,
           collapsed: false,
           items: [
-            { text: 'Overview', link: '/api/' },
             { text: 'Base URL', link: '/api/#base-url' },
+            { text: 'OpenAPI Specification', link: '/api/#openapi-specification' },
             { text: 'Authentication', link: '/api/#authentication' },
             { text: 'Response Format', link: '/api/#response-format' },
             { text: 'Rate Limiting', link: '/api/#rate-limiting' },
+            { text: 'Common Parameters', link: '/api/#common-parameters' },
           ]
         },
         {
@@ -104,56 +116,62 @@ export default defineConfig({
           items: [
             {
               text: 'Maqāmāt',
+              link: '/api/#maqamat',
               items: [
-                { text: 'List Maqāmāt', link: '/api/#listMaqamat' },
-                { text: 'Get Maqām Details', link: '/api/#getMaqam' },
-                { text: 'Check Availability', link: '/api/#getMaqamAvailability' },
-                { text: 'List Transpositions', link: '/api/#listMaqamTranspositions' },
-                { text: 'Compare Across Tuning Systems', link: '/api/#compareMaqam' },
+                { text: 'List Maqāmāt', link: '/api/#list-all-maqamat' },
+                { text: 'Get Maqām Details', link: '/api/#get-maqam-details' },
+                { text: 'Check Availability', link: '/api/#check-maqam-availability' },
+                { text: 'List Transpositions', link: '/api/#list-maqam-transpositions' },
+                { text: 'Compare Across Tuning Systems', link: '/api/#compare-maqam-across-tuning-systems' },
               ]
             },
             {
               text: 'Ajnās',
+              link: '/api/#ajnas',
               items: [
-                { text: 'List Ajnās', link: '/api/#listAjnas' },
-                { text: 'Get Jins Details', link: '/api/#getJins' },
-                { text: 'Check Availability', link: '/api/#getJinsAvailability' },
-                { text: 'List Transpositions', link: '/api/#listJinsTranspositions' },
-                { text: 'Compare Across Tuning Systems', link: '/api/#compareJins' },
+                { text: 'List Ajnās', link: '/api/#list-all-ajnas' },
+                { text: 'Get Jins Details', link: '/api/#get-jins-details' },
+                { text: 'Check Availability', link: '/api/#check-jins-availability' },
+                { text: 'List Transpositions', link: '/api/#list-jins-transpositions' },
+                { text: 'Compare Across Tuning Systems', link: '/api/#compare-jins-across-tuning-systems' },
               ]
             },
             {
               text: 'Tuning Systems',
+              link: '/api/#tuning-systems',
               items: [
-                { text: 'List Tuning Systems', link: '/api/#listTuningSystems' },
-                { text: 'Get Tuning System Details', link: '/api/#getTuningSystemPitchClasses' },
-                { text: 'List Maqāmāt in Tuning System', link: '/api/#listTuningSystemMaqamat' },
+                { text: 'List Tuning Systems', link: '/api/#list-all-tuning-systems' },
+                { text: 'Get Tuning System Details', link: '/api/#get-tuning-system-pitch-classes' },
+                { text: 'List Maqāmāt in Tuning System', link: '/api/#list-maqamat-in-tuning-system' },
               ]
             },
             {
               text: 'Pitch Classes (by Note Names)',
+              link: '/api/#pitch-classes-by-note-names',
               items: [
-                { text: 'List Note Names', link: '/api/#listNoteNames' },
-                { text: 'Get Pitch Class by Note Name', link: '/api/#getPitchClassByNoteName' },
-                { text: 'Check Note Name Availability', link: '/api/#getNoteNameAvailability' },
-                { text: 'Compare by Note Name', link: '/api/#comparePitchClassByNoteName' },
+                { text: 'List Note Names', link: '/api/#list-note-names' },
+                { text: 'Get Pitch Class by Note Name', link: '/api/#get-pitch-class-by-note-name' },
+                { text: 'Check Note Name Availability', link: '/api/#check-note-name-availability' },
+                { text: 'Compare Pitch Class Across Systems', link: '/api/#compare-pitch-class-across-systems' },
               ]
             },
             {
               text: 'Intervals',
+              link: '/api/#intervals',
               items: [
-                { text: 'Calculate Intervals by Note Names', link: '/api/#calculateIntervalsByNoteNames' },
-                { text: 'Compare Intervals Across Tuning Systems', link: '/api/#compareIntervalsByNoteNames' },
+                { text: 'Calculate Intervals by Note Names', link: '/api/#calculate-intervals-by-note-names' },
+                { text: 'Compare Intervals Across Tuning Systems', link: '/api/#compare-intervals-across-tuning-systems' },
               ]
             },
             {
               text: 'Sources',
+              link: '/api/#sources',
               items: [
-                { text: 'List Sources', link: '/api/#listSources' },
-                { text: 'Get Source Details', link: '/api/#getSource' },
-                { text: 'List Tuning Systems by Source', link: '/api/#listTuningSystemsBySource' },
-                { text: 'List Maqamat by Source', link: '/api/#listMaqamatBySource' },
-                { text: 'List Ajnas by Source', link: '/api/#listAjnasBySource' },
+                { text: 'List Sources', link: '/api/#list-all-sources' },
+                { text: 'Get Source Details', link: '/api/#get-source-details' },
+                { text: 'List Tuning Systems by Source', link: '/api/#list-tuning-systems-by-source' },
+                { text: 'List Maqāmāt by Source', link: '/api/#list-maqamat-by-source' },
+                { text: 'List Ajnās by Source', link: '/api/#list-ajnas-by-source' },
               ]
             },
           ]
