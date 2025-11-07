@@ -1,21 +1,33 @@
 import { defineConfig } from 'vitepress'
+import llmstxt from 'vitepress-plugin-llms'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: 'Digital Arabic Maqām Archive',
   description: 'Comprehensive documentation for the Digital Arabic Maqām Archive - TypeScript library and REST API',
-  
+
   // Base path for serving from /docs/ in Next.js
   base: '/docs/',
-  
+
   // Build output will go to public/docs so Next.js can serve it
   outDir: '../public/docs',
-  
+
   // Enable clean URLs (without .html extension)
   cleanUrls: true,
-  
+
   // Last updated timestamp
   lastUpdated: true,
+
+  // LLM-friendly documentation generation
+  vite: {
+    plugins: [
+      llmstxt({
+        template: {
+          introduction: 'Digital Arabic Maqām Archive (DiArMaqAr) - Open-source platform for Arabic maqām theory providing REST API and TypeScript library. Includes 60 historically documented maqāmāt, 29 ajnās, and 35 tuning systems spanning from al-Kindī (874 CE) to contemporary approaches. All data includes comprehensive bibliographic attribution following decolonial computing principles.',
+        }
+      })
+    ]
+  },
   
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config

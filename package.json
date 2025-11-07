@@ -43,6 +43,7 @@
     "sass": "^1.89.0",
     "typescript": "^5",
     "vitepress": "^1.6.4",
-    "vitepress-openapi": "^0.1.10"
+    "vitepress-openapi": "^0.1.10",
+    "vitepress-plugin-llms": "^1.9.0"
   }
 }

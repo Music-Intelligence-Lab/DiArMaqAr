@@ -1,0 +1,207 @@
+# Digital Arabic Maqām Archive
+
+> Documentation
+
+Open-source bilingual platform integrating historically documented Arabic maqām theory within a unified computational framework
+
+## Table of Contents
+
+### Getting Started
+
+- [Getting Started](/docs/guide.md): Introduction to the Digital Arabic Maqām Archive (DiArMaqAr)
+- [Quick Start Guide](/docs/guide/quick-start.md): Get up and running with DiArMaqAr quickly
+
+### Core Concepts
+
+- [Theoretical Framework](/docs/guide/theoretical-framework.md): Understanding the conceptual hierarchy and foundations of Arabic maqām theory in DiArMaqAr
+- [Tuning Systems (Tanāghīm)](/docs/guide/tuning-systems.md): Understanding tuning systems and their role in Arabic maqām theory
+- [Ajnās](/docs/guide/ajnas.md): Understanding ajnās as the building blocks of maqāmāt
+- [Maqāmāt](/docs/guide/maqamat.md): Understanding maqāmāt as complete modal frameworks
+- [Suyūr](/docs/guide/suyur.md): Understanding suyūr as traditional melodic development pathways
+
+### Advanced Features
+
+- [Transposition](/docs/guide/transposition.md): Understanding tuning-system-sensitive transposition capabilities
+- [Modulation (Intiqālāt)](/docs/guide/modulation.md): Understanding Al-Shawwā's modulation algorithm and modulation networks
+- [Audio Synthesis](/docs/guide/audio-synthesis.md): Real-time audio synthesis capabilities for auditioning maqāmāt and tuning systems
+- [MIDI Integration](/docs/guide/midi-integration.md): MIDI input/output capabilities including MPE support for microtonal playback
+- [Data Export](/docs/guide/data-export.md): Comprehensive data export capabilities for research and composition
+
+### Research and Methodology
+
+- [Research Applications](/docs/guide/research-applications.md): Research use cases and academic applications of DiArMaqAr
+- [Cultural Framework](/docs/guide/cultural-framework.md): Decolonial computing principles and culturally-specific methodology
+- [Bibliographic Sources](/docs/guide/bibliographic-sources.md): Comprehensive source attribution and scholarly verification
+
+### API Reference
+
+- [API Reference](/docs/api.md): Complete REST API documentation for the Digital Arabic Maqām Archive
+
+
+### TypeScript Library
+
+- [TypeScript Library](/docs/library.md): Complete TypeScript/JavaScript library documentation
+
+### Library Reference
+
+- [DiArMaqAr - the Digital Arabic Maqām Archive](/docs/library/api/README.md)
+- [DiArMaqAr TypeScript Library v0.1.0](/docs/library/api/modules.md)
+
+### Models
+
+- [models/Maqam](/docs/library/api/models/Maqam/README.md)
+- [models/Jins](/docs/library/api/models/Jins/README.md)
+- [models/TuningSystem](/docs/library/api/models/TuningSystem/README.md)
+- [models/PitchClass](/docs/library/api/models/PitchClass/README.md)
+- [models/NoteName](/docs/library/api/models/NoteName/README.md)
+
+### Functions
+
+- [functions/export](/docs/library/api/functions/export/README.md)
+- [functions/transpose](/docs/library/api/functions/transpose/README.md)
+- [functions/modulate](/docs/library/api/functions/modulate/README.md)
+- [functions/import](/docs/library/api/functions/import/README.md)
+- [functions/classifyMaqamFamily](/docs/library/api/functions/classifyMaqamFamily/README.md)
+- [functions/getPitchClassIntervals](/docs/library/api/functions/getPitchClassIntervals/README.md)
+- [functions/getTuningSystemPitchClasses](/docs/library/api/functions/getTuningSystemPitchClasses/README.md)
+- [functions/calculateCentsDeviation](/docs/library/api/functions/calculateCentsDeviation/README.md)
+- [functions/convertPitchClass](/docs/library/api/functions/convertPitchClass/README.md)
+- [functions/scala-export](/docs/library/api/functions/scala-export/README.md)
+
+### Other
+
+- [Class: default](/docs/library/api/models/Jins/classes/default.md)
+- [Class: default](/docs/library/api/models/Maqam/classes/default.md)
+- [Class: default](/docs/library/api/models/Pattern/classes/default.md)
+- [Class: default](/docs/library/api/models/TuningSystem/classes/default.md)
+- [Digital Arabic Maqām Archive (DiArMaqAr)](/docs/README DiArMaqAr Tuning System JSON Data Export.md)
+- [Function: ajnasAreEqual()](/docs/library/api/models/Jins/functions/ajnasAreEqual.md)
+- [Function: calculateCentsDeviationWithReferenceNote()](/docs/library/api/functions/calculateCentsDeviation/functions/calculateCentsDeviationWithReferenceNote.md)
+- [Function: calculateInterval()](/docs/library/api/models/PitchClass/functions/calculateInterval.md)
+- [Function: calculateIpnReferenceMidiNote()](/docs/library/api/functions/calculateIpnReferenceMidiNote/functions/calculateIpnReferenceMidiNote.md)
+- [Function: calculateJinsTranspositions()](/docs/library/api/functions/transpose/functions/calculateJinsTranspositions.md)
+- [Function: calculateMaqamTranspositions()](/docs/library/api/functions/transpose/functions/calculateMaqamTranspositions.md)
+- [Function: canTransposeMaqamToNote()](/docs/library/api/functions/transpose/functions/canTransposeMaqamToNote.md)
+- [Function: classifyMaqamDataFamily()](/docs/library/api/functions/classifyMaqamFamily/functions/classifyMaqamDataFamily.md)
+- [Function: classifyMaqamFamily()](/docs/library/api/functions/classifyMaqamFamily/functions/classifyMaqamFamily.md)
+- [Function: default()](/docs/library/api/functions/calculateNumberOfModulations/functions/default.md)
+- [Function: default()](/docs/library/api/functions/computeFractionInterval/functions/default.md)
+- [Function: default()](/docs/library/api/functions/convertPitchClass/functions/default.md)
+- [Function: default()](/docs/library/api/functions/detectPitchClassType/functions/default.md)
+- [Function: default()](/docs/library/api/functions/extendSelectedPitchClasses/functions/default.md)
+- [Function: default()](/docs/library/api/functions/gcd/functions/default.md)
+- [Function: default()](/docs/library/api/functions/getFirstNoteName/functions/default.md)
+- [Function: default()](/docs/library/api/functions/getNoteNamesUsedInTuningSystem/functions/default.md)
+- [Function: default()](/docs/library/api/functions/getTuningSystemPitchClasses/functions/default.md)
+- [Function: default()](/docs/library/api/functions/modulate/functions/default.md)
+- [Function: default()](/docs/library/api/functions/romanToNumber/functions/default.md)
+- [Function: default()](/docs/library/api/functions/shiftPitchClassByOctave/functions/default.md)
+- [Function: exportJins()](/docs/library/api/functions/export/functions/exportJins.md)
+- [Function: exportJinsToScala()](/docs/library/api/functions/scala-export/functions/exportJinsToScala.md)
+- [Function: exportJinsToScalaKeymap()](/docs/library/api/functions/scala-export/functions/exportJinsToScalaKeymap.md)
+- [Function: exportMaqam()](/docs/library/api/functions/export/functions/exportMaqam.md)
+- [Function: exportMaqamToScala()](/docs/library/api/functions/scala-export/functions/exportMaqamToScala.md)
+- [Function: exportMaqamToScalaKeymap()](/docs/library/api/functions/scala-export/functions/exportMaqamToScalaKeymap.md)
+- [Function: exportTuningSystem()](/docs/library/api/functions/export/functions/exportTuningSystem.md)
+- [Function: exportTuningSystemToScala()](/docs/library/api/functions/scala-export/functions/exportTuningSystemToScala.md)
+- [Function: exportTuningSystemToScalaKeymap()](/docs/library/api/functions/scala-export/functions/exportTuningSystemToScalaKeymap.md)
+- [Function: frequencyToMidiNoteNumber()](/docs/library/api/functions/convertPitchClass/functions/frequencyToMidiNoteNumber.md)
+- [Function: generateAndWriteAnalytics()](/docs/library/api/functions/generate-analytics/functions/generateAndWriteAnalytics.md)
+- [Function: getAjnas()](/docs/library/api/functions/import/functions/getAjnas.md)
+- [Function: getBaseJinsName()](/docs/library/api/functions/classifyMaqamFamily/functions/getBaseJinsName.md)
+- [Function: getDynamicArabicName()](/docs/library/api/functions/dynamicArabicConverter/functions/getDynamicArabicName.md)
+- [Function: getEnglishNoteName()](/docs/library/api/functions/noteNameMappings/functions/getEnglishNoteName.md)
+- [Function: getFirstJinsNameForMaqam()](/docs/library/api/functions/classifyMaqamFamily/functions/getFirstJinsNameForMaqam.md)
+- [Function: getFirstJinsNameForMaqamData()](/docs/library/api/functions/classifyMaqamFamily/functions/getFirstJinsNameForMaqamData.md)
+- [Function: getIpnReferenceNoteName()](/docs/library/api/functions/getIpnReferenceNoteName/functions/getIpnReferenceNoteName.md)
+- [Function: getIpnReferenceNoteNameWithOctave()](/docs/library/api/functions/getIpnReferenceNoteName/functions/getIpnReferenceNoteNameWithOctave.md)
+- [Function: getMaqamat()](/docs/library/api/functions/import/functions/getMaqamat.md)
+- [Function: getNoteNameFromIndexAndOctave()](/docs/library/api/models/NoteName/functions/getNoteNameFromIndexAndOctave.md)
+- [Function: getNoteNameIndex()](/docs/library/api/models/NoteName/functions/getNoteNameIndex.md)
+- [Function: getNoteNameIndexAndOctave()](/docs/library/api/models/NoteName/functions/getNoteNameIndexAndOctave.md)
+- [Function: getPatterns()](/docs/library/api/functions/import/functions/getPatterns.md)
+- [Function: getPitchClassIntervals()](/docs/library/api/functions/getPitchClassIntervals/functions/getPitchClassIntervals.md)
+- [Function: getSequentialEnglishNames()](/docs/library/api/functions/noteNameMappings/functions/getSequentialEnglishNames.md)
+- [Function: getSources()](/docs/library/api/functions/import/functions/getSources.md)
+- [Function: getTuningSystems()](/docs/library/api/functions/import/functions/getTuningSystems.md)
+- [Function: maqamatAreEqual()](/docs/library/api/models/Maqam/functions/maqamatAreEqual.md)
+- [Function: matchingIntervals()](/docs/library/api/models/PitchClass/functions/matchingIntervals.md)
+- [Function: matchingListOfIntervals()](/docs/library/api/models/PitchClass/functions/matchingListOfIntervals.md)
+- [Function: renderPitchClassSpellings()](/docs/library/api/functions/renderPitchClassIpnSpellings/functions/renderPitchClassSpellings.md)
+- [Function: reversePatternNotes()](/docs/library/api/models/Pattern/functions/reversePatternNotes.md)
+- [Function: shiftJinsByOctaves()](/docs/library/api/models/Jins/functions/shiftJinsByOctaves.md)
+- [Function: shiftMaqamByOctaves()](/docs/library/api/models/Maqam/functions/shiftMaqamByOctaves.md)
+- [Function: shiftNoteName()](/docs/library/api/models/NoteName/functions/shiftNoteName.md)
+- [Function: shiftPitchClassBaseValue()](/docs/library/api/functions/convertPitchClass/functions/shiftPitchClassBaseValue.md)
+- [Function: standardizeText()](/docs/library/api/functions/export/functions/standardizeText.md)
+- [Function: swapEnharmonicForReference()](/docs/library/api/functions/calculateCentsDeviation/functions/swapEnharmonicForReference.md)
+- [Function: transposeSayr()](/docs/library/api/functions/transpose/functions/transposeSayr.md)
+- [Function: updateAjnas()](/docs/library/api/functions/update/functions/updateAjnas.md)
+- [Function: updateMaqamat()](/docs/library/api/functions/update/functions/updateMaqamat.md)
+- [Function: updatePatterns()](/docs/library/api/functions/update/functions/updatePatterns.md)
+- [Function: updateSources()](/docs/library/api/functions/update/functions/updateSources.md)
+- [Function: updateTuningSystems()](/docs/library/api/functions/update/functions/updateTuningSystems.md)
+- [functions/calculateIpnReferenceMidiNote](/docs/library/api/functions/calculateIpnReferenceMidiNote/README.md)
+- [functions/calculateNumberOfModulations](/docs/library/api/functions/calculateNumberOfModulations/README.md)
+- [functions/computeFractionInterval](/docs/library/api/functions/computeFractionInterval/README.md)
+- [functions/detectPitchClassType](/docs/library/api/functions/detectPitchClassType/README.md)
+- [functions/dynamicArabicConverter](/docs/library/api/functions/dynamicArabicConverter/README.md)
+- [functions/extendSelectedPitchClasses](/docs/library/api/functions/extendSelectedPitchClasses/README.md)
+- [functions/gcd](/docs/library/api/functions/gcd/README.md)
+- [functions/generate-analytics](/docs/library/api/functions/generate-analytics/README.md)
+- [functions/getFirstNoteName](/docs/library/api/functions/getFirstNoteName/README.md)
+- [functions/getIpnReferenceNoteName](/docs/library/api/functions/getIpnReferenceNoteName/README.md)
+- [functions/getNoteNamesUsedInTuningSystem](/docs/library/api/functions/getNoteNamesUsedInTuningSystem/README.md)
+- [functions/noteNameMappings](/docs/library/api/functions/noteNameMappings/README.md)
+- [functions/renderPitchClassIpnSpellings](/docs/library/api/functions/renderPitchClassIpnSpellings/README.md)
+- [functions/romanToNumber](/docs/library/api/functions/romanToNumber/README.md)
+- [functions/shiftPitchClassByOctave](/docs/library/api/functions/shiftPitchClassByOctave/README.md)
+- [functions/update](/docs/library/api/functions/update/README.md)
+- [Interface: AjnasModulations](/docs/library/api/models/Jins/interfaces/AjnasModulations.md)
+- [Interface: Cell](/docs/library/api/models/NoteName/interfaces/Cell.md)
+- [Interface: default](/docs/library/api/models/PitchClass/interfaces/default.md)
+- [Interface: ExportMaqamFamilyClassification](/docs/library/api/functions/export/interfaces/ExportMaqamFamilyClassification.md)
+- [Interface: ExportOptions](/docs/library/api/functions/export/interfaces/ExportOptions.md)
+- [Interface: Jins](/docs/library/api/models/Jins/interfaces/Jins.md)
+- [Interface: JinsDataInterface](/docs/library/api/models/Jins/interfaces/JinsDataInterface.md)
+- [Interface: JinsExportOptions](/docs/library/api/functions/export/interfaces/JinsExportOptions.md)
+- [Interface: JinsModulationDegrees8vbNoteNames](/docs/library/api/functions/export/interfaces/JinsModulationDegrees8vbNoteNames.md)
+- [Interface: JinsModulationDegreesNoteNames](/docs/library/api/functions/export/interfaces/JinsModulationDegreesNoteNames.md)
+- [Interface: Maqam](/docs/library/api/models/Maqam/interfaces/Maqam.md)
+- [Interface: MaqamatModulations](/docs/library/api/models/Maqam/interfaces/MaqamatModulations.md)
+- [Interface: MaqamDataInterface](/docs/library/api/models/Maqam/interfaces/MaqamDataInterface.md)
+- [Interface: MaqamExportOptions](/docs/library/api/functions/export/interfaces/MaqamExportOptions.md)
+- [Interface: MaqamFamilyClassification](/docs/library/api/functions/classifyMaqamFamily/interfaces/MaqamFamilyClassification.md)
+- [Interface: MaqamToJinsLowerOctaveModulationsStructure](/docs/library/api/functions/export/interfaces/MaqamToJinsLowerOctaveModulationsStructure.md)
+- [Interface: MaqamToJinsModulationsStructure](/docs/library/api/functions/export/interfaces/MaqamToJinsModulationsStructure.md)
+- [Interface: MaqamToJinsModulationsWithKeys](/docs/library/api/functions/export/interfaces/MaqamToJinsModulationsWithKeys.md)
+- [Interface: MaqamToMaqamLowerOctaveModulationsStructure](/docs/library/api/functions/export/interfaces/MaqamToMaqamLowerOctaveModulationsStructure.md)
+- [Interface: MaqamToMaqamModulationsStructure](/docs/library/api/functions/export/interfaces/MaqamToMaqamModulationsStructure.md)
+- [Interface: MaqamToMaqamModulationsWithKeys](/docs/library/api/functions/export/interfaces/MaqamToMaqamModulationsWithKeys.md)
+- [Interface: MergedJins](/docs/library/api/functions/export/interfaces/MergedJins.md)
+- [Interface: MergedMaqam](/docs/library/api/functions/export/interfaces/MergedMaqam.md)
+- [Interface: ModulationDegrees8vbNoteNames](/docs/library/api/functions/export/interfaces/ModulationDegrees8vbNoteNames.md)
+- [Interface: ModulationDegreesNoteNames](/docs/library/api/functions/export/interfaces/ModulationDegreesNoteNames.md)
+- [Interface: PatternNote](/docs/library/api/models/Pattern/interfaces/PatternNote.md)
+- [Interface: PitchClassInterval](/docs/library/api/models/PitchClass/interfaces/PitchClassInterval.md)
+- [Interface: Sayr](/docs/library/api/models/Maqam/interfaces/Sayr.md)
+- [Interface: SayrStop](/docs/library/api/models/Maqam/interfaces/SayrStop.md)
+- [models/Pattern](/docs/library/api/models/Pattern/README.md)
+- [Type Alias: default](/docs/library/api/models/NoteName/type-aliases/default.md)
+- [Type Alias: EnglishNameOptions](/docs/library/api/functions/noteNameMappings/type-aliases/EnglishNameOptions.md)
+- [Type Alias: MaqamFamilyClassificationMethod](/docs/library/api/functions/classifyMaqamFamily/type-aliases/MaqamFamilyClassificationMethod.md)
+- [Type Alias: NoteDuration](/docs/library/api/models/Pattern/type-aliases/NoteDuration.md)
+- [Type Alias: TransliteratedNoteNameOctaveFour](/docs/library/api/models/NoteName/type-aliases/TransliteratedNoteNameOctaveFour.md)
+- [Type Alias: TransliteratedNoteNameOctaveOne](/docs/library/api/models/NoteName/type-aliases/TransliteratedNoteNameOctaveOne.md)
+- [Type Alias: TransliteratedNoteNameOctaveThree](/docs/library/api/models/NoteName/type-aliases/TransliteratedNoteNameOctaveThree.md)
+- [Type Alias: TransliteratedNoteNameOctaveTwo](/docs/library/api/models/NoteName/type-aliases/TransliteratedNoteNameOctaveTwo.md)
+- [Type Alias: TransliteratedNoteNameOctaveZero](/docs/library/api/models/NoteName/type-aliases/TransliteratedNoteNameOctaveZero.md)
+- [Variable: abjadNames](/docs/library/api/functions/noteNameMappings/variables/abjadNames.md)
+- [Variable: allNotes](/docs/library/api/models/NoteName/variables/allNotes.md)
+- [Variable: DURATION\_OPTIONS](/docs/library/api/models/Pattern/variables/DURATION_OPTIONS.md)
+- [Variable: octaveFourNoteNames](/docs/library/api/models/NoteName/variables/octaveFourNoteNames.md)
+- [Variable: octaveOneNoteNames](/docs/library/api/models/NoteName/variables/octaveOneNoteNames.md)
+- [Variable: octaveThreeNoteNames](/docs/library/api/models/NoteName/variables/octaveThreeNoteNames.md)
+- [Variable: octaveTwoNoteNames](/docs/library/api/models/NoteName/variables/octaveTwoNoteNames.md)
+- [Variable: octaveZeroNoteNames](/docs/library/api/models/NoteName/variables/octaveZeroNoteNames.md)
+- [Variable: SCALE\_DEGREES](/docs/library/api/models/Pattern/variables/SCALE_DEGREES.md)
