@@ -17,3 +17,7 @@
     Cache-Control = "no-store, no-cache, must-revalidate, max-age=0"
     X-Content-Type-Options = "nosniff"
 
+# Note: Static files from public/docs/ should be served by Next.js automatically
+# The route handler at /docs/[[...slug]] will handle HTML pages, but static
+# assets like .json, .js, .css should be served directly by Netlify
+

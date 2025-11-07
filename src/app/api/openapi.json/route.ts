@@ -15,17 +15,36 @@ export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
   try {
-    const openapiPath = path.join(process.cwd(), 'public', 'docs', 'openapi.json')
+    // Try multiple possible locations where the file might be in Netlify's environment
+    const possiblePaths = [
+      path.join(process.cwd(), 'public', 'docs', 'openapi.json'),
+      path.join(process.cwd(), '..', 'public', 'docs', 'openapi.json'),
+      path.join('/opt/build/repo', 'public', 'docs', 'openapi.json'),
+    ]
     
-    if (!fs.existsSync(openapiPath)) {
+    let foundPath: string | null = null
+    for (const openapiPath of possiblePaths) {
+      try {
+        if (fs.existsSync(openapiPath)) {
+          foundPath = openapiPath
+          break
+        }
+      } catch (e) {
+        continue
+      }
+    }
+    
+    if (!foundPath) {
+      console.error(`OpenAPI file not found. Tried paths:`, possiblePaths)
+      console.error(`Current working directory: ${process.cwd()}`)
       return NextResponse.json(
-        { error: 'OpenAPI specification not found' },
+        { error: 'OpenAPI specification not found', triedPaths: possiblePaths },
         { status: 404 }
       )
     }
     
-    const fileContents = fs.readFileSync(openapiPath, 'utf8')
-    const stats = fs.statSync(openapiPath)
+    const fileContents = fs.readFileSync(foundPath, 'utf8')
+    const stats = fs.statSync(foundPath)
     
     // Get cache-busting query parameter if provided, or use file modification time
     const url = new URL(request.url)

@@ -42,8 +42,9 @@ const LazyOASpec = defineAsyncComponent({
 })
 
 // Generate cache-busting URL immediately (not in onMounted)
-// Use /docs/openapi.json which is served by the /docs/[[...slug]] route handler
-// This route handler serves the file from public/docs/openapi.json with proper no-cache headers
+// Use /docs/openapi.json which is served as a static asset from docs/public/
+// VitePress copies files from docs/public/ to the output root during build
+// With base: '/docs/', the file will be accessible at /docs/openapi.json
 // Set the URL with query parameter immediately so it's ready when the component loads
 const openApiUrl = ref(`/docs/openapi.json?v=${Date.now()}`)
 </script>
