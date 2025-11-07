@@ -1,8 +1,9 @@
 # Netlify configuration for Next.js deployment
 # This ensures API routes are handled as serverless functions with proper query parameter support
+# Build docs first (generates openapi.json and VitePress static files), then build Next.js
 
 [build]
-  command = "npm run build"
+  command = "npm run docs:build && npm run build"
   publish = ".next"
 
 # Use Netlify's Next.js plugin for proper serverless function handling
