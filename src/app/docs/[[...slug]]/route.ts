@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server'
 import fs from 'fs'
 import path from 'path'
 
+// Force dynamic rendering to ensure files are read at runtime
+export const dynamic = "force-dynamic";
+
 export async function GET(
   request: Request,
   { params }: { params: { slug?: string[] } }
