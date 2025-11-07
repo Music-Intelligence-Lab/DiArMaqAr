@@ -69,6 +69,8 @@ Open-source bilingual platform integrating historically documented Arabic maqām
 ### Other
 
 - [API Documentation](/docs/api.md): Interactive API documentation and testing for the Digital Arabic Maqām Archive
+- [API Endpoints Reference](/docs/api/endpoints-reference.md): Comprehensive auto-generated API endpoints reference from OpenAPI specification
+- [Canonical Examples](/docs/api/canonical-examples.md): Recommended tuning systems, maqāmāt, and ajnās for testing and documentation
 - [Class: default](/docs/library/api/models/Jins/classes/default.md)
 - [Class: default](/docs/library/api/models/Maqam/classes/default.md)
 - [Class: default](/docs/library/api/models/Pattern/classes/default.md)
