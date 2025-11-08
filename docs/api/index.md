@@ -21,7 +21,7 @@ curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-
 ### For Humans
 - **[Endpoints Reference](./endpoints-reference)** - Complete endpoint documentation with parameters and responses
 - **[Interactive Playground](./playground)** - Test API calls live in your browser
-- **[Canonical Examples](./canonical-examples)** - Recommended examples for consistent documentation
+- **[Representative Examples](./representative-examples)** - Recommended examples for consistent documentation
 
 ### For LLMs
 - **OpenAPI Specification:** [openapi.json](/docs/openapi.json) | [openapi.yaml](/docs/openapi.yaml)
@@ -97,4 +97,4 @@ All endpoints return JSON. No authentication required.
 
 For complete parameter documentation, see the [Endpoints Reference](./endpoints-reference).
 
-For recommended example values, see [Canonical Examples](./canonical-examples).
+For recommended example values, see [Representative Examples](./representative-examples).

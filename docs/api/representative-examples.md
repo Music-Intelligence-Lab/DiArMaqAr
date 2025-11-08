@@ -1,9 +1,9 @@
 ---
-title: Canonical Examples
+title: Representative Examples
 description: Recommended tuning systems, maqāmāt, and ajnās for testing and documentation
 ---
 
-# Canonical Examples
+# Representative Examples
 
 These examples have been carefully selected to demonstrate the full capabilities of the API while respecting the cultural and historical significance of Arabic maqām theory. 
 
@@ -14,7 +14,7 @@ curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-
 
 ---
 
-## Canonical Tuning Systems
+## Representative Tuning Systems
 
 ### `al-Kindi-(874)` - al-Kindī (874)
 **Starting Note**: `ushayran` - ʿushayrān
@@ -136,7 +136,7 @@ GET /api/tuning-systems/al-Sabbagh-(1954)/rast/pitch-classes?pitchClassDataType=
 
 ---
 
-## Canonical Ajnās
+## Representative Ajnās
 
 **Ajnās with zalzalian intervals** (ʿirāq, nīm zīrgūleh, segāh, nīm ḥijāz, or awj):
 
@@ -272,7 +272,7 @@ GET /api/ajnas/jins_hijaz_(binsir)?tuningSystem=IbnSina-(1037)&startingNote=yega
 
 ---
 
-## Canonical Maqāmāt
+## Representative Maqāmāt
 
 **Principle maqāmāt** - fundamental and archetypal:
 
@@ -396,7 +396,7 @@ GET /api/maqamat/maqam_dilkesh-huran?tuningSystem=IbnSina-(1037)&startingNote=ye
 
 ---
 
-## Canonical Usage Patterns
+## Representative Usage Patterns
 
 ### Basic Detail Request
 ```bash
@@ -460,3 +460,4 @@ curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-
 - [API Documentation](./index) - Main API overview
 - [Interactive Playground](./playground) - Test these examples interactively
 - [OpenAPI Specification](/docs/openapi.yaml) - Complete parameter documentation
+
