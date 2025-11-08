@@ -164,7 +164,7 @@ curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-
 
 * **[Endpoints Reference](./endpoints-reference)** - Complete endpoint documentation with parameters and responses
 * **[Interactive Playground](./playground)** - Test API calls live in your browser
-* **[Canonical Examples](./canonical-examples)** - Recommended examples for consistent documentation
+* **[Representative Examples](./representative-examples)** - Recommended examples for consistent documentation
 
 ### For LLMs
 
@@ -254,7 +254,7 @@ All endpoints return JSON. No authentication required.
 
 For complete parameter documentation, see the [Endpoints Reference](./endpoints-reference).
 
-For recommended example values, see [Canonical Examples](./canonical-examples).
+For recommended example values, see [Representative Examples](./representative-examples).
 
 ---
 
@@ -265,7 +265,7 @@ description: Complete API endpoint documentation
 
 # API Endpoints Reference
 
-Complete documentation for all API endpoints. For quick start, see [API Documentation](./index). For examples, see [Canonical Examples](./canonical-examples).
+Complete documentation for all API endpoints. For quick start, see [API Documentation](./index). For examples, see [Representative Examples](./representative-examples).
 
 ***
 
@@ -1769,520 +1769,6 @@ Following principles of critical editions:
 * Explore [Research Applications](/guide/research-applications/)
 * Learn about [Cultural Framework](/guide/cultural-framework/)
 * Understand [Theoretical Framework](/guide/theoretical-framework/)
-
----
-
----
-url: /docs/api/canonical-examples.md
-description: 'Recommended tuning systems, maqāmāt, and ajnās for testing and documentation'
----
-
-# Canonical Examples
-
-These examples have been carefully selected to demonstrate the full capabilities of the API while respecting the cultural and historical significance of Arabic maqām theory.
-
-**Quick test URL:**
-
-```bash
-curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents"
-```
-
-***
-
-## Canonical Tuning Systems
-
-### `al-Kindi-(874)` - al-Kindī (874)
-
-**Starting Note**: `ushayran` - ʿushayrān
-
-**Description**: One of the oldest tuning systems documented in Arabic music theory. It is a 12-tone chromatic tuning system based on Greek theory and doesn't include the quintessential so-called Arabic "quarter tone" pitch classes ʿirāq, nīm zīrgūleh, segāh, nīm ḥijāz, or awj, also referred to as zalzalian intervals. It can only render ajnās and maqāmāt that don't use those notes such as kurd, nahāwand, nikrīz and ʿajam ʿushayrān.
-
-**Historical Context**: Al-Kindī's tuning represents the earliest systematic documentation of Arabic music theory, drawing on Hellenistic sources while adapting them to Arabic musical practice.
-
-**Example**:
-
-```
-GET /api/tuning-systems/al-Kindi-(874)/ushayran/pitch-classes?pitchClassDataType=cents
-```
-
-**Good for testing**:
-
-* Ajnās without zalzalian intervals: `jins_kurd`, `jins_nahawand`, `jins_nikriz`
-* Maqāmāt without zalzalian intervals: `maqam_kurd`, `maqam_nahawand`
-
-***
-
-### `al-Farabi-(950g)` - al-Fārābī (950g)
-
-**Starting Note**: `ushayran` - ʿushayrān
-
-**Description**: The first documentation of the wuṣtā zalzal interval, the so-called Arabic "quarter tone" using a frequency ratio of 27/22. It is a comprehensive 27-tone tuning system that allows for many ajnās and maqāmāt and their transpositions, therefore also modulations.
-
-**Historical Context**: Al-Fārābī's "Great Book of Music" (Kitāb al-Mūsīqī al-Kabīr) represents a milestone in Arabic music theory, introducing the zalzalian intervals that are characteristic of Arabic maqām practice.
-
-**Example**:
-
-```
-GET /api/tuning-systems/al-Farabi-(950g)/ushayran/pitch-classes?pitchClassDataType=cents
-```
-
-**Good for testing**:
-
-* Comprehensive ajnās and maqāmāt coverage
-* Zalzalian intervals
-* Historical comparison studies
-
-***
-
-### `IbnSina-(1037)` - Ibn Sīnā (1037) ⭐ (Most Common)
-
-**Starting Note**: `yegah` - yegāh
-
-**Description**: An excellent concise and precise 17-tone tuning that allows for a wide range of ajnās and maqāmāt and their transpositions. Includes the wuṣtā zalzal interval with the frequency ratio of 39/32.
-
-**Historical Context**: Ibn Sīnā (Avicenna) refined earlier theories into an elegant and practical system that balances theoretical precision with musical usability.
-
-**Why use this as primary example**:
-
-* Comprehensive coverage of most maqāmāt and ajnās
-* Historically significant and well-documented
-* Balanced between complexity and usability
-* Includes zalzalian intervals
-
-**Example**:
-
-```
-GET /api/tuning-systems/IbnSina-(1037)/yegah/pitch-classes?pitchClassDataType=cents
-```
-
-**Good for testing**:
-
-* All primary maqāmāt: `maqam_rast`, `maqam_bayyat`, `maqam_hijaz`
-* All primary ajnās: `jins_rast`, `jins_bayyat`, `jins_hijaz`
-* Transpositions and modulations
-
-***
-
-### `Meshshaqa-(1899)` - Mishāqah (1899)
-
-**Starting Note**: `yegah` - yegāh
-
-**Description**: The first documented tuning system that is based on literal quarter tones, 24 equal divisions of the octave. Defined by Mishāqah as the "Arabic Octave According to the Modernists", meaning that it was already known before him but undocumented - though no one knows if it was really used. Because it is 24 equal divisions of the octave it allows for many ajnās and maqāmāt and their transpositions, therefore also modulations. Even though it allows the same number of maqāmāt as Ibn Sīnā's tuning system, it allows for more transpositions.
-
-**Historical Context**: Mikhāʾīl Mishāqah's tuning represents a modernization of Arabic music theory, introducing equal divisions while maintaining the essential character of Arabic maqāmāt.
-
-**Example**:
-
-```
-GET /api/tuning-systems/Meshshaqa-(1899)/yegah/pitch-classes?pitchClassDataType=cents
-```
-
-**Good for testing**:
-
-* Modern equal-division approach
-* Comparison with historical unequal systems
-* All maqāmāt and ajnās
-* Extended transposition capabilities
-
-***
-
-### `CairoCongressTuningCommittee-(1929)` - Cairo Congress Tuning Committee (1929)
-
-**Starting Note**: `rast` - rāst
-
-**Description**: The tuning system researched, measured and prepared in preparation for the 1932 Cairo Congress of Arabic Music. It is referred to as an "Egyptian Tuning" and is an unequal 24-tone system. Also comprehensive in its maqām availability and was rendered based on the measurement and expertise of Egyptian musicians at the time.
-
-**Historical Context**: The 1932 Cairo Congress brought together musicians, theorists, and scholars to document and standardize Arabic music theory. This tuning reflects Egyptian musical practice.
-
-**Example**:
-
-```
-GET /api/tuning-systems/CairoCongressTuningCommittee-(1929)/rast/pitch-classes?pitchClassDataType=cents
-```
-
-**Good for testing**:
-
-* Egyptian performance practice
-* 20th-century documentation standards
-* Unequal divisions vs. equal divisions
-
-***
-
-### `al-Sabbagh-(1954)` - al-Ṣabbāgh (1954)
-
-**Starting Note**: `rast` - rāst
-
-**Description**: The only Arabic tuning system that exclusively uses the "comma" (syntonic comma of 81/80) as a basis for its construction. It is an unequal 24-tone system and allows for many maqāmāt and ajnās but with limited transpositions.
-
-**Historical Context**: Ṭūbiyā al-Ṣabbāgh's system represents a unique theoretical approach focusing on pure acoustic ratios.
-
-**Example**:
-
-```
-GET /api/tuning-systems/al-Sabbagh-(1954)/rast/pitch-classes?pitchClassDataType=cents
-```
-
-**Good for testing**:
-
-* Acoustic purity approaches
-* Limited transposition scenarios
-* Theoretical vs. practical systems
-
-***
-
-## Canonical Ajnās
-
-**Ajnās with zalzalian intervals** (ʿirāq, nīm zīrgūleh, segāh, nīm ḥijāz, or awj):
-
-### `jins_rast` - jins rāst ⭐ (Most Common)
-
-**Description**: Includes the zalzalian interval segāh. The most fundamental jins in Arabic music.
-
-**Structure**: Ascending tetrachord with a neutral third (segāh) above the tonic.
-
-**Example**:
-
-```
-GET /api/ajnas/jins_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
-```
-
-***
-
-### `jins_bayyat` - jins bayyāt
-
-**Description**: Includes the zalzalian interval segāh. Forms the basis of Maqām Bayyātī.
-
-**Character**: More melancholic than Rāst, with a distinctive expressive quality.
-
-**Example**:
-
-```
-GET /api/ajnas/jins_bayyat?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
-```
-
-***
-
-### `jins_segah` - jins segāh
-
-**Description**: Its tonic is the zalzalian interval segāh. Begins on a neutral note.
-
-**Usage**: Common in modulations and as an upper jins.
-
-**Example**:
-
-```
-GET /api/ajnas/jins_segah?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
-```
-
-***
-
-### `jins_saba` - jins ṣabā
-
-**Description**: Includes the zalzalian interval segāh. Known for its distinctive augmented second.
-
-**Character**: Intense and expressive, often used for emotional climaxes.
-
-**Example**:
-
-```
-GET /api/ajnas/jins_saba?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
-```
-
-***
-
-**Ajnās without zalzalian intervals:**
-
-### `jins_nikriz` - jins nikrīz
-
-**Description**: Does not include a zalzalian interval. Built from tones and semitones only.
-
-**Good for testing**: Tuning systems without zalzalian intervals (like al-Kindī).
-
-**Example**:
-
-```
-GET /api/ajnas/jins_nikriz?tuningSystem=al-Kindi-(874)&startingNote=ushayran&pitchClassDataType=cents
-```
-
-***
-
-### `jins_kurd` - jins kurd
-
-**Description**: Does not include a zalzalian interval. Similar to Western Phrygian mode.
-
-**Character**: Minor quality with a lowered second degree.
-
-**Example**:
-
-```
-GET /api/ajnas/jins_kurd?tuningSystem=al-Kindi-(874)&startingNote=ushayran&pitchClassDataType=cents
-```
-
-***
-
-### `jins_kurd_(binsir)` - jins kurd (binsir)
-
-**Description**: The same as jins kurd but starting on a different tonic, giving it slightly different intervals. Interesting for comparison and understanding why the maqām based on it (maqām ḥijāz kār kurd) is supposedly a transposition of maqām kurd with the same intervals, but in fact is not. Does not include a zalzalian interval.
-
-**Good for testing**: Transposition analysis, interval pattern comparison.
-
-**Example**:
-
-```
-GET /api/ajnas/jins_kurd_(binsir)?tuningSystem=al-Kindi-(874)&startingNote=ushayran&pitchClassDataType=cents
-```
-
-***
-
-### `jins_nahawand` - jins nahāwand
-
-**Description**: Does not include a zalzalian interval. Similar to Western natural minor.
-
-**Usage**: Very common in modern Arabic music, especially Egyptian popular music.
-
-**Example**:
-
-```
-GET /api/ajnas/jins_nahawand?tuningSystem=al-Kindi-(874)&startingNote=ushayran&pitchClassDataType=cents
-```
-
-***
-
-### `jins_hijaz` - jins ḥijāz
-
-**Description**: Does not include a zalzalian interval. Known for its distinctive augmented second.
-
-**Character**: Instantly recognizable "Middle Eastern" sound, commonly used in adhān (call to prayer).
-
-**Example**:
-
-```
-GET /api/ajnas/jins_hijaz?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
-```
-
-***
-
-### `jins_hijaz_(binsir)` - jins ḥijāz (binsir)
-
-**Description**: The same as jins ḥijāz but starting on a different tonic, giving it slightly different intervals. Interesting for comparison. Does not include a zalzalian interval.
-
-**Good for testing**: Interval pattern comparison, transposition analysis.
-
-**Example**:
-
-```
-GET /api/ajnas/jins_hijaz_(binsir)?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
-```
-
-***
-
-## Canonical Maqāmāt
-
-**Principle maqāmāt** - fundamental and archetypal:
-
-### `maqam_rast` - maqām rāst ⭐ (Most Common)
-
-**Description**: One of the principle and archetypal Arabic maqāmāt. Prominently used in Egypt across both popular and religious sufi musics. Includes the zalzalian intervals segāh and awj in its ascending form.
-
-**Character**: Majestic, balanced, grounding. Often called the "father of maqāmāt."
-
-**Structure**: Built from two Jins Rāst tetrachords, one on the tonic and one on the fifth.
-
-**Why use this**: Most fundamental maqām, demonstrates all essential features of the API.
-
-**Example**:
-
-```
-GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
-```
-
-***
-
-### `maqam_bayyat` - maqām bayyāt
-
-**Description**: Also a principle and archetypal Arabic maqām, that is used widely in popular and rural musics across the Arabic speaking region and beyond. It is the base maqām for many variations in Arabic repertoire and beyond. Includes the zalzalian interval segāh and awj in its ascending form.
-
-**Character**: Earthy, emotional, introspective. Very common in improvisation.
-
-**Structure**: Built from Jins Bayyātī on the tonic.
-
-**Example**:
-
-```
-GET /api/maqamat/maqam_bayyat?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
-```
-
-***
-
-### `maqam_hijaz` - maqām ḥijāz
-
-**Description**: A principle Arabic maqām, known primarily for its use in the adhān, the call to prayer. Includes the zalzalian interval awj in its ascending form.
-
-**Character**: Mystical, tense, spiritual. Immediately recognizable.
-
-**Usage**: Extremely common in religious contexts and classical compositions.
-
-**Example**:
-
-```
-GET /api/maqamat/maqam_hijaz?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
-```
-
-***
-
-**Complex and transposed maqāmāt:**
-
-### `maqam_rahat_al-arwah` - rāḥat al-arwāḥ
-
-**Description**: A transposition of maqām huzām given its own name because of its character. Its darajat al-istiqrār (tonic) is the zalzalian interval ʿirāq.
-
-**Good for testing**: Transposition logic, non-standard tonics, zalzalian tonics.
-
-**Example**:
-
-```
-GET /api/maqamat/maqam_rahat_al-arwah?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
-```
-
-***
-
-### `maqam_bestenegar` - maqām bestenegar
-
-**Description**: Complex and rarely used non-octave repeating maqam. Its darajat al-istiqrār (tonic) is the zalzalian interval segāh.
-
-**Character**: Ottoman-era maqām with elaborate melodic patterns.
-
-**Good for testing**: Non-octave-repeating sequences, complex structures, asymmetric melodic paths, zalzalian tonics.
-
-**Example**:
-
-```
-GET /api/maqamat/maqam_bestenegar?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
-```
-
-***
-
-**Maqāmāt without zalzalian intervals:**
-
-### `maqam_kurd` - maqām kurd
-
-**Description**: This maqām came to much prominence in 1960s and 70s Egyptian popular music, and is one of the most used in pop music across the region today. It doesn't include the quintessential so-called Arabic "quarter tone", i.e. pitch classes ʿirāq, nīm zīrgūleh, segāh, nīm ḥijāz, or awj.
-
-**Character**: Minor quality, melancholic but accessible.
-
-**Good for testing**: Tuning systems without zalzalian intervals, modern popular music contexts.
-
-**Example**:
-
-```
-GET /api/maqamat/maqam_kurd?tuningSystem=al-Kindi-(874)&startingNote=ushayran&pitchClassDataType=cents
-```
-
-***
-
-### `maqam_athar-kurd` - maqām āthār kurd
-
-**Description**: A rarely used maqām with a very specific character. It doesn't include the quintessential so-called Arabic "quarter tone", i.e. pitch classes ʿirāq, nīm zīrgūleh, segāh, nīm ḥijāz, or awj.
-
-**Good for testing**: Edge cases, availability checking, rare maqāmāt.
-
-**Example**:
-
-```
-GET /api/maqamat/maqam_athar-kurd?tuningSystem=al-Kindi-(874)&startingNote=ushayran&pitchClassDataType=cents
-```
-
-***
-
-### `maqam_dilkesh-huran` - maqām dilkesh ḥūrān
-
-**Description**: A complex non-octave repeating Ottoman maqām that is rarely used in Arabic music but was a part of early 20th century music theory.
-
-**Good for testing**: Ottoman repertoire, complex non-octave-repeating structures, early 20th century theory.
-
-**Example**:
-
-```
-GET /api/maqamat/maqam_dilkesh-huran?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
-```
-
-***
-
-## Canonical Usage Patterns
-
-### Basic Detail Request
-
-```bash
-curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents"
-```
-
-### With All Optional Parameters
-
-```bash
-curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents&includeArabic=true&includeIntervals=true&includeModulations=true&includeModulations8vb=true&includeSuyur=true"
-```
-
-### Parameter Discovery
-
-```bash
-curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&options=true"
-```
-
-### Comparison Across Tuning Systems
-
-```bash
-curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast/compare?tuningSystems=IbnSina-(1037),al-Farabi-(950g)&startingNote=yegah&pitchClassDataType=cents"
-```
-
-### Transposition
-
-```bash
-curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents&transposeTo=nawa"
-```
-
-***
-
-## Testing Combinations
-
-### Test Basic Coverage
-
-* Tuning: `IbnSina-(1037)` on `yegah`
-* Maqām: `maqam_rast`
-* Jins: `jins_rast`
-* Format: `cents`
-
-### Test Zalzalian Intervals
-
-* Tuning: `al-Farabi-(950g)` on `ushayran`
-* Ajnās: `jins_rast`, `jins_bayyat`, `jins_segah`, `jins_saba`
-
-### Test Non-Zalzalian Systems
-
-* Tuning: `al-Kindi-(874)` on `ushayran`
-* Ajnās: `jins_kurd`, `jins_nahawand`, `jins_nikriz`
-
-### Test Modern Equal Divisions
-
-* Tuning: `Meshshaqa-(1899)` on `yegah`
-* Compare with: `IbnSina-(1037)` to see equal vs. unequal
-
-### Test Complex Structures
-
-* Maqām: `maqam_bestenegar` (non-octave-repeating)
-* Maqām: `maqam_dilkesh-huran` (Ottoman complexity)
-
-### Test Historical Documentation
-
-* Tuning: `CairoCongressTuningCommittee-(1929)` on `rast`
-* Compare with: `al-Sabbagh-(1954)` on `rast`
-
-***
-
-## See Also
-
-* [API Documentation](./index) - Main API overview
-* [Interactive Playground](./playground) - Test these examples interactively
-* [OpenAPI Specification](/docs/openapi.yaml) - Complete parameter documentation
 
 ---
 
@@ -4371,7 +3857,7 @@ By providing rigorously sourced, computationally accessible reference data with 
 
 ## Links
 
-* **Live Application**: <https://diarmaqar.netlify.app/>
+* **Live Application**: <https://arabic-maqam-archive.netlify.app/>
 
 ---
 
@@ -5199,6 +4685,94 @@ Ordered lists of elements:
 ---
 
 ---
+url: /docs/scripts/README.md
+---
+# Documentation Generation Scripts
+
+This folder contains scripts used for generating and maintaining the DiArMaqAr documentation.
+
+## Scripts
+
+### `generate-openapi-json.js`
+
+Converts the OpenAPI YAML specification (`openapi.yaml`) to JSON format and places it in multiple locations:
+
+* `public/docs/openapi.json` - For Next.js to serve directly
+* `docs/public/openapi.json` - For VitePress to copy during build
+* `docs/openapi.json` - Legacy location
+
+Also copies the YAML file to `public/docs/openapi.yaml` and `docs/public/openapi.yaml`.
+
+**Usage:**
+
+```bash
+npm run docs:openapi
+```
+
+### `generate-api-docs.js`
+
+Generates comprehensive API endpoint reference documentation from the OpenAPI specification. Outputs to `docs/api/endpoints-reference.md`.
+
+**Usage:**
+
+```bash
+npm run docs:api
+```
+
+### `post-process-llms-txt.js`
+
+Post-processes the generated `docs/llms.txt` file (created by `vitepress-plugin-llms`) to add:
+
+* Link to `llms-full.txt`
+* Link to root-level `/llms.txt`
+* API instructions section at the top with Representative Examples
+* Replaces any "Canonical Examples" references with "Representative Examples"
+
+**Usage:**
+Automatically runs as part of `npm run docs:build`, or manually:
+
+```bash
+node scripts/docs/post-process-llms-txt.js
+```
+
+### `test-docs-locally.sh`
+
+Bash script for testing API documentation locally without deploying to Netlify. Tests:
+
+* `/docs/openapi.json` endpoint
+* `/api/openapi.json` endpoint
+* `/docs/api/` page
+
+**Usage:**
+
+```bash
+# Make sure Next.js dev server is running first
+npm run dev
+
+# In another terminal
+./docs/scripts/test-docs-locally.sh
+```
+
+## Path References
+
+All scripts use `__dirname` with relative paths to reference project locations:
+
+* To project root: `../..` (up from `scripts/` to `docs/`, then up to root)
+* To files within `docs/`: `..` (up from `scripts/` to `docs/`)
+* Scripts are located in `docs/scripts/` (two levels deep from the root)
+
+## Integration
+
+These scripts are integrated into npm scripts in `package.json`:
+
+* `docs:openapi` - Generates OpenAPI JSON files
+* `docs:api` - Generates API documentation
+* `docs:dev` - Runs both generation scripts then starts VitePress dev server
+* `docs:build` - Runs generation scripts, builds VitePress docs, then post-processes llms.txt
+
+---
+
+---
 url: /docs/library/api/models/Jins/functions/ajnasAreEqual.md
 ---
 [**DiArMaqAr TypeScript Library v0.1.0**](../../../README.md)
@@ -5781,6 +5355,65 @@ The total count of modulations matching the specified type
 ---
 
 ---
+url: /docs/library/api/functions/computeFractionInterval/functions/default.md
+---
+[**DiArMaqAr TypeScript Library v0.1.0**](../../../README.md)
+
+***
+
+[DiArMaqAr TypeScript Library](../../../modules.md) / [functions/computeFractionInterval](../README.md) / default
+
+# Function: default()
+
+> **default**(`firstFraction`, `secondFraction`): `string`
+
+Defined in: [functions/computeFractionInterval.ts:26](https://github.com/Music-Intelligence-Lab/DiArMaqAr/blob/6f1c81e1c50000c844884af75834b700ae00e423/src/functions/computeFractionInterval.ts#L26)
+
+Computes the interval between two fractions and returns the result as a simplified fraction.
+
+This function calculates the ratio between two fractions, which is essential for
+determining musical intervals in just intonation and other tuning systems.
+The result is automatically simplified using the Greatest Common Divisor.
+
+Mathematical formula: (c/d) / (a/b) = (c \* b) / (d \* a)
+
+## Parameters
+
+### firstFraction
+
+`string`
+
+The first fraction in "numerator/denominator" format (e.g., "3/2")
+
+### secondFraction
+
+`string`
+
+The second fraction in "numerator/denominator" format (e.g., "4/3")
+
+## Returns
+
+`string`
+
+The interval as a simplified fraction string
+
+## Examples
+
+```ts
+// Calculate interval from 3/2 to 4/3
+computeFractionInterval("3/2", "4/3")
+// Returns "8/9" (the simplified result of (4*2)/(3*3))
+```
+
+```ts
+// Calculate interval from 5/4 to 6/5
+computeFractionInterval("5/4", "6/5")
+// Returns "24/25"
+```
+
+---
+
+---
 url: /docs/library/api/functions/convertPitchClass/functions/default.md
 ---
 [**DiArMaqAr TypeScript Library v0.1.0**](../../../README.md)
@@ -5857,65 +5490,6 @@ convertPitchClass("102", "fretDivision", 100, 440)
 ---
 
 ---
-url: /docs/library/api/functions/computeFractionInterval/functions/default.md
----
-[**DiArMaqAr TypeScript Library v0.1.0**](../../../README.md)
-
-***
-
-[DiArMaqAr TypeScript Library](../../../modules.md) / [functions/computeFractionInterval](../README.md) / default
-
-# Function: default()
-
-> **default**(`firstFraction`, `secondFraction`): `string`
-
-Defined in: [functions/computeFractionInterval.ts:26](https://github.com/Music-Intelligence-Lab/DiArMaqAr/blob/6f1c81e1c50000c844884af75834b700ae00e423/src/functions/computeFractionInterval.ts#L26)
-
-Computes the interval between two fractions and returns the result as a simplified fraction.
-
-This function calculates the ratio between two fractions, which is essential for
-determining musical intervals in just intonation and other tuning systems.
-The result is automatically simplified using the Greatest Common Divisor.
-
-Mathematical formula: (c/d) / (a/b) = (c \* b) / (d \* a)
-
-## Parameters
-
-### firstFraction
-
-`string`
-
-The first fraction in "numerator/denominator" format (e.g., "3/2")
-
-### secondFraction
-
-`string`
-
-The second fraction in "numerator/denominator" format (e.g., "4/3")
-
-## Returns
-
-`string`
-
-The interval as a simplified fraction string
-
-## Examples
-
-```ts
-// Calculate interval from 3/2 to 4/3
-computeFractionInterval("3/2", "4/3")
-// Returns "8/9" (the simplified result of (4*2)/(3*3))
-```
-
-```ts
-// Calculate interval from 5/4 to 6/5
-computeFractionInterval("5/4", "6/5")
-// Returns "24/25"
-```
-
----
-
----
 url: /docs/library/api/functions/detectPitchClassType/functions/default.md
 ---
 [**DiArMaqAr TypeScript Library v0.1.0**](../../../README.md)
@@ -5983,54 +5557,6 @@ detectPitchClassType(["10000", "9600", "8700", "7000"]) // Returns "stringLength
 ---
 
 ---
-url: /docs/library/api/functions/extendSelectedPitchClasses/functions/default.md
----
-[**DiArMaqAr TypeScript Library v0.1.0**](../../../README.md)
-
-***
-
-[DiArMaqAr TypeScript Library](../../../modules.md) / [functions/extendSelectedPitchClasses](../README.md) / default
-
-# Function: default()
-
-> **default**(`allPitchClasses`, `selectedPitchClasses`): [`default`](../../../models/PitchClass/interfaces/default.md)\[]
-
-Defined in: [functions/extendSelectedPitchClasses.ts:19](https://github.com/Music-Intelligence-Lab/DiArMaqAr/blob/6f1c81e1c50000c844884af75834b700ae00e423/src/functions/extendSelectedPitchClasses.ts#L19)
-
-Extends a selection of pitch classes to include related pitches across octaves.
-
-This function analyzes the selected pitch classes and accurately extends
-the selection to include equivalent pitches in other octaves based on
-frequency relationships. It's used to create comprehensive pitch collections
-when working with scales that span multiple octaves.
-
-The algorithm determines a frequency cutoff point and then includes matching
-pitch class indices from appropriate octaves, maintaining the harmonic
-relationships while extending the available pitch range.
-
-## Parameters
-
-### allPitchClasses
-
-[`default`](../../../models/PitchClass/interfaces/default.md)\[]
-
-Complete array of all available pitch classes
-
-### selectedPitchClasses
-
-[`default`](../../../models/PitchClass/interfaces/default.md)\[]
-
-Currently selected pitch classes to extend
-
-## Returns
-
-[`default`](../../../models/PitchClass/interfaces/default.md)\[]
-
-Extended array of pitch classes including related octave equivalents
-
----
-
----
 url: /docs/library/api/functions/gcd/functions/default.md
 ---
 [**DiArMaqAr TypeScript Library v0.1.0**](../../../README.md)
@@ -6091,6 +5617,91 @@ gcd(17, 13) // Returns 1 (coprime numbers)
 ---
 
 ---
+url: /docs/library/api/functions/getFirstNoteName/functions/default.md
+---
+[**DiArMaqAr TypeScript Library v0.1.0**](../../../README.md)
+
+***
+
+[DiArMaqAr TypeScript Library](../../../modules.md) / [functions/getFirstNoteName](../README.md) / default
+
+# Function: default()
+
+> **default**(`selectedIndices`): `string`
+
+Defined in: [functions/getFirstNoteName.ts:13](https://github.com/Music-Intelligence-Lab/DiArMaqAr/blob/6f1c81e1c50000c844884af75834b700ae00e423/src/functions/getFirstNoteName.ts#L13)
+
+Retrieves the first note name from an array of selected pitch class indices.
+
+This utility function is used in UI state management to determine the
+starting note when pitch classes are selected. It maps the first selected
+index to its corresponding note name from the octave one note names array.
+
+## Parameters
+
+### selectedIndices
+
+`number`\[]
+
+Array of selected pitch class indices
+
+## Returns
+
+`string`
+
+The note name corresponding to the first index, or "none" if empty or invalid
+
+---
+
+---
+url: /docs/library/api/functions/extendSelectedPitchClasses/functions/default.md
+---
+[**DiArMaqAr TypeScript Library v0.1.0**](../../../README.md)
+
+***
+
+[DiArMaqAr TypeScript Library](../../../modules.md) / [functions/extendSelectedPitchClasses](../README.md) / default
+
+# Function: default()
+
+> **default**(`allPitchClasses`, `selectedPitchClasses`): [`default`](../../../models/PitchClass/interfaces/default.md)\[]
+
+Defined in: [functions/extendSelectedPitchClasses.ts:19](https://github.com/Music-Intelligence-Lab/DiArMaqAr/blob/6f1c81e1c50000c844884af75834b700ae00e423/src/functions/extendSelectedPitchClasses.ts#L19)
+
+Extends a selection of pitch classes to include related pitches across octaves.
+
+This function analyzes the selected pitch classes and accurately extends
+the selection to include equivalent pitches in other octaves based on
+frequency relationships. It's used to create comprehensive pitch collections
+when working with scales that span multiple octaves.
+
+The algorithm determines a frequency cutoff point and then includes matching
+pitch class indices from appropriate octaves, maintaining the harmonic
+relationships while extending the available pitch range.
+
+## Parameters
+
+### allPitchClasses
+
+[`default`](../../../models/PitchClass/interfaces/default.md)\[]
+
+Complete array of all available pitch classes
+
+### selectedPitchClasses
+
+[`default`](../../../models/PitchClass/interfaces/default.md)\[]
+
+Currently selected pitch classes to extend
+
+## Returns
+
+[`default`](../../../models/PitchClass/interfaces/default.md)\[]
+
+Extended array of pitch classes including related octave equivalents
+
+---
+
+---
 url: >-
   /docs/library/api/functions/getNoteNamesUsedInTuningSystem/functions/default.md
 ---
@@ -6129,43 +5740,6 @@ Array of pitch class indices to map to note names (default: \[])
 `string`\[]
 
 Array of note names corresponding to the indices across all octaves
-
----
-
----
-url: /docs/library/api/functions/getFirstNoteName/functions/default.md
----
-[**DiArMaqAr TypeScript Library v0.1.0**](../../../README.md)
-
-***
-
-[DiArMaqAr TypeScript Library](../../../modules.md) / [functions/getFirstNoteName](../README.md) / default
-
-# Function: default()
-
-> **default**(`selectedIndices`): `string`
-
-Defined in: [functions/getFirstNoteName.ts:13](https://github.com/Music-Intelligence-Lab/DiArMaqAr/blob/6f1c81e1c50000c844884af75834b700ae00e423/src/functions/getFirstNoteName.ts#L13)
-
-Retrieves the first note name from an array of selected pitch class indices.
-
-This utility function is used in UI state management to determine the
-starting note when pitch classes are selected. It maps the first selected
-index to its corresponding note name from the octave one note names array.
-
-## Parameters
-
-### selectedIndices
-
-`number`\[]
-
-Array of selected pitch class indices
-
-## Returns
-
-`string`
-
-The note name corresponding to the first index, or "none" if empty or invalid
 
 ---
 
@@ -6235,103 +5809,6 @@ properties needed for maqam analysis.
 The function handles various pitch class formats (ratios, frequencies, cents) and
 automatically detects the input type. It also manages reference frequencies and
 octave relationships to create a comprehensive pitch space.
-
----
-
----
-url: /docs/library/api/functions/modulate/functions/default.md
----
-[**DiArMaqAr TypeScript Library v0.1.0**](../../../README.md)
-
-***
-
-[DiArMaqAr TypeScript Library](../../../modules.md) / [functions/modulate](../README.md) / default
-
-# Function: default()
-
-> **default**(`allPitchClasses`, `allAjnas`, `allMaqamat`, `sourceMaqamTransposition`, `ajnasModulationsMode`, `centsTolerance`): [`AjnasModulations`](../../../models/Jins/interfaces/AjnasModulations.md) | [`MaqamatModulations`](../../../models/Maqam/interfaces/MaqamatModulations.md)
-
-Defined in: [functions/modulate.ts:94](https://github.com/Music-Intelligence-Lab/DiArMaqAr/blob/6f1c81e1c50000c844884af75834b700ae00e423/src/functions/modulate.ts#L94)
-
-Modulation Analysis Using Al-Shawwā's Technique
-
-This function implements the modulation algorithm based on Sāmī Al-Shawwā's 1946 work
-"Al-Qawāʿid al-Fannīya fī al-Mūsīqa al-Sharqīya wa al-Gharbīya" (The Artistic Principles
-of Eastern and Western Music). Al-Shawwā, a Cairo-born Aleppine violinist, provided unique
-guidelines for maqām modulation based on scale degree relationships within the
-Arab-Ottoman-Persian note naming framework.
-
-Modulation Rules Implemented:
-
-1. Tonic Correspondence: Modulation between maqāmāt sharing the same tonic (qarār),
-   provided the tonic is classified as an "original" note (aṣlīya)
-
-2. Third-Degree Modulation: Transition where the third degree of the source maqām
-   becomes the tonic of the target, valid only when the third degree is classified
-   as an "original" note
-
-3. Alternative Third-Degree Modulation: If the standard third degree is invalid,
-   Al-Shawwā permits using a niṣf (half-note)/two-parts (2p) scale degree immediately
-   below it, provided that:
-   a) It is the sixth pitch class from the fundamental (qarār) scale degree of the
-   source maqām according to the 24-tone list
-   b) It maintains a distance of two pitch classes from the preceding scale degree
-   within the source maqām
-
-4. Fourth and Fifth-Degree Modulation: Transitions using the fourth or fifth scale
-   degrees of the source maqām as the tonic of the target
-
-5. Sixth-Degree Modulation (No Third): When both the third degree and its alternative
-   are invalid, modulation may occur through the sixth scale degree, provided it is
-   the sixteenth or seventeenth pitch class from the tonic of the source maqām and
-   remains an "original" scale degree
-
-6. Sixth-Degree Modulation (Between Naturals): The sixth scale degree may also be
-   used when it lies between two "natural" scale degrees within the source maqām
-
-## Parameters
-
-### allPitchClasses
-
-[`default`](../../../models/PitchClass/interfaces/default.md)\[]
-
-Complete array of available pitch classes in the tuning system
-
-### allAjnas
-
-[`default`](../../../models/Jins/classes/default.md)\[]
-
-Array of all available ajnas (jins data objects) for modulation analysis
-
-### allMaqamat
-
-[`default`](../../../models/Maqam/classes/default.md)\[]
-
-Array of all available maqamat (maqam data objects) for modulation analysis
-
-### sourceMaqamTransposition
-
-[`Maqam`](../../../models/Maqam/interfaces/Maqam.md)
-
-The source maqam transposition to analyze modulations from
-
-### ajnasModulationsMode
-
-`boolean`
-
-If true, analyze ajnas modulations; if false, analyze maqamat modulations
-
-### centsTolerance
-
-`number` = `5`
-
-Tolerance in cents for pitch matching (default: 5)
-
-## Returns
-
-[`AjnasModulations`](../../../models/Jins/interfaces/AjnasModulations.md) | [`MaqamatModulations`](../../../models/Maqam/interfaces/MaqamatModulations.md)
-
-Object containing all possible modulations organized by scale degree according to Al-Shawwā's rules
 
 ---
 
@@ -6441,6 +5918,103 @@ const shifted = shiftPitchClassByOctave(allPitches, originalPitch, 1);
 // Shift a pitch class down two octaves  
 const shifted = shiftPitchClassByOctave(allPitches, originalPitch, -2);
 ```
+
+---
+
+---
+url: /docs/library/api/functions/modulate/functions/default.md
+---
+[**DiArMaqAr TypeScript Library v0.1.0**](../../../README.md)
+
+***
+
+[DiArMaqAr TypeScript Library](../../../modules.md) / [functions/modulate](../README.md) / default
+
+# Function: default()
+
+> **default**(`allPitchClasses`, `allAjnas`, `allMaqamat`, `sourceMaqamTransposition`, `ajnasModulationsMode`, `centsTolerance`): [`AjnasModulations`](../../../models/Jins/interfaces/AjnasModulations.md) | [`MaqamatModulations`](../../../models/Maqam/interfaces/MaqamatModulations.md)
+
+Defined in: [functions/modulate.ts:94](https://github.com/Music-Intelligence-Lab/DiArMaqAr/blob/6f1c81e1c50000c844884af75834b700ae00e423/src/functions/modulate.ts#L94)
+
+Modulation Analysis Using Al-Shawwā's Technique
+
+This function implements the modulation algorithm based on Sāmī Al-Shawwā's 1946 work
+"Al-Qawāʿid al-Fannīya fī al-Mūsīqa al-Sharqīya wa al-Gharbīya" (The Artistic Principles
+of Eastern and Western Music). Al-Shawwā, a Cairo-born Aleppine violinist, provided unique
+guidelines for maqām modulation based on scale degree relationships within the
+Arab-Ottoman-Persian note naming framework.
+
+Modulation Rules Implemented:
+
+1. Tonic Correspondence: Modulation between maqāmāt sharing the same tonic (qarār),
+   provided the tonic is classified as an "original" note (aṣlīya)
+
+2. Third-Degree Modulation: Transition where the third degree of the source maqām
+   becomes the tonic of the target, valid only when the third degree is classified
+   as an "original" note
+
+3. Alternative Third-Degree Modulation: If the standard third degree is invalid,
+   Al-Shawwā permits using a niṣf (half-note)/two-parts (2p) scale degree immediately
+   below it, provided that:
+   a) It is the sixth pitch class from the fundamental (qarār) scale degree of the
+   source maqām according to the 24-tone list
+   b) It maintains a distance of two pitch classes from the preceding scale degree
+   within the source maqām
+
+4. Fourth and Fifth-Degree Modulation: Transitions using the fourth or fifth scale
+   degrees of the source maqām as the tonic of the target
+
+5. Sixth-Degree Modulation (No Third): When both the third degree and its alternative
+   are invalid, modulation may occur through the sixth scale degree, provided it is
+   the sixteenth or seventeenth pitch class from the tonic of the source maqām and
+   remains an "original" scale degree
+
+6. Sixth-Degree Modulation (Between Naturals): The sixth scale degree may also be
+   used when it lies between two "natural" scale degrees within the source maqām
+
+## Parameters
+
+### allPitchClasses
+
+[`default`](../../../models/PitchClass/interfaces/default.md)\[]
+
+Complete array of available pitch classes in the tuning system
+
+### allAjnas
+
+[`default`](../../../models/Jins/classes/default.md)\[]
+
+Array of all available ajnas (jins data objects) for modulation analysis
+
+### allMaqamat
+
+[`default`](../../../models/Maqam/classes/default.md)\[]
+
+Array of all available maqamat (maqam data objects) for modulation analysis
+
+### sourceMaqamTransposition
+
+[`Maqam`](../../../models/Maqam/interfaces/Maqam.md)
+
+The source maqam transposition to analyze modulations from
+
+### ajnasModulationsMode
+
+`boolean`
+
+If true, analyze ajnas modulations; if false, analyze maqamat modulations
+
+### centsTolerance
+
+`number` = `5`
+
+Tolerance in cents for pitch matching (default: 5)
+
+## Returns
+
+[`AjnasModulations`](../../../models/Jins/interfaces/AjnasModulations.md) | [`MaqamatModulations`](../../../models/Maqam/interfaces/MaqamatModulations.md)
+
+Object containing all possible modulations organized by scale degree according to Al-Shawwā's rules
 
 ---
 
@@ -12606,6 +12180,526 @@ This returns:
 * [API Reference](/api/) - Complete API documentation
 * [TypeScript Library](/library/) - Programmatic usage guide
 * [Interactive API Playground](http://localhost:3000/api-playground) - Test endpoints in your browser
+
+---
+
+---
+url: /docs/api/representative-examples.md
+description: 'Recommended tuning systems, maqāmāt, and ajnās for testing and documentation'
+---
+
+# Representative Examples
+
+These examples have been carefully selected to demonstrate the full capabilities of the API while respecting the cultural and historical significance of Arabic maqām theory.
+
+**Quick test URL:**
+
+```bash
+curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents"
+```
+
+***
+
+## Representative Tuning Systems
+
+### al-Kindī (874) - `al-Kindi-(874)`
+
+**Title**: 12-Tone
+**Starting Note**: ʿushayrān - `ushayran`
+
+**Description**: One of the oldest tuning systems documented in Arabic music theory. It is a 12-tone chromatic tuning system based on Greek theory and doesn't include the quintessential so-called Arabic "quarter tone" pitch classes ʿirāq, nīm zīrgūleh, segāh, nīm ḥijāz, or awj, also referred to as zalzalian intervals. It can only render ajnās and maqāmāt that don't use those notes such as kurd, nahāwand, nikrīz and ʿajam ʿushayrān.
+
+**Historical Context**: Al-Kindī's tuning represents the earliest systematic documentation of Arabic music theory, drawing on Hellenistic sources while adapting them to Arabic musical practice.
+
+**Example**:
+
+```
+GET /api/tuning-systems/al-Kindi-(874)/ushayran/pitch-classes?pitchClassDataType=cents
+```
+
+**Good for testing**:
+
+* Ajnās without zalzalian intervals: `jins_kurd`, `jins_nahawand`, `jins_nikriz`
+* Maqāmāt without zalzalian intervals: `maqam_kurd`, `maqam_nahawand`
+
+***
+
+### al-Fārābī (950g) - `al-Farabi-(950g)`
+
+**Title**: First Oud Tuning (Full First Octave) 27-Tone
+**Starting Note**: ʿushayrān - `ushayran`
+
+**Description**: The first documentation of the wuṣtā zalzal interval, the so-called Arabic "quarter tone" using a frequency ratio of 27/22. It is a comprehensive 27-tone tuning system that allows for many ajnās and maqāmāt and their transpositions, therefore also modulations.
+
+**Historical Context**: Al-Fārābī's "Great Book of Music" (Kitāb al-Mūsīqī al-Kabīr) represents a milestone in Arabic music theory, introducing the zalzalian intervals that are characteristic of Arabic maqām practice.
+
+**Example**:
+
+```
+GET /api/tuning-systems/al-Farabi-(950g)/ushayran/pitch-classes?pitchClassDataType=cents
+```
+
+**Good for testing**:
+
+* Comprehensive ajnās and maqāmāt coverage
+* Zalzalian intervals
+* Historical comparison studies
+
+***
+
+### Ibn Sīnā (1037) ⭐ (Most Common) - `IbnSina-(1037)`
+
+**Title**: 7-Fret Oud 17-Tone
+**Starting Note**: yegāh - `yegah`
+
+**Description**: An excellent concise and precise 17-tone tuning that allows for a wide range of ajnās and maqāmāt and their transpositions. Includes the wuṣtā zalzal interval with the frequency ratio of 39/32.
+
+**Historical Context**: Ibn Sīnā (Avicenna) refined earlier theories into an elegant and practical system that balances theoretical precision with musical usability.
+
+**Why use this as primary example**:
+
+* Comprehensive coverage of most maqāmāt and ajnās
+* Historically significant and well-documented
+* Balanced between complexity and usability
+* Includes zalzalian intervals
+
+**Example**:
+
+```
+GET /api/tuning-systems/IbnSina-(1037)/yegah/pitch-classes?pitchClassDataType=cents
+```
+
+**Good for testing**:
+
+* All primary maqāmāt: `maqam_rast`, `maqam_bayyat`, `maqam_hijaz`
+* All primary ajnās: `jins_rast`, `jins_bayyat`, `jins_hijaz`
+* Transpositions and modulations
+
+***
+
+### Meshshāqa (1899) - `Meshshaqa-(1899)`
+
+**Title**: Arabic Octave According to the Modernists
+**Starting Note**: yegāh - `yegah`
+
+**Description**: The first documented tuning system that is based on literal quarter tones, 24 equal divisions of the octave. Defined by Mishāqah as the "Arabic Octave According to the Modernists", meaning that it was already known before him but undocumented - though no one knows if it was really used. Because it is 24 equal divisions of the octave it allows for many ajnās and maqāmāt and their transpositions, therefore also modulations. Even though it allows the same number of maqāmāt as Ibn Sīnā's tuning system, it allows for more transpositions.
+
+**Historical Context**: Meshshāqa's tuning represents a modernization of Arabic music theory, introducing equal divisions while maintaining the essential character of Arabic maqāmāt.
+
+**Example**:
+
+```
+GET /api/tuning-systems/Meshshaqa-(1899)/yegah/pitch-classes?pitchClassDataType=cents
+```
+
+**Good for testing**:
+
+* Modern equal-division approach
+* Comparison with historical unequal systems
+* All maqāmāt and ajnās
+* Extended transposition capabilities
+
+***
+
+### Cairo Congress Tuning Committee (1929) - `CairoCongressTuningCommittee-(1929)`
+
+**Title**: Egyptian Tuning
+**Starting Note**: rāst - `rast`
+
+**Description**: The tuning system researched, measured and prepared in preparation for the 1932 Cairo Congress of Arabic Music. It is referred to as an "Egyptian Tuning" and is an unequal 24-tone system. Also comprehensive in its maqām availability and was rendered based on the measurement and expertise of Egyptian musicians at the time.
+
+**Historical Context**: The 1932 Cairo Congress brought together musicians, theorists, and scholars to document and standardize Arabic music theory. This tuning reflects Egyptian musical practice.
+
+**Example**:
+
+```
+GET /api/tuning-systems/CairoCongressTuningCommittee-(1929)/rast/pitch-classes?pitchClassDataType=cents
+```
+
+**Good for testing**:
+
+* Egyptian performance practice
+* 20th-century documentation standards
+* Unequal divisions vs. equal divisions
+
+***
+
+### al-Ṣabbāgh (1954) - `al-Sabbagh-(1954)`
+
+**Title**: Contemporary Arabic Tuning 24-Tone
+**Starting Note**: rāst - `rast`
+
+**Description**: The only Arabic tuning system that exclusively uses the "comma" (syntonic comma of 81/80) as a basis for its construction. It is an unequal 24-tone system and allows for many maqāmāt and ajnās but with limited transpositions.
+
+**Historical Context**: Ṭūbiyā al-Ṣabbāgh's system represents a unique theoretical approach focusing on pure acoustic ratios.
+
+**Example**:
+
+```
+GET /api/tuning-systems/al-Sabbagh-(1954)/rast/pitch-classes?pitchClassDataType=cents
+```
+
+**Good for testing**:
+
+* Acoustic purity approaches
+* Limited transposition scenarios
+* Theoretical vs. practical systems
+
+***
+
+## Representative Ajnās
+
+**Ajnās with zalzalian intervals** (ʿirāq, nīm zīrgūleh, segāh, nīm ḥijāz, or awj):
+
+### jins rāst ⭐ (Most Common) - `jins_rast`
+
+**Description**: Includes the zalzalian interval segāh. The most fundamental jins in Arabic music.
+
+**Structure**: Ascending tetrachord with a neutral third (segāh) above the tonic.
+
+**Example**:
+
+```
+GET /api/ajnas/jins_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
+```
+
+***
+
+### jins bayyāt - `jins_bayyat`
+
+**Description**: Includes the zalzalian interval segāh. Forms the basis of Maqām Bayyātī.
+
+**Character**: More melancholic than Rāst, with a distinctive expressive quality.
+
+**Example**:
+
+```
+GET /api/ajnas/jins_bayyat?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
+```
+
+***
+
+### jins segāh - `jins_segah`
+
+**Description**: Its tonic is the zalzalian interval segāh. Begins on a neutral note.
+
+**Usage**: Common in modulations and as an upper jins.
+
+**Example**:
+
+```
+GET /api/ajnas/jins_segah?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
+```
+
+***
+
+### jins ṣabā - `jins_saba`
+
+**Description**: Includes the zalzalian interval segāh. Known for its distinctive augmented second.
+
+**Character**: Intense and expressive, often used for emotional climaxes.
+
+**Example**:
+
+```
+GET /api/ajnas/jins_saba?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
+```
+
+***
+
+**Ajnās without zalzalian intervals:**
+
+### jins nikrīz - `jins_nikriz`
+
+**Description**: Does not include a zalzalian interval. Built from tones and semitones only.
+
+**Good for testing**: Tuning systems without zalzalian intervals (like al-Kindī).
+
+**Example**:
+
+```
+GET /api/ajnas/jins_nikriz?tuningSystem=al-Kindi-(874)&startingNote=ushayran&pitchClassDataType=cents
+```
+
+***
+
+### jins kurd - `jins_kurd`
+
+**Description**: Does not include a zalzalian interval. Similar to Western Phrygian mode.
+
+**Character**: Minor quality with a lowered second degree.
+
+**Example**:
+
+```
+GET /api/ajnas/jins_kurd?tuningSystem=al-Kindi-(874)&startingNote=ushayran&pitchClassDataType=cents
+```
+
+***
+
+### jins kurd (binsir) - `jins_kurd_(binsir)`
+
+**Description**: The same as jins kurd but starting on a different tonic, giving it slightly different intervals. Interesting for comparison and understanding why the maqām based on it (maqām ḥijāz kār kurd) is supposedly a transposition of maqām kurd with the same intervals, but in fact is not. Does not include a zalzalian interval.
+
+**Good for testing**: Transposition analysis, interval pattern comparison.
+
+**Example**:
+
+```
+GET /api/ajnas/jins_kurd_(binsir)?tuningSystem=al-Kindi-(874)&startingNote=ushayran&pitchClassDataType=cents
+```
+
+***
+
+### jins nahāwand - `jins_nahawand`
+
+**Description**: Does not include a zalzalian interval. Similar to Western natural minor.
+
+**Usage**: Very common in modern Arabic music, especially Egyptian popular music.
+
+**Example**:
+
+```
+GET /api/ajnas/jins_nahawand?tuningSystem=al-Kindi-(874)&startingNote=ushayran&pitchClassDataType=cents
+```
+
+***
+
+### jins ḥijāz - `jins_hijaz`
+
+**Description**: Does not include a zalzalian interval. Known for its distinctive augmented second.
+
+**Character**: Instantly recognizable "Middle Eastern" sound, commonly used in adhān (call to prayer).
+
+**Example**:
+
+```
+GET /api/ajnas/jins_hijaz?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
+```
+
+***
+
+### jins ḥijāz (binsir) - `jins_hijaz_(binsir)`
+
+**Description**: The same as jins ḥijāz but starting on a different tonic, giving it slightly different intervals. Interesting for comparison. Does not include a zalzalian interval.
+
+**Good for testing**: Interval pattern comparison, transposition analysis.
+
+**Example**:
+
+```
+GET /api/ajnas/jins_hijaz_(binsir)?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
+```
+
+***
+
+## Representative Maqāmāt
+
+**Principle maqāmāt** - fundamental and archetypal:
+
+### maqām rāst ⭐ (Most Common) - `maqam_rast`
+
+**Description**: One of the principle and archetypal Arabic maqāmāt. Prominently used in Egypt across both popular and religious sufi musics. Includes the zalzalian intervals segāh and awj in its ascending form.
+
+**Character**: Majestic, balanced, grounding. Often called the "father of maqāmāt."
+
+**Structure**: Built from two Jins Rāst tetrachords, one on the tonic and one on the fifth.
+
+**Why use this**: Most fundamental maqām, demonstrates all essential features of the API.
+
+**Example**:
+
+```
+GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
+```
+
+***
+
+### maqām bayyāt - `maqam_bayyat`
+
+**Description**: Also a principle and archetypal Arabic maqām, that is used widely in popular and rural musics across the Arabic speaking region and beyond. It is the base maqām for many variations in Arabic repertoire and beyond. Includes the zalzalian interval segāh and awj in its ascending form.
+
+**Character**: Earthy, emotional, introspective. Very common in improvisation.
+
+**Structure**: Built from Jins Bayyātī on the tonic.
+
+**Example**:
+
+```
+GET /api/maqamat/maqam_bayyat?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
+```
+
+***
+
+### maqām ḥijāz - `maqam_hijaz`
+
+**Description**: A principle Arabic maqām, known primarily for its use in the adhān, the call to prayer. Includes the zalzalian interval awj in its ascending form.
+
+**Character**: Mystical, tense, spiritual. Immediately recognizable.
+
+**Usage**: Extremely common in religious contexts and classical compositions.
+
+**Example**:
+
+```
+GET /api/maqamat/maqam_hijaz?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
+```
+
+***
+
+**Complex and transposed maqāmāt:**
+
+### rāḥat al-arwāḥ - `maqam_rahat_al-arwah`
+
+**Description**: A transposition of maqām huzām given its own name because of its character. Its darajat al-istiqrār (tonic) is the zalzalian interval ʿirāq.
+
+**Good for testing**: Transposition logic, non-standard tonics, zalzalian tonics.
+
+**Example**:
+
+```
+GET /api/maqamat/maqam_rahat_al-arwah?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
+```
+
+***
+
+### maqām bestenegar - `maqam_bestenegar`
+
+**Description**: Complex and rarely used non-octave repeating maqam. Its darajat al-istiqrār (tonic) is the zalzalian interval segāh.
+
+**Character**: Ottoman-era maqām with elaborate melodic patterns.
+
+**Good for testing**: Non-octave-repeating sequences, complex structures, asymmetric melodic paths, zalzalian tonics.
+
+**Example**:
+
+```
+GET /api/maqamat/maqam_bestenegar?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
+```
+
+***
+
+**Maqāmāt without zalzalian intervals:**
+
+### maqām kurd - `maqam_kurd`
+
+**Description**: This maqām came to much prominence in 1960s and 70s Egyptian popular music, and is one of the most used in pop music across the region today. It doesn't include the quintessential so-called Arabic "quarter tone", i.e. pitch classes ʿirāq, nīm zīrgūleh, segāh, nīm ḥijāz, or awj.
+
+**Character**: Minor quality, melancholic but accessible.
+
+**Good for testing**: Tuning systems without zalzalian intervals, modern popular music contexts.
+
+**Example**:
+
+```
+GET /api/maqamat/maqam_kurd?tuningSystem=al-Kindi-(874)&startingNote=ushayran&pitchClassDataType=cents
+```
+
+***
+
+### maqām āthār kurd - `maqam_athar-kurd`
+
+**Description**: A rarely used maqām with a very specific character. It doesn't include the quintessential so-called Arabic "quarter tone", i.e. pitch classes ʿirāq, nīm zīrgūleh, segāh, nīm ḥijāz, or awj.
+
+**Good for testing**: Edge cases, availability checking, rare maqāmāt.
+
+**Example**:
+
+```
+GET /api/maqamat/maqam_athar-kurd?tuningSystem=al-Kindi-(874)&startingNote=ushayran&pitchClassDataType=cents
+```
+
+***
+
+### maqām dilkesh ḥūrān - `maqam_dilkesh-huran`
+
+**Description**: A complex non-octave repeating Ottoman maqām that is rarely used in Arabic music but was a part of early 20th century music theory.
+
+**Good for testing**: Ottoman repertoire, complex non-octave-repeating structures, early 20th century theory.
+
+**Example**:
+
+```
+GET /api/maqamat/maqam_dilkesh-huran?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
+```
+
+***
+
+## Representative Usage Patterns
+
+### Basic Detail Request
+
+```bash
+curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents"
+```
+
+### With All Optional Parameters
+
+```bash
+curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents&includeArabic=true&includeIntervals=true&includeModulations=true&includeModulations8vb=true&includeSuyur=true"
+```
+
+### Parameter Discovery
+
+```bash
+curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&options=true"
+```
+
+### Comparison Across Tuning Systems
+
+```bash
+curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast/compare?tuningSystems=IbnSina-(1037),al-Farabi-(950g)&startingNote=yegah&pitchClassDataType=cents"
+```
+
+### Transposition
+
+```bash
+curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents&transposeTo=nawa"
+```
+
+***
+
+## Testing Combinations
+
+### Test Basic Coverage
+
+* Tuning: `IbnSina-(1037)` on `yegah`
+* Maqām: `maqam_rast`
+* Jins: `jins_rast`
+* Format: `cents`
+
+### Test Zalzalian Intervals
+
+* Tuning: `al-Farabi-(950g)` on `ushayran`
+* Ajnās: `jins_rast`, `jins_bayyat`, `jins_segah`, `jins_saba`
+
+### Test Non-Zalzalian Systems
+
+* Tuning: `al-Kindi-(874)` on `ushayran`
+* Ajnās: `jins_kurd`, `jins_nahawand`, `jins_nikriz`
+
+### Test Modern Equal Divisions
+
+* Tuning: `Meshshaqa-(1899)` on `yegah`
+* Compare with: `IbnSina-(1037)` to see equal vs. unequal
+
+### Test Complex Structures
+
+* Maqām: `maqam_bestenegar` (non-octave-repeating)
+* Maqām: `maqam_dilkesh-huran` (Ottoman complexity)
+
+### Test Historical Documentation
+
+* Tuning: `CairoCongressTuningCommittee-(1929)` on `rast`
+* Compare with: `al-Sabbagh-(1954)` on `rast`
+
+***
+
+## See Also
+
+* [API Documentation](./index) - Main API overview
+* [Interactive Playground](./playground) - Test these examples interactively
+* [OpenAPI Specification](/docs/openapi.yaml) - Complete parameter documentation
 
 ---
 
