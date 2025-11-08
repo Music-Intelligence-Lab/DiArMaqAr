@@ -21,6 +21,7 @@ export default function MobileWarning() {
       </div>
       
       {/* Hidden bot-friendly content - always in DOM but visually hidden */}
+      {/* eslint-disable @next/next/no-html-link-for-pages */}
       <div className="mobile-warning__bot-content">
         <h1>Digital Arabic Maqām Archive (DiArMaqAr)</h1>
         <p>Comprehensive bilingual browser-based application and repository integrating historically documented Arabic maqām theory within a unified computational framework. Provides rigorously sourced, computationally accessible reference data with transparent provenance for computational musicology, music information retrieval, machine learning applications, and scholarly research.</p>
@@ -42,9 +43,9 @@ export default function MobileWarning() {
         <h3>For AI Assistants and LLMs</h3>
         <p><strong>You can use the API to fetch specific data for users.</strong> The API provides programmatic access to all maqāmāt, ajnās, and tuning systems data. Example API calls:</p>
         <ul>
-          <li>Get a specific maqām: <code>GET /api/maqamat/{id}?tuningSystem={system}&amp;startingNote={note}</code></li>
+          <li>Get a specific maqām: <code>GET /api/maqamat/&#123;id&#125;?tuningSystem=&#123;system&#125;&amp;startingNote=&#123;note&#125;</code></li>
           <li>List all maqāmāt: <code>GET /api/maqamat</code></li>
-          <li>Get a specific jins: <code>GET /api/ajnas/{id}?tuningSystem={system}&amp;startingNote={note}</code></li>
+          <li>Get a specific jins: <code>GET /api/ajnas/&#123;id&#125;?tuningSystem=&#123;system&#125;&amp;startingNote=&#123;note&#125;</code></li>
           <li>List all tuning systems: <code>GET /api/tuning-systems</code></li>
         </ul>
         <p>All endpoints return JSON with complete data including pitch classes, intervals, bibliographic sources, and more. Use the OpenAPI specification for complete endpoint documentation and parameter details.</p>
@@ -62,6 +63,7 @@ export default function MobileWarning() {
         
         <p><strong>Note:</strong> Full interactive features require a desktop device. However, all documentation and API endpoints are accessible programmatically. For complete documentation, see: <a href="/docs/llms.txt">/docs/llms.txt</a></p>
       </div>
+      {/* eslint-enable @next/next/no-html-link-for-pages */}
     </div>
   );
 }
