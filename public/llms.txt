@@ -1,0 +1,36 @@
+# Digital Arabic Maqām Archive (DiArMaqAr)
+# LLM-Friendly Documentation Index
+
+## Documentation
+- Main Documentation: /docs/
+- LLM-Optimized Index: /docs/llms.txt
+- Full LLM Documentation: /docs/llms-full.txt
+- API Documentation: /docs/api/
+- OpenAPI Specification: /docs/openapi.json
+
+## API Access
+- Base URL: https://diarmaqar.netlify.app/api
+- OpenAPI Spec: /docs/openapi.json
+- Interactive Playground: /docs/api/playground
+
+### For AI Assistants and LLMs
+**You can use the API to fetch specific data for users.** The API provides programmatic access to all maqāmāt, ajnās, and tuning systems data. Example queries:
+
+- Get a specific maqām: GET /api/maqamat/{id}?tuningSystem={system}&startingNote={note}
+- List all maqāmāt: GET /api/maqamat
+- Get a specific jins: GET /api/ajnas/{id}?tuningSystem={system}&startingNote={note}
+- List all tuning systems: GET /api/tuning-systems
+
+All endpoints return JSON with complete data including pitch classes, intervals, bibliographic sources, and more. Use the OpenAPI specification at /docs/openapi.json for complete endpoint documentation and parameter details.
+
+## Quick Links
+- Interactive Application: /app
+- Documentation Home: /docs/
+- API Reference: /docs/api/
+- TypeScript Library Docs: /docs/library/
+
+## About
+Digital Arabic Maqām Archive (DiArMaqAr) is an open-source platform for Arabic maqām theory providing REST API and TypeScript library. Includes historically documented maqāmāt, ajnās, and tuning systems spanning from al-Kindī (874 CE) to contemporary approaches. All data includes comprehensive bibliographic attribution following decolonial computing principles.
+
+For complete documentation, see: /docs/llms.txt
+

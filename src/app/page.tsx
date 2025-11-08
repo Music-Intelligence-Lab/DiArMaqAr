@@ -144,6 +144,79 @@ export default function LandingPage() {
         </div>
       </section>
 
+      <section className="developers-llms">
+        <h2>{language === "ar" ? "للمطورين والذكاء الاصطناعي" : "For Developers & LLMs"}</h2>
+        {language === "ar" ? (
+          <>
+            <p>
+              هذا الموقع صديق للذكاء الاصطناعي ويوفر وصولاً برمجياً شاملاً لبيانات المقامات العربية. جميع الوثائق وواجهات برمجة التطبيقات متاحة للوصول البرمجي.
+            </p>
+            <p>
+              <strong>للمساعدات الذكية:</strong> يمكنك استخدام واجهة برمجة التطبيقات لجلب بيانات محددة للمستخدمين. مثال: <code>GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah</code> يعيد بيانات مقام مفصلة. راجع مواصفات OpenAPI لجميع نقاط النهاية والمعاملات المتاحة.
+            </p>
+            <div className="developers-links">
+              <div className="developer-link-card">
+                <h3>الوثائق</h3>
+                <ul>
+                  <li><Link href="/docs/">الوثائق الرئيسية</Link></li>
+                  <li><Link href="/docs/llms.txt">فهرس الوثائق المحسّن للذكاء الاصطناعي</Link></li>
+                  <li><Link href="/docs/api/">وثائق واجهة برمجة التطبيقات</Link></li>
+                </ul>
+              </div>
+              <div className="developer-link-card">
+                <h3>واجهة برمجة التطبيقات</h3>
+                <ul>
+                  <li><Link href="/docs/openapi.json">مواصفات OpenAPI</Link></li>
+                  <li><a href="https://diarmaqar.netlify.app/api">عنوان URL الأساسي: /api</a></li>
+                  <li><Link href="/docs/api/playground">ملعب تفاعلي</Link></li>
+                </ul>
+              </div>
+              <div className="developer-link-card">
+                <h3>مكتبة TypeScript</h3>
+                <ul>
+                  <li><Link href="/docs/library/">وثائق المكتبة</Link></li>
+                  <li><a href="https://www.npmjs.com/package/arabic-maqam-core">حزمة NPM</a></li>
+                </ul>
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            <p>
+              This site is LLM-friendly and provides comprehensive programmatic access to Arabic maqām data. All documentation and APIs are available for programmatic access.
+            </p>
+            <p>
+              <strong>For AI Assistants:</strong> You can use the API to fetch specific data for users. Example: <code>GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah</code> returns detailed maqām data. See the OpenAPI specification for all available endpoints and parameters.
+            </p>
+            <div className="developers-links">
+              <div className="developer-link-card">
+                <h3>Documentation</h3>
+                <ul>
+                  <li><Link href="/docs/">Main Documentation</Link></li>
+                  <li><Link href="/docs/llms.txt">LLM-Optimized Documentation Index</Link></li>
+                  <li><Link href="/docs/api/">API Documentation</Link></li>
+                </ul>
+              </div>
+              <div className="developer-link-card">
+                <h3>API Access</h3>
+                <ul>
+                  <li><Link href="/docs/openapi.json">OpenAPI Specification</Link></li>
+                  <li><a href="https://diarmaqar.netlify.app/api">Base URL: /api</a></li>
+                  <li><Link href="/docs/api/playground">Interactive Playground</Link></li>
+                </ul>
+              </div>
+              <div className="developer-link-card">
+                <h3>TypeScript Library</h3>
+                <ul>
+                  <li><Link href="/docs/library/">Library Documentation</Link></li>
+                  <li><a href="https://www.npmjs.com/package/arabic-maqam-core">NPM Package</a></li>
+                </ul>
+              </div>
+            </div>
+          </>
+        )}
+      </section>
+
       <section className="credits">
         <h2>{language === "ar" ? "القائمون على المشروع" : "Project Team"}</h2>
         {language === "ar" ? (

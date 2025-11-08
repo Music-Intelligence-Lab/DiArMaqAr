@@ -113,4 +113,4 @@ const modulations = modulate(maqam, allMaqamat, tuningSystem)
 
 * [Source Code](https://github.com/Music-Intelligence-Lab/DiArMaqAr) - View on GitHub
 * [Music Intelligence Lab](https://music-intelligence-lab.org) - Research lab website
-* [Live Application](https://arabic-maqam-archive.netlify.app/) - Interactive web interface
+* [Live Application](https://diarmaqar.netlify.app/) - Interactive web interface

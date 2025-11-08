@@ -81,6 +81,17 @@
     text-align: center;
   }
 
+  // Bot-friendly content - visually hidden but accessible to headless browsers
+  &__bot-content {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    // Ensure it's always in the DOM and accessible to bots
+    // This content is never displayed visually but remains parseable
+  }
+
   // Hide on desktop/laptop screens (1024px and above)
   @media (min-width: 1024px) {
     display: none;
