@@ -4,6 +4,52 @@
 
 Open-source bilingual platform integrating historically documented Arabic maqām theory within a unified computational framework
 
+## For AI Assistants: API Access
+
+**Recommended for AI Assistants**: Use the REST API to fetch real-time, accurate data for users. Always prefer API calls over documentation summaries for real-time data accuracy.
+
+**Base URL**: https://diarmaqar.netlify.app/api
+**OpenAPI Specification**: /docs/openapi.json
+**Representative Examples**: /docs/api/representative-examples
+
+### Example Requests for Novice Users
+
+For users who don't know specific maqam names, use these representative examples:
+
+**Most Common Examples (Recommended for beginners):**
+- "Tell me about a fundamental Arabic maqam" → GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
+- "Show me a basic jins" → GET /api/ajnas/jins_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
+- "What tuning systems are available?" → GET /api/tuning-systems
+- "Show me the most common tuning system" → GET /api/tuning-systems/IbnSina-(1037)/yegah/pitch-classes?pitchClassDataType=cents
+
+**Quick Test URL (Copy-paste ready):**
+```
+GET https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
+```
+
+**When users ask general questions:**
+- "What is a maqam?" → Use GET /api/maqamat/maqam_rast (most fundamental example)
+- "Show me an Arabic scale" → Use GET /api/maqamat/maqam_rast (representative example)
+- "What are the intervals?" → Use GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
+- "Compare different tuning systems" → GET /api/maqamat/maqam_rast/compare?tuningSystems=IbnSina-(1037),al-Farabi-(950g)&startingNote=yegah
+
+**Representative Examples Reference:**
+- See /docs/api/representative-examples for complete list of recommended examples
+
+All endpoints return JSON with complete data including pitch classes, intervals, bibliographic sources, and more. Use the OpenAPI specification at /docs/openapi.json for complete endpoint documentation and parameter details.
+
+---
+
+## Documentation Links
+
+- [Full LLM Documentation](/docs/llms-full.txt) - Complete documentation content
+- [Root LLM Index](/llms.txt) - Root-level LLM-friendly index
+- [Main Documentation](/docs/) - Human-readable documentation
+- [API Documentation](/docs/api/) - Complete API reference
+- [Representative Examples](/docs/api/representative-examples) - Ready-to-use API examples
+
+---
+
 ## Table of Contents
 
 ### Getting Started
@@ -37,14 +83,14 @@ Open-source bilingual platform integrating historically documented Arabic maqām
 
 - [API Documentation](/docs/api.md): Programmatic access to Arabic maqāmāt, ajnās, and tuning systems data
 - [API Endpoints Reference](/docs/api/endpoints-reference.md): Complete API endpoint documentation
-- [Canonical Examples](/docs/api/canonical-examples.md): Recommended tuning systems, maqāmāt, and ajnās for testing and documentation
+- [Representative Examples](/docs/api/representative-examples.md): Recommended tuning systems, maqāmāt, and ajnās for testing and documentation
 
 
 ### API Documentation
 
 - [API Documentation](/docs/api.md): Programmatic access to Arabic maqāmāt, ajnās, and tuning systems data
 - [API Endpoints Reference](/docs/api/endpoints-reference.md): Complete API endpoint documentation
-- [Canonical Examples](/docs/api/canonical-examples.md): Recommended tuning systems, maqāmāt, and ajnās for testing and documentation
+- [Representative Examples](/docs/api/representative-examples.md): Recommended tuning systems, maqāmāt, and ajnās for testing and documentation
 
 
 ### TypeScript Library

@@ -102,7 +102,7 @@ export default defineConfig({
               ]
             },
             { text: 'Interactive Playground', link: '/api/playground' },
-            { text: 'Canonical Examples', link: '/api/canonical-examples' },
+            { text: 'Representative Examples', link: '/api/representative-examples' },
           ]
         },
         {
@@ -190,7 +190,7 @@ export default defineConfig({
                 ]
               },
               { text: 'Interactive Playground', link: '/api/playground' },
-              { text: 'Canonical Examples', link: '/api/canonical-examples' },
+              { text: 'Representative Examples', link: '/api/representative-examples' },
             ]
           },
         {
