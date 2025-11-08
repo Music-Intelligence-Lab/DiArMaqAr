@@ -43,5 +43,5 @@ Allow: /docs/llms-full.txt
 # OpenAPI specification
 Allow: /docs/openapi.json
 
-# Sitemap (if you add one in the future)
-# Sitemap: https://diarmaqar.netlify.app/sitemap.xml
+# Sitemap
+Sitemap: https://diarmaqar.netlify.app/sitemap.xml

@@ -11,7 +11,7 @@
 The **Digital Arabic Maqām Archive** (DiArMaqAr) is a Open-source bilingual platform integrating historically documented Arabic maqām theory within a unified computational framework
 
 
-**Live Application**: https://arabic-maqam-archive.netlify.app/
+**Live Application**: https://diarmaqar.netlify.app/
 
 ---
 
@@ -254,7 +254,7 @@ node scripts/batch-export/batch-export.js --list-tuning-systems
 
 - **Repository**: Music-Intelligence-Lab/DiArMaqAr
 - **Branch**: main
-- **Live Site**: https://arabic-maqam-archive.netlify.app/
+- **Live Site**: https://diarmaqar.netlify.app/
 
 ---
 

@@ -453,7 +453,7 @@ module.exports = { /* functions */ };
 NEXT_PUBLIC_API_URL=http://localhost:3000/api
 
 # Production
-NEXT_PUBLIC_API_URL=https://arabic-maqam-archive.netlify.app/api
+NEXT_PUBLIC_API_URL=https://diarmaqar.netlify.app/api
 ```
 
 **Create `.env.local` for local overrides** (gitignored automatically):
