@@ -182,6 +182,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
+        {/* eslint-disable @next/next/no-html-link-for-pages */}
         <noscript>
           <div style={{ position: "absolute", left: "-9999px", width: "1px", height: "1px", overflow: "hidden" }}>
             <h1>Digital Arabic Maqām Archive (DiArMaqAr)</h1>
@@ -201,9 +202,11 @@ export default function RootLayout({
             <p>For complete documentation and interactive features, please enable JavaScript or access from a desktop device.</p>
           </div>
         </noscript>
+        {/* eslint-enable @next/next/no-html-link-for-pages */}
       </head>
       <body className={`${readexPro.variable}`}>
         {/* Server-rendered bot-friendly content - always in HTML for headless browsers */}
+        {/* eslint-disable @next/next/no-html-link-for-pages */}
         <div style={{ position: "absolute", left: "-9999px", width: "1px", height: "1px", overflow: "hidden", visibility: "hidden" }} aria-hidden="true">
           <h1>Digital Arabic Maqām Archive (DiArMaqAr)</h1>
           <p>Comprehensive bilingual browser-based application and repository integrating historically documented Arabic maqām theory within a unified computational framework. Provides rigorously sourced, computationally accessible reference data with transparent provenance for computational musicology, music information retrieval, machine learning applications, and scholarly research.</p>
@@ -225,9 +228,9 @@ export default function RootLayout({
           <h3>For AI Assistants and LLMs</h3>
           <p><strong>You can use the API to fetch specific data for users.</strong> The API provides programmatic access to all maqāmāt, ajnās, and tuning systems data. Example API calls:</p>
           <ul>
-            <li>Get a specific maqām: <code>GET /api/maqamat/{id}?tuningSystem={system}&amp;startingNote={note}</code></li>
+            <li>Get a specific maqām: <code>GET /api/maqamat/&#123;id&#125;?tuningSystem=&#123;system&#125;&amp;startingNote=&#123;note&#125;</code></li>
             <li>List all maqāmāt: <code>GET /api/maqamat</code></li>
-            <li>Get a specific jins: <code>GET /api/ajnas/{id}?tuningSystem={system}&amp;startingNote={note}</code></li>
+            <li>Get a specific jins: <code>GET /api/ajnas/&#123;id&#125;?tuningSystem=&#123;system&#125;&amp;startingNote=&#123;note&#125;</code></li>
             <li>List all tuning systems: <code>GET /api/tuning-systems</code></li>
           </ul>
           <p>All endpoints return JSON with complete data including pitch classes, intervals, bibliographic sources, and more. Use the OpenAPI specification for complete endpoint documentation and parameter details.</p>
@@ -245,6 +248,7 @@ export default function RootLayout({
           
           <p><strong>Note:</strong> Full interactive features require a desktop device. However, all documentation and API endpoints are accessible programmatically. For complete documentation, see: <a href="/docs/llms.txt">/docs/llms.txt</a></p>
         </div>
+        {/* eslint-enable @next/next/no-html-link-for-pages */}
         
         <MobileWarning />
         <LanguageContextProvider>
