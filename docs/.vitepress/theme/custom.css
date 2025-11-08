@@ -1,7 +1,52 @@
-/* Increase content width for wider layout */
+/* Import Readex Pro font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Readex+Pro:wght@200;300;400&display=swap');
+
+/* Project color scheme from variables.scss */
 :root {
   --vp-layout-max-width: 100%;
   --vp-content-max-width: 100%;
+  
+  /* Project colors */
+  --project-bg: #222222;
+  --project-primary: #5a2585;
+  --project-secondary: #83105d;
+  --project-tertiary: #a4079c;
+  --project-gold: #d4af37;
+  --project-text: #eeeeee;
+  --project-dark-grey: #222222;
+  --project-medium-grey: #333333;
+  --project-grey: #555555;
+  --project-light-grey: #dddddd;
+  
+  /* VitePress theme colors - matching project colors */
+  --vp-c-bg: var(--project-bg);
+  --vp-c-bg-alt: var(--project-medium-grey);
+  --vp-c-bg-soft: var(--project-medium-grey);
+  --vp-c-bg-mute: var(--project-grey);
+  
+  --vp-c-text: var(--project-text);
+  --vp-c-text-1: var(--project-text);
+  --vp-c-text-2: var(--project-light-grey);
+  --vp-c-text-3: var(--project-grey);
+  
+  --vp-c-brand: var(--project-primary);
+  --vp-c-brand-1: var(--project-primary);
+  --vp-c-brand-2: var(--project-secondary);
+  --vp-c-brand-3: var(--project-tertiary);
+  --vp-c-brand-soft: var(--project-primary);
+  
+  --vp-c-divider: var(--project-grey);
+  --vp-c-border: var(--project-grey);
+  
+  /* Link colors */
+  --vp-c-brand-light: var(--project-gold);
+  --vp-c-brand-lighter: #f4d03f; /* Lighter gold for hover */
+  --vp-c-brand-dark: var(--project-primary);
+  --vp-c-brand-darker: #4a1f6f; /* Darker primary for hover */
+  
+  /* Font */
+  --vp-font-family-base: 'Readex Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --vp-font-family-mono: 'Fira Code', 'Fira Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
 }
 
 /* Target the specific content div */
@@ -38,6 +83,15 @@
 
 /* Remove max-width constraints on the main content */
 .main {
+  max-width: 100% !important;
+}
+
+/* Make the title span full width of the main div */
+.main .name.clip,
+.main span.name.clip,
+span.name.clip[data-v-4f9c455b] {
+  width: 100% !important;
+  display: block !important;
   max-width: 100% !important;
 }
 
@@ -150,6 +204,15 @@ header[role="header"] > div > div > div {
 a.title {
   flex: 0 0 auto !important;
   margin-right: auto !important;
+}
+
+/* Make title link match hero name.clip color */
+a.title,
+a.title[data-v-1168a8e4],
+.title[data-v-1168a8e4] {
+  color: var(--vp-c-text-1) !important;
+  color: var(--project-text) !important;
+  color: #eeeeee !important;
 }
 
 /* Content body (search + nav links) on right - align with main content right padding */
@@ -373,4 +436,147 @@ div.content-body {
 .openapi-component .flex.flex-row.items-center.gap-2:has(a[href^="mailto:"]) > span.text-muted-foreground {
   margin: 0 4px;
   flex-shrink: 0;
+}
+
+/* Apply project colors to links */
+.vp-doc a,
+a.VPLink {
+  color: var(--project-gold) !important;
+  transition: color 0.2s;
+}
+
+.vp-doc a:hover,
+a.VPLink:hover {
+  color: var(--vp-c-brand-lighter) !important;
+}
+
+/* Apply project colors to buttons */
+.VPButton.brand {
+  background-color: var(--project-primary) !important;
+  border-color: var(--project-primary) !important;
+}
+
+.VPButton.brand:hover {
+  background-color: var(--vp-c-brand-darker) !important;
+  border-color: var(--vp-c-brand-darker) !important;
+}
+
+/* Apply font to body */
+body {
+  font-family: var(--vp-font-family-base) !important;
+  font-weight: 200 !important;
+}
+
+/* Body text in documentation */
+.vp-doc p,
+.vp-doc li,
+.vp-doc div,
+.vp-doc span:not(code):not(pre) {
+  font-weight: 200 !important;
+}
+
+/* Apply font to code blocks */
+code,
+pre,
+.vp-code-group,
+.vp-doc code,
+.vp-doc pre,
+pre.shiki,
+pre.shiki code {
+  font-family: var(--vp-font-family-mono) !important;
+  font-family: 'Fira Code', 'Fira Mono', 'Consolas', 'Monaco', 'Courier New', monospace !important;
+}
+
+/* Ensure code blocks have readable text color */
+code,
+pre code,
+.vp-code-group code,
+.vp-doc code,
+.vp-doc pre code,
+.shiki,
+.shiki code,
+.shiki span {
+  color: #aaaaaa !important;
+}
+
+/* Inline code - distinct from links */
+.vp-doc :not(pre) > code {
+  color: #aaaaaa !important;
+  background-color: var(--project-dark-grey) !important;
+  background-color: #1a1a1a !important;
+  padding: 0.2em 0.4em !important;
+  border-radius: 3px !important;
+  font-weight: 300 !important;
+}
+
+/* Code blocks */
+.vp-doc pre,
+.vp-doc pre code,
+pre.shiki,
+pre.shiki code {
+  color: #aaaaaa !important;
+  background-color: var(--project-dark-grey) !important;
+  background-color: #1a1a1a !important;
+  font-weight: 300 !important;
+}
+
+/* Sidebar styling */
+.VPSidebar {
+  background-color: var(--project-dark-grey) !important;
+  background-color: #1a1a1a !important;
+}
+
+/* Curtain and sidebar - consistent darker background */
+.curtain[data-v-319d5ca6],
+.curtain,
+.VPSidebar[data-v-319d5ca6],
+.VPSidebar[data-v-5d98c3a5],
+aside.VPSidebar[data-v-319d5ca6],
+aside.VPSidebar[data-v-5d98c3a5],
+aside.VPSidebar {
+  background-color: #1a1a1a !important;
+}
+
+/* Navigation links */
+.VPNavBarMenuLink.active {
+  color: var(--project-gold) !important;
+}
+
+.VPNavBarMenuLink:hover {
+  color: var(--project-gold) !important;
+}
+
+/* Sidebar navigation links - hover and active states */
+.VPSidebar .group a:hover,
+.VPSidebar .group a.active,
+.VPSidebar a:hover,
+.VPSidebar a.active,
+.VPSidebar .item:hover,
+.VPSidebar .item.active,
+.VPSidebar .nav-link:hover,
+.VPSidebar .nav-link.active,
+.VPSidebar .sidebar-link:hover,
+.VPSidebar .sidebar-link.active {
+  color: var(--project-secondary) !important;
+  color: #83105d !important;
+}
+
+/* VitePress sidebar item hover and active */
+.VPSidebarItem .item:hover,
+.VPSidebarItem .item.is-active,
+.VPSidebarItem .item.active,
+.VPSidebar .item:hover,
+.VPSidebar .item.is-active,
+.VPSidebar .item.active {
+  color: var(--project-secondary) !important;
+  color: #83105d !important;
+}
+
+/* VitePress sidebar group links */
+.VPSidebar .group[data-v-c40bc020] a:hover,
+.VPSidebar .group[data-v-c40bc020] a.active,
+.VPSidebar .group a:hover,
+.VPSidebar .group a.active {
+  color: var(--project-secondary) !important;
+  color: #83105d !important;
 }
