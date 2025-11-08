@@ -121,7 +121,7 @@ From "Contemporary Arabic 19-Tone" system by Al-Ṣabbāgh (1950:173):
 curl http://localhost:3000/api/sources
 
 # Maqām responses include source references
-curl "http://localhost:3000/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=ushayran"
+curl "http://localhost:3000/api/maqamat/maqam_bayyat?tuningSystem=al-Farabi-(950g)&startingNote=ushayran&pitchClassDataType=cents"
 
 # Response includes:
 # - source references

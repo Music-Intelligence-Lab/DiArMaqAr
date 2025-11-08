@@ -127,7 +127,7 @@ The platform automatically converts between all formats based on:
 curl http://localhost:3000/api/tuning-systems
 
 # Get specific tuning system data
-curl "http://localhost:3000/api/tuning-systems/IbnSina-(1037)"
+curl "http://localhost:3000/api/tuning-systems/al-Farabi-(950g)"
 ```
 
 ### Via TypeScript Library
@@ -163,5 +163,5 @@ This transparent provenance enables:
 ## Next Steps
 
 * Learn how tuning systems relate to [Ajnās](/guide/ajnas/)
-* Explore [Transposition](/guide/transposition/) capabilities
+* Explore [Taṣwīr (Transposition)](/guide/taswir/) capabilities
 * Understand [Starting Note Conventions](/guide/theoretical-framework/#starting-note-conventions)

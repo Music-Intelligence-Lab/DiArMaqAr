@@ -22,8 +22,9 @@ export default defineConfig({
   vite: {
     plugins: [
       llmstxt({
+        // @ts-ignore - vitepress-plugin-llms template property may not be in types
         template: {
-          introduction: 'Digital Arabic Maqām Archive (DiArMaqAr) - Open-source platform for Arabic maqām theory providing REST API and TypeScript library. Includes 60 historically documented maqāmāt, 29 ajnās, and 35 tuning systems spanning from al-Kindī (874 CE) to contemporary approaches. All data includes comprehensive bibliographic attribution following decolonial computing principles.',
+          introduction: 'Digital Arabic Maqām Archive (DiArMaqAr) - Open-source platform for Arabic maqām theory providing REST API and TypeScript library. Includes historically documented maqāmāt, ajnās, and tuning systems spanning from al-Kindī (874 CE) to contemporary approaches. All data includes comprehensive bibliographic attribution following decolonial computing principles.',
         },
         // Ignore the playground page as it's interactive and not needed for LLM documentation
         // index.md contains all static API documentation for optimal LLM accessibility
@@ -45,7 +46,6 @@ export default defineConfig({
       '/guide/': [
         {
           text: 'Getting Started',
-          collapsible: true,
           collapsed: false,
           items: [
             { text: 'Introduction', link: '/guide/' },
@@ -54,7 +54,6 @@ export default defineConfig({
         },
         {
           text: 'Core Concepts',
-          collapsible: true,
           collapsed: false,
           items: [
             { text: 'Theoretical Framework', link: '/guide/theoretical-framework' },
@@ -66,11 +65,10 @@ export default defineConfig({
         },
         {
           text: 'Advanced Features',
-          collapsible: true,
           collapsed: false,
           items: [
-            { text: 'Transposition', link: '/guide/transposition' },
-            { text: 'Modulation', link: '/guide/modulation' },
+            { text: 'Taṣwīr (Transposition)', link: '/guide/taswir' },
+            { text: 'Intiqāl (Modulation)', link: '/guide/intiqal' },
             { text: 'Audio Synthesis', link: '/guide/audio-synthesis' },
             { text: 'MIDI Integration', link: '/guide/midi-integration' },
             { text: 'Data Export', link: '/guide/data-export' },
@@ -78,7 +76,6 @@ export default defineConfig({
         },
         {
           text: 'Research and Methodology',
-          collapsible: true,
           collapsed: false,
           items: [
             { text: 'Research Applications', link: '/guide/research-applications' },
@@ -91,87 +88,173 @@ export default defineConfig({
         {
           text: 'API Documentation',
           items: [
-            { text: 'Overview', link: '/api/#overview' },
-            { text: 'Quick Start', link: '/api/#quick-start' },
-            { text: 'Interactive API Playground', link: '/api/#interactive-api-playground' },
-          ]
-        },
-        {
-          text: 'Quick Reference',
-          collapsible: true,
-          collapsed: false,
-          items: [
-            { text: 'Base URL', link: '/api/#base-url' },
-            { text: 'OpenAPI Specification', link: '/api/#openapi-specification' },
-            { text: 'Authentication', link: '/api/#authentication' },
-            { text: 'Response Format', link: '/api/#response-format' },
-            { text: 'Rate Limiting', link: '/api/#rate-limiting' },
-            { text: 'Common Parameters', link: '/api/#common-parameters' },
+            { text: 'Overview', link: '/api/' },
+            {
+              text: 'Endpoints Reference',
+              link: '/api/endpoints-reference',
+              items: [
+                { text: 'Base URL', link: '/api/endpoints-reference#base-url' },
+                { text: 'OpenAPI Specification', link: '/api/endpoints-reference#openapi-specification' },
+                { text: 'Authentication', link: '/api/endpoints-reference#authentication' },
+                { text: 'Response Format', link: '/api/endpoints-reference#response-format' },
+                { text: 'Rate Limiting', link: '/api/endpoints-reference#rate-limiting' },
+                { text: 'Common Parameters', link: '/api/endpoints-reference#common-parameters' },
+              ]
+            },
+            { text: 'Interactive Playground', link: '/api/playground' },
+            { text: 'Canonical Examples', link: '/api/canonical-examples' },
           ]
         },
         {
           text: 'Endpoints',
-          collapsible: true,
           collapsed: false,
           items: [
             {
               text: 'Maqāmāt',
-              link: '/api/#maqamat',
+              link: '#maqamat',
               items: [
-                { text: 'List Maqāmāt', link: '/api/#list-all-maqamat' },
-                { text: 'Get Maqām Details', link: '/api/#get-maqam-details' },
-                { text: 'Check Availability', link: '/api/#check-maqam-availability' },
-                { text: 'List Transpositions', link: '/api/#list-maqam-transpositions' },
-                { text: 'Compare Across Tuning Systems', link: '/api/#compare-maqam-across-tuning-systems' },
+                { text: 'List Maqāmāt', link: '#listMaqamat' },
+                { text: 'Get Maqām Details', link: '#getMaqam' },
+                { text: 'Check Availability', link: '#getMaqamAvailability' },
+                { text: 'List Transpositions', link: '#listMaqamTranspositions' },
+                { text: 'Compare Across Tuning Systems', link: '#compareMaqam' },
               ]
             },
             {
               text: 'Ajnās',
-              link: '/api/#ajnas',
+              link: '#ajnas',
               items: [
-                { text: 'List Ajnās', link: '/api/#list-all-ajnas' },
-                { text: 'Get Jins Details', link: '/api/#get-jins-details' },
-                { text: 'Check Availability', link: '/api/#check-jins-availability' },
-                { text: 'List Transpositions', link: '/api/#list-jins-transpositions' },
-                { text: 'Compare Across Tuning Systems', link: '/api/#compare-jins-across-tuning-systems' },
+                { text: 'List Ajnās', link: '#listAjnas' },
+                { text: 'Get Jins Details', link: '#getJins' },
+                { text: 'Check Availability', link: '#getJinsAvailability' },
+                { text: 'List Transpositions', link: '#listJinsTranspositions' },
+                { text: 'Compare Across Tuning Systems', link: '#compareJins' },
               ]
             },
             {
               text: 'Tuning Systems',
-              link: '/api/#tuning-systems',
+              link: '#tuning-systems',
               items: [
-                { text: 'List Tuning Systems', link: '/api/#list-all-tuning-systems' },
-                { text: 'Get Tuning System Details', link: '/api/#get-tuning-system-pitch-classes' },
-                { text: 'List Maqāmāt in Tuning System', link: '/api/#list-maqamat-in-tuning-system' },
+                { text: 'List Tuning Systems', link: '#listTuningSystems' },
+                { text: 'Get Tuning System Details', link: '#getTuningSystemPitchClasses' },
+                { text: 'List Maqāmāt in Tuning System', link: '#listTuningSystemMaqamat' },
               ]
             },
             {
-              text: 'Pitch Classes (by Note Names)',
-              link: '/api/#pitch-classes-by-note-names',
+              text: 'Pitch Classes',
+              link: '#pitch-classes',
               items: [
-                { text: 'List Note Names', link: '/api/#list-note-names' },
-                { text: 'Get Pitch Class by Note Name', link: '/api/#get-pitch-class-by-note-name' },
-                { text: 'Check Note Name Availability', link: '/api/#check-note-name-availability' },
-                { text: 'Compare Pitch Class Across Systems', link: '/api/#compare-pitch-class-across-systems' },
+                { text: 'List Note Names', link: '#listNoteNames' },
+                { text: 'Get Pitch Class by Note Name', link: '#getPitchClassByNoteName' },
+                { text: 'Check Note Name Availability', link: '#getNoteNameAvailability' },
+                { text: 'Compare Pitch Class Across Systems', link: '#comparePitchClassByNoteName' },
               ]
             },
             {
               text: 'Intervals',
-              link: '/api/#intervals',
+              link: '#intervals',
               items: [
-                { text: 'Calculate Intervals by Note Names', link: '/api/#calculate-intervals-by-note-names' },
-                { text: 'Compare Intervals Across Tuning Systems', link: '/api/#compare-intervals-across-tuning-systems' },
+                { text: 'Calculate Intervals by Note Names', link: '#calculateIntervalsByNoteNames' },
+                { text: 'Compare Intervals Across Tuning Systems', link: '#compareIntervalsByNoteNames' },
               ]
             },
             {
               text: 'Sources',
-              link: '/api/#sources',
+              link: '#sources',
               items: [
-                { text: 'List Sources', link: '/api/#list-all-sources' },
-                { text: 'Get Source Details', link: '/api/#get-source-details' },
-                { text: 'List Tuning Systems by Source', link: '/api/#list-tuning-systems-by-source' },
-                { text: 'List Maqāmāt by Source', link: '/api/#list-maqamat-by-source' },
-                { text: 'List Ajnās by Source', link: '/api/#list-ajnas-by-source' },
+                { text: 'List Sources', link: '#listSources' },
+                { text: 'Get Source Details', link: '#getSource' },
+                { text: 'List Tuning Systems by Source', link: '#listTuningSystemsBySource' },
+                { text: 'List Maqāmāt by Source', link: '#listMaqamatBySource' },
+                { text: 'List Ajnās by Source', link: '#listAjnasBySource' },
+              ]
+            },
+          ]
+        },
+      ],
+        '/api/playground': [
+          {
+            text: 'API Documentation',
+            items: [
+              { text: 'Overview', link: '/api/' },
+              {
+                text: 'Endpoints Reference',
+                link: '/api/endpoints-reference',
+                items: [
+                  { text: 'Base URL', link: '/api/endpoints-reference#base-url' },
+                  { text: 'OpenAPI Specification', link: '/api/endpoints-reference#openapi-specification' },
+                  { text: 'Authentication', link: '/api/endpoints-reference#authentication' },
+                  { text: 'Response Format', link: '/api/endpoints-reference#response-format' },
+                  { text: 'Rate Limiting', link: '/api/endpoints-reference#rate-limiting' },
+                  { text: 'Common Parameters', link: '/api/endpoints-reference#common-parameters' },
+                ]
+              },
+              { text: 'Interactive Playground', link: '/api/playground' },
+              { text: 'Canonical Examples', link: '/api/canonical-examples' },
+            ]
+          },
+        {
+          text: 'Endpoints',
+          collapsed: true,
+          items: [
+            {
+              text: 'Maqāmāt',
+              link: '#maqamat',
+              items: [
+                { text: 'List Maqāmāt', link: '#listMaqamat' },
+                { text: 'Get Maqām Details', link: '#getMaqam' },
+                { text: 'Check Availability', link: '#getMaqamAvailability' },
+                { text: 'List Transpositions', link: '#listMaqamTranspositions' },
+                { text: 'Compare Across Tuning Systems', link: '#compareMaqam' },
+              ]
+            },
+            {
+              text: 'Ajnās',
+              link: '#ajnas',
+              items: [
+                { text: 'List Ajnās', link: '#listAjnas' },
+                { text: 'Get Jins Details', link: '#getJins' },
+                { text: 'Check Availability', link: '#getJinsAvailability' },
+                { text: 'List Transpositions', link: '#listJinsTranspositions' },
+                { text: 'Compare Across Tuning Systems', link: '#compareJins' },
+              ]
+            },
+            {
+              text: 'Tuning Systems',
+              link: '#tuning-systems',
+              items: [
+                { text: 'List Tuning Systems', link: '#listTuningSystems' },
+                { text: 'Get Tuning System Details', link: '#getTuningSystemPitchClasses' },
+                { text: 'List Maqāmāt in Tuning System', link: '#listTuningSystemMaqamat' },
+              ]
+            },
+            {
+              text: 'Pitch Classes',
+              link: '#pitch-classes',
+              items: [
+                { text: 'List Note Names', link: '#listNoteNames' },
+                { text: 'Get Pitch Class by Note Name', link: '#getPitchClassByNoteName' },
+                { text: 'Check Note Name Availability', link: '#getNoteNameAvailability' },
+                { text: 'Compare Pitch Class Across Systems', link: '#comparePitchClassByNoteName' },
+              ]
+            },
+            {
+              text: 'Intervals',
+              link: '#intervals',
+              items: [
+                { text: 'Calculate Intervals by Note Names', link: '#calculateIntervalsByNoteNames' },
+                { text: 'Compare Intervals Across Tuning Systems', link: '#compareIntervalsByNoteNames' },
+              ]
+            },
+            {
+              text: 'Sources',
+              link: '#sources',
+              items: [
+                { text: 'List Sources', link: '#listSources' },
+                { text: 'Get Source Details', link: '#getSource' },
+                { text: 'List Tuning Systems by Source', link: '#listTuningSystemsBySource' },
+                { text: 'List Maqāmāt by Source', link: '#listMaqamatBySource' },
+                { text: 'List Ajnās by Source', link: '#listAjnasBySource' },
               ]
             },
           ]
@@ -180,7 +263,6 @@ export default defineConfig({
       '/library/': [
         {
           text: 'TypeScript Library',
-          collapsible: true,
           collapsed: false,
           items: [
             { text: 'Overview', link: '/library/' },
@@ -188,7 +270,6 @@ export default defineConfig({
         },
         {
           text: 'Library Reference',
-          collapsible: true,
           collapsed: false,
           items: [
             { text: 'Complete Reference', link: '/library/api/README' },
@@ -197,7 +278,6 @@ export default defineConfig({
         },
         {
           text: 'Models',
-          collapsible: true,
           collapsed: false,
           items: [
             { text: 'Maqam', link: '/library/api/models/Maqam/README' },
@@ -209,7 +289,6 @@ export default defineConfig({
         },
         {
           text: 'Functions',
-          collapsible: true,
           collapsed: false,
           items: [
             { text: 'Export', link: '/library/api/functions/export/README' },
@@ -242,8 +321,11 @@ export default defineConfig({
       }
     },
 
-    // Table of contents (outline) configuration - disabled to remove right sidebar
-    outline: false,
+    // Table of contents (outline) configuration - shows h2 and h3 headings
+    outline: {
+      level: [2, 3],
+      label: 'On this page'
+    },
 
     // Back to top button
     returnToTopLabel: 'Back to top',

@@ -6,23 +6,25 @@ info:
     Digital Arabic Maqām Archive (DiArMaqAr) — programmatic access to Arabic maqāmāt, ajnās, and tuning systems data
 
     Key features:
-    - Comprehensive maqāmāt and ajnās database with bibliographic source attribution
-    - Tuning systems spanning 1000+ years with multiple starting note contexts
-    - Comprehensive pitch class data formats (fractions ratios, decimal ratio, string length, fret divisions, frequency, cents, MIDI notes, and more)
-    - Tuning system sensitive transpositions and modulations via al-Shawwā's 1946 modulation guidelines
+    - Maqāmāt and ajnās database with bibliographic source attribution
+    - Historical tuning systems with multiple starting note contexts
+    - Multiple pitch class data formats (fractions, ratios, decimal ratio, string length, fret divisions, frequency, cents, MIDI notes, and more)
+    - Tuning system sensitive transpositions
+    - Modulations via al-Shawwā's 1946 modulation guidelines
+    - Interactive API documentation with live endpoint testing capabilities 
 
   contact:
-    name: DiArMaqAr 
-    url: https://github.com/Music-Intelligence-Lab/DiArMaqAr
+    name: Khyam Allami
+    email: ka109@aub.edu.lb
+    url: https://musicintelligencelab.com
   license:
     name: CC-BY-NC-SA 4.0
     url: https://creativecommons.org/licenses/by-nc-sa/4.0/
-
 servers:
   - url: https://diarmaqar.netlify.app/api
-    description: Production API
+    description: Production server
   - url: http://localhost:3000/api
-    description: Local development
+    description: Development server
 paths:
   /maqamat:
     get:

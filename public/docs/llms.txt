@@ -21,8 +21,8 @@ Open-source bilingual platform integrating historically documented Arabic maqām
 
 ### Advanced Features
 
-- [Transposition](/docs/guide/transposition.md): Understanding tuning-system-sensitive transposition capabilities
-- [Modulation (Intiqālāt)](/docs/guide/modulation.md): Understanding Al-Shawwā's modulation algorithm and modulation networks
+- [Taṣwīr (Transposition)](/docs/guide/taswir.md): Understanding tuning-system-sensitive transposition capabilities
+- [Intiqāl (Modulation)](/docs/guide/intiqal.md): Understanding Al-Shawwā's modulation algorithm and modulation networks
 - [Audio Synthesis](/docs/guide/audio-synthesis.md): Real-time audio synthesis capabilities for auditioning maqāmāt and tuning systems
 - [MIDI Integration](/docs/guide/midi-integration.md): MIDI input/output capabilities including MPE support for microtonal playback
 - [Data Export](/docs/guide/data-export.md): Comprehensive data export capabilities for research and composition
@@ -33,7 +33,18 @@ Open-source bilingual platform integrating historically documented Arabic maqām
 - [Cultural Framework](/docs/guide/cultural-framework.md): Decolonial computing principles and culturally-specific methodology
 - [Bibliographic Sources](/docs/guide/bibliographic-sources.md): Comprehensive source attribution and scholarly verification
 
+### API Documentation
 
+- [API Documentation](/docs/api.md): Programmatic access to Arabic maqāmāt, ajnās, and tuning systems data
+- [API Endpoints Reference](/docs/api/endpoints-reference.md): Complete API endpoint documentation
+- [Canonical Examples](/docs/api/canonical-examples.md): Recommended tuning systems, maqāmāt, and ajnās for testing and documentation
+
+
+### API Documentation
+
+- [API Documentation](/docs/api.md): Programmatic access to Arabic maqāmāt, ajnās, and tuning systems data
+- [API Endpoints Reference](/docs/api/endpoints-reference.md): Complete API endpoint documentation
+- [Canonical Examples](/docs/api/canonical-examples.md): Recommended tuning systems, maqāmāt, and ajnās for testing and documentation
 
 
 ### TypeScript Library
@@ -68,9 +79,6 @@ Open-source bilingual platform integrating historically documented Arabic maqām
 
 ### Other
 
-- [API Documentation](/docs/api.md): Interactive API documentation and testing for the Digital Arabic Maqām Archive
-- [API Endpoints Reference](/docs/api/endpoints-reference.md): Comprehensive auto-generated API endpoints reference from OpenAPI specification
-- [Canonical Examples](/docs/api/canonical-examples.md): Recommended tuning systems, maqāmāt, and ajnās for testing and documentation
 - [Class: default](/docs/library/api/models/Jins/classes/default.md)
 - [Class: default](/docs/library/api/models/Maqam/classes/default.md)
 - [Class: default](/docs/library/api/models/Pattern/classes/default.md)
@@ -86,13 +94,13 @@ Open-source bilingual platform integrating historically documented Arabic maqām
 - [Function: classifyMaqamDataFamily()](/docs/library/api/functions/classifyMaqamFamily/functions/classifyMaqamDataFamily.md)
 - [Function: classifyMaqamFamily()](/docs/library/api/functions/classifyMaqamFamily/functions/classifyMaqamFamily.md)
 - [Function: default()](/docs/library/api/functions/calculateNumberOfModulations/functions/default.md)
-- [Function: default()](/docs/library/api/functions/computeFractionInterval/functions/default.md)
 - [Function: default()](/docs/library/api/functions/convertPitchClass/functions/default.md)
+- [Function: default()](/docs/library/api/functions/computeFractionInterval/functions/default.md)
 - [Function: default()](/docs/library/api/functions/detectPitchClassType/functions/default.md)
 - [Function: default()](/docs/library/api/functions/extendSelectedPitchClasses/functions/default.md)
 - [Function: default()](/docs/library/api/functions/gcd/functions/default.md)
-- [Function: default()](/docs/library/api/functions/getFirstNoteName/functions/default.md)
 - [Function: default()](/docs/library/api/functions/getNoteNamesUsedInTuningSystem/functions/default.md)
+- [Function: default()](/docs/library/api/functions/getFirstNoteName/functions/default.md)
 - [Function: default()](/docs/library/api/functions/getTuningSystemPitchClasses/functions/default.md)
 - [Function: default()](/docs/library/api/functions/modulate/functions/default.md)
 - [Function: default()](/docs/library/api/functions/romanToNumber/functions/default.md)

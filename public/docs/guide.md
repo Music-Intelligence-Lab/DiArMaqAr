@@ -41,10 +41,10 @@ The easiest way to get started is using the REST API:
 curl http://localhost:3000/api/maqamat
 
 # Get specific maqām data with full details
-curl "http://localhost:3000/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=ushayran&pitchClassDataType=all"
+curl "http://localhost:3000/api/maqamat/maqam_bayyat?tuningSystem=al-Farabi-(950g)&startingNote=ushayran&pitchClassDataType=cents"
 
 # Include transpositions and modulations
-curl "http://localhost:3000/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=ushayran&includeTranspositions=true&includeModulations=true"
+curl "http://localhost:3000/api/maqamat/maqam_bayyat?tuningSystem=al-Farabi-(950g)&startingNote=ushayran&includeTranspositions=true&includeModulations=true"
 ```
 
 ### Using the TypeScript Library
@@ -83,9 +83,9 @@ const modulations = modulate(maqam, allMaqamat, tuningSystem)
 
 ### Advanced Features
 
-6. **[Transposition](/guide/transposition/)** - Tuning-system-sensitive transposition of ajnās and maqāmāt
+6. **[Taṣwīr (Transposition)](/guide/taswir/)** - Tuning-system-sensitive transposition of ajnās and maqāmāt
 
-7. **[Modulation](/guide/modulation/)** - Al-Shawwā's modulation algorithm and network analysis
+7. **[Intiqāl (Modulation)](/guide/intiqal/)** - Al-Shawwā's modulation algorithm and network analysis
 
 8. **[Audio Synthesis](/guide/audio-synthesis/)** - Real-time audio playback using Web Audio API
 
