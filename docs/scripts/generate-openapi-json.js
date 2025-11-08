@@ -3,10 +3,10 @@ const path = require('path');
 const yaml = require('js-yaml');
 
 // Read the OpenAPI YAML file
-const yamlPath = path.join(__dirname, '..', 'openapi.yaml');
-const publicJsonPath = path.join(__dirname, '..', 'public', 'docs', 'openapi.json');
-const docsPublicJsonPath = path.join(__dirname, '..', 'docs', 'public', 'openapi.json');
-const docsJsonPath = path.join(__dirname, '..', 'docs', 'openapi.json');
+const yamlPath = path.join(__dirname, '../..', 'openapi.yaml');
+const publicJsonPath = path.join(__dirname, '../..', 'public', 'docs', 'openapi.json');
+const docsPublicJsonPath = path.join(__dirname, '..', 'public', 'openapi.json');
+const docsJsonPath = path.join(__dirname, '..', 'openapi.json');
 
 try {
   // Read and parse YAML
@@ -41,8 +41,8 @@ try {
   fs.writeFileSync(docsJsonPath, jsonContent, 'utf8');
   
   // Also copy the YAML file to public/docs for direct access
-  const publicYamlPath = path.join(__dirname, '..', 'public', 'docs', 'openapi.yaml');
-  const docsPublicYamlPath = path.join(__dirname, '..', 'docs', 'public', 'openapi.yaml');
+  const publicYamlPath = path.join(__dirname, '../..', 'public', 'docs', 'openapi.yaml');
+  const docsPublicYamlPath = path.join(__dirname, '..', 'public', 'openapi.yaml');
   fs.copyFileSync(yamlPath, publicYamlPath);
   fs.copyFileSync(yamlPath, docsPublicYamlPath);
   

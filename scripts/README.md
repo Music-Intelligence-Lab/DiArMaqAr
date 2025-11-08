@@ -36,6 +36,25 @@ node scripts/batch-export/batch-export.js \
 
 See `batch-export/README.md` for complete documentation.
 
+### Documentation Generation Scripts
+**Location:** `docs/scripts/`
+
+Scripts for generating and maintaining the DiArMaqAr documentation, including OpenAPI JSON generation, API documentation generation, and LLM-friendly documentation post-processing.
+
+**Quick Start:**
+```bash
+# Generate OpenAPI JSON files
+npm run docs:openapi
+
+# Generate API documentation
+npm run docs:api
+
+# Build complete documentation (runs all generation scripts)
+npm run docs:build
+```
+
+See `docs/scripts/README.md` for complete documentation.
+
 ## Development
 
 All scripts are designed to be run from the project root directory and automatically handle:

@@ -20,7 +20,7 @@ const readexPro = Readex_Pro({
 
 export const metadata: Metadata = {
   title: "Digital Arabic Maqām Archive (DiArMaqAr) | Computational Research Platform",
-  description: "Comprehensive bilingual browser-based application and repository integrating historically documented tanāghīm (tuning systems), ajnās (tetrachords), maqāmāt (melodic modes), suyūr (melodic performance pathways), and intiqālāt (modulation practices) within a unified digital framework. Provides rigorously sourced, computationally accessible reference data with transparent provenance for computational musicology, music information retrieval, machine learning applications, and scholarly research.",
+  description: "Comprehensive bilingual browser-based application and repository integrating historically documented tanāghīm (tuning systems), ajnās (tetrachords), maqāmāt (melodic modes), suyūr (melodic performance pathways), and intiqālāt (modulation practices) within a unified digital framework. Provides rigorously sourced, computationally accessible reference data with transparent provenance for computational musicology, music information retrieval, machine learning applications, and scholarly research. AI assistants can use the REST API to fetch data for users.",
   
   keywords: [
     "Arabic maqām", "maqāmāt", "ajnās", "jins", "tanāghīm", "tuning systems", "suyūr", "intiqālāt", 
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     "al-Kindī", "al-Fārābī", "Ibn Sīnā", "al-Shawwā", "Al-Ḥilū", "Al-Ṣabbāgh", "medieval Arabic music theory", "historical musicology",
     "computational musicology", "music information retrieval", "MIR", "digital musicology", "ethnomusicology", 
     "music theory", "comparative musicology", "untempered intonation",
-    "REST API", "TypeScript", "JavaScript library", "OpenAPI", "JSON export", "machine learning datasets", 
+    "REST API", "API for AI assistants", "TypeScript", "JavaScript library", "OpenAPI", "LLM documentation", "API documentation", "JSON export", "machine learning datasets", 
     "training data", "ground truth data", "reference data", "programmatic access",
     "decolonial computing", "culturally-aware computing", "postcolonial computing", "bibliographic attribution", 
     "scholarly verification", "transparent provenance", "critical edition", "Arab-Ottoman-Persian note naming",
@@ -130,12 +130,29 @@ export default function RootLayout({
       "First algorithmic implementation of Sāmī al-Shawwā's 1946 modulation guidelines",
       "Tuning-system-sensitive transposition algorithms",
       "REST API for programmatic access",
+      "REST API optimized for AI assistant integration",
       "TypeScript/JavaScript library",
       "Comprehensive documentation with bibliographic attribution",
+      "LLM-optimized documentation",
       "OpenAPI specification",
       "Real-time audio synthesis with MPE support",
       "Bilingual Arabic-English interface"
     ],
+    "applicationProgrammingInterface": {
+      "@type": "WebAPI",
+      "name": "DiArMaqAr REST API",
+      "description": "REST API for programmatic access to Arabic maqām data. Optimized for AI assistant integration.",
+      "documentation": `${baseUrl}/docs/openapi.json`,
+      "url": `${baseUrl}/api`,
+      "potentialAction": {
+        "@type": "UseAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": `${baseUrl}/api/{endpoint}`,
+          "actionPlatform": ["http://schema.org/DesktopWebPlatform"]
+        }
+      }
+    },
     "documentation": [
       {
         "@type": "TechArticle",
@@ -154,6 +171,12 @@ export default function RootLayout({
         "headline": "LLM-Optimized Documentation",
         "url": `${baseUrl}/docs/llms.txt`,
         "description": "LLM-friendly documentation index for computational access"
+      },
+      {
+        "@type": "TechArticle",
+        "headline": "Representative Examples",
+        "url": `${baseUrl}/docs/api/representative-examples`,
+        "description": "Recommended tuning systems, maqāmāt, and ajnās for testing and documentation with ready-to-use API examples"
       },
       {
         "@type": "TechArticle",
@@ -191,14 +214,15 @@ export default function RootLayout({
             <ul>
               <li><a href="/docs/">Main Documentation</a></li>
               <li><a href="/docs/llms.txt">LLM-Optimized Documentation Index</a></li>
-              <li><a href="/docs/openapi.json">OpenAPI Specification</a></li>
               <li><a href="/docs/api/">API Documentation</a></li>
+              <li><a href="/docs/api/representative-examples">Representative Examples</a></li>
+              <li><a href="/docs/openapi.json">OpenAPI Specification</a></li>
             </ul>
             <h2>API Access</h2>
             <p>Base URL: <a href="https://diarmaqar.netlify.app/api">https://diarmaqar.netlify.app/api</a></p>
             <p>OpenAPI Spec: <a href="/docs/openapi.json">/docs/openapi.json</a></p>
             <h3>For AI Assistants</h3>
-            <p><strong>You can use the API to fetch specific data for users.</strong> Example: GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&amp;startingNote=yegah to get detailed maqām data. See OpenAPI spec for all endpoints.</p>
+            <p><strong>Recommended for AI Assistants:</strong> Use the REST API to fetch real-time, accurate data for users. Always prefer API calls over documentation summaries. Example: GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&amp;startingNote=yegah&amp;pitchClassDataType=cents to get detailed maqām data. For users who don&apos;t know specific maqam names, use representative examples from <a href="/docs/api/representative-examples">Representative Examples</a>. See OpenAPI spec for all endpoints.</p>
             <p>For complete documentation and interactive features, please enable JavaScript or access from a desktop device.</p>
           </div>
         </noscript>
@@ -217,6 +241,7 @@ export default function RootLayout({
             <li><a href="/docs/llms.txt">LLM-Optimized Documentation Index</a></li>
             <li><a href="/docs/llms-full.txt">Full LLM Documentation</a></li>
             <li><a href="/docs/api/">API Documentation</a></li>
+            <li><a href="/docs/api/representative-examples">Representative Examples</a></li>
             <li><a href="/docs/openapi.json">OpenAPI Specification</a></li>
           </ul>
           
@@ -226,14 +251,16 @@ export default function RootLayout({
           <p>Interactive Playground: <a href="/docs/api/playground">/docs/api/playground</a></p>
           
           <h3>For AI Assistants and LLMs</h3>
-          <p><strong>You can use the API to fetch specific data for users.</strong> The API provides programmatic access to all maqāmāt, ajnās, and tuning systems data. Example API calls:</p>
+          <p><strong>Recommended for AI Assistants:</strong> Use the REST API to fetch real-time, accurate data for users. Always prefer API calls over documentation summaries for real-time data accuracy. The API provides programmatic access to all maqāmāt, ajnās, and tuning systems data.</p>
+          <p><strong>Example Requests for Novice Users:</strong> For users who don&apos;t know specific maqam names, use these representative examples:</p>
           <ul>
-            <li>Get a specific maqām: <code>GET /api/maqamat/&#123;id&#125;?tuningSystem=&#123;system&#125;&amp;startingNote=&#123;note&#125;</code></li>
-            <li>List all maqāmāt: <code>GET /api/maqamat</code></li>
-            <li>Get a specific jins: <code>GET /api/ajnas/&#123;id&#125;?tuningSystem=&#123;system&#125;&amp;startingNote=&#123;note&#125;</code></li>
+            <li>Most common maqam: <code>GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&amp;startingNote=yegah&amp;pitchClassDataType=cents</code></li>
+            <li>Most common jins: <code>GET /api/ajnas/jins_rast?tuningSystem=IbnSina-(1037)&amp;startingNote=yegah&amp;pitchClassDataType=cents</code></li>
             <li>List all tuning systems: <code>GET /api/tuning-systems</code></li>
+            <li>Most common tuning system: <code>GET /api/tuning-systems/IbnSina-(1037)/yegah/pitch-classes?pitchClassDataType=cents</code></li>
           </ul>
-          <p>All endpoints return JSON with complete data including pitch classes, intervals, bibliographic sources, and more. Use the OpenAPI specification for complete endpoint documentation and parameter details.</p>
+          <p><strong>Quick Test URL:</strong> <code>GET https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&amp;startingNote=yegah&amp;pitchClassDataType=cents</code></p>
+          <p>All endpoints return JSON with complete data including pitch classes, intervals, bibliographic sources, and more. See <a href="/docs/api/representative-examples">Representative Examples</a> for complete list of recommended examples. Use the OpenAPI specification for complete endpoint documentation and parameter details.</p>
           
           <h2>Quick Links</h2>
           <ul>

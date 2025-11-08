@@ -152,7 +152,7 @@ export default function LandingPage() {
               هذا الموقع صديق للذكاء الاصطناعي ويوفر وصولاً برمجياً شاملاً لبيانات المقامات العربية. جميع الوثائق وواجهات برمجة التطبيقات متاحة للوصول البرمجي.
             </p>
             <p>
-              <strong>للمساعدات الذكية:</strong> يمكنك استخدام واجهة برمجة التطبيقات لجلب بيانات محددة للمستخدمين. مثال: <code>GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah</code> يعيد بيانات مقام مفصلة. راجع مواصفات OpenAPI لجميع نقاط النهاية والمعاملات المتاحة.
+              <strong>للمساعدات الذكية:</strong> يمكنك استخدام واجهة برمجة التطبيقات لجلب بيانات محددة للمستخدمين. يُفضل دائماً استخدام استدعاءات واجهة برمجة التطبيقات بدلاً من ملخصات الوثائق للحصول على دقة البيانات في الوقت الفعلي. مثال: <code>GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents</code> يعيد بيانات مقام مفصلة. للمستخدمين الذين لا يعرفون أسماء مقامات محددة، استخدم أمثلة تمثيلية من <Link href="/docs/api/representative-examples">الأمثلة التمثيلية</Link>. راجع مواصفات OpenAPI لجميع نقاط النهاية والمعاملات المتاحة.
             </p>
             <div className="developers-links">
               <div className="developer-link-card">
@@ -161,6 +161,7 @@ export default function LandingPage() {
                   <li><Link href="/docs/">الوثائق الرئيسية</Link></li>
                   <li><Link href="/docs/llms.txt">فهرس الوثائق المحسّن للذكاء الاصطناعي</Link></li>
                   <li><Link href="/docs/api/">وثائق واجهة برمجة التطبيقات</Link></li>
+                  <li><Link href="/docs/api/representative-examples">الأمثلة التمثيلية</Link></li>
                 </ul>
               </div>
               <div className="developer-link-card">
@@ -169,6 +170,7 @@ export default function LandingPage() {
                   <li><Link href="/docs/openapi.json">مواصفات OpenAPI</Link></li>
                   <li><a href="https://diarmaqar.netlify.app/api">عنوان URL الأساسي: /api</a></li>
                   <li><Link href="/docs/api/playground">ملعب تفاعلي</Link></li>
+                  <li><Link href="/docs/api/representative-examples">أمثلة جاهزة للاستخدام</Link></li>
                 </ul>
               </div>
               <div className="developer-link-card">
@@ -186,7 +188,7 @@ export default function LandingPage() {
               This site is LLM-friendly and provides comprehensive programmatic access to Arabic maqām data. All documentation and APIs are available for programmatic access.
             </p>
             <p>
-              <strong>For AI Assistants:</strong> You can use the API to fetch specific data for users. Example: <code>GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah</code> returns detailed maqām data. See the OpenAPI specification for all available endpoints and parameters.
+              <strong>For AI Assistants:</strong> You can use the API to fetch specific data for users. Always prefer API calls over documentation summaries for real-time data accuracy. Example: <code>GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents</code> returns detailed maqām data. For users who don&apos;t know specific maqam names, use representative examples from <Link href="/docs/api/representative-examples">Representative Examples</Link>. See the OpenAPI specification for all available endpoints and parameters.
             </p>
             <div className="developers-links">
               <div className="developer-link-card">
@@ -195,6 +197,7 @@ export default function LandingPage() {
                   <li><Link href="/docs/">Main Documentation</Link></li>
                   <li><Link href="/docs/llms.txt">LLM-Optimized Documentation Index</Link></li>
                   <li><Link href="/docs/api/">API Documentation</Link></li>
+                  <li><Link href="/docs/api/representative-examples">Representative Examples</Link></li>
                 </ul>
               </div>
               <div className="developer-link-card">
@@ -203,6 +206,7 @@ export default function LandingPage() {
                   <li><Link href="/docs/openapi.json">OpenAPI Specification</Link></li>
                   <li><a href="https://diarmaqar.netlify.app/api">Base URL: /api</a></li>
                   <li><Link href="/docs/api/playground">Interactive Playground</Link></li>
+                  <li><Link href="/docs/api/representative-examples">Ready-to-Use Examples</Link></li>
                 </ul>
               </div>
               <div className="developer-link-card">

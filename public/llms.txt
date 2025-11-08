@@ -14,14 +14,36 @@
 - Interactive Playground: /docs/api/playground
 
 ### For AI Assistants and LLMs
-**You can use the API to fetch specific data for users.** The API provides programmatic access to all maqāmāt, ajnās, and tuning systems data. Example queries:
 
-- Get a specific maqām: GET /api/maqamat/{id}?tuningSystem={system}&startingNote={note}
-- List all maqāmāt: GET /api/maqamat
-- Get a specific jins: GET /api/ajnas/{id}?tuningSystem={system}&startingNote={note}
-- List all tuning systems: GET /api/tuning-systems
+**Recommended for AI Assistants**: Use the REST API to fetch real-time, accurate data for users. When users ask about maqāmāt, ajnās, or tuning systems, use the API endpoints to fetch current, complete data rather than relying on cached documentation.
 
-All endpoints return JSON with complete data including pitch classes, intervals, bibliographic sources, and more. Use the OpenAPI specification at /docs/openapi.json for complete endpoint documentation and parameter details.
+**Best Practice for LLMs**: Always use the API endpoints to answer user queries about specific maqāmāt, ajnās, or tuning systems. The API returns complete, structured data with all details.
+
+#### When to Use the API - Example Requests for Novice Users
+
+**For users who don't know specific maqam names**, use these representative examples:
+
+**Most Common Examples (Recommended for beginners):**
+- "Tell me about a fundamental Arabic maqam" → GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
+- "Show me a basic jins" → GET /api/ajnas/jins_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
+- "What tuning systems are available?" → GET /api/tuning-systems
+- "Show me the most common tuning system" → GET /api/tuning-systems/IbnSina-(1037)/yegah/pitch-classes?pitchClassDataType=cents
+
+**Quick Test URL (Copy-paste ready):**
+```
+GET https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
+```
+
+**When users ask general questions:**
+- "What is a maqam?" → Use GET /api/maqamat/maqam_rast (most fundamental example)
+- "Show me an Arabic scale" → Use GET /api/maqamat/maqam_rast (representative example)
+- "What are the intervals?" → Use GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
+- "Compare different tuning systems" → GET /api/maqamat/maqam_rast/compare?tuningSystems=IbnSina-(1037),al-Farabi-(950g)&startingNote=yegah
+
+**Representative Examples Reference:**
+- See /docs/api/representative-examples for complete list of recommended examples
+
+**All endpoints return JSON** with complete data including pitch classes, intervals, bibliographic sources, and more. Use the OpenAPI specification at /docs/openapi.json for complete endpoint documentation and parameter details.
 
 ## Quick Links
 - Interactive Application: /app

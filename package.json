@@ -7,10 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "docs:openapi": "node scripts/generate-openapi-json.js",
-    "docs:api": "node scripts/generate-api-docs.js",
+    "docs:openapi": "node docs/scripts/generate-openapi-json.js",
+    "docs:api": "node docs/scripts/generate-api-docs.js",
     "docs:dev": "npm run docs:openapi && npm run docs:api && vitepress dev docs",
-    "docs:build": "npm run docs:openapi && npm run docs:api && vitepress build docs",
+    "docs:build": "npm run docs:openapi && npm run docs:api && vitepress build docs && node docs/scripts/post-process-llms-txt.js",
     "docs:preview": "vitepress preview docs",
     "docs:typecheck": "vitepress typecheck docs"
   },

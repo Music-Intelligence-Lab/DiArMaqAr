@@ -282,8 +282,8 @@ function generateEndpointDocumentation(path, method, operation, spec) {
 
 // Main execution
 try {
-  const yamlPath = path.join(__dirname, '..', 'openapi.yaml');
-  const outputPath = path.join(__dirname, '..', 'docs', 'api', 'endpoints-reference.md');
+  const yamlPath = path.join(__dirname, '../..', 'openapi.yaml');
+  const outputPath = path.join(__dirname, '..', 'api', 'endpoints-reference.md');
 
   // Read and parse YAML
   const fileContents = fs.readFileSync(yamlPath, 'utf8');
