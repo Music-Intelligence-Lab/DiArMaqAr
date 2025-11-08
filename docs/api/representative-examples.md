@@ -16,8 +16,9 @@ curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-
 
 ## Representative Tuning Systems
 
-### `al-Kindi-(874)` - al-Kindī (874)
-**Starting Note**: `ushayran` - ʿushayrān
+### al-Kindī (874) - `al-Kindi-(874)`
+**Title**: 12-Tone
+**Starting Note**: ʿushayrān - `ushayran`
 
 **Description**: One of the oldest tuning systems documented in Arabic music theory. It is a 12-tone chromatic tuning system based on Greek theory and doesn't include the quintessential so-called Arabic "quarter tone" pitch classes ʿirāq, nīm zīrgūleh, segāh, nīm ḥijāz, or awj, also referred to as zalzalian intervals. It can only render ajnās and maqāmāt that don't use those notes such as kurd, nahāwand, nikrīz and ʿajam ʿushayrān.
 
@@ -34,8 +35,9 @@ GET /api/tuning-systems/al-Kindi-(874)/ushayran/pitch-classes?pitchClassDataType
 
 ---
 
-### `al-Farabi-(950g)` - al-Fārābī (950g)
-**Starting Note**: `ushayran` - ʿushayrān
+### al-Fārābī (950g) - `al-Farabi-(950g)`
+**Title**: First Oud Tuning (Full First Octave) 27-Tone
+**Starting Note**: ʿushayrān - `ushayran`
 
 **Description**: The first documentation of the wuṣtā zalzal interval, the so-called Arabic "quarter tone" using a frequency ratio of 27/22. It is a comprehensive 27-tone tuning system that allows for many ajnās and maqāmāt and their transpositions, therefore also modulations.
 
@@ -53,8 +55,9 @@ GET /api/tuning-systems/al-Farabi-(950g)/ushayran/pitch-classes?pitchClassDataTy
 
 ---
 
-### `IbnSina-(1037)` - Ibn Sīnā (1037) ⭐ (Most Common)
-**Starting Note**: `yegah` - yegāh
+### Ibn Sīnā (1037) ⭐ (Most Common) - `IbnSina-(1037)`
+**Title**: 7-Fret Oud 17-Tone
+**Starting Note**: yegāh - `yegah`
 
 **Description**: An excellent concise and precise 17-tone tuning that allows for a wide range of ajnās and maqāmāt and their transpositions. Includes the wuṣtā zalzal interval with the frequency ratio of 39/32.
 
@@ -78,12 +81,13 @@ GET /api/tuning-systems/IbnSina-(1037)/yegah/pitch-classes?pitchClassDataType=ce
 
 ---
 
-### `Meshshaqa-(1899)` - Mishāqah (1899)
-**Starting Note**: `yegah` - yegāh
+### Meshshāqa (1899) - `Meshshaqa-(1899)`
+**Title**: Arabic Octave According to the Modernists
+**Starting Note**: yegāh - `yegah`
 
 **Description**: The first documented tuning system that is based on literal quarter tones, 24 equal divisions of the octave. Defined by Mishāqah as the "Arabic Octave According to the Modernists", meaning that it was already known before him but undocumented - though no one knows if it was really used. Because it is 24 equal divisions of the octave it allows for many ajnās and maqāmāt and their transpositions, therefore also modulations. Even though it allows the same number of maqāmāt as Ibn Sīnā's tuning system, it allows for more transpositions.
 
-**Historical Context**: Mikhāʾīl Mishāqah's tuning represents a modernization of Arabic music theory, introducing equal divisions while maintaining the essential character of Arabic maqāmāt.
+**Historical Context**: Meshshāqa's tuning represents a modernization of Arabic music theory, introducing equal divisions while maintaining the essential character of Arabic maqāmāt.
 
 **Example**:
 ```
@@ -98,8 +102,9 @@ GET /api/tuning-systems/Meshshaqa-(1899)/yegah/pitch-classes?pitchClassDataType=
 
 ---
 
-### `CairoCongressTuningCommittee-(1929)` - Cairo Congress Tuning Committee (1929)
-**Starting Note**: `rast` - rāst
+### Cairo Congress Tuning Committee (1929) - `CairoCongressTuningCommittee-(1929)`
+**Title**: Egyptian Tuning
+**Starting Note**: rāst - `rast`
 
 **Description**: The tuning system researched, measured and prepared in preparation for the 1932 Cairo Congress of Arabic Music. It is referred to as an "Egyptian Tuning" and is an unequal 24-tone system. Also comprehensive in its maqām availability and was rendered based on the measurement and expertise of Egyptian musicians at the time.
 
@@ -117,8 +122,9 @@ GET /api/tuning-systems/CairoCongressTuningCommittee-(1929)/rast/pitch-classes?p
 
 ---
 
-### `al-Sabbagh-(1954)` - al-Ṣabbāgh (1954)
-**Starting Note**: `rast` - rāst
+### al-Ṣabbāgh (1954) - `al-Sabbagh-(1954)`
+**Title**: Contemporary Arabic Tuning 24-Tone
+**Starting Note**: rāst - `rast`
 
 **Description**: The only Arabic tuning system that exclusively uses the "comma" (syntonic comma of 81/80) as a basis for its construction. It is an unequal 24-tone system and allows for many maqāmāt and ajnās but with limited transpositions.
 
@@ -140,7 +146,7 @@ GET /api/tuning-systems/al-Sabbagh-(1954)/rast/pitch-classes?pitchClassDataType=
 
 **Ajnās with zalzalian intervals** (ʿirāq, nīm zīrgūleh, segāh, nīm ḥijāz, or awj):
 
-### `jins_rast` - jins rāst ⭐ (Most Common)
+### jins rāst ⭐ (Most Common) - `jins_rast`
 
 **Description**: Includes the zalzalian interval segāh. The most fundamental jins in Arabic music.
 
@@ -153,7 +159,7 @@ GET /api/ajnas/jins_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchCla
 
 ---
 
-### `jins_bayyat` - jins bayyāt
+### jins bayyāt - `jins_bayyat`
 
 **Description**: Includes the zalzalian interval segāh. Forms the basis of Maqām Bayyātī.
 
@@ -166,7 +172,7 @@ GET /api/ajnas/jins_bayyat?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchC
 
 ---
 
-### `jins_segah` - jins segāh
+### jins segāh - `jins_segah`
 
 **Description**: Its tonic is the zalzalian interval segāh. Begins on a neutral note.
 
@@ -179,7 +185,7 @@ GET /api/ajnas/jins_segah?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchCl
 
 ---
 
-### `jins_saba` - jins ṣabā
+### jins ṣabā - `jins_saba`
 
 **Description**: Includes the zalzalian interval segāh. Known for its distinctive augmented second.
 
@@ -194,7 +200,7 @@ GET /api/ajnas/jins_saba?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchCla
 
 **Ajnās without zalzalian intervals:**
 
-### `jins_nikriz` - jins nikrīz
+### jins nikrīz - `jins_nikriz`
 
 **Description**: Does not include a zalzalian interval. Built from tones and semitones only.
 
@@ -207,7 +213,7 @@ GET /api/ajnas/jins_nikriz?tuningSystem=al-Kindi-(874)&startingNote=ushayran&pit
 
 ---
 
-### `jins_kurd` - jins kurd
+### jins kurd - `jins_kurd`
 
 **Description**: Does not include a zalzalian interval. Similar to Western Phrygian mode.
 
@@ -220,7 +226,7 @@ GET /api/ajnas/jins_kurd?tuningSystem=al-Kindi-(874)&startingNote=ushayran&pitch
 
 ---
 
-### `jins_kurd_(binsir)` - jins kurd (binsir)
+### jins kurd (binsir) - `jins_kurd_(binsir)`
 
 **Description**: The same as jins kurd but starting on a different tonic, giving it slightly different intervals. Interesting for comparison and understanding why the maqām based on it (maqām ḥijāz kār kurd) is supposedly a transposition of maqām kurd with the same intervals, but in fact is not. Does not include a zalzalian interval.
 
@@ -233,7 +239,7 @@ GET /api/ajnas/jins_kurd_(binsir)?tuningSystem=al-Kindi-(874)&startingNote=ushay
 
 ---
 
-### `jins_nahawand` - jins nahāwand
+### jins nahāwand - `jins_nahawand`
 
 **Description**: Does not include a zalzalian interval. Similar to Western natural minor.
 
@@ -246,7 +252,7 @@ GET /api/ajnas/jins_nahawand?tuningSystem=al-Kindi-(874)&startingNote=ushayran&p
 
 ---
 
-### `jins_hijaz` - jins ḥijāz
+### jins ḥijāz - `jins_hijaz`
 
 **Description**: Does not include a zalzalian interval. Known for its distinctive augmented second.
 
@@ -259,7 +265,7 @@ GET /api/ajnas/jins_hijaz?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchCl
 
 ---
 
-### `jins_hijaz_(binsir)` - jins ḥijāz (binsir)
+### jins ḥijāz (binsir) - `jins_hijaz_(binsir)`
 
 **Description**: The same as jins ḥijāz but starting on a different tonic, giving it slightly different intervals. Interesting for comparison. Does not include a zalzalian interval.
 
@@ -276,7 +282,7 @@ GET /api/ajnas/jins_hijaz_(binsir)?tuningSystem=IbnSina-(1037)&startingNote=yega
 
 **Principle maqāmāt** - fundamental and archetypal:
 
-### `maqam_rast` - maqām rāst ⭐ (Most Common)
+### maqām rāst ⭐ (Most Common) - `maqam_rast`
 
 **Description**: One of the principle and archetypal Arabic maqāmāt. Prominently used in Egypt across both popular and religious sufi musics. Includes the zalzalian intervals segāh and awj in its ascending form.
 
@@ -293,7 +299,7 @@ GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitch
 
 ---
 
-### `maqam_bayyat` - maqām bayyāt
+### maqām bayyāt - `maqam_bayyat`
 
 **Description**: Also a principle and archetypal Arabic maqām, that is used widely in popular and rural musics across the Arabic speaking region and beyond. It is the base maqām for many variations in Arabic repertoire and beyond. Includes the zalzalian interval segāh and awj in its ascending form.
 
@@ -308,7 +314,7 @@ GET /api/maqamat/maqam_bayyat?tuningSystem=IbnSina-(1037)&startingNote=yegah&pit
 
 ---
 
-### `maqam_hijaz` - maqām ḥijāz
+### maqām ḥijāz - `maqam_hijaz`
 
 **Description**: A principle Arabic maqām, known primarily for its use in the adhān, the call to prayer. Includes the zalzalian interval awj in its ascending form.
 
@@ -325,7 +331,7 @@ GET /api/maqamat/maqam_hijaz?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitc
 
 **Complex and transposed maqāmāt:**
 
-### `maqam_rahat_al-arwah` - rāḥat al-arwāḥ
+### rāḥat al-arwāḥ - `maqam_rahat_al-arwah`
 
 **Description**: A transposition of maqām huzām given its own name because of its character. Its darajat al-istiqrār (tonic) is the zalzalian interval ʿirāq.
 
@@ -338,7 +344,7 @@ GET /api/maqamat/maqam_rahat_al-arwah?tuningSystem=IbnSina-(1037)&startingNote=y
 
 ---
 
-### `maqam_bestenegar` - maqām bestenegar
+### maqām bestenegar - `maqam_bestenegar`
 
 **Description**: Complex and rarely used non-octave repeating maqam. Its darajat al-istiqrār (tonic) is the zalzalian interval segāh.
 
@@ -355,7 +361,7 @@ GET /api/maqamat/maqam_bestenegar?tuningSystem=IbnSina-(1037)&startingNote=yegah
 
 **Maqāmāt without zalzalian intervals:**
 
-### `maqam_kurd` - maqām kurd
+### maqām kurd - `maqam_kurd`
 
 **Description**: This maqām came to much prominence in 1960s and 70s Egyptian popular music, and is one of the most used in pop music across the region today. It doesn't include the quintessential so-called Arabic "quarter tone", i.e. pitch classes ʿirāq, nīm zīrgūleh, segāh, nīm ḥijāz, or awj.
 
@@ -370,7 +376,7 @@ GET /api/maqamat/maqam_kurd?tuningSystem=al-Kindi-(874)&startingNote=ushayran&pi
 
 ---
 
-### `maqam_athar-kurd` - maqām āthār kurd
+### maqām āthār kurd - `maqam_athar-kurd`
 
 **Description**: A rarely used maqām with a very specific character. It doesn't include the quintessential so-called Arabic "quarter tone", i.e. pitch classes ʿirāq, nīm zīrgūleh, segāh, nīm ḥijāz, or awj.
 
@@ -383,7 +389,7 @@ GET /api/maqamat/maqam_athar-kurd?tuningSystem=al-Kindi-(874)&startingNote=ushay
 
 ---
 
-### `maqam_dilkesh-huran` - maqām dilkesh ḥūrān
+### maqām dilkesh ḥūrān - `maqam_dilkesh-huran`
 
 **Description**: A complex non-octave repeating Ottoman maqām that is rarely used in Arabic music but was a part of early 20th century music theory.
 

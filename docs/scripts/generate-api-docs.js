@@ -18,7 +18,7 @@ description: Complete API endpoint documentation
 
 # API Endpoints Reference
 
-Complete documentation for all API endpoints. For quick start, see [API Documentation](./index). For examples, see [Canonical Examples](./canonical-examples).
+Complete documentation for all API endpoints. For quick start, see [API Documentation](./index). For examples, see [Representative Examples](./representative-examples).
 
 ---
 

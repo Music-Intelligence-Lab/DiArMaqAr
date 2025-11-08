@@ -36,4 +36,4 @@ By providing rigorously sourced, computationally accessible reference data with 
 
 ## Links
 
-* **Live Application**: <https://diarmaqar.netlify.app/>
+* **Live Application**: <https://arabic-maqam-archive.netlify.app/>
