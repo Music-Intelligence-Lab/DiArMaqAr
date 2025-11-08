@@ -444,6 +444,15 @@ description: |
 8. **Parenthetical translations**
    - Let Arabic terminology stand as primary
 
+9. **Using specific quantities in prose**
+   - ❌ Avoid: "35 historical tuning systems from al-Kindī (874 CE) to contemporary approaches"
+   - ❌ Avoid: "29 documented melodic fragments with historical source attribution"
+   - ❌ Avoid: "60 historically documented maqāmāt"
+   - ✅ Prefer: "Historical tuning systems from al-Kindī (874 CE) to contemporary approaches"
+   - ✅ Prefer: "Documented melodic fragments with historical source attribution"
+   - ✅ Prefer: "Historically documented maqāmāt"
+   - **Rationale**: Quantities change as data evolves. Focus on describing what the system contains rather than specific counts that may become outdated.
+
 ---
 
 ## JSDoc Standards for Code

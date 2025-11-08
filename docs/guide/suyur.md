@@ -97,10 +97,10 @@ Suyūr are included in maqām responses:
 
 ```bash
 # Get maqām with suyūr
-curl "http://localhost:3000/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=ushayran&includeSuyur=true"
+curl "http://localhost:3000/api/maqamat/maqam_bayyat?tuningSystem=al-Farabi-(950g)&startingNote=ushayran&includeSuyur=true"
 
 # Suyūr are automatically transposed for each transposition
-curl "http://localhost:3000/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=ushayran&includeTranspositions=true&includeSuyur=true"
+curl "http://localhost:3000/api/maqamat/maqam_bayyat?tuningSystem=al-Farabi-(950g)&startingNote=ushayran&includeTranspositions=true&includeSuyur=true"
 ```
 
 ### Via TypeScript Library
@@ -135,7 +135,7 @@ Suyūr represent one of the most detailed aspects of Arabic maqām theory that h
 ## Next Steps
 
 - Learn about [Maqāmāt](/guide/maqamat/) structure
-- Explore [Transposition](/guide/transposition/) capabilities
-- Understand [Modulation](/guide/modulation/) practices
+- Explore [Taṣwīr (Transposition)](/guide/taswir/) capabilities
+- Understand [Intiqāl (Modulation)](/guide/intiqal/) practices
 - Review [Bibliographic Sources](/guide/bibliographic-sources/)
 

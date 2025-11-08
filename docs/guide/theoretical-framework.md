@@ -151,5 +151,5 @@ All calculations are based on the original unit of measurement in the relevant b
 - Learn about [Tuning Systems](/guide/tuning-systems/)
 - Explore [Ajnās](/guide/ajnas/)
 - Understand [Maqāmāt](/guide/maqamat/)
-- Discover [Modulation](/guide/modulation/)
+- Discover [Intiqāl (Modulation)](/guide/intiqal/)
 

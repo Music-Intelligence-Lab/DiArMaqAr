@@ -103,13 +103,13 @@ See the [Suyūr Guide](/guide/suyur/) for detailed information.
 curl http://localhost:3000/api/maqamat
 
 # Get specific maqām with full details
-curl "http://localhost:3000/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=ushayran&pitchClassDataType=all"
+curl "http://localhost:3000/api/maqamat/maqam_bayyat?tuningSystem=al-Farabi-(950g)&startingNote=ushayran&pitchClassDataType=cents"
 
 # Include transpositions
-curl "http://localhost:3000/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=ushayran&includeTranspositions=true"
+curl "http://localhost:3000/api/maqamat/maqam_bayyat?tuningSystem=al-Farabi-(950g)&startingNote=ushayran&includeTranspositions=true"
 
 # Include modulation analysis
-curl "http://localhost:3000/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=ushayran&includeModulations=true"
+curl "http://localhost:3000/api/maqamat/maqam_bayyat?tuningSystem=al-Farabi-(950g)&startingNote=ushayran&includeModulations=true"
 ```
 
 ### Via TypeScript Library
@@ -157,7 +157,7 @@ The platform provides multiple visualization modes:
 ## Next Steps
 
 - Learn about [Suyūr](/guide/suyur/)
-- Explore [Transposition](/guide/transposition/) capabilities
-- Discover [Modulation](/guide/modulation/) networks
+- Explore [Taṣwīr (Transposition)](/guide/taswir/) capabilities
+- Discover [Intiqāl (Modulation)](/guide/intiqal/) networks
 - Understand [Bibliographic Sources](/guide/bibliographic-sources/)
 

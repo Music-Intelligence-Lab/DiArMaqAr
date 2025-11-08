@@ -3,44 +3,33 @@ const path = require('path');
 const yaml = require('js-yaml');
 
 /**
- * Generates static markdown documentation from OpenAPI spec
- * This ensures index.md matches the content shown in playground.md (OASpec component)
- * but remains static for LLM consumption
+ * Generates comprehensive endpoint reference documentation from OpenAPI spec
+ * Outputs to endpoints-reference.md for detailed API reference
+ * Static documentation for LLM consumption and human reference
  */
 
 function generateMarkdownFromOpenAPI(openapiSpec) {
   const { info, servers, paths, components } = openapiSpec;
-  
+
   let markdown = `---
-title: API Documentation
-description: Interactive API documentation and testing for the Digital Arabic Maqām Archive
+title: API Endpoints Reference
+description: Complete API endpoint documentation
 ---
 
-# API Documentation
-## Overview
+# API Endpoints Reference
 
-${info.description}
-
-## Quick Start
-
-- **Base URL**: \`${servers[0].url}\`
-- **Authentication**: Not required (all endpoints are publicly accessible)
-- **Response Format**: JSON
-- **OpenAPI Specification**: Machine-readable OpenAPI 3.1.0 specification [openapi.json](/openapi.json) and [openapi.yaml](/openapi.yaml)
-
-## Interactive API Playground
-
-The **OpenAPI Playground** provides an interactive interface to explore and test all API endpoints. You can browse endpoints by resource type, view request/response schemas, and make live API calls directly from your browser.
-
-Visit the [OpenAPI Playground page](/api/playground) to get started.
+Complete documentation for all API endpoints. For quick start, see [API Documentation](./index). For examples, see [Canonical Examples](./canonical-examples).
 
 ---
 
 # Quick Reference
 ## Base URL
 
-- **Production**: \`${servers[0].url}\`
-- **Development**: \`${servers[1]?.url || 'http://localhost:3000/api'}\`
+${servers && servers.length > 0 
+  ? `- **Production**: \`${servers[0].url}\`
+- **Development**: \`${servers[1]?.url || 'http://localhost:3000/api'}\``
+  : `- **Production**: \`https://diarmaqar.netlify.app/api\`
+- **Development**: \`http://localhost:3000/api\``}
 
 ## OpenAPI Specification
 
@@ -113,11 +102,11 @@ Most endpoints support these optional parameters:
     
     // Add tag description if available
     if (tag === 'Maqāmāt') {
-      markdown += `60 documented modal frameworks with historical source attribution.\n\n`;
+      markdown += `Documented modal frameworks with historical source attribution.\n\n`;
     } else if (tag === 'Ajnās') {
-      markdown += `29 documented tetrachords (melodic fragments) with historical source attribution.\n\n`;
+      markdown += `Documented tetrachords (melodic fragments) with historical source attribution.\n\n`;
     } else if (tag === 'Tuning Systems') {
-      markdown += `35 historical tuning systems spanning from al-Kindī (874 CE) to contemporary approaches.\n\n`;
+      markdown += `Historical tuning systems spanning from al-Kindī (874 CE) to contemporary approaches.\n\n`;
     }
     
     // Process each endpoint in this tag
@@ -139,7 +128,9 @@ function generateEndpointDocumentation(path, method, operation, spec) {
   
   // Endpoint title (using summary or operationId)
   const title = summary || operationId || `${method.toUpperCase()} ${path}`;
-  doc += `#### ${title}\n\n`;
+  // Use operationId as anchor ID to match OASpec component format
+  // This allows hash anchors to work on both static and dynamic pages
+  doc += `#### ${title} {#${operationId}}\n\n`;
   
   // HTTP method and path
   doc += `\`\`\`\n${method.toUpperCase()} ${path}\n\`\`\`\n\n`;
@@ -239,7 +230,9 @@ function generateEndpointDocumentation(path, method, operation, spec) {
   }
   
   // Example request
-  const baseUrl = spec.servers[0].url;
+  const baseUrl = (spec.servers && spec.servers.length > 0) 
+    ? spec.servers[0].url 
+    : 'https://diarmaqar.netlify.app/api';
   const examplePath = path.replace(/{(\w+)}/g, (match, paramName) => {
     const param = parameters?.find(p => p.name === paramName && p.in === 'path');
     if (param?.examples) {
@@ -290,18 +283,18 @@ function generateEndpointDocumentation(path, method, operation, spec) {
 // Main execution
 try {
   const yamlPath = path.join(__dirname, '..', 'openapi.yaml');
-  const outputPath = path.join(__dirname, '..', 'docs', 'api', 'index.md');
-  
+  const outputPath = path.join(__dirname, '..', 'docs', 'api', 'endpoints-reference.md');
+
   // Read and parse YAML
   const fileContents = fs.readFileSync(yamlPath, 'utf8');
   const openapiSpec = yaml.load(fileContents);
-  
+
   // Generate markdown
   const markdown = generateMarkdownFromOpenAPI(openapiSpec);
-  
+
   // Write to file
   fs.writeFileSync(outputPath, markdown, 'utf8');
-  
+
   console.log(`✅ Successfully generated API documentation from OpenAPI spec:`);
   console.log(`   - ${outputPath}`);
 } catch (error) {

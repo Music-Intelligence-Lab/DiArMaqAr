@@ -1,87 +1,11 @@
 ---
 title: API Endpoints Reference
-description: Comprehensive auto-generated API endpoints reference from OpenAPI specification
+description: Complete API endpoint documentation
 ---
 
 # API Endpoints Reference
 
-::: tip Auto-Generated
-This page is auto-generated from the OpenAPI specification. For a cleaner overview, see the [API Overview](./index) page.
-:::
-
-## Overview
-
-Digital Arabic Maqām Archive (DiArMaqAr) — programmatic access to Arabic maqāmāt, ajnās, and tuning systems data
-
-## Quick Start
-
-**Try this first**: `/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents`
-
-**Example endpoints** (no parameters required):
-- `/api/examples/maqam-rast` - Complete example response for Maqām Rāst
-- `/api/examples/jins-rast` - Complete example response for Jins Rāst
-- `/api/discover` - All discovery information including available tuning systems, maqāmāt, ajnās, and documentation links
-
-**Discover parameters**: Add `&options=true` to any detail endpoint to see available parameter values.
-
-**Documentation**:
-- LLM-optimized: https://diarmaqar.netlify.app/docs/llms.txt
-- Full API docs: https://diarmaqar.netlify.app/docs/api
-- OpenAPI spec: https://diarmaqar.netlify.app/docs/openapi.json
-- **Canonical Examples**: https://diarmaqar.netlify.app/docs/api/canonical-examples
-
-Key features:
-- Comprehensive maqāmāt and ajnās database with bibliographic source attribution
-- Tuning systems spanning 1000+ years with multiple starting note contexts
-- Comprehensive pitch class data formats (fractions ratios, decimal ratio, string length, fret divisions, frequency, cents, MIDI notes, and more)
-- Tuning system sensitive transpositions and modulations via al-Shawwā's 1946 modulation guidelines
-
-## Canonical Examples Reference
-
-For recommended tuning systems, maqāmāt, and ajnās to use in examples and testing, see the comprehensive [Canonical Examples documentation](https://diarmaqar.netlify.app/docs/api/canonical-examples).
-
-**Primary canonical values** (use in examples):
-- **Tuning System**: `IbnSina-(1037)` with starting note `yegah`
-- **Maqām**: `maqam_rast`
-- **Jins**: `jins_rast`
-- **Pitch Class Data Type**: `cents`
-
-⚠️ **Critical**: Never use `Anglo-European-(1700)`, `Anglo-European-(1800)`, or `Ronzevalle-(1904)` in examples - these reflect colonial-era attempts to force Arabic maqām theory into Western frameworks.
-
-
-## Quick Start for LLMs
-
-**Try this first** (no parameters required):
-- `/api/examples/maqam-rast` - Complete example response for Maqām Rāst
-- `/api/examples/jins-rast` - Complete example response for Jins Rāst
-- `/api/discover` - All discovery information including available tuning systems, maqāmāt, ajnās, and documentation links
-
-**Working example URL**:
-```bash
-curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents"
-```
-
-**LLM-Optimized Documentation**:
-- [LLM-optimized text](/docs/llms.txt) - Plain text format optimized for LLM parsing
-- [Full LLM documentation](/docs/llms-full.txt) - Complete documentation in LLM-friendly format
-- [Canonical examples reference](/.ai-agent-instructions/reference/canonical-examples.md) - Official list of tuning systems, maqāmāt, and ajnās to use in examples
-
-**Parameter Discovery**: Add `&options=true` to any detail endpoint to see available parameter values.
-
----
-
-## Quick Start
-
-- **Base URL**: `https://diarmaqar.netlify.app/api`
-- **Authentication**: Not required (all endpoints are publicly accessible)
-- **Response Format**: JSON
-- **OpenAPI Specification**: Machine-readable OpenAPI 3.1.0 specification [openapi.json](/openapi.json) and [openapi.yaml](/openapi.yaml)
-
-## Interactive API Playground
-
-The **OpenAPI Playground** provides an interactive interface to explore and test all API endpoints. You can browse endpoints by resource type, view request/response schemas, and make live API calls directly from your browser.
-
-Visit the [OpenAPI Playground page](/api/playground) to get started.
+Complete documentation for all API endpoints. For quick start, see [API Documentation](./index). For examples, see [Canonical Examples](./canonical-examples).
 
 ---
 
@@ -134,9 +58,9 @@ Most endpoints support these optional parameters:
 
 ## Maqāmāt
 
-60 documented modal frameworks with historical source attribution.
+Documented modal frameworks with historical source attribution.
 
-#### List all maqāmāt
+#### List all maqāmāt {#listMaqamat}
 
 ```
 GET /maqamat
@@ -179,7 +103,7 @@ curl "https://diarmaqar.netlify.app/api/maqamat?includeSources=true&includeArabi
 **Response:** List of maqāmāt retrieved successfully
 
 
-#### Get detailed maqām data
+#### Get detailed maqām data {#getMaqam}
 
 ```
 GET /maqamat/{idName}
@@ -269,7 +193,7 @@ curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-
 
 
 
-#### Check maqām availability across tuning systems
+#### Check maqām availability across tuning systems {#getMaqamAvailability}
 
 ```
 GET /maqamat/{idName}/availability
@@ -305,7 +229,7 @@ curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast/availability?includeA
 **Response:** Availability information retrieved successfully
 
 
-#### List transpositions for a maqām
+#### List transpositions for a maqām {#listMaqamTranspositions}
 
 ```
 GET /maqamat/{idName}/transpositions
@@ -340,7 +264,7 @@ curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast/transpositions?tuning
 **Response:** Transpositions retrieved successfully
 
 
-#### Compare maqām data across multiple tuning systems
+#### Compare maqām data across multiple tuning systems {#compareMaqam}
 
 ```
 GET /maqamat/{idName}/compare
@@ -392,9 +316,9 @@ curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast/compare?tuningSystems
 
 ## Ajnās
 
-29 documented tetrachords (melodic fragments) with historical source attribution.
+Documented tetrachords (melodic fragments) with historical source attribution.
 
-#### List all ajnās
+#### List all ajnās {#listAjnas}
 
 ```
 GET /ajnas
@@ -430,7 +354,7 @@ curl "https://diarmaqar.netlify.app/api/ajnas?includeSources=true&includeArabic=
 **Response:** List of ajnās retrieved successfully
 
 
-#### Get detailed jins data
+#### Get detailed jins data {#getJins}
 
 ```
 GET /ajnas/{idName}
@@ -517,7 +441,7 @@ curl "https://diarmaqar.netlify.app/api/ajnas/jins_kurd?tuningSystem=IbnSina-(10
 
 
 
-#### Check jins availability across tuning systems
+#### Check jins availability across tuning systems {#getJinsAvailability}
 
 ```
 GET /ajnas/{idName}/availability
@@ -553,7 +477,7 @@ curl "https://diarmaqar.netlify.app/api/ajnas/jins_kurd/availability?includeArab
 **Response:** Availability information retrieved successfully
 
 
-#### List transpositions for a jins
+#### List transpositions for a jins {#listJinsTranspositions}
 
 ```
 GET /ajnas/{idName}/transpositions
@@ -588,7 +512,7 @@ curl "https://diarmaqar.netlify.app/api/ajnas/jins_kurd/transpositions?tuningSys
 **Response:** Transpositions retrieved successfully
 
 
-#### Compare jins data across multiple tuning systems
+#### Compare jins data across multiple tuning systems {#compareJins}
 
 ```
 GET /ajnas/{idName}/compare
@@ -639,9 +563,9 @@ curl "https://diarmaqar.netlify.app/api/ajnas/jins_kurd/compare?tuningSystems=Ib
 
 ## Tuning Systems
 
-35 historical tuning systems spanning from al-Kindī (874 CE) to contemporary approaches.
+Historical tuning systems spanning from al-Kindī (874 CE) to contemporary approaches.
 
-#### List all tuning systems
+#### List all tuning systems {#listTuningSystems}
 
 ```
 GET /tuning-systems
@@ -673,7 +597,7 @@ curl "https://diarmaqar.netlify.app/api/tuning-systems?includeSources=true&inclu
 **Response:** List of tuning systems
 
 
-#### Get Tuning System Details
+#### Get Tuning System Details {#getTuningSystemPitchClasses}
 
 ```
 GET /tuning-systems/{id}/{startingNote}/pitch-classes
@@ -711,7 +635,7 @@ curl "https://diarmaqar.netlify.app/api/tuning-systems/IbnSina-(1037)/yegah/pitc
 **Response:** Tuning system pitch classes retrieved successfully
 
 
-#### List maqāmāt available in a tuning system
+#### List maqāmāt available in a tuning system {#listTuningSystemMaqamat}
 
 ```
 GET /tuning-systems/{id}/{startingNote}/maqamat
@@ -748,7 +672,7 @@ curl "https://diarmaqar.netlify.app/api/tuning-systems/IbnSina-(1037)/yegah/maqa
 
 ## Pitch Classes
 
-#### List all note names
+#### List all note names {#listNoteNames}
 
 ```
 GET /pitch-classes/note-names
@@ -787,7 +711,7 @@ curl "https://diarmaqar.netlify.app/api/pitch-classes/note-names?includeArabic=t
 **Response:** List of note names retrieved successfully
 
 
-#### Get pitch class details by note name
+#### Get pitch class details by note name {#getPitchClassByNoteName}
 
 ```
 GET /pitch-classes/note-names/{noteName}
@@ -828,7 +752,7 @@ curl "https://diarmaqar.netlify.app/api/pitch-classes/note-names/rast?includeAra
 **Response:** Pitch class data retrieved successfully
 
 
-#### Check note name availability across tuning systems
+#### Check note name availability across tuning systems {#getNoteNameAvailability}
 
 ```
 GET /pitch-classes/note-names/{noteName}/availability
@@ -858,7 +782,7 @@ curl "https://diarmaqar.netlify.app/api/pitch-classes/note-names/rast/availabili
 **Response:** Availability data retrieved successfully
 
 
-#### Compare pitch class by note name across tuning systems
+#### Compare pitch class by note name across tuning systems {#comparePitchClassByNoteName}
 
 ```
 GET /pitch-classes/note-names/{noteName}/compare
@@ -897,7 +821,7 @@ curl "https://diarmaqar.netlify.app/api/pitch-classes/note-names/rast/compare?tu
 
 ## Intervals
 
-#### Calculate intervals by note names
+#### Calculate intervals by note names {#calculateIntervalsByNoteNames}
 
 ```
 GET /intervals
@@ -936,7 +860,7 @@ curl "https://diarmaqar.netlify.app/api/intervals?noteNames=rast,dugah,segah&inc
 **Response:** Interval calculations retrieved successfully
 
 
-#### Compare intervals across tuning systems
+#### Compare intervals across tuning systems {#compareIntervalsByNoteNames}
 
 ```
 GET /intervals/compare
@@ -972,7 +896,7 @@ curl "https://diarmaqar.netlify.app/api/intervals/compare?noteNames=rast,dugah,s
 
 ## Sources
 
-#### List all bibliographic sources
+#### List all bibliographic sources {#listSources}
 
 ```
 GET /sources
@@ -1008,7 +932,7 @@ curl "https://diarmaqar.netlify.app/api/sources?includeArabic=true"
 **Response:** List of sources retrieved successfully
 
 
-#### Get a single bibliographic source
+#### Get a single bibliographic source {#getSource}
 
 ```
 GET /sources/{id}
@@ -1058,7 +982,7 @@ curl "https://diarmaqar.netlify.app/api/sources/Farmer-(1937)?includeArabic=true
 **Response:** Source retrieved successfully
 
 
-#### List tuning systems by source
+#### List tuning systems by source {#listTuningSystemsBySource}
 
 ```
 GET /sources/{id}/tuning-systems
@@ -1089,7 +1013,7 @@ curl "https://diarmaqar.netlify.app/api/sources/Farmer-(1937)/tuning-systems?inc
 **Response:** Tuning systems retrieved successfully
 
 
-#### List maqamat by source
+#### List maqamat by source {#listMaqamatBySource}
 
 ```
 GET /sources/{id}/maqamat
@@ -1120,7 +1044,7 @@ curl "https://diarmaqar.netlify.app/api/sources/Farmer-(1937)/maqamat?includeAra
 **Response:** Maqamat retrieved successfully
 
 
-#### List ajnas by source
+#### List ajnas by source {#listAjnasBySource}
 
 ```
 GET /sources/{id}/ajnas

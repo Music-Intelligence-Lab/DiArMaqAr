@@ -100,8 +100,8 @@ This comprehensive analysis reveals the primary structural ajnās that define th
 # Get all ajnās
 curl http://localhost:3000/api/ajnas
 
-# Get ajnās for a specific maqām (included in maqām response)
-curl "http://localhost:3000/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=ushayran"
+# Get specific jins with zalzalian intervals
+curl "http://localhost:3000/api/ajnas/jins_bayyat?tuningSystem=al-Farabi-(950g)&startingNote=ushayran&pitchClassDataType=cents"
 ```
 
 ### Via TypeScript Library
@@ -134,5 +134,5 @@ Each jins includes:
 ## Next Steps
 
 * Learn about [Maqāmāt](/guide/maqamat/) that combine ajnās
-* Explore [Transposition](/guide/transposition/) in depth
-* Understand how ajnās relate to [Modulation](/guide/modulation/)
+* Explore [Taṣwīr (Transposition)](/guide/taswir/) in depth
+* Understand how ajnās relate to [Intiqāl (Modulation)](/guide/intiqal/)

@@ -10,7 +10,7 @@
   width: 100% !important;
 }
 
-/* Widen the main content area, especially after removing right sidebar */
+/* Widen the main content area */
 .VPDoc.has-aside .content-container,
 .VPDoc .content-container {
   max-width: 100% !important;
@@ -77,46 +77,16 @@ div.content[data-v-39a288b8] {
   padding: 0 24px !important;
 }
 
-/* Hide the aside-container (right sidebar) completely */
-.aside-container,
-div.aside-container,
-div.aside-container[data-v-39a288b8] {
-  display: none !important;
-  width: 0 !important;
-  visibility: hidden !important;
-}
-
-/* Hide any aside elements */
-.aside,
-.VPDocAside,
-.VPDocAsideContent {
-  display: none !important;
-}
-
-/* Adjust layout when aside is hidden - remove reserved space */
-.VPDoc.has-aside .content-container {
-  margin-right: 0 !important;
-  padding-right: 0 !important;
-}
-
-/* Make content take full width when aside is hidden */
-.VPDoc:not(.has-aside) .content-container,
-.VPDoc .content-container {
-  max-width: 100% !important;
-  margin-right: 0 !important;
-}
-
-/* Ensure the layout doesn't reserve space for aside */
-.VPDoc.has-aside {
-  grid-template-columns: 1fr 0 !important;
-}
-
-/* Hide the entire aside section */
-.VPDoc .aside,
-.VPDoc .VPDocAside {
-  display: none !important;
-  width: 0 !important;
-  min-width: 0 !important;
+/* Keep right sidebar (On This Page) visible on tablet and larger screens */
+/* Minimal override - only prevent VitePress from hiding it, let VitePress handle positioning */
+@media (min-width: 769px) {
+  .aside-container {
+    display: block !important;
+  }
+  
+  .VPDocAside {
+    display: block !important;
+  }
 }
 
 /* Increase left padding on playground variables to match other column padding */
@@ -373,3 +343,34 @@ div.content-body {
 }
 
 /* OpenAPI response styling - Now handled by theme configuration (jsonViewer.renderer: 'shiki') */
+
+/* Improve contact section formatting in OpenAPI playground */
+/* Target only the contact info row (the one that contains mailto links) */
+.vp-doc .flex.flex-row.items-center.gap-2:has(a[href^="mailto:"]),
+.openapi-component .flex.flex-row.items-center.gap-2:has(a[href^="mailto:"]) {
+  flex-wrap: wrap !important;
+  align-items: flex-start !important;
+  gap: 8px 12px !important;
+  line-height: 1.6 !important;
+}
+
+/* Ensure email links wrap properly */
+.vp-doc .flex.flex-row.items-center.gap-2:has(a[href^="mailto:"]) a[href^="mailto:"],
+.openapi-component .flex.flex-row.items-center.gap-2:has(a[href^="mailto:"]) a[href^="mailto:"] {
+  word-break: break-all;
+  white-space: normal;
+}
+
+/* Allow contact name/URL links to wrap */
+.vp-doc .flex.flex-row.items-center.gap-2:has(a[href^="mailto:"]) > a:not([href^="mailto:"]),
+.openapi-component .flex.flex-row.items-center.gap-2:has(a[href^="mailto:"]) > a:not([href^="mailto:"]) {
+  word-break: break-word;
+  white-space: normal;
+}
+
+/* Better spacing for separator between name and email */
+.vp-doc .flex.flex-row.items-center.gap-2:has(a[href^="mailto:"]) > span.text-muted-foreground,
+.openapi-component .flex.flex-row.items-center.gap-2:has(a[href^="mailto:"]) > span.text-muted-foreground {
+  margin: 0 4px;
+  flex-shrink: 0;
+}

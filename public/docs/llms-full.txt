@@ -100,8 +100,8 @@ This comprehensive analysis reveals the primary structural ajnās that define th
 # Get all ajnās
 curl http://localhost:3000/api/ajnas
 
-# Get ajnās for a specific maqām (included in maqām response)
-curl "http://localhost:3000/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=ushayran"
+# Get specific jins with zalzalian intervals
+curl "http://localhost:3000/api/ajnas/jins_bayyat?tuningSystem=al-Farabi-(950g)&startingNote=ushayran&pitchClassDataType=cents"
 ```
 
 ### Via TypeScript Library
@@ -134,1244 +134,138 @@ Each jins includes:
 ## Next Steps
 
 * Learn about [Maqāmāt](/guide/maqamat/) that combine ajnās
-* Explore [Transposition](/guide/transposition/) in depth
-* Understand how ajnās relate to [Modulation](/guide/modulation/)
+* Explore [Taṣwīr (Transposition)](/guide/taswir/) in depth
+* Understand how ajnās relate to [Intiqāl (Modulation)](/guide/intiqal/)
 
 ---
 
 ---
 url: /docs/api.md
-description: Interactive API documentation and testing for the Digital Arabic Maqām Archive
+description: 'Programmatic access to Arabic maqāmāt, ajnās, and tuning systems data'
 ---
 
 # API Documentation
 
-## Overview
-
-Digital Arabic Maqām Archive (DiArMaqAr) — programmatic access to Arabic maqāmāt, ajnās, and tuning systems data
-
-Key features:
-
-* Comprehensive maqāmāt and ajnās database with bibliographic source attribution
-* Tuning systems spanning 1000+ years with multiple starting note contexts
-* Comprehensive pitch class data formats (fractions ratios, decimal ratio, string length, fret divisions, frequency, cents, MIDI notes, and more)
-* Tuning system sensitive transpositions and modulations via al-Shawwā's 1946 modulation guidelines
+Digital Arabic Maqām Archive (DiArMaqAr) — programmatic access to historically documented maqāmāt, ajnās, and tuning systems spanning from al-Kindī (874 CE) to contemporary approaches.
 
 ## Quick Start
 
-* **Base URL**: `https://diarmaqar.netlify.app/api`
-* **Authentication**: Not required (all endpoints are publicly accessible)
-* **Response Format**: JSON
-* **OpenAPI Specification**: Machine-readable OpenAPI 3.1.0 specification [openapi.json](/openapi.json) and [openapi.yaml](/openapi.yaml)
-
-## Interactive API Playground
-
-The **OpenAPI Playground** provides an interactive interface to explore and test all API endpoints. You can browse endpoints by resource type, view request/response schemas, and make live API calls directly from your browser.
-
-Visit the [OpenAPI Playground page](/api/playground) to get started.
-
-***
-
-# Quick Reference
-
-## Base URL
-
-* **Production**: `https://diarmaqar.netlify.app/api`
-* **Development**: `http://localhost:3000/api`
-
-## OpenAPI Specification
-
-Machine-readable OpenAPI 3.1.0 specification:
-
-* [openapi.json](/openapi.json)
-* [openapi.yaml](/openapi.yaml)
-
-## Authentication
-
-The API does not require authentication. All endpoints are publicly accessible.
-
-## Response Format
-
-All API responses are in JSON format. List endpoints return:
-
-```json
-{
-  "count": <number>,
-  "data": [<array>]
-}
-```
-
-## Rate Limiting
-
-Currently, there are no rate limits. Please use the API responsibly.
-
-## Common Parameters
-
-Most endpoints support these optional parameters:
-
-* **`includeArabic`** (default: `"true"`): Include Arabic script alongside transliteration
-  * `"true"`: Bilingual responses with `*Ar` suffixed fields (`displayNameAr`, `noteNameDisplayAr`, etc.)
-  * `"false"`: English transliteration only
-
-* **`includeSources`** (default: `"true"` for list endpoints, `"false"` for detail endpoints): Include bibliographic source references
-  * `"true"`: Include `sources` array with `{sourceId, page}` objects
-  * `"false"`: Omit source references for performance
-
-***
-
-# Endpoints
-
-## Maqāmāt
-
-60 documented modal frameworks with historical source attribution.
-
-#### List all maqāmāt
-
-```
-GET /maqamat
-```
-
-Retrieve all available maqāmāt with optional filtering and sorting.
-
-Returns concise metadata (no pitch class data) including:
-
-* URL-safe identifiers and display names for each maqām
-* Maqām family and maqām tonic identifiers (both URL-safe and display formats)
-* Availability counts across tuning systems with their valid starting note names (e.g., "ʿushayrān", "yegāh" etc...)
-* Optional bibliographic source references (sourceId and page) when `includeSources=true`
-* Filter values must be URL-safe; see parameter enums for complete list of valid options
-
-**Query Parameters:**
-
-* `filterByFamily` (optional): Filter by maqām family name (URL-safe, case-insensitive, diacritics-insensitive) - Type: `string` - Valid values: `ajam`, `athar_kurd`, `awj_ara`, `bayyat`, `buselik`, ... (16 total)
-  * Example: `rast`
-* `filterByTonic` (optional): Filter by maqām tonic/first note (URL-safe, case-insensitive, diacritics-insensitive) - Type: `string` - Valid values: `ajam_ushayran`, `chahargah`, `dugah`, `iraq`, `nawa`, `rast`, `segah`, `ushayran`, `yegah`
-* `sortBy` (optional): Sort order for results - Type: `string` - Valid values: `tonic`, `alphabetical` - Default: `alphabetical`
-  * Example: `tonic` - Sort by tonic note priority (NoteName.ts order)
-  * Example: `alphabetical` - Sort alphabetically by display name
-* `includeSources` (optional): Include bibliographic source references (sourceId and page) for each maqām - Type: `string` - Valid values: `true`, `false` - Default: `true`
-  * Example: `true`
-* `includeArabic` (optional): Return bilingual responses with Arabic script when true.
-  * All English/transliteration fields remain unchanged
-  * Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
-  * Note names, maqām names, and jins names get Arabic versions in \*Ar fields
-  * Comments get Arabic versions in commentsAr if available
-  * Tuning system display names get Arabic versions in displayNameAr if available
-  * Source metadata gets Arabic versions in \*Ar fields (titleAr, firstNameAr, etc.)
-* Type: `string` - Valid values: `true`, `false` - Default: `true`
-* Example: `true`
-
-**Example:**
-
-```bash
-curl "https://diarmaqar.netlify.app/api/maqamat?includeSources=true&includeArabic=true"
-```
-
-**Response:** List of maqāmāt retrieved successfully
-
-#### Get detailed maqām data
-
-```
-GET /maqamat/{idName}
-```
-
-Retrieve comprehensive data for a specific maqām on its conventional or a transposed tonic, in a specific tuning system on a specific starting note name.
-
-Returns:
-
-* Comprehensive pitch class data in the requested tuning system and starting note name
-* All ajnās present at each maqām degree in the ascending and descending maqām structure, organized by their maqām degree note names
-* Optional includeIntervals data, transposition to different tonics, tuning-system-specific modulations (including lower octave), and suyūr
-
-Parameter Discovery:
-
-* Use options=true to discover valid values for all parameters including dynamically calculated transposition options
-* Especially useful for finding valid tuning system starting notes and transposition tonics for a specific maqām
-
-Important:
-
-* When options=true, the endpoint returns parameter discovery metadata instead of maqām data
-* This mode is mutually exclusive with data-returning parameters (transpose to, include modulations, include lower octave modulations, include suyūr, pitch class data type, includeIntervals)
-* If data-returning parameters are provided with options=true, the API returns a 400 Bad Request error with details about conflicting parameters
-
-Requirements:
-
-* Tuning system and starting note are required for all requests (both data retrieval and discovery mode)
-* These are fundamental to all pitch class calculations
-
-**Path Parameters:**
-
-* `idName`: URL-safe maqām identifier (string) **(required)**
-  * Example: `maqam_rast` - Maqām Rāst
-  * Example: `maqam_hijaz` - Maqām Ḥijāz
-
-**Query Parameters:**
-
-* `tuningSystem` **(required)**: Tuning system identifier (e.g., 'IbnSina-(1037)', 'al-Farabi-(950i)', 'Anglo-European-(1700)') - Type: `string`
-  * Example: `IbnSina-(1037)` - Ibn Sīnā 17-tone system
-  * Example: `al-Farabi-(950i)` - al-Fārābī tuning system
-  * Example: `Anglo-European-(1700)` - 12-tone equal temperament
-* `startingNote` **(required)**: Tuning system starting note name (URL-safe, diacritics-insensitive).
-  * Different starting notes represent different theoretical frameworks within the same tuning system
-  * Examples: ʿushayrān for oud tuning, yegāh for monochord measurements
-* Type: `string`
-* Example: `ushayran` - ʿushayrān
-* Example: `rast` - rāst
-* Example: `dugah` - dūgāh
-* `options` (optional): When true, returns available parameter options instead of maqām data.
-  * Tuning system and starting note are required for all requests (both data retrieval and discovery mode)
-  * These are fundamental to all pitch class calculations and calculate valid starting note options and transposition tonics
-  * Mutually exclusive with data-returning parameters (transpose to, include modulations, include lower octave modulations, include suyūr, pitch class data type, includeIntervals)
-  * Transposition options are dynamically calculated based on the specific maqām, tuning system, and starting note combination
-  * Only tonics where the maqām can be validly transposed (preserving interval pattern) are included, not all possible pitch classes
-  * If data-returning parameters are provided, returns 400 Bad Request error with details about conflicting parameters
-* Type: `string` - Valid values: `true`, `false` - Default: `false`
-* Example: `true`
-* `pitchClassDataType` **(required)**: Specifies which pitch class data type to return for each pitch class.
-  * Optional for discovery mode (when options=true) since discovery returns parameter metadata, not formatted data
-  * Use 'all' for complete pitch class data across all available formats
-  * Each option returns the specified data type for all pitch classes in the maqām
-* Type: `string` - Valid values: `all`, `frequency`, `cents`, `fraction`, `decimalRatio`, ... (13 total)
-* Example: `cents`
-* `transposeTo` (optional): Transpose the maqām to a new tonic by preserving the interval patterns (URL-safe, diacritics-insensitive).
-  * To see all valid transposition options, request available parameter options instead of maqām data
-* Type: `string`
-* Example: `nawa`
-* `includeIntervals` (optional): Include interval data between maqām degrees - Type: `string` - Valid values: `true`, `false` - Default: `true`
-  * Example: `true`
-* `includeModulations` (optional): Include modulation possibilities to other maqāmāt and ajnās - Type: `string` - Valid values: `true`, `false` - Default: `true`
-  * Example: `true`
-* `includeModulations8vb` (optional): Include available modulations an octave below - Type: `string` - Valid values: `true`, `false` - Default: `true`
-  * Example: `true`
-* `includeSuyur` (optional): Include suyūr (melodic paths) data - Type: `string` - Valid values: `true`, `false` - Default: `true`
-  * Example: `true`
-* `includeArabic` (optional): Return response data in Arabic script when true.
-  * Note names, maqām names, and jins names are converted to Arabic script
-  * Comments return Arabic versions if available
-  * Tuning system display names use Arabic creator/title if available
-* Type: `string` - Valid values: `true`, `false` - Default: `true`
-* Example: `true`
-
-**Example:**
-
-```bash
-curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=ushayran&pitchClassDataType=cents&includeArabic=true"
-```
-
-**Response:** Maqām data retrieved successfully.
-
-* When options is true, the response structure differs and returns available parameter options instead of maqām data
-* In that case, transposition options contain only valid transposition tonics for this specific maqām, tuning system, and starting note combination
-
-#### Check maqām availability across tuning systems
-
-```
-GET /maqamat/{idName}/availability
-```
-
-Return tuning-system availability for a maqām.
-
-* Shows which tuning systems on which starting note names can realize the specified maqām
-* If `transpositionNoteName` is provided, filters results to show only tuning systems where the maqām can be transposed to that specific note
-* Validity is computed against each tuning system's note name sets and the maqām's pitch class intervals
-* Tuning system starting note names are returned as both display values (with diacritics) and URL-safe identifiers
-
-**Path Parameters:**
-
-* `idName`: URL-safe maqām identifier (string) **(required)**
-  * Example: `maqam_rast`
-
-**Query Parameters:**
-
-* `transpositionNoteName` (optional): Filter results to show only tuning systems where the maqām can be transposed to this specific note (URL-safe, diacritics-insensitive). - Type: `string`
-  * Example: `nawa`
-* `includeArabic` (optional): Return response data in Arabic script when true.
-  * Note names, maqām names, and jins names are converted to Arabic script
-  * Comments return Arabic versions if available
-  * Tuning system display names use Arabic creator/title if available
-* Type: `string` - Valid values: `true`, `false` - Default: `true`
-* Example: `true`
-
-**Example:**
-
-```bash
-curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast/availability?includeArabic=true"
-```
-
-**Response:** Availability information retrieved successfully
-
-#### List transpositions for a maqām
-
-```
-GET /maqamat/{idName}/transpositions
-```
-
-List all available transposition options for a maqām within a specific tuning system and starting note.
-
-Returns all tonic transpositions that are feasible under the tuning system across all octaves.
-
-**Path Parameters:**
-
-* `idName`: URL-safe maqām identifier (string) **(required)**
-  * Example: `maqam_rast`
-
-**Query Parameters:**
-
-* `tuningSystem` **(required)**: Tuning system identifier (e.g., 'IbnSina-(1037)', 'al-Farabi-(950i)', 'Anglo-European-(1700)') - Type: `string`
-  * Example: `IbnSina-(1037)`
-* `startingNote` **(required)**: Tuning system starting note name (URL-safe, diacritics-insensitive) - Type: `string`
-  * Example: `yegah`
-* `includeArabic` (optional): Return response data in Arabic script when true.
-  * Note names, maqām names, and jins names are converted to Arabic script
-  * Comments return Arabic versions if available
-  * Tuning system display names use Arabic creator/title if available
-* Type: `string` - Valid values: `true`, `false` - Default: `true`
-* Example: `true`
-
-**Example:**
-
-```bash
-curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast/transpositions?tuningSystem=IbnSina-(1037)&startingNote=yegah&includeArabic=true"
-```
-
-**Response:** Transpositions retrieved successfully
-
-#### Compare maqām data across multiple tuning systems
-
-```
-GET /maqamat/{idName}/compare
-```
-
-Compare comprehensive maqām data across multiple tuning systems and starting note configurations in a single request.
-
-Returns comprehensive data similar to `/maqamat/{idName}` but without modulations and suyur. Each comparison includes:
-
-* Pitch class data (ascending and descending sequences)
-* Optional interval data
-* Ajnās (constituent melodic structures) mapping
-* Maqām metadata (family classification, tonic, transposition status)
-* Context information (tuning system, starting note, reference frequency)
-
-This endpoint is ideal for comparative musicological analysis across different historical tuning systems.
-
-**Path Parameters:**
-
-* `idName`: URL-safe maqām identifier (string) **(required)**
-  * Example: `maqam_rast`
-
-**Query Parameters:**
-
-* `tuningSystems` **(required)**: Comma-separated tuning system IDs. - Type: `string`
-  * Example: `IbnSina-(1037),al-Farabi-(950g)`
-* `startingNote` **(required)**: Starting note name (URL-safe, diacritics-insensitive) - applies to all tuning systems - Type: `string`
-  * Example: `yegah`
-* `pitchClassDataType` **(required)**: Output format for pitch class data - Type: `string` - Valid values: `all`, `englishName`, `fraction`, `cents`, `decimalRatio`, ... (13 total)
-  * Example: `cents`
-* `includeIntervals` (optional): Include interval data between pitch classes - Type: `string` - Valid values: `true`, `false` - Default: `true`
-  * Example: `true`
-* `transposeTo` (optional): Transpose to specific tonic note (applies to all tuning systems) - Type: `string`
-  * Example: `nawa`
-* `includeArabic` (optional): Return response data in Arabic script when true.
-  * Note names, maqām names, and jins names are converted to Arabic script
-  * Comments return Arabic versions if available
-  * Tuning system display names use Arabic creator/title if available
-* Type: `string` - Valid values: `true`, `false` - Default: `true`
-* Example: `true`
-
-**Example:**
-
-```bash
-curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast/compare?tuningSystems=IbnSina-(1037),al-Farabi-(950g)&startingNote=yegah&pitchClassDataType=cents&includeArabic=true"
-```
-
-**Response:** Comparison data retrieved successfully
-
-***
-
-## Ajnās
-
-29 documented tetrachords (melodic fragments) with historical source attribution.
-
-#### List all ajnās
-
-```
-GET /ajnas
-```
-
-Return all ajnās (singular: jins) with metadata.
-
-* Includes URL-safe identifiers, display names, and structural information
-* Structural information includes note sequences needed for maqām construction and analysis
-* Optional bibliographic source references (sourceId and page) when `includeSources=true`
-
-**Query Parameters:**
-
-* `filterByTonic` (optional): Filter by jins tonic/first note (URL-safe, case-insensitive, diacritics-insensitive) - Type: `string`
-  * Example: `rast`
-* `sortBy` (optional): Sort order for results - Type: `string` - Valid values: `tonic`, `alphabetical` - Default: `alphabetical`
-  * Example: `tonic` - Sort by tonic note priority (NoteName.ts order)
-  * Example: `alphabetical` - Sort alphabetically by display name
-* `includeSources` (optional): Include bibliographic source references (sourceId and page) for each jins - Type: `string` - Valid values: `true`, `false` - Default: `true`
-  * Example: `true`
-* `includeArabic` (optional): Return response data in Arabic script when true.
-  * Note names, maqām names, and jins names are converted to Arabic script
-  * Comments return Arabic versions if available
-  * Tuning system display names use Arabic creator/title if available
-* Type: `string` - Valid values: `true`, `false` - Default: `true`
-* Example: `true`
-
-**Example:**
-
-```bash
-curl "https://diarmaqar.netlify.app/api/ajnas?includeSources=true&includeArabic=true"
-```
-
-**Response:** List of ajnās retrieved successfully
-
-#### Get detailed jins data
-
-```
-GET /ajnas/{idName}
-```
-
-Retrieve comprehensive data for a specific jins on its conventional or a transposed tonic, in a specific tuning system on a specific starting note name.
-
-Returns:
-
-* Comprehensive pitch class data in the requested tuning system and starting note name
-* Optional includeIntervals data, transposition to different tonics, and tuning-system-specific modulations (including lower octave)
-
-Parameter Discovery:
-
-* Use options=true to discover valid values for all parameters including dynamically calculated transposition options
-* Especially useful for finding valid tuning system starting notes and transposition tonics for a specific jins
-
-Important:
-
-* When options=true, the endpoint returns parameter discovery metadata instead of jins data
-* This mode is mutually exclusive with data-returning parameters (transpose to, include modulations, include lower octave modulations, pitch class data type, includeIntervals)
-* If data-returning parameters are provided with options=true, the API returns a 400 Bad Request error with details about conflicting parameters
-
-Requirements:
-
-* Tuning system and starting note are required for all requests (both data retrieval and discovery mode)
-* These are fundamental to all pitch class calculations
-
-**Path Parameters:**
-
-* `idName`: URL-safe jins identifier (string) **(required)**
-  * Example: `jins_kurd` - Jins Kurd
-  * Example: `jins_rast` - Jins Rāst
-
-**Query Parameters:**
-
-* `tuningSystem` **(required)**: Tuning system identifier (e.g., 'IbnSina-(1037)', 'al-Farabi-(950i)', 'Anglo-European-(1700)') - Type: `string`
-  * Example: `IbnSina-(1037)` - Ibn Sīnā 17-tone system
-  * Example: `al-Farabi-(950i)` - al-Fārābī tuning system
-  * Example: `Anglo-European-(1700)` - 12-tone equal temperament
-* `startingNote` **(required)**: Tuning system starting note name (URL-safe, diacritics-insensitive).
-  * Different starting notes represent different theoretical frameworks within the same tuning system
-  * Examples: ʿushayrān for oud tuning, yegāh for monochord measurements
-* Type: `string`
-* Example: `ushayran` - ʿushayrān
-* Example: `rast` - rāst
-* Example: `yegah` - yegāh
-* `options` (optional): When true, returns available parameter options instead of jins data.
-  * Tuning system and starting note are required for all requests (both data retrieval and discovery mode)
-  * These are fundamental to all pitch class calculations and calculate valid starting note options and transposition tonics
-  * Mutually exclusive with data-returning parameters (transpose to, include modulations, include lower octave modulations, pitch class data type, intervals)
-  * Transposition options are dynamically calculated based on the specific jins, tuning system, and starting note combination
-  * Only tonics where the jins can be validly transposed (preserving interval pattern) are included, not all possible pitch classes
-  * If data-returning parameters are provided, returns 400 Bad Request error with details about conflicting parameters
-* Type: `string` - Valid values: `true`, `false` - Default: `false`
-* Example: `true`
-* `pitchClassDataType` (optional): Specifies which pitch class data type to return for each pitch class.
-  * Optional for discovery mode (when options=true) since discovery returns parameter metadata, not formatted data
-  * Use 'all' for complete pitch class data across all available formats
-  * Each option returns the specified data type for all pitch classes in the jins
-* Type: `string` - Valid values: `all`, `frequency`, `cents`, `fraction`, `decimalRatio`, ... (13 total)
-* Example: `cents`
-* `transposeTo` (optional): Transpose the jins to a new tonic by preserving the interval patterns (URL-safe, diacritics-insensitive).
-  * To see all valid transposition options, request available parameter options instead of jins data
-* Type: `string`
-* Example: `nawa`
-* `includeIntervals` (optional): Include interval data between jins degrees - Type: `string` - Valid values: `true`, `false` - Default: `true`
-  * Example: `true`
-* `includeModulations` (optional): Include modulation possibilities to other ajnās - Type: `string` - Valid values: `true`, `false` - Default: `true`
-  * Example: `true`
-* `includeModulations8vb` (optional): Include available modulations an octave below - Type: `string` - Valid values: `true`, `false` - Default: `true`
-  * Example: `true`
-* `includeArabic` (optional): Return response data in Arabic script when true.
-  * Note names, maqām names, and jins names are converted to Arabic script
-  * Comments return Arabic versions if available
-  * Tuning system display names use Arabic creator/title if available
-* Type: `string` - Valid values: `true`, `false` - Default: `true`
-* Example: `true`
-
-**Example:**
-
-```bash
-curl "https://diarmaqar.netlify.app/api/ajnas/jins_kurd?tuningSystem=IbnSina-(1037)&startingNote=ushayran&includeArabic=true"
-```
-
-**Response:** Jins data retrieved successfully.
-
-* When options is true, the response structure differs and returns available parameter options instead of jins data
-* In that case, transposition options contain only valid transposition tonics for this specific jins, tuning system, and starting note combination
-
-#### Check jins availability across tuning systems
-
-```
-GET /ajnas/{idName}/availability
-```
-
-Return tuning-system availability for a jins.
-
-* Shows which tuning systems on which starting note names can realize the specified jins
-* If `transpositionNoteName` is provided, filters results to show only tuning systems where the jins can be transposed to that specific note
-* Validity is computed against each tuning system's note name sets and the jins's pitch class intervals
-* Availability checking spans 3 octaves to correctly handle ajnās that may span multiple octaves
-
-**Path Parameters:**
-
-* `idName`: URL-safe jins identifier (string) **(required)**
-  * Example: `jins_kurd`
-
-**Query Parameters:**
-
-* `transpositionNoteName` (optional): Filter results to show only tuning systems where the jins can be transposed to this specific note (URL-safe, diacritics-insensitive). - Type: `string`
-  * Example: `nawa`
-* `includeArabic` (optional): Return response data in Arabic script when true.
-  * Note names, maqām names, and jins names are converted to Arabic script
-  * Comments return Arabic versions if available
-  * Tuning system display names use Arabic creator/title if available
-* Type: `string` - Valid values: `true`, `false` - Default: `true`
-* Example: `true`
-
-**Example:**
-
-```bash
-curl "https://diarmaqar.netlify.app/api/ajnas/jins_kurd/availability?includeArabic=true"
-```
-
-**Response:** Availability information retrieved successfully
-
-#### List transpositions for a jins
-
-```
-GET /ajnas/{idName}/transpositions
-```
-
-List all available transposition options for a jins within a specific tuning system and starting note.
-
-Returns all tonic transpositions that are feasible under the tuning system across all octaves.
-
-**Path Parameters:**
-
-* `idName`: URL-safe jins identifier (string) **(required)**
-  * Example: `jins_kurd`
-
-**Query Parameters:**
-
-* `tuningSystem` **(required)**: Tuning system identifier (e.g., 'IbnSina-(1037)', 'al-Farabi-(950i)', 'Anglo-European-(1700)') - Type: `string`
-  * Example: `IbnSina-(1037)`
-* `startingNote` **(required)**: Tuning system starting note name (URL-safe, diacritics-insensitive) - Type: `string`
-  * Example: `yegah`
-* `includeArabic` (optional): Return response data in Arabic script when true.
-  * Note names, maqām names, and jins names are converted to Arabic script
-  * Comments return Arabic versions if available
-  * Tuning system display names use Arabic creator/title if available
-* Type: `string` - Valid values: `true`, `false` - Default: `true`
-* Example: `true`
-
-**Example:**
-
-```bash
-curl "https://diarmaqar.netlify.app/api/ajnas/jins_kurd/transpositions?tuningSystem=IbnSina-(1037)&startingNote=yegah&includeArabic=true"
-```
-
-**Response:** Transpositions retrieved successfully
-
-#### Compare jins data across multiple tuning systems
-
-```
-GET /ajnas/{idName}/compare
-```
-
-Compare comprehensive jins data across multiple tuning systems and starting note configurations in a single request.
-
-Returns comprehensive data similar to `/ajnas/{idName}` but without modulations. Each comparison includes:
-
-* Pitch class data (single sequence, as ajnās are unidirectional)
-* Optional interval data
-* Jins metadata (tonic, transposition status)
-* Context information (tuning system, starting note, reference frequency)
-
-This endpoint is ideal for comparative musicological analysis of melodic structures across different historical tuning systems.
-
-**Path Parameters:**
-
-* `idName`: URL-safe jins identifier (string) **(required)**
-  * Example: `jins_kurd`
-
-**Query Parameters:**
-
-* `tuningSystems` **(required)**: Comma-separated tuning system IDs. - Type: `string`
-  * Example: `IbnSina-(1037),al-Farabi-(950g)`
-* `startingNote` **(required)**: Starting note name (URL-safe, diacritics-insensitive) - applies to all tuning systems - Type: `string`
-  * Example: `yegah`
-* `pitchClassDataType` **(required)**: Output format for pitch class data - Type: `string` - Valid values: `all`, `englishName`, `fraction`, `cents`, `decimalRatio`, ... (13 total)
-  * Example: `cents`
-* `includeIntervals` (optional): Include interval data between pitch classes - Type: `string` - Valid values: `true`, `false` - Default: `true`
-  * Example: `true`
-* `transposeTo` (optional): Transpose to specific tonic note (applies to all tuning systems) - Type: `string`
-  * Example: `nawa`
-* `includeArabic` (optional): Return response data in Arabic script when true.
-  * Note names, maqām names, and jins names are converted to Arabic script
-  * Comments return Arabic versions if available
-  * Tuning system display names use Arabic creator/title if available
-* Type: `string` - Valid values: `true`, `false` - Default: `true`
-* Example: `true`
-
-**Example:**
-
-```bash
-curl "https://diarmaqar.netlify.app/api/ajnas/jins_kurd/compare?tuningSystems=IbnSina-(1037),al-Farabi-(950g)&startingNote=yegah&pitchClassDataType=cents&includeArabic=true"
-```
-
-**Response:** Comparison data retrieved successfully
-
-***
-
-## Tuning Systems
-
-35 historical tuning systems spanning from al-Kindī (874 CE) to contemporary approaches.
-
-#### List all tuning systems
-
-```
-GET /tuning-systems
-```
-
-Retrieve metadata for all available tuning systems.
-
-* Includes identifiers, display names, version information, primary value type, and pitch class counts per octave
-* Responses include available starting note names for each tuning system
-* Different starting notes represent different theoretical frameworks (e.g., ʿushayrān for oud tuning, yegāh for monochord measurements)
-* Optional bibliographic source references (sourceId and page) when `includeSources=true`
-
-**Query Parameters:**
-
-* `includeSources` (optional): Include bibliographic source references (sourceId and page) for each tuning system - Type: `string` - Valid values: `true`, `false` - Default: `true`
-  * Example: `true`
-* `includeArabic` (optional): Return response data in Arabic script when true.
-  * Note names, maqām names, and jins names are converted to Arabic script
-  * Comments return Arabic versions if available
-  * Tuning system display names use Arabic creator/title if available
-* Type: `string` - Valid values: `true`, `false` - Default: `true`
-* Example: `true`
-
-**Example:**
-
-```bash
-curl "https://diarmaqar.netlify.app/api/tuning-systems?includeSources=true&includeArabic=true"
-```
-
-**Response:** List of tuning systems
-
-#### Get Tuning System Details
-
-```
-GET /tuning-systems/{id}/{startingNote}/pitch-classes
-```
-
-Get Tuning System Details - Returns all pitch classes for a specific tuning system and starting note.
-
-This endpoint is essential for tuning system operations, providing comprehensive pitch class data
-across all octaves with full formatting options.
-
-**Path Parameters:**
-
-* `id`: Tuning system identifier (string) **(required)**
-  * Example: `IbnSina-(1037)`
-* `startingNote`: Tuning system starting note name (URL-safe, diacritics-insensitive) (string) **(required)**
-  * Example: `yegah`
-
-**Query Parameters:**
-
-* `pitchClassDataType` (optional): Pitch class data format (optional, defaults to "all") - Type: `string` - Valid values: `all`, `englishName`, `fraction`, `cents`, `decimalRatio`, ... (13 total)
-  * Example: `cents`
-* `octave` (optional): Filter by octave number.
-  Use a specific octave number (0, 1, 2, 3) to filter to that octave only.
-* Type: `string` - Valid values: `all`, `0`, `1`, `2`, `3`
-* Example: `all`
-* `includeSources` (optional): Include bibliographic source references (sourceId and page) for the tuning system - Type: `string` - Valid values: `true`, `false`
-  * Example: `true`
-* `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false` - Default: `true`
-  * Example: `true`
-
-**Example:**
-
-```bash
-curl "https://diarmaqar.netlify.app/api/tuning-systems/IbnSina-(1037)/yegah/pitch-classes?includeSources=true&includeArabic=true"
-```
-
-**Response:** Tuning system pitch classes retrieved successfully
-
-#### List maqāmāt available in a tuning system
-
-```
-GET /tuning-systems/{id}/{startingNote}/maqamat
-```
-
-Return all maqāmāt that can be realized in a given tuning system beginning on a specific starting note name.
-
-* Feasibility is determined by comparing maqām pitch classes to the tuning system's note name sets (including adjacent octave context)
-
-**Path Parameters:**
-
-* `id`: Tuning system identifier (e.g., 'IbnSina-(1037)', 'al-Farabi-(950i)', 'Anglo-European-(1700)') (string) **(required)**
-  * Example: `IbnSina-(1037)`
-* `startingNote`: Tuning system starting note name (URL-safe, diacritics-insensitive) (string) **(required)**
-  * Example: `yegah`
-
-**Query Parameters:**
-
-* `includeArabic` (optional): Return response data in Arabic script when true.
-  * Note names, maqām names, and jins names are converted to Arabic script
-  * Comments return Arabic versions if available
-  * Tuning system display names use Arabic creator/title if available
-* Type: `string` - Valid values: `true`, `false` - Default: `true`
-* Example: `true`
-
-**Example:**
-
-```bash
-curl "https://diarmaqar.netlify.app/api/tuning-systems/IbnSina-(1037)/yegah/maqamat?includeArabic=true"
-```
-
-**Response:** Maqāmāt list retrieved successfully
-
-***
-
-## Pitch Classes
-
-#### List all note names
-
-```
-GET /pitch-classes/note-names
-```
-
-Returns all note names used in the app, bilingually, sortable by note name order or alphabetically.
-
-Note names are sourced from all octave arrays in NoteName.ts (octaveZeroNoteNames, octaveOneNoteNames,
-octaveTwoNoteNames, octaveThreeNoteNames, octaveFourNoteNames). Each note name includes:
-
-* Canonical order (index within its octave array)
-* Octave number (0-4)
-* English IPN equivalent
-
-Note names are unique per octave, so the same note name string in different octaves represents
-different pitch classes.
-
-**Note**: Availability data is not included in this endpoint (it's expensive to calculate).
-Use the availability endpoint (`/api/pitch-classes/note-names/{noteName}/availability`) to get
-availability information for a specific note name.
-
-**Query Parameters:**
-
-* `sortBy` (optional): Sort order for results - Type: `string` - Valid values: `order`, `alphabetical` - Default: `order`
-  * Example: `order` - Sort by canonical note name order (from NoteName.ts arrays)
-  * Example: `alphabetical` - Sort alphabetically by display name
-* `filterByTuningSystem` (optional): Filter by tuning system ID to show only note names that exist in that system (URL-safe, case-insensitive). - Type: `string`
-  * Example: `IbnSina-(1037)`
-* `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false` - Default: `true`
-  * Example: `true`
-
-**Example:**
-
-```bash
-curl "https://diarmaqar.netlify.app/api/pitch-classes/note-names?includeArabic=true"
-```
-
-**Response:** List of note names retrieved successfully
-
-#### Get pitch class details by note name
-
-```
-GET /pitch-classes/note-names/{noteName}
-```
-
-Get pitch class details for a note name, across all tuning systems or a specific one.
-
-When querying by note name, the note name itself identifies the octave (note names are unique per octave).
-The octave parameter is optional and can be used for validation.
-
-Supports:
-
-* Single tuning system with specific starting note
-* Single tuning system with startingNote="all" (returns array for all starting notes)
-* All tuning systems (returns array for all tuning systems and starting notes)
-
-**Path Parameters:**
-
-* `noteName`: URL-safe note name (e.g., "rast", "dugah", "nawa") (string) **(required)**
-  * Example: `rast`
-
-**Query Parameters:**
-
-* `tuningSystem` (optional): Tuning system ID. - Type: `string`
-  * Example: `IbnSina-(1037)`
-* `startingNote` (optional): Starting note for the tuning system.
-  * Use "all" to include all available starting notes for that tuning system (returns array of results, one per starting note) Note: Since note names are unique per octave, the note name itself identifies the octave. No octave parameter is needed.
-* Type: `string`
-* Example: `yegah`
-* `pitchClassDataType` (optional): Pitch class data format - Type: `string` - Valid values: `all`, `englishName`, `fraction`, `cents`, `decimalRatio`, ... (13 total) - Default: `all`
-  * Example: `all`
-* `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false` - Default: `true`
-  * Example: `true`
-
-**Example:**
-
-```bash
-curl "https://diarmaqar.netlify.app/api/pitch-classes/note-names/rast?includeArabic=true"
-```
-
-**Response:** Pitch class data retrieved successfully
-
-#### Check note name availability across tuning systems
-
-```
-GET /pitch-classes/note-names/{noteName}/availability
-```
-
-Check which tuning systems support a specific note name and what pitch class index it has in each tuning system.
-
-Returns for each tuning system:
-
-* All starting notes where the note name exists
-* The pitch class index for each starting note
-* The octave where the note name was found
-
-**Path Parameters:**
-
-* `noteName`: URL-safe note name (e.g., "rast", "dugah", "nawa") (string) **(required)**
-  * Example: `rast`
-
-**Query Parameters:**
-
-* `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false` - Default: `true`
-  * Example: `true`
-
-**Example:**
-
-```bash
-curl "https://diarmaqar.netlify.app/api/pitch-classes/note-names/rast/availability?includeArabic=true"
-```
-
-**Response:** Availability data retrieved successfully
-
-#### Compare pitch class by note name across tuning systems
-
-```
-GET /pitch-classes/note-names/{noteName}/compare
-```
-
-Compare a pitch class (by note name) across different tuning systems.
-
-Returns comprehensive data for each tuning system including:
-
-* Pitch class data in the requested format
-* Context information (tuning system, starting note, reference frequency)
-
-**Path Parameters:**
-
-* `noteName`: URL-safe note name (e.g., "rast", "dugah", "nawa") (string) **(required)**
-  * Example: `rast`
-
-**Query Parameters:**
-
-* `tuningSystems` **(required)**: Comma-separated tuning system IDs - Type: `string`
-  * Example: `IbnSina-(1037),al-Farabi-(950g)`
-* `startingNote` **(required)**: Starting note (applies to all tuning systems), or "all" to include all available starting notes for each tuning system. - Type: `string`
-  * Example: `yegah`
-* `pitchClassDataType` (optional): Pitch class data format - Type: `string` - Valid values: `all`, `englishName`, `fraction`, `cents`, `decimalRatio`, ... (13 total) - Default: `all`
-  * Example: `all`
-* `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false` - Default: `true`
-  * Example: `true`
-
-**Example:**
-
-```bash
-curl "https://diarmaqar.netlify.app/api/pitch-classes/note-names/rast/compare?tuningSystems=IbnSina-(1037),al-Farabi-(950g)&startingNote=yegah&includeArabic=true"
-```
-
-**Response:** Comparison data retrieved successfully
-
-***
-
-## Intervals
-
-#### Calculate intervals by note names
-
-```
-GET /intervals
-```
-
-Get interval calculations for 2 or more pitch classes by listing their note names.
-
-Calculates intervals between consecutive note names: \[0→1, 1→2, 2→3, ...]
-
-Supports:
-
-* Single tuning system with specific starting note
-* Single tuning system with startingNote="all" (returns array for all starting notes)
-* All tuning systems (returns array for all tuning systems and starting notes)
-
-Note: When querying by note names, the pitchClassIndex field is excluded from interval responses
-as it is not meaningful in this context.
-
-**Query Parameters:**
-
-* `noteNames` **(required)**: Comma-separated note names (e.g., "rast,dugah,segah"). Note names can come from any octave. - Type: `string`
-  * Example: `rast,dugah,segah`
-* `tuningSystem` (optional): Tuning system ID. - Type: `string`
-  * Example: `IbnSina-(1037)`
-* `startingNote` (optional): Starting note.
-  * Use "all" to include all available starting notes for that tuning system (returns array of results, one per starting note) Note: Since note names are unique per octave, each note name already identifies its octave. No octave parameter is needed.
-* Type: `string`
-* Example: `yegah`
-* `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false` - Default: `true`
-  * Example: `true`
-
-**Example:**
-
-```bash
-curl "https://diarmaqar.netlify.app/api/intervals?noteNames=rast,dugah,segah&includeArabic=true"
-```
-
-**Response:** Interval calculations retrieved successfully
-
-#### Compare intervals across tuning systems
-
-```
-GET /intervals/compare
-```
-
-Compare interval calculations for 2+ pitch classes across different tuning systems by listing their note names.
-
-Calculates intervals between consecutive note names: \[0→1, 1→2, 2→3, ...]
-
-Note: When querying by note names, the pitchClassIndex field is excluded from interval responses
-as it is not meaningful in this context.
-
-**Query Parameters:**
-
-* `noteNames` **(required)**: Comma-separated note names. Note names can come from any octave. - Type: `string`
-  * Example: `rast,dugah,segah`
-* `tuningSystems` **(required)**: Comma-separated tuning system IDs - Type: `string`
-  * Example: `IbnSina-(1037),al-Farabi-(950g)`
-* `startingNote` **(required)**: Starting note (applies to all tuning systems), or "all" to include all available starting notes for each tuning system. - Type: `string`
-  * Example: `yegah`
-* `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false` - Default: `true`
-  * Example: `true`
-
-**Example:**
-
-```bash
-curl "https://diarmaqar.netlify.app/api/intervals/compare?noteNames=rast,dugah,segah&tuningSystems=IbnSina-(1037),al-Farabi-(950g)&startingNote=yegah&includeArabic=true"
-```
-
-**Response:** Comparison data retrieved successfully
-
-***
-
-## Sources
-
-#### List all bibliographic sources
-
-```
-GET /sources
-```
-
-Return all bibliographic sources (books, articles, theses) with comprehensive metadata.
-
-* Includes titles, contributors, publication information, and version timestamps
-* Sources document the historical and scholarly foundation for the archive's musical data
-* All sources include common fields (edition, publication date, URL, etc.)
-* Type-specific fields are included based on sourceType:
-  * Books: publisher, place, ISBN, original publication date
-  * Articles: journal, volume, issue, page range, DOI
-  * Theses: degree type, university, department, database information
-
-**Query Parameters:**
-
-* `includeArabic` (optional): Return bilingual responses with Arabic script when true.
-  * All English/transliteration fields remain unchanged
-  * Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
-  * Note names, maqām names, and jins names get Arabic versions in \*Ar fields
-  * Comments get Arabic versions in commentsAr if available
-  * Tuning system display names get Arabic versions in displayNameAr if available
-  * Source metadata gets Arabic versions in \*Ar fields (titleAr, firstNameAr, etc.)
-* Type: `string` - Valid values: `true`, `false` - Default: `true`
-* Example: `true`
-
-**Example:**
-
-```bash
-curl "https://diarmaqar.netlify.app/api/sources?includeArabic=true"
-```
-
-**Response:** List of sources retrieved successfully
-
-#### Get a single bibliographic source
-
-```
-GET /sources/{id}
-```
-
-Return detailed information for a single bibliographic source by ID.
-
-* Returns comprehensive bibliographic metadata for the specified source
-* Includes all common fields (title, contributors, publication date, etc.)
-* Includes type-specific fields based on sourceType:
-  * Books: publisher, place, ISBN, original publication date
-  * Articles: journal, volume, issue, page range, DOI
-  * Theses: degree type, university, department, database information
-* Supports bilingual responses (English/Arabic) via includeArabic parameter
-
-**Path Parameters:**
-
-* `id`: The unique identifier for the bibliographic source.
-
-Examples:
-
-* `al-Khuli-(2011)` - Book source ID (URL-safe, diacritics removed)
-* `Farmer-(1937)` - Article source ID
-* `Allami-(2022)` - Thesis source ID
-
-**Note**: Source IDs use only the publication date (not original publication date)
-and are URL-safe with diacritics removed for compatibility.
-
-Use the `/api/sources` endpoint to retrieve all available source IDs.
-(string) **(required)**
-
-* Example: `Farmer-(1937)`
-
-**Query Parameters:**
-
-* `includeArabic` (optional): Return bilingual responses with Arabic script when true.
-  * All English/transliteration fields remain unchanged
-  * Arabic versions are added with "Ar" suffix (e.g., titleAr, firstNameAr, lastNameAr)
-  * Contributors get Arabic name versions in firstNameAr and lastNameAr fields
-  * Type-specific fields get Arabic versions (e.g., publisherAr, journalAr, universityAr)
-  * Display name gets Arabic version in displayNameAr field
-* Type: `string` - Valid values: `true`, `false` - Default: `true`
-* Example: `true`
-
-**Example:**
-
-```bash
-curl "https://diarmaqar.netlify.app/api/sources/Farmer-(1937)?includeArabic=true"
-```
-
-**Response:** Source retrieved successfully
-
-#### List tuning systems by source
-
-```
-GET /sources/{id}/tuning-systems
-```
-
-Returns all tuning systems that reference the specified source.
-
-A tuning system is included if any of its sourcePageReferences match the source ID.
-This endpoint provides an easy way to see which tuning systems have been derived from a specific source.
-
-**Path Parameters:**
-
-* `id`: The unique identifier for the bibliographic source.
-
-Use the `/api/sources` endpoint to retrieve all available source IDs.
-(string) **(required)**
-
-* Example: `Farmer-(1937)`
-
-**Query Parameters:**
-
-* `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false` - Default: `true`
-  * Example: `true`
-
-**Example:**
-
-```bash
-curl "https://diarmaqar.netlify.app/api/sources/Farmer-(1937)/tuning-systems?includeArabic=true"
-```
-
-**Response:** Tuning systems retrieved successfully
-
-#### List maqamat by source
-
-```
-GET /sources/{id}/maqamat
-```
-
-Returns all maqamat that reference the specified source.
-
-A maqam is included if any of its sourcePageReferences match the source ID.
-This endpoint provides an easy way to see which maqamat have been documented in a specific source.
-
-**Path Parameters:**
-
-* `id`: The unique identifier for the bibliographic source.
-
-Use the `/api/sources` endpoint to retrieve all available source IDs.
-(string) **(required)**
-
-* Example: `Farmer-(1937)`
-
-**Query Parameters:**
-
-* `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false` - Default: `true`
-  * Example: `true`
-
-**Example:**
-
-```bash
-curl "https://diarmaqar.netlify.app/api/sources/Farmer-(1937)/maqamat?includeArabic=true"
-```
-
-**Response:** Maqamat retrieved successfully
-
-#### List ajnas by source
-
-```
-GET /sources/{id}/ajnas
-```
-
-Returns all ajnas that reference the specified source.
-
-A jins is included if any of its SourcePageReferences match the source ID.
-This endpoint provides an easy way to see which ajnas have been documented in a specific source.
-
-**Path Parameters:**
-
-* `id`: The unique identifier for the bibliographic source.
-
-Use the `/api/sources` endpoint to retrieve all available source IDs.
-(string) **(required)**
-
-* Example: `Farmer-(1937)`
-
-**Query Parameters:**
-
-* `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false` - Default: `true`
-  * Example: `true`
-
-**Example:**
-
-```bash
-curl "https://diarmaqar.netlify.app/api/sources/Farmer-(1937)/ajnas?includeArabic=true"
-```
-
-**Response:** Ajnas retrieved successfully
-
-***
-
----
-
----
-url: /docs/api/endpoints-reference.md
-description: >-
-  Comprehensive auto-generated API endpoints reference from OpenAPI
-  specification
----
-
-# API Endpoints Reference
-
-::: tip Auto-Generated
-This page is auto-generated from the OpenAPI specification. For a cleaner overview, see the [API Overview](./index) page.
-:::
-
-## Overview
-
-Digital Arabic Maqām Archive (DiArMaqAr) — programmatic access to Arabic maqāmāt, ajnās, and tuning systems data
-
-## Quick Start
-
-**Try this first**: `/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents`
-
-**Example endpoints** (no parameters required):
-
-* `/api/examples/maqam-rast` - Complete example response for Maqām Rāst
-* `/api/examples/jins-rast` - Complete example response for Jins Rāst
-* `/api/discover` - All discovery information including available tuning systems, maqāmāt, ajnās, and documentation links
-
-**Discover parameters**: Add `&options=true` to any detail endpoint to see available parameter values.
-
-**Documentation**:
-
-* LLM-optimized: https://diarmaqar.netlify.app/docs/llms.txt
-* Full API docs: https://diarmaqar.netlify.app/docs/api
-* OpenAPI spec: https://diarmaqar.netlify.app/docs/openapi.json
-* **Canonical Examples**: https://diarmaqar.netlify.app/docs/api/canonical-examples
-
-Key features:
-
-* Comprehensive maqāmāt and ajnās database with bibliographic source attribution
-* Tuning systems spanning 1000+ years with multiple starting note contexts
-* Comprehensive pitch class data formats (fractions ratios, decimal ratio, string length, fret divisions, frequency, cents, MIDI notes, and more)
-* Tuning system sensitive transpositions and modulations via al-Shawwā's 1946 modulation guidelines
-
-## Canonical Examples Reference
-
-For recommended tuning systems, maqāmāt, and ajnās to use in examples and testing, see the comprehensive [Canonical Examples documentation](https://diarmaqar.netlify.app/docs/api/canonical-examples).
-
-**Primary canonical values** (use in examples):
-
-* **Tuning System**: `IbnSina-(1037)` with starting note `yegah`
-* **Maqām**: `maqam_rast`
-* **Jins**: `jins_rast`
-* **Pitch Class Data Type**: `cents`
-
-⚠️ **Critical**: Never use `Anglo-European-(1700)`, `Anglo-European-(1800)`, or `Ronzevalle-(1904)` in examples - these reflect colonial-era attempts to force Arabic maqām theory into Western frameworks.
-
-## Quick Start for LLMs
-
-**Try this first** (no parameters required):
-
-* `/api/examples/maqam-rast` - Complete example response for Maqām Rāst
-* `/api/examples/jins-rast` - Complete example response for Jins Rāst
-* `/api/discover` - All discovery information including available tuning systems, maqāmāt, ajnās, and documentation links
-
-**Working example URL**:
+**Try this first:**
 
 ```bash
 curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents"
 ```
 
-**LLM-Optimized Documentation**:
+**Base URL:** `https://diarmaqar.netlify.app/api`
 
-* [LLM-optimized text](/docs/llms.txt) - Plain text format optimized for LLM parsing
-* [Full LLM documentation](/docs/llms-full.txt) - Complete documentation in LLM-friendly format
-* [Canonical examples reference](/.ai-agent-instructions/reference/canonical-examples.md) - Official list of tuning systems, maqāmāt, and ajnās to use in examples
+## Documentation Resources
 
-**Parameter Discovery**: Add `&options=true` to any detail endpoint to see available parameter values.
+### For Humans
+
+* **[Endpoints Reference](./endpoints-reference)** - Complete endpoint documentation with parameters and responses
+* **[Interactive Playground](./playground)** - Test API calls live in your browser
+* **[Canonical Examples](./canonical-examples)** - Recommended examples for consistent documentation
+
+### For LLMs
+
+* **OpenAPI Specification:** [openapi.json](/docs/openapi.json) | [openapi.yaml](/docs/openapi.yaml)
+* **LLM-optimized:** [llms.txt](/docs/llms.txt) | [llms-full.txt](/docs/llms-full.txt)
 
 ***
 
-## Quick Start
+## API Endpoints
 
-* **Base URL**: `https://diarmaqar.netlify.app/api`
-* **Authentication**: Not required (all endpoints are publicly accessible)
-* **Response Format**: JSON
-* **OpenAPI Specification**: Machine-readable OpenAPI 3.1.0 specification [openapi.json](/openapi.json) and [openapi.yaml](/openapi.yaml)
+### Maqāmāt
 
-## Interactive API Playground
+Documented modal frameworks with historical source attribution.
 
-The **OpenAPI Playground** provides an interactive interface to explore and test all API endpoints. You can browse endpoints by resource type, view request/response schemas, and make live API calls directly from your browser.
+**Endpoints:**
 
-Visit the [OpenAPI Playground page](/api/playground) to get started.
+* `GET /maqamat` - List all maqāmāt → [Details](./endpoints-reference#list-all-maqamat)
+* `GET /maqamat/{id}` - Get maqām details → [Details](./endpoints-reference#get-maqam-details)
+* `GET /maqamat/{id}/availability` - Check availability → [Details](./endpoints-reference#check-maqam-availability)
+* `GET /maqamat/{id}/transpositions` - List transpositions → [Details](./endpoints-reference#list-maqam-transpositions)
+* `GET /maqamat/{id}/compare` - Compare across systems → [Details](./endpoints-reference#compare-maqam-across-tuning-systems)
+
+### Ajnās
+
+Documented melodic fragments with historical source attribution.
+
+**Endpoints:**
+
+* `GET /ajnas` - List all ajnās → [Details](./endpoints-reference#list-all-ajnas)
+* `GET /ajnas/{id}` - Get jins details → [Details](./endpoints-reference#get-jins-details)
+* `GET /ajnas/{id}/availability` - Check availability → [Details](./endpoints-reference#check-jins-availability)
+* `GET /ajnas/{id}/transpositions` - List transpositions → [Details](./endpoints-reference#list-jins-transpositions)
+* `GET /ajnas/{id}/compare` - Compare across systems → [Details](./endpoints-reference#compare-jins-across-tuning-systems)
+
+### Tuning Systems
+
+Historical tuning systems from al-Kindī (874 CE) to contemporary approaches.
+
+**Endpoints:**
+
+* `GET /tuning-systems` - List all tuning systems → [Details](./endpoints-reference#list-all-tuning-systems)
+* `GET /tuning-systems/{id}/{startingNote}/pitch-classes` - Get pitch classes → [Details](./endpoints-reference#get-tuning-system-pitch-classes)
+* `GET /tuning-systems/{id}/{startingNote}/maqamat` - List maqāmāt in system → [Details](./endpoints-reference#list-maqamat-in-tuning-system)
+
+### Pitch Classes (by Note Names)
+
+Query pitch class data by note name across tuning systems.
+
+**Endpoints:**
+
+* `GET /pitch-classes/note-names` - List all note names → [Details](./endpoints-reference#list-note-names)
+* `GET /pitch-classes/note-names/{noteName}` - Get pitch class by note name → [Details](./endpoints-reference#get-pitch-class-by-note-name)
+* `GET /pitch-classes/note-names/{noteName}/availability` - Check availability → [Details](./endpoints-reference#check-note-name-availability)
+* `GET /pitch-classes/note-names/{noteName}/compare` - Compare across systems → [Details](./endpoints-reference#compare-pitch-class-across-systems)
+
+### Intervals
+
+Calculate intervals between note names.
+
+**Endpoints:**
+
+* `GET /intervals` - Calculate intervals by note names → [Details](./endpoints-reference#calculate-intervals-by-note-names)
+* `GET /intervals/compare` - Compare intervals across systems → [Details](./endpoints-reference#compare-intervals-across-tuning-systems)
+
+### Sources
+
+Bibliographic references for all documented content.
+
+**Endpoints:**
+
+* `GET /sources` - List all sources → [Details](./endpoints-reference#list-all-sources)
+* `GET /sources/{id}` - Get source details → [Details](./endpoints-reference#get-source-details)
+* `GET /sources/{id}/tuning-systems` - List tuning systems by source → [Details](./endpoints-reference#list-tuning-systems-by-source)
+* `GET /sources/{id}/maqamat` - List maqāmāt by source → [Details](./endpoints-reference#list-maqamat-by-source)
+* `GET /sources/{id}/ajnas` - List ajnās by source → [Details](./endpoints-reference#list-ajnas-by-source)
+
+***
+
+## Getting Started
+
+All endpoints return JSON. No authentication required.
+
+**Common parameters:**
+
+* `includeArabic` (default: "true") - Include Arabic script alongside transliteration
+* `includeSources` (default varies) - Include bibliographic source references
+
+For complete parameter documentation, see the [Endpoints Reference](./endpoints-reference).
+
+For recommended example values, see [Canonical Examples](./canonical-examples).
+
+---
+
+---
+url: /docs/api/endpoints-reference.md
+description: Complete API endpoint documentation
+---
+
+# API Endpoints Reference
+
+Complete documentation for all API endpoints. For quick start, see [API Documentation](./index). For examples, see [Canonical Examples](./canonical-examples).
 
 ***
 
@@ -1426,9 +320,9 @@ Most endpoints support these optional parameters:
 
 ## Maqāmāt
 
-60 documented modal frameworks with historical source attribution.
+Documented modal frameworks with historical source attribution.
 
-#### List all maqāmāt
+#### List all maqāmāt {#listMaqamat}
 
 ```
 GET /maqamat
@@ -1472,7 +366,7 @@ curl "https://diarmaqar.netlify.app/api/maqamat?includeSources=true&includeArabi
 
 **Response:** List of maqāmāt retrieved successfully
 
-#### Get detailed maqām data
+#### Get detailed maqām data {#getMaqam}
 
 ```
 GET /maqamat/{idName}
@@ -1566,7 +460,7 @@ curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-
 * When options is true, the response structure differs and returns available parameter options instead of maqām data
 * In that case, transposition options contain only valid transposition tonics for this specific maqām, tuning system, and starting note combination
 
-#### Check maqām availability across tuning systems
+#### Check maqām availability across tuning systems {#getMaqamAvailability}
 
 ```
 GET /maqamat/{idName}/availability
@@ -1603,7 +497,7 @@ curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast/availability?includeA
 
 **Response:** Availability information retrieved successfully
 
-#### List transpositions for a maqām
+#### List transpositions for a maqām {#listMaqamTranspositions}
 
 ```
 GET /maqamat/{idName}/transpositions
@@ -1639,7 +533,7 @@ curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast/transpositions?tuning
 
 **Response:** Transpositions retrieved successfully
 
-#### Compare maqām data across multiple tuning systems
+#### Compare maqām data across multiple tuning systems {#compareMaqam}
 
 ```
 GET /maqamat/{idName}/compare
@@ -1693,9 +587,9 @@ curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast/compare?tuningSystems
 
 ## Ajnās
 
-29 documented tetrachords (melodic fragments) with historical source attribution.
+Documented tetrachords (melodic fragments) with historical source attribution.
 
-#### List all ajnās
+#### List all ajnās {#listAjnas}
 
 ```
 GET /ajnas
@@ -1731,7 +625,7 @@ curl "https://diarmaqar.netlify.app/api/ajnas?includeSources=true&includeArabic=
 
 **Response:** List of ajnās retrieved successfully
 
-#### Get detailed jins data
+#### Get detailed jins data {#getJins}
 
 ```
 GET /ajnas/{idName}
@@ -1822,7 +716,7 @@ curl "https://diarmaqar.netlify.app/api/ajnas/jins_kurd?tuningSystem=IbnSina-(10
 * When options is true, the response structure differs and returns available parameter options instead of jins data
 * In that case, transposition options contain only valid transposition tonics for this specific jins, tuning system, and starting note combination
 
-#### Check jins availability across tuning systems
+#### Check jins availability across tuning systems {#getJinsAvailability}
 
 ```
 GET /ajnas/{idName}/availability
@@ -1859,7 +753,7 @@ curl "https://diarmaqar.netlify.app/api/ajnas/jins_kurd/availability?includeArab
 
 **Response:** Availability information retrieved successfully
 
-#### List transpositions for a jins
+#### List transpositions for a jins {#listJinsTranspositions}
 
 ```
 GET /ajnas/{idName}/transpositions
@@ -1895,7 +789,7 @@ curl "https://diarmaqar.netlify.app/api/ajnas/jins_kurd/transpositions?tuningSys
 
 **Response:** Transpositions retrieved successfully
 
-#### Compare jins data across multiple tuning systems
+#### Compare jins data across multiple tuning systems {#compareJins}
 
 ```
 GET /ajnas/{idName}/compare
@@ -1948,9 +842,9 @@ curl "https://diarmaqar.netlify.app/api/ajnas/jins_kurd/compare?tuningSystems=Ib
 
 ## Tuning Systems
 
-35 historical tuning systems spanning from al-Kindī (874 CE) to contemporary approaches.
+Historical tuning systems spanning from al-Kindī (874 CE) to contemporary approaches.
 
-#### List all tuning systems
+#### List all tuning systems {#listTuningSystems}
 
 ```
 GET /tuning-systems
@@ -1982,7 +876,7 @@ curl "https://diarmaqar.netlify.app/api/tuning-systems?includeSources=true&inclu
 
 **Response:** List of tuning systems
 
-#### Get Tuning System Details
+#### Get Tuning System Details {#getTuningSystemPitchClasses}
 
 ```
 GET /tuning-systems/{id}/{startingNote}/pitch-classes
@@ -2021,7 +915,7 @@ curl "https://diarmaqar.netlify.app/api/tuning-systems/IbnSina-(1037)/yegah/pitc
 
 **Response:** Tuning system pitch classes retrieved successfully
 
-#### List maqāmāt available in a tuning system
+#### List maqāmāt available in a tuning system {#listTuningSystemMaqamat}
 
 ```
 GET /tuning-systems/{id}/{startingNote}/maqamat
@@ -2059,7 +953,7 @@ curl "https://diarmaqar.netlify.app/api/tuning-systems/IbnSina-(1037)/yegah/maqa
 
 ## Pitch Classes
 
-#### List all note names
+#### List all note names {#listNoteNames}
 
 ```
 GET /pitch-classes/note-names
@@ -2099,7 +993,7 @@ curl "https://diarmaqar.netlify.app/api/pitch-classes/note-names?includeArabic=t
 
 **Response:** List of note names retrieved successfully
 
-#### Get pitch class details by note name
+#### Get pitch class details by note name {#getPitchClassByNoteName}
 
 ```
 GET /pitch-classes/note-names/{noteName}
@@ -2142,7 +1036,7 @@ curl "https://diarmaqar.netlify.app/api/pitch-classes/note-names/rast?includeAra
 
 **Response:** Pitch class data retrieved successfully
 
-#### Check note name availability across tuning systems
+#### Check note name availability across tuning systems {#getNoteNameAvailability}
 
 ```
 GET /pitch-classes/note-names/{noteName}/availability
@@ -2174,7 +1068,7 @@ curl "https://diarmaqar.netlify.app/api/pitch-classes/note-names/rast/availabili
 
 **Response:** Availability data retrieved successfully
 
-#### Compare pitch class by note name across tuning systems
+#### Compare pitch class by note name across tuning systems {#comparePitchClassByNoteName}
 
 ```
 GET /pitch-classes/note-names/{noteName}/compare
@@ -2215,7 +1109,7 @@ curl "https://diarmaqar.netlify.app/api/pitch-classes/note-names/rast/compare?tu
 
 ## Intervals
 
-#### Calculate intervals by note names
+#### Calculate intervals by note names {#calculateIntervalsByNoteNames}
 
 ```
 GET /intervals
@@ -2255,7 +1149,7 @@ curl "https://diarmaqar.netlify.app/api/intervals?noteNames=rast,dugah,segah&inc
 
 **Response:** Interval calculations retrieved successfully
 
-#### Compare intervals across tuning systems
+#### Compare intervals across tuning systems {#compareIntervalsByNoteNames}
 
 ```
 GET /intervals/compare
@@ -2291,7 +1185,7 @@ curl "https://diarmaqar.netlify.app/api/intervals/compare?noteNames=rast,dugah,s
 
 ## Sources
 
-#### List all bibliographic sources
+#### List all bibliographic sources {#listSources}
 
 ```
 GET /sources
@@ -2327,7 +1221,7 @@ curl "https://diarmaqar.netlify.app/api/sources?includeArabic=true"
 
 **Response:** List of sources retrieved successfully
 
-#### Get a single bibliographic source
+#### Get a single bibliographic source {#getSource}
 
 ```
 GET /sources/{id}
@@ -2380,7 +1274,7 @@ curl "https://diarmaqar.netlify.app/api/sources/Farmer-(1937)?includeArabic=true
 
 **Response:** Source retrieved successfully
 
-#### List tuning systems by source
+#### List tuning systems by source {#listTuningSystemsBySource}
 
 ```
 GET /sources/{id}/tuning-systems
@@ -2413,7 +1307,7 @@ curl "https://diarmaqar.netlify.app/api/sources/Farmer-(1937)/tuning-systems?inc
 
 **Response:** Tuning systems retrieved successfully
 
-#### List maqamat by source
+#### List maqamat by source {#listMaqamatBySource}
 
 ```
 GET /sources/{id}/maqamat
@@ -2446,7 +1340,7 @@ curl "https://diarmaqar.netlify.app/api/sources/Farmer-(1937)/maqamat?includeAra
 
 **Response:** Maqamat retrieved successfully
 
-#### List ajnas by source
+#### List ajnas by source {#listAjnasBySource}
 
 ```
 GET /sources/{id}/ajnas
@@ -2766,7 +1660,7 @@ From "Contemporary Arabic 19-Tone" system by Al-Ṣabbāgh (1950:173):
 curl http://localhost:3000/api/sources
 
 # Maqām responses include source references
-curl "http://localhost:3000/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=ushayran"
+curl "http://localhost:3000/api/maqamat/maqam_bayyat?tuningSystem=al-Farabi-(950g)&startingNote=ushayran&pitchClassDataType=cents"
 
 # Response includes:
 # - source references
@@ -2885,28 +1779,7 @@ description: 'Recommended tuning systems, maqāmāt, and ajnās for testing and 
 
 # Canonical Examples
 
-**PURPOSE**: Use these canonical examples consistently across all documentation, API examples, and user-facing content.
-
 These examples have been carefully selected to demonstrate the full capabilities of the API while respecting the cultural and historical significance of Arabic maqām theory.
-
-## Critical Rule
-
-**⚠️ NEVER use the following for examples, tests, or documentation:**
-
-* `Anglo-European-(1700)`
-* `Anglo-European-(1800)`
-* `Ronzevalle-(1904)`
-
-These tuning systems are included in the archive for historical completeness, but they are not appropriate as primary examples because they reflect colonial-era attempts to force Arabic maqām theory into Western equal-tempered frameworks.
-
-## Primary Canonical Values
-
-**Most Common Examples** (use in primary documentation):
-
-* **Tuning System**: `IbnSina-(1037)` with starting note `yegah`
-* **Maqām**: `maqam_rast`
-* **Jins**: `jins_rast`
-* **Pitch Class Data Type**: `cents`
 
 **Quick test URL:**
 
@@ -2918,11 +1791,11 @@ curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-
 
 ## Canonical Tuning Systems
 
-### al-Kindi-(874)
+### `al-Kindi-(874)` - al-Kindī (874)
 
-**Starting Note**: `ushayran`
+**Starting Note**: `ushayran` - ʿushayrān
 
-**Description**: 12-tone chromatic tuning system based on Greek theory. Does not include zalzalian intervals. Can only render ajnās and maqāmāt that don't use zalzalian notes (kurd, nahāwand, nikrīz, ʿajam ʿushayrān).
+**Description**: One of the oldest tuning systems documented in Arabic music theory. It is a 12-tone chromatic tuning system based on Greek theory and doesn't include the quintessential so-called Arabic "quarter tone" pitch classes ʿirāq, nīm zīrgūleh, segāh, nīm ḥijāz, or awj, also referred to as zalzalian intervals. It can only render ajnās and maqāmāt that don't use those notes such as kurd, nahāwand, nikrīz and ʿajam ʿushayrān.
 
 **Historical Context**: Al-Kindī's tuning represents the earliest systematic documentation of Arabic music theory, drawing on Hellenistic sources while adapting them to Arabic musical practice.
 
@@ -2939,11 +1812,11 @@ GET /api/tuning-systems/al-Kindi-(874)/ushayran/pitch-classes?pitchClassDataType
 
 ***
 
-### al-Farabi-(950g)
+### `al-Farabi-(950g)` - al-Fārābī (950g)
 
-**Starting Note**: `ushayran`
+**Starting Note**: `ushayran` - ʿushayrān
 
-**Description**: First documentation of the wuṣtā zalzal interval. Comprehensive 27-tone tuning system that allows for many ajnās and maqāmāt and their transpositions.
+**Description**: The first documentation of the wuṣtā zalzal interval, the so-called Arabic "quarter tone" using a frequency ratio of 27/22. It is a comprehensive 27-tone tuning system that allows for many ajnās and maqāmāt and their transpositions, therefore also modulations.
 
 **Historical Context**: Al-Fārābī's "Great Book of Music" (Kitāb al-Mūsīqī al-Kabīr) represents a milestone in Arabic music theory, introducing the zalzalian intervals that are characteristic of Arabic maqām practice.
 
@@ -2961,11 +1834,11 @@ GET /api/tuning-systems/al-Farabi-(950g)/ushayran/pitch-classes?pitchClassDataTy
 
 ***
 
-### IbnSina-(1037) ⭐ (Most Common)
+### `IbnSina-(1037)` - Ibn Sīnā (1037) ⭐ (Most Common)
 
-**Starting Note**: `yegah`
+**Starting Note**: `yegah` - yegāh
 
-**Description**: Excellent concise and precise 17-tone tuning that allows for a wide range of ajnās and maqāmāt and their transpositions. Includes the wuṣtā zalzal interval.
+**Description**: An excellent concise and precise 17-tone tuning that allows for a wide range of ajnās and maqāmāt and their transpositions. Includes the wuṣtā zalzal interval with the frequency ratio of 39/32.
 
 **Historical Context**: Ibn Sīnā (Avicenna) refined earlier theories into an elegant and practical system that balances theoretical precision with musical usability.
 
@@ -2990,11 +1863,11 @@ GET /api/tuning-systems/IbnSina-(1037)/yegah/pitch-classes?pitchClassDataType=ce
 
 ***
 
-### Meshshaqa-(1899)
+### `Meshshaqa-(1899)` - Mishāqah (1899)
 
-**Starting Note**: `yegah`
+**Starting Note**: `yegah` - yegāh
 
-**Description**: First documented tuning system based on literal quarter tones (24 equal divisions of the octave). Allows for many ajnās and maqāmāt and their transpositions.
+**Description**: The first documented tuning system that is based on literal quarter tones, 24 equal divisions of the octave. Defined by Mishāqah as the "Arabic Octave According to the Modernists", meaning that it was already known before him but undocumented - though no one knows if it was really used. Because it is 24 equal divisions of the octave it allows for many ajnās and maqāmāt and their transpositions, therefore also modulations. Even though it allows the same number of maqāmāt as Ibn Sīnā's tuning system, it allows for more transpositions.
 
 **Historical Context**: Mikhāʾīl Mishāqah's tuning represents a modernization of Arabic music theory, introducing equal divisions while maintaining the essential character of Arabic maqāmāt.
 
@@ -3009,14 +1882,15 @@ GET /api/tuning-systems/Meshshaqa-(1899)/yegah/pitch-classes?pitchClassDataType=
 * Modern equal-division approach
 * Comparison with historical unequal systems
 * All maqāmāt and ajnās
+* Extended transposition capabilities
 
 ***
 
-### CairoCongressTuningCommittee-(1929)
+### `CairoCongressTuningCommittee-(1929)` - Cairo Congress Tuning Committee (1929)
 
-**Starting Note**: `rast`
+**Starting Note**: `rast` - rāst
 
-**Description**: Egyptian tuning system researched and prepared for the 1932 Cairo Congress of Arabic Music. Unequal 24-tone system.
+**Description**: The tuning system researched, measured and prepared in preparation for the 1932 Cairo Congress of Arabic Music. It is referred to as an "Egyptian Tuning" and is an unequal 24-tone system. Also comprehensive in its maqām availability and was rendered based on the measurement and expertise of Egyptian musicians at the time.
 
 **Historical Context**: The 1932 Cairo Congress brought together musicians, theorists, and scholars to document and standardize Arabic music theory. This tuning reflects Egyptian musical practice.
 
@@ -3034,11 +1908,11 @@ GET /api/tuning-systems/CairoCongressTuningCommittee-(1929)/rast/pitch-classes?p
 
 ***
 
-### al-Sabbagh-(1954)
+### `al-Sabbagh-(1954)` - al-Ṣabbāgh (1954)
 
-**Starting Note**: `rast`
+**Starting Note**: `rast` - rāst
 
-**Description**: Only Arabic tuning system that exclusively uses the syntonic comma (81/80) as a basis. Unequal 24-tone system with limited transpositions.
+**Description**: The only Arabic tuning system that exclusively uses the "comma" (syntonic comma of 81/80) as a basis for its construction. It is an unequal 24-tone system and allows for many maqāmāt and ajnās but with limited transpositions.
 
 **Historical Context**: Ṭūbiyā al-Ṣabbāgh's system represents a unique theoretical approach focusing on pure acoustic ratios.
 
@@ -3058,11 +1932,13 @@ GET /api/tuning-systems/al-Sabbagh-(1954)/rast/pitch-classes?pitchClassDataType=
 
 ## Canonical Ajnās
 
-### With Zalzalian Intervals
+**Ajnās with zalzalian intervals** (ʿirāq, nīm zīrgūleh, segāh, nīm ḥijāz, or awj):
 
-#### jins\_rast ⭐ (Most Common)
+### `jins_rast` - jins rāst ⭐ (Most Common)
 
-**Description**: Includes zalzalian interval segāh. The most fundamental jins in Arabic music.
+**Description**: Includes the zalzalian interval segāh. The most fundamental jins in Arabic music.
+
+**Structure**: Ascending tetrachord with a neutral third (segāh) above the tonic.
 
 **Example**:
 
@@ -3070,13 +1946,13 @@ GET /api/tuning-systems/al-Sabbagh-(1954)/rast/pitch-classes?pitchClassDataType=
 GET /api/ajnas/jins_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
 ```
 
-**Structure**: Ascending tetrachord with a neutral third (segāh) above the tonic.
-
 ***
 
-#### jins\_bayyat
+### `jins_bayyat` - jins bayyāt
 
-**Description**: Includes zalzalian interval segāh. Forms the basis of Maqām Bayyātī.
+**Description**: Includes the zalzalian interval segāh. Forms the basis of Maqām Bayyātī.
+
+**Character**: More melancholic than Rāst, with a distinctive expressive quality.
 
 **Example**:
 
@@ -3084,13 +1960,13 @@ GET /api/ajnas/jins_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchCla
 GET /api/ajnas/jins_bayyat?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
 ```
 
-**Character**: More melancholic than Rāst, with a distinctive expressive quality.
-
 ***
 
-#### jins\_segah
+### `jins_segah` - jins segāh
 
-**Description**: Tonic is the zalzalian interval segāh. Begins on a neutral note.
+**Description**: Its tonic is the zalzalian interval segāh. Begins on a neutral note.
+
+**Usage**: Common in modulations and as an upper jins.
 
 **Example**:
 
@@ -3098,13 +1974,13 @@ GET /api/ajnas/jins_bayyat?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchC
 GET /api/ajnas/jins_segah?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
 ```
 
-**Usage**: Common in modulations and as an upper jins.
-
 ***
 
-#### jins\_saba
+### `jins_saba` - jins ṣabā
 
-**Description**: Includes zalzalian interval segāh. Known for its distinctive augmented second.
+**Description**: Includes the zalzalian interval segāh. Known for its distinctive augmented second.
+
+**Character**: Intense and expressive, often used for emotional climaxes.
 
 **Example**:
 
@@ -3112,15 +1988,15 @@ GET /api/ajnas/jins_segah?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchCl
 GET /api/ajnas/jins_saba?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
 ```
 
-**Character**: Intense and expressive, often used for emotional climaxes.
-
 ***
 
-### Without Zalzalian Intervals
+**Ajnās without zalzalian intervals:**
 
-#### jins\_nikriz
+### `jins_nikriz` - jins nikrīz
 
-**Description**: Does not include zalzalian intervals. Built from tones and semitones only.
+**Description**: Does not include a zalzalian interval. Built from tones and semitones only.
+
+**Good for testing**: Tuning systems without zalzalian intervals (like al-Kindī).
 
 **Example**:
 
@@ -3128,13 +2004,13 @@ GET /api/ajnas/jins_saba?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchCla
 GET /api/ajnas/jins_nikriz?tuningSystem=al-Kindi-(874)&startingNote=ushayran&pitchClassDataType=cents
 ```
 
-**Good for testing**: Tuning systems without zalzalian intervals (like al-Kindī).
-
 ***
 
-#### jins\_kurd
+### `jins_kurd` - jins kurd
 
-**Description**: Does not include zalzalian intervals. Similar to Western Phrygian mode.
+**Description**: Does not include a zalzalian interval. Similar to Western Phrygian mode.
+
+**Character**: Minor quality with a lowered second degree.
 
 **Example**:
 
@@ -3142,13 +2018,27 @@ GET /api/ajnas/jins_nikriz?tuningSystem=al-Kindi-(874)&startingNote=ushayran&pit
 GET /api/ajnas/jins_kurd?tuningSystem=al-Kindi-(874)&startingNote=ushayran&pitchClassDataType=cents
 ```
 
-**Character**: Minor quality with a lowered second degree.
+***
+
+### `jins_kurd_(binsir)` - jins kurd (binsir)
+
+**Description**: The same as jins kurd but starting on a different tonic, giving it slightly different intervals. Interesting for comparison and understanding why the maqām based on it (maqām ḥijāz kār kurd) is supposedly a transposition of maqām kurd with the same intervals, but in fact is not. Does not include a zalzalian interval.
+
+**Good for testing**: Transposition analysis, interval pattern comparison.
+
+**Example**:
+
+```
+GET /api/ajnas/jins_kurd_(binsir)?tuningSystem=al-Kindi-(874)&startingNote=ushayran&pitchClassDataType=cents
+```
 
 ***
 
-#### jins\_nahawand
+### `jins_nahawand` - jins nahāwand
 
-**Description**: Does not include zalzalian intervals. Similar to Western natural minor.
+**Description**: Does not include a zalzalian interval. Similar to Western natural minor.
+
+**Usage**: Very common in modern Arabic music, especially Egyptian popular music.
 
 **Example**:
 
@@ -3156,13 +2046,13 @@ GET /api/ajnas/jins_kurd?tuningSystem=al-Kindi-(874)&startingNote=ushayran&pitch
 GET /api/ajnas/jins_nahawand?tuningSystem=al-Kindi-(874)&startingNote=ushayran&pitchClassDataType=cents
 ```
 
-**Usage**: Very common in modern Arabic music, especially Egyptian popular music.
-
 ***
 
-#### jins\_hijaz
+### `jins_hijaz` - jins ḥijāz
 
-**Description**: Does not include zalzalian intervals. Known for its distinctive augmented second.
+**Description**: Does not include a zalzalian interval. Known for its distinctive augmented second.
+
+**Character**: Instantly recognizable "Middle Eastern" sound, commonly used in adhān (call to prayer).
 
 **Example**:
 
@@ -3170,17 +2060,35 @@ GET /api/ajnas/jins_nahawand?tuningSystem=al-Kindi-(874)&startingNote=ushayran&p
 GET /api/ajnas/jins_hijaz?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
 ```
 
-**Character**: Instantly recognizable "Middle Eastern" sound, commonly used in adhān (call to prayer).
+***
+
+### `jins_hijaz_(binsir)` - jins ḥijāz (binsir)
+
+**Description**: The same as jins ḥijāz but starting on a different tonic, giving it slightly different intervals. Interesting for comparison. Does not include a zalzalian interval.
+
+**Good for testing**: Interval pattern comparison, transposition analysis.
+
+**Example**:
+
+```
+GET /api/ajnas/jins_hijaz_(binsir)?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
+```
 
 ***
 
 ## Canonical Maqāmāt
 
-### Principle Maqāmāt
+**Principle maqāmāt** - fundamental and archetypal:
 
-#### maqam\_rast ⭐ (Most Common)
+### `maqam_rast` - maqām rāst ⭐ (Most Common)
 
-**Description**: Principle and archetypal Arabic maqām. Includes zalzalian intervals segāh and awj.
+**Description**: One of the principle and archetypal Arabic maqāmāt. Prominently used in Egypt across both popular and religious sufi musics. Includes the zalzalian intervals segāh and awj in its ascending form.
+
+**Character**: Majestic, balanced, grounding. Often called the "father of maqāmāt."
+
+**Structure**: Built from two Jins Rāst tetrachords, one on the tonic and one on the fifth.
+
+**Why use this**: Most fundamental maqām, demonstrates all essential features of the API.
 
 **Example**:
 
@@ -3188,17 +2096,15 @@ GET /api/ajnas/jins_hijaz?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchCl
 GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
 ```
 
-**Character**: Majestic, balanced, grounding. Often called the "father of maqāmāt."
-
-**Why use this**: Most fundamental maqām, demonstrates all essential features of the API.
-
-**Structure**: Built from two Jins Rāst tetrachords, one on the tonic and one on the fifth.
-
 ***
 
-#### maqam\_bayyat
+### `maqam_bayyat` - maqām bayyāt
 
-**Description**: Principle and archetypal Arabic maqām. Includes zalzalian intervals segāh and awj.
+**Description**: Also a principle and archetypal Arabic maqām, that is used widely in popular and rural musics across the Arabic speaking region and beyond. It is the base maqām for many variations in Arabic repertoire and beyond. Includes the zalzalian interval segāh and awj in its ascending form.
+
+**Character**: Earthy, emotional, introspective. Very common in improvisation.
+
+**Structure**: Built from Jins Bayyātī on the tonic.
 
 **Example**:
 
@@ -3206,15 +2112,15 @@ GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitch
 GET /api/maqamat/maqam_bayyat?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
 ```
 
-**Character**: Earthy, emotional, introspective. Very common in improvisation.
-
-**Structure**: Built from Jins Bayyātī on the tonic.
-
 ***
 
-#### maqam\_hijaz
+### `maqam_hijaz` - maqām ḥijāz
 
-**Description**: Principle Arabic maqām, known for use in the adhān. Includes zalzalian interval awj.
+**Description**: A principle Arabic maqām, known primarily for its use in the adhān, the call to prayer. Includes the zalzalian interval awj in its ascending form.
+
+**Character**: Mystical, tense, spiritual. Immediately recognizable.
+
+**Usage**: Extremely common in religious contexts and classical compositions.
 
 **Example**:
 
@@ -3222,31 +2128,31 @@ GET /api/maqamat/maqam_bayyat?tuningSystem=IbnSina-(1037)&startingNote=yegah&pit
 GET /api/maqamat/maqam_hijaz?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
 ```
 
-**Character**: Mystical, tense, spiritual. Immediately recognizable.
-
-**Usage**: Extremely common in religious contexts and classical compositions.
-
 ***
 
-### Complex/Transposed Maqāmāt
+**Complex and transposed maqāmāt:**
 
-#### rahat-al-arwah
+### `maqam_rahat_al-arwah` - rāḥat al-arwāḥ
 
-**Description**: Transposition of maqām huzām. Tonic is zalzalian interval ʿirāq.
+**Description**: A transposition of maqām huzām given its own name because of its character. Its darajat al-istiqrār (tonic) is the zalzalian interval ʿirāq.
+
+**Good for testing**: Transposition logic, non-standard tonics, zalzalian tonics.
 
 **Example**:
 
 ```
-GET /api/maqamat/rahat-al-arwah?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
+GET /api/maqamat/maqam_rahat_al-arwah?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
 ```
-
-**Good for testing**: Transposition logic, non-standard tonics.
 
 ***
 
-#### maqam\_bestenegar
+### `maqam_bestenegar` - maqām bestenegar
 
-**Description**: Complex non-octave repeating maqam. Tonic is zalzalian interval segāh.
+**Description**: Complex and rarely used non-octave repeating maqam. Its darajat al-istiqrār (tonic) is the zalzalian interval segāh.
+
+**Character**: Ottoman-era maqām with elaborate melodic patterns.
+
+**Good for testing**: Non-octave-repeating sequences, complex structures, asymmetric melodic paths, zalzalian tonics.
 
 **Example**:
 
@@ -3254,17 +2160,17 @@ GET /api/maqamat/rahat-al-arwah?tuningSystem=IbnSina-(1037)&startingNote=yegah&p
 GET /api/maqamat/maqam_bestenegar?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
 ```
 
-**Good for testing**: Non-octave-repeating sequences, complex structures, asymmetric melodic paths.
-
-**Character**: Ottoman-era maqām with elaborate melodic patterns.
-
 ***
 
-### Non-Zalzalian Maqāmāt
+**Maqāmāt without zalzalian intervals:**
 
-#### maqam\_kurd
+### `maqam_kurd` - maqām kurd
 
-**Description**: Prominent in 1960s-70s Egyptian popular music. Does not include zalzalian intervals.
+**Description**: This maqām came to much prominence in 1960s and 70s Egyptian popular music, and is one of the most used in pop music across the region today. It doesn't include the quintessential so-called Arabic "quarter tone", i.e. pitch classes ʿirāq, nīm zīrgūleh, segāh, nīm ḥijāz, or awj.
+
+**Character**: Minor quality, melancholic but accessible.
+
+**Good for testing**: Tuning systems without zalzalian intervals, modern popular music contexts.
 
 **Example**:
 
@@ -3272,15 +2178,13 @@ GET /api/maqamat/maqam_bestenegar?tuningSystem=IbnSina-(1037)&startingNote=yegah
 GET /api/maqamat/maqam_kurd?tuningSystem=al-Kindi-(874)&startingNote=ushayran&pitchClassDataType=cents
 ```
 
-**Good for testing**: Tuning systems without zalzalian intervals.
-
-**Character**: Minor quality, melancholic but accessible.
-
 ***
 
-#### maqam\_athar-kurd
+### `maqam_athar-kurd` - maqām āthār kurd
 
-**Description**: Rarely used maqām. Does not include zalzalian intervals.
+**Description**: A rarely used maqām with a very specific character. It doesn't include the quintessential so-called Arabic "quarter tone", i.e. pitch classes ʿirāq, nīm zīrgūleh, segāh, nīm ḥijāz, or awj.
+
+**Good for testing**: Edge cases, availability checking, rare maqāmāt.
 
 **Example**:
 
@@ -3288,21 +2192,19 @@ GET /api/maqamat/maqam_kurd?tuningSystem=al-Kindi-(874)&startingNote=ushayran&pi
 GET /api/maqamat/maqam_athar-kurd?tuningSystem=al-Kindi-(874)&startingNote=ushayran&pitchClassDataType=cents
 ```
 
-**Good for testing**: Edge cases, availability checking.
-
 ***
 
-#### maqam\_dilkesh-huran
+### `maqam_dilkesh-huran` - maqām dilkesh ḥūrān
 
-**Description**: Complex non-octave repeating Ottoman maqām.
+**Description**: A complex non-octave repeating Ottoman maqām that is rarely used in Arabic music but was a part of early 20th century music theory.
+
+**Good for testing**: Ottoman repertoire, complex non-octave-repeating structures, early 20th century theory.
 
 **Example**:
 
 ```
 GET /api/maqamat/maqam_dilkesh-huran?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
 ```
-
-**Good for testing**: Ottoman repertoire, complex non-octave-repeating structures.
 
 ***
 
@@ -6879,65 +5781,6 @@ The total count of modulations matching the specified type
 ---
 
 ---
-url: /docs/library/api/functions/computeFractionInterval/functions/default.md
----
-[**DiArMaqAr TypeScript Library v0.1.0**](../../../README.md)
-
-***
-
-[DiArMaqAr TypeScript Library](../../../modules.md) / [functions/computeFractionInterval](../README.md) / default
-
-# Function: default()
-
-> **default**(`firstFraction`, `secondFraction`): `string`
-
-Defined in: [functions/computeFractionInterval.ts:26](https://github.com/Music-Intelligence-Lab/DiArMaqAr/blob/6f1c81e1c50000c844884af75834b700ae00e423/src/functions/computeFractionInterval.ts#L26)
-
-Computes the interval between two fractions and returns the result as a simplified fraction.
-
-This function calculates the ratio between two fractions, which is essential for
-determining musical intervals in just intonation and other tuning systems.
-The result is automatically simplified using the Greatest Common Divisor.
-
-Mathematical formula: (c/d) / (a/b) = (c \* b) / (d \* a)
-
-## Parameters
-
-### firstFraction
-
-`string`
-
-The first fraction in "numerator/denominator" format (e.g., "3/2")
-
-### secondFraction
-
-`string`
-
-The second fraction in "numerator/denominator" format (e.g., "4/3")
-
-## Returns
-
-`string`
-
-The interval as a simplified fraction string
-
-## Examples
-
-```ts
-// Calculate interval from 3/2 to 4/3
-computeFractionInterval("3/2", "4/3")
-// Returns "8/9" (the simplified result of (4*2)/(3*3))
-```
-
-```ts
-// Calculate interval from 5/4 to 6/5
-computeFractionInterval("5/4", "6/5")
-// Returns "24/25"
-```
-
----
-
----
 url: /docs/library/api/functions/convertPitchClass/functions/default.md
 ---
 [**DiArMaqAr TypeScript Library v0.1.0**](../../../README.md)
@@ -7009,6 +5852,65 @@ convertPitchClass("200", "cents", 100, 440)
 // Convert fret division to all formats
 convertPitchClass("102", "fretDivision", 100, 440)
 // Returns all equivalent representations relative to string length
+```
+
+---
+
+---
+url: /docs/library/api/functions/computeFractionInterval/functions/default.md
+---
+[**DiArMaqAr TypeScript Library v0.1.0**](../../../README.md)
+
+***
+
+[DiArMaqAr TypeScript Library](../../../modules.md) / [functions/computeFractionInterval](../README.md) / default
+
+# Function: default()
+
+> **default**(`firstFraction`, `secondFraction`): `string`
+
+Defined in: [functions/computeFractionInterval.ts:26](https://github.com/Music-Intelligence-Lab/DiArMaqAr/blob/6f1c81e1c50000c844884af75834b700ae00e423/src/functions/computeFractionInterval.ts#L26)
+
+Computes the interval between two fractions and returns the result as a simplified fraction.
+
+This function calculates the ratio between two fractions, which is essential for
+determining musical intervals in just intonation and other tuning systems.
+The result is automatically simplified using the Greatest Common Divisor.
+
+Mathematical formula: (c/d) / (a/b) = (c \* b) / (d \* a)
+
+## Parameters
+
+### firstFraction
+
+`string`
+
+The first fraction in "numerator/denominator" format (e.g., "3/2")
+
+### secondFraction
+
+`string`
+
+The second fraction in "numerator/denominator" format (e.g., "4/3")
+
+## Returns
+
+`string`
+
+The interval as a simplified fraction string
+
+## Examples
+
+```ts
+// Calculate interval from 3/2 to 4/3
+computeFractionInterval("3/2", "4/3")
+// Returns "8/9" (the simplified result of (4*2)/(3*3))
+```
+
+```ts
+// Calculate interval from 5/4 to 6/5
+computeFractionInterval("5/4", "6/5")
+// Returns "24/25"
 ```
 
 ---
@@ -7189,43 +6091,6 @@ gcd(17, 13) // Returns 1 (coprime numbers)
 ---
 
 ---
-url: /docs/library/api/functions/getFirstNoteName/functions/default.md
----
-[**DiArMaqAr TypeScript Library v0.1.0**](../../../README.md)
-
-***
-
-[DiArMaqAr TypeScript Library](../../../modules.md) / [functions/getFirstNoteName](../README.md) / default
-
-# Function: default()
-
-> **default**(`selectedIndices`): `string`
-
-Defined in: [functions/getFirstNoteName.ts:13](https://github.com/Music-Intelligence-Lab/DiArMaqAr/blob/6f1c81e1c50000c844884af75834b700ae00e423/src/functions/getFirstNoteName.ts#L13)
-
-Retrieves the first note name from an array of selected pitch class indices.
-
-This utility function is used in UI state management to determine the
-starting note when pitch classes are selected. It maps the first selected
-index to its corresponding note name from the octave one note names array.
-
-## Parameters
-
-### selectedIndices
-
-`number`\[]
-
-Array of selected pitch class indices
-
-## Returns
-
-`string`
-
-The note name corresponding to the first index, or "none" if empty or invalid
-
----
-
----
 url: >-
   /docs/library/api/functions/getNoteNamesUsedInTuningSystem/functions/default.md
 ---
@@ -7264,6 +6129,43 @@ Array of pitch class indices to map to note names (default: \[])
 `string`\[]
 
 Array of note names corresponding to the indices across all octaves
+
+---
+
+---
+url: /docs/library/api/functions/getFirstNoteName/functions/default.md
+---
+[**DiArMaqAr TypeScript Library v0.1.0**](../../../README.md)
+
+***
+
+[DiArMaqAr TypeScript Library](../../../modules.md) / [functions/getFirstNoteName](../README.md) / default
+
+# Function: default()
+
+> **default**(`selectedIndices`): `string`
+
+Defined in: [functions/getFirstNoteName.ts:13](https://github.com/Music-Intelligence-Lab/DiArMaqAr/blob/6f1c81e1c50000c844884af75834b700ae00e423/src/functions/getFirstNoteName.ts#L13)
+
+Retrieves the first note name from an array of selected pitch class indices.
+
+This utility function is used in UI state management to determine the
+starting note when pitch classes are selected. It maps the first selected
+index to its corresponding note name from the octave one note names array.
+
+## Parameters
+
+### selectedIndices
+
+`number`\[]
+
+Array of selected pitch class indices
+
+## Returns
+
+`string`
+
+The note name corresponding to the first index, or "none" if empty or invalid
 
 ---
 
@@ -10115,10 +9017,10 @@ The easiest way to get started is using the REST API:
 curl http://localhost:3000/api/maqamat
 
 # Get specific maqām data with full details
-curl "http://localhost:3000/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=ushayran&pitchClassDataType=all"
+curl "http://localhost:3000/api/maqamat/maqam_bayyat?tuningSystem=al-Farabi-(950g)&startingNote=ushayran&pitchClassDataType=cents"
 
 # Include transpositions and modulations
-curl "http://localhost:3000/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=ushayran&includeTranspositions=true&includeModulations=true"
+curl "http://localhost:3000/api/maqamat/maqam_bayyat?tuningSystem=al-Farabi-(950g)&startingNote=ushayran&includeTranspositions=true&includeModulations=true"
 ```
 
 ### Using the TypeScript Library
@@ -10157,9 +9059,9 @@ const modulations = modulate(maqam, allMaqamat, tuningSystem)
 
 ### Advanced Features
 
-6. **[Transposition](/guide/transposition/)** - Tuning-system-sensitive transposition of ajnās and maqāmāt
+6. **[Taṣwīr (Transposition)](/guide/taswir/)** - Tuning-system-sensitive transposition of ajnās and maqāmāt
 
-7. **[Modulation](/guide/modulation/)** - Al-Shawwā's modulation algorithm and network analysis
+7. **[Intiqāl (Modulation)](/guide/intiqal/)** - Al-Shawwā's modulation algorithm and network analysis
 
 8. **[Audio Synthesis](/guide/audio-synthesis/)** - Real-time audio playback using Web Audio API
 
@@ -12980,6 +11882,172 @@ Optional directional instruction for melodic movement
 ---
 
 ---
+url: /docs/guide/intiqal.md
+description: Understanding Al-Shawwā's modulation algorithm and modulation networks
+---
+
+# Intiqāl (Modulation)
+
+DiArMaqAr implements the **first algorithmic interpretation** of Sāmī al-Shawwā's (1946) modulation guidelines, enabling systematic exploration of intiqālāt (modulation practices) networks that were previously documented only in prose.
+
+## Overview
+
+Unlike Anglo-European modulation theory, Turkish makam theory, or contemporary Arabic theoretical approaches, Al-Shawwā's method employs specific conditions based on scale degree relationships within the Arab-Ottoman-Persian note naming framework.
+
+### Historical Context
+
+Sāmī Al-Shawwā, a revered Cairo-born, Aleppine violinist, provided unique guidelines for maqām modulation in his 1946 work *Al-Qawāʿid al-Fannīya fī al-Mūsīqa al-Sharqīya wa al-Gharbīya* (The Artistic Principles of Eastern and Western Music).
+
+**Key Principle:** Modulation should occur through specific scale degree relationships while maintaining "good disposition" (ḥusn al-taṣarruf) and avoiding abrupt transitions that would be "hard on the ear" (ṣaʿb ʿalā al-udhun).
+
+This approach emphasizes **melodic connection** rather than harmonic compatibility, reflecting the fundamentally melodic nature of maqāmic practice.
+
+## Theoretical Foundation
+
+### The 24-Tone Classification System
+
+Al-Shawwā classified a 24-tone system into three categories based on the Arab-Ottoman-Persian note naming framework:
+
+1. **Aṣlīya or Ṭabīʿīya** (Original/Natural): Represented as "n"
+   * These are stable, consonant scale degrees that form the foundation of maqām structure which are whole tones and three-fourths tones.
+
+2. **Anṣāf** (Half-notes, sing. niṣf): Represented as "2p" (two parts)
+   * These represent the half-tones
+
+3. **Arbāʿ** (One-fourth notes, sing. rubʿ): Represented as "1p" (one part)
+   * These represent one-fourth tones, reflecting our understanding of Arabic maqām theory dividing a whole tone into four unequal parts (not equal divisions)
+
+### The Shawwā Function
+
+Implemented as: *sh(n): N → {"n", "1p", "2p", "/"}*
+
+This function evaluates the validity of proposed modulations based on the specific classification of individual note names within the 24-tone system. The function returns "n" for natural/original notes, "2p" for half-notes (anṣāf), "1p" for quarter-notes (arbāʿ), and "/" for notes outside Al-Shawwā's theoretical framework.
+
+## Modulation Rules
+
+The algorithm evaluates multiple cases for valid transitions:
+
+### 1. Tonic Correspondence
+
+Modulation between maqāmāt sharing the same tonic (qarār), provided the tonic is classified as an "original" note (aṣlīya/ṭabīʿīya, represented as "n").
+
+### 2. Third-Degree Modulation
+
+Transition where the third degree of the source maqām becomes the tonic of the target, valid only when:
+
+* The third degree is classified as an "original" note (aṣlīya/ṭabīʿīya, represented as "n")
+
+### 3. Alternative Third-Degree Modulation
+
+If the standard third degree is invalid, Al-Shawwā permits using an anṣāf (half-note, represented as "2p") scale degree immediately below it, provided:
+
+* It is the sixth pitch class from the fundamental (qarār) scale degree of the source maqām according to the 24-tone list
+* It maintains a distance of two pitch classes from the preceding scale degree within the source maqām
+
+### 4. Fourth and Fifth-Degree Modulation
+
+Transitions using the fourth or fifth scale degrees of the source maqām as the tonic of the target.
+
+### 5. Sixth-Degree Modulation (No Third)
+
+When both the third degree and its alternative are invalid, modulation may occur through the sixth scale degree, provided:
+
+* It is the sixteenth or seventeenth pitch class from the tonic of the source maqām
+* It remains an "original" scale degree (aṣlīya/ṭabīʿīya, represented as "n")
+
+### 6. Sixth-Degree Modulation (Between Naturals)
+
+The sixth scale degree may also be used when it lies between two "natural" scale degrees within the source maqām.
+
+## Algorithmic Implementation
+
+The `modulate.ts` function implements these rules using Al-Shawwā's specific 24-tone classification system as the reference framework.
+
+**Process:**
+
+1. Evaluates source maqām's scale degrees according to Al-Shawwā's classification
+2. Tests each modulation rule against potential target maqāmāt
+3. Generates list of valid modulation pathways
+4. Creates interactive networks showing relationships
+
+## Using Modulation Analysis
+
+### Via REST API
+
+```bash
+# Get modulation analysis for a maqām (example: principle maqām used in adhān)
+curl "http://localhost:3000/api/maqamat/maqam_hijaz?tuningSystem=IbnSina-(1037)&startingNote=yegah&includeModulations=true&pitchClassDataType=cents"
+
+# Response includes:
+# - Valid modulation targets
+# - Modulation type (third-degree, fourth-degree, etc.)
+# - Network relationships
+```
+
+### Via TypeScript Library
+
+```typescript
+import { modulate } from '@/functions/modulate'
+
+// Get valid modulations from source maqām
+const modulations = modulate(sourceMaqam, allMaqamat, tuningSystem)
+
+// Each modulation includes:
+// - Target maqām
+// - Modulation type
+// - Scale degree relationship
+// - Classification validation
+```
+
+## Research Applications
+
+The implementation of the Shawwā algorithm enables:
+
+### Modulation Network Analysis
+
+* **Interactive lists**: All valid modulation pathways from any maqām
+* **Network visualization**: Structural relationships between maqāmāt
+* **Hub identification**: Central maqāmāt serving as modulation hubs
+* **Cluster analysis**: Groups of closely related modes
+
+### Quantitative Analysis
+
+* **Pattern recognition**: Systematic modulation structures
+* **Comparative studies**: How modulation possibilities vary across tuning systems
+* **Theoretical investigation**: Validation against historical practices
+
+### Compositional Applications
+
+* **Systematic exploration**: Discover modulation pathways
+* **Traditional frameworks**: Informed by historical theory
+* **Creative practice**: Contemporary composition grounded in tradition
+
+## Limitations and Context
+
+The modulation algorithm:
+
+* Represents **one theoretical perspective** (Al-Shawwā 1946)
+* Is historically accurate to documented approach
+* Could benefit from incorporating additional frameworks
+* May be supplemented by audio analysis of recorded performances
+
+Future enhancements could integrate:
+
+* Modulation analysis from audio recordings
+* Additional theoretical frameworks
+* Performance practice documentation
+* Contemporary compositional approaches
+
+## Next Steps
+
+* Explore [Taṣwīr (Transposition)](/guide/taswir/) capabilities
+* Learn about [Maqāmāt](/guide/maqamat/) structure
+* Understand [Bibliographic Sources](/guide/bibliographic-sources/)
+* Review [Research Applications](/guide/research-applications/)
+
+---
+
+---
 url: /docs/guide/maqamat.md
 description: Understanding maqāmāt as complete modal frameworks
 ---
@@ -13092,13 +12160,13 @@ See the [Suyūr Guide](/guide/suyur/) for detailed information.
 curl http://localhost:3000/api/maqamat
 
 # Get specific maqām with full details
-curl "http://localhost:3000/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=ushayran&pitchClassDataType=all"
+curl "http://localhost:3000/api/maqamat/maqam_bayyat?tuningSystem=al-Farabi-(950g)&startingNote=ushayran&pitchClassDataType=cents"
 
 # Include transpositions
-curl "http://localhost:3000/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=ushayran&includeTranspositions=true"
+curl "http://localhost:3000/api/maqamat/maqam_bayyat?tuningSystem=al-Farabi-(950g)&startingNote=ushayran&includeTranspositions=true"
 
 # Include modulation analysis
-curl "http://localhost:3000/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=ushayran&includeModulations=true"
+curl "http://localhost:3000/api/maqamat/maqam_bayyat?tuningSystem=al-Farabi-(950g)&startingNote=ushayran&includeModulations=true"
 ```
 
 ### Via TypeScript Library
@@ -13149,8 +12217,8 @@ The platform provides multiple visualization modes:
 ## Next Steps
 
 * Learn about [Suyūr](/guide/suyur/)
-* Explore [Transposition](/guide/transposition/) capabilities
-* Discover [Modulation](/guide/modulation/) networks
+* Explore [Taṣwīr (Transposition)](/guide/taswir/) capabilities
+* Discover [Intiqāl (Modulation)](/guide/intiqal/) networks
 * Understand [Bibliographic Sources](/guide/bibliographic-sources/)
 
 ---
@@ -13490,172 +12558,6 @@ url: /docs/library/api/models/TuningSystem/README.md
 ---
 
 ---
-url: /docs/guide/modulation.md
-description: Understanding Al-Shawwā's modulation algorithm and modulation networks
----
-
-# Modulation (Intiqālāt)
-
-DiArMaqAr implements the **first algorithmic interpretation** of Sāmī al-Shawwā's (1946) modulation guidelines, enabling systematic exploration of intiqālāt (modulation practices) networks that were previously documented only in prose.
-
-## Overview
-
-Unlike Anglo-European modulation theory, Turkish makam theory, or contemporary Arabic theoretical approaches, Al-Shawwā's method employs specific conditions based on scale degree relationships within the Arab-Ottoman-Persian note naming framework.
-
-### Historical Context
-
-Sāmī Al-Shawwā, a revered Cairo-born, Aleppine violinist, provided unique guidelines for maqām modulation in his 1946 work *Al-Qawāʿid al-Fannīya fī al-Mūsīqa al-Sharqīya wa al-Gharbīya* (The Artistic Principles of Eastern and Western Music).
-
-**Key Principle:** Modulation should occur through specific scale degree relationships while maintaining "good disposition" (ḥusn al-taṣarruf) and avoiding abrupt transitions that would be "hard on the ear" (ṣaʿb ʿalā al-udhun).
-
-This approach emphasizes **melodic connection** rather than harmonic compatibility, reflecting the fundamentally melodic nature of maqāmic practice.
-
-## Theoretical Foundation
-
-### The 24-Tone Classification System
-
-Al-Shawwā classified a 24-tone system into three categories based on the Arab-Ottoman-Persian note naming framework:
-
-1. **Aṣlīya or Ṭabīʿīya** (Original/Natural): Represented as "n"
-   * These are stable, consonant scale degrees that form the foundation of maqām structure which are whole tones and three-fourths tones.
-
-2. **Anṣāf** (Half-notes, sing. niṣf): Represented as "2p" (two parts)
-   * These represent the half-tones
-
-3. **Arbāʿ** (One-fourth notes, sing. rubʿ): Represented as "1p" (one part)
-   * These represent one-fourth tones, reflecting our understanding of Arabic maqām theory dividing a whole tone into four unequal parts (not equal divisions)
-
-### The Shawwā Function
-
-Implemented as: *sh(n): N → {"n", "1p", "2p", "/"}*
-
-This function evaluates the validity of proposed modulations based on the specific classification of individual note names within the 24-tone system. The function returns "n" for natural/original notes, "2p" for half-notes (anṣāf), "1p" for quarter-notes (arbāʿ), and "/" for notes outside Al-Shawwā's theoretical framework.
-
-## Modulation Rules
-
-The algorithm evaluates multiple cases for valid transitions:
-
-### 1. Tonic Correspondence
-
-Modulation between maqāmāt sharing the same tonic (qarār), provided the tonic is classified as an "original" note (aṣlīya/ṭabīʿīya, represented as "n").
-
-### 2. Third-Degree Modulation
-
-Transition where the third degree of the source maqām becomes the tonic of the target, valid only when:
-
-* The third degree is classified as an "original" note (aṣlīya/ṭabīʿīya, represented as "n")
-
-### 3. Alternative Third-Degree Modulation
-
-If the standard third degree is invalid, Al-Shawwā permits using an anṣāf (half-note, represented as "2p") scale degree immediately below it, provided:
-
-* It is the sixth pitch class from the fundamental (qarār) scale degree of the source maqām according to the 24-tone list
-* It maintains a distance of two pitch classes from the preceding scale degree within the source maqām
-
-### 4. Fourth and Fifth-Degree Modulation
-
-Transitions using the fourth or fifth scale degrees of the source maqām as the tonic of the target.
-
-### 5. Sixth-Degree Modulation (No Third)
-
-When both the third degree and its alternative are invalid, modulation may occur through the sixth scale degree, provided:
-
-* It is the sixteenth or seventeenth pitch class from the tonic of the source maqām
-* It remains an "original" scale degree (aṣlīya/ṭabīʿīya, represented as "n")
-
-### 6. Sixth-Degree Modulation (Between Naturals)
-
-The sixth scale degree may also be used when it lies between two "natural" scale degrees within the source maqām.
-
-## Algorithmic Implementation
-
-The `modulate.ts` function implements these rules using Al-Shawwā's specific 24-tone classification system as the reference framework.
-
-**Process:**
-
-1. Evaluates source maqām's scale degrees according to Al-Shawwā's classification
-2. Tests each modulation rule against potential target maqāmāt
-3. Generates list of valid modulation pathways
-4. Creates interactive networks showing relationships
-
-## Using Modulation Analysis
-
-### Via REST API
-
-```bash
-# Get modulation analysis for a maqām
-curl "http://localhost:3000/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=ushayran&includeModulations=true"
-
-# Response includes:
-# - Valid modulation targets
-# - Modulation type (third-degree, fourth-degree, etc.)
-# - Network relationships
-```
-
-### Via TypeScript Library
-
-```typescript
-import { modulate } from '@/functions/modulate'
-
-// Get valid modulations from source maqām
-const modulations = modulate(sourceMaqam, allMaqamat, tuningSystem)
-
-// Each modulation includes:
-// - Target maqām
-// - Modulation type
-// - Scale degree relationship
-// - Classification validation
-```
-
-## Research Applications
-
-The implementation of the Shawwā algorithm enables:
-
-### Modulation Network Analysis
-
-* **Interactive lists**: All valid modulation pathways from any maqām
-* **Network visualization**: Structural relationships between maqāmāt
-* **Hub identification**: Central maqāmāt serving as modulation hubs
-* **Cluster analysis**: Groups of closely related modes
-
-### Quantitative Analysis
-
-* **Pattern recognition**: Systematic modulation structures
-* **Comparative studies**: How modulation possibilities vary across tuning systems
-* **Theoretical investigation**: Validation against historical practices
-
-### Compositional Applications
-
-* **Systematic exploration**: Discover modulation pathways
-* **Traditional frameworks**: Informed by historical theory
-* **Creative practice**: Contemporary composition grounded in tradition
-
-## Limitations and Context
-
-The modulation algorithm:
-
-* Represents **one theoretical perspective** (Al-Shawwā 1946)
-* Is historically accurate to documented approach
-* Could benefit from incorporating additional frameworks
-* May be supplemented by audio analysis of recorded performances
-
-Future enhancements could integrate:
-
-* Modulation analysis from audio recordings
-* Additional theoretical frameworks
-* Performance practice documentation
-* Contemporary compositional approaches
-
-## Next Steps
-
-* Explore [Transposition](/guide/transposition/) capabilities
-* Learn about [Maqāmāt](/guide/maqamat/) structure
-* Understand [Bibliographic Sources](/guide/bibliographic-sources/)
-* Review [Research Applications](/guide/research-applications/)
-
----
-
----
 url: /docs/guide/quick-start.md
 description: Get up and running with DiArMaqAr quickly
 ---
@@ -13690,7 +12592,7 @@ This will return a list of all available maqāmāt with basic metadata.
 To get detailed data for a specific maqām:
 
 ```bash
-curl "http://localhost:3000/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=ushayran&pitchClassDataType=all"
+curl "http://localhost:3000/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents"
 ```
 
 This returns:
@@ -14052,10 +12954,10 @@ Suyūr are included in maqām responses:
 
 ```bash
 # Get maqām with suyūr
-curl "http://localhost:3000/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=ushayran&includeSuyur=true"
+curl "http://localhost:3000/api/maqamat/maqam_bayyat?tuningSystem=al-Farabi-(950g)&startingNote=ushayran&includeSuyur=true"
 
 # Suyūr are automatically transposed for each transposition
-curl "http://localhost:3000/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=ushayran&includeTranspositions=true&includeSuyur=true"
+curl "http://localhost:3000/api/maqamat/maqam_bayyat?tuningSystem=al-Farabi-(950g)&startingNote=ushayran&includeTranspositions=true&includeSuyur=true"
 ```
 
 ### Via TypeScript Library
@@ -14090,9 +12992,174 @@ Suyūr represent one of the most detailed aspects of Arabic maqām theory that h
 ## Next Steps
 
 * Learn about [Maqāmāt](/guide/maqamat/) structure
-* Explore [Transposition](/guide/transposition/) capabilities
-* Understand [Modulation](/guide/modulation/) practices
+* Explore [Taṣwīr (Transposition)](/guide/taswir/) capabilities
+* Understand [Intiqāl (Modulation)](/guide/intiqal/) practices
 * Review [Bibliographic Sources](/guide/bibliographic-sources/)
+
+---
+
+---
+url: /docs/guide/taswir.md
+description: Understanding tuning-system-sensitive transposition capabilities
+---
+
+# Taṣwīr (Transposition)
+
+Transposition is one of DiArMaqAr's most sophisticated features, enabling systematic analysis of how any jins or maqām can be shifted to different starting pitches while maintaining essential intervallic relationships.
+
+## Overview
+
+In written Arabic maqām theory, transposition is rarely dealt with as a fundamental possibility of maqāmic practice, and transpositions are rarely explicitly rendered. DiArMaqAr's transposition capabilities represent a significant computational advancement, revealing theoretical possibilities that would require extensive manual calculation to discover.
+
+## How Transposition Works
+
+Transposition is **not** simply moving pitches up or down by a fixed amount. Instead, it involves:
+
+1. **Extracting the interval pattern** from the original structure
+2. **Systematically applying** the pattern to all possible starting points
+3. **Pattern matching** against the tuning system's available pitch classes
+4. **Preserving intervallic relationships** while adapting to new tonal centers
+
+### Interval Pattern Extraction
+
+The algorithm:
+
+* Cross-references maqām/jins note name sequences to the tuning system
+* Extracts the sequence of intervals between consecutive notes
+* Uses these intervals (not fixed pitches) as the pattern to match
+
+### Matching Process
+
+**For systems using fractional ratios:**
+
+* Requires exact fractional ratio matches
+* Mathematical precision is preserved
+
+**For systems using string lengths or cents:**
+
+* Uses cents values for matching
+* Applies user-definable ±cents tolerance (default: ±5 cents)
+* Allows for performance practice variations (JND - Just Noticeable Difference)
+
+## Jins Transposition
+
+A jins transposition systematically shifts a jins to begin from a different pitch class while preserving its intervallic relationships.
+
+### Example: Jins Kurd
+
+**Original (Tahlīl):** Jins kurd starting on dūgāh
+
+* Pattern: dūgāh → kurdī → chahārgāh → nawā
+* Intervals: \[specific cents pattern]
+
+**Transposition (Taswīr):** Jins kurd starting on muhayyar
+
+* Pattern: muhayyar → \[notes maintaining same intervals]
+* Name: "jins kurd al-muhayyar"
+
+### Algorithm Characteristics
+
+* **Recursive search**: Finds all valid starting points
+* **Early termination**: Optimizes performance
+* **Automatic generation**: All possible transpositions are calculated
+* **Naming convention**: Follows Arabic theory ("jins \[name] al-\[starting note]")
+
+## Maqām Transposition
+
+Maqām transposition handles both ascending and descending sequences separately, accounting for the fact that many maqāmāt employ different sequences in their ascent and descent.
+
+### Algorithm Details
+
+1. **Separate Processing**: Ascending and descending sequences analyzed independently
+2. **Validation**: Ensures all required note names exist in four octaves
+3. **Interval Preservation**: Maintains original intervallic relationships
+4. **Automatic Recalculation**: All embedded ajnās recalculated for each transposition
+5. **Suyūr Transposition**: Associated suyūr automatically transposed
+
+### Example: Maqām Farahfazza
+
+**Original:** Starting on yegāh
+
+* Ascending: yegāh → rāst → dūgāh → ...
+* Descending: \[possibly different sequence]
+
+**Transposition:** Starting on rāst → "maqām farahfazza al-rāst"
+
+* Ascending: rāst → \[transposed maintaining intervals] → ...
+* Descending: \[transposed maintaining intervals]
+* All ajnās recalculated
+* All suyūr transposed
+
+## Computational Complexity
+
+The implementation employs:
+
+* **Recursive sequence building** with early termination
+* **O(n×m×k) complexity** where:
+  * n = available pitch classes
+  * m = pattern length
+  * k = tolerance width
+
+This efficiency enables:
+
+* Real-time transposition generation
+* Comprehensive dataset export (all transpositions for all maqāmāt)
+* Large-scale comparative analysis
+
+## Using Transposition
+
+### Via REST API
+
+```bash
+# Get maqām with all transpositions (example: transposed maqām with zalzalian tonic)
+curl "http://localhost:3000/api/maqamat/maqam_rahat_al-arwah?tuningSystem=IbnSina-(1037)&startingNote=yegah&includeTranspositions=true&pitchClassDataType=cents"
+
+# Response includes array of transpositions with:
+# - Transposed name
+# - Ascending/descending sequences
+# - Recalculated ajnās
+# - Transposed suyūr
+```
+
+### Via TypeScript Library
+
+```typescript
+import { getJinsTranspositions, getMaqamTranspositions } from '@/functions/transpose'
+
+// Get all jins transpositions
+const jinsTranspositions = getJinsTranspositions(jins, tuningSystem)
+
+// Get all maqām transpositions
+const maqamTranspositions = getMaqamTranspositions(maqam, tuningSystem)
+
+// Each transposition includes:
+// - Name (following Arabic convention)
+// - Starting note
+// - All pitch classes with mathematical values
+// - Constituent ajnās (for maqāmāt)
+// - Transposed suyūr (for maqāmāt)
+```
+
+## Research Applications
+
+Transposition capabilities enable:
+
+* **Systematic exploration**: All mathematically valid possibilities
+* **Comparative analysis**: How transposition possibilities vary across tuning systems
+* **Theoretical investigation**: Relationships between tuning systems and modal availability
+* **Dataset generation**: Complete mappings for machine learning applications
+
+### Example Research Questions
+
+* Which tuning systems support the most transpositions for a given maqām?
+* How do starting note conventions affect transposition possibilities?
+* What is the relationship between tuning system complexity and transposition availability?
+
+## Next Steps
+
+* Learn about [Intiqāl (Modulation)](/guide/intiqal/) (related but distinct)
+* Explore [Tuning Systems](/guide/tuning-systems/) and their impact on transposition
+* Understand how transposition relates to [Ajnās](/guide/ajnas/)
 
 ---
 
@@ -14260,172 +13327,7 @@ All calculations are based on the original unit of measurement in the relevant b
 * Learn about [Tuning Systems](/guide/tuning-systems/)
 * Explore [Ajnās](/guide/ajnas/)
 * Understand [Maqāmāt](/guide/maqamat/)
-* Discover [Modulation](/guide/modulation/)
-
----
-
----
-url: /docs/guide/transposition.md
-description: Understanding tuning-system-sensitive transposition capabilities
----
-
-# Transposition
-
-Transposition is one of DiArMaqAr's most sophisticated features, enabling systematic analysis of how any jins or maqām can be shifted to different starting pitches while maintaining essential intervallic relationships.
-
-## Overview
-
-In written Arabic maqām theory, transposition is rarely dealt with as a fundamental possibility of maqāmic practice, and transpositions are rarely explicitly rendered. DiArMaqAr's transposition capabilities represent a significant computational advancement, revealing theoretical possibilities that would require extensive manual calculation to discover.
-
-## How Transposition Works
-
-Transposition is **not** simply moving pitches up or down by a fixed amount. Instead, it involves:
-
-1. **Extracting the interval pattern** from the original structure
-2. **Systematically applying** the pattern to all possible starting points
-3. **Pattern matching** against the tuning system's available pitch classes
-4. **Preserving intervallic relationships** while adapting to new tonal centers
-
-### Interval Pattern Extraction
-
-The algorithm:
-
-* Cross-references maqām/jins note name sequences to the tuning system
-* Extracts the sequence of intervals between consecutive notes
-* Uses these intervals (not fixed pitches) as the pattern to match
-
-### Matching Process
-
-**For systems using fractional ratios:**
-
-* Requires exact fractional ratio matches
-* Mathematical precision is preserved
-
-**For systems using string lengths or cents:**
-
-* Uses cents values for matching
-* Applies user-definable ±cents tolerance (default: ±5 cents)
-* Allows for performance practice variations (JND - Just Noticeable Difference)
-
-## Jins Transposition
-
-A jins transposition systematically shifts a jins to begin from a different pitch class while preserving its intervallic relationships.
-
-### Example: Jins Kurd
-
-**Original (Tahlīl):** Jins kurd starting on dūgāh
-
-* Pattern: dūgāh → kurdī → chahārgāh → nawā
-* Intervals: \[specific cents pattern]
-
-**Transposition (Taswīr):** Jins kurd starting on muhayyar
-
-* Pattern: muhayyar → \[notes maintaining same intervals]
-* Name: "jins kurd al-muhayyar"
-
-### Algorithm Characteristics
-
-* **Recursive search**: Finds all valid starting points
-* **Early termination**: Optimizes performance
-* **Automatic generation**: All possible transpositions are calculated
-* **Naming convention**: Follows Arabic theory ("jins \[name] al-\[starting note]")
-
-## Maqām Transposition
-
-Maqām transposition handles both ascending and descending sequences separately, accounting for the fact that many maqāmāt employ different sequences in their ascent and descent.
-
-### Algorithm Details
-
-1. **Separate Processing**: Ascending and descending sequences analyzed independently
-2. **Validation**: Ensures all required note names exist in four octaves
-3. **Interval Preservation**: Maintains original intervallic relationships
-4. **Automatic Recalculation**: All embedded ajnās recalculated for each transposition
-5. **Suyūr Transposition**: Associated suyūr automatically transposed
-
-### Example: Maqām Farahfazza
-
-**Original:** Starting on yegāh
-
-* Ascending: yegāh → rāst → dūgāh → ...
-* Descending: \[possibly different sequence]
-
-**Transposition:** Starting on rāst → "maqām farahfazza al-rāst"
-
-* Ascending: rāst → \[transposed maintaining intervals] → ...
-* Descending: \[transposed maintaining intervals]
-* All ajnās recalculated
-* All suyūr transposed
-
-## Computational Complexity
-
-The implementation employs:
-
-* **Recursive sequence building** with early termination
-* **O(n×m×k) complexity** where:
-  * n = available pitch classes
-  * m = pattern length
-  * k = tolerance width
-
-This efficiency enables:
-
-* Real-time transposition generation
-* Comprehensive dataset export (all transpositions for all maqāmāt)
-* Large-scale comparative analysis
-
-## Using Transposition
-
-### Via REST API
-
-```bash
-# Get maqām with all transpositions
-curl "http://localhost:3000/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=ushayran&includeTranspositions=true"
-
-# Response includes array of transpositions with:
-# - Transposed name
-# - Ascending/descending sequences
-# - Recalculated ajnās
-# - Transposed suyūr
-```
-
-### Via TypeScript Library
-
-```typescript
-import { getJinsTranspositions, getMaqamTranspositions } from '@/functions/transpose'
-
-// Get all jins transpositions
-const jinsTranspositions = getJinsTranspositions(jins, tuningSystem)
-
-// Get all maqām transpositions
-const maqamTranspositions = getMaqamTranspositions(maqam, tuningSystem)
-
-// Each transposition includes:
-// - Name (following Arabic convention)
-// - Starting note
-// - All pitch classes with mathematical values
-// - Constituent ajnās (for maqāmāt)
-// - Transposed suyūr (for maqāmāt)
-```
-
-## Research Applications
-
-Transposition capabilities enable:
-
-* **Systematic exploration**: All mathematically valid possibilities
-* **Comparative analysis**: How transposition possibilities vary across tuning systems
-* **Theoretical investigation**: Relationships between tuning systems and modal availability
-* **Dataset generation**: Complete mappings for machine learning applications
-
-### Example Research Questions
-
-* Which tuning systems support the most transpositions for a given maqām?
-* How do starting note conventions affect transposition possibilities?
-* What is the relationship between tuning system complexity and transposition availability?
-
-## Next Steps
-
-* Learn about [Modulation](/guide/modulation/) (related but distinct)
-* Explore [Tuning Systems](/guide/tuning-systems/) and their impact on transposition
-* Understand how transposition relates to [Ajnās](/guide/ajnas/)
+* Discover [Intiqāl (Modulation)](/guide/intiqal/)
 
 ---
 
@@ -14558,7 +13460,7 @@ The platform automatically converts between all formats based on:
 curl http://localhost:3000/api/tuning-systems
 
 # Get specific tuning system data
-curl "http://localhost:3000/api/tuning-systems/IbnSina-(1037)"
+curl "http://localhost:3000/api/tuning-systems/al-Farabi-(950g)"
 ```
 
 ### Via TypeScript Library
@@ -14594,7 +13496,7 @@ This transparent provenance enables:
 ## Next Steps
 
 * Learn how tuning systems relate to [Ajnās](/guide/ajnas/)
-* Explore [Transposition](/guide/transposition/) capabilities
+* Explore [Taṣwīr (Transposition)](/guide/taswir/) capabilities
 * Understand [Starting Note Conventions](/guide/theoretical-framework/#starting-note-conventions)
 
 ---

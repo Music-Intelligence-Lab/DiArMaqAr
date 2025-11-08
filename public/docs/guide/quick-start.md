@@ -33,7 +33,7 @@ This will return a list of all available maqāmāt with basic metadata.
 To get detailed data for a specific maqām:
 
 ```bash
-curl "http://localhost:3000/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=ushayran&pitchClassDataType=all"
+curl "http://localhost:3000/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents"
 ```
 
 This returns:

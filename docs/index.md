@@ -87,8 +87,8 @@ The implementation operates entirely within **Arabic theoretical frameworks** an
 
 ### Explore Features
 
-- **[Transposition](/guide/transposition/)** - Systematic transposition capabilities
-- **[Modulation](/guide/modulation/)** - Al-Shawwā's modulation algorithm
+- **[Taṣwīr (Transposition)](/guide/taswir/)** - Systematic transposition capabilities
+- **[Intiqāl (Modulation)](/guide/intiqal/)** - Al-Shawwā's modulation algorithm
 - **[Audio Synthesis](/guide/audio-synthesis/)** - Real-time audio playback
 - **[MIDI Integration](/guide/midi-integration/)** - MIDI input/output
 - **[Data Export](/guide/data-export/)** - Export capabilities
