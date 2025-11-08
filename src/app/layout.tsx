@@ -141,7 +141,7 @@ export default function RootLayout({
         "@type": "TechArticle",
         "headline": "API Documentation",
         "url": `${baseUrl}/docs/api/`,
-        "description": "Complete REST API documentation with endpoint reference and canonical examples"
+        "description": "Complete REST API documentation with endpoint reference and representative examples"
       },
       {
         "@type": "TechArticle",
