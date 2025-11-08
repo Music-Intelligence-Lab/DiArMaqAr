@@ -413,6 +413,7 @@ description: |
 - **Error cases**: Document common error scenarios
 - **❌ NEVER**: Use display names (e.g., '12-EDO') when you need IDs (e.g., 'Anglo-European-(1700)')
 - **✅ ALWAYS**: Query the API or check data files to get actual IDs before documenting examples
+- **Representative examples**: For recommended tuning systems, maqāmāt, and ajnās for testing and documentation, see [`docs/api/representative-examples.md`](../../docs/api/representative-examples.md)
 
 ---
 

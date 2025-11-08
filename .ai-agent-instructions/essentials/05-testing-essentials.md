@@ -4,6 +4,12 @@
 
 ---
 
+## Representative Examples
+
+For recommended tuning systems, maqāmāt, and ajnās for testing and documentation, see [`docs/api/representative-examples.md`](../../docs/api/representative-examples.md). These examples have been carefully selected to demonstrate the full capabilities of the API while respecting the cultural and historical significance of Arabic maqām theory.
+
+---
+
 ## Quick Reference
 
 ### Tuning System Categories
