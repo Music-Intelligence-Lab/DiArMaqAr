@@ -130,7 +130,7 @@ function generateEndpointDocumentation(path, method, operation, spec) {
   const title = summary || operationId || `${method.toUpperCase()} ${path}`;
   // Use operationId as anchor ID to match OASpec component format
   // This allows hash anchors to work on both static and dynamic pages
-  doc += `#### ${title} {#${operationId}}\n\n`;
+  doc += `### ${title} {#${operationId}}\n\n`;
   
   // HTTP method and path
   doc += `\`\`\`\n${method.toUpperCase()} ${path}\n\`\`\`\n\n`;

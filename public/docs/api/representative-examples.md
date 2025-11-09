@@ -1,6 +1,6 @@
 ---
 url: /docs/api/representative-examples.md
-description: 'Recommended tuning systems, maqāmāt, and ajnās for testing and documentation'
+description: 'Recommended tuning systems, maqāmāt, and ajnās for proper API usage'
 ---
 
 # Representative Examples
