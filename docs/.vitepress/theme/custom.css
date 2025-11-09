@@ -475,6 +475,13 @@ body {
   font-weight: 200 !important;
 }
 
+/* Make h3 headers bigger */
+.vp-doc h3,
+.vp-doc h3[data-v-39a288b8] {
+  font-size: 1.5em !important;
+  font-weight: 400 !important;
+}
+
 /* Apply font to code blocks */
 code,
 pre,

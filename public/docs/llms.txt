@@ -83,14 +83,14 @@ All endpoints return JSON with complete data including pitch classes, intervals,
 
 - [API Documentation](/docs/api.md): Programmatic access to Arabic maqāmāt, ajnās, and tuning systems data
 - [API Endpoints Reference](/docs/api/endpoints-reference.md): Complete API endpoint documentation
-- [Representative Examples](/docs/api/representative-examples.md): Recommended tuning systems, maqāmāt, and ajnās for testing and documentation
+- [Representative Examples](/docs/api/representative-examples.md): Recommended tuning systems, maqāmāt, and ajnās for proper API usage
 
 
 ### API Documentation
 
 - [API Documentation](/docs/api.md): Programmatic access to Arabic maqāmāt, ajnās, and tuning systems data
 - [API Endpoints Reference](/docs/api/endpoints-reference.md): Complete API endpoint documentation
-- [Representative Examples](/docs/api/representative-examples.md): Recommended tuning systems, maqāmāt, and ajnās for testing and documentation
+- [Representative Examples](/docs/api/representative-examples.md): Recommended tuning systems, maqāmāt, and ajnās for proper API usage
 
 
 ### TypeScript Library
@@ -144,12 +144,12 @@ All endpoints return JSON with complete data including pitch classes, intervals,
 - [Function: default()](/docs/library/api/functions/computeFractionInterval/functions/default.md)
 - [Function: default()](/docs/library/api/functions/convertPitchClass/functions/default.md)
 - [Function: default()](/docs/library/api/functions/detectPitchClassType/functions/default.md)
-- [Function: default()](/docs/library/api/functions/gcd/functions/default.md)
 - [Function: default()](/docs/library/api/functions/extendSelectedPitchClasses/functions/default.md)
+- [Function: default()](/docs/library/api/functions/gcd/functions/default.md)
 - [Function: default()](/docs/library/api/functions/getFirstNoteName/functions/default.md)
-- [Function: default()](/docs/library/api/functions/getNoteNamesUsedInTuningSystem/functions/default.md)
 - [Function: default()](/docs/library/api/functions/getTuningSystemPitchClasses/functions/default.md)
 - [Function: default()](/docs/library/api/functions/modulate/functions/default.md)
+- [Function: default()](/docs/library/api/functions/getNoteNamesUsedInTuningSystem/functions/default.md)
 - [Function: default()](/docs/library/api/functions/romanToNumber/functions/default.md)
 - [Function: default()](/docs/library/api/functions/shiftPitchClassByOctave/functions/default.md)
 - [Function: exportJins()](/docs/library/api/functions/export/functions/exportJins.md)
