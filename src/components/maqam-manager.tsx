@@ -457,7 +457,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
               <label className="maqam-manager__label" htmlFor="commentsArabicField">
                 {t('maqam.commentsArabic')}
               </label>
-              <textarea rows={5} className="maqam-manager__input" id="commentsArabicField" value={commentsArabicLocal} onChange={(e) => setCommentsArabicLocal(e.target.value)} />
+              <textarea rows={5} className="maqam-manager__input" id="commentsArabicField" dir="rtl" value={commentsArabicLocal} onChange={(e) => setCommentsArabicLocal(e.target.value)} />
             </div>
           </div>
         </div>

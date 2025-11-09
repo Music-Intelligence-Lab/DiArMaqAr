@@ -281,7 +281,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
               <label className="jins-manager__label" htmlFor="commentsArabicField">
                 {t('jins.commentsArabic')}
               </label>
-              <textarea rows={5} className="jins-manager__input" id="commentsArabicField" value={commentsArabicLocal} onChange={(e) => setCommentsArabicLocal(e.target.value)} />
+              <textarea rows={5} className="jins-manager__input" id="commentsArabicField" dir="rtl" value={commentsArabicLocal} onChange={(e) => setCommentsArabicLocal(e.target.value)} />
             </div>
           </div>
         </div>
