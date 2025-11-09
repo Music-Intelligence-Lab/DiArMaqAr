@@ -580,3 +580,30 @@ aside.VPSidebar {
   color: var(--project-secondary) !important;
   color: #83105d !important;
 }
+
+/* Limit home page content width to match actions buttons */
+/* Target the content section that comes after the hero */
+.VPHome .content,
+.VPHome .vp-doc,
+.VPHome .vp-doc-content {
+  max-width: fit-content !important;
+  width: fit-content !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Specifically target paragraphs and divs in the home page content */
+.VPHome .vp-doc p,
+.VPHome .vp-doc div:not(.features),
+.VPHome .vp-doc section {
+  max-width: fit-content !important;
+  width: fit-content !important;
+}
+
+/* Ensure actions div maintains its natural width */
+.VPHome .actions[data-v-4f9c455b],
+.VPHome .actions {
+  width: fit-content !important;
+  max-width: fit-content !important;
+  display: inline-flex !important;
+}
