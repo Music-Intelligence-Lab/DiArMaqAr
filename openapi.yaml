@@ -340,13 +340,14 @@ paths:
           description: |
             Specifies which pitch class data type to return for each pitch class.
             
-            - Required for data retrieval (when options is not set or false)
-            - Optional for discovery mode (when options=true) since discovery returns parameter metadata, not formatted data
+            - Required for all requests (defaults to "cents" if not provided)
+            - In discovery mode (when options=true), this parameter is still required but the response returns parameter metadata instead of formatted data
             - Use 'all' for complete pitch class data across all available formats
             - Each option returns the specified data type for all pitch classes in the maqām
           schema:
             type: string
             enum: [all, frequency, cents, fraction, decimalRatio, stringLength, abjadName, fretDivision, midiNoteNumber, midiNoteDeviation, centsDeviation, referenceNoteName, englishName]
+          default: "cents"
           example: "cents"
         - name: transposeTo
           in: query
@@ -1065,8 +1066,8 @@ paths:
           example: "rast"
         - name: pitchClassDataType
           in: query
-          required: false
-          description: Pitch class data format (optional, defaults to "all")
+          required: true
+          description: Pitch class data format (defaults to "cents")
           schema:
             type: string
             enum:
@@ -1083,7 +1084,7 @@ paths:
               - midiNoteDeviation
               - centsDeviation
               - referenceNoteName
-          default: "all"
+          default: "cents"
           example: "cents"
         - name: octave
           in: query
@@ -1407,6 +1408,7 @@ paths:
               - midiNoteDeviation
               - centsDeviation
               - referenceNoteName
+          default: "cents"
           example: "cents"
         - name: includeIntervals
           in: query
@@ -2141,17 +2143,18 @@ paths:
           example: "true"
         - name: pitchClassDataType
           in: query
-          required: false
+          required: true
           description: |
             Specifies which pitch class data type to return for each pitch class.
             
-            - Required for data retrieval (when options is not set or false)
-            - Optional for discovery mode (when options=true) since discovery returns parameter metadata, not formatted data
+            - Required for all requests (defaults to "cents" if not provided)
+            - In discovery mode (when options=true), this parameter is still required but the response returns parameter metadata instead of formatted data
             - Use 'all' for complete pitch class data across all available formats
             - Each option returns the specified data type for all pitch classes in the jins
           schema:
             type: string
             enum: [all, frequency, cents, fraction, decimalRatio, stringLength, abjadName, fretDivision, midiNoteNumber, midiNoteDeviation, centsDeviation, referenceNoteName, englishName]
+          default: "cents"
           example: "cents"
         - name: transposeTo
           in: query
@@ -2841,6 +2844,7 @@ paths:
               - midiNoteDeviation
               - centsDeviation
               - referenceNoteName
+          default: "cents"
           example: "cents"
         - name: includeIntervals
           in: query
@@ -3291,13 +3295,13 @@ paths:
           example: "rast"
         - name: pitchClassDataType
           in: query
-          required: false
+          required: true
           description: Pitch class data format
           schema:
             type: string
             enum: [all, englishName, fraction, cents, decimalRatio, stringLength, frequency, abjadName, fretDivision, midiNoteNumber, midiNoteDeviation, centsDeviation, referenceNoteName]
-            default: all
-          example: "all"
+            default: "cents"
+          example: "cents"
         - name: includeArabic
           in: query
           required: false
@@ -3502,13 +3506,13 @@ paths:
           example: "yegah"
         - name: pitchClassDataType
           in: query
-          required: false
+          required: true
           description: Pitch class data format
           schema:
             type: string
             enum: [all, englishName, fraction, cents, decimalRatio, stringLength, frequency, abjadName, fretDivision, midiNoteNumber, midiNoteDeviation, centsDeviation, referenceNoteName]
-            default: all
-          example: "all"
+            default: "cents"
+          example: "cents"
         - name: includeArabic
           in: query
           required: false
