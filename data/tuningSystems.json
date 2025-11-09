@@ -1828,7 +1828,12 @@
     "year": "1037",
     "sourceEnglish": "",
     "sourceArabic": "",
-    "sourcePageReferences": [],
+    "sourcePageReferences": [
+      {
+        "sourceId": "Farmer-(1937)",
+        "page": "249"
+      }
+    ],
     "creatorEnglish": "Ibn Sīnā ",
     "creatorArabic": "إبن سينا",
     "commentsEnglish": "Farmer, H.G. (1937) ‘The Lute Scale of Avicenna’, The Journal of the Royal Asiatic Society of Great Britain and Ireland, pp. 249.\n\nAbū-ʿAlī al-Ḥusayn ibn-ʿAbdallāh Ibn-Sīnā [Avicenna] (ca. 970–1037) https://plato.stanford.edu/entries/ibn-sina/",
@@ -1968,7 +1973,7 @@
       "yegāh": 97.999,
       "ʿushayrān": 110
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2025-11-09T00:44:40.275Z"
   },
   {
     "id": "al-Mawsili-(850)",

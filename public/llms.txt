@@ -17,7 +17,19 @@
 
 **Recommended for AI Assistants**: Use the REST API to fetch real-time, accurate data for users. When users ask about maqāmāt, ajnās, or tuning systems, use the API endpoints to fetch current, complete data rather than relying on cached documentation.
 
-**Best Practice for LLMs**: Always use the API endpoints to answer user queries about specific maqāmāt, ajnās, or tuning systems. The API returns complete, structured data with all details.
+**⚠️ CRITICAL: Required Parameters**
+
+All detail endpoints (`/api/maqamat/{id}`, `/api/ajnas/{id}`) **REQUIRE** three parameters:
+1. `tuningSystem` - ID of tuning system (e.g., `IbnSina-(1037)`)
+2. `startingNote` - Starting note in URL-safe format (e.g., `yegah`, `ushayran`)
+3. `pitchClassDataType` - Format for pitch class data (e.g., `cents`, `fraction`, `all`)
+
+**Common Mistakes to Avoid:**
+- ❌ `GET /api/maqamat/maqam_rast` (missing required parameters)
+- ❌ `GET /api/maqamat/rast` (wrong endpoint format - missing "maqam_" prefix)
+- ✅ `GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents`
+
+**Best Practice for LLMs**: Always use the API endpoints to answer user queries about specific maqāmāt, ajnās, or tuning systems. The API returns complete, structured data with all details. Always include all three required parameters for detail endpoints.
 
 #### When to Use the API - Example Requests for Novice Users
 
@@ -42,8 +54,13 @@ GET https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1
 
 **Representative Examples Reference:**
 - See /docs/api/representative-examples for complete list of recommended examples
+- This page includes critical requirements, common mistakes to avoid, and explicit instructions for AI assistants
 
 **All endpoints return JSON** with complete data including pitch classes, intervals, bibliographic sources, and more. Use the OpenAPI specification at /docs/openapi.json for complete endpoint documentation and parameter details.
+
+**Parameter Discovery:**
+- Use `?options=true` to discover available parameters: `GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&options=true`
+- This returns available tuning systems, starting notes, and other parameters instead of data
 
 ## Quick Links
 - Interactive Application: /app

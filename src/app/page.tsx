@@ -151,9 +151,23 @@ export default function LandingPage() {
             <p>
               هذا الموقع صديق للذكاء الاصطناعي ويوفر وصولاً برمجياً شاملاً لبيانات المقامات العربية. جميع الوثائق وواجهات برمجة التطبيقات متاحة للوصول البرمجي.
             </p>
+            <div style={{ backgroundColor: "#fff3cd", border: "1px solid #ffc107", borderRadius: "4px", padding: "12px", marginBottom: "16px" }}>
+              <p style={{ margin: 0, fontWeight: "bold" }}>⚠️ مهم: المعاملات المطلوبة</p>
+              <p style={{ margin: "8px 0 0 0" }}>
+                جميع نقاط النهاية التفصيلية (<code>/api/maqamat/&#123;id&#125;</code>, <code>/api/ajnas/&#123;id&#125;</code>) <strong>تتطلب</strong> ثلاثة معاملات: <code>tuningSystem</code> و <code>startingNote</code> و <code>pitchClassDataType</code>. راجع <Link href="/docs/api/representative-examples">الأمثلة التمثيلية</Link> للاستخدام الصحيح.
+              </p>
+            </div>
             <p>
               <strong>للمساعدات الذكية:</strong> يمكنك استخدام واجهة برمجة التطبيقات لجلب بيانات محددة للمستخدمين. يُفضل دائماً استخدام استدعاءات واجهة برمجة التطبيقات بدلاً من ملخصات الوثائق للحصول على دقة البيانات في الوقت الفعلي. مثال: <code>GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents</code> يعيد بيانات مقام مفصلة. للمستخدمين الذين لا يعرفون أسماء مقامات محددة، استخدم أمثلة تمثيلية من <Link href="/docs/api/representative-examples">الأمثلة التمثيلية</Link>. راجع مواصفات OpenAPI لجميع نقاط النهاية والمعاملات المتاحة.
             </p>
+            <div style={{ backgroundColor: "#f8f9fa", border: "1px solid #dee2e6", borderRadius: "4px", padding: "12px", marginTop: "16px" }}>
+              <p style={{ margin: 0, fontWeight: "bold" }}>الأخطاء الشائعة التي يجب تجنبها:</p>
+              <ul style={{ margin: "8px 0 0 0", paddingLeft: "20px" }}>
+                <li>❌ <code>GET /api/maqamat/maqam_rast</code> (معاملات مطلوبة مفقودة)</li>
+                <li>❌ <code>GET /api/maqamat/rast</code> (تنسيق خاطئ - بادئة &quot;maqam_&quot; مفقودة)</li>
+                <li>✅ <code>GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents</code></li>
+              </ul>
+            </div>
             <div className="developers-links">
               <div className="developer-link-card">
                 <h3>الوثائق</h3>
@@ -187,9 +201,23 @@ export default function LandingPage() {
             <p>
               This site is LLM-friendly and provides comprehensive programmatic access to Arabic maqām data. All documentation and APIs are available for programmatic access.
             </p>
+            <div style={{ backgroundColor: "#fff3cd", border: "1px solid #ffc107", borderRadius: "4px", padding: "12px", marginBottom: "16px" }}>
+              <p style={{ margin: 0, fontWeight: "bold" }}>⚠️ Critical: Required Parameters</p>
+              <p style={{ margin: "8px 0 0 0" }}>
+                All detail endpoints (<code>/api/maqamat/&#123;id&#125;</code>, <code>/api/ajnas/&#123;id&#125;</code>) <strong>require</strong> three parameters: <code>tuningSystem</code>, <code>startingNote</code>, and <code>pitchClassDataType</code>. See <Link href="/docs/api/representative-examples">Representative Examples</Link> for correct usage.
+              </p>
+            </div>
             <p>
               <strong>For AI Assistants:</strong> You can use the API to fetch specific data for users. Always prefer API calls over documentation summaries for real-time data accuracy. Example: <code>GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents</code> returns detailed maqām data. For users who don&apos;t know specific maqam names, use representative examples from <Link href="/docs/api/representative-examples">Representative Examples</Link>. See the OpenAPI specification for all available endpoints and parameters.
             </p>
+            <div style={{ backgroundColor: "#f8f9fa", border: "1px solid #dee2e6", borderRadius: "4px", padding: "12px", marginTop: "16px" }}>
+              <p style={{ margin: 0, fontWeight: "bold" }}>Common Mistakes to Avoid:</p>
+              <ul style={{ margin: "8px 0 0 0", paddingLeft: "20px" }}>
+                <li>❌ <code>GET /api/maqamat/maqam_rast</code> (missing required parameters)</li>
+                <li>❌ <code>GET /api/maqamat/rast</code> (wrong format - missing &quot;maqam_&quot; prefix)</li>
+                <li>✅ <code>GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents</code></li>
+              </ul>
+            </div>
             <div className="developers-links">
               <div className="developer-link-card">
                 <h3>Documentation</h3>

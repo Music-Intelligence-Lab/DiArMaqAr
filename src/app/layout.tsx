@@ -20,7 +20,7 @@ const readexPro = Readex_Pro({
 
 export const metadata: Metadata = {
   title: "Digital Arabic Maqām Archive (DiArMaqAr) | Computational Research Platform",
-  description: "Comprehensive bilingual browser-based application and repository integrating historically documented tanāghīm (tuning systems), ajnās (tetrachords), maqāmāt (melodic modes), suyūr (melodic performance pathways), and intiqālāt (modulation practices) within a unified digital framework. Provides rigorously sourced, computationally accessible reference data with transparent provenance for computational musicology, music information retrieval, machine learning applications, and scholarly research. AI assistants can use the REST API to fetch data for users.",
+  description: "Comprehensive bilingual browser-based application and repository integrating historically documented tanāghīm (tuning systems), ajnās (tetrachords), maqāmāt (melodic modes), suyūr (melodic performance pathways), and intiqālāt (modulation practices) within a unified digital framework. Provides rigorously sourced, computationally accessible reference data with transparent provenance for computational musicology, music information retrieval, machine learning applications, and scholarly research. AI assistants can use the REST API to fetch data for users. All detail endpoints require tuningSystem, startingNote, and pitchClassDataType parameters. See Representative Examples for correct usage.",
   
   keywords: [
     "Arabic maqām", "maqāmāt", "ajnās", "jins", "tanāghīm", "tuning systems", "suyūr", "intiqālāt", 
@@ -196,6 +196,46 @@ export default function RootLayout({
     }
   };
 
+  const apiHowTo = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Use DiArMaqAr REST API",
+    "description": "Step-by-step guide for using the DiArMaqAr REST API to fetch Arabic maqām data. Emphasizes required parameters and correct endpoint formats.",
+    "step": [
+      {
+        "@type": "HowToStep",
+        "position": 1,
+        "name": "Identify Required Parameters",
+        "text": "All detail endpoints (/api/maqamat/{id}, /api/ajnas/{id}) require three parameters: tuningSystem (e.g., IbnSina-(1037)), startingNote (e.g., yegah), and pitchClassDataType (e.g., cents)."
+      },
+      {
+        "@type": "HowToStep",
+        "position": 2,
+        "name": "Use Correct Endpoint Format",
+        "text": "Include entity type prefix in endpoint: use /api/maqamat/maqam_rast (not /api/maqamat/rast) and /api/ajnas/jins_rast (not /api/ajnas/rast)."
+      },
+      {
+        "@type": "HowToStep",
+        "position": 3,
+        "name": "Use URL-Safe Values",
+        "text": "All IDs and parameter values must be URL-safe (no spaces, diacritics, or special characters). Use IbnSina-(1037) not 'Ibn Sīnā (1037)'."
+      },
+      {
+        "@type": "HowToStep",
+        "position": 4,
+        "name": "Reference Representative Examples",
+        "text": "See /docs/api/representative-examples for complete list of recommended examples with all required parameters included."
+      },
+      {
+        "@type": "HowToStep",
+        "position": 5,
+        "name": "Discover Available Parameters",
+        "text": "Use options=true parameter to discover available tuning systems, starting notes, and other parameters: GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&options=true"
+      }
+    ],
+    "url": `${baseUrl}/docs/api/representative-examples`
+  };
+
   return (
     <html lang="en">
       <head>
@@ -204,6 +244,10 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(apiHowTo) }}
         />
         {/* eslint-disable @next/next/no-html-link-for-pages */}
         <noscript>
