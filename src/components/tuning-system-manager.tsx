@@ -725,6 +725,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 className="tuning-system-manager__input"
                 id="titleArabicField"
                 type="text"
+                dir="rtl"
                 value={titleArabic ?? ""}
                 onChange={(e) => setTitleArabic(e.target.value)}
               />
@@ -822,6 +823,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 className="tuning-system-manager__input"
                 id="creatorArabicField"
                 type="text"
+                dir="rtl"
                 value={creatorArabic ?? ""}
                 onChange={(e) => setCreatorArabic(e.target.value)}
               />
@@ -857,6 +859,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 rows={5}
                 className="tuning-system-manager__input"
                 id="commentsArabicField"
+                dir="rtl"
                 value={commentsArabic}
                 onChange={(e) => setCommentsArabic(e.target.value)}
               />

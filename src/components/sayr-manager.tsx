@@ -332,7 +332,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
             </div>
             <div className="sayr-manager__input-container">
               <label className="sayr-manager__label">{t("sayr.commentsArabic")}</label>
-              <textarea className="sayr-manager__textarea" rows={3} value={commentsArabic} onChange={(e) => setCommentsArabic(e.target.value)} />
+              <textarea className="sayr-manager__textarea" rows={3} dir="rtl" value={commentsArabic} onChange={(e) => setCommentsArabic(e.target.value)} />
             </div>
           </div>
         )}
