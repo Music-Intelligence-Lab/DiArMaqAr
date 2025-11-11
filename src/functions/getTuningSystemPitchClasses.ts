@@ -11,7 +11,7 @@ import NoteName, {
 import detectPitchClassValueType from "@/functions/detectPitchClassType";
 import convertPitchClassValue, { shiftPitchClassBaseValue, frequencyToMidiNoteNumber } from "@/functions/convertPitchClass";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
-import { calculateCentsDeviationWithReferenceNote, swapEnharmonicForReference } from "@/functions/calculateCentsDeviation";
+import { calculateCentsDeviationWithReferenceNote, swapEnharmonicForReference, getNextSequentialReferenceNote } from "@/functions/calculateCentsDeviation";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
 import PitchClass from "@/models/PitchClass";
 
@@ -148,30 +148,50 @@ export default function getTuningSystemPitchClasses(
     
     pitchClasses.forEach((pc) => {
       const deviationResult = calculateCentsDeviationWithReferenceNote(pc.midiNoteDecimal, pc.cents, startingMidiNumber, pc.englishName, startingNoteName);
-      pc.centsDeviation = deviationResult.deviation;
       
-      // Apply enharmonic logic to avoid repeating the same letter
+      // Apply sequential logic to avoid repeating the same letter in reference note names.
+      // Both englishName and referenceNoteName need unique sequential orders.
+      // When the same letter would repeat, try to move to the next sequential note first,
+      // then fall back to enharmonic swap if that's not possible.
       let referenceNoteName = deviationResult.referenceNoteName;
+      let centsDeviation = deviationResult.deviation;
+      
       if (prevReferenceNoteName) {
         const prevLetter = prevReferenceNoteName.charAt(0).toUpperCase();
         const currLetter = referenceNoteName.charAt(0).toUpperCase();
         
         if (prevLetter === currLetter) {
-          // Try to swap enharmonic equivalent using the same logic from noteNameMappings
+          // Try moving to the next sequential note (e.g., E → F, B → C)
+          const nextSequential = getNextSequentialReferenceNote(referenceNoteName);
+          if (nextSequential) {
+            referenceNoteName = nextSequential;
+          } else {
+            // Fall back to enharmonic swap if next sequential is not available
           const swapped = swapEnharmonicForReference(referenceNoteName);
           if (swapped) {
             referenceNoteName = swapped;
+            }
+          }
+          
+          // Recalculate cents deviation based on the new reference note
+          if (referenceNoteName !== deviationResult.referenceNoteName) {
+            const tempPc = { ...pc, referenceNoteName };
+            const newRefMidi = calculateIpnReferenceMidiNote(tempPc);
+            const referenceFrequency = 440 * Math.pow(2, (newRefMidi - 69) / 12);
+            const currentFrequency = 440 * Math.pow(2, (pc.midiNoteDecimal - 69) / 12);
+            centsDeviation = 1200 * Math.log2(currentFrequency / referenceFrequency);
           }
         }
       }
       
       pc.referenceNoteName = referenceNoteName;
+      pc.centsDeviation = centsDeviation;
       prevReferenceNoteName = referenceNoteName;
 
       // Calculate MIDI Note Deviation (formatted string for display/export)
       const referenceMidiNote = calculateIpnReferenceMidiNote(pc);
       const sign = pc.centsDeviation > 0 ? "+" : "";
-      pc.midiNoteDeviation = `${referenceMidiNote} ${sign}${pc.centsDeviation}`;
+      pc.midiNoteDeviation = `${referenceMidiNote} ${sign}${pc.centsDeviation.toFixed(1)}`;
     });
   }
 

@@ -215,3 +215,79 @@ export function swapEnharmonicForReference(name: string): string | null {
 
   return map[name] || null;
 }
+
+/**
+ * Gets the next sequential reference note name when avoiding letter repetition.
+ * When a reference note name would repeat the same letter as the previous one,
+ * this function returns the next sequential note (e.g., E → F, B → C).
+ * 
+ * This ensures unique sequential ordering for reference note names while
+ * preserving accidentals when possible.
+ *
+ * @param name - The reference note name (e.g., "E", "E#", "B", "Bb")
+ * @returns The next sequential note name, or null if already at the end
+ */
+export function getNextSequentialReferenceNote(name: string): string | null {
+  const match = name.match(/^([A-G])([#b]*)$/);
+  if (!match) return null;
+  
+  const baseNote = match[1];
+  const accidental = match[2];
+  
+  // Map notes to their next sequential note
+  const nextNoteMap: { [key: string]: string } = {
+    "A": "B",
+    "B": "C",
+    "C": "D",
+    "D": "E",
+    "E": "F",
+    "F": "G",
+    "G": "A",
+  };
+  
+  const nextBase = nextNoteMap[baseNote];
+  if (!nextBase) return null;
+  
+  // Preserve accidental if it makes sense
+  // E# → F# (sharp preserved)
+  // E → F (no accidental)
+  // Bb → Cb (but Cb is enharmonic to B, so we might want C instead)
+  // Actually, let's keep it simple: preserve the accidental
+  return nextBase + accidental;
+}
+
+/**
+ * Gets the previous sequential reference note name when avoiding letter repetition in descending sequences.
+ * When a reference note name would repeat the same letter as the previous one in a descending sequence,
+ * this function returns the previous sequential note (e.g., D → C, C → B).
+ * 
+ * This ensures unique sequential ordering for reference note names in descending sequences while
+ * preserving accidentals when possible.
+ *
+ * @param name - The reference note name (e.g., "D", "D#", "C", "Cb")
+ * @returns The previous sequential note name, or null if already at the beginning
+ */
+export function getPreviousSequentialReferenceNote(name: string): string | null {
+  const match = name.match(/^([A-G])([#b]*)$/);
+  if (!match) return null;
+  
+  const baseNote = match[1];
+  const accidental = match[2];
+  
+  // Map notes to their previous sequential note (for descending sequences)
+  const prevNoteMap: { [key: string]: string } = {
+    "A": "G",
+    "B": "A",
+    "C": "B",
+    "D": "C",
+    "E": "D",
+    "F": "E",
+    "G": "F",
+  };
+  
+  const prevBase = prevNoteMap[baseNote];
+  if (!prevBase) return null;
+  
+  // Preserve accidental
+  return prevBase + accidental;
+}
