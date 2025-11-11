@@ -70,13 +70,17 @@ GET /maqamat
 
 Retrieve all available maqāmāt with optional filtering and sorting.
 
-Returns concise metadata (no pitch class data) including:
+**Returns:** All maqāmāt with their tuning system availability information. This endpoint does **not** include note names or pitch class data—only metadata about which tuning systems can realize each maqām.
+
+Returns concise metadata including:
 
 * URL-safe identifiers and display names for each maqām
 * Maqām family and maqām tonic identifiers (both URL-safe and display formats)
 * Availability counts across tuning systems with their valid starting note names (e.g., "ʿushayrān", "yegāh" etc...)
 * Optional bibliographic source references (sourceId and page) when `includeSources=true`
 * Filter values must be URL-safe; see parameter enums for complete list of valid options
+
+**Note:** For detailed pitch class data, note names, and ajnās information, use the `/maqamat/{idName}` endpoint.
 
 **Query Parameters:**
 
@@ -95,7 +99,7 @@ Returns concise metadata (no pitch class data) including:
   * Comments get Arabic versions in commentsAr if available
   * Tuning system display names get Arabic versions in displayNameAr if available
   * Source metadata gets Arabic versions in \*Ar fields (titleAr, firstNameAr, etc.)
-* Type: `string` - Valid values: `true`, `false` - Default: `true`
+* Type: `string` - Valid values: `true`, `false`
 * Example: `true`
 
 **Example:**
@@ -113,6 +117,11 @@ GET /maqamat/{idName}
 ```
 
 Retrieve comprehensive data for a specific maqām on its conventional or a transposed tonic, in a specific tuning system on a specific starting note name.
+
+**Special Path Parameter Value:**
+
+* The `{idName}` path parameter accepts the special value `"all"` to retrieve data for all maqāmāt in a specific tuning system and starting note
+* When using `"all"`, both `tuningSystem` and `startingNote` query parameters are required
 
 Returns:
 
@@ -138,10 +147,15 @@ Requirements:
 
 **Path Parameters:**
 
-* `idName`: URL-safe maqām identifier (string) **(required)**
-  * Example: `maqam_rast` - Maqām Rāst (representative example)
-  * Example: `maqam_bayyat` - Maqām Bayyāt (representative example)
-  * Example: `maqam_hijaz` - Maqām Ḥijāz (representative example)
+* `idName`: URL-safe maqām identifier.
+
+**Special value**: Use `"all"` to retrieve data for all maqāmāt in a specific tuning system and starting note. When using `"all"`, both `tuningSystem` and `startingNote` query parameters are required.
+(string) **(required)**
+
+* Example: `maqam_rast` - Maqām Rāst (representative example)
+* Example: `maqam_bayyat` - Maqām Bayyāt (representative example)
+* Example: `maqam_hijaz` - Maqām Ḥijāz (representative example)
+* Example: `all` - All maqāmāt (requires tuningSystem and startingNote query parameters)
 
 **Query Parameters:**
 
@@ -165,35 +179,35 @@ Requirements:
   * If data-returning parameters are provided, returns 400 Bad Request error with details about conflicting parameters
 * Type: `string` - Valid values: `true`, `false` - Default: `false`
 * Example: `true`
-* `pitchClassDataType` **(required)**: Specifies which pitch class data type to return for each pitch class.
-  * Optional for discovery mode (when options=true) since discovery returns parameter metadata, not formatted data
+* `pitchClassDataType` (optional): Specifies which pitch class data type to return for each pitch class.
+  * When provided, returns the specified data type for all pitch classes in the maqām
+  * In discovery mode (when options=true), this parameter is optional since the response returns parameter metadata instead of formatted data
   * Use 'all' for complete pitch class data across all available formats
-  * Each option returns the specified data type for all pitch classes in the maqām
 * Type: `string` - Valid values: `all`, `frequency`, `cents`, `fraction`, `decimalRatio`, ... (13 total)
 * Example: `cents`
 * `transposeTo` (optional): Transpose the maqām to a new tonic by preserving the interval patterns (URL-safe, diacritics-insensitive).
   * To see all valid transposition options, request available parameter options instead of maqām data
 * Type: `string`
 * Example: `nawa`
-* `includeIntervals` (optional): Include interval data between maqām degrees - Type: `string` - Valid values: `true`, `false` - Default: `true`
-  * Example: `true`
-* `includeModulations` (optional): Include modulation possibilities to other maqāmāt and ajnās - Type: `string` - Valid values: `true`, `false` - Default: `true`
-  * Example: `true`
-* `includeModulations8vb` (optional): Include available modulations an octave below - Type: `string` - Valid values: `true`, `false` - Default: `true`
-  * Example: `true`
-* `includeSuyur` (optional): Include suyūr (melodic paths) data - Type: `string` - Valid values: `true`, `false` - Default: `true`
-  * Example: `true`
+* `includeIntervals` (optional): Include interval data between maqām degrees - Type: `string` - Valid values: `true`, `false` - Default: `false`
+  * Example: `false`
+* `includeModulations` (optional): Include modulation possibilities to other maqāmāt and ajnās - Type: `string` - Valid values: `true`, `false` - Default: `false`
+  * Example: `false`
+* `includeModulations8vb` (optional): Include available modulations an octave below - Type: `string` - Valid values: `true`, `false` - Default: `false`
+  * Example: `false`
+* `includeSuyur` (optional): Include suyūr (melodic paths) data - Type: `string` - Valid values: `true`, `false` - Default: `false`
+  * Example: `false`
 * `includeArabic` (optional): Return response data in Arabic script when true.
   * Note names, maqām names, and jins names are converted to Arabic script
   * Comments return Arabic versions if available
   * Tuning system display names use Arabic creator/title if available
-* Type: `string` - Valid values: `true`, `false` - Default: `true`
+* Type: `string` - Valid values: `true`, `false`
 * Example: `true`
 
 **Example:**
 
 ```bash
-curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents&includeArabic=true"
+curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&includeArabic=true"
 ```
 
 **Response:** Maqām data retrieved successfully.
@@ -227,7 +241,7 @@ Return tuning-system availability for a maqām.
   * Note names, maqām names, and jins names are converted to Arabic script
   * Comments return Arabic versions if available
   * Tuning system display names use Arabic creator/title if available
-* Type: `string` - Valid values: `true`, `false` - Default: `true`
+* Type: `string` - Valid values: `true`, `false`
 * Example: `true`
 
 **Example:**
@@ -263,7 +277,7 @@ Returns all tonic transpositions that are feasible under the tuning system acros
   * Note names, maqām names, and jins names are converted to Arabic script
   * Comments return Arabic versions if available
   * Tuning system display names use Arabic creator/title if available
-* Type: `string` - Valid values: `true`, `false` - Default: `true`
+* Type: `string` - Valid values: `true`, `false`
 * Example: `true`
 
 **Example:**
@@ -313,7 +327,7 @@ This endpoint is ideal for comparative musicological analysis across different h
   * Note names, maqām names, and jins names are converted to Arabic script
   * Comments return Arabic versions if available
   * Tuning system display names use Arabic creator/title if available
-* Type: `string` - Valid values: `true`, `false` - Default: `true`
+* Type: `string` - Valid values: `true`, `false`
 * Example: `true`
 
 **Example:**
@@ -323,6 +337,51 @@ curl "https://diarmaqar.netlify.app/api/maqamat/maqam_bayyat/compare?tuningSyste
 ```
 
 **Response:** Comparison data retrieved successfully
+
+### Classify maqāmāt by 12-pitch-class sets {#classifyMaqamat12PitchClassSets}
+
+```
+GET /maqamat/classification/12-pitch-class-sets
+```
+
+Groups maqāmāt according to sets of 12 pitch classes. Each set is created by replacing
+pitch classes in al-Kindi-(874) on ushayran with pitch classes from maqāmāt in the
+specified tuning system, based on matching IPN reference note names.
+
+The algorithm:
+
+1. Starts with the 12 pitch classes from al-Kindi-(874) on ushayran
+2. For each maqām transposition in the specified tuning system:
+   * Extracts IPN reference note names from ascending and descending sequences
+   * Replaces matching pitch classes in al-Kindi base (ascending takes priority, then descending)
+   * Creates a new 12-pitch-class set
+   * Finds all compatible maqāmāt that can be performed in this set
+3. Groups compatible maqāmāt together
+4. Names each group after the source maqām (e.g., "maqām rast set")
+
+Maqāmāt with duplicate IPN references (same IPN reference appearing multiple times)
+are marked as incompatible and cannot form valid 12-pitch-class sets.
+
+**Query Parameters:**
+
+* `tuningSystem` (optional): Tuning system ID for maqāmāt (default: CairoCongressTuningCommittee-(1929)) - Type: `string` - Default: `CairoCongressTuningCommittee-(1929)`
+  * Example: `CairoCongressTuningCommittee-(1929)`
+* `startingNote` (optional): Starting note for maqāmāt tuning system (default: yegah) - Type: `string` - Default: `yegah`
+  * Example: `yegah`
+* `centsTolerance` (optional): Tolerance in cents for pitch class comparison (default: 5) - Type: `number` - Default: `5`
+  * Example: `5`
+* `includeIncompatible` (optional): Include maqāmāt that cannot form valid 12-pitch-class sets - Type: `boolean` - Default: `true`
+  * Example: `true`
+* `includeArabic` (optional): Include Arabic display names in response - Type: `boolean` - Default: `false`
+  * Example: `false`
+
+**Example:**
+
+```bash
+curl "https://diarmaqar.netlify.app/api/maqamat/classification/12-pitch-class-sets?includeArabic=false"
+```
+
+**Response:** Classification results with sets and compatible maqāmāt
 
 ***
 
@@ -355,7 +414,7 @@ Return all ajnās (singular: jins) with metadata.
   * Note names, maqām names, and jins names are converted to Arabic script
   * Comments return Arabic versions if available
   * Tuning system display names use Arabic creator/title if available
-* Type: `string` - Valid values: `true`, `false` - Default: `true`
+* Type: `string` - Valid values: `true`, `false`
 * Example: `true`
 
 **Example:**
@@ -424,8 +483,8 @@ Requirements:
   * If data-returning parameters are provided, returns 400 Bad Request error with details about conflicting parameters
 * Type: `string` - Valid values: `true`, `false` - Default: `false`
 * Example: `true`
-* `pitchClassDataType` (optional): Specifies which pitch class data type to return for each pitch class.
-  * Optional for discovery mode (when options=true) since discovery returns parameter metadata, not formatted data
+* `pitchClassDataType` **(required)**: Specifies which pitch class data type to return for each pitch class.
+  * In discovery mode (when options=true), this parameter is still required but the response returns parameter metadata instead of formatted data
   * Use 'all' for complete pitch class data across all available formats
   * Each option returns the specified data type for all pitch classes in the jins
 * Type: `string` - Valid values: `all`, `frequency`, `cents`, `fraction`, `decimalRatio`, ... (13 total)
@@ -444,13 +503,13 @@ Requirements:
   * Note names, maqām names, and jins names are converted to Arabic script
   * Comments return Arabic versions if available
   * Tuning system display names use Arabic creator/title if available
-* Type: `string` - Valid values: `true`, `false` - Default: `true`
+* Type: `string` - Valid values: `true`, `false`
 * Example: `true`
 
 **Example:**
 
 ```bash
-curl "https://diarmaqar.netlify.app/api/ajnas/jins_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&includeArabic=true"
+curl "https://diarmaqar.netlify.app/api/ajnas/jins_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents&includeArabic=true"
 ```
 
 **Response:** Jins data retrieved successfully.
@@ -484,7 +543,7 @@ Return tuning-system availability for a jins.
   * Note names, maqām names, and jins names are converted to Arabic script
   * Comments return Arabic versions if available
   * Tuning system display names use Arabic creator/title if available
-* Type: `string` - Valid values: `true`, `false` - Default: `true`
+* Type: `string` - Valid values: `true`, `false`
 * Example: `true`
 
 **Example:**
@@ -520,7 +579,7 @@ Returns all tonic transpositions that are feasible under the tuning system acros
   * Note names, maqām names, and jins names are converted to Arabic script
   * Comments return Arabic versions if available
   * Tuning system display names use Arabic creator/title if available
-* Type: `string` - Valid values: `true`, `false` - Default: `true`
+* Type: `string` - Valid values: `true`, `false`
 * Example: `true`
 
 **Example:**
@@ -569,7 +628,7 @@ This endpoint is ideal for comparative musicological analysis of melodic structu
   * Note names, maqām names, and jins names are converted to Arabic script
   * Comments return Arabic versions if available
   * Tuning system display names use Arabic creator/title if available
-* Type: `string` - Valid values: `true`, `false` - Default: `true`
+* Type: `string` - Valid values: `true`, `false`
 * Example: `true`
 
 **Example:**
@@ -607,7 +666,7 @@ Retrieve metadata for all available tuning systems.
   * Note names, maqām names, and jins names are converted to Arabic script
   * Comments return Arabic versions if available
   * Tuning system display names use Arabic creator/title if available
-* Type: `string` - Valid values: `true`, `false` - Default: `true`
+* Type: `string` - Valid values: `true`, `false`
 * Example: `true`
 
 **Example:**
@@ -638,7 +697,7 @@ across all octaves with full formatting options.
 
 **Query Parameters:**
 
-* `pitchClassDataType` (optional): Pitch class data format (optional, defaults to "all") - Type: `string` - Valid values: `all`, `englishName`, `fraction`, `cents`, `decimalRatio`, ... (13 total)
+* `pitchClassDataType` **(required)**: Pitch class data format (defaults to "cents") - Type: `string` - Valid values: `all`, `englishName`, `fraction`, `cents`, `decimalRatio`, ... (13 total)
   * Example: `cents`
 * `octave` (optional): Filter by octave number.
   Use a specific octave number (0, 1, 2, 3) to filter to that octave only.
@@ -646,13 +705,13 @@ across all octaves with full formatting options.
 * Example: `all`
 * `includeSources` (optional): Include bibliographic source references (sourceId and page) for the tuning system - Type: `string` - Valid values: `true`, `false`
   * Example: `true`
-* `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false` - Default: `true`
+* `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false`
   * Example: `true`
 
 **Example:**
 
 ```bash
-curl "https://diarmaqar.netlify.app/api/tuning-systems/CairoCongressTuningCommittee-(1929)/rast/pitch-classes?includeSources=true&includeArabic=true"
+curl "https://diarmaqar.netlify.app/api/tuning-systems/CairoCongressTuningCommittee-(1929)/rast/pitch-classes?pitchClassDataType=cents&includeSources=true&includeArabic=true"
 ```
 
 **Response:** Tuning system pitch classes retrieved successfully
@@ -680,7 +739,7 @@ Return all maqāmāt that can be realized in a given tuning system beginning on 
   * Note names, maqām names, and jins names are converted to Arabic script
   * Comments return Arabic versions if available
   * Tuning system display names use Arabic creator/title if available
-* Type: `string` - Valid values: `true`, `false` - Default: `true`
+* Type: `string` - Valid values: `true`, `false`
 * Example: `true`
 
 **Example:**
@@ -724,7 +783,7 @@ availability information for a specific note name.
   * Example: `alphabetical` - Sort alphabetically by display name
 * `filterByTuningSystem` (optional): Filter by tuning system ID to show only note names that exist in that system (URL-safe, case-insensitive). - Type: `string`
   * Example: `Meshshaqa-(1899)`
-* `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false` - Default: `true`
+* `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false`
   * Example: `true`
 
 **Example:**
@@ -765,15 +824,15 @@ Supports:
   * Use "all" to include all available starting notes for that tuning system (returns array of results, one per starting note) Note: Since note names are unique per octave, the note name itself identifies the octave. No octave parameter is needed. Use `yegah` for IbnSina/Meshshaqa, `ushayran` for al-Farabi/al-Kindi, `rast` for CairoCongress/al-Sabbagh
 * Type: `string`
 * Example: `rast`
-* `pitchClassDataType` (optional): Pitch class data format - Type: `string` - Valid values: `all`, `englishName`, `fraction`, `cents`, `decimalRatio`, ... (13 total) - Default: `all`
-  * Example: `all`
-* `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false` - Default: `true`
+* `pitchClassDataType` **(required)**: Pitch class data format - Type: `string` - Valid values: `all`, `englishName`, `fraction`, `cents`, `decimalRatio`, ... (13 total) - Default: `cents`
+  * Example: `cents`
+* `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false`
   * Example: `true`
 
 **Example:**
 
 ```bash
-curl "https://diarmaqar.netlify.app/api/pitch-classes/note-names/rast?includeArabic=true"
+curl "https://diarmaqar.netlify.app/api/pitch-classes/note-names/rast?pitchClassDataType=cents&includeArabic=true"
 ```
 
 **Response:** Pitch class data retrieved successfully
@@ -799,7 +858,7 @@ Returns for each tuning system:
 
 **Query Parameters:**
 
-* `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false` - Default: `true`
+* `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false`
   * Example: `true`
 
 **Example:**
@@ -834,15 +893,15 @@ Returns comprehensive data for each tuning system including:
   * Example: `Meshshaqa-(1899),CairoCongressTuningCommittee-(1929)`
 * `startingNote` **(required)**: Starting note (applies to all tuning systems), or "all" to include all available starting notes for each tuning system. - Type: `string`
   * Example: `yegah`
-* `pitchClassDataType` (optional): Pitch class data format - Type: `string` - Valid values: `all`, `englishName`, `fraction`, `cents`, `decimalRatio`, ... (13 total) - Default: `all`
-  * Example: `all`
-* `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false` - Default: `true`
+* `pitchClassDataType` **(required)**: Pitch class data format - Type: `string` - Valid values: `all`, `englishName`, `fraction`, `cents`, `decimalRatio`, ... (13 total) - Default: `cents`
+  * Example: `cents`
+* `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false`
   * Example: `true`
 
 **Example:**
 
 ```bash
-curl "https://diarmaqar.netlify.app/api/pitch-classes/note-names/rast/compare?tuningSystems=Meshshaqa-(1899),CairoCongressTuningCommittee-(1929)&startingNote=yegah&includeArabic=true"
+curl "https://diarmaqar.netlify.app/api/pitch-classes/note-names/rast/compare?tuningSystems=Meshshaqa-(1899),CairoCongressTuningCommittee-(1929)&startingNote=yegah&pitchClassDataType=cents&includeArabic=true"
 ```
 
 **Response:** Comparison data retrieved successfully
@@ -880,7 +939,7 @@ as it is not meaningful in this context.
   * Use "all" to include all available starting notes for that tuning system (returns array of results, one per starting note) Note: Since note names are unique per octave, each note name already identifies its octave. No octave parameter is needed. Use `yegah` for IbnSina/Meshshaqa, `ushayran` for al-Farabi/al-Kindi, `rast` for CairoCongress/al-Sabbagh
 * Type: `string`
 * Example: `rast`
-* `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false` - Default: `true`
+* `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false`
   * Example: `true`
 
 **Example:**
@@ -912,7 +971,7 @@ as it is not meaningful in this context.
   * Example: `al-Farabi-(950g),CairoCongressTuningCommittee-(1929)`
 * `startingNote` **(required)**: Starting note (applies to all tuning systems), or "all" to include all available starting notes for each tuning system. - Type: `string`
   * Example: `ushayran`
-* `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false` - Default: `true`
+* `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false`
   * Example: `true`
 
 **Example:**
@@ -1005,7 +1064,7 @@ Use the `/api/sources` endpoint to retrieve all available source IDs.
   * Contributors get Arabic name versions in firstNameAr and lastNameAr fields
   * Type-specific fields get Arabic versions (e.g., publisherAr, journalAr, universityAr)
   * Display name gets Arabic version in displayNameAr field
-* Type: `string` - Valid values: `true`, `false` - Default: `true`
+* Type: `string` - Valid values: `true`, `false`
 * Example: `true`
 
 **Example:**
@@ -1038,7 +1097,7 @@ Use the `/api/sources` endpoint to retrieve all available source IDs.
 
 **Query Parameters:**
 
-* `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false` - Default: `true`
+* `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false`
   * Example: `true`
 
 **Example:**
@@ -1071,7 +1130,7 @@ Use the `/api/sources` endpoint to retrieve all available source IDs.
 
 **Query Parameters:**
 
-* `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false` - Default: `true`
+* `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false`
   * Example: `true`
 
 **Example:**
@@ -1104,7 +1163,7 @@ Use the `/api/sources` endpoint to retrieve all available source IDs.
 
 **Query Parameters:**
 
-* `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false` - Default: `true`
+* `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false`
   * Example: `true`
 
 **Example:**

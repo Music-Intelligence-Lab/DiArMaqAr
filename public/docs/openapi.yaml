@@ -34,12 +34,16 @@ paths:
       description: |
         Retrieve all available maqāmāt with optional filtering and sorting.
         
-        Returns concise metadata (no pitch class data) including:
+        **Returns:** All maqāmāt with their tuning system availability information. This endpoint does **not** include note names or pitch class data—only metadata about which tuning systems can realize each maqām.
+        
+        Returns concise metadata including:
         - URL-safe identifiers and display names for each maqām
         - Maqām family and maqām tonic identifiers (both URL-safe and display formats)
         - Availability counts across tuning systems with their valid starting note names (e.g., "ʿushayrān", "yegāh" etc...)
         - Optional bibliographic source references (sourceId and page) when `includeSources=true`
         - Filter values must be URL-safe; see parameter enums for complete list of valid options
+        
+        **Note:** For detailed pitch class data, note names, and ajnās information, use the `/maqamat/{idName}` endpoint.
       operationId: listMaqamat
       parameters:
         - name: filterByFamily
@@ -120,7 +124,6 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "true"
           example: "true"
       responses:
         '200':
@@ -245,6 +248,10 @@ paths:
       description: |
         Retrieve comprehensive data for a specific maqām on its conventional or a transposed tonic, in a specific tuning system on a specific starting note name.
         
+        **Special Path Parameter Value:**
+        - The `{idName}` path parameter accepts the special value `"all"` to retrieve data for all maqāmāt in a specific tuning system and starting note
+        - When using `"all"`, both `tuningSystem` and `startingNote` query parameters are required
+        
         Returns:
         - Comprehensive pitch class data in the requested tuning system and starting note name
         - All ajnās present at each maqām degree in the ascending and descending maqām structure, organized by their maqām degree note names
@@ -267,7 +274,10 @@ paths:
         - name: idName
           in: path
           required: true
-          description: URL-safe maqām identifier
+          description: |
+            URL-safe maqām identifier.
+            
+            **Special value**: Use `"all"` to retrieve data for all maqāmāt in a specific tuning system and starting note. When using `"all"`, both `tuningSystem` and `startingNote` query parameters are required.
           schema:
             type: string
           examples:
@@ -280,6 +290,9 @@ paths:
             hijaz:
               value: maqam_hijaz
               summary: Maqām Ḥijāz (representative example)
+            all:
+              value: "all"
+              summary: All maqāmāt (requires tuningSystem and startingNote query parameters)
         - name: tuningSystem
           in: query
           required: true
@@ -336,14 +349,14 @@ paths:
           example: "true"
         - name: pitchClassDataType
           in: query
-          required: true
+          required: false
           description: |
             Specifies which pitch class data type to return for each pitch class.
             
-            - Required for data retrieval (when options is not set or false)
-            - Optional for discovery mode (when options=true) since discovery returns parameter metadata, not formatted data
+            - Optional parameter. When omitted, returns only minimal pitch class fields: `pitchClassIndex`, `octave`, `scaleDegree`, `noteName`, `noteNameDisplay`, and `noteNameDisplayAr` (if includeArabic is enabled)
+            - When provided, returns the specified data type for all pitch classes in the maqām
+            - In discovery mode (when options=true), this parameter is optional since the response returns parameter metadata instead of formatted data
             - Use 'all' for complete pitch class data across all available formats
-            - Each option returns the specified data type for all pitch classes in the maqām
           schema:
             type: string
             enum: [all, frequency, cents, fraction, decimalRatio, stringLength, abjadName, fretDivision, midiNoteNumber, midiNoteDeviation, centsDeviation, referenceNoteName, englishName]
@@ -364,32 +377,32 @@ paths:
           schema:
             type: string
             enum: [true, false]
-            default: true
-          example: "true"
+            default: "false"
+          example: "false"
         - name: includeModulations
           in: query
           description: Include modulation possibilities to other maqāmāt and ajnās
           schema:
             type: string
             enum: [true, false]
-            default: true
-          example: "true"
+            default: "false"
+          example: "false"
         - name: includeModulations8vb
           in: query
           description: Include available modulations an octave below
           schema:
             type: string
             enum: [true, false]
-            default: true
-          example: "true"
+            default: "false"
+          example: "false"
         - name: includeSuyur
           in: query
           description: Include suyūr (melodic paths) data
           schema:
             type: string
             enum: [true, false]
-            default: true
-          example: "true"
+            default: "false"
+          example: "false"
         - name: includeArabic
           in: query
           required: false
@@ -403,7 +416,6 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "true"
           example: "true"
         # Note: ajnas are included by default and are not controlled by a query parameter
       responses:
@@ -453,6 +465,61 @@ paths:
                         referenceFrequency: 97.999
                       pitchClassDataType: "cents"
                       includeIntervals: false
+                minimal:
+                  summary: Minimal fields (pitchClassDataType omitted)
+                  value:
+                    maqam:
+                      id: "1"
+                      idName: "maqam_rast"
+                      displayName: "maqām rāst"
+                      version: "2025-10-18T19:41:17.132Z"
+                      tonicId: "rast"
+                      tonicDisplay: "rāst"
+                      transposition: false
+                      familyId: "rast"
+                      familyDisplay: "rāst"
+                      numberOfTranspositions: 3
+                      numberOfMaqamModulations: 28
+                      numberOfAjnasModulations: 29
+                      commentsEnglish: null
+                      commentsArabic: null
+                      sources: []
+                    context:
+                      tuningSystem:
+                        id: "IbnSina-(1037)"
+                        displayName: "Ibn Sīnā  (1037) 7-Fret Oud 17-Tone"
+                        version: "2025-10-18T19:42:23.643Z"
+                        originalValueType: "fraction"
+                        numberOfPitchClassesSingleOctave: 17
+                        numberOfPitchClassesAllOctaves: 68
+                        tuningSystemStartingNoteNames: ["ʿushayrān", "yegāh"]
+                        tuningSystemStartingNoteNamesIds: ["ushayran", "yegah"]
+                        startingNoteName: "yegah"
+                        referenceFrequency: 97.999
+                    pitchData:
+                      ascending:
+                        - pitchClassIndex: 4
+                          octave: 1
+                          scaleDegree: "I"
+                          noteName: "rast"
+                          noteNameDisplay: "rāst"
+                        - pitchClassIndex: 7
+                          octave: 1
+                          scaleDegree: "II"
+                          noteName: "dugah"
+                          noteNameDisplay: "dūgāh"
+                      descending:
+                        - pitchClassIndex: 16
+                          octave: 2
+                          scaleDegree: "VII"
+                          noteName: "ajam"
+                          noteNameDisplay: "ʿajam"
+                    ajnas:
+                      ascending:
+                        rast: { id: "3", idName: "jins_rast", displayName: "jins rāst" }
+                        dugah: null
+                      descending:
+                        ajam: { id: "7", idName: "jins_ajam", displayName: "jins ʿajam" }
                 transposed:
                   summary: Transposed maqām (taṣwīr)
                   value:
@@ -634,11 +701,11 @@ paths:
                         description: "Theoretical framework for note naming"
                       pitchClassDataType:
                         options: ["all", "frequency", "cents", "fraction", "decimalRatio", "stringLength", "abjadName", "fretDivision", "midiNoteNumber", "midiNoteDeviation", "centsDeviation", "referenceNoteName", "englishName"]
-                        default: "cents"
-                        description: "Output format for pitch data. Use 'all' for complete pitch class information."
+                        default: null
+                        description: "Output format for pitch data. When omitted, returns only minimal fields (pitchClassIndex, octave, scaleDegree, noteName, noteNameDisplay, noteNameDisplayAr). Use 'all' for complete pitch class information."
                       includeIntervals:
                         type: "boolean"
-                        default: true
+                        default: false
                         description: "Include interval data between pitch classes"
                       transposeTo:
                         options: ["rast", "nawa", "dugah"]
@@ -646,19 +713,19 @@ paths:
                         description: "Transpose to specific tonic (taṣwīr) - only valid transpositions shown"
                       includeModulations:
                         type: "boolean"
-                        default: true
+                        default: false
                         description: "Include modulation analysis (maqāmāt and ajnās)"
                       includeModulations8vb:
                         type: "boolean"
-                        default: true
+                        default: false
                         description: "Include available modulations an octave below"
                       includeSuyur:
                         type: "boolean"
-                        default: true
+                        default: false
                         description: "Include documented performance practices (suyūr)"
                     notes:
                       ajnasData: "Ajnās (constituent melodic structures) are always included in the response for maqām analysis"
-                      formatOptions: "The 'pitchClassDataType' parameter controls which pitch class properties are returned. Use 'all' for comprehensive data or specific formats like 'cents', 'fraction', etc. for targeted data."
+                      formatOptions: "The 'pitchClassDataType' parameter controls which pitch class properties are returned. When omitted, only minimal fields are returned. Use 'all' for comprehensive data or specific formats like 'cents', 'fraction', etc. for targeted data."
                     examples:
                       - "/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents&includeIntervals=true"
                       - "/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&transposeTo=nawa&includeModulations=true"
@@ -759,7 +826,6 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "true"
           example: "true"
       responses:
         '200':
@@ -903,7 +969,6 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "true"
           example: "true"
       responses:
         '200':
@@ -1065,8 +1130,8 @@ paths:
           example: "rast"
         - name: pitchClassDataType
           in: query
-          required: false
-          description: Pitch class data format (optional, defaults to "all")
+          required: true
+          description: Pitch class data format (defaults to "cents")
           schema:
             type: string
             enum:
@@ -1083,7 +1148,7 @@ paths:
               - midiNoteDeviation
               - centsDeviation
               - referenceNoteName
-          default: "all"
+          default: "cents"
           example: "cents"
         - name: octave
           in: query
@@ -1113,7 +1178,6 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "true"
           example: "true"
       responses:
         '200':
@@ -1259,7 +1323,6 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "true"
           example: "true"
       responses:
         '200':
@@ -1407,6 +1470,7 @@ paths:
               - midiNoteDeviation
               - centsDeviation
               - referenceNoteName
+          default: "cents"
           example: "cents"
         - name: includeIntervals
           in: query
@@ -1437,7 +1501,6 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "true"
           example: "true"
       responses:
         '200':
@@ -1852,6 +1915,322 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
 
+  /maqamat/classification/12-pitch-class-sets:
+    get:
+      tags:
+        - Maqāmāt
+      summary: Classify maqāmāt by 12-pitch-class sets
+      description: |
+        Groups maqāmāt according to sets of 12 pitch classes. Each set is created by replacing 
+        pitch classes in al-Kindi-(874) on ushayran with pitch classes from maqāmāt in the 
+        specified tuning system, based on matching IPN reference note names.
+        
+        The algorithm:
+        1. Starts with the 12 pitch classes from al-Kindi-(874) on ushayran
+        2. For each maqām transposition in the specified tuning system:
+           - Extracts IPN reference note names from ascending and descending sequences
+           - Replaces matching pitch classes in al-Kindi base (ascending takes priority, then descending)
+           - Creates a new 12-pitch-class set
+           - Finds all compatible maqāmāt that can be performed in this set
+        3. Groups compatible maqāmāt together
+        4. Names each group after the source maqām (e.g., "maqām rast set")
+        
+        Maqāmāt with duplicate IPN references (same IPN reference appearing multiple times) 
+        are marked as incompatible and cannot form valid 12-pitch-class sets.
+      operationId: classifyMaqamat12PitchClassSets
+      parameters:
+        - name: tuningSystem
+          in: query
+          description: "Tuning system ID for maqāmāt (default: CairoCongressTuningCommittee-(1929))"
+          schema:
+            type: string
+            default: "CairoCongressTuningCommittee-(1929)"
+          example: "CairoCongressTuningCommittee-(1929)"
+        - name: startingNote
+          in: query
+          description: "Starting note for maqāmāt tuning system (default: yegah)"
+          schema:
+            type: string
+            default: "yegah"
+          example: "yegah"
+        - name: centsTolerance
+          in: query
+          description: "Tolerance in cents for pitch class comparison (default: 5)"
+          schema:
+            type: number
+            default: 5
+            minimum: 0
+          example: 5
+        - name: includeIncompatible
+          in: query
+          description: Include maqāmāt that cannot form valid 12-pitch-class sets
+          schema:
+            type: boolean
+            default: true
+          example: true
+        - name: includeArabic
+          in: query
+          description: Include Arabic display names in response
+          schema:
+            type: boolean
+            default: false
+          example: false
+      responses:
+        '200':
+          description: Classification results with sets and compatible maqāmāt
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  summary:
+                    type: array
+                    description: Summary of each set with compatible maqāmāt names
+                    items:
+                      type: object
+                      properties:
+                        setName:
+                          type: string
+                          example: "maqām rast set"
+                        compatibleMaqamat:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              maqamName:
+                                type: string
+                              transpositionName:
+                                type: string
+                              isTransposed:
+                                type: boolean
+                  statistics:
+                    type: object
+                    description: Statistics about the classification
+                    properties:
+                      totalSets:
+                        type: number
+                      sets:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            setName:
+                              type: string
+                            compatibleMaqamatCount:
+                              type: number
+                      totalCompatibleMaqamat:
+                        type: number
+                      incompatibleMaqamatCount:
+                        type: number
+                  sets:
+                    type: array
+                    description: Classification sets grouping compatible maqāmāt
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: URL-safe identifier for the set
+                          example: "maqam_rast_set"
+                        name:
+                          type: string
+                          description: Display name of the set
+                          example: "maqām rast set"
+                        sourceMaqam:
+                          $ref: '#/components/schemas/EntityNamespace'
+                        sourceTransposition:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                              example: "maqām rāst"
+                            isTransposed:
+                              type: boolean
+                              example: false
+                        pitchClassSet:
+                          type: array
+                          description: The 12 pitch classes in this set
+                          items:
+                            type: object
+                            properties:
+                              ipnReferenceNoteName:
+                                type: string
+                                example: "C"
+                              noteName:
+                                type: string
+                                example: "rāst"
+                              cents:
+                                type: number
+                                example: 0
+                              fraction:
+                                type: string
+                                example: "1/1"
+                              decimalRatio:
+                                type: number
+                                example: 1.0
+                              frequency:
+                                type: number
+                                example: 130.665
+                              octave:
+                                type: number
+                                example: 1
+                        compatibleMaqamat:
+                          type: array
+                          description: Maqāmāt compatible with this set
+                          items:
+                            type: object
+                            properties:
+                              maqam:
+                                $ref: '#/components/schemas/EntityNamespace'
+                              transposition:
+                                type: object
+                                properties:
+                                  name:
+                                    type: string
+                                  isTransposed:
+                                    type: boolean
+                              isCompatible:
+                                type: boolean
+                        compatibleMaqamatCount:
+                          type: number
+                          description: Number of compatible maqāmāt in this set
+                  totalSets:
+                    type: number
+                    description: Total number of classification sets
+                  totalCompatibleMaqamat:
+                    type: number
+                    description: Total number of compatible maqām transpositions across all sets
+                  incompatibleMaqamat:
+                    type: array
+                    description: Maqāmāt that cannot form valid 12-pitch-class sets
+                    items:
+                      type: object
+                      properties:
+                        maqam:
+                          $ref: '#/components/schemas/EntityNamespace'
+                        transposition:
+                          type: object
+                          nullable: true
+                          properties:
+                            name:
+                              type: string
+                            isTransposed:
+                              type: boolean
+                        reason:
+                          type: string
+                          example: "duplicate_ipn_reference"
+                  incompatibleMaqamatCount:
+                    type: number
+                    description: Number of incompatible maqāmāt
+                  parameters:
+                    type: object
+                    description: Parameters used for classification
+                    properties:
+                      tuningSystem:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          idName:
+                            type: string
+                          displayName:
+                            type: string
+                      startingNote:
+                        type: object
+                        properties:
+                          idName:
+                            type: string
+                          displayName:
+                            type: string
+                      alKindiTuningSystem:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          idName:
+                            type: string
+                          displayName:
+                            type: string
+                      alKindiStartingNote:
+                        type: object
+                        properties:
+                          idName:
+                            type: string
+                          displayName:
+                            type: string
+              examples:
+                default:
+                  summary: Default response
+                  value:
+                    summary:
+                      - setName: "maqām rast set"
+                        compatibleMaqamat:
+                          - maqamName: "maqām rāst"
+                            transpositionName: "maqām rāst"
+                            isTransposed: false
+                    statistics:
+                      totalSets: 1
+                      sets:
+                        - setName: "maqām rast set"
+                          compatibleMaqamatCount: 1
+                      totalCompatibleMaqamat: 1
+                      incompatibleMaqamatCount: 0
+                    sets:
+                      - id: "maqam_rast_set"
+                        name: "maqām rast set"
+                        sourceMaqam:
+                          id: "1"
+                          idName: "maqam_rast"
+                          displayName: "maqām rāst"
+                        sourceTransposition:
+                          name: "maqām rāst"
+                          isTransposed: false
+                        pitchClassSet:
+                          - ipnReferenceNoteName: "C"
+                            noteName: "rāst"
+                            cents: 0
+                            fraction: "1/1"
+                            decimalRatio: 1.0
+                            frequency: 130.665
+                            octave: 1
+                        compatibleMaqamat:
+                          - maqam:
+                              id: "1"
+                              idName: "maqam_rast"
+                              displayName: "maqām rāst"
+                            transposition:
+                              name: "maqām rāst"
+                              isTransposed: false
+                            isCompatible: true
+                        compatibleMaqamatCount: 1
+                    totalSets: 1
+                    totalCompatibleMaqamat: 1
+                    incompatibleMaqamat: []
+                    incompatibleMaqamatCount: 0
+                    parameters:
+                      tuningSystem:
+                        id: "CairoCongressTuningCommittee-(1929)"
+                        idName: "cairocongresstuningcommittee-1929"
+                        displayName: "Cairo Congress Tuning Committee (1929)"
+                      startingNote:
+                        idName: "yegah"
+                        displayName: "yegāh"
+                      alKindiTuningSystem:
+                        id: "al-Kindi-(874)"
+                        idName: "al-kindi-874"
+                        displayName: "al-Kindī (874)"
+                      alKindiStartingNote:
+                        idName: "ushayran"
+                        displayName: "ʿushayrān"
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
   /tuning-systems/{id}/{startingNote}/maqamat:
     get:
       tags:
@@ -1890,7 +2269,6 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "true"
           example: "true"
       responses:
         '200':
@@ -1987,7 +2365,6 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "true"
           example: "true"
       responses:
         '200':
@@ -2141,17 +2518,18 @@ paths:
           example: "true"
         - name: pitchClassDataType
           in: query
-          required: false
+          required: true
           description: |
             Specifies which pitch class data type to return for each pitch class.
             
-            - Required for data retrieval (when options is not set or false)
-            - Optional for discovery mode (when options=true) since discovery returns parameter metadata, not formatted data
+            - Required for all requests (defaults to "cents" if not provided)
+            - In discovery mode (when options=true), this parameter is still required but the response returns parameter metadata instead of formatted data
             - Use 'all' for complete pitch class data across all available formats
             - Each option returns the specified data type for all pitch classes in the jins
           schema:
             type: string
             enum: [all, frequency, cents, fraction, decimalRatio, stringLength, abjadName, fretDivision, midiNoteNumber, midiNoteDeviation, centsDeviation, referenceNoteName, englishName]
+          default: "cents"
           example: "cents"
         - name: transposeTo
           in: query
@@ -2200,7 +2578,6 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "true"
           example: "true"
       responses:
         '200':
@@ -2497,7 +2874,6 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "true"
           example: "true"
       responses:
         '200':
@@ -2650,7 +3026,6 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "true"
           example: "true"
       responses:
         '200':
@@ -2841,6 +3216,7 @@ paths:
               - midiNoteDeviation
               - centsDeviation
               - referenceNoteName
+          default: "cents"
           example: "cents"
         - name: includeIntervals
           in: query
@@ -2871,7 +3247,6 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "true"
           example: "true"
       responses:
         '200':
@@ -3193,7 +3568,6 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "true"
           example: "true"
       responses:
         '200':
@@ -3291,13 +3665,13 @@ paths:
           example: "rast"
         - name: pitchClassDataType
           in: query
-          required: false
+          required: true
           description: Pitch class data format
           schema:
             type: string
             enum: [all, englishName, fraction, cents, decimalRatio, stringLength, frequency, abjadName, fretDivision, midiNoteNumber, midiNoteDeviation, centsDeviation, referenceNoteName]
-            default: all
-          example: "all"
+            default: "cents"
+          example: "cents"
         - name: includeArabic
           in: query
           required: false
@@ -3306,7 +3680,6 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "true"
           example: "true"
       responses:
         '200':
@@ -3408,7 +3781,6 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "true"
           example: "true"
       responses:
         '200':
@@ -3502,13 +3874,13 @@ paths:
           example: "yegah"
         - name: pitchClassDataType
           in: query
-          required: false
+          required: true
           description: Pitch class data format
           schema:
             type: string
             enum: [all, englishName, fraction, cents, decimalRatio, stringLength, frequency, abjadName, fretDivision, midiNoteNumber, midiNoteDeviation, centsDeviation, referenceNoteName]
-            default: all
-          example: "all"
+            default: "cents"
+          example: "cents"
         - name: includeArabic
           in: query
           required: false
@@ -3517,7 +3889,6 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "true"
           example: "true"
       responses:
         '200':
@@ -3631,7 +4002,6 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "true"
           example: "true"
       responses:
         '200':
@@ -3788,7 +4158,6 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "true"
           example: "true"
       responses:
         '200':
@@ -4066,7 +4435,6 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "true"
           example: "true"
       responses:
         '200':
@@ -4208,7 +4576,6 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "true"
           example: "true"
       responses:
         '200':
@@ -4289,7 +4656,6 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "true"
           example: "true"
       responses:
         '200':
@@ -4366,7 +4732,6 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "true"
           example: "true"
       responses:
         '200':
