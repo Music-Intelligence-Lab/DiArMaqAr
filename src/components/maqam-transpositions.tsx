@@ -702,9 +702,21 @@ const MaqamTranspositions: React.FC = () => {
     const { romanNumerals, noOctaveMaqam, valueType, useRatio, numberOfFilterRows } = maqamConfig;
 
     function renderTranspositionRow(maqam: Maqam, ascending: boolean, rowIndex: number) {
+      // Check if maqam is symmetrical (ascending and descending have same note names)
+      const ascendingNoteNames = maqam.ascendingPitchClasses.map(pc => pc.noteName);
+      const descendingNoteNames = maqam.descendingPitchClasses.map(pc => pc.noteName);
+      const isSymmetrical = ascendingNoteNames.length === descendingNoteNames.length &&
+        ascendingNoteNames.every((name, i) => name === descendingNoteNames[descendingNoteNames.length - 1 - i]);
+      
+      // For symmetrical maqamat, pass all pitch classes to ensure consistent reference note assignments
+      // For asymmetrical maqamat, process each sequence independently
+      const allMaqamPitchClasses = isSymmetrical
+        ? [...maqam.ascendingPitchClasses, ...maqam.descendingPitchClasses]
+        : undefined;
+      
       // Apply sequential English name spellings for melodic sequences
-      let ascendingTranspositionPitchClasses = renderPitchClassSpellings(maqam.ascendingPitchClasses, true);
-      let descendingTranspositionPitchClasses = renderPitchClassSpellings(maqam.descendingPitchClasses, false);
+      let ascendingTranspositionPitchClasses = renderPitchClassSpellings(maqam.ascendingPitchClasses, true, allMaqamPitchClasses);
+      let descendingTranspositionPitchClasses = renderPitchClassSpellings(maqam.descendingPitchClasses, false, allMaqamPitchClasses);
 
       let ascendingIntervals = maqam.ascendingPitchClassIntervals;
       let descendingIntervals = maqam.descendingPitchClassIntervals;
