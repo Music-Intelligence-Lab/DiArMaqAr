@@ -137,8 +137,20 @@ function createLowerOctaveJinsDegreesNoteNames(
  * @param isDescending - Whether this is descending data (reverses scale degrees)
  * @param inArabic - Whether to return Arabic script for note names
  */
-function formatPitchData(pitchClasses: PitchClass[], format: string, isDescending: boolean = false, inArabic: boolean = false) {
+function formatPitchData(pitchClasses: PitchClass[], format: string | null | undefined, isDescending: boolean = false, inArabic: boolean = false) {
   const length = pitchClasses.length;
+  
+  // Return minimal fields when pitchClassDataType is not provided
+  if (!format || format === "") {
+    return pitchClasses.map((pc, index) => ({
+      pitchClassIndex: pc.pitchClassIndex,
+      octave: pc.octave,
+      scaleDegree: isDescending ? (romanNumerals[length - 1 - index] || `${length - index}`) : (romanNumerals[index] || `${index + 1}`),
+      noteName: standardizeText(pc.noteName),
+      noteNameDisplay: pc.noteName,
+      ...(inArabic && { noteNameDisplayAr: getNoteNameDisplayAr(pc.noteName) })
+    }));
+  }
   
   switch (format) {
     case "all":
@@ -406,14 +418,14 @@ export async function GET(
     const tuningSystemId = searchParams.get("tuningSystem");
     const startingNote = searchParams.get("startingNote");
     const pitchClassDataType = searchParams.get("pitchClassDataType");
-    const includeIntervals = searchParams.get("includeIntervals") !== "false";
+    const includeIntervals = searchParams.get("includeIntervals") === "true";
     const transposeToNote = searchParams.get("transposeTo");
-    const includeModulations = searchParams.get("includeModulations") !== "false";
+    const includeModulations = searchParams.get("includeModulations") === "true";
     // Handle both parameter names for backward compatibility
     const mod8vb = searchParams.get("includeModulations8vb");
     const modLower = searchParams.get("includeLowerOctaveModulations");
-    const includeLowerOctaveModulations = (mod8vb === null && modLower === null) || mod8vb === "true" || modLower === "true" || (mod8vb !== "false" && modLower !== "false");
-    const includeSuyur = searchParams.get("includeSuyur") !== "false";
+    const includeLowerOctaveModulations = mod8vb === "true" || modLower === "true";
+    const includeSuyur = searchParams.get("includeSuyur") === "true";
     const showOptions = searchParams.get("options") === "true";
     
     // Parse includeArabic parameter
@@ -614,8 +626,8 @@ export async function GET(
 
           // Add pitch data according to pitchClassDataType
           maqamData.pitchData = {
-            ascending: formatPitchData(tahlil.ascendingPitchClasses, pitchClassDataType || "all", false, inArabic),
-            descending: formatPitchData(tahlil.descendingPitchClasses, pitchClassDataType || "all", true, inArabic)
+            ascending: formatPitchData(tahlil.ascendingPitchClasses, pitchClassDataType, false, inArabic),
+            descending: formatPitchData(tahlil.descendingPitchClasses, pitchClassDataType, true, inArabic)
           };
 
           // Add intervals if requested
@@ -947,20 +959,7 @@ export async function GET(
       );
     }
 
-    // Require pitchClassDataType for data retrieval (not required for discovery mode)
-    if (!showOptions && !pitchClassDataType) {
-      return addCorsHeaders(
-        NextResponse.json(
-          {
-            error: "pitchClassDataType parameter is required",
-            message: "Pitch class data type must be specified for data retrieval. This determines which pitch class properties are returned.",
-            validOptions: validPitchClassDataTypes,
-            hint: `Add &pitchClassDataType=cents to your request. Use 'all' for complete pitch class information. For parameter discovery, use &options=true (pitchClassDataType is optional in discovery mode).`
-          },
-          { status: 400 }
-        )
-      );
-    }
+    // pitchClassDataType is optional - when omitted, returns only minimal fields
 
     // Require tuning system for actual data
     if (!tuningSystemId) {
@@ -1288,10 +1287,30 @@ export async function GET(
       }),
     };
 
+    // Apply sequential reference note logic to maqam pitch classes
+    const { renderPitchClassSpellings } = await import("@/functions/renderPitchClassIpnSpellings");
+    
+    // For symmetrical maqamat, pass all pitch classes to ensure consistent reference note assignments
+    // For asymmetrical maqamat, process each sequence independently
+    const allMaqamPitchClasses = !hasAsymmetricDescending
+      ? [...selectedTransposition.ascendingPitchClasses, ...selectedTransposition.descendingPitchClasses]
+      : undefined;
+    
+    const ascendingPitchClassesWithSequentialRefs = renderPitchClassSpellings(
+      selectedTransposition.ascendingPitchClasses,
+      true,
+      allMaqamPitchClasses
+    );
+    const descendingPitchClassesWithSequentialRefs = renderPitchClassSpellings(
+      selectedTransposition.descendingPitchClasses,
+      false,
+      allMaqamPitchClasses
+    );
+
     // Always include pitch data
     responseData.pitchData = {
-      ascending: formatPitchData(selectedTransposition.ascendingPitchClasses, pitchClassDataType || "all", false, inArabic),
-      descending: formatPitchData(selectedTransposition.descendingPitchClasses, pitchClassDataType || "all", true, inArabic)
+      ascending: formatPitchData(ascendingPitchClassesWithSequentialRefs, pitchClassDataType, false, inArabic),
+      descending: formatPitchData(descendingPitchClassesWithSequentialRefs, pitchClassDataType, true, inArabic)
     };
 
     // Add intervals if requested
