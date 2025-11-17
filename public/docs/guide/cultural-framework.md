@@ -25,7 +25,7 @@ As Serra (2011) identifies, there is a foundational epistemological problem in d
 The platform implements culture-specific methodology by:
 
 1. **Prioritizing Arabic Theoretical Frameworks**
-   * All operations grounded in Arab-Ottoman-Persian note naming convention
+   * All operations grounded in Persian-Arab-Ottoman note naming convention
    * Arabic concepts as foundational logic, not exotic variation
 
 2. **System-Level Implementation**
@@ -38,7 +38,7 @@ The platform implements culture-specific methodology by:
    * Represents independent theoretical frameworks
    * Avoids positioning as "alternative" or "xenharmonic"
 
-## Arab-Ottoman-Persian Note Naming Convention
+## Persian-Arab-Ottoman Note Naming Convention
 
 ### Primary Reference System
 
@@ -140,7 +140,7 @@ DiArMaqAr demonstrates:
 
 ### Technical Architecture
 
-* **Note naming**: Arab-Ottoman-Persian convention as primary
+* **Note naming**: Persian-Arab-Ottoman convention as primary
 * **Data organization**: Arabic hierarchies enforced
 * **Calculations**: Begin from Arabic frameworks
 * **Interface**: Arabic concepts presented natively

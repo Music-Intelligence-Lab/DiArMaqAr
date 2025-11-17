@@ -9,7 +9,7 @@ DiArMaqAr implements the **first algorithmic interpretation** of Sāmī al-Shaww
 
 ## Overview
 
-Unlike Anglo-European modulation theory, Turkish makam theory, or contemporary Arabic theoretical approaches, Al-Shawwā's method employs specific conditions based on scale degree relationships within the Arab-Ottoman-Persian note naming framework.
+Unlike Anglo-European modulation theory, Turkish makam theory, or contemporary Arabic theoretical approaches, Al-Shawwā's method employs specific conditions based on scale degree relationships within the Persian-Arab-Ottoman note naming framework.
 
 ### Historical Context
 
@@ -23,7 +23,7 @@ This approach emphasizes **melodic connection** rather than harmonic compatibili
 
 ### The 24-Tone Classification System
 
-Al-Shawwā classified a 24-tone system into three categories based on the Arab-Ottoman-Persian note naming framework:
+Al-Shawwā classified a 24-tone system into three categories based on the Persian-Arab-Ottoman note naming framework:
 
 1. **Aṣlīya or Ṭabīʿīya** (Original/Natural): Represented as "n"
    - These are stable, consonant scale degrees that form the foundation of maqām structure which are whole tones and three-fourths tones. 

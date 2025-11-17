@@ -15,7 +15,7 @@ A jins is a unique sequence of 3, 4, or 5 notes, each defined by its characteris
 
 - **Size**: Typically 3-5 pitch classes
 - **Structure**: Defined by intervallic relationships between consecutive notes
-- **Note name-based**: Constructed using Arab-Ottoman-Persian note names
+- **Note name-based**: Constructed using Persian-Arab-Ottoman note names
 - **Compatibility**: Dependent on tuning system (not all ajnās work in all tuning systems)
 
 ## Construction and Compatibility

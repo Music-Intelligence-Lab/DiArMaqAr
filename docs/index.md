@@ -44,7 +44,7 @@ The application integrates an archive of historically documented **tanāghīm** 
 
 ### Cultural Framework
 
-The implementation operates entirely within **Arabic theoretical frameworks** and epistemological systems. All operations are grounded in the historical Arab-Ottoman-Persian note naming convention, with tuning-system-sensitive transposition capabilities that maintain intervallic integrity. This culture-specific methodology follows decolonial computing principles, avoiding Western-centric paradigms in digital musicology.
+The implementation operates entirely within **Arabic theoretical frameworks** and epistemological systems. All operations are grounded in the historical Persian-Arab-Ottoman note naming convention, with tuning-system-sensitive transposition capabilities that maintain intervallic integrity. This culture-specific methodology follows decolonial computing principles, avoiding Western-centric paradigms in digital musicology.
 
 ## Key Features
 

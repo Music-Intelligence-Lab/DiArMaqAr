@@ -53,7 +53,7 @@ function shawwaMapping(noteName: NoteName): "n" | "1p" | "2p" | "/" {
  * "Al-Qawāʿid al-Fannīya fī al-Mūsīqa al-Sharqīya wa al-Gharbīya" (The Artistic Principles
  * of Eastern and Western Music). Al-Shawwā, a Cairo-born Aleppine violinist, provided unique
  * guidelines for maqām modulation based on scale degree relationships within the
- * Arab-Ottoman-Persian note naming framework.
+ * Persian-Arab-Ottoman note naming framework.
  *
  * Modulation Rules Implemented:
  *

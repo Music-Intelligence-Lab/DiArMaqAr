@@ -15,7 +15,7 @@ The Digital Arabic Maqām Archive represents a significant advancement in comput
 
 The application integrates an archive of historically documented tanāghīm (tuning systems), ajnās (tetrachords), maqāmāt (melodic modes), suyūr (melodic performance pathways), and intiqālāt (modulation practices) within a unified digital framework, establishing verified reference data for education, performance, composition, software development, machine learning applications, and instrument design.
 
-The implementation operates entirely within Arabic theoretical frameworks and epistemological systems. All operations are grounded in the historical Arab-Ottoman-Persian note naming convention (rāst, dugāh, segāh etc.), with tuning-system-sensitive transposition capabilities that maintain intervallic integrity across all maqāmāt and ajnās.
+The implementation operates entirely within Arabic theoretical frameworks and epistemological systems. All operations are grounded in the historical Persian-Arab-Ottoman note naming convention (rāst, dugāh, segāh etc.), with tuning-system-sensitive transposition capabilities that maintain intervallic integrity across all maqāmāt and ajnās.
 
 * Users can audition the data with real-time audio synthesis, hearing precise intonational relationships of the maqāmāt and their ajnās across different tuning systems.
 * Musicians and composers gain access to the first algorithmic implementation of Sāmī al-Shawwā's 1946 modulation guidelines, enabling systematic explorations of intiqālāt.

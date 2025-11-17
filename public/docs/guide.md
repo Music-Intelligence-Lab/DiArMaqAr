@@ -28,7 +28,7 @@ The application integrates an archive of historically documented **tanāghīm**,
 
 ### Cultural Framework
 
-All functionality is rooted in the **theoretical framework of Arabic maqām theory** and its epistemological traditions. The system uses the historical Arab-Ottoman-Persian note naming conventions (rāst, dugāh, segāh, etc.) and supports tuning-system-aware transposition, ensuring precise intervallic relationships are preserved across all maqāmāt and ajnās.
+All functionality is rooted in the **theoretical framework of Arabic maqām theory** and its epistemological traditions. The system uses the historical Persian-Arab-Ottoman note naming conventions (rāst, dugāh, segāh, etc.) and supports tuning-system-aware transposition, ensuring precise intervallic relationships are preserved across all maqāmāt and ajnās.
 
 ## Quick Start
 

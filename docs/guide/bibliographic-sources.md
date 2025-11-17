@@ -62,7 +62,7 @@ The `sources.json` corpus maintains a comprehensive bibliographic database suppo
 
 ## Note Name Compilation
 
-The Arab-Ottoman-Persian note naming convention is compiled from:
+The Persian-Arab-Ottoman note naming convention is compiled from:
 
 - Meshshāqa (1899:18)
 - Al-Khulʿī (1904/2011:50-54 and 77-78)
@@ -79,7 +79,7 @@ The Arab-Ottoman-Persian note naming convention is compiled from:
 
 ### Where Note Names Exist in Sources
 
-Where Arab-Ottoman-Persian note name associations to pitch classes exist in bibliographic sources, they are **explicitly used**.
+Where Persian-Arab-Ottoman note name associations to pitch classes exist in bibliographic sources, they are **explicitly used**.
 
 ### Where Note Names Must Be Inferred
 

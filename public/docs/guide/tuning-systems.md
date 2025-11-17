@@ -35,7 +35,7 @@ To render a tuning system sonically, two additional pieces of information are ne
 1. **Reference Frequency**: The absolute frequency (in Hz) for the first pitch class
    * Example: ʿushayrān = 220 Hz, or yegāh = 196 Hz
 
-2. **Note Names**: Association with the Arab-Ottoman-Persian note naming convention
+2. **Note Names**: Association with the Persian-Arab-Ottoman note naming convention
    * Example: 1/1 = 0 cents = ʿushayrān = 220 Hz
 
 The reference frequency is not arbitrary—it relies on either theoretical standardization or performance practice as documented in historical sources.

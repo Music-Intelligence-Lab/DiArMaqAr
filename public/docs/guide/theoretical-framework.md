@@ -21,7 +21,7 @@ Tuning systems provide the fundamental pitch framework for all operations. A tun
 * **Cents values** (relative to a reference, such as 0, 203.9, 498.0, 702.0)
 * **String lengths** or **fret divisions** (historical measurement approaches)
 
-For a tuning system to be rendered sonically, a reference frequency associated with its first pitch class needs to be defined. Additionally, all pitch classes are assigned a note name from the Arab-Ottoman-Persian naming convention to allow for conventional forms of ajnās, maqāmāt and suyūr to be represented across different tuning systems.
+For a tuning system to be rendered sonically, a reference frequency associated with its first pitch class needs to be defined. Additionally, all pitch classes are assigned a note name from the Persian-Arab-Ottoman naming convention to allow for conventional forms of ajnās, maqāmāt and suyūr to be represented across different tuning systems.
 
 **Key Characteristics:**
 
@@ -75,7 +75,7 @@ Suyūr are conventional melodic pathways for developing or modulating within maq
 
 * Suyūr are implemented as structured sequences of "stops"
 * Each stop represents either:
-  * A specific note (from the Arab-Ottoman-Persian naming convention)
+  * A specific note (from the Persian-Arab-Ottoman naming convention)
   * A jins (maintains structural identity while allowing transposition)
   * A maqām (allows description of modulatory pathways)
   * A directional instruction (ascending/descending)
@@ -97,7 +97,7 @@ Intiqāl is the process of moving from one maqām to another during performance 
 
 ## Note Naming Convention
 
-The application's data model is fundamentally grounded in the **historical Arab-Ottoman-Persian note naming convention**. This naming system spans four octaves and serves as the primary reference framework for all operations:
+The application's data model is fundamentally grounded in the **historical Persian-Arab-Ottoman note naming convention**. This naming system spans four octaves and serves as the primary reference framework for all operations:
 
 **Standard Note Names:**
 
