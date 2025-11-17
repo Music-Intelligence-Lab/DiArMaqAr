@@ -230,19 +230,7 @@
         "chahārgāh",
         "ḥijāz",
         "nawā",
-        "ḥiṣār",
-        "ḥusaynī",
-        "ʿajam",
-        "māhūr",
-        "kurdān",
-        "shahnāz",
-        "muḥayyar",
-        "sunbuleh/zawāl",
-        "jawāb būselīk",
-        "māhūrān",
-        "jawāb ḥijāz",
-        "saham/ramal tūtī",
-        "jawāb ḥiṣār"
+        "ḥiṣār"
       ],
       [
         "yegāh",
@@ -269,6 +257,20 @@
         "jawāb būselīk",
         "māhūrān",
         "jawāb ḥijāz"
+      ],
+      [
+        "rāst",
+        "zīrgūleh",
+        "dūgāh",
+        "kurdī",
+        "būselīk/ʿushshāq",
+        "chahārgāh",
+        "ḥijāz",
+        "nawā",
+        "ḥiṣār",
+        "ḥusaynī",
+        "ʿajam",
+        "māhūr"
       ]
     ],
     "abjadNames": [
@@ -301,9 +303,10 @@
     "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
       "yegāh": 97.999,
-      "ʿushayrān": 110
+      "ʿushayrān": 109.99999999999999,
+      "rāst": 130.813
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2025-11-17T13:16:34.754Z"
   },
   {
     "id": "Anglo-European-(1700)",

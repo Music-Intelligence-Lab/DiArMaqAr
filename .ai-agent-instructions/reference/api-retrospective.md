@@ -961,6 +961,163 @@ Use the shared `scripts/test-api-responses.sh` (or equivalent) to exercise every
 
 ---
 
+## Dual-Mode API Parameters (Export Compatibility)
+
+### Rule
+
+**For APIs that serve both musicological analysis AND export/tooling integration, provide mode-switching parameters that preserve data integrity while adapting presentation.**
+
+### Pattern: `startSetFromC` + `pitchClassDataType` in 12-Pitch-Class Sets API
+
+**Problem 1**: Maqāmāt analysis starts from the maqām tonic, but Scala (.scl) format and MIDI keyboards expect degree 0 = middle C.
+
+**Problem 2**: Different use cases need different data fields, and full responses can be unnecessarily large for simple exports.
+
+**Solution**: Two complementary parameters:
+
+#### 1. Mode Switching (`startSetFromC`)
+
+```typescript
+// Default mode (startSetFromC=false): Musicological analysis
+{
+  pitchClassSet: [
+    { ipnReferenceNoteName: "D", noteName: "dūgāh", relativeCents: 0.00, ... },  // Tonic
+    { ipnReferenceNoteName: "D#", noteName: "kurdī", relativeCents: 90.05, ... },
+    ...
+  ],
+  compatibleMaqamat: [
+    {
+      maqamDisplayName: "maqām ḥijāz",
+      tonic: { ipnReferenceNoteName: "D", noteNameDisplayName: "dūgāh", positionInSet: 0 }
+    },
+    ...
+  ]
+}
+
+// Scala mode (startSetFromC=true): Export compatibility
+{
+  pitchClassSet: [
+    { ipnReferenceNoteName: "C", noteName: "rāst", relativeCents: 0.00, ... },  // Degree 0
+    { ipnReferenceNoteName: "C#", noteName: "zīrgūleh", relativeCents: 92.21, ... },
+    { ipnReferenceNoteName: "D", noteName: "dūgāh", relativeCents: 204.08, ... }, // Tonic
+    ...
+  ],
+  compatibleMaqamat: [
+    {
+      maqamDisplayName: "maqām ḥijāz",
+      tonic: { ipnReferenceNoteName: "D", noteNameDisplayName: "dūgāh", positionInSet: 2 }
+    },
+    ...
+  ]
+}
+```
+
+**Key Design Decision**: Tonic information is **inside each `compatibleMaqamat` object**, not at top level, because different maqāmāt in the same set can have different tonics (transpositions).
+
+#### 2. Data Field Filtering (`pitchClassDataType`)
+
+Controls which pitch class fields are returned:
+
+```typescript
+// Default (no parameter): Minimal fields
+{ ipnReferenceNoteName: "C", noteName: "rāst", relativeCents: 0, octave: 1 }
+
+// pitchClassDataType=cents: Only cents
+{ ipnReferenceNoteName: "C", noteName: "rāst", cents: 498.04 }
+
+// pitchClassDataType=all: All 15 fields
+{ ipnReferenceNoteName: "C", noteName: "rāst", cents: 498.04, relativeCents: 0,
+  fraction: "1/1", decimalRatio: 1, frequency: 264, octave: 1, englishName: "C2",
+  stringLength: "66.000", fretDivision: "0.000", midiNoteDecimal: 60.04,
+  midiNoteDeviation: "60 +4.5", centsDeviation: 4.5, referenceNoteName: "C" }
+```
+
+**Valid options**: `all`, `englishName`, `fraction`, `cents`, `decimalRatio`, `stringLength`, `frequency`, `abjadName`, `fretDivision`, `midiNoteNumber`, `midiNoteDeviation`, `centsDeviation`, `referenceNoteName`, `relativeCents`
+
+### Critical Requirements
+
+1. **Preserve absolute values**: Absolute cents, frequencies, ratios unchanged between modes
+2. **Maintain cultural accuracy**: Note names follow NoteName model's octave conventions
+3. **Track original context**: Each compatible maqām includes its tonic position in the set
+4. **Handle edge cases**: Selective octave shifting for pitch classes before the tonic
+5. **Per-maqam tonic tracking**: Tonic information belongs to individual maqāmāt, not top-level
+6. **Octave equivalent matching**: Match tonics by IPN reference (pitch class) not exact Arabic note name, ensuring qarār dūgāh and muḥayyar correctly map to D
+7. **Flexible data filtering**: Allow clients to request only needed fields for efficiency
+8. **Validation**: Validate `pitchClassDataType` values and return helpful error messages
+9. **Document clearly**: Explain which mode and which data type serves which use case
+
+### Why This Works
+
+- **Separation of concerns**: Analysis vs export are distinct use cases, data field needs vary
+- **Data integrity**: Same underlying pitch data, different presentation and filtering
+- **User choice**: Explicit parameters make intent clear
+- **No breaking changes**: Default mode preserves existing behavior
+- **Complete information**: Per-maqam tonic tracking allows understanding of all compatible maqāmāt
+- **Efficiency**: Data filtering reduces payload size for simple use cases
+- **Composability**: Parameters work independently and together
+
+### Implementation Notes
+
+**File**: `src/app/api/maqamat/classification/12-pitch-class-sets/route.ts`
+
+**Key steps**:
+1. **Parameter validation** (lines 115-144): Validate `pitchClassDataType` with helpful errors
+2. **Octave selection** (lines 228-243): Selectively shift octave 2 notes before tonic to octave 1
+3. **Array rotation** (lines 248-258): Rotate to start from C while preserving order
+4. **Relative cents** (lines 279-281): Recalculate from new reference with wrap-around
+5. **Data formatting** (lines 24-95): `formatPitchClassData` helper filters fields based on parameter
+6. **Per-maqam tonic** (lines 309-359): Extract tonic for each compatible maqām individually
+
+**Helper function pattern**: Follows same `formatPitchClassData` approach as `/maqamat/{idName}` endpoint for consistency
+
+### When to Use This Pattern
+
+**Mode switching (`startSetFromC`)**:
+- ✅ API serves both analysis AND export use cases
+- ✅ Different starting points/orderings needed for different contexts
+- ✅ Cultural/musicological accuracy must be preserved
+- ✅ Export format has rigid requirements (like Scala .scl)
+- ❌ Don't use for simple formatting differences (use format parameter instead)
+- ❌ Don't use if modes would have different data schemas
+
+**Data field filtering (`pitchClassDataType`)**:
+- ✅ API returns complex objects with many fields
+- ✅ Different use cases need different subsets of data
+- ✅ Payload size optimization is important
+- ✅ Same pattern used across multiple endpoints (consistency)
+- ❌ Don't use if all fields are always needed
+- ❌ Don't use if response is already minimal
+
+**Per-object metadata (`tonic` in `compatibleMaqamat`)**:
+- ✅ Collection items can have different values for the same property
+- ✅ Property is intrinsic to each item, not to the collection
+- ✅ Clients need to understand each item's relationship to the collection
+- ❌ Don't use if all items share the same value (use top-level instead)
+
+### Testing Requirements
+
+For dual-mode parameters, always verify:
+
+1. **Note name consistency**: Pitch classes at/after tonic should have identical note names in both modes
+2. **Absolute value preservation**: Cents, frequencies, ratios must match exactly
+3. **Per-maqam tonic accuracy**: Each compatible maqām has correct tonic position in both modes
+4. **Edge cases**: Test maqāmāt starting at different chromatic positions (C, D, E, F#, etc.)
+5. **Octave boundaries**: Verify correct octave selection per NoteName model
+6. **Transposition handling**: Verify different maqāmāt in same set have correct tonics
+7. **Octave equivalents**: Verify maqāmāt in different octaves (qarār, muḥayyar) correctly map to same IPN and position
+
+For data filtering parameters, always verify:
+
+1. **Minimal fields**: Default (no parameter) returns essential fields only
+2. **Individual types**: Each data type option returns correct fields
+3. **All fields**: `all` option returns complete data
+4. **Validation**: Invalid values return 400 error with helpful messages
+5. **Composability**: Works correctly with other parameters (e.g., `startSetFromC`)
+
+**Reference**: See `.ai-agent-instructions/reference/12-pitch-class-sets-scala-export.md` for full implementation details.
+
+---
+
 ## Additional Resources
 
 **For comprehensive API development session notes**: See `src/app/api/playground/SESSION_SUMMARY.md`

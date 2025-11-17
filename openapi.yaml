@@ -344,7 +344,7 @@ paths:
             - If data-returning parameters are provided, returns 400 Bad Request error with details about conflicting parameters
           schema:
             type: string
-            enum: [true, false]
+            enum: ["true", "false"]
             default: false
           example: "true"
         - name: pitchClassDataType
@@ -376,7 +376,7 @@ paths:
           description: Include interval data between maqām degrees
           schema:
             type: string
-            enum: [true, false]
+            enum: ["true", "false"]
             default: "false"
           example: "false"
         - name: includeModulations
@@ -384,7 +384,7 @@ paths:
           description: Include modulation possibilities to other maqāmāt and ajnās
           schema:
             type: string
-            enum: [true, false]
+            enum: ["true", "false"]
             default: "false"
           example: "false"
         - name: includeModulations8vb
@@ -392,7 +392,7 @@ paths:
           description: Include available modulations an octave below
           schema:
             type: string
-            enum: [true, false]
+            enum: ["true", "false"]
             default: "false"
           example: "false"
         - name: includeSuyur
@@ -400,19 +400,22 @@ paths:
           description: Include suyūr (melodic paths) data
           schema:
             type: string
-            enum: [true, false]
+            enum: ["true", "false"]
             default: "false"
           example: "false"
         - name: includeArabic
           in: query
           required: false
           description: |
-            Return response data in Arabic script when true.
-            
+            Return bilingual responses with Arabic script when true.
+
             When true:
-            - Note names, maqām names, and jins names are converted to Arabic script
-            - Comments return Arabic versions if available
-            - Tuning system display names use Arabic creator/title if available
+            - All English/transliteration fields remain unchanged
+            - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+            - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+            - Comments get Arabic versions in commentsAr if available
+            - Tuning system display names get Arabic versions in displayNameAr if available
+            - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
           schema:
             type: string
             enum: ["true", "false"]
@@ -817,12 +820,15 @@ paths:
           in: query
           required: false
           description: |
-            Return response data in Arabic script when true.
-            
+            Return bilingual responses with Arabic script when true.
+
             When true:
-            - Note names, maqām names, and jins names are converted to Arabic script
-            - Comments return Arabic versions if available
-            - Tuning system display names use Arabic creator/title if available
+            - All English/transliteration fields remain unchanged
+            - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+            - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+            - Comments get Arabic versions in commentsAr if available
+            - Tuning system display names get Arabic versions in displayNameAr if available
+            - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
           schema:
             type: string
             enum: ["true", "false"]
@@ -960,12 +966,15 @@ paths:
           in: query
           required: false
           description: |
-            Return response data in Arabic script when true.
-            
+            Return bilingual responses with Arabic script when true.
+
             When true:
-            - Note names, maqām names, and jins names are converted to Arabic script
-            - Comments return Arabic versions if available
-            - Tuning system display names use Arabic creator/title if available
+            - All English/transliteration fields remain unchanged
+            - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+            - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+            - Comments get Arabic versions in commentsAr if available
+            - Tuning system display names get Arabic versions in displayNameAr if available
+            - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
           schema:
             type: string
             enum: ["true", "false"]
@@ -1175,6 +1184,14 @@ paths:
           required: false
           description: |
             Return bilingual responses with Arabic script when true.
+
+            When true:
+            - All English/transliteration fields remain unchanged
+            - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+            - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+            - Comments get Arabic versions in commentsAr if available
+            - Tuning system display names get Arabic versions in displayNameAr if available
+            - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
           schema:
             type: string
             enum: ["true", "false"]
@@ -1314,12 +1331,15 @@ paths:
           in: query
           required: false
           description: |
-            Return response data in Arabic script when true.
-            
+            Return bilingual responses with Arabic script when true.
+
             When true:
-            - Note names, maqām names, and jins names are converted to Arabic script
-            - Comments return Arabic versions if available
-            - Tuning system display names use Arabic creator/title if available
+            - All English/transliteration fields remain unchanged
+            - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+            - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+            - Comments get Arabic versions in commentsAr if available
+            - Tuning system display names get Arabic versions in displayNameAr if available
+            - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
           schema:
             type: string
             enum: ["true", "false"]
@@ -1492,12 +1512,15 @@ paths:
           in: query
           required: false
           description: |
-            Return response data in Arabic script when true.
-            
+            Return bilingual responses with Arabic script when true.
+
             When true:
-            - Note names, maqām names, and jins names are converted to Arabic script
-            - Comments return Arabic versions if available
-            - Tuning system display names use Arabic creator/title if available
+            - All English/transliteration fields remain unchanged
+            - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+            - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+            - Comments get Arabic versions in commentsAr if available
+            - Tuning system display names get Arabic versions in displayNameAr if available
+            - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
           schema:
             type: string
             enum: ["true", "false"]
@@ -1921,22 +1944,48 @@ paths:
         - Maqāmāt
       summary: Classify maqāmāt by 12-pitch-class sets
       description: |
-        Groups maqāmāt according to sets of 12 pitch classes. Each set is created by replacing 
-        pitch classes in al-Kindi-(874) on ushayran with pitch classes from maqāmāt in the 
-        specified tuning system, based on matching IPN reference note names.
-        
-        The algorithm:
-        1. Starts with the 12 pitch classes from al-Kindi-(874) on ushayran
-        2. For each maqām transposition in the specified tuning system:
+        Groups maqāmāt according to sets of 12 pitch classes suitable for MIDI keyboard tuning
+        and Scala file export. Each set is created by merging pitch classes from the specified
+        tuning system with al-Kindi-(874) filler pitch classes, based on matching IPN reference
+        note names.
+
+        **Critical Design Principles:**
+        - **Octave Alignment**: Both the maqām tuning system and al-Kindi-(874) use the same
+          `startingNote` to ensure octaves align correctly
+        - **Chromatic Order**: Each set contains exactly 12 pitch classes ordered chromatically
+          starting from the maqām's tonic (e.g., C, C#, D, D#... for Rāst)
+        - **Arabic Musicological Logic**: IPN references respect Arabic maqām theory where
+          microtonal modifiers indicate what the pitch is a variant OF, not mathematical proximity
+          to 12-EDO semitones
+        - **Direct Tuning System Values**: All cent values come directly from tuning systems
+          without post-processing or calculation
+
+        **The Algorithm:**
+        1. Loads pitch classes from both the specified tuning system and al-Kindi-(874) using
+           the same `startingNote`
+        2. For each maqām transposition:
            - Extracts IPN reference note names from ascending and descending sequences
            - Replaces matching pitch classes in al-Kindi base (ascending takes priority, then descending)
-           - Creates a new 12-pitch-class set
-           - Finds all compatible maqāmāt that can be performed in this set
+           - Selects pitch classes from correct octaves to ensure ascending chromatic order
+           - Orders the 12 pitch classes chromatically starting from the maqām's tonic
         3. Groups compatible maqāmāt together
-        4. Names each group after the source maqām (e.g., "maqām rast set")
-        
-        Maqāmāt with duplicate IPN references (same IPN reference appearing multiple times) 
-        are marked as incompatible and cannot form valid 12-pitch-class sets.
+        4. Names each group after the source maqām (e.g., "maqām rāst set")
+
+        **Compatibility:**
+        - Maqāmāt with duplicate IPN references (same IPN appearing with different pitch values)
+          are marked as incompatible and cannot form valid 12-pitch-class sets
+        - Compatible maqāmāt can be performed entirely within a single 12-pitch-class set
+
+        **Output Format:**
+        - Pitch classes ordered chromatically (C, C#, D, D#, E, F, F#, G, G#, A, A#, B)
+        - Starting from the maqām's tonic (default) OR from IPN "C" (if `startSetFromC=true`)
+        - Relative cents from 0 (reference note) to ~1050-1200 (octave)
+        - `maqamTonic` field indicates the actual maqām tonic position and note name
+        - Suitable for MIDI keyboard tuning and Scala (.scl) file generation
+
+        **Filtering Options:**
+        - Use `setId` to retrieve a specific set and its compatible maqāmāt
+        - Use `maqamId` to find all sets containing a specific maqām
       operationId: classifyMaqamat12PitchClassSets
       parameters:
         - name: tuningSystem
@@ -1948,7 +1997,12 @@ paths:
           example: "CairoCongressTuningCommittee-(1929)"
         - name: startingNote
           in: query
-          description: "Starting note for maqāmāt tuning system (default: yegah)"
+          description: |
+            Starting note for both the maqām tuning system and al-Kindi-(874) (default: yegah).
+            IMPORTANT: Both tuning systems must use the same starting note to ensure octaves align
+            correctly and pitch classes can be properly selected from matching octaves.
+
+            Use `yegah` for IbnSina/Meshshaqa, `ushayran` for al-Farabi/al-Kindi, `rast` for CairoCongress/al-Sabbagh
           schema:
             type: string
             default: "yegah"
@@ -1965,16 +2019,112 @@ paths:
           in: query
           description: Include maqāmāt that cannot form valid 12-pitch-class sets
           schema:
-            type: boolean
-            default: true
-          example: true
+            type: string
+            enum: ["true", "false"]
+            default: "true"
+          example: "true"
         - name: includeArabic
           in: query
-          description: Include Arabic display names in response
+          required: false
+          description: |
+            Return bilingual responses with Arabic script when true.
+
+            When true:
+            - All English/transliteration fields remain unchanged
+            - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+            - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+            - Comments get Arabic versions in commentsAr if available
+            - Tuning system display names get Arabic versions in displayNameAr if available
+            - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
           schema:
-            type: boolean
-            default: false
-          example: false
+            type: string
+            enum: ["true", "false"]
+          example: "true"
+        - name: startSetFromC
+          in: query
+          description: |
+            Start pitch class set from IPN reference "C" (degree 0) instead of from the maqām's tonic.
+            When `true`, the set is reordered to start from C at 0.00 cents (relative), making it
+            directly compatible with Scala (.scl) file format which maps degree 0 to middle C by default.
+
+            **Technical Implementation:**
+            1. **Octave Selection**: For maqāmāt starting mid-octave (e.g., D), pitch classes before the tonic in chromatic order (C, C#) are taken from octave 1, while those at or after the tonic use their original octaves
+            2. **Array Rotation**: The 12 pitch classes are rotated to place C first
+            3. **Relative Cents**: Calculated from C (0.00 cents), with octave wrap-around handling (negative values + 1200)
+            4. **Note Names**: Arabic note names follow the NoteName model's octave conventions (e.g., C octave 1 = rāst, C octave 2 = kurdān)
+            5. **Tonic Tracking**: The `maqamTonic` field indicates the actual maqām tonic's IPN, note names, and position in the reordered set
+
+            **Use Cases:**
+            - `false` (default): For understanding maqām structure starting from its tonic
+            - `true`: For Scala .scl export (no .kbm file needed) or MIDI keyboard mapping where C = degree 0
+
+            **Example:**
+            - Maqām ḥijāz (tonic D/dūgāh at 702.13 cents):
+              - Default mode: D at position 0 (0.00 cents relative)
+              - Scala mode: C (rāst, 498.04 cents) at position 0 (0.00 cents relative), D at position 2 (204.08 cents relative)
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "false"
+          example: "false"
+        - name: pitchClassDataType
+          in: query
+          required: false
+          description: |
+            Controls which pitch class data fields are returned in the response.
+
+            **Available Options:**
+            - `all`: Returns all available pitch class data fields
+            - `englishName`: English note name with octave (e.g., "D2", "E-b3")
+            - `fraction`: Frequency ratio as a fraction string
+            - `cents`: Absolute cents value from the tuning system
+            - `decimalRatio`: Frequency ratio as decimal number
+            - `stringLength`: String length for oud/qanun (if available)
+            - `frequency`: Frequency in Hz
+            - `abjadName`: Arabic abjad notation (if available)
+            - `fretDivision`: Fret position for oud (if available)
+            - `midiNoteNumber`: MIDI note number as decimal
+            - `midiNoteDeviation`: MIDI note with cents deviation string
+            - `centsDeviation`: Cents deviation from 12-EDO
+            - `referenceNoteName`: IPN reference note name
+            - `relativeCents`: Cents relative to the first pitch class (0.00 for tonic or C)
+
+            **Default Behavior (parameter omitted):**
+            - Returns minimal fields: `ipnReferenceNoteName`, `noteName`, `relativeCents`, `octave`
+
+            **Example:**
+            - `?pitchClassDataType=cents` returns only IPN, note name, and cents values
+            - `?pitchClassDataType=all` returns all available data fields
+          schema:
+            type: string
+            enum:
+              - all
+              - englishName
+              - fraction
+              - cents
+              - decimalRatio
+              - stringLength
+              - frequency
+              - abjadName
+              - fretDivision
+              - midiNoteNumber
+              - midiNoteDeviation
+              - centsDeviation
+              - referenceNoteName
+              - relativeCents
+          example: "cents"
+        - name: setId
+          in: query
+          description: "Filter by specific set ID to retrieve that set and its compatible maqāmāt (e.g., 'maqam_rast_set')"
+          schema:
+            type: string
+          example: "maqam_rast_set"
+        - name: maqamId
+          in: query
+          description: "Filter by maqām ID to find all sets containing that maqām (e.g., 'maqam_rast')"
+          schema:
+            type: string
+          example: "maqam_rast"
       responses:
         '200':
           description: Classification results with sets and compatible maqāmāt
@@ -2032,12 +2182,16 @@ paths:
                           type: string
                           description: URL-safe identifier for the set
                           example: "maqam_rast_set"
-                        name:
+                        setIdName:
+                          type: string
+                          description: Standardized identifier for the set
+                          example: "maqam_rast_set"
+                        setDisplayName:
                           type: string
                           description: Display name of the set
-                          example: "maqām rast set"
+                          example: "maqām rāst set"
                         sourceMaqam:
-                          $ref: '#/components/schemas/EntityNamespace'
+                          $ref: '#/components/schemas/EntityRef'
                         sourceTransposition:
                           type: object
                           properties:
@@ -2074,23 +2228,47 @@ paths:
                               octave:
                                 type: number
                                 example: 1
+                        maqamTonic:
+                          type: object
+                          description: Information about the actual maqām tonic position in the set
+                          properties:
+                            ipnReferenceNoteName:
+                              type: string
+                              description: IPN reference name of the tonic (e.g., "C", "F", "G"). Uses pitch class equivalent for octave variants (qarār dūgāh → "D")
+                              example: "C"
+                            noteNameIdName:
+                              type: string
+                              description: Standardized identifier for the tonic note name (ASCII-safe, URL-friendly)
+                              example: "rast"
+                            noteNameDisplayName:
+                              type: string
+                              description: Display name of the tonic note (with diacritics)
+                              example: "rāst"
+                            positionInSet:
+                              type: number
+                              description: |
+                                Index position (0-11) of the maqām tonic in the pitch class set.
+                                - In default mode (startSetFromC=false): Always 0
+                                - In Scala mode (startSetFromC=true): Varies based on tonic (e.g., 2 for D, 5 for F)
+                                - Octave equivalents (qarār dūgāh, muḥayyar) map to same position as their pitch class (D → position 2)
+                              example: 0
                         compatibleMaqamat:
                           type: array
                           description: Maqāmāt compatible with this set
                           items:
                             type: object
                             properties:
-                              maqam:
-                                $ref: '#/components/schemas/EntityNamespace'
-                              transposition:
-                                type: object
-                                properties:
-                                  name:
-                                    type: string
-                                  isTransposed:
-                                    type: boolean
-                              isCompatible:
+                              maqamIdName:
+                                type: string
+                                description: Standardized identifier for the maqām transposition
+                                example: "maqam_rast"
+                              maqamDisplayName:
+                                type: string
+                                description: Display name of the maqām transposition
+                                example: "maqām rāst"
+                              isTransposed:
                                 type: boolean
+                                description: Whether this is a transposition of the base maqām
                         compatibleMaqamatCount:
                           type: number
                           description: Number of compatible maqāmāt in this set
@@ -2107,7 +2285,7 @@ paths:
                       type: object
                       properties:
                         maqam:
-                          $ref: '#/components/schemas/EntityNamespace'
+                          $ref: '#/components/schemas/EntityRef'
                         transposition:
                           type: object
                           nullable: true
@@ -2158,32 +2336,52 @@ paths:
                             type: string
                           displayName:
                             type: string
+                      centsTolerance:
+                        type: number
+                      startSetFromC:
+                        type: boolean
+                        description: Whether the set starts from IPN "C" (Scala mode) or from the maqām tonic (default)
+                        example: false
+                      setId:
+                        type: string
+                        nullable: true
+                        description: Set ID filter if applied
+                        example: "maqam_rast_set"
+                      maqamId:
+                        type: string
+                        nullable: true
+                        description: Maqām ID filter if applied
+                        example: "maqam_rast"
               examples:
                 default:
                   summary: Default response
                   value:
                     summary:
-                      - setName: "maqām rast set"
+                      - setIdName: "maqam_rast_set"
+                        setDisplayName: "maqām rāst set"
                         compatibleMaqamat:
-                          - maqamName: "maqām rāst"
-                            transpositionName: "maqām rāst"
+                          - maqamIdName: "maqam_rast"
+                            maqamDisplayName: "maqām rāst"
                             isTransposed: false
                     statistics:
                       totalSets: 1
                       sets:
-                        - setName: "maqām rast set"
+                        - setIdName: "maqam_rast_set"
+                          setDisplayName: "maqām rāst set"
                           compatibleMaqamatCount: 1
                       totalCompatibleMaqamat: 1
                       incompatibleMaqamatCount: 0
                     sets:
                       - id: "maqam_rast_set"
-                        name: "maqām rast set"
+                        setIdName: "maqam_rast_set"
+                        setDisplayName: "maqām rāst set"
                         sourceMaqam:
                           id: "1"
                           idName: "maqam_rast"
                           displayName: "maqām rāst"
                         sourceTransposition:
-                          name: "maqām rāst"
+                          idName: "maqam_rast"
+                          displayName: "maqām rāst"
                           isTransposed: false
                         pitchClassSet:
                           - ipnReferenceNoteName: "C"
@@ -2194,14 +2392,9 @@ paths:
                             frequency: 130.665
                             octave: 1
                         compatibleMaqamat:
-                          - maqam:
-                              id: "1"
-                              idName: "maqam_rast"
-                              displayName: "maqām rāst"
-                            transposition:
-                              name: "maqām rāst"
-                              isTransposed: false
-                            isCompatible: true
+                          - maqamIdName: "maqam_rast"
+                            maqamDisplayName: "maqām rāst"
+                            isTransposed: false
                         compatibleMaqamatCount: 1
                     totalSets: 1
                     totalCompatibleMaqamat: 1
@@ -2222,12 +2415,31 @@ paths:
                       alKindiStartingNote:
                         idName: "ushayran"
                         displayName: "ʿushayrān"
+                      centsTolerance: 5
+                      startSetFromC: false
         '400':
           description: Invalid request parameters
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Set or maqām not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                setNotFound:
+                  summary: Set not found
+                  value:
+                    error: "Set 'maqam_invalid_set' not found"
+                    hint: "Use ?setId=<set-id> to filter by a specific set (e.g., ?setId=maqam_rast_set)"
+                maqamNotFound:
+                  summary: Maqām not found in any set
+                  value:
+                    error: "No sets found containing maqam 'maqam_invalid'"
+                    hint: "Use ?maqamId=<maqam-id> to find sets containing a specific maqām (e.g., ?maqamId=maqam_rast)"
         '500':
           $ref: '#/components/responses/ServerError'
 
@@ -2260,12 +2472,15 @@ paths:
           in: query
           required: false
           description: |
-            Return response data in Arabic script when true.
-            
+            Return bilingual responses with Arabic script when true.
+
             When true:
-            - Note names, maqām names, and jins names are converted to Arabic script
-            - Comments return Arabic versions if available
-            - Tuning system display names use Arabic creator/title if available
+            - All English/transliteration fields remain unchanged
+            - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+            - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+            - Comments get Arabic versions in commentsAr if available
+            - Tuning system display names get Arabic versions in displayNameAr if available
+            - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
           schema:
             type: string
             enum: ["true", "false"]
@@ -2356,12 +2571,15 @@ paths:
           in: query
           required: false
           description: |
-            Return response data in Arabic script when true.
-            
+            Return bilingual responses with Arabic script when true.
+
             When true:
-            - Note names, maqām names, and jins names are converted to Arabic script
-            - Comments return Arabic versions if available
-            - Tuning system display names use Arabic creator/title if available
+            - All English/transliteration fields remain unchanged
+            - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+            - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+            - Comments get Arabic versions in commentsAr if available
+            - Tuning system display names get Arabic versions in displayNameAr if available
+            - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
           schema:
             type: string
             enum: ["true", "false"]
@@ -2513,23 +2731,22 @@ paths:
             - If data-returning parameters are provided, returns 400 Bad Request error with details about conflicting parameters
           schema:
             type: string
-            enum: [true, false]
+            enum: ["true", "false"]
             default: false
           example: "true"
         - name: pitchClassDataType
           in: query
-          required: true
+          required: false
           description: |
             Specifies which pitch class data type to return for each pitch class.
-            
-            - Required for all requests (defaults to "cents" if not provided)
-            - In discovery mode (when options=true), this parameter is still required but the response returns parameter metadata instead of formatted data
+
+            - Optional parameter. When omitted, returns only minimal pitch class fields: `pitchClassIndex`, `octave`, `scaleDegree`, `noteName`, `noteNameDisplay`, and `noteNameDisplayAr` (if includeArabic is enabled)
+            - When provided, returns the specified data type for all pitch classes in the jins
+            - In discovery mode (when options=true), this parameter is optional since the response returns parameter metadata instead of formatted data
             - Use 'all' for complete pitch class data across all available formats
-            - Each option returns the specified data type for all pitch classes in the jins
           schema:
             type: string
             enum: [all, frequency, cents, fraction, decimalRatio, stringLength, abjadName, fretDivision, midiNoteNumber, midiNoteDeviation, centsDeviation, referenceNoteName, englishName]
-          default: "cents"
           example: "cents"
         - name: transposeTo
           in: query
@@ -2546,15 +2763,15 @@ paths:
           description: Include interval data between jins degrees
           schema:
             type: string
-            enum: [true, false]
-            default: true
-          example: "true"
+            enum: ["true", "false"]
+            default: "false"
+          example: "false"
         - name: includeModulations
           in: query
           description: Include modulation possibilities to other ajnās
           schema:
             type: string
-            enum: [true, false]
+            enum: ["true", "false"]
             default: true
           example: "true"
         - name: includeModulations8vb
@@ -2562,19 +2779,22 @@ paths:
           description: Include available modulations an octave below
           schema:
             type: string
-            enum: [true, false]
+            enum: ["true", "false"]
             default: true
           example: "true"
         - name: includeArabic
           in: query
           required: false
           description: |
-            Return response data in Arabic script when true.
-            
+            Return bilingual responses with Arabic script when true.
+
             When true:
-            - Note names, maqām names, and jins names are converted to Arabic script
-            - Comments return Arabic versions if available
-            - Tuning system display names use Arabic creator/title if available
+            - All English/transliteration fields remain unchanged
+            - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+            - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+            - Comments get Arabic versions in commentsAr if available
+            - Tuning system display names get Arabic versions in displayNameAr if available
+            - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
           schema:
             type: string
             enum: ["true", "false"]
@@ -2865,12 +3085,15 @@ paths:
           in: query
           required: false
           description: |
-            Return response data in Arabic script when true.
-            
+            Return bilingual responses with Arabic script when true.
+
             When true:
-            - Note names, maqām names, and jins names are converted to Arabic script
-            - Comments return Arabic versions if available
-            - Tuning system display names use Arabic creator/title if available
+            - All English/transliteration fields remain unchanged
+            - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+            - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+            - Comments get Arabic versions in commentsAr if available
+            - Tuning system display names get Arabic versions in displayNameAr if available
+            - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
           schema:
             type: string
             enum: ["true", "false"]
@@ -3017,12 +3240,15 @@ paths:
           in: query
           required: false
           description: |
-            Return response data in Arabic script when true.
-            
+            Return bilingual responses with Arabic script when true.
+
             When true:
-            - Note names, maqām names, and jins names are converted to Arabic script
-            - Comments return Arabic versions if available
-            - Tuning system display names use Arabic creator/title if available
+            - All English/transliteration fields remain unchanged
+            - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+            - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+            - Comments get Arabic versions in commentsAr if available
+            - Tuning system display names get Arabic versions in displayNameAr if available
+            - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
           schema:
             type: string
             enum: ["true", "false"]
@@ -3238,12 +3464,15 @@ paths:
           in: query
           required: false
           description: |
-            Return response data in Arabic script when true.
-            
+            Return bilingual responses with Arabic script when true.
+
             When true:
-            - Note names, maqām names, and jins names are converted to Arabic script
-            - Comments return Arabic versions if available
-            - Tuning system display names use Arabic creator/title if available
+            - All English/transliteration fields remain unchanged
+            - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+            - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+            - Comments get Arabic versions in commentsAr if available
+            - Tuning system display names get Arabic versions in displayNameAr if available
+            - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
           schema:
             type: string
             enum: ["true", "false"]
@@ -3556,7 +3785,7 @@ paths:
         - name: filterByTuningSystem
           in: query
           required: false
-          description: Filter by tuning system ID to show only note names that exist in that system (URL-safe, case-insensitive)
+          description: Filter by tuning system ID to show only note names that exist in that system (URL-safe, case-insensitive, diacritics-insensitive)
           schema:
             type: string
           example: "Meshshaqa-(1899)"
@@ -3565,6 +3794,14 @@ paths:
           required: false
           description: |
             Return bilingual responses with Arabic script when true.
+
+            When true:
+            - All English/transliteration fields remain unchanged
+            - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+            - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+            - Comments get Arabic versions in commentsAr if available
+            - Tuning system display names get Arabic versions in displayNameAr if available
+            - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
           schema:
             type: string
             enum: ["true", "false"]
@@ -3677,6 +3914,14 @@ paths:
           required: false
           description: |
             Return bilingual responses with Arabic script when true.
+
+            When true:
+            - All English/transliteration fields remain unchanged
+            - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+            - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+            - Comments get Arabic versions in commentsAr if available
+            - Tuning system display names get Arabic versions in displayNameAr if available
+            - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
           schema:
             type: string
             enum: ["true", "false"]
@@ -3778,6 +4023,14 @@ paths:
           required: false
           description: |
             Return bilingual responses with Arabic script when true.
+
+            When true:
+            - All English/transliteration fields remain unchanged
+            - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+            - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+            - Comments get Arabic versions in commentsAr if available
+            - Tuning system display names get Arabic versions in displayNameAr if available
+            - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
           schema:
             type: string
             enum: ["true", "false"]
@@ -3886,6 +4139,14 @@ paths:
           required: false
           description: |
             Return bilingual responses with Arabic script when true.
+
+            When true:
+            - All English/transliteration fields remain unchanged
+            - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+            - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+            - Comments get Arabic versions in commentsAr if available
+            - Tuning system display names get Arabic versions in displayNameAr if available
+            - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
           schema:
             type: string
             enum: ["true", "false"]
@@ -3999,6 +4260,14 @@ paths:
           required: false
           description: |
             Return bilingual responses with Arabic script when true.
+
+            When true:
+            - All English/transliteration fields remain unchanged
+            - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+            - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+            - Comments get Arabic versions in commentsAr if available
+            - Tuning system display names get Arabic versions in displayNameAr if available
+            - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
           schema:
             type: string
             enum: ["true", "false"]
@@ -4155,6 +4424,14 @@ paths:
           required: false
           description: |
             Return bilingual responses with Arabic script when true.
+
+            When true:
+            - All English/transliteration fields remain unchanged
+            - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+            - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+            - Comments get Arabic versions in commentsAr if available
+            - Tuning system display names get Arabic versions in displayNameAr if available
+            - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
           schema:
             type: string
             enum: ["true", "false"]
@@ -4573,6 +4850,14 @@ paths:
           required: false
           description: |
             Return bilingual responses with Arabic script when true.
+
+            When true:
+            - All English/transliteration fields remain unchanged
+            - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+            - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+            - Comments get Arabic versions in commentsAr if available
+            - Tuning system display names get Arabic versions in displayNameAr if available
+            - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
           schema:
             type: string
             enum: ["true", "false"]
@@ -4653,6 +4938,14 @@ paths:
           required: false
           description: |
             Return bilingual responses with Arabic script when true.
+
+            When true:
+            - All English/transliteration fields remain unchanged
+            - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+            - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+            - Comments get Arabic versions in commentsAr if available
+            - Tuning system display names get Arabic versions in displayNameAr if available
+            - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
           schema:
             type: string
             enum: ["true", "false"]
@@ -4729,6 +5022,14 @@ paths:
           required: false
           description: |
             Return bilingual responses with Arabic script when true.
+
+            When true:
+            - All English/transliteration fields remain unchanged
+            - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+            - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+            - Comments get Arabic versions in commentsAr if available
+            - Tuning system display names get Arabic versions in displayNameAr if available
+            - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
           schema:
             type: string
             enum: ["true", "false"]

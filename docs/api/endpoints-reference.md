@@ -187,10 +187,13 @@ Requirements:
   - Example: `false`
 - `includeSuyur` (optional): Include suyūr (melodic paths) data - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `false`
-- `includeArabic` (optional): Return response data in Arabic script when true.
-  - Note names, maqām names, and jins names are converted to Arabic script
-  - Comments return Arabic versions if available
-  - Tuning system display names use Arabic creator/title if available
+- `includeArabic` (optional): Return bilingual responses with Arabic script when true.
+  - All English/transliteration fields remain unchanged
+  - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+  - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+  - Comments get Arabic versions in commentsAr if available
+  - Tuning system display names get Arabic versions in displayNameAr if available
+  - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
  - Type: `string` - Valid values: `true`, `false`
   - Example: `true`
 
@@ -227,10 +230,13 @@ Return tuning-system availability for a maqām.
 **Query Parameters:**
 - `transpositionNoteName` (optional): Filter results to show only tuning systems where the maqām can be transposed to this specific note (URL-safe, diacritics-insensitive). - Type: `string`
   - Example: `nawa`
-- `includeArabic` (optional): Return response data in Arabic script when true.
-  - Note names, maqām names, and jins names are converted to Arabic script
-  - Comments return Arabic versions if available
-  - Tuning system display names use Arabic creator/title if available
+- `includeArabic` (optional): Return bilingual responses with Arabic script when true.
+  - All English/transliteration fields remain unchanged
+  - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+  - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+  - Comments get Arabic versions in commentsAr if available
+  - Tuning system display names get Arabic versions in displayNameAr if available
+  - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
  - Type: `string` - Valid values: `true`, `false`
   - Example: `true`
 
@@ -262,10 +268,13 @@ Returns all tonic transpositions that are feasible under the tuning system acros
   - Example: `al-Sabbagh-(1954)`
 - `startingNote` **(required)**: Tuning system starting note name (URL-safe, diacritics-insensitive). - Type: `string`
   - Example: `rast`
-- `includeArabic` (optional): Return response data in Arabic script when true.
-  - Note names, maqām names, and jins names are converted to Arabic script
-  - Comments return Arabic versions if available
-  - Tuning system display names use Arabic creator/title if available
+- `includeArabic` (optional): Return bilingual responses with Arabic script when true.
+  - All English/transliteration fields remain unchanged
+  - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+  - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+  - Comments get Arabic versions in commentsAr if available
+  - Tuning system display names get Arabic versions in displayNameAr if available
+  - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
  - Type: `string` - Valid values: `true`, `false`
   - Example: `true`
 
@@ -310,10 +319,13 @@ This endpoint is ideal for comparative musicological analysis across different h
   - Example: `true`
 - `transposeTo` (optional): Transpose to specific tonic note (applies to all tuning systems) - Type: `string`
   - Example: `nawa`
-- `includeArabic` (optional): Return response data in Arabic script when true.
-  - Note names, maqām names, and jins names are converted to Arabic script
-  - Comments return Arabic versions if available
-  - Tuning system display names use Arabic creator/title if available
+- `includeArabic` (optional): Return bilingual responses with Arabic script when true.
+  - All English/transliteration fields remain unchanged
+  - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+  - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+  - Comments get Arabic versions in commentsAr if available
+  - Tuning system display names get Arabic versions in displayNameAr if available
+  - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
  - Type: `string` - Valid values: `true`, `false`
   - Example: `true`
 
@@ -331,39 +343,116 @@ curl "https://diarmaqar.netlify.app/api/maqamat/maqam_bayyat/compare?tuningSyste
 GET /maqamat/classification/12-pitch-class-sets
 ```
 
-Groups maqāmāt according to sets of 12 pitch classes. Each set is created by replacing 
-pitch classes in al-Kindi-(874) on ushayran with pitch classes from maqāmāt in the 
-specified tuning system, based on matching IPN reference note names.
+Groups maqāmāt according to sets of 12 pitch classes suitable for MIDI keyboard tuning
+and Scala file export. Each set is created by merging pitch classes from the specified
+tuning system with al-Kindi-(874) filler pitch classes, based on matching IPN reference
+note names.
 
-The algorithm:
-1. Starts with the 12 pitch classes from al-Kindi-(874) on ushayran
-2. For each maqām transposition in the specified tuning system:
+**Critical Design Principles:**
+- **Octave Alignment**: Both the maqām tuning system and al-Kindi-(874) use the same
+  `startingNote` to ensure octaves align correctly
+- **Chromatic Order**: Each set contains exactly 12 pitch classes ordered chromatically
+  starting from the maqām's tonic (e.g., C, C#, D, D#... for Rāst)
+- **Arabic Musicological Logic**: IPN references respect Arabic maqām theory where
+  microtonal modifiers indicate what the pitch is a variant OF, not mathematical proximity
+  to 12-EDO semitones
+- **Direct Tuning System Values**: All cent values come directly from tuning systems
+  without post-processing or calculation
+
+**The Algorithm:**
+1. Loads pitch classes from both the specified tuning system and al-Kindi-(874) using
+   the same `startingNote`
+2. For each maqām transposition:
    - Extracts IPN reference note names from ascending and descending sequences
    - Replaces matching pitch classes in al-Kindi base (ascending takes priority, then descending)
-   - Creates a new 12-pitch-class set
-   - Finds all compatible maqāmāt that can be performed in this set
+   - Selects pitch classes from correct octaves to ensure ascending chromatic order
+   - Orders the 12 pitch classes chromatically starting from the maqām's tonic
 3. Groups compatible maqāmāt together
-4. Names each group after the source maqām (e.g., "maqām rast set")
+4. Names each group after the source maqām (e.g., "maqām rāst set")
 
-Maqāmāt with duplicate IPN references (same IPN reference appearing multiple times) 
-are marked as incompatible and cannot form valid 12-pitch-class sets.
+**Compatibility:**
+- Maqāmāt with duplicate IPN references (same IPN appearing with different pitch values)
+  are marked as incompatible and cannot form valid 12-pitch-class sets
+- Compatible maqāmāt can be performed entirely within a single 12-pitch-class set
+
+**Output Format:**
+- Pitch classes ordered chromatically (C, C#, D, D#, E, F, F#, G, G#, A, A#, B)
+- Starting from the maqām's tonic (default) OR from IPN "C" (if `startSetFromC=true`)
+- Relative cents from 0 (reference note) to ~1050-1200 (octave)
+- `maqamTonic` field indicates the actual maqām tonic position and note name
+- Suitable for MIDI keyboard tuning and Scala (.scl) file generation
+
+**Filtering Options:**
+- Use `setId` to retrieve a specific set and its compatible maqāmāt
+- Use `maqamId` to find all sets containing a specific maqām
 
 
 **Query Parameters:**
 - `tuningSystem` (optional): Tuning system ID for maqāmāt (default: CairoCongressTuningCommittee-(1929)) - Type: `string` - Default: `CairoCongressTuningCommittee-(1929)`
   - Example: `CairoCongressTuningCommittee-(1929)`
-- `startingNote` (optional): Starting note for maqāmāt tuning system (default: yegah) - Type: `string` - Default: `yegah`
+- `startingNote` (optional): Starting note for both the maqām tuning system and al-Kindi-(874) (default: yegah).
+IMPORTANT: Both tuning systems must use the same starting note to ensure octaves align
+correctly and pitch classes can be properly selected from matching octaves.
+  IMPORTANT: Both tuning systems must use the same starting note to ensure octaves align
+  correctly and pitch classes can be properly selected from matching octaves. Use `yegah` for IbnSina/Meshshaqa, `ushayran` for al-Farabi/al-Kindi, `rast` for CairoCongress/al-Sabbagh
+ - Type: `string` - Default: `yegah`
   - Example: `yegah`
 - `centsTolerance` (optional): Tolerance in cents for pitch class comparison (default: 5) - Type: `number` - Default: `5`
   - Example: `5`
-- `includeIncompatible` (optional): Include maqāmāt that cannot form valid 12-pitch-class sets - Type: `boolean` - Default: `true`
+- `includeIncompatible` (optional): Include maqāmāt that cannot form valid 12-pitch-class sets - Type: `string` - Valid values: `true`, `false` - Default: `true`
   - Example: `true`
-- `includeArabic` (optional): Include Arabic display names in response - Type: `boolean` - Default: `false`
+- `includeArabic` (optional): Return bilingual responses with Arabic script when true.
+  - All English/transliteration fields remain unchanged
+  - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+  - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+  - Comments get Arabic versions in commentsAr if available
+  - Tuning system display names get Arabic versions in displayNameAr if available
+  - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
+ - Type: `string` - Valid values: `true`, `false`
+  - Example: `true`
+- `startSetFromC` (optional): Start pitch class set from IPN reference "C" (degree 0) instead of from the maqām's tonic.
+When `true`, the set is reordered to start from C at 0.00 cents (relative), making it
+directly compatible with Scala (.scl) file format which maps degree 0 to middle C by default.
+  When `true`, the set is reordered to start from C at 0.00 cents (relative), making it
+  directly compatible with Scala (.scl) file format which maps degree 0 to middle C by default. **Technical Implementation:**
+  1. **Octave Selection**: For maqāmāt starting mid-octave (e.g., D), pitch classes before the tonic in chromatic order (C, C#) are taken from octave 1, while those at or after the tonic use their original octaves
+  2. **Array Rotation**: The 12 pitch classes are rotated to place C first
+  3. **Relative Cents**: Calculated from C (0.00 cents), with octave wrap-around handling (negative values + 1200)
+  4. **Note Names**: Arabic note names follow the NoteName model's octave conventions (e.g., C octave 1 = rāst, C octave 2 = kurdān)
+  5. **Tonic Tracking**: The `maqamTonic` field indicates the actual maqām tonic's IPN, note names, and position in the reordered set **Use Cases:**
+  - `false` (default): For understanding maqām structure starting from its tonic
+  - `true`: For Scala .scl export (no .kbm file needed) or MIDI keyboard mapping where C = degree 0 **Example:**
+  - Maqām ḥijāz (tonic D/dūgāh at 702.13 cents): - Default mode: D at position 0 (0.00 cents relative) - Scala mode: C (rāst, 498.04 cents) at position 0 (0.00 cents relative), D at position 2 (204.08 cents relative)
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `false`
+- `pitchClassDataType` (optional): Controls which pitch class data fields are returned in the response.
+  - `all`: Returns all available pitch class data fields
+  - `englishName`: English note name with octave (e.g., "D2", "E-b3")
+  - `fraction`: Frequency ratio as a fraction string
+  - `cents`: Absolute cents value from the tuning system
+  - `decimalRatio`: Frequency ratio as decimal number
+  - `stringLength`: String length for oud/qanun (if available)
+  - `frequency`: Frequency in Hz
+  - `abjadName`: Arabic abjad notation (if available)
+  - `fretDivision`: Fret position for oud (if available)
+  - `midiNoteNumber`: MIDI note number as decimal
+  - `midiNoteDeviation`: MIDI note with cents deviation string
+  - `centsDeviation`: Cents deviation from 12-EDO
+  - `referenceNoteName`: IPN reference note name
+  - `relativeCents`: Cents relative to the first pitch class (0.00 for tonic or C) **Default Behavior (parameter omitted):**
+  - Returns minimal fields: `ipnReferenceNoteName`, `noteName`, `relativeCents`, `octave` **Example:**
+  - `?pitchClassDataType=cents` returns only IPN, note name, and cents values
+  - `?pitchClassDataType=all` returns all available data fields
+ - Type: `string` - Valid values: `all`, `englishName`, `fraction`, `cents`, `decimalRatio`, ... (14 total)
+  - Example: `cents`
+- `setId` (optional): Filter by specific set ID to retrieve that set and its compatible maqāmāt (e.g., 'maqam_rast_set') - Type: `string`
+  - Example: `maqam_rast_set`
+- `maqamId` (optional): Filter by maqām ID to find all sets containing that maqām (e.g., 'maqam_rast') - Type: `string`
+  - Example: `maqam_rast`
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/maqamat/classification/12-pitch-class-sets?includeArabic=false"
+curl "https://diarmaqar.netlify.app/api/maqamat/classification/12-pitch-class-sets?includeArabic=true"
 ```
 
 **Response:** Classification results with sets and compatible maqāmāt
@@ -396,10 +485,13 @@ Return all ajnās (singular: jins) with metadata.
   - Example: `alphabetical` - Sort alphabetically by display name
 - `includeSources` (optional): Include bibliographic source references (sourceId and page) for each jins - Type: `string` - Valid values: `true`, `false` - Default: `true`
   - Example: `true`
-- `includeArabic` (optional): Return response data in Arabic script when true.
-  - Note names, maqām names, and jins names are converted to Arabic script
-  - Comments return Arabic versions if available
-  - Tuning system display names use Arabic creator/title if available
+- `includeArabic` (optional): Return bilingual responses with Arabic script when true.
+  - All English/transliteration fields remain unchanged
+  - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+  - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+  - Comments get Arabic versions in commentsAr if available
+  - Tuning system display names get Arabic versions in displayNameAr if available
+  - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
  - Type: `string` - Valid values: `true`, `false`
   - Example: `true`
 
@@ -464,32 +556,35 @@ Requirements:
   - If data-returning parameters are provided, returns 400 Bad Request error with details about conflicting parameters
  - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
-- `pitchClassDataType` **(required)**: Specifies which pitch class data type to return for each pitch class.
-  - In discovery mode (when options=true), this parameter is still required but the response returns parameter metadata instead of formatted data
+- `pitchClassDataType` (optional): Specifies which pitch class data type to return for each pitch class.
+  - When provided, returns the specified data type for all pitch classes in the jins
+  - In discovery mode (when options=true), this parameter is optional since the response returns parameter metadata instead of formatted data
   - Use 'all' for complete pitch class data across all available formats
-  - Each option returns the specified data type for all pitch classes in the jins
  - Type: `string` - Valid values: `all`, `frequency`, `cents`, `fraction`, `decimalRatio`, ... (13 total)
   - Example: `cents`
 - `transposeTo` (optional): Transpose the jins to a new tonic by preserving the interval patterns (URL-safe, diacritics-insensitive).
   - To see all valid transposition options, request available parameter options instead of jins data
  - Type: `string`
   - Example: `nawa`
-- `includeIntervals` (optional): Include interval data between jins degrees - Type: `string` - Valid values: `true`, `false` - Default: `true`
-  - Example: `true`
+- `includeIntervals` (optional): Include interval data between jins degrees - Type: `string` - Valid values: `true`, `false` - Default: `false`
+  - Example: `false`
 - `includeModulations` (optional): Include modulation possibilities to other ajnās - Type: `string` - Valid values: `true`, `false` - Default: `true`
   - Example: `true`
 - `includeModulations8vb` (optional): Include available modulations an octave below - Type: `string` - Valid values: `true`, `false` - Default: `true`
   - Example: `true`
-- `includeArabic` (optional): Return response data in Arabic script when true.
-  - Note names, maqām names, and jins names are converted to Arabic script
-  - Comments return Arabic versions if available
-  - Tuning system display names use Arabic creator/title if available
+- `includeArabic` (optional): Return bilingual responses with Arabic script when true.
+  - All English/transliteration fields remain unchanged
+  - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+  - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+  - Comments get Arabic versions in commentsAr if available
+  - Tuning system display names get Arabic versions in displayNameAr if available
+  - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
  - Type: `string` - Valid values: `true`, `false`
   - Example: `true`
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/ajnas/jins_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents&includeArabic=true"
+curl "https://diarmaqar.netlify.app/api/ajnas/jins_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&includeArabic=true"
 ```
 
 **Response:** Jins data retrieved successfully.
@@ -520,10 +615,13 @@ Return tuning-system availability for a jins.
 **Query Parameters:**
 - `transpositionNoteName` (optional): Filter results to show only tuning systems where the jins can be transposed to this specific note (URL-safe, diacritics-insensitive). - Type: `string`
   - Example: `nawa`
-- `includeArabic` (optional): Return response data in Arabic script when true.
-  - Note names, maqām names, and jins names are converted to Arabic script
-  - Comments return Arabic versions if available
-  - Tuning system display names use Arabic creator/title if available
+- `includeArabic` (optional): Return bilingual responses with Arabic script when true.
+  - All English/transliteration fields remain unchanged
+  - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+  - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+  - Comments get Arabic versions in commentsAr if available
+  - Tuning system display names get Arabic versions in displayNameAr if available
+  - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
  - Type: `string` - Valid values: `true`, `false`
   - Example: `true`
 
@@ -555,10 +653,13 @@ Returns all tonic transpositions that are feasible under the tuning system acros
   - Example: `Meshshaqa-(1899)`
 - `startingNote` **(required)**: Tuning system starting note name (URL-safe, diacritics-insensitive). - Type: `string`
   - Example: `yegah`
-- `includeArabic` (optional): Return response data in Arabic script when true.
-  - Note names, maqām names, and jins names are converted to Arabic script
-  - Comments return Arabic versions if available
-  - Tuning system display names use Arabic creator/title if available
+- `includeArabic` (optional): Return bilingual responses with Arabic script when true.
+  - All English/transliteration fields remain unchanged
+  - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+  - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+  - Comments get Arabic versions in commentsAr if available
+  - Tuning system display names get Arabic versions in displayNameAr if available
+  - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
  - Type: `string` - Valid values: `true`, `false`
   - Example: `true`
 
@@ -602,10 +703,13 @@ This endpoint is ideal for comparative musicological analysis of melodic structu
   - Example: `true`
 - `transposeTo` (optional): Transpose to specific tonic note (applies to all tuning systems) - Type: `string`
   - Example: `nawa`
-- `includeArabic` (optional): Return response data in Arabic script when true.
-  - Note names, maqām names, and jins names are converted to Arabic script
-  - Comments return Arabic versions if available
-  - Tuning system display names use Arabic creator/title if available
+- `includeArabic` (optional): Return bilingual responses with Arabic script when true.
+  - All English/transliteration fields remain unchanged
+  - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+  - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+  - Comments get Arabic versions in commentsAr if available
+  - Tuning system display names get Arabic versions in displayNameAr if available
+  - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
  - Type: `string` - Valid values: `true`, `false`
   - Example: `true`
 
@@ -640,10 +744,13 @@ Retrieve metadata for all available tuning systems.
 **Query Parameters:**
 - `includeSources` (optional): Include bibliographic source references (sourceId and page) for each tuning system - Type: `string` - Valid values: `true`, `false` - Default: `true`
   - Example: `true`
-- `includeArabic` (optional): Return response data in Arabic script when true.
-  - Note names, maqām names, and jins names are converted to Arabic script
-  - Comments return Arabic versions if available
-  - Tuning system display names use Arabic creator/title if available
+- `includeArabic` (optional): Return bilingual responses with Arabic script when true.
+  - All English/transliteration fields remain unchanged
+  - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+  - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+  - Comments get Arabic versions in commentsAr if available
+  - Tuning system display names get Arabic versions in displayNameAr if available
+  - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
  - Type: `string` - Valid values: `true`, `false`
   - Example: `true`
 
@@ -682,7 +789,14 @@ across all octaves with full formatting options.
   - Example: `all`
 - `includeSources` (optional): Include bibliographic source references (sourceId and page) for the tuning system - Type: `string` - Valid values: `true`, `false`
   - Example: `true`
-- `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false`
+- `includeArabic` (optional): Return bilingual responses with Arabic script when true.
+  - All English/transliteration fields remain unchanged
+  - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+  - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+  - Comments get Arabic versions in commentsAr if available
+  - Tuning system display names get Arabic versions in displayNameAr if available
+  - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
+ - Type: `string` - Valid values: `true`, `false`
   - Example: `true`
 
 **Example:**
@@ -711,10 +825,13 @@ Return all maqāmāt that can be realized in a given tuning system beginning on 
   - Example: `ushayran`
 
 **Query Parameters:**
-- `includeArabic` (optional): Return response data in Arabic script when true.
-  - Note names, maqām names, and jins names are converted to Arabic script
-  - Comments return Arabic versions if available
-  - Tuning system display names use Arabic creator/title if available
+- `includeArabic` (optional): Return bilingual responses with Arabic script when true.
+  - All English/transliteration fields remain unchanged
+  - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+  - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+  - Comments get Arabic versions in commentsAr if available
+  - Tuning system display names get Arabic versions in displayNameAr if available
+  - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
  - Type: `string` - Valid values: `true`, `false`
   - Example: `true`
 
@@ -756,9 +873,16 @@ availability information for a specific note name.
 - `sortBy` (optional): Sort order for results - Type: `string` - Valid values: `order`, `alphabetical` - Default: `order`
   - Example: `order` - Sort by canonical note name order (from NoteName.ts arrays)
   - Example: `alphabetical` - Sort alphabetically by display name
-- `filterByTuningSystem` (optional): Filter by tuning system ID to show only note names that exist in that system (URL-safe, case-insensitive). - Type: `string`
+- `filterByTuningSystem` (optional): Filter by tuning system ID to show only note names that exist in that system (URL-safe, case-insensitive, diacritics-insensitive). - Type: `string`
   - Example: `Meshshaqa-(1899)`
-- `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false`
+- `includeArabic` (optional): Return bilingual responses with Arabic script when true.
+  - All English/transliteration fields remain unchanged
+  - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+  - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+  - Comments get Arabic versions in commentsAr if available
+  - Tuning system display names get Arabic versions in displayNameAr if available
+  - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
+ - Type: `string` - Valid values: `true`, `false`
   - Example: `true`
 
 **Example:**
@@ -799,7 +923,14 @@ Supports:
   - Example: `rast`
 - `pitchClassDataType` **(required)**: Pitch class data format - Type: `string` - Valid values: `all`, `englishName`, `fraction`, `cents`, `decimalRatio`, ... (13 total) - Default: `cents`
   - Example: `cents`
-- `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false`
+- `includeArabic` (optional): Return bilingual responses with Arabic script when true.
+  - All English/transliteration fields remain unchanged
+  - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+  - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+  - Comments get Arabic versions in commentsAr if available
+  - Tuning system display names get Arabic versions in displayNameAr if available
+  - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
+ - Type: `string` - Valid values: `true`, `false`
   - Example: `true`
 
 **Example:**
@@ -829,7 +960,14 @@ Returns for each tuning system:
   - Example: `rast`
 
 **Query Parameters:**
-- `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false`
+- `includeArabic` (optional): Return bilingual responses with Arabic script when true.
+  - All English/transliteration fields remain unchanged
+  - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+  - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+  - Comments get Arabic versions in commentsAr if available
+  - Tuning system display names get Arabic versions in displayNameAr if available
+  - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
+ - Type: `string` - Valid values: `true`, `false`
   - Example: `true`
 
 **Example:**
@@ -864,7 +1002,14 @@ Returns comprehensive data for each tuning system including:
   - Example: `yegah`
 - `pitchClassDataType` **(required)**: Pitch class data format - Type: `string` - Valid values: `all`, `englishName`, `fraction`, `cents`, `decimalRatio`, ... (13 total) - Default: `cents`
   - Example: `cents`
-- `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false`
+- `includeArabic` (optional): Return bilingual responses with Arabic script when true.
+  - All English/transliteration fields remain unchanged
+  - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+  - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+  - Comments get Arabic versions in commentsAr if available
+  - Tuning system display names get Arabic versions in displayNameAr if available
+  - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
+ - Type: `string` - Valid values: `true`, `false`
   - Example: `true`
 
 **Example:**
@@ -907,7 +1052,14 @@ as it is not meaningful in this context.
   - Use "all" to include all available starting notes for that tuning system (returns array of results, one per starting note) Note: Since note names are unique per octave, each note name already identifies its octave. No octave parameter is needed. Use `yegah` for IbnSina/Meshshaqa, `ushayran` for al-Farabi/al-Kindi, `rast` for CairoCongress/al-Sabbagh
  - Type: `string`
   - Example: `rast`
-- `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false`
+- `includeArabic` (optional): Return bilingual responses with Arabic script when true.
+  - All English/transliteration fields remain unchanged
+  - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+  - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+  - Comments get Arabic versions in commentsAr if available
+  - Tuning system display names get Arabic versions in displayNameAr if available
+  - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
+ - Type: `string` - Valid values: `true`, `false`
   - Example: `true`
 
 **Example:**
@@ -939,7 +1091,14 @@ as it is not meaningful in this context.
   - Example: `al-Farabi-(950g),CairoCongressTuningCommittee-(1929)`
 - `startingNote` **(required)**: Starting note (applies to all tuning systems), or "all" to include all available starting notes for each tuning system. - Type: `string`
   - Example: `ushayran`
-- `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false`
+- `includeArabic` (optional): Return bilingual responses with Arabic script when true.
+  - All English/transliteration fields remain unchanged
+  - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+  - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+  - Comments get Arabic versions in commentsAr if available
+  - Tuning system display names get Arabic versions in displayNameAr if available
+  - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
+ - Type: `string` - Valid values: `true`, `false`
   - Example: `true`
 
 **Example:**
@@ -1060,7 +1219,14 @@ Use the `/api/sources` endpoint to retrieve all available source IDs.
   - Example: `Farmer-(1937)`
 
 **Query Parameters:**
-- `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false`
+- `includeArabic` (optional): Return bilingual responses with Arabic script when true.
+  - All English/transliteration fields remain unchanged
+  - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+  - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+  - Comments get Arabic versions in commentsAr if available
+  - Tuning system display names get Arabic versions in displayNameAr if available
+  - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
+ - Type: `string` - Valid values: `true`, `false`
   - Example: `true`
 
 **Example:**
@@ -1091,7 +1257,14 @@ Use the `/api/sources` endpoint to retrieve all available source IDs.
   - Example: `Farmer-(1937)`
 
 **Query Parameters:**
-- `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false`
+- `includeArabic` (optional): Return bilingual responses with Arabic script when true.
+  - All English/transliteration fields remain unchanged
+  - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+  - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+  - Comments get Arabic versions in commentsAr if available
+  - Tuning system display names get Arabic versions in displayNameAr if available
+  - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
+ - Type: `string` - Valid values: `true`, `false`
   - Example: `true`
 
 **Example:**
@@ -1122,7 +1295,14 @@ Use the `/api/sources` endpoint to retrieve all available source IDs.
   - Example: `Farmer-(1937)`
 
 **Query Parameters:**
-- `includeArabic` (optional): Return bilingual responses with Arabic script when true. - Type: `string` - Valid values: `true`, `false`
+- `includeArabic` (optional): Return bilingual responses with Arabic script when true.
+  - All English/transliteration fields remain unchanged
+  - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+  - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+  - Comments get Arabic versions in commentsAr if available
+  - Tuning system display names get Arabic versions in displayNameAr if available
+  - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
+ - Type: `string` - Valid values: `true`, `false`
   - Example: `true`
 
 **Example:**
