@@ -8,7 +8,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "al-Khulʿī-(2011)",
+        "sourceId": "al-Khuli-(1904/2011)",
         "page": "55-56"
       },
       {
@@ -230,19 +230,7 @@
         "chahārgāh",
         "ḥijāz",
         "nawā",
-        "ḥiṣār",
-        "ḥusaynī",
-        "ʿajam",
-        "māhūr",
-        "kurdān",
-        "shahnāz",
-        "muḥayyar",
-        "sunbuleh/zawāl",
-        "jawāb būselīk",
-        "māhūrān",
-        "jawāb ḥijāz",
-        "saham/ramal tūtī",
-        "jawāb ḥiṣār"
+        "ḥiṣār"
       ],
       [
         "yegāh",
@@ -269,6 +257,20 @@
         "jawāb būselīk",
         "māhūrān",
         "jawāb ḥijāz"
+      ],
+      [
+        "rāst",
+        "zīrgūleh",
+        "dūgāh",
+        "kurdī",
+        "būselīk/ʿushshāq",
+        "chahārgāh",
+        "ḥijāz",
+        "nawā",
+        "ḥiṣār",
+        "ḥusaynī",
+        "ʿajam",
+        "māhūr"
       ]
     ],
     "abjadNames": [
@@ -301,9 +303,10 @@
     "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
       "yegāh": 97.999,
-      "ʿushayrān": 110
+      "ʿushayrān": 109.99999999999999,
+      "rāst": 130.37037037037035
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2025-11-17T13:13:24.352Z"
   },
   {
     "id": "Anglo-European-(1700)",
@@ -1828,7 +1831,12 @@
     "year": "1037",
     "sourceEnglish": "",
     "sourceArabic": "",
-    "sourcePageReferences": [],
+    "sourcePageReferences": [
+      {
+        "sourceId": "Farmer-(1937)",
+        "page": "249"
+      }
+    ],
     "creatorEnglish": "Ibn Sīnā ",
     "creatorArabic": "إبن سينا",
     "commentsEnglish": "Farmer, H.G. (1937) ‘The Lute Scale of Avicenna’, The Journal of the Royal Asiatic Society of Great Britain and Ireland, pp. 249.\n\nAbū-ʿAlī al-Ḥusayn ibn-ʿAbdallāh Ibn-Sīnā [Avicenna] (ca. 970–1037) https://plato.stanford.edu/entries/ibn-sina/",
@@ -1968,11 +1976,11 @@
       "yegāh": 97.999,
       "ʿushayrān": 110
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2025-11-09T00:44:40.275Z"
   },
   {
-    "id": "Ishaqal-Mawsili-(850)",
-    "titleEnglish": "9-Tone",
+    "id": "al-Mawsili-(850)",
+    "titleEnglish": "10-Tone",
     "titleArabic": "",
     "year": "850",
     "sourceEnglish": "",
@@ -1983,9 +1991,9 @@
         "page": "247"
       }
     ],
-    "creatorEnglish": "Isḥāq al-Mawṣilī",
-    "creatorArabic": "الموصلي, اسحاق",
-    "commentsEnglish": "TESTING VERSION TIMESTAMP",
+    "creatorEnglish": "al-Mawṣilī",
+    "creatorArabic": "الموصلي",
+    "commentsEnglish": "Iṣhāq al-Mawṣilī",
     "commentsArabic": "",
     "tuningSystemPitchClasses": [
       "1/1",
@@ -1996,7 +2004,8 @@
       "3/2",
       "128/81",
       "27/16",
-      "16/9"
+      "16/9",
+      "243/128"
     ],
     "noteNames": [
       [
@@ -2009,15 +2018,7 @@
         "chahārgāh",
         "ḥijāz",
         "nawā",
-        "ḥusaynī",
-        "māhūr",
-        "kurdān",
-        "shahnāz",
-        "muḥayyar",
-        "jawāb būselīk",
-        "māhūrān",
-        "jawāb ḥijāz",
-        "saham/ramal tūtī"
+        "ḥiṣār"
       ],
       [
         "yegāh",
@@ -2029,42 +2030,30 @@
         "kurdī",
         "būselīk/ʿushshāq",
         "chahārgāh",
-        "tīk chahārgāh",
-        "nīm ḥijāz",
-        "ṣabā",
-        "ḥijāz",
-        "tīk ḥijāz/ṣabā",
-        "nīm nawā",
-        "nawā",
-        "nīm ḥiṣār",
-        "jawāb shūrī",
-        "ḥiṣār",
-        "tīk ḥiṣār",
-        "nīm ḥusaynī",
-        "ḥusaynī",
-        "nīm ʿajam",
-        "ʿajam"
+        "ḥijāz"
       ]
     ],
     "abjadNames": [
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      ""
+      "آ",
+      "ب",
+      "ج",
+      "د",
+      "ه",
+      "و",
+      "ز",
+      "ح",
+      "ط",
+      "ي",
+      "آ",
+      "ب",
+      "ج",
+      "د",
+      "ه",
+      "و",
+      "ز",
+      "ح",
+      "ط",
+      "ي"
     ],
     "stringLength": 1000,
     "defaultReferenceFrequency": 110,
@@ -2072,7 +2061,7 @@
       "yegāh": 97.999,
       "ʿushayrān": 110
     },
-    "version": "2025-10-18T19:43:01.864Z"
+    "version": "2025-11-06T21:49:51.447Z"
   },
   {
     "id": "CairoCongressTuningCommittee-(1929)",
@@ -2270,7 +2259,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "al-Khulʿī-(2011)",
+        "sourceId": "al-Khuli-(1904/2011)",
         "page": "51-52"
       }
     ],
@@ -3165,14 +3154,14 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "al-Farabii-(950c)",
+    "id": "al-Farabi-(950c)",
     "titleEnglish": "First Oud Tuning 3: mujannab sabbāba 3 + alt wusṭa zalzal",
     "titleArabic": "",
     "year": "950c",
     "sourceEnglish": "",
     "sourceArabic": "",
     "sourcePageReferences": [],
-    "creatorEnglish": "al-Fārābīi",
+    "creatorEnglish": "al-Fārābī",
     "creatorArabic": "الفارابي",
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -3270,7 +3259,7 @@
       "yegāh": 97.999,
       "ʿushayrān": 110
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2025-11-06T00:23:22.237Z"
   },
   {
     "id": "al-Farabi-(950b)",
@@ -4555,10 +4544,10 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "al-Farabi-(950aa)",
+    "id": "al-Farabi-(950j)",
     "titleEnglish": "al-Ṭanbūr al-Baghdādi/al-Mīzānī (pre-Islamic)",
     "titleArabic": "الطنبور البغدادي/الميزاني",
-    "year": "950aa",
+    "year": "950j",
     "sourceEnglish": "Unknown Source",
     "sourceArabic": "مصدر غير معروف",
     "sourcePageReferences": [
@@ -4710,130 +4699,7 @@
       "ʿushayrān": 110,
       "rāst": 130.665
     },
-    "version": "2025-10-18T19:42:23.643Z"
-  },
-  {
-    "id": "UnknownCreator-()",
-    "titleEnglish": "TEST",
-    "titleArabic": "غير مسمى",
-    "year": "",
-    "sourceEnglish": "Unknown Source",
-    "sourceArabic": "مصدر غير معروف",
-    "sourcePageReferences": [],
-    "creatorEnglish": "Unknown Creator",
-    "creatorArabic": "مؤلف غير معروف",
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "tuningSystemPitchClasses": [
-      "000",
-      "102",
-      "201",
-      "298",
-      "392",
-      "483",
-      "572",
-      "658",
-      "742",
-      "823",
-      "903",
-      "980",
-      "1054",
-      "1127",
-      "1197",
-      "1266",
-      "1332",
-      "1397",
-      "1460",
-      "1521",
-      "1580",
-      "1638",
-      "1693",
-      "1748"
-    ],
-    "noteNames": [
-      [
-        "yegāh",
-        "qarār nīm ḥiṣār",
-        "shūrī",
-        "qarār ḥiṣār",
-        "qarār tīk ḥiṣār/shūrī",
-        "nīm ʿushayrān",
-        "ʿushayrān",
-        "nīm ʿajam ʿushayrān",
-        "ʿajam ʿushayrān",
-        "nayrūz",
-        "tīk ʿajam ʿushayrān",
-        "ʿirāq",
-        "rahāwī",
-        "nīm kawasht",
-        "kawasht",
-        "tīk kawasht",
-        "rāst",
-        "tīk rāst",
-        "nīm zīrgūleh",
-        "zīrgūleh",
-        "tīk zīrgūleh",
-        "dūgāh",
-        "nīm kurdī/nahāwand",
-        "nahāwand"
-      ]
-    ],
-    "abjadNames": [
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      ""
-    ],
-    "stringLength": 3600,
-    "defaultReferenceFrequency": 440,
-    "referenceFrequencies": {
-      "yegāh": 98
-    },
-    "version": "2025-10-20T23:39:35.568Z"
+    "version": "2025-11-06T00:24:06.628Z"
   },
   {
     "id": "MokhtarandMosharrafa-(1937)",

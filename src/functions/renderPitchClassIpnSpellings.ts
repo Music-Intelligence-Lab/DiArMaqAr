@@ -1,6 +1,6 @@
 import PitchClass from "@/models/PitchClass";
 import { getSequentialEnglishNames } from "@/functions/noteNameMappings";
-import { calculateCentsDeviationWithReferenceNote, getNextSequentialReferenceNote, getPreviousSequentialReferenceNote, swapEnharmonicForReference } from "@/functions/calculateCentsDeviation";
+import { calculateCentsDeviationWithReferenceNote, getNextSequentialReferenceNote, swapEnharmonicForReference } from "@/functions/calculateCentsDeviation";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
 
 /**

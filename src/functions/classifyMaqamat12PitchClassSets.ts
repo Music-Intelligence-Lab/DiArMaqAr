@@ -1,6 +1,5 @@
 import TuningSystem from "@/models/TuningSystem";
-import MaqamData from "@/models/Maqam";
-import Maqam from "@/models/Maqam";
+import MaqamData, { Maqam } from "@/models/Maqam";
 import PitchClass from "@/models/PitchClass";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { calculateMaqamTranspositions } from "@/functions/transpose";
@@ -147,10 +146,23 @@ export function getMaqamTranspositions(
 }
 
 /**
- * Creates a 12-pitch-class set by replacing pitch classes in al-Kindi base
- * with pitch classes from the maqam transposition based on matching IPN references
- * 
- * Returns null if the maqam has duplicate IPN references (incompatible)
+ * Creates a 12-pitch-class set suitable for MIDI keyboard tuning and Scala export.
+ *
+ * Merges pitch classes from the maqam transposition with al-Kindi filler pitch classes
+ * based on matching IPN references. The resulting set is ordered chromatically starting
+ * from the maqam's tonic.
+ *
+ * IMPORTANT: The alKindiTuningSystem must use the same starting note as the maqam's
+ * tuning system to ensure octaves align correctly and pitch classes can be properly
+ * selected from matching octaves to maintain ascending chromatic order.
+ *
+ * @param maqamTransposition - The maqam transposition to build the set from
+ * @param alKindiTuningSystem - al-Kindi tuning system for filler pitch classes
+ * @param alKindiStartingNote - Starting note for al-Kindi (must match maqam's starting note)
+ * @returns PitchClassSet with 12 chromatically ordered pitch classes, or null if incompatible
+ *
+ * Returns null if the maqam has duplicate IPN references (same IPN appearing with different
+ * pitch values), which makes it incompatible with 12-tone chromatic tuning.
  */
 export function create12PitchClassSet(
   maqamTransposition: Maqam,
@@ -212,7 +224,7 @@ export function create12PitchClassSet(
   // Check for duplicate IPN references with different pitch class values (incompatible)
   // A maqam is incompatible if the same IPN reference appears with different pitch class values
   // (e.g., C at 0 cents in ascending and C at 50 cents in descending)
-  for (const [ipnRef, pitchClasses] of maqamIpnMap.entries()) {
+  for (const pitchClasses of maqamIpnMap.values()) {
     if (pitchClasses.length > 1) {
       // Normalize cents to same octave (modulo 1200) for comparison
       // Handle negative values properly: ((x % 1200) + 1200) % 1200
@@ -273,13 +285,106 @@ export function create12PitchClassSet(
   for (const [ipnRef, pitchClass] of ascendingIpnMap.entries()) {
     newPitchClassMap.set(ipnRef, pitchClass);
   }
-  
+
   for (const [ipnRef, pitchClass] of descendingIpnMap.entries()) {
     newPitchClassMap.set(ipnRef, pitchClass);
   }
-  
+
+  // Adjust octaves to ensure chromatic ascending order from the tuning system
+  // Get all pitch classes from al-Kindi tuning system to have octave options
+  const allAlKindiPitchClasses = getTuningSystemPitchClasses(alKindiTuningSystem, alKindiStartingNote);
+  const alKindiByIpn = new Map<string, PitchClass[]>();
+
+  for (const pc of allAlKindiPitchClasses) {
+    const ipnRef = getIpnReferenceNoteName(pc);
+    if (!alKindiByIpn.has(ipnRef)) {
+      alKindiByIpn.set(ipnRef, []);
+    }
+    alKindiByIpn.get(ipnRef)!.push(pc);
+  }
+
+  // Also group maqam pitch classes by IPN for consideration in octave selection
+  const maqamByIpn = new Map<string, PitchClass[]>();
+  for (const pc of [...ascendingWithSequentialRefs, ...descendingWithSequentialRefs]) {
+    const ipnRef = getIpnReferenceNoteName(pc);
+    if (!maqamByIpn.has(ipnRef)) {
+      maqamByIpn.set(ipnRef, []);
+    }
+    maqamByIpn.get(ipnRef)!.push(pc);
+  }
+
+  // Find tonic (first pitch class from maqam's ascending sequence)
+  // Use the actual pitch class with its actual octave and cents (including qarār positions with negative cents)
+  const tonicPitchClass = ascendingWithSequentialRefs.length > 0
+    ? ascendingWithSequentialRefs[0]
+    : null;
+
+  if (!tonicPitchClass) {
+    return {
+      pitchClasses: newPitchClassMap,
+      ipnReferenceNames: alKindiBase.ipnReferenceNames
+    };
+  }
+
+  const tonicIpnRef = getIpnReferenceNoteName(tonicPitchClass);
+  const tonicCents = parseFloat(tonicPitchClass.cents);
+
+  // Reorder chromatic sequence starting from tonic
+  const chromaticOrder = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+  const tonicIndex = chromaticOrder.indexOf(tonicIpnRef);
+  const reorderedChromatic = [...chromaticOrder.slice(tonicIndex), ...chromaticOrder.slice(0, tonicIndex)];
+
+  // Rebuild map with pitch classes from correct octaves for chromatic ascending order
+  // Start with the tonic's actual cents (may be negative for qarār octaves)
+  const finalPitchClassMap = new Map<string, PitchClass>();
+  let previousCents = tonicCents - 0.01;
+
+  for (let i = 0; i < reorderedChromatic.length; i++) {
+    const ipnRef = reorderedChromatic[i];
+
+    // For the first position (tonic), use the actual tonic pitch class from the maqam
+    if (i === 0) {
+      finalPitchClassMap.set(ipnRef, tonicPitchClass);
+      previousCents = tonicCents;
+      continue;
+    }
+
+    // For subsequent positions, collect candidates from both maqam and al-Kindi
+    const candidates: PitchClass[] = [];
+
+    // Add maqam pitch classes if available (including qarār octaves)
+    if (maqamByIpn.has(ipnRef)) {
+      candidates.push(...maqamByIpn.get(ipnRef)!);
+    }
+
+    // Add al-Kindi pitch classes as additional options (including qarār octaves)
+    if (alKindiByIpn.has(ipnRef)) {
+      candidates.push(...alKindiByIpn.get(ipnRef)!);
+    }
+
+    if (candidates.length === 0) continue;
+
+    // Find the candidate with the lowest cents value that's greater than previousCents
+    // This ensures chromatic ascending order from the tonic (regardless of starting octave)
+    const sorted = candidates
+      .filter(pc => parseFloat(pc.cents) > previousCents)
+      .sort((a, b) => parseFloat(a.cents) - parseFloat(b.cents));
+
+    if (sorted.length > 0) {
+      finalPitchClassMap.set(ipnRef, sorted[0]);
+      previousCents = parseFloat(sorted[0].cents);
+    } else {
+      // No suitable candidate found - shouldn't happen with full tuning system coverage
+      // Fall back to lowest cents available
+      const fallback = candidates
+        .sort((a, b) => parseFloat(a.cents) - parseFloat(b.cents))[0];
+      finalPitchClassMap.set(ipnRef, fallback);
+      previousCents = parseFloat(fallback.cents);
+    }
+  }
+
   return {
-    pitchClasses: newPitchClassMap,
+    pitchClasses: finalPitchClassMap,
     ipnReferenceNames: alKindiBase.ipnReferenceNames
   };
 }

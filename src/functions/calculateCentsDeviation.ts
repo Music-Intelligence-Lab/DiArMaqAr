@@ -105,29 +105,20 @@ export function calculateCentsDeviationWithReferenceNote(
       targetSemitone = chromaticSemitones;
     }
 
-    // Find the nearest MIDI note number that matches the target semitone
-    const currentMidiRounded = Math.round(currentMidiNumber);
-    const currentSemitone = currentMidiRounded % 12;
-    
-    // Calculate reference MIDI number based on the nearest occurrence of the target semitone
+    // Extract octave from englishName to calculate reference MIDI note
+    // This respects Arabic musicological logic where microtonal modifiers indicate
+    // what the pitch is a variant OF, not mathematical proximity to 12-EDO semitones
+    const octaveMatch = currentNoteName.match(/(\d+)$/);
     let referenceMidiNumber: number;
-    if (currentSemitone === targetSemitone) {
-      referenceMidiNumber = currentMidiRounded;
+
+    if (octaveMatch) {
+      // Use octave from the note name (e.g., "A2" → octave 2, "E-b3" → octave 3)
+      const octave = parseInt(octaveMatch[1], 10);
+      referenceMidiNumber = (octave + 1) * 12 + targetSemitone;
     } else {
-      // Find the closest MIDI number with the target semitone
-      const baseOctave = Math.floor(currentMidiRounded / 12);
-      const candidateUp = baseOctave * 12 + targetSemitone;
-      const candidateDown = (baseOctave - 1) * 12 + targetSemitone;
-      const candidateUpNext = (baseOctave + 1) * 12 + targetSemitone;
-      
-      // Choose the closest one
-      const distances = [
-        { midi: candidateDown, dist: Math.abs(currentMidiRounded - candidateDown) },
-        { midi: candidateUp, dist: Math.abs(currentMidiRounded - candidateUp) },
-        { midi: candidateUpNext, dist: Math.abs(currentMidiRounded - candidateUpNext) }
-      ];
-      distances.sort((a, b) => a.dist - b.dist);
-      referenceMidiNumber = distances[0].midi;
+      // Fallback: use octave from current MIDI number
+      const currentOctave = Math.floor(currentMidiNumber / 12);
+      referenceMidiNumber = currentOctave * 12 + targetSemitone;
     }
 
     // Calculate deviation from the determined reference using frequency ratios
