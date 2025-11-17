@@ -985,7 +985,7 @@
     ],
     "creatorEnglish": "al-Lādhiqī",
     "creatorArabic": "اللاذقي",
-    "commentsEnglish": "Rejab (1986) gives the names for the pitch classes 12, 13, 14 as nīm ḥijāz (128/81), ḥijāz (32768/19683) and ḥijāz + (27/16) as opposed to chahārgāh (128/81), nīm ḥijāz (32768/19683) and ḥijāz (27/16).\n\nThis doesn't make sense to me because the interval distance between 32/27 (rāst) and 128/81 is a 4/3 perfect forth, and both the ratios 32/27 and 128/81 are the main intervals derived from a sequence of successive fourths 4:3 + 4:3 (16/9) + 4:3 (32:27) + 4:3 (128:81). Therefore 128/81 should be labeled chahārgāh as in the modern Arab-Persian-Ottoman naming convention.",
+    "commentsEnglish": "Rejab (1986) gives the names for the pitch classes 12, 13, 14 as nīm ḥijāz (128/81), ḥijāz (32768/19683) and ḥijāz + (27/16) as opposed to chahārgāh (128/81), nīm ḥijāz (32768/19683) and ḥijāz (27/16).\n\nThis doesn't make sense to me because the interval distance between 32/27 (rāst) and 128/81 is a 4/3 perfect forth, and both the ratios 32/27 and 128/81 are the main intervals derived from a sequence of successive fourths 4:3 + 4:3 (16/9) + 4:3 (32:27) + 4:3 (128:81). Therefore 128/81 should be labeled chahārgāh as in the modern Persian-Arab-Ottoman naming convention.",
     "commentsArabic": "",
     "tuningSystemPitchClasses": [
       "1/1",

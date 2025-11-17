@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     "REST API", "API for AI assistants", "TypeScript", "JavaScript library", "OpenAPI", "LLM documentation", "API documentation", "JSON export", "machine learning datasets", 
     "training data", "ground truth data", "reference data", "programmatic access",
     "decolonial computing", "culturally-aware computing", "postcolonial computing", "bibliographic attribution", 
-    "scholarly verification", "transparent provenance", "critical edition", "Arab-Ottoman-Persian note naming",
+    "scholarly verification", "transparent provenance", "critical edition", "Persian-Arab-Ottoman note naming",
     "tuning-system-sensitive transposition", "modulation algorithm", "audio synthesis", "MIDI", "MPE", 
     "Web Audio API", "real-time synthesis", "microtonal playback",
     "music information retrieval systems", "AI/ML applications", "digital instrument design", 
@@ -184,7 +184,7 @@ export default function RootLayout({
     },
     "about": {
       "@type": "Thing",
-      "description": "The implementation operates entirely within Arabic theoretical frameworks and epistemological systems. All operations are grounded in the historical Arab-Ottoman-Persian note naming convention, with tuning-system-sensitive transposition capabilities that maintain intervallic integrity across all maqāmāt and ajnās."
+      "description": "The implementation operates entirely within Arabic theoretical frameworks and epistemological systems. All operations are grounded in the historical Persian-Arab-Ottoman note naming convention, with tuning-system-sensitive transposition capabilities that maintain intervallic integrity across all maqāmāt and ajnās."
     }
   };
 

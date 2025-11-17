@@ -9,7 +9,7 @@ DiArMaqAr provides unprecedented tools for systematic investigation of maqāmic 
 
 ## Comparative Tuning System Analysis
 
-The platform's integration of historical tuning systems enables comparative analysis of Arabic theoretical frameworks through consistent Arab-Ottoman-Persian note naming.
+The platform's integration of historical tuning systems enables comparative analysis of Arabic theoretical frameworks through consistent Persian-Arab-Ottoman note naming.
 
 ### Research Questions
 

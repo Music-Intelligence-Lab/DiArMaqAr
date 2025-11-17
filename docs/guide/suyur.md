@@ -26,7 +26,7 @@ Suyūr documentation appears in important Arabic music theory sources:
 Suyūr are implemented as structured sequences of "stops," where each stop represents:
 
 **Note Stops:**
-- A specific note from the Arab-Ottoman-Persian naming convention
+- A specific note from the Persian-Arab-Ottoman naming convention
 - Example: "dūgāh" or "ḥusaynī"
 
 **Jins Stops:**
