@@ -59,6 +59,168 @@ export interface ClassificationResult {
 }
 
 /**
+ * Checks if a pitch class is chromatic (not microtonal).
+ * Chromatic pitch classes have englishName matching pattern: [A-G][#b]?[0-9]+
+ * Examples: C3, D#3, Eb2 (chromatic) vs D-#3, E-b3, Bb+2 (microtonal)
+ *
+ * @param englishName - The English name of the pitch class (IPN notation)
+ * @returns true if chromatic, false if microtonal
+ */
+function isChromatic(englishName: string): boolean {
+  // Pattern: Natural letter + optional single sharp/flat + octave number
+  return /^[A-G][#b]?\d+$/.test(englishName);
+}
+
+/**
+ * Extracts the IPN reference from an englishName field.
+ * Uses the englishName directly to identify chromatic pitch classes:
+ * - Naturals: A, B, C, D, E, F, G (no accidentals)
+ * - Full sharps: A#, C#, D#, F#, G# (single # symbol)
+ * - Full flats: Ab, Bb, Db, Eb, Gb (single b symbol)
+ *
+ * Normalizes flat spellings to sharp spellings for standard 12-tone representation.
+ *
+ * @param englishName - The English name (e.g., "C3", "D#3", "Eb2")
+ * @returns The IPN reference (e.g., "C", "D#", "D#") normalized to sharps
+ */
+function extractIpnFromEnglishName(englishName: string): string {
+  // Match letter + optional single sharp/flat (no quarter tone modifiers)
+  const match = englishName.match(/^([A-G][#b]?)\d+$/);
+  if (!match) return "";
+
+  const ipn = match[1];
+
+  // Normalize flat spellings to sharp spellings for standard 12-tone representation
+  const flatToSharp: {[key: string]: string} = {
+    "Db": "C#",
+    "Eb": "D#",
+    "Gb": "F#",
+    "Ab": "G#",
+    "Bb": "A#"
+  };
+
+  return flatToSharp[ipn] || ipn;
+}
+
+/**
+ * Extracts chromatic pitch classes from a tuning system grouped by IPN reference.
+ * Filters out microtonal pitch classes (half-sharps, half-flats, etc.)
+ * Uses englishName field to identify chromatic pitch classes and extract IPN references.
+ *
+ * @param tuningSystem - The tuning system to extract from
+ * @param startingNote - The starting note for the tuning system
+ * @returns Map of IPN reference to array of chromatic pitch classes
+ */
+function extractChromaticPitchClasses(
+  tuningSystem: TuningSystem,
+  startingNote: string
+): Map<string, PitchClass[]> {
+  const allPitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote);
+  const chromaticPitchClassMap = new Map<string, PitchClass[]>();
+
+  for (const pitchClass of allPitchClasses) {
+    // Check if this pitch class is chromatic by examining englishName
+    if (isChromatic(pitchClass.englishName)) {
+      // Extract IPN reference directly from englishName (not from referenceNoteName field)
+      const ipnRef = extractIpnFromEnglishName(pitchClass.englishName);
+
+      if (ipnRef) {
+        if (!chromaticPitchClassMap.has(ipnRef)) {
+          chromaticPitchClassMap.set(ipnRef, []);
+        }
+        chromaticPitchClassMap.get(ipnRef)!.push(pitchClass);
+      }
+    }
+  }
+
+  return chromaticPitchClassMap;
+}
+
+/**
+ * Checks if a tuning system has all 12 chromatic pitch classes.
+ *
+ * @param chromaticPitchClassMap - Map of IPN reference to chromatic pitch classes
+ * @returns true if all 12 chromatic IPN references are present
+ */
+function hasAll12ChromaticPitchClasses(
+  chromaticPitchClassMap: Map<string, PitchClass[]>
+): boolean {
+  const requiredIPNs = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+
+  for (const ipn of requiredIPNs) {
+    if (!chromaticPitchClassMap.has(ipn) || chromaticPitchClassMap.get(ipn)!.length === 0) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+/**
+ * Builds a base 12-pitch-class set from chromatic pitch classes of a tuning system.
+ * Similar to getAlKindi12PitchClasses but works with any tuning system's chromatic subset.
+ *
+ * @param chromaticPitchClassMap - Map of IPN reference to chromatic pitch classes
+ * @param preferredOctaveRange - Optional octave range preference
+ * @returns PitchClassSet with 12 chromatic pitch classes
+ */
+function buildBase12FromChromaticPitchClasses(
+  chromaticPitchClassMap: Map<string, PitchClass[]>,
+  preferredOctaveRange?: { min: number; max: number }
+): PitchClassSet {
+  const pitchClassMap = new Map<string, PitchClass>();
+  const ipnReferenceNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+
+  // For each IPN reference, select the best pitch class
+  for (const [ipnRef, pitchClasses] of chromaticPitchClassMap.entries()) {
+    let selected: PitchClass;
+
+    if (preferredOctaveRange) {
+      // Prefer pitch classes from the preferred octave range
+      const inRange = pitchClasses.filter(
+        pc => pc.octave >= preferredOctaveRange.min && pc.octave <= preferredOctaveRange.max
+      );
+
+      if (inRange.length > 0) {
+        // Sort by octave (ascending), then by cents (ascending)
+        inRange.sort((a, b) => {
+          if (a.octave !== b.octave) return a.octave - b.octave;
+          return parseFloat(a.cents) - parseFloat(b.cents);
+        });
+        selected = inRange[0];
+      } else {
+        // Fall back to closest octave
+        pitchClasses.sort((a, b) => {
+          const aDist = Math.abs(a.octave - (preferredOctaveRange.min + preferredOctaveRange.max) / 2);
+          const bDist = Math.abs(b.octave - (preferredOctaveRange.min + preferredOctaveRange.max) / 2);
+          if (Math.abs(aDist - bDist) < 0.1) {
+            // If same distance, prefer lower octave, then lower cents
+            if (a.octave !== b.octave) return a.octave - b.octave;
+            return parseFloat(a.cents) - parseFloat(b.cents);
+          }
+          return aDist - bDist;
+        });
+        selected = pitchClasses[0];
+      }
+    } else {
+      // No preference - use first occurrence (lowest octave, then lowest cents)
+      pitchClasses.sort((a, b) => {
+        if (a.octave !== b.octave) return a.octave - b.octave;
+        return parseFloat(a.cents) - parseFloat(b.cents);
+      });
+      selected = pitchClasses[0];
+    }
+
+    pitchClassMap.set(ipnRef, selected);
+  }
+
+  return {
+    pitchClasses: pitchClassMap,
+    ipnReferenceNames
+  };
+}
+
+/**
  * Gets the 12 pitch classes from al-Kindi-(874) on ushayran
  * and maps them by IPN reference note name, preferring a specific octave range
  */
@@ -148,16 +310,21 @@ export function getMaqamTranspositions(
 /**
  * Creates a 12-pitch-class set suitable for MIDI keyboard tuning and Scala export.
  *
- * Merges pitch classes from the maqam transposition with al-Kindi filler pitch classes
- * based on matching IPN references. The resulting set is ordered chromatically starting
- * from the maqam's tonic.
+ * Priority order for base pitch classes:
+ * 1. Extract chromatic subset from the maqam's own tuning system (if all 12 chromatic pitch classes present)
+ * 2. Fall back to al-Kindi-(874) as filler (if maqam's tuning system lacks complete chromatic set)
  *
- * IMPORTANT: The alKindiTuningSystem must use the same starting note as the maqam's
- * tuning system to ensure octaves align correctly and pitch classes can be properly
- * selected from matching octaves to maintain ascending chromatic order.
+ * Then merges pitch classes from the maqam transposition with the base set based on matching
+ * IPN references. The resulting set is ordered chromatically starting from the maqam's tonic.
+ *
+ * IMPORTANT: Both tuning systems must use the same starting note to ensure octaves align
+ * correctly and pitch classes can be properly selected from matching octaves to maintain
+ * ascending chromatic order.
  *
  * @param maqamTransposition - The maqam transposition to build the set from
- * @param alKindiTuningSystem - al-Kindi tuning system for filler pitch classes
+ * @param maqamTuningSystem - The tuning system used by the maqam
+ * @param maqamStartingNote - Starting note for the maqam's tuning system
+ * @param alKindiTuningSystem - al-Kindi tuning system for fallback filler pitch classes
  * @param alKindiStartingNote - Starting note for al-Kindi (must match maqam's starting note)
  * @returns PitchClassSet with 12 chromatically ordered pitch classes, or null if incompatible
  *
@@ -166,6 +333,8 @@ export function getMaqamTranspositions(
  */
 export function create12PitchClassSet(
   maqamTransposition: Maqam,
+  maqamTuningSystem: TuningSystem,
+  maqamStartingNote: string,
   alKindiTuningSystem: TuningSystem,
   alKindiStartingNote: string
 ): PitchClassSet | null {
@@ -202,13 +371,40 @@ export function create12PitchClassSet(
   const maqamOctaves = allMaqamPitchClasses.map(pc => pc.octave);
   const minOctave = Math.min(...maqamOctaves);
   const maxOctave = Math.max(...maqamOctaves);
-  
-  // Get al-Kindi base pitch classes, preferring the same octave range as the maqam
-  const alKindiBase = getAlKindi12PitchClasses(
-    alKindiTuningSystem,
-    alKindiStartingNote,
-    { min: minOctave, max: maxOctave }
+
+  // Try to extract chromatic 12-pitch-class set from the maqam's own tuning system first
+  let basePitchClassSet: PitchClassSet;
+  let baseTuningSystemForOctaveAdjustment: TuningSystem;
+  let baseStartingNote: string;
+  let usedChromaticExtraction: boolean; // Track whether we used chromatic extraction
+
+  const maqamChromaticPitchClasses = extractChromaticPitchClasses(
+    maqamTuningSystem,
+    maqamStartingNote
   );
+
+  if (hasAll12ChromaticPitchClasses(maqamChromaticPitchClasses)) {
+    // SUCCESS: Maqam's tuning system has all 12 chromatic pitch classes
+    // Use it as the base instead of al-Kindi
+    basePitchClassSet = buildBase12FromChromaticPitchClasses(
+      maqamChromaticPitchClasses,
+      { min: minOctave, max: maxOctave }
+    );
+    baseTuningSystemForOctaveAdjustment = maqamTuningSystem;
+    baseStartingNote = maqamStartingNote;
+    usedChromaticExtraction = true; // Flag that we're using chromatic extraction
+  } else {
+    // FALLBACK: Maqam's tuning system lacks complete chromatic set
+    // Fall back to al-Kindi-(874) as filler
+    basePitchClassSet = getAlKindi12PitchClasses(
+      alKindiTuningSystem,
+      alKindiStartingNote,
+      { min: minOctave, max: maxOctave }
+    );
+    baseTuningSystemForOctaveAdjustment = alKindiTuningSystem;
+    baseStartingNote = alKindiStartingNote;
+    usedChromaticExtraction = false; // Using al-Kindi fallback
+  }
   
   // Map IPN reference to pitch classes from maqam
   const maqamIpnMap = new Map<string, PitchClass[]>();
@@ -254,29 +450,39 @@ export function create12PitchClassSet(
   
   // Create new set by replacing matching IPN references
   const newPitchClassMap = new Map<string, PitchClass>();
-  
-  // Start with al-Kindi base
-  for (const [ipnRef, pitchClass] of alKindiBase.pitchClasses.entries()) {
+
+  // Start with base pitch class set (from maqam's tuning system or al-Kindi fallback)
+  for (const [ipnRef, pitchClass] of basePitchClassSet.pitchClasses.entries()) {
     newPitchClassMap.set(ipnRef, pitchClass);
   }
-  
+
   // Replace with maqam pitch classes where IPN reference matches
   // Use ascending first, then descending for any IPN refs not in ascending
   // Use the pitch classes with sequential reference notes applied
+  // IMPORTANT: Only include pitch classes that match the chromatic nature of the base set
+  // If base set uses chromatic pitch classes, only include chromatic maqam pitch classes
   const ascendingIpnMap = new Map<string, PitchClass>();
   for (const pitchClass of ascendingWithSequentialRefs) {
     const ipnRef = getIpnReferenceNoteName(pitchClass);
-    // Only add if this IPN ref exists in al-Kindi base
-    if (alKindiBase.pitchClasses.has(ipnRef) && !ascendingIpnMap.has(ipnRef)) {
+
+    // If base is chromatic, only include chromatic pitch classes from maqam
+    const shouldInclude = !usedChromaticExtraction || isChromatic(pitchClass.englishName);
+
+    // Only add if this IPN ref exists in base pitch class set and passes chromatic check
+    if (basePitchClassSet.pitchClasses.has(ipnRef) && !ascendingIpnMap.has(ipnRef) && shouldInclude) {
       ascendingIpnMap.set(ipnRef, pitchClass);
     }
   }
-  
+
   const descendingIpnMap = new Map<string, PitchClass>();
   for (const pitchClass of descendingWithSequentialRefs) {
     const ipnRef = getIpnReferenceNoteName(pitchClass);
-    // Only add if this IPN ref exists in al-Kindi base and not already in ascending
-    if (alKindiBase.pitchClasses.has(ipnRef) && !ascendingIpnMap.has(ipnRef) && !descendingIpnMap.has(ipnRef)) {
+
+    // If base is chromatic, only include chromatic pitch classes from maqam
+    const shouldInclude = !usedChromaticExtraction || isChromatic(pitchClass.englishName);
+
+    // Only add if this IPN ref exists in base pitch class set and not already in ascending
+    if (basePitchClassSet.pitchClasses.has(ipnRef) && !ascendingIpnMap.has(ipnRef) && !descendingIpnMap.has(ipnRef) && shouldInclude) {
       descendingIpnMap.set(ipnRef, pitchClass);
     }
   }
@@ -291,21 +497,28 @@ export function create12PitchClassSet(
   }
 
   // Adjust octaves to ensure chromatic ascending order from the tuning system
-  // Get all pitch classes from al-Kindi tuning system to have octave options
-  const allAlKindiPitchClasses = getTuningSystemPitchClasses(alKindiTuningSystem, alKindiStartingNote);
-  const alKindiByIpn = new Map<string, PitchClass[]>();
+  // Get all pitch classes from base tuning system to have octave options
+  const allBasePitchClasses = getTuningSystemPitchClasses(baseTuningSystemForOctaveAdjustment, baseStartingNote);
+  const baseByIpn = new Map<string, PitchClass[]>();
 
-  for (const pc of allAlKindiPitchClasses) {
+  for (const pc of allBasePitchClasses) {
     const ipnRef = getIpnReferenceNoteName(pc);
-    if (!alKindiByIpn.has(ipnRef)) {
-      alKindiByIpn.set(ipnRef, []);
+    if (!baseByIpn.has(ipnRef)) {
+      baseByIpn.set(ipnRef, []);
     }
-    alKindiByIpn.get(ipnRef)!.push(pc);
+    baseByIpn.get(ipnRef)!.push(pc);
   }
 
   // Also group maqam pitch classes by IPN for consideration in octave selection
+  // IMPORTANT: Only include chromatic pitch classes if base set is chromatic
   const maqamByIpn = new Map<string, PitchClass[]>();
+
   for (const pc of [...ascendingWithSequentialRefs, ...descendingWithSequentialRefs]) {
+    // If base is chromatic, only include chromatic maqam pitch classes
+    if (usedChromaticExtraction && !isChromatic(pc.englishName)) {
+      continue; // Skip microtonal pitch classes
+    }
+
     const ipnRef = getIpnReferenceNoteName(pc);
     if (!maqamByIpn.has(ipnRef)) {
       maqamByIpn.set(ipnRef, []);
@@ -322,7 +535,7 @@ export function create12PitchClassSet(
   if (!tonicPitchClass) {
     return {
       pitchClasses: newPitchClassMap,
-      ipnReferenceNames: alKindiBase.ipnReferenceNames
+      ipnReferenceNames: basePitchClassSet.ipnReferenceNames
     };
   }
 
@@ -366,19 +579,19 @@ export function create12PitchClassSet(
       }
     }
 
-    // Priority 2: Fall back to al-Kindi if no maqam candidate satisfies the requirement
-    if (!selectedPitchClass && alKindiByIpn.has(ipnRef)) {
-      const alKindiCandidates = alKindiByIpn.get(ipnRef)!;
-      const validAlKindiCandidates = alKindiCandidates
+    // Priority 2: Fall back to base tuning system if no maqam candidate satisfies the requirement
+    if (!selectedPitchClass && baseByIpn.has(ipnRef)) {
+      const baseCandidates = baseByIpn.get(ipnRef)!;
+      const validBaseCandidates = baseCandidates
         .filter(pc => parseFloat(pc.cents) > previousCents)
         .sort((a, b) => parseFloat(a.cents) - parseFloat(b.cents));
-      
-      if (validAlKindiCandidates.length > 0) {
-        selectedPitchClass = validAlKindiCandidates[0];
+
+      if (validBaseCandidates.length > 0) {
+        selectedPitchClass = validBaseCandidates[0];
       } else {
-        // Last resort: use lowest al-Kindi candidate even if it doesn't maintain strict ascending order
+        // Last resort: use lowest base candidate even if it doesn't maintain strict ascending order
         // (shouldn't happen with full tuning system coverage, but handle gracefully)
-        const fallback = alKindiCandidates
+        const fallback = baseCandidates
           .sort((a, b) => parseFloat(a.cents) - parseFloat(b.cents))[0];
         selectedPitchClass = fallback;
       }
@@ -393,7 +606,7 @@ export function create12PitchClassSet(
 
   return {
     pitchClasses: finalPitchClassMap,
-    ipnReferenceNames: alKindiBase.ipnReferenceNames
+    ipnReferenceNames: basePitchClassSet.ipnReferenceNames
   };
 }
 
@@ -540,6 +753,8 @@ export function classifyMaqamat(
         // Try to create 12-pitch-class set from this transposition
         const pitchClassSet = create12PitchClassSet(
           transposition,
+          cairoTuningSystem,
+          cairoStartingNote,
           alKindiTuningSystem,
           alKindiStartingNote
         );
@@ -712,6 +927,8 @@ export function createSetFromMaqam(
   for (const transposition of transpositions) {
     const testSet = create12PitchClassSet(
       transposition,
+      cairoTuningSystem,
+      cairoStartingNote,
       alKindiTuningSystem,
       alKindiStartingNote
     );
