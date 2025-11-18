@@ -349,38 +349,46 @@ export function create12PitchClassSet(
       continue;
     }
 
-    // For subsequent positions, collect candidates from both maqam and al-Kindi
-    const candidates: PitchClass[] = [];
+    // For subsequent positions, prioritize maqam values over al-Kindi fillers
+    // First try maqam candidates that satisfy ascending order requirement
+    let selectedPitchClass: PitchClass | null = null;
 
-    // Add maqam pitch classes if available (including qarār octaves)
+    // Priority 1: Try maqam pitch classes first (if available)
     if (maqamByIpn.has(ipnRef)) {
-      candidates.push(...maqamByIpn.get(ipnRef)!);
+      const maqamCandidates = maqamByIpn.get(ipnRef)!;
+      const validMaqamCandidates = maqamCandidates
+        .filter(pc => parseFloat(pc.cents) > previousCents)
+        .sort((a, b) => parseFloat(a.cents) - parseFloat(b.cents));
+      
+      if (validMaqamCandidates.length > 0) {
+        // Use the lowest maqam candidate that maintains ascending order
+        selectedPitchClass = validMaqamCandidates[0];
+      }
     }
 
-    // Add al-Kindi pitch classes as additional options (including qarār octaves)
-    if (alKindiByIpn.has(ipnRef)) {
-      candidates.push(...alKindiByIpn.get(ipnRef)!);
+    // Priority 2: Fall back to al-Kindi if no maqam candidate satisfies the requirement
+    if (!selectedPitchClass && alKindiByIpn.has(ipnRef)) {
+      const alKindiCandidates = alKindiByIpn.get(ipnRef)!;
+      const validAlKindiCandidates = alKindiCandidates
+        .filter(pc => parseFloat(pc.cents) > previousCents)
+        .sort((a, b) => parseFloat(a.cents) - parseFloat(b.cents));
+      
+      if (validAlKindiCandidates.length > 0) {
+        selectedPitchClass = validAlKindiCandidates[0];
+      } else {
+        // Last resort: use lowest al-Kindi candidate even if it doesn't maintain strict ascending order
+        // (shouldn't happen with full tuning system coverage, but handle gracefully)
+        const fallback = alKindiCandidates
+          .sort((a, b) => parseFloat(a.cents) - parseFloat(b.cents))[0];
+        selectedPitchClass = fallback;
+      }
     }
 
-    if (candidates.length === 0) continue;
-
-    // Find the candidate with the lowest cents value that's greater than previousCents
-    // This ensures chromatic ascending order from the tonic (regardless of starting octave)
-    const sorted = candidates
-      .filter(pc => parseFloat(pc.cents) > previousCents)
-      .sort((a, b) => parseFloat(a.cents) - parseFloat(b.cents));
-
-    if (sorted.length > 0) {
-      finalPitchClassMap.set(ipnRef, sorted[0]);
-      previousCents = parseFloat(sorted[0].cents);
-    } else {
-      // No suitable candidate found - shouldn't happen with full tuning system coverage
-      // Fall back to lowest cents available
-      const fallback = candidates
-        .sort((a, b) => parseFloat(a.cents) - parseFloat(b.cents))[0];
-      finalPitchClassMap.set(ipnRef, fallback);
-      previousCents = parseFloat(fallback.cents);
+    if (selectedPitchClass) {
+      finalPitchClassMap.set(ipnRef, selectedPitchClass);
+      previousCents = parseFloat(selectedPitchClass.cents);
     }
+    // If no candidate found at all, skip this IPN reference (shouldn't happen)
   }
 
   return {
@@ -490,23 +498,34 @@ export function classifyMaqamat(
   let hasUnprocessed = true;
   let iterationCount = 0;
   const maxIterations = 1000; // Safety limit
-  
+
   while (hasUnprocessed && iterationCount < maxIterations) {
     iterationCount++;
     hasUnprocessed = false;
     let foundNewSet = false;
-    
-    // Process each maqam
-    for (const maqamData of maqamat) {
-      // Get all transpositions of this maqam
-      const transpositions = getMaqamTranspositions(
-        maqamData,
-        cairoTuningSystem,
-        cairoStartingNote,
-        ajnas
-      );
-      
-      for (const transposition of transpositions) {
+
+    // IMPORTANT: Two-pass approach to prioritize tahlil versions globally
+    // Pass 1: Process ALL tahlil (non-transposed) versions first
+    // Pass 2: Process ALL transposed versions
+
+    for (let pass = 1; pass <= 2; pass++) {
+      const processingTahlil = (pass === 1);
+
+      for (const maqamData of maqamat) {
+        // Get all transpositions of this maqam
+        const transpositions = getMaqamTranspositions(
+          maqamData,
+          cairoTuningSystem,
+          cairoStartingNote,
+          ajnas
+        );
+
+        // Filter based on current pass
+        const transpositionsToProcess = processingTahlil
+          ? transpositions.filter(t => !t.transposition)  // Pass 1: Only tahlil
+          : transpositions.filter(t => t.transposition);   // Pass 2: Only transpositions
+
+        for (const transposition of transpositionsToProcess) {
         // Create unique key for this maqam/transposition combination
         const key = `${maqamData.getId()}_${transposition.name}`;
         
@@ -630,17 +649,157 @@ export function classifyMaqamat(
           break;
         }
       }
-      
-      // If we found a new set, break outer loop and restart
+
+      // If we found a new set, break from maqamData loop
       if (foundNewSet) {
         break;
       }
     }
+
+    // If we found a new set, break from pass loop and restart iteration
+    if (foundNewSet) {
+      break;
+    }
+  }
   }
   
   return {
     sets,
     incompatibleMaqamat
+  };
+}
+
+/**
+ * Creates a single 12-pitch-class set from a specific maqam
+ *
+ * This function:
+ * 1. Finds a transposition of the specified maqam that creates a complete 12-pitch-class set
+ * 2. Finds all compatible maqāmāt for that set
+ * 3. Returns a single ClassificationSet with the specified maqam as the source
+ *
+ * @param sourceMaqamData - The maqam to create the set from
+ * @param allMaqamat - All maqamat to check for compatibility
+ * @param cairoTuningSystem - The tuning system for maqamat
+ * @param cairoStartingNote - The starting note for the tuning system
+ * @param alKindiTuningSystem - The al-Kindi tuning system for filler pitches
+ * @param alKindiStartingNote - The starting note for al-Kindi (should match cairoStartingNote)
+ * @param ajnas - All ajnas data
+ * @param centsTolerance - Tolerance for cents comparison (default: 5)
+ * @returns A ClassificationSet or null if no complete set can be created
+ */
+export function createSetFromMaqam(
+  sourceMaqamData: MaqamData,
+  allMaqamat: MaqamData[],
+  cairoTuningSystem: TuningSystem,
+  cairoStartingNote: string,
+  alKindiTuningSystem: TuningSystem,
+  alKindiStartingNote: string,
+  ajnas: any[],
+  centsTolerance: number = 5
+): ClassificationSet | null {
+  // Get all transpositions of the source maqam
+  const transpositions = getMaqamTranspositions(
+    sourceMaqamData,
+    cairoTuningSystem,
+    cairoStartingNote,
+    ajnas
+  );
+
+  // Find a transposition that creates a complete 12-pitch-class set
+  let sourceMaqam: Maqam | null = null;
+  let pitchClassSet: PitchClassSet | null = null;
+
+  for (const transposition of transpositions) {
+    const testSet = create12PitchClassSet(
+      transposition,
+      alKindiTuningSystem,
+      alKindiStartingNote
+    );
+
+    // Check if this transposition creates a complete 12-pitch-class set
+    if (testSet && testSet.pitchClasses.size === 12) {
+      sourceMaqam = transposition;
+      pitchClassSet = testSet;
+      break;
+    }
+  }
+
+  if (!sourceMaqam || !pitchClassSet) {
+    return null; // No transposition creates a complete 12-pitch-class set
+  }
+
+  // Find all compatible maqāmāt
+  const compatibleMaqamat: MaqamTranspositionInfo[] = [];
+
+  // Add source maqam first (it's always compatible since it created the set)
+  compatibleMaqamat.push({
+    maqam: sourceMaqam,
+    maqamData: sourceMaqamData,
+    isCompatible: true
+  });
+
+  // Check all other maqamat for compatibility with this set
+  for (const otherMaqamData of allMaqamat) {
+    // Skip the source maqam (already added)
+    if (otherMaqamData.getId() === sourceMaqamData.getId()) {
+      // But check if other transpositions of the source maqam are compatible
+      const otherTranspositions = getMaqamTranspositions(
+        otherMaqamData,
+        cairoTuningSystem,
+        cairoStartingNote,
+        ajnas
+      );
+
+      for (const otherTransposition of otherTranspositions) {
+        // Skip the source transposition itself
+        if (otherTransposition.name === sourceMaqam.name) {
+          continue;
+        }
+
+        if (checkMaqamCompatibility(otherTransposition, pitchClassSet, centsTolerance)) {
+          compatibleMaqamat.push({
+            maqam: otherTransposition,
+            maqamData: otherMaqamData,
+            isCompatible: true
+          });
+        }
+      }
+    } else {
+      // Check all transpositions of other maqamat
+      const otherTranspositions = getMaqamTranspositions(
+        otherMaqamData,
+        cairoTuningSystem,
+        cairoStartingNote,
+        ajnas
+      );
+
+      for (const otherTransposition of otherTranspositions) {
+        if (checkMaqamCompatibility(otherTransposition, pitchClassSet, centsTolerance)) {
+          compatibleMaqamat.push({
+            maqam: otherTransposition,
+            maqamData: otherMaqamData,
+            isCompatible: true
+          });
+        }
+      }
+    }
+  }
+
+  // Create set name from source maqam
+  const setId = `maqam_${sourceMaqamData.getIdName()}_set`;
+  const setName = `${sourceMaqam.name} set`;
+
+  return {
+    id: setId,
+    name: setName,
+    sourceMaqam: {
+      id: sourceMaqamData.getId(),
+      idName: sourceMaqamData.getIdName(),
+      name: sourceMaqamData.getName()
+    },
+    sourceTransposition: sourceMaqam,
+    pitchClassSet: pitchClassSet,
+    compatibleMaqamat: compatibleMaqamat
   };
 }
 

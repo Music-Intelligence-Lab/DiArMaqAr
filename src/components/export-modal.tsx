@@ -13,12 +13,15 @@ import {
   exportJinsToScala,
   exportJinsToScalaKeymap,
   exportMaqamToScala,
-  exportMaqamToScalaKeymap,
+  exportMaqamTo12ToneScala,
+  exportMaqamTo12ToneScalaKeymap,
 } from "@/functions/scala-export";
+import { getTuningSystems } from "@/functions/import";
 import NoteName from "@/models/NoteName";
 import { Jins } from "@/models/Jins";
 import { Maqam } from "@/models/Maqam";
 import getFirstNoteName from "@/functions/getFirstNoteName";
+import { standardizeText } from "@/functions/export";
 
 export type ExportType = "tuning-system" | "jins" | "maqam";
 
@@ -32,11 +35,11 @@ interface ExportModalProps {
 
 export type ExportFormat =
   | "json"
-  | "csv"
   | "txt"
   | "pdf"
   | "scala"
-  | "scala-keymap";
+  | "scala-keymap"
+  | "scala-12tone";
 
 export interface ExportOptions {
   format: ExportFormat;
@@ -49,7 +52,6 @@ export interface ExportOptions {
   includeMaqamToJinsModulations: boolean;
   includeModulations8vb: boolean; // Lower Octave modulations
   exportSeparateFilesPerStartingNote?: boolean; // Only for tuning system exports
-  csvDelimiter: "," | ";" | "\t";
   filename: string;
 }
 
@@ -79,7 +81,6 @@ export default function ExportModal({
       includeMaqamToMaqamModulations: false,
       includeMaqamToJinsModulations: false,
       includeModulations8vb: false, // Lower Octave modulations
-      csvDelimiter: "," as "," | ";" | "\t",
       filename: "", // Will be set by useEffect
     };
 
@@ -357,12 +358,10 @@ export default function ExportModal({
 
   const formatDescriptions = {
     json: "JavaScript Object Notation - Best for data interchange and web applications",
-    csv: "Comma Separated Values - Great for spreadsheets and data analysis",
-    // txt: "Plain text format - Human-readable and universal",
-    // pdf: "Portable Document Format - Professional presentation and printing",
     scala: "Scala scale format (.scl) - For microtonal music software",
     "scala-keymap":
       "Scala keymap format (.kbm) - MIDI key mapping for Scala scales",
+    "scala-12tone": "Scala 12-tone chromatic set (.scl + .kbm) - Complete MIDI keyboard setup with all compatible maqāmāt",
   };
 
   const handleExport = async () => {
@@ -721,14 +720,6 @@ export default function ExportModal({
         fileExtension = "json";
         break;
 
-      case "csv":
-        updateProgress(97.5, "Converting to CSV format...");
-        await new Promise((resolve) => setTimeout(resolve, 100));
-        content = convertToCSV(data, options.csvDelimiter);
-        mimeType = "text/csv";
-        fileExtension = "csv";
-        break;
-
       case "txt":
         updateProgress(97.5, "Formatting as text...");
         await new Promise((resolve) => setTimeout(resolve, 75));
@@ -815,18 +806,123 @@ export default function ExportModal({
               "Scala keymap export requires a maqam and tuning system"
             );
           }
+
+          // Get al-Kindi (874) tuning system for 12-tone chromatic keymaps
+          const allTuningSystems = getTuningSystems();
+          const alKindiTuningSystem = allTuningSystems.find(ts => ts.getId() === "al-Kindi-(874)");
+
+          if (!alKindiTuningSystem) {
+            throw new Error("al-Kindi (874) tuning system not found - required for 12-tone chromatic keymap export");
+          }
+
           const startingNote =
             selectedIndices.length > 0
               ? (selectedIndices[0] as unknown as NoteName)
               : undefined;
-          content = exportMaqamToScalaKeymap(
+
+          if (!startingNote) {
+            throw new Error("Scala keymap export requires a starting note");
+          }
+
+          // Generate multiple .kbm files (one for each compatible maqām)
+          const keymapResults = exportMaqamTo12ToneScalaKeymap(
             maqamToExport,
             selectedTuningSystem,
-            startingNote
+            startingNote.toString(),
+            alKindiTuningSystem,
+            startingNote.toString(), // al-Kindi uses same starting note as main tuning system
+            440, // reference frequency (A4 = 440Hz)
+            128 // MIDI map size
           );
+
+          if (!keymapResults || keymapResults.length === 0) {
+            throw new Error("Failed to generate keymap files");
+          }
+
+          updateProgress(98, "Creating file blobs...");
+          await new Promise((resolve) => setTimeout(resolve, 50));
+
+          // Download all .kbm files
+          updateProgress(99, `Downloading ${keymapResults.length} keymap files...`);
+          for (const keymapResult of keymapResults) {
+            const keymapBlob = new Blob([keymapResult.keymapContent], { type: "text/plain" });
+            const keymapUrl = URL.createObjectURL(keymapBlob);
+            const keymapLink = document.createElement("a");
+            keymapLink.href = keymapUrl;
+            keymapLink.download = `${options.filename}_${keymapResult.maqamName}_${keymapResult.tonic}.kbm`;
+            document.body.appendChild(keymapLink);
+            keymapLink.click();
+            document.body.removeChild(keymapLink);
+            URL.revokeObjectURL(keymapUrl);
+
+            // Small delay between downloads to prevent browser blocking
+            await new Promise((resolve) => setTimeout(resolve, 50));
+          }
+
+          return; // Skip the default download logic
         }
         mimeType = "text/plain";
         fileExtension = "kbm";
+        break;
+
+      case "scala-12tone":
+        updateProgress(97.5, "Generating 12-tone chromatic Scala file...");
+        await new Promise((resolve) => setTimeout(resolve, 100));
+
+        if (exportType !== "maqam") {
+          throw new Error("12-tone chromatic Scala export is only available for maqam exports");
+        }
+
+        if (!maqamToExport || !selectedTuningSystem) {
+          throw new Error("12-tone chromatic Scala export requires a maqam and tuning system");
+        }
+
+        // Get al-Kindi (874) tuning system for filler pitches
+        const allTuningSystems = getTuningSystems();
+        const alKindiTuningSystem = allTuningSystems.find(ts => ts.getId() === "al-Kindi-(874)");
+
+        if (!alKindiTuningSystem) {
+          throw new Error("al-Kindi (874) tuning system not found - required for 12-tone chromatic export");
+        }
+
+        // Get the starting note name from the tuning system's note name sets
+        // This matches the pattern used in tuning-system-manager.tsx (lines 624-627)
+        // and the API endpoint pattern (route.ts lines 293-311)
+        const firstNoteFromIndices = getFirstNoteName(selectedIndices);
+        if (!firstNoteFromIndices || firstNoteFromIndices === "none") {
+          throw new Error("12-tone chromatic Scala export requires a starting note");
+        }
+        
+        // Find the matching note name set in the tuning system
+        // Use standardizeText for comparison (matching API endpoint pattern)
+        const noteNameSets = selectedTuningSystem.getNoteNameSets();
+        const matchingNoteSet = noteNameSets.find(
+          (set) => standardizeText(set[0] || "") === standardizeText(firstNoteFromIndices)
+        );
+        
+        // Use the note name from the tuning system's note name set (has proper diacritics)
+        const startingNote = matchingNoteSet?.[0] || firstNoteFromIndices;
+
+        // Generate .scl file only (no .kbm files)
+        // Capture current URL for the export
+        const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
+        const scalaContent = exportMaqamTo12ToneScala(
+          maqamToExport,
+          selectedTuningSystem,
+          startingNote,
+          alKindiTuningSystem,
+          startingNote, // al-Kindi uses same starting note as main tuning system
+          undefined, // description is optional
+          currentUrl // pass current URL
+        );
+
+        if (!scalaContent) {
+          throw new Error("Failed to generate 12-tone chromatic Scala file");
+        }
+
+        content = scalaContent;
+        mimeType = "text/plain";
+        fileExtension = "scl";
         break;
 
       case "pdf":
@@ -853,408 +949,6 @@ export default function ExportModal({
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
-  };
-
-  const convertToCSV = (data: any, delimiter: string): string => {
-    const sections: string[] = [];
-
-    // Helper function to escape CSV values
-    const escapeCSV = (value: any): string => {
-      const str = String(value || "");
-      if (str.includes(delimiter) || str.includes('"') || str.includes("\n")) {
-        return `"${str.replace(/"/g, '""')}"`;
-      }
-      return str;
-    };
-
-    // Helper function to flatten nested objects and convert values to strings
-    const flattenObject = (obj: any, prefix = ""): Record<string, string> => {
-      const flattened: Record<string, string> = {};
-
-      for (const key in obj) {
-        if (obj.hasOwnProperty(key)) {
-          const value = obj[key];
-          const newKey = prefix ? `${prefix}.${key}` : key;
-
-          // Skip functions and private properties
-          if (typeof value === "function" || key.startsWith("_")) {
-            continue;
-          }
-
-          if (value === null || value === undefined || value === "") {
-            flattened[newKey] = "";
-          } else if (Array.isArray(value)) {
-            // Convert arrays to semicolon-separated strings
-            if (value.length === 0) {
-              flattened[newKey] = "";
-            } else {
-              flattened[newKey] = value
-                .map((item) => {
-                  if (typeof item === "object" && item !== null) {
-                    // For complex objects in arrays, try to get a meaningful string representation
-                    const title =
-                      item.titleEnglish ||
-                      item.name ||
-                      item.title ||
-                      (typeof item.getTitleEnglish === "function"
-                        ? item.getTitleEnglish()
-                        : null);
-                    return title || JSON.stringify(item);
-                  } else {
-                    return String(item);
-                  }
-                })
-                .join("; ");
-            }
-          } else if (typeof value === "object") {
-            // For objects, try to flatten them recursively, but limit depth to avoid infinite recursion
-            const depth = (prefix.match(/\./g) || []).length;
-            if (depth < 3) {
-              // Limit to 3 levels deep
-              try {
-                const nested = flattenObject(value, newKey);
-                Object.assign(flattened, nested);
-              } catch {
-                // If flattening fails, convert to JSON string
-                flattened[newKey] = JSON.stringify(value);
-              }
-            } else {
-              // Too deep, just convert to string
-              const title =
-                value.titleEnglish ||
-                value.name ||
-                value.title ||
-                (typeof value.getTitleEnglish === "function"
-                  ? value.getTitleEnglish()
-                  : null);
-              flattened[newKey] = title || JSON.stringify(value);
-            }
-          } else {
-            flattened[newKey] = String(value);
-          }
-        }
-      }
-
-      return flattened;
-    };
-
-    // Helper function to convert array of objects to CSV with proper flattening and column ordering
-    const arrayToCSV = (
-      items: any[],
-      title: string,
-      preferredOrder: string[] = []
-    ): string => {
-      if (!items || items.length === 0) return `${title}\nNo data available\n`;
-
-      // Flatten all objects and collect all unique keys
-      const flattenedItems = items.map((item) => {
-        if (typeof item === "object" && item !== null) {
-          return flattenObject(item);
-        } else {
-          return { value: String(item) };
-        }
-      });
-
-      // Get all unique keys from all flattened objects
-      const allKeys = new Set<string>();
-      flattenedItems.forEach((item) => {
-        Object.keys(item).forEach((key) => allKeys.add(key));
-      });
-
-      // Order headers based on preferred order first, then alphabetically
-      const headers = Array.from(allKeys).sort((a, b) => {
-        const aIndex = preferredOrder.indexOf(a);
-        const bIndex = preferredOrder.indexOf(b);
-
-        if (aIndex !== -1 && bIndex !== -1) {
-          return aIndex - bIndex;
-        } else if (aIndex !== -1) {
-          return -1;
-        } else if (bIndex !== -1) {
-          return 1;
-        }
-        return a.localeCompare(b);
-      });
-
-      const csvRows = [
-        `${title}`,
-        headers.map(escapeCSV).join(delimiter),
-        ...flattenedItems.map((item) =>
-          headers.map((header) => escapeCSV(item[header] || "")).join(delimiter)
-        ),
-      ];
-
-      return csvRows.join("\n") + "\n";
-    };
-
-    // Combine Tuning System Information with Pitch Classes
-    if (data.tuningSystem) {
-      const ts = data.tuningSystem;
-      const tuningSystemInfo = [
-        "Tuning System Information",
-        `Title (English)${delimiter}${escapeCSV(
-          ts.titleEnglish || ts.getTitleEnglish?.()
-        )}`,
-        `Title (Arabic)${delimiter}${escapeCSV(
-          ts.titleArabic || ts.getTitleArabic?.()
-        )}`,
-        `Creator (English)${delimiter}${escapeCSV(
-          ts.creatorEnglish || ts.getCreatorEnglish?.()
-        )}`,
-        `Creator (Arabic)${delimiter}${escapeCSV(
-          ts.creatorArabic || ts.getCreatorArabic?.()
-        )}`,
-        `Year${delimiter}${escapeCSV(ts.year || ts.getYear?.())}`,
-        `Starting Note Name${delimiter}${escapeCSV(data.startingNote)}`,
-        `Source (English)${delimiter}${escapeCSV(
-          ts.sourceEnglish || ts.getSourceEnglish?.()
-        )}`,
-        `Source (Arabic)${delimiter}${escapeCSV(
-          ts.sourceArabic || ts.getSourceArabic?.()
-        )}`,
-        `Comments (English)${delimiter}${escapeCSV(
-          ts.commentsEnglish || ts.getCommentsEnglish?.()
-        )}`,
-        `Comments (Arabic)${delimiter}${escapeCSV(
-          ts.commentsArabic || ts.getCommentsArabic?.()
-        )}`,
-        `String Length${delimiter}${escapeCSV(
-          ts.stringLength || ts.getStringLength?.()
-        )}`,
-        `Default Reference Frequency${delimiter}${escapeCSV(
-          ts.defaultReferenceFrequency || ts.getDefaultReferenceFrequency?.()
-        )}`,
-        "",
-      ].join("\n");
-      sections.push(tuningSystemInfo);
-
-      // Add pitch classes as part of tuning system info
-      if (data.fullRangeTuningSystemPitchClasses) {
-        // Create a more organized pitch class table with logical column order
-        const pitchClasses = data.fullRangeTuningSystemPitchClasses.map(
-          (pc: any) => ({
-            "Note Name": pc.noteName,
-            Octave: pc.octave,
-            Cents: pc.cents,
-            "Frequency (Hz)": pc.frequency,
-            "Pitch Class": pc.pitchClass,
-            Semitones: pc.semitones,
-          })
-        );
-        const pitchClassOrder = [
-          "Note Name",
-          "Octave",
-          "Cents",
-          "Frequency (Hz)",
-          "Pitch Class",
-          "Semitones",
-        ];
-        sections.push(
-          arrayToCSV(pitchClasses, "Pitch Classes", pitchClassOrder)
-        );
-      }
-    }
-
-    // Ajnas Overview
-    if (data.possibleAjnasOverview) {
-      const ajnasOverviewOrder = [
-        "titleEnglish",
-        "titleArabic",
-        "root",
-        "intonation",
-        "SourcePageReferences",
-        "numberOfTranspositions",
-      ];
-      sections.push(
-        arrayToCSV(
-          data.possibleAjnasOverview,
-          "Possible Ajnas Overview",
-          ajnasOverviewOrder
-        )
-      );
-    }
-
-    // Ajnas Details
-    if (data.possibleAjnasDetails) {
-      const ajnasDetailsOrder = [
-        "titleEnglish",
-        "titleArabic",
-        "root",
-        "intonation",
-        "family",
-        "SourcePageReferences",
-        "commentsEnglish",
-        "commentsArabic",
-        "numberOfTranspositions",
-      ];
-      sections.push(
-        arrayToCSV(
-          data.possibleAjnasDetails,
-          "Possible Ajnas Details",
-          ajnasDetailsOrder
-        )
-      );
-    }
-
-    // Maqamat Overview
-    if (data.possibleMaqamatOverview) {
-      const maqamatOverviewOrder = [
-        "titleEnglish",
-        "titleArabic",
-        "root",
-        "family",
-        "SourcePageReferences",
-        "numberOfTranspositions",
-      ];
-      sections.push(
-        arrayToCSV(
-          data.possibleMaqamatOverview,
-          "Possible Maqamat Overview",
-          maqamatOverviewOrder
-        )
-      );
-    }
-
-    // Maqamat Details
-    if (data.possibleMaqamatDetails) {
-      const maqamatDetailsOrder = [
-        "titleEnglish",
-        "titleArabic",
-        "root",
-        "family",
-        "suyur",
-        "SourcePageReferences",
-        "commentsEnglish",
-        "commentsArabic",
-        "numberOfTranspositions",
-      ];
-      sections.push(
-        arrayToCSV(
-          data.possibleMaqamatDetails,
-          "Possible Maqamat Details",
-          maqamatDetailsOrder
-        )
-      );
-    }
-
-    // Modulations
-    const hasModulations = data.maqamatModulations || data.ajnasModulations;
-    if (hasModulations) {
-      // Convert modulations objects to arrays for CSV export
-      const flatModulations: any[] = [];
-
-      // Handle Maqamat modulations
-      if (
-        data.maqamatModulations &&
-        typeof data.maqamatModulations === "object"
-      ) {
-        Object.entries(data.maqamatModulations).forEach(([key, value]) => {
-          if (Array.isArray(value)) {
-            value.forEach((mod: any) => {
-              flatModulations.push({
-                ModulationCategory: "Maqamat",
-                ModulationType: key,
-                ...mod,
-              });
-            });
-          } else {
-            flatModulations.push({
-              ModulationCategory: "Maqamat",
-              ModulationType: key,
-              Value: value,
-            });
-          }
-        });
-      }
-
-      // Handle Ajnas modulations
-      if (data.ajnasModulations && typeof data.ajnasModulations === "object") {
-        Object.entries(data.ajnasModulations).forEach(([key, value]) => {
-          if (Array.isArray(value)) {
-            value.forEach((mod: any) => {
-              flatModulations.push({
-                ModulationCategory: "Ajnas",
-                ModulationType: key,
-                ...mod,
-              });
-            });
-          } else {
-            flatModulations.push({
-              ModulationCategory: "Ajnas",
-              ModulationType: key,
-              Value: value,
-            });
-          }
-        });
-      }
-
-      const modulationsOrder = [
-        "ModulationCategory",
-        "ModulationType",
-        "titleEnglish",
-        "titleArabic",
-        "root",
-        "family",
-      ];
-      sections.push(
-        arrayToCSV(flatModulations, "Modulations", modulationsOrder)
-      );
-    }
-
-    // Transpositions
-    if (data.transpositions) {
-      const transpositionsOrder = [
-        "titleEnglish",
-        "titleArabic",
-        "root",
-        "family",
-      ];
-      sections.push(
-        arrayToCSV(data.transpositions, "Transpositions", transpositionsOrder)
-      );
-    }
-
-    // Summary statistics
-    if (data.summaryStats) {
-      const summary = [
-        "Summary Statistics",
-        `Total Ajnas in Database${delimiter}${escapeCSV(
-          data.summaryStats.totalAjnasInDatabase || 0
-        )}`,
-        `Total Maqamat in Database${delimiter}${escapeCSV(
-          data.summaryStats.totalMaqamatInDatabase || 0
-        )}`,
-        `Tuning Pitch Classes in Single Octave${delimiter}${escapeCSV(
-          data.summaryStats.tuningPitchClassesInSingleOctave || 0
-        )}`,
-        `Tuning Pitch Classes in All Octaves${delimiter}${escapeCSV(
-          data.summaryStats.tuningPitchClassesInAllOctaves || 0
-        )}`,
-        `Ajnas Available in Tuning${delimiter}${escapeCSV(
-          data.summaryStats.ajnasAvailableInTuning || 0
-        )}`,
-        `Maqamat Available in Tuning${delimiter}${escapeCSV(
-          data.summaryStats.maqamatAvailableInTuning || 0
-        )}`,
-        `Total Ajnas Transpositions${delimiter}${escapeCSV(
-          data.summaryStats.totalAjnasTranspositions || 0
-        )}`,
-        `Total Maqamat Transpositions${delimiter}${escapeCSV(
-          data.summaryStats.totalMaqamatTranspositions || 0
-        )}`,
-        `Total Maqam Modulations${delimiter}${escapeCSV(
-          data.summaryStats.totalMaqamModulations || 0
-        )}`,
-        `Total Ajnas Modulations${delimiter}${escapeCSV(
-          data.summaryStats.totalAjnasModulations || 0
-        )}`,
-        "",
-      ].join("\n");
-
-      sections.push(summary);
-    }
-
-    return sections.join("\n");
   };
 
   const convertToText = (data: any): string => {
@@ -1748,6 +1442,8 @@ export default function ExportModal({
             </div>
           </div>
 
+          {/* Only show Include Data section for non-Scala formats */}
+          {!['scala', 'scala-keymap', 'scala-12tone'].includes(exportOptions.format) && (
           <div className="export-modal__section">
             <label className="export-modal__label">Include Data</label>
             <div className="export-modal__checkbox-group">
@@ -1893,25 +1589,6 @@ export default function ExportModal({
               )}
             </div>
           </div>
-
-          {exportOptions.format === "csv" && (
-            <div className="export-modal__section">
-              <label className="export-modal__label">CSV Delimiter</label>
-              <select
-                className="export-modal__select"
-                value={exportOptions.csvDelimiter}
-                onChange={(e) =>
-                  setExportOptions((prev) => ({
-                    ...prev,
-                    csvDelimiter: e.target.value as "," | ";" | "\t",
-                  }))
-                }
-              >
-                <option value=",">Comma (,)</option>
-                <option value=";">Semicolon (;)</option>
-                <option value="\t">Tab</option>
-              </select>
-            </div>
           )}
 
           <div className="export-modal__section">

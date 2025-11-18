@@ -358,17 +358,26 @@ note names.
   to 12-EDO semitones
 - **Direct Tuning System Values**: All cent values come directly from tuning systems
   without post-processing or calculation
+- **Maqām Priority**: Maqām pitch classes are prioritized over al-Kindi fillers when both
+  satisfy the ascending order requirement (ensures maqām characteristics are preserved)
 
 **The Algorithm:**
 1. Loads pitch classes from both the specified tuning system and al-Kindi-(874) using
    the same `startingNote`
-2. For each maqām transposition:
-   - Extracts IPN reference note names from ascending and descending sequences
-   - Replaces matching pitch classes in al-Kindi base (ascending takes priority, then descending)
-   - Selects pitch classes from correct octaves to ensure ascending chromatic order
+2. Creates al-Kindi base set: Selects one pitch class per IPN reference (C, C#, D, etc.)
+   from octaves matching the maqām's octave range
+3. For each maqām transposition:
+   - Applies sequential reference note logic to ensure consistent IPN assignments
+   - Validates compatibility: Checks for duplicate IPN references with different cents values
+   - Initial merge: Replaces al-Kindi pitch classes with maqām values where IPN references match
+     (ascending sequence takes priority, then descending)
+   - Optimal octave selection: Rebuilds set with chromatic ascending order from tonic:
+     * **Priority 1**: Uses maqām pitch classes that satisfy ascending order requirement
+     * **Priority 2**: Falls back to al-Kindi fillers only if no maqām candidate available
+     * Selects optimal octaves to maintain ascending cents values
    - Orders the 12 pitch classes chromatically starting from the maqām's tonic
-3. Groups compatible maqāmāt together
-4. Names each group after the source maqām (e.g., "maqām rāst set")
+4. Groups compatible maqāmāt together (those that match the set within tolerance)
+5. Names each group after the source maqām (e.g., "maqām rāst set")
 
 **Compatibility:**
 - Maqāmāt with duplicate IPN references (same IPN appearing with different pitch values)
@@ -379,7 +388,7 @@ note names.
 - Pitch classes ordered chromatically (C, C#, D, D#, E, F, F#, G, G#, A, A#, B)
 - Starting from the maqām's tonic (default) OR from IPN "C" (if `startSetFromC=true`)
 - Relative cents from 0 (reference note) to ~1050-1200 (octave)
-- `maqamTonic` field indicates the actual maqām tonic position and note name
+- Each compatible maqām includes a `tonic` object with the maqām's tonic position and note names
 - Suitable for MIDI keyboard tuning and Scala (.scl) file generation
 
 **Filtering Options:**
@@ -399,8 +408,8 @@ correctly and pitch classes can be properly selected from matching octaves.
   - Example: `yegah`
 - `centsTolerance` (optional): Tolerance in cents for pitch class comparison (default: 5) - Type: `number` - Default: `5`
   - Example: `5`
-- `includeIncompatible` (optional): Include maqāmāt that cannot form valid 12-pitch-class sets - Type: `string` - Valid values: `true`, `false` - Default: `true`
-  - Example: `true`
+- `includeIncompatible` (optional): Include maqāmāt that cannot form valid 12-pitch-class sets - Type: `string` - Valid values: `true`, `false` - Default: `false`
+  - Example: `false`
 - `includeArabic` (optional): Return bilingual responses with Arabic script when true.
   - All English/transliteration fields remain unchanged
   - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
@@ -411,18 +420,24 @@ correctly and pitch classes can be properly selected from matching octaves.
  - Type: `string` - Valid values: `true`, `false`
   - Example: `true`
 - `startSetFromC` (optional): Start pitch class set from IPN reference "C" (degree 0) instead of from the maqām's tonic.
-When `true`, the set is reordered to start from C at 0.00 cents (relative), making it
-directly compatible with Scala (.scl) file format which maps degree 0 to middle C by default.
   When `true`, the set is reordered to start from C at 0.00 cents (relative), making it
-  directly compatible with Scala (.scl) file format which maps degree 0 to middle C by default. **Technical Implementation:**
-  1. **Octave Selection**: For maqāmāt starting mid-octave (e.g., D), pitch classes before the tonic in chromatic order (C, C#) are taken from octave 1, while those at or after the tonic use their original octaves
-  2. **Array Rotation**: The 12 pitch classes are rotated to place C first
-  3. **Relative Cents**: Calculated from C (0.00 cents), with octave wrap-around handling (negative values + 1200)
+  directly compatible with Scala (.scl) file format which maps degree 0 to middle C by default.
+  
+  **Technical Implementation:**
+  1. **Octave Shifting**: For maqāmāt starting mid-octave (e.g., D), pitch classes in octave 2 that come BEFORE the tonic in chromatic order (C, C#) are shifted to their octave 1 equivalents from the tuning system. This ensures proper ascending order when rotated.
+  2. **Array Rotation**: The 12 pitch classes are rotated to place C first (instead of tonic)
+  3. **Relative Cents**: Recalculated from C (0.00 cents) instead of from tonic, with octave wrap-around handling (negative values + 1200)
   4. **Note Names**: Arabic note names follow the NoteName model's octave conventions (e.g., C octave 1 = rāst, C octave 2 = kurdān)
-  5. **Tonic Tracking**: The `maqamTonic` field indicates the actual maqām tonic's IPN, note names, and position in the reordered set **Use Cases:**
+  5. **Tonic Tracking**: Each compatible maqām's `tonic` object indicates the actual maqām tonic's IPN, note names, and position in the reordered set
+  
+  **Use Cases:**
   - `false` (default): For understanding maqām structure starting from its tonic
-  - `true`: For Scala .scl export (no .kbm file needed) or MIDI keyboard mapping where C = degree 0 **Example:**
-  - Maqām ḥijāz (tonic D/dūgāh at 702.13 cents): - Default mode: D at position 0 (0.00 cents relative) - Scala mode: C (rāst, 498.04 cents) at position 0 (0.00 cents relative), D at position 2 (204.08 cents relative)
+  - `true`: For Scala .scl export (no .kbm file needed) or MIDI keyboard mapping where C = degree 0
+  
+  **Example:**
+  - Maqām bayyāt shūrī (tonic D/dūgāh at 498.04 cents):
+    - Default mode: D at position 0 (0.00 cents relative)
+    - Scala mode: C (rāst, 294.13 cents) at position 0 (0.00 cents relative), D at position 2 (203.91 cents relative)
  - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `false`
 - `pitchClassDataType` (optional): Controls which pitch class data fields are returned in the response.

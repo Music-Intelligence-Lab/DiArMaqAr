@@ -34,6 +34,7 @@ Load files based on your task type for optimal context efficiency:
 | **Bug fix** | 00 | 03, 04, 05 | - | - |
 | **API endpoint** | 00 | 03 | api-retrospective, openapi-formatting-guide | - |
 | **API documentation** | 00 | 03 | openapi-formatting-guide | - |
+| **12-pitch-class sets / Scala export** | 00 | 03, 04 | 12-pitch-class-sets-scala-export | - |
 | **Documentation** | 00 | 03 | - | 06, 07 |
 | **Testing** | 00 | 05 | - | - |
 | **Performance audit** | 00 | 05 | cli-commands-guide | - |
@@ -118,6 +119,15 @@ Load files based on your task type for optimal context efficiency:
 - Playwright (browser automation)
 - MCP best practices
 
+**[`reference/12-pitch-class-sets-scala-export.md`](./reference/12-pitch-class-sets-scala-export.md)** ⭐ (~1,310 lines)
+- Complete 12-pitch-class sets API reference
+- Set creation algorithm deep dive
+- Compatibility matching process
+- Octave selection and ordering logic
+- startSetFromC transformation details
+- Manual calculation walkthrough
+- Verification results
+
 ### Tier 4: Glossary (Load When Needed)
 
 **[`glossary/06-documentation-standards.md`](./glossary/06-documentation-standards.md)** (~620 lines)
@@ -167,6 +177,7 @@ RED (write test) → GREEN (minimal code) → REFACTOR → COMMIT
 - New patterns → essentials/03-development-quick-ref.md
 - Music theory insights → essentials/04-musicology-essentials.md
 - API lessons → reference/api-retrospective.md
+- 12-pitch-class sets / Scala export → reference/12-pitch-class-sets-scala-export.md
 
 ---
 
@@ -178,9 +189,9 @@ RED (write test) → GREEN (minimal code) → REFACTOR → COMMIT
 |------|-------|-------------|---------------|
 | **Core** | 1 | ~290 | Always load |
 | **Essentials** | 5 | ~2,130 | Load for most tasks |
-| **Reference** | 5 | ~2,170 | Load on demand |
+| **Reference** | 6 | ~3,480 | Load on demand |
 | **Glossary** | 2 | ~1,020 | Load when needed |
-| **Total** | 13 | ~5,610 | Conditional loading |
+| **Total** | 14 | ~6,920 | Conditional loading |
 
 **Before optimization:** ~9,650 lines loaded upfront
 **After optimization:** ~2,420 lines default load (Core + Dev Quick Ref)
@@ -210,6 +221,10 @@ RED (write test) → GREEN (minimal code) → REFACTOR → COMMIT
 | **API doc generation** | reference/openapi-formatting-guide | Reference |
 | **MCP servers** | reference/mcp-servers-guide | Reference |
 | **CLI commands** | reference/cli-commands-guide | Reference |
+| **12-pitch-class sets** | reference/12-pitch-class-sets-scala-export | Reference |
+| **Scala export** | reference/12-pitch-class-sets-scala-export | Reference |
+| **Compatibility matching** | reference/12-pitch-class-sets-scala-export | Reference |
+| **Octave selection** | reference/12-pitch-class-sets-scala-export | Reference |
 | **Cultural sensitivity** | core/00 | Core |
 | **Octave-repeating** | essentials/04 Section 0 | Essential |
 | **Asymmetric sequences** | essentials/04 Section 1 | Essential |
@@ -351,6 +366,7 @@ These instructions embody:
 │   ├── 04-musicology-essentials.md
 │   └── 05-testing-essentials.md
 ├── reference/
+│   ├── 12-pitch-class-sets-scala-export.md ⭐
 │   ├── api-retrospective.md
 │   ├── cli-commands-guide.md
 │   ├── mcp-servers-guide.md
@@ -363,5 +379,5 @@ These instructions embody:
 
 ---
 
-*Last Updated: 2025-11-06*
-*Major revision: Hierarchical restructuring, conditional loading, 75% context reduction*
+*Last Updated: 2025-11-18*
+*Recent addition: Comprehensive 12-pitch-class sets & Scala export guide (~1,310 lines)*
