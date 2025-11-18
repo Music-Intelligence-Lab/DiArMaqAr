@@ -412,6 +412,18 @@ export function getEnglishNoteName(arabicName: string, opts?: EnglishNameOptions
 }
 
 /**
+ * Gets the next sequential letter in the musical alphabet (A-B-C-D-E-F-G-A...)
+ * @param letter - The current letter (A-G)
+ * @returns The next sequential letter
+ */
+function getNextSequentialLetter(letter: string): string {
+  const letters = ["A", "B", "C", "D", "E", "F", "G"];
+  const index = letters.indexOf(letter.toUpperCase());
+  if (index === -1) return letter;
+  return letters[(index + 1) % 7];
+}
+
+/**
  * Determines the expected letter sequence for a melodic sequence.
  * For diatonic scales, the natural letter sequence should follow alphabetical order.
  *
@@ -553,6 +565,23 @@ export function getSequentialEnglishNames(arabicNames: string[], ascending: bool
     if (actualLetter === expectedLetter) {
       result.push(defaultName);
       continue;
+    }
+
+    // Check if this note is sequential relative to the previous note
+    // This allows sequences like Eb, E, F, F# where same letters can appear consecutively
+    // We check against the actual previous default name (before any enharmonic changes)
+    if (i > 0) {
+      const prevDefaultName = defaultNames[i - 1];
+      if (prevDefaultName !== "--") {
+        const prevLetter = prevDefaultName[0].toUpperCase();
+        // If current note is the same letter as previous (e.g., Eb then E), allow it
+        // If current note is the next sequential letter after previous (e.g., E then F), allow it
+        const nextSequentialLetter = getNextSequentialLetter(prevLetter);
+        if (actualLetter === prevLetter || actualLetter === nextSequentialLetter) {
+          result.push(defaultName);
+          continue;
+        }
+      }
     }
 
     // Try to find an enharmonic spelling with the expected letter
