@@ -8,7 +8,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "al-Khulʿī-(2011)",
+        "sourceId": "al-Khuli-(1904/2011)",
         "page": "55-56"
       },
       {
@@ -230,19 +230,7 @@
         "chahārgāh",
         "ḥijāz",
         "nawā",
-        "ḥiṣār",
-        "ḥusaynī",
-        "ʿajam",
-        "māhūr",
-        "kurdān",
-        "shahnāz",
-        "muḥayyar",
-        "sunbuleh/zawāl",
-        "jawāb būselīk",
-        "māhūrān",
-        "jawāb ḥijāz",
-        "saham/ramal tūtī",
-        "jawāb ḥiṣār"
+        "ḥiṣār"
       ],
       [
         "yegāh",
@@ -269,6 +257,20 @@
         "jawāb būselīk",
         "māhūrān",
         "jawāb ḥijāz"
+      ],
+      [
+        "rāst",
+        "zīrgūleh",
+        "dūgāh",
+        "kurdī",
+        "būselīk/ʿushshāq",
+        "chahārgāh",
+        "ḥijāz",
+        "nawā",
+        "ḥiṣār",
+        "ḥusaynī",
+        "ʿajam",
+        "māhūr"
       ]
     ],
     "abjadNames": [
@@ -301,9 +303,10 @@
     "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
       "yegāh": 97.999,
-      "ʿushayrān": 110
+      "ʿushayrān": 109.99999999999999,
+      "rāst": 130.813
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2025-11-17T13:16:34.754Z"
   },
   {
     "id": "Anglo-European-(1700)",
@@ -344,19 +347,21 @@
         "chahārgāh",
         "ḥijāz",
         "nawā",
-        "ḥiṣār",
-        "ḥusaynī",
-        "ʿajam",
-        "māhūr",
-        "kurdān",
-        "shahnāz",
-        "muḥayyar",
-        "sunbuleh/zawāl",
-        "jawāb būselīk",
-        "māhūrān",
-        "jawāb ḥijāz",
-        "saham/ramal tūtī",
-        "jawāb ḥiṣār"
+        "ḥiṣār"
+      ],
+      [
+        "yegāh",
+        "qarār ḥiṣār",
+        "ʿushayrān",
+        "ʿajam ʿushayrān",
+        "kawasht",
+        "rāst",
+        "zīrgūleh",
+        "dūgāh",
+        "kurdī",
+        "būselīk/ʿushshāq",
+        "chahārgāh",
+        "ḥijāz"
       ]
     ],
     "abjadNames": [
@@ -388,9 +393,10 @@
     "stringLength": 1000,
     "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "ʿushayrān": 110
+      "ʿushayrān": 110,
+      "yegāh": 97.99885899543732
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2025-11-18T11:53:58.428Z"
   },
   {
     "id": "al-Dik-(1926a)",
@@ -982,7 +988,7 @@
     ],
     "creatorEnglish": "al-Lādhiqī",
     "creatorArabic": "اللاذقي",
-    "commentsEnglish": "Rejab (1986) gives the names for the pitch classes 12, 13, 14 as nīm ḥijāz (128/81), ḥijāz (32768/19683) and ḥijāz + (27/16) as opposed to chahārgāh (128/81), nīm ḥijāz (32768/19683) and ḥijāz (27/16).\n\nThis doesn't make sense to me because the interval distance between 32/27 (rāst) and 128/81 is a 4/3 perfect forth, and both the ratios 32/27 and 128/81 are the main intervals derived from a sequence of successive fourths 4:3 + 4:3 (16/9) + 4:3 (32:27) + 4:3 (128:81). Therefore 128/81 should be labeled chahārgāh as in the modern Arab-Persian-Ottoman naming convention.",
+    "commentsEnglish": "Rejab (1986) gives the names for the pitch classes 12, 13, 14 as nīm ḥijāz (128/81), ḥijāz (32768/19683) and ḥijāz + (27/16) as opposed to chahārgāh (128/81), nīm ḥijāz (32768/19683) and ḥijāz (27/16).\n\nThis doesn't make sense to me because the interval distance between 32/27 (rāst) and 128/81 is a 4/3 perfect forth, and both the ratios 32/27 and 128/81 are the main intervals derived from a sequence of successive fourths 4:3 + 4:3 (16/9) + 4:3 (32:27) + 4:3 (128:81). Therefore 128/81 should be labeled chahārgāh as in the modern Persian-Arab-Ottoman naming convention.",
     "commentsArabic": "",
     "tuningSystemPitchClasses": [
       "1/1",
@@ -1828,7 +1834,12 @@
     "year": "1037",
     "sourceEnglish": "",
     "sourceArabic": "",
-    "sourcePageReferences": [],
+    "sourcePageReferences": [
+      {
+        "sourceId": "Farmer-(1937)",
+        "page": "249"
+      }
+    ],
     "creatorEnglish": "Ibn Sīnā ",
     "creatorArabic": "إبن سينا",
     "commentsEnglish": "Farmer, H.G. (1937) ‘The Lute Scale of Avicenna’, The Journal of the Royal Asiatic Society of Great Britain and Ireland, pp. 249.\n\nAbū-ʿAlī al-Ḥusayn ibn-ʿAbdallāh Ibn-Sīnā [Avicenna] (ca. 970–1037) https://plato.stanford.edu/entries/ibn-sina/",
@@ -1968,11 +1979,11 @@
       "yegāh": 97.999,
       "ʿushayrān": 110
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2025-11-09T00:44:40.275Z"
   },
   {
-    "id": "Ishaqal-Mawsili-(850)",
-    "titleEnglish": "9-Tone",
+    "id": "al-Mawsili-(850)",
+    "titleEnglish": "10-Tone",
     "titleArabic": "",
     "year": "850",
     "sourceEnglish": "",
@@ -1983,9 +1994,9 @@
         "page": "247"
       }
     ],
-    "creatorEnglish": "Isḥāq al-Mawṣilī",
-    "creatorArabic": "الموصلي, اسحاق",
-    "commentsEnglish": "TESTING VERSION TIMESTAMP",
+    "creatorEnglish": "al-Mawṣilī",
+    "creatorArabic": "الموصلي",
+    "commentsEnglish": "Iṣhāq al-Mawṣilī",
     "commentsArabic": "",
     "tuningSystemPitchClasses": [
       "1/1",
@@ -1996,7 +2007,8 @@
       "3/2",
       "128/81",
       "27/16",
-      "16/9"
+      "16/9",
+      "243/128"
     ],
     "noteNames": [
       [
@@ -2009,15 +2021,7 @@
         "chahārgāh",
         "ḥijāz",
         "nawā",
-        "ḥusaynī",
-        "māhūr",
-        "kurdān",
-        "shahnāz",
-        "muḥayyar",
-        "jawāb būselīk",
-        "māhūrān",
-        "jawāb ḥijāz",
-        "saham/ramal tūtī"
+        "ḥiṣār"
       ],
       [
         "yegāh",
@@ -2029,42 +2033,30 @@
         "kurdī",
         "būselīk/ʿushshāq",
         "chahārgāh",
-        "tīk chahārgāh",
-        "nīm ḥijāz",
-        "ṣabā",
-        "ḥijāz",
-        "tīk ḥijāz/ṣabā",
-        "nīm nawā",
-        "nawā",
-        "nīm ḥiṣār",
-        "jawāb shūrī",
-        "ḥiṣār",
-        "tīk ḥiṣār",
-        "nīm ḥusaynī",
-        "ḥusaynī",
-        "nīm ʿajam",
-        "ʿajam"
+        "ḥijāz"
       ]
     ],
     "abjadNames": [
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      ""
+      "آ",
+      "ب",
+      "ج",
+      "د",
+      "ه",
+      "و",
+      "ز",
+      "ح",
+      "ط",
+      "ي",
+      "آ",
+      "ب",
+      "ج",
+      "د",
+      "ه",
+      "و",
+      "ز",
+      "ح",
+      "ط",
+      "ي"
     ],
     "stringLength": 1000,
     "defaultReferenceFrequency": 110,
@@ -2072,7 +2064,7 @@
       "yegāh": 97.999,
       "ʿushayrān": 110
     },
-    "version": "2025-10-18T19:43:01.864Z"
+    "version": "2025-11-06T21:49:51.447Z"
   },
   {
     "id": "CairoCongressTuningCommittee-(1929)",
@@ -2270,7 +2262,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "al-Khulʿī-(2011)",
+        "sourceId": "al-Khuli-(1904/2011)",
         "page": "51-52"
       }
     ],
@@ -3165,14 +3157,14 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "al-Farabii-(950c)",
+    "id": "al-Farabi-(950c)",
     "titleEnglish": "First Oud Tuning 3: mujannab sabbāba 3 + alt wusṭa zalzal",
     "titleArabic": "",
     "year": "950c",
     "sourceEnglish": "",
     "sourceArabic": "",
     "sourcePageReferences": [],
-    "creatorEnglish": "al-Fārābīi",
+    "creatorEnglish": "al-Fārābī",
     "creatorArabic": "الفارابي",
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -3270,7 +3262,7 @@
       "yegāh": 97.999,
       "ʿushayrān": 110
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2025-11-06T00:23:22.237Z"
   },
   {
     "id": "al-Farabi-(950b)",
@@ -4555,10 +4547,10 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "al-Farabi-(950aa)",
+    "id": "al-Farabi-(950j)",
     "titleEnglish": "al-Ṭanbūr al-Baghdādi/al-Mīzānī (pre-Islamic)",
     "titleArabic": "الطنبور البغدادي/الميزاني",
-    "year": "950aa",
+    "year": "950j",
     "sourceEnglish": "Unknown Source",
     "sourceArabic": "مصدر غير معروف",
     "sourcePageReferences": [
@@ -4710,7 +4702,7 @@
       "ʿushayrān": 110,
       "rāst": 130.665
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2025-11-06T00:24:06.628Z"
   },
   {
     "id": "MokhtarandMosharrafa-(1937)",

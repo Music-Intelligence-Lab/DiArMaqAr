@@ -3569,8 +3569,8 @@
   },
   {
     "id": "62",
-    "idName": "sullam_krumatiki",
-    "name": "sullam krūmātīkī",
+    "idName": "maqam_kromatiki",
+    "name": "maqām kromātīkī",
     "ascendingNoteNames": [
       "yegāh",
       "qarār ḥiṣār",
@@ -3603,6 +3603,6 @@
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [],
-    "version": "2025-11-18T11:51:14.617Z"
+    "version": "2025-11-18T11:49:52.567Z"
   }
 ]

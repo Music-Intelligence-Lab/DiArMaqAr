@@ -551,11 +551,71 @@ export async function GET(request: Request) {
       );
 
       if (filteredSets.length === 0) {
+        // Try to extract maqam ID from the set ID (e.g., "maqam_kurd_set" -> "maqam_kurd")
+        const extractedMaqamId = setIdParam.replace(/_set$/, '');
+        const extractedMaqamIdStandardized = standardizeText(extractedMaqamId);
+
+        // Check if this maqam exists in any other sets
+        const setsContainingMaqam = formattedSets.filter(set =>
+          set.compatibleMaqamat.some(maqam => {
+            const baseMatch = maqam.baseMaqamIdName === extractedMaqamIdStandardized ||
+                             maqam.baseMaqamIdName === extractedMaqamId;
+            const transpositionMatch = maqam.maqamIdName === extractedMaqamIdStandardized ||
+                                      maqam.maqamIdName === extractedMaqamId ||
+                                      maqam.maqamIdName.startsWith(extractedMaqamIdStandardized + "_");
+            return baseMatch || transpositionMatch;
+          })
+        );
+
+        if (setsContainingMaqam.length > 0) {
+          // The maqam exists but not as a source maqam for a set
+          const maqamInfo = setsContainingMaqam.map(set => ({
+            setIdName: set.setIdName,
+            setDisplayName: set.setDisplayName,
+            sourceMaqam: set.sourceMaqam.displayName,
+            maqamPositionInSet: (() => {
+              const maqamEntry = set.compatibleMaqamat.find(m => {
+                const baseMatch = m.baseMaqamIdName === extractedMaqamIdStandardized ||
+                                 m.baseMaqamIdName === extractedMaqamId;
+                const transpositionMatch = m.maqamIdName === extractedMaqamIdStandardized ||
+                                          m.maqamIdName === extractedMaqamId;
+                return baseMatch || transpositionMatch;
+              });
+              return maqamEntry ? {
+                maqamDisplayName: maqamEntry.maqamDisplayName,
+                tonicIpn: maqamEntry.tonic?.ipnReferenceNoteName,
+                tonicNoteName: maqamEntry.tonic?.noteNameDisplayName,
+                isTransposed: maqamEntry.isTransposed
+              } : null;
+            })()
+          }));
+
+          return addCorsHeaders(
+            NextResponse.json(
+              {
+                error: `Set '${setIdParam}' not found`,
+                message: `The set '${setIdParam}' does not exist. However, the maqām '${extractedMaqamId}' is available in other sets.`,
+                maqamId: extractedMaqamId,
+                availableInSets: maqamInfo,
+                hint: `The maqām '${extractedMaqamId}' appears in ${setsContainingMaqam.length} set(s). Use ?maqamId=${extractedMaqamId} to see all sets containing this maqām, or use one of the setIds listed above.`,
+                suggestion: `Try: ?setId=${maqamInfo[0].setIdName} or ?maqamId=${extractedMaqamId}`
+              },
+              { status: 404 }
+            )
+          );
+        }
+
+        // Neither the set nor the maqam exists
+        const availableSetIds = formattedSets.slice(0, 5).map(s => s.setIdName);
         return addCorsHeaders(
           NextResponse.json(
             {
               error: `Set '${setIdParam}' not found`,
-              hint: "Use ?setId=<set-id> to filter by a specific set (e.g., ?setId=maqam_rast_set)"
+              message: `The set '${setIdParam}' does not exist, and no maqām with ID '${extractedMaqamId}' was found.`,
+              hint: "Use ?setId=<set-id> to filter by a specific set (e.g., ?setId=maqam_rast_set)",
+              availableSetIds: availableSetIds,
+              totalAvailableSets: formattedSets.length,
+              suggestion: `Try: ?setId=${availableSetIds[0]} or view all sets without the setId parameter`
             },
             { status: 404 }
           )

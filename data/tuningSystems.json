@@ -347,19 +347,21 @@
         "chahārgāh",
         "ḥijāz",
         "nawā",
-        "ḥiṣār",
-        "ḥusaynī",
-        "ʿajam",
-        "māhūr",
-        "kurdān",
-        "shahnāz",
-        "muḥayyar",
-        "sunbuleh/zawāl",
-        "jawāb būselīk",
-        "māhūrān",
-        "jawāb ḥijāz",
-        "saham/ramal tūtī",
-        "jawāb ḥiṣār"
+        "ḥiṣār"
+      ],
+      [
+        "yegāh",
+        "qarār ḥiṣār",
+        "ʿushayrān",
+        "ʿajam ʿushayrān",
+        "kawasht",
+        "rāst",
+        "zīrgūleh",
+        "dūgāh",
+        "kurdī",
+        "būselīk/ʿushshāq",
+        "chahārgāh",
+        "ḥijāz"
       ]
     ],
     "abjadNames": [
@@ -391,9 +393,10 @@
     "stringLength": 1000,
     "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "ʿushayrān": 110
+      "ʿushayrān": 110,
+      "yegāh": 97.99885899543732
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2025-11-18T11:53:58.428Z"
   },
   {
     "id": "al-Dik-(1926a)",
@@ -4708,7 +4711,12 @@
     "year": "1937",
     "sourceEnglish": "Unknown Source",
     "sourceArabic": "مصدر غير معروف",
-    "sourcePageReferences": [],
+    "sourcePageReferences": [
+      {
+        "sourceId": "Mokhtar-(1937)",
+        "page": "548-549"
+      }
+    ],
     "creatorEnglish": "Mokhtar and Mosharrafa",
     "creatorArabic": "مختار ومشرّفة",
     "commentsEnglish": "\"We have been engaged on determining the frequency ratios involved in the principal musical scales or modes in current use in Egypt to-day. Those scales were the subject of a controversial discussion at an international congress held in Cairo in March 1932.' In the present investigation, three expert tuners (appointed by the Royal Institute of Oriental Music)  tuned a Qanun, an instrument consisting of strings stretched on a sounding board, to the different modes, and the frequencies were then measured by means of an audio-frequency valve oscillator to which a calibration curve was plotted by means of a set of standard tuning forks. The actual determination of each frequency was carried out using the method of beats. The notes constituting each scale were taken in ascending and then in descending order, so as to correct for possible variation in temperature. The experimental error is of the order of 0 ·1 per cent. The results for each of the three tuners were recorded separately and an average was then taken. The following table gives the fourteen recognizable intervals into which an octave was found to be subdivided compared with the diatonic and equitempered scales. The four principal modes correspond to the following groups of notes (quoted by their numbers): (l, 3, 5, 7, 9, 11, 13), (3, 4, 8, 9, 11, 13, 1'), (3, 5, 7, 8, 11, 12, 1'), (1, 3, 4, 7, 9, 10, 14). Of these the last is the same as the minor scale in European music. Other modes are obtained by changing the first note (key-note) in a group. The most characteristic feature of the scheme is the appearance of neutral thirds and neutral sevenths. A fuller account will appear elsewhere.\"",
@@ -4782,6 +4790,6 @@
     "referenceFrequencies": {
       "rāst": 130.7
     },
-    "version": "2025-10-23T21:29:33.604Z"
+    "version": "2025-11-18T11:58:42.848Z"
   }
 ]
