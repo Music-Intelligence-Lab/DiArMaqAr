@@ -106,11 +106,13 @@ function formatPitchClassData(pitchClass: any, format: string | null | undefined
  * - Chromatic Order: Each set contains 12 pitch classes ordered chromatically
  * - Arabic Musicological Logic: IPN references respect maqam theory (variant OF, not proximity)
  * - Direct Values: All cent values come directly from tuning systems without calculation
+ * - Maqam Priority: Maqam pitch classes are prioritized over al-Kindi fillers when both satisfy
+ *   the ascending order requirement (ensures maqam characteristics are preserved)
  *
  * Query Parameters:
  * - tuningSystem: string (default: "CairoCongressTuningCommittee-(1929)") - tuning system ID for maqamat
  * - startingNote: string (default: "yegah") - starting note for BOTH tuning systems (critical for octave alignment)
- * - includeIncompatible: boolean (default: true) - include maqamat that can't form sets
+ * - includeIncompatible: boolean (default: false) - include maqamat that can't form sets
  * - includeArabic: boolean (default: false) - include Arabic display names
  * - startSetFromC: boolean (default: false) - start pitch class set from IPN "C" (for Scala .scl export)
  * - setId: string (optional) - filter by specific set ID (e.g., "maqam_rast_set")
@@ -121,11 +123,15 @@ function formatPitchClassData(pitchClass: any, format: string | null | undefined
  * directly compatible with Scala (.scl) file format which maps degree 0 to middle C by default.
  *
  * How it works:
- * 1. Rotates the pitch class array to start from C
- * 2. Adjusts octaves: pitch classes after the tonic shift down by 1200 cents
- * 3. Example: For maqam hijaz (tonic D), degree 0 becomes rāst (C below D, not kurdān)
- * 4. The maqamTonic field tracks the original tonic position (e.g., position 2 for D)
- * 5. All note names and absolute cents values remain from the tuning system
+ * 1. Octave shifting: Pitch classes in octave 2 that come BEFORE the tonic in chromatic order
+ *    are shifted to their octave 1 equivalents (e.g., C and C# when tonic is D)
+ * 2. Rotates the pitch class array to start from C (instead of tonic)
+ * 3. Recalculates relative cents from C (0.00 cents) instead of from tonic
+ * 4. Handles octave wrap-around: negative relative cents are adjusted by adding 1200 cents
+ * 5. Example: For maqam bayyāt shūrī (tonic D), C shifts from octave 2 (kurdān: 1494.13¢)
+ *    to octave 1 (rāst: 294.13¢), then becomes position 0 with 0.00¢ relative
+ * 6. The maqamTonic field tracks the original tonic position (e.g., position 2 for D)
+ * 7. All absolute cents values remain unchanged from the tuning system
  *
  * Output Format:
  * - Pitch classes ordered chromatically (C, C#, D, D#, E, F, F#, G, G#, A, A#, B)
@@ -140,7 +146,7 @@ function formatPitchClassData(pitchClass: any, format: string | null | undefined
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const includeIncompatible = searchParams.get("includeIncompatible") !== "false";
+    const includeIncompatible = searchParams.get("includeIncompatible") === "true";
     const setIdParam = searchParams.get("setId");
     const maqamIdParam = searchParams.get("maqamId");
     
@@ -510,27 +516,40 @@ export async function GET(request: Request) {
         };
       });
 
+      // Deduplicate compatible maqamat before counting
+      // Use maqam name + tonic IPN as key to identify duplicates
+      const seenMaqamatByTonic = new Set<string>();
+      const deduplicatedMaqamat = compatibleMaqamatFormatted.filter((maqam) => {
+        const tonicIpn = maqam.tonic?.ipnReferenceNoteName || 'Unknown';
+        const key = `${maqam.maqamDisplayName}:${tonicIpn}`;
+        if (seenMaqamatByTonic.has(key)) {
+          return false; // Duplicate, filter it out
+        }
+        seenMaqamatByTonic.add(key);
+        return true; // Keep this entry
+      });
+
       const setNameStandardized = standardizeText(set.name);
       return {
         setIdName: setNameStandardized,
         setDisplayName: set.name,
         sourceMaqam: sourceMaqamNamespace,
         pitchClassSet: pitchClassSetArray,
-        compatibleMaqamat: compatibleMaqamatFormatted,
-        compatibleMaqamatCount: compatibleMaqamatFormatted.length
+        compatibleMaqamat: deduplicatedMaqamat,
+        compatibleMaqamatCount: deduplicatedMaqamat.length
       };
     });
 
     // Filter sets based on query parameters
     let filteredSets = formattedSets;
-    
+
     if (setIdParam) {
       // Filter by specific set ID
       const setIdStandardized = standardizeText(setIdParam);
-      filteredSets = formattedSets.filter(set => 
+      filteredSets = formattedSets.filter(set =>
         set.setIdName === setIdStandardized
       );
-      
+
       if (filteredSets.length === 0) {
         return addCorsHeaders(
           NextResponse.json(
@@ -545,18 +564,18 @@ export async function GET(request: Request) {
     } else if (maqamIdParam) {
       // Filter by maqam ID - find sets containing this maqam
       const maqamIdStandardized = standardizeText(maqamIdParam);
-      filteredSets = formattedSets.filter(set => 
+      filteredSets = formattedSets.filter(set =>
         set.compatibleMaqamat.some(maqam => {
           // Match by base maqam ID name (for base maqam) or transposition ID name (for transpositions)
-          const baseMatch = maqam.baseMaqamIdName === maqamIdStandardized || 
+          const baseMatch = maqam.baseMaqamIdName === maqamIdStandardized ||
                            maqam.baseMaqamIdName === maqamIdParam;
-          const transpositionMatch = maqam.maqamIdName === maqamIdStandardized || 
+          const transpositionMatch = maqam.maqamIdName === maqamIdStandardized ||
                                     maqam.maqamIdName === maqamIdParam ||
                                     maqam.maqamIdName.startsWith(maqamIdStandardized + "_");
           return baseMatch || transpositionMatch;
         })
       );
-      
+
       if (filteredSets.length === 0) {
         return addCorsHeaders(
           NextResponse.json(
@@ -570,14 +589,30 @@ export async function GET(request: Request) {
       }
     }
 
+    // Sort sets by compatibleMaqamatCount in descending order (most to least)
+    filteredSets.sort((a, b) => b.compatibleMaqamatCount - a.compatibleMaqamatCount);
+
+    // Calculate statistics
+    const filteredCompatibleCount = filteredSets.reduce(
+      (sum, set) => sum + set.compatibleMaqamatCount,
+      0
+    );
+    const globalCompatibleCount = formattedSets.reduce(
+      (sum, set) => sum + set.compatibleMaqamatCount,
+      0
+    );
+
     const response: any = {
       statistics: {
         totalSets: filteredSets.length,
-        totalCompatibleMaqamat: filteredSets.reduce(
-          (sum, set) => sum + set.compatibleMaqamatCount,
-          0
-        ),
-        incompatibleMaqamatCount: result.incompatibleMaqamat.length
+        totalCompatibleMaqamat: filteredCompatibleCount,
+        incompatibleMaqamatCount: result.incompatibleMaqamat.length,
+        // Global statistics (always shown for context)
+        global: {
+          totalSets: formattedSets.length,
+          totalCompatibleMaqamat: globalCompatibleCount,
+          totalProcessed: globalCompatibleCount + result.incompatibleMaqamat.length
+        }
       },
       sets: filteredSets,
       parameters: {
