@@ -1,339 +1,19 @@
-# 12-Pitch-Class Sets & Scala Export: Comprehensive Guide
+# 12-Pitch-Class Sets Algorithm Deep Dive
 
-**Complete reference for the 12-pitch-class sets API, classification algorithm, and Scala export functionality**
+**Purpose**: Comprehensive explanation of how 12-pitch-class sets are created, classified, and transformed.
 
 ---
 
 ## Table of Contents
 
-### Part 1: API Usage & Features
-1. [Overview](#overview)
-2. [API Parameters](#api-parameters)
-3. [Response Structure](#response-structure)
-4. [Usage Examples](#usage-examples)
-
-### Part 2: Algorithm Deep Dive
-5. [Set Creation Algorithm](#set-creation-algorithm)
-6. [Compatibility Matching Process](#compatibility-matching-process)
-7. [Octave Selection & Ordering](#octave-selection--ordering)
-8. [startSetFromC Transformation](#startsetfromc-transformation)
-
-### Part 3: Detailed Examples
-9. [Manual Calculation Walkthrough](#manual-calculation-walkthrough)
-10. [Verification Results](#verification-results)
+1. [Set Creation Algorithm](#set-creation-algorithm)
+2. [Compatibility Matching Process](#compatibility-matching-process)
+3. [Octave Selection & Ordering](#octave-selection--ordering)
+4. [startSetFromC Transformation](#startsetfromc-transformation)
+5. [Manual Calculation Walkthrough](#manual-calculation-walkthrough)
+6. [Verification Results](#verification-results)
 
 ---
-
-# Part 1: API Usage & Features
-
-## Overview
-
-The `/api/maqamat/classification/12-pitch-class-sets` endpoint provides flexible pitch class set data for both musicological analysis and practical applications like Scala (.scl) file export and MIDI keyboard tuning.
-
-### Key Features
-
-1. **Dual-Mode Presentation** (`startSetFromC`): Start from maqām tonic (analysis) or IPN "C" (Scala export)
-2. **Flexible Data Output** (`pitchClassDataType`): Control which pitch class fields are returned
-3. **Per-Maqam Tonic Information**: Each compatible maqām includes its specific tonic details
-4. **Scala Export Compatibility**: Direct .scl file generation without .kbm mapping files
-
----
-
-## API Parameters
-
-### `startSetFromC` (boolean, optional, default: false)
-
-Controls the starting point and ordering of the 12-pitch-class set:
-
-- **`false` (default)**: Pitch classes start from maqām tonic for musicological analysis
-- **`true`**: Pitch classes start from C for Scala export and MIDI keyboard tuning
-
-**Use Cases**:
-- `false`: Musicological analysis, displaying maqam structure from tonic
-- `true`: Scala (.scl) file export, MIDI keyboard tuning (no .kbm file needed)
-
-### `pitchClassDataType` (string, optional)
-
-Controls which pitch class data fields are returned in the response:
-
-**Core Options**:
-- `all` - Returns all 15 available pitch class fields
-- `cents` - Absolute cents value from tuning system
-- `relativeCents` - Cents relative to first pitch class (0.00 at tonic or C)
-- `fraction` - Frequency ratio as fraction string
-- `decimalRatio` - Frequency ratio as decimal number
-- `frequency` - Frequency in Hz
-
-**Note Naming**:
-- `englishName` - English note name with octave (e.g., "D2", "E-b3")
-- `abjadName` - Arabic abjad notation
-- `referenceNoteName` - IPN reference note name for 12-EDO comparison
-
-**Instrument-Specific**:
-- `stringLength` - String length for oud/qanun
-- `fretDivision` - Fret position for oud
-
-**MIDI & 12-EDO Comparison**:
-- `midiNoteNumber` - MIDI note number as decimal
-- `midiNoteDeviation` - MIDI note with cents deviation string (e.g., "62 +4.1")
-- `centsDeviation` - Cents deviation from 12-EDO
-
-**Default Behavior (Parameter Omitted)**:
-
-When `pitchClassDataType` is not provided, returns minimal fields:
-- `ipnReferenceNoteName`
-- `noteName` (Arabic)
-- `relativeCents`
-- `octave`
-
-### `setId` (string, optional)
-
-Filter to a specific 12-pitch-class set by its ID (e.g., `maqam_rast_set`, `maqam_hijaz_set`).
-
----
-
-## Response Structure
-
-### Top-Level Structure
-
-```json
-{
-  "sets": [
-    {
-      "setId": "maqam_rast_set",
-      "pitchClassSet": {
-        "pitchClasses": [ /* 12 pitch classes */ ]
-      },
-      "compatibleMaqamat": [ /* compatible maqāmāt with tonic info */ ]
-    }
-  ]
-}
-```
-
-### Pitch Class Object
-
-**Default (minimal)**:
-```json
-{
-  "ipnReferenceNoteName": "C",
-  "noteName": "rāst",
-  "relativeCents": 0,
-  "octave": 1
-}
-```
-
-**With `pitchClassDataType=cents`**:
-```json
-{
-  "ipnReferenceNoteName": "C",
-  "noteName": "rāst",
-  "cents": 498.0449991346125
-}
-```
-
-**With `pitchClassDataType=all`**:
-```json
-{
-  "ipnReferenceNoteName": "C",
-  "noteName": "rāst",
-  "cents": 498.0449991346125,
-  "relativeCents": 0,
-  "fraction": "1/1",
-  "decimalRatio": 1,
-  "frequency": 264,
-  "octave": 1,
-  "englishName": "C2",
-  "stringLength": "66.000",
-  "fretDivision": "0.000",
-  "midiNoteDecimal": 60.0449991346125,
-  "midiNoteDeviation": "60 +4.5",
-  "centsDeviation": 4.5,
-  "referenceNoteName": "C"
-}
-```
-
-### Compatible Maqām Object
-
-Each compatible maqām includes its own tonic information:
-
-```json
-{
-  "maqamIdName": "maqam_hijaz",
-  "maqamDisplayName": "maqām ḥijāz",
-  "baseMaqamIdName": "maqam_hijaz",
-  "isTransposed": false,
-  "tonic": {
-    "ipnReferenceNoteName": "D",
-    "noteNameIdName": "dugah",
-    "noteNameDisplayName": "dūgāh",
-    "positionInSet": 2
-  }
-}
-```
-
-**Why per-maqam tonic?** Different compatible maqāmāt can have different tonics (transpositions). For example, in the same set:
-- Maqām ḥijāz: tonic D (dūgāh) at position 2
-- Maqām rāḥat al-arwāḥ al-awj: tonic B (awj) at position 11
-
-**Octave equivalents**: Maqāmāt starting in different octaves (e.g., qarār dūgāh, muḥayyar) correctly map to their pitch class equivalents, showing the same `ipnReferenceNoteName` and `positionInSet`.
-
----
-
-## Usage Examples
-
-### Example 1: Minimal Default Response
-
-```bash
-curl 'http://localhost:3000/api/maqamat/classification/12-pitch-class-sets?setId=maqam_rast_set'
-```
-
-**Returns**: Minimal fields (IPN, note name, relative cents, octave) starting from maqām tonic
-
-### Example 2: Scala Mode with Cents Only
-
-```bash
-curl 'http://localhost:3000/api/maqamat/classification/12-pitch-class-sets?setId=maqam_hijaz_set&startSetFromC=true&pitchClassDataType=cents'
-```
-
-**Returns**: Pitch classes starting from C with absolute cents values - optimized for Scala .scl file generation
-
-### Example 3: Full Data, Analysis Mode
-
-```bash
-curl 'http://localhost:3000/api/maqamat/classification/12-pitch-class-sets?setId=maqam_rast_set&pitchClassDataType=all'
-```
-
-**Returns**: All 15 fields per pitch class, starting from maqām tonic - complete data for scholarly research
-
-### Example 4: Verify Tonic Positions in Scala Mode
-
-```bash
-curl 'http://localhost:3000/api/maqamat/classification/12-pitch-class-sets?setId=maqam_hijaz_set&startSetFromC=true' | \
-  python3 -c "import json, sys; data = json.load(sys.stdin); \
-  [print(f'{m[\"maqamDisplayName\"]:30s} → Tonic: {m[\"tonic\"][\"ipnReferenceNoteName\"]:3s} ({m[\"tonic\"][\"noteNameDisplayName\"]:15s}) at position {m[\"tonic\"][\"positionInSet\"]}') \
-  for m in data['sets'][0]['compatibleMaqamat'][:5]]"
-```
-
-**Returns**: List of compatible maqāmāt with their tonic positions in the C-based set
-
----
-
-## Concrete Example: Maqām Ḥijāz
-
-### Default Mode (`startSetFromC=false`)
-
-```
-Tonic: D (dūgāh) at position 0
-Position 0: D - dūgāh (0.00 cents relative, 702.13 cents absolute)
-Position 1: D# - kurdī (90.05 cents relative, 792.18 cents absolute)
-...
-Position 10: C - kurdān (995.92 cents relative, 1698.04 cents absolute)
-Position 11: C# - shahnāz (1086.14 cents relative, 1788.27 cents absolute)
-```
-
-### Scala Mode (`startSetFromC=true`)
-
-```
-Tonic: D (dūgāh) at position 2
-Position 0: C - rāst (0.00 cents relative, 498.04 cents absolute)
-Position 1: C# - zīrgūleh (92.21 cents relative, 590.25 cents absolute)
-Position 2: D - dūgāh (204.08 cents relative, 702.13 cents absolute) ← TONIC
-Position 3: D# - kurdī (294.13 cents relative, 792.18 cents absolute)
-...
-```
-
-### Key Differences Between Modes
-
-| Aspect | Default Mode | Scala Mode |
-|--------|-------------|------------|
-| **First note** | Maqām tonic | C (IPN reference) |
-| **Relative cents start** | 0.00 at tonic | 0.00 at C |
-| **C note name (ḥijāz)** | kurdān (oct 2) | rāst (oct 1) |
-| **C# note name (ḥijāz)** | shahnāz (oct 2) | zīrgūleh (oct 1) |
-| **Tonic position** | Always 0 | Varies (e.g., 2 for D) |
-| **Use case** | Musicological analysis | Scala export, MIDI tuning |
-
----
-
-## Scala File Export Functions
-
-### `exportMaqamTo12ToneScala`
-
-**Purpose**: Generates a complete Scala (.scl) file from a maqām's 12-pitch-class set.
-
-**Function Signature**:
-```typescript
-export function exportMaqamTo12ToneScala(
-  maqamInput: Maqam | MaqamData,
-  tuningSystem: TuningSystem,
-  startingNote: string,
-  alKindiTuningSystem: TuningSystem,
-  alKindiStartingNote: string,
-  description?: string,
-  currentUrl?: string
-): string | null
-```
-
-**Key Implementation Details**:
-
-1. **Calls Classification Algorithm**: Internally calls `classifyMaqamat()` to get the 12-pitch-class set
-2. **Matches API Behavior**: Uses identical logic to API endpoint with `startSetFromC=true`
-3. **Starting Note Name Lookup**: Gets the starting note name from the tuning system's note name sets (not from abstract arrays or indices). Uses `standardizeText()` comparison to find matching note name set, then uses the first element which has proper diacritics. This matches the API endpoint pattern (route.ts lines 293-311).
-4. **Octave Shifting**: Automatically shifts octave 2 notes before tonic to octave 1
-5. **Rotation to C**: Rotates pitch class array to start from C (degree 0)
-6. **Relative Cents**: Calculates relative cents from C (not tonic)
-7. **Capitalization**: Uses sentence case for labels (first letter capitalized, rest lowercase) and lowercase for all maqām names and note names throughout the header
-8. **Reference Frequency Label**: Uses format "Scala file 1/1 (0 cents) reference frequency:" to clearly indicate this is the reference for the 1/1 ratio (0 cents) note
-
-**Output Format** (Scala .scl file):
-```
-! maqām bayyāt shūrī (12 pitch class chromatic set)
-! Generated by the Digital Arabic Maqām Archive (DiArMaqAr) https://diarmaqar.netlify.app
-! Source maqām: maqām bayyāt shūrī
-! Source maqām tonic note name: dūgāh
-! Source tuning system: al-Fārābī (950g) First Oud Tuning (Full First Octave) 27-Tone + al-Kindī (874) 12-Tone (starting note: ʿushayrān, reference frequency: 110.00 Hz)
-! Scala file 1/1 (0 cents) reference frequency: 130.37 Hz (C3)
-! More information: [URL]
-!
-! Compatible maqāmāt in this set (13 total):
-! - maqām sūznāk (and its octave equivalents: ...)
-!   Tonic: C (rāst), position 0
-!   ...
-maqām bayyāt shūrī - 12-tone chromatic set (al-Fārābī (950g) First Oud Tuning (Full First Octave) 27-Tone + al-Kindī (874) 12-Tone)
-12
-!
-113.69
-203.91
-294.13
-348.73
-498.04
-611.73
-701.96
-800.91
-905.87
-996.09
-1109.78
-1200.00
-```
-
-**Header Formatting Rules**:
-- **Capitalization**: Sentence case for labels (first letter capitalized, rest lowercase). Lowercase for all maqām names and note names.
-- **Starting Note**: Displayed as actual note name from tuning system (e.g., "ʿushayrān"), not as numeric index. Obtained from `tuningSystem.getNoteNameSets()` using `standardizeText()` comparison.
-- **Reference Frequency**: Label format is "Scala file 1/1 (0 cents) reference frequency:" to indicate this is the reference for the 1/1 ratio (0 cents) note.
-
-**Important Notes**:
-- Returns `null` if maqām is not a source for any 12-pitch-class set
-- Uses same classification algorithm as API endpoint
-- Pitch classes already in chromatic ascending order (DO NOT re-sort)
-- Always operates in "Scala mode" (equivalent to `startSetFromC=true`)
-
-**Related Function**: `exportMaqamTo12ToneScalaKeymap` - Generates keyboard mapping (.kbm) file for MIDI mapping
-
-**File**: `src/functions/scala-export.ts` (lines 632-1080)
-
----
-
-# Part 2: Algorithm Deep Dive
 
 ## Set Creation Algorithm
 
@@ -575,37 +255,6 @@ const diffWrapped = Math.min(diff, 1200 - diff); // Handle wrap-around
 - Maqām: B at 10.00¢ → Normalized: 10.00¢
 - Direct difference: |1190.00 - 10.00| = 1180.00¢ ❌ (too large!)
 - Wrapped difference: min(1180, 1200 - 1180) = min(1180, 20) = 20.00¢ ✅ (correct)
-
-### Example: Matching maqām ḥuzām to bayyāt shūrī Set
-
-#### 12-Pitch-Class Set (from maqām bayyāt shūrī):
-
-| IPN | Note Name | Cents | Normalized (mod 1200) |
-|-----|-----------|-------|----------------------|
-| D | dūgāh | 498.04 | 498.04 |
-| D# | kurdī | 588.27 | 588.27 |
-| E | segāh | 642.86 | 642.86 |
-| F | chahārgāh | 792.18 | 792.18 |
-| F# | ḥijāz | 905.87 | 905.87 |
-| G | nawā | 996.09 | 996.09 |
-| G# | ḥiṣār | 1095.04 | 1095.04 |
-| A | ḥusaynī | 1200.00 | 0.00 |
-| A# | ʿajam | 1290.22 | 90.22 |
-| B | māhūr | 1403.91 | 203.91 |
-| C | kurdān | 1494.13 | 294.13 |
-| C# | shahnāz | 1607.82 | 407.82 |
-
-#### Compatibility Check Process:
-
-For each pitch class in the maqām transposition's ascending and descending sequences:
-
-1. **Get IPN Reference**: `getIpnReferenceNoteName(maqamPitchClass)` assigns an IPN reference based on musicological logic
-2. **Lookup in Set**: Find the pitch class with matching IPN reference in the set
-3. **Normalize Cents**: Both values normalized to same octave (modulo 1200)
-4. **Compare**: Calculate difference with wrap-around handling
-5. **Check Tolerance**: If difference ≤ tolerance (default: 5¢) → ✅ Match
-
-**Result**: ✅ **COMPATIBLE** - All pitch classes match within tolerance!
 
 ---
 
@@ -852,28 +501,6 @@ if (startSetFromC && relativeCents < 0) {
    - `false`: Not directly compatible (degree 0 = tonic, not C)
    - `true`: Compatible (degree 0 = C, as Scala expects)
 
-### Use Cases
-
-#### `startSetFromC=false` (Default)
-- **Use when**: Displaying maqām-centric information
-- **Benefit**: Tonic is at position 0, making it easy to see maqām structure
-- **Example**: UI showing maqām intervals from tonic
-
-#### `startSetFromC=true` (Scala Mode)
-- **Use when**: Exporting to Scala (.scl) files
-- **Benefit**: Degree 0 maps to C (middle C), as Scala expects
-- **Example**: Generating tuning files for MIDI keyboards or synthesizers
-
-### Important Notes
-
-1. **Octave Shifting**: The algorithm intelligently shifts octave 2 notes to octave 1 when they come before the tonic, ensuring proper ascending order when rotated.
-
-2. **Maqam Tonic Tracking**: The `tonic` field in compatible maqāmāt still tracks the original tonic position (e.g., position 2 for D when `startSetFromC=true`).
-
-3. **Absolute Cents Preserved**: The absolute cents values remain unchanged - only the ordering and relative cents calculation change.
-
-4. **All 12 Pitch Classes**: Both modes contain all 12 IPN references, just in different orders.
-
 ### Implementation Reference
 
 - **API Route**: `src/app/api/maqamat/classification/12-pitch-class-sets/route.ts`
@@ -882,8 +509,6 @@ if (startSetFromC && relativeCents < 0) {
 - **Relative cents wrap**: Lines 302-307
 
 ---
-
-# Part 3: Detailed Examples
 
 ## Manual Calculation Walkthrough
 
@@ -911,14 +536,14 @@ This section provides a complete step-by-step manual calculation of a 12-pitch-c
 **al-Kindi-(874) Tuning System on Ushayran**
 
 **Octave 1 (preferred range):**
-- ʿushayrān (C): 0 cents
-- ʿajam ʿushayrān (C#): 90.22 cents
-- kawasht (D#): 203.91 cents
-- rāst (E): 294.13 cents
-- zīrgūleh (F#): 407.82 cents
+- ʿushayrān (A): 0 cents
+- ʿajam ʿushayrān (A#): 90.22 cents
+- kawasht (B): 203.91 cents
+- rāst (C): 294.13 cents
+- zīrgūleh (C#): 407.82 cents
 - dūgāh (D): 498.04 cents
 - kurdī (D#): 588.27 cents
-- būselīk/ʿushshāq (F): 701.96 cents
+- būselīk/ʿushshāq (E): 701.96 cents
 - chahārgāh (F): 792.18 cents
 - ḥijāz (F#): 905.87 cents
 - nawā (G): 996.09 cents
@@ -930,6 +555,8 @@ This section provides a complete step-by-step manual calculation of a 12-pitch-c
 - māhūr (B): 1403.91 cents
 - kurdān (C): 1494.13 cents
 - shahnāz (C#): 1607.82 cents
+
+**Note**: In al-Kindi-(874) tuning system, ʿushayrān (the starting note) maps to IPN reference **A** (not C), as defined by its `englishName: "A2"`. This is the musicological mapping.
 
 #### Step-by-Step Process
 
@@ -975,8 +602,6 @@ G  → nawā (octave 1): 996.09 cents
 G# → ḥiṣār (octave 1): 1086.31 cents
 ```
 
-**Note:** In al-Kindi-(874) tuning system, ʿushayrān (the starting note) maps to IPN reference **A** (not C), as defined by its `englishName: "A2"`. This is the musicological mapping, not a mathematical one based on cents value.
-
 ### Phase 3: Validate Compatibility
 
 **Step 3.1: Map Maqam Pitch Classes by IPN Reference**
@@ -992,18 +617,18 @@ G# → ḥiṣār (octave 1): 1086.31 cents
 **Step 4.1: Start with al-Kindi Base**
 ```
 newPitchClassMap = {
-  A: alKindi_A (0 cents),        // ʿushayrān
-  A#: alKindi_A# (90.22 cents),  // ʿajam ʿushayrān
-  B: alKindi_B (203.91 cents),   // kawasht
-  C: alKindi_C (294.13 cents),   // rāst
-  C#: alKindi_C# (407.82 cents), // zīrgūleh
-  D: alKindi_D (498.04 cents),   // dūgāh
-  D#: alKindi_D# (588.27 cents),  // kurdī
-  E: alKindi_E (701.96 cents),   // būselīk/ʿushshāq
-  F: alKindi_F (792.18 cents),   // chahārgāh
-  F#: alKindi_F# (905.87 cents),  // ḥijāz
-  G: alKindi_G (996.09 cents),    // nawā
-  G#: alKindi_G# (1086.31 cents)  // ḥiṣār
+  A: alKindi_A (0 cents),
+  A#: alKindi_A# (90.22 cents),
+  B: alKindi_B (203.91 cents),
+  C: alKindi_C (294.13 cents),
+  C#: alKindi_C# (407.82 cents),
+  D: alKindi_D (498.04 cents),
+  D#: alKindi_D# (588.27 cents),
+  E: alKindi_E (701.96 cents),
+  F: alKindi_F (792.18 cents),
+  F#: alKindi_F# (905.87 cents),
+  G: alKindi_G (996.09 cents),
+  G#: alKindi_G# (1086.31 cents)
 }
 ```
 
@@ -1027,27 +652,25 @@ newPitchClassMap = {
   - **E**: alKindi_E (701.96) → maqam_E (642.86) ✅ Different value - replaced
   - **F**: alKindi_F (792.18) → maqam_F (792.18) ✅ Same value
   - **G**: alKindi_G (996.09) → maqam_G (996.09) ✅ Same value
-  - **G#**: alKindi_G# (1086.31) → maqam_G# (1095.04) ✅ Different value - replaced (initial)
+  - **G#**: alKindi_G# (1086.31) → maqam_G# (1095.04) ✅ Different value - replaced
   - **B**: alKindi_B (203.91) → maqam_B (1403.91) ✅ Different value - replaced
   - **C**: alKindi_C (294.13) → maqam_C (1494.13) ✅ Different value - replaced
 
 **Result after initial merge:**
 ```
-A  → alKindi_A (0 cents) - filler (ʿushayrān)
-A# → alKindi_A# (90.22 cents) - filler (ʿajam ʿushayrān)
+A  → alKindi_A (0 cents) - filler
+A# → alKindi_A# (90.22 cents) - filler
 B  → maqam_B (1403.91 cents) - from maqam (māhūr)
 C  → maqam_C (1494.13 cents) - from maqam (kurdān)
-C# → alKindi_C# (407.82 cents) - filler (zīrgūleh)
-D  → maqam_D (498.04 cents) - from maqam (dūgāh)
-D# → alKindi_D# (588.27 cents) - filler (kurdī)
+C# → alKindi_C# (407.82 cents) - filler
+D  → maqam_D (498.04 cents) - from maqam (dūgāh, tonic)
+D# → alKindi_D# (588.27 cents) - filler
 E  → maqam_E (642.86 cents) - from maqam (segāh)
 F  → maqam_F (792.18 cents) - from maqam (chahārgāh)
-F# → alKindi_F# (905.87 cents) - filler (ḥijāz)
+F# → alKindi_F# (905.87 cents) - filler
 G  → maqam_G (996.09 cents) - from maqam (nawā)
-G# → maqam_G# (1095.04 cents) - from maqam (initial replacement)
+G# → maqam_G# (1095.04 cents) - from maqam
 ```
-
-**Note:** Phase 5 will rebuild this set with optimal octave selection.
 
 ### Phase 5: Reorder and Select Optimal Octaves
 
@@ -1110,7 +733,7 @@ Starting from tonic D (498.04 cents):
   - Selected: **G# (ḥiṣār)**: 1095.04 cents (maqam - prioritized!)
 - previousCents = 1095.04
 
-**✅ Algorithm Update**: The algorithm now prioritizes maqām values over al-Kindi fillers. Maqam ḥiṣār (1095.04) is selected even though al-Kindi ḥiṣār (1086.31) has a lower cents value, because maqām values take priority when they satisfy the ascending order requirement.
+**✅ Algorithm Update**: Maqam ḥiṣār (1095.04) is selected even though al-Kindi ḥiṣār (1086.31) has a lower cents value, because maqām values take priority.
 
 **Position 7 (A):**
 - **Priority 1: Try maqam candidates first**
@@ -1118,7 +741,7 @@ Starting from tonic D (498.04 cents):
 - **Priority 2: Fall back to al-Kindi**
   - al-Kindi ḥusaynī (1200 cents, octave 2)
   - Filter: 1200 > 1095.04 ✅
-  - Selected: **A (ḥusaynī)**: 1200 cents (al-Kindi filler)
+  - Selected: **A (ḥusaynī)**: 1200 cents
 - previousCents = 1200
 
 **Position 8 (A#):**
@@ -1149,8 +772,8 @@ Starting from tonic D (498.04 cents):
 
 **Ordered from tonic D (chromatic ascending):**
 
-| Position | IPN Reference | Note Name | Cents | Relative Cents | Octave | Source |
-|----------|---------------|-----------|-------|----------------|--------|--------|
+| Position | IPN | Note Name | Cents | Relative Cents | Octave | Source |
+|----------|-----|-----------|-------|----------------|--------|--------|
 | 0 | **D** | dūgāh | 498.04 | 0.00 | 1 | Maqam (tonic) |
 | 1 | **D#** | kurdī | 588.27 | 90.22 | 1 | al-Kindi filler |
 | 2 | **E** | segāh | 642.86 | 144.82 | 1 | Maqam |
@@ -1164,230 +787,40 @@ Starting from tonic D (498.04 cents):
 | 10 | **C** | kurdān | 1494.13 | 996.09 | 2 | Maqam |
 | 11 | **C#** | shahnāz | 1607.82 | 1109.78 | 2 | al-Kindi filler |
 
-**Relative Cents Calculation**: Relative cents are calculated from the tonic (D = 0.00¢). Each pitch class's relative cents = its absolute cents - tonic cents (498.04).
-
-#### Summary
-
-✅ **7 pitch classes from maqam** (D, E, F, G, G#, B, C)
-✅ **5 pitch classes from al-Kindi** (D#, F#, A, A#, C#)
-✅ **Chromatic ascending order** from tonic D
-✅ **All 12 IPN references** covered (C, C#, D, D#, E, F, F#, G, G#, A, A#, B)
-✅ **Optimal octave selection** ensures ascending cents values
-
-This set is suitable for MIDI keyboard tuning and Scala (.scl) file export!
+**Summary**:
+- ✅ 7 pitch classes from maqam
+- ✅ 5 pitch classes from al-Kindi
+- ✅ Chromatic ascending order from tonic D
+- ✅ All 12 IPN references covered
+- ✅ Optimal octave selection
 
 ---
 
 ## Verification Results
 
-All manual calculations have been verified against the actual API results. Both modes (`startSetFromC=false` and `startSetFromC=true`) match perfectly.
+All manual calculations have been verified against the actual API results. Both modes (`startSetFromC=false` and `startSetFromC=true`) match perfectly with differences within 0.01 cents (rounding tolerance).
 
-### `startSetFromC=false` (Default Mode)
-
-#### Absolute Cents Values
-✅ **All 12 pitch classes match exactly**
-
-| Position | IPN | Note Name | Manual Cents | API Cents | Match |
-|----------|-----|-----------|--------------|-----------|-------|
-| 0 | D | dūgāh | 498.04 | 498.04 | ✅ |
-| 1 | D# | kurdī | 588.27 | 588.27 | ✅ |
-| 2 | E | segāh | 642.86 | 642.86 | ✅ |
-| 3 | F | chahārgāh | 792.18 | 792.18 | ✅ |
-| 4 | F# | ḥijāz | 905.87 | 905.87 | ✅ |
-| 5 | G | nawā | 996.09 | 996.09 | ✅ |
-| 6 | G# | ḥiṣār | 1095.04 | 1095.04 | ✅ |
-| 7 | A | ḥusaynī | 1200.00 | 1200.00 | ✅ |
-| 8 | A# | ʿajam | 1290.22 | 1290.22 | ✅ |
-| 9 | B | māhūr | 1403.91 | 1403.91 | ✅ |
-| 10 | C | kurdān | 1494.13 | 1494.13 | ✅ |
-| 11 | C# | shahnāz | 1607.82 | 1607.82 | ✅ |
-
-#### Relative Cents Values
-✅ **All match within 0.01 cents (rounding tolerance)**
-
-| Position | IPN | Manual Rel Cents | API Rel Cents | Difference |
-|----------|-----|------------------|---------------|------------|
-| 0 | D | 0.00 | 0.00 | 0.00 ✅ |
-| 1 | D# | 90.22 | 90.22 | 0.00 ✅ |
-| 2 | E | 144.82 | 144.82 | 0.00 ✅ |
-| 3 | F | 294.13 | 294.13 | 0.00 ✅ |
-| 4 | F# | 407.82 | 407.82 | 0.00 ✅ |
-| 5 | G | 498.04 | 498.04 | 0.00 ✅ |
-| 6 | G# | 597.00 | 597.00 | 0.00 ✅ |
-| 7 | A | 701.96 | 701.96 | 0.00 ✅ |
-| 8 | A# | 792.18 | 792.18 | 0.00 ✅ |
-| 9 | B | 905.87 | 905.87 | 0.00 ✅ |
-| 10 | C | 996.09 | 996.09 | 0.00 ✅ |
-| 11 | C# | 1109.78 | 1109.78 | 0.00 ✅ |
-
-**Note**: Minor differences (0.01-0.02 cents) are due to floating-point rounding and are within acceptable tolerance.
-
-### `startSetFromC=true` (Scala Mode)
-
-#### Absolute Cents Values
-✅ **All 12 pitch classes match exactly**
-
-| Position | IPN | Note Name | Manual Cents | API Cents | Match |
-|----------|-----|-----------|--------------|-----------|-------|
-| 0 | C | rāst | 294.13 | 294.13 | ✅ |
-| 1 | C# | zīrgūleh | 407.82 | 407.82 | ✅ |
-| 2 | D | dūgāh | 498.04 | 498.04 | ✅ |
-| 3 | D# | kurdī | 588.27 | 588.27 | ✅ |
-| 4 | E | segāh | 642.86 | 642.86 | ✅ |
-| 5 | F | chahārgāh | 792.18 | 792.18 | ✅ |
-| 6 | F# | ḥijāz | 905.87 | 905.87 | ✅ |
-| 7 | G | nawā | 996.09 | 996.09 | ✅ |
-| 8 | G# | ḥiṣār | 1095.04 | 1095.04 | ✅ |
-| 9 | A | ḥusaynī | 1200.00 | 1200.00 | ✅ |
-| 10 | A# | ʿajam | 1290.22 | 1290.22 | ✅ |
-| 11 | B | māhūr | 1403.91 | 1403.91 | ✅ |
-
-#### Relative Cents Values
-✅ **All match within 0.01 cents (rounding tolerance)**
-
-| Position | IPN | Manual Rel Cents | API Rel Cents | Difference |
-|----------|-----|------------------|---------------|------------|
-| 0 | C | 0.00 | 0.00 | 0.00 ✅ |
-| 1 | C# | 113.69 | 113.69 | 0.00 ✅ |
-| 2 | D | 203.91 | 203.91 | 0.00 ✅ |
-| 3 | D# | 294.13 | 294.13 | 0.00 ✅ |
-| 4 | E | 348.73 | 348.73 | 0.00 ✅ |
-| 5 | F | 498.04 | 498.04 | 0.00 ✅ |
-| 6 | F# | 611.73 | 611.73 | 0.00 ✅ |
-| 7 | G | 701.96 | 701.96 | 0.00 ✅ |
-| 8 | G# | 800.91 | 800.91 | 0.00 ✅ |
-| 9 | A | 905.87 | 905.87 | 0.00 ✅ |
-| 10 | A# | 996.09 | 996.09 | 0.00 ✅ |
-| 11 | B | 1109.78 | 1109.78 | 0.00 ✅ |
-
-#### Octave Shifting Verification
-✅ **C and C# correctly shifted from octave 2 to octave 1**
-
-- **C**: Changed from octave 2 (kurdān: 1494.13¢) → octave 1 (rāst: 294.13¢) ✅
-- **C#**: Changed from octave 2 (shahnāz: 1607.82¢) → octave 1 (zīrgūleh: 407.82¢) ✅
-
-### Key Verification Points
+**Key Verification Points**:
 
 1. ✅ **Absolute cents values**: All match exactly
 2. ✅ **Relative cents calculations**: All match within 0.01 cents tolerance
 3. ✅ **Octave assignments**: All match correctly
-4. ✅ **Pitch class selection**: Maqam values prioritized correctly (G# uses maqam ḥiṣār: 1095.04¢, not al-Kindi: 1086.31¢)
+4. ✅ **Pitch class selection**: Maqam values prioritized correctly
 5. ✅ **Ordering**: Chromatic order maintained correctly in both modes
 6. ✅ **startSetFromC rotation**: C correctly becomes position 0 in Scala mode
 7. ✅ **Octave shifting**: C and C# correctly shifted to octave 1 when before tonic
 
-### Conclusion
-
-**All manual calculations match the API results perfectly.** The documentation accurately describes the algorithm's behavior, and the step-by-step process correctly reflects how the 12-pitch-class sets are created and formatted.
-
-The minor rounding differences (0.01-0.02 cents) are expected due to:
-- Floating-point arithmetic precision
-- Display rounding in API responses
-- Multiple decimal place calculations
-
-These differences are well within acceptable tolerance for musical applications.
+**Conclusion**: All manual calculations match the API results perfectly. The minor rounding differences (0.01-0.02 cents) are expected due to floating-point arithmetic precision and are well within acceptable tolerance for musical applications.
 
 ---
 
-# Critical Rules & Best Practices
+## Related Documentation
 
-## Implementation Rules
-
-1. **Never mix octaves incorrectly**: C and C# before the tonic MUST come from octave 1 when `startSetFromC=true`
-2. **Preserve absolute cents**: Absolute cents values are unchanged between modes
-3. **Maintain chromatic order**: The 12 pitch classes follow C, C#, D, D#, E, F, F#, G, G#, A, A#, B
-4. **Track tonic position**: Always include tonic metadata in Scala mode
-5. **Handle wrap-around**: Add 1200 cents to negative relative cents values
-6. **Prioritize maqam values**: When both maqam and tuning system pitch classes satisfy ascending order, choose maqam
-7. **Starting Note Name Pattern**: Always get starting note names from `tuningSystem.getNoteNameSets()` using `standardizeText()` comparison. Never convert from numeric indices or use abstract note name arrays directly. The pattern: find matching note name set where `standardizeText(set[0]) === standardizeText(noteName)`, then use `set[0]` which has proper diacritics.
-8. **Capitalization Rules**: Use sentence case for labels (first letter capitalized, rest lowercase). Use lowercase for all maqām names and note names. Example: "Source maqām:" not "Source Maqām:", "Compatible maqāmāt" not "Compatible Maqāmāt".
-9. **Reference Frequency Label**: Always use format "Scala file 1/1 (0 cents) reference frequency:" to clearly indicate this refers to the 1/1 ratio (0 cents) reference note.
-
-## Testing Guidelines
-
-### Verify Both Modes
-
-```bash
-# Default mode
-curl 'http://localhost:3000/api/maqamat/classification/12-pitch-class-sets?setId=maqam_hijaz_set'
-
-# Scala mode
-curl 'http://localhost:3000/api/maqamat/classification/12-pitch-class-sets?startSetFromC=true&setId=maqam_hijaz_set'
-
-# Compare: D, D#, E, F, F#, G, G#, A, A#, B should have identical note names
-# Only C and C# differ (rāst/zīrgūleh vs kurdān/shahnāz)
-```
-
-### Verify Note Names
-
-Always verify note names against `src/models/NoteName.ts`:
-
-```typescript
-export const octaveOneNoteNames = [
-  "yegāh",      // 0
-  ...
-  "rāst",       // 16  ← C octave 1
-  ...
-  "zīrgūleh",   // 19  ← C# octave 1
-  ...
-  "dūgāh",      // 21  ← D octave 1
-  ...
-];
-
-export const octaveTwoNoteNames = [
-  "nawā",       // 0   ← G octave 2
-  ...
-  "kurdān",     // 16  ← C octave 2
-  ...
-  "shahnāz",    // 19  ← C# octave 2
-  ...
-];
-```
-
-### Parameter Validation
-
-```bash
-# Test invalid parameter
-curl 'http://localhost:3000/api/maqamat/classification/12-pitch-class-sets?setId=maqam_rast_set&pitchClassDataType=invalid'
-# Should return 400 error with valid options list
-```
+- [scala-export-overview.md](./scala-export-overview.md) - Choose export type
+- [12-pitch-class-sets-api.md](./12-pitch-class-sets-api.md) - API usage
+- [scala-scl-export.md](./scala-scl-export.md) - Creating .scl files
+- [scala-kbm-export.md](./scala-kbm-export.md) - Creating .kbm files
 
 ---
 
-# Quick Reference
-
-## When to Use Each Mode
-
-| Mode | Parameter | Use Case | Starting Point | Tonic Position |
-|------|-----------|----------|----------------|----------------|
-| **Analysis** | `startSetFromC=false` | Musicological analysis, UI display | Maqām tonic | Position 0 |
-| **Scala Export** | `startSetFromC=true` | Scala .scl files, MIDI tuning | C (IPN) | Variable (e.g., 2 for D) |
-
-## Common Parameter Combinations
-
-```bash
-# Minimal output for Scala export
-?startSetFromC=true&pitchClassDataType=cents
-
-# Full analysis data
-?pitchClassDataType=all
-
-# Scala export with all data
-?startSetFromC=true&pitchClassDataType=all
-
-# Specific set only
-?setId=maqam_rast_set
-```
-
-## Algorithm Summary
-
-1. **Create set from maqam** → 12 pitch classes (maqam + tuning system fillers)
-2. **Check for duplicates** → Merge with existing set if identical
-3. **Find compatible maqamat** → Match pitch classes within tolerance (default: 5¢)
-4. **Apply startSetFromC** → Rotate to C and shift octaves if needed
-5. **Format response** → Include tonic info for each compatible maqam
-
----
-
-*Last Updated: 2025-11-18*
-*Comprehensive guide combining API usage, algorithm deep dive, and verification examples*
+*Deep dive into the 12-pitch-class set creation and classification algorithm*
