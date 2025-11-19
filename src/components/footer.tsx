@@ -26,7 +26,7 @@ export default function Footer() {
               alt="American University of Beirut Logo"
               width={200}
               height={50}
-              style={{ maxHeight: "50px", width: "auto" }}
+              style={{ maxHeight: "50px", width: "auto", height: "auto" }}
             />
           </div>
 

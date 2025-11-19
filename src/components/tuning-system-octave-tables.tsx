@@ -67,6 +67,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
   });
 
   const octaveScrollRefs = [useRef<HTMLDivElement>(null), useRef<HTMLDivElement>(null), useRef<HTMLDivElement>(null), useRef<HTMLDivElement>(null)];
+  const isSyncingScroll = useRef(false);
 
   const [cascade, setCascade] = useState(false);
 
@@ -93,7 +94,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
   useEffect(() => {
     if (selectedPitchClasses && selectedPitchClasses.length > 0) {
       const currentValueType = selectedPitchClasses[0].originalValueType;
-      
+
       // Collect all available value types in current tuning system
       const availableValueTypes = new Set<string>();
       selectedPitchClasses.forEach((pc) => {
@@ -102,7 +103,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
 
       setFilters((prev) => {
         const updated = { ...prev };
-        
+
         // Uncheck value types that aren't in the current tuning system
         const valueTypeFilters = ['fraction', 'cents', 'decimalRatio', 'stringLength', 'fretDivision'];
         valueTypeFilters.forEach((vt) => {
@@ -110,13 +111,52 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
             updated[vt as keyof typeof updated] = false;
           }
         });
-        
+
         // Always ensure current value type is checked
         updated[currentValueType as keyof typeof updated] = true;
         return updated;
       });
     }
   }, [selectedPitchClasses, setFilters]);
+
+  // Sync horizontal scrolling across all octave tables
+  useEffect(() => {
+    const syncScroll = (sourceIndex: number) => (event: Event) => {
+      if (isSyncingScroll.current) return;
+
+      const sourceContainer = event.target as HTMLDivElement;
+      const scrollLeft = sourceContainer.scrollLeft;
+
+      isSyncingScroll.current = true;
+
+      // Sync all other octave containers
+      octaveScrollRefs.forEach((ref, index) => {
+        if (index !== sourceIndex && ref.current) {
+          ref.current.scrollLeft = scrollLeft;
+        }
+      });
+
+      isSyncingScroll.current = false;
+    };
+
+    // Attach scroll listeners to all octave containers
+    const listeners: Array<{ element: HTMLDivElement; handler: (event: Event) => void }> = [];
+
+    octaveScrollRefs.forEach((ref, index) => {
+      if (ref.current) {
+        const handler = syncScroll(index);
+        ref.current.addEventListener('scroll', handler);
+        listeners.push({ element: ref.current, handler });
+      }
+    });
+
+    // Cleanup
+    return () => {
+      listeners.forEach(({ element, handler }) => {
+        element.removeEventListener('scroll', handler);
+      });
+    };
+  }, [openedOctaveRows]); // Re-attach when octaves open/close
 
   function getOctaveNoteName(octave: number, colIndex: number) {
     const idx = selectedIndices[colIndex];
