@@ -118,6 +118,8 @@ export default defineConfig({
                 { text: 'Check Availability', link: '#getMaqamAvailability' },
                 { text: 'List Transpositions', link: '#listMaqamTranspositions' },
                 { text: 'Compare Across Tuning Systems', link: '#compareMaqam' },
+                { text: 'Classification: 12-Pitch-Class Sets', link: '#classifyMaqamat12PitchClassSets' },
+                { text: 'Classification: Maqam-Based Sets', link: '#classifyMaqamatByMaqamPitchClassSets' },
               ]
             },
             {
@@ -206,6 +208,8 @@ export default defineConfig({
                 { text: 'Check Availability', link: '#getMaqamAvailability' },
                 { text: 'List Transpositions', link: '#listMaqamTranspositions' },
                 { text: 'Compare Across Tuning Systems', link: '#compareMaqam' },
+                { text: 'Classification: 12-Pitch-Class Sets', link: '#classifyMaqamat12PitchClassSets' },
+                { text: 'Classification: Maqam-Based Sets', link: '#classifyMaqamatByMaqamPitchClassSets' },
               ]
             },
             {
