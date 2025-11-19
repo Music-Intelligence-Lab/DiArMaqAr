@@ -1959,26 +1959,17 @@ paths:
           to 12-EDO semitones
         - **Direct Tuning System Values**: All cent values come directly from tuning systems
           without post-processing or calculation
-        - **Maqām Priority**: Maqām pitch classes are prioritized over al-Kindi fillers when both
-          satisfy the ascending order requirement (ensures maqām characteristics are preserved)
 
         **The Algorithm:**
         1. Loads pitch classes from both the specified tuning system and al-Kindi-(874) using
            the same `startingNote`
-        2. Creates al-Kindi base set: Selects one pitch class per IPN reference (C, C#, D, etc.)
-           from octaves matching the maqām's octave range
-        3. For each maqām transposition:
-           - Applies sequential reference note logic to ensure consistent IPN assignments
-           - Validates compatibility: Checks for duplicate IPN references with different cents values
-           - Initial merge: Replaces al-Kindi pitch classes with maqām values where IPN references match
-             (ascending sequence takes priority, then descending)
-           - Optimal octave selection: Rebuilds set with chromatic ascending order from tonic:
-             * **Priority 1**: Uses maqām pitch classes that satisfy ascending order requirement
-             * **Priority 2**: Falls back to al-Kindi fillers only if no maqām candidate available
-             * Selects optimal octaves to maintain ascending cents values
+        2. For each maqām transposition:
+           - Extracts IPN reference note names from ascending and descending sequences
+           - Replaces matching pitch classes in al-Kindi base (ascending takes priority, then descending)
+           - Selects pitch classes from correct octaves to ensure ascending chromatic order
            - Orders the 12 pitch classes chromatically starting from the maqām's tonic
-        4. Groups compatible maqāmāt together (those that match the set within tolerance)
-        5. Names each group after the source maqām (e.g., "maqām rāst set")
+        3. Groups compatible maqāmāt together
+        4. Names each group after the source maqām (e.g., "maqām rāst set")
 
         **Compatibility:**
         - Maqāmāt with duplicate IPN references (same IPN appearing with different pitch values)
@@ -2030,8 +2021,8 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
-          example: "false"
+            default: "true"
+          example: "true"
         - name: includeArabic
           in: query
           required: false
@@ -2057,9 +2048,9 @@ paths:
             directly compatible with Scala (.scl) file format which maps degree 0 to middle C by default.
 
             **Technical Implementation:**
-            1. **Octave Shifting**: For maqāmāt starting mid-octave (e.g., D), pitch classes in octave 2 that come BEFORE the tonic in chromatic order (C, C#) are shifted to their octave 1 equivalents from the tuning system. This ensures proper ascending order when rotated.
-            2. **Array Rotation**: The 12 pitch classes are rotated to place C first (instead of tonic)
-            3. **Relative Cents**: Recalculated from C (0.00 cents) instead of from tonic, with octave wrap-around handling (negative values + 1200)
+            1. **Octave Selection**: For maqāmāt starting mid-octave (e.g., D), pitch classes before the tonic in chromatic order (C, C#) are taken from octave 1, while those at or after the tonic use their original octaves
+            2. **Array Rotation**: The 12 pitch classes are rotated to place C first
+            3. **Relative Cents**: Calculated from C (0.00 cents), with octave wrap-around handling (negative values + 1200)
             4. **Note Names**: Arabic note names follow the NoteName model's octave conventions (e.g., C octave 1 = rāst, C octave 2 = kurdān)
             5. **Tonic Tracking**: The `maqamTonic` field indicates the actual maqām tonic's IPN, note names, and position in the reordered set
 
@@ -2068,9 +2059,9 @@ paths:
             - `true`: For Scala .scl export (no .kbm file needed) or MIDI keyboard mapping where C = degree 0
 
             **Example:**
-            - Maqām bayyāt shūrī (tonic D/dūgāh at 498.04 cents):
+            - Maqām ḥijāz (tonic D/dūgāh at 702.13 cents):
               - Default mode: D at position 0 (0.00 cents relative)
-              - Scala mode: C (rāst, 294.13 cents) at position 0 (0.00 cents relative), D at position 2 (203.91 cents relative)
+              - Scala mode: C (rāst, 498.04 cents) at position 0 (0.00 cents relative), D at position 2 (204.08 cents relative)
           schema:
             type: string
             enum: ["true", "false"]
@@ -2142,38 +2133,55 @@ paths:
               schema:
                 type: object
                 properties:
+                  summary:
+                    type: array
+                    description: Summary of each set with compatible maqāmāt names
+                    items:
+                      type: object
+                      properties:
+                        setName:
+                          type: string
+                          example: "maqām rast set"
+                        compatibleMaqamat:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              maqamName:
+                                type: string
+                              transpositionName:
+                                type: string
+                              isTransposed:
+                                type: boolean
                   statistics:
                     type: object
-                    description: Statistics about the classification (filtered results)
+                    description: Statistics about the classification
                     properties:
                       totalSets:
                         type: number
-                        description: Number of sets in filtered results
+                      sets:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            setName:
+                              type: string
+                            compatibleMaqamatCount:
+                              type: number
                       totalCompatibleMaqamat:
                         type: number
-                        description: Number of compatible maqāmāt in filtered results
                       incompatibleMaqamatCount:
                         type: number
-                        description: Total number of incompatible maqāmāt
-                      global:
-                        type: object
-                        description: Global statistics (unfiltered, for context)
-                        properties:
-                          totalSets:
-                            type: number
-                            description: Total number of all sets (before filtering)
-                          totalCompatibleMaqamat:
-                            type: number
-                            description: Total number of all compatible maqāmāt (before filtering)
-                          totalProcessed:
-                            type: number
-                            description: Total number of maqāmāt processed (compatible + incompatible)
                   sets:
                     type: array
                     description: Classification sets grouping compatible maqāmāt
                     items:
                       type: object
                       properties:
+                        id:
+                          type: string
+                          description: URL-safe identifier for the set
+                          example: "maqam_rast_set"
                         setIdName:
                           type: string
                           description: Standardized identifier for the set
@@ -2184,85 +2192,66 @@ paths:
                           example: "maqām rāst set"
                         sourceMaqam:
                           $ref: '#/components/schemas/EntityRef'
+                        sourceTransposition:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                              example: "maqām rāst"
+                            isTransposed:
+                              type: boolean
+                              example: false
                         pitchClassSet:
                           type: array
-                          description: |
-                            The 12 pitch classes in this set. Fields returned depend on the `pitchClassDataType` parameter:
-                            - Default (no parameter): Returns minimal fields (ipnReferenceNoteName, noteName, relativeCents, octave)
-                            - Specific type: Returns base fields plus the requested field
-                            - "all": Returns all available fields
+                          description: The 12 pitch classes in this set
                           items:
                             type: object
                             properties:
                               ipnReferenceNoteName:
                                 type: string
-                                description: IPN reference note name (always returned)
                                 example: "C"
                               noteName:
                                 type: string
-                                description: Note name from the tuning system (always returned)
                                 example: "rāst"
-                              relativeCents:
-                                type: number
-                                description: Cents relative to the first pitch class in the set (0.00 for tonic or C)
-                                example: 0
-                              octave:
-                                type: number
-                                description: Octave number (always returned in minimal mode)
-                                example: 1
                               cents:
                                 type: number
-                                description: Absolute cents value from the tuning system (included with pitchClassDataType=cents or all)
                                 example: 0
                               fraction:
                                 type: string
-                                description: Frequency ratio as fraction (included with pitchClassDataType=fraction or all)
                                 example: "1/1"
                               decimalRatio:
                                 type: number
-                                description: Frequency ratio as decimal (included with pitchClassDataType=decimalRatio or all)
                                 example: 1.0
                               frequency:
                                 type: number
-                                description: Frequency in Hz (included with pitchClassDataType=frequency or all)
                                 example: 130.665
-                              englishName:
-                                type: string
-                                nullable: true
-                                description: English note name with octave (included with pitchClassDataType=englishName or all)
-                                example: "C2"
-                              abjadName:
-                                type: string
-                                nullable: true
-                                description: Arabic abjad notation (included with pitchClassDataType=abjadName or all)
-                              stringLength:
+                              octave:
                                 type: number
-                                nullable: true
-                                description: String length for oud/qanun (included with pitchClassDataType=stringLength or all)
-                              fretDivision:
-                                type: number
-                                nullable: true
-                                description: Fret position for oud (included with pitchClassDataType=fretDivision or all)
-                              midiNoteDecimal:
-                                type: number
-                                nullable: true
-                                description: MIDI note number as decimal (included with pitchClassDataType=midiNoteNumber or all)
-                              midiNoteDeviation:
-                                type: string
-                                nullable: true
-                                description: MIDI note with cents deviation (included with pitchClassDataType=midiNoteDeviation or all)
-                              centsDeviation:
-                                type: number
-                                nullable: true
-                                description: Cents deviation from 12-EDO (included with pitchClassDataType=centsDeviation or all)
-                              referenceNoteName:
-                                type: string
-                                nullable: true
-                                description: Reference note name (included with pitchClassDataType=referenceNoteName or all)
-                              noteNameDisplayAr:
-                                type: string
-                                description: Arabic display name (included when includeArabic=true)
-                                example: "راست"
+                                example: 1
+                        maqamTonic:
+                          type: object
+                          description: Information about the actual maqām tonic position in the set
+                          properties:
+                            ipnReferenceNoteName:
+                              type: string
+                              description: IPN reference name of the tonic (e.g., "C", "F", "G"). Uses pitch class equivalent for octave variants (qarār dūgāh → "D")
+                              example: "C"
+                            noteNameIdName:
+                              type: string
+                              description: Standardized identifier for the tonic note name (ASCII-safe, URL-friendly)
+                              example: "rast"
+                            noteNameDisplayName:
+                              type: string
+                              description: Display name of the tonic note (with diacritics)
+                              example: "rāst"
+                            positionInSet:
+                              type: number
+                              description: |
+                                Index position (0-11) of the maqām tonic in the pitch class set.
+                                - In default mode (startSetFromC=false): Always 0
+                                - In Scala mode (startSetFromC=true): Varies based on tonic (e.g., 2 for D, 5 for F)
+                                - Octave equivalents (qarār dūgāh, muḥayyar) map to same position as their pitch class (D → position 2)
+                              example: 0
                         compatibleMaqamat:
                           type: array
                           description: Maqāmāt compatible with this set
@@ -2277,44 +2266,21 @@ paths:
                                 type: string
                                 description: Display name of the maqām transposition
                                 example: "maqām rāst"
-                              baseMaqamIdName:
-                                type: string
-                                description: ID name of the base maqām (without transposition suffix)
-                                example: "maqam_rast"
                               isTransposed:
                                 type: boolean
                                 description: Whether this is a transposition of the base maqām
-                              tonic:
-                                type: object
-                                nullable: true
-                                description: Information about the maqām's tonic note in this set
-                                properties:
-                                  ipnReferenceNoteName:
-                                    type: string
-                                    description: IPN reference name of the tonic (e.g., "C", "D", "F"). Uses pitch class equivalent for octave variants (qarār dūgāh → "D")
-                                    example: "C"
-                                  noteNameIdName:
-                                    type: string
-                                    description: Standardized identifier for the tonic note name (ASCII-safe, URL-friendly)
-                                    example: "rast"
-                                  noteNameDisplayName:
-                                    type: string
-                                    description: Display name of the tonic note (with diacritics)
-                                    example: "rāst"
-                                  positionInSet:
-                                    type: number
-                                    description: |
-                                      Index position (0-11) of the maqām tonic in the pitch class set.
-                                      - In default mode (startSetFromC=false): Varies based on maqām tonic
-                                      - In Scala mode (startSetFromC=true): Position shifts as set is rotated to start from C
-                                      - Octave equivalents (qarār dūgāh, muḥayyar) map to same position as their pitch class (D → position varies)
-                                    example: 0
                         compatibleMaqamatCount:
                           type: number
                           description: Number of compatible maqāmāt in this set
+                  totalSets:
+                    type: number
+                    description: Total number of classification sets
+                  totalCompatibleMaqamat:
+                    type: number
+                    description: Total number of compatible maqām transpositions across all sets
                   incompatibleMaqamat:
                     type: array
-                    description: Maqāmāt that cannot form valid 12-pitch-class sets (only included when includeIncompatible=true)
+                    description: Maqāmāt that cannot form valid 12-pitch-class sets
                     items:
                       type: object
                       properties:
@@ -2324,25 +2290,16 @@ paths:
                           type: object
                           nullable: true
                           properties:
-                            idName:
+                            name:
                               type: string
-                              description: Standardized identifier for the transposition
-                              example: "maqam_rast"
-                            displayName:
-                              type: string
-                              description: Display name of the transposition
-                              example: "maqām rāst"
                             isTransposed:
                               type: boolean
-                              description: Whether this is a transposition
-                              example: false
                         reason:
                           type: string
-                          description: Reason why this maqām is incompatible
                           example: "duplicate_ipn_reference"
                   incompatibleMaqamatCount:
                     type: number
-                    description: Number of incompatible maqāmāt (only included when includeIncompatible=true)
+                    description: Number of incompatible maqāmāt
                   parameters:
                     type: object
                     description: Parameters used for classification
@@ -2397,43 +2354,52 @@ paths:
                         example: "maqam_rast"
               examples:
                 default:
-                  summary: Default response (minimal pitch class data)
+                  summary: Default response
                   value:
+                    summary:
+                      - setIdName: "maqam_rast_set"
+                        setDisplayName: "maqām rāst set"
+                        compatibleMaqamat:
+                          - maqamIdName: "maqam_rast"
+                            maqamDisplayName: "maqām rāst"
+                            isTransposed: false
                     statistics:
                       totalSets: 1
+                      sets:
+                        - setIdName: "maqam_rast_set"
+                          setDisplayName: "maqām rāst set"
+                          compatibleMaqamatCount: 1
                       totalCompatibleMaqamat: 1
                       incompatibleMaqamatCount: 0
-                      global:
-                        totalSets: 1
-                        totalCompatibleMaqamat: 1
-                        totalProcessed: 1
                     sets:
-                      - setIdName: "maqam_rast_set"
+                      - id: "maqam_rast_set"
+                        setIdName: "maqam_rast_set"
                         setDisplayName: "maqām rāst set"
                         sourceMaqam:
                           id: "1"
                           idName: "maqam_rast"
                           displayName: "maqām rāst"
+                        sourceTransposition:
+                          idName: "maqam_rast"
+                          displayName: "maqām rāst"
+                          isTransposed: false
                         pitchClassSet:
                           - ipnReferenceNoteName: "C"
                             noteName: "rāst"
-                            relativeCents: 0
-                            octave: 1
-                          - ipnReferenceNoteName: "D"
-                            noteName: "dūgāh"
-                            relativeCents: 203.91
+                            cents: 0
+                            fraction: "1/1"
+                            decimalRatio: 1.0
+                            frequency: 130.665
                             octave: 1
                         compatibleMaqamat:
                           - maqamIdName: "maqam_rast"
                             maqamDisplayName: "maqām rāst"
-                            baseMaqamIdName: "maqam_rast"
                             isTransposed: false
-                            tonic:
-                              ipnReferenceNoteName: "C"
-                              noteNameIdName: "rast"
-                              noteNameDisplayName: "rāst"
-                              positionInSet: 0
                         compatibleMaqamatCount: 1
+                    totalSets: 1
+                    totalCompatibleMaqamat: 1
+                    incompatibleMaqamat: []
+                    incompatibleMaqamatCount: 0
                     parameters:
                       tuningSystem:
                         id: "CairoCongressTuningCommittee-(1929)"
@@ -2447,10 +2413,428 @@ paths:
                         idName: "al-kindi-874"
                         displayName: "al-Kindī (874)"
                       alKindiStartingNote:
+                        idName: "ushayran"
+                        displayName: "ʿushayrān"
+                      centsTolerance: 5
+                      startSetFromC: false
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Set or maqām not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                setNotFound:
+                  summary: Set not found
+                  value:
+                    error: "Set 'maqam_invalid_set' not found"
+                    hint: "Use ?setId=<set-id> to filter by a specific set (e.g., ?setId=maqam_rast_set)"
+                maqamNotFound:
+                  summary: Maqām not found in any set
+                  value:
+                    error: "No sets found containing maqam 'maqam_invalid'"
+                    hint: "Use ?maqamId=<maqam-id> to find sets containing a specific maqām (e.g., ?maqamId=maqam_rast)"
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /maqamat/classification/maqam-pitch-class-sets:
+    get:
+      tags:
+        - Maqāmāt
+      summary: Classify maqāmāt by maqam-based pitch class sets
+      description: |
+        Groups maqāmāt according to maqam-based pitch class sets. Each set contains all pitch
+        classes from a single source maqam (union of ascending and descending), and identifies
+        which other maqāmāt can be performed using only those pitch classes.
+
+        **Musicological Purpose:**
+        Answers the question: "Which maqāmāt can be performed using only the pitch classes of
+        maqām X?" For example, maqām rāst on rāst includes pitch classes that can perform maqām
+        bayyāt on dūgāh and maqām segāh on segāh.
+
+        **Key Differences from 12-Pitch-Class-Sets:**
+        - **No Chromatic Base**: Does not merge with al-Kindi-(874) or chromatic filler pitch classes
+        - **Variable Set Sizes**: Sets can contain any number of pitch classes (7, 8, 10, etc.), not fixed at 12
+        - **Octave-Equivalent Matching**: Pitch classes in different octaves treated as equivalent (C in octave 1 = C in octave 2)
+        - **Single Tuning System**: Uses only the specified tuning system (simpler than 12-pitch-class-sets)
+        - **Subset Matching**: Compatible maqāmāt must use subset of source maqam's pitch classes
+
+        **Critical Design Principles:**
+        - **Octave Equivalence**: IPN references are compared octave-normalized (C at any octave = "C")
+        - **Union of Melodic Paths**: Includes all pitch classes from both ascending AND descending sequences
+        - **Exact Matching**: All pitch classes from a compatible maqām must exist in the source set (within tolerance)
+        - **Direct Values**: All cent values come directly from tuning system without calculation
+        - **Tahlil Priority**: Base (non-transposed) maqāmāt create canonical sets first, then transpositions
+
+        **The Algorithm:**
+        1. For each maqām transposition (tahlil first, then transpositions):
+           - Extracts all unique pitch classes from ascending + descending sequences
+           - Groups by IPN reference (octave-equivalent)
+           - Validates no duplicate IPN references with different cents values
+           - Creates a maqam-based pitch class set
+        2. For each set, finds compatible maqāmāt:
+           - Checks if all pitch classes needed by candidate maqām exist in source set
+           - Compares cents values within tolerance (octave-normalized)
+           - Marks candidate as compatible if all pitch classes match
+        3. Groups compatible maqāmāt together
+        4. Names each group after the source maqām (e.g., "maqām rāst set")
+
+        **Compatibility:**
+        - Maqāmāt with duplicate IPN references (same IPN with different cents values when octave-normalized)
+          are marked as incompatible
+        - Compatible maqāmāt can be performed entirely using the pitch classes of the source maqām
+        - **Minimum Set Size**: Only sets with 2 or more maqāmāt are returned (source + at least one compatible)
+        - Sets containing only the source maqām (no compatible maqāmāt) are filtered out
+
+        **Output Format:**
+        - Sets ordered by number of compatible maqāmāt (descending)
+        - Each set includes: source maqām, all pitch classes (in ascending cents order), compatible maqāmāt, pitch class count
+        - Pitch classes include: English name, note name, cents, frequency, fraction, etc.
+
+        **Filtering Options:**
+        - Use `setId` to retrieve a specific set and its compatible maqāmāt
+        - Use `maqamId` to find all sets containing a specific maqām
+      operationId: classifyMaqamatByMaqamPitchClassSets
+      parameters:
+        - name: tuningSystem
+          in: query
+          description: "Tuning system ID for all maqāmāt (default: CairoCongressTuningCommittee-(1929))"
+          schema:
+            type: string
+            default: "CairoCongressTuningCommittee-(1929)"
+          example: "CairoCongressTuningCommittee-(1929)"
+        - name: startingNote
+          in: query
+          description: |
+            Starting note for the tuning system (default: yegah).
+
+            Use `yegah` for IbnSina/Meshshaqa, `ushayran` for al-Farabi/al-Kindi, `rast` for CairoCongress/al-Sabbagh
+          schema:
+            type: string
+            default: "yegah"
+          example: "yegah"
+        - name: centsTolerance
+          in: query
+          description: "Tolerance in cents for pitch class comparison (default: 5)"
+          schema:
+            type: number
+            default: 5
+            minimum: 0
+          example: 5
+        - name: includeIncompatible
+          in: query
+          description: Include maqāmāt that cannot form valid maqam-based pitch class sets
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "false"
+          example: "false"
+        - name: includeArabic
+          in: query
+          required: false
+          description: |
+            Return bilingual responses with Arabic script when true.
+
+            When true:
+            - All English/transliteration fields remain unchanged
+            - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+            - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+          schema:
+            type: string
+            enum: ["true", "false"]
+          example: "true"
+        - name: includePitchClassData
+          in: query
+          description: |
+            Include pitch class data in the response (default: false).
+
+            When true: Returns pitchClassSet and pitchClassCount for each set
+            When false: Omits pitch class data, returning only set metadata and compatible maqamat
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "false"
+          example: "false"
+        - name: setId
+          in: query
+          description: "Filter by specific set ID to retrieve that set and its compatible maqāmāt (e.g., 'maqam_rast_set')"
+          schema:
+            type: string
+          example: "maqam_rast_set"
+        - name: maqamId
+          in: query
+          description: "Filter by maqām ID to find all sets containing that maqām (e.g., 'maqam_rast')"
+          schema:
+            type: string
+          example: "maqam_rast"
+      responses:
+        '200':
+          description: Classification results with maqam-based pitch class sets and compatible maqāmāt
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statistics:
+                    type: object
+                    description: Statistics about the classification
+                    properties:
+                      totalSets:
+                        type: number
+                        description: Total number of sets
+                      totalCompatibleMaqamat:
+                        type: number
+                        description: Total number of compatible maqāmāt across all sets
+                      incompatibleMaqamatCount:
+                        type: number
+                        description: Total number of incompatible maqāmāt
+                      totalProcessed:
+                        type: number
+                        description: Total number of maqāmāt processed (compatible + incompatible)
+                  sets:
+                    type: array
+                    description: Classification sets grouping compatible maqāmāt
+                    items:
+                      type: object
+                      properties:
+                        setIdName:
+                          type: string
+                          description: Standardized identifier for the set
+                          example: "maqam_rast_set"
+                        setDisplayName:
+                          type: string
+                          description: Display name of the set
+                          example: "maqām rāst set"
+                        compatibleMaqamatCount:
+                          type: number
+                          description: Number of compatible maqāmāt in this set (deduplicated, no octave equivalents)
+                        sourceMaqam:
+                          $ref: '#/components/schemas/EntityRef'
+                        pitchClassSet:
+                          type: array
+                          description: |
+                            All pitch classes in this maqam-based set (variable number, not fixed at 12).
+                            Includes all pitch classes from the source maqām's ascending and descending sequences.
+                            Ordered by ascending cents values (from lowest to highest pitch).
+                            Only included when includePitchClassData=true.
+                          items:
+                            type: object
+                            properties:
+                              englishName:
+                                type: string
+                                description: English note name with octave (e.g., "C3", "D#4")
+                                example: "C3"
+                              noteName:
+                                type: string
+                                description: Note name from the tuning system
+                                example: "rāst"
+                              cents:
+                                type: number
+                                description: Absolute cents value from the tuning system
+                                example: 0
+                              fraction:
+                                type: string
+                                description: Frequency ratio as fraction
+                                example: "1/1"
+                              decimalRatio:
+                                type: number
+                                description: Frequency ratio as decimal
+                                example: 1.0
+                              frequency:
+                                type: number
+                                description: Frequency in Hz
+                                example: 130.665
+                              octave:
+                                type: number
+                                description: Octave number
+                                example: 1
+                              noteNameDisplayAr:
+                                type: string
+                                description: Arabic display name (included when includeArabic=true)
+                                example: "راست"
+                        pitchClassCount:
+                          type: number
+                          description: |
+                            Number of pitch classes in this set (variable, not fixed at 12).
+                            Only included when includePitchClassData=true.
+                          example: 7
+                        compatibleMaqamat:
+                          type: array
+                          description: |
+                            Maqāmāt compatible with this set (can be performed using only these pitch classes).
+                            Octave equivalents are deduplicated (e.g., maqam rast on rast and maqam rast on muhayyar rast
+                            are counted as one entry since they share the same base maqam and IPN reference)
+                          items:
+                            type: object
+                            properties:
+                              maqamIdName:
+                                type: string
+                                description: Standardized identifier for the maqām transposition
+                                example: "maqam_rast"
+                              maqamDisplayName:
+                                type: string
+                                description: Display name of the maqām transposition
+                                example: "maqām rāst"
+                              isTransposed:
+                                type: boolean
+                                description: Whether this is a transposition of the base maqām
+                              tonic:
+                                type: object
+                                nullable: true
+                                description: Information about the maqām's tonic note
+                                properties:
+                                  ipnReferenceNoteName:
+                                    type: string
+                                    description: IPN reference name of the tonic (e.g., "C", "D", "F")
+                                    example: "C"
+                                  noteNameIdName:
+                                    type: string
+                                    description: Standardized identifier for the tonic note name
+                                    example: "rast"
+                                  noteNameDisplayName:
+                                    type: string
+                                    description: Display name of the tonic note (with diacritics)
+                                    example: "rāst"
+                  incompatibleMaqamat:
+                    type: array
+                    description: Maqāmāt that cannot form valid maqam-based pitch class sets (only included when includeIncompatible=true)
+                    items:
+                      type: object
+                      properties:
+                        maqam:
+                          $ref: '#/components/schemas/EntityRef'
+                        transposition:
+                          type: object
+                          nullable: true
+                          properties:
+                            idName:
+                              type: string
+                              description: Standardized identifier for the transposition
+                              example: "maqam_rast"
+                            displayName:
+                              type: string
+                              description: Display name of the transposition
+                              example: "maqām rāst"
+                            isTransposed:
+                              type: boolean
+                              description: Whether this is a transposition
+                              example: false
+                        reason:
+                          type: string
+                          description: Reason why this maqām is incompatible
+                          example: "duplicate_ipn_reference"
+                  incompatibleMaqamatCount:
+                    type: number
+                    description: Number of incompatible maqāmāt (only included when includeIncompatible=true)
+                  parameters:
+                    type: object
+                    description: Parameters used for classification
+                    properties:
+                      tuningSystem:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          idName:
+                            type: string
+                          displayName:
+                            type: string
+                      startingNote:
+                        type: object
+                        properties:
+                          idName:
+                            type: string
+                          displayName:
+                            type: string
+                      centsTolerance:
+                        type: number
+                      setId:
+                        type: string
+                        nullable: true
+                        description: Set ID filter if applied
+                        example: "maqam_rast_set"
+                      maqamId:
+                        type: string
+                        nullable: true
+                        description: Maqām ID filter if applied
+                        example: "maqam_rast"
+              examples:
+                default:
+                  summary: Default response
+                  value:
+                    statistics:
+                      totalSets: 1
+                      totalCompatibleMaqamat: 3
+                      incompatibleMaqamatCount: 0
+                      totalProcessed: 3
+                    sets:
+                      - setIdName: "maqam_rast_set"
+                        setDisplayName: "maqām rāst set"
+                        compatibleMaqamatCount: 3
+                        sourceMaqam:
+                          id: "1"
+                          idName: "maqam_rast"
+                          displayName: "maqām rāst"
+                        pitchClassSet:
+                          - englishName: "C3"
+                            noteName: "rāst"
+                            cents: 0
+                            fraction: "1/1"
+                            decimalRatio: 1.0
+                            frequency: 130.665
+                            octave: 1
+                          - englishName: "D3"
+                            noteName: "dūgāh"
+                            cents: 203.91
+                            fraction: "9/8"
+                            decimalRatio: 1.125
+                            frequency: 146.998
+                            octave: 1
+                          - englishName: "E3"
+                            noteName: "segāh"
+                            cents: 407.82
+                            fraction: "81/64"
+                            decimalRatio: 1.266
+                            frequency: 165.361
+                            octave: 1
+                        pitchClassCount: 7
+                        compatibleMaqamat:
+                          - maqamIdName: "maqam_rast"
+                            maqamDisplayName: "maqām rāst"
+                            isTransposed: false
+                            tonic:
+                              ipnReferenceNoteName: "C"
+                              noteNameIdName: "rast"
+                              noteNameDisplayName: "rāst"
+                          - maqamIdName: "maqam_bayyat_dugah"
+                            maqamDisplayName: "maqām bayyāt (dūgāh)"
+                            isTransposed: true
+                            tonic:
+                              ipnReferenceNoteName: "D"
+                              noteNameIdName: "dugah"
+                              noteNameDisplayName: "dūgāh"
+                          - maqamIdName: "maqam_segah_segah"
+                            maqamDisplayName: "maqām segāh (segāh)"
+                            isTransposed: true
+                            tonic:
+                              ipnReferenceNoteName: "E"
+                              noteNameIdName: "segah"
+                              noteNameDisplayName: "segāh"
+                    parameters:
+                      tuningSystem:
+                        id: "CairoCongressTuningCommittee-(1929)"
+                        idName: "cairocongresstuningcommittee-1929"
+                        displayName: "Cairo Congress Tuning Committee (1929)"
+                      startingNote:
                         idName: "yegah"
                         displayName: "yegāh"
                       centsTolerance: 5
-                      startSetFromC: false
         '400':
           description: Invalid request parameters
           content:
