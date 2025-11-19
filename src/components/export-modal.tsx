@@ -11,10 +11,10 @@ import {
   exportTuningSystemToScala,
   exportTuningSystemToScalaKeymap,
   exportJinsToScala,
-  exportJinsToScalaKeymap,
   exportMaqamToScala,
   exportMaqamTo12ToneScala,
-  exportMaqamTo12ToneScalaKeymap,
+  exportMaqamWithTuningSystemOctave,
+  exportJinsWithTuningSystemOctave,
 } from "@/functions/scala-export";
 import { getTuningSystems } from "@/functions/import";
 import NoteName from "@/models/NoteName";
@@ -67,6 +67,7 @@ export default function ExportModal({
     selectedIndices,
     selectedJinsData,
     selectedMaqamData,
+    allPitchClasses,
   } = useAppContext();
 
   // Determine which jins/maqam to use for export - prioritize specific instances
@@ -360,7 +361,7 @@ export default function ExportModal({
     json: "JavaScript Object Notation - Best for data interchange and web applications",
     scala: "Scala scale format (.scl) - For microtonal music software",
     "scala-keymap":
-      "Scala keymap format (.kbm) - MIDI key mapping for Scala scales",
+      "Scala scale + keymap (.scl + .kbm) - Tuning system octave 1 with maqam/jins mapping",
     "scala-12tone": "Scala 12-tone chromatic set (.scl + .kbm) - Complete MIDI keyboard setup with all compatible maqāmāt",
   };
 
@@ -773,7 +774,7 @@ export default function ExportModal({
         break;
 
       case "scala-keymap":
-        updateProgress(97.5, "Generating Scala keymap...");
+        updateProgress(97.5, "Generating Scala scale and keymap...");
         await new Promise((resolve) => setTimeout(resolve, 100));
         if (exportType === "tuning-system") {
           if (!selectedTuningSystem || selectedIndices.length === 0) {
@@ -791,15 +792,58 @@ export default function ExportModal({
               "Scala keymap export requires a jins and tuning system"
             );
           }
-          const startingNote =
-            selectedIndices.length > 0
-              ? (selectedIndices[0] as unknown as NoteName)
-              : undefined;
-          content = exportJinsToScalaKeymap(
+
+          // Get the tuning system's starting note from octave 1
+          // allPitchClasses contains all octaves (0-3), so we find the first pitch class from octave 1
+          const octave1StartingPitchClass = allPitchClasses.find(pc => pc.octave === 1);
+          const tuningSystemStartingNote = octave1StartingPitchClass?.noteName || null;
+          console.log('[ExportModal] Tuning system starting note from octave 1:', tuningSystemStartingNote);
+          if (!tuningSystemStartingNote || tuningSystemStartingNote === "none") {
+            throw new Error("Scala keymap export requires a tuning system starting note");
+          }
+
+          // Export BOTH .scl and .kbm files for jins
+          const exportResult = exportJinsWithTuningSystemOctave(
             jinsToExport,
             selectedTuningSystem,
-            startingNote
+            tuningSystemStartingNote
           );
+
+          if (!exportResult) {
+            throw new Error("Failed to export jins - cannot map jins pitch classes to tuning system");
+          }
+
+          updateProgress(98, "Creating file blobs...");
+          await new Promise((resolve) => setTimeout(resolve, 50));
+
+          // Download .scl file (tuning system octave 1)
+          updateProgress(98.5, "Downloading tuning system scale file...");
+          const scalaBlob = new Blob([exportResult.scalaContent], { type: "text/plain" });
+          const scalaUrl = URL.createObjectURL(scalaBlob);
+          const scalaLink = document.createElement("a");
+          scalaLink.href = scalaUrl;
+          scalaLink.download = exportResult.scalaFilename;
+          document.body.appendChild(scalaLink);
+          scalaLink.click();
+          document.body.removeChild(scalaLink);
+          URL.revokeObjectURL(scalaUrl);
+
+          // Small delay between downloads to prevent browser blocking
+          await new Promise((resolve) => setTimeout(resolve, 100));
+
+          // Download .kbm file (jins mapping)
+          updateProgress(99, "Downloading jins keymap file...");
+          const keymapBlob = new Blob([exportResult.keymapContent], { type: "text/plain" });
+          const keymapUrl = URL.createObjectURL(keymapBlob);
+          const keymapLink = document.createElement("a");
+          keymapLink.href = keymapUrl;
+          keymapLink.download = exportResult.keymapFilename;
+          document.body.appendChild(keymapLink);
+          keymapLink.click();
+          document.body.removeChild(keymapLink);
+          URL.revokeObjectURL(keymapUrl);
+
+          return; // Skip the default download logic
         } else if (exportType === "maqam") {
           if (!maqamToExport || !selectedTuningSystem) {
             throw new Error(
@@ -807,57 +851,56 @@ export default function ExportModal({
             );
           }
 
-          // Get al-Kindi (874) tuning system for 12-tone chromatic keymaps
-          const allTuningSystems = getTuningSystems();
-          const alKindiTuningSystem = allTuningSystems.find(ts => ts.getId() === "al-Kindi-(874)");
-
-          if (!alKindiTuningSystem) {
-            throw new Error("al-Kindi (874) tuning system not found - required for 12-tone chromatic keymap export");
+          // Get the tuning system's starting note from octave 1
+          // allPitchClasses contains all octaves (0-3), so we find the first pitch class from octave 1
+          const octave1StartingPitchClass = allPitchClasses.find(pc => pc.octave === 1);
+          const tuningSystemStartingNote = octave1StartingPitchClass?.noteName || null;
+          console.log('[ExportModal] Tuning system starting note from octave 1:', tuningSystemStartingNote);
+          if (!tuningSystemStartingNote || tuningSystemStartingNote === "none") {
+            throw new Error("Scala keymap export requires a tuning system starting note");
           }
 
-          const startingNote =
-            selectedIndices.length > 0
-              ? (selectedIndices[0] as unknown as NoteName)
-              : undefined;
-
-          if (!startingNote) {
-            throw new Error("Scala keymap export requires a starting note");
-          }
-
-          // Generate multiple .kbm files (one for each compatible maqām)
-          const keymapResults = exportMaqamTo12ToneScalaKeymap(
+          // Export BOTH .scl and .kbm files for maqam
+          const exportResult = exportMaqamWithTuningSystemOctave(
             maqamToExport,
             selectedTuningSystem,
-            startingNote.toString(),
-            alKindiTuningSystem,
-            startingNote.toString(), // al-Kindi uses same starting note as main tuning system
-            440, // reference frequency (A4 = 440Hz)
-            128 // MIDI map size
+            tuningSystemStartingNote,
+            true // use ascending pitch classes
           );
 
-          if (!keymapResults || keymapResults.length === 0) {
-            throw new Error("Failed to generate keymap files");
+          if (!exportResult) {
+            throw new Error("Failed to export maqam - cannot map maqam pitch classes to tuning system");
           }
 
           updateProgress(98, "Creating file blobs...");
           await new Promise((resolve) => setTimeout(resolve, 50));
 
-          // Download all .kbm files
-          updateProgress(99, `Downloading ${keymapResults.length} keymap files...`);
-          for (const keymapResult of keymapResults) {
-            const keymapBlob = new Blob([keymapResult.keymapContent], { type: "text/plain" });
-            const keymapUrl = URL.createObjectURL(keymapBlob);
-            const keymapLink = document.createElement("a");
-            keymapLink.href = keymapUrl;
-            keymapLink.download = `${options.filename}_${keymapResult.maqamName}_${keymapResult.tonic}.kbm`;
-            document.body.appendChild(keymapLink);
-            keymapLink.click();
-            document.body.removeChild(keymapLink);
-            URL.revokeObjectURL(keymapUrl);
+          // Download .scl file (tuning system octave 1)
+          updateProgress(98.5, "Downloading tuning system scale file...");
+          const scalaBlob = new Blob([exportResult.scalaContent], { type: "text/plain" });
+          const scalaUrl = URL.createObjectURL(scalaBlob);
+          const scalaLink = document.createElement("a");
+          scalaLink.href = scalaUrl;
+          scalaLink.download = exportResult.scalaFilename;
+          document.body.appendChild(scalaLink);
+          scalaLink.click();
+          document.body.removeChild(scalaLink);
+          URL.revokeObjectURL(scalaUrl);
 
-            // Small delay between downloads to prevent browser blocking
-            await new Promise((resolve) => setTimeout(resolve, 50));
-          }
+          // Small delay between downloads to prevent browser blocking
+          await new Promise((resolve) => setTimeout(resolve, 100));
+
+          // Download .kbm file (maqam mapping)
+          updateProgress(99, "Downloading maqam keymap file...");
+          const keymapBlob = new Blob([exportResult.keymapContent], { type: "text/plain" });
+          const keymapUrl = URL.createObjectURL(keymapBlob);
+          const keymapLink = document.createElement("a");
+          keymapLink.href = keymapUrl;
+          keymapLink.download = exportResult.keymapFilename;
+          document.body.appendChild(keymapLink);
+          keymapLink.click();
+          document.body.removeChild(keymapLink);
+          URL.revokeObjectURL(keymapUrl);
 
           return; // Skip the default download logic
         }
@@ -901,7 +944,7 @@ export default function ExportModal({
         );
         
         // Use the note name from the tuning system's note name set (has proper diacritics)
-        const startingNote = matchingNoteSet?.[0] || firstNoteFromIndices;
+        const startingNoteName = matchingNoteSet?.[0] || firstNoteFromIndices;
 
         // Generate .scl file only (no .kbm files)
         // Capture current URL for the export
@@ -909,9 +952,9 @@ export default function ExportModal({
         const scalaContent = exportMaqamTo12ToneScala(
           maqamToExport,
           selectedTuningSystem,
-          startingNote,
+          startingNoteName,
           alKindiTuningSystem,
-          startingNote, // al-Kindi uses same starting note as main tuning system
+          startingNoteName, // al-Kindi uses same starting note as main tuning system
           undefined, // description is optional
           currentUrl // pass current URL
         );

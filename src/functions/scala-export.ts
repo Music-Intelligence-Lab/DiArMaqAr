@@ -35,14 +35,15 @@ function removeDuplicatePitchClasses(pitchClasses: PitchClass[], tolerance: numb
  * Filters pitch classes to a single octave range
  * @param pitchClasses - Array of pitch classes to filter
  * @param minCents - Minimum cents value (inclusive, default: 0)
- * @param maxCents - Maximum cents value (exclusive, default: 1200)
+ * @param maxCents - Maximum cents value (inclusive, default: 1200)
  * @returns Filtered and sorted pitch classes within the octave range
  */
 function filterToOctave(pitchClasses: PitchClass[], minCents: number = 0, maxCents: number = 1200): PitchClass[] {
   return pitchClasses
     .filter((pc) => {
       const cents = parseFloat(pc.cents);
-      return cents >= minCents && cents < maxCents;
+      // Include the maxCents boundary (octave note) for proper .kbm mapping
+      return cents >= minCents && cents <= maxCents;
     })
     .sort((a, b) => parseFloat(a.cents) - parseFloat(b.cents));
 }
@@ -299,6 +300,21 @@ export function exportTuningSystemToScala(tuningSystem: TuningSystem, startingNo
 
   // Remove the root note (0 cents) as it's implicit in Scala format
   const scaleNotes = uniquePitchClasses.filter((pc) => parseFloat(pc.cents) > 0);
+
+  // Ensure the octave (1200 cents) is included as the final value
+  const hasOctave = scaleNotes.some(pc => Math.abs(parseFloat(pc.cents) - 1200) < 0.01);
+  if (!hasOctave) {
+    // Add the octave as the final note
+    scaleNotes.push({
+      ...scaleNotes[0], // Base it on first note
+      cents: '1200.00',
+      frequency: scaleNotes[0]?.frequency ? (parseFloat(scaleNotes[0].frequency) * 2).toString() : '',
+      octave: (scaleNotes[0]?.octave || 0) + 1
+    } as PitchClass);
+  }
+
+  // Sort by cents to ensure proper order
+  scaleNotes.sort((a, b) => parseFloat(a.cents) - parseFloat(b.cents));
 
   // Generate description
   const desc = description || `${tuningSystem.getTitleEnglish()} (${tuningSystem.getCreatorEnglish()}, ${tuningSystem.getYear()})`;
@@ -1199,4 +1215,570 @@ export function exportMaqamTo12ToneScalaKeymap(
   keymaps.sort((a, b) => a.tonicPosition - b.tonicPosition);
 
   return keymaps;
+}
+
+// ============================================================================
+// Tuning System Octave + Maqam/Jins Keymap Exports
+// ============================================================================
+
+/**
+ * Maps maqam or jins pitch classes to tuning system degrees with cents tolerance
+ * @param maqamOrJinsPitchClasses - Pitch classes from maqam or jins
+ * @param tuningSystemPitchClasses - Pitch classes from tuning system octave 1
+ * @param tolerance - Cents tolerance for matching (default: 5)
+ * @returns Array of tuning system degree indices (0-based), or null if any pitch class cannot be matched
+ */
+function mapPitchClassesToTuningSystemDegrees(
+  maqamOrJinsPitchClasses: PitchClass[],
+  tuningSystemPitchClasses: PitchClass[],
+  tolerance: number = 5
+): number[] | null {
+  const degrees: number[] = [];
+
+  for (const pc of maqamOrJinsPitchClasses) {
+    const cents = parseFloat(pc.cents);
+
+    // Normalize cents to octave 1 range (0-1200) for comparison
+    // This handles cases where maqam pitch classes are in different octaves
+    const normalizedCents = ((cents % 1200) + 1200) % 1200;
+
+    // Find matching tuning system pitch class within tolerance
+    const matchIndex = tuningSystemPitchClasses.findIndex(tspc => {
+      const tsCents = parseFloat(tspc.cents);
+      const tsCentsNormalized = ((tsCents % 1200) + 1200) % 1200;
+
+      // Compare normalized values
+      const diff = Math.abs(normalizedCents - tsCentsNormalized);
+
+      // Also check wrap-around case (e.g., 5 cents vs 1195 cents should be close)
+      const diffWrapped = Math.min(diff, 1200 - diff);
+
+      return diffWrapped < tolerance;
+    });
+
+    if (matchIndex === -1) {
+      // Cannot find matching pitch class in tuning system
+      return null;
+    }
+
+    degrees.push(matchIndex);
+  }
+
+  return degrees;
+}
+
+/**
+ * Converts an IPN englishName (e.g., "A2", "G#3", "Bb2") to a MIDI note number
+ * MIDI note 0 = C-1, MIDI note 60 = C4 (middle C)
+ */
+function englishNameToMidiNote(englishName: string): number {
+  // Extract note letter, accidental, and octave from englishName
+  const match = englishName.match(/^([A-G])([#b]?)(-?\d+)$/);
+  if (!match) {
+    return 60; // Default to middle C if parsing fails
+  }
+
+  const [, noteLetter, accidental, octaveStr] = match;
+  const octave = parseInt(octaveStr);
+
+  // Convert note letter to pitch class number (C=0, D=2, E=4, F=5, G=7, A=9, B=11)
+  const noteLetterToPitchClass: {[key: string]: number} = {
+    'C': 0, 'D': 2, 'E': 4, 'F': 5, 'G': 7, 'A': 9, 'B': 11
+  };
+
+  let pitchClass = noteLetterToPitchClass[noteLetter];
+
+  // Apply accidental
+  if (accidental === '#') {
+    pitchClass += 1;
+  } else if (accidental === 'b') {
+    pitchClass -= 1;
+  }
+
+  // Normalize pitch class to 0-11 range
+  pitchClass = ((pitchClass % 12) + 12) % 12;
+
+  // Calculate MIDI note: (octave + 1) * 12 + pitchClass
+  // Note: MIDI note 0 = C-1, so C0 = 12, C1 = 24, C2 = 36, etc.
+  return (octave + 1) * 12 + pitchClass;
+}
+
+/**
+ * Normalizes IPN reference note names to use only sharps (no flats)
+ * This ensures consistent chromatic mapping regardless of enharmonic spelling
+ */
+function normalizeIpnToSharps(ipn: string): string {
+  const flatToSharp: { [key: string]: string } = {
+    'Db': 'C#',
+    'Eb': 'D#',
+    'Gb': 'F#',
+    'Ab': 'G#',
+    'Bb': 'A#',
+  };
+  return flatToSharp[ipn] || ipn;
+}
+
+/**
+ * Builds a keymap (.kbm) content string for mapping maqam/jins to tuning system degrees
+ * Uses IPN-based mapping where each MIDI key corresponds to a chromatic pitch class.
+ * Missing pitch classes in the maqam/jins are mapped to 'x' (unmapped).
+ * The mapping pattern is 12 notes (chromatic octave) and repeats across all octaves.
+ *
+ * @param name - Display name of the maqam or jins
+ * @param type - Type: "maqam" or "jins"
+ * @param maqamOrJinsPitchClasses - Pitch classes from the maqam or jins
+ * @param tuningSystemPitchClasses - Pitch classes from tuning system octave 1
+ * @param tuningSystem - Tuning system
+ * @param startingNote - Starting note for the tuning system
+ * @param scaleSize - Number of pitch classes in the tuning system octave
+ * @param refFreq - Reference frequency in Hz
+ * @param scalaFilename - Associated .scl filename for reference
+ * @returns Formatted keymap content string
+ */
+function buildTuningSystemKeymapContent(
+  name: string,
+  type: "maqam" | "jins",
+  maqamOrJinsPitchClasses: PitchClass[],
+  tuningSystemPitchClasses: PitchClass[],
+  tuningSystem: TuningSystem,
+  startingNote: string,
+  scaleSize: number,
+  refFreq: number,
+  scalaFilename: string
+): string {
+  const chromaticOrder = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+
+  // ============================================================================
+  // STEP 1: Map each maqam/jins pitch class to its tuning system degree
+  // ============================================================================
+
+  type MappedPitchClass = {
+    pitchClass: PitchClass;
+    ipnRef: string;
+    degree: number;
+    midiNote: number;
+  };
+
+  const mappedPitchClasses: MappedPitchClass[] = [];
+
+  for (const pc of maqamOrJinsPitchClasses) {
+    const ipnRef = getIpnReferenceNoteName(pc);
+    if (!ipnRef) continue;
+
+    const normalizedIpn = normalizeIpnToSharps(ipnRef);
+    const pcCents = parseFloat(pc.cents);
+    const centsInOctave = pcCents % 1200;
+
+    // Find matching pitch class in tuning system octave 1
+    const matchIndex = tuningSystemPitchClasses.findIndex(tspc => {
+      const tsCents = parseFloat(tspc.cents);
+      const diff = Math.abs(centsInOctave - tsCents);
+      const diffWrapped = Math.min(diff, 1200 - diff);
+      return diffWrapped < 5; // 5 cents tolerance
+    });
+
+    if (matchIndex >= 0) {
+      // CRITICAL: Always use midiNoteDeviation to extract accurate MIDI note numbers
+      // midiNoteDeviation format: "MIDI_NOTE CENTS_DEVIATION" (e.g., "50 -2.0")
+      // Extract the MIDI note number (first part before space)
+      let midiNote: number;
+      if (pc.midiNoteDeviation) {
+        const parts = pc.midiNoteDeviation.split(' ');
+        midiNote = parseInt(parts[0], 10);
+      } else {
+        midiNote = englishNameToMidiNote(pc.englishName);
+      }
+
+      // Use matchIndex as degree (base degree in tuning system)
+      const degree = matchIndex;
+
+      mappedPitchClasses.push({
+        pitchClass: pc,
+        ipnRef: normalizedIpn,
+        degree: degree,
+        midiNote: midiNote
+      });
+
+      console.log(`[buildTuningSystemKeymapContent] Mapped ${normalizedIpn}:`, {
+        noteName: pc.noteName,
+        englishName: pc.englishName,
+        cents: pcCents,
+        degree: degree,
+        midiNote: midiNote,
+        midiNoteDeviation: pc.midiNoteDeviation
+      });
+    }
+  }
+
+  // ============================================================================
+  // STEP 2: Sort by tuning system degree (ascending) to find the lowest
+  // ============================================================================
+
+  mappedPitchClasses.sort((a, b) => a.degree - b.degree);
+
+  // ============================================================================
+  // STEP 3: Determine middle note and reference note
+  // ============================================================================
+
+  // The maqam/jins tonic is always the first pitch class (before sorting)
+  const tonicPc = maqamOrJinsPitchClasses[0];
+  const tonicMapped = mappedPitchClasses.find(mpc => mpc.pitchClass === tonicPc);
+
+  if (!tonicMapped) {
+    throw new Error(`Cannot find tonic in mapped pitch classes for ${name}`);
+  }
+
+  // Position 0 must map to the pitch class with the LOWEST degree
+  const lowestDegreeMapped = mappedPitchClasses[0];
+  const lowestDegreeIpn = lowestDegreeMapped.ipnRef;
+  const lowestDegreePosition = chromaticOrder.indexOf(lowestDegreeIpn);
+
+  // CRITICAL: Reference note = tonic's MIDI note (always mapped)
+  // The tonic must be the reference note with its frequency from DiArMaqAr data
+  const referenceNoteMidi = tonicMapped.midiNote;
+  const actualRefFreq = tonicPc?.frequency ? parseFloat(tonicPc.frequency) : refFreq;
+
+  // CRITICAL: Middle note = lowest degree's MIDI note (where position 0 maps to)
+  // BUT if the lowest degree's MIDI note is HIGHER than the tonic's MIDI note,
+  // we must shift the middle note DOWN by one octave (subtract 12) so that
+  // the middle note is lower than the reference note (tonic).
+  //
+  // Example: Bayyāt Shūrī on D3 (MIDI 50, degree 11)
+  //   - Lowest degree: 5 (B3, MIDI 59)
+  //   - Tonic: degree 11 (D3, MIDI 50)
+  //   - B3 (59) > D3 (50), so middle note = 59 - 12 = 47 (B2)
+  let middleNote = lowestDegreeMapped.midiNote;
+  if (lowestDegreeMapped.midiNote > referenceNoteMidi) {
+    middleNote = lowestDegreeMapped.midiNote - 12;
+  }
+
+  const tonicIpnRef = tonicMapped.ipnRef;
+
+  console.log('[buildTuningSystemKeymapContent] Reference setup:', {
+    lowestDegree: lowestDegreeMapped.degree,
+    lowestDegreeIpn: lowestDegreeIpn,
+    lowestDegreeNote: lowestDegreeMapped.pitchClass.englishName,
+    lowestDegreeMidiOriginal: lowestDegreeMapped.midiNote,
+    tonicNote: tonicPc.englishName,
+    tonicIpn: tonicIpnRef,
+    tonicDegree: tonicMapped.degree,
+    tonicMidi: tonicMapped.midiNote,
+    middleNote: middleNote,
+    middleNoteShifted: lowestDegreeMapped.midiNote > referenceNoteMidi,
+    referenceNote: referenceNoteMidi,
+    referenceFrequency: actualRefFreq
+  });
+
+  // ============================================================================
+  // STEP 4: Build chromatic mapping in ascending degree order
+  // ============================================================================
+
+  // Build IPN-to-degree map for quick lookup
+  const ipnToDegreeMap = new Map<string, number>();
+  for (const mpc of mappedPitchClasses) {
+    ipnToDegreeMap.set(mpc.ipnRef, mpc.degree);
+  }
+
+  // Build mapping: 12-note chromatic pattern starting from the LOWEST degree's IPN
+  // Position 0 = lowest degree, and degrees must be in ASCENDING order
+  // Example: [5, 6, x, 11, x, 14, 17, x, 22, 24, x, x]
+  const mapping: Array<string | number> = [];
+  const mapPatternSize = 12; // Chromatic octave
+
+  for (let i = 0; i < mapPatternSize; i++) {
+    // Rotate chromatic order to start from the lowest degree's IPN
+    const rotatedIndex = (lowestDegreePosition + i) % mapPatternSize;
+    const ipn = chromaticOrder[rotatedIndex];
+
+    // Check if this IPN exists in the maqam/jins
+    if (ipnToDegreeMap.has(ipn)) {
+      mapping.push(ipnToDegreeMap.get(ipn)!);
+    } else {
+      mapping.push('x'); // Unmapped in Scala format
+    }
+  }
+
+  // Debug: log the complete mapping
+  console.log('[buildTuningSystemKeymapContent] Complete mapping array:', {
+    mapPatternSize,
+    scaleSize,
+    middleNote,
+    referenceNote: referenceNoteMidi,
+    actualRefFreq,
+    lowestDegreePosition,
+    mapping: mapping.map((deg, idx) => ({
+      position: idx,
+      ipn: chromaticOrder[(lowestDegreePosition + idx) % 12],
+      degree: deg
+    }))
+  });
+
+  // Get tuning system starting note details
+  const tuningSystemStartingPc = tuningSystemPitchClasses[0]; // First pitch class at 0 cents
+  const tuningSystemStartingFreq = tuningSystemStartingPc?.frequency
+    ? parseFloat(tuningSystemStartingPc.frequency)
+    : refFreq;
+
+  // Extract MIDI note number from starting note's midiNoteDeviation
+  let tuningSystemStartingMidi: number;
+  if (tuningSystemStartingPc?.midiNoteDeviation) {
+    const parts = tuningSystemStartingPc.midiNoteDeviation.split(' ');
+    tuningSystemStartingMidi = parseInt(parts[0], 10);
+  } else {
+    tuningSystemStartingMidi = 0; // Fallback
+  }
+
+  const tuningSystemStartingEnglishName = tuningSystemStartingPc?.englishName || '';
+
+  const desc = `${name} (tonic: ${tonicIpnRef}) - Mapped to ${tuningSystem.stringify()}`;
+
+  const lines = [
+    `! ${desc}`,
+    `! Generated by the Digital Arabic Maqām Archive (DiArMaqAr) https://diarmaqar.netlify.app`,
+    `!`,
+    `! === ASSOCIATED SCALA FILE ===`,
+    `! This keyboard mapping uses the following .scl file:`,
+    `! ${scalaFilename}`,
+    `!`,
+    `! === ${type === "maqam" ? "MAQAM" : "JINS"} DETAILS ===`,
+    `! ${type === "maqam" ? "Maqam" : "Jins"}: ${name}`,
+    `! Tonic: ${tonicPc?.noteName}`,
+    `! Tonic IPN: ${tonicIpnRef}`,
+    `! Tonic degree in tuning system: ${tonicMapped.degree}`,
+    `!`,
+    `! === TUNING SYSTEM DETAILS ===`,
+    `! Tuning system: ${tuningSystem.stringify()}`,
+    `! Starting note name: ${startingNote}`,
+    `! Starting note MIDI note number: ${tuningSystemStartingMidi}`,
+    `! Starting note IPN and octave: ${tuningSystemStartingEnglishName}`,
+    `! Starting note frequency (1/1 at 0 cents): ${tuningSystemStartingFreq.toFixed(2)} Hz`,
+    `! Total Scale degrees in .scl file: ${scaleSize}`,
+    `! Formal octave (2/1 1200 cents): degree ${scaleSize}`,
+    `!`,
+    `! === KEYBOARD MAPPING (.kbm) REFERENCE SETTINGS ===`,
+    `! Middle note (where position 0 maps to): MIDI ${middleNote}`,
+    `!   - Position 0 pitch: ${lowestDegreeMapped.pitchClass.noteName} (${lowestDegreeMapped.pitchClass.englishName})`,
+    `!   - Position 0 degree: ${lowestDegreeMapped.degree}`,
+    ...(lowestDegreeMapped.midiNote > referenceNoteMidi
+      ? [`!   - Note: Middle note shifted down one octave (${lowestDegreeMapped.midiNote} → ${middleNote}) to be lower than reference note`]
+      : []),
+    `! Reference note (gets reference frequency): MIDI ${referenceNoteMidi}`,
+    `!   - Reference pitch: ${tonicPc?.noteName} (${tonicPc?.englishName})`,
+    `!   - Reference frequency: ${actualRefFreq.toFixed(2)} Hz`,
+    `!`,
+    `${mapPatternSize}`, // Map size: pattern repeats every so many keys (12 for chromatic)
+    `0`, // First MIDI note to retune
+    `127`, // Last MIDI note to retune (full MIDI range)
+    `${middleNote}`, // Middle note: where first entry of mapping is mapped to
+    `${referenceNoteMidi}`, // Reference note: which MIDI note gets the reference frequency
+    `${actualRefFreq}`, // Reference frequency in Hz
+    `${scaleSize}`, // Scale degree to consider as formal octave
+    ...mapping.map((degree) => `${degree}`),
+  ];
+
+  return lines.join("\n");
+}
+
+/**
+ * Exports a tuning system's octave 1 as .scl and a maqam as .kbm (mapping to tuning system degrees)
+ *
+ * This function exports TWO files:
+ * 1. A .scl file containing the tuning system's octave 1 pitch classes
+ * 2. A .kbm file that maps the maqam's pitch classes to degrees within that tuning system
+ *
+ * The keymap uses a chromatic mapping pattern (12 notes) that repeats across all octaves.
+ *
+ * @param maqamInput - Maqam or MaqamData instance to export
+ * @param tuningSystem - Tuning system to realize the maqam in
+ * @param startingNote - Starting note for the tuning system
+ * @param useAscending - Use ascending (true) or descending (false) pitch classes
+ * @param referenceFrequency - Optional reference frequency (default: from tuning system)
+ * @returns Object with .scl and .kbm file contents, or null if maqam cannot be mapped
+ */
+export function exportMaqamWithTuningSystemOctave(
+  maqamInput: Maqam | MaqamData,
+  tuningSystem: TuningSystem,
+  startingNote: string,
+  useAscending: boolean = true,
+  referenceFrequency?: number
+): {
+  scalaContent: string;
+  scalaFilename: string;
+  keymapContent: string;
+  keymapFilename: string;
+} | null {
+  // Convert MaqamData to Maqam if needed
+  let maqam: Maqam;
+  if ("maqamId" in maqamInput) {
+    maqam = maqamInput;
+  } else {
+    const fullRangeTuningSystemPitchClasses = getTuningSystemPitchClasses(
+      tuningSystem,
+      startingNote as any
+    );
+    maqam = maqamInput.getTahlil(fullRangeTuningSystemPitchClasses);
+  }
+
+  // Get tuning system octave 1 pitch classes
+  const allPitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote as any);
+  const octave1PitchClasses = filterToOctave(allPitchClasses, 0, 1200);
+  const uniqueOctave1PitchClasses = removeDuplicatePitchClasses(octave1PitchClasses);
+
+  // Get maqam pitch classes (ascending or descending)
+  const maqamPitchClasses = useAscending
+    ? maqam.ascendingPitchClasses
+    : maqam.descendingPitchClasses;
+
+  // Map maqam pitch classes to tuning system degrees
+  const degrees = mapPitchClassesToTuningSystemDegrees(
+    maqamPitchClasses,
+    uniqueOctave1PitchClasses,
+    5 // 5 cents tolerance
+  );
+
+  if (!degrees) {
+    // Cannot map maqam to tuning system
+    return null;
+  }
+
+  // Generate .scl file content (tuning system octave 1)
+  const scalaContent = exportTuningSystemToScala(
+    tuningSystem,
+    startingNote,
+    `${tuningSystem.getTitleEnglish()} Octave 1 (starting note: ${startingNote})`
+  );
+
+  // Generate filenames with starting note
+  const tuningSystemId = tuningSystem.getId();
+  const maqamName = maqam.name.toLowerCase().replace(/\s+/g, '_');
+  const startingNoteForFilename = startingNote.toLowerCase().replace(/\s+/g, '_');
+  const scalaFilename = `${tuningSystemId}_${startingNoteForFilename}_octave1.scl`;
+  const keymapFilename = `${maqamName}_${tuningSystemId}_${startingNoteForFilename}.kbm`;
+
+  // Generate .kbm file content (maqam mapping)
+  // Get reference frequency from the starting note's pitch class
+  const startingNoteFreq = uniqueOctave1PitchClasses[0]?.frequency
+    ? parseFloat(uniqueOctave1PitchClasses[0].frequency)
+    : tuningSystem.getDefaultReferenceFrequency() || 440.0;
+  const refFreq = referenceFrequency || startingNoteFreq;
+  // Scale size should match the .scl file count (which excludes the root note at 0 cents)
+  const scaleSize = uniqueOctave1PitchClasses.length - 1;
+  const keymapContent = buildTuningSystemKeymapContent(
+    maqam.name,
+    "maqam",
+    maqamPitchClasses,
+    uniqueOctave1PitchClasses,
+    tuningSystem,
+    startingNote,
+    scaleSize,
+    refFreq,
+    scalaFilename
+  );
+
+  return {
+    scalaContent,
+    scalaFilename,
+    keymapContent,
+    keymapFilename,
+  };
+}
+
+/**
+ * Exports a tuning system's octave 1 as .scl and a jins as .kbm (mapping to tuning system degrees)
+ *
+ * This function exports TWO files:
+ * 1. A .scl file containing the tuning system's octave 1 pitch classes
+ * 2. A .kbm file that maps the jins's pitch classes to degrees within that tuning system
+ *
+ * The keymap uses a chromatic mapping pattern (12 notes) that repeats across all octaves.
+ *
+ * @param jinsInput - Jins or JinsData instance to export
+ * @param tuningSystem - Tuning system to realize the jins in
+ * @param startingNote - Starting note for the tuning system
+ * @param referenceFrequency - Optional reference frequency (default: from tuning system)
+ * @returns Object with .scl and .kbm file contents, or null if jins cannot be mapped
+ */
+export function exportJinsWithTuningSystemOctave(
+  jinsInput: Jins | JinsData,
+  tuningSystem: TuningSystem,
+  startingNote: string,
+  referenceFrequency?: number
+): {
+  scalaContent: string;
+  scalaFilename: string;
+  keymapContent: string;
+  keymapFilename: string;
+} | null {
+  // Convert JinsData to Jins if needed
+  let jins: Jins;
+  if ("jinsId" in jinsInput) {
+    jins = jinsInput;
+  } else {
+    const fullRangeTuningSystemPitchClasses = getTuningSystemPitchClasses(
+      tuningSystem,
+      startingNote as any
+    );
+    jins = jinsInput.getTahlil(fullRangeTuningSystemPitchClasses);
+  }
+
+  // Get tuning system octave 1 pitch classes
+  const allPitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote as any);
+  const octave1PitchClasses = filterToOctave(allPitchClasses, 0, 1200);
+  const uniqueOctave1PitchClasses = removeDuplicatePitchClasses(octave1PitchClasses);
+
+  // Get jins pitch classes
+  const jinsPitchClasses = jins.jinsPitchClasses;
+
+  // Map jins pitch classes to tuning system degrees
+  const degrees = mapPitchClassesToTuningSystemDegrees(
+    jinsPitchClasses,
+    uniqueOctave1PitchClasses,
+    5 // 5 cents tolerance
+  );
+
+  if (!degrees) {
+    // Cannot map jins to tuning system
+    return null;
+  }
+
+  // Generate .scl file content (tuning system octave 1)
+  const scalaContent = exportTuningSystemToScala(
+    tuningSystem,
+    startingNote,
+    `${tuningSystem.getTitleEnglish()} Octave 1 (starting note: ${startingNote})`
+  );
+
+  // Generate filenames with starting note
+  const tuningSystemId = tuningSystem.getId();
+  const jinsName = jins.name.toLowerCase().replace(/\s+/g, '_');
+  const startingNoteForFilename = startingNote.toLowerCase().replace(/\s+/g, '_');
+  const scalaFilename = `${tuningSystemId}_${startingNoteForFilename}_octave1.scl`;
+  const keymapFilename = `${jinsName}_${tuningSystemId}_${startingNoteForFilename}.kbm`;
+
+  // Generate .kbm file content (jins mapping)
+  // Get reference frequency from the starting note's pitch class
+  const startingNoteFreq = uniqueOctave1PitchClasses[0]?.frequency
+    ? parseFloat(uniqueOctave1PitchClasses[0].frequency)
+    : tuningSystem.getDefaultReferenceFrequency() || 440.0;
+  const refFreq = referenceFrequency || startingNoteFreq;
+  // Scale size should match the .scl file count (which excludes the root note at 0 cents)
+  const scaleSize = uniqueOctave1PitchClasses.length - 1;
+  const keymapContent = buildTuningSystemKeymapContent(
+    jins.name,
+    "jins",
+    jinsPitchClasses,
+    uniqueOctave1PitchClasses,
+    tuningSystem,
+    startingNote,
+    scaleSize,
+    refFreq,
+    scalaFilename
+  );
+
+  return {
+    scalaContent,
+    scalaFilename,
+    keymapContent,
+    keymapFilename,
+  };
 }
