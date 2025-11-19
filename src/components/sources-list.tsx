@@ -23,16 +23,27 @@ export default function SourcesList() {
   useEffect(() => {
     if (pathname === "/bibliography") {
       const sourceParameter = searchParams.get("source");
+
       if (sourceParameter) {
+        let found = false;
         for (const source of sources) {
-          if (sourceParameter === stringifySource(source, true, null)) {
+          const stringified = stringifySource(source, true, null);
+          if (sourceParameter === stringified) {
             setHighlighted(source.getId());
+            found = true;
             break;
           }
         }
+        if (!found) {
+          setHighlighted(null);
+        }
+      } else {
+        setHighlighted(null);
       }
+    } else {
+      setHighlighted(null);
     }
-  }, [pathname, searchParams]);
+  }, [pathname, searchParams, sources]);
 
   // Auto-scroll to highlighted source
   useEffect(() => {
@@ -427,28 +438,27 @@ const formatContributorsArabic = (contributors: Contributor[]): string => {
               : standardizeText(b.getTitleEnglish().toLowerCase());
           return aKey.localeCompare(bKey);
         })
-        .map((src: Source) => (
-          <div
-            key={src.getId()}
-            ref={(el) => {
-              sourceRefs.current[src.getId()] = el;
-            }}
-            className={
-              "sources-list__row " +
-              (highlighted === src.getId()
-                ? "sources-list__row_highlighted"
-                : "")
-            }
-          >
-            <div className="sources-list__cell sources-list__cell--arabic">
-              {buildArabicCitation(src)}
-            </div>
-                        <div className="sources-list__cell sources-list__cell--english">
-              {buildEnglishCitation(src)}
-            </div>
+        .map((src: Source) => {
+          const isHighlighted = highlighted === src.getId();
+          const className = "sources-list__row " + (isHighlighted ? "sources-list__row--highlighted" : "");
 
-          </div>
-        ))}
+          return (
+            <div
+              key={src.getId()}
+              ref={(el) => {
+                sourceRefs.current[src.getId()] = el;
+              }}
+              className={className}
+            >
+              <div className="sources-list__cell sources-list__cell--arabic">
+                {buildArabicCitation(src)}
+              </div>
+              <div className="sources-list__cell sources-list__cell--english">
+                {buildEnglishCitation(src)}
+              </div>
+            </div>
+          );
+        })}
     </div>
   );
 }
