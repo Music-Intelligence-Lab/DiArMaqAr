@@ -230,7 +230,7 @@ export default function AppClient() {
     const startingNoteName = searchParams.get("startingNoteName") ?? undefined;
 
     // Parse descriptive maqam parameter if present
-    const maqamParam = searchParams.get("maqām");
+    const maqamParam = searchParams.get("maqam");
     if (maqamParam) {
       const parsed = parseUrlParameter(maqamParam);
 
@@ -318,7 +318,7 @@ export default function AppClient() {
     if (selectedTuningSystem) {
       params.push(`tuningSystem=${selectedTuningSystem.getId()}`);
       const first = getFirstNoteName(selectedIndices);
-      if (first) params.push(`startingNoteName=${standardizeText(first)}`);
+      if (first && first !== "none") params.push(`startingNoteName=${standardizeText(first)}`);
     }
 
     // Use descriptive parameters for jins and maqam with transposition note included in parameter
@@ -347,7 +347,7 @@ export default function AppClient() {
       } else {
         maqamParam = createUrlParameter(maqamName);
       }
-      params.push(`maqām=${encodeUrlParameter(maqamParam)}`);
+      params.push(`maqam=${encodeUrlParameter(maqamParam)}`);
 
       if (maqamSayrId) {
         // Use descriptive sayr parameter with author and page information
