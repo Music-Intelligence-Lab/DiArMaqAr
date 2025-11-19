@@ -112,7 +112,32 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
 
   const numberOfPitchClasses = selectedTuningSystem ? selectedTuningSystem.getOriginalPitchClassValues().length : 0;
 
-  const sortedMaqamat = [...maqamat].sort((a, b) => a.getName().localeCompare(b.getName()));
+  // Helper function to strip leading special characters for sorting
+  const stripLeadingSpecialChars = (str: string): string => {
+    return str.replace(/^[^\p{L}\p{N}]+/u, '');
+  };
+
+  // Helper function to normalize string for consistent sorting
+  const normalizeForSort = (str: string): string => {
+    return stripLeadingSpecialChars(str)
+      .toLowerCase()
+      .normalize('NFD') // Decompose characters (e.g., é -> e + ́)
+      .replace(/[\u0300-\u036f]/g, '') // Remove combining diacritical marks
+      .replace(/[\u02B0-\u02FF]/g, '') // Remove modifier letters (including ʿ U+02BF and other modifiers)
+      .replace(/\s+/g, ' ') // Normalize whitespace
+      .trim();
+  };
+
+  const sortedMaqamat = [...maqamat].sort((a, b) => {
+    const nameA = normalizeForSort(a.getName());
+    const nameB = normalizeForSort(b.getName());
+    // Use a more permissive comparison that handles mixed scripts better
+    return nameA.localeCompare(nameB, 'en', { 
+      sensitivity: 'base', 
+      numeric: true,
+      ignorePunctuation: true 
+    });
+  });
 
   // Generate new unique ID
   const setOfMaqamat = new Set(maqamat.map((m) => m.getId()));
