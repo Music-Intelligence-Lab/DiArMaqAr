@@ -18,13 +18,14 @@ import Modulations from "@/components/modulations";
 import { getSources } from "@/functions/import";
 import { Sayr } from "@/models/Maqam";
 import Footer from "@/components/footer";
+import { standardizeText } from "@/functions/export";
 
 // URL parameter helper functions
 /**
- * Formats a name for URL by replacing spaces with hyphens
+ * Formats a name for URL by removing diacritics and special characters, replacing spaces with hyphens
  */
 export function formatNameForUrl(name: string): string {
-  return name.replace(/\s+/g, "-");
+  return standardizeText(name).replace(/_/g, "-");
 }
 
 /**
@@ -317,7 +318,7 @@ export default function AppClient() {
     if (selectedTuningSystem) {
       params.push(`tuningSystem=${selectedTuningSystem.getId()}`);
       const first = getFirstNoteName(selectedIndices);
-      if (first) params.push(`startingNoteName=${first}`);
+      if (first) params.push(`startingNoteName=${standardizeText(first)}`);
     }
 
     // Use descriptive parameters for jins and maqam with transposition note included in parameter

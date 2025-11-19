@@ -12,6 +12,7 @@
 import Book from "./Book";
 import Article from "./Article";
 import Thesis from "./Thesis";
+import { standardizeText } from "@/functions/export";
 
 /**
  * Union type representing all possible bibliographic source types.
@@ -88,5 +89,5 @@ export function stringifySource(source: Source, english: boolean, page: string |
   if (page) resultString += ":" + page + ")";
   else resultString += ")";
 
-  return page ? resultString : resultString.replaceAll(" ", "-");
+  return page ? resultString : standardizeText(resultString).replace(/_/g, "-");
 }
