@@ -44,7 +44,7 @@ The platform implements culture-specific methodology by:
 All pitch calculations begin from this framework:
 - **Note names**: rāst, dugāh, segāh, chahārgāh, nawā, etc.
 - **Organizational hierarchies**: Tanāghīm → Ajnās → Maqāmāt → Suyūr → Intiqālāt
-- **Four octaves**: Extended lower (qarār prefixes) and upper (jawāb prefixes) octaves
+- **Extended ranges**: Lower register (qarār prefixes) and upper register (jawāb prefixes)
 
 ### Implementation
 

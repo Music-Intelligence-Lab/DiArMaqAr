@@ -70,6 +70,8 @@ docs/library/api
 docs/openapi.json
 docs/public/openapi.json
 public/docs/openapi.json
+public/docs/
+
 
 # Claude
 .claude/

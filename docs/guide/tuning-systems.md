@@ -53,14 +53,14 @@ Each tuning system includes:
 - Commentary on theoretical context
 - Original units of measurement
 
-## Four-Octave System
+## Extended Range System
 
-In DiArMaqAr, each tuning system is expanded across **four octaves**:
+In DiArMaqAr, tuning systems are expanded across multiple registers to support comprehensive musical analysis:
 
-- **Octave 0**: Extended lower octave (qarār qarār, qarār prefixes)
-- **Octave 1**: Main octave (standard note names)
-- **Octave 2**: Upper octave (standard note names)
-- **Octave 3**: Extended upper octave (jawāb, jawāb jawāb prefixes)
+- **Lower register**: qarār qarār or qarār prefixes
+- **Main register**: Standard note names
+- **Upper register**: Standard note names (higher range)
+- **Extended upper register**: jawāb or jawāb jawāb prefixes
 
 This expansion is essential for:
 - Jins and maqām analysis across full ranges
@@ -130,7 +130,7 @@ import { getTuningSystemPitchClasses } from '@/functions/getTuningSystemPitchCla
 // Create tuning system instance
 const tuningSystem = new TuningSystem(tuningSystemData)
 
-// Get all pitch classes across four octaves
+// Get all pitch classes
 const pitchClasses = getTuningSystemPitchClasses(tuningSystem, 'ushayran')
 ```
 

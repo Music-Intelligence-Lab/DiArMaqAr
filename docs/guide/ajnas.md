@@ -20,7 +20,7 @@ A jins is a unique sequence of 3, 4, or 5 notes, each defined by its characteris
 
 ## Construction and Compatibility
 
-Ajnās are constructed based on their constituent note names. For a jins to be possible in a given tuning system, **all required note names must exist within the system's four octaves**.
+Ajnās are constructed based on their constituent note names. For a jins to be possible in a given tuning system, **all required note names must exist within the system**.
 
 ### Example: Jins Kurd
 
@@ -30,7 +30,7 @@ Ajnās are constructed based on their constituent note names. For a jins to be p
 - ✅ **Al-Kindī system**: All note names exist → Jins kurd is possible
 - ❌ **Some systems**: Missing one or more note names → Jins kurd is not possible
 
-The platform automatically searches across all four octaves when determining ajnās compatibility.
+The platform automatically searches the tuning system when determining ajnās compatibility.
 
 ## Jins Transpositions
 
