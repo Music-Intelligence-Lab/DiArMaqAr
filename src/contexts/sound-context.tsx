@@ -605,7 +605,12 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     });
     const baseFrequency = parseFloat(pitchClass.frequency);
     // Apply octave shift: multiply by 2^octaveShift
-    const frequency = baseFrequency * Math.pow(2, soundSettings.octaveShift);
+    let frequency = baseFrequency * Math.pow(2, soundSettings.octaveShift);
+    // Validate frequency is finite, fallback to 440 Hz (A4) if invalid
+    if (!Number.isFinite(frequency) || frequency <= 0) {
+      console.warn(`Invalid frequency for pitch class ${pitchClass.noteName}: ${pitchClass.frequency}, using fallback 440 Hz`);
+      frequency = 440;
+    }
     if (soundSettings.outputMode === "mute") return;
 
     // Use a quadratic velocity curve for more expressive dynamics
@@ -661,7 +666,13 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         const oscNode = audioCtx.createOscillator();
         oscNode.setPeriodicWave(pws[i]);
         const detunedFreq = frequency * Math.pow(2, dets[i] / 1200);
-        oscNode.frequency.setValueAtTime(detunedFreq, startTime);
+        // Validate frequency is finite before setting
+        if (Number.isFinite(detunedFreq) && detunedFreq > 0 && Number.isFinite(startTime)) {
+          oscNode.frequency.setValueAtTime(detunedFreq, startTime);
+        } else {
+          console.warn(`Invalid detuned frequency: ${detunedFreq}, startTime: ${startTime}`);
+          oscNode.frequency.setValueAtTime(440, startTime);
+        }
         oscNode.connect(merger);
         oscs.push(oscNode);
       }
@@ -716,7 +727,10 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
       customWave = createZeroPhasePeriodicWave(waveform, audioCtx);
       if (customWave) osc.setPeriodicWave(customWave); else osc.type = waveform as OscillatorType;
     } else if (PERIODIC_WAVES[waveform]) osc.setPeriodicWave(PERIODIC_WAVES[waveform]); else osc.type = waveform as OscillatorType;
-    try { osc.frequency.setValueAtTime(frequency ?? 0, startTime); } catch (e) { console.error("Error setting frequency on oscillator:", e, frequency, startTime, pitchClass); }
+    // Validate frequency and startTime are finite before setting
+    const safeFrequency = (Number.isFinite(frequency) && frequency > 0) ? frequency : 440;
+    const safeStartTime = Number.isFinite(startTime) ? startTime : audioCtx.currentTime;
+    try { osc.frequency.setValueAtTime(safeFrequency, safeStartTime); } catch (e) { console.error("Error setting frequency on oscillator:", e, safeFrequency, safeStartTime, pitchClass); }
     const gainNode = audioCtx.createGain();
     const peakLevel = polyScale; const sustainLevel = sustain * polyScale; const attackEndTime = startTime + attack; const decayEndTime = attackEndTime + decay;
     gainNode.gain.setValueAtTime(0, startTime);
@@ -876,7 +890,10 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
             const tonicPc = shiftPitchClassByOctave(allPitchClasses, pitchClasses[0], -1);
             const freq = parseFloat(tonicPc.frequency);
-            try { osc.frequency.setValueAtTime(freq, audioCtx.currentTime); } catch (err) { console.warn("Could not set drone oscillator frequency:", err); }
+            // Validate frequency is finite before setting
+            const safeFreq = (Number.isFinite(freq) && freq > 0) ? freq : 440;
+            const safeTime = Number.isFinite(audioCtx.currentTime) ? audioCtx.currentTime : 0;
+            try { osc.frequency.setValueAtTime(safeFreq, safeTime); } catch (err) { console.warn("Could not set drone oscillator frequency:", err, freq, audioCtx.currentTime); }
 
             osc.connect(droneGainRef.current);
             osc.start();
@@ -1037,8 +1054,11 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     } else {
       // For non-MPE, send note off on channel 0
       midiActiveNotesRef.current.forEach((frequency) => {
-        const note = Math.floor(frequencyToMidiNoteNumber(frequency));
-        sendMidiMessage([0x80, note, 0]);
+        // Validate frequency is finite before converting to MIDI
+        if (Number.isFinite(frequency) && frequency > 0) {
+          const note = Math.floor(frequencyToMidiNoteNumber(frequency));
+          sendMidiMessage([0x80, note, 0]);
+        }
       });
     }
     midiActiveNotesRef.current.clear();
@@ -1080,8 +1100,11 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     } else {
       // For non-MPE, send note off on channel 0
       midiActiveNotesRef.current.forEach((frequency) => {
-        const note = Math.floor(frequencyToMidiNoteNumber(frequency));
-        sendMidiMessage([0x80, note, 0]);
+        // Validate frequency is finite before converting to MIDI
+        if (Number.isFinite(frequency) && frequency > 0) {
+          const note = Math.floor(frequencyToMidiNoteNumber(frequency));
+          sendMidiMessage([0x80, note, 0]);
+        }
       });
     }
     midiActiveNotesRef.current.clear();
@@ -1103,7 +1126,12 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
       const currentPitchClass = allPitchClasses.find((pc) => pc.fraction === pitchClassFraction);
       if (!currentPitchClass) continue;
 
-      const newFrequency = newReferenceFrequency * parseFloat(currentPitchClass.decimalRatio);
+      let newFrequency = newReferenceFrequency * parseFloat(currentPitchClass.decimalRatio);
+      // Validate frequency is finite
+      if (!Number.isFinite(newFrequency) || newFrequency <= 0) {
+        console.warn(`Invalid frequency calculated for pitch class ${currentPitchClass.noteName}: ${newFrequency}, skipping update`);
+        continue;
+      }
 
       voices.forEach((voice) => {
         voice.frequency = newFrequency; // Update stored frequency
@@ -1117,23 +1145,28 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
             voice.oscillator.forEach((osc, index) => {
               const detunedNewFreq = newFrequency * Math.pow(2, detunings[index] / 1200);
-              try {
-                osc.frequency.cancelScheduledValues(now);
-                osc.frequency.setValueAtTime(osc.frequency.value, now);
-                osc.frequency.linearRampToValueAtTime(detunedNewFreq, now + TRANSITION_TIME);
-              } catch (e) {
-                console.warn("Could not update oscillator frequency:", e);
+              // Validate detuned frequency is finite
+              if (Number.isFinite(detunedNewFreq) && detunedNewFreq > 0 && Number.isFinite(now)) {
+                try {
+                  osc.frequency.cancelScheduledValues(now);
+                  osc.frequency.setValueAtTime(osc.frequency.value, now);
+                  osc.frequency.linearRampToValueAtTime(detunedNewFreq, now + TRANSITION_TIME);
+                } catch (e) {
+                  console.warn("Could not update oscillator frequency:", e);
+                }
               }
             });
           }
         } else {
           // Handle single oscillator (periodic waves)
-          try {
-            voice.oscillator.frequency.cancelScheduledValues(now);
-            voice.oscillator.frequency.setValueAtTime(voice.oscillator.frequency.value, now);
-            voice.oscillator.frequency.linearRampToValueAtTime(newFrequency, now + TRANSITION_TIME);
-          } catch (e) {
-            console.warn("Could not update oscillator frequency:", e);
+          if (Number.isFinite(now)) {
+            try {
+              voice.oscillator.frequency.cancelScheduledValues(now);
+              voice.oscillator.frequency.setValueAtTime(voice.oscillator.frequency.value, now);
+              voice.oscillator.frequency.linearRampToValueAtTime(newFrequency, now + TRANSITION_TIME);
+            } catch (e) {
+              console.warn("Could not update oscillator frequency:", e);
+            }
           }
         }
       });
@@ -1146,7 +1179,16 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         const currentPitchClass = allPitchClasses.find((pc) => pc.fraction === pitchClassFraction);
         if (!currentPitchClass) continue;
 
-        const newFrequency = newReferenceFrequency * parseFloat(currentPitchClass.decimalRatio);
+        let newFrequency = newReferenceFrequency * parseFloat(currentPitchClass.decimalRatio);
+        // Validate frequencies are finite before converting to MIDI
+        if (!Number.isFinite(newFrequency) || newFrequency <= 0) {
+          console.warn(`Invalid frequency calculated for MIDI update: ${newFrequency}, skipping`);
+          continue;
+        }
+        if (!Number.isFinite(oldFrequency) || oldFrequency <= 0) {
+          console.warn(`Invalid old frequency for MIDI update: ${oldFrequency}, skipping`);
+          continue;
+        }
         const oldMf = frequencyToMidiNoteNumber(oldFrequency);
         const newMf = frequencyToMidiNoteNumber(newFrequency);
         const oldNote = Math.floor(oldMf);
@@ -1199,7 +1241,12 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
       const currentPitchClass = allPitchClasses.find((pc) => pc.fraction === pitchClassFraction);
       if (!currentPitchClass) continue;
 
-      const targetFrequency = parseFloat(currentPitchClass.frequency);
+      let targetFrequency = parseFloat(currentPitchClass.frequency);
+      // Validate frequency is finite
+      if (!Number.isFinite(targetFrequency) || targetFrequency <= 0) {
+        console.warn(`Invalid target frequency for pitch class ${currentPitchClass.noteName}: ${targetFrequency}, skipping update`);
+        continue;
+      }
 
       voices.forEach((voice) => {
         voice.frequency = targetFrequency; // Update stored frequency
@@ -1213,23 +1260,28 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
             voice.oscillator.forEach((osc, index) => {
               const detunedTargetFreq = targetFrequency * Math.pow(2, detunings[index] / 1200);
-              try {
-                osc.frequency.cancelScheduledValues(now);
-                osc.frequency.setValueAtTime(osc.frequency.value, now);
-                osc.frequency.linearRampToValueAtTime(detunedTargetFreq, now + TRANSITION_TIME);
-              } catch (e) {
-                console.warn("Could not update oscillator frequency:", e);
+              // Validate detuned frequency is finite
+              if (Number.isFinite(detunedTargetFreq) && detunedTargetFreq > 0 && Number.isFinite(now)) {
+                try {
+                  osc.frequency.cancelScheduledValues(now);
+                  osc.frequency.setValueAtTime(osc.frequency.value, now);
+                  osc.frequency.linearRampToValueAtTime(detunedTargetFreq, now + TRANSITION_TIME);
+                } catch (e) {
+                  console.warn("Could not update oscillator frequency:", e);
+                }
               }
             });
           }
         } else {
           // Handle single oscillator (periodic waves)
-          try {
-            voice.oscillator.frequency.cancelScheduledValues(now);
-            voice.oscillator.frequency.setValueAtTime(voice.oscillator.frequency.value, now);
-            voice.oscillator.frequency.linearRampToValueAtTime(targetFrequency, now + TRANSITION_TIME);
-          } catch (e) {
-            console.warn("Could not update oscillator frequency:", e);
+          if (Number.isFinite(now)) {
+            try {
+              voice.oscillator.frequency.cancelScheduledValues(now);
+              voice.oscillator.frequency.setValueAtTime(voice.oscillator.frequency.value, now);
+              voice.oscillator.frequency.linearRampToValueAtTime(targetFrequency, now + TRANSITION_TIME);
+            } catch (e) {
+              console.warn("Could not update oscillator frequency:", e);
+            }
           }
         }
       });
@@ -1242,7 +1294,16 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         const currentPitchClass = allPitchClasses.find((pc) => pc.fraction === pitchClassFraction);
         if (!currentPitchClass) continue;
 
-        const targetFrequency = parseFloat(currentPitchClass.frequency);
+        let targetFrequency = parseFloat(currentPitchClass.frequency);
+        // Validate frequencies are finite before converting to MIDI
+        if (!Number.isFinite(targetFrequency) || targetFrequency <= 0) {
+          console.warn(`Invalid target frequency for MIDI recalculation: ${targetFrequency}, skipping`);
+          continue;
+        }
+        if (!Number.isFinite(currentFreq) || currentFreq <= 0) {
+          console.warn(`Invalid current frequency for MIDI recalculation: ${currentFreq}, skipping`);
+          continue;
+        }
         const oldMf = frequencyToMidiNoteNumber(currentFreq);
         const newMf = frequencyToMidiNoteNumber(targetFrequency);
         const oldNote = Math.floor(oldMf);
