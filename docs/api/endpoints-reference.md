@@ -358,26 +358,17 @@ note names.
   to 12-EDO semitones
 - **Direct Tuning System Values**: All cent values come directly from tuning systems
   without post-processing or calculation
-- **Maqām Priority**: Maqām pitch classes are prioritized over al-Kindi fillers when both
-  satisfy the ascending order requirement (ensures maqām characteristics are preserved)
 
 **The Algorithm:**
 1. Loads pitch classes from both the specified tuning system and al-Kindi-(874) using
    the same `startingNote`
-2. Creates al-Kindi base set: Selects one pitch class per IPN reference (C, C#, D, etc.)
-   from octaves matching the maqām's octave range
-3. For each maqām transposition:
-   - Applies sequential reference note logic to ensure consistent IPN assignments
-   - Validates compatibility: Checks for duplicate IPN references with different cents values
-   - Initial merge: Replaces al-Kindi pitch classes with maqām values where IPN references match
-     (ascending sequence takes priority, then descending)
-   - Optimal octave selection: Rebuilds set with chromatic ascending order from tonic:
-     * **Priority 1**: Uses maqām pitch classes that satisfy ascending order requirement
-     * **Priority 2**: Falls back to al-Kindi fillers only if no maqām candidate available
-     * Selects optimal octaves to maintain ascending cents values
+2. For each maqām transposition:
+   - Extracts IPN reference note names from ascending and descending sequences
+   - Replaces matching pitch classes in al-Kindi base (ascending takes priority, then descending)
+   - Selects pitch classes from correct octaves to ensure ascending chromatic order
    - Orders the 12 pitch classes chromatically starting from the maqām's tonic
-4. Groups compatible maqāmāt together (those that match the set within tolerance)
-5. Names each group after the source maqām (e.g., "maqām rāst set")
+3. Groups compatible maqāmāt together
+4. Names each group after the source maqām (e.g., "maqām rāst set")
 
 **Compatibility:**
 - Maqāmāt with duplicate IPN references (same IPN appearing with different pitch values)
@@ -388,7 +379,7 @@ note names.
 - Pitch classes ordered chromatically (C, C#, D, D#, E, F, F#, G, G#, A, A#, B)
 - Starting from the maqām's tonic (default) OR from IPN "C" (if `startSetFromC=true`)
 - Relative cents from 0 (reference note) to ~1050-1200 (octave)
-- Each compatible maqām includes a `tonic` object with the maqām's tonic position and note names
+- `maqamTonic` field indicates the actual maqām tonic position and note name
 - Suitable for MIDI keyboard tuning and Scala (.scl) file generation
 
 **Filtering Options:**
@@ -408,8 +399,8 @@ correctly and pitch classes can be properly selected from matching octaves.
   - Example: `yegah`
 - `centsTolerance` (optional): Tolerance in cents for pitch class comparison (default: 5) - Type: `number` - Default: `5`
   - Example: `5`
-- `includeIncompatible` (optional): Include maqāmāt that cannot form valid 12-pitch-class sets - Type: `string` - Valid values: `true`, `false` - Default: `false`
-  - Example: `false`
+- `includeIncompatible` (optional): Include maqāmāt that cannot form valid 12-pitch-class sets - Type: `string` - Valid values: `true`, `false` - Default: `true`
+  - Example: `true`
 - `includeArabic` (optional): Return bilingual responses with Arabic script when true.
   - All English/transliteration fields remain unchanged
   - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
@@ -420,24 +411,18 @@ correctly and pitch classes can be properly selected from matching octaves.
  - Type: `string` - Valid values: `true`, `false`
   - Example: `true`
 - `startSetFromC` (optional): Start pitch class set from IPN reference "C" (degree 0) instead of from the maqām's tonic.
+When `true`, the set is reordered to start from C at 0.00 cents (relative), making it
+directly compatible with Scala (.scl) file format which maps degree 0 to middle C by default.
   When `true`, the set is reordered to start from C at 0.00 cents (relative), making it
-  directly compatible with Scala (.scl) file format which maps degree 0 to middle C by default.
-  
-  **Technical Implementation:**
-  1. **Octave Shifting**: For maqāmāt starting mid-octave (e.g., D), pitch classes in octave 2 that come BEFORE the tonic in chromatic order (C, C#) are shifted to their octave 1 equivalents from the tuning system. This ensures proper ascending order when rotated.
-  2. **Array Rotation**: The 12 pitch classes are rotated to place C first (instead of tonic)
-  3. **Relative Cents**: Recalculated from C (0.00 cents) instead of from tonic, with octave wrap-around handling (negative values + 1200)
+  directly compatible with Scala (.scl) file format which maps degree 0 to middle C by default. **Technical Implementation:**
+  1. **Octave Selection**: For maqāmāt starting mid-octave (e.g., D), pitch classes before the tonic in chromatic order (C, C#) are taken from octave 1, while those at or after the tonic use their original octaves
+  2. **Array Rotation**: The 12 pitch classes are rotated to place C first
+  3. **Relative Cents**: Calculated from C (0.00 cents), with octave wrap-around handling (negative values + 1200)
   4. **Note Names**: Arabic note names follow the NoteName model's octave conventions (e.g., C octave 1 = rāst, C octave 2 = kurdān)
-  5. **Tonic Tracking**: Each compatible maqām's `tonic` object indicates the actual maqām tonic's IPN, note names, and position in the reordered set
-  
-  **Use Cases:**
+  5. **Tonic Tracking**: The `maqamTonic` field indicates the actual maqām tonic's IPN, note names, and position in the reordered set **Use Cases:**
   - `false` (default): For understanding maqām structure starting from its tonic
-  - `true`: For Scala .scl export (no .kbm file needed) or MIDI keyboard mapping where C = degree 0
-  
-  **Example:**
-  - Maqām bayyāt shūrī (tonic D/dūgāh at 498.04 cents):
-    - Default mode: D at position 0 (0.00 cents relative)
-    - Scala mode: C (rāst, 294.13 cents) at position 0 (0.00 cents relative), D at position 2 (203.91 cents relative)
+  - `true`: For Scala .scl export (no .kbm file needed) or MIDI keyboard mapping where C = degree 0 **Example:**
+  - Maqām ḥijāz (tonic D/dūgāh at 702.13 cents): - Default mode: D at position 0 (0.00 cents relative) - Scala mode: C (rāst, 498.04 cents) at position 0 (0.00 cents relative), D at position 2 (204.08 cents relative)
  - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `false`
 - `pitchClassDataType` (optional): Controls which pitch class data fields are returned in the response.
@@ -471,6 +456,97 @@ curl "https://diarmaqar.netlify.app/api/maqamat/classification/12-pitch-class-se
 ```
 
 **Response:** Classification results with sets and compatible maqāmāt
+
+
+### Classify maqāmāt by maqam-based pitch class sets {#classifyMaqamatByMaqamPitchClassSets}
+
+```
+GET /maqamat/classification/maqam-pitch-class-sets
+```
+
+Groups maqāmāt according to maqam-based pitch class sets. Each set contains all pitch
+classes from a single source maqam (union of ascending and descending), and identifies
+which other maqāmāt can be performed using only those pitch classes.
+
+**Musicological Purpose:**
+Answers the question: "Which maqāmāt can be performed using only the pitch classes of
+maqām X?" For example, maqām rāst on rāst includes pitch classes that can perform maqām
+bayyāt on dūgāh and maqām segāh on segāh.
+
+**Key Differences from 12-Pitch-Class-Sets:**
+- **No Chromatic Base**: Does not merge with al-Kindi-(874) or chromatic filler pitch classes
+- **Variable Set Sizes**: Sets can contain any number of pitch classes (7, 8, 10, etc.), not fixed at 12
+- **Octave-Equivalent Matching**: Pitch classes in different octaves treated as equivalent (C in octave 1 = C in octave 2)
+- **Single Tuning System**: Uses only the specified tuning system (simpler than 12-pitch-class-sets)
+- **Subset Matching**: Compatible maqāmāt must use subset of source maqam's pitch classes
+
+**Critical Design Principles:**
+- **Octave Equivalence**: IPN references are compared octave-normalized (C at any octave = "C")
+- **Union of Melodic Paths**: Includes all pitch classes from both ascending AND descending sequences
+- **Exact Matching**: All pitch classes from a compatible maqām must exist in the source set (within tolerance)
+- **Direct Values**: All cent values come directly from tuning system without calculation
+- **Tahlil Priority**: Base (non-transposed) maqāmāt create canonical sets first, then transpositions
+
+**The Algorithm:**
+1. For each maqām transposition (tahlil first, then transpositions):
+   - Extracts all unique pitch classes from ascending + descending sequences
+   - Groups by IPN reference (octave-equivalent)
+   - Validates no duplicate IPN references with different cents values
+   - Creates a maqam-based pitch class set
+2. For each set, finds compatible maqāmāt:
+   - Checks if all pitch classes needed by candidate maqām exist in source set
+   - Compares cents values within tolerance (octave-normalized)
+   - Marks candidate as compatible if all pitch classes match
+3. Groups compatible maqāmāt together
+4. Names each group after the source maqām (e.g., "maqām rāst set")
+
+**Compatibility:**
+- Maqāmāt with duplicate IPN references (same IPN with different cents values when octave-normalized)
+  are marked as incompatible
+- Compatible maqāmāt can be performed entirely using the pitch classes of the source maqām
+- **Minimum Set Size**: Only sets with 2 or more maqāmāt are returned (source + at least one compatible)
+- Sets containing only the source maqām (no compatible maqāmāt) are filtered out
+
+**Output Format:**
+- Sets ordered by number of compatible maqāmāt (descending)
+- Each set includes: source maqām, all pitch classes (in ascending cents order), compatible maqāmāt, pitch class count
+- Pitch classes include: English name, note name, cents, frequency, fraction, etc.
+
+**Filtering Options:**
+- Use `setId` to retrieve a specific set and its compatible maqāmāt
+- Use `maqamId` to find all sets containing a specific maqām
+
+
+**Query Parameters:**
+- `tuningSystem` (optional): Tuning system ID for all maqāmāt (default: CairoCongressTuningCommittee-(1929)) - Type: `string` - Default: `CairoCongressTuningCommittee-(1929)`
+  - Example: `CairoCongressTuningCommittee-(1929)`
+- `startingNote` (optional): Starting note for the tuning system (default: yegah). - Type: `string` - Default: `yegah`
+  - Example: `yegah`
+- `centsTolerance` (optional): Tolerance in cents for pitch class comparison (default: 5) - Type: `number` - Default: `5`
+  - Example: `5`
+- `includeIncompatible` (optional): Include maqāmāt that cannot form valid maqam-based pitch class sets - Type: `string` - Valid values: `true`, `false` - Default: `false`
+  - Example: `false`
+- `includeArabic` (optional): Return bilingual responses with Arabic script when true.
+  - All English/transliteration fields remain unchanged
+  - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+  - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+ - Type: `string` - Valid values: `true`, `false`
+  - Example: `true`
+- `includePitchClassData` (optional): Include pitch class data in the response (default: false).
+  When false: Omits pitch class data, returning only set metadata and compatible maqamat
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
+  - Example: `false`
+- `setId` (optional): Filter by specific set ID to retrieve that set and its compatible maqāmāt (e.g., 'maqam_rast_set') - Type: `string`
+  - Example: `maqam_rast_set`
+- `maqamId` (optional): Filter by maqām ID to find all sets containing that maqām (e.g., 'maqam_rast') - Type: `string`
+  - Example: `maqam_rast`
+
+**Example:**
+```bash
+curl "https://diarmaqar.netlify.app/api/maqamat/classification/maqam-pitch-class-sets?includeArabic=true"
+```
+
+**Response:** Classification results with maqam-based pitch class sets and compatible maqāmāt
 
 
 ---

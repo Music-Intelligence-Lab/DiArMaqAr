@@ -9,20 +9,21 @@ Welcome to the Digital Arabic Maqām Archive (DiArMaqAr) documentation!
 
 ## What is DiArMaqAr?
 
-The Digital Arabic Maqām Archive (DiArMaqAr) is an open-source, bilingual browser-based application and repository designed for musicians, composers, developers, and scholars engaged with Arabic maqām theory.
+The Digital Arabic Maqām Archive (DiArMaqAr) is an open-source, bilingual, browser-based application and repository designed for musicians, composers, developers, and scholars engaged with Arabic maqām theory.
 
-The application integrates an archive of historically documented **tanāghīm**, **ajnās**, **maqāmāt**, **suyūr**, and **intiqālāt** within a unified digital framework, establishing verified reference data for education, performance, composition, software development, machine learning applications, and instrument design.
+The application integrates an archive of historically documented **tanāghīm** (تناغيم, tuning systems), **ajnās** (أجناس, melodic segments), **maqāmāt** (مقامات, modal frameworks), **suyūr** (سيور, melodic pathways), and **intiqālāt** (انتقالات, modulations) within a unified digital framework, establishing verified reference data for education, performance, composition, software development, machine learning applications, and instrument design.
 
 ### Key Features
 
-- **Bilingual Interface**: Arabic/English with Library of Congress Romanization standards
+- **Bilingual Interface**: Arabic/English (with Library of Congress Romanization standards)
 - **Comprehensive Tuning Systems**: Access to historical and modern tuning systems from the 9th century to present with historical source attributions
-- **Maqāmāt and Ajnās Data**: Complete database with historical source attributions
-- **Tuning-System-Sensitive Transposition**: Systematic computation of all mathematically valid transpositions
+- **Maqāmāt and Ajnās Data**: Complete database with modern source attributions
+- **Tuning-System-Sensitive Transposition**: Systematic computation of all mathematically valid ajnās and maqāmāt transpositions
 - **Al-Shawwā Modulation Algorithm**: First algorithmic implementation of Sāmī al-Shawwā's 1946 modulation guidelines
+- **Bibliographic Attribution System**: Complete source references with scholarly verification
 - **Real-Time Audio Synthesis**: Hear precise intonational relationships with Web Audio API
-- **MIDI Integration**: Support for MIDI controllers and MPE (MIDI Polyphonic Expression) output
-- **Data Export**: JSON, CSV, and Scala (.scl/.kbm) formats for research and composition
+- **MIDI Integration**: Support for MIDI input and MPE (MIDI Polyphonic Expression) output
+- **Data Export**: JSON and Scala (.scl/.kbm) formats for research and composition
 - **REST API**: Programmatic access to all data
 - **TypeScript Library**: Complete JavaScript/TypeScript library with full type safety
 
@@ -52,16 +53,19 @@ curl "http://localhost:3000/api/maqamat/maqam_bayyat?tuningSystem=al-Farabi-(950
 First, install the library in your project (or clone the repository for direct development access). Then import the required modules:
 
 ```typescript
-import { Maqam, Jins, TuningSystem } from '@/models'
-import { getMaqamTranspositions } from '@/functions/transpose'
-import { modulate } from '@/functions/modulate'
+import MaqamData from '@/models/Maqam'
+import JinsData from '@/models/Jins'
+import TuningSystem from '@/models/TuningSystem'
+import { calculateMaqamTranspositions } from '@/functions/transpose'
+import modulate from '@/functions/modulate'
 
 // Create instances
 const tuningSystem = new TuningSystem(tuningSystemData)
-const maqam = new Maqam(maqamData)
+const maqamData = new MaqamData(maqamDataInterface)
+const maqam = maqamData.generate(tuningSystem)
 
 // Get transpositions
-const transpositions = getMaqamTranspositions(maqam, tuningSystem)
+const transpositions = calculateMaqamTranspositions(maqam, tuningSystem)
 
 // Analyze modulations
 const modulations = modulate(maqam, allMaqamat, tuningSystem)
