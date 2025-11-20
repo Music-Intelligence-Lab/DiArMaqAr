@@ -33,10 +33,10 @@ Each maqām contains:
 Similar to ajnās, maqāmāt are constructed based on constituent note names and are subject to tuning system compatibility.
 
 **Requirements:**
-- All note names in both ascending and descending sequences must exist within the selected tuning system's four octaves
+- All note names in both ascending and descending sequences must exist within the selected tuning system
 - If any required note name is missing, the maqām is not possible in that tuning system
 
-**Example:** Maqām farahfazza in Al-Kindī's tuning system extends from octave 0 (yegāh) to octave 1 (ḥusaynī), utilizing notes across this range.
+**Example:** Maqām farahfazza in Al-Kindī's tuning system extends from yegāh to ḥusaynī, utilizing notes across this range.
 
 ## Ajnās Within Maqāmāt
 
@@ -61,7 +61,7 @@ Like ajnās, maqāmāt can be systematically transposed to begin from different 
 
 The transposition algorithm:
 1. **Separately processes** both ascending and descending sequences
-2. **Ensures** all required note names exist within four octaves
+2. **Ensures** all required note names exist within the tuning system
 3. **Maintains** original intervallic relationships
 4. **Recalculates** all embedded ajnās for each transposition
 5. **Generates** transposed names following "maqām [name] al-[starting note]" convention

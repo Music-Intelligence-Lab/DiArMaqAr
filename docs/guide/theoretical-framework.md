@@ -34,10 +34,10 @@ A jins (plural, ajnās) is a unique sequence of 3, 4, or 5 notes (trichord, tetr
 **Key Characteristics:**
 - Ajnās are constructed based on their constituent note names
 - Not all ajnās are compatible with every tuning system
-- The platform searches across all four octaves when determining ajnās compatibility
+- The platform searches across the tuning system when determining ajnās compatibility
 - Each jins has a specific intervallic pattern that defines its character
 
-**Example:** In Al-Kindī's tuning system, jins kurd (dūgāh, kurdī, chahārgāh, nawā) can be constructed because all these note names exist within the system's four octaves.
+**Example:** In Al-Kindī's tuning system, jins kurd (dūgāh, kurdī, chahārgāh, nawā) can be constructed because all these note names exist within the system.
 
 ### 3. Maqāmāt
 
@@ -89,28 +89,36 @@ Intiqāl is the process of moving from one maqām to another during performance 
 
 ## Note Naming Convention
 
-The application's data model is fundamentally grounded in the **historical Persian-Arab-Ottoman note naming convention**. This naming system spans four octaves and serves as the primary reference framework for all operations:
+The application's data model is fundamentally grounded in the **historical Persian-Arab-Ottoman note naming convention**. This naming system serves as the primary reference framework for all operations:
 
 **Standard Note Names:**
 - yegāh, qarār ḥiṣār, ʿushayrān, ʿirāq, rāst, dūgāh, segāh, chahārgāh, nawā, ḥusaynī, awj, etc.
 
-**Extended Octaves:**
-- **Octave 0 (lower)**: qarār qarār or qarār prefixes
-- **Octave 1 (main octave)**: Standard note names
-- **Octave 2 (upper octave)**: Standard note names (octave above)
-- **Octave 3 (higher)**: jawāb or jawāb jawāb prefixes
+**Extended Ranges:**
+- **Lower register**: qarār qarār or qarār prefixes
+- **Main register**: Standard note names
+- **Upper register**: Standard note names (higher range)
+- **Extended upper register**: jawāb or jawāb jawāb prefixes
 
-This naming convention ensures authenticity and consistency across different tuning systems and historical sources.
+**Theoretical Significance:**
+
+Using Persian-Arab-Ottoman note names is the only approach that enables exploring multiple tuning systems based on Arabic maqām theory conventions, which regularly analyze maqāmāt using note names rather than historical or mathematical pitch class definitions. This methodology:
+
+- **Grounds analysis in Arabic theoretical frameworks**: Maqām theory developed using these specific note names as the primary organizational system
+- **Enables cross-tuning-system analysis**: The same note names (e.g., rāst, dūgāh, segāh) allow comparison across different historical tanāghīm
+- **Preserves historical analytical methods**: Reflects how Arabic music theorists have analyzed and documented maqāmāt for centuries
+- **Avoids Anglo-European-centric impositions**: Does not force International Pitch Notation (C, D, E) or solfege (do, re, mi)—approaches that became common practice in Arabic music theory only since the mid-20th century
+- **Maintains theoretical independence**: Arabic maqām analysis operates within its own conceptual framework without requiring Western reference systems
 
 ## Tuning System Starting Note Name
 
-The note name for the first pitch class from which all remaining pitch classes are ordered and calculated is called the tuning system starting note name (ism al-nagham al-mubtadi). This is always associated with the first pitch class in the tuning system (ratio 1/1, 0 cents, or open string length). Starting note names reflect different traditions and methodologies:
+The note name for the first pitch class from which all remaining pitch classes are ordered and calculated is the tuning system's starting note name. This is always associated with the first pitch class in the tuning system (ratio 1/1, 0 cents, or open string length). Starting note names reflect different traditions and methodologies:
 
-- **ʿUshayrān-based**: Related to theorisations based on defining frets/division of the oud strings where the open oud strings are tuned in perfect fourths. ʿUshayrān is the modern note name assigned to the fourth string of a standard 6-string oud, which is the lowest of the four strings that are tuned in fourths.
+- **ʿUshayrān-based**: Related to theorisations based on defining frets/division of the oud strings where the open oud strings are tuned in perfect fourths. ʿUshayrān is the modern note name assigned to the fourth string of a standard 6-string oud, which is the lowest (in pitch) of the four strings that are tuned in fourths.
 
 - **Yegāh-based**: This is the first note name utilised in modern Arabic music theory. It also represents tuning systems that were developed based on long necked lute family instruments (the Persian Tar or Sehtar) or the division of a single string using a monochord or sonometer.
 
-- **Rāst-based**: The note name rāst is associated with the International Pitch Notation note name C. Tuning systems using rāst for their starting note name are mid-20th century onwards and represent a trend of modifying Anglo-European music theory standards to suit the Arabic maqām system. Most theoretical representations of Anglo-European scales or the 12-EDO tuning system start on the note C, as opposed to A which is used to define the reference frequency (i.e. A4 = 440 Hz).
+- **Rāst-based**: Tuning systems using rāst for their starting note name are mid-20th century onwards and represent a trend of modifying Anglo-European music theory standards to suit the Arabic maqām system. The note name rāst is associated with the International Pitch Notation note name C. Most theoretical representations of Anglo-European scales or the 12-EDO tuning system start on the note C, as opposed to A which is used to define the reference frequency (i.e. A4 = 440 Hz), hence the modern usage of rāst.
 
 **Key Characteristics:**
 - Note name, not actual pitch class
@@ -122,11 +130,11 @@ The note name for the first pitch class from which all remaining pitch classes a
 
 The choice of starting note name is not arbitrary—it represents a fundamental theoretical decision that affects the entire mathematical and practical framework of maqām analysis:
 
-- **Availability of Ajnās and Maqāmāt**: Different starting points determine which maqāmāt and ajnās are available within a tuning system. The same tuning system with different starting notes (e.g., ʿushayrān vs. yegāh) may support different numbers of possible maqāmāt and ajnās.
+- **Availability of Ajnās and Maqāmāt**: Different tuning system starting note names determine which maqāmāt and ajnās are available within a tuning system. The same tuning system with different starting notes (e.g., ʿushayrān vs. yegāh) may support different numbers of possible maqāmāt and ajnās due to the unequal divisions used in the tuning system itself.
 
 - **Mathematical Relationships**: The starting note name determines how intervals are mathematically organized. Changing the starting note name affects the relative positions of all pitch classes and their intervallic relationships within the tuning system.
 
-- **Modulation Pathways**: The networks of possible modulations between maqāmāt vary substantially depending on the starting note name of a tuning system. Some modulation pathways that are possible in one system may not be available in another due to the different pitch class organization.
+- **Intiqālāt (modulations)**: The networks of possible modulations between maqāmāt vary substantially depending on the starting note name of a tuning system. Some modulation pathways that are possible in one system may not be available in another due to the different pitch class organization.
 
 - **Structural Accessibility**: Certain maqām structures may be accessible in a framework based on a certain starting note name but not another, even within the same underlying tuning system. This affects which structures can be constructed and analyzed.
 

@@ -66,7 +66,7 @@ Maqām transposition handles both ascending and descending sequences separately,
 ### Algorithm Details
 
 1. **Separate Processing**: Ascending and descending sequences analyzed independently
-2. **Validation**: Ensures all required note names exist in four octaves
+2. **Validation**: Ensures all required note names exist in the tuning system
 3. **Interval Preservation**: Maintains original intervallic relationships
 4. **Automatic Recalculation**: All embedded ajnās recalculated for each transposition
 5. **Suyūr Transposition**: Associated suyūr automatically transposed

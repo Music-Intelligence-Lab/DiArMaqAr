@@ -71,7 +71,7 @@ The Persian-Arab-Ottoman note naming convention is compiled from:
 - Al-Ṣabbāgh (1954:47)
 - Al-Ḥilū (1961:69)
 
-**Extended octaves** (qarār prefixes, jawāb prefixes) follow conventions documented in:
+**Extended ranges** (qarār prefixes, jawāb prefixes) follow conventions documented in:
 - Allāh Wīrdī (1949:203)
 - Al-Ḥilū (1961:70)
 
