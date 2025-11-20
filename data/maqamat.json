@@ -3367,39 +3367,6 @@
     "version": "2025-10-18T19:41:17.132Z"
   },
   {
-    "id": "57",
-    "idName": "maqam_zawil",
-    "name": "maqām zāwīl",
-    "ascendingNoteNames": [
-      "rāst",
-      "dūgāh",
-      "segāh",
-      "chahārgāh",
-      "nawā",
-      "ḥiṣār",
-      "nīm māhūr"
-    ],
-    "descendingNoteNames": [
-      "ʿajam",
-      "ḥusaynī",
-      "nawā",
-      "ḥijāz",
-      "kurdī",
-      "dūgāh",
-      "rāst"
-    ],
-    "suyur": [],
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "sourcePageReferences": [
-      {
-        "sourceId": "al-Shawwa-(1946)",
-        "page": "48"
-      }
-    ],
-    "version": "2025-10-18T19:41:17.132Z"
-  },
-  {
     "id": "58",
     "idName": "maqam_zawil",
     "name": "maqām zāwīl",
