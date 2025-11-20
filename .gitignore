@@ -65,7 +65,11 @@ next-env.d.ts
 docs/.vitepress/dist
 docs/.vitepress/cache
 docs/library/api
+
 # Generated OpenAPI JSON files (source of truth is openapi.yaml)
 docs/openapi.json
 docs/public/openapi.json
 public/docs/openapi.json
+
+# Claude
+.claude/

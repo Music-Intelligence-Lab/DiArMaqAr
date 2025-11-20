@@ -70,7 +70,7 @@ DiArMaqAr supports different export strategies depending on your use case:
 
 ---
 
-### Use Case 2: Play Maqām Rāst on MIDI Keyboard
+### Use Case 2: Play maqām rāst on MIDI Keyboard
 **Goal**: Map only the actual notes of maqām rāst to a MIDI keyboard.
 
 **Approach**: Simple .scl + Simple .kbm Export

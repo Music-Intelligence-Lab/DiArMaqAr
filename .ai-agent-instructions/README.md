@@ -34,6 +34,7 @@ Load files based on your task type for optimal context efficiency:
 | **Bug fix** | 00 | 03, 04, 05 | - | - |
 | **API endpoint** | 00 | 03 | api-retrospective, openapi-formatting-guide | - |
 | **API documentation** | 00 | 03 | openapi-formatting-guide | - |
+| **User-facing documentation** | 00 | 03 | vitepress-documentation-guide | 06, 07 |
 | **12-pitch-class sets / Scala export** | 00 | 03, 04 | 12-pitch-class-sets-scala-export | - |
 | **Documentation** | 00 | 03 | - | 06, 07 |
 | **Testing** | 00 | 05 | - | - |
@@ -47,7 +48,7 @@ Load files based on your task type for optimal context efficiency:
 
 ### Tier 1: Core (Always Load)
 
-**[`core/00-core-principles.md`](./core/00-core-principles.md)** (~290 lines)
+**[`core/00-core-principles.md`](./core/00-core-principles.md)** (~365 lines)
 - Personality & philosophy
 - Decolonial computing framework
 - Cultural sensitivity principles
@@ -57,19 +58,19 @@ Load files based on your task type for optimal context efficiency:
 
 ### Tier 2: Essentials (Load for Most Tasks)
 
-**[`essentials/01-project-essentials.md`](./essentials/01-project-essentials.md)** (~240 lines)
+**[`essentials/01-project-essentials.md`](./essentials/01-project-essentials.md)** (~279 lines)
 - Project overview & tech stack
 - High-level architecture
 - Core conceptual model
 - Common commands reference
 
-**[`essentials/02-architecture-essentials.md`](./essentials/02-architecture-essentials.md)** (~450 lines)
+**[`essentials/02-architecture-essentials.md`](./essentials/02-architecture-essentials.md)** (~519 lines)
 - Context provider hierarchy
 - Data model relationships
 - Component patterns
 - Performance considerations
 
-**[`essentials/03-development-quick-ref.md`](./essentials/03-development-quick-ref.md)** ⭐ (~550 lines) - **MOST USED**
+**[`essentials/03-development-quick-ref.md`](./essentials/03-development-quick-ref.md)** ⭐ (~603 lines) - **MOST USED**
 - Quick reference tables
 - TDD workflow
 - Component creation checklist
@@ -77,66 +78,73 @@ Load files based on your task type for optimal context efficiency:
 - Common patterns
 - UI/UX patterns
 
-**[`essentials/04-musicology-essentials.md`](./essentials/04-musicology-essentials.md)** (~450 lines)
+**[`essentials/04-musicology-essentials.md`](./essentials/04-musicology-essentials.md)** (~563 lines)
 - Octave-repeating vs non-octave-repeating (CRITICAL)
 - Asymmetric melodic paths
 - Tuning system independence
 - Common programming pitfalls
 
-**[`essentials/05-testing-essentials.md`](./essentials/05-testing-essentials.md)** (~440 lines)
+**[`essentials/05-testing-essentials.md`](./essentials/05-testing-essentials.md)** (~487 lines)
 - Manual testing protocols
 - Priority test cases
 - Debugging procedures
 
 ### Tier 3: Reference (Load on Demand)
 
-**[`reference/api-retrospective.md`](./reference/api-retrospective.md)** (~600 lines)
+**[`reference/api-retrospective.md`](./reference/api-retrospective.md)** (~1,150 lines)
 - Entity object pattern
 - Context object nesting
 - API design lessons learned
 - Progressive disclosure pattern
 
-**[`reference/openapi-formatting-guide.md`](./reference/openapi-formatting-guide.md)** (~470 lines)
+**[`reference/openapi-formatting-guide.md`](./reference/openapi-formatting-guide.md)** (~524 lines)
 - OpenAPI specification standards
 - Parameter description consistency
 - URL-safe values requirements
 - Options parameter pattern
 
-**[`reference/naming-conventions-deep-dive.md`](./reference/naming-conventions-deep-dive.md)** (~470 lines)
+**[`reference/naming-conventions-deep-dive.md`](./reference/naming-conventions-deep-dive.md)** (~468 lines)
 - Semantic clarity principles
 - Type qualifiers pattern
 - Context qualifiers pattern
 - Field name construction
 
-**[`reference/cli-commands-guide.md`](./reference/cli-commands-guide.md)** (~330 lines)
+**[`reference/cli-commands-guide.md`](./reference/cli-commands-guide.md)** (~482 lines)
 - Development commands
 - Documentation commands
 - Batch export CLI
 - Git workflow
 
-**[`reference/mcp-servers-guide.md`](./reference/mcp-servers-guide.md)** (~300 lines)
+**[`reference/mcp-servers-guide.md`](./reference/mcp-servers-guide.md)** (~269 lines)
 - Context7 (library documentation)
 - Playwright (browser automation)
 - MCP best practices
 
-**[`reference/12-pitch-class-sets-scala-export.md`](./reference/12-pitch-class-sets-scala-export.md)** ⭐ (~1,310 lines)
-- Complete 12-pitch-class sets API reference
-- Set creation algorithm deep dive
-- Compatibility matching process
-- Octave selection and ordering logic
-- startSetFromC transformation details
-- Manual calculation walkthrough
-- Verification results
+**[`reference/vitepress-documentation-guide.md`](./reference/vitepress-documentation-guide.md)** (~850 lines)
+- VitePress structure and configuration
+- Documentation file locations
+- Build commands and workflow
+- Editing user-facing documentation
+
+**12-Pitch-Class Sets & Scala Export** ⭐ (~99KB across 6 files)
+- [`reference/12-pitch-class-sets-api.md`](./reference/12-pitch-class-sets-api.md) - API endpoints and usage
+- [`reference/12-pitch-class-sets-algorithm.md`](./reference/12-pitch-class-sets-algorithm.md) - Algorithm internals
+- [`reference/scala-export-overview.md`](./reference/scala-export-overview.md) - Export system overview
+- [`reference/scala-scl-export.md`](./reference/scala-scl-export.md) - .scl format specification
+- [`reference/scala-kbm-export.md`](./reference/scala-kbm-export.md) - .kbm format specification
+- [`reference/scala-export-fixes-archive.md`](./reference/scala-export-fixes-archive.md) - Historical fixes
+
+**Navigation Hub**: [`reference/12-pitch-class-sets-scala-export.md`](./reference/12-pitch-class-sets-scala-export.md)
 
 ### Tier 4: Glossary (Load When Needed)
 
-**[`glossary/06-documentation-standards.md`](./glossary/06-documentation-standards.md)** (~620 lines)
+**[`glossary/06-documentation-standards.md`](./glossary/06-documentation-standards.md)** (~768 lines)
 - Cultural-linguistic accuracy
 - Property documentation patterns
 - JSDoc standards
 - API documentation requirements
 
-**[`glossary/07-musicological-definitions.md`](./glossary/07-musicological-definitions.md)** ⭐ (~400 lines)
+**[`glossary/07-musicological-definitions.md`](./glossary/07-musicological-definitions.md)** ⭐ (~390 lines)
 - Comprehensive term definitions
 - Grounded in Arabic maqām theory
 - Differences from Anglo-European concepts
@@ -187,15 +195,16 @@ RED (write test) → GREEN (minimal code) → REFACTOR → COMMIT
 
 | Tier | Files | Total Lines | Load Strategy |
 |------|-------|-------------|---------------|
-| **Core** | 1 | ~290 | Always load |
-| **Essentials** | 5 | ~2,130 | Load for most tasks |
-| **Reference** | 6 | ~3,480 | Load on demand |
-| **Glossary** | 2 | ~1,020 | Load when needed |
-| **Total** | 14 | ~6,920 | Conditional loading |
+| **Core** | 1 | ~365 | Always load |
+| **Essentials** | 5 | ~2,451 | Load for most tasks |
+| **Reference** | 14 | ~7,474 | Load on demand |
+| **Glossary** | 2 | ~1,158 | Load when needed |
+| **Total** | 22 | ~11,448 | Conditional loading |
 
-**Before optimization:** ~9,650 lines loaded upfront
-**After optimization:** ~2,420 lines default load (Core + Dev Quick Ref)
-**Reduction:** ~75% in default context load
+**Before optimization:** ~9,650 lines loaded upfront (pre-restructuring)
+**After optimization:** ~968 lines default load (Core + Quick Ref: 365 + 603)
+**Reduction:** ~90% in default context load
+**Reference tier growth:** Comprehensive deep-dive documentation available on demand
 
 ### Benefits
 
@@ -221,6 +230,8 @@ RED (write test) → GREEN (minimal code) → REFACTOR → COMMIT
 | **API doc generation** | reference/openapi-formatting-guide | Reference |
 | **MCP servers** | reference/mcp-servers-guide | Reference |
 | **CLI commands** | reference/cli-commands-guide | Reference |
+| **VitePress docs** | reference/vitepress-documentation-guide | Reference |
+| **User-facing documentation** | reference/vitepress-documentation-guide | Reference |
 | **12-pitch-class sets** | reference/12-pitch-class-sets-scala-export | Reference |
 | **Scala export** | reference/12-pitch-class-sets-scala-export | Reference |
 | **Compatibility matching** | reference/12-pitch-class-sets-scala-export | Reference |
@@ -241,6 +252,7 @@ RED (write test) → GREEN (minimal code) → REFACTOR → COMMIT
 - Create a component → essentials/03: Component Creation Checklist
 - Build an API → essentials/03 + reference/api-retrospective + reference/openapi-formatting-guide
 - Generate API documentation → reference/openapi-formatting-guide: Static API Documentation Generation
+- Update user-facing docs → reference/vitepress-documentation-guide
 - Test my code → essentials/03: TDD + essentials/05: Manual Testing
 - Document this → glossary/06: Documentation Standards
 - Use MCP servers → reference/mcp-servers-guide
@@ -366,12 +378,20 @@ These instructions embody:
 │   ├── 04-musicology-essentials.md
 │   └── 05-testing-essentials.md
 ├── reference/
-│   ├── 12-pitch-class-sets-scala-export.md ⭐
+│   ├── 12-pitch-class-sets-scala-export.md ⭐ (navigation hub)
+│   ├── 12-pitch-class-sets-api.md
+│   ├── 12-pitch-class-sets-algorithm.md
 │   ├── api-retrospective.md
 │   ├── cli-commands-guide.md
+│   ├── decolonial-computing-theory.md
 │   ├── mcp-servers-guide.md
 │   ├── naming-conventions-deep-dive.md
-│   └── openapi-formatting-guide.md
+│   ├── openapi-formatting-guide.md
+│   ├── scala-export-overview.md
+│   ├── scala-scl-export.md
+│   ├── scala-kbm-export.md
+│   ├── scala-export-fixes-archive.md
+│   └── vitepress-documentation-guide.md
 └── glossary/
     ├── 06-documentation-standards.md
     └── 07-musicological-definitions.md
@@ -379,5 +399,7 @@ These instructions embody:
 
 ---
 
-*Last Updated: 2025-11-18*
-*Recent addition: Comprehensive 12-pitch-class sets & Scala export guide (~1,310 lines)*
+*Last Updated: 2025-11-20*
+*Recent additions:*
+- *Decolonial computing theory reference (~599 lines)*
+- *VitePress documentation guide (~850 lines)*

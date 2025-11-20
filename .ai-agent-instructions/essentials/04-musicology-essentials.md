@@ -8,9 +8,12 @@
 
 ## Overview
 
-Arabic maqām theory is **not** a variant of Western music theory. It represents independent theoretical frameworks with their own logic, historical development, and epistemological foundations. This document outlines key musicological principles essential for correct computational modeling.
+Arabic maqām theory emerged from distinct historical, geographical, and epistemological contexts spanning over a millennium of theoretical development. The computational challenges in modeling maqām theory stem not from its "complexity" but from the fundamental mismatch between its modal logic and the harmonic assumptions embedded in Western music software.
+
+This document outlines key musicological principles essential for correct computational modeling, grounded in historical sources and contemporary theoretical frameworks.
 
 **For complete definitions**: See [glossary/07-musicological-definitions.md](../glossary/07-musicological-definitions.md)
+**For theoretical frameworks**: See [reference/decolonial-computing-theory.md](../reference/decolonial-computing-theory.md)
 
 ---
 
@@ -18,12 +21,12 @@ Arabic maqām theory is **not** a variant of Western music theory. It represents
 
 ### Distinction
 
-Maqamat and ajnās fall into two categories based on their pitch class count:
+Maqāmāt and ajnās fall into two categories based on their pitch class count:
 
 **Octave-Repeating**: ≤7 pitch classes
 - Repeat every octave
 - Can be found entirely within a single octave
-- Example: Maqām Rāst (7 pitch classes)
+- Example: maqām rāst (7 pitch classes)
 
 **Non-Octave-Repeating**: >7 pitch classes
 - Span **multiple octaves** before repeating
@@ -86,7 +89,7 @@ Single-octave checking incorrectly reports these as "unavailable".
 
 ### Critical Insight
 
-Maqamat can have **fundamentally different** ascending and descending sequences, not just reversed note orders.
+Maqāmāt can have **fundamentally different** ascending and descending sequences, not just reversed note orders.
 
 ### Example: Maqām Bestenegār
 
@@ -112,7 +115,7 @@ interface Maqam {
 }
 ```
 
-**UI Indicator**: Maqamat with asymmetric paths are marked with asterisk (*).
+**UI Indicator**: Maqāmāt with asymmetric paths are marked with asterisk (*).
 
 ---
 
@@ -120,9 +123,9 @@ interface Maqam {
 
 ### Reality
 
-Maqamat contain **varying numbers of pitch classes** depending on theoretical context, melodic range, and historical tradition.
+Maqāmāt contain **varying numbers of pitch classes** depending on theoretical context, melodic range, and historical tradition.
 
-Some maqamat end on the octave equivalence of the first note (marked "I+"), others on different pitch classes.
+Some maqāmāt end on the octave equivalence of the first note (marked "I+"), others on different pitch classes.
 
 ### Examples
 
@@ -326,7 +329,7 @@ if (standardizeText(userInput) === standardizeText(dbValue)) {
 
 ### Key Insight
 
-- **Maqamat modulate** (change from one modal framework to another)
+- **Maqāmāt modulate** (change from one modal framework to another)
 - **Ajnās don't modulate** (they're the targets of modulation)
 
 ### Implementation Pattern
@@ -394,7 +397,7 @@ if (pitchClasses.length === 7) {  // Doesn't guarantee octave equivalence
 
 ### Principle
 
-Maqamat are composed of **embedded ajnas patterns** that can be automatically identified through pattern matching.
+Maqāmāt are composed of **embedded ajnas patterns** that can be automatically identified through pattern matching.
 
 ### Algorithm
 
@@ -424,7 +427,7 @@ Traditional performance practice pathways that extend beyond basic maqam scales,
 
 ### Characteristics
 
-- Belong to specific parent maqamat
+- Belong to specific parent maqāmāt
 - Automatically transposed along with parent maqam
 - Require note name conversion when transposing
 - May reference other jins/maqam patterns
@@ -502,19 +505,50 @@ This highlights that **family classification is tuning-system-relative**: a maq�
 
 ---
 
+## 13. Technocoloniality in Music Software: Key Insights
+
+Music technology is not neutral—default settings, software architectures, and interface designs encode colonial logics that privilege Western musical systems while marginalizing others. Understanding these dynamics is essential for building culturally respectful music software.
+
+### Critical Insights
+
+**Default Settings as Ideology**: When software defaults to 4/4 time, 12-TET tuning, and A=440Hz, it implies these are "normal" while other systems are exotic additions.
+
+**MIDI Tuning Standard's Neglect**: Despite MTS (1992) providing ultra-high-resolution tuning for all world musics, thirty years of neglect reveals that developers and manufacturers did not consider non-Western tuning systems important enough to implement.
+
+**Tokenization vs. Meaningful Access**: Loading diverse tuning files without context (Scala archive pattern) renders them unusable outside exoticism, lacking the interface design thoughtfulness shown in tools like Roger Linn's MPC60 pads.
+
+**Measurement as Colonial Framework**: Alexander Ellis invented the cent specifically to compare non-Western tunings to 12-EDO, imposing a filiative framework that positions European tuning as unmarked standard. This contrasts with the Relational method of ratios requiring practical understanding.
+
+**Historical Resistance**: The 1932 Cairo Congress's refusal to standardize Arabic tuning can be read as Relational resistance to colonial logics, though many such logics were later imposed through music technology and education.
+
+**Musical Violence**: As Kofi Agawu articulates, imposing Western frameworks (tonality, tuning, notation) on non-Western music constitutes "musical violence of a very high order" whose impacts remain underexplored.
+
+### Why This Matters for Development
+
+These insights inform every design decision in this archive:
+- Why we reject "microtonal" terminology
+- Why tuning systems have starting notes, not "root notes"
+- Why defaults matter as much as features
+- Why interface design determines cultural accessibility
+- Why we prioritize ratios alongside cents
+
+**For complete theoretical framework and detailed case studies**: See [reference/decolonial-computing-theory.md](../reference/decolonial-computing-theory.md) Part III: Technocoloniality in Music Software Practice
+
+---
+
 ## Summary of Key Principles
 
 1. **Octave-Repeating**: Use 3-octave checking for availability (CRITICAL)
 2. **Asymmetric Sequences**: Ascending ≠ Descending (reversed)
-3. **Variable Counts**: Maqamat can have 7, 8, 9, 10+ pitch classes
+3. **Variable Counts**: Maqāmāt can have 7, 8, 9, 10+ pitch classes
 4. **Sequential Letters**: Staff notation requires consecutive natural letters
 5. **Tuning Independence**: Same maqam, different realizations across systems
 6. **Enharmonic Context**: C# vs Db depends on melodic direction
 7. **Note Names and Ordering**: Abstract note name order from `NoteName.ts` arrays; tuning system context maps to `pitchClassIndex`
 8. **Starting Note Significance**: Not simple transposition, different frameworks
-9. **Modulation Structure**: Maqamat modulate, ajnas don't (they're targets)
+9. **Modulation Structure**: Maqāmāt modulate, ajnas don't (they're targets)
 10. **JavaScript Gotchas**: Double-modulo for negative numbers
-11. **Embedded Analysis**: Pattern matching finds ajnas within maqamat
+11. **Embedded Analysis**: Pattern matching finds ajnas within maqāmāt
 12. **Computational Transposition of Suyūr**: First implementation enabling systematic exploration of melodic pathways
 13. **Family Classification**: Requires canonical tuning system reference (al-Ṣabbāgh 1954)
 
@@ -525,3 +559,5 @@ These principles ensure computational implementations respect the independent th
 **For complete musicological definitions**: See [glossary/07-musicological-definitions.md](../glossary/07-musicological-definitions.md)
 
 **For cultural framework**: See [core/00-core-principles.md](../core/00-core-principles.md#culturally-sensitive-computational-musicology)
+
+**For comprehensive decolonial theory**: See [reference/decolonial-computing-theory.md](../reference/decolonial-computing-theory.md)

@@ -198,7 +198,7 @@ interface MaqamData {
 
 In Arabic music theory:
 - **Tuning system starting note** = theoretical framework anchor (e.g., ʿushayrān for oud tuning)
-- **Maqām tonic** = first note of the melodic scale (e.g., rāst for Maqām Rāst)
+- **Maqām tonic** = first note of the melodic scale (e.g., rāst for maqām rāst)
 
 These are fundamentally different concepts that happen to be represented as strings. Conflating them creates theoretical confusion.
 

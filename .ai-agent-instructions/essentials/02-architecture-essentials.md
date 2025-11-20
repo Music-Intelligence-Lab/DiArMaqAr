@@ -115,20 +115,22 @@ useEffect(() => {
 
 ### Model Hierarchy
 
-```
-TuningSystem
-  └─ generates → PitchClass[]
-                    ↓
-      ┌─────────────┴─────────────┐
-      ↓                           ↓
-JinsData + PitchClass[]      MaqamData + PitchClass[]
-      ↓                           ↓
-   realizes → Jins            realizes → Maqam
-      ↓                           ↓
-   transposes → Jins[]        transposes → Maqam[]
-                                  ↓
-                      modulates → MaqamatModulations
-                                  AjnasModulations
+```mermaid
+graph TD
+    TS[TuningSystem] -->|generates| PC[PitchClass Array]
+    PC --> JD[JinsData + PitchClass Array]
+    PC --> MD[MaqamData + PitchClass Array]
+    JD -->|realizes| J[Jins]
+    MD -->|realizes| M[Maqam]
+    J -->|transposes| JA[Jins Array]
+    M -->|transposes| MA[Maqam Array]
+    MA -->|modulates| MOD[MaqamatModulations<br/>AjnasModulations]
+
+    style TS fill:#e1f5ff
+    style PC fill:#fff4e1
+    style J fill:#e8f5e9
+    style M fill:#e8f5e9
+    style MOD fill:#f3e5f5
 ```
 
 ### Key Transformations

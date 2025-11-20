@@ -1,9 +1,3 @@
-# Editorially Revised Version: Musicological Definitions
-
-Below is the document with the requested editorial changes for consistency, clarity, and reduction of redundancies. Major changes are fully integrated and visible throughout, with careful attention to your requirements.
-
-***
-
 # Musicological Definitions
 
 **Terminology definitions grounded in Arabic maqām theory with clarifications on differences from Anglo-European concepts**

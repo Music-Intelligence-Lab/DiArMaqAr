@@ -87,10 +87,10 @@ The **Digital Arabic Maqām Archive** (DiArMaqAr) is a Open-source bilingual pla
 - Matches abstract interval patterns against tuning system pitch classes
 - Enables cross-system compatibility analysis
 
-### Bidirectional Sequences (Maqamat)
+### Bidirectional Sequences (Maqāmāt)
 
 - **Separate** ascending (ṣuʿūd) and descending (hubūṭ) note sequences
-- **Asymmetric maqamat**: Different ascending/descending paths (marked with *)
+- **Asymmetric maqāmāt**: Different ascending/descending paths (marked with *)
 - Both sequences analyzed independently for embedded ajnas patterns
 
 ### Starting Note Conventions
@@ -161,11 +161,11 @@ The **Digital Arabic Maqām Archive** (DiArMaqAr) is a Open-source bilingual pla
 - Abstract definitions in JSON
 - Automatic transposition to all valid starting positions
 - Pattern matching within tuning systems
-- Embedded analysis within maqamat
+- Embedded analysis within maqāmāt
 
-### 3. Maqamat (Modal Frameworks)
+### 3. Maqāmāt (Modal Frameworks)
 - Complete ascending/descending sequences
-- Asymmetric maqamat support
+- Asymmetric maqāmāt support
 - Suyūr (melodic development pathways)
 - Embedded ajnas identification
 
@@ -194,7 +194,7 @@ The **Digital Arabic Maqām Archive** (DiArMaqAr) is a Open-source bilingual pla
 
 ### 5. Modulation Analysis
 - First digital implementation of al-Shawwā algorithm (1946)
-- Maqamat-to-maqamat modulations
+- Maqāmāt-to-maqāmāt modulations
 - Ajnas-to-ajnas modulations
 - Organized by maqām degree
 
@@ -270,7 +270,7 @@ node scripts/batch-export/batch-export.js --list-tuning-systems
 - [essentials/05-testing-essentials.md](05-testing-essentials.md)
 
 ### Reference Files (On Demand)
-- [reference/api-design-patterns.md](../reference/api-design-patterns.md)
+- [reference/api-retrospective.md](../reference/api-retrospective.md)
 - [reference/cli-commands-guide.md](../reference/cli-commands-guide.md)
 - [reference/mcp-servers-guide.md](../reference/mcp-servers-guide.md)
 

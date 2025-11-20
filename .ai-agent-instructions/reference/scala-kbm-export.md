@@ -375,7 +375,7 @@ const referenceFreq = parseFloat(tonicPitchClass.frequency);
 
 Similar to Section A, but with all 12 positions mapped.
 
-### Example: Maqām Rāst 12-Pitch-Class Set
+### Example: maqām rāst 12-Pitch-Class Set
 
 **Chromatic mapping from C**:
 ```

@@ -49,7 +49,7 @@ const DEFAULTS = {
 | ✅ Add format option | Update API handler, UI dropdown, tests, docs, OpenAPI spec |
 | ✅ Return entity references | Use `{id, idName, displayName}` objects, never string arrays |
 | ✅ Nest context data | Group related fields in parent objects |
-| ✅ Include metadata | Always add `pitchClassIndex`, `noteName` fields. Include `scaleDegree` for maqamat/ajnas, but NOT for pitch classes (they're fundamental building blocks) |
+| ✅ Include metadata | Always add `pitchClassIndex`, `noteName` fields. Include `scaleDegree` for maqāmāt/ajnās, but NOT for pitch classes (they're fundamental building blocks) |
 | ✅ Include source references | Add `sources` array with `{sourceId, page}` when `includeSources=true` (optional parameter, defaults to false for performance) |
 | ✅ Use consistent list structure | Always use `{count, data}` format, never `{meta: {count/total}, data}` |
 | ✅ Verify with curl | Test actual HTTP responses with jq |

@@ -736,6 +736,103 @@ curl "https://diarmaqar.netlify.app/api/maqamat/classification/12-pitch-class-se
 
 **Response:** Classification results with sets and compatible maqāmāt
 
+### Classify maqāmāt by maqam-based pitch class sets {#classifyMaqamatByMaqamPitchClassSets}
+
+```
+GET /maqamat/classification/maqam-pitch-class-sets
+```
+
+Groups maqāmāt according to maqam-based pitch class sets. Each set contains all pitch
+classes from a single source maqam (union of ascending and descending), and identifies
+which other maqāmāt can be performed using only those pitch classes.
+
+**Musicological Purpose:**
+Answers the question: "Which maqāmāt can be performed using only the pitch classes of
+maqām X?" For example, maqām rāst on rāst includes pitch classes that can perform maqām
+bayyāt on dūgāh and maqām segāh on segāh.
+
+**Key Differences from 12-Pitch-Class-Sets:**
+
+* **No Chromatic Base**: Does not merge with al-Kindi-(874) or chromatic filler pitch classes
+* **Variable Set Sizes**: Sets can contain any number of pitch classes (7, 8, 10, etc.), not fixed at 12
+* **Octave-Equivalent Matching**: Pitch classes in different octaves treated as equivalent (C in octave 1 = C in octave 2)
+* **Single Tuning System**: Uses only the specified tuning system (simpler than 12-pitch-class-sets)
+* **Subset Matching**: Compatible maqāmāt must use subset of source maqam's pitch classes
+
+**Critical Design Principles:**
+
+* **Octave Equivalence**: IPN references are compared octave-normalized (C at any octave = "C")
+* **Union of Melodic Paths**: Includes all pitch classes from both ascending AND descending sequences
+* **Exact Matching**: All pitch classes from a compatible maqām must exist in the source set (within tolerance)
+* **Direct Values**: All cent values come directly from tuning system without calculation
+* **Tahlil Priority**: Base (non-transposed) maqāmāt create canonical sets first, then transpositions
+
+**The Algorithm:**
+
+1. For each maqām transposition (tahlil first, then transpositions):
+   * Extracts all unique pitch classes from ascending + descending sequences
+   * Groups by IPN reference (octave-equivalent)
+   * Validates no duplicate IPN references with different cents values
+   * Creates a maqam-based pitch class set
+2. For each set, finds compatible maqāmāt:
+   * Checks if all pitch classes needed by candidate maqām exist in source set
+   * Compares cents values within tolerance (octave-normalized)
+   * Marks candidate as compatible if all pitch classes match
+3. Groups compatible maqāmāt together
+4. Names each group after the source maqām (e.g., "maqām rāst set")
+
+**Compatibility:**
+
+* Maqāmāt with duplicate IPN references (same IPN with different cents values when octave-normalized)
+  are marked as incompatible
+* Compatible maqāmāt can be performed entirely using the pitch classes of the source maqām
+* **Minimum Set Size**: Only sets with 2 or more maqāmāt are returned (source + at least one compatible)
+* Sets containing only the source maqām (no compatible maqāmāt) are filtered out
+
+**Output Format:**
+
+* Sets ordered by number of compatible maqāmāt (descending)
+* Each set includes: source maqām, all pitch classes (in ascending cents order), compatible maqāmāt, pitch class count
+* Pitch classes include: English name, note name, cents, frequency, fraction, etc.
+
+**Filtering Options:**
+
+* Use `setId` to retrieve a specific set and its compatible maqāmāt
+* Use `maqamId` to find all sets containing a specific maqām
+
+**Query Parameters:**
+
+* `tuningSystem` (optional): Tuning system ID for all maqāmāt (default: CairoCongressTuningCommittee-(1929)) - Type: `string` - Default: `CairoCongressTuningCommittee-(1929)`
+  * Example: `CairoCongressTuningCommittee-(1929)`
+* `startingNote` (optional): Starting note for the tuning system (default: yegah). - Type: `string` - Default: `yegah`
+  * Example: `yegah`
+* `centsTolerance` (optional): Tolerance in cents for pitch class comparison (default: 5) - Type: `number` - Default: `5`
+  * Example: `5`
+* `includeIncompatible` (optional): Include maqāmāt that cannot form valid maqam-based pitch class sets - Type: `string` - Valid values: `true`, `false` - Default: `false`
+  * Example: `false`
+* `includeArabic` (optional): Return bilingual responses with Arabic script when true.
+  * All English/transliteration fields remain unchanged
+  * Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+  * Note names, maqām names, and jins names get Arabic versions in \*Ar fields
+* Type: `string` - Valid values: `true`, `false`
+* Example: `true`
+* `includePitchClassData` (optional): Include pitch class data in the response (default: false).
+  When false: Omits pitch class data, returning only set metadata and compatible maqamat
+* Type: `string` - Valid values: `true`, `false` - Default: `false`
+* Example: `false`
+* `setId` (optional): Filter by specific set ID to retrieve that set and its compatible maqāmāt (e.g., 'maqam\_rast\_set') - Type: `string`
+  * Example: `maqam_rast_set`
+* `maqamId` (optional): Filter by maqām ID to find all sets containing that maqām (e.g., 'maqam\_rast') - Type: `string`
+  * Example: `maqam_rast`
+
+**Example:**
+
+```bash
+curl "https://diarmaqar.netlify.app/api/maqamat/classification/maqam-pitch-class-sets?includeArabic=true"
+```
+
+**Response:** Classification results with maqam-based pitch class sets and compatible maqāmāt
+
 ***
 
 ## Ajnās
@@ -2845,6 +2942,203 @@ Legacy property - consider removing in future refactoring
 ---
 
 ---
+url: /docs/library/api/models/Pattern/classes/default.md
+---
+[**DiArMaqAr TypeScript Library v0.1.0**](../../../README.md)
+
+***
+
+[DiArMaqAr TypeScript Library](../../../modules.md) / [models/Pattern](../README.md) / default
+
+# Class: default
+
+Defined in: [models/Pattern.ts:22](https://github.com/Music-Intelligence-Lab/DiArMaqAr/blob/6f1c81e1c50000c844884af75834b700ae00e423/src/models/Pattern.ts#L22)
+
+Represents a musical pattern in the Arabic maqam system.
+
+A Pattern is a sequence of musical notes with specific durations and scale degrees
+that can be used to demonstrate or practice melodic phrases within a maqam.
+Each pattern contains notes with scale degrees, rhythmic durations, and target
+emphasis information for educational and performance purposes.
+
+## Example
+
+```typescript
+const pattern = new Pattern(
+  "ascending-basic",
+  "Basic Ascending Pattern",
+  [
+    { scaleDegree: "I", noteDuration: "4n", isTarget: true },
+    { scaleDegree: "II", noteDuration: "4n", isTarget: false },
+    { scaleDegree: "III", noteDuration: "4n", isTarget: true }
+  ]
+);
+```
+
+## Constructors
+
+### Constructor
+
+> **new default**(`id`, `name`, `notes`, `version?`): `Pattern`
+
+Defined in: [models/Pattern.ts:43](https://github.com/Music-Intelligence-Lab/DiArMaqAr/blob/6f1c81e1c50000c844884af75834b700ae00e423/src/models/Pattern.ts#L43)
+
+Creates a new Pattern instance.
+
+#### Parameters
+
+##### id
+
+`string`
+
+Unique identifier for this pattern
+
+##### name
+
+`string`
+
+Human-readable name for this pattern
+
+##### notes
+
+[`PatternNote`](../interfaces/PatternNote.md)\[]
+
+Array of PatternNote objects that define the melodic sequence
+
+##### version?
+
+`string`
+
+ISO 8601 timestamp of last modification (defaults to current time)
+
+#### Returns
+
+`Pattern`
+
+## Methods
+
+### getId()
+
+> **getId**(): `string`
+
+Defined in: [models/Pattern.ts:55](https://github.com/Music-Intelligence-Lab/DiArMaqAr/blob/6f1c81e1c50000c844884af75834b700ae00e423/src/models/Pattern.ts#L55)
+
+Gets the unique identifier of this pattern.
+
+#### Returns
+
+`string`
+
+The pattern's ID
+
+***
+
+### getName()
+
+> **getName**(): `string`
+
+Defined in: [models/Pattern.ts:64](https://github.com/Music-Intelligence-Lab/DiArMaqAr/blob/6f1c81e1c50000c844884af75834b700ae00e423/src/models/Pattern.ts#L64)
+
+Gets the human-readable name of this pattern.
+
+#### Returns
+
+`string`
+
+The pattern's name
+
+***
+
+### getNotes()
+
+> **getNotes**(): [`PatternNote`](../interfaces/PatternNote.md)\[]
+
+Defined in: [models/Pattern.ts:73](https://github.com/Music-Intelligence-Lab/DiArMaqAr/blob/6f1c81e1c50000c844884af75834b700ae00e423/src/models/Pattern.ts#L73)
+
+Gets the array of notes that make up this pattern.
+
+#### Returns
+
+[`PatternNote`](../interfaces/PatternNote.md)\[]
+
+Array of PatternNote objects
+
+***
+
+### getVersion()
+
+> **getVersion**(): `string`
+
+Defined in: [models/Pattern.ts:82](https://github.com/Music-Intelligence-Lab/DiArMaqAr/blob/6f1c81e1c50000c844884af75834b700ae00e423/src/models/Pattern.ts#L82)
+
+Gets the version timestamp of this pattern.
+
+#### Returns
+
+`string`
+
+ISO 8601 timestamp string
+
+***
+
+### setVersion()
+
+> **setVersion**(`version`): `void`
+
+Defined in: [models/Pattern.ts:91](https://github.com/Music-Intelligence-Lab/DiArMaqAr/blob/6f1c81e1c50000c844884af75834b700ae00e423/src/models/Pattern.ts#L91)
+
+Sets the version timestamp of this pattern.
+
+#### Parameters
+
+##### version
+
+`string`
+
+ISO 8601 timestamp string
+
+#### Returns
+
+`void`
+
+***
+
+### convertToJSON()
+
+> **convertToJSON**(): `object`
+
+Defined in: [models/Pattern.ts:103](https://github.com/Music-Intelligence-Lab/DiArMaqAr/blob/6f1c81e1c50000c844884af75834b700ae00e423/src/models/Pattern.ts#L103)
+
+Converts the pattern to a JSON-serializable object.
+
+This method is useful for saving patterns to files, sending them over
+network requests, or storing them in databases.
+
+#### Returns
+
+`object`
+
+A plain object representation of the pattern
+
+##### id
+
+> **id**: `string`
+
+##### name
+
+> **name**: `string`
+
+##### notes
+
+> **notes**: [`PatternNote`](../interfaces/PatternNote.md)\[]
+
+##### version
+
+> **version**: `string`
+
+---
+
+---
 url: /docs/library/api/models/TuningSystem/classes/default.md
 ---
 [**DiArMaqAr TypeScript Library v0.1.0**](../../../README.md)
@@ -3415,203 +3709,6 @@ new systems.
 `TuningSystem`
 
 A new TuningSystem instance with default placeholder values
-
----
-
----
-url: /docs/library/api/models/Pattern/classes/default.md
----
-[**DiArMaqAr TypeScript Library v0.1.0**](../../../README.md)
-
-***
-
-[DiArMaqAr TypeScript Library](../../../modules.md) / [models/Pattern](../README.md) / default
-
-# Class: default
-
-Defined in: [models/Pattern.ts:22](https://github.com/Music-Intelligence-Lab/DiArMaqAr/blob/6f1c81e1c50000c844884af75834b700ae00e423/src/models/Pattern.ts#L22)
-
-Represents a musical pattern in the Arabic maqam system.
-
-A Pattern is a sequence of musical notes with specific durations and scale degrees
-that can be used to demonstrate or practice melodic phrases within a maqam.
-Each pattern contains notes with scale degrees, rhythmic durations, and target
-emphasis information for educational and performance purposes.
-
-## Example
-
-```typescript
-const pattern = new Pattern(
-  "ascending-basic",
-  "Basic Ascending Pattern",
-  [
-    { scaleDegree: "I", noteDuration: "4n", isTarget: true },
-    { scaleDegree: "II", noteDuration: "4n", isTarget: false },
-    { scaleDegree: "III", noteDuration: "4n", isTarget: true }
-  ]
-);
-```
-
-## Constructors
-
-### Constructor
-
-> **new default**(`id`, `name`, `notes`, `version?`): `Pattern`
-
-Defined in: [models/Pattern.ts:43](https://github.com/Music-Intelligence-Lab/DiArMaqAr/blob/6f1c81e1c50000c844884af75834b700ae00e423/src/models/Pattern.ts#L43)
-
-Creates a new Pattern instance.
-
-#### Parameters
-
-##### id
-
-`string`
-
-Unique identifier for this pattern
-
-##### name
-
-`string`
-
-Human-readable name for this pattern
-
-##### notes
-
-[`PatternNote`](../interfaces/PatternNote.md)\[]
-
-Array of PatternNote objects that define the melodic sequence
-
-##### version?
-
-`string`
-
-ISO 8601 timestamp of last modification (defaults to current time)
-
-#### Returns
-
-`Pattern`
-
-## Methods
-
-### getId()
-
-> **getId**(): `string`
-
-Defined in: [models/Pattern.ts:55](https://github.com/Music-Intelligence-Lab/DiArMaqAr/blob/6f1c81e1c50000c844884af75834b700ae00e423/src/models/Pattern.ts#L55)
-
-Gets the unique identifier of this pattern.
-
-#### Returns
-
-`string`
-
-The pattern's ID
-
-***
-
-### getName()
-
-> **getName**(): `string`
-
-Defined in: [models/Pattern.ts:64](https://github.com/Music-Intelligence-Lab/DiArMaqAr/blob/6f1c81e1c50000c844884af75834b700ae00e423/src/models/Pattern.ts#L64)
-
-Gets the human-readable name of this pattern.
-
-#### Returns
-
-`string`
-
-The pattern's name
-
-***
-
-### getNotes()
-
-> **getNotes**(): [`PatternNote`](../interfaces/PatternNote.md)\[]
-
-Defined in: [models/Pattern.ts:73](https://github.com/Music-Intelligence-Lab/DiArMaqAr/blob/6f1c81e1c50000c844884af75834b700ae00e423/src/models/Pattern.ts#L73)
-
-Gets the array of notes that make up this pattern.
-
-#### Returns
-
-[`PatternNote`](../interfaces/PatternNote.md)\[]
-
-Array of PatternNote objects
-
-***
-
-### getVersion()
-
-> **getVersion**(): `string`
-
-Defined in: [models/Pattern.ts:82](https://github.com/Music-Intelligence-Lab/DiArMaqAr/blob/6f1c81e1c50000c844884af75834b700ae00e423/src/models/Pattern.ts#L82)
-
-Gets the version timestamp of this pattern.
-
-#### Returns
-
-`string`
-
-ISO 8601 timestamp string
-
-***
-
-### setVersion()
-
-> **setVersion**(`version`): `void`
-
-Defined in: [models/Pattern.ts:91](https://github.com/Music-Intelligence-Lab/DiArMaqAr/blob/6f1c81e1c50000c844884af75834b700ae00e423/src/models/Pattern.ts#L91)
-
-Sets the version timestamp of this pattern.
-
-#### Parameters
-
-##### version
-
-`string`
-
-ISO 8601 timestamp string
-
-#### Returns
-
-`void`
-
-***
-
-### convertToJSON()
-
-> **convertToJSON**(): `object`
-
-Defined in: [models/Pattern.ts:103](https://github.com/Music-Intelligence-Lab/DiArMaqAr/blob/6f1c81e1c50000c844884af75834b700ae00e423/src/models/Pattern.ts#L103)
-
-Converts the pattern to a JSON-serializable object.
-
-This method is useful for saving patterns to files, sending them over
-network requests, or storing them in databases.
-
-#### Returns
-
-`object`
-
-A plain object representation of the pattern
-
-##### id
-
-> **id**: `string`
-
-##### name
-
-> **name**: `string`
-
-##### notes
-
-> **notes**: [`PatternNote`](../interfaces/PatternNote.md)\[]
-
-##### version
-
-> **version**: `string`
 
 ---
 
@@ -5850,6 +5947,43 @@ Extended array of pitch classes including related octave equivalents
 ---
 
 ---
+url: /docs/library/api/functions/getFirstNoteName/functions/default.md
+---
+[**DiArMaqAr TypeScript Library v0.1.0**](../../../README.md)
+
+***
+
+[DiArMaqAr TypeScript Library](../../../modules.md) / [functions/getFirstNoteName](../README.md) / default
+
+# Function: default()
+
+> **default**(`selectedIndices`): `string`
+
+Defined in: [functions/getFirstNoteName.ts:13](https://github.com/Music-Intelligence-Lab/DiArMaqAr/blob/6f1c81e1c50000c844884af75834b700ae00e423/src/functions/getFirstNoteName.ts#L13)
+
+Retrieves the first note name from an array of selected pitch class indices.
+
+This utility function is used in UI state management to determine the
+starting note when pitch classes are selected. It maps the first selected
+index to its corresponding note name from the octave one note names array.
+
+## Parameters
+
+### selectedIndices
+
+`number`\[]
+
+Array of selected pitch class indices
+
+## Returns
+
+`string`
+
+The note name corresponding to the first index, or "none" if empty or invalid
+
+---
+
+---
 url: /docs/library/api/functions/gcd/functions/default.md
 ---
 [**DiArMaqAr TypeScript Library v0.1.0**](../../../README.md)
@@ -5906,43 +6040,6 @@ gcd(15, 25) // Returns 5
 ```ts
 gcd(17, 13) // Returns 1 (coprime numbers)
 ```
-
----
-
----
-url: /docs/library/api/functions/getFirstNoteName/functions/default.md
----
-[**DiArMaqAr TypeScript Library v0.1.0**](../../../README.md)
-
-***
-
-[DiArMaqAr TypeScript Library](../../../modules.md) / [functions/getFirstNoteName](../README.md) / default
-
-# Function: default()
-
-> **default**(`selectedIndices`): `string`
-
-Defined in: [functions/getFirstNoteName.ts:13](https://github.com/Music-Intelligence-Lab/DiArMaqAr/blob/6f1c81e1c50000c844884af75834b700ae00e423/src/functions/getFirstNoteName.ts#L13)
-
-Retrieves the first note name from an array of selected pitch class indices.
-
-This utility function is used in UI state management to determine the
-starting note when pitch classes are selected. It maps the first selected
-index to its corresponding note name from the octave one note names array.
-
-## Parameters
-
-### selectedIndices
-
-`number`\[]
-
-Array of selected pitch class indices
-
-## Returns
-
-`string`
-
-The note name corresponding to the first index, or "none" if empty or invalid
 
 ---
 
@@ -8804,20 +8901,21 @@ Welcome to the Digital Arabic Maqām Archive (DiArMaqAr) documentation!
 
 ## What is DiArMaqAr?
 
-The Digital Arabic Maqām Archive (DiArMaqAr) is an open-source, bilingual browser-based application and repository designed for musicians, composers, developers, and scholars engaged with Arabic maqām theory.
+The Digital Arabic Maqām Archive (DiArMaqAr) is an open-source, bilingual, browser-based application and repository designed for musicians, composers, developers, and scholars engaged with Arabic maqām theory.
 
-The application integrates an archive of historically documented **tanāghīm**, **ajnās**, **maqāmāt**, **suyūr**, and **intiqālāt** within a unified digital framework, establishing verified reference data for education, performance, composition, software development, machine learning applications, and instrument design.
+The application integrates an archive of historically documented **tanāghīm** (تناغيم, tuning systems), **ajnās** (أجناس, melodic segments), **maqāmāt** (مقامات, modal frameworks), **suyūr** (سيور, melodic pathways), and **intiqālāt** (انتقالات, modulations) within a unified digital framework, establishing verified reference data for education, performance, composition, software development, machine learning applications, and instrument design.
 
 ### Key Features
 
-* **Bilingual Interface**: Arabic/English with Library of Congress Romanization standards
+* **Bilingual Interface**: Arabic/English (with Library of Congress Romanization standards)
 * **Comprehensive Tuning Systems**: Access to historical and modern tuning systems from the 9th century to present with historical source attributions
-* **Maqāmāt and Ajnās Data**: Complete database with historical source attributions
-* **Tuning-System-Sensitive Transposition**: Systematic computation of all mathematically valid transpositions
+* **Maqāmāt and Ajnās Data**: Complete database with modern source attributions
+* **Tuning-System-Sensitive Transposition**: Systematic computation of all mathematically valid ajnās and maqāmāt transpositions
 * **Al-Shawwā Modulation Algorithm**: First algorithmic implementation of Sāmī al-Shawwā's 1946 modulation guidelines
+* **Bibliographic Attribution System**: Complete source references with scholarly verification
 * **Real-Time Audio Synthesis**: Hear precise intonational relationships with Web Audio API
-* **MIDI Integration**: Support for MIDI controllers and MPE (MIDI Polyphonic Expression) output
-* **Data Export**: JSON, CSV, and Scala (.scl/.kbm) formats for research and composition
+* **MIDI Integration**: Support for MIDI input and MPE (MIDI Polyphonic Expression) output
+* **Data Export**: JSON and Scala (.scl/.kbm) formats for research and composition
 * **REST API**: Programmatic access to all data
 * **TypeScript Library**: Complete JavaScript/TypeScript library with full type safety
 
@@ -8847,16 +8945,19 @@ curl "http://localhost:3000/api/maqamat/maqam_bayyat?tuningSystem=al-Farabi-(950
 First, install the library in your project (or clone the repository for direct development access). Then import the required modules:
 
 ```typescript
-import { Maqam, Jins, TuningSystem } from '@/models'
-import { getMaqamTranspositions } from '@/functions/transpose'
-import { modulate } from '@/functions/modulate'
+import MaqamData from '@/models/Maqam'
+import JinsData from '@/models/Jins'
+import TuningSystem from '@/models/TuningSystem'
+import { calculateMaqamTranspositions } from '@/functions/transpose'
+import modulate from '@/functions/modulate'
 
 // Create instances
 const tuningSystem = new TuningSystem(tuningSystemData)
-const maqam = new Maqam(maqamData)
+const maqamData = new MaqamData(maqamDataInterface)
+const maqam = maqamData.generate(tuningSystem)
 
 // Get transpositions
-const transpositions = getMaqamTranspositions(maqam, tuningSystem)
+const transpositions = calculateMaqamTranspositions(maqam, tuningSystem)
 
 // Analyze modulations
 const modulations = modulate(maqam, allMaqamat, tuningSystem)

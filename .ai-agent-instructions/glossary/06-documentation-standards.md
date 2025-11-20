@@ -167,6 +167,145 @@ Structure documentation for different reader needs:
 
 ---
 
+## Capitalization and Formatting Standards
+
+### Arabic Music Terminology
+
+**Maqām/maqām**:
+- **Always lowercase "maqām"** for both specific names and general concepts: "maqām rāst", "maqām bayyāt", "maqām bestenegār"
+- **Lowercase for theory and generic references**: "maqām theory", "a maqām is...", "all maqāmāt share..."
+- **Plural**: Always lowercase "maqāmāt" except at sentence start
+
+**Examples**:
+```markdown
+✅ "maqām rāst is an octave-repeating maqām"
+✅ "The study of maqām theory reveals..."
+✅ "Multiple maqāmāt share this characteristic"
+❌ "The Maqām Theory shows..." (unnecessary capital)
+❌ "Maqām Rāst" (incorrect capitalization - use lowercase)
+❌ "maqam Rast" (missing diacriticals)
+```
+
+**Note Names**:
+- **Lowercase** in transliteration: "rāst", "dūgāh", "ʿushayrān", "yegāh"
+- **Exception**: Uppercase when part of proper system name: "ʿUshayrān-based tuning system", "Yegāh-based framework"
+- **Recommendation**: Prefer lowercase in general prose unless specifically naming a system/framework
+
+**Examples**:
+```markdown
+✅ "The note rāst serves as the tonic"
+✅ "The ʿUshayrān-based system includes seven notes"
+✅ "Starting from dūgāh, the jins ascends"
+❌ "The note Rast" (unnecessary capital in prose)
+❌ "the Ushayran system" (missing diacriticals)
+```
+
+**Jins/Ajnās**:
+- **Always lowercase "jins"** for both specific names and general concepts: "jins rāst", "jins kurd", "jins ḥijāz"
+- **Lowercase for theory and generic references**: "a jins consists of...", "each jins has..."
+- **Plural**: Always lowercase "ajnās" except at sentence start
+
+**Examples**:
+```markdown
+✅ "jins rāst appears in many maqāmāt"
+✅ "A jins is a melodic building block"
+✅ "The ajnās combine to form complete maqāmāt"
+❌ "Jins Rāst" (incorrect capitalization - use lowercase)
+❌ "Ajnas are..." (missing diacriticals)
+```
+
+**Compound Technical Terms**:
+- **Hyphenate** when used as compound adjective before noun: "octave-repeating maqām", "non-octave-repeating structure", "ʿushayrān-based system"
+- **No hyphen** in predicate position: "The maqām is octave repeating", "This system is ʿushayrān based"
+- **Always hyphenate** file-related and technical compounds: "12-pitch-class sets", "scala-export", "pitch-class"
+
+**Examples**:
+```markdown
+✅ "This is an octave-repeating maqām"
+✅ "The maqām is octave repeating"
+✅ "The 12-pitch-class set contains all pitches"
+✅ "An ʿushayrān-based tuning system"
+❌ "This is an octave repeating Maqam" (need hyphen, wrong caps)
+❌ "The 12 pitch class set" (need hyphens)
+```
+
+**System and Framework Names**:
+- **Follow source capitalization**: "al-Fārābī (950)", "Ibn Sīnā (1037)", "al-Urmawī (1294)"
+- **Lowercase "al-" prefix** unless at sentence start
+- **Preserve diacriticals** in all contexts
+- **Dates in parentheses** for historical clarity
+
+**Examples**:
+```markdown
+✅ "According to al-Fārābī (950), the system includes..."
+✅ "Al-Fārābī (950) documented seven modal forms" (sentence start)
+✅ "Ibn Sīnā (1037) and al-Urmawī (1294) both describe..."
+❌ "Al-Farabi's system" (should be lowercase "al-", missing diacriticals)
+❌ "ibn Sina" (missing capitalization and diacriticals)
+```
+
+### Complete Examples
+
+**Section Header in Documentation**:
+```markdown
+## maqām bayyāt: Octave-Repeating Structure
+
+maqām bayyāt is an octave-repeating maqām found in multiple historical sources.
+The maqām uses the ʿushayrān-based tuning system as documented by al-Fārābī (950).
+Its lower jins is jins bayyāt, which consists of four notes starting from dūgāh.
+```
+
+**API Parameter Description**:
+```markdown
+**`maqamName`** (string): The name of the maqām to retrieve. Valid values include
+"rāst", "bayyāt", "nahāwand". All maqāmāt in the system are octave-repeating
+unless explicitly noted otherwise. Note names use lowercase transliteration
+with proper diacriticals.
+```
+
+**Code Comment**:
+```typescript
+/**
+ * Retrieves maqām rāst from the ʿUshayrān-based tuning system.
+ * This maqām is octave-repeating with jins rāst as its foundational jins.
+ * The starting note is rāst, with the jins ascending through four notes.
+ *
+ * @param systemName - Either "ʿushayrān" or "yegāh"
+ * @returns Complete maqām object with all ajnās
+ */
+```
+
+### Style Guide Summary Table
+
+| Term Type | Specific Name | General Concept | Plural | Example |
+|-----------|---------------|-----------------|--------|---------|
+| Maqām | Lowercase | Lowercase | Lowercase | maqām rāst / maqām theory / maqāmāt |
+| Jins | Lowercase | Lowercase | Lowercase | jins rāst / a jins / ajnās |
+| Note names | Lowercase* | Lowercase | Lowercase | rāst, dūgāh, ʿushayrān |
+| Scholars | Title case | N/A | N/A | al-Fārābī (950), Ibn Sīnā (1037) |
+| Compounds | Hyphenate (adj) | Varies | Varies | octave-repeating, 12-pitch-class |
+
+*Exception: Uppercase when part of system name (e.g., "ʿUshayrān-based system")
+
+### Common Mistakes to Avoid
+
+❌ **Wrong**: "The Maqam Rast uses the Ushayran system"
+✅ **Correct**: "maqām rāst uses the ʿushayrān-based system"
+
+❌ **Wrong**: "This is an Octave-Repeating maqam"
+✅ **Correct**: "This is an octave-repeating maqām"
+
+❌ **Wrong**: "Maqām Rāst" or "Jins Rāst" (incorrect capitalization)
+✅ **Correct**: "maqām rāst" and "jins rāst"
+
+❌ **Wrong**: "According to Al-Farabi, the mode includes..."
+✅ **Correct**: "According to al-Fārābī (950), the maqām includes..."
+
+❌ **Wrong**: "The 12 pitch class set uses Maqamat"
+✅ **Correct**: "The 12-pitch-class set uses maqāmāt"
+
+---
+
 ## Real Data Integration
 
 ### Verification Protocol

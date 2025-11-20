@@ -476,6 +476,103 @@ curl "https://diarmaqar.netlify.app/api/maqamat/classification/12-pitch-class-se
 
 **Response:** Classification results with sets and compatible maqāmāt
 
+### Classify maqāmāt by maqam-based pitch class sets {#classifyMaqamatByMaqamPitchClassSets}
+
+```
+GET /maqamat/classification/maqam-pitch-class-sets
+```
+
+Groups maqāmāt according to maqam-based pitch class sets. Each set contains all pitch
+classes from a single source maqam (union of ascending and descending), and identifies
+which other maqāmāt can be performed using only those pitch classes.
+
+**Musicological Purpose:**
+Answers the question: "Which maqāmāt can be performed using only the pitch classes of
+maqām X?" For example, maqām rāst on rāst includes pitch classes that can perform maqām
+bayyāt on dūgāh and maqām segāh on segāh.
+
+**Key Differences from 12-Pitch-Class-Sets:**
+
+* **No Chromatic Base**: Does not merge with al-Kindi-(874) or chromatic filler pitch classes
+* **Variable Set Sizes**: Sets can contain any number of pitch classes (7, 8, 10, etc.), not fixed at 12
+* **Octave-Equivalent Matching**: Pitch classes in different octaves treated as equivalent (C in octave 1 = C in octave 2)
+* **Single Tuning System**: Uses only the specified tuning system (simpler than 12-pitch-class-sets)
+* **Subset Matching**: Compatible maqāmāt must use subset of source maqam's pitch classes
+
+**Critical Design Principles:**
+
+* **Octave Equivalence**: IPN references are compared octave-normalized (C at any octave = "C")
+* **Union of Melodic Paths**: Includes all pitch classes from both ascending AND descending sequences
+* **Exact Matching**: All pitch classes from a compatible maqām must exist in the source set (within tolerance)
+* **Direct Values**: All cent values come directly from tuning system without calculation
+* **Tahlil Priority**: Base (non-transposed) maqāmāt create canonical sets first, then transpositions
+
+**The Algorithm:**
+
+1. For each maqām transposition (tahlil first, then transpositions):
+   * Extracts all unique pitch classes from ascending + descending sequences
+   * Groups by IPN reference (octave-equivalent)
+   * Validates no duplicate IPN references with different cents values
+   * Creates a maqam-based pitch class set
+2. For each set, finds compatible maqāmāt:
+   * Checks if all pitch classes needed by candidate maqām exist in source set
+   * Compares cents values within tolerance (octave-normalized)
+   * Marks candidate as compatible if all pitch classes match
+3. Groups compatible maqāmāt together
+4. Names each group after the source maqām (e.g., "maqām rāst set")
+
+**Compatibility:**
+
+* Maqāmāt with duplicate IPN references (same IPN with different cents values when octave-normalized)
+  are marked as incompatible
+* Compatible maqāmāt can be performed entirely using the pitch classes of the source maqām
+* **Minimum Set Size**: Only sets with 2 or more maqāmāt are returned (source + at least one compatible)
+* Sets containing only the source maqām (no compatible maqāmāt) are filtered out
+
+**Output Format:**
+
+* Sets ordered by number of compatible maqāmāt (descending)
+* Each set includes: source maqām, all pitch classes (in ascending cents order), compatible maqāmāt, pitch class count
+* Pitch classes include: English name, note name, cents, frequency, fraction, etc.
+
+**Filtering Options:**
+
+* Use `setId` to retrieve a specific set and its compatible maqāmāt
+* Use `maqamId` to find all sets containing a specific maqām
+
+**Query Parameters:**
+
+* `tuningSystem` (optional): Tuning system ID for all maqāmāt (default: CairoCongressTuningCommittee-(1929)) - Type: `string` - Default: `CairoCongressTuningCommittee-(1929)`
+  * Example: `CairoCongressTuningCommittee-(1929)`
+* `startingNote` (optional): Starting note for the tuning system (default: yegah). - Type: `string` - Default: `yegah`
+  * Example: `yegah`
+* `centsTolerance` (optional): Tolerance in cents for pitch class comparison (default: 5) - Type: `number` - Default: `5`
+  * Example: `5`
+* `includeIncompatible` (optional): Include maqāmāt that cannot form valid maqam-based pitch class sets - Type: `string` - Valid values: `true`, `false` - Default: `false`
+  * Example: `false`
+* `includeArabic` (optional): Return bilingual responses with Arabic script when true.
+  * All English/transliteration fields remain unchanged
+  * Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+  * Note names, maqām names, and jins names get Arabic versions in \*Ar fields
+* Type: `string` - Valid values: `true`, `false`
+* Example: `true`
+* `includePitchClassData` (optional): Include pitch class data in the response (default: false).
+  When false: Omits pitch class data, returning only set metadata and compatible maqamat
+* Type: `string` - Valid values: `true`, `false` - Default: `false`
+* Example: `false`
+* `setId` (optional): Filter by specific set ID to retrieve that set and its compatible maqāmāt (e.g., 'maqam\_rast\_set') - Type: `string`
+  * Example: `maqam_rast_set`
+* `maqamId` (optional): Filter by maqām ID to find all sets containing that maqām (e.g., 'maqam\_rast') - Type: `string`
+  * Example: `maqam_rast`
+
+**Example:**
+
+```bash
+curl "https://diarmaqar.netlify.app/api/maqamat/classification/maqam-pitch-class-sets?includeArabic=true"
+```
+
+**Response:** Classification results with maqam-based pitch class sets and compatible maqāmāt
+
 ***
 
 ## Ajnās
