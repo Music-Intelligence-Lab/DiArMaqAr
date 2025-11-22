@@ -388,6 +388,58 @@ families.sort((a, b) =>
 );
 ```
 
+### Export Modal UI Patterns
+
+**Format Descriptions Consistency:**
+```typescript
+// ✅ CORRECT - Single source of truth for format descriptions
+const formatDescriptions: Record<ExportFormat, string> = {
+  json: "JSON format — Structured, machine-readable data with complete relationships",
+  txt: "Text format — Human-readable text file",
+  pdf: "PDF format — Formatted document",
+  scala: "Musical tuning files for compatible software and hardware"
+};
+
+// Use same object for both UI display and export info generation
+parts.push(formatDescriptions[exportOptions.format]);
+```
+
+**Option Positioning Logic:**
+- Position options in logical dependency order (e.g., modulations before separate files export)
+- Use `export-modal__inline-options` for consistent styling across similar options
+- Avoid redundant information in labels (e.g., don't show count when label already implies multiple)
+
+**Export Information Generation:**
+```typescript
+// ✅ CORRECT - Use stringified tuning system names
+const tuningSystemName = selectedTuningSystem?.stringify() || "tuning system";
+parts.push(`Exporting ${tuningSystemName}`);
+
+// ✅ CORRECT - Format-specific information
+if (exportOptions.format === "scala") {
+  parts.push("• Scala file (.scl) — Tuning system pitch classes in cents...");
+} else {
+  // Non-Scala format details
+}
+```
+
+**Filename Generation:**
+```typescript
+// ❌ WRONG - Redundant information
+if (opts.exportSeparateFilesPerStartingNote) {
+  parts.push("all-starting-notes"); // Each file already includes starting note
+}
+
+// ✅ CORRECT - Skip redundant terms
+// Note: exportSeparateFilesPerStartingNote doesn't add to filename
+// because each file already includes the starting note name
+```
+
+**Terminology Consistency:**
+- Always use proper plural forms with diacritics in user-facing text: "maqāmāt" (not "maqamat"), "taṣāwīr" (not "taṣwīr")
+- Code identifiers and filenames can remain without diacritics for technical consistency
+- Export information should use stringified entity names (e.g., `tuningSystem.stringify()`)
+
 ### State Management
 
 ```typescript

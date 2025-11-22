@@ -480,6 +480,12 @@ handleUrlParams({
 - Optional: ajnas details, maqamat details, modulations
 - Same data structure as batch CLI
 
+**Export Information Generation Patterns:**
+- Always use `stringify()` for tuning system names in export information (e.g., "Al-Kindī (874) 12-tone System" not just title)
+- Format descriptions must be consistent between UI display and export info generation
+- Export information should be concise, single-line where possible, and semantically accurate
+- Format-specific information should be clearly separated (Scala vs. JSON/TXT/PDF)
+
 ### CLI Batch Export
 
 **Location**: [scripts/batch-export/batch-export.js](../../scripts/batch-export/batch-export.js)

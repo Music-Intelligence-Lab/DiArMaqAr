@@ -54,9 +54,13 @@ Tuning systems (tanāghīm) are **NOT scales**. The term "scale" is an Anglo-Eur
 
 ***
 
-### Taṣwīr (Transposition)
+### Taṣwīr (Transposition) / Taṣāwīr (Transpositions)
 
-**Arabic maqām theory**: The process or operation of moving a collection of pitch classes up or down so they start on a different pitch class while maintaining the intervallic relationships between them. Transposition is considered **valid** when the interval pattern of the original group of pitch classes can be exactly matched starting from a new pitch class within the selected tuning system. For instance, if Jins Kurd (intervals 1/1 - 9/8 - 3/2) begins on rāst in a given tuning system, a valid transposition would move it to start on dūgāh only if the tuning system contains the exact interval pattern starting from dūgāh’s position.
+**Arabic maqām theory**: The process or operation of moving a collection of pitch classes up or down so they start on a different pitch class while maintaining the intervallic relationships between them. Transposition is considered **valid** when the interval pattern of the original group of pitch classes can be exactly matched starting from a new pitch class within the selected tuning system. For instance, if Jins Kurd (intervals 1/1 - 9/8 - 3/2) begins on rāst in a given tuning system, a valid transposition would move it to start on dūgāh only if the tuning system contains the exact interval pattern starting from dūgāh's position.
+
+**Terminology**: 
+- **Taṣwīr** (singular) - refers to the process or a single transposition
+- **Taṣāwīr** (plural) - refers to multiple transpositions
 
 **Key characteristics:**
 - Tuning-system-dependent: Validity depends on which pitch classes exist in the specific tuning system

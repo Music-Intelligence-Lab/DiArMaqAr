@@ -383,11 +383,10 @@
 
   &__inline-options {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     gap: 10px;
     padding: 8px 12px;
-    flex: 1 1 280px;
-    min-width: 280px;
+    width: 100%;
     background: rgba($grey, 0.1);
     border-radius: 6px;
     transition: background-color 0.2s ease;
@@ -397,16 +396,13 @@
     }
 
     .export-modal__checkbox {
-      flex: 1 1 0;
-      min-width: 0;
+      flex: 0 0 auto;
       margin: 0;
       padding: 0;
       background: transparent;
       border-radius: 0;
       transition: background-color 0.2s ease;
       white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
 
       &:hover {
         background: transparent;
@@ -414,8 +410,6 @@
 
       span {
         white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
       }
     }
   }
@@ -460,6 +454,37 @@
     border-radius: 4px;
     font-family: monospace;
     opacity: 0.8;
+  }
+
+  &__info-card {
+    width: 100%;
+    padding: 18px;
+    background: rgba($grey, 0.1);
+    border: 1px solid rgba($grey, 0.2);
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+
+  &__info-content {
+    font-size: 14px;
+    color: $text;
+    line-height: 1.6;
+    opacity: 0.9;
+
+    div {
+      margin-bottom: 6px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      &:first-child {
+        font-weight: 500;
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba($grey, 0.3);
+      }
+    }
   }
 
   /* Responsive design */

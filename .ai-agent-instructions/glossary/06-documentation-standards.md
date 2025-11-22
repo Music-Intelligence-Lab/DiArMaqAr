@@ -295,6 +295,42 @@ Structure documentation for different reader needs:
 
 ---
 
+## Plural Form Consistency
+
+**CRITICAL**: User-facing text must use proper plural forms with diacritics.
+
+### Arabic Term Plurals
+
+**User-facing text (UI, documentation, export information):**
+- ✅ "maqāmāt" (plural of maqām) - with proper diacritics
+- ✅ "taṣāwīr" (plural of taṣwīr) - with proper diacritics
+- ✅ "ajnās" (plural of jins) - already correct
+- ✅ "tanāghīm" (plural of tanghīm) - already correct
+
+**Code identifiers and filenames:**
+- Can remain without diacritics for technical consistency (e.g., `maqamat`, `taswir`)
+- URL-safe identifiers should use standardized text without diacritics
+
+**Pattern:**
+```typescript
+// ✅ CORRECT - User-facing text
+<span>Exporting maqāmāt</span>
+parts.push("all compatible maqāmāt with their sequences");
+
+// ✅ CORRECT - Code identifiers
+const maqamatData = getMaqamat();
+const filename = `maqamat_${id}.json`;
+```
+
+**When to apply:**
+- All UI labels and descriptions
+- Export information text
+- Documentation prose
+- Error messages shown to users
+- API response descriptions (not the data itself)
+
+**See also**: [07-musicological-definitions.md](../glossary/07-musicological-definitions.md) for complete term definitions
+
 ## Capitalization and Formatting Standards
 
 ### Arabic Music Terminology
@@ -430,6 +466,7 @@ with proper diacriticals.
 ✅ **Correct**: "According to al-Fārābī (950), the maqām includes..."
 
 ❌ **Wrong**: "The 12 pitch class set uses Maqamat"
+✅ **Correct**: "The 12 pitch class set uses Maqāmāt"
 ✅ **Correct**: "The 12-pitch-class set uses maqāmāt"
 
 ---
