@@ -10,6 +10,7 @@ import { standardizeText } from "@/functions/export";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
 import { getIpnReferenceNoteNameWithOctave } from "@/functions/getIpnReferenceNoteName";
 import { renderPitchClassSpellings } from "@/functions/renderPitchClassIpnSpellings";
+import PitchClass from "@/models/PitchClass";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import useTranspositionsContext from "@/contexts/transpositions-context";
 import { Jins } from "@/models/Jins";
@@ -32,7 +33,7 @@ export default function JinsTranspositions() {
   const { selectedJinsData, selectedTuningSystem, setSelectedPitchClasses, allPitchClasses, centsTolerance, setCentsTolerance, sources, setSelectedJins, selectedJins } = useAppContext();
   const { jinsTranspositions } = useTranspositionsContext();
 
-  const { noteOn, noteOff, playSequence } = useSoundContext();
+  const { noteOn, noteOff, playSequence, activePitchClasses } = useSoundContext();
 
   const { filters, setFilters } = useFilterContext();
 
@@ -492,6 +493,14 @@ export default function JinsTranspositions() {
     const numberOfFilterRows = Object.keys(filters).filter((key) => !disabledFilters.includes(key) && key !== valueType && filters[key as keyof typeof filters]).length;
 
     function renderTransposition(jins: Jins, index: number) {
+      // Helper function to check if a pitch class is currently active (with octave wrapping)
+      // Matches across all octaves - if any octave of this pitch class is active, highlight it
+      const isPitchClassActive = (pitchClass: PitchClass) => {
+        return activePitchClasses.some(
+          (ac) => ac.pitchClassIndex === pitchClass.pitchClassIndex
+        );
+      };
+
       const transposition = jins.transposition;
       // Apply sequential English name spellings for melodic sequences
       const pitchClasses = renderPitchClassSpellings(jins.jinsPitchClasses);
@@ -592,10 +601,10 @@ export default function JinsTranspositions() {
             <>
               <tr data-row-type="noteNames">
                 <th scope="col" id={`jins-${standardizeText(jins.name)}-noteNames-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.noteNames")}</th>
-                {pitchClasses.map(({ noteName }, i) => (
+                {pitchClasses.map((pitchClass, i) => (
                   <React.Fragment key={i}>
                     {i !== 0 && <th scope="col" className="jins-transpositions__table-cell" data-column-type="empty"></th>}
-                    <th scope="col" className="jins-transpositions__table-cell--pitch-class" data-column-type="note-name">{getDisplayName(noteName, "note")}</th>
+                    <th scope="col" className="jins-transpositions__table-cell--pitch-class" data-column-type="note-name">{getDisplayName(pitchClass.noteName, "note")}</th>
                   </React.Fragment>
                 ))}
               </tr>
@@ -772,7 +781,7 @@ export default function JinsTranspositions() {
                 {pitchClasses.map((pitchClass, i) => (
                   <React.Fragment key={i}>
                     {i !== 0 && <td className="jins-transpositions__table-cell" data-column-type="empty"></td>}
-                    <td className="jins-transpositions__table-cell" data-column-type="play-button">
+                    <td className={`${isPitchClassActive(pitchClass) ? "jins-transpositions__table-cell--active " : ""}`} data-column-type="play-button">
                       <PlayCircleIcon
                         className="jins-transpositions__play-circle-icon"
                         aria-label={t("jins.playNote")}

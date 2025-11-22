@@ -742,6 +742,32 @@
     &[class*="--pitch-class"] {
       // Default pitch class styling
       background-color: transparent;
+
+      // Active state - when a pitch class is currently being played
+      &[class*="--active"] {
+        background-color: rgba($primary, 0.4);
+
+        &:hover {
+          background-color: rgba($primary, 0.9);
+        }
+      }
+    }
+
+    // Cells containing jins buttons should allow full height
+    &[data-column-type="jins"] {
+      height: 100%;
+      padding: 0;
+      vertical-align: middle;
+      position: relative;
+    }
+
+    // Active state for play button cells
+    &[data-column-type="play-button"][class*="--active"] {
+      background-color: rgba($primary, 0.4);
+
+      &:hover {
+        background-color: rgba($primary, 0.9);
+      }
     }
   }
 
@@ -1080,20 +1106,25 @@
   [class*="__jins-button"] {
     background-color: rgba($primary, 0.5);
     color: $text;
-    padding: 0px 10px;
+    padding: 4px 10px;
     border-radius: 2px;
     cursor: pointer;
     font-size: 12px;
-    min-width: 120px;
-    width: auto;
-    height: 27px;
+    width: 100%;
+    height: 100%;
+    min-height: 27px;
     vertical-align: middle;
     text-align: center;
     border: none;
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: background-color 0.2s ease;
     font-weight: 400;
-    line-height: 27px;
+    line-height: 1.4;
+    white-space: normal;
+    word-wrap: break-word;
+    box-sizing: border-box;
     
     &:focus {
       outline: transparent;
