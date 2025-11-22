@@ -8,6 +8,23 @@
 
 ## Development Commands
 
+**⚠️ CRITICAL: Always check for running servers before starting new ones**
+
+Before running `npm run dev` or `npm run docs:dev`, check if a server is already running to avoid port conflicts:
+
+```bash
+# Check for running servers
+lsof -i :3000  # API/Next.js server
+lsof -i :5173  # VitePress docs server
+
+# Check for running npm processes
+ps aux | grep "npm run"
+
+# If servers are running, use them instead of starting new ones
+```
+
+**Background server indicator**: Look for system messages like "Background Bash [id] (command: npm run docs:dev) (status: running)" which indicate a server is already running.
+
 ### Next.js Development
 
 ```bash

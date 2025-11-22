@@ -1,15 +1,15 @@
 ---
-title: Tuning Systems (Tanāghīm)
-description: Understanding tuning systems and their role in Arabic maqām theory
+title: Tanāghīm (Tuning Systems)
+description: Understanding tanāghīm (tuning systems) and their role in Arabic maqām theory
 ---
 
-# Tuning Systems (Tanāghīm)
+# Tanāghīm (Tuning Systems)
 
-Tuning systems are the foundational layer of Arabic maqām theory in DiArMaqAr. They provide the pitch framework upon which all other musical structures are built.
+Tanāghīm (tuning systems, singular: tanghīm) are the foundational layer of Arabic maqām theory in DiArMaqAr. They provide the pitch framework upon which all other musical structures are built.
 
-## What is a Tuning System?
+## What is a tanghīm?
 
-A tuning system (tanjīh, plural: tanāghīm) is an ordered sequence of pitch classes (pitches/tones/notes) within an octave. These pitch classes can be expressed through various mathematical representations, all relative to the first pitch class.
+A tanghīm is an ordered sequence of pitch classes within an octave. These pitch classes can be expressed through various mathematical representations, all relative to the first pitch class.
 
 ### Mathematical Representations
 
@@ -27,35 +27,22 @@ A tuning system (tanjīh, plural: tanāghīm) is an ordered sequence of pitch cl
 
 ## Reference Frequency and Note Names
 
-To render a tuning system sonically, two additional pieces of information are needed:
+To render a tanghīm sonically, two additional pieces of information are needed:
 
-1. **Reference Frequency**: The absolute frequency (in Hz) for the first pitch class
-   - Example: ʿushayrān = 220 Hz, or yegāh = 196 Hz
+1. **Reference Frequency**: The absolute frequency (in Hz) assigned to the first pitch class
+2. **Note Names**: Mapping to the Persian-Arab-Ottoman note naming convention
 
-2. **Note Names**: Association with the Persian-Arab-Ottoman note naming convention
-   - Example: 1/1 = 0 cents = ʿushayrān = 220 Hz
-
-The reference frequency is not arbitrary—it relies on either theoretical standardization or performance practice as documented in historical sources.
+These associations are documented in historical sources and reflect either theoretical standardization or performance practice traditions.
 
 ## Historical Sources
 
-DiArMaqAr integrates tuning systems from the medieval period through the modern era, including:
+DiArMaqAr integrates tanāghīm spanning over 1,000 years of documented theory and practice, from medieval theorists like al-Kindī (874), al-Fārābī (950), and Ibn Sīnā (1037), through modern sources including the Cairo Congress Tuning Committee (1932) and al-Ṣabbāgh (1950), to contemporary approaches (Allami 2022-2025).
 
-- **Al-Kindī (9th century)**: 12-tone system based on ratios
-- **Al-Fārābī (10th century)**: Comprehensive tuning systems
-- **Ibn Sīnā (11th century)**: Various tuning approaches
-- **Al-Urmawī (13th century)**: Mathematical frameworks
-- **Modern theorists**: Al-Ṣabbāgh (1950s), Al-Ḥilū (1960s), and others
-
-Each tuning system includes:
-- Complete source attribution
-- Bibliographic references
-- Commentary on theoretical context
-- Original units of measurement
+Each tanghīm includes complete bibliographic attribution with source references and page numbers where applicable.
 
 ## Extended Range System
 
-In DiArMaqAr, tuning systems are expanded across multiple registers to support comprehensive musical analysis:
+In DiArMaqAr, tanāghīm are expanded across multiple registers to support comprehensive musical analysis:
 
 - **Lower register**: qarār qarār or qarār prefixes
 - **Main register**: Standard note names
@@ -70,46 +57,19 @@ This expansion is essential for:
 
 ## Starting Note Conventions
 
-Tuning systems in DiArMaqAr follow different starting note conventions based on their historical sources:
+Tanāghīm follow different starting note conventions based on their historical sources:
 
-### Oud-Based Systems
-- **Starting note**: ʿushayrān
-- **Tradition**: Based on oud tuning in perfect fourths (4/3)
-- **Examples**: Al-Kindī, Al-Fārābī, Ibn Sīnā (oud conventions)
-- **Practical context**: Reflects how tuning is applied on the oud instrument
+**Oud-based systems** start on ʿushayrān, reflecting oud tuning in perfect fourths (e.g., al-Kindī, al-Fārābī, Ibn Sīnā).
 
-### Monochord/Sonometer Systems
-- **Starting note**: yegāh or rāst
-- **Tradition**: Based on theoretical measurement instruments
-- **Examples**: Cairo Congress (1932) approaches, modern theoretical frameworks
-- **Practical context**: Reflects abstract theoretical measurement
+**Monochord/sonometer systems** start on yegāh or rāst, reflecting theoretical measurement approaches (e.g., Cairo Congress 1932).
 
-**Important**: The choice of starting note affects:
-- Available maqāmāt and ajnās
-- Transposition possibilities
-- Modulation network characteristics
-- Mathematical relationships between intervals
+The starting note affects available maqāmāt, transposition possibilities, and modulation characteristics.
 
 ## Mathematical Conversion
 
-Each pitch class can be represented in multiple formats simultaneously:
+Each pitch class is automatically converted to multiple formats including frequency ratios, cents, absolute frequencies, MIDI values, string lengths, and cents deviations from 12-EDO reference notes.
 
-```
-Pitch Class → Multiple Representations:
-  - Frequency Ratio: 9/8
-  - Cents: 203.9
-  - Frequency (Hz): 247.5 (from 220 Hz reference)
-  - MIDI (decimal): 60.36
-  - String Length: (if applicable)
-  - Deviation from 12-EDO: +3.9 cents
-```
-
-The platform automatically converts between all formats based on:
-- The original representation in the source
-- The selected reference frequency
-- The mathematical relationships between formats
-
-## Using Tuning Systems
+## Using Tanāghīm
 
 ### Via REST API
 
@@ -136,7 +96,7 @@ const pitchClasses = getTuningSystemPitchClasses(tuningSystem, 'ushayran')
 
 ## Bibliographic Attribution
 
-Every tuning system includes:
+Every tanghīm includes:
 - **Source citation**: Complete bibliographic reference
 - **Page references**: Specific pages where the system appears
 - **Creator attribution**: Historical theorist or modern scholar
@@ -151,7 +111,7 @@ This transparent provenance enables:
 
 ## Next Steps
 
-- Learn how tuning systems relate to [Ajnās](/guide/ajnas/)
+- Learn how tanāghīm relate to [Ajnās](/guide/ajnas/)
 - Explore [Taṣwīr (Transposition)](/guide/taswir/) capabilities
 - Understand [Starting Note Conventions](/guide/theoretical-framework/#starting-note-conventions)
 

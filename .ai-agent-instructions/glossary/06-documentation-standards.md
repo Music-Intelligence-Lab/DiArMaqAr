@@ -41,6 +41,133 @@ Parenthetical definitions frame Arabic terms as deviations from a Western defaul
 - Trusts readers to understand through context and fuller documentation sections
 - Respects the independent theoretical framework of Arabic maqām theory
 
+### Arabic Terms as Primary (Not Parenthetical)
+
+**CRITICAL**: When introducing Arabic terminology, make the Arabic term the primary subject, not a parenthetical clarification.
+
+**⚠️ MOST CRITICAL: Check ALL prominent locations**
+
+The Arabic-as-primary principle must be applied to **ALL** locations, especially the most visible ones:
+
+1. **Frontmatter `title:`** - Page metadata shown in browser tabs, search results
+2. **H1 headers (`#`)** - Main page title
+3. **H2/H3 section headers (`##`, `###`)** - All section titles
+4. **Opening sentences** - First sentences of sections
+5. **Prose throughout** - All body text
+
+**Common oversight**: Fixing prose content but missing frontmatter and headers!
+
+#### ❌ Incorrect - English as Primary
+
+```markdown
+---
+title: Tuning Systems (Tanāghīm)
+---
+
+# Tuning Systems (Tanāghīm)
+
+## What is a Tuning System?
+
+A tuning system (tanghīm, plural: tanāghīm) is an ordered sequence...
+Tuning systems are the foundational layer...
+The maqam (Arabic: maqām) is a modal framework...
+```
+
+These patterns frame English as primary and Arabic as supplementary translation.
+
+#### ✅ Correct - Arabic as Primary
+
+```markdown
+---
+title: Tanāghīm (Tuning Systems)
+description: Understanding tanāghīm (tuning systems)...
+---
+
+# Tanāghīm (Tuning Systems)
+
+## What is a Tanghīm?
+
+A tanghīm (tuning system, plural: tanāghīm) is an ordered sequence...
+Tanāghīm (tuning systems) are the foundational layer...
+The maqām (مقام) is a modal framework...
+```
+
+**Pattern**: `[Arabic term] ([English equivalent if needed])` NOT `[English term] ([Arabic term])`
+
+**Rationale**:
+- Establishes Arabic terminology as the authoritative framework
+- Treats English as the translation/approximation, not the standard
+- Aligns with decolonial computing principles of epistemic delinking
+- Respects the theoretical integrity of Arabic maqām theory
+
+**Exception**: In contexts where the audience is explicitly English-speaking and unfamiliar with Arabic terminology, you may introduce both: "The tanāghīm (tuning systems) provide..." But even here, Arabic comes first.
+
+### Introduce Once, Then Use Arabic Only
+
+**CRITICAL PATTERN**: Eliminate redundancy by introducing terms completely once, then using only Arabic thereafter.
+
+**The Pattern:**
+
+1. **Header with English**: `# Tanāghīm (Tuning Systems)`
+2. **First complete introduction**: `A tanghīm (tuning system; plural: tanāghīm, tuning systems) is...`
+   - Includes singular Arabic + singular English + plural Arabic + plural English
+   - Format: `singular_arabic (singular_english; plural: plural_arabic, plural_english)`
+3. **All subsequent uses**: ONLY Arabic - "tanghīm" or "tanāghīm"
+   - NO more "(tuning system)" or "(tuning systems)"
+
+**Why this matters:**
+- Avoids repetitive English translations
+- Reinforces Arabic terminology as primary
+- Makes documentation more concise and readable
+- Trusts readers to learn and remember Arabic terms
+
+#### ❌ Incorrect - Redundant English Throughout
+
+```markdown
+# Tanāghīm (Tuning Systems)
+
+A tanghīm (tuning system, plural: tanāghīm) is an ordered sequence...
+     ❌ WRONG - missing plural English translation
+
+DiArMaqAr integrates tuning systems from the medieval period...
+
+Each tuning system includes complete source attribution...
+
+In DiArMaqAr, tuning systems are expanded across multiple registers...
+
+## Using Tuning Systems
+
+Every tuning system includes bibliographic references...
+```
+
+**Problem**: English "tuning system(s)" repeated unnecessarily after the first complete introduction.
+
+#### ✅ Correct - Introduce Once, Then Arabic Only
+
+```markdown
+# Tanāghīm (Tuning Systems)
+
+A tanghīm (tuning system; plural: tanāghīm, tuning systems) is an ordered sequence...
+     ✅ CORRECT - shows both singular and plural with English for each
+
+DiArMaqAr integrates tanāghīm from the medieval period...
+
+Each tanghīm includes complete source attribution...
+
+In DiArMaqAr, tanāghīm are expanded across multiple registers...
+
+## Using Tanāghīm
+
+Every tanghīm includes bibliographic references...
+```
+
+**Correct**: After the complete introduction at line 3, all subsequent uses are Arabic only.
+
+**Scope of "introduction":**
+- The complete introduction (singular + English + plural) happens ONCE per document
+- Not once per section - ONCE for the entire document
+- After that, Arabic only throughout the rest of the document
+
 ### Headings and Titles
 
 **CRITICAL**: Do not use parenthetical English definitions in headings, section titles, or page titles.
@@ -593,6 +720,90 @@ description: |
    - ✅ Prefer: "Historically documented maqāmāt"
    - **Rationale**: Quantities change as data evolves. Focus on describing what the system contains rather than specific counts that may become outdated.
 
+10. **Using vague filler language instead of concrete examples**
+   - ❌ Avoid: "Comprehensive tanāghīm", "Various tuning approaches", "Mathematical frameworks", "and others"
+   - ❌ Avoid: Making up historical details you don't have access to
+   - ❌ Avoid: Suggesting to add information not grounded in verifiable data
+   - ✅ Prefer: List actual examples from the database showing historical breadth
+   - ✅ Prefer: Query data files (e.g., `data/tuningSystems.json`) to get real system names
+   - ✅ Prefer: Use concrete, verifiable examples organized by period
+   - **Example Pattern**:
+     ```markdown
+     **Medieval Period:**
+     - al-Mawṣilī (850)
+     - al-Kindī (874)
+     - al-Fārābī (950a-j) - multiple documented systems
+
+     **Modern Period:**
+     - Cairo Congress Tuning Committee (1929, 1932a, 1932b)
+     - al-Ṣabbāgh (1950, 1954)
+     ```
+   - **Rationale**: Vague descriptors provide no value and can mislead. Real examples from the database are verifiable, informative, and demonstrate actual system capabilities. Never hallucinate or suggest adding information you don't have access to—always ground documentation in verifiable facts from the codebase.
+
+---
+
+## Code Examples and String Literals
+
+**CRITICAL: Code examples and string literals must use plain ASCII without diacritics**
+
+### Rationale
+
+While documentation prose should use proper Arabic transliteration with diacritics (ʿushayrān, maqām, etc.), **code examples must use plain ASCII** for:
+- **Technical compatibility**: Special characters can cause encoding issues
+- **Developer workflow**: Easier to type and copy-paste
+- **API consistency**: Actual API parameters use ASCII identifiers
+- **Searchability**: Plain ASCII is easier to grep and search
+
+### ✅ Correct Code Examples
+
+```typescript
+// ✅ CORRECT - Plain ASCII in code
+const pitchClasses = getTuningSystemPitchClasses(tuningSystem, 'ushayran')
+const maqam = getMaqam('rast', 'al-Farabi-(950)')
+```
+
+```bash
+# ✅ CORRECT - Plain ASCII in API calls
+curl "http://localhost:3000/api/tuning-systems/al-Farabi-(950g)"
+```
+
+```json
+{
+  "startingNote": "ushayran",
+  "maqamName": "rast"
+}
+```
+
+### ❌ Incorrect Code Examples
+
+```typescript
+// ❌ WRONG - Diacritics in code
+const pitchClasses = getTuningSystemPitchClasses(tuningSystem, 'ʿushayrān')
+const maqam = getMaqam('rāst', 'al-Fārābī-(950)')
+```
+
+### Documentation Prose vs Code
+
+**In prose/documentation text**: Use proper diacritics
+- "The ʿushayrān-based tuning system..."
+- "maqām rāst is an octave-repeating maqām"
+
+**In code examples**: Use plain ASCII
+- `getTuningSystemPitchClasses(tuningSystem, 'ushayran')`
+- `const maqamName = 'rast'`
+
+**Pattern**:
+```markdown
+The function accepts the starting note name as a parameter. For example, to get
+pitch classes for the ʿushayrān-based system:
+
+\`\`\`typescript
+const pitchClasses = getTuningSystemPitchClasses(tuningSystem, 'ushayran')
+\`\`\`
+```
+
+Notice: Prose uses "ʿushayrān" with diacritics, code uses `'ushayran'` without.
+
 ---
 
 ## JSDoc Standards for Code
@@ -620,8 +831,8 @@ description: |
  * @example
  * ```typescript
  * const pitchClasses = getTuningSystemPitchClasses(
- *   tuningSystem, 
- *   "ʿushayrān", 
+ *   tuningSystem,
+ *   "ushayran",
  *   440
  * );
  * const transpositions = calculateJinsTranspositions(
@@ -669,7 +880,17 @@ class Jins {
 
 Before publishing documentation:
 
+**⚠️ CRITICAL - Check These First:**
+- [ ] **Frontmatter title** - Arabic as primary: `title: Tanāghīm (Tuning Systems)` NOT `title: Tuning Systems (Tanāghīm)`
+- [ ] **H1 header** - Arabic as primary: `# Tanāghīm (Tuning Systems)` NOT `# Tuning Systems (Tanāghīm)`
+- [ ] **All section headers (H2, H3, etc.)** - Arabic as primary: `## What is a Tanghīm?` NOT `## What is a Tuning System?`
+- [ ] **Opening sentences** - Arabic as primary: "Tanāghīm (tuning systems) are..." NOT "Tuning systems (tanāghīm) are..."
+
+**Cultural Accuracy:**
 - [ ] No parenthetical English definitions after Arabic terms
+- [ ] Arabic terms are primary throughout (not parenthetical)
+- [ ] **Terms introduced once completely, then Arabic only** - After first introduction (e.g., "tanghīm (tuning system, plural: tanāghīm)"), all subsequent uses are Arabic only ("tanghīm"/"tanāghīm")
+- [ ] Code examples use plain ASCII without diacritics (e.g., 'ushayran' NOT 'ʿushayrān')
 - [ ] All examples sourced from real export files (verified)
 - [ ] All properties match actual data structure
 - [ ] Optional fields clearly marked with presence conditions

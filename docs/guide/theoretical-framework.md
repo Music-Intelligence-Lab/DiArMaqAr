@@ -11,7 +11,7 @@ DiArMaqAr's architecture reflects the traditional conceptual hierarchy of maqām
 
 The system organizes content according to five hierarchical levels:
 
-### 1. Tanāghīm (Tuning Systems)
+### 1. Tanāghīm (tuning systems)
 
 Tuning systems provide the fundamental pitch framework for all operations. A tuning system is an ordered sequence of pitch classes (pitches/tones/notes) that can be expressed through various mathematical representations:
 
@@ -27,7 +27,7 @@ For a tuning system to be rendered sonically, a reference frequency associated w
 - All values are relative to the first pitch class (1/1 or 0 cents)
 - Reference frequency is variable, based on theoretical standardization or performance practice
 
-### 2. Ajnās
+### 2. Ajnās (tri/tetra/penta-chords)
 
 A jins (plural, ajnās) is a unique sequence of 3, 4, or 5 notes (trichord, tetrachord, or pentachord), each defined by its characteristic interval pattern. Ajnās are the foundational building blocks of maqāmāt. 
 
@@ -39,7 +39,7 @@ A jins (plural, ajnās) is a unique sequence of 3, 4, or 5 notes (trichord, tetr
 
 **Example:** In Al-Kindī's tuning system, jins kurd (dūgāh, kurdī, chahārgāh, nawā) can be constructed because all these note names exist within the system.
 
-### 3. Maqāmāt
+### 3. Maqāmāt (modal frameworks)
 
 A maqām is a a complete modal framework built from an ordered sequence of pitch classes that form the contituent ajnās from which the maqāmāt are constructed. Each maqām contains:
 
@@ -54,7 +54,7 @@ The ascending and descending sequences can either be identical or different, cre
 - All maqāmāt are automatically analyzed for constituent ajnās
 - Transpositions are tuning system sensitive, meaning that not all maqāmāt nor all their transpositions are available in every tuning system.
 
-### 4. Suyūr
+### 4. Suyūr (pathways of melodic development)
 
 Suyūr are conventional melodic pathways for developing or modulating within maqām frameworks. These are characteristic modal transformations or transitions, generally understood in performance practice but not always documented in theoretical literature.
 
@@ -76,7 +76,7 @@ Suyūr are conventional melodic pathways for developing or modulating within maq
 
 **Historical Context:** In historical sources (Meshshāqa 1899, Al-Shawwā 1946, Al-Ṣabbāgh 1950, Al-Ḥilū 1961), suyūr are always presented as prose text and are never represented for transpositions of any given maqām. DiArMaqAr addresses this limitation through computational transposition of suyūr.
 
-### 5. Intiqālāt
+### 5. Intiqālāt (modulations)
 
 Intiqāl is the process of moving from one maqām to another during performance or composition. Modulation is only possible when the darajat al-istiqrār (stabilizing degree) or tonic of the target jins or maqām exists among the current maqām's pitch classes. DiArMaqAr implements the first algorithmic interpretation of Sāmī al-Shawwā's (1946) modulation guidelines, making explicit the networked relationships underlying maqām modulation theory.
 
@@ -145,12 +145,14 @@ The choice of starting note name is not arbitrary—it represents a fundamental 
 The core TuningSystem class implements mathematical conversion between different pitch representation formats, maintaining mathematical accuracy while supporting diverse representations:
 
 - Frequency ratios (fractions)
+- Decimal ratios
 - Cents values
 - String lengths
 - Fret divisions
-- Deviation from 12-EDO in ±cents
 - Frequencies in Hz
+- Deviation from 12-EDO in ±cents
 - MIDI note numbers in decimal format
+- MIDI note numbers plus the deviation in ±cents
 
 All calculations are based on the original unit of measurement in the relevant bibliographic source, ensuring historical accuracy.
 
