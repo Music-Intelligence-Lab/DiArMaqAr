@@ -875,8 +875,8 @@ export default function ExportModal({
     progressCallback?: (percentage: number, step: string) => void
   ) => {
     let content: string = "";
-    let mimeType: string;
-    let fileExtension: string;
+    let mimeType: string = "";
+    let fileExtension: string = "";
 
     // Progress tracking helper
     const updateProgress = progressCallback || (() => {});
@@ -1103,6 +1103,11 @@ export default function ExportModal({
 
       default:
         throw new Error(`Unsupported format: ${options.format}`);
+    }
+
+    // TypeScript guard: ensure mimeType and fileExtension are assigned
+    if (!mimeType || !fileExtension) {
+      throw new Error(`Failed to determine MIME type or file extension for format: ${options.format}`);
     }
 
     updateProgress(98, "Creating file blob...");
