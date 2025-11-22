@@ -24,6 +24,17 @@ This document defines key musicological terms as they are used within the Digita
 
 **Anglo-European difference**: Anglo-European music theory typically assumes 12-tone equal temperament (12-EDO) as the default tuning system, where the octave is divided into 12 equal semitones. Arabic tuning systems do not default to equal divisions and represent independent theoretical frameworks, not "alternatives" to 12-EDO.
 
+**⚠️ CRITICAL: Never Call Tuning Systems "Scales"**
+
+Tuning systems (tanāghīm) are **NOT scales**. The term "scale" is an Anglo-European concept that implies a specific theoretical framework (typically a 7-note or 12-note ordered collection within equal temperament). Calling a tuning system a "scale" imposes Anglo-European categorical assumptions and erases the independent theoretical logic of Arabic maqām theory.
+
+- ❌ **Never**: "This tuning system is a 17-note scale"
+- ❌ **Never**: "The scale contains 22 pitch classes"
+- ❌ **Never**: "Export the scale to Scala format"
+- ✅ **Correct**: "This tuning system contains 17 pitch classes"
+- ✅ **Correct**: "The tuning system has 22 pitch classes"
+- ✅ **Correct**: "Export the tuning system to Scala format"
+
 ***
 
 ### Pitch Class (Naghma)
@@ -370,9 +381,10 @@ The choice of starting note name is not arbitrary—it represents a fundamental 
 - Use these definitions as the reference point.
 - Avoid parenthetical English definitions that subordinate Arabic terminology.
 - Describe Arabic concepts on their own terms first.
-- Use the “Anglo-European difference” section to clarify as needed.
-- Avoid framing Arabic concepts as “like X but...” where X is an Anglo-European concept.
-- Avoid terms like “microtonal” or other Anglo-European-centric deviation language.
+- Use the "Anglo-European difference" section to clarify as needed.
+- Avoid framing Arabic concepts as "like X but..." where X is an Anglo-European concept.
+- Avoid terms like "microtonal" or other Anglo-European-centric deviation language.
+- **Never call tuning systems "scales"** - Use "tuning system" or "tanghīm" (plural: tanāghīm).
 - Never assume Anglo-European defaults (12-EDO, 7-note scales, harmonic function).
 
 ***

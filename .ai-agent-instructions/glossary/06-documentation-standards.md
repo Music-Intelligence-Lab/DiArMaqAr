@@ -287,6 +287,7 @@ Structure documentation for different reader needs:
 - "mode" (unless specifically discussing Western modal theory)
 - "scale degree" (always use "maqām degree" instead)
 - "microtonal" (NEVER - see terminology standards)
+- **"scale" for tuning systems** (NEVER - tuning systems are not scales; "scale" is an Anglo-European concept that imposes a different theoretical framework)
 
 **Don't compare intervals to 12-EDO** unless explicitly discussing compatibility:
 - ❌ "9/8 = major tone"

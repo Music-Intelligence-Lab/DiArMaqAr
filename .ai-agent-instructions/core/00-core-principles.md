@@ -100,6 +100,25 @@ Coloniality—what survives formal colonialism—operates across four interrelat
 - Instead of "X is like Y but with..." → describe X on its own terms
 - Instead of "(Arabic term means Western term)" → use Arabic term with contextual explanation
 - Instead of "including diverse voices" → restructuring who controls technology
+- **Never call tuning systems "scales"** → Tuning systems (tanāghīm) are ordered sequences of pitch classes with specific intervallic relationships. "Scale" is an Anglo-European concept that implies a specific theoretical framework. Tuning systems are foundational pitch organizations, not scales.
+
+**⚠️ CRITICAL: Rewrite Context, Don't Just Replace Words**
+
+When removing culturally inappropriate terms (like "microtonal"), **rewrite the entire sentence** for natural flow, don't just do word-for-word replacement.
+
+**❌ Bad - Word Replacement:**
+```
+Before: "For microtonal music software"
+After: "For music software supporting unequal divisions"
+```
+This creates awkward phrasing and doesn't flow naturally.
+
+**✅ Good - Context Rewriting:**
+```
+Before: "For microtonal music software"
+After: "For music software and hardware that supports custom tunings"
+```
+This rewrites the sentence to be natural and clear while removing the problematic term.
 
 ### Key Concepts for Decolonial Computing
 
@@ -147,6 +166,7 @@ Western music theory emerged from specific historical and geographical contexts�
 - ❌ Don't use Western music theory as "translation layer"
 - ❌ Don't force non-Western music into Western categories
 - ❌ Don't assume Western notation is sufficient
+- ❌ **Never refer to tuning systems as "scales"** - Tuning systems (tanāghīm) are foundational pitch organizations with specific intervallic relationships. "Scale" is an Anglo-European concept that imposes a different theoretical framework. Use "tuning system" or the Arabic term "tanghīm" (plural: tanāghīm).
 
 **Documentation:**
 - Lead with the culture's own concepts and terminology
