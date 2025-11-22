@@ -77,31 +77,217 @@ export default function SelectedPitchClassesAnalysis() {
 
       const rows: string[][] = [];
 
-      // Note names row
+      // Note names row (always included)
       const noteNamesRow = [t("analysis.noteNames")];
       pitchClasses.forEach((pc, i) => {
+        if (i > 0) noteNamesRow.push(''); // Empty cell for interval column
         noteNamesRow.push(getDisplayName(pc.noteName, "note"));
-        if (i < pitchClasses.length - 1) noteNamesRow.push('');
       });
       rows.push(noteNamesRow);
 
-      // Primary value type row
-      const valueRow = [t(`analysis.${valueType}`)];
-      pitchClasses.forEach((pc, i) => {
-        valueRow.push(pc.originalValue);
-        if (i < pitchClasses.length - 1) {
-          const interval = intervals[i];
-          const intervalValue = useRatio ? `(${interval.fraction.replace("/", ":")})` : `(${interval.cents.toFixed(3)})`;
-          valueRow.push(intervalValue);
-        }
-      });
-      rows.push(valueRow);
+      // Pitch Class row (if filter enabled)
+      if (localFilters["pitchClass"]) {
+        const pitchClassRow = [t("analysis.pitchClass")];
+        pitchClasses.forEach((_, i) => {
+          if (i > 0) pitchClassRow.push(''); // Empty cell for interval column
+          pitchClassRow.push(i.toString());
+        });
+        rows.push(pitchClassRow);
+      }
 
-      // Convert to TSV format for Excel compatibility
-      const tsvContent = rows.map(row => row.join('\t')).join('\n');
+      // Abjad names row (if filter enabled)
+      if (localFilters["abjadName"]) {
+        const abjadRow = [t("analysis.abjadName")];
+        pitchClasses.forEach((pc, i) => {
+          if (i > 0) abjadRow.push(''); // Empty cell for interval column
+          abjadRow.push(pc.abjadName || "--");
+        });
+        rows.push(abjadRow);
+      }
+
+      // English names row (if filter enabled)
+      if (localFilters["englishName"]) {
+        const englishRow = [t("analysis.englishName")];
+        pitchClasses.forEach((pc, i) => {
+          if (i > 0) englishRow.push(''); // Empty cell for interval column
+          englishRow.push(pc.englishName);
+        });
+        rows.push(englishRow);
+      }
+
+      // Primary value type row (if filter enabled)
+      if (localFilters[valueType as keyof typeof localFilters]) {
+        const valueRow = [t(`analysis.${valueType}`)];
+        pitchClasses.forEach((pc, i) => {
+          if (i > 0) {
+            const interval = intervals[i - 1];
+            const intervalValue = useRatio ? `(${interval.fraction.replace("/", ":")})` : `(${interval.cents.toFixed(3)})`;
+            valueRow.push(intervalValue);
+          }
+          valueRow.push(pc.originalValue);
+        });
+        rows.push(valueRow);
+      }
+
+      // Additional filter rows
+      if (valueType !== "fraction" && localFilters["fraction"]) {
+        const fractionRow = [t("analysis.fraction")];
+        pitchClasses.forEach((pc, i) => {
+          if (i > 0) {
+            const interval = intervals[i - 1];
+            fractionRow.push(`(${interval.fraction})`);
+          }
+          fractionRow.push(pc.fraction);
+        });
+        rows.push(fractionRow);
+      }
+
+      if (valueType !== "cents" && localFilters["cents"]) {
+        const centsRow = [t("analysis.cents")];
+        pitchClasses.forEach((pc, i) => {
+          if (i > 0) {
+            const interval = intervals[i - 1];
+            centsRow.push(`(${interval.cents.toFixed(3)})`);
+          }
+          centsRow.push(parseFloat(pc.cents).toFixed(3));
+        });
+        rows.push(centsRow);
+      }
+
+      if (localFilters["centsFromZero"]) {
+        const centsFromZeroRow = [t("analysis.centsFromZero")];
+        pitchClasses.forEach((pc, i) => {
+          if (i > 0) {
+            const interval = intervals[i - 1];
+            centsFromZeroRow.push(`(${interval.cents.toFixed(3)})`);
+          }
+          const centsFromZero = i === 0 ? "0.000" : (parseFloat(pc.cents) - parseFloat(pitchClasses[0].cents)).toFixed(3);
+          centsFromZeroRow.push(centsFromZero);
+        });
+        rows.push(centsFromZeroRow);
+      }
+
+      if (localFilters["centsDeviation"]) {
+        const centsDeviationRow = [t("analysis.centsDeviation")];
+        pitchClasses.forEach((pc, i) => {
+          if (i > 0) centsDeviationRow.push(''); // Empty cell for interval column
+          const referenceNoteWithOctave = getIpnReferenceNoteNameWithOctave(pc);
+          const deviationText = `${referenceNoteWithOctave}${pc.centsDeviation > 0 ? ' +' : ' '}${pc.centsDeviation.toFixed(1)}¢`;
+          centsDeviationRow.push(deviationText);
+        });
+        rows.push(centsDeviationRow);
+      }
+
+      if (valueType !== "decimalRatio" && localFilters["decimalRatio"]) {
+        const decimalRow = [t("analysis.decimalRatio")];
+        pitchClasses.forEach((pc, i) => {
+          if (i > 0) {
+            const interval = intervals[i - 1];
+            decimalRow.push(`(${interval.decimalRatio.toFixed(3)})`);
+          }
+          decimalRow.push(parseFloat(pc.decimalRatio).toFixed(3));
+        });
+        rows.push(decimalRow);
+      }
+
+      if (valueType !== "stringLength" && localFilters["stringLength"]) {
+        const stringLengthRow = [t("analysis.stringLength")];
+        pitchClasses.forEach((pc, i) => {
+          if (i > 0) {
+            const interval = intervals[i - 1];
+            stringLengthRow.push(`(${interval.stringLength.toFixed(3)})`);
+          }
+          stringLengthRow.push(parseFloat(pc.stringLength).toFixed(3));
+        });
+        rows.push(stringLengthRow);
+      }
+
+      if (valueType !== "fretDivision" && localFilters["fretDivision"]) {
+        const fretDivisionRow = [t("analysis.fretDivision")];
+        pitchClasses.forEach((pc, i) => {
+          if (i > 0) {
+            const interval = intervals[i - 1];
+            fretDivisionRow.push(`(${interval.fretDivision.toFixed(3)})`);
+          }
+          fretDivisionRow.push(parseFloat(pc.fretDivision).toFixed(3));
+        });
+        rows.push(fretDivisionRow);
+      }
+
+      if (localFilters["midiNote"]) {
+        const midiRow = [t("analysis.midiNote")];
+        pitchClasses.forEach((pc, i) => {
+          if (i > 0) midiRow.push(''); // Empty cell for interval column
+          midiRow.push(pc.midiNoteDecimal.toFixed(3));
+        });
+        rows.push(midiRow);
+      }
+
+      if (localFilters["midiNoteDeviation"]) {
+        const midiDeviationRow = [t("analysis.midiNoteDeviation")];
+        pitchClasses.forEach((pc, i) => {
+          if (i > 0) midiDeviationRow.push(''); // Empty cell for interval column
+          const referenceMidiNote = calculateIpnReferenceMidiNote(pc);
+          const deviationText = `${referenceMidiNote} ${pc.centsDeviation > 0 ? '+' : ''}${pc.centsDeviation.toFixed(1)}`;
+          midiDeviationRow.push(deviationText);
+        });
+        rows.push(midiDeviationRow);
+      }
+
+      if (localFilters["frequency"]) {
+        const frequencyRow = [t("analysis.frequency")];
+        pitchClasses.forEach((pc, i) => {
+          if (i > 0) frequencyRow.push(''); // Empty cell for interval column
+          frequencyRow.push(parseFloat(pc.frequency).toFixed(3));
+        });
+        rows.push(frequencyRow);
+      }
+
+      // Get max columns from data rows
+      const maxCols = Math.max(...rows.filter(r => r.length > 1).map(r => r.length));
       
-      await navigator.clipboard.writeText(tsvContent);
-      alert(t("analysis.tableCopied"));
+      // Build title
+      const title = t("analysis.title");
+      
+      // Build TSV format for spreadsheets
+      let tsvText = `${title}\n\n`;
+      
+      // Build HTML format for documents
+      let htmlText = `<h3>${title}</h3><table border="1" cellpadding="4" cellspacing="0"><tbody>`;
+      
+      for (const row of rows) {
+        const paddedRow = [...row];
+        // Pad to max columns
+        while (paddedRow.length < maxCols) {
+          paddedRow.push('');
+        }
+        
+        // TSV format
+        tsvText += paddedRow.join('\t') + '\n';
+        
+        // HTML format
+        htmlText += '<tr>';
+        paddedRow.forEach((cell, index) => {
+          // First column is row header, style it differently
+          if (index === 0) {
+            htmlText += `<th style="background-color: #f8f8f8; text-align: left;">${cell || ''}</th>`;
+          } else {
+            htmlText += `<td style="text-align: center;">${cell || ''}</td>`;
+          }
+        });
+        htmlText += '</tr>';
+      }
+      
+      htmlText += '</tbody></table>';
+
+      // Copy both formats to clipboard using the modern Clipboard API
+      const clipboardItem = new ClipboardItem({
+        'text/plain': new Blob([tsvText], { type: 'text/plain' }),
+        'text/html': new Blob([htmlText], { type: 'text/html' })
+      });
+      
+      await navigator.clipboard.write([clipboardItem]);
+      
     } catch (error) {
       console.error("Failed to copy table:", error);
       alert(t("analysis.copyFailed"));
@@ -177,6 +363,17 @@ export default function SelectedPitchClassesAnalysis() {
               </React.Fragment>
             ))}
           </tr>
+          {localFilters["pitchClass"] && (
+            <tr data-row-type="pitchClass">
+              <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.pitchClass')}</th>
+              {pitchClasses.map((_, i) => (
+                <React.Fragment key={i}>
+                  {i !== 0 && <th className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></th>}
+                  <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="pitch-class">{i}</th>
+                </React.Fragment>
+              ))}
+            </tr>
+          )}
           {localFilters["abjadName"] && (
             <tr data-row-type="abjadName">
               <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.abjadName')}</th>
@@ -201,18 +398,20 @@ export default function SelectedPitchClassesAnalysis() {
               ))}
             </tr>
           )}
-          <tr data-row-type={valueType}>
-            <th className="maqam-jins-transpositions-shared__row-header maqam-jins-transpositions-shared__row-header--primary-value" data-column-type="row-header">{t(`analysis.${valueType}`)}</th>
-            <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type={valueType}>{pitchClasses[0].originalValue}</th>
-            {intervals.map((interval, i) => (
-              <React.Fragment key={i}>
-                <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type={`${valueType}-interval`}>
-                  {useRatio ? `(${interval.fraction.replace("/", ":")})` : `(${interval.cents.toFixed(3)})`}
-                </th>
-                <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type={valueType}>{pitchClasses[i + 1].originalValue}</th>
-              </React.Fragment>
-            ))}
-          </tr>
+          {localFilters[valueType as keyof typeof localFilters] && (
+            <tr data-row-type={valueType}>
+              <th className="maqam-jins-transpositions-shared__row-header maqam-jins-transpositions-shared__row-header--primary-value" data-column-type="row-header">{t(`analysis.${valueType}`)}</th>
+              <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type={valueType}>{pitchClasses[0].originalValue}</th>
+              {intervals.map((interval, i) => (
+                <React.Fragment key={i}>
+                  <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type={`${valueType}-interval`}>
+                    {useRatio ? `(${interval.fraction.replace("/", ":")})` : `(${interval.cents.toFixed(3)})`}
+                  </th>
+                  <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type={valueType}>{pitchClasses[i + 1].originalValue}</th>
+                </React.Fragment>
+              ))}
+            </tr>
+          )}
           {valueType !== "fraction" && localFilters["fraction"] && (
             <tr data-row-type="fraction">
               <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.fraction')}</th>
@@ -397,12 +596,29 @@ export default function SelectedPitchClassesAnalysis() {
               )}
             </div>
               <div className="maqam-jins-transpositions-shared__filter-menu">
-              {Object.keys(localFilters).map((filterKey) => {
+              {/* Filter order matches table row appearance order */}
+              {[
+                "pitchClass",
+                "abjadName",
+                "englishName",
+                "fraction",
+                "cents",
+                "centsFromZero",
+                "centsDeviation",
+                "decimalRatio",
+                "stringLength",
+                "fretDivision",
+                "midiNote",
+                "midiNoteDeviation",
+                "frequency",
+                "staffNotation",
+              ].map((filterKey) => {
                 const isDisabled =
                   (filterKey === "fraction" && valueType === "fraction") ||
                   (filterKey === "cents" && valueType === "cents") ||
                   (filterKey === "decimalRatio" && valueType === "decimalRatio") ||
                   (filterKey === "stringLength" && valueType === "stringLength") ||
+                  (filterKey === "fretDivision" && valueType === "fretDivision") ||
                   (filterKey === "centsFromZero" && valueType === "cents");
 
                 if (isDisabled) return null;
