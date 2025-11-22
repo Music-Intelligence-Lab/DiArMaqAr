@@ -73,7 +73,7 @@ export function scrollToMaqamHeader(firstNote: string, selectedMaqamData?: any) 
   }
 }
 import { Maqam } from "@/models/Maqam";
-import { calculateInterval } from "@/models/PitchClass";
+import PitchClass, { calculateInterval } from "@/models/PitchClass";
 import shiftPitchClassByOctave from "@/functions/shiftPitchClassByOctave";
 import Link from "next/link";
 import { stringifySource } from "@/models/bibliography/Source";
@@ -90,7 +90,7 @@ const MaqamTranspositions: React.FC = () => {
 
   const { selectedMaqamData, selectedTuningSystem, setSelectedPitchClasses, allPitchClasses, centsTolerance, setCentsTolerance, ajnas, setSelectedMaqam, selectedMaqam, sources } = useAppContext();
 
-  const { noteOn, noteOff, playSequence, clearHangingNotes } = useSoundContext();
+  const { noteOn, noteOff, playSequence, clearHangingNotes, activePitchClasses } = useSoundContext();
 
   const { filters, setFilters } = useFilterContext();
   const { t, language, getDisplayName } = useLanguageContext();
@@ -702,6 +702,51 @@ const MaqamTranspositions: React.FC = () => {
     const { romanNumerals, noOctaveMaqam, valueType, useRatio, numberOfFilterRows } = maqamConfig;
 
     function renderTranspositionRow(maqam: Maqam, ascending: boolean, rowIndex: number) {
+      // Helper function to check if a pitch class is currently active (with octave wrapping)
+      // Matches across all octaves - if any octave of this pitch class is active, highlight it
+      // Special case for noOctaveMaqam (applies to both ascending and descending rows):
+      // - If the octave tonic (I+) is active, don't highlight the original tonic (I)
+      // - If the original tonic (I) is active, don't highlight the octave tonic (I+)
+      const isPitchClassActive = (pitchClass: PitchClass, isTonic: boolean = false, isOctaveTonic: boolean = false) => {
+        // For noOctaveMaqam, handle tonic/octave tonic exclusion first
+        if (noOctaveMaqam && (isTonic || isOctaveTonic)) {
+          // If this is the original tonic, check if any higher octave version is active
+          if (isTonic) {
+            // Check if any higher octave version is active (octave + 1 or higher)
+            const octaveTonicActive = activePitchClasses.some(
+              (ac) => ac.pitchClassIndex === pitchClass.pitchClassIndex && ac.octave > pitchClass.octave
+            );
+            // If the octave tonic is active, don't highlight the original tonic
+            if (octaveTonicActive) {
+              return false;
+            }
+            // Otherwise, only match the exact octave for the original tonic
+            return activePitchClasses.some(
+              (ac) => ac.pitchClassIndex === pitchClass.pitchClassIndex && ac.octave === pitchClass.octave
+            );
+          }
+          // If this is the octave tonic, check if any lower octave version is active
+          if (isOctaveTonic) {
+            // Check if any lower octave version is active (octave - 1 or lower)
+            const originalTonicActive = activePitchClasses.some(
+              (ac) => ac.pitchClassIndex === pitchClass.pitchClassIndex && ac.octave < pitchClass.octave
+            );
+            // If the original tonic is active, don't highlight the octave tonic
+            if (originalTonicActive) {
+              return false;
+            }
+            // Otherwise, only match the exact octave for the octave tonic
+            return activePitchClasses.some(
+              (ac) => ac.pitchClassIndex === pitchClass.pitchClassIndex && ac.octave === pitchClass.octave
+            );
+          }
+        }
+        // For all other pitch classes, match across all octaves
+        return activePitchClasses.some(
+          (ac) => ac.pitchClassIndex === pitchClass.pitchClassIndex
+        );
+      };
+
       // Check if maqam is symmetrical (ascending and descending have same note names)
       const ascendingNoteNames = maqam.ascendingPitchClasses.map(pc => pc.noteName);
       const descendingNoteNames = maqam.descendingPitchClasses.map(pc => pc.noteName);
@@ -1087,25 +1132,39 @@ const MaqamTranspositions: React.FC = () => {
               )}
               <tr data-row-type="play">
                 <th scope="row" id={`maqam-${standardizeText(maqam.name)}-${ascending ? 'ascending' : 'descending'}-play-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.play")}</th>
-                {pitchClasses.map((pitchClass, i) => (
-                  <React.Fragment key={i}>
-                    <td data-column-type="play-button">
-                      <PlayCircleIcon
-                        className="maqam-jins-transpositions-shared__play-circle-icon"
-                        aria-label={t("maqam.playNote")}
-                        onMouseDown={() => {
-                          noteOn(pitchClass, defaultNoteVelocity);
-                          const handleMouseUp = () => {
-                            noteOff(pitchClass);
-                            window.removeEventListener("mouseup", handleMouseUp);
-                          };
-                          window.addEventListener("mouseup", handleMouseUp);
-                        }}
-                      />
-                    </td>
-                    <td className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></td>
-                  </React.Fragment>
-                ))}
+                {pitchClasses.map((pitchClass, i) => {
+                  // Check if this is the original tonic
+                  // - In ascending: first pitch class (index 0)
+                  // - In descending when noOctaveMaqam: last pitch class (the tonic returns at the end)
+                  const isTonic = noOctaveMaqam 
+                    ? (ascending ? i === 0 : i === pitchClasses.length - 1)
+                    : i === 0;
+                  // Check if this is the octave tonic (last element in ascending, first in descending when noOctaveMaqam)
+                  const isOctaveTonic = noOctaveMaqam && (
+                    (ascending && i === pitchClasses.length - 1) || 
+                    (!ascending && i === 0)
+                  );
+                  
+                  return (
+                    <React.Fragment key={i}>
+                      <td className={`${isPitchClassActive(pitchClass, isTonic, isOctaveTonic) ? "maqam-jins-transpositions-shared__table-cell--active " : ""}`} data-column-type="play-button">
+                        <PlayCircleIcon
+                          className="maqam-jins-transpositions-shared__play-circle-icon"
+                          aria-label={t("maqam.playNote")}
+                          onMouseDown={() => {
+                            noteOn(pitchClass, defaultNoteVelocity);
+                            const handleMouseUp = () => {
+                              noteOff(pitchClass);
+                              window.removeEventListener("mouseup", handleMouseUp);
+                            };
+                            window.addEventListener("mouseup", handleMouseUp);
+                          }}
+                        />
+                      </td>
+                      <td className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></td>
+                    </React.Fragment>
+                  );
+                })}
               </tr>
               {jinsTranspositions && (
                 <>

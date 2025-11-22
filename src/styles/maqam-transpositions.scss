@@ -175,7 +175,7 @@
 
   &__jins-button {
     width: 100%;
-    padding: 0px;
+    padding: 4px 6px;
     border-radius: 0px;
     background-color: rgba($black, 0);
     color: $text;
@@ -188,6 +188,10 @@
     justify-content: flex-start; // (optional) aligns to left horizontally
     cursor: pointer;
     margin-bottom: 0px;
+    line-height: 1.4;
+    white-space: normal;
+    word-wrap: break-word;
+    min-height: 27px;
 
     // RTL support
     [dir="rtl"] & {
