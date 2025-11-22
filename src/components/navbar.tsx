@@ -91,6 +91,7 @@ export default function Navbar() {
                 : ""
             } ${selectedTuningSystem ? "navbar__bottom-bar-item_active" : ""}`}
             onClick={() => handleTabClick("tuningSystem")}
+            data-tooltip={!selectedTuningSystem ? t('tabs.tooltip.selectTuningSystem') : undefined}
           >
             {selectedTuningSystem ? (
               <>
@@ -142,6 +143,7 @@ export default function Navbar() {
             } ${selectedJinsData ? "navbar__bottom-bar-item_active" : ""}`}
             onClick={() => handleTabClick("jins")}
             disabled={!selectedTuningSystem}
+            data-tooltip={!selectedTuningSystem ? t('tabs.tooltip.selectTuningSystemToExploreAjnas') : undefined}
           >
             <span className="navbar__bottom-bar-item_tab-title">
               {selectedTuningSystem
@@ -189,6 +191,7 @@ export default function Navbar() {
             }`}
             onClick={() => setSelectedMenu("jins-admin")}
             disabled={!selectedTuningSystem}
+            data-tooltip={!selectedTuningSystem ? t('tabs.tooltip.selectTuningSystemToExploreAjnas') : undefined}
           >
             {t('tabs.jinsAdmin')}
           </button>
@@ -205,6 +208,7 @@ export default function Navbar() {
             } ${selectedMaqamData ? "navbar__bottom-bar-item_active" : ""}`}
             onClick={() => handleTabClick("maqam")}
             disabled={!selectedTuningSystem}
+            data-tooltip={!selectedTuningSystem ? t('tabs.tooltip.selectTuningSystemToExploreMaqamat') : undefined}
           >
             <span className="navbar__bottom-bar-item_tab-title">
               {selectedTuningSystem
@@ -245,6 +249,7 @@ export default function Navbar() {
             }`}
             onClick={() => setSelectedMenu("maqam-admin")}
             disabled={!selectedTuningSystem}
+            data-tooltip={!selectedTuningSystem ? t('tabs.tooltip.selectTuningSystemToExploreMaqamat') : undefined}
           >
             {t('tabs.maqamAdmin')}
           </button>
@@ -261,6 +266,7 @@ export default function Navbar() {
             } ${selectedSayr ? "navbar__bottom-bar-item_active" : ""}`}
             onClick={() => setSelectedMenu("sayr")}
             disabled={!selectedMaqamData}
+            data-tooltip={!selectedMaqamData ? t('tabs.tooltip.selectMaqamToExploreSuyur') : undefined}
           >
             <span className="navbar__bottom-bar-item_tab-title">
               {selectedMaqamData
@@ -292,6 +298,7 @@ export default function Navbar() {
             }`}
             onClick={() => setSelectedMenu("sayr-admin")}
             disabled={!selectedMaqamData}
+            data-tooltip={!selectedMaqamData ? t('tabs.tooltip.selectMaqamToExploreSuyur') : undefined}
           >
             {t('tabs.sayrAdmin')}
           </button>
@@ -310,6 +317,7 @@ export default function Navbar() {
             }`}
             onClick={() => setSelectedMenu("modulation")}
             disabled={!selectedMaqamData}
+            data-tooltip={!selectedMaqamData ? t('tabs.tooltip.selectMaqamToExploreIntiqalat') : undefined}
           >
             {t('tabs.intiqalat')}{selectedMaqamData ? ` (${totalModulations})` : ""}
           </button>
