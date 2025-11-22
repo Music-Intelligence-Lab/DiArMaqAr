@@ -9,7 +9,7 @@ Transposition is one of DiArMaqAr's most sophisticated features, enabling system
 
 ## Overview
 
-In written Arabic maqām theory, transposition is rarely dealt with as a fundamental possibility of maqāmic practice, and transpositions are rarely explicitly rendered. DiArMaqAr's transposition capabilities represent a significant computational advancement, revealing theoretical possibilities that would require extensive manual calculation to discover.
+In written Arabic maqām theory, transposition is recognised as a fundamental feature of maqāmic practice, but transpositions are rarely explicitly rendered in full. DiArMaqAr's transposition capabilities represent a significant computational advancement, revealing theoretical possibilities that would require extensive manual calculation to discover.
 
 ## How Transposition Works
 
@@ -33,10 +33,9 @@ The algorithm:
 - Requires exact fractional ratio matches
 - Mathematical precision is preserved
 
-**For systems using string lengths or cents:**
+**For systems using any other original input data type (decimal ratios, string lengths, fret divisions or cents):**
 - Uses cents values for matching
-- Applies user-definable ±cents tolerance (default: ±5 cents)
-- Allows for performance practice variations (JND - Just Noticeable Difference)
+- Applies user-definable ±cents tolerance (default: ±5 cents, Just Noticeable Difference JND) to allow for performance practice variations.
 
 ## Jins Transposition
 
@@ -48,16 +47,16 @@ A jins transposition systematically shifts a jins to begin from a different pitc
 - Pattern: dūgāh → kurdī → chahārgāh → nawā
 - Intervals: [specific cents pattern]
 
-**Transposition (Taswīr):** Jins kurd starting on muhayyar
+**Transposition (Taswīr):** Jins kurd starting on muḥayyar
 - Pattern: muhayyar → [notes maintaining same intervals]
-- Name: "jins kurd al-muhayyar"
+- Name: "jins kurd al-muḥayyar"
 
 ### Algorithm Characteristics
 
 - **Recursive search**: Finds all valid starting points
 - **Early termination**: Optimizes performance
 - **Automatic generation**: All possible transpositions are calculated
-- **Naming convention**: Follows Arabic theory ("jins [name] al-[starting note]")
+- **Naming convention**: Follows Arabic maqām theory ("jins [name] al-[starting note]")
 
 ## Maqām Transposition
 
@@ -71,13 +70,13 @@ Maqām transposition handles both ascending and descending sequences separately,
 4. **Automatic Recalculation**: All embedded ajnās recalculated for each transposition
 5. **Suyūr Transposition**: Associated suyūr automatically transposed
 
-### Example: Maqām Farahfazza
+### Example: Maqām Faraḥfazza
 
 **Original:** Starting on yegāh
 - Ascending: yegāh → rāst → dūgāh → ...
 - Descending: [possibly different sequence]
 
-**Transposition:** Starting on rāst → "maqām farahfazza al-rāst"
+**Transposition:** Starting on rāst → "maqām faraḥfazza al-rāst"
 - Ascending: rāst → [transposed maintaining intervals] → ...
 - Descending: [transposed maintaining intervals]
 - All ajnās recalculated
