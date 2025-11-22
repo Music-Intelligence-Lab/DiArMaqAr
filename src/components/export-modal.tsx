@@ -9,8 +9,6 @@ import {
 } from "@/functions/export";
 import {
   exportTuningSystemToScala,
-  exportTuningSystemToScalaKeymap,
-  exportJinsToScala,
   exportMaqamToScala,
   exportMaqamTo12ToneScala,
   exportMaqamWithTuningSystemOctave,
@@ -37,9 +35,7 @@ export type ExportFormat =
   | "json"
   | "txt"
   | "pdf"
-  | "scala"
-  | "scala-keymap"
-  | "scala-12tone";
+  | "scala";
 
 export interface ExportOptions {
   format: ExportFormat;
@@ -52,6 +48,7 @@ export interface ExportOptions {
   includeMaqamToJinsModulations: boolean;
   includeModulations8vb: boolean; // Lower Octave modulations
   exportSeparateFilesPerStartingNote?: boolean; // Only for tuning system exports
+  scalaVariant?: 'standard' | 'keymap' | '12tone'; // Only used when format is 'scala'
   filename: string;
 }
 
@@ -96,6 +93,7 @@ export default function ExportModal({
       return {
         ...baseOptions,
         includeTranspositions: true,
+        scalaVariant: exportType === "maqam" ? 'standard' : undefined,
       };
     }
   });
@@ -107,34 +105,36 @@ export default function ExportModal({
     if (exportType === "tuning-system") {
       // For tuning systems: always show the tuning system ID and starting note
       if (selectedTuningSystem) {
-        const tuningSysId = selectedTuningSystem.getId();
+        const tuningSysId = standardizeText(selectedTuningSystem.getId());
         parts.push(tuningSysId);
 
         // Add starting note if available
         if (selectedIndices.length > 0) {
           const startingNote = getFirstNoteName(selectedIndices);
-          const startingNoteName = startingNote.toString();
+          const startingNoteName = standardizeText(startingNote.toString());
           parts.push(`(${startingNoteName})`);
         }
       } else {
         parts.push("maqam-network");
       }
 
-      // Add included data options
+      // Add included data options - only include what's actually exported
       if (opts.includeAjnasDetails) {
-        parts.push("ajnās");
+        parts.push("ajnas");
       }
       if (opts.includeMaqamatDetails) {
-        parts.push("maqāmāt");
-      }
-      if (opts.includeMaqamToMaqamModulations) {
-        parts.push("maqāmāt-modulations");
-      }
-      if (opts.includeMaqamToJinsModulations) {
-        parts.push("ajnās-modulations");
-      }
-      if (opts.includeModulations8vb) {
-        parts.push("lower-octave");
+        parts.push("maqamat");
+        // Modulations are only included if maqamat details are included
+        if (opts.includeMaqamToMaqamModulations) {
+          parts.push("maqamat-modulations");
+        }
+        if (opts.includeMaqamToJinsModulations) {
+          parts.push("ajnas-modulations");
+        }
+        // Lower octave modulations only if at least one modulation type is enabled
+        if (opts.includeModulations8vb && (opts.includeMaqamToMaqamModulations || opts.includeMaqamToJinsModulations)) {
+          parts.push("lower-octave");
+        }
       }
       if (opts.exportSeparateFilesPerStartingNote) {
         parts.push("all-starting-notes");
@@ -142,50 +142,70 @@ export default function ExportModal({
     } else if (exportType === "jins") {
       // For jins: use jins name instead of ID
       if (specificJins) {
-        parts.push(specificJins.name);
+        parts.push(standardizeText(specificJins.name));
       } else {
         parts.push("jins");
       }
 
-      // Add tuning system
+      // Add tuning system only if it's actually included in the export
       if (opts.includeTuningSystemDetails && selectedTuningSystem) {
-        const tuningSysId = selectedTuningSystem.getId();
+        const tuningSysId = standardizeText(selectedTuningSystem.getId());
         parts.push(tuningSysId);
       }
 
-      // Add included options
-      if (opts.includeTranspositions) {
-        parts.push("transpositions");
-      }
-      if (opts.includeModulations8vb) {
-        parts.push("lower-octave");
+      // For Scala format, only include Scala-specific options (no transpositions)
+      if (opts.format === "scala") {
+        // Jins always uses keymap export (generates both .scl and .kbm)
+        parts.push("keymap");
+      } else {
+        // For non-Scala formats, include data options
+        // Add included options - only include what's actually exported
+        if (opts.includeTranspositions) {
+          parts.push("transpositions");
+        }
+        // Note: jins exports don't have modulations, so no modulation options here
       }
     } else if (exportType === "maqam") {
       // For maqam: use maqam name instead of ID
       if (specificMaqam) {
-        parts.push(specificMaqam.name);
+        parts.push(standardizeText(specificMaqam.name));
       } else {
         parts.push("maqam");
       }
 
-      // Add tuning system
+      // Add tuning system only if it's actually included in the export
       if (opts.includeTuningSystemDetails && selectedTuningSystem) {
-        const tuningSysId = selectedTuningSystem.getId();
+        const tuningSysId = standardizeText(selectedTuningSystem.getId());
         parts.push(tuningSysId);
       }
 
-      // Add included options
-      if (opts.includeTranspositions) {
-        parts.push("transpositions");
-      }
-      if (opts.includeMaqamToMaqamModulations) {
-        parts.push("maqāmāt-modulations");
-      }
-      if (opts.includeMaqamToJinsModulations) {
-        parts.push("ajnās-modulations");
-      }
-      if (opts.includeModulations8vb) {
-        parts.push("lower-octave");
+      // For Scala format, only include Scala-specific options (no modulations, no transpositions)
+      if (opts.format === "scala") {
+        // Add Scala variant suffix for maqam
+        if (opts.scalaVariant) {
+          if (opts.scalaVariant === "keymap") {
+            parts.push("keymap");
+          } else if (opts.scalaVariant === "12tone") {
+            parts.push("12tone");
+          }
+          // 'standard' variant doesn't add a suffix
+        }
+      } else {
+        // For non-Scala formats, include data options
+        // Add included options - only include what's actually exported
+        if (opts.includeTranspositions) {
+          parts.push("transpositions");
+        }
+        if (opts.includeMaqamToMaqamModulations) {
+          parts.push("maqamat-modulations");
+        }
+        if (opts.includeMaqamToJinsModulations) {
+          parts.push("ajnas-modulations");
+        }
+        // Lower octave modulations only if at least one modulation type is enabled
+        if (opts.includeModulations8vb && (opts.includeMaqamToMaqamModulations || opts.includeMaqamToJinsModulations)) {
+          parts.push("lower-octave");
+        }
       }
     }
 
@@ -212,6 +232,8 @@ export default function ExportModal({
     exportOptions.includeModulations8vb,
     exportOptions.exportSeparateFilesPerStartingNote,
     exportOptions.includeTuningSystemDetails,
+    exportOptions.format,
+    exportOptions.scalaVariant,
   ]);
 
   const [isExporting, setIsExporting] = useState(false);
@@ -359,10 +381,7 @@ export default function ExportModal({
 
   const formatDescriptions = {
     json: "JavaScript Object Notation - Best for data interchange and web applications",
-    scala: "Scala scale format (.scl) - For microtonal music software",
-    "scala-keymap":
-      "Scala scale + keymap (.scl + .kbm) - Tuning system octave 1 with maqam/jins mapping",
-    "scala-12tone": "Scala 12-tone chromatic set (.scl + .kbm) - Complete MIDI keyboard setup with all compatible maqāmāt",
+    scala: "Scala scale format (.scl) - For music software and hardware that supports custom tunings. Options available for maqam exports.",
   };
 
   const handleExport = async () => {
@@ -375,6 +394,24 @@ export default function ExportModal({
       // For separate files export, we don't need selectedIndices to be set
       if (!exportOptions.exportSeparateFilesPerStartingNote && selectedIndices.length === 0) {
         alert("Please select a starting note first");
+        return;
+      }
+      // Validate dependencies: modulations require maqamatDetails
+      if (
+        (exportOptions.includeMaqamToMaqamModulations ||
+          exportOptions.includeMaqamToJinsModulations) &&
+        !exportOptions.includeMaqamatDetails
+      ) {
+        alert("Modulations require Maqāmat Details to be enabled");
+        return;
+      }
+      // Validate: includeModulations8vb requires at least one modulation option
+      if (
+        exportOptions.includeModulations8vb &&
+        !exportOptions.includeMaqamToMaqamModulations &&
+        !exportOptions.includeMaqamToJinsModulations
+      ) {
+        alert("Lower Octave Modulations require at least one modulation option to be enabled");
         return;
       }
     } else if (exportType === "jins") {
@@ -393,6 +430,20 @@ export default function ExportModal({
         selectedIndices.length === 0
       ) {
         alert("Please select a maqam and tuning system first");
+        return;
+      }
+      // Validate: includeModulations8vb requires at least one modulation option
+      if (
+        exportOptions.includeModulations8vb &&
+        !exportOptions.includeMaqamToMaqamModulations &&
+        !exportOptions.includeMaqamToJinsModulations
+      ) {
+        alert("Lower Octave Modulations require at least one modulation option to be enabled");
+        return;
+      }
+      // Validate: Scala format requires scalaVariant to be set for maqam
+      if (exportOptions.format === "scala" && !exportOptions.scalaVariant) {
+        alert("Please select a Scala export variant");
         return;
       }
     }
@@ -528,12 +579,12 @@ export default function ExportModal({
         steps.push({ percent: 10, text: "Loading maqam data...", delay: 300 });
         steps.push({
           percent: 15,
-          text: "Processing ascending scale...",
+          text: "Processing ascending sequence...",
           delay: 300,
         });
         steps.push({
           percent: 20,
-          text: "Processing descending scale...",
+          text: "Processing descending sequence...",
           delay: 300,
         });
 
@@ -742,67 +793,21 @@ export default function ExportModal({
             selectedTuningSystem,
             selectedIndices[0] as unknown as NoteName
           );
+          mimeType = "text/plain";
+          fileExtension = "scl";
         } else if (exportType === "jins") {
           if (!jinsToExport || !selectedTuningSystem) {
             throw new Error("Scala export requires a jins and tuning system");
           }
-          const startingNote =
-            selectedIndices.length > 0
-              ? (selectedIndices[0] as unknown as NoteName)
-              : undefined;
-          content = exportJinsToScala(
-            jinsToExport,
-            selectedTuningSystem,
-            startingNote
-          );
-        } else if (exportType === "maqam") {
-          if (!maqamToExport || !selectedTuningSystem) {
-            throw new Error("Scala export requires a maqam and tuning system");
-          }
-          const startingNote =
-            selectedIndices.length > 0
-              ? (selectedIndices[0] as unknown as NoteName)
-              : undefined;
-          content = exportMaqamToScala(
-            maqamToExport,
-            selectedTuningSystem,
-            startingNote
-          );
-        }
-        mimeType = "text/plain";
-        fileExtension = "scl";
-        break;
-
-      case "scala-keymap":
-        updateProgress(97.5, "Generating Scala scale and keymap...");
-        await new Promise((resolve) => setTimeout(resolve, 100));
-        if (exportType === "tuning-system") {
-          if (!selectedTuningSystem || selectedIndices.length === 0) {
-            throw new Error(
-              "Scala keymap export requires a tuning system and starting note"
-            );
-          }
-          content = exportTuningSystemToScalaKeymap(
-            selectedTuningSystem,
-            selectedIndices[0] as unknown as NoteName
-          );
-        } else if (exportType === "jins") {
-          if (!jinsToExport || !selectedTuningSystem) {
-            throw new Error(
-              "Scala keymap export requires a jins and tuning system"
-            );
-          }
 
           // Get the tuning system's starting note from octave 1
-          // allPitchClasses contains all octaves (0-3), so we find the first pitch class from octave 1
           const octave1StartingPitchClass = allPitchClasses.find(pc => pc.octave === 1);
           const tuningSystemStartingNote = octave1StartingPitchClass?.noteName || null;
-          console.log('[ExportModal] Tuning system starting note from octave 1:', tuningSystemStartingNote);
           if (!tuningSystemStartingNote || tuningSystemStartingNote === "none") {
-            throw new Error("Scala keymap export requires a tuning system starting note");
+            throw new Error("Scala export requires a tuning system starting note");
           }
 
-          // Export BOTH .scl and .kbm files for jins
+          // Jins always uses keymap export (generates both .scl and .kbm)
           const exportResult = exportJinsWithTuningSystemOctave(
             jinsToExport,
             selectedTuningSystem,
@@ -816,13 +821,13 @@ export default function ExportModal({
           updateProgress(98, "Creating file blobs...");
           await new Promise((resolve) => setTimeout(resolve, 50));
 
-          // Download .scl file (tuning system octave 1)
+          // Download .scl file (tuning system octave 1) - use unified filename
           updateProgress(98.5, "Downloading tuning system scale file...");
           const scalaBlob = new Blob([exportResult.scalaContent], { type: "text/plain" });
           const scalaUrl = URL.createObjectURL(scalaBlob);
           const scalaLink = document.createElement("a");
           scalaLink.href = scalaUrl;
-          scalaLink.download = exportResult.scalaFilename;
+          scalaLink.download = `${options.filename}_scale.scl`;
           document.body.appendChild(scalaLink);
           scalaLink.click();
           document.body.removeChild(scalaLink);
@@ -831,13 +836,13 @@ export default function ExportModal({
           // Small delay between downloads to prevent browser blocking
           await new Promise((resolve) => setTimeout(resolve, 100));
 
-          // Download .kbm file (jins mapping)
+          // Download .kbm file (jins mapping) - use unified filename
           updateProgress(99, "Downloading jins keymap file...");
           const keymapBlob = new Blob([exportResult.keymapContent], { type: "text/plain" });
           const keymapUrl = URL.createObjectURL(keymapBlob);
           const keymapLink = document.createElement("a");
           keymapLink.href = keymapUrl;
-          keymapLink.download = exportResult.keymapFilename;
+          keymapLink.download = `${options.filename}.kbm`;
           document.body.appendChild(keymapLink);
           keymapLink.click();
           document.body.removeChild(keymapLink);
@@ -846,126 +851,130 @@ export default function ExportModal({
           return; // Skip the default download logic
         } else if (exportType === "maqam") {
           if (!maqamToExport || !selectedTuningSystem) {
-            throw new Error(
-              "Scala keymap export requires a maqam and tuning system"
+            throw new Error("Scala export requires a maqam and tuning system");
+          }
+
+          const startingNote =
+            selectedIndices.length > 0
+              ? (selectedIndices[0] as unknown as NoteName)
+              : undefined;
+
+          // Use scalaVariant to determine which export function to call
+          const variant = options.scalaVariant || 'standard';
+
+          if (variant === '12tone') {
+            // 12-pitch-class chromatic set export
+            updateProgress(97.5, "Generating 12-pitch-class chromatic Scala file...");
+            await new Promise((resolve) => setTimeout(resolve, 100));
+
+            // Get al-Kindi (874) tuning system for filler pitches
+            const allTuningSystems = getTuningSystems();
+            const alKindiTuningSystem = allTuningSystems.find(ts => ts.getId() === "al-Kindi-(874)");
+
+            if (!alKindiTuningSystem) {
+              throw new Error("al-Kindi (874) tuning system not found - required for 12-pitch-class chromatic export");
+            }
+
+            // Get the starting note name from the tuning system's note name sets
+            const firstNoteFromIndices = getFirstNoteName(selectedIndices);
+            if (!firstNoteFromIndices || firstNoteFromIndices === "none") {
+              throw new Error("12-pitch-class chromatic Scala export requires a starting note");
+            }
+            
+            // Find the matching note name set in the tuning system
+            const noteNameSets = selectedTuningSystem.getNoteNameSets();
+            const matchingNoteSet = noteNameSets.find(
+              (set) => standardizeText(set[0] || "") === standardizeText(firstNoteFromIndices)
             );
+            
+            // Use the note name from the tuning system's note name set (has proper diacritics)
+            const startingNoteName = matchingNoteSet?.[0] || firstNoteFromIndices;
+
+            // Generate .scl file only (no .kbm files)
+            const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
+            const scalaContent = exportMaqamTo12ToneScala(
+              maqamToExport,
+              selectedTuningSystem,
+              startingNoteName,
+              alKindiTuningSystem,
+              startingNoteName, // al-Kindi uses same starting note as main tuning system
+              undefined, // description is optional
+              currentUrl // pass current URL
+            );
+
+            if (!scalaContent) {
+              throw new Error("Failed to generate 12-pitch-class chromatic Scala file");
+            }
+
+            content = scalaContent;
+            mimeType = "text/plain";
+            fileExtension = "scl";
+          } else if (variant === 'keymap') {
+            // Keymap export (generates both .scl and .kbm)
+            updateProgress(97.5, "Generating Scala scale and keymap...");
+            await new Promise((resolve) => setTimeout(resolve, 100));
+
+            // Get the tuning system's starting note from octave 1
+            const octave1StartingPitchClass = allPitchClasses.find(pc => pc.octave === 1);
+            const tuningSystemStartingNote = octave1StartingPitchClass?.noteName || null;
+            if (!tuningSystemStartingNote || tuningSystemStartingNote === "none") {
+              throw new Error("Scala keymap export requires a tuning system starting note");
+            }
+
+            // Export BOTH .scl and .kbm files for maqam
+            const exportResult = exportMaqamWithTuningSystemOctave(
+              maqamToExport,
+              selectedTuningSystem,
+              tuningSystemStartingNote,
+              true // use ascending pitch classes
+            );
+
+            if (!exportResult) {
+              throw new Error("Failed to export maqam - cannot map maqam pitch classes to tuning system");
+            }
+
+            updateProgress(98, "Creating file blobs...");
+            await new Promise((resolve) => setTimeout(resolve, 50));
+
+            // Download .scl file (tuning system octave 1) - use unified filename
+            updateProgress(98.5, "Downloading tuning system scale file...");
+            const scalaBlob = new Blob([exportResult.scalaContent], { type: "text/plain" });
+            const scalaUrl = URL.createObjectURL(scalaBlob);
+            const scalaLink = document.createElement("a");
+            scalaLink.href = scalaUrl;
+            scalaLink.download = `${options.filename}_scale.scl`;
+            document.body.appendChild(scalaLink);
+            scalaLink.click();
+            document.body.removeChild(scalaLink);
+            URL.revokeObjectURL(scalaUrl);
+
+            // Small delay between downloads to prevent browser blocking
+            await new Promise((resolve) => setTimeout(resolve, 100));
+
+            // Download .kbm file (maqam mapping) - use unified filename
+            updateProgress(99, "Downloading maqam keymap file...");
+            const keymapBlob = new Blob([exportResult.keymapContent], { type: "text/plain" });
+            const keymapUrl = URL.createObjectURL(keymapBlob);
+            const keymapLink = document.createElement("a");
+            keymapLink.href = keymapUrl;
+            keymapLink.download = `${options.filename}.kbm`;
+            document.body.appendChild(keymapLink);
+            keymapLink.click();
+            document.body.removeChild(keymapLink);
+            URL.revokeObjectURL(keymapUrl);
+
+            return; // Skip the default download logic
+          } else {
+            // Standard scale export (default)
+            content = exportMaqamToScala(
+              maqamToExport,
+              selectedTuningSystem,
+              startingNote
+            );
+            mimeType = "text/plain";
+            fileExtension = "scl";
           }
-
-          // Get the tuning system's starting note from octave 1
-          // allPitchClasses contains all octaves (0-3), so we find the first pitch class from octave 1
-          const octave1StartingPitchClass = allPitchClasses.find(pc => pc.octave === 1);
-          const tuningSystemStartingNote = octave1StartingPitchClass?.noteName || null;
-          console.log('[ExportModal] Tuning system starting note from octave 1:', tuningSystemStartingNote);
-          if (!tuningSystemStartingNote || tuningSystemStartingNote === "none") {
-            throw new Error("Scala keymap export requires a tuning system starting note");
-          }
-
-          // Export BOTH .scl and .kbm files for maqam
-          const exportResult = exportMaqamWithTuningSystemOctave(
-            maqamToExport,
-            selectedTuningSystem,
-            tuningSystemStartingNote,
-            true // use ascending pitch classes
-          );
-
-          if (!exportResult) {
-            throw new Error("Failed to export maqam - cannot map maqam pitch classes to tuning system");
-          }
-
-          updateProgress(98, "Creating file blobs...");
-          await new Promise((resolve) => setTimeout(resolve, 50));
-
-          // Download .scl file (tuning system octave 1)
-          updateProgress(98.5, "Downloading tuning system scale file...");
-          const scalaBlob = new Blob([exportResult.scalaContent], { type: "text/plain" });
-          const scalaUrl = URL.createObjectURL(scalaBlob);
-          const scalaLink = document.createElement("a");
-          scalaLink.href = scalaUrl;
-          scalaLink.download = exportResult.scalaFilename;
-          document.body.appendChild(scalaLink);
-          scalaLink.click();
-          document.body.removeChild(scalaLink);
-          URL.revokeObjectURL(scalaUrl);
-
-          // Small delay between downloads to prevent browser blocking
-          await new Promise((resolve) => setTimeout(resolve, 100));
-
-          // Download .kbm file (maqam mapping)
-          updateProgress(99, "Downloading maqam keymap file...");
-          const keymapBlob = new Blob([exportResult.keymapContent], { type: "text/plain" });
-          const keymapUrl = URL.createObjectURL(keymapBlob);
-          const keymapLink = document.createElement("a");
-          keymapLink.href = keymapUrl;
-          keymapLink.download = exportResult.keymapFilename;
-          document.body.appendChild(keymapLink);
-          keymapLink.click();
-          document.body.removeChild(keymapLink);
-          URL.revokeObjectURL(keymapUrl);
-
-          return; // Skip the default download logic
         }
-        mimeType = "text/plain";
-        fileExtension = "kbm";
-        break;
-
-      case "scala-12tone":
-        updateProgress(97.5, "Generating 12-tone chromatic Scala file...");
-        await new Promise((resolve) => setTimeout(resolve, 100));
-
-        if (exportType !== "maqam") {
-          throw new Error("12-tone chromatic Scala export is only available for maqam exports");
-        }
-
-        if (!maqamToExport || !selectedTuningSystem) {
-          throw new Error("12-tone chromatic Scala export requires a maqam and tuning system");
-        }
-
-        // Get al-Kindi (874) tuning system for filler pitches
-        const allTuningSystems = getTuningSystems();
-        const alKindiTuningSystem = allTuningSystems.find(ts => ts.getId() === "al-Kindi-(874)");
-
-        if (!alKindiTuningSystem) {
-          throw new Error("al-Kindi (874) tuning system not found - required for 12-tone chromatic export");
-        }
-
-        // Get the starting note name from the tuning system's note name sets
-        // This matches the pattern used in tuning-system-manager.tsx (lines 624-627)
-        // and the API endpoint pattern (route.ts lines 293-311)
-        const firstNoteFromIndices = getFirstNoteName(selectedIndices);
-        if (!firstNoteFromIndices || firstNoteFromIndices === "none") {
-          throw new Error("12-tone chromatic Scala export requires a starting note");
-        }
-        
-        // Find the matching note name set in the tuning system
-        // Use standardizeText for comparison (matching API endpoint pattern)
-        const noteNameSets = selectedTuningSystem.getNoteNameSets();
-        const matchingNoteSet = noteNameSets.find(
-          (set) => standardizeText(set[0] || "") === standardizeText(firstNoteFromIndices)
-        );
-        
-        // Use the note name from the tuning system's note name set (has proper diacritics)
-        const startingNoteName = matchingNoteSet?.[0] || firstNoteFromIndices;
-
-        // Generate .scl file only (no .kbm files)
-        // Capture current URL for the export
-        const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
-        const scalaContent = exportMaqamTo12ToneScala(
-          maqamToExport,
-          selectedTuningSystem,
-          startingNoteName,
-          alKindiTuningSystem,
-          startingNoteName, // al-Kindi uses same starting note as main tuning system
-          undefined, // description is optional
-          currentUrl // pass current URL
-        );
-
-        if (!scalaContent) {
-          throw new Error("Failed to generate 12-tone chromatic Scala file");
-        }
-
-        content = scalaContent;
-        mimeType = "text/plain";
-        fileExtension = "scl";
         break;
 
       case "pdf":
@@ -1467,10 +1476,21 @@ export default function ExportModal({
                         : ""
                     }`}
                     onClick={() =>
-                      setExportOptions((prev) => ({
-                        ...prev,
-                        format: format as ExportFormat,
-                      }))
+                      setExportOptions((prev) => {
+                        const newFormat = format as ExportFormat;
+                        // Reset scalaVariant when switching away from scala format
+                        // Set default scalaVariant for maqam when switching to scala
+                        return {
+                          ...prev,
+                          format: newFormat,
+                          scalaVariant:
+                            newFormat === 'scala' && exportType === 'maqam'
+                              ? (prev.scalaVariant || 'standard')
+                              : newFormat !== 'scala'
+                              ? undefined
+                              : prev.scalaVariant,
+                        };
+                      })
                     }
                   >
                     <div className="export-modal__format-name">
@@ -1486,7 +1506,7 @@ export default function ExportModal({
           </div>
 
           {/* Only show Include Data section for non-Scala formats */}
-          {!['scala', 'scala-keymap', 'scala-12tone'].includes(exportOptions.format) && (
+          {exportOptions.format !== 'scala' && (
           <div className="export-modal__section">
             <label className="export-modal__label">Include Data</label>
             <div className="export-modal__checkbox-group">
@@ -1533,19 +1553,21 @@ export default function ExportModal({
 
               {/* Jins and Maqam specific options */}
               {(exportType === "jins" || exportType === "maqam") && (
-                <label className="export-modal__checkbox">
-                  <input
-                    type="checkbox"
-                    checked={exportOptions.includeTranspositions || false}
-                    onChange={(e) =>
-                      setExportOptions((prev) => ({
-                        ...prev,
-                        includeTranspositions: e.target.checked,
-                      }))
-                    }
-                  />
-                  <span>All Transpositions</span>
-                </label>
+                <div className="export-modal__inline-options">
+                  <label className="export-modal__checkbox">
+                    <input
+                      type="checkbox"
+                      checked={exportOptions.includeTranspositions || false}
+                      onChange={(e) =>
+                        setExportOptions((prev) => ({
+                          ...prev,
+                          includeTranspositions: e.target.checked,
+                        }))
+                      }
+                    />
+                    <span>All Transpositions</span>
+                  </label>
+                </div>
               )}
 
               {/* Separate files export option - Full width */}
@@ -1577,61 +1599,116 @@ export default function ExportModal({
               {((exportType === "tuning-system" &&
                 exportOptions.includeMaqamatDetails) ||
                 exportType === "maqam") && (
+                <>
+                  <div className="export-modal__inline-options">
+                    <label className="export-modal__checkbox">
+                      <input
+                        type="checkbox"
+                        checked={exportOptions.includeMaqamToMaqamModulations}
+                        onChange={(e) =>
+                          setExportOptions((prev) => ({
+                            ...prev,
+                            includeMaqamToMaqamModulations: e.target.checked,
+                            // Auto-disable 8vb if both modulation options are now unchecked
+                            includeModulations8vb: e.target.checked || prev.includeMaqamToJinsModulations
+                              ? prev.includeModulations8vb
+                              : false,
+                          }))
+                        }
+                      />
+                      <span>Maqāmat Modulations</span>
+                    </label>
+                    <label className="export-modal__checkbox">
+                      <input
+                        type="checkbox"
+                        checked={exportOptions.includeMaqamToJinsModulations}
+                        onChange={(e) =>
+                          setExportOptions((prev) => ({
+                            ...prev,
+                            includeMaqamToJinsModulations: e.target.checked,
+                            // Auto-disable 8vb if both modulation options are now unchecked
+                            includeModulations8vb: e.target.checked || prev.includeMaqamToMaqamModulations
+                              ? prev.includeModulations8vb
+                              : false,
+                          }))
+                        }
+                      />
+                      <span>Ajnās Modulations</span>
+                    </label>
+                  </div>
+                  {/* Lower octave modulations option - only show when at least one modulation is selected */}
+                  {(exportOptions.includeMaqamToMaqamModulations ||
+                    exportOptions.includeMaqamToJinsModulations) && (
+                    <div className="export-modal__inline-options">
+                      <label className="export-modal__checkbox">
+                        <input
+                          type="checkbox"
+                          checked={exportOptions.includeModulations8vb}
+                          onChange={(e) =>
+                            setExportOptions((prev) => ({
+                              ...prev,
+                              includeModulations8vb: e.target.checked,
+                            }))
+                          }
+                        />
+                        <span>Lower Octave Maqāmat & Ajnās</span>
+                      </label>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
+          )}
+
+          {/* Scala format-specific options */}
+          {exportOptions.format === 'scala' && exportType === 'maqam' && (
+            <div className="export-modal__section">
+              <label className="export-modal__label">Scala Export Variant</label>
+              <div className="export-modal__checkbox-group">
                 <div className="export-modal__inline-options">
                   <label className="export-modal__checkbox">
                     <input
                       type="checkbox"
-                      checked={exportOptions.includeMaqamToJinsModulations}
+                      checked={exportOptions.scalaVariant === 'standard'}
                       onChange={(e) =>
                         setExportOptions((prev) => ({
                           ...prev,
-                          includeMaqamToJinsModulations: e.target.checked,
+                          scalaVariant: e.target.checked ? 'standard' : undefined,
                         }))
                       }
                     />
-                    <span>Ajnās Modulations</span>
+                    <span>Maqam Data</span>
                   </label>
                   <label className="export-modal__checkbox">
                     <input
                       type="checkbox"
-                      checked={exportOptions.includeMaqamToMaqamModulations}
+                      checked={exportOptions.scalaVariant === 'keymap'}
                       onChange={(e) =>
                         setExportOptions((prev) => ({
                           ...prev,
-                          includeMaqamToMaqamModulations: e.target.checked,
+                          scalaVariant: e.target.checked ? 'keymap' : undefined,
                         }))
                       }
                     />
-                    <span>Maqāmat Modulations</span>
+                    <span>Tuning System with Maqam Keymap</span>
                   </label>
-                </div>
-              )}
-
-              {/* Lower octave modulations option - Full width */}
-              {((exportType === "tuning-system" &&
-                exportOptions.includeMaqamatDetails) ||
-                exportType === "maqam") && (
-                <div className="export-modal__option-group">
                   <label className="export-modal__checkbox">
                     <input
                       type="checkbox"
-                      checked={exportOptions.includeModulations8vb}
+                      checked={exportOptions.scalaVariant === '12tone'}
                       onChange={(e) =>
                         setExportOptions((prev) => ({
                           ...prev,
-                          includeModulations8vb: e.target.checked,
+                          scalaVariant: e.target.checked ? '12tone' : undefined,
                         }))
                       }
                     />
-                    <span>Lower Octave Maqāmat & Ajnās</span>
+                    <span>12-Pitch-Class Chromatic Set</span>
                   </label>
-                  <div className="export-modal__option-description">
-                    Include modulations that use pitches in the lower octave range (8vb)
-                  </div>
                 </div>
-              )}
+              </div>
             </div>
-          </div>
           )}
 
           <div className="export-modal__section">
