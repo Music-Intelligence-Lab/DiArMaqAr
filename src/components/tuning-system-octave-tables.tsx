@@ -673,9 +673,30 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
           )}
           {octave === 1 && openedOctaveRows[1] && (
             <span className="tuning-system-manager__filter-menu">
-              {Object.keys(filters).map((filterKey) => {
+              {/* Filter order matches table row appearance order */}
+              {[
+                "pitchClass",
+                "abjadName",
+                "englishName",
+                "fraction",
+                "cents",
+                "centsDeviation",
+                "decimalRatio",
+                "stringLength",
+                "fretDivision",
+                "midiNote",
+                "midiNoteDeviation",
+                "frequency",
+                "staffNotation",
+              ].map((filterKey) => {
                 const valueType = allPitchClasses && allPitchClasses.length > 0 ? allPitchClasses[0].originalValueType : null;
-                const isDisabled = filterKey === pitchClassType;
+                const isDisabled =
+                  (filterKey === "fraction" && pitchClassType === "fraction") ||
+                  (filterKey === "cents" && pitchClassType === "cents") ||
+                  (filterKey === "decimalRatio" && pitchClassType === "decimalRatio") ||
+                  (filterKey === "stringLength" && pitchClassType === "stringLength") ||
+                  (filterKey === "fretDivision" && pitchClassType === "fretDivision") ||
+                  (filterKey === "centsFromZero" && pitchClassType === "cents");
 
                 if (isDisabled) return null;
 
@@ -712,31 +733,31 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                 );
 
                 // Add original value type checkbox after englishName
-                if (filterKey === "englishName" && valueType) {
+                if (filterKey === "englishName" && pitchClassType && pitchClassType !== "unknown") {
                   return (
                     <React.Fragment key={`englishName-with-valuetype`}>
                       {filterElement}
                       <label
-                        key={`originalValue-${valueType}`}
-                        htmlFor={`filter-${valueType}`}
-                        className={`tuning-system-manager__filter-item ${filters[valueType as keyof typeof filters] ? "tuning-system-manager__filter-item_active" : ""}`}
+                        key={`originalValue-${pitchClassType}`}
+                        htmlFor={`filter-${pitchClassType}`}
+                        className={`tuning-system-manager__filter-item ${filters[pitchClassType as keyof typeof filters] ? "tuning-system-manager__filter-item_active" : ""}`}
                         onClick={(e) => e.stopPropagation()}
                       >
                         <input
-                          id={`filter-${valueType}`}
+                          id={`filter-${pitchClassType}`}
                           type="checkbox"
                           className="tuning-system-manager__filter-checkbox"
-                          checked={filters[valueType as keyof typeof filters]}
+                          checked={filters[pitchClassType as keyof typeof filters]}
                           onChange={(e) => {
                             e.stopPropagation();
                             setFilters((prev) => ({
                               ...prev,
-                              [valueType as keyof typeof filters]: e.target.checked,
+                              [pitchClassType as keyof typeof filters]: e.target.checked,
                             }));
                           }}
                         />
                         <span className="tuning-system-manager__filter-label">
-                          {t(`filter.${valueType}`)}
+                          {t(`filter.${pitchClassType}`)}
                         </span>
                       </label>
                     </React.Fragment>
@@ -912,7 +933,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                   </tr>
                 )}
 
-                {pitchClassType !== "unknown" && (
+                {pitchClassType !== "unknown" && filters[pitchClassType as keyof typeof filters] && (
                   <tr className="tuning-system-manager__octave-table__detectedPitchClassType">
                     <td className="tuning-system-manager__row-header">
                       {t(`octave.${pitchClassType === 'fraction' ? 'fractionRatio' : 
