@@ -60,6 +60,13 @@ const translations = {
     "tabs.sayrAdmin": "Sayr Admin",
     "tabs.patternsAdmin": "Patterns Admin",
 
+    // Navbar Tooltips
+    "tabs.tooltip.selectTuningSystem": "Select a tuning system",
+    "tabs.tooltip.selectTuningSystemToExploreAjnas": "Select a tuning system to explore ajnās",
+    "tabs.tooltip.selectTuningSystemToExploreMaqamat": "Select a tuning system to explore maqāmāt",
+    "tabs.tooltip.selectMaqamToExploreSuyur": "Select a maqām to explore suyūr",
+    "tabs.tooltip.selectMaqamToExploreIntiqalat": "Select a maqām to explore intiqālāt",
+
     // Settings
     "settings.userMode": "User Mode",
     "settings.adminMode": "Admin Mode",
@@ -389,6 +396,13 @@ const translations = {
     "tabs.maqamAdmin": "إدارة المقام",
     "tabs.sayrAdmin": "إدارة السَير",
     "tabs.patternsAdmin": "إدارة الأنماط",
+
+    // Navbar Tooltips
+    "tabs.tooltip.selectTuningSystem": "اختر نظام تنغيم",
+    "tabs.tooltip.selectTuningSystemToExploreAjnas": "اختر نظام تنغيم لاستكشاف الأجناس",
+    "tabs.tooltip.selectTuningSystemToExploreMaqamat": "اختر نظام تنغيم لاستكشاف المقامات",
+    "tabs.tooltip.selectMaqamToExploreSuyur": "اختر مقاماً لاستكشاف السيور",
+    "tabs.tooltip.selectMaqamToExploreIntiqalat": "اختر مقاماً لاستكشاف الانتقالات",
 
     // Settings
     "settings.userMode": "وضع المستخدم",

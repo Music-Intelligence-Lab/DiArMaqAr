@@ -86,6 +86,7 @@
   min-width: 0; // allow flex children to shrink properly in Safari
   -webkit-text-size-adjust: 100%; // prevent iOS Safari from auto-resizing text
   text-size-adjust: 100%;
+  position: relative;
 
 
     &:not(:last-child) {
@@ -96,9 +97,50 @@
       background-color: rgba($secondary, 0.5);
     }
 
+    // Custom tooltip (works for all buttons with data-tooltip)
+    &[data-tooltip]:hover::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      margin-top: 8px;
+      padding: 10px 16px;
+      background-color: rgba($primary, 0.95);
+      color: white;
+      font-size: 13px;
+      font-weight: 400;
+      min-width: 200px;
+      max-width: 400px;
+      width: max-content;
+      white-space: normal;
+      word-wrap: break-word;
+      text-align: center;
+      border-radius: 6px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      z-index: 10000;
+      pointer-events: none;
+      animation: tooltipFadeIn 0.2s ease-out;
+      line-height: 1.4;
+    }
+
+    // Tooltip arrow (works for all buttons with data-tooltip)
+    &[data-tooltip]:hover::before {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      margin-top: 2px;
+      border: 6px solid transparent;
+      border-bottom-color: rgba($primary, 0.95);
+      z-index: 10001;
+      pointer-events: none;
+    }
+
     &:disabled {
       color: rgba(255, 255, 255, 0.521);
-      cursor: not-allowed;
+      cursor: default;
 
       &:hover {
         background-color: transparent;
@@ -308,5 +350,17 @@
     transition: 0.3s;
     user-select: none;
     text-decoration: none;
+  }
+}
+
+// Tooltip animation
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
   }
 }
