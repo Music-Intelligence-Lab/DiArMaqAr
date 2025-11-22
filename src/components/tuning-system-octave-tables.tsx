@@ -689,7 +689,6 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                 "frequency",
                 "staffNotation",
               ].map((filterKey) => {
-                const valueType = allPitchClasses && allPitchClasses.length > 0 ? allPitchClasses[0].originalValueType : null;
                 const isDisabled =
                   (filterKey === "fraction" && pitchClassType === "fraction") ||
                   (filterKey === "cents" && pitchClassType === "cents") ||

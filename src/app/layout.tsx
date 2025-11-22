@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Readex_Pro } from "next/font/google";
 import { AppContextProvider } from "@/contexts/app-context";
 import { SoundContextProvider } from "@/contexts/sound-context";
 import { TranspositionsContextProvider } from "@/contexts/transpositions-context";
@@ -9,6 +10,12 @@ import NavbarGuard from "@/components/navbar-guard";
 import MobileWarning from "@/components/mobile-warning";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.scss";
+
+const readexPro = Readex_Pro({
+  weight: ["200", "300", "400"],
+  subsets: ["latin"],
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Digital Arabic Maqām Archive (DiArMaqAr) | Computational Research Platform",
@@ -231,9 +238,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@200;300;400&display=swap" rel="stylesheet" />
         <meta name="googlebot" content="notranslate" />
         <meta name="google" content="notranslate" />
         <script
@@ -267,7 +271,7 @@ export default function RootLayout({
         </noscript>
         {/* eslint-enable @next/next/no-html-link-for-pages */}
       </head>
-      <body>
+      <body className={readexPro.className}>
         {/* Server-rendered bot-friendly content - always in HTML for headless browsers */}
         {/* eslint-disable @next/next/no-html-link-for-pages */}
         <div style={{ position: "absolute", left: "-9999px", width: "1px", height: "1px", overflow: "hidden", visibility: "hidden" }} aria-hidden="true">

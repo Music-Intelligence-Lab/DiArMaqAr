@@ -1126,7 +1126,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
       const currentPitchClass = allPitchClasses.find((pc) => pc.fraction === pitchClassFraction);
       if (!currentPitchClass) continue;
 
-      let newFrequency = newReferenceFrequency * parseFloat(currentPitchClass.decimalRatio);
+      const newFrequency = newReferenceFrequency * parseFloat(currentPitchClass.decimalRatio);
       // Validate frequency is finite
       if (!Number.isFinite(newFrequency) || newFrequency <= 0) {
         console.warn(`Invalid frequency calculated for pitch class ${currentPitchClass.noteName}: ${newFrequency}, skipping update`);
@@ -1179,7 +1179,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         const currentPitchClass = allPitchClasses.find((pc) => pc.fraction === pitchClassFraction);
         if (!currentPitchClass) continue;
 
-        let newFrequency = newReferenceFrequency * parseFloat(currentPitchClass.decimalRatio);
+        const newFrequency = newReferenceFrequency * parseFloat(currentPitchClass.decimalRatio);
         // Validate frequencies are finite before converting to MIDI
         if (!Number.isFinite(newFrequency) || newFrequency <= 0) {
           console.warn(`Invalid frequency calculated for MIDI update: ${newFrequency}, skipping`);
@@ -1241,7 +1241,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
       const currentPitchClass = allPitchClasses.find((pc) => pc.fraction === pitchClassFraction);
       if (!currentPitchClass) continue;
 
-      let targetFrequency = parseFloat(currentPitchClass.frequency);
+      const targetFrequency = parseFloat(currentPitchClass.frequency);
       // Validate frequency is finite
       if (!Number.isFinite(targetFrequency) || targetFrequency <= 0) {
         console.warn(`Invalid target frequency for pitch class ${currentPitchClass.noteName}: ${targetFrequency}, skipping update`);
@@ -1294,7 +1294,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         const currentPitchClass = allPitchClasses.find((pc) => pc.fraction === pitchClassFraction);
         if (!currentPitchClass) continue;
 
-        let targetFrequency = parseFloat(currentPitchClass.frequency);
+        const targetFrequency = parseFloat(currentPitchClass.frequency);
         // Validate frequencies are finite before converting to MIDI
         if (!Number.isFinite(targetFrequency) || targetFrequency <= 0) {
           console.warn(`Invalid target frequency for MIDI recalculation: ${targetFrequency}, skipping`);
