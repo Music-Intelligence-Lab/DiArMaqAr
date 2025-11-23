@@ -7,7 +7,7 @@ export default function LanguageSelector() {
   const { language, setLanguage, t } = useLanguageContext();
 
   const handleLanguageChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setLanguage(event.target.value as 'en' | 'ar');
+    setLanguage(event.target.value as 'en' | 'ar' | 'fr');
   };
 
   return (
@@ -20,6 +20,7 @@ export default function LanguageSelector() {
       >
         <option value="en">{t('language.english')}</option>
         <option value="ar">{t('language.arabic')}</option>
+        <option value="fr">{t('language.french')}</option>
       </select>
     </div>
   );

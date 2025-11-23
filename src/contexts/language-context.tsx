@@ -12,7 +12,7 @@ import { getDynamicArabicName } from "@/functions/dynamicArabicConverter";
 /**
  * Supported languages in the application
  */
-export type Language = "en" | "ar";
+export type Language = "en" | "ar" | "fr";
 
 /**
  * Interface for the language context that manages language state and translation functions
@@ -33,7 +33,7 @@ const LanguageContext = createContext<LanguageContextInterface | undefined>(
 );
 
 /**
- * Translation dictionaries for English and Arabic
+ * Translation dictionaries for English, Arabic, and French
  */
 const translations = {
   en: {
@@ -116,6 +116,7 @@ const translations = {
     // Language selector
     "language.english": "English",
     "language.arabic": "العربية",
+    "language.french": "Français",
 
     // Jins Manager
     "jins.noAjnasAvailable": "No ajnas available.",
@@ -453,6 +454,7 @@ const translations = {
     // Language selector
     "language.english": "English",
     "language.arabic": "العربية",
+    "language.french": "Français",
 
     // Jins Manager (Arabic translations)
     "jins.noAjnasAvailable": "لا توجد أجناس متاحة",
@@ -710,6 +712,344 @@ const translations = {
     "sayr.transpositionWarning":
       "لا يمكن نقل بعض النغمات في هذا السير بسبب قيود نظام الضبط.",
   },
+  fr: {
+    // Navigation Menu
+    "nav.home": "Accueil",
+    "nav.tools": "Outils",
+    "nav.bibliography": "Bibliographie",
+    "nav.statistics": "Statistiques",
+    "nav.documentation": "Documentation",
+    "nav.about": "À propos",
+    "nav.credits": "Crédits",
+
+    // Navbar Tabs
+    "tabs.tuningSystem": "Tanāghīm (systèmes d'accord)",
+    "tabs.ajnas": "Ajnās",
+    "tabs.maqamat": "Maqāmāt",
+    "tabs.suyur": "Suyūr",
+    "tabs.intiqalat": "Intiqālāt",
+
+    // Admin Tabs
+    "tabs.tuningSystemAdmin": "Administration du système d'accord",
+    "tabs.jinsAdmin": "Administration du jins",
+    "tabs.maqamAdmin": "Administration du maqām",
+    "tabs.sayrAdmin": "Administration du sayr",
+    "tabs.patternsAdmin": "Administration des motifs",
+
+    // Navbar Tooltips
+    "tabs.tooltip.selectTuningSystem": "Sélectionner un système d'accord",
+    "tabs.tooltip.selectTuningSystemToExploreAjnas": "Sélectionner un système d'accord pour explorer les ajnās",
+    "tabs.tooltip.selectTuningSystemToExploreMaqamat": "Sélectionner un système d'accord pour explorer les maqāmāt",
+    "tabs.tooltip.selectMaqamToExploreSuyur": "Sélectionner un maqām pour explorer les suyūr",
+    "tabs.tooltip.selectMaqamToExploreIntiqalat": "Sélectionner un maqām pour explorer les intiqālāt",
+
+    // Settings
+    "settings.userMode": "Mode utilisateur",
+    "settings.adminMode": "Mode administrateur",
+    "settings.title": "Paramètres audio et application",
+    "settings.pattern": "Motif",
+    "settings.tempo": "Tempo (BPM) :",
+    "settings.patternSelect": "Sélection du motif :",
+    "settings.droneOn": "Drone activé",
+    "settings.droneOff": "Drone désactivé",
+    "settings.liveInput": "Entrée en direct",
+    "settings.midiInput": "Entrée MIDI :",
+    "settings.refresh": "Actualiser",
+    "settings.chooseInput": "– choisir une entrée –",
+    "settings.qwerty": "AZERTY",
+    "settings.midi": "MIDI",
+    "settings.tuningSystem": "Système d'accord",
+    "settings.jinsOrMaqam": "Jins/Maqām",
+    "settings.envelope": "Enveloppe",
+    "settings.volume": "Volume :",
+    "settings.droneVolume": "Volume du drone :",
+    "settings.attack": "Attaque (s) :",
+    "settings.release": "Relâchement (s) :",
+    "settings.timbre": "Timbre",
+    "settings.output": "Sortie",
+    "settings.midiOutput": "Sortie MIDI :",
+    "settings.chooseOutput": "– choisir une sortie –",
+    "settings.pitchBendRange": "Plage de pitch bend (demi-tons) :",
+    "settings.useMPE": "Utiliser MPE",
+    "settings.clearSelections": "Effacer les sélections",
+    "settings.clearHangingNotes": "Effacer les notes suspendues",
+    "settings.stopAllSounds": "Arrêter tous les sons",
+    "settings.web": "Web",
+    "settings.midiMode": "MIDI",
+    "settings.waveform": "Forme d'onde :",
+    "settings.basic": "Basique",
+    "settings.customPeriodic": "Périodique personnalisé",
+    "settings.aperiodic": "Apériodique",
+    "settings.mute": "Muet",
+    "settings.waveformMode": "Forme d'onde",
+    "settings.resetEnvelope": "Réinitialiser l'enveloppe",
+    "settings.octaveShift": "Décalage d'octave",
+    "settings.octaveDown": "↓",
+    "settings.octaveUp": "↑",
+    "settings.reset": "Réinitialiser",
+    "settings.octaves": "octave(s)",
+
+    // Language selector
+    "language.english": "English",
+    "language.arabic": "العربية",
+    "language.french": "Français",
+
+    // Jins Manager
+    "jins.noAjnasAvailable": "Aucun ajnās disponible.",
+    "jins.transpositions": "Transpositions",
+    "jins.createNewJins": "Créer un nouveau jins",
+    "jins.enterNewJinsName": "Entrer le nom du nouveau jins",
+    "jins.save": "Enregistrer",
+    "jins.delete": "Supprimer",
+    "jins.clear": "Effacer",
+    "jins.addSource": "Ajouter une source",
+    "jins.selectSource": "Sélectionner une source",
+    "jins.page": "Page",
+    "jins.commentsEnglish": "Commentaires (anglais)",
+    "jins.commentsArabic": "Commentaires (arabe)",
+
+    // Jins Transpositions
+    "jins.analysis": "Taḥlīl (analyse)",
+    "jins.centsTolerance": "Tolérance en cents",
+    "jins.darajatAlIstiqrar": "Darajat al-Istiqrār al-Taqlīdīya (tonique/finalis conventionnel)",
+    "jins.selectLoadToKeyboard": "Sélectionner et charger sur le clavier",
+    "jins.playJins": "Jouer le jins",
+    "jins.export": "Exporter",
+    "jins.copyTable": "Copier le tableau",
+    "jins.showDetails": "Afficher les détails",
+    "jins.hideDetails": "Masquer les détails",
+    "jins.noteNames": "Noms des notes",
+    "jins.abjadName": "Nom abjad",
+    "jins.englishName": "Nom anglais",
+    "jins.fraction": "Fraction",
+    "jins.cents": "Cents",
+    "jins.centsFromZero": "Cents depuis 0",
+    "jins.centsDeviation": "Déviation en cents",
+    "jins.decimalRatio": "Rapport décimal",
+    "jins.stringLength": "Longueur de corde",
+    "jins.fretDivision": "Division de frette",
+    "jins.midiNote": "Note MIDI décimale",
+    "jins.midiNoteDeviation": "MIDI et déviation",
+    "jins.frequency": "Fréq. (Hz)",
+    "jins.play": "Jouer",
+    "jins.staffNotation": "Notation sur portée",
+    "jins.comments": "Commentaires",
+    "jins.sources": "Sources",
+    "jins.transpositionsTitle": "Taṣāwīr (transpositions)",
+    "jins.all": "Tous les ajnās",
+
+    // Value types
+    "valueType.fraction": "Fraction",
+    "valueType.cents": "Cents",
+    "valueType.decimalRatio": "Rapport décimal",
+    "valueType.stringLength": "Longueur de corde",
+    "valueType.fretDivision": "Division de frette",
+
+    // Filter labels
+    "filter.pitchClass": "Classe de hauteur",
+    "filter.abjadName": "Nom abjad",
+    "filter.englishName": "Nom anglais",
+    "filter.fraction": "Fraction",
+    "filter.cents": "Cents",
+    "filter.centsFromZero": "Cents depuis 0",
+    "filter.decimalRatio": "Rapport décimal",
+    "filter.stringLength": "Longueur de corde",
+    "filter.fretDivision": "Division de frette",
+    "filter.midiNote": "Note MIDI décimale",
+    "filter.midiNoteDeviation": "MIDI et déviation",
+    "filter.frequency": "Fréquence",
+    "filter.staffNotation": "Notation sur portée",
+    "filter.centsDeviation": "Déviation en cents",
+
+    // Maqam Manager
+    "maqam.transpositions": "Transpositions",
+    "maqam.createNewMaqam": "Créer un nouveau maqām",
+    "maqam.enterMaqamName": "Entrer le nom du maqām",
+    "maqam.saveName": "Enregistrer le nom",
+    "maqam.saveAscending": "Enregistrer l'ascendant",
+    "maqam.saveDescending": "Enregistrer le descendant",
+    "maqam.delete": "Supprimer",
+    "maqam.clear": "Effacer",
+    "maqam.addSource": "Ajouter une source",
+    "maqam.selectSource": "Sélectionner une source",
+    "maqam.page": "Page",
+    "maqam.commentsEnglish": "Commentaires (anglais)",
+    "maqam.commentsArabic": "Commentaires (arabe)",
+
+    // Maqam Transpositions
+    "maqam.analysis": "Taḥlīl (analyse)",
+    "maqam.centsTolerance": "Tolérance en cents",
+    "maqam.darajatAlIstiqrar": "Darajat al-Istiqrār al-Taqlīdīya (tonique/finalis conventionnel)",
+    "maqam.selectLoadToKeyboard": "Sélectionner et charger sur le clavier",
+    "maqam.ascendingDescending": "Asc > Desc",
+    "maqam.ascending": "Ascendant",
+    "maqam.descending": "Descendant",
+    "maqam.export": "Exporter",
+    "maqam.copyTable": "Copier le tableau",
+    "maqam.showDetails": "Afficher les détails",
+    "maqam.hideDetails": "Masquer les détails",
+    "maqam.scaleDegrees": "Degré de gamme",
+    "maqam.noteNames": "Noms des notes",
+    "maqam.abjadName": "Nom abjad",
+    "maqam.englishName": "Nom anglais",
+    "maqam.fraction": "Fraction",
+    "maqam.cents": "Cents",
+    "maqam.centsFromZero": "Cents depuis 0",
+    "maqam.centsDeviation": "Déviation en cents",
+    "maqam.decimalRatio": "Rapport décimal",
+    "maqam.stringLength": "Longueur de corde",
+    "maqam.fretDivision": "Division de frette",
+    "maqam.midiNote": "Note MIDI décimale",
+    "maqam.midiNoteDeviation": "MIDI et déviation",
+    "maqam.frequency": "Fréq. (Hz)",
+    "maqam.play": "Jouer",
+    "maqam.ajnas": "Ajnās",
+    "maqam.staffNotation": "Notation sur portée",
+    "maqam.comments": "Commentaires",
+    "maqam.sources": "Sources",
+    "maqam.transpositionsTitle": "Taṣāwīr (transpositions)",
+    "maqam.all": "Tous les maqāmāt",
+    "maqam.groupByJins": "Grouper par jins",
+    "maqam.groupByStartingNote": "Grouper par note de départ",
+    "maqam.noJins": "sans jins",
+
+    // Tuning System Manager
+    "tuningSystem.all": "Tous les systèmes d'accord",
+    "tuningSystem.8th10thCentury": "8e–10e s. EC",
+    "tuningSystem.11th15thCentury": "11e–15e s. EC",
+    "tuningSystem.16th19thCentury": "16e–19e s. EC",
+    "tuningSystem.20th21stCentury": "20e–21e s. EC",
+    "tuningSystem.selectOrCreate": "Sélectionner un système d'accord ou en créer un nouveau :",
+    "tuningSystem.createNew": "-- Créer un nouveau système --",
+    "tuningSystem.none": "-- Aucun --",
+    "tuningSystem.sortBy": "Trier par :",
+    "tuningSystem.id": "ID",
+    "tuningSystem.creator": "Créateur (anglais)",
+    "tuningSystem.year": "Année",
+    "tuningSystem.titleEnglish": "Titre (anglais)",
+    "tuningSystem.titleArabic": "Titre (arabe)",
+    "tuningSystem.creatorEnglish": "Créateur (anglais)",
+    "tuningSystem.creatorArabic": "Créateur (arabe)",
+    "tuningSystem.commentsEnglish": "Commentaires (anglais)",
+    "tuningSystem.commentsArabic": "Commentaires (arabe)",
+    "tuningSystem.addSource": "Ajouter une source",
+    "tuningSystem.selectSource": "Sélectionner une source",
+    "tuningSystem.page": "Page",
+    "tuningSystem.delete": "Supprimer",
+    "tuningSystem.pitchClasses": "Classes de hauteur (une par ligne)",
+    "tuningSystem.stringLength": "Longueur de corde",
+    "tuningSystem.defaultReferenceFrequency": "Fréquence de référence par défaut",
+    "tuningSystem.save": "Enregistrer les modifications du système d'accord",
+    "tuningSystem.create": "Créer un nouveau système d'accord",
+    "tuningSystem.deleteTuningSystem": "Supprimer le système d'accord",
+    "tuningSystem.startingNoteName": "Nom de la note de départ :",
+    "tuningSystem.frequency": "Fréquence (Hz) :",
+    "tuningSystem.saveNoteConfiguration": "Enregistrer la configuration des noms de notes",
+    "tuningSystem.deleteNoteConfiguration": "Supprimer la configuration des noms de notes",
+    "tuningSystem.export": "Exporter :",
+    "tuningSystem.comments": "Commentaires :",
+    "tuningSystem.sources": "Sources :",
+    "tuningSystem.noSystemsAvailable": "Aucun système d'accord disponible.",
+    "tuningSystem.unsaved": "non enregistré",
+
+    // Tuning System Octave Tables
+    "octave.title": "Dīwān (octave)",
+    "octave.cascadeEnabled": "Cascade activée",
+    "octave.cascadeDisabled": "Cascade désactivée",
+    "octave.pitchClass": "Classe de hauteur",
+    "octave.noteNames": "Nom de note",
+    "octave.abjadName": "Nom abjad",
+    "octave.englishName": "Nom anglais",
+    "octave.fractionRatio": "Rapport de fraction",
+    "octave.cents": "Cents",
+    "octave.centsDeviation": "Déviation en cents",
+    "octave.decimalRatio": "Rapport décimal",
+    "octave.stringLength": "Longueur de corde",
+    "octave.fretDivision": "Division de frette",
+    "octave.midiNote": "Note MIDI décimale",
+    "octave.midiNoteDeviation": "MIDI et déviation",
+    "octave.frequency": "Fréq. (Hz)",
+    "octave.play": "Jouer",
+    "octave.select": "Sélectionner",
+    "octave.staffNotation": "Notation sur portée",
+    "octave.copyTable": "Copier le tableau",
+    "octave.none": "(aucun)",
+
+    // Selected Pitch Classes Transpositions
+    "analysis.title": "Taḥlīl (analyse)",
+    "analysis.selectedPitchClasses": "Classes de hauteur sélectionnées",
+    "analysis.centsTolerance": "Tolérance en cents",
+    "analysis.playSelectedPitchClasses": "Jouer les sélections",
+    "analysis.copyTable": "Copier le tableau",
+    "analysis.copyTableToClipboard": "Copier le tableau dans le presse-papiers",
+    "analysis.tableCopied": "Tableau copié dans le presse-papiers !",
+    "analysis.copyFailed": "Échec de la copie du tableau.",
+    "analysis.noteNames": "Noms des notes",
+    "analysis.pitchClass": "Classe de hauteur",
+    "analysis.abjadName": "Nom abjad",
+    "analysis.englishName": "Nom anglais",
+    "analysis.fraction": "fraction",
+    "analysis.cents": "Cents",
+    "analysis.centsFromZero": "Cents depuis 0",
+    "analysis.centsDeviation": "Déviation en cents",
+    "analysis.decimalRatio": "Rapport décimal",
+    "analysis.stringLength": "Longueur de corde",
+    "analysis.fretDivision": "Division de frette",
+    "analysis.midiNote": "Note MIDI décimale",
+    "analysis.midiNoteDeviation": "MIDI et déviation",
+    "analysis.frequency": "Fréq. (Hz)",
+    "analysis.staffNotation": "Notation sur portée",
+    "analysis.play": "Jouer",
+
+    // Modulations
+    "modulations.expand": "Développer",
+    "modulations.collapse": "Réduire",
+    "modulations.ajnasModulations": "modulations des ajnās",
+    "modulations.maqamatModulations": "modulations des maqāmāt",
+    "modulations.deleteHop": "Supprimer le saut",
+    "modulations.tonic": "Tonique",
+    "modulations.third": "Tierce",
+    "modulations.thirdAlternative": "Tierce (alternative)",
+    "modulations.fourth": "Quarte",
+    "modulations.fifth": "Quinte",
+    "modulations.sixthIfNoThird": "Sixte (s'il n'y a pas de tierce)",
+    "modulations.sixthAscending": "Sixte (ascendante)",
+    "modulations.sixthDescending": "Sixte (descendante)",
+    "modulations.octaveShift": "Décalage d'octave (-1)",
+
+    // Sayr Manager
+    "sayr.selectOrCreate": "Sélectionner un sayr ou en créer un nouveau :",
+    "sayr.newSayr": "-- Nouveau sayr --",
+    "sayr.noSuyurAvailable": "Aucun suyūr disponible.",
+    "sayr.noSource": "Aucune source",
+    "sayr.source": "Source",
+    "sayr.selectSource": "Sélectionner une source",
+    "sayr.page": "Page",
+    "sayr.commentsEnglish": "Commentaires (anglais)",
+    "sayr.commentsArabic": "Commentaires (arabe)",
+    "sayr.commentsOnSayr": "Commentaires sur le sayr de",
+    "sayr.stops": "Arrêts",
+    "sayr.addStop": "+ Ajouter un arrêt",
+    "sayr.note": "note",
+    "sayr.jins": "jins",
+    "sayr.maqam": "maqām",
+    "sayr.direction": "direction",
+    "sayr.none": "(aucun)",
+    "sayr.noDirection": "(pas de direction)",
+    "sayr.ascending": "ascendant",
+    "sayr.descending": "descendant",
+    "sayr.ascend": "monter",
+    "sayr.descend": "descendre",
+    "sayr.ascendTo": "monter vers",
+    "sayr.descendTo": "descendre vers",
+    "sayr.delete": "Supprimer",
+    "sayr.updateSayr": "Mettre à jour le sayr",
+    "sayr.saveSayr": "Enregistrer le sayr",
+    "sayr.deleteSayr": "Supprimer le sayr",
+    "sayr.definiteArticle": " al-",
+    "sayr.transpositionWarning":
+      "Certaines notes de ce sayr n'ont pas pu être transposées en raison des limitations du système d'accord.",
+  },
 };
 
 /**
@@ -726,7 +1066,7 @@ export function LanguageContextProvider({ children }: { children: ReactNode }) {
     const savedLanguage = localStorage.getItem(
       "maqam-network-language"
     ) as Language;
-    if (savedLanguage && (savedLanguage === "en" || savedLanguage === "ar")) {
+    if (savedLanguage && (savedLanguage === "en" || savedLanguage === "ar" || savedLanguage === "fr")) {
       setLanguageState(savedLanguage);
     }
   }, []);
@@ -741,7 +1081,7 @@ export function LanguageContextProvider({ children }: { children: ReactNode }) {
 
     // Update document direction
     document.documentElement.dir = newLanguage === "ar" ? "rtl" : "ltr";
-    document.documentElement.lang = newLanguage === "ar" ? "ar" : "en";
+    document.documentElement.lang = newLanguage === "ar" ? "ar" : newLanguage === "fr" ? "fr" : "en";
 
     // Force a re-render by adding a class to trigger CSS changes
     document.body.className = document.body.className.replace(
@@ -756,7 +1096,7 @@ export function LanguageContextProvider({ children }: { children: ReactNode }) {
    */
   useEffect(() => {
     document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
-    document.documentElement.lang = language === "ar" ? "ar" : "en";
+    document.documentElement.lang = language === "ar" ? "ar" : language === "fr" ? "fr" : "en";
 
     // Also set body class for additional CSS targeting
     document.body.className = document.body.className.replace(
