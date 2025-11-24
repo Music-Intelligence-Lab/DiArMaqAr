@@ -28,19 +28,21 @@
 
 Load files based on your task type for optimal context efficiency:
 
-| Task Type | Core | Essentials | Reference | Glossary |
-|-----------|------|------------|-----------|----------|
+| Task Type | Core | Essentials | Reference | Also Load |
+|-----------|------|------------|-----------|-----------|
 | **New feature** | 00 | 01, 03, 04 | - | - |
 | **Bug fix** | 00 | 03, 04, 05 | - | - |
 | **API endpoint** | 00 | 03 | api-retrospective, openapi-formatting-guide | - |
 | **API documentation** | 00 | 03 | openapi-formatting-guide | - |
-| **User-facing documentation** | 00 | 03 | vitepress-documentation-guide | 06, 07 |
+| **User-facing documentation** | 00 | 03 | vitepress-documentation-guide | glossary/06, 07 |
 | **12-pitch-class sets / Scala export** | 00 | 03, 04 | 12-pitch-class-sets-scala-export | - |
-| **Documentation** | 00 | 03 | - | 06, 07 |
+| **Documentation** | 00 | 03 | - | glossary/06, 07 |
 | **Testing** | 00 | 05 | - | - |
+| **UI testing with Playwright** | 00 | 03, 05 | mcp-servers-guide | `servers/playwright/` |
+| **Library research** | 00 | 03 | mcp-servers-guide | `servers/context7/` |
 | **Performance audit** | 00 | 05 | cli-commands-guide | - |
-| **MCP usage** | 00 | - | mcp-servers-guide | - |
-| **Naming/semantics** | 00 | 03 | naming-conventions-deep-dive | 07 |
+| **MCP usage** | 00 | 03 | mcp-servers-guide | `servers/index.ts` |
+| **Naming/semantics** | 00 | 03 | naming-conventions-deep-dive | glossary/07 |
 
 ---
 
@@ -255,7 +257,10 @@ RED (write test) → GREEN (minimal code) → REFACTOR → COMMIT
 - Update user-facing docs → reference/vitepress-documentation-guide
 - Test my code → essentials/03: TDD + essentials/05: Manual Testing
 - Document this → glossary/06: Documentation Standards
-- Use MCP servers → reference/mcp-servers-guide
+- Use MCP servers → **`servers/index.ts`** + reference/mcp-servers-guide
+- Get library documentation → `servers/context7/` (Context7 MCP)
+- Test UI workflows → `servers/playwright/` (Playwright MCP)
+- Discover MCP tools → **Read `servers/index.ts` first** (Code API pattern)
 
 **"Why is...?"**
 - Check musicological principles → essentials/04
@@ -341,11 +346,29 @@ After successful task completion:
 
 ## 📚 External Resources Integration
 
-**MCP Servers Available:**
-- **Context7**: Current library documentation
-- **Playwright**: Browser automation for testing
+### MCP Servers (Code API Pattern)
+
+**AI agents MUST use the `servers/` directory** for MCP tool discovery:
+
+```
+servers/
+├── index.ts              ← START HERE
+├── context7/             ← Library documentation
+└── playwright/           ← Browser automation
+```
+
+**Workflow:**
+1. Read `servers/index.ts` for available servers
+2. Navigate to server directory for tool files
+3. Read typed interfaces and examples
+4. Call tools via Claude's MCP integration
+
+**Available Servers:**
+- **Context7**: Up-to-date library documentation (beyond training data)
+- **Playwright**: Browser automation for UI testing
 
 **See**: [`reference/mcp-servers-guide.md`](./reference/mcp-servers-guide.md) for detailed usage
+**See**: `servers/` directory for typed tool interfaces
 
 ---
 
@@ -384,7 +407,7 @@ These instructions embody:
 │   ├── api-retrospective.md
 │   ├── cli-commands-guide.md
 │   ├── decolonial-computing-theory.md
-│   ├── mcp-servers-guide.md
+│   ├── mcp-servers-guide.md ⭐ (Code API pattern)
 │   ├── naming-conventions-deep-dive.md
 │   ├── openapi-formatting-guide.md
 │   ├── scala-export-overview.md
@@ -395,11 +418,26 @@ These instructions embody:
 └── glossary/
     ├── 06-documentation-standards.md
     └── 07-musicological-definitions.md
+
+servers/                          ⭐ MCP TOOL DISCOVERY (Code API Pattern)
+├── index.ts                      ← Start here for all MCP usage
+├── mcpClient.ts                  ← Core utility
+├── context7/                     ← Library documentation tools
+│   ├── index.ts
+│   ├── resolveLibraryId.ts
+│   └── getLibraryDocs.ts
+└── playwright/                   ← Browser automation tools
+    ├── index.ts
+    ├── navigate.ts
+    ├── click.ts
+    ├── screenshot.ts
+    └── evaluate.ts
 ```
 
 ---
 
-*Last Updated: 2025-11-20*
+*Last Updated: 2025-11-24*
 *Recent additions:*
+- *MCP Code API pattern integration (servers/ directory)*
 - *Decolonial computing theory reference (~599 lines)*
 - *VitePress documentation guide (~850 lines)*

@@ -12,6 +12,57 @@ MCP servers provide powerful extensions to base AI capabilities. Use them strate
 
 ---
 
+## Code API Pattern (Recommended)
+
+This project implements the **Code API pattern** recommended by Anthropic for MCP usage. Instead of loading all tool definitions upfront (consuming ~150K tokens), tools are presented as navigable TypeScript files enabling **progressive discovery** (~2K tokens).
+
+**Reference**: [Anthropic Engineering: Code Execution with MCP](https://www.anthropic.com/engineering/code-execution-with-mcp)
+
+### Directory Structure
+
+```
+servers/
+├── index.ts              <- Start here - lists all servers
+├── mcpClient.ts          <- Core MCP utility
+├── context7/             <- Library documentation
+│   ├── index.ts          <- Server overview
+│   ├── resolveLibraryId.ts
+│   └── getLibraryDocs.ts
+└── playwright/           <- Browser automation
+    ├── index.ts          <- Server overview
+    ├── navigate.ts
+    ├── click.ts
+    ├── screenshot.ts
+    └── evaluate.ts
+```
+
+### How to Use (for AI Agents)
+
+1. **EXPLORE**: Read `servers/index.ts` to see available servers
+2. **NAVIGATE**: Open specific server directory (e.g., `servers/context7/`)
+3. **DISCOVER**: Read individual tool files for typed interfaces and examples
+4. **CALL**: Use Claude's native MCP integration with the documented tool names
+
+### Benefits
+
+- **~98.7% token reduction** vs loading all tool schemas upfront
+- **Progressive disclosure** - load tool definitions on-demand
+- **Typed interfaces** - better code quality and documentation
+- **Project-specific examples** - tools documented with DiArMaqAr context
+
+### Quick Reference
+
+| Server | Tool | MCP Tool Name |
+|--------|------|---------------|
+| Context7 | Resolve Library | `mcp__context7__resolve-library-id` |
+| Context7 | Get Docs | `mcp__context7__get-library-docs` |
+| Playwright | Navigate | `mcp__playwright__navigate` |
+| Playwright | Click | `mcp__playwright__click` |
+| Playwright | Screenshot | `mcp__playwright__screenshot` |
+| Playwright | Evaluate | `mcp__playwright__evaluate` |
+
+---
+
 ## Context7 (Upstash) - Library Documentation
 
 **Purpose**: Access up-to-date documentation for any library or framework beyond your training data.

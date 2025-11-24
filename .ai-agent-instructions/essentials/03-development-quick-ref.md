@@ -672,10 +672,88 @@ git add . && git commit -m "message"
 
 ## 🛠️ Tools & MCP Servers
 
-### Quick Usage
+### Code API Pattern (REQUIRED)
 
-- **Context7** (Library Docs): "Show me VexFlow examples for non-Western notation"
-- **Playwright** (Browser Testing): "Test the maqām selection workflow on localhost"
+**AI agents MUST use the `servers/` directory** for MCP tool discovery. This reduces context overhead by ~98.7%.
+
+```
+servers/
+├── index.ts              ← START HERE: Lists all servers & quick reference
+├── mcpClient.ts          ← Core MCP utility
+├── context7/             ← Library documentation
+│   ├── index.ts
+│   ├── resolveLibraryId.ts
+│   └── getLibraryDocs.ts
+└── playwright/           ← Browser automation
+    ├── index.ts
+    ├── navigate.ts
+    ├── click.ts
+    ├── screenshot.ts
+    └── evaluate.ts
+```
+
+### MCP Discovery Workflow
+
+1. **Read `servers/index.ts`** to see available servers and quick reference
+2. **Navigate to server directory** (e.g., `servers/context7/`)
+3. **Read tool files** for typed interfaces and project-specific examples
+4. **Call via Claude's MCP integration** using documented tool names
+
+### When to Use MCP Servers
+
+| Scenario | Server | Example |
+|----------|--------|---------|
+| Need library docs beyond training data | Context7 | "VexFlow custom accidentals" |
+| Check framework updates | Context7 | "Next.js 15 app router i18n" |
+| Test UI workflows | Playwright | Navigate, click, verify |
+| Capture screenshots for docs | Playwright | `screenshot({ fullPage: true })` |
+| Extract data from pages | Playwright | `evaluate({ script: "..." })` |
+| Verify Arabic text rendering | Playwright | Check RTL layout, fonts |
+
+### Quick Reference
+
+| Server | Tool | MCP Tool Name |
+|--------|------|---------------|
+| Context7 | Resolve Library | `mcp__context7__resolve-library-id` |
+| Context7 | Get Docs | `mcp__context7__get-library-docs` |
+| Playwright | Navigate | `mcp__playwright__browser_navigate` |
+| Playwright | Screenshot | `mcp__playwright__browser_screenshot` |
+| Playwright | Click | `mcp__playwright__browser_click` |
+| Playwright | Evaluate | `mcp__playwright__browser_evaluate` |
+
+### Example: Getting Library Documentation
+
+```typescript
+// 1. Read servers/context7/resolveLibraryId.ts for interface
+// 2. Call MCP tool:
+mcp__context7__resolve-library-id({ libraryName: "tone.js" })
+// → Returns: { libraries: [{ libraryId: "/Tonejs/Tone.js", ... }] }
+
+// 3. Read servers/context7/getLibraryDocs.ts for interface
+// 4. Call MCP tool:
+mcp__context7__get-library-docs({
+  libraryId: "/Tonejs/Tone.js",
+  topic: "custom tuning microtonal"  // Check for non-12-EDO support
+})
+```
+
+### Example: Testing UI with Playwright
+
+```typescript
+// 1. Navigate to app
+mcp__playwright__browser_navigate({ url: "http://localhost:3000/maqamat" })
+
+// 2. Test maqām selection
+mcp__playwright__browser_click({ selector: "[data-testid='maqam-rast']" })
+
+// 3. Verify Arabic text renders
+mcp__playwright__browser_evaluate({
+  script: "document.fonts.check('16px \"Noto Naskh Arabic\"')"
+})
+
+// 4. Capture for documentation
+mcp__playwright__browser_screenshot({ fullPage: true })
+```
 
 **For detailed MCP usage**: See [reference/mcp-servers-guide.md](../reference/mcp-servers-guide.md)
 
