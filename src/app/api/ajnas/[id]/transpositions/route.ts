@@ -123,7 +123,7 @@ export async function GET(
     }
 
     // Find the tuning system
-    const tuningSystem = tuningSystems.find((ts) => ts.getId() === tuningSystemId);
+    const tuningSystem = tuningSystems.find((ts) => standardizeText(ts.getId()) === standardizeText(tuningSystemId));
     if (!tuningSystem) {
       return addCorsHeaders(
         NextResponse.json(
