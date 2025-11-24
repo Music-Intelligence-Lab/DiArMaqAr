@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "generate:modulations": "npx tsx scripts/generate-modulations/generate-modulations.ts",
     "docs:openapi": "node docs/scripts/generate-openapi-json.js",
     "docs:api": "node docs/scripts/generate-api-docs.js",
     "docs:dev": "npm run docs:openapi && npm run docs:api && vitepress dev docs",
