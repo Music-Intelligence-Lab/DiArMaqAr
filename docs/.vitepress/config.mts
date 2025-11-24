@@ -143,6 +143,13 @@ export default defineConfig({
               ]
             },
             {
+              text: 'Modulations',
+              link: '#modulations',
+              items: [
+                { text: 'Find Modulation Routes', link: '#findModulationRoutes' },
+              ]
+            },
+            {
               text: 'Pitch Classes',
               link: '#pitch-classes',
               items: [
@@ -230,6 +237,13 @@ export default defineConfig({
                 { text: 'List Tuning Systems', link: '#listTuningSystems' },
                 { text: 'Get Tuning System Details', link: '#getTuningSystemPitchClasses' },
                 { text: 'List Maqāmāt in Tuning System', link: '#listTuningSystemMaqamat' },
+              ]
+            },
+            {
+              text: 'Modulations',
+              link: '#modulations',
+              items: [
+                { text: 'Find Modulation Routes', link: '#findModulationRoutes' },
               ]
             },
             {

@@ -150,7 +150,7 @@ export async function GET(request: Request) {
       
       try {
         // Get canonical reference tuning system
-        const referenceTuningSystem = tuningSystems.find(ts => ts.getId() === "al-Sabbagh-(1954)");
+        const referenceTuningSystem = tuningSystems.find(ts => ts.getId() === "al-sabbagh-(1954)");
         
         if (referenceTuningSystem) {
           // Use the maqām's canonical starting note (first note of ascending scale)

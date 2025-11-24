@@ -60,6 +60,8 @@ export function standardizeText(text: string): string {
       .replace(/ʾ/g, "")
       // Replace spaces with underscores
       .replace(/\s+/g, "_")
+      // Convert to lowercase for consistent matching
+      .toLowerCase()
   );
 }
 

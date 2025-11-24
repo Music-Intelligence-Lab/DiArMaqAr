@@ -14,6 +14,209 @@ In a complex domain like Arabic music theory, ambiguous names cause confusion, i
 
 ---
 
+## Entity ID Naming Patterns
+
+### Overview
+
+This section documents the **critical patterns** for entity IDs across the codebase. Incorrect ID formatting is a common source of bugs when building API endpoints.
+
+### The `standardizeText()` Function
+
+**Location**: `src/functions/export.ts`
+
+This is the **core transformation** that converts display names to URL-safe IDs:
+
+```typescript
+import { standardizeText } from '@/functions/export';
+
+// Transformations applied:
+// 1. NFD normalization (decompose combined characters)
+// 2. Remove diacritics (combining marks \u0300-\u036f)
+// 3. Remove apostrophes (')
+// 4. Remove Arabic ayn (ʿ)
+// 5. Remove Arabic hamza (ʾ)
+// 6. Replace spaces with underscores (_)
+// 7. Convert to lowercase
+```
+
+**Transformation examples:**
+
+| Display Name | After `standardizeText()` |
+|-------------|---------------------------|
+| `maqām rāst` | `maqam_rast` |
+| `jins ṣabā` | `jins_saba` |
+| `ʿajam ʿushayrān` | `ajam_ushayran` |
+| `dūgāh` | `dugah` |
+| `nīm ḥiṣār` | `nim_hisar` |
+| `būselīk/ʿushshāq` | `buselik/ushshaq` |
+
+### Tuning Systems
+
+**Data file**: `data/tuningSystems.json`
+**Model**: `src/models/TuningSystem.ts`
+
+| Field | Format | Example |
+|-------|--------|---------|
+| `id` | `Creator-(Year)` | `"IbnSina-(1037)"`, `"Ronzevalle-(1904)"` |
+| Display | `stringify()` method | `"Ibn Sīnā (1037) ..."` |
+
+**ID generation** (line 136 in TuningSystem.ts):
+```typescript
+this.id = standardizeText(`${creatorEnglish}-(${year})`.replaceAll(" ", "").replaceAll("+", ""));
+```
+
+**API usage**:
+- Route: `/api/tuning-systems/[id]/...`
+- Query param: `?tuningSystem=IbnSina-(1037)`
+- **Note**: Parentheses are URL-safe but may need encoding in some contexts
+
+### Maqamat
+
+**Data file**: `data/maqamat.json`
+**Model**: `src/models/Maqam.ts`
+
+| Field | Format | Example |
+|-------|--------|---------|
+| `id` | Numeric string | `"1"`, `"2"`, `"3"` |
+| `idName` | `maqam_<name>` | `"maqam_rast"`, `"maqam_hijaz"` |
+| `name` | Display with diacritics | `"maqām rāst"`, `"maqām ḥijāz"` |
+
+**ID generation** (line 123 in Maqam.ts):
+```typescript
+this.idName = standardizeText(name);
+```
+
+**API route matching** (in route.ts):
+```typescript
+// Route parameters accept EITHER numeric id OR idName
+const maqam = maqamatData.find(
+  (m) => m.getId() === maqamId || standardizeText(m.getName()) === standardizeText(maqamId)
+);
+```
+
+**Examples**:
+- `/api/maqamat/1` ✅ (numeric id)
+- `/api/maqamat/maqam_rast` ✅ (idName)
+- `/api/maqamat/maqām rāst` ❌ (display name - won't match)
+
+### Ajnas
+
+**Data file**: `data/ajnas.json`
+**Model**: `src/models/Jins.ts`
+
+| Field | Format | Example |
+|-------|--------|---------|
+| `id` | Numeric string | `"2"`, `"3"`, `"4"` |
+| `idName` | `jins_<name>` | `"jins_bayyat"`, `"jins_saba"` |
+| `name` | Display with diacritics | `"jins bayyāt"`, `"jins ṣabā"` |
+
+**ID generation** (lines 90-91 in Jins.ts):
+```typescript
+const cleanName = name.trim();
+this.idName = standardizeText(cleanName);
+```
+
+**API route matching** (same pattern as maqamat):
+```typescript
+const jins = ajnasData.find(
+  (j) => j.getId() === jinsId || standardizeText(j.getName()) === standardizeText(jinsId)
+);
+```
+
+### Note Names
+
+**Model**: `src/models/NoteName.ts`
+
+Note names are **typed string literals** from predefined arrays. They always have diacritics in canonical form.
+
+| Context | Format | Example |
+|---------|--------|---------|
+| API param `noteName` | `standardizeText(name)` | `"dugah"`, `"rast"` |
+| Display `noteNameDisplay` | Original with diacritics | `"dūgāh"`, `"rāst"` |
+| Arabic `noteNameDisplayAr` | Arabic script | Via `getNoteNameDisplayAr()` |
+
+**Octave prefixes**:
+
+| Octave | Prefix | Example |
+|--------|--------|---------|
+| 0 (qarār) | `qarār` | `"qarār yegāh"`, `"qarār dūgāh"` |
+| 1 (base) | none | `"yegāh"`, `"dūgāh"`, `"rāst"` |
+| 2 (jawāb) | `jawāb` | `"jawāb shūrī"` (or special: `"nawā"`) |
+| 3-4 | `jawāb jawāb...` | `"jawāb jawāb ḥusaynī"` |
+
+**API parameter usage**:
+```
+?startingNote=ushayran   ✅ (matches "ʿushayrān")
+?startingNote=yegah      ✅ (matches "yegāh")
+?startingNote=ʿushayrān  ❌ (display name - use standardized)
+```
+
+### Sources (Bibliography)
+
+**Data file**: `data/sources.json`
+**Model**: `src/models/bibliography/Source.ts`
+
+| Field | Format | Example |
+|-------|--------|---------|
+| `id` | `LastName-(Year)` or `LastName-(OrigYear/PubYear)` | `"Forster-(2010)"`, `"al-Urmawi-al-Baghdadi-(1986/2017)"` |
+| Display | `titleEnglish` or `titleArabic` | Full title |
+
+### API Response: Entity Object Pattern
+
+**Location**: `src/app/api/response-shapes.ts`
+
+All entities in API responses follow this structure:
+
+```typescript
+interface EntityNamespace {
+  id: string;           // Original ID from data
+  idName: string;       // URL-safe standardized name
+  displayName: string;  // Human-readable with diacritics
+  version?: string;     // ISO 8601 timestamp
+  displayNameAr?: string; // Arabic script (if inArabic=true)
+}
+```
+
+**Example API response**:
+```json
+{
+  "maqam": {
+    "id": "1",
+    "idName": "maqam_rast",
+    "displayName": "maqām rāst",
+    "version": "2025-10-18T19:41:17.132Z",
+    "displayNameAr": "مقام راست"
+  },
+  "tonic": {
+    "idName": "rast",
+    "displayName": "rāst",
+    "displayNameAr": "راست"
+  }
+}
+```
+
+### Common ID Mistakes
+
+| Mistake | Problem | Fix |
+|---------|---------|-----|
+| Using display name in URL | Contains diacritics, spaces | Use `idName` or `standardizeText()` |
+| Assuming all IDs are numeric | Tuning systems use `Creator-(Year)` | Check entity type |
+| Not handling both id/idName | Route only matches one format | Use OR logic in `.find()` |
+| Hardcoding IDs | IDs can change | Use `standardizeText(name)` |
+| Forgetting `maqam_`/`jins_` prefix | idName includes entity prefix | Include full idName |
+
+### Quick Reference
+
+**When building API endpoints**:
+
+1. **Route params**: Accept both `id` and `idName` for maqamat/ajnas
+2. **Query params**: Use URL-safe format (output of `standardizeText()`)
+3. **Response bodies**: Always include `{id, idName, displayName}` triplet
+4. **Matching logic**: Use `standardizeText()` for comparison
+5. **Tuning system IDs**: Use directly (already URL-safe with parentheses)
+
+---
+
 ## Type Qualifiers Pattern
 
 ### Principle

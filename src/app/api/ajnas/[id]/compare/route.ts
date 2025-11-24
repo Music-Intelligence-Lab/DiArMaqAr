@@ -296,7 +296,7 @@ export async function GET(
       const { tuningSystem: tuningSystemId, startingNote: startingNoteParam, transposeTo: transposeToNote } = comparison;
 
       // Find tuning system
-      const tuningSystem = tuningSystems.find((ts) => ts.getId() === tuningSystemId);
+      const tuningSystem = tuningSystems.find((ts) => standardizeText(ts.getId()) === standardizeText(tuningSystemId));
       if (!tuningSystem) {
         const fallbackTuningSystem = buildEntityNamespace(
           {

@@ -500,7 +500,7 @@ export async function GET(
         );
       }
 
-      const selectedTuningSystem = tuningSystems.find((ts) => ts.getId() === tuningSystemId);
+      const selectedTuningSystem = tuningSystems.find((ts) => standardizeText(ts.getId()) === standardizeText(tuningSystemId));
       if (!selectedTuningSystem) {
         return addCorsHeaders(
           NextResponse.json(
@@ -650,7 +650,7 @@ export async function GET(
     }
 
     // Find tuning system
-    const tuningSystem = tuningSystems.find((ts) => ts.getId() === tuningSystemId);
+    const tuningSystem = tuningSystems.find((ts) => standardizeText(ts.getId()) === standardizeText(tuningSystemId));
     if (!tuningSystem) {
       return addCorsHeaders(
         NextResponse.json(

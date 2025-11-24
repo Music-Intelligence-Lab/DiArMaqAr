@@ -2943,6 +2943,322 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
 
+  /modulation-routes:
+    get:
+      tags:
+        - Modulations
+      summary: Find modulation routes between maqāmāt
+      description: |
+        Calculate possible modulation routes between maqāmāt, similar to a navigation/maps application.
+
+        Uses al-Shawwā's 1946 modulation rules to find shortest paths between a source and target maqām,
+        with optional waypoints and return-to-start functionality.
+
+        **Key Features:**
+        - Finds shortest paths (fewest modulation steps) using BFS algorithm
+        - Supports waypoints for multi-stop journeys
+        - Optional return-to-start for round-trip routes (reflecting traditional maqām performance practice)
+        - Results cached per tuning system + starting note combination for performance
+
+        **Graph Structure:**
+        - Nodes: Each (maqamId, tonic) pair is a unique node
+        - Edges: Modulation possibilities based on al-Shawwā's rules (scale degrees I, III, IV, V, VI)
+
+        **Performance Notes:**
+        - maxHops is required to prevent combinatorial explosion
+        - First request for a tuning system + starting note builds the graph (may take longer)
+        - Subsequent requests use cached graph data
+      operationId: findModulationRoutes
+      parameters:
+        - name: tuningSystem
+          in: query
+          required: true
+          description: Tuning system identifier (e.g., 'al-Farabi-(950g)', 'IbnSina-(1037)')
+          schema:
+            type: string
+          example: "al-Farabi-(950g)"
+        - name: startingNote
+          in: query
+          required: true
+          description: |
+            Tuning system starting note name (URL-safe, diacritics-insensitive).
+            This is MANDATORY as it affects which maqāmāt are available and their modulation possibilities.
+          schema:
+            type: string
+          example: "ushayran"
+        - name: fromMaqam
+          in: query
+          required: true
+          description: Source maqam ID (the starting point of the journey)
+          schema:
+            type: string
+          example: "maqam_rast"
+        - name: fromTonic
+          in: query
+          required: false
+          description: |
+            Optional specific tonic for the source maqam (URL-safe).
+            If not specified, uses the canonical (taḥlīl) form.
+          schema:
+            type: string
+          example: "rast"
+        - name: toMaqam
+          in: query
+          required: true
+          description: Target maqam ID (the destination of the journey)
+          schema:
+            type: string
+          example: "maqam_hijaz"
+        - name: toTonic
+          in: query
+          required: false
+          description: |
+            Optional specific tonic for the target maqam (URL-safe).
+            If not specified, uses the canonical (taḥlīl) form.
+          schema:
+            type: string
+          example: "nawa"
+        - name: maxHops
+          in: query
+          required: true
+          description: |
+            Maximum number of modulation steps allowed (required safeguard).
+            Prevents combinatorial explosion in route calculation.
+            Most musical modulation sequences are 2-4 hops.
+            Maximum allowed value is 10.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 10
+          example: 5
+        - name: waypoints
+          in: query
+          required: false
+          description: |
+            Optional comma-separated waypoints to pass through.
+            Format: maqamId:tonicId or just maqamId (uses canonical tonic).
+            Example: "maqam_bayyat:dugah,maqam_saba"
+          schema:
+            type: string
+          example: "maqam_bayyat:dugah"
+        - name: returnToStart
+          in: query
+          required: false
+          description: |
+            Whether to calculate the return path back to the source maqam.
+            Reflects traditional maqām performance practice where music returns to the starting mode.
+            When true, response includes both outbound and return routes.
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "false"
+          example: "true"
+        - name: limit
+          in: query
+          required: false
+          description: Maximum number of routes to return
+          schema:
+            type: integer
+            minimum: 1
+            default: 10
+          example: 10
+        - name: includeArabic
+          in: query
+          required: false
+          description: |
+            Return bilingual responses with Arabic script when true.
+            Adds Arabic versions with "Ar" suffix (e.g., maqamDisplayNameAr, tonicDisplayAr)
+          schema:
+            type: string
+            enum: ["true", "false"]
+          example: "true"
+      responses:
+        '200':
+          description: Modulation routes calculated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - routes
+                  - context
+                properties:
+                  routes:
+                    type: object
+                    required:
+                      - count
+                      - data
+                    properties:
+                      count:
+                        type: integer
+                        description: Number of routes found
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/ModulationJourney'
+                  context:
+                    type: object
+                    properties:
+                      tuningSystem:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          displayName:
+                            type: string
+                          displayNameAr:
+                            type: string
+                      startingNote:
+                        type: object
+                        properties:
+                          idName:
+                            type: string
+                          displayName:
+                            type: string
+                          displayNameAr:
+                            type: string
+                      sourceNode:
+                        $ref: '#/components/schemas/MaqamNode'
+                      targetNode:
+                        $ref: '#/components/schemas/MaqamNode'
+                      waypoints:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/MaqamNode'
+                      searchConstraints:
+                        type: object
+                        properties:
+                          maxHops:
+                            type: integer
+                          returnToStart:
+                            type: boolean
+                          limit:
+                            type: integer
+                  message:
+                    type: string
+                    description: Present when no routes found, explains why
+              examples:
+                routeFound:
+                  summary: Successful route finding
+                  value:
+                    routes:
+                      count: 1
+                      data:
+                        - totalHops: 2
+                          outboundRoute:
+                            hops: 2
+                            path:
+                              - from:
+                                  maqamId: "maqam_rast"
+                                  maqamIdName: "maqam_rast"
+                                  maqamDisplayName: "Maqam Rast"
+                                  tonicId: "rast"
+                                  tonicDisplay: "rāst"
+                                  isTransposition: false
+                                to:
+                                  maqamId: "maqam_bayyat"
+                                  maqamIdName: "maqam_bayyat"
+                                  maqamDisplayName: "Maqam Bayyat"
+                                  tonicId: "dugah"
+                                  tonicDisplay: "dūgāh"
+                                  isTransposition: false
+                                modulationDegree: "III"
+                                modulationCategory: "thirdDegree"
+                              - from:
+                                  maqamId: "maqam_bayyat"
+                                  maqamIdName: "maqam_bayyat"
+                                  maqamDisplayName: "Maqam Bayyat"
+                                  tonicId: "dugah"
+                                  tonicDisplay: "dūgāh"
+                                  isTransposition: false
+                                to:
+                                  maqamId: "maqam_hijaz"
+                                  maqamIdName: "maqam_hijaz"
+                                  maqamDisplayName: "Maqam Hijaz"
+                                  tonicId: "nawa"
+                                  tonicDisplay: "nawā"
+                                  isTransposition: false
+                                modulationDegree: "IV"
+                                modulationCategory: "fourthDegree"
+                    context:
+                      tuningSystem:
+                        id: "al-Farabi-(950g)"
+                        displayName: "al-Fārābī (950) غ"
+                      startingNote:
+                        idName: "ushayran"
+                        displayName: "ʿushayrān"
+                      sourceNode:
+                        maqamId: "maqam_rast"
+                        maqamDisplayName: "Maqam Rast"
+                        tonicId: "rast"
+                        tonicDisplay: "rāst"
+                        isTransposition: false
+                      targetNode:
+                        maqamId: "maqam_hijaz"
+                        maqamDisplayName: "Maqam Hijaz"
+                        tonicId: "nawa"
+                        tonicDisplay: "nawā"
+                        isTransposition: false
+                      searchConstraints:
+                        maxHops: 5
+                        returnToStart: false
+                        limit: 10
+                noRouteFound:
+                  summary: No path found within constraints
+                  value:
+                    routes:
+                      count: 0
+                      data: []
+                    context:
+                      tuningSystem:
+                        id: "al-Farabi-(950g)"
+                        displayName: "al-Fārābī (950) غ"
+                      startingNote:
+                        idName: "ushayran"
+                        displayName: "ʿushayrān"
+                      sourceNode:
+                        maqamId: "maqam_rast"
+                        maqamDisplayName: "Maqam Rast"
+                        tonicId: "rast"
+                        tonicDisplay: "rāst"
+                        isTransposition: false
+                      targetNode:
+                        maqamId: "maqam_sikah"
+                        maqamDisplayName: "Maqam Sikah"
+                        tonicId: "segah"
+                        tonicDisplay: "segāh"
+                        isTransposition: false
+                      searchConstraints:
+                        maxHops: 3
+                        returnToStart: false
+                        limit: 10
+                    message: "No path found from 'maqam_rast' to 'maqam_sikah' within 3 hops"
+        '400':
+          description: Invalid or missing required parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                missingMaxHops:
+                  value:
+                    error: "maxHops parameter is required"
+                    message: "maxHops is required to prevent combinatorial explosion in route calculation."
+                    hint: "Add &maxHops=5 to your request. Recommended values: 3-7 for most use cases."
+                maxHopsExceeded:
+                  value:
+                    error: "maxHops cannot exceed 10"
+                    message: "Higher values may cause performance issues. Most musical modulation sequences are 2-4 hops."
+                    hint: "Use maxHops=10 or lower"
+        '404':
+          description: Maqam or tuning system not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
   /ajnas:
     get:
       tags:
@@ -6354,6 +6670,116 @@ components:
           type: array
           items:
             type: string
+
+    MaqamNode:
+      type: object
+      description: Represents a node in the modulation graph - a unique (maqamId, tonic) combination
+      required:
+        - maqamId
+        - maqamIdName
+        - maqamDisplayName
+        - tonicId
+        - tonicDisplay
+        - isTransposition
+      properties:
+        maqamId:
+          type: string
+          description: ID of the maqam (e.g., "maqam_rast")
+          example: "maqam_rast"
+        maqamIdName:
+          type: string
+          description: URL-safe identifier for the maqam
+          example: "maqam_rast"
+        maqamDisplayName:
+          type: string
+          description: Human-readable name (may include transposition info)
+          example: "Maqam Rast"
+        maqamDisplayNameAr:
+          type: string
+          description: Arabic display name (only when includeArabic=true)
+          example: "مقام راست"
+        tonicId:
+          type: string
+          description: URL-safe tonic identifier
+          example: "rast"
+        tonicDisplay:
+          type: string
+          description: Display name for the tonic note
+          example: "rāst"
+        tonicDisplayAr:
+          type: string
+          description: Arabic tonic name (only when includeArabic=true)
+          example: "راست"
+        isTransposition:
+          type: boolean
+          description: Whether this is a transposition (taṣwīr) or original form (taḥlīl)
+          example: false
+
+    ModulationStep:
+      type: object
+      description: A single step/edge in a modulation route
+      required:
+        - from
+        - to
+        - modulationDegree
+        - modulationCategory
+      properties:
+        from:
+          $ref: '#/components/schemas/MaqamNode'
+        to:
+          $ref: '#/components/schemas/MaqamNode'
+        modulationDegree:
+          type: string
+          description: Scale degree where modulation occurs
+          enum: ["I", "III", "IV", "V", "VI"]
+          example: "III"
+        modulationCategory:
+          type: string
+          description: Specific modulation category from al-Shawwā's rules
+          enum:
+            - firstDegree
+            - thirdDegree
+            - altThirdDegree
+            - fourthDegree
+            - fifthDegree
+            - sixthDegreeAsc
+            - sixthDegreeDesc
+            - sixthDegreeIfNoThird
+          example: "thirdDegree"
+
+    ModulationRoute:
+      type: object
+      description: A complete route from source to target maqam
+      required:
+        - hops
+        - path
+      properties:
+        hops:
+          type: integer
+          description: Number of modulation steps
+          example: 2
+        path:
+          type: array
+          description: Ordered sequence of modulation steps
+          items:
+            $ref: '#/components/schemas/ModulationStep'
+
+    ModulationJourney:
+      type: object
+      description: A complete journey including optional return path
+      required:
+        - totalHops
+        - outboundRoute
+      properties:
+        totalHops:
+          type: integer
+          description: Total hops for the complete journey (outbound + return if applicable)
+          example: 4
+        outboundRoute:
+          $ref: '#/components/schemas/ModulationRoute'
+        returnRoute:
+          $ref: '#/components/schemas/ModulationRoute'
+          description: Present when returnToStart=true
 
     ErrorResponse:
       type: object

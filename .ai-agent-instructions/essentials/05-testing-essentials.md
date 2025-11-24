@@ -4,6 +4,10 @@
 
 ---
 
+> **📝 For Automated Testing (TDD)**: This file covers **manual testing** protocols. For test-driven development workflow, test file conventions, and automated unit tests, see [03-development-quick-ref.md](03-development-quick-ref.md#-test-driven-development-tdd). **TDD is MANDATORY** for new functions, utilities, API endpoints, and bug fixes.
+
+---
+
 ## Representative Examples
 
 For recommended tuning systems, maqāmāt, and ajnās for testing and documentation, see [`docs/api/representative-examples.md`](../../docs/api/representative-examples.md). These examples have been carefully selected to demonstrate the full capabilities of the API while respecting the cultural and historical significance of Arabic maqām theory.

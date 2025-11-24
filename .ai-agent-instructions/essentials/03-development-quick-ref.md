@@ -23,6 +23,7 @@ const DEFAULTS = {
 
 | Rule | Why |
 |------|-----|
+| ✅ **Write test FIRST** (TDD) | Tests define expected behavior before implementation |
 | ✅ Test BEFORE committing | User should never discover bugs |
 | ✅ Use `getNoteNameSetsWithAdjacentOctaves()` | Handles non-octave-repeating maqāmāt |
 | ✅ Never use "microtonal" | Western-centric, culturally insensitive |
@@ -33,13 +34,37 @@ const DEFAULTS = {
 | ✅ No defaults for required params | Users must explicitly provide values |
 | ❌ Never skip consistency checks | Check similar code for patterns |
 
+### Entity ID Formats (CRITICAL for API Development)
+
+| Entity | `id` Field | `idName` Field | Display Name |
+|--------|------------|----------------|--------------|
+| **TuningSystem** | `Creator-(Year)` | N/A (use id) | `stringify()` method |
+| **Maqam** | Numeric `"1"` | `maqam_rast` | `maqām rāst` |
+| **Jins** | Numeric `"2"` | `jins_bayyat` | `jins bayyāt` |
+| **NoteName** | N/A | `standardizeText()` | Original with diacritics |
+| **Source** | `LastName-(Year)` | Same as id | `titleEnglish` |
+
+**Route parameters accept BOTH `id` and `idName`** for maqamat/ajnas.
+
+**The `standardizeText()` function** (from `@/functions/export`):
+```typescript
+// Transforms display names → URL-safe IDs
+standardizeText("maqām rāst")     // → "maqam_rast"
+standardizeText("jins ṣabā")       // → "jins_saba"
+standardizeText("ʿajam ʿushayrān") // → "ajam_ushayran"
+```
+
+**For detailed ID patterns**: See [reference/naming-conventions-deep-dive.md](../reference/naming-conventions-deep-dive.md#entity-id-naming-patterns)
+
 ### Auto-Implementation Triggers
 
 | User Says | Implement |
 |-----------|-----------|
-| "search/filter" | FilterContext + useFilterContext |
+| "new function/utility" | **TDD cycle**: Write test in `tmp/` first → implement → refactor |
+| "bug fix" | **TDD cycle**: Write failing test reproducing bug → fix → verify |
+| "search/filter" | FilterContext + useFilterContext + **TDD** |
 | "play/audio" | SoundContext + client guards |
-| "API endpoint" | Validation + error handling + tests |
+| "API endpoint" | Validation + error handling + **TDD** |
 | "new component" | Follow manager pattern + bilingual |
 
 ### API Development Checklist
@@ -70,6 +95,8 @@ const DEFAULTS = {
 
 ## 🔴🟢🔵 Test-Driven Development (TDD)
 
+> **⚠️ MANDATORY**: TDD is REQUIRED for all new functions, utilities, API endpoints, and bug fixes. Write the test FIRST in `tmp/`, then implement. No exceptions.
+
 ### The TDD Cycle
 
 ```
@@ -86,8 +113,9 @@ const DEFAULTS = {
 
 ### TDD Workflow
 
-**Step 1: RED (Write Failing Test)**
+**Step 1: RED (Write Failing Test in `tmp/`)**
 ```typescript
+// tmp/test-calculate-maqam-transpositions.ts
 // 1. Define expected behavior FIRST
 describe('calculateMaqamTranspositions', () => {
   it('should return empty array for unavailable maqam', () => {
@@ -237,6 +265,68 @@ sleep 2
 - **Manual Testing**: UI interactions, visual elements, musicological accuracy
 
 **For comprehensive testing protocols**: See [05-testing-essentials.md](05-testing-essentials.md)
+
+---
+
+## 📁 Test File Conventions
+
+### Location
+
+**All test files go in the `tmp/` folder** at the project root.
+
+```
+tmp/
+├── test-maqam-transpositions.ts    # Unit tests for functions
+├── test-api-endpoint.sh            # API endpoint tests
+├── test-export-logic.ts            # Export functionality tests
+└── test-*.ts                       # Any other test files
+```
+
+### Naming Convention
+
+| Test Type | Pattern | Example |
+|-----------|---------|---------|
+| Function tests | `test-{function-name}.ts` | `test-calculate-intervals.ts` |
+| API tests | `test-api-{endpoint}.sh` | `test-api-maqamat.sh` |
+| Component tests | `test-{component-name}.ts` | `test-maqam-selector.ts` |
+| Bug reproduction | `test-bug-{issue}.ts` | `test-bug-enharmonic-spelling.ts` |
+
+### Test File Structure
+
+```typescript
+// tmp/test-example.ts
+import { describe, it, expect } from 'vitest';  // or jest
+import { functionToTest } from '@/functions/target';
+
+describe('functionToTest', () => {
+  it('should handle normal case', () => {
+    const result = functionToTest(normalInput);
+    expect(result).toEqual(expectedOutput);
+  });
+
+  it('should handle edge case: empty input', () => {
+    const result = functionToTest('');
+    expect(result).toEqual([]);
+  });
+
+  it('should handle edge case: invalid input', () => {
+    expect(() => functionToTest(null)).toThrow();
+  });
+});
+```
+
+### Running Tests
+
+```bash
+# Run all tests in tmp/
+npm test
+
+# Run specific test file
+npx vitest tmp/test-maqam-transpositions.ts
+
+# Run tests in watch mode
+npx vitest --watch
+```
 
 ---
 
