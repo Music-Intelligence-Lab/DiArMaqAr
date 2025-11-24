@@ -241,7 +241,7 @@ export function getDynamicArabicName(name: string, type: "note" | "jins" | "maqa
  * Allows optional custom parameter name for future reuse.
  */
 export function parseInArabicFlag(value: string | null, fieldName: string = "includeArabic"): boolean {
-  if (value === null) return true; // Default to true
+  if (value === null) return false; // Default to false
 
   const trimmed = value.trim();
   if (trimmed === "") {
