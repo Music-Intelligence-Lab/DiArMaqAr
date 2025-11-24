@@ -291,9 +291,9 @@ export async function GET(
     // Get data
     const tuningSystems = getTuningSystems();
 
-    // Find the tuning system
+    // Find the tuning system (case-insensitive matching)
     const tuningSystem = tuningSystems.find(
-      (ts: any) => ts.getId() === tuningSystemId
+      (ts: any) => standardizeText(ts.getId()) === standardizeText(tuningSystemId)
     );
 
     if (!tuningSystem) {

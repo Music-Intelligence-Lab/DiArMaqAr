@@ -6,6 +6,7 @@ import Book from "@/models/bibliography/Book";
 import Article from "@/models/bibliography/Article";
 import Thesis from "@/models/bibliography/Thesis";
 import { parseInArabic } from "@/app/api/arabic-helpers";
+import { standardizeText } from "@/functions/export";
 
 export const OPTIONS = handleCorsPreflightRequest;
 
@@ -61,8 +62,8 @@ export async function GET(
 
     const sources = getSources();
 
-    // Find the source by ID
-    const source = sources.find((s) => s.getId() === sourceId);
+    // Find the source by ID (case-insensitive matching)
+    const source = sources.find((s) => standardizeText(s.getId()) === standardizeText(sourceId));
 
     if (!source) {
       return addCorsHeaders(
