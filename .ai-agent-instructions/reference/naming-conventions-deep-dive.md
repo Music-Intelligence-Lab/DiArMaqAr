@@ -99,6 +99,109 @@ const maqam = maqamatData.find(
 - `/api/maqamat/maqam_rast` ✅ (idName)
 - `/api/maqamat/maqām rāst` ❌ (display name - won't match)
 
+### Transposed Maqamat Naming (Taṣwīr)
+
+**CRITICAL**: When a maqām is transposed to a different tonic, it receives a suffixed display name while maintaining a stable base identifier for lookups.
+
+#### Two ID Fields for Transpositions
+
+| Field | Purpose | Stability | Example |
+|-------|---------|-----------|---------|
+| `baseMaqamIdName` | Lookup/query identifier | **Stable** across all transpositions | `maqam_nahawand` |
+| `maqamIdName` | Display identifier | **Changes** with transposition | `maqam_nahawand_al-kurdan` |
+
+#### Transposition Naming Pattern
+
+**Original form (taḥlīl)**: Uses base name only
+```
+maqām nahāwand → maqam_nahawand (on rāst)
+```
+
+**Transposed form (taṣwīr)**: Adds `_al-{tonic}` suffix
+```
+maqām nahāwand al-kurdān → maqam_nahawand_al-kurdan (on kurdān)
+maqām nahāwand al-nawā → maqam_nahawand_al-nawa (on nawā)
+```
+
+#### API Query Pattern
+
+**To find a specific transposition**, use base maqam ID + tonic:
+
+```bash
+# Find maqām nahāwand on kurdān
+?toMaqam=maqam_nahawand&toTonic=kurdan
+
+# NOT the display name format
+?toMaqam=maqam_nahawand_al-kurdan  # ❌ Will not work for queries
+```
+
+#### Why Two Fields?
+
+**Problem solved**: Graph nodes keyed by display name (`maqam_nahawand_al-kurdan:kurdan`) caused "not found" errors when queried with base name + tonic (`maqam_nahawand:kurdan`).
+
+**Solution**: The `baseMaqamIdName` field provides a stable identifier for:
+- Graph node lookups
+- Route finding queries
+- Cross-transposition matching
+- API parameter validation
+
+#### Implementation Details
+
+**Location**: `src/models/ModulationRoute.ts`
+
+```typescript
+export interface MaqamNode {
+  maqamId: string;           // Numeric ID: "10"
+  baseMaqamIdName: string;   // Stable: "maqam_nahawand" (for lookups)
+  maqamIdName: string;       // Display: "maqam_nahawand_al-kurdan"
+  maqamDisplayName: string;  // "maqām nahāwand al-kurdān"
+  tonicId: string;           // "kurdan"
+  tonicDisplay: string;      // "kurdān"
+  isTransposition: boolean;  // true for taṣwīr, false for taḥlīl
+}
+```
+
+**Graph node key format**: `{baseMaqamIdName}:{tonicId}`
+```typescript
+// Correct: Uses base ID for consistent lookups
+const nodeKey = createNodeKey(node.baseMaqamIdName, node.tonicId);
+// Result: "maqam_nahawand:kurdan"
+```
+
+#### API Response Example
+
+```json
+{
+  "from": {
+    "maqamId": "1",
+    "baseMaqamIdName": "maqam_rast",
+    "maqamIdName": "maqam_rast",
+    "maqamDisplayName": "maqām rāst",
+    "tonicId": "rast",
+    "tonicDisplay": "rāst",
+    "isTransposition": false
+  },
+  "to": {
+    "maqamId": "10",
+    "baseMaqamIdName": "maqam_nahawand",
+    "maqamIdName": "maqam_nahawand_al-kurdan",
+    "maqamDisplayName": "maqām nahāwand al-kurdān",
+    "tonicId": "kurdan",
+    "tonicDisplay": "kurdān",
+    "isTransposition": true
+  }
+}
+```
+
+#### Common Mistakes
+
+| Mistake | Problem | Fix |
+|---------|---------|-----|
+| Using `maqamIdName` for graph keys | Transpositions have different keys than base form | Use `baseMaqamIdName` for graph operations |
+| Querying with display-style ID | `maqam_nahawand_al-kurdan` won't match query params | Use `baseMaqamIdName` + `tonic` params |
+| Assuming all maqamat have same base/display ID | Only untransposed maqamat have matching IDs | Always check `isTransposition` flag |
+| Not including `baseMaqamIdName` in API responses | Clients can't distinguish transpositions | Always return both ID fields |
+
 ### Ajnas
 
 **Data file**: `data/ajnas.json`

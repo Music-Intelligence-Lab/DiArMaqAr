@@ -2989,7 +2989,10 @@ paths:
         - name: fromMaqam
           in: query
           required: true
-          description: Source maqam ID (the starting point of the journey)
+          description: |
+            Source maqam base ID (the starting point of the journey).
+            Use the base maqam identifier (e.g., "maqam_nahawand"), not the transposition display name.
+            Combine with `fromTonic` to specify a particular transposition.
           schema:
             type: string
           example: "maqam_rast"
@@ -3005,7 +3008,10 @@ paths:
         - name: toMaqam
           in: query
           required: true
-          description: Target maqam ID (the destination of the journey)
+          description: |
+            Target maqam base ID (the destination of the journey).
+            Use the base maqam identifier (e.g., "maqam_nahawand"), not the transposition display name.
+            Combine with `toTonic` to specify a particular transposition.
           schema:
             type: string
           example: "maqam_hijaz"
@@ -3149,32 +3155,36 @@ paths:
                             hops: 2
                             path:
                               - from:
-                                  maqamId: "maqam_rast"
+                                  maqamId: "1"
+                                  baseMaqamIdName: "maqam_rast"
                                   maqamIdName: "maqam_rast"
-                                  maqamDisplayName: "Maqam Rast"
+                                  maqamDisplayName: "maqām rāst"
                                   tonicId: "rast"
                                   tonicDisplay: "rāst"
                                   isTransposition: false
                                 to:
-                                  maqamId: "maqam_bayyat"
+                                  maqamId: "2"
+                                  baseMaqamIdName: "maqam_bayyat"
                                   maqamIdName: "maqam_bayyat"
-                                  maqamDisplayName: "Maqam Bayyat"
+                                  maqamDisplayName: "maqām bayyāt"
                                   tonicId: "dugah"
                                   tonicDisplay: "dūgāh"
                                   isTransposition: false
                                 modulationDegree: "III"
                                 modulationCategory: "thirdDegree"
                               - from:
-                                  maqamId: "maqam_bayyat"
+                                  maqamId: "2"
+                                  baseMaqamIdName: "maqam_bayyat"
                                   maqamIdName: "maqam_bayyat"
-                                  maqamDisplayName: "Maqam Bayyat"
+                                  maqamDisplayName: "maqām bayyāt"
                                   tonicId: "dugah"
                                   tonicDisplay: "dūgāh"
                                   isTransposition: false
                                 to:
-                                  maqamId: "maqam_hijaz"
+                                  maqamId: "5"
+                                  baseMaqamIdName: "maqam_hijaz"
                                   maqamIdName: "maqam_hijaz"
-                                  maqamDisplayName: "Maqam Hijaz"
+                                  maqamDisplayName: "maqām ḥijāz"
                                   tonicId: "nawa"
                                   tonicDisplay: "nawā"
                                   isTransposition: false
@@ -6673,9 +6683,14 @@ components:
 
     MaqamNode:
       type: object
-      description: Represents a node in the modulation graph - a unique (maqamId, tonic) combination
+      description: |
+        Represents a node in the modulation graph - a unique (maqamId, tonic) combination.
+
+        **Important**: For transposed maqāmāt, use `baseMaqamIdName` + `tonicId` for queries.
+        The `maqamIdName` includes transposition suffix (e.g., "maqam_nahawand_al-kurdan") for display.
       required:
         - maqamId
+        - baseMaqamIdName
         - maqamIdName
         - maqamDisplayName
         - tonicId
@@ -6684,11 +6699,21 @@ components:
       properties:
         maqamId:
           type: string
-          description: ID of the maqam (e.g., "maqam_rast")
+          description: Numeric ID of the maqam
+          example: "1"
+        baseMaqamIdName:
+          type: string
+          description: |
+            **Stable** base identifier for the maqam (without transposition suffix).
+            Use this + tonicId for API queries to find specific transpositions.
+            Example: "maqam_nahawand" (same for all transpositions of nahāwand)
           example: "maqam_rast"
         maqamIdName:
           type: string
-          description: URL-safe identifier for the maqam
+          description: |
+            **Display** identifier that includes transposition suffix for taṣwīr forms.
+            Original forms (taḥlīl): same as baseMaqamIdName (e.g., "maqam_nahawand")
+            Transposed forms (taṣwīr): includes suffix (e.g., "maqam_nahawand_al-kurdan")
           example: "maqam_rast"
         maqamDisplayName:
           type: string
