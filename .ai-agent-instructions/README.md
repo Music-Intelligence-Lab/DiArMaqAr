@@ -4,6 +4,10 @@
 
 ---
 
+> **📋 Check [TODO.md](./TODO.md) first** — When directed to this folder, always review the TODO list for pending tasks, research items, and priorities before proceeding.
+
+---
+
 ## 📊 Recent Updates (2025-11-06)
 
 **Major Restructuring:**
