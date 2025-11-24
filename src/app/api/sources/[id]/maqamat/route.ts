@@ -43,7 +43,8 @@ export async function GET(
     }
 
     const sources = getSources();
-    const source = sources.find(s => s.getId() === id);
+    // Case-insensitive matching
+    const source = sources.find(s => standardizeText(s.getId()) === standardizeText(id));
 
     if (!source) {
       return addCorsHeaders(

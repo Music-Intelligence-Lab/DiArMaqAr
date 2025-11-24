@@ -107,9 +107,9 @@ export async function GET(request: Request) {
     const tuningSystems = getTuningSystems();
     const ajnas = getAjnas();
 
-    // Find required tuning system
+    // Find required tuning system (case-insensitive matching)
     const tuningSystem = tuningSystems.find(
-      (ts) => ts.getId() === tuningSystemId
+      (ts) => standardizeText(ts.getId()) === standardizeText(tuningSystemId)
     );
 
     if (!tuningSystem) {
