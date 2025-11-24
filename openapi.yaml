@@ -106,7 +106,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "true"
+            default: "false"
           example: "true"
         - name: includeArabic
           in: query
@@ -346,7 +346,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: false
+            default: "false"
           example: "true"
         - name: pitchClassDataType
           in: query
@@ -379,7 +379,7 @@ paths:
             type: string
             enum: ["true", "false"]
             default: "false"
-          example: "false"
+          example: "true"
         - name: includeModulations
           in: query
           description: Include modulation possibilities to other maqāmāt and ajnās
@@ -387,7 +387,7 @@ paths:
             type: string
             enum: ["true", "false"]
             default: "false"
-          example: "false"
+          example: "true"
         - name: includeModulations8vb
           in: query
           description: Include available modulations an octave below
@@ -395,7 +395,7 @@ paths:
             type: string
             enum: ["true", "false"]
             default: "false"
-          example: "false"
+          example: "true"
         - name: includeSuyur
           in: query
           description: Include suyūr (melodic paths) data
@@ -403,7 +403,7 @@ paths:
             type: string
             enum: ["true", "false"]
             default: "false"
-          example: "false"
+          example: "true"
         - name: includeArabic
           in: query
           required: false
@@ -963,7 +963,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "true"
+            default: "false"
           example: "true"
         - name: includeArabic
           in: query
@@ -1181,7 +1181,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-          default: "true"
+          default: "false"
           example: "true"
         - name: includeArabic
           in: query
@@ -1505,7 +1505,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "true"
+            default: "false"
           example: "true"
         - name: transposeTo
           in: query
@@ -2028,7 +2028,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "true"
+            default: "false"
           example: "true"
         - name: includeArabic
           in: query
@@ -2074,7 +2074,7 @@ paths:
             type: string
             enum: ["true", "false"]
             default: "false"
-          example: "false"
+          example: "true"
         - name: pitchClassDataType
           in: query
           required: false
@@ -2542,7 +2542,7 @@ paths:
             type: string
             enum: ["true", "false"]
             default: "false"
-          example: "false"
+          example: "true"
         - name: includeArabic
           in: query
           required: false
@@ -2569,7 +2569,7 @@ paths:
             type: string
             enum: ["true", "false"]
             default: "false"
-          example: "false"
+          example: "true"
         - name: setId
           in: query
           description: "Filter by specific set ID to retrieve that set and its compatible maqāmāt (e.g., 'maqam_rast_set')"
@@ -3320,7 +3320,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "true"
+            default: "false"
           example: "true"
         - name: includeArabic
           in: query
@@ -3488,7 +3488,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: false
+            default: "false"
           example: "true"
         - name: pitchClassDataType
           in: query
@@ -3521,7 +3521,7 @@ paths:
             type: string
             enum: ["true", "false"]
             default: "false"
-          example: "false"
+          example: "true"
         - name: includeModulations
           in: query
           description: Include modulation possibilities to other ajnās
@@ -4210,7 +4210,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "true"
+            default: "false"
           example: "true"
         - name: transposeTo
           in: query
@@ -5319,7 +5319,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "true"
+            default: "false"
           example: "true"
       responses:
         '200':

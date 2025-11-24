@@ -124,7 +124,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
+            default: "true"
           example: "true"
       responses:
         '200':
@@ -346,7 +346,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: false
+            default: "true"
           example: "true"
         - name: pitchClassDataType
           in: query
@@ -378,32 +378,32 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
-          example: "false"
+            default: "true"
+          example: "true"
         - name: includeModulations
           in: query
           description: Include modulation possibilities to other maqāmāt and ajnās
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
-          example: "false"
+            default: "true"
+          example: "true"
         - name: includeModulations8vb
           in: query
           description: Include available modulations an octave below
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
-          example: "false"
+            default: "true"
+          example: "true"
         - name: includeSuyur
           in: query
           description: Include suyūr (melodic paths) data
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
-          example: "false"
+            default: "true"
+          example: "true"
         - name: includeArabic
           in: query
           required: false
@@ -420,7 +420,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
+            default: "true"
           example: "true"
         # Note: ajnas are included by default and are not controlled by a query parameter
       responses:
@@ -834,7 +834,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
+            default: "true"
           example: "true"
       responses:
         '200':
@@ -981,7 +981,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
+            default: "true"
           example: "true"
       responses:
         '200':
@@ -1199,7 +1199,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
+            default: "true"
           example: "true"
       responses:
         '200':
@@ -1348,7 +1348,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
+            default: "true"
           example: "true"
       responses:
         '200':
@@ -1530,7 +1530,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
+            default: "true"
           example: "true"
       responses:
         '200':
@@ -2046,7 +2046,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
+            default: "true"
           example: "true"
         - name: startSetFromC
           in: query
@@ -2073,8 +2073,8 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
-          example: "false"
+            default: "true"
+          example: "true"
         - name: pitchClassDataType
           in: query
           required: false
@@ -2541,8 +2541,8 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
-          example: "false"
+            default: "true"
+          example: "true"
         - name: includeArabic
           in: query
           required: false
@@ -2556,7 +2556,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
+            default: "true"
           example: "true"
         - name: includePitchClassData
           in: query
@@ -2568,8 +2568,8 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
-          example: "false"
+            default: "true"
+          example: "true"
         - name: setId
           in: query
           description: "Filter by specific set ID to retrieve that set and its compatible maqāmāt (e.g., 'maqam_rast_set')"
@@ -2911,7 +2911,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
+            default: "true"
           example: "true"
       responses:
         '200':
@@ -3067,7 +3067,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
+            default: "true"
           example: "true"
         - name: limit
           in: query
@@ -3087,7 +3087,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
+            default: "true"
           example: "true"
       responses:
         '200':
@@ -3338,7 +3338,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
+            default: "true"
           example: "true"
       responses:
         '200':
@@ -3488,7 +3488,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: false
+            default: "true"
           example: "true"
         - name: pitchClassDataType
           in: query
@@ -3520,8 +3520,8 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
-          example: "false"
+            default: "true"
+          example: "true"
         - name: includeModulations
           in: query
           description: Include modulation possibilities to other ajnās
@@ -3554,7 +3554,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
+            default: "true"
           example: "true"
       responses:
         '200':
@@ -3854,7 +3854,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
+            default: "true"
           example: "true"
       responses:
         '200':
@@ -4010,7 +4010,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
+            default: "true"
           example: "true"
       responses:
         '200':
@@ -4235,7 +4235,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
+            default: "true"
           example: "true"
       responses:
         '200':
@@ -4565,7 +4565,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
+            default: "true"
           example: "true"
       responses:
         '200':
@@ -4686,7 +4686,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
+            default: "true"
           example: "true"
       responses:
         '200':
@@ -4796,7 +4796,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
+            default: "true"
           example: "true"
       responses:
         '200':
@@ -4913,7 +4913,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
+            default: "true"
           example: "true"
       responses:
         '200':
@@ -5035,7 +5035,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
+            default: "true"
           example: "true"
       responses:
         '200':
@@ -5200,7 +5200,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
+            default: "true"
           example: "true"
       responses:
         '200':
@@ -5478,7 +5478,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
+            default: "true"
           example: "true"
       responses:
         '200':
@@ -5628,7 +5628,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
+            default: "true"
           example: "true"
       responses:
         '200':
@@ -5717,7 +5717,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
+            default: "true"
           example: "true"
       responses:
         '200':
@@ -5802,7 +5802,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
+            default: "true"
           example: "true"
       responses:
         '200':
