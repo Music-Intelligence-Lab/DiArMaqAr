@@ -87,7 +87,7 @@ Returns concise metadata including:
 - `sortBy` (optional): Sort order for results - Type: `string` - Valid values: `tonic`, `alphabetical` - Default: `alphabetical`
   - Example: `tonic` - Sort by tonic note priority (NoteName.ts order)
   - Example: `alphabetical` - Sort alphabetically by display name
-- `includeSources` (optional): Include bibliographic source references (sourceId and page) for each maqām - Type: `string` - Valid values: `true`, `false` - Default: `true`
+- `includeSources` (optional): Include bibliographic source references (sourceId and page) for each maqām - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 - `includeArabic` (optional): Return bilingual responses with Arabic script when true.
   - All English/transliteration fields remain unchanged
@@ -180,13 +180,13 @@ Requirements:
  - Type: `string`
   - Example: `nawa`
 - `includeIntervals` (optional): Include interval data between maqām degrees - Type: `string` - Valid values: `true`, `false` - Default: `false`
-  - Example: `false`
+  - Example: `true`
 - `includeModulations` (optional): Include modulation possibilities to other maqāmāt and ajnās - Type: `string` - Valid values: `true`, `false` - Default: `false`
-  - Example: `false`
+  - Example: `true`
 - `includeModulations8vb` (optional): Include available modulations an octave below - Type: `string` - Valid values: `true`, `false` - Default: `false`
-  - Example: `false`
+  - Example: `true`
 - `includeSuyur` (optional): Include suyūr (melodic paths) data - Type: `string` - Valid values: `true`, `false` - Default: `false`
-  - Example: `false`
+  - Example: `true`
 - `includeArabic` (optional): Return bilingual responses with Arabic script when true.
   - All English/transliteration fields remain unchanged
   - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
@@ -315,7 +315,7 @@ This endpoint is ideal for comparative musicological analysis across different h
   - Example: `rast`
 - `pitchClassDataType` **(required)**: Output format for pitch class data - Type: `string` - Valid values: `all`, `englishName`, `fraction`, `cents`, `decimalRatio`, ... (13 total)
   - Example: `cents`
-- `includeIntervals` (optional): Include interval data between pitch classes - Type: `string` - Valid values: `true`, `false` - Default: `true`
+- `includeIntervals` (optional): Include interval data between pitch classes - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 - `transposeTo` (optional): Transpose to specific tonic note (applies to all tuning systems) - Type: `string`
   - Example: `nawa`
@@ -399,7 +399,7 @@ correctly and pitch classes can be properly selected from matching octaves.
   - Example: `yegah`
 - `centsTolerance` (optional): Tolerance in cents for pitch class comparison (default: 5) - Type: `number` - Default: `5`
   - Example: `5`
-- `includeIncompatible` (optional): Include maqāmāt that cannot form valid 12-pitch-class sets - Type: `string` - Valid values: `true`, `false` - Default: `true`
+- `includeIncompatible` (optional): Include maqāmāt that cannot form valid 12-pitch-class sets - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 - `includeArabic` (optional): Return bilingual responses with Arabic script when true.
   - All English/transliteration fields remain unchanged
@@ -424,7 +424,7 @@ directly compatible with Scala (.scl) file format which maps degree 0 to middle 
   - `true`: For Scala .scl export (no .kbm file needed) or MIDI keyboard mapping where C = degree 0 **Example:**
   - Maqām ḥijāz (tonic D/dūgāh at 702.13 cents): - Default mode: D at position 0 (0.00 cents relative) - Scala mode: C (rāst, 498.04 cents) at position 0 (0.00 cents relative), D at position 2 (204.08 cents relative)
  - Type: `string` - Valid values: `true`, `false` - Default: `false`
-  - Example: `false`
+  - Example: `true`
 - `pitchClassDataType` (optional): Controls which pitch class data fields are returned in the response.
   - `all`: Returns all available pitch class data fields
   - `englishName`: English note name with octave (e.g., "D2", "E-b3")
@@ -525,7 +525,7 @@ bayyāt on dūgāh and maqām segāh on segāh.
 - `centsTolerance` (optional): Tolerance in cents for pitch class comparison (default: 5) - Type: `number` - Default: `5`
   - Example: `5`
 - `includeIncompatible` (optional): Include maqāmāt that cannot form valid maqam-based pitch class sets - Type: `string` - Valid values: `true`, `false` - Default: `false`
-  - Example: `false`
+  - Example: `true`
 - `includeArabic` (optional): Return bilingual responses with Arabic script when true.
   - All English/transliteration fields remain unchanged
   - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
@@ -535,7 +535,7 @@ bayyāt on dūgāh and maqām segāh on segāh.
 - `includePitchClassData` (optional): Include pitch class data in the response (default: false).
   When false: Omits pitch class data, returning only set metadata and compatible maqamat
  - Type: `string` - Valid values: `true`, `false` - Default: `false`
-  - Example: `false`
+  - Example: `true`
 - `setId` (optional): Filter by specific set ID to retrieve that set and its compatible maqāmāt (e.g., 'maqam_rast_set') - Type: `string`
   - Example: `maqam_rast_set`
 - `maqamId` (optional): Filter by maqām ID to find all sets containing that maqām (e.g., 'maqam_rast') - Type: `string`
@@ -574,7 +574,7 @@ Return all ajnās (singular: jins) with metadata.
 - `sortBy` (optional): Sort order for results - Type: `string` - Valid values: `tonic`, `alphabetical` - Default: `alphabetical`
   - Example: `tonic` - Sort by tonic note priority (NoteName.ts order)
   - Example: `alphabetical` - Sort alphabetically by display name
-- `includeSources` (optional): Include bibliographic source references (sourceId and page) for each jins - Type: `string` - Valid values: `true`, `false` - Default: `true`
+- `includeSources` (optional): Include bibliographic source references (sourceId and page) for each jins - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 - `includeArabic` (optional): Return bilingual responses with Arabic script when true.
   - All English/transliteration fields remain unchanged
@@ -658,7 +658,7 @@ Requirements:
  - Type: `string`
   - Example: `nawa`
 - `includeIntervals` (optional): Include interval data between jins degrees - Type: `string` - Valid values: `true`, `false` - Default: `false`
-  - Example: `false`
+  - Example: `true`
 - `includeModulations` (optional): Include modulation possibilities to other ajnās - Type: `string` - Valid values: `true`, `false` - Default: `true`
   - Example: `true`
 - `includeModulations8vb` (optional): Include available modulations an octave below - Type: `string` - Valid values: `true`, `false` - Default: `true`
@@ -790,7 +790,7 @@ This endpoint is ideal for comparative musicological analysis of melodic structu
   - Example: `ushayran`
 - `pitchClassDataType` **(required)**: Output format for pitch class data - Type: `string` - Valid values: `all`, `englishName`, `fraction`, `cents`, `decimalRatio`, ... (13 total)
   - Example: `cents`
-- `includeIntervals` (optional): Include interval data between pitch classes - Type: `string` - Valid values: `true`, `false` - Default: `true`
+- `includeIntervals` (optional): Include interval data between pitch classes - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 - `transposeTo` (optional): Transpose to specific tonic note (applies to all tuning systems) - Type: `string`
   - Example: `nawa`
@@ -833,7 +833,7 @@ Retrieve metadata for all available tuning systems.
 
 
 **Query Parameters:**
-- `includeSources` (optional): Include bibliographic source references (sourceId and page) for each tuning system - Type: `string` - Valid values: `true`, `false` - Default: `true`
+- `includeSources` (optional): Include bibliographic source references (sourceId and page) for each tuning system - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 - `includeArabic` (optional): Return bilingual responses with Arabic script when true.
   - All English/transliteration fields remain unchanged
@@ -1229,7 +1229,7 @@ Return all bibliographic sources (books, articles, theses) with comprehensive me
   - Comments get Arabic versions in commentsAr if available
   - Tuning system display names get Arabic versions in displayNameAr if available
   - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
- - Type: `string` - Valid values: `true`, `false` - Default: `true`
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 
 **Example:**
