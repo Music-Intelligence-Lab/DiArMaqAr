@@ -96,7 +96,7 @@ Returns concise metadata including:
   - Comments get Arabic versions in commentsAr if available
   - Tuning system display names get Arabic versions in displayNameAr if available
   - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
- - Type: `string` - Valid values: `true`, `false`
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 
 **Example:**
@@ -194,7 +194,7 @@ Requirements:
   - Comments get Arabic versions in commentsAr if available
   - Tuning system display names get Arabic versions in displayNameAr if available
   - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
- - Type: `string` - Valid values: `true`, `false`
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 
 **Example:**
@@ -237,7 +237,7 @@ Return tuning-system availability for a maqām.
   - Comments get Arabic versions in commentsAr if available
   - Tuning system display names get Arabic versions in displayNameAr if available
   - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
- - Type: `string` - Valid values: `true`, `false`
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 
 **Example:**
@@ -275,7 +275,7 @@ Returns all tonic transpositions that are feasible under the tuning system acros
   - Comments get Arabic versions in commentsAr if available
   - Tuning system display names get Arabic versions in displayNameAr if available
   - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
- - Type: `string` - Valid values: `true`, `false`
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 
 **Example:**
@@ -326,7 +326,7 @@ This endpoint is ideal for comparative musicological analysis across different h
   - Comments get Arabic versions in commentsAr if available
   - Tuning system display names get Arabic versions in displayNameAr if available
   - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
- - Type: `string` - Valid values: `true`, `false`
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 
 **Example:**
@@ -408,7 +408,7 @@ correctly and pitch classes can be properly selected from matching octaves.
   - Comments get Arabic versions in commentsAr if available
   - Tuning system display names get Arabic versions in displayNameAr if available
   - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
- - Type: `string` - Valid values: `true`, `false`
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 - `startSetFromC` (optional): Start pitch class set from IPN reference "C" (degree 0) instead of from the maqām's tonic.
 When `true`, the set is reordered to start from C at 0.00 cents (relative), making it
@@ -530,7 +530,7 @@ bayyāt on dūgāh and maqām segāh on segāh.
   - All English/transliteration fields remain unchanged
   - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
   - Note names, maqām names, and jins names get Arabic versions in *Ar fields
- - Type: `string` - Valid values: `true`, `false`
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 - `includePitchClassData` (optional): Include pitch class data in the response (default: false).
   When false: Omits pitch class data, returning only set metadata and compatible maqamat
@@ -583,7 +583,7 @@ Return all ajnās (singular: jins) with metadata.
   - Comments get Arabic versions in commentsAr if available
   - Tuning system display names get Arabic versions in displayNameAr if available
   - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
- - Type: `string` - Valid values: `true`, `false`
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 
 **Example:**
@@ -670,7 +670,7 @@ Requirements:
   - Comments get Arabic versions in commentsAr if available
   - Tuning system display names get Arabic versions in displayNameAr if available
   - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
- - Type: `string` - Valid values: `true`, `false`
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 
 **Example:**
@@ -713,7 +713,7 @@ Return tuning-system availability for a jins.
   - Comments get Arabic versions in commentsAr if available
   - Tuning system display names get Arabic versions in displayNameAr if available
   - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
- - Type: `string` - Valid values: `true`, `false`
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 
 **Example:**
@@ -751,7 +751,7 @@ Returns all tonic transpositions that are feasible under the tuning system acros
   - Comments get Arabic versions in commentsAr if available
   - Tuning system display names get Arabic versions in displayNameAr if available
   - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
- - Type: `string` - Valid values: `true`, `false`
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 
 **Example:**
@@ -801,7 +801,7 @@ This endpoint is ideal for comparative musicological analysis of melodic structu
   - Comments get Arabic versions in commentsAr if available
   - Tuning system display names get Arabic versions in displayNameAr if available
   - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
- - Type: `string` - Valid values: `true`, `false`
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 
 **Example:**
@@ -842,7 +842,7 @@ Retrieve metadata for all available tuning systems.
   - Comments get Arabic versions in commentsAr if available
   - Tuning system display names get Arabic versions in displayNameAr if available
   - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
- - Type: `string` - Valid values: `true`, `false`
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 
 **Example:**
@@ -887,7 +887,7 @@ across all octaves with full formatting options.
   - Comments get Arabic versions in commentsAr if available
   - Tuning system display names get Arabic versions in displayNameAr if available
   - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
- - Type: `string` - Valid values: `true`, `false`
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 
 **Example:**
@@ -923,7 +923,7 @@ Return all maqāmāt that can be realized in a given tuning system beginning on 
   - Comments get Arabic versions in commentsAr if available
   - Tuning system display names get Arabic versions in displayNameAr if available
   - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
- - Type: `string` - Valid values: `true`, `false`
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 
 **Example:**
@@ -973,7 +973,7 @@ availability information for a specific note name.
   - Comments get Arabic versions in commentsAr if available
   - Tuning system display names get Arabic versions in displayNameAr if available
   - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
- - Type: `string` - Valid values: `true`, `false`
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 
 **Example:**
@@ -1021,7 +1021,7 @@ Supports:
   - Comments get Arabic versions in commentsAr if available
   - Tuning system display names get Arabic versions in displayNameAr if available
   - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
- - Type: `string` - Valid values: `true`, `false`
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 
 **Example:**
@@ -1058,7 +1058,7 @@ Returns for each tuning system:
   - Comments get Arabic versions in commentsAr if available
   - Tuning system display names get Arabic versions in displayNameAr if available
   - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
- - Type: `string` - Valid values: `true`, `false`
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 
 **Example:**
@@ -1100,7 +1100,7 @@ Returns comprehensive data for each tuning system including:
   - Comments get Arabic versions in commentsAr if available
   - Tuning system display names get Arabic versions in displayNameAr if available
   - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
- - Type: `string` - Valid values: `true`, `false`
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 
 **Example:**
@@ -1150,7 +1150,7 @@ as it is not meaningful in this context.
   - Comments get Arabic versions in commentsAr if available
   - Tuning system display names get Arabic versions in displayNameAr if available
   - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
- - Type: `string` - Valid values: `true`, `false`
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 
 **Example:**
@@ -1189,7 +1189,7 @@ as it is not meaningful in this context.
   - Comments get Arabic versions in commentsAr if available
   - Tuning system display names get Arabic versions in displayNameAr if available
   - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
- - Type: `string` - Valid values: `true`, `false`
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 
 **Example:**
@@ -1279,7 +1279,7 @@ Use the `/api/sources` endpoint to retrieve all available source IDs.
   - Contributors get Arabic name versions in firstNameAr and lastNameAr fields
   - Type-specific fields get Arabic versions (e.g., publisherAr, journalAr, universityAr)
   - Display name gets Arabic version in displayNameAr field
- - Type: `string` - Valid values: `true`, `false`
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 
 **Example:**
@@ -1317,7 +1317,7 @@ Use the `/api/sources` endpoint to retrieve all available source IDs.
   - Comments get Arabic versions in commentsAr if available
   - Tuning system display names get Arabic versions in displayNameAr if available
   - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
- - Type: `string` - Valid values: `true`, `false`
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 
 **Example:**
@@ -1355,7 +1355,7 @@ Use the `/api/sources` endpoint to retrieve all available source IDs.
   - Comments get Arabic versions in commentsAr if available
   - Tuning system display names get Arabic versions in displayNameAr if available
   - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
- - Type: `string` - Valid values: `true`, `false`
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 
 **Example:**
@@ -1393,7 +1393,7 @@ Use the `/api/sources` endpoint to retrieve all available source IDs.
   - Comments get Arabic versions in commentsAr if available
   - Tuning system display names get Arabic versions in displayNameAr if available
   - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
- - Type: `string` - Valid values: `true`, `false`
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 
 **Example:**

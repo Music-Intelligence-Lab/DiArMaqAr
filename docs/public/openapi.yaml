@@ -124,6 +124,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
+            default: "false"
           example: "true"
       responses:
         '200':
@@ -419,6 +420,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
+            default: "false"
           example: "true"
         # Note: ajnas are included by default and are not controlled by a query parameter
       responses:
@@ -832,6 +834,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
+            default: "false"
           example: "true"
       responses:
         '200':
@@ -978,6 +981,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
+            default: "false"
           example: "true"
       responses:
         '200':
@@ -1195,6 +1199,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
+            default: "false"
           example: "true"
       responses:
         '200':
@@ -1343,6 +1348,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
+            default: "false"
           example: "true"
       responses:
         '200':
@@ -1524,6 +1530,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
+            default: "false"
           example: "true"
       responses:
         '200':
@@ -2039,6 +2046,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
+            default: "false"
           example: "true"
         - name: startSetFromC
           in: query
@@ -2548,6 +2556,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
+            default: "false"
           example: "true"
         - name: includePitchClassData
           in: query
@@ -2902,6 +2911,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
+            default: "false"
           example: "true"
       responses:
         '200':
@@ -3077,6 +3087,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
+            default: "false"
           example: "true"
       responses:
         '200':
@@ -3327,6 +3338,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
+            default: "false"
           example: "true"
       responses:
         '200':
@@ -3542,6 +3554,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
+            default: "false"
           example: "true"
       responses:
         '200':
@@ -3841,6 +3854,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
+            default: "false"
           example: "true"
       responses:
         '200':
@@ -3996,6 +4010,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
+            default: "false"
           example: "true"
       responses:
         '200':
@@ -4220,6 +4235,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
+            default: "false"
           example: "true"
       responses:
         '200':
@@ -4549,6 +4565,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
+            default: "false"
           example: "true"
       responses:
         '200':
@@ -4669,6 +4686,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
+            default: "false"
           example: "true"
       responses:
         '200':
@@ -4778,6 +4796,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
+            default: "false"
           example: "true"
       responses:
         '200':
@@ -4894,6 +4913,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
+            default: "false"
           example: "true"
       responses:
         '200':
@@ -5015,6 +5035,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
+            default: "false"
           example: "true"
       responses:
         '200':
@@ -5179,6 +5200,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
+            default: "false"
           example: "true"
       responses:
         '200':
@@ -5456,6 +5478,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
+            default: "false"
           example: "true"
       responses:
         '200':
@@ -5605,6 +5628,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
+            default: "false"
           example: "true"
       responses:
         '200':
@@ -5693,6 +5717,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
+            default: "false"
           example: "true"
       responses:
         '200':
@@ -5777,6 +5802,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
+            default: "false"
           example: "true"
       responses:
         '200':
