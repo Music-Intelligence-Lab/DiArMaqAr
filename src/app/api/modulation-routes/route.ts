@@ -372,6 +372,7 @@ function buildContext(
 function formatNode(node: MaqamNode, inArabic: boolean): any {
   const formatted: any = {
     maqamId: node.maqamId,
+    baseMaqamIdName: node.baseMaqamIdName,
     maqamIdName: node.maqamIdName,
     maqamDisplayName: node.maqamDisplayName,
     tonicId: node.tonicId,

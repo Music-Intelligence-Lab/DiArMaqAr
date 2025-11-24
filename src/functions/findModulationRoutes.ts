@@ -123,6 +123,17 @@ function buildModulationGraph(
   const pitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote);
   const allNoteNames = pitchClasses.map((pc) => pc.noteName);
 
+  // Create a map from maqamId to base idName (stable identifier for lookups)
+  const maqamIdToBaseIdName = new Map<string, string>();
+  for (const maqamData of allMaqamat) {
+    maqamIdToBaseIdName.set(maqamData.getId(), maqamData.getIdName());
+  }
+
+  // Helper to get base idName from a Maqam transposition
+  const getBaseIdName = (maqam: Maqam): string => {
+    return maqamIdToBaseIdName.get(maqam.maqamId) || standardizeText(maqam.name);
+  };
+
   // Find all available maqamat and their transpositions
   const availableMaqamat: Maqam[] = [];
 
@@ -143,18 +154,20 @@ function buildModulationGraph(
   }
 
   // Create nodes for all available maqam transpositions
-  // Use maqamIdName (URL-safe standardized name) as the key, not numeric maqamId
+  // Use baseMaqamIdName:tonicId as the key for consistent lookups
   for (const maqam of availableMaqamat) {
-    const node = createMaqamNode(maqam, standardizeText);
-    const nodeKey = createNodeKey(node.maqamIdName, node.tonicId);
+    const baseIdName = getBaseIdName(maqam);
+    const node = createMaqamNode(maqam, baseIdName, standardizeText);
+    const nodeKey = createNodeKey(node.baseMaqamIdName, node.tonicId);
     nodes.set(nodeKey, node);
     adjacencyList.set(nodeKey, []);
   }
 
   // Calculate modulation edges for each node
   for (const maqam of availableMaqamat) {
-    const sourceNode = createMaqamNode(maqam, standardizeText);
-    const sourceNodeKey = createNodeKey(sourceNode.maqamIdName, sourceNode.tonicId);
+    const baseIdName = getBaseIdName(maqam);
+    const sourceNode = createMaqamNode(maqam, baseIdName, standardizeText);
+    const sourceNodeKey = createNodeKey(sourceNode.baseMaqamIdName, sourceNode.tonicId);
 
     // Calculate modulations from this maqam (maqamat mode, not ajnas)
     const modulations = modulate(
@@ -176,8 +189,9 @@ function buildModulationGraph(
       category: ModulationCategory
     ) => {
       for (const targetMaqam of mods) {
-        const targetNode = createMaqamNode(targetMaqam, standardizeText);
-        const targetNodeKey = createNodeKey(targetNode.maqamIdName, targetNode.tonicId);
+        const targetBaseIdName = getBaseIdName(targetMaqam);
+        const targetNode = createMaqamNode(targetMaqam, targetBaseIdName, standardizeText);
+        const targetNodeKey = createNodeKey(targetNode.baseMaqamIdName, targetNode.tonicId);
 
         // Only add edge if target node exists in our graph
         if (nodes.has(targetNodeKey)) {
@@ -255,7 +269,8 @@ function validateNodeExists(
   // If tonic specified, check if that transposition exists
   if (tonicId) {
     const normalizedTonicId = standardizeText(tonicId);
-    
+    const baseIdName = maqamData.getIdName();
+
     // Calculate transpositions for this maqam
     const transpositions = calculateMaqamTranspositions(
       pitchClasses,
@@ -267,7 +282,7 @@ function validateNodeExists(
 
     // Check if any transposition has the requested tonic
     const hasTonic = transpositions.some((trans) => {
-      const node = createMaqamNode(trans, standardizeText);
+      const node = createMaqamNode(trans, baseIdName, standardizeText);
       return standardizeText(node.tonicId) === normalizedTonicId;
     });
 
@@ -280,7 +295,7 @@ function validateNodeExists(
 }
 
 /**
- * Finds the node key for a maqam by idName and optional tonic.
+ * Finds the node key for a maqam by baseMaqamIdName and optional tonic.
  * If tonic is not specified, returns the canonical (tahlil) form.
  *
  * @param graph - The modulation graph
@@ -297,7 +312,7 @@ function findNodeKey(
   const normalizedMaqamIdName = standardizeText(maqamIdName);
   const normalizedTonicId = tonicId ? standardizeText(tonicId) : undefined;
 
-  // If tonic specified, look for exact match
+  // If tonic specified, look for exact match using baseMaqamIdName
   if (normalizedTonicId) {
     const exactKey = createNodeKey(normalizedMaqamIdName, normalizedTonicId);
     if (graph.nodes.has(exactKey)) {
@@ -306,16 +321,16 @@ function findNodeKey(
     return null;
   }
 
-  // Otherwise, find the canonical (non-transposition) form
+  // Otherwise, find the canonical (non-transposition) form by baseMaqamIdName
   for (const [key, node] of graph.nodes) {
-    if (node.maqamIdName === normalizedMaqamIdName && !node.isTransposition) {
+    if (node.baseMaqamIdName === normalizedMaqamIdName && !node.isTransposition) {
       return key;
     }
   }
 
-  // Fallback: return first matching maqamIdName
+  // Fallback: return first matching baseMaqamIdName
   for (const [key, node] of graph.nodes) {
-    if (node.maqamIdName === normalizedMaqamIdName) {
+    if (node.baseMaqamIdName === normalizedMaqamIdName) {
       return key;
     }
   }
@@ -402,8 +417,8 @@ function bfsShortestPaths(
       // Don't revisit nodes already in this path (prevent cycles)
       const visitedInPath = path.some(
         (step) =>
-          createNodeKey(step.from.maqamId, step.from.tonicId) === edge.targetNodeKey ||
-          createNodeKey(step.to.maqamId, step.to.tonicId) === edge.targetNodeKey
+          createNodeKey(step.from.baseMaqamIdName, step.from.tonicId) === edge.targetNodeKey ||
+          createNodeKey(step.to.baseMaqamIdName, step.to.tonicId) === edge.targetNodeKey
       );
       if (visitedInPath) continue;
 

@@ -96,6 +96,59 @@ This efficiency enables:
 - Comprehensive dataset export (all transpositions for all maqāmāt)
 - Large-scale comparative analysis
 
+## API Naming Conventions for Transpositions
+
+When working with transposed maqāmāt in the API, it's important to understand how identifiers work.
+
+### Two ID Fields
+
+Each maqām node in API responses includes two identifier fields:
+
+| Field | Purpose | Stability | Example |
+|-------|---------|-----------|---------|
+| `baseMaqamIdName` | Query/lookup identifier | **Stable** across transpositions | `maqam_nahawand` |
+| `maqamIdName` | Display identifier | **Changes** with transposition | `maqam_nahawand_al-kurdan` |
+
+### Naming Pattern
+
+- **Original form (taḥlīl)**: Uses base name only → `maqam_nahawand`
+- **Transposed form (taṣwīr)**: Adds `_al-{tonic}` suffix → `maqam_nahawand_al-kurdan`
+
+### Querying Transposed Maqāmāt
+
+**To find a specific transposition, use base maqam ID + tonic parameters:**
+
+```bash
+# Find maqām nahāwand on kurdān
+?toMaqam=maqam_nahawand&toTonic=kurdan   # ✅ Correct
+
+# NOT the display name format
+?toMaqam=maqam_nahawand_al-kurdan        # ❌ Will not work
+```
+
+### Example Response
+
+```json
+{
+  "from": {
+    "baseMaqamIdName": "maqam_rast",
+    "maqamIdName": "maqam_rast",
+    "maqamDisplayName": "maqām rāst",
+    "isTransposition": false
+  },
+  "to": {
+    "baseMaqamIdName": "maqam_nahawand",
+    "maqamIdName": "maqam_nahawand_al-kurdan",
+    "maqamDisplayName": "maqām nahāwand al-kurdān",
+    "isTransposition": true
+  }
+}
+```
+
+::: tip
+Always use `baseMaqamIdName` + `tonic` parameters for API queries. The `maqamIdName` field is for display purposes and includes the transposition suffix.
+:::
+
 ## Using Transposition
 
 ### Via REST API
