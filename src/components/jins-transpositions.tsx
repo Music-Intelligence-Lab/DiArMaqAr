@@ -24,8 +24,8 @@ import { stringifySource } from "@/models/bibliography/Source";
 export default function JinsTranspositions() {
   // Configurable constants (extracted magic numbers for easier tuning)
   const DISPATCH_EVENT_DELAY_MS = 10; // delay before emitting custom event
-  const SCROLL_TIMEOUT_MS = 60; // delay before performing scroll after event
-  const URL_SCROLL_TIMEOUT_MS = 220; // delay for initial scroll from URL param (increased to wait for comments to render)
+  const SCROLL_TIMEOUT_MS = 150; // delay before performing scroll after event (increased for smoother scroll)
+  const URL_SCROLL_TIMEOUT_MS = 350; // delay for initial scroll from URL param (increased for DOM readiness)
   const HEADER_SCROLL_MARGIN_TOP_PX = 170; // scroll margin top for first headers
   const INTERSECTION_ROOT_MARGIN = "200px 0px 0px 0px"; // observer root margin
   const BATCH_SIZE = 10; // batch size for lazy loading
@@ -55,14 +55,93 @@ export default function JinsTranspositions() {
   };
 
   function scrollToJinsHeader(firstNote: string, selectedJinsData?: any) {
+    const HEADER_SCROLL_MARGIN_TOP_PX = 215; // scroll margin for headers (matches $total-navbar-height)
+    const SCROLL_DURATION_MS = 800; // Duration for smooth scrolling (increased for smoother feel)
+    
     if (!firstNote && selectedJinsData) {
       firstNote = selectedJinsData.getNoteNames?.()?.[0];
     }
     if (!firstNote) return;
     const id = getJinsHeaderId(firstNote);
     const el = document.getElementById(id);
-    if (el && typeof el.scrollIntoView === "function") {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (!el) return;
+
+    // Compute deterministic scroll position so the header lands at the same offset
+    function getScrollableAncestor(
+      node: HTMLElement | null
+    ): HTMLElement | Window {
+      let elNode: HTMLElement | null = node;
+      while (
+        elNode &&
+        elNode !== document.body &&
+        elNode !== document.documentElement
+      ) {
+        const style = window.getComputedStyle(elNode);
+        const overflowY = style.overflowY;
+        const isScrollable = overflowY === "auto" || overflowY === "scroll";
+        if (isScrollable && elNode.scrollHeight > elNode.clientHeight)
+          return elNode;
+        elNode = elNode.parentElement;
+      }
+      return window;
+    }
+
+    // Custom smooth scroll with easing function for smoother animation
+    function smoothScrollTo(
+      container: HTMLElement | Window,
+      target: number,
+      duration: number
+    ) {
+      const start = container === window 
+        ? window.pageYOffset || document.documentElement.scrollTop
+        : (container as HTMLElement).scrollTop;
+      const distance = target - start;
+      const startTime = performance.now();
+
+      // Easing function: easeInOutCubic for smooth acceleration/deceleration
+      function easeInOutCubic(t: number): number {
+        return t < 0.5
+          ? 4 * t * t * t
+          : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      }
+
+      function animateScroll(currentTime: number) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = easeInOutCubic(progress);
+        const current = start + distance * eased;
+
+        if (container === window) {
+          window.scrollTo(0, current);
+        } else {
+          (container as HTMLElement).scrollTop = current;
+        }
+
+        if (progress < 1) {
+          requestAnimationFrame(animateScroll);
+        }
+      }
+
+      requestAnimationFrame(animateScroll);
+    }
+
+    const scrollContainer = getScrollableAncestor(el as HTMLElement);
+    const rect = el.getBoundingClientRect();
+
+    if (scrollContainer === window) {
+      const absoluteTop = rect.top + window.pageYOffset;
+      const target = Math.max(0, absoluteTop - HEADER_SCROLL_MARGIN_TOP_PX);
+      smoothScrollTo(window, target, SCROLL_DURATION_MS);
+    } else {
+      const container = scrollContainer as HTMLElement;
+      const containerRect = container.getBoundingClientRect();
+      const offsetTopWithinContainer =
+        rect.top - containerRect.top + container.scrollTop;
+      const target = Math.max(
+        0,
+        offsetTopWithinContainer - HEADER_SCROLL_MARGIN_TOP_PX
+      );
+      smoothScrollTo(container, target, SCROLL_DURATION_MS);
     }
   }
 

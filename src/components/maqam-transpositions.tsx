@@ -24,6 +24,7 @@ const getHeaderId = (noteName: string): string => {
 
 export function scrollToMaqamHeader(firstNote: string, selectedMaqamData?: any) {
   const HEADER_SCROLL_MARGIN_TOP_PX = 215; // scroll margin for headers (matches $total-navbar-height)
+  const SCROLL_DURATION_MS = 800; // Duration for smooth scrolling (increased for smoother feel)
   
   if (!firstNote && selectedMaqamData) {
     firstNote = selectedMaqamData.getAscendingNoteNames?.()?.[0];
@@ -53,13 +54,52 @@ export function scrollToMaqamHeader(firstNote: string, selectedMaqamData?: any) 
     return window;
   }
 
+  // Custom smooth scroll with easing function for smoother animation
+  function smoothScrollTo(
+    container: HTMLElement | Window,
+    target: number,
+    duration: number
+  ) {
+    const start = container === window 
+      ? window.pageYOffset || document.documentElement.scrollTop
+      : (container as HTMLElement).scrollTop;
+    const distance = target - start;
+    const startTime = performance.now();
+
+    // Easing function: easeInOutCubic for smooth acceleration/deceleration
+    function easeInOutCubic(t: number): number {
+      return t < 0.5
+        ? 4 * t * t * t
+        : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    }
+
+    function animateScroll(currentTime: number) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = easeInOutCubic(progress);
+      const current = start + distance * eased;
+
+      if (container === window) {
+        window.scrollTo(0, current);
+      } else {
+        (container as HTMLElement).scrollTop = current;
+      }
+
+      if (progress < 1) {
+        requestAnimationFrame(animateScroll);
+      }
+    }
+
+    requestAnimationFrame(animateScroll);
+  }
+
   const scrollContainer = getScrollableAncestor(el as HTMLElement);
   const rect = el.getBoundingClientRect();
 
   if (scrollContainer === window) {
     const absoluteTop = rect.top + window.pageYOffset;
     const target = Math.max(0, absoluteTop - HEADER_SCROLL_MARGIN_TOP_PX);
-    window.scrollTo({ top: target, behavior: "smooth" });
+    smoothScrollTo(window, target, SCROLL_DURATION_MS);
   } else {
     const container = scrollContainer as HTMLElement;
     const containerRect = container.getBoundingClientRect();
@@ -69,7 +109,7 @@ export function scrollToMaqamHeader(firstNote: string, selectedMaqamData?: any) 
       0,
       offsetTopWithinContainer - HEADER_SCROLL_MARGIN_TOP_PX
     );
-    container.scrollTo({ top: target, behavior: "smooth" });
+    smoothScrollTo(container, target, SCROLL_DURATION_MS);
   }
 }
 import { Maqam } from "@/models/Maqam";
@@ -80,8 +120,8 @@ import { stringifySource } from "@/models/bibliography/Source";
 
 const MaqamTranspositions: React.FC = () => {
   // Configurable constants (previous magic numbers)
-  const SCROLL_TIMEOUT_MS = 60; // short timeout before scrolling after event
-  const URL_SCROLL_TIMEOUT_MS = 220; // timeout used when scrolling from URL param
+  const SCROLL_TIMEOUT_MS = 150; // short timeout before scrolling after event (increased for smoother scroll)
+  const URL_SCROLL_TIMEOUT_MS = 350; // timeout used when scrolling from URL param (increased for DOM readiness)
   const ANALYSIS_SCROLL_MARGIN_TOP_PX = 170; // scroll margin for top analysis header
   const INTERSECTION_ROOT_MARGIN = "200px 0px 0px 0px"; // prefetch root margin
   const BATCH_SIZE = 10; // number of transpositions to load at once
