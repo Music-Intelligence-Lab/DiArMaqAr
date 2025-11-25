@@ -1,14 +1,14 @@
 @use "./variables" as *;
 
 .settings-open-button {
-    position: fixed;
-  top: 20px;
-  right: 20px;
+  position: fixed;
+  top: 15px;
+  right: 15px;
   background-color: transparent;
   color: $text;
   border: none;
   cursor: pointer;
-  z-index: 10000;
+  z-index: 11000;
 }
 
 .settings-card {
@@ -257,6 +257,7 @@
     cursor: pointer;
     transition: background-color 0.2s ease;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    flex: 1;
     
     &:hover {
       background-color: $primary;
@@ -265,6 +266,23 @@
     &:active {
       transform: translateY(1px);
     }
+  }
+
+  &__octave-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 5px;
+
+    &.rtl {
+      flex-direction: row-reverse;
+    }
+  }
+
+  &__octave-info {
+    font-size: 0.9em;
+    margin-top: 8px;
+    text-align: center;
   }
 }
 

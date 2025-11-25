@@ -12,7 +12,7 @@ export default function LandingPage() {
     <>
       <div className={`landing-page ${isRTL ? "rtl" : "ltr"}`}>
       <header className="landing-header">
-        <div style={{ position: "absolute", top: 12, right: 12 }}>
+        <div className="language-selector-wrapper">
           <LanguageSelector />
         </div>
         <h1>

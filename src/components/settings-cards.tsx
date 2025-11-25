@@ -436,7 +436,7 @@ const SettingsCard = () => {
           {refInfo && (
             <div className="settings-card__input-container">
               <label className="settings-card__label">{t('settings.octaveShift')}</label>
-              <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginTop: '5px', flexDirection: language === 'ar' ? 'row-reverse' : 'row' }}>
+              <div className={`settings-card__octave-controls ${language === 'ar' ? 'rtl' : ''}`} dir={language === 'ar' ? 'rtl' : 'ltr'}>
                 <button
                   onClick={() => {
                     setSoundSettings((prev) => ({
@@ -446,7 +446,6 @@ const SettingsCard = () => {
                   }}
                   className="settings-card__quick-action-button"
                   disabled={soundSettings.octaveShift <= -3}
-                  style={{ flex: 1 }}
                 >
                   {t('settings.octaveDown')}
                 </button>
@@ -459,7 +458,6 @@ const SettingsCard = () => {
                   }}
                   className="settings-card__quick-action-button"
                   disabled={soundSettings.octaveShift === 0}
-                  style={{ flex: 1 }}
                 >
                   {t('settings.reset')}
                 </button>
@@ -472,12 +470,11 @@ const SettingsCard = () => {
                   }}
                   className="settings-card__quick-action-button"
                   disabled={soundSettings.octaveShift >= 3}
-                  style={{ flex: 1 }}
                 >
                   {t('settings.octaveUp')}
                 </button>
               </div>
-              <p style={{ fontSize: '0.9em', marginTop: '8px', textAlign: 'center' }}>
+              <p className="settings-card__octave-info">
                 {language === 'ar' ? (
                   <>
                     <bdi>{getDisplayName(refInfo.noteName, 'note')} {refInfo.englishName} = {refInfo.baseFrequency.toFixed(2)} Hz</bdi>
@@ -655,7 +652,6 @@ const SettingsCard = () => {
       aria-expanded={openSettings}
       aria-controls="settings-card"
       ref={buttonRef}
-      style={{ position: "fixed", top: "20px", right: "20px", zIndex: 11000 }}
     >
       <SettingsIcon />
     </button>

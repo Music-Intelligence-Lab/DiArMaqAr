@@ -376,7 +376,8 @@ export default function Navbar() {
                 setSelectedMenu("tuningSystem");
               }}
             >
-              أرشيف المقامات العربية الرقمي • Digital Arabic Maqām Archive
+              <span className="navbar__title-line">أرشيف المقامات العربية الرقمي</span>
+              <span className="navbar__title-line">Digital Arabic Maqām Archive</span>
             </h1>
           </div>
           <div className="navbar__right-panel">
@@ -387,14 +388,14 @@ export default function Navbar() {
               <SettingsCard />
             </div>
             <div className="navbar__quick-actions">
-              <button 
+              {/* <button 
                 className="navbar__quick-action-button" 
                 onClick={clearSelections}
                 aria-label={t('settings.clearSelections')}
                 title={t('settings.clearSelections')}
               >
                 {t('settings.clearSelections')}
-              </button>
+              </button> */}
               <button 
                 className="navbar__quick-action-button" 
                 onClick={stopAllSounds}

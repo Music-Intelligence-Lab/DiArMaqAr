@@ -229,6 +229,16 @@ h2 {
     background: $secondary;
     transition: background 0.2s;
   }
+
+  .landing-header {
+    position: relative;
+
+    .language-selector-wrapper {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+    }
+  }
 }
 
 /* If the button is an anchor, show it as a plain link */
