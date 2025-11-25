@@ -27,12 +27,36 @@
   }
 
   &__title {
-    font-size: 30px;
+    font-size: 26px;
     font-weight: 300;
     color: white;
     cursor: pointer;
     direction: ltr !important;
     text-align: center !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.2em;
+    line-height: 1.2;
+
+    @media (max-width: 768px) {
+      font-size: 24px;
+    }
+
+    @media (max-width: 480px) {
+      font-size: 20px;
+    }
+  }
+
+  &__title-line {
+    white-space: nowrap;
+  }
+
+  &__title-separator {
+    @media (max-width: 768px) {
+      display: none;
+    }
   }
 
   &__subtitle {
@@ -101,12 +125,11 @@
     &[data-tooltip]:hover::after {
       content: attr(data-tooltip);
       position: absolute;
-      top: 100%;
+      top: calc(100% + 8px);
       left: 50%;
       transform: translateX(-50%);
-      margin-top: 8px;
       padding: 10px 16px;
-      background-color: rgba($primary, 0.95);
+      background-color: $secondary;
       color: white;
       font-size: 13px;
       font-weight: 400;
@@ -120,22 +143,69 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
       z-index: 10000;
       pointer-events: none;
-      animation: tooltipFadeIn 0.2s ease-out;
       line-height: 1.4;
     }
 
+    // First child tooltip (align to left edge of viewport)
+    &:first-child[data-tooltip]:hover::after {
+      position: fixed;
+      top: calc($top-navbar-height + $bottom-navbar-height + 8px);
+      left: 20px;
+      right: auto;
+      transform: none;
+    }
+
+    // Last child tooltip (align to right edge of viewport)
+    &:last-child[data-tooltip]:hover::after {
+      position: fixed;
+      top: calc($top-navbar-height + $bottom-navbar-height + 8px);
+      left: auto;
+      right: 20px;
+      transform: none;
+    }
+
     // Tooltip arrow (works for all buttons with data-tooltip)
+    // Arrow is 6px tall, positioned to overlap bubble top by 1px for visibility
     &[data-tooltip]:hover::before {
       content: '';
       position: absolute;
-      top: 100%;
+      top: calc(100% - 3px);
       left: 50%;
       transform: translateX(-50%);
-      margin-top: 2px;
+      width: 0;
+      height: 0;
       border: 6px solid transparent;
-      border-bottom-color: rgba($primary, 0.95);
+      border-bottom-color: $secondary;
       z-index: 10001;
       pointer-events: none;
+    }
+
+    // First child tooltip arrow
+    // Arrow positioned to overlap bubble top by 1px for visibility
+    &:first-child[data-tooltip]:hover::before {
+      position: fixed;
+      top: calc($top-navbar-height + $bottom-navbar-height - 3px);
+      left: 32px;
+      right: auto;
+      transform: none;
+      width: 0;
+      height: 0;
+      border: 6px solid transparent;
+      border-bottom-color: $secondary;
+    }
+
+    // Last child tooltip arrow
+    // Arrow positioned to overlap bubble top by 1px for visibility
+    &:last-child[data-tooltip]:hover::before {
+      position: fixed;
+      top: calc($top-navbar-height + $bottom-navbar-height - 3px);
+      left: auto;
+      right: 32px;
+      transform: none;
+      width: 0;
+      height: 0;
+      border: 6px solid transparent;
+      border-bottom-color: $secondary;
     }
 
     &:disabled {
@@ -183,12 +253,16 @@
   }
 
   &__left-panel {
-    width: 10%;
+    width: 110px;
     display: flex;
-    flex-direction: row;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
     cursor: pointer;
-    z-index: 10;
+    z-index: 1000;
+
+    &-menu-icon {
+      width: 100%;
+    }
 
     & svg {
       font-size: 40px;
@@ -198,24 +272,32 @@
   }
 
   &__left-panel-admin {
-    position: fixed;
-    top: 23px;
-    left: 50px;
+    padding: 6px 12px;
+    width: 100%;
+    background-color: rgba($primary, 0.8);
+    color: $text;
+    border-radius: 4px;
     font-size: 11px;
-    display: flex;
-    align-items: left;
-    justify-content: left;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    margin-top: 29px;
     user-select: none;
-    background-color: $primary;
-    padding: 2px 10px;
     
+    &:hover {
+      background-color: $primary;
+    }
+    
+    &:active {
+      transform: translateY(1px);
+    }
   }
 
   &__right-panel {
-    width: 10%;
+    width: 110px;
     display: flex;
-    align-items: center;
-    justify-content: flex-end;
+    flex-direction: column;
+    align-items: flex-end;
     gap: 15px;
     cursor: pointer;
     z-index: 1000;
@@ -223,32 +305,32 @@
     &-language {
       display: flex;
       align-items: center;
+      width: 100%;
     }
 
     &-icon {
       display: flex;
       align-items: center;
+      width: 100%;
     }
   }
   
   &__quick-actions {
-    position: fixed;
-    top: 50px;
-    right: 20px;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     gap: 8px;
-    z-index: 10000;
+    width: 100%;
   -webkit-overflow-scrolling: touch;
   }
   
   &__quick-action-button {
     padding: 6px 12px;
     background-color: rgba($primary, 0.8);
-    color: white;
+    color: $text;
+    width: 100%;
     //border: 1px solid $grey;
     border-radius: 4px;
-    font-size: 12px;
+    font-size: 11px;
     cursor: pointer;
     transition: background-color 0.2s ease;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
@@ -350,17 +432,5 @@
     transition: 0.3s;
     user-select: none;
     text-decoration: none;
-  }
-}
-
-// Tooltip animation
-@keyframes tooltipFadeIn {
-  from {
-    opacity: 0;
-    transform: translateX(-50%) translateY(-4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
   }
 }
