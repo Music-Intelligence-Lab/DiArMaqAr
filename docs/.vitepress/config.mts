@@ -86,13 +86,22 @@ export default defineConfig({
       ],
       '/api/': [
         {
-          text: 'API Documentation',
+          text: 'API Getting Started',
+          collapsed: false,
           items: [
-            { text: 'Overview', link: '/api/' },
+            { text: 'API Overview', link: '/api/' },
+            { text: 'Representative Examples', link: '/api/representative-examples' },
+          ]
+        },
+        {
+          text: 'Static Documentation',
+          collapsed: false,
+          items: [
             {
               text: 'Endpoints Reference',
               link: '/api/endpoints-reference',
               items: [
+                { text: 'Quick Reference', link: '/api/endpoints-reference#quick-reference' },
                 { text: 'Base URL', link: '/api/endpoints-reference#base-url' },
                 { text: 'OpenAPI Specification', link: '/api/endpoints-reference#openapi-specification' },
                 { text: 'Authentication', link: '/api/endpoints-reference#authentication' },
@@ -101,95 +110,109 @@ export default defineConfig({
                 { text: 'Common Parameters', link: '/api/endpoints-reference#common-parameters' },
               ]
             },
-            { text: 'Interactive Playground', link: '/api/playground' },
-            { text: 'Representative Examples', link: '/api/representative-examples' },
-          ]
-        },
-        {
-          text: 'Endpoints',
-          collapsed: false,
-          items: [
             {
               text: 'Maqāmāt',
-              link: '#maqamat',
+              collapsed: true,
+              link: '/api/endpoints-reference#maqamat',
               items: [
-                { text: 'List Maqāmāt', link: '#listMaqamat' },
-                { text: 'Get Maqām Details', link: '#getMaqam' },
-                { text: 'Check Availability', link: '#getMaqamAvailability' },
-                { text: 'List Transpositions', link: '#listMaqamTranspositions' },
-                { text: 'Compare Across Tuning Systems', link: '#compareMaqam' },
-                { text: 'Classification: 12-Pitch-Class Sets', link: '#classifyMaqamat12PitchClassSets' },
-                { text: 'Classification: Maqam-Based Sets', link: '#classifyMaqamatByMaqamPitchClassSets' },
+                { text: 'List all maqāmāt', link: '/api/endpoints-reference#listMaqamat' },
+                { text: 'Get detailed maqām data', link: '/api/endpoints-reference#getMaqam' },
+                { text: 'Check maqām availability', link: '/api/endpoints-reference#getMaqamAvailability' },
+                { text: 'List transpositions for a maqām', link: '/api/endpoints-reference#listMaqamTranspositions' },
+                { text: 'Compare maqām data across tuning systems', link: '/api/endpoints-reference#compareMaqam' },
+                { text: 'Classify by 12-pitch-class sets', link: '/api/endpoints-reference#classifyMaqamat12PitchClassSets' },
+                { text: 'Classify by maqam-based pitch class sets', link: '/api/endpoints-reference#classifyMaqamatByMaqamPitchClassSets' },
               ]
             },
             {
               text: 'Ajnās',
-              link: '#ajnas',
+              collapsed: true,
+              link: '/api/endpoints-reference#ajnas',
               items: [
-                { text: 'List Ajnās', link: '#listAjnas' },
-                { text: 'Get Jins Details', link: '#getJins' },
-                { text: 'Check Availability', link: '#getJinsAvailability' },
-                { text: 'List Transpositions', link: '#listJinsTranspositions' },
-                { text: 'Compare Across Tuning Systems', link: '#compareJins' },
+                { text: 'List all ajnās', link: '/api/endpoints-reference#listAjnas' },
+                { text: 'Get detailed jins data', link: '/api/endpoints-reference#getJins' },
+                { text: 'Check jins availability', link: '/api/endpoints-reference#getJinsAvailability' },
+                { text: 'List transpositions for a jins', link: '/api/endpoints-reference#listJinsTranspositions' },
+                { text: 'Compare jins data across tuning systems', link: '/api/endpoints-reference#compareJins' },
               ]
             },
             {
               text: 'Tuning Systems',
-              link: '#tuning-systems',
+              collapsed: true,
+              link: '/api/endpoints-reference#tuning-systems',
               items: [
-                { text: 'List Tuning Systems', link: '#listTuningSystems' },
-                { text: 'Get Tuning System Details', link: '#getTuningSystemPitchClasses' },
-                { text: 'List Maqāmāt in Tuning System', link: '#listTuningSystemMaqamat' },
-              ]
-            },
-            {
-              text: 'Modulations',
-              link: '#modulations',
-              items: [
-                { text: 'Find Modulation Routes', link: '#findModulationRoutes' },
+                { text: 'List all tuning systems', link: '/api/endpoints-reference#listTuningSystems' },
+                { text: 'Get tuning system details', link: '/api/endpoints-reference#getTuningSystemPitchClasses' },
+                { text: 'List maqāmāt available in a tuning system', link: '/api/endpoints-reference#listTuningSystemMaqamat' },
               ]
             },
             {
               text: 'Pitch Classes',
-              link: '#pitch-classes',
+              collapsed: true,
+              link: '/api/endpoints-reference#pitch-classes',
               items: [
-                { text: 'List Note Names', link: '#listNoteNames' },
-                { text: 'Get Pitch Class by Note Name', link: '#getPitchClassByNoteName' },
-                { text: 'Check Note Name Availability', link: '#getNoteNameAvailability' },
-                { text: 'Compare Pitch Class Across Systems', link: '#comparePitchClassByNoteName' },
+                { text: 'List all note names', link: '/api/endpoints-reference#listNoteNames' },
+                { text: 'Get pitch class details by note name', link: '/api/endpoints-reference#getPitchClassByNoteName' },
+                { text: 'Check note name availability', link: '/api/endpoints-reference#getNoteNameAvailability' },
+                { text: 'Compare pitch class across tuning systems', link: '/api/endpoints-reference#comparePitchClassByNoteName' },
               ]
             },
             {
               text: 'Intervals',
-              link: '#intervals',
+              collapsed: true,
+              link: '/api/endpoints-reference#intervals',
               items: [
-                { text: 'Calculate Intervals by Note Names', link: '#calculateIntervalsByNoteNames' },
-                { text: 'Compare Intervals Across Tuning Systems', link: '#compareIntervalsByNoteNames' },
+                { text: 'Calculate intervals by note names', link: '/api/endpoints-reference#calculateIntervalsByNoteNames' },
+                { text: 'Compare intervals across tuning systems', link: '/api/endpoints-reference#compareIntervalsByNoteNames' },
               ]
             },
             {
               text: 'Sources',
-              link: '#sources',
+              collapsed: true,
+              link: '/api/endpoints-reference#sources',
               items: [
-                { text: 'List Sources', link: '#listSources' },
-                { text: 'Get Source Details', link: '#getSource' },
-                { text: 'List Tuning Systems by Source', link: '#listTuningSystemsBySource' },
-                { text: 'List Maqāmāt by Source', link: '#listMaqamatBySource' },
-                { text: 'List Ajnās by Source', link: '#listAjnasBySource' },
+                { text: 'List all bibliographic sources', link: '/api/endpoints-reference#listSources' },
+                { text: 'Get a single bibliographic source', link: '/api/endpoints-reference#getSource' },
+                { text: 'List tuning systems by source', link: '/api/endpoints-reference#listTuningSystemsBySource' },
+                { text: 'List maqamat by source', link: '/api/endpoints-reference#listMaqamatBySource' },
+                { text: 'List ajnas by source', link: '/api/endpoints-reference#listAjnasBySource' },
               ]
             },
+          ]
+        },
+        {
+          text: 'Interactive Playground',
+          collapsed: false,
+          items: [
+            { text: 'OpenAPI Playground', link: '/api/playground' },
+            { text: 'Maqāmāt', link: '/api/playground#maqamat' },
+            { text: 'Ajnās', link: '/api/playground#ajnas' },
+            { text: 'Tuning Systems', link: '/api/playground#tuning-systems' },
+            { text: 'Pitch Classes', link: '/api/playground#pitch-classes' },
+            { text: 'Intervals', link: '/api/playground#intervals' },
+            { text: 'Sources', link: '/api/playground#sources' },
+            { text: 'Modulations', link: '/api/playground#modulations' },
           ]
         },
       ],
         '/api/playground': [
           {
-            text: 'API Documentation',
+            text: 'API Getting Started',
+            collapsed: false,
             items: [
-              { text: 'Overview', link: '/api/' },
+              { text: 'API Overview', link: '/api/' },
+              { text: 'Representative Examples', link: '/api/representative-examples' },
+            ]
+          },
+          {
+            text: 'Static Documentation',
+            collapsed: true,
+            items: [
               {
                 text: 'Endpoints Reference',
                 link: '/api/endpoints-reference',
                 items: [
+                  { text: 'Quick Reference', link: '/api/endpoints-reference#quick-reference' },
                   { text: 'Base URL', link: '/api/endpoints-reference#base-url' },
                   { text: 'OpenAPI Specification', link: '/api/endpoints-reference#openapi-specification' },
                   { text: 'Authentication', link: '/api/endpoints-reference#authentication' },
@@ -198,86 +221,202 @@ export default defineConfig({
                   { text: 'Common Parameters', link: '/api/endpoints-reference#common-parameters' },
                 ]
               },
-              { text: 'Interactive Playground', link: '/api/playground' },
+              {
+                text: 'Maqāmāt',
+                collapsed: true,
+                link: '/api/endpoints-reference#maqamat',
+                items: [
+                  { text: 'List all maqāmāt', link: '/api/endpoints-reference#listMaqamat' },
+                  { text: 'Get detailed maqām data', link: '/api/endpoints-reference#getMaqam' },
+                  { text: 'Check maqām availability', link: '/api/endpoints-reference#getMaqamAvailability' },
+                  { text: 'List transpositions for a maqām', link: '/api/endpoints-reference#listMaqamTranspositions' },
+                  { text: 'Compare maqām data across tuning systems', link: '/api/endpoints-reference#compareMaqam' },
+                  { text: 'Classify by 12-pitch-class sets', link: '/api/endpoints-reference#classifyMaqamat12PitchClassSets' },
+                  { text: 'Classify by maqam-based pitch class sets', link: '/api/endpoints-reference#classifyMaqamatByMaqamPitchClassSets' },
+                ]
+              },
+              {
+                text: 'Ajnās',
+                collapsed: true,
+                link: '/api/endpoints-reference#ajnas',
+                items: [
+                  { text: 'List all ajnās', link: '/api/endpoints-reference#listAjnas' },
+                  { text: 'Get detailed jins data', link: '/api/endpoints-reference#getJins' },
+                  { text: 'Check jins availability', link: '/api/endpoints-reference#getJinsAvailability' },
+                  { text: 'List transpositions for a jins', link: '/api/endpoints-reference#listJinsTranspositions' },
+                  { text: 'Compare jins data across tuning systems', link: '/api/endpoints-reference#compareJins' },
+                ]
+              },
+              {
+                text: 'Tuning Systems',
+                collapsed: true,
+                link: '/api/endpoints-reference#tuning-systems',
+                items: [
+                  { text: 'List all tuning systems', link: '/api/endpoints-reference#listTuningSystems' },
+                  { text: 'Get tuning system details', link: '/api/endpoints-reference#getTuningSystemPitchClasses' },
+                  { text: 'List maqāmāt available in a tuning system', link: '/api/endpoints-reference#listTuningSystemMaqamat' },
+                ]
+              },
+              {
+                text: 'Pitch Classes',
+                collapsed: true,
+                link: '/api/endpoints-reference#pitch-classes',
+                items: [
+                  { text: 'List all note names', link: '/api/endpoints-reference#listNoteNames' },
+                  { text: 'Get pitch class details by note name', link: '/api/endpoints-reference#getPitchClassByNoteName' },
+                  { text: 'Check note name availability', link: '/api/endpoints-reference#getNoteNameAvailability' },
+                  { text: 'Compare pitch class across tuning systems', link: '/api/endpoints-reference#comparePitchClassByNoteName' },
+                ]
+              },
+              {
+                text: 'Intervals',
+                collapsed: true,
+                link: '/api/endpoints-reference#intervals',
+                items: [
+                  { text: 'Calculate intervals by note names', link: '/api/endpoints-reference#calculateIntervalsByNoteNames' },
+                  { text: 'Compare intervals across tuning systems', link: '/api/endpoints-reference#compareIntervalsByNoteNames' },
+                ]
+              },
+              {
+                text: 'Sources',
+                collapsed: true,
+                link: '/api/endpoints-reference#sources',
+                items: [
+                  { text: 'List all bibliographic sources', link: '/api/endpoints-reference#listSources' },
+                  { text: 'Get a single bibliographic source', link: '/api/endpoints-reference#getSource' },
+                  { text: 'List tuning systems by source', link: '/api/endpoints-reference#listTuningSystemsBySource' },
+                  { text: 'List maqamat by source', link: '/api/endpoints-reference#listMaqamatBySource' },
+                  { text: 'List ajnas by source', link: '/api/endpoints-reference#listAjnasBySource' },
+                ]
+              },
+            ]
+          },
+          {
+            text: 'Interactive Playground',
+            collapsed: false,
+            items: [
+              { text: 'OpenAPI Playground', link: '/api/playground' },
+              { text: 'Maqāmāt', link: '/api/playground#maqamat' },
+              { text: 'Ajnās', link: '/api/playground#ajnas' },
+              { text: 'Tuning Systems', link: '/api/playground#tuning-systems' },
+              { text: 'Pitch Classes', link: '/api/playground#pitch-classes' },
+              { text: 'Intervals', link: '/api/playground#intervals' },
+              { text: 'Sources', link: '/api/playground#sources' },
+              { text: 'Modulations', link: '/api/playground#modulations' },
+            ]
+          },
+        ],
+        '/api/endpoints-reference': [
+          {
+            text: 'API Getting Started',
+            collapsed: false,
+            items: [
+              { text: 'API Overview', link: '/api/' },
               { text: 'Representative Examples', link: '/api/representative-examples' },
             ]
           },
-        {
-          text: 'Endpoints',
-          collapsed: true,
-          items: [
-            {
-              text: 'Maqāmāt',
-              link: '#maqamat',
-              items: [
-                { text: 'List Maqāmāt', link: '#listMaqamat' },
-                { text: 'Get Maqām Details', link: '#getMaqam' },
-                { text: 'Check Availability', link: '#getMaqamAvailability' },
-                { text: 'List Transpositions', link: '#listMaqamTranspositions' },
-                { text: 'Compare Across Tuning Systems', link: '#compareMaqam' },
-                { text: 'Classification: 12-Pitch-Class Sets', link: '#classifyMaqamat12PitchClassSets' },
-                { text: 'Classification: Maqam-Based Sets', link: '#classifyMaqamatByMaqamPitchClassSets' },
-              ]
-            },
-            {
-              text: 'Ajnās',
-              link: '#ajnas',
-              items: [
-                { text: 'List Ajnās', link: '#listAjnas' },
-                { text: 'Get Jins Details', link: '#getJins' },
-                { text: 'Check Availability', link: '#getJinsAvailability' },
-                { text: 'List Transpositions', link: '#listJinsTranspositions' },
-                { text: 'Compare Across Tuning Systems', link: '#compareJins' },
-              ]
-            },
-            {
-              text: 'Tuning Systems',
-              link: '#tuning-systems',
-              items: [
-                { text: 'List Tuning Systems', link: '#listTuningSystems' },
-                { text: 'Get Tuning System Details', link: '#getTuningSystemPitchClasses' },
-                { text: 'List Maqāmāt in Tuning System', link: '#listTuningSystemMaqamat' },
-              ]
-            },
-            {
-              text: 'Modulations',
-              link: '#modulations',
-              items: [
-                { text: 'Find Modulation Routes', link: '#findModulationRoutes' },
-              ]
-            },
-            {
-              text: 'Pitch Classes',
-              link: '#pitch-classes',
-              items: [
-                { text: 'List Note Names', link: '#listNoteNames' },
-                { text: 'Get Pitch Class by Note Name', link: '#getPitchClassByNoteName' },
-                { text: 'Check Note Name Availability', link: '#getNoteNameAvailability' },
-                { text: 'Compare Pitch Class Across Systems', link: '#comparePitchClassByNoteName' },
-              ]
-            },
-            {
-              text: 'Intervals',
-              link: '#intervals',
-              items: [
-                { text: 'Calculate Intervals by Note Names', link: '#calculateIntervalsByNoteNames' },
-                { text: 'Compare Intervals Across Tuning Systems', link: '#compareIntervalsByNoteNames' },
-              ]
-            },
-            {
-              text: 'Sources',
-              link: '#sources',
-              items: [
-                { text: 'List Sources', link: '#listSources' },
-                { text: 'Get Source Details', link: '#getSource' },
-                { text: 'List Tuning Systems by Source', link: '#listTuningSystemsBySource' },
-                { text: 'List Maqāmāt by Source', link: '#listMaqamatBySource' },
-                { text: 'List Ajnās by Source', link: '#listAjnasBySource' },
-              ]
-            },
-          ]
-        },
-      ],
+          {
+            text: 'Static Documentation',
+            collapsed: false,
+            items: [
+              {
+                text: 'Endpoints Reference',
+                link: '/api/endpoints-reference',
+                items: [
+                  { text: 'Quick Reference', link: '/api/endpoints-reference#quick-reference' },
+                  { text: 'Base URL', link: '/api/endpoints-reference#base-url' },
+                  { text: 'OpenAPI Specification', link: '/api/endpoints-reference#openapi-specification' },
+                  { text: 'Authentication', link: '/api/endpoints-reference#authentication' },
+                  { text: 'Response Format', link: '/api/endpoints-reference#response-format' },
+                  { text: 'Rate Limiting', link: '/api/endpoints-reference#rate-limiting' },
+                  { text: 'Common Parameters', link: '/api/endpoints-reference#common-parameters' },
+                ]
+              },
+              {
+                text: 'Maqāmāt',
+                collapsed: true,
+                link: '/api/endpoints-reference#maqamat',
+                items: [
+                  { text: 'List all maqāmāt', link: '/api/endpoints-reference#listMaqamat' },
+                  { text: 'Get detailed maqām data', link: '/api/endpoints-reference#getMaqam' },
+                  { text: 'Check maqām availability', link: '/api/endpoints-reference#getMaqamAvailability' },
+                  { text: 'List transpositions for a maqām', link: '/api/endpoints-reference#listMaqamTranspositions' },
+                  { text: 'Compare maqām data across tuning systems', link: '/api/endpoints-reference#compareMaqam' },
+                  { text: 'Classify by 12-pitch-class sets', link: '/api/endpoints-reference#classifyMaqamat12PitchClassSets' },
+                  { text: 'Classify by maqam-based pitch class sets', link: '/api/endpoints-reference#classifyMaqamatByMaqamPitchClassSets' },
+                ]
+              },
+              {
+                text: 'Ajnās',
+                collapsed: true,
+                link: '/api/endpoints-reference#ajnas',
+                items: [
+                  { text: 'List all ajnās', link: '/api/endpoints-reference#listAjnas' },
+                  { text: 'Get detailed jins data', link: '/api/endpoints-reference#getJins' },
+                  { text: 'Check jins availability', link: '/api/endpoints-reference#getJinsAvailability' },
+                  { text: 'List transpositions for a jins', link: '/api/endpoints-reference#listJinsTranspositions' },
+                  { text: 'Compare jins data across tuning systems', link: '/api/endpoints-reference#compareJins' },
+                ]
+              },
+              {
+                text: 'Tuning Systems',
+                collapsed: true,
+                link: '/api/endpoints-reference#tuning-systems',
+                items: [
+                  { text: 'List all tuning systems', link: '/api/endpoints-reference#listTuningSystems' },
+                  { text: 'Get tuning system details', link: '/api/endpoints-reference#getTuningSystemPitchClasses' },
+                  { text: 'List maqāmāt available in a tuning system', link: '/api/endpoints-reference#listTuningSystemMaqamat' },
+                ]
+              },
+              {
+                text: 'Pitch Classes',
+                collapsed: true,
+                link: '/api/endpoints-reference#pitch-classes',
+                items: [
+                  { text: 'List all note names', link: '/api/endpoints-reference#listNoteNames' },
+                  { text: 'Get pitch class details by note name', link: '/api/endpoints-reference#getPitchClassByNoteName' },
+                  { text: 'Check note name availability', link: '/api/endpoints-reference#getNoteNameAvailability' },
+                  { text: 'Compare pitch class across tuning systems', link: '/api/endpoints-reference#comparePitchClassByNoteName' },
+                ]
+              },
+              {
+                text: 'Intervals',
+                collapsed: true,
+                link: '/api/endpoints-reference#intervals',
+                items: [
+                  { text: 'Calculate intervals by note names', link: '/api/endpoints-reference#calculateIntervalsByNoteNames' },
+                  { text: 'Compare intervals across tuning systems', link: '/api/endpoints-reference#compareIntervalsByNoteNames' },
+                ]
+              },
+              {
+                text: 'Sources',
+                collapsed: true,
+                link: '/api/endpoints-reference#sources',
+                items: [
+                  { text: 'List all bibliographic sources', link: '/api/endpoints-reference#listSources' },
+                  { text: 'Get a single bibliographic source', link: '/api/endpoints-reference#getSource' },
+                  { text: 'List tuning systems by source', link: '/api/endpoints-reference#listTuningSystemsBySource' },
+                  { text: 'List maqamat by source', link: '/api/endpoints-reference#listMaqamatBySource' },
+                  { text: 'List ajnas by source', link: '/api/endpoints-reference#listAjnasBySource' },
+                ]
+              },
+            ]
+          },
+          {
+            text: 'Interactive Playground',
+            collapsed: true,
+            items: [
+              { text: 'OpenAPI Playground', link: '/api/playground' },
+              { text: 'Maqāmāt', link: '/api/playground#maqamat' },
+              { text: 'Ajnās', link: '/api/playground#ajnas' },
+              { text: 'Tuning Systems', link: '/api/playground#tuning-systems' },
+              { text: 'Pitch Classes', link: '/api/playground#pitch-classes' },
+              { text: 'Intervals', link: '/api/playground#intervals' },
+              { text: 'Sources', link: '/api/playground#sources' },
+              { text: 'Modulations', link: '/api/playground#modulations' },
+            ]
+          },
+        ],
       '/library/': [
         {
           text: 'TypeScript Library',

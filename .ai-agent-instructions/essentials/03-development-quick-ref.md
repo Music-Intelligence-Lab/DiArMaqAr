@@ -21,20 +21,71 @@ const DEFAULTS = {
 
 ### Critical Rules
 
-| Rule | Why |
-|------|-----|
-| ✅ **Write test FIRST** (TDD) | Tests define expected behavior before implementation |
-| ✅ Test BEFORE committing | User should never discover bugs |
-| ✅ Use `getNoteNameSetsWithAdjacentOctaves()` | Handles non-octave-repeating maqāmāt |
-| ✅ Never use "microtonal" | Western-centric, culturally insensitive |
-| ✅ Always validate empty strings | `param === ""` returns silent errors |
-| ✅ Check if dev server is running | Never start/restart without checking first |
-| ✅ Force user choices in UI | No defaults for critical parameters |
-| ✅ Required params are universal | Required in ALL cases, not conditionally |
-| ✅ No defaults for required params | Users must explicitly provide values |
-| ❌ Never skip consistency checks | Check similar code for patterns |
+<!-- @critical: development-rules -->
+
+**Severity Legend:** `[CRITICAL]` = Breaking/data corruption, must fix immediately | `[REQUIRED]` = Project standard, fix before commit | `[RECOMMENDED]` = Best practice
+
+| Rule | Severity | Why |
+|------|----------|-----|
+| ✅ Use `getNoteNameSetsWithAdjacentOctaves()` | `[CRITICAL]` | Fails for non-octave-repeating maqāmāt |
+| ✅ Never use "microtonal" | `[CRITICAL]` | Culturally insensitive terminology |
+| ✅ Always validate empty strings | `[CRITICAL]` | `param === ""` returns silent errors |
+| ✅ **Write test FIRST** (TDD) | `[REQUIRED]` | Tests define expected behavior |
+| ✅ Test BEFORE committing | `[REQUIRED]` | User should never discover bugs |
+| ✅ Force user choices in UI | `[REQUIRED]` | No defaults for critical parameters |
+| ✅ Required params are universal | `[REQUIRED]` | Required in ALL cases, not conditionally |
+| ✅ No defaults for required params | `[REQUIRED]` | Users must explicitly provide values |
+| ✅ Check if dev server is running | `[RECOMMENDED]` | Never start/restart without checking |
+| ❌ Never skip consistency checks | `[RECOMMENDED]` | Check similar code for patterns |
+
+### [CRITICAL] Rules with Examples
+
+<!-- @critical: rules-with-examples -->
+
+**Every `[CRITICAL]` rule above has a paired negative example:**
+
+**1. Octave-Repeating Check** (`getNoteNameSetsWithAdjacentOctaves`)
+```typescript
+// ❌ WRONG - Will fail for maqām mustaʿār, maqām awj ārā, etc.
+const noteNameSets = tuningSystem.getNoteNameSets();
+if (maqam.isMaqamPossible(noteNameSets[0])) { ... }
+
+// ✅ CORRECT - Works for ALL maqāmāt including non-octave-repeating
+const shiftedSets = tuningSystem.getNoteNameSetsWithAdjacentOctaves();
+for (const noteNameSet of shiftedSets) {
+  if (maqam.isMaqamPossible(noteNameSet)) return true;
+}
+```
+
+**2. Terminology** (Never "microtonal")
+```typescript
+// ❌ WRONG - Culturally insensitive
+"For microtonal music software"
+"microtonal scales"
+"quarter-tone deviations"
+
+// ✅ CORRECT - Culturally appropriate
+"For music software supporting custom tunings"
+"unequal divisions"
+"non-12-EDO pitches"
+```
+
+**3. Empty String Validation**
+```typescript
+// ❌ WRONG - Empty string passes this check silently
+if (!param) { ... }  // "" is falsy but should be an error
+
+// ✅ CORRECT - Explicitly check for empty string
+if (param !== null && param.trim() === "") {
+  return NextResponse.json({ error: "Invalid parameter" }, { status: 400 });
+}
+```
+
+---
 
 ### Entity ID Formats (CRITICAL for API Development)
+
+<!-- @pattern: entity-id-formats -->
 
 | Entity | `id` Field | `idName` Field | Display Name |
 |--------|------------|----------------|--------------|
@@ -68,6 +119,8 @@ standardizeText("ʿajam ʿushayrān") // → "ajam_ushayran"
 | "new component" | Follow manager pattern + bilingual |
 
 ### API Development Checklist
+
+<!-- @pattern: api-development -->
 
 | Action | Requirement |
 |--------|-------------|
@@ -392,6 +445,8 @@ import maqamat from '@/data/maqamat.json';
 
 ### Octave-Repeating Availability (CRITICAL)
 
+<!-- @critical: octave-repeating -->
+
 ```typescript
 // ✅ CORRECT - Checks 3 octaves for all maqām types
 const shiftedSets = tuningSystem.getNoteNameSetsWithAdjacentOctaves();
@@ -409,6 +464,8 @@ if (maqam.isMaqamPossible(noteNameSets[0])) { ... }
 **For musicological explanation**: See [04-musicology-essentials.md](04-musicology-essentials.md)
 
 ### Terminology Standards
+
+<!-- @terminology: culturally-appropriate -->
 
 ```typescript
 // ✅ Culturally appropriate
@@ -761,7 +818,11 @@ mcp__playwright__browser_screenshot({ fullPage: true })
 
 ## ⚠️ Common Pitfalls
 
+<!-- @pitfall: common-pitfalls -->
+
 ### Empty String Validation
+
+<!-- @pitfall: empty-string-validation -->
 
 ```typescript
 // ✅ CORRECT - Check for empty string explicitly
@@ -775,6 +836,8 @@ if (!param) { ... }  // "" is falsy but should error
 
 ### Octave-Repeating Assumptions
 
+<!-- @pitfall: octave-repeating-assumption -->
+
 ```typescript
 // ❌ WRONG - Assumes octave-repeating
 const noteNames = tuningSystem.getNoteNameSets()[0];
@@ -784,6 +847,8 @@ const shiftedSets = tuningSystem.getNoteNameSetsWithAdjacentOctaves();
 ```
 
 ### Legacy Aliases
+
+<!-- @pitfall: legacy-aliases -->
 
 ```typescript
 // ❌ WRONG - Maintaining legacy for "compatibility"

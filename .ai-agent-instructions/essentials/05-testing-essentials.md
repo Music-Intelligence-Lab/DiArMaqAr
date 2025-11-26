@@ -14,6 +14,41 @@ For recommended tuning systems, maqāmāt, and ajnās for testing and documentat
 
 ---
 
+## Instruction Compliance Checklist
+
+<!-- @meta: compliance-checklist -->
+
+**Before completing ANY task**, verify compliance with critical instructions:
+
+### [CRITICAL] Rules Verification
+
+- [ ] Used `getNoteNameSetsWithAdjacentOctaves()` for maqām/jins availability checks (NOT `getNoteNameSets()`)
+- [ ] No instances of "microtonal" in user-facing text or documentation
+- [ ] Empty string parameters explicitly validated (`param.trim() === ""`)
+- [ ] Entity references use `{id, idName, displayName}` objects (not string arrays)
+
+### [REQUIRED] Standards Verification
+
+- [ ] TDD cycle followed (test written FIRST in `tmp/`)
+- [ ] All tests pass before committing
+- [ ] Required parameters have no default values
+- [ ] API list responses use `{count, data}` format
+- [ ] Sources include `{sourceId, page}` when `includeSources=true`
+
+### Musicological Accuracy
+
+- [ ] Asymmetric maqāmāt handled independently (not `ascending.reverse()`)
+- [ ] Tuning system starting note is specified (not assumed)
+- [ ] Double-modulo pattern used for negative numbers: `((value % 7) + 7) % 7`
+
+### Cultural Sensitivity
+
+- [ ] No Western-centric framing ("microtonal", "scale" for tuning systems)
+- [ ] Arabic terminology used as primary (not parenthetical)
+- [ ] No comparison framing ("like X but with...")
+
+---
+
 ## Quick Reference
 
 ### Tuning System Categories

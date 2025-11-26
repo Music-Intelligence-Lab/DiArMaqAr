@@ -37,7 +37,8 @@ The instructions are organized into a **4-tier hierarchical system** for optimal
 2. **Skim** [essentials/01-project-essentials.md](./.ai-agent-instructions/essentials/01-project-essentials.md) - Project context
 3. **Bookmark** [essentials/03-development-quick-ref.md](./.ai-agent-instructions/essentials/03-development-quick-ref.md) ⭐ - Most-used reference
 
-**Default recommended load**: Core Principles + Development Quick Reference (~968 lines)
+**Default recommended load**: Core Principles + Development Quick Reference (~1,023 lines)
+**Minimal load option**: Core Principles + Cheatsheet (~475 lines)
 
 ---
 
@@ -53,6 +54,11 @@ The instructions are organized into a **4-tier hierarchical system** for optimal
   - **ALWAYS load this file for all tasks**
 
 ### Tier 2: Essentials (Load for Most Tasks)
+
+- **[Cheatsheet](./.ai-agent-instructions/essentials/00-cheatsheet.md)** ⚡ (~55 lines) - **ULTRA-COMPRESSED**
+  - Critical functions and never-use rules
+  - Quick validation checklist
+  - Minimal context overhead option
 
 - **[Project Essentials](./.ai-agent-instructions/essentials/01-project-essentials.md)** (~279 lines)
   - Project overview & tech stack

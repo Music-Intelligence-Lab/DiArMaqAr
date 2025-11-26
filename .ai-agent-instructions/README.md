@@ -28,6 +28,35 @@
 2. **Skim** [`essentials/01-project-essentials.md`](./essentials/01-project-essentials.md) - Project context
 3. **Bookmark** [`essentials/03-development-quick-ref.md`](./essentials/03-development-quick-ref.md) - Most-used reference
 
+### Quick Decision Tree: Which Files to Load
+
+```
+START → Always load: core/00-core-principles.md
+│
+├─ Is this a new feature?
+│  └─ Yes → + essentials/01, 03, 04
+│
+├─ Is this API-related?
+│  ├─ Endpoint development → + essentials/03 + reference/api-retrospective + openapi-formatting
+│  └─ Documentation only → + essentials/03 + reference/openapi-formatting
+│
+├─ Is this a bug fix?
+│  └─ Yes → + essentials/03, 04, 05
+│
+├─ Is this documentation work?
+│  ├─ User-facing docs → + reference/vitepress-documentation-guide + glossary/06, 07
+│  └─ API docs → + reference/openapi-formatting-guide
+│
+├─ Is this 12-pitch-class / Scala export?
+│  └─ Yes → + essentials/03, 04 + reference/12-pitch-class-sets-scala-export
+│
+├─ Is this testing?
+│  └─ Yes → + essentials/05
+│
+└─ Not sure / Other
+   └─ Default → + essentials/03 (Development Quick Ref)
+```
+
 ### Task-Based Loading Strategy
 
 Load files based on your task type for optimal context efficiency:
@@ -63,6 +92,12 @@ Load files based on your task type for optimal context efficiency:
 - **ALWAYS load this file for all tasks**
 
 ### Tier 2: Essentials (Load for Most Tasks)
+
+**[`essentials/00-cheatsheet.md`](./essentials/00-cheatsheet.md)** ⚡ (~55 lines) - **ULTRA-COMPRESSED**
+- Critical functions and rules
+- Never-use list
+- Quick validation checklist
+- **Load for minimal context overhead**
 
 **[`essentials/01-project-essentials.md`](./essentials/01-project-essentials.md)** (~279 lines)
 - Project overview & tech stack
@@ -201,16 +236,16 @@ RED (write test) → GREEN (minimal code) → REFACTOR → COMMIT
 
 | Tier | Files | Total Lines | Load Strategy |
 |------|-------|-------------|---------------|
-| **Core** | 1 | ~365 | Always load |
-| **Essentials** | 5 | ~2,451 | Load for most tasks |
+| **Core** | 1 | ~420 | Always load |
+| **Essentials** | 6 | ~2,550 | Load for most tasks |
 | **Reference** | 14 | ~7,474 | Load on demand |
 | **Glossary** | 2 | ~1,158 | Load when needed |
-| **Total** | 22 | ~11,448 | Conditional loading |
+| **Total** | 23 | ~11,600 | Conditional loading |
 
-**Before optimization:** ~9,650 lines loaded upfront (pre-restructuring)
-**After optimization:** ~968 lines default load (Core + Quick Ref: 365 + 603)
-**Reduction:** ~90% in default context load
-**Reference tier growth:** Comprehensive deep-dive documentation available on demand
+**Minimal load:** ~475 lines (Core + Cheatsheet: 420 + 55)
+**Default load:** ~1,023 lines (Core + Quick Ref: 420 + 603)
+**Reduction:** ~90% from pre-restructuring (~9,650 lines)
+**Reference tier:** Comprehensive deep-dive documentation available on demand
 
 ### Benefits
 
@@ -399,6 +434,7 @@ These instructions embody:
 ├── core/
 │   └── 00-core-principles.md
 ├── essentials/
+│   ├── 00-cheatsheet.md ⚡ (ultra-compressed)
 │   ├── 01-project-essentials.md
 │   ├── 02-architecture-essentials.md
 │   ├── 03-development-quick-ref.md ⭐
@@ -440,8 +476,29 @@ servers/                          ⭐ MCP TOOL DISCOVERY (Code API Pattern)
 
 ---
 
-*Last Updated: 2025-11-24*
-*Recent additions:*
-- *MCP Code API pattern integration (servers/ directory)*
-- *Decolonial computing theory reference (~599 lines)*
-- *VitePress documentation guide (~850 lines)*
+## 📝 Changelog
+
+### 2025-11-26
+- **Added**: Rule hierarchy section for conflict resolution (core/00)
+- **Added**: Semantic anchor tags throughout documents (`@critical`, `@pitfall`, `@pattern`, `@terminology`)
+- **Added**: Severity markers `[CRITICAL]`/`[REQUIRED]`/`[RECOMMENDED]` to rules (essentials/03, 04)
+- **Added**: Negative examples for all critical rules (essentials/03)
+- **Added**: Decision tree for file loading (README.md)
+- **Added**: Instruction compliance checklist (essentials/05)
+- **Added**: Agent capability adaptation section (core/00)
+- **Added**: Feedback protocol for outdated information (core/00)
+- **Added**: Ultra-compressed cheatsheet (essentials/00-cheatsheet.md)
+
+### 2025-11-24
+- **Added**: MCP Code API pattern integration (servers/ directory)
+- **Added**: Decolonial computing theory reference (~599 lines)
+- **Added**: VitePress documentation guide (~850 lines)
+
+### 2025-11-06
+- **Major**: Hierarchical restructuring (Core/Essentials/Reference/Glossary)
+- **Reduced**: Context load by ~90% (from ~9,650 lines → ~968 lines default)
+- **Added**: Task-based loading strategy
+- **Eliminated**: Redundancy across files
+
+### Earlier Updates
+- See git history for complete change log

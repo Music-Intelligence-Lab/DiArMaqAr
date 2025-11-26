@@ -151,6 +151,73 @@ sidebar: {
 
 **⚠️ IMPORTANT**: When adding new documentation pages, you MUST update the sidebar configuration in `docs/.vitepress/config.mts`
 
+### API Sidebar Navigation Pattern
+
+The API documentation uses a comprehensive left sidebar with collapsible sections and hash links to all endpoints:
+
+```typescript
+'/api/': [
+  {
+    text: 'API Getting Started',  // Explicit "API" prefix for clarity
+    collapsed: false,
+    items: [
+      { text: 'API Overview', link: '/api/' },  // Not just "Overview"
+      { text: 'Representative Examples', link: '/api/representative-examples' },
+    ]
+  },
+  {
+    text: 'Static Documentation',
+    collapsed: false,
+    items: [
+      {
+        text: 'Endpoints Reference',
+        link: '/api/endpoints-reference',
+        items: [
+          // Quick reference sections with hash links
+          { text: 'Quick Reference', link: '/api/endpoints-reference#quick-reference' },
+          { text: 'Base URL', link: '/api/endpoints-reference#base-url' },
+          // ... more sections
+        ]
+      },
+      {
+        text: 'Maqāmāt',
+        link: '/api/endpoints-reference#maqamat',
+        items: [
+          // Individual endpoints with hash links
+          { text: 'List all maqāmāt', link: '/api/endpoints-reference#listMaqamat' },
+          { text: 'Get detailed maqām data', link: '/api/endpoints-reference#getMaqam' },
+          // ... all endpoints
+        ]
+      },
+      // ... other resource types
+    ]
+  },
+  {
+    text: 'Interactive Playground',
+    collapsed: false,
+    items: [
+      { text: 'OpenAPI Playground', link: '/api/playground' },
+      // Tag-based navigation links
+      { text: 'Maqāmāt', link: '/api/playground#maqamat' },
+      // ... other tags
+    ]
+  },
+]
+```
+
+**Key Patterns:**
+- **Explicit labeling**: Use "API Getting Started" not just "Getting Started", "API Overview" not just "Overview"
+- **Comprehensive endpoint listing**: Include all endpoints with hash links to detailed documentation
+- **Collapsible sections**: Use `collapsed: false` for primary sections, `collapsed: true` for secondary
+- **Context-aware sidebars**: Different sidebar configs for `/api/`, `/api/playground`, `/api/endpoints-reference`
+- **Hash links**: All endpoint links use hash anchors (e.g., `#listMaqamat`) for direct navigation
+
+**API Overview Page (`docs/api/index.md`):**
+- Must list ALL endpoints organized by resource type
+- Include endpoint count per category (e.g., "Endpoints (7):")
+- Each endpoint should link to detailed documentation with hash anchor
+- Total endpoint count should be stated at the top
+
 ---
 
 ## Build Commands

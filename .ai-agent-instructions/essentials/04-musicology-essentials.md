@@ -19,6 +19,8 @@ This document outlines key musicological principles essential for correct comput
 
 ## 0. Octave-Repeating vs Non-Octave-Repeating (CRITICAL)
 
+<!-- @critical: octave-repeating-musicology -->
+
 ### Distinction
 
 Maqāmāt and ajnās fall into two categories based on their pitch class count:
@@ -87,6 +89,8 @@ Single-octave checking incorrectly reports these as "unavailable".
 
 ## 1. Asymmetric Melodic Paths (ṣuʿūd vs hubūṭ)
 
+<!-- @critical: asymmetric-paths -->
+
 ### Critical Insight
 
 Maqāmāt can have **fundamentally different** ascending and descending sequences, not just reversed note orders.
@@ -149,6 +153,8 @@ const letterIndex = ((startIndex + offset) % 7 + 7) % 7;
 
 ## 3. Sequential Letter Resolution for Enharmonic Spelling
 
+<!-- @pattern: enharmonic-spelling -->
+
 ### Principle
 
 Melodic sequences must use **consecutive natural letters** with appropriate accidentals for staff notation readability.
@@ -176,6 +182,8 @@ Melodic sequences must use **consecutive natural letters** with appropriate acci
 
 ### JavaScript Modulo Gotcha
 
+<!-- @pitfall: javascript-modulo -->
+
 ```typescript
 // ❌ JavaScript handles negative modulo incorrectly
 -2 % 7 = -2  // JavaScript result
@@ -188,6 +196,8 @@ Melodic sequences must use **consecutive natural letters** with appropriate acci
 ---
 
 ## 4. Tuning System Independence
+
+<!-- @critical: tuning-system-independence -->
 
 ### Principle
 
@@ -343,6 +353,8 @@ Modulation analysis identifies:
 
 ## 9. Common Programming Pitfalls
 
+<!-- @pitfall: programming-pitfalls -->
+
 ### JavaScript Modulo for Negative Numbers
 
 ```typescript
@@ -445,6 +457,8 @@ The `transposeSayr()` function intelligently shifts note stops, maintains struct
 
 ## 12. Maqām Family Classification (Canonical Reference)
 
+<!-- @pattern: family-classification -->
+
 ### Critical Insight
 
 Maqām families are determined by analyzing the **first jins at maqām degree 1**. Since family classification depends on ajnās analysis, and ajnās analysis depends on tuning system pitch classes, **using different tuning systems produces inconsistent family classifications**.
@@ -538,19 +552,25 @@ These insights inform every design decision in this archive:
 
 ## Summary of Key Principles
 
-1. **Octave-Repeating**: Use 3-octave checking for availability (CRITICAL)
-2. **Asymmetric Sequences**: Ascending ≠ Descending (reversed)
-3. **Variable Counts**: Maqāmāt can have 7, 8, 9, 10+ pitch classes
-4. **Sequential Letters**: Staff notation requires consecutive natural letters
-5. **Tuning Independence**: Same maqam, different realizations across systems
-6. **Enharmonic Context**: C# vs Db depends on melodic direction
-7. **Note Names and Ordering**: Abstract note name order from `NoteName.ts` arrays; tuning system context maps to `pitchClassIndex`
-8. **Starting Note Significance**: Not simple transposition, different frameworks
-9. **Modulation Structure**: Maqāmāt modulate, ajnas don't (they're targets)
-10. **JavaScript Gotchas**: Double-modulo for negative numbers
-11. **Embedded Analysis**: Pattern matching finds ajnas within maqāmāt
-12. **Computational Transposition of Suyūr**: First implementation enabling systematic exploration of melodic pathways
-13. **Family Classification**: Requires canonical tuning system reference (al-Ṣabbāgh 1954)
+<!-- @meta: musicology-summary -->
+
+**Severity:** `[CRITICAL]` = Will cause incorrect results | `[REQUIRED]` = Must follow for accuracy | `[RECOMMENDED]` = Best practice
+
+| # | Principle | Severity |
+|---|-----------|----------|
+| 1 | **Octave-Repeating**: Use 3-octave checking for availability | `[CRITICAL]` |
+| 2 | **Asymmetric Sequences**: Ascending ≠ Descending (reversed) | `[CRITICAL]` |
+| 3 | **Variable Counts**: Maqāmāt can have 7, 8, 9, 10+ pitch classes | `[REQUIRED]` |
+| 4 | **Sequential Letters**: Staff notation requires consecutive natural letters | `[REQUIRED]` |
+| 5 | **Tuning Independence**: Same maqam, different realizations across systems | `[REQUIRED]` |
+| 6 | **Enharmonic Context**: C# vs Db depends on melodic direction | `[REQUIRED]` |
+| 7 | **Note Names and Ordering**: Abstract order from `NoteName.ts`; tuning context maps to `pitchClassIndex` | `[REQUIRED]` |
+| 8 | **Starting Note Significance**: Not simple transposition, different frameworks | `[REQUIRED]` |
+| 9 | **Modulation Structure**: Maqāmāt modulate, ajnas don't | `[REQUIRED]` |
+| 10 | **JavaScript Gotchas**: Double-modulo for negative numbers | `[CRITICAL]` |
+| 11 | **Embedded Analysis**: Pattern matching finds ajnas within maqāmāt | `[RECOMMENDED]` |
+| 12 | **Suyūr Transposition**: First computational implementation | `[RECOMMENDED]` |
+| 13 | **Family Classification**: Requires canonical tuning system (al-Ṣabbāgh 1954) | `[REQUIRED]` |
 
 These principles ensure computational implementations respect the independent theoretical logic of Arabic maqām theory rather than imposing Western musical frameworks.
 
