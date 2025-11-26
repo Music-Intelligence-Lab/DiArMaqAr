@@ -31,59 +31,71 @@ curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-
 
 ## API Endpoints
 
+All API endpoints are organized by resource type. Each endpoint includes a link to detailed documentation with parameters, examples, and response formats.
+
+**Total: 26 endpoints** across 7 resource categories.
+
 ### Maqāmāt
 Documented modal frameworks with historical source attribution.
 
-**Endpoints:**
+**Endpoints (7):**
 - `GET /maqamat` - List all maqāmāt → [Details](./endpoints-reference#listMaqamat)
-- `GET /maqamat/{id}` - Get maqām details → [Details](./endpoints-reference#getMaqam)
-- `GET /maqamat/{id}/availability` - Check availability → [Details](./endpoints-reference#getMaqamAvailability)
-- `GET /maqamat/{id}/transpositions` - List transpositions → [Details](./endpoints-reference#listMaqamTranspositions)
-- `GET /maqamat/{id}/compare` - Compare across systems → [Details](./endpoints-reference#compareMaqam)
+- `GET /maqamat/{idName}` - Get detailed maqām data → [Details](./endpoints-reference#getMaqam)
+- `GET /maqamat/{idName}/availability` - Check maqām availability across tuning systems → [Details](./endpoints-reference#getMaqamAvailability)
+- `GET /maqamat/{idName}/transpositions` - List transpositions for a maqām → [Details](./endpoints-reference#listMaqamTranspositions)
+- `GET /maqamat/{idName}/compare` - Compare maqām data across multiple tuning systems → [Details](./endpoints-reference#compareMaqam)
+- `GET /maqamat/classification/12-pitch-class-sets` - Classify maqāmāt by 12-pitch-class sets → [Details](./endpoints-reference#classifyMaqamat12PitchClassSets)
+- `GET /maqamat/classification/maqam-pitch-class-sets` - Classify maqāmāt by maqam-based pitch class sets → [Details](./endpoints-reference#classifyMaqamatByMaqamPitchClassSets)
 
 ### Ajnās
-Documented melodic fragments with historical source attribution.
+Documented tetrachords (melodic fragments) with historical source attribution.
 
-**Endpoints:**
+**Endpoints (5):**
 - `GET /ajnas` - List all ajnās → [Details](./endpoints-reference#listAjnas)
-- `GET /ajnas/{id}` - Get jins details → [Details](./endpoints-reference#getJins)
-- `GET /ajnas/{id}/availability` - Check availability → [Details](./endpoints-reference#getJinsAvailability)
-- `GET /ajnas/{id}/transpositions` - List transpositions → [Details](./endpoints-reference#listJinsTranspositions)
-- `GET /ajnas/{id}/compare` - Compare across systems → [Details](./endpoints-reference#compareJins)
+- `GET /ajnas/{idName}` - Get detailed jins data → [Details](./endpoints-reference#getJins)
+- `GET /ajnas/{idName}/availability` - Check jins availability across tuning systems → [Details](./endpoints-reference#getJinsAvailability)
+- `GET /ajnas/{idName}/transpositions` - List transpositions for a jins → [Details](./endpoints-reference#listJinsTranspositions)
+- `GET /ajnas/{idName}/compare` - Compare jins data across multiple tuning systems → [Details](./endpoints-reference#compareJins)
 
 ### Tuning Systems
-Historical tuning systems from al-Kindī (874 CE) to contemporary approaches.
+Historical tuning systems spanning from al-Kindī (874 CE) to contemporary approaches.
 
-**Endpoints:**
+**Endpoints (3):**
 - `GET /tuning-systems` - List all tuning systems → [Details](./endpoints-reference#listTuningSystems)
-- `GET /tuning-systems/{id}/{startingNote}/pitch-classes` - Get pitch classes → [Details](./endpoints-reference#getTuningSystemPitchClasses)
-- `GET /tuning-systems/{id}/{startingNote}/maqamat` - List maqāmāt in system → [Details](./endpoints-reference#listTuningSystemMaqamat)
+- `GET /tuning-systems/{id}/{startingNote}/pitch-classes` - Get tuning system details (pitch classes) → [Details](./endpoints-reference#getTuningSystemPitchClasses)
+- `GET /tuning-systems/{id}/{startingNote}/maqamat` - List maqāmāt available in a tuning system → [Details](./endpoints-reference#listTuningSystemMaqamat)
 
-### Pitch Classes (by Note Names)
-Query pitch class data by note name across tuning systems.
+### Pitch Classes
+Note names and pitch class data across all tuning systems.
 
-**Endpoints:**
+**Endpoints (4):**
 - `GET /pitch-classes/note-names` - List all note names → [Details](./endpoints-reference#listNoteNames)
-- `GET /pitch-classes/note-names/{noteName}` - Get pitch class by note name → [Details](./endpoints-reference#getPitchClassByNoteName)
-- `GET /pitch-classes/note-names/{noteName}/availability` - Check availability → [Details](./endpoints-reference#getNoteNameAvailability)
-- `GET /pitch-classes/note-names/{noteName}/compare` - Compare across systems → [Details](./endpoints-reference#comparePitchClassByNoteName)
+- `GET /pitch-classes/note-names/{noteName}` - Get pitch class details by note name → [Details](./endpoints-reference#getPitchClassByNoteName)
+- `GET /pitch-classes/note-names/{noteName}/availability` - Check note name availability across tuning systems → [Details](./endpoints-reference#getNoteNameAvailability)
+- `GET /pitch-classes/note-names/{noteName}/compare` - Compare pitch class by note name across tuning systems → [Details](./endpoints-reference#comparePitchClassByNoteName)
 
 ### Intervals
 Calculate intervals between note names.
 
-**Endpoints:**
+**Endpoints (2):**
 - `GET /intervals` - Calculate intervals by note names → [Details](./endpoints-reference#calculateIntervalsByNoteNames)
-- `GET /intervals/compare` - Compare intervals across systems → [Details](./endpoints-reference#compareIntervalsByNoteNames)
+- `GET /intervals/compare` - Compare intervals across tuning systems → [Details](./endpoints-reference#compareIntervalsByNoteNames)
 
 ### Sources
-Bibliographic references for all documented content.
+Bibliographic sources documenting the historical foundation of the archive's musical data.
 
-**Endpoints:**
-- `GET /sources` - List all sources → [Details](./endpoints-reference#listSources)
-- `GET /sources/{id}` - Get source details → [Details](./endpoints-reference#getSource)
+**Endpoints (5):**
+- `GET /sources` - List all bibliographic sources → [Details](./endpoints-reference#listSources)
+- `GET /sources/{id}` - Get a single bibliographic source → [Details](./endpoints-reference#getSource)
 - `GET /sources/{id}/tuning-systems` - List tuning systems by source → [Details](./endpoints-reference#listTuningSystemsBySource)
-- `GET /sources/{id}/maqamat` - List maqāmāt by source → [Details](./endpoints-reference#listMaqamatBySource)
-- `GET /sources/{id}/ajnas` - List ajnās by source → [Details](./endpoints-reference#listAjnasBySource)
+- `GET /sources/{id}/maqamat` - List maqamat by source → [Details](./endpoints-reference#listMaqamatBySource)
+- `GET /sources/{id}/ajnas` - List ajnas by source → [Details](./endpoints-reference#listAjnasBySource)
+
+### Modulations
+Modulation routes between maqāmāt using al-Shawwā's 1946 modulation guidelines.
+
+**Endpoints (1):**
+- `GET /modulation-routes` - Find modulation routes between maqāmāt → [Details](./endpoints-reference#findModulationRoutes)
 
 ---
 
