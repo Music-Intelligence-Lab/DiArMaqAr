@@ -104,7 +104,7 @@ Most endpoints support these optional parameters:
     if (tag === 'Maqāmāt') {
       markdown += `Documented modal frameworks with historical source attribution.\n\n`;
     } else if (tag === 'Ajnās') {
-      markdown += `Documented tetrachords (melodic fragments) with historical source attribution.\n\n`;
+      markdown += `Documented tri/tetra/penta-chords with historical source attribution.\n\n`;
     } else if (tag === 'Tuning Systems') {
       markdown += `Historical tuning systems spanning from al-Kindī (874 CE) to contemporary approaches.\n\n`;
     }
