@@ -42,10 +42,10 @@ The easiest way to get started is using the REST API:
 curl http://localhost:3000/api/maqamat
 
 # Get specific maqām data with full details
-curl "http://localhost:3000/api/maqamat/maqam_bayyat?tuningSystem=al-Farabi-(950g)&startingNote=ushayran&pitchClassDataType=cents"
+curl "http://localhost:3000/api/maqamat/maqam_bayyat?tuningSystem=alfarabi_950g&startingNote=ushayran&pitchClassDataType=cents"
 
 # Include transpositions and modulations
-curl "http://localhost:3000/api/maqamat/maqam_bayyat?tuningSystem=al-Farabi-(950g)&startingNote=ushayran&includeTranspositions=true&includeModulations=true"
+curl "http://localhost:3000/api/maqamat/maqam_bayyat?tuningSystem=alfarabi_950g&startingNote=ushayran&includeTranspositions=true&includeModulations=true"
 ```
 
 ### Using the TypeScript Library

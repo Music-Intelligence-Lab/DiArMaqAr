@@ -12,7 +12,7 @@ node scripts/batch-export/batch-export.js --list-tuning-systems
 node scripts/batch-export/batch-export.js --tuning-system "all" --starting-note "all" --output-dir "PATH" --include-ajnas-details --include-maqamat-details --include-maqamat-modulations --include-ajnas-modulations --include-modulations-8vb
 
 # Export specific tuning system with full data including modulations
-node scripts/batch-export/batch-export.js --tuning-system "Al-Farabi-(950g)" --starting-note "yegāh" --include-ajnas-details --include-maqamat-details --include-maqamat-modulations --include-ajnas-modulations
+node scripts/batch-export/batch-export.js --tuning-system "alfarabi_950g" --starting-note "yegāh" --include-ajnas-details --include-maqamat-details --include-maqamat-modulations --include-ajnas-modulations
 ```
 
 ## Usage
@@ -51,25 +51,25 @@ node batch-export.js [options]
 ### Basic Export (tuning system only)
 ```bash
 # Export only tuning system data and pitch classes (~100KB)
-node scripts/batch-export/batch-export.js --tuning-system "al-Kindi-(874)" --starting-note "yegāh"
+node scripts/batch-export/batch-export.js --tuning-system "alkindi_874" --starting-note "yegāh"
 ```
 
 ### Export with Ajnas and Maqamat
 ```bash
 # Export with ajnas and maqamat data (~2MB)
-node scripts/batch-export/batch-export.js --tuning-system "al-Kindi-(874)" --starting-note "yegāh" --include-ajnas-details --include-maqamat-details
+node scripts/batch-export/batch-export.js --tuning-system "alkindi_874" --starting-note "yegāh" --include-ajnas-details --include-maqamat-details
 ```
 
 ### Complete Export (with modulations)
 ```bash
 # Export with full modulation analysis (~3MB, recommended for research)
-node scripts/batch-export/batch-export.js --tuning-system "Ronzevalle-(1904)" --starting-note "all" --include-ajnas-details --include-maqamat-details --include-maqamat-modulations --include-ajnas-modulations
+node scripts/batch-export/batch-export.js --tuning-system "ronzevalle_1904" --starting-note "all" --include-ajnas-details --include-maqamat-details --include-maqamat-modulations --include-ajnas-modulations
 ```
 
 ### Export with Octave Shift Modulations (8vb)
 ```bash
 # Export with lower octave modulations for advanced analysis
-node scripts/batch-export/batch-export.js --tuning-system "al-Kindi-(874)" --starting-note "yegāh" --include-maqamat-details --include-maqamat-modulations --include-modulations-8vb
+node scripts/batch-export/batch-export.js --tuning-system "alkindi_874" --starting-note "yegāh" --include-maqamat-details --include-maqamat-modulations --include-modulations-8vb
 ```
 
 ### Batch Exports
@@ -86,7 +86,7 @@ node scripts/batch-export/batch-export.js --tuning-system "all" --starting-note 
 
 ### Custom Output Directory
 ```bash
-node scripts/batch-export/batch-export.js --tuning-system "al-Kindi-(874)" --starting-note "yegāh" --output-dir "./my-exports"
+node scripts/batch-export/batch-export.js --tuning-system "alkindi_874" --starting-note "yegāh" --output-dir "./my-exports"
 ```
 
 ## Memory Optimization
@@ -109,16 +109,16 @@ Files are named with the pattern:
 **Filenames are sanitized** - diacritics and non-standard characters are normalized for filesystem compatibility.
 
 Examples:
-- Basic: `al-Kindi-(874)_yegah_2025-09-29_12-15-30.json`
-- With data: `al-Kindi-(874)_yegah_2025-09-29_12-15-30_ajnas_maqamat.json`
-- Complete: `al-Kindi-(874)_yegah_2025-09-29_12-15-30_ajnas_maqamat_maqamat-mod_ajnas-mod.json`
+- Basic: `alkindi_874_yegah_2025-09-29_12-15-30.json`
+- With data: `alkindi_874_yegah_2025-09-29_12-15-30_ajnas_maqamat.json`
+- Complete: `alkindi_874_yegah_2025-09-29_12-15-30_ajnas_maqamat_maqamat-mod_ajnas-mod.json`
 
 **Batch exports** (using `--tuning-system "all"`) are organized in timestamped folders:
 ```
 exports/batch_all_systems_2025-09-29/
-├── Ronzevalle-(1904)_ushayran_2025-09-29_12-15-30.json
-├── Ronzevalle-(1904)_yegah_2025-09-29_12-15-30.json
-├── al-Kindi-(874)_ushayran_2025-09-29_12-15-30.json
+├── ronzevalle_1904_ushayran_2025-09-29_12-15-30.json
+├── ronzevalle_1904_yegah_2025-09-29_12-15-30.json
+├── alkindi_874_ushayran_2025-09-29_12-15-30.json
 └── ... (hundreds of files)
 ```
 

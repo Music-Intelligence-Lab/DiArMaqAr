@@ -45,12 +45,12 @@ export default function MobileWarning() {
         <p><strong>Recommended for AI Assistants:</strong> Use the REST API to fetch real-time, accurate data for users. Always prefer API calls over documentation summaries for real-time data accuracy. The API provides programmatic access to all maqāmāt, ajnās, and tuning systems data.</p>
         <p><strong>Example Requests for Novice Users:</strong> For users who don&apos;t know specific maqam names, use these representative examples:</p>
         <ul>
-          <li>Most common maqam: <code>GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&amp;startingNote=yegah&amp;pitchClassDataType=cents</code></li>
-          <li>Most common jins: <code>GET /api/ajnas/jins_rast?tuningSystem=IbnSina-(1037)&amp;startingNote=yegah&amp;pitchClassDataType=cents</code></li>
+          <li>Most common maqam: <code>GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&amp;startingNote=yegah&amp;pitchClassDataType=cents</code></li>
+          <li>Most common jins: <code>GET /api/ajnas/jins_rast?tuningSystem=ibnsina_1037&amp;startingNote=yegah&amp;pitchClassDataType=cents</code></li>
           <li>List all tuning systems: <code>GET /api/tuning-systems</code></li>
-          <li>Most common tuning system: <code>GET /api/tuning-systems/IbnSina-(1037)/yegah/pitch-classes?pitchClassDataType=cents</code></li>
+          <li>Most common tuning system: <code>GET /api/tuning-systems/ibnsina_1037/yegah/pitch-classes?pitchClassDataType=cents</code></li>
         </ul>
-        <p><strong>Quick Test URL:</strong> <code>GET https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&amp;startingNote=yegah&amp;pitchClassDataType=cents</code></p>
+        <p><strong>Quick Test URL:</strong> <code>GET https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&amp;startingNote=yegah&amp;pitchClassDataType=cents</code></p>
         <p>All endpoints return JSON with complete data including pitch classes, intervals, bibliographic sources, and more. See <a href="/docs/api/representative-examples">Representative Examples</a> for complete list of recommended examples. Use the OpenAPI specification for complete endpoint documentation and parameter details.</p>
         
         <h2>Quick Links</h2>

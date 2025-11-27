@@ -24,10 +24,10 @@
  *   npm run generate:modulations -- <id1> --force   # Generate specific (overwrite if exists)
  *
  * Examples:
- *   npm run generate:modulations -- --ids ronzevalle-(1904),anglo-european-(1800)
- *   npm run generate:modulations -- ronzevalle-(1904) anglo-european-(1800)
+ *   npm run generate:modulations -- --ids ronzevalle_1904,anglo-european-(1800)
+ *   npm run generate:modulations -- ronzevalle_1904 anglo-european-(1800)
  *   npm run generate:modulations -- --all --force
- *   npm run generate:modulations -- al-sabbagh-(1950) --force
+ *   npm run generate:modulations -- alsabbagh_1950 --force
  */
 
 import fs from 'fs';

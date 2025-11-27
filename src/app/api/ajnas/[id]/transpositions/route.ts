@@ -55,7 +55,7 @@ export async function GET(
         NextResponse.json(
           {
             error: "tuningSystem parameter is required",
-            hint: "Add ?tuningSystem=IbnSina-(1037) to your request. Use /api/ajnas/{id}/availability to see available tuning systems"
+            hint: "Add ?tuningSystem=ibnsina_1037 to your request. Use /api/ajnas/{id}/availability to see available tuning systems"
           },
           { status: 400 }
         )
@@ -68,7 +68,7 @@ export async function GET(
           {
             error: "Invalid parameter: tuningSystem",
             message: "The 'tuningSystem' parameter cannot be empty. Provide a valid tuning system ID.",
-            hint: "Specify a tuning system like ?tuningSystem=IbnSina-(1037)"
+            hint: "Specify a tuning system like ?tuningSystem=ibnsina_1037"
           },
           { status: 400 }
         )

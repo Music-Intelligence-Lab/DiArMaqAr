@@ -153,13 +153,13 @@ paths:
                         hasSuyur: true
                         availableInTuningSystems: 4
                         tuningSystemsAvailability:
-                          - tuningSystemId: "al-Farabi-(950g)"
+                          - tuningSystemId: "alfarabi_950g"
                             tuningSystemStartingNoteNames: ["ʿushayrān"]
-                          - tuningSystemId: "CairoCongressTuningCommittee-(1929)"
+                          - tuningSystemId: "cairocongresstuningcommittee_1929"
                             tuningSystemStartingNoteNames: ["yegāh"]
-                          - tuningSystemId: "al-Sabbagh-(1954)"
+                          - tuningSystemId: "alsabbagh_1954"
                             tuningSystemStartingNoteNames: ["rāst"]
-                          - tuningSystemId: "Allami-(2025)"
+                          - tuningSystemId: "allami_2025"
                             tuningSystemStartingNoteNames: ["rāst"]
                         maqamDetailsUrl: "/api/maqamat/maqam_yegah"
                         sources:
@@ -179,9 +179,9 @@ paths:
                         hasSuyur: true
                         availableInTuningSystems: 35
                         tuningSystemsAvailability:
-                          - tuningSystemId: "Ronzevalle-(1904)"
+                          - tuningSystemId: "ronzevalle_1904"
                             tuningSystemStartingNoteNames: ["ʿushayrān", "yegāh"]
-                          - tuningSystemId: "al-Farabi-(950g)"
+                          - tuningSystemId: "alfarabi_950g"
                             tuningSystemStartingNoteNames: ["ʿushayrān"]
                         maqamDetailsUrl: "/api/maqamat/maqam_farahfazza"
                         sources:
@@ -209,10 +209,10 @@ paths:
                         hasSuyur: true
                         availableInTuningSystems: 4
                         tuningSystemsAvailability:
-                          - tuningSystemId: "al-Farabi-(950g)"
+                          - tuningSystemId: "alfarabi_950g"
                             tuningSystemStartingNoteNames: ["ʿushayrān"]
                             tuningSystemStartingNoteNamesAr: ["عشيران"]
-                          - tuningSystemId: "CairoCongressTuningCommittee-(1929)"
+                          - tuningSystemId: "cairocongresstuningcommittee_1929"
                             tuningSystemStartingNoteNames: ["yegāh"]
                             tuningSystemStartingNoteNamesAr: ["يگاه"]
                         maqamDetailsUrl: "/api/maqamat/maqam_yegah"
@@ -297,18 +297,18 @@ paths:
         - name: tuningSystem
           in: query
           required: true
-          description: Tuning system identifier (e.g., 'IbnSina-(1037)', 'al-Farabi-(950g)', 'Meshshaqa-(1899)')
+          description: Tuning system identifier (e.g., 'ibnsina_1037', 'alfarabi_950g', 'meshshaqa_1899')
           schema:
             type: string
           examples:
             ibnsina:
-              value: "IbnSina-(1037)"
+              value: "ibnsina_1037"
               summary: Ibn Sīnā (1037) - 7-Fret Oud 17-Tone (representative example)
             farabi:
-              value: "al-Farabi-(950g)"
+              value: "alfarabi_950g"
               summary: al-Fārābī (950g) - First Oud Tuning 27-Tone (representative example)
             meshshaqa:
-              value: "Meshshaqa-(1899)"
+              value: "meshshaqa_1899"
               summary: Meshshāqa (1899) - Arabic Octave According to the Modernists (representative example)
         - name: startingNote
           in: query
@@ -458,7 +458,7 @@ paths:
                       includeIntervals: false
                     context:
                       tuningSystem:
-                        id: "IbnSina-(1037)"
+                        id: "ibnsina_1037"
                         displayName: "Ibn Sīnā  (1037) 7-Fret Oud 17-Tone"
                         version: "2025-10-18T19:42:23.643Z"
                         originalValueType: "fraction"
@@ -491,7 +491,7 @@ paths:
                       sources: []
                     context:
                       tuningSystem:
-                        id: "IbnSina-(1037)"
+                        id: "ibnsina_1037"
                         displayName: "Ibn Sīnā  (1037) 7-Fret Oud 17-Tone"
                         version: "2025-10-18T19:42:23.643Z"
                         originalValueType: "fraction"
@@ -552,7 +552,7 @@ paths:
                       includeIntervals: false
                     context:
                       tuningSystem:
-                        id: "IbnSina-(1037)"
+                        id: "ibnsina_1037"
                         displayName: "Ibn Sīnā  (1037) 7-Fret Oud 17-Tone"
                         version: "2025-10-18T19:42:23.643Z"
                         originalValueType: "fraction"
@@ -619,7 +619,7 @@ paths:
                       includeIntervals: false
                     context:
                       tuningSystem:
-                        id: "IbnSina-(1037)"
+                        id: "ibnsina_1037"
                         displayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
                         startingNoteName: "ushayran"
                     pitchData:
@@ -695,7 +695,7 @@ paths:
                   summary: Options response (when options=true)
                   value:
                     maqam: "maqām rāst"
-                    tuningSystem: "IbnSina-(1037)"
+                    tuningSystem: "ibnsina_1037"
                     availableParameters:
                       tuningSystem:
                         required: true
@@ -732,8 +732,8 @@ paths:
                       ajnasData: "Ajnās (constituent melodic structures) are always included in the response for maqām analysis"
                       formatOptions: "The 'pitchClassDataType' parameter controls which pitch class properties are returned. When omitted, only minimal fields are returned. Use 'all' for comprehensive data or specific formats like 'cents', 'fraction', etc. for targeted data."
                     examples:
-                      - "/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents&includeIntervals=true"
-                      - "/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&transposeTo=nawa&includeModulations=true"
+                      - "/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents&includeIntervals=true"
+                      - "/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&transposeTo=nawa&includeModulations=true"
         '400':
           description: Invalid request parameters
           content:
@@ -785,7 +785,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
               example:
-                error: "Maqām 'maqam_bestenegar' cannot be realized in tuning system 'al-Kindi-(874)' with starting note 'ushayran'"
+                error: "Maqām 'maqam_bestenegar' cannot be realized in tuning system 'alkindi_874' with starting note 'ushayran'"
                 hint: "Use /api/maqamat/{idName}/availability to see compatible tuning systems"
         '500':
           $ref: '#/components/responses/ServerError'
@@ -889,11 +889,11 @@ paths:
                     availability:
                       count: 29
                       tuningSystems:
-                        - tuningSystemId: "IbnSina-(1037)"
+                        - tuningSystemId: "ibnsina_1037"
                           tuningSystemDisplayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
                           tuningSystemStartingNoteNames: ["ʿushayrān", "yegāh"]
                           tuningSystemStartingNoteNamesIds: ["ushayran", "yegah"]
-                        - tuningSystemId: "al-Farabi-(950g)"
+                        - tuningSystemId: "alfarabi_950g"
                           tuningSystemDisplayName: "al-Fārābī (950g) First Oud Tuning (Full First Octave)"
                           tuningSystemStartingNoteNames: ["ʿushayrān", "yegāh"]
                           tuningSystemStartingNoteNamesIds: ["ushayran", "yegah"]
@@ -909,11 +909,11 @@ paths:
                     availability:
                       count: 15
                       tuningSystems:
-                        - tuningSystemId: "IbnSina-(1037)"
+                        - tuningSystemId: "ibnsina_1037"
                           tuningSystemDisplayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
                           tuningSystemStartingNoteNames: ["ʿushayrān"]
                           tuningSystemStartingNoteNamesIds: ["ushayran"]
-                        - tuningSystemId: "al-Farabi-(950g)"
+                        - tuningSystemId: "alfarabi_950g"
                           tuningSystemDisplayName: "al-Fārābī (950g) First Oud Tuning (Full First Octave)"
                           tuningSystemStartingNoteNames: ["ʿushayrān", "yegāh"]
                           tuningSystemStartingNoteNamesIds: ["ushayran", "yegah"]
@@ -1048,8 +1048,8 @@ paths:
                     count: 35
                     data:
                       - tuningSystem:
-                          id: "IbnSina-(1037)"
-                          idName: "IbnSina-(1037)"
+                          id: "ibnsina_1037"
+                          idName: "ibnsina_1037"
                           displayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
                           version: "2025-10-18T19:42:23.643Z"
                           year: "1037"
@@ -1062,8 +1062,8 @@ paths:
                           - sourceId: "al-Shawwa-(1946)"
                             page: "49"
                       - tuningSystem:
-                          id: "al-Farabi-(950g)"
-                          idName: "al-Farabi-(950g)"
+                          id: "alfarabi_950g"
+                          idName: "alfarabi_950g"
                           displayName: "al-Fārābī (950g) First Oud Tuning (Full First Octave) 27-Tone"
                           version: "2025-10-18T19:42:23.643Z"
                           year: "950g"
@@ -1081,8 +1081,8 @@ paths:
                     count: 35
                     data:
                       - tuningSystem:
-                          id: "IbnSina-(1037)"
-                          idName: "IbnSina-(1037)"
+                          id: "ibnsina_1037"
+                          idName: "ibnsina_1037"
                           displayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
                           displayNameAr: "ابن سينا (1037) 7-Fret Oud 17-Tone"
                           version: "2025-10-18T19:42:23.643Z"
@@ -1097,8 +1097,8 @@ paths:
                           - sourceId: "al-Shawwa-(1946)"
                             page: "49"
                       - tuningSystem:
-                          id: "al-Farabi-(950g)"
-                          idName: "al-Farabi-(950g)"
+                          id: "alfarabi_950g"
+                          idName: "alfarabi_950g"
                           displayName: "al-Fārābī (950g) First Oud Tuning (Full First Octave) 27-Tone"
                           displayNameAr: "الفارابي (950g) تنغيم العود الأول (الديوان الأول الكامل) ٢٧-نغمة"
                           version: "2025-10-18T19:42:23.643Z"
@@ -1133,7 +1133,7 @@ paths:
           description: Tuning system identifier
           schema:
             type: string
-          example: "CairoCongressTuningCommittee-(1929)"
+          example: "cairocongresstuningcommittee_1929"
         - name: startingNote
           in: path
           required: true
@@ -1321,10 +1321,10 @@ paths:
         - name: tuningSystem
           in: query
           required: true
-          description: Tuning system identifier (e.g., 'IbnSina-(1037)', 'al-Farabi-(950g)', 'Meshshaqa-(1899)')
+          description: Tuning system identifier (e.g., 'ibnsina_1037', 'alfarabi_950g', 'meshshaqa_1899')
           schema:
             type: string
-          example: "al-Sabbagh-(1954)"
+          example: "alsabbagh_1954"
         - name: startingNote
           in: query
           required: true
@@ -1468,7 +1468,7 @@ paths:
             Comma-separated tuning system IDs. All tuning systems will use the same starting note and optional transposition.
           schema:
             type: string
-          example: "CairoCongressTuningCommittee-(1929),al-Sabbagh-(1954)"
+          example: "cairocongresstuningcommittee_1929,alsabbagh_1954"
         - name: startingNote
           in: query
           required: true
@@ -1723,7 +1723,7 @@ paths:
                           includeIntervals: true
                         context:
                           tuningSystem:
-                            id: "Meshshaqa-(1899)"
+                            id: "meshshaqa_1899"
                             displayName: "Meshshāqa (1899) Arabic Octave According to the Modernists"
                             version: "2025-10-18T19:41:17.132Z"
                             numberOfPitchClassesSingleOctave: 24
@@ -1771,7 +1771,7 @@ paths:
                           includeIntervals: true
                         context:
                           tuningSystem:
-                            id: "IbnSina-(1037)"
+                            id: "ibnsina_1037"
                             displayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
                             version: "2025-10-18T19:41:17.132Z"
                             numberOfPitchClassesSingleOctave: 17
@@ -1832,7 +1832,7 @@ paths:
                           includeIntervals: false
                         context:
                           tuningSystem:
-                            id: "IbnSina-(1037)"
+                            id: "ibnsina_1037"
                             displayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
                             version: "2025-10-18T19:41:17.132Z"
                             numberOfPitchClassesSingleOctave: 17
@@ -1881,7 +1881,7 @@ paths:
                           includeIntervals: false
                         context:
                           tuningSystem:
-                            id: "IbnSina-(1037)"
+                            id: "ibnsina_1037"
                             displayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
                             version: "2025-10-18T19:41:17.132Z"
                             numberOfPitchClassesSingleOctave: 17
@@ -1918,8 +1918,8 @@ paths:
                   value:
                     error: "tuningSystems parameter is required"
                     message: "Provide comma-separated tuning system IDs"
-                    hint: 'Format: ?tuningSystems=IbnSina-(1037),al-Farabi-(950g)'
-                    example: "/api/maqamat/maqam_bayyat/compare?tuningSystems=CairoCongressTuningCommittee-(1929),al-Sabbagh-(1954)&startingNote=rast&pitchClassDataType=cents"
+                    hint: 'Format: ?tuningSystems=ibnsina_1037,alfarabi_950g'
+                    example: "/api/maqamat/maqam_bayyat/compare?tuningSystems=cairocongresstuningcommittee_1929,alsabbagh_1954&startingNote=rast&pitchClassDataType=cents"
                 missingStartingNote:
                   summary: Missing startingNote parameter
                   value:
@@ -1953,11 +1953,11 @@ paths:
       description: |
         Groups maqāmāt according to sets of 12 pitch classes suitable for MIDI keyboard tuning
         and Scala file export. Each set is created by merging pitch classes from the specified
-        tuning system with al-Kindi-(874) filler pitch classes, based on matching IPN reference
+        tuning system with alkindi_874 filler pitch classes, based on matching IPN reference
         note names.
 
         **Critical Design Principles:**
-        - **Octave Alignment**: Both the maqām tuning system and al-Kindi-(874) use the same
+        - **Octave Alignment**: Both the maqām tuning system and alkindi_874 use the same
           `startingNote` to ensure octaves align correctly
         - **Chromatic Order**: Each set contains exactly 12 pitch classes ordered chromatically
           starting from the maqām's tonic (e.g., C, C#, D, D#... for Rāst)
@@ -1968,7 +1968,7 @@ paths:
           without post-processing or calculation
 
         **The Algorithm:**
-        1. Loads pitch classes from both the specified tuning system and al-Kindi-(874) using
+        1. Loads pitch classes from both the specified tuning system and alkindi_874 using
            the same `startingNote`
         2. For each maqām transposition:
            - Extracts IPN reference note names from ascending and descending sequences
@@ -1997,15 +1997,15 @@ paths:
       parameters:
         - name: tuningSystem
           in: query
-          description: "Tuning system ID for maqāmāt (default: CairoCongressTuningCommittee-(1929))"
+          description: "Tuning system ID for maqāmāt (default: cairocongresstuningcommittee_1929)"
           schema:
             type: string
-            default: "CairoCongressTuningCommittee-(1929)"
-          example: "CairoCongressTuningCommittee-(1929)"
+            default: "cairocongresstuningcommittee_1929"
+          example: "cairocongresstuningcommittee_1929"
         - name: startingNote
           in: query
           description: |
-            Starting note for both the maqām tuning system and al-Kindi-(874) (default: yegah).
+            Starting note for both the maqām tuning system and alkindi_874 (default: yegah).
             IMPORTANT: Both tuning systems must use the same starting note to ensure octaves align
             correctly and pitch classes can be properly selected from matching octaves.
 
@@ -2410,14 +2410,14 @@ paths:
                     incompatibleMaqamatCount: 0
                     parameters:
                       tuningSystem:
-                        id: "CairoCongressTuningCommittee-(1929)"
+                        id: "cairocongresstuningcommittee_1929"
                         idName: "cairocongresstuningcommittee-1929"
                         displayName: "Cairo Congress Tuning Committee (1929)"
                       startingNote:
                         idName: "yegah"
                         displayName: "yegāh"
                       alKindiTuningSystem:
-                        id: "al-Kindi-(874)"
+                        id: "alkindi_874"
                         idName: "al-kindi-874"
                         displayName: "al-Kindī (874)"
                       alKindiStartingNote:
@@ -2467,7 +2467,7 @@ paths:
         bayyāt on dūgāh and maqām segāh on segāh.
 
         **Key Differences from 12-Pitch-Class-Sets:**
-        - **No Chromatic Base**: Does not merge with al-Kindi-(874) or chromatic filler pitch classes
+        - **No Chromatic Base**: Does not merge with alkindi_874 or chromatic filler pitch classes
         - **Variable Set Sizes**: Sets can contain any number of pitch classes (7, 8, 10, etc.), not fixed at 12
         - **Octave-Equivalent Matching**: Pitch classes in different octaves treated as equivalent (C in octave 1 = C in octave 2)
         - **Single Tuning System**: Uses only the specified tuning system (simpler than 12-pitch-class-sets)
@@ -2512,11 +2512,11 @@ paths:
       parameters:
         - name: tuningSystem
           in: query
-          description: "Tuning system ID for all maqāmāt (default: CairoCongressTuningCommittee-(1929))"
+          description: "Tuning system ID for all maqāmāt (default: cairocongresstuningcommittee_1929)"
           schema:
             type: string
-            default: "CairoCongressTuningCommittee-(1929)"
-          example: "CairoCongressTuningCommittee-(1929)"
+            default: "cairocongresstuningcommittee_1929"
+          example: "cairocongresstuningcommittee_1929"
         - name: startingNote
           in: query
           description: |
@@ -2837,7 +2837,7 @@ paths:
                               noteNameDisplayName: "segāh"
                     parameters:
                       tuningSystem:
-                        id: "CairoCongressTuningCommittee-(1929)"
+                        id: "cairocongresstuningcommittee_1929"
                         idName: "cairocongresstuningcommittee-1929"
                         displayName: "Cairo Congress Tuning Committee (1929)"
                       startingNote:
@@ -2884,10 +2884,10 @@ paths:
         - name: id
           in: path
           required: true
-          description: Tuning system identifier (e.g., 'IbnSina-(1037)', 'al-Farabi-(950g)', 'Meshshaqa-(1899)')
+          description: Tuning system identifier (e.g., 'ibnsina_1037', 'alfarabi_950g', 'meshshaqa_1899')
           schema:
                     type: string
-          example: "al-Farabi-(950g)"
+          example: "alfarabi_950g"
         - name: startingNote
           in: path
           required: true
@@ -2983,10 +2983,10 @@ paths:
         - name: tuningSystem
           in: query
           required: true
-          description: Tuning system identifier (e.g., 'al-Farabi-(950g)', 'IbnSina-(1037)')
+          description: Tuning system identifier (e.g., 'alfarabi_950g', 'ibnsina_1037')
           schema:
             type: string
-          example: "al-Farabi-(950g)"
+          example: "alfarabi_950g"
         - name: startingNote
           in: query
           required: true
@@ -3203,7 +3203,7 @@ paths:
                                 modulationCategory: "fourthDegree"
                     context:
                       tuningSystem:
-                        id: "al-Farabi-(950g)"
+                        id: "alfarabi_950g"
                         displayName: "al-Fārābī (950) غ"
                       startingNote:
                         idName: "ushayran"
@@ -3232,7 +3232,7 @@ paths:
                       data: []
                     context:
                       tuningSystem:
-                        id: "al-Farabi-(950g)"
+                        id: "alfarabi_950g"
                         displayName: "al-Fārābī (950) غ"
                       startingNote:
                         idName: "ushayran"
@@ -3439,18 +3439,18 @@ paths:
         - name: tuningSystem
           in: query
           required: true
-          description: Tuning system identifier (e.g., 'IbnSina-(1037)', 'al-Farabi-(950g)', 'Meshshaqa-(1899)')
+          description: Tuning system identifier (e.g., 'ibnsina_1037', 'alfarabi_950g', 'meshshaqa_1899')
           schema:
             type: string
           examples:
             ibnsina:
-              value: "IbnSina-(1037)"
+              value: "ibnsina_1037"
               summary: Ibn Sīnā (1037) - 7-Fret Oud 17-Tone (representative example)
             farabi:
-              value: "al-Farabi-(950g)"
+              value: "alfarabi_950g"
               summary: al-Fārābī (950g) - First Oud Tuning 27-Tone (representative example)
             meshshaqa:
-              value: "Meshshaqa-(1899)"
+              value: "meshshaqa_1899"
               summary: Meshshāqa (1899) - Arabic Octave According to the Modernists (representative example)
         - name: startingNote
           in: query
@@ -3522,22 +3522,6 @@ paths:
             enum: ["true", "false"]
             default: "false"
           example: "true"
-        - name: includeModulations
-          in: query
-          description: Include modulation possibilities to other ajnās
-          schema:
-            type: string
-            enum: ["true", "false"]
-            default: true
-          example: "true"
-        - name: includeModulations8vb
-          in: query
-          description: Include available modulations an octave below
-          schema:
-            type: string
-            enum: ["true", "false"]
-            default: true
-          example: "true"
         - name: includeArabic
           in: query
           required: false
@@ -3588,7 +3572,7 @@ paths:
                       includeIntervals: false
                     context:
                       tuningSystem:
-                        id: "IbnSina-(1037)"
+                        id: "ibnsina_1037"
                         displayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
                         version: "2025-10-18T19:41:17.132Z"
                         originalValueType: "fraction"
@@ -3647,7 +3631,7 @@ paths:
                       includeIntervals: false
                     context:
                       tuningSystem:
-                        id: "IbnSina-(1037)"
+                        id: "ibnsina_1037"
                         displayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
                         version: "2025-10-18T19:41:17.132Z"
                         originalValueType: "fraction"
@@ -3678,7 +3662,7 @@ paths:
                       includeIntervals: false
                     context:
                       tuningSystem:
-                        id: "IbnSina-(1037)"
+                        id: "ibnsina_1037"
                         displayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
                         startingNoteName: "yegah"
                     pitchData:
@@ -3694,34 +3678,11 @@ paths:
                         noteName: "dugah"
                         noteNameDisplay: "dūgāh"
                         cents: 204.0
-                    modulations:
-                      ajnas:
-                        - jinsDegree: "I"
-                          noteNameId: "rast"
-                          noteNameDisplay: "rāst"
-                          pitchClassIndex: 0
-                          count: 5
-                          modulations:
-                            - id: "6"
-                              idName: "jins_nahawand"
-                              displayName: "jins nahāwand"
-                            - id: "19"
-                              idName: "jins_rast"
-                              displayName: "jins rāst"
-                        - jinsDegree: "III"
-                          noteNameId: "kurd"
-                          noteNameDisplay: "kurd"
-                          pitchClassIndex: 2
-                          count: 4
-                          modulations:
-                            - id: "3"
-                              idName: "jins_segah"
-                              displayName: "jins segāh"
                 withOptions:
                   summary: Options response (when options=true)
                   value:
                     jins: "Jins Kurd"
-                    tuningSystem: "IbnSina-(1037)"
+                    tuningSystem: "ibnsina_1037"
                     availableParameters:
                       tuningSystem:
                         required: true
@@ -3742,19 +3703,11 @@ paths:
                         options: ["rast", "nawa", "dugah"]
                         default: null
                         description: "Transpose to specific tonic (taṣwīr) - only valid transpositions shown"
-                      includeModulations:
-                        type: "boolean"
-                        default: true
-                        description: "Include modulation analysis (ajnās)"
-                      includeModulations8vb:
-                        type: "boolean"
-                        default: true
-                        description: "Include available modulations an octave below"
                     notes:
                       formatOptions: "The 'pitchClassDataType' parameter controls which pitch class properties are returned. Use 'all' for comprehensive data or specific formats like 'cents', 'fraction', etc. for targeted data."
                     examples:
-                      - "/api/ajnas/jins_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents&includeIntervals=true"
-                      - "/api/ajnas/jins_kurd?tuningSystem=al-Kindi-(874)&startingNote=ushayran&pitchClassDataType=cents&includeIntervals=true"
+                      - "/api/ajnas/jins_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents&includeIntervals=true"
+                      - "/api/ajnas/jins_kurd?tuningSystem=alkindi_874&startingNote=ushayran&pitchClassDataType=cents&includeIntervals=true"
         '400':
           description: Invalid request parameters
           content:
@@ -3805,7 +3758,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
               example:
-                error: "Jins 'jins_rast' cannot be realized in tuning system 'al-Kindi-(874)' with starting note 'ushayran'"
+                error: "Jins 'jins_rast' cannot be realized in tuning system 'alkindi_874' with starting note 'ushayran'"
                 hint: "Use /api/ajnas/{idName}/availability to see compatible tuning systems"
         '500':
           $ref: '#/components/responses/ServerError'
@@ -3909,11 +3862,11 @@ paths:
                     availability:
                       count: 29
                       tuningSystems:
-                        - tuningSystemId: "IbnSina-(1037)"
+                        - tuningSystemId: "ibnsina_1037"
                           tuningSystemDisplayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
                           tuningSystemStartingNoteNames: ["ʿushayrān", "yegāh"]
                           tuningSystemStartingNoteNamesIds: ["ushayran", "yegah"]
-                        - tuningSystemId: "al-Farabi-(950g)"
+                        - tuningSystemId: "alfarabi_950g"
                           tuningSystemDisplayName: "al-Fārābī (950g) First Oud Tuning (Full First Octave)"
                           tuningSystemStartingNoteNames: ["ʿushayrān", "yegāh"]
                           tuningSystemStartingNoteNamesIds: ["ushayran", "yegah"]
@@ -3929,11 +3882,11 @@ paths:
                     availability:
                       count: 15
                       tuningSystems:
-                        - tuningSystemId: "IbnSina-(1037)"
+                        - tuningSystemId: "ibnsina_1037"
                           tuningSystemDisplayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
                           tuningSystemStartingNoteNames: ["ʿushayrān"]
                           tuningSystemStartingNoteNamesIds: ["ushayran"]
-                        - tuningSystemId: "al-Farabi-(950g)"
+                        - tuningSystemId: "alfarabi_950g"
                           tuningSystemDisplayName: "al-Fārābī (950g) First Oud Tuning (Full First Octave)"
                           tuningSystemStartingNoteNames: ["ʿushayrān", "yegāh"]
                           tuningSystemStartingNoteNamesIds: ["ushayran", "yegah"]
@@ -3983,10 +3936,10 @@ paths:
         - name: tuningSystem
           in: query
           required: true
-          description: Tuning system identifier (e.g., 'IbnSina-(1037)', 'al-Farabi-(950g)', 'Meshshaqa-(1899)')
+          description: Tuning system identifier (e.g., 'ibnsina_1037', 'alfarabi_950g', 'meshshaqa_1899')
           schema:
             type: string
-          example: "Meshshaqa-(1899)"
+          example: "meshshaqa_1899"
         - name: startingNote
           in: query
           required: true
@@ -4106,7 +4059,7 @@ paths:
                   summary: Missing tuningSystem parameter
                   value:
                     error: "tuningSystem parameter is required"
-                    hint: "Add ?tuningSystem=IbnSina-(1037) to your request. Use /api/ajnas/{id}/availability to see available tuning systems"
+                    hint: "Add ?tuningSystem=ibnsina_1037 to your request. Use /api/ajnas/{id}/availability to see available tuning systems"
                 missingStartingNote:
                   summary: Missing startingNote parameter
                   value:
@@ -4115,12 +4068,12 @@ paths:
                 invalidStartingNote:
                   summary: Invalid starting note for tuning system
                   value:
-                    error: "Starting note 'invalid' is not valid for tuning system 'IbnSina-(1037)'"
+                    error: "Starting note 'invalid' is not valid for tuning system 'ibnsina_1037'"
                     validOptions: ["ʿushayrān", "yegāh"]
                 jinsNotPossible:
                   summary: Jins not possible in this context
                   value:
-                    error: "Jins 'Jins Kurd' is not possible in tuning system 'IbnSina-(1037)' with starting note 'yegāh'"
+                    error: "Jins 'Jins Kurd' is not possible in tuning system 'ibnsina_1037' with starting note 'yegāh'"
                     hint: "Use /api/ajnas/{id}/availability to find compatible combinations"
         '404':
           description: Jins or tuning system not found
@@ -4173,7 +4126,7 @@ paths:
             Comma-separated tuning system IDs. All tuning systems will use the same starting note and optional transposition.
           schema:
             type: string
-          example: "al-Farabi-(950g),Meshshaqa-(1899)"
+          example: "alfarabi_950g,meshshaqa_1899"
         - name: startingNote
           in: query
           required: true
@@ -4379,7 +4332,7 @@ paths:
                           includeIntervals: true
                         context:
                           tuningSystem:
-                            id: "IbnSina-(1037)"
+                            id: "ibnsina_1037"
                             displayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
                             version: "2025-10-18T19:41:17.132Z"
                             numberOfPitchClassesSingleOctave: 17
@@ -4427,7 +4380,7 @@ paths:
                           includeIntervals: true
                         context:
                           tuningSystem:
-                            id: "IbnSina-(1037)"
+                            id: "ibnsina_1037"
                             displayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
                             version: "2025-10-18T19:41:17.132Z"
                             numberOfPitchClassesSingleOctave: 17
@@ -4478,8 +4431,8 @@ paths:
                   value:
                     error: "tuningSystems parameter is required"
                     message: "Provide comma-separated tuning system IDs"
-                    hint: 'Format: ?tuningSystems=IbnSina-(1037),al-Farabi-(950g)'
-                    example: "/api/ajnas/jins_segah/compare?tuningSystems=al-Farabi-(950g),Meshshaqa-(1899)&startingNote=ushayran&pitchClassDataType=cents"
+                    hint: 'Format: ?tuningSystems=ibnsina_1037,alfarabi_950g'
+                    example: "/api/ajnas/jins_segah/compare?tuningSystems=alfarabi_950g,meshshaqa_1899&startingNote=ushayran&pitchClassDataType=cents"
                 missingStartingNote:
                   summary: Missing startingNote parameter
                   value:
@@ -4548,7 +4501,7 @@ paths:
           description: Filter by tuning system ID to show only note names that exist in that system (URL-safe, case-insensitive, diacritics-insensitive)
           schema:
             type: string
-          example: "Meshshaqa-(1899)"
+          example: "meshshaqa_1899"
         - name: includeArabic
           in: query
           required: false
@@ -4647,7 +4600,7 @@ paths:
           description: Tuning system ID. If provided, returns data for that tuning system only. If omitted, returns data for all tuning systems.
           schema:
             type: string
-          example: "CairoCongressTuningCommittee-(1929)"
+          example: "cairocongresstuningcommittee_1929"
         - name: startingNote
           in: query
           required: false
@@ -4879,7 +4832,7 @@ paths:
           description: Comma-separated tuning system IDs
           schema:
             type: string
-          example: "Meshshaqa-(1899),CairoCongressTuningCommittee-(1929)"
+          example: "meshshaqa_1899,cairocongresstuningcommittee_1929"
         - name: startingNote
           in: query
           required: true
@@ -5005,7 +4958,7 @@ paths:
           description: Tuning system ID. If provided, calculates in that tuning system only. If omitted, calculates in all tuning systems.
           schema:
             type: string
-          example: "al-Sabbagh-(1954)"
+          example: "alsabbagh_1954"
         - name: startingNote
           in: query
           required: false
@@ -5171,7 +5124,7 @@ paths:
           description: Comma-separated tuning system IDs
           schema:
             type: string
-          example: "al-Farabi-(950g),CairoCongressTuningCommittee-(1929)"
+          example: "alfarabi_950g,cairocongresstuningcommittee_1929"
         - name: startingNote
           in: query
           required: true
@@ -5945,16 +5898,16 @@ components:
             properties:
               tuningSystemId:
                 type: string
-                example: "al-Farabi-(950g)"
+                example: "alfarabi_950g"
               tuningSystemStartingNoteNames:
                 type: array
                 items:
                   type: string
                 example: ["ʿushayrān"]
           example:
-            - tuningSystemId: "al-Farabi-(950g)"
+            - tuningSystemId: "alfarabi_950g"
               tuningSystemStartingNoteNames: ["ʿushayrān"]
-            - tuningSystemId: "IbnSina-(1037)"
+            - tuningSystemId: "ibnsina_1037"
               tuningSystemStartingNoteNames: ["ʿushayrān", "yegāh"]
         maqamDetailsUrl:
           type: string
@@ -5988,8 +5941,8 @@ components:
       properties:
         tuningSystemId:
           type: string
-          description: Tuning system identifier (e.g., 'IbnSina-(1037)', 'al-Farabi-(950g)', 'Meshshaqa-(1899)')
-          example: "IbnSina-(1037)"
+          description: Tuning system identifier (e.g., 'ibnsina_1037', 'alfarabi_950g', 'meshshaqa_1899')
+          example: "ibnsina_1037"
         tuningSystemDisplayName:
           type: string
           description: Display name formatted as "Creator (Year) Title" (e.g., "Ibn Sīnā (1037) 7-Fret Oud 17-Tone")
@@ -6134,55 +6087,6 @@ components:
           items:
             type: object
             description: Interval data (fields vary by format parameter)
-        modulations:
-          type: object
-          description: Optional - included when includeModulations=true
-          properties:
-            ajnas:
-              type: array
-              description: Modulation possibilities to other ajnās
-              items:
-                type: object
-                properties:
-                  jinsDegree:
-                    type: string
-                    description: Scale degree where modulation occurs
-                  noteNameId:
-                    type: string
-                    description: URL-safe note name identifier
-                  noteNameDisplay:
-                    type: string
-                    description: Note name with diacritics
-                  pitchClassIndex:
-                    type: integer
-                    description: Pitch class index at this degree
-                  count:
-                    type: integer
-                    description: Number of modulation options
-                  modulations:
-                    type: array
-                    description: Array of ajnās that can be modulated to
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                        idName:
-                          type: string
-                        displayName:
-                          type: string
-        lowerOctaveModulations:
-          type: object
-          description: Optional - included when includeModulations8vb=true
-          properties:
-            degreesNoteNames:
-              type: object
-              properties:
-                ajnas:
-                  type: object
-            ajnas:
-              type: object
-              description: Lower octave modulation possibilities organized by degree
 
     SourceResponse:
       type: object
@@ -6367,7 +6271,7 @@ components:
         id:
           type: string
           description: URL-safe tuning system identifier
-          example: "IbnSina-(1037)"
+          example: "ibnsina_1037"
         displayName:
           type: string
           description: Human-readable name

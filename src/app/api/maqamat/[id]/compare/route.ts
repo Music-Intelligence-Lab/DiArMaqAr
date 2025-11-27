@@ -144,7 +144,7 @@ function formatIntervalData(intervals: any[], format: string) {
  * 
  * Query parameters:
  * - tuningSystems (required): Comma-separated tuning system IDs
- *   Format: "IbnSina-(1037),al-Farabi-(950g)"
+ *   Format: "ibnsina_1037,alfarabi_950g"
  * - startingNote (required): Starting note name (URL-safe, diacritics-insensitive) - applies to all tuning systems
  * - pitchClassDataType (required): Output format (all, cents, fraction, etc.)
  * - intervals (optional): Include interval data ("true" or "false", default: "false")
@@ -216,8 +216,8 @@ export async function GET(
           {
             error: "tuningSystems parameter is required",
             message: "Provide comma-separated tuning system IDs",
-            hint: 'Format: ?tuningSystems=IbnSina-(1037),al-Farabi-(950g)',
-            example: '/api/maqamat/maqam_rast/compare?tuningSystems=IbnSina-(1037),al-Farabi-(950g)&startingNote=yegah&pitchClassDataType=cents'
+            hint: 'Format: ?tuningSystems=ibnsina_1037,alfarabi_950g',
+            example: '/api/maqamat/maqam_rast/compare?tuningSystems=ibnsina_1037,alfarabi_950g&startingNote=yegah&pitchClassDataType=cents'
           },
           { status: 400 }
         )
@@ -247,7 +247,7 @@ export async function GET(
           {
             error: "Invalid tuningSystems parameter",
             message: "At least one tuning system ID must be provided",
-            hint: 'Format: ?tuningSystems=IbnSina-(1037),al-Farabi-(950g)'
+            hint: 'Format: ?tuningSystems=ibnsina_1037,alfarabi_950g'
           },
           { status: 400 }
         )

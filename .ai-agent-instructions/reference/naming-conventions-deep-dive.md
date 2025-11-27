@@ -57,12 +57,12 @@ import { standardizeText } from '@/functions/export';
 
 | Field | Format | Example |
 |-------|--------|---------|
-| `id` | `Creator-(Year)` | `"IbnSina-(1037)"`, `"Ronzevalle-(1904)"` |
+| `id` | `creator_year` | `"ibnsina_1037"`, `"ronzevalle_1904"` |
 | Display | `stringify()` method | `"Ibn Sīnā (1037) ..."` |
 
 **ID generation** (line 136 in TuningSystem.ts):
 ```typescript
-this.id = standardizeText(`${creatorEnglish}-(${year})`.replaceAll(" ", "").replaceAll("+", ""));
+this.id = standardizeText(`${creatorEnglish}_${year}`.replaceAll(" ", "").replaceAll("+", "").replaceAll("-", ""));
 ```
 
 **API usage**:

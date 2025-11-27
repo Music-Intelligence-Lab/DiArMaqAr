@@ -35,6 +35,7 @@ const DEFAULTS = {
 | ✅ Force user choices in UI | `[REQUIRED]` | No defaults for critical parameters |
 | ✅ Required params are universal | `[REQUIRED]` | Required in ALL cases, not conditionally |
 | ✅ No defaults for required params | `[REQUIRED]` | Users must explicitly provide values |
+| ✅ Use Python3 for utility scripts | `[REQUIRED]` | Faster for data manipulation and large files |
 | ✅ Check if dev server is running | `[RECOMMENDED]` | Never start/restart without checking |
 | ❌ Never skip consistency checks | `[RECOMMENDED]` | Check similar code for patterns |
 
@@ -83,6 +84,45 @@ if (param !== null && param.trim() === "") {
 
 ---
 
+### [REQUIRED] Python3 for Utility Scripts
+
+<!-- @required: python-utility-scripts -->
+
+**When creating utility scripts for local tasks, ALWAYS use Python3 instead of TypeScript.**
+
+**Why Python3:**
+- Faster development cycle (no compilation step)
+- Superior JSON/data manipulation libraries
+- Better handling of large files and batch operations
+- Simpler file I/O operations
+- Rich ecosystem for data processing (pandas, json, csv, etc.)
+
+**Use Python3 for:**
+```bash
+# ✅ Data transformation scripts
+python3 scripts/transform-maqamat-data.py
+
+# ✅ Batch file processing
+python3 scripts/generate-all-modulations.py
+
+# ✅ JSON manipulation and validation
+python3 scripts/validate-tuning-systems.py
+
+# ✅ One-off data analysis
+python3 scripts/analyze-interval-patterns.py
+```
+
+**Use TypeScript for:**
+```typescript
+// ✅ Application code (models, components, API routes)
+// ✅ Shared business logic that runs in the app
+// ✅ Type definitions and interfaces
+```
+
+**If unsure, ASK** - when the boundary is unclear (e.g., a script that might become part of the app), ask the user which language to use.
+
+---
+
 ### Entity ID Formats (CRITICAL for API Development)
 
 <!-- @pattern: entity-id-formats -->
@@ -117,6 +157,7 @@ standardizeText("ʿajam ʿushayrān") // → "ajam_ushayran"
 | "play/audio" | SoundContext + client guards |
 | "API endpoint" | Validation + error handling + **TDD** |
 | "new component" | Follow manager pattern + bilingual |
+| "script for data/files" | **Python3** - NOT TypeScript. Ask if unsure. |
 
 ### API Development Checklist
 

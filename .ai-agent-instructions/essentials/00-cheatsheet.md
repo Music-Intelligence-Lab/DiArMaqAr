@@ -40,6 +40,7 @@ standardizeText("maqām rāst") // → "maqam_rast"
 | centsTolerance | `5` | Always use unless specified |
 | imports | `@/*` | Never relative paths |
 | startingNote | **MANDATORY** | No default, user must specify |
+| utility scripts | **Python3** | NOT TypeScript. Ask if unsure. |
 
 ## TDD Workflow
 

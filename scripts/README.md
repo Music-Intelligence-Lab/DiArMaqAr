@@ -22,11 +22,11 @@ A comprehensive command-line tool for batch exporting tuning system data in JSON
 node scripts/batch-export/batch-export.js --list-tuning-systems
 
 # Basic export
-node scripts/batch-export/batch-export.js --tuning-system "Al-Farabi-(950g)" --starting-note "yegāh"
+node scripts/batch-export/batch-export.js --tuning-system "alfarabi_950g" --starting-note "yegāh"
 
 # Complete export with modulations
 node scripts/batch-export/batch-export.js \
-  --tuning-system "Al-Farabi-(950g)" \
+  --tuning-system "alfarabi_950g" \
   --starting-note "yegāh" \
   --include-ajnas-details \
   --include-maqamat-details \

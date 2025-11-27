@@ -11,7 +11,7 @@ Digital Arabic Maqām Archive (DiArMaqAr) — programmatic access to historicall
 
 **Try this first:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents"
+curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents"
 ```
 
 **Base URL:** `https://diarmaqar.netlify.app/api`

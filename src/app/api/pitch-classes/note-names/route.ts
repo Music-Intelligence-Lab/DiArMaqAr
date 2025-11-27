@@ -63,7 +63,7 @@ export async function GET(request: Request) {
           {
             error: "Invalid parameter: filterByTuningSystem",
             message: "The 'filterByTuningSystem' parameter cannot be empty. Either omit it or provide a valid tuning system ID.",
-            hint: "Remove '?filterByTuningSystem=' from your URL or specify a tuning system like '?filterByTuningSystem=IbnSina-(1037)'"
+            hint: "Remove '?filterByTuningSystem=' from your URL or specify a tuning system like '?filterByTuningSystem=ibnsina_1037'"
           },
           { status: 400 }
         )
