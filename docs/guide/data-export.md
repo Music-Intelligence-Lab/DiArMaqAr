@@ -49,16 +49,16 @@ Tabular format suitable for spreadsheet software and statistical analysis:
 
 ### Scala (.scl and .kbm)
 
-Scala is a widely-used format for microtonal scale representation, compatible with many music software and hardware.
+Scala is a widely-used format for tuning system representation, compatible with many music software and hardware.
 
-#### Scala Scale Files (.scl)
-- Contains scale definition with pitch ratios or cents
+#### Scala Tuning Files (.scl)
+- Contains tuning system definition with pitch ratios or cents
 - Comprehensive metadata from database
 - Proper formatting for Scala software
 - Includes bibliographic attribution
 
 #### Scala Keymap Files (.kbm)
-- Maps scale degrees to MIDI keys
+- Maps tuning system pitch classes to MIDI keys
 - Defines reference note and octave size
 - Enables accurate playback in compatible software
 
@@ -188,7 +188,7 @@ df = pd.DataFrame(data['maqamat'])
 1. Export tuning system to .scl format
 2. Import into Scala software
 3. Load into compatible synthesizer
-4. Play with accurate microtonal tuning
+4. Play with accurate tuning
 
 ### DAW Integration
 

@@ -1,18 +1,18 @@
 ---
 title: MIDI Integration
-description: MIDI input/output capabilities including MPE support for microtonal playback
+description: MIDI input/output capabilities including MPE support for precise non-12-EDO playback
 ---
 
 # MIDI Integration
 
-DiArMaqAr implements sophisticated MIDI integration allowing users to interact with any tuning system, or the subsequences of ajnās or maqāmāt, through both computer keyboard and MIDI controller input, with precise microtonal output capabilities.
+DiArMaqAr implements sophisticated MIDI integration allowing users to interact with any tuning system, or the subsequences of ajnās or maqāmāt, through both computer keyboard and MIDI controller input, with precise pitch output capabilities for all intervals.
 
 ## Overview
 
 The platform supports comprehensive MIDI functionality:
 - **Input**: Computer keyboard and MIDI controllers
 - **Output**: Monophonic and MPE (MIDI Polyphonic Expression)
-- **Precision**: 14-bit pitch bend for accurate microtonal intervals
+- **Precision**: 14-bit pitch bend for accurate non-12-EDO intervals
 - **Real-time**: Low-latency response for live exploration
 
 ## MIDI Input
@@ -46,23 +46,23 @@ The platform supports comprehensive MIDI functionality:
 ### MPE (MIDI Polyphonic Expression)
 
 **What is MPE?**
-MIDI Polyphonic Expression enables accurate tuning of polyphonic software and hardware synthesizers without tuning artifacts. Traditional MIDI uses pitch bend on a single channel for all voices, causing conflicts when playing microtonal harmonies.
+MIDI Polyphonic Expression enables accurate tuning of polyphonic software and hardware synthesizers without tuning artifacts. Traditional MIDI uses pitch bend on a single channel for all voices, causing conflicts when playing non-12-EDO harmonies.
 
 **How MPE Works:**
 - Each voice gets its own MIDI channel
 - Individual pitch bend per channel
 - No conflicts between simultaneous pitches
-- Precise microtonal intervals preserved
+- Precise non-12-EDO intervals preserved
 
 **MPE Precision:**
 - **14-bit pitch bend**: High resolution control messages
 - **Accurate conversion**: Fractional ratios and cents converted to precise MIDI values
 - **No artifacts**: Pitch relationships remain accurate in digital audio workstations
-- **Polyphonic harmony**: Multiple microtonal pitches simultaneously
+- **Polyphonic harmony**: Multiple non-12-EDO pitches simultaneously
 
 ## Pitch Bend Calculation
 
-The system uses 14-bit pitch bend calculations to achieve precise microtonal intervals:
+The system uses 14-bit pitch bend calculations to achieve precise non-12-EDO intervals:
 
 **Process:**
 1. Converts fractional ratios/cents to target frequency
@@ -73,7 +73,7 @@ The system uses 14-bit pitch bend calculations to achieve precise microtonal int
 **Precision:**
 - Maintains mathematical accuracy
 - Preserves pitch relationships essential to traditional practice
-- Enables authentic microtonal playback in external systems
+- Enables authentic playback of all intervals in external systems
 
 ## Use Cases
 
@@ -119,7 +119,7 @@ The system manages voice distribution across multiple MIDI channels:
 ## Integration with DAWs
 
 DiArMaqAr MIDI output can be used with:
-- **Ableton Live**: MPE support for microtonal playback
+- **Ableton Live**: MPE support for non-12-EDO playback
 - **Logic Pro**: MIDI and MPE compatibility
 - **Bitwig Studio**: Native MPE support
 - **Reaper**: MIDI routing capabilities
@@ -128,7 +128,7 @@ DiArMaqAr MIDI output can be used with:
 ## Limitations
 
 - **Browser support**: Web MIDI API not available in all browsers
-- **MPE requirement**: External systems must support MPE for polyphonic microtonal playback
+- **MPE requirement**: External systems must support MPE for polyphonic non-12-EDO playback
 - **Latency**: Browser audio processing may introduce slight latency
 
 ## Next Steps

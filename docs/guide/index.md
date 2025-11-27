@@ -79,7 +79,7 @@ const modulations = modulate(maqam, allMaqamat, tuningSystem)
 
 2. **[Tuning Systems](/guide/tuning-systems/)** - Learn about tanāghīm, mathematical representations, and historical sources
 
-3. **[Ajnās](/guide/ajnas/)** - Understanding tetrachords as building blocks of maqāmāt
+3. **[Ajnās](/guide/ajnas/)** - Understanding ajnās (3-5 note sequences) as building blocks of maqāmāt
 
 4. **[Maqāmāt](/guide/maqamat/)** - Complete modal frameworks with ascending/descending sequences
 
@@ -93,7 +93,7 @@ const modulations = modulate(maqam, allMaqamat, tuningSystem)
 
 8. **[Audio Synthesis](/guide/audio-synthesis/)** - Real-time audio playback using Web Audio API
 
-9. **[MIDI Integration](/guide/midi-integration/)** - MIDI input/output with MPE support for microtonal playback
+9. **[MIDI Integration](/guide/midi-integration/)** - MIDI input/output with MPE support for precise non-12-EDO playback
 
 10. **[Data Export](/guide/data-export/)** - Export capabilities: JSON, CSV, Scala formats
 

@@ -5,7 +5,7 @@ description: Understanding maqāmāt as complete modal frameworks
 
 # Maqāmāt
 
-Maqām is a complete modal framework built from an ordered sequence of pitch classes (typically 7–13+ notes), ascending (ṣuʿūd) and descending (hubūṭ) sequences (which may differ), positioning of multiple ajnās at specific scale degrees, melodic development pathways (suyūr), and unique theoretical and aesthetic properties.
+Maqām is a complete modal framework built from an ordered sequence of pitch classes (typically 7–13+ notes), ascending (ṣuʿūd) and descending (hubūṭ) sequences (which may differ), positioning of multiple ajnās at specific maqām degrees, melodic development pathways (suyūr), and unique theoretical and aesthetic properties.
 
 ## What is a Maqām?
 
@@ -44,7 +44,7 @@ As building blocks, ajnās combine to form maqāmāt. The platform automatically
 
 - Which ajnās appear in the ascending sequence
 - Which ajnās appear in the descending sequence
-- Whether they are in their original form (tahlīl) or transposed (taswīr)
+- Whether they are in their original form (taḥlīl) or transposed (taṣwīr)
 - Their precise intervallic structure within the maqām context
 
 **Analysis Algorithm:**

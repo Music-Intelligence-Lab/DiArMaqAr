@@ -9,13 +9,13 @@ DiArMaqAr implements the **first algorithmic interpretation** of Sāmī al-Shaww
 
 ## Overview
 
-Unlike Anglo-European modulation theory, Turkish makam theory, or contemporary Arabic theoretical approaches, Al-Shawwā's method employs specific conditions based on scale degree relationships within the Persian-Arab-Ottoman note naming framework.
+Unlike Anglo-European modulation theory, Turkish makam theory, or contemporary Arabic theoretical approaches, Al-Shawwā's method employs specific conditions based on maqām degree relationships within the Persian-Arab-Ottoman note naming framework.
 
 ### Historical Context
 
 Sāmī Al-Shawwā, a revered Cairo-born, Aleppine violinist, provided unique guidelines for maqām modulation in his 1946 work *Al-Qawāʿid al-Fannīya fī al-Mūsīqa al-Sharqīya wa al-Gharbīya* (The Artistic Principles of Eastern and Western Music).
 
-**Key Principle:** Modulation should occur through specific scale degree relationships while maintaining "good disposition" (ḥusn al-taṣarruf) and avoiding abrupt transitions that would be "hard on the ear" (ṣaʿb ʿalā al-udhun).
+**Key Principle:** Modulation should occur through specific maqām degree relationships while maintaining "good disposition" (ḥusn al-taṣarruf) and avoiding abrupt transitions that would be "hard on the ear" (ṣaʿb ʿalā al-udhun).
 
 This approach emphasizes **melodic connection** rather than harmonic compatibility, reflecting the fundamentally melodic nature of maqāmic practice.
 
@@ -26,7 +26,7 @@ This approach emphasizes **melodic connection** rather than harmonic compatibili
 Al-Shawwā classified a 24-tone system into three categories based on the Persian-Arab-Ottoman note naming framework:
 
 1. **Aṣlīya or Ṭabīʿīya** (Original/Natural): Represented as "n"
-   - These are stable, consonant scale degrees that form the foundation of maqām structure which are whole tones and three-fourths tones. 
+   - These are stable, consonant maqām degrees that form the foundation of maqām structure which are whole tones and three-fourths tones. 
 
 2. **Anṣāf** (Half-notes, sing. niṣf): Represented as "2p" (two parts)
    - These represent the half-tones
@@ -56,30 +56,30 @@ Transition where the third degree of the source maqām becomes the tonic of the 
 
 ### 3. Alternative Third-Degree Modulation
 
-If the standard third degree is invalid, Al-Shawwā permits using an anṣāf (half-note, represented as "2p") scale degree immediately below it, provided:
-- It is the sixth pitch class from the fundamental (qarār) scale degree of the source maqām according to the 24-tone list
-- It maintains a distance of two pitch classes from the preceding scale degree within the source maqām
+If the standard third degree is invalid, Al-Shawwā permits using an anṣāf (half-note, represented as "2p") maqām degree immediately below it, provided:
+- It is the sixth pitch class from the fundamental (qarār) maqām degree of the source maqām according to the 24-tone list
+- It maintains a distance of two pitch classes from the preceding maqām degree within the source maqām
 
 ### 4. Fourth and Fifth-Degree Modulation
 
-Transitions using the fourth or fifth scale degrees of the source maqām as the tonic of the target.
+Transitions using the fourth or fifth maqām degrees of the source maqām as the tonic of the target.
 
 ### 5. Sixth-Degree Modulation (No Third)
 
-When both the third degree and its alternative are invalid, modulation may occur through the sixth scale degree, provided:
+When both the third degree and its alternative are invalid, modulation may occur through the sixth maqām degree, provided:
 - It is the sixteenth or seventeenth pitch class from the tonic of the source maqām
-- It remains an "original" scale degree (aṣlīya/ṭabīʿīya, represented as "n")
+- It remains an "original" maqām degree (aṣlīya/ṭabīʿīya, represented as "n")
 
 ### 6. Sixth-Degree Modulation (Between Naturals)
 
-The sixth scale degree may also be used when it lies between two "natural" scale degrees within the source maqām.
+The sixth maqām degree may also be used when it lies between two "natural" maqām degrees within the source maqām.
 
 ## Algorithmic Implementation
 
 The `modulate.ts` function implements these rules using Al-Shawwā's specific 24-tone classification system as the reference framework.
 
 **Process:**
-1. Evaluates source maqām's scale degrees according to Al-Shawwā's classification
+1. Evaluates source maqām's maqām degrees according to Al-Shawwā's classification
 2. Tests each modulation rule against potential target maqāmāt
 3. Generates list of valid modulation pathways
 4. Creates interactive networks showing relationships
@@ -109,7 +109,7 @@ const modulations = modulate(sourceMaqam, allMaqamat, tuningSystem)
 // Each modulation includes:
 // - Target maqām
 // - Modulation type
-// - Scale degree relationship
+// - Maqām degree relationship
 // - Classification validation
 ```
 

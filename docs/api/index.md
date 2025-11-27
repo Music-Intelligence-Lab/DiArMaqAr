@@ -48,7 +48,7 @@ Documented modal frameworks with historical source attribution.
 - `GET /maqamat/classification/maqam-pitch-class-sets` - Classify maqāmāt by maqam-based pitch class sets → [Details](./endpoints-reference#classifyMaqamatByMaqamPitchClassSets)
 
 ### Ajnās
-Documented tetrachords (melodic fragments) with historical source attribution.
+Documented tri/tetra/penta-chords with historical source attribution.
 
 **Endpoints (5):**
 - `GET /ajnas` - List all ajnās → [Details](./endpoints-reference#listAjnas)

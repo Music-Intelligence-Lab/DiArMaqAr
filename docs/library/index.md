@@ -44,7 +44,7 @@ The complete TypeScript library reference documentation is generated from JSDoc 
 ### Models
 
 - **[Maqam](./api/models/Maqam/README.md)** - Maqām data structure and methods
-- **[Jins](./api/models/Jins/README.md)** - Jins (tetrachord) data structure
+- **[Jins](./api/models/Jins/README.md)** - Jins (tri/tetra/penta-chord) data structure
 - **[TuningSystem](./api/models/TuningSystem/README.md)** - Tuning system definitions
 - **[PitchClass](./api/models/PitchClass/README.md)** - Individual pitch class data
 - **[NoteName](./api/models/NoteName/README.md)** - Note name handling and transliteration

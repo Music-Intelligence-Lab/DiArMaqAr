@@ -18,7 +18,7 @@ hero:
 
 features:
   - title: Comprehensive Data Archive
-    details: Historically documented tanāghīm (tuning systems), ajnās (tetrachords), maqāmāt (melodic modes), suyūr (melodic pathways), and intiqālāt (modulation practices) with rigorous bibliographic attribution
+    details: Historically documented tanāghīm (tuning systems), ajnās (tri/tetra/penta-chords), maqāmāt (complete modal frameworks), suyūr (melodic pathways), and intiqālāt (modulation practices) with rigorous bibliographic attribution
   - title: Tuning-System-Sensitive Transposition
     details: Systematic exploration of all mathematically valid transpositions for ajnās and maqāmāt, maintaining intervallic integrity across tuning systems
   - title: Al-Shawwā Modulation Algorithm
@@ -40,7 +40,7 @@ features:
 
 The Digital Arabic Maqām Archive (DiArMaqAr) is an open-source, bilingual browser-based application and repository designed for musicians, composers, developers, and scholars engaged with Arabic maqām theory.
 
-The application integrates an archive of historically documented **tanāghīm** (tuning systems), **ajnās** (tetrachords), **maqāmāt** (melodic modes), **suyūr** (melodic performance pathways), and **intiqālāt** (modulation practices) within a unified digital framework, establishing verified reference data for education, performance, composition, software development, machine learning applications, and instrument design.
+The application integrates an archive of historically documented **tanāghīm** (tuning systems), **ajnās** (tri/tetra/penta-chords), **maqāmāt** (complete modal frameworks), **suyūr** (melodic performance pathways), and **intiqālāt** (modulation practices) within a unified digital framework, establishing verified reference data for education, performance, composition, software development, machine learning applications, and instrument design.
 
 ### Cultural Framework
 

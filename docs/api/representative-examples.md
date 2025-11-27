@@ -24,11 +24,11 @@ Jump to specific example categories:
   - [Cairo Congress Tuning Committee (1929)](#cairo-congress-tuning-committee-1929---cairocongresstuningcommittee-1929) - Egyptian Tuning
   - [al-Ṣabbāgh (1954)](#al-ṣabbāgh-1954---al-sabbagh-1954) - Contemporary Arabic Tuning 24-Tone
 
-- **[Representative Ajnās](#representative-ajnās)** - Tetrachords (building blocks of maqāmāt)
+- **[Representative Ajnās](#representative-ajnās)** - Tri/tetra/penta-chords
   - With zalzalian intervals: [jins rāst](#jins-rāst---jins_rast), [jins bayyāt](#jins-bayyāt---jins_bayyat), [jins segāh](#jins-segāh---jins_segah), [jins ṣabā](#jins-ṣabā---jins_saba)
   - Without zalzalian intervals: [jins nikrīz](#jins-nikrīz---jins_nikriz), [jins kurd](#jins-kurd---jins_kurd), [jins nahāwand](#jins-nahāwand---jins_nahawand), [jins ḥijāz](#jins-ḥijāz---jins_hijaz)
 
-- **[Representative Maqāmāt](#representative-maqāmāt)** - Melodic modes
+- **[Representative Maqāmāt](#representative-maqāmāt)** - Complete modal frameworks
   - Principle maqāmāt: [maqām rāst](#maqām-rāst---maqam_rast), [maqām bayyāt](#maqām-bayyāt---maqam_bayyat), [maqām ḥijāz](#maqām-ḥijāz---maqam_hijaz)
   - Complex and transposed: [rāḥat al-arwāḥ](#rāḥat-al-arwāḥ---maqam_rahat_al-arwah), [maqām bestenegar](#maqām-bestenegar---maqam_bestenegar)
   - Without zalzalian intervals: [maqām kurd](#maqām-kurd---maqam_kurd), [maqām āthār kurd](#maqām-āthār-kurd---maqam_athar-kurd), [maqām dilkesh ḥūrān](#maqām-dilkesh-ḥūrān---maqam_dilkesh-huran)

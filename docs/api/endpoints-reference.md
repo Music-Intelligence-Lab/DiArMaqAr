@@ -553,7 +553,7 @@ curl "https://diarmaqar.netlify.app/api/maqamat/classification/maqam-pitch-class
 
 ## Ajnās
 
-Documented tetrachords (melodic fragments) with historical source attribution.
+Documented tri/tetra/penta-chords with historical source attribution.
 
 ### List all ajnās {#listAjnas}
 
