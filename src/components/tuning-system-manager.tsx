@@ -599,9 +599,15 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   const handleDeleteStartingNoteConfiguration = () => {
     if (!selectedTuningSystem) return;
 
-    const newNoteSet = selectedIndices.map((idx) =>
-      idx >= 0 ? octaveOneNoteNames[idx] : "none"
-    );
+    const newNoteSet = selectedIndices.map((idx) => {
+      if (idx < 0) return "none";
+      const O1_LEN = octaveOneNoteNames.length;
+      if (idx < O1_LEN) {
+        return octaveOneNoteNames[idx];
+      } else {
+        return octaveTwoNoteNames[idx - O1_LEN];
+      }
+    });
     const firstNote = newNoteSet[0];
 
     if (firstNote === "none") return;
