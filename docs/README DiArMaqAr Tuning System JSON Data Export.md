@@ -754,7 +754,7 @@ Ordered lists of elements:
 
 5. **Access pitch details**: Reference the pitchClassReference section for comprehensive information about each pitch class, including note names, frequency ratios, cents, decimal values, abjad notation, and more. Use the pitch class names found in ajnās and maqāmāt arrays as keys to look up their detailed definitions here.
 
-6. **Trace structure composition**: For each maqām, examine the ascendingMaqamAjnas and descendingMaqamAjnas objects to see which ajnās are used on each degree in both directions. This reveals the internal structure and modal building blocks of each scale.
+6. **Trace structure composition**: For each maqām, examine the ascendingMaqamAjnas and descendingMaqamAjnas objects to see which ajnās are used on each degree in both directions. This reveals the internal structure and constituent ajnās of each scale.
 
 7. **Locate bibliographic context**: Use the SourcePageReferences arrays in ajnās and maqāmāt objects to find academic or historical sources for each structure, supporting further research or verification.
 

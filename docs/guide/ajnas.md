@@ -39,8 +39,8 @@ A jins transposition is the systematic shifting of a jins to begin from a differ
 ### Naming Convention
 
 Transpositions follow Arabic music theory naming:
-- **Tahlīl**: The original jins (e.g., "jins kurd" starting on dūgāh)
-- **Taswīr**: A transposition (e.g., "jins kurd al-muhayyar" starting on muhayyar)
+- **Taḥlīl**: The original jins (e.g., "jins kurd" starting on dūgāh)
+- **Taṣwīr**: A transposition (e.g., "jins kurd al-muhayyar" starting on muhayyar)
 
 **Example:**
 - Original: Jins kurd starting on dūgāh → **jins kurd**

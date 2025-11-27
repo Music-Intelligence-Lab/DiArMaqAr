@@ -82,7 +82,7 @@ Intiqāl is the process of moving from one maqām to another during performance 
 
 **Key Characteristics:**
 - Tonic requirement: Target tonic (darajat al-istiqrār/al-rukūz) must exist in the current pitch class set
-- Permitted scale degrees (al-Shawwā): 1st, 3rd, 4th, 5th, or 6th (and/or alternative third)
+- Permitted maqām degrees (al-Shawwā): 1st, 3rd, 4th, 5th, or 6th (and/or alternative third)
 - Context-dependent, based on pitch class presence and theoretical relationships
 - Specific maqāmāt prescribe allowable modulation pathways (suyūr)
 - Maintains modal identity: The new maqām establishes its own structure

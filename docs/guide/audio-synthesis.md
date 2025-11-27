@@ -62,7 +62,7 @@ This allows for:
 
 The audio synthesis maintains **mathematical precision** when rendering tuning systems:
 
-- **Microtonal intervals**: Accurately rendered without artifacts
+- **Non-12-EDO intervals**: Accurately rendered without artifacts
 - **Fractional ratios**: Precisely calculated frequencies
 - **Historical tunings**: Authentic intonational relationships
 - **No quantization**: Continuous pitch variation preserved
@@ -117,7 +117,7 @@ The audio system:
 - Supports all major browsers (Chrome, Firefox, Safari, Edge)
 - Implements graceful degradation for older platforms
 - Manages oscillator nodes efficiently
-- Handles microtonal frequency calculations precisely
+- Handles precise frequency calculations for all intervals
 
 ## Limitations
 

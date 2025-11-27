@@ -181,7 +181,7 @@ Address gaps identified by Gedik and Bozkurt (2009):
 - **Mathematical precision**: Exact pitch class values
 - **Historical frameworks**: Authentic reference data
 - **Hardware integration**: Scala export for synthesizers
-- **Software instruments**: Accurate microtonal implementation
+- **Software instruments**: Accurate implementation of all intervals
 
 ### Design Applications
 
