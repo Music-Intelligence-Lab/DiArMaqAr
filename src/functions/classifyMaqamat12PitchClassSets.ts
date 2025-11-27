@@ -221,7 +221,7 @@ function buildBase12FromChromaticPitchClasses(
 }
 
 /**
- * Gets the 12 pitch classes from al-Kindi-(874) on ushayran
+ * Gets the 12 pitch classes from alkindi_874 on ushayran
  * and maps them by IPN reference note name, preferring a specific octave range
  */
 export function getAlKindi12PitchClasses(
@@ -312,7 +312,7 @@ export function getMaqamTranspositions(
  *
  * Priority order for base pitch classes:
  * 1. Extract chromatic subset from the maqam's own tuning system (if all 12 chromatic pitch classes present)
- * 2. Fall back to al-Kindi-(874) as filler (if maqam's tuning system lacks complete chromatic set)
+ * 2. Fall back to alkindi_874 as filler (if maqam's tuning system lacks complete chromatic set)
  *
  * Then merges pitch classes from the maqam transposition with the base set based on matching
  * IPN references. The resulting set is ordered chromatically starting from the maqam's tonic.
@@ -395,7 +395,7 @@ export function create12PitchClassSet(
     usedChromaticExtraction = true; // Flag that we're using chromatic extraction
   } else {
     // FALLBACK: Maqam's tuning system lacks complete chromatic set
-    // Fall back to al-Kindi-(874) as filler
+    // Fall back to alkindi_874 as filler
     basePitchClassSet = getAlKindi12PitchClasses(
       alKindiTuningSystem,
       alKindiStartingNote,

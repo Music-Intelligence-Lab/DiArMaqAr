@@ -987,7 +987,7 @@ export default function ExportModal({
 
             // Get al-Kindi (874) tuning system for filler pitches
             const allTuningSystems = getTuningSystems();
-            const alKindiTuningSystem = allTuningSystems.find(ts => ts.getId() === "al-Kindi-(874)");
+            const alKindiTuningSystem = allTuningSystems.find(ts => ts.getId() === "alkindi_874");
 
             if (!alKindiTuningSystem) {
               throw new Error("al-Kindi (874) tuning system not found - required for 12-pitch-class chromatic export");

@@ -186,7 +186,7 @@ export async function GET(
           {
             error: "tuningSystems parameter is required",
             message: "A comma-separated list of tuning system IDs must be provided.",
-            hint: "Add &tuningSystems=IbnSina-(1037),al-Farabi-(950g) to your request"
+            hint: "Add &tuningSystems=ibnsina_1037,alfarabi_950g to your request"
           },
           { status: 400 }
         )
@@ -199,7 +199,7 @@ export async function GET(
           {
             error: "Invalid parameter: tuningSystems",
             message: "The 'tuningSystems' parameter cannot be empty.",
-            hint: "Specify tuning systems like '?tuningSystems=IbnSina-(1037),al-Farabi-(950g)'"
+            hint: "Specify tuning systems like '?tuningSystems=ibnsina_1037,alfarabi_950g'"
           },
           { status: 400 }
         )

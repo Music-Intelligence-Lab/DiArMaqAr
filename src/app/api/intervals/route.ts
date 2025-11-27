@@ -219,7 +219,7 @@ export async function GET(request: Request) {
             {
               error: "Invalid parameter: tuningSystem",
               message: "The 'tuningSystem' parameter cannot be empty.",
-              hint: "Remove '?tuningSystem=' from your URL or specify a tuning system like '?tuningSystem=IbnSina-(1037)'"
+              hint: "Remove '?tuningSystem=' from your URL or specify a tuning system like '?tuningSystem=ibnsina_1037'"
             },
             { status: 400 }
           )

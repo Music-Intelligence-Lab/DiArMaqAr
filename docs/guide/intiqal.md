@@ -90,7 +90,7 @@ The `modulate.ts` function implements these rules using Al-Shawwā's specific 24
 
 ```bash
 # Get modulation analysis for a maqām (example: principle maqām used in adhān)
-curl "http://localhost:3000/api/maqamat/maqam_hijaz?tuningSystem=IbnSina-(1037)&startingNote=yegah&includeModulations=true&pitchClassDataType=cents"
+curl "http://localhost:3000/api/maqamat/maqam_hijaz?tuningSystem=ibnsina_1037&startingNote=yegah&includeModulations=true&pitchClassDataType=cents"
 
 # Response includes:
 # - Valid modulation targets

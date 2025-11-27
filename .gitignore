@@ -78,3 +78,10 @@ public/docs/
 
 # MCP servers (Code API pattern - local tool discovery files)
 /servers/
+
+# Cursor
+.cursor/
+.cursorrules
+
+# modaulations data
+data/modulations/*

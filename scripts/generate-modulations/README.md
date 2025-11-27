@@ -23,12 +23,12 @@ Generates files in `data/modulations/` with two JSON files per tuning system + s
 
 ```
 data/modulations/
-├── ronzevalle-(1904)-ushayran-maqamat-modulations.json
-├── ronzevalle-(1904)-ushayran-ajnas-modulations.json
-├── ronzevalle-(1904)-rast-maqamat-modulations.json
-├── ronzevalle-(1904)-rast-ajnas-modulations.json
-├── al-kindi-(874)-ushayran-maqamat-modulations.json
-├── al-kindi-(874)-ushayran-ajnas-modulations.json
+├── ronzevalle_1904-ushayran-maqamat-modulations.json
+├── ronzevalle_1904-ushayran-ajnas-modulations.json
+├── ronzevalle_1904-rast-maqamat-modulations.json
+├── ronzevalle_1904-rast-ajnas-modulations.json
+├── alkindi_874-ushayran-maqamat-modulations.json
+├── alkindi_874-ushayran-ajnas-modulations.json
 └── ... (tuning systems × starting notes × 2 total files)
 ```
 
@@ -46,7 +46,7 @@ Contains only maqam-to-maqam modulations for a single starting note:
 
 ```json
 {
-  "id": "ronzevalle-(1904)",
+  "id": "ronzevalle_1904",
   "version": "2025-11-24T12:00:00.000Z",
   "sourceVersions": {
     "maqamat": "2025-10-18T19:41:17.132Z",
@@ -117,7 +117,7 @@ Contains only maqam-to-jins modulations for a single starting note:
 
 ```json
 {
-  "id": "ronzevalle-(1904)",
+  "id": "ronzevalle_1904",
   "version": "2025-11-24T12:00:00.000Z",
   "sourceVersions": {
     "maqamat": "2025-10-18T19:41:17.132Z",
@@ -243,7 +243,7 @@ Example:
 npm run split:modulations -- --all --backup
 
 # Split specific tuning systems
-npm run split:modulations -- --ids ronzevalle-(1904),al-kindi-(874)
+npm run split:modulations -- --ids ronzevalle_1904,alkindi_874
 
 # Preview what would be split
 npm run split:modulations -- --all --dry-run

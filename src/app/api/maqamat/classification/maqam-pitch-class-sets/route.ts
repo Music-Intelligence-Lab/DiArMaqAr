@@ -40,7 +40,7 @@ export const dynamic = "force-dynamic";
  * - Direct Values: All cent values come directly from tuning system without calculation
  *
  * Query Parameters:
- * - tuningSystem: string (default: "CairoCongressTuningCommittee-(1929)") - tuning system ID
+ * - tuningSystem: string (default: "cairocongresstuningcommittee_1929") - tuning system ID
  * - startingNote: string (default: "yegah") - starting note for tuning system
  * - includeIncompatible: boolean (default: false) - include maqamat that can't form sets
  * - includeArabic: boolean (default: false) - include Arabic display names
@@ -63,7 +63,7 @@ export async function GET(request: Request) {
     const maqamIdParam = searchParams.get("maqamId");
 
     // Get tuning system and starting note parameters
-    const tuningSystemId = searchParams.get("tuningSystem") || "CairoCongressTuningCommittee-(1929)";
+    const tuningSystemId = searchParams.get("tuningSystem") || "cairocongresstuningcommittee_1929";
     const startingNoteParam = searchParams.get("startingNote") || "yegah";
 
     // Get cents tolerance parameter

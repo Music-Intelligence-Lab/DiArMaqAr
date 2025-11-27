@@ -3,11 +3,9 @@ import { getAjnas, getTuningSystems } from "@/functions/import";
 import { standardizeText } from "@/functions/export";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { calculateJinsTranspositions } from "@/functions/transpose";
-import modulate from "@/functions/modulate";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
 import PitchClass from "@/models/PitchClass";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
-import { AjnasModulations, shiftJinsByOctaves } from "@/models/Jins";
 import { parseInArabic, getJinsNameDisplayAr, getNoteNameDisplayAr, getComments, getCommentsAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
 import {
   buildEntityNamespace,
@@ -22,56 +20,6 @@ export const OPTIONS = handleCorsPreflightRequest;
  * Roman numeral conversion for scale degrees
  */
 const romanNumerals = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV"];
-
-/**
- * Helper function to create jins modulation degree note names mapping
- */
-function createJinsModulationDegreesNoteNames(
-  pitchClasses: PitchClass[]
-) {
-  return {
-    jinsModulationsOnFirstDegreeNoteName: standardizeText(pitchClasses[0]?.noteName || ''),
-    jinsModulationsOnThirdDegreeNoteName: standardizeText(pitchClasses[2]?.noteName || ''),
-    jinsModulationsOnAltThirdDegreeNoteName: standardizeText(pitchClasses[2]?.noteName || ''),
-    jinsModulationsOnFourthDegreeNoteName: standardizeText(pitchClasses[3]?.noteName || ''),
-    jinsModulationsOnFifthDegreeNoteName: standardizeText(pitchClasses[4]?.noteName || ''),
-    jinsModulationsOnSixthDegreeAscNoteName: standardizeText(pitchClasses[5]?.noteName || ''),
-    jinsModulationsOnSixthDegreeDescNoteName: standardizeText(pitchClasses[1]?.noteName || ''),
-    jinsModulationsOnSixthDegreeIfNoThirdNoteName: standardizeText(pitchClasses[5]?.noteName || '')
-  };
-}
-
-/**
- * Helper function to create lower octave jins degree note names mapping
- */
-function createLowerOctaveJinsDegreesNoteNames(
-  pitchClasses: PitchClass[],
-  allPitchClasses: PitchClass[]
-) {
-  // Find pitch classes one octave below
-  const findLowerOctave = (noteName: string) => {
-    const currentPc = allPitchClasses.find(pc => pc.noteName === noteName);
-    if (!currentPc) return noteName;
-
-    const targetCents = parseFloat(currentPc.cents) - 1200;
-    const lowerPc = allPitchClasses.find(pc =>
-      Math.abs(parseFloat(pc.cents) - targetCents) < 10
-    );
-
-    return lowerPc ? lowerPc.noteName : noteName;
-  };
-
-  return {
-    jinsModulationsOnFirstDegree8vbNoteName: standardizeText(findLowerOctave(pitchClasses[0]?.noteName || '')),
-    jinsModulationsOnThirdDegree8vbNoteName: standardizeText(findLowerOctave(pitchClasses[2]?.noteName || '')),
-    jinsModulationsOnAltThirdDegree8vbNoteName: standardizeText(findLowerOctave(pitchClasses[2]?.noteName || '')),
-    jinsModulationsOnFourthDegree8vbNoteName: standardizeText(findLowerOctave(pitchClasses[3]?.noteName || '')),
-    jinsModulationsOnFifthDegree8vbNoteName: standardizeText(findLowerOctave(pitchClasses[4]?.noteName || '')),
-    jinsModulationsOnSixthDegreeAsc8vbNoteName: standardizeText(findLowerOctave(pitchClasses[5]?.noteName || '')),
-    jinsModulationsOnSixthDegreeDesc8vbNoteName: standardizeText(findLowerOctave(pitchClasses[1]?.noteName || '')),
-    jinsModulationsOnSixthDegreeIfNoThird8vbNoteName: standardizeText(findLowerOctave(pitchClasses[5]?.noteName || ''))
-  };
-}
 
 /**
  * Format pitch data according to requested format
@@ -279,7 +227,6 @@ function formatIntervalData(intervals: any[], format: string) {
  *     abjadName, fretDivision, midiNoteNumber, midiNoteDeviation, centsDeviation, referenceNoteName
  * - includeIntervals: true|false (include interval data, default: true)
  * - transposeTo: Transpose to specific tonic note (URL-friendly)
- * - includeModulations: true|false (returns URL-safe jins names, default: true)
  * - includeArabic: true|false (include Arabic display names, default: true)
  * - options: true returns available parameters instead of data
  * 
@@ -306,10 +253,6 @@ export async function GET(
     const pitchClassDataType = searchParams.get("pitchClassDataType");
     const includeIntervals = searchParams.get("includeIntervals") !== "false";
     const transposeToNote = searchParams.get("transposeTo");
-    const includeModulations = searchParams.get("includeModulations") !== "false";
-    const mod8vb = searchParams.get("includeModulations8vb");
-    const modLower = searchParams.get("includeLowerOctaveModulations");
-    const includeLowerOctaveModulations = (mod8vb === null && modLower === null) || mod8vb === "true" || modLower === "true" || (mod8vb !== "false" && modLower !== "false");
     const showOptions = searchParams.get("options") === "true";
 
     let inArabic = false;
@@ -384,7 +327,7 @@ export async function GET(
           { 
             error: "No jins selected",
             hint: "Please specify a jins ID",
-            example: `/api/ajnas/jins_kurd?tuningSystem=IbnSina-(1037)&startingNote=yegah` 
+            example: `/api/ajnas/jins_kurd?tuningSystem=ibnsina_1037&startingNote=yegah` 
           },
           { status: 400 }
         )
@@ -414,7 +357,7 @@ export async function GET(
           {
             error: "Invalid parameter: tuningSystem",
             message: "The 'tuningSystem' parameter cannot be empty. Provide a valid tuning system ID.",
-            hint: "Specify a tuning system like '?tuningSystem=IbnSina-(1037)'"
+            hint: "Specify a tuning system like '?tuningSystem=ibnsina_1037'"
           },
           { status: 400 }
         )
@@ -452,8 +395,6 @@ export async function GET(
       // Check for conflicting data-returning parameters
       const conflictingParams: string[] = [];
       if (transposeToNote) conflictingParams.push("transposeTo");
-      if (includeModulations) conflictingParams.push("includeModulations");
-      if (includeLowerOctaveModulations) conflictingParams.push("includeModulations8vb");
       if (pitchClassDataType && pitchClassDataType !== "cents") conflictingParams.push("pitchClassDataType");
       if (includeIntervals) conflictingParams.push("intervals");
 
@@ -479,7 +420,7 @@ export async function GET(
             {
               error: "tuningSystem parameter is required",
               message: "Tuning system is required for all requests (both data retrieval and discovery mode).",
-              hint: `Add &tuningSystem=IbnSina-(1037) to your request. Use /api/ajnas/${jinsId}/availability to see available tuning systems`,
+              hint: `Add &tuningSystem=ibnsina_1037 to your request. Use /api/ajnas/${jinsId}/availability to see available tuning systems`,
               availabilityUrl: `/api/ajnas/${jinsId}/availability`
             },
             { status: 400 }
@@ -493,7 +434,7 @@ export async function GET(
             {
               error: "Invalid parameter: tuningSystem",
               message: "The 'tuningSystem' parameter cannot be empty. Provide a valid tuning system ID.",
-              hint: "Specify a tuning system like '?tuningSystem=IbnSina-(1037)'"
+              hint: "Specify a tuning system like '?tuningSystem=ibnsina_1037'"
             },
             { status: 400 }
           )
@@ -596,25 +537,15 @@ export async function GET(
             transposeTo: {
               options: transposeOptions.length > 0 ? transposeOptions.map(note => standardizeText(note)) : [],
               description: "Transpose to specific tonic (taṣwīr) - only valid transpositions shown. Calculated based on the provided tuningSystem and startingNote."
-            },
-            includeModulations: {
-              type: "boolean",
-              default: false,
-              description: "Include modulation analysis (ajnās)"
-            },
-            includeModulations8vb: {
-              type: "boolean",
-              default: false,
-              description: "Include available modulations an octave below"
             }
           },
           notes: {
             formatOptions: "The 'pitchClassDataType' parameter controls which pitch class properties are returned. Use 'all' for comprehensive data or specific formats like 'cents', 'fraction', etc. for targeted data."
           },
           examples: [
-            `/api/ajnas/${jinsId}?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents&intervals=true`,
-            `/api/ajnas/${jinsId}?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents&transposeTo=nawa&includeModulations=true`,
-            `/api/ajnas/${jinsId}?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=all`
+            `/api/ajnas/${jinsId}?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents&intervals=true`,
+            `/api/ajnas/${jinsId}?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents&transposeTo=nawa`,
+            `/api/ajnas/${jinsId}?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=all`
           ]
         })
       );
@@ -873,8 +804,6 @@ export async function GET(
       parameters: {
         pitchClassDataType,
         includeIntervals,
-        includeModulations,
-        includeModulations8vb: includeLowerOctaveModulations,
       },
       context: {
         tuningSystem: {
@@ -902,267 +831,6 @@ export async function GET(
     // Add intervals if requested
     if (includeIntervals) {
       responseData.intervals = formatIntervalData(selectedTransposition.jinsPitchClassIntervals, pitchClassDataType || "all");
-    }
-
-    // Add modulations if requested
-    if (includeModulations) {
-      // For jins modulations, we need to use a maqam-like structure but with a single jins
-      // Create a temporary maqam-like structure for modulation calculation
-      const tempMaqam = {
-        ascendingPitchClasses: selectedTransposition.jinsPitchClasses,
-        descendingPitchClasses: selectedTransposition.jinsPitchClasses,
-        ascendingPitchClassIntervals: selectedTransposition.jinsPitchClassIntervals,
-        descendingPitchClassIntervals: selectedTransposition.jinsPitchClassIntervals,
-        ascendingMaqamAjnas: null,
-        descendingMaqamAjnas: null
-      };
-
-      const ajnasModulations = modulate(pitchClasses, ajnasData, [], tempMaqam as any, true, 5) as AjnasModulations;
-      
-      // Create lookup map from numeric IDs to full entity data
-      const jinsIdToEntity = new Map<string, any>();
-      for (const j of ajnasData) {
-        const jinsEntity: any = {
-          id: j.getId(),
-          idName: j.getIdName(),
-          displayName: j.getName()
-        };
-        if (inArabic) {
-          jinsEntity.displayNameAr = getJinsNameDisplayAr(j.getName());
-        }
-        jinsIdToEntity.set(j.getId(), jinsEntity);
-      }
-      
-      // Add degree note name mappings
-      const jinsDegreesNoteNames = createJinsModulationDegreesNoteNames(
-        selectedTransposition.jinsPitchClasses
-      );
-
-      // Helper function to create organized modulation structure
-      const createOrganizedModulations = (
-        modulations: AjnasModulations,
-        degreesNoteNames: any,
-        entityMap: Map<string, any>
-      ) => {
-        const organized: any[] = [];
-
-        const degreeMappings = [
-          { 
-            degree: "I", 
-            noteNameKey: "jinsModulationsOnFirstDegreeNoteName",
-            mods: modulations.modulationsOnFirstDegree
-          },
-          { 
-            degree: "III", 
-            noteNameKey: "jinsModulationsOnThirdDegreeNoteName",
-            mods: modulations.modulationsOnThirdDegree
-          },
-          { 
-            degree: "III", 
-            noteNameKey: "jinsModulationsOnAltThirdDegreeNoteName",
-            mods: modulations.modulationsOnAltThirdDegree
-          },
-          { 
-            degree: "IV", 
-            noteNameKey: "jinsModulationsOnFourthDegreeNoteName",
-            mods: modulations.modulationsOnFourthDegree
-          },
-          { 
-            degree: "V", 
-            noteNameKey: "jinsModulationsOnFifthDegreeNoteName",
-            mods: modulations.modulationsOnFifthDegree
-          },
-          { 
-            degree: "VI", 
-            noteNameKey: "jinsModulationsOnSixthDegreeAscNoteName",
-            mods: modulations.modulationsOnSixthDegreeAsc
-          },
-          { 
-            degree: "VI", 
-            noteNameKey: "jinsModulationsOnSixthDegreeDescNoteName",
-            mods: modulations.modulationsOnSixthDegreeDesc
-          },
-          { 
-            degree: "VI", 
-            noteNameKey: "jinsModulationsOnSixthDegreeIfNoThirdNoteName",
-            mods: modulations.modulationsOnSixthDegreeIfNoThird
-          }
-        ];
-
-        for (const mapping of degreeMappings) {
-          const noteNameId = degreesNoteNames[mapping.noteNameKey];
-          const pitchClass = selectedTransposition.jinsPitchClasses.find(
-            (pc: PitchClass) => standardizeText(pc.noteName) === noteNameId
-          );
-          const noteNameDisplay = pitchClass?.noteName || noteNameId;
-          const pitchClassIndex = pitchClass?.pitchClassIndex;
-
-          if (mapping.mods.length === 0) continue;
-          
-          const existingIndex = organized.findIndex(item => item.noteNameId === noteNameId && item.jinsDegree === mapping.degree);
-          
-          if (existingIndex >= 0) {
-            const existing = organized[existingIndex];
-            const newMods = mapping.mods.map((m: any) => {
-              const entity = entityMap.get(m.jinsId);
-              if (!entity) return null;
-              const modObj: any = { id: entity.id, idName: standardizeText(m.name), displayName: m.name };
-              if (inArabic) {
-                modObj.displayNameAr = getJinsNameDisplayAr(m.name);
-              }
-              return modObj;
-            }).filter(Boolean);
-            existing.modulations = [...existing.modulations, ...newMods];
-            existing.count = existing.modulations.length;
-          } else {
-            const formattedMods = mapping.mods.map((m: any) => {
-              const entity = entityMap.get(m.jinsId);
-              if (!entity) return null;
-              const modObj: any = { id: entity.id, idName: standardizeText(m.name), displayName: m.name };
-              if (inArabic) {
-                modObj.displayNameAr = getJinsNameDisplayAr(m.name);
-              }
-              return modObj;
-            }).filter(Boolean);
-
-            const entry: any = {
-              jinsDegree: mapping.degree,
-              noteNameId: noteNameId,
-              noteNameDisplay: noteNameDisplay,
-              ...(inArabic && { noteNameDisplayAr: getNoteNameDisplayAr(noteNameDisplay) }),
-              ...(pitchClassIndex !== undefined && { pitchClassIndex: pitchClassIndex }),
-              count: formattedMods.length,
-              modulations: formattedMods
-            };
-            
-            organized.push(entry);
-          }
-        }
-
-        return organized;
-      };
-
-      const organizedAjnas = createOrganizedModulations(
-        ajnasModulations,
-        jinsDegreesNoteNames,
-        jinsIdToEntity
-      );
-
-      responseData.modulations = {
-        ajnas: organizedAjnas
-      };
-      
-      // Add lower octave modulations if requested
-      if (includeLowerOctaveModulations) {
-        const lowerOctaveJinsDegreesNoteNames = createLowerOctaveJinsDegreesNoteNames(
-          selectedTransposition.jinsPitchClasses,
-          pitchClasses
-        );
-
-        responseData.lowerOctaveModulations = {
-          degreesNoteNames: {
-            ajnas: lowerOctaveJinsDegreesNoteNames
-          },
-          ajnas: {
-            onFirstDegree: ajnasModulations.modulationsOnFirstDegree
-              .map((j: any) => {
-                const shifted = shiftJinsByOctaves(pitchClasses, j, -1);
-                const entity = jinsIdToEntity.get(j.jinsId);
-                if (!shifted || !entity) return null;
-                const modObj: any = { id: entity.id, idName: standardizeText(shifted.name), displayName: shifted.name };
-                if (inArabic) {
-                  modObj.displayNameAr = getJinsNameDisplayAr(shifted.name);
-                }
-                return modObj;
-              })
-              .filter((j: any) => j !== null),
-            onThirdDegree: ajnasModulations.modulationsOnThirdDegree
-              .map((j: any) => {
-                const shifted = shiftJinsByOctaves(pitchClasses, j, -1);
-                const entity = jinsIdToEntity.get(j.jinsId);
-                if (!shifted || !entity) return null;
-                const modObj: any = { id: entity.id, idName: standardizeText(shifted.name), displayName: shifted.name };
-                if (inArabic) {
-                  modObj.displayNameAr = getJinsNameDisplayAr(shifted.name);
-                }
-                return modObj;
-              })
-              .filter((j: any) => j !== null),
-            onAltThirdDegree: ajnasModulations.modulationsOnAltThirdDegree
-              .map((j: any) => {
-                const shifted = shiftJinsByOctaves(pitchClasses, j, -1);
-                const entity = jinsIdToEntity.get(j.jinsId);
-                if (!shifted || !entity) return null;
-                const modObj: any = { id: entity.id, idName: standardizeText(shifted.name), displayName: shifted.name };
-                if (inArabic) {
-                  modObj.displayNameAr = getJinsNameDisplayAr(shifted.name);
-                }
-                return modObj;
-              })
-              .filter((j: any) => j !== null),
-            onFourthDegree: ajnasModulations.modulationsOnFourthDegree
-              .map((j: any) => {
-                const shifted = shiftJinsByOctaves(pitchClasses, j, -1);
-                const entity = jinsIdToEntity.get(j.jinsId);
-                if (!shifted || !entity) return null;
-                const modObj: any = { id: entity.id, idName: standardizeText(shifted.name), displayName: shifted.name };
-                if (inArabic) {
-                  modObj.displayNameAr = getJinsNameDisplayAr(shifted.name);
-                }
-                return modObj;
-              })
-              .filter((j: any) => j !== null),
-            onFifthDegree: ajnasModulations.modulationsOnFifthDegree
-              .map((j: any) => {
-                const shifted = shiftJinsByOctaves(pitchClasses, j, -1);
-                const entity = jinsIdToEntity.get(j.jinsId);
-                if (!shifted || !entity) return null;
-                const modObj: any = { id: entity.id, idName: standardizeText(shifted.name), displayName: shifted.name };
-                if (inArabic) {
-                  modObj.displayNameAr = getJinsNameDisplayAr(shifted.name);
-                }
-                return modObj;
-              })
-              .filter((j: any) => j !== null),
-            onSixthDegreeAsc: ajnasModulations.modulationsOnSixthDegreeAsc
-              .map((j: any) => {
-                const shifted = shiftJinsByOctaves(pitchClasses, j, -1);
-                const entity = jinsIdToEntity.get(j.jinsId);
-                if (!shifted || !entity) return null;
-                const modObj: any = { id: entity.id, idName: standardizeText(shifted.name), displayName: shifted.name };
-                if (inArabic) {
-                  modObj.displayNameAr = getJinsNameDisplayAr(shifted.name);
-                }
-                return modObj;
-              })
-              .filter((j: any) => j !== null),
-            onSixthDegreeDesc: ajnasModulations.modulationsOnSixthDegreeDesc
-              .map((j: any) => {
-                const shifted = shiftJinsByOctaves(pitchClasses, j, -1);
-                const entity = jinsIdToEntity.get(j.jinsId);
-                if (!shifted || !entity) return null;
-                const modObj: any = { id: entity.id, idName: standardizeText(shifted.name), displayName: shifted.name };
-                if (inArabic) {
-                  modObj.displayNameAr = getJinsNameDisplayAr(shifted.name);
-                }
-                return modObj;
-              })
-              .filter((j: any) => j !== null),
-            onSixthDegreeIfNoThird: ajnasModulations.modulationsOnSixthDegreeIfNoThird
-              .map((j: any) => {
-                const shifted = shiftJinsByOctaves(pitchClasses, j, -1);
-                const entity = jinsIdToEntity.get(j.jinsId);
-                if (!shifted || !entity) return null;
-                const modObj: any = { id: entity.id, idName: standardizeText(shifted.name), displayName: shifted.name };
-                if (inArabic) {
-                  modObj.displayNameAr = getJinsNameDisplayAr(shifted.name);
-                }
-                return modObj;
-              })
-              .filter((j: any) => j !== null)
-          }
-        };
-      }
     }
 
     return addCorsHeaders(NextResponse.json(responseData));

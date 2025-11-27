@@ -9,7 +9,7 @@ These examples have been carefully selected to demonstrate the full capabilities
 
 **Quick test URL:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents"
+curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents"
 ```
 
 ## Quick Access
@@ -41,7 +41,7 @@ Jump to specific example categories:
 
 All detail endpoints (`/api/maqamat/{id}`, `/api/ajnas/{id}`) **MUST** include these three parameters:
 
-1. **`tuningSystem`** - ID of the tuning system (e.g., `IbnSina-(1037)`)
+1. **`tuningSystem`** - ID of the tuning system (e.g., `ibnsina_1037`)
 2. **`startingNote`** - Starting note in URL-safe format (e.g., `yegah`, `ushayran`, `rast`)
 3. **`pitchClassDataType`** - Format for pitch class data (e.g., `cents`, `fraction`, `all`)
 
@@ -52,7 +52,7 @@ All detail endpoints (`/api/maqamat/{id}`, `/api/ajnas/{id}`) **MUST** include t
 
 **Example - CORRECT:**
 ```bash
-GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
+GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
 ```
 
 **Example - WRONG (missing parameters):**
@@ -75,8 +75,8 @@ GET /api/ajnas/jins_rast
 
 **CORRECT:**
 ```bash
-GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
-GET /api/ajnas/jins_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
+GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
+GET /api/ajnas/jins_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
 ```
 
 ### 2. Wrong Endpoint Format
@@ -102,7 +102,7 @@ GET /api/maqamat/maqam_rast?tuningSystem=Ibn Sīnā (1037)&startingNote=yegāh
 
 **CORRECT:**
 ```bash
-GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah
+GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah
 ```
 
 **Note:** All IDs and parameter values must be URL-safe (no spaces, diacritics, or special characters).
@@ -112,7 +112,7 @@ GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah
 If you need to discover available parameters, use `options=true`:
 
 ```bash
-GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&options=true
+GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&options=true
 ```
 
 This returns available parameters instead of data, which is useful for programmatic discovery.
@@ -130,7 +130,7 @@ This returns available parameters instead of data, which is useful for programma
 
 **Example Parameter Discovery Request:**
 ```bash
-GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&options=true
+GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&options=true
 ```
 
 **Response includes:**
@@ -143,7 +143,7 @@ GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&optio
 - When users ask about a specific maqām, jins, or tuning system, use the Representative Examples to find the correct endpoint format
 - Always include all three required parameters
 - Use `cents` as the default `pitchClassDataType` for most use cases
-- For users who don't know specific names, use `maqam_rast` with `IbnSina-(1037)` and `yegah` as safe defaults
+- For users who don't know specific names, use `maqam_rast` with `ibnsina_1037` and `yegah` as safe defaults
 
 ---
 
@@ -180,7 +180,7 @@ API responses are complex nested structures, not simple arrays. A typical respon
   },
   "context": {
     "tuningSystem": {
-      "id": "IbnSina-(1037)",
+      "id": "ibnsina_1037",
       "displayName": "Ibn Sīnā (1037) - 7-Fret Oud 17-Tone",
       "selectedStartingNote": { "idName": "yegah", "displayName": "yegāh" },
       "referenceFrequency": 97.999
@@ -198,7 +198,7 @@ API responses are complex nested structures, not simple arrays. A typical respon
 
 ## Representative Tuning Systems
 
-### al-Kindī (874) - `al-Kindi-(874)`
+### al-Kindī (874) - `alkindi_874`
 **Title**: 12-Tone
 **Starting Note**: ʿushayrān - `ushayran`
 
@@ -207,13 +207,13 @@ API responses are complex nested structures, not simple arrays. A typical respon
 **Source**: [Farmer (1937:248)](../../bibliography?source=Farmer-(1937)), [Forster (2010:615)](../../bibliography?source=Forster-(2010))
 
 **Required Parameters:**
-- `tuningSystem`: `al-Kindi-(874)`
+- `tuningSystem`: `alkindi_874`
 - `startingNote`: `ushayran`
 - `pitchClassDataType`: `cents` (or `fraction`, `all`, etc.)
 
 **Example**:
 ```bash
-GET /api/tuning-systems/al-Kindi-(874)/ushayran/pitch-classes?pitchClassDataType=cents
+GET /api/tuning-systems/alkindi_874/ushayran/pitch-classes?pitchClassDataType=cents
 ```
 
 **Good for testing**:
@@ -222,7 +222,7 @@ GET /api/tuning-systems/al-Kindi-(874)/ushayran/pitch-classes?pitchClassDataType
 
 ---
 
-### al-Fārābī (950g) - `al-Farabi-(950g)`
+### al-Fārābī (950g) - `alfarabi_950g`
 **Title**: First Oud Tuning (Full First Octave) 27-Tone
 **Starting Note**: ʿushayrān - `ushayran`
 
@@ -232,7 +232,7 @@ GET /api/tuning-systems/al-Kindi-(874)/ushayran/pitch-classes?pitchClassDataType
 
 **Example**:
 ```
-GET /api/tuning-systems/al-Farabi-(950g)/ushayran/pitch-classes?pitchClassDataType=cents
+GET /api/tuning-systems/alfarabi_950g/ushayran/pitch-classes?pitchClassDataType=cents
 ```
 
 **Good for testing**:
@@ -242,7 +242,7 @@ GET /api/tuning-systems/al-Farabi-(950g)/ushayran/pitch-classes?pitchClassDataTy
 
 ---
 
-### Ibn Sīnā (1037) - `IbnSina-(1037)`
+### Ibn Sīnā (1037) - `ibnsina_1037`
 **Title**: 7-Fret Oud 17-Tone
 **Starting Note**: yegāh - `yegah`
 
@@ -252,7 +252,7 @@ GET /api/tuning-systems/al-Farabi-(950g)/ushayran/pitch-classes?pitchClassDataTy
 
 **Example**:
 ```
-GET /api/tuning-systems/IbnSina-(1037)/yegah/pitch-classes?pitchClassDataType=cents
+GET /api/tuning-systems/ibnsina_1037/yegah/pitch-classes?pitchClassDataType=cents
 ```
 
 **Good for testing**:
@@ -262,7 +262,7 @@ GET /api/tuning-systems/IbnSina-(1037)/yegah/pitch-classes?pitchClassDataType=ce
 
 ---
 
-### Meshshāqa (1899) - `Meshshaqa-(1899)`
+### Meshshāqa (1899) - `meshshaqa_1899`
 **Title**: Arabic Octave According to the Modernists
 **Starting Note**: yegāh - `yegah`
 
@@ -272,7 +272,7 @@ GET /api/tuning-systems/IbnSina-(1037)/yegah/pitch-classes?pitchClassDataType=ce
 
 **Example**:
 ```
-GET /api/tuning-systems/Meshshaqa-(1899)/yegah/pitch-classes?pitchClassDataType=cents
+GET /api/tuning-systems/meshshaqa_1899/yegah/pitch-classes?pitchClassDataType=cents
 ```
 
 **Good for testing**:
@@ -283,7 +283,7 @@ GET /api/tuning-systems/Meshshaqa-(1899)/yegah/pitch-classes?pitchClassDataType=
 
 ---
 
-### Cairo Congress Tuning Committee (1929) - `CairoCongressTuningCommittee-(1929)`
+### Cairo Congress Tuning Committee (1929) - `cairocongresstuningcommittee_1929`
 **Title**: Egyptian Tuning
 **Starting Note**: rāst - `rast`
 
@@ -293,7 +293,7 @@ GET /api/tuning-systems/Meshshaqa-(1899)/yegah/pitch-classes?pitchClassDataType=
 
 **Example**:
 ```
-GET /api/tuning-systems/CairoCongressTuningCommittee-(1929)/rast/pitch-classes?pitchClassDataType=cents
+GET /api/tuning-systems/cairocongresstuningcommittee_1929/rast/pitch-classes?pitchClassDataType=cents
 ```
 
 **Good for testing**:
@@ -303,7 +303,7 @@ GET /api/tuning-systems/CairoCongressTuningCommittee-(1929)/rast/pitch-classes?p
 
 ---
 
-### al-Ṣabbāgh (1954) - `al-Sabbagh-(1954)`
+### al-Ṣabbāgh (1954) - `alsabbagh_1954`
 **Title**: Contemporary Arabic Tuning 24-Tone
 **Starting Note**: rāst - `rast`
 
@@ -313,7 +313,7 @@ GET /api/tuning-systems/CairoCongressTuningCommittee-(1929)/rast/pitch-classes?p
 
 **Example**:
 ```
-GET /api/tuning-systems/al-Sabbagh-(1954)/rast/pitch-classes?pitchClassDataType=cents
+GET /api/tuning-systems/alsabbagh_1954/rast/pitch-classes?pitchClassDataType=cents
 ```
 
 **Good for testing**:
@@ -331,18 +331,18 @@ GET /api/tuning-systems/al-Sabbagh-(1954)/rast/pitch-classes?pitchClassDataType=
 
 **Description**: Includes the zalzalian interval segāh.
 
-**Tuning System**: `IbnSina-(1037)` on `yegah`, `al-Farabi-(950g)` on `ushayran`, `Meshshaqa-(1899)` on `yegah`, or `CairoCongressTuningCommittee-(1929)` on `rast`.
+**Tuning System**: `ibnsina_1037` on `yegah`, `alfarabi_950g` on `ushayran`, `meshshaqa_1899` on `yegah`, or `cairocongresstuningcommittee_1929` on `rast`.
 
 **Source**: (No source references in data)
 
 **Required Parameters:**
-- `tuningSystem`: `IbnSina-(1037)`, `al-Farabi-(950g)`, `Meshshaqa-(1899)`, or `CairoCongressTuningCommittee-(1929)`
+- `tuningSystem`: `ibnsina_1037`, `alfarabi_950g`, `meshshaqa_1899`, or `cairocongresstuningcommittee_1929`
 - `startingNote`: `yegah` (for IbnSina, Meshshaqa), `ushayran` (for al-Farabi), or `rast` (for CairoCongress)
 - `pitchClassDataType`: `cents` (or `fraction`, `all`, etc.)
 
 **Example**:
 ```bash
-GET /api/ajnas/jins_rast?tuningSystem=Meshshaqa-(1899)&startingNote=yegah&pitchClassDataType=cents
+GET /api/ajnas/jins_rast?tuningSystem=meshshaqa_1899&startingNote=yegah&pitchClassDataType=cents
 ```
 
 ---
@@ -351,13 +351,13 @@ GET /api/ajnas/jins_rast?tuningSystem=Meshshaqa-(1899)&startingNote=yegah&pitchC
 
 **Description**: Includes the zalzalian interval segāh.
 
-**Tuning System**: `IbnSina-(1037)` on `yegah`, `al-Farabi-(950g)` on `ushayran`, `Meshshaqa-(1899)` on `yegah`, or `CairoCongressTuningCommittee-(1929)` on `rast`.
+**Tuning System**: `ibnsina_1037` on `yegah`, `alfarabi_950g` on `ushayran`, `meshshaqa_1899` on `yegah`, or `cairocongresstuningcommittee_1929` on `rast`.
 
 **Source**: (No source references in data)
 
 **Example**:
 ```
-GET /api/ajnas/jins_bayyat?tuningSystem=CairoCongressTuningCommittee-(1929)&startingNote=rast&pitchClassDataType=cents
+GET /api/ajnas/jins_bayyat?tuningSystem=cairocongresstuningcommittee_1929&startingNote=rast&pitchClassDataType=cents
 ```
 
 ---
@@ -366,13 +366,13 @@ GET /api/ajnas/jins_bayyat?tuningSystem=CairoCongressTuningCommittee-(1929)&star
 
 **Description**: Its tonic is the zalzalian interval segāh.
 
-**Tuning System**: `IbnSina-(1037)` on `yegah`, `al-Farabi-(950g)` on `ushayran`, `Meshshaqa-(1899)` on `yegah`, or `CairoCongressTuningCommittee-(1929)` on `rast`.
+**Tuning System**: `ibnsina_1037` on `yegah`, `alfarabi_950g` on `ushayran`, `meshshaqa_1899` on `yegah`, or `cairocongresstuningcommittee_1929` on `rast`.
 
 **Source**: (No source references in data)
 
 **Example**:
 ```
-GET /api/ajnas/jins_segah?tuningSystem=al-Sabbagh-(1954)&startingNote=rast&pitchClassDataType=cents
+GET /api/ajnas/jins_segah?tuningSystem=alsabbagh_1954&startingNote=rast&pitchClassDataType=cents
 ```
 
 ---
@@ -381,13 +381,13 @@ GET /api/ajnas/jins_segah?tuningSystem=al-Sabbagh-(1954)&startingNote=rast&pitch
 
 **Description**: Includes the zalzalian interval segāh.
 
-**Tuning System**: `IbnSina-(1037)` on `yegah`, `al-Farabi-(950g)` on `ushayran`, `Meshshaqa-(1899)` on `yegah`, or `CairoCongressTuningCommittee-(1929)` on `rast`.
+**Tuning System**: `ibnsina_1037` on `yegah`, `alfarabi_950g` on `ushayran`, `meshshaqa_1899` on `yegah`, or `cairocongresstuningcommittee_1929` on `rast`.
 
 **Source**: [al-Khulʿī (2011:55)](../../bibliography?source=al-Khulʿī-(2011)), [al-Urmawī-al-Baghdādī (2017:23)](../../bibliography?source=al-Urmawī-al-Baghdādī-(2017))
 
 **Example**:
 ```
-GET /api/ajnas/jins_saba?tuningSystem=Meshshaqa-(1899)&startingNote=yegah&pitchClassDataType=cents
+GET /api/ajnas/jins_saba?tuningSystem=meshshaqa_1899&startingNote=yegah&pitchClassDataType=cents
 ```
 
 ---
@@ -398,13 +398,13 @@ GET /api/ajnas/jins_saba?tuningSystem=Meshshaqa-(1899)&startingNote=yegah&pitchC
 
 **Description**: Does not include a zalzalian interval.
 
-**Tuning System**: `al-Kindi-(874)` on `ushayran`.
+**Tuning System**: `alkindi_874` on `ushayran`.
 
 **Source**: (No source references in data)
 
 **Example**:
 ```
-GET /api/ajnas/jins_nikriz?tuningSystem=al-Kindi-(874)&startingNote=ushayran&pitchClassDataType=cents
+GET /api/ajnas/jins_nikriz?tuningSystem=alkindi_874&startingNote=ushayran&pitchClassDataType=cents
 ```
 
 ---
@@ -413,13 +413,13 @@ GET /api/ajnas/jins_nikriz?tuningSystem=al-Kindi-(874)&startingNote=ushayran&pit
 
 **Description**: Does not include a zalzalian interval.
 
-**Tuning System**: `al-Kindi-(874)` on `ushayran`.
+**Tuning System**: `alkindi_874` on `ushayran`.
 
 **Source**: (No source references in data)
 
 **Example**:
 ```
-GET /api/ajnas/jins_kurd?tuningSystem=al-Kindi-(874)&startingNote=ushayran&pitchClassDataType=cents
+GET /api/ajnas/jins_kurd?tuningSystem=alkindi_874&startingNote=ushayran&pitchClassDataType=cents
 ```
 
 ---
@@ -428,13 +428,13 @@ GET /api/ajnas/jins_kurd?tuningSystem=al-Kindi-(874)&startingNote=ushayran&pitch
 
 **Description**: The same as jins kurd but starting on a different tonic, giving it slightly different intervals. Interesting for comparison and understanding why the maqām based on it (maqām ḥijāz kār kurd) is supposedly a transposition of maqām kurd with the same intervals, but in fact is not. Does not include a zalzalian interval.
 
-**Tuning System**: `al-Kindi-(874)` on `ushayran`.
+**Tuning System**: `alkindi_874` on `ushayran`.
 
 **Source**: (No source references in data)
 
 **Example**:
 ```
-GET /api/ajnas/jins_kurd_(binsir)?tuningSystem=al-Kindi-(874)&startingNote=ushayran&pitchClassDataType=cents
+GET /api/ajnas/jins_kurd_(binsir)?tuningSystem=alkindi_874&startingNote=ushayran&pitchClassDataType=cents
 ```
 
 ---
@@ -443,13 +443,13 @@ GET /api/ajnas/jins_kurd_(binsir)?tuningSystem=al-Kindi-(874)&startingNote=ushay
 
 **Description**: Does not include a zalzalian interval.
 
-**Tuning System**: `al-Kindi-(874)` on `ushayran`.
+**Tuning System**: `alkindi_874` on `ushayran`.
 
 **Source**: (No source references in data)
 
 **Example**:
 ```
-GET /api/ajnas/jins_nahawand?tuningSystem=al-Kindi-(874)&startingNote=ushayran&pitchClassDataType=cents
+GET /api/ajnas/jins_nahawand?tuningSystem=alkindi_874&startingNote=ushayran&pitchClassDataType=cents
 ```
 
 ---
@@ -458,13 +458,13 @@ GET /api/ajnas/jins_nahawand?tuningSystem=al-Kindi-(874)&startingNote=ushayran&p
 
 **Description**: Does not include a zalzalian interval.
 
-**Tuning System**: `al-Kindi-(874)` on `ushayran` or `IbnSina-(1037)` on `yegah`.
+**Tuning System**: `alkindi_874` on `ushayran` or `ibnsina_1037` on `yegah`.
 
 **Source**: (No source references in data)
 
 **Example**:
 ```
-GET /api/ajnas/jins_hijaz?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
+GET /api/ajnas/jins_hijaz?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
 ```
 
 ---
@@ -473,13 +473,13 @@ GET /api/ajnas/jins_hijaz?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchCl
 
 **Description**: The same as jins ḥijāz but starting on a different tonic, giving it slightly different intervals. Interesting for comparison. Does not include a zalzalian interval.
 
-**Tuning System**: `al-Kindi-(874)` on `ushayran` or `IbnSina-(1037)` on `yegah`.
+**Tuning System**: `alkindi_874` on `ushayran` or `ibnsina_1037` on `yegah`.
 
 **Source**: (No source references in data)
 
 **Example**:
 ```
-GET /api/ajnas/jins_hijaz_(binsir)?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
+GET /api/ajnas/jins_hijaz_(binsir)?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
 ```
 
 ---
@@ -492,18 +492,18 @@ GET /api/ajnas/jins_hijaz_(binsir)?tuningSystem=IbnSina-(1037)&startingNote=yega
 
 **Description**: One of the principle and archetypal Arabic maqāmāt. Prominently used in Egypt across both popular and religious sufi musics. Includes the zalzalian intervals segāh and awj in its ascending form.
 
-**Tuning System**: `IbnSina-(1037)` on `yegah`, `al-Farabi-(950g)` on `ushayran`, `Meshshaqa-(1899)` on `yegah`, or `CairoCongressTuningCommittee-(1929)` on `rast`.
+**Tuning System**: `ibnsina_1037` on `yegah`, `alfarabi_950g` on `ushayran`, `meshshaqa_1899` on `yegah`, or `cairocongresstuningcommittee_1929` on `rast`.
 
 **Source**: (No source references in data)
 
 **Required Parameters:**
-- `tuningSystem`: `IbnSina-(1037)`, `al-Farabi-(950g)`, `Meshshaqa-(1899)`, or `CairoCongressTuningCommittee-(1929)`
+- `tuningSystem`: `ibnsina_1037`, `alfarabi_950g`, `meshshaqa_1899`, or `cairocongresstuningcommittee_1929`
 - `startingNote`: `yegah` (for IbnSina, Meshshaqa), `ushayran` (for al-Farabi), or `rast` (for CairoCongress)
 - `pitchClassDataType`: `cents` (or `fraction`, `all`, etc.)
 
 **Example**:
 ```bash
-GET /api/maqamat/maqam_rast?tuningSystem=CairoCongressTuningCommittee-(1929)&startingNote=rast&pitchClassDataType=cents
+GET /api/maqamat/maqam_rast?tuningSystem=cairocongresstuningcommittee_1929&startingNote=rast&pitchClassDataType=cents
 ```
 
 ---
@@ -512,13 +512,13 @@ GET /api/maqamat/maqam_rast?tuningSystem=CairoCongressTuningCommittee-(1929)&sta
 
 **Description**: Also a principle and archetypal Arabic maqām, that is used widely in popular and rural musics across the Arabic speaking region and beyond. It is the base maqām for many variations in Arabic repertoire and beyond. Includes the zalzalian interval segāh and awj in its ascending form.
 
-**Tuning System**: `IbnSina-(1037)` on `yegah`, `al-Farabi-(950g)` on `ushayran`, `Meshshaqa-(1899)` on `yegah`, or `CairoCongressTuningCommittee-(1929)` on `rast`.
+**Tuning System**: `ibnsina_1037` on `yegah`, `alfarabi_950g` on `ushayran`, `meshshaqa_1899` on `yegah`, or `cairocongresstuningcommittee_1929` on `rast`.
 
 **Source**: (No source references in data)
 
 **Example**:
 ```
-GET /api/maqamat/maqam_bayyat?tuningSystem=Meshshaqa-(1899)&startingNote=yegah&pitchClassDataType=cents
+GET /api/maqamat/maqam_bayyat?tuningSystem=meshshaqa_1899&startingNote=yegah&pitchClassDataType=cents
 ```
 
 ---
@@ -527,13 +527,13 @@ GET /api/maqamat/maqam_bayyat?tuningSystem=Meshshaqa-(1899)&startingNote=yegah&p
 
 **Description**: A principle Arabic maqām, known primarily for its use in the adhān, the call to prayer. Includes the zalzalian interval awj in its ascending form.
 
-**Tuning System**: `IbnSina-(1037)` on `yegah`, `al-Farabi-(950g)` on `ushayran`, `Meshshaqa-(1899)` on `yegah`, or `CairoCongressTuningCommittee-(1929)` on `rast`.
+**Tuning System**: `ibnsina_1037` on `yegah`, `alfarabi_950g` on `ushayran`, `meshshaqa_1899` on `yegah`, or `cairocongresstuningcommittee_1929` on `rast`.
 
 **Source**: (No source references in data)
 
 **Example**:
 ```
-GET /api/maqamat/maqam_hijaz?tuningSystem=al-Sabbagh-(1954)&startingNote=rast&pitchClassDataType=cents
+GET /api/maqamat/maqam_hijaz?tuningSystem=alsabbagh_1954&startingNote=rast&pitchClassDataType=cents
 ```
 
 ---
@@ -544,13 +544,13 @@ GET /api/maqamat/maqam_hijaz?tuningSystem=al-Sabbagh-(1954)&startingNote=rast&pi
 
 **Description**: A transposition of maqām huzām given its own name because of its character. Its darajat al-istiqrār (tonic) is the zalzalian interval ʿirāq.
 
-**Tuning System**: `IbnSina-(1037)` on `yegah`, `al-Farabi-(950g)` on `ushayran`, `Meshshaqa-(1899)` on `yegah`, or `CairoCongressTuningCommittee-(1929)` on `rast`.
+**Tuning System**: `ibnsina_1037` on `yegah`, `alfarabi_950g` on `ushayran`, `meshshaqa_1899` on `yegah`, or `cairocongresstuningcommittee_1929` on `rast`.
 
 **Source**: (No source references in data)
 
 **Example**:
 ```
-GET /api/maqamat/maqam_rahat_al-arwah?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
+GET /api/maqamat/maqam_rahat_al-arwah?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
 ```
 
 ---
@@ -559,13 +559,13 @@ GET /api/maqamat/maqam_rahat_al-arwah?tuningSystem=IbnSina-(1037)&startingNote=y
 
 **Description**: Complex and rarely used non-octave repeating maqam. Its darajat al-istiqrār (tonic) is the zalzalian interval segāh.
 
-**Tuning System**: `IbnSina-(1037)` on `yegah`, `al-Farabi-(950g)` on `ushayran`, `Meshshaqa-(1899)` on `yegah`, or `CairoCongressTuningCommittee-(1929)` on `rast`.
+**Tuning System**: `ibnsina_1037` on `yegah`, `alfarabi_950g` on `ushayran`, `meshshaqa_1899` on `yegah`, or `cairocongresstuningcommittee_1929` on `rast`.
 
 **Source**: (No source references in data)
 
 **Example**:
 ```
-GET /api/maqamat/maqam_bestenegar?tuningSystem=al-Farabi-(950g)&startingNote=ushayran&pitchClassDataType=cents
+GET /api/maqamat/maqam_bestenegar?tuningSystem=alfarabi_950g&startingNote=ushayran&pitchClassDataType=cents
 ```
 
 ---
@@ -576,13 +576,13 @@ GET /api/maqamat/maqam_bestenegar?tuningSystem=al-Farabi-(950g)&startingNote=ush
 
 **Description**: This maqām came to much prominence in 1960s and 70s Egyptian popular music, and is one of the most used in pop music across the region today. It doesn't include the quintessential so-called Arabic "quarter tone", i.e. pitch classes ʿirāq, nīm zīrgūleh, segāh, nīm ḥijāz, or awj.
 
-**Tuning System**: `al-Kindi-(874)` on `ushayran`.
+**Tuning System**: `alkindi_874` on `ushayran`.
 
 **Source**: (No source references in data)
 
 **Example**:
 ```
-GET /api/maqamat/maqam_kurd?tuningSystem=al-Kindi-(874)&startingNote=ushayran&pitchClassDataType=cents
+GET /api/maqamat/maqam_kurd?tuningSystem=alkindi_874&startingNote=ushayran&pitchClassDataType=cents
 ```
 
 ---
@@ -591,13 +591,13 @@ GET /api/maqamat/maqam_kurd?tuningSystem=al-Kindi-(874)&startingNote=ushayran&pi
 
 **Description**: A rarely used maqām with a very specific character. It doesn't include the quintessential so-called Arabic "quarter tone", i.e. pitch classes ʿirāq, nīm zīrgūleh, segāh, nīm ḥijāz, or awj.
 
-**Tuning System**: `al-Kindi-(874)` on `ushayran`.
+**Tuning System**: `alkindi_874` on `ushayran`.
 
 **Source**: (No source references in data)
 
 **Example**:
 ```
-GET /api/maqamat/maqam_athar-kurd?tuningSystem=al-Kindi-(874)&startingNote=ushayran&pitchClassDataType=cents
+GET /api/maqamat/maqam_athar-kurd?tuningSystem=alkindi_874&startingNote=ushayran&pitchClassDataType=cents
 ```
 
 ---
@@ -606,13 +606,13 @@ GET /api/maqamat/maqam_athar-kurd?tuningSystem=al-Kindi-(874)&startingNote=ushay
 
 **Description**: A complex non-octave repeating Ottoman maqām that is rarely used in Arabic music but was a part of early 20th century music theory.
 
-**Tuning System**: `IbnSina-(1037)` on `yegah` or `Meshshaqa-(1899)` on `yegah`.
+**Tuning System**: `ibnsina_1037` on `yegah` or `meshshaqa_1899` on `yegah`.
 
 **Source**: (No source references in data)
 
 **Example**:
 ```
-GET /api/maqamat/maqam_dilkesh-huran?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
+GET /api/maqamat/maqam_dilkesh-huran?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
 ```
 
 ---
@@ -621,27 +621,27 @@ GET /api/maqamat/maqam_dilkesh-huran?tuningSystem=IbnSina-(1037)&startingNote=ye
 
 ### Basic Detail Request
 ```bash
-curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents"
+curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents"
 ```
 
 ### With All Optional Parameters
 ```bash
-curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents&includeArabic=true&includeIntervals=true&includeModulations=true&includeModulations8vb=true&includeSuyur=true"
+curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents&includeArabic=true&includeIntervals=true&includeModulations=true&includeModulations8vb=true&includeSuyur=true"
 ```
 
 ### Parameter Discovery
 ```bash
-curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&options=true"
+curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&options=true"
 ```
 
 ### Comparison Across Tuning Systems
 ```bash
-curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast/compare?tuningSystems=IbnSina-(1037),al-Farabi-(950g)&startingNote=yegah&pitchClassDataType=cents"
+curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast/compare?tuningSystems=ibnsina_1037,alfarabi_950g&startingNote=yegah&pitchClassDataType=cents"
 ```
 
 ### Transposition
 ```bash
-curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents&transposeTo=nawa"
+curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents&transposeTo=nawa"
 ```
 
 ---
@@ -649,30 +649,30 @@ curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-
 ## Testing Combinations
 
 ### Test Basic Coverage
-- Tuning: `IbnSina-(1037)` on `yegah`
+- Tuning: `ibnsina_1037` on `yegah`
 - Maqām: `maqam_rast`
 - Jins: `jins_rast`
 - Format: `cents`
 
 ### Test Zalzalian Intervals
-- Tuning: `al-Farabi-(950g)` on `ushayran`
+- Tuning: `alfarabi_950g` on `ushayran`
 - Ajnās: `jins_rast`, `jins_bayyat`, `jins_segah`, `jins_saba`
 
 ### Test Non-Zalzalian Systems
-- Tuning: `al-Kindi-(874)` on `ushayran`
+- Tuning: `alkindi_874` on `ushayran`
 - Ajnās: `jins_kurd`, `jins_nahawand`, `jins_nikriz`
 
 ### Test Modern Equal Divisions
-- Tuning: `Meshshaqa-(1899)` on `yegah`
-- Compare with: `IbnSina-(1037)` to see equal vs. unequal
+- Tuning: `meshshaqa_1899` on `yegah`
+- Compare with: `ibnsina_1037` to see equal vs. unequal
 
 ### Test Complex Structures
 - Maqām: `maqam_bestenegar` (non-octave-repeating)
 - Maqām: `maqam_dilkesh-huran` (Ottoman complexity)
 
 ### Test Historical Documentation
-- Tuning: `CairoCongressTuningCommittee-(1929)` on `rast`
-- Compare with: `al-Sabbagh-(1954)` on `rast`
+- Tuning: `cairocongresstuningcommittee_1929` on `rast`
+- Compare with: `alsabbagh_1954` on `rast`
 
 ---
 

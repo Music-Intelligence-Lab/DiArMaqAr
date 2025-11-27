@@ -589,7 +589,7 @@ export async function GET(
           { 
             error: "No maqām selected",
             hint: "Please specify a maqām ID or use 'all' to get all available maqāmāt",
-            example: `/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)` 
+            example: `/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037` 
           },
           { status: 400 }
         )
@@ -619,7 +619,7 @@ export async function GET(
           {
             error: "Invalid parameter: tuningSystem",
             message: "The 'tuningSystem' parameter cannot be empty. Provide a valid tuning system ID.",
-            hint: "Specify a tuning system like '?tuningSystem=IbnSina-(1037)'"
+            hint: "Specify a tuning system like '?tuningSystem=ibnsina_1037'"
           },
           { status: 400 }
         )
@@ -686,7 +686,7 @@ export async function GET(
             {
               error: "tuningSystem parameter is required",
               message: "Tuning system is required for all requests (both data retrieval and discovery mode).",
-              hint: `Add &tuningSystem=IbnSina-(1037) to your request. Use /api/maqamat/${maqamId}/availability to see available tuning systems`,
+              hint: `Add &tuningSystem=ibnsina_1037 to your request. Use /api/maqamat/${maqamId}/availability to see available tuning systems`,
               availabilityUrl: `/api/maqamat/${maqamId}/availability`
             },
             { status: 400 }
@@ -701,7 +701,7 @@ export async function GET(
             {
               error: "Invalid parameter: tuningSystem",
               message: "The 'tuningSystem' parameter cannot be empty. Provide a valid tuning system ID.",
-              hint: "Specify a tuning system like '?tuningSystem=IbnSina-(1037)'"
+              hint: "Specify a tuning system like '?tuningSystem=ibnsina_1037'"
             },
             { status: 400 }
           )
@@ -846,9 +846,9 @@ export async function GET(
             formatOptions: "The 'pitchClassDataType' parameter controls which pitch class properties are returned. Use 'all' for comprehensive data or specific formats like 'cents', 'fraction', etc. for targeted data."
           },
           examples: [
-            `/api/maqamat/${maqamId}?tuningSystem=IbnSina-(1037)&startingNote=ushayran&pitchClassDataType=cents&intervals=true`,
-            `/api/maqamat/${maqamId}?tuningSystem=IbnSina-(1037)&startingNote=ushayran&pitchClassDataType=cents&transposeTo=nawa&includeModulations=true`,
-            `/api/maqamat/${maqamId}?tuningSystem=IbnSina-(1037)&startingNote=ushayran&pitchClassDataType=all&includeSuyur=true`
+            `/api/maqamat/${maqamId}?tuningSystem=ibnsina_1037&startingNote=ushayran&pitchClassDataType=cents&intervals=true`,
+            `/api/maqamat/${maqamId}?tuningSystem=ibnsina_1037&startingNote=ushayran&pitchClassDataType=cents&transposeTo=nawa&includeModulations=true`,
+            `/api/maqamat/${maqamId}?tuningSystem=ibnsina_1037&startingNote=ushayran&pitchClassDataType=all&includeSuyur=true`
           ]
         })
       );

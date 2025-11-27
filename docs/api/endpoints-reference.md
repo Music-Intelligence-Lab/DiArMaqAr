@@ -149,10 +149,10 @@ Requirements:
   - Example: `all` - All maqāmāt (requires tuningSystem and startingNote query parameters)
 
 **Query Parameters:**
-- `tuningSystem` **(required)**: Tuning system identifier (e.g., 'IbnSina-(1037)', 'al-Farabi-(950g)', 'Meshshaqa-(1899)') - Type: `string`
-  - Example: `IbnSina-(1037)` - Ibn Sīnā (1037) - 7-Fret Oud 17-Tone (representative example)
-  - Example: `al-Farabi-(950g)` - al-Fārābī (950g) - First Oud Tuning 27-Tone (representative example)
-  - Example: `Meshshaqa-(1899)` - Meshshāqa (1899) - Arabic Octave According to the Modernists (representative example)
+- `tuningSystem` **(required)**: Tuning system identifier (e.g., 'ibnsina_1037', 'alfarabi_950g', 'meshshaqa_1899') - Type: `string`
+  - Example: `ibnsina_1037` - Ibn Sīnā (1037) - 7-Fret Oud 17-Tone (representative example)
+  - Example: `alfarabi_950g` - al-Fārābī (950g) - First Oud Tuning 27-Tone (representative example)
+  - Example: `meshshaqa_1899` - Meshshāqa (1899) - Arabic Octave According to the Modernists (representative example)
 - `startingNote` **(required)**: Tuning system starting note name (URL-safe, diacritics-insensitive).
   - Different starting notes represent different theoretical frameworks within the same tuning system
   - Use `yegah` for IbnSina/Meshshaqa, `ushayran` for al-Farabi/al-Kindi, `rast` for CairoCongress/al-Sabbagh
@@ -199,7 +199,7 @@ Requirements:
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&includeArabic=true"
+curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&includeArabic=true"
 ```
 
 **Response:** Maqām data retrieved successfully.
@@ -264,8 +264,8 @@ Returns all tonic transpositions that are feasible under the tuning system acros
   - Example: `maqam_hijaz`
 
 **Query Parameters:**
-- `tuningSystem` **(required)**: Tuning system identifier (e.g., 'IbnSina-(1037)', 'al-Farabi-(950g)', 'Meshshaqa-(1899)') - Type: `string`
-  - Example: `al-Sabbagh-(1954)`
+- `tuningSystem` **(required)**: Tuning system identifier (e.g., 'ibnsina_1037', 'alfarabi_950g', 'meshshaqa_1899') - Type: `string`
+  - Example: `alsabbagh_1954`
 - `startingNote` **(required)**: Tuning system starting note name (URL-safe, diacritics-insensitive). - Type: `string`
   - Example: `rast`
 - `includeArabic` (optional): Return bilingual responses with Arabic script when true.
@@ -280,7 +280,7 @@ Returns all tonic transpositions that are feasible under the tuning system acros
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/maqamat/maqam_hijaz/transpositions?tuningSystem=al-Sabbagh-(1954)&startingNote=rast&includeArabic=true"
+curl "https://diarmaqar.netlify.app/api/maqamat/maqam_hijaz/transpositions?tuningSystem=alsabbagh_1954&startingNote=rast&includeArabic=true"
 ```
 
 **Response:** Transpositions retrieved successfully
@@ -310,7 +310,7 @@ This endpoint is ideal for comparative musicological analysis across different h
 
 **Query Parameters:**
 - `tuningSystems` **(required)**: Comma-separated tuning system IDs. - Type: `string`
-  - Example: `CairoCongressTuningCommittee-(1929),al-Sabbagh-(1954)`
+  - Example: `cairocongresstuningcommittee_1929,alsabbagh_1954`
 - `startingNote` **(required)**: Starting note name (URL-safe, diacritics-insensitive) - applies to all tuning systems. - Type: `string`
   - Example: `rast`
 - `pitchClassDataType` **(required)**: Output format for pitch class data - Type: `string` - Valid values: `all`, `englishName`, `fraction`, `cents`, `decimalRatio`, ... (13 total)
@@ -331,7 +331,7 @@ This endpoint is ideal for comparative musicological analysis across different h
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/maqamat/maqam_bayyat/compare?tuningSystems=CairoCongressTuningCommittee-(1929),al-Sabbagh-(1954)&startingNote=rast&pitchClassDataType=cents&includeArabic=true"
+curl "https://diarmaqar.netlify.app/api/maqamat/maqam_bayyat/compare?tuningSystems=cairocongresstuningcommittee_1929,alsabbagh_1954&startingNote=rast&pitchClassDataType=cents&includeArabic=true"
 ```
 
 **Response:** Comparison data retrieved successfully
@@ -345,11 +345,11 @@ GET /maqamat/classification/12-pitch-class-sets
 
 Groups maqāmāt according to sets of 12 pitch classes suitable for MIDI keyboard tuning
 and Scala file export. Each set is created by merging pitch classes from the specified
-tuning system with al-Kindi-(874) filler pitch classes, based on matching IPN reference
+tuning system with alkindi_874 filler pitch classes, based on matching IPN reference
 note names.
 
 **Critical Design Principles:**
-- **Octave Alignment**: Both the maqām tuning system and al-Kindi-(874) use the same
+- **Octave Alignment**: Both the maqām tuning system and alkindi_874 use the same
   `startingNote` to ensure octaves align correctly
 - **Chromatic Order**: Each set contains exactly 12 pitch classes ordered chromatically
   starting from the maqām's tonic (e.g., C, C#, D, D#... for Rāst)
@@ -360,7 +360,7 @@ note names.
   without post-processing or calculation
 
 **The Algorithm:**
-1. Loads pitch classes from both the specified tuning system and al-Kindi-(874) using
+1. Loads pitch classes from both the specified tuning system and alkindi_874 using
    the same `startingNote`
 2. For each maqām transposition:
    - Extracts IPN reference note names from ascending and descending sequences
@@ -388,9 +388,9 @@ note names.
 
 
 **Query Parameters:**
-- `tuningSystem` (optional): Tuning system ID for maqāmāt (default: CairoCongressTuningCommittee-(1929)) - Type: `string` - Default: `CairoCongressTuningCommittee-(1929)`
-  - Example: `CairoCongressTuningCommittee-(1929)`
-- `startingNote` (optional): Starting note for both the maqām tuning system and al-Kindi-(874) (default: yegah).
+- `tuningSystem` (optional): Tuning system ID for maqāmāt (default: cairocongresstuningcommittee_1929) - Type: `string` - Default: `cairocongresstuningcommittee_1929`
+  - Example: `cairocongresstuningcommittee_1929`
+- `startingNote` (optional): Starting note for both the maqām tuning system and alkindi_874 (default: yegah).
 IMPORTANT: Both tuning systems must use the same starting note to ensure octaves align
 correctly and pitch classes can be properly selected from matching octaves.
   IMPORTANT: Both tuning systems must use the same starting note to ensure octaves align
@@ -474,7 +474,7 @@ maqām X?" For example, maqām rāst on rāst includes pitch classes that can pe
 bayyāt on dūgāh and maqām segāh on segāh.
 
 **Key Differences from 12-Pitch-Class-Sets:**
-- **No Chromatic Base**: Does not merge with al-Kindi-(874) or chromatic filler pitch classes
+- **No Chromatic Base**: Does not merge with alkindi_874 or chromatic filler pitch classes
 - **Variable Set Sizes**: Sets can contain any number of pitch classes (7, 8, 10, etc.), not fixed at 12
 - **Octave-Equivalent Matching**: Pitch classes in different octaves treated as equivalent (C in octave 1 = C in octave 2)
 - **Single Tuning System**: Uses only the specified tuning system (simpler than 12-pitch-class-sets)
@@ -518,8 +518,8 @@ bayyāt on dūgāh and maqām segāh on segāh.
 
 
 **Query Parameters:**
-- `tuningSystem` (optional): Tuning system ID for all maqāmāt (default: CairoCongressTuningCommittee-(1929)) - Type: `string` - Default: `CairoCongressTuningCommittee-(1929)`
-  - Example: `CairoCongressTuningCommittee-(1929)`
+- `tuningSystem` (optional): Tuning system ID for all maqāmāt (default: cairocongresstuningcommittee_1929) - Type: `string` - Default: `cairocongresstuningcommittee_1929`
+  - Example: `cairocongresstuningcommittee_1929`
 - `startingNote` (optional): Starting note for the tuning system (default: yegah). - Type: `string` - Default: `yegah`
   - Example: `yegah`
 - `centsTolerance` (optional): Tolerance in cents for pitch class comparison (default: 5) - Type: `number` - Default: `5`
@@ -627,10 +627,10 @@ Requirements:
   - Example: `jins_bayyat` - Jins Bayyāt (representative example - with zalzalian intervals)
 
 **Query Parameters:**
-- `tuningSystem` **(required)**: Tuning system identifier (e.g., 'IbnSina-(1037)', 'al-Farabi-(950g)', 'Meshshaqa-(1899)') - Type: `string`
-  - Example: `IbnSina-(1037)` - Ibn Sīnā (1037) - 7-Fret Oud 17-Tone (representative example)
-  - Example: `al-Farabi-(950g)` - al-Fārābī (950g) - First Oud Tuning 27-Tone (representative example)
-  - Example: `Meshshaqa-(1899)` - Meshshāqa (1899) - Arabic Octave According to the Modernists (representative example)
+- `tuningSystem` **(required)**: Tuning system identifier (e.g., 'ibnsina_1037', 'alfarabi_950g', 'meshshaqa_1899') - Type: `string`
+  - Example: `ibnsina_1037` - Ibn Sīnā (1037) - 7-Fret Oud 17-Tone (representative example)
+  - Example: `alfarabi_950g` - al-Fārābī (950g) - First Oud Tuning 27-Tone (representative example)
+  - Example: `meshshaqa_1899` - Meshshāqa (1899) - Arabic Octave According to the Modernists (representative example)
 - `startingNote` **(required)**: Tuning system starting note name (URL-safe, diacritics-insensitive).
   - Different starting notes represent different theoretical frameworks within the same tuning system
   - Use `yegah` for IbnSina/Meshshaqa, `ushayran` for al-Farabi/al-Kindi, `rast` for CairoCongress/al-Sabbagh
@@ -659,10 +659,6 @@ Requirements:
   - Example: `nawa`
 - `includeIntervals` (optional): Include interval data between jins degrees - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
-- `includeModulations` (optional): Include modulation possibilities to other ajnās - Type: `string` - Valid values: `true`, `false` - Default: `true`
-  - Example: `true`
-- `includeModulations8vb` (optional): Include available modulations an octave below - Type: `string` - Valid values: `true`, `false` - Default: `true`
-  - Example: `true`
 - `includeArabic` (optional): Return bilingual responses with Arabic script when true.
   - All English/transliteration fields remain unchanged
   - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
@@ -675,7 +671,7 @@ Requirements:
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/ajnas/jins_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&includeArabic=true"
+curl "https://diarmaqar.netlify.app/api/ajnas/jins_rast?tuningSystem=ibnsina_1037&startingNote=yegah&includeArabic=true"
 ```
 
 **Response:** Jins data retrieved successfully.
@@ -740,8 +736,8 @@ Returns all tonic transpositions that are feasible under the tuning system acros
   - Example: `jins_bayyat`
 
 **Query Parameters:**
-- `tuningSystem` **(required)**: Tuning system identifier (e.g., 'IbnSina-(1037)', 'al-Farabi-(950g)', 'Meshshaqa-(1899)') - Type: `string`
-  - Example: `Meshshaqa-(1899)`
+- `tuningSystem` **(required)**: Tuning system identifier (e.g., 'ibnsina_1037', 'alfarabi_950g', 'meshshaqa_1899') - Type: `string`
+  - Example: `meshshaqa_1899`
 - `startingNote` **(required)**: Tuning system starting note name (URL-safe, diacritics-insensitive). - Type: `string`
   - Example: `yegah`
 - `includeArabic` (optional): Return bilingual responses with Arabic script when true.
@@ -756,7 +752,7 @@ Returns all tonic transpositions that are feasible under the tuning system acros
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/ajnas/jins_bayyat/transpositions?tuningSystem=Meshshaqa-(1899)&startingNote=yegah&includeArabic=true"
+curl "https://diarmaqar.netlify.app/api/ajnas/jins_bayyat/transpositions?tuningSystem=meshshaqa_1899&startingNote=yegah&includeArabic=true"
 ```
 
 **Response:** Transpositions retrieved successfully
@@ -785,7 +781,7 @@ This endpoint is ideal for comparative musicological analysis of melodic structu
 
 **Query Parameters:**
 - `tuningSystems` **(required)**: Comma-separated tuning system IDs. - Type: `string`
-  - Example: `al-Farabi-(950g),Meshshaqa-(1899)`
+  - Example: `alfarabi_950g,meshshaqa_1899`
 - `startingNote` **(required)**: Starting note name (URL-safe, diacritics-insensitive) - applies to all tuning systems. - Type: `string`
   - Example: `ushayran`
 - `pitchClassDataType` **(required)**: Output format for pitch class data - Type: `string` - Valid values: `all`, `englishName`, `fraction`, `cents`, `decimalRatio`, ... (13 total)
@@ -806,7 +802,7 @@ This endpoint is ideal for comparative musicological analysis of melodic structu
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/ajnas/jins_segah/compare?tuningSystems=al-Farabi-(950g),Meshshaqa-(1899)&startingNote=ushayran&pitchClassDataType=cents&includeArabic=true"
+curl "https://diarmaqar.netlify.app/api/ajnas/jins_segah/compare?tuningSystems=alfarabi_950g,meshshaqa_1899&startingNote=ushayran&pitchClassDataType=cents&includeArabic=true"
 ```
 
 **Response:** Comparison data retrieved successfully
@@ -867,7 +863,7 @@ across all octaves with full formatting options.
 
 **Path Parameters:**
 - `id`: Tuning system identifier (string) **(required)**
-  - Example: `CairoCongressTuningCommittee-(1929)`
+  - Example: `cairocongresstuningcommittee_1929`
 - `startingNote`: Tuning system starting note name (URL-safe, diacritics-insensitive). Use `yegah` for IbnSina/Meshshaqa, `ushayran` for al-Farabi/al-Kindi, `rast` for CairoCongress/al-Sabbagh (string) **(required)**
   - Example: `rast`
 
@@ -892,7 +888,7 @@ across all octaves with full formatting options.
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/tuning-systems/CairoCongressTuningCommittee-(1929)/rast/pitch-classes?pitchClassDataType=cents&includeSources=true&includeArabic=true"
+curl "https://diarmaqar.netlify.app/api/tuning-systems/cairocongresstuningcommittee_1929/rast/pitch-classes?pitchClassDataType=cents&includeSources=true&includeArabic=true"
 ```
 
 **Response:** Tuning system pitch classes retrieved successfully
@@ -910,8 +906,8 @@ Return all maqāmāt that can be realized in a given tuning system beginning on 
 
 
 **Path Parameters:**
-- `id`: Tuning system identifier (e.g., 'IbnSina-(1037)', 'al-Farabi-(950g)', 'Meshshaqa-(1899)') (string) **(required)**
-  - Example: `al-Farabi-(950g)`
+- `id`: Tuning system identifier (e.g., 'ibnsina_1037', 'alfarabi_950g', 'meshshaqa_1899') (string) **(required)**
+  - Example: `alfarabi_950g`
 - `startingNote`: Tuning system starting note name (URL-safe, diacritics-insensitive). Use `yegah` for IbnSina/Meshshaqa, `ushayran` for al-Farabi/al-Kindi, `rast` for CairoCongress/al-Sabbagh (string) **(required)**
   - Example: `ushayran`
 
@@ -928,7 +924,7 @@ Return all maqāmāt that can be realized in a given tuning system beginning on 
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/tuning-systems/al-Farabi-(950g)/ushayran/maqamat?includeArabic=true"
+curl "https://diarmaqar.netlify.app/api/tuning-systems/alfarabi_950g/ushayran/maqamat?includeArabic=true"
 ```
 
 **Response:** Maqāmāt list retrieved successfully
@@ -965,7 +961,7 @@ availability information for a specific note name.
   - Example: `order` - Sort by canonical note name order (from NoteName.ts arrays)
   - Example: `alphabetical` - Sort alphabetically by display name
 - `filterByTuningSystem` (optional): Filter by tuning system ID to show only note names that exist in that system (URL-safe, case-insensitive, diacritics-insensitive). - Type: `string`
-  - Example: `Meshshaqa-(1899)`
+  - Example: `meshshaqa_1899`
 - `includeArabic` (optional): Return bilingual responses with Arabic script when true.
   - All English/transliteration fields remain unchanged
   - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
@@ -1007,7 +1003,7 @@ Supports:
 
 **Query Parameters:**
 - `tuningSystem` (optional): Tuning system ID. - Type: `string`
-  - Example: `CairoCongressTuningCommittee-(1929)`
+  - Example: `cairocongresstuningcommittee_1929`
 - `startingNote` (optional): Starting note for the tuning system.
   - Use "all" to include all available starting notes for that tuning system (returns array of results, one per starting note) Note: Since note names are unique per octave, the note name itself identifies the octave. No octave parameter is needed. Use `yegah` for IbnSina/Meshshaqa, `ushayran` for al-Farabi/al-Kindi, `rast` for CairoCongress/al-Sabbagh
  - Type: `string`
@@ -1088,7 +1084,7 @@ Returns comprehensive data for each tuning system including:
 
 **Query Parameters:**
 - `tuningSystems` **(required)**: Comma-separated tuning system IDs - Type: `string`
-  - Example: `Meshshaqa-(1899),CairoCongressTuningCommittee-(1929)`
+  - Example: `meshshaqa_1899,cairocongresstuningcommittee_1929`
 - `startingNote` **(required)**: Starting note (applies to all tuning systems), or "all" to include all available starting notes for each tuning system. - Type: `string`
   - Example: `yegah`
 - `pitchClassDataType` **(required)**: Pitch class data format - Type: `string` - Valid values: `all`, `englishName`, `fraction`, `cents`, `decimalRatio`, ... (13 total) - Default: `cents`
@@ -1105,7 +1101,7 @@ Returns comprehensive data for each tuning system including:
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/pitch-classes/note-names/rast/compare?tuningSystems=Meshshaqa-(1899),CairoCongressTuningCommittee-(1929)&startingNote=yegah&pitchClassDataType=cents&includeArabic=true"
+curl "https://diarmaqar.netlify.app/api/pitch-classes/note-names/rast/compare?tuningSystems=meshshaqa_1899,cairocongresstuningcommittee_1929&startingNote=yegah&pitchClassDataType=cents&includeArabic=true"
 ```
 
 **Response:** Comparison data retrieved successfully
@@ -1138,7 +1134,7 @@ as it is not meaningful in this context.
 - `noteNames` **(required)**: Comma-separated note names (e.g., "rast,dugah,segah"). Note names can come from any octave. - Type: `string`
   - Example: `rast,dugah,segah`
 - `tuningSystem` (optional): Tuning system ID. - Type: `string`
-  - Example: `al-Sabbagh-(1954)`
+  - Example: `alsabbagh_1954`
 - `startingNote` (optional): Starting note.
   - Use "all" to include all available starting notes for that tuning system (returns array of results, one per starting note) Note: Since note names are unique per octave, each note name already identifies its octave. No octave parameter is needed. Use `yegah` for IbnSina/Meshshaqa, `ushayran` for al-Farabi/al-Kindi, `rast` for CairoCongress/al-Sabbagh
  - Type: `string`
@@ -1179,7 +1175,7 @@ as it is not meaningful in this context.
 - `noteNames` **(required)**: Comma-separated note names. Note names can come from any octave. - Type: `string`
   - Example: `rast,dugah,segah`
 - `tuningSystems` **(required)**: Comma-separated tuning system IDs - Type: `string`
-  - Example: `al-Farabi-(950g),CairoCongressTuningCommittee-(1929)`
+  - Example: `alfarabi_950g,cairocongresstuningcommittee_1929`
 - `startingNote` **(required)**: Starting note (applies to all tuning systems), or "all" to include all available starting notes for each tuning system. - Type: `string`
   - Example: `ushayran`
 - `includeArabic` (optional): Return bilingual responses with Arabic script when true.
@@ -1194,7 +1190,7 @@ as it is not meaningful in this context.
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/intervals/compare?noteNames=rast,dugah,segah&tuningSystems=al-Farabi-(950g),CairoCongressTuningCommittee-(1929)&startingNote=ushayran&includeArabic=true"
+curl "https://diarmaqar.netlify.app/api/intervals/compare?noteNames=rast,dugah,segah&tuningSystems=alfarabi_950g,cairocongresstuningcommittee_1929&startingNote=ushayran&includeArabic=true"
 ```
 
 **Response:** Comparison data retrieved successfully

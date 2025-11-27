@@ -102,10 +102,10 @@ Examples:
   node scripts/batch-export/batch-export.js --list-tuning-systems
 
   # Export specific tuning system with basic data
-  node scripts/batch-export/batch-export.js --tuning-system "al-Kindi-(874)" --starting-note "yegāh"
+  node scripts/batch-export/batch-export.js --tuning-system "alkindi_874" --starting-note "yegāh"
 
   # Export with full data including modulations
-  node scripts/batch-export/batch-export.js --tuning-system "al-Kindi-(874)" --starting-note "yegāh" --include-ajnas-details --include-maqamat-details --include-maqamat-modulations --include-ajnas-modulations
+  node scripts/batch-export/batch-export.js --tuning-system "alkindi_874" --starting-note "yegāh" --include-ajnas-details --include-maqamat-details --include-maqamat-modulations --include-ajnas-modulations
 
   # Export all systems with all starting notes (batch export)
   node scripts/batch-export/batch-export.js --tuning-system "all" --starting-note "all"

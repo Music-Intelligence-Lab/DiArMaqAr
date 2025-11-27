@@ -220,7 +220,7 @@ export async function GET(
         {
           error: "Invalid path parameter: id",
           message: "The tuning system ID cannot be empty.",
-          hint: "Provide a valid tuning system ID in the URL path, e.g., /api/tuning-systems/IbnSina-(1037)/yegah/pitch-classes"
+          hint: "Provide a valid tuning system ID in the URL path, e.g., /api/tuning-systems/ibnsina_1037/yegah/pitch-classes"
         },
         { status: 400 }
       );
@@ -232,7 +232,7 @@ export async function GET(
         {
           error: "Invalid path parameter: startingNote",
           message: "The starting note cannot be empty.",
-          hint: "Provide a valid starting note in the URL path, e.g., /api/tuning-systems/IbnSina-(1037)/yegah/pitch-classes"
+          hint: "Provide a valid starting note in the URL path, e.g., /api/tuning-systems/ibnsina_1037/yegah/pitch-classes"
         },
         { status: 400 }
       );

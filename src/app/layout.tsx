@@ -205,7 +205,7 @@ export default function RootLayout({
         "@type": "HowToStep",
         "position": 1,
         "name": "Identify Required Parameters",
-        "text": "All detail endpoints (/api/maqamat/{id}, /api/ajnas/{id}) require three parameters: tuningSystem (e.g., IbnSina-(1037)), startingNote (e.g., yegah), and pitchClassDataType (e.g., cents)."
+        "text": "All detail endpoints (/api/maqamat/{id}, /api/ajnas/{id}) require three parameters: tuningSystem (e.g., ibnsina_1037), startingNote (e.g., yegah), and pitchClassDataType (e.g., cents)."
       },
       {
         "@type": "HowToStep",
@@ -217,7 +217,7 @@ export default function RootLayout({
         "@type": "HowToStep",
         "position": 3,
         "name": "Use URL-Safe Values",
-        "text": "All IDs and parameter values must be URL-safe (no spaces, diacritics, or special characters). Use IbnSina-(1037) not 'Ibn Sīnā (1037)'."
+        "text": "All IDs and parameter values must be URL-safe (no spaces, diacritics, or special characters). Use ibnsina_1037 not 'Ibn Sīnā (1037)'."
       },
       {
         "@type": "HowToStep",
@@ -229,7 +229,7 @@ export default function RootLayout({
         "@type": "HowToStep",
         "position": 5,
         "name": "Discover Available Parameters",
-        "text": "Use options=true parameter to discover available tuning systems, starting notes, and other parameters: GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&options=true"
+        "text": "Use options=true parameter to discover available tuning systems, starting notes, and other parameters: GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&options=true"
       }
     ],
     "url": `${baseUrl}/docs/api/representative-examples`
@@ -265,7 +265,7 @@ export default function RootLayout({
             <p>Base URL: <a href="https://diarmaqar.netlify.app/api">https://diarmaqar.netlify.app/api</a></p>
             <p>OpenAPI Spec: <a href="/docs/openapi.json">/docs/openapi.json</a></p>
             <h3>For AI Assistants</h3>
-            <p><strong>Recommended for AI Assistants:</strong> Use the REST API to fetch real-time, accurate data for users. Always prefer API calls over documentation summaries. Example: GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&amp;startingNote=yegah&amp;pitchClassDataType=cents to get detailed maqām data. For users who don&apos;t know specific maqam names, use representative examples from <a href="/docs/api/representative-examples">Representative Examples</a>. See OpenAPI spec for all endpoints.</p>
+            <p><strong>Recommended for AI Assistants:</strong> Use the REST API to fetch real-time, accurate data for users. Always prefer API calls over documentation summaries. Example: GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&amp;startingNote=yegah&amp;pitchClassDataType=cents to get detailed maqām data. For users who don&apos;t know specific maqam names, use representative examples from <a href="/docs/api/representative-examples">Representative Examples</a>. See OpenAPI spec for all endpoints.</p>
             <p>For complete documentation and interactive features, please enable JavaScript or access from a desktop device.</p>
           </div>
         </noscript>
@@ -297,12 +297,12 @@ export default function RootLayout({
           <p><strong>Recommended for AI Assistants:</strong> Use the REST API to fetch real-time, accurate data for users. Always prefer API calls over documentation summaries for real-time data accuracy. The API provides programmatic access to all maqāmāt, ajnās, and tuning systems data.</p>
           <p><strong>Example Requests for Novice Users:</strong> For users who don&apos;t know specific maqam names, use these representative examples:</p>
           <ul>
-            <li>Most common maqam: <code>GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&amp;startingNote=yegah&amp;pitchClassDataType=cents</code></li>
-            <li>Most common jins: <code>GET /api/ajnas/jins_rast?tuningSystem=IbnSina-(1037)&amp;startingNote=yegah&amp;pitchClassDataType=cents</code></li>
+            <li>Most common maqam: <code>GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&amp;startingNote=yegah&amp;pitchClassDataType=cents</code></li>
+            <li>Most common jins: <code>GET /api/ajnas/jins_rast?tuningSystem=ibnsina_1037&amp;startingNote=yegah&amp;pitchClassDataType=cents</code></li>
             <li>List all tuning systems: <code>GET /api/tuning-systems</code></li>
-            <li>Most common tuning system: <code>GET /api/tuning-systems/IbnSina-(1037)/yegah/pitch-classes?pitchClassDataType=cents</code></li>
+            <li>Most common tuning system: <code>GET /api/tuning-systems/ibnsina_1037/yegah/pitch-classes?pitchClassDataType=cents</code></li>
           </ul>
-          <p><strong>Quick Test URL:</strong> <code>GET https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&amp;startingNote=yegah&amp;pitchClassDataType=cents</code></p>
+          <p><strong>Quick Test URL:</strong> <code>GET https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&amp;startingNote=yegah&amp;pitchClassDataType=cents</code></p>
           <p>All endpoints return JSON with complete data including pitch classes, intervals, bibliographic sources, and more. See <a href="/docs/api/representative-examples">Representative Examples</a> for complete list of recommended examples. Use the OpenAPI specification for complete endpoint documentation and parameter details.</p>
           
           <h2>Quick Links</h2>

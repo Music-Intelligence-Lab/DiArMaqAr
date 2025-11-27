@@ -99,7 +99,7 @@ function formatPitchClassData(pitchClass: any, format: string | null | undefined
  *
  * Groups maqamat according to sets of 12 pitch classes suitable for MIDI keyboard tuning
  * and Scala file export. Each set is created by merging pitch classes from the specified
- * tuning system with al-Kindi-(874) filler pitch classes.
+ * tuning system with alkindi_874 filler pitch classes.
  *
  * Critical Design Principles:
  * - Octave Alignment: Both tuning systems use the same startingNote for octave alignment
@@ -110,7 +110,7 @@ function formatPitchClassData(pitchClass: any, format: string | null | undefined
  *   the ascending order requirement (ensures maqam characteristics are preserved)
  *
  * Query Parameters:
- * - tuningSystem: string (default: "CairoCongressTuningCommittee-(1929)") - tuning system ID for maqamat
+ * - tuningSystem: string (default: "cairocongresstuningcommittee_1929") - tuning system ID for maqamat
  * - startingNote: string (default: "yegah") - starting note for BOTH tuning systems (critical for octave alignment)
  * - includeIncompatible: boolean (default: false) - include maqamat that can't form sets
  * - includeArabic: boolean (default: false) - include Arabic display names
@@ -151,7 +151,7 @@ export async function GET(request: Request) {
     const maqamIdParam = searchParams.get("maqamId");
     
     // Get tuning system and starting note parameters
-    const tuningSystemId = searchParams.get("tuningSystem") || "CairoCongressTuningCommittee-(1929)";
+    const tuningSystemId = searchParams.get("tuningSystem") || "cairocongresstuningcommittee_1929";
     const startingNoteParam = searchParams.get("startingNote") || "yegah";
     
     // Get cents tolerance parameter
@@ -255,7 +255,7 @@ export async function GET(request: Request) {
     );
 
     const alKindiTuningSystem = tuningSystems.find(
-      (ts) => ts.getId() === "al-Kindi-(874)"
+      (ts) => ts.getId() === "alkindi_874"
     );
 
     if (!cairoTuningSystem) {
@@ -282,7 +282,7 @@ export async function GET(request: Request) {
       return addCorsHeaders(
         NextResponse.json(
           {
-            error: "al-Kindi-(874) tuning system not found"
+            error: "alkindi_874 tuning system not found"
           },
           { status: 500 }
         )
@@ -321,8 +321,8 @@ export async function GET(request: Request) {
       return addCorsHeaders(
         NextResponse.json(
           {
-            error: `Starting note '${startingNoteParam}' is not valid for al-Kindi-(874) tuning system`,
-            hint: "The starting note must be valid for both the selected tuning system and al-Kindi-(874)",
+            error: `Starting note '${startingNoteParam}' is not valid for alkindi_874 tuning system`,
+            hint: "The starting note must be valid for both the selected tuning system and alkindi_874",
             validAlKindiNotes: alKindiNoteNameSets.map((set) => set[0])
           },
           { status: 400 }
