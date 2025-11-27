@@ -1,6 +1,6 @@
 [
   {
-    "id": "Ronzevalle-(1904)",
+    "id": "ronzevalle-(1904)",
     "titleEnglish": "Modernist Arabic Tuning",
     "titleArabic": "التنغيم العربي الحديث",
     "year": "1904",
@@ -8,11 +8,11 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "al-Khuli-(1904/2011)",
+        "sourceId": "al-khuli-(1904/2011)",
         "page": "55-56"
       },
       {
-        "sourceId": "Shawqi-(1969)",
+        "sourceId": "shawqi-(1969)",
         "page": "32-33"
       }
     ],
@@ -97,31 +97,7 @@
         "chahārgāh",
         "nīm ḥijāz",
         "ḥijāz",
-        "tīk ḥijāz/ṣabā",
-        "nawā",
-        "nīm ḥiṣār",
-        "ḥiṣār",
-        "tīk ḥiṣār",
-        "ḥusaynī",
-        "nīm ʿajam",
-        "ʿajam",
-        "awj",
-        "māhūr",
-        "tīk māhūr",
-        "kurdān",
-        "nīm shahnāz",
-        "shahnāz",
-        "jawāb tīk zīrgūleh",
-        "muḥayyar",
-        "nīm sunbuleh",
-        "sunbuleh/zawāl",
-        "buzurk",
-        "jawāb būselīk",
-        "jawāb tīk būselīk",
-        "māhūrān",
-        "jawāb nīm ḥijāz",
-        "jawāb ḥijāz",
-        "jawāb tīk ḥijāz"
+        "tīk ḥijāz/ṣabā"
       ]
     ],
     "abjadNames": [
@@ -177,13 +153,13 @@
     "stringLength": 3600,
     "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "yegāh": 97.999,
+      "yegāh": 97.99,
       "ʿushayrān": 110
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2025-11-26T10:19:38.569Z"
   },
   {
-    "id": "al-Kindi-(874)",
+    "id": "al-kindi-(874)",
     "titleEnglish": "12-Tone",
     "titleArabic": "12-نغمة",
     "year": "874",
@@ -191,11 +167,11 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "Farmer-(1937)",
+        "sourceId": "farmer-(1937)",
         "page": "248"
       },
       {
-        "sourceId": "Forster-(2010)",
+        "sourceId": "forster-(2010)",
         "page": "615"
       }
     ],
@@ -244,19 +220,7 @@
         "kurdī",
         "būselīk/ʿushshāq",
         "chahārgāh",
-        "ḥijāz",
-        "nawā",
-        "ḥiṣār",
-        "ḥusaynī",
-        "ʿajam",
-        "māhūr",
-        "kurdān",
-        "shahnāz",
-        "muḥayyar",
-        "sunbuleh/zawāl",
-        "jawāb būselīk",
-        "māhūrān",
-        "jawāb ḥijāz"
+        "ḥijāz"
       ],
       [
         "rāst",
@@ -309,7 +273,7 @@
     "version": "2025-11-17T13:16:34.754Z"
   },
   {
-    "id": "Anglo-European-(1700)",
+    "id": "anglo-european-(1700)",
     "titleEnglish": "12-EDO",
     "titleArabic": "12 نغمة متوازية",
     "year": "1700",
@@ -399,7 +363,7 @@
     "version": "2025-11-18T11:53:58.428Z"
   },
   {
-    "id": "al-Dik-(1926a)",
+    "id": "al-dik-(1926a)",
     "titleEnglish": "al-Sullam al-Fārsī or al-'Arabī (!!!)",
     "titleArabic": "السلم الفارسي او العربي",
     "year": "1926a",
@@ -407,7 +371,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "Shawqi-(1969)",
+        "sourceId": "shawqi-(1969)",
         "page": "43"
       }
     ],
@@ -466,31 +430,7 @@
         "chahārgāh",
         "nīm ḥijāz",
         "ḥijāz",
-        "tīk ḥijāz/ṣabā",
-        "nawā",
-        "nīm ḥiṣār",
-        "ḥiṣār",
-        "tīk ḥiṣār",
-        "ḥusaynī",
-        "nīm ʿajam",
-        "ʿajam",
-        "awj",
-        "māhūr",
-        "tīk māhūr",
-        "kurdān",
-        "nīm shahnāz",
-        "shahnāz",
-        "jawāb tīk zīrgūleh",
-        "muḥayyar",
-        "nīm sunbuleh",
-        "sunbuleh/zawāl",
-        "buzurk",
-        "jawāb būselīk",
-        "jawāb tīk būselīk",
-        "māhūrān",
-        "jawāb nīm ḥijāz",
-        "jawāb ḥijāz",
-        "jawāb tīk ḥijāz"
+        "tīk ḥijāz/ṣabā"
       ]
     ],
     "abjadNames": [
@@ -551,7 +491,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "al-Dik-(1926b)",
+    "id": "al-dik-(1926b)",
     "titleEnglish": "Old Arabic Scale",
     "titleArabic": "السلم العربي القديم",
     "year": "1926b",
@@ -559,7 +499,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "Shawqi-(1969)",
+        "sourceId": "shawqi-(1969)",
         "page": "41"
       }
     ],
@@ -604,24 +544,7 @@
         "būselīk/ʿushshāq",
         "chahārgāh",
         "ḥijāz",
-        "tīk ḥijāz/ṣabā",
-        "nawā",
-        "ḥiṣār",
-        "tīk ḥiṣār",
-        "ḥusaynī",
-        "ʿajam",
-        "awj",
-        "māhūr",
-        "kurdān",
-        "nīm shahnāz",
-        "shahnāz",
-        "muḥayyar",
-        "sunbuleh/zawāl",
-        "buzurk",
-        "jawāb būselīk",
-        "māhūrān",
-        "jawāb ḥijāz",
-        "jawāb tīk ḥijāz"
+        "tīk ḥijāz/ṣabā"
       ]
     ],
     "abjadNames": [
@@ -669,7 +592,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "CairoCongressTuningCommittee-(1932a)",
+    "id": "cairocongresstuningcommittee-(1932a)",
     "titleEnglish": "Ancient Intervals",
     "titleArabic": "الأبعاد القديمة",
     "year": "1932a",
@@ -736,31 +659,7 @@
         "chahārgāh",
         "nīm ḥijāz",
         "ḥijāz",
-        "tīk ḥijāz/ṣabā",
-        "nawā",
-        "nīm ḥiṣār",
-        "ḥiṣār",
-        "tīk ḥiṣār",
-        "ḥusaynī",
-        "nīm ʿajam",
-        "ʿajam",
-        "awj",
-        "māhūr",
-        "tīk māhūr",
-        "kurdān",
-        "nīm shahnāz",
-        "shahnāz",
-        "jawāb tīk zīrgūleh",
-        "muḥayyar",
-        "nīm sunbuleh",
-        "sunbuleh/zawāl",
-        "buzurk",
-        "jawāb būselīk",
-        "jawāb tīk būselīk",
-        "māhūrān",
-        "jawāb nīm ḥijāz",
-        "jawāb ḥijāz",
-        "jawāb tīk ḥijāz"
+        "tīk ḥijāz/ṣabā"
       ]
     ],
     "abjadNames": [
@@ -822,7 +721,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "CairoCongressTuningCommittee-(1932b)",
+    "id": "cairocongresstuningcommittee-(1932b)",
     "titleEnglish": "Arab Intervals according to al-Dīk",
     "titleArabic": "الأبعاد العربية حسب الديك",
     "year": "1932b",
@@ -889,31 +788,7 @@
         "chahārgāh",
         "nīm ḥijāz",
         "ḥijāz",
-        "tīk ḥijāz/ṣabā",
-        "nawā",
-        "nīm ḥiṣār",
-        "ḥiṣār",
-        "tīk ḥiṣār",
-        "ḥusaynī",
-        "nīm ʿajam",
-        "ʿajam",
-        "awj",
-        "māhūr",
-        "tīk māhūr",
-        "kurdān",
-        "nīm shahnāz",
-        "shahnāz",
-        "jawāb tīk zīrgūleh",
-        "muḥayyar",
-        "nīm sunbuleh",
-        "sunbuleh/zawāl",
-        "buzurk",
-        "jawāb būselīk",
-        "jawāb tīk būselīk",
-        "māhūrān",
-        "jawāb nīm ḥijāz",
-        "jawāb ḥijāz",
-        "jawāb tīk ḥijāz"
+        "tīk ḥijāz/ṣabā"
       ]
     ],
     "abjadNames": [
@@ -974,7 +849,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "al-Ladhiqi-(1495)",
+    "id": "al-ladhiqi-(1495)",
     "titleEnglish": "17-Tone",
     "titleArabic": "17 نغمة",
     "year": "1495",
@@ -1027,15 +902,7 @@
         "ḥijāz",
         "nawā",
         "ḥiṣār",
-        "tīk ḥiṣār",
-        "none",
-        "none",
-        "ḥijāz",
-        "nawā",
-        "ḥiṣār",
-        "none",
-        "none",
-        "none"
+        "tīk ḥiṣār"
       ],
       [
         "yegāh",
@@ -1054,24 +921,7 @@
         "būselīk/ʿushshāq",
         "chahārgāh",
         "ḥijāz",
-        "tīk ḥijāz/ṣabā",
-        "nawā",
-        "ḥiṣār",
-        "tīk ḥiṣār",
-        "ḥusaynī",
-        "ʿajam",
-        "awj",
-        "māhūr",
-        "kurdān",
-        "shahnāz",
-        "jawāb tīk zīrgūleh",
-        "muḥayyar",
-        "sunbuleh/zawāl",
-        "buzurk",
-        "jawāb būselīk",
-        "māhūrān",
-        "jawāb ḥijāz",
-        "jawāb tīk ḥijāz"
+        "tīk ḥijāz/ṣabā"
       ]
     ],
     "abjadNames": [
@@ -1119,7 +969,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "al-Farabi-(950i)",
+    "id": "al-farabi-(950i)",
     "titleEnglish": "Second Oud Tuning 22-Tone",
     "titleArabic": "",
     "year": "950i",
@@ -1127,7 +977,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "Forster-(2010)",
+        "sourceId": "forster-(2010)",
         "page": "643"
       }
     ],
@@ -1264,7 +1114,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "Allami-(2022)",
+    "id": "allami-(2022)",
     "titleEnglish": "al-Kindi with al-Farabi's 22/27",
     "titleArabic": "تنغيم الكندي مع اضافة نسبة 22/27 للفارابي",
     "year": "2022",
@@ -1272,7 +1122,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "Allami-(2022)",
+        "sourceId": "allami-(2022)",
         "page": "215"
       }
     ],
@@ -1331,8 +1181,7 @@
         "nawā",
         "nīm ḥiṣār",
         "ḥiṣār",
-        "tīk ḥiṣār",
-        "none"
+        "tīk ḥiṣār"
       ],
       [
         "yegāh",
@@ -1358,31 +1207,7 @@
         "chahārgāh",
         "nīm ḥijāz",
         "ḥijāz",
-        "tīk ḥijāz/ṣabā",
-        "nawā",
-        "nīm ḥiṣār",
-        "ḥiṣār",
-        "tīk ḥiṣār",
-        "ḥusaynī",
-        "nīm ʿajam",
-        "ʿajam",
-        "awj",
-        "māhūr",
-        "tīk māhūr",
-        "kurdān",
-        "nīm shahnāz",
-        "shahnāz",
-        "jawāb tīk zīrgūleh",
-        "muḥayyar",
-        "nīm sunbuleh",
-        "sunbuleh/zawāl",
-        "buzurk",
-        "jawāb būselīk",
-        "jawāb tīk būselīk",
-        "māhūrān",
-        "jawāb nīm ḥijāz",
-        "jawāb ḥijāz",
-        "jawāb tīk ḥijāz"
+        "tīk ḥijāz/ṣabā"
       ]
     ],
     "abjadNames": [
@@ -1444,7 +1269,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "Anglo-European-(1800)",
+    "id": "anglo-european-(1800)",
     "titleEnglish": "24-EDO",
     "titleArabic": "24 نغمة متوازية",
     "year": "1800",
@@ -1506,31 +1331,7 @@
         "nawā",
         "nīm ḥiṣār",
         "ḥiṣār",
-        "tīk ḥiṣār",
-        "ḥusaynī",
-        "nīm ʿajam",
-        "ʿajam",
-        "awj",
-        "māhūr",
-        "tīk māhūr",
-        "kurdān",
-        "nīm shahnāz",
-        "shahnāz",
-        "jawāb tīk zīrgūleh",
-        "muḥayyar",
-        "nīm sunbuleh",
-        "sunbuleh/zawāl",
-        "buzurk",
-        "jawāb būselīk",
-        "jawāb tīk būselīk",
-        "māhūrān",
-        "jawāb nīm ḥijāz",
-        "jawāb ḥijāz",
-        "jawāb tīk ḥijāz",
-        "saham/ramal tūtī",
-        "jawāb nīm ḥiṣār",
-        "jawāb ḥiṣār",
-        "jawāb tīk ḥiṣār"
+        "tīk ḥiṣār"
       ],
       [
         "yegāh",
@@ -1556,31 +1357,7 @@
         "chahārgāh",
         "nīm ḥijāz",
         "ḥijāz",
-        "tīk ḥijāz/ṣabā",
-        "nawā",
-        "nīm ḥiṣār",
-        "ḥiṣār",
-        "tīk ḥiṣār",
-        "ḥusaynī",
-        "nīm ʿajam",
-        "ʿajam",
-        "awj",
-        "māhūr",
-        "tīk māhūr",
-        "kurdān",
-        "nīm shahnāz",
-        "shahnāz",
-        "jawāb tīk zīrgūleh",
-        "muḥayyar",
-        "nīm sunbuleh",
-        "sunbuleh/zawāl",
-        "buzurk",
-        "jawāb būselīk",
-        "jawāb tīk būselīk",
-        "māhūrān",
-        "jawāb nīm ḥijāz",
-        "jawāb ḥijāz",
-        "jawāb tīk ḥijāz"
+        "tīk ḥijāz/ṣabā"
       ]
     ],
     "abjadNames": [
@@ -1636,13 +1413,13 @@
     "stringLength": 1000,
     "defaultReferenceFrequency": 97.999,
     "referenceFrequencies": {
-      "yegāh": 97.999,
+      "yegāh": 97.998,
       "ʿushayrān": 110
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2025-11-26T10:21:17.434Z"
   },
   {
-    "id": "al-Farabi-(950g)",
+    "id": "al-farabi-(950g)",
     "titleEnglish": "First Oud Tuning (Full First Octave) 27-Tone",
     "titleArabic": "تنغيم العود الأول (الديوان الأول الكامل) ٢٧-نغمة",
     "year": "950g",
@@ -1650,11 +1427,11 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "Farmer-(1937)",
+        "sourceId": "farmer-(1937)",
         "page": "249"
       },
       {
-        "sourceId": "Land-(1885)",
+        "sourceId": "land-(1885)",
         "page": "134-137"
       },
       {
@@ -1662,11 +1439,11 @@
         "page": "165-185"
       },
       {
-        "sourceId": "Mofakham-(2022)",
+        "sourceId": "mofakham-(2022)",
         "page": "14"
       },
       {
-        "sourceId": "Forster-(2010)",
+        "sourceId": "forster-(2010)",
         "page": "639"
       }
     ],
@@ -1828,7 +1605,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "IbnSina-(1037)",
+    "id": "ibnsina-(1037)",
     "titleEnglish": "7-Fret Oud 17-Tone",
     "titleArabic": "7 نغمات 17 دستان على العود",
     "year": "1037",
@@ -1836,7 +1613,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "Farmer-(1937)",
+        "sourceId": "farmer-(1937)",
         "page": "249"
       }
     ],
@@ -1881,24 +1658,7 @@
         "ḥijāz",
         "nawā",
         "ḥiṣār",
-        "tīk ḥiṣār",
-        "ḥusaynī",
-        "ʿajam",
-        "awj",
-        "māhūr",
-        "kurdān",
-        "nīm shahnāz",
-        "shahnāz",
-        "muḥayyar",
-        "sunbuleh/zawāl",
-        "buzurk",
-        "jawāb būselīk",
-        "māhūrān",
-        "jawāb nīm ḥijāz",
-        "jawāb ḥijāz",
-        "saham/ramal tūtī",
-        "jawāb ḥiṣār",
-        "jawāb tīk ḥiṣār"
+        "tīk ḥiṣār"
       ],
       [
         "yegāh",
@@ -1917,24 +1677,7 @@
         "būselīk/ʿushshāq",
         "chahārgāh",
         "nīm ḥijāz",
-        "ḥijāz",
-        "nawā",
-        "ḥiṣār",
-        "tīk ḥiṣār",
-        "ḥusaynī",
-        "ʿajam",
-        "awj",
-        "māhūr",
-        "kurdān",
-        "shahnāz",
-        "jawāb tīk zīrgūleh",
-        "muḥayyar",
-        "sunbuleh/zawāl",
-        "buzurk",
-        "jawāb būselīk",
-        "māhūrān",
-        "jawāb nīm ḥijāz",
-        "jawāb ḥijāz"
+        "ḥijāz"
       ]
     ],
     "abjadNames": [
@@ -1982,7 +1725,7 @@
     "version": "2025-11-09T00:44:40.275Z"
   },
   {
-    "id": "al-Mawsili-(850)",
+    "id": "al-mawsili-(850)",
     "titleEnglish": "10-Tone",
     "titleArabic": "",
     "year": "850",
@@ -1990,7 +1733,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "Farmer-(1937)",
+        "sourceId": "farmer-(1937)",
         "page": "247"
       }
     ],
@@ -2067,7 +1810,7 @@
     "version": "2025-11-06T21:49:51.447Z"
   },
   {
-    "id": "CairoCongressTuningCommittee-(1929)",
+    "id": "cairocongresstuningcommittee-(1929)",
     "titleEnglish": "Egyptian Tuning",
     "titleArabic": "التنغيم المصري",
     "year": "1929",
@@ -2075,7 +1818,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "Shawqi-(1969)",
+        "sourceId": "shawqi-(1969)",
         "page": "48-49"
       },
       {
@@ -2168,31 +1911,7 @@
         "ʿajam",
         "awj",
         "māhūr",
-        "tīk māhūr",
-        "kurdān",
-        "nīm shahnāz",
-        "shahnāz",
-        "jawāb tīk zīrgūleh",
-        "muḥayyar",
-        "nīm sunbuleh",
-        "sunbuleh/zawāl",
-        "buzurk",
-        "jawāb būselīk",
-        "jawāb tīk būselīk",
-        "māhūrān",
-        "jawāb nīm ḥijāz",
-        "jawāb ḥijāz",
-        "jawāb tīk ḥijāz",
-        "saham/ramal tūtī",
-        "jawāb nīm ḥiṣār",
-        "jawāb ḥiṣār",
-        "jawāb tīk ḥiṣār",
-        "jawāb ḥusaynī",
-        "jawāb nīm ʿajam",
-        "jawāb ʿajam",
-        "jawāb awj",
-        "jawāb māhūr",
-        "jawāb tīk māhūr"
+        "tīk māhūr"
       ]
     ],
     "abjadNames": [
@@ -2254,7 +1973,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "al-KhuliandRagheb-(1904)",
+    "id": "al-khuliandragheb-(1904)",
     "titleEnglish": "",
     "titleArabic": "",
     "year": "1904",
@@ -2262,7 +1981,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "al-Khuli-(1904/2011)",
+        "sourceId": "al-khuli-(1904/2011)",
         "page": "51-52"
       }
     ],
@@ -2321,31 +2040,7 @@
         "chahārgāh",
         "nīm ḥijāz",
         "ḥijāz",
-        "tīk ḥijāz/ṣabā",
-        "nawā",
-        "nīm ḥiṣār",
-        "ḥiṣār",
-        "tīk ḥiṣār",
-        "ḥusaynī",
-        "nīm ʿajam",
-        "ʿajam",
-        "awj",
-        "māhūr",
-        "tīk māhūr",
-        "kurdān",
-        "nīm shahnāz",
-        "shahnāz",
-        "jawāb tīk zīrgūleh",
-        "muḥayyar",
-        "nīm sunbuleh",
-        "sunbuleh/zawāl",
-        "buzurk",
-        "jawāb būselīk",
-        "jawāb tīk būselīk",
-        "māhūrān",
-        "jawāb nīm ḥijāz",
-        "jawāb ḥijāz",
-        "jawāb tīk ḥijāz"
+        "tīk ḥijāz/ṣabā"
       ]
     ],
     "abjadNames": [
@@ -2406,7 +2101,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "IbnMunajjim-(912)",
+    "id": "ibnmunajjim-(912)",
     "titleEnglish": "10-Tone",
     "titleArabic": "10-نغمات",
     "year": "912",
@@ -2452,17 +2147,7 @@
         "kurdī",
         "būselīk/ʿushshāq",
         "chahārgāh",
-        "ḥijāz",
-        "nawā",
-        "ḥusaynī",
-        "ʿajam",
-        "māhūr",
-        "kurdān",
-        "muḥayyar",
-        "sunbuleh/zawāl",
-        "jawāb būselīk",
-        "māhūrān",
-        "jawāb ḥijāz"
+        "ḥijāz"
       ]
     ],
     "abjadNames": [
@@ -2496,7 +2181,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "al-Urmawi-(1294a)",
+    "id": "al-urmawi-(1294a)",
     "titleEnglish": "First Oud Tuning 17-Tone",
     "titleArabic": "اول تنغيم على العود 17 نغمة",
     "year": "1294a",
@@ -2504,7 +2189,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "Forster-(2010)",
+        "sourceId": "forster-(2010)",
         "page": "716"
       },
       {
@@ -2553,14 +2238,7 @@
         "ḥijāz",
         "nawā",
         "ḥiṣār",
-        "nīm ḥusaynī",
-        "none",
-        "ḥijāz",
-        "none",
-        "nawā",
-        "none",
-        "ḥiṣār",
-        "none"
+        "nīm ḥusaynī"
       ],
       [
         "yegāh",
@@ -2627,7 +2305,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "Allami-(2024)",
+    "id": "allami-(2024)",
     "titleEnglish": "al-Kindi with Ibn Sina's 39/32",
     "titleArabic": "تنغيم الكندي مع اضافة نسبة 32/39 لإبن سينا",
     "year": "2024",
@@ -2689,31 +2367,7 @@
         "nawā",
         "nīm ḥiṣār",
         "ḥiṣār",
-        "tīk ḥiṣār",
-        "ḥusaynī",
-        "nīm ʿajam",
-        "ʿajam",
-        "awj",
-        "māhūr",
-        "tīk māhūr",
-        "kurdān",
-        "nīm shahnāz",
-        "shahnāz",
-        "jawāb tīk zīrgūleh",
-        "muḥayyar",
-        "nīm sunbuleh",
-        "sunbuleh/zawāl",
-        "buzurk",
-        "jawāb būselīk",
-        "jawāb tīk būselīk",
-        "māhūrān",
-        "jawāb nīm ḥijāz",
-        "jawāb ḥijāz",
-        "jawāb tīk ḥijāz",
-        "saham/ramal tūtī",
-        "jawāb nīm ḥiṣār",
-        "jawāb ḥiṣār",
-        "jawāb tīk ḥiṣār"
+        "tīk ḥiṣār"
       ]
     ],
     "abjadNames": [
@@ -2774,7 +2428,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "al-Urmawi-(1294b)",
+    "id": "al-urmawi-(1294b)",
     "titleEnglish": "Second Oud Tuning 17-Tone",
     "titleArabic": "ثاني تنغيم على العود 17 نغمة",
     "year": "1294b",
@@ -2782,7 +2436,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "Forster-(2010)",
+        "sourceId": "forster-(2010)",
         "page": "716"
       }
     ],
@@ -2894,7 +2548,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "Meshshaqa-(1899)",
+    "id": "meshshaqa-(1899)",
     "titleEnglish": "Arabic Octave According to the Modernists",
     "titleArabic": "الديوان العربي عند المحدثين",
     "year": "1899",
@@ -3022,7 +2676,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "al-Farabi-(950a)",
+    "id": "al-farabi-(950a)",
     "titleEnglish": "First Oud Tuning 1: mujannab sabbāba 3 + wusṭa al-furs 20-Tone",
     "titleArabic": "",
     "year": "950a",
@@ -3030,7 +2684,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "Land-(1885)",
+        "sourceId": "land-(1885)",
         "page": "134-137"
       }
     ],
@@ -3157,7 +2811,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "al-Farabi-(950c)",
+    "id": "al-farabi-(950c)",
     "titleEnglish": "First Oud Tuning 3: mujannab sabbāba 3 + alt wusṭa zalzal",
     "titleArabic": "",
     "year": "950c",
@@ -3265,7 +2919,7 @@
     "version": "2025-11-06T00:23:22.237Z"
   },
   {
-    "id": "al-Farabi-(950b)",
+    "id": "al-farabi-(950b)",
     "titleEnglish": "First Oud Tuning 2: mujannab sabbāba 3 + wuṣtā zalzal",
     "titleArabic": "",
     "year": "950b",
@@ -3273,7 +2927,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "Land-(1885)",
+        "sourceId": "land-(1885)",
         "page": "134-137"
       }
     ],
@@ -3378,7 +3032,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "al-Farabi-(950d)",
+    "id": "al-farabi-(950d)",
     "titleEnglish": "First Oud Tuning 4: mujannab sabbāba 4 + wusṭa al-furs",
     "titleArabic": "",
     "year": "950d",
@@ -3386,7 +3040,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "Land-(1885)",
+        "sourceId": "land-(1885)",
         "page": "134-137"
       }
     ],
@@ -3491,7 +3145,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "al-Farabi-(950f)",
+    "id": "al-farabi-(950f)",
     "titleEnglish": "First Oud Tuning 6: mujannab sabbāba 4 + alt wusṭa zalzal",
     "titleArabic": "",
     "year": "950f",
@@ -3599,7 +3253,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "al-Farabi-(950e)",
+    "id": "al-farabi-(950e)",
     "titleEnglish": "First Oud Tuning 5: mujannab sabbāba 4 + wusṭa zalzal",
     "titleArabic": "",
     "year": "950e",
@@ -3607,7 +3261,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "Land-(1885)",
+        "sourceId": "land-(1885)",
         "page": "134-137"
       }
     ],
@@ -3712,7 +3366,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "al-Farabi-(950h)",
+    "id": "al-farabi-(950h)",
     "titleEnglish": "First Oud Tuning (First and Second Octaves) 35-Tone",
     "titleArabic": "",
     "year": "950h",
@@ -3720,7 +3374,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "Land-(1885)",
+        "sourceId": "land-(1885)",
         "page": "134-137"
       }
     ],
@@ -3885,7 +3539,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "MukhtarandMushrrafa-(1944)",
+    "id": "mukhtarandmushrrafa-(1944)",
     "titleEnglish": "Egyptian Tuning 22-Tone",
     "titleArabic": "التنغيم المصري 22 نغمة",
     "year": "1944",
@@ -3893,7 +3547,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "Shawqi-(1969)",
+        "sourceId": "shawqi-(1969)",
         "page": "139"
       }
     ],
@@ -4007,7 +3661,7 @@
     "version": "2025-10-23T21:23:15.543Z"
   },
   {
-    "id": "al-Sabbagh-(1950)",
+    "id": "al-sabbagh-(1950)",
     "titleEnglish": "Contemporary Arabic 19-Tone",
     "titleArabic": "السلم العربي الحالي",
     "year": "1950",
@@ -4015,7 +3669,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "Shawqi-(1969)",
+        "sourceId": "shawqi-(1969)",
         "page": "160"
       },
       {
@@ -4157,7 +3811,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "al-Laythi-(1965)",
+    "id": "al-laythi-(1965)",
     "titleEnglish": "20-Tone",
     "titleArabic": "20 نغمة",
     "year": "1965",
@@ -4165,7 +3819,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "Shawqi-(1969)",
+        "sourceId": "shawqi-(1969)",
         "page": "190"
       }
     ],
@@ -4271,7 +3925,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "al-Sabbagh-(1954)",
+    "id": "al-sabbagh-(1954)",
     "titleEnglish": "Contemporary Arabic Tuning 24-Tone",
     "titleArabic": "السلم العربي الحالي ٢٤ نغمة",
     "year": "1954",
@@ -4399,7 +4053,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "Allami-(2025)",
+    "id": "allami-(2025)",
     "titleEnglish": "al-Ṣabbāgh with al-Shawwā's 28-Tones",
     "titleArabic": "الصبّاغ الشوا ٢٨ نغمة",
     "year": "2025",
@@ -4547,7 +4201,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "al-Farabi-(950j)",
+    "id": "al-farabi-(950j)",
     "titleEnglish": "al-Ṭanbūr al-Baghdādi/al-Mīzānī (pre-Islamic)",
     "titleArabic": "الطنبور البغدادي/الميزاني",
     "year": "950j",
@@ -4555,7 +4209,7 @@
     "sourceArabic": "مصدر غير معروف",
     "sourcePageReferences": [
       {
-        "sourceId": "Farmer-(1937)",
+        "sourceId": "farmer-(1937)",
         "page": "243"
       }
     ],
@@ -4705,7 +4359,7 @@
     "version": "2025-11-06T00:24:06.628Z"
   },
   {
-    "id": "MokhtarandMosharrafa-(1937)",
+    "id": "mokhtarandmosharrafa-(1937)",
     "titleEnglish": "Modes in Modern Egyptian Music",
     "titleArabic": "غير مسمى",
     "year": "1937",
@@ -4713,7 +4367,7 @@
     "sourceArabic": "مصدر غير معروف",
     "sourcePageReferences": [
       {
-        "sourceId": "Mokhtar-(1937)",
+        "sourceId": "mokhtar-(1937)",
         "page": "548-549"
       }
     ],
