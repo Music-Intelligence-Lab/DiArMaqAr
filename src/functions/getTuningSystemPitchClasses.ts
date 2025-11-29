@@ -10,7 +10,7 @@ import NoteName, {
 } from "@/models/NoteName";
 import detectPitchClassValueType from "@/functions/detectPitchClassType";
 import convertPitchClassValue, { shiftPitchClassBaseValue, frequencyToMidiNoteNumber } from "@/functions/convertPitchClass";
-import { getEnglishNoteName } from "@/functions/noteNameMappings";
+import { getEnglishNoteName, getSolfegeFromEnglishName } from "@/functions/noteNameMappings";
 import { calculateCentsDeviationWithReferenceNote } from "@/functions/calculateCentsDeviation";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
 import PitchClass from "@/models/PitchClass";
@@ -105,14 +105,16 @@ export default function getTuningSystemPitchClasses(
       // midi
       const midiNoteDecimal = frequencyToMidiNoteNumber(parseFloat(conv.frequency));
 
-      // English note name and cents deviation
+      // English note name and solfege
       const englishNoteName = getEnglishNoteName(noteName);
+      const solfege = getSolfegeFromEnglishName(englishNoteName);
 
       pitchClasses.push({
         // Core identifiers (matching UI table order)
         noteName,
         abjadName,
         englishName: englishNoteName,
+        solfege,
 
         // Position identifiers
         pitchClassIndex: idx,

@@ -46,7 +46,10 @@ export default interface PitchClass {
   
   /** English name of the note */
   englishName: string;
-  
+
+  /** Solfege notation (do, re, mi, fa, sol, la, si) derived from English name */
+  solfege?: string;
+
   /** Arabic/Abjad name of the note */
   abjadName: string;
 

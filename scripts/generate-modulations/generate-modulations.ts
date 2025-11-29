@@ -618,18 +618,11 @@ class DualIncrementalJsonWriter {
       `  "statistics": null,\n` +
       `  "modulationData": [\n`;
     
-    fs.writeFileSync(filePath, header, 'utf-8');
+    // Create writer using constructor (it will write a header)
+    const writer = new IncrementalJsonWriter(filePath, logger, tuningSystemId);
     
-    // Create a minimal writer instance
-    const writer = Object.create(IncrementalJsonWriter.prototype) as IncrementalJsonWriter;
-    writer.filePath = filePath;
-    writer.logger = logger;
-    writer.isFirstStartingNote = true;
-    writer.isFirstMaqamInStartingNote = true;
-    writer.statistics = null;
-    writer.writtenMaqamatCount = 0;
-    writer.useStream = false;
-    writer.writeStream = null;
+    // Overwrite with our custom header
+    fs.writeFileSync(filePath, header, 'utf-8');
     
     return writer;
   }
