@@ -360,7 +360,7 @@ paths:
             - Use 'all' for complete pitch class data across all available formats
           schema:
             type: string
-            enum: [all, frequency, cents, fraction, decimalRatio, stringLength, abjadName, fretDivision, midiNoteNumber, midiNoteDeviation, centsDeviation, referenceNoteName, englishName]
+            enum: [all, abjadName, englishName, solfege, fraction, cents, centsDeviation, decimalRatio, stringLength, fretDivision, midiNoteNumber, midiNoteDeviation, frequency, referenceNoteName]
           example: "cents"
         - name: transposeTo
           in: query
@@ -2107,17 +2107,18 @@ paths:
             type: string
             enum:
               - all
+              - abjadName
               - englishName
+              - solfege
               - fraction
               - cents
+              - centsDeviation
               - decimalRatio
               - stringLength
-              - frequency
-              - abjadName
               - fretDivision
               - midiNoteNumber
               - midiNoteDeviation
-              - centsDeviation
+              - frequency
               - referenceNoteName
               - relativeCents
           example: "cents"
@@ -3502,7 +3503,7 @@ paths:
             - Use 'all' for complete pitch class data across all available formats
           schema:
             type: string
-            enum: [all, frequency, cents, fraction, decimalRatio, stringLength, abjadName, fretDivision, midiNoteNumber, midiNoteDeviation, centsDeviation, referenceNoteName, englishName]
+            enum: [all, abjadName, englishName, solfege, fraction, cents, centsDeviation, decimalRatio, stringLength, fretDivision, midiNoteNumber, midiNoteDeviation, frequency, referenceNoteName]
           example: "cents"
         - name: transposeTo
           in: query
@@ -4620,7 +4621,7 @@ paths:
           description: Pitch class data format
           schema:
             type: string
-            enum: [all, englishName, fraction, cents, decimalRatio, stringLength, frequency, abjadName, fretDivision, midiNoteNumber, midiNoteDeviation, centsDeviation, referenceNoteName]
+            enum: [all, abjadName, englishName, solfege, fraction, cents, centsDeviation, decimalRatio, stringLength, fretDivision, midiNoteNumber, midiNoteDeviation, frequency, referenceNoteName]
             default: "cents"
           example: "cents"
         - name: includeArabic
@@ -4847,7 +4848,7 @@ paths:
           description: Pitch class data format
           schema:
             type: string
-            enum: [all, englishName, fraction, cents, decimalRatio, stringLength, frequency, abjadName, fretDivision, midiNoteNumber, midiNoteDeviation, centsDeviation, referenceNoteName]
+            enum: [all, abjadName, englishName, solfege, fraction, cents, centsDeviation, decimalRatio, stringLength, fretDivision, midiNoteNumber, midiNoteDeviation, frequency, referenceNoteName]
             default: "cents"
           example: "cents"
         - name: includeArabic

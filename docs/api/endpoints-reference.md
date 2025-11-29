@@ -173,7 +173,7 @@ Requirements:
   - When provided, returns the specified data type for all pitch classes in the maqām
   - In discovery mode (when options=true), this parameter is optional since the response returns parameter metadata instead of formatted data
   - Use 'all' for complete pitch class data across all available formats
- - Type: `string` - Valid values: `all`, `frequency`, `cents`, `fraction`, `decimalRatio`, ... (13 total)
+ - Type: `string` - Valid values: `all`, `abjadName`, `englishName`, `solfege`, `fraction`, ... (14 total)
   - Example: `cents`
 - `transposeTo` (optional): Transpose the maqām to a new tonic by preserving the interval patterns (URL-safe, diacritics-insensitive).
   - To see all valid transposition options, request available parameter options instead of maqām data
@@ -443,7 +443,7 @@ directly compatible with Scala (.scl) file format which maps degree 0 to middle 
   - Returns minimal fields: `ipnReferenceNoteName`, `noteName`, `relativeCents`, `octave` **Example:**
   - `?pitchClassDataType=cents` returns only IPN, note name, and cents values
   - `?pitchClassDataType=all` returns all available data fields
- - Type: `string` - Valid values: `all`, `englishName`, `fraction`, `cents`, `decimalRatio`, ... (14 total)
+ - Type: `string` - Valid values: `all`, `abjadName`, `englishName`, `solfege`, `fraction`, ... (15 total)
   - Example: `cents`
 - `setId` (optional): Filter by specific set ID to retrieve that set and its compatible maqāmāt (e.g., 'maqam_rast_set') - Type: `string`
   - Example: `maqam_rast_set`
@@ -651,7 +651,7 @@ Requirements:
   - When provided, returns the specified data type for all pitch classes in the jins
   - In discovery mode (when options=true), this parameter is optional since the response returns parameter metadata instead of formatted data
   - Use 'all' for complete pitch class data across all available formats
- - Type: `string` - Valid values: `all`, `frequency`, `cents`, `fraction`, `decimalRatio`, ... (13 total)
+ - Type: `string` - Valid values: `all`, `abjadName`, `englishName`, `solfege`, `fraction`, ... (14 total)
   - Example: `cents`
 - `transposeTo` (optional): Transpose the jins to a new tonic by preserving the interval patterns (URL-safe, diacritics-insensitive).
   - To see all valid transposition options, request available parameter options instead of jins data
@@ -1008,7 +1008,7 @@ Supports:
   - Use "all" to include all available starting notes for that tuning system (returns array of results, one per starting note) Note: Since note names are unique per octave, the note name itself identifies the octave. No octave parameter is needed. Use `yegah` for IbnSina/Meshshaqa, `ushayran` for al-Farabi/al-Kindi, `rast` for CairoCongress/al-Sabbagh
  - Type: `string`
   - Example: `rast`
-- `pitchClassDataType` **(required)**: Pitch class data format - Type: `string` - Valid values: `all`, `englishName`, `fraction`, `cents`, `decimalRatio`, ... (13 total) - Default: `cents`
+- `pitchClassDataType` **(required)**: Pitch class data format - Type: `string` - Valid values: `all`, `abjadName`, `englishName`, `solfege`, `fraction`, ... (14 total) - Default: `cents`
   - Example: `cents`
 - `includeArabic` (optional): Return bilingual responses with Arabic script when true.
   - All English/transliteration fields remain unchanged
@@ -1087,7 +1087,7 @@ Returns comprehensive data for each tuning system including:
   - Example: `meshshaqa_1899,cairocongresstuningcommittee_1929`
 - `startingNote` **(required)**: Starting note (applies to all tuning systems), or "all" to include all available starting notes for each tuning system. - Type: `string`
   - Example: `yegah`
-- `pitchClassDataType` **(required)**: Pitch class data format - Type: `string` - Valid values: `all`, `englishName`, `fraction`, `cents`, `decimalRatio`, ... (13 total) - Default: `cents`
+- `pitchClassDataType` **(required)**: Pitch class data format - Type: `string` - Valid values: `all`, `abjadName`, `englishName`, `solfege`, `fraction`, ... (14 total) - Default: `cents`
   - Example: `cents`
 - `includeArabic` (optional): Return bilingual responses with Arabic script when true.
   - All English/transliteration fields remain unchanged
