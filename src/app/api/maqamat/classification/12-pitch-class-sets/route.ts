@@ -198,6 +198,7 @@ export async function GET(request: Request) {
     const validPitchClassDataTypes = [
       "all",
       "englishName",
+      "solfege",
       "fraction",
       "cents",
       "decimalRatio",

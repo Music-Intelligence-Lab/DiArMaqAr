@@ -412,6 +412,46 @@ export function getEnglishNoteName(arabicName: string, opts?: EnglishNameOptions
 }
 
 /**
+ * Converts an International Pitch Notation note name to solfege notation.
+ *
+ * Uses a fixed-do system where each note letter maps to a specific solfege syllable,
+ * regardless of musical context. Preserves accidentals, modifiers, and octave numbers.
+ *
+ * @param englishName - The IPN note name to convert (e.g., "G2", "Bb++2", "F#3")
+ * @returns The solfege equivalent (e.g., "Sol 2", "Si b++2", "Fa #3")
+ *
+ * @example
+ * ```typescript
+ * getSolfegeFromEnglishName("G2");     // "Sol 2"
+ * getSolfegeFromEnglishName("Bb++2");  // "Si b++2"
+ * getSolfegeFromEnglishName("F#3");    // "Fa #3"
+ * getSolfegeFromEnglishName("E-b2");   // "Mi -b2"
+ * ```
+ */
+export function getSolfegeFromEnglishName(englishName: string): string {
+  if (!englishName || englishName === "--") return "--";
+
+  const { englishNoteNameNatural, englishNoteNameAccidental } = splitEnglishNoteName(englishName);
+
+  const solfegeMap: { [key: string]: string } = {
+    "A": "La",
+    "B": "Si",
+    "C": "Do",
+    "D": "Re",
+    "E": "Mi",
+    "F": "Fa",
+    "G": "Sol",
+  };
+
+  const solfege = solfegeMap[englishNoteNameNatural.toUpperCase()] || "--";
+
+  if (englishNoteNameAccidental) {
+    return `${solfege} ${englishNoteNameAccidental}`;
+  }
+  return solfege;
+}
+
+/**
  * Gets the next sequential letter in the musical alphabet (A-B-C-D-E-F-G-A...)
  * @param letter - The current letter (A-G)
  * @returns The next sequential letter

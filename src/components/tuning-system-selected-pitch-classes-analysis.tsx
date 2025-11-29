@@ -23,6 +23,7 @@ export default function SelectedPitchClassesAnalysis() {
   const [localFilters, setLocalFilters] = useState({
     abjadName: false,
     englishName: false,
+    solfege: false,
     fraction: false,
     cents: false,
     centsFromZero: false,
@@ -113,6 +114,16 @@ export default function SelectedPitchClassesAnalysis() {
           englishRow.push(pc.englishName);
         });
         rows.push(englishRow);
+      }
+
+      // Solfege row (if filter enabled)
+      if (localFilters["solfege"]) {
+        const solfegeRow = [t("analysis.solfege")];
+        pitchClasses.forEach((pc, i) => {
+          if (i > 0) solfegeRow.push(''); // Empty cell for interval column
+          solfegeRow.push(pc.solfege || "--");
+        });
+        rows.push(solfegeRow);
       }
 
       // Primary value type row (if filter enabled)
@@ -398,6 +409,18 @@ export default function SelectedPitchClassesAnalysis() {
               ))}
             </tr>
           )}
+          {localFilters["solfege"] && (
+            <tr data-row-type="solfege">
+              <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.solfege')}</th>
+              <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="solfege">{pitchClasses[0].solfege || '--'}</th>
+              {intervals.map((interval, i) => (
+                <React.Fragment key={i}>
+                  <th className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></th>
+                  <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="solfege">{pitchClasses[i + 1].solfege || '--'}</th>
+                </React.Fragment>
+              ))}
+            </tr>
+          )}
           {localFilters[valueType as keyof typeof localFilters] && (
             <tr data-row-type={valueType}>
               <th className="maqam-jins-transpositions-shared__row-header maqam-jins-transpositions-shared__row-header--primary-value" data-column-type="row-header">{t(`analysis.${valueType}`)}</th>
@@ -601,6 +624,7 @@ export default function SelectedPitchClassesAnalysis() {
                 "pitchClass",
                 "abjadName",
                 "englishName",
+                "solfege",
                 "fraction",
                 "cents",
                 "centsFromZero",
@@ -659,10 +683,10 @@ export default function SelectedPitchClassesAnalysis() {
                   </label>
                 );
 
-                // Add original value type checkbox after englishName
-                if (filterKey === "englishName" && valueType) {
+                // Add original value type checkbox after solfege (matching table row order)
+                if (filterKey === "solfege" && valueType) {
                   return (
-                    <React.Fragment key={`englishName-with-valuetype`}>
+                    <React.Fragment key={`solfege-with-valuetype`}>
                       {filterElement}
                       <label
                         key={`originalValue-${valueType}`}

@@ -470,6 +470,16 @@ const MaqamTranspositions: React.FC = () => {
             rows.push(englishRow);
           }
 
+          // Solfege row (if filter enabled)
+          if (filters["solfege"]) {
+            const solfegeRow = [t("maqam.solfege")];
+            pitchClasses.forEach((pc, i) => {
+              solfegeRow.push(pc.solfege || "--");
+              if (i < pitchClasses.length - 1) solfegeRow.push(''); // interval column
+            });
+            rows.push(solfegeRow);
+          }
+
           // Primary value type row
           const valueRow = [t(`maqam.${valueType}`)];
           pitchClasses.forEach((pc, i) => {
@@ -1019,6 +1029,17 @@ const MaqamTranspositions: React.FC = () => {
                   ))}
                 </tr>
               )}
+              {filters["solfege"] && (
+                <tr data-row-type="solfege">
+                  <th scope="row" id={`maqam-${standardizeText(maqam.name)}-${ascending ? 'ascending' : 'descending'}-solfege-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.solfege")}</th>
+                  {pitchClasses.map((pc, i) => (
+                    <React.Fragment key={i}>
+                      <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="solfege">{pc.solfege || '--'}</td>
+                      <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="empty"></td>
+                    </React.Fragment>
+                  ))}
+                </tr>
+              )}
               {filters[valueType as keyof typeof filters] && (
               <tr data-row-type={valueType}>
                 <th scope="row" id={`maqam-${standardizeText(maqam.name)}-${ascending ? 'ascending' : 'descending'}-primaryValue-header`} className="maqam-jins-transpositions-shared__row-header maqam-jins-transpositions-shared__row-header--primary-value" data-column-type="row-header">{t(`maqam.${valueType}`)}</th>
@@ -1317,6 +1338,7 @@ const MaqamTranspositions: React.FC = () => {
                 {[
                   "abjadName",
                   "englishName",
+                  "solfege",
                   "fraction",
                   "cents",
                   "centsFromZero",
@@ -1368,10 +1390,10 @@ const MaqamTranspositions: React.FC = () => {
                   </label>
                 );
 
-                // Add original value type checkbox after englishName
-                if (filterKey === "englishName" && valueType) {
+                // Add original value type checkbox after solfege (matching table row order)
+                if (filterKey === "solfege" && valueType) {
                   return (
-                    <React.Fragment key={`englishName-with-valuetype`}>
+                    <React.Fragment key={`solfege-with-valuetype`}>
                       {filterElement}
                       <label
                         key={`originalValue-${valueType}`}

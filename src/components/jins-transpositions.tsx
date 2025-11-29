@@ -260,6 +260,16 @@ export default function JinsTranspositions() {
             rows.push(englishRow);
           }
 
+          // Solfege row (if filter enabled)
+          if (filters["solfege"]) {
+            const solfegeRow = [t("jins.solfege")];
+            pitchClasses.forEach((pc, i) => {
+              solfegeRow.push(pc.solfege || "--");
+              if (i < pitchClasses.length - 1) solfegeRow.push(''); // interval column
+            });
+            rows.push(solfegeRow);
+          }
+
           // Primary value type row
           const valueRow = [t(`jins.${valueType}`)];
           pitchClasses.forEach((pc, i) => {
@@ -711,6 +721,18 @@ export default function JinsTranspositions() {
                   ))}
                 </tr>
               )}
+              {filters["solfege"] && (
+                <tr data-row-type="solfege">
+                  <th scope="row" id={`jins-${standardizeText(jins.name)}-solfege-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.solfege")}</th>
+                  <td className="jins-transpositions__table-cell--pitch-class" data-column-type="solfege">{pitchClasses[0].solfege || '--'}</td>
+                  {intervals.map((interval, i) => (
+                    <React.Fragment key={i}>
+                      <td className="jins-transpositions__table-cell" data-column-type="empty"></td>
+                      <td className="jins-transpositions__table-cell--pitch-class" data-column-type="solfege">{pitchClasses[i + 1].solfege || '--'}</td>
+                    </React.Fragment>
+                  ))}
+                </tr>
+              )}
               {filters[valueType as keyof typeof filters] && (
               <tr data-row-type={valueType}>
                 <th scope="row" id={`jins-${standardizeText(jins.name)}-primaryValue-header`} className="jins-transpositions__row-header jins-transpositions__row-header--primary-value" data-column-type="row-header">{t(`jins.${valueType}`)}</th>
@@ -914,6 +936,7 @@ export default function JinsTranspositions() {
               {[
                 "abjadName",
                 "englishName",
+                "solfege",
                 "fraction",
                 "cents",
                 "centsFromZero",
@@ -965,10 +988,10 @@ export default function JinsTranspositions() {
                   </label>
                 );
 
-                // Add original value type checkbox after englishName
-                if (filterKey === "englishName" && valueType) {
+                // Add original value type checkbox after solfege (matching table row order)
+                if (filterKey === "solfege" && valueType) {
                   return (
-                    <React.Fragment key={`englishName-with-valuetype`}>
+                    <React.Fragment key={`solfege-with-valuetype`}>
                       {filterElement}
                       <label
                         key={`originalValue-${valueType}`}

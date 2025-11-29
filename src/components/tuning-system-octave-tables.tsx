@@ -294,6 +294,15 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
           rows.push(englishRow);
         }
 
+        // Solfege row (if filter enabled)
+        if (filters["solfege"]) {
+          const solfegeRow = [t("octave.solfege")];
+          octavePitchClasses.forEach((pc) => {
+            solfegeRow.push(pc.solfege || "--");
+          });
+          rows.push(solfegeRow);
+        }
+
         // Primary value type row
         const valueRowHeader = valueType === 'fraction' ? 'fractionRatio' : 
                               valueType === 'decimalRatio' ? 'decimalRatio' : 
@@ -678,6 +687,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                 "pitchClass",
                 "abjadName",
                 "englishName",
+                "solfege",
                 "fraction",
                 "cents",
                 "centsDeviation",
@@ -731,10 +741,10 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                   </label>
                 );
 
-                // Add original value type checkbox after englishName
-                if (filterKey === "englishName" && pitchClassType && pitchClassType !== "unknown") {
+                // Add original value type checkbox after solfege (matching table row order)
+                if (filterKey === "solfege" && pitchClassType && pitchClassType !== "unknown") {
                   return (
-                    <React.Fragment key={`englishName-with-valuetype`}>
+                    <React.Fragment key={`solfege-with-valuetype`}>
                       {filterElement}
                       <label
                         key={`originalValue-${pitchClassType}`}
@@ -932,12 +942,24 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                   </tr>
                 )}
 
+                {/* Row: Solfege */}
+                {filters.solfege && (
+                  <tr>
+                    <td className="tuning-system-manager__row-header">{t('octave.solfege')}</td>
+                    {rowCells.map((pitchClass, colIndex) => (
+                      <td key={colIndex} className={getCellClassName(octave, colIndex)}>
+                        {pitchClass.solfege || '--'}
+                      </td>
+                    ))}
+                  </tr>
+                )}
+
                 {pitchClassType !== "unknown" && filters[pitchClassType as keyof typeof filters] && (
                   <tr className="tuning-system-manager__octave-table__detectedPitchClassType">
                     <td className="tuning-system-manager__row-header">
-                      {t(`octave.${pitchClassType === 'fraction' ? 'fractionRatio' : 
-                           pitchClassType === 'decimalRatio' ? 'decimalRatio' : 
-                           pitchClassType === 'stringLength' ? 'stringLength' : 
+                      {t(`octave.${pitchClassType === 'fraction' ? 'fractionRatio' :
+                           pitchClassType === 'decimalRatio' ? 'decimalRatio' :
+                           pitchClassType === 'stringLength' ? 'stringLength' :
                            pitchClassType === 'fretDivision' ? 'fretDivision' : 'cents'}`)}
                     </td>
                     {rowCells.map((pitchClass, colIndex) => (

@@ -57,6 +57,7 @@ function formatPitchData(pitchClasses: PitchClass[], format: string | null | und
         noteNameDisplay: pc.noteName,
         ...(inArabic && { noteNameDisplayAr: getNoteNameDisplayAr(pc.noteName) }),
         englishName: pc.englishName,
+        solfege: pc.solfege,
         abjadName: pc.abjadName,
         fraction: pc.fraction,
         cents: parseFloat(pc.cents),
@@ -78,6 +79,16 @@ function formatPitchData(pitchClasses: PitchClass[], format: string | null | und
         noteNameDisplay: pc.noteName,
         ...(inArabic && { noteNameDisplayAr: getNoteNameDisplayAr(pc.noteName) }),
         englishName: pc.englishName
+      }));
+    case "solfege":
+      return pitchClasses.map((pc, index) => ({
+        pitchClassIndex: pc.pitchClassIndex,
+        octave: pc.octave,
+        scaleDegree: isDescending ? (romanNumerals[length - 1 - index] || `${length - index}`) : (romanNumerals[index] || `${index + 1}`),
+        noteName: standardizeText(pc.noteName),
+        noteNameDisplay: pc.noteName,
+        ...(inArabic && { noteNameDisplayAr: getNoteNameDisplayAr(pc.noteName) }),
+        solfege: pc.solfege
       }));
     case "fraction":
       return pitchClasses.map((pc, index) => ({
@@ -347,6 +358,7 @@ export async function GET(
     const validPitchClassDataTypes = [
       "all",
       "englishName",
+      "solfege",
       "fraction",
       "cents",
       "decimalRatio",

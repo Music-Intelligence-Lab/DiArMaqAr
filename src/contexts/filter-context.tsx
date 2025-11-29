@@ -8,6 +8,7 @@ import React, { createContext, useState, useContext, ReactNode } from "react";
 export interface FilterSettings {
   pitchClass: boolean;
   englishName: boolean;
+  solfege: boolean;
   abjadName: boolean;
   fraction: boolean;
   cents: boolean;
@@ -29,6 +30,7 @@ const defaultFilters: FilterSettings = {
   pitchClass: false,
   abjadName: false,
   englishName: true,
+  solfege: false,
   fraction: true,
   decimalRatio: true,
   cents: true,
