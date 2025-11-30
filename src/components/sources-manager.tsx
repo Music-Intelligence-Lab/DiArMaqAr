@@ -12,11 +12,16 @@ import { standardizeText } from "@/functions/export";
 
 /**
  * Generate a URL-safe source ID from contributor and publication date
- * Format: standardized-lastname-(year)
- * Uses only the publication date (not original publication date) for consistency
+ * Format: standardizedlastname_year or standardizedlastname_origyear_pubyear (for Books with original dates)
+ * Matches the format used in data/sources.json after ID transformation
  * Removes special characters and diacritics to ensure URL safety
  */
-function generateSourceId(contributors: Contributor[], publicationDateEnglish: string): string {
+function generateSourceId(
+  contributors: Contributor[],
+  publicationDateEnglish: string,
+  sourceType: "Book" | "Article" | "Thesis" = "Book",
+  originalPublicationDateEnglish: string = ""
+): string {
   let baseName = "na";
 
   // Get first contributor's last name
@@ -25,16 +30,23 @@ function generateSourceId(contributors: Contributor[], publicationDateEnglish: s
     if (firstContributor.lastNameEnglish) {
       // Standardize text to remove diacritics and make URL-safe
       baseName = standardizeText(firstContributor.lastNameEnglish);
-      // Additional URL safety: remove any remaining problematic characters
-      baseName = baseName.replace(/[^a-zA-Z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+      // Remove dashes and other special characters (keep only alphanumeric)
+      baseName = baseName.replace(/[^a-zA-Z0-9]/g, '');
     }
   }
 
   // Extract year from publication date (handles formats like "2011", "2011-05", etc.)
   const yearMatch = publicationDateEnglish.match(/\d{4}/);
-  const year = yearMatch ? yearMatch[0] : "unknown";
+  const pubYear = yearMatch ? yearMatch[0] : "unknown";
 
-  return `${baseName}-(${year})`;
+  // For Books, check if there's an original publication date
+  if (sourceType === "Book" && originalPublicationDateEnglish) {
+    const origYearMatch = originalPublicationDateEnglish.match(/\d{4}/);
+    const origYear = origYearMatch ? origYearMatch[0] : originalPublicationDateEnglish;
+    return `${baseName}_${origYear}_${pubYear}`;
+  }
+
+  return `${baseName}_${pubYear}`;
 }
 
 export default function SourcesManager() {
@@ -246,7 +258,12 @@ export default function SourcesManager() {
     e.preventDefault();
 
     // Generate URL-safe ID based on contributor and publication date
-    const generatedId = generateSourceId(contributors, publicationDateEnglish);
+    const generatedId = generateSourceId(
+      contributors,
+      publicationDateEnglish,
+      sourceType,
+      originalPublicationDateEnglish
+    );
     const finalId = selectedSourceId === "new" ? generatedId : id;
 
     // Get existing version if editing

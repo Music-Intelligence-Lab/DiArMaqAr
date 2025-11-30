@@ -347,7 +347,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                   <span className="sayr-manager__comments-english_title">
                     {t("sayr.commentsOnSayr")} {getDisplayName(selectedMaqam ? selectedMaqam.name : selectedMaqamData.getName(), "maqam")}
                     {language === "ar" ? " ل" : " by "}
-                    <Link href={`/bibliography?source=${stringifySource(source, true, null)}`}>
+                    <Link href={`/bibliography?source=${source.getId()}`}>
                       {stringifySource(source, language === "en", page)}
                     </Link>
                   </span>

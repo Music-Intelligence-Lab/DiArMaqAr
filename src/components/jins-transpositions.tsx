@@ -1089,9 +1089,9 @@ export default function JinsTranspositions() {
                         <h3>{t("jins.sources")}:</h3>
                         <div className="jins-transpositions__sources-text">
                           {selectedJinsData.getSourcePageReferences().map((sourceRef, idx) => {
-                            const source = sources.find((s: any) => s.id === sourceRef.sourceId);
+                            const source = sources.find((s) => s.getId() === sourceRef.sourceId);
                             return source ? (
-                              <Link key={idx} href={`/bibliography?source=${stringifySource(source, true, null)}`}>
+                              <Link key={idx} href={`/bibliography?source=${source.getId()}`}>
                                 {stringifySource(source, false, sourceRef.page)}
                                 <br />
                               </Link>
@@ -1122,9 +1122,9 @@ export default function JinsTranspositions() {
                         <h3>{t("jins.sources")}:</h3>
                         <div className="jins-transpositions__sources-text">
                           {selectedJinsData.getSourcePageReferences().map((sourceRef, idx) => {
-                            const source = sources.find((s: any) => s.id === sourceRef.sourceId);
+                            const source = sources.find((s) => s.getId() === sourceRef.sourceId);
                             return source ? (
-                              <Link key={idx} href={`/bibliography?source=${stringifySource(source, true, null)}`}>
+                              <Link key={idx} href={`/bibliography?source=${source.getId()}`}>
                                 {stringifySource(source, true, sourceRef.page)}
                                 <br />
                               </Link>

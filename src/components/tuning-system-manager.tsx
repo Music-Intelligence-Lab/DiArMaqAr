@@ -1391,11 +1391,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                     if (!source) return null;
                     return (
                       <Link
-                        href={`/bibliography?source=${stringifySource(
-                          source,
-                          true,
-                          null
-                        )}`}
+                        href={`/bibliography?source=${source.getId()}`}
                         key={idx}
                         className="tuning-system-manager__source-item"
                       >

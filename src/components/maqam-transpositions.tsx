@@ -1484,9 +1484,9 @@ const MaqamTranspositions: React.FC = () => {
                       <h3>{t("maqam.sources")}:</h3>
                       <div className="maqam-jins-transpositions-shared__sources-text">
                         {selectedMaqamData.getSourcePageReferences().map((sourceRef, idx) => {
-                          const source = sources.find((s: any) => s.id === sourceRef.sourceId);
+                          const source = sources.find((s) => s.getId() === sourceRef.sourceId);
                           return source ? (
-                            <Link key={idx} href={`/bibliography?source=${stringifySource(source, true, null)}`}>
+                            <Link key={idx} href={`/bibliography?source=${source.getId()}`}>
                               {stringifySource(source, false, sourceRef.page)}
                               <br />
                             </Link>
@@ -1517,9 +1517,9 @@ const MaqamTranspositions: React.FC = () => {
                       <h3>{t("maqam.sources")}:</h3>
                       <div className="maqam-jins-transpositions-shared__sources-text">
                         {selectedMaqamData.getSourcePageReferences().map((sourceRef, idx) => {
-                          const source = sources.find((s: any) => s.id === sourceRef.sourceId);
+                          const source = sources.find((s) => s.getId() === sourceRef.sourceId);
                           return source ? (
-                            <Link key={idx} href={`/bibliography?source=${stringifySource(source, true, null)}`}>
+                            <Link key={idx} href={`/bibliography?source=${source.getId()}`}>
                               {stringifySource(source, true, sourceRef.page)}
                               <br />
                             </Link>

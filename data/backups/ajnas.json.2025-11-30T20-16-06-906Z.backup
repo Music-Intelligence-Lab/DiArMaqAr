@@ -42,11 +42,11 @@
     "commentsArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "alkhuli_1904_2011",
+        "sourceId": "alkhuli_2011",
         "page": "55"
       },
       {
-        "sourceId": "alurmawialbaghdadi_1986_2017",
+        "sourceId": "alurmawialbaghdadi_2017",
         "page": "23"
       }
     ],
@@ -54,8 +54,8 @@
   },
   {
     "id": "5",
-    "idName": "jins_ajam_ushayran",
-    "name": "jins ʿajam ʿushayrān",
+    "idName": "jins_ajam_ushayran_",
+    "name": "jins ʿajam ʿushayrān ",
     "noteNames": [
       "ʿajam ʿushayrān",
       "rāst",
@@ -281,7 +281,7 @@
   },
   {
     "id": "21",
-    "idName": "jins_buselik_(al-shawwa)",
+    "idName": "jins_buselik_(al-Shawwa)",
     "name": "jins būselīk (al-Shawwā)",
     "noteNames": [
       "dūgāh",
@@ -301,7 +301,7 @@
   },
   {
     "id": "22",
-    "idName": "jins_buselik_(al-hilu)",
+    "idName": "jins_buselik_(al-Hilu)",
     "name": "jins būselīk (al-Ḥilū)",
     "noteNames": [
       "dūgāh",
@@ -313,11 +313,11 @@
     "commentsArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "alhilu_1957_1961",
+        "sourceId": "alhilu_1961",
         "page": "126"
       }
     ],
-    "version": "2025-11-30T20:16:06.485Z"
+    "version": "2025-10-18T19:34:26.343Z"
   },
   {
     "id": "23",
@@ -445,7 +445,7 @@
   },
   {
     "id": "31",
-    "idName": "jins_chahargah_(al-shawwa)",
+    "idName": "jins_chahargah_(al-Shawwa)",
     "name": "jins chahārgāh (al-Shawwā)",
     "noteNames": [
       "chahārgāh",

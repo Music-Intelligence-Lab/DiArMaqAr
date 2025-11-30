@@ -1,6 +1,6 @@
 [
   {
-    "id": "Forster-(2010)",
+    "id": "forster_2010",
     "titleEnglish": "Musical Mathematics: On the Art and Science of Acoustic Instruments",
     "titleArabic": "الرياضيات الموسيقية: عن فن وعلم الآلات الصوتية",
     "sourceType": "Book",
@@ -29,7 +29,7 @@
     "ISBN": "9780811874076"
   },
   {
-    "id": "al-Urmawi-al-Baghdadi-(1986/2017)",
+    "id": "alurmawialbaghdadi_1986_2017",
     "titleEnglish": "Kitāb al-Adwār fī al-Mūsīqā",
     "titleArabic": "كتاب الادوار في الموسيقى",
     "sourceType": "Book",
@@ -72,7 +72,7 @@
     "ISBN": "9789779112459"
   },
   {
-    "id": "al-Khuli-(1904/2011)",
+    "id": "alkhuli_1904_2011",
     "titleEnglish": "Kitāb al-Mūsiqā al-Sharqī",
     "titleArabic": "كتاب الموسيقى الشرقي",
     "sourceType": "Book",
@@ -101,7 +101,7 @@
     "ISBN": "9789776416543"
   },
   {
-    "id": "Allah-Wirdi-(1949)",
+    "id": "allahwirdi_1949",
     "titleEnglish": "Falsafat al-Mūsīqā al-Sharqīyah fī Asrār al-Fann al-ʻArabī",
     "titleArabic": " فلسفة الموسيقى الشرقية في أسرار الفن العربي",
     "sourceType": "Book",
@@ -130,7 +130,7 @@
     "ISBN": ""
   },
   {
-    "id": "Meshshaqa-(1899)",
+    "id": "meshshaqa_1899",
     "titleEnglish": "al-Risālah al-Shihābīyah fī al-Ṣināʻah al-Mūsīqīyah",
     "titleArabic": "الرسالة الشهابية في الصناعة الموسيقية",
     "sourceType": "Book",
@@ -166,7 +166,7 @@
     "ISBN": ""
   },
   {
-    "id": "Shawqi-(1969)",
+    "id": "shawqi_1969",
     "titleEnglish": "Qiyās al-Sullam al-Mūsīqī al-ʿArabī",
     "titleArabic": "قياس السلم الموسيقي العربي",
     "sourceType": "Book",
@@ -195,7 +195,7 @@
     "ISBN": ""
   },
   {
-    "id": "Allami-(2022)",
+    "id": "allami_2022",
     "titleEnglish": "Échos-monde: Towards a hybrid repertoire of contemporary and experimental acoustic, electroacoustic and electronic Arabic music",
     "titleArabic": "‎عالم الأصداء: نحو رصيدٍ هجينٍ للموسيقى العربية المعاصرة والتجريبية، صوتياً وكهروصوتياً وإلكترونياً",
     "sourceType": "Thesis",
@@ -225,7 +225,7 @@
     "databaseName": ""
   },
   {
-    "id": "al-Shawwa-(1946)",
+    "id": "alshawwa_1946",
     "titleEnglish": "al-Qawaʿid al-Fannīya fī al-Mūsiqa al-Sharqīya wa al-Gharbīya",
     "titleArabic": "القواعد الفنيّة في الموسيقى الشرقيّة والغربيّة",
     "sourceType": "Book",
@@ -254,7 +254,7 @@
     "ISBN": ""
   },
   {
-    "id": "Farmer-(1937)",
+    "id": "farmer_1937",
     "titleEnglish": "The Lute Scale of Avicenna",
     "titleArabic": "سلم العود لإبن سينا",
     "sourceType": "Article",
@@ -285,7 +285,7 @@
     "DOI": ""
   },
   {
-    "id": "na.-(1933)",
+    "id": "na_1933",
     "titleEnglish": "Kitāb Muʼtamar al-Mūsīqā al-ʿArabiyah",
     "titleArabic": "كتاب مؤتمر الموسيقى العربية",
     "sourceType": "Book",
@@ -314,7 +314,7 @@
     "ISBN": ""
   },
   {
-    "id": "Land-(1885)",
+    "id": "land_1885",
     "titleEnglish": "Actes du Sixième Congrès International Des Orientalistes tenu en 1883 à Leide. Deuxième Partie",
     "titleArabic": "أعمال المؤتمر الدولي السادس للمستشرقين المنعقد عام ١٨٨٣ في ليدن. الجزء الثاني",
     "sourceType": "Book",
@@ -343,7 +343,7 @@
     "ISBN": ""
   },
   {
-    "id": "dErlanger-(1930)",
+    "id": "derlanger_1930",
     "titleEnglish": "La Musique Arabe, Tome 1",
     "titleArabic": "الموسيقى العربية، المجلد ١",
     "sourceType": "Book",
@@ -372,7 +372,7 @@
     "ISBN": ""
   },
   {
-    "id": "Mofakham-(2022)",
+    "id": "mofakham_2022",
     "titleEnglish": "Holographic Composition Technique: Revisiting the Medieval Treatises on Iranian Music",
     "titleArabic": "تقنية التأليف الثلاثي الأبعاد: إعادة النظر في رسائل العصور الوسطى عن الموسيقى الإيرانية",
     "sourceType": "Book",
@@ -401,7 +401,7 @@
     "ISBN": ""
   },
   {
-    "id": "al-Sabbagh-(1950)",
+    "id": "alsabbagh_1950",
     "titleEnglish": "al-Dalīl al-Mūsīqī al-ʿĀm fi Aṭrab al-Anghām",
     "titleArabic": "الدليل الموسيقي العام في أطرب الأنغام",
     "sourceType": "Book",
@@ -430,7 +430,7 @@
     "ISBN": ""
   },
   {
-    "id": "al-Sabbagh-(1954)",
+    "id": "alsabbagh_1954",
     "titleEnglish": "al-Anghām al-Sharqīya: al-Qism al-Thānī min kitāb al-Dalīl al-Mūsīqī al-ʿĀm fi Aṭrab al-Anghām",
     "titleArabic": "الأنغام الشرقيّة: القسم الثاني من كتاب الديلي العام في اطرب الأنغام",
     "sourceType": "Book",
@@ -459,7 +459,7 @@
     "ISBN": ""
   },
   {
-    "id": "al-Hilu-(1957/1961)",
+    "id": "alhilu_1957_1961",
     "titleEnglish": "al-Mūsīqah al-Nazarīya",
     "titleArabic": "الموسيقى النَّظريَّة",
     "sourceType": "Book",
@@ -488,7 +488,7 @@
     "ISBN": ""
   },
   {
-    "id": "Mokhtar-(1937)",
+    "id": "mokhtar_1937",
     "titleEnglish": "Modes in Modern Egyptian Music",
     "titleArabic": "المقامات في الموسيقى العربية الحديثة",
     "sourceType": "Article",
