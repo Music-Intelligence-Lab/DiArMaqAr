@@ -1336,6 +1336,7 @@ const MaqamTranspositions: React.FC = () => {
               <div className="maqam-jins-transpositions-shared__filter-menu">
                 {/* Filter order matches table row appearance order */}
                 {[
+                  "pitchClass",
                   "abjadName",
                   "englishName",
                   "solfege",
@@ -1386,7 +1387,7 @@ const MaqamTranspositions: React.FC = () => {
                         }));
                       }}
                     />
-                    <span className="maqam-jins-transpositions-shared__filter-label">{t(`maqam.${filterKey}`)}</span>
+                    <span className="maqam-jins-transpositions-shared__filter-label">{t(`filter.${filterKey}`)}</span>
                   </label>
                 );
 
@@ -1414,7 +1415,7 @@ const MaqamTranspositions: React.FC = () => {
                             }));
                           }}
                         />
-                        <span className="maqam-jins-transpositions-shared__filter-label">{t(`maqam.${valueType}`)}</span>
+                        <span className="maqam-jins-transpositions-shared__filter-label">{t(`filter.${valueType}`)}</span>
                       </label>
                     </React.Fragment>
                   );

@@ -690,6 +690,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                 "solfege",
                 "fraction",
                 "cents",
+                "centsFromZero",
                 "centsDeviation",
                 "decimalRatio",
                 "stringLength",
@@ -708,9 +709,6 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                   (filterKey === "centsFromZero" && pitchClassType === "cents");
 
                 if (isDisabled) return null;
-
-                // Hide centsFromZero filters from tuning system octave tables
-                if (filterKey === 'centsFromZero') return null;
 
                 const filterElement = (
                   <label

@@ -934,6 +934,7 @@ export default function JinsTranspositions() {
             <div className="jins-transpositions__filter-menu">
               {/* Filter order matches table row appearance order */}
               {[
+                "pitchClass",
                 "abjadName",
                 "englishName",
                 "solfege",
@@ -984,7 +985,7 @@ export default function JinsTranspositions() {
                         }));
                       }}
                     />
-                    <span className="jins-transpositions__filter-label">{t(`jins.${filterKey}`)}</span>
+                    <span className="jins-transpositions__filter-label">{t(`filter.${filterKey}`)}</span>
                   </label>
                 );
 
@@ -1012,7 +1013,7 @@ export default function JinsTranspositions() {
                             }));
                           }}
                         />
-                        <span className="jins-transpositions__filter-label">{t(`jins.${valueType}`)}</span>
+                        <span className="jins-transpositions__filter-label">{t(`filter.${valueType}`)}</span>
                       </label>
                     </React.Fragment>
                   );
