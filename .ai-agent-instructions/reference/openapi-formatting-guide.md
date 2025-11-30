@@ -57,6 +57,113 @@
 
 ---
 
+## ⚠️ CRITICAL: YAML is Source of Truth
+
+**ALWAYS edit `openapi.yaml` - NEVER edit `openapi.json` directly.**
+
+### The Problem
+
+The JSON file is auto-generated from YAML. If you edit `openapi.json` directly:
+- Changes will be lost on next regeneration
+- JSON and YAML will be out of sync
+- Other developers may not see your changes
+
+### Correct Workflow
+
+1. **Edit**: `openapi.yaml` (project root)
+2. **Regenerate**: `npm run docs:openapi` → Creates JSON files
+3. **Rebuild docs**: `npm run docs:build` → Updates playground and static docs
+4. **Verify**: Check the OpenAPI playground reflects your changes
+
+### File Locations
+
+| File | Purpose | Edit? |
+|------|---------|-------|
+| `openapi.yaml` | Source of truth | ✅ YES |
+| `public/docs/openapi.json` | Generated for API route | ❌ NO |
+| `docs/public/openapi.json` | Generated for VitePress | ❌ NO |
+| `docs/openapi.json` | Generated for build | ❌ NO |
+
+### Regeneration Commands
+
+```bash
+# Regenerate JSON from YAML
+npm run docs:openapi
+
+# Full rebuild (includes JSON regeneration)
+npm run docs:build
+```
+
+---
+
+## ⚠️ CRITICAL: Enum Ordering Consistency
+
+**`pitchClassDataType` enum order MUST match the UI filter order.**
+
+### Why This Matters
+
+- OpenAPI playground dropdown shows options in enum order
+- Users expect consistency between UI and API
+- Reduces confusion when switching between app and API
+
+### Correct Order (Matches UI Filter)
+
+```yaml
+# Standard endpoints (14 options)
+enum: [all, abjadName, englishName, solfege, fraction, cents, centsDeviation, decimalRatio, stringLength, fretDivision, midiNoteNumber, midiNoteDeviation, frequency, referenceNoteName]
+
+# 12-pitch-class-sets endpoint (15 options - includes relativeCents)
+enum:
+  - all
+  - abjadName
+  - englishName
+  - solfege
+  - fraction
+  - cents
+  - centsDeviation
+  - decimalRatio
+  - stringLength
+  - fretDivision
+  - midiNoteNumber
+  - midiNoteDeviation
+  - frequency
+  - referenceNoteName
+  - relativeCents
+```
+
+### UI Filter Reference
+
+The order comes from the filter menu in components like `jins-transpositions.tsx`:
+
+```typescript
+// Filter order matches table row appearance order
+{[
+  "abjadName",
+  "englishName",
+  "solfege",
+  "fraction",
+  "cents",
+  "centsFromZero",  // UI-only (calculated client-side)
+  "centsDeviation",
+  "decimalRatio",
+  "stringLength",
+  "fretDivision",
+  "midiNote",       // → midiNoteNumber in API
+  "midiNoteDeviation",
+  "frequency",
+]}
+```
+
+### When Adding New Pitch Class Data Types
+
+1. Add to UI filter array first (in `jins-transpositions.tsx`, `maqam-transpositions.tsx`)
+2. Add to `FilterSettings` interface in `filter-context.tsx`
+3. Add to ALL `pitchClassDataType` enums in `openapi.yaml` in the same position
+4. Add to `validPitchClassDataTypes` arrays in API route files
+5. Regenerate docs: `npm run docs:build`
+
+---
+
 ## ⚠️ CRITICAL: Terminology Consistency
 
 **ALWAYS use "pitch class" (never just "pitch") when referring to pitch-related data.**
@@ -497,19 +604,23 @@ npm run docs:build
 
 ### Critical Rules
 
-1. **Never document PUT endpoints** in OpenAPI
-2. **Always use "pitch class"** not "pitch"
-3. **URL-safe values only** in enums and examples
-4. **Consistent parameter descriptions** across all endpoints
-5. **Options parameter mutually exclusive** with data parameters
-6. **Verify all examples** against actual data
-7. **No default values** for required parameters in discovery mode
-8. **Regenerate static docs** after OpenAPI changes (`npm run docs:api`)
+1. **Edit YAML, not JSON** - `openapi.yaml` is source of truth; JSON is auto-generated
+2. **Enum order matches UI** - `pitchClassDataType` enums follow UI filter order
+3. **Never document PUT endpoints** in OpenAPI
+4. **Always use "pitch class"** not "pitch"
+5. **URL-safe values only** in enums and examples
+6. **Consistent parameter descriptions** across all endpoints
+7. **Options parameter mutually exclusive** with data parameters
+8. **Verify all examples** against actual data
+9. **No default values** for required parameters in discovery mode
+10. **Regenerate after changes** - Run `npm run docs:openapi` then `npm run docs:build`
 
 ### Quick Checklist
 
 When adding/modifying OpenAPI documentation:
 
+- [ ] Editing `openapi.yaml` (NOT JSON files)
+- [ ] `pitchClassDataType` enum order matches UI filter order
 - [ ] PUT endpoints not documented
 - [ ] "pitch class" terminology used consistently
 - [ ] All enums and examples URL-safe
@@ -519,6 +630,7 @@ When adding/modifying OpenAPI documentation:
 - [ ] Multi-line descriptions only when needed
 - [ ] Boolean flags start with "Include" or "When"
 - [ ] Options parameter properly implemented
-- [ ] Static documentation regenerated after OpenAPI changes
+- [ ] Regenerated JSON: `npm run docs:openapi`
+- [ ] Rebuilt docs: `npm run docs:build`
 
 **Apply these standards to maintain high-quality, consistent API documentation.**

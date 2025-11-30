@@ -662,6 +662,138 @@ for (let i = 0; i < items.length; i++) {
 }
 ```
 
+### Adding New Pitch Class Data Types
+
+**Complete workflow for adding a new pitch class data type (e.g., solfege, englishName):**
+
+**Step 1: Model Layer**
+```typescript
+// src/models/PitchClass.ts - Add property to interface
+export default interface PitchClass {
+  // ... existing properties
+  solfege?: string;  // Add new property (optional if derived)
+}
+```
+
+**Step 2: Data Generation Function**
+```typescript
+// src/functions/getTuningSystemPitchClasses.ts
+// Add calculation/mapping for the new data type
+const solfege = getSolfegeFromEnglishName(englishNoteName);
+
+pitchClasses.push({
+  // ... existing properties
+  solfege,  // Add to pitch class object
+});
+```
+
+**Step 3: Mapping Function (if needed)**
+```typescript
+// src/functions/noteNameMappings.ts
+// Add mapping function for derived values
+export function getSolfegeFromEnglishName(englishName: string): string {
+  const baseNote = englishName.charAt(0).toUpperCase();
+  const solfegeMap: Record<string, string> = {
+    'A': 'La', 'B': 'Si', 'C': 'Do', 'D': 'Re',
+    'E': 'Mi', 'F': 'Fa', 'G': 'Sol'
+  };
+  return solfegeMap[baseNote] || englishName;
+}
+```
+
+**Step 4: Filter Context**
+```typescript
+// src/contexts/filter-context.tsx
+export interface FilterSettings {
+  solfege: boolean;  // Add to interface
+  // ... other filters
+}
+
+const defaultFilters: FilterSettings = {
+  solfege: false,  // Set default visibility
+  // ... other defaults
+};
+```
+
+**Step 5: UI Components (filter menu + table rows)**
+```typescript
+// src/components/jins-transpositions.tsx (and maqam-transpositions.tsx)
+// Add to filter menu array (ORDER MATTERS - matches table row order)
+{[
+  "abjadName",
+  "englishName",
+  "solfege",      // ← Add in correct position
+  "fraction",
+  // ...
+]}
+
+// Add table row rendering
+if (filters["solfege"]) {
+  const solfegeRow = [t("jins.solfege")];
+  pitchClasses.forEach((pc, i) => {
+    solfegeRow.push(pc.solfege || "--");
+    if (i < pitchClasses.length - 1) solfegeRow.push('');
+  });
+  rows.push(solfegeRow);
+}
+```
+
+**Step 6: API Routes**
+```typescript
+// All relevant route.ts files (ajnas/[id], maqamat/[id], etc.)
+// Add to validPitchClassDataTypes array
+const validPitchClassDataTypes = [
+  "all",
+  "abjadName",
+  "englishName",
+  "solfege",  // ← Add in same order as UI
+  // ...
+];
+
+// Add to "all" case response
+case "all":
+  return { ...existingFields, solfege: pc.solfege };
+
+// Add specific case
+case "solfege":
+  return { ...baseFields, solfege: pc.solfege };
+```
+
+**Step 7: OpenAPI Spec (YAML only!)**
+```yaml
+# openapi.yaml - Add to ALL pitchClassDataType enums
+# ⚠️ CRITICAL: Order must match UI filter order
+enum: [all, abjadName, englishName, solfege, fraction, ...]
+```
+
+**Step 8: Regenerate & Rebuild**
+```bash
+npm run docs:openapi  # Regenerate JSON from YAML
+npm run docs:build    # Rebuild docs
+```
+
+**Step 9: Translations (if user-facing)**
+```json
+// public/locales/en/translation.json
+{
+  "jins": {
+    "solfege": "Solfege"
+  }
+}
+```
+
+**Key Files Checklist:**
+- [ ] `src/models/PitchClass.ts` - Interface property
+- [ ] `src/functions/getTuningSystemPitchClasses.ts` - Generation
+- [ ] `src/functions/noteNameMappings.ts` - Mapping (if derived)
+- [ ] `src/contexts/filter-context.tsx` - FilterSettings
+- [ ] `src/components/jins-transpositions.tsx` - Filter menu + table
+- [ ] `src/components/maqam-transpositions.tsx` - Filter menu + table
+- [ ] `src/components/tuning-system-octave-tables.tsx` - Table (if applicable)
+- [ ] `src/app/api/*/route.ts` - All relevant API routes
+- [ ] `openapi.yaml` - All pitchClassDataType enums
+- [ ] `public/locales/*/translation.json` - Translations
+
 ---
 
 ## 📱 UI/UX Patterns

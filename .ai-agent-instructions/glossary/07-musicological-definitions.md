@@ -346,6 +346,34 @@ The choice of starting note name is not arbitrary—it represents a fundamental 
 
 ***
 
+### Solfege (Fixed-Do System)
+
+**Arabic maqām theory**: Solfege provides an alternative pitch naming system using syllables (Do, Re, Mi, Fa, Sol, La, Si) mapped from English note names. In DiArMaqAr, we use the **fixed-do system** where each syllable corresponds to a specific pitch class regardless of key or mode.
+
+**Fixed-Do Mapping:**
+| English | Solfege |
+|---------|---------|
+| C | Do |
+| D | Re |
+| E | Mi |
+| F | Fa |
+| G | Sol |
+| A | La |
+| B | Si |
+
+**Key characteristics:**
+- Derived from the English name's base letter (ignoring accidentals)
+- Capitalized syllables: "Do", "Re", "Mi" (not "do", "re", "mi")
+- Accidentals inherit from the English name (e.g., C# → Do, Db → Do)
+- Secondary notation system alongside Arabic names and IPN
+- Useful for users familiar with European solfege traditions
+
+**Implementation**: The `getSolfegeFromEnglishName()` function in `noteNameMappings.ts` derives solfege from the English note name by extracting the base letter and mapping it to the corresponding syllable.
+
+**Anglo-European difference**: Solfege traditions vary between fixed-do (syllables tied to absolute pitches) and movable-do (Do = tonic of any key). DiArMaqAr uses fixed-do to maintain consistency with the absolute pitch class system and avoid imposing Anglo-European functional harmonic assumptions through movable-do.
+
+***
+
 ### Enharmonic Equivalence (Tasāwīy al-Aṣwāt)
 
 **Arabic maqām theory**: When mapping Arabic pitch classes to IPN, enharmonic equivalence (e.g., G# vs Ab) arises only as a notational convenience; sequential letters are preferred for melodic clarity.

@@ -10,7 +10,7 @@ Tasks, research items, and things to take care of for the DiArMaqAr project.
 ---
 
 ## Tasks
-- [ ] update filter items so they are shorter (Decimal Ratio / Decimal - Abjad Name / Abjad, Cents Deviation / 12-EDO Deviation)
+- [ ] update filter items so they are shorter (Decimal Ratio / Decimal, Abjad Name / Abjad, Cents Deviation / 12-EDO Deviation)
 - [ ] fix "availableTranspositions" in /maqamat/{idName} and any other endpoints so that it has full transposed maqam name i.e. maqām rāst al-chahārgāh / maqam_rast_al_chahargah
 
 
