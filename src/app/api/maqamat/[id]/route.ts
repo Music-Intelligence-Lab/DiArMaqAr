@@ -972,7 +972,14 @@ export async function GET(
           NextResponse.json(
             {
               error: `Cannot transpose to '${transposeToNote}' in this tuning system`,
-              availableTranspositions: transpositions.map((t) => t.ascendingPitchClasses[0].noteName)
+              availableTranspositions: transpositions.map((t) => ({
+                idName: standardizeText(t.name),
+                displayName: t.name,
+                tonic: {
+                  idName: standardizeText(t.ascendingPitchClasses[0].noteName),
+                  displayName: t.ascendingPitchClasses[0].noteName,
+                },
+              }))
             },
             { status: 400 }
           )
@@ -1150,17 +1157,22 @@ export async function GET(
       }
     );
 
-    const availableTranspositionNotes = transpositions.map((t) => t.ascendingPitchClasses[0].noteName);
-    const availableTranspositionsNamespace = buildStringArrayNamespace(
-      availableTranspositionNotes.map((name) => standardizeText(name)),
-      {
-        inArabic,
-        displayNames: availableTranspositionNotes,
-        displayNamesAr: inArabic
-          ? availableTranspositionNotes.map((name) => getNoteNameDisplayAr(name))
-          : undefined,
-      }
-    );
+    // Build availableTranspositions with full maqam names
+    const availableTranspositionsData = transpositions.map((t) => {
+      const tonicNoteName = t.ascendingPitchClasses[0].noteName;
+      const fullMaqamName = t.name; // e.g., "maqām rāst al-chahārgāh" or "maqām rāst" for tahlil
+      return {
+        idName: standardizeText(fullMaqamName),
+        displayName: fullMaqamName,
+        ...(inArabic && { displayNameAr: getMaqamNameDisplayAr(fullMaqamName) }),
+        tonic: {
+          idName: standardizeText(tonicNoteName),
+          displayName: tonicNoteName,
+          ...(inArabic && { displayNameAr: getNoteNameDisplayAr(tonicNoteName) }),
+        },
+      };
+    });
+    const availableTranspositionsNamespace = availableTranspositionsData;
 
     const responseData: any = {
       maqam: maqamNamespace,

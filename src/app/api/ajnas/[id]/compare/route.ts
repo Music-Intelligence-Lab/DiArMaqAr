@@ -472,24 +472,27 @@ export async function GET(
             }
           );
 
-          const availableTranspositionNotes = transpositions.map((t) => t.jinsPitchClasses[0].noteName);
-          const availableTranspositionsNamespace = buildStringArrayNamespace(
-            availableTranspositionNotes.map((name) => standardizeText(name)),
-            {
-              inArabic,
-              displayNames: availableTranspositionNotes,
-              displayNamesAr: inArabic
-                ? availableTranspositionNotes.map((name) => getNoteNameDisplayAr(name))
-                : undefined,
-            }
-          );
+          const availableTranspositionsData = transpositions.map((t) => {
+            const tonicNoteName = t.jinsPitchClasses[0].noteName;
+            const fullJinsName = t.name;
+            return {
+              idName: standardizeText(fullJinsName),
+              displayName: fullJinsName,
+              ...(inArabic && { displayNameAr: getJinsNameDisplayAr(fullJinsName) }),
+              tonic: {
+                idName: standardizeText(tonicNoteName),
+                displayName: tonicNoteName,
+                ...(inArabic && { displayNameAr: getNoteNameDisplayAr(tonicNoteName) }),
+              },
+            };
+          });
 
           comparisonResults.push({
             tuningSystem: tuningSystemNamespace,
             startingNote: startingNoteNamespace,
             transposeTo: transposeToNote,
             error: `Cannot transpose to '${transposeToNote}' in this tuning system`,
-            availableTranspositions: availableTranspositionsNamespace,
+            availableTranspositions: availableTranspositionsData,
           });
           continue;
         }
@@ -577,17 +580,21 @@ export async function GET(
           }
         : undefined;
 
-      const availableTranspositionNotes = transpositions.map((t) => t.jinsPitchClasses[0].noteName);
-      const availableTranspositionsNamespace = buildStringArrayNamespace(
-        availableTranspositionNotes.map((name) => standardizeText(name)),
-        {
-          inArabic,
-          displayNames: availableTranspositionNotes,
-          displayNamesAr: inArabic
-            ? availableTranspositionNotes.map((name) => getNoteNameDisplayAr(name))
-            : undefined,
-        }
-      );
+      // Build availableTranspositions with full jins names
+      const availableTranspositionsData = transpositions.map((t) => {
+        const tonicNoteName = t.jinsPitchClasses[0].noteName;
+        const fullJinsName = t.name;
+        return {
+          idName: standardizeText(fullJinsName),
+          displayName: fullJinsName,
+          ...(inArabic && { displayNameAr: getJinsNameDisplayAr(fullJinsName) }),
+          tonic: {
+            idName: standardizeText(tonicNoteName),
+            displayName: tonicNoteName,
+            ...(inArabic && { displayNameAr: getNoteNameDisplayAr(tonicNoteName) }),
+          },
+        };
+      });
 
       const comparisonItem: any = {
         tuningSystem: tuningSystemNamespace,
@@ -604,7 +611,7 @@ export async function GET(
             numberOfPitchClasses: selectedTransposition.jinsPitchClasses.length,
           },
         },
-        availableTranspositions: availableTranspositionsNamespace,
+        availableTranspositions: availableTranspositionsData,
         pitchData: formatPitchData(selectedTransposition.jinsPitchClasses, pitchClassDataType, inArabic),
         parameters: {
           pitchClassDataType,

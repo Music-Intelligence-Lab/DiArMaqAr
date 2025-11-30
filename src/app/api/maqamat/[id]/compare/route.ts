@@ -354,7 +354,14 @@ export async function GET(
             startingNote: selectedStartingNote,
             transposeTo: transposeToNote,
             error: `Cannot transpose to '${transposeToNote}' in this tuning system`,
-            availableTranspositions: transpositions.map((t) => t.ascendingPitchClasses[0].noteName)
+            availableTranspositions: transpositions.map((t) => ({
+              idName: standardizeText(t.name),
+              displayName: t.name,
+              tonic: {
+                idName: standardizeText(t.ascendingPitchClasses[0].noteName),
+                displayName: t.ascendingPitchClasses[0].noteName,
+              },
+            }))
           });
           continue;
         }

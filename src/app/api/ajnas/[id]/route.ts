@@ -682,7 +682,14 @@ export async function GET(
           NextResponse.json(
             {
               error: `Cannot transpose to '${transposeToNote}' in this tuning system`,
-              availableTranspositions: transpositions.map((t) => t.jinsPitchClasses[0].noteName)
+              availableTranspositions: transpositions.map((t) => ({
+                idName: standardizeText(t.name),
+                displayName: t.name,
+                tonic: {
+                  idName: standardizeText(t.jinsPitchClasses[0].noteName),
+                  displayName: t.jinsPitchClasses[0].noteName,
+                },
+              }))
             },
             { status: 400 }
           )
