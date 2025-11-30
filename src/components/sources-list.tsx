@@ -2,7 +2,7 @@
 
 import React from "react";
 import useAppContext from "@/contexts/app-context";
-import { Source, stringifySource } from "@/models/bibliography/Source";
+import { Source } from "@/models/bibliography/Source";
 import Book from "@/models/bibliography/Book";
 import Article from "@/models/bibliography/Article";
 import Thesis from "@/models/bibliography/Thesis";
@@ -25,16 +25,10 @@ export default function SourcesList() {
       const sourceParameter = searchParams.get("source");
 
       if (sourceParameter) {
-        let found = false;
-        for (const source of sources) {
-          const stringified = stringifySource(source, true, null);
-          if (sourceParameter === stringified) {
-            setHighlighted(source.getId());
-            found = true;
-            break;
-          }
-        }
-        if (!found) {
+        const source = sources.find((s) => s.getId() === sourceParameter);
+        if (source) {
+          setHighlighted(source.getId());
+        } else {
           setHighlighted(null);
         }
       } else {

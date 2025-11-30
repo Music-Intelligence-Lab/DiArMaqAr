@@ -19,13 +19,13 @@ function compareStringNumbers(a: string, b: string): number {
 }
 
 /**
- * Converts a sourceId to URL-safe format by looking up the source and using stringifySource.
+ * Converts a sourceId to URL-safe format by looking up the source.
  * Tries multiple matching strategies to find the source even if the ID format differs.
  * If the source is not found, returns the original sourceId.
  *
  * @param sourceId - The source ID to convert
  * @param sources - Array of all sources to search
- * @returns URL-safe source ID
+ * @returns URL-safe source ID (the source's actual ID field)
  */
 function getUrlSafeSourceId(sourceId: string, sources: Source[]): string {
   if (!sourceId) return sourceId;
@@ -34,7 +34,7 @@ function getUrlSafeSourceId(sourceId: string, sources: Source[]): string {
   let source = sources.find((s) => s.getId() === sourceId);
   
   // If not found, try to find by matching the stringified version
-  // This handles cases where the sourceId might be in a different format
+  // This handles cases where the sourceId might be in the old format
   if (!source) {
     source = sources.find((s) => {
       const urlSafeId = stringifySource(s, true, null);
@@ -43,8 +43,8 @@ function getUrlSafeSourceId(sourceId: string, sources: Source[]): string {
   }
   
   if (source) {
-    // Use stringifySource to get URL-safe ID (same as updateSources does)
-    return stringifySource(source, true, null);
+    // Use the source's actual ID (already in URL-safe format after our transformation)
+    return source.getId();
   }
   
   // If source not found, return original (might be already URL-safe or invalid)

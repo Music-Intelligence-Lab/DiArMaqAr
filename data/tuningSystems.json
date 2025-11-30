@@ -1,6 +1,6 @@
 [
   {
-    "id": "ronzevalle-(1904)",
+    "id": "ronzevalle_1904",
     "titleEnglish": "Modernist Arabic Tuning",
     "titleArabic": "التنغيم العربي الحديث",
     "year": "1904",
@@ -8,11 +8,11 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "al-khuli-(1904/2011)",
+        "sourceId": "alkhuli_1904_2011",
         "page": "55-56"
       },
       {
-        "sourceId": "shawqi-(1969)",
+        "sourceId": "shawqi_1969",
         "page": "32-33"
       }
     ],
@@ -159,7 +159,7 @@
     "version": "2025-11-26T10:19:38.569Z"
   },
   {
-    "id": "al-kindi-(874)",
+    "id": "alkindi_874",
     "titleEnglish": "12-Tone",
     "titleArabic": "12-نغمة",
     "year": "874",
@@ -167,11 +167,11 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "farmer-(1937)",
+        "sourceId": "farmer_1937",
         "page": "248"
       },
       {
-        "sourceId": "forster-(2010)",
+        "sourceId": "forster_2010",
         "page": "615"
       }
     ],
@@ -273,7 +273,7 @@
     "version": "2025-11-17T13:16:34.754Z"
   },
   {
-    "id": "anglo-european-(1700)",
+    "id": "angloeuropean_1700",
     "titleEnglish": "12-EDO",
     "titleArabic": "12 نغمة متوازية",
     "year": "1700",
@@ -363,7 +363,7 @@
     "version": "2025-11-18T11:53:58.428Z"
   },
   {
-    "id": "al-dik-(1926a)",
+    "id": "aldik_1926a",
     "titleEnglish": "al-Sullam al-Fārsī or al-'Arabī (!!!)",
     "titleArabic": "السلم الفارسي او العربي",
     "year": "1926a",
@@ -371,7 +371,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "shawqi-(1969)",
+        "sourceId": "shawqi_1969",
         "page": "43"
       }
     ],
@@ -491,7 +491,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "al-dik-(1926b)",
+    "id": "aldik_1926b",
     "titleEnglish": "Old Arabic Scale",
     "titleArabic": "السلم العربي القديم",
     "year": "1926b",
@@ -499,7 +499,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "shawqi-(1969)",
+        "sourceId": "shawqi_1969",
         "page": "41"
       }
     ],
@@ -592,7 +592,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "cairocongresstuningcommittee-(1932a)",
+    "id": "cairocongresstuningcommittee_1932a",
     "titleEnglish": "Ancient Intervals",
     "titleArabic": "الأبعاد القديمة",
     "year": "1932a",
@@ -600,7 +600,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "na.-(1933)",
+        "sourceId": "na_1933",
         "page": "336"
       }
     ],
@@ -721,7 +721,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "cairocongresstuningcommittee-(1932b)",
+    "id": "cairocongresstuningcommittee_1932b",
     "titleEnglish": "Arab Intervals according to al-Dīk",
     "titleArabic": "الأبعاد العربية حسب الديك",
     "year": "1932b",
@@ -729,7 +729,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "na.-(1933)",
+        "sourceId": "na_1933",
         "page": "336"
       }
     ],
@@ -849,7 +849,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "al-ladhiqi-(1495)",
+    "id": "alladhiqi_1495",
     "titleEnglish": "17-Tone",
     "titleArabic": "17 نغمة",
     "year": "1495",
@@ -857,7 +857,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "Allāh-Wīrdī-(1949)",
+        "sourceId": "allahwirdi_1949",
         "page": "163-164"
       }
     ],
@@ -969,7 +969,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "al-farabi-(950i)",
+    "id": "alfarabi_950i",
     "titleEnglish": "Second Oud Tuning 22-Tone",
     "titleArabic": "",
     "year": "950i",
@@ -977,7 +977,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "forster-(2010)",
+        "sourceId": "forster_2010",
         "page": "643"
       }
     ],
@@ -1114,7 +1114,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "allami-(2022)",
+    "id": "allami_2022",
     "titleEnglish": "al-Kindi with al-Farabi's 22/27",
     "titleArabic": "تنغيم الكندي مع اضافة نسبة 22/27 للفارابي",
     "year": "2022",
@@ -1122,7 +1122,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "allami-(2022)",
+        "sourceId": "allami_2022",
         "page": "215"
       }
     ],
@@ -1269,7 +1269,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "anglo-european-(1800)",
+    "id": "angloeuropean_1800",
     "titleEnglish": "24-EDO",
     "titleArabic": "24 نغمة متوازية",
     "year": "1800",
@@ -1419,7 +1419,7 @@
     "version": "2025-11-26T10:21:17.434Z"
   },
   {
-    "id": "al-farabi-(950g)",
+    "id": "alfarabi_950g",
     "titleEnglish": "First Oud Tuning (Full First Octave) 27-Tone",
     "titleArabic": "تنغيم العود الأول (الديوان الأول الكامل) ٢٧-نغمة",
     "year": "950g",
@@ -1427,23 +1427,23 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "farmer-(1937)",
+        "sourceId": "farmer_1937",
         "page": "249"
       },
       {
-        "sourceId": "land-(1885)",
+        "sourceId": "land_1885",
         "page": "134-137"
       },
       {
-        "sourceId": "d'Erlanger-(1930)",
+        "sourceId": "derlanger_1930",
         "page": "165-185"
       },
       {
-        "sourceId": "mofakham-(2022)",
+        "sourceId": "mofakham_2022",
         "page": "14"
       },
       {
-        "sourceId": "forster-(2010)",
+        "sourceId": "forster_2010",
         "page": "639"
       }
     ],
@@ -1605,7 +1605,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "ibnsina-(1037)",
+    "id": "ibnsina_1037",
     "titleEnglish": "7-Fret Oud 17-Tone",
     "titleArabic": "7 نغمات 17 دستان على العود",
     "year": "1037",
@@ -1613,7 +1613,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "farmer-(1937)",
+        "sourceId": "farmer_1937",
         "page": "249"
       }
     ],
@@ -1725,7 +1725,7 @@
     "version": "2025-11-09T00:44:40.275Z"
   },
   {
-    "id": "al-mawsili-(850)",
+    "id": "almawsili_850",
     "titleEnglish": "10-Tone",
     "titleArabic": "",
     "year": "850",
@@ -1733,7 +1733,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "farmer-(1937)",
+        "sourceId": "farmer_1937",
         "page": "247"
       }
     ],
@@ -1810,7 +1810,7 @@
     "version": "2025-11-06T21:49:51.447Z"
   },
   {
-    "id": "cairocongresstuningcommittee-(1929)",
+    "id": "cairocongresstuningcommittee_1929",
     "titleEnglish": "Egyptian Tuning",
     "titleArabic": "التنغيم المصري",
     "year": "1929",
@@ -1818,15 +1818,15 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "shawqi-(1969)",
+        "sourceId": "shawqi_1969",
         "page": "48-49"
       },
       {
-        "sourceId": "na.-(1933)",
+        "sourceId": "na_1933",
         "page": "336"
       },
       {
-        "sourceId": "Allāh-Wīrdī-(1949)",
+        "sourceId": "allahwirdi_1949",
         "page": "80"
       }
     ],
@@ -1973,7 +1973,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "al-khuliandragheb-(1904)",
+    "id": "alkhuliandragheb_1904",
     "titleEnglish": "",
     "titleArabic": "",
     "year": "1904",
@@ -1981,7 +1981,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "al-khuli-(1904/2011)",
+        "sourceId": "alkhuli_1904_2011",
         "page": "51-52"
       }
     ],
@@ -2101,7 +2101,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "ibnmunajjim-(912)",
+    "id": "ibnmunajjim_912",
     "titleEnglish": "10-Tone",
     "titleArabic": "10-نغمات",
     "year": "912",
@@ -2181,7 +2181,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "al-urmawi-(1294a)",
+    "id": "alurmawi_1294a",
     "titleEnglish": "First Oud Tuning 17-Tone",
     "titleArabic": "اول تنغيم على العود 17 نغمة",
     "year": "1294a",
@@ -2189,11 +2189,11 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "forster-(2010)",
+        "sourceId": "forster_2010",
         "page": "716"
       },
       {
-        "sourceId": "al-Urmawī-al-Baghdādī-(1986/2017)",
+        "sourceId": "alurmawialbaghdadi_1986_2017",
         "page": "102-105"
       }
     ],
@@ -2305,7 +2305,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "allami-(2024)",
+    "id": "allami_2024",
     "titleEnglish": "al-Kindi with Ibn Sina's 39/32",
     "titleArabic": "تنغيم الكندي مع اضافة نسبة 32/39 لإبن سينا",
     "year": "2024",
@@ -2428,7 +2428,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "al-urmawi-(1294b)",
+    "id": "alurmawi_1294b",
     "titleEnglish": "Second Oud Tuning 17-Tone",
     "titleArabic": "ثاني تنغيم على العود 17 نغمة",
     "year": "1294b",
@@ -2436,7 +2436,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "forster-(2010)",
+        "sourceId": "forster_2010",
         "page": "716"
       }
     ],
@@ -2548,7 +2548,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "meshshaqa-(1899)",
+    "id": "meshshaqa_1899",
     "titleEnglish": "Arabic Octave According to the Modernists",
     "titleArabic": "الديوان العربي عند المحدثين",
     "year": "1899",
@@ -2556,7 +2556,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "Meshshāqa-(1899)",
+        "sourceId": "meshshaqa_1899",
         "page": "18"
       }
     ],
@@ -2676,7 +2676,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "al-farabi-(950a)",
+    "id": "alfarabi_950a",
     "titleEnglish": "First Oud Tuning 1: mujannab sabbāba 3 + wusṭa al-furs 20-Tone",
     "titleArabic": "",
     "year": "950a",
@@ -2684,7 +2684,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "land-(1885)",
+        "sourceId": "land_1885",
         "page": "134-137"
       }
     ],
@@ -2811,7 +2811,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "al-farabi-(950c)",
+    "id": "alfarabi_950c",
     "titleEnglish": "First Oud Tuning 3: mujannab sabbāba 3 + alt wusṭa zalzal",
     "titleArabic": "",
     "year": "950c",
@@ -2919,7 +2919,7 @@
     "version": "2025-11-06T00:23:22.237Z"
   },
   {
-    "id": "al-farabi-(950b)",
+    "id": "alfarabi_950b",
     "titleEnglish": "First Oud Tuning 2: mujannab sabbāba 3 + wuṣtā zalzal",
     "titleArabic": "",
     "year": "950b",
@@ -2927,7 +2927,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "land-(1885)",
+        "sourceId": "land_1885",
         "page": "134-137"
       }
     ],
@@ -3032,7 +3032,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "al-farabi-(950d)",
+    "id": "alfarabi_950d",
     "titleEnglish": "First Oud Tuning 4: mujannab sabbāba 4 + wusṭa al-furs",
     "titleArabic": "",
     "year": "950d",
@@ -3040,7 +3040,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "land-(1885)",
+        "sourceId": "land_1885",
         "page": "134-137"
       }
     ],
@@ -3145,7 +3145,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "al-farabi-(950f)",
+    "id": "alfarabi_950f",
     "titleEnglish": "First Oud Tuning 6: mujannab sabbāba 4 + alt wusṭa zalzal",
     "titleArabic": "",
     "year": "950f",
@@ -3253,7 +3253,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "al-farabi-(950e)",
+    "id": "alfarabi_950e",
     "titleEnglish": "First Oud Tuning 5: mujannab sabbāba 4 + wusṭa zalzal",
     "titleArabic": "",
     "year": "950e",
@@ -3261,7 +3261,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "land-(1885)",
+        "sourceId": "land_1885",
         "page": "134-137"
       }
     ],
@@ -3366,7 +3366,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "al-farabi-(950h)",
+    "id": "alfarabi_950h",
     "titleEnglish": "First Oud Tuning (First and Second Octaves) 35-Tone",
     "titleArabic": "",
     "year": "950h",
@@ -3374,7 +3374,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "land-(1885)",
+        "sourceId": "land_1885",
         "page": "134-137"
       }
     ],
@@ -3539,7 +3539,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "mukhtarandmushrrafa-(1944)",
+    "id": "mukhtarandmushrrafa_1944",
     "titleEnglish": "Egyptian Tuning 22-Tone",
     "titleArabic": "التنغيم المصري 22 نغمة",
     "year": "1944",
@@ -3547,7 +3547,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "shawqi-(1969)",
+        "sourceId": "shawqi_1969",
         "page": "139"
       }
     ],
@@ -3661,7 +3661,7 @@
     "version": "2025-10-23T21:23:15.543Z"
   },
   {
-    "id": "al-sabbagh-(1950)",
+    "id": "alsabbagh_1950",
     "titleEnglish": "Contemporary Arabic 19-Tone",
     "titleArabic": "السلم العربي الحالي",
     "year": "1950",
@@ -3669,11 +3669,11 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "shawqi-(1969)",
+        "sourceId": "shawqi_1969",
         "page": "160"
       },
       {
-        "sourceId": "al-Ṣabbāgh-(1950)",
+        "sourceId": "alsabbagh_1950",
         "page": "173"
       }
     ],
@@ -3811,7 +3811,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "al-laythi-(1965)",
+    "id": "allaythi_1965",
     "titleEnglish": "20-Tone",
     "titleArabic": "20 نغمة",
     "year": "1965",
@@ -3819,7 +3819,7 @@
     "sourceArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "shawqi-(1969)",
+        "sourceId": "shawqi_1969",
         "page": "190"
       }
     ],
@@ -3925,7 +3925,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "al-sabbagh-(1954)",
+    "id": "alsabbagh_1954",
     "titleEnglish": "Contemporary Arabic Tuning 24-Tone",
     "titleArabic": "السلم العربي الحالي ٢٤ نغمة",
     "year": "1954",
@@ -3933,7 +3933,7 @@
     "sourceArabic": "مصدر غير معروف",
     "sourcePageReferences": [
       {
-        "sourceId": "al-Ṣabbāgh-(1954)",
+        "sourceId": "alsabbagh_1954",
         "page": "47"
       }
     ],
@@ -4053,7 +4053,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "allami-(2025)",
+    "id": "allami_2025",
     "titleEnglish": "al-Ṣabbāgh with al-Shawwā's 28-Tones",
     "titleArabic": "الصبّاغ الشوا ٢٨ نغمة",
     "year": "2025",
@@ -4061,11 +4061,11 @@
     "sourceArabic": "مصدر غير معروف",
     "sourcePageReferences": [
       {
-        "sourceId": "al-Ṣabbāgh-(1954)",
+        "sourceId": "alsabbagh_1954",
         "page": "47"
       },
       {
-        "sourceId": "al-Shawwā-(1946)",
+        "sourceId": "alshawwa_1946",
         "page": "13"
       }
     ],
@@ -4201,7 +4201,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "al-farabi-(950j)",
+    "id": "alfarabi_950j",
     "titleEnglish": "al-Ṭanbūr al-Baghdādi/al-Mīzānī (pre-Islamic)",
     "titleArabic": "الطنبور البغدادي/الميزاني",
     "year": "950j",
@@ -4209,7 +4209,7 @@
     "sourceArabic": "مصدر غير معروف",
     "sourcePageReferences": [
       {
-        "sourceId": "farmer-(1937)",
+        "sourceId": "farmer_1937",
         "page": "243"
       }
     ],
@@ -4359,7 +4359,7 @@
     "version": "2025-11-06T00:24:06.628Z"
   },
   {
-    "id": "mokhtarandmosharrafa-(1937)",
+    "id": "mokhtarandmosharrafa_1937",
     "titleEnglish": "Modes in Modern Egyptian Music",
     "titleArabic": "غير مسمى",
     "year": "1937",
@@ -4367,7 +4367,7 @@
     "sourceArabic": "مصدر غير معروف",
     "sourcePageReferences": [
       {
-        "sourceId": "mokhtar-(1937)",
+        "sourceId": "mokhtar_1937",
         "page": "548-549"
       }
     ],
