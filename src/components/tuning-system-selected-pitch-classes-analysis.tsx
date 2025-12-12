@@ -292,12 +292,15 @@ export default function SelectedPitchClassesAnalysis() {
       htmlText += '</tbody></table>';
 
       // Copy both formats to clipboard using the modern Clipboard API
-      const clipboardItem = new ClipboardItem({
-        'text/plain': new Blob([tsvText], { type: 'text/plain' }),
-        'text/html': new Blob([htmlText], { type: 'text/html' })
-      });
-      
-      await navigator.clipboard.write([clipboardItem]);
+      if (typeof ClipboardItem !== 'undefined') {
+        const clipboardItem = new ClipboardItem({
+          'text/plain': new Blob([tsvText], { type: 'text/plain' }),
+          'text/html': new Blob([htmlText], { type: 'text/html' })
+        });
+        await navigator.clipboard.write([clipboardItem]);
+      } else {
+        throw new Error('ClipboardItem is not supported in this browser');
+      }
       
     } catch (error) {
       console.error("Failed to copy table:", error);
