@@ -433,7 +433,7 @@ const MaqamTranspositions: React.FC = () => {
         const buildDirectionRows = (pitchClasses: any[], intervals: any[], ascending: boolean, jinsTranspositions?: any[]) => {
           const rows: string[][] = [];
           
-          // Scale degrees row
+          // Maqām degrees row
           const scaleDegreesRow = [t("maqam.scaleDegrees")];
           pitchClasses.forEach((_, i) => {
             const degree = ascending ? romanNumerals[i] : romanNumerals[romanNumerals.length - 1 - i];
