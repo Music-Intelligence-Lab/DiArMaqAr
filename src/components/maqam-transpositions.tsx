@@ -1007,6 +1007,17 @@ const MaqamTranspositions: React.FC = () => {
                   </React.Fragment>
                 ))}
               </tr>
+              {filters["pitchClass"] && (
+                <tr data-row-type="pitchClass">
+                  <th scope="row" id={`maqam-${standardizeText(maqam.name)}-${ascending ? 'ascending' : 'descending'}-pitchClass-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.pitchClass")}</th>
+                  {pitchClasses.map((pitchClass, i) => (
+                    <React.Fragment key={i}>
+                      <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="pitch-class">{pitchClass.pitchClassIndex}</td>
+                      <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="empty"></td>
+                    </React.Fragment>
+                  ))}
+                </tr>
+              )}
               {filters["abjadName"] && (
                 <tr data-row-type="abjadName">
                   <th scope="row" id={`maqam-${standardizeText(maqam.name)}-${ascending ? 'ascending' : 'descending'}-abjadName-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.abjadName")}</th>
