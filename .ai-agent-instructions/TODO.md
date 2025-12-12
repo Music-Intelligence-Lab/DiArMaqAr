@@ -11,7 +11,9 @@ Tasks, research items, and things to take care of for the DiArMaqAr project.
 
 ## Tasks
 
+- Bug: When frequency of a pitchclass in tuning system octave table 0 are too low, playing them via computer keyboard they currently produce a fixed frequency
 
+- 
 
 
 
