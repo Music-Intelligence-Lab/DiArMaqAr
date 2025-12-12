@@ -450,6 +450,16 @@ const MaqamTranspositions: React.FC = () => {
           });
           rows.push(noteNamesRow);
 
+          // Pitch class row (if filter enabled)
+          if (filters["pitchClass"]) {
+            const pitchClassRow = [t("maqam.pitchClass")];
+            pitchClasses.forEach((pc, i) => {
+              pitchClassRow.push(pc.pitchClassIndex.toString());
+              if (i < pitchClasses.length - 1) pitchClassRow.push(''); // interval column
+            });
+            rows.push(pitchClassRow);
+          }
+
           // Abjad names row (if filter enabled)
           if (filters["abjadName"]) {
             const abjadRow = [t("maqam.abjadName")];
@@ -708,12 +718,15 @@ const MaqamTranspositions: React.FC = () => {
         htmlText += '</tbody></table>';
 
         // Copy both formats to clipboard using the modern Clipboard API
-        const clipboardItem = new ClipboardItem({
-          'text/plain': new Blob([tsvText], { type: 'text/plain' }),
-          'text/html': new Blob([htmlText], { type: 'text/html' })
-        });
-        
-        await navigator.clipboard.write([clipboardItem]);
+        if (typeof ClipboardItem !== 'undefined') {
+          const clipboardItem = new ClipboardItem({
+            'text/plain': new Blob([tsvText], { type: 'text/plain' }),
+            'text/html': new Blob([htmlText], { type: 'text/html' })
+          });
+          await navigator.clipboard.write([clipboardItem]);
+        } else {
+          throw new Error('ClipboardItem is not supported in this browser');
+        }
         
       } catch (error) {
         console.error('Failed to copy to clipboard:', error);
