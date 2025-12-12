@@ -697,6 +697,17 @@ export default function JinsTranspositions() {
                   </React.Fragment>
                 ))}
               </tr>
+              {filters["pitchClass"] && (
+                <tr data-row-type="pitchClass">
+                  <th scope="row" id={`jins-${standardizeText(jins.name)}-pitchClass-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.pitchClass")}</th>
+                  {pitchClasses.map((pitchClass, i) => (
+                    <React.Fragment key={i}>
+                      {i !== 0 && <td className="jins-transpositions__table-cell" data-column-type="empty"></td>}
+                      <td className="jins-transpositions__table-cell--pitch-class" data-column-type="pitch-class">{pitchClass.pitchClassIndex}</td>
+                    </React.Fragment>
+                  ))}
+                </tr>
+              )}
               {filters["abjadName"] && (
                 <tr data-row-type="abjadName">
                   <th scope="row" id={`jins-${standardizeText(jins.name)}-abjadName-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.abjadName")}</th>
