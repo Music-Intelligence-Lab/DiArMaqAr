@@ -263,13 +263,24 @@ export async function GET(request: Request) {
           return true; // Keep this entry
         });
 
+      // Sort compatible maqamat: tahlil (non-transposed) versions first, then by base maqam name
+      const sortedMaqamat = deduplicatedMaqamat.sort((a, b) => {
+        // PRIORITY 1: Tahlil (non-transposed) versions come first
+        if (a.isTransposed !== b.isTransposed) {
+          return a.isTransposed ? 1 : -1; // Non-transposed (false) comes before transposed (true)
+        }
+
+        // PRIORITY 2: Sort alphabetically by maqam display name
+        return a.maqamDisplayName.localeCompare(b.maqamDisplayName);
+      });
+
       const setNameStandardized = standardizeText(set.name);
 
       // Build response object with conditional pitch class data
       const responseObj: any = {
         setIdName: setNameStandardized,
         setDisplayName: set.name,
-        compatibleMaqamatCount: deduplicatedMaqamat.length,
+        compatibleMaqamatCount: sortedMaqamat.length,
         sourceMaqam: sourceMaqamNamespace,
       };
 
@@ -280,7 +291,7 @@ export async function GET(request: Request) {
       }
 
       // Add compatible maqamat list (baseMaqamIdName kept for filtering, removed later)
-      responseObj.compatibleMaqamat = deduplicatedMaqamat;
+      responseObj.compatibleMaqamat = sortedMaqamat;
 
       return responseObj;
     });
