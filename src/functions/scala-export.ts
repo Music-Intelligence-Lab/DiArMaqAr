@@ -66,11 +66,19 @@ function buildScalaHeader(
     referenceFrequency?: number;
     referenceFrequencyNoteName?: string;
     sourceMaqamTonicNoteName?: string;
+    sourceMaqamFrequency?: number;
+    sourceMaqamIpnWithOctave?: string;
+    a4Frequency?: number | null;
+    a4NoteName?: string;
+    exportedMaqamName?: string;
+    exportedMaqamFrequency?: number | null;
+    exportedMaqamIpnWithOctave?: string;
+    exportedMaqamTonicNoteName?: string;
     baseUrl?: string;
     url?: string;
-    compatibleMaqamat?: Array<{ 
-      name: string; 
-      tonicIpn: string; 
+    compatibleMaqamat?: Array<{
+      name: string;
+      tonicIpn: string;
       tonicNoteName: string;
       position: number;
       ascendingIpnNames?: string[];
@@ -135,12 +143,27 @@ function buildScalaHeader(
   // Scala file reference frequency
   if (metadata.referenceFrequency !== undefined) {
     const frequencyNoteName = metadata.referenceFrequencyNoteName || '';
-    const frequencyDisplay = frequencyNoteName 
+    const frequencyDisplay = frequencyNoteName
       ? `${metadata.referenceFrequency.toFixed(2)} Hz (${frequencyNoteName})`
       : `${metadata.referenceFrequency.toFixed(2)} Hz`;
     lines.push(`! Scala file 1/1 (0 cents) reference frequency: ${frequencyDisplay}`);
   }
-  
+
+  // Source maqām reference frequency
+  if (metadata.sourceMaqam && metadata.sourceMaqamFrequency !== undefined && metadata.sourceMaqamIpnWithOctave && metadata.sourceMaqamTonicNoteName) {
+    lines.push(`! Source maqām (${lowercaseMusicTerms(metadata.sourceMaqam)}) reference frequency: ${metadata.sourceMaqamIpnWithOctave}/${lowercaseMusicTerms(metadata.sourceMaqamTonicNoteName)} = ${metadata.sourceMaqamFrequency.toFixed(2)} Hz`);
+  }
+
+  // A4 reference frequency
+  if (metadata.a4Frequency !== null && metadata.a4Frequency !== undefined && metadata.a4NoteName) {
+    lines.push(`! A4 reference frequency: A4/${lowercaseMusicTerms(metadata.a4NoteName)} = ${metadata.a4Frequency.toFixed(2)} Hz`);
+  }
+
+  // Exported maqām tonic and frequency
+  if (metadata.exportedMaqamName && metadata.exportedMaqamFrequency !== null && metadata.exportedMaqamFrequency !== undefined && metadata.exportedMaqamIpnWithOctave && metadata.exportedMaqamTonicNoteName) {
+    lines.push(`! ${lowercaseMusicTerms(metadata.exportedMaqamName)} tonic and frequency: ${metadata.exportedMaqamIpnWithOctave}/${lowercaseMusicTerms(metadata.exportedMaqamTonicNoteName)} = ${metadata.exportedMaqamFrequency.toFixed(2)} Hz`);
+  }
+
   if (metadata.url) {
     lines.push(`! More information: ${metadata.url}`);
   }
@@ -151,10 +174,13 @@ function buildScalaHeader(
     // The total count includes all octave equivalents (before grouping)
     const compatibleMaqamat = metadata.compatibleMaqamat;
     const totalCount = (compatibleMaqamat[0] as any)?.totalCount || compatibleMaqamat.length;
-    lines.push(`! Compatible maqāmāt in this set (${totalCount} total):`);
+    const uniqueCount = compatibleMaqamat.length;
+    lines.push(`! Compatible maqāmāt in this set: ${uniqueCount} unique / ${totalCount} inc. transpositions:`);
     compatibleMaqamat.forEach((maqam, index) => {
       lines.push(`! - ${lowercaseMusicTerms(maqam.name)}`);
-      lines.push(`!   Tonic: ${maqam.tonicIpn} (${lowercaseMusicTerms(maqam.tonicNoteName)}), position ${maqam.position}`);
+      // Extract IPN without octave (e.g., "C3" -> "C")
+      const tonicIpnWithoutOctave = maqam.tonicIpn.replace(/\d+$/, '');
+      lines.push(`!   Tonic: ${tonicIpnWithoutOctave} (${lowercaseMusicTerms(maqam.tonicNoteName)}), position ${maqam.position}`);
       
       // Check if maqam is symmetrical - if so, show only one sequence
       const isSymmetrical = maqam.isSymmetrical ?? false;
@@ -171,22 +197,22 @@ function buildScalaHeader(
         }
       } else {
         // Asymmetrical maqam - show both sequences
-        // Add ascending IPN sequence with positions if available
+        // Add ascending sequence with positions if available
         if (maqam.ascendingIpnNames && maqam.ascendingIpnNames.length > 0) {
           const ascendingStr = maqam.ascendingIpnNames.join(' → ');
           if (maqam.ascendingPositions && maqam.ascendingPositions.length > 0) {
             const positionsStr = maqam.ascendingPositions.join(' → ');
-            lines.push(`!   Ascending IPN sequence: ${ascendingStr}`);
+            lines.push(`!   Ascending sequence: ${ascendingStr}`);
             lines.push(`!   Ascending positions: ${positionsStr}`);
           } else {
-            lines.push(`!   Ascending IPN sequence: ${ascendingStr}`);
+            lines.push(`!   Ascending sequence: ${ascendingStr}`);
           }
         }
-        
-        // Add descending IPN sequence with positions if available
+
+        // Add descending sequence with positions if available
         if (maqam.descendingIpnNames && maqam.descendingIpnNames.length > 0) {
           const descendingStr = maqam.descendingIpnNames.join(' → ');
-          lines.push(`!   Descending IPN sequence: ${descendingStr}`);
+          lines.push(`!   Descending sequence: ${descendingStr}`);
           if (maqam.descendingPositions && maqam.descendingPositions.length > 0) {
             const positionsStr = maqam.descendingPositions.join(' → ');
             lines.push(`!   Descending positions: ${positionsStr}`);
@@ -680,15 +706,30 @@ export function exportMaqamTo12ToneScala(
     5 // cents tolerance
   );
 
-  // Find the set where this maqam is the SOURCE (matching API setId filtering logic)
+  // Find the set for this maqam
+  // STRATEGY:
+  // 1. First try to find a set where this maqam is the SOURCE
+  // 2. If not found, find ANY set where this maqam appears in compatibleMaqamat
+  //    and use that set's source maqam instead
   const maqamIdStandardized = standardizeText(maqamData.getId());
-  const matchingSet = classificationResult.sets.find(set =>
+
+  // Try to find set where this maqam is the SOURCE
+  let matchingSet = classificationResult.sets.find(set =>
     standardizeText(set.sourceMaqam.id) === maqamIdStandardized ||
     set.sourceMaqam.idName === maqamIdStandardized
   );
 
+  // If not a source maqam, find the set where this maqam appears as compatible
   if (!matchingSet) {
-    return null; // Maqam is not a source for any 12-pitch-class set
+    matchingSet = classificationResult.sets.find(set =>
+      set.compatibleMaqamat.some(cm =>
+        standardizeText(cm.maqamData.getId()) === maqamIdStandardized
+      )
+    );
+
+    if (!matchingSet) {
+      return null; // Maqam doesn't appear in any 12-pitch-class set
+    }
   }
 
   // Use the set's pitch class data
@@ -826,10 +867,10 @@ export function exportMaqamTo12ToneScala(
 
   // Use compatible maqamat from the classification result
   // Enhanced with tonic note names, IPN sequences, and position numbers
-  const compatibleMaqamatInfo: Array<{ 
+  const compatibleMaqamatInfo: Array<{
     name: string;
     baseMaqamId: string;
-    tonicIpn: string; 
+    tonicIpn: string;
     tonicNoteName: string;
     position: number;
     ascendingIpnNames: string[];
@@ -837,6 +878,7 @@ export function exportMaqamTo12ToneScala(
     ascendingPositions: number[];
     descendingPositions: number[];
     isSymmetrical: boolean;
+    isTransposition: boolean;
   }> = [];
   const seenMaqamatByTonic = new Set<string>(); // Track maqam:tonic combinations to avoid duplicates
 
@@ -935,10 +977,16 @@ export function exportMaqamTo12ToneScala(
     const transpositionName = maqamInfo.maqam.name;
     const key = `${transpositionName}:${maqamTonicIpnRef}`;
     if (!seenMaqamatByTonic.has(key)) {
+      // Get the full English name with octave for the tonic (e.g., "C4", "C2")
+      // ALWAYS use getIpnReferenceNoteNameWithOctave to ensure uppercase and correct format
+      const tonicIpnWithOctave = maqamTonicPitchClass
+        ? getIpnReferenceNoteNameWithOctave(maqamTonicPitchClass)
+        : 'Unknown';
+
       compatibleMaqamatInfo.push({
         name: transpositionName,
         baseMaqamId: maqamInfo.maqamData.getId(),
-        tonicIpn: maqamTonicIpnRef || 'Unknown',
+        tonicIpn: tonicIpnWithOctave,
         tonicNoteName: tonicNoteName,
         position: maqamTonicPositionInSet >= 0 ? maqamTonicPositionInSet : 0,
         ascendingIpnNames: ascendingIpnNames,
@@ -946,6 +994,7 @@ export function exportMaqamTo12ToneScala(
         ascendingPositions: ascendingPositions,
         descendingPositions: descendingPositions,
         isSymmetrical: isSymmetrical,
+        isTransposition: !!maqamInfo.maqam.transposition,
       });
       seenMaqamatByTonic.add(key);
     }
@@ -980,24 +1029,54 @@ export function exportMaqamTo12ToneScala(
         totalCount: totalCompatibleMaqamatCount
       });
     } else {
-      // Multiple maqamat - find the "main" one (usually the one without "al-" prefix or shortest name)
-      // Sort by name length, shortest first (main maqam usually has shorter name)
+      // Multiple maqamat - prioritize tahlil (non-transposed) version first
+      // Then sort remaining transpositions by MIDI note (ascending pitch order)
       maqamat.sort((a, b) => {
+        // PRIORITY 1: Tahlil (non-transposed) versions come first
+        if (a.isTransposition !== b.isTransposition) {
+          return a.isTransposition ? 1 : -1; // Non-transposed (false) comes before transposed (true)
+        }
+
+        // PRIORITY 2: Sort by MIDI note (ascending pitch order)
+        // Extract MIDI note from tonicIpn (e.g., "C3" -> MIDI 48)
+        const getMidiNote = (ipn: string): number => {
+          const match = ipn.match(/^([A-G][#b]?)(\d+)$/);
+          if (!match) return 60; // Default to middle C
+          const [, note, octaveStr] = match;
+          const octave = parseInt(octaveStr);
+          const noteToChroma: { [key: string]: number } = {
+            'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5,
+            'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11, 'Bb': 10, 'Eb': 3, 'Ab': 8
+          };
+          const chroma = noteToChroma[note] || 0;
+          return (octave + 1) * 12 + chroma;
+        };
+
+        const aMidi = getMidiNote(a.tonicIpn);
+        const bMidi = getMidiNote(b.tonicIpn);
+        if (aMidi !== bMidi) {
+          return aMidi - bMidi; // Sort by ascending pitch
+        }
+
+        // PRIORITY 3: If MIDI notes are equal, prefer ones without "al-" prefix
         const aHasAl = a.name.includes(' al-');
         const bHasAl = b.name.includes(' al-');
         if (aHasAl !== bHasAl) {
-          return aHasAl ? 1 : -1; // Prefer ones without "al-"
+          return aHasAl ? 1 : -1;
         }
-        return a.name.length - b.name.length; // Shorter name first
+
+        // PRIORITY 4: Shorter name first
+        return a.name.length - b.name.length;
       });
-      
+
       const mainMaqam = maqamat[0];
-      const octaveEquivalents = maqamat.slice(1).map(m => m.name);
-      
+      // Build transposition list with IPN in parentheses
+      const transpositions = maqamat.slice(1).map(m => `${m.name} (${m.tonicIpn})`);
+
       groupedMaqamatInfo.push({
         ...mainMaqam,
-        name: octaveEquivalents.length > 0
-          ? `${mainMaqam.name} (and its octave equivalent${octaveEquivalents.length > 1 ? 's' : ''}: ${octaveEquivalents.join(', ')})`
+        name: transpositions.length > 0
+          ? `${mainMaqam.name} (and its transposition${transpositions.length > 1 ? 's' : ''}: ${transpositions.join(', ')})`
           : mainMaqam.name,
         totalCount: totalCompatibleMaqamatCount
       });
@@ -1068,15 +1147,55 @@ export function exportMaqamTo12ToneScala(
   const referenceFrequencies = tuningSystem.getReferenceFrequencies();
   const startingNoteRefFreq = referenceFrequencies[actualStartingNoteName] || tuningSystem.getDefaultReferenceFrequency();
 
+  // Calculate SOURCE maqam reference frequency
+  const sourceMaqamName = matchingSet.sourceMaqam.name;
+  const sourceMaqamFrequency = baseMaqamTonicPitchClass?.frequency
+    ? parseFloat(baseMaqamTonicPitchClass.frequency)
+    : referenceFrequency;
+  const sourceMaqamIpnWithOctave = baseMaqamTonicPitchClass
+    ? getIpnReferenceNoteNameWithOctave(baseMaqamTonicPitchClass)
+    : 'Unknown';
+
+  // Find A4 in the pitch classes
+  // A4 = MIDI note 69, frequency ~440 Hz
+  // Search for EXACTLY A4 with no microtonal modifiers (natural A4)
+  const a4PitchClass = allTuningSystemPitchClasses.find(pc => {
+    return pc.englishName === 'A4';
+  });
+  const a4Frequency = a4PitchClass?.frequency ? parseFloat(a4PitchClass.frequency) : null;
+  const a4NoteName = a4PitchClass?.noteName || '';
+
+  // Get EXPORTED maqam tonic frequency
+  // Find the exported maqam in compatibleMaqamat
+  const exportedMaqamInfo = matchingSet.compatibleMaqamat.find(cm =>
+    standardizeText(cm.maqamData.getId()) === maqamIdStandardized
+  );
+  const exportedMaqamTonicPitchClass = exportedMaqamInfo?.maqam.ascendingPitchClasses?.[0];
+  const exportedMaqamFrequency = exportedMaqamTonicPitchClass?.frequency
+    ? parseFloat(exportedMaqamTonicPitchClass.frequency)
+    : null;
+  const exportedMaqamIpnWithOctave = exportedMaqamTonicPitchClass
+    ? getIpnReferenceNoteNameWithOctave(exportedMaqamTonicPitchClass)
+    : 'Unknown';
+  const exportedMaqamTonicNoteName = exportedMaqamTonicPitchClass?.noteName || '';
+
   // Build Scala file content with compatible maqāmāt listing
   const headerLines = buildScalaHeader(maqamData.getName(), {
-    sourceMaqam: maqamData.getName(),
+    sourceMaqam: sourceMaqamName,
     tuningSystem: `${tuningSystem.stringify()} + ${alKindiTuningSystem.stringify()}`,
     tuningSystemStartingNote: actualStartingNoteName,
     tuningSystemStartingNoteRefFreq: startingNoteRefFreq,
     referenceFrequency: referenceFrequency,
     referenceFrequencyNoteName: referenceFrequencyNoteName,
     sourceMaqamTonicNoteName: baseMaqamTonicNoteName,
+    sourceMaqamFrequency: sourceMaqamFrequency,
+    sourceMaqamIpnWithOctave: sourceMaqamIpnWithOctave,
+    a4Frequency: a4Frequency,
+    a4NoteName: a4NoteName,
+    exportedMaqamName: maqamData.getName(),
+    exportedMaqamFrequency: exportedMaqamFrequency,
+    exportedMaqamIpnWithOctave: exportedMaqamIpnWithOctave,
+    exportedMaqamTonicNoteName: exportedMaqamTonicNoteName,
     baseUrl: baseUrl,
     url: currentUrl,
     compatibleMaqamat: compatibleMaqamatInfo,
@@ -1151,15 +1270,30 @@ export function exportMaqamTo12ToneScalaKeymap(
     5 // cents tolerance
   );
 
-  // Find the set where this maqam is the SOURCE (matching API setId filtering logic)
+  // Find the set for this maqam
+  // STRATEGY:
+  // 1. First try to find a set where this maqam is the SOURCE
+  // 2. If not found, find ANY set where this maqam appears in compatibleMaqamat
+  //    and use that set's source maqam instead
   const maqamIdStandardized = standardizeText(maqamData.getId());
-  const matchingSet = classificationResult.sets.find(set =>
+
+  // Try to find set where this maqam is the SOURCE
+  let matchingSet = classificationResult.sets.find(set =>
     standardizeText(set.sourceMaqam.id) === maqamIdStandardized ||
     set.sourceMaqam.idName === maqamIdStandardized
   );
 
+  // If not a source maqam, find the set where this maqam appears as compatible
   if (!matchingSet) {
-    return null; // Maqam is not a source for any 12-pitch-class set
+    matchingSet = classificationResult.sets.find(set =>
+      set.compatibleMaqamat.some(cm =>
+        standardizeText(cm.maqamData.getId()) === maqamIdStandardized
+      )
+    );
+
+    if (!matchingSet) {
+      return null; // Maqam doesn't appear in any 12-pitch-class set
+    }
   }
 
   // Use compatible maqamat from the classification result (deduplicated by IPN tonic)

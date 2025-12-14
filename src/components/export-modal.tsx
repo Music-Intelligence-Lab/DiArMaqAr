@@ -994,19 +994,32 @@ export default function ExportModal({
             }
 
             // Get the starting note name from the tuning system's note name sets
-            const firstNoteFromIndices = getFirstNoteName(selectedIndices);
-            if (!firstNoteFromIndices || firstNoteFromIndices === "none") {
-              throw new Error("12-pitch-class chromatic Scala export requires a starting note");
+            // Get all note name sets from the tuning system
+            const noteNameSets = selectedTuningSystem.getNoteNameSets();
+            
+            let startingNoteName: string | undefined;
+            
+            // Try to get starting note from selectedIndices first
+            if (selectedIndices && selectedIndices.length > 0 && selectedIndices[0] >= 0) {
+              const firstNoteFromIndices = getFirstNoteName(selectedIndices);
+              if (firstNoteFromIndices && firstNoteFromIndices !== "none") {
+                // Find the matching note name set in the tuning system
+                const matchingNoteSet = noteNameSets.find(
+                  (set) => standardizeText(set[0] || "") === standardizeText(firstNoteFromIndices)
+                );
+                startingNoteName = matchingNoteSet?.[0] || firstNoteFromIndices;
+              }
             }
             
-            // Find the matching note name set in the tuning system
-            const noteNameSets = selectedTuningSystem.getNoteNameSets();
-            const matchingNoteSet = noteNameSets.find(
-              (set) => standardizeText(set[0] || "") === standardizeText(firstNoteFromIndices)
-            );
+            // Fallback: use the first note name set from the tuning system
+            if (!startingNoteName && noteNameSets.length > 0 && noteNameSets[0] && noteNameSets[0][0]) {
+              startingNoteName = noteNameSets[0][0];
+            }
             
-            // Use the note name from the tuning system's note name set (has proper diacritics)
-            const startingNoteName = matchingNoteSet?.[0] || firstNoteFromIndices;
+            // If still no starting note, throw an error
+            if (!startingNoteName) {
+              throw new Error("12-pitch-class chromatic Scala export requires a starting note. Please select a starting note in the tuning system manager or ensure the tuning system has at least one note name set configured.");
+            }
 
             // Generate .scl file only (no .kbm files)
             const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
