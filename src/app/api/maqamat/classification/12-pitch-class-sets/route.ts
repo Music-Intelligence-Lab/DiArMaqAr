@@ -530,13 +530,26 @@ export async function GET(request: Request) {
         return true; // Keep this entry
       });
 
+      // Sort compatible maqamat: tahlil (non-transposed) versions first, then by position in set
+      const sortedMaqamat = deduplicatedMaqamat.sort((a, b) => {
+        // PRIORITY 1: Tahlil (non-transposed) versions come first
+        if (a.isTransposed !== b.isTransposed) {
+          return a.isTransposed ? 1 : -1; // Non-transposed (false) comes before transposed (true)
+        }
+
+        // PRIORITY 2: Sort by position in set
+        const aPosition = a.tonic?.positionInSet ?? 999;
+        const bPosition = b.tonic?.positionInSet ?? 999;
+        return aPosition - bPosition;
+      });
+
       const setNameStandardized = standardizeText(set.name);
       return {
         setIdName: setNameStandardized,
         setDisplayName: set.name,
         sourceMaqam: sourceMaqamNamespace,
         pitchClassSet: pitchClassSetArray,
-        compatibleMaqamat: deduplicatedMaqamat,
+        compatibleMaqamat: sortedMaqamat,
         compatibleMaqamatCount: deduplicatedMaqamat.length
       };
     });
