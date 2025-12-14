@@ -433,12 +433,21 @@ export function exportJinsToScala(jinsInput: Jins | JinsData, tuningSystem: Tuni
 
   const pitchClasses = jins.jinsPitchClasses;
 
+  // Get tonic (first pitch class) cents value for calculating relative cents
+  const tonicCents = pitchClasses.length > 0 ? parseFloat(pitchClasses[0].cents) : 0;
+
   // Sort and remove duplicates
   const sortedPitchClasses = [...pitchClasses].sort((a, b) => parseFloat(a.cents) - parseFloat(b.cents));
   const uniquePitchClasses = removeDuplicatePitchClasses(sortedPitchClasses);
 
-  // Remove the root note (0 cents) as it's implicit in Scala format
-  const scaleNotes = uniquePitchClasses.filter((pc) => parseFloat(pc.cents) > 0);
+  // Remove the tonic and calculate relative cents for remaining pitch classes
+  // The tonic (0 cents relative) is implicit in Scala format
+  const scaleNotes = uniquePitchClasses
+    .map(pc => ({
+      pitchClass: pc,
+      relativeCents: parseFloat(pc.cents) - tonicCents
+    }))
+    .filter(item => Math.abs(item.relativeCents) > 0.01);
 
   // Generate description
   const desc = description || `${jins.name} - ${tuningSystem.getTitleEnglish()} (${tuningSystem.getCreatorEnglish()}, ${tuningSystem.getYear()})`;
@@ -454,7 +463,7 @@ export function exportJinsToScala(jinsInput: Jins | JinsData, tuningSystem: Tuni
     `${desc}`,
     `${scaleNotes.length}`,
     `!`,
-    ...scaleNotes.map((pc) => formatPitchClassValue(pc, 'cents')),
+    ...scaleNotes.map(item => item.relativeCents.toFixed(2)),
   ];
 
   return lines.join("\n") + "\n";
@@ -548,12 +557,21 @@ export function exportMaqamToScala(maqamInput: Maqam | MaqamData, tuningSystem: 
 
   const pitchClasses = useAscending ? maqam.ascendingPitchClasses : maqam.descendingPitchClasses;
 
+  // Get tonic (first pitch class) cents value for calculating relative cents
+  const tonicCents = pitchClasses.length > 0 ? parseFloat(pitchClasses[0].cents) : 0;
+
   // Sort and remove duplicates
   const sortedPitchClasses = [...pitchClasses].sort((a, b) => parseFloat(a.cents) - parseFloat(b.cents));
   const uniquePitchClasses = removeDuplicatePitchClasses(sortedPitchClasses);
 
-  // Remove the root note (0 cents) as it's implicit in Scala format
-  const scaleNotes = uniquePitchClasses.filter((pc) => parseFloat(pc.cents) > 0);
+  // Remove the tonic and calculate relative cents for remaining pitch classes
+  // The tonic (0 cents relative) is implicit in Scala format
+  const scaleNotes = uniquePitchClasses
+    .map(pc => ({
+      pitchClass: pc,
+      relativeCents: parseFloat(pc.cents) - tonicCents
+    }))
+    .filter(item => Math.abs(item.relativeCents) > 0.01);
 
   // Generate description
   const desc = description || `${maqam.name} (${useAscending ? "Ascending" : "Descending"}) - ${tuningSystem.getTitleEnglish()} (${tuningSystem.getCreatorEnglish()}, ${tuningSystem.getYear()})`;
@@ -570,7 +588,7 @@ export function exportMaqamToScala(maqamInput: Maqam | MaqamData, tuningSystem: 
     `${desc}`,
     `${scaleNotes.length}`,
     `!`,
-    ...scaleNotes.map((pc) => formatPitchClassValue(pc, 'cents')),
+    ...scaleNotes.map(item => item.relativeCents.toFixed(2)),
   ];
 
   return lines.join("\n") + "\n";

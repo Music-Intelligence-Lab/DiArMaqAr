@@ -198,9 +198,17 @@ midiNote = englishNameToMidiNote(pc.englishName); // Missing microtonal info
 ## Implementation Files
 
 - **Scala export functions**: `src/functions/scala-export.ts`
+  - `exportMaqamToScala()` - Simple maqām .scl export (uses relative cents from tonic)
+  - `exportJinsToScala()` - Simple jins .scl export (uses relative cents from tonic)
+  - `exportMaqamTo12ToneScala()` - 12-pitch-class set .scl export
+  - `exportMaqamToScalaKeymap()` - Simple maqām .kbm export
+  - `exportJinsToScalaKeymap()` - Simple jins .kbm export
+  - `exportMaqamTo12ToneScalaKeymap()` - 12-pitch-class set .kbm export
 - **12-pitch-class set creation**: `src/functions/create12PitchClassSet.ts`
 - **Classification algorithm**: `src/functions/classifyMaqamat12PitchClassSets.ts`
-- **API endpoint**: `src/app/api/maqamat/classification/12-pitch-class-sets/route.ts`
+- **API endpoints**:
+  - `src/app/api/maqamat/classification/12-pitch-class-sets/route.ts` - Returns tahlil versions first
+  - `src/app/api/maqamat/classification/maqam-pitch-class-sets/route.ts` - Returns tahlil versions first
 - **Pitch class model**: `src/models/PitchClass.ts`
 
 ---
