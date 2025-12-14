@@ -227,6 +227,35 @@ Western music theory emerged from specific historical and geographical contexts�
 4. **Validate assumptions**: Verify file locations, data structures, dependencies
 5. **Document learnings**: Preserve insights for future reference
 
+<!-- @critical: root-cause-resolution -->
+
+**⚠️ CRITICAL: Root Cause Resolution**
+
+Never just patch problems—always resolve their root cause:
+
+1. **Diagnose deeply**: Identify the underlying issue, not just symptoms
+2. **Avoid unnecessary fallbacks**: Only use fallbacks when functionality will break without them
+3. **Reuse existing functions**: Always use existing functions to get required data in the same way they are used for the UI
+4. **Don't duplicate logic**: Never recalculate or rewrite functions that already exist
+
+**Examples:**
+```typescript
+// ❌ BAD - Patching symptoms with fallback
+const data = complexCalculation() || defaultValue;  // Why is it failing?
+
+// ✅ GOOD - Fix root cause
+const data = complexCalculation();  // Fixed the actual bug in complexCalculation()
+
+// ❌ BAD - Duplicating existing logic
+const pitchClasses = tuningSystem.noteNames.map((name, i) => ({
+  noteName: name,
+  cents: calculateCents(i)  // Recalculating what already exists
+}));
+
+// ✅ GOOD - Reuse existing function
+const pitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote);
+```
+
 <!-- @critical: ask-before-major-changes -->
 
 **⚠️ CRITICAL: Always Ask Before Major Changes**

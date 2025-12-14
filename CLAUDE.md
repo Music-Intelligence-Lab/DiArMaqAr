@@ -177,6 +177,12 @@ Load files efficiently based on your task type:
 - Never assume symmetric sequences
 - Tuning system starting note is MANDATORY
 
+### 5. Root Cause Resolution
+- Never just patch problems, always resolve their root cause
+- Never use fallbacks unless absolutely necessary (only when functionality will break without them)
+- Always use existing functions to get required data in the same way they are used for the UI
+- Don't recalculate or rewrite functions that already exist
+
 ---
 
 For complete documentation including detailed file descriptions, quick topic index, maintenance guidelines, and knowledge preservation protocol, see [.ai-agent-instructions/README.md](./.ai-agent-instructions/README.md).

@@ -22,6 +22,9 @@ standardizeText("maqām rāst") // → "maqam_rast"
 | "scale" (for tuning systems) | "tuning system" or "tanghīm" |
 | `descendingPitchClasses = ascending.reverse()` | Treat as independent arrays |
 | `value % 7` (negative numbers) | `((value % 7) + 7) % 7` |
+| Patching problems | Resolve root cause |
+| Unnecessary fallbacks | Only fallback when functionality breaks without it |
+| Rewriting existing functions | Use existing functions (same way as UI does) |
 
 ## API Response Formats
 

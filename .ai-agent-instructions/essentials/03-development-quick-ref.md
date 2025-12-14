@@ -30,12 +30,15 @@ const DEFAULTS = {
 | ✅ Use `getNoteNameSetsWithAdjacentOctaves()` | `[CRITICAL]` | Fails for non-octave-repeating maqāmāt |
 | ✅ Never use "microtonal" | `[CRITICAL]` | Culturally insensitive terminology |
 | ✅ Always validate empty strings | `[CRITICAL]` | `param === ""` returns silent errors |
+| ✅ Resolve root cause, never patch | `[CRITICAL]` | Patches hide bugs, create technical debt |
+| ✅ Reuse existing functions | `[CRITICAL]` | Don't duplicate logic that already exists |
 | ✅ **Write test FIRST** (TDD) | `[REQUIRED]` | Tests define expected behavior |
 | ✅ Test BEFORE committing | `[REQUIRED]` | User should never discover bugs |
 | ✅ Force user choices in UI | `[REQUIRED]` | No defaults for critical parameters |
 | ✅ Required params are universal | `[REQUIRED]` | Required in ALL cases, not conditionally |
 | ✅ No defaults for required params | `[REQUIRED]` | Users must explicitly provide values |
 | ✅ Use Python3 for utility scripts | `[REQUIRED]` | Faster for data manipulation and large files |
+| ❌ Never use unnecessary fallbacks | `[REQUIRED]` | Only when functionality breaks without them |
 | ✅ Check if dev server is running | `[RECOMMENDED]` | Never start/restart without checking |
 | ❌ Never skip consistency checks | `[RECOMMENDED]` | Check similar code for patterns |
 
@@ -80,6 +83,24 @@ if (!param) { ... }  // "" is falsy but should be an error
 if (param !== null && param.trim() === "") {
   return NextResponse.json({ error: "Invalid parameter" }, { status: 400 });
 }
+```
+
+**4. Root Cause Resolution**
+```typescript
+// ❌ WRONG - Patching symptoms with fallback
+const noteNames = maqam.getAscendingNoteNames() || [];  // Why is it undefined?
+
+// ✅ CORRECT - Fix root cause (maqam should always have note names)
+const noteNames = maqam.getAscendingNoteNames();  // Fixed data validation
+
+// ❌ WRONG - Rewriting existing function
+const pitchClasses = tuningSystem.noteNames.map((name, i) => ({
+  noteName: name,
+  cents: (i * 1200) / tuningSystem.noteNames.length  // Duplicating logic
+}));
+
+// ✅ CORRECT - Reuse existing function (same as UI uses)
+const pitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote);
 ```
 
 ---
