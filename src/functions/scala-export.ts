@@ -74,6 +74,8 @@ function buildScalaHeader(
     exportedMaqamFrequency?: number | null;
     exportedMaqamIpnWithOctave?: string;
     exportedMaqamTonicNoteName?: string;
+    tonicFrequency?: number;
+    tonicNoteName?: string;
     baseUrl?: string;
     url?: string;
     compatibleMaqamat?: Array<{
@@ -124,7 +126,12 @@ function buildScalaHeader(
   if (metadata.direction) {
     lines.push(`! Direction: ${toSentenceCase(metadata.direction)}`);
   }
-  
+
+  // Tonic reference frequency (for simple maqam/jins exports)
+  if (metadata.tonicFrequency !== undefined && metadata.tonicNoteName) {
+    lines.push(`! Tonic reference frequency: ${lowercaseMusicTerms(metadata.tonicNoteName)} = ${metadata.tonicFrequency.toFixed(2)} Hz`);
+  }
+
   // Source tuning system with starting note name and reference frequency
   if (metadata.tuningSystem) {
     let tuningSystemLine = `! Source tuning system: ${metadata.tuningSystem}`;
@@ -449,13 +456,31 @@ export function exportJinsToScala(jinsInput: Jins | JinsData, tuningSystem: Tuni
     }))
     .filter(item => Math.abs(item.relativeCents) > 0.01);
 
+  // Check if the jins is octave-repeating (has a pitch class at ~1200 cents)
+  const hasOctave = scaleNotes.some(item => Math.abs(item.relativeCents - 1200) < 5);
+
+  // If NOT octave-repeating, add 1200.00 as the octave
+  if (!hasOctave) {
+    scaleNotes.push({
+      pitchClass: pitchClasses[0], // Use tonic pitch class as placeholder
+      relativeCents: 1200
+    });
+  }
+
+  // Get tonic frequency and note name
+  const tonicPitchClass = pitchClasses[0];
+  const tonicFrequency = tonicPitchClass ? parseFloat(tonicPitchClass.frequency) : undefined;
+  const tonicNoteName = tonicPitchClass?.noteName;
+
   // Generate description
   const desc = description || `${jins.name} - ${tuningSystem.getTitleEnglish()} (${tuningSystem.getCreatorEnglish()}, ${tuningSystem.getYear()})`;
 
   // Build Scala file content using helper
   const headerLines = buildScalaHeader(desc, {
-    rootNote: pitchClasses[0]?.noteName,
+    rootNote: tonicNoteName,
     tuningSystem: tuningSystem.getTitleEnglish(),
+    tonicFrequency: tonicFrequency,
+    tonicNoteName: tonicNoteName,
   });
 
   const lines = [
@@ -573,14 +598,32 @@ export function exportMaqamToScala(maqamInput: Maqam | MaqamData, tuningSystem: 
     }))
     .filter(item => Math.abs(item.relativeCents) > 0.01);
 
+  // Check if the maqam is octave-repeating (has a pitch class at ~1200 cents)
+  const hasOctave = scaleNotes.some(item => Math.abs(item.relativeCents - 1200) < 5);
+
+  // If NOT octave-repeating, add 1200.00 as the octave
+  if (!hasOctave) {
+    scaleNotes.push({
+      pitchClass: pitchClasses[0], // Use tonic pitch class as placeholder
+      relativeCents: 1200
+    });
+  }
+
+  // Get tonic frequency and note name
+  const tonicPitchClass = pitchClasses[0];
+  const tonicFrequency = tonicPitchClass ? parseFloat(tonicPitchClass.frequency) : undefined;
+  const tonicNoteName = tonicPitchClass?.noteName;
+
   // Generate description
   const desc = description || `${maqam.name} (${useAscending ? "Ascending" : "Descending"}) - ${tuningSystem.getTitleEnglish()} (${tuningSystem.getCreatorEnglish()}, ${tuningSystem.getYear()})`;
 
   // Build Scala file content using helper
   const headerLines = buildScalaHeader(desc, {
     direction: useAscending ? "Ascending" : "Descending",
-    rootNote: pitchClasses[0]?.noteName,
+    rootNote: tonicNoteName,
     tuningSystem: tuningSystem.getTitleEnglish(),
+    tonicFrequency: tonicFrequency,
+    tonicNoteName: tonicNoteName,
   });
 
   const lines = [
