@@ -198,8 +198,8 @@ midiNote = englishNameToMidiNote(pc.englishName); // Missing microtonal info
 ## Implementation Files
 
 - **Scala export functions**: `src/functions/scala-export.ts`
-  - `exportMaqamToScala()` - Simple maqām .scl export (uses relative cents from tonic)
-  - `exportJinsToScala()` - Simple jins .scl export (uses relative cents from tonic)
+  - `exportMaqamToScala()` - Simple maqām .scl export (uses relative cents from tonic, includes octave and tonic reference frequency)
+  - `exportJinsToScala()` - Simple jins .scl export (uses relative cents from tonic, includes octave and tonic reference frequency)
   - `exportMaqamTo12ToneScala()` - 12-pitch-class set .scl export
   - `exportMaqamToScalaKeymap()` - Simple maqām .kbm export
   - `exportJinsToScalaKeymap()` - Simple jins .kbm export
