@@ -120,16 +120,16 @@ function buildScalaHeader(
     }
   }
 
-  if (metadata.rootNote) {
-    lines.push(`! Root note: ${lowercaseMusicTerms(metadata.rootNote)}`);
-  }
-  if (metadata.direction) {
-    lines.push(`! Direction: ${toSentenceCase(metadata.direction)}`);
-  }
-
   // Tonic reference frequency (for simple maqam/jins exports)
   if (metadata.tonicFrequency !== undefined && metadata.tonicNoteName) {
     lines.push(`! Tonic reference frequency: ${lowercaseMusicTerms(metadata.tonicNoteName)} = ${metadata.tonicFrequency.toFixed(2)} Hz`);
+  } else if (metadata.rootNote) {
+    // Fallback to root note if tonic frequency not provided (for 12-pitch-class exports)
+    lines.push(`! Root note: ${lowercaseMusicTerms(metadata.rootNote)}`);
+  }
+
+  if (metadata.direction) {
+    lines.push(`! Direction: ${toSentenceCase(metadata.direction)}`);
   }
 
   // Source tuning system with starting note name and reference frequency
