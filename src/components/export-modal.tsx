@@ -498,8 +498,8 @@ export default function ExportModal({
 
   const formatDescriptions: Record<ExportFormat, string> = {
     json: "JSON format — Structured, machine-readable data with complete relationships",
-    txt: "Text format — Human-readable text file",
-    pdf: "PDF format — Formatted document",
+    // txt: "Text format — Human-readable text file",
+    // pdf: "PDF format — Formatted document",
     scala: "Musical tuning files for compatible software and hardware",
   };
 
