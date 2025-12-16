@@ -66,6 +66,7 @@ export default function ExportModal({
     selectedJinsData,
     selectedMaqamData,
     allPitchClasses,
+    referenceFrequencies,
   } = useAppContext();
 
   // Determine which jins/maqam to use for export - prioritize specific instances
@@ -1030,7 +1031,8 @@ export default function ExportModal({
               alKindiTuningSystem,
               startingNoteName, // al-Kindi uses same starting note as main tuning system
               undefined, // description is optional
-              currentUrl // pass current URL
+              currentUrl, // pass current URL
+              referenceFrequencies // current reference frequencies for accurate A4
             );
 
             if (!scalaContent) {
