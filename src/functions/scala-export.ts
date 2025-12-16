@@ -738,7 +738,8 @@ export function exportMaqamTo12ToneScala(
   alKindiTuningSystem: TuningSystem,
   alKindiStartingNote: string,
   description?: string,
-  currentUrl?: string
+  currentUrl?: string,
+  referenceFrequencies?: { [noteName: string]: number }
 ): string | null {
   // Get dependencies
   const allMaqamat = getMaqamat();
@@ -800,7 +801,14 @@ export function exportMaqamTo12ToneScala(
 
   // Get all tuning system pitch classes for octave shifting (always needed for Scala export)
   // This matches the API endpoint behavior when startSetFromC=true
-  const allTuningSystemPitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote as any);
+  // Pass current reference frequencies for accurate A4 calculation
+  const allTuningSystemPitchClasses = getTuningSystemPitchClasses(
+    tuningSystem,
+    startingNote as any,
+    [],
+    0,
+    referenceFrequencies
+  );
 
   // Get all 12 pitch classes from the original set
   const allPitchClasses: Array<{ ipnRef: string; pitchClass: PitchClass }> = [];
@@ -1204,9 +1212,10 @@ export function exportMaqamTo12ToneScala(
   );
   const actualStartingNoteName = validNoteSet?.[0] || startingNote;
 
-  // Get starting note's reference frequency from tuning system
-  const referenceFrequencies = tuningSystem.getReferenceFrequencies();
-  const startingNoteRefFreq = referenceFrequencies[actualStartingNoteName] || tuningSystem.getDefaultReferenceFrequency();
+  // Get starting note's reference frequency
+  // Use provided reference frequencies from context, otherwise get tuning system defaults
+  const refFreqs = referenceFrequencies ?? tuningSystem.getReferenceFrequencies();
+  const startingNoteRefFreq = refFreqs[actualStartingNoteName] ?? tuningSystem.getDefaultReferenceFrequency();
 
   // Calculate SOURCE maqam reference frequency
   const sourceMaqamName = matchingSet.sourceMaqam.name;
