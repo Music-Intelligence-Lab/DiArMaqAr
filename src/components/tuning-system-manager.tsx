@@ -238,13 +238,28 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       );
 
       const defaultFreqs = selectedTuningSystem.getReferenceFrequencies();
+
+      // Check if the tuning system has changed (compare with originalReferenceFrequencies)
+      const tuningSystemChanged = JSON.stringify(defaultFreqs) !== JSON.stringify(originalReferenceFrequencies);
+
+      // Check if there are any custom frequencies that were explicitly set (different from the current tuning system's defaults)
+      // Only check this if the tuning system hasn't changed
+      const hasCustomFrequencies = !tuningSystemChanged && Object.keys(referenceFrequencies).some(
+        noteName => {
+          const currentFreq = referenceFrequencies[noteName];
+          const defaultFreq = defaultFreqs[noteName] ?? selectedTuningSystem.getDefaultReferenceFrequency();
+          return currentFreq !== defaultFreq;
+        }
+      );
+
       // Set reference frequencies if:
       // 1. referenceFrequencies is empty (first mount or after deselection)
-      // 2. This is a different tuning system (originalReferenceFrequencies changed)
+      // 2. This is a different tuning system (always reset to new defaults)
+      // 3. Same tuning system but no custom frequencies
       if (
         Object.keys(referenceFrequencies).length === 0 ||
-        JSON.stringify(defaultFreqs) !==
-          JSON.stringify(originalReferenceFrequencies)
+        tuningSystemChanged ||
+        !hasCustomFrequencies
       ) {
         setReferenceFrequencies(defaultFreqs);
         setOriginalReferenceFrequencies(defaultFreqs);
@@ -1164,6 +1179,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                     selectedMaqam,
                     startingNote
                   ).disabled;
+
                   return (
                     <div
                       className="tuning-system-manager__starting-note"
@@ -1186,41 +1202,22 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                         >
                           {getDisplayName(startingNote, "note")}
                         </button>
-                        {admin ? (
-                          <label htmlFor="reference-frequency-input">
-                            <input
-                              type="number"
-                              id="reference-frequency-input"
-                              value={referenceFrequencies[startingNote] ?? 0}
-                              onChange={(e) => {
-                                const val = Number(e.target.value);
-                                setReferenceFrequencies((prev) => ({
-                                  ...prev,
-                                  [startingNote]: val,
-                                }));
-                              }}
-                              className="tuning-system-manager__starting-note-input"
-                            />{" "}
-                            Hz
-                          </label>
-                        ) : (
-                          <FrequencyKnob
-                            key={`${selectedTuningSystem?.getId()}-${startingNote}`}
-                            value={referenceFrequencies[startingNote] ?? 110}
-                            onChange={(val, shouldRecalculate) => {
-                              handleReferenceFrequencyChange(
-                                startingNote,
-                                val,
-                                shouldRecalculate
-                              );
-                            }}
-                            onNewReferenceFrequency={
-                              updateAllActiveNotesByReferenceFrequency
-                            }
-                            id={`tuning-system-${selectedTuningSystem?.getId()}-note-${startingNote}`}
-                            noteName={startingNote}
-                          />
-                        )}
+                        <FrequencyKnob
+                          key={`${selectedTuningSystem?.getId()}-${startingNote}`}
+                          value={referenceFrequencies[startingNote] ?? 110}
+                          onChange={(val, shouldRecalculate) => {
+                            handleReferenceFrequencyChange(
+                              startingNote,
+                              val,
+                              shouldRecalculate
+                            );
+                          }}
+                          onNewReferenceFrequency={
+                            updateAllActiveNotesByReferenceFrequency
+                          }
+                          id={`tuning-system-${selectedTuningSystem?.getId()}-note-${startingNote}`}
+                          noteName={startingNote}
+                        />
                       </div>
                     </div>
                   );
@@ -1239,54 +1236,30 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                       )}{" "}
                       ({t("tuningSystem.unsaved")})
                     </button>
-                    {admin ? (
-                      <label htmlFor="reference-frequency-input">
-                        {t("tuningSystem.frequency")}
-                        <input
-                          type="number"
-                          id="reference-frequency-input"
-                          disabled={!admin}
-                          value={
-                            referenceFrequencies[
-                              getFirstNoteName(selectedIndices)
-                            ] ?? 0
-                          }
-                          onChange={(e) => {
-                            const val = Number(e.target.value);
-                            setReferenceFrequencies((prev) => ({
-                              ...prev,
-                              [getFirstNoteName(selectedIndices)]: val,
-                            }));
-                          }}
-                          className="tuning-system-manager__starting-note-input"
-                        />
-                      </label>
-                    ) : (
-                      <FrequencyKnob
-                        key={`${selectedTuningSystem?.getId()}-${getFirstNoteName(
-                          selectedIndices
-                        )}`}
-                        value={
-                          referenceFrequencies[
-                            getFirstNoteName(selectedIndices)
-                          ] ?? 110
-                        }
-                        onChange={(val, shouldRecalculate) => {
-                          handleReferenceFrequencyChange(
-                            getFirstNoteName(selectedIndices),
-                            val,
-                            shouldRecalculate
-                          );
-                        }}
-                        onNewReferenceFrequency={
-                          updateAllActiveNotesByReferenceFrequency
-                        }
-                        id={`tuning-system-${selectedTuningSystem?.getId()}-note-${getFirstNoteName(
-                          selectedIndices
-                        )}`}
-                        noteName={getFirstNoteName(selectedIndices)}
-                      />
-                    )}
+                    <FrequencyKnob
+                      key={`${selectedTuningSystem?.getId()}-${getFirstNoteName(
+                        selectedIndices
+                      )}`}
+                      value={
+                        referenceFrequencies[
+                          getFirstNoteName(selectedIndices)
+                        ] ?? 110
+                      }
+                      onChange={(val, shouldRecalculate) => {
+                        handleReferenceFrequencyChange(
+                          getFirstNoteName(selectedIndices),
+                          val,
+                          shouldRecalculate
+                        );
+                      }}
+                      onNewReferenceFrequency={
+                        updateAllActiveNotesByReferenceFrequency
+                      }
+                      id={`tuning-system-${selectedTuningSystem?.getId()}-note-${getFirstNoteName(
+                        selectedIndices
+                      )}`}
+                      noteName={getFirstNoteName(selectedIndices)}
+                    />
                   </div>
                 </div>
               )}
