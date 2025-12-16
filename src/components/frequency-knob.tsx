@@ -119,10 +119,10 @@ export default function FrequencyKnob({
     
     const deltaY = dragStartRef.current.y - clientY; // Inverted: up = positive
     
-    // Use logarithmic scaling for drag movement
+    // Use logarithmic scaling for drag movement with higher sensitivity for finer control
     const logRange = Math.log(dynamicMax) - Math.log(dynamicMin);
     const currentLogValue = Math.log(dragStartRef.current.startValue);
-    const newLogValue = currentLogValue + (deltaY / 100) * logRange;
+    const newLogValue = currentLogValue + (deltaY / 500) * logRange;
     const newValue = Math.exp(newLogValue);
     
     const clampedNewValue = Math.max(dynamicMin, Math.min(dynamicMax, newValue));

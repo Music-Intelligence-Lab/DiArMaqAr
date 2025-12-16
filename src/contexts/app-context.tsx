@@ -14,6 +14,7 @@ import PitchClass from "@/models/PitchClass";
 import { getTuningSystems, getMaqamat, getAjnas, getSources, getPatterns } from "@/functions/import";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import modulate from "@/functions/modulate";
+import { standardizeText } from "@/functions/export";
 
 interface AppContextInterface {
   tuningSystems: TuningSystem[];
@@ -59,7 +60,7 @@ interface AppContextInterface {
   setCentsTolerance: React.Dispatch<React.SetStateAction<number>>;
   clearSelections: () => void;
   clearJinsSelections: () => void;
-  handleUrlParams: (params: { tuningSystemId?: string; jinsDataId?: string; maqamDataId?: string; sayrId?: string; firstNote?: string; maqamFirstNote?: string; jinsFirstNote?: string }) => void;
+  handleUrlParams: (params: { tuningSystemId?: string; jinsDataId?: string; maqamDataId?: string; sayrId?: string; firstNote?: string; maqamFirstNote?: string; jinsFirstNote?: string; referenceFrequency?: number }) => void;
   sources: Source[];
   setSources: React.Dispatch<React.SetStateAction<Source[]>>;
   patterns: Pattern[];
@@ -237,7 +238,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         return mapIndices(noteNamesToSearch[0], givenNumberOfPitchClasses);
       } else {
         for (const setOfNotes of noteNamesToSearch) {
-          if (setOfNotes[0] === startingNoteName) {
+          if (standardizeText(setOfNotes[0]) === standardizeText(startingNoteName)) {
             return mapIndices(setOfNotes, givenNumberOfPitchClasses);
           }
         }
@@ -348,6 +349,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       firstNote,
       maqamFirstNote,
       jinsFirstNote,
+      referenceFrequency,
     }: {
       tuningSystemId?: string;
       jinsDataId?: string;
@@ -356,6 +358,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       firstNote?: string;
       maqamFirstNote?: string;
       jinsFirstNote?: string;
+      referenceFrequency?: number;
     }) => {
       if (!tuningSystems.length || !ajnas.length || !maqamat.length) return;
 
@@ -366,7 +369,34 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
           if (found) {
             setSelectedTuningSystem(found);
             handleStartNoteNameChange(firstNote ?? "", found.getNoteNameSets(), found.getOriginalPitchClassValues().length);
-            const allPitchClasses = getTuningSystemPitchClasses(found, firstNote || "");
+
+            // Find the actual note name (with diacritics) from the tuning system that matches the URL parameter
+            let actualNoteName = firstNote;
+            if (firstNote) {
+              const allNoteNames = found.getNoteNameSets().flat();
+              const matchingNote = allNoteNames.find(name =>
+                standardizeText(name) === standardizeText(firstNote)
+              );
+              if (matchingNote) {
+                actualNoteName = matchingNote;
+              }
+            }
+
+            // Get the tuning system's default reference frequencies
+            const defaultFreqs = found.getReferenceFrequencies();
+
+            // Store the defaults in originalReferenceFrequencies so TuningSystemManager knows the baseline
+            setOriginalReferenceFrequencies(defaultFreqs);
+
+            // Prepare reference frequencies with custom value from URL if provided
+            const refFreqs = referenceFrequency && actualNoteName
+              ? { ...defaultFreqs, [actualNoteName]: referenceFrequency }
+              : defaultFreqs;
+
+            // Apply reference frequencies (defaults + custom from URL)
+            setReferenceFrequencies(refFreqs);
+
+            const allPitchClasses = getTuningSystemPitchClasses(found, actualNoteName || "", [], 0, refFreqs);
 
             if (jinsDataId) {
               const foundJinsData = ajnas.find((j) => j.getId() === jinsDataId);
@@ -398,7 +428,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         }
       }
     },
-    [tuningSystems, ajnas, maqamat, selectedTuningSystem, handleStartNoteNameChange, handleClickJins, handleClickMaqam]
+    [tuningSystems, ajnas, maqamat, selectedTuningSystem, handleStartNoteNameChange, handleClickJins, handleClickMaqam, setReferenceFrequencies]
   );
 
   // Memoize context value to avoid re-renders of all consumers when no referenced pieces change

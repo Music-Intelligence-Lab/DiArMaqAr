@@ -177,7 +177,7 @@ function parseSayrParameter(param: string, maqamData: any): string | undefined {
   }
 }
 export default function AppClient() {
-  const { tuningSystems, ajnas, maqamat, handleUrlParams, selectedTuningSystem, selectedJinsData, selectedMaqamData, maqamSayrId, selectedIndices, selectedMaqam, selectedJins } = useAppContext();
+  const { tuningSystems, ajnas, maqamat, handleUrlParams, selectedTuningSystem, selectedJinsData, selectedMaqamData, maqamSayrId, selectedIndices, selectedMaqam, selectedJins, referenceFrequencies } = useAppContext();
 
   const { setSelectedMenu, selectedMenu } = useMenuContext();
 
@@ -228,6 +228,10 @@ export default function AppClient() {
     let jinsId: string | undefined = undefined;
     let jinsFirstNote: string | undefined = undefined;
     const startingNoteName = searchParams.get("startingNoteName") ?? undefined;
+
+    // Parse reference frequency parameter if present
+    const refFreqParam = searchParams.get("refFreq");
+    const referenceFrequency = refFreqParam ? parseFloat(refFreqParam) : undefined;
 
     // Parse descriptive maqam parameter if present
     const maqamParam = searchParams.get("maqam");
@@ -298,6 +302,7 @@ export default function AppClient() {
       maqamFirstNote: maqamFirstNote,
       sayrId: sayrId,
       firstNote: startingNoteName,
+      referenceFrequency: referenceFrequency,
     });
   // Mark that we've applied URL params so we don't re-apply on subsequent searchParams changes
   urlParamsApplied.current = true;
@@ -317,8 +322,19 @@ export default function AppClient() {
 
     if (selectedTuningSystem) {
       params.push(`tuningSystem=${selectedTuningSystem.getId()}`);
+
+      // Get the starting note from selectedIndices
       const first = getFirstNoteName(selectedIndices);
-      if (first && first !== "none") params.push(`startingNoteName=${standardizeText(first)}`);
+
+      if (first && first !== "none") {
+        params.push(`startingNoteName=${standardizeText(first)}`);
+
+        // Always include reference frequency for the starting note
+        const currentRefFreq = referenceFrequencies[first];
+        if (currentRefFreq) {
+          params.push(`refFreq=${currentRefFreq}`);
+        }
+      }
     }
 
     // Use descriptive parameters for jins and maqam with transposition note included in parameter
@@ -360,7 +376,7 @@ export default function AppClient() {
       const urlParams = params.join("&");
       router.replace(`/app?${urlParams}`, { scroll: false });
     }
-  }, [selectedTuningSystem, selectedJinsData, selectedMaqamData, maqamSayrId, selectedIndices, selectedMaqam, selectedJins, router]);
+  }, [selectedTuningSystem, selectedJinsData, selectedMaqamData, maqamSayrId, selectedIndices, selectedMaqam, selectedJins, referenceFrequencies, router]);
 
   return (
     <div className="main-content">
