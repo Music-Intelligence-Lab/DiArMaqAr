@@ -33,8 +33,8 @@ interface ExportModalProps {
 
 export type ExportFormat =
   | "json"
-  | "txt"
-  | "pdf"
+  // | "txt"  // Commented out - not currently supported
+  // | "pdf"  // Commented out - not currently supported
   | "scala";
 
 export interface ExportOptions {
@@ -108,8 +108,6 @@ export default function ExportModal({
     // Format description
     const formatDescriptions: Record<ExportFormat, string> = {
       json: "JSON format — Structured, machine-readable data with complete relationships",
-      txt: "Text format — Human-readable text file",
-      pdf: "PDF format — Formatted document",
       scala: "Musical tuning files for compatible software and hardware"
     };
     
@@ -498,8 +496,6 @@ export default function ExportModal({
 
   const formatDescriptions: Record<ExportFormat, string> = {
     json: "JSON format — Structured, machine-readable data with complete relationships",
-    // txt: "Text format — Human-readable text file",
-    // pdf: "PDF format — Formatted document",
     scala: "Musical tuning files for compatible software and hardware",
   };
 
@@ -891,13 +887,13 @@ export default function ExportModal({
         fileExtension = "json";
         break;
 
-      case "txt":
-        updateProgress(97.5, "Formatting as text...");
-        await new Promise((resolve) => setTimeout(resolve, 75));
-        content = convertToText(data);
-        mimeType = "text/plain";
-        fileExtension = "txt";
-        break;
+      // case "txt":
+      //   updateProgress(97.5, "Formatting as text...");
+      //   await new Promise((resolve) => setTimeout(resolve, 75));
+      //   content = convertToText(data);
+      //   mimeType = "text/plain";
+      //   fileExtension = "txt";
+      //   break;
 
       case "scala":
         updateProgress(97.5, "Generating Scala scale...");
@@ -1112,9 +1108,9 @@ export default function ExportModal({
         }
         break;
 
-      case "pdf":
-        await downloadPDF(data);
-        return;
+      // case "pdf":
+      //   await downloadPDF(data);
+      //   return;
 
       default:
         throw new Error(`Unsupported format: ${options.format}`);
@@ -1143,411 +1139,413 @@ export default function ExportModal({
     URL.revokeObjectURL(url);
   };
 
-  const convertToText = (data: any): string => {
-    const sections: string[] = [];
+  // TXT export - commented out (not currently supported)
+  //   const convertToText = (data: any): string => {
+  //     const sections: string[] = [];
+  // 
+  //     // Helper function to format any value, recursively breaking down objects
+  //     const formatValue = (value: any, indentLevel: number = 0): string => {
+  //       const indent = "  ".repeat(indentLevel);
+  // 
+  //       if (value === null || value === undefined || value === "") {
+  //         return "N/A";
+  //       }
+  // 
+  //       if (
+  //         typeof value === "string" ||
+  //         typeof value === "number" ||
+  //         typeof value === "boolean"
+  //       ) {
+  //         const str = String(value).trim();
+  //         return str || "N/A";
+  //       }
+  // 
+  //       if (Array.isArray(value)) {
+  //         if (value.length === 0) return "None";
+  //         return value
+  //           .map((item, index) => {
+  //             const itemStr = formatValue(item, indentLevel + 1);
+  //             if (itemStr.includes("\n")) {
+  //               return `${indent}  ${index + 1}.\n${itemStr}`;
+  //             } else {
+  //               return `${indent}  ${index + 1}. ${itemStr}`;
+  //             }
+  //           })
+  //           .join("\n");
+  //       }
+  // 
+  //       if (typeof value === "object" && value !== null) {
+  //         // Handle objects by breaking them down into their properties
+  //         const entries = Object.entries(value).filter(([key, val]) => {
+  //           // Filter out functions, internal properties, and empty values
+  //           return (
+  //             typeof val !== "function" &&
+  //             !key.startsWith("_") &&
+  //             val !== null &&
+  //             val !== undefined &&
+  //             val !== ""
+  //           );
+  //         });
+  // 
+  //         if (entries.length === 0) return "N/A";
+  // 
+  //         return entries
+  //           .map(([key, val]) => {
+  //             // Convert camelCase to readable format
+  //             const formattedKey = key
+  //               .replace(/([A-Z])/g, " $1")
+  //               .replace(/^./, (str) => str.toUpperCase())
+  //               .replace(/\s+/g, " ")
+  //               .trim();
+  // 
+  //             const formattedValue = formatValue(val, indentLevel + 1);
+  //             if (formattedValue.includes("\n")) {
+  //               return `${indent}  ${formattedKey}:\n${formattedValue}`;
+  //             } else {
+  //               return `${indent}  ${formattedKey}: ${formattedValue}`;
+  //             }
+  //           })
+  //           .join("\n");
+  //       }
+  // 
+  //       return String(value);
+  //     };
+  // 
+  //     // Title Section
+  //     sections.push("=".repeat(60));
+  //     sections.push("ARABIC MAQAM NETWORK - EXPORT DATA");
+  //     sections.push("=".repeat(60));
+  //     sections.push("");
+  // 
+  //     // Export timestamp
+  //     const now = new Date();
+  //     sections.push(`Export Date: ${now.toLocaleDateString()}`);
+  //     sections.push(`Export Time: ${now.toLocaleTimeString()}`);
+  //     sections.push("");
+  // 
+  //     // Tuning System Information
+  //     if (data.tuningSystem) {
+  //       const ts = data.tuningSystem;
+  //       sections.push("TUNING SYSTEM INFORMATION");
+  //       sections.push("-".repeat(40));
+  //       sections.push(
+  //         `Title (English): ${formatValue(
+  //           ts.titleEnglish || ts.getTitleEnglish?.()
+  //         )}`
+  //       );
+  //       sections.push(
+  //         `Title (Arabic): ${formatValue(
+  //           ts.titleArabic || ts.getTitleArabic?.()
+  //         )}`
+  //       );
+  //       sections.push(
+  //         `Creator (English): ${formatValue(
+  //           ts.creatorEnglish || ts.getCreatorEnglish?.()
+  //         )}`
+  //       );
+  //       sections.push(
+  //         `Creator (Arabic): ${formatValue(
+  //           ts.creatorArabic || ts.getCreatorArabic?.()
+  //         )}`
+  //       );
+  //       sections.push(`Year: ${formatValue(ts.year || ts.getYear?.())}`);
+  //       sections.push(`Starting Note: ${formatValue(data.startingNote)}`);
+  //       sections.push(
+  //         `Source (English): ${formatValue(
+  //           ts.sourceEnglish || ts.getSourceEnglish?.()
+  //         )}`
+  //       );
+  //       sections.push(
+  //         `Source (Arabic): ${formatValue(
+  //           ts.sourceArabic || ts.getSourceArabic?.()
+  //         )}`
+  //       );
+  //       sections.push(
+  //         `Comments (English): ${formatValue(
+  //           ts.commentsEnglish || ts.getCommentsEnglish?.()
+  //         )}`
+  //       );
+  //       sections.push(
+  //         `Comments (Arabic): ${formatValue(
+  //           ts.commentsArabic || ts.getCommentsArabic?.()
+  //         )}`
+  //       );
+  //       sections.push(
+  //         `String Length: ${formatValue(
+  //           ts.stringLength || ts.getStringLength?.()
+  //         )}`
+  //       );
+  //       sections.push(
+  //         `Default Reference Frequency: ${formatValue(
+  //           ts.defaultReferenceFrequency || ts.getDefaultReferenceFrequency?.()
+  //         )} Hz`
+  //       );
+  //       sections.push("");
+  //     }
+  // 
+  //     // Pitch Classes
+  //     if (data.fullRangeTuningSystemPitchClasses) {
+  //       sections.push("PITCH CLASSES");
+  //       sections.push("-".repeat(40));
+  //       data.fullRangeTuningSystemPitchClasses.forEach(
+  //         (pc: any, index: number) => {
+  //           sections.push(
+  //             `${index + 1}. ${formatValue(pc.noteName)} (Octave ${formatValue(
+  //               pc.octave
+  //             )})`
+  //           );
+  //           sections.push(`   Cents: ${formatValue(pc.cents)}`);
+  //           sections.push(`   Frequency: ${formatValue(pc.frequency)} Hz`);
+  //           sections.push(`   Pitch Class: ${formatValue(pc.pitchClass)}`);
+  //           if (pc.semitones !== undefined) {
+  //             sections.push(`   Semitones: ${formatValue(pc.semitones)}`);
+  //           }
+  //           sections.push("");
+  //         }
+  //       );
+  //     }
+  // 
+  //     // Ajnas Details
+  //     if (data.possibleAjnasDetails) {
+  //       sections.push("AJNAS DETAILS");
+  //       sections.push("-".repeat(40));
+  //       data.possibleAjnasDetails.forEach((jins: any, index: number) => {
+  //         sections.push(
+  //           `${index + 1}. ${formatValue(
+  //             jins.titleEnglish || jins.getTitleEnglish?.()
+  //           )}`
+  //         );
+  // 
+  //         // Use the helper function to display all properties properly
+  //         const jinsFormatted = formatValue(jins, 1);
+  //         if (jinsFormatted !== "N/A") {
+  //           sections.push(jinsFormatted);
+  //         }
+  //         sections.push("");
+  //       });
+  //     }
+  // 
+  //     // Maqāmāt Details
+  //     if (data.possibleMaqamatDetails) {
+  //       sections.push("MAQĀMĀT DETAILS");
+  //       sections.push("-".repeat(40));
+  //       data.possibleMaqamatDetails.forEach((maqam: any, index: number) => {
+  //         sections.push(
+  //           `${index + 1}. ${formatValue(
+  //             maqam.titleEnglish || maqam.getTitleEnglish?.()
+  //           )}`
+  //         );
+  // 
+  //         // Use the helper function to display all properties properly
+  //         const maqamFormatted = formatValue(maqam, 1);
+  //         if (maqamFormatted !== "N/A") {
+  //           sections.push(maqamFormatted);
+  //         }
+  //         sections.push("");
+  //       });
+  //     }
+  // 
+  //     // Transpositions (for jins and maqām exports)
+  //     if (data.transpositions) {
+  //       sections.push("TRANSPOSITIONS");
+  //       sections.push("-".repeat(40));
+  //       data.transpositions.forEach((transposition: any, index: number) => {
+  //         sections.push(
+  //           `${index + 1}. ${formatValue(
+  //             transposition.titleEnglish || transposition.getTitleEnglish?.()
+  //           )}`
+  //         );
+  // 
+  //         const transpositionFormatted = formatValue(transposition, 1);
+  //         if (transpositionFormatted !== "N/A") {
+  //           sections.push(transpositionFormatted);
+  //         }
+  //         sections.push("");
+  //       });
+  //     }
+  // 
+  //     // Modulations
+  //     const hasModulations = data.maqamatModulations || data.ajnasModulations;
+  //     if (hasModulations) {
+  //       sections.push("MODULATIONS");
+  //       sections.push("-".repeat(40));
+  // 
+  //       if (data.maqamatModulations) {
+  //         sections.push("Maqāmāt Modulations:");
+  //         const maqamatModulationsFormatted = formatValue(
+  //           data.maqamatModulations,
+  //           1
+  //         );
+  //         sections.push(maqamatModulationsFormatted);
+  //         if (data.numberOfMaqamModulationHops !== undefined) {
+  //           sections.push(
+  //             `Number of Maqām Modulation Hops: ${data.numberOfMaqamModulationHops}`
+  //           );
+  //         }
+  //         sections.push("");
+  //       }
+  // 
+  //       if (data.ajnasModulations) {
+  //         sections.push("Ajnas Modulations:");
+  //         const ajnasModulationsFormatted = formatValue(data.ajnasModulations, 1);
+  //         sections.push(ajnasModulationsFormatted);
+  //         if (data.numberOfJinsModulationHops !== undefined) {
+  //           sections.push(
+  //             `Number of Jins Modulation Hops: ${data.numberOfJinsModulationHops}`
+  //           );
+  //         }
+  //         sections.push("");
+  //       }
+  //     }
+  // 
+  //     // Summary Statistics
+  //     if (data.summaryStats) {
+  //       sections.push("SUMMARY STATISTICS");
+  //       sections.push("-".repeat(40));
+  //       sections.push(
+  //         `Total Ajnas in Database: ${
+  //           data.summaryStats.totalAjnasInDatabase ?? 0
+  //         }`
+  //       );
+  //       sections.push(
+  //         `Total Maqāmāt in Database: ${
+  //           data.summaryStats.totalMaqamatInDatabase ?? 0
+  //         }`
+  //       );
+  //       sections.push(
+  //         `Tuning Pitch Classes in Single Octave: ${
+  //           data.summaryStats.tuningPitchClassesInSingleOctave ?? 0
+  //         }`
+  //       );
+  //       sections.push(
+  //         `Tuning Pitch Classes in All Octaves: ${
+  //           data.summaryStats.tuningPitchClassesInAllOctaves ?? 0
+  //         }`
+  //       );
+  //       sections.push(
+  //         `Ajnas Available in Tuning: ${
+  //           data.summaryStats.ajnasAvailableInTuning ?? 0
+  //         }`
+  //       );
+  //       sections.push(
+  //         `Maqāmāt Available in Tuning: ${
+  //           data.summaryStats.maqamatAvailableInTuning ?? 0
+  //         }`
+  //       );
+  //       sections.push(
+  //         `Total Ajnas Transpositions: ${
+  //           data.summaryStats.totalAjnasTranspositions ?? 0
+  //         }`
+  //       );
+  //       sections.push(
+  //         `Total Maqāmāt Transpositions: ${
+  //           data.summaryStats.totalMaqamatTranspositions ?? 0
+  //         }`
+  //       );
+  //       sections.push(
+  //         `Total Maqām Modulations: ${
+  //           data.summaryStats.totalMaqamModulations ?? 0
+  //         }`
+  //       );
+  //       sections.push(
+  //         `Total Ajnas Modulations: ${
+  //           data.summaryStats.totalAjnasModulations ?? 0
+  //         }`
+  //       );
+  //       sections.push("");
+  //     }
+  // 
+  //     sections.push("=".repeat(60));
+  //     sections.push("End of Export");
+  //     sections.push("=".repeat(60));
+  // 
+  //     return sections.join("\n");
+  //   };
 
-    // Helper function to format any value, recursively breaking down objects
-    const formatValue = (value: any, indentLevel: number = 0): string => {
-      const indent = "  ".repeat(indentLevel);
+  // PDF export - commented out (not currently supported)
+  // const downloadPDF = async (data: any) => {
+  //   // Convert data to formatted text first
+  //   const formattedText = convertToText(data);
 
-      if (value === null || value === undefined || value === "") {
-        return "N/A";
-      }
+  //   const htmlContent = `
+  //     <!DOCTYPE html>
+  //     <html>
+  //     <head>
+  //       <title>Digital Arabic Maqām Archive Export</title>
+  //       <style>
+  //         body {
+  //           font-family: 'Times New Roman', serif;
+  //           margin: 30px;
+  //           line-height: 1.6;
+  //           color: #333;
+  //         }
+  //         h1 {
+  //           color: #2c3e50;
+  //           text-align: center;
+  //           border-bottom: 3px solid #3498db;
+  //           padding-bottom: 10px;
+  //           margin-bottom: 30px;
+  //         }
+  //         h2 {
+  //           color: #34495e;
+  //           margin-top: 30px;
+  //           margin-bottom: 15px;
+  //           border-bottom: 1px solid #bdc3c7;
+  //           padding-bottom: 5px;
+  //         }
+  //         .export-info {
+  //           background: #ecf0f1;
+  //           padding: 15px;
+  //           border-radius: 5px;
+  //           margin-bottom: 30px;
+  //           text-align: center;
+  //           font-style: italic;
+  //         }
+  //         .content {
+  //           white-space: pre-wrap;
+  //           font-family: 'Courier New', monospace;
+  //           font-size: 11px;
+  //           line-height: 1.4;
+  //           background: #f8f9fa;
+  //           padding: 20px;
+  //           border-radius: 5px;
+  //           border: 1px solid #dee2e6;
+  //         }
+  //         .section {
+  //           margin-bottom: 30px;
+  //           page-break-inside: avoid;
+  //         }
+  //         @media print {
+  //           body { margin: 20mm; }
+  //           h1 { font-size: 18pt; }
+  //           h2 { font-size: 14pt; }
+  //           .content { font-size: 10pt; }
+  //         }
+  //       </style>
+  //     </head>
+  //     <body>
+  //       <h1>Digital Arabic Maqām Archive Export</h1>
+  //       <div class="export-info">
+  //         Generated on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}
+  //       </div>
+  //       <div class="section">
+  //         <div class="content">${formattedText}</div>
+  //       </div>
+  //     </body>
+  //     </html>
+  //   `;
 
-      if (
-        typeof value === "string" ||
-        typeof value === "number" ||
-        typeof value === "boolean"
-      ) {
-        const str = String(value).trim();
-        return str || "N/A";
-      }
-
-      if (Array.isArray(value)) {
-        if (value.length === 0) return "None";
-        return value
-          .map((item, index) => {
-            const itemStr = formatValue(item, indentLevel + 1);
-            if (itemStr.includes("\n")) {
-              return `${indent}  ${index + 1}.\n${itemStr}`;
-            } else {
-              return `${indent}  ${index + 1}. ${itemStr}`;
-            }
-          })
-          .join("\n");
-      }
-
-      if (typeof value === "object" && value !== null) {
-        // Handle objects by breaking them down into their properties
-        const entries = Object.entries(value).filter(([key, val]) => {
-          // Filter out functions, internal properties, and empty values
-          return (
-            typeof val !== "function" &&
-            !key.startsWith("_") &&
-            val !== null &&
-            val !== undefined &&
-            val !== ""
-          );
-        });
-
-        if (entries.length === 0) return "N/A";
-
-        return entries
-          .map(([key, val]) => {
-            // Convert camelCase to readable format
-            const formattedKey = key
-              .replace(/([A-Z])/g, " $1")
-              .replace(/^./, (str) => str.toUpperCase())
-              .replace(/\s+/g, " ")
-              .trim();
-
-            const formattedValue = formatValue(val, indentLevel + 1);
-            if (formattedValue.includes("\n")) {
-              return `${indent}  ${formattedKey}:\n${formattedValue}`;
-            } else {
-              return `${indent}  ${formattedKey}: ${formattedValue}`;
-            }
-          })
-          .join("\n");
-      }
-
-      return String(value);
-    };
-
-    // Title Section
-    sections.push("=".repeat(60));
-    sections.push("ARABIC MAQAM NETWORK - EXPORT DATA");
-    sections.push("=".repeat(60));
-    sections.push("");
-
-    // Export timestamp
-    const now = new Date();
-    sections.push(`Export Date: ${now.toLocaleDateString()}`);
-    sections.push(`Export Time: ${now.toLocaleTimeString()}`);
-    sections.push("");
-
-    // Tuning System Information
-    if (data.tuningSystem) {
-      const ts = data.tuningSystem;
-      sections.push("TUNING SYSTEM INFORMATION");
-      sections.push("-".repeat(40));
-      sections.push(
-        `Title (English): ${formatValue(
-          ts.titleEnglish || ts.getTitleEnglish?.()
-        )}`
-      );
-      sections.push(
-        `Title (Arabic): ${formatValue(
-          ts.titleArabic || ts.getTitleArabic?.()
-        )}`
-      );
-      sections.push(
-        `Creator (English): ${formatValue(
-          ts.creatorEnglish || ts.getCreatorEnglish?.()
-        )}`
-      );
-      sections.push(
-        `Creator (Arabic): ${formatValue(
-          ts.creatorArabic || ts.getCreatorArabic?.()
-        )}`
-      );
-      sections.push(`Year: ${formatValue(ts.year || ts.getYear?.())}`);
-      sections.push(`Starting Note: ${formatValue(data.startingNote)}`);
-      sections.push(
-        `Source (English): ${formatValue(
-          ts.sourceEnglish || ts.getSourceEnglish?.()
-        )}`
-      );
-      sections.push(
-        `Source (Arabic): ${formatValue(
-          ts.sourceArabic || ts.getSourceArabic?.()
-        )}`
-      );
-      sections.push(
-        `Comments (English): ${formatValue(
-          ts.commentsEnglish || ts.getCommentsEnglish?.()
-        )}`
-      );
-      sections.push(
-        `Comments (Arabic): ${formatValue(
-          ts.commentsArabic || ts.getCommentsArabic?.()
-        )}`
-      );
-      sections.push(
-        `String Length: ${formatValue(
-          ts.stringLength || ts.getStringLength?.()
-        )}`
-      );
-      sections.push(
-        `Default Reference Frequency: ${formatValue(
-          ts.defaultReferenceFrequency || ts.getDefaultReferenceFrequency?.()
-        )} Hz`
-      );
-      sections.push("");
-    }
-
-    // Pitch Classes
-    if (data.fullRangeTuningSystemPitchClasses) {
-      sections.push("PITCH CLASSES");
-      sections.push("-".repeat(40));
-      data.fullRangeTuningSystemPitchClasses.forEach(
-        (pc: any, index: number) => {
-          sections.push(
-            `${index + 1}. ${formatValue(pc.noteName)} (Octave ${formatValue(
-              pc.octave
-            )})`
-          );
-          sections.push(`   Cents: ${formatValue(pc.cents)}`);
-          sections.push(`   Frequency: ${formatValue(pc.frequency)} Hz`);
-          sections.push(`   Pitch Class: ${formatValue(pc.pitchClass)}`);
-          if (pc.semitones !== undefined) {
-            sections.push(`   Semitones: ${formatValue(pc.semitones)}`);
-          }
-          sections.push("");
-        }
-      );
-    }
-
-    // Ajnas Details
-    if (data.possibleAjnasDetails) {
-      sections.push("AJNAS DETAILS");
-      sections.push("-".repeat(40));
-      data.possibleAjnasDetails.forEach((jins: any, index: number) => {
-        sections.push(
-          `${index + 1}. ${formatValue(
-            jins.titleEnglish || jins.getTitleEnglish?.()
-          )}`
-        );
-
-        // Use the helper function to display all properties properly
-        const jinsFormatted = formatValue(jins, 1);
-        if (jinsFormatted !== "N/A") {
-          sections.push(jinsFormatted);
-        }
-        sections.push("");
-      });
-    }
-
-    // Maqāmāt Details
-    if (data.possibleMaqamatDetails) {
-      sections.push("MAQĀMĀT DETAILS");
-      sections.push("-".repeat(40));
-      data.possibleMaqamatDetails.forEach((maqam: any, index: number) => {
-        sections.push(
-          `${index + 1}. ${formatValue(
-            maqam.titleEnglish || maqam.getTitleEnglish?.()
-          )}`
-        );
-
-        // Use the helper function to display all properties properly
-        const maqamFormatted = formatValue(maqam, 1);
-        if (maqamFormatted !== "N/A") {
-          sections.push(maqamFormatted);
-        }
-        sections.push("");
-      });
-    }
-
-    // Transpositions (for jins and maqām exports)
-    if (data.transpositions) {
-      sections.push("TRANSPOSITIONS");
-      sections.push("-".repeat(40));
-      data.transpositions.forEach((transposition: any, index: number) => {
-        sections.push(
-          `${index + 1}. ${formatValue(
-            transposition.titleEnglish || transposition.getTitleEnglish?.()
-          )}`
-        );
-
-        const transpositionFormatted = formatValue(transposition, 1);
-        if (transpositionFormatted !== "N/A") {
-          sections.push(transpositionFormatted);
-        }
-        sections.push("");
-      });
-    }
-
-    // Modulations
-    const hasModulations = data.maqamatModulations || data.ajnasModulations;
-    if (hasModulations) {
-      sections.push("MODULATIONS");
-      sections.push("-".repeat(40));
-
-      if (data.maqamatModulations) {
-        sections.push("Maqāmāt Modulations:");
-        const maqamatModulationsFormatted = formatValue(
-          data.maqamatModulations,
-          1
-        );
-        sections.push(maqamatModulationsFormatted);
-        if (data.numberOfMaqamModulationHops !== undefined) {
-          sections.push(
-            `Number of Maqām Modulation Hops: ${data.numberOfMaqamModulationHops}`
-          );
-        }
-        sections.push("");
-      }
-
-      if (data.ajnasModulations) {
-        sections.push("Ajnas Modulations:");
-        const ajnasModulationsFormatted = formatValue(data.ajnasModulations, 1);
-        sections.push(ajnasModulationsFormatted);
-        if (data.numberOfJinsModulationHops !== undefined) {
-          sections.push(
-            `Number of Jins Modulation Hops: ${data.numberOfJinsModulationHops}`
-          );
-        }
-        sections.push("");
-      }
-    }
-
-    // Summary Statistics
-    if (data.summaryStats) {
-      sections.push("SUMMARY STATISTICS");
-      sections.push("-".repeat(40));
-      sections.push(
-        `Total Ajnas in Database: ${
-          data.summaryStats.totalAjnasInDatabase ?? 0
-        }`
-      );
-      sections.push(
-        `Total Maqāmāt in Database: ${
-          data.summaryStats.totalMaqamatInDatabase ?? 0
-        }`
-      );
-      sections.push(
-        `Tuning Pitch Classes in Single Octave: ${
-          data.summaryStats.tuningPitchClassesInSingleOctave ?? 0
-        }`
-      );
-      sections.push(
-        `Tuning Pitch Classes in All Octaves: ${
-          data.summaryStats.tuningPitchClassesInAllOctaves ?? 0
-        }`
-      );
-      sections.push(
-        `Ajnas Available in Tuning: ${
-          data.summaryStats.ajnasAvailableInTuning ?? 0
-        }`
-      );
-      sections.push(
-        `Maqāmāt Available in Tuning: ${
-          data.summaryStats.maqamatAvailableInTuning ?? 0
-        }`
-      );
-      sections.push(
-        `Total Ajnas Transpositions: ${
-          data.summaryStats.totalAjnasTranspositions ?? 0
-        }`
-      );
-      sections.push(
-        `Total Maqāmāt Transpositions: ${
-          data.summaryStats.totalMaqamatTranspositions ?? 0
-        }`
-      );
-      sections.push(
-        `Total Maqām Modulations: ${
-          data.summaryStats.totalMaqamModulations ?? 0
-        }`
-      );
-      sections.push(
-        `Total Ajnas Modulations: ${
-          data.summaryStats.totalAjnasModulations ?? 0
-        }`
-      );
-      sections.push("");
-    }
-
-    sections.push("=".repeat(60));
-    sections.push("End of Export");
-    sections.push("=".repeat(60));
-
-    return sections.join("\n");
-  };
-
-  const downloadPDF = async (data: any) => {
-    // Convert data to formatted text first
-    const formattedText = convertToText(data);
-
-    const htmlContent = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>Digital Arabic Maqām Archive Export</title>
-        <style>
-          body { 
-            font-family: 'Times New Roman', serif; 
-            margin: 30px; 
-            line-height: 1.6;
-            color: #333;
-          }
-          h1 { 
-            color: #2c3e50; 
-            text-align: center; 
-            border-bottom: 3px solid #3498db; 
-            padding-bottom: 10px; 
-            margin-bottom: 30px;
-          }
-          h2 { 
-            color: #34495e; 
-            margin-top: 30px; 
-            margin-bottom: 15px;
-            border-bottom: 1px solid #bdc3c7;
-            padding-bottom: 5px;
-          }
-          .export-info {
-            background: #ecf0f1;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 30px;
-            text-align: center;
-            font-style: italic;
-          }
-          .content {
-            white-space: pre-wrap;
-            font-family: 'Courier New', monospace;
-            font-size: 11px;
-            line-height: 1.4;
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 5px;
-            border: 1px solid #dee2e6;
-          }
-          .section { 
-            margin-bottom: 30px; 
-            page-break-inside: avoid;
-          }
-          @media print {
-            body { margin: 20mm; }
-            h1 { font-size: 18pt; }
-            h2 { font-size: 14pt; }
-            .content { font-size: 10pt; }
-          }
-        </style>
-      </head>
-      <body>
-        <h1>Digital Arabic Maqām Archive Export</h1>
-        <div class="export-info">
-          Generated on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}
-        </div>
-        <div class="section">
-          <div class="content">${formattedText}</div>
-        </div>
-      </body>
-      </html>
-    `;
-
-    const printWindow = window.open("", "_blank");
-    if (printWindow) {
-      printWindow.document.write(htmlContent);
-      printWindow.document.close();
-      printWindow.focus();
-      setTimeout(() => {
-        printWindow.print();
-        printWindow.close();
-      }, 1000);
-    }
-  };
+  //   const printWindow = window.open("", "_blank");
+  //   if (printWindow) {
+  //     printWindow.document.write(htmlContent);
+  //     printWindow.document.close();
+  //     printWindow.focus();
+  //     setTimeout(() => {
+  //       printWindow.print();
+  //       printWindow.close();
+  //     }, 1000);
+  //   }
+  // };
 
   if (!isOpen) return null;
 
