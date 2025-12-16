@@ -2,9 +2,19 @@
 
 **Purpose**: Historical reference documenting why certain Scala export implementation decisions were made.
 
-**Note**: This is an archive for historical context. For current implementation guidance, see:
-- [scala-export-overview.md](./scala-export-overview.md) - Quick reference
-- [scala-kbm-export.md](./scala-kbm-export.md) - Implementation guide
+**IMPORTANT**: This is an **ARCHIVE** containing historical context and resolved issues. The information here explains the reasoning behind implementation decisions but may not reflect current code structure.
+
+**For current implementation guidance, see**:
+- [scala-export-overview.md](./scala-export-overview.md) - Quick reference and decision tree
+- [scala-kbm-export.md](./scala-kbm-export.md) - Current .kbm implementation guide
+- [scala-scl-export.md](./scala-scl-export.md) - Current .scl implementation guide
+- [12-pitch-class-sets-api.md](./12-pitch-class-sets-api.md) - API reference
+
+**What this archive contains**:
+- Root cause analysis of historical bugs
+- Explanation of why certain approaches were taken
+- Evolution of the implementation over time
+- Lessons learned from past issues
 
 ---
 

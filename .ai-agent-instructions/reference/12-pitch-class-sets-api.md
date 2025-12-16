@@ -435,8 +435,13 @@ export function exportMaqamTo12ToneScala(
 4. **Octave Shifting**: Automatically shifts octave 2 notes before tonic to octave 1
 5. **Rotation to C**: Rotates pitch class array to start from C (degree 0)
 6. **Relative Cents**: Calculates relative cents from C (not tonic)
-7. **Capitalization**: Uses sentence case for labels (first letter capitalized, rest lowercase) and lowercase for all maqām names and note names throughout the header
-8. **Reference Frequency Label**: Uses format "Scala file 1/1 (0 cents) reference frequency:" to clearly indicate this is the reference for the 1/1 ratio (0 cents) note
+7. **Reference Frequency Calculation**: Extracts C pitch class frequency directly from pitch class data (not calculated from tuning system reference)
+8. **A4 Detection Logic**: Finds natural A4 by exact match on `englishName === 'A4'` to exclude microtonal variants
+9. **Octave Grouping**: Groups octave equivalent maqamat together, showing transpositions in parentheses with IPN in format "name (IPN)"
+10. **Tahlil-First Sorting**: Within octave groups, sorts by: (1) non-transposed first, (2) ascending MIDI note, (3) prefer names without "al-" prefix, (4) shorter names first
+11. **Symmetrical Detection**: Checks if `JSON.stringify(ascending) === JSON.stringify(descending.reverse())` to detect symmetrical maqamat
+12. **Capitalization**: Uses sentence case for labels (first letter capitalized, rest lowercase) and lowercase for all maqām names and note names throughout the header
+13. **Four Reference Frequency Lines**: Generates separate frequency lines for Scala 1/1 reference, source maqām, A4, and exported maqām
 
 **Output Format** (Scala .scl file):
 ```
@@ -446,12 +451,23 @@ export function exportMaqamTo12ToneScala(
 ! Source maqām tonic note name: dūgāh
 ! Source tuning system: al-Fārābī (950g) First Oud Tuning (Full First Octave) 27-Tone + al-Kindī (874) 12-Tone (starting note: ʿushayrān, reference frequency: 110.00 Hz)
 ! Scala file 1/1 (0 cents) reference frequency: 130.37 Hz (C3)
-! More information: [URL]
+! Source maqām (maqām bayyāt shūrī) reference frequency: D3/dūgāh = 146.67 Hz
+! A4 reference frequency: A4/jawāb ʿushayrān = 440.00 Hz
+! maqām bayyāt shūrī tonic and frequency: D3/dūgāh = 146.67 Hz
+! More information: https://diarmaqar.netlify.app/maqam/bayyat-shuri
 !
-! Compatible maqāmāt in this set (13 total):
-! - maqām sūznāk (and its octave equivalents: ...)
+! Compatible maqāmāt in this set: 13 unique / 45 inc. transpositions:
+! - maqām sūznāk (and its transpositions: maqām sūznāk al-qarār rāst (C2), maqām sūznāk al-jawāb rāst (C4))
 !   Tonic: C (rāst), position 0
-!   ...
+!   Sequence: rāst (C3) → zīrgūleh (C#3) → dūgāh (D3) → segāh (E3) → chahārgāh (F3) → nawā (G3) → ḥiṣār (G#3)
+!   Positions: 0 → 1 → 2 → 4 → 5 → 7 → 8
+! - maqām bayyāt (and its transpositions: maqām bayyāt al-qarār dūgāh (D2))
+!   Tonic: D (dūgāh), position 2
+!   Ascending sequence: dūgāh (D3) → segāh (E3) → chahārgāh (F3) → nawā (G3) → ḥusaynī (A3) → ʿajam (A#3) → kurdān (C4)
+!   Ascending positions: 2 → 4 → 5 → 7 → 9 → 10 → 0
+!   Descending sequence: kurdān (C4) → ʿajam (A#3) → ḥusaynī (A3) → nawā (G3) → chahārgāh (F3) → segāh (E3) → dūgāh (D3)
+!   Descending positions: 0 → 10 → 9 → 7 → 5 → 4 → 2
+! ...
 maqām bayyāt shūrī - 12-tone chromatic set (al-Fārābī (950g) First Oud Tuning (Full First Octave) 27-Tone + al-Kindī (874) 12-Tone)
 12
 !
@@ -472,7 +488,16 @@ maqām bayyāt shūrī - 12-tone chromatic set (al-Fārābī (950g) First Oud Tu
 **Header Formatting Rules**:
 - **Capitalization**: Sentence case for labels (first letter capitalized, rest lowercase). Lowercase for all maqām names and note names.
 - **Starting Note**: Displayed as actual note name from tuning system (e.g., "ʿushayrān"), not as numeric index. Obtained from `tuningSystem.getNoteNameSets()` using `standardizeText()` comparison.
-- **Reference Frequency**: Label format is "Scala file 1/1 (0 cents) reference frequency:" to indicate this is the reference for the 1/1 ratio (0 cents) note.
+- **Four Reference Frequency Lines**:
+  1. **Scala file 1/1 (0 cents) reference frequency**: C pitch class frequency (calculated from pitch class data, not tuning system reference)
+  2. **Source maqām reference frequency**: Source maqām tonic frequency in format "IPN/noteName = frequency Hz"
+  3. **A4 reference frequency**: Natural A4 (~440 Hz) found by exact match on `englishName === 'A4'` (excludes microtonal variants)
+  4. **Exported maqām tonic and frequency**: Actual exported maqām tonic in format "IPN/noteName = frequency Hz"
+- **Octave Grouping**: Octave equivalent maqamat grouped together with transposition list shown in parentheses
+- **Dual Count Display**: Shows format "X unique / Y inc. transpositions" where X is grouped count and Y is total including all octave equivalents
+- **Tahlil-First Sorting**: Within octave groups, non-transposed (tahlil) versions listed first, then sorted by ascending pitch order
+- **Symmetrical Detection**: Automatically detects if ascending == descending (reversed), shows single "Sequence" label instead of separate ascending/descending
+- **Pitch Class Name Format**: Persian-Arab-Ottoman name first, then English with octave in brackets (e.g., "dūgāh (D3)")
 
 **Important Notes**:
 - Returns `null` if maqām is not a source for any 12-pitch-class set
