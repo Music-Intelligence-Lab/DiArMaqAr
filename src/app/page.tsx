@@ -258,25 +258,56 @@ export default function LandingPage() {
         {language === "ar" ? (
           <>
             <p>
-              هذا الموقع صديق للذكاء الاصطناعي ويوفر وصولاً برمجياً شاملاً لبيانات المقامات العربية. جميع الوثائق وواجهات برمجة التطبيقات متاحة للوصول البرمجي.
+              هذا الموقع صديق للذكاء الاصطناعي ويوفر وصولاً برمجياً شاملاً لبيانات المقامات العربية. جميع الوثائق وواجهات برمجة التطبيقات متاحة للوصول البرمجي. تعيد واجهة برمجة التطبيقات استجابات JSON منظمة كاملة تتضمن فئات النغمات والفواصل والمراجع الببليوغرافية والمزيد.
             </p>
-            <div style={{ backgroundColor: "#fff3cd", border: "1px solid #ffc107", borderRadius: "4px", padding: "12px", marginBottom: "16px" }}>
-              <p style={{ margin: 0, fontWeight: "bold" }}>⚠️ مهم: المعاملات المطلوبة</p>
-              <p style={{ margin: "8px 0 0 0" }}>
-                جميع نقاط النهاية التفصيلية (<code>/api/maqamat/&#123;id&#125;</code>, <code>/api/ajnas/&#123;id&#125;</code>) <strong>تتطلب</strong> ثلاثة معاملات: <code>tuningSystem</code> و <code>startingNote</code> و <code>pitchClassDataType</code>. راجع <Link href="/docs/api/representative-examples">الأمثلة التمثيلية</Link> للاستخدام الصحيح.
+            
+            <div className="warning-box">
+              <p>⚠️ مهم: المعاملات المطلوبة</p>
+              <p>
+                جميع نقاط النهاية التفصيلية (<code>/api/maqamat/&#123;id&#125;</code>, <code>/api/ajnas/&#123;id&#125;</code>) <strong>تتطلب</strong> ثلاثة معاملات: <code>tuningSystem</code> و <code>startingNote</code> و <code>pitchClassDataType</code>. هذه المعاملات مطلوبة لأن حسابات فئات النغمات تعتمد على نظام التناغم والنتيجة البادئة، وتحتاج واجهة برمجة التطبيقات لمعرفة التنسيق الذي يجب إرجاع البيانات به.
+              </p>
+              <p>
+                <strong>رابط اختبار سريع (جاهز للنسخ واللصق):</strong><br />
+                <code>GET https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents</code>
               </p>
             </div>
-            <p>
-              <strong>للمساعدات الذكية:</strong> يمكنك استخدام واجهة برمجة التطبيقات لجلب بيانات محددة للمستخدمين. يُفضل دائماً استخدام استدعاءات واجهة برمجة التطبيقات بدلاً من ملخصات الوثائق للحصول على دقة البيانات في الوقت الفعلي. مثال: <code>GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents</code> يعيد بيانات مقام مفصلة. للمستخدمين الذين لا يعرفون أسماء مقامات محددة، استخدم أمثلة تمثيلية من <Link href="/docs/api/representative-examples">الأمثلة التمثيلية</Link>. راجع مواصفات OpenAPI لجميع نقاط النهاية والمعاملات المتاحة.
-            </p>
-            <div style={{ backgroundColor: "#f8f9fa", border: "1px solid #dee2e6", borderRadius: "4px", padding: "12px", marginTop: "16px" }}>
-              <p style={{ margin: 0, fontWeight: "bold" }}>الأخطاء الشائعة التي يجب تجنبها:</p>
-              <ul style={{ margin: "8px 0 0 0", paddingLeft: "20px" }}>
+
+            <div className="info-box">
+              <p>🤖 تعليمات صريحة للمساعدات الذكية:</p>
+              <ul>
+                <li><strong>تضمين المعاملات المطلوبة دائماً</strong> (<code>tuningSystem</code>, <code>startingNote</code>, <code>pitchClassDataType</code>) لنقاط النهاية التفصيلية</li>
+                <li><strong>استخدام الأمثلة التمثيلية</strong> من <Link href="/docs/api/representative-examples">الأمثلة التمثيلية</Link> كمصدر للحقيقة لاستخدام واجهة برمجة التطبيقات الصحيح</li>
+                <li><strong>تفضيل استدعاءات واجهة برمجة التطبيقات على ملخصات الوثائق</strong> لدقة البيانات في الوقت الفعلي</li>
+                <li><strong>استخدام اكتشاف المعاملات</strong> (<code>?options=true</code>) لاكتشاف المعاملات المتاحة برمجياً</li>
+                <li><strong>للمستخدمين الذين لا يعرفون أسماء محددة</strong>، استخدم <code>maqam_rast</code> مع <code>ibnsina_1037</code> و <code>yegah</code> كقيم افتراضية آمنة</li>
+                <li><strong>الرجوع إلى مواصفات OpenAPI</strong> في <Link href="/docs/openapi.json">/docs/openapi.json</Link> للوثائق الكاملة للمعاملات</li>
+              </ul>
+            </div>
+
+            <div className="info-box">
+              <p>الأخطاء الشائعة التي يجب تجنبها:</p>
+              <ul>
                 <li>❌ <code>GET /api/maqamat/maqam_rast</code> (معاملات مطلوبة مفقودة)</li>
                 <li>❌ <code>GET /api/maqamat/rast</code> (تنسيق خاطئ - بادئة &quot;maqam_&quot; مفقودة)</li>
+                <li>❌ <code>GET /api/maqamat/maqam_rast?tuningSystem=Ibn Sīnā (1037)</code> (استخدام الاسم المعروض بدلاً من المعرف الآمن للرابط)</li>
                 <li>✅ <code>GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents</code></li>
               </ul>
             </div>
+
+            <div className="info-box">
+              <p>📋 حالات الاستخدام الشائعة للمساعدات الذكية:</p>
+              <ul>
+                <li><strong>&quot;أخبرني عن مقام عربي أساسي&quot;</strong> → <code>GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents</code></li>
+                <li><strong>&quot;أظهر لي جنساً أساسياً&quot;</strong> → <code>GET /api/ajnas/jins_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents</code></li>
+                <li><strong>&quot;ما أنظمة التناغم المتاحة؟&quot;</strong> → <code>GET /api/tuning-systems</code></li>
+                <li><strong>&quot;قارن أنظمة تناغم مختلفة&quot;</strong> → <code>GET /api/maqamat/maqam_rast/compare?tuningSystems=ibnsina_1037,alfarabi_950g&startingNote=yegah</code></li>
+                <li><strong>&quot;اكتشف المعاملات المتاحة&quot;</strong> → <code>GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&options=true</code></li>
+              </ul>
+            </div>
+
+            <p>
+              <strong>هيكل الاستجابة:</strong> استجابات واجهة برمجة التطبيقات هي هياكل JSON متداخلة معقدة تتضمن بيانات <code>maqam</code>/<code>jins</code>، و<code>pitchData</code> (مصفوفات صاعدة/هابطة)، و<code>intervals</code>، و<code>context</code> (معلومات نظام التناغم)، و<code>sources</code> (مراجع ببليوغرافية)، و<code>links</code> (نقاط نهاية ذات صلة)، و<code>characteristics</code> (خصائص موسيقية). راجع <Link href="/docs/openapi.json">مواصفات OpenAPI</Link> لخطط الاستجابة الكاملة.
+            </p>
             <div className="developers-links">
               <div className="developer-link-card">
                 <h3>الوثائق</h3>
@@ -308,25 +339,56 @@ export default function LandingPage() {
         ) : language === "fr" ? (
           <>
             <p>
-              Ce site est compatible avec les LLM et fournit un accès programmatique complet aux données des maqāmāt arabes. Toute la documentation et les API sont disponibles pour un accès programmatique.
+              Ce site est compatible avec les LLM et fournit un accès programmatique complet aux données des maqāmāt arabes. Toute la documentation et les API sont disponibles pour un accès programmatique. L&apos;API renvoie des réponses JSON structurées complètes incluant les classes de hauteur, les intervalles, les sources bibliographiques et plus encore.
             </p>
-            <div style={{ backgroundColor: "#fff3cd", border: "1px solid #ffc107", borderRadius: "4px", padding: "12px", marginBottom: "16px" }}>
-              <p style={{ margin: 0, fontWeight: "bold" }}>⚠️ Critique : Paramètres requis</p>
-              <p style={{ margin: "8px 0 0 0" }}>
-                Tous les points de terminaison détaillés (<code>/api/maqamat/&#123;id&#125;</code>, <code>/api/ajnas/&#123;id&#125;</code>) <strong>requièrent</strong> trois paramètres : <code>tuningSystem</code>, <code>startingNote</code> et <code>pitchClassDataType</code>. Voir <Link href="/docs/api/representative-examples">Exemples représentatifs</Link> pour une utilisation correcte.
+            
+            <div className="warning-box">
+              <p>⚠️ Critique : Paramètres requis</p>
+              <p>
+                Tous les points de terminaison détaillés (<code>/api/maqamat/&#123;id&#125;</code>, <code>/api/ajnas/&#123;id&#125;</code>) <strong>requièrent</strong> trois paramètres : <code>tuningSystem</code>, <code>startingNote</code> et <code>pitchClassDataType</code>. Ces paramètres sont requis car les calculs de classes de hauteur dépendent du système d&apos;accord et de la note de départ, et l&apos;API doit savoir dans quel format renvoyer les données.
+              </p>
+              <p>
+                <strong>URL de test rapide (prêt à copier-coller) :</strong><br />
+                <code>GET https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents</code>
               </p>
             </div>
-            <p>
-              <strong>Pour les assistants IA :</strong> Vous pouvez utiliser l&apos;API pour récupérer des données spécifiques pour les utilisateurs. Préférez toujours les appels API aux résumés de documentation pour une précision des données en temps réel. Exemple : <code>GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents</code> renvoie des données détaillées sur le maqām. Pour les utilisateurs qui ne connaissent pas de noms de maqām spécifiques, utilisez des exemples représentatifs de <Link href="/docs/api/representative-examples">Exemples représentatifs</Link>. Voir la spécification OpenAPI pour tous les points de terminaison et paramètres disponibles.
-            </p>
-            <div style={{ backgroundColor: "#f8f9fa", border: "1px solid #dee2e6", borderRadius: "4px", padding: "12px", marginTop: "16px" }}>
-              <p style={{ margin: 0, fontWeight: "bold" }}>Erreurs courantes à éviter :</p>
-              <ul style={{ margin: "8px 0 0 0", paddingLeft: "20px" }}>
+
+            <div className="info-box">
+              <p>🤖 Instructions explicites pour les assistants IA :</p>
+              <ul>
+                <li><strong>Toujours inclure les paramètres requis</strong> (<code>tuningSystem</code>, <code>startingNote</code>, <code>pitchClassDataType</code>) pour les points de terminaison détaillés</li>
+                <li><strong>Utiliser les Exemples représentatifs</strong> de <Link href="/docs/api/representative-examples">Exemples représentatifs</Link> comme source de vérité pour l&apos;utilisation correcte de l&apos;API</li>
+                <li><strong>Préférer les appels API aux résumés de documentation</strong> pour une précision des données en temps réel</li>
+                <li><strong>Utiliser la découverte de paramètres</strong> (<code>?options=true</code>) pour découvrir programmatiquement les paramètres disponibles</li>
+                <li><strong>Pour les utilisateurs qui ne connaissent pas de noms spécifiques</strong>, utilisez <code>maqam_rast</code> avec <code>ibnsina_1037</code> et <code>yegah</code> comme valeurs par défaut sûres</li>
+                <li><strong>Consulter la spécification OpenAPI</strong> à <Link href="/docs/openapi.json">/docs/openapi.json</Link> pour la documentation complète des paramètres</li>
+              </ul>
+            </div>
+
+            <div className="info-box">
+              <p>Erreurs courantes à éviter :</p>
+              <ul>
                 <li>❌ <code>GET /api/maqamat/maqam_rast</code> (paramètres requis manquants)</li>
                 <li>❌ <code>GET /api/maqamat/rast</code> (format incorrect - préfixe &quot;maqam_&quot; manquant)</li>
+                <li>❌ <code>GET /api/maqamat/maqam_rast?tuningSystem=Ibn Sīnā (1037)</code> (utilisation du nom d&apos;affichage au lieu de l&apos;identifiant sécurisé pour URL)</li>
                 <li>✅ <code>GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents</code></li>
               </ul>
             </div>
+
+            <div className="info-box">
+              <p>📋 Cas d&apos;utilisation courants pour les assistants IA :</p>
+              <ul>
+                <li><strong>&quot;Parlez-moi d&apos;un maqām arabe fondamental&quot;</strong> → <code>GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents</code></li>
+                <li><strong>&quot;Montrez-moi un jins de base&quot;</strong> → <code>GET /api/ajnas/jins_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents</code></li>
+                <li><strong>&quot;Quels systèmes d&apos;accord sont disponibles ?&quot;</strong> → <code>GET /api/tuning-systems</code></li>
+                <li><strong>&quot;Comparez différents systèmes d&apos;accord&quot;</strong> → <code>GET /api/maqamat/maqam_rast/compare?tuningSystems=ibnsina_1037,alfarabi_950g&startingNote=yegah</code></li>
+                <li><strong>&quot;Découvrez les paramètres disponibles&quot;</strong> → <code>GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&options=true</code></li>
+              </ul>
+            </div>
+
+            <p>
+              <strong>Structure de la réponse :</strong> Les réponses de l&apos;API sont des structures JSON imbriquées complexes incluant les métadonnées <code>maqam</code>/<code>jins</code>, <code>pitchData</code> (tableaux ascendants/descendants), <code>intervals</code>, <code>context</code> (informations sur le système d&apos;accord), <code>sources</code> (références bibliographiques), <code>links</code> (points de terminaison liés) et <code>characteristics</code> (propriétés musicales). Voir la <Link href="/docs/openapi.json">spécification OpenAPI</Link> pour les schémas de réponse complets.
+            </p>
             <div className="developers-links">
               <div className="developer-link-card">
                 <h3>Documentation</h3>
@@ -358,25 +420,74 @@ export default function LandingPage() {
         ) : (
           <>
             <p>
-              This site is LLM-friendly and provides comprehensive programmatic access to Arabic maqām data. All documentation and APIs are available for programmatic access.
+              This site is LLM-friendly and provides comprehensive programmatic access to Arabic maqām data. All documentation and APIs are available for programmatic access. The API returns complete, structured JSON responses with pitch classes, intervals, bibliographic sources, and more.
             </p>
-            <div style={{ backgroundColor: "#fff3cd", border: "1px solid #ffc107", borderRadius: "4px", padding: "12px", marginBottom: "16px" }}>
-              <p style={{ margin: 0, fontWeight: "bold" }}>⚠️ Critical: Required Parameters</p>
-              <p style={{ margin: "8px 0 0 0" }}>
-                All detail endpoints (<code>/api/maqamat/&#123;id&#125;</code>, <code>/api/ajnas/&#123;id&#125;</code>) <strong>require</strong> three parameters: <code>tuningSystem</code>, <code>startingNote</code>, and <code>pitchClassDataType</code>. See <Link href="/docs/api/representative-examples">Representative Examples</Link> for correct usage.
+            
+            <div className="warning-box">
+              <p>⚠️ Critical: Required Parameters</p>
+              <p>
+                All detail endpoints (<code>/api/maqamat/&#123;id&#125;</code>, <code>/api/ajnas/&#123;id&#125;</code>) <strong>require</strong> three parameters: <code>tuningSystem</code>, <code>startingNote</code>, and <code>pitchClassDataType</code>. These are required because pitch class calculations depend on the tuning system and starting note, and the API needs to know which format to return the data in.
+              </p>
+              <p>
+                <strong>Quick Test URL (copy-paste ready):</strong><br />
+                <code>GET https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents</code>
               </p>
             </div>
-            <p>
-              <strong>For AI Assistants:</strong> You can use the API to fetch specific data for users. Always prefer API calls over documentation summaries for real-time data accuracy. Example: <code>GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents</code> returns detailed maqām data. For users who don&apos;t know specific maqam names, use representative examples from <Link href="/docs/api/representative-examples">Representative Examples</Link>. See the OpenAPI specification for all available endpoints and parameters.
-            </p>
-            <div style={{ backgroundColor: "#f8f9fa", border: "1px solid #dee2e6", borderRadius: "4px", padding: "12px", marginTop: "16px" }}>
-              <p style={{ margin: 0, fontWeight: "bold" }}>Common Mistakes to Avoid:</p>
-              <ul style={{ margin: "8px 0 0 0", paddingLeft: "20px" }}>
-                <li>❌ <code>GET /api/maqamat/maqam_rast</code> (missing required parameters)</li>
-                <li>❌ <code>GET /api/maqamat/rast</code> (wrong format - missing &quot;maqam_&quot; prefix)</li>
-                <li>✅ <code>GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents</code></li>
+
+            <div className="info-box">
+              <p>🤖 Explicit Instructions for AI Assistants:</p>
+              <ul>
+                <li><strong>Always include required parameters</strong> (<code>tuningSystem</code>, <code>startingNote</code>, <code>pitchClassDataType</code>) for detail endpoints</li>
+                <li><strong>Use Representative Examples</strong> from <Link href="/docs/api/representative-examples">Representative Examples</Link> as the source of truth for correct API usage</li>
+                <li><strong>Prefer API calls over documentation summaries</strong> for real-time data accuracy</li>
+                <li><strong>Use parameter discovery</strong> (<code>?options=true</code>) to programmatically discover available parameters</li>
+                <li><strong>For users who don&apos;t know specific names</strong>, use <code>maqam_rast</code> with <code>ibnsina_1037</code> and <code>yegah</code> as safe defaults</li>
+                <li><strong>Reference the OpenAPI specification</strong> at <Link href="/docs/openapi.json">/docs/openapi.json</Link> for complete parameter documentation</li>
               </ul>
             </div>
+
+            <div className="info-box">
+              <p>Common Mistakes to Avoid:</p>
+              <ul>
+                <li>
+                  <span>❌</span> <code>GET /api/maqamat/maqam_rast</code> <span>(missing required parameters)</span>
+                </li>
+                <li>
+                  <span>❌</span> <code>GET /api/maqamat/rast</code> <span>(wrong format - missing &quot;maqam_&quot; prefix)</span>
+                </li>
+                <li>
+                  <span>❌</span> <code>GET /api/maqamat/maqam_rast?tuningSystem=Ibn Sīnā (1037)</code> <span>(using display name instead of URL-safe ID)</span>
+                </li>
+                <li>
+                  <span>✅</span> <code>GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents</code>
+                </li>
+              </ul>
+            </div>
+
+            <div className="info-box">
+              <p>📋 Common Use Cases for AI Assistants:</p>
+              <ul>
+                <li>
+                  <strong>&quot;Tell me about a fundamental Arabic maqam&quot;</strong> → <code>GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents</code>
+                </li>
+                <li>
+                  <strong>&quot;Show me a basic jins&quot;</strong> → <code>GET /api/ajnas/jins_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents</code>
+                </li>
+                <li>
+                  <strong>&quot;What tuning systems are available?&quot;</strong> → <code>GET /api/tuning-systems</code>
+                </li>
+                <li>
+                  <strong>&quot;Compare different tuning systems&quot;</strong> → <code>GET /api/maqamat/maqam_rast/compare?tuningSystems=ibnsina_1037,alfarabi_950g&startingNote=yegah</code>
+                </li>
+                <li>
+                  <strong>&quot;Discover available parameters&quot;</strong> → <code>GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&options=true</code>
+                </li>
+              </ul>
+            </div>
+
+            <p>
+              <strong>Response Structure:</strong> API responses are complex nested JSON structures including <code>maqam</code>/<code>jins</code> metadata, <code>pitchData</code> (ascending/descending arrays), <code>intervals</code>, <code>context</code> (tuning system info), <code>sources</code> (bibliographic references), <code>links</code> (related endpoints), and <code>characteristics</code> (musical properties). See the <Link href="/docs/openapi.json">OpenAPI specification</Link> for complete response schemas.
+            </p>
             <div className="developers-links">
               <div className="developer-link-card">
                 <h3>Documentation</h3>
