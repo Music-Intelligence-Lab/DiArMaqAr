@@ -42,10 +42,10 @@ The **Digital Arabic Maqām Archive** (DiArMaqAr) is a Open-source bilingual pla
 
 **Files:**
 - `tuningSystems.json` - Historical tuning systems with pitch class values
-- `ajnas.json` - Melodic fragments (abstract note names)
+- `ajnas.json` - Jins definitions (3–5 note sequences with abstract note names)
 - `maqamat.json` - Complete modal frameworks
 - `sources.json` - Bibliography and source references
-- `patterns.json` - Melodic patterns for analysis
+- `patterns.json` - Playback patterns for audio demonstration
 
 **2. Model Layer (TypeScript)**
 - Classes bridge abstract data with concrete implementations
