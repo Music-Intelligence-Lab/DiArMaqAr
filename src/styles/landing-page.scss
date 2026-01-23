@@ -239,27 +239,6 @@ h2 {
       right: 12px;
     }
   }
-}
-
-/* If the button is an anchor, show it as a plain link */
-a.button,
-a.main-button {
-  background: none;
-  color: inherit !important;
-  padding: 0;
-  border-radius: 0;
-  box-shadow: none;
-  text-decoration: none;
-  display: inline;
-}
-
-a.button:hover,
-a.main-button:hover {
-  background: none;
-  box-shadow: none;
-  text-decoration: underline;
-}
-
 
   .features-grid {
     display: grid;
@@ -317,3 +296,252 @@ a.main-button:hover {
       }
     }
   }
+
+  .developers-llms {
+    > p {
+      margin-bottom: 1.5rem;
+      line-height: 1.7;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+
+    // Shared styles for warning and info boxes
+    .warning-box,
+    .info-box {
+      background-color: rgba($medium-grey, 0.7);
+      border-left: 3px solid;
+      border-radius: 4px;
+      padding: 1.25rem;
+      margin: 1.5rem 0;
+      color: $text;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+
+      p {
+        margin: 0;
+        font-size: 15px;
+        line-height: 1.7;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        hyphens: auto;
+
+        &:not(:last-child) {
+          margin-bottom: 0.75rem;
+        }
+      }
+
+      code {
+        background-color: rgba(0, 0, 0, 0.4);
+        padding: 3px 6px;
+        border-radius: 3px;
+        font-size: 0.875em;
+        font-family: 'Courier New', 'Monaco', monospace;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        white-space: pre-wrap;
+        display: inline;
+        line-height: 1.6;
+      }
+
+      strong {
+        font-weight: 600;
+        word-wrap: break-word;
+      }
+    }
+
+    .warning-box {
+      border-left-color: $gold;
+      background-color: rgba($medium-grey, 0.8);
+
+      p:first-child {
+        font-weight: 600;
+        color: $gold;
+        margin-bottom: 0.75rem;
+      }
+
+      code {
+        color: $gold;
+      }
+
+      strong {
+        color: $gold;
+      }
+    }
+
+    .info-box {
+      border-left-color: rgba($primary, 0.6);
+
+      p:first-child {
+        font-weight: 600;
+        color: $text;
+        margin-bottom: 0.75rem;
+      }
+
+      code {
+        color: $text;
+      }
+
+      ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        counter-reset: none;
+
+        li {
+          padding: 0.875rem 0;
+          font-size: 14px;
+          line-height: 1.7;
+          border-bottom: 1px solid rgba($primary, 0.1);
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+          display: block;
+
+          &:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+          }
+
+          &::before {
+            display: none;
+            content: none;
+          }
+
+          // Spacing for emoji/icon spans
+          > span:first-child {
+            margin-right: 0.5rem;
+            display: inline-block;
+            vertical-align: top;
+          }
+
+          // Better handling for code blocks in list items
+          code {
+            display: inline;
+            margin: 0 0.25rem;
+            padding: 3px 6px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            line-height: 1.6;
+            vertical-align: baseline;
+          }
+
+          // Handle arrow separators and text spans
+          strong {
+            display: inline;
+            word-wrap: break-word;
+            margin-right: 0.5rem;
+            font-weight: 600;
+          }
+
+          // Text after code blocks
+          > span:not(:first-child) {
+            display: inline;
+            word-wrap: break-word;
+            margin-left: 0.25rem;
+          }
+
+          // Better wrapping for long content
+          * {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+          }
+        }
+      }
+    }
+
+    .developers-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+      }
+    }
+
+    .developer-link-card {
+      background-color: rgba($medium-grey, 0.7);
+      border: 1px solid rgba($primary, 0.25);
+      border-radius: 6px;
+      padding: 1.5rem;
+      transition: all 0.2s ease;
+
+      &:hover {
+        border-color: rgba($primary, 0.4);
+        background-color: rgba($medium-grey, 0.8);
+      }
+
+      h3 {
+        color: $gold;
+        margin-bottom: 1rem;
+        font-size: 18px;
+        font-weight: 500;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        max-width: 100%;
+
+        li {
+          padding: 0.5rem 0;
+          margin-bottom: 0;
+          border-bottom: 1px solid rgba($primary, 0.1);
+
+          &:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+          }
+
+          &::before {
+            display: none;
+          }
+
+          a {
+            color: $text;
+            text-decoration: none;
+            transition: color 0.2s ease;
+            font-size: 14px;
+            line-height: 1.5;
+
+            &:hover {
+              color: $gold;
+              text-decoration: underline;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .about,
+  .key-features,
+  .developers-llms,
+  .credits,
+  .contribute {
+    margin-top: 2rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* If the button is an anchor, show it as a plain link */
+a.button,
+a.main-button {
+  background: none;
+  color: inherit !important;
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+  text-decoration: none;
+  display: inline;
+}
+
+a.button:hover,
+a.main-button:hover {
+  background: none;
+  box-shadow: none;
+  text-decoration: underline;
+}
