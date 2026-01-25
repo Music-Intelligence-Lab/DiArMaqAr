@@ -187,6 +187,7 @@ const translations = {
     "filter.frequency": "Freq (Hz)",
     "filter.staffNotation": "Staff Notation",
     "filter.centsDeviation": "12-EDO Deviation",
+    "filter.intervalsMatrix": "Intervals Matrix",
 
     // Maqam Manager
     "maqam.transpositions": "Transpositions",
@@ -330,6 +331,10 @@ const translations = {
     "analysis.midiNoteDeviation": "MIDI & Deviation",
     "analysis.frequency": "Freq (Hz)",
     "analysis.staffNotation": "Staff Notation",
+    "analysis.intervalsFrom": "Intervals from",
+    "analysis.intervalBetween": "Interval between",
+    "analysis.to": "to",
+    "analysis.and": "and",
     "analysis.play": "Play",
 
     // Modulations
@@ -532,6 +537,7 @@ const translations = {
     "filter.frequency": "التردد",
     "filter.staffNotation": "تدوين",
     "filter.centsDeviation": "انحراف 12-EDO",
+    "filter.intervalsMatrix": "مصفوفة الفواصل",
 
     // Maqam Manager (Arabic translations)
     "maqam.transpositions": "تصاوير",
@@ -675,6 +681,10 @@ const translations = {
     "analysis.midiNoteDeviation": "انحراف نوطة ميدي",
     "analysis.frequency": "التردد (هرتز)",
     "analysis.staffNotation": "تدوين",
+    "analysis.intervalsFrom": "الفواصل من",
+    "analysis.intervalBetween": "الفاصل بين",
+    "analysis.to": "إلى",
+    "analysis.and": "و",
     "analysis.play": "استماع",
 
     // Modulations (Arabic translations)
@@ -877,6 +887,7 @@ const translations = {
     "filter.frequency": "Fréq. (Hz)",
     "filter.staffNotation": "Notation sur portée",
     "filter.centsDeviation": "Déviation 12-EDO",
+    "filter.intervalsMatrix": "Matrice d'intervalles",
 
     // Maqam Manager
     "maqam.transpositions": "Transpositions",
@@ -1020,6 +1031,10 @@ const translations = {
     "analysis.midiNoteDeviation": "MIDI et déviation",
     "analysis.frequency": "Fréq. (Hz)",
     "analysis.staffNotation": "Notation sur portée",
+    "analysis.intervalsFrom": "Intervalles de",
+    "analysis.intervalBetween": "Intervalle entre",
+    "analysis.to": "à",
+    "analysis.and": "et",
     "analysis.play": "Jouer",
 
     // Modulations
