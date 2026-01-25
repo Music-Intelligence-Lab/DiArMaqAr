@@ -5240,6 +5240,383 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
 
+  /intervals/calculate:
+    get:
+      tags:
+        - Intervals
+      summary: Calculate interval between two pitch classes
+      description: |
+        Calculate the interval between two pitch classes in a specific tuning system.
+        
+        Supports flexible pitch class identification:
+        - By note name (e.g., "rast", "dugah")
+        - By value in any format: fraction (e.g., "3/2"), cents (e.g., "701.955"), decimalRatio (e.g., "1.5"), stringLength, or fretDivision
+        
+        Returns the interval in the requested unit format, plus all other unit formats for reference.
+      operationId: calculateIntervalBetweenPitchClasses
+      parameters:
+        - name: from
+          in: query
+          required: true
+          description: First pitch class identifier (note name or value)
+          schema:
+            type: string
+          example: "rast"
+        - name: to
+          in: query
+          required: true
+          description: Second pitch class identifier (note name or value)
+          schema:
+            type: string
+          example: "dugah"
+        - name: tuningSystem
+          in: query
+          required: true
+          description: Tuning system ID
+          schema:
+            type: string
+          example: "ibnsina_1037"
+        - name: startingNote
+          in: query
+          required: true
+          description: Starting note for the tuning system
+          schema:
+            type: string
+          example: "yegah"
+        - name: unit
+          in: query
+          required: true
+          description: Output unit format for the interval
+          schema:
+            type: string
+            enum: [fraction, cents, centsFromZero, decimalRatio, stringLength, fretDivision]
+          example: "cents"
+        - name: fromType
+          in: query
+          required: false
+          description: |
+            Type of 'from' value if it's a value (not a note name).
+            Required if 'from' is a value and cannot be auto-detected.
+          schema:
+            type: string
+            enum: [fraction, cents, decimalRatio, stringLength, fretDivision]
+          example: "fraction"
+        - name: toType
+          in: query
+          required: false
+          description: |
+            Type of 'to' value if it's a value (not a note name).
+            Required if 'to' is a value and cannot be auto-detected.
+          schema:
+            type: string
+            enum: [fraction, cents, decimalRatio, stringLength, fretDivision]
+          example: "fraction"
+        - name: includeArabic
+          in: query
+          required: false
+          description: |
+            Return bilingual responses with Arabic script when true.
+
+            When true:
+            - All English/transliteration fields remain unchanged
+            - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+            - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+            - Comments get Arabic versions in commentsAr if available
+            - Tuning system display names get Arabic versions in displayNameAr if available
+            - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "false"
+          example: "true"
+      responses:
+        '200':
+          description: Interval calculated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  context:
+                    type: object
+                    properties:
+                      tuningSystem:
+                        $ref: '#/components/schemas/EntityRef'
+                      startingNote:
+                        $ref: '#/components/schemas/IdentifierRef'
+                      referenceFrequency:
+                        type: number
+                        description: Reference frequency in Hz
+                  from:
+                    type: object
+                    properties:
+                      pitchClass:
+                        type: object
+                        properties:
+                          pitchClassIndex:
+                            type: integer
+                          octave:
+                            type: integer
+                          noteName:
+                            type: string
+                            description: URL-safe note name
+                          noteNameDisplay:
+                            type: string
+                            description: Display note name with diacritics
+                          noteNameDisplayAr:
+                            type: string
+                            description: Arabic note name (if includeArabic=true)
+                          englishName:
+                            type: string
+                          solfege:
+                            type: string
+                          abjadName:
+                            type: string
+                          fraction:
+                            type: string
+                          cents:
+                            type: number
+                          decimalRatio:
+                            type: number
+                          stringLength:
+                            type: number
+                          fretDivision:
+                            type: number
+                      identifier:
+                        $ref: '#/components/schemas/IdentifierRef'
+                        description: The input identifier used to find this pitch class
+                  to:
+                    type: object
+                    properties:
+                      pitchClass:
+                        type: object
+                        properties:
+                          pitchClassIndex:
+                            type: integer
+                          octave:
+                            type: integer
+                          noteName:
+                            type: string
+                            description: URL-safe note name
+                          noteNameDisplay:
+                            type: string
+                            description: Display note name with diacritics
+                          noteNameDisplayAr:
+                            type: string
+                            description: Arabic note name (if includeArabic=true)
+                          englishName:
+                            type: string
+                          solfege:
+                            type: string
+                          abjadName:
+                            type: string
+                          fraction:
+                            type: string
+                          cents:
+                            type: number
+                          decimalRatio:
+                            type: number
+                          stringLength:
+                            type: number
+                          fretDivision:
+                            type: number
+                      identifier:
+                        $ref: '#/components/schemas/IdentifierRef'
+                        description: The input identifier used to find this pitch class
+                  interval:
+                    type: object
+                    properties:
+                      value:
+                        oneOf:
+                          - type: string
+                          - type: number
+                        description: The interval in the requested unit format
+                      unit:
+                        type: string
+                        description: The requested unit format
+                        enum: [fraction, cents, centsFromZero, decimalRatio, stringLength, fretDivision]
+                      allUnits:
+                        type: object
+                        description: All unit formats for reference
+                        properties:
+                          fraction:
+                            type: string
+                          cents:
+                            type: number
+                          decimalRatio:
+                            type: number
+                          stringLength:
+                            type: number
+                          fretDivision:
+                            type: number
+                  links:
+                    $ref: '#/components/schemas/Links'
+              examples:
+                noteNames:
+                  summary: Calculate interval using note names
+                  value:
+                    context:
+                      tuningSystem:
+                        id: "ibnsina_1037"
+                        idName: "ibnsina_1037"
+                        displayName: "Ibn Sīnā (1037)"
+                      startingNote:
+                        idName: "yegah"
+                        displayName: "yegāh"
+                      referenceFrequency: 97.999
+                    from:
+                      pitchClass:
+                        pitchClassIndex: 0
+                        octave: 0
+                        noteName: "yegah"
+                        noteNameDisplay: "yegāh"
+                        englishName: "D"
+                        solfege: "re"
+                        abjadName: "د"
+                        fraction: "1/1"
+                        cents: 0
+                        decimalRatio: 1
+                        stringLength: 1000
+                        fretDivision: 0
+                      identifier:
+                        idName: "yegah"
+                        displayName: "yegāh"
+                    to:
+                      pitchClass:
+                        pitchClassIndex: 1
+                        octave: 0
+                        noteName: "dugah"
+                        noteNameDisplay: "dūgāh"
+                        englishName: "E"
+                        solfege: "mi"
+                        abjadName: "ه"
+                        fraction: "9/8"
+                        cents: 203.91
+                        decimalRatio: 1.125
+                        stringLength: 888.889
+                        fretDivision: 102
+                      identifier:
+                        idName: "dugah"
+                        displayName: "dūgāh"
+                    interval:
+                      value: 203.91
+                      unit: "cents"
+                      allUnits:
+                        fraction: "9/8"
+                        cents: 203.91
+                        decimalRatio: 1.125
+                        stringLength: 111.111
+                        fretDivision: 102
+                    links:
+                      self: "/api/intervals/calculate?from=yegah&to=dugah&tuningSystem=ibnsina_1037&startingNote=yegah&unit=cents"
+                      tuningSystem: "/api/tuning-systems/ibnsina_1037"
+                      intervals: "/api/intervals?noteNames=yegah,dugah&tuningSystem=ibnsina_1037&startingNote=yegah"
+                values:
+                  summary: Calculate interval using values
+                  value:
+                    context:
+                      tuningSystem:
+                        id: "ibnsina_1037"
+                        idName: "ibnsina_1037"
+                        displayName: "Ibn Sīnā (1037)"
+                      startingNote:
+                        idName: "yegah"
+                        displayName: "yegāh"
+                      referenceFrequency: 97.999
+                    from:
+                      pitchClass:
+                        pitchClassIndex: 0
+                        octave: 0
+                        noteName: "yegah"
+                        noteNameDisplay: "yegāh"
+                        englishName: "D"
+                        solfege: "re"
+                        abjadName: "د"
+                        fraction: "1/1"
+                        cents: 0
+                        decimalRatio: 1
+                        stringLength: 1000
+                        fretDivision: 0
+                      identifier:
+                        idName: "1/1"
+                        displayName: "1/1"
+                    to:
+                      pitchClass:
+                        pitchClassIndex: 1
+                        octave: 0
+                        noteName: "dugah"
+                        noteNameDisplay: "dūgāh"
+                        englishName: "E"
+                        solfege: "mi"
+                        abjadName: "ه"
+                        fraction: "9/8"
+                        cents: 203.91
+                        decimalRatio: 1.125
+                        stringLength: 888.889
+                        fretDivision: 102
+                      identifier:
+                        idName: "9/8"
+                        displayName: "9/8"
+                    interval:
+                      value: "9/8"
+                      unit: "fraction"
+                      allUnits:
+                        fraction: "9/8"
+                        cents: 203.91
+                        decimalRatio: 1.125
+                        stringLength: 111.111
+                        fretDivision: 102
+                    links:
+                      self: "/api/intervals/calculate?from=1/1&to=9/8&tuningSystem=ibnsina_1037&startingNote=yegah&unit=fraction&fromType=fraction&toType=fraction"
+                      tuningSystem: "/api/tuning-systems/ibnsina_1037"
+                      intervals: "/api/intervals?noteNames=yegah,dugah&tuningSystem=ibnsina_1037&startingNote=yegah"
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                missingParameter:
+                  summary: Missing required parameter
+                  value:
+                    error: "from parameter is required"
+                    message: "The first pitch class identifier must be provided."
+                    hint: "Add &from=rast or &from=3/2 to your request"
+                invalidUnit:
+                  summary: Invalid unit parameter
+                  value:
+                    error: "Invalid unit 'invalid'"
+                    message: "The unit must be one of the valid options."
+                    validOptions: ["fraction", "cents", "centsFromZero", "decimalRatio", "stringLength", "fretDivision"]
+                    hint: "Use one of: fraction, cents, centsFromZero, decimalRatio, stringLength, fretDivision"
+                invalidStartingNote:
+                  summary: Invalid starting note
+                  value:
+                    error: "Invalid startingNote 'invalid'"
+                    validOptions: ["yegah", "ushayran", "rast"]
+                    hint: "Valid starting notes for this tuning system: yegah, ushayran, rast"
+        '404':
+          description: Pitch class or tuning system not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                pitchClassNotFound:
+                  summary: Pitch class not found
+                  value:
+                    error: "Pitch class 'invalid' not found"
+                    message: "Could not find a pitch class matching 'invalid' in tuning system 'ibnsina_1037' with starting note 'yegah'."
+                    hint: "Use /api/pitch-classes/note-names to see all valid note names, or ensure the value matches exactly a pitch class value in the tuning system"
+                tuningSystemNotFound:
+                  summary: Tuning system not found
+                  value:
+                    error: "Tuning system 'invalid' not found"
+                    hint: "Use /api/tuning-systems to see all available tuning systems"
+        '500':
+          $ref: '#/components/responses/ServerError'
+
   /sources:
     get:
       tags:
