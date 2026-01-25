@@ -495,6 +495,31 @@
     transition: background-color 0.2s;
   }
 
+  &__intervals-matrix-unit-select {
+    font-size: 12px;
+    padding: 2px 2px;
+    border: 0px none;
+    border-image: none;
+    border-radius: 3px;
+    background-color: rgba(0, 0, 0, 1);
+    color: rgba(240, 240, 240, 1);
+    cursor: pointer;
+    margin-left: -8px;
+    margin-right: -8px;
+    min-width: 100px;
+    
+    &:focus {
+      outline: 1px solid #666;
+      outline-offset: -1px;
+    }
+  }
+
+  // Separate rule for centered table cells (can't nest in attribute selector)
+  [class*="__table-cell--centered"] {
+    text-align: center !important;
+  }
+
+
   &__filter-checkbox {
     cursor: pointer;
     margin-right: 2px;
@@ -832,6 +857,10 @@
     background-color: $medium-grey;
     text-transform: capitalize;
     font-weight: 400 !important;
+  }
+
+  [class*="__row-header--sentence-case"] {
+    text-transform: none;
   }
 
   // -------------------------

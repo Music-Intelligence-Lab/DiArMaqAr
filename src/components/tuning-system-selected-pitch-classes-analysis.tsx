@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect, useRef } from "react";
 import useAppContext from "@/contexts/app-context";
 import useSoundContext, { defaultNoteVelocity } from "@/contexts/sound-context";
 import useLanguageContext from "@/contexts/language-context";
@@ -10,6 +10,7 @@ import { getPitchClassIntervals } from "@/functions/getPitchClassIntervals";
 import { renderPitchClassSpellings } from "@/functions/renderPitchClassIpnSpellings";
 import { getIpnReferenceNoteNameWithOctave } from "@/functions/getIpnReferenceNoteName";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
+import { calculateInterval } from "@/models/PitchClass";
 import StaffNotation from "./staff-notation";
 
 export default function SelectedPitchClassesAnalysis() {
@@ -36,7 +37,27 @@ export default function SelectedPitchClassesAnalysis() {
     frequency: false,
     staffNotation: false,
     pitchClass: false,
+    intervalsMatrix: false,
   });
+
+  // Unit selection for intervals matrix - default to cents
+  // Use a ref to track if we've initialized the unit based on valueType
+  const hasInitializedUnit = useRef(false);
+  const [intervalsMatrixUnit, setIntervalsMatrixUnit] = useState<"fraction" | "cents" | "centsFromZero" | "decimalRatio" | "stringLength" | "fretDivision">("cents");
+
+  // Initialize intervalsMatrixUnit once based on valueType, but don't override user's manual selection
+  useEffect(() => {
+    if (selectedPitchClasses && selectedPitchClasses.length > 0 && !hasInitializedUnit.current) {
+      const currentValueType = selectedPitchClasses[0].originalValueType;
+      const calculableUnits: Array<"fraction" | "cents" | "centsFromZero" | "decimalRatio" | "stringLength" | "fretDivision"> = ["fraction", "cents", "centsFromZero", "decimalRatio", "stringLength", "fretDivision"];
+      
+      // Set initial value based on valueType if it's a calculable unit
+      if (calculableUnits.includes(currentValueType as any)) {
+        setIntervalsMatrixUnit(currentValueType as "fraction" | "cents" | "centsFromZero" | "decimalRatio" | "stringLength" | "fretDivision");
+      }
+      hasInitializedUnit.current = true;
+    }
+  }, [selectedPitchClasses]);
 
   // Ensure current value type is always checked, uncheck value types not in current tuning system
   useEffect(() => {
@@ -69,6 +90,61 @@ export default function SelectedPitchClassesAnalysis() {
 
   const disabledFilters: string[] = [];
 
+  // Helper function to format interval based on selected unit
+  const formatIntervalValue = (
+    interval: ReturnType<typeof calculateInterval>,
+    unit: typeof intervalsMatrixUnit,
+    fromPcIndex: number
+  ): string => {
+    switch (unit) {
+      case "fraction":
+        return `(${interval.fraction.replace("/", ":")})`;
+      case "cents":
+        return `(${interval.cents.toFixed(3)})`;
+      case "centsFromZero":
+        // For intervals, centsFromZero is the same as cents (intervals are already relative)
+        return `(${interval.cents.toFixed(3)})`;
+      case "decimalRatio":
+        return `(${interval.decimalRatio.toFixed(3)})`;
+      case "stringLength":
+        return `(${interval.stringLength.toFixed(3)})`;
+      case "fretDivision":
+        return `(${interval.fretDivision.toFixed(3)})`;
+      default:
+        return `(${interval.cents.toFixed(3)})`;
+    }
+  };
+
+  // Helper function to format pitch class value based on selected unit
+  const formatPitchClassValue = (
+    pitchClass: typeof selectedPitchClasses[0],
+    unit: typeof intervalsMatrixUnit,
+    pitchClassIndex: number
+  ): string => {
+    switch (unit) {
+      case "fraction":
+        return pitchClass.fraction.replace("/", ":");
+      case "cents":
+        return parseFloat(pitchClass.cents).toFixed(3);
+      case "centsFromZero":
+        // Calculate cents from the first pitch class (index 0)
+        if (pitchClassIndex === 0) {
+          return "0.000";
+        }
+        const firstPitchClass = selectedPitchClasses[0];
+        const centsFromZero = parseFloat(pitchClass.cents) - parseFloat(firstPitchClass.cents);
+        return centsFromZero.toFixed(3);
+      case "decimalRatio":
+        return parseFloat(pitchClass.decimalRatio).toFixed(3);
+      case "stringLength":
+        return parseFloat(pitchClass.stringLength).toFixed(3);
+      case "fretDivision":
+        return parseFloat(pitchClass.fretDivision).toFixed(3);
+      default:
+        return parseFloat(pitchClass.cents).toFixed(3);
+    }
+  };
+
   const copyTableToClipboard = async () => {
     try {
       const pitchClasses = renderPitchClassSpellings(selectedPitchClasses);
@@ -89,9 +165,9 @@ export default function SelectedPitchClassesAnalysis() {
       // Pitch Class row (if filter enabled)
       if (localFilters["pitchClass"]) {
         const pitchClassRow = [t("analysis.pitchClass")];
-        pitchClasses.forEach((_, i) => {
+        pitchClasses.forEach((pitchClass, i) => {
           if (i > 0) pitchClassRow.push(''); // Empty cell for interval column
-          pitchClassRow.push(i.toString());
+          pitchClassRow.push(pitchClass.pitchClassIndex.toString());
         });
         rows.push(pitchClassRow);
       }
@@ -254,6 +330,68 @@ export default function SelectedPitchClassesAnalysis() {
         rows.push(frequencyRow);
       }
 
+      // Intervals matrix rows (if filter enabled)
+      if (localFilters["intervalsMatrix"]) {
+        // Build list of all intervals to display (one per row)
+        const intervalsToShow: Array<{ fromPc: typeof pitchClasses[0], fromIndex: number, toPc: typeof pitchClasses[0], toIndex: number }> = [];
+        
+        // Only consider pitch classes up to second-to-last (exclude last)
+        pitchClasses.slice(0, -1).forEach((fromPc, sliceIndex) => {
+          const fromIndex = sliceIndex;
+          
+          // Find all ascending intervals from this pitch class (including adjacent)
+          pitchClasses.slice(1).forEach((toPc, toIndex) => {
+            const actualIndex = toIndex + 1;
+            if (fromIndex < actualIndex) {
+              intervalsToShow.push({ fromPc, fromIndex, toPc, toIndex: actualIndex });
+            }
+          });
+        });
+
+        // Create one row per interval
+        intervalsToShow.forEach((interval) => {
+          const matrixRow = [`${t('analysis.intervalBetween')} ${getDisplayName(interval.fromPc.noteName, "note")} ${t('analysis.and')} ${getDisplayName(interval.toPc.noteName, "note")}`];
+          
+          // First pitch class: only show if fromIndex is 0
+          if (interval.fromIndex === 0) {
+            matrixRow.push(formatPitchClassValue(pitchClasses[0], intervalsMatrixUnit, 0));
+          } else {
+            matrixRow.push('');
+          }
+          
+          // Subsequent pitch classes
+          pitchClasses.slice(1).forEach((pc, pcIndex) => {
+            const actualIndex = pcIndex + 1;
+            
+            if (actualIndex < interval.fromIndex) {
+              // Before the "from" pitch class: empty
+              matrixRow.push('');
+              matrixRow.push('');
+            } else if (actualIndex === interval.fromIndex) {
+              // At the "from" pitch class: empty interval, then value
+              matrixRow.push('');
+              matrixRow.push(formatPitchClassValue(pc, intervalsMatrixUnit, actualIndex));
+            } else if (actualIndex < interval.toIndex) {
+              // Between "from" and "to": empty
+              matrixRow.push('');
+              matrixRow.push('');
+            } else if (actualIndex === interval.toIndex) {
+              // At the "to" pitch class: interval then value
+              const calculatedInterval = calculateInterval(interval.fromPc, interval.toPc);
+              const intervalValue = formatIntervalValue(calculatedInterval, intervalsMatrixUnit, interval.fromIndex);
+              matrixRow.push(intervalValue);
+              matrixRow.push(formatPitchClassValue(pc, intervalsMatrixUnit, actualIndex));
+            } else {
+              // After the "to" pitch class: empty
+              matrixRow.push('');
+              matrixRow.push('');
+            }
+          });
+          
+          rows.push(matrixRow);
+        });
+      }
+
       // Get max columns from data rows
       const maxCols = Math.max(...rows.filter(r => r.length > 1).map(r => r.length));
       
@@ -314,15 +452,28 @@ export default function SelectedPitchClassesAnalysis() {
     const valueType = allPitchClasses[0].originalValueType;
     const useRatio = valueType === "fraction" || valueType === "decimalRatio";
 
-    const numberOfFilterRows = Object.keys(localFilters).filter(
-      (key) => !disabledFilters.includes(key) && key !== valueType && localFilters[key as keyof typeof localFilters]
-    ).length;
-    const pitchClassIntervals = getPitchClassIntervals(selectedPitchClasses);
-    function renderTable() {
-      // Apply sequential English name spellings for melodic sequences
-      const pitchClasses = renderPitchClassSpellings(selectedPitchClasses);
-      const intervals = pitchClassIntervals;
-      const rowSpan = 4 + numberOfFilterRows;
+      const numberOfFilterRows = Object.keys(localFilters).filter(
+        (key) => !disabledFilters.includes(key) && key !== valueType && key !== "intervalsMatrix" && localFilters[key as keyof typeof localFilters]
+      ).length;
+      const pitchClassIntervals = getPitchClassIntervals(selectedPitchClasses);
+      function renderTable() {
+        // Apply sequential English name spellings for melodic sequences
+        const pitchClasses = renderPitchClassSpellings(selectedPitchClasses);
+        const intervals = pitchClassIntervals;
+        // Intervals matrix rows: count all ascending intervals
+        let intervalsMatrixRows = 0;
+        if (localFilters["intervalsMatrix"]) {
+          pitchClasses.slice(0, -1).forEach((fromPc, sliceIndex) => {
+            const fromIndex = sliceIndex;
+            pitchClasses.slice(1).forEach((toPc, toIndex) => {
+              const actualIndex = toIndex + 1;
+              if (fromIndex < actualIndex) {
+                intervalsMatrixRows++;
+              }
+            });
+          });
+        }
+        const rowSpan = 4 + numberOfFilterRows + intervalsMatrixRows;
 
       return (
         <>
@@ -380,10 +531,10 @@ export default function SelectedPitchClassesAnalysis() {
           {localFilters["pitchClass"] && (
             <tr data-row-type="pitchClass">
               <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.pitchClass')}</th>
-              {pitchClasses.map((_, i) => (
+              {pitchClasses.map((pitchClass, i) => (
                 <React.Fragment key={i}>
                   {i !== 0 && <th className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></th>}
-                  <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="pitch-class">{i}</th>
+                  <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="pitch-class">{pitchClass.pitchClassIndex}</th>
                 </React.Fragment>
               ))}
             </tr>
@@ -576,6 +727,147 @@ export default function SelectedPitchClassesAnalysis() {
               </td>
             </tr>
           )}
+          {localFilters["intervalsMatrix"] && (() => {
+            // Build list of all intervals to display (one per row)
+            const intervalsToShow: Array<{ fromPc: typeof pitchClasses[0], fromIndex: number, toPc: typeof pitchClasses[0], toIndex: number }> = [];
+            
+            // Only consider pitch classes up to second-to-last (exclude last)
+            pitchClasses.slice(0, -1).forEach((fromPc, sliceIndex) => {
+              const fromIndex = sliceIndex;
+              
+              // Find all ascending intervals from this pitch class (including adjacent)
+              pitchClasses.slice(1).forEach((toPc, toIndex) => {
+                const actualIndex = toIndex + 1;
+                if (fromIndex < actualIndex) {
+                  intervalsToShow.push({ fromPc, fromIndex, toPc, toIndex: actualIndex });
+                }
+              });
+            });
+
+            return intervalsToShow.map((interval, rowIndex) => {
+              const calculatedInterval = calculateInterval(interval.fromPc, interval.toPc);
+              // Calculate how many interval cells to merge between fromIndex and toIndex
+              // Structure: for each pitch class i (i > 0), we have: [interval cell] [value cell]
+              // We want to merge only the interval cells (not value cells) between fromIndex and toIndex
+              // Number of interval cells to merge = (toIndex - fromIndex) interval cells
+              // But we also need to account for the value cells in between, so:
+              // Total cells to span = (toIndex - fromIndex) * 2 - 1
+              // (subtract 1 because we don't include the toIndex value cell in the merge)
+              const cellsToMerge = (interval.toIndex - interval.fromIndex) * 2 - 1;
+              
+              return (
+                <tr key={`intervals-matrix-${interval.fromIndex}-${interval.toIndex}`} data-row-type="intervalsMatrix">
+                  <th className="maqam-jins-transpositions-shared__row-header maqam-jins-transpositions-shared__row-header--sentence-case" data-column-type="row-header">
+                    {t('analysis.intervalBetween')} {getDisplayName(interval.fromPc.noteName, 'note')} {t('analysis.and')} {getDisplayName(interval.toPc.noteName, 'note')}
+                  </th>
+                  {/* Special handling when fromIndex is 0 */}
+                  {interval.fromIndex === 0 ? (
+                    <>
+                      {/* First pitch class value */}
+                      <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="intervals-matrix-value">
+                        {formatPitchClassValue(pitchClasses[0], intervalsMatrixUnit, 0)}
+                      </th>
+                      {/* Merged interval cell spanning from after index 0 to before toIndex */}
+                      {cellsToMerge > 0 && (
+                        <th 
+                          className="maqam-jins-transpositions-shared__table-cell--pitch-class maqam-jins-transpositions-shared__table-cell--centered" 
+                          data-column-type="intervals-matrix"
+                          colSpan={cellsToMerge}
+                        >
+                          {formatIntervalValue(calculatedInterval, intervalsMatrixUnit, interval.fromIndex)}
+                        </th>
+                      )}
+                      {/* Subsequent pitch classes - only show those at or after toIndex */}
+                      {pitchClasses.slice(1).map((pc, pcIndex) => {
+                        const actualIndex = pcIndex + 1;
+                        
+                        if (actualIndex < interval.toIndex) {
+                          // Before the "to" pitch class: skip (merged into colspan above)
+                          return null;
+                        } else if (actualIndex === interval.toIndex) {
+                          // At the "to" pitch class: show value (interval is already shown in merged cell)
+                          return (
+                            <React.Fragment key={actualIndex}>
+                              <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="intervals-matrix-value">
+                                {formatPitchClassValue(pc, intervalsMatrixUnit, actualIndex)}
+                              </th>
+                            </React.Fragment>
+                          );
+                        } else {
+                          // After the "to" pitch class: show empty
+                          return (
+                            <React.Fragment key={actualIndex}>
+                              <th className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></th>
+                              <th className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></th>
+                            </React.Fragment>
+                          );
+                        }
+                      })}
+                    </>
+                  ) : (
+                    <>
+                      {/* First pitch class value - empty when fromIndex is not 0 */}
+                      <th className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></th>
+                      {/* Subsequent pitch classes */}
+                      {pitchClasses.slice(1).map((pc, pcIndex) => {
+                        const actualIndex = pcIndex + 1;
+                        
+                        if (actualIndex < interval.fromIndex) {
+                          // Before the "from" pitch class: show empty
+                          return (
+                            <React.Fragment key={actualIndex}>
+                              <th className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></th>
+                              <th className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></th>
+                            </React.Fragment>
+                          );
+                        } else if (actualIndex === interval.fromIndex) {
+                          // At the "from" pitch class: show value, then merged interval cell with centered value
+                          return (
+                            <React.Fragment key={actualIndex}>
+                              <th className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></th>
+                              <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="intervals-matrix-value">
+                                {formatPitchClassValue(pc, intervalsMatrixUnit, actualIndex)}
+                              </th>
+                              {/* Merged interval cell spanning from after fromIndex to before toIndex */}
+                              {cellsToMerge > 0 && (
+                                <th 
+                                  className="maqam-jins-transpositions-shared__table-cell--pitch-class maqam-jins-transpositions-shared__table-cell--centered" 
+                                  data-column-type="intervals-matrix"
+                                  colSpan={cellsToMerge}
+                                >
+                                  {formatIntervalValue(calculatedInterval, intervalsMatrixUnit, interval.fromIndex)}
+                                </th>
+                              )}
+                            </React.Fragment>
+                          );
+                        } else if (actualIndex < interval.toIndex) {
+                          // Between "from" and "to": skip these cells (they're merged into the colspan above)
+                          return null;
+                        } else if (actualIndex === interval.toIndex) {
+                          // At the "to" pitch class: show value (interval is already shown in merged cell)
+                          return (
+                            <React.Fragment key={actualIndex}>
+                              <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="intervals-matrix-value">
+                                {formatPitchClassValue(pc, intervalsMatrixUnit, actualIndex)}
+                              </th>
+                            </React.Fragment>
+                          );
+                        } else {
+                          // After the "to" pitch class: show empty
+                          return (
+                            <React.Fragment key={actualIndex}>
+                              <th className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></th>
+                              <th className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></th>
+                            </React.Fragment>
+                          );
+                        }
+                      })}
+                    </>
+                  )}
+                </tr>
+              );
+            });
+          })()}
           <tr data-row-type="play">
             <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.play')}</th>
             {pitchClasses.map((pitchClass, i) => (
@@ -639,6 +931,7 @@ export default function SelectedPitchClassesAnalysis() {
                 "midiNoteDeviation",
                 "frequency",
                 "staffNotation",
+                "intervalsMatrix",
               ].map((filterKey) => {
                 const isDisabled =
                   (filterKey === "fraction" && valueType === "fraction") ||
@@ -651,6 +944,60 @@ export default function SelectedPitchClassesAnalysis() {
                 if (isDisabled) return null;
 
                 if (disabledFilters.includes(filterKey)) return null;
+
+                // Special handling for intervalsMatrix with unit dropdown
+                if (filterKey === "intervalsMatrix") {
+                  // All units are always available because calculateInterval always returns all properties
+                  return (
+                    <React.Fragment key={filterKey}>
+                      <label
+                        className={`maqam-jins-transpositions-shared__filter-item ${
+                          localFilters[filterKey as keyof typeof localFilters] ? "maqam-jins-transpositions-shared__filter-item_active" : ""
+                        }`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setLocalFilters((prev) => ({
+                            ...prev,
+                            [filterKey as keyof typeof localFilters]: !prev[filterKey as keyof typeof localFilters],
+                          }));
+                        }}
+                      >
+                        <input
+                          type="checkbox"
+                          className="maqam-jins-transpositions-shared__filter-checkbox"
+                          checked={localFilters[filterKey as keyof typeof localFilters]}
+                          onChange={() => {}}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                          }}
+                        />
+                        <span className="maqam-jins-transpositions-shared__filter-label">
+                          {t(`filter.${filterKey}`)}
+                        </span>
+                      </label>
+                      {localFilters[filterKey as keyof typeof localFilters] && (
+                        <select
+                          className="maqam-jins-transpositions-shared__intervals-matrix-unit-select"
+                          value={intervalsMatrixUnit}
+                          onChange={(e) => {
+                            e.stopPropagation();
+                            setIntervalsMatrixUnit(e.target.value as typeof intervalsMatrixUnit);
+                          }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                          }}
+                        >
+                          <option value="fraction">{t('filter.fraction')}</option>
+                          <option value="cents">{t('filter.cents')}</option>
+                          <option value="centsFromZero">{t('filter.centsFromZero')}</option>
+                          <option value="decimalRatio">{t('filter.decimalRatio')}</option>
+                          <option value="stringLength">{t('filter.stringLength')}</option>
+                          <option value="fretDivision">{t('filter.fretDivision')}</option>
+                        </select>
+                      )}
+                    </React.Fragment>
+                  );
+                }
 
                 const filterElement = (
                   <label
@@ -744,7 +1091,7 @@ export default function SelectedPitchClassesAnalysis() {
         </div>
       </>
     );
-  }, [selectedTuningSystem, allPitchClasses, selectedPitchClasses, centsTolerance, localFilters, soundSettings, t, getDisplayName]);
+  }, [selectedTuningSystem, allPitchClasses, selectedPitchClasses, centsTolerance, localFilters, intervalsMatrixUnit, soundSettings, t, getDisplayName]);
 
   return transpositionTables;
 }
