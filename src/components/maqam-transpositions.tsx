@@ -496,7 +496,7 @@ const MaqamTranspositions: React.FC = () => {
             valueRow.push(pc.originalValue);
             if (i < pitchClasses.length - 1) {
               const interval = intervals[i];
-              const intervalValue = useRatio ? `(${interval.fraction.replace("/", ":")})` : `(${interval.cents.toFixed(3)})`;
+              const intervalValue = valueType === "decimalRatio" ? `(${interval.decimalRatio.toFixed(3)})` : valueType === "fraction" ? `(${interval.fraction.replace("/", ":")})` : `(${interval.cents.toFixed(3)})`;
               valueRow.push(intervalValue);
             }
           });
