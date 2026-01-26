@@ -17,10 +17,10 @@ export default function LandingPage() {
         </div>
         <h1>
           {language === "ar" 
-            ? "أرشيف المقامات العربية الرقمي" 
+            ? "أرشيف المقامات العربية الرقمي"
             : language === "fr"
-            ? "Archive Numérique des Maqāmāt Arabes"
-            : "Digital Arabic Maqām Archive"}
+            ? <>أرشيف المقامات العربية الرقمي<br />Archive Numérique des Maqāmāt Arabes</>
+            : <>أرشيف المقامات العربية الرقمي<br />Digital Arabic Maqām Archive</>}
         </h1>
         <h3>
           {language === "ar"
@@ -43,7 +43,7 @@ export default function LandingPage() {
         </div>
 
         <div className="button-row">
-          <a className="button" href="#tour">
+          <a className="button disabled" href="#" onClick={(e) => e.preventDefault()} style={{ pointerEvents: 'none', opacity: 0.5, cursor: 'not-allowed' }}>
             {language === "ar" 
               ? "ابدأوا جولة تفاعلية" 
               : language === "fr"
@@ -57,14 +57,14 @@ export default function LandingPage() {
               ? "Accéder à la documentation"
               : "Access the Documentation"}
           </Link>
-          <a className="button" href="https://github.com/Music-Intelligence-Lab/diarmaqar">
+          <a className="button disabled" href="#" onClick={(e) => e.preventDefault()} style={{ pointerEvents: 'none', opacity: 0.5, cursor: 'not-allowed' }}>
             {language === "ar" 
               ? "اطّلعوا على الشيفرة المصدرية" 
               : language === "fr"
               ? "Accéder au code source"
               : "Access the Source Code"}
           </a>
-          <a className="button" href="#paper">
+          <a className="button disabled" href="#" onClick={(e) => e.preventDefault()} style={{ pointerEvents: 'none', opacity: 0.5, cursor: 'not-allowed' }}>
             {language === "ar" 
               ? "اقرأوا الرسالة البحثية" 
               : language === "fr"
@@ -94,7 +94,7 @@ export default function LandingPage() {
               وكلها يمكن تشغيلها وسماعها باستخدام لوحة مفاتيح الكمبيوتر أو عبر MIDI.
             </p>
             <p>
-              بالإضافة إلى ذلك، توفر بيانات رياضية متعمقة وتحليلات، وخيارات تصدير شاملة، وواجهة برمجة تطبيقات ومكتبة NPM للوصول البرمجي إلى البيانات.
+              يمكن للموسيقيين والملحنين تصدير ملفات Scala للتناغم للتكامل مع الآلات والبرمجيات الخارجية. بالتوازي، يمكن للمطورين والباحثين الوصول إلى بيانات منظمة وقابلة للاستعلام حسابياً من خلال تصديرات JSON شاملة ونقاط نهاية واجهة برمجة التطبيقات، إلى جانب بيانات وتحليلات رياضية متعمقة.
             </p>
           </>
         ) : language === "fr" ? (
@@ -109,7 +109,7 @@ export default function LandingPage() {
               Elle offre un dépôt interactif et académiquement rigoureux de systèmes d&apos;accord, d&apos;ajnās et de maqāmāt, ainsi que leurs suyūr (chemins de développement mélodique) et intiqālāt (modulations), tous pouvant être joués et entendus avec un clavier d&apos;ordinateur ou via MIDI.
             </p>
             <p>
-              De plus, elle fournit des données et analyses mathématiques approfondies, des options d&apos;exportation complètes, une API et une bibliothèque NPM pour l&apos;accès programmatique aux données.
+              Les musiciens et compositeurs peuvent exporter des fichiers Scala d&apos;accord pour l&apos;intégration avec des instruments et logiciels externes. En parallèle, les développeurs et chercheurs peuvent accéder à des données structurées et interrogeables par calcul via des exportations JSON complètes et des points de terminaison API, ainsi que des données et analyses mathématiques approfondies.
             </p>
           </>
         ) : (
@@ -127,8 +127,7 @@ export default function LandingPage() {
               melodic development) and intiqālāt (modulations), all of which can be played and heard with a computer keyboard or via MIDI.
             </p>
             <p>
-              In addition, it provides in-depth mathematical data and analysis, comprehensive export options, an API and an NPM library for
-              programmatic access to the data.
+              Musicians and composers can export Scala tuning files for integration with external instruments and software. In parallel, developers and researchers can access structured, computationally queryable data through comprehensive JSON exports and API endpoints, alongside in-depth mathematical data and analysis.
             </p>
           </>
         )}
@@ -238,10 +237,10 @@ export default function LandingPage() {
             </h3>
             <p>
               {language === "ar"
-                ? "صدّروا البيانات بصيغ مختلفة للاستخدام البحثي أو الإبداعي واطّلعوا على واجهة برمجة التطبيقات المفتوحة أو مكتبة NPM للتكامل البرمجي."
+                ? "صدّروا البيانات بصيغ مختلفة للاستخدام البحثي أو الإبداعي واطّلعوا على واجهة برمجة التطبيقات المفتوحة للتكامل البرمجي."
                 : language === "fr"
-                ? "Exportez les données dans divers formats pour un usage de recherche ou créatif et accédez à notre API ouverte ou à la bibliothèque NPM pour l'intégration programmatique."
-                : "Export the data in various formats for research or creative use and access our open API or NPM library for programmatic integration."}
+                ? "Exportez les données dans divers formats pour un usage de recherche ou créatif et accédez à notre API ouverte pour l'intégration programmatique."
+                : "Export the data in various formats for research or creative use and access our open API for programmatic integration."}
             </p>
           </div>
         </div>
@@ -331,7 +330,6 @@ export default function LandingPage() {
                 <h3>مكتبة TypeScript</h3>
                 <ul>
                   <li><Link href="/docs/library/">وثائق المكتبة</Link></li>
-                  <li><a href="https://www.npmjs.com/package/arabic-maqam-core">حزمة NPM</a></li>
                 </ul>
               </div>
             </div>
@@ -412,7 +410,6 @@ export default function LandingPage() {
                 <h3>Bibliothèque TypeScript</h3>
                 <ul>
                   <li><Link href="/docs/library/">Documentation de la bibliothèque</Link></li>
-                  <li><a href="https://www.npmjs.com/package/arabic-maqam-core">Paquet NPM</a></li>
                 </ul>
               </div>
             </div>
@@ -511,7 +508,6 @@ export default function LandingPage() {
                 <h3>TypeScript Library</h3>
                 <ul>
                   <li><Link href="/docs/library/">Library Documentation</Link></li>
-                  <li><a href="https://www.npmjs.com/package/arabic-maqam-core">NPM Package</a></li>
                 </ul>
               </div>
             </div>
