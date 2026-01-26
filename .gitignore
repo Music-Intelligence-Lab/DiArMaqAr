@@ -85,3 +85,9 @@ public/docs/
 
 # modaulations data
 data/modulations/*
+
+# Local Netlify folder
+.netlify
+
+# ai agent instructions
+.ai-agent-instructions/
