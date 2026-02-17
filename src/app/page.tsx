@@ -326,12 +326,6 @@ export default function LandingPage() {
                   <li><Link href="/docs/api/representative-examples">أمثلة جاهزة للاستخدام</Link></li>
                 </ul>
               </div>
-              <div className="developer-link-card">
-                <h3>مكتبة TypeScript</h3>
-                <ul>
-                  <li><Link href="/docs/library/">وثائق المكتبة</Link></li>
-                </ul>
-              </div>
             </div>
           </>
         ) : language === "fr" ? (
@@ -404,12 +398,6 @@ export default function LandingPage() {
                   <li><a href="https://diarmaqar.netlify.app/api">URL de base : /api</a></li>
                   <li><Link href="/docs/api/playground">Terrain de jeu interactif</Link></li>
                   <li><Link href="/docs/api/representative-examples">Exemples prêts à l&apos;emploi</Link></li>
-                </ul>
-              </div>
-              <div className="developer-link-card">
-                <h3>Bibliothèque TypeScript</h3>
-                <ul>
-                  <li><Link href="/docs/library/">Documentation de la bibliothèque</Link></li>
                 </ul>
               </div>
             </div>
@@ -502,12 +490,6 @@ export default function LandingPage() {
                   <li><a href="https://diarmaqar.netlify.app/api">Base URL: /api</a></li>
                   <li><Link href="/docs/api/playground">Interactive Playground</Link></li>
                   <li><Link href="/docs/api/representative-examples">Ready-to-Use Examples</Link></li>
-                </ul>
-              </div>
-              <div className="developer-link-card">
-                <h3>TypeScript Library</h3>
-                <ul>
-                  <li><Link href="/docs/library/">Library Documentation</Link></li>
                 </ul>
               </div>
             </div>
