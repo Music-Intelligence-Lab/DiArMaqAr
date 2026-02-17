@@ -921,6 +921,17 @@ Return all maqāmāt that can be realized in a given tuning system beginning on 
   - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
  - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
+- `includeMaqamDegrees` (optional): When true, each maqām in data includes a `maqamDegrees` object with ascending and descending arrays
+of PAO note name idNames (URL-safe identifiers for scale degrees)..
+  of PAO note name idNames (URL-safe identifiers for scale degrees).
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
+  - Example: `true`
+- `includeTranspositions` (optional): When true, each maqām in data includes a `transpositions` array with the other transpositions
+(excluding the base tonic).
+  (excluding the base tonic). Each transposition has `tonic` and `maqamDegrees` with ascending/descending
+  note name idNames for that transposed position.
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
+  - Example: `true`
 
 **Example:**
 ```bash
@@ -1194,6 +1205,60 @@ curl "https://diarmaqar.netlify.app/api/intervals/compare?noteNames=rast,dugah,s
 ```
 
 **Response:** Comparison data retrieved successfully
+
+
+### Calculate interval between two pitch classes {#calculateIntervalBetweenPitchClasses}
+
+```
+GET /intervals/calculate
+```
+
+Calculate the interval between two pitch classes in a specific tuning system.
+
+Supports flexible pitch class identification:
+- By note name (e.g., "rast", "dugah")
+- By value in any format: fraction (e.g., "3/2"), cents (e.g., "701.955"), decimalRatio (e.g., "1.5"), stringLength, or fretDivision
+
+Returns the interval in the requested unit format, plus all other unit formats for reference.
+
+
+**Query Parameters:**
+- `from` **(required)**: First pitch class identifier (note name or value) - Type: `string`
+  - Example: `rast`
+- `to` **(required)**: Second pitch class identifier (note name or value) - Type: `string`
+  - Example: `dugah`
+- `tuningSystem` **(required)**: Tuning system ID - Type: `string`
+  - Example: `ibnsina_1037`
+- `startingNote` **(required)**: Starting note for the tuning system - Type: `string`
+  - Example: `yegah`
+- `unit` **(required)**: Output unit format for the interval - Type: `string` - Valid values: `fraction`, `cents`, `centsFromZero`, `decimalRatio`, `stringLength`, `fretDivision`
+  - Example: `cents`
+- `fromType` (optional): Type of 'from' value if it's a value (not a note name).
+Required if 'from' is a value and cannot be auto-detected..
+  Required if 'from' is a value and cannot be auto-detected.
+ - Type: `string` - Valid values: `fraction`, `cents`, `decimalRatio`, `stringLength`, `fretDivision`
+  - Example: `fraction`
+- `toType` (optional): Type of 'to' value if it's a value (not a note name).
+Required if 'to' is a value and cannot be auto-detected..
+  Required if 'to' is a value and cannot be auto-detected.
+ - Type: `string` - Valid values: `fraction`, `cents`, `decimalRatio`, `stringLength`, `fretDivision`
+  - Example: `fraction`
+- `includeArabic` (optional): Return bilingual responses with Arabic script when true.
+  - All English/transliteration fields remain unchanged
+  - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
+  - Note names, maqām names, and jins names get Arabic versions in *Ar fields
+  - Comments get Arabic versions in commentsAr if available
+  - Tuning system display names get Arabic versions in displayNameAr if available
+  - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
+  - Example: `true`
+
+**Example:**
+```bash
+curl "https://diarmaqar.netlify.app/api/intervals/calculate?from=rast&to=dugah&tuningSystem=ibnsina_1037&startingNote=yegah&unit=cents&includeArabic=true"
+```
+
+**Response:** Interval calculated successfully
 
 
 ---

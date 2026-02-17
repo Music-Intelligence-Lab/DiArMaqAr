@@ -17,10 +17,10 @@ export const OPTIONS = handleCorsPreflightRequest;
 
 export async function GET(
   request: NextRequest,
-  context: { params: Promise<{ id: string; startingNote: string }> }
+  { params }: { params: Promise<{ id: string; startingNote: string }> }
 ) {
   try {
-    const { id: tuningSystemId, startingNote: startingNoteParam } = await context.params;
+    const { id: tuningSystemId, startingNote: startingNoteParam } = await params;
     const { searchParams } = new URL(request.url);
     
     // Parse includeArabic parameter
@@ -38,6 +38,10 @@ export async function GET(
         )
       );
     }
+
+    // Parse optional include flags
+    const includeTranspositions = searchParams.get("includeTranspositions") === "true";
+    const includeMaqamDegrees = searchParams.get("includeMaqamDegrees") === "true";
 
     // Validate that path parameters are not empty
     if (!tuningSystemId || tuningSystemId.trim() === "") {
@@ -211,7 +215,7 @@ export async function GET(
           }
         );
 
-        availableMaqamat.push({
+        const item: Record<string, unknown> = {
           maqam: maqamNamespace,
           family: familyNamespace,
           tonic: tonicNamespace,
@@ -226,7 +230,39 @@ export async function GET(
           links: buildLinksNamespace({
             detail: `/api/maqamat/${maqam.getIdName()}`,
           }),
-        });
+        };
+
+        if (includeMaqamDegrees) {
+          item.maqamDegrees = {
+            ascending: ascendingNotes.map((n) => standardizeText(n)),
+            descending: descendingNotes.map((n) => standardizeText(n)),
+          };
+        }
+
+        if (includeTranspositions) {
+          const otherTranspositions = transpositions.filter((t: { transposition: boolean }) => t.transposition);
+          item.transpositions = otherTranspositions.map((t: { ascendingPitchClasses: { noteName: string }[]; descendingPitchClasses: { noteName: string }[] }) => {
+            const tonicNoteName = t.ascendingPitchClasses[0].noteName;
+            return {
+              tonic: buildIdentifierNamespace(
+                {
+                  idName: standardizeText(tonicNoteName),
+                  displayName: tonicNoteName,
+                },
+                {
+                  inArabic,
+                  displayAr: inArabic ? getNoteNameDisplayAr(tonicNoteName) : undefined,
+                }
+              ),
+              maqamDegrees: {
+                ascending: t.ascendingPitchClasses.map((pc) => standardizeText(pc.noteName)),
+                descending: t.descendingPitchClasses.map((pc) => standardizeText(pc.noteName)),
+              },
+            };
+          });
+        }
+
+        availableMaqamat.push(item);
       }
     }
 
