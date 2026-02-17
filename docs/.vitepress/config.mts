@@ -1,5 +1,33 @@
 import { defineConfig } from 'vitepress'
+import type { DefaultTheme } from 'vitepress'
 import llmstxt from 'vitepress-plugin-llms'
+
+const IGNORED_SIDEBAR_PATHS = ['/api/playground']
+
+/** Strip hash fragments and remove links to ignored files so vitepress-plugin-llms can match sidebar links */
+function stripSidebarLinkHashes(sidebar: DefaultTheme.Sidebar | undefined): DefaultTheme.Sidebar | undefined {
+  if (!sidebar) return sidebar
+  const strip = (link: string) => (typeof link === 'string' ? link.replace(/#.*$/, '') : link)
+  const isIgnored = (link: string) => IGNORED_SIDEBAR_PATHS.some((p) => strip(link).startsWith(p))
+  const mapItem = (item: DefaultTheme.SidebarItem): DefaultTheme.SidebarItem | null => {
+    if ('link' in item && item.link) {
+      if (isIgnored(item.link)) return null
+      return { ...item, link: strip(item.link), items: item.items?.map(mapItem).filter(Boolean) as DefaultTheme.SidebarItem[] | undefined }
+    }
+    if ('items' in item && item.items) {
+      const mapped = item.items.map(mapItem).filter(Boolean) as DefaultTheme.SidebarItem[]
+      return mapped.length ? { ...item, items: mapped } : null
+    }
+    return item
+  }
+  const filterItems = (items: DefaultTheme.SidebarItem[]) => items.map(mapItem).filter(Boolean) as DefaultTheme.SidebarItem[]
+  if (Array.isArray(sidebar)) {
+    return filterItems(sidebar) as DefaultTheme.Sidebar
+  }
+  return Object.fromEntries(
+    Object.entries(sidebar).map(([k, v]) => [k, filterItems(v)])
+  ) as DefaultTheme.Sidebar
+}
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -29,6 +57,8 @@ export default defineConfig({
         // Ignore the playground page as it's interactive and not needed for LLM documentation
         // index.md contains all static API documentation for optimal LLM accessibility
         ignoreFiles: ['api/playground.md'],
+        // Strip hash fragments so plugin can match sidebar links (e.g. /api/endpoints-reference#maqamat) to files
+        sidebar: (configSidebar) => stripSidebarLinkHashes(configSidebar),
       })
     ]
   },
