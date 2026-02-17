@@ -2914,6 +2914,29 @@ paths:
             enum: ["true", "false"]
             default: "false"
           example: "true"
+        - name: includeMaqamDegrees
+          in: query
+          required: false
+          description: |
+            When true, each maqām in data includes a `maqamDegrees` object with ascending and descending arrays
+            of PAO note name idNames (URL-safe identifiers for scale degrees).
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "false"
+          example: "true"
+        - name: includeTranspositions
+          in: query
+          required: false
+          description: |
+            When true, each maqām in data includes a `transpositions` array with the other transpositions
+            (excluding the base tonic). Each transposition has `tonic` and `maqamDegrees` with ascending/descending
+            note name idNames for that transposed position.
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "false"
+          example: "true"
       responses:
         '200':
           description: Maqāmāt list retrieved successfully
