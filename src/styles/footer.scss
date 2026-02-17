@@ -18,7 +18,7 @@
     margin: 0 auto;
     padding: 0 1rem;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: 2fr 1fr 1fr 2fr;
     gap: 2rem;
 
     @media (max-width: 768px) {
@@ -132,10 +132,10 @@
 
   &__copyright,
   &__license {
-    font-size: 12px;
+    font-size: 14px;
     color: $light-grey;
     margin: 0;
-    line-height: 1;
+    line-height: 1.4;
   }
 
   &__license {
