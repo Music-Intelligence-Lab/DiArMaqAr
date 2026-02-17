@@ -311,22 +311,36 @@ h2 {
       background-color: rgba($medium-grey, 0.7);
       border-left: 3px solid;
       border-radius: 4px;
-      padding: 1.25rem;
+      padding: 1.25rem 1rem 1rem 1.25rem;
       margin: 1.5rem 0;
       color: $text;
       word-wrap: break-word;
       overflow-wrap: break-word;
+      max-width: 100%;
+      width: 100%;
+      box-sizing: border-box;
+      overflow: hidden;
 
       p {
         margin: 0;
         font-size: 15px;
-        line-height: 1.7;
+        line-height: 1.6;
         word-wrap: break-word;
         overflow-wrap: break-word;
         hyphens: auto;
+        max-width: 100%;
 
         &:not(:last-child) {
           margin-bottom: 0.75rem;
+        }
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        // Better spacing for paragraphs with code
+        code {
+          margin: 0 0.125rem;
         }
       }
 
@@ -336,16 +350,52 @@ h2 {
         border-radius: 3px;
         font-size: 0.875em;
         font-family: 'Courier New', 'Monaco', monospace;
-        word-break: break-word;
+        word-break: normal;
         overflow-wrap: break-word;
-        white-space: pre-wrap;
+        white-space: normal;
         display: inline;
         line-height: 1.6;
+        max-width: 100%;
+        box-sizing: border-box;
+        vertical-align: baseline;
+        text-indent: 0;
+        letter-spacing: normal;
+      }
+
+      // Handle code blocks that come after line breaks (long URLs, etc.)
+      br + code {
+        display: block;
+        width: calc(100% - 1.5rem);
+        max-width: calc(100% - 1.5rem);
+        margin: 0.5rem 0 0 0;
+        padding: 0.5rem 0.75rem;
+        white-space: normal;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        line-height: 1.5;
+        box-sizing: border-box;
+        text-indent: 0;
+      }
+
+      // Handle code blocks that are likely to be long (standalone in paragraphs)
+      p > code:only-child {
+        display: block;
+        width: calc(100% - 1.5rem);
+        max-width: calc(100% - 1.5rem);
+        margin: 0.5rem 0 0 0;
+        padding: 0.5rem 0.75rem;
+        white-space: normal;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        line-height: 1.5;
+        box-sizing: border-box;
+        text-indent: 0;
       }
 
       strong {
         font-weight: 600;
         word-wrap: break-word;
+        display: inline-block;
       }
     }
 
@@ -366,6 +416,38 @@ h2 {
       strong {
         color: $gold;
       }
+
+      // Better handling for long code blocks in warning boxes
+      p code {
+        word-break: break-word;
+        overflow-wrap: break-word;
+      }
+
+      // Override global ul/li styles
+      ul {
+        margin: 0.5rem 0 0 0 !important;
+        padding: 0 !important;
+        list-style: none !important;
+        counter-reset: none !important;
+        max-width: 100% !important;
+        text-align: left !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+      }
+
+      ul li {
+        padding: 0.625rem 0 !important;
+        position: static !important;
+        align-items: flex-start !important;
+        text-align: left !important;
+        display: block !important;
+        margin: 0 !important;
+
+        &::before {
+          display: none !important;
+          content: none !important;
+        }
+      }
     }
 
     .info-box {
@@ -374,55 +456,92 @@ h2 {
       p:first-child {
         font-weight: 600;
         color: $text;
-        margin-bottom: 0.75rem;
+        margin-bottom: 0.5rem;
+        margin-top: 0;
       }
 
       code {
         color: $text;
       }
 
+      // Better spacing for paragraphs before lists
+      p + ul {
+        margin-top: 0.5rem;
+      }
+
       ul {
-        margin: 0;
-        padding: 0;
-        list-style: none;
-        counter-reset: none;
+        margin: 0.5rem 0 0 0;
+        padding: 0 !important;
+        list-style: none !important;
+        counter-reset: none !important;
+        max-width: 100% !important;
+        text-align: left !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
 
         li {
-          padding: 0.875rem 0;
+          padding: 0.625rem 0 !important;
           font-size: 14px;
-          line-height: 1.7;
+          line-height: 1.5;
           border-bottom: 1px solid rgba($primary, 0.1);
           word-wrap: break-word;
           overflow-wrap: break-word;
-          display: block;
+          display: block !important;
+          margin: 0 !important;
+          white-space: normal;
+          position: static !important;
+          align-items: flex-start !important;
+          text-align: left !important;
 
           &:last-child {
             border-bottom: none;
             padding-bottom: 0;
           }
 
+          &:first-child {
+            padding-top: 0.25rem;
+          }
+
           &::before {
-            display: none;
-            content: none;
+            display: none !important;
+            content: none !important;
+            position: static !important;
+            width: 0 !important;
+            height: 0 !important;
+            background: none !important;
+            border: none !important;
           }
 
           // Spacing for emoji/icon spans
           > span:first-child {
             margin-right: 0.5rem;
             display: inline-block;
-            vertical-align: top;
+            vertical-align: middle;
+            flex-shrink: 0;
+            white-space: nowrap;
           }
 
           // Better handling for code blocks in list items
           code {
             display: inline;
             margin: 0 0.25rem;
-            padding: 3px 6px;
-            white-space: pre-wrap;
+            padding: 2px 5px;
+            white-space: normal;
+            word-break: normal;
+            overflow-wrap: break-word;
+            line-height: 1.5;
+            vertical-align: baseline;
+            font-size: 0.85em;
+            max-width: 100%;
+            box-sizing: border-box;
+          }
+
+          // Handle long code blocks that should wrap (only break at word boundaries)
+          code:only-child,
+          code:last-child {
             word-break: break-word;
             overflow-wrap: break-word;
-            line-height: 1.6;
-            vertical-align: baseline;
+            max-width: 100%;
           }
 
           // Handle arrow separators and text spans
@@ -431,19 +550,28 @@ h2 {
             word-wrap: break-word;
             margin-right: 0.5rem;
             font-weight: 600;
+            vertical-align: baseline;
+            white-space: normal;
           }
 
           // Text after code blocks
           > span:not(:first-child) {
             display: inline;
             word-wrap: break-word;
-            margin-left: 0.25rem;
+            margin-left: 0.5rem;
+            vertical-align: baseline;
+            white-space: normal;
           }
 
           // Better wrapping for long content
           * {
             word-wrap: break-word;
             overflow-wrap: break-word;
+          }
+
+          // Handle arrow separators (→) better
+          &::after {
+            content: none;
           }
         }
       }
@@ -515,6 +643,23 @@ h2 {
         }
       }
     }
+
+    // Ensure consistent spacing throughout the section
+    > p:first-of-type {
+      margin-top: 0;
+    }
+
+    // Better spacing between sections
+    > p + .warning-box,
+    > p + .info-box {
+      margin-top: 1.5rem;
+    }
+
+    .warning-box + .info-box,
+    .info-box + .warning-box,
+    .info-box + .info-box {
+      margin-top: 1.5rem;
+    }
   }
 
   .about,
@@ -524,6 +669,10 @@ h2 {
   .contribute {
     margin-top: 2rem;
     margin-bottom: 1.5rem;
+
+    h2 {
+      margin-bottom: 1.5rem;
+    }
   }
 }
 
