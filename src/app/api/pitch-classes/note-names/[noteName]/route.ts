@@ -194,10 +194,10 @@ function formatPitchData(pitchClass: PitchClass, format: string, inArabic: boole
  */
 export async function GET(
   request: Request,
-  context: { params: Promise<{ noteName: string }> }
+  { params }: { params: Promise<{ noteName: string }> }
 ) {
   try {
-    const { noteName: noteNameParam } = await context.params;
+    const { noteName: noteNameParam } = await params;
     const { searchParams } = new URL(request.url);
     const tuningSystemId = searchParams.get("tuningSystem");
     const startingNoteParam = searchParams.get("startingNote");

@@ -154,9 +154,10 @@ function formatIntervalData(intervals: any[], format: string) {
  */
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id: maqamId } = await params;
     const { searchParams } = new URL(request.url);
     const tuningSystemsParam = searchParams.get("tuningSystems");
     const startingNoteParam = searchParams.get("startingNote");
@@ -267,9 +268,6 @@ export async function GET(
     const maqamatData = getMaqamat();
     const tuningSystems = getTuningSystems();
     const ajnas = getAjnas();
-
-    // Await params in Next.js 15
-    const { id: maqamId } = await Promise.resolve(params);
     
     // Find the maqām
     const maqam = maqamatData.find(

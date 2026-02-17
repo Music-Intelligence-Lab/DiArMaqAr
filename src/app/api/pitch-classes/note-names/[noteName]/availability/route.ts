@@ -28,9 +28,10 @@ export const OPTIONS = handleCorsPreflightRequest;
  */
 export async function GET(
   request: Request,
-  context: { params: Promise<{ noteName: string }> }
+  { params }: { params: Promise<{ noteName: string }> }
 ) {
   try {
+    const { noteName: noteNameParam } = await params;
     const { searchParams } = new URL(request.url);
     
     // Parse includeArabic parameter
@@ -50,9 +51,6 @@ export async function GET(
     }
 
     const tuningSystems = getTuningSystems();
-
-    // Await params in Next.js 15
-    const { noteName: noteNameParam } = await Promise.resolve(context.params);
     
     // Decode URL-encoded note name
     const decodedNoteName = decodeURIComponent(noteNameParam);
