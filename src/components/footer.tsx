@@ -126,38 +126,38 @@ export default function Footer() {
             <a href="mailto:ka109&#64;aub&#46;edu&#46;lb" className="footer__link">ka109&#64;aub&#46;edu&#46;lb</a>
           </p>
         </div>
-      </div>
 
-      <div className="footer__bottom">
-        <p className="footer__copyright">
-          {language === "ar"
-            ? `© ${new Date().getFullYear()} أرشيف المقامات العربية الرقمي/مختبر الذكاء الموسيقي في الجامعة الأمريكية في بيروت. جميع الحقوق محفوظة.`
-            : language === "fr"
-            ? (
-              <>
-                Archive Numérique des Maqāmāt Arabes (DiArMaqAr) © 2025 par <a href="https://musicintelligencelab.com" className="footer__link">Khyam Allami/Music Intelligence Lab</a> est sous licence <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" className="footer__link">CC BY-NC-SA 4.0</a>
-                <Image src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt="" width={16} height={16} style={{ maxWidth: "1em", maxHeight: "1em", marginLeft: ".2em" }} unoptimized />
-                <Image src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt="" width={16} height={16} style={{ maxWidth: "1em", maxHeight: "1em", marginLeft: ".2em" }} unoptimized />
-                <Image src="https://mirrors.creativecommons.org/presskit/icons/nc.svg" alt="" width={16} height={16} style={{ maxWidth: "1em", maxHeight: "1em", marginLeft: ".2em" }} unoptimized />
-                <Image src="https://mirrors.creativecommons.org/presskit/icons/sa.svg" alt="" width={16} height={16} style={{ maxWidth: "1em", maxHeight: "1em", marginLeft: ".2em" }} unoptimized />
-              </>
-            )
-            : (
-          <>
-            Digital Arabic Maqam Archive (DiArMaqAr) © 2025 by <a href="https://musicintelligencelab.com" className="footer__link">Khyam Allami/Music Intelligence Lab</a> is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" className="footer__link">CC BY-NC-SA 4.0</a>
-            <Image src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt="" width={16} height={16} style={{ maxWidth: "1em", maxHeight: "1em", marginLeft: ".2em" }} unoptimized />
-            <Image src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt="" width={16} height={16} style={{ maxWidth: "1em", maxHeight: "1em", marginLeft: ".2em" }} unoptimized />
-            <Image src="https://mirrors.creativecommons.org/presskit/icons/nc.svg" alt="" width={16} height={16} style={{ maxWidth: "1em", maxHeight: "1em", marginLeft: ".2em" }} unoptimized />
-            <Image src="https://mirrors.creativecommons.org/presskit/icons/sa.svg" alt="" width={16} height={16} style={{ maxWidth: "1em", maxHeight: "1em", marginLeft: ".2em" }} unoptimized />
-          </>
-          )}
-        </p>
-{/*         <p className="footer__license">
-          {language === "ar"
-            ? "مفتوح المصدر تحت رخصة MIT"
-            : "Open source under MIT License"}
-        </p>
- */}      </div>
+        <div className="footer__section">
+          <p className="footer__copyright">
+            {language === "ar"
+              ? `© ${new Date().getFullYear()} أرشيف المقامات العربية الرقمي/مختبر الذكاء الموسيقي في الجامعة الأمريكية في بيروت. جميع الحقوق محفوظة.`
+              : language === "fr"
+              ? (
+                <>
+                  Archive Numérique des Maqāmāt Arabes (DiArMaqAr) © 2025 par <a href="https://musicintelligencelab.com" className="footer__link">Khyam Allami/Music Intelligence Lab</a> est sous licence <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" className="footer__link">CC BY-NC-SA 4.0</a>
+                  <br />
+                  <Image src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt="" width={32} height={32} style={{ maxWidth: "1.5em", maxHeight: "1.5em", marginLeft: ".2em", marginTop: "0.5em", marginBottom: "0.5em", verticalAlign: "middle" }} unoptimized />
+                  <Image src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt="" width={32} height={32} style={{ maxWidth: "1.5em", maxHeight: "1.5em", marginLeft: ".2em", marginTop: "0.5em", marginBottom: "0.5em", verticalAlign: "middle" }} unoptimized />
+                  <Image src="https://mirrors.creativecommons.org/presskit/icons/nc.svg" alt="" width={32} height={32} style={{ maxWidth: "1.5em", maxHeight: "1.5em", marginLeft: ".2em", marginTop: "0.5em", marginBottom: "0.5em", verticalAlign: "middle" }} unoptimized />
+                  <Image src="https://mirrors.creativecommons.org/presskit/icons/sa.svg" alt="" width={32} height={32} style={{ maxWidth: "1.5em", maxHeight: "1.5em", marginLeft: ".2em", marginTop: "0.5em", marginBottom: "0.5em", verticalAlign: "middle" }} unoptimized />
+                </>
+              )
+              : (
+            <>
+              Digital Arabic Maqam Archive (DiArMaqAr) 
+              <br /> © 2025 by <a href="https://musicintelligencelab.com" className="footer__link">AUB Music Intelligence Lab</a>
+              <br /> Licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" className="footer__link">CC BY-NC-SA 4.0</a>
+              <br />
+                <Image src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt="" width={32} height={32} style={{ maxWidth: "1.5em", maxHeight: "1.5em", marginLeft: "0em", marginTop: "0.5em", marginBottom: "0.5em", verticalAlign: "middle" }} unoptimized />
+                <Image src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt="" width={32} height={32} style={{ maxWidth: "1.5em", maxHeight: "1.5em", marginLeft: ".2em", marginTop: "0.5em", marginBottom: "0.5em", verticalAlign: "middle" }} unoptimized />
+                <Image src="https://mirrors.creativecommons.org/presskit/icons/nc.svg" alt="" width={32} height={32} style={{ maxWidth: "1.5em", maxHeight: "1.5em", marginLeft: ".2em", marginTop: "0.5em", marginBottom: "0.5em", verticalAlign: "middle" }} unoptimized />
+                <Image src="https://mirrors.creativecommons.org/presskit/icons/sa.svg" alt="" width={32} height={32} style={{ maxWidth: "1.5em", maxHeight: "1.5em", marginLeft: ".2em", marginTop: "0.5em", marginBottom: "0.5em", verticalAlign: "middle" }} unoptimized />
+              <br />This site is powered by <a href="https://www.netlify.com" className="footer__link">Netlify</a>.
+            </>
+            )}
+          </p>
+        </div>
+      </div>
     </footer>
   );
 }
