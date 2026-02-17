@@ -26,9 +26,10 @@ export const OPTIONS = handleCorsPreflightRequest;
  */
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id: maqamId } = await params;
     const { searchParams } = new URL(request.url);
     const tuningSystemId = searchParams.get("tuningSystem");
     const startingNote = searchParams.get("startingNote");
@@ -106,7 +107,6 @@ export async function GET(
     const ajnas = getAjnas();
 
     // Find the maqām
-    const maqamId = params.id;
     const maqam = maqamatData.find(
       (m) => m.getId() === maqamId || standardizeText(m.getName()) === standardizeText(maqamId)
     );

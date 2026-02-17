@@ -27,9 +27,10 @@ export const OPTIONS = handleCorsPreflightRequest;
  */
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id: jinsId } = await params;
     const { searchParams } = new URL(request.url);
     const transpositionNoteName = searchParams.get("transpositionNoteName");
     
@@ -51,9 +52,6 @@ export async function GET(
 
     const ajnasData = getAjnas();
     const tuningSystems = getTuningSystems();
-
-    // Await params in Next.js 15
-    const { id: jinsId } = await Promise.resolve(params);
     
     // Find the jins by ID or name
     const jins = ajnasData.find(

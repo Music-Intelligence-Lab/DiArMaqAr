@@ -203,10 +203,10 @@ function formatPitchData(pitchClasses: PitchClass[], format: string, inArabic: b
  */
 export async function GET(
   request: NextRequest,
-  context: { params: Promise<{ id: string; startingNote: string }> }
+  { params }: { params: Promise<{ id: string; startingNote: string }> }
 ) {
   try {
-    const { id: tuningSystemId, startingNote: startingNoteParam } = await context.params;
+    const { id: tuningSystemId, startingNote: startingNoteParam } = await params;
     const { searchParams } = new URL(request.url);
     
     // Parse includeArabic parameter

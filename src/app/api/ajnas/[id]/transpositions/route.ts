@@ -26,9 +26,10 @@ export const OPTIONS = handleCorsPreflightRequest;
  */
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id: jinsId } = await params;
     const { searchParams } = new URL(request.url);
     const tuningSystemId = searchParams.get("tuningSystem");
     const startingNote = searchParams.get("startingNote");
@@ -105,7 +106,6 @@ export async function GET(
     const tuningSystems = getTuningSystems();
 
     // Find the jins
-    const jinsId = params.id;
     const jins = ajnasData.find(
       (j) => j.getId() === jinsId || standardizeText(j.getName()) === standardizeText(jinsId)
     );

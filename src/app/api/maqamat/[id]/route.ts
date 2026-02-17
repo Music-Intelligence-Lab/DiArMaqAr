@@ -316,10 +316,10 @@ function formatIntervalData(intervals: any[], format: string) {
  */
 export async function GET(
   request: Request,
-  context: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: maqamId } = await context.params;
+    const { id: maqamId } = await params;
     const { searchParams } = new URL(request.url);
     const tuningSystemId = searchParams.get("tuningSystem");
     const startingNote = searchParams.get("startingNote");

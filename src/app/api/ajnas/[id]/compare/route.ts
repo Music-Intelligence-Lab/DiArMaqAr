@@ -158,9 +158,10 @@ function formatIntervalData(intervals: any[], format: string) {
  */
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id: jinsId } = await params;
     const { searchParams } = new URL(request.url);
     const tuningSystemsParam = searchParams.get("tuningSystems");
     const startingNoteParam = searchParams.get("startingNote");
@@ -270,9 +271,6 @@ export async function GET(
 
     const ajnasData = getAjnas();
     const tuningSystems = getTuningSystems();
-
-    // Await params in Next.js 15
-    const { id: jinsId } = await Promise.resolve(params);
     
     // Find the jins
     const jins = ajnasData.find(

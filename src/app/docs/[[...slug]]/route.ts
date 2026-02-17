@@ -39,11 +39,12 @@ function getBasePath(): string {
 
 export async function GET(
   request: Request,
-  { params }: { params: { slug?: string[] } }
+  { params }: { params: Promise<{ slug?: string[] }> }
 ) {
   try {
     // Get the requested path
-    const slug = params.slug || []
+    const { slug: slugParam } = await params;
+    const slug = slugParam || []
     const requestedPath = slug.join('/')
     
     // Special handling for openapi.json - serve directly from source with no-cache

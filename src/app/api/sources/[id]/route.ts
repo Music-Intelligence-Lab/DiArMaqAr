@@ -24,10 +24,10 @@ export const OPTIONS = handleCorsPreflightRequest;
  */
 export async function GET(
   request: Request,
-  context: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: sourceId } = await context.params;
+    const { id: sourceId } = await params;
     const { searchParams } = new URL(request.url);
 
     // Parse includeArabic parameter
