@@ -93,8 +93,7 @@ export default function SelectedPitchClassesAnalysis() {
   // Helper function to format interval based on selected unit
   const formatIntervalValue = (
     interval: ReturnType<typeof calculateInterval>,
-    unit: typeof intervalsMatrixUnit,
-    fromPcIndex: number
+    unit: typeof intervalsMatrixUnit
   ): string => {
     switch (unit) {
       case "fraction":
@@ -378,7 +377,7 @@ export default function SelectedPitchClassesAnalysis() {
             } else if (actualIndex === interval.toIndex) {
               // At the "to" pitch class: interval then value
               const calculatedInterval = calculateInterval(interval.fromPc, interval.toPc);
-              const intervalValue = formatIntervalValue(calculatedInterval, intervalsMatrixUnit, interval.fromIndex);
+              const intervalValue = formatIntervalValue(calculatedInterval, intervalsMatrixUnit);
               matrixRow.push(intervalValue);
               matrixRow.push(formatPitchClassValue(pc, intervalsMatrixUnit, actualIndex));
             } else {
@@ -744,7 +743,7 @@ export default function SelectedPitchClassesAnalysis() {
               });
             });
 
-            return intervalsToShow.map((interval, rowIndex) => {
+            return intervalsToShow.map((interval) => {
               const calculatedInterval = calculateInterval(interval.fromPc, interval.toPc);
               // Calculate how many interval cells to merge between fromIndex and toIndex
               // Structure: for each pitch class i (i > 0), we have: [interval cell] [value cell]
@@ -774,7 +773,7 @@ export default function SelectedPitchClassesAnalysis() {
                           data-column-type="intervals-matrix"
                           colSpan={cellsToMerge}
                         >
-                          {formatIntervalValue(calculatedInterval, intervalsMatrixUnit, interval.fromIndex)}
+                          {formatIntervalValue(calculatedInterval, intervalsMatrixUnit)}
                         </th>
                       )}
                       {/* Subsequent pitch classes - only show those at or after toIndex */}
@@ -835,7 +834,7 @@ export default function SelectedPitchClassesAnalysis() {
                                   data-column-type="intervals-matrix"
                                   colSpan={cellsToMerge}
                                 >
-                                  {formatIntervalValue(calculatedInterval, intervalsMatrixUnit, interval.fromIndex)}
+                                  {formatIntervalValue(calculatedInterval, intervalsMatrixUnit)}
                                 </th>
                               )}
                             </React.Fragment>
