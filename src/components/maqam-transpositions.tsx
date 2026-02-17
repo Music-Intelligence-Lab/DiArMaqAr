@@ -390,7 +390,7 @@ const MaqamTranspositions: React.FC = () => {
         let ascendingIntervals = maqam.ascendingPitchClassIntervals;
         let descendingIntervals = maqam.descendingPitchClassIntervals;
 
-        const { romanNumerals, valueType, useRatio, noOctaveMaqam } = maqamConfig;
+        const { romanNumerals, valueType, noOctaveMaqam } = maqamConfig;
 
         // Apply the same octave transformations as the UI rendering
         if (noOctaveMaqam) {

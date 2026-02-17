@@ -6,7 +6,6 @@ import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
 import { calculateInterval } from "@/models/PitchClass";
 import PitchClass from "@/models/PitchClass";
 import { parseInArabic, getNoteNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
-import detectPitchClassValueType from "@/functions/detectPitchClassType";
 import {
   octaveZeroNoteNames,
   octaveOneNoteNames,
@@ -387,8 +386,8 @@ export async function GET(request: Request) {
       );
     }
 
-    const validUnits = ["fraction", "cents", "centsFromZero", "decimalRatio", "stringLength", "fretDivision"];
-    if (!validUnits.includes(unitParam)) {
+    const validUnits = ["fraction", "cents", "centsFromZero", "decimalRatio", "stringLength", "fretDivision"] as const;
+    if (!validUnits.includes(unitParam as (typeof validUnits)[number])) {
       return addCorsHeaders(
         NextResponse.json(
           {
@@ -515,7 +514,7 @@ export async function GET(request: Request) {
     const interval = calculateInterval(fromResult.pitchClass, toResult.pitchClass);
 
     // Format interval value
-    const intervalValue = formatIntervalByUnit(interval, unitParam as typeof validUnits[number]);
+    const intervalValue = formatIntervalByUnit(interval, unitParam as (typeof validUnits)[number]);
 
     // Calculate reference frequency
     const referenceFrequency = (typeof fromResult.pitchClass.frequency === 'number' 
