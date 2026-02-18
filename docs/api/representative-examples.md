@@ -144,6 +144,7 @@ GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&options
 - Always include all three required parameters
 - Use `cents` as the default `pitchClassDataType` for most use cases
 - For users who don't know specific names, use `maqam_rast` with `ibnsina_1037` and `yegah` as safe defaults
+- For valid `filterByFamily` values, use `GET /api/maqamat/families?tuningSystem=ibnsina_1037&startingNote=yegah`
 
 ---
 

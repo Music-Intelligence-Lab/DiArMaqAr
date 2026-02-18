@@ -33,13 +33,14 @@ curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=ibnsina_
 
 All API endpoints are organized by resource type. Each endpoint includes a link to detailed documentation with parameters, examples, and response formats.
 
-**Total: 26 endpoints** across 7 resource categories.
+**Total: 27 endpoints** across 7 resource categories.
 
 ### Maqāmāt
 Documented modal frameworks with historical source attribution.
 
-**Endpoints (7):**
+**Endpoints (8):**
 - `GET /maqamat` - List all maqāmāt → [Details](./endpoints-reference#listMaqamat)
+- `GET /maqamat/families` - List maqām families → [Details](./endpoints-reference#listMaqamFamilies)
 - `GET /maqamat/{idName}` - Get detailed maqām data → [Details](./endpoints-reference#getMaqam)
 - `GET /maqamat/{idName}/availability` - Check maqām availability across tuning systems → [Details](./endpoints-reference#getMaqamAvailability)
 - `GET /maqamat/{idName}/transpositions` - List transpositions for a maqām → [Details](./endpoints-reference#listMaqamTranspositions)
