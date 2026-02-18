@@ -81,7 +81,10 @@ Returns concise metadata including:
 
 
 **Query Parameters:**
-- `filterByFamily` (optional): Filter by maqām family name (URL-safe, case-insensitive, diacritics-insensitive) - Type: `string` - Valid values: `ajam`, `athar_kurd`, `awj_ara`, `bayyat`, `buselik`, ... (16 total)
+- `filterByFamily` (optional): Filter by maqām family name (URL-safe, case-insensitive, diacritics-insensitive).
+Use GET /maqamat/families to retrieve valid family values..
+  Use GET /maqamat/families to retrieve valid family values.
+ - Type: `string` - Valid values: `ajam`, `athar_kurd`, `awj_ara`, `bayyat`, `buselik`, ... (16 total)
   - Example: `rast`
 - `filterByTonic` (optional): Filter by maqām tonic/first note (URL-safe, case-insensitive, diacritics-insensitive) - Type: `string` - Valid values: `ajam_ushayran`, `chahargah`, `dugah`, `iraq`, `nawa`, `rast`, `segah`, `ushayran`, `yegah`
 - `sortBy` (optional): Sort order for results - Type: `string` - Valid values: `tonic`, `alphabetical` - Default: `alphabetical`
@@ -105,6 +108,32 @@ curl "https://diarmaqar.netlify.app/api/maqamat?includeSources=true&includeArabi
 ```
 
 **Response:** List of maqāmāt retrieved successfully
+
+
+### List maqām families {#listMaqamFamilies}
+
+```
+GET /maqamat/families
+```
+
+Retrieve maqām families for maqāmāt available in the specified tuning system.
+Families are classified by the first jins at scale degree 1. Use the `maqamat`
+link to filter maqāmāt by family via GET /maqamat?filterByFamily={idName}.
+
+
+**Query Parameters:**
+- `tuningSystem` **(required)**: Tuning system identifier (e.g., ibnsina_1037, alsabbagh_1954) - Type: `string`
+  - Example: `ibnsina_1037`
+- `startingNote` **(required)**: Starting note name (URL-safe, diacritics-insensitive) - Type: `string`
+  - Example: `yegah`
+- `includeArabic` (optional): Include Arabic display names in family objects - Type: `string` - Valid values: `true`, `false` - Default: `false`
+
+**Example:**
+```bash
+curl "https://diarmaqar.netlify.app/api/maqamat/families?tuningSystem=ibnsina_1037&startingNote=yegah&includeArabic=false"
+```
+
+**Response:** Maqām families retrieved successfully
 
 
 ### Get detailed maqām data {#getMaqam}

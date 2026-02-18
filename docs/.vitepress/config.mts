@@ -146,6 +146,7 @@ export default defineConfig({
               link: '/api/endpoints-reference#maqamat',
               items: [
                 { text: 'List all maqāmāt', link: '/api/endpoints-reference#listMaqamat' },
+                { text: 'List maqām families', link: '/api/endpoints-reference#listMaqamFamilies' },
                 { text: 'Get detailed maqām data', link: '/api/endpoints-reference#getMaqam' },
                 { text: 'Check maqām availability', link: '/api/endpoints-reference#getMaqamAvailability' },
                 { text: 'List transpositions for a maqām', link: '/api/endpoints-reference#listMaqamTranspositions' },

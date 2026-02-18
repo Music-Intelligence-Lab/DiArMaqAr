@@ -36,6 +36,7 @@ For users who don't know specific maqam names, use these representative examples
 - "Tell me about a fundamental Arabic maqam" → GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
 - "Show me a basic jins" → GET /api/ajnas/jins_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
 - "What tuning systems are available?" → GET /api/tuning-systems
+- "What maqām families exist?" → GET /api/maqamat/families?tuningSystem=ibnsina_1037&startingNote=yegah
 - "Show me the most common tuning system" → GET /api/tuning-systems/IbnSina-(1037)/yegah/pitch-classes?pitchClassDataType=cents
 
 **Quick Test URL (Copy-paste ready):**

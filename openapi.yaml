@@ -48,7 +48,9 @@ paths:
       parameters:
         - name: filterByFamily
           in: query
-          description: Filter by maqām family name (URL-safe, case-insensitive, diacritics-insensitive)
+          description: |
+            Filter by maqām family name (URL-safe, case-insensitive, diacritics-insensitive).
+            Use GET /maqamat/families to retrieve valid family values.
           schema:
             type: string
             enum:
@@ -231,13 +233,103 @@ paths:
                   value:
                     error: "Invalid parameter: filterByFamily"
                     message: "The 'filterByFamily' parameter cannot be empty. Either omit it or provide a valid maqām family name."
-                    hint: "Remove '?filterByFamily=' from your URL or specify a family like '?filterByFamily=rast'"
+                    hint: "Remove '?filterByFamily=' from your URL, specify a family like '?filterByFamily=rast', or use GET /maqamat/families?tuningSystem=ibnsina_1037&startingNote=yegah for valid values"
                 emptyTonic:
                   summary: Empty filterByTonic parameter
                   value:
                     error: "Invalid parameter: filterByTonic"
                     message: "The 'filterByTonic' parameter cannot be empty. Either omit it or provide a valid tonic note name."
                     hint: "Remove '?filterByTonic=' from your URL or specify a tonic like '?filterByTonic=rast'"
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /maqamat/families:
+    get:
+      tags:
+        - Maqāmāt
+      summary: List maqām families
+      description: |
+        Retrieve maqām families for maqāmāt available in the specified tuning system.
+        Families are classified by the first jins at scale degree 1. Use the `maqamat`
+        link to filter maqāmāt by family via GET /maqamat?filterByFamily={idName}.
+      operationId: listMaqamFamilies
+      parameters:
+        - name: tuningSystem
+          in: query
+          required: true
+          description: Tuning system identifier (e.g., ibnsina_1037, alsabbagh_1954)
+          schema:
+            type: string
+          example: ibnsina_1037
+        - name: startingNote
+          in: query
+          required: true
+          description: Starting note name (URL-safe, diacritics-insensitive)
+          schema:
+            type: string
+          example: yegah
+        - name: includeArabic
+          in: query
+          required: false
+          description: Include Arabic display names in family objects
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "false"
+      responses:
+        '400':
+          description: Missing required parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Tuning system or starting note not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '200':
+          description: Maqām families retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, data]
+                properties:
+                  count:
+                    type: integer
+                    description: Number of families
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      required: [family, links]
+                      properties:
+                        family:
+                          $ref: '#/components/schemas/IdentifierRef'
+                        links:
+                          type: object
+                          properties:
+                            maqamat:
+                              type: string
+                              description: URL to filter maqāmāt by this family
+                              example: "/api/maqamat?filterByFamily=rast"
+              example:
+                count: 16
+                data:
+                  - family:
+                      idName: "rast"
+                      displayName: "rāst"
+                  - family:
+                      idName: "bayyat"
+                      displayName: "bayyāt"
+                  - family:
+                      idName: "hijaz"
+                      displayName: "ḥijāz"
+                  - family:
+                      idName: "ajam"
+                      displayName: "ʿajam"
         '500':
           $ref: '#/components/responses/ServerError'
 
