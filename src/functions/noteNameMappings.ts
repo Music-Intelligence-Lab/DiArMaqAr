@@ -418,14 +418,14 @@ export function getEnglishNoteName(arabicName: string, opts?: EnglishNameOptions
  * regardless of musical context. Preserves accidentals, modifiers, and octave numbers.
  *
  * @param englishName - The IPN note name to convert (e.g., "G2", "Bb++2", "F#3")
- * @returns The solfege equivalent (e.g., "Sol 2", "Si b++2", "Fa #3")
+ * @returns The solfege equivalent (e.g., "Sol2", "Sib++2", "Fa#3")
  *
  * @example
  * ```typescript
- * getSolfegeFromEnglishName("G2");     // "Sol 2"
- * getSolfegeFromEnglishName("Bb++2");  // "Si b++2"
- * getSolfegeFromEnglishName("F#3");    // "Fa #3"
- * getSolfegeFromEnglishName("E-b2");   // "Mi -b2"
+ * getSolfegeFromEnglishName("G2");     // "Sol2"
+ * getSolfegeFromEnglishName("Bb++2");  // "Sib++2"
+ * getSolfegeFromEnglishName("F#3");   // "Fa#3"
+ * getSolfegeFromEnglishName("E-b2");   // "Mi-b2"
  * ```
  */
 export function getSolfegeFromEnglishName(englishName: string): string {
@@ -446,7 +446,7 @@ export function getSolfegeFromEnglishName(englishName: string): string {
   const solfege = solfegeMap[englishNoteNameNatural.toUpperCase()] || "--";
 
   if (englishNoteNameAccidental) {
-    return `${solfege} ${englishNoteNameAccidental}`;
+    return `${solfege}${englishNoteNameAccidental}`;
   }
   return solfege;
 }

@@ -664,6 +664,7 @@ paths:
                           noteName: "rast"
                           noteNameDisplay: "rāst"
                           englishName: "C3"
+                          solfege: "Do3"
                           fraction: "32/27"
                           cents: 294.135
                           decimalRatio: 1.185
@@ -680,6 +681,7 @@ paths:
                           noteName: "dugah"
                           noteNameDisplay: "dūgāh"
                           englishName: "D3"
+                          solfege: "Re3"
                           fraction: "4/3"
                           cents: 498.045
                           decimalRatio: 1.333
@@ -1235,13 +1237,17 @@ paths:
           example: "rast"
         - name: pitchClassDataType
           in: query
-          required: true
-          description: Pitch class data format (defaults to "cents")
+          required: false
+          description: |
+            Pitch class data format. When omitted, defaults to "all".
+            - `all` returns all available fields including englishName, solfege, abjadName, fraction, cents, decimalRatio, stringLength, frequency, fretDivision, midiNoteDecimal, midiNotePlusCentsDeviation, centsDeviation, ipnReferenceNoteName
+            - Use a specific value to return only that field plus minimal identifiers
           schema:
             type: string
             enum:
               - all
               - englishName
+              - solfege
               - fraction
               - cents
               - decimalRatio
@@ -1253,8 +1259,8 @@ paths:
               - midiNoteDeviation
               - centsDeviation
               - referenceNoteName
-          default: "cents"
-          example: "cents"
+          default: "all"
+          example: "all"
         - name: octave
           in: query
           required: false
@@ -1344,9 +1350,64 @@ paths:
                           type: integer
                   pitchClasses:
                     type: array
-                    description: Array of formatted pitch class data
+                    description: |
+                      Array of formatted pitch class data. Fields vary by pitchClassDataType.
+                      When pitchClassDataType=all, each item includes: pitchClassIndex, octave, noteName, noteNameDisplay, englishName, solfege, abjadName, fraction, cents, decimalRatio, stringLength, frequency, fretDivision, midiNoteDecimal, midiNotePlusCentsDeviation, centsDeviation, ipnReferenceNoteName.
                     items:
                       type: object
+                      description: Pitch class object; properties depend on pitchClassDataType
+                      properties:
+                        pitchClassIndex:
+                          type: integer
+                          description: Index of the pitch class within the tuning system
+                        octave:
+                          type: integer
+                          description: Octave number (0-3)
+                        noteName:
+                          type: string
+                          description: URL-safe note name identifier
+                        noteNameDisplay:
+                          type: string
+                          description: Display form of the note name
+                        englishName:
+                          type: string
+                          description: International Pitch Notation name (e.g. G3, Bb3). Included when pitchClassDataType is all or englishName.
+                        solfege:
+                          type: string
+                          description: Fixed-do solfege syllable (Do, Re, Mi, Fa, Sol, La, Si) with accidentals and octave appended (no spaces, e.g. Mi-b3, Sol2). Included when pitchClassDataType is all or solfege.
+                        abjadName:
+                          type: string
+                          description: Arabic abjad name. Included when pitchClassDataType is all or abjadName.
+                        fraction:
+                          type: string
+                          description: Frequency ratio as fraction. Included when pitchClassDataType is all or fraction.
+                        cents:
+                          type: number
+                          description: Pitch in cents. Included when pitchClassDataType is all or cents.
+                        decimalRatio:
+                          type: number
+                          description: Frequency ratio as decimal. Included when pitchClassDataType is all or decimalRatio.
+                        stringLength:
+                          type: number
+                          description: Relative string length. Included when pitchClassDataType is all or stringLength.
+                        frequency:
+                          type: number
+                          description: Frequency in Hz. Included when pitchClassDataType is all or frequency.
+                        fretDivision:
+                          type: string
+                          description: Fret position. Included when pitchClassDataType is all or fretDivision.
+                        midiNoteDecimal:
+                          type: number
+                          description: MIDI note with fractional precision. Included when pitchClassDataType is all or midiNoteNumber.
+                        midiNotePlusCentsDeviation:
+                          type: string
+                          description: IPN reference note with cents deviation. Included when pitchClassDataType is all or midiNoteDeviation.
+                        centsDeviation:
+                          type: number
+                          description: Deviation in cents from nearest equal-tempered pitch. Included when pitchClassDataType is all or centsDeviation.
+                        ipnReferenceNoteName:
+                          type: string
+                          description: IPN reference note name. Included when pitchClassDataType is all or referenceNoteName.
                   sources:
                     type: array
                     description: Bibliographic source references for this tuning system
