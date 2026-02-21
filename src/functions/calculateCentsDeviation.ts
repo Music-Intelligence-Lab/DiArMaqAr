@@ -76,7 +76,7 @@ export function calculateCentsDeviationWithReferenceNote(
 ): { deviation: number; referenceNoteName: string } {
   // Parse the English note name to get the intended 12-EDO reference
   if (currentNoteName) {
-    const { baseNote, chromaticSemitones, mainAccidental, isMicrotonal } = parseEnglishNoteName(currentNoteName);
+    const { baseNote, chromaticSemitones, mainAccidental } = parseEnglishNoteName(currentNoteName);
 
     // Determine the reference note name based on the main accidental
     // Rule: Use chromatic note (Ab, Eb, F#) only if b/# is IMMEDIATELY after the letter.
