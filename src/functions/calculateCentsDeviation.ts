@@ -82,13 +82,18 @@ export function calculateCentsDeviationWithReferenceNote(
     let referenceNoteName: string;
     let targetSemitone: number; // The semitone within an octave (0-11)
 
-    // For microtonal notes (like E-b, F+#), use the natural note as reference
-    // unless there's a non-microtonal sharp/flat, in which case use that
+    // For microtonal notes (like E-b, F+#, Ab--), use the chromatic note as reference
+    // The microtonal modifier describes deviation FROM that chromatic note (Eb, Ab, F#)
     if (isMicrotonal && mainAccidental) {
-      // Microtonal with accidental (e.g., "E-b", "F+#")
-      // Use natural note as reference
-      referenceNoteName = baseNote;
-      targetSemitone = chromaticSemitones;
+      // Microtonal with accidental (e.g., "E-b", "F+#", "Ab--")
+      // Use chromatic note as reference - the pitch is a variant OF that note
+      if (mainAccidental === "b") {
+        referenceNoteName = getNoteName(baseNote, -1);
+        targetSemitone = (chromaticSemitones - 1 + 12) % 12;
+      } else {
+        referenceNoteName = getNoteName(baseNote, 1);
+        targetSemitone = (chromaticSemitones + 1) % 12;
+      }
     } else if (mainAccidental === "b") {
       // Standard flat (non-microtonal): Eb, Ab, Bb, etc.
       referenceNoteName = getNoteName(baseNote, -1);
