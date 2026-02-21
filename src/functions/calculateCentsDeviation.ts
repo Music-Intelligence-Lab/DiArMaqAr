@@ -79,14 +79,17 @@ export function calculateCentsDeviationWithReferenceNote(
     const { baseNote, chromaticSemitones, mainAccidental, isMicrotonal } = parseEnglishNoteName(currentNoteName);
 
     // Determine the reference note name based on the main accidental
+    // Rule: Use chromatic note (Ab, Eb, F#) only if b/# is IMMEDIATELY after the letter.
+    // E-b, F+# have +/- before the accidental → use natural (E, F).
+    // Ab--, Eb+ have b/# immediately after the letter → use chromatic (Ab, Eb).
+    const firstCharAfterBase = currentNoteName.charAt(1);
+    const accidentalImmediatelyAfterBase = firstCharAfterBase === "b" || firstCharAfterBase === "#";
+
     let referenceNoteName: string;
     let targetSemitone: number; // The semitone within an octave (0-11)
 
-    // For microtonal notes (like E-b, F+#, Ab--), use the chromatic note as reference
-    // The microtonal modifier describes deviation FROM that chromatic note (Eb, Ab, F#)
-    if (isMicrotonal && mainAccidental) {
-      // Microtonal with accidental (e.g., "E-b", "F+#", "Ab--")
-      // Use chromatic note as reference - the pitch is a variant OF that note
+    if (accidentalImmediatelyAfterBase && mainAccidental) {
+      // b or # immediately after letter: Ab--, Eb+, F#-, C# → use chromatic
       if (mainAccidental === "b") {
         referenceNoteName = getNoteName(baseNote, -1);
         targetSemitone = (chromaticSemitones - 1 + 12) % 12;
@@ -94,18 +97,8 @@ export function calculateCentsDeviationWithReferenceNote(
         referenceNoteName = getNoteName(baseNote, 1);
         targetSemitone = (chromaticSemitones + 1) % 12;
       }
-    } else if (mainAccidental === "b") {
-      // Standard flat (non-microtonal): Eb, Ab, Bb, etc.
-      referenceNoteName = getNoteName(baseNote, -1);
-      // Flat is one semitone below the natural note
-      targetSemitone = (chromaticSemitones - 1 + 12) % 12;
-    } else if (mainAccidental === "#") {
-      // Standard sharp (non-microtonal): C#, D#, F#, etc.
-      referenceNoteName = getNoteName(baseNote, 1);
-      // Sharp is one semitone above the natural note
-      targetSemitone = (chromaticSemitones + 1) % 12;
     } else {
-      // Natural note or pure microtonal (e.g., C, D, E or C+, D-)
+      // No accidental immediately after: E-b, F+#, C, C+, D- → use natural
       referenceNoteName = baseNote;
       targetSemitone = chromaticSemitones;
     }
