@@ -607,17 +607,15 @@ export function getSequentialEnglishNames(arabicNames: string[], ascending: bool
       continue;
     }
 
-    // Check if this note is sequential relative to the previous note
-    // This allows sequences like Eb, E, F, F# where same letters can appear consecutively
-    // We check against the actual previous default name (before any enharmonic changes)
+    // Check if this note advances to the next sequential letter (e.g., E then F).
+    // CRITICAL: Do NOT allow same letter (e.g., F then F#) - each pitch class must have a unique natural.
+    // Per Western notation convention, scales use consecutive letters (D-E-F-G-A-B-C-D).
     if (i > 0) {
       const prevDefaultName = defaultNames[i - 1];
       if (prevDefaultName !== "--") {
         const prevLetter = prevDefaultName[0].toUpperCase();
-        // If current note is the same letter as previous (e.g., Eb then E), allow it
-        // If current note is the next sequential letter after previous (e.g., E then F), allow it
         const nextSequentialLetter = getNextSequentialLetter(prevLetter);
-        if (actualLetter === prevLetter || actualLetter === nextSequentialLetter) {
+        if (actualLetter === nextSequentialLetter) {
           result.push(defaultName);
           continue;
         }
