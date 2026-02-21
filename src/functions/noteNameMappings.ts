@@ -31,7 +31,7 @@ import { octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames, octaveThre
  */
 const englishOctaveZero = [
   "G1",
-  "G-#1",
+  "Ab--1",
   "Ab-1",
   "Ab1",
   "A-b1",
@@ -77,7 +77,7 @@ const englishOctaveZero = [
  */
 const englishOctaveOne = [
   "G2",
-  "G-#2",
+  "Ab--2",
   "Ab-2",
   "Ab2",
   "A-b2",
@@ -122,7 +122,7 @@ const englishOctaveOne = [
  */
 const englishOctaveTwo = [
   "G3",
-  "G-#3",
+  "Ab--3",
   "Ab-3",
   "Ab3",
   "A-b3",
@@ -167,7 +167,7 @@ const englishOctaveTwo = [
  */
 const englishOctaveThree = [
   "G4",
-  "G-#4",
+  "Ab--4",
   "Ab-4",
   "Ab4",
   "A-b4",
@@ -213,7 +213,7 @@ const englishOctaveThree = [
  */
 const englishOctaveFour = [
   "G5",
-  "G-#5",
+  "Ab--5",
   "Ab-5",
   "Ab5",
   "A-b5",
