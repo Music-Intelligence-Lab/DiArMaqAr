@@ -2,7 +2,7 @@
 
 import React, { useRef, useEffect } from "react";
 import { Renderer, Stave, StaveNote, Voice, Formatter, Accidental, TextNote } from "vexflow";
-import { getEnglishNoteName } from "@/functions/noteNameMappings";
+import { getEnglishNoteName, getSolfegeFromEnglishName } from "@/functions/noteNameMappings";
 import { renderPitchClassSpellings } from "@/functions/renderPitchClassIpnSpellings";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
 import { getIpnReferenceNoteNameWithOctave } from "@/functions/getIpnReferenceNoteName";
@@ -105,26 +105,37 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
   const renderStaff = () => {
     if (!containerRef.current) return;
 
-    // Precompute context-aware english names for the pitchClasses array
-    const computedEnglishNames: string[] = (() => {
-      const preferredMap: Record<string, string> = {};
-      const contextSeq = 
+    // Precompute context-aware english names and solfege for the pitchClasses array.
+    // Prefer pitchClasses' own englishName/solfege when already rendered (maqam/jins transpositions).
+    const { computedEnglishNames, computedSolfege }: { computedEnglishNames: string[]; computedSolfege: string[] } = (() => {
+      const preferredEnglishMap: Record<string, string> = {};
+      const preferredSolfegeMap: Record<string, string> = {};
+      const contextSeq =
         (selectedMaqam && selectedMaqam.ascendingPitchClasses) ||
         (selectedJins && selectedJins.jinsPitchClasses) ||
         (appSelectedPitchClasses && appSelectedPitchClasses.length >= 2 ? appSelectedPitchClasses : undefined);
 
       if (contextSeq) {
-        // Apply sequential naming for melodic sequences
         const renderedSeq = renderPitchClassSpellings(contextSeq);
         renderedSeq.forEach((pc) => {
-          preferredMap[pc.noteName] = pc.englishName;
+          preferredEnglishMap[pc.noteName] = pc.englishName;
+          preferredSolfegeMap[pc.noteName] = pc.solfege || getSolfegeFromEnglishName(pc.englishName);
         });
       }
 
-      // Map pitchClasses to their English names, using the preferred map where available
-      return pitchClasses.map((pc) => {
-        return preferredMap[pc.noteName] || getEnglishNoteName(pc.noteName);
+      const englishNames = pitchClasses.map((pc) => {
+        if (pc.englishName && /^[A-G][#b]?\d+/.test(pc.englishName)) {
+          return pc.englishName;
+        }
+        return preferredEnglishMap[pc.noteName] || getEnglishNoteName(pc.noteName);
       });
+
+      const solfegeNames = pitchClasses.map((pc, idx) => {
+        if (pc.solfege && pc.solfege !== "--") return pc.solfege;
+        return preferredSolfegeMap[pc.noteName] || getSolfegeFromEnglishName(englishNames[idx]);
+      });
+
+      return { computedEnglishNames: englishNames, computedSolfege: solfegeNames };
     })();
 
     const notesCount = computedEnglishNames.filter((en) => en && en !== "--").length;
@@ -140,20 +151,19 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
       pitchClasses.forEach((pitchClass, idx) => {
         const englishName = computedEnglishNames[idx];
         if (!englishName || englishName === "--") return;
-        
-        // Measure note name text (line 1)
-        measureCtx.font = '10pt "Readex Pro"';
+
+        const pcWithEnglish = { ...pitchClass, englishName };
+        const referenceNoteWithOctave = getIpnReferenceNoteNameWithOctave(pcWithEnglish);
         const noteName = getDisplayName(pitchClass.noteName, 'note');
-        const noteNameWidth = measureCtx.measureText(noteName).width;
-        
-        // Measure combined text (line 2) - IPN + cents
+        const centsText = `${referenceNoteWithOctave} ${pitchClass.centsDeviation > 0 ? '+' : ''}${pitchClass.centsDeviation.toFixed(1)}¢`;
+        const ipnSolfegeText = `${englishName} / ${computedSolfege[idx]}`;
+
         measureCtx.font = '10pt "Readex Pro"';
-        const referenceNoteWithOctave = getIpnReferenceNoteNameWithOctave(pitchClass);
-        const combinedText = `${referenceNoteWithOctave} ${pitchClass.centsDeviation > 0 ? '+' : ''}${pitchClass.centsDeviation.toFixed(1)}¢`;
-        const combinedTextWidth = measureCtx.measureText(combinedText).width;
-        
-        // Take the maximum of both text lines
-        maxTextWidth = Math.max(maxTextWidth, noteNameWidth, combinedTextWidth);
+        const noteNameWidth = measureCtx.measureText(noteName).width;
+        const centsWidth = measureCtx.measureText(centsText).width;
+        const ipnSolfegeWidth = measureCtx.measureText(ipnSolfegeText).width;
+
+        maxTextWidth = Math.max(maxTextWidth, noteNameWidth, centsWidth, ipnSolfegeWidth);
       });
     }
     
@@ -282,43 +292,33 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
     voice.draw(context, stave);
 
     // After rendering notes, calculate text positions based on their bounding box
-    let textLine1Position = 10; // Default
-    let textLine2Position = 15; // Default
-    
+    let textLine1Position = 10;
+    let textLine2Position = 15;
+    let textLine3Position = 20;
+
     if (containerRef.current) {
       const svgElement = containerRef.current.querySelector('svg');
       if (svgElement) {
-        // Get the bounding box of just the notes (before text is added)
         const notesBBox = svgElement.getBBox();
-        
-  // Debug logs removed: computed bounding box and positions are used below
-        
-        // Calculate dynamic text line positions based on the bottom of the notes
-        const gapBelowNotes = -20; // Space between bottom of notes and first text line (adjust this!)
-        const textLineSpacing = 20; // Space between text lines in pixels (adjust this!)
-        
+        const gapBelowNotes = -20;
+        const textLineSpacing = 20;
+
         const notesBottom = notesBBox.y + notesBBox.height;
-        
-        // Calculate absolute Y positions for text
         const text1Y = notesBottom + gapBelowNotes;
         const text2Y = text1Y + textLineSpacing;
-        
-        // VexFlow's setLine uses staff space units where middle line (B4) = 0
-        // Each staff space is 10 pixels (distance between two staff lines)
-        // Staff center is at staveY + 20 (middle of 5-line staff)
+        const text3Y = text2Y + textLineSpacing;
+
         const staffCenter = staveY + 20;
-        
-        // Convert absolute Y to staff-relative line position
         textLine1Position = (text1Y - staffCenter) / 10;
         textLine2Position = (text2Y - staffCenter) / 10;
-        
-  // Debug logs removed: final positions are set in textLine1Position/textLine2Position
+        textLine3Position = (text3Y - staffCenter) / 10;
       }
     }
 
-    // Create text notes for note names and combined English name with cents
-    const arabicTextNotes: TextNote[] = [];
-    const combinedTextNotes: TextNote[] = [];
+    // Create text notes: line 1 = Arabic note name, line 2 = cents value, line 3 = IPN / solfege
+    const noteNameTextNotes: TextNote[] = [];
+    const centsTextNotes: TextNote[] = [];
+    const ipnSolfegeTextNotes: TextNote[] = [];
 
     pitchClasses.forEach((pitchClass, idx) => {
       try {
@@ -330,7 +330,10 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
 
         if (!parsed) return;
 
-        // Create a text note for note name (Arabic or localized based on language)
+        const pcWithEnglish = { ...pitchClass, englishName };
+        const referenceNoteWithOctave = getIpnReferenceNoteNameWithOctave(pcWithEnglish);
+
+        // Line 1: Arabic note name (or localized)
         const noteName = getDisplayName(pitchClass.noteName, 'note');
         const noteNameTextNote = new TextNote({
           text: noteName,
@@ -339,55 +342,65 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
         noteNameTextNote.setLine(textLine1Position);
         noteNameTextNote.setJustification(TextNote.Justification.CENTER);
         noteNameTextNote.setFont("Readex Pro", 10);
-        arabicTextNotes.push(noteNameTextNote);
+        noteNameTextNotes.push(noteNameTextNote);
 
-        // Create a combined text note for IPN reference note name with octave and cents deviation
-        const referenceNoteWithOctave = getIpnReferenceNoteNameWithOctave(pitchClass);
-        const combinedText = `${referenceNoteWithOctave} ${pitchClass.centsDeviation > 0 ? '+' : ''}${pitchClass.centsDeviation.toFixed(1)}¢`;
-        const combinedTextNote = new TextNote({
-          text: combinedText,
+        // Line 2: cents value (reference + deviation)
+        const centsText = `${referenceNoteWithOctave} ${pitchClass.centsDeviation > 0 ? '+' : ''}${pitchClass.centsDeviation.toFixed(1)}¢`;
+        const centsTextNote = new TextNote({
+          text: centsText,
           duration: "q",
         });
-        combinedTextNote.setLine(textLine2Position);
-        combinedTextNote.setJustification(TextNote.Justification.CENTER);
-        combinedTextNote.setFont("Readex Pro", 10);
-        combinedTextNotes.push(combinedTextNote);
+        centsTextNote.setLine(textLine2Position);
+        centsTextNote.setJustification(TextNote.Justification.CENTER);
+        centsTextNote.setFont("Readex Pro", 10);
+        centsTextNotes.push(centsTextNote);
+
+        // Line 3: IPN / solfege
+        const ipnSolfegeText = `${englishName} / ${computedSolfege[idx]}`;
+        const ipnSolfegeTextNote = new TextNote({
+          text: ipnSolfegeText,
+          duration: "q",
+        });
+        ipnSolfegeTextNote.setLine(textLine3Position);
+        ipnSolfegeTextNote.setJustification(TextNote.Justification.CENTER);
+        ipnSolfegeTextNote.setFont("Readex Pro", 10);
+        ipnSolfegeTextNotes.push(ipnSolfegeTextNote);
       } catch (error) {
         console.warn(`[StaffNotation] Could not create text note for ${pitchClass.noteName}:`, error);
       }
     });
 
-    // Create voice for note names (Arabic/localized based on language)
     const noteNameTextVoice = new Voice({
-      numBeats: arabicTextNotes.length,
+      numBeats: noteNameTextNotes.length,
       beatValue: 4,
     });
-    noteNameTextVoice.addTickables(arabicTextNotes);
+    noteNameTextVoice.addTickables(noteNameTextNotes);
 
-    // Create voice for combined English note names and cents deviation
-    const combinedTextVoice = new Voice({
-      numBeats: combinedTextNotes.length,
+    const centsTextVoice = new Voice({
+      numBeats: centsTextNotes.length,
       beatValue: 4,
     });
-    combinedTextVoice.addTickables(combinedTextNotes);
+    centsTextVoice.addTickables(centsTextNotes);
 
-    // Calculate the exact width needed for notes (without extra spreading)
-    // This prevents the formatter from distributing notes across the full staff width
+    const ipnSolfegeTextVoice = new Voice({
+      numBeats: ipnSolfegeTextNotes.length,
+      beatValue: 4,
+    });
+    ipnSolfegeTextVoice.addTickables(ipnSolfegeTextNotes);
+
     const formatterWidth = notesFormattingWidth;
-    
-    // Format all voices together to ensure horizontal alignment
-    // Use the exact width needed for notes, not the full stave width
-    formatter.joinVoices([voice, noteNameTextVoice, combinedTextVoice]).format([voice, noteNameTextVoice, combinedTextVoice], formatterWidth);
-    
-    // Clear and redraw everything with aligned formatting
+
+    formatter.joinVoices([voice, noteNameTextVoice, centsTextVoice, ipnSolfegeTextVoice]).format([voice, noteNameTextVoice, centsTextVoice, ipnSolfegeTextVoice], formatterWidth);
+
     context.clear();
     stave.setContext(context).draw();
     context.setFont("Readex Pro", 10, "bold");
-    context.fillText("8", staveX + 16, staveY + 105); // Position "8" below the clef, relative to staff position
-    
+    context.fillText("8", staveX + 16, staveY + 105);
+
     voice.draw(context, stave);
     noteNameTextVoice.draw(context, stave);
-    combinedTextVoice.draw(context, stave);
+    centsTextVoice.draw(context, stave);
+    ipnSolfegeTextVoice.draw(context, stave);
     
     // Get final bounding box after everything is rendered
     if (containerRef.current) {
