@@ -5,7 +5,6 @@ import { Renderer, Stave, StaveNote, Voice, Formatter, Accidental, TextNote } fr
 import { getEnglishNoteName, getSolfegeFromEnglishName } from "@/functions/noteNameMappings";
 import { renderPitchClassSpellings } from "@/functions/renderPitchClassIpnSpellings";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
-import { getIpnReferenceNoteNameWithOctave } from "@/functions/getIpnReferenceNoteName";
 import useAppContext from "@/contexts/app-context";
 import PitchClass from "@/models/PitchClass";
 import useLanguageContext from "@/contexts/language-context";
@@ -152,10 +151,8 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
         const englishName = computedEnglishNames[idx];
         if (!englishName || englishName === "--") return;
 
-        const pcWithEnglish = { ...pitchClass, englishName };
-        const referenceNoteWithOctave = getIpnReferenceNoteNameWithOctave(pcWithEnglish);
         const noteName = getDisplayName(pitchClass.noteName, 'note');
-        const centsText = `${referenceNoteWithOctave} ${pitchClass.centsDeviation > 0 ? '+' : ''}${pitchClass.centsDeviation.toFixed(1)}¢`;
+        const centsText = `${pitchClass.centsDeviation > 0 ? '+' : ''}${pitchClass.centsDeviation.toFixed(1)}¢`;
         const ipnSolfegeText = `${englishName} / ${computedSolfege[idx]}`;
 
         measureCtx.font = '10pt "Readex Pro"';
@@ -212,12 +209,12 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
 
     if (!englishName || englishName === "--") return;
 
-    const parsed = parseNote(englishName);
+        const parsed = parseNote(englishName);
 
         if (!parsed) return;
 
-        // Use the IPN reference MIDI note instead of the microtonal MIDI note
-        const referenceMidiNote = calculateIpnReferenceMidiNote(pitchClass);
+        const pcWithEnglish = { ...pitchClass, englishName };
+        const referenceMidiNote = calculateIpnReferenceMidiNote(pcWithEnglish);
 
         // Use the parsed note letter from the English name instead of MIDI conversion
         const noteLetter = parsed.letter;
@@ -330,9 +327,6 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
 
         if (!parsed) return;
 
-        const pcWithEnglish = { ...pitchClass, englishName };
-        const referenceNoteWithOctave = getIpnReferenceNoteNameWithOctave(pcWithEnglish);
-
         // Line 1: Arabic note name (or localized)
         const noteName = getDisplayName(pitchClass.noteName, 'note');
         const noteNameTextNote = new TextNote({
@@ -344,8 +338,8 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
         noteNameTextNote.setFont("Readex Pro", 10);
         noteNameTextNotes.push(noteNameTextNote);
 
-        // Line 2: cents value (reference + deviation)
-        const centsText = `${referenceNoteWithOctave} ${pitchClass.centsDeviation > 0 ? '+' : ''}${pitchClass.centsDeviation.toFixed(1)}¢`;
+        // Line 2: cents value only (deviation from 12-EDO reference)
+        const centsText = `${pitchClass.centsDeviation > 0 ? '+' : ''}${pitchClass.centsDeviation.toFixed(1)}¢`;
         const centsTextNote = new TextNote({
           text: centsText,
           duration: "q",
