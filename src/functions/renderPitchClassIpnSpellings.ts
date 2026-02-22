@@ -96,16 +96,15 @@ export function renderPitchClassSpellings(pitchClasses: PitchClass[], ascending:
       const currLetter = referenceNoteName.charAt(0).toUpperCase();
 
       if (prevLetter === currLetter) {
-        // Always use forward sequential logic for consistency
-        const sequentialNote = getNextSequentialReferenceNote(referenceNoteName);
-        
-        if (sequentialNote) {
-          referenceNoteName = sequentialNote;
+        // Prefer enharmonic swap (F# → Gb) over sequential advance (F# → G#).
+        // Sequential advance changes the PITCH (G# ≠ F#); enharmonic swap preserves it.
+        const swapped = swapEnharmonicForReference(referenceNoteName);
+        if (swapped) {
+          referenceNoteName = swapped;
         } else {
-          // Fall back to enharmonic swap if sequential note is not available
-          const swapped = swapEnharmonicForReference(referenceNoteName);
-          if (swapped) {
-            referenceNoteName = swapped;
+          const sequentialNote = getNextSequentialReferenceNote(referenceNoteName);
+          if (sequentialNote) {
+            referenceNoteName = sequentialNote;
           }
         }
 
