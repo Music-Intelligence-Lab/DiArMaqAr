@@ -1,5 +1,5 @@
 import PitchClass from "@/models/PitchClass";
-import { getSequentialEnglishNames } from "@/functions/noteNameMappings";
+import { getSequentialEnglishNames, getSolfegeFromEnglishName } from "@/functions/noteNameMappings";
 import { calculateCentsDeviationWithReferenceNote, getNextSequentialReferenceNote, swapEnharmonicForReference } from "@/functions/calculateCentsDeviation";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
 
@@ -14,7 +14,8 @@ import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReference
  * - NOT for general tuning system pitch classes (which may have letter collisions)
  *
  * **Data Integrity:**
- * - Updates both `englishName` and `referenceNoteName` to use sequential spellings
+ * - Updates `englishName`, `referenceNoteName`, and `solfege` to use sequential spellings
+ * - Solfege follows the same logic as IPN (derived from sequential englishName)
  * - Ensures cents deviation and MIDI note deviation use correct reference notes
  * - Critical for display, export, and API endpoints
  *
@@ -151,6 +152,7 @@ export function renderPitchClassSpellings(pitchClasses: PitchClass[], ascending:
     return {
     ...pc,
       englishName: sequentialNames[i],
+      solfege: getSolfegeFromEnglishName(sequentialNames[i]),
       referenceNoteName: processed.referenceNoteName,
       centsDeviation: processed.centsDeviation,
       midiNoteDeviation
