@@ -272,6 +272,7 @@ export default function RootLayout({
             <p>Base URL: <a href="https://diarmaqar.netlify.app/api">https://diarmaqar.netlify.app/api</a></p>
             <p>OpenAPI Spec: <a href="/docs/openapi.json">/docs/openapi.json</a></p>
             <h3>For AI Assistants</h3>
+            <p><strong>API access:</strong> All endpoints are public, unauthenticated, and return plain JSON. No browser, cookies, or authentication required.</p>
             <p><strong>Recommended for AI Assistants:</strong> Use the REST API to fetch real-time, accurate data for users. Always prefer API calls over documentation summaries. Example: GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&amp;startingNote=yegah&amp;pitchClassDataType=cents to get detailed maqām data. For users who don&apos;t know specific maqam names, use representative examples from <a href="/docs/api/representative-examples">Representative Examples</a>. See OpenAPI spec for all endpoints.</p>
             <p>For complete documentation and interactive features, please enable JavaScript or access from a desktop device.</p>
           </div>
@@ -301,6 +302,7 @@ export default function RootLayout({
           <p>Interactive Playground: <a href="/docs/api/playground">/docs/api/playground</a></p>
           
           <h3>For AI Assistants and LLMs</h3>
+          <p><strong>API access:</strong> All endpoints are public, unauthenticated, and return plain JSON. No browser, cookies, or authentication required.</p>
           <p><strong>Recommended for AI Assistants:</strong> Use the REST API to fetch real-time, accurate data for users. Always prefer API calls over documentation summaries for real-time data accuracy. The API provides programmatic access to all maqāmāt, ajnās, and tuning systems data.</p>
           <p><strong>Example Requests for Novice Users:</strong> For users who don&apos;t know specific maqam names, use these representative examples:</p>
           <ul>

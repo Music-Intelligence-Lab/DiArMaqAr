@@ -257,7 +257,7 @@ export default function LandingPage() {
         {language === "ar" ? (
           <>
             <p>
-              هذا الموقع صديق للذكاء الاصطناعي ويوفر وصولاً برمجياً شاملاً لبيانات المقامات العربية. جميع الوثائق وواجهات برمجة التطبيقات متاحة للوصول البرمجي. تعيد واجهة برمجة التطبيقات استجابات JSON منظمة كاملة تتضمن فئات النغمات والفواصل والمراجع الببليوغرافية والمزيد.
+              هذا الموقع صديق للذكاء الاصطناعي ويوفر وصولاً برمجياً شاملاً لبيانات المقامات العربية. <strong>جميع نقاط نهاية واجهة برمجة التطبيقات عامة وغير مصادق عليها وتعيد JSON عادي</strong> — لا يتطلب متصفحاً أو ملفات تعريف الارتباط أو مصادقة. تعيد واجهة برمجة التطبيقات استجابات JSON منظمة كاملة تتضمن فئات النغمات والفواصل والمراجع الببليوغرافية والمزيد.
             </p>
             
             <div className="warning-box">
@@ -331,7 +331,7 @@ export default function LandingPage() {
         ) : language === "fr" ? (
           <>
             <p>
-              Ce site est compatible avec les LLM et fournit un accès programmatique complet aux données des maqāmāt arabes. Toute la documentation et les API sont disponibles pour un accès programmatique. L&apos;API renvoie des réponses JSON structurées complètes incluant les classes de hauteur, les intervalles, les sources bibliographiques et plus encore.
+              Ce site est compatible avec les LLM et fournit un accès programmatique complet aux données des maqāmāt arabes. <strong>Tous les points de terminaison de l&apos;API sont publics, non authentifiés et renvoient du JSON brut</strong> — aucun navigateur, cookie ou authentification requis. L&apos;API renvoie des réponses JSON structurées complètes incluant les classes de hauteur, les intervalles, les sources bibliographiques et plus encore.
             </p>
             
             <div className="warning-box">
@@ -405,7 +405,7 @@ export default function LandingPage() {
         ) : (
           <>
             <p>
-              This site is LLM-friendly and provides comprehensive programmatic access to Arabic maqām data. All documentation and APIs are available for programmatic access. The API returns complete, structured JSON responses with pitch classes, intervals, bibliographic sources, and more.
+              This site is LLM-friendly and provides comprehensive programmatic access to Arabic maqām data. <strong>All API endpoints are public, unauthenticated, and return plain JSON</strong> — no browser, cookies, or authentication required. Standard HTTP GET requests work from any client (curl, fetch, etc.). The API returns complete, structured JSON responses with pitch classes, intervals, bibliographic sources, and more.
             </p>
             
             <div className="warning-box">

@@ -1,5 +1,6 @@
 # Digital Arabic Maqm Archive - Robots Configuration
 # We welcome LLM bots to access our documentation and API
+# API: public, unauthenticated, plain JSON. No browser or cookies required.
 
 User-agent: *
 Allow: /
