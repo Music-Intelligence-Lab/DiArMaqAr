@@ -4,6 +4,13 @@ import llmstxt from 'vitepress-plugin-llms'
 
 const IGNORED_SIDEBAR_PATHS = ['/api/playground']
 
+/**
+ * Route keys that duplicate the /api/ sidebar structure.
+ * Excluding these from the sidebar passed to vitepress-plugin-llms prevents
+ * duplicate TOC entries (e.g. "API Endpoints Reference" appearing 50+ times).
+ */
+const LLMS_SIDEBAR_DEDUP_EXCLUDE_ROUTES = ['/api/playground', '/api/endpoints-reference']
+
 /** Strip hash fragments and remove links to ignored files so vitepress-plugin-llms can match sidebar links */
 function stripSidebarLinkHashes(sidebar: DefaultTheme.Sidebar | undefined): DefaultTheme.Sidebar | undefined {
   if (!sidebar) return sidebar
@@ -57,8 +64,19 @@ export default defineConfig({
         // Ignore the playground page as it's interactive and not needed for LLM documentation
         // index.md contains all static API documentation for optimal LLM accessibility
         ignoreFiles: ['api/playground.md'],
-        // Strip hash fragments so plugin can match sidebar links (e.g. /api/endpoints-reference#maqamat) to files
-        sidebar: (configSidebar) => stripSidebarLinkHashes(configSidebar),
+        // Strip hash fragments and deduplicate: exclude route-specific sidebars that duplicate /api/ content
+        // (vitepress-plugin-llms flattens all route configs, causing "API Endpoints Reference" 50+ times)
+        sidebar: (configSidebar) => {
+          const deduped =
+            configSidebar && typeof configSidebar === 'object' && !Array.isArray(configSidebar)
+              ? Object.fromEntries(
+                  Object.entries(configSidebar).filter(
+                    ([route]) => !LLMS_SIDEBAR_DEDUP_EXCLUDE_ROUTES.some((excl) => route.startsWith(excl))
+                  )
+                )
+              : configSidebar
+          return stripSidebarLinkHashes(deduped)
+        },
       })
     ]
   },

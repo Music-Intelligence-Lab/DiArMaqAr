@@ -20,14 +20,14 @@
 **⚠️ CRITICAL: Required Parameters**
 
 All detail endpoints (`/api/maqamat/{id}`, `/api/ajnas/{id}`) **REQUIRE** three parameters:
-1. `tuningSystem` - ID of tuning system (e.g., `IbnSina-(1037)`)
+1. `tuningSystem` - ID of tuning system (e.g., `ibnsina_1037`)
 2. `startingNote` - Starting note in URL-safe format (e.g., `yegah`, `ushayran`)
 3. `pitchClassDataType` - Format for pitch class data (e.g., `cents`, `fraction`, `all`)
 
 **Common Mistakes to Avoid:**
 - ❌ `GET /api/maqamat/maqam_rast` (missing required parameters)
 - ❌ `GET /api/maqamat/rast` (wrong endpoint format - missing "maqam_" prefix)
-- ✅ `GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents`
+- ✅ `GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents`
 
 **Best Practice for LLMs**: Always use the API endpoints to answer user queries about specific maqāmāt, ajnās, or tuning systems. The API returns complete, structured data with all details. Always include all three required parameters for detail endpoints.
 
@@ -36,21 +36,21 @@ All detail endpoints (`/api/maqamat/{id}`, `/api/ajnas/{id}`) **REQUIRE** three 
 **For users who don't know specific maqam names**, use these representative examples:
 
 **Most Common Examples (Recommended for beginners):**
-- "Tell me about a fundamental Arabic maqam" → GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
-- "Show me a basic jins" → GET /api/ajnas/jins_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
+- "Tell me about a fundamental Arabic maqam" → GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
+- "Show me a basic jins" → GET /api/ajnas/jins_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
 - "What tuning systems are available?" → GET /api/tuning-systems
-- "Show me the most common tuning system" → GET /api/tuning-systems/IbnSina-(1037)/yegah/pitch-classes?pitchClassDataType=cents
+- "Show me the most common tuning system" → GET /api/tuning-systems/ibnsina_1037/yegah/pitch-classes?pitchClassDataType=cents
 
 **Quick Test URL (Copy-paste ready):**
 ```
-GET https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
+GET https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
 ```
 
 **When users ask general questions:**
 - "What is a maqam?" → Use GET /api/maqamat/maqam_rast (most fundamental example)
 - "Show me an Arabic scale" → Use GET /api/maqamat/maqam_rast (representative example)
-- "What are the intervals?" → Use GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
-- "Compare different tuning systems" → GET /api/maqamat/maqam_rast/compare?tuningSystems=IbnSina-(1037),al-Farabi-(950g)&startingNote=yegah
+- "What are the intervals?" → Use GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
+- "Compare different tuning systems" → GET /api/maqamat/maqam_rast/compare?tuningSystems=ibnsina_1037,alfarabi_950g&startingNote=yegah
 
 **Representative Examples Reference:**
 - See /docs/api/representative-examples for complete list of recommended examples
@@ -59,7 +59,7 @@ GET https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1
 **All endpoints return JSON** with complete data including pitch classes, intervals, bibliographic sources, and more. Use the OpenAPI specification at /docs/openapi.json for complete endpoint documentation and parameter details.
 
 **Parameter Discovery:**
-- Use `?options=true` to discover available parameters: `GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&options=true`
+- Use `?options=true` to discover available parameters: `GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&options=true`
 - This returns available tuning systems, starting notes, and other parameters instead of data
 
 ## Quick Links
