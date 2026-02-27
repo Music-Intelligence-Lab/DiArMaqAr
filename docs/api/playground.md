@@ -4,7 +4,7 @@ description: Interactive API documentation and testing playground
 head:
   - - link
     - rel: prefetch
-      href: /docs/openapi.json
+      href: /openapi.json
       as: fetch
       crossorigin: anonymous
 ---
@@ -15,7 +15,7 @@ Interactive API documentation with live endpoint testing capabilities. All API e
 
 ## OpenAPI Specification
 
-Machine-readable OpenAPI 3.1.0 specification: [openapi.json](/docs/openapi.json)
+Machine-readable OpenAPI 3.1.0 specification: [openapi.json](/openapi.json)
 
 ---
 
@@ -25,7 +25,7 @@ Interactive API documentation with live endpoint testing capabilities. All API e
 
 <ClientOnly>
   <HashNavigation />
-  <OASpec :spec-url="'/docs/openapi.json'" />
+  <OASpec :spec-url="'/openapi.json'" />
   <template #fallback>
     <div style="display: flex; align-items: center; justify-content: center; min-height: 400px; color: var(--vp-c-text-2);">
       <p>Loading API documentation...</p>

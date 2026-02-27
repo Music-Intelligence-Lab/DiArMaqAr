@@ -7,7 +7,7 @@ import { ClientOnly } from 'vitepress'
 
 <template>
   <ClientOnly>
-    <OASpec :spec-url="'/docs/openapi.json'" />
+    <OASpec :spec-url="'/openapi.json'" />
     <template #fallback>
       <div class="oaspec-loading">
         <p>Loading API documentation...</p>
