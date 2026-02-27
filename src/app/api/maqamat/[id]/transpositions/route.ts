@@ -9,7 +9,8 @@ import {
   buildEntityNamespace,
   buildIdentifierNamespace,
   buildLinksNamespace,
-  buildStringArrayNamespace
+  buildStringArrayNamespace,
+  getCanonicalApiUrl
 } from "@/app/api/response-shapes";
 
 export const OPTIONS = handleCorsPreflightRequest;
@@ -282,7 +283,7 @@ export async function GET(
         detailed: transpositionItems,
       },
       links: buildLinksNamespace({
-        self: `/api/maqamat/${maqam.getIdName()}/transpositions?tuningSystem=${encodeURIComponent(tuningSystemId)}&startingNote=${encodeURIComponent(actualStartingNote)}`,
+        self: getCanonicalApiUrl(`/api/maqamat/${maqam.getIdName()}/transpositions?tuningSystem=${encodeURIComponent(tuningSystemId)}&startingNote=${encodeURIComponent(actualStartingNote)}`),
         availability: `/api/maqamat/${maqam.getIdName()}/availability`,
         detail: `/api/maqamat/${maqam.getIdName()}`,
       }),

@@ -139,6 +139,45 @@ GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&options
 - Available pitch class data types
 - All other optional parameters
 
+**Example options=true response** (maqām rāst, ibnsina_1037, yegah):
+```json
+{
+  "maqam": "maqām rāst",
+  "tuningSystem": "ibnsina_1037",
+  "availableParameters": {
+    "tuningSystem": {
+      "required": true,
+      "description": "ID of tuning system (see /availability for options)"
+    },
+    "startingNote": {
+      "options": ["ushayran", "yegah"],
+      "required": true,
+      "description": "Theoretical framework for note naming (URL-safe, diacritics-insensitive)."
+    },
+    "pitchClassDataType": {
+      "options": ["all", "englishName", "fraction", "cents", "decimalRatio", "stringLength", "frequency", "abjadName", "fretDivision", "midiNoteNumber", "midiNoteDeviation", "centsDeviation", "referenceNoteName"],
+      "required": true,
+      "description": "Output format for pitch data."
+    },
+    "transposeTo": {
+      "options": ["rast", "qarar_rast", "qarar_chahargah", "chahargah", "kurdan", "mahuran"],
+      "description": "Transpose to specific tonic (taṣwīr)."
+    },
+    "intervals": { "type": "boolean", "default": false },
+    "includeModulations": { "type": "boolean", "default": false },
+    "includeSuyur": { "type": "boolean", "default": false }
+  },
+  "notes": {
+    "ajnasData": "Ajnās are always included in maqām responses",
+    "formatOptions": "Use 'all' for complete pitch class information."
+  },
+  "examples": [
+    "/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=ushayran&pitchClassDataType=cents&intervals=true",
+    "/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=ushayran&pitchClassDataType=cents&transposeTo=nawa&includeModulations=true"
+  ]
+}
+```
+
 **Best Practice:**
 - When users ask about a specific maqām, jins, or tuning system, use the Representative Examples to find the correct endpoint format
 - Always include all three required parameters

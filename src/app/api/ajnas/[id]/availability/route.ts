@@ -10,7 +10,8 @@ import {
   buildIdentifierNamespace,
   buildLinksNamespace,
   buildListResponse,
-  buildStringArrayNamespace
+  buildStringArrayNamespace,
+  getCanonicalSelfUrl
 } from "@/app/api/response-shapes";
 
 export const OPTIONS = handleCorsPreflightRequest;
@@ -209,7 +210,7 @@ export async function GET(
       ...(filterPayload && { filters: filterPayload }),
       availability: successfulAvailability,
       links: buildLinksNamespace({
-        self: request.url,
+        self: getCanonicalSelfUrl(request),
         detail: `/api/ajnas/${jins.getIdName()}`,
         compare: `/api/ajnas/${jins.getIdName()}/compare`,
       }),

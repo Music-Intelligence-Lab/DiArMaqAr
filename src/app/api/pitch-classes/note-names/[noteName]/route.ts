@@ -16,7 +16,8 @@ import {
 import {
   buildEntityNamespace,
   buildIdentifierNamespace,
-  buildLinksNamespace
+  buildLinksNamespace,
+  getCanonicalSelfUrl
 } from "@/app/api/response-shapes";
 
 export const OPTIONS = handleCorsPreflightRequest;
@@ -387,7 +388,7 @@ export async function GET(
             },
             pitchClasses: results,
             links: buildLinksNamespace({
-              self: request.url,
+              self: getCanonicalSelfUrl(request),
               availability: `/api/pitch-classes/note-names/${standardizeText(matchingNoteName)}/availability`,
               compare: `/api/pitch-classes/note-names/${standardizeText(matchingNoteName)}/compare`
             })
@@ -481,7 +482,7 @@ export async function GET(
           },
           pitchClass: formatPitchData(matchingPitchClass, pitchClassDataType || "all", inArabic),
           links: buildLinksNamespace({
-            self: request.url,
+            self: getCanonicalSelfUrl(request),
             availability: `/api/pitch-classes/note-names/${standardizeText(matchingNoteName)}/availability`,
             compare: `/api/pitch-classes/note-names/${standardizeText(matchingNoteName)}/compare`
           })
@@ -562,7 +563,7 @@ export async function GET(
         },
         pitchClasses: results,
         links: buildLinksNamespace({
-          self: request.url,
+          self: getCanonicalSelfUrl(request),
           availability: `/api/pitch-classes/note-names/${standardizeText(matchingNoteName)}/availability`,
           compare: `/api/pitch-classes/note-names/${standardizeText(matchingNoteName)}/compare`
         })

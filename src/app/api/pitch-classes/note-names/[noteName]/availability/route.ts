@@ -15,7 +15,8 @@ import {
   buildEntityNamespace,
   buildIdentifierNamespace,
   buildLinksNamespace,
-  buildListResponse
+  buildListResponse,
+  getCanonicalSelfUrl
 } from "@/app/api/response-shapes";
 import { getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
 
@@ -168,7 +169,7 @@ export async function GET(
       ),
       availability: buildListResponse(availableTuningSystems),
       links: buildLinksNamespace({
-        self: request.url,
+        self: getCanonicalSelfUrl(request),
         detail: `/api/pitch-classes/note-names/${standardizeText(matchingNoteName)}`,
         compare: `/api/pitch-classes/note-names/${standardizeText(matchingNoteName)}/compare`,
       }),

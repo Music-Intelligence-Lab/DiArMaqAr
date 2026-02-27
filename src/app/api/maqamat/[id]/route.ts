@@ -15,7 +15,8 @@ import {
   buildEntityNamespace,
   buildIdentifierNamespace,
   buildLinksNamespace,
-  buildStringArrayNamespace
+  buildStringArrayNamespace,
+  getCanonicalSelfUrl
 } from "@/app/api/response-shapes";
 
 export const OPTIONS = handleCorsPreflightRequest;
@@ -1199,7 +1200,7 @@ export async function GET(
         },
       },
       links: buildLinksNamespace({
-        self: request.url,
+        self: getCanonicalSelfUrl(request),
         detail: `/api/maqamat/${maqam.getIdName()}`,
         availability: `/api/maqamat/${maqam.getIdName()}/availability`,
         compare: `/api/maqamat/${maqam.getIdName()}/compare`,

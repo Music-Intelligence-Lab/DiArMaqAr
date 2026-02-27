@@ -9,7 +9,8 @@ import {
   buildEntityNamespace,
   buildIdentifierNamespace,
   buildLinksNamespace,
-  buildStringArrayNamespace
+  buildStringArrayNamespace,
+  getCanonicalApiUrl
 } from "@/app/api/response-shapes";
 
 export const OPTIONS = handleCorsPreflightRequest;
@@ -280,7 +281,7 @@ export async function GET(
         detailed: transpositionItems,
       },
       links: buildLinksNamespace({
-        self: `/api/ajnas/${jins.getIdName()}/transpositions?tuningSystem=${encodeURIComponent(tuningSystemId)}&startingNote=${encodeURIComponent(actualStartingNote)}`,
+        self: getCanonicalApiUrl(`/api/ajnas/${jins.getIdName()}/transpositions?tuningSystem=${encodeURIComponent(tuningSystemId)}&startingNote=${encodeURIComponent(actualStartingNote)}`),
         availability: `/api/ajnas/${jins.getIdName()}/availability`,
         detail: `/api/ajnas/${jins.getIdName()}`,
       }),
