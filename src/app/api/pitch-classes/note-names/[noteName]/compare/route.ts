@@ -16,7 +16,8 @@ import {
 import {
   buildEntityNamespace,
   buildIdentifierNamespace,
-  buildLinksNamespace
+  buildLinksNamespace,
+  getCanonicalSelfUrl
 } from "@/app/api/response-shapes";
 
 export const OPTIONS = handleCorsPreflightRequest;
@@ -406,7 +407,7 @@ export async function GET(
           failedComparisons
         },
         links: buildLinksNamespace({
-          self: request.url,
+          self: getCanonicalSelfUrl(request),
           detail: `/api/pitch-classes/note-names/${standardizeText(matchingNoteName)}`,
           availability: `/api/pitch-classes/note-names/${standardizeText(matchingNoteName)}/availability`
         })

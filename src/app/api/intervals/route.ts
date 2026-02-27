@@ -15,7 +15,8 @@ import {
 import {
   buildEntityNamespace,
   buildIdentifierNamespace,
-  buildLinksNamespace
+  buildLinksNamespace,
+  getCanonicalSelfUrl
 } from "@/app/api/response-shapes";
 
 export const OPTIONS = handleCorsPreflightRequest;
@@ -341,7 +342,7 @@ export async function GET(request: Request) {
             },
             intervals: results,
             links: buildLinksNamespace({
-              self: request.url,
+              self: getCanonicalSelfUrl(request),
               compare: `/api/intervals/compare?noteNames=${encodeURIComponent(noteNamesParam)}`
             })
           })
@@ -436,7 +437,7 @@ export async function GET(request: Request) {
           },
           intervals,
           links: buildLinksNamespace({
-            self: request.url,
+            self: getCanonicalSelfUrl(request),
             compare: `/api/intervals/compare?noteNames=${encodeURIComponent(noteNamesParam)}`
           })
         })
@@ -514,7 +515,7 @@ export async function GET(request: Request) {
         },
         intervals: results,
         links: buildLinksNamespace({
-          self: request.url,
+          self: getCanonicalSelfUrl(request),
           compare: `/api/intervals/compare?noteNames=${encodeURIComponent(noteNamesParam)}`
         })
       })

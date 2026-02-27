@@ -10,7 +10,8 @@ import {
   buildIdentifierNamespace,
   buildLinksNamespace,
   buildListResponse,
-  buildStringArrayNamespace
+  buildStringArrayNamespace,
+  getCanonicalSelfUrl
 } from "@/app/api/response-shapes";
 
 export const OPTIONS = handleCorsPreflightRequest;
@@ -207,7 +208,7 @@ export async function GET(
       ...(transpositionNamespace && { filters: { transpositionNote: transpositionNamespace } }),
       availability: availabilityList,
       links: buildLinksNamespace({
-        self: request.url,
+        self: getCanonicalSelfUrl(request),
         detail: `/api/maqamat/${maqam.getIdName()}`,
         compare: `/api/maqamat/${maqam.getIdName()}/compare`,
       }),

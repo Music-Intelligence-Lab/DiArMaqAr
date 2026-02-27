@@ -10,7 +10,8 @@ import {
   buildEntityNamespace,
   buildIdentifierNamespace,
   buildLinksNamespace,
-  buildStringArrayNamespace
+  buildStringArrayNamespace,
+  getCanonicalApiUrl
 } from "@/app/api/response-shapes";
 
 export const OPTIONS = handleCorsPreflightRequest;
@@ -354,7 +355,7 @@ export async function GET(
       stats,
       data: availableMaqamat,
       links: buildLinksNamespace({
-        self: `/api/tuning-systems/${tuningSystemId}/${startingNoteParam}/maqamat`,
+        self: getCanonicalApiUrl(`/api/tuning-systems/${tuningSystemId}/${startingNoteParam}/maqamat`),
         tuningSystem: `/api/tuning-systems/${tuningSystemId}`,
         collection: `/api/maqamat`,
       }),

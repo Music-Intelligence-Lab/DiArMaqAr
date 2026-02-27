@@ -2,6 +2,24 @@ import { addArabicFields } from "@/app/api/arabic-helpers";
 
 type Nullable<T> = T | null | undefined;
 
+/** Canonical production URL - prevents branch/deploy URLs from leaking into API responses */
+const CANONICAL_BASE = "https://diarmaqar.netlify.app";
+
+/**
+ * Returns the canonical production URL for links.self.
+ * Netlify branch deploys (main--, deploy-id--) would otherwise leak into responses,
+ * breaking LLM API chaining and navigation.
+ */
+export function getCanonicalSelfUrl(request: Request): string {
+  const url = new URL(request.url);
+  return `${CANONICAL_BASE}${url.pathname}${url.search}`;
+}
+
+/** Build canonical URL from path (with optional query string) */
+export function getCanonicalApiUrl(path: string): string {
+  return `${CANONICAL_BASE}${path.startsWith("/") ? path : `/${path}`}`;
+}
+
 function stripUndefined<T extends Record<string, unknown>>(input: T): T {
   return Object.fromEntries(
     Object.entries(input).filter(([, value]) => value !== undefined)

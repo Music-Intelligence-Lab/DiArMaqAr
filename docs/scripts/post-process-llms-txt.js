@@ -57,6 +57,10 @@ All endpoints return JSON with complete data including pitch classes, intervals,
 
 ---
 
+## Discovery
+- robots.txt: /robots.txt
+- Sitemap: /sitemap.xml
+
 ## Documentation Links
 
 - [Full LLM Documentation](/docs/llms-full.txt) - Complete documentation content

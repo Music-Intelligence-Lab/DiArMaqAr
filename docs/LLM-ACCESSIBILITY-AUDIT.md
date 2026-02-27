@@ -87,6 +87,29 @@ The DiArMaqAr site has strong LLM-oriented design with dedicated documentation, 
 
 ---
 
+## Follow-up Audit (Claude Sonnet 4.6)
+
+### Issues Addressed
+
+**1. links.self branch URL leak (PRIORITY)** ✅  
+API responses were returning `main--diarmaqar.netlify.app` or deploy-preview URLs instead of `diarmaqar.netlify.app`. Fixed by adding `getCanonicalSelfUrl(request)` and `getCanonicalApiUrl(path)` in `response-shapes.ts`; all API routes now use canonical production URL for `links.self`.
+
+**2. robots.txt and sitemap discovery** ✅  
+Added explicit links to `/robots.txt` and `/sitemap.xml` in `public/llms.txt` and post-process `docs/llms.txt` under a "Discovery" section.
+
+**3. Desktop Required clarification** ✅  
+Added note in `public/llms.txt`: "The 'Desktop Required' message on the homepage refers only to the interactive UI. All documentation and API endpoints are fully accessible programmatically."
+
+**4. options=true example** ✅  
+Added abbreviated example response structure to representative-examples.md for the parameter discovery endpoint.
+
+### Verified
+
+- **docs/llms.txt accessibility**: Returns 200, publicly accessible (auditor's tool constraint was tool-specific).
+- **robots.txt**: Exists at `/robots.txt`, references sitemap.
+
+---
+
 ## Verification Checklist
 
 After deployment, verify:

@@ -1,6 +1,10 @@
 # Digital Arabic Maqām Archive (DiArMaqAr)
 # LLM-Friendly Documentation Index
 
+## Discovery
+- robots.txt: /robots.txt
+- Sitemap: /sitemap.xml
+
 ## Documentation
 - Main Documentation: /docs/
 - LLM-Optimized Index: /docs/llms.txt
@@ -30,6 +34,8 @@ All detail endpoints (`/api/maqamat/{id}`, `/api/ajnas/{id}`) **REQUIRE** three 
 - ✅ `GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents`
 
 **Best Practice for LLMs**: Always use the API endpoints to answer user queries about specific maqāmāt, ajnās, or tuning systems. The API returns complete, structured data with all details. Always include all three required parameters for detail endpoints.
+
+**Note for LLMs**: The "Desktop Required" message on the homepage refers only to the interactive UI. All documentation and API endpoints are fully accessible programmatically.
 
 #### When to Use the API - Example Requests for Novice Users
 

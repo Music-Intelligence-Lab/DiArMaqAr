@@ -11,7 +11,8 @@ import {
   buildEntityNamespace,
   buildIdentifierNamespace,
   buildLinksNamespace,
-  buildStringArrayNamespace
+  buildStringArrayNamespace,
+  getCanonicalSelfUrl
 } from "@/app/api/response-shapes";
 
 export const OPTIONS = handleCorsPreflightRequest;
@@ -838,7 +839,7 @@ export async function GET(
         },
       },
       links: buildLinksNamespace({
-        self: request.url,
+        self: getCanonicalSelfUrl(request),
         detail: `/api/ajnas/${jins.getIdName()}`,
         availability: `/api/ajnas/${jins.getIdName()}/availability`,
       }),

@@ -16,7 +16,8 @@ import {
 import {
   buildEntityNamespace,
   buildIdentifierNamespace,
-  buildLinksNamespace
+  buildLinksNamespace,
+  getCanonicalSelfUrl
 } from "@/app/api/response-shapes";
 
 export const OPTIONS = handleCorsPreflightRequest;
@@ -620,7 +621,7 @@ export async function GET(request: Request) {
           }
         },
         links: buildLinksNamespace({
-          self: request.url,
+          self: getCanonicalSelfUrl(request),
           tuningSystem: `/api/tuning-systems/${encodeURIComponent(tuningSystemId)}`,
           intervals: `/api/intervals?noteNames=${encodeURIComponent(fromResult.pitchClass.noteName)},${encodeURIComponent(toResult.pitchClass.noteName)}&tuningSystem=${encodeURIComponent(tuningSystemId)}&startingNote=${encodeURIComponent(startingNoteParam)}`
         })
