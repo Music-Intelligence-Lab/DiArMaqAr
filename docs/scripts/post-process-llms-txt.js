@@ -33,22 +33,22 @@ const apiInstructionsHeader = `## For AI Assistants: API Access
 For users who don't know specific maqam names, use these representative examples:
 
 **Most Common Examples (Recommended for beginners):**
-- "Tell me about a fundamental Arabic maqam" → GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
-- "Show me a basic jins" → GET /api/ajnas/jins_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
+- "Tell me about a fundamental Arabic maqam" → GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
+- "Show me a basic jins" → GET /api/ajnas/jins_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
 - "What tuning systems are available?" → GET /api/tuning-systems
 - "What maqām families exist?" → GET /api/maqamat/families?tuningSystem=ibnsina_1037&startingNote=yegah
-- "Show me the most common tuning system" → GET /api/tuning-systems/IbnSina-(1037)/yegah/pitch-classes?pitchClassDataType=cents
+- "Show me the most common tuning system" → GET /api/tuning-systems/ibnsina_1037/yegah/pitch-classes?pitchClassDataType=cents
 
 **Quick Test URL (Copy-paste ready):**
 \`\`\`
-GET https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
+GET https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
 \`\`\`
 
 **When users ask general questions:**
 - "What is a maqam?" → Use GET /api/maqamat/maqam_rast (most fundamental example)
 - "Show me an Arabic scale" → Use GET /api/maqamat/maqam_rast (representative example)
-- "What are the intervals?" → Use GET /api/maqamat/maqam_rast?tuningSystem=IbnSina-(1037)&startingNote=yegah&pitchClassDataType=cents
-- "Compare different tuning systems" → GET /api/maqamat/maqam_rast/compare?tuningSystems=IbnSina-(1037),al-Farabi-(950g)&startingNote=yegah
+- "What are the intervals?" → Use GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
+- "Compare different tuning systems" → GET /api/maqamat/maqam_rast/compare?tuningSystems=ibnsina_1037,alfarabi_950g&startingNote=yegah
 
 **Representative Examples Reference:**
 - See /docs/api/representative-examples for complete list of recommended examples
@@ -131,6 +131,26 @@ if (!content.includes('/docs/api/representative-examples')) {
               '\n- [Representative Examples](/docs/api/representative-examples) - Ready-to-use API examples' +
               content.slice(insertPos);
   }
+}
+
+// Deduplicate TOC links: vitepress-plugin-llms produces duplicates when nested sidebar items
+// (Maqāmāt, Ajnās, etc.) all point to the same file with different hashes
+const tocStart = content.indexOf('## Table of Contents');
+if (tocStart !== -1) {
+  const beforeToc = content.slice(0, tocStart);
+  const tocSection = content.slice(tocStart);
+  const lines = tocSection.split('\n');
+  const seenUrls = new Set();
+  const dedupedLines = lines.map((line) => {
+    const match = line.match(/^- \[([^\]]+)\]\(([^)]+)\)/);
+    if (match) {
+      const url = match[2].replace(/#.*$/, ''); // Normalize: strip hash for dedup
+      if (seenUrls.has(url)) return null;
+      seenUrls.add(url);
+    }
+    return line;
+  });
+  content = beforeToc + dedupedLines.filter(Boolean).join('\n');
 }
 
 fs.writeFileSync(llmsTxtPath, content, 'utf-8');
