@@ -19,6 +19,8 @@
 
 ### For AI Assistants and LLMs
 
+**API access**: All endpoints are public, unauthenticated, and return plain JSON. No browser, cookies, or authentication required. Standard HTTP GET requests work from any client (curl, fetch, etc.).
+
 **Recommended for AI Assistants**: Use the REST API to fetch real-time, accurate data for users. When users ask about maqāmāt, ajnās, or tuning systems, use the API endpoints to fetch current, complete data rather than relying on cached documentation.
 
 **⚠️ CRITICAL: Required Parameters**

@@ -22,6 +22,8 @@ let content = fs.readFileSync(llmsTxtPath, 'utf-8');
 // API instructions header to add at the top (after title)
 const apiInstructionsHeader = `## For AI Assistants: API Access
 
+**API access**: All endpoints are public, unauthenticated, and return plain JSON. No browser, cookies, or authentication required. Standard HTTP GET requests work from any client (curl, fetch, etc.).
+
 **Recommended for AI Assistants**: Use the REST API to fetch real-time, accurate data for users. Always prefer API calls over documentation summaries for real-time data accuracy.
 
 **Base URL**: https://diarmaqar.netlify.app/api
