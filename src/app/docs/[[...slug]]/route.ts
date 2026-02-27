@@ -115,20 +115,23 @@ export async function GET(
       filePath = path.join(basePath, 'public', 'docs', 'index.html')
     } else {
       // Check if it's a directory (needs index.html) or a file
-      const potentialDir = path.join(basePath, 'public', 'docs', requestedPath)
-      const potentialFile = path.join(basePath, 'public', 'docs', requestedPath + '.html')
-      const potentialDirIndex = path.join(basePath, 'public', 'docs', requestedPath, 'index.html')
-      
-      if (fs.existsSync(potentialDirIndex)) {
+      const docsRoot = path.join(basePath, 'public', 'docs')
+      const potentialRawFile = path.join(docsRoot, requestedPath)
+      const potentialDir = path.join(docsRoot, requestedPath)
+      const potentialFile = path.join(docsRoot, requestedPath + '.html')
+      const potentialDirIndex = path.join(docsRoot, requestedPath, 'index.html')
+
+      // Serve static files (openapi.yaml, llms.txt, etc.) directly when they exist
+      if (fs.existsSync(potentialRawFile) && fs.statSync(potentialRawFile).isFile()) {
+        filePath = potentialRawFile
+      } else if (fs.existsSync(potentialDirIndex)) {
         filePath = potentialDirIndex
       } else if (fs.existsSync(potentialFile)) {
         filePath = potentialFile
       } else if (fs.existsSync(potentialDir) && fs.statSync(potentialDir).isDirectory()) {
-        // Directory exists, serve its index.html
         filePath = path.join(potentialDir, 'index.html')
       } else {
-        // Try as index.html in the directory
-        filePath = path.join(basePath, 'public', 'docs', requestedPath, 'index.html')
+        filePath = path.join(docsRoot, requestedPath, 'index.html')
       }
     }
     
@@ -147,10 +150,12 @@ export async function GET(
     
     // Determine content type
     const ext = path.extname(filePath)
-    const contentType = ext === '.html' ? 'text/html' : 
+    const contentType = ext === '.html' ? 'text/html' :
                         ext === '.css' ? 'text/css' :
                         ext === '.js' ? 'application/javascript' :
                         ext === '.json' ? 'application/json' :
+                        ext === '.yaml' || ext === '.yml' ? 'application/x-yaml' :
+                        ext === '.txt' ? 'text/plain' :
                         'text/plain'
     
     return new NextResponse(fileContents, {

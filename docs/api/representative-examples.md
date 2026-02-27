@@ -681,5 +681,5 @@ curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=ibnsina_
 
 - [API Documentation](./index) - Main API overview
 - [Interactive Playground](./playground) - Test these examples interactively
-- [OpenAPI Specification](/docs/openapi.yaml) - Complete parameter documentation
+- [OpenAPI Specification](/openapi.yaml) - Complete parameter documentation
 
