@@ -897,8 +897,11 @@ across all octaves with full formatting options.
   - Example: `rast`
 
 **Query Parameters:**
-- `pitchClassDataType` **(required)**: Pitch class data format (defaults to "cents") - Type: `string` - Valid values: `all`, `englishName`, `fraction`, `cents`, `decimalRatio`, ... (13 total)
-  - Example: `cents`
+- `pitchClassDataType` (optional): Pitch class data format.
+  - `all` returns all available fields including englishName, solfege, abjadName, fraction, cents, decimalRatio, stringLength, frequency, fretDivision, midiNoteDecimal, midiNotePlusCentsDeviation, centsDeviation, ipnReferenceNoteName
+  - Use a specific value to return only that field plus minimal identifiers
+ - Type: `string` - Valid values: `all`, `englishName`, `solfege`, `fraction`, `cents`, ... (14 total)
+  - Example: `all`
 - `octave` (optional): Filter by octave number.
   Use a specific octave number (0, 1, 2, 3) to filter to that octave only.
  - Type: `string` - Valid values: `all`, `0`, `1`, `2`, `3`
@@ -917,7 +920,7 @@ across all octaves with full formatting options.
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/tuning-systems/cairocongresstuningcommittee_1929/rast/pitch-classes?pitchClassDataType=cents&includeSources=true&includeArabic=true"
+curl "https://diarmaqar.netlify.app/api/tuning-systems/cairocongresstuningcommittee_1929/rast/pitch-classes?includeSources=true&includeArabic=true"
 ```
 
 **Response:** Tuning system pitch classes retrieved successfully

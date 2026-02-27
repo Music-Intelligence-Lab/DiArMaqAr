@@ -664,7 +664,7 @@ paths:
                           noteName: "rast"
                           noteNameDisplay: "rāst"
                           englishName: "C3"
-                          solfege: "Do 3"
+                          solfege: "Do3"
                           fraction: "32/27"
                           cents: 294.135
                           decimalRatio: 1.185
@@ -681,7 +681,7 @@ paths:
                           noteName: "dugah"
                           noteNameDisplay: "dūgāh"
                           englishName: "D3"
-                          solfege: "Re 3"
+                          solfege: "Re3"
                           fraction: "4/3"
                           cents: 498.045
                           decimalRatio: 1.333
@@ -1374,7 +1374,7 @@ paths:
                           description: International Pitch Notation name (e.g. G3, Bb3). Included when pitchClassDataType is all or englishName.
                         solfege:
                           type: string
-                          description: Fixed-do solfege syllable (Do, Re, Mi, Fa, Sol, La, Si) with accidentals if present. Included when pitchClassDataType is all or solfege.
+                          description: Fixed-do solfege syllable (Do, Re, Mi, Fa, Sol, La, Si) with accidentals and octave appended (no spaces, e.g. Mi-b3, Sol2). Included when pitchClassDataType is all or solfege.
                         abjadName:
                           type: string
                           description: Arabic abjad name. Included when pitchClassDataType is all or abjadName.
