@@ -24,7 +24,7 @@ curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=ibnsina_
 - **[Representative Examples](./representative-examples)** - Recommended examples for proper API usage
 
 ### For LLMs
-- **OpenAPI Specification:** [openapi.json](/docs/openapi.json) | [openapi.yaml](/docs/openapi.yaml)
+- **OpenAPI Specification:** [openapi.json](/openapi.json) | [openapi.yaml](/openapi.yaml)
 - **LLM-optimized:** [llms.txt](/llms.txt) | [llms-full.txt](/llms-full.txt)
 
 ---
