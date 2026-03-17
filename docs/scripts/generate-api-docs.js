@@ -34,8 +34,8 @@ ${servers && servers.length > 0
 ## OpenAPI Specification
 
 Machine-readable OpenAPI 3.1.0 specification:
-- [openapi.json](/openapi.json)
-- [openapi.yaml](/openapi.yaml)
+- [openapi.json](/docs/openapi.json)
+- [openapi.yaml](/docs/openapi.yaml)
 
 ## Authentication
 

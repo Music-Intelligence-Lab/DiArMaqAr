@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ClientOnly } from 'vitepress'
+import { withBase } from 'vitepress'
 
 // OASpec is registered globally by vitepress-openapi theme
 // We use ClientOnly to ensure it only renders on the client side
@@ -7,7 +8,7 @@ import { ClientOnly } from 'vitepress'
 
 <template>
   <ClientOnly>
-    <OASpec :spec-url="'/openapi.json'" />
+    <OASpec :spec-url="withBase('/openapi.json')" />
     <template #fallback>
       <div class="oaspec-loading">
         <p>Loading API documentation...</p>
