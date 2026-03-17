@@ -11,17 +11,11 @@ head:
 
 # OpenAPI Playground
 
-Interactive API documentation with live endpoint testing capabilities. All API endpoints are available in the interactive documentation below, organized by resource type (Maqāmāt, Ajnās, Tuning Systems, etc.).
-
-## OpenAPI Specification
+Interactive API documentation with live endpoint testing capabilities. All API endpoints are available 
+in the interactive documentation below, organized by resource type (Maqāmāt, Ajnās, Tuning Systems, 
+etc.).
 
 Machine-readable OpenAPI 3.1.0 specification: [openapi.json](/openapi.json)
-
----
-
-## Interactive API Documentation
-
-Interactive API documentation with live endpoint testing capabilities. All API endpoints are available in the interactive documentation below, organized by resource type (Maqāmāt, Ajnās, Tuning Systems, etc.).
 
 <ClientOnly>
   <HashNavigation />
