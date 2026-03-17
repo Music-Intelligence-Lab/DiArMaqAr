@@ -40,6 +40,14 @@ export function renderPitchClassSpellings(pitchClasses: PitchClass[], ascending:
   // Calculate sequential English names for the entire sequence
   const noteNames = pitchClasses.map(pc => pc.noteName);
   const sequentialNames = getSequentialEnglishNames(noteNames, ascending);
+  const sequentialEnglishNameByNoteName = new Map<string, string>();
+  for (let i = 0; i < pitchClasses.length; i++) {
+    const key = pitchClasses[i]?.noteName;
+    const val = sequentialNames[i];
+    if (key && val && val !== "--") {
+      sequentialEnglishNameByNoteName.set(key, val);
+    }
+  }
 
   // Get starting pitch class for reference calculations
   const startingPitchClass = pitchClasses[0];
@@ -68,11 +76,14 @@ export function renderPitchClassSpellings(pitchClasses: PitchClass[], ascending:
   // First pass: Calculate base reference notes for all canonical pitch classes
   // This ensures the same pitch class gets the same base reference note regardless of direction
   const canonicalBaseReferenceNotes = canonicalOrder.map((pc) => {
+    // Use the maqām-context sequential spelling when available (matches UI and avoids
+    // deriving reference note names from tuning-system spellings that may differ).
+    const maqamContextEnglishName = sequentialEnglishNameByNoteName.get(pc.noteName) ?? pc.englishName;
     const deviationResult = calculateCentsDeviationWithReferenceNote(
       pc.midiNoteDecimal,
       pc.cents,
       startingMidiNumber,
-      pc.englishName, // Use original English name
+      maqamContextEnglishName,
       startingNoteName
     );
     return {
