@@ -958,6 +958,10 @@ of PAO note name idNames (URL-safe identifiers for scale degrees)..
   of PAO note name idNames (URL-safe identifiers for scale degrees).
  - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
+- `includeDegreeDetails` (optional): When true (and when `includeMaqamDegrees=true`), `maqamDegrees.ascending` /
+`maqamDegrees.descending` are arrays of objects `{ noteName, englishName, solfege }` instead of note-name strings. The same transformation applies to `transpositions[].maqamDegrees`.
+- Type: `string` - Valid values: `true`, `false` - Default: `false`
+  - Example: `true`
 - `includeTranspositions` (optional): When true, each maqām in data includes a `transpositions` array with the other transpositions
 (excluding the base tonic).
   (excluding the base tonic). Each transposition has `tonic` and `maqamDegrees` with ascending/descending

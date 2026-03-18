@@ -43,6 +43,8 @@ export async function GET(
     // Parse optional include flags
     const includeTranspositions = searchParams.get("includeTranspositions") === "true";
     const includeMaqamDegrees = searchParams.get("includeMaqamDegrees") === "true";
+    const includeDegreeDetails = searchParams.get("includeDegreeDetails") === "true";
+    const shouldIncludeDegreeDetails = includeMaqamDegrees && includeDegreeDetails;
 
     // Validate that path parameters are not empty
     if (!tuningSystemId || tuningSystemId.trim() === "") {
@@ -118,6 +120,13 @@ export async function GET(
 
     // Get all note name sets with adjacent octaves for proper maqam checking
     const shiftedSets = tuningSystem.getNoteNameSetsWithAdjacentOctaves();
+
+    // Sequential spelling logic for degree detail objects (englishName + solfege).
+    // We import lazily to keep the default list endpoint fast.
+    const degreeSpellingsModule = shouldIncludeDegreeDetails
+      ? await import("@/functions/renderPitchClassIpnSpellings")
+      : null;
+    const renderPitchClassSpellings = degreeSpellingsModule?.renderPitchClassSpellings;
 
     // Find all maqamat that are possible in this tuning system
     const availableMaqamat: any[] = [];
@@ -234,16 +243,89 @@ export async function GET(
         };
 
         if (includeMaqamDegrees) {
-          item.maqamDegrees = {
-            ascending: ascendingNotes.map((n) => standardizeText(n)),
-            descending: descendingNotes.map((n) => standardizeText(n)),
-          };
+          if (shouldIncludeDegreeDetails && renderPitchClassSpellings) {
+            const allMaqamPitchClasses = !hasAsymmetricDescending
+              ? [...tahlil.ascendingPitchClasses, ...tahlil.descendingPitchClasses]
+              : undefined;
+
+            const renderedAscending = renderPitchClassSpellings(
+              tahlil.ascendingPitchClasses,
+              true,
+              allMaqamPitchClasses
+            );
+            const renderedDescending = renderPitchClassSpellings(
+              tahlil.descendingPitchClasses,
+              false,
+              allMaqamPitchClasses
+            );
+
+            item.maqamDegrees = {
+              ascending: renderedAscending.map((pc: any) => ({
+                noteName: standardizeText(pc.noteName),
+                englishName: pc.englishName,
+                solfege: pc.solfege!,
+              })),
+              descending: renderedDescending.map((pc: any) => ({
+                noteName: standardizeText(pc.noteName),
+                englishName: pc.englishName,
+                solfege: pc.solfege!,
+              })),
+            };
+          } else {
+            item.maqamDegrees = {
+              ascending: ascendingNotes.map((n) => standardizeText(n)),
+              descending: descendingNotes.map((n) => standardizeText(n)),
+            };
+          }
         }
 
         if (includeTranspositions) {
           const otherTranspositions = transpositions.filter((t: { transposition: boolean }) => t.transposition);
-          item.transpositions = otherTranspositions.map((t: { ascendingPitchClasses: { noteName: string }[]; descendingPitchClasses: { noteName: string }[] }) => {
+          item.transpositions = otherTranspositions.map((t: any) => {
             const tonicNoteName = t.ascendingPitchClasses[0].noteName;
+
+            if (shouldIncludeDegreeDetails && renderPitchClassSpellings) {
+              const allMaqamPitchClasses = !hasAsymmetricDescending
+                ? [...t.ascendingPitchClasses, ...t.descendingPitchClasses]
+                : undefined;
+
+              const renderedAscending = renderPitchClassSpellings(
+                t.ascendingPitchClasses,
+                true,
+                allMaqamPitchClasses
+              );
+              const renderedDescending = renderPitchClassSpellings(
+                t.descendingPitchClasses,
+                false,
+                allMaqamPitchClasses
+              );
+
+              return {
+                tonic: buildIdentifierNamespace(
+                  {
+                    idName: standardizeText(tonicNoteName),
+                    displayName: tonicNoteName,
+                  },
+                  {
+                    inArabic,
+                    displayAr: inArabic ? getNoteNameDisplayAr(tonicNoteName) : undefined,
+                  }
+                ),
+                maqamDegrees: {
+                  ascending: renderedAscending.map((pc: any) => ({
+                    noteName: standardizeText(pc.noteName),
+                    englishName: pc.englishName,
+                    solfege: pc.solfege!,
+                  })),
+                  descending: renderedDescending.map((pc: any) => ({
+                    noteName: standardizeText(pc.noteName),
+                    englishName: pc.englishName,
+                    solfege: pc.solfege!,
+                  })),
+                },
+              };
+            }
+
             return {
               tonic: buildIdentifierNamespace(
                 {
@@ -256,8 +338,8 @@ export async function GET(
                 }
               ),
               maqamDegrees: {
-                ascending: t.ascendingPitchClasses.map((pc) => standardizeText(pc.noteName)),
-                descending: t.descendingPitchClasses.map((pc) => standardizeText(pc.noteName)),
+                ascending: t.ascendingPitchClasses.map((pc: any) => standardizeText(pc.noteName)),
+                descending: t.descendingPitchClasses.map((pc: any) => standardizeText(pc.noteName)),
               },
             };
           });

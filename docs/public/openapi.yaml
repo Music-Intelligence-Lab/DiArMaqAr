@@ -3078,6 +3078,18 @@ paths:
             enum: ["true", "false"]
             default: "false"
           example: "true"
+        - name: includeDegreeDetails
+          in: query
+          required: false
+          description: |
+            When true (and when includeMaqamDegrees=true), the endpoint returns `maqamDegrees.ascending` /
+            `maqamDegrees.descending` as arrays of objects `{ noteName, englishName, solfege }` instead of
+            note-name strings. The same transformation applies to `transpositions[].maqamDegrees`.
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "false"
+          example: "true"
         - name: includeTranspositions
           in: query
           required: false
