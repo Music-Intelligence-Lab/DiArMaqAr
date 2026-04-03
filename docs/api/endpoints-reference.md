@@ -126,6 +126,7 @@ link to filter maqāmāt by family via GET /maqamat?filterByFamily={idName}.
   - Example: `ibnsina_1037`
 - `startingNote` **(required)**: Starting note name (URL-safe, diacritics-insensitive) - Type: `string`
   - Example: `yegah`
+  - Note: JSON responses use `startingNoteName` on nested objects; the **query** parameter name is `startingNote` (not `startingNoteName`).
 - `includeArabic` (optional): Include Arabic display names in family objects - Type: `string` - Valid values: `true`, `false` - Default: `false`
 
 **Example:**
@@ -212,7 +213,7 @@ Requirements:
   - Example: `true`
 - `includeModulations` (optional): Include modulation possibilities to other maqāmāt and ajnās - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
-- `includeModulations8vb` (optional): Include available modulations an octave below - Type: `string` - Valid values: `true`, `false` - Default: `false`
+- `includeModulations8vb` (optional): Include available modulations an octave below - Type: `string` - Valid values: `true`, `false` - Default: `false`. This is the only query parameter name for lower-octave modulations; other names return `400`.
   - Example: `true`
 - `includeSuyur` (optional): Include suyūr (melodic paths) data - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
@@ -670,7 +671,7 @@ Requirements:
 - `options` (optional): When true, returns available parameter options instead of jins data.
   - Tuning system and starting note are required for all requests (both data retrieval and discovery mode)
   - These are fundamental to all pitch class calculations and calculate valid starting note options and transposition tonics
-  - Mutually exclusive with data-returning parameters (transpose to, include modulations, include lower octave modulations, pitch class data type, intervals)
+  - Mutually exclusive with data-returning parameters (transpose to, include modulations, include lower octave modulations, pitch class data type, `includeIntervals`)
   - Transposition options are dynamically calculated based on the specific jins, tuning system, and starting note combination
   - Only tonics where the jins can be validly transposed (preserving interval pattern) are included, not all possible pitch classes
   - If data-returning parameters are provided, returns 400 Bad Request error with details about conflicting parameters

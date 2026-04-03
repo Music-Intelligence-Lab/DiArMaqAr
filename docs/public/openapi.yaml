@@ -4805,12 +4805,12 @@ paths:
           example: "rast"
         - name: pitchClassDataType
           in: query
-          required: true
-          description: Pitch class data format
+          required: false
+          description: Pitch class data format (defaults to `all` when omitted, matching the handler)
           schema:
             type: string
             enum: [all, abjadName, englishName, solfege, fraction, cents, centsDeviation, decimalRatio, stringLength, fretDivision, midiNoteNumber, midiNoteDeviation, frequency, referenceNoteName]
-            default: "cents"
+            default: "all"
           example: "cents"
         - name: includeArabic
           in: query
@@ -5032,12 +5032,12 @@ paths:
           example: "yegah"
         - name: pitchClassDataType
           in: query
-          required: true
-          description: Pitch class data format
+          required: false
+          description: Pitch class data format (defaults to `all` when omitted, matching the handler)
           schema:
             type: string
             enum: [all, abjadName, englishName, solfege, fraction, cents, centsDeviation, decimalRatio, stringLength, fretDivision, midiNoteNumber, midiNoteDeviation, frequency, referenceNoteName]
-            default: "cents"
+            default: "all"
           example: "cents"
         - name: includeArabic
           in: query

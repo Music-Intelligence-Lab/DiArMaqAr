@@ -97,10 +97,10 @@ Suyūr are included in maqām responses:
 
 ```bash
 # Get maqām with suyūr
-curl "http://localhost:3000/api/maqamat/maqam_bayyat?tuningSystem=al-Farabi-(950g)&startingNote=ushayran&includeSuyur=true"
+curl "http://localhost:3000/api/maqamat/maqam_bayyat?tuningSystem=alfarabi_950g&startingNote=ushayran&includeSuyur=true"
 
-# Suyūr are automatically transposed for each transposition
-curl "http://localhost:3000/api/maqamat/maqam_bayyat?tuningSystem=al-Farabi-(950g)&startingNote=ushayran&includeTranspositions=true&includeSuyur=true"
+# Transpositions are listed via the transpositions endpoint (combine with the detail response as needed)
+curl "http://localhost:3000/api/maqamat/maqam_bayyat/transpositions?tuningSystem=alfarabi_950g&startingNote=ushayran"
 ```
 
 ### Via TypeScript Library

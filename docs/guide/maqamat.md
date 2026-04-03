@@ -105,8 +105,8 @@ curl http://localhost:3000/api/maqamat
 # Get specific maqām with full details
 curl "http://localhost:3000/api/maqamat/maqam_bayyat?tuningSystem=alfarabi_950g&startingNote=ushayran&pitchClassDataType=cents"
 
-# Include transpositions
-curl "http://localhost:3000/api/maqamat/maqam_bayyat?tuningSystem=alfarabi_950g&startingNote=ushayran&includeTranspositions=true"
+# List transpositions (dedicated endpoint)
+curl "http://localhost:3000/api/maqamat/maqam_bayyat/transpositions?tuningSystem=alfarabi_950g&startingNote=ushayran"
 
 # Include modulation analysis
 curl "http://localhost:3000/api/maqamat/maqam_bayyat?tuningSystem=alfarabi_950g&startingNote=ushayran&includeModulations=true"

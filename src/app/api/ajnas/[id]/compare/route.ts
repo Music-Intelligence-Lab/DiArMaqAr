@@ -154,7 +154,7 @@ function formatIntervalData(intervals: any[], format: string) {
  *   Format: "ibnsina_1037,alfarabi_950g"
  * - startingNote (required): Starting note name (URL-safe, diacritics-insensitive) - applies to all tuning systems
  * - pitchClassDataType (required): Output format (all, cents, fraction, etc.)
- * - intervals (optional): Include interval data ("true" or "false", default: "false")
+ * - includeIntervals (optional): Include interval data ("true" or "false"; default true when omitted)
  * - transposeTo (optional): Transpose to specific tonic note (applies to all tuning systems)
  */
 export async function GET(
@@ -618,7 +618,7 @@ export async function GET(
           transposeTo: transposeToNote || null,
         },
         links: buildLinksNamespace({
-          detail: `/api/ajnas/${jins.getIdName()}?tuningSystem=${encodeURIComponent(tuningSystem.getId())}&startingNote=${encodeURIComponent(selectedStartingNote)}&pitchClassDataType=${encodeURIComponent(pitchClassDataType)}${includeIntervals ? "&intervals=true" : ""}${transposeToNote ? `&transposeTo=${encodeURIComponent(transposeToNote)}` : ""}`,
+          detail: `/api/ajnas/${jins.getIdName()}?tuningSystem=${encodeURIComponent(tuningSystem.getId())}&startingNote=${encodeURIComponent(selectedStartingNote)}&pitchClassDataType=${encodeURIComponent(pitchClassDataType)}&includeIntervals=${includeIntervals ? "true" : "false"}${transposeToNote ? `&transposeTo=${encodeURIComponent(transposeToNote)}` : ""}`,
           availability: `/api/ajnas/${jins.getIdName()}/availability`,
         }),
       };

@@ -172,7 +172,7 @@ GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&options
     "formatOptions": "Use 'all' for complete pitch class information."
   },
   "examples": [
-    "/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=ushayran&pitchClassDataType=cents&intervals=true",
+    "/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=ushayran&pitchClassDataType=cents&includeIntervals=true",
     "/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=ushayran&pitchClassDataType=cents&transposeTo=nawa&includeModulations=true"
   ]
 }

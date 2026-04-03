@@ -409,7 +409,7 @@ export async function GET(
       const conflictingParams: string[] = [];
       if (transposeToNote) conflictingParams.push("transposeTo");
       if (pitchClassDataType && pitchClassDataType !== "cents") conflictingParams.push("pitchClassDataType");
-      if (includeIntervals) conflictingParams.push("intervals");
+      if (includeIntervals) conflictingParams.push("includeIntervals");
 
       if (conflictingParams.length > 0) {
         return addCorsHeaders(
@@ -542,10 +542,10 @@ export async function GET(
               required: true,
               description: "Output format for pitch data. Required for data retrieval (when not using options=true). Optional for discovery mode (options=true). Use 'all' for complete pitch class information."
             },
-            intervals: {
+            includeIntervals: {
               type: "boolean",
-              default: false,
-              description: "Include interval data between pitch classes"
+              default: true,
+              description: "Include interval data between pitch classes (?includeIntervals=true or false; default true when omitted)"
             },
             transposeTo: {
               options: transposeOptions.length > 0 ? transposeOptions.map(note => standardizeText(note)) : [],
@@ -556,7 +556,7 @@ export async function GET(
             formatOptions: "The 'pitchClassDataType' parameter controls which pitch class properties are returned. Use 'all' for comprehensive data or specific formats like 'cents', 'fraction', etc. for targeted data."
           },
           examples: [
-            `/api/ajnas/${jinsId}?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents&intervals=true`,
+            `/api/ajnas/${jinsId}?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents&includeIntervals=true`,
             `/api/ajnas/${jinsId}?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents&transposeTo=nawa`,
             `/api/ajnas/${jinsId}?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=all`
           ]

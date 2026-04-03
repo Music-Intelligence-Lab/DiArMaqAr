@@ -328,10 +328,20 @@ export async function GET(
     const includeIntervals = searchParams.get("includeIntervals") === "true";
     const transposeToNote = searchParams.get("transposeTo");
     const includeModulations = searchParams.get("includeModulations") === "true";
-    // Handle both parameter names for backward compatibility
-    const mod8vb = searchParams.get("includeModulations8vb");
-    const modLower = searchParams.get("includeLowerOctaveModulations");
-    const includeLowerOctaveModulations = mod8vb === "true" || modLower === "true";
+    if (searchParams.has("includeLowerOctaveModulations")) {
+      return addCorsHeaders(
+        NextResponse.json(
+          {
+            error: "Invalid parameter: includeLowerOctaveModulations",
+            message:
+              "That query name is not supported. Use includeModulations8vb=true for lower-octave modulations.",
+            hint: "Replace includeLowerOctaveModulations with includeModulations8vb",
+          },
+          { status: 400 }
+        )
+      );
+    }
+    const includeModulations8vbEnabled = searchParams.get("includeModulations8vb") === "true";
     const includeSuyur = searchParams.get("includeSuyur") === "true";
     const showOptions = searchParams.get("options") === "true";
     
@@ -671,10 +681,10 @@ export async function GET(
       const conflictingParams: string[] = [];
       if (transposeToNote) conflictingParams.push("transposeTo");
       if (includeModulations) conflictingParams.push("includeModulations");
-      if (includeLowerOctaveModulations) conflictingParams.push("includeModulations8vb");
+      if (includeModulations8vbEnabled) conflictingParams.push("includeModulations8vb");
       if (includeSuyur) conflictingParams.push("includeSuyur");
       if (pitchClassDataType && pitchClassDataType !== "cents") conflictingParams.push("pitchClassDataType");
-      if (includeIntervals) conflictingParams.push("intervals");
+      if (includeIntervals) conflictingParams.push("includeIntervals");
 
       // Return 400 error if conflicting parameters are present (REST API best practice)
       if (conflictingParams.length > 0) {
@@ -829,10 +839,10 @@ export async function GET(
               required: true,
               description: "Output format for pitch data. Required for data retrieval (when not using options=true). Optional for discovery mode (options=true). Use 'all' for complete pitch class information."
             },
-            intervals: {
+            includeIntervals: {
               type: "boolean",
               default: false,
-              description: "Include interval data between pitch classes"
+              description: "Include interval data between pitch classes (?includeIntervals=true)"
             },
             transposeTo: {
               options: transposeOptions.length > 0 ? transposeOptions.map(note => standardizeText(note)) : [],
@@ -859,7 +869,7 @@ export async function GET(
             formatOptions: "The 'pitchClassDataType' parameter controls which pitch class properties are returned. Use 'all' for comprehensive data or specific formats like 'cents', 'fraction', etc. for targeted data."
           },
           examples: [
-            `/api/maqamat/${maqamId}?tuningSystem=ibnsina_1037&startingNote=ushayran&pitchClassDataType=cents&intervals=true`,
+            `/api/maqamat/${maqamId}?tuningSystem=ibnsina_1037&startingNote=ushayran&pitchClassDataType=cents&includeIntervals=true`,
             `/api/maqamat/${maqamId}?tuningSystem=ibnsina_1037&startingNote=ushayran&pitchClassDataType=cents&transposeTo=nawa&includeModulations=true`,
             `/api/maqamat/${maqamId}?tuningSystem=ibnsina_1037&startingNote=ushayran&pitchClassDataType=all&includeSuyur=true`
           ]
@@ -1113,7 +1123,7 @@ export async function GET(
       pitchClassDataType,
       includeIntervals,
       includeModulations,
-      includeModulations8vb: includeLowerOctaveModulations,
+      includeModulations8vb: includeModulations8vbEnabled,
       includeSuyur,
       transposeTo: transposeToNote || null,
     };
@@ -1392,7 +1402,7 @@ export async function GET(
       };
       
       // Add lower octave modulations if requested
-      if (includeLowerOctaveModulations) {
+      if (includeModulations8vbEnabled) {
         // Lower octave modulations - simplified property-based structure
         responseData.lowerOctaveModulations = {
           maqamat: {
