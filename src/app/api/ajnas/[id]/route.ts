@@ -5,6 +5,7 @@ import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses
 import { calculateJinsTranspositions } from "@/functions/transpose";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
 import PitchClass from "@/models/PitchClass";
+import NoteName, { getNoteNameIndexAndOctave } from "@/models/NoteName";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
 import { parseInArabic, getJinsNameDisplayAr, getNoteNameDisplayAr, getComments, getCommentsAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
 import {
@@ -683,7 +684,7 @@ export async function GET(
           NextResponse.json(
             {
               error: `Cannot transpose to '${transposeToNote}' in this tuning system`,
-              availableTranspositions: transpositions.map((t) => ({
+              availableTranspositions: transpositions.filter((t) => t.transposition).map((t) => ({
                 idName: standardizeText(t.name),
                 displayName: t.name,
                 tonic: {
@@ -710,7 +711,9 @@ export async function GET(
     // Determine if this is a transposition (taṣwīr)
     const originalJinsTonic = jins.getNoteNames()[0];
     const transposedJinsTonic = selectedTransposition.jinsPitchClasses[0].noteName;
-    const isTransposed = standardizeText(originalJinsTonic) !== standardizeText(transposedJinsTonic);
+    const isTransposed =
+      getNoteNameIndexAndOctave(originalJinsTonic as NoteName).index !==
+      getNoteNameIndexAndOctave(transposedJinsTonic as NoteName).index;
 
     const commentsEnglish = getComments(jins.getCommentsEnglish());
     const commentsArabic = getCommentsAr(jins.getCommentsArabic());
@@ -760,7 +763,7 @@ export async function GET(
       : undefined;
 
     const stats = {
-      numberOfTranspositions: transpositions.length,
+      numberOfTranspositions: transpositions.filter((t) => t.transposition).length,
       numberOfPitchClasses: selectedTransposition.jinsPitchClasses.length,
     };
 

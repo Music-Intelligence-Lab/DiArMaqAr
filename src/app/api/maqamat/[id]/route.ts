@@ -6,6 +6,7 @@ import { calculateMaqamTranspositions } from "@/functions/transpose";
 import modulate from "@/functions/modulate";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
 import PitchClass from "@/models/PitchClass";
+import NoteName, { getNoteNameIndexAndOctave } from "@/models/NoteName";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
 import { classifyMaqamFamily } from "@/functions/classifyMaqamFamily";
 import { MaqamatModulations, shiftMaqamByOctaves } from "@/models/Maqam";
@@ -983,7 +984,7 @@ export async function GET(
           NextResponse.json(
             {
               error: `Cannot transpose to '${transposeToNote}' in this tuning system`,
-              availableTranspositions: transpositions.map((t) => ({
+              availableTranspositions: transpositions.filter((t) => t.transposition).map((t) => ({
                 idName: standardizeText(t.name),
                 displayName: t.name,
                 tonic: {
@@ -1027,7 +1028,9 @@ export async function GET(
     // Determine if this is a transposition (taṣwīr)
     const originalMaqamTonic = maqam.getAscendingNoteNames()[0];
     const transposedMaqamTonic = selectedTransposition.ascendingPitchClasses[0].noteName;
-    const isTransposed = standardizeText(originalMaqamTonic) !== standardizeText(transposedMaqamTonic);
+    const isTransposed =
+      getNoteNameIndexAndOctave(originalMaqamTonic as NoteName).index !==
+      getNoteNameIndexAndOctave(transposedMaqamTonic as NoteName).index;
 
     const commentsEnglish = getComments(maqam.getCommentsEnglish());
     const commentsArabic = getCommentsAr(maqam.getCommentsArabic());
@@ -1095,7 +1098,7 @@ export async function GET(
     const hasAsymmetricDescending = JSON.stringify(ascendingNoteNames) !== JSON.stringify([...descendingNoteNames].reverse());
 
     const stats = {
-      numberOfTranspositions: transpositions.length,
+      numberOfTranspositions: transpositions.filter((t) => t.transposition).length,
       numberOfPitchClasses,
       numberOfMaqamModulations: totalMaqamModulations,
       numberOfAjnasModulations: totalAjnasModulations,
@@ -1168,8 +1171,8 @@ export async function GET(
       }
     );
 
-    // Build availableTranspositions with full maqam names
-    const availableTranspositionsData = transpositions.map((t) => {
+    // Build availableTranspositions with full maqam names (taswīr only)
+    const availableTranspositionsData = transpositions.filter((t) => t.transposition).map((t) => {
       const tonicNoteName = t.ascendingPitchClasses[0].noteName;
       const fullMaqamName = t.name; // e.g., "maqām rāst al-chahārgāh" or "maqām rāst" for tahlil
       return {

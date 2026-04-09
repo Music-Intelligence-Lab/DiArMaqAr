@@ -40,41 +40,41 @@ export const octaveZeroNoteNames = [
 export const octaveOneNoteNames = [
   "yegāh", // 0
   "qarār nīm ḥiṣār", // 1
-  "shūrī",
+  "shūrī", //2
   "qarār ḥiṣār", // 3
   "qarār tīk ḥiṣār/shūrī", // 4
-  "nīm ʿushayrān",
+  "nīm ʿushayrān", //5
   "ʿushayrān", //6
   "nīm ʿajam ʿushayrān", // 7
   "ʿajam ʿushayrān", // 8
-  "nayrūz",
+  "nayrūz", //9
   "tīk ʿajam ʿushayrān",
   "ʿirāq", // 11
-  "rahāwī",
+  "rahāwī", //12
   "nīm kawasht", // 13
   "kawasht", // 14
-  "tīk kawasht",
+  "tīk kawasht", //15
   "rāst", // 16
-  "tīk rāst",
+  "tīk rāst", //17
   "nīm zīrgūleh", // 18
   "zīrgūleh", // 19
   "tīk zīrgūleh", // 20
   "dūgāh", // 21
   "nīm kurdī/nahāwand", // 22
-  "nahāwand",
+  "nahāwand", // 23
   "kurdī", // 24
-  "tīk kūrdī",
+  "tīk kūrdī", // 25
   "segāh", // 26
   "nīm būselīk", // 27
   "būselīk/ʿushshāq", // 28
-  "tīk būselīk",
+  "tīk būselīk", // 29
   "chahārgāh", // 30
-  "tīk chahārgāh",
+  "tīk chahārgāh", // 31
   "nīm ḥijāz", // 32
-  "ṣabā",
+  "ṣabā", // 33
   "ḥijāz", // 34
   "tīk ḥijāz/ṣabā", // 35
-  "nīm nawā",
+  "nīm nawā", // 36
 ];
 export const octaveTwoNoteNames = [
   "nawā",

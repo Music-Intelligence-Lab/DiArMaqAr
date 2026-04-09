@@ -159,21 +159,33 @@ export async function GET(
     // Use the actual note name from the tuning system (with diacritics)
     const actualStartingNote = validNoteSet[0];
 
-    // Check if jins is possible in this context
-    if (!jins.isJinsPossible(validNoteSet)) {
+    const pitchClasses = getTuningSystemPitchClasses(tuningSystem, actualStartingNote);
+
+    if (pitchClasses.length === 0) {
       return addCorsHeaders(
         NextResponse.json(
           {
-            error: `Jins '${jins.getName()}' is not possible in tuning system '${tuningSystemId}' with starting note '${actualStartingNote}'`,
-            hint: "Use /api/ajnas/{id}/availability to find compatible combinations"
+            error: `Could not build pitch classes for tuning system '${tuningSystemId}' with starting note '${actualStartingNote}'`,
+            hint: "Verify tuning system configuration and starting note",
           },
-          { status: 400 }
+          { status: 500 }
         )
       );
     }
 
-    // Get pitch classes and calculate transpositions
-    const pitchClasses = getTuningSystemPitchClasses(tuningSystem, actualStartingNote);
+    const noteNamesInPitchSpace = pitchClasses.map((pc) => pc.noteName);
+    if (!jins.isJinsPossible(noteNamesInPitchSpace)) {
+      return addCorsHeaders(
+        NextResponse.json(
+          {
+            error: `Jins '${jins.getName()}' cannot be realized in tuning system '${tuningSystemId}' with starting note '${actualStartingNote}'`,
+            hint: `Use /api/ajnas/${jins.getIdName()}/availability to see compatible tuning systems`,
+          },
+          { status: 422 }
+        )
+      );
+    }
+
     const transpositions = calculateJinsTranspositions(
       pitchClasses,
       jins,
@@ -181,8 +193,24 @@ export async function GET(
       5 // default tolerance
     );
 
+    // API lists only taswīr (transposition: true). Octave/register variants must not be flagged true;
+    // that is handled at the source in calculateJinsTranspositions().
+    const transpositionsListed = transpositions.filter((t) => t.transposition);
+
+    if (transpositionsListed.length === 0) {
+      return addCorsHeaders(
+        NextResponse.json(
+          {
+            error: `No distinct transpositions (taswīr) are available for jins '${jins.getName()}' in tuning system '${tuningSystemId}' with starting note '${actualStartingNote}'`,
+            hint: `This jins can be constructed in this tuning system with starting note '${actualStartingNote}', but only in its original modal position (and its octave equivalents). Use /api/ajnas/${jins.getIdName()} for the detail response, or /api/ajnas/${jins.getIdName()}/availability to explore compatible tuning-system + starting-note combinations.`,
+          },
+          { status: 422 }
+        )
+      );
+    }
+
     // Build transpositions list with tonicId (URL-safe) and tonicName (with diacritics or Arabic)
-    const transpositionItems = transpositions.map((t) => {
+    const transpositionItems = transpositionsListed.map((t) => {
       const tonicNoteName = t.jinsPitchClasses[0].noteName;
       const tonicNamespace = buildIdentifierNamespace(
         {
@@ -261,12 +289,12 @@ export async function GET(
     );
 
     const transpositionsNamespace = buildStringArrayNamespace(
-      transpositions.map((t) => standardizeText(t.jinsPitchClasses[0].noteName)),
+      transpositionsListed.map((t) => standardizeText(t.jinsPitchClasses[0].noteName)),
       {
         inArabic,
-        displayNames: transpositions.map((t) => t.jinsPitchClasses[0].noteName),
+        displayNames: transpositionsListed.map((t) => t.jinsPitchClasses[0].noteName),
         displayNamesAr: inArabic
-          ? transpositions.map((t) => getNoteNameDisplayAr(t.jinsPitchClasses[0].noteName))
+          ? transpositionsListed.map((t) => getNoteNameDisplayAr(t.jinsPitchClasses[0].noteName))
           : undefined,
       }
     );

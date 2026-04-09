@@ -7,6 +7,7 @@ import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
 import { classifyMaqamFamily } from "@/functions/classifyMaqamFamily";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
 import { parseInArabic, getMaqamNameDisplayAr, getJinsNameDisplayAr, getNoteNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
+import NoteName, { getNoteNameIndexAndOctave } from "@/models/NoteName";
 
 export const OPTIONS = handleCorsPreflightRequest;
 
@@ -352,7 +353,7 @@ export async function GET(
             startingNote: selectedStartingNote,
             transposeTo: transposeToNote,
             error: `Cannot transpose to '${transposeToNote}' in this tuning system`,
-            availableTranspositions: transpositions.map((t) => ({
+            availableTranspositions: transpositions.filter((t) => t.transposition).map((t) => ({
               idName: standardizeText(t.name),
               displayName: t.name,
               tonic: {
@@ -417,7 +418,9 @@ export async function GET(
       // Determine if transposed
       const originalTonic = maqam.getAscendingNoteNames()[0];
       const transposedTonic = selectedTransposition.ascendingPitchClasses[0].noteName;
-      const isTransposed = standardizeText(originalTonic) !== standardizeText(transposedTonic);
+      const isTransposed =
+        getNoteNameIndexAndOctave(originalTonic as NoteName).index !==
+        getNoteNameIndexAndOctave(transposedTonic as NoteName).index;
 
       // Build comparison result
       const result: any = {

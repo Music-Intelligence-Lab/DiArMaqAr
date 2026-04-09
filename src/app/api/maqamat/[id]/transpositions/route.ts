@@ -160,21 +160,35 @@ export async function GET(
     // Use the actual note name from the tuning system (with diacritics)
     const actualStartingNote = validNoteSet[0];
 
-    // Check if maqām is possible in this context
-    if (!maqam.isMaqamPossible(validNoteSet)) {
+    // Pitch classes span multiple octaves; possibility must use the same note-name universe as
+    // analysis (not a single row from getNoteNameSets()), or non-octave-repeating systems misreport.
+    const pitchClasses = getTuningSystemPitchClasses(tuningSystem, actualStartingNote);
+
+    if (pitchClasses.length === 0) {
       return addCorsHeaders(
         NextResponse.json(
           {
-            error: `Maqām '${maqam.getName()}' is not possible in tuning system '${tuningSystemId}' with starting note '${actualStartingNote}'`,
-            hint: "Use /api/maqamat/{id}/availability to find compatible combinations"
+            error: `Could not build pitch classes for tuning system '${tuningSystemId}' with starting note '${actualStartingNote}'`,
+            hint: "Verify tuning system configuration and starting note",
           },
-          { status: 400 }
+          { status: 500 }
         )
       );
     }
 
-    // Get pitch classes and calculate transpositions
-    const pitchClasses = getTuningSystemPitchClasses(tuningSystem, actualStartingNote);
+    const noteNamesInPitchSpace = pitchClasses.map((pc) => pc.noteName);
+    if (!maqam.isMaqamPossible(noteNamesInPitchSpace)) {
+      return addCorsHeaders(
+        NextResponse.json(
+          {
+            error: `Maqām '${maqam.getName()}' cannot be realized in tuning system '${tuningSystemId}' with starting note '${actualStartingNote}'`,
+            hint: `Use /api/maqamat/${maqam.getIdName()}/availability to see compatible tuning systems`,
+          },
+          { status: 422 }
+        )
+      );
+    }
+
     const transpositions = calculateMaqamTranspositions(
       pitchClasses,
       ajnas,
@@ -183,8 +197,24 @@ export async function GET(
       5 // default tolerance
     );
 
+    // API lists only taswīr (transposition: true). Octave/register variants must not be flagged true;
+    // that is handled at the source in calculateMaqamTranspositions().
+    const transpositionsListed = transpositions.filter((t) => t.transposition);
+
+    if (transpositionsListed.length === 0) {
+      return addCorsHeaders(
+        NextResponse.json(
+          {
+            error: `No distinct transpositions (taswīr) are available for maqām '${maqam.getName()}' in tuning system '${tuningSystemId}' with starting note '${actualStartingNote}'`,
+            hint: `This maqām can be constructed in this tuning system with starting note '${actualStartingNote}', but only in its original modal position (and its octave equivalents). Use /api/maqamat/${maqam.getIdName()} for the detail response, or /api/maqamat/${maqam.getIdName()}/availability to explore compatible tuning-system + starting-note combinations.`,
+          },
+          { status: 422 }
+        )
+      );
+    }
+
     // Build transpositions list with tonicId (URL-safe) and tonicName (with diacritics or Arabic)
-    const transpositionItems = transpositions.map((t) => {
+    const transpositionItems = transpositionsListed.map((t) => {
       const tonicNoteName = t.ascendingPitchClasses[0].noteName;
       const tonicNamespace = buildIdentifierNamespace(
         {
@@ -263,12 +293,12 @@ export async function GET(
     );
 
     const transpositionSummary = buildStringArrayNamespace(
-      transpositions.map((t) => standardizeText(t.ascendingPitchClasses[0].noteName)),
+      transpositionsListed.map((t) => standardizeText(t.ascendingPitchClasses[0].noteName)),
       {
         inArabic,
-        displayNames: transpositions.map((t) => t.ascendingPitchClasses[0].noteName),
+        displayNames: transpositionsListed.map((t) => t.ascendingPitchClasses[0].noteName),
         displayNamesAr: inArabic
-          ? transpositions.map((t) => getNoteNameDisplayAr(t.ascendingPitchClasses[0].noteName))
+          ? transpositionsListed.map((t) => getNoteNameDisplayAr(t.ascendingPitchClasses[0].noteName))
           : undefined,
       }
     );

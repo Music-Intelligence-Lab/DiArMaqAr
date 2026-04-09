@@ -6,6 +6,7 @@ import { calculateJinsTranspositions } from "@/functions/transpose";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
 import { parseInArabic, getJinsNameDisplayAr, getNoteNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
+import NoteName, { getNoteNameIndexAndOctave } from "@/models/NoteName";
 import {
   buildEntityNamespace,
   buildIdentifierNamespace,
@@ -471,7 +472,7 @@ export async function GET(
             }
           );
 
-          const availableTranspositionsData = transpositions.map((t) => {
+          const availableTranspositionsData = transpositions.filter((t) => t.transposition).map((t) => {
             const tonicNoteName = t.jinsPitchClasses[0].noteName;
             const fullJinsName = t.name;
             return {
@@ -501,7 +502,9 @@ export async function GET(
       // Determine if transposed
       const originalTonic = jins.getNoteNames()[0];
       const transposedTonic = selectedTransposition.jinsPitchClasses[0].noteName;
-      const isTransposed = standardizeText(originalTonic) !== standardizeText(transposedTonic);
+      const isTransposed =
+        getNoteNameIndexAndOctave(originalTonic as NoteName).index !==
+        getNoteNameIndexAndOctave(transposedTonic as NoteName).index;
 
       const referenceFrequency = tuningSystem.getReferenceFrequencies()[selectedStartingNote] ?? tuningSystem.getDefaultReferenceFrequency();
 
@@ -579,8 +582,8 @@ export async function GET(
           }
         : undefined;
 
-      // Build availableTranspositions with full jins names
-      const availableTranspositionsData = transpositions.map((t) => {
+      // Build availableTranspositions with full jins names (taswīr only)
+      const availableTranspositionsData = transpositions.filter((t) => t.transposition).map((t) => {
         const tonicNoteName = t.jinsPitchClasses[0].noteName;
         const fullJinsName = t.name;
         return {

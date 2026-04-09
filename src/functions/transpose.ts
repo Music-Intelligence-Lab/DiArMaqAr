@@ -3,9 +3,16 @@ import MaqamData, { Maqam, Sayr } from "@/models/Maqam";
 import JinsData, { Jins } from "@/models/Jins";
 import TuningSystem from "@/models/TuningSystem";
 import NoteName from "@/models/NoteName";
+import { getNoteNameIndexAndOctave } from "@/models/NoteName";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import shiftPitchClassByOctave from "./shiftPitchClassByOctave";
 import { getPitchClassIntervals } from "./getPitchClassIntervals";
+
+function sameModalDegreeSlot(a: string, b: string): boolean {
+  const aIdx = getNoteNameIndexAndOctave(a as NoteName).index;
+  const bIdx = getNoteNameIndexAndOctave(b as NoteName).index;
+  return aIdx >= 0 && bIdx >= 0 && aIdx === bIdx;
+}
 
 /**
  * Universal Interval Pattern Transposition Algorithm
@@ -280,7 +287,8 @@ export function calculateMaqamTranspositions(
             const firstJinsNote = jins.getNoteNames()[0];
             const firstCell = extendedAscendingPitchClasses[i];
 
-            const isTransposed = firstJinsNote !== firstCell.noteName;
+            // Embedded jins transposition should treat register/octave variants as equivalent.
+            const isTransposed = !sameModalDegreeSlot(firstJinsNote, firstCell.noteName);
             const jinsTransposition = {
               jinsId: jins.getId(),
               name: isTransposed ? `${jins.getName()} al-${firstCell.noteName}` : jins.getName(),
@@ -310,7 +318,8 @@ export function calculateMaqamTranspositions(
             const firstJinsNote = jins.getNoteNames()[0];
             const firstCell = extendedDescendingPitchClasses[i];
 
-            const isTransposed = firstJinsNote !== firstCell.noteName;
+            // Embedded jins transposition should treat register/octave variants as equivalent.
+            const isTransposed = !sameModalDegreeSlot(firstJinsNote, firstCell.noteName);
             const jinsTransposition = {
               jinsId: jins.getId(),
               name: isTransposed ? `${jins.getName()} al-${firstCell.noteName}` : jins.getName(),
@@ -333,7 +342,9 @@ export function calculateMaqamTranspositions(
 
     const firstMaqamNote = ascendingNoteNames[0];
     const firstTransposedNote = sequencePair.ascendingSequence[0].noteName;
-    const isTransposed = firstMaqamNote !== firstTransposedNote;
+    // "Transposition" (taswīr) is a change of modal tonic, not a register/octave variant
+    // like qarār dūgāh vs dūgāh vs muḥayyar (same modal degree slot in NoteName tables).
+    const isTransposed = !sameModalDegreeSlot(firstMaqamNote, firstTransposedNote);
 
     return {
       maqamId: maqamData.getId(),
@@ -348,13 +359,15 @@ export function calculateMaqamTranspositions(
     };
   });
 
-  const tahlilTransposition = maqamTranspositions.find((transposition) => transposition.ascendingPitchClasses[0].noteName === ascendingNoteNames[0]);
+  const tahlilTransposition = maqamTranspositions.find((transposition) =>
+    sameModalDegreeSlot(transposition.ascendingPitchClasses[0].noteName, ascendingNoteNames[0])
+  );
   const maqamTranspositionsWithoutTahlil = maqamTranspositions.filter((transposition) => transposition !== tahlilTransposition);
 
   // if (maqamData.getId() === "12")
 
   if (withTahlil && tahlilTransposition) {
-    return [tahlilTransposition, ...maqamTranspositionsWithoutTahlil];
+    return [{ ...tahlilTransposition, name: maqamData.getName(), transposition: false }, ...maqamTranspositionsWithoutTahlil];
   } else return maqamTranspositionsWithoutTahlil;
 }
 
@@ -405,16 +418,20 @@ export function calculateJinsTranspositions(allPitchClasses: PitchClass[], jinsD
   const jinsTranspositions: Jins[] = calculatePitchClassTranspositions(allPitchClasses, intervalPattern, true, useRatio, centsTolerance)
     .filter((sequence) => !onlyOctaveOne || sequence[0].octave === 1)
     .map((sequence) => {
+      const tonic = sequence[0].noteName;
+      const isTransposed = !sameModalDegreeSlot(jinsNoteNames[0], tonic);
       return {
         jinsId: jinsData.getId(),
-        name: `${jinsData.getName()} al-${sequence[0].noteName}`,
-        transposition: true,
+        name: isTransposed ? `${jinsData.getName()} al-${tonic}` : jinsData.getName(),
+        transposition: isTransposed,
         jinsPitchClasses: sequence,
         jinsPitchClassIntervals: getPitchClassIntervals(sequence),
       };
     });
 
-  const tahlilTransposition = jinsTranspositions.find((transposition) => transposition.jinsPitchClasses[0].noteName === jinsNoteNames[0]);
+  const tahlilTransposition = jinsTranspositions.find((transposition) =>
+    sameModalDegreeSlot(transposition.jinsPitchClasses[0].noteName, jinsNoteNames[0])
+  );
   const jinsTranspositionsWithoutTahlil = jinsTranspositions.filter((transposition) => transposition !== tahlilTransposition);
 
   if (withTahlil && tahlilTransposition) return [{ ...tahlilTransposition, name: jinsData.getName(), transposition: false }, ...jinsTranspositionsWithoutTahlil];
