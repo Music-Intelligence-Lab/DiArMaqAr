@@ -252,19 +252,6 @@ export async function GET(
       );
     }
 
-    if (effectiveStartingNotesRaw.trim() === "") {
-      return addCorsHeaders(
-        NextResponse.json(
-          {
-            error: "Invalid parameter: startingNotes",
-            message: "The 'startingNotes' parameter cannot be empty.",
-            hint: "Use ?startingNotes=yegah or ?startingNotes=yegah,rast,ushayran",
-          },
-          { status: 400 }
-        )
-      );
-    }
-
     const startingNoteInputs = effectiveStartingNotesRaw
       .split(",")
       .map((n) => n.trim())
@@ -275,7 +262,7 @@ export async function GET(
         NextResponse.json(
           {
             error: "Invalid parameter: startingNotes",
-            message: "At least one starting note must be provided after parsing.",
+            message: "The 'startingNotes' parameter must contain at least one starting note name.",
             hint: "Use ?startingNotes=yegah or ?startingNotes=yegah,rast,ushayran",
           },
           { status: 400 }
@@ -679,14 +666,15 @@ export async function GET(
       comparisonResults.push(comparisonItem);
     }
 
+    const successfulComparisons = comparisonResults.filter(
+      (r) => !r.error && !r.note
+    ).length;
     const unavailableStartingNotes = comparisonResults.filter(
-      (r) => "note" in r && r.note !== undefined
+      (r) => r.note !== undefined
     ).length;
     const failedComparisons = comparisonResults.filter(
-      (r) => "error" in r && (r as { error?: unknown }).error !== undefined
+      (r) => r.error !== undefined
     ).length;
-    const successfulComparisons =
-      comparisonResults.length - unavailableStartingNotes - failedComparisons;
 
     const comparisonsPayload = buildListResponse(comparisonResults, {
       meta: {
