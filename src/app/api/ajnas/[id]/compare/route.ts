@@ -166,7 +166,8 @@ export async function GET(
     const { id: jinsId } = await params;
     const { searchParams } = new URL(request.url);
     const tuningSystemsParam = searchParams.get("tuningSystems");
-    const startingNoteParam = searchParams.get("startingNote");
+    const startingNotesParam = searchParams.get("startingNotes");
+    const legacyStartingNoteParam = searchParams.get("startingNote");
     const pitchClassDataType = searchParams.get("pitchClassDataType") || "all";
     const intervalsParam = searchParams.get("includeIntervals");
     const transposeToNote = searchParams.get("transposeTo");
@@ -233,14 +234,49 @@ export async function GET(
       );
     }
 
-    // Validate startingNote parameter
-    if (!startingNoteParam) {
+    // Validate startingNotes parameter (accepts legacy `startingNote` as alias)
+    // If both are supplied, `startingNotes` wins and `startingNote` is ignored.
+    const effectiveStartingNotesRaw =
+      startingNotesParam !== null ? startingNotesParam : legacyStartingNoteParam;
+
+    if (effectiveStartingNotesRaw === null) {
       return addCorsHeaders(
         NextResponse.json(
           {
-            error: "startingNote parameter is required",
-            message: "A starting note must be specified for all tuning systems",
-            hint: "Add &startingNote=yegah to your request"
+            error: "startingNotes parameter is required",
+            message: "At least one starting note must be specified",
+            hint: "Add &startingNotes=yegah,rast to your request (comma-separated list)",
+          },
+          { status: 400 }
+        )
+      );
+    }
+
+    if (effectiveStartingNotesRaw.trim() === "") {
+      return addCorsHeaders(
+        NextResponse.json(
+          {
+            error: "Invalid parameter: startingNotes",
+            message: "The 'startingNotes' parameter cannot be empty.",
+            hint: "Use ?startingNotes=yegah or ?startingNotes=yegah,rast,ushayran",
+          },
+          { status: 400 }
+        )
+      );
+    }
+
+    const startingNoteInputs = effectiveStartingNotesRaw
+      .split(",")
+      .map((n) => n.trim())
+      .filter((n) => n.length > 0);
+
+    if (startingNoteInputs.length === 0) {
+      return addCorsHeaders(
+        NextResponse.json(
+          {
+            error: "Invalid parameter: startingNotes",
+            message: "At least one starting note must be provided after parsing.",
+            hint: "Use ?startingNotes=yegah or ?startingNotes=yegah,rast,ushayran",
           },
           { status: 400 }
         )
@@ -263,13 +299,23 @@ export async function GET(
       );
     }
 
-    // Build comparisons array from tuning system IDs
-    const comparisons: Array<{ tuningSystem: string; startingNote: string; transposeTo?: string }> = 
-      tuningSystemIds.map(tuningSystemId => ({
-        tuningSystem: tuningSystemId,
-        startingNote: startingNoteParam,
-        ...(transposeToNote && { transposeTo: transposeToNote })
-      }));
+    // Build Cartesian product of tuningSystems × startingNotes in user-supplied order.
+    // Outer loop = tuningSystems, inner loop = startingNotes, so the result list is:
+    //   TS1×SN1, TS1×SN2, …, TS1×SNm, TS2×SN1, …, TSn×SNm
+    const comparisons: Array<{
+      tuningSystem: string;
+      startingNote: string;
+      transposeTo?: string;
+    }> = [];
+    for (const tuningSystemId of tuningSystemIds) {
+      for (const startingNoteInput of startingNoteInputs) {
+        comparisons.push({
+          tuningSystem: tuningSystemId,
+          startingNote: startingNoteInput,
+          ...(transposeToNote && { transposeTo: transposeToNote }),
+        });
+      }
+    }
 
     const ajnasData = getAjnas();
     const tuningSystems = getTuningSystems();
@@ -295,7 +341,7 @@ export async function GET(
     const comparisonResults = [];
     
     for (const comparison of comparisons) {
-      const { tuningSystem: tuningSystemId, startingNote: startingNoteParam, transposeTo: transposeToNote } = comparison;
+      const { tuningSystem: tuningSystemId, startingNote: cellStartingNote, transposeTo: transposeToNote } = comparison;
 
       // Find tuning system
       const tuningSystem = tuningSystems.find((ts) => standardizeText(ts.getId()) === standardizeText(tuningSystemId));
@@ -310,8 +356,8 @@ export async function GET(
 
         const startingNoteNamespace = buildIdentifierNamespace(
           {
-            idName: standardizeText(startingNoteParam),
-            displayName: startingNoteParam,
+            idName: standardizeText(cellStartingNote),
+            displayName: cellStartingNote,
           }
         );
 
@@ -326,7 +372,7 @@ export async function GET(
       // Validate and find starting note
       const noteNameSets = tuningSystem.getNoteNameSets();
       const matchingSet = noteNameSets.find(
-        (set) => standardizeText(set[0]) === standardizeText(startingNoteParam)
+        (set) => standardizeText(set[0]) === standardizeText(cellStartingNote)
       );
       
       if (!matchingSet) {
@@ -353,12 +399,12 @@ export async function GET(
 
         const requestedStartingNote = buildIdentifierNamespace(
           {
-            idName: standardizeText(startingNoteParam),
-            displayName: startingNoteParam,
+            idName: standardizeText(cellStartingNote),
+            displayName: cellStartingNote,
           },
           {
             inArabic,
-            displayAr: inArabic ? getNoteNameDisplayAr(startingNoteParam) : undefined,
+            displayAr: inArabic ? getNoteNameDisplayAr(cellStartingNote) : undefined,
           }
         );
 
@@ -374,7 +420,7 @@ export async function GET(
         comparisonResults.push({
           tuningSystem: tuningSystemNamespace,
           startingNote: requestedStartingNote,
-          error: `Invalid starting note '${startingNoteParam}' for tuning system '${tuningSystemId}'`,
+          note: `Starting note '${cellStartingNote}' is not available in tuning system '${tuningSystem.stringify()}'`,
           validStartingNotes: validOptionsNamespace,
         });
         continue;
@@ -633,13 +679,20 @@ export async function GET(
       comparisonResults.push(comparisonItem);
     }
 
-    const successfulComparisons = comparisonResults.filter((r) => !r.error).length;
-    const failedComparisons = comparisonResults.length - successfulComparisons;
+    const unavailableStartingNotes = comparisonResults.filter(
+      (r) => "note" in r && r.note !== undefined
+    ).length;
+    const failedComparisons = comparisonResults.filter(
+      (r) => "error" in r && (r as { error?: unknown }).error !== undefined
+    ).length;
+    const successfulComparisons =
+      comparisonResults.length - unavailableStartingNotes - failedComparisons;
 
     const comparisonsPayload = buildListResponse(comparisonResults, {
       meta: {
         totalComparisons: comparisonResults.length,
         successfulComparisons,
+        unavailableStartingNotes,
         failedComparisons,
       },
     });
@@ -664,14 +717,14 @@ export async function GET(
       }
     );
 
-    const startingNoteParamNamespace = buildIdentifierNamespace(
+    const startingNotesParamNamespace = buildStringArrayNamespace(
+      startingNoteInputs.map((n) => standardizeText(n)),
       {
-        idName: standardizeText(startingNoteParam),
-        displayName: startingNoteParam,
-      },
-      {
+        displayNames: startingNoteInputs,
         inArabic,
-        displayAr: inArabic ? getNoteNameDisplayAr(startingNoteParam) : undefined,
+        displayNamesAr: inArabic
+          ? startingNoteInputs.map((n) => getNoteNameDisplayAr(n))
+          : undefined,
       }
     );
 
@@ -680,7 +733,7 @@ export async function GET(
       comparisons: comparisonsPayload,
       parameters: {
         tuningSystems: tuningSystemsParamNamespace,
-        startingNote: startingNoteParamNamespace,
+        startingNotes: startingNotesParamNamespace,
         pitchClassDataType,
         includeIntervals,
         transposeTo: transposeToNote || null,
