@@ -8,6 +8,14 @@ import { classifyMaqamFamily } from "@/functions/classifyMaqamFamily";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
 import { parseInArabic, getMaqamNameDisplayAr, getJinsNameDisplayAr, getNoteNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
 import NoteName, { getNoteNameIndexAndOctave } from "@/models/NoteName";
+import {
+  buildEntityNamespace,
+  buildIdentifierNamespace,
+  buildLinksNamespace,
+  buildListResponse,
+  buildStringArrayNamespace,
+  getCanonicalSelfUrl,
+} from "@/app/api/response-shapes";
 
 export const OPTIONS = handleCorsPreflightRequest;
 
@@ -161,7 +169,8 @@ export async function GET(
     const { id: maqamId } = await params;
     const { searchParams } = new URL(request.url);
     const tuningSystemsParam = searchParams.get("tuningSystems");
-    const startingNoteParam = searchParams.get("startingNote");
+    const startingNotesParam = searchParams.get("startingNotes");
+    const legacyStartingNoteParam = searchParams.get("startingNote");
     const pitchClassDataType = searchParams.get("pitchClassDataType") || "all";
     const intervalsParam = searchParams.get("includeIntervals");
     const transposeToNote = searchParams.get("transposeTo");
@@ -228,14 +237,36 @@ export async function GET(
       );
     }
 
-    // Validate startingNote parameter
-    if (!startingNoteParam) {
+    // Validate startingNotes parameter (accepts legacy `startingNote` as alias).
+    // If both are supplied, `startingNotes` wins and `startingNote` is ignored.
+    const effectiveStartingNotesRaw =
+      startingNotesParam !== null ? startingNotesParam : legacyStartingNoteParam;
+
+    if (effectiveStartingNotesRaw === null) {
       return addCorsHeaders(
         NextResponse.json(
           {
-            error: "startingNote parameter is required",
-            message: "A starting note must be specified for all tuning systems",
-            hint: "Add &startingNote=yegah to your request"
+            error: "startingNotes parameter is required",
+            message: "At least one starting note must be specified",
+            hint: "Add &startingNotes=yegah,rast to your request (comma-separated list)",
+          },
+          { status: 400 }
+        )
+      );
+    }
+
+    const startingNoteInputs = effectiveStartingNotesRaw
+      .split(",")
+      .map((n) => n.trim())
+      .filter((n) => n.length > 0);
+
+    if (startingNoteInputs.length === 0) {
+      return addCorsHeaders(
+        NextResponse.json(
+          {
+            error: "Invalid parameter: startingNotes",
+            message: "The 'startingNotes' parameter must contain at least one starting note name.",
+            hint: "Use ?startingNotes=yegah or ?startingNotes=yegah,rast,ushayran",
           },
           { status: 400 }
         )
@@ -258,13 +289,23 @@ export async function GET(
       );
     }
 
-    // Build comparisons array from tuning system IDs
-    const comparisons: Array<{ tuningSystem: string; startingNote: string; transposeTo?: string }> = 
-      tuningSystemIds.map(tuningSystemId => ({
-        tuningSystem: tuningSystemId,
-        startingNote: startingNoteParam,
-        ...(transposeToNote && { transposeTo: transposeToNote })
-      }));
+    // Build Cartesian product of tuningSystems × startingNotes in user-supplied order.
+    // Outer loop = tuningSystems, inner loop = startingNotes, so the result list is:
+    //   TS1×SN1, TS1×SN2, …, TS1×SNm, TS2×SN1, …, TSn×SNm
+    const comparisons: Array<{
+      tuningSystem: string;
+      startingNote: string;
+      transposeTo?: string;
+    }> = [];
+    for (const tuningSystemId of tuningSystemIds) {
+      for (const startingNoteInput of startingNoteInputs) {
+        comparisons.push({
+          tuningSystem: tuningSystemId,
+          startingNote: startingNoteInput,
+          ...(transposeToNote && { transposeTo: transposeToNote }),
+        });
+      }
+    }
 
     const maqamatData = getMaqamat();
     const tuningSystems = getTuningSystems();
@@ -291,15 +332,26 @@ export async function GET(
     const comparisonResults = [];
     
     for (const comparison of comparisons) {
-      const { tuningSystem: tuningSystemId, startingNote: startingNoteParam, transposeTo: transposeToNote } = comparison;
+      const { tuningSystem: tuningSystemId, startingNote: cellStartingNote, transposeTo: transposeToNote } = comparison;
 
       // Find tuning system
       const tuningSystem = tuningSystems.find((ts) => standardizeText(ts.getId()) === standardizeText(tuningSystemId));
       if (!tuningSystem) {
+        const fallbackTuningSystem = buildEntityNamespace({
+          id: tuningSystemId,
+          idName: standardizeText(tuningSystemId),
+          displayName: tuningSystemId,
+        });
+
+        const startingNoteNamespace = buildIdentifierNamespace({
+          idName: standardizeText(cellStartingNote),
+          displayName: cellStartingNote,
+        });
+
         comparisonResults.push({
-          tuningSystem: tuningSystemId,
-          startingNote: startingNoteParam,
-          error: `Tuning system '${tuningSystemId}' not found`
+          tuningSystem: fallbackTuningSystem,
+          startingNote: startingNoteNamespace,
+          error: `Tuning system '${tuningSystemId}' not found`,
         });
         continue;
       }
@@ -307,15 +359,58 @@ export async function GET(
       // Validate and find starting note
       const noteNameSets = tuningSystem.getNoteNameSets();
       const matchingSet = noteNameSets.find(
-        (set) => standardizeText(set[0]) === standardizeText(startingNoteParam)
+        (set) => standardizeText(set[0]) === standardizeText(cellStartingNote)
       );
-      
+
       if (!matchingSet) {
+        const tuningSystemNamespace = buildEntityNamespace(
+          {
+            id: tuningSystem.getId(),
+            idName: standardizeText(tuningSystem.getId()),
+            displayName: tuningSystem.stringify(),
+          },
+          {
+            version: tuningSystem.getVersion(),
+            inArabic,
+            displayNameAr: inArabic
+              ? getTuningSystemDisplayNameAr(
+                  tuningSystem.getCreatorArabic() || "",
+                  tuningSystem.getCreatorEnglish() || "",
+                  tuningSystem.getYear(),
+                  tuningSystem.getTitleArabic() || "",
+                  tuningSystem.getTitleEnglish() || ""
+                )
+              : undefined,
+          }
+        );
+
+        const requestedStartingNote = buildIdentifierNamespace(
+          {
+            idName: standardizeText(cellStartingNote),
+            displayName: cellStartingNote,
+          },
+          {
+            inArabic,
+            displayAr: inArabic ? getNoteNameDisplayAr(cellStartingNote) : undefined,
+          }
+        );
+
+        const validDisplayNames = noteNameSets.map((set) => set[0]);
+        const validIdNames = validDisplayNames.map((name) => standardizeText(name));
+
+        const validOptionsNamespace = buildStringArrayNamespace(validIdNames, {
+          inArabic,
+          displayNames: validDisplayNames,
+          displayNamesAr: inArabic
+            ? validDisplayNames.map((name) => getNoteNameDisplayAr(name))
+            : undefined,
+        });
+
         comparisonResults.push({
-          tuningSystem: tuningSystemId,
-          startingNote: startingNoteParam,
-          error: `Invalid starting note '${startingNoteParam}' for tuning system '${tuningSystemId}'`,
-          validOptions: noteNameSets.map((set) => set[0])
+          tuningSystem: tuningSystemNamespace,
+          startingNote: requestedStartingNote,
+          note: `Starting note '${cellStartingNote}' is not available in tuning system '${tuningSystem.stringify()}'`,
+          validStartingNotes: validOptionsNamespace,
         });
         continue;
       }
@@ -324,16 +419,45 @@ export async function GET(
 
       // Get pitch classes
       const pitchClasses = getTuningSystemPitchClasses(tuningSystem, selectedStartingNote);
-      
-      // Count pitch classes in a single octave (from tuning system's original pitch class values)
-      const pitchClassesInSingleOctave = tuningSystem.getOriginalPitchClassValues().length;
 
       // Check if maqām is possible
       if (!maqam.isMaqamPossible(pitchClasses.map((pc) => pc.noteName))) {
+        const tuningSystemNamespace = buildEntityNamespace(
+          {
+            id: tuningSystem.getId(),
+            idName: standardizeText(tuningSystem.getId()),
+            displayName: tuningSystem.stringify(),
+          },
+          {
+            version: tuningSystem.getVersion(),
+            inArabic,
+            displayNameAr: inArabic
+              ? getTuningSystemDisplayNameAr(
+                  tuningSystem.getCreatorArabic() || "",
+                  tuningSystem.getCreatorEnglish() || "",
+                  tuningSystem.getYear(),
+                  tuningSystem.getTitleArabic() || "",
+                  tuningSystem.getTitleEnglish() || ""
+                )
+              : undefined,
+          }
+        );
+
+        const startingNoteNamespace = buildIdentifierNamespace(
+          {
+            idName: standardizeText(selectedStartingNote),
+            displayName: selectedStartingNote,
+          },
+          {
+            inArabic,
+            displayAr: inArabic ? getNoteNameDisplayAr(selectedStartingNote) : undefined,
+          }
+        );
+
         comparisonResults.push({
-          tuningSystem: tuningSystemId,
-          startingNote: selectedStartingNote,
-          error: `Maqām '${maqam.getName()}' cannot be realized in this tuning system configuration`
+          tuningSystem: tuningSystemNamespace,
+          startingNote: startingNoteNamespace,
+          error: `Maqām '${maqam.getName()}' cannot be realized in this tuning system configuration`,
         });
         continue;
       }
@@ -348,32 +472,85 @@ export async function GET(
           (t) => standardizeText(t.ascendingPitchClasses[0].noteName) === standardizeText(transposeToNote)
         );
         if (!found) {
+          const tuningSystemNamespace = buildEntityNamespace(
+            {
+              id: tuningSystem.getId(),
+              idName: standardizeText(tuningSystem.getId()),
+              displayName: tuningSystem.stringify(),
+            },
+            {
+              version: tuningSystem.getVersion(),
+              inArabic,
+              displayNameAr: inArabic
+                ? getTuningSystemDisplayNameAr(
+                    tuningSystem.getCreatorArabic() || "",
+                    tuningSystem.getCreatorEnglish() || "",
+                    tuningSystem.getYear(),
+                    tuningSystem.getTitleArabic() || "",
+                    tuningSystem.getTitleEnglish() || ""
+                  )
+                : undefined,
+            }
+          );
+
+          const startingNoteNamespace = buildIdentifierNamespace(
+            {
+              idName: standardizeText(selectedStartingNote),
+              displayName: selectedStartingNote,
+            },
+            {
+              inArabic,
+              displayAr: inArabic ? getNoteNameDisplayAr(selectedStartingNote) : undefined,
+            }
+          );
+
+          const availableTranspositionsData = transpositions
+            .filter((t) => t.transposition)
+            .map((t) => {
+              const tonicNoteName = t.ascendingPitchClasses[0].noteName;
+              const fullMaqamName = t.name;
+              return {
+                idName: standardizeText(fullMaqamName),
+                displayName: fullMaqamName,
+                ...(inArabic && { displayNameAr: getMaqamNameDisplayAr(fullMaqamName) }),
+                tonic: {
+                  idName: standardizeText(tonicNoteName),
+                  displayName: tonicNoteName,
+                  ...(inArabic && { displayNameAr: getNoteNameDisplayAr(tonicNoteName) }),
+                },
+              };
+            });
+
           comparisonResults.push({
-            tuningSystem: tuningSystemId,
-            startingNote: selectedStartingNote,
+            tuningSystem: tuningSystemNamespace,
+            startingNote: startingNoteNamespace,
             transposeTo: transposeToNote,
             error: `Cannot transpose to '${transposeToNote}' in this tuning system`,
-            availableTranspositions: transpositions.filter((t) => t.transposition).map((t) => ({
-              idName: standardizeText(t.name),
-              displayName: t.name,
-              tonic: {
-                idName: standardizeText(t.ascendingPitchClasses[0].noteName),
-                displayName: t.ascendingPitchClasses[0].noteName,
-              },
-            }))
+            availableTranspositions: availableTranspositionsData,
           });
           continue;
         }
         selectedTransposition = found;
       }
 
-      // Get family classification from tahlil
+      // Get family classification from tahlil (first transposition)
       const tahlil = transpositions[0];
       const familyClassification = classifyMaqamFamily(tahlil);
 
-      // Build ajnas objects
-      const ascendingAjnasObject: any = {};
-      const descendingAjnasObject: any = {};
+      // Determine if transposed
+      const originalTonic = maqam.getAscendingNoteNames()[0];
+      const transposedTonic = selectedTransposition.ascendingPitchClasses[0].noteName;
+      const isTransposed =
+        getNoteNameIndexAndOctave(originalTonic as NoteName).index !==
+        getNoteNameIndexAndOctave(transposedTonic as NoteName).index;
+
+      const referenceFrequency =
+        tuningSystem.getReferenceFrequencies()[selectedStartingNote] ??
+        tuningSystem.getDefaultReferenceFrequency();
+
+      // Build ajnas objects (keyed by note name) for this cell
+      const ascendingAjnasObject: Record<string, unknown> = {};
+      const descendingAjnasObject: Record<string, unknown> = {};
 
       if (selectedTransposition.ascendingMaqamAjnas) {
         for (let i = 0; i < selectedTransposition.ascendingPitchClasses.length; i++) {
@@ -382,13 +559,13 @@ export async function GET(
           if (jinsAtThisNote === null) {
             ascendingAjnasObject[noteName] = null;
           } else {
-            const jinsObj: any = {
+            const jinsObj: Record<string, unknown> = {
               id: jinsAtThisNote.jinsId,
-              idName: standardizeText(jinsAtThisNote.name || ''),
-              displayName: jinsAtThisNote.name || ''
+              idName: standardizeText(jinsAtThisNote.name || ""),
+              displayName: jinsAtThisNote.name || "",
             };
             if (inArabic) {
-              jinsObj.displayNameAr = getJinsNameDisplayAr(jinsAtThisNote.name || '');
+              jinsObj.displayNameAr = getJinsNameDisplayAr(jinsAtThisNote.name || "");
             }
             ascendingAjnasObject[noteName] = jinsObj;
           }
@@ -402,109 +579,248 @@ export async function GET(
           if (jinsAtThisNote === null) {
             descendingAjnasObject[noteName] = null;
           } else {
-            const jinsObj: any = {
+            const jinsObj: Record<string, unknown> = {
               id: jinsAtThisNote.jinsId,
-              idName: standardizeText(jinsAtThisNote.name || ''),
-              displayName: jinsAtThisNote.name || ''
+              idName: standardizeText(jinsAtThisNote.name || ""),
+              displayName: jinsAtThisNote.name || "",
             };
             if (inArabic) {
-              jinsObj.displayNameAr = getJinsNameDisplayAr(jinsAtThisNote.name || '');
+              jinsObj.displayNameAr = getJinsNameDisplayAr(jinsAtThisNote.name || "");
             }
             descendingAjnasObject[noteName] = jinsObj;
           }
         }
       }
 
-      // Determine if transposed
-      const originalTonic = maqam.getAscendingNoteNames()[0];
-      const transposedTonic = selectedTransposition.ascendingPitchClasses[0].noteName;
-      const isTransposed =
-        getNoteNameIndexAndOctave(originalTonic as NoteName).index !==
-        getNoteNameIndexAndOctave(transposedTonic as NoteName).index;
-
-      // Build comparison result
-      const result: any = {
-        maqam: {
-          id: maqam.getId(),
-          idName: isTransposed ? standardizeText(selectedTransposition.name) : maqam.getIdName(),
-          displayName: isTransposed ? selectedTransposition.name : maqam.getName(),
-          version: maqam.getVersion(),
-          tonicId: standardizeText(transposedTonic),
-          tonicName: transposedTonic,
-          transposition: isTransposed,
-          ...(isTransposed && {
-            originalTonicId: standardizeText(originalTonic),
-            originalTonicName: originalTonic
-          }),
-          maqamFamilyId: standardizeText(familyClassification.familyName),
-          maqamFamilyDisplayName: familyClassification.familyName,
-          ...(inArabic && {
-            displayNameAr: getMaqamNameDisplayAr(isTransposed ? selectedTransposition.name : maqam.getName()),
-            tonicNameAr: getNoteNameDisplayAr(transposedTonic),
-            ...(isTransposed && {
-              originalTonicNameAr: getNoteNameDisplayAr(originalTonic)
-            }),
-            maqamFamilyDisplayNameAr: getMaqamNameDisplayAr(familyClassification.familyName)
-          }),
-          numberOfPitchClasses: selectedTransposition.ascendingPitchClasses.length,
-          isOctaveRepeating: selectedTransposition.ascendingPitchClasses.length <= 7,
-          pitchClassDataType: pitchClassDataType,
-          includeIntervals: includeIntervals
+      // Per-cell entity namespaces
+      const tuningSystemNamespace = buildEntityNamespace(
+        {
+          id: tuningSystem.getId(),
+          idName: standardizeText(tuningSystem.getId()),
+          displayName: tuningSystem.stringify(),
         },
-        context: {
-          tuningSystem: {
-            id: tuningSystemId,
-            displayName: tuningSystem.stringify(),
-            version: tuningSystem.getVersion(),
-            numberOfPitchClassesSingleOctave: pitchClassesInSingleOctave,
-            startingNoteName: selectedStartingNote,
-            ...(inArabic && {
-              displayNameAr: getTuningSystemDisplayNameAr(
+        {
+          version: tuningSystem.getVersion(),
+          inArabic,
+          displayNameAr: inArabic
+            ? getTuningSystemDisplayNameAr(
                 tuningSystem.getCreatorArabic() || "",
                 tuningSystem.getCreatorEnglish() || "",
                 tuningSystem.getYear(),
                 tuningSystem.getTitleArabic() || "",
                 tuningSystem.getTitleEnglish() || ""
-              ),
-              startingNoteNameAr: getNoteNameDisplayAr(selectedStartingNote)
-            }),
-            referenceFrequency: tuningSystem.getReferenceFrequencies()[selectedStartingNote] ?? tuningSystem.getDefaultReferenceFrequency()
-          }
+              )
+            : undefined,
+        }
+      );
+
+      const startingNoteNamespace = buildIdentifierNamespace(
+        {
+          idName: standardizeText(selectedStartingNote),
+          displayName: selectedStartingNote,
         },
+        {
+          inArabic,
+          displayAr: inArabic ? getNoteNameDisplayAr(selectedStartingNote) : undefined,
+        }
+      );
+
+      const comparisonMaqamNamespace = buildEntityNamespace(
+        {
+          id: maqam.getId(),
+          idName: isTransposed ? standardizeText(selectedTransposition.name) : maqam.getIdName(),
+          displayName: isTransposed ? selectedTransposition.name : maqam.getName(),
+        },
+        {
+          version: maqam.getVersion(),
+          inArabic,
+          displayNameAr: inArabic
+            ? getMaqamNameDisplayAr(isTransposed ? selectedTransposition.name : maqam.getName())
+            : undefined,
+          extras: {
+            maqamFamilyId: standardizeText(familyClassification.familyName),
+            maqamFamilyDisplayName: familyClassification.familyName,
+            ...(inArabic && {
+              maqamFamilyDisplayNameAr: getMaqamNameDisplayAr(familyClassification.familyName),
+            }),
+          },
+        }
+      );
+
+      const tonicNamespace = buildIdentifierNamespace(
+        {
+          idName: standardizeText(transposedTonic),
+          displayName: transposedTonic,
+        },
+        {
+          inArabic,
+          displayAr: inArabic ? getNoteNameDisplayAr(transposedTonic) : undefined,
+        }
+      );
+
+      const transpositionDetails = isTransposed
+        ? {
+            original: buildIdentifierNamespace(
+              {
+                idName: standardizeText(originalTonic),
+                displayName: originalTonic,
+              },
+              {
+                inArabic,
+                displayAr: inArabic ? getNoteNameDisplayAr(originalTonic) : undefined,
+              }
+            ),
+            resolved: tonicNamespace,
+          }
+        : undefined;
+
+      // Build availableTranspositions (taswīr only)
+      const availableTranspositionsData = transpositions
+        .filter((t) => t.transposition)
+        .map((t) => {
+          const tonicNoteName = t.ascendingPitchClasses[0].noteName;
+          const fullMaqamName = t.name;
+          return {
+            idName: standardizeText(fullMaqamName),
+            displayName: fullMaqamName,
+            ...(inArabic && { displayNameAr: getMaqamNameDisplayAr(fullMaqamName) }),
+            tonic: {
+              idName: standardizeText(tonicNoteName),
+              displayName: tonicNoteName,
+              ...(inArabic && { displayNameAr: getNoteNameDisplayAr(tonicNoteName) }),
+            },
+          };
+        });
+
+      const pitchClassesInSingleOctave = tuningSystem.getOriginalPitchClassValues().length;
+
+      const comparisonItem: Record<string, unknown> = {
+        tuningSystem: tuningSystemNamespace,
+        startingNote: startingNoteNamespace,
+        maqam: comparisonMaqamNamespace,
+        tonic: tonicNamespace,
+        transposition: transpositionDetails,
+        stats: {
+          tuningSystem: {
+            numberOfPitchClassesSingleOctave: pitchClassesInSingleOctave,
+            referenceFrequency,
+          },
+          maqam: {
+            numberOfPitchClasses: selectedTransposition.ascendingPitchClasses.length,
+            isOctaveRepeating: selectedTransposition.ascendingPitchClasses.length <= 7,
+          },
+        },
+        availableTranspositions: availableTranspositionsData,
         pitchData: {
-          ascending: formatPitchData(selectedTransposition.ascendingPitchClasses, pitchClassDataType, false, inArabic),
-          descending: formatPitchData(selectedTransposition.descendingPitchClasses, pitchClassDataType, true, inArabic)
+          ascending: formatPitchData(
+            selectedTransposition.ascendingPitchClasses,
+            pitchClassDataType,
+            false,
+            inArabic
+          ),
+          descending: formatPitchData(
+            selectedTransposition.descendingPitchClasses,
+            pitchClassDataType,
+            true,
+            inArabic
+          ),
         },
         ajnas: {
           ascending: ascendingAjnasObject,
-          descending: descendingAjnasObject
-        }
+          descending: descendingAjnasObject,
+        },
+        parameters: {
+          pitchClassDataType,
+          includeIntervals,
+          transposeTo: transposeToNote || null,
+        },
+        links: buildLinksNamespace({
+          detail: `/api/maqamat/${maqam.getIdName()}?tuningSystem=${encodeURIComponent(tuningSystem.getId())}&startingNote=${encodeURIComponent(selectedStartingNote)}&pitchClassDataType=${encodeURIComponent(pitchClassDataType)}&includeIntervals=${includeIntervals ? "true" : "false"}${transposeToNote ? `&transposeTo=${encodeURIComponent(transposeToNote)}` : ""}`,
+          availability: `/api/maqamat/${maqam.getIdName()}/availability`,
+        }),
       };
 
       if (includeIntervals) {
-        result.intervals = {
-          ascending: formatIntervalData(selectedTransposition.ascendingPitchClassIntervals, pitchClassDataType),
-          descending: formatIntervalData(selectedTransposition.descendingPitchClassIntervals, pitchClassDataType)
+        comparisonItem.intervals = {
+          ascending: formatIntervalData(
+            selectedTransposition.ascendingPitchClassIntervals,
+            pitchClassDataType
+          ),
+          descending: formatIntervalData(
+            selectedTransposition.descendingPitchClassIntervals,
+            pitchClassDataType
+          ),
         };
       }
 
-      comparisonResults.push(result);
+      comparisonResults.push(comparisonItem);
     }
 
-    const response = NextResponse.json({
-      maqam: {
+    const successfulComparisons = comparisonResults.filter(
+      (r) => !r.error && !r.note
+    ).length;
+    const unavailableStartingNotes = comparisonResults.filter(
+      (r) => r.note !== undefined
+    ).length;
+    const failedComparisons = comparisonResults.filter(
+      (r) => r.error !== undefined
+    ).length;
+
+    const comparisonsPayload = buildListResponse(comparisonResults, {
+      meta: {
+        totalComparisons: comparisonResults.length,
+        successfulComparisons,
+        unavailableStartingNotes,
+        failedComparisons,
+      },
+    });
+
+    const maqamSummary = buildEntityNamespace(
+      {
         id: maqam.getId(),
         idName: maqam.getIdName(),
         displayName: maqam.getName(),
-        version: maqam.getVersion(),
-        ...(inArabic && { displayNameAr: getMaqamNameDisplayAr(maqam.getName()) })
       },
-      comparisons: comparisonResults,
-      meta: {
-        totalComparisons: comparisons.length,
-        successfulComparisons: comparisonResults.filter(r => !r.error).length,
-        failedComparisons: comparisonResults.filter(r => r.error).length
+      {
+        version: maqam.getVersion(),
+        inArabic,
+        displayNameAr: inArabic ? getMaqamNameDisplayAr(maqam.getName()) : undefined,
       }
+    );
+
+    const tuningSystemsParamNamespace = buildStringArrayNamespace(
+      tuningSystemIds.map((id) => standardizeText(id)),
+      {
+        displayNames: tuningSystemIds,
+      }
+    );
+
+    const startingNotesParamNamespace = buildStringArrayNamespace(
+      startingNoteInputs.map((n) => standardizeText(n)),
+      {
+        displayNames: startingNoteInputs,
+        inArabic,
+        displayNamesAr: inArabic
+          ? startingNoteInputs.map((n) => getNoteNameDisplayAr(n))
+          : undefined,
+      }
+    );
+
+    const response = NextResponse.json({
+      maqam: maqamSummary,
+      comparisons: comparisonsPayload,
+      parameters: {
+        tuningSystems: tuningSystemsParamNamespace,
+        startingNotes: startingNotesParamNamespace,
+        pitchClassDataType,
+        includeIntervals,
+        transposeTo: transposeToNote || null,
+      },
+      links: buildLinksNamespace({
+        self: getCanonicalSelfUrl(request),
+        detail: `/api/maqamat/${maqam.getIdName()}`,
+        availability: `/api/maqamat/${maqam.getIdName()}/availability`,
+      }),
     });
 
     return addCorsHeaders(response);
