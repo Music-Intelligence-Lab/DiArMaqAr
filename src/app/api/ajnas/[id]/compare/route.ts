@@ -7,6 +7,8 @@ import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
 import { parseInArabic, getJinsNameDisplayAr, getNoteNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
 import NoteName, { getNoteNameIndexAndOctave } from "@/models/NoteName";
+import type TuningSystem from "@/models/TuningSystem";
+import type { Jins } from "@/models/Jins";
 import {
   buildEntityNamespace,
   buildIdentifierNamespace,
@@ -210,6 +212,61 @@ export async function GET(
       );
     }
 
+    // File-local helpers — close over `inArabic` so every per-cell branch
+    // that needs a full tuning-system or starting-note namespace can share
+    // one body instead of repeating the ~20-line construction block.
+    const buildTSNamespaceFull = (ts: TuningSystem) =>
+      buildEntityNamespace(
+        {
+          id: ts.getId(),
+          idName: standardizeText(ts.getId()),
+          displayName: ts.stringify(),
+        },
+        {
+          version: ts.getVersion(),
+          inArabic,
+          displayNameAr: inArabic
+            ? getTuningSystemDisplayNameAr(
+                ts.getCreatorArabic() || "",
+                ts.getCreatorEnglish() || "",
+                ts.getYear(),
+                ts.getTitleArabic() || "",
+                ts.getTitleEnglish() || ""
+              )
+            : undefined,
+        }
+      );
+
+    const buildCellSNNamespaceFull = (noteName: string) =>
+      buildIdentifierNamespace(
+        {
+          idName: standardizeText(noteName),
+          displayName: noteName,
+        },
+        {
+          inArabic,
+          displayAr: inArabic ? getNoteNameDisplayAr(noteName) : undefined,
+        }
+      );
+
+    const buildAvailableJinsTranspositions = (candidates: Jins[]) =>
+      candidates
+        .filter((t) => t.transposition)
+        .map((t) => {
+          const tonicNoteName = t.jinsPitchClasses[0].noteName;
+          const fullJinsName = t.name;
+          return {
+            idName: standardizeText(fullJinsName),
+            displayName: fullJinsName,
+            ...(inArabic && { displayNameAr: getJinsNameDisplayAr(fullJinsName) }),
+            tonic: {
+              idName: standardizeText(tonicNoteName),
+              displayName: tonicNoteName,
+              ...(inArabic && { displayNameAr: getNoteNameDisplayAr(tonicNoteName) }),
+            },
+          };
+        });
+
     // Validate intervals parameter (3-step validation: null -> empty string -> invalid value)
     let includeIntervals = true; // Default to true
     if (intervalsParam !== null) {
@@ -350,7 +407,7 @@ export async function GET(
     const comparisonResults = [];
     
     for (const comparison of comparisons) {
-      const { tuningSystem: tuningSystemId, startingNote: cellStartingNote, transposeTo: transposeToNote } = comparison;
+      const { tuningSystem: tuningSystemId, startingNote: cellStartingNote, transposeTo: cellTransposeTo } = comparison;
 
       // Find tuning system
       const tuningSystem = tuningSystems.find((ts) => standardizeText(ts.getId()) === standardizeText(tuningSystemId));
@@ -385,37 +442,8 @@ export async function GET(
       );
       
       if (!matchingSet) {
-        const tuningSystemNamespace = buildEntityNamespace(
-          {
-            id: tuningSystem.getId(),
-            idName: standardizeText(tuningSystem.getId()),
-            displayName: tuningSystem.stringify(),
-          },
-          {
-            version: tuningSystem.getVersion(),
-            inArabic,
-            displayNameAr: inArabic
-              ? getTuningSystemDisplayNameAr(
-                  tuningSystem.getCreatorArabic() || "",
-                  tuningSystem.getCreatorEnglish() || "",
-                  tuningSystem.getYear(),
-                  tuningSystem.getTitleArabic() || "",
-                  tuningSystem.getTitleEnglish() || ""
-                )
-              : undefined,
-          }
-        );
-
-        const requestedStartingNote = buildIdentifierNamespace(
-          {
-            idName: standardizeText(cellStartingNote),
-            displayName: cellStartingNote,
-          },
-          {
-            inArabic,
-            displayAr: inArabic ? getNoteNameDisplayAr(cellStartingNote) : undefined,
-          }
-        );
+        const tuningSystemNamespace = buildTSNamespaceFull(tuningSystem);
+        const requestedStartingNote = buildCellSNNamespaceFull(cellStartingNote);
 
         const validDisplayNames = noteNameSets.map((set) => set[0]);
         const validIdNames = validDisplayNames.map((name) => standardizeText(name));
@@ -445,41 +473,9 @@ export async function GET(
 
       // Check if jins is possible
       if (!jins.isJinsPossible(pitchClasses.map((pc) => pc.noteName))) {
-        const tuningSystemNamespace = buildEntityNamespace(
-          {
-            id: tuningSystem.getId(),
-            idName: standardizeText(tuningSystem.getId()),
-            displayName: tuningSystem.stringify(),
-          },
-          {
-            version: tuningSystem.getVersion(),
-            inArabic,
-            displayNameAr: inArabic
-              ? getTuningSystemDisplayNameAr(
-                  tuningSystem.getCreatorArabic() || "",
-                  tuningSystem.getCreatorEnglish() || "",
-                  tuningSystem.getYear(),
-                  tuningSystem.getTitleArabic() || "",
-                  tuningSystem.getTitleEnglish() || ""
-                )
-              : undefined,
-          }
-        );
-
-        const startingNoteNamespace = buildIdentifierNamespace(
-          {
-            idName: standardizeText(selectedStartingNote),
-            displayName: selectedStartingNote,
-          },
-          {
-            inArabic,
-            displayAr: inArabic ? getNoteNameDisplayAr(selectedStartingNote) : undefined,
-          }
-        );
-
         comparisonResults.push({
-          tuningSystem: tuningSystemNamespace,
-          startingNote: startingNoteNamespace,
+          tuningSystem: buildTSNamespaceFull(tuningSystem),
+          startingNote: buildCellSNNamespaceFull(selectedStartingNote),
           error: `Jins '${jins.getName()}' cannot be realized in this tuning system configuration`,
         });
         continue;
@@ -500,64 +496,17 @@ export async function GET(
 
       // Find specific transposition if requested
       let selectedTransposition = canonicalTahlil ?? transpositions[0];
-      if (transposeToNote) {
+      if (cellTransposeTo) {
         const found = transpositions.find(
-          (t) => standardizeText(t.jinsPitchClasses[0].noteName) === standardizeText(transposeToNote)
+          (t) => standardizeText(t.jinsPitchClasses[0].noteName) === standardizeText(cellTransposeTo)
         );
         if (!found) {
-          const tuningSystemNamespace = buildEntityNamespace(
-            {
-              id: tuningSystem.getId(),
-              idName: standardizeText(tuningSystem.getId()),
-              displayName: tuningSystem.stringify(),
-            },
-            {
-              version: tuningSystem.getVersion(),
-              inArabic,
-              displayNameAr: inArabic
-                ? getTuningSystemDisplayNameAr(
-                    tuningSystem.getCreatorArabic() || "",
-                    tuningSystem.getCreatorEnglish() || "",
-                    tuningSystem.getYear(),
-                    tuningSystem.getTitleArabic() || "",
-                    tuningSystem.getTitleEnglish() || ""
-                  )
-                : undefined,
-            }
-          );
-
-          const startingNoteNamespace = buildIdentifierNamespace(
-            {
-              idName: standardizeText(selectedStartingNote),
-              displayName: selectedStartingNote,
-            },
-            {
-              inArabic,
-              displayAr: inArabic ? getNoteNameDisplayAr(selectedStartingNote) : undefined,
-            }
-          );
-
-          const availableTranspositionsData = transpositions.filter((t) => t.transposition).map((t) => {
-            const tonicNoteName = t.jinsPitchClasses[0].noteName;
-            const fullJinsName = t.name;
-            return {
-              idName: standardizeText(fullJinsName),
-              displayName: fullJinsName,
-              ...(inArabic && { displayNameAr: getJinsNameDisplayAr(fullJinsName) }),
-              tonic: {
-                idName: standardizeText(tonicNoteName),
-                displayName: tonicNoteName,
-                ...(inArabic && { displayNameAr: getNoteNameDisplayAr(tonicNoteName) }),
-              },
-            };
-          });
-
           comparisonResults.push({
-            tuningSystem: tuningSystemNamespace,
-            startingNote: startingNoteNamespace,
-            transposeTo: transposeToNote,
-            error: `Cannot transpose to '${transposeToNote}' in this tuning system`,
-            availableTranspositions: availableTranspositionsData,
+            tuningSystem: buildTSNamespaceFull(tuningSystem),
+            startingNote: buildCellSNNamespaceFull(selectedStartingNote),
+            transposeTo: cellTransposeTo,
+            error: `Cannot transpose to '${cellTransposeTo}' in this tuning system`,
+            availableTranspositions: buildAvailableJinsTranspositions(transpositions),
           });
           continue;
         }
@@ -573,37 +522,8 @@ export async function GET(
 
       const referenceFrequency = tuningSystem.getReferenceFrequencies()[selectedStartingNote] ?? tuningSystem.getDefaultReferenceFrequency();
 
-      const tuningSystemNamespace = buildEntityNamespace(
-        {
-          id: tuningSystem.getId(),
-          idName: standardizeText(tuningSystem.getId()),
-          displayName: tuningSystem.stringify(),
-        },
-        {
-          version: tuningSystem.getVersion(),
-          inArabic,
-          displayNameAr: inArabic
-            ? getTuningSystemDisplayNameAr(
-                tuningSystem.getCreatorArabic() || "",
-                tuningSystem.getCreatorEnglish() || "",
-                tuningSystem.getYear(),
-                tuningSystem.getTitleArabic() || "",
-                tuningSystem.getTitleEnglish() || ""
-              )
-            : undefined,
-        }
-      );
-
-      const startingNoteNamespace = buildIdentifierNamespace(
-        {
-          idName: standardizeText(selectedStartingNote),
-          displayName: selectedStartingNote,
-        },
-        {
-          inArabic,
-          displayAr: inArabic ? getNoteNameDisplayAr(selectedStartingNote) : undefined,
-        }
-      );
+      const tuningSystemNamespace = buildTSNamespaceFull(tuningSystem);
+      const startingNoteNamespace = buildCellSNNamespaceFull(selectedStartingNote);
 
       const comparisonJinsNamespace = buildEntityNamespace(
         {
@@ -647,22 +567,6 @@ export async function GET(
           }
         : undefined;
 
-      // Build availableTranspositions with full jins names (taswīr only)
-      const availableTranspositionsData = transpositions.filter((t) => t.transposition).map((t) => {
-        const tonicNoteName = t.jinsPitchClasses[0].noteName;
-        const fullJinsName = t.name;
-        return {
-          idName: standardizeText(fullJinsName),
-          displayName: fullJinsName,
-          ...(inArabic && { displayNameAr: getJinsNameDisplayAr(fullJinsName) }),
-          tonic: {
-            idName: standardizeText(tonicNoteName),
-            displayName: tonicNoteName,
-            ...(inArabic && { displayNameAr: getNoteNameDisplayAr(tonicNoteName) }),
-          },
-        };
-      });
-
       const comparisonItem: any = {
         tuningSystem: tuningSystemNamespace,
         startingNote: startingNoteNamespace,
@@ -678,15 +582,15 @@ export async function GET(
             numberOfPitchClasses: selectedTransposition.jinsPitchClasses.length,
           },
         },
-        availableTranspositions: availableTranspositionsData,
+        availableTranspositions: buildAvailableJinsTranspositions(transpositions),
         pitchData: formatPitchData(selectedTransposition.jinsPitchClasses, pitchClassDataType, inArabic),
         parameters: {
           pitchClassDataType,
           includeIntervals,
-          transposeTo: transposeToNote || null,
+          transposeTo: cellTransposeTo || null,
         },
         links: buildLinksNamespace({
-          detail: `/api/ajnas/${jins.getIdName()}?tuningSystem=${encodeURIComponent(tuningSystem.getId())}&startingNote=${encodeURIComponent(selectedStartingNote)}&pitchClassDataType=${encodeURIComponent(pitchClassDataType)}&includeIntervals=${includeIntervals ? "true" : "false"}${transposeToNote ? `&transposeTo=${encodeURIComponent(transposeToNote)}` : ""}`,
+          detail: `/api/ajnas/${jins.getIdName()}?tuningSystem=${encodeURIComponent(tuningSystem.getId())}&startingNote=${encodeURIComponent(selectedStartingNote)}&pitchClassDataType=${encodeURIComponent(pitchClassDataType)}&includeIntervals=${includeIntervals ? "true" : "false"}${cellTransposeTo ? `&transposeTo=${encodeURIComponent(cellTransposeTo)}` : ""}`,
           availability: `/api/ajnas/${jins.getIdName()}/availability`,
         }),
       };
