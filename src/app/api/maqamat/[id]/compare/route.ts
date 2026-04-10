@@ -465,8 +465,18 @@ export async function GET(
       // Calculate transpositions
       const transpositions = calculateMaqamTranspositions(pitchClasses, ajnas, maqam, true, 5);
 
+      // Prefer the tahlil whose tonic exactly matches the canonical tonic note
+      // name (same note, same octave). `calculateMaqamTranspositions` picks its
+      // tahlil by modal slot, which can land on `qarār dūgāh` when `dūgāh` also
+      // exists in the tuning system — but the caller asked for the canonical
+      // maqām, so we surface the canonical-octave form when it's available.
+      const canonicalTonic = maqam.getAscendingNoteNames()[0];
+      const canonicalTahlil = transpositions.find(
+        (t) => t.ascendingPitchClasses[0].noteName === canonicalTonic
+      );
+
       // Find specific transposition if requested
-      let selectedTransposition = transpositions[0]; // Default to tahlil
+      let selectedTransposition = canonicalTahlil ?? transpositions[0];
       if (transposeToNote) {
         const found = transpositions.find(
           (t) => standardizeText(t.ascendingPitchClasses[0].noteName) === standardizeText(transposeToNote)
