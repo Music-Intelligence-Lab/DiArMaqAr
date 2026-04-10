@@ -126,7 +126,6 @@ link to filter maqāmāt by family via GET /maqamat?filterByFamily={idName}.
   - Example: `ibnsina_1037`
 - `startingNote` **(required)**: Starting note name (URL-safe, diacritics-insensitive) - Type: `string`
   - Example: `yegah`
-  - Note: JSON responses use `startingNoteName` on nested objects; the **query** parameter name is `startingNote` (not `startingNoteName`).
 - `includeArabic` (optional): Include Arabic display names in family objects - Type: `string` - Valid values: `true`, `false` - Default: `false`
 
 **Example:**
@@ -213,7 +212,7 @@ Requirements:
   - Example: `true`
 - `includeModulations` (optional): Include modulation possibilities to other maqāmāt and ajnās - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
-- `includeModulations8vb` (optional): Include available modulations an octave below - Type: `string` - Valid values: `true`, `false` - Default: `false`. This is the only query parameter name for lower-octave modulations; other names return `400`.
+- `includeModulations8vb` (optional): Include available modulations an octave below - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 - `includeSuyur` (optional): Include suyūr (melodic paths) data - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
@@ -284,9 +283,12 @@ curl "https://diarmaqar.netlify.app/api/maqamat/maqam_bayyat/availability?includ
 GET /maqamat/{idName}/transpositions
 ```
 
-List all available transposition options for a maqām within a specific tuning system and starting note.
+Lists distinct transpositions (taswīr) for a maqām within a specific tuning system and starting note.
+The analytical form (tahlīl) is excluded. Octave/register variants of the same modal degree
+(e.g. qarār dūgāh vs dūgāh vs muḥayyar) are not treated as distinct taswīr.
 
-Returns all tonic transpositions that are feasible under the tuning system across all octaves.
+If there are no distinct taswīr for this tuning-system + starting-note combination, this endpoint returns `422`
+with an `{ error, hint }` payload (it does not return a 200 with an empty list).
 
 
 **Path Parameters:**
@@ -316,22 +318,33 @@ curl "https://diarmaqar.netlify.app/api/maqamat/maqam_hijaz/transpositions?tunin
 **Response:** Transpositions retrieved successfully
 
 
-### Compare maqām data across multiple tuning systems {#compareMaqam}
+### Compare maqām data across multiple tuning systems and starting notes {#compareMaqam}
 
 ```
 GET /maqamat/{idName}/compare
 ```
 
-Compare comprehensive maqām data across multiple tuning systems and starting note configurations in a single request.
+Compare comprehensive maqām data across multiple tuning systems **and** multiple starting
+notes in a single request. Given `N` tuning systems and `M` starting notes, the response
+contains the Cartesian product of `N × M` comparison cells in user-supplied order
+(outer loop = `tuningSystems`, inner loop = `startingNotes`).
 
-Returns comprehensive data similar to `/maqamat/{idName}` but without modulations and suyur. Each comparison includes:
-- Pitch class data (ascending and descending sequences)
-- Optional interval data
-- Ajnās (constituent melodic structures) mapping
-- Maqām metadata (family classification, tonic, transposition status)
-- Context information (tuning system, starting note, reference frequency)
+Each successful cell includes ascending/descending pitch class sequences, optional
+interval data, ajnās mapping, family classification, and transposition details. When a
+requested starting note is not available in a given tuning system the cell carries an
+informational `note` field (not `error`) together with `validStartingNotes`. When a hard
+failure occurs (tuning system not found, maqām not realizable in this configuration, or a
+`transposeTo` target that is unreachable) the cell carries an `error` field. The overall
+response is always HTTP 200 — per-cell outcomes do not affect the HTTP status.
 
-This endpoint is ideal for comparative musicological analysis across different historical tuning systems.
+The following invariant always holds:
+
+```
+successfulComparisons + unavailableStartingNotes + failedComparisons === totalComparisons
+```
+
+This endpoint is ideal for comparative musicological analysis across historical tuning
+systems and/or multiple modal transpositions.
 
 
 **Path Parameters:**
@@ -339,32 +352,58 @@ This endpoint is ideal for comparative musicological analysis across different h
   - Example: `maqam_bayyat`
 
 **Query Parameters:**
-- `tuningSystems` **(required)**: Comma-separated tuning system IDs. - Type: `string`
-  - Example: `cairocongresstuningcommittee_1929,alsabbagh_1954`
-- `startingNote` **(required)**: Starting note name (URL-safe, diacritics-insensitive) - applies to all tuning systems. - Type: `string`
+- `tuningSystems` **(required)**: Comma-separated list of tuning system IDs.
+  product of these tuning systems with the requested `startingNotes` (outer loop =
+  `tuningSystems`, inner loop = `startingNotes`).
+ - Type: `string`
+  - Example: `alsabbagh_1954,ibnsina_1037`
+- `startingNotes` (optional): Comma-separated list of starting note names (URL-safe, diacritics-insensitive).
+  response contains `N × M` cells for `N` tuning systems × `M` starting notes, in
+  user-supplied order. If a starting note is not available in a given tuning system
+  that cell carries an informational `note` field (with a `validStartingNotes`
+  namespace) rather than pitch data. Either `startingNotes` (plural, preferred) or the deprecated singular `startingNote`
+  must be provided. When both are supplied, `startingNotes` wins and `startingNote` is
+  silently ignored.
+ - Type: `string`
+  - Example: `rast,yegah,ushayran`
+- `startingNote` (optional): **DEPRECATED.** Use `startingNotes` (plural) instead.
+  alias for backwards compatibility. Silently ignored when `startingNotes` is also
+  provided.
+ - Type: `string`
   - Example: `rast`
-- `pitchClassDataType` **(required)**: Output format for pitch class data - Type: `string` - Valid values: `all`, `englishName`, `fraction`, `cents`, `decimalRatio`, ... (13 total)
+- `pitchClassDataType` (optional): Output format for pitch class data. Defaults to `all` when omitted. - Type: `string` - Valid values: `all`, `englishName`, `fraction`, `cents`, `decimalRatio`, ... (13 total) - Default: `all`
   - Example: `cents`
-- `includeIntervals` (optional): Include interval data between pitch classes - Type: `string` - Valid values: `true`, `false` - Default: `false`
+- `includeIntervals` (optional): Whether to include interval data between adjacent pitch classes on each cell.
+Defaults to `"true"` when omitted..
+  Defaults to `"true"` when omitted.
+ - Type: `string` - Valid values: `true`, `false` - Default: `true`
   - Example: `true`
-- `transposeTo` (optional): Transpose to specific tonic note (applies to all tuning systems) - Type: `string`
+- `transposeTo` (optional): Transpose every successful cell to the given tonic note (applies to every cell in the
+Cartesian product).
+  Cartesian product). If the requested target is not reachable in a given cell the cell
+  carries an `error` plus an `availableTranspositions` list.
+ - Type: `string`
   - Example: `nawa`
 - `includeArabic` (optional): Return bilingual responses with Arabic script when true.
   - All English/transliteration fields remain unchanged
-  - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
-  - Note names, maqām names, and jins names get Arabic versions in *Ar fields
-  - Comments get Arabic versions in commentsAr if available
-  - Tuning system display names get Arabic versions in displayNameAr if available
-  - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
+  - Arabic versions are added with `Ar` suffix (e.g., `displayNameAr`, `noteNameDisplayAr`)
+  - Note names, maqām names, and jins names get Arabic versions in `*Ar` fields
+  - Tuning system display names get Arabic versions in `displayNameAr` if available
  - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/maqamat/maqam_bayyat/compare?tuningSystems=cairocongresstuningcommittee_1929,alsabbagh_1954&startingNote=rast&pitchClassDataType=cents&includeArabic=true"
+curl "https://diarmaqar.netlify.app/api/maqamat/maqam_bayyat/compare?tuningSystems=alsabbagh_1954,ibnsina_1037&includeArabic=true"
 ```
 
-**Response:** Comparison data retrieved successfully
+**Response:** Comparison data retrieved successfully. Note that the response is always HTTP 200
+regardless of per-cell outcomes; individual failures (missing starting note, tuning
+system not found, maqām not realizable, unreachable transposeTo) are reported on the
+respective cell via `note` or `error` fields. The counters
+`successfulComparisons + unavailableStartingNotes + failedComparisons` always equal
+`totalComparisons`.
+
 
 
 ### Classify maqāmāt by 12-pitch-class sets {#classifyMaqamat12PitchClassSets}
@@ -671,7 +710,7 @@ Requirements:
 - `options` (optional): When true, returns available parameter options instead of jins data.
   - Tuning system and starting note are required for all requests (both data retrieval and discovery mode)
   - These are fundamental to all pitch class calculations and calculate valid starting note options and transposition tonics
-  - Mutually exclusive with data-returning parameters (transpose to, include modulations, include lower octave modulations, pitch class data type, `includeIntervals`)
+  - Mutually exclusive with data-returning parameters (transpose to, include modulations, include lower octave modulations, pitch class data type, intervals)
   - Transposition options are dynamically calculated based on the specific jins, tuning system, and starting note combination
   - Only tonics where the jins can be validly transposed (preserving interval pattern) are included, not all possible pitch classes
   - If data-returning parameters are provided, returns 400 Bad Request error with details about conflicting parameters
@@ -756,9 +795,12 @@ curl "https://diarmaqar.netlify.app/api/ajnas/jins_rast/availability?includeArab
 GET /ajnas/{idName}/transpositions
 ```
 
-List all available transposition options for a jins within a specific tuning system and starting note.
+Lists distinct transpositions (taswīr) for a jins within a specific tuning system and starting note.
+The analytical form (tahlīl) is excluded. Octave/register variants of the same modal degree
+(e.g. qarār dūgāh vs dūgāh vs muḥayyar) are not treated as distinct taswīr.
 
-Returns all tonic transpositions that are feasible under the tuning system across all octaves.
+If there are no distinct taswīr for this tuning-system + starting-note combination, this endpoint returns `422`
+with an `{ error, hint }` payload (it does not return a 200 with an empty list).
 
 
 **Path Parameters:**
@@ -788,54 +830,92 @@ curl "https://diarmaqar.netlify.app/api/ajnas/jins_bayyat/transpositions?tuningS
 **Response:** Transpositions retrieved successfully
 
 
-### Compare jins data across multiple tuning systems {#compareJins}
+### Compare jins data across multiple tuning systems and starting notes {#compareJins}
 
 ```
 GET /ajnas/{idName}/compare
 ```
 
-Compare comprehensive jins data across multiple tuning systems and starting note configurations in a single request.
+Compare comprehensive jins data across multiple tuning systems **and** multiple starting
+notes in a single request. Given `N` tuning systems and `M` starting notes, the response
+contains the Cartesian product of `N × M` comparison cells in user-supplied order
+(outer loop = `tuningSystems`, inner loop = `startingNotes`).
 
-Returns comprehensive data similar to `/ajnas/{idName}` but without modulations. Each comparison includes:
-- Pitch class data (single sequence, as ajnās are unidirectional)
-- Optional interval data
-- Jins metadata (tonic, transposition status)
-- Context information (tuning system, starting note, reference frequency)
+Each successful cell includes the (unidirectional) pitch class sequence, optional
+interval data, and transposition details. When a requested starting note is not available
+in a given tuning system the cell carries an informational `note` field (not `error`)
+together with `validStartingNotes`. When a hard failure occurs (tuning system not found,
+jins not realizable in this configuration, or an unreachable `transposeTo` target) the
+cell carries an `error` field. The overall response is always HTTP 200 — per-cell
+outcomes do not affect the HTTP status.
 
-This endpoint is ideal for comparative musicological analysis of melodic structures across different historical tuning systems.
+The following invariant always holds:
+
+```
+successfulComparisons + unavailableStartingNotes + failedComparisons === totalComparisons
+```
+
+This endpoint is ideal for comparative musicological analysis of melodic structures
+across historical tuning systems and/or multiple modal transpositions.
 
 
 **Path Parameters:**
 - `idName`: URL-safe jins identifier (string) **(required)**
-  - Example: `jins_segah`
+  - Example: `jins_bayyat`
 
 **Query Parameters:**
-- `tuningSystems` **(required)**: Comma-separated tuning system IDs. - Type: `string`
-  - Example: `alfarabi_950g,meshshaqa_1899`
-- `startingNote` **(required)**: Starting note name (URL-safe, diacritics-insensitive) - applies to all tuning systems. - Type: `string`
+- `tuningSystems` **(required)**: Comma-separated list of tuning system IDs.
+  product of these tuning systems with the requested `startingNotes` (outer loop =
+  `tuningSystems`, inner loop = `startingNotes`).
+ - Type: `string`
+  - Example: `alsabbagh_1954,ibnsina_1037`
+- `startingNotes` (optional): Comma-separated list of starting note names (URL-safe, diacritics-insensitive).
+  response contains `N × M` cells for `N` tuning systems × `M` starting notes, in
+  user-supplied order. If a starting note is not available in a given tuning system
+  that cell carries an informational `note` field (with a `validStartingNotes`
+  namespace) rather than pitch data. Either `startingNotes` (plural, preferred) or the deprecated singular `startingNote`
+  must be provided. When both are supplied, `startingNotes` wins and `startingNote` is
+  silently ignored.
+ - Type: `string`
+  - Example: `rast,yegah,ushayran`
+- `startingNote` (optional): **DEPRECATED.** Use `startingNotes` (plural) instead.
+  alias for backwards compatibility. Silently ignored when `startingNotes` is also
+  provided.
+ - Type: `string`
   - Example: `ushayran`
-- `pitchClassDataType` **(required)**: Output format for pitch class data - Type: `string` - Valid values: `all`, `englishName`, `fraction`, `cents`, `decimalRatio`, ... (13 total)
+- `pitchClassDataType` (optional): Output format for pitch class data. Defaults to `all` when omitted. - Type: `string` - Valid values: `all`, `englishName`, `fraction`, `cents`, `decimalRatio`, ... (13 total) - Default: `all`
   - Example: `cents`
-- `includeIntervals` (optional): Include interval data between pitch classes - Type: `string` - Valid values: `true`, `false` - Default: `false`
+- `includeIntervals` (optional): Whether to include interval data between adjacent pitch classes on each cell.
+Defaults to `"true"` when omitted..
+  Defaults to `"true"` when omitted.
+ - Type: `string` - Valid values: `true`, `false` - Default: `true`
   - Example: `true`
-- `transposeTo` (optional): Transpose to specific tonic note (applies to all tuning systems) - Type: `string`
+- `transposeTo` (optional): Transpose every successful cell to the given tonic note (applies to every cell in the
+Cartesian product).
+  Cartesian product). If the requested target is not reachable in a given cell the cell
+  carries an `error` plus an `availableTranspositions` list.
+ - Type: `string`
   - Example: `nawa`
 - `includeArabic` (optional): Return bilingual responses with Arabic script when true.
   - All English/transliteration fields remain unchanged
-  - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
-  - Note names, maqām names, and jins names get Arabic versions in *Ar fields
-  - Comments get Arabic versions in commentsAr if available
-  - Tuning system display names get Arabic versions in displayNameAr if available
-  - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
+  - Arabic versions are added with `Ar` suffix (e.g., `displayNameAr`, `noteNameDisplayAr`)
+  - Note names and jins names get Arabic versions in `*Ar` fields
+  - Tuning system display names get Arabic versions in `displayNameAr` if available
  - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/ajnas/jins_segah/compare?tuningSystems=alfarabi_950g,meshshaqa_1899&startingNote=ushayran&pitchClassDataType=cents&includeArabic=true"
+curl "https://diarmaqar.netlify.app/api/ajnas/jins_bayyat/compare?tuningSystems=alsabbagh_1954,ibnsina_1037&includeArabic=true"
 ```
 
-**Response:** Comparison data retrieved successfully
+**Response:** Comparison data retrieved successfully. Note that the response is always HTTP 200
+regardless of per-cell outcomes; individual failures (missing starting note, tuning
+system not found, jins not realizable, unreachable transposeTo) are reported on the
+respective cell via `note` or `error` fields. The counters
+`successfulComparisons + unavailableStartingNotes + failedComparisons` always equal
+`totalComparisons`.
+
 
 
 ---
@@ -901,13 +981,13 @@ across all octaves with full formatting options.
 - `pitchClassDataType` (optional): Pitch class data format.
   - `all` returns all available fields including englishName, solfege, abjadName, fraction, cents, decimalRatio, stringLength, frequency, fretDivision, midiNoteDecimal, midiNotePlusCentsDeviation, centsDeviation, ipnReferenceNoteName
   - Use a specific value to return only that field plus minimal identifiers
- - Type: `string` - Valid values: `all`, `englishName`, `solfege`, `fraction`, `cents`, ... (14 total)
+ - Type: `string` - Valid values: `all`, `englishName`, `solfege`, `fraction`, `cents`, ... (14 total) - Default: `all`
   - Example: `all`
 - `octave` (optional): Filter by octave number.
   Use a specific octave number (0, 1, 2, 3) to filter to that octave only.
- - Type: `string` - Valid values: `all`, `0`, `1`, `2`, `3`
+ - Type: `string` - Valid values: `all`, `0`, `1`, `2`, `3` - Default: `all`
   - Example: `all`
-- `includeSources` (optional): Include bibliographic source references (sourceId and page) for the tuning system - Type: `string` - Valid values: `true`, `false`
+- `includeSources` (optional): Include bibliographic source references (sourceId and page) for the tuning system - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 - `includeArabic` (optional): Return bilingual responses with Arabic script when true.
   - All English/transliteration fields remain unchanged
@@ -959,9 +1039,12 @@ of PAO note name idNames (URL-safe identifiers for scale degrees)..
   of PAO note name idNames (URL-safe identifiers for scale degrees).
  - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
-- `includeDegreeDetails` (optional): When true (and when `includeMaqamDegrees=true`), `maqamDegrees.ascending` /
-`maqamDegrees.descending` are arrays of objects `{ noteName, englishName, solfege }` instead of note-name strings. The same transformation applies to `transpositions[].maqamDegrees`.
-- Type: `string` - Valid values: `true`, `false` - Default: `false`
+- `includeDegreeDetails` (optional): When true (and when includeMaqamDegrees=true), the endpoint returns `maqamDegrees.ascending` /
+`maqamDegrees.descending` as arrays of objects `{ noteName, englishName, solfege }` instead of
+note-name strings.
+  `maqamDegrees.descending` as arrays of objects `{ noteName, englishName, solfege }` instead of
+  note-name strings. The same transformation applies to `transpositions[].maqamDegrees`.
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 - `includeTranspositions` (optional): When true, each maqām in data includes a `transpositions` array with the other transpositions
 (excluding the base tonic).
@@ -1056,7 +1139,7 @@ Supports:
   - Use "all" to include all available starting notes for that tuning system (returns array of results, one per starting note) Note: Since note names are unique per octave, the note name itself identifies the octave. No octave parameter is needed. Use `yegah` for IbnSina/Meshshaqa, `ushayran` for al-Farabi/al-Kindi, `rast` for CairoCongress/al-Sabbagh
  - Type: `string`
   - Example: `rast`
-- `pitchClassDataType` **(required)**: Pitch class data format - Type: `string` - Valid values: `all`, `abjadName`, `englishName`, `solfege`, `fraction`, ... (14 total) - Default: `cents`
+- `pitchClassDataType` (optional): Pitch class data format (defaults to `all` when omitted, matching the handler) - Type: `string` - Valid values: `all`, `abjadName`, `englishName`, `solfege`, `fraction`, ... (14 total) - Default: `all`
   - Example: `cents`
 - `includeArabic` (optional): Return bilingual responses with Arabic script when true.
   - All English/transliteration fields remain unchanged
@@ -1070,7 +1153,7 @@ Supports:
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/pitch-classes/note-names/rast?pitchClassDataType=cents&includeArabic=true"
+curl "https://diarmaqar.netlify.app/api/pitch-classes/note-names/rast?includeArabic=true"
 ```
 
 **Response:** Pitch class data retrieved successfully
@@ -1135,7 +1218,7 @@ Returns comprehensive data for each tuning system including:
   - Example: `meshshaqa_1899,cairocongresstuningcommittee_1929`
 - `startingNote` **(required)**: Starting note (applies to all tuning systems), or "all" to include all available starting notes for each tuning system. - Type: `string`
   - Example: `yegah`
-- `pitchClassDataType` **(required)**: Pitch class data format - Type: `string` - Valid values: `all`, `abjadName`, `englishName`, `solfege`, `fraction`, ... (14 total) - Default: `cents`
+- `pitchClassDataType` (optional): Pitch class data format (defaults to `all` when omitted, matching the handler) - Type: `string` - Valid values: `all`, `abjadName`, `englishName`, `solfege`, `fraction`, ... (14 total) - Default: `all`
   - Example: `cents`
 - `includeArabic` (optional): Return bilingual responses with Arabic script when true.
   - All English/transliteration fields remain unchanged
@@ -1149,7 +1232,7 @@ Returns comprehensive data for each tuning system including:
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/pitch-classes/note-names/rast/compare?tuningSystems=meshshaqa_1899,cairocongresstuningcommittee_1929&startingNote=yegah&pitchClassDataType=cents&includeArabic=true"
+curl "https://diarmaqar.netlify.app/api/pitch-classes/note-names/rast/compare?tuningSystems=meshshaqa_1899,cairocongresstuningcommittee_1929&startingNote=yegah&includeArabic=true"
 ```
 
 **Response:** Comparison data retrieved successfully
