@@ -147,16 +147,38 @@ function formatIntervalData(intervals: any[], format: string) {
 
 /**
  * GET /api/ajnas/[id]/compare
- * 
- * Compare jins data across multiple tuning systems.
- * 
+ *
+ * Compare jins data across multiple tuning systems and starting notes.
+ * Returns the Cartesian product of tuningSystems × startingNotes in
+ * user-supplied TS-major order (outer loop = tuningSystems, inner loop
+ * = startingNotes), so N tuning systems × M starting notes → N*M cells.
+ *
  * Query parameters:
  * - tuningSystems (required): Comma-separated tuning system IDs
  *   Format: "ibnsina_1037,alfarabi_950g"
- * - startingNote (required): Starting note name (URL-safe, diacritics-insensitive) - applies to all tuning systems
- * - pitchClassDataType (required): Output format (all, cents, fraction, etc.)
- * - includeIntervals (optional): Include interval data ("true" or "false"; default true when omitted)
- * - transposeTo (optional): Transpose to specific tonic note (applies to all tuning systems)
+ * - startingNotes (required): Comma-separated starting note names
+ *   (URL-safe, diacritics-insensitive). Format: "rast,yegah,ushayran".
+ *   Either this or the deprecated singular `startingNote` must be
+ *   provided; if both are sent, `startingNotes` wins.
+ * - startingNote (deprecated alias): Single starting note, kept for
+ *   backwards compatibility. Silently ignored if `startingNotes` is set.
+ * - pitchClassDataType (optional): Output format (all, cents, fraction,
+ *   etc.). Default: "all".
+ * - includeIntervals (optional): Include interval data ("true" or
+ *   "false"; default true when omitted).
+ * - transposeTo (optional): Transpose to specific tonic note (applies
+ *   to every cell).
+ *
+ * Per-cell outcomes (all HTTP 200):
+ * - Success: cell has `pitchData` and related fields
+ * - `note`: starting note is not available in that tuning system
+ *   (informational, distinct from error); cell has a `note` string and
+ *   `validStartingNotes` namespace
+ * - `error`: hard failure (tuning system not found, jins not
+ *   realizable, transposeTo unreachable)
+ *
+ * The invariant `successfulComparisons + unavailableStartingNotes +
+ * failedComparisons === totalComparisons` always holds.
  */
 export async function GET(
   request: Request,
@@ -227,7 +249,7 @@ export async function GET(
             error: "tuningSystems parameter is required",
             message: "Provide comma-separated tuning system IDs",
             hint: 'Format: ?tuningSystems=ibnsina_1037,alfarabi_950g',
-            example: '/api/ajnas/jins_kurd/compare?tuningSystems=ibnsina_1037,alfarabi_950g&startingNote=yegah&pitchClassDataType=cents'
+            example: '/api/ajnas/jins_kurd/compare?tuningSystems=ibnsina_1037,alfarabi_950g&startingNotes=yegah&pitchClassDataType=cents'
           },
           { status: 400 }
         )

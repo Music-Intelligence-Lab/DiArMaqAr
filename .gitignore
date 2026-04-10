@@ -91,3 +91,6 @@ data/modulations/*
 
 # ai agent instructions
 .ai-agent-instructions/
+
+# superpowers specs and plans (local workflow artifacts)
+docs/superpowers/
