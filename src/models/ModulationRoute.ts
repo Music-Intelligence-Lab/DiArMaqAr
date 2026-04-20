@@ -74,13 +74,15 @@ export interface ModulationRoute {
   /** Number of modulation steps (hops) */
   hops: number;
   /** Ordered sequence of modulation steps */
-  path: ModulationStep[];
+  steps: ModulationStep[];
 }
 
 /**
  * Represents a complete journey including optional return path.
  */
 export interface ModulationJourney {
+  /** 1-based index within the enclosing totalPossibleRoutes.data array */
+  routeNumber: number;
   /** The outbound route from source to destination */
   outboundRoute: ModulationRoute;
   /** Optional return route back to source (when returnToStart=true) */

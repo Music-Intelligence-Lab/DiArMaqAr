@@ -392,10 +392,11 @@ function formatNode(node: MaqamNode, inArabic: boolean): any {
  */
 function formatJourney(journey: ModulationJourney, inArabic: boolean): any {
   const formatted: any = {
+    routeNumber: journey.routeNumber,
     totalHops: journey.totalHops,
     outboundRoute: {
       hops: journey.outboundRoute.hops,
-      path: journey.outboundRoute.path.map((step) => ({
+      steps: journey.outboundRoute.steps.map((step) => ({
         from: formatNode(step.from, inArabic),
         to: formatNode(step.to, inArabic),
         modulationDegree: step.modulationDegree,
@@ -407,7 +408,7 @@ function formatJourney(journey: ModulationJourney, inArabic: boolean): any {
   if (journey.returnRoute) {
     formatted.returnRoute = {
       hops: journey.returnRoute.hops,
-      path: journey.returnRoute.path.map((step) => ({
+      steps: journey.returnRoute.steps.map((step) => ({
         from: formatNode(step.from, inArabic),
         to: formatNode(step.to, inArabic),
         modulationDegree: step.modulationDegree,

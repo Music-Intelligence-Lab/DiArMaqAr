@@ -4305,10 +4305,11 @@ paths:
                     totalPossibleRoutes:
                       count: 1
                       data:
-                        - totalHops: 2
+                        - routeNumber: 1
+                          totalHops: 2
                           outboundRoute:
                             hops: 2
-                            path:
+                            steps:
                               - from:
                                   maqamId: "1"
                                   maqamIdName: "maqam_rast"
@@ -10258,13 +10259,13 @@ components:
       description: A complete route from source to target maqam
       required:
         - hops
-        - path
+        - steps
       properties:
         hops:
           type: integer
           description: Number of modulation steps
           example: 2
-        path:
+        steps:
           type: array
           description: Ordered sequence of modulation steps
           items:
@@ -10274,9 +10275,16 @@ components:
       type: object
       description: A complete journey including optional return path
       required:
+        - routeNumber
         - totalHops
         - outboundRoute
       properties:
+        routeNumber:
+          type: integer
+          description: |
+            1-based index of this route within `totalPossibleRoutes.data`. Lets
+            clients refer to a specific route unambiguously (e.g. "route 3").
+          example: 1
         totalHops:
           type: integer
           description: Total hops for the complete journey (outbound + return if applicable)

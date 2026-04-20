@@ -428,7 +428,7 @@ function bfsShortestPaths(
 ): ModulationRoute[] {
   // Handle same-node case: any start already in the target set
   for (const sk of startKeys) {
-    if (endKeys.has(sk)) return [{ hops: 0, path: [] }];
+    if (endKeys.has(sk)) return [{ hops: 0, steps: [] }];
   }
 
   // Standard multi-source/multi-target all-shortest-paths BFS: level-by-level
@@ -500,7 +500,7 @@ function bfsShortestPaths(
     if (startSet.has(nodeKey)) {
       routes.push({
         hops: reversedSteps.length,
-        path: [...reversedSteps].reverse(),
+        steps: [...reversedSteps].reverse(),
       });
       return;
     }
@@ -600,7 +600,7 @@ function combineSegmentRoutes(
 
         newCombined.push({
           hops: route.hops + nextRoute.hops,
-          path: [...route.path, ...nextRoute.path],
+          steps: [...route.steps, ...nextRoute.steps],
         });
       }
       if (newCombined.length >= limit) break;
@@ -836,8 +836,8 @@ export function findModulationRoutes(
     route: ModulationRoute,
     canonicalKey: string
   ): ModulationRoute => {
-    if (route.path.length === 0) return route;
-    const last = route.path[route.path.length - 1].to;
+    if (route.steps.length === 0) return route;
+    const last = route.steps[route.steps.length - 1].to;
     const reachedKey = createNodeKey(last.baseMaqamIdName, last.tonicId);
     if (reachedKey === canonicalKey) return route;
     const canonicalNode = graph.nodes.get(canonicalKey);
@@ -849,8 +849,8 @@ export function findModulationRoutes(
 
     return {
       hops: route.hops + 1,
-      path: [
-        ...route.path,
+      steps: [
+        ...route.steps,
         {
           from: last,
           to: canonicalNode,
@@ -928,6 +928,7 @@ export function findModulationRoutes(
       if (journeys.length >= limit) break;
 
       journeys.push({
+        routeNumber: journeys.length + 1,
         outboundRoute: outbound,
         returnRoute,
         totalHops: outbound.hops + (returnRoute?.hops || 0),
@@ -939,6 +940,7 @@ export function findModulationRoutes(
       if (journeys.length >= limit) break;
 
       journeys.push({
+        routeNumber: journeys.length + 1,
         outboundRoute: outbound,
         totalHops: outbound.hops,
       });
