@@ -18,6 +18,7 @@ import { getMaqamat, getTuningSystems, getAjnas } from "@/functions/import";
 import MaqamData, { Maqam, MaqamatModulations } from "@/models/Maqam";
 import JinsData from "@/models/Jins";
 import TuningSystemData from "@/models/TuningSystem";
+import NoteName, { getNoteNameIndexAndOctave } from "@/models/NoteName";
 import {
   ModulationGraph,
   ModulationEdge,
@@ -213,14 +214,29 @@ function buildModulationGraph(
       }
     };
 
-    // Add edges for each modulation category
+    // Add edges for each modulation category. For sixth-degree modulations,
+    // asc and desc rules are driven by the source's ascending vs descending
+    // pitch classes (al-Shawwā rule 6). When the source is symmetric — its
+    // descending sequence is the reverse of its ascending — both rules fire
+    // on the same notes and emit the same targets, producing duplicate edges
+    // (and therefore duplicate routes in the BFS output). Skip the
+    // `sixthDegreeDesc` emission in that case so the graph carries exactly
+    // one edge per (source, target, degree) for symmetric sources.
+    const asc = maqam.ascendingPitchClasses;
+    const desc = maqam.descendingPitchClasses;
+    const isSymmetric =
+      asc.length === desc.length &&
+      asc.every((pc, i) => pc.noteName === desc[desc.length - 1 - i].noteName);
+
     addEdges(modulations.modulationsOnFirstDegree, "I", "firstDegree");
     addEdges(modulations.modulationsOnThirdDegree, "III", "thirdDegree");
     addEdges(modulations.modulationsOnAltThirdDegree, "III", "altThirdDegree");
     addEdges(modulations.modulationsOnFourthDegree, "IV", "fourthDegree");
     addEdges(modulations.modulationsOnFifthDegree, "V", "fifthDegree");
     addEdges(modulations.modulationsOnSixthDegreeAsc, "VI", "sixthDegreeAsc");
-    addEdges(modulations.modulationsOnSixthDegreeDesc, "VI", "sixthDegreeDesc");
+    if (!isSymmetric) {
+      addEdges(modulations.modulationsOnSixthDegreeDesc, "VI", "sixthDegreeDesc");
+    }
     addEdges(modulations.modulationsOnSixthDegreeIfNoThird, "VI", "sixthDegreeIfNoThird");
 
     adjacencyList.set(sourceNodeKey, edges);
@@ -347,6 +363,52 @@ function findNodeKey(
 }
 
 /**
+ * Finds all node keys equivalent to a given (maqamIdName, tonicId) query.
+ *
+ * "Equivalent" here means musically register-equivalent: nodes that share the
+ * same modal tonic slot via `sameModalDegreeSlot` — e.g. maqām ḥijāz sitting
+ * on dūgāh, qarār dūgāh, and muḥayyar. These are three different graph nodes
+ * (different `tonicId`s, different incoming modulation edges) but all share
+ * `transposition=false` because register shift is not taṣwīr.
+ *
+ * When the caller specifies a `tonicId`, we return just the exact match (or
+ * an empty array). When no tonic is given, we return every non-transposition
+ * sibling so BFS can search for a path to any of them. This lets route
+ * queries like `fromMaqam=maqam_rast&toMaqam=maqam_hijaz` (no tonic) succeed
+ * whenever any register variant is reachable, even when the canonical
+ * non-transposition node (picked by `findNodeKey`) is in an unreachable
+ * partition of the graph.
+ */
+function findEquivalentNodeKeys(
+  graph: ModulationGraph,
+  maqamIdName: string,
+  tonicId?: string
+): string[] {
+  const normalizedMaqamIdName = standardizeText(maqamIdName);
+
+  if (tonicId) {
+    const key = createNodeKey(normalizedMaqamIdName, standardizeText(tonicId));
+    return graph.nodes.has(key) ? [key] : [];
+  }
+
+  // All non-transposition (register-equivalent) variants first
+  const nonTransposition: string[] = [];
+  for (const [key, node] of graph.nodes) {
+    if (node.baseMaqamIdName === normalizedMaqamIdName && !node.isTransposition) {
+      nonTransposition.push(key);
+    }
+  }
+  if (nonTransposition.length > 0) return nonTransposition;
+
+  // Fallback: any matching baseMaqamIdName (including transpositions)
+  const anyMatch: string[] = [];
+  for (const [key, node] of graph.nodes) {
+    if (node.baseMaqamIdName === normalizedMaqamIdName) anyMatch.push(key);
+  }
+  return anyMatch;
+}
+
+/**
  * BFS pathfinding between two nodes.
  * Returns all shortest paths (same hop count) up to the limit.
  *
@@ -359,31 +421,33 @@ function findNodeKey(
  */
 function bfsShortestPaths(
   graph: ModulationGraph,
-  startKey: string,
-  endKey: string,
+  startKeys: string[],
+  endKeys: Set<string>,
   maxHops: number,
   limit: number
 ): ModulationRoute[] {
-  // Handle same node case
-  if (startKey === endKey) {
-    return [{ hops: 0, path: [] }];
+  // Handle same-node case: any start already in the target set
+  for (const sk of startKeys) {
+    if (endKeys.has(sk)) return [{ hops: 0, path: [] }];
   }
 
-  // Standard all-shortest-paths BFS: level-by-level relaxation to fill in
-  // dist[node] = hop count from start on the shortest path, and preds[node] =
-  // every (prevKey, edge) that is consistent with a shortest path. Then
-  // reconstruct all shortest paths by walking preds from endKey back to
-  // startKey. Avg out-degree in this graph is ~52, so maxHops=5 would
-  // produce 52^5 ≈ 380M path expansions under the previous enumerate-every-
-  // path BFS; the level-by-level variant runs in O(V + E) = ~21k ops instead.
+  // Standard multi-source/multi-target all-shortest-paths BFS: level-by-level
+  // relaxation to fill in dist[node] (shortest hop count from any startKey)
+  // and preds[node] (every (prevKey, edge) consistent with a shortest path).
+  // Reconstruct all shortest paths by walking preds from each reached endKey
+  // back to a startKey. Avg out-degree in this graph is ~52, so maxHops=5
+  // would produce 52^5 ≈ 380M path expansions under an enumerate-every-path
+  // BFS; this level-by-level variant runs in O(V + E) = ~21k ops instead.
   const dist = new Map<string, number>();
   const preds = new Map<string, Array<{ fromKey: string; edge: ModulationEdge }>>();
-  dist.set(startKey, 0);
+  const startSet = new Set(startKeys);
+  for (const sk of startKeys) dist.set(sk, 0);
 
-  let frontier: string[] = [startKey];
+  let frontier: string[] = [...startSet];
   let depth = 0;
+  let reachedDepth: number | null = null;
 
-  while (frontier.length > 0 && depth < maxHops && !dist.has(endKey)) {
+  while (frontier.length > 0 && depth < maxHops && reachedDepth === null) {
     const nextFrontierSet = new Set<string>();
 
     for (const u of frontier) {
@@ -408,18 +472,32 @@ function bfsShortestPaths(
 
     depth++;
     frontier = [...nextFrontierSet];
+
+    // After this level, check whether any endKey has been reached; if so we
+    // lock the shortest-path depth and stop expanding further layers.
+    for (const ek of endKeys) {
+      const d = dist.get(ek);
+      if (d !== undefined) {
+        reachedDepth = reachedDepth === null ? d : Math.min(reachedDepth, d);
+      }
+    }
   }
 
-  if (!dist.has(endKey)) return [];
+  if (reachedDepth === null) return [];
 
-  // Reconstruct all shortest paths by walking preds from endKey back to
-  // startKey. Because dist is a shortest-distance map, no reconstructed path
-  // revisits a node (that would imply a shorter path via the duplicate).
+  // Collect every endKey that was reached at the shortest distance so we can
+  // enumerate alternate shortest-path routes landing on different register
+  // siblings within the target set.
+  const reachedEnds: string[] = [];
+  for (const ek of endKeys) {
+    if (dist.get(ek) === reachedDepth) reachedEnds.push(ek);
+  }
+
   const routes: ModulationRoute[] = [];
 
   const walk = (nodeKey: string, reversedSteps: ModulationStep[]): void => {
     if (routes.length >= limit) return;
-    if (nodeKey === startKey) {
+    if (startSet.has(nodeKey)) {
       routes.push({
         hops: reversedSteps.length,
         path: [...reversedSteps].reverse(),
@@ -440,7 +518,11 @@ function bfsShortestPaths(
     }
   };
 
-  walk(endKey, []);
+  for (const endKey of reachedEnds) {
+    if (routes.length >= limit) break;
+    walk(endKey, []);
+  }
+
   return routes;
 }
 
@@ -473,8 +555,8 @@ function findRoutesWithWaypoints(
 
     const routes = bfsShortestPaths(
       graph,
-      startKey,
-      endKey,
+      [startKey],
+      new Set([endKey]),
       maxHopsPerSegment,
       limit // Get up to limit routes per segment
     );
@@ -678,7 +760,10 @@ export function findModulationRoutes(
     allAjnas
   );
 
-  // Find source node (now that graph is built)
+  // Find canonical source and target nodes (for display / error messages /
+  // the trailing register-shift landing). `findNodeKey` picks the first
+  // non-transposition match by `baseMaqamIdName`, which we treat as the
+  // canonical register for this modal tonic slot.
   const sourceNodeKey = findNodeKey(graph, fromMaqamId, fromTonicId);
   if (!sourceNodeKey) {
     // This should not happen if validation worked correctly, but handle gracefully
@@ -692,7 +777,6 @@ export function findModulationRoutes(
   }
   const sourceNode = graph.nodes.get(sourceNodeKey)!;
 
-  // Find target node
   const targetNodeKey = findNodeKey(graph, toMaqamId, toTonicId);
   if (!targetNodeKey) {
     return {
@@ -704,6 +788,21 @@ export function findModulationRoutes(
     };
   }
   const targetNode = graph.nodes.get(targetNodeKey)!;
+
+  // Resolve every register-equivalent sibling of the TARGET. When the caller
+  // omits toTonic, BFS is free to land on any non-transposition variant that
+  // shares the target's modal tonic slot — e.g. ḥijāz on dūgāh / qarār dūgāh
+  // / muḥayyar. A trailing registerShift step relocates the journey onto the
+  // canonical tonic when BFS lands on a non-canonical sibling. When toTonic
+  // is specified this set collapses to one exact key (strict behaviour).
+  //
+  // The SOURCE is always pinned to its canonical tonic — a journey "from
+  // maqām X" starts on maqām X's tonic by convention, never on an octave
+  // sibling. Register-equivalent source siblings are still used as permitted
+  // LANDING nodes for the return-to-start journey (outbound-target is the
+  // starting point for the return, so the same multi-target logic applies).
+  const targetEquivKeys = findEquivalentNodeKeys(graph, toMaqamId, toTonicId);
+  const sourceEquivKeys = findEquivalentNodeKeys(graph, fromMaqamId, fromTonicId);
 
   // Resolve waypoint nodes
   const waypointKeys: string[] = [];
@@ -724,20 +823,75 @@ export function findModulationRoutes(
     waypointNodes.push(graph.nodes.get(wpKey)!);
   }
 
-  // Build the full path of node keys: source -> waypoints -> target
-  const allKeys = [sourceNodeKey, ...waypointKeys, targetNodeKey];
+  // Helper: if a route ends at a register-equivalent sibling of the
+  // canonical landing rather than the canonical itself, append a trailing
+  // octave-shift step so the journey lands on the canonical tonic
+  // (e.g. ḥijāz:muḥayyar → ḥijāz:dūgāh). Direction is derived from the
+  // NoteName octave indices of the reached and canonical tonics — if the
+  // reached tonic sits HIGHER, we shift DOWN (`8vb` / `octaveBelow`); if it
+  // sits LOWER, we shift UP (`8va` / `octaveAbove`). Returns the route
+  // unchanged when the caller pinned an explicit tonic or when BFS already
+  // landed on the canonical node.
+  const appendRegisterShiftIfNeeded = (
+    route: ModulationRoute,
+    canonicalKey: string
+  ): ModulationRoute => {
+    if (route.path.length === 0) return route;
+    const last = route.path[route.path.length - 1].to;
+    const reachedKey = createNodeKey(last.baseMaqamIdName, last.tonicId);
+    if (reachedKey === canonicalKey) return route;
+    const canonicalNode = graph.nodes.get(canonicalKey);
+    if (!canonicalNode) return route;
 
-  // Calculate max hops per segment (divide evenly among segments)
-  const numSegments = allKeys.length - 1;
-  const maxHopsPerSegment = Math.ceil(maxHops / numSegments);
+    const reachedCell = getNoteNameIndexAndOctave(last.tonicDisplay as NoteName);
+    const canonicalCell = getNoteNameIndexAndOctave(canonicalNode.tonicDisplay as NoteName);
+    const reachedIsHigher = reachedCell.octave > canonicalCell.octave;
 
-  // Find outbound routes
-  const outboundRoutes = findRoutesWithWaypoints(
-    graph,
-    allKeys,
-    maxHopsPerSegment,
-    limit
-  );
+    return {
+      hops: route.hops + 1,
+      path: [
+        ...route.path,
+        {
+          from: last,
+          to: canonicalNode,
+          modulationDegree: reachedIsHigher ? "8vb" : "8va",
+          modulationCategory: reachedIsHigher ? "octaveBelow" : "octaveAbove",
+        },
+      ],
+    };
+  };
+
+  // Find outbound routes. Two code paths:
+  //   - no waypoints: run a single multi-source / multi-target BFS using the
+  //     full sets of register-equivalent source and target keys so the
+  //     query succeeds whenever ANY sibling is reachable.
+  //   - with waypoints: keep the existing segment-chaining behaviour (strict
+  //     per segment). Waypoints carry segment-to-segment state and blending
+  //     register-equivalence across segments is out of scope here.
+  let outboundRoutes: ModulationRoute[];
+
+  if (waypoints.length === 0) {
+    outboundRoutes = bfsShortestPaths(
+      graph,
+      [sourceNodeKey], // always single canonical source
+      new Set(targetEquivKeys),
+      maxHops,
+      limit
+    );
+    outboundRoutes = outboundRoutes.map((r) =>
+      appendRegisterShiftIfNeeded(r, targetNodeKey)
+    );
+  } else {
+    const allKeys = [sourceNodeKey, ...waypointKeys, targetNodeKey];
+    const numSegments = allKeys.length - 1;
+    const maxHopsPerSegment = Math.ceil(maxHops / numSegments);
+    outboundRoutes = findRoutesWithWaypoints(
+      graph,
+      allKeys,
+      maxHopsPerSegment,
+      limit
+    );
+  }
 
   if (outboundRoutes.length === 0) {
     return {
@@ -753,20 +907,22 @@ export function findModulationRoutes(
   const journeys: ModulationJourney[] = [];
 
   if (returnToStart) {
-    // Calculate return path from target back to source
-    // Use remaining hops from max
+    // Return path: target (canonical) → any register-equivalent source,
+    // with a trailing register-shift to the canonical source if needed.
     const shortestOutbound = outboundRoutes[0].hops;
     const maxReturnHops = Math.max(1, maxHops - shortestOutbound);
 
     const returnRoutes = bfsShortestPaths(
       graph,
-      targetNodeKey,
-      sourceNodeKey,
+      [targetNodeKey],
+      new Set(sourceEquivKeys),
       maxReturnHops,
       1 // Just need the shortest return path
     );
 
-    const returnRoute = returnRoutes.length > 0 ? returnRoutes[0] : undefined;
+    const returnRoute = returnRoutes.length > 0
+      ? appendRegisterShiftIfNeeded(returnRoutes[0], sourceNodeKey)
+      : undefined;
 
     for (const outbound of outboundRoutes) {
       if (journeys.length >= limit) break;

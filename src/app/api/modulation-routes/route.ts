@@ -238,7 +238,7 @@ export async function GET(request: Request) {
         // Return empty results for "no path found" case
         return addCorsHeaders(
           NextResponse.json({
-            routes: {
+            totalPossibleRoutes: {
               count: 0,
               data: [],
             },
@@ -276,7 +276,7 @@ export async function GET(request: Request) {
 
     return addCorsHeaders(
       NextResponse.json({
-        routes: {
+        totalPossibleRoutes: {
           count: formattedJourneys.length,
           data: formattedJourneys,
         },
@@ -372,7 +372,6 @@ function buildContext(
 function formatNode(node: MaqamNode, inArabic: boolean): any {
   const formatted: any = {
     maqamId: node.maqamId,
-    baseMaqamIdName: node.baseMaqamIdName,
     maqamIdName: node.maqamIdName,
     maqamDisplayName: node.maqamDisplayName,
     tonicId: node.tonicId,

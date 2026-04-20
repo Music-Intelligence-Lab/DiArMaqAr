@@ -55,7 +55,17 @@ export type ModulationCategory =
   | "fifthDegree"
   | "sixthDegreeAsc"
   | "sixthDegreeDesc"
-  | "sixthDegreeIfNoThird";
+  | "sixthDegreeIfNoThird"
+  // Non-al-Shawwā categories: an octave shift within the same modal tonic
+  // slot, inserted by findModulationRoutes when BFS reaches a
+  // register-equivalent sibling of the canonical target. The pair encodes
+  // direction: `octaveAbove` means the reached tonic sits BELOW the
+  // canonical and we shift UP (paired with `modulationDegree: "8va"`);
+  // `octaveBelow` means the reached tonic sits ABOVE the canonical and we
+  // shift DOWN (`modulationDegree: "8vb"`). Example: ḥijāz:muḥayyar →
+  // ḥijāz:dūgāh is `octaveBelow` / `8vb`.
+  | "octaveAbove"
+  | "octaveBelow";
 
 /**
  * Represents a complete route from source to target maqam.

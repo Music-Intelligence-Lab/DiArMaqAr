@@ -4236,18 +4236,23 @@ paths:
               schema:
                 type: object
                 required:
-                  - routes
+                  - totalPossibleRoutes
                   - context
                 properties:
-                  routes:
+                  totalPossibleRoutes:
                     type: object
+                    description: |
+                      All shortest modulation routes the endpoint was able to
+                      enumerate for the query, capped at `limit`. The `count`
+                      field gives the size of `data`; it can be zero when no
+                      path exists within `maxHops`.
                     required:
                       - count
                       - data
                     properties:
                       count:
                         type: integer
-                        description: Number of routes found
+                        description: Number of routes returned in `data`
                       data:
                         type: array
                         items:
@@ -4297,7 +4302,7 @@ paths:
                 routeFound:
                   summary: Successful route finding
                   value:
-                    routes:
+                    totalPossibleRoutes:
                       count: 1
                       data:
                         - totalHops: 2
@@ -4306,7 +4311,6 @@ paths:
                             path:
                               - from:
                                   maqamId: "1"
-                                  baseMaqamIdName: "maqam_rast"
                                   maqamIdName: "maqam_rast"
                                   maqamDisplayName: "maqām rāst"
                                   tonicId: "rast"
@@ -4314,7 +4318,6 @@ paths:
                                   isTransposition: false
                                 to:
                                   maqamId: "2"
-                                  baseMaqamIdName: "maqam_bayyat"
                                   maqamIdName: "maqam_bayyat"
                                   maqamDisplayName: "maqām bayyāt"
                                   tonicId: "dugah"
@@ -4324,7 +4327,6 @@ paths:
                                 modulationCategory: "thirdDegree"
                               - from:
                                   maqamId: "2"
-                                  baseMaqamIdName: "maqam_bayyat"
                                   maqamIdName: "maqam_bayyat"
                                   maqamDisplayName: "maqām bayyāt"
                                   tonicId: "dugah"
@@ -4332,7 +4334,6 @@ paths:
                                   isTransposition: false
                                 to:
                                   maqamId: "5"
-                                  baseMaqamIdName: "maqam_hijaz"
                                   maqamIdName: "maqam_hijaz"
                                   maqamDisplayName: "maqām ḥijāz"
                                   tonicId: "nawa"
@@ -10159,11 +10160,11 @@ components:
       description: |
         Represents a node in the modulation graph - a unique (maqamId, tonic) combination.
 
-        **Important**: For transposed maqāmāt, use `baseMaqamIdName` + `tonicId` for queries.
-        The `maqamIdName` includes transposition suffix (e.g., "maqam_nahawand_al-kurdan") for display.
+        Use `maqamId` (stable numeric) or the pair `maqamIdName` + `tonicId` for
+        identification. For transposed maqāmāt, `maqamIdName` includes the
+        transposition suffix (e.g., "maqam_nahawand_al-kurdan").
       required:
         - maqamId
-        - baseMaqamIdName
         - maqamIdName
         - maqamDisplayName
         - tonicId
@@ -10172,21 +10173,14 @@ components:
       properties:
         maqamId:
           type: string
-          description: Numeric ID of the maqam
+          description: Numeric ID of the maqam (stable across all transpositions)
           example: "1"
-        baseMaqamIdName:
-          type: string
-          description: |
-            **Stable** base identifier for the maqam (without transposition suffix).
-            Use this + tonicId for API queries to find specific transpositions.
-            Example: "maqam_nahawand" (same for all transpositions of nahāwand)
-          example: "maqam_rast"
         maqamIdName:
           type: string
           description: |
-            **Display** identifier that includes transposition suffix for taṣwīr forms.
-            Original forms (taḥlīl): same as baseMaqamIdName (e.g., "maqam_nahawand")
-            Transposed forms (taṣwīr): includes suffix (e.g., "maqam_nahawand_al-kurdan")
+            Identifier for this (maqam, tonic) variant. For non-transpositions
+            this is the bare maqam id (e.g. "maqam_nahawand"); for taṣwīr forms
+            it includes the tonic suffix (e.g. "maqam_nahawand_al-kurdan").
           example: "maqam_rast"
         maqamDisplayName:
           type: string
@@ -10228,12 +10222,24 @@ components:
           $ref: '#/components/schemas/MaqamNode'
         modulationDegree:
           type: string
-          description: Scale degree where modulation occurs
-          enum: ["I", "III", "IV", "V", "VI"]
+          description: |
+            Scale degree where modulation occurs. Roman numerals (`I`, `III`,
+            `IV`, `V`, `VI`) correspond to al-Shawwā's rules. `8va` / `8vb`
+            appear on trailing octave-shift steps that the endpoint inserts
+            when BFS lands on a register-equivalent sibling of the target
+            rather than the canonical tonic.
+          enum: ["I", "III", "IV", "V", "VI", "8va", "8vb"]
           example: "III"
         modulationCategory:
           type: string
-          description: Specific modulation category from al-Shawwā's rules
+          description: |
+            Specific modulation category. The first eight values come from
+            al-Shawwā's 1946 modulation rules. The two `octave*` values label
+            a non-al-Shawwā trailing step: `octaveBelow` (paired with
+            `modulationDegree: "8vb"`) when the reached tonic sits one octave
+            above the canonical target and the journey must shift DOWN;
+            `octaveAbove` (paired with `"8va"`) when the reached tonic sits
+            one octave below.
           enum:
             - firstDegree
             - thirdDegree
@@ -10243,6 +10249,8 @@ components:
             - sixthDegreeAsc
             - sixthDegreeDesc
             - sixthDegreeIfNoThird
+            - octaveAbove
+            - octaveBelow
           example: "thirdDegree"
 
     ModulationRoute:
