@@ -338,18 +338,16 @@ export function create12PitchClassSet(
   alKindiTuningSystem: TuningSystem,
   alKindiStartingNote: string
 ): PitchClassSet | null {
-  // Apply sequential reference note logic to ensure consistent assignments
-  // This is critical for symmetrical maqamat where the same pitch class appears in both sequences
-  const ascendingNoteNames = maqamTransposition.ascendingPitchClasses.map(pc => pc.noteName);
-  const descendingNoteNames = maqamTransposition.descendingPitchClasses.map(pc => pc.noteName);
-  const isSymmetrical = ascendingNoteNames.length === descendingNoteNames.length &&
-    ascendingNoteNames.every((name, i) => name === descendingNoteNames[descendingNoteNames.length - 1 - i]);
-  
-  // For symmetrical maqamat, pass all pitch classes to ensure consistent reference note assignments
-  const allMaqamPitchClassesForSequential = isSymmetrical
-    ? [...maqamTransposition.ascendingPitchClasses, ...maqamTransposition.descendingPitchClasses]
-    : undefined;
-  
+  // Apply sequential reference note logic with cross-direction visibility so
+  // diatonic-slot collisions (e.g. segāh E-b + nīm būselīk E-3 both resolving
+  // to natural E in bayyātī ʿushayrān) are detected and the maqām-theory
+  // displacement rule is applied. Always pass the combined pitch classes,
+  // regardless of symmetry.
+  const allMaqamPitchClassesForSequential = [
+    ...maqamTransposition.ascendingPitchClasses,
+    ...maqamTransposition.descendingPitchClasses,
+  ];
+
   const ascendingWithSequentialRefs = renderPitchClassSpellings(
     maqamTransposition.ascendingPitchClasses,
     true,

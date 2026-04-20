@@ -1,35 +1,81 @@
 import PitchClass from "@/models/PitchClass";
 import { getSequentialEnglishNames, getSolfegeFromEnglishName } from "@/functions/noteNameMappings";
-import { calculateCentsDeviationWithReferenceNote, getNextSequentialReferenceNote, swapEnharmonicForReference } from "@/functions/calculateCentsDeviation";
+import { calculateCentsDeviationWithReferenceNote } from "@/functions/calculateCentsDeviation";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
 
 /**
- * Renders pitch classes with sequential International Pitch Notation name spellings for melodic sequences.
+ * Renders pitch classes with sequential International Pitch Notation spellings
+ * for melodic sequences and resolves maqām-context 12-TET chromatic-slot collisions.
  *
- * This function ensures Western music notation convention where scales use consecutive
- * letters (D-E-F-G-A-B-C-D) by resolving enharmonic equivalents appropriately.
+ * ## Two concerns, one function
  *
- * **Context-Specific Function:**
- * - Use this for jins and maqam melodic sequences
- * - NOT for general tuning system pitch classes (which may have letter collisions)
+ * 1. **Sequential letter spelling** (Western notation convention): scales use
+ *    consecutive letters (D-E-F-G-A-B-C-D). `getSequentialEnglishNames` picks
+ *    enharmonic equivalents to avoid repeated letters. This drives `englishName`
+ *    and (downstream) `solfege`.
  *
- * **Data Integrity:**
- * - Updates `englishName`, `referenceNoteName`, and `solfege` to use sequential spellings
- * - Solfege follows the same logic as IPN (derived from sequential englishName)
- * - Ensures cents deviation and MIDI note deviation use correct reference notes
- * - Critical for display, export, and API endpoints
+ * 2. **Maqām-context reference-note mapping** (this function's canonical pass):
+ *    when two pitches of a maqām project onto the same 12-EDO chromatic slot
+ *    (e.g. segāh `E-b3` and nīm būselīk `E-3` both default to natural E), the
+ *    keyboard/MIDI projection cannot fit both. Maqām theory guarantees at most
+ *    two variants per diatonic slot, so the flat accidental is always free. The
+ *    rule: **higher-cents pitch keeps the natural letter; lower-cents pitch is
+ *    displaced onto the flat accidental** (E → E♭, A → A♭, etc.).
  *
- * @param pitchClasses - Array of pitch classes from a melodic sequence (jins or maqam)
- * @param ascending - Direction of the sequence (true for ascending, false for descending). Defaults to true.
- * @param allPitchClasses - Optional: All pitch classes from both sequences (for symmetrical maqamat to ensure consistent assignments)
- * @returns New array of pitch classes with sequential English name spellings and reference note names
+ * ## englishName vs referenceNoteName
+ *
+ * - `englishName` is the **authentic maqām-pitch identifier** (e.g. `E-b3`).
+ *   Never rewritten by the collision rule — it is a contract with the user and
+ *   the musicological record. `solfege` is derived from `englishName` and so
+ *   also stays untouched by the collision rule.
+ * - `referenceNoteName` is the **12-TET chromatic slot** the pitch projects to
+ *   (e.g. `E`, `Eb`). Adjusted by the collision rule. `centsDeviation` and
+ *   `midiNoteDeviation` follow from `referenceNoteName` and are recomputed.
+ * - `midiNoteDecimal` is the actual pitch value and never changes.
+ *
+ * ## Collision detection
+ *
+ * Compare references by **12-EDO chromatic slot**, not by first letter. `E` vs
+ * `E` is a collision; `Bb` vs `B` is NOT (slots 10 vs 11). `referenceToChroma`
+ * computes the slot and the second pass triggers only on real same-slot matches.
+ *
+ * ## Cross-direction visibility
+ *
+ * For asymmetric maqāmāt the colliding pitches are often in different sequences
+ * (ascending vs descending). The collision is only visible when the caller
+ * passes the **combined** ascending + descending pitch classes via
+ * `allPitchClasses`. **Maqām-context callers must always pass combined pitches**
+ * (API routes, transpositions UI, 12-pitch-class set builder, etc.).
+ *
+ * ## Context
+ *
+ * - Use this for jins and maqām melodic sequences.
+ * - NOT for general tuning-system pitch classes (which may have letter
+ *   collisions by design).
+ * - See `.ai-agent-instructions/essentials/04-musicology-essentials.md` §5.1
+ *   for the full rule and rationale.
+ *
+ * @param pitchClasses - Pitch classes from the sequence being rendered
+ * @param ascending - Direction (true = ascending, false = descending). Defaults true.
+ * @param allPitchClasses - Combined pitch classes from both sequences of the
+ *   maqām. Required for asymmetric maqāmāt so cross-direction collisions fire.
+ *   Pass even for symmetric maqāmāt — it's harmless there and keeps call sites
+ *   uniform.
+ * @returns New array of pitch classes with sequential `englishName`, adjusted
+ *   `referenceNoteName` / `centsDeviation` / `midiNoteDeviation`, and `solfege`
+ *   derived from the sequential englishName.
  *
  * @example
  * ```typescript
- * // For a maqam starting on D with intervallic pattern that includes Ab
- * const maqamPitchClasses = maqam.getPitchClasses();
- * const rendered = renderPitchClassSpellings(maqamPitchClasses);
- * // Result: D, Eb, F, G#, A, Bb, C#, D (sequential letters, not Ab)
+ * // Maqām bayyātī ʿushayrān in al-Fārābī 950g / ʿushayrān:
+ * //   ascending uses segāh (E-b3, ≈ 643¢) at degree V
+ * //   descending uses nīm būselīk (E-3, ≈ 666¢) at degree V
+ * // Both default to natural E → collision.
+ * const allPcs = [...maqam.ascendingPitchClasses, ...maqam.descendingPitchClasses];
+ * const asc = renderPitchClassSpellings(maqam.ascendingPitchClasses, true, allPcs);
+ * const desc = renderPitchClassSpellings(maqam.descendingPitchClasses, false, allPcs);
+ * // segāh: englishName stays "E-b3"; referenceNoteName → "Eb"; midiDev "51 +42.9"
+ * // nīm būselīk: englishName stays "E-3"; referenceNoteName → "E"; midiDev "52 -33.7"
  * ```
  */
 export function renderPitchClassSpellings(pitchClasses: PitchClass[], ascending: boolean = true, allPitchClasses?: PitchClass[]): PitchClass[] {
@@ -94,44 +140,83 @@ export function renderPitchClassSpellings(pitchClasses: PitchClass[], ascending:
   });
 
   // Second pass: Apply sequential logic to canonical ordering to avoid duplicate letters
-  // This creates a deterministic map of reference notes that will be consistent for both sequences
-  let prevReferenceNoteName: string | undefined = undefined;
+  // on the reference-note mapping.
+  //
+  // Maqām-context rule: when two pitches of a maqām resolve to the same natural
+  // letter slot (microtonal-vs-natural OR microtonal-vs-microtonal), the
+  // **higher-cents** pitch keeps the natural letter and the **lower-cents** pitch
+  // is displaced onto the **flat accidental** of the same letter (E → E♭, etc.).
+  // Maqām theory guarantees the flat slot is free in these cases — a maqām never
+  // uses three variants of a single diatonic slot.
+  //
+  // Only the MAPPING changes (referenceNoteName, centsDeviation, midiNoteDeviation).
+  // englishName stays untouched (it is the authentic maqām-pitch identifier), and
+  // solfege stays derived from englishName downstream.
+  //
+  // Canonical order is ascending by MIDI, so on collision the previously-assigned
+  // pitch is the lower-cents one — it gets retroactively moved to the flat.
   const canonicalReferenceNoteMap = new Map<string, { referenceNoteName: string; centsDeviation: number }>();
-  
+
+  const recalcDeviation = (pc: PitchClass, referenceNoteName: string): number => {
+    const tempPc = { ...pc, referenceNoteName } as PitchClass;
+    const newRefMidi = calculateIpnReferenceMidiNote(tempPc);
+    const referenceFrequency = 440 * Math.pow(2, (newRefMidi - 69) / 12);
+    const currentFrequency = 440 * Math.pow(2, (pc.midiNoteDecimal - 69) / 12);
+    return 1200 * Math.log2(currentFrequency / referenceFrequency);
+  };
+
+  // Map a bare reference letter+accidental (no octave) to a 12-EDO chromatic slot
+  // (0-11). Two references collide when they resolve to the same slot; different
+  // accidentals of the same letter (e.g. Bb vs B) are distinct slots and do NOT
+  // collide.
+  const referenceToChroma = (ref: string): number | null => {
+    const m = ref.match(/^([A-G])(#|b)?$/);
+    if (!m) return null;
+    const base: { [k: string]: number } = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
+    let c = base[m[1].toUpperCase()];
+    if (c === undefined) return null;
+    if (m[2] === "#") c += 1;
+    if (m[2] === "b") c -= 1;
+    return ((c % 12) + 12) % 12;
+  };
+
+  let prevReferenceNoteName: string | undefined = undefined;
+  let prevPitchClass: PitchClass | undefined = undefined;
+
   canonicalBaseReferenceNotes.forEach(({ pitchClass, baseReferenceNote, baseCentsDeviation }) => {
-    let referenceNoteName = baseReferenceNote;
-    let centsDeviation = baseCentsDeviation;
+    const referenceNoteName = baseReferenceNote;
+    const centsDeviation = baseCentsDeviation;
 
-    // Apply sequential logic to avoid repeating the same letter
-    if (prevReferenceNoteName) {
-      const prevLetter = prevReferenceNoteName.charAt(0).toUpperCase();
-      const currLetter = referenceNoteName.charAt(0).toUpperCase();
+    if (prevReferenceNoteName && prevPitchClass) {
+      const prevChroma = referenceToChroma(prevReferenceNoteName);
+      const currChroma = referenceToChroma(referenceNoteName);
 
-      if (prevLetter === currLetter) {
-        // Prefer enharmonic swap (F# → Gb) over sequential advance (F# → G#).
-        // Sequential advance changes the PITCH (G# ≠ F#); enharmonic swap preserves it.
-        const swapped = swapEnharmonicForReference(referenceNoteName);
-        if (swapped) {
-          referenceNoteName = swapped;
-        } else {
-          const sequentialNote = getNextSequentialReferenceNote(referenceNoteName);
-          if (sequentialNote) {
-            referenceNoteName = sequentialNote;
-          }
-        }
-
-        // Recalculate cents deviation based on the new reference note
-        if (referenceNoteName !== baseReferenceNote) {
-          const tempPc = { ...pitchClass, referenceNoteName };
-          const newRefMidi = calculateIpnReferenceMidiNote(tempPc);
-          const referenceFrequency = 440 * Math.pow(2, (newRefMidi - 69) / 12);
-          const currentFrequency = 440 * Math.pow(2, (pitchClass.midiNoteDecimal - 69) / 12);
-          centsDeviation = 1200 * Math.log2(currentFrequency / referenceFrequency);
+      // Real collision: both references resolve to the same 12-EDO chromatic slot.
+      // Bb vs B is NOT a collision (different slots). E vs E IS a collision.
+      if (prevChroma !== null && currChroma !== null && prevChroma === currChroma) {
+        // Canonical order is ascending by MIDI, so the previously-assigned pitch is
+        // the lower-cents one. Maqām-theory rule: higher-cents keeps the natural
+        // letter; lower-cents moves onto the flat accidental of the same letter.
+        //
+        // We only rewrite the PREVIOUS (lower) pitch's reference — the current
+        // (higher) pitch keeps its base reference (the natural). This covers the
+        // standard bayyātī-ʿushayrān case where segāh E-b3 and nīm būselīk E-3
+        // both resolve to E.
+        const naturalLetter = referenceNoteName.charAt(0).toUpperCase();
+        const flatRef = `${naturalLetter}b`;
+        const updatedPrev = canonicalReferenceNoteMap.get(prevPitchClass.noteName);
+        if (updatedPrev) {
+          const newPrevDeviation = recalcDeviation(prevPitchClass, flatRef);
+          canonicalReferenceNoteMap.set(prevPitchClass.noteName, {
+            referenceNoteName: flatRef,
+            centsDeviation: newPrevDeviation,
+          });
         }
       }
     }
 
     prevReferenceNoteName = referenceNoteName;
+    prevPitchClass = pitchClass;
     canonicalReferenceNoteMap.set(pitchClass.noteName, { referenceNoteName, centsDeviation });
   });
 

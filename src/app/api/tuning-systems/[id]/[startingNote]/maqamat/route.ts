@@ -244,9 +244,13 @@ export async function GET(
 
         if (includeMaqamDegrees) {
           if (shouldIncludeDegreeDetails && renderPitchClassSpellings) {
-            const allMaqamPitchClasses = !hasAsymmetricDescending
-              ? [...tahlil.ascendingPitchClasses, ...tahlil.descendingPitchClasses]
-              : undefined;
+            // Always pass combined asc+desc so cross-direction diatonic-slot
+            // collisions (e.g. bayyātī ʿushayrān E-b vs E-3) trigger the
+            // maqām-theory displacement rule in renderPitchClassSpellings.
+            const allMaqamPitchClasses = [
+              ...tahlil.ascendingPitchClasses,
+              ...tahlil.descendingPitchClasses,
+            ];
 
             const renderedAscending = renderPitchClassSpellings(
               tahlil.ascendingPitchClasses,
@@ -285,9 +289,12 @@ export async function GET(
             const tonicNoteName = t.ascendingPitchClasses[0].noteName;
 
             if (shouldIncludeDegreeDetails && renderPitchClassSpellings) {
-              const allMaqamPitchClasses = !hasAsymmetricDescending
-                ? [...t.ascendingPitchClasses, ...t.descendingPitchClasses]
-                : undefined;
+              // See comment on tahlil render above — always pass combined
+              // asc+desc so cross-direction collisions fire the maqām rule.
+              const allMaqamPitchClasses = [
+                ...t.ascendingPitchClasses,
+                ...t.descendingPitchClasses,
+              ];
 
               const renderedAscending = renderPitchClassSpellings(
                 t.ascendingPitchClasses,

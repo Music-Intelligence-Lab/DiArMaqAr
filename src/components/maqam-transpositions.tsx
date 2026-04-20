@@ -810,18 +810,15 @@ const MaqamTranspositions: React.FC = () => {
         );
       };
 
-      // Check if maqam is symmetrical (ascending and descending have same note names)
-      const ascendingNoteNames = maqam.ascendingPitchClasses.map(pc => pc.noteName);
-      const descendingNoteNames = maqam.descendingPitchClasses.map(pc => pc.noteName);
-      const isSymmetrical = ascendingNoteNames.length === descendingNoteNames.length &&
-        ascendingNoteNames.every((name, i) => name === descendingNoteNames[descendingNoteNames.length - 1 - i]);
-      
-      // For symmetrical maqamat, pass all pitch classes to ensure consistent reference note assignments
-      // For asymmetrical maqamat, process each sequence independently
-      const allMaqamPitchClasses = isSymmetrical
-        ? [...maqam.ascendingPitchClasses, ...maqam.descendingPitchClasses]
-        : undefined;
-      
+      // Always pass the combined ascending + descending pitch classes so cross-
+      // direction diatonic-slot collisions (e.g. segāh vs nīm būselīk both on E
+      // in asymmetric maqāmāt) are detected and the maqām-theory displacement
+      // rule fires in renderPitchClassSpellings.
+      const allMaqamPitchClasses = [
+        ...maqam.ascendingPitchClasses,
+        ...maqam.descendingPitchClasses,
+      ];
+
       // Apply sequential English name spellings for melodic sequences
       let ascendingTranspositionPitchClasses = renderPitchClassSpellings(maqam.ascendingPitchClasses, true, allMaqamPitchClasses);
       let descendingTranspositionPitchClasses = renderPitchClassSpellings(maqam.descendingPitchClasses, false, allMaqamPitchClasses);
