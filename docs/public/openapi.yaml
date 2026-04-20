@@ -1438,6 +1438,96 @@ paths:
                         type: string
                       tuningSystem:
                         type: string
+              example:
+                {
+                  "tuningSystem": {
+                    "id": "ibnsina_1037",
+                    "idName": "ibnsina_1037",
+                    "displayName": "Ibn Sīnā  (1037) 7-Fret Oud 17-Tone",
+                    "version": "2025-11-09T00:44:40.275Z",
+                    "year": "1037",
+                    "numberOfPitchClassesSingleOctave": 17
+                  },
+                  "startingNotes": {
+                    "idNames": [
+                      "ushayran",
+                      "yegah"
+                    ],
+                    "displayNames": [
+                      "ʿushayrān",
+                      "yegāh"
+                    ]
+                  },
+                  "selectedStartingNote": {
+                    "idName": "yegah",
+                    "displayName": "yegāh"
+                  },
+                  "stats": {
+                    "totalPitchClasses": 17,
+                    "numberOfPitchClassesSingleOctave": 17,
+                    "referenceFrequency": 97.999,
+                    "octaves": [
+                      0,
+                      1,
+                      2,
+                      3
+                    ]
+                  },
+                  "pitchClasses": [
+                    {
+                      "pitchClassIndex": 0,
+                      "octave": 0,
+                      "noteName": "qarar_yegah",
+                      "noteNameDisplay": "qarār yegāh",
+                      "cents": -1200
+                    },
+                    {
+                      "pitchClassIndex": 1,
+                      "octave": 0,
+                      "noteName": "qarar_qarar_hisar",
+                      "noteNameDisplay": "qarār qarār ḥiṣār",
+                      "cents": -1088.691430896177
+                    },
+                    {
+                      "pitchClassIndex": 2,
+                      "octave": 0,
+                      "noteName": "qarar_qarar_tik_hisar/shuri",
+                      "noteNameDisplay": "qarār qarār tīk ḥiṣār/shūrī",
+                      "cents": -1061.427339096077
+                    },
+                    {
+                      "pitchClassIndex": 3,
+                      "octave": 0,
+                      "noteName": "qarar_ushayran",
+                      "noteNameDisplay": "qarār ʿushayrān",
+                      "cents": -996.0899982692251
+                    },
+                    {
+                      "pitchClassIndex": 4,
+                      "octave": 0,
+                      "noteName": "qarar_ajam_ushayran",
+                      "noteNameDisplay": "qarār ʿajam ʿushayrān",
+                      "cents": -905.8650025961624
+                    },
+                    {
+                      "…": "truncated — 63 more items"
+                    }
+                  ],
+                  "context": {
+                    "pitchClassDataType": "cents",
+                    "octave": "all"
+                  },
+                  "links": {
+                    "self": "https://diarmaqar.netlify.app/api/tuning-systems/ibnsina_1037/yegah/pitch-classes",
+                    "tuningSystem": "/api/tuning-systems/ibnsina_1037"
+                  },
+                  "sources": [
+                    {
+                      "sourceId": "farmer_1937",
+                      "page": "249"
+                    }
+                  ]
+                }
         '400':
           description: Invalid request parameters
           content:
@@ -1559,6 +1649,87 @@ paths:
                       self: { type: string }
                       availability: { type: string }
                       detail: { type: string }
+              example:
+                {
+                  "maqam": {
+                    "id": "1",
+                    "idName": "maqam_rast",
+                    "displayName": "maqām rāst",
+                    "version": "2025-12-10T17:03:34.565Z"
+                  },
+                  "tuningSystem": {
+                    "id": "ibnsina_1037",
+                    "idName": "ibnsina_1037",
+                    "displayName": "Ibn Sīnā  (1037) 7-Fret Oud 17-Tone",
+                    "version": "2025-11-09T00:44:40.275Z",
+                    "numberOfPitchClassesSingleOctave": 17
+                  },
+                  "startingNote": {
+                    "idName": "yegah",
+                    "displayName": "yegāh"
+                  },
+                  "transpositions": {
+                    "total": 3,
+                    "options": {
+                      "idNames": [
+                        "qarar_chahargah",
+                        "chahargah",
+                        "mahuran"
+                      ],
+                      "displayNames": [
+                        "qarār chahārgāh",
+                        "chahārgāh",
+                        "māhūrān"
+                      ]
+                    },
+                    "detailed": [
+                      {
+                        "tonic": {
+                          "idName": "qarar_chahargah",
+                          "displayName": "qarār chahārgāh"
+                        },
+                        "pitchClass": {
+                          "pitchClassIndex": 14,
+                          "octave": 0
+                        },
+                        "links": {
+                          "detail": "/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&transposeTo=qarar_chahargah"
+                        }
+                      },
+                      {
+                        "tonic": {
+                          "idName": "chahargah",
+                          "displayName": "chahārgāh"
+                        },
+                        "pitchClass": {
+                          "pitchClassIndex": 14,
+                          "octave": 1
+                        },
+                        "links": {
+                          "detail": "/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&transposeTo=chahargah"
+                        }
+                      },
+                      {
+                        "tonic": {
+                          "idName": "mahuran",
+                          "displayName": "māhūrān"
+                        },
+                        "pitchClass": {
+                          "pitchClassIndex": 14,
+                          "octave": 2
+                        },
+                        "links": {
+                          "detail": "/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&transposeTo=mahuran"
+                        }
+                      }
+                    ]
+                  },
+                  "links": {
+                    "self": "https://diarmaqar.netlify.app/api/maqamat/maqam_rast/transpositions?tuningSystem=ibnsina_1037&startingNote=yegah",
+                    "availability": "/api/maqamat/maqam_rast/availability",
+                    "detail": "/api/maqamat/maqam_rast"
+                  }
+                }
         '400':
           description: Invalid request parameters
           content:
@@ -3729,6 +3900,183 @@ paths:
                     type: object
                   links:
                     type: object
+              example:
+                {
+                  "tuningSystem": {
+                    "id": "ibnsina_1037",
+                    "idName": "ibnsina_1037",
+                    "displayName": "Ibn Sīnā  (1037) 7-Fret Oud 17-Tone",
+                    "version": "2025-11-09T00:44:40.275Z",
+                    "year": "1037",
+                    "numberOfPitchClassesSingleOctave": 17
+                  },
+                  "startingNotes": {
+                    "idNames": [
+                      "ushayran",
+                      "yegah"
+                    ],
+                    "displayNames": [
+                      "ʿushayrān",
+                      "yegāh"
+                    ]
+                  },
+                  "selectedStartingNote": {
+                    "idName": "yegah",
+                    "displayName": "yegāh"
+                  },
+                  "stats": {
+                    "totalMaqamatForStartingNote": 43,
+                    "totalMaqamatInLibrary": 63,
+                    "uniqueTonicCount": 9,
+                    "uniqueFamilyCount": 15,
+                    "referenceFrequency": 97.999
+                  },
+                  "data": [
+                    {
+                      "maqam": {
+                        "id": "34",
+                        "idName": "maqam_dilkeshidah",
+                        "displayName": "maqām dilkeshīdah",
+                        "version": "2025-10-18T19:41:17.132Z"
+                      },
+                      "family": {
+                        "idName": "nahawand",
+                        "displayName": "nahāwand"
+                      },
+                      "tonic": {
+                        "idName": "yegah",
+                        "displayName": "yegāh"
+                      },
+                      "stats": {
+                        "numberOfPitchClasses": 7
+                      },
+                      "characteristics": {
+                        "isOctaveRepeating": true,
+                        "hasAsymmetricDescending": true,
+                        "hasSuyur": true
+                      },
+                      "links": {
+                        "detail": "/api/maqamat/maqam_dilkeshidah"
+                      }
+                    },
+                    {
+                      "maqam": {
+                        "id": "30",
+                        "idName": "maqam_farahfazza",
+                        "displayName": "maqām faraḥfazzā",
+                        "version": "2025-10-18T19:41:17.132Z"
+                      },
+                      "family": {
+                        "idName": "nahawand",
+                        "displayName": "nahāwand"
+                      },
+                      "tonic": {
+                        "idName": "yegah",
+                        "displayName": "yegāh"
+                      },
+                      "stats": {
+                        "numberOfPitchClasses": 7
+                      },
+                      "characteristics": {
+                        "isOctaveRepeating": true,
+                        "hasAsymmetricDescending": true,
+                        "hasSuyur": true
+                      },
+                      "links": {
+                        "detail": "/api/maqamat/maqam_farahfazza"
+                      }
+                    },
+                    {
+                      "maqam": {
+                        "id": "53",
+                        "idName": "maqam_rast_yegah",
+                        "displayName": "maqām rāst yegāh",
+                        "version": "2025-10-18T19:41:17.132Z"
+                      },
+                      "family": {
+                        "idName": "rast",
+                        "displayName": "rāst"
+                      },
+                      "tonic": {
+                        "idName": "yegah",
+                        "displayName": "yegāh"
+                      },
+                      "stats": {
+                        "numberOfPitchClasses": 7
+                      },
+                      "characteristics": {
+                        "isOctaveRepeating": true,
+                        "hasAsymmetricDescending": true,
+                        "hasSuyur": false
+                      },
+                      "links": {
+                        "detail": "/api/maqamat/maqam_rast_yegah"
+                      }
+                    },
+                    {
+                      "maqam": {
+                        "id": "32",
+                        "idName": "maqam_sultani_yegah",
+                        "displayName": "maqām sulṭānī yegāh",
+                        "version": "2025-10-18T19:41:17.132Z"
+                      },
+                      "family": {
+                        "idName": "nahawand",
+                        "displayName": "nahāwand"
+                      },
+                      "tonic": {
+                        "idName": "yegah",
+                        "displayName": "yegāh"
+                      },
+                      "stats": {
+                        "numberOfPitchClasses": 7
+                      },
+                      "characteristics": {
+                        "isOctaveRepeating": true,
+                        "hasAsymmetricDescending": true,
+                        "hasSuyur": true
+                      },
+                      "links": {
+                        "detail": "/api/maqamat/maqam_sultani_yegah"
+                      }
+                    },
+                    {
+                      "maqam": {
+                        "id": "61",
+                        "idName": "maqam_zanjaran",
+                        "displayName": "maqām zanjarān",
+                        "version": "2025-12-11T23:34:00.303Z"
+                      },
+                      "family": {
+                        "idName": "hijaz",
+                        "displayName": "ḥijāz"
+                      },
+                      "tonic": {
+                        "idName": "yegah",
+                        "displayName": "yegāh"
+                      },
+                      "stats": {
+                        "numberOfPitchClasses": 7
+                      },
+                      "characteristics": {
+                        "isOctaveRepeating": true,
+                        "hasAsymmetricDescending": true,
+                        "hasSuyur": false
+                      },
+                      "links": {
+                        "detail": "/api/maqamat/maqam_zanjaran"
+                      }
+                    },
+                    {
+                      "…": "truncated — 38 more items"
+                    }
+                  ],
+                  "links": {
+                    "self": "https://diarmaqar.netlify.app/api/tuning-systems/ibnsina_1037/yegah/maqamat",
+                    "tuningSystem": "/api/tuning-systems/ibnsina_1037",
+                    "collection": "/api/maqamat"
+                  }
+                }
         '400':
           description: Invalid path parameters
           content:
@@ -4182,6 +4530,577 @@ paths:
                                 example: "49"
                         links:
                           $ref: '#/components/schemas/Links'
+              example:
+                {
+                  "count": 29,
+                  "data": [
+                    {
+                      "jins": {
+                        "id": "5",
+                        "idName": "jins_ajam_ushayran",
+                        "displayName": "jins ʿajam ʿushayrān",
+                        "version": "2025-10-18T19:34:26.343Z"
+                      },
+                      "tonic": {
+                        "idName": "ajam_ushayran",
+                        "displayName": "ʿajam ʿushayrān"
+                      },
+                      "stats": {
+                        "numberOfPitchClasses": 4,
+                        "availableInTuningSystems": 35
+                      },
+                      "availability": {
+                        "tuningSystems": [
+                          {
+                            "tuningSystem": {
+                              "id": "ronzevalle_1904",
+                              "idName": "ronzevalle_1904",
+                              "displayName": "Ronzevalle (1904) Modernist Arabic Tuning",
+                              "version": "2025-11-26T10:19:38.569Z"
+                            },
+                            "startingNotes": {
+                              "idNames": [
+                                "ushayran",
+                                "yegah"
+                              ],
+                              "displayNames": [
+                                "ʿushayrān",
+                                "yegāh"
+                              ]
+                            }
+                          },
+                          {
+                            "tuningSystem": {
+                              "id": "alkindi_874",
+                              "idName": "alkindi_874",
+                              "displayName": "al-Kindī (874) 12-Tone",
+                              "version": "2025-11-17T13:16:34.754Z"
+                            },
+                            "startingNotes": {
+                              "idNames": [
+                                "ushayran",
+                                "yegah",
+                                "rast"
+                              ],
+                              "displayNames": [
+                                "ʿushayrān",
+                                "yegāh",
+                                "rāst"
+                              ]
+                            }
+                          },
+                          {
+                            "tuningSystem": {
+                              "id": "angloeuropean_1700",
+                              "idName": "angloeuropean_1700",
+                              "displayName": "Anglo-European (1700) 12-EDO",
+                              "version": "2025-11-18T11:53:58.428Z"
+                            },
+                            "startingNotes": {
+                              "idNames": [
+                                "ushayran",
+                                "yegah"
+                              ],
+                              "displayNames": [
+                                "ʿushayrān",
+                                "yegāh"
+                              ]
+                            }
+                          },
+                          {
+                            "tuningSystem": {
+                              "id": "aldik_1926a",
+                              "idName": "aldik_1926a",
+                              "displayName": "al-Dīk (1926a) al-Sullam al-Fārsī or al-'Arabī (!!!)",
+                              "version": "2025-10-18T19:42:23.643Z"
+                            },
+                            "startingNotes": {
+                              "idNames": [
+                                "yegah"
+                              ],
+                              "displayNames": [
+                                "yegāh"
+                              ]
+                            }
+                          },
+                          {
+                            "tuningSystem": {
+                              "id": "aldik_1926b",
+                              "idName": "aldik_1926b",
+                              "displayName": "al-Dīk (1926b) Old Arabic Scale",
+                              "version": "2025-10-18T19:42:23.643Z"
+                            },
+                            "startingNotes": {
+                              "idNames": [
+                                "yegah"
+                              ],
+                              "displayNames": [
+                                "yegāh"
+                              ]
+                            }
+                          },
+                          {
+                            "…": "truncated — 30 more items"
+                          }
+                        ]
+                      },
+                      "links": {
+                        "detail": "/api/ajnas/jins_ajam_ushayran"
+                      },
+                      "sources": []
+                    },
+                    {
+                      "jins": {
+                        "id": "11",
+                        "idName": "jins_athar_kurd",
+                        "displayName": "jins athar kurd",
+                        "version": "2025-10-18T19:34:45.799Z"
+                      },
+                      "tonic": {
+                        "idName": "dugah",
+                        "displayName": "dūgāh"
+                      },
+                      "stats": {
+                        "numberOfPitchClasses": 5,
+                        "availableInTuningSystems": 33
+                      },
+                      "availability": {
+                        "tuningSystems": [
+                          {
+                            "tuningSystem": {
+                              "id": "ronzevalle_1904",
+                              "idName": "ronzevalle_1904",
+                              "displayName": "Ronzevalle (1904) Modernist Arabic Tuning",
+                              "version": "2025-11-26T10:19:38.569Z"
+                            },
+                            "startingNotes": {
+                              "idNames": [
+                                "ushayran",
+                                "yegah"
+                              ],
+                              "displayNames": [
+                                "ʿushayrān",
+                                "yegāh"
+                              ]
+                            }
+                          },
+                          {
+                            "tuningSystem": {
+                              "id": "alkindi_874",
+                              "idName": "alkindi_874",
+                              "displayName": "al-Kindī (874) 12-Tone",
+                              "version": "2025-11-17T13:16:34.754Z"
+                            },
+                            "startingNotes": {
+                              "idNames": [
+                                "ushayran",
+                                "yegah",
+                                "rast"
+                              ],
+                              "displayNames": [
+                                "ʿushayrān",
+                                "yegāh",
+                                "rāst"
+                              ]
+                            }
+                          },
+                          {
+                            "tuningSystem": {
+                              "id": "angloeuropean_1700",
+                              "idName": "angloeuropean_1700",
+                              "displayName": "Anglo-European (1700) 12-EDO",
+                              "version": "2025-11-18T11:53:58.428Z"
+                            },
+                            "startingNotes": {
+                              "idNames": [
+                                "ushayran",
+                                "yegah"
+                              ],
+                              "displayNames": [
+                                "ʿushayrān",
+                                "yegāh"
+                              ]
+                            }
+                          },
+                          {
+                            "tuningSystem": {
+                              "id": "aldik_1926a",
+                              "idName": "aldik_1926a",
+                              "displayName": "al-Dīk (1926a) al-Sullam al-Fārsī or al-'Arabī (!!!)",
+                              "version": "2025-10-18T19:42:23.643Z"
+                            },
+                            "startingNotes": {
+                              "idNames": [
+                                "yegah"
+                              ],
+                              "displayNames": [
+                                "yegāh"
+                              ]
+                            }
+                          },
+                          {
+                            "tuningSystem": {
+                              "id": "aldik_1926b",
+                              "idName": "aldik_1926b",
+                              "displayName": "al-Dīk (1926b) Old Arabic Scale",
+                              "version": "2025-10-18T19:42:23.643Z"
+                            },
+                            "startingNotes": {
+                              "idNames": [
+                                "yegah"
+                              ],
+                              "displayNames": [
+                                "yegāh"
+                              ]
+                            }
+                          },
+                          {
+                            "…": "truncated — 28 more items"
+                          }
+                        ]
+                      },
+                      "links": {
+                        "detail": "/api/ajnas/jins_athar_kurd"
+                      },
+                      "sources": []
+                    },
+                    {
+                      "jins": {
+                        "id": "24",
+                        "idName": "jins_awj_ara",
+                        "displayName": "jins awj ʾārāʾ",
+                        "version": "2025-10-18T19:34:26.343Z"
+                      },
+                      "tonic": {
+                        "idName": "iraq",
+                        "displayName": "ʿirāq"
+                      },
+                      "stats": {
+                        "numberOfPitchClasses": 4,
+                        "availableInTuningSystems": 29
+                      },
+                      "availability": {
+                        "tuningSystems": [
+                          {
+                            "tuningSystem": {
+                              "id": "ronzevalle_1904",
+                              "idName": "ronzevalle_1904",
+                              "displayName": "Ronzevalle (1904) Modernist Arabic Tuning",
+                              "version": "2025-11-26T10:19:38.569Z"
+                            },
+                            "startingNotes": {
+                              "idNames": [
+                                "ushayran",
+                                "yegah"
+                              ],
+                              "displayNames": [
+                                "ʿushayrān",
+                                "yegāh"
+                              ]
+                            }
+                          },
+                          {
+                            "tuningSystem": {
+                              "id": "aldik_1926a",
+                              "idName": "aldik_1926a",
+                              "displayName": "al-Dīk (1926a) al-Sullam al-Fārsī or al-'Arabī (!!!)",
+                              "version": "2025-10-18T19:42:23.643Z"
+                            },
+                            "startingNotes": {
+                              "idNames": [
+                                "yegah"
+                              ],
+                              "displayNames": [
+                                "yegāh"
+                              ]
+                            }
+                          },
+                          {
+                            "tuningSystem": {
+                              "id": "aldik_1926b",
+                              "idName": "aldik_1926b",
+                              "displayName": "al-Dīk (1926b) Old Arabic Scale",
+                              "version": "2025-10-18T19:42:23.643Z"
+                            },
+                            "startingNotes": {
+                              "idNames": [
+                                "yegah"
+                              ],
+                              "displayNames": [
+                                "yegāh"
+                              ]
+                            }
+                          },
+                          {
+                            "tuningSystem": {
+                              "id": "cairocongresstuningcommittee_1932a",
+                              "idName": "cairocongresstuningcommittee_1932a",
+                              "displayName": "Cairo Congress Tuning Committee (1932a) Ancient Intervals",
+                              "version": "2025-10-18T19:42:23.643Z"
+                            },
+                            "startingNotes": {
+                              "idNames": [
+                                "yegah"
+                              ],
+                              "displayNames": [
+                                "yegāh"
+                              ]
+                            }
+                          },
+                          {
+                            "tuningSystem": {
+                              "id": "cairocongresstuningcommittee_1932b",
+                              "idName": "cairocongresstuningcommittee_1932b",
+                              "displayName": "Cairo Congress Tuning Committee (1932b) Arab Intervals according to al-Dīk",
+                              "version": "2025-10-18T19:42:23.643Z"
+                            },
+                            "startingNotes": {
+                              "idNames": [
+                                "yegah"
+                              ],
+                              "displayNames": [
+                                "yegāh"
+                              ]
+                            }
+                          },
+                          {
+                            "…": "truncated — 24 more items"
+                          }
+                        ]
+                      },
+                      "links": {
+                        "detail": "/api/ajnas/jins_awj_ara"
+                      },
+                      "sources": [
+                        {
+                          "sourceId": "alshawwa_1946",
+                          "page": "38"
+                        }
+                      ]
+                    },
+                    {
+                      "jins": {
+                        "id": "2",
+                        "idName": "jins_bayyat",
+                        "displayName": "jins bayyāt",
+                        "version": "2025-10-18T19:35:30.479Z"
+                      },
+                      "tonic": {
+                        "idName": "dugah",
+                        "displayName": "dūgāh"
+                      },
+                      "stats": {
+                        "numberOfPitchClasses": 4,
+                        "availableInTuningSystems": 31
+                      },
+                      "availability": {
+                        "tuningSystems": [
+                          {
+                            "tuningSystem": {
+                              "id": "ronzevalle_1904",
+                              "idName": "ronzevalle_1904",
+                              "displayName": "Ronzevalle (1904) Modernist Arabic Tuning",
+                              "version": "2025-11-26T10:19:38.569Z"
+                            },
+                            "startingNotes": {
+                              "idNames": [
+                                "ushayran",
+                                "yegah"
+                              ],
+                              "displayNames": [
+                                "ʿushayrān",
+                                "yegāh"
+                              ]
+                            }
+                          },
+                          {
+                            "tuningSystem": {
+                              "id": "aldik_1926a",
+                              "idName": "aldik_1926a",
+                              "displayName": "al-Dīk (1926a) al-Sullam al-Fārsī or al-'Arabī (!!!)",
+                              "version": "2025-10-18T19:42:23.643Z"
+                            },
+                            "startingNotes": {
+                              "idNames": [
+                                "yegah"
+                              ],
+                              "displayNames": [
+                                "yegāh"
+                              ]
+                            }
+                          },
+                          {
+                            "tuningSystem": {
+                              "id": "aldik_1926b",
+                              "idName": "aldik_1926b",
+                              "displayName": "al-Dīk (1926b) Old Arabic Scale",
+                              "version": "2025-10-18T19:42:23.643Z"
+                            },
+                            "startingNotes": {
+                              "idNames": [
+                                "yegah"
+                              ],
+                              "displayNames": [
+                                "yegāh"
+                              ]
+                            }
+                          },
+                          {
+                            "tuningSystem": {
+                              "id": "cairocongresstuningcommittee_1932a",
+                              "idName": "cairocongresstuningcommittee_1932a",
+                              "displayName": "Cairo Congress Tuning Committee (1932a) Ancient Intervals",
+                              "version": "2025-10-18T19:42:23.643Z"
+                            },
+                            "startingNotes": {
+                              "idNames": [
+                                "yegah"
+                              ],
+                              "displayNames": [
+                                "yegāh"
+                              ]
+                            }
+                          },
+                          {
+                            "tuningSystem": {
+                              "id": "cairocongresstuningcommittee_1932b",
+                              "idName": "cairocongresstuningcommittee_1932b",
+                              "displayName": "Cairo Congress Tuning Committee (1932b) Arab Intervals according to al-Dīk",
+                              "version": "2025-10-18T19:42:23.643Z"
+                            },
+                            "startingNotes": {
+                              "idNames": [
+                                "yegah"
+                              ],
+                              "displayNames": [
+                                "yegāh"
+                              ]
+                            }
+                          },
+                          {
+                            "…": "truncated — 26 more items"
+                          }
+                        ]
+                      },
+                      "links": {
+                        "detail": "/api/ajnas/jins_bayyat"
+                      },
+                      "sources": []
+                    },
+                    {
+                      "jins": {
+                        "id": "28",
+                        "idName": "jins_bayyat_ushayran",
+                        "displayName": "jins bayyāt ʿushayrān",
+                        "version": "2025-10-18T19:34:26.343Z"
+                      },
+                      "tonic": {
+                        "idName": "ushayran",
+                        "displayName": "ʿushayrān"
+                      },
+                      "stats": {
+                        "numberOfPitchClasses": 4,
+                        "availableInTuningSystems": 30
+                      },
+                      "availability": {
+                        "tuningSystems": [
+                          {
+                            "tuningSystem": {
+                              "id": "ronzevalle_1904",
+                              "idName": "ronzevalle_1904",
+                              "displayName": "Ronzevalle (1904) Modernist Arabic Tuning",
+                              "version": "2025-11-26T10:19:38.569Z"
+                            },
+                            "startingNotes": {
+                              "idNames": [
+                                "ushayran",
+                                "yegah"
+                              ],
+                              "displayNames": [
+                                "ʿushayrān",
+                                "yegāh"
+                              ]
+                            }
+                          },
+                          {
+                            "tuningSystem": {
+                              "id": "aldik_1926a",
+                              "idName": "aldik_1926a",
+                              "displayName": "al-Dīk (1926a) al-Sullam al-Fārsī or al-'Arabī (!!!)",
+                              "version": "2025-10-18T19:42:23.643Z"
+                            },
+                            "startingNotes": {
+                              "idNames": [
+                                "yegah"
+                              ],
+                              "displayNames": [
+                                "yegāh"
+                              ]
+                            }
+                          },
+                          {
+                            "tuningSystem": {
+                              "id": "aldik_1926b",
+                              "idName": "aldik_1926b",
+                              "displayName": "al-Dīk (1926b) Old Arabic Scale",
+                              "version": "2025-10-18T19:42:23.643Z"
+                            },
+                            "startingNotes": {
+                              "idNames": [
+                                "yegah"
+                              ],
+                              "displayNames": [
+                                "yegāh"
+                              ]
+                            }
+                          },
+                          {
+                            "tuningSystem": {
+                              "id": "cairocongresstuningcommittee_1932a",
+                              "idName": "cairocongresstuningcommittee_1932a",
+                              "displayName": "Cairo Congress Tuning Committee (1932a) Ancient Intervals",
+                              "version": "2025-10-18T19:42:23.643Z"
+                            },
+                            "startingNotes": {
+                              "idNames": [
+                                "yegah"
+                              ],
+                              "displayNames": [
+                                "yegāh"
+                              ]
+                            }
+                          },
+                          {
+                            "tuningSystem": {
+                              "id": "cairocongresstuningcommittee_1932b",
+                              "idName": "cairocongresstuningcommittee_1932b",
+                              "displayName": "Cairo Congress Tuning Committee (1932b) Arab Intervals according to al-Dīk",
+                              "version": "2025-10-18T19:42:23.643Z"
+                            },
+                            "startingNotes": {
+                              "idNames": [
+                                "yegah"
+                              ],
+                              "displayNames": [
+                                "yegāh"
+                              ]
+                            }
+                          },
+                          {
+                            "…": "truncated — 25 more items"
+                          }
+                        ]
+                      },
+                      "links": {
+                        "detail": "/api/ajnas/jins_bayyat_ushayran"
+                      },
+                      "sources": []
+                    },
+                    {
+                      "…": "truncated — 24 more items"
+                    }
+                  ]
+                }
         '500':
           $ref: '#/components/responses/ServerError'
 
@@ -4818,6 +5737,126 @@ paths:
                       jins:
                         type: string
                         description: Link to jins detail endpoint
+              example:
+                {
+                  "jins": {
+                    "id": "2",
+                    "idName": "jins_bayyat",
+                    "displayName": "jins bayyāt",
+                    "version": "2025-10-18T19:35:30.479Z"
+                  },
+                  "tuningSystem": {
+                    "id": "ibnsina_1037",
+                    "idName": "ibnsina_1037",
+                    "displayName": "Ibn Sīnā  (1037) 7-Fret Oud 17-Tone",
+                    "version": "2025-11-09T00:44:40.275Z",
+                    "numberOfPitchClassesSingleOctave": 17
+                  },
+                  "startingNote": {
+                    "idName": "yegah",
+                    "displayName": "yegāh"
+                  },
+                  "transpositions": {
+                    "total": 12,
+                    "options": {
+                      "idNames": [
+                        "qarar_yegah",
+                        "qarar_ushayran",
+                        "qarar_rast",
+                        "yegah",
+                        "ushayran",
+                        {
+                          "…": "truncated — 7 more items"
+                        }
+                      ],
+                      "displayNames": [
+                        "qarār yegāh",
+                        "qarār ʿushayrān",
+                        "qarār rāst",
+                        "yegāh",
+                        "ʿushayrān",
+                        {
+                          "…": "truncated — 7 more items"
+                        }
+                      ]
+                    },
+                    "detailed": [
+                      {
+                        "tonic": {
+                          "idName": "qarar_yegah",
+                          "displayName": "qarār yegāh"
+                        },
+                        "pitchClass": {
+                          "pitchClassIndex": 0,
+                          "octave": 0
+                        },
+                        "links": {
+                          "detail": "/api/ajnas/jins_bayyat?tuningSystem=ibnsina_1037&startingNote=yegah&transposeTo=qarar_yegah"
+                        }
+                      },
+                      {
+                        "tonic": {
+                          "idName": "qarar_ushayran",
+                          "displayName": "qarār ʿushayrān"
+                        },
+                        "pitchClass": {
+                          "pitchClassIndex": 3,
+                          "octave": 0
+                        },
+                        "links": {
+                          "detail": "/api/ajnas/jins_bayyat?tuningSystem=ibnsina_1037&startingNote=yegah&transposeTo=qarar_ushayran"
+                        }
+                      },
+                      {
+                        "tonic": {
+                          "idName": "qarar_rast",
+                          "displayName": "qarār rāst"
+                        },
+                        "pitchClass": {
+                          "pitchClassIndex": 7,
+                          "octave": 0
+                        },
+                        "links": {
+                          "detail": "/api/ajnas/jins_bayyat?tuningSystem=ibnsina_1037&startingNote=yegah&transposeTo=qarar_rast"
+                        }
+                      },
+                      {
+                        "tonic": {
+                          "idName": "yegah",
+                          "displayName": "yegāh"
+                        },
+                        "pitchClass": {
+                          "pitchClassIndex": 0,
+                          "octave": 1
+                        },
+                        "links": {
+                          "detail": "/api/ajnas/jins_bayyat?tuningSystem=ibnsina_1037&startingNote=yegah&transposeTo=yegah"
+                        }
+                      },
+                      {
+                        "tonic": {
+                          "idName": "ushayran",
+                          "displayName": "ʿushayrān"
+                        },
+                        "pitchClass": {
+                          "pitchClassIndex": 3,
+                          "octave": 1
+                        },
+                        "links": {
+                          "detail": "/api/ajnas/jins_bayyat?tuningSystem=ibnsina_1037&startingNote=yegah&transposeTo=ushayran"
+                        }
+                      },
+                      {
+                        "…": "truncated — 7 more items"
+                      }
+                    ]
+                  },
+                  "links": {
+                    "self": "https://diarmaqar.netlify.app/api/ajnas/jins_bayyat/transpositions?tuningSystem=ibnsina_1037&startingNote=yegah",
+                    "availability": "/api/ajnas/jins_bayyat/availability",
+                    "detail": "/api/ajnas/jins_bayyat"
+                  }
+                }
         '400':
           description: Invalid request parameters
           content:
@@ -5925,6 +6964,80 @@ paths:
                         links:
                           $ref: '#/components/schemas/Links'
                           description: Links to detail and availability endpoints (availability data is only in the availability endpoint)
+              example:
+                {
+                  "count": 183,
+                  "data": [
+                    {
+                      "noteName": {
+                        "idName": "qarar_yegah",
+                        "displayName": "qarār yegāh"
+                      },
+                      "englishName": "G1",
+                      "order": 0,
+                      "octave": 0,
+                      "links": {
+                        "detail": "/api/pitch-classes/note-names/qarar_yegah",
+                        "availability": "/api/pitch-classes/note-names/qarar_yegah/availability"
+                      }
+                    },
+                    {
+                      "noteName": {
+                        "idName": "yegah",
+                        "displayName": "yegāh"
+                      },
+                      "englishName": "G2",
+                      "order": 0,
+                      "octave": 1,
+                      "links": {
+                        "detail": "/api/pitch-classes/note-names/yegah",
+                        "availability": "/api/pitch-classes/note-names/yegah/availability"
+                      }
+                    },
+                    {
+                      "noteName": {
+                        "idName": "nawa",
+                        "displayName": "nawā"
+                      },
+                      "englishName": "G3",
+                      "order": 0,
+                      "octave": 2,
+                      "links": {
+                        "detail": "/api/pitch-classes/note-names/nawa",
+                        "availability": "/api/pitch-classes/note-names/nawa/availability"
+                      }
+                    },
+                    {
+                      "noteName": {
+                        "idName": "saham/ramal_tuti",
+                        "displayName": "saham/ramal tūtī"
+                      },
+                      "englishName": "G4",
+                      "order": 0,
+                      "octave": 3,
+                      "links": {
+                        "detail": "/api/pitch-classes/note-names/saham/ramal_tuti",
+                        "availability": "/api/pitch-classes/note-names/saham/ramal_tuti/availability"
+                      }
+                    },
+                    {
+                      "noteName": {
+                        "idName": "qarar_qarar_nim_hisar",
+                        "displayName": "qarār qarār nīm ḥiṣār"
+                      },
+                      "englishName": "Ab--1",
+                      "order": 1,
+                      "octave": 0,
+                      "links": {
+                        "detail": "/api/pitch-classes/note-names/qarar_qarar_nim_hisar",
+                        "availability": "/api/pitch-classes/note-names/qarar_qarar_nim_hisar/availability"
+                      }
+                    },
+                    {
+                      "…": "truncated — 178 more items"
+                    }
+                  ]
+                }
         '400':
           description: Invalid request parameters
           content:
@@ -6067,6 +7180,39 @@ paths:
                               $ref: '#/components/schemas/PitchClass'
                       links:
                         $ref: '#/components/schemas/Links'
+              example:
+                {
+                  "context": {
+                    "tuningSystem": {
+                      "id": "ibnsina_1037",
+                      "idName": "ibnsina_1037",
+                      "displayName": "Ibn Sīnā  (1037) 7-Fret Oud 17-Tone",
+                      "version": "2025-11-09T00:44:40.275Z"
+                    },
+                    "startingNote": {
+                      "idName": "yegah",
+                      "displayName": "yegāh"
+                    },
+                    "noteName": {
+                      "idName": "yegah",
+                      "displayName": "yegāh"
+                    },
+                    "referenceFrequency": 97.999,
+                    "pitchClassDataType": "cents"
+                  },
+                  "pitchClass": {
+                    "pitchClassIndex": 0,
+                    "octave": 1,
+                    "noteName": "yegah",
+                    "noteNameDisplay": "yegāh",
+                    "cents": 0
+                  },
+                  "links": {
+                    "self": "https://diarmaqar.netlify.app/api/pitch-classes/note-names/yegah?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents",
+                    "availability": "/api/pitch-classes/note-names/yegah/availability",
+                    "compare": "/api/pitch-classes/note-names/yegah/compare"
+                  }
+                }
         '400':
           description: Invalid request parameters
           content:
@@ -6161,6 +7307,148 @@ paths:
                                     description: Octave where the note name was found
                   links:
                     $ref: '#/components/schemas/Links'
+              example:
+                {
+                  "noteName": {
+                    "idName": "yegah",
+                    "displayName": "yegāh"
+                  },
+                  "availability": {
+                    "count": 35,
+                    "data": [
+                      {
+                        "tuningSystem": {
+                          "id": "ronzevalle_1904",
+                          "idName": "ronzevalle_1904",
+                          "displayName": "Ronzevalle (1904) Modernist Arabic Tuning",
+                          "version": "2025-11-26T10:19:38.569Z"
+                        },
+                        "startingNotes": [
+                          {
+                            "startingNote": {
+                              "idName": "ushayran",
+                              "displayName": "ʿushayrān"
+                            },
+                            "pitchClassIndex": 20,
+                            "octave": 0
+                          },
+                          {
+                            "startingNote": {
+                              "idName": "yegah",
+                              "displayName": "yegāh"
+                            },
+                            "pitchClassIndex": 0,
+                            "octave": 1
+                          }
+                        ]
+                      },
+                      {
+                        "tuningSystem": {
+                          "id": "alkindi_874",
+                          "idName": "alkindi_874",
+                          "displayName": "al-Kindī (874) 12-Tone",
+                          "version": "2025-11-17T13:16:34.754Z"
+                        },
+                        "startingNotes": [
+                          {
+                            "startingNote": {
+                              "idName": "ushayran",
+                              "displayName": "ʿushayrān"
+                            },
+                            "pitchClassIndex": 10,
+                            "octave": 0
+                          },
+                          {
+                            "startingNote": {
+                              "idName": "yegah",
+                              "displayName": "yegāh"
+                            },
+                            "pitchClassIndex": 0,
+                            "octave": 1
+                          },
+                          {
+                            "startingNote": {
+                              "idName": "rast",
+                              "displayName": "rāst"
+                            },
+                            "pitchClassIndex": 7,
+                            "octave": 0
+                          }
+                        ]
+                      },
+                      {
+                        "tuningSystem": {
+                          "id": "angloeuropean_1700",
+                          "idName": "angloeuropean_1700",
+                          "displayName": "Anglo-European (1700) 12-EDO",
+                          "version": "2025-11-18T11:53:58.428Z"
+                        },
+                        "startingNotes": [
+                          {
+                            "startingNote": {
+                              "idName": "ushayran",
+                              "displayName": "ʿushayrān"
+                            },
+                            "pitchClassIndex": 10,
+                            "octave": 0
+                          },
+                          {
+                            "startingNote": {
+                              "idName": "yegah",
+                              "displayName": "yegāh"
+                            },
+                            "pitchClassIndex": 0,
+                            "octave": 1
+                          }
+                        ]
+                      },
+                      {
+                        "tuningSystem": {
+                          "id": "aldik_1926a",
+                          "idName": "aldik_1926a",
+                          "displayName": "al-Dīk (1926a) al-Sullam al-Fārsī or al-'Arabī (!!!)",
+                          "version": "2025-10-18T19:42:23.643Z"
+                        },
+                        "startingNotes": [
+                          {
+                            "startingNote": {
+                              "idName": "yegah",
+                              "displayName": "yegāh"
+                            },
+                            "pitchClassIndex": 0,
+                            "octave": 1
+                          }
+                        ]
+                      },
+                      {
+                        "tuningSystem": {
+                          "id": "aldik_1926b",
+                          "idName": "aldik_1926b",
+                          "displayName": "al-Dīk (1926b) Old Arabic Scale",
+                          "version": "2025-10-18T19:42:23.643Z"
+                        },
+                        "startingNotes": [
+                          {
+                            "startingNote": {
+                              "idName": "yegah",
+                              "displayName": "yegāh"
+                            },
+                            "pitchClassIndex": 0,
+                            "octave": 1
+                          }
+                        ]
+                      },
+                      {
+                        "…": "truncated — 30 more items"
+                      }
+                    ]
+                  },
+                  "links": {
+                    "self": "https://diarmaqar.netlify.app/api/pitch-classes/note-names/yegah/availability",
+                    "detail": "/api/pitch-classes/note-names/yegah",
+                    "compare": "/api/pitch-classes/note-names/yegah/compare"
+                  }
+                }
         '400':
           description: Invalid request parameters
           content:
@@ -6281,6 +7569,73 @@ paths:
                         type: integer
                   links:
                     $ref: '#/components/schemas/Links'
+              example:
+                {
+                  "context": {
+                    "noteName": {
+                      "idName": "yegah",
+                      "displayName": "yegāh"
+                    }
+                  },
+                  "comparisons": [
+                    {
+                      "tuningSystem": {
+                        "id": "ibnsina_1037",
+                        "idName": "ibnsina_1037",
+                        "displayName": "Ibn Sīnā  (1037) 7-Fret Oud 17-Tone",
+                        "version": "2025-11-09T00:44:40.275Z"
+                      },
+                      "startingNote": {
+                        "idName": "yegah",
+                        "displayName": "yegāh"
+                      },
+                      "pitchClass": {
+                        "pitchClassIndex": 0,
+                        "octave": 1,
+                        "noteName": "yegah",
+                        "noteNameDisplay": "yegāh",
+                        "cents": 0
+                      },
+                      "context": {
+                        "referenceFrequency": 97.999,
+                        "pitchClassDataType": "cents"
+                      }
+                    },
+                    {
+                      "tuningSystem": {
+                        "id": "alfarabi_950g",
+                        "idName": "alfarabi_950g",
+                        "displayName": "al-Fārābī (950g) First Oud Tuning (Full First Octave) 27-Tone",
+                        "version": "2025-10-18T19:42:23.643Z"
+                      },
+                      "startingNote": {
+                        "idName": "yegah",
+                        "displayName": "yegāh"
+                      },
+                      "pitchClass": {
+                        "pitchClassIndex": 0,
+                        "octave": 1,
+                        "noteName": "yegah",
+                        "noteNameDisplay": "yegāh",
+                        "cents": 0
+                      },
+                      "context": {
+                        "referenceFrequency": 97.999,
+                        "pitchClassDataType": "cents"
+                      }
+                    }
+                  ],
+                  "meta": {
+                    "totalComparisons": 2,
+                    "successfulComparisons": 2,
+                    "failedComparisons": 0
+                  },
+                  "links": {
+                    "self": "https://diarmaqar.netlify.app/api/pitch-classes/note-names/yegah/compare?tuningSystems=ibnsina_1037%2Calfarabi_950g&pitchClassDataType=cents&startingNote=yegah",
+                    "detail": "/api/pitch-classes/note-names/yegah",
+                    "availability": "/api/pitch-classes/note-names/yegah/availability"
+                  }
+                }
         '400':
           description: Invalid request parameters
           content:
@@ -6452,6 +7807,95 @@ paths:
                                   type: number
                       links:
                         $ref: '#/components/schemas/Links'
+              example:
+                {
+                  "context": {
+                    "noteNames": [
+                      {
+                        "idName": "yegah",
+                        "displayName": "yegāh"
+                      },
+                      {
+                        "idName": "dugah",
+                        "displayName": "dūgāh"
+                      },
+                      {
+                        "idName": "segah",
+                        "displayName": "segāh"
+                      }
+                    ]
+                  },
+                  "intervals": [
+                    {
+                      "tuningSystemContext": {
+                        "tuningSystem": {
+                          "id": "ibnsina_1037",
+                          "idName": "ibnsina_1037",
+                          "displayName": "Ibn Sīnā  (1037) 7-Fret Oud 17-Tone",
+                          "version": "2025-11-09T00:44:40.275Z"
+                        },
+                        "startingNote": {
+                          "idName": "yegah",
+                          "displayName": "yegāh"
+                        },
+                        "referenceFrequency": 97.999
+                      },
+                      "fromNote": {
+                        "idName": "yegah",
+                        "displayName": "yegāh"
+                      },
+                      "toNote": {
+                        "idName": "dugah",
+                        "displayName": "dūgāh"
+                      },
+                      "intervalData": {
+                        "fraction": "3/2",
+                        "cents": 701.9550008653874,
+                        "decimalRatio": 1.5,
+                        "stringLength": -333.33333333333337,
+                        "fretDivision": 333.333,
+                        "originalValue": "3/2",
+                        "originalValueType": "fraction"
+                      }
+                    },
+                    {
+                      "tuningSystemContext": {
+                        "tuningSystem": {
+                          "id": "ibnsina_1037",
+                          "idName": "ibnsina_1037",
+                          "displayName": "Ibn Sīnā  (1037) 7-Fret Oud 17-Tone",
+                          "version": "2025-11-09T00:44:40.275Z"
+                        },
+                        "startingNote": {
+                          "idName": "yegah",
+                          "displayName": "yegāh"
+                        },
+                        "referenceFrequency": 97.999
+                      },
+                      "fromNote": {
+                        "idName": "dugah",
+                        "displayName": "dūgāh"
+                      },
+                      "toNote": {
+                        "idName": "segah",
+                        "displayName": "segāh"
+                      },
+                      "intervalData": {
+                        "fraction": "13/12",
+                        "cents": 138.57266090392318,
+                        "decimalRatio": 1.0833333333333333,
+                        "stringLength": -51.28205128205127,
+                        "fretDivision": 51.28199999999998,
+                        "originalValue": "13/12",
+                        "originalValueType": "fraction"
+                      }
+                    }
+                  ],
+                  "links": {
+                    "self": "https://diarmaqar.netlify.app/api/intervals?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents&noteNames=yegah%2Cdugah%2Csegah",
+                    "compare": "/api/intervals/compare?noteNames=yegah,dugah,segah"
+                  }
+                }
         '400':
           description: Invalid request parameters
           content:
@@ -6594,6 +8038,146 @@ paths:
                         type: integer
                   links:
                     $ref: '#/components/schemas/Links'
+              example:
+                {
+                  "context": {
+                    "noteNames": [
+                      {
+                        "idName": "yegah",
+                        "displayName": "yegāh"
+                      },
+                      {
+                        "idName": "dugah",
+                        "displayName": "dūgāh"
+                      },
+                      {
+                        "idName": "segah",
+                        "displayName": "segāh"
+                      }
+                    ]
+                  },
+                  "comparisons": [
+                    {
+                      "tuningSystem": {
+                        "id": "ibnsina_1037",
+                        "idName": "ibnsina_1037",
+                        "displayName": "Ibn Sīnā  (1037) 7-Fret Oud 17-Tone",
+                        "version": "2025-11-09T00:44:40.275Z"
+                      },
+                      "startingNote": {
+                        "idName": "yegah",
+                        "displayName": "yegāh"
+                      },
+                      "intervals": [
+                        {
+                          "from": {
+                            "idName": "yegah",
+                            "displayName": "yegāh"
+                          },
+                          "to": {
+                            "idName": "dugah",
+                            "displayName": "dūgāh"
+                          },
+                          "interval": {
+                            "fraction": "3/2",
+                            "cents": 701.9550008653874,
+                            "decimalRatio": 1.5,
+                            "stringLength": -333.33333333333337,
+                            "fretDivision": 333.333,
+                            "originalValue": "3/2",
+                            "originalValueType": "fraction"
+                          }
+                        },
+                        {
+                          "from": {
+                            "idName": "dugah",
+                            "displayName": "dūgāh"
+                          },
+                          "to": {
+                            "idName": "segah",
+                            "displayName": "segāh"
+                          },
+                          "interval": {
+                            "fraction": "13/12",
+                            "cents": 138.57266090392318,
+                            "decimalRatio": 1.0833333333333333,
+                            "stringLength": -51.28205128205127,
+                            "fretDivision": 51.28199999999998,
+                            "originalValue": "13/12",
+                            "originalValueType": "fraction"
+                          }
+                        }
+                      ],
+                      "context": {
+                        "referenceFrequency": 97.999
+                      }
+                    },
+                    {
+                      "tuningSystem": {
+                        "id": "alfarabi_950g",
+                        "idName": "alfarabi_950g",
+                        "displayName": "al-Fārābī (950g) First Oud Tuning (Full First Octave) 27-Tone",
+                        "version": "2025-10-18T19:42:23.643Z"
+                      },
+                      "startingNote": {
+                        "idName": "yegah",
+                        "displayName": "yegāh"
+                      },
+                      "intervals": [
+                        {
+                          "from": {
+                            "idName": "yegah",
+                            "displayName": "yegāh"
+                          },
+                          "to": {
+                            "idName": "dugah",
+                            "displayName": "dūgāh"
+                          },
+                          "interval": {
+                            "fraction": "3/2",
+                            "cents": 701.9550008653874,
+                            "decimalRatio": 1.5,
+                            "stringLength": -333.33333333333337,
+                            "fretDivision": 333.333,
+                            "originalValue": "3/2",
+                            "originalValueType": "fraction"
+                          }
+                        },
+                        {
+                          "from": {
+                            "idName": "dugah",
+                            "displayName": "dūgāh"
+                          },
+                          "to": {
+                            "idName": "segah",
+                            "displayName": "segāh"
+                          },
+                          "interval": {
+                            "fraction": "12/11",
+                            "cents": 150.63705850063081,
+                            "decimalRatio": 1.0909090909090908,
+                            "stringLength": -55.55555555555554,
+                            "fretDivision": 55.55599999999998,
+                            "originalValue": "12/11",
+                            "originalValueType": "fraction"
+                          }
+                        }
+                      ],
+                      "context": {
+                        "referenceFrequency": 97.999
+                      }
+                    }
+                  ],
+                  "meta": {
+                    "totalComparisons": 2,
+                    "successfulComparisons": 2,
+                    "failedComparisons": 0
+                  },
+                  "links": {
+                    "self": "https://diarmaqar.netlify.app/api/intervals/compare?tuningSystems=ibnsina_1037%2Calfarabi_950g&startingNote=yegah&pitchClassDataType=cents&noteNames=yegah%2Cdugah%2Csegah",
+                    "intervals": "/api/intervals?noteNames=yegah,dugah,segah"
+                  }
+                }
         '400':
           description: Invalid request parameters
           content:
@@ -7370,6 +8954,40 @@ paths:
                     properties:
                       count:
                         type: integer
+              example:
+                {
+                  "context": {
+                    "source": {
+                      "id": "alshawwa_1946",
+                      "idName": "alshawwa_1946",
+                      "displayName": "al-Qawaʿid al-Fannīya fī al-Mūsiqa al-Sharqīya wa al-Gharbīya"
+                    }
+                  },
+                  "count": 1,
+                  "data": [
+                    {
+                      "tuningSystem": {
+                        "id": "allami_2025",
+                        "idName": "allami_2025",
+                        "displayName": "Allami (2025) al-Ṣabbāgh with al-Shawwā's 28-Tones",
+                        "version": "2025-12-11T23:36:54.970Z",
+                        "year": "2025"
+                      },
+                      "sourceReferences": [
+                        {
+                          "page": "13"
+                        }
+                      ],
+                      "startingNotes": [
+                        "rast"
+                      ],
+                      "links": {
+                        "detail": "/api/tuning-systems/allami_2025",
+                        "source": "/api/sources/alshawwa_1946"
+                      }
+                    }
+                  ]
+                }
         '404':
           description: Source not found
           content:
@@ -7455,6 +9073,107 @@ paths:
                     properties:
                       count:
                         type: integer
+              example:
+                {
+                  "context": {
+                    "source": {
+                      "id": "alshawwa_1946",
+                      "idName": "alshawwa_1946",
+                      "displayName": "al-Qawaʿid al-Fannīya fī al-Mūsiqa al-Sharqīya wa al-Gharbīya"
+                    }
+                  },
+                  "count": 36,
+                  "data": [
+                    {
+                      "maqam": {
+                        "id": "1",
+                        "idName": "maqam_rast",
+                        "displayName": "maqām rāst",
+                        "version": "2025-12-10T17:03:34.565Z"
+                      },
+                      "sourceReferences": [
+                        {
+                          "page": "42"
+                        }
+                      ],
+                      "links": {
+                        "detail": "/api/maqamat/maqam_rast",
+                        "source": "/api/sources/alshawwa_1946"
+                      }
+                    },
+                    {
+                      "maqam": {
+                        "id": "6",
+                        "idName": "maqam_nawa_athar",
+                        "displayName": "maqām nawā athar",
+                        "version": "2025-12-10T18:28:28.107Z"
+                      },
+                      "sourceReferences": [
+                        {
+                          "page": "52"
+                        }
+                      ],
+                      "links": {
+                        "detail": "/api/maqamat/maqam_nawa_athar",
+                        "source": "/api/sources/alshawwa_1946"
+                      }
+                    },
+                    {
+                      "maqam": {
+                        "id": "10",
+                        "idName": "maqam_nahawand",
+                        "displayName": "maqām nahāwand",
+                        "version": "2025-10-18T19:41:17.132Z"
+                      },
+                      "sourceReferences": [
+                        {
+                          "page": "49"
+                        }
+                      ],
+                      "links": {
+                        "detail": "/api/maqamat/maqam_nahawand",
+                        "source": "/api/sources/alshawwa_1946"
+                      }
+                    },
+                    {
+                      "maqam": {
+                        "id": "11",
+                        "idName": "maqam_nahawand_kabir",
+                        "displayName": "maqām nahāwand kabīr",
+                        "version": "2025-10-18T19:41:17.132Z"
+                      },
+                      "sourceReferences": [
+                        {
+                          "page": "50"
+                        }
+                      ],
+                      "links": {
+                        "detail": "/api/maqamat/maqam_nahawand_kabir",
+                        "source": "/api/sources/alshawwa_1946"
+                      }
+                    },
+                    {
+                      "maqam": {
+                        "id": "17",
+                        "idName": "maqam_ajam_ushayran",
+                        "displayName": "maqām ʿajam ʿushayrān",
+                        "version": "2025-10-18T19:41:17.132Z"
+                      },
+                      "sourceReferences": [
+                        {
+                          "page": "30"
+                        }
+                      ],
+                      "links": {
+                        "detail": "/api/maqamat/maqam_ajam_ushayran",
+                        "source": "/api/sources/alshawwa_1946"
+                      }
+                    },
+                    {
+                      "…": "truncated — 31 more items"
+                    }
+                  ]
+                }
         '404':
           description: Source not found
           content:
@@ -7540,6 +9259,53 @@ paths:
                     properties:
                       count:
                         type: integer
+              example:
+                {
+                  "context": {
+                    "source": {
+                      "id": "alshawwa_1946",
+                      "idName": "alshawwa_1946",
+                      "displayName": "al-Qawaʿid al-Fannīya fī al-Mūsiqa al-Sharqīya wa al-Gharbīya"
+                    }
+                  },
+                  "count": 2,
+                  "data": [
+                    {
+                      "jins": {
+                        "id": "21",
+                        "idName": "jins_buselik_(al-shawwa)",
+                        "displayName": "jins būselīk (al-Shawwā)",
+                        "version": "2025-10-18T19:34:26.343Z"
+                      },
+                      "sourceReferences": [
+                        {
+                          "page": "70"
+                        }
+                      ],
+                      "links": {
+                        "detail": "/api/ajnas/jins_buselik_(al-shawwa)",
+                        "source": "/api/sources/alshawwa_1946"
+                      }
+                    },
+                    {
+                      "jins": {
+                        "id": "24",
+                        "idName": "jins_awj_ara",
+                        "displayName": "jins awj ʾārāʾ",
+                        "version": "2025-10-18T19:34:26.343Z"
+                      },
+                      "sourceReferences": [
+                        {
+                          "page": "38"
+                        }
+                      ],
+                      "links": {
+                        "detail": "/api/ajnas/jins_awj_ara",
+                        "source": "/api/sources/alshawwa_1946"
+                      }
+                    }
+                  ]
+                }
         '404':
           description: Source not found
           content:

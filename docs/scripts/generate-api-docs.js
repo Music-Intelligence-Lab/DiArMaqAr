@@ -8,6 +8,19 @@ const yaml = require('js-yaml');
  * Static documentation for LLM consumption and human reference
  */
 
+/** Truncation rule (matches spec §A2):
+ *  if payload.data is an array > 10 items, keep the first 5 and append a marker.
+ *  Non-matching payloads returned unchanged. Defence-in-depth — examples are
+ *  already trimmed at fetch time, but a future hand-edited example could exceed 10.
+ */
+function truncateForMarkdown(payload) {
+  if (payload && Array.isArray(payload.data) && payload.data.length > 10) {
+    const total = payload.data.length;
+    return { ...payload, data: [...payload.data.slice(0, 5), { '…': `truncated — ${total - 5} more items` }] };
+  }
+  return payload;
+}
+
 function generateMarkdownFromOpenAPI(openapiSpec) {
   const { info, servers, paths, components } = openapiSpec;
 
@@ -90,7 +103,7 @@ Most endpoints support these optional parameters:
   }
 
   // Generate documentation for each tag
-  const tagOrder = ['Maqāmāt', 'Ajnās', 'Tuning Systems', 'Pitch Classes', 'Intervals', 'Sources'];
+  const tagOrder = ['Maqāmāt', 'Ajnās', 'Tuning Systems', 'Modulations', 'Pitch Classes', 'Intervals', 'Sources'];
   
   for (const tag of tagOrder) {
     if (!pathsByTag[tag]) continue;
@@ -269,11 +282,33 @@ function generateEndpointDocumentation(path, method, operation, spec) {
   doc += `curl "${baseUrl}${examplePath}${queryString}"\n`;
   doc += `\`\`\`\n\n`;
   
-  // Response description
+  // Response description + example body
   if (responses && responses['200']) {
     const response = responses['200'];
     if (response.description) {
       doc += `**Response:** ${response.description}\n\n`;
+    }
+    const jsonContent = response.content && response.content['application/json'];
+    if (jsonContent) {
+      let exampleValue;
+      let exampleLabel = '';
+      if (jsonContent.example !== undefined) {
+        exampleValue = jsonContent.example;
+      } else if (jsonContent.examples && typeof jsonContent.examples === 'object') {
+        const entries = Object.entries(jsonContent.examples);
+        if (entries.length > 0) {
+          const [key, entry] = entries[0];
+          exampleValue = entry && entry.value !== undefined ? entry.value : entry;
+          exampleLabel = ` — ${key}`;
+        }
+      }
+      if (exampleValue !== undefined) {
+        const rendered = truncateForMarkdown(exampleValue);
+        doc += `**Example response${exampleLabel}:**\n\n`;
+        doc += '```json\n';
+        doc += JSON.stringify(rendered, null, 2) + '\n';
+        doc += '```\n\n';
+      }
     }
   }
   
