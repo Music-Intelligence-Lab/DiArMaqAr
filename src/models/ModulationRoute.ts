@@ -128,6 +128,12 @@ export interface ModulationRoutesRequest {
   returnToStartingMaqam?: boolean;
   /** Maximum number of routes to return (default: 10) */
   maxRoutes?: number;
+  /**
+   * When true (default), only the shortest-length routes are returned.
+   * When false, the result is filled out with progressively longer routes
+   * (still simple paths) up to `maxRoutes` / `maxHops`.
+   */
+  limitToShortestHops?: boolean;
 }
 
 /**

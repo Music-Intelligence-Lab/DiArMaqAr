@@ -4107,6 +4107,9 @@ paths:
         - Finds shortest paths (fewest modulation steps) using BFS algorithm
         - Supports waypoints for multi-stop journeys
         - Optional return-to-start for round-trip routes (reflecting traditional maqām performance practice)
+        - `limitToShortestHops=false` pads the result with progressively
+          longer routes up to `maxRoutes` / `maxHops` (default `true`:
+          only shortest-length routes are returned)
         - Results cached per tuning system + starting note combination for performance
         - `maxHops` is required and capped at 20 to prevent combinatorial explosion
 
@@ -4218,6 +4221,21 @@ paths:
             minimum: 1
             default: 10
           example: 10
+        - name: limitToShortestHops
+          in: query
+          required: false
+          description: |
+            When `true` (default), only routes at the minimum hop count are
+            returned — all routes in the response share the same `hops`
+            value. When `false`, the response is filled out with
+            progressively longer simple paths (still capped by `maxHops` and
+            `maxRoutes`, ordered shortest-first). Use `false` when you want
+            a diverse sampling of routes, not just the shortest.
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "true"
+          example: "false"
         - name: includeArabic
           in: query
           required: false
@@ -4322,6 +4340,8 @@ paths:
                             type: integer
                           returnToStartingMaqam:
                             type: boolean
+                          limitToShortestHops:
+                            type: boolean
                   message:
                     type: string
                     description: Present when no routes found, explains why
@@ -4391,6 +4411,7 @@ paths:
                         maxHops: 5
                         maxRoutes: 10
                         returnToStartingMaqam: false
+                        limitToShortestHops: true
                 noRouteFound:
                   summary: No path found within constraints
                   value:
@@ -4420,6 +4441,7 @@ paths:
                         maxHops: 3
                         maxRoutes: 10
                         returnToStartingMaqam: false
+                        limitToShortestHops: true
                     message: "No path found from 'maqam_rast' to 'maqam_sikah' within 3 hops"
         '400':
           description: Invalid or missing required parameters

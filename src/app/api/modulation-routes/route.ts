@@ -27,6 +27,7 @@ export const OPTIONS = handleCorsPreflightRequest;
  * - waypoints: Comma-separated maqam:tonic pairs (e.g., "maqam_bayyat:dugah,maqam_saba")
  * - returnToStartingMaqam: true|false - Calculate return path (default: false)
  * - maxRoutes: Maximum number of routes to return (default: 10)
+ * - limitToShortestHops: true|false - Only return shortest-length routes (default: true)
  * - includeArabic: true|false - Include Arabic display names (default: false)
  *
  * Response includes:
@@ -49,6 +50,10 @@ export async function GET(request: Request) {
     const maxHopsParam = searchParams.get("maxHops");
     const returnToStartingMaqam = searchParams.get("returnToStartingMaqam") === "true";
     const maxRoutesParam = searchParams.get("maxRoutes");
+    // Default true — same behaviour as before the flag existed (only shortest
+    // routes are returned). When false, results are padded with longer paths.
+    const limitToShortestHopsParam = searchParams.get("limitToShortestHops");
+    const limitToShortestHops = limitToShortestHopsParam === null ? true : limitToShortestHopsParam === "true";
 
     // Parse includeArabic parameter
     let inArabic = false;
@@ -225,6 +230,7 @@ export async function GET(request: Request) {
         maxHops,
         returnToStartingMaqam,
         maxRoutes,
+        limitToShortestHops,
       }
     );
 
@@ -251,6 +257,7 @@ export async function GET(request: Request) {
               maxHops,
               returnToStartingMaqam,
               maxRoutes,
+              limitToShortestHops,
               inArabic
             ),
             message: result.error,
@@ -303,6 +310,7 @@ export async function GET(request: Request) {
       maxHops,
       returnToStartingMaqam,
       maxRoutes,
+      limitToShortestHops,
       inArabic
     );
 
@@ -333,6 +341,7 @@ function buildContext(
   maxHops: number,
   returnToStartingMaqam: boolean,
   maxRoutes: number,
+  limitToShortestHops: boolean,
   inArabic: boolean
 ): any {
   const tuningSystems = getTuningSystems();
@@ -351,6 +360,7 @@ function buildContext(
       maxHops,
       maxRoutes,
       returnToStartingMaqam,
+      limitToShortestHops,
     },
   };
 

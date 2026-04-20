@@ -410,34 +410,60 @@ function findNodeKey(
 
 /**
  * BFS pathfinding between two nodes.
- * Returns all shortest paths (same hop count) up to the limit.
+ *
+ * With `limitToShortestHops = true` (the default): returns all shortest
+ * paths (same minimum hop count) up to `limit`. Runs O(V + E) via a single
+ * level-by-level BFS that builds a predecessor DAG, then reconstructs paths.
+ *
+ * With `limitToShortestHops = false`: returns paths in order of increasing
+ * hop count — shortest first, then next-shortest, and so on — until either
+ * `limit` routes are collected or depth exceeds `maxHops`. Uses iterative
+ * deepening DFS with a backward-BFS distance map for pruning (so dead-end
+ * branches that can't reach an endKey within the remaining budget are cut).
  *
  * @param graph - The modulation graph
- * @param startKey - Starting node key
- * @param endKey - Target node key
+ * @param startKeys - Accepted starting nodes
+ * @param endKeys - Accepted ending nodes
  * @param maxHops - Maximum depth to search
  * @param limit - Maximum number of paths to return
- * @returns Array of routes found
+ * @param limitToShortestHops - If true, return only shortest-length paths
+ * @returns Array of routes found, ordered by hop count ascending
  */
 function bfsShortestPaths(
   graph: ModulationGraph,
   startKeys: string[],
   endKeys: Set<string>,
   maxHops: number,
-  limit: number
+  limit: number,
+  limitToShortestHops: boolean = true
 ): ModulationRoute[] {
   // Handle same-node case: any start already in the target set
   for (const sk of startKeys) {
     if (endKeys.has(sk)) return [{ hops: 0, steps: [] }];
   }
 
-  // Standard multi-source/multi-target all-shortest-paths BFS: level-by-level
-  // relaxation to fill in dist[node] (shortest hop count from any startKey)
-  // and preds[node] (every (prevKey, edge) consistent with a shortest path).
-  // Reconstruct all shortest paths by walking preds from each reached endKey
-  // back to a startKey. Avg out-degree in this graph is ~52, so maxHops=5
-  // would produce 52^5 ≈ 380M path expansions under an enumerate-every-path
-  // BFS; this level-by-level variant runs in O(V + E) = ~21k ops instead.
+  if (limitToShortestHops) {
+    return bfsAllShortestPaths(graph, startKeys, endKeys, maxHops, limit);
+  }
+  return bfsPathsByIncreasingHops(graph, startKeys, endKeys, maxHops, limit);
+}
+
+/**
+ * Standard multi-source/multi-target all-shortest-paths BFS: level-by-level
+ * relaxation fills in dist[node] (shortest hop count from any startKey) and
+ * preds[node] (every (prevKey, edge) consistent with a shortest path). Walks
+ * preds from each reached endKey back to a startKey to enumerate every
+ * shortest path. Avg out-degree in this graph is ~52, so maxHops=5 would
+ * produce 52^5 ≈ 380M path expansions under an enumerate-every-path BFS;
+ * this level-by-level variant runs in O(V + E) = ~21k ops instead.
+ */
+function bfsAllShortestPaths(
+  graph: ModulationGraph,
+  startKeys: string[],
+  endKeys: Set<string>,
+  maxHops: number,
+  limit: number
+): ModulationRoute[] {
   const dist = new Map<string, number>();
   const preds = new Map<string, Array<{ fromKey: string; edge: ModulationEdge }>>();
   const startSet = new Set(startKeys);
@@ -457,24 +483,18 @@ function bfsShortestPaths(
         const existingDist = dist.get(v);
 
         if (existingDist === undefined) {
-          // First time reaching v — depth+1 is the shortest distance to v
           dist.set(v, depth + 1);
           preds.set(v, [{ fromKey: u, edge }]);
           nextFrontierSet.add(v);
         } else if (existingDist === depth + 1) {
-          // Another shortest-path predecessor for v
           preds.get(v)!.push({ fromKey: u, edge });
         }
-        // else: existingDist < depth + 1 means v already has a strictly
-        // shorter path; this edge is on a longer path and we ignore it
       }
     }
 
     depth++;
     frontier = [...nextFrontierSet];
 
-    // After this level, check whether any endKey has been reached; if so we
-    // lock the shortest-path depth and stop expanding further layers.
     for (const ek of endKeys) {
       const d = dist.get(ek);
       if (d !== undefined) {
@@ -485,9 +505,6 @@ function bfsShortestPaths(
 
   if (reachedDepth === null) return [];
 
-  // Collect every endKey that was reached at the shortest distance so we can
-  // enumerate alternate shortest-path routes landing on different register
-  // siblings within the target set.
   const reachedEnds: string[] = [];
   for (const ek of endKeys) {
     if (dist.get(ek) === reachedDepth) reachedEnds.push(ek);
@@ -521,6 +538,108 @@ function bfsShortestPaths(
   for (const endKey of reachedEnds) {
     if (routes.length >= limit) break;
     walk(endKey, []);
+  }
+
+  return routes;
+}
+
+/**
+ * Iterative-deepening DFS that enumerates simple paths in order of
+ * increasing hop count — shortest first, then next-shortest, and so on —
+ * until `limit` routes are collected or depth > `maxHops`. Pruned by a
+ * backward-BFS distance map so branches that can't possibly reach any
+ * endKey within the remaining hop budget are cut before recursing.
+ *
+ * Complexity is worst-case exponential in `maxHops`, but the backward-
+ * distance pruning is aggressive — most branches die at the first step
+ * when the nearest endKey is farther than the remaining budget allows.
+ * The `limit` cap provides an additional early-exit safeguard.
+ */
+function bfsPathsByIncreasingHops(
+  graph: ModulationGraph,
+  startKeys: string[],
+  endKeys: Set<string>,
+  maxHops: number,
+  limit: number
+): ModulationRoute[] {
+  // Backward BFS from endKeys: distToEnd[v] = shortest hop count from v to
+  // ANY endKey using a single reverse traversal of the graph. Lets us prune
+  // DFS branches that can't reach an endKey within the remaining budget.
+  const reverseAdj = new Map<string, string[]>();
+  for (const [u, edges] of graph.adjacencyList) {
+    for (const e of edges) {
+      if (!reverseAdj.has(e.targetNodeKey)) reverseAdj.set(e.targetNodeKey, []);
+      reverseAdj.get(e.targetNodeKey)!.push(u);
+    }
+  }
+  const distToEnd = new Map<string, number>();
+  for (const ek of endKeys) distToEnd.set(ek, 0);
+  let rframe: string[] = [...endKeys];
+  let rdepth = 0;
+  while (rframe.length > 0 && rdepth < maxHops) {
+    const next = new Set<string>();
+    for (const u of rframe) {
+      for (const p of reverseAdj.get(u) ?? []) {
+        if (!distToEnd.has(p)) {
+          distToEnd.set(p, rdepth + 1);
+          next.add(p);
+        }
+      }
+    }
+    rdepth++;
+    rframe = [...next];
+  }
+
+  const routes: ModulationRoute[] = [];
+  const seenSigs = new Set<string>();
+
+  // DFS with depth bound = targetDepth, collecting only paths that END at
+  // an endKey at EXACTLY targetDepth hops. This yields paths in depth order
+  // when called with targetDepth = 1, 2, 3, ...
+  const dfs = (
+    current: string,
+    remaining: number,
+    path: ModulationStep[],
+    visited: Set<string>
+  ): void => {
+    if (routes.length >= limit) return;
+    if (remaining === 0) {
+      if (endKeys.has(current) && path.length > 0) {
+        const sig = path.map((s) => s.to.maqamIdName + ":" + s.to.tonicId + "/" + s.modulationCategory).join("|");
+        if (!seenSigs.has(sig)) {
+          seenSigs.add(sig);
+          routes.push({ hops: path.length, steps: [...path] });
+        }
+      }
+      return;
+    }
+    // Prune: nothing reachable from here to an endKey in `remaining` hops
+    const d = distToEnd.get(current);
+    if (d === undefined || d > remaining) return;
+
+    const edges = graph.adjacencyList.get(current) ?? [];
+    for (const edge of edges) {
+      if (visited.has(edge.targetNodeKey)) continue; // simple paths only
+      visited.add(edge.targetNodeKey);
+      path.push({
+        from: graph.nodes.get(current)!,
+        to: edge.targetNode,
+        modulationDegree: edge.degree,
+        modulationCategory: edge.category,
+      });
+      dfs(edge.targetNodeKey, remaining - 1, path, visited);
+      path.pop();
+      visited.delete(edge.targetNodeKey);
+      if (routes.length >= limit) return;
+    }
+  };
+
+  for (let targetDepth = 1; targetDepth <= maxHops && routes.length < limit; targetDepth++) {
+    for (const sk of startKeys) {
+      if (routes.length >= limit) break;
+      const visited = new Set<string>([sk]);
+      dfs(sk, targetDepth, [], visited);
+    }
   }
 
   return routes;
@@ -637,6 +756,7 @@ export function findModulationRoutes(
     maxHops: number;
     returnToStartingMaqam?: boolean;
     maxRoutes?: number;
+    limitToShortestHops?: boolean;
   }
 ): {
   journeys: ModulationJourney[];
@@ -659,6 +779,7 @@ export function findModulationRoutes(
     maxHops,
     returnToStartingMaqam = false,
     maxRoutes = 10,
+    limitToShortestHops = true,
   } = options;
 
   // Internal alias used as the enumeration cap across BFS / segment routines,
@@ -845,7 +966,8 @@ export function findModulationRoutes(
       [sourceNodeKey],
       new Set([targetNodeKey]),
       maxHops,
-      limit
+      limit,
+      limitToShortestHops
     );
   } else {
     const allKeys = [sourceNodeKey, ...waypointKeys, targetNodeKey];
@@ -895,7 +1017,8 @@ export function findModulationRoutes(
       [targetNodeKey],
       new Set([sourceNodeKey]),
       maxHops,
-      limit
+      limit,
+      limitToShortestHops
     );
   }
 
