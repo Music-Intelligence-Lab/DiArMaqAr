@@ -25,6 +25,46 @@ servers:
     description: Production server
   - url: http://localhost:3000/api
     description: Development server
+tags:
+  - name: Maqāmāt
+    description: |
+      Maqām (pl. maqāmāt) — complete modal framework in Arabic music comprising
+      an ascending tonal structure (ṣuʿūd) and descending counterpart (hubūṭ),
+      typically built from two or more ajnās, along with characteristic sayr
+      (melodic-development path). Each maqām realises differently across
+      tuning systems and starting notes.
+  - name: Ajnās
+    description: |
+      Jins (pl. ajnās) — fundamental building block of a maqām, a tetrachord
+      (four notes), pentachord (five), or trichord (three) with a specific
+      interval pattern. Multiple ajnās combine to form a maqām.
+  - name: Tuning Systems
+    description: |
+      Tanāghīm (tuning systems) — historically documented pitch-class
+      collections, from al-Kindī (874 CE) through al-Fārābī, Ibn Sīnā,
+      Ṣafī al-Dīn, and into contemporary approaches. Each system defines
+      which maqāmāt and ajnās can be realised and from which starting notes.
+  - name: Intervals
+    description: |
+      Pitch-class intervals expressed in multiple formats (cents, ratios,
+      fractions, string-length, frequency) between consecutive or arbitrary
+      pitches within a tuning system.
+  - name: Pitch Classes
+    description: |
+      Individual pitches identified by culturally-specific note names
+      (e.g. yegāh, ʿushayrān, dūgāh, sīkāh) carried across tuning systems.
+      Each note name maps to a different frequency depending on the tuning
+      system in use.
+  - name: Sources
+    description: |
+      Bibliographic sources — historical treatises and contemporary
+      publications from which the archive's maqāmāt, ajnās, and tuning
+      systems are drawn, with page-level citations.
+  - name: Modulations
+    description: |
+      Intiqāl — modulation routes between maqāmāt, generated per al-Shawwā's
+      1946 modulation guidelines. Modulations depend on the source maqām,
+      tuning system, and starting note.
 paths:
   /maqamat:
     get:
