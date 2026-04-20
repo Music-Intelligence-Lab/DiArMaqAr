@@ -1782,7 +1782,9 @@ export function exportMaqamWithTuningSystemOctave(
   tuningSystem: TuningSystem,
   startingNote: string,
   useAscending: boolean = true,
-  referenceFrequency?: number
+  referenceFrequency?: number,
+  scalaFilenameOverride?: string,
+  keymapFilenameOverride?: string
 ): {
   scalaContent: string;
   scalaFilename: string;
@@ -1830,12 +1832,14 @@ export function exportMaqamWithTuningSystemOctave(
     `${tuningSystem.getTitleEnglish()} Octave 1 (starting note: ${startingNote})`
   );
 
-  // Generate filenames with starting note
+  // Filenames: caller-supplied overrides (from export-modal) are used verbatim
+  // so the KBM's "This keyboard mapping uses the following .scl file:" line
+  // matches the actual downloaded companion. Fall back to a legacy default.
   const tuningSystemId = tuningSystem.getId();
   const maqamName = maqam.name.toLowerCase().replace(/\s+/g, '_');
   const startingNoteForFilename = startingNote.toLowerCase().replace(/\s+/g, '_');
-  const scalaFilename = `${tuningSystemId}_${startingNoteForFilename}_octave1.scl`;
-  const keymapFilename = `${maqamName}_${tuningSystemId}_${startingNoteForFilename}.kbm`;
+  const scalaFilename = scalaFilenameOverride || `${tuningSystemId}_${startingNoteForFilename}_octave1.scl`;
+  const keymapFilename = keymapFilenameOverride || `${maqamName}_${tuningSystemId}_${startingNoteForFilename}.kbm`;
 
   // Generate .kbm file content (maqam mapping)
   // Get reference frequency from the starting note's pitch class
@@ -1884,7 +1888,9 @@ export function exportJinsWithTuningSystemOctave(
   jinsInput: Jins | JinsData,
   tuningSystem: TuningSystem,
   startingNote: string,
-  referenceFrequency?: number
+  referenceFrequency?: number,
+  scalaFilenameOverride?: string,
+  keymapFilenameOverride?: string
 ): {
   scalaContent: string;
   scalaFilename: string;
@@ -1930,12 +1936,14 @@ export function exportJinsWithTuningSystemOctave(
     `${tuningSystem.getTitleEnglish()} Octave 1 (starting note: ${startingNote})`
   );
 
-  // Generate filenames with starting note
+  // Filenames: caller-supplied overrides (from export-modal) are used verbatim
+  // so the KBM's "This keyboard mapping uses the following .scl file:" line
+  // matches the actual downloaded companion. Fall back to a legacy default.
   const tuningSystemId = tuningSystem.getId();
   const jinsName = jins.name.toLowerCase().replace(/\s+/g, '_');
   const startingNoteForFilename = startingNote.toLowerCase().replace(/\s+/g, '_');
-  const scalaFilename = `${tuningSystemId}_${startingNoteForFilename}_octave1.scl`;
-  const keymapFilename = `${jinsName}_${tuningSystemId}_${startingNoteForFilename}.kbm`;
+  const scalaFilename = scalaFilenameOverride || `${tuningSystemId}_${startingNoteForFilename}_octave1.scl`;
+  const keymapFilename = keymapFilenameOverride || `${jinsName}_${tuningSystemId}_${startingNoteForFilename}.kbm`;
 
   // Generate .kbm file content (jins mapping)
   // Get reference frequency from the starting note's pitch class
