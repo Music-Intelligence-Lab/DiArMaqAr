@@ -435,7 +435,8 @@ function bfsShortestPaths(
   endKeys: Set<string>,
   maxHops: number,
   limit: number,
-  limitToShortestHops: boolean = true
+  limitToShortestHops: boolean = true,
+  allowOctaveJumps: boolean = true
 ): ModulationRoute[] {
   // Handle same-node case: any start already in the target set
   for (const sk of startKeys) {
@@ -443,9 +444,17 @@ function bfsShortestPaths(
   }
 
   if (limitToShortestHops) {
-    return bfsAllShortestPaths(graph, startKeys, endKeys, maxHops, limit);
+    return bfsAllShortestPaths(graph, startKeys, endKeys, maxHops, limit, allowOctaveJumps);
   }
-  return bfsPathsByIncreasingHops(graph, startKeys, endKeys, maxHops, limit);
+  return bfsPathsByIncreasingHops(graph, startKeys, endKeys, maxHops, limit, allowOctaveJumps);
+}
+
+/**
+ * Returns true for the non-al-Shawwā register-shift categories. Used by BFS
+ * to optionally skip these edges when the caller sets allowOctaveJumps=false.
+ */
+function isOctaveEdge(edge: ModulationEdge): boolean {
+  return edge.category === "octaveAbove" || edge.category === "octaveBelow";
 }
 
 /**
@@ -462,7 +471,8 @@ function bfsAllShortestPaths(
   startKeys: string[],
   endKeys: Set<string>,
   maxHops: number,
-  limit: number
+  limit: number,
+  allowOctaveJumps: boolean = true
 ): ModulationRoute[] {
   const dist = new Map<string, number>();
   const preds = new Map<string, Array<{ fromKey: string; edge: ModulationEdge }>>();
@@ -479,6 +489,7 @@ function bfsAllShortestPaths(
     for (const u of frontier) {
       const edges = graph.adjacencyList.get(u) ?? [];
       for (const edge of edges) {
+        if (!allowOctaveJumps && isOctaveEdge(edge)) continue;
         const v = edge.targetNodeKey;
         const existingDist = dist.get(v);
 
@@ -560,7 +571,8 @@ function bfsPathsByIncreasingHops(
   startKeys: string[],
   endKeys: Set<string>,
   maxHops: number,
-  limit: number
+  limit: number,
+  allowOctaveJumps: boolean = true
 ): ModulationRoute[] {
   // Backward BFS from endKeys: distToEnd[v] = shortest hop count from v to
   // ANY endKey using a single reverse traversal of the graph. Lets us prune
@@ -568,6 +580,7 @@ function bfsPathsByIncreasingHops(
   const reverseAdj = new Map<string, string[]>();
   for (const [u, edges] of graph.adjacencyList) {
     for (const e of edges) {
+      if (!allowOctaveJumps && isOctaveEdge(e)) continue;
       if (!reverseAdj.has(e.targetNodeKey)) reverseAdj.set(e.targetNodeKey, []);
       reverseAdj.get(e.targetNodeKey)!.push(u);
     }
@@ -619,6 +632,7 @@ function bfsPathsByIncreasingHops(
 
     const edges = graph.adjacencyList.get(current) ?? [];
     for (const edge of edges) {
+      if (!allowOctaveJumps && isOctaveEdge(edge)) continue;
       if (visited.has(edge.targetNodeKey)) continue; // simple paths only
       visited.add(edge.targetNodeKey);
       path.push({
@@ -757,6 +771,7 @@ export function findModulationRoutes(
     returnToStartingMaqam?: boolean;
     maxRoutes?: number;
     limitToShortestHops?: boolean;
+    allowOctaveJumps?: boolean;
   }
 ): {
   journeys: ModulationJourney[];
@@ -780,6 +795,7 @@ export function findModulationRoutes(
     returnToStartingMaqam = false,
     maxRoutes = 10,
     limitToShortestHops = true,
+    allowOctaveJumps = true,
   } = options;
 
   // Internal alias used as the enumeration cap across BFS / segment routines,
@@ -967,7 +983,8 @@ export function findModulationRoutes(
       new Set([targetNodeKey]),
       maxHops,
       limit,
-      limitToShortestHops
+      limitToShortestHops,
+      allowOctaveJumps
     );
   } else {
     const allKeys = [sourceNodeKey, ...waypointKeys, targetNodeKey];
@@ -1018,7 +1035,8 @@ export function findModulationRoutes(
       new Set([sourceNodeKey]),
       maxHops,
       limit,
-      limitToShortestHops
+      limitToShortestHops,
+      allowOctaveJumps
     );
   }
 

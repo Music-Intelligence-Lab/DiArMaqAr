@@ -4110,6 +4110,10 @@ paths:
         - `limitToShortestHops=false` pads the result with progressively
           longer routes up to `maxRoutes` / `maxHops` (default `true`:
           only shortest-length routes are returned)
+        - `allowOctaveJumps=false` forbids register-shift (8va/8vb) edges
+          between register-equivalent siblings, so routes stay strictly
+          within al-Shawwā's scale-degree modulation rules (default
+          `true`: octave jumps are allowed anywhere in the route)
         - Results cached per tuning system + starting note combination for performance
         - `maxHops` is required and capped at 20 to prevent combinatorial explosion
 
@@ -4236,6 +4240,25 @@ paths:
             enum: ["true", "false"]
             default: "true"
           example: "false"
+        - name: allowOctaveJumps
+          in: query
+          required: false
+          description: |
+            When `true` (default), BFS may traverse register-shift
+            (`8va` / `8vb`) edges between register-equivalent siblings of
+            the same maqām (e.g. ḥijāz:muḥayyar → ḥijāz:dūgāh). These
+            edges appear anywhere in a route — at the start, in the
+            middle, or at the end — and let the algorithm reach register
+            variants that aren't directly connected by scale-degree
+            modulation. When `false`, those edges are ignored and every
+            hop in every returned route must be a genuine al-Shawwā
+            modulation (degrees I / III / IV / V / VI). Use `false` when
+            you want routes that stay within a single octave.
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "true"
+          example: "false"
         - name: includeArabic
           in: query
           required: false
@@ -4342,6 +4365,8 @@ paths:
                             type: boolean
                           limitToShortestHops:
                             type: boolean
+                          allowOctaveJumps:
+                            type: boolean
                   message:
                     type: string
                     description: Present when no routes found, explains why
@@ -4412,6 +4437,7 @@ paths:
                         maxRoutes: 10
                         returnToStartingMaqam: false
                         limitToShortestHops: true
+                        allowOctaveJumps: true
                 noRouteFound:
                   summary: No path found within constraints
                   value:
@@ -4442,6 +4468,7 @@ paths:
                         maxRoutes: 10
                         returnToStartingMaqam: false
                         limitToShortestHops: true
+                        allowOctaveJumps: true
                     message: "No path found from 'maqam_rast' to 'maqam_sikah' within 3 hops"
         '400':
           description: Invalid or missing required parameters

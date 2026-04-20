@@ -134,6 +134,14 @@ export interface ModulationRoutesRequest {
    * (still simple paths) up to `maxRoutes` / `maxHops`.
    */
   limitToShortestHops?: boolean;
+  /**
+   * When true (default), BFS may traverse register-shift (8va/8vb) edges
+   * between register-equivalent siblings (e.g. muḥayyar → dūgāh). When
+   * false, those edges are ignored and routes can only progress via
+   * al-Shawwā's modulation rules. Useful when the caller wants a route
+   * that stays within a single octave.
+   */
+  allowOctaveJumps?: boolean;
 }
 
 /**
