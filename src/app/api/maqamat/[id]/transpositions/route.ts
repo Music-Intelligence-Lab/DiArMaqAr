@@ -236,7 +236,7 @@ export async function GET(
         tonic: tonicNamespace,
         pitchClass: pitchClassNamespace,
         links: buildLinksNamespace({
-          detail: `/api/maqamat/${maqam.getIdName()}?tuningSystem=${encodeURIComponent(tuningSystemId)}&startingNote=${encodeURIComponent(actualStartingNote)}&transposeTo=${standardizeText(tonicNoteName)}`
+          detail: `/api/maqamat/${maqam.getIdName()}?tuningSystem=${encodeURIComponent(tuningSystemId)}&startingNote=${standardizeText(actualStartingNote)}&transposeTo=${standardizeText(tonicNoteName)}`
         })
       };
     });
@@ -313,7 +313,7 @@ export async function GET(
         detailed: transpositionItems,
       },
       links: buildLinksNamespace({
-        self: getCanonicalApiUrl(`/api/maqamat/${maqam.getIdName()}/transpositions?tuningSystem=${encodeURIComponent(tuningSystemId)}&startingNote=${encodeURIComponent(actualStartingNote)}`),
+        self: getCanonicalApiUrl(`/api/maqamat/${maqam.getIdName()}/transpositions?tuningSystem=${encodeURIComponent(tuningSystemId)}&startingNote=${standardizeText(actualStartingNote)}`),
         availability: `/api/maqamat/${maqam.getIdName()}/availability`,
         detail: `/api/maqamat/${maqam.getIdName()}`,
       }),

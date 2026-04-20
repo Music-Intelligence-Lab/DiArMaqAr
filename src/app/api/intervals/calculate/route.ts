@@ -623,7 +623,7 @@ export async function GET(request: Request) {
         links: buildLinksNamespace({
           self: getCanonicalSelfUrl(request),
           tuningSystem: `/api/tuning-systems/${encodeURIComponent(tuningSystemId)}`,
-          intervals: `/api/intervals?noteNames=${encodeURIComponent(fromResult.pitchClass.noteName)},${encodeURIComponent(toResult.pitchClass.noteName)}&tuningSystem=${encodeURIComponent(tuningSystemId)}&startingNote=${encodeURIComponent(startingNoteParam)}`
+          intervals: `/api/intervals?noteNames=${standardizeText(fromResult.pitchClass.noteName)},${standardizeText(toResult.pitchClass.noteName)}&tuningSystem=${encodeURIComponent(tuningSystemId)}&startingNote=${standardizeText(startingNoteParam)}`
         })
       })
     );

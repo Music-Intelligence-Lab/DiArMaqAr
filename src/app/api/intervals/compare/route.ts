@@ -458,7 +458,7 @@ export async function GET(request: Request) {
         },
         links: buildLinksNamespace({
           self: getCanonicalSelfUrl(request),
-          intervals: `/api/intervals?noteNames=${encodeURIComponent(noteNamesParam)}`
+          intervals: `/api/intervals?noteNames=${standardizeText(noteNamesParam)}`
         })
       })
     );

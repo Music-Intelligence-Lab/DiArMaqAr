@@ -343,7 +343,7 @@ export async function GET(request: Request) {
             intervals: results,
             links: buildLinksNamespace({
               self: getCanonicalSelfUrl(request),
-              compare: `/api/intervals/compare?noteNames=${encodeURIComponent(noteNamesParam)}`
+              compare: `/api/intervals/compare?noteNames=${standardizeText(noteNamesParam)}`
             })
           })
         );
@@ -438,7 +438,7 @@ export async function GET(request: Request) {
           intervals,
           links: buildLinksNamespace({
             self: getCanonicalSelfUrl(request),
-            compare: `/api/intervals/compare?noteNames=${encodeURIComponent(noteNamesParam)}`
+            compare: `/api/intervals/compare?noteNames=${standardizeText(noteNamesParam)}`
           })
         })
       );
@@ -516,7 +516,7 @@ export async function GET(request: Request) {
         intervals: results,
         links: buildLinksNamespace({
           self: getCanonicalSelfUrl(request),
-          compare: `/api/intervals/compare?noteNames=${encodeURIComponent(noteNamesParam)}`
+          compare: `/api/intervals/compare?noteNames=${standardizeText(noteNamesParam)}`
         })
       })
     );

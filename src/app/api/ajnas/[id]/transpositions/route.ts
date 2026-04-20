@@ -232,7 +232,7 @@ export async function GET(
         tonic: tonicNamespace,
         pitchClass: pitchClassNamespace,
         links: buildLinksNamespace({
-          detail: `/api/ajnas/${jins.getIdName()}?tuningSystem=${encodeURIComponent(tuningSystemId)}&startingNote=${encodeURIComponent(actualStartingNote)}&transposeTo=${standardizeText(tonicNoteName)}`
+          detail: `/api/ajnas/${jins.getIdName()}?tuningSystem=${encodeURIComponent(tuningSystemId)}&startingNote=${standardizeText(actualStartingNote)}&transposeTo=${standardizeText(tonicNoteName)}`
         })
       };
     });
@@ -309,7 +309,7 @@ export async function GET(
         detailed: transpositionItems,
       },
       links: buildLinksNamespace({
-        self: getCanonicalApiUrl(`/api/ajnas/${jins.getIdName()}/transpositions?tuningSystem=${encodeURIComponent(tuningSystemId)}&startingNote=${encodeURIComponent(actualStartingNote)}`),
+        self: getCanonicalApiUrl(`/api/ajnas/${jins.getIdName()}/transpositions?tuningSystem=${encodeURIComponent(tuningSystemId)}&startingNote=${standardizeText(actualStartingNote)}`),
         availability: `/api/ajnas/${jins.getIdName()}/availability`,
         detail: `/api/ajnas/${jins.getIdName()}`,
       }),
