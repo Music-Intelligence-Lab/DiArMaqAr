@@ -4245,15 +4245,15 @@ paths:
                     description: |
                       All shortest outbound modulation routes the endpoint was
                       able to enumerate for the query, capped at `maxRoutes`.
-                      The `count` field gives the size of `data`; it can be
+                      `outboundRoutesCount` gives the size of `data`; it can be
                       zero when no path exists within `maxHops`.
                     required:
-                      - count
+                      - outboundRoutesCount
                       - data
                     properties:
-                      count:
+                      outboundRoutesCount:
                         type: integer
-                        description: Number of routes returned in `data`
+                        description: Number of outbound routes returned in `data`
                       data:
                         type: array
                         items:
@@ -4268,10 +4268,10 @@ paths:
                       once and shared across every outbound journey — they are
                       not nested inside each journey.
                     required:
-                      - count
+                      - returnRoutesCount
                       - data
                     properties:
-                      count:
+                      returnRoutesCount:
                         type: integer
                         description: Number of return routes returned in `data`
                       data:
@@ -4324,7 +4324,7 @@ paths:
                   summary: Successful route finding
                   value:
                     totalPossibleRoutes:
-                      count: 1
+                      outboundRoutesCount: 1
                       data:
                         - routeNumber: 1
                           outboundRoute:
@@ -4389,7 +4389,7 @@ paths:
                   summary: No path found within constraints
                   value:
                     totalPossibleRoutes:
-                      count: 0
+                      outboundRoutesCount: 0
                       data: []
                     context:
                       tuningSystem:

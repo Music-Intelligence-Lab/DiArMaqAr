@@ -239,7 +239,7 @@ export async function GET(request: Request) {
         return addCorsHeaders(
           NextResponse.json({
             totalPossibleRoutes: {
-              count: 0,
+              outboundRoutesCount: 0,
               data: [],
             },
             context: buildContext(
@@ -276,7 +276,7 @@ export async function GET(request: Request) {
 
     const responseBody: any = {
       totalPossibleRoutes: {
-        count: formattedJourneys.length,
+        outboundRoutesCount: formattedJourneys.length,
         data: formattedJourneys,
       },
     };
@@ -286,7 +286,7 @@ export async function GET(request: Request) {
         formatReturnRoute(route, i + 1, inArabic)
       );
       responseBody.possibleReturnRoutes = {
-        count: formattedReturns.length,
+        returnRoutesCount: formattedReturns.length,
         data: formattedReturns,
       };
     }
