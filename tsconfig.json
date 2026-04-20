@@ -37,6 +37,7 @@
     "out",
     "dist",
     "build",
-    ".git"
+    ".git",
+    "tmp"
   ]
 }
