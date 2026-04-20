@@ -242,6 +242,52 @@ function buildModulationGraph(
     adjacencyList.set(sourceNodeKey, edges);
   }
 
+  // Add octave-shift edges between register-equivalent siblings — nodes that
+  // share the same (baseMaqamIdName, modal-degree slot) but live in different
+  // octaves. Register siblings can be tahlil variants (e.g. ḥijāz on qarār
+  // dūgāh / dūgāh / muḥayyar, all transposition=false) or transposition
+  // variants (e.g. ḥijāz al-yegāh / al-nawā, both transposition=true, shared
+  // G slot). Emitting these as real edges lets BFS:
+  //   (1) chain multi-octave shifts (e.g. muḥayyar → dūgāh → qarār dūgāh)
+  //   (2) traverse register shifts as intermediate hops, not only at the end
+  // Only adjacent siblings in octave order are connected, so the hop count
+  // reflects the number of octave jumps.
+  const siblingsBySlot = new Map<string, MaqamNode[]>();
+  for (const node of nodes.values()) {
+    const cell = getNoteNameIndexAndOctave(node.tonicDisplay as NoteName);
+    if (cell.index < 0) continue; // tonic not in the NoteName tables; skip
+    const slotKey = `${node.baseMaqamIdName}:${cell.index}`;
+    if (!siblingsBySlot.has(slotKey)) siblingsBySlot.set(slotKey, []);
+    siblingsBySlot.get(slotKey)!.push(node);
+  }
+
+  for (const siblings of siblingsBySlot.values()) {
+    if (siblings.length < 2) continue;
+    siblings.sort((a, b) => {
+      const oa = getNoteNameIndexAndOctave(a.tonicDisplay as NoteName).octave;
+      const ob = getNoteNameIndexAndOctave(b.tonicDisplay as NoteName).octave;
+      return oa - ob;
+    });
+    for (let i = 0; i < siblings.length - 1; i++) {
+      const lower = siblings[i];
+      const higher = siblings[i + 1];
+      const lowerKey = createNodeKey(lower.baseMaqamIdName, lower.tonicId);
+      const higherKey = createNodeKey(higher.baseMaqamIdName, higher.tonicId);
+      adjacencyList.get(lowerKey)!.push({
+        targetNodeKey: higherKey,
+        targetNode: higher,
+        degree: "8va",
+        category: "octaveAbove",
+      });
+      adjacencyList.get(higherKey)!.push({
+        targetNodeKey: lowerKey,
+        targetNode: lower,
+        degree: "8vb",
+        category: "octaveBelow",
+      });
+    }
+  }
+
   return { nodes, adjacencyList };
 }
 
@@ -360,52 +406,6 @@ function findNodeKey(
   }
 
   return null;
-}
-
-/**
- * Finds all node keys equivalent to a given (maqamIdName, tonicId) query.
- *
- * "Equivalent" here means musically register-equivalent: nodes that share the
- * same modal tonic slot via `sameModalDegreeSlot` — e.g. maqām ḥijāz sitting
- * on dūgāh, qarār dūgāh, and muḥayyar. These are three different graph nodes
- * (different `tonicId`s, different incoming modulation edges) but all share
- * `transposition=false` because register shift is not taṣwīr.
- *
- * When the caller specifies a `tonicId`, we return just the exact match (or
- * an empty array). When no tonic is given, we return every non-transposition
- * sibling so BFS can search for a path to any of them. This lets route
- * queries like `fromMaqam=maqam_rast&toMaqam=maqam_hijaz` (no tonic) succeed
- * whenever any register variant is reachable, even when the canonical
- * non-transposition node (picked by `findNodeKey`) is in an unreachable
- * partition of the graph.
- */
-function findEquivalentNodeKeys(
-  graph: ModulationGraph,
-  maqamIdName: string,
-  tonicId?: string
-): string[] {
-  const normalizedMaqamIdName = standardizeText(maqamIdName);
-
-  if (tonicId) {
-    const key = createNodeKey(normalizedMaqamIdName, standardizeText(tonicId));
-    return graph.nodes.has(key) ? [key] : [];
-  }
-
-  // All non-transposition (register-equivalent) variants first
-  const nonTransposition: string[] = [];
-  for (const [key, node] of graph.nodes) {
-    if (node.baseMaqamIdName === normalizedMaqamIdName && !node.isTransposition) {
-      nonTransposition.push(key);
-    }
-  }
-  if (nonTransposition.length > 0) return nonTransposition;
-
-  // Fallback: any matching baseMaqamIdName (including transpositions)
-  const anyMatch: string[] = [];
-  for (const [key, node] of graph.nodes) {
-    if (node.baseMaqamIdName === normalizedMaqamIdName) anyMatch.push(key);
-  }
-  return anyMatch;
 }
 
 /**
@@ -800,20 +800,19 @@ export function findModulationRoutes(
   }
   const targetNode = graph.nodes.get(targetNodeKey)!;
 
-  // Resolve every register-equivalent sibling of the TARGET. When the caller
-  // omits toTonic, BFS is free to land on any non-transposition variant that
-  // shares the target's modal tonic slot — e.g. ḥijāz on dūgāh / qarār dūgāh
-  // / muḥayyar. A trailing registerShift step relocates the journey onto the
-  // canonical tonic when BFS lands on a non-canonical sibling. When toTonic
-  // is specified this set collapses to one exact key (strict behaviour).
+  // Source is pinned to its canonical tonic — a journey "from maqām X"
+  // starts on X's canonical tonic by convention, never on an octave sibling.
+  // Target is also pinned to the specific node `findNodeKey` resolved: the
+  // exact match when `toTonic` is given, otherwise the canonical (first
+  // non-transposition sibling).
   //
-  // The SOURCE is always pinned to its canonical tonic — a journey "from
-  // maqām X" starts on maqām X's tonic by convention, never on an octave
-  // sibling. Register-equivalent source siblings are still used as permitted
-  // LANDING nodes for the return-to-start journey (outbound-target is the
-  // starting point for the return, so the same multi-target logic applies).
-  const targetEquivKeys = findEquivalentNodeKeys(graph, toMaqamId, toTonicId);
-  const sourceEquivKeys = findEquivalentNodeKeys(graph, fromMaqamId, fromTonicId);
+  // Register siblings no longer need special handling in this function —
+  // `buildModulationGraph` emits 8va/8vb edges between every pair of adjacent
+  // register-equivalent siblings, so BFS reaches siblings naturally via those
+  // edges (and chains them for multi-octave jumps such as muḥayyar → dūgāh →
+  // qarār dūgāh). The previous multi-target resolution and trailing
+  // register-shift post-processing are therefore redundant and have been
+  // removed.
 
   // Resolve waypoint nodes
   const waypointKeys: string[] = [];
@@ -834,63 +833,19 @@ export function findModulationRoutes(
     waypointNodes.push(graph.nodes.get(wpKey)!);
   }
 
-  // Helper: if a route ends at a register-equivalent sibling of the
-  // canonical landing rather than the canonical itself, append a trailing
-  // octave-shift step so the journey lands on the canonical tonic
-  // (e.g. ḥijāz:muḥayyar → ḥijāz:dūgāh). Direction is derived from the
-  // NoteName octave indices of the reached and canonical tonics — if the
-  // reached tonic sits HIGHER, we shift DOWN (`8vb` / `octaveBelow`); if it
-  // sits LOWER, we shift UP (`8va` / `octaveAbove`). Returns the route
-  // unchanged when the caller pinned an explicit tonic or when BFS already
-  // landed on the canonical node.
-  const appendRegisterShiftIfNeeded = (
-    route: ModulationRoute,
-    canonicalKey: string
-  ): ModulationRoute => {
-    if (route.steps.length === 0) return route;
-    const last = route.steps[route.steps.length - 1].to;
-    const reachedKey = createNodeKey(last.baseMaqamIdName, last.tonicId);
-    if (reachedKey === canonicalKey) return route;
-    const canonicalNode = graph.nodes.get(canonicalKey);
-    if (!canonicalNode) return route;
-
-    const reachedCell = getNoteNameIndexAndOctave(last.tonicDisplay as NoteName);
-    const canonicalCell = getNoteNameIndexAndOctave(canonicalNode.tonicDisplay as NoteName);
-    const reachedIsHigher = reachedCell.octave > canonicalCell.octave;
-
-    return {
-      hops: route.hops + 1,
-      steps: [
-        ...route.steps,
-        {
-          from: last,
-          to: canonicalNode,
-          modulationDegree: reachedIsHigher ? "8vb" : "8va",
-          modulationCategory: reachedIsHigher ? "octaveBelow" : "octaveAbove",
-        },
-      ],
-    };
-  };
-
-  // Find outbound routes. Two code paths:
-  //   - no waypoints: run a single multi-source / multi-target BFS using the
-  //     full sets of register-equivalent source and target keys so the
-  //     query succeeds whenever ANY sibling is reachable.
-  //   - with waypoints: keep the existing segment-chaining behaviour (strict
-  //     per segment). Waypoints carry segment-to-segment state and blending
-  //     register-equivalence across segments is out of scope here.
+  // Find outbound routes.
+  //   - no waypoints: single-source / single-target BFS over the graph
+  //     (which includes register-shift edges between siblings).
+  //   - with waypoints: segment-chaining behaviour as before.
   let outboundRoutes: ModulationRoute[];
 
   if (waypoints.length === 0) {
     outboundRoutes = bfsShortestPaths(
       graph,
-      [sourceNodeKey], // always single canonical source
-      new Set(targetEquivKeys),
+      [sourceNodeKey],
+      new Set([targetNodeKey]),
       maxHops,
       limit
-    );
-    outboundRoutes = outboundRoutes.map((r) =>
-      appendRegisterShiftIfNeeded(r, targetNodeKey)
     );
   } else {
     const allKeys = [sourceNodeKey, ...waypointKeys, targetNodeKey];
@@ -929,22 +884,19 @@ export function findModulationRoutes(
 
   let returnRoutes: ModulationRoute[] | undefined;
   if (returnToStartingMaqam) {
-    // Return path: canonical target → any register-equivalent source, with a
-    // trailing register-shift to the canonical source when BFS lands on a
-    // non-canonical sibling. Uses the full `limit` (maxRoutes) so all
-    // shortest return paths are enumerated, not only one.
+    // Return path: canonical target → canonical source. Register-shift edges
+    // in the graph handle any octave bridging that's needed, so the BFS
+    // single-target form is sufficient here too. Uses the full `limit`
+    // (maxRoutes) so all shortest return paths are enumerated, not only one.
     const shortestOutbound = journeys.length > 0 ? journeys[0].outboundRoute.hops : 0;
     const maxReturnHops = Math.max(1, maxHops - shortestOutbound);
 
-    const rawReturnRoutes = bfsShortestPaths(
+    returnRoutes = bfsShortestPaths(
       graph,
       [targetNodeKey],
-      new Set(sourceEquivKeys),
+      new Set([sourceNodeKey]),
       maxReturnHops,
       limit
-    );
-    returnRoutes = rawReturnRoutes.map((r) =>
-      appendRegisterShiftIfNeeded(r, sourceNodeKey)
     );
   }
 

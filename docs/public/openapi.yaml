@@ -10262,11 +10262,14 @@ components:
           description: |
             Specific modulation category. The first eight values come from
             al-Shawwā's 1946 modulation rules. The two `octave*` values label
-            a non-al-Shawwā trailing step: `octaveBelow` (paired with
-            `modulationDegree: "8vb"`) when the reached tonic sits one octave
-            above the canonical target and the journey must shift DOWN;
-            `octaveAbove` (paired with `"8va"`) when the reached tonic sits
-            one octave below.
+            a non-al-Shawwā step that moves between register-equivalent
+            siblings of the same maqām (same modal tonic slot, different
+            octave): `octaveAbove` shifts UP by one octave (paired with
+            `modulationDegree: "8va"`); `octaveBelow` shifts DOWN by one
+            octave (paired with `"8vb"`). These appear as regular graph
+            edges, so BFS can chain them (e.g. muḥayyar → dūgāh → qarār
+            dūgāh as two 8vb steps) and traverse them at any position in a
+            path, not just at the end.
           enum:
             - firstDegree
             - thirdDegree
@@ -10324,9 +10327,11 @@ components:
       description: |
         A return route back to the starting maqām, carrying its own 1-based
         `routeNumber` within `possibleReturnRoutes.data`. Its `steps` may
-        include a trailing `8va` / `8vb` (`octaveAbove` / `octaveBelow`) step
-        when BFS lands on a register-equivalent sibling of the canonical
-        source.
+        include `8va` / `8vb` (`octaveAbove` / `octaveBelow`) steps at any
+        position — the graph carries register-shift edges between every pair
+        of adjacent register-equivalent siblings, so BFS can cross octaves
+        anywhere in the path (including chained 8vb/8va jumps to reach a
+        tonic two or more octaves away from the nearest non-shift landing).
       required:
         - routeNumber
         - hops
