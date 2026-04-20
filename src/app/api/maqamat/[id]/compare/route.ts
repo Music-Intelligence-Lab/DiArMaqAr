@@ -165,10 +165,6 @@ function formatIntervalData(intervals: any[], format: string) {
  *   Format: "ibnsina_1037,alfarabi_950g"
  * - startingNotes (required): Comma-separated starting note names
  *   (URL-safe, diacritics-insensitive). Format: "rast,yegah,ushayran".
- *   Either this or the deprecated singular `startingNote` must be
- *   provided; if both are sent, `startingNotes` wins.
- * - startingNote (deprecated alias): Single starting note, kept for
- *   backwards compatibility. Silently ignored if `startingNotes` is set.
  * - pitchClassDataType (optional): Output format (all, cents, fraction,
  *   etc.). Default: "all".
  * - includeIntervals (optional): Include interval data ("true" or
@@ -197,7 +193,6 @@ export async function GET(
     const { searchParams } = new URL(request.url);
     const tuningSystemsParam = searchParams.get("tuningSystems");
     const startingNotesParam = searchParams.get("startingNotes");
-    const legacyStartingNoteParam = searchParams.get("startingNote");
     const pitchClassDataType = searchParams.get("pitchClassDataType") || "all";
     const intervalsParam = searchParams.get("includeIntervals");
     const transposeToNote = searchParams.get("transposeTo");
@@ -349,12 +344,7 @@ export async function GET(
       );
     }
 
-    // Validate startingNotes parameter (accepts legacy `startingNote` as alias).
-    // If both are supplied, `startingNotes` wins and `startingNote` is ignored.
-    const effectiveStartingNotesRaw =
-      startingNotesParam !== null ? startingNotesParam : legacyStartingNoteParam;
-
-    if (effectiveStartingNotesRaw === null) {
+    if (startingNotesParam === null) {
       return addCorsHeaders(
         NextResponse.json(
           {
@@ -367,7 +357,7 @@ export async function GET(
       );
     }
 
-    const startingNoteInputs = effectiveStartingNotesRaw
+    const startingNoteInputs = startingNotesParam
       .split(",")
       .map((n) => n.trim())
       .filter((n) => n.length > 0);

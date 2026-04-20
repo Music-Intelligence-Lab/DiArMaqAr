@@ -1628,31 +1628,16 @@ paths:
           example: "alsabbagh_1954,ibnsina_1037"
         - name: startingNotes
           in: query
-          required: false
+          required: true
           description: |
             Comma-separated list of starting note names (URL-safe, diacritics-insensitive). The
             response contains `N × M` cells for `N` tuning systems × `M` starting notes, in
             user-supplied order. If a starting note is not available in a given tuning system
             that cell carries an informational `note` field (with a `validStartingNotes`
             namespace) rather than pitch data.
-
-            Either `startingNotes` (plural, preferred) or the deprecated singular `startingNote`
-            must be provided. When both are supplied, `startingNotes` wins and `startingNote` is
-            silently ignored.
           schema:
             type: string
           example: "rast,yegah,ushayran"
-        - name: startingNote
-          in: query
-          required: false
-          deprecated: true
-          description: |
-            **DEPRECATED.** Use `startingNotes` (plural) instead. Accepted as a single-element
-            alias for backwards compatibility. Silently ignored when `startingNotes` is also
-            provided.
-          schema:
-            type: string
-          example: "rast"
         - name: pitchClassDataType
           in: query
           required: false
@@ -2683,9 +2668,9 @@ paths:
                     error: "tuningSystems parameter is required"
                     message: "Provide comma-separated tuning system IDs"
                     hint: 'Format: ?tuningSystems=ibnsina_1037,alfarabi_950g'
-                    example: "/api/maqamat/maqam_rast/compare?tuningSystems=ibnsina_1037,alfarabi_950g&startingNote=yegah&pitchClassDataType=cents"
+                    example: "/api/maqamat/maqam_rast/compare?tuningSystems=ibnsina_1037,alfarabi_950g&startingNotes=yegah&pitchClassDataType=cents"
                 missingStartingNotes:
-                  summary: Missing startingNotes parameter (neither plural nor deprecated singular supplied)
+                  summary: Missing startingNotes parameter
                   value:
                     error: "startingNotes parameter is required"
                     message: "At least one starting note must be specified"
@@ -4935,31 +4920,16 @@ paths:
           example: "alsabbagh_1954,ibnsina_1037"
         - name: startingNotes
           in: query
-          required: false
+          required: true
           description: |
             Comma-separated list of starting note names (URL-safe, diacritics-insensitive). The
             response contains `N × M` cells for `N` tuning systems × `M` starting notes, in
             user-supplied order. If a starting note is not available in a given tuning system
             that cell carries an informational `note` field (with a `validStartingNotes`
             namespace) rather than pitch data.
-
-            Either `startingNotes` (plural, preferred) or the deprecated singular `startingNote`
-            must be provided. When both are supplied, `startingNotes` wins and `startingNote` is
-            silently ignored.
           schema:
             type: string
           example: "rast,yegah,ushayran"
-        - name: startingNote
-          in: query
-          required: false
-          deprecated: true
-          description: |
-            **DEPRECATED.** Use `startingNotes` (plural) instead. Accepted as a single-element
-            alias for backwards compatibility. Silently ignored when `startingNotes` is also
-            provided.
-          schema:
-            type: string
-          example: "ushayran"
         - name: pitchClassDataType
           in: query
           required: false
@@ -5826,9 +5796,9 @@ paths:
                     error: "tuningSystems parameter is required"
                     message: "Provide comma-separated tuning system IDs"
                     hint: 'Format: ?tuningSystems=ibnsina_1037,alfarabi_950g'
-                    example: "/api/ajnas/jins_kurd/compare?tuningSystems=ibnsina_1037,alfarabi_950g&startingNote=yegah&pitchClassDataType=cents"
+                    example: "/api/ajnas/jins_kurd/compare?tuningSystems=ibnsina_1037,alfarabi_950g&startingNotes=yegah&pitchClassDataType=cents"
                 missingStartingNotes:
-                  summary: Missing startingNotes parameter (neither plural nor deprecated singular supplied)
+                  summary: Missing startingNotes parameter
                   value:
                     error: "startingNotes parameter is required"
                     message: "At least one starting note must be specified"
@@ -8117,7 +8087,7 @@ components:
           example: "fraction"
         startingNoteName:
           type: string
-          description: The selected tuning system starting note for this context (preferred over deprecated context.startingNote)
+          description: The selected tuning system starting note for this context
           example: "ushayran"
 
     PitchData:

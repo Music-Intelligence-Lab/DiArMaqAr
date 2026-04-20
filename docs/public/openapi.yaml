@@ -1259,7 +1259,7 @@ paths:
               - midiNoteDeviation
               - centsDeviation
               - referenceNoteName
-          default: "all"
+            default: "all"
           example: "all"
         - name: octave
           in: query
@@ -1270,7 +1270,7 @@ paths:
           schema:
             type: string
             enum: ["all", "0", "1", "2", "3"]
-          default: "all"
+            default: "all"
           example: "all"
         - name: includeSources
           in: query
@@ -1279,7 +1279,7 @@ paths:
           schema:
             type: string
             enum: ["true", "false"]
-          default: "false"
+            default: "false"
           example: "true"
         - name: includeArabic
           in: query
@@ -1584,18 +1584,29 @@ paths:
     get:
       tags:
         - Maqāmāt
-      summary: Compare maqām data across multiple tuning systems
+      summary: Compare maqām data across multiple tuning systems and starting notes
       description: |
-        Compare comprehensive maqām data across multiple tuning systems and starting note configurations in a single request.
-        
-        Returns comprehensive data similar to `/maqamat/{idName}` but without modulations and suyur. Each comparison includes:
-        - Pitch class data (ascending and descending sequences)
-        - Optional interval data
-        - Ajnās (constituent melodic structures) mapping
-        - Maqām metadata (family classification, tonic, transposition status)
-        - Context information (tuning system, starting note, reference frequency)
-        
-        This endpoint is ideal for comparative musicological analysis across different historical tuning systems.
+        Compare comprehensive maqām data across multiple tuning systems **and** multiple starting
+        notes in a single request. Given `N` tuning systems and `M` starting notes, the response
+        contains the Cartesian product of `N × M` comparison cells in user-supplied order
+        (outer loop = `tuningSystems`, inner loop = `startingNotes`).
+
+        Each successful cell includes ascending/descending pitch class sequences, optional
+        interval data, ajnās mapping, family classification, and transposition details. When a
+        requested starting note is not available in a given tuning system the cell carries an
+        informational `note` field (not `error`) together with `validStartingNotes`. When a hard
+        failure occurs (tuning system not found, maqām not realizable in this configuration, or a
+        `transposeTo` target that is unreachable) the cell carries an `error` field. The overall
+        response is always HTTP 200 — per-cell outcomes do not affect the HTTP status.
+
+        The following invariant always holds:
+
+        ```
+        successfulComparisons + unavailableStartingNotes + failedComparisons === totalComparisons
+        ```
+
+        This endpoint is ideal for comparative musicological analysis across historical tuning
+        systems and/or multiple modal transpositions.
       operationId: compareMaqam
       parameters:
         - name: idName
@@ -1609,21 +1620,28 @@ paths:
           in: query
           required: true
           description: |
-            Comma-separated tuning system IDs. All tuning systems will use the same starting note and optional transposition.
+            Comma-separated list of tuning system IDs. The response computes the Cartesian
+            product of these tuning systems with the requested `startingNotes` (outer loop =
+            `tuningSystems`, inner loop = `startingNotes`).
           schema:
             type: string
-          example: "cairocongresstuningcommittee_1929,alsabbagh_1954"
-        - name: startingNote
+          example: "alsabbagh_1954,ibnsina_1037"
+        - name: startingNotes
           in: query
           required: true
-          description: Starting note name (URL-safe, diacritics-insensitive) - applies to all tuning systems. Use `yegah` for IbnSina/Meshshaqa, `ushayran` for al-Farabi/al-Kindi, `rast` for CairoCongress/al-Sabbagh
+          description: |
+            Comma-separated list of starting note names (URL-safe, diacritics-insensitive). The
+            response contains `N × M` cells for `N` tuning systems × `M` starting notes, in
+            user-supplied order. If a starting note is not available in a given tuning system
+            that cell carries an informational `note` field (with a `validStartingNotes`
+            namespace) rather than pitch data.
           schema:
             type: string
-          example: "rast"
+          example: "rast,yegah,ushayran"
         - name: pitchClassDataType
           in: query
-          required: true
-          description: Output format for pitch class data
+          required: false
+          description: Output format for pitch class data. Defaults to `all` when omitted.
           schema:
             type: string
             enum:
@@ -1640,21 +1658,26 @@ paths:
               - midiNoteDeviation
               - centsDeviation
               - referenceNoteName
-          default: "cents"
+            default: "all"
           example: "cents"
         - name: includeIntervals
           in: query
           required: false
-          description: Include interval data between pitch classes
+          description: |
+            Whether to include interval data between adjacent pitch classes on each cell.
+            Defaults to `"true"` when omitted.
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
+            default: "true"
           example: "true"
         - name: transposeTo
           in: query
           required: false
-          description: Transpose to specific tonic note (applies to all tuning systems)
+          description: |
+            Transpose every successful cell to the given tonic note (applies to every cell in the
+            Cartesian product). If the requested target is not reachable in a given cell the cell
+            carries an `error` plus an `availableTranspositions` list.
           schema:
             type: string
           example: "nawa"
@@ -1666,11 +1689,9 @@ paths:
 
             When true:
             - All English/transliteration fields remain unchanged
-            - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
-            - Note names, maqām names, and jins names get Arabic versions in *Ar fields
-            - Comments get Arabic versions in commentsAr if available
-            - Tuning system display names get Arabic versions in displayNameAr if available
-            - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
+            - Arabic versions are added with `Ar` suffix (e.g., `displayNameAr`, `noteNameDisplayAr`)
+            - Note names, maqām names, and jins names get Arabic versions in `*Ar` fields
+            - Tuning system display names get Arabic versions in `displayNameAr` if available
           schema:
             type: string
             enum: ["true", "false"]
@@ -1678,7 +1699,13 @@ paths:
           example: "true"
       responses:
         '200':
-          description: Comparison data retrieved successfully
+          description: |
+            Comparison data retrieved successfully. Note that the response is always HTTP 200
+            regardless of per-cell outcomes; individual failures (missing starting note, tuning
+            system not found, maqām not realizable, unreachable transposeTo) are reported on the
+            respective cell via `note` or `error` fields. The counters
+            `successfulComparisons + unavailableStartingNotes + failedComparisons` always equal
+            `totalComparisons`.
           content:
             application/json:
               schema:
@@ -1686,11 +1713,16 @@ paths:
                 required:
                   - maqam
                   - comparisons
-                  - meta
+                  - parameters
+                  - links
                 properties:
                   maqam:
                     type: object
-                    description: Original maqām identifier information
+                    description: Canonical maqām identifier namespace (the maqām being compared)
+                    required:
+                      - id
+                      - idName
+                      - displayName
                     properties:
                       id:
                         type: string
@@ -1701,355 +1733,928 @@ paths:
                       displayName:
                         type: string
                         description: Display name with diacritics
+                      displayNameAr:
+                        type: string
+                        description: Arabic-script display name (present only when `includeArabic=true`)
                       version:
                         type: string
                         description: ISO 8601 timestamp of last modification
                   comparisons:
-                    type: array
-                    description: Array of comparison results (one per configuration)
-                    items:
-                      type: object
-                      properties:
-                        tuningSystem:
+                    type: object
+                    description: |
+                      List response object containing every comparison cell in the Cartesian
+                      product. Meta counters are hoisted to the top level of this object (siblings
+                      of `count` and `data`), not nested under a separate `meta` key.
+                    required:
+                      - count
+                      - totalComparisons
+                      - successfulComparisons
+                      - unavailableStartingNotes
+                      - failedComparisons
+                      - data
+                    properties:
+                      count:
+                        type: integer
+                        description: Number of items in `data` (equals `totalComparisons`)
+                      totalComparisons:
+                        type: integer
+                        description: Total number of comparison cells in the Cartesian product (`N × M`)
+                      successfulComparisons:
+                        type: integer
+                        description: Number of cells that returned full pitch/interval data
+                      unavailableStartingNotes:
+                        type: integer
+                        description: |
+                          Number of cells whose `startingNote` was not available in the cell's
+                          `tuningSystem`. These cells carry a `note` field (informational — NOT
+                          an error) and are distinct from hard failures.
+                      failedComparisons:
+                        type: integer
+                        description: |
+                          Number of cells that hit a hard failure (tuning system not found,
+                          maqām not realizable, or unreachable `transposeTo`). These cells carry
+                          an `error` field.
+                      data:
+                        type: array
+                        description: |
+                          Array of comparison cells in user-supplied order (outer loop =
+                          `tuningSystems`, inner loop = `startingNotes`). Each cell has one of
+                          three mutually exclusive shapes — a successful result, an informational
+                          `note` (unavailable starting note), or an `error` (hard failure). All
+                          non-common fields below are optional and present only for the
+                          corresponding outcome.
+                        items:
                           type: object
-                          properties:
-                            id:
-                              type: string
-                              description: Tuning system identifier
-                            displayName:
-                              type: string
-                              description: Display name formatted as "Creator (Year) Title"
-                            version:
-                              type: string
-                              description: ISO 8601 timestamp of last modification
-                        maqam:
-                          type: object
-                          description: Maqām data for this comparison (may include transposition info)
-                          properties:
-                            id:
-                              type: string
-                            idName:
-                              type: string
-                            displayName:
-                              type: string
-                            version:
-                              type: string
-                            tonicId:
-                              type: string
-                              description: URL-safe tonic note identifier
-                            tonicName:
-                              type: string
-                              description: Tonic note name with diacritics
-                            transposition:
-                              type: boolean
-                              description: Whether this is a transposition from the original tonic
-                            originalTonicId:
-                              type: string
-                              description: Original tonic identifier (present only if transposed)
-                            originalTonicDisplay:
-                              type: string
-                              description: Original tonic name (present only if transposed)
-                            familyId:
-                              type: string
-                              description: URL-safe maqām family identifier
-                            familyDisplay:
-                              type: string
-                              description: Maqām family name with diacritics
-                            numberOfPitchClasses:
-                              type: integer
-                              description: Number of pitch classes in this maqām
-                            isOctaveRepeating:
-                              type: boolean
-                              description: Whether the maqām structure repeats within an octave
-                            pitchClassDataType:
-                              type: string
-                              description: Format used for pitch class data
-                            includeIntervals:
-                              type: boolean
-                              description: Whether intervals are included
-                        context:
-                          type: object
+                          required:
+                            - tuningSystem
+                            - startingNote
                           properties:
                             tuningSystem:
                               type: object
+                              description: |
+                                Tuning system entity namespace for this cell. For the
+                                "tuning system not found" failure this is a minimal fallback
+                                namespace built from the raw ID (no `version`, no `displayNameAr`).
+                                In every other outcome this is the full entity namespace.
                               properties:
                                 id:
                                   type: string
-                                  description: Tuning system identifier
-                            displayName:
-                              type: string
-                              description: Display name formatted as "Creator (Year) Title"
-                            version:
-                              type: string
-                              description: ISO 8601 timestamp of last modification
-                            numberOfPitchClassesSingleOctave:
-                              type: integer
-                              description: Number of pitch classes in one octave of the selected tuning system (from tuning system's original pitch class values)
-                            startingNoteName:
-                              type: string
-                              description: Starting note name (URL-safe)
-                            referenceFrequency:
-                              type: number
-                              description: Reference frequency in Hz associated with the starting note name (falls back to tuning system default if not specified for this note)
-                        pitchData:
-                          type: object
-                          properties:
-                            ascending:
-                              type: array
-                              description: Ascending pitch class sequence
-                              items:
-                                type: object
-                            descending:
-                              type: array
-                              description: Descending pitch class sequence
-                              items:
-                                type: object
-                        intervals:
-                          type: object
-                          description: Interval data (present only if includeIntervals=true)
-                          properties:
-                            ascending:
-                              type: array
-                              items:
-                                type: object
-                            descending:
-                              type: array
-                              items:
-                                type: object
-                        ajnas:
-                          type: object
-                          description: Ajnās mapping for each note position
-                          properties:
-                            ascending:
+                                idName:
+                                  type: string
+                                displayName:
+                                  type: string
+                                version:
+                                  type: string
+                                displayNameAr:
+                                  type: string
+                                  description: Present only when `includeArabic=true`
+                            startingNote:
                               type: object
-                              description: Ascending ajnās mapping (note name to jins entity object or null)
-                            descending:
+                              description: Identifier namespace for the starting note of this cell
+                              properties:
+                                idName:
+                                  type: string
+                                displayName:
+                                  type: string
+                                displayNameAr:
+                                  type: string
+                                  description: Present only when `includeArabic=true`
+                            maqam:
                               type: object
-                              description: Descending ajnās mapping (note name to jins entity object or null)
-                        error:
-                          type: string
-                          description: Error message if this comparison failed
-                  meta:
+                              description: |
+                                Per-cell maqām entity namespace with family classification.
+                                **Present on successful cells only.** When the cell represents a
+                                transposition, `idName` and `displayName` reflect the transposed
+                                name (e.g. `maqam_rast_al-nawa`); the canonical `id` is preserved.
+                              properties:
+                                id:
+                                  type: string
+                                idName:
+                                  type: string
+                                displayName:
+                                  type: string
+                                version:
+                                  type: string
+                                displayNameAr:
+                                  type: string
+                                maqamFamilyId:
+                                  type: string
+                                  description: URL-safe maqām family identifier
+                                maqamFamilyDisplayName:
+                                  type: string
+                                  description: Maqām family display name with diacritics
+                                maqamFamilyDisplayNameAr:
+                                  type: string
+                                  description: Present only when `includeArabic=true`
+                            tonic:
+                              type: object
+                              description: |
+                                Identifier namespace for the resolved tonic note. **Present on
+                                successful cells only.**
+                              properties:
+                                idName:
+                                  type: string
+                                displayName:
+                                  type: string
+                                displayNameAr:
+                                  type: string
+                            transposition:
+                              type: object
+                              description: |
+                                Transposition details. **Present only when the tahlil for this
+                                cell is a taswīr (tonic differs from the canonical tonic).** Omitted
+                                entirely when the cell resolves to the canonical-octave tahlil.
+                              properties:
+                                original:
+                                  type: object
+                                  description: Identifier namespace for the canonical tonic
+                                  properties:
+                                    idName:
+                                      type: string
+                                    displayName:
+                                      type: string
+                                    displayNameAr:
+                                      type: string
+                                resolved:
+                                  type: object
+                                  description: Identifier namespace for the transposed tonic (same as top-level `tonic`)
+                                  properties:
+                                    idName:
+                                      type: string
+                                    displayName:
+                                      type: string
+                                    displayNameAr:
+                                      type: string
+                            stats:
+                              type: object
+                              description: Per-cell statistics. **Present on successful cells only.**
+                              properties:
+                                tuningSystem:
+                                  type: object
+                                  properties:
+                                    numberOfPitchClassesSingleOctave:
+                                      type: integer
+                                      description: Number of pitch classes per octave in this tuning system
+                                    referenceFrequency:
+                                      type: number
+                                      description: Reference frequency in Hz for the cell's starting note
+                                maqam:
+                                  type: object
+                                  properties:
+                                    numberOfPitchClasses:
+                                      type: integer
+                                      description: Number of pitch classes in this cell's tahlil
+                                    isOctaveRepeating:
+                                      type: boolean
+                                      description: Whether the tahlil repeats within an octave
+                            availableTranspositions:
+                              type: array
+                              description: |
+                                Taswīr-only available transpositions for this cell. **Present on
+                                successful cells and on `transposeTo`-unreachable error cells**
+                                (in the latter case, this lists the alternatives the caller could
+                                try). May be an empty array.
+                              items:
+                                type: object
+                                properties:
+                                  idName:
+                                    type: string
+                                  displayName:
+                                    type: string
+                                  displayNameAr:
+                                    type: string
+                                  tonic:
+                                    type: object
+                                    properties:
+                                      idName:
+                                        type: string
+                                      displayName:
+                                        type: string
+                                      displayNameAr:
+                                        type: string
+                            pitchData:
+                              type: object
+                              description: |
+                                Pitch class sequences. **Present on successful cells only.** The
+                                field set of each pitch class item depends on `pitchClassDataType`.
+                              properties:
+                                ascending:
+                                  type: array
+                                  items:
+                                    type: object
+                                descending:
+                                  type: array
+                                  items:
+                                    type: object
+                            ajnas:
+                              type: object
+                              description: |
+                                Ajnās mapping keyed by note name. **Present on successful cells
+                                only.** Each value is either a jins entity namespace
+                                (`{id, idName, displayName, displayNameAr?}`) or `null` if no
+                                jins begins at that note.
+                              properties:
+                                ascending:
+                                  type: object
+                                  additionalProperties:
+                                    oneOf:
+                                      - type: object
+                                      - type: "null"
+                                descending:
+                                  type: object
+                                  additionalProperties:
+                                    oneOf:
+                                      - type: object
+                                      - type: "null"
+                            intervals:
+                              type: object
+                              description: |
+                                Interval data between adjacent pitch classes. **Present on
+                                successful cells only and only when `includeIntervals=true`.**
+                              properties:
+                                ascending:
+                                  type: array
+                                  items:
+                                    type: object
+                                descending:
+                                  type: array
+                                  items:
+                                    type: object
+                            parameters:
+                              type: object
+                              description: Per-cell echo of the effective parameters. **Present on successful cells only.**
+                              properties:
+                                pitchClassDataType:
+                                  type: string
+                                includeIntervals:
+                                  type: boolean
+                                transposeTo:
+                                  type: string
+                                  nullable: true
+                            links:
+                              type: object
+                              description: Per-cell links namespace. **Present on successful cells only.**
+                              properties:
+                                detail:
+                                  type: string
+                                availability:
+                                  type: string
+                            note:
+                              type: string
+                              description: |
+                                Informational message for cells whose `startingNote` is not
+                                available in the cell's `tuningSystem`. **Present only for
+                                unavailable-starting-note cells** (counted by
+                                `unavailableStartingNotes`). Mutually exclusive with `error`.
+                            validStartingNotes:
+                              type: object
+                              description: |
+                                Valid starting notes for the cell's tuning system. Present
+                                alongside `note`. A string-array namespace.
+                              properties:
+                                idNames:
+                                  type: array
+                                  items:
+                                    type: string
+                                displayNames:
+                                  type: array
+                                  items:
+                                    type: string
+                                displayNamesAr:
+                                  type: array
+                                  items:
+                                    type: string
+                                  description: Present only when `includeArabic=true`
+                            error:
+                              type: string
+                              description: |
+                                Error message for cells that hit a hard failure (tuning system
+                                not found, maqām not realizable, or unreachable `transposeTo`).
+                                **Present only for failed cells** (counted by `failedComparisons`).
+                                Mutually exclusive with `note`.
+                            transposeTo:
+                              type: string
+                              description: |
+                                Present only on the `transposeTo`-unreachable error variant:
+                                echoes the unreachable target note name.
+                  parameters:
                     type: object
+                    description: Echo of the effective request parameters at the top level
                     properties:
-                      totalComparisons:
-                        type: integer
-                        description: Total number of comparisons requested
-                      successfulComparisons:
-                        type: integer
-                        description: Number of successful comparisons
-                      failedComparisons:
-                        type: integer
-                        description: Number of failed comparisons
+                      tuningSystems:
+                        type: object
+                        description: String-array namespace of requested tuning systems
+                        properties:
+                          idNames:
+                            type: array
+                            items:
+                              type: string
+                          displayNames:
+                            type: array
+                            items:
+                              type: string
+                          displayNamesAr:
+                            type: array
+                            items:
+                              type: string
+                            description: Present only when `includeArabic=true`
+                      startingNotes:
+                        type: object
+                        description: String-array namespace of requested starting notes
+                        properties:
+                          idNames:
+                            type: array
+                            items:
+                              type: string
+                          displayNames:
+                            type: array
+                            items:
+                              type: string
+                          displayNamesAr:
+                            type: array
+                            items:
+                              type: string
+                            description: Present only when `includeArabic=true`
+                      pitchClassDataType:
+                        type: string
+                      includeIntervals:
+                        type: boolean
+                      transposeTo:
+                        type: string
+                        nullable: true
+                  links:
+                    type: object
+                    description: Top-level links namespace
+                    properties:
+                      self:
+                        type: string
+                        description: Canonical URL for this comparison request
+                      detail:
+                        type: string
+                        description: Link to the maqām detail endpoint
+                      availability:
+                        type: string
+                        description: Link to the maqām availability endpoint
               examples:
                 twoTuningSystems:
-                  summary: Compare across two tuning systems
+                  summary: Compare across two tuning systems (single starting note)
                   value:
                     maqam:
                       id: "1"
                       idName: "maqam_rast"
-                      displayName: "Maqam Rāst"
-                      version: "2025-10-18T19:41:17.132Z"
+                      displayName: "maqām rāst"
+                      version: "2025-12-10T17:03:34.565Z"
                     comparisons:
-                      - maqam:
-                          id: "1"
-                          idName: "maqam_rast"
-                          displayName: "Maqam Rāst"
-                          version: "2025-10-18T19:41:17.132Z"
-                          tonicId: "rast"
-                          tonicDisplay: "rāst"
-                          transposition: false
-                          familyId: "rast"
-                          familyDisplay: "Rāst"
-                          numberOfPitchClasses: 7
-                          isOctaveRepeating: true
-                          pitchClassDataType: "cents"
-                          includeIntervals: true
-                        context:
-                          tuningSystem:
-                            id: "meshshaqa_1899"
-                            displayName: "Meshshāqa (1899) Arabic Octave According to the Modernists"
-                            version: "2025-10-18T19:41:17.132Z"
-                            numberOfPitchClassesSingleOctave: 24
-                            tuningSystemStartingNoteNames: ["yegāh"]
-                            tuningSystemStartingNoteNamesIds: ["yegah"]
-                            startingNoteName: "yegah"
-                            referenceFrequency: 97.999
-                        pitchData:
-                          ascending:
-                            - pitchClassIndex: 0
-                              octave: 1
-                              scaleDegree: "I"
-                              noteName: "rast"
-                              noteNameDisplay: "rāst"
-                              cents: 0.0
-                            - pitchClassIndex: 1
-                              octave: 1
-                              scaleDegree: "II"
-                              noteName: "dugah"
-                              noteNameDisplay: "dūgāh"
-                              cents: 204.0
-                        intervals:
-                          ascending:
-                            - cents: 204.0
-                        ajnas:
-                          ascending:
-                            rāst:
-                              id: "1"
-                              idName: "jins_rast"
-                              displayName: "Jins Rāst"
-                            dūgāh: null
-                      - maqam:
-                          id: "1"
-                          idName: "maqam_rast"
-                          displayName: "Maqam Rāst"
-                          version: "2025-10-18T19:41:17.132Z"
-                          tonicId: "rast"
-                          tonicName: "rāst"
-                          transposition: false
-                          maqamFamilyId: "rast"
-                          maqamFamilyDisplayName: "Rāst"
-                          numberOfPitchClasses: 7
-                          isOctaveRepeating: true
-                          pitchClassDataType: "cents"
-                          includeIntervals: true
-                        context:
-                          tuningSystem:
-                            id: "ibnsina_1037"
-                            displayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
-                            version: "2025-10-18T19:41:17.132Z"
-                            numberOfPitchClassesSingleOctave: 17
-                            startingNoteName: "yegah"
-                            referenceFrequency: 97.999
-                        pitchData:
-                          ascending:
-                            - pitchClassIndex: 0
-                              octave: 1
-                              scaleDegree: "I"
-                              noteName: "rast"
-                              noteNameDisplay: "rāst"
-                              cents: 0.0
-                            - pitchClassIndex: 1
-                              octave: 1
-                              scaleDegree: "II"
-                              noteName: "dugah"
-                              noteNameDisplay: "dūgāh"
-                              cents: 211.7
-                        intervals:
-                          ascending:
-                            - cents: 211.7
-                        ajnas:
-                          ascending:
-                            rāst:
-                              id: "1"
-                              idName: "jins_rast"
-                              displayName: "Jins Rāst"
-                            dūgāh: null
-                    meta:
-                      totalComparisons: 2
-                      successfulComparisons: 2
-                      failedComparisons: 0
-                withTransposition:
-                  summary: Compare with transposition
-                  value:
-                    maqam:
-                      id: "1"
-                      idName: "maqam_rast"
-                      displayName: "Maqam Rāst"
-                      version: "2025-10-18T19:41:17.132Z"
-                    comparisons:
-                      - maqam:
-                          id: "1"
-                          idName: "maqam_rast_al-nawa"
-                          displayName: "Maqam Rāst al-Nawā"
-                          version: "2025-10-18T19:41:17.132Z"
-                          tonicId: "nawa"
-                          tonicName: "nawā"
-                          transposition: true
-                          originalTonicId: "rast"
-                          originalTonicName: "rāst"
-                          maqamFamilyId: "rast"
-                          maqamFamilyDisplayName: "Rāst"
-                          numberOfPitchClasses: 7
-                          isOctaveRepeating: true
-                          pitchClassDataType: "cents"
-                          includeIntervals: false
-                        context:
-                          tuningSystem:
-                            id: "ibnsina_1037"
-                            displayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
-                            version: "2025-10-18T19:41:17.132Z"
-                            numberOfPitchClassesSingleOctave: 17
-                            startingNoteName: "yegah"
-                            referenceFrequency: 97.999
-                        pitchData:
-                          ascending:
-                            - pitchClassIndex: 3
-                              octave: 1
-                              scaleDegree: "I"
-                              noteName: "nawa"
-                              noteNameDisplay: "nawā"
-                              cents: 498.0
-                        ajnas:
-                          ascending:
-                            nawā:
-                              id: "1"
-                              idName: "jins_rast"
-                              displayName: "Jins Rāst"
-                    meta:
+                      count: 1
                       totalComparisons: 1
                       successfulComparisons: 1
+                      unavailableStartingNotes: 0
                       failedComparisons: 0
+                      data:
+                        - tuningSystem:
+                            id: "alsabbagh_1954"
+                            idName: "alsabbagh_1954"
+                            displayName: "al-Ṣabbāgh (1954) Contemporary Arabic Tuning 24-Tone"
+                            version: "2025-10-18T19:42:23.643Z"
+                          startingNote:
+                            idName: "rast"
+                            displayName: "rāst"
+                          maqam:
+                            id: "1"
+                            idName: "maqam_rast"
+                            displayName: "maqām rāst"
+                            version: "2025-12-10T17:03:34.565Z"
+                            maqamFamilyId: "rast"
+                            maqamFamilyDisplayName: "rāst"
+                          tonic:
+                            idName: "rast"
+                            displayName: "rāst"
+                          stats:
+                            tuningSystem:
+                              numberOfPitchClassesSingleOctave: 24
+                              referenceFrequency: 130.665
+                            maqam:
+                              numberOfPitchClasses: 7
+                              isOctaveRepeating: true
+                          availableTranspositions: []
+                          pitchData:
+                            ascending:
+                              - pitchClassIndex: 0
+                                octave: 1
+                                scaleDegree: "I"
+                                noteName: "rast"
+                                noteNameDisplay: "rāst"
+                                cents: 0
+                              - pitchClassIndex: 4
+                                octave: 1
+                                scaleDegree: "II"
+                                noteName: "dugah"
+                                noteNameDisplay: "dūgāh"
+                                cents: 203.91000173077484
+                            descending:
+                              - pitchClassIndex: 20
+                                octave: 1
+                                scaleDegree: "VII"
+                                noteName: "ajam"
+                                noteNameDisplay: "ʿajam"
+                                cents: 1019.5580263750745
+                              - pitchClassIndex: 18
+                                octave: 1
+                                scaleDegree: "VI"
+                                noteName: "husayni"
+                                noteNameDisplay: "ḥusaynī"
+                                cents: 905.8650025961623
+                          ajnas:
+                            ascending:
+                              rāst:
+                                id: "19"
+                                idName: "jins_rast"
+                                displayName: "jins rāst"
+                              dūgāh:
+                                id: "2"
+                                idName: "jins_bayyat"
+                                displayName: "jins bayyāt"
+                              chahārgāh: null
+                            descending:
+                              ʿajam: null
+                              ḥusaynī:
+                                id: "30"
+                                idName: "jins_kurd_ushayran"
+                                displayName: "jins kurd ʿushayrān"
+                          intervals:
+                            ascending:
+                              - cents: 203.91000173077484
+                              - cents: 152.95309101871007
+                            descending:
+                              - cents: 113.69302377891222
+                              - cents: 203.91000173077487
+                          parameters:
+                            pitchClassDataType: "cents"
+                            includeIntervals: true
+                            transposeTo: null
+                          links:
+                            detail: "/api/maqamat/maqam_rast?tuningSystem=alsabbagh_1954&startingNote=r%C4%81st&pitchClassDataType=cents&includeIntervals=true"
+                            availability: "/api/maqamat/maqam_rast/availability"
+                    parameters:
+                      tuningSystems:
+                        idNames: ["alsabbagh_1954"]
+                        displayNames: ["alsabbagh_1954"]
+                      startingNotes:
+                        idNames: ["rast"]
+                        displayNames: ["rast"]
+                      pitchClassDataType: "cents"
+                      includeIntervals: true
+                      transposeTo: null
+                    links:
+                      self: "https://diarmaqar.netlify.app/api/maqamat/maqam_rast/compare?tuningSystems=alsabbagh_1954&startingNotes=rast&pitchClassDataType=cents"
+                      detail: "/api/maqamat/maqam_rast"
+                      availability: "/api/maqamat/maqam_rast/availability"
+                multipleStartingNotes:
+                  summary: Cartesian product — 2 tuning systems × 3 starting notes
+                  description: |
+                    Requests `maqam_bayyat` against 2 tuning systems × 3 starting notes, yielding
+                    6 cells in user-supplied order (outer = `tuningSystems`, inner =
+                    `startingNotes`). Three cells are successful; three cells carry a `note`
+                    because the requested starting note isn't available in that tuning system.
+                    `pitchData` is trimmed to 2 entries per direction for brevity.
+                  value:
+                    maqam:
+                      id: "7"
+                      idName: "maqam_bayyat"
+                      displayName: "maqām bayyāt"
+                      version: "2025-10-18T19:42:22.369Z"
+                    comparisons:
+                      count: 6
+                      totalComparisons: 6
+                      successfulComparisons: 3
+                      unavailableStartingNotes: 3
+                      failedComparisons: 0
+                      data:
+                        - tuningSystem:
+                            id: "alsabbagh_1954"
+                            idName: "alsabbagh_1954"
+                            displayName: "al-Ṣabbāgh (1954) Contemporary Arabic Tuning 24-Tone"
+                            version: "2025-10-18T19:42:23.643Z"
+                          startingNote:
+                            idName: "rast"
+                            displayName: "rāst"
+                          maqam:
+                            id: "7"
+                            idName: "maqam_bayyat"
+                            displayName: "maqām bayyāt"
+                            version: "2025-10-18T19:42:22.369Z"
+                            maqamFamilyId: "bayyat"
+                            maqamFamilyDisplayName: "bayyāt"
+                          tonic:
+                            idName: "dugah"
+                            displayName: "dūgāh"
+                          stats:
+                            tuningSystem:
+                              numberOfPitchClassesSingleOctave: 24
+                              referenceFrequency: 130.665
+                            maqam:
+                              numberOfPitchClasses: 7
+                              isOctaveRepeating: true
+                          availableTranspositions: []
+                          pitchData:
+                            ascending:
+                              - pitchClassIndex: 4
+                                octave: 1
+                                scaleDegree: "I"
+                                noteName: "dugah"
+                                noteNameDisplay: "dūgāh"
+                                cents: 203.91000173077484
+                              - pitchClassIndex: 7
+                                octave: 1
+                                scaleDegree: "II"
+                                noteName: "segah"
+                                noteNameDisplay: "segāh"
+                                cents: 356.8630927494849
+                            descending:
+                              - pitchClassIndex: 0
+                                octave: 2
+                                scaleDegree: "VII"
+                                noteName: "kurdan"
+                                noteNameDisplay: "kurdān"
+                                cents: 1200
+                              - pitchClassIndex: 20
+                                octave: 1
+                                scaleDegree: "VI"
+                                noteName: "ajam"
+                                noteNameDisplay: "ʿajam"
+                                cents: 1019.5580263750745
+                          ajnas:
+                            ascending:
+                              dūgāh:
+                                id: "2"
+                                idName: "jins_bayyat"
+                                displayName: "jins bayyāt"
+                              chahārgāh: null
+                            descending:
+                              kurdān:
+                                id: "19"
+                                idName: "jins_rast"
+                                displayName: "jins rāst"
+                              ʿajam: null
+                          intervals:
+                            ascending:
+                              - cents: 152.95309101871007
+                              - cents: 141.1819063851276
+                            descending:
+                              - cents: 180.44197362492548
+                              - cents: 113.69302377891222
+                          parameters:
+                            pitchClassDataType: "cents"
+                            includeIntervals: true
+                            transposeTo: null
+                          links:
+                            detail: "/api/maqamat/maqam_bayyat?tuningSystem=alsabbagh_1954&startingNote=r%C4%81st&pitchClassDataType=cents&includeIntervals=true"
+                            availability: "/api/maqamat/maqam_bayyat/availability"
+                        - tuningSystem:
+                            id: "alsabbagh_1954"
+                            idName: "alsabbagh_1954"
+                            displayName: "al-Ṣabbāgh (1954) Contemporary Arabic Tuning 24-Tone"
+                            version: "2025-10-18T19:42:23.643Z"
+                          startingNote:
+                            idName: "yegah"
+                            displayName: "yegah"
+                          note: "Starting note 'yegah' is not available in tuning system 'al-Ṣabbāgh (1954) Contemporary Arabic Tuning 24-Tone'"
+                          validStartingNotes:
+                            idNames: ["rast"]
+                            displayNames: ["rāst"]
+                        - tuningSystem:
+                            id: "alsabbagh_1954"
+                            idName: "alsabbagh_1954"
+                            displayName: "al-Ṣabbāgh (1954) Contemporary Arabic Tuning 24-Tone"
+                            version: "2025-10-18T19:42:23.643Z"
+                          startingNote:
+                            idName: "ushayran"
+                            displayName: "ushayran"
+                          note: "Starting note 'ushayran' is not available in tuning system 'al-Ṣabbāgh (1954) Contemporary Arabic Tuning 24-Tone'"
+                          validStartingNotes:
+                            idNames: ["rast"]
+                            displayNames: ["rāst"]
+                        - tuningSystem:
+                            id: "ibnsina_1037"
+                            idName: "ibnsina_1037"
+                            displayName: "Ibn Sīnā  (1037) 7-Fret Oud 17-Tone"
+                            version: "2025-11-09T00:44:40.275Z"
+                          startingNote:
+                            idName: "rast"
+                            displayName: "rast"
+                          note: "Starting note 'rast' is not available in tuning system 'Ibn Sīnā  (1037) 7-Fret Oud 17-Tone'"
+                          validStartingNotes:
+                            idNames: ["ushayran", "yegah"]
+                            displayNames: ["ʿushayrān", "yegāh"]
+                        - tuningSystem:
+                            id: "ibnsina_1037"
+                            idName: "ibnsina_1037"
+                            displayName: "Ibn Sīnā  (1037) 7-Fret Oud 17-Tone"
+                            version: "2025-11-09T00:44:40.275Z"
+                          startingNote:
+                            idName: "yegah"
+                            displayName: "yegāh"
+                          maqam:
+                            id: "7"
+                            idName: "maqam_bayyat"
+                            displayName: "maqām bayyāt"
+                            version: "2025-10-18T19:42:22.369Z"
+                            maqamFamilyId: "bayyat"
+                            maqamFamilyDisplayName: "bayyāt"
+                          tonic:
+                            idName: "dugah"
+                            displayName: "dūgāh"
+                          stats:
+                            tuningSystem:
+                              numberOfPitchClassesSingleOctave: 17
+                              referenceFrequency: 97.999
+                            maqam:
+                              numberOfPitchClasses: 7
+                              isOctaveRepeating: true
+                          availableTranspositions:
+                            - idName: "maqam_bayyat_al-yegah"
+                              displayName: "maqām bayyāt al-yegāh"
+                              tonic:
+                                idName: "yegah"
+                                displayName: "yegāh"
+                            - idName: "maqam_bayyat_al-nawa"
+                              displayName: "maqām bayyāt al-nawā"
+                              tonic:
+                                idName: "nawa"
+                                displayName: "nawā"
+                          pitchData:
+                            ascending:
+                              - pitchClassIndex: 10
+                                octave: 1
+                                scaleDegree: "I"
+                                noteName: "dugah"
+                                noteNameDisplay: "dūgāh"
+                                cents: 701.9550008653874
+                              - pitchClassIndex: 12
+                                octave: 1
+                                scaleDegree: "II"
+                                noteName: "segah"
+                                noteNameDisplay: "segāh"
+                                cents: 840.5276617693106
+                            descending:
+                              - pitchClassIndex: 7
+                                octave: 2
+                                scaleDegree: "VII"
+                                noteName: "kurdan"
+                                noteNameDisplay: "kurdān"
+                                cents: 1698.0449991346125
+                              - pitchClassIndex: 4
+                                octave: 2
+                                scaleDegree: "VI"
+                                noteName: "ajam"
+                                noteNameDisplay: "ʿajam"
+                                cents: 1494.1349974038376
+                          ajnas:
+                            ascending:
+                              dūgāh:
+                                id: "2"
+                                idName: "jins_bayyat"
+                                displayName: "jins bayyāt"
+                              nawā:
+                                id: "19"
+                                idName: "jins_rast_al-nawa"
+                                displayName: "jins rāst al-nawā"
+                            descending:
+                              kurdān:
+                                id: "19"
+                                idName: "jins_rast"
+                                displayName: "jins rāst"
+                              ʿajam: null
+                          intervals:
+                            ascending:
+                              - cents: 138.57266090392318
+                              - cents: 155.5623364999144
+                            descending:
+                              - cents: 203.91000173077487
+                              - cents: 90.22499567306272
+                          parameters:
+                            pitchClassDataType: "cents"
+                            includeIntervals: true
+                            transposeTo: null
+                          links:
+                            detail: "/api/maqamat/maqam_bayyat?tuningSystem=ibnsina_1037&startingNote=yeg%C4%81h&pitchClassDataType=cents&includeIntervals=true"
+                            availability: "/api/maqamat/maqam_bayyat/availability"
+                        - tuningSystem:
+                            id: "ibnsina_1037"
+                            idName: "ibnsina_1037"
+                            displayName: "Ibn Sīnā  (1037) 7-Fret Oud 17-Tone"
+                            version: "2025-11-09T00:44:40.275Z"
+                          startingNote:
+                            idName: "ushayran"
+                            displayName: "ʿushayrān"
+                          maqam:
+                            id: "7"
+                            idName: "maqam_bayyat"
+                            displayName: "maqām bayyāt"
+                            version: "2025-10-18T19:42:22.369Z"
+                            maqamFamilyId: "bayyat"
+                            maqamFamilyDisplayName: "bayyāt"
+                          tonic:
+                            idName: "dugah"
+                            displayName: "dūgāh"
+                          stats:
+                            tuningSystem:
+                              numberOfPitchClassesSingleOctave: 17
+                              referenceFrequency: 97.999
+                            maqam:
+                              numberOfPitchClasses: 7
+                              isOctaveRepeating: true
+                          availableTranspositions:
+                            - idName: "maqam_bayyat_al-ushayran"
+                              displayName: "maqām bayyāt al-ʿushayrān"
+                              tonic:
+                                idName: "ushayran"
+                                displayName: "ʿushayrān"
+                            - idName: "maqam_bayyat_al-nawa"
+                              displayName: "maqām bayyāt al-nawā"
+                              tonic:
+                                idName: "nawa"
+                                displayName: "nawā"
+                          pitchData:
+                            ascending:
+                              - pitchClassIndex: 5
+                                octave: 1
+                                scaleDegree: "I"
+                                noteName: "dugah"
+                                noteNameDisplay: "dūgāh"
+                                cents: 498.0449991346125
+                              - pitchClassIndex: 7
+                                octave: 1
+                                scaleDegree: "II"
+                                noteName: "segah"
+                                noteNameDisplay: "segāh"
+                                cents: 636.6176600385357
+                          parameters:
+                            pitchClassDataType: "cents"
+                            includeIntervals: true
+                            transposeTo: null
+                          links:
+                            detail: "/api/maqamat/maqam_bayyat?tuningSystem=ibnsina_1037&startingNote=%CA%BFushayr%C4%81n&pitchClassDataType=cents&includeIntervals=true"
+                            availability: "/api/maqamat/maqam_bayyat/availability"
+                    parameters:
+                      tuningSystems:
+                        idNames: ["alsabbagh_1954", "ibnsina_1037"]
+                        displayNames: ["alsabbagh_1954", "ibnsina_1037"]
+                      startingNotes:
+                        idNames: ["rast", "yegah", "ushayran"]
+                        displayNames: ["rast", "yegah", "ushayran"]
+                      pitchClassDataType: "cents"
+                      includeIntervals: true
+                      transposeTo: null
+                    links:
+                      self: "https://diarmaqar.netlify.app/api/maqamat/maqam_bayyat/compare?tuningSystems=alsabbagh_1954,ibnsina_1037&startingNotes=rast,yegah,ushayran&pitchClassDataType=cents"
+                      detail: "/api/maqamat/maqam_bayyat"
+                      availability: "/api/maqamat/maqam_bayyat/availability"
+                unavailableStartingNote:
+                  summary: Single cell whose starting note isn't available (`note` field)
+                  description: |
+                    Demonstrates the `note` (informational, not error) per-cell shape when the
+                    requested starting note is not available in the given tuning system. The
+                    response is HTTP 200 and `unavailableStartingNotes` is incremented.
+                  value:
+                    maqam:
+                      id: "7"
+                      idName: "maqam_bayyat"
+                      displayName: "maqām bayyāt"
+                      version: "2025-10-18T19:42:22.369Z"
+                    comparisons:
+                      count: 1
+                      totalComparisons: 1
+                      successfulComparisons: 0
+                      unavailableStartingNotes: 1
+                      failedComparisons: 0
+                      data:
+                        - tuningSystem:
+                            id: "ibnsina_1037"
+                            idName: "ibnsina_1037"
+                            displayName: "Ibn Sīnā  (1037) 7-Fret Oud 17-Tone"
+                            version: "2025-11-09T00:44:40.275Z"
+                          startingNote:
+                            idName: "bogus_note"
+                            displayName: "bogus_note"
+                          note: "Starting note 'bogus_note' is not available in tuning system 'Ibn Sīnā  (1037) 7-Fret Oud 17-Tone'"
+                          validStartingNotes:
+                            idNames: ["ushayran", "yegah"]
+                            displayNames: ["ʿushayrān", "yegāh"]
+                    parameters:
+                      tuningSystems:
+                        idNames: ["ibnsina_1037"]
+                        displayNames: ["ibnsina_1037"]
+                      startingNotes:
+                        idNames: ["bogus_note"]
+                        displayNames: ["bogus_note"]
+                      pitchClassDataType: "cents"
+                      includeIntervals: true
+                      transposeTo: null
+                    links:
+                      self: "https://diarmaqar.netlify.app/api/maqamat/maqam_bayyat/compare?tuningSystems=ibnsina_1037&startingNotes=bogus_note&pitchClassDataType=cents"
+                      detail: "/api/maqamat/maqam_bayyat"
+                      availability: "/api/maqamat/maqam_bayyat/availability"
                 withErrors:
-                  summary: Comparison with some failures
+                  summary: Mixed success and hard-failure cells
+                  description: |
+                    Demonstrates a cell with `error` (hard failure — tuning system not found)
+                    alongside a successful cell. Hard failures use a minimal fallback
+                    `tuningSystem` namespace built from the raw request ID.
                   value:
                     maqam:
                       id: "1"
                       idName: "maqam_rast"
-                      displayName: "Maqam Rāst"
-                      version: "2025-10-18T19:41:17.132Z"
+                      displayName: "maqām rāst"
+                      version: "2025-12-10T17:03:34.565Z"
                     comparisons:
-                      - maqam:
-                          id: "1"
-                          idName: "maqam_rast"
-                          displayName: "Maqam Rāst"
-                          version: "2025-10-18T19:41:17.132Z"
-                          tonicId: "rast"
-                          tonicName: "rāst"
-                          transposition: false
-                          maqamFamilyId: "rast"
-                          maqamFamilyDisplayName: "Rāst"
-                          numberOfPitchClasses: 7
-                          isOctaveRepeating: true
-                          pitchClassDataType: "cents"
-                          includeIntervals: false
-                        context:
-                          tuningSystem:
-                            id: "ibnsina_1037"
-                            displayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
-                            version: "2025-10-18T19:41:17.132Z"
-                            numberOfPitchClassesSingleOctave: 17
-                            startingNoteName: "yegah"
-                            referenceFrequency: 97.999
-                        pitchData:
-                          ascending:
-                            - pitchClassIndex: 0
-                              octave: 1
-                              scaleDegree: "I"
-                              noteName: "rast"
-                              noteNameDisplay: "rāst"
-                              cents: 0.0
-                        ajnas:
-                          ascending:
-                            rāst:
-                              id: "1"
-                              idName: "jins_rast"
-                              displayName: "Jins Rāst"
-                      - error: "Tuning system 'InvalidSystem' not found"
-                    meta:
+                      count: 2
                       totalComparisons: 2
                       successfulComparisons: 1
+                      unavailableStartingNotes: 0
                       failedComparisons: 1
+                      data:
+                        - tuningSystem:
+                            id: "alsabbagh_1954"
+                            idName: "alsabbagh_1954"
+                            displayName: "al-Ṣabbāgh (1954) Contemporary Arabic Tuning 24-Tone"
+                            version: "2025-10-18T19:42:23.643Z"
+                          startingNote:
+                            idName: "rast"
+                            displayName: "rāst"
+                          maqam:
+                            id: "1"
+                            idName: "maqam_rast"
+                            displayName: "maqām rāst"
+                            version: "2025-12-10T17:03:34.565Z"
+                            maqamFamilyId: "rast"
+                            maqamFamilyDisplayName: "rāst"
+                          tonic:
+                            idName: "rast"
+                            displayName: "rāst"
+                          stats:
+                            tuningSystem:
+                              numberOfPitchClassesSingleOctave: 24
+                              referenceFrequency: 130.665
+                            maqam:
+                              numberOfPitchClasses: 7
+                              isOctaveRepeating: true
+                          availableTranspositions: []
+                          pitchData:
+                            ascending:
+                              - pitchClassIndex: 0
+                                octave: 1
+                                scaleDegree: "I"
+                                noteName: "rast"
+                                noteNameDisplay: "rāst"
+                                cents: 0
+                            descending:
+                              - pitchClassIndex: 0
+                                octave: 1
+                                scaleDegree: "I"
+                                noteName: "rast"
+                                noteNameDisplay: "rāst"
+                                cents: 0
+                          ajnas:
+                            ascending:
+                              rāst:
+                                id: "19"
+                                idName: "jins_rast"
+                                displayName: "jins rāst"
+                            descending:
+                              rāst:
+                                id: "19"
+                                idName: "jins_rast"
+                                displayName: "jins rāst"
+                          parameters:
+                            pitchClassDataType: "cents"
+                            includeIntervals: true
+                            transposeTo: null
+                          links:
+                            detail: "/api/maqamat/maqam_rast?tuningSystem=alsabbagh_1954&startingNote=r%C4%81st&pitchClassDataType=cents&includeIntervals=true"
+                            availability: "/api/maqamat/maqam_rast/availability"
+                        - tuningSystem:
+                            id: "InvalidSystem"
+                            idName: "invalidsystem"
+                            displayName: "InvalidSystem"
+                          startingNote:
+                            idName: "rast"
+                            displayName: "rast"
+                          error: "Tuning system 'InvalidSystem' not found"
+                    parameters:
+                      tuningSystems:
+                        idNames: ["alsabbagh_1954", "invalidsystem"]
+                        displayNames: ["alsabbagh_1954", "InvalidSystem"]
+                      startingNotes:
+                        idNames: ["rast"]
+                        displayNames: ["rast"]
+                      pitchClassDataType: "cents"
+                      includeIntervals: true
+                      transposeTo: null
+                    links:
+                      self: "https://diarmaqar.netlify.app/api/maqamat/maqam_rast/compare?tuningSystems=alsabbagh_1954,InvalidSystem&startingNotes=rast&pitchClassDataType=cents"
+                      detail: "/api/maqamat/maqam_rast"
+                      availability: "/api/maqamat/maqam_rast/availability"
         '400':
           description: Invalid request parameters
           content:
@@ -2063,13 +2668,19 @@ paths:
                     error: "tuningSystems parameter is required"
                     message: "Provide comma-separated tuning system IDs"
                     hint: 'Format: ?tuningSystems=ibnsina_1037,alfarabi_950g'
-                    example: "/api/maqamat/maqam_bayyat/compare?tuningSystems=cairocongresstuningcommittee_1929,alsabbagh_1954&startingNote=rast&pitchClassDataType=cents"
-                missingStartingNote:
-                  summary: Missing startingNote parameter
+                    example: "/api/maqamat/maqam_rast/compare?tuningSystems=ibnsina_1037,alfarabi_950g&startingNotes=yegah&pitchClassDataType=cents"
+                missingStartingNotes:
+                  summary: Missing startingNotes parameter
                   value:
-                    error: "startingNote parameter is required"
-                    message: "A starting note must be specified for all tuning systems"
-                    hint: "Add &startingNote=yegah to your request"
+                    error: "startingNotes parameter is required"
+                    message: "At least one starting note must be specified"
+                    hint: "Add &startingNotes=yegah,rast to your request (comma-separated list)"
+                emptyStartingNotes:
+                  summary: startingNotes parameter is empty or whitespace-only
+                  value:
+                    error: "Invalid parameter: startingNotes"
+                    message: "The 'startingNotes' parameter must contain at least one starting note name."
+                    hint: "Use ?startingNotes=yegah or ?startingNotes=yegah,rast,ushayran"
                 invalidIntervals:
                   summary: Invalid includeIntervals parameter
                   value:
@@ -4198,12 +4809,6 @@ paths:
                   links:
                     type: object
                     properties:
-                      self: { type: string }
-                      availability: { type: string }
-                      detail: { type: string }
-                  links:
-                    type: object
-                    properties:
                       self:
                         type: string
                         description: Link to this endpoint
@@ -4271,17 +4876,29 @@ paths:
     get:
       tags:
         - Ajnās
-      summary: Compare jins data across multiple tuning systems
+      summary: Compare jins data across multiple tuning systems and starting notes
       description: |
-        Compare comprehensive jins data across multiple tuning systems and starting note configurations in a single request.
-        
-        Returns comprehensive data similar to `/ajnas/{idName}` but without modulations. Each comparison includes:
-        - Pitch class data (single sequence, as ajnās are unidirectional)
-        - Optional interval data
-        - Jins metadata (tonic, transposition status)
-        - Context information (tuning system, starting note, reference frequency)
-        
-        This endpoint is ideal for comparative musicological analysis of melodic structures across different historical tuning systems.
+        Compare comprehensive jins data across multiple tuning systems **and** multiple starting
+        notes in a single request. Given `N` tuning systems and `M` starting notes, the response
+        contains the Cartesian product of `N × M` comparison cells in user-supplied order
+        (outer loop = `tuningSystems`, inner loop = `startingNotes`).
+
+        Each successful cell includes the (unidirectional) pitch class sequence, optional
+        interval data, and transposition details. When a requested starting note is not available
+        in a given tuning system the cell carries an informational `note` field (not `error`)
+        together with `validStartingNotes`. When a hard failure occurs (tuning system not found,
+        jins not realizable in this configuration, or an unreachable `transposeTo` target) the
+        cell carries an `error` field. The overall response is always HTTP 200 — per-cell
+        outcomes do not affect the HTTP status.
+
+        The following invariant always holds:
+
+        ```
+        successfulComparisons + unavailableStartingNotes + failedComparisons === totalComparisons
+        ```
+
+        This endpoint is ideal for comparative musicological analysis of melodic structures
+        across historical tuning systems and/or multiple modal transpositions.
       operationId: compareJins
       parameters:
         - name: idName
@@ -4290,26 +4907,33 @@ paths:
           description: URL-safe jins identifier
           schema:
             type: string
-          example: "jins_segah"
+          example: "jins_bayyat"
         - name: tuningSystems
           in: query
           required: true
           description: |
-            Comma-separated tuning system IDs. All tuning systems will use the same starting note and optional transposition.
+            Comma-separated list of tuning system IDs. The response computes the Cartesian
+            product of these tuning systems with the requested `startingNotes` (outer loop =
+            `tuningSystems`, inner loop = `startingNotes`).
           schema:
             type: string
-          example: "alfarabi_950g,meshshaqa_1899"
-        - name: startingNote
+          example: "alsabbagh_1954,ibnsina_1037"
+        - name: startingNotes
           in: query
           required: true
-          description: Starting note name (URL-safe, diacritics-insensitive) - applies to all tuning systems. Use `yegah` for IbnSina/Meshshaqa, `ushayran` for al-Farabi/al-Kindi, `rast` for CairoCongress/al-Sabbagh
+          description: |
+            Comma-separated list of starting note names (URL-safe, diacritics-insensitive). The
+            response contains `N × M` cells for `N` tuning systems × `M` starting notes, in
+            user-supplied order. If a starting note is not available in a given tuning system
+            that cell carries an informational `note` field (with a `validStartingNotes`
+            namespace) rather than pitch data.
           schema:
             type: string
-          example: "ushayran"
+          example: "rast,yegah,ushayran"
         - name: pitchClassDataType
           in: query
-          required: true
-          description: Output format for pitch class data
+          required: false
+          description: Output format for pitch class data. Defaults to `all` when omitted.
           schema:
             type: string
             enum:
@@ -4326,21 +4950,26 @@ paths:
               - midiNoteDeviation
               - centsDeviation
               - referenceNoteName
-          default: "cents"
+            default: "all"
           example: "cents"
         - name: includeIntervals
           in: query
           required: false
-          description: Include interval data between pitch classes
+          description: |
+            Whether to include interval data between adjacent pitch classes on each cell.
+            Defaults to `"true"` when omitted.
           schema:
             type: string
             enum: ["true", "false"]
-            default: "false"
+            default: "true"
           example: "true"
         - name: transposeTo
           in: query
           required: false
-          description: Transpose to specific tonic note (applies to all tuning systems)
+          description: |
+            Transpose every successful cell to the given tonic note (applies to every cell in the
+            Cartesian product). If the requested target is not reachable in a given cell the cell
+            carries an `error` plus an `availableTranspositions` list.
           schema:
             type: string
           example: "nawa"
@@ -4352,11 +4981,9 @@ paths:
 
             When true:
             - All English/transliteration fields remain unchanged
-            - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
-            - Note names, maqām names, and jins names get Arabic versions in *Ar fields
-            - Comments get Arabic versions in commentsAr if available
-            - Tuning system display names get Arabic versions in displayNameAr if available
-            - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
+            - Arabic versions are added with `Ar` suffix (e.g., `displayNameAr`, `noteNameDisplayAr`)
+            - Note names and jins names get Arabic versions in `*Ar` fields
+            - Tuning system display names get Arabic versions in `displayNameAr` if available
           schema:
             type: string
             enum: ["true", "false"]
@@ -4364,7 +4991,13 @@ paths:
           example: "true"
       responses:
         '200':
-          description: Comparison data retrieved successfully
+          description: |
+            Comparison data retrieved successfully. Note that the response is always HTTP 200
+            regardless of per-cell outcomes; individual failures (missing starting note, tuning
+            system not found, jins not realizable, unreachable transposeTo) are reported on the
+            respective cell via `note` or `error` fields. The counters
+            `successfulComparisons + unavailableStartingNotes + failedComparisons` always equal
+            `totalComparisons`.
           content:
             application/json:
               schema:
@@ -4372,11 +5005,16 @@ paths:
                 required:
                   - jins
                   - comparisons
-                  - meta
+                  - parameters
+                  - links
                 properties:
                   jins:
                     type: object
-                    description: Original jins identifier information
+                    description: Canonical jins identifier namespace (the jins being compared)
+                    required:
+                      - id
+                      - idName
+                      - displayName
                     properties:
                       id:
                         type: string
@@ -4387,210 +5025,764 @@ paths:
                       displayName:
                         type: string
                         description: Display name with diacritics
+                      displayNameAr:
+                        type: string
+                        description: Arabic-script display name (present only when `includeArabic=true`)
                       version:
                         type: string
                         description: ISO 8601 timestamp of last modification
                   comparisons:
-                    type: array
-                    description: Array of comparison results (one per configuration)
-                    items:
-                      type: object
-                      properties:
-                        jins:
+                    type: object
+                    description: |
+                      List response object containing every comparison cell in the Cartesian
+                      product. Meta counters are hoisted to the top level of this object (siblings
+                      of `count` and `data`), not nested under a separate `meta` key.
+                    required:
+                      - count
+                      - totalComparisons
+                      - successfulComparisons
+                      - unavailableStartingNotes
+                      - failedComparisons
+                      - data
+                    properties:
+                      count:
+                        type: integer
+                        description: Number of items in `data` (equals `totalComparisons`)
+                      totalComparisons:
+                        type: integer
+                        description: Total number of comparison cells in the Cartesian product (`N × M`)
+                      successfulComparisons:
+                        type: integer
+                        description: Number of cells that returned full pitch/interval data
+                      unavailableStartingNotes:
+                        type: integer
+                        description: |
+                          Number of cells whose `startingNote` was not available in the cell's
+                          `tuningSystem`. These cells carry a `note` field (informational — NOT
+                          an error) and are distinct from hard failures.
+                      failedComparisons:
+                        type: integer
+                        description: |
+                          Number of cells that hit a hard failure (tuning system not found,
+                          jins not realizable, or unreachable `transposeTo`). These cells carry
+                          an `error` field.
+                      data:
+                        type: array
+                        description: |
+                          Array of comparison cells in user-supplied order (outer loop =
+                          `tuningSystems`, inner loop = `startingNotes`). Each cell has one of
+                          three mutually exclusive shapes — a successful result, an informational
+                          `note` (unavailable starting note), or an `error` (hard failure). All
+                          non-common fields below are optional and present only for the
+                          corresponding outcome.
+                        items:
                           type: object
-                          description: Jins data for this comparison (may include transposition info)
-                          properties:
-                            id:
-                              type: string
-                            idName:
-                              type: string
-                            displayName:
-                              type: string
-                            version:
-                              type: string
-                            tonicId:
-                              type: string
-                              description: URL-safe tonic note identifier
-                            tonicName:
-                              type: string
-                              description: Tonic note name with diacritics
-                            transposition:
-                              type: boolean
-                              description: Whether this is a transposition from the original tonic
-                            originalTonicId:
-                              type: string
-                              description: Original tonic identifier (present only if transposed)
-                            originalTonicName:
-                              type: string
-                              description: Original tonic name (present only if transposed)
-                            numberOfPitchClasses:
-                              type: integer
-                              description: Number of pitch classes in this jins
-                            pitchClassDataType:
-                              type: string
-                              description: Format used for pitch class data
-                            includeIntervals:
-                              type: boolean
-                              description: Whether intervals are included
-                        context:
-                          type: object
+                          required:
+                            - tuningSystem
+                            - startingNote
                           properties:
                             tuningSystem:
                               type: object
+                              description: |
+                                Tuning system entity namespace for this cell. For the
+                                "tuning system not found" failure this is a minimal fallback
+                                namespace built from the raw ID (no `version`, no `displayNameAr`).
+                                In every other outcome this is the full entity namespace.
                               properties:
                                 id:
                                   type: string
-                                  description: Tuning system identifier
-                            displayName:
+                                idName:
+                                  type: string
+                                displayName:
+                                  type: string
+                                version:
+                                  type: string
+                                displayNameAr:
+                                  type: string
+                                  description: Present only when `includeArabic=true`
+                            startingNote:
+                              type: object
+                              description: Identifier namespace for the starting note of this cell
+                              properties:
+                                idName:
+                                  type: string
+                                displayName:
+                                  type: string
+                                displayNameAr:
+                                  type: string
+                                  description: Present only when `includeArabic=true`
+                            jins:
+                              type: object
+                              description: |
+                                Per-cell jins entity namespace. **Present on successful cells
+                                only.** When the cell represents a transposition, `idName` and
+                                `displayName` reflect the transposed name (e.g. `jins_bayyat_al-nawa`);
+                                the canonical `id` is preserved.
+                              properties:
+                                id:
+                                  type: string
+                                idName:
+                                  type: string
+                                displayName:
+                                  type: string
+                                version:
+                                  type: string
+                                displayNameAr:
+                                  type: string
+                            tonic:
+                              type: object
+                              description: |
+                                Identifier namespace for the resolved tonic note. **Present on
+                                successful cells only.**
+                              properties:
+                                idName:
+                                  type: string
+                                displayName:
+                                  type: string
+                                displayNameAr:
+                                  type: string
+                            transposition:
+                              type: object
+                              description: |
+                                Transposition details. **Present only when the tahlil for this
+                                cell is a taswīr (tonic differs from the canonical tonic).** Omitted
+                                entirely when the cell resolves to the canonical-octave tahlil.
+                              properties:
+                                original:
+                                  type: object
+                                  description: Identifier namespace for the canonical tonic
+                                  properties:
+                                    idName:
+                                      type: string
+                                    displayName:
+                                      type: string
+                                    displayNameAr:
+                                      type: string
+                                resolved:
+                                  type: object
+                                  description: Identifier namespace for the transposed tonic (same as top-level `tonic`)
+                                  properties:
+                                    idName:
+                                      type: string
+                                    displayName:
+                                      type: string
+                                    displayNameAr:
+                                      type: string
+                            stats:
+                              type: object
+                              description: Per-cell statistics. **Present on successful cells only.**
+                              properties:
+                                tuningSystem:
+                                  type: object
+                                  properties:
+                                    numberOfPitchClassesSingleOctave:
+                                      type: integer
+                                      description: Number of pitch classes per octave in this tuning system
+                                    referenceFrequency:
+                                      type: number
+                                      description: Reference frequency in Hz for the cell's starting note
+                                jins:
+                                  type: object
+                                  properties:
+                                    numberOfPitchClasses:
+                                      type: integer
+                                      description: Number of pitch classes in this cell's tahlil
+                            availableTranspositions:
+                              type: array
+                              description: |
+                                Taswīr-only available transpositions for this cell. **Present on
+                                successful cells and on `transposeTo`-unreachable error cells**
+                                (in the latter case, this lists the alternatives the caller could
+                                try). May be an empty array.
+                              items:
+                                type: object
+                                properties:
+                                  idName:
+                                    type: string
+                                  displayName:
+                                    type: string
+                                  displayNameAr:
+                                    type: string
+                                  tonic:
+                                    type: object
+                                    properties:
+                                      idName:
+                                        type: string
+                                      displayName:
+                                        type: string
+                                      displayNameAr:
+                                        type: string
+                            pitchData:
+                              type: array
+                              description: |
+                                Unidirectional pitch class sequence (ajnās have a single
+                                direction). **Present on successful cells only.** The field set
+                                of each item depends on `pitchClassDataType`.
+                              items:
+                                type: object
+                            intervals:
+                              type: array
+                              description: |
+                                Interval data between adjacent pitch classes (single array —
+                                unidirectional). **Present on successful cells only and only
+                                when `includeIntervals=true`.**
+                              items:
+                                type: object
+                            parameters:
+                              type: object
+                              description: Per-cell echo of the effective parameters. **Present on successful cells only.**
+                              properties:
+                                pitchClassDataType:
+                                  type: string
+                                includeIntervals:
+                                  type: boolean
+                                transposeTo:
+                                  type: string
+                                  nullable: true
+                            links:
+                              type: object
+                              description: Per-cell links namespace. **Present on successful cells only.**
+                              properties:
+                                detail:
+                                  type: string
+                                availability:
+                                  type: string
+                            note:
                               type: string
-                              description: Display name formatted as "Creator (Year) Title"
-                            version:
+                              description: |
+                                Informational message for cells whose `startingNote` is not
+                                available in the cell's `tuningSystem`. **Present only for
+                                unavailable-starting-note cells** (counted by
+                                `unavailableStartingNotes`). Mutually exclusive with `error`.
+                            validStartingNotes:
+                              type: object
+                              description: |
+                                Valid starting notes for the cell's tuning system. Present
+                                alongside `note`. A string-array namespace.
+                              properties:
+                                idNames:
+                                  type: array
+                                  items:
+                                    type: string
+                                displayNames:
+                                  type: array
+                                  items:
+                                    type: string
+                                displayNamesAr:
+                                  type: array
+                                  items:
+                                    type: string
+                                  description: Present only when `includeArabic=true`
+                            error:
                               type: string
-                              description: ISO 8601 timestamp of last modification
-                            numberOfPitchClassesSingleOctave:
-                              type: integer
-                              description: Number of pitch classes in one octave of the selected tuning system (from tuning system's original pitch class values)
-                            startingNoteName:
+                              description: |
+                                Error message for cells that hit a hard failure (tuning system
+                                not found, jins not realizable, or unreachable `transposeTo`).
+                                **Present only for failed cells** (counted by `failedComparisons`).
+                                Mutually exclusive with `note`.
+                            transposeTo:
                               type: string
-                              description: Starting note name (URL-safe)
-                            referenceFrequency:
-                              type: number
-                              description: Reference frequency in Hz associated with the starting note name (falls back to tuning system default if not specified for this note)
-                        pitchData:
-                          type: array
-                          description: Pitch class sequence (ajnās are unidirectional)
-                          items:
-                            type: object
-                        intervals:
-                          type: array
-                          description: Interval data (present only if includeIntervals=true)
-                          items:
-                            type: object
-                        error:
-                          type: string
-                          description: Error message if this comparison failed
-                  meta:
+                              description: |
+                                Present only on the `transposeTo`-unreachable error variant:
+                                echoes the unreachable target note name.
+                  parameters:
                     type: object
+                    description: Echo of the effective request parameters at the top level
                     properties:
-                      totalComparisons:
-                        type: integer
-                        description: Total number of comparisons requested
-                      successfulComparisons:
-                        type: integer
-                        description: Number of successful comparisons
-                      failedComparisons:
-                        type: integer
-                        description: Number of failed comparisons
+                      tuningSystems:
+                        type: object
+                        description: String-array namespace of requested tuning systems
+                        properties:
+                          idNames:
+                            type: array
+                            items:
+                              type: string
+                          displayNames:
+                            type: array
+                            items:
+                              type: string
+                          displayNamesAr:
+                            type: array
+                            items:
+                              type: string
+                            description: Present only when `includeArabic=true`
+                      startingNotes:
+                        type: object
+                        description: String-array namespace of requested starting notes
+                        properties:
+                          idNames:
+                            type: array
+                            items:
+                              type: string
+                          displayNames:
+                            type: array
+                            items:
+                              type: string
+                          displayNamesAr:
+                            type: array
+                            items:
+                              type: string
+                            description: Present only when `includeArabic=true`
+                      pitchClassDataType:
+                        type: string
+                      includeIntervals:
+                        type: boolean
+                      transposeTo:
+                        type: string
+                        nullable: true
+                  links:
+                    type: object
+                    description: Top-level links namespace
+                    properties:
+                      self:
+                        type: string
+                        description: Canonical URL for this comparison request
+                      detail:
+                        type: string
+                        description: Link to the jins detail endpoint
+                      availability:
+                        type: string
+                        description: Link to the jins availability endpoint
               examples:
                 twoTuningSystems:
-                  summary: Compare across two tuning systems
+                  summary: Compare a single tuning system × single starting note cell
                   value:
                     jins:
-                      id: "5"
-                      idName: "jins_kurd"
-                      displayName: "Jins Kurd"
-                      version: "2025-10-18T19:41:17.132Z"
+                      id: "19"
+                      idName: "jins_rast"
+                      displayName: "jins rāst"
+                      version: "2025-10-18T19:34:26.343Z"
                     comparisons:
-                      - jins:
-                          id: "5"
-                          idName: "jins_kurd"
-                          displayName: "Jins Kurd"
-                          version: "2025-10-18T19:41:17.132Z"
-                          tonicId: "rast"
-                          tonicName: "rāst"
-                          transposition: false
-                          numberOfPitchClasses: 4
-                          pitchClassDataType: "cents"
-                          includeIntervals: true
-                        context:
-                          tuningSystem:
-                            id: "ibnsina_1037"
-                            displayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
-                            version: "2025-10-18T19:41:17.132Z"
-                            numberOfPitchClassesSingleOctave: 17
-                            startingNoteName: "yegah"
-                            referenceFrequency: 440.0
-                        pitchData:
-                          - pitchClassIndex: 0
-                            octave: 1
-                            scaleDegree: "I"
-                            noteName: "rast"
-                            noteNameDisplay: "rāst"
-                            cents: 0.0
-                          - pitchClassIndex: 1
-                            octave: 1
-                            scaleDegree: "II"
-                            noteName: "dugah"
-                            noteNameDisplay: "dūgāh"
-                            cents: 204.0
-                          - pitchClassIndex: 2
-                            octave: 1
-                            scaleDegree: "III"
-                            noteName: "kurd"
-                            noteNameDisplay: "kurd"
-                            cents: 294.0
-                          - pitchClassIndex: 3
-                            octave: 1
-                            scaleDegree: "IV"
-                            noteName: "nawa"
-                            noteNameDisplay: "nawā"
-                            cents: 498.0
-                        intervals:
-                          - cents: 204.0
-                          - cents: 90.0
-                          - cents: 204.0
-                      - jins:
-                          id: "5"
-                          idName: "jins_kurd"
-                          displayName: "Jins Kurd"
-                          version: "2025-10-18T19:41:17.132Z"
-                          tonicId: "rast"
-                          tonicName: "rāst"
-                          transposition: false
-                          numberOfPitchClasses: 4
-                          pitchClassDataType: "cents"
-                          includeIntervals: true
-                        context:
-                          tuningSystem:
-                            id: "ibnsina_1037"
-                            displayName: "Ibn Sīnā (1037) 7-Fret Oud 17-Tone"
-                            version: "2025-10-18T19:41:17.132Z"
-                            numberOfPitchClassesSingleOctave: 17
-                            startingNoteName: "yegah"
-                            referenceFrequency: 440.0
-                        pitchData:
-                          - pitchClassIndex: 0
-                            octave: 1
-                            scaleDegree: "I"
-                            noteName: "rast"
-                            noteNameDisplay: "rāst"
-                            cents: 0.0
-                          - pitchClassIndex: 1
-                            octave: 1
-                            scaleDegree: "II"
-                            noteName: "dugah"
-                            noteNameDisplay: "dūgāh"
-                            cents: 211.7
-                          - pitchClassIndex: 2
-                            octave: 1
-                            scaleDegree: "III"
-                            noteName: "kurd"
-                            noteNameDisplay: "kurd"
-                            cents: 294.1
-                          - pitchClassIndex: 3
-                            octave: 1
-                            scaleDegree: "IV"
-                            noteName: "nawa"
-                            noteNameDisplay: "nawā"
-                            cents: 498.0
-                        intervals:
-                          - cents: 211.7
-                          - cents: 82.4
-                          - cents: 203.9
-                    meta:
-                      totalComparisons: 2
-                      successfulComparisons: 2
+                      count: 1
+                      totalComparisons: 1
+                      successfulComparisons: 1
+                      unavailableStartingNotes: 0
                       failedComparisons: 0
+                      data:
+                        - tuningSystem:
+                            id: "alsabbagh_1954"
+                            idName: "alsabbagh_1954"
+                            displayName: "al-Ṣabbāgh (1954) Contemporary Arabic Tuning 24-Tone"
+                            version: "2025-10-18T19:42:23.643Z"
+                          startingNote:
+                            idName: "rast"
+                            displayName: "rāst"
+                          jins:
+                            id: "19"
+                            idName: "jins_rast"
+                            displayName: "jins rāst"
+                            version: "2025-10-18T19:34:26.343Z"
+                          tonic:
+                            idName: "rast"
+                            displayName: "rāst"
+                          stats:
+                            tuningSystem:
+                              numberOfPitchClassesSingleOctave: 24
+                              referenceFrequency: 130.665
+                            jins:
+                              numberOfPitchClasses: 4
+                          availableTranspositions: []
+                          pitchData:
+                            - pitchClassIndex: 0
+                              octave: 1
+                              scaleDegree: "I"
+                              noteName: "rast"
+                              noteNameDisplay: "rāst"
+                              cents: 0
+                            - pitchClassIndex: 4
+                              octave: 1
+                              scaleDegree: "II"
+                              noteName: "dugah"
+                              noteNameDisplay: "dūgāh"
+                              cents: 203.91000173077484
+                            - pitchClassIndex: 7
+                              octave: 1
+                              scaleDegree: "III"
+                              noteName: "segah"
+                              noteNameDisplay: "segāh"
+                              cents: 356.8630927494849
+                            - pitchClassIndex: 10
+                              octave: 1
+                              scaleDegree: "IV"
+                              noteName: "chahargah"
+                              noteNameDisplay: "chahārgāh"
+                              cents: 498.0449991346125
+                          parameters:
+                            pitchClassDataType: "cents"
+                            includeIntervals: true
+                            transposeTo: null
+                          links:
+                            detail: "/api/ajnas/jins_rast?tuningSystem=alsabbagh_1954&startingNote=r%C4%81st&pitchClassDataType=cents&includeIntervals=true"
+                            availability: "/api/ajnas/jins_rast/availability"
+                          intervals:
+                            - cents: 203.91000173077484
+                            - cents: 152.95309101871007
+                            - cents: 141.1819063851276
+                    parameters:
+                      tuningSystems:
+                        idNames: ["alsabbagh_1954"]
+                        displayNames: ["alsabbagh_1954"]
+                      startingNotes:
+                        idNames: ["rast"]
+                        displayNames: ["rast"]
+                      pitchClassDataType: "cents"
+                      includeIntervals: true
+                      transposeTo: null
+                    links:
+                      self: "https://diarmaqar.netlify.app/api/ajnas/jins_rast/compare?tuningSystems=alsabbagh_1954&startingNotes=rast&pitchClassDataType=cents"
+                      detail: "/api/ajnas/jins_rast"
+                      availability: "/api/ajnas/jins_rast/availability"
+                multipleStartingNotes:
+                  summary: Cartesian product — 2 tuning systems × 3 starting notes
+                  description: |
+                    Requests `jins_bayyat` against 2 tuning systems × 3 starting notes, yielding
+                    6 cells in user-supplied order (outer = `tuningSystems`, inner =
+                    `startingNotes`). Three cells are successful; three cells carry a `note`
+                    because the requested starting note isn't available in that tuning system.
+                    `pitchData` is trimmed for brevity.
+                  value:
+                    jins:
+                      id: "2"
+                      idName: "jins_bayyat"
+                      displayName: "jins bayyāt"
+                      version: "2025-10-18T19:35:30.479Z"
+                    comparisons:
+                      count: 6
+                      totalComparisons: 6
+                      successfulComparisons: 3
+                      unavailableStartingNotes: 3
+                      failedComparisons: 0
+                      data:
+                        - tuningSystem:
+                            id: "alsabbagh_1954"
+                            idName: "alsabbagh_1954"
+                            displayName: "al-Ṣabbāgh (1954) Contemporary Arabic Tuning 24-Tone"
+                            version: "2025-10-18T19:42:23.643Z"
+                          startingNote:
+                            idName: "rast"
+                            displayName: "rāst"
+                          jins:
+                            id: "2"
+                            idName: "jins_bayyat"
+                            displayName: "jins bayyāt"
+                            version: "2025-10-18T19:35:30.479Z"
+                          tonic:
+                            idName: "dugah"
+                            displayName: "dūgāh"
+                          stats:
+                            tuningSystem:
+                              numberOfPitchClassesSingleOctave: 24
+                              referenceFrequency: 130.665
+                            jins:
+                              numberOfPitchClasses: 4
+                          availableTranspositions: []
+                          pitchData:
+                            - pitchClassIndex: 4
+                              octave: 1
+                              scaleDegree: "I"
+                              noteName: "dugah"
+                              noteNameDisplay: "dūgāh"
+                              cents: 203.91000173077484
+                            - pitchClassIndex: 7
+                              octave: 1
+                              scaleDegree: "II"
+                              noteName: "segah"
+                              noteNameDisplay: "segāh"
+                              cents: 356.8630927494849
+                          parameters:
+                            pitchClassDataType: "cents"
+                            includeIntervals: true
+                            transposeTo: null
+                          links:
+                            detail: "/api/ajnas/jins_bayyat?tuningSystem=alsabbagh_1954&startingNote=r%C4%81st&pitchClassDataType=cents&includeIntervals=true"
+                            availability: "/api/ajnas/jins_bayyat/availability"
+                          intervals:
+                            - cents: 152.95309101871007
+                            - cents: 141.1819063851276
+                            - cents: 203.91000173077492
+                        - tuningSystem:
+                            id: "alsabbagh_1954"
+                            idName: "alsabbagh_1954"
+                            displayName: "al-Ṣabbāgh (1954) Contemporary Arabic Tuning 24-Tone"
+                            version: "2025-10-18T19:42:23.643Z"
+                          startingNote:
+                            idName: "yegah"
+                            displayName: "yegah"
+                          note: "Starting note 'yegah' is not available in tuning system 'al-Ṣabbāgh (1954) Contemporary Arabic Tuning 24-Tone'"
+                          validStartingNotes:
+                            idNames: ["rast"]
+                            displayNames: ["rāst"]
+                        - tuningSystem:
+                            id: "alsabbagh_1954"
+                            idName: "alsabbagh_1954"
+                            displayName: "al-Ṣabbāgh (1954) Contemporary Arabic Tuning 24-Tone"
+                            version: "2025-10-18T19:42:23.643Z"
+                          startingNote:
+                            idName: "ushayran"
+                            displayName: "ushayran"
+                          note: "Starting note 'ushayran' is not available in tuning system 'al-Ṣabbāgh (1954) Contemporary Arabic Tuning 24-Tone'"
+                          validStartingNotes:
+                            idNames: ["rast"]
+                            displayNames: ["rāst"]
+                        - tuningSystem:
+                            id: "ibnsina_1037"
+                            idName: "ibnsina_1037"
+                            displayName: "Ibn Sīnā  (1037) 7-Fret Oud 17-Tone"
+                            version: "2025-11-09T00:44:40.275Z"
+                          startingNote:
+                            idName: "rast"
+                            displayName: "rast"
+                          note: "Starting note 'rast' is not available in tuning system 'Ibn Sīnā  (1037) 7-Fret Oud 17-Tone'"
+                          validStartingNotes:
+                            idNames: ["ushayran", "yegah"]
+                            displayNames: ["ʿushayrān", "yegāh"]
+                        - tuningSystem:
+                            id: "ibnsina_1037"
+                            idName: "ibnsina_1037"
+                            displayName: "Ibn Sīnā  (1037) 7-Fret Oud 17-Tone"
+                            version: "2025-11-09T00:44:40.275Z"
+                          startingNote:
+                            idName: "yegah"
+                            displayName: "yegāh"
+                          jins:
+                            id: "2"
+                            idName: "jins_bayyat"
+                            displayName: "jins bayyāt"
+                            version: "2025-10-18T19:35:30.479Z"
+                          tonic:
+                            idName: "dugah"
+                            displayName: "dūgāh"
+                          stats:
+                            tuningSystem:
+                              numberOfPitchClassesSingleOctave: 17
+                              referenceFrequency: 97.999
+                            jins:
+                              numberOfPitchClasses: 4
+                          availableTranspositions:
+                            - idName: "jins_bayyat_al-yegah"
+                              displayName: "jins bayyāt al-yegāh"
+                              tonic:
+                                idName: "yegah"
+                                displayName: "yegāh"
+                            - idName: "jins_bayyat_al-nawa"
+                              displayName: "jins bayyāt al-nawā"
+                              tonic:
+                                idName: "nawa"
+                                displayName: "nawā"
+                          pitchData:
+                            - pitchClassIndex: 10
+                              octave: 1
+                              scaleDegree: "I"
+                              noteName: "dugah"
+                              noteNameDisplay: "dūgāh"
+                              cents: 701.9550008653874
+                            - pitchClassIndex: 12
+                              octave: 1
+                              scaleDegree: "II"
+                              noteName: "segah"
+                              noteNameDisplay: "segāh"
+                              cents: 840.5276617693106
+                          parameters:
+                            pitchClassDataType: "cents"
+                            includeIntervals: true
+                            transposeTo: null
+                          links:
+                            detail: "/api/ajnas/jins_bayyat?tuningSystem=ibnsina_1037&startingNote=yeg%C4%81h&pitchClassDataType=cents&includeIntervals=true"
+                            availability: "/api/ajnas/jins_bayyat/availability"
+                          intervals:
+                            - cents: 138.57266090392318
+                            - cents: 155.5623364999144
+                            - cents: 203.91000173077498
+                        - tuningSystem:
+                            id: "ibnsina_1037"
+                            idName: "ibnsina_1037"
+                            displayName: "Ibn Sīnā  (1037) 7-Fret Oud 17-Tone"
+                            version: "2025-11-09T00:44:40.275Z"
+                          startingNote:
+                            idName: "ushayran"
+                            displayName: "ʿushayrān"
+                          jins:
+                            id: "2"
+                            idName: "jins_bayyat"
+                            displayName: "jins bayyāt"
+                            version: "2025-10-18T19:35:30.479Z"
+                          tonic:
+                            idName: "dugah"
+                            displayName: "dūgāh"
+                          stats:
+                            tuningSystem:
+                              numberOfPitchClassesSingleOctave: 17
+                              referenceFrequency: 97.999
+                            jins:
+                              numberOfPitchClasses: 4
+                          availableTranspositions:
+                            - idName: "jins_bayyat_al-ushayran"
+                              displayName: "jins bayyāt al-ʿushayrān"
+                              tonic:
+                                idName: "ushayran"
+                                displayName: "ʿushayrān"
+                            - idName: "jins_bayyat_al-nawa"
+                              displayName: "jins bayyāt al-nawā"
+                              tonic:
+                                idName: "nawa"
+                                displayName: "nawā"
+                          pitchData:
+                            - pitchClassIndex: 5
+                              octave: 1
+                              scaleDegree: "I"
+                              noteName: "dugah"
+                              noteNameDisplay: "dūgāh"
+                              cents: 498.0449991346125
+                            - pitchClassIndex: 7
+                              octave: 1
+                              scaleDegree: "II"
+                              noteName: "segah"
+                              noteNameDisplay: "segāh"
+                              cents: 636.6176600385357
+                          parameters:
+                            pitchClassDataType: "cents"
+                            includeIntervals: true
+                            transposeTo: null
+                          links:
+                            detail: "/api/ajnas/jins_bayyat?tuningSystem=ibnsina_1037&startingNote=%CA%BFushayr%C4%81n&pitchClassDataType=cents&includeIntervals=true"
+                            availability: "/api/ajnas/jins_bayyat/availability"
+                    parameters:
+                      tuningSystems:
+                        idNames: ["alsabbagh_1954", "ibnsina_1037"]
+                        displayNames: ["alsabbagh_1954", "ibnsina_1037"]
+                      startingNotes:
+                        idNames: ["rast", "yegah", "ushayran"]
+                        displayNames: ["rast", "yegah", "ushayran"]
+                      pitchClassDataType: "cents"
+                      includeIntervals: true
+                      transposeTo: null
+                    links:
+                      self: "https://diarmaqar.netlify.app/api/ajnas/jins_bayyat/compare?tuningSystems=alsabbagh_1954,ibnsina_1037&startingNotes=rast,yegah,ushayran&pitchClassDataType=cents"
+                      detail: "/api/ajnas/jins_bayyat"
+                      availability: "/api/ajnas/jins_bayyat/availability"
+                unavailableStartingNote:
+                  summary: Single cell whose starting note isn't available (`note` field)
+                  description: |
+                    Demonstrates the `note` (informational, not error) per-cell shape when the
+                    requested starting note is not available in the given tuning system. The
+                    response is HTTP 200 and `unavailableStartingNotes` is incremented.
+                  value:
+                    jins:
+                      id: "19"
+                      idName: "jins_rast"
+                      displayName: "jins rāst"
+                      version: "2025-10-18T19:34:26.343Z"
+                    comparisons:
+                      count: 1
+                      totalComparisons: 1
+                      successfulComparisons: 0
+                      unavailableStartingNotes: 1
+                      failedComparisons: 0
+                      data:
+                        - tuningSystem:
+                            id: "ibnsina_1037"
+                            idName: "ibnsina_1037"
+                            displayName: "Ibn Sīnā  (1037) 7-Fret Oud 17-Tone"
+                            version: "2025-11-09T00:44:40.275Z"
+                          startingNote:
+                            idName: "bogus_note"
+                            displayName: "bogus_note"
+                          note: "Starting note 'bogus_note' is not available in tuning system 'Ibn Sīnā  (1037) 7-Fret Oud 17-Tone'"
+                          validStartingNotes:
+                            idNames: ["ushayran", "yegah"]
+                            displayNames: ["ʿushayrān", "yegāh"]
+                    parameters:
+                      tuningSystems:
+                        idNames: ["ibnsina_1037"]
+                        displayNames: ["ibnsina_1037"]
+                      startingNotes:
+                        idNames: ["bogus_note"]
+                        displayNames: ["bogus_note"]
+                      pitchClassDataType: "cents"
+                      includeIntervals: true
+                      transposeTo: null
+                    links:
+                      self: "https://diarmaqar.netlify.app/api/ajnas/jins_rast/compare?tuningSystems=ibnsina_1037&startingNotes=bogus_note&pitchClassDataType=cents"
+                      detail: "/api/ajnas/jins_rast"
+                      availability: "/api/ajnas/jins_rast/availability"
+                withErrors:
+                  summary: Mixed success and hard-failure cells
+                  description: |
+                    Demonstrates a cell with `error` (hard failure — tuning system not found)
+                    alongside a successful cell. Hard failures use a minimal fallback
+                    `tuningSystem` namespace built from the raw request ID.
+                  value:
+                    jins:
+                      id: "19"
+                      idName: "jins_rast"
+                      displayName: "jins rāst"
+                      version: "2025-10-18T19:34:26.343Z"
+                    comparisons:
+                      count: 2
+                      totalComparisons: 2
+                      successfulComparisons: 1
+                      unavailableStartingNotes: 0
+                      failedComparisons: 1
+                      data:
+                        - tuningSystem:
+                            id: "alsabbagh_1954"
+                            idName: "alsabbagh_1954"
+                            displayName: "al-Ṣabbāgh (1954) Contemporary Arabic Tuning 24-Tone"
+                            version: "2025-10-18T19:42:23.643Z"
+                          startingNote:
+                            idName: "rast"
+                            displayName: "rāst"
+                          jins:
+                            id: "19"
+                            idName: "jins_rast"
+                            displayName: "jins rāst"
+                            version: "2025-10-18T19:34:26.343Z"
+                          tonic:
+                            idName: "rast"
+                            displayName: "rāst"
+                          stats:
+                            tuningSystem:
+                              numberOfPitchClassesSingleOctave: 24
+                              referenceFrequency: 130.665
+                            jins:
+                              numberOfPitchClasses: 4
+                          availableTranspositions: []
+                          pitchData:
+                            - pitchClassIndex: 0
+                              octave: 1
+                              scaleDegree: "I"
+                              noteName: "rast"
+                              noteNameDisplay: "rāst"
+                              cents: 0
+                          parameters:
+                            pitchClassDataType: "cents"
+                            includeIntervals: true
+                            transposeTo: null
+                          links:
+                            detail: "/api/ajnas/jins_rast?tuningSystem=alsabbagh_1954&startingNote=r%C4%81st&pitchClassDataType=cents&includeIntervals=true"
+                            availability: "/api/ajnas/jins_rast/availability"
+                        - tuningSystem:
+                            id: "InvalidSystem"
+                            idName: "invalidsystem"
+                            displayName: "InvalidSystem"
+                          startingNote:
+                            idName: "rast"
+                            displayName: "rast"
+                          error: "Tuning system 'InvalidSystem' not found"
+                    parameters:
+                      tuningSystems:
+                        idNames: ["alsabbagh_1954", "invalidsystem"]
+                        displayNames: ["alsabbagh_1954", "InvalidSystem"]
+                      startingNotes:
+                        idNames: ["rast"]
+                        displayNames: ["rast"]
+                      pitchClassDataType: "cents"
+                      includeIntervals: true
+                      transposeTo: null
+                    links:
+                      self: "https://diarmaqar.netlify.app/api/ajnas/jins_rast/compare?tuningSystems=alsabbagh_1954,InvalidSystem&startingNotes=rast&pitchClassDataType=cents"
+                      detail: "/api/ajnas/jins_rast"
+                      availability: "/api/ajnas/jins_rast/availability"
         '400':
           description: Invalid request parameters
           content:
@@ -4604,13 +5796,19 @@ paths:
                     error: "tuningSystems parameter is required"
                     message: "Provide comma-separated tuning system IDs"
                     hint: 'Format: ?tuningSystems=ibnsina_1037,alfarabi_950g'
-                    example: "/api/ajnas/jins_segah/compare?tuningSystems=alfarabi_950g,meshshaqa_1899&startingNote=ushayran&pitchClassDataType=cents"
-                missingStartingNote:
-                  summary: Missing startingNote parameter
+                    example: "/api/ajnas/jins_kurd/compare?tuningSystems=ibnsina_1037,alfarabi_950g&startingNotes=yegah&pitchClassDataType=cents"
+                missingStartingNotes:
+                  summary: Missing startingNotes parameter
                   value:
-                    error: "startingNote parameter is required"
-                    message: "A starting note must be specified for all tuning systems"
-                    hint: "Add &startingNote=yegah to your request"
+                    error: "startingNotes parameter is required"
+                    message: "At least one starting note must be specified"
+                    hint: "Add &startingNotes=yegah,rast to your request (comma-separated list)"
+                emptyStartingNotes:
+                  summary: startingNotes parameter is empty or whitespace-only
+                  value:
+                    error: "Invalid parameter: startingNotes"
+                    message: "The 'startingNotes' parameter must contain at least one starting note name."
+                    hint: "Use ?startingNotes=yegah or ?startingNotes=yegah,rast,ushayran"
                 invalidIntervals:
                   summary: Invalid includeIntervals parameter
                   value:
@@ -6889,7 +8087,7 @@ components:
           example: "fraction"
         startingNoteName:
           type: string
-          description: The selected tuning system starting note for this context (preferred over deprecated context.startingNote)
+          description: The selected tuning system starting note for this context
           example: "ushayran"
 
     PitchData:

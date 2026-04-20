@@ -357,20 +357,13 @@ systems and/or multiple modal transpositions.
   `tuningSystems`, inner loop = `startingNotes`).
  - Type: `string`
   - Example: `alsabbagh_1954,ibnsina_1037`
-- `startingNotes` (optional): Comma-separated list of starting note names (URL-safe, diacritics-insensitive).
+- `startingNotes` **(required)**: Comma-separated list of starting note names (URL-safe, diacritics-insensitive).
   response contains `N × M` cells for `N` tuning systems × `M` starting notes, in
   user-supplied order. If a starting note is not available in a given tuning system
   that cell carries an informational `note` field (with a `validStartingNotes`
-  namespace) rather than pitch data. Either `startingNotes` (plural, preferred) or the deprecated singular `startingNote`
-  must be provided. When both are supplied, `startingNotes` wins and `startingNote` is
-  silently ignored.
+  namespace) rather than pitch data.
  - Type: `string`
   - Example: `rast,yegah,ushayran`
-- `startingNote` (optional): **DEPRECATED.** Use `startingNotes` (plural) instead.
-  alias for backwards compatibility. Silently ignored when `startingNotes` is also
-  provided.
- - Type: `string`
-  - Example: `rast`
 - `pitchClassDataType` (optional): Output format for pitch class data. Defaults to `all` when omitted. - Type: `string` - Valid values: `all`, `englishName`, `fraction`, `cents`, `decimalRatio`, ... (13 total) - Default: `all`
   - Example: `cents`
 - `includeIntervals` (optional): Whether to include interval data between adjacent pitch classes on each cell.
@@ -394,7 +387,7 @@ Cartesian product).
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/maqamat/maqam_bayyat/compare?tuningSystems=alsabbagh_1954,ibnsina_1037&includeArabic=true"
+curl "https://diarmaqar.netlify.app/api/maqamat/maqam_bayyat/compare?tuningSystems=alsabbagh_1954,ibnsina_1037&startingNotes=rast,yegah,ushayran&includeArabic=true"
 ```
 
 **Response:** Comparison data retrieved successfully. Note that the response is always HTTP 200
@@ -869,20 +862,13 @@ across historical tuning systems and/or multiple modal transpositions.
   `tuningSystems`, inner loop = `startingNotes`).
  - Type: `string`
   - Example: `alsabbagh_1954,ibnsina_1037`
-- `startingNotes` (optional): Comma-separated list of starting note names (URL-safe, diacritics-insensitive).
+- `startingNotes` **(required)**: Comma-separated list of starting note names (URL-safe, diacritics-insensitive).
   response contains `N × M` cells for `N` tuning systems × `M` starting notes, in
   user-supplied order. If a starting note is not available in a given tuning system
   that cell carries an informational `note` field (with a `validStartingNotes`
-  namespace) rather than pitch data. Either `startingNotes` (plural, preferred) or the deprecated singular `startingNote`
-  must be provided. When both are supplied, `startingNotes` wins and `startingNote` is
-  silently ignored.
+  namespace) rather than pitch data.
  - Type: `string`
   - Example: `rast,yegah,ushayran`
-- `startingNote` (optional): **DEPRECATED.** Use `startingNotes` (plural) instead.
-  alias for backwards compatibility. Silently ignored when `startingNotes` is also
-  provided.
- - Type: `string`
-  - Example: `ushayran`
 - `pitchClassDataType` (optional): Output format for pitch class data. Defaults to `all` when omitted. - Type: `string` - Valid values: `all`, `englishName`, `fraction`, `cents`, `decimalRatio`, ... (13 total) - Default: `all`
   - Example: `cents`
 - `includeIntervals` (optional): Whether to include interval data between adjacent pitch classes on each cell.
@@ -906,7 +892,7 @@ Cartesian product).
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/ajnas/jins_bayyat/compare?tuningSystems=alsabbagh_1954,ibnsina_1037&includeArabic=true"
+curl "https://diarmaqar.netlify.app/api/ajnas/jins_bayyat/compare?tuningSystems=alsabbagh_1954,ibnsina_1037&startingNotes=rast,yegah,ushayran&includeArabic=true"
 ```
 
 **Response:** Comparison data retrieved successfully. Note that the response is always HTTP 200

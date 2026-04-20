@@ -290,7 +290,6 @@ function formatIntervalData(intervals: any[], format: string) {
  * - view: Output structure
  *   - simple: Pitch Class Data only (default)
  *   - intervals: Pitch Class and Intervals Data (filtered by format parameter)
- *   - Legacy: pitchClasses|full
  * - transpose: Transpose to specific tonic note (URL-friendly)
  * - includeIntervals: true|false (include interval data, default: true)
  * - includeModulations: true|false (returns URL-safe maqām/jins names, default: true)
