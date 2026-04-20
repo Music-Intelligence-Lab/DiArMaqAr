@@ -121,12 +121,12 @@ export interface ModulationRoutesRequest {
   toTonicId?: string;
   /** Optional waypoints to pass through */
   waypoints?: ModulationWaypoint[];
-  /** Maximum number of hops allowed (required, prevents combinatorial explosion) */
+  /** Maximum number of hops allowed (required, 1-20; prevents combinatorial explosion) */
   maxHops: number;
-  /** Whether to calculate return path to starting maqam */
-  returnToStart?: boolean;
-  /** Maximum number of routes to return */
-  limit?: number;
+  /** Whether to calculate return path back to the starting maqam */
+  returnToStartingMaqam?: boolean;
+  /** Maximum number of routes to return (default: 10) */
+  maxRoutes?: number;
 }
 
 /**

@@ -635,8 +635,8 @@ export function findModulationRoutes(
     toTonicId?: string;
     waypoints?: ModulationWaypoint[];
     maxHops: number;
-    returnToStart?: boolean;
-    limit?: number;
+    returnToStartingMaqam?: boolean;
+    maxRoutes?: number;
   }
 ): {
   journeys: ModulationJourney[];
@@ -650,9 +650,13 @@ export function findModulationRoutes(
     toTonicId,
     waypoints = [],
     maxHops,
-    returnToStart = false,
-    limit = 10,
+    returnToStartingMaqam = false,
+    maxRoutes = 10,
   } = options;
+
+  // Internal alias used as the enumeration cap across BFS / segment routines,
+  // which predate the public-facing `maxRoutes` name.
+  const limit = maxRoutes;
 
   // Load data
   const tuningSystems = getTuningSystems();
@@ -906,7 +910,7 @@ export function findModulationRoutes(
   // Build journeys
   const journeys: ModulationJourney[] = [];
 
-  if (returnToStart) {
+  if (returnToStartingMaqam) {
     // Return path: target (canonical) → any register-equivalent source,
     // with a trailing register-shift to the canonical source if needed.
     const shortestOutbound = outboundRoutes[0].hops;

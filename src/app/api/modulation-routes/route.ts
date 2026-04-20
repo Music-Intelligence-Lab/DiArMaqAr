@@ -19,14 +19,14 @@ export const OPTIONS = handleCorsPreflightRequest;
  * - startingNote: Starting note for the tuning system (URL-friendly)
  * - fromMaqam: Source maqam ID
  * - toMaqam: Target maqam ID
- * - maxHops: Maximum number of modulation steps allowed (required safeguard)
+ * - maxHops: Maximum number of modulation steps allowed (1-20, required safeguard)
  *
  * OPTIONAL Query Parameters:
  * - fromTonic: Specific tonic for source maqam (URL-friendly)
  * - toTonic: Specific tonic for target maqam (URL-friendly)
  * - waypoints: Comma-separated maqam:tonic pairs (e.g., "maqam_bayyat:dugah,maqam_saba")
- * - returnToStart: true|false - Calculate return path (default: false)
- * - limit: Maximum routes to return (default: 10)
+ * - returnToStartingMaqam: true|false - Calculate return path (default: false)
+ * - maxRoutes: Maximum number of routes to return (default: 10)
  * - includeArabic: true|false - Include Arabic display names (default: false)
  *
  * Response includes:
@@ -47,8 +47,8 @@ export async function GET(request: Request) {
     const toTonicId = searchParams.get("toTonic");
     const waypointsParam = searchParams.get("waypoints");
     const maxHopsParam = searchParams.get("maxHops");
-    const returnToStart = searchParams.get("returnToStart") === "true";
-    const limitParam = searchParams.get("limit");
+    const returnToStartingMaqam = searchParams.get("returnToStartingMaqam") === "true";
+    const maxRoutesParam = searchParams.get("maxRoutes");
 
     // Parse includeArabic parameter
     let inArabic = false;
@@ -151,27 +151,27 @@ export async function GET(request: Request) {
       );
     }
 
-    if (maxHops > 10) {
+    if (maxHops > 20) {
       return addCorsHeaders(
         NextResponse.json(
           {
-            error: "maxHops cannot exceed 10",
+            error: "maxHops cannot exceed 20",
             message: "Higher values may cause performance issues. Most musical modulation sequences are 2-4 hops.",
-            hint: "Use maxHops=10 or lower",
+            hint: "Use maxHops=20 or lower",
           },
           { status: 400 }
         )
       );
     }
 
-    // Parse limit
-    const limit = limitParam ? parseInt(limitParam, 10) : 10;
-    if (isNaN(limit) || limit < 1) {
+    // Parse maxRoutes
+    const maxRoutes = maxRoutesParam ? parseInt(maxRoutesParam, 10) : 10;
+    if (isNaN(maxRoutes) || maxRoutes < 1) {
       return addCorsHeaders(
         NextResponse.json(
           {
-            error: "limit must be a positive integer",
-            hint: "Use values like limit=10, limit=20, etc.",
+            error: "maxRoutes must be a positive integer",
+            hint: "Use values like maxRoutes=10, maxRoutes=20, etc.",
           },
           { status: 400 }
         )
@@ -223,8 +223,8 @@ export async function GET(request: Request) {
         toTonicId: toTonicId || undefined,
         waypoints,
         maxHops,
-        returnToStart,
-        limit,
+        returnToStartingMaqam,
+        maxRoutes,
       }
     );
 
@@ -249,8 +249,8 @@ export async function GET(request: Request) {
               result.targetNode,
               result.waypointNodes,
               maxHops,
-              returnToStart,
-              limit,
+              returnToStartingMaqam,
+              maxRoutes,
               inArabic
             ),
             message: result.error,
@@ -287,8 +287,8 @@ export async function GET(request: Request) {
           result.targetNode!,
           result.waypointNodes,
           maxHops,
-          returnToStart,
-          limit,
+          returnToStartingMaqam,
+          maxRoutes,
           inArabic
         ),
       })
@@ -317,8 +317,8 @@ function buildContext(
   targetNode: MaqamNode | null,
   waypointNodes: MaqamNode[],
   maxHops: number,
-  returnToStart: boolean,
-  limit: number,
+  returnToStartingMaqam: boolean,
+  maxRoutes: number,
   inArabic: boolean
 ): any {
   const tuningSystems = getTuningSystems();
@@ -335,8 +335,8 @@ function buildContext(
     },
     searchConstraints: {
       maxHops,
-      returnToStart,
-      limit,
+      maxRoutes,
+      returnToStartingMaqam,
     },
   };
 

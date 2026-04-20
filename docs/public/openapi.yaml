@@ -4108,6 +4108,7 @@ paths:
         - Supports waypoints for multi-stop journeys
         - Optional return-to-start for round-trip routes (reflecting traditional maqām performance practice)
         - Results cached per tuning system + starting note combination for performance
+        - `maxHops` is required and capped at 20 to prevent combinatorial explosion
 
         **Graph Structure:**
         - Nodes: Each (maqamId, tonic) pair is a unique node
@@ -4180,11 +4181,11 @@ paths:
             Maximum number of modulation steps allowed (required safeguard).
             Prevents combinatorial explosion in route calculation.
             Most musical modulation sequences are 2-4 hops.
-            Maximum allowed value is 10.
+            Maximum allowed value is 20.
           schema:
             type: integer
             minimum: 1
-            maximum: 10
+            maximum: 20
           example: 5
         - name: waypoints
           in: query
@@ -4196,11 +4197,11 @@ paths:
           schema:
             type: string
           example: "maqam_bayyat:dugah"
-        - name: returnToStart
+        - name: returnToStartingMaqam
           in: query
           required: false
           description: |
-            Whether to calculate the return path back to the source maqam.
+            Whether to calculate the return path back to the source (starting) maqam.
             Reflects traditional maqām performance practice where music returns to the starting mode.
             When true, response includes both outbound and return routes.
           schema:
@@ -4208,7 +4209,7 @@ paths:
             enum: ["true", "false"]
             default: "false"
           example: "true"
-        - name: limit
+        - name: maxRoutes
           in: query
           required: false
           description: Maximum number of routes to return
@@ -4243,9 +4244,9 @@ paths:
                     type: object
                     description: |
                       All shortest modulation routes the endpoint was able to
-                      enumerate for the query, capped at `limit`. The `count`
-                      field gives the size of `data`; it can be zero when no
-                      path exists within `maxHops`.
+                      enumerate for the query, capped at `maxRoutes`. The
+                      `count` field gives the size of `data`; it can be zero
+                      when no path exists within `maxHops`.
                     required:
                       - count
                       - data
@@ -4291,10 +4292,10 @@ paths:
                         properties:
                           maxHops:
                             type: integer
-                          returnToStart:
-                            type: boolean
-                          limit:
+                          maxRoutes:
                             type: integer
+                          returnToStartingMaqam:
+                            type: boolean
                   message:
                     type: string
                     description: Present when no routes found, explains why
@@ -4363,12 +4364,12 @@ paths:
                         isTransposition: false
                       searchConstraints:
                         maxHops: 5
-                        returnToStart: false
-                        limit: 10
+                        maxRoutes: 10
+                        returnToStartingMaqam: false
                 noRouteFound:
                   summary: No path found within constraints
                   value:
-                    routes:
+                    totalPossibleRoutes:
                       count: 0
                       data: []
                     context:
@@ -4392,8 +4393,8 @@ paths:
                         isTransposition: false
                       searchConstraints:
                         maxHops: 3
-                        returnToStart: false
-                        limit: 10
+                        maxRoutes: 10
+                        returnToStartingMaqam: false
                     message: "No path found from 'maqam_rast' to 'maqam_sikah' within 3 hops"
         '400':
           description: Invalid or missing required parameters
@@ -4409,9 +4410,9 @@ paths:
                     hint: "Add &maxHops=5 to your request. Recommended values: 3-7 for most use cases."
                 maxHopsExceeded:
                   value:
-                    error: "maxHops cannot exceed 10"
+                    error: "maxHops cannot exceed 20"
                     message: "Higher values may cause performance issues. Most musical modulation sequences are 2-4 hops."
-                    hint: "Use maxHops=10 or lower"
+                    hint: "Use maxHops=20 or lower"
         '404':
           description: Maqam or tuning system not found
           content:
@@ -10293,7 +10294,7 @@ components:
           $ref: '#/components/schemas/ModulationRoute'
         returnRoute:
           $ref: '#/components/schemas/ModulationRoute'
-          description: Present when returnToStart=true
+          description: Present when returnToStartingMaqam=true
 
     ErrorResponse:
       type: object
