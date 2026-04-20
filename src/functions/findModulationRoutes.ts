@@ -884,18 +884,17 @@ export function findModulationRoutes(
 
   let returnRoutes: ModulationRoute[] | undefined;
   if (returnToStartingMaqam) {
-    // Return path: canonical target → canonical source. Register-shift edges
-    // in the graph handle any octave bridging that's needed, so the BFS
-    // single-target form is sufficient here too. Uses the full `limit`
-    // (maxRoutes) so all shortest return paths are enumerated, not only one.
-    const shortestOutbound = journeys.length > 0 ? journeys[0].outboundRoute.hops : 0;
-    const maxReturnHops = Math.max(1, maxHops - shortestOutbound);
-
+    // Return path: canonical target → canonical source. Uses the full
+    // `maxHops` budget — since outbound and return are independent top-level
+    // collections (not paired per journey), the return BFS should have its
+    // own full hop budget, not whatever was "left over" from the outbound.
+    // A long outbound (e.g. 4 hops to qarār dūgāh) would otherwise leave no
+    // room for a return.
     returnRoutes = bfsShortestPaths(
       graph,
       [targetNodeKey],
       new Set([sourceNodeKey]),
-      maxReturnHops,
+      maxHops,
       limit
     );
   }
