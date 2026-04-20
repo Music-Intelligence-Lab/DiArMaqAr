@@ -11,6 +11,11 @@ head:
 
 # OpenAPI Playground
 
+> **For LLMs:** This page is an interactive UI that requires a browser.
+> Use [`/docs/api/representative-examples`](/docs/api/representative-examples),
+> [`/docs/openapi.json`](/docs/openapi.json), or direct `curl` calls against
+> `/api/*` instead.
+
 Interactive API documentation with live endpoint testing capabilities. All API endpoints are available 
 in the interactive documentation below, organized by resource type (Maqāmāt, Ajnās, Tuning Systems, 
 etc.).
