@@ -5,7 +5,7 @@ import { Jins } from "@/models/Jins";
 import { Maqam } from "@/models/Maqam";
 import JinsData from "@/models/Jins";
 import MaqamData from "@/models/Maqam";
-import { classifyMaqamat } from "./classifyMaqamat12PitchClassSets";
+import { createSetFromMaqam } from "./classifyMaqamat12PitchClassSets";
 import { getMaqamat, getAjnas } from "./import";
 import { standardizeText } from "./export";
 import { getIpnReferenceNoteName, getIpnReferenceNoteNameWithOctave } from "./getIpnReferenceNoteName";
@@ -13,6 +13,33 @@ import { getIpnReferenceNoteName, getIpnReferenceNoteNameWithOctave } from "./ge
 // ============================================================================
 // Helper Functions
 // ============================================================================
+
+/**
+ * Converts a string to the ASCII subset required by the Scala .scl spec
+ * (https://www.huygens-fokker.org/scala/scl_format.html), which allows only
+ * ASCII or ISO 8859-1. We restrict to pure ASCII — safe under either encoding.
+ *
+ * Preserves Arabic transliteration readability by romanising diacritics
+ * (ā→a, ḥ→h, ṣ→s, ʿ/ʾ→'), replaces unicode arrows/dashes with ASCII
+ * equivalents, and drops anything else above 0x7F (e.g. Arabic script).
+ */
+function toScalaAscii(text: string): string {
+  if (!text) return text;
+  // NFD decomposition lets us strip combining marks in one sweep — handles
+  // every Latin letter with a macron/dot-below/etc. in the data set.
+  let out = text.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const replacements: { [key: string]: string } = {
+    "\u02BE": "'", "\u02BF": "'", "\u02BB": "'", "\u02BC": "'",
+    "\u2018": "'", "\u2019": "'", "\u201C": '"', "\u201D": '"',
+    "\u2192": "->", "\u2190": "<-", "\u2194": "<->",
+    "\u2013": "-", "\u2014": "-",
+    "\u060C": ",", "\u00B7": ".",
+    "\u0660": "0", "\u0661": "1", "\u0662": "2", "\u0663": "3", "\u0664": "4",
+    "\u0665": "5", "\u0666": "6", "\u0667": "7", "\u0668": "8", "\u0669": "9",
+  };
+  out = out.replace(/[\u00A0-\uFFFF]/g, (ch) => replacements[ch] ?? "");
+  return out;
+}
 
 /**
  * Removes duplicate pitch classes based on cents value within a tolerance
@@ -313,7 +340,7 @@ function build12ToneKeymapContent(
     ...mapping.map((degree) => `${degree}`),
   ];
 
-  return lines.join("\n") + "\n";
+  return toScalaAscii(lines.join("\n")) + "\n";
 }
 
 
@@ -369,7 +396,7 @@ export function exportTuningSystemToScala(tuningSystem: TuningSystem, startingNo
     ...scaleNotes.map((pc) => formatPitchClassValue(pc, 'cents')),
   ];
 
-  return lines.join("\n") + "\n";
+  return toScalaAscii(lines.join("\n")) + "\n";
 }
 
 /**
@@ -419,7 +446,7 @@ export function exportTuningSystemToScalaKeymap(tuningSystem: TuningSystem, star
     ...mapping.map((degree) => `${degree}`),
   ];
 
-  return lines.join("\n") + "\n";
+  return toScalaAscii(lines.join("\n")) + "\n";
 }
 
 /**
@@ -491,7 +518,7 @@ export function exportJinsToScala(jinsInput: Jins | JinsData, tuningSystem: Tuni
     ...scaleNotes.map(item => item.relativeCents.toFixed(2)),
   ];
 
-  return lines.join("\n") + "\n";
+  return toScalaAscii(lines.join("\n")) + "\n";
 }
 
 /**
@@ -561,7 +588,7 @@ export function exportJinsToScalaKeymap(
     ...mapping.map((degree) => `${degree}`),
   ];
 
-  return lines.join("\n") + "\n";
+  return toScalaAscii(lines.join("\n")) + "\n";
 }
 
 /**
@@ -634,7 +661,7 @@ export function exportMaqamToScala(maqamInput: Maqam | MaqamData, tuningSystem: 
     ...scaleNotes.map(item => item.relativeCents.toFixed(2)),
   ];
 
-  return lines.join("\n") + "\n";
+  return toScalaAscii(lines.join("\n")) + "\n";
 }
 
 /**
@@ -706,7 +733,7 @@ export function exportMaqamToScalaKeymap(
     ...mapping.map((degree) => `${degree}`),
   ];
 
-  return lines.join("\n") + "\n";
+  return toScalaAscii(lines.join("\n")) + "\n";
 }
 
 // ============================================================================
@@ -757,8 +784,11 @@ export function exportMaqamTo12ToneScala(
     maqamData = maqamInput;
   }
 
-  // Run global classification to find sets (matches API behavior)
-  const classificationResult = classifyMaqamat(
+  // Build a 12-pitch-class set anchored to THIS maqam as source.
+  // Previously we used classifyMaqamat() and fell back to a set where this maqam
+  // appeared only as compatible — that yielded another maqam's pitches in the .scl.
+  const matchingSet = createSetFromMaqam(
+    maqamData,
     allMaqamat,
     tuningSystem,
     startingNote,
@@ -768,30 +798,8 @@ export function exportMaqamTo12ToneScala(
     5 // cents tolerance
   );
 
-  // Find the set for this maqam
-  // STRATEGY:
-  // 1. First try to find a set where this maqam is the SOURCE
-  // 2. If not found, find ANY set where this maqam appears in compatibleMaqamat
-  //    and use that set's source maqam instead
-  const maqamIdStandardized = standardizeText(maqamData.getId());
-
-  // Try to find set where this maqam is the SOURCE
-  let matchingSet = classificationResult.sets.find(set =>
-    standardizeText(set.sourceMaqam.id) === maqamIdStandardized ||
-    set.sourceMaqam.idName === maqamIdStandardized
-  );
-
-  // If not a source maqam, find the set where this maqam appears as compatible
   if (!matchingSet) {
-    matchingSet = classificationResult.sets.find(set =>
-      set.compatibleMaqamat.some(cm =>
-        standardizeText(cm.maqamData.getId()) === maqamIdStandardized
-      )
-    );
-
-    if (!matchingSet) {
-      return null; // Maqam doesn't appear in any 12-pitch-class set
-    }
+    return null; // No transposition of this maqam creates a complete 12-pitch-class set
   }
 
   // Use the set's pitch class data
@@ -1237,6 +1245,7 @@ export function exportMaqamTo12ToneScala(
 
   // Get EXPORTED maqam tonic frequency
   // Find the exported maqam in compatibleMaqamat
+  const maqamIdStandardized = standardizeText(maqamData.getId());
   const exportedMaqamInfo = matchingSet.compatibleMaqamat.find(cm =>
     standardizeText(cm.maqamData.getId()) === maqamIdStandardized
   );
@@ -1279,7 +1288,7 @@ export function exportMaqamTo12ToneScala(
     ...scaleNotes.map((pc) => pc.relativeCents), // Already formatted as string with 2 decimal places
   ];
 
-  return lines.join("\n") + "\n";
+  return toScalaAscii(lines.join("\n")) + "\n";
 }
 
 /**
@@ -1329,8 +1338,11 @@ export function exportMaqamTo12ToneScalaKeymap(
     maqamData = maqamInput;
   }
 
-  // Run global classification to find sets (matches API behavior)
-  const classificationResult = classifyMaqamat(
+  // Build a 12-pitch-class set anchored to THIS maqam as source.
+  // Previously we used classifyMaqamat() and fell back to a set where this maqam
+  // appeared only as compatible — that yielded another maqam's pitches in the .scl.
+  const matchingSet = createSetFromMaqam(
+    maqamData,
     allMaqamat,
     tuningSystem,
     startingNote,
@@ -1340,30 +1352,8 @@ export function exportMaqamTo12ToneScalaKeymap(
     5 // cents tolerance
   );
 
-  // Find the set for this maqam
-  // STRATEGY:
-  // 1. First try to find a set where this maqam is the SOURCE
-  // 2. If not found, find ANY set where this maqam appears in compatibleMaqamat
-  //    and use that set's source maqam instead
-  const maqamIdStandardized = standardizeText(maqamData.getId());
-
-  // Try to find set where this maqam is the SOURCE
-  let matchingSet = classificationResult.sets.find(set =>
-    standardizeText(set.sourceMaqam.id) === maqamIdStandardized ||
-    set.sourceMaqam.idName === maqamIdStandardized
-  );
-
-  // If not a source maqam, find the set where this maqam appears as compatible
   if (!matchingSet) {
-    matchingSet = classificationResult.sets.find(set =>
-      set.compatibleMaqamat.some(cm =>
-        standardizeText(cm.maqamData.getId()) === maqamIdStandardized
-      )
-    );
-
-    if (!matchingSet) {
-      return null; // Maqam doesn't appear in any 12-pitch-class set
-    }
+    return null; // No transposition of this maqam creates a complete 12-pitch-class set
   }
 
   // Use compatible maqamat from the classification result (deduplicated by IPN tonic)
@@ -1632,45 +1622,36 @@ function buildTuningSystemKeymapContent(
     throw new Error(`Cannot find tonic in mapped pitch classes for ${name}`);
   }
 
-  // Position 0 must map to the pitch class with the LOWEST degree
-  const lowestDegreeMapped = mappedPitchClasses[0];
-  const lowestDegreeIpn = lowestDegreeMapped.ipnRef;
-  const lowestDegreePosition = chromaticOrder.indexOf(lowestDegreeIpn);
+  // Anchor the repeating 12-key pattern on the tonic: pattern position 0 is the
+  // tonic's chromatic slot, and middleNote is the tonic's MIDI note. This keeps
+  // the maqam's layout consistent across octaves regardless of which pitch
+  // class happens to have the lowest degree in the underlying .scl.
+  const tonicIpnRef = tonicMapped.ipnRef;
+  const tonicChromaticPosition = chromaticOrder.indexOf(tonicIpnRef);
 
-  // CRITICAL: Reference note = tonic's MIDI note (always mapped)
-  // The tonic must be the reference note with its frequency from DiArMaqAr data
+  // Reference note = tonic's MIDI (the note that gets the reference frequency).
   const referenceNoteMidi = tonicMapped.midiNote;
   const actualRefFreq = tonicPc?.frequency ? parseFloat(tonicPc.frequency) : refFreq;
 
-  // CRITICAL: Middle note = lowest degree's MIDI note (where position 0 maps to)
-  // BUT if the lowest degree's MIDI note is HIGHER than the tonic's MIDI note,
-  // we must shift the middle note DOWN by one octave (subtract 12) so that
-  // the middle note is lower than the reference note (tonic).
-  //
-  // Example: Bayyāt Shūrī on D3 (MIDI 50, degree 11)
-  //   - Lowest degree: 5 (B3, MIDI 59)
-  //   - Tonic: degree 11 (D3, MIDI 50)
-  //   - B3 (59) > D3 (50), so middle note = 59 - 12 = 47 (B2)
-  let middleNote = lowestDegreeMapped.midiNote;
-  if (lowestDegreeMapped.midiNote > referenceNoteMidi) {
-    middleNote = lowestDegreeMapped.midiNote - 12;
-  }
+  // Middle note (where pattern position 0 lands) = tonic MIDI, so the tonic
+  // occupies position 0 and the remaining pitches distribute across their
+  // own chromatic slots within the same 12-key octave.
+  const middleNote = referenceNoteMidi;
 
-  const tonicIpnRef = tonicMapped.ipnRef;
+  // Kept for the informational comment block only.
+  const lowestDegreeMapped = mappedPitchClasses[0];
 
   console.log('[buildTuningSystemKeymapContent] Reference setup:', {
-    lowestDegree: lowestDegreeMapped.degree,
-    lowestDegreeIpn: lowestDegreeIpn,
-    lowestDegreeNote: lowestDegreeMapped.pitchClass.englishName,
-    lowestDegreeMidiOriginal: lowestDegreeMapped.midiNote,
     tonicNote: tonicPc.englishName,
     tonicIpn: tonicIpnRef,
     tonicDegree: tonicMapped.degree,
     tonicMidi: tonicMapped.midiNote,
-    middleNote: middleNote,
-    middleNoteShifted: lowestDegreeMapped.midiNote > referenceNoteMidi,
+    tonicChromaticPosition,
+    middleNote,
     referenceNote: referenceNoteMidi,
-    referenceFrequency: actualRefFreq
+    referenceFrequency: actualRefFreq,
+    lowestDegree: lowestDegreeMapped.degree,
+    lowestDegreeIpn: lowestDegreeMapped.ipnRef
   });
 
   // ============================================================================
@@ -1683,18 +1664,18 @@ function buildTuningSystemKeymapContent(
     ipnToDegreeMap.set(mpc.ipnRef, mpc.degree);
   }
 
-  // Build mapping: 12-note chromatic pattern starting from the LOWEST degree's IPN
-  // Position 0 = lowest degree, and degrees must be in ASCENDING order
-  // Example: [5, 6, x, 11, x, 14, 17, x, 22, 24, x, x]
+  // Build mapping: 12-note chromatic pattern anchored at the tonic.
+  // Position 0 = tonic's chromatic slot. Each subsequent position corresponds to
+  // the next chromatic semitone above; only positions whose IPN appears in the
+  // maqam/jins carry a .scl degree, the rest are unmapped ('x').
+  // Example (maqam rast on C): [6, x, 11, x, 14, 17, x, 22, x, 0, x, 3]
   const mapping: Array<string | number> = [];
   const mapPatternSize = 12; // Chromatic octave
 
   for (let i = 0; i < mapPatternSize; i++) {
-    // Rotate chromatic order to start from the lowest degree's IPN
-    const rotatedIndex = (lowestDegreePosition + i) % mapPatternSize;
+    const rotatedIndex = (tonicChromaticPosition + i) % mapPatternSize;
     const ipn = chromaticOrder[rotatedIndex];
 
-    // Check if this IPN exists in the maqam/jins
     if (ipnToDegreeMap.has(ipn)) {
       mapping.push(ipnToDegreeMap.get(ipn)!);
     } else {
@@ -1709,10 +1690,10 @@ function buildTuningSystemKeymapContent(
     middleNote,
     referenceNote: referenceNoteMidi,
     actualRefFreq,
-    lowestDegreePosition,
+    tonicChromaticPosition,
     mapping: mapping.map((deg, idx) => ({
       position: idx,
-      ipn: chromaticOrder[(lowestDegreePosition + idx) % 12],
+      ipn: chromaticOrder[(tonicChromaticPosition + idx) % 12],
       degree: deg
     }))
   });
@@ -1761,11 +1742,8 @@ function buildTuningSystemKeymapContent(
     `!`,
     `! === KEYBOARD MAPPING (.kbm) REFERENCE SETTINGS ===`,
     `! Middle note (where position 0 maps to): MIDI ${middleNote}`,
-    `!   - Position 0 pitch: ${lowestDegreeMapped.pitchClass.noteName} (${lowestDegreeMapped.pitchClass.englishName})`,
-    `!   - Position 0 degree: ${lowestDegreeMapped.degree}`,
-    ...(lowestDegreeMapped.midiNote > referenceNoteMidi
-      ? [`!   - Note: Middle note shifted down one octave (${lowestDegreeMapped.midiNote} → ${middleNote}) to be lower than reference note`]
-      : []),
+    `!   - Position 0 pitch: ${tonicPc?.noteName} (${tonicPc?.englishName})`,
+    `!   - Position 0 degree: ${tonicMapped.degree}`,
     `! Reference note (gets reference frequency): MIDI ${referenceNoteMidi}`,
     `!   - Reference pitch: ${tonicPc?.noteName} (${tonicPc?.englishName})`,
     `!   - Reference frequency: ${actualRefFreq.toFixed(2)} Hz`,
@@ -1780,7 +1758,7 @@ function buildTuningSystemKeymapContent(
     ...mapping.map((degree) => `${degree}`),
   ];
 
-  return lines.join("\n");
+  return toScalaAscii(lines.join("\n"));
 }
 
 /**
