@@ -640,6 +640,13 @@ export function findModulationRoutes(
   }
 ): {
   journeys: ModulationJourney[];
+  /**
+   * Present only when returnToStartingMaqam=true. All shortest return
+   * routes from the canonical target back to any register-equivalent of
+   * the source (with trailing register-shift to the canonical source
+   * when needed). Decoupled from journeys to avoid cartesian duplication.
+   */
+  returnRoutes?: ModulationRoute[];
   sourceNode: MaqamNode | null;
   targetNode: MaqamNode | null;
   waypointNodes: MaqamNode[];
@@ -907,52 +914,43 @@ export function findModulationRoutes(
     };
   }
 
-  // Build journeys
+  // Build outbound journeys. Returns are computed separately below because
+  // every outbound journey ends on the same canonical target, so any return
+  // route applies to any outbound — pairing them individually would just
+  // duplicate the same return list N times.
   const journeys: ModulationJourney[] = [];
+  for (const outbound of outboundRoutes) {
+    if (journeys.length >= limit) break;
+    journeys.push({
+      routeNumber: journeys.length + 1,
+      outboundRoute: outbound,
+    });
+  }
 
+  let returnRoutes: ModulationRoute[] | undefined;
   if (returnToStartingMaqam) {
-    // Return path: target (canonical) → any register-equivalent source,
-    // with a trailing register-shift to the canonical source if needed.
-    const shortestOutbound = outboundRoutes[0].hops;
+    // Return path: canonical target → any register-equivalent source, with a
+    // trailing register-shift to the canonical source when BFS lands on a
+    // non-canonical sibling. Uses the full `limit` (maxRoutes) so all
+    // shortest return paths are enumerated, not only one.
+    const shortestOutbound = journeys.length > 0 ? journeys[0].outboundRoute.hops : 0;
     const maxReturnHops = Math.max(1, maxHops - shortestOutbound);
 
-    const returnRoutes = bfsShortestPaths(
+    const rawReturnRoutes = bfsShortestPaths(
       graph,
       [targetNodeKey],
       new Set(sourceEquivKeys),
       maxReturnHops,
-      1 // Just need the shortest return path
+      limit
     );
-
-    const returnRoute = returnRoutes.length > 0
-      ? appendRegisterShiftIfNeeded(returnRoutes[0], sourceNodeKey)
-      : undefined;
-
-    for (const outbound of outboundRoutes) {
-      if (journeys.length >= limit) break;
-
-      journeys.push({
-        routeNumber: journeys.length + 1,
-        outboundRoute: outbound,
-        returnRoute,
-        totalHops: outbound.hops + (returnRoute?.hops || 0),
-      });
-    }
-  } else {
-    // No return path needed
-    for (const outbound of outboundRoutes) {
-      if (journeys.length >= limit) break;
-
-      journeys.push({
-        routeNumber: journeys.length + 1,
-        outboundRoute: outbound,
-        totalHops: outbound.hops,
-      });
-    }
+    returnRoutes = rawReturnRoutes.map((r) =>
+      appendRegisterShiftIfNeeded(r, sourceNodeKey)
+    );
   }
 
   return {
     journeys,
+    returnRoutes,
     sourceNode,
     targetNode,
     waypointNodes,

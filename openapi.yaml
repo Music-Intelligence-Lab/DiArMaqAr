@@ -4243,10 +4243,10 @@ paths:
                   totalPossibleRoutes:
                     type: object
                     description: |
-                      All shortest modulation routes the endpoint was able to
-                      enumerate for the query, capped at `maxRoutes`. The
-                      `count` field gives the size of `data`; it can be zero
-                      when no path exists within `maxHops`.
+                      All shortest outbound modulation routes the endpoint was
+                      able to enumerate for the query, capped at `maxRoutes`.
+                      The `count` field gives the size of `data`; it can be
+                      zero when no path exists within `maxHops`.
                     required:
                       - count
                       - data
@@ -4258,6 +4258,26 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/ModulationJourney'
+                  possibleReturnRoutes:
+                    type: object
+                    description: |
+                      All shortest return routes from the canonical target back
+                      to any register-equivalent of the source, also capped at
+                      `maxRoutes`. Present only when
+                      `returnToStartingMaqam=true`. Returns are enumerated
+                      once and shared across every outbound journey — they are
+                      not nested inside each journey.
+                    required:
+                      - count
+                      - data
+                    properties:
+                      count:
+                        type: integer
+                        description: Number of return routes returned in `data`
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/NumberedReturnRoute'
                   context:
                     type: object
                     properties:
@@ -4307,7 +4327,6 @@ paths:
                       count: 1
                       data:
                         - routeNumber: 1
-                          totalHops: 2
                           outboundRoute:
                             hops: 2
                             steps:
@@ -10274,10 +10293,15 @@ components:
 
     ModulationJourney:
       type: object
-      description: A complete journey including optional return path
+      description: |
+        One outbound journey from source to target. When the caller sets
+        `returnToStartingMaqam=true`, the response includes a SEPARATE
+        top-level `possibleReturnRoutes` collection — returns are not nested
+        inside each journey because every outbound lands on the same
+        canonical target and pairing them individually would duplicate the
+        same return list N times.
       required:
         - routeNumber
-        - totalHops
         - outboundRoute
       properties:
         routeNumber:
@@ -10286,15 +10310,32 @@ components:
             1-based index of this route within `totalPossibleRoutes.data`. Lets
             clients refer to a specific route unambiguously (e.g. "route 3").
           example: 1
-        totalHops:
-          type: integer
-          description: Total hops for the complete journey (outbound + return if applicable)
-          example: 4
         outboundRoute:
           $ref: '#/components/schemas/ModulationRoute'
-        returnRoute:
-          $ref: '#/components/schemas/ModulationRoute'
-          description: Present when returnToStartingMaqam=true
+
+    NumberedReturnRoute:
+      type: object
+      description: |
+        A return route back to the starting maqām, carrying its own 1-based
+        `routeNumber` within `possibleReturnRoutes.data`. Its `steps` may
+        include a trailing `8va` / `8vb` (`octaveAbove` / `octaveBelow`) step
+        when BFS lands on a register-equivalent sibling of the canonical
+        source.
+      required:
+        - routeNumber
+        - hops
+        - steps
+      properties:
+        routeNumber:
+          type: integer
+          example: 1
+        hops:
+          type: integer
+          example: 3
+        steps:
+          type: array
+          items:
+            $ref: '#/components/schemas/ModulationStep'
 
     ErrorResponse:
       type: object

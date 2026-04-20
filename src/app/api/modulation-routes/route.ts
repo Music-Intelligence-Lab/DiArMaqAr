@@ -4,7 +4,7 @@ import { standardizeText } from "@/functions/export";
 import { findModulationRoutes } from "@/functions/findModulationRoutes";
 import { getTuningSystems } from "@/functions/import";
 import { parseInArabic, getNoteNameDisplayAr, getMaqamNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
-import { ModulationWaypoint, MaqamNode, ModulationJourney } from "@/models/ModulationRoute";
+import { ModulationWaypoint, MaqamNode, ModulationJourney, ModulationRoute } from "@/models/ModulationRoute";
 
 export const OPTIONS = handleCorsPreflightRequest;
 
@@ -274,25 +274,36 @@ export async function GET(request: Request) {
       formatJourney(journey, inArabic)
     );
 
-    return addCorsHeaders(
-      NextResponse.json({
-        totalPossibleRoutes: {
-          count: formattedJourneys.length,
-          data: formattedJourneys,
-        },
-        context: buildContext(
-          tuningSystemId,
-          startingNote,
-          result.sourceNode!,
-          result.targetNode!,
-          result.waypointNodes,
-          maxHops,
-          returnToStartingMaqam,
-          maxRoutes,
-          inArabic
-        ),
-      })
+    const responseBody: any = {
+      totalPossibleRoutes: {
+        count: formattedJourneys.length,
+        data: formattedJourneys,
+      },
+    };
+
+    if (returnToStartingMaqam && result.returnRoutes) {
+      const formattedReturns = result.returnRoutes.map((route, i) =>
+        formatReturnRoute(route, i + 1, inArabic)
+      );
+      responseBody.possibleReturnRoutes = {
+        count: formattedReturns.length,
+        data: formattedReturns,
+      };
+    }
+
+    responseBody.context = buildContext(
+      tuningSystemId,
+      startingNote,
+      result.sourceNode!,
+      result.targetNode!,
+      result.waypointNodes,
+      maxHops,
+      returnToStartingMaqam,
+      maxRoutes,
+      inArabic
     );
+
+    return addCorsHeaders(NextResponse.json(responseBody));
   } catch (error) {
     console.error("Error in GET /api/modulation-routes:", error);
     return addCorsHeaders(
@@ -391,9 +402,8 @@ function formatNode(node: MaqamNode, inArabic: boolean): any {
  * Formats a ModulationJourney for the API response.
  */
 function formatJourney(journey: ModulationJourney, inArabic: boolean): any {
-  const formatted: any = {
+  return {
     routeNumber: journey.routeNumber,
-    totalHops: journey.totalHops,
     outboundRoute: {
       hops: journey.outboundRoute.hops,
       steps: journey.outboundRoute.steps.map((step) => ({
@@ -404,18 +414,17 @@ function formatJourney(journey: ModulationJourney, inArabic: boolean): any {
       })),
     },
   };
+}
 
-  if (journey.returnRoute) {
-    formatted.returnRoute = {
-      hops: journey.returnRoute.hops,
-      steps: journey.returnRoute.steps.map((step) => ({
-        from: formatNode(step.from, inArabic),
-        to: formatNode(step.to, inArabic),
-        modulationDegree: step.modulationDegree,
-        modulationCategory: step.modulationCategory,
-      })),
-    };
-  }
-
-  return formatted;
+function formatReturnRoute(route: ModulationRoute, routeNumber: number, inArabic: boolean): any {
+  return {
+    routeNumber,
+    hops: route.hops,
+    steps: route.steps.map((step) => ({
+      from: formatNode(step.from, inArabic),
+      to: formatNode(step.to, inArabic),
+      modulationDegree: step.modulationDegree,
+      modulationCategory: step.modulationCategory,
+    })),
+  };
 }

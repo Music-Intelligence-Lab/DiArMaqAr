@@ -78,17 +78,18 @@ export interface ModulationRoute {
 }
 
 /**
- * Represents a complete journey including optional return path.
+ * One outbound journey from source to target. Return routes (when
+ * `returnToStartingMaqam=true`) are delivered separately at the top level of
+ * the API response under `possibleReturnRoutes`, not nested inside each
+ * journey — because every outbound ends on the same canonical target, a
+ * single set of return routes applies to every outbound and pairing them
+ * individually would duplicate the same list N times.
  */
 export interface ModulationJourney {
   /** 1-based index within the enclosing totalPossibleRoutes.data array */
   routeNumber: number;
   /** The outbound route from source to destination */
   outboundRoute: ModulationRoute;
-  /** Optional return route back to source (when returnToStart=true) */
-  returnRoute?: ModulationRoute;
-  /** Total hops for the complete journey */
-  totalHops: number;
 }
 
 /**
