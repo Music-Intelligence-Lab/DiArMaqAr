@@ -29,6 +29,7 @@ export const OPTIONS = handleCorsPreflightRequest;
  * - maxRoutes: Maximum number of routes to return (default: 10)
  * - limitToShortestHops: true|false - Only return shortest-length routes (default: true)
  * - allowOctaveJumps: true|false - Allow BFS to traverse register-shift (8va/8vb) edges (default: true)
+ * - allowDownwardModulation: true|false - Allow direct downward-modulation edges (e.g. VI-8vb) (default: true)
  * - includeArabic: true|false - Include Arabic display names (default: false)
  *
  * Response includes:
@@ -59,6 +60,11 @@ export async function GET(request: Request) {
     // register-equivalent siblings. Default true preserves current behaviour.
     const allowOctaveJumpsParam = searchParams.get("allowOctaveJumps");
     const allowOctaveJumps = allowOctaveJumpsParam === null ? true : allowOctaveJumpsParam === "true";
+    // Whether BFS may traverse direct downward-modulation edges (a single-
+    // hop modulation to a different maqām at a tonic one octave below the
+    // ascending rule's target). Default true.
+    const allowDownwardModulationParam = searchParams.get("allowDownwardModulation");
+    const allowDownwardModulation = allowDownwardModulationParam === null ? true : allowDownwardModulationParam === "true";
 
     // Parse includeArabic parameter
     let inArabic = false;
@@ -237,6 +243,7 @@ export async function GET(request: Request) {
         maxRoutes,
         limitToShortestHops,
         allowOctaveJumps,
+        allowDownwardModulation,
       }
     );
 
@@ -265,6 +272,7 @@ export async function GET(request: Request) {
               maxRoutes,
               limitToShortestHops,
               allowOctaveJumps,
+              allowDownwardModulation,
               inArabic
             ),
             message: result.error,
@@ -319,6 +327,7 @@ export async function GET(request: Request) {
       maxRoutes,
       limitToShortestHops,
       allowOctaveJumps,
+      allowDownwardModulation,
       inArabic
     );
 
@@ -351,6 +360,7 @@ function buildContext(
   maxRoutes: number,
   limitToShortestHops: boolean,
   allowOctaveJumps: boolean,
+  allowDownwardModulation: boolean,
   inArabic: boolean
 ): any {
   const tuningSystems = getTuningSystems();
@@ -371,6 +381,7 @@ function buildContext(
       returnToStartingMaqam,
       limitToShortestHops,
       allowOctaveJumps,
+      allowDownwardModulation,
     },
   };
 

@@ -65,7 +65,24 @@ export type ModulationCategory =
   // shift DOWN (`modulationDegree: "8vb"`). Example: ḥijāz:muḥayyar →
   // ḥijāz:dūgāh is `octaveBelow` / `8vb`.
   | "octaveAbove"
-  | "octaveBelow";
+  | "octaveBelow"
+  // Downward-modulation categories: a genuine modulation to a DIFFERENT
+  // maqām whose new tonic sits one octave BELOW the target of the
+  // corresponding ascending rule. Emitted as standalone edges so a caller
+  // can model e.g. saba:dūgāh → ajam ushayrān:ajam ushayrān as ONE hop
+  // (`sixthDegreeAscOctaveBelow` / `VI-8vb`) rather than as VI↑ + 8vb.
+  // Each maps 1:1 to an existing ascending category; the modulationDegree
+  // field gets a `-8vb` suffix (e.g. "VI-8vb") to keep Roman-numeral degree
+  // semantics unambiguous (no arrows that could be confused with the
+  // ascending-vs-descending-rule distinction of the source maqām).
+  | "firstDegreeOctaveBelow"
+  | "thirdDegreeOctaveBelow"
+  | "altThirdDegreeOctaveBelow"
+  | "fourthDegreeOctaveBelow"
+  | "fifthDegreeOctaveBelow"
+  | "sixthDegreeAscOctaveBelow"
+  | "sixthDegreeDescOctaveBelow"
+  | "sixthDegreeIfNoThirdOctaveBelow";
 
 /**
  * Represents a complete route from source to target maqam.
@@ -142,6 +159,15 @@ export interface ModulationRoutesRequest {
    * that stays within a single octave.
    */
   allowOctaveJumps?: boolean;
+  /**
+   * When true (default), BFS may traverse direct downward-modulation edges
+   * (categories ending in `OctaveBelow`, e.g. `sixthDegreeAscOctaveBelow`)
+   * that model a single-step modulation to a different maqām whose tonic
+   * sits one octave below the target of the corresponding ascending rule.
+   * When false, those edges are ignored and such a move can only be made
+   * as an ascending modulation + separate 8vb register shift (2 hops).
+   */
+  allowDownwardModulation?: boolean;
 }
 
 /**

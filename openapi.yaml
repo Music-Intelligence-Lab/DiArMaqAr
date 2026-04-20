@@ -4114,6 +4114,13 @@ paths:
           between register-equivalent siblings, so routes stay strictly
           within al-Shawwā's scale-degree modulation rules (default
           `true`: octave jumps are allowed anywhere in the route)
+        - `allowDownwardModulation=false` forbids direct downward-
+          modulation edges (`*OctaveBelow` categories, e.g.
+          `sixthDegreeAscOctaveBelow` / `VI-8vb`). These are single-hop
+          modulations to a different maqām whose tonic sits one octave
+          below the ascending rule's target — common in Arabic practice
+          (e.g. saba:dūgāh → ajam ushayrān:ajam ushayrān as one move)
+          (default `true`)
         - Results cached per tuning system + starting note combination for performance
         - `maxHops` is required and capped at 20 to prevent combinatorial explosion
 
@@ -4254,6 +4261,30 @@ paths:
             hop in every returned route must be a genuine al-Shawwā
             modulation (degrees I / III / IV / V / VI). Use `false` when
             you want routes that stay within a single octave.
+
+            Note: `allowOctaveJumps` controls PURE register shifts
+            (same maqām, different octave). `allowDownwardModulation`
+            controls DOWNWARD MODULATIONS (different maqām at a
+            lower-octave tonic). They are independent flags.
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "true"
+          example: "false"
+        - name: allowDownwardModulation
+          in: query
+          required: false
+          description: |
+            When `true` (default), BFS may traverse direct downward-
+            modulation edges (`*OctaveBelow` categories, e.g.
+            `sixthDegreeAscOctaveBelow` / `VI-8vb`). These represent a
+            single-hop modulation to a different maqām whose tonic sits
+            one octave below the corresponding ascending rule's target —
+            common in Arabic practice (e.g. saba:dūgāh → ajam
+            ushayrān:ajam ushayrān as one move rather than as VI↑ + 8vb).
+            When `false`, those edges are ignored and such a move can
+            only be reached via the equivalent two-hop ascending-
+            modulation + register-shift combination.
           schema:
             type: string
             enum: ["true", "false"]
@@ -4367,6 +4398,8 @@ paths:
                             type: boolean
                           allowOctaveJumps:
                             type: boolean
+                          allowDownwardModulation:
+                            type: boolean
                   message:
                     type: string
                     description: Present when no routes found, explains why
@@ -4438,6 +4471,7 @@ paths:
                         returnToStartingMaqam: false
                         limitToShortestHops: true
                         allowOctaveJumps: true
+                        allowDownwardModulation: true
                 noRouteFound:
                   summary: No path found within constraints
                   value:
@@ -4469,6 +4503,7 @@ paths:
                         returnToStartingMaqam: false
                         limitToShortestHops: true
                         allowOctaveJumps: true
+                        allowDownwardModulation: true
                     message: "No path found from 'maqam_rast' to 'maqam_sikah' within 3 hops"
         '400':
           description: Invalid or missing required parameters
@@ -10300,11 +10335,14 @@ components:
           type: string
           description: |
             Scale degree where modulation occurs. Roman numerals (`I`, `III`,
-            `IV`, `V`, `VI`) correspond to al-Shawwā's rules. `8va` / `8vb`
-            appear on trailing octave-shift steps that the endpoint inserts
-            when BFS lands on a register-equivalent sibling of the target
-            rather than the canonical tonic.
-          enum: ["I", "III", "IV", "V", "VI", "8va", "8vb"]
+            `IV`, `V`, `VI`) correspond to al-Shawwā's ascending rules.
+            `8va` / `8vb` appear on pure register-shift steps between
+            register-equivalent siblings of the same maqām. Roman-numeral
+            variants suffixed with `-8vb` (e.g. `I-8vb`, `V-8vb`, `VI-8vb`)
+            label downward-modulation steps — a single-hop modulation to a
+            different maqām whose tonic sits one octave below the
+            corresponding ascending rule's target.
+          enum: ["I", "III", "IV", "V", "VI", "8va", "8vb", "I-8vb", "III-8vb", "IV-8vb", "V-8vb", "VI-8vb"]
           example: "III"
         modulationCategory:
           type: string
@@ -10319,6 +10357,14 @@ components:
             edges, so BFS can chain them (e.g. muḥayyar → dūgāh → qarār
             dūgāh as two 8vb steps) and traverse them at any position in a
             path, not just at the end.
+
+            The `*OctaveBelow` values are direct downward-modulation
+            edges: a single-hop modulation to a different maqām at the
+            lower-register sibling of the corresponding ascending rule's
+            target. For example, `sixthDegreeAscOctaveBelow` / `VI-8vb`
+            models saba:dūgāh → ajam ushayrān:ajam ushayrān as one hop
+            instead of as a two-hop VI↑ + 8vb pair. Gated by the
+            `allowDownwardModulation` query parameter.
           enum:
             - firstDegree
             - thirdDegree
@@ -10330,6 +10376,14 @@ components:
             - sixthDegreeIfNoThird
             - octaveAbove
             - octaveBelow
+            - firstDegreeOctaveBelow
+            - thirdDegreeOctaveBelow
+            - altThirdDegreeOctaveBelow
+            - fourthDegreeOctaveBelow
+            - fifthDegreeOctaveBelow
+            - sixthDegreeAscOctaveBelow
+            - sixthDegreeDescOctaveBelow
+            - sixthDegreeIfNoThirdOctaveBelow
           example: "thirdDegree"
 
     ModulationRoute:

@@ -169,6 +169,20 @@ function buildModulationGraph(
     adjacencyList.set(nodeKey, []);
   }
 
+  // Build a lookup for register siblings by (baseMaqamIdName, tonic modal
+  // degree index, octave). Used to emit downward-modulation edges: for each
+  // ascending modulation edge source → target, we check whether target has a
+  // sibling one octave below and, if so, emit a direct source → target_below
+  // edge with the corresponding `*OctaveBelow` category.
+  const siblingByCell = new Map<string, MaqamNode>();
+  const cellKey = (baseMaqamIdName: string, idx: number, oct: number) =>
+    `${baseMaqamIdName}::${idx}::${oct}`;
+  for (const node of nodes.values()) {
+    const cell = getNoteNameIndexAndOctave(node.tonicDisplay as NoteName);
+    if (cell.index < 0) continue;
+    siblingByCell.set(cellKey(node.baseMaqamIdName, cell.index, cell.octave), node);
+  }
+
   // Calculate modulation edges for each node
   for (const maqam of availableMaqamat) {
     const baseIdName = getBaseIdName(maqam);
@@ -191,11 +205,17 @@ function buildModulationGraph(
     // Process each modulation category and create edges
     const edges: ModulationEdge[] = [];
 
-    // Helper to add edges from a modulation array
+    // Helper to add edges from a modulation array. When `downwardCategory`
+    // is provided (non-null), also emits a direct downward-modulation edge
+    // from source to the target's lower-register sibling (if one exists) —
+    // modelling e.g. saba:dūgāh → ajam ushayrān:ajam ushayrān as a single
+    // hop labelled VI-8vb / sixthDegreeAscOctaveBelow instead of as a
+    // VI-ascending + 8vb register-shift pair.
     const addEdges = (
       mods: Maqam[],
       degree: string,
-      category: ModulationCategory
+      category: ModulationCategory,
+      downwardCategory: ModulationCategory | null = null
     ) => {
       for (const targetMaqam of mods) {
         const targetBaseIdName = getBaseIdName(targetMaqam);
@@ -203,14 +223,33 @@ function buildModulationGraph(
         const targetNodeKey = createNodeKey(targetNode.baseMaqamIdName, targetNode.tonicId);
 
         // Only add edge if target node exists in our graph
-        if (nodes.has(targetNodeKey)) {
-          edges.push({
-            targetNodeKey,
-            targetNode,
-            degree,
-            category,
-          });
-        }
+        if (!nodes.has(targetNodeKey)) continue;
+
+        edges.push({
+          targetNodeKey,
+          targetNode,
+          degree,
+          category,
+        });
+
+        if (!downwardCategory) continue;
+
+        // Look up the target's register sibling one octave below. If it
+        // exists and isn't the source itself, emit the downward edge.
+        const targetCell = getNoteNameIndexAndOctave(targetNode.tonicDisplay as NoteName);
+        if (targetCell.index < 0) continue;
+        const lowerSibling = siblingByCell.get(
+          cellKey(targetNode.baseMaqamIdName, targetCell.index, targetCell.octave - 1)
+        );
+        if (!lowerSibling) continue;
+        const lowerKey = createNodeKey(lowerSibling.baseMaqamIdName, lowerSibling.tonicId);
+        if (lowerKey === sourceNodeKey) continue; // no self-loop
+        edges.push({
+          targetNodeKey: lowerKey,
+          targetNode: lowerSibling,
+          degree: `${degree}-8vb`,
+          category: downwardCategory,
+        });
       }
     };
 
@@ -228,16 +267,16 @@ function buildModulationGraph(
       asc.length === desc.length &&
       asc.every((pc, i) => pc.noteName === desc[desc.length - 1 - i].noteName);
 
-    addEdges(modulations.modulationsOnFirstDegree, "I", "firstDegree");
-    addEdges(modulations.modulationsOnThirdDegree, "III", "thirdDegree");
-    addEdges(modulations.modulationsOnAltThirdDegree, "III", "altThirdDegree");
-    addEdges(modulations.modulationsOnFourthDegree, "IV", "fourthDegree");
-    addEdges(modulations.modulationsOnFifthDegree, "V", "fifthDegree");
-    addEdges(modulations.modulationsOnSixthDegreeAsc, "VI", "sixthDegreeAsc");
+    addEdges(modulations.modulationsOnFirstDegree, "I", "firstDegree", "firstDegreeOctaveBelow");
+    addEdges(modulations.modulationsOnThirdDegree, "III", "thirdDegree", "thirdDegreeOctaveBelow");
+    addEdges(modulations.modulationsOnAltThirdDegree, "III", "altThirdDegree", "altThirdDegreeOctaveBelow");
+    addEdges(modulations.modulationsOnFourthDegree, "IV", "fourthDegree", "fourthDegreeOctaveBelow");
+    addEdges(modulations.modulationsOnFifthDegree, "V", "fifthDegree", "fifthDegreeOctaveBelow");
+    addEdges(modulations.modulationsOnSixthDegreeAsc, "VI", "sixthDegreeAsc", "sixthDegreeAscOctaveBelow");
     if (!isSymmetric) {
-      addEdges(modulations.modulationsOnSixthDegreeDesc, "VI", "sixthDegreeDesc");
+      addEdges(modulations.modulationsOnSixthDegreeDesc, "VI", "sixthDegreeDesc", "sixthDegreeDescOctaveBelow");
     }
-    addEdges(modulations.modulationsOnSixthDegreeIfNoThird, "VI", "sixthDegreeIfNoThird");
+    addEdges(modulations.modulationsOnSixthDegreeIfNoThird, "VI", "sixthDegreeIfNoThird", "sixthDegreeIfNoThirdOctaveBelow");
 
     adjacencyList.set(sourceNodeKey, edges);
   }
@@ -436,7 +475,8 @@ function bfsShortestPaths(
   maxHops: number,
   limit: number,
   limitToShortestHops: boolean = true,
-  allowOctaveJumps: boolean = true
+  allowOctaveJumps: boolean = true,
+  allowDownwardModulation: boolean = true
 ): ModulationRoute[] {
   // Handle same-node case: any start already in the target set
   for (const sk of startKeys) {
@@ -444,9 +484,9 @@ function bfsShortestPaths(
   }
 
   if (limitToShortestHops) {
-    return bfsAllShortestPaths(graph, startKeys, endKeys, maxHops, limit, allowOctaveJumps);
+    return bfsAllShortestPaths(graph, startKeys, endKeys, maxHops, limit, allowOctaveJumps, allowDownwardModulation);
   }
-  return bfsPathsByIncreasingHops(graph, startKeys, endKeys, maxHops, limit, allowOctaveJumps);
+  return bfsPathsByIncreasingHops(graph, startKeys, endKeys, maxHops, limit, allowOctaveJumps, allowDownwardModulation);
 }
 
 /**
@@ -455,6 +495,25 @@ function bfsShortestPaths(
  */
 function isOctaveEdge(edge: ModulationEdge): boolean {
   return edge.category === "octaveAbove" || edge.category === "octaveBelow";
+}
+
+/**
+ * Returns true for downward-modulation categories (direct modulation to the
+ * target's lower-register sibling). Used by BFS to optionally skip these
+ * edges when the caller sets allowDownwardModulation=false.
+ */
+const DOWNWARD_MODULATION_CATEGORIES = new Set<string>([
+  "firstDegreeOctaveBelow",
+  "thirdDegreeOctaveBelow",
+  "altThirdDegreeOctaveBelow",
+  "fourthDegreeOctaveBelow",
+  "fifthDegreeOctaveBelow",
+  "sixthDegreeAscOctaveBelow",
+  "sixthDegreeDescOctaveBelow",
+  "sixthDegreeIfNoThirdOctaveBelow",
+]);
+function isDownwardModulationEdge(edge: ModulationEdge): boolean {
+  return DOWNWARD_MODULATION_CATEGORIES.has(edge.category);
 }
 
 /**
@@ -472,7 +531,8 @@ function bfsAllShortestPaths(
   endKeys: Set<string>,
   maxHops: number,
   limit: number,
-  allowOctaveJumps: boolean = true
+  allowOctaveJumps: boolean = true,
+  allowDownwardModulation: boolean = true
 ): ModulationRoute[] {
   const dist = new Map<string, number>();
   const preds = new Map<string, Array<{ fromKey: string; edge: ModulationEdge }>>();
@@ -490,6 +550,7 @@ function bfsAllShortestPaths(
       const edges = graph.adjacencyList.get(u) ?? [];
       for (const edge of edges) {
         if (!allowOctaveJumps && isOctaveEdge(edge)) continue;
+        if (!allowDownwardModulation && isDownwardModulationEdge(edge)) continue;
         const v = edge.targetNodeKey;
         const existingDist = dist.get(v);
 
@@ -572,7 +633,8 @@ function bfsPathsByIncreasingHops(
   endKeys: Set<string>,
   maxHops: number,
   limit: number,
-  allowOctaveJumps: boolean = true
+  allowOctaveJumps: boolean = true,
+  allowDownwardModulation: boolean = true
 ): ModulationRoute[] {
   // Backward BFS from endKeys: distToEnd[v] = shortest hop count from v to
   // ANY endKey using a single reverse traversal of the graph. Lets us prune
@@ -581,6 +643,7 @@ function bfsPathsByIncreasingHops(
   for (const [u, edges] of graph.adjacencyList) {
     for (const e of edges) {
       if (!allowOctaveJumps && isOctaveEdge(e)) continue;
+      if (!allowDownwardModulation && isDownwardModulationEdge(e)) continue;
       if (!reverseAdj.has(e.targetNodeKey)) reverseAdj.set(e.targetNodeKey, []);
       reverseAdj.get(e.targetNodeKey)!.push(u);
     }
@@ -633,6 +696,7 @@ function bfsPathsByIncreasingHops(
     const edges = graph.adjacencyList.get(current) ?? [];
     for (const edge of edges) {
       if (!allowOctaveJumps && isOctaveEdge(edge)) continue;
+      if (!allowDownwardModulation && isDownwardModulationEdge(edge)) continue;
       if (visited.has(edge.targetNodeKey)) continue; // simple paths only
       visited.add(edge.targetNodeKey);
       path.push({
@@ -772,6 +836,7 @@ export function findModulationRoutes(
     maxRoutes?: number;
     limitToShortestHops?: boolean;
     allowOctaveJumps?: boolean;
+    allowDownwardModulation?: boolean;
   }
 ): {
   journeys: ModulationJourney[];
@@ -796,6 +861,7 @@ export function findModulationRoutes(
     maxRoutes = 10,
     limitToShortestHops = true,
     allowOctaveJumps = true,
+    allowDownwardModulation = true,
   } = options;
 
   // Internal alias used as the enumeration cap across BFS / segment routines,
@@ -984,7 +1050,8 @@ export function findModulationRoutes(
       maxHops,
       limit,
       limitToShortestHops,
-      allowOctaveJumps
+      allowOctaveJumps,
+      allowDownwardModulation
     );
   } else {
     const allKeys = [sourceNodeKey, ...waypointKeys, targetNodeKey];
@@ -1036,7 +1103,8 @@ export function findModulationRoutes(
       maxHops,
       limit,
       limitToShortestHops,
-      allowOctaveJumps
+      allowOctaveJumps,
+      allowDownwardModulation
     );
   }
 
