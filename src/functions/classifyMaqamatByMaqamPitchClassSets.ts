@@ -333,6 +333,22 @@ export function classifyMaqamatByMaqamPitchClassSets(
   const incompatibleMaqamat: IncompatibleMaqam[] = [];
   const processedMaqamat = new Set<string>(); // Track processed maqam/transposition combinations
 
+  // Cache transpositions per maqam. getMaqamTranspositions is deterministic for
+  // a fixed (maqamData, tuningSystem, startingNote, ajnas) tuple — the only
+  // variable across the nested loops is maqamData — yet it runs thousands of
+  // times with identical inputs. Without this cache, the Netlify function
+  // hits its timeout.
+  const transpositionsCache = new Map<string, Maqam[]>();
+  const getCachedTranspositions = (maqamData: MaqamData): Maqam[] => {
+    const key = maqamData.getId();
+    let cached = transpositionsCache.get(key);
+    if (!cached) {
+      cached = getMaqamTranspositions(maqamData, tuningSystem, startingNote, ajnas);
+      transpositionsCache.set(key, cached);
+    }
+    return cached;
+  };
+
   // Continue looping until all maqamat are processed
   let hasUnprocessed = true;
   let iterationCount = 0;
@@ -351,13 +367,8 @@ export function classifyMaqamatByMaqamPitchClassSets(
       const processingTahlil = (pass === 1);
 
       for (const maqamData of maqamat) {
-        // Get all transpositions of this maqam
-        const transpositions = getMaqamTranspositions(
-          maqamData,
-          tuningSystem,
-          startingNote,
-          ajnas
-        );
+        // Get all transpositions of this maqam (cached)
+        const transpositions = getCachedTranspositions(maqamData);
 
         // Filter based on current pass
         const transpositionsToProcess = processingTahlil
@@ -429,12 +440,7 @@ export function classifyMaqamatByMaqamPitchClassSets(
             // Check all other maqamat for compatibility with this set
             // Only check unprocessed maqamat to allow for finding multiple distinct sets
             for (const otherMaqamData of maqamat) {
-              const otherTranspositions = getMaqamTranspositions(
-                otherMaqamData,
-                tuningSystem,
-                startingNote,
-                ajnas
-              );
+              const otherTranspositions = getCachedTranspositions(otherMaqamData);
 
               for (const otherTransposition of otherTranspositions) {
                 const otherKey = `${otherMaqamData.getId()}_${otherTransposition.name}`;
