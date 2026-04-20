@@ -274,21 +274,24 @@ export async function GET(request: Request) {
       formatJourney(journey, inArabic)
     );
 
-    const responseBody: any = {
-      totalPossibleRoutes: {
-        outboundRoutesCount: formattedJourneys.length,
-        data: formattedJourneys,
-      },
+    const totalPossibleRoutes: any = {
+      outboundRoutesCount: formattedJourneys.length,
     };
 
+    let formattedReturns: any[] | null = null;
     if (returnToStartingMaqam && result.returnRoutes) {
-      const formattedReturns = result.returnRoutes.map((route, i) =>
+      formattedReturns = result.returnRoutes.map((route, i) =>
         formatReturnRoute(route, i + 1, inArabic)
       );
-      responseBody.possibleReturnRoutes = {
-        returnRoutesCount: formattedReturns.length,
-        data: formattedReturns,
-      };
+      totalPossibleRoutes.returnRoutesCount = formattedReturns.length;
+    }
+
+    totalPossibleRoutes.data = formattedJourneys;
+
+    const responseBody: any = { totalPossibleRoutes };
+
+    if (formattedReturns) {
+      responseBody.possibleReturnRoutes = { data: formattedReturns };
     }
 
     responseBody.context = buildContext(

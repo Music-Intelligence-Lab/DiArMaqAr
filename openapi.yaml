@@ -4243,10 +4243,12 @@ paths:
                   totalPossibleRoutes:
                     type: object
                     description: |
-                      All shortest outbound modulation routes the endpoint was
-                      able to enumerate for the query, capped at `maxRoutes`.
-                      `outboundRoutesCount` gives the size of `data`; it can be
-                      zero when no path exists within `maxHops`.
+                      Wraps the outbound routes returned for this query along
+                      with the stats for both directions. Both counts live
+                      here (before `data`) so clients see totals up-front
+                      without having to walk into each collection. `data`
+                      holds the outbound routes; the corresponding return
+                      routes live in the sibling `possibleReturnRoutes`.
                     required:
                       - outboundRoutesCount
                       - data
@@ -4254,6 +4256,12 @@ paths:
                       outboundRoutesCount:
                         type: integer
                         description: Number of outbound routes returned in `data`
+                      returnRoutesCount:
+                        type: integer
+                        description: |
+                          Number of return routes returned in
+                          `possibleReturnRoutes.data`. Present only when
+                          `returnToStartingMaqam=true`.
                       data:
                         type: array
                         items:
@@ -4262,18 +4270,16 @@ paths:
                     type: object
                     description: |
                       All shortest return routes from the canonical target back
-                      to any register-equivalent of the source, also capped at
+                      to any register-equivalent of the source, capped at
                       `maxRoutes`. Present only when
                       `returnToStartingMaqam=true`. Returns are enumerated
                       once and shared across every outbound journey — they are
-                      not nested inside each journey.
+                      not nested inside each journey. The count is reported in
+                      `totalPossibleRoutes.returnRoutesCount` (not duplicated
+                      here).
                     required:
-                      - returnRoutesCount
                       - data
                     properties:
-                      returnRoutesCount:
-                        type: integer
-                        description: Number of return routes returned in `data`
                       data:
                         type: array
                         items:
