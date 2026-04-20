@@ -134,8 +134,12 @@ function buildModulationGraph(
     return maqamIdToBaseIdName.get(maqam.maqamId) || standardizeText(maqam.name);
   };
 
-  // Find all available maqamat and their transpositions
+  // Find all available maqamat and their transpositions.
+  // Also build a cache keyed by maqamData id so the `modulate` calls below
+  // don't recompute transpositions 398× for the same 63 maqamat — that loop
+  // is the cold-start hotspot and was exceeding Netlify's function timeout.
   const availableMaqamat: Maqam[] = [];
+  const transpositionsCache = new Map<string, Maqam[]>();
 
   for (const maqamData of allMaqamat) {
     // Check if maqam is possible in this tuning system
@@ -150,6 +154,7 @@ function buildModulationGraph(
       centsTolerance
     );
 
+    transpositionsCache.set(maqamData.getId(), transpositions);
     availableMaqamat.push(...transpositions);
   }
 
@@ -169,14 +174,17 @@ function buildModulationGraph(
     const sourceNode = createMaqamNode(maqam, baseIdName, standardizeText);
     const sourceNodeKey = createNodeKey(sourceNode.baseMaqamIdName, sourceNode.tonicId);
 
-    // Calculate modulations from this maqam (maqamat mode, not ajnas)
+    // Calculate modulations from this maqam (maqamat mode, not ajnas).
+    // Pass the prebuilt transpositionsCache so modulate() skips the inner
+    // calculateMaqamTranspositions loop.
     const modulations = modulate(
       pitchClasses,
       allAjnas,
       allMaqamat,
       maqam,
       false, // maqamat modulations, not ajnas
-      centsTolerance
+      centsTolerance,
+      transpositionsCache
     ) as MaqamatModulations;
 
     // Process each modulation category and create edges
@@ -361,86 +369,78 @@ function bfsShortestPaths(
     return [{ hops: 0, path: [] }];
   }
 
-  const routes: ModulationRoute[] = [];
-  let shortestPathLength: number | null = null;
+  // Standard all-shortest-paths BFS: level-by-level relaxation to fill in
+  // dist[node] = hop count from start on the shortest path, and preds[node] =
+  // every (prevKey, edge) that is consistent with a shortest path. Then
+  // reconstruct all shortest paths by walking preds from endKey back to
+  // startKey. Avg out-degree in this graph is ~52, so maxHops=5 would
+  // produce 52^5 ≈ 380M path expansions under the previous enumerate-every-
+  // path BFS; the level-by-level variant runs in O(V + E) = ~21k ops instead.
+  const dist = new Map<string, number>();
+  const preds = new Map<string, Array<{ fromKey: string; edge: ModulationEdge }>>();
+  dist.set(startKey, 0);
 
-  // BFS queue: each entry is [currentNodeKey, path taken so far]
-  const queue: Array<{ nodeKey: string; path: ModulationStep[] }> = [];
+  let frontier: string[] = [startKey];
+  let depth = 0;
 
-  // Track visited nodes at each depth to allow multiple paths through same nodes
-  // but prevent infinite loops within a single path
-  queue.push({ nodeKey: startKey, path: [] });
+  while (frontier.length > 0 && depth < maxHops && !dist.has(endKey)) {
+    const nextFrontierSet = new Set<string>();
 
-  while (queue.length > 0 && routes.length < limit) {
-    const { nodeKey, path } = queue.shift()!;
-    const currentDepth = path.length;
+    for (const u of frontier) {
+      const edges = graph.adjacencyList.get(u) ?? [];
+      for (const edge of edges) {
+        const v = edge.targetNodeKey;
+        const existingDist = dist.get(v);
 
-    // Stop if we've exceeded max hops
-    if (currentDepth >= maxHops) continue;
-
-    // Stop if we've found shortest paths and this path is longer
-    if (shortestPathLength !== null && currentDepth >= shortestPathLength) continue;
-
-    // Get edges from current node
-    const edges = graph.adjacencyList.get(nodeKey) || [];
-
-    for (const edge of edges) {
-      // Check if this completes a path to the target
-      if (edge.targetNodeKey === endKey) {
-        const sourceNode = graph.nodes.get(nodeKey)!;
-        const newStep: ModulationStep = {
-          from: sourceNode,
-          to: edge.targetNode,
-          modulationDegree: edge.degree,
-          modulationCategory: edge.category,
-        };
-
-        const completePath = [...path, newStep];
-        const route: ModulationRoute = {
-          hops: completePath.length,
-          path: completePath,
-        };
-
-        // Set shortest path length on first find
-        if (shortestPathLength === null) {
-          shortestPathLength = completePath.length;
+        if (existingDist === undefined) {
+          // First time reaching v — depth+1 is the shortest distance to v
+          dist.set(v, depth + 1);
+          preds.set(v, [{ fromKey: u, edge }]);
+          nextFrontierSet.add(v);
+        } else if (existingDist === depth + 1) {
+          // Another shortest-path predecessor for v
+          preds.get(v)!.push({ fromKey: u, edge });
         }
-
-        // Only add if this is a shortest path
-        if (completePath.length === shortestPathLength) {
-          routes.push(route);
-        }
-
-        continue;
+        // else: existingDist < depth + 1 means v already has a strictly
+        // shorter path; this edge is on a longer path and we ignore it
       }
+    }
 
-      // Don't revisit nodes already in this path (prevent cycles)
-      const visitedInPath = path.some(
-        (step) =>
-          createNodeKey(step.from.baseMaqamIdName, step.from.tonicId) === edge.targetNodeKey ||
-          createNodeKey(step.to.baseMaqamIdName, step.to.tonicId) === edge.targetNodeKey
-      );
-      if (visitedInPath) continue;
+    depth++;
+    frontier = [...nextFrontierSet];
+  }
 
-      // Also check start node
-      if (edge.targetNodeKey === startKey) continue;
+  if (!dist.has(endKey)) return [];
 
-      // Add to queue for further exploration
-      const sourceNode = graph.nodes.get(nodeKey)!;
-      const newStep: ModulationStep = {
+  // Reconstruct all shortest paths by walking preds from endKey back to
+  // startKey. Because dist is a shortest-distance map, no reconstructed path
+  // revisits a node (that would imply a shorter path via the duplicate).
+  const routes: ModulationRoute[] = [];
+
+  const walk = (nodeKey: string, reversedSteps: ModulationStep[]): void => {
+    if (routes.length >= limit) return;
+    if (nodeKey === startKey) {
+      routes.push({
+        hops: reversedSteps.length,
+        path: [...reversedSteps].reverse(),
+      });
+      return;
+    }
+    const predList = preds.get(nodeKey) ?? [];
+    for (const { fromKey, edge } of predList) {
+      if (routes.length >= limit) return;
+      const sourceNode = graph.nodes.get(fromKey)!;
+      const step: ModulationStep = {
         from: sourceNode,
         to: edge.targetNode,
         modulationDegree: edge.degree,
         modulationCategory: edge.category,
       };
-
-      queue.push({
-        nodeKey: edge.targetNodeKey,
-        path: [...path, newStep],
-      });
+      walk(fromKey, [...reversedSteps, step]);
     }
-  }
+  };
 
+  walk(endKey, []);
   return routes;
 }
 

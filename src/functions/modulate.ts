@@ -97,7 +97,13 @@ export default function modulate(
   allMaqamat: MaqamData[],
   sourceMaqamTransposition: Maqam,
   ajnasModulationsMode: boolean,
-  centsTolerance: number = 5
+  centsTolerance: number = 5,
+  // Optional precomputed transpositions keyed by maqam id. When a batch caller
+  // (e.g. buildModulationGraph) will invoke modulate many times against the
+  // same (allPitchClasses, allAjnas, centsTolerance), pass a prebuilt map to
+  // skip redundant calculateMaqamTranspositions calls. Only consulted in
+  // maqamat mode; ajnas mode still computes per call.
+  maqamTranspositionsCache?: Map<string, Maqam[]>
 ): MaqamatModulations | AjnasModulations {
   type ModulationType = Maqam | Jins;
 
@@ -208,8 +214,10 @@ export default function modulate(
       // Add original maqam if different from source
       transpositions = JSON.stringify(currentAscendingNotes) !== JSON.stringify(sourceAscendingNotes) ? [maqamOrJins.getTahlil(allPitchClasses)] : [];
 
-      // Add all valid transpositions of this maqam
-      calculateMaqamTranspositions(allPitchClasses, allAjnas, maqamOrJins, true, centsTolerance).forEach((maqamTransposition: Maqam) => {
+      // Add all valid transpositions of this maqam (from cache if provided)
+      const maqamTranspositions = maqamTranspositionsCache?.get(maqamOrJins.getId())
+        ?? calculateMaqamTranspositions(allPitchClasses, allAjnas, maqamOrJins, true, centsTolerance);
+      maqamTranspositions.forEach((maqamTransposition: Maqam) => {
         if (JSON.stringify(currentAscendingNotes) === JSON.stringify(maqamTransposition.ascendingPitchClasses.map((pitchClass: PitchClass) => pitchClass.noteName))) return;
         transpositions.push(maqamTransposition);
       });
