@@ -21,3 +21,24 @@
 # The route handler at /docs/[[...slug]] will handle HTML pages, but static
 # assets like .json, .js, .css should be served directly by Netlify
 
+# Root-level aliases for LLM discovery (LLM-audit F6)
+# Use status 200 (rewrite, not redirect) so the URL the LLM sees stays stable.
+# force = true to run ahead of @netlify/plugin-nextjs's router.
+[[redirects]]
+  from = "/llms-full.txt"
+  to = "/docs/llms-full.txt"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/openapi.yaml"
+  to = "/docs/openapi.yaml"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/openapi.json"
+  to = "/docs/openapi.json"
+  status = 200
+  force = true
+
