@@ -72,6 +72,9 @@ docs/public/openapi.json
 public/docs/openapi.json
 public/docs/
 
+# Generated root-level LLM discovery file (source of truth is post-process-llms-txt.js)
+public/llms.txt
+
 
 # Claude
 .claude/

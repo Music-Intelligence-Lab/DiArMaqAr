@@ -9,6 +9,67 @@
 
 const fs = require('fs');
 const path = require('path');
+const { CANONICAL_PROJECT_DESCRIPTION } = require('../.vitepress/canonical-description');
+
+const BASE_URL = 'https://diarmaqar.netlify.app/api';
+
+const COLD_START_WORKFLOW_BLOCK = `## Cold-start discovery workflow
+
+If you don't have a specific maqām / jins / tuning system to go on,
+follow this chain:
+
+1. \`GET /api/maqamat\`                               → pick an \`idName\` from \`data[]\`
+2. \`GET /api/maqamat/{idName}/availability\`         → pick a compatible
+                                                      \`tuningSystem\` + \`startingNote\`
+3. \`GET /api/maqamat/{idName}?tuningSystem=…&startingNote=…&pitchClassDataType=cents\`
+
+Parallel chains for ajnās, tuning systems, pitch classes, intervals,
+and sources follow the same pattern: **list → availability → detail**.
+
+If you omit required parameters, the API returns a 400 response with a
+\`hint\` field pointing at the next URL to call. Follow it.
+
+---
+
+`;
+
+/** Wrap a paragraph into a Markdown blockquote with lines of ~max chars,
+ *  each line prefixed with `> `. Used for /llms.txt per the llmstxt.org shape. */
+function toBlockquote(paragraph, max = 75) {
+  const words = paragraph.split(/\s+/);
+  const lines = [];
+  let line = '';
+  for (const w of words) {
+    if (line.length === 0) {
+      line = w;
+    } else if (line.length + 1 + w.length > max) {
+      lines.push(line);
+      line = w;
+    } else {
+      line += ' ' + w;
+    }
+  }
+  if (line) lines.push(line);
+  return lines.map((l) => '> ' + l).join('\n');
+}
+
+const ROOT_LLMS_TXT = `# Digital Arabic Maqām Archive (DiArMaqAr)
+
+${toBlockquote(CANONICAL_PROJECT_DESCRIPTION)}
+
+## Documentation
+- [LLM-optimized index](/docs/llms.txt)
+- [Full LLM documentation bundle](/docs/llms-full.txt)
+- [OpenAPI specification](/docs/openapi.json)
+- [API reference](/docs/api/)
+- [Representative examples](/docs/api/representative-examples)
+
+## API
+- Base URL: ${BASE_URL}
+- No authentication required
+- See /docs/llms.txt for required-parameter rules and a cold-start
+  discovery workflow.
+`;
 
 const llmsTxtPath = path.join(__dirname, '../..', 'public', 'docs', 'llms.txt');
 
@@ -114,6 +175,20 @@ if (content.includes('## For AI Assistants: API Access')) {
   }
 }
 
+// Workstream C2: inject cold-start workflow block after the For AI Assistants section
+if (!content.includes('## Cold-start discovery workflow')) {
+  const aiAccessMatch = content.match(/## For AI Assistants: API Access[\s\S]*?\n---\n/);
+  if (aiAccessMatch) {
+    const insertPos = aiAccessMatch.index + aiAccessMatch[0].length;
+    content = content.slice(0, insertPos) + '\n' + COLD_START_WORKFLOW_BLOCK + content.slice(insertPos);
+    console.log('✓ Injected cold-start workflow block into docs/llms.txt');
+  } else {
+    console.warn('⚠ Could not locate For AI Assistants block; cold-start workflow NOT injected.');
+  }
+} else {
+  console.log('Cold-start workflow already present in docs/llms.txt, skipping injection.');
+}
+
 // Ensure links to llms-full.txt and root llms.txt are present
 if (!content.includes('/docs/llms-full.txt')) {
   // Add link if not present
@@ -161,4 +236,9 @@ if (tocStart !== -1) {
 
 fs.writeFileSync(llmsTxtPath, content, 'utf-8');
 console.log('✓ Post-processed docs/llms.txt with API instructions and links');
+
+// Workstream C3: write root /llms.txt as a generated artifact (strict-minimal llmstxt.org pointer)
+const rootLlmsPath = path.join(__dirname, '../..', 'public', 'llms.txt');
+fs.writeFileSync(rootLlmsPath, ROOT_LLMS_TXT, 'utf-8');
+console.log('✓ Wrote root public/llms.txt (generated, minimal pointer)');
 

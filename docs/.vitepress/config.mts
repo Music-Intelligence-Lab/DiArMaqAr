@@ -1,6 +1,8 @@
 import { defineConfig } from 'vitepress'
 import type { DefaultTheme } from 'vitepress'
 import llmstxt from 'vitepress-plugin-llms'
+// @ts-ignore - plain CommonJS module with no type declarations
+import { CANONICAL_PROJECT_DESCRIPTION } from './canonical-description'
 
 const IGNORED_SIDEBAR_PATHS = ['/api/playground']
 
@@ -59,7 +61,7 @@ export default defineConfig({
       llmstxt({
         // @ts-ignore - vitepress-plugin-llms template property may not be in types
         template: {
-          introduction: 'Digital Arabic Maqām Archive (DiArMaqAr) - Open-source platform for Arabic maqām theory providing REST API and TypeScript library. Includes historically documented maqāmāt, ajnās, and tuning systems spanning from al-Kindī (874 CE) to contemporary approaches. All data includes comprehensive bibliographic attribution following decolonial computing principles.',
+          introduction: CANONICAL_PROJECT_DESCRIPTION,
         },
         // Ignore the playground page as it's interactive and not needed for LLM documentation
         // index.md contains all static API documentation for optimal LLM accessibility
