@@ -359,12 +359,35 @@ export function calculateMaqamTranspositions(
     };
   });
 
-  const tahlilTransposition = maqamTranspositions.find((transposition) =>
-    sameModalDegreeSlot(transposition.ascendingPitchClasses[0].noteName, ascendingNoteNames[0])
-  );
-  const maqamTranspositionsWithoutTahlil = maqamTranspositions.filter((transposition) => transposition !== tahlilTransposition);
-
-  // if (maqamData.getId() === "12")
+  // Prefer an EXACT first-note match so the tahlil is the canonical register
+  // (e.g. rāst → rāst/C3), not an octave sibling (qarār rāst/C2, kirdān/C4).
+  // Fall back to modal-degree slot match only if no exact match exists.
+  const canonicalFirstNote = ascendingNoteNames[0];
+  const tahlilTransposition =
+    maqamTranspositions.find(
+      (transposition) => transposition.ascendingPitchClasses[0].noteName === canonicalFirstNote
+    ) ??
+    maqamTranspositions.find((transposition) =>
+      sameModalDegreeSlot(transposition.ascendingPitchClasses[0].noteName, canonicalFirstNote)
+    );
+  // Octave-register siblings of the tahlil (same modal degree slot, different
+  // register — e.g. qarār rāst vs rāst vs kirdān) keep transposition=false
+  // by design (register shift is not taṣwīr), but give them a distinguishing
+  // name suffix so name-based lookups in the UI are unambiguous.
+  const maqamTranspositionsWithoutTahlil = maqamTranspositions
+    .filter((transposition) => transposition !== tahlilTransposition)
+    .map((transposition) => {
+      if (
+        !transposition.transposition &&
+        transposition.ascendingPitchClasses[0].noteName !== canonicalFirstNote
+      ) {
+        return {
+          ...transposition,
+          name: `${maqamData.getName()} al-${transposition.ascendingPitchClasses[0].noteName}`,
+        };
+      }
+      return transposition;
+    });
 
   if (withTahlil && tahlilTransposition) {
     return [{ ...tahlilTransposition, name: maqamData.getName(), transposition: false }, ...maqamTranspositionsWithoutTahlil];

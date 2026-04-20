@@ -1456,7 +1456,7 @@ const MaqamTranspositions: React.FC = () => {
               const isLastNeededForPrefetch = displayIndex === visibleCount - PREFETCH_OFFSET - 1 && visibleCount < sortedTables.length;
               
               return (
-                <React.Fragment key={`${isAnalysis ? 'analysis' : 'transposition'}-${maqam.name}`}>
+                <React.Fragment key={`${isAnalysis ? 'analysis' : 'transposition'}-${maqam.name}-${firstNoteName}`}>
                   <table 
                     className={`maqam-jins-transpositions-shared__table ${isAnalysis ? 'maqam-jins-transpositions-shared__table--analysis' : 'maqam-jins-transpositions-shared__table--transposition'}`}
                     data-table-type={isAnalysis ? "analysis" : "transposition"}
