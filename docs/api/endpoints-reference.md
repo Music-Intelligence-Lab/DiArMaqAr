@@ -3017,7 +3017,22 @@ with optional waypoints and return-to-start functionality.
 - Finds shortest paths (fewest modulation steps) using BFS algorithm
 - Supports waypoints for multi-stop journeys
 - Optional return-to-start for round-trip routes (reflecting traditional maqām performance practice)
+- `limitToShortestHops=false` pads the result with progressively
+  longer routes up to `maxRoutes` / `maxHops` (default `true`:
+  only shortest-length routes are returned)
+- `allowOctaveJumps=false` forbids register-shift (8va/8vb) edges
+  between register-equivalent siblings, so routes stay strictly
+  within al-Shawwā's scale-degree modulation rules (default
+  `true`: octave jumps are allowed anywhere in the route)
+- `allowDownwardModulation=false` forbids direct downward-
+  modulation edges (`*OctaveBelow` categories, e.g.
+  `sixthDegreeAscOctaveBelow` / `VI-8vb`). These are single-hop
+  modulations to a different maqām whose tonic sits one octave
+  below the ascending rule's target — common in Arabic practice
+  (e.g. saba:dūgāh → ajam ushayrān:ajam ushayrān as one move)
+  (default `true`)
 - Results cached per tuning system + starting note combination for performance
+- `maxHops` is required and capped at 20 to prevent combinatorial explosion
 
 **Graph Structure:**
 - Nodes: Each (maqamId, tonic) pair is a unique node
@@ -3064,10 +3079,10 @@ If not specified, uses the canonical (taḥlīl) form..
 - `maxHops` **(required)**: Maximum number of modulation steps allowed (required safeguard).
 Prevents combinatorial explosion in route calculation.
 Most musical modulation sequences are 2-4 hops.
-Maximum allowed value is 10..
+Maximum allowed value is 20..
   Prevents combinatorial explosion in route calculation.
   Most musical modulation sequences are 2-4 hops.
-  Maximum allowed value is 10.
+  Maximum allowed value is 20.
  - Type: `integer`
   - Example: `5`
 - `waypoints` (optional): Optional comma-separated waypoints to pass through.
@@ -3077,15 +3092,56 @@ Example: "maqam_bayyat:dugah,maqam_saba".
   Example: "maqam_bayyat:dugah,maqam_saba"
  - Type: `string`
   - Example: `maqam_bayyat:dugah`
-- `returnToStart` (optional): Whether to calculate the return path back to the source maqam.
+- `returnToStartingMaqam` (optional): Whether to calculate the return path back to the source (starting) maqam.
 Reflects traditional maqām performance practice where music returns to the starting mode.
 When true, response includes both outbound and return routes..
   Reflects traditional maqām performance practice where music returns to the starting mode.
   When true, response includes both outbound and return routes.
  - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
-- `limit` (optional): Maximum number of routes to return - Type: `integer` - Default: `10`
+- `maxRoutes` (optional): Maximum number of routes to return - Type: `integer` - Default: `10`
   - Example: `10`
+- `limitToShortestHops` (optional): When `true` (default), only routes at the minimum hop count are
+returned — all routes in the response share the same `hops`
+value.
+  returned — all routes in the response share the same `hops`
+  value. When `false`, the response is filled out with
+  progressively longer simple paths (still capped by `maxHops` and
+  `maxRoutes`, ordered shortest-first). Use `false` when you want
+  a diverse sampling of routes, not just the shortest.
+ - Type: `string` - Valid values: `true`, `false` - Default: `true`
+  - Example: `false`
+- `allowOctaveJumps` (optional): When `true` (default), BFS may traverse register-shift
+(`8va` / `8vb`) edges between register-equivalent siblings of
+the same maqām (e.g.
+  (`8va` / `8vb`) edges between register-equivalent siblings of
+  the same maqām (e.g. ḥijāz:muḥayyar → ḥijāz:dūgāh). These
+  edges appear anywhere in a route — at the start, in the
+  middle, or at the end — and let the algorithm reach register
+  variants that aren't directly connected by scale-degree
+  modulation. When `false`, those edges are ignored and every
+  hop in every returned route must be a genuine al-Shawwā
+  modulation (degrees I / III / IV / V / VI). Use `false` when
+  you want routes that stay within a single octave. Note: `allowOctaveJumps` controls PURE register shifts
+  (same maqām, different octave). `allowDownwardModulation`
+  controls DOWNWARD MODULATIONS (different maqām at a
+  lower-octave tonic). They are independent flags.
+ - Type: `string` - Valid values: `true`, `false` - Default: `true`
+  - Example: `false`
+- `allowDownwardModulation` (optional): When `true` (default), BFS may traverse direct downward-
+modulation edges (`*OctaveBelow` categories, e.g.
+`sixthDegreeAscOctaveBelow` / `VI-8vb`).
+  modulation edges (`*OctaveBelow` categories, e.g.
+  `sixthDegreeAscOctaveBelow` / `VI-8vb`). These represent a
+  single-hop modulation to a different maqām whose tonic sits
+  one octave below the corresponding ascending rule's target —
+  common in Arabic practice (e.g. saba:dūgāh → ajam
+  ushayrān:ajam ushayrān as one move rather than as VI↑ + 8vb).
+  When `false`, those edges are ignored and such a move can
+  only be reached via the equivalent two-hop ascending-
+  modulation + register-shift combination.
+ - Type: `string` - Valid values: `true`, `false` - Default: `true`
+  - Example: `false`
 - `includeArabic` (optional): Return bilingual responses with Arabic script when true.
 Adds Arabic versions with "Ar" suffix (e.g., maqamDisplayNameAr, tonicDisplayAr).
   Adds Arabic versions with "Ar" suffix (e.g., maqamDisplayNameAr, tonicDisplayAr)
@@ -3103,18 +3159,17 @@ curl "https://diarmaqar.netlify.app/api/modulation-routes?tuningSystem=alfarabi_
 
 ```json
 {
-  "routes": {
-    "count": 1,
+  "totalPossibleRoutes": {
+    "outboundRoutesCount": 1,
     "data": [
       {
-        "totalHops": 2,
+        "routeNumber": 1,
         "outboundRoute": {
           "hops": 2,
-          "path": [
+          "steps": [
             {
               "from": {
                 "maqamId": "1",
-                "baseMaqamIdName": "maqam_rast",
                 "maqamIdName": "maqam_rast",
                 "maqamDisplayName": "maqām rāst",
                 "tonicId": "rast",
@@ -3123,7 +3178,6 @@ curl "https://diarmaqar.netlify.app/api/modulation-routes?tuningSystem=alfarabi_
               },
               "to": {
                 "maqamId": "2",
-                "baseMaqamIdName": "maqam_bayyat",
                 "maqamIdName": "maqam_bayyat",
                 "maqamDisplayName": "maqām bayyāt",
                 "tonicId": "dugah",
@@ -3136,7 +3190,6 @@ curl "https://diarmaqar.netlify.app/api/modulation-routes?tuningSystem=alfarabi_
             {
               "from": {
                 "maqamId": "2",
-                "baseMaqamIdName": "maqam_bayyat",
                 "maqamIdName": "maqam_bayyat",
                 "maqamDisplayName": "maqām bayyāt",
                 "tonicId": "dugah",
@@ -3145,7 +3198,6 @@ curl "https://diarmaqar.netlify.app/api/modulation-routes?tuningSystem=alfarabi_
               },
               "to": {
                 "maqamId": "5",
-                "baseMaqamIdName": "maqam_hijaz",
                 "maqamIdName": "maqam_hijaz",
                 "maqamDisplayName": "maqām ḥijāz",
                 "tonicId": "nawa",
@@ -3185,8 +3237,11 @@ curl "https://diarmaqar.netlify.app/api/modulation-routes?tuningSystem=alfarabi_
     },
     "searchConstraints": {
       "maxHops": 5,
-      "returnToStart": false,
-      "limit": 10
+      "maxRoutes": 10,
+      "returnToStartingMaqam": false,
+      "limitToShortestHops": true,
+      "allowOctaveJumps": true,
+      "allowDownwardModulation": true
     }
   }
 }
