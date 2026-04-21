@@ -1858,9 +1858,13 @@
     "primaryJinsDegree": [
       "yegāh"
     ],
-    "secondaryJinsDegree": null,
+    "secondaryJinsDegree": [
+      "rāst"
+    ],
     "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "ghammaz": [
+      "rāst"
+    ],
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -3488,9 +3492,15 @@
     "primaryJinsDegree": [
       "dūgāh"
     ],
-    "secondaryJinsDegree": null,
-    "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "secondaryJinsDegree": [
+      "ḥusaynī"
+    ],
+    "tertiaryJinsDegree": [
+      "muḥayyar"
+    ],
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [],
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -3570,9 +3580,13 @@
     "primaryJinsDegree": [
       "chahārgāh"
     ],
-    "secondaryJinsDegree": null,
+    "secondaryJinsDegree": [
+      "kurdān"
+    ],
     "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "ghammaz": [
+      "kurdān"
+    ],
     "suyur": [],
     "commentsEnglish": "",
     "commentsArabic": "",
