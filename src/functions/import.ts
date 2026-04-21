@@ -102,7 +102,11 @@ export function getMaqamat(): MaqamData[] {
         d.commentsEnglish, // English commentary
         d.commentsArabic, // Arabic commentary
         d.sourcePageReferences, // Source page references
-        d.version // Version timestamp (optional, defaults to current time)
+        d.version, // Version timestamp (optional, defaults to current time)
+        d.primaryJinsDegree ?? null, // Primary jins degree
+        d.secondaryJinsDegree ?? null, // Secondary jins degree
+        d.tertiaryJinsDegree ?? null, // Tertiary jins degree
+        d.ghammaz ?? null // Ghammaz (ornamental note/grace note)
       )
   );
 }
