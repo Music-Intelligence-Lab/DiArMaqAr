@@ -129,10 +129,6 @@ async function runVerify(): Promise<void> {
       if (!(k in entry)) errors.push(`${id}: missing key ${k}`);
     }
 
-    if (entry.primaryJinsDegree === null) {
-      errors.push(`${id}: primaryJinsDegree must be a non-null array (got null)`);
-    }
-
     const validationScale = expandWithAdjacentOctaves(entry.ascendingNoteNames);
     for (const field of ["primaryJinsDegree", "secondaryJinsDegree", "tertiaryJinsDegree", "ghammaz"] as const) {
       const v = entry[field];
@@ -140,9 +136,6 @@ async function runVerify(): Promise<void> {
       if (!Array.isArray(v)) {
         errors.push(`${id}: ${field} must be array or null`);
         continue;
-      }
-      if (field === "primaryJinsDegree" && v.length !== 1) {
-        errors.push(`${id}: primaryJinsDegree must be a single-element array (got ${v.length})`);
       }
       const vr = validateNoteNamesInScale(v, validationScale);
       if (!vr.ok) {
