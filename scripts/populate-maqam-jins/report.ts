@@ -24,8 +24,12 @@ export function printSummary(logs: ActionLog[]): void {
     }
   }
 
+  const newlyPopulated = byCategory.populated.filter((l) => l.setFields.length > 0);
+  const alreadyPopulated = byCategory.populated.filter((l) => l.setFields.length === 0);
+
   console.log("");
-  console.log(`Populated: ${byCategory.populated.length} maqāmāt received family-rule defaults`);
+  console.log(`Newly populated: ${newlyPopulated.length} maqāmāt received family-rule defaults`);
+  console.log(`Already populated (no changes): ${alreadyPopulated.length} maqāmāt`);
   console.log(`Flagged for manual entry: ${byCategory.no_jins.length + byCategory.unknown_family.length + byCategory.validation_error.length}`);
   console.log(`  - no_jins (${byCategory.no_jins.length}): ${byCategory.no_jins.map((l) => l.idName).join(", ") || "none"}`);
   console.log(`  - unknown family (${byCategory.unknown_family.length}): ${byCategory.unknown_family.map((l) => `${l.idName} [family=${l.familyIdName}]`).join(", ") || "none"}`);
