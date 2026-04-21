@@ -22,6 +22,10 @@ export interface MaqamDataInterface {
   sourcePageReferences: SourcePageReference[];
   numberOfTranspositions?: number;
   version?: string;
+  primaryJinsDegree?: NoteName[] | null;
+  secondaryJinsDegree?: NoteName[] | null;
+  tertiaryJinsDegree?: NoteName[] | null;
+  ghammaz?: NoteName[] | null;
 }
 
 /**
@@ -92,6 +96,18 @@ export default class MaqamData {
   /** ISO 8601 timestamp of last modification */
   private version!: string;
 
+  /** Primary jins degree note names (scoped to ascendingNoteNames or adjacent-octave equivalents). */
+  private primaryJinsDegree: NoteName[] | null;
+
+  /** Secondary jins degree note names. Null when not applicable. */
+  private secondaryJinsDegree: NoteName[] | null;
+
+  /** Tertiary jins degree note names. Null when not applicable (rare). */
+  private tertiaryJinsDegree: NoteName[] | null;
+
+  /** Ghammāz note names — the degree most often used for modulation. Null when intentionally suppressed. */
+  private ghammaz: NoteName[] | null;
+
   /** Legacy property - consider removing in future refactoring */
   ascendingPitchClasses: any;
 
@@ -107,6 +123,10 @@ export default class MaqamData {
    * @param commentsArabic - Arabic description or comments
    * @param sourcePageReferences - References to source documents
    * @param version - ISO 8601 timestamp of last modification (defaults to current time)
+   * @param primaryJinsDegree - Primary jins degree note names
+   * @param secondaryJinsDegree - Secondary jins degree note names
+   * @param tertiaryJinsDegree - Tertiary jins degree note names
+   * @param ghammaz - Ghammāz note names for modulation
    */
   constructor(
     id: string,
@@ -117,7 +137,11 @@ export default class MaqamData {
     commentsEnglish: string,
     commentsArabic: string,
     sourcePageReferences: SourcePageReference[],
-    version?: string
+    version?: string,
+    primaryJinsDegree?: NoteName[] | null,
+    secondaryJinsDegree?: NoteName[] | null,
+    tertiaryJinsDegree?: NoteName[] | null,
+    ghammaz?: NoteName[] | null,
   ) {
     this.id = id;
     this.idName = standardizeText(name);
@@ -129,6 +153,10 @@ export default class MaqamData {
     this.commentsArabic = commentsArabic;
     this.sourcePageReferences = sourcePageReferences;
     this.version = version || new Date().toISOString();
+    this.primaryJinsDegree = primaryJinsDegree ?? null;
+    this.secondaryJinsDegree = secondaryJinsDegree ?? null;
+    this.tertiaryJinsDegree = tertiaryJinsDegree ?? null;
+    this.ghammaz = ghammaz ?? null;
   }
 
   /**
@@ -234,6 +262,38 @@ export default class MaqamData {
    */
   setVersion(version: string): void {
     this.version = version;
+  }
+
+  /**
+   * Gets the primary jins degree note names.
+   * @returns Array of note names, or null when absent.
+   */
+  getPrimaryJinsDegree(): NoteName[] | null {
+    return this.primaryJinsDegree;
+  }
+
+  /**
+   * Gets the secondary jins degree note names.
+   * @returns Array of note names, or null when absent.
+   */
+  getSecondaryJinsDegree(): NoteName[] | null {
+    return this.secondaryJinsDegree;
+  }
+
+  /**
+   * Gets the tertiary jins degree note names.
+   * @returns Array of note names, or null when absent.
+   */
+  getTertiaryJinsDegree(): NoteName[] | null {
+    return this.tertiaryJinsDegree;
+  }
+
+  /**
+   * Gets the ghammāz note names.
+   * @returns Array of note names, or null when absent.
+   */
+  getGhammaz(): NoteName[] | null {
+    return this.ghammaz;
   }
 
   /**
