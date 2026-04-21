@@ -205,6 +205,38 @@ function mergeSequences(ascendingSequences: PitchClass[][], descendingSequences:
  * @param onlyOctaveOne - Restrict search to first octave only
  * @returns Array of all possible maqām transpositions with embedded jins analysis
  */
+
+/**
+ * Shifts a note name by `shift` positions within `allPitchClasses`. Used by both
+ * sayr transposition and maqam-degree transposition to resolve "the note that
+ * sits in the same scale-degree slot in the transposed tuning system".
+ *
+ * @param noteName Source note name to shift.
+ * @param shift Positive = upward, negative = downward, in tuning-system positions.
+ * @param allPitchClasses The tuning system's full pitch-class array.
+ * @returns An object reporting the shifted note name plus flags for the two
+ *   failure modes: `notFound` if `noteName` is absent from `allPitchClasses`,
+ *   and `outOfBounds` if the shifted index falls outside the pitch-class array.
+ *   In both failure modes the original `noteName` is returned unchanged so
+ *   callers that want "preserve on failure" behaviour (like transposeSayr)
+ *   can use the result directly.
+ */
+function shiftNoteNameByTransposition(
+  noteName: string,
+  shift: number,
+  allPitchClasses: PitchClass[]
+): { noteName: string; outOfBounds: boolean; notFound: boolean } {
+  const noteIndex = allPitchClasses.findIndex((p) => p.noteName === noteName);
+  if (noteIndex === -1) {
+    return { noteName, outOfBounds: false, notFound: true };
+  }
+  const newIndex = noteIndex + shift;
+  if (newIndex < 0 || newIndex >= allPitchClasses.length) {
+    return { noteName, outOfBounds: true, notFound: false };
+  }
+  return { noteName: allPitchClasses[newIndex].noteName, outOfBounds: false, notFound: false };
+}
+
 export function calculateMaqamTranspositions(
   allPitchClasses: PitchClass[],
   allAjnas: JinsData[],
@@ -577,32 +609,21 @@ export function transposeSayr(sayr: Sayr, allPitchClasses: PitchClass[], maqamDa
   const shift = firstNoteInMaqamIndex - firstNoteInDataIndex;
   let hasOutOfBoundsNotes = false;
 
-  const shiftNoteName = (noteName: string) => {
-    const noteIndex = allPitchClasses.findIndex((pitchClass) => pitchClass.noteName === noteName);
-
-    if (noteIndex === -1) return noteName; // If the note is not found, return it unchanged
-    
-    const newIndex = noteIndex + shift;
-    
-    // If the shifted index is out of bounds, mark as out of bounds and return the original note name
-    if (newIndex < 0 || newIndex >= allPitchClasses.length) {
-      hasOutOfBoundsNotes = true;
-      return noteName;
-    }
-
-    return allPitchClasses[newIndex].noteName;
+  const shiftOne = (noteName: string): string => {
+    const result = shiftNoteNameByTransposition(noteName, shift, allPitchClasses);
+    if (result.outOfBounds) hasOutOfBoundsNotes = true;
+    return result.noteName;
   };
 
   const originalStops = sayr.stops;
 
   const newStops = originalStops.map((stop) => {
-    const newNoteName = stop.type === "note" ? shiftNoteName(stop.value) : stop.value;
-
-    const newStartingNote = (stop.type === "jins" || stop.type === "maqam") && stop.startingNote ? shiftNoteName(stop.startingNote) : stop.startingNote;
+    const newNoteName = stop.type === "note" ? shiftOne(stop.value) : stop.value;
+    const newStartingNote = (stop.type === "jins" || stop.type === "maqam") && stop.startingNote ? shiftOne(stop.startingNote) : stop.startingNote;
     return { ...stop, value: newNoteName, startingNote: newStartingNote };
   });
 
-  return { 
+  return {
     transposedSayr: { ...sayr, stops: newStops },
     hasOutOfBoundsNotes
   };
