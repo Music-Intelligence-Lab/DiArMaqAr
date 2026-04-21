@@ -1,0 +1,10 @@
+{
+  "_meta": {
+    "classifier": {
+      "tuningSystem": "angloeuropean_1800",
+      "startingNote": "yegah"
+    },
+    "description": "Family-level defaults for secondary/tertiary jins degrees and ghammāz. Keyed by family idName from GET /api/maqamat/families. Per-maqam overrides live in data/maqamat.json — the merge script skips fields already set to a non-null value."
+  },
+  "families": {}
+}
