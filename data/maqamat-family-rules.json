@@ -6,5 +6,104 @@
     },
     "description": "Family-level defaults for secondary/tertiary jins degrees and ghammāz. Keyed by family idName from GET /api/maqamat/families. Per-maqam overrides live in data/maqamat.json — the merge script skips fields already set to a non-null value."
   },
-  "families": {}
+  "families": {
+    "ajam": {
+      "displayName": "ʿajam",
+      "secondaryJinsDegree": ["chahārgāh"],
+      "tertiaryJinsDegree": [],
+      "ghammazDegree": ["chahārgāh"],
+      "notes": ""
+    },
+    "athar_kurd": {
+      "displayName": "athar kurd",
+      "secondaryJinsDegree": ["ḥusaynī"],
+      "tertiaryJinsDegree": [],
+      "ghammazDegree": ["ḥusaynī"],
+      "notes": ""
+    },
+    "awj_ara": {
+      "displayName": "awj ʾārāʾ",
+      "secondaryJinsDegree": ["segāh"],
+      "tertiaryJinsDegree": [],
+      "ghammazDegree": ["segāh"],
+      "notes": ""
+    },
+    "bayyat": {
+      "displayName": "bayyāt",
+      "secondaryJinsDegree": ["nawā"],
+      "tertiaryJinsDegree": [],
+      "ghammazDegree": ["nawā"],
+      "notes": ""
+    },
+    "hijaz": {
+      "displayName": "ḥijāz",
+      "secondaryJinsDegree": ["nawā"],
+      "tertiaryJinsDegree": [],
+      "ghammazDegree": ["nawā"],
+      "notes": ""
+    },
+    "kurd": {
+      "displayName": "kurd",
+      "secondaryJinsDegree": ["nawā"],
+      "tertiaryJinsDegree": [],
+      "ghammazDegree": ["nawā"],
+      "notes": ""
+    },
+    "mustaar": {
+      "displayName": "mustaʿār",
+      "secondaryJinsDegree": ["nawā"],
+      "tertiaryJinsDegree": ["ḥusaynī"],
+      "ghammazDegree": ["nawā"],
+      "notes": ""
+    },
+    "nahawand": {
+      "displayName": "nahāwand",
+      "secondaryJinsDegree": ["nawā"],
+      "tertiaryJinsDegree": [],
+      "ghammazDegree": ["nawā"],
+      "notes": ""
+    },
+    "nikriz": {
+      "displayName": "nikrīz",
+      "secondaryJinsDegree": ["nawā"],
+      "tertiaryJinsDegree": [],
+      "ghammazDegree": ["nawā"],
+      "notes": ""
+    },
+    "rast": {
+      "displayName": "rāst",
+      "secondaryJinsDegree": ["nawā"],
+      "tertiaryJinsDegree": [],
+      "ghammazDegree": ["nawā"],
+      "notes": ""
+    },
+    "saba": {
+      "displayName": "ṣabā",
+      "secondaryJinsDegree": ["ḥusaynī"],
+      "tertiaryJinsDegree": [],
+      "ghammazDegree": ["ḥusaynī"],
+      "notes": ""
+    },
+    "saba_zamzam": {
+      "displayName": "ṣabā zamzam",
+      "secondaryJinsDegree": ["ḥusaynī"],
+      "tertiaryJinsDegree": [],
+      "ghammazDegree": ["ḥusaynī"],
+      "notes": ""
+    },
+    "segah": {
+      "displayName": "segāh",
+      "secondaryJinsDegree": ["nawā"],
+      "tertiaryJinsDegree": [],
+      "ghammazDegree": ["nawā"],
+      "notes": "ghammāz defaulted to nawā (not explicitly specified during authoring)"
+    },
+    "no_jins": {
+      "displayName": "no jins",
+      "secondaryJinsDegree": null,
+      "tertiaryJinsDegree": null,
+      "ghammazDegree": null,
+      "notes": "Not classifiable — all degree fields remain null in maqamat.json and must be entered manually."
+    }
+  }
 }
