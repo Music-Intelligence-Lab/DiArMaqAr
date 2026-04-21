@@ -575,13 +575,44 @@ export interface Maqam {
    */
   descendingPitchClassIntervals: PitchClassInterval[];
   
-  /** 
+  /**
    * Optional array of embedded ajnas found within the descending sequence.
    * Generated through algorithmic pattern matching against known ajnās database.
    */
   descendingMaqamAjnas?: (Jins | null)[];
-  
-  /** 
+
+  /**
+   * Transposed primary jins degree as note names.
+   * Each element is mapped from the source MaqamData's primaryJinsDegree by
+   * applying the same tuning-system shift as the transposed scale.
+   * Null when the source is null OR when transposition pushes any element out of bounds.
+   */
+  primaryJinsNoteName?: NoteName[] | null;
+
+  /** Transposed secondary jins degree as note names. See primaryJinsNoteName for semantics. */
+  secondaryJinsNoteName?: NoteName[] | null;
+
+  /** Transposed tertiary jins degree as note names. See primaryJinsNoteName for semantics. */
+  tertiaryJinsNoteName?: NoteName[] | null;
+
+  /** Transposed ghammāz as note names. See primaryJinsNoteName for semantics. */
+  ghammazNoteName?: NoteName[] | null;
+
+  /**
+   * Jins objects found on each primaryJinsNoteName entry.
+   * Parallel to primaryJinsNoteName but possibly shorter — entries for which no
+   * matching jins was found in ascendingMaqamAjnas / descendingMaqamAjnas are
+   * omitted to keep the array compact. Empty array when primaryJinsNoteName is null.
+   */
+  primaryJins?: Jins[];
+
+  /** Jins objects for secondaryJinsNoteName. See primaryJins for semantics. */
+  secondaryJins?: Jins[];
+
+  /** Jins objects for tertiaryJinsNoteName. See primaryJins for semantics. */
+  tertiaryJins?: Jins[];
+
+  /**
    * Optional modulation possibilities to other maqamat or ajnas.
    * Defines possible transitions from this maqam to others.
    */
