@@ -48,6 +48,8 @@ export function classifyMaqamToFamilyIdName(
   ctx: ClassifyContext
 ): string | null {
   try {
+    // startingNote is validated by buildClassifyContext; `as any` matches the
+    // same cast used by the /api/maqamat/families route (NoteName branded type).
     const pitchClasses = getTuningSystemPitchClasses(
       ctx.tuningSystem,
       ctx.startingNote as any
@@ -63,7 +65,14 @@ export function classifyMaqamToFamilyIdName(
     if (!tahlil) return null;
     const classification = classifyMaqamFamily(tahlil);
     return standardizeText(classification.familyName);
-  } catch {
+  } catch (error) {
+    const name = typeof (maqamData as any)?.getName === "function"
+      ? (maqamData as any).getName()
+      : "<unknown>";
+    console.warn(
+      `[classifyMaqamToFamilyIdName] Unexpected error classifying '${name}':`,
+      error instanceof Error ? error.message : error
+    );
     return null;
   }
 }
