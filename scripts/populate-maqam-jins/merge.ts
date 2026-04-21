@@ -46,18 +46,6 @@ export function mergeMaqam(input: MergeInput): MergeResult {
   const skippedFields: string[] = [];
   const validationErrors: { field: string; missing: string[] }[] = [];
 
-  // primaryJinsDegree: derivable from ascendingNoteNames[0].
-  // Explicit `null` is treated as "manually unset, don't touch" — matches the
-  // semantic for the other three fields. Only populate when the key is absent.
-  const primarySet = Object.prototype.hasOwnProperty.call(maqam, "primaryJinsDegree");
-  const firstNote = maqam.ascendingNoteNames[0];
-  if (!primarySet && firstNote) {
-    updated.primaryJinsDegree = [firstNote];
-    setFields.push("primaryJinsDegree");
-  } else if (primarySet) {
-    skippedFields.push("primaryJinsDegree");
-  }
-
   // no_jins: never write secondary/tertiary/ghammaz
   if (familyIdName === "no_jins") {
     if (updated.secondaryJinsDegree === undefined) updated.secondaryJinsDegree = null;

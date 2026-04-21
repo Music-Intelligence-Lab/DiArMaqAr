@@ -19,7 +19,7 @@ const noJinsRule: FamilyRule = {
   notes: "",
 };
 
-test("mergeMaqam: sets primaryJinsDegree from ascending[0] when absent", () => {
+test("mergeMaqam: never writes primaryJinsDegree (treats it as read-only source data)", () => {
   const input: MergeInput = {
     maqam: {
       idName: "maqam_rast",
@@ -28,8 +28,10 @@ test("mergeMaqam: sets primaryJinsDegree from ascending[0] when absent", () => {
     familyIdName: "rast",
     rule: rastRule,
   };
-  const { updated } = mergeMaqam(input);
-  assert.deepEqual(updated.primaryJinsDegree, ["rāst"]);
+  const { updated, log } = mergeMaqam(input);
+  assert.equal(updated.primaryJinsDegree, undefined, "primary should remain absent when absent in input");
+  assert.ok(!log.setFields.includes("primaryJinsDegree"), "primary must never appear in setFields");
+  assert.ok(!log.skippedFields.includes("primaryJinsDegree"), "primary must never appear in skippedFields");
 });
 
 test("mergeMaqam: applies family rule when secondaryJinsDegree key is absent", () => {
@@ -98,7 +100,7 @@ test("mergeMaqam: no_jins leaves secondary/tertiary/ghammaz as null", () => {
     rule: noJinsRule,
   };
   const { updated, log } = mergeMaqam(input);
-  assert.deepEqual(updated.primaryJinsDegree, ["a"]);
+  assert.equal(updated.primaryJinsDegree, undefined);
   assert.equal(updated.secondaryJinsDegree, null);
   assert.equal(updated.tertiaryJinsDegree, null);
   assert.equal(updated.ghammaz, null);
@@ -115,7 +117,7 @@ test("mergeMaqam: unknown family (no rule) leaves secondary/tertiary/ghammaz as 
     rule: null,
   };
   const { updated, log } = mergeMaqam(input);
-  assert.deepEqual(updated.primaryJinsDegree, ["a"]);
+  assert.equal(updated.primaryJinsDegree, undefined);
   assert.equal(updated.secondaryJinsDegree, null);
   assert.equal(log.category, "unknown_family");
 });
