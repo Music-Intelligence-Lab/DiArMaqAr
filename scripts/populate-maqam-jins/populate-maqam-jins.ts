@@ -106,24 +106,19 @@ async function runVerify(): Promise<void> {
       if (!(k in entry)) errors.push(`${id}: missing key ${k}`);
     }
 
-    const firstNote = entry.ascendingNoteNames?.[0];
-    if (
-      firstNote &&
-      (!Array.isArray(entry.primaryJinsDegree) ||
-        entry.primaryJinsDegree.length !== 1 ||
-        entry.primaryJinsDegree[0] !== firstNote)
-    ) {
-      errors.push(
-        `${id}: primaryJinsDegree is ${JSON.stringify(entry.primaryJinsDegree)}, expected [${JSON.stringify(firstNote)}]`
-      );
+    if (entry.primaryJinsDegree === null) {
+      errors.push(`${id}: primaryJinsDegree must be a non-null array (got null)`);
     }
 
-    for (const field of ["secondaryJinsDegree", "tertiaryJinsDegree", "ghammaz"] as const) {
+    for (const field of ["primaryJinsDegree", "secondaryJinsDegree", "tertiaryJinsDegree", "ghammaz"] as const) {
       const v = entry[field];
       if (v == null) continue;
       if (!Array.isArray(v)) {
         errors.push(`${id}: ${field} must be array or null`);
         continue;
+      }
+      if (field === "primaryJinsDegree" && v.length !== 1) {
+        errors.push(`${id}: primaryJinsDegree must be a single-element array (got ${v.length})`);
       }
       const vr = validateNoteNamesInScale(v, entry.ascendingNoteNames);
       if (!vr.ok) {
