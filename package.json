@@ -11,6 +11,7 @@
     "split:modulations": "node --max-old-space-size=8192 node_modules/.bin/tsx scripts/generate-modulations/split-existing-modulations.ts",
     "populate-maqam-jins": "tsx scripts/populate-maqam-jins/populate-maqam-jins.ts",
     "populate-maqam-jins:test": "tsx --test scripts/populate-maqam-jins/__tests__/*.test.ts",
+    "test:functions": "tsx --test src/functions/__tests__/*.test.ts",
     "docs:openapi": "node docs/scripts/generate-openapi-json.js",
     "docs:api": "node docs/scripts/generate-api-docs.js",
     "docs:dev": "npm run docs:openapi && npm run docs:api && vitepress dev docs",
