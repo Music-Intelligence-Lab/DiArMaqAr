@@ -378,6 +378,54 @@ export function calculateMaqamTranspositions(
     // like qarār dūgāh vs dūgāh vs muḥayyar (same modal degree slot in NoteName tables).
     const isTransposed = !sameModalDegreeSlot(firstMaqamNote, firstTransposedNote);
 
+    // Transpose the four degree fields using a tuning-system-wide shift
+    // (matches transposeSayr's pattern via the shared shiftNoteNameByTransposition).
+    const firstNoteInDataIndex = allPitchClasses.findIndex((p) => p.noteName === firstMaqamNote);
+    const firstNoteInMaqamIndex = allPitchClasses.findIndex((p) => p.noteName === firstTransposedNote);
+    const degreeShift = firstNoteInMaqamIndex - firstNoteInDataIndex;
+
+    const mapDegree = (source: string[] | null | undefined): string[] | null => {
+      if (source == null) return null;
+      const resolved: string[] = [];
+      for (const n of source) {
+        const r = shiftNoteNameByTransposition(n, degreeShift, allPitchClasses);
+        // Any failure mode collapses the whole degree to null — mixing resolved
+        // and unresolved notes in one degree is musicologically meaningless.
+        if (r.outOfBounds || r.notFound) return null;
+        resolved.push(r.noteName);
+      }
+      return resolved;
+    };
+
+    const primaryJinsNoteName = mapDegree(maqamData.getPrimaryJinsDegree());
+    const secondaryJinsNoteName = mapDegree(maqamData.getSecondaryJinsDegree());
+    const tertiaryJinsNoteName = mapDegree(maqamData.getTertiaryJinsDegree());
+    const ghammazNoteName = mapDegree(maqamData.getGhammaz());
+
+    // Look up jins objects for the three jins degrees. Must run BEFORE the
+    // descendingMaqamAjnas.reverse() in the return statement, so we capture the
+    // ascending-index layout of the descending array here.
+    const jinsLookup = (noteNames: string[] | null): Jins[] => {
+      if (noteNames == null) return [];
+      const out: Jins[] = [];
+      for (const n of noteNames) {
+        const asc = ascendingMaqamAjnas.find((j): j is Jins =>
+          j != null && j.jinsPitchClasses[0]?.noteName === n
+        );
+        if (asc) { out.push(asc); continue; }
+        const desc = descendingMaqamAjnas.find((j): j is Jins =>
+          j != null && j.jinsPitchClasses[0]?.noteName === n
+        );
+        if (desc) { out.push(desc); continue; }
+        // No matching jins — skip this noteName. Keeps the array compact.
+      }
+      return out;
+    };
+
+    const primaryJins = jinsLookup(primaryJinsNoteName);
+    const secondaryJins = jinsLookup(secondaryJinsNoteName);
+    const tertiaryJins = jinsLookup(tertiaryJinsNoteName);
+
     return {
       maqamId: maqamData.getId(),
       name: isTransposed ? `${maqamData.getName()} al-${firstTransposedNote}` : maqamData.getName(),
@@ -388,6 +436,13 @@ export function calculateMaqamTranspositions(
       descendingPitchClasses: descendingPitchClasses.reverse(),
       descendingPitchClassIntervals: descendingPitchClassIntervals.reverse(),
       descendingMaqamAjnas: descendingMaqamAjnas.reverse(),
+      primaryJinsNoteName,
+      secondaryJinsNoteName,
+      tertiaryJinsNoteName,
+      ghammazNoteName,
+      primaryJins,
+      secondaryJins,
+      tertiaryJins,
     };
   });
 
