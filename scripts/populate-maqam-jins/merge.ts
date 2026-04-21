@@ -15,6 +15,13 @@ export type MergeInput = {
   maqam: MaqamEntry;
   familyIdName: string;
   rule: FamilyRule | null;
+  /**
+   * Optional expanded scale for note-name-in-scale validation. Lets callers
+   * include adjacent-octave equivalents (e.g. ḥusaynī ≡ ʿushayrān + 1 octave)
+   * so a legitimate octave-shifted jins degree isn't falsely flagged.
+   * Defaults to `maqam.ascendingNoteNames`.
+   */
+  validationScale?: string[];
 };
 
 export type ActionLog = {
@@ -33,17 +40,21 @@ export type MergeResult = {
 
 export function mergeMaqam(input: MergeInput): MergeResult {
   const { maqam, familyIdName, rule } = input;
+  const validationScale = input.validationScale ?? maqam.ascendingNoteNames;
   const updated: MaqamEntry = { ...maqam };
   const setFields: string[] = [];
   const skippedFields: string[] = [];
   const validationErrors: { field: string; missing: string[] }[] = [];
 
-  // primaryJinsDegree: always derivable from ascendingNoteNames[0]
+  // primaryJinsDegree: derivable from ascendingNoteNames[0].
+  // Explicit `null` is treated as "manually unset, don't touch" — matches the
+  // semantic for the other three fields. Only populate when the key is absent.
+  const primarySet = Object.prototype.hasOwnProperty.call(maqam, "primaryJinsDegree");
   const firstNote = maqam.ascendingNoteNames[0];
-  if (updated.primaryJinsDegree == null && firstNote) {
+  if (!primarySet && firstNote) {
     updated.primaryJinsDegree = [firstNote];
     setFields.push("primaryJinsDegree");
-  } else if (updated.primaryJinsDegree != null) {
+  } else if (primarySet) {
     skippedFields.push("primaryJinsDegree");
   }
 
@@ -90,23 +101,24 @@ export function mergeMaqam(input: MergeInput): MergeResult {
 
   for (const { ruleField, targetField } of applications) {
     const ruleValue = rule[ruleField] as string[] | null;
-    const current = updated[targetField] as string[] | null | undefined;
+    const keyPresent = Object.prototype.hasOwnProperty.call(maqam, targetField);
 
-    if (current != null) {
+    // Any pre-existing key (including explicit null) is a manual override — skip.
+    if (keyPresent) {
       skippedFields.push(targetField as string);
       continue;
     }
 
     if (ruleValue === null || ruleValue.length === 0) {
-      // Pad with null so the field appears in output
-      if (current === undefined) (updated as any)[targetField] = null;
+      // Pad with null so the field appears in output.
+      (updated as any)[targetField] = null;
       continue;
     }
 
-    const vr = validateNoteNamesInScale(ruleValue, maqam.ascendingNoteNames);
+    const vr = validateNoteNamesInScale(ruleValue, validationScale);
     if (!vr.ok) {
       validationErrors.push({ field: targetField as string, missing: vr.missing });
-      if (current === undefined) (updated as any)[targetField] = null;
+      (updated as any)[targetField] = null;
       continue;
     }
 

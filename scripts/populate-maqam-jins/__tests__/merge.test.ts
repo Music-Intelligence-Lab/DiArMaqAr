@@ -32,7 +32,20 @@ test("mergeMaqam: sets primaryJinsDegree from ascending[0] when absent", () => {
   assert.deepEqual(updated.primaryJinsDegree, ["rāst"]);
 });
 
-test("mergeMaqam: applies family rule to null secondaryJinsDegree", () => {
+test("mergeMaqam: applies family rule when secondaryJinsDegree key is absent", () => {
+  const input: MergeInput = {
+    maqam: {
+      idName: "maqam_rast",
+      ascendingNoteNames: ["rāst", "dūgāh", "nawā"],
+    },
+    familyIdName: "rast",
+    rule: rastRule,
+  };
+  const { updated } = mergeMaqam(input);
+  assert.deepEqual(updated.secondaryJinsDegree, ["nawā"]);
+});
+
+test("mergeMaqam: explicit null on secondaryJinsDegree is an override, rule not applied", () => {
   const input: MergeInput = {
     maqam: {
       idName: "maqam_rast",
@@ -42,8 +55,9 @@ test("mergeMaqam: applies family rule to null secondaryJinsDegree", () => {
     familyIdName: "rast",
     rule: rastRule,
   };
-  const { updated } = mergeMaqam(input);
-  assert.deepEqual(updated.secondaryJinsDegree, ["nawā"]);
+  const { updated, log } = mergeMaqam(input);
+  assert.equal(updated.secondaryJinsDegree, null);
+  assert.ok(log.skippedFields.includes("secondaryJinsDegree"));
 });
 
 test("mergeMaqam: leaves already-set secondaryJinsDegree untouched (override)", () => {
