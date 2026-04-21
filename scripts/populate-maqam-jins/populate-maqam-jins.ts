@@ -3,10 +3,32 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { getMaqamat, getAjnas, getTuningSystems } from "@/functions/import";
+import { shiftNoteName } from "@/models/NoteName";
 import { validateRulesFile, validateNoteNamesInScale, type RulesFile } from "./validate";
 import { mergeMaqam, type MaqamEntry, type ActionLog } from "./merge";
 import { buildClassifyContext, classifyMaqamToFamilyIdName } from "./classify";
 import { printSummary } from "./report";
+
+/**
+ * Expand a scale with its adjacent-octave equivalents so a jins degree that
+ * lies one octave above or below the written scale (e.g. ḥusaynī as the octave
+ * of ʿushayrān) counts as in-scale. Matches the pattern used by
+ * TuningSystem.getNoteNameSetsWithAdjacentOctaves.
+ */
+function expandWithAdjacentOctaves(scale: string[]): string[] {
+  const below: string[] = [];
+  const above: string[] = [];
+  for (const n of scale) {
+    try {
+      below.push(shiftNoteName(n as any, -1));
+      above.push(shiftNoteName(n as any, 1));
+    } catch {
+      // A note without a defined octave neighbour (rare) is simply omitted
+      // from the expansion; the literal note is still present via `scale`.
+    }
+  }
+  return [...below, ...scale, ...above];
+}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -73,7 +95,8 @@ async function runMerge(): Promise<void> {
   for (const entry of rawMaqamat) {
     const familyIdName = idToFamily.get(String(entry.id)) ?? "unknown";
     const rule = rules.families[familyIdName] ?? null;
-    const { updated: u, log } = mergeMaqam({ maqam: entry, familyIdName, rule });
+    const validationScale = expandWithAdjacentOctaves(entry.ascendingNoteNames);
+    const { updated: u, log } = mergeMaqam({ maqam: entry, familyIdName, rule, validationScale });
     updated.push(orderKeys(u as Record<string, unknown>) as MaqamEntry);
     logs.push(log);
   }
@@ -110,6 +133,7 @@ async function runVerify(): Promise<void> {
       errors.push(`${id}: primaryJinsDegree must be a non-null array (got null)`);
     }
 
+    const validationScale = expandWithAdjacentOctaves(entry.ascendingNoteNames);
     for (const field of ["primaryJinsDegree", "secondaryJinsDegree", "tertiaryJinsDegree", "ghammaz"] as const) {
       const v = entry[field];
       if (v == null) continue;
@@ -120,7 +144,7 @@ async function runVerify(): Promise<void> {
       if (field === "primaryJinsDegree" && v.length !== 1) {
         errors.push(`${id}: primaryJinsDegree must be a single-element array (got ${v.length})`);
       }
-      const vr = validateNoteNamesInScale(v, entry.ascendingNoteNames);
+      const vr = validateNoteNamesInScale(v, validationScale);
       if (!vr.ok) {
         errors.push(
           `${id}: ${field} references notes not in scale: ${JSON.stringify(vr.missing)}`
