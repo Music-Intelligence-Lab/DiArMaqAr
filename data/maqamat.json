@@ -1436,7 +1436,13 @@
         "page": "17"
       }
     ],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2025-10-18T19:41:17.132Z",
+    "secondaryJinsDegree": [
+      "dūgāh"
+    ],
+    "ghammaz": [
+      "dūgāh"
+    ]
   },
   {
     "id": "30",
@@ -1529,7 +1535,13 @@
         "page": "19"
       }
     ],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2025-10-18T19:41:17.132Z",
+    "secondaryJinsDegree": [
+      "rāst"
+    ],
+    "ghammaz": [
+      "rāst"
+    ]
   },
   {
     "id": "31",
@@ -1677,7 +1689,13 @@
         "page": "21"
       }
     ],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2025-10-18T19:41:17.132Z",
+    "secondaryJinsDegree": [
+      "rāst"
+    ],
+    "ghammaz": [
+      "rāst"
+    ]
   },
   {
     "id": "33",
@@ -1847,7 +1865,14 @@
         "page": "23"
       }
     ],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2025-10-18T19:41:17.132Z",
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "ḥusaynī"
+    ],
+    "ghammaz": null
   },
   {
     "id": "35",
@@ -2206,7 +2231,13 @@
         "page": "27"
       }
     ],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2025-10-18T19:41:17.132Z",
+    "secondaryJinsDegree": [
+      "dūgāh"
+    ],
+    "ghammaz": [
+      "dūgāh"
+    ]
   },
   {
     "id": "39",
@@ -2307,7 +2338,13 @@
         "page": "28"
       }
     ],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2025-10-18T19:41:17.132Z",
+    "secondaryJinsDegree": [
+      "dūgāh"
+    ],
+    "ghammaz": [
+      "dūgāh"
+    ]
   },
   {
     "id": "40",
@@ -2578,7 +2615,13 @@
         "page": "32"
       }
     ],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2025-10-18T19:41:17.132Z",
+    "secondaryJinsDegree": [
+      "dūgāh"
+    ],
+    "ghammaz": [
+      "dūgāh"
+    ]
   },
   {
     "id": "43",
@@ -2807,7 +2850,13 @@
         "page": "37"
       }
     ],
-    "version": "2025-11-19T22:13:31.168Z"
+    "version": "2025-11-19T22:13:31.168Z",
+    "secondaryJinsDegree": [
+      "dūgāh"
+    ],
+    "ghammaz": [
+      "dūgāh"
+    ]
   },
   {
     "id": "46",
@@ -3287,7 +3336,13 @@
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2025-10-18T19:41:17.132Z",
+    "secondaryJinsDegree": [
+      "dūgāh"
+    ],
+    "ghammaz": [
+      "dūgāh"
+    ]
   },
   {
     "id": "54",
@@ -3724,7 +3779,13 @@
     "commentsEnglish": "Created by Sayyed Darwīsh (see Dawr Fī Sharʿi Mīn: https://www.youtube.com/watch?v=DmEEUlWYJjo)",
     "commentsArabic": "",
     "sourcePageReferences": [],
-    "version": "2025-12-11T23:34:00.303Z"
+    "version": "2025-12-11T23:34:00.303Z",
+    "secondaryJinsDegree": [
+      "rāst"
+    ],
+    "ghammaz": [
+      "rāst"
+    ]
   },
   {
     "id": "62",
@@ -3857,6 +3918,12 @@
         "page": "51"
       }
     ],
-    "version": "2025-12-11T23:30:41.160Z"
+    "version": "2025-12-11T23:30:41.160Z",
+    "secondaryJinsDegree": [
+      "chahārgāh"
+    ],
+    "ghammaz": [
+      "chahārgāh"
+    ]
   }
 ]
