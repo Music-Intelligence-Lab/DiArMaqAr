@@ -1170,38 +1170,53 @@ export async function GET(
       }
     );
 
-    // Given a specific Maqam transposition `t` and its jins-degree note-name
-    // array, produce the { noteName: jins-entity | null } map that mirrors the
-    // shape of the top-level ajnas.ascending block. Used both for the selected
-    // transposition and for every entry in availableTranspositions.
-    const buildJinsDegreeObjectForTransposition = (
+    // Given a specific Maqam transposition `t` and a source note-name array
+    // (one of the transposed degree fields like `t.primaryJinsNoteName`),
+    // produce an array of per-degree entries carrying note name, roman-numeral
+    // maqam degree, and — for jins slots — the resolved jins entity. Returns
+    // null when the source array is null (e.g. a maqām without a tertiary).
+    //
+    // Used both for the selected transposition and for every entry in
+    // availableTranspositions / transpositions.detailed.
+    const buildJinsDegreeEntries = (
       t: typeof transpositions[number],
-      noteNames: string[] | null | undefined
-    ): Record<string, any> | null => {
+      noteNames: string[] | null | undefined,
+      { resolveJins }: { resolveJins: boolean }
+    ): any[] | null => {
       if (noteNames == null) return null;
-      const out: Record<string, any> = {};
-      for (const noteName of noteNames) {
+      return noteNames.map((noteName) => {
+        const idx = t.ascendingPitchClasses.findIndex((pc) => pc.noteName === noteName);
+        const maqamDegree = idx >= 0
+          ? (romanNumerals[idx] || String(idx + 1))
+          : null;
+        const entry: any = {
+          noteName: standardizeText(noteName),
+          noteNameDisplay: noteName,
+          ...(inArabic && { noteNameDisplayAr: getNoteNameDisplayAr(noteName) }),
+          maqamDegree,
+        };
+        if (!resolveJins) return entry;
         const fromAsc = t.ascendingMaqamAjnas?.find(
           (j) => j != null && j.jinsPitchClasses[0]?.noteName === noteName
         );
         const jinsAtNote = fromAsc ?? t.descendingMaqamAjnas?.find(
           (j) => j != null && j.jinsPitchClasses[0]?.noteName === noteName
         );
-        if (!jinsAtNote) {
-          out[noteName] = null;
-          continue;
+        if (jinsAtNote) {
+          entry.jinsId = jinsAtNote.jinsId;
+          entry.jinsIdName = standardizeText(jinsAtNote.name || '');
+          entry.jinsDisplayName = jinsAtNote.name || '';
+          if (inArabic) {
+            entry.jinsDisplayNameAr = getJinsNameDisplayAr(jinsAtNote.name || '');
+          }
+        } else {
+          entry.jinsId = null;
+          entry.jinsIdName = null;
+          entry.jinsDisplayName = null;
+          if (inArabic) entry.jinsDisplayNameAr = null;
         }
-        const jinsObj: any = {
-          id: jinsAtNote.jinsId,
-          idName: standardizeText(jinsAtNote.name || ''),
-          displayName: jinsAtNote.name || ''
-        };
-        if (inArabic) {
-          jinsObj.displayNameAr = getJinsNameDisplayAr(jinsAtNote.name || '');
-        }
-        out[noteName] = jinsObj;
-      }
-      return out;
+        return entry;
+      });
     };
 
     // Build availableTranspositions with full maqam names (taswīr only).
@@ -1219,13 +1234,10 @@ export async function GET(
           displayName: tonicNoteName,
           ...(inArabic && { displayNameAr: getNoteNameDisplayAr(tonicNoteName) }),
         },
-        primaryJinsNoteName: t.primaryJinsNoteName ?? null,
-        secondaryJinsNoteName: t.secondaryJinsNoteName ?? null,
-        tertiaryJinsNoteName: t.tertiaryJinsNoteName ?? null,
-        ghammazNoteName: t.ghammazNoteName ?? null,
-        primaryJins: buildJinsDegreeObjectForTransposition(t, t.primaryJinsNoteName),
-        secondaryJins: buildJinsDegreeObjectForTransposition(t, t.secondaryJinsNoteName),
-        tertiaryJins: buildJinsDegreeObjectForTransposition(t, t.tertiaryJinsNoteName),
+        primaryJins: buildJinsDegreeEntries(t, t.primaryJinsNoteName, { resolveJins: true }),
+        secondaryJins: buildJinsDegreeEntries(t, t.secondaryJinsNoteName, { resolveJins: true }),
+        tertiaryJins: buildJinsDegreeEntries(t, t.tertiaryJinsNoteName, { resolveJins: true }),
+        ghammaz: buildJinsDegreeEntries(t, t.ghammazNoteName, { resolveJins: false }),
       };
     });
     const availableTranspositionsNamespace = availableTranspositionsData;
@@ -1359,19 +1371,19 @@ export async function GET(
     };
 
     // Top-level jins-degree + ghammāz fields for the selected transposition.
-    // Each *JinsNoteName is a note-name array (or null) from the source
-    // MaqamData's degree fields, mapped through the same tuning-system shift
-    // that produced the transposed scale. The three jins slots mirror the
-    // ajnas shape above: a note-name → jins-entity-or-null map, keyed by the
-    // entries of the corresponding *JinsNoteName array. When the note-name
-    // array is null, the jins map is null too.
-    responseData.primaryJinsNoteName = selectedTransposition.primaryJinsNoteName ?? null;
-    responseData.secondaryJinsNoteName = selectedTransposition.secondaryJinsNoteName ?? null;
-    responseData.tertiaryJinsNoteName = selectedTransposition.tertiaryJinsNoteName ?? null;
-    responseData.ghammazNoteName = selectedTransposition.ghammazNoteName ?? null;
-    responseData.primaryJins = buildJinsDegreeObjectForTransposition(selectedTransposition, selectedTransposition.primaryJinsNoteName);
-    responseData.secondaryJins = buildJinsDegreeObjectForTransposition(selectedTransposition, selectedTransposition.secondaryJinsNoteName);
-    responseData.tertiaryJins = buildJinsDegreeObjectForTransposition(selectedTransposition, selectedTransposition.tertiaryJinsNoteName);
+    // Each is an array of per-degree entries carrying note name, maqām degree
+    // (roman numeral), and — for the three jins slots — the resolved jins
+    // entity. `null` when the corresponding source field is `null` (e.g.
+    // `tertiaryJins` for a maqām without a tertiary, or `ghammaz` for maqām
+    // dilkeshīdah where the source explicitly suppresses it).
+    //
+    // The array shape accommodates multi-valued degrees (e.g. an either-or
+    // secondary jins). Every current family-rule entry is length 1, but the
+    // shape is honest to the underlying data.
+    responseData.primaryJins = buildJinsDegreeEntries(selectedTransposition, selectedTransposition.primaryJinsNoteName, { resolveJins: true });
+    responseData.secondaryJins = buildJinsDegreeEntries(selectedTransposition, selectedTransposition.secondaryJinsNoteName, { resolveJins: true });
+    responseData.tertiaryJins = buildJinsDegreeEntries(selectedTransposition, selectedTransposition.tertiaryJinsNoteName, { resolveJins: true });
+    responseData.ghammaz = buildJinsDegreeEntries(selectedTransposition, selectedTransposition.ghammazNoteName, { resolveJins: false });
 
     // Add optional includes
     if (includeSuyur) {

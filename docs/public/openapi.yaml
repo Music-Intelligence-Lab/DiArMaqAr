@@ -657,15 +657,25 @@ paths:
                         dugah: null
                       descending:
                         ajam: { id: "7", idName: "jins_ajam", displayName: "jins ʿajam" }
-                    primaryJinsNoteName: ["rāst"]
-                    secondaryJinsNoteName: ["nawā"]
-                    tertiaryJinsNoteName: null
-                    ghammazNoteName: ["nawā"]
                     primaryJins:
-                      rāst: { id: "3", idName: "jins_rast", displayName: "jins rāst" }
+                      - noteName: "rast"
+                        noteNameDisplay: "rāst"
+                        maqamDegree: "I"
+                        jinsId: "3"
+                        jinsIdName: "jins_rast"
+                        jinsDisplayName: "jins rāst"
                     secondaryJins:
-                      nawā: { id: "3", idName: "jins_rast_al-nawa", displayName: "jins rāst al-nawā" }
+                      - noteName: "nawa"
+                        noteNameDisplay: "nawā"
+                        maqamDegree: "V"
+                        jinsId: "3"
+                        jinsIdName: "jins_rast_al-nawa"
+                        jinsDisplayName: "jins rāst al-nawā"
                     tertiaryJins: null
+                    ghammaz:
+                      - noteName: "nawa"
+                        noteNameDisplay: "nawā"
+                        maqamDegree: "V"
                 transposed:
                   summary: Transposed maqām (taṣwīr)
                   value:
@@ -1677,7 +1687,7 @@ paths:
                             items: { type: string }
                       detailed:
                         type: array
-                        description: Detailed transposition options — each entry carries its own transposed jins-degree and ghammāz note names plus resolved jins entities.
+                        description: Detailed transposition options — each entry carries its own transposed jins-degree and ghammāz fields (note name, maqām degree, resolved jins entity).
                         items:
                           type: object
                           properties:
@@ -1688,28 +1698,26 @@ paths:
                               properties:
                                 pitchClassIndex: { type: integer }
                                 octave: { type: integer }
-                            primaryJinsNoteName:
-                              type: array
-                              nullable: true
-                              items: { type: string }
-                            secondaryJinsNoteName:
-                              type: array
-                              nullable: true
-                              items: { type: string }
-                            tertiaryJinsNoteName:
-                              type: array
-                              nullable: true
-                              items: { type: string }
-                            ghammazNoteName:
-                              type: array
-                              nullable: true
-                              items: { type: string }
                             primaryJins:
-                              $ref: '#/components/schemas/JinsDegreeMap'
+                              type: array
+                              nullable: true
+                              items:
+                                $ref: '#/components/schemas/JinsDegreeEntry'
                             secondaryJins:
-                              $ref: '#/components/schemas/JinsDegreeMap'
+                              type: array
+                              nullable: true
+                              items:
+                                $ref: '#/components/schemas/JinsDegreeEntry'
                             tertiaryJins:
-                              $ref: '#/components/schemas/JinsDegreeMap'
+                              type: array
+                              nullable: true
+                              items:
+                                $ref: '#/components/schemas/JinsDegreeEntry'
+                            ghammaz:
+                              type: array
+                              nullable: true
+                              items:
+                                $ref: '#/components/schemas/GhammazEntry'
                             links:
                               type: object
                               properties:
@@ -9703,43 +9711,44 @@ components:
         ajnas:
           $ref: '#/components/schemas/AjnasData'
           description: Always included for maqām analysis
-        primaryJinsNoteName:
-          type: array
-          nullable: true
-          items:
-            type: string
-          description: |
-            Note name(s) on which the primary jins is built, transposed in sync with
-            the selected transposition. Always a non-null array for valid maqāmāt;
-            `null` only if the source data has no primary or if the transposition
-            pushed a note out of range.
-        secondaryJinsNoteName:
-          type: array
-          nullable: true
-          items:
-            type: string
-          description: Note name(s) on which the secondary jins is built (often the 5th or 4th degree). `null` when the maqām has no standard secondary jins, or for `no_jins`-family maqāmāt without a manual override.
-        tertiaryJinsNoteName:
-          type: array
-          nullable: true
-          items:
-            type: string
-          description: Note name(s) on which a tertiary jins is built. Rare; `null` for most maqāmāt.
-        ghammazNoteName:
-          type: array
-          nullable: true
-          items:
-            type: string
-          description: Note name(s) of the ghammāz — the degree most often used for modulation. Usually equals secondaryJinsNoteName; can be independently set or `null`.
         primaryJins:
-          $ref: '#/components/schemas/JinsDegreeMap'
-          description: Note-name-keyed map of jins entities found on each primaryJinsNoteName entry.
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/JinsDegreeEntry'
+          description: |
+            Primary jins position(s) for the selected transposition. Array of
+            per-degree entries; each entry carries the note name, maqām degree
+            (roman numeral), and the resolved jins entity. Usually a
+            single-element array; multi-valued when alternatives are recorded
+            in the source data. `null` when the source has no primary.
         secondaryJins:
-          $ref: '#/components/schemas/JinsDegreeMap'
-          description: Note-name-keyed map of jins entities found on each secondaryJinsNoteName entry.
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/JinsDegreeEntry'
+          description: |
+            Secondary jins position(s) — typically on the 5th or 4th degree.
+            `null` when the maqām has no standard secondary jins, or for
+            no_jins-family maqāmāt without a manual override.
         tertiaryJins:
-          $ref: '#/components/schemas/JinsDegreeMap'
-          description: Note-name-keyed map of jins entities found on each tertiaryJinsNoteName entry. `null` when tertiaryJinsNoteName is `null`.
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/JinsDegreeEntry'
+          description: |
+            Tertiary jins position(s). Rare; `null` for most maqāmāt.
+        ghammaz:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/GhammazEntry'
+          description: |
+            Ghammāz degree(s) — the note(s) most often used for modulation.
+            Usually equals the secondaryJins position. Unlike the jins slots,
+            entries only carry note name and maqām degree (the ghammāz is a
+            melodic-emphasis note, not a jins). `null` when the source
+            explicitly suppresses the ghammāz (e.g. maqām dilkeshīdah).
         availableTranspositions:
           type: array
           description: All available transpositions (taswīr) of this maqām in the current tuning system + starting note. Each entry carries its own transposed jins-degree and ghammāz fields.
@@ -9757,22 +9766,63 @@ components:
           items:
             $ref: '#/components/schemas/Sayr'
 
-    JinsDegreeMap:
+    GhammazEntry:
       type: object
-      nullable: true
-      additionalProperties:
-        oneOf:
-          - $ref: '#/components/schemas/EntityRef'
-          - type: 'null'
+      required:
+        - noteName
+        - noteNameDisplay
+        - maqamDegree
+      properties:
+        noteName:
+          type: string
+          description: URL-safe note name (e.g. "nawa").
+        noteNameDisplay:
+          type: string
+          description: Note name with diacritics (e.g. "nawā").
+        noteNameDisplayAr:
+          type: string
+          description: Arabic-script note name (only when `includeArabic=true`).
+        maqamDegree:
+          type: string
+          nullable: true
+          description: Roman-numeral position of this note within the ascending scale of the selected transposition (e.g. "V"). `null` if the note cannot be located in the scale.
       description: |
-        Note-name-keyed map of jins entities for a given jins-degree field
-        (primary/secondary/tertiary). Keys are the entries of the corresponding
-        `*JinsNoteName` array; values are jins entity objects
-        `{ id, idName, displayName, displayNameAr? }` when a jins is present on
-        that note, or `null` when no jins is found. The whole object is `null`
-        when the corresponding `*JinsNoteName` is `null`.
-      example:
-        nawā: { id: "19", idName: "jins_rast_al-nawa", displayName: "jins rāst al-nawā" }
+        A single ghammāz position. Carries only note-name and maqām-degree
+        fields — the ghammāz is a melodic-emphasis note, not a jins.
+
+    JinsDegreeEntry:
+      allOf:
+        - $ref: '#/components/schemas/GhammazEntry'
+        - type: object
+          required:
+            - jinsId
+            - jinsIdName
+            - jinsDisplayName
+          properties:
+            jinsId:
+              type: string
+              nullable: true
+              description: Numeric id of the jins built on this degree. `null` if no matching jins is found.
+            jinsIdName:
+              type: string
+              nullable: true
+              description: URL-safe identifier for the jins (e.g. `jins_rast_al-nawa`). `null` if no matching jins is found.
+            jinsDisplayName:
+              type: string
+              nullable: true
+              description: Display name of the jins with diacritics (e.g. `jins rāst al-nawā`). `null` if no matching jins is found.
+            jinsDisplayNameAr:
+              type: string
+              nullable: true
+              description: Arabic-script jins display name (only when `includeArabic=true`).
+      description: |
+        A single jins position on a maqām degree. Combines a GhammazEntry
+        (noteName, noteNameDisplay, maqamDegree) with the resolved jins
+        identity (jinsId, jinsIdName, jinsDisplayName). The jins fields are
+        nullable together — when the transposed note doesn't match any
+        embedded jins in the ascending or descending ajnas analysis, all four
+        jins-prefixed fields are `null` while the note and degree fields
+        remain populated.
 
     AvailableTranspositionItem:
       type: object
@@ -9800,36 +9850,30 @@ components:
               type: string
             displayNameAr:
               type: string
-        primaryJinsNoteName:
-          type: array
-          nullable: true
-          items:
-            type: string
-        secondaryJinsNoteName:
-          type: array
-          nullable: true
-          items:
-            type: string
-        tertiaryJinsNoteName:
-          type: array
-          nullable: true
-          items:
-            type: string
-        ghammazNoteName:
-          type: array
-          nullable: true
-          items:
-            type: string
         primaryJins:
-          $ref: '#/components/schemas/JinsDegreeMap'
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/JinsDegreeEntry'
         secondaryJins:
-          $ref: '#/components/schemas/JinsDegreeMap'
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/JinsDegreeEntry'
         tertiaryJins:
-          $ref: '#/components/schemas/JinsDegreeMap'
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/JinsDegreeEntry'
+        ghammaz:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/GhammazEntry'
       description: |
         A single available transposition (taswīr) of a maqām within a given
         tuning system and starting note. Each entry carries both its tonic
-        identifiers and its transposed jins-degree and ghammāz note names, so
+        identifiers and its transposed jins-degree and ghammāz fields, so
         consumers don't need to re-query per tonic.
 
     JinsDetailResponse:
