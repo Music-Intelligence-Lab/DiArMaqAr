@@ -4,7 +4,7 @@ import { standardizeText } from "@/functions/export";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { calculateMaqamTranspositions } from "@/functions/transpose";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
-import { parseInArabic, getMaqamNameDisplayAr, getNoteNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
+import { parseInArabic, getMaqamNameDisplayAr, getNoteNameDisplayAr, getJinsNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
 import {
   buildEntityNamespace,
   buildIdentifierNamespace,
@@ -213,6 +213,39 @@ export async function GET(
       );
     }
 
+    // Given a specific Maqam transposition and a jins-degree note-name array,
+    // produce the { noteName: jins-entity | null } map (same shape as the
+    // top-level ajnas.ascending block in /maqamat/{idName}).
+    const buildJinsDegreeObjectForTransposition = (
+      t: typeof transpositionsListed[number],
+      noteNames: string[] | null | undefined
+    ): Record<string, any> | null => {
+      if (noteNames == null) return null;
+      const out: Record<string, any> = {};
+      for (const noteName of noteNames) {
+        const fromAsc = t.ascendingMaqamAjnas?.find(
+          (j) => j != null && j.jinsPitchClasses[0]?.noteName === noteName
+        );
+        const jinsAtNote = fromAsc ?? t.descendingMaqamAjnas?.find(
+          (j) => j != null && j.jinsPitchClasses[0]?.noteName === noteName
+        );
+        if (!jinsAtNote) {
+          out[noteName] = null;
+          continue;
+        }
+        const jinsObj: any = {
+          id: jinsAtNote.jinsId,
+          idName: standardizeText(jinsAtNote.name || ''),
+          displayName: jinsAtNote.name || ''
+        };
+        if (inArabic) {
+          jinsObj.displayNameAr = getJinsNameDisplayAr(jinsAtNote.name || '');
+        }
+        out[noteName] = jinsObj;
+      }
+      return out;
+    };
+
     // Build transpositions list with tonicId (URL-safe) and tonicName (with diacritics or Arabic)
     const transpositionItems = transpositionsListed.map((t) => {
       const tonicNoteName = t.ascendingPitchClasses[0].noteName;
@@ -235,6 +268,13 @@ export async function GET(
       return {
         tonic: tonicNamespace,
         pitchClass: pitchClassNamespace,
+        primaryJinsNoteName: t.primaryJinsNoteName ?? null,
+        secondaryJinsNoteName: t.secondaryJinsNoteName ?? null,
+        tertiaryJinsNoteName: t.tertiaryJinsNoteName ?? null,
+        ghammazNoteName: t.ghammazNoteName ?? null,
+        primaryJins: buildJinsDegreeObjectForTransposition(t, t.primaryJinsNoteName),
+        secondaryJins: buildJinsDegreeObjectForTransposition(t, t.secondaryJinsNoteName),
+        tertiaryJins: buildJinsDegreeObjectForTransposition(t, t.tertiaryJinsNoteName),
         links: buildLinksNamespace({
           detail: `/api/maqamat/${maqam.getIdName()}?tuningSystem=${encodeURIComponent(tuningSystemId)}&startingNote=${standardizeText(actualStartingNote)}&transposeTo=${standardizeText(tonicNoteName)}`
         })

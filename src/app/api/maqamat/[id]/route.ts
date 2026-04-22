@@ -1170,7 +1170,43 @@ export async function GET(
       }
     );
 
-    // Build availableTranspositions with full maqam names (taswīr only)
+    // Given a specific Maqam transposition `t` and its jins-degree note-name
+    // array, produce the { noteName: jins-entity | null } map that mirrors the
+    // shape of the top-level ajnas.ascending block. Used both for the selected
+    // transposition and for every entry in availableTranspositions.
+    const buildJinsDegreeObjectForTransposition = (
+      t: typeof transpositions[number],
+      noteNames: string[] | null | undefined
+    ): Record<string, any> | null => {
+      if (noteNames == null) return null;
+      const out: Record<string, any> = {};
+      for (const noteName of noteNames) {
+        const fromAsc = t.ascendingMaqamAjnas?.find(
+          (j) => j != null && j.jinsPitchClasses[0]?.noteName === noteName
+        );
+        const jinsAtNote = fromAsc ?? t.descendingMaqamAjnas?.find(
+          (j) => j != null && j.jinsPitchClasses[0]?.noteName === noteName
+        );
+        if (!jinsAtNote) {
+          out[noteName] = null;
+          continue;
+        }
+        const jinsObj: any = {
+          id: jinsAtNote.jinsId,
+          idName: standardizeText(jinsAtNote.name || ''),
+          displayName: jinsAtNote.name || ''
+        };
+        if (inArabic) {
+          jinsObj.displayNameAr = getJinsNameDisplayAr(jinsAtNote.name || '');
+        }
+        out[noteName] = jinsObj;
+      }
+      return out;
+    };
+
+    // Build availableTranspositions with full maqam names (taswīr only).
+    // Each entry carries the transposed jins-degree + ghammāz fields so
+    // consumers that fetch the full list don't need to re-query per tonic.
     const availableTranspositionsData = transpositions.filter((t) => t.transposition).map((t) => {
       const tonicNoteName = t.ascendingPitchClasses[0].noteName;
       const fullMaqamName = t.name; // e.g., "maqām rāst al-chahārgāh" or "maqām rāst" for tahlil
@@ -1183,6 +1219,13 @@ export async function GET(
           displayName: tonicNoteName,
           ...(inArabic && { displayNameAr: getNoteNameDisplayAr(tonicNoteName) }),
         },
+        primaryJinsNoteName: t.primaryJinsNoteName ?? null,
+        secondaryJinsNoteName: t.secondaryJinsNoteName ?? null,
+        tertiaryJinsNoteName: t.tertiaryJinsNoteName ?? null,
+        ghammazNoteName: t.ghammazNoteName ?? null,
+        primaryJins: buildJinsDegreeObjectForTransposition(t, t.primaryJinsNoteName),
+        secondaryJins: buildJinsDegreeObjectForTransposition(t, t.secondaryJinsNoteName),
+        tertiaryJins: buildJinsDegreeObjectForTransposition(t, t.tertiaryJinsNoteName),
       };
     });
     const availableTranspositionsNamespace = availableTranspositionsData;
@@ -1314,6 +1357,21 @@ export async function GET(
       ascending: ascendingAjnasObject,
       descending: descendingAjnasObject
     };
+
+    // Top-level jins-degree + ghammāz fields for the selected transposition.
+    // Each *JinsNoteName is a note-name array (or null) from the source
+    // MaqamData's degree fields, mapped through the same tuning-system shift
+    // that produced the transposed scale. The three jins slots mirror the
+    // ajnas shape above: a note-name → jins-entity-or-null map, keyed by the
+    // entries of the corresponding *JinsNoteName array. When the note-name
+    // array is null, the jins map is null too.
+    responseData.primaryJinsNoteName = selectedTransposition.primaryJinsNoteName ?? null;
+    responseData.secondaryJinsNoteName = selectedTransposition.secondaryJinsNoteName ?? null;
+    responseData.tertiaryJinsNoteName = selectedTransposition.tertiaryJinsNoteName ?? null;
+    responseData.ghammazNoteName = selectedTransposition.ghammazNoteName ?? null;
+    responseData.primaryJins = buildJinsDegreeObjectForTransposition(selectedTransposition, selectedTransposition.primaryJinsNoteName);
+    responseData.secondaryJins = buildJinsDegreeObjectForTransposition(selectedTransposition, selectedTransposition.secondaryJinsNoteName);
+    responseData.tertiaryJins = buildJinsDegreeObjectForTransposition(selectedTransposition, selectedTransposition.tertiaryJinsNoteName);
 
     // Add optional includes
     if (includeSuyur) {
