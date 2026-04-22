@@ -81,19 +81,6 @@ curl http://localhost:3000/api/tuning-systems
 curl "http://localhost:3000/api/tuning-systems/alfarabi_950g/ushayran/pitch-classes?pitchClassDataType=cents"
 ```
 
-### Via TypeScript Library
-
-```typescript
-import { TuningSystem } from '@/models/TuningSystem'
-import { getTuningSystemPitchClasses } from '@/functions/getTuningSystemPitchClasses'
-
-// Create tuning system instance
-const tuningSystem = new TuningSystem(tuningSystemData)
-
-// Get all pitch classes
-const pitchClasses = getTuningSystemPitchClasses(tuningSystem, 'ushayran')
-```
-
 ## Bibliographic Attribution
 
 Every tanghīm includes:

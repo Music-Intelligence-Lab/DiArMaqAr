@@ -121,21 +121,6 @@ curl "http://localhost:3000/api/maqamat/maqam_bayyat?tuningSystem=alfarabi_950g&
 # - bibliographic citations
 ```
 
-### Via TypeScript Library
-
-```typescript
-import { getSources } from '@/functions/import'
-
-// Get all bibliographic sources
-const sources = getSources()
-
-// Each source includes:
-// - Full citation (Arabic and English)
-// - Publication details
-// - Contributor information
-// - DOI links (if available)
-```
-
 ## Academic Citation
 
 All data is ready for academic citation with:

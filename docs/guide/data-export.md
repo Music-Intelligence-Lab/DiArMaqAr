@@ -68,34 +68,7 @@ Scala is a widely-used format for tuning system representation, compatible with 
 - Software instrument design
 - Hardware synthesizer configuration
 
-## Export Functions
-
-### Via TypeScript Library
-
-```typescript
-import { 
-  exportMaqam, 
-  exportJins, 
-  exportTuningSystem,
-  exportToScala 
-} from '@/functions/export'
-
-// Export maqām data
-const maqamJSON = exportMaqam(maqam, {
-  includeTranspositions: true,
-  includeModulations: true,
-  includeAjnās: true
-})
-
-// Export tuning system to Scala
-const scalaFiles = exportToScala(tuningSystem, {
-  format: 'scl', // or 'kbm'
-  referenceNote: 'A4',
-  referenceFrequency: 440
-})
-```
-
-### Export Options
+## Export Options
 
 **For Maqāmāt:**
 - Include/exclude transpositions

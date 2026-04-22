@@ -319,7 +319,6 @@ export default function RootLayout({
             <li><a href="/app">Interactive Application</a></li>
             <li><a href="/docs/">Documentation Home</a></li>
             <li><a href="/docs/api/">API Reference</a></li>
-            <li><a href="/docs/library/">TypeScript Library Documentation</a></li>
           </ul>
           
           <h2>About</h2>

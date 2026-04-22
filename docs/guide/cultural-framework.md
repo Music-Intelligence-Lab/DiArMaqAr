@@ -137,7 +137,7 @@ DiArMaqAr demonstrates:
 - **Calculations**: Begin from Arabic frameworks
 - **Interface**: Arabic concepts presented natively
 
-### Bilingual Support
+### multilingual Support
 
 - **Library of Congress Romanization**: International scholarly standards
 - **Arabic script**: Native language support

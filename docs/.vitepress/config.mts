@@ -40,8 +40,8 @@ function stripSidebarLinkHashes(sidebar: DefaultTheme.Sidebar | undefined): Defa
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: 'Digital Arabic Maqām Archive',
-  description: 'Comprehensive documentation for the Digital Arabic Maqām Archive - TypeScript library and REST API',
+  title: 'DiArMaqAr',
+  description: 'Comprehensive documentation for the Digital Arabic Maqām Archive - REST API',
 
   // Base path for serving from /docs/ in Next.js
   base: '/docs/',
@@ -89,7 +89,6 @@ export default defineConfig({
       { text: 'Home', link: '/' },
       { text: 'Guide', link: '/guide/' },
       { text: 'API Reference', link: '/api/' },
-      { text: 'TypeScript Library', link: '/library/' },
     ],
 
     sidebar: {
@@ -468,50 +467,6 @@ export default defineConfig({
             ]
           },
         ],
-      '/library/': [
-        {
-          text: 'TypeScript Library',
-          collapsed: false,
-          items: [
-            { text: 'Overview', link: '/library/' },
-          ]
-        },
-        {
-          text: 'Library Reference',
-          collapsed: false,
-          items: [
-            { text: 'Complete Reference', link: '/library/api/README' },
-            { text: 'Modules Index', link: '/library/api/modules' },
-          ]
-        },
-        {
-          text: 'Models',
-          collapsed: false,
-          items: [
-            { text: 'Maqam', link: '/library/api/models/Maqam/README' },
-            { text: 'Jins', link: '/library/api/models/Jins/README' },
-            { text: 'TuningSystem', link: '/library/api/models/TuningSystem/README' },
-            { text: 'PitchClass', link: '/library/api/models/PitchClass/README' },
-            { text: 'NoteName', link: '/library/api/models/NoteName/README' },
-          ]
-        },
-        {
-          text: 'Functions',
-          collapsed: false,
-          items: [
-            { text: 'Export', link: '/library/api/functions/export/README' },
-            { text: 'Transpose', link: '/library/api/functions/transpose/README' },
-            { text: 'Modulate', link: '/library/api/functions/modulate/README' },
-            { text: 'Import', link: '/library/api/functions/import/README' },
-            { text: 'Classify Maqam Family', link: '/library/api/functions/classifyMaqamFamily/README' },
-            { text: 'Get Pitch Class Intervals', link: '/library/api/functions/getPitchClassIntervals/README' },
-            { text: 'Get Tuning System Pitch Classes', link: '/library/api/functions/getTuningSystemPitchClasses/README' },
-            { text: 'Calculate Cents Deviation', link: '/library/api/functions/calculateCentsDeviation/README' },
-            { text: 'Convert Pitch Class', link: '/library/api/functions/convertPitchClass/README' },
-            { text: 'SCALA Export', link: '/library/api/functions/scala-export/README' },
-          ]
-        }
-      ],
     },
 
     // Edit link configuration

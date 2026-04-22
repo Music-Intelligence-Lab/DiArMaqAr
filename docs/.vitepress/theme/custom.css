@@ -224,6 +224,7 @@ header[role="header"] > div > div > div {
 a.title {
   flex: 0 0 auto !important;
   margin-right: auto !important;
+  justify-content: flex-start !important;
 }
 
 /* Make title link match hero name.clip color */
@@ -231,6 +232,35 @@ a.title,
 a.title[data-v-1168a8e4],
 .title[data-v-1168a8e4] {
   color: var(--project-text) !important;
+}
+
+/* Navbar alignment: make the home page match the sidebar pages.
+
+   Structure (from VitePress source):
+     .VPNavBar > .wrapper > .container > .title > .VPNavBarTitle > a.title
+
+   Sidebar pages (≥960px, unchanged VitePress defaults):
+     .wrapper       { padding: 0 }                        (via .has-sidebar override)
+     .title         { position: absolute; left: 0;
+                      padding: 0 32px }                   → a.title at 32px
+
+   Home page (needs explicit alignment to match 32px):
+     .wrapper       → zero the outer padding (removes the 67px indent the
+                      browser-preview CSS_CHANGE flagged)
+     .container     → zero padding so only .VPNavBarTitle controls inset
+     .VPNavBarTitle → 32px padding-left, matching .has-sidebar .title padding */
+.VPNavBar.home > .wrapper {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.VPNavBar.home .container,
+.VPNavBar.home > .wrapper > .container {
+  padding-left: 0 !important;
+}
+
+.VPNavBar.home .VPNavBarTitle {
+  padding-left: 32px !important;
 }
 
 /* Content body (search + nav links) on right - align with main content right padding */
@@ -603,29 +633,33 @@ aside.VPSidebar {
   color: #83105d !important;
 }
 
-/* Limit home page content width to match actions buttons */
-/* Target the content section that comes after the hero */
-.VPHome .content,
-.VPHome .vp-doc,
-.VPHome .vp-doc-content {
-  max-width: fit-content !important;
-  width: fit-content !important;
+/* Hide the "On this page" dropdown that appears in the local nav bar above the content.
+   It's redundant since the right-hand aside already shows the page outline. */
+.VPLocalNavOutlineDropdown {
+  display: none !important;
+}
+
+/* "On this page" aside: add breathing room on the left so links don't hug the edge */
+.VPDocAside {
+  padding-left: 16px !important;
+}
+
+.VPDocAside .outline-title,
+.VPDocAside .VPDocAsideOutline .outline-title,
+.VPDocAside .VPDocOutlineItem,
+.VPDocAside .VPDocOutlineItem a,
+.VPDocAside .outline-link,
+.VPDocAside .outline-marker {
+  padding-left: 4px !important;
+}
+
+/* Constrain home page markdown content below the hero to match the hero's width.
+   VPHero's inner .container has a built-in max-width of 1152px; we mirror that here
+   so the content below lines up with the hero instead of stretching full-width. */
+.VPHome .vp-doc.container,
+.VPHome > .vp-doc {
+  max-width: 1152px !important;
+  width: 100% !important;
   margin-left: auto !important;
   margin-right: auto !important;
-}
-
-/* Specifically target paragraphs and divs in the home page content */
-.VPHome .vp-doc p,
-.VPHome .vp-doc div:not(.features),
-.VPHome .vp-doc section {
-  max-width: fit-content !important;
-  width: fit-content !important;
-}
-
-/* Ensure actions div maintains its natural width */
-.VPHome .actions[data-v-4f9c455b],
-.VPHome .actions {
-  width: fit-content !important;
-  max-width: fit-content !important;
-  display: inline-flex !important;
 }

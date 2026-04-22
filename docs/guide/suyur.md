@@ -103,17 +103,6 @@ curl "http://localhost:3000/api/maqamat/maqam_bayyat?tuningSystem=alfarabi_950g&
 curl "http://localhost:3000/api/maqamat/maqam_bayyat/transpositions?tuningSystem=alfarabi_950g&startingNote=ushayran"
 ```
 
-### Via TypeScript Library
-
-```typescript
-import { transposeSayr } from '@/functions/transpose'
-
-// Transpose suyūr along with maqām transposition
-const originalSayr = maqam.suyur
-const transposedMaqam = transpositions[0] // First transposition
-const transposedSayr = transposeSayr(originalSayr, maqam, transposedMaqam)
-```
-
 ## Research Applications
 
 The computational transposition of suyūr enables:

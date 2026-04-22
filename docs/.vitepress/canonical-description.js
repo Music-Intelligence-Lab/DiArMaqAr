@@ -9,6 +9,6 @@
  * the post-processor wraps it in a `>` blockquote for /llms.txt.
  */
 const CANONICAL_PROJECT_DESCRIPTION =
-  'Digital Arabic Maqām Archive (DiArMaqAr) - Open-source platform for Arabic maqām theory providing REST API and TypeScript library. Includes historically documented maqāmāt, ajnās, and tuning systems spanning from al-Kindī (874 CE) to contemporary approaches. All data includes comprehensive bibliographic attribution following decolonial computing principles.';
+  'Digital Arabic Maqām Archive (DiArMaqAr) - Open-source platform for Arabic maqām theory providing a REST API. Includes historically documented maqāmāt, ajnās, and tuning systems spanning from al-Kindī (874 CE) to contemporary approaches. All data includes comprehensive bibliographic attribution following decolonial computing principles.';
 
 module.exports = { CANONICAL_PROJECT_DESCRIPTION };

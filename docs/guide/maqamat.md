@@ -112,26 +112,6 @@ curl "http://localhost:3000/api/maqamat/maqam_bayyat/transpositions?tuningSystem
 curl "http://localhost:3000/api/maqamat/maqam_bayyat?tuningSystem=alfarabi_950g&startingNote=ushayran&includeModulations=true"
 ```
 
-### Via TypeScript Library
-
-```typescript
-import { Maqam } from '@/models/Maqam'
-import { getMaqamTranspositions } from '@/functions/transpose'
-
-// Create maqam instance
-const maqam = new Maqam(maqamData)
-
-// Get all possible transpositions in a tuning system
-const transpositions = getMaqamTranspositions(maqam, tuningSystem)
-
-// Access ascending and descending sequences
-console.log(maqam.ascendingSequence)
-console.log(maqam.descendingSequence)
-
-// Access embedded ajnās (automatically analyzed)
-console.log(maqam.ajnas)
-```
-
 ## Bibliographic Sources
 
 Maqāmāt in DiArMaqAr are compiled from:

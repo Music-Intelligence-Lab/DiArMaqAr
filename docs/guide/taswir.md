@@ -167,25 +167,6 @@ curl "http://localhost:3000/api/maqamat/maqam_rahat_al-arwah?tuningSystem=ibnsin
 # - Transposed suyūr
 ```
 
-### Via TypeScript Library
-
-```typescript
-import { getJinsTranspositions, getMaqamTranspositions } from '@/functions/transpose'
-
-// Get all jins transpositions
-const jinsTranspositions = getJinsTranspositions(jins, tuningSystem)
-
-// Get all maqām transpositions
-const maqamTranspositions = getMaqamTranspositions(maqam, tuningSystem)
-
-// Each transposition includes:
-// - Name (following Arabic convention)
-// - Starting note
-// - All pitch classes with mathematical values
-// - Constituent ajnās (for maqāmāt)
-// - Transposed suyūr (for maqāmāt)
-```
-
 ## Research Applications
 
 Transposition capabilities enable:

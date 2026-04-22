@@ -97,19 +97,6 @@ curl http://localhost:3000/api/ajnas
 curl "http://localhost:3000/api/ajnas/jins_bayyat?tuningSystem=alfarabi_950g&startingNote=ushayran&pitchClassDataType=cents"
 ```
 
-### Via TypeScript Library
-
-```typescript
-import { Jins } from '@/models/Jins'
-import { getJinsTranspositions } from '@/functions/transpose'
-
-// Create jins instance
-const jins = new Jins(jinsData)
-
-// Get all possible transpositions in a tuning system
-const transpositions = getJinsTranspositions(jins, tuningSystem)
-```
-
 ## Bibliographic Sources
 
 Ajnās in DiArMaqAr are compiled from:

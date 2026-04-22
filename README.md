@@ -1,6 +1,6 @@
 # DiArMaqAr - the Digital Arabic Maqām Archive
 
-A comprehensive bilingual browser-based application and repository designed for musicians, composers, developers, and scholars engaged with Arabic maqām theory.
+A comprehensive multilingual browser-based application and repository designed for musicians, composers, developers, and scholars engaged with Arabic maqām theory.
 
 ## Overview
 

@@ -58,11 +58,10 @@ export default function MobileWarning() {
           <li><a href="/app">Interactive Application</a></li>
           <li><a href="/docs/">Documentation Home</a></li>
           <li><a href="/docs/api/">API Reference</a></li>
-          <li><a href="/docs/library/">TypeScript Library Documentation</a></li>
         </ul>
         
         <h2>About</h2>
-        <p>Digital Arabic Maqām Archive (DiArMaqAr) is an open-source platform for Arabic maqām theory providing REST API and TypeScript library. Includes historically documented maqāmāt, ajnās, and tuning systems spanning from al-Kindī (874 CE) to contemporary approaches. All data includes comprehensive bibliographic attribution following decolonial computing principles.</p>
+        <p>Digital Arabic Maqām Archive (DiArMaqAr) is an open-source platform for Arabic maqām theory providing a REST API. Includes historically documented maqāmāt, ajnās, and tuning systems spanning from al-Kindī (874 CE) to contemporary approaches. All data includes comprehensive bibliographic attribution following decolonial computing principles.</p>
         
         <p><strong>Note:</strong> Full interactive features require a desktop device. However, all documentation and API endpoints are accessible programmatically. For complete documentation, see: <a href="/docs/llms.txt">/docs/llms.txt</a></p>
       </div>

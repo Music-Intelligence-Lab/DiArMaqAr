@@ -44,6 +44,5 @@ This returns:
 ## Explore Further
 
 - [API Reference](/api/) - Complete API documentation
-- [TypeScript Library](/library/) - Programmatic usage guide
 - [Interactive API Playground](http://localhost:3000/api-playground) - Test endpoints in your browser
 

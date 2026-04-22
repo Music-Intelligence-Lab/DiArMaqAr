@@ -4,7 +4,7 @@ layout: home
 hero:
   name: "Digital Arabic Maqām Archive"
   text: "Documentation"
-  tagline: Open-source bilingual platform integrating historically documented Arabic maqām theory within a unified computational framework
+  tagline: Open-source multilingual platform integrating historically documented Arabic maqām theory within a unified computational framework
   actions:
     - theme: brand
       text: Get Started
@@ -12,9 +12,6 @@ hero:
     - theme: alt
       text: API Reference
       link: /api/
-    - theme: alt
-      text: TypeScript Library
-      link: /library/
 
 features:
   - title: Comprehensive Data Archive
@@ -26,19 +23,17 @@ features:
   - title: Real-Time Audio Synthesis
     details: Audition precise intonational relationships using Web Audio API with support for multiple waveforms and envelope control
   - title: MIDI Integration & MPE
-    details: MIDI input/output with 14-bit pitch bend precision and MIDI Polyphonic Expression (MPE) support for accurate microtonal polyphonic playback
+    details: MIDI input/output with 14-bit pitch bend precision and MIDI Polyphonic Expression (MPE) support for accurate polyphonic playback
   - title: Comprehensive Data Export
     details: Export to JSON, CSV, and Scala (.scl/.kbm) formats for research, composition, and software integration
   - title: REST API
     details: Complete REST API with programmatic access to all data, including transpositions, modulations, and analytical results
-  - title: TypeScript Library
-    details: Full-featured JavaScript/TypeScript library with complete type safety, comprehensive documentation, and modular architecture
 
 ---
 
 ## What is DiArMaqAr?
 
-The Digital Arabic Maqām Archive (DiArMaqAr) is an open-source, bilingual browser-based application and repository designed for musicians, composers, developers, and scholars engaged with Arabic maqām theory.
+The Digital Arabic Maqām Archive (DiArMaqAr) is an open-source, multilingual browser-based application and repository designed for musicians, composers, developers, and scholars engaged with Arabic maqām theory.
 
 The application integrates an archive of historically documented **tanāghīm** (tuning systems), **ajnās** (tri/tetra/penta-chords), **maqāmāt** (complete modal frameworks), **suyūr** (melodic performance pathways), and **intiqālāt** (modulation practices) within a unified digital framework, establishing verified reference data for education, performance, composition, software development, machine learning applications, and instrument design.
 
@@ -71,8 +66,7 @@ The implementation operates entirely within **Arabic theoretical frameworks** an
 ### Technical Architecture
 
 - **REST API**: Comprehensive endpoints with flexible query parameters and multiple response formats
-- **TypeScript Library**: Complete type-safe library with modular design
-- **Bilingual Interface**: Arabic/English with Library of Congress Romanization standards
+- **multilingual Interface**: Arabic/English with Library of Congress Romanization standards
 - **Decolonial Computing**: Culture-specific methodology prioritizing Arabic theoretical frameworks
 
 ## Getting Started
@@ -83,7 +77,6 @@ The implementation operates entirely within **Arabic theoretical frameworks** an
 2. **[Theoretical Framework](/guide/theoretical-framework/)** - Understand the conceptual hierarchy
 3. **[Quick Start Tutorial](/guide/quick-start/)** - Hands-on examples
 4. **[API Reference](/api/)** - Complete REST API documentation
-5. **[TypeScript Library](/library/)** - Programmatic usage
 
 ### Explore Features
 

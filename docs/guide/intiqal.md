@@ -98,21 +98,6 @@ curl "http://localhost:3000/api/maqamat/maqam_hijaz?tuningSystem=ibnsina_1037&st
 # - Network relationships
 ```
 
-### Via TypeScript Library
-
-```typescript
-import { modulate } from '@/functions/modulate'
-
-// Get valid modulations from source maqām
-const modulations = modulate(sourceMaqam, allMaqamat, tuningSystem)
-
-// Each modulation includes:
-// - Target maqām
-// - Modulation type
-// - Maqām degree relationship
-// - Classification validation
-```
-
 ## Research Applications
 
 The implementation of the Shawwā algorithm enables:
