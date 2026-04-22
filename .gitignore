@@ -94,6 +94,8 @@ data/modulations/*
 
 # ai agent instructions
 .ai-agent-instructions/
+.github/instructions/
+CLAUDE.md
 
 # superpowers specs and plans (local workflow artifacts)
 docs/superpowers/
