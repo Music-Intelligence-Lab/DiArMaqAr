@@ -1771,6 +1771,34 @@ paths:
                           "pitchClassIndex": 14,
                           "octave": 0
                         },
+                        "primaryJins": [
+                          {
+                            "noteName": "qarar_chahargah",
+                            "noteNameDisplay": "qarār chahārgāh",
+                            "maqamDegree": "I",
+                            "jinsId": "19",
+                            "jinsIdName": "jins_rast_al-qarar_chahargah",
+                            "jinsDisplayName": "jins rāst al-qarār chahārgāh"
+                          }
+                        ],
+                        "secondaryJins": [
+                          {
+                            "noteName": "rast",
+                            "noteNameDisplay": "rāst",
+                            "maqamDegree": "V",
+                            "jinsId": "19",
+                            "jinsIdName": "jins_rast",
+                            "jinsDisplayName": "jins rāst"
+                          }
+                        ],
+                        "tertiaryJins": null,
+                        "ghammaz": [
+                          {
+                            "noteName": "rast",
+                            "noteNameDisplay": "rāst",
+                            "maqamDegree": "V"
+                          }
+                        ],
                         "links": {
                           "detail": "/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&transposeTo=qarar_chahargah"
                         }
@@ -1784,6 +1812,34 @@ paths:
                           "pitchClassIndex": 14,
                           "octave": 1
                         },
+                        "primaryJins": [
+                          {
+                            "noteName": "chahargah",
+                            "noteNameDisplay": "chahārgāh",
+                            "maqamDegree": "I",
+                            "jinsId": "19",
+                            "jinsIdName": "jins_rast_al-chahargah",
+                            "jinsDisplayName": "jins rāst al-chahārgāh"
+                          }
+                        ],
+                        "secondaryJins": [
+                          {
+                            "noteName": "kurdan",
+                            "noteNameDisplay": "kurdān",
+                            "maqamDegree": "V",
+                            "jinsId": "19",
+                            "jinsIdName": "jins_rast",
+                            "jinsDisplayName": "jins rāst"
+                          }
+                        ],
+                        "tertiaryJins": null,
+                        "ghammaz": [
+                          {
+                            "noteName": "kurdan",
+                            "noteNameDisplay": "kurdān",
+                            "maqamDegree": "V"
+                          }
+                        ],
                         "links": {
                           "detail": "/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&transposeTo=chahargah"
                         }
@@ -1797,6 +1853,34 @@ paths:
                           "pitchClassIndex": 14,
                           "octave": 2
                         },
+                        "primaryJins": [
+                          {
+                            "noteName": "mahuran",
+                            "noteNameDisplay": "māhūrān",
+                            "maqamDegree": "I",
+                            "jinsId": "19",
+                            "jinsIdName": "jins_rast_al-mahuran",
+                            "jinsDisplayName": "jins rāst al-māhūrān"
+                          }
+                        ],
+                        "secondaryJins": [
+                          {
+                            "noteName": "jawab_kurdan",
+                            "noteNameDisplay": "jawāb kurdān",
+                            "maqamDegree": "V",
+                            "jinsId": "19",
+                            "jinsIdName": "jins_rast",
+                            "jinsDisplayName": "jins rāst"
+                          }
+                        ],
+                        "tertiaryJins": null,
+                        "ghammaz": [
+                          {
+                            "noteName": "jawab_kurdan",
+                            "noteNameDisplay": "jawāb kurdān",
+                            "maqamDegree": "V"
+                          }
+                        ],
                         "links": {
                           "detail": "/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&transposeTo=mahuran"
                         }
