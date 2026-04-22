@@ -45,7 +45,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const tonicFilter = searchParams.get("filterByTonic");
     const sortBy = searchParams.get("sortBy") || "alphabetical";
-    const includeSources = searchParams.get("includeSources") !== "false";
+    const includeSources = searchParams.get("includeSources") === "true";
     
     // Parse includeArabic parameter
     let inArabic = false;

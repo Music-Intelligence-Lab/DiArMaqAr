@@ -199,8 +199,8 @@ function formatPitchData(pitchClasses: PitchClass[], format: string, inArabic: b
  *   - all, englishName, fraction, cents, decimalRatio, stringLength, frequency,
  *     abjadName, fretDivision, midiNoteNumber, midiNoteDeviation, centsDeviation, referenceNoteName
  * - octave: Filter by octave number - "all" (default) returns all octaves, or specific octave (0, 1, 2, 3)
- * - includeSources: Include bibliographic source references (sourceId and page) for the tuning system (optional, defaults to true)
- * - includeArabic: Include Arabic display names (optional, defaults to true)
+ * - includeSources: Include bibliographic source references (sourceId and page) for the tuning system (optional, defaults to false)
+ * - includeArabic: Include Arabic display names (optional, defaults to false)
  */
 export async function GET(
   request: NextRequest,
@@ -253,7 +253,7 @@ export async function GET(
 
     const pitchClassDataType = searchParams.get("pitchClassDataType") || "all";
     const octaveFilter = searchParams.get("octave") || "all";
-    const includeSources = searchParams.get("includeSources") !== "false";
+    const includeSources = searchParams.get("includeSources") === "true";
 
     // Define valid pitch class data types
     const validPitchClassDataTypes = [

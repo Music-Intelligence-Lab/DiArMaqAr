@@ -474,9 +474,9 @@ function bfsShortestPaths(
   endKeys: Set<string>,
   maxHops: number,
   limit: number,
-  limitToShortestHops: boolean = true,
-  allowOctaveJumps: boolean = true,
-  allowDownwardModulation: boolean = true
+  limitToShortestHops: boolean = false,
+  allowOctaveJumps: boolean = false,
+  allowDownwardModulation: boolean = false
 ): ModulationRoute[] {
   // Handle same-node case: any start already in the target set
   for (const sk of startKeys) {
@@ -531,8 +531,8 @@ function bfsAllShortestPaths(
   endKeys: Set<string>,
   maxHops: number,
   limit: number,
-  allowOctaveJumps: boolean = true,
-  allowDownwardModulation: boolean = true
+  allowOctaveJumps: boolean = false,
+  allowDownwardModulation: boolean = false
 ): ModulationRoute[] {
   const dist = new Map<string, number>();
   const preds = new Map<string, Array<{ fromKey: string; edge: ModulationEdge }>>();
@@ -633,8 +633,8 @@ function bfsPathsByIncreasingHops(
   endKeys: Set<string>,
   maxHops: number,
   limit: number,
-  allowOctaveJumps: boolean = true,
-  allowDownwardModulation: boolean = true
+  allowOctaveJumps: boolean = false,
+  allowDownwardModulation: boolean = false
 ): ModulationRoute[] {
   // Backward BFS from endKeys: distToEnd[v] = shortest hop count from v to
   // ANY endKey using a single reverse traversal of the graph. Lets us prune
@@ -859,9 +859,9 @@ export function findModulationRoutes(
     maxHops,
     returnToStartingMaqam = false,
     maxRoutes = 10,
-    limitToShortestHops = true,
-    allowOctaveJumps = true,
-    allowDownwardModulation = true,
+    limitToShortestHops = false,
+    allowOctaveJumps = false,
+    allowDownwardModulation = false,
   } = options;
 
   // Internal alias used as the enumeration cap across BFS / segment routines,

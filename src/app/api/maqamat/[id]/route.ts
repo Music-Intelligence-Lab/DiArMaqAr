@@ -291,10 +291,10 @@ function formatIntervalData(intervals: any[], format: string) {
  *   - simple: Pitch Class Data only (default)
  *   - intervals: Pitch Class and Intervals Data (filtered by format parameter)
  * - transpose: Transpose to specific tonic note (URL-friendly)
- * - includeIntervals: true|false (include interval data, default: true)
- * - includeModulations: true|false (returns URL-safe maqām/jins names, default: true)
+ * - includeIntervals: true|false (include interval data, default: false)
+ * - includeModulations: true|false (returns URL-safe maqām/jins names, default: false)
  * - includeAjnas: true|false (returns URL-safe jins names, default: false)
- * - includeSuyur: true|false (default: true)
+ * - includeSuyur: true|false (default: false)
  * - includeArabic: true|false (include Arabic display names, default: true)
  * - options: true returns available parameters instead of data
  * 

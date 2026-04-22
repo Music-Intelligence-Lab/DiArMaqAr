@@ -280,6 +280,9 @@ Retrieve comprehensive data for a specific maqām on its conventional or a trans
 Returns:
 - Comprehensive pitch class data in the requested tuning system and starting note name
 - All ajnās present at each maqām degree in the ascending and descending maqām structure, organized by their maqām degree note names
+- The maqām's primary, secondary, and (when defined) tertiary jins positions as transposed per-degree entries — each carrying the note name, maqām degree (roman numeral), and the resolved jins entity `{jinsId, jinsIdName, jinsDisplayName}`
+- The maqām's ghammāz (modulation emphasis note) as a note-name + maqām-degree entry (no jins fields — the ghammāz is a melodic-emphasis note, not a jins)
+- All four of `primaryJins`, `secondaryJins`, `tertiaryJins`, and `ghammaz` are transposed in sync with the selected transposition (e.g. when `transposeTo=nawa` is used, every entry reflects the new tonic and the new maqām-degree position of each note). They are returned as arrays of per-degree objects to accommodate alternatives, or `null` when a maqām has no entry for that slot (e.g. rāst has no tertiary).
 - Optional includeIntervals data, transposition to different tonics, tuning-system-specific modulations (including lower octave), and suyūr
 
 Parameter Discovery:
@@ -374,43 +377,305 @@ curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=ibnsina_
     "id": "1",
     "idName": "maqam_rast",
     "displayName": "maqām rāst",
-    "version": "2025-10-18T19:41:17.132Z",
-    "tonicId": "rast",
-    "tonicDisplay": "rāst",
-    "transposition": false,
-    "familyId": "rast",
-    "familyDisplay": "rāst",
+    "version": "2025-12-10T17:03:34.565Z"
+  },
+  "family": {
+    "idName": "rast",
+    "displayName": "rāst"
+  },
+  "tonic": {
+    "idName": "rast",
+    "displayName": "rāst"
+  },
+  "stats": {
     "numberOfTranspositions": 3,
-    "numberOfMaqamModulations": 28,
-    "numberOfAjnasModulations": 29,
-    "commentsEnglish": null,
-    "commentsArabic": null,
-    "sources": [],
-    "pitchClassDataType": "cents",
-    "includeIntervals": false
+    "numberOfPitchClasses": 7,
+    "numberOfMaqamModulations": 49,
+    "numberOfAjnasModulations": 47
+  },
+  "characteristics": {
+    "isOctaveRepeating": true,
+    "hasAsymmetricDescending": true,
+    "hasSuyur": true
+  },
+  "availableTranspositions": [
+    {
+      "idName": "maqam_rast_al-qarar_chahargah",
+      "displayName": "maqām rāst al-qarār chahārgāh",
+      "tonic": {
+        "idName": "qarar_chahargah",
+        "displayName": "qarār chahārgāh"
+      }
+    },
+    {
+      "idName": "maqam_rast_al-chahargah",
+      "displayName": "maqām rāst al-chahārgāh",
+      "tonic": {
+        "idName": "chahargah",
+        "displayName": "chahārgāh"
+      }
+    },
+    {
+      "idName": "maqam_rast_al-mahuran",
+      "displayName": "maqām rāst al-māhūrān",
+      "tonic": {
+        "idName": "mahuran",
+        "displayName": "māhūrān"
+      }
+    }
+  ],
+  "comments": {
+    "english": null,
+    "arabic": null
+  },
+  "sources": [
+    {
+      "sourceId": "alshawwa_1946",
+      "page": "42"
+    }
+  ],
+  "parameters": {
+    "pitchClassDataType": null,
+    "includeIntervals": false,
+    "includeModulations": false,
+    "includeModulations8vb": false,
+    "includeSuyur": false,
+    "transposeTo": null
   },
   "context": {
     "tuningSystem": {
       "id": "ibnsina_1037",
+      "idName": "ibnsina_1037",
       "displayName": "Ibn Sīnā  (1037) 7-Fret Oud 17-Tone",
-      "version": "2025-10-18T19:42:23.643Z",
+      "version": "2025-11-09T00:44:40.275Z",
+      "startingNotes": {
+        "idNames": [
+          "ushayran",
+          "yegah"
+        ],
+        "displayNames": [
+          "ʿushayrān",
+          "yegāh"
+        ]
+      },
+      "selectedStartingNote": {
+        "idName": "yegah",
+        "displayName": "yegāh"
+      },
+      "pitchClassCounts": {
+        "singleOctave": 17,
+        "allOctaves": 68
+      },
       "originalValueType": "fraction",
-      "numberOfPitchClassesSingleOctave": 17,
-      "numberOfPitchClassesAllOctaves": 68,
-      "tuningSystemStartingNoteNames": [
-        "ʿushayrān",
-        "yegāh"
-      ],
-      "tuningSystemStartingNoteNamesIds": [
-        "ushayran",
-        "yegah"
-      ],
-      "startingNoteName": "yegah",
       "referenceFrequency": 97.999
+    }
+  },
+  "links": {
+    "self": "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah",
+    "detail": "/api/maqamat/maqam_rast",
+    "availability": "/api/maqamat/maqam_rast/availability",
+    "compare": "/api/maqamat/maqam_rast/compare"
+  },
+  "pitchData": {
+    "ascending": [
+      {
+        "pitchClassIndex": 7,
+        "octave": 1,
+        "scaleDegree": "I",
+        "noteName": "rast",
+        "noteNameDisplay": "rāst"
+      },
+      {
+        "pitchClassIndex": 10,
+        "octave": 1,
+        "scaleDegree": "II",
+        "noteName": "dugah",
+        "noteNameDisplay": "dūgāh"
+      },
+      {
+        "pitchClassIndex": 12,
+        "octave": 1,
+        "scaleDegree": "III",
+        "noteName": "segah",
+        "noteNameDisplay": "segāh"
+      },
+      {
+        "pitchClassIndex": 14,
+        "octave": 1,
+        "scaleDegree": "IV",
+        "noteName": "chahargah",
+        "noteNameDisplay": "chahārgāh"
+      },
+      {
+        "pitchClassIndex": 0,
+        "octave": 2,
+        "scaleDegree": "V",
+        "noteName": "nawa",
+        "noteNameDisplay": "nawā"
+      },
+      {
+        "pitchClassIndex": 3,
+        "octave": 2,
+        "scaleDegree": "VI",
+        "noteName": "husayni",
+        "noteNameDisplay": "ḥusaynī"
+      },
+      {
+        "pitchClassIndex": 5,
+        "octave": 2,
+        "scaleDegree": "VII",
+        "noteName": "awj",
+        "noteNameDisplay": "awj"
+      }
+    ],
+    "descending": [
+      {
+        "pitchClassIndex": 4,
+        "octave": 2,
+        "scaleDegree": "VII",
+        "noteName": "ajam",
+        "noteNameDisplay": "ʿajam"
+      },
+      {
+        "pitchClassIndex": 3,
+        "octave": 2,
+        "scaleDegree": "VI",
+        "noteName": "husayni",
+        "noteNameDisplay": "ḥusaynī"
+      },
+      {
+        "pitchClassIndex": 0,
+        "octave": 2,
+        "scaleDegree": "V",
+        "noteName": "nawa",
+        "noteNameDisplay": "nawā"
+      },
+      {
+        "pitchClassIndex": 14,
+        "octave": 1,
+        "scaleDegree": "IV",
+        "noteName": "chahargah",
+        "noteNameDisplay": "chahārgāh"
+      },
+      {
+        "pitchClassIndex": 12,
+        "octave": 1,
+        "scaleDegree": "III",
+        "noteName": "segah",
+        "noteNameDisplay": "segāh"
+      },
+      {
+        "pitchClassIndex": 10,
+        "octave": 1,
+        "scaleDegree": "II",
+        "noteName": "dugah",
+        "noteNameDisplay": "dūgāh"
+      },
+      {
+        "pitchClassIndex": 7,
+        "octave": 1,
+        "scaleDegree": "I",
+        "noteName": "rast",
+        "noteNameDisplay": "rāst"
+      }
+    ]
+  },
+  "ajnas": {
+    "ascending": {
+      "rāst": {
+        "id": "19",
+        "idName": "jins_rast",
+        "displayName": "jins rāst"
+      },
+      "dūgāh": {
+        "id": "2",
+        "idName": "jins_bayyat",
+        "displayName": "jins bayyāt"
+      },
+      "segāh": {
+        "id": "3",
+        "idName": "jins_segah",
+        "displayName": "jins segāh"
+      },
+      "chahārgāh": null,
+      "nawā": {
+        "id": "19",
+        "idName": "jins_rast_al-nawa",
+        "displayName": "jins rāst al-nawā"
+      },
+      "ḥusaynī": {
+        "id": "2",
+        "idName": "jins_bayyat_al-husayni",
+        "displayName": "jins bayyāt al-ḥusaynī"
+      },
+      "awj": {
+        "id": "3",
+        "idName": "jins_segah_al-awj",
+        "displayName": "jins segāh al-awj"
+      }
     },
-    "pitchClassDataType": "cents",
-    "includeIntervals": false
-  }
+    "descending": {
+      "ʿajam": null,
+      "ḥusaynī": {
+        "id": "7",
+        "idName": "jins_kurd_al-husayni",
+        "displayName": "jins kurd al-ḥusaynī"
+      },
+      "nawā": {
+        "id": "6",
+        "idName": "jins_nahawand_al-nawa",
+        "displayName": "jins nahāwand al-nawā"
+      },
+      "chahārgāh": {
+        "id": "5",
+        "idName": "jins_ajam_ushayran_al-chahargah",
+        "displayName": "jins ʿajam ʿushayrān al-chahārgāh"
+      },
+      "segāh": {
+        "id": "3",
+        "idName": "jins_segah",
+        "displayName": "jins segāh"
+      },
+      "dūgāh": {
+        "id": "2",
+        "idName": "jins_bayyat",
+        "displayName": "jins bayyāt"
+      },
+      "rāst": {
+        "id": "19",
+        "idName": "jins_rast",
+        "displayName": "jins rāst"
+      }
+    }
+  },
+  "primaryJins": [
+    {
+      "noteName": "rast",
+      "noteNameDisplay": "rāst",
+      "maqamDegree": "I",
+      "jinsId": "19",
+      "jinsIdName": "jins_rast",
+      "jinsDisplayName": "jins rāst"
+    }
+  ],
+  "secondaryJins": [
+    {
+      "noteName": "nawa",
+      "noteNameDisplay": "nawā",
+      "maqamDegree": "V",
+      "jinsId": "19",
+      "jinsIdName": "jins_rast_al-nawa",
+      "jinsDisplayName": "jins rāst al-nawā"
+    }
+  ],
+  "tertiaryJins": null,
+  "ghammaz": [
+    {
+      "noteName": "nawa",
+      "noteNameDisplay": "nawā",
+      "maqamDegree": "V"
+    }
+  ]
 }
 ```
 
@@ -581,6 +846,34 @@ curl "https://diarmaqar.netlify.app/api/maqamat/maqam_hijaz/transpositions?tunin
           "pitchClassIndex": 14,
           "octave": 0
         },
+        "primaryJins": [
+          {
+            "noteName": "qarar_chahargah",
+            "noteNameDisplay": "qarār chahārgāh",
+            "maqamDegree": "I",
+            "jinsId": "19",
+            "jinsIdName": "jins_rast_al-qarar_chahargah",
+            "jinsDisplayName": "jins rāst al-qarār chahārgāh"
+          }
+        ],
+        "secondaryJins": [
+          {
+            "noteName": "rast",
+            "noteNameDisplay": "rāst",
+            "maqamDegree": "V",
+            "jinsId": "19",
+            "jinsIdName": "jins_rast",
+            "jinsDisplayName": "jins rāst"
+          }
+        ],
+        "tertiaryJins": null,
+        "ghammaz": [
+          {
+            "noteName": "rast",
+            "noteNameDisplay": "rāst",
+            "maqamDegree": "V"
+          }
+        ],
         "links": {
           "detail": "/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&transposeTo=qarar_chahargah"
         }
@@ -594,6 +887,34 @@ curl "https://diarmaqar.netlify.app/api/maqamat/maqam_hijaz/transpositions?tunin
           "pitchClassIndex": 14,
           "octave": 1
         },
+        "primaryJins": [
+          {
+            "noteName": "chahargah",
+            "noteNameDisplay": "chahārgāh",
+            "maqamDegree": "I",
+            "jinsId": "19",
+            "jinsIdName": "jins_rast_al-chahargah",
+            "jinsDisplayName": "jins rāst al-chahārgāh"
+          }
+        ],
+        "secondaryJins": [
+          {
+            "noteName": "kurdan",
+            "noteNameDisplay": "kurdān",
+            "maqamDegree": "V",
+            "jinsId": "19",
+            "jinsIdName": "jins_rast",
+            "jinsDisplayName": "jins rāst"
+          }
+        ],
+        "tertiaryJins": null,
+        "ghammaz": [
+          {
+            "noteName": "kurdan",
+            "noteNameDisplay": "kurdān",
+            "maqamDegree": "V"
+          }
+        ],
         "links": {
           "detail": "/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&transposeTo=chahargah"
         }
@@ -607,6 +928,34 @@ curl "https://diarmaqar.netlify.app/api/maqamat/maqam_hijaz/transpositions?tunin
           "pitchClassIndex": 14,
           "octave": 2
         },
+        "primaryJins": [
+          {
+            "noteName": "mahuran",
+            "noteNameDisplay": "māhūrān",
+            "maqamDegree": "I",
+            "jinsId": "19",
+            "jinsIdName": "jins_rast_al-mahuran",
+            "jinsDisplayName": "jins rāst al-māhūrān"
+          }
+        ],
+        "secondaryJins": [
+          {
+            "noteName": "jawab_kurdan",
+            "noteNameDisplay": "jawāb kurdān",
+            "maqamDegree": "V",
+            "jinsId": "19",
+            "jinsIdName": "jins_rast",
+            "jinsDisplayName": "jins rāst"
+          }
+        ],
+        "tertiaryJins": null,
+        "ghammaz": [
+          {
+            "noteName": "jawab_kurdan",
+            "noteNameDisplay": "jawāb kurdān",
+            "maqamDegree": "V"
+          }
+        ],
         "links": {
           "detail": "/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&transposeTo=mahuran"
         }
@@ -671,9 +1020,9 @@ systems and/or multiple modal transpositions.
 - `pitchClassDataType` (optional): Output format for pitch class data. Defaults to `all` when omitted. - Type: `string` - Valid values: `all`, `englishName`, `fraction`, `cents`, `decimalRatio`, ... (13 total) - Default: `all`
   - Example: `cents`
 - `includeIntervals` (optional): Whether to include interval data between adjacent pitch classes on each cell.
-Defaults to `"true"` when omitted..
-  Defaults to `"true"` when omitted.
- - Type: `string` - Valid values: `true`, `false` - Default: `true`
+Defaults to `"false"` when omitted..
+  Defaults to `"false"` when omitted.
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 - `transposeTo` (optional): Transpose every successful cell to the given tonic note (applies to every cell in the
 Cartesian product).
@@ -2348,9 +2697,9 @@ across historical tuning systems and/or multiple modal transpositions.
 - `pitchClassDataType` (optional): Output format for pitch class data. Defaults to `all` when omitted. - Type: `string` - Valid values: `all`, `englishName`, `fraction`, `cents`, `decimalRatio`, ... (13 total) - Default: `all`
   - Example: `cents`
 - `includeIntervals` (optional): Whether to include interval data between adjacent pitch classes on each cell.
-Defaults to `"true"` when omitted..
-  Defaults to `"true"` when omitted.
- - Type: `string` - Valid values: `true`, `false` - Default: `true`
+Defaults to `"false"` when omitted..
+  Defaults to `"false"` when omitted.
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 - `transposeTo` (optional): Transpose every successful cell to the given tonic note (applies to every cell in the
 Cartesian product).
@@ -3017,20 +3366,20 @@ with optional waypoints and return-to-start functionality.
 - Finds shortest paths (fewest modulation steps) using BFS algorithm
 - Supports waypoints for multi-stop journeys
 - Optional return-to-start for round-trip routes (reflecting traditional maqām performance practice)
-- `limitToShortestHops=false` pads the result with progressively
-  longer routes up to `maxRoutes` / `maxHops` (default `true`:
-  only shortest-length routes are returned)
-- `allowOctaveJumps=false` forbids register-shift (8va/8vb) edges
-  between register-equivalent siblings, so routes stay strictly
-  within al-Shawwā's scale-degree modulation rules (default
-  `true`: octave jumps are allowed anywhere in the route)
-- `allowDownwardModulation=false` forbids direct downward-
-  modulation edges (`*OctaveBelow` categories, e.g.
+- `limitToShortestHops=true` returns only the shortest-length
+  routes; default (`false`) pads the result with progressively
+  longer routes up to `maxRoutes` / `maxHops`
+- `allowOctaveJumps=true` lets BFS traverse register-shift
+  (8va/8vb) edges between register-equivalent siblings; default
+  (`false`) keeps routes strictly within al-Shawwā's
+  scale-degree modulation rules
+- `allowDownwardModulation=true` lets BFS traverse direct
+  downward-modulation edges (`*OctaveBelow` categories, e.g.
   `sixthDegreeAscOctaveBelow` / `VI-8vb`). These are single-hop
   modulations to a different maqām whose tonic sits one octave
   below the ascending rule's target — common in Arabic practice
-  (e.g. saba:dūgāh → ajam ushayrān:ajam ushayrān as one move)
-  (default `true`)
+  (e.g. saba:dūgāh → ajam ushayrān:ajam ushayrān as one move).
+  Default (`false`) ignores those edges
 - Results cached per tuning system + starting note combination for performance
 - `maxHops` is required and capped at 20 to prevent combinatorial explosion
 
@@ -3070,7 +3419,7 @@ Combine with `toTonic` to specify a particular transposition..
   Use the base maqam identifier (e.g., "maqam_nahawand"), not the transposition display name.
   Combine with `toTonic` to specify a particular transposition.
  - Type: `string`
-  - Example: `maqam_hijaz`
+  - Example: `maqam_segah`
 - `toTonic` (optional): Optional specific tonic for the target maqam (URL-safe).
 If not specified, uses the canonical (taḥlīl) form..
   If not specified, uses the canonical (taḥlīl) form.
@@ -3101,47 +3450,45 @@ When true, response includes both outbound and return routes..
   - Example: `true`
 - `maxRoutes` (optional): Maximum number of routes to return - Type: `integer` - Default: `10`
   - Example: `10`
-- `limitToShortestHops` (optional): When `true` (default), only routes at the minimum hop count are
+- `limitToShortestHops` (optional): When `true`, only routes at the minimum hop count are
 returned — all routes in the response share the same `hops`
 value.
   returned — all routes in the response share the same `hops`
-  value. When `false`, the response is filled out with
-  progressively longer simple paths (still capped by `maxHops` and
-  `maxRoutes`, ordered shortest-first). Use `false` when you want
-  a diverse sampling of routes, not just the shortest.
- - Type: `string` - Valid values: `true`, `false` - Default: `true`
-  - Example: `false`
-- `allowOctaveJumps` (optional): When `true` (default), BFS may traverse register-shift
-(`8va` / `8vb`) edges between register-equivalent siblings of
-the same maqām (e.g.
-  (`8va` / `8vb`) edges between register-equivalent siblings of
-  the same maqām (e.g. ḥijāz:muḥayyar → ḥijāz:dūgāh). These
-  edges appear anywhere in a route — at the start, in the
-  middle, or at the end — and let the algorithm reach register
-  variants that aren't directly connected by scale-degree
-  modulation. When `false`, those edges are ignored and every
+  value. When `false` (default), the response is filled out
+  with progressively longer simple paths (still capped by
+  `maxHops` and `maxRoutes`, ordered shortest-first).
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
+  - Example: `true`
+- `allowOctaveJumps` (optional): When `true`, BFS may traverse register-shift (`8va` / `8vb`)
+edges between register-equivalent siblings of the same
+maqām (e.g.
+  edges between register-equivalent siblings of the same
+  maqām (e.g. ḥijāz:muḥayyar → ḥijāz:dūgāh). These edges
+  appear anywhere in a route — at the start, in the middle, or
+  at the end — and let the algorithm reach register variants
+  that aren't directly connected by scale-degree modulation.
+  When `false` (default), those edges are ignored and every
   hop in every returned route must be a genuine al-Shawwā
-  modulation (degrees I / III / IV / V / VI). Use `false` when
-  you want routes that stay within a single octave. Note: `allowOctaveJumps` controls PURE register shifts
+  modulation (degrees I / III / IV / V / VI). Note: `allowOctaveJumps` controls PURE register shifts
   (same maqām, different octave). `allowDownwardModulation`
   controls DOWNWARD MODULATIONS (different maqām at a
   lower-octave tonic). They are independent flags.
- - Type: `string` - Valid values: `true`, `false` - Default: `true`
-  - Example: `false`
-- `allowDownwardModulation` (optional): When `true` (default), BFS may traverse direct downward-
-modulation edges (`*OctaveBelow` categories, e.g.
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
+  - Example: `true`
+- `allowDownwardModulation` (optional): When `true`, BFS may traverse direct downward-modulation
+edges (`*OctaveBelow` categories, e.g.
 `sixthDegreeAscOctaveBelow` / `VI-8vb`).
-  modulation edges (`*OctaveBelow` categories, e.g.
+  edges (`*OctaveBelow` categories, e.g.
   `sixthDegreeAscOctaveBelow` / `VI-8vb`). These represent a
   single-hop modulation to a different maqām whose tonic sits
   one octave below the corresponding ascending rule's target —
   common in Arabic practice (e.g. saba:dūgāh → ajam
   ushayrān:ajam ushayrān as one move rather than as VI↑ + 8vb).
-  When `false`, those edges are ignored and such a move can
-  only be reached via the equivalent two-hop ascending-
-  modulation + register-shift combination.
- - Type: `string` - Valid values: `true`, `false` - Default: `true`
-  - Example: `false`
+  When `false` (default), those edges are ignored and such a
+  move can only be reached via the equivalent two-hop
+  ascending-modulation + register-shift combination.
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
+  - Example: `true`
 - `includeArabic` (optional): Return bilingual responses with Arabic script when true.
 Adds Arabic versions with "Ar" suffix (e.g., maqamDisplayNameAr, tonicDisplayAr).
   Adds Arabic versions with "Ar" suffix (e.g., maqamDisplayNameAr, tonicDisplayAr)
@@ -3150,7 +3497,7 @@ Adds Arabic versions with "Ar" suffix (e.g., maqamDisplayNameAr, tonicDisplayAr)
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/modulation-routes?tuningSystem=alfarabi_950g&startingNote=ushayran&fromMaqam=maqam_rast&toMaqam=maqam_hijaz&maxHops=5&includeArabic=true"
+curl "https://diarmaqar.netlify.app/api/modulation-routes?tuningSystem=alfarabi_950g&startingNote=ushayran&fromMaqam=maqam_rast&toMaqam=maqam_segah&maxHops=5&includeArabic=true"
 ```
 
 **Response:** Modulation routes calculated successfully
@@ -3239,9 +3586,9 @@ curl "https://diarmaqar.netlify.app/api/modulation-routes?tuningSystem=alfarabi_
       "maxHops": 5,
       "maxRoutes": 10,
       "returnToStartingMaqam": false,
-      "limitToShortestHops": true,
-      "allowOctaveJumps": true,
-      "allowDownwardModulation": true
+      "limitToShortestHops": false,
+      "allowOctaveJumps": false,
+      "allowDownwardModulation": false
     }
   }
 }

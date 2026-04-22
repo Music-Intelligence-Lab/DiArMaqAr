@@ -168,7 +168,7 @@ function formatIntervalData(intervals: any[], format: string) {
  * - pitchClassDataType (optional): Output format (all, cents, fraction,
  *   etc.). Default: "all".
  * - includeIntervals (optional): Include interval data ("true" or
- *   "false"; default true when omitted).
+ *   "false"; default false when omitted).
  * - transposeTo (optional): Transpose to specific tonic note (applies
  *   to every cell).
  *
@@ -299,7 +299,7 @@ export async function GET(
     };
 
     // Validate intervals parameter (3-step validation: null -> empty string -> invalid value)
-    let includeIntervals = true; // Default to true
+    let includeIntervals = false; // Default to false
     if (intervalsParam !== null) {
       if (intervalsParam === "") {
         return addCorsHeaders(
@@ -326,7 +326,7 @@ export async function GET(
           )
         );
       }
-      includeIntervals = intervalsParam !== "false";
+      includeIntervals = intervalsParam === "true";
     }
 
     // Validate tuningSystems parameter

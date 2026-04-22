@@ -27,9 +27,9 @@ export const OPTIONS = handleCorsPreflightRequest;
  * - waypoints: Comma-separated maqam:tonic pairs (e.g., "maqam_bayyat:dugah,maqam_saba")
  * - returnToStartingMaqam: true|false - Calculate return path (default: false)
  * - maxRoutes: Maximum number of routes to return (default: 10)
- * - limitToShortestHops: true|false - Only return shortest-length routes (default: true)
- * - allowOctaveJumps: true|false - Allow BFS to traverse register-shift (8va/8vb) edges (default: true)
- * - allowDownwardModulation: true|false - Allow direct downward-modulation edges (e.g. VI-8vb) (default: true)
+ * - limitToShortestHops: true|false - Only return shortest-length routes (default: false)
+ * - allowOctaveJumps: true|false - Allow BFS to traverse register-shift (8va/8vb) edges (default: false)
+ * - allowDownwardModulation: true|false - Allow direct downward-modulation edges (e.g. VI-8vb) (default: false)
  * - includeArabic: true|false - Include Arabic display names (default: false)
  *
  * Response includes:
@@ -52,19 +52,12 @@ export async function GET(request: Request) {
     const maxHopsParam = searchParams.get("maxHops");
     const returnToStartingMaqam = searchParams.get("returnToStartingMaqam") === "true";
     const maxRoutesParam = searchParams.get("maxRoutes");
-    // Default true — same behaviour as before the flag existed (only shortest
-    // routes are returned). When false, results are padded with longer paths.
     const limitToShortestHopsParam = searchParams.get("limitToShortestHops");
-    const limitToShortestHops = limitToShortestHopsParam === null ? true : limitToShortestHopsParam === "true";
-    // Whether BFS may traverse octave-shift edges (8va/8vb) between
-    // register-equivalent siblings. Default true preserves current behaviour.
+    const limitToShortestHops = limitToShortestHopsParam === null ? false : limitToShortestHopsParam === "true";
     const allowOctaveJumpsParam = searchParams.get("allowOctaveJumps");
-    const allowOctaveJumps = allowOctaveJumpsParam === null ? true : allowOctaveJumpsParam === "true";
-    // Whether BFS may traverse direct downward-modulation edges (a single-
-    // hop modulation to a different maqām at a tonic one octave below the
-    // ascending rule's target). Default true.
+    const allowOctaveJumps = allowOctaveJumpsParam === null ? false : allowOctaveJumpsParam === "true";
     const allowDownwardModulationParam = searchParams.get("allowDownwardModulation");
-    const allowDownwardModulation = allowDownwardModulationParam === null ? true : allowDownwardModulationParam === "true";
+    const allowDownwardModulation = allowDownwardModulationParam === null ? false : allowDownwardModulationParam === "true";
 
     // Parse includeArabic parameter
     let inArabic = false;

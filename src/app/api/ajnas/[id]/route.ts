@@ -238,9 +238,9 @@ function formatIntervalData(intervals: any[], format: string) {
  *   - all: All data types
  *   - englishName, fraction, cents, decimalRatio, stringLength, frequency,
  *     abjadName, fretDivision, midiNoteNumber, midiNoteDeviation, centsDeviation, referenceNoteName
- * - includeIntervals: true|false (include interval data, default: true)
+ * - includeIntervals: true|false (include interval data, default: false)
  * - transposeTo: Transpose to specific tonic note (URL-friendly)
- * - includeArabic: true|false (include Arabic display names, default: true)
+ * - includeArabic: true|false (include Arabic display names, default: false)
  * - options: true returns available parameters instead of data
  * 
  * Response includes:
@@ -264,7 +264,7 @@ export async function GET(
     const tuningSystemId = searchParams.get("tuningSystem");
     const startingNote = searchParams.get("startingNote");
     const pitchClassDataType = searchParams.get("pitchClassDataType");
-    const includeIntervals = searchParams.get("includeIntervals") !== "false";
+    const includeIntervals = searchParams.get("includeIntervals") === "true";
     const transposeToNote = searchParams.get("transposeTo");
     const showOptions = searchParams.get("options") === "true";
 
@@ -545,8 +545,8 @@ export async function GET(
             },
             includeIntervals: {
               type: "boolean",
-              default: true,
-              description: "Include interval data between pitch classes (?includeIntervals=true or false; default true when omitted)"
+              default: false,
+              description: "Include interval data between pitch classes (?includeIntervals=true)"
             },
             transposeTo: {
               options: transposeOptions.length > 0 ? transposeOptions.map(note => standardizeText(note)) : [],

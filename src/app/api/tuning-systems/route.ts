@@ -23,7 +23,7 @@ export const dynamic = "force-dynamic";
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const includeSources = searchParams.get("includeSources") !== "false";
+    const includeSources = searchParams.get("includeSources") === "true";
     
     // Parse includeArabic parameter
     let inArabic = false;
