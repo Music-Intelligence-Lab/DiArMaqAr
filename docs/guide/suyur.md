@@ -82,11 +82,11 @@ nawā → ascending → kurdān → jins bayāt al-kurdān → muḥayyar
 
 The bounds safety mechanism ensures transposed suyūr remain within practical tuning system limits, mirroring real-world musical constraints.
 
-## Bilingual Support
+## Multilingual Support
 
-Suyūr are preserved in their original Arabic form with English translations:
+Suyūr are preserved in their original Arabic form with translations:
 - Original Arabic prose from historical sources
-- English translations maintaining scholarly accuracy
+- English (and French, where applicable) translations maintaining scholarly accuracy
 - Library of Congress Arabic Romanization standard
 
 ## Using Suyūr

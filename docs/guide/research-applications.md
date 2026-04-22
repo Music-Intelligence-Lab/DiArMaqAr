@@ -41,19 +41,21 @@ Comparing Al-Fārābī's 10th-century ratios with Al-Ṣabbāgh's 20th-century c
 
 ## Starting Note Convention Analysis
 
-A crucial analytical capability lies in systematic comparison of tuning systems based on different starting note conventions.
+A crucial analytical capability lies in systematic comparison of tuning systems based on different starting note conventions. DiArMaqAr supports three starting note names: **ʿushayrān**, **yegāh**, and **rāst**.
 
 ### Research Framework
 
 **Oud-Based Systems (ʿushayrān):**
-- Reflect oud tuning in perfect fourths
-- Instrument-specific approaches
-- Examples: Al-Kindī, Al-Fārābī (oud conventions)
+- Reflect the conventional tuning of the oud in perfect fourths (4/3)
+- ʿushayrān marks the 1/1, corresponding to the lowest of the four strings tuned in perfect fourths — the two or more strings lower in pitch remain tuning-independent
+- Examples: al-Kindī, al-Fārābī (oud conventions), al-Urmawī
 
-**Monochord/Sonometer Systems (yegāh/rāst):**
-- Abstract theoretical measurement
-- Cairo Congress (1932) approaches
-- Examples: Modern theoretical frameworks
+**Longnecked-Lute and Monochord/Sonometer Systems (yegāh/rāst):**
+- Derived from the fret divisions of longnecked lutes (Arabic tanbūr, Persian tar/sehtar, Turkish tanbur) or from monochord/sonometer measurements
+- Follow a theoretical framework rather than a fixed instrument tuning
+- Examples: al-Fārābī's Tanbūr al-Baghdādī and Tanbūr al-Khorasānī, through to the Tuning Committee of the 1932 Cairo Congress for Arabic Music
+
+Al-Fārābī appears in both categories because he described multiple tuning systems derived from different instruments. When a tuning system begins from ʿushayrān versus yegāh (which are a 9/8 whole-tone apart), the resulting intervallic relationships, the availability of specific maqāmāt and ajnās, and the modulation pathways can vary substantially.
 
 ### Research Applications
 
@@ -98,40 +100,39 @@ Export comprehensive datasets for:
 
 ### Example Research
 
-Analyze relationships between:
+Analyse relationships between:
 - Number of pitch classes and available maqāmāt
 - Starting note convention and transposition possibilities
 - Tuning system complexity and modulation network density
 
+**Concrete example (al-Shawwā modulation algorithm):** For maqām bayyāt on its conventional tonic of dūgāh in al-Ṣabbāgh's 24-tone comma-based tuning system (1954), the al-Shawwā modulation algorithm identifies **41 valid modulation pathways**, whereas al-Ṣabbāgh's book provides only **8 fixed modulation targets** for the same maqām. See §6.3 of the accompanying article for the full analysis.
+
 ## Musicological Research
 
-The platform enables systematic analysis of traditional repertoire that would be extremely laborious through manual methods.
+The platform enables systematic analysis of the documented maqām tradition that would be extremely laborious through manual cross-referencing of dispersed, multilingual sources.
 
-### Arabic Composition Practice
+### Repertoire Analysis (Forthcoming)
 
-**Historical Analysis:**
-- Compare modulation pathways in compositions for Um Kulthūm by:
-  - Muḥammad ʿAbd al-Wahhāb
-  - Riyāḍ Al-Ṣunbāṭī
-  - Balīgh Ḥamdī
-- Reveal compositional patterns beyond documented frameworks
-- Identify innovations in modulation practice
+The platform's current scope is theoretical rather than practice-based. Integration with audio analysis for recorded performances is an active research direction, alongside the forthcoming downstream projects described in the accompanying article (§8):
+
+- **Arabic Maqām Identification (MIR)**: automatic maqām identification from audio recordings, using DiArMaqAr's JSON exports as verified theoretical reference data
+- **Arabic Maqām Networks**: web-based visualisation and exploration of maqām construction and modulation networks across tuning systems
+- **Comparison between documented theory and performance practice**, once audio-analysis capabilities are integrated
 
 ### Maqām Naming and Classification
 
 **Theoretical Investigation:**
-- Analyze comma-based systems (Al-Ṣabbāgh)
-- Understand relationship between transposition and naming
-- Examine why same pitch classes with different transpositions receive different names
-- Example: Maqām ḥijāz vs. Maqām shad ʿarabān
+- Analyse comma-based systems (e.g. al-Ṣabbāgh 1954)
+- Understand the relationship between transposition and naming
+- Investigate why certain maqām transpositions are given unique names even when sayr is not the differentiating factor
 
 ### Arabic Music Pedagogy
 
 **Tuning and Intonation Analysis:**
-- Address contradictory discussions (e.g., Faraj and Shumays 2019)
-- Provide reference to specific Arabic tuning systems
-- Support nuanced discussions beyond binary debates
-- Enable analysis beyond assertions of "arbitrariness"
+- Ground pedagogical discussions in historically documented Arabic tuning systems rather than 24-EDO by default
+- Provide reference implementations that can support works which engage this subject critically (e.g. Farraj & Shumays 2019, chapter 11)
+- Replace unreferenced assertions about Arabic intonation with source-backed pitch-class data
+- Enable nuanced discussions beyond binary "quarter-tone vs. not quarter-tone" debates
 
 ## Machine Learning and AI Applications
 
@@ -169,7 +170,7 @@ Address limitations in existing research:
 ### Infrastructure for Research
 
 Address gaps identified by Gedik and Bozkurt (2009):
-- "Valid pitch-class definitions grounded in culturally-specific frameworks"
+- Valid pitch-class definitions grounded in culturally specific frameworks
 - Computationally accessible theory
 - Verified reference data
 - Transparent methodology

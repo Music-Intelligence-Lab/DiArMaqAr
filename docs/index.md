@@ -16,6 +16,8 @@ hero:
 features:
   - title: Comprehensive Data Archive
     details: Historically documented tanāghīm (tuning systems), ajnās (tri/tetra/penta-chords), maqāmāt (complete modal frameworks), suyūr (melodic pathways), and intiqālāt (modulation practices) with rigorous bibliographic attribution
+  - title: Cultural Framework
+    details: Operates entirely within Arabic theoretical frameworks and epistemological systems, grounded in the historical Persian-Arab-Ottoman note naming convention and decolonial computing principles
   - title: Tuning-System-Sensitive Transposition
     details: Systematic exploration of all mathematically valid transpositions for ajnās and maqāmāt, maintaining intervallic integrity across tuning systems
   - title: Al-Shawwā Modulation Algorithm

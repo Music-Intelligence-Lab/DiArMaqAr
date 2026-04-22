@@ -122,7 +122,7 @@ Maqāmāt in DiArMaqAr are compiled from:
 Each maqām includes:
 - Complete bibliographic references
 - Source and page citations
-- Bilingual commentary (Arabic/English)
+- Multilingual commentary (Arabic/English/French)
 - Suyūr from original sources
 - Historical context
 
