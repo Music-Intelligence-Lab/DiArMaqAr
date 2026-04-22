@@ -1220,8 +1220,9 @@ export async function GET(
     };
 
     // Build availableTranspositions with full maqam names (taswīr only).
-    // Each entry carries the transposed jins-degree + ghammāz fields so
-    // consumers that fetch the full list don't need to re-query per tonic.
+    // Intentionally minimal: consumers who want the transposed jins-degree /
+    // ghammāz data for a specific tonic follow the detail link and receive
+    // the full shape, or use /maqamat/{idName}/transpositions.
     const availableTranspositionsData = transpositions.filter((t) => t.transposition).map((t) => {
       const tonicNoteName = t.ascendingPitchClasses[0].noteName;
       const fullMaqamName = t.name; // e.g., "maqām rāst al-chahārgāh" or "maqām rāst" for tahlil
@@ -1234,10 +1235,6 @@ export async function GET(
           displayName: tonicNoteName,
           ...(inArabic && { displayNameAr: getNoteNameDisplayAr(tonicNoteName) }),
         },
-        primaryJins: buildJinsDegreeEntries(t, t.primaryJinsNoteName, { resolveJins: true }),
-        secondaryJins: buildJinsDegreeEntries(t, t.secondaryJinsNoteName, { resolveJins: true }),
-        tertiaryJins: buildJinsDegreeEntries(t, t.tertiaryJinsNoteName, { resolveJins: true }),
-        ghammaz: buildJinsDegreeEntries(t, t.ghammazNoteName, { resolveJins: false }),
       };
     });
     const availableTranspositionsNamespace = availableTranspositionsData;

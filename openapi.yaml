@@ -9850,31 +9850,13 @@ components:
               type: string
             displayNameAr:
               type: string
-        primaryJins:
-          type: array
-          nullable: true
-          items:
-            $ref: '#/components/schemas/JinsDegreeEntry'
-        secondaryJins:
-          type: array
-          nullable: true
-          items:
-            $ref: '#/components/schemas/JinsDegreeEntry'
-        tertiaryJins:
-          type: array
-          nullable: true
-          items:
-            $ref: '#/components/schemas/JinsDegreeEntry'
-        ghammaz:
-          type: array
-          nullable: true
-          items:
-            $ref: '#/components/schemas/GhammazEntry'
       description: |
         A single available transposition (taswīr) of a maqām within a given
-        tuning system and starting note. Each entry carries both its tonic
-        identifiers and its transposed jins-degree and ghammāz fields, so
-        consumers don't need to re-query per tonic.
+        tuning system and starting note. Intentionally minimal — use the
+        detail link (or GET /maqamat/{idName}?transposeTo=<tonic>) to get
+        the fully-resolved jins-degree and ghammāz fields for a specific
+        tonic, or use GET /maqamat/{idName}/transpositions for the same
+        data across all tonics in one response.
 
     JinsDetailResponse:
       type: object
