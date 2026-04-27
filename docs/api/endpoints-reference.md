@@ -87,9 +87,11 @@ Use GET /maqamat/families to retrieve valid family values..
  - Type: `string` - Valid values: `ajam`, `athar_kurd`, `awj_ara`, `bayyat`, `buselik`, ... (16 total)
   - Example: `rast`
 - `filterByTonic` (optional): Filter by maqām tonic/first note (URL-safe, case-insensitive, diacritics-insensitive) - Type: `string` - Valid values: `ajam_ushayran`, `chahargah`, `dugah`, `iraq`, `nawa`, `rast`, `segah`, `ushayran`, `yegah`
-- `sortBy` (optional): Sort order for results - Type: `string` - Valid values: `tonic`, `alphabetical` - Default: `alphabetical`
-  - Example: `tonic` - Sort by tonic note priority (NoteName.ts order)
-  - Example: `alphabetical` - Sort alphabetically by display name
+- `sortBy` (optional): Sort order for results.
+  including empty string) return HTTP 400.
+ - Type: `string` - Valid values: `alphabetical`, `tonic` - Default: `alphabetical`
+  - Example: `alphabetical` - Sort alphabetically by display name (default)
+  - Example: `tonic` - Sort by tonic note priority across the full NoteName.ts octave-stratified order, alphabetical tiebreak
 - `includeSources` (optional): Include bibliographic source references (sourceId and page) for each maqām - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 - `includeArabic` (optional): Return bilingual responses with Arabic script when true.
@@ -1650,9 +1652,11 @@ Return all ajnās (singular: jins) with metadata.
 **Query Parameters:**
 - `filterByTonic` (optional): Filter by jins tonic/first note (URL-safe, case-insensitive, diacritics-insensitive) - Type: `string`
   - Example: `rast`
-- `sortBy` (optional): Sort order for results - Type: `string` - Valid values: `tonic`, `alphabetical` - Default: `alphabetical`
-  - Example: `tonic` - Sort by tonic note priority (NoteName.ts order)
-  - Example: `alphabetical` - Sort alphabetically by display name
+- `sortBy` (optional): Sort order for results.
+  including empty string) return HTTP 400.
+ - Type: `string` - Valid values: `alphabetical`, `tonic` - Default: `alphabetical`
+  - Example: `alphabetical` - Sort alphabetically by display name (default)
+  - Example: `tonic` - Sort by tonic note priority across the full NoteName.ts octave-stratified order, alphabetical tiebreak
 - `includeSources` (optional): Include bibliographic source references (sourceId and page) for each jins - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 - `includeArabic` (optional): Return bilingual responses with Arabic script when true.
@@ -3157,6 +3161,12 @@ note-name strings.
   note name idNames for that transposed position.
  - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
+- `sortBy` (optional): Sort order for results.
+  and `/ajnas`, which default to `alphabetical`) because the endpoint is intrinsically about
+  a concrete pitch layout. Invalid values return HTTP 400.
+ - Type: `string` - Valid values: `alphabetical`, `tonic` - Default: `tonic`
+  - Example: `tonic` - Sort by tonic note priority across the full NoteName.ts octave-stratified order, alphabetical tiebreak
+  - Example: `alphabetical` - Sort alphabetically by display name
 
 **Example:**
 ```bash

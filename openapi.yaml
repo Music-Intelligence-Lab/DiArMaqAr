@@ -129,18 +129,20 @@ paths:
             example: rast
         - name: sortBy
           in: query
-          description: Sort order for results
+          description: |
+            Sort order for results. Invalid values (anything other than `alphabetical` or `tonic`,
+            including empty string) return HTTP 400.
           schema:
             type: string
-            enum: [tonic, alphabetical]
+            enum: [alphabetical, tonic]
             default: alphabetical
           examples:
-            tonic:
-              value: tonic
-              summary: Sort by tonic note priority (NoteName.ts order)
             alphabetical:
               value: alphabetical
-              summary: Sort alphabetically by display name
+              summary: Sort alphabetically by display name (default)
+            tonic:
+              value: tonic
+              summary: Sort by tonic note priority across the full NoteName.ts octave-stratified order, alphabetical tiebreak
         - name: includeSources
           in: query
           required: false
@@ -4241,6 +4243,24 @@ paths:
             enum: ["true", "false"]
             default: "false"
           example: "true"
+        - name: sortBy
+          in: query
+          required: false
+          description: |
+            Sort order for results. Defaults to `tonic` on this endpoint (different from `/maqamat`
+            and `/ajnas`, which default to `alphabetical`) because the endpoint is intrinsically about
+            a concrete pitch layout. Invalid values return HTTP 400.
+          schema:
+            type: string
+            enum: [alphabetical, tonic]
+            default: tonic
+          examples:
+            tonic:
+              value: tonic
+              summary: Sort by tonic note priority across the full NoteName.ts octave-stratified order, alphabetical tiebreak
+            alphabetical:
+              value: alphabetical
+              summary: Sort alphabetically by display name
       responses:
         '200':
           description: Maqāmāt list retrieved successfully
@@ -4916,18 +4936,20 @@ paths:
           example: rast
         - name: sortBy
           in: query
-          description: Sort order for results
+          description: |
+            Sort order for results. Invalid values (anything other than `alphabetical` or `tonic`,
+            including empty string) return HTTP 400.
           schema:
             type: string
-            enum: [tonic, alphabetical]
+            enum: [alphabetical, tonic]
             default: alphabetical
           examples:
-            tonic:
-              value: tonic
-              summary: Sort by tonic note priority (NoteName.ts order)
             alphabetical:
               value: alphabetical
-              summary: Sort alphabetically by display name
+              summary: Sort alphabetically by display name (default)
+            tonic:
+              value: tonic
+              summary: Sort by tonic note priority across the full NoteName.ts octave-stratified order, alphabetical tiebreak
         - name: includeSources
           in: query
           required: false
