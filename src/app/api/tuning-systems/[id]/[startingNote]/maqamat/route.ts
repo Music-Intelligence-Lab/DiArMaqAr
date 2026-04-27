@@ -13,6 +13,7 @@ import {
   buildStringArrayNamespace,
   getCanonicalApiUrl
 } from "@/app/api/response-shapes";
+import { parseSortBy, compareByDisplayName, compareByTonicThenName, buildInvalidSortByResponseBody, InvalidSortByError } from "@/app/api/sort-helpers";
 
 export const OPTIONS = handleCorsPreflightRequest;
 
@@ -45,6 +46,18 @@ export async function GET(
     const includeMaqamDegrees = searchParams.get("includeMaqamDegrees") === "true";
     const includeDegreeDetails = searchParams.get("includeDegreeDetails") === "true";
     const shouldIncludeDegreeDetails = includeMaqamDegrees && includeDegreeDetails;
+
+    let sortBy: "alphabetical" | "tonic";
+    try {
+      sortBy = parseSortBy(searchParams.get("sortBy"), "tonic");
+    } catch (err) {
+      if (err instanceof InvalidSortByError) {
+        return addCorsHeaders(
+          NextResponse.json(buildInvalidSortByResponseBody(err.received), { status: 400 })
+        );
+      }
+      throw err;
+    }
 
     // Validate that path parameters are not empty
     if (!tuningSystemId || tuningSystemId.trim() === "") {
@@ -356,20 +369,13 @@ export async function GET(
       }
     }
 
-    // Sort by tonic (NoteName.ts order) then alphabetically
-    availableMaqamat.sort((a: any, b: any) => {
-      // First sort by tonic
-      const noteOrder = ["yegah", "asiran", "iraq", "rast", "dugah", "sikah", "jaharkah"];
-      const aIndex = noteOrder.indexOf(a.tonic.idName);
-      const bIndex = noteOrder.indexOf(b.tonic.idName);
-      
-      if (aIndex !== -1 && bIndex !== -1 && aIndex !== bIndex) {
-        return aIndex - bIndex;
-      }
-      
-      // Then sort alphabetically by display name
-      return a.maqam.displayName.localeCompare(b.maqam.displayName, "ar");
-    });
+    if (sortBy === "tonic") {
+      availableMaqamat.sort((a: any, b: any) =>
+        compareByTonicThenName(a.tonic.idName, a.maqam.displayName, b.tonic.idName, b.maqam.displayName)
+      );
+    } else {
+      availableMaqamat.sort((a: any, b: any) => compareByDisplayName(a.maqam.displayName, b.maqam.displayName));
+    }
 
     // Build response
     const tuningSystemNoteNameSets = tuningSystem.getNoteNameSets();

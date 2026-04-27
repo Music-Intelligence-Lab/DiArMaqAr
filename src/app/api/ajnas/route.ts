@@ -5,13 +5,6 @@ import { addCorsHeaders, handleCorsPreflightRequest } from "@/app/api/cors";
 import { safeWriteFile } from "@/app/api/backup-utils";
 import path from "path";
 import {
-  octaveZeroNoteNames,
-  octaveOneNoteNames,
-  octaveTwoNoteNames,
-  octaveThreeNoteNames,
-  octaveFourNoteNames
-} from "@/models/NoteName";
-import {
   parseInArabic,
   getJinsNameDisplayAr,
   getNoteNameDisplayAr,
@@ -24,6 +17,13 @@ import {
   buildListResponse,
   buildStringArrayNamespace
 } from "@/app/api/response-shapes";
+import {
+  parseSortBy,
+  compareByDisplayName,
+  compareByTonicThenName,
+  buildInvalidSortByResponseBody,
+  InvalidSortByError
+} from "@/app/api/sort-helpers";
 
 export const OPTIONS = handleCorsPreflightRequest;
 
@@ -38,13 +38,23 @@ export const dynamic = "force-dynamic";
  * 
  * Query Parameters:
  * - filterByTonic: Filter by jins tonic/first note (e.g., "rast", "dugah", "segah")
- * - sortBy: Sort order - "tonic" (by tonic note priority, NoteName.ts order) or "alphabetical" (default, by display name)
+ * - sortBy: Sort order - "alphabetical" (default, by display name) or "tonic" (by tonic note priority, NoteName.ts order). Invalid values return 400.
  */
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const tonicFilter = searchParams.get("filterByTonic");
-    const sortBy = searchParams.get("sortBy") || "alphabetical";
+    let sortBy: "alphabetical" | "tonic";
+    try {
+      sortBy = parseSortBy(searchParams.get("sortBy"), "alphabetical");
+    } catch (err) {
+      if (err instanceof InvalidSortByError) {
+        return addCorsHeaders(
+          NextResponse.json(buildInvalidSortByResponseBody(err.received), { status: 400 })
+        );
+      }
+      throw err;
+    }
     const includeSources = searchParams.get("includeSources") === "true";
     
     // Parse includeArabic parameter
@@ -79,21 +89,6 @@ export async function GET(request: Request) {
 
     const ajnas = getAjnas();
     const tuningSystems = getTuningSystems();
-
-    // Create NoteName order lookup for sorting (all octaves)
-    // Use standardized text for note names to handle diacritics (ʿ, ʾ) consistently
-    const noteNameOrder = [
-      ...octaveZeroNoteNames,
-      ...octaveOneNoteNames, 
-      ...octaveTwoNoteNames,
-      ...octaveThreeNoteNames,
-      ...octaveFourNoteNames
-    ].map(name => standardizeText(name));
-    
-    const getNotePriority = (noteName: string) => {
-      const index = noteNameOrder.indexOf(noteName);
-      return index === -1 ? 999 : index; // Unknown notes go to the end
-    };
 
     // Calculate availability for each jins
     const ajnasWithAvailability = ajnas.map((jins) => {
@@ -237,18 +232,11 @@ export async function GET(request: Request) {
 
     // Apply sorting
     if (sortBy === "tonic") {
-      // Sort by tonic note priority (NoteName.ts order)
-      // Use standardized text for note name comparison to handle diacritics consistently
-      filteredAjnas.sort((a, b) => {
-        const priorityA = getNotePriority(a.tonic.idName);
-        const priorityB = getNotePriority(b.tonic.idName);
-        return priorityA - priorityB;
-      });
-    } else {
-      // Default: Sort alphabetically by display name (using standardized text for consistency)
       filteredAjnas.sort((a, b) =>
-        standardizeText(a.jins.displayName).localeCompare(standardizeText(b.jins.displayName))
+        compareByTonicThenName(a.tonic.idName, a.jins.displayName, b.tonic.idName, b.jins.displayName)
       );
+    } else {
+      filteredAjnas.sort((a, b) => compareByDisplayName(a.jins.displayName, b.jins.displayName));
     }
 
     const response = NextResponse.json(
