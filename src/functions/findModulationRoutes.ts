@@ -737,7 +737,10 @@ function findRoutesWithWaypoints(
   graph: ModulationGraph,
   waypointKeys: string[],
   maxHopsPerSegment: number,
-  limit: number
+  limit: number,
+  limitToShortestHops: boolean = false,
+  allowOctaveJumps: boolean = false,
+  allowDownwardModulation: boolean = false
 ): ModulationRoute[] {
   if (waypointKeys.length < 2) {
     return [];
@@ -755,7 +758,10 @@ function findRoutesWithWaypoints(
       [startKey],
       new Set([endKey]),
       maxHopsPerSegment,
-      limit // Get up to limit routes per segment
+      limit, // Get up to limit routes per segment
+      limitToShortestHops,
+      allowOctaveJumps,
+      allowDownwardModulation
     );
 
     if (routes.length === 0) {
@@ -1061,7 +1067,10 @@ export function findModulationRoutes(
       graph,
       allKeys,
       maxHopsPerSegment,
-      limit
+      limit,
+      limitToShortestHops,
+      allowOctaveJumps,
+      allowDownwardModulation
     );
   }
 
