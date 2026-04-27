@@ -234,8 +234,9 @@ function formatIntervalData(intervals: any[], format: string) {
  * REQUIRED Query Parameters:
  * - tuningSystem: ID of tuning system (required for all requests)
  * - startingNote: Starting note (URL-friendly) - MANDATORY for all pitch class calculations (required for all requests)
- * - pitchClassDataType: Pitch class data format - REQUIRED for data retrieval, optional for discovery mode (options=true)
- *   - all: All data types
+ * - pitchClassDataType: Pitch class data format - defaults to "all" when omitted. Empty or
+ *   invalid values still return 400.
+ *   - all: All data types (default)
  *   - englishName, fraction, cents, decimalRatio, stringLength, frequency,
  *     abjadName, fretDivision, midiNoteNumber, midiNoteDeviation, centsDeviation, referenceNoteName
  * - includeIntervals: true|false (include interval data, default: false)
@@ -263,7 +264,7 @@ export async function GET(
     const { searchParams } = new URL(request.url);
     const tuningSystemId = searchParams.get("tuningSystem");
     const startingNote = searchParams.get("startingNote");
-    const pitchClassDataType = searchParams.get("pitchClassDataType");
+    const pitchClassDataTypeRaw = searchParams.get("pitchClassDataType");
     const includeIntervals = searchParams.get("includeIntervals") === "true";
     const transposeToNote = searchParams.get("transposeTo");
     const showOptions = searchParams.get("options") === "true";
@@ -304,27 +305,28 @@ export async function GET(
       "referenceNoteName"
     ];
 
-    // Validate pitchClassDataType if provided
-    if (pitchClassDataType !== null) {
-      if (pitchClassDataType.trim() === "") {
+    // Validate pitchClassDataType if provided. Missing parameter defaults to "all";
+    // empty string or invalid values still return 400.
+    if (pitchClassDataTypeRaw !== null) {
+      if (pitchClassDataTypeRaw.trim() === "") {
         return addCorsHeaders(
           NextResponse.json(
             {
               error: "Invalid parameter: pitchClassDataType",
-              message: "The 'pitchClassDataType' parameter cannot be empty. Provide a valid data type.",
+              message: "The 'pitchClassDataType' parameter cannot be empty. Omit it to use the default 'all', or provide a valid data type.",
               validOptions: validPitchClassDataTypes,
-              hint: `Specify a valid pitch class data type like '?pitchClassDataType=cents' or '?pitchClassDataType=all'`
+              hint: `Specify a valid pitch class data type like '?pitchClassDataType=cents' or '?pitchClassDataType=all', or omit the parameter for the default ('all').`
             },
             { status: 400 }
           )
         );
       }
 
-      if (!validPitchClassDataTypes.includes(pitchClassDataType)) {
+      if (!validPitchClassDataTypes.includes(pitchClassDataTypeRaw)) {
         return addCorsHeaders(
           NextResponse.json(
             {
-              error: `Invalid pitchClassDataType '${pitchClassDataType}'`,
+              error: `Invalid pitchClassDataType '${pitchClassDataTypeRaw}'`,
               validOptions: validPitchClassDataTypes,
               hint: `Valid options: ${validPitchClassDataTypes.join(", ")}`
             },
@@ -333,6 +335,7 @@ export async function GET(
         );
       }
     }
+    const pitchClassDataType = pitchClassDataTypeRaw ?? "all";
 
     // Check if jinsId is empty or invalid
     if (!jinsId || jinsId.trim() === "") {
@@ -409,7 +412,7 @@ export async function GET(
       // Check for conflicting data-returning parameters
       const conflictingParams: string[] = [];
       if (transposeToNote) conflictingParams.push("transposeTo");
-      if (pitchClassDataType && pitchClassDataType !== "cents") conflictingParams.push("pitchClassDataType");
+      if (pitchClassDataTypeRaw && pitchClassDataTypeRaw !== "cents") conflictingParams.push("pitchClassDataType");
       if (includeIntervals) conflictingParams.push("includeIntervals");
 
       if (conflictingParams.length > 0) {
@@ -562,21 +565,6 @@ export async function GET(
             `/api/ajnas/${jinsId}?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=all`
           ]
         })
-      );
-    }
-
-    // Require pitchClassDataType for data retrieval
-    if (!showOptions && !pitchClassDataType) {
-      return addCorsHeaders(
-        NextResponse.json(
-          {
-            error: "pitchClassDataType parameter is required",
-            message: "Pitch class data type must be specified for data retrieval. This determines which pitch class properties are returned.",
-            validOptions: validPitchClassDataTypes,
-            hint: `Add &pitchClassDataType=cents to your request. Use 'all' for complete pitch class information. For parameter discovery, use &options=true (pitchClassDataType is optional in discovery mode).`
-          },
-          { status: 400 }
-        )
       );
     }
 
@@ -849,11 +837,11 @@ export async function GET(
     };
 
     // Always include pitch data (ajnās are unidirectional)
-    responseData.pitchData = formatPitchData(selectedTransposition.jinsPitchClasses, pitchClassDataType || "all", inArabic);
+    responseData.pitchData = formatPitchData(selectedTransposition.jinsPitchClasses, pitchClassDataType, inArabic);
 
     // Add intervals if requested
     if (includeIntervals) {
-      responseData.intervals = formatIntervalData(selectedTransposition.jinsPitchClassIntervals, pitchClassDataType || "all");
+      responseData.intervals = formatIntervalData(selectedTransposition.jinsPitchClassIntervals, pitchClassDataType);
     }
 
     return addCorsHeaders(NextResponse.json(responseData));

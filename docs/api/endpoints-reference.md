@@ -2305,11 +2305,12 @@ Requirements:
   - If data-returning parameters are provided, returns 400 Bad Request error with details about conflicting parameters
  - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
-- `pitchClassDataType` (optional): Specifies which pitch class data type to return for each pitch class.
-  - When provided, returns the specified data type for all pitch classes in the jins
-  - In discovery mode (when options=true), this parameter is optional since the response returns parameter metadata instead of formatted data
-  - Use 'all' for complete pitch class data across all available formats
- - Type: `string` - Valid values: `all`, `abjadName`, `englishName`, `solfege`, `fraction`, ... (14 total)
+- `pitchClassDataType` **(required)**: Specifies which pitch class data type to return for each pitch class.
+  - When set to `all`, returns the full set of pitch class fields (englishName, solfege, abjadName, fraction, cents, decimalRatio, stringLength, frequency, fretDivision, midiNoteDecimal, midiNotePlusCentsDeviation, centsDeviation, ipnReferenceNoteName) plus the always-included identifiers (pitchClassIndex, octave, scaleDegree, noteName, noteNameDisplay, and noteNameDisplayAr if includeArabic is enabled).
+  - When set to a specific format, returns only that field plus the always-included identifiers.
+  - Empty string and unrecognised values return HTTP 400 with a hint listing valid options.
+  - In discovery mode (when options=true), this parameter remains optional. Passing any value other than `cents` in discovery mode is treated as a conflict (400).
+ - Type: `string` - Valid values: `all`, `abjadName`, `englishName`, `solfege`, `fraction`, ... (14 total) - Default: `all`
   - Example: `cents`
 - `transposeTo` (optional): Transpose the jins to a new tonic by preserving the interval patterns (URL-safe, diacritics-insensitive).
   - To see all valid transposition options, request available parameter options instead of jins data
@@ -2329,7 +2330,7 @@ Requirements:
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/ajnas/jins_rast?tuningSystem=ibnsina_1037&startingNote=yegah&includeArabic=true"
+curl "https://diarmaqar.netlify.app/api/ajnas/jins_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents&includeArabic=true"
 ```
 
 **Response:** Jins data retrieved successfully.

@@ -5700,17 +5700,19 @@ paths:
           example: "true"
         - name: pitchClassDataType
           in: query
-          required: false
+          required: true
           description: |
             Specifies which pitch class data type to return for each pitch class.
 
-            - Optional parameter. When omitted, returns only minimal pitch class fields: `pitchClassIndex`, `octave`, `scaleDegree`, `noteName`, `noteNameDisplay`, and `noteNameDisplayAr` (if includeArabic is enabled)
-            - When provided, returns the specified data type for all pitch classes in the jins
-            - In discovery mode (when options=true), this parameter is optional since the response returns parameter metadata instead of formatted data
-            - Use 'all' for complete pitch class data across all available formats
+            - Defaults to `all` when the parameter is omitted from the query string. Effectively required from a contract perspective — the endpoint always returns a populated `pitchClassDataType` in `parameters` and `pitchData` formatted accordingly.
+            - When set to `all`, returns the full set of pitch class fields (englishName, solfege, abjadName, fraction, cents, decimalRatio, stringLength, frequency, fretDivision, midiNoteDecimal, midiNotePlusCentsDeviation, centsDeviation, ipnReferenceNoteName) plus the always-included identifiers (pitchClassIndex, octave, scaleDegree, noteName, noteNameDisplay, and noteNameDisplayAr if includeArabic is enabled).
+            - When set to a specific format, returns only that field plus the always-included identifiers.
+            - Empty string and unrecognised values return HTTP 400 with a hint listing valid options.
+            - In discovery mode (when options=true), this parameter remains optional. Passing any value other than `cents` in discovery mode is treated as a conflict (400).
           schema:
             type: string
             enum: [all, abjadName, englishName, solfege, fraction, cents, centsDeviation, decimalRatio, stringLength, fretDivision, midiNoteNumber, midiNoteDeviation, frequency, referenceNoteName]
+            default: all
           example: "cents"
         - name: transposeTo
           in: query
