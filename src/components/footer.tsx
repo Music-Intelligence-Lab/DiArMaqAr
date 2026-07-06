@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 // Update the import path if the context file exists elsewhere, for example:
 import useLanguageContext from "../contexts/language-context";
 // Or, if the correct path is different, adjust accordingly:
@@ -50,40 +51,40 @@ export default function Footer() {
           </h4>
           <ul className="footer__list">
             <li className="footer__list-item">
-              <a href="/app" className="footer__link">
+              <Link href="/app" className="footer__link">
                 {language === "ar"
                   ? "استخدام الأرشيف"
                   : language === "fr"
                   ? "Accéder à l'Archive"
                   : "Access the Archive"}
-              </a>
+              </Link>
             </li>
             <li className="footer__list-item">
-              <a href="/bibliography" className="footer__link">
+              <Link href="/bibliography" className="footer__link">
                 {language === "ar"
                   ? "المراجع"
                   : language === "fr"
                   ? "Bibliographie"
                   : "Bibliography"}
-              </a>
+              </Link>
             </li>
             <li className="footer__list-item">
-              <a href="/docs/" className="footer__link">
+              <Link href="/docs/" className="footer__link">
                 {language === "ar"
                   ? "التوثيق"
                   : language === "fr"
                   ? "Documentation"
                   : "Documentation"}
-              </a>
+              </Link>
             </li>
             <li className="footer__list-item">
-              <a href="/about" className="footer__link">
+              <Link href="/about" className="footer__link">
                 {language === "ar"
                   ? "حول المشروع"
                   : language === "fr"
                   ? "À propos"
                   : "About"}
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
