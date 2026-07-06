@@ -5,692 +5,426 @@ body {
   overflow-x: hidden;
 }
 
+// Landing page design system
+// Ground: inherited charcoal. Gold appears only as identity rules and on
+// links (ways into the archive). Purple carries the single primary action.
+// The Arabic title in Amiri is the monumental element; everything else is quiet.
+
+@keyframes landing-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes scroll-cue-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scroll-cue-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(4px);
+  }
+}
+
 .landing-page {
-  display: flex;
-  flex-direction: column;
-  max-width: 60%;
-  margin: 30px auto;
-  padding: 0rem;
-  min-height: fit-content;
+  width: 100%;
+  // Horizontal inset matches the footer's content edges (.footer 22px + &__content 1rem)
+  padding-inline: calc(22px + 1rem);
   box-sizing: border-box;
-  overflow-x: hidden;
 
-  // Responsive design
-  @media (max-width: 1200px) {
-    max-width: 70%;
-  }
+  // ---------------------------------------------------------------- hero
 
-  @media (max-width: 992px) {
-    max-width: 80%;
-  }
-
-  @media (max-width: 768px) {
-    max-width: 90%;
-    margin: 20px auto;
-    padding: 0 1rem;
-  }
-
-  @media (max-width: 576px) {
-    max-width: 95%;
-    margin: 15px auto;
-    padding: 0 0.5rem;
-  }
-
-  h1 {
-    font-size: 40px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    color: $text;
-    text-align: center;
-    font-weight: 400;
-    
-    @media (max-width: 768px) {
-      font-size: 32px;
-      margin-top: 15px;
-      margin-bottom: 15px;
-    }
-
-    @media (max-width: 576px) {
-      font-size: 28px;
-    }
-  }
-
-h2 {
-    font-size: 24px;
-    margin-bottom: 10px;
-    color: $text;
-    font-weight: 300;
-    //text-align: left;
-  }
-
-  h3 {
-    font-size: 24px;
-    margin-bottom: 40px;
-    color: $text;
-    font-weight: 200;
-    text-align: center;
-
-    @media (max-width: 768px) {
-      font-size: 20px;
-      margin-bottom: 30px;
-    }
-
-    @media (max-width: 576px) {
-      font-size: 18px;
-      margin-bottom: 25px;
-    }
-  }
-
-  p {
-    font-size: 16px;
-    line-height: 1.7;
-    color: $text;
-    text-align: justify;
-    margin-bottom: 20px;
-  }
-
-  ul {
-    padding: 0;
-    list-style: none;
-    counter-reset: feature;
-    max-width: 80%;
-    text-align: justify;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  ul li {
+  // The hero flows at its natural height — no viewport-proportioned stage.
+  // The first viewport is one composed unit: lockup, actions, all six
+  // feature cards, then the scroll cue beneath them.
+  .landing-header {
     position: relative;
-    line-height: 1.5;
-    font-size: 16px;
-    color: $text;
-    //border-radius: 0.7rem;
-    padding: 18px 24px 15px 52px;
-    transition: background 0.2s;
     display: flex;
+    flex-direction: column;
     align-items: center;
+    text-align: center;
+    padding-block: clamp(2.5rem, 6.5svh, 4.5rem) 0;
+
+    > * {
+      animation: landing-rise 0.7s cubic-bezier(0.2, 0.6, 0.2, 1) both;
+    }
+
+    .language-selector-wrapper {
+      position: absolute;
+      top: 16px;
+      inset-inline-end: 0;
+      animation: none;
+    }
+
+    .landing-title {
+      animation-delay: 0.05s;
+    }
+    .landing-title__nuqta {
+      animation-delay: 0.18s;
+    }
+    .landing-subtitle {
+      animation-delay: 0.3s;
+    }
+    .cta-row {
+      animation-delay: 0.45s;
+    }
+    .button-row {
+      animation-delay: 0.58s;
+    }
   }
 
-  ul li::before {
-    counter-increment: feature;
-    content: counter(feature);
-    position: absolute;
-    left: 0px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-weight: 400;
-    color: $text;
-    background-color: $primary;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
+  .scroll-cue {
+    margin: 1.6rem auto 0;
+    width: 58px;
+    height: 58px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
-    border: 0px solid $text;
-    z-index: 1;
-  }
+    border: 1px solid rgba($text, 0.18);
+    border-radius: 50%;
+    // !important counters the global `a { color: $link !important }` in variables.scss
+    color: rgba($text, 0.5) !important;
+    transition: color 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
+    animation: scroll-cue-in 0.7s ease both 0.85s, scroll-cue-bob 2.6s ease-in-out 2.2s infinite;
 
-  // RTL-specific styles for Arabic
-  &.rtl {
-    ul li {
-      padding: 18px 52px 15px 24px;
-      text-align: right;
+    &:hover {
+      color: $gold !important;
+      border-color: rgba($gold, 0.55);
+      background-color: rgba($gold, 0.05);
     }
-    
-    ul li::before {
-      left: auto;
-      right: 0px;
+
+    @media (max-width: 768px) {
+      display: none;
     }
   }
 
-  ul li:last-child {
-    margin-bottom: 0;
+  .landing-title {
+    margin: 0;
+
+    &__ar {
+      display: block;
+      font-weight: 500;
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      line-height: 1.3;
+      color: $text;
+    }
+
+    &__latin {
+      display: block;
+      font-weight: 200;
+      font-size: clamp(1.1rem, 1.7vw, 1.6rem);
+      letter-spacing: 0.05em;
+      line-height: 1.3;
+      color: rgba($text, 0.9);
+      margin-top: 0.6rem;
+    }
+
+    // The nuqta: a qalam's dot — a square, slightly rotated past the
+    // diagonal and skewed as a reed pen would form it. Drawn on ::before
+    // so the hero entrance animation (which animates transform on the
+    // wrapper) cannot override the shape's own transform.
+    &__nuqta {
+      width: 8.5px;
+      height: 8.5px;
+      margin: 1.5rem auto 1.3rem;
+
+      &::before {
+        content: "";
+        display: block;
+        width: 100%;
+        height: 100%;
+        background: rgba($gold, 0.85);
+        transform: rotate(52deg) skew(8deg, 8deg);
+      }
+    }
   }
 
-  .highlight {
-    //background-color: rgb($secondary, 0.8);
-    color: $text;
-    font-weight: 400;
-    padding: 1px 2px;
-    margin: 0 0;
+  .landing-subtitle {
+    font-size: clamp(0.95rem, 1.2vw, 1.1rem);
+    font-weight: 200;
+    line-height: 1.7;
+    color: rgba($text, 0.6);
+    // Single line on desktop; wraps naturally on narrow screens
+    max-width: none;
+    margin: 0;
   }
+
+  // ------------------------------------------------------------- actions
 
   .cta-row {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    margin-bottom: 20px;
-    width: 100%;
-  }
-
-
-  .button-row {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    margin-bottom: 50px;
-    width: 100%;
-    box-sizing: border-box;
-    flex-wrap: wrap;
-
-    @media (max-width: 768px) {
-      flex-direction: column;
-      gap: 8px;
-      margin-bottom: 40px;
-    }
+    margin-top: 2.2rem;
   }
 
   .main-button {
     display: inline-block;
     background: $primary;
-    color: $text;
-    font-size: 24px;
+    // !important counters the global `a { color: $link !important }` in variables.scss
+    color: $text !important;
+    font-size: 1.1rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
     text-align: center;
-    padding: 10px 18px;
-    border-radius: 0px;
+    padding: 0.9rem 3.4rem;
+    border-radius: 2px;
     cursor: pointer;
-    font-weight: 500;
-    width: 100%;
+    transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+
+    &:hover {
+      background: $hovered-primary;
+      transform: translateY(-1px);
+      box-shadow: 0 10px 28px rgba($primary, 0.35);
+    }
   }
-  .main-button:hover {
-    background: $secondary;
-    transition: background 0.2s;
+
+  .button-row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.6rem;
   }
 
   .button {
-    /* make buttons share the available width equally */
-    display: flex;
-    flex: 1 1 0;
-    justify-content: center;
+    display: inline-flex;
     align-items: center;
-    background: $primary;
-    color: $text;
-    padding: 12px 10px;
-    border-radius: 0px;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid rgba($text, 0.16);
+    // !important counters the global `a { color: $link !important }` in variables.scss
+    color: rgba($text, 0.72) !important;
+    font-size: 0.85rem;
+    font-weight: 300;
+    padding: 0.6rem 1.4rem;
+    border-radius: 2px;
     cursor: pointer;
-    font-weight: 500;
+    transition: border-color 0.25s ease, color 0.25s ease;
+
+    &:hover {
+      border-color: rgba($gold, 0.55);
+      color: $gold !important;
+    }
+
+    &.disabled {
+      opacity: 0.35;
+      pointer-events: none;
+      cursor: not-allowed;
+    }
+  }
+
+  // ------------------------------------------------------------ sections
+
+  section {
+    margin-block: 5rem;
+    // Anchored scrolls land with the same gap above the gold tick
+    // as the tick keeps to the section title below it (h2::before margin-bottom)
+    scroll-margin-top: 0.9rem;
+  }
+
+  // Part of the first-viewport composition: sits tight under the hero,
+  // with the scroll cue directly after it.
+  .key-features {
+    margin-block: 2rem 0;
+
+    h2 {
+      margin-bottom: 1.4rem;
+    }
+  }
+
+  // Body content shares the hero's central axis: headings and their gold
+  // ticks sit on the centerline, prose blocks are centered columns with
+  // start-aligned text inside.
+  h2 {
+    font-size: 0.95rem;
+    font-weight: 400;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
     text-align: center;
-    min-width: 0; /* prevents overflow in flex items */
-    box-sizing: border-box;
-    word-wrap: break-word;
-    hyphens: auto;
+    color: rgba($text, 0.55);
+    margin-bottom: 1.7rem;
 
-    @media (max-width: 768px) {
-      flex: 1 1 100%;
-      min-width: 100%;
-      padding: 12px 8px;
-      font-size: 14px;
+    // Section mark: the same qalam nuqta as the title
+    &::before {
+      content: "";
+      display: block;
+      width: 8.5px;
+      height: 8.5px;
+      background: rgba($gold, 0.7);
+      transform: rotate(52deg) skew(8deg, 8deg);
+      margin: 0 auto 0.9rem;
     }
   }
 
-  .button:hover {
-    background: $secondary;
-    transition: background 0.2s;
-  }
+  p {
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 1.8;
+    color: rgba($text, 0.78);
+    text-align: start;
+    max-width: 68ch;
+    margin-inline: auto;
+    margin-bottom: 1.2rem;
 
-  .landing-header {
-    position: relative;
-
-    .language-selector-wrapper {
-      position: absolute;
-      top: 12px;
-      right: 12px;
+    &:last-child {
+      margin-bottom: 0;
     }
   }
+
+  // ------------------------------------------------------------ features
 
   .features-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-    margin: 2rem 0;
-    width: 100%;
-    box-sizing: border-box;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
+    // Cards keep card proportions on ultra-wide screens
+    max-width: 1360px;
+    margin-inline: auto;
 
-    @media (max-width: 768px) {
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-      margin: 1.5rem 0;
+    @media (max-width: 1100px) {
+      grid-template-columns: repeat(2, 1fr);
     }
 
-    @media (max-width: 576px) {
-      gap: 1rem;
-      margin: 1rem 0;
+    @media (max-width: 700px) {
+      grid-template-columns: 1fr;
     }
   }
 
   .feature-card {
-    background-color: rgba($medium-grey, 0.7);
-    border: 1px solid rgba($primary, 0.3);
-    border-radius: 8px;
-    padding: 1.5rem;
-    transition: all 0.3s ease;
-    box-sizing: border-box;
-    width: 100%;
+    background-color: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 4px;
+    padding: 1.3rem 1.4rem;
+    transition: border-color 0.25s ease, background-color 0.25s ease, transform 0.25s ease;
 
-    @media (max-width: 576px) {
-      padding: 1rem;
+    &:hover {
+      border-color: rgba(255, 255, 255, 0.18);
+      background-color: rgba(255, 255, 255, 0.04);
+      transform: translateY(-2px);
     }
 
     h3 {
-      color: $gold;
-      margin-bottom: 1rem;
-      font-size: 18px;
+      font-size: 1rem;
       font-weight: 400;
-
-      @media (max-width: 576px) {
-        font-size: 16px;
-        margin-bottom: 0.8rem;
-      }
+      letter-spacing: 0.01em;
+      color: $text;
+      margin-bottom: 0.65rem;
     }
 
     p {
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: rgba($text, 0.6);
       margin-bottom: 0;
-      font-size: 14px;
-      line-height: 1.6;
-      word-wrap: break-word;
-
-      @media (max-width: 576px) {
-        font-size: 13px;
-      }
     }
   }
+
+  // ------------------------------------------------- developers & LLMs
 
   .developers-llms {
-    > p {
-      margin-bottom: 1.5rem;
-      line-height: 1.7;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
+    .dev-code {
+      display: block;
+      direction: ltr;
+      text-align: left;
+      max-width: 68ch;
+      margin-inline: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Cascadia Mono", monospace;
+      font-size: 0.78rem;
+      line-height: 1.6;
+      color: rgba($text, 0.75);
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-inline-start: 2px solid rgba($gold, 0.55);
+      border-radius: 3px;
+      padding: 0.8rem 1.1rem;
+      margin-block: 1.5rem;
+      word-break: break-all;
     }
 
-    // Shared styles for warning and info boxes
-    .warning-box,
-    .info-box {
-      background-color: rgba($medium-grey, 0.7);
-      border-left: 3px solid;
-      border-radius: 4px;
-      padding: 1.25rem 1rem 1rem 1.25rem;
-      margin: 1.5rem 0;
-      color: $text;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-      max-width: 100%;
-      width: 100%;
-      box-sizing: border-box;
-      overflow: hidden;
+    .dev-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem 2rem;
 
-      p {
-        margin: 0;
-        font-size: 15px;
-        line-height: 1.6;
-        word-wrap: break-word;
-        overflow-wrap: break-word;
-        hyphens: auto;
-        max-width: 100%;
-
-        &:not(:last-child) {
-          margin-bottom: 0.75rem;
-        }
-
-        &:last-child {
-          margin-bottom: 0;
-        }
-
-        // Better spacing for paragraphs with code
-        code {
-          margin: 0 0.125rem;
-        }
+      a {
+        font-size: 0.9rem;
+        font-weight: 300;
       }
-
-      code {
-        background-color: rgba(0, 0, 0, 0.4);
-        padding: 3px 6px;
-        border-radius: 3px;
-        font-size: 0.875em;
-        font-family: 'Courier New', 'Monaco', monospace;
-        word-break: normal;
-        overflow-wrap: break-word;
-        white-space: normal;
-        display: inline;
-        line-height: 1.6;
-        max-width: 100%;
-        box-sizing: border-box;
-        vertical-align: baseline;
-        text-indent: 0;
-        letter-spacing: normal;
-      }
-
-      // Handle code blocks that come after line breaks (long URLs, etc.)
-      br + code {
-        display: block;
-        width: calc(100% - 1.5rem);
-        max-width: calc(100% - 1.5rem);
-        margin: 0.5rem 0 0 0;
-        padding: 0.5rem 0.75rem;
-        white-space: normal;
-        word-break: break-word;
-        overflow-wrap: break-word;
-        line-height: 1.5;
-        box-sizing: border-box;
-        text-indent: 0;
-      }
-
-      // Handle code blocks that are likely to be long (standalone in paragraphs)
-      p > code:only-child {
-        display: block;
-        width: calc(100% - 1.5rem);
-        max-width: calc(100% - 1.5rem);
-        margin: 0.5rem 0 0 0;
-        padding: 0.5rem 0.75rem;
-        white-space: normal;
-        word-break: break-word;
-        overflow-wrap: break-word;
-        line-height: 1.5;
-        box-sizing: border-box;
-        text-indent: 0;
-      }
-
-      strong {
-        font-weight: 600;
-        word-wrap: break-word;
-        display: inline-block;
-      }
-    }
-
-    .warning-box {
-      border-left-color: $gold;
-      background-color: rgba($medium-grey, 0.8);
-
-      p:first-child {
-        font-weight: 600;
-        color: $gold;
-        margin-bottom: 0.75rem;
-      }
-
-      code {
-        color: $gold;
-      }
-
-      strong {
-        color: $gold;
-      }
-
-      // Better handling for long code blocks in warning boxes
-      p code {
-        word-break: break-word;
-        overflow-wrap: break-word;
-      }
-
-      // Override global ul/li styles
-      ul {
-        margin: 0.5rem 0 0 0 !important;
-        padding: 0 !important;
-        list-style: none !important;
-        counter-reset: none !important;
-        max-width: 100% !important;
-        text-align: left !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
-      }
-
-      ul li {
-        padding: 0.625rem 0 !important;
-        position: static !important;
-        align-items: flex-start !important;
-        text-align: left !important;
-        display: block !important;
-        margin: 0 !important;
-
-        &::before {
-          display: none !important;
-          content: none !important;
-        }
-      }
-    }
-
-    .info-box {
-      border-left-color: rgba($primary, 0.6);
-
-      p:first-child {
-        font-weight: 600;
-        color: $text;
-        margin-bottom: 0.5rem;
-        margin-top: 0;
-      }
-
-      code {
-        color: $text;
-      }
-
-      // Better spacing for paragraphs before lists
-      p + ul {
-        margin-top: 0.5rem;
-      }
-
-      ul {
-        margin: 0.5rem 0 0 0;
-        padding: 0 !important;
-        list-style: none !important;
-        counter-reset: none !important;
-        max-width: 100% !important;
-        text-align: left !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
-
-        li {
-          padding: 0.625rem 0 !important;
-          font-size: 14px;
-          line-height: 1.5;
-          border-bottom: 1px solid rgba($primary, 0.1);
-          word-wrap: break-word;
-          overflow-wrap: break-word;
-          display: block !important;
-          margin: 0 !important;
-          white-space: normal;
-          position: static !important;
-          align-items: flex-start !important;
-          text-align: left !important;
-
-          &:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-          }
-
-          &:first-child {
-            padding-top: 0.25rem;
-          }
-
-          &::before {
-            display: none !important;
-            content: none !important;
-            position: static !important;
-            width: 0 !important;
-            height: 0 !important;
-            background: none !important;
-            border: none !important;
-          }
-
-          // Spacing for emoji/icon spans
-          > span:first-child {
-            margin-right: 0.5rem;
-            display: inline-block;
-            vertical-align: middle;
-            flex-shrink: 0;
-            white-space: nowrap;
-          }
-
-          // Better handling for code blocks in list items
-          code {
-            display: inline;
-            margin: 0 0.25rem;
-            padding: 2px 5px;
-            white-space: normal;
-            word-break: normal;
-            overflow-wrap: break-word;
-            line-height: 1.5;
-            vertical-align: baseline;
-            font-size: 0.85em;
-            max-width: 100%;
-            box-sizing: border-box;
-          }
-
-          // Handle long code blocks that should wrap (only break at word boundaries)
-          code:only-child,
-          code:last-child {
-            word-break: break-word;
-            overflow-wrap: break-word;
-            max-width: 100%;
-          }
-
-          // Handle arrow separators and text spans
-          strong {
-            display: inline;
-            word-wrap: break-word;
-            margin-right: 0.5rem;
-            font-weight: 600;
-            vertical-align: baseline;
-            white-space: normal;
-          }
-
-          // Text after code blocks
-          > span:not(:first-child) {
-            display: inline;
-            word-wrap: break-word;
-            margin-left: 0.5rem;
-            vertical-align: baseline;
-            white-space: normal;
-          }
-
-          // Better wrapping for long content
-          * {
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-          }
-
-          // Handle arrow separators (→) better
-          &::after {
-            content: none;
-          }
-        }
-      }
-    }
-
-    .developers-links {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin-top: 2.5rem;
-
-      @media (max-width: 768px) {
-        grid-template-columns: 1fr;
-        gap: 1.25rem;
-      }
-    }
-
-    .developer-link-card {
-      background-color: rgba($medium-grey, 0.7);
-      border: 1px solid rgba($primary, 0.25);
-      border-radius: 6px;
-      padding: 1.5rem;
-      transition: all 0.2s ease;
-
-      &:hover {
-        border-color: rgba($primary, 0.4);
-        background-color: rgba($medium-grey, 0.8);
-      }
-
-      h3 {
-        color: $gold;
-        margin-bottom: 1rem;
-        font-size: 18px;
-        font-weight: 500;
-      }
-
-      ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        max-width: 100%;
-
-        li {
-          padding: 0.5rem 0;
-          margin-bottom: 0;
-          border-bottom: 1px solid rgba($primary, 0.1);
-
-          &:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-          }
-
-          &::before {
-            display: none;
-          }
-
-          a {
-            color: $text;
-            text-decoration: none;
-            transition: color 0.2s ease;
-            font-size: 14px;
-            line-height: 1.5;
-
-            &:hover {
-              color: $gold;
-              text-decoration: underline;
-            }
-          }
-        }
-      }
-    }
-
-    // Ensure consistent spacing throughout the section
-    > p:first-of-type {
-      margin-top: 0;
-    }
-
-    // Better spacing between sections
-    > p + .warning-box,
-    > p + .info-box {
-      margin-top: 1.5rem;
-    }
-
-    .warning-box + .info-box,
-    .info-box + .warning-box,
-    .info-box + .info-box {
-      margin-top: 1.5rem;
     }
   }
 
-  .about,
-  .key-features,
-  .developers-llms,
-  .credits,
-  .contribute {
-    margin-top: 2rem;
-    margin-bottom: 1.5rem;
+  // ------------------------------------------------------------------ RTL
+  // Connected Arabic script must never be letterspaced, and uppercase
+  // has no meaning — swap the eyebrow treatment for size alone.
 
+  &.rtl {
     h2 {
-      margin-bottom: 1.5rem;
+      letter-spacing: 0;
+      text-transform: none;
+      font-size: 1.15rem;
+    }
+
+    .landing-title__latin {
+      letter-spacing: 0;
+    }
+  }
+
+  // ----------------------------------------------------------- responsive
+
+  @media (max-width: 768px) {
+    .landing-header {
+      padding-block: 4rem 0;
+    }
+
+    section {
+      margin-block: 3.5rem;
+    }
+
+    .main-button {
+      width: min(100%, 22rem);
+    }
+
+    .button-row {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .button {
+      width: min(100%, 22rem);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .landing-header {
+      padding-block: 4rem 2rem;
+    }
+
+    .landing-title__rule {
+      margin: 1.8rem auto 1.5rem;
+    }
+
+    .cta-row {
+      margin-top: 2.4rem;
     }
   }
 }
 
-/* If the button is an anchor, show it as a plain link */
-a.button,
-a.main-button {
-  background: none;
-  color: inherit !important;
-  padding: 0;
-  border-radius: 0;
-  box-shadow: none;
-  text-decoration: none;
-  display: inline;
-}
-
-a.button:hover,
-a.main-button:hover {
-  background: none;
-  box-shadow: none;
-  text-decoration: underline;
+@media (prefers-reduced-motion: reduce) {
+  .landing-page .landing-header > *,
+  .landing-page .scroll-cue {
+    animation: none;
+  }
 }
