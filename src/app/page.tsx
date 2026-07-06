@@ -23,14 +23,13 @@ export default function LandingPage() {
             {language === "fr" ? "Archive Numérique du Maqām Arabe" : "Digital Arabic Maqām Archive"}
           </span>
         </h1>
-        <div className="landing-title__nuqta" aria-hidden="true"></div>
-        <h3 className="landing-subtitle">
+        <p className="landing-subtitle">
           {language === "ar"
             ? "منصة ومكتبة مفتوحة المصدر لاستكشاف نظام المقامات العربية"
             : language === "fr"
             ? "Plateforme et bibliothèque open-source pour explorer le système des maqām arabes"
             : "Open-source platform and library for exploring the Arabic maqām system"}
-        </h3>
+        </p>
 
         <div className="cta-row">
           <Link className="main-button" href="/app">
@@ -73,6 +72,20 @@ export default function LandingPage() {
           </a>
         </div>
       </header>
+
+      <a
+        className="scroll-cue"
+        href="#key-features"
+        aria-label={language === "ar" ? "مرّروا إلى الأسفل" : language === "fr" ? "Défiler vers le bas" : "Scroll down"}
+        onClick={(e) => {
+          e.preventDefault();
+          document.getElementById("key-features")?.scrollIntoView({ behavior: "smooth" });
+        }}
+      >
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </a>
 
       <section className="key-features" id="key-features">
         <h2>
@@ -187,21 +200,8 @@ export default function LandingPage() {
         </div>
       </section>
 
-        <a
-          className="scroll-cue"
-          href="#about"
-          aria-label={language === "ar" ? "مرّروا إلى الأسفل" : language === "fr" ? "Défiler vers le bas" : "Scroll down"}
-          onClick={(e) => {
-            e.preventDefault();
-            document.getElementById("about")?.scrollIntoView({ behavior: "smooth" });
-          }}
-        >
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </a>
-
       <section className="about" id="about">
+        <div className="about__inner">
         <h2>
           {language === "ar" 
             ? "حول المشروع" 
@@ -258,6 +258,7 @@ export default function LandingPage() {
             </p>
           </>
         )}
+        </div>
       </section>
 
       <section className="developers-llms">
@@ -298,14 +299,15 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="credits">
-        <h2>
-          {language === "ar" 
-            ? "القائمون على المشروع" 
-            : language === "fr"
-            ? "Équipe du projet"
-            : "Project Team"}
-        </h2>
+      <section className="colophon">
+        <div className="colophon__item">
+          <h2>
+            {language === "ar"
+              ? "القائمون على المشروع"
+              : language === "fr"
+              ? "Équipe du projet"
+              : "Project Team"}
+          </h2>
         {language === "ar" ? (
           <p>
             تم بحث وتصميم وتطوير هذا المشروع من قبل خيام اللامي وإبراهيم الخنسة في مختبر الذكاء الموسيقى في الجامعة الأمريكية في بيروت، لبنان، وأُطلق
@@ -321,16 +323,15 @@ export default function LandingPage() {
             University of Beirut, Lebanon, and launched in September 2025.
           </p>
         )}
-      </section>
-
-      <section className="contribute">
-        <h2>
-          {language === "ar" 
-            ? "ساهموا" 
-            : language === "fr"
-            ? "Contribuer"
-            : "Contribute"}
-        </h2>
+        </div>
+        <div className="colophon__item">
+          <h2>
+            {language === "ar"
+              ? "ساهموا"
+              : language === "fr"
+              ? "Contribuer"
+              : "Contribute"}
+          </h2>
         {language === "ar" ? (
           <p>
             نرحب بمساهمات المجتمع لمساعدتنا في تحسين وتوسيع هذا المشروع أكثر. يرجى زيارة مستودع GitHub الخاص بنا للإبلاغ عن المشاكل أو اقتراح الميزات
@@ -348,7 +349,24 @@ export default function LandingPage() {
             Allami directly on <a href="mailto:ka109&#64;aub&#46;edu&#46;lb">ka109&#64;aub&#46;edu&#46;lb</a>.
           </p>
         )}
+        </div>
+      </section>
 
+      <section className="closing-cta">
+        <p>
+          {language === "ar"
+            ? "مئات من أنظمة التناغيم والأجناس والمقامات — جاهزة للعزف والسماع والدراسة."
+            : language === "fr"
+            ? "Des centaines de systèmes d'accord, d'ajnās et de maqāmāt — prêts à être joués, écoutés et étudiés."
+            : "Hundreds of tuning systems, ajnās, and maqāmāt — ready to be played, heard, and studied."}
+        </p>
+        <Link className="main-button" href="/app">
+          {language === "ar"
+            ? "ادخلوا إلى الأرشيف"
+            : language === "fr"
+            ? "Entrer dans l'Archive"
+            : "Enter the Archive"}
+        </Link>
       </section>
     </div>
     <Footer />
