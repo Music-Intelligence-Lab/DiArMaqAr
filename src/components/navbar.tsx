@@ -376,7 +376,7 @@ export default function Navbar() {
                 setSelectedMenu("tuningSystem");
               }}
             >
-              <span className="navbar__title-line">أرشيف المقامات العربية الرقمي</span>
+              <span className="navbar__title-line">أرشيف المقام العربي الرقمي</span>
               <span className="navbar__title-line">Digital Arabic Maqām Archive</span>
             </h1>
           </div>
