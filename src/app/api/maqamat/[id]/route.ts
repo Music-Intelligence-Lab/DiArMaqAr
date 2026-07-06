@@ -745,66 +745,61 @@ export async function GET(
         );
       }
 
-      // Require startingNote for discovery mode (required in all cases)
-      if (!startingNote) {
-        const noteNameSets = selectedTuningSystem.getNoteNameSets();
-        const validOptions = noteNameSets.map((set) => set[0]);
-        return addCorsHeaders(
-          NextResponse.json(
-            {
-              error: "startingNote parameter is required",
-              message: "A tuning system starting note must be specified. This is mandatory for all requests.",
-              validOptions: validOptions,
-              hint: `Add &startingNote=${validOptions[0]} to your request`
-            },
-            { status: 400 }
-          )
-        );
-      }
-
-      // Validate startingNote is not empty string
-      if (startingNote.trim() === "") {
-        return addCorsHeaders(
-          NextResponse.json(
-            {
-              error: "Invalid parameter: startingNote",
-              message: "The 'startingNote' parameter cannot be empty. Provide a valid note name.",
-              hint: "Specify a starting note like '?startingNote=yegah'"
-            },
-            { status: 400 }
-          )
-        );
-      }
-
-      // Find matching starting note (with or without diacritics)
+      // startingNote is optional in discovery mode: when omitted, the response
+      // still lists starting-note options but transpositions cannot be computed.
       const noteNameSets = selectedTuningSystem.getNoteNameSets();
-      const matchingSet = noteNameSets.find(
-        (set) => standardizeText(set[0]) === standardizeText(startingNote)
-      );
+      let selectedStartingNote: string | null = null;
 
-      if (!matchingSet) {
-        const validStartingNotes = noteNameSets.map((set) => set[0]);
-        return addCorsHeaders(
-          NextResponse.json(
-            {
-              error: `Invalid startingNote '${startingNote}'`,
-              validOptions: validStartingNotes,
-              hint: `Valid starting notes for this tuning system: ${validStartingNotes.join(", ")}`
-            },
-            { status: 400 }
-          )
+      if (startingNote !== null) {
+        if (startingNote.trim() === "") {
+          return addCorsHeaders(
+            NextResponse.json(
+              {
+                error: "Invalid parameter: startingNote",
+                message: "The 'startingNote' parameter cannot be empty. Provide a valid note name.",
+                hint: "Specify a starting note like '?startingNote=yegah'"
+              },
+              { status: 400 }
+            )
+          );
+        }
+
+        const matchingSet = noteNameSets.find(
+          (set) => standardizeText(set[0]) === standardizeText(startingNote)
         );
+        if (!matchingSet) {
+          const validStartingNotes = noteNameSets.map((set) => set[0]);
+          return addCorsHeaders(
+            NextResponse.json(
+              {
+                error: `Invalid startingNote '${startingNote}'`,
+                validOptions: validStartingNotes,
+                hint: `Valid starting notes for this tuning system: ${validStartingNotes.join(", ")}`
+              },
+              { status: 400 }
+            )
+          );
+        }
+        selectedStartingNote = matchingSet[0];
       }
 
-      const selectedStartingNote = matchingSet[0];
-      
-      // Get available starting notes for this tuning system
-      const startingNoteOptions = selectedTuningSystem.getNoteNameSets().map((set) => set[0]);
-      
-      // Get pitch classes and calculate valid transpositions
-      const pitchClasses = getTuningSystemPitchClasses(selectedTuningSystem, selectedStartingNote);
-      const transpositions = calculateMaqamTranspositions(pitchClasses, ajnas, maqam, true, 5);
-      const transposeOptions = transpositions.map((t) => t.ascendingPitchClasses[0].noteName);
+      // Available starting notes for this tuning system (URL-ready idNames)
+      const startingNoteOptions = noteNameSets.map((set) => standardizeText(set[0]));
+
+      // Transpositions require a starting note; null = not computed
+      const transposeOptions =
+        selectedStartingNote !== null
+          ? calculateMaqamTranspositions(
+              getTuningSystemPitchClasses(selectedTuningSystem, selectedStartingNote),
+              ajnas,
+              maqam,
+              true,
+              5
+            ).map((t) => standardizeText(t.ascendingPitchClasses[0].noteName))
+          : null;
+
+      const exampleStartingNote =
+        selectedStartingNote !== null ? standardizeText(selectedStartingNote) : startingNoteOptions[0];
 
       return addCorsHeaders(
         NextResponse.json({
@@ -818,7 +813,7 @@ export async function GET(
             startingNote: {
               options: startingNoteOptions,
               required: true,
-              description: "Theoretical framework for note naming. Required for all requests (data retrieval and discovery). Needed to calculate transposition options."
+              description: "Theoretical framework for note naming. Required for data retrieval. Optional for discovery mode (options=true). Needed to calculate transposition options."
             },
             pitchClassDataType: {
               options: [
@@ -836,8 +831,8 @@ export async function GET(
                 "centsDeviation",
                 "referenceNoteName"
               ],
-              required: true,
-              description: "Output format for pitch data. Required for data retrieval (when not using options=true). Optional for discovery mode (options=true). Use 'all' for complete pitch class information."
+              required: false,
+              description: "Output format for pitch data. Optional — when omitted, pitch classes contain only minimal note-name fields. Use 'cents' for tuning analysis or 'all' for complete pitch class information."
             },
             includeIntervals: {
               type: "boolean",
@@ -845,8 +840,8 @@ export async function GET(
               description: "Include interval data between pitch classes (?includeIntervals=true)"
             },
             transposeTo: {
-              options: transposeOptions.length > 0 ? transposeOptions.map(note => standardizeText(note)) : [],
-              description: "Transpose to specific tonic (taṣwīr) - only valid transpositions shown. Calculated based on the provided tuningSystem and startingNote."
+              options: transposeOptions,
+              description: "Transpose to specific tonic (taṣwīr) - only valid transpositions shown. Calculated based on the provided tuningSystem and startingNote; null until a startingNote is provided."
             },
             includeModulations: {
               type: "boolean",
@@ -869,11 +864,11 @@ export async function GET(
             formatOptions: "The 'pitchClassDataType' parameter controls which pitch class properties are returned. Use 'all' for comprehensive data or specific formats like 'cents', 'fraction', etc. for targeted data."
           },
           examples: [
-            `/api/maqamat/${maqamId}?tuningSystem=${tuningSystemId}&startingNote=${standardizeText(selectedStartingNote)}&pitchClassDataType=cents&includeIntervals=true`,
-            ...(transposeOptions.length > 1
-              ? [`/api/maqamat/${maqamId}?tuningSystem=${tuningSystemId}&startingNote=${standardizeText(selectedStartingNote)}&pitchClassDataType=cents&transposeTo=${standardizeText(transposeOptions[1])}&includeModulations=true`]
+            `/api/maqamat/${maqamId}?tuningSystem=${tuningSystemId}&startingNote=${exampleStartingNote}&pitchClassDataType=cents&includeIntervals=true`,
+            ...(transposeOptions !== null && transposeOptions.length > 1
+              ? [`/api/maqamat/${maqamId}?tuningSystem=${tuningSystemId}&startingNote=${exampleStartingNote}&pitchClassDataType=cents&transposeTo=${transposeOptions[1]}&includeModulations=true`]
               : []),
-            `/api/maqamat/${maqamId}?tuningSystem=${tuningSystemId}&startingNote=${standardizeText(selectedStartingNote)}&pitchClassDataType=all&includeSuyur=true`
+            `/api/maqamat/${maqamId}?tuningSystem=${tuningSystemId}&startingNote=${exampleStartingNote}&pitchClassDataType=all&includeSuyur=true`
           ]
         })
       );
@@ -919,7 +914,7 @@ export async function GET(
             error: "startingNote parameter is required",
             message: "A tuning system starting note must be specified. This is mandatory for all pitch class calculations.",
             validOptions: validOptions,
-            hint: `Add &startingNote=${validOptions[0]} to your request`
+            hint: `Add &startingNote=${validOptions[0]} to your request, or add &options=true to discover valid values`
           },
           { status: 400 }
         )
