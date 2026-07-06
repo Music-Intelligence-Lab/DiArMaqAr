@@ -1,8 +1,15 @@
 "use client";
 
 import React from "react";
+import { usePathname } from "next/navigation";
 
 export default function MobileWarning() {
+  const pathname = usePathname();
+
+  // The landing page is informational and must remain readable on phones;
+  // only the interactive app requires a desktop viewport.
+  if (pathname === "/") return null;
+
   return (
     <div className="mobile-warning">
       <div className="mobile-warning__content">

@@ -128,11 +128,13 @@
   }
 }
 
-// Show mobile warning only on screens smaller than 1024px
+// Show mobile warning only on screens smaller than 1024px.
+// Scoped to :has(.mobile-warning) so pages that opt out of the warning
+// (the landing page) stay scrollable and visible on phones.
 @media (max-width: 1023px) {
 
-  html,
-  body {
+  html:has(.mobile-warning),
+  body:has(.mobile-warning) {
     overflow: hidden;
     margin: 0;
     padding: 0;
@@ -140,15 +142,15 @@
     height: 100%;
   }
 
-  body {
+  body:has(.mobile-warning) {
     position: relative;
-  }
 
-  .center-container {
-    display: none !important;
-  }
+    .center-container {
+      display: none !important;
+    }
 
-  .navbar {
-    display: none !important;
+    .navbar {
+      display: none !important;
+    }
   }
 }

@@ -65,6 +65,12 @@ body {
   }
 }
 
+// The informational landing page renders on any viewport;
+// only the interactive app enforces the desktop-width floor above.
+body:has(.landing-page) {
+  min-width: 0;
+}
+
 *,
 *::before,
 *::after {
