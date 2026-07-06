@@ -869,9 +869,11 @@ export async function GET(
             formatOptions: "The 'pitchClassDataType' parameter controls which pitch class properties are returned. Use 'all' for comprehensive data or specific formats like 'cents', 'fraction', etc. for targeted data."
           },
           examples: [
-            `/api/maqamat/${maqamId}?tuningSystem=ibnsina_1037&startingNote=ushayran&pitchClassDataType=cents&includeIntervals=true`,
-            `/api/maqamat/${maqamId}?tuningSystem=ibnsina_1037&startingNote=ushayran&pitchClassDataType=cents&transposeTo=nawa&includeModulations=true`,
-            `/api/maqamat/${maqamId}?tuningSystem=ibnsina_1037&startingNote=ushayran&pitchClassDataType=all&includeSuyur=true`
+            `/api/maqamat/${maqamId}?tuningSystem=${tuningSystemId}&startingNote=${standardizeText(selectedStartingNote)}&pitchClassDataType=cents&includeIntervals=true`,
+            ...(transposeOptions.length > 1
+              ? [`/api/maqamat/${maqamId}?tuningSystem=${tuningSystemId}&startingNote=${standardizeText(selectedStartingNote)}&pitchClassDataType=cents&transposeTo=${standardizeText(transposeOptions[1])}&includeModulations=true`]
+              : []),
+            `/api/maqamat/${maqamId}?tuningSystem=${tuningSystemId}&startingNote=${standardizeText(selectedStartingNote)}&pitchClassDataType=all&includeSuyur=true`
           ]
         })
       );

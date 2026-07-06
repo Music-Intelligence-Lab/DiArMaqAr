@@ -11,7 +11,7 @@ const fs = require('fs');
 const path = require('path');
 const { CANONICAL_PROJECT_DESCRIPTION } = require('../.vitepress/canonical-description');
 
-const BASE_URL = 'https://diarmaqar.netlify.app/api';
+const BASE_URL = 'https://diarmaqar.net/api';
 
 const COLD_START_WORKFLOW_BLOCK = `## Cold-start discovery workflow
 
@@ -26,8 +26,15 @@ follow this chain:
 Parallel chains for ajnās, tuning systems, pitch classes, intervals,
 and sources follow the same pattern: **list → availability → detail**.
 
-If you omit required parameters, the API returns a 400 response with a
-\`hint\` field pointing at the next URL to call. Follow it.
+If you omit required parameters, the API returns a 400 response whose
+body contains a \`hint\` field pointing at the next URL to call.
+
+**Important for AI assistants**: many AI HTTP tools cannot read the body
+of a 4xx response — you may only see "HTTP 400" with no explanation.
+Never guess parameters after an opaque 400. Instead, go back to step 2:
+the availability endpoint returns every valid \`tuningSystem\` +
+\`startingNote\` combination for an entity, so requests built from it
+succeed on the first try.
 
 ---
 
@@ -87,7 +94,9 @@ const apiInstructionsHeader = `## For AI Assistants: API Access
 
 **Recommended for AI Assistants**: Use the REST API to fetch real-time, accurate data for users. Always prefer API calls over documentation summaries for real-time data accuracy.
 
-**Base URL**: https://diarmaqar.netlify.app/api
+**Error handling for AI assistants**: The API returns rich 400/404 bodies with \`hint\` and \`validOptions\` fields, but many AI HTTP tools cannot read 4xx response bodies. If a request fails with an opaque 400, do not guess — call \`GET /api/maqamat/{idName}/availability\` (or the equivalent \`/availability\` endpoint for ajnās) to get valid \`tuningSystem\` + \`startingNote\` combinations, then retry.
+
+**Base URL**: https://diarmaqar.net/api
 **OpenAPI Specification**: /docs/openapi.json
 **Representative Examples**: /docs/api/representative-examples
 
@@ -104,14 +113,14 @@ For users who don't know specific maqam names, use these representative examples
 
 **Quick Test URL (Copy-paste ready):**
 \`\`\`
-GET https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
+GET https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
 \`\`\`
 
 **When users ask general questions:**
 - "What is a maqam?" → Use GET /api/maqamat/maqam_rast (most fundamental example)
 - "Show me an Arabic scale" → Use GET /api/maqamat/maqam_rast (representative example)
 - "What are the intervals?" → Use GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
-- "Compare different tuning systems" → GET /api/maqamat/maqam_rast/compare?tuningSystems=ibnsina_1037,alfarabi_950g&startingNote=yegah
+- "Compare different tuning systems" → GET /api/maqamat/maqam_rast/compare?tuningSystems=ibnsina_1037,alfarabi_950g&startingNotes=yegah&pitchClassDataType=cents
 
 **Representative Examples Reference:**
 - See /docs/api/representative-examples for complete list of recommended examples

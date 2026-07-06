@@ -20,7 +20,7 @@
     # tool inspecting a response can auto-discover the full contract.
     # rel="service-desc" is the RFC 8631 link relation for an API description.
     # Points at the stable root-level /openapi.json alias (see redirects below).
-    Link = "<https://diarmaqar.netlify.app/openapi.json>; rel=\"service-desc\"; type=\"application/json\""
+    Link = "<https://diarmaqar.net/openapi.json>; rel=\"service-desc\"; type=\"application/json\""
 
 # Note: Static files from public/docs/ should be served by Next.js automatically
 # The route handler at /docs/[[...slug]] will handle HTML pages, but static

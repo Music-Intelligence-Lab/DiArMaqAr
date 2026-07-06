@@ -1059,21 +1059,20 @@ paths:
                         required: true
                         description: "ID of tuning system (see /availability for options)"
                       startingNote:
-                        options: ["ushayran", "yegah"]
-                        default: "ushayran"
-                        description: "Theoretical framework for note naming"
+                        options: ["ʿushayrān", "yegāh"]
+                        required: true
+                        description: "Theoretical framework for note naming. Required for all requests (data retrieval and discovery). Needed to calculate transposition options."
                       pitchClassDataType:
-                        options: ["all", "frequency", "cents", "fraction", "decimalRatio", "stringLength", "abjadName", "fretDivision", "midiNoteNumber", "midiNoteDeviation", "centsDeviation", "referenceNoteName", "englishName"]
-                        default: null
-                        description: "Output format for pitch data. When omitted, returns only minimal fields (pitchClassIndex, octave, scaleDegree, noteName, noteNameDisplay, noteNameDisplayAr). Use 'all' for complete pitch class information."
+                        options: ["all", "englishName", "fraction", "cents", "decimalRatio", "stringLength", "frequency", "abjadName", "fretDivision", "midiNoteNumber", "midiNoteDeviation", "centsDeviation", "referenceNoteName"]
+                        required: true
+                        description: "Output format for pitch data. Required for data retrieval (when not using options=true). Optional for discovery mode (options=true). Use 'all' for complete pitch class information."
                       includeIntervals:
                         type: "boolean"
                         default: false
-                        description: "Include interval data between pitch classes"
+                        description: "Include interval data between pitch classes (?includeIntervals=true)"
                       transposeTo:
-                        options: ["rast", "nawa", "dugah"]
-                        default: null
-                        description: "Transpose to specific tonic (taṣwīr) - only valid transpositions shown"
+                        options: ["rast", "qarar_rast", "qarar_chahargah", "chahargah", "kurdan", "mahuran"]
+                        description: "Transpose to specific tonic (taṣwīr) - only valid transpositions shown. Calculated based on the provided tuningSystem and startingNote."
                       includeModulations:
                         type: "boolean"
                         default: false
@@ -1088,10 +1087,11 @@ paths:
                         description: "Include documented performance practices (suyūr)"
                     notes:
                       ajnasData: "Ajnās (constituent melodic structures) are always included in the response for maqām analysis"
-                      formatOptions: "The 'pitchClassDataType' parameter controls which pitch class properties are returned. When omitted, only minimal fields are returned. Use 'all' for comprehensive data or specific formats like 'cents', 'fraction', etc. for targeted data."
+                      formatOptions: "The 'pitchClassDataType' parameter controls which pitch class properties are returned. Use 'all' for comprehensive data or specific formats like 'cents', 'fraction', etc. for targeted data."
                     examples:
                       - "/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents&includeIntervals=true"
-                      - "/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&transposeTo=nawa&includeModulations=true"
+                      - "/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents&transposeTo=qarar_rast&includeModulations=true"
+                      - "/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=all&includeSuyur=true"
         '400':
           description: Invalid request parameters
           content:
