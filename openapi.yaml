@@ -405,7 +405,7 @@ paths:
         - If data-returning parameters are provided with options=true, the API returns a 400 Bad Request error with details about conflicting parameters
         
         Requirements:
-        - Tuning system and starting note are required for all requests (both data retrieval and discovery mode)
+        - Tuning system is required for all requests; a starting note is required for data retrieval and optional in discovery mode (options=true), where omitting it returns the tuning system's valid starting notes
         - These are fundamental to all pitch class calculations
       operationId: getMaqam
       parameters:
@@ -474,7 +474,7 @@ paths:
             When true, returns available parameter options instead of maqām data.
             
             - Useful for discovering valid values for tuning systems, starting notes, and other parameters
-            - Tuning system and starting note are required for all requests (both data retrieval and discovery mode)
+            - Tuning system is required for all requests; a starting note is required for data retrieval and optional in discovery mode (options=true), where omitting it returns the tuning system's valid starting notes
             - These are fundamental to all pitch class calculations and calculate valid starting note options and transposition tonics
             - Mutually exclusive with data-returning parameters (transpose to, include modulations, include lower octave modulations, include suyūr, pitch class data type, includeIntervals)
             - Transposition options are dynamically calculated based on the specific maqām, tuning system, and starting note combination
@@ -1059,20 +1059,20 @@ paths:
                         required: true
                         description: "ID of tuning system (see /availability for options)"
                       startingNote:
-                        options: ["ʿushayrān", "yegāh"]
+                        options: ["ushayran", "yegah"]
                         required: true
-                        description: "Theoretical framework for note naming. Required for all requests (data retrieval and discovery). Needed to calculate transposition options."
+                        description: "Theoretical framework for note naming. Required for data retrieval. Optional for discovery mode (options=true). Needed to calculate transposition options."
                       pitchClassDataType:
                         options: ["all", "englishName", "fraction", "cents", "decimalRatio", "stringLength", "frequency", "abjadName", "fretDivision", "midiNoteNumber", "midiNoteDeviation", "centsDeviation", "referenceNoteName"]
-                        required: true
-                        description: "Output format for pitch data. Required for data retrieval (when not using options=true). Optional for discovery mode (options=true). Use 'all' for complete pitch class information."
+                        required: false
+                        description: "Output format for pitch data. Optional — when omitted, pitch classes contain only minimal note-name fields. Use 'cents' for tuning analysis or 'all' for complete pitch class information."
                       includeIntervals:
                         type: "boolean"
                         default: false
                         description: "Include interval data between pitch classes (?includeIntervals=true)"
                       transposeTo:
                         options: ["rast", "qarar_rast", "qarar_chahargah", "chahargah", "kurdan", "mahuran"]
-                        description: "Transpose to specific tonic (taṣwīr) - only valid transpositions shown. Calculated based on the provided tuningSystem and startingNote."
+                        description: "Transpose to specific tonic (taṣwīr) - only valid transpositions shown. Calculated based on the provided tuningSystem and startingNote; null until a startingNote is provided."
                       includeModulations:
                         type: "boolean"
                         default: false
@@ -1092,6 +1092,48 @@ paths:
                       - "/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents&includeIntervals=true"
                       - "/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents&transposeTo=qarar_rast&includeModulations=true"
                       - "/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=all&includeSuyur=true"
+                withOptionsNoStartingNote:
+                  summary: Options response without startingNote (discovery)
+                  value:
+                    maqam: "maqām rāst"
+                    tuningSystem: "ibnsina_1037"
+                    availableParameters:
+                      tuningSystem:
+                        required: true
+                        description: "ID of tuning system (see /availability for options)"
+                      startingNote:
+                        options: ["ushayran", "yegah"]
+                        required: true
+                        description: "Theoretical framework for note naming. Required for data retrieval. Optional for discovery mode (options=true). Needed to calculate transposition options."
+                      pitchClassDataType:
+                        options: ["all", "englishName", "fraction", "cents", "decimalRatio", "stringLength", "frequency", "abjadName", "fretDivision", "midiNoteNumber", "midiNoteDeviation", "centsDeviation", "referenceNoteName"]
+                        required: false
+                        description: "Output format for pitch data. Optional — when omitted, pitch classes contain only minimal note-name fields. Use 'cents' for tuning analysis or 'all' for complete pitch class information."
+                      includeIntervals:
+                        type: "boolean"
+                        default: false
+                        description: "Include interval data between pitch classes (?includeIntervals=true)"
+                      transposeTo:
+                        options: null
+                        description: "Transpose to specific tonic (taṣwīr) - only valid transpositions shown. Calculated based on the provided tuningSystem and startingNote; null until a startingNote is provided."
+                      includeModulations:
+                        type: "boolean"
+                        default: false
+                        description: "Include modulation analysis (maqāmāt and ajnās)"
+                      includeModulations8vb:
+                        type: "boolean"
+                        default: false
+                        description: "Include available modulations an octave below"
+                      includeSuyur:
+                        type: "boolean"
+                        default: false
+                        description: "Include documented performance practices (suyūr)"
+                    notes:
+                      ajnasData: "Ajnās (constituent melodic structures) are always included in the response for maqām analysis"
+                      formatOptions: "The 'pitchClassDataType' parameter controls which pitch class properties are returned. Use 'all' for comprehensive data or specific formats like 'cents', 'fraction', etc. for targeted data."
+                    examples:
+                      - "/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=ushayran&pitchClassDataType=cents&includeIntervals=true"
+                      - "/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=ushayran&pitchClassDataType=all&includeSuyur=true"
         '400':
           description: Invalid request parameters
           content:
@@ -5624,7 +5666,7 @@ paths:
         - If data-returning parameters are provided with options=true, the API returns a 400 Bad Request error with details about conflicting parameters
         
         Requirements:
-        - Tuning system and starting note are required for all requests (both data retrieval and discovery mode)
+        - Tuning system is required for all requests; a starting note is required for data retrieval and optional in discovery mode (options=true), where omitting it returns the tuning system's valid starting notes
         - These are fundamental to all pitch class calculations
       operationId: getJins
       parameters:
@@ -5687,7 +5729,7 @@ paths:
             When true, returns available parameter options instead of jins data.
             
             - Useful for discovering valid values for tuning systems, starting notes, and other parameters
-            - Tuning system and starting note are required for all requests (both data retrieval and discovery mode)
+            - Tuning system is required for all requests; a starting note is required for data retrieval and optional in discovery mode (options=true), where omitting it returns the tuning system's valid starting notes
             - These are fundamental to all pitch class calculations and calculate valid starting note options and transposition tonics
             - Mutually exclusive with data-returning parameters (transpose to, include modulations, include lower octave modulations, pitch class data type, intervals)
             - Transposition options are dynamically calculated based on the specific jins, tuning system, and starting note combination
@@ -5891,7 +5933,7 @@ paths:
                 withOptions:
                   summary: Options response (when options=true)
                   value:
-                    jins: "Jins Kurd"
+                    jins: "jins rāst"
                     tuningSystem: "ibnsina_1037"
                     availableParameters:
                       tuningSystem:
@@ -5899,25 +5941,56 @@ paths:
                         description: "ID of tuning system (see /availability for options)"
                       startingNote:
                         options: ["ushayran", "yegah"]
-                        default: "ushayran"
-                        description: "Theoretical framework for note naming"
+                        required: true
+                        description: "Theoretical framework for note naming. Required for data retrieval. Optional for discovery mode (options=true). Needed to calculate transposition options."
                       pitchClassDataType:
-                        options: ["all", "frequency", "cents", "fraction", "decimalRatio", "stringLength", "abjadName", "fretDivision", "midiNoteNumber", "midiNoteDeviation", "centsDeviation", "referenceNoteName", "englishName"]
-                        default: "cents"
-                        description: "Output format for pitch data. Use 'all' for complete pitch class information."
+                        options: ["all", "englishName", "solfege", "fraction", "cents", "decimalRatio", "stringLength", "frequency", "abjadName", "fretDivision", "midiNoteNumber", "midiNoteDeviation", "centsDeviation", "referenceNoteName"]
+                        required: false
+                        default: "all"
+                        description: "Output format for pitch data. Optional — defaults to 'all' (complete pitch class information) when omitted."
                       includeIntervals:
                         type: "boolean"
-                        default: true
-                        description: "Include interval data between pitch classes"
+                        default: false
+                        description: "Include interval data between pitch classes (?includeIntervals=true)"
                       transposeTo:
-                        options: ["rast", "nawa", "dugah"]
-                        default: null
-                        description: "Transpose to specific tonic (taṣwīr) - only valid transpositions shown"
+                        options: ["qarar_rast", "qarar_yegah", "qarar_ajam_ushayran", "qarar_chahargah", "yegah", "ajam_ushayran", "rast", "chahargah", "nawa", "ajam", "kurdan", "mahuran", "saham/ramal_tuti", "jawab_ajam", "jawab_kurdan"]
+                        description: "Transpose to specific tonic (taṣwīr) - only valid transpositions shown. Calculated based on the provided tuningSystem and startingNote; null until a startingNote is provided."
                     notes:
                       formatOptions: "The 'pitchClassDataType' parameter controls which pitch class properties are returned. Use 'all' for comprehensive data or specific formats like 'cents', 'fraction', etc. for targeted data."
                     examples:
                       - "/api/ajnas/jins_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents&includeIntervals=true"
-                      - "/api/ajnas/jins_kurd?tuningSystem=alkindi_874&startingNote=ushayran&pitchClassDataType=cents&includeIntervals=true"
+                      - "/api/ajnas/jins_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents&transposeTo=qarar_yegah"
+                      - "/api/ajnas/jins_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=all"
+                withOptionsNoStartingNote:
+                  summary: Options response without startingNote (discovery)
+                  value:
+                    jins: "jins rāst"
+                    tuningSystem: "ibnsina_1037"
+                    availableParameters:
+                      tuningSystem:
+                        required: true
+                        description: "ID of tuning system (see /availability for options)"
+                      startingNote:
+                        options: ["ushayran", "yegah"]
+                        required: true
+                        description: "Theoretical framework for note naming. Required for data retrieval. Optional for discovery mode (options=true). Needed to calculate transposition options."
+                      pitchClassDataType:
+                        options: ["all", "englishName", "solfege", "fraction", "cents", "decimalRatio", "stringLength", "frequency", "abjadName", "fretDivision", "midiNoteNumber", "midiNoteDeviation", "centsDeviation", "referenceNoteName"]
+                        required: false
+                        default: "all"
+                        description: "Output format for pitch data. Optional — defaults to 'all' (complete pitch class information) when omitted."
+                      includeIntervals:
+                        type: "boolean"
+                        default: false
+                        description: "Include interval data between pitch classes (?includeIntervals=true)"
+                      transposeTo:
+                        options: null
+                        description: "Transpose to specific tonic (taṣwīr) - only valid transpositions shown. Calculated based on the provided tuningSystem and startingNote; null until a startingNote is provided."
+                    notes:
+                      formatOptions: "The 'pitchClassDataType' parameter controls which pitch class properties are returned. Use 'all' for comprehensive data or specific formats like 'cents', 'fraction', etc. for targeted data."
+                    examples:
+                      - "/api/ajnas/jins_rast?tuningSystem=ibnsina_1037&startingNote=ushayran&pitchClassDataType=cents&includeIntervals=true"
+                      - "/api/ajnas/jins_rast?tuningSystem=ibnsina_1037&startingNote=ushayran&pitchClassDataType=all"
         '400':
           description: Invalid request parameters
           content:
