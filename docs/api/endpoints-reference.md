@@ -297,7 +297,7 @@ Important:
 - If data-returning parameters are provided with options=true, the API returns a 400 Bad Request error with details about conflicting parameters
 
 Requirements:
-- Tuning system and starting note are required for all requests (both data retrieval and discovery mode)
+- Tuning system is required for all requests; a starting note is required for data retrieval and optional in discovery mode (options=true), where omitting it returns the tuning system's valid starting notes
 - These are fundamental to all pitch class calculations
 
 
@@ -324,7 +324,7 @@ Requirements:
   - Example: `ushayran` - ʿushayrān (for al-Farabi, al-Kindi)
   - Example: `rast` - rāst (for CairoCongress, al-Sabbagh)
 - `options` (optional): When true, returns available parameter options instead of maqām data.
-  - Tuning system and starting note are required for all requests (both data retrieval and discovery mode)
+  - Tuning system is required for all requests; a starting note is required for data retrieval and optional in discovery mode (options=true), where omitting it returns the tuning system's valid starting notes
   - These are fundamental to all pitch class calculations and calculate valid starting note options and transposition tonics
   - Mutually exclusive with data-returning parameters (transpose to, include modulations, include lower octave modulations, include suyūr, pitch class data type, includeIntervals)
   - Transposition options are dynamically calculated based on the specific maqām, tuning system, and starting note combination
@@ -2274,7 +2274,7 @@ Important:
 - If data-returning parameters are provided with options=true, the API returns a 400 Bad Request error with details about conflicting parameters
 
 Requirements:
-- Tuning system and starting note are required for all requests (both data retrieval and discovery mode)
+- Tuning system is required for all requests; a starting note is required for data retrieval and optional in discovery mode (options=true), where omitting it returns the tuning system's valid starting notes
 - These are fundamental to all pitch class calculations
 
 
@@ -2297,7 +2297,7 @@ Requirements:
   - Example: `ushayran` - ʿushayrān (for al-Farabi, al-Kindi)
   - Example: `rast` - rāst (for CairoCongress, al-Sabbagh)
 - `options` (optional): When true, returns available parameter options instead of jins data.
-  - Tuning system and starting note are required for all requests (both data retrieval and discovery mode)
+  - Tuning system is required for all requests; a starting note is required for data retrieval and optional in discovery mode (options=true), where omitting it returns the tuning system's valid starting notes
   - These are fundamental to all pitch class calculations and calculate valid starting note options and transposition tonics
   - Mutually exclusive with data-returning parameters (transpose to, include modulations, include lower octave modulations, pitch class data type, intervals)
   - Transposition options are dynamically calculated based on the specific jins, tuning system, and starting note combination

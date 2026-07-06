@@ -26,6 +26,10 @@ follow this chain:
 Parallel chains for ajnās, tuning systems, pitch classes, intervals,
 and sources follow the same pattern: **list → availability → detail**.
 
+Tip: \`options=true\` on a detail endpoint needs only \`tuningSystem\` —
+it returns the valid starting notes (idNames), and once \`startingNote\`
+is added, the valid \`transposeTo\` tonics.
+
 If you omit required parameters, the API returns a 400 response whose
 body contains a \`hint\` field pointing at the next URL to call.
 

@@ -127,7 +127,7 @@ GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&options
 
 This returns available parameters instead of data, which is useful for programmatic discovery.
 
-**Precondition:** discovery mode still requires a valid `tuningSystem` and `startingNote` — the transposition options depend on them. If you don't have a valid combination yet, start with the availability endpoint instead:
+**Precondition:** discovery mode requires a valid `tuningSystem`. `startingNote` is optional — without it the response lists the tuning system's valid starting notes and returns `transposeTo.options: null` (transpositions depend on the starting note). If you don't have a valid tuning system yet, start with the availability endpoint instead:
 
 ```bash
 GET /api/maqamat/maqam_rast/availability
@@ -143,7 +143,7 @@ GET /api/maqamat/maqam_rast/availability
 2. **Use Representative Examples** (this page) as the source of truth for correct API usage
 3. **Reference the OpenAPI specification** at `/docs/openapi.json` for complete parameter documentation
 4. **Use the availability endpoint first** (`/api/maqamat/{idName}/availability`, `/api/ajnas/{idName}/availability`) when you don't already have a known-valid `tuningSystem` + `startingNote` combination
-5. **Use parameter discovery** (`options=true`) to discover the remaining parameters for a combination you already know is valid
+5. **Use parameter discovery** (`options=true`) once you know a valid `tuningSystem` — `startingNote` is optional in discovery mode and the response lists the valid ones
 
 **If a request fails with HTTP 400:** the response body contains `error`, `hint`, and `validOptions` fields explaining exactly what to fix — but many AI HTTP tools cannot read 4xx response bodies, so you may only see the status code. In that case do not guess: call the availability endpoint for the entity and rebuild the request from a listed combination.
 
@@ -153,7 +153,7 @@ GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&options
 ```
 
 **Response includes:**
-- Valid starting notes for the requested tuning system (as display names — both display and URL-safe forms are accepted as parameter values)
+- Valid starting notes for the requested tuning system (as URL-safe idNames, ready to use as parameter values)
 - Valid `pitchClassDataType` values
 - Valid `transposeTo` tonics, calculated for the requested tuning system and starting note
 - The boolean flags (`includeIntervals`, `includeModulations`, `includeModulations8vb`, `includeSuyur`)
@@ -169,23 +169,63 @@ GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&options
       "description": "ID of tuning system (see /availability for options)"
     },
     "startingNote": {
-      "options": ["ʿushayrān", "yegāh"],
+      "options": [
+        "ushayran",
+        "yegah"
+      ],
       "required": true,
-      "description": "Theoretical framework for note naming. Required for all requests (data retrieval and discovery). Needed to calculate transposition options."
+      "description": "Theoretical framework for note naming. Required for data retrieval. Optional for discovery mode (options=true). Needed to calculate transposition options."
     },
     "pitchClassDataType": {
-      "options": ["all", "englishName", "fraction", "cents", "decimalRatio", "stringLength", "frequency", "abjadName", "fretDivision", "midiNoteNumber", "midiNoteDeviation", "centsDeviation", "referenceNoteName"],
-      "required": true,
-      "description": "Output format for pitch data. Required for data retrieval (when not using options=true). Optional for discovery mode (options=true). Use 'all' for complete pitch class information."
+      "options": [
+        "all",
+        "englishName",
+        "fraction",
+        "cents",
+        "decimalRatio",
+        "stringLength",
+        "frequency",
+        "abjadName",
+        "fretDivision",
+        "midiNoteNumber",
+        "midiNoteDeviation",
+        "centsDeviation",
+        "referenceNoteName"
+      ],
+      "required": false,
+      "description": "Output format for pitch data. Optional — when omitted, pitch classes contain only minimal note-name fields. Use 'cents' for tuning analysis or 'all' for complete pitch class information."
     },
-    "includeIntervals": { "type": "boolean", "default": false },
+    "includeIntervals": {
+      "type": "boolean",
+      "default": false,
+      "description": "Include interval data between pitch classes (?includeIntervals=true)"
+    },
     "transposeTo": {
-      "options": ["rast", "qarar_rast", "qarar_chahargah", "chahargah", "kurdan", "mahuran"],
-      "description": "Transpose to specific tonic (taṣwīr) - only valid transpositions shown. Calculated based on the provided tuningSystem and startingNote."
+      "options": [
+        "rast",
+        "qarar_rast",
+        "qarar_chahargah",
+        "chahargah",
+        "kurdan",
+        "mahuran"
+      ],
+      "description": "Transpose to specific tonic (taṣwīr) - only valid transpositions shown. Calculated based on the provided tuningSystem and startingNote; null until a startingNote is provided."
     },
-    "includeModulations": { "type": "boolean", "default": false },
-    "includeModulations8vb": { "type": "boolean", "default": false },
-    "includeSuyur": { "type": "boolean", "default": false }
+    "includeModulations": {
+      "type": "boolean",
+      "default": false,
+      "description": "Include modulation analysis (maqāmāt and ajnās)"
+    },
+    "includeModulations8vb": {
+      "type": "boolean",
+      "default": false,
+      "description": "Include available modulations an octave below"
+    },
+    "includeSuyur": {
+      "type": "boolean",
+      "default": false,
+      "description": "Include documented performance practices (suyūr)"
+    }
   },
   "notes": {
     "ajnasData": "Ajnās (constituent melodic structures) are always included in the response for maqām analysis",
