@@ -12,8 +12,8 @@ import { Analytics } from "@vercel/analytics/next";
 import "./globals.scss";
 
 const readexPro = Readex_Pro({
-  weight: ["200", "300", "400"],
-  subsets: ["latin"],
+  weight: ["200", "300", "400", "500"],
+  subsets: ["latin", "arabic"],
   display: "swap",
 });
 
