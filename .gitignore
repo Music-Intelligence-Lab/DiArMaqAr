@@ -60,6 +60,7 @@ next-env.d.ts
 # article
 
 /article/*
+/shawwa_article/*
 
 # VitePress
 docs/.vitepress/dist
