@@ -16,17 +16,17 @@ export default function Footer() {
         <div className="footer__section">
           <h3 className="footer__title">
             {language === "ar" 
-              ? "أرشيف المقامات العربية الرقمي" 
+              ? "أرشيف المقام العربي الرقمي" 
               : language === "fr"
-              ? "Archive Numérique des Maqāmāt Arabes"
+              ? "Archive Numérique du Maqām Arabe"
               : "Digital Arabic Maqām Archive"}
           </h3>
           <p className="footer__description">
             {language === "ar"
-              ? "منصة إلكترونية تفاعلية ومكتبة مفتوحة المصدر لاستكشاف نظام المقامات العربية"
+              ? "منصة إلكترونية ومكتبة مفتوحة المصدر لاستكشاف نظام المقامات العربية"
               : language === "fr"
-              ? "Plateforme interactive en ligne et bibliothèque open-source pour explorer le système des maqāmāt arabes"
-              : "Open-source interactive online platform and library for exploring the Arabic maqām system"}
+              ? "Plateforme en ligne et bibliothèque open-source pour explorer le système des maqāmāt arabes"
+              : "Open-source online platform and library for exploring the Arabic maqām system"}
           </p>
                     <div className="footer__logo">
             <Image
@@ -51,38 +51,38 @@ export default function Footer() {
           <ul className="footer__list">
             <li className="footer__list-item">
               <a href="/app" className="footer__link">
-                {language === "ar" 
-                  ? "استخدام الأرشيف" 
+                {language === "ar"
+                  ? "استخدام الأرشيف"
                   : language === "fr"
-                  ? "Accéder à l&apos;Archive"
+                  ? "Accéder à l'Archive"
                   : "Access the Archive"}
               </a>
             </li>
             <li className="footer__list-item">
-              <a href="/about" className="footer__link">
-                {language === "ar" 
-                  ? "حول المشروع" 
-                  : language === "fr"
-                  ? "À propos"
-                  : "About"}
-              </a>
-            </li>
-            <li className="footer__list-item">
-              <a href="/user-guide" className="footer__link">
-                {language === "ar" 
-                  ? "دليل المستخدم" 
-                  : language === "fr"
-                  ? "Guide utilisateur"
-                  : "User Guide"}
-              </a>
-            </li>
-            <li className="footer__list-item">
               <a href="/bibliography" className="footer__link">
-                {language === "ar" 
-                  ? "المراجع" 
+                {language === "ar"
+                  ? "المراجع"
                   : language === "fr"
                   ? "Bibliographie"
                   : "Bibliography"}
+              </a>
+            </li>
+            <li className="footer__list-item">
+              <a href="/docs/" className="footer__link">
+                {language === "ar"
+                  ? "التوثيق"
+                  : language === "fr"
+                  ? "Documentation"
+                  : "Documentation"}
+              </a>
+            </li>
+            <li className="footer__list-item">
+              <a href="/about" className="footer__link">
+                {language === "ar"
+                  ? "حول المشروع"
+                  : language === "fr"
+                  ? "À propos"
+                  : "About"}
               </a>
             </li>
           </ul>
@@ -111,7 +111,7 @@ export default function Footer() {
               : "Contribute"}
           </h4>
           <p className="footer__text">
-            <a href="https://github.com/Music-Intelligence-Lab/maqam-network" target="_blank" rel="noopener noreferrer" className="footer__link">
+            <a href="https://github.com/Music-Intelligence-Lab/DiArMaqAr/" target="_blank" rel="noopener noreferrer" className="footer__link">
               GitHub
             </a>
           </p>
@@ -130,11 +130,11 @@ export default function Footer() {
         <div className="footer__section">
           <p className="footer__copyright">
             {language === "ar"
-              ? `© ${new Date().getFullYear()} أرشيف المقامات العربية الرقمي/مختبر الذكاء الموسيقي في الجامعة الأمريكية في بيروت. جميع الحقوق محفوظة.`
+              ? `© ${new Date().getFullYear()} مختبر الذكاء الموسيقي في الجامعة الأمريكية في بيروت`
               : language === "fr"
               ? (
                 <>
-                  Archive Numérique des Maqāmāt Arabes (DiArMaqAr) © 2025 par <a href="https://musicintelligencelab.com" className="footer__link">Khyam Allami/Music Intelligence Lab</a> est sous licence <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" className="footer__link">CC BY-NC-SA 4.0</a>
+                  © {new Date().getFullYear()} <a href="https://musicintelligencelab.com" className="footer__link">AUB Music Intelligence Lab</a>, sous licence <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" className="footer__link">CC BY-NC-SA 4.0</a>
                   <br />
                   <Image src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt="" width={32} height={32} style={{ maxWidth: "1.5em", maxHeight: "1.5em", marginLeft: ".2em", marginTop: "0.5em", marginBottom: "0.5em", verticalAlign: "middle" }} unoptimized />
                   <Image src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt="" width={32} height={32} style={{ maxWidth: "1.5em", maxHeight: "1.5em", marginLeft: ".2em", marginTop: "0.5em", marginBottom: "0.5em", verticalAlign: "middle" }} unoptimized />
@@ -144,8 +144,7 @@ export default function Footer() {
               )
               : (
             <>
-              Digital Arabic Maqam Archive (DiArMaqAr) 
-              <br /> © 2025 by <a href="https://musicintelligencelab.com" className="footer__link">AUB Music Intelligence Lab</a>
+              © {new Date().getFullYear()} <a href="https://musicintelligencelab.com" className="footer__link">AUB Music Intelligence Lab</a>
               <br /> Licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" className="footer__link">CC BY-NC-SA 4.0</a>
               <br />
                 <Image src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt="" width={32} height={32} style={{ maxWidth: "1.5em", maxHeight: "1.5em", marginLeft: "0em", marginTop: "0.5em", marginBottom: "0.5em", verticalAlign: "middle" }} unoptimized />
