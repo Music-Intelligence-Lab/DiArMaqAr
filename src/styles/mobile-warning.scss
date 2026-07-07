@@ -20,65 +20,121 @@
   margin: 0;
   overflow: hidden;
 
+  // Matches the landing page: a recessed near-black well with a hairline
+  // edge, the Arabic-title lockup as the identity anchor, gold as the
+  // "way in" accent, and the landing's quiet type scale.
   &__content {
-    max-width: 500px;
+    max-width: 460px;
     width: 100%;
-    text-align: center;
-    background: $medium-grey;
-    border-radius: 5px;
-    padding: 40px 30px;
-    border: 1px solid $grey;
-    box-shadow: 0 20px 15px rgba(0, 0, 0, 0.6);
     margin: 0 auto;
+    padding: 40px 32px;
+    text-align: center;
+    background-color: rgba($black, 0.35);
+    border: 1px solid rgba($black, 0.5);
+    border-radius: 6px;
   }
 
+  // Sits below the title lockup, above the "Desktop Required" heading.
   &__icon {
-    font-size: 4rem;
-    margin-bottom: 20px;
     display: block;
-    color: $primary;
+    margin: 24px 0 4px;
+    font-size: 3rem;
+    letter-spacing: 0.3rem;
+    filter: grayscale(0.2);
   }
 
+  // The bilingual title lockup, scaled down from the landing hero. Fits on
+  // one line on typical phones and wraps gracefully on very narrow screens.
   &__title {
+    margin: 0;
+    font-size: clamp(1.35rem, 6.5vw, 1.9rem);
+    font-weight: 500;
+    line-height: 1.3;
+    text-wrap: balance;
     color: $text;
-    font-size: 2rem;
+  }
+
+  &__subtitle {
+    margin: 8px 0 0;
+    font-size: 1rem;
     font-weight: 300;
-    margin-bottom: 20px;
+    letter-spacing: 0.06em;
+    color: rgba($text, 0.85);
+  }
+
+  // "Desktop Required" — a heading with a gold underline spanning its text.
+  &__heading {
+    display: inline-block;
+    margin: 28px 0 16px;
+    font-size: 1.1rem;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    color: $text;
+
+    &::after {
+      content: "";
+      display: block;
+      width: 100%;
+      height: 2px;
+      margin-top: 8px;
+      background: $gold;
+    }
   }
 
   &__message {
-    color: $text;
-    font-size: 1.1rem;
-    line-height: 1.6;
-    margin-bottom: 15px;
-    font-weight: 200;
+    margin: 0 auto;
+    max-width: 40ch;
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 1.7;
+    color: rgba($text, 0.75);
   }
 
-  &__submessage {
-    color: rgba($text, 0.8);
-    font-size: 0.95rem;
-    line-height: 1.5;
-    margin-bottom: 30px;
-    font-weight: 200;
+  &__note {
+    margin: 28px 0 12px;
+    font-size: 0.85rem;
+    font-weight: 300;
+    color: rgba($text, 0.55);
   }
 
-  &__features {
+  // Gold links, like the landing's "ways in". Wrap and stay evenly spaced
+  // if the card gets too narrow to hold them on one row.
+  &__links {
     display: flex;
-    flex-direction: column;
-    gap: 12px;
-    align-items: center;
-  }
-
-  &__feature {
-    color: rgba($text, 0.9);
-    font-size: 0.9rem;
-    display: flex;
-    align-items: center;
+    flex-wrap: wrap;
     justify-content: center;
-    gap: 10px;
-    padding: 8px 0;
-    font-weight: 200;
-    text-align: center;
+    gap: 12px 28px;
+
+    a {
+      color: $gold;
+      font-size: 0.95rem;
+      font-weight: 300;
+      text-decoration: none;
+      text-underline-offset: 5px;
+      transition: text-decoration-color 0.25s ease;
+
+      &:hover {
+        text-decoration: underline;
+        text-decoration-color: rgba($gold, 0.5);
+      }
+    }
+  }
+
+  // The lightest thing on the card: a quiet route home. Grey, not gold, so
+  // it sits below the docs/API links in the hierarchy — nothing here is a
+  // primary action.
+  &__home {
+    display: inline-block;
+    margin-top: 24px;
+    color: rgba($text, 0.45);
+    font-size: 0.85rem;
+    font-weight: 300;
+    text-decoration: none;
+    transition: color 0.25s ease;
+
+    &:hover {
+      color: rgba($text, 0.7);
+    }
   }
 
   // Bot-friendly content - visually hidden but accessible to headless browsers
@@ -97,29 +153,21 @@
     display: none;
   }
 
-  // Responsive adjustments for smaller screens
+  // Responsive adjustments for smaller screens. The title keeps its clamp
+  // here (no fixed override) so it can shrink and wrap on very narrow cards.
   @media (max-width: 480px) {
-    padding: 15px;
+    padding: 12px;
 
     &__content {
-      padding: 30px 20px;
-      border-radius: 5px;
+      padding: 28px 18px;
     }
 
-    &__title {
-      font-size: 1.5rem;
-    }
-
-    &__message {
-      font-size: 1rem;
-    }
-
-    &__submessage {
+    &__subtitle {
       font-size: 0.9rem;
     }
 
-    &__feature {
-      font-size: 0.85rem;
+    &__message {
+      font-size: 0.95rem;
     }
 
     &__icon {
@@ -150,6 +198,13 @@
     }
 
     .navbar {
+      display: none !important;
+    }
+
+    // The settings gear is position:fixed at z-index 11000 — above the
+    // overlay's 9999 — so it must be hidden explicitly, not just via .navbar.
+    .settings-open-button,
+    .settings-card {
       display: none !important;
     }
   }

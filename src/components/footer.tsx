@@ -24,10 +24,10 @@ export default function Footer() {
           </h3>
           <p className="footer__description">
             {language === "ar"
-              ? "منصة إلكترونية ومكتبة مفتوحة المصدر لاستكشاف نظام المقامات العربية"
+              ? "منصّة وواجهة برمجية ومدوّنة، متعدّدة اللغات ومفتوحة المصدر، لاستكشاف نظام المقامات العربية"
               : language === "fr"
-              ? "Plateforme en ligne et bibliothèque open-source pour explorer le système des maqāmāt arabes"
-              : "Open-source online platform and library for exploring the Arabic maqām system"}
+              ? "Plateforme, API et corpus multilingues et open-source pour explorer le système des maqāmāt arabes"
+              : "Multilingual open-source platform, API and corpus for exploring the Arabic maqām system"}
           </p>
                     <div className="footer__logo">
             <Image
@@ -93,7 +93,7 @@ export default function Footer() {
           <h4 className="footer__subtitle">{language === "ar" ? "القائمون على المشروع" : "Project Team"}</h4>
           <p className="footer__text">
             {language === "ar"
-              ? "الدكتور خيام علامي وإبراهيم الخنسا"
+              ? "الدكتور خيّام اللامي وإبراهيم الخنسا"
               : "Khyam Allami & Ibrahim El Khansa"}
           </p>
           <p className="footer__text">
@@ -130,31 +130,27 @@ export default function Footer() {
 
         <div className="footer__section">
           <p className="footer__copyright">
+            <a href="https://musicintelligencelab.com" className="footer__link">AUB Music Intelligence Lab</a>
+            <br />
+            <a href="https://www.aub.edu.lb/cams/" className="footer__link">Centre for Advanced Mathematical Sciences</a>
+            <br />
             {language === "ar"
-              ? `© ${new Date().getFullYear()} مختبر الذكاء الموسيقي في الجامعة الأمريكية في بيروت`
+              ? "مرخّص بموجب "
               : language === "fr"
-              ? (
-                <>
-                  © {new Date().getFullYear()} <a href="https://musicintelligencelab.com" className="footer__link">AUB Music Intelligence Lab</a>, sous licence <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" className="footer__link">CC BY-NC-SA 4.0</a>
-                  <br />
-                  <Image src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt="" width={32} height={32} style={{ maxWidth: "1.5em", maxHeight: "1.5em", marginLeft: ".2em", marginTop: "0.5em", marginBottom: "0.5em", verticalAlign: "middle" }} unoptimized />
-                  <Image src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt="" width={32} height={32} style={{ maxWidth: "1.5em", maxHeight: "1.5em", marginLeft: ".2em", marginTop: "0.5em", marginBottom: "0.5em", verticalAlign: "middle" }} unoptimized />
-                  <Image src="https://mirrors.creativecommons.org/presskit/icons/nc.svg" alt="" width={32} height={32} style={{ maxWidth: "1.5em", maxHeight: "1.5em", marginLeft: ".2em", marginTop: "0.5em", marginBottom: "0.5em", verticalAlign: "middle" }} unoptimized />
-                  <Image src="https://mirrors.creativecommons.org/presskit/icons/sa.svg" alt="" width={32} height={32} style={{ maxWidth: "1.5em", maxHeight: "1.5em", marginLeft: ".2em", marginTop: "0.5em", marginBottom: "0.5em", verticalAlign: "middle" }} unoptimized />
-                </>
-              )
-              : (
-            <>
-              © {new Date().getFullYear()} <a href="https://musicintelligencelab.com" className="footer__link">AUB Music Intelligence Lab</a>
-              <br /> Licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" className="footer__link">CC BY-NC-SA 4.0</a>
-              <br />
-                <Image src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt="" width={32} height={32} style={{ maxWidth: "1.5em", maxHeight: "1.5em", marginLeft: "0em", marginTop: "0.5em", marginBottom: "0.5em", verticalAlign: "middle" }} unoptimized />
-                <Image src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt="" width={32} height={32} style={{ maxWidth: "1.5em", maxHeight: "1.5em", marginLeft: ".2em", marginTop: "0.5em", marginBottom: "0.5em", verticalAlign: "middle" }} unoptimized />
-                <Image src="https://mirrors.creativecommons.org/presskit/icons/nc.svg" alt="" width={32} height={32} style={{ maxWidth: "1.5em", maxHeight: "1.5em", marginLeft: ".2em", marginTop: "0.5em", marginBottom: "0.5em", verticalAlign: "middle" }} unoptimized />
-                <Image src="https://mirrors.creativecommons.org/presskit/icons/sa.svg" alt="" width={32} height={32} style={{ maxWidth: "1.5em", maxHeight: "1.5em", marginLeft: ".2em", marginTop: "0.5em", marginBottom: "0.5em", verticalAlign: "middle" }} unoptimized />
-              <br />This site is powered by <a href="https://www.netlify.com" className="footer__link">Netlify</a>.
-            </>
-            )}
+              ? "Sous licence "
+              : "Licensed under "}
+            <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" className="footer__link">CC BY-NC-SA 4.0</a>
+            <br />
+            <Image src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt="" width={32} height={32} style={{ maxWidth: "1.5em", maxHeight: "1.5em", marginLeft: "0em", marginTop: "0.5em", marginBottom: "0.5em", verticalAlign: "middle" }} unoptimized />
+            <Image src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt="" width={32} height={32} style={{ maxWidth: "1.5em", maxHeight: "1.5em", marginLeft: ".2em", marginTop: "0.5em", marginBottom: "0.5em", verticalAlign: "middle" }} unoptimized />
+            <Image src="https://mirrors.creativecommons.org/presskit/icons/nc.svg" alt="" width={32} height={32} style={{ maxWidth: "1.5em", maxHeight: "1.5em", marginLeft: ".2em", marginTop: "0.5em", marginBottom: "0.5em", verticalAlign: "middle" }} unoptimized />
+            <Image src="https://mirrors.creativecommons.org/presskit/icons/sa.svg" alt="" width={32} height={32} style={{ maxWidth: "1.5em", maxHeight: "1.5em", marginLeft: ".2em", marginTop: "0.5em", marginBottom: "0.5em", verticalAlign: "middle" }} unoptimized />
+            <br />
+            {language === "ar"
+              ? <>هذا الموقع مدعوم من <a href="https://www.netlify.com" className="footer__link">Netlify</a>.</>
+              : language === "fr"
+              ? <>Ce site est propulsé par <a href="https://www.netlify.com" className="footer__link">Netlify</a>.</>
+              : <>This site is powered by <a href="https://www.netlify.com" className="footer__link">Netlify</a>.</>}
           </p>
         </div>
       </div>

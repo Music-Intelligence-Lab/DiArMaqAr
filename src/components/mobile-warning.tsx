@@ -13,18 +13,28 @@ export default function MobileWarning() {
   return (
     <div className="mobile-warning">
       <div className="mobile-warning__content">
-        <div className="mobile-warning__icon">
-          🖥️
-        </div>
-        <h2 className="mobile-warning__title">
-          Desktop Required
-        </h2>
+        <h1 className="mobile-warning__title" lang="ar" dir="rtl">
+          أرشيف المقام العربي الرقمي
+        </h1>
+        <p className="mobile-warning__subtitle">Digital Arabic Maqām Archive</p>
+        <span className="mobile-warning__icon" aria-hidden="true">
+          🖥️ 💻
+        </span>
+        <h2 className="mobile-warning__heading">Desktop Required</h2>
         <p className="mobile-warning__message">
-          The Digital Arabic Maqām Archive is designed for laptop and desktop computers only.
+          The interactive platform is built for larger screens. Please open it on a laptop or desktop
+          computer to play, hear, and explore the maqāmāt.
         </p>
-        <p>
-          Please access this application from a device with a larger screen for the best experience.
-        </p>
+        <p className="mobile-warning__note">The documentation and API work on any device:</p>
+        {/* eslint-disable @next/next/no-html-link-for-pages */}
+        <div className="mobile-warning__links">
+          <a href="/docs/">Documentation</a>
+          <a href="/docs/api/">API</a>
+        </div>
+        <a className="mobile-warning__home" href="/">
+          ← Back
+        </a>
+        {/* eslint-enable @next/next/no-html-link-for-pages */}
       </div>
       
       {/* Hidden bot-friendly content - always in DOM but visually hidden */}
@@ -44,7 +54,7 @@ export default function MobileWarning() {
         </ul>
         
         <h2>API Access</h2>
-        <p>Base URL: <a href="https://diarmaqar.netlify.app/api">https://diarmaqar.netlify.app/api</a></p>
+        <p>Base URL: <a href="https://diarmaqar.net/api">https://diarmaqar.net/api</a></p>
         <p>OpenAPI Specification: <a href="/docs/openapi.json">/docs/openapi.json</a></p>
         <p>Interactive Playground: <a href="/docs/api/playground">/docs/api/playground</a></p>
         
@@ -57,7 +67,7 @@ export default function MobileWarning() {
           <li>List all tuning systems: <code>GET /api/tuning-systems</code></li>
           <li>Most common tuning system: <code>GET /api/tuning-systems/ibnsina_1037/yegah/pitch-classes?pitchClassDataType=cents</code></li>
         </ul>
-        <p><strong>Quick Test URL:</strong> <code>GET https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&amp;startingNote=yegah&amp;pitchClassDataType=cents</code></p>
+        <p><strong>Quick Test URL:</strong> <code>GET https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&amp;startingNote=yegah&amp;pitchClassDataType=cents</code></p>
         <p>All endpoints return JSON with complete data including pitch classes, intervals, bibliographic sources, and more. See <a href="/docs/api/representative-examples">Representative Examples</a> for complete list of recommended examples. Use the OpenAPI specification for complete endpoint documentation and parameter details.</p>
         
         <h2>Quick Links</h2>

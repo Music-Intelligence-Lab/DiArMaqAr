@@ -4,7 +4,8 @@
 .footer {
   background-color: rgb($black , 0.6);
   color: $text;
-  padding: 20px 22px;
+  // Extra breathing room below the footer content before the page edge.
+  padding: 20px 22px 56px;
   // /border-top: 1px solid $grey;
   box-sizing: border-box; /* ensure padding doesn't increase measured width */
   width: 102%;

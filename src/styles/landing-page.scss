@@ -1,161 +1,154 @@
+@use "sass:color";
 @use "./variables" as *;
 
-// Prevent horizontal scrolling globally
-body {
-  overflow-x: hidden;
-}
+// ============================================================================
+// Landing page
+// ----------------------------------------------------------------------------
+// Design system
+//   Ground    charcoal ($background), inherited from the app.
+//   Purple    $primary is the structural accent — the CTA fill and card
+//             hovers. $accent-line (lightened) carries small accents that
+//             would die at $primary's depth: heading ticks, hairline borders.
+//   Magenta   $tertiary appears once, as the CTA's hover glow.
+//   Gold      means "a way in": links, the qalam nuqta, scroll cues on hover.
+//   Type      Readex Pro throughout. The Arabic title is monumental; the
+//             scale descends from it: h1 lockup > h2 headings > card h3 > body.
+//
+// Page arc
+//   hero (one promise) → features → about (recessed well + lede) →
+//   developers → colophon (team + contribute, furniture) → closing CTA.
+//
+// Rhythm — the one rule that governs all vertical spacing
+//   The page is a flex column, so margins never collapse. Every <section>
+//   owns its padding-block ($space-xl); the hero owns its own. Bands own
+//   only padding-inline (to break full-bleed) and inherit the block rhythm.
+//   Splitting the axes this way means no section can perturb another's
+//   spacing — every chapter boundary is 2 × $space-xl, band or not.
+// ============================================================================
 
-// Landing page design system
-// Ground: inherited charcoal. Purple ($primary) is the structural accent —
-// heading ticks, card hovers, the main CTA. Magenta ($tertiary) marks live
-// moments only: the CTA's hover glow and the scroll cue. Gold belongs to
-// links (ways into the archive) and the qalam nuqta on the feature cards.
-// Readex Pro throughout; the Arabic title is the monumental element and the
-// type scale descends cleanly from it: h1 lockup > h2 headings > card h3 >
-// body.
-// Page arc: the hero makes one promise (lockup + CTA), the cards are the
-// first chapter of the scroll, About is the anchor section (tonal band +
-// lede), Developers is the functional block, Team/Contribute compress into
-// a colophon, and a closing CTA repeats the way in before the footer.
-
-// Spacing scale — every margin, padding, and gap on the page snaps to one
-// of these steps. The two exceptions are optical: the nuqta's inline offset
-// and link underline offsets.
+// Spacing scale — every size on the page is one of these steps.
 $space-2xs: 0.5rem;
 $space-xs: 0.75rem;
 $space-sm: 1rem;
 $space-md: 1.5rem;
 $space-lg: 2.5rem;
 $space-xl: 4rem;
-$space-2xl: 6rem;
 
-// Full-bleed helper: escapes the page's inline padding (.footer 22px + 1rem)
+// Small accents need a lighter purple: $primary on charcoal is ~1.5:1, below
+// the 3:1 non-text threshold. Large fills keep $primary's depth.
+$accent-line: color.adjust($primary, $lightness: 28%);
+
+// Shared inner content width, centred on the page axis.
+$content-max: 980px;
+
+// Full-bleed break-out: cancels the page's inline padding (footer 22px + 1rem).
 $bleed: calc(-22px - 1rem);
 $bleed-pad: calc(22px + 1rem);
 
-@keyframes landing-rise {
-  from {
-    opacity: 0;
-    transform: translateY(14px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
+body {
+  overflow-x: hidden;
 }
 
-@keyframes scroll-cue-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes scroll-cue-bob {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(4px);
-  }
-}
+// ================================================================= page shell
 
 .landing-page {
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  // Horizontal inset matches the footer's content edges (.footer 22px + &__content 1rem)
   padding-inline: $bleed-pad;
   box-sizing: border-box;
 
-  // ---------------------------------------------------------------- hero
+  // Vertical rhythm: one rule for the whole page. Sections carry it; bands
+  // inherit it. Tightened to $space-lg so the fold (hero + all six feature
+  // cards + cue) clears a 900px-tall laptop, applied consistently everywhere.
+  // Cue clicks land the section's top edge flush against the viewport top.
+  section {
+    padding-block: $space-lg;
+    scroll-margin-top: 0;
+  }
 
-  // One viewport, one job: the lockup and the way in. The cards open the
-  // scroll journey below; the cue points at them. Top padding scales with
-  // the viewport so the lockup sits deep on tall screens without leaving
-  // a void between the actions and the cue.
+  // Centred content column, shared by every section's inner wrapper.
+  .key-features,
+  .about__inner,
+  .developers-llms,
+  .colophon__inner {
+    max-width: $content-max;
+    margin-inline: auto;
+  }
+
+  // ======================================================================= hero
+  // One viewport, one job: the lockup and the way in.
+  //
+  // The CTA is the hero's anchor: it gets equal, generous breathing room
+  // above and below ($space-xl), so it reads as centred in its own space.
+  // Everything else clusters tighter — the tagline hugs the title, the links
+  // caption the CTA, the cue trails the links. Top padding has a modest cap
+  // so the lockup doesn't drift on tall screens.
+
   .landing-header {
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    padding-block: clamp(2.5rem, 12svh, 8rem) 0;
+    // Symmetric band padding: top matches bottom for an even hero well.
+    padding-block: $space-lg;
 
     > * {
-      animation: landing-rise 0.7s cubic-bezier(0.2, 0.6, 0.2, 1) both;
+      margin: 0;
     }
 
-    .language-selector-wrapper {
-      position: absolute;
-      top: $space-2xs;
-      inset-inline-end: 0;
-      z-index: 2;
-      animation: none;
-
-      // Globally the selector is position: fixed (it floats over the app);
-      // on the landing page it anchors inside the header instead
-      .language-selector {
-        position: static;
-      }
-    }
-
-    .landing-title {
-      animation-delay: 0.05s;
-    }
+    // lockup internal — the tagline sits close under the title
     .landing-subtitle {
-      animation-delay: 0.22s;
+      margin-top: $space-sm;
     }
+
+    // group break — lockup → CTA
     .cta-row {
-      animation-delay: 0.45s;
+      margin-top: $space-lg;
     }
+
+    // the links caption the CTA: pulled close beneath it as one action group
     .button-row {
-      animation-delay: 0.58s;
+      margin-top: $space-md;
+    }
+
+    // group break — actions → cue, so the cue reads as its own "scroll" beat
+    .scroll-cue {
+      margin-top: $space-lg;
     }
   }
 
-  .scroll-cue {
-    margin: $space-md auto 0;
-    width: 58px;
-    height: 58px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid rgba($text, 0.18);
-    border-radius: 50%;
-    // !important counters the global `a { color: $link !important }` in variables.scss
-    color: rgba($text, 0.5) !important;
-    transition: color 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
-    animation: scroll-cue-in 0.7s ease both 0.85s, scroll-cue-bob 2.6s ease-in-out 2.2s infinite;
-
-    &:hover {
-      color: $tertiary !important;
-      border-color: rgba($tertiary, 0.55);
-      background-color: rgba($tertiary, 0.06);
-    }
-
-    @media (max-width: 768px) {
-      display: none;
-    }
-  }
-
-  // Three clean tiers: monumental Arabic, tracked Latin, quiet subtitle
+  // Three tiers: monumental Arabic, tracked Latin, quiet subtitle.
+  //
+  // The Arabic size is the single source of truth (--title-size, one clamp);
+  // the Latin is derived from it as a fixed fraction. Because both read from
+  // the same value, their ratio is identical at every viewport width — they
+  // can never drift out of proportion the way two independent clamps did.
   .landing-title {
+    // Keeps the full Arabic string on one line down to the smallest phones:
+    // the vw term shrinks it on narrow screens, the rem floor stops it going
+    // too small, the rem cap holds it on large ones.
+    --title-size: clamp(1.3rem, 6.4vw, 2.9rem);
+    // Latin sits at 0.7× the Arabic, held constant across all widths.
+    --title-latin-ratio: 0.7;
+
     margin: 0;
 
     &__ar {
       display: block;
+      font-size: var(--title-size);
       font-weight: 500;
-      font-size: clamp(2.3rem, 4.5vw, 3.6rem);
       line-height: 1.25;
+      white-space: nowrap;
       color: $text;
     }
 
     &__latin {
       display: block;
-      font-weight: 200;
-      font-size: clamp(1.05rem, 1.6vw, 1.5rem);
+      // 300, not 200: thin strokes erode on dark grounds (halation).
+      font-weight: 300;
+      font-size: calc(var(--title-size) * var(--title-latin-ratio));
       letter-spacing: 0.06em;
       line-height: 1.3;
       color: rgba($text, 0.85);
@@ -163,168 +156,225 @@ $bleed-pad: calc(22px + 1rem);
     }
   }
 
+  // Vertical rhythm lives in the hero group hierarchy above; this rule owns
+  // only the subtitle's appearance.
   .landing-subtitle {
+    max-width: 60ch;
     font-size: clamp(0.95rem, 1.1vw, 1.05rem);
     font-weight: 300;
     line-height: 1.7;
-    color: rgba($text, 0.6);
     text-align: center;
-    max-width: 60ch;
-    margin: $space-md 0 0;
+    color: rgba($text, 0.6);
   }
 
-  // ------------------------------------------------------------- actions
+  // ----------------------------------------------------------------- actions
 
+  // The CTA and its desktop-only helper line, stacked and centred. The note
+  // hugs the button as its caption, so the gap is tight.
   .cta-row {
-    margin-top: $space-lg;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $space-2xs;
+  }
+
+  // Quiet expectation-setter under the button — not part of the label.
+  .cta-note {
+    font-size: 0.8rem;
+    font-weight: 300;
+    letter-spacing: 0.01em;
+    color: $accent-line;
   }
 
   .main-button {
     display: inline-block;
+    padding: 0.9rem 3.4rem;
     background: $primary;
-    // !important counters the global `a { color: $link !important }` in variables.scss
+    // !important counters the global `a { color: $link !important }`.
     color: $text !important;
     font-size: 1.1rem;
     font-weight: 400;
     letter-spacing: 0.02em;
     text-align: center;
-    padding: 0.9rem 3.4rem;
     border-radius: 2px;
     cursor: pointer;
-    transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+    transition: background 0.25s ease, transform 0.25s ease;
 
     &:hover {
       background: $hovered-primary;
       transform: translateY(-1px);
-      box-shadow: 0 10px 28px rgba($tertiary, 0.3);
     }
   }
 
-  // Secondary ways in: quiet text links, not boxes — they must not
-  // compete with the CTA above them
+  // Secondary ways in: gold links, each marked with the qalam nuqta — the
+  // page's own vocabulary (the feature cards carry the same diamond). Clearly
+  // clickable and clearly gold "ways in", but lighter than the solid CTA.
+  // All four on one line when they fit; otherwise a clean 2×2, then a single
+  // column — never an uneven 3-and-1. Media queries switch between the three
+  // arrangements at widths chosen for the label lengths.
+  // Vertical rhythm lives in the hero group hierarchy; this owns layout only.
   .button-row {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(4, max-content);
     justify-content: center;
-    flex-wrap: wrap;
-    gap: $space-2xs $space-lg;
-    margin-top: $space-md;
+    gap: $space-xs $space-lg;
+
+    // Two-up only once four genuinely no longer fit on one line.
+    @media (max-width: 950px) {
+      grid-template-columns: repeat(2, max-content);
+    }
+
+    // Single column on narrow screens.
+    @media (max-width: 480px) {
+      grid-template-columns: max-content;
+    }
   }
 
   .button {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
+    padding: 0.35rem 0;
     background: none;
     border: none;
-    // !important counters the global `a { color: $link !important }` in variables.scss
-    color: rgba($text, 0.55) !important;
+    // !important counters the global `a { color: $link !important }`.
+    color: rgba($gold, 0.85) !important;
     font-size: 0.85rem;
-    font-weight: 300;
-    padding: 0.35rem 0;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    text-decoration: underline;
+    text-decoration-color: rgba($gold, 0.25);
     text-underline-offset: 5px;
     cursor: pointer;
-    transition: color 0.25s ease;
+    transition: color 0.25s ease, text-decoration-color 0.25s ease;
 
     &:hover {
       color: $gold !important;
-      text-decoration: underline;
-      text-decoration-color: rgba($gold, 0.5);
-    }
-
-    &.disabled {
-      opacity: 0.45;
-      pointer-events: none;
-      cursor: not-allowed;
+      text-decoration-color: rgba($gold, 0.6);
     }
   }
 
-  // ------------------------------------------------------------ sections
+  // =================================================================== cues
+  // Each cue is the last child of the section it concludes: $space-lg below
+  // the content, then the section's own padding does the rest. margin-inline
+  // auto centres every cue on the page axis (grid cues span 1 / -1 first).
 
-  section {
-    margin-block: $space-2xl;
-    scroll-margin-top: $space-md;
+  .scroll-cue {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    margin: $space-lg auto 0;
+    border: 1px solid rgba($text, 0.35);
+    border-radius: 50%;
+    // !important counters the global `a { color: $link !important }`.
+    color: rgba($text, 0.5) !important;
+    transition: color 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
+
+    // The chevron glyph sits optically high in its viewBox; nudge it down
+    // so it reads as centred in the circle.
+    svg {
+      margin-top: 2px;
+    }
+
+    &:hover {
+      color: $gold !important;
+      border-color: rgba($gold, 0.55);
+      background-color: rgba($gold, 0.06);
+    }
+
+    @media (max-width: 768px) {
+      display: none;
+    }
   }
 
-  // First chapter of the scroll: close enough to the cue that the cards
-  // peek above the fold
-  .key-features {
-    margin-block: $space-lg $space-2xl;
-    max-width: 980px;
-    margin-inline: auto;
-  }
+  // ============================================================ typography
+  // Section headings: larger than body, with a short purple tick.
 
-  // Real headings — larger than body, weight 400, with a short purple tick
   h2 {
+    margin-bottom: $space-md;
     font-size: clamp(1.3rem, 1.8vw, 1.6rem);
     font-weight: 400;
     letter-spacing: 0.01em;
     text-align: start;
     color: $text;
-    margin-bottom: $space-md;
 
     &::after {
       content: "";
       display: block;
       width: 2.4rem;
       height: 2px;
-      background: $primary;
       margin-top: $space-xs;
+      background: $accent-line;
     }
   }
 
   p {
+    // Paragraph gap must exceed the ~29px line box or prose reads as slabs.
+    margin: 0 0 $space-md;
     font-size: 1rem;
     font-weight: 300;
     line-height: 1.8;
-    color: rgba($text, 0.75);
     text-align: start;
-    max-width: 62ch;
-    margin: 0 0 $space-sm;
+    color: rgba($text, 0.75);
 
     &:last-child {
       margin-bottom: 0;
     }
   }
 
-  // Prose sections leave the center axis: heading rail on the start side,
-  // text column beside it
+  // ====================================================== editorial layout
+  // Prose sections stack: heading above its text, both on the section's
+  // start edge. Content flows naturally down the single column.
+
   .about__inner,
   .developers-llms {
-    display: grid;
-    // Content track is capped at prose width so paragraphs, code block,
-    // and link rows all share one right edge
-    grid-template-columns: clamp(160px, 22%, 230px) minmax(0, 62ch);
-    column-gap: clamp($space-lg, 5vw, $space-xl);
-    max-width: 980px;
-    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
 
-    h2 {
-      grid-column: 1;
-    }
-
-    p,
-    .dev-code,
-    .dev-links {
-      grid-column: 2;
+    // Flex items default to min-width:auto, which lets a long unbreakable
+    // token (the example URL) push a child wider than the viewport. Reset it
+    // so the code blocks stay within the column and wrap instead.
+    > * {
+      min-width: 0;
     }
   }
 
-  // The anchor section: a full-bleed tonal band marks the chapter break,
-  // and the first paragraph is set as a lede
-  .about {
-    margin-inline: $bleed;
-    padding: $space-xl $bleed-pad;
-    background-color: rgba(255, 255, 255, 0.02);
-    border-block: 1px solid rgba(255, 255, 255, 0.05);
+  // ================================================================= bands
+  // Zebra, starting banded at the top: Hero(band) → Features(charcoal) →
+  // About(band) → Developers(charcoal) → Colophon(band) → Closing(charcoal).
+  // The banded blocks are recessed wells that sink into near-black — engraved,
+  // not painted, in the same idiom as the code block. No two bands touch.
+  //
+  // The band is painted by a full-bleed ::before layered just behind the
+  // block's own content (z-index 0, content lifted to 1) — NOT at a negative
+  // z-index, which would drop it behind the whole page and never show. Each
+  // block keeps its own centring; no markup wrapper needed.
+  .landing-header,
+  .about,
+  .colophon {
+    position: relative;
+    z-index: 0;
 
-    &__inner > p:first-of-type {
-      font-size: 1.15rem;
-      line-height: 1.7;
-      color: rgba($text, 0.85);
+    &::before {
+      content: "";
+      position: absolute;
+      z-index: 0;
+      inset-block: 0;
+      // Break full-bleed from the centred block out to the page edges.
+      inset-inline: calc(50% - 50vw);
+      background-color: rgba($black, 0.55);
+      border-block: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    // Lift the block's real content above the band layer.
+    > * {
+      position: relative;
+      z-index: 1;
     }
   }
 
-  // ------------------------------------------------------------ features
+  // ============================================================== features
 
   .features-grid {
     display: grid;
@@ -341,14 +391,14 @@ $bleed-pad: calc(22px + 1rem);
   }
 
   .feature-card {
+    padding: 1.15rem $space-md;
     background-color: rgba(255, 255, 255, 0.02);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 6px;
-    padding: $space-md;
     transition: border-color 0.25s ease, background-color 0.25s ease, transform 0.25s ease;
 
     &:hover {
-      border-color: rgba($primary, 0.6);
+      border-color: rgba($accent-line, 0.7);
       background-color: rgba($primary, 0.12);
       transform: translateY(-3px);
 
@@ -358,58 +408,140 @@ $bleed-pad: calc(22px + 1rem);
     }
 
     h3 {
+      margin-bottom: $space-xs;
       font-size: 1rem;
       font-weight: 500;
       letter-spacing: 0.01em;
       color: $text;
-      margin-bottom: $space-xs;
 
-      // Each card carries the qalam nuqta as its identity mark
+      // The qalam nuqta: each card's identity mark.
       &::before {
         content: "";
         display: inline-block;
         width: 7px;
         height: 7px;
-        background: rgba($gold, 0.75);
-        transform: rotate(52deg) skew(8deg, 8deg);
         margin-inline-end: 0.6rem;
         margin-bottom: 1px;
+        background: rgba($gold, 0.75);
+        transform: rotate(52deg) skew(8deg, 8deg);
         transition: background 0.25s ease;
       }
     }
 
     p {
-      font-size: 0.9rem;
-      line-height: 1.7;
-      color: rgba($text, 0.6);
       margin-bottom: 0;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: rgba($text, 0.6);
     }
   }
 
-  // ------------------------------------------------- developers & LLMs
+  // ================================================= about — anchor section
+  // First paragraph set as a lede, brighter and larger.
+
+  .about__inner > p:first-of-type {
+    font-size: 1.15rem;
+    line-height: 1.7;
+    color: rgba($text, 0.85);
+  }
+
+  // ====================================================== developers & LLMs
 
   .developers-llms {
-    .dev-code {
-      display: block;
-      direction: ltr;
-      text-align: left;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Cascadia Mono", monospace;
-      font-size: 0.78rem;
-      line-height: 1.6;
-      color: rgba($text, 0.75);
+    // A code box: a header bar (label + Copy button) above the code, so the
+    // button lives in its own row and can never overlay the code text. The
+    // leading edge is tinted per variant — gold for the example, purple for
+    // the agent prompt.
+    .dev-block {
+      margin-bottom: $space-md;
       background: rgba(0, 0, 0, 0.35);
       border: 1px solid rgba(255, 255, 255, 0.07);
       border-inline-start: 2px solid rgba($gold, 0.55);
       border-radius: 3px;
-      padding: $space-xs $space-sm;
-      margin-block: $space-md;
-      word-break: break-all;
+      overflow: hidden;
+
+      &--accent {
+        border-inline-start-color: rgba($accent-line, 0.6);
+      }
+
+      &__bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: $space-sm;
+        padding: 0.4rem $space-sm;
+        background: rgba(255, 255, 255, 0.03);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      &__label {
+        font-size: 0.72rem;
+        font-weight: 400;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        color: rgba($text, 0.45);
+      }
+
+      &__copy {
+        flex: none;
+        padding: 0.25rem 0.7rem;
+        font-size: 0.72rem;
+        font-weight: 400;
+        color: rgba($text, 0.7);
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 3px;
+        cursor: pointer;
+        transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+
+        &:hover {
+          color: $gold;
+          border-color: rgba($gold, 0.5);
+          background: rgba($gold, 0.08);
+        }
+      }
+
+      // Swap label → confirmation while the copied flag is set.
+      &__copy-done {
+        display: none;
+        color: $gold;
+      }
+
+      &__copy[data-copied="true"] {
+        .dev-block__copy-label {
+          display: none;
+        }
+        .dev-block__copy-done {
+          display: inline;
+        }
+      }
+
+      code {
+        display: block;
+        padding: $space-sm;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Cascadia Mono", monospace;
+        font-size: 0.78rem;
+        line-height: 1.7;
+        // Follow the element's own dir attribute (ltr for a URL, rtl for the
+        // Arabic prompt) rather than forcing left — start aligns to whichever.
+        text-align: start;
+        color: rgba($text, 0.8);
+        overflow-wrap: anywhere;
+      }
     }
 
+    // Orientation lede above the paste-ready prompt.
+    .dev-agent-lede {
+      margin-bottom: $space-sm;
+      font-size: 0.9rem;
+      color: rgba($text, 0.6);
+    }
+
+    // Links on one wrapping line on wider screens; a clean single column on
+    // narrow ones, so they never orphan into a ragged wrap.
     .dev-links {
-      // 2×2 grid instead of a scattered wrap line
-      display: grid;
-      grid-template-columns: repeat(2, max-content);
+      display: flex;
+      flex-wrap: wrap;
       gap: $space-2xs $space-lg;
 
       a {
@@ -417,36 +549,37 @@ $bleed-pad: calc(22px + 1rem);
         font-weight: 300;
       }
 
-      @media (max-width: 480px) {
-        grid-template-columns: 1fr;
+      @media (max-width: 560px) {
+        flex-direction: column;
+        align-items: center;
+        gap: $space-sm;
       }
     }
   }
 
-  // ------------------------------------------------------------ colophon
-  // Team + Contribute as page furniture: two quiet columns, small type,
-  // no editorial rail, no heading ticks
+  // ============================================================== colophon
+  // Team + Contribute as furniture: two boxes spanning the section width,
+  // small headings without ticks.
 
   .colophon {
-    display: grid;
-    // Two boxes spanning the full section width — left edge on the same
-    // axis as the section headings above
-    grid-template-columns: 1fr 1fr;
-    gap: $space-sm;
-    max-width: 980px;
-    margin-inline: auto;
+    &__inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: $space-sm;
+    }
 
     &__item {
-      background-color: rgba(255, 255, 255, 0.02);
+      padding: $space-md;
+      // A step above the well fill so the boxes read on it.
+      background-color: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 6px;
-      padding: $space-md;
     }
 
     h2 {
+      margin-bottom: $space-xs;
       font-size: 1rem;
       font-weight: 500;
-      margin-bottom: $space-xs;
 
       &::after {
         content: none;
@@ -460,57 +593,97 @@ $bleed-pad: calc(22px + 1rem);
     }
   }
 
-  // --------------------------------------------------------- closing CTA
-  // The reader who needed the whole story acts here, not back at the top
+  // =========================================================== closing CTA
+  // For the reader who needed the whole story before acting.
 
   .closing-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
 
     p {
       max-width: none;
+      margin: 0 0 $space-md;
       text-align: center;
       color: rgba($text, 0.6);
-      margin: 0 0 $space-md;
+    }
+
+    // The shared secondary links caption the closing CTA, as in the hero.
+    .button-row {
+      margin-top: $space-md;
     }
   }
 
-  // ------------------------------------------------------------------ RTL
-  // Latin tracking reads as noise next to connected Arabic script
+  // ==================================================================== RTL
+  // Latin letter-tracking reads as noise beside connected Arabic script.
 
-  &.rtl {
-    .landing-title__latin {
-      letter-spacing: 0;
+  &.rtl .landing-title__latin {
+    letter-spacing: 0;
+  }
+
+  // ========================================================= accessibility
+
+  // Keyboard focus in gold — the "way in" colour.
+  :is(a, button):focus-visible {
+    outline: 2px solid $gold;
+    outline-offset: 3px;
+  }
+
+  @media (prefers-contrast: more) {
+    .landing-subtitle,
+    .closing-cta p,
+    .colophon p,
+    .feature-card p {
+      color: rgba($text, 0.85);
+    }
+
+    .button {
+      color: rgba($text, 0.85) !important;
     }
   }
 
-  // ----------------------------------------------------------- responsive
+  // ============================================================ responsive
 
   @media (max-width: 900px) {
-    .about__inner,
-    .developers-llms {
-      display: block;
+    // Rhythm compresses further on mobile; because only sections set
+    // padding-block, this one rule covers bands too — nothing to repeat.
+    section {
+      padding-block: $space-md;
     }
 
-    .about {
-      padding-block: $space-lg;
-    }
-
-    .colophon {
+    .colophon__inner {
       grid-template-columns: 1fr;
     }
   }
 
   @media (max-width: 768px) {
+    // Symmetric band padding on mobile too (was $space-lg / 0, leaving the
+    // title jammed to the top with no bottom band edge).
     .landing-header {
-      padding-block: $space-lg $space-sm;
+      padding-block: $space-lg;
     }
 
-    section {
-      margin-block: $space-xl;
-    }
+    // No navbar on the mobile hero, so the app's fixed top-right selector
+    // just floats over the title. Drop it into normal flow, centred at the top
+    // of the hero, with a quiet bordered chip so it reads as a deliberate
+    // control rather than orphaned text hanging in space.
+    .language-selector-wrapper {
+      align-self: center;
+      // Pull up tight to the hero's top edge, then space it off the title.
+      margin-top: -#{$space-xs};
+      margin-bottom: $space-md;
 
-    .key-features {
-      margin-block: $space-lg $space-xl;
+      .language-selector {
+        position: static;
+      }
+
+      .language-selector__select {
+        padding: 0.35rem 0.6rem;
+        background-color: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 4px;
+      }
     }
 
     .main-button {
@@ -519,35 +692,6 @@ $bleed-pad: calc(22px + 1rem);
 
     .button-row {
       gap: $space-2xs $space-md;
-    }
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .landing-page .landing-header > *,
-  .landing-page .scroll-cue {
-    animation: none;
-  }
-}
-
-// Scroll-driven reveals: below-the-fold content rises in as it enters the
-// viewport, extending the hero's entrance choreography down the page.
-// Elements already in view at load render complete; browsers without
-// scroll-timeline support simply show everything static.
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .landing-page section > h2,
-    .landing-page section > p,
-    .landing-page .about__inner > h2,
-    .landing-page .about__inner > p,
-    .landing-page .colophon__item,
-    .landing-page .closing-cta > *,
-    .landing-page .feature-card,
-    .landing-page .dev-code,
-    .landing-page .dev-links {
-      animation: landing-rise linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 40%;
     }
   }
 }
