@@ -12,7 +12,7 @@ Complete documentation for all API endpoints. For quick start, see [API Document
 # Quick Reference
 ## Base URL
 
-- **Production**: `https://diarmaqar.netlify.app/api`
+- **Production**: `https://diarmaqar.net/api`
 - **Development**: `http://localhost:3000/api`
 
 ## OpenAPI Specification
@@ -106,7 +106,7 @@ Use GET /maqamat/families to retrieve valid family values..
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/maqamat?includeSources=true&includeArabic=true"
+curl "https://diarmaqar.net/api/maqamat?includeSources=true&includeArabic=true"
 ```
 
 **Response:** List of maqāmāt retrieved successfully
@@ -227,7 +227,7 @@ link to filter maqāmāt by family via GET /maqamat?filterByFamily={idName}.
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/maqamat/families?tuningSystem=ibnsina_1037&startingNote=yegah&includeArabic=false"
+curl "https://diarmaqar.net/api/maqamat/families?tuningSystem=ibnsina_1037&startingNote=yegah&includeArabic=false"
 ```
 
 **Response:** Maqām families retrieved successfully
@@ -362,7 +362,7 @@ Requirements:
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&includeArabic=true"
+curl "https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&includeArabic=true"
 ```
 
 **Response:** Maqām data retrieved successfully.
@@ -473,7 +473,7 @@ curl "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=ibnsina_
     }
   },
   "links": {
-    "self": "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah",
+    "self": "https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah",
     "detail": "/api/maqamat/maqam_rast",
     "availability": "/api/maqamat/maqam_rast/availability",
     "compare": "/api/maqamat/maqam_rast/compare"
@@ -715,7 +715,7 @@ Return tuning-system availability for a maqām.
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/maqamat/maqam_bayyat/availability?includeArabic=true"
+curl "https://diarmaqar.net/api/maqamat/maqam_bayyat/availability?includeArabic=true"
 ```
 
 **Response:** Availability information retrieved successfully
@@ -798,7 +798,7 @@ with an `{ error, hint }` payload (it does not return a 200 with an empty list).
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/maqamat/maqam_hijaz/transpositions?tuningSystem=alsabbagh_1954&startingNote=rast&includeArabic=true"
+curl "https://diarmaqar.net/api/maqamat/maqam_hijaz/transpositions?tuningSystem=alsabbagh_1954&startingNote=rast&includeArabic=true"
 ```
 
 **Response:** Transpositions retrieved successfully
@@ -965,7 +965,7 @@ curl "https://diarmaqar.netlify.app/api/maqamat/maqam_hijaz/transpositions?tunin
     ]
   },
   "links": {
-    "self": "https://diarmaqar.netlify.app/api/maqamat/maqam_rast/transpositions?tuningSystem=ibnsina_1037&startingNote=yegah",
+    "self": "https://diarmaqar.net/api/maqamat/maqam_rast/transpositions?tuningSystem=ibnsina_1037&startingNote=yegah",
     "availability": "/api/maqamat/maqam_rast/availability",
     "detail": "/api/maqamat/maqam_rast"
   }
@@ -1042,7 +1042,7 @@ Cartesian product).
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/maqamat/maqam_bayyat/compare?tuningSystems=alsabbagh_1954,ibnsina_1037&startingNotes=rast,yegah,ushayran&includeArabic=true"
+curl "https://diarmaqar.net/api/maqamat/maqam_bayyat/compare?tuningSystems=alsabbagh_1954,ibnsina_1037&startingNotes=rast,yegah,ushayran&includeArabic=true"
 ```
 
 **Response:** Comparison data retrieved successfully. Note that the response is always HTTP 200
@@ -1217,7 +1217,7 @@ respective cell via `note` or `error` fields. The counters
     "transposeTo": null
   },
   "links": {
-    "self": "https://diarmaqar.netlify.app/api/maqamat/maqam_rast/compare?tuningSystems=alsabbagh_1954&startingNotes=rast&pitchClassDataType=cents",
+    "self": "https://diarmaqar.net/api/maqamat/maqam_rast/compare?tuningSystems=alsabbagh_1954&startingNotes=rast&pitchClassDataType=cents",
     "detail": "/api/maqamat/maqam_rast",
     "availability": "/api/maqamat/maqam_rast/availability"
   }
@@ -1340,7 +1340,7 @@ directly compatible with Scala (.scl) file format which maps degree 0 to middle 
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/maqamat/classification/12-pitch-class-sets?includeArabic=true"
+curl "https://diarmaqar.net/api/maqamat/classification/12-pitch-class-sets?includeArabic=true"
 ```
 
 **Response:** Classification results with sets and compatible maqāmāt
@@ -1525,7 +1525,7 @@ bayyāt on dūgāh and maqām segāh on segāh.
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/maqamat/classification/maqam-pitch-class-sets?includeArabic=true"
+curl "https://diarmaqar.net/api/maqamat/classification/maqam-pitch-class-sets?includeArabic=true"
 ```
 
 **Response:** Classification results with maqam-based pitch class sets and compatible maqāmāt
@@ -1671,7 +1671,7 @@ Return all ajnās (singular: jins) with metadata.
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/ajnas?includeSources=true&includeArabic=true"
+curl "https://diarmaqar.net/api/ajnas?includeSources=true&includeArabic=true"
 ```
 
 **Response:** List of ajnās retrieved successfully
@@ -2330,7 +2330,7 @@ Requirements:
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/ajnas/jins_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents&includeArabic=true"
+curl "https://diarmaqar.net/api/ajnas/jins_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents&includeArabic=true"
 ```
 
 **Response:** Jins data retrieved successfully.
@@ -2440,7 +2440,7 @@ Return tuning-system availability for a jins.
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/ajnas/jins_rast/availability?includeArabic=true"
+curl "https://diarmaqar.net/api/ajnas/jins_rast/availability?includeArabic=true"
 ```
 
 **Response:** Availability information retrieved successfully
@@ -2523,7 +2523,7 @@ with an `{ error, hint }` payload (it does not return a 200 with an empty list).
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/ajnas/jins_bayyat/transpositions?tuningSystem=meshshaqa_1899&startingNote=yegah&includeArabic=true"
+curl "https://diarmaqar.net/api/ajnas/jins_bayyat/transpositions?tuningSystem=meshshaqa_1899&startingNote=yegah&includeArabic=true"
 ```
 
 **Response:** Transpositions retrieved successfully
@@ -2645,7 +2645,7 @@ curl "https://diarmaqar.netlify.app/api/ajnas/jins_bayyat/transpositions?tuningS
     ]
   },
   "links": {
-    "self": "https://diarmaqar.netlify.app/api/ajnas/jins_bayyat/transpositions?tuningSystem=ibnsina_1037&startingNote=yegah",
+    "self": "https://diarmaqar.net/api/ajnas/jins_bayyat/transpositions?tuningSystem=ibnsina_1037&startingNote=yegah",
     "availability": "/api/ajnas/jins_bayyat/availability",
     "detail": "/api/ajnas/jins_bayyat"
   }
@@ -2722,7 +2722,7 @@ Cartesian product).
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/ajnas/jins_bayyat/compare?tuningSystems=alsabbagh_1954,ibnsina_1037&startingNotes=rast,yegah,ushayran&includeArabic=true"
+curl "https://diarmaqar.net/api/ajnas/jins_bayyat/compare?tuningSystems=alsabbagh_1954,ibnsina_1037&startingNotes=rast,yegah,ushayran&includeArabic=true"
 ```
 
 **Response:** Comparison data retrieved successfully. Note that the response is always HTTP 200
@@ -2860,7 +2860,7 @@ respective cell via `note` or `error` fields. The counters
     "transposeTo": null
   },
   "links": {
-    "self": "https://diarmaqar.netlify.app/api/ajnas/jins_rast/compare?tuningSystems=alsabbagh_1954&startingNotes=rast&pitchClassDataType=cents",
+    "self": "https://diarmaqar.net/api/ajnas/jins_rast/compare?tuningSystems=alsabbagh_1954&startingNotes=rast&pitchClassDataType=cents",
     "detail": "/api/ajnas/jins_rast",
     "availability": "/api/ajnas/jins_rast/availability"
   }
@@ -2903,7 +2903,7 @@ Retrieve metadata for all available tuning systems.
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/tuning-systems?includeSources=true&includeArabic=true"
+curl "https://diarmaqar.net/api/tuning-systems?includeSources=true&includeArabic=true"
 ```
 
 **Response:** List of tuning systems
@@ -3017,7 +3017,7 @@ across all octaves with full formatting options.
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/tuning-systems/cairocongresstuningcommittee_1929/rast/pitch-classes?includeSources=true&includeArabic=true"
+curl "https://diarmaqar.net/api/tuning-systems/cairocongresstuningcommittee_1929/rast/pitch-classes?includeSources=true&includeArabic=true"
 ```
 
 **Response:** Tuning system pitch classes retrieved successfully
@@ -3104,7 +3104,7 @@ curl "https://diarmaqar.netlify.app/api/tuning-systems/cairocongresstuningcommit
     "octave": "all"
   },
   "links": {
-    "self": "https://diarmaqar.netlify.app/api/tuning-systems/ibnsina_1037/yegah/pitch-classes",
+    "self": "https://diarmaqar.net/api/tuning-systems/ibnsina_1037/yegah/pitch-classes",
     "tuningSystem": "/api/tuning-systems/ibnsina_1037"
   },
   "sources": [
@@ -3171,7 +3171,7 @@ note-name strings.
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/tuning-systems/alfarabi_950g/ushayran/maqamat?includeArabic=true"
+curl "https://diarmaqar.net/api/tuning-systems/alfarabi_950g/ushayran/maqamat?includeArabic=true"
 ```
 
 **Response:** Maqāmāt list retrieved successfully
@@ -3350,7 +3350,7 @@ curl "https://diarmaqar.netlify.app/api/tuning-systems/alfarabi_950g/ushayran/ma
     }
   ],
   "links": {
-    "self": "https://diarmaqar.netlify.app/api/tuning-systems/ibnsina_1037/yegah/maqamat",
+    "self": "https://diarmaqar.net/api/tuning-systems/ibnsina_1037/yegah/maqamat",
     "tuningSystem": "/api/tuning-systems/ibnsina_1037",
     "collection": "/api/maqamat"
   }
@@ -3508,7 +3508,7 @@ Adds Arabic versions with "Ar" suffix (e.g., maqamDisplayNameAr, tonicDisplayAr)
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/modulation-routes?tuningSystem=alfarabi_950g&startingNote=ushayran&fromMaqam=maqam_rast&toMaqam=maqam_segah&maxHops=5&includeArabic=true"
+curl "https://diarmaqar.net/api/modulation-routes?tuningSystem=alfarabi_950g&startingNote=ushayran&fromMaqam=maqam_rast&toMaqam=maqam_segah&maxHops=5&includeArabic=true"
 ```
 
 **Response:** Modulation routes calculated successfully
@@ -3650,7 +3650,7 @@ availability information for a specific note name.
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/pitch-classes/note-names?includeArabic=true"
+curl "https://diarmaqar.net/api/pitch-classes/note-names?includeArabic=true"
 ```
 
 **Response:** List of note names retrieved successfully
@@ -3776,7 +3776,7 @@ Supports:
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/pitch-classes/note-names/rast?includeArabic=true"
+curl "https://diarmaqar.net/api/pitch-classes/note-names/rast?includeArabic=true"
 ```
 
 **Response:** Pitch class data retrieved successfully
@@ -3811,7 +3811,7 @@ curl "https://diarmaqar.netlify.app/api/pitch-classes/note-names/rast?includeAra
     "cents": 0
   },
   "links": {
-    "self": "https://diarmaqar.netlify.app/api/pitch-classes/note-names/yegah?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents",
+    "self": "https://diarmaqar.net/api/pitch-classes/note-names/yegah?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents",
     "availability": "/api/pitch-classes/note-names/yegah/availability",
     "compare": "/api/pitch-classes/note-names/yegah/compare"
   }
@@ -3850,7 +3850,7 @@ Returns for each tuning system:
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/pitch-classes/note-names/rast/availability?includeArabic=true"
+curl "https://diarmaqar.net/api/pitch-classes/note-names/rast/availability?includeArabic=true"
 ```
 
 **Response:** Availability data retrieved successfully
@@ -3994,7 +3994,7 @@ curl "https://diarmaqar.netlify.app/api/pitch-classes/note-names/rast/availabili
     ]
   },
   "links": {
-    "self": "https://diarmaqar.netlify.app/api/pitch-classes/note-names/yegah/availability",
+    "self": "https://diarmaqar.net/api/pitch-classes/note-names/yegah/availability",
     "detail": "/api/pitch-classes/note-names/yegah",
     "compare": "/api/pitch-classes/note-names/yegah/compare"
   }
@@ -4038,7 +4038,7 @@ Returns comprehensive data for each tuning system including:
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/pitch-classes/note-names/rast/compare?tuningSystems=meshshaqa_1899,cairocongresstuningcommittee_1929&startingNote=yegah&includeArabic=true"
+curl "https://diarmaqar.net/api/pitch-classes/note-names/rast/compare?tuningSystems=meshshaqa_1899,cairocongresstuningcommittee_1929&startingNote=yegah&includeArabic=true"
 ```
 
 **Response:** Comparison data retrieved successfully
@@ -4107,7 +4107,7 @@ curl "https://diarmaqar.netlify.app/api/pitch-classes/note-names/rast/compare?tu
     "failedComparisons": 0
   },
   "links": {
-    "self": "https://diarmaqar.netlify.app/api/pitch-classes/note-names/yegah/compare?tuningSystems=ibnsina_1037%2Calfarabi_950g&pitchClassDataType=cents&startingNote=yegah",
+    "self": "https://diarmaqar.net/api/pitch-classes/note-names/yegah/compare?tuningSystems=ibnsina_1037%2Calfarabi_950g&pitchClassDataType=cents&startingNote=yegah",
     "detail": "/api/pitch-classes/note-names/yegah",
     "availability": "/api/pitch-classes/note-names/yegah/availability"
   }
@@ -4159,7 +4159,7 @@ as it is not meaningful in this context.
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/intervals?noteNames=rast,dugah,segah&includeArabic=true"
+curl "https://diarmaqar.net/api/intervals?noteNames=rast,dugah,segah&includeArabic=true"
 ```
 
 **Response:** Interval calculations retrieved successfully
@@ -4251,7 +4251,7 @@ curl "https://diarmaqar.netlify.app/api/intervals?noteNames=rast,dugah,segah&inc
     }
   ],
   "links": {
-    "self": "https://diarmaqar.netlify.app/api/intervals?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents&noteNames=yegah%2Cdugah%2Csegah",
+    "self": "https://diarmaqar.net/api/intervals?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents&noteNames=yegah%2Cdugah%2Csegah",
     "compare": "/api/intervals/compare?noteNames=yegah,dugah,segah"
   }
 }
@@ -4291,7 +4291,7 @@ as it is not meaningful in this context.
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/intervals/compare?noteNames=rast,dugah,segah&tuningSystems=alfarabi_950g,cairocongresstuningcommittee_1929&startingNote=ushayran&includeArabic=true"
+curl "https://diarmaqar.net/api/intervals/compare?noteNames=rast,dugah,segah&tuningSystems=alfarabi_950g,cairocongresstuningcommittee_1929&startingNote=ushayran&includeArabic=true"
 ```
 
 **Response:** Comparison data retrieved successfully
@@ -4434,7 +4434,7 @@ curl "https://diarmaqar.netlify.app/api/intervals/compare?noteNames=rast,dugah,s
     "failedComparisons": 0
   },
   "links": {
-    "self": "https://diarmaqar.netlify.app/api/intervals/compare?tuningSystems=ibnsina_1037%2Calfarabi_950g&startingNote=yegah&pitchClassDataType=cents&noteNames=yegah%2Cdugah%2Csegah",
+    "self": "https://diarmaqar.net/api/intervals/compare?tuningSystems=ibnsina_1037%2Calfarabi_950g&startingNote=yegah&pitchClassDataType=cents&noteNames=yegah%2Cdugah%2Csegah",
     "intervals": "/api/intervals?noteNames=yegah,dugah,segah"
   }
 }
@@ -4489,7 +4489,7 @@ Required if 'to' is a value and cannot be auto-detected..
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/intervals/calculate?from=rast&to=dugah&tuningSystem=ibnsina_1037&startingNote=yegah&unit=cents&includeArabic=true"
+curl "https://diarmaqar.net/api/intervals/calculate?from=rast&to=dugah&tuningSystem=ibnsina_1037&startingNote=yegah&unit=cents&includeArabic=true"
 ```
 
 **Response:** Interval calculated successfully
@@ -4604,7 +4604,7 @@ Return all bibliographic sources (books, articles, theses) with comprehensive me
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/sources?includeArabic=true"
+curl "https://diarmaqar.net/api/sources?includeArabic=true"
 ```
 
 **Response:** List of sources retrieved successfully
@@ -4760,7 +4760,7 @@ Use the `/api/sources` endpoint to retrieve all available source IDs.
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/sources/Farmer-(1937)?includeArabic=true"
+curl "https://diarmaqar.net/api/sources/Farmer-(1937)?includeArabic=true"
 ```
 
 **Response:** Source retrieved successfully
@@ -4827,7 +4827,7 @@ Use the `/api/sources` endpoint to retrieve all available source IDs.
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/sources/Farmer-(1937)/tuning-systems?includeArabic=true"
+curl "https://diarmaqar.net/api/sources/Farmer-(1937)/tuning-systems?includeArabic=true"
 ```
 
 **Response:** Tuning systems retrieved successfully
@@ -4903,7 +4903,7 @@ Use the `/api/sources` endpoint to retrieve all available source IDs.
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/sources/Farmer-(1937)/maqamat?includeArabic=true"
+curl "https://diarmaqar.net/api/sources/Farmer-(1937)/maqamat?includeArabic=true"
 ```
 
 **Response:** Maqamat retrieved successfully
@@ -5046,7 +5046,7 @@ Use the `/api/sources` endpoint to retrieve all available source IDs.
 
 **Example:**
 ```bash
-curl "https://diarmaqar.netlify.app/api/sources/Farmer-(1937)/ajnas?includeArabic=true"
+curl "https://diarmaqar.net/api/sources/Farmer-(1937)/ajnas?includeArabic=true"
 ```
 
 **Response:** Ajnas retrieved successfully

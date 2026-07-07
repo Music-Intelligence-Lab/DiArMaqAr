@@ -41,7 +41,7 @@ Complete documentation for all API endpoints. For quick start, see [API Document
 ${servers && servers.length > 0 
   ? `- **Production**: \`${servers[0].url}\`
 - **Development**: \`${servers[1]?.url || 'http://localhost:3000/api'}\``
-  : `- **Production**: \`https://diarmaqar.netlify.app/api\`
+  : `- **Production**: \`https://diarmaqar.net/api\`
 - **Development**: \`http://localhost:3000/api\``}
 
 ## OpenAPI Specification
@@ -245,7 +245,7 @@ function generateEndpointDocumentation(path, method, operation, spec) {
   // Example request
   const baseUrl = (spec.servers && spec.servers.length > 0) 
     ? spec.servers[0].url 
-    : 'https://diarmaqar.netlify.app/api';
+    : 'https://diarmaqar.net/api';
   const examplePath = path.replace(/{(\w+)}/g, (match, paramName) => {
     const param = parameters?.find(p => p.name === paramName && p.in === 'path');
     if (param?.examples) {

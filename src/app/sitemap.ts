@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next'
 import fs from 'fs'
 import path from 'path'
 
-const baseUrl = 'https://diarmaqar.netlify.app'
+const baseUrl = 'https://diarmaqar.net'
 
 /** Enumerate /docs/guide/*.md at build time. Runs during `next build`,
  *  which runs after `docs:build`, so the directory is always present. */

@@ -53,7 +53,7 @@ export const metadata: Metadata = {
   
   referrer: "origin-when-cross-origin",
   
-  metadataBase: new URL("https://diarmaqar.netlify.app"),
+  metadataBase: new URL("https://diarmaqar.net"),
   
   alternates: {
     canonical: "/",
@@ -66,7 +66,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://diarmaqar.netlify.app",
+    url: "https://diarmaqar.net",
     siteName: "Digital Arabic Maqām Archive",
     title: "Digital Arabic Maqām Archive (DiArMaqAr): Interactive Multilingual Platform for Computational Research, Pedagogy, and Creative Practice",
     description: "Open-source, multilingual, browser-based computational platform and machine-readable corpus spanning over one thousand years of Arabic maqām documentation. Features the first computational implementation of Sāmī al-Shawwā&apos;s 1946 intiqālāt guidelines. Grounded in culture-specific and decolonial computing methodologies. Interactive interface for musicians, REST API and JSON exports for researchers.",
@@ -96,7 +96,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const baseUrl = "https://diarmaqar.netlify.app";
+  const baseUrl = "https://diarmaqar.net";
   
   const structuredData = {
     "@context": "https://schema.org",
@@ -269,7 +269,7 @@ export default function RootLayout({
               <li><a href="/docs/openapi.json">OpenAPI Specification</a></li>
             </ul>
             <h2>API Access</h2>
-            <p>Base URL: <a href="https://diarmaqar.netlify.app/api">https://diarmaqar.netlify.app/api</a></p>
+            <p>Base URL: <a href="https://diarmaqar.net/api">https://diarmaqar.net/api</a></p>
             <p>OpenAPI Spec: <a href="/docs/openapi.json">/docs/openapi.json</a></p>
             <h3>For AI Assistants</h3>
             <p><strong>API access:</strong> All endpoints are public, unauthenticated, and return plain JSON. No browser, cookies, or authentication required.</p>
@@ -297,7 +297,7 @@ export default function RootLayout({
           </ul>
           
           <h2>API Access</h2>
-          <p>Base URL: <a href="https://diarmaqar.netlify.app/api">https://diarmaqar.netlify.app/api</a></p>
+          <p>Base URL: <a href="https://diarmaqar.net/api">https://diarmaqar.net/api</a></p>
           <p>OpenAPI Specification: <a href="/docs/openapi.json">/docs/openapi.json</a></p>
           <p>Interactive Playground: <a href="/docs/api/playground">/docs/api/playground</a></p>
           
@@ -311,7 +311,7 @@ export default function RootLayout({
             <li>List all tuning systems: <code>GET /api/tuning-systems</code></li>
             <li>Most common tuning system: <code>GET /api/tuning-systems/ibnsina_1037/yegah/pitch-classes?pitchClassDataType=cents</code></li>
           </ul>
-          <p><strong>Quick Test URL:</strong> <code>GET https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&amp;startingNote=yegah&amp;pitchClassDataType=cents</code></p>
+          <p><strong>Quick Test URL:</strong> <code>GET https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&amp;startingNote=yegah&amp;pitchClassDataType=cents</code></p>
           <p>All endpoints return JSON with complete data including pitch classes, intervals, bibliographic sources, and more. See <a href="/docs/api/representative-examples">Representative Examples</a> for complete list of recommended examples. Use the OpenAPI specification for complete endpoint documentation and parameter details.</p>
           
           <h2>Quick Links</h2>

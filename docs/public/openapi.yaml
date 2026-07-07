@@ -21,7 +21,7 @@ info:
     name: CC-BY-NC-SA 4.0
     url: https://creativecommons.org/licenses/by-nc-sa/4.0/
 servers:
-  - url: https://diarmaqar.netlify.app/api
+  - url: https://diarmaqar.net/api
     description: Production server
   - url: http://localhost:3000/api
     description: Development server
@@ -642,7 +642,7 @@ paths:
                         originalValueType: "fraction"
                         referenceFrequency: 97.999
                     links:
-                      self: "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah"
+                      self: "https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah"
                       detail: "/api/maqamat/maqam_rast"
                       availability: "/api/maqamat/maqam_rast/availability"
                       compare: "/api/maqamat/maqam_rast/compare"
@@ -832,7 +832,7 @@ paths:
                         originalValueType: "fraction"
                         referenceFrequency: 97.999
                     links:
-                      self: "https://diarmaqar.netlify.app/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&transposeTo=chahargah"
+                      self: "https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&transposeTo=chahargah"
                       detail: "/api/maqamat/maqam_rast"
                       availability: "/api/maqamat/maqam_rast/availability"
                       compare: "/api/maqamat/maqam_rast/compare"
@@ -1824,7 +1824,7 @@ paths:
                     "octave": "all"
                   },
                   "links": {
-                    "self": "https://diarmaqar.netlify.app/api/tuning-systems/ibnsina_1037/yegah/pitch-classes",
+                    "self": "https://diarmaqar.net/api/tuning-systems/ibnsina_1037/yegah/pitch-classes",
                     "tuningSystem": "/api/tuning-systems/ibnsina_1037"
                   },
                   "sources": [
@@ -2135,7 +2135,7 @@ paths:
                     ]
                   },
                   "links": {
-                    "self": "https://diarmaqar.netlify.app/api/maqamat/maqam_rast/transpositions?tuningSystem=ibnsina_1037&startingNote=yegah",
+                    "self": "https://diarmaqar.net/api/maqamat/maqam_rast/transpositions?tuningSystem=ibnsina_1037&startingNote=yegah",
                     "availability": "/api/maqamat/maqam_rast/availability",
                     "detail": "/api/maqamat/maqam_rast"
                   }
@@ -2787,7 +2787,7 @@ paths:
                       includeIntervals: true
                       transposeTo: null
                     links:
-                      self: "https://diarmaqar.netlify.app/api/maqamat/maqam_rast/compare?tuningSystems=alsabbagh_1954&startingNotes=rast&pitchClassDataType=cents"
+                      self: "https://diarmaqar.net/api/maqamat/maqam_rast/compare?tuningSystems=alsabbagh_1954&startingNotes=rast&pitchClassDataType=cents"
                       detail: "/api/maqamat/maqam_rast"
                       availability: "/api/maqamat/maqam_rast/availability"
                 multipleStartingNotes:
@@ -3088,7 +3088,7 @@ paths:
                       includeIntervals: true
                       transposeTo: null
                     links:
-                      self: "https://diarmaqar.netlify.app/api/maqamat/maqam_bayyat/compare?tuningSystems=alsabbagh_1954,ibnsina_1037&startingNotes=rast,yegah,ushayran&pitchClassDataType=cents"
+                      self: "https://diarmaqar.net/api/maqamat/maqam_bayyat/compare?tuningSystems=alsabbagh_1954,ibnsina_1037&startingNotes=rast,yegah,ushayran&pitchClassDataType=cents"
                       detail: "/api/maqamat/maqam_bayyat"
                       availability: "/api/maqamat/maqam_bayyat/availability"
                 unavailableStartingNote:
@@ -3133,7 +3133,7 @@ paths:
                       includeIntervals: true
                       transposeTo: null
                     links:
-                      self: "https://diarmaqar.netlify.app/api/maqamat/maqam_bayyat/compare?tuningSystems=ibnsina_1037&startingNotes=bogus_note&pitchClassDataType=cents"
+                      self: "https://diarmaqar.net/api/maqamat/maqam_bayyat/compare?tuningSystems=ibnsina_1037&startingNotes=bogus_note&pitchClassDataType=cents"
                       detail: "/api/maqamat/maqam_bayyat"
                       availability: "/api/maqamat/maqam_bayyat/availability"
                 withErrors:
@@ -3233,7 +3233,7 @@ paths:
                       includeIntervals: true
                       transposeTo: null
                     links:
-                      self: "https://diarmaqar.netlify.app/api/maqamat/maqam_rast/compare?tuningSystems=alsabbagh_1954,InvalidSystem&startingNotes=rast&pitchClassDataType=cents"
+                      self: "https://diarmaqar.net/api/maqamat/maqam_rast/compare?tuningSystems=alsabbagh_1954,InvalidSystem&startingNotes=rast&pitchClassDataType=cents"
                       detail: "/api/maqamat/maqam_rast"
                       availability: "/api/maqamat/maqam_rast/availability"
         '400':
@@ -4500,7 +4500,7 @@ paths:
                     }
                   ],
                   "links": {
-                    "self": "https://diarmaqar.netlify.app/api/tuning-systems/ibnsina_1037/yegah/maqamat",
+                    "self": "https://diarmaqar.net/api/tuning-systems/ibnsina_1037/yegah/maqamat",
                     "tuningSystem": "/api/tuning-systems/ibnsina_1037",
                     "collection": "/api/maqamat"
                   }
@@ -6425,7 +6425,7 @@ paths:
                     ]
                   },
                   "links": {
-                    "self": "https://diarmaqar.netlify.app/api/ajnas/jins_bayyat/transpositions?tuningSystem=ibnsina_1037&startingNote=yegah",
+                    "self": "https://diarmaqar.net/api/ajnas/jins_bayyat/transpositions?tuningSystem=ibnsina_1037&startingNote=yegah",
                     "availability": "/api/ajnas/jins_bayyat/availability",
                     "detail": "/api/ajnas/jins_bayyat"
                   }
@@ -7041,7 +7041,7 @@ paths:
                       includeIntervals: true
                       transposeTo: null
                     links:
-                      self: "https://diarmaqar.netlify.app/api/ajnas/jins_rast/compare?tuningSystems=alsabbagh_1954&startingNotes=rast&pitchClassDataType=cents"
+                      self: "https://diarmaqar.net/api/ajnas/jins_rast/compare?tuningSystems=alsabbagh_1954&startingNotes=rast&pitchClassDataType=cents"
                       detail: "/api/ajnas/jins_rast"
                       availability: "/api/ajnas/jins_rast/availability"
                 multipleStartingNotes:
@@ -7269,7 +7269,7 @@ paths:
                       includeIntervals: true
                       transposeTo: null
                     links:
-                      self: "https://diarmaqar.netlify.app/api/ajnas/jins_bayyat/compare?tuningSystems=alsabbagh_1954,ibnsina_1037&startingNotes=rast,yegah,ushayran&pitchClassDataType=cents"
+                      self: "https://diarmaqar.net/api/ajnas/jins_bayyat/compare?tuningSystems=alsabbagh_1954,ibnsina_1037&startingNotes=rast,yegah,ushayran&pitchClassDataType=cents"
                       detail: "/api/ajnas/jins_bayyat"
                       availability: "/api/ajnas/jins_bayyat/availability"
                 unavailableStartingNote:
@@ -7314,7 +7314,7 @@ paths:
                       includeIntervals: true
                       transposeTo: null
                     links:
-                      self: "https://diarmaqar.netlify.app/api/ajnas/jins_rast/compare?tuningSystems=ibnsina_1037&startingNotes=bogus_note&pitchClassDataType=cents"
+                      self: "https://diarmaqar.net/api/ajnas/jins_rast/compare?tuningSystems=ibnsina_1037&startingNotes=bogus_note&pitchClassDataType=cents"
                       detail: "/api/ajnas/jins_rast"
                       availability: "/api/ajnas/jins_rast/availability"
                 withErrors:
@@ -7392,7 +7392,7 @@ paths:
                       includeIntervals: true
                       transposeTo: null
                     links:
-                      self: "https://diarmaqar.netlify.app/api/ajnas/jins_rast/compare?tuningSystems=alsabbagh_1954,InvalidSystem&startingNotes=rast&pitchClassDataType=cents"
+                      self: "https://diarmaqar.net/api/ajnas/jins_rast/compare?tuningSystems=alsabbagh_1954,InvalidSystem&startingNotes=rast&pitchClassDataType=cents"
                       detail: "/api/ajnas/jins_rast"
                       availability: "/api/ajnas/jins_rast/availability"
         '400':
@@ -7781,7 +7781,7 @@ paths:
                     "cents": 0
                   },
                   "links": {
-                    "self": "https://diarmaqar.netlify.app/api/pitch-classes/note-names/yegah?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents",
+                    "self": "https://diarmaqar.net/api/pitch-classes/note-names/yegah?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents",
                     "availability": "/api/pitch-classes/note-names/yegah/availability",
                     "compare": "/api/pitch-classes/note-names/yegah/compare"
                   }
@@ -8017,7 +8017,7 @@ paths:
                     ]
                   },
                   "links": {
-                    "self": "https://diarmaqar.netlify.app/api/pitch-classes/note-names/yegah/availability",
+                    "self": "https://diarmaqar.net/api/pitch-classes/note-names/yegah/availability",
                     "detail": "/api/pitch-classes/note-names/yegah",
                     "compare": "/api/pitch-classes/note-names/yegah/compare"
                   }
@@ -8204,7 +8204,7 @@ paths:
                     "failedComparisons": 0
                   },
                   "links": {
-                    "self": "https://diarmaqar.netlify.app/api/pitch-classes/note-names/yegah/compare?tuningSystems=ibnsina_1037%2Calfarabi_950g&pitchClassDataType=cents&startingNote=yegah",
+                    "self": "https://diarmaqar.net/api/pitch-classes/note-names/yegah/compare?tuningSystems=ibnsina_1037%2Calfarabi_950g&pitchClassDataType=cents&startingNote=yegah",
                     "detail": "/api/pitch-classes/note-names/yegah",
                     "availability": "/api/pitch-classes/note-names/yegah/availability"
                   }
@@ -8465,7 +8465,7 @@ paths:
                     }
                   ],
                   "links": {
-                    "self": "https://diarmaqar.netlify.app/api/intervals?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents&noteNames=yegah%2Cdugah%2Csegah",
+                    "self": "https://diarmaqar.net/api/intervals?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents&noteNames=yegah%2Cdugah%2Csegah",
                     "compare": "/api/intervals/compare?noteNames=yegah,dugah,segah"
                   }
                 }
@@ -8747,7 +8747,7 @@ paths:
                     "failedComparisons": 0
                   },
                   "links": {
-                    "self": "https://diarmaqar.netlify.app/api/intervals/compare?tuningSystems=ibnsina_1037%2Calfarabi_950g&startingNote=yegah&pitchClassDataType=cents&noteNames=yegah%2Cdugah%2Csegah",
+                    "self": "https://diarmaqar.net/api/intervals/compare?tuningSystems=ibnsina_1037%2Calfarabi_950g&startingNote=yegah&pitchClassDataType=cents&noteNames=yegah%2Cdugah%2Csegah",
                     "intervals": "/api/intervals?noteNames=yegah,dugah,segah"
                   }
                 }

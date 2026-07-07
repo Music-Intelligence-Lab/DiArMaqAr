@@ -94,7 +94,7 @@ The implementation operates entirely within **Arabic theoretical frameworks** an
 - [Source Code](https://github.com/Music-Intelligence-Lab/DiArMaqAr) - View on GitHub
 - [Music Intelligence Lab](https://music-intelligence-lab.org) - Research lab website
 - [Interactive API Playground](http://localhost:3000/api-playground) - Test endpoints
-- [Live Application](https://diarmaqar.netlify.app/) - Interactive web interface
+- [Live Application](https://diarmaqar.net/) - Interactive web interface
 
 ## Documentation Structure
 

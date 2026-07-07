@@ -27,4 +27,4 @@ By providing rigorously sourced, computationally accessible reference data with 
 
 ## Links
 
-- **Live Application**: [https://diarmaqar.netlify.app/](https://diarmaqar.netlify.app/)
+- **Live Application**: [https://diarmaqar.net/](https://diarmaqar.net/)

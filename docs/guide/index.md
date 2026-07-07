@@ -95,5 +95,5 @@ curl "http://localhost:3000/api/maqamat/maqam_bayyat/transpositions?tuningSystem
 
 - [Source Code](https://github.com/Music-Intelligence-Lab/DiArMaqAr) - View on GitHub
 - [Music Intelligence Lab](https://music-intelligence-lab.org) - Research lab website
-- [Live Application](https://diarmaqar.netlify.app/) - Interactive web interface
+- [Live Application](https://diarmaqar.net/) - Interactive web interface
 

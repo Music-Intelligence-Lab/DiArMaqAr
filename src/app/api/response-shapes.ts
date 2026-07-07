@@ -3,7 +3,7 @@ import { addArabicFields } from "@/app/api/arabic-helpers";
 type Nullable<T> = T | null | undefined;
 
 /** Canonical production URL - prevents branch/deploy URLs from leaking into API responses */
-const CANONICAL_BASE = "https://diarmaqar.netlify.app";
+const CANONICAL_BASE = "https://diarmaqar.net";
 
 /**
  * Returns the canonical production URL for links.self.
