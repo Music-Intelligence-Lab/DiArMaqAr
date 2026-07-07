@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, ReactNode } from "react";
-import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { getDynamicArabicName } from "@/functions/dynamicArabicConverter";
 
 /**
@@ -1091,7 +1091,6 @@ export function LanguageContextProvider({ children }: { children: ReactNode }) {
   const params = useParams();
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
 
   const rawLang = Array.isArray(params?.lang) ? params.lang[0] : params?.lang;
   const language: Language =
@@ -1102,8 +1101,8 @@ export function LanguageContextProvider({ children }: { children: ReactNode }) {
    */
   const setLanguage = (newLanguage: Language) => {
     const rest = pathname.replace(/^\/(en|ar|fr)(?=\/|$)/, "");
-    const qs = searchParams.toString();
-    router.push(`/${newLanguage}${rest}${qs ? `?${qs}` : ""}`);
+    const search = typeof window !== "undefined" ? window.location.search : "";
+    router.push(`/${newLanguage}${rest}${search}`);
   };
 
   const isRTL = language === "ar";
