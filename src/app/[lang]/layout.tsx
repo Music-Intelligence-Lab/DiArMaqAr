@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Readex_Pro } from "next/font/google";
-import { isLocale, dir, locales } from "@/i18n/config";
+import { isLocale, dir, locales, type Locale } from "@/i18n/config";
+import { localeMeta } from "@/i18n/metadata";
 import { notFound } from "next/navigation";
 import { AppContextProvider } from "@/contexts/app-context";
 import { SoundContextProvider } from "@/contexts/sound-context";
@@ -19,79 +20,90 @@ const readexPro = Readex_Pro({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "Digital Arabic Maqām Archive (DiArMaqAr) | Interactive Multilingual Platform for Computational Research, Pedagogy, and Creative Practice",
-  description: "Open-source, multilingual, browser-based computational platform and machine-readable corpus of Arabic maqām theory spanning over one thousand years of documentation. Comprises tanāghīm (tuning systems), ajnās (tri/tetra/pentachords), maqāmāt (melodic modes), suyūr (melodic pathways), and intiqālāt (modulation practices) compiled from primary Arabic, English, and French sources ranging from al-Kindī&apos;s 9th-century ratios to 20th-century scholarship, with complete bibliographic provenance. Features the first computational implementation of Sāmī al-Shawwā&apos;s 1946 intiqālāt guidelines. Musicians can explore through interactive interface with keyboard/MIDI/MPE and Scala exports. Researchers access structured JSON exports and REST API. Grounded in culture-specific and decolonial computing methodologies. All detail endpoints require tuningSystem, startingNote, and pitchClassDataType parameters.",
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}): Promise<Metadata> {
+  const { lang } = await params;
+  const locale: Locale = isLocale(lang) ? lang : "en";
+  const m = localeMeta[locale];
 
-  keywords: [
-    "Arabic maqām", "maqāmāt", "ajnās", "jins", "tanāghīm", "tuning systems", "suyūr", "intiqālāt",
-    "melodic modes", "tetrachords", "tri/tetra/pentachords", "taṣāwīr", "transpositions", "modulation", "Arabic music theory", "traditional Arabic music",
-    "Eastern Mediterranean music", "Arabic scales", "Arabic musical scales",
-    "Turkish makam", "Persian dastgāh", "mugham", "shashmaqam", "Indian rāga", "Central Asian music", "modal music",
-    "al-Kindī", "al-Fārābī", "Ibn Sīnā", "Sāmī al-Shawwā", "al-Shawwā", "Al-Ḥilū", "Al-Ṣabbāgh", "medieval Arabic music theory", "historical musicology",
-    "computational musicology", "music information retrieval", "MIR", "digital musicology", "ethnomusicology",
-    "music theory", "comparative musicology", "untempered intonation", "pattern-matching algorithms",
-    "REST API", "API for AI assistants", "TypeScript", "JavaScript library", "OpenAPI", "LLM documentation", "LLM-optimised", "API documentation", "JSON export", "machine learning datasets",
-    "training data", "ground truth data", "reference data", "programmatic access", "Scala tuning files",
-    "decolonial computing", "culture-specific computing", "culturally-aware computing", "postcolonial computing", "bibliographic attribution",
-    "scholarly verification", "transparent provenance", "complete bibliographic provenance", "critical edition", "Persian-Arab-Ottoman note naming",
-    "tuning-system-sensitive transposition", "modulation algorithm", "intiqālāt guidelines", "audio synthesis", "MIDI", "MPE",
-    "Web Audio API", "real-time synthesis", "fractional ratios", "cents", "string lengths", "frequencies", "intervallic analyses",
-    "music information retrieval systems", "AI/ML applications", "algorithmic applications", "machine learning applications", "digital instrument design",
-    "pedagogical tools", "compositional resources", "quantitative analysis", "music education", "Arabic music resources", "creative practice"
-  ],
+  return {
+    metadataBase: new URL("https://diarmaqar.net"),
+    title: m.title,
+    description: m.description,
 
-  authors: [
-    { name: "Khyam Allami", url: "https://musicintelligencelab.com" },
-    { name: "Ibrahim El Khansa" },
-    { name: "Joseph Bakarji" }
-  ],
+    keywords: [
+      "Arabic maqām", "maqāmāt", "ajnās", "jins", "tanāghīm", "tuning systems", "suyūr", "intiqālāt",
+      "melodic modes", "tetrachords", "tri/tetra/pentachords", "taṣāwīr", "transpositions", "modulation", "Arabic music theory", "traditional Arabic music",
+      "Eastern Mediterranean music", "Arabic scales", "Arabic musical scales",
+      "Turkish makam", "Persian dastgāh", "mugham", "shashmaqam", "Indian rāga", "Central Asian music", "modal music",
+      "al-Kindī", "al-Fārābī", "Ibn Sīnā", "Sāmī al-Shawwā", "al-Shawwā", "Al-Ḥilū", "Al-Ṣabbāgh", "medieval Arabic music theory", "historical musicology",
+      "computational musicology", "music information retrieval", "MIR", "digital musicology", "ethnomusicology",
+      "music theory", "comparative musicology", "untempered intonation", "pattern-matching algorithms",
+      "REST API", "API for AI assistants", "TypeScript", "JavaScript library", "OpenAPI", "LLM documentation", "LLM-optimised", "API documentation", "JSON export", "machine learning datasets",
+      "training data", "ground truth data", "reference data", "programmatic access", "Scala tuning files",
+      "decolonial computing", "culture-specific computing", "culturally-aware computing", "postcolonial computing", "bibliographic attribution",
+      "scholarly verification", "transparent provenance", "complete bibliographic provenance", "critical edition", "Persian-Arab-Ottoman note naming",
+      "tuning-system-sensitive transposition", "modulation algorithm", "intiqālāt guidelines", "audio synthesis", "MIDI", "MPE",
+      "Web Audio API", "real-time synthesis", "fractional ratios", "cents", "string lengths", "frequencies", "intervallic analyses",
+      "music information retrieval systems", "AI/ML applications", "algorithmic applications", "machine learning applications", "digital instrument design",
+      "pedagogical tools", "compositional resources", "quantitative analysis", "music education", "Arabic music resources", "creative practice"
+    ],
 
-  creator: "Music Intelligence Lab, American University of Beirut",
+    authors: [
+      { name: "Khyam Allami", url: "https://musicintelligencelab.com" },
+      { name: "Ibrahim El Khansa" },
+      { name: "Joseph Bakarji" }
+    ],
 
-  publisher: "Music Intelligence Lab",
+    creator: "Music Intelligence Lab, American University of Beirut",
 
-  applicationName: "Digital Arabic Maqām Archive",
+    publisher: "Music Intelligence Lab",
 
-  referrer: "origin-when-cross-origin",
+    applicationName: "Digital Arabic Maqām Archive",
 
-  metadataBase: new URL("https://diarmaqar.net"),
+    referrer: "origin-when-cross-origin",
 
-  alternates: {
-    canonical: "/",
-    languages: {
-      "en": "/",
-      "ar": "/",
+    alternates: {
+      canonical: `/${locale}`,
+      languages: {
+        en: "/en",
+        ar: "/ar",
+        fr: "/fr",
+        "x-default": "/en",
+      },
     },
-  },
 
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: "https://diarmaqar.net",
-    siteName: "Digital Arabic Maqām Archive",
-    title: "Digital Arabic Maqām Archive (DiArMaqAr): Interactive Multilingual Platform for Computational Research, Pedagogy, and Creative Practice",
-    description: "Open-source, multilingual, browser-based computational platform and machine-readable corpus spanning over one thousand years of Arabic maqām documentation. Features the first computational implementation of Sāmī al-Shawwā&apos;s 1946 intiqālāt guidelines. Grounded in culture-specific and decolonial computing methodologies. Interactive interface for musicians, REST API and JSON exports for researchers.",
-  },
+    openGraph: {
+      type: "website",
+      locale: m.ogLocale,
+      url: `https://diarmaqar.net/${locale}`,
+      siteName: "Digital Arabic Maqām Archive",
+      title: m.title,
+      description: m.description,
+    },
 
-  twitter: {
-    card: "summary_large_image",
-    title: "Digital Arabic Maqām Archive (DiArMaqAr)",
-    description: "Interactive multilingual platform spanning 1000+ years of Arabic maqām documentation. First computational implementation of Sāmī al-Shawwā&apos;s 1946 intiqālāt guidelines. REST API, JSON exports, Scala files. Grounded in decolonial computing.",
-  },
+    twitter: {
+      card: "summary_large_image",
+      title: "Digital Arabic Maqām Archive (DiArMaqAr)",
+      description: "Interactive multilingual platform spanning 1000+ years of Arabic maqām documentation. First computational implementation of Sāmī al-Shawwā&apos;s 1946 intiqālāt guidelines. REST API, JSON exports, Scala files. Grounded in decolonial computing.",
+    },
 
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
+    robots: {
       index: true,
       follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
     },
-  },
-};
+  };
+}
 
 export function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
