@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams, useRouter, useParams, usePathname } from "next/navigation";
+import { stripLocale } from "@/i18n/navigation";
 import useAppContext from "@/contexts/app-context";
 import useMenuContext from "@/contexts/menu-context";
 import TuningSystemManager from "@/components/tuning-system-manager";
@@ -183,6 +184,9 @@ export default function AppClient() {
 
   const searchParams = useSearchParams();
   const router = useRouter();
+  const routeParams = useParams();
+  const pathname = usePathname();
+  const lang = (Array.isArray(routeParams?.lang) ? routeParams.lang[0] : routeParams?.lang) ?? "en";
   const urlParamsApplied = useRef(false);
   
   // Track previous menu for smooth transitions
@@ -372,11 +376,11 @@ export default function AppClient() {
       }
     }
 
-    if (typeof window !== "undefined" && window.location.pathname === "/app") {
+    if (stripLocale(pathname) === "/app") {
       const urlParams = params.join("&");
-      router.replace(`/app?${urlParams}`, { scroll: false });
+      router.replace(`/${lang}/app?${urlParams}`, { scroll: false });
     }
-  }, [selectedTuningSystem, selectedJinsData, selectedMaqamData, maqamSayrId, selectedIndices, selectedMaqam, selectedJins, referenceFrequencies, router]);
+  }, [selectedTuningSystem, selectedJinsData, selectedMaqamData, maqamSayrId, selectedIndices, selectedMaqam, selectedJins, referenceFrequencies, router, pathname, lang]);
 
   return (
     <div className="main-content">
