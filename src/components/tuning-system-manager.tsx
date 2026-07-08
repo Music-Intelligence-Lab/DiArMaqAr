@@ -30,6 +30,7 @@ import SelectedPitchClassesAnalysis from "./tuning-system-selected-pitch-classes
 import Link from "next/link";
 import { canTransposeMaqamToNote } from "@/functions/transpose";
 import FrequencyKnob from "./frequency-knob";
+import { useLocalizedHref } from "@/hooks/use-localized-href";
 
 function isTuningSystemDisabled(
   tuningSystem: TuningSystem,
@@ -76,6 +77,7 @@ function isTuningSystemDisabled(
 export default function TuningSystemManager({ admin }: { admin: boolean }) {
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const { t, language, getDisplayName } = useLanguageContext();
+  const lh = useLocalizedHref();
 
   const {
     tuningSystems,
@@ -1364,7 +1366,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                     if (!source) return null;
                     return (
                       <Link
-                        href={`/bibliography?source=${source.getId()}`}
+                        href={lh(`/bibliography?source=${source.getId()}`)}
                         key={idx}
                         className="tuning-system-manager__source-item"
                       >
