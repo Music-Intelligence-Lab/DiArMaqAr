@@ -100,6 +100,8 @@ const apiInstructionsHeader = `## For AI Assistants: API Access
 
 **Error handling for AI assistants**: The API returns rich 400/404 bodies with \`hint\` and \`validOptions\` fields, but many AI HTTP tools cannot read 4xx response bodies. If a request fails with an opaque 400, do not guess — call \`GET /api/maqamat/{idName}/availability\` (or the equivalent \`/availability\` endpoint for ajnās) to get valid \`tuningSystem\` + \`startingNote\` combinations, then retry.
 
+**Entity ID format**: Tuning system and source \`idName\`/\`id\` values follow the \`creator_year\` convention, lowercase (e.g. \`ibnsina_1037\`, \`forster_2010\`). Maqām and jins IDs are prefixed accordingly (e.g. \`maqam_rast\`, \`jins_rast\`). Do not guess-case or hyphenate these — list them via \`GET /api/tuning-systems\`, \`GET /api/maqamat\`, or \`GET /api/ajnas\` if unsure.
+
 **Base URL**: https://diarmaqar.net/api
 **OpenAPI Specification**: /docs/openapi.json
 **Representative Examples**: /docs/api/representative-examples

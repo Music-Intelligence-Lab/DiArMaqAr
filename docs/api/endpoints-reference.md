@@ -160,7 +160,7 @@ curl "https://diarmaqar.net/api/maqamat?includeSources=true&includeArabic=true"
       "maqamDetailsUrl": "/api/maqamat/maqam_yegah",
       "sources": [
         {
-          "sourceId": "al-Shawwa-(1946)",
+          "sourceId": "alshawwa_1946",
           "page": "49"
         }
       ]
@@ -197,7 +197,7 @@ curl "https://diarmaqar.net/api/maqamat?includeSources=true&includeArabic=true"
       "maqamDetailsUrl": "/api/maqamat/maqam_farahfazza",
       "sources": [
         {
-          "sourceId": "al-Shawwa-(1946)",
+          "sourceId": "alshawwa_1946",
           "page": "50"
         }
       ]
@@ -2937,7 +2937,7 @@ curl "https://diarmaqar.net/api/tuning-systems?includeSources=true&includeArabic
       },
       "sources": [
         {
-          "sourceId": "al-Shawwa-(1946)",
+          "sourceId": "alshawwa_1946",
           "page": "49"
         }
       ]
@@ -2965,7 +2965,7 @@ curl "https://diarmaqar.net/api/tuning-systems?includeSources=true&includeArabic
       },
       "sources": [
         {
-          "sourceId": "al-Shawwa-(1946)",
+          "sourceId": "alshawwa_1946",
           "page": "50"
         }
       ]
