@@ -1,12 +1,7 @@
 "use client";
 
-import React, {
-  createContext,
-  useState,
-  useContext,
-  ReactNode,
-  useEffect,
-} from "react";
+import React, { createContext, useContext, ReactNode } from "react";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { getDynamicArabicName } from "@/functions/dynamicArabicConverter";
 
 /**
@@ -1090,57 +1085,25 @@ const translations = {
 
 /**
  * Provider component that wraps the app and provides language context to all child components
- * Manages language state, localStorage persistence, and document direction
+ * Reads the active language from the [lang] route param; setLanguage navigates.
  */
 export function LanguageContextProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<Language>("en");
+  const params = useParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const rawLang = Array.isArray(params?.lang) ? params.lang[0] : params?.lang;
+  const language: Language =
+    rawLang === "ar" || rawLang === "fr" || rawLang === "en" ? rawLang : "en";
 
   /**
-   * Load saved language from localStorage on component mount
-   */
-  useEffect(() => {
-    const savedLanguage = localStorage.getItem(
-      "maqam-network-language"
-    ) as Language;
-    if (savedLanguage && (savedLanguage === "en" || savedLanguage === "ar" || savedLanguage === "fr")) {
-      setLanguageState(savedLanguage);
-    }
-  }, []);
-
-  /**
-   * Sets the language and persists it to localStorage
-   * Also updates document direction and language attributes
+   * Sets the language by navigating to the same path+query under the new locale segment.
    */
   const setLanguage = (newLanguage: Language) => {
-    setLanguageState(newLanguage);
-    localStorage.setItem("maqam-network-language", newLanguage);
-
-    // Update document direction
-    document.documentElement.dir = newLanguage === "ar" ? "rtl" : "ltr";
-    document.documentElement.lang = newLanguage === "ar" ? "ar" : newLanguage === "fr" ? "fr" : "en";
-
-    // Force a re-render by adding a class to trigger CSS changes
-    document.body.className = document.body.className.replace(
-      /\b(ltr|rtl)\b/g,
-      ""
-    );
-    document.body.classList.add(newLanguage === "ar" ? "rtl" : "ltr");
+    const rest = pathname.replace(/^\/(en|ar|fr)(?=\/|$)/, "");
+    const search = typeof window !== "undefined" ? window.location.search : "";
+    router.push(`/${newLanguage}${rest}${search}`);
   };
-
-  /**
-   * Set initial document direction and language on component mount
-   */
-  useEffect(() => {
-    document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
-    document.documentElement.lang = language === "ar" ? "ar" : language === "fr" ? "fr" : "en";
-
-    // Also set body class for additional CSS targeting
-    document.body.className = document.body.className.replace(
-      /\b(ltr|rtl)\b/g,
-      ""
-    );
-    document.body.classList.add(language === "ar" ? "rtl" : "ltr");
-  }, [language]);
 
   const isRTL = language === "ar";
 

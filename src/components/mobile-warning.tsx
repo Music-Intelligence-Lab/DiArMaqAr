@@ -1,14 +1,17 @@
 "use client";
 
 import React from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useParams } from "next/navigation";
+import { stripLocale } from "@/i18n/navigation";
 
 export default function MobileWarning() {
   const pathname = usePathname();
+  const params = useParams();
+  const lang = (Array.isArray(params?.lang) ? params.lang[0] : params?.lang) ?? "en";
 
   // The landing page is informational and must remain readable on phones;
   // only the interactive app requires a desktop viewport.
-  if (pathname === "/") return null;
+  if (stripLocale(pathname) === "/") return null;
 
   return (
     <div className="mobile-warning">
@@ -31,7 +34,7 @@ export default function MobileWarning() {
           <a href="/docs/">Documentation</a>
           <a href="/docs/api/">API</a>
         </div>
-        <a className="mobile-warning__home" href="/">
+        <a className="mobile-warning__home" href={`/${lang}`}>
           ← Back
         </a>
         {/* eslint-enable @next/next/no-html-link-for-pages */}

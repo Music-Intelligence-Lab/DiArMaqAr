@@ -5,9 +5,11 @@ import Link from "next/link";
 import LanguageSelector from "@/components/language-selector";
 import useLanguageContext from "@/contexts/language-context";
 import Footer from "@/components/footer";
+import { useLocalizedHref } from "@/hooks/use-localized-href";
 
 export default function LandingPage() {
   const { language, isRTL } = useLanguageContext();
+  const lh = useLocalizedHref();
 
   // A cue is the last child of the section it concludes; clicking it
   // smooth-scrolls to the section it names.
@@ -64,7 +66,7 @@ export default function LandingPage() {
   // the button rather than crowding its label.
   const enterArchive = (
     <div className="cta-row">
-      <Link className="main-button" href="/app">
+      <Link className="main-button" href={lh("/app")}>
         {language === "ar" ? "ادخلوا إلى الأرشيف" : language === "fr" ? "Entrer dans l'Archive" : "Enter the Archive"}
       </Link>
       <span className="cta-note">

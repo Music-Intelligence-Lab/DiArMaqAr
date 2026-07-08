@@ -6,10 +6,12 @@ import useMenuContext from "@/contexts/menu-context";
 import useLanguageContext from "@/contexts/language-context";
 import MenuIcon from "@mui/icons-material/Menu";
 import Link from "next/link";
+import { useLocalizedHref } from "@/hooks/use-localized-href";
 
 const NavigationMenu = () => {
   const { openSettings, setOpenSettings, openNavigation, setOpenNavigation } = useMenuContext();
   const { t } = useLanguageContext();
+  const lh = useLocalizedHref();
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -102,9 +104,9 @@ const NavigationMenu = () => {
     <div ref={menuRef} className={`navigation-menu-card ${openNavigation ? "navigation-menu-card--open" : ""}`} role="dialog" aria-modal="true" aria-label="Main navigation menu" tabIndex={-1}>
       <div className="navigation-menu-card__content">
         {navigationLinks.map((link) => (
-          <Link 
-            key={link.href} 
-            href={link.href} 
+          <Link
+            key={link.href}
+            href={lh(link.href)}
             className="navigation-menu-card__link"
           >
             {t(link.key)}

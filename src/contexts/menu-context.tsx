@@ -2,7 +2,8 @@
 
 import React, { createContext, useState, useContext, ReactNode } from "react";
 import { useEffect } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname, useParams } from "next/navigation";
+import { stripLocale } from "@/i18n/navigation";
 
 interface MenuContextInterface {
   showAdminTabs: boolean;
@@ -65,15 +66,17 @@ export function MenuContextProvider({ children }: { children: ReactNode }) {
 
   const router = useRouter();
   const pathname = usePathname();
+  const params = useParams();
+  const lang = (Array.isArray(params?.lang) ? params.lang[0] : params?.lang) ?? "en";
 
   useEffect(() => {
-    if (pathname !== "/app" && selectedMenu !== "") {
-      router.push("/app");
+    if (stripLocale(pathname) !== "/app" && selectedMenu !== "") {
+      router.push(`/${lang}/app`);
     }
   }, [selectedMenu]);
 
   useEffect(() => {
-    if (!pathname.startsWith("/app")) {
+    if (!stripLocale(pathname).startsWith("/app")) {
       setSelectedMenu("");
     }
   }, [pathname]);

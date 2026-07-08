@@ -117,6 +117,7 @@ import PitchClass, { calculateInterval } from "@/models/PitchClass";
 import shiftPitchClassByOctave from "@/functions/shiftPitchClassByOctave";
 import Link from "next/link";
 import { stringifySource } from "@/models/bibliography/Source";
+import { useLocalizedHref } from "@/hooks/use-localized-href";
 
 const MaqamTranspositions: React.FC = () => {
   // Configurable constants (previous magic numbers)
@@ -134,6 +135,7 @@ const MaqamTranspositions: React.FC = () => {
 
   const { filters, setFilters } = useFilterContext();
   const { t, language, getDisplayName } = useLanguageContext();
+  const lh = useLocalizedHref();
 
   const [highlightedNotes, setHighlightedNotes] = useState<{
     index: number;
@@ -1507,7 +1509,7 @@ const MaqamTranspositions: React.FC = () => {
                         {selectedMaqamData.getSourcePageReferences().map((sourceRef, idx) => {
                           const source = sources.find((s) => s.getId() === sourceRef.sourceId);
                           return source ? (
-                            <Link key={idx} href={`/bibliography?source=${source.getId()}`}>
+                            <Link key={idx} href={lh(`/bibliography?source=${source.getId()}`)}>
                               {stringifySource(source, false, sourceRef.page)}
                               <br />
                             </Link>
@@ -1540,7 +1542,7 @@ const MaqamTranspositions: React.FC = () => {
                         {selectedMaqamData.getSourcePageReferences().map((sourceRef, idx) => {
                           const source = sources.find((s) => s.getId() === sourceRef.sourceId);
                           return source ? (
-                            <Link key={idx} href={`/bibliography?source=${source.getId()}`}>
+                            <Link key={idx} href={lh(`/bibliography?source=${source.getId()}`)}>
                               {stringifySource(source, true, sourceRef.page)}
                               <br />
                             </Link>

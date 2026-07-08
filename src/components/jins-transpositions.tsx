@@ -20,6 +20,7 @@ import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import ExportModal from "./export-modal";
 import { stringifySource } from "@/models/bibliography/Source";
+import { useLocalizedHref } from "@/hooks/use-localized-href";
 
 export default function JinsTranspositions() {
   // Configurable constants (extracted magic numbers for easier tuning)
@@ -38,6 +39,7 @@ export default function JinsTranspositions() {
   const { filters, setFilters } = useFilterContext();
 
   const { t, language, getDisplayName } = useLanguageContext();
+  const lh = useLocalizedHref();
 
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [jinsToExport, setJinsToExport] = useState<Jins | null>(null);
@@ -1115,7 +1117,7 @@ export default function JinsTranspositions() {
                           {selectedJinsData.getSourcePageReferences().map((sourceRef, idx) => {
                             const source = sources.find((s) => s.getId() === sourceRef.sourceId);
                             return source ? (
-                              <Link key={idx} href={`/bibliography?source=${source.getId()}`}>
+                              <Link key={idx} href={lh(`/bibliography?source=${source.getId()}`)}>
                                 {stringifySource(source, false, sourceRef.page)}
                                 <br />
                               </Link>
@@ -1148,7 +1150,7 @@ export default function JinsTranspositions() {
                           {selectedJinsData.getSourcePageReferences().map((sourceRef, idx) => {
                             const source = sources.find((s) => s.getId() === sourceRef.sourceId);
                             return source ? (
-                              <Link key={idx} href={`/bibliography?source=${source.getId()}`}>
+                              <Link key={idx} href={lh(`/bibliography?source=${source.getId()}`)}>
                                 {stringifySource(source, true, sourceRef.page)}
                                 <br />
                               </Link>

@@ -7,9 +7,11 @@ import Link from "next/link";
 import useLanguageContext from "../contexts/language-context";
 // Or, if the correct path is different, adjust accordingly:
 // import useLanguageContext from "../../contexts/language-context";
+import { useLocalizedHref } from "@/hooks/use-localized-href";
 
 export default function Footer() {
   const { language } = useLanguageContext();
+  const lh = useLocalizedHref();
 
   return (
     <footer className="footer">
@@ -51,7 +53,7 @@ export default function Footer() {
           </h4>
           <ul className="footer__list">
             <li className="footer__list-item">
-              <Link href="/app" className="footer__link">
+              <Link href={lh("/app")} className="footer__link">
                 {language === "ar"
                   ? "استخدام الأرشيف"
                   : language === "fr"
@@ -60,7 +62,7 @@ export default function Footer() {
               </Link>
             </li>
             <li className="footer__list-item">
-              <Link href="/bibliography" className="footer__link">
+              <Link href={lh("/bibliography")} className="footer__link">
                 {language === "ar"
                   ? "المراجع"
                   : language === "fr"
@@ -78,7 +80,7 @@ export default function Footer() {
               </Link>
             </li>
             <li className="footer__list-item">
-              <Link href="/about" className="footer__link">
+              <Link href={lh("/about")} className="footer__link">
                 {language === "ar"
                   ? "حول المشروع"
                   : language === "fr"

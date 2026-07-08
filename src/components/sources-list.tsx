@@ -9,6 +9,7 @@ import Thesis from "@/models/bibliography/Thesis";
 import { Contributor } from "@/models/bibliography/AbstractSource";
 import { useEffect, useState, useRef } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
+import { stripLocale } from "@/i18n/navigation";
 import { standardizeText } from "@/functions/export";
 
 export default function SourcesList() {
@@ -21,7 +22,7 @@ export default function SourcesList() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    if (pathname === "/bibliography") {
+    if (stripLocale(pathname) === "/bibliography") {
       const sourceParameter = searchParams.get("source");
 
       if (sourceParameter) {
