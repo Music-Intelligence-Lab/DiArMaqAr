@@ -73,7 +73,7 @@ export function MenuContextProvider({ children }: { children: ReactNode }) {
     if (stripLocale(pathname) !== "/app" && selectedMenu !== "") {
       router.push(`/${lang}/app`);
     }
-  }, [selectedMenu, pathname, lang]);
+  }, [selectedMenu]);
 
   useEffect(() => {
     if (!stripLocale(pathname).startsWith("/app")) {
