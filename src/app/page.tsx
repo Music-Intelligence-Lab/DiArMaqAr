@@ -329,10 +329,10 @@ export default function LandingPage() {
           {codeBlock(
             language === "ar" ? "الموجّه" : language === "fr" ? "Invite" : "Prompt",
             language === "ar"
-              ? "لديك وصول إلى أرشيف المقام العربي الرقمي (DiArMaqAr)، وهو واجهة برمجية (REST API) عامّة للقراءة فقط على https://diarmaqar.net/api (دون مصادقة). اكتشف كلّ شيء عبر https://diarmaqar.net/docs/llms.txt. معرّفات الكيانات بصيغة creator_year (بأحرف صغيرة، مثل forster_2010). العقد الكامل القابل للقراءة آلياً: https://diarmaqar.net/docs/openapi.json"
+              ? "لديك وصول إلى أرشيف المقام العربي الرقمي (DiArMaqAr)، وهو واجهة برمجية (REST API) عامّة للقراءة فقط على https://diarmaqar.net/api (دون مصادقة). اكتشف كلّ شيء عبر https://diarmaqar.net/docs/llms.txt. العقد الكامل القابل للقراءة آلياً: https://diarmaqar.net/docs/openapi.json"
               : language === "fr"
-              ? "Vous avez accès à l'Archive Numérique du Maqām Arabe (DiArMaqAr), une API REST publique en lecture seule sur https://diarmaqar.net/api (sans authentification). Découvrez tout via https://diarmaqar.net/docs/llms.txt. Les identifiants d'entités utilisent le format creator_year (minuscules, ex. forster_2010). Contrat complet lisible par machine : https://diarmaqar.net/docs/openapi.json"
-              : "You have access to the Digital Arabic Maqām Archive (DiArMaqAr), a public read-only REST API at https://diarmaqar.net/api (no auth). Discover everything via https://diarmaqar.net/docs/llms.txt. Entity IDs use the creator_year format (lowercase, e.g. forster_2010). Full machine-readable contract: https://diarmaqar.net/docs/openapi.json",
+              ? "Vous avez accès à l'Archive Numérique du Maqām Arabe (DiArMaqAr), une API REST publique en lecture seule sur https://diarmaqar.net/api (sans authentification). Découvrez tout via https://diarmaqar.net/docs/llms.txt. Contrat complet lisible par machine : https://diarmaqar.net/docs/openapi.json"
+              : "You have access to the Digital Arabic Maqām Archive (DiArMaqAr), a public read-only REST API at https://diarmaqar.net/api (no auth). Discover everything via https://diarmaqar.net/docs/llms.txt. Full machine-readable contract: https://diarmaqar.net/docs/openapi.json",
             "accent",
             language === "ar" ? "rtl" : "ltr"
           )}

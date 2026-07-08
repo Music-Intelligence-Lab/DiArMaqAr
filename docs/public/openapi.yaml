@@ -11,7 +11,14 @@ info:
     - Multiple pitch class data formats (fractions, ratios, decimal ratio, string length, fret divisions, frequency, cents, MIDI notes, and more)
     - Tuning system sensitive transpositions
     - Modulations via al-Shawwā's 1946 modulation guidelines
-    - Interactive API documentation with live endpoint testing capabilities 
+    - Interactive API documentation with live endpoint testing capabilities
+
+    Entity ID format: tuning system, source, maqām, and jins `id`/`idName` values
+    follow a lowercase `creator_year` convention (e.g. `ibnsina_1037`,
+    `alshawwa_1946`), with maqām/jins IDs additionally prefixed (`maqam_rast`,
+    `jins_rast`). Do not construct or guess-case an ID; always obtain it from a
+    list endpoint (`GET /api/tuning-systems`, `GET /api/maqamat`,
+    `GET /api/ajnas`) or an `availability` endpoint.
 
   contact:
     name: Khyam Allami
@@ -207,7 +214,7 @@ paths:
                             tuningSystemStartingNoteNames: ["rāst"]
                         maqamDetailsUrl: "/api/maqamat/maqam_yegah"
                         sources:
-                          - sourceId: "al-Shawwa-(1946)"
+                          - sourceId: "alshawwa_1946"
                             page: "49"
                       - id: "30"
                         idName: "maqam_farahfazza"
@@ -229,7 +236,7 @@ paths:
                             tuningSystemStartingNoteNames: ["ʿushayrān"]
                         maqamDetailsUrl: "/api/maqamat/maqam_farahfazza"
                         sources:
-                          - sourceId: "al-Shawwa-(1946)"
+                          - sourceId: "alshawwa_1946"
                             page: "50"
                 bilingual:
                   summary: Bilingual response (includeArabic=true)
@@ -261,7 +268,7 @@ paths:
                             tuningSystemStartingNoteNamesAr: ["يگاه"]
                         maqamDetailsUrl: "/api/maqamat/maqam_yegah"
                         sources:
-                          - sourceId: "al-Shawwa-(1946)"
+                          - sourceId: "alshawwa_1946"
                             page: "49"
         '400':
           description: Invalid request parameters
@@ -1435,8 +1442,11 @@ paths:
                             properties:
                               sourceId:
                                 type: string
-                                description: URL-safe source identifier
-                                example: "al-Shawwa-(1946)"
+                                description: >-
+                                  URL-safe identifier, lowercase creator_year (e.g.
+                                  alshawwa_1946). Do not construct this value —
+                                  obtain it from a list or availability endpoint.
+                                example: "alshawwa_1946"
                               page:
                                 type: string
                                 description: Page number or range where the tuning system is documented
@@ -1459,7 +1469,7 @@ paths:
                         stats:
                           numberOfPitchClassesSingleOctave: 17
                         sources:
-                          - sourceId: "al-Shawwa-(1946)"
+                          - sourceId: "alshawwa_1946"
                             page: "49"
                       - tuningSystem:
                           id: "alfarabi_950g"
@@ -1473,7 +1483,7 @@ paths:
                         stats:
                           numberOfPitchClassesSingleOctave: 27
                         sources:
-                          - sourceId: "al-Shawwa-(1946)"
+                          - sourceId: "alshawwa_1946"
                             page: "50"
                 arabic:
                   summary: Arabic display names (includeArabic=true)
@@ -1494,7 +1504,7 @@ paths:
                         stats:
                           numberOfPitchClassesSingleOctave: 17
                         sources:
-                          - sourceId: "al-Shawwa-(1946)"
+                          - sourceId: "alshawwa_1946"
                             page: "49"
                       - tuningSystem:
                           id: "alfarabi_950g"
@@ -1510,7 +1520,7 @@ paths:
                         stats:
                           numberOfPitchClassesSingleOctave: 27
                         sources:
-                          - sourceId: "al-Shawwa-(1946)"
+                          - sourceId: "alshawwa_1946"
                             page: "50"
         '500':
           $ref: '#/components/responses/ServerError'
@@ -1722,8 +1732,11 @@ paths:
                       properties:
                         sourceId:
                           type: string
-                          description: URL-safe source identifier
-                          example: "al-Shawwa-(1946)"
+                          description: >-
+                            URL-safe identifier, lowercase creator_year (e.g.
+                            alshawwa_1946). Do not construct this value —
+                            obtain it from a list or availability endpoint.
+                          example: "alshawwa_1946"
                         page:
                           type: string
                           description: Page number or range where the tuning system is documented
@@ -5062,8 +5075,11 @@ paths:
                             properties:
                               sourceId:
                                 type: string
-                                description: URL-safe source identifier
-                                example: "al-Shawwa-(1946)"
+                                description: >-
+                                  URL-safe identifier, lowercase creator_year (e.g.
+                                  alshawwa_1946). Do not construct this value —
+                                  obtain it from a list or availability endpoint.
+                                example: "alshawwa_1946"
                               page:
                                 type: string
                                 description: Page number or range where the jins is documented
@@ -9900,7 +9916,10 @@ components:
           description: Entity identifier
         idName:
           type: string
-          description: URL-safe identifier
+          description: >-
+            URL-safe identifier, lowercase creator_year (e.g. ibnsina_1037),
+            with maqām/jins IDs prefixed (maqam_rast). Do not construct this
+            value — obtain it from a list or availability endpoint.
         displayName:
           type: string
           description: Display name with diacritics
@@ -9915,7 +9934,10 @@ components:
       properties:
         idName:
           type: string
-          description: URL-safe identifier
+          description: >-
+            URL-safe identifier, lowercase creator_year (e.g. ibnsina_1037),
+            with maqām/jins IDs prefixed (maqam_rast). Do not construct this
+            value — obtain it from a list or availability endpoint.
         displayName:
           type: string
           description: Display name with diacritics
@@ -10037,14 +10059,17 @@ components:
             properties:
               sourceId:
                 type: string
-                description: URL-safe source identifier
-                example: "al-Shawwa-(1946)"
+                description: >-
+                  URL-safe identifier, lowercase creator_year (e.g.
+                  alshawwa_1946). Do not construct this value — obtain
+                  it from a list or availability endpoint.
+                example: "alshawwa_1946"
               page:
                 type: string
                 description: Page number or range where the maqām is documented
                 example: "49"
           example:
-            - sourceId: "al-Shawwa-(1946)"
+            - sourceId: "alshawwa_1946"
               page: "49"
 
     TuningSystemAvailability:
@@ -10317,6 +10342,10 @@ components:
                 properties:
                   sourceId:
                     type: string
+                    description: >-
+                      URL-safe identifier, lowercase creator_year (e.g.
+                      alshawwa_1946). Do not construct this value — obtain
+                      it from a list or availability endpoint.
                   page:
                     type: string
             pitchClassDataType:
