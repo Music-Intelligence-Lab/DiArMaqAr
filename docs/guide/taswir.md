@@ -155,10 +155,10 @@ Always use `baseMaqamIdName` + `tonic` parameters for API queries. The `maqamIdN
 
 ```bash
 # List all transpositions for a maqām in a tuning context (separate endpoint)
-curl "http://localhost:3000/api/maqamat/maqam_rahat_al-arwah/transpositions?tuningSystem=ibnsina_1037&startingNote=yegah"
+curl "https://diarmaqar.net/api/maqamat/maqam_rahat_al-arwah/transpositions?tuningSystem=ibnsina_1037&startingNote=yegah"
 
 # Or fetch full pitch-class detail for one realization:
-curl "http://localhost:3000/api/maqamat/maqam_rahat_al-arwah?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents"
+curl "https://diarmaqar.net/api/maqamat/maqam_rahat_al-arwah?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents"
 
 # The transpositions response includes entries with:
 # - Transposed name

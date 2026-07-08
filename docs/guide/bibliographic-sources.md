@@ -123,10 +123,10 @@ From "Contemporary Arabic 19-Tone" system by Al-Ṣabbāgh (1950:173):
 
 ```bash
 # Get sources database
-curl http://localhost:3000/api/sources
+curl https://diarmaqar.net/api/sources
 
 # Maqām responses include source references
-curl "http://localhost:3000/api/maqamat/maqam_bayyat?tuningSystem=alfarabi_950g&startingNote=ushayran&pitchClassDataType=cents"
+curl "https://diarmaqar.net/api/maqamat/maqam_bayyat?tuningSystem=alfarabi_950g&startingNote=ushayran&pitchClassDataType=cents"
 
 # Response includes:
 # - source references

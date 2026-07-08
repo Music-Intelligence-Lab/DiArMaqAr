@@ -38,16 +38,16 @@ The easiest way to get started is using the REST API:
 
 ```bash
 # Get all maqāmāt
-curl http://localhost:3000/api/maqamat
+curl https://diarmaqar.net/api/maqamat
 
 # Get specific maqām data with full details
-curl "http://localhost:3000/api/maqamat/maqam_bayyat?tuningSystem=alfarabi_950g&startingNote=ushayran&pitchClassDataType=cents"
+curl "https://diarmaqar.net/api/maqamat/maqam_bayyat?tuningSystem=alfarabi_950g&startingNote=ushayran&pitchClassDataType=cents"
 
 # Include modulation analysis on the maqām detail response
-curl "http://localhost:3000/api/maqamat/maqam_bayyat?tuningSystem=alfarabi_950g&startingNote=ushayran&includeModulations=true"
+curl "https://diarmaqar.net/api/maqamat/maqam_bayyat?tuningSystem=alfarabi_950g&startingNote=ushayran&includeModulations=true"
 
 # List transpositions (separate endpoint; `includeTranspositions` applies to GET /tuning-systems/{id}/{startingNote}/maqamat, not maqām detail)
-curl "http://localhost:3000/api/maqamat/maqam_bayyat/transpositions?tuningSystem=alfarabi_950g&startingNote=ushayran"
+curl "https://diarmaqar.net/api/maqamat/maqam_bayyat/transpositions?tuningSystem=alfarabi_950g&startingNote=ushayran"
 ```
 
 ## Documentation Guide

@@ -100,16 +100,16 @@ See the [Suyūr Guide](/guide/suyur/) for detailed information.
 
 ```bash
 # Get all maqāmāt
-curl http://localhost:3000/api/maqamat
+curl https://diarmaqar.net/api/maqamat
 
 # Get specific maqām with full details
-curl "http://localhost:3000/api/maqamat/maqam_bayyat?tuningSystem=alfarabi_950g&startingNote=ushayran&pitchClassDataType=cents"
+curl "https://diarmaqar.net/api/maqamat/maqam_bayyat?tuningSystem=alfarabi_950g&startingNote=ushayran&pitchClassDataType=cents"
 
 # List transpositions (dedicated endpoint)
-curl "http://localhost:3000/api/maqamat/maqam_bayyat/transpositions?tuningSystem=alfarabi_950g&startingNote=ushayran"
+curl "https://diarmaqar.net/api/maqamat/maqam_bayyat/transpositions?tuningSystem=alfarabi_950g&startingNote=ushayran"
 
 # Include modulation analysis
-curl "http://localhost:3000/api/maqamat/maqam_bayyat?tuningSystem=alfarabi_950g&startingNote=ushayran&includeModulations=true"
+curl "https://diarmaqar.net/api/maqamat/maqam_bayyat?tuningSystem=alfarabi_950g&startingNote=ushayran&includeModulations=true"
 ```
 
 ## Bibliographic Sources

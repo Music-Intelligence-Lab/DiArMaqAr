@@ -91,10 +91,10 @@ This comprehensive analysis reveals the primary structural ajnās that define th
 
 ```bash
 # Get all ajnās
-curl http://localhost:3000/api/ajnas
+curl https://diarmaqar.net/api/ajnas
 
 # Get specific jins with zalzalian intervals
-curl "http://localhost:3000/api/ajnas/jins_bayyat?tuningSystem=alfarabi_950g&startingNote=ushayran&pitchClassDataType=cents"
+curl "https://diarmaqar.net/api/ajnas/jins_bayyat?tuningSystem=alfarabi_950g&startingNote=ushayran&pitchClassDataType=cents"
 ```
 
 ## Bibliographic Sources

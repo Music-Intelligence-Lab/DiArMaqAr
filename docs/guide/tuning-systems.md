@@ -75,10 +75,10 @@ Each pitch class is automatically converted to multiple formats including freque
 
 ```bash
 # Get all available tuning systems (full metadata per tanghīm)
-curl http://localhost:3000/api/tuning-systems
+curl https://diarmaqar.net/api/tuning-systems
 
 # There is no GET /api/tuning-systems/{id}; use list + idName, or pitch classes / maqāmāt in context:
-curl "http://localhost:3000/api/tuning-systems/alfarabi_950g/ushayran/pitch-classes?pitchClassDataType=cents"
+curl "https://diarmaqar.net/api/tuning-systems/alfarabi_950g/ushayran/pitch-classes?pitchClassDataType=cents"
 ```
 
 ## Bibliographic Attribution

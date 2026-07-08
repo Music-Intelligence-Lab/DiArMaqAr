@@ -23,7 +23,7 @@ Let's make your first API call:
 
 ```bash
 # List all maqāmāt
-curl http://localhost:3000/api/maqamat
+curl https://diarmaqar.net/api/maqamat
 ```
 
 This will return a list of all available maqāmāt with basic metadata.
@@ -33,7 +33,7 @@ This will return a list of all available maqāmāt with basic metadata.
 To get detailed data for a specific maqām:
 
 ```bash
-curl "http://localhost:3000/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents"
+curl "https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents"
 ```
 
 This returns:
