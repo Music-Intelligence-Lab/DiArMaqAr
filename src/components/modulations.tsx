@@ -1,6 +1,6 @@
 "use client";
 
-import useAppContext from "@/contexts/app-context";
+import useAppContext, { ModulationChainHop } from "@/contexts/app-context";
 import useSoundContext from "@/contexts/sound-context";
 import useLanguageContext from "@/contexts/language-context";
 import React, { useState, useEffect, useRef } from "react";
@@ -10,6 +10,8 @@ import calculateNumberOfModulations from "@/functions/calculateNumberOfModulatio
 import { AjnasModulations, shiftJinsByOctaves, Jins } from "@/models/Jins";
 import shiftPitchClassByOctave from "@/functions/shiftPitchClassByOctave";
 import modulate from "@/functions/modulate";
+import { calculateMaqamTranspositions } from "@/functions/transpose";
+import { standardizeText } from "@/functions/export";
 type ModulationsPair = { ajnas: AjnasModulations; maqamat: MaqamatModulations };
 
 export default function Modulations() {
@@ -27,6 +29,9 @@ export default function Modulations() {
     allPitchClasses,
     setSelectedPitchClasses,
     handleClickMaqam,
+    centsTolerance,
+    modulationChain,
+    setModulationChain,
   } = useAppContext();
 
   const [modulationModes, setModulationModes] = useState<boolean[]>([false]);
@@ -85,11 +90,85 @@ export default function Modulations() {
     };
   }
 
+  function findMaqamInModulations(mods: MaqamatModulations, hop: ModulationChainHop): Maqam | null {
+    const degreeArrays = [
+      mods.modulationsOnFirstDegree,
+      mods.modulationsOnThirdDegree,
+      mods.modulationsOnAltThirdDegree,
+      mods.modulationsOnFourthDegree,
+      mods.modulationsOnFifthDegree,
+      mods.modulationsOnSixthDegreeAsc,
+      mods.modulationsOnSixthDegreeDesc,
+      mods.modulationsOnSixthDegreeIfNoThird,
+    ];
+    for (const degreeArray of degreeArrays) {
+      for (const maqam of degreeArray) {
+        if (maqam.maqamId === hop.maqamId && standardizeText(maqam.ascendingPitchClasses[0]?.noteName ?? "") === hop.tonicIdName) {
+          return maqam;
+        }
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Rebuilds the hop stack from a chain descriptor (restored from a shared URL or
+   * kept in context across tab switches). Each hop after the first is validated by
+   * looking it up in the previous hop's modulation options; an unreachable hop
+   * truncates the chain there.
+   */
+  function replayModulationChain(chain: ModulationChainHop[]): { stack: Maqam[]; modulations: ModulationsPair[]; chain: ModulationChainHop[] } | null {
+    const maqamData = maqamat.find((m) => m.getId() === chain[0].maqamId);
+    if (!maqamData) return null;
+
+    const transpositions = calculateMaqamTranspositions(allPitchClasses, ajnas, maqamData, true, centsTolerance);
+    let first = transpositions.find((m) => standardizeText(m.ascendingPitchClasses[0]?.noteName ?? "") === chain[0].tonicIdName) || null;
+    if (!first) {
+      const tahlil = maqamData.getTahlil(allPitchClasses);
+      if (standardizeText(tahlil.ascendingPitchClasses[0]?.noteName ?? "") === chain[0].tonicIdName) first = tahlil;
+    }
+    if (!first) return null;
+
+    const stack: Maqam[] = [first];
+    const modulations: ModulationsPair[] = [getBothModulations(first, 0, chain[0].octaveShift)];
+    const appliedChain: ModulationChainHop[] = [chain[0]];
+
+    for (let i = 1; i < chain.length; i++) {
+      const target = findMaqamInModulations(modulations[i - 1].maqamat, chain[i]);
+      if (!target) break;
+      stack.push(target);
+      modulations.push(getBothModulations(target, i, chain[i].octaveShift));
+      appliedChain.push(chain[i]);
+    }
+
+    return { stack, modulations, chain: appliedChain };
+  }
+
   useEffect(() => {
     if (sourceMaqamStack.length === 0 && selectedMaqamData) {
       let transposition: Maqam;
       if (selectedMaqam) transposition = selectedMaqam;
       else transposition = selectedMaqamData.getTahlil(allPitchClasses);
+
+      // If a chain descriptor whose last hop matches the current selection exists,
+      // replay the whole chain instead of seeding a fresh single-hop stack
+      if (modulationChain && modulationChain.length > 0) {
+        const tail = modulationChain[modulationChain.length - 1];
+        const currentTonic = standardizeText(transposition.ascendingPitchClasses[0]?.noteName ?? "");
+        if (tail.maqamId === selectedMaqamData.getId() && tail.tonicIdName === currentTonic) {
+          const replayed = replayModulationChain(modulationChain);
+          if (replayed) {
+            setSourceMaqamStack(replayed.stack);
+            setModulationsStack(replayed.modulations);
+            setModulationModes(replayed.chain.map((hop) => hop.ajnasMode));
+            setOctaveShiftEnabled(replayed.chain.map((hop) => hop.octaveShift));
+            // Collapse everything but the last hop so a long restored chain stays scannable
+            setCollapsedHops(replayed.chain.map((_, idx) => idx < replayed.chain.length - 1));
+            return;
+          }
+        }
+      }
+
       setSourceMaqamStack([transposition]);
       setModulationsStack([getBothModulations(transposition, 0)]);
       setModulationModes([false]); // default to maqamat for first hop
@@ -97,6 +176,21 @@ export default function Modulations() {
       setOctaveShiftEnabled([false]); // default to no octave shift
     }
   }, []);
+
+  // Keep the shareable chain descriptor in app context (and thereby the URL) in
+  // sync with the local hop stack
+  useEffect(() => {
+    if (sourceMaqamStack.length === 0) return;
+    const descriptor: ModulationChainHop[] = sourceMaqamStack.map((maqam, idx) => ({
+      maqamId: maqam.maqamId,
+      tonicIdName: standardizeText(maqam.ascendingPitchClasses[0]?.noteName ?? ""),
+      octaveShift: !!octaveShiftEnabled[idx],
+      ajnasMode: !!modulationModes[idx],
+    }));
+    if (JSON.stringify(descriptor) !== JSON.stringify(modulationChain)) {
+      setModulationChain(descriptor);
+    }
+  }, [sourceMaqamStack, octaveShiftEnabled, modulationModes, modulationChain, setModulationChain]);
 
   useEffect(() => {
     if (selectedMaqam) {

@@ -3,8 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams, useRouter, useParams, usePathname } from "next/navigation";
 import { stripLocale } from "@/i18n/navigation";
-import useAppContext from "@/contexts/app-context";
+import useAppContext, { ModulationChainHop } from "@/contexts/app-context";
 import useMenuContext from "@/contexts/menu-context";
+import MaqamData from "@/models/Maqam";
 import TuningSystemManager from "@/components/tuning-system-manager";
 import JinsTranspositions from "@/components/jins-transpositions";
 import MaqamTranspositions from "@/components/maqam-transpositions";
@@ -177,8 +178,79 @@ function parseSayrParameter(param: string, maqamData: any): string | undefined {
     return param; // Return original parameter on error
   }
 }
+/**
+ * Serializes the modulations (intiqālāt) chain as a URL parameter value.
+ *
+ * Convention: comma-separated hops, each hop being the canonical URL-safe maqam
+ * idName with its tonic idName appended ("maqam_hijaz_al-nawa"), plus optional
+ * dot-flags ".8vb" (octave-shifted options) and ".ajnas" (ajnas view):
+ *
+ *   modulations=maqam_rast_al-nawa,maqam_hijaz_al-nawa.8vb,maqam_bayyati_al-dugah
+ */
+function createModulationsParameter(chain: ModulationChainHop[], maqamat: MaqamData[]): string | null {
+  const hops: string[] = [];
+
+  for (const hop of chain) {
+    const maqamData = maqamat.find((m) => m.getId() === hop.maqamId);
+    if (!maqamData) return null;
+
+    let token = maqamData.getIdName();
+    if (hop.tonicIdName) token += `_al-${hop.tonicIdName}`;
+    if (hop.octaveShift) token += ".8vb";
+    if (hop.ajnasMode) token += ".ajnas";
+    hops.push(token);
+  }
+
+  return hops.join(",");
+}
+
+/**
+ * Parses a modulations chain parameter back into hop descriptors.
+ *
+ * Hops are matched against the longest maqam idName prefix so that maqam names
+ * containing "al-" themselves parse correctly. An unrecognized hop truncates the
+ * chain there (the valid prefix is still restored).
+ */
+function parseModulationsParameter(param: string, maqamat: MaqamData[]): ModulationChainHop[] {
+  const chain: ModulationChainHop[] = [];
+
+  for (const rawToken of decodeURIComponent(param).split(",")) {
+    const [base, ...flags] = rawToken.trim().split(".");
+
+    let matchedMaqam: MaqamData | null = null;
+    let matchedTonic = "";
+    let matchedIdNameLength = -1;
+
+    for (const maqamData of maqamat) {
+      const idName = maqamData.getIdName();
+      if (idName.length <= matchedIdNameLength) continue;
+
+      if (base === idName) {
+        matchedMaqam = maqamData;
+        matchedTonic = standardizeText(maqamData.getAscendingNoteNames()[0] ?? "");
+        matchedIdNameLength = idName.length;
+      } else if (base.startsWith(`${idName}_al-`)) {
+        matchedMaqam = maqamData;
+        matchedTonic = base.slice(idName.length + "_al-".length);
+        matchedIdNameLength = idName.length;
+      }
+    }
+
+    if (!matchedMaqam || !matchedTonic) break;
+
+    chain.push({
+      maqamId: matchedMaqam.getId(),
+      tonicIdName: matchedTonic,
+      octaveShift: flags.includes("8vb"),
+      ajnasMode: flags.includes("ajnas"),
+    });
+  }
+
+  return chain;
+}
+
 export default function AppClient() {
-  const { tuningSystems, ajnas, maqamat, handleUrlParams, selectedTuningSystem, selectedJinsData, selectedMaqamData, maqamSayrId, selectedIndices, selectedMaqam, selectedJins, referenceFrequencies } = useAppContext();
+  const { tuningSystems, ajnas, maqamat, handleUrlParams, selectedTuningSystem, selectedJinsData, selectedMaqamData, maqamSayrId, selectedIndices, selectedMaqam, selectedJins, referenceFrequencies, modulationChain, setModulationChain } = useAppContext();
 
   const { setSelectedMenu, selectedMenu } = useMenuContext();
 
@@ -273,6 +345,23 @@ export default function AppClient() {
       }
     }
 
+    // Parse the modulations (intiqālāt) chain parameter if present.
+    // The chain is self-contained: its last hop defines the current maqam selection,
+    // so it takes precedence over the maqam/jins parameters.
+    let urlModulationChain: ModulationChainHop[] | null = null;
+    const modulationsParam = searchParams.get("modulations");
+    if (modulationsParam && maqamat.length > 0) {
+      const parsedChain = parseModulationsParameter(modulationsParam, maqamat);
+      if (parsedChain.length > 0) {
+        const tail = parsedChain[parsedChain.length - 1];
+        urlModulationChain = parsedChain;
+        maqamId = tail.maqamId;
+        maqamFirstNote = tail.tonicIdName;
+        jinsId = undefined;
+        jinsFirstNote = undefined;
+      }
+    }
+
     // Get sayrId from the URL parameter
     let sayrId: string | undefined = undefined;
 
@@ -311,15 +400,19 @@ export default function AppClient() {
   // Mark that we've applied URL params so we don't re-apply on subsequent searchParams changes
   urlParamsApplied.current = true;
 
+  // Store the parsed modulations chain so the modulations component can replay it
+  if (urlModulationChain) setModulationChain(urlModulationChain);
+
   // Set the selected menu based on parameters.
-  // Priority: jins > maqam > sayr > tuningSystem (default)
-  // If jins, maqam, or sayr params are present, navigate to that page
+  // Priority: modulations > jins > maqam > sayr > tuningSystem (default)
+  // If modulations, jins, maqam, or sayr params are present, navigate to that page
   // Otherwise show tuning system
-  if (jinsId) setSelectedMenu("jins");
+  if (urlModulationChain) setSelectedMenu("modulation");
+  else if (jinsId) setSelectedMenu("jins");
   else if (maqamId && sayrId) setSelectedMenu("sayr");
   else if (maqamId) setSelectedMenu("maqam");
   else setSelectedMenu("tuningSystem"); // Default to tuning system when no specific data is loaded
-  }, [tuningSystems, ajnas, maqamat, searchParams, handleUrlParams, setSelectedMenu]);
+  }, [tuningSystems, ajnas, maqamat, searchParams, handleUrlParams, setSelectedMenu, setModulationChain]);
 
   useEffect(() => {
     const params: string[] = [];
@@ -376,11 +469,18 @@ export default function AppClient() {
       }
     }
 
+    // Only include the modulations chain while the modulations page is active,
+    // so the shared URL restores exactly the view being looked at.
+    if (selectedMenu === "modulation" && modulationChain && modulationChain.length > 0) {
+      const modulationsParam = createModulationsParameter(modulationChain, maqamat);
+      if (modulationsParam) params.push(`modulations=${modulationsParam}`);
+    }
+
     if (stripLocale(pathname) === "/app") {
       const urlParams = params.join("&");
       router.replace(`/${lang}/app?${urlParams}`, { scroll: false });
     }
-  }, [selectedTuningSystem, selectedJinsData, selectedMaqamData, maqamSayrId, selectedIndices, selectedMaqam, selectedJins, referenceFrequencies, router, pathname, lang]);
+  }, [selectedTuningSystem, selectedJinsData, selectedMaqamData, maqamSayrId, selectedIndices, selectedMaqam, selectedJins, referenceFrequencies, modulationChain, selectedMenu, maqamat, router, pathname, lang]);
 
   return (
     <div className="main-content">

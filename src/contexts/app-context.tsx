@@ -16,6 +16,17 @@ import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses
 import modulate from "@/functions/modulate";
 import { standardizeText } from "@/functions/export";
 
+/**
+ * One hop in the modulations (intiqālāt) chain, in serializable form.
+ * `tonicIdName` is the URL-safe idName of the hop's tonic (standardizeText of the note name).
+ */
+export interface ModulationChainHop {
+  maqamId: string;
+  tonicIdName: string;
+  octaveShift: boolean;
+  ajnasMode: boolean;
+}
+
 interface AppContextInterface {
   tuningSystems: TuningSystem[];
   setTuningSystems: React.Dispatch<React.SetStateAction<TuningSystem[]>>;
@@ -68,6 +79,8 @@ interface AppContextInterface {
   getModulations: (sourceMaqamTransposition: Maqam) => MaqamatModulations | AjnasModulations;
   ajnasModulationsMode: boolean;
   setAjnasModulationsMode: React.Dispatch<React.SetStateAction<boolean>>;
+  modulationChain: ModulationChainHop[] | null;
+  setModulationChain: React.Dispatch<React.SetStateAction<ModulationChainHop[] | null>>;
 }
 
 const AppContext = createContext<AppContextInterface | null>(null);
@@ -106,6 +119,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   const [sources, setSources] = useState<Source[]>([]);
 
   const [ajnasModulationsMode, setAjnasModulationsMode] = useState(false);
+
+  const [modulationChain, setModulationChain] = useState<ModulationChainHop[] | null>(null);
 
   const tuningSystemPitchClassesArray = useMemo(
     () =>
@@ -178,6 +193,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     setSelectedJins(null);
     setSelectedMaqam(null);
     setSelectedTuningSystem(null);
+    setModulationChain(null);
   }, []);
 
   const clearJinsSelections = useCallback(() => {
@@ -404,7 +420,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
                 const JinsTranspositions = calculateJinsTranspositions(allPitchClasses, foundJinsData, true, 10);
                 let foundJins: Jins | null = null;
                 if (jinsFirstNote) {
-                  foundJins = JinsTranspositions.find((j) => j.jinsPitchClasses[0].noteName === jinsFirstNote) || null;
+                  foundJins = JinsTranspositions.find((j) => standardizeText(j.jinsPitchClasses[0].noteName) === standardizeText(jinsFirstNote)) || null;
                 }
 
                 handleClickJins(foundJinsData, allPitchClasses, foundJins);
@@ -415,7 +431,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
                 const maqamTranspositions = calculateMaqamTranspositions(allPitchClasses, ajnas, foundMaqamData, true, 10);
                 let foundMaqam: Maqam | null = null;
                 if (maqamFirstNote) {
-                  foundMaqam = maqamTranspositions.find((m) => m.ascendingPitchClasses[0].noteName === maqamFirstNote) || null;
+                  foundMaqam = maqamTranspositions.find((m) => standardizeText(m.ascendingPitchClasses[0].noteName) === standardizeText(maqamFirstNote)) || null;
                 }
 
                 handleClickMaqam(foundMaqamData, allPitchClasses, foundMaqam);
@@ -485,6 +501,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       getModulations,
       ajnasModulationsMode,
       setAjnasModulationsMode,
+      modulationChain,
+      setModulationChain,
     }),
     [
       tuningSystems,
@@ -517,6 +535,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       patterns,
       getModulations,
       ajnasModulationsMode,
+      modulationChain,
     ]
   );
 
