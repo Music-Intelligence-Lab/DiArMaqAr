@@ -34,7 +34,27 @@ export async function GET(
     const { id: jinsId } = await params;
     const { searchParams } = new URL(request.url);
     const transpositionNoteName = searchParams.get("transpositionNoteName");
-    
+
+    // Get cents tolerance parameter
+    let centsTolerance = 5; // Default tolerance
+    const centsToleranceParam = searchParams.get("centsTolerance");
+    if (centsToleranceParam) {
+      const parsed = parseFloat(centsToleranceParam);
+      if (isNaN(parsed) || parsed < 0) {
+        return addCorsHeaders(
+          NextResponse.json(
+            {
+              error: "Invalid centsTolerance parameter",
+              message: "centsTolerance must be a non-negative number",
+              hint: "Use ?centsTolerance=<number> (e.g., ?centsTolerance=5)"
+            },
+            { status: 400 }
+          )
+        );
+      }
+      centsTolerance = parsed;
+    }
+
     // Parse includeArabic parameter
     let inArabic = false;
     try {
@@ -110,7 +130,7 @@ export async function GET(
                 pitchClasses,
                 jins,
                 true,
-                5 // default tolerance
+                centsTolerance
               );
               
               // Check if any transposition starts on the requested note (case/diacritics insensitive)

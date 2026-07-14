@@ -30,6 +30,7 @@ export const OPTIONS = handleCorsPreflightRequest;
  * - limitToShortestHops: true|false - Only return shortest-length routes (default: false)
  * - allowOctaveJumps: true|false - Allow BFS to traverse register-shift (8va/8vb) edges (default: false)
  * - allowDownwardModulation: true|false - Allow direct downward-modulation edges (e.g. VI-8vb) (default: false)
+ * - centsTolerance: Tolerance in cents for pitch matching (non-negative number, default: 5)
  * - includeArabic: true|false - Include Arabic display names (default: false)
  *
  * Response includes:
@@ -58,6 +59,25 @@ export async function GET(request: Request) {
     const allowOctaveJumps = allowOctaveJumpsParam === null ? false : allowOctaveJumpsParam === "true";
     const allowDownwardModulationParam = searchParams.get("allowDownwardModulation");
     const allowDownwardModulation = allowDownwardModulationParam === null ? false : allowDownwardModulationParam === "true";
+
+    // Get cents tolerance parameter
+    let centsTolerance = 5; // Default tolerance
+    const centsToleranceParam = searchParams.get("centsTolerance");
+    if (centsToleranceParam) {
+      const parsed = parseFloat(centsToleranceParam);
+      if (isNaN(parsed) || parsed < 0) {
+        return addCorsHeaders(
+          NextResponse.json(
+            {
+              error: "centsTolerance must be a non-negative number",
+              hint: "Use ?centsTolerance=<number> (e.g., ?centsTolerance=5)",
+            },
+            { status: 400 }
+          )
+        );
+      }
+      centsTolerance = parsed;
+    }
 
     // Parse includeArabic parameter
     let inArabic = false;
@@ -237,6 +257,7 @@ export async function GET(request: Request) {
         limitToShortestHops,
         allowOctaveJumps,
         allowDownwardModulation,
+        centsTolerance,
       }
     );
 
@@ -266,6 +287,7 @@ export async function GET(request: Request) {
               limitToShortestHops,
               allowOctaveJumps,
               allowDownwardModulation,
+              centsTolerance,
               inArabic
             ),
             message: result.error,
@@ -321,6 +343,7 @@ export async function GET(request: Request) {
       limitToShortestHops,
       allowOctaveJumps,
       allowDownwardModulation,
+      centsTolerance,
       inArabic
     );
 
@@ -354,6 +377,7 @@ function buildContext(
   limitToShortestHops: boolean,
   allowOctaveJumps: boolean,
   allowDownwardModulation: boolean,
+  centsTolerance: number,
   inArabic: boolean
 ): any {
   const tuningSystems = getTuningSystems();
@@ -375,6 +399,7 @@ function buildContext(
       limitToShortestHops,
       allowOctaveJumps,
       allowDownwardModulation,
+      centsTolerance,
     },
   };
 

@@ -42,8 +42,8 @@ const graphCache = new Map<string, ModulationGraph>();
 /**
  * Creates a cache key for the graph cache.
  */
-function createCacheKey(tuningSystemId: string, startingNote: string): string {
-  return `${tuningSystemId}:${standardizeText(startingNote)}`;
+function createCacheKey(tuningSystemId: string, startingNote: string, centsTolerance: number): string {
+  return `${tuningSystemId}:${standardizeText(startingNote)}:${centsTolerance}`;
 }
 
 /**
@@ -72,7 +72,7 @@ export function getModulationGraph(
   allAjnas: JinsData[],
   centsTolerance: number = 5
 ): ModulationGraph {
-  const cacheKey = createCacheKey(tuningSystem.getId(), startingNote);
+  const cacheKey = createCacheKey(tuningSystem.getId(), startingNote, centsTolerance);
 
   // Return cached graph if available
   if (graphCache.has(cacheKey)) {
@@ -843,6 +843,7 @@ export function findModulationRoutes(
     limitToShortestHops?: boolean;
     allowOctaveJumps?: boolean;
     allowDownwardModulation?: boolean;
+    centsTolerance?: number;
   }
 ): {
   journeys: ModulationJourney[];
@@ -868,6 +869,7 @@ export function findModulationRoutes(
     limitToShortestHops = false,
     allowOctaveJumps = false,
     allowDownwardModulation = false,
+    centsTolerance = 5,
   } = options;
 
   // Internal alias used as the enumeration cap across BFS / segment routines,
@@ -920,7 +922,8 @@ export function findModulationRoutes(
     allMaqamat,
     allAjnas,
     fromMaqamId,
-    fromTonicId
+    fromTonicId,
+    centsTolerance
   );
   if (sourceError) {
     return {
@@ -939,7 +942,8 @@ export function findModulationRoutes(
     allMaqamat,
     allAjnas,
     toMaqamId,
-    toTonicId
+    toTonicId,
+    centsTolerance
   );
   if (targetError) {
     return {
@@ -959,7 +963,8 @@ export function findModulationRoutes(
       allMaqamat,
       allAjnas,
       wp.maqamId,
-      wp.tonicId
+      wp.tonicId,
+      centsTolerance
     );
     if (wpError) {
       return {
@@ -977,7 +982,8 @@ export function findModulationRoutes(
     tuningSystem,
     validStartingNote,
     allMaqamat,
-    allAjnas
+    allAjnas,
+    centsTolerance
   );
 
   // Find canonical source and target nodes (for display / error messages /

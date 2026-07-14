@@ -168,6 +168,8 @@ export interface ModulationRoutesRequest {
    * as an ascending modulation + separate 8vb register shift (2 hops).
    */
   allowDownwardModulation?: boolean;
+  /** Tolerance in cents for pitch matching (default: 5) */
+  centsTolerance?: number;
 }
 
 /**

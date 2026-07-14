@@ -269,6 +269,26 @@ export async function GET(
     const transposeToNote = searchParams.get("transposeTo");
     const showOptions = searchParams.get("options") === "true";
 
+    // Get cents tolerance parameter
+    let centsTolerance = 5; // Default tolerance
+    const centsToleranceParam = searchParams.get("centsTolerance");
+    if (centsToleranceParam) {
+      const parsed = parseFloat(centsToleranceParam);
+      if (isNaN(parsed) || parsed < 0) {
+        return addCorsHeaders(
+          NextResponse.json(
+            {
+              error: "Invalid centsTolerance parameter",
+              message: "centsTolerance must be a non-negative number",
+              hint: "Use ?centsTolerance=<number> (e.g., ?centsTolerance=5)"
+            },
+            { status: 400 }
+          )
+        );
+      }
+      centsTolerance = parsed;
+    }
+
     let inArabic = false;
     try {
       inArabic = parseInArabic(searchParams);
@@ -519,7 +539,7 @@ export async function GET(
               getTuningSystemPitchClasses(selectedTuningSystem, selectedStartingNote),
               jins,
               true,
-              5
+              centsTolerance
             ).map((t) => standardizeText(t.jinsPitchClasses[0].noteName))
           : null;
 
@@ -554,6 +574,11 @@ export async function GET(
             transposeTo: {
               options: transposeOptions,
               description: "Transpose to specific tonic (taṣwīr) - only valid transpositions shown. Calculated based on the provided tuningSystem and startingNote; null until a startingNote is provided."
+            },
+            centsTolerance: {
+              type: "number",
+              default: 5,
+              description: "Tolerance in cents for pitch matching in transposition calculations (non-negative number)"
             }
           },
           notes: {
@@ -661,7 +686,7 @@ export async function GET(
     }
 
     // Calculate transpositions
-    const transpositions = calculateJinsTranspositions(pitchClasses, jins, true, 5);
+    const transpositions = calculateJinsTranspositions(pitchClasses, jins, true, centsTolerance);
 
     // Find specific transposition if requested
     let selectedTransposition = transpositions[0]; // Default to first (tahlil)
@@ -817,6 +842,7 @@ export async function GET(
       parameters: {
         pitchClassDataType,
         includeIntervals,
+        centsTolerance,
       },
       context: {
         tuningSystem: {

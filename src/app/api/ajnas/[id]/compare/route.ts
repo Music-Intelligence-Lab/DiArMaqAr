@@ -190,7 +190,27 @@ export async function GET(
     const pitchClassDataType = searchParams.get("pitchClassDataType") || "all";
     const intervalsParam = searchParams.get("includeIntervals");
     const transposeToNote = searchParams.get("transposeTo");
-    
+
+    // Get cents tolerance parameter
+    let centsTolerance = 5; // Default tolerance
+    const centsToleranceParam = searchParams.get("centsTolerance");
+    if (centsToleranceParam) {
+      const parsed = parseFloat(centsToleranceParam);
+      if (isNaN(parsed) || parsed < 0) {
+        return addCorsHeaders(
+          NextResponse.json(
+            {
+              error: "Invalid centsTolerance parameter",
+              message: "centsTolerance must be a non-negative number",
+              hint: "Use ?centsTolerance=<number> (e.g., ?centsTolerance=5)"
+            },
+            { status: 400 }
+          )
+        );
+      }
+      centsTolerance = parsed;
+    }
+
     // Parse includeArabic parameter
     let inArabic = false;
     try {
@@ -472,7 +492,7 @@ export async function GET(
       }
 
       // Calculate transpositions
-      const transpositions = calculateJinsTranspositions(pitchClasses, jins, true, 5);
+      const transpositions = calculateJinsTranspositions(pitchClasses, jins, true, centsTolerance);
 
       // Prefer the tahlil whose tonic exactly matches the canonical tonic note
       // name (same note, same octave). `calculateJinsTranspositions` picks its
@@ -651,6 +671,7 @@ export async function GET(
         pitchClassDataType,
         includeIntervals,
         transposeTo: transposeToNote || null,
+        centsTolerance,
       },
       links: buildLinksNamespace({
         self: getCanonicalSelfUrl(request),

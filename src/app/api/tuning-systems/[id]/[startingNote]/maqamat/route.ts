@@ -47,6 +47,26 @@ export async function GET(
     const includeDegreeDetails = searchParams.get("includeDegreeDetails") === "true";
     const shouldIncludeDegreeDetails = includeMaqamDegrees && includeDegreeDetails;
 
+    // Get cents tolerance parameter
+    let centsTolerance = 5; // Default tolerance
+    const centsToleranceParam = searchParams.get("centsTolerance");
+    if (centsToleranceParam) {
+      const parsed = parseFloat(centsToleranceParam);
+      if (isNaN(parsed) || parsed < 0) {
+        return addCorsHeaders(
+          NextResponse.json(
+            {
+              error: "Invalid centsTolerance parameter",
+              message: "centsTolerance must be a non-negative number",
+              hint: "Use ?centsTolerance=<number> (e.g., ?centsTolerance=5)"
+            },
+            { status: 400 }
+          )
+        );
+      }
+      centsTolerance = parsed;
+    }
+
     let sortBy: "alphabetical" | "tonic";
     try {
       sortBy = parseSortBy(searchParams.get("sortBy"), "tonic");
@@ -180,7 +200,7 @@ export async function GET(
           ajnas,
           maqam,
           true,
-          5
+          centsTolerance
         );
         const tahlil = transpositions.find((t: any) => !t.transposition);
 

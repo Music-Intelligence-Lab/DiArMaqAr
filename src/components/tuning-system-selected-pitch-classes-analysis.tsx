@@ -4,6 +4,7 @@ import React, { useMemo, useState, useEffect, useRef } from "react";
 import useAppContext from "@/contexts/app-context";
 import useSoundContext, { defaultNoteVelocity } from "@/contexts/sound-context";
 import useLanguageContext from "@/contexts/language-context";
+import CentsToleranceInput from "@/components/cents-tolerance-input";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { getPitchClassIntervals } from "@/functions/getPitchClassIntervals";
@@ -14,7 +15,7 @@ import { calculateInterval } from "@/models/PitchClass";
 import StaffNotation from "./staff-notation";
 
 export default function SelectedPitchClassesAnalysis() {
-  const { selectedPitchClasses, selectedTuningSystem, allPitchClasses, centsTolerance, setCentsTolerance } = useAppContext();
+  const { selectedPitchClasses, selectedTuningSystem, allPitchClasses, centsTolerance } = useAppContext();
 
   const { noteOn, noteOff, playSequence, soundSettings } = useSoundContext();
 
@@ -899,18 +900,9 @@ export default function SelectedPitchClassesAnalysis() {
           <div className="maqam-jins-transpositions-shared__analysis-header">
             <div className="maqam-jins-transpositions-shared__title-row">
               {t('analysis.title')}
-              {!useRatio && (
-                <>
-                  {" "}
-                  / {t('analysis.centsTolerance')}:{" "}
-                  <input
-                    className="maqam-jins-transpositions-shared__input"
-                    type="number"
-                    value={centsTolerance ?? 0}
-                    onChange={(e) => setCentsTolerance(Number(e.target.value))}
-                  />
-                </>
-              )}
+              {" "}
+              / {t('analysis.centsTolerance')}:{" "}
+              <CentsToleranceInput className="maqam-jins-transpositions-shared__input" />
             </div>
               <div className="maqam-jins-transpositions-shared__filter-menu">
               {/* Filter order matches table row appearance order */}

@@ -103,6 +103,8 @@ Use GET /maqamat/families to retrieve valid family values..
   - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
  - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
+- `centsTolerance` (optional): Tolerance in cents for pitch class comparison (default: 5) - Type: `number` - Default: `5`
+  - Example: `5`
 
 **Example:**
 ```bash
@@ -224,6 +226,8 @@ link to filter maqāmāt by family via GET /maqamat?filterByFamily={idName}.
 - `startingNote` **(required)**: Starting note name (URL-safe, diacritics-insensitive) - Type: `string`
   - Example: `yegah`
 - `includeArabic` (optional): Include Arabic display names in family objects - Type: `string` - Valid values: `true`, `false` - Default: `false`
+- `centsTolerance` (optional): Tolerance in cents for pitch class comparison (default: 5) - Type: `number` - Default: `5`
+  - Example: `5`
 
 **Example:**
 ```bash
@@ -359,6 +363,8 @@ Requirements:
   - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
  - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
+- `centsTolerance` (optional): Tolerance in cents for pitch class comparison (default: 5) - Type: `number` - Default: `5`
+  - Example: `5`
 
 **Example:**
 ```bash
@@ -712,6 +718,8 @@ Return tuning-system availability for a maqām.
   - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
  - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
+- `centsTolerance` (optional): Tolerance in cents for pitch class comparison (default: 5) - Type: `number` - Default: `5`
+  - Example: `5`
 
 **Example:**
 ```bash
@@ -795,6 +803,8 @@ with an `{ error, hint }` payload (it does not return a 200 with an empty list).
   - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
  - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
+- `centsTolerance` (optional): Tolerance in cents for pitch class comparison (default: 5) - Type: `number` - Default: `5`
+  - Example: `5`
 
 **Example:**
 ```bash
@@ -1039,6 +1049,8 @@ Cartesian product).
   - Tuning system display names get Arabic versions in `displayNameAr` if available
  - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
+- `centsTolerance` (optional): Tolerance in cents for pitch class comparison (default: 5) - Type: `number` - Default: `5`
+  - Example: `5`
 
 **Example:**
 ```bash
@@ -2327,6 +2339,8 @@ Requirements:
   - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
  - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
+- `centsTolerance` (optional): Tolerance in cents for pitch class comparison (default: 5) - Type: `number` - Default: `5`
+  - Example: `5`
 
 **Example:**
 ```bash
@@ -2437,6 +2451,8 @@ Return tuning-system availability for a jins.
   - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
  - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
+- `centsTolerance` (optional): Tolerance in cents for pitch class comparison (default: 5) - Type: `number` - Default: `5`
+  - Example: `5`
 
 **Example:**
 ```bash
@@ -2520,6 +2536,8 @@ with an `{ error, hint }` payload (it does not return a 200 with an empty list).
   - Source metadata gets Arabic versions in *Ar fields (titleAr, firstNameAr, etc.)
  - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
+- `centsTolerance` (optional): Tolerance in cents for pitch class comparison (default: 5) - Type: `number` - Default: `5`
+  - Example: `5`
 
 **Example:**
 ```bash
@@ -2719,6 +2737,8 @@ Cartesian product).
   - Tuning system display names get Arabic versions in `displayNameAr` if available
  - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
+- `centsTolerance` (optional): Tolerance in cents for pitch class comparison (default: 5) - Type: `number` - Default: `5`
+  - Example: `5`
 
 **Example:**
 ```bash
@@ -3168,6 +3188,8 @@ note-name strings.
  - Type: `string` - Valid values: `alphabetical`, `tonic` - Default: `tonic`
   - Example: `tonic` - Sort by tonic note priority across the full NoteName.ts octave-stratified order, alphabetical tiebreak
   - Example: `alphabetical` - Sort alphabetically by display name
+- `centsTolerance` (optional): Tolerance in cents for pitch class comparison (default: 5) - Type: `number` - Default: `5`
+  - Example: `5`
 
 **Example:**
 ```bash
@@ -3505,6 +3527,8 @@ Adds Arabic versions with "Ar" suffix (e.g., maqamDisplayNameAr, tonicDisplayAr)
   Adds Arabic versions with "Ar" suffix (e.g., maqamDisplayNameAr, tonicDisplayAr)
  - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
+- `centsTolerance` (optional): Tolerance in cents for pitch class comparison (default: 5) - Type: `number` - Default: `5`
+  - Example: `5`
 
 **Example:**
 ```bash

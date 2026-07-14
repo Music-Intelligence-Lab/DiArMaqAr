@@ -160,20 +160,16 @@ export function calculateInterval(firstPitchClass: PitchClass, secondPitchClass:
 
 /**
  * Determines if two intervals are equivalent within a specified tolerance.
- * Uses different comparison methods based on the original value type:
- * - For fraction and decimal ratio types: Exact string comparison
- * - For other types: Cents comparison within tolerance
- * 
+ * Compares cents distance for all value types — ratio-based intervals included,
+ * since an exact ratio match has a cents distance of 0.
+ *
  * @param firstInterval - First interval to compare
  * @param secondInterval - Second interval to compare
  * @param centsTolerance - Tolerance in cents for comparison (default: 5)
  * @returns true if the intervals match within the specified tolerance, false otherwise
  */
 export function matchingIntervals(firstInterval: PitchClassInterval, secondInterval: PitchClassInterval, centsTolerance: number = 5): boolean {
-  const originalValueType = firstInterval.originalValueType;
-
-  if (originalValueType === "fraction" || originalValueType === "decimalRatio") return firstInterval.fraction === secondInterval.fraction;
-  else return Math.abs(firstInterval.cents - secondInterval.cents) <= centsTolerance;
+  return Math.abs(firstInterval.cents - secondInterval.cents) <= centsTolerance;
 }
 
 

@@ -61,6 +61,26 @@ export async function GET(request: Request) {
       );
     }
 
+    // Get cents tolerance parameter
+    let centsTolerance = 5; // Default tolerance
+    const centsToleranceParam = searchParams.get("centsTolerance");
+    if (centsToleranceParam) {
+      const parsed = parseFloat(centsToleranceParam);
+      if (isNaN(parsed) || parsed < 0) {
+        return addCorsHeaders(
+          NextResponse.json(
+            {
+              error: "Invalid centsTolerance parameter",
+              message: "centsTolerance must be a non-negative number",
+              hint: "Use ?centsTolerance=<number> (e.g., ?centsTolerance=5)"
+            },
+            { status: 400 }
+          )
+        );
+      }
+      centsTolerance = parsed;
+    }
+
     let inArabic = false;
     try {
       inArabic = parseInArabic(searchParams);
@@ -146,7 +166,7 @@ export async function GET(request: Request) {
           ajnas,
           maqam,
           true,
-          5
+          centsTolerance
         );
         const tahlil = transpositions.find((t) => !t.transposition);
         if (!tahlil) continue;

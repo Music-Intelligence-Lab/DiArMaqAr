@@ -32,13 +32,16 @@ function sameModalDegreeSlot(a: string, b: string): boolean {
  * @param inputPitchClasses - Available pitch classes to search within (tuning system)
  * @param pitchClassIntervals - Target interval pattern to match 
  * @param ascending - Search direction (true = ascending, false = descending)
- * @param useRatio - Matching mode (true = exact ratios, false = cents with tolerance)
+ * @param centsTolerance - Matching tolerance in cents (applies to all value types; exact matches have a cents distance of 0)
  * @param centsTolerance - Tolerance in cents for fuzzy matching (typically ±5 cents)
  * @returns Array of pitch class sequences that match the interval pattern
  */
-function calculatePitchClassTranspositions(inputPitchClasses: PitchClass[], pitchClassIntervals: PitchClassInterval[], ascending: boolean, useRatio: boolean, centsTolerance: number) {
-  // Determine search direction: use original order for ascending, reverse for descending
-  const allPitchClasses = ascending ? inputPitchClasses : [...inputPitchClasses].reverse();
+function calculatePitchClassTranspositions(inputPitchClasses: PitchClass[], pitchClassIntervals: PitchClassInterval[], ascending: boolean, centsTolerance: number) {
+  // Determine search direction: use original order for ascending, reverse for descending.
+  // Exclude "none" placeholder cells (unmapped tuning-system indices) — they carry pitch
+  // values but no note identity, so tolerant matching must never build sequences through them.
+  const orderedPitchClasses = ascending ? inputPitchClasses : [...inputPitchClasses].reverse();
+  const allPitchClasses = orderedPitchClasses.filter((pitchClass) => pitchClass.noteName !== "none");
 
   // Array to collect all valid transposition sequences found
   const sequences: PitchClass[][] = [];
@@ -74,30 +77,15 @@ function calculatePitchClassTranspositions(inputPitchClasses: PitchClass[], pitc
       // Calculate the actual interval between last note and candidate note
       const computedInterval = calculateInterval(lastCell, candidateCell);
 
-      // Interval matching: Choose matching criteria based on source data type
-      if (useRatio) {
-        // Exact ratio matching (for fractional sources)
-        const comp = computedInterval.decimalRatio;
-        const target = cellInterval.decimalRatio;
-
-        if (comp === target) {
-          // Exact match found: Recursively continue building sequence from next position
-          buildSequences([...pitchClasses, candidateCell], i + 1, intervalIndex + 1);
-          break; // Found exact match, no need to continue this loop
-        } else if ((ascending && comp > target) || (!ascending && comp < target)) {
-          // Early termination: We've gone past the target ratio, stop searching
-          break;
-        }
-      } else {
-        // Fuzzy cents matching (for string length/cents sources)
-        if (Math.abs(computedInterval.cents - cellInterval.cents) <= centsTolerance) {
-          // Match within tolerance: Recursively continue building sequence
-          buildSequences([...pitchClasses, candidateCell], i + 1, intervalIndex + 1);
-          break; // Found acceptable match, no need to continue this loop
-        } else if (Math.abs(cellInterval.cents) + centsTolerance < Math.abs(computedInterval.cents)) {
-          // Early termination: We've exceeded the tolerance threshold, stop searching
-          break;
-        }
+      // Interval matching: cents comparison within tolerance for all value types
+      // (ratio-based sources included — an exact ratio match has a cents distance of 0)
+      if (Math.abs(computedInterval.cents - cellInterval.cents) <= centsTolerance) {
+        // Match within tolerance: Recursively continue building sequence
+        buildSequences([...pitchClasses, candidateCell], i + 1, intervalIndex + 1);
+        break; // Found acceptable match, no need to continue this loop
+      } else if (Math.abs(cellInterval.cents) + centsTolerance < Math.abs(computedInterval.cents)) {
+        // Early termination: We've exceeded the tolerance threshold, stop searching
+        break;
       }
     }
   }
@@ -257,18 +245,15 @@ export function calculateMaqamTranspositions(
 
   if (ascendingMaqamCells.length === 0 || descendingMaqamCells.length === 0) return [];
 
-  const valueType = allPitchClasses[0].originalValueType;
-  const useRatio = valueType === "fraction" || valueType === "decimalRatio";
-
   const ascendingIntervalPattern: PitchClassInterval[] = getPitchClassIntervals(ascendingMaqamCells);
 
   const descendingIntervalPattern: PitchClassInterval[] = getPitchClassIntervals(descendingMaqamCells);
 
-  const ascendingSequences: PitchClass[][] = calculatePitchClassTranspositions(allPitchClasses, ascendingIntervalPattern, true, useRatio, centsTolerance).filter(
+  const ascendingSequences: PitchClass[][] = calculatePitchClassTranspositions(allPitchClasses, ascendingIntervalPattern, true, centsTolerance).filter(
     (sequence) => !onlyOctaveOne || sequence[0].octave === 1
   );
 
-  const descendingSequences: PitchClass[][] = calculatePitchClassTranspositions(allPitchClasses, descendingIntervalPattern, false, useRatio, centsTolerance);
+  const descendingSequences: PitchClass[][] = calculatePitchClassTranspositions(allPitchClasses, descendingIntervalPattern, false, centsTolerance);
 
   const ajnasIntervals: { jins: JinsData; intervals: PitchClassInterval[] }[] = [];
 
@@ -520,12 +505,9 @@ export function calculateJinsTranspositions(allPitchClasses: PitchClass[], jinsD
 
   if (jinsCells.length === 0) return [];
 
-  const valueType = jinsCells[0].originalValueType;
-  const useRatio = valueType === "fraction" || valueType === "decimalRatio";
-
   const intervalPattern: PitchClassInterval[] = getPitchClassIntervals(jinsCells);
 
-  const jinsTranspositions: Jins[] = calculatePitchClassTranspositions(allPitchClasses, intervalPattern, true, useRatio, centsTolerance)
+  const jinsTranspositions: Jins[] = calculatePitchClassTranspositions(allPitchClasses, intervalPattern, true, centsTolerance)
     .filter((sequence) => !onlyOctaveOne || sequence[0].octave === 1)
     .map((sequence) => {
       const tonic = sequence[0].noteName;
@@ -577,9 +559,10 @@ export function canTransposeMaqamToNote(
 ): boolean {
   if (!tuningSystem || !maqamData) return false;
 
-  // Generate pitch classes from the tuning system
-  const allPitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote);
-  
+  // Generate pitch classes from the tuning system, excluding "none" placeholder cells
+  // (unmapped indices) so tolerant matching never builds sequences through them
+  const allPitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote).filter((pitchClass) => pitchClass.noteName !== "none");
+
   if (allPitchClasses.length === 0) return false;
 
   // Check if the target note exists in the pitch classes
@@ -596,9 +579,6 @@ export function canTransposeMaqamToNote(
   // Get the interval pattern from the source maqam
   const intervalPattern = getPitchClassIntervals(sourceMaqam.ascendingPitchClasses);
   
-  const valueType = allPitchClasses[0].originalValueType;
-  const useRatio = valueType === "fraction" || valueType === "decimalRatio";
-
   // Find the starting pitch class for the target note
   const startingCell = allPitchClasses.find((pitchClass) => pitchClass.noteName === targetFirstNote);
   if (!startingCell) return false;
@@ -616,21 +596,11 @@ export function canTransposeMaqamToNote(
       const cellInterval = intervalPattern[intervalIndex];
       const computedInterval = calculateInterval(lastCell, candidateCell);
 
-      if (useRatio) {
-        const comp = computedInterval.decimalRatio;
-        const target = cellInterval.decimalRatio;
-
-        if (comp === target) {
-          return buildSequence([...pitchClasses, candidateCell], i + 1, intervalIndex + 1);
-        } else if (comp > target) {
-          break; // Ascending, so we've gone too far
-        }
-      } else {
-        if (Math.abs(computedInterval.cents - cellInterval.cents) <= centsTolerance) {
-          return buildSequence([...pitchClasses, candidateCell], i + 1, intervalIndex + 1);
-        } else if (Math.abs(cellInterval.cents) + centsTolerance < Math.abs(computedInterval.cents)) {
-          break; // We've gone too far
-        }
+      // Cents comparison within tolerance for all value types (ratio-based included)
+      if (Math.abs(computedInterval.cents - cellInterval.cents) <= centsTolerance) {
+        return buildSequence([...pitchClasses, candidateCell], i + 1, intervalIndex + 1);
+      } else if (Math.abs(cellInterval.cents) + centsTolerance < Math.abs(computedInterval.cents)) {
+        break; // We've gone too far
       }
     }
     

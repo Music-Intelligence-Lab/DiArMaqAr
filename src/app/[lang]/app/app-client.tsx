@@ -250,7 +250,7 @@ function parseModulationsParameter(param: string, maqamat: MaqamData[]): Modulat
 }
 
 export default function AppClient() {
-  const { tuningSystems, ajnas, maqamat, handleUrlParams, selectedTuningSystem, selectedJinsData, selectedMaqamData, maqamSayrId, selectedIndices, selectedMaqam, selectedJins, referenceFrequencies, modulationChain, setModulationChain } = useAppContext();
+  const { tuningSystems, ajnas, maqamat, handleUrlParams, selectedTuningSystem, selectedJinsData, selectedMaqamData, maqamSayrId, selectedIndices, selectedMaqam, selectedJins, referenceFrequencies, modulationChain, setModulationChain, centsTolerance } = useAppContext();
 
   const { setSelectedMenu, selectedMenu } = useMenuContext();
 
@@ -308,6 +308,14 @@ export default function AppClient() {
     // Parse reference frequency parameter if present
     const refFreqParam = searchParams.get("refFreq");
     const referenceFrequency = refFreqParam ? parseFloat(refFreqParam) : undefined;
+
+    // Parse cents tolerance parameter if present (ignore invalid/negative values)
+    const centsToleranceParam = searchParams.get("centsTolerance");
+    let urlCentsTolerance: number | undefined = undefined;
+    if (centsToleranceParam) {
+      const parsed = parseFloat(centsToleranceParam);
+      if (!isNaN(parsed) && parsed >= 0) urlCentsTolerance = parsed;
+    }
 
     // Parse descriptive maqam parameter if present
     const maqamParam = searchParams.get("maqam");
@@ -396,6 +404,7 @@ export default function AppClient() {
       sayrId: sayrId,
       firstNote: startingNoteName,
       referenceFrequency: referenceFrequency,
+      centsTolerance: urlCentsTolerance,
     });
   // Mark that we've applied URL params so we don't re-apply on subsequent searchParams changes
   urlParamsApplied.current = true;
@@ -432,6 +441,8 @@ export default function AppClient() {
           params.push(`refFreq=${currentRefFreq}`);
         }
       }
+
+      params.push(`centsTolerance=${centsTolerance}`);
     }
 
     // Use descriptive parameters for jins and maqam with transposition note included in parameter
@@ -482,7 +493,7 @@ export default function AppClient() {
       const urlParams = params.join("&");
       router.replace(`/${lang}/app?${urlParams}`, { scroll: false });
     }
-  }, [selectedTuningSystem, selectedJinsData, selectedMaqamData, maqamSayrId, selectedIndices, selectedMaqam, selectedJins, referenceFrequencies, modulationChain, selectedMenu, maqamat, router, pathname, lang]);
+  }, [selectedTuningSystem, selectedJinsData, selectedMaqamData, maqamSayrId, selectedIndices, selectedMaqam, selectedJins, referenceFrequencies, modulationChain, selectedMenu, maqamat, centsTolerance, router, pathname, lang]);
 
   return (
     <div className="main-content">

@@ -10,6 +10,7 @@ import { standardizeText } from "@/functions/export";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
 import { getIpnReferenceNoteName, getIpnReferenceNoteNameWithOctave } from "@/functions/getIpnReferenceNoteName";
 import { renderPitchClassSpellings } from "@/functions/renderPitchClassIpnSpellings";
+import CentsToleranceInput from "@/components/cents-tolerance-input";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import useTranspositionsContext from "@/contexts/transpositions-context";
 import StaffNotation from "./staff-notation";
@@ -364,7 +365,6 @@ const MaqamTranspositions: React.FC = () => {
     romanNumerals = romanNumerals.slice(0, numberOfMaqamNotes + (noOctaveMaqam ? 1 : 0));
 
     const valueType = allPitchClasses[0].originalValueType;
-    const useRatio = valueType === "fraction" || valueType === "decimalRatio";
 
     const numberOfFilterRows = Object.keys(filters).filter((key) => !disabledFilters.includes(key) && key !== valueType && filters[key as keyof typeof filters]).length;
 
@@ -376,7 +376,6 @@ const MaqamTranspositions: React.FC = () => {
       numberOfMaqamNotes,
       noOctaveMaqam,
       valueType,
-      useRatio,
       numberOfFilterRows,
     };
   }, [selectedMaqamData, selectedTuningSystem, allPitchClasses, filters]);
@@ -764,7 +763,7 @@ const MaqamTranspositions: React.FC = () => {
   const transpositionTables = useMemo(() => {
     if (!maqamConfig) return null;
 
-    const { romanNumerals, noOctaveMaqam, valueType, useRatio, numberOfFilterRows } = maqamConfig;
+    const { romanNumerals, noOctaveMaqam, valueType, numberOfFilterRows } = maqamConfig;
 
     function renderTranspositionRow(maqam: Maqam, ascending: boolean, rowIndex: number) {
       // Helper function to check if a pitch class is currently active (with octave wrapping)
@@ -1348,12 +1347,8 @@ const MaqamTranspositions: React.FC = () => {
             <div className={`maqam-jins-transpositions-shared__sticky-header${isHeaderStuck ? ' maqam-jins-transpositions-shared__sticky-header_stuck' : ''}`}>
               <div className="maqam-jins-transpositions-shared__title-row" dir={language === "ar" ? "rtl" : "ltr"}>
                 {t("maqam.analysis")}: {`${getDisplayName(selectedMaqamData?.getName() || "", "maqam")}`}
-                {!useRatio && (
-                  <>
-                    {" "}
-                    / {t("maqam.centsTolerance")}: <input className="maqam-jins-transpositions-shared__cents-tolerance-input" type="number" value={centsTolerance ?? 0} onChange={(e) => setCentsTolerance(Number(e.target.value))} />
-                  </>
-                )}
+                {" "}
+                / {t("maqam.centsTolerance")}: <CentsToleranceInput className="maqam-jins-transpositions-shared__cents-tolerance-input" />
               </div>
 
               <div className="maqam-jins-transpositions-shared__filter-menu">

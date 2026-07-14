@@ -177,6 +177,14 @@ paths:
             enum: ["true", "false"]
             default: "false"
           example: "true"
+        - name: centsTolerance
+          in: query
+          description: "Tolerance in cents for pitch class comparison (default: 5)"
+          schema:
+            type: number
+            default: 5
+            minimum: 0
+          example: 5
       responses:
         '200':
           description: List of maqāmāt retrieved successfully
@@ -325,6 +333,14 @@ paths:
             type: string
             enum: ["true", "false"]
             default: "false"
+        - name: centsTolerance
+          in: query
+          description: "Tolerance in cents for pitch class comparison (default: 5)"
+          schema:
+            type: number
+            default: 5
+            minimum: 0
+          example: 5
       responses:
         '400':
           description: Missing required parameters
@@ -566,6 +582,14 @@ paths:
             enum: ["true", "false"]
             default: "false"
           example: "true"
+        - name: centsTolerance
+          in: query
+          description: "Tolerance in cents for pitch class comparison (default: 5)"
+          schema:
+            type: number
+            default: 5
+            minimum: 0
+          example: 5
         # Note: ajnas are included by default and are not controlled by a query parameter
       responses:
         '200':
@@ -1243,6 +1267,14 @@ paths:
             enum: ["true", "false"]
             default: "false"
           example: "true"
+        - name: centsTolerance
+          in: query
+          description: "Tolerance in cents for pitch class comparison (default: 5)"
+          schema:
+            type: number
+            default: 5
+            minimum: 0
+          example: 5
       responses:
         '200':
           description: Availability information retrieved successfully
@@ -1915,6 +1947,14 @@ paths:
             enum: ["true", "false"]
             default: "false"
           example: "true"
+        - name: centsTolerance
+          in: query
+          description: "Tolerance in cents for pitch class comparison (default: 5)"
+          schema:
+            type: number
+            default: 5
+            minimum: 0
+          example: 5
       responses:
         '200':
           description: Transpositions retrieved successfully
@@ -2291,6 +2331,14 @@ paths:
             enum: ["true", "false"]
             default: "false"
           example: "true"
+        - name: centsTolerance
+          in: query
+          description: "Tolerance in cents for pitch class comparison (default: 5)"
+          schema:
+            type: number
+            default: 5
+            minimum: 0
+          example: 5
       responses:
         '200':
           description: |
@@ -4316,6 +4364,14 @@ paths:
             alphabetical:
               value: alphabetical
               summary: Sort alphabetically by display name
+        - name: centsTolerance
+          in: query
+          description: "Tolerance in cents for pitch class comparison (default: 5)"
+          schema:
+            type: number
+            default: 5
+            minimum: 0
+          example: 5
       responses:
         '200':
           description: Maqāmāt list retrieved successfully
@@ -4740,6 +4796,14 @@ paths:
             enum: ["true", "false"]
             default: "false"
           example: "true"
+        - name: centsTolerance
+          in: query
+          description: "Tolerance in cents for pitch class comparison (default: 5)"
+          schema:
+            type: number
+            default: 5
+            minimum: 0
+          example: 5
       responses:
         '200':
           description: Modulation routes calculated successfully
@@ -5808,6 +5872,14 @@ paths:
             enum: ["true", "false"]
             default: "false"
           example: "true"
+        - name: centsTolerance
+          in: query
+          description: "Tolerance in cents for pitch class comparison (default: 5)"
+          schema:
+            type: number
+            default: 5
+            minimum: 0
+          example: 5
       responses:
         '200':
           description: |
@@ -6108,6 +6180,14 @@ paths:
             enum: ["true", "false"]
             default: "false"
           example: "true"
+        - name: centsTolerance
+          in: query
+          description: "Tolerance in cents for pitch class comparison (default: 5)"
+          schema:
+            type: number
+            default: 5
+            minimum: 0
+          example: 5
       responses:
         '200':
           description: Availability information retrieved successfully
@@ -6267,6 +6347,14 @@ paths:
             enum: ["true", "false"]
             default: "false"
           example: "true"
+        - name: centsTolerance
+          in: query
+          description: "Tolerance in cents for pitch class comparison (default: 5)"
+          schema:
+            type: number
+            default: 5
+            minimum: 0
+          example: 5
       responses:
         '200':
           description: Transpositions retrieved successfully
@@ -6617,6 +6705,14 @@ paths:
             enum: ["true", "false"]
             default: "false"
           example: "true"
+        - name: centsTolerance
+          in: query
+          description: "Tolerance in cents for pitch class comparison (default: 5)"
+          schema:
+            type: number
+            default: 5
+            minimum: 0
+          example: 5
       responses:
         '200':
           description: |

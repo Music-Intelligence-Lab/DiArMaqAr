@@ -71,7 +71,7 @@ interface AppContextInterface {
   setCentsTolerance: React.Dispatch<React.SetStateAction<number>>;
   clearSelections: () => void;
   clearJinsSelections: () => void;
-  handleUrlParams: (params: { tuningSystemId?: string; jinsDataId?: string; maqamDataId?: string; sayrId?: string; firstNote?: string; maqamFirstNote?: string; jinsFirstNote?: string; referenceFrequency?: number }) => void;
+  handleUrlParams: (params: { tuningSystemId?: string; jinsDataId?: string; maqamDataId?: string; sayrId?: string; firstNote?: string; maqamFirstNote?: string; jinsFirstNote?: string; referenceFrequency?: number; centsTolerance?: number }) => void;
   sources: Source[];
   setSources: React.Dispatch<React.SetStateAction<Source[]>>;
   patterns: Pattern[];
@@ -366,6 +366,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       maqamFirstNote,
       jinsFirstNote,
       referenceFrequency,
+      centsTolerance: urlCentsTolerance,
     }: {
       tuningSystemId?: string;
       jinsDataId?: string;
@@ -375,8 +376,16 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       maqamFirstNote?: string;
       jinsFirstNote?: string;
       referenceFrequency?: number;
+      centsTolerance?: number;
     }) => {
       if (!tuningSystems.length || !ajnas.length || !maqamat.length) return;
+
+      // Apply the URL's cents tolerance both to state and to this call's own
+      // matching (state updates don't land until the next render)
+      const effectiveCentsTolerance = urlCentsTolerance ?? centsTolerance;
+      if (urlCentsTolerance !== undefined && urlCentsTolerance !== centsTolerance) {
+        setCentsTolerance(urlCentsTolerance);
+      }
 
       if (tuningSystemId) {
         if (!selectedTuningSystem || selectedTuningSystem.getId() !== tuningSystemId) {
@@ -417,7 +426,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
             if (jinsDataId) {
               const foundJinsData = ajnas.find((j) => j.getId() === jinsDataId);
               if (foundJinsData && foundJinsData.isJinsPossible(allPitchClasses.map((pc) => pc.noteName))) {
-                const JinsTranspositions = calculateJinsTranspositions(allPitchClasses, foundJinsData, true, 10);
+                const JinsTranspositions = calculateJinsTranspositions(allPitchClasses, foundJinsData, true, effectiveCentsTolerance);
                 let foundJins: Jins | null = null;
                 if (jinsFirstNote) {
                   foundJins = JinsTranspositions.find((j) => standardizeText(j.jinsPitchClasses[0].noteName) === standardizeText(jinsFirstNote)) || null;
@@ -428,7 +437,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
             } else if (maqamDataId) {
               const foundMaqamData = maqamat.find((m) => m.getId() === maqamDataId);
               if (foundMaqamData && foundMaqamData.isMaqamPossible(allPitchClasses.map((pc) => pc.noteName))) {
-                const maqamTranspositions = calculateMaqamTranspositions(allPitchClasses, ajnas, foundMaqamData, true, 10);
+                const maqamTranspositions = calculateMaqamTranspositions(allPitchClasses, ajnas, foundMaqamData, true, effectiveCentsTolerance);
                 let foundMaqam: Maqam | null = null;
                 if (maqamFirstNote) {
                   foundMaqam = maqamTranspositions.find((m) => standardizeText(m.ascendingPitchClasses[0].noteName) === standardizeText(maqamFirstNote)) || null;
@@ -444,7 +453,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         }
       }
     },
-    [tuningSystems, ajnas, maqamat, selectedTuningSystem, handleStartNoteNameChange, handleClickJins, handleClickMaqam, setReferenceFrequencies]
+    [tuningSystems, ajnas, maqamat, selectedTuningSystem, handleStartNoteNameChange, handleClickJins, handleClickMaqam, setReferenceFrequencies, centsTolerance]
   );
 
   // Memoize context value to avoid re-renders of all consumers when no referenced pieces change

@@ -34,7 +34,27 @@ export async function GET(
     const { searchParams } = new URL(request.url);
     const tuningSystemId = searchParams.get("tuningSystem");
     const startingNote = searchParams.get("startingNote");
-    
+
+    // Get cents tolerance parameter
+    let centsTolerance = 5; // Default tolerance
+    const centsToleranceParam = searchParams.get("centsTolerance");
+    if (centsToleranceParam) {
+      const parsed = parseFloat(centsToleranceParam);
+      if (isNaN(parsed) || parsed < 0) {
+        return addCorsHeaders(
+          NextResponse.json(
+            {
+              error: "Invalid centsTolerance parameter",
+              message: "centsTolerance must be a non-negative number",
+              hint: "Use ?centsTolerance=<number> (e.g., ?centsTolerance=5)"
+            },
+            { status: 400 }
+          )
+        );
+      }
+      centsTolerance = parsed;
+    }
+
     // Parse includeArabic parameter
     let inArabic = false;
     try {
@@ -194,7 +214,7 @@ export async function GET(
       ajnas,
       maqam,
       true,
-      5 // default tolerance
+      centsTolerance
     );
 
     // API lists only taswīr (transposition: true). Octave/register variants must not be flagged true;

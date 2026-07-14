@@ -10,6 +10,7 @@ import { standardizeText } from "@/functions/export";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
 import { getIpnReferenceNoteNameWithOctave } from "@/functions/getIpnReferenceNoteName";
 import { renderPitchClassSpellings } from "@/functions/renderPitchClassIpnSpellings";
+import CentsToleranceInput from "@/components/cents-tolerance-input";
 import PitchClass from "@/models/PitchClass";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import useTranspositionsContext from "@/contexts/transpositions-context";
@@ -949,12 +950,8 @@ export default function JinsTranspositions() {
           <div className="jins-transpositions__sticky-header">
             <div className="jins-transpositions__title-row" dir={language === "ar" ? "rtl" : "ltr"}>
               {t("jins.analysis")}: {`${getDisplayName(selectedJinsData.getName(), "jins")}`}{" "}
-              {!useRatio && (
-                <>
-                  {" "}
-                  / {t("jins.centsTolerance")}: <input className="maqam-jins-transpositions-shared__cents-tolerance-input" type="number" value={centsTolerance ?? 0} onChange={(e) => setCentsTolerance(Number(e.target.value))} />
-                </>
-              )}
+              {" "}
+              / {t("jins.centsTolerance")}: <CentsToleranceInput className="maqam-jins-transpositions-shared__cents-tolerance-input" />
             </div>
 
             <div className="jins-transpositions__filter-menu">

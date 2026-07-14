@@ -599,6 +599,14 @@ export function getSequentialEnglishNames(arabicNames: string[], ascending: bool
     }
 
     const expectedLetter = expectedLetters[i];
+
+    // No expected letter available (e.g. the anchor note had no English mapping,
+    // so getExpectedLetterSequence returned []) — keep the default spelling
+    if (!expectedLetter) {
+      result.push(defaultName);
+      continue;
+    }
+
     const actualLetter = defaultName[0].toUpperCase();
 
     // If the default already matches the expected letter, use it

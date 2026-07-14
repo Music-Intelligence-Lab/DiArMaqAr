@@ -344,7 +344,27 @@ export async function GET(
     const includeModulations8vbEnabled = searchParams.get("includeModulations8vb") === "true";
     const includeSuyur = searchParams.get("includeSuyur") === "true";
     const showOptions = searchParams.get("options") === "true";
-    
+
+    // Get cents tolerance parameter
+    let centsTolerance = 5; // Default tolerance
+    const centsToleranceParam = searchParams.get("centsTolerance");
+    if (centsToleranceParam) {
+      const parsed = parseFloat(centsToleranceParam);
+      if (isNaN(parsed) || parsed < 0) {
+        return addCorsHeaders(
+          NextResponse.json(
+            {
+              error: "Invalid centsTolerance parameter",
+              message: "centsTolerance must be a non-negative number",
+              hint: "Use ?centsTolerance=<number> (e.g., ?centsTolerance=5)"
+            },
+            { status: 400 }
+          )
+        );
+      }
+      centsTolerance = parsed;
+    }
+
     // Parse includeArabic parameter
     let inArabic = false;
     try {
@@ -494,14 +514,14 @@ export async function GET(
         .filter((maqam) => maqam.isMaqamPossible(pitchClasses.map((pc) => pc.noteName)))
         .sort((a, b) => a.getName().localeCompare(b.getName()))
         .map((maqam) => {
-          const transpositions = calculateMaqamTranspositions(pitchClasses, ajnas, maqam, true, 5);
+          const transpositions = calculateMaqamTranspositions(pitchClasses, ajnas, maqam, true, centsTolerance);
           const tahlil = transpositions[0];
           const familyClassification = classifyMaqamFamily(tahlil);
           const sources = maqam.getSourcePageReferences();
 
           // Calculate modulations for counts
-          const maqamatModulations = modulate(pitchClasses, ajnas, maqamatData, tahlil, false, 5) as MaqamatModulations;
-          const ajnasModulations = modulate(pitchClasses, ajnas, maqamatData, tahlil, true, 5) as AjnasModulations;
+          const maqamatModulations = modulate(pitchClasses, ajnas, maqamatData, tahlil, false, centsTolerance) as MaqamatModulations;
+          const ajnasModulations = modulate(pitchClasses, ajnas, maqamatData, tahlil, true, centsTolerance) as AjnasModulations;
           
           const totalMaqamModulations = Object.values(maqamatModulations)
             .filter(val => Array.isArray(val))
@@ -695,7 +715,7 @@ export async function GET(
               message: `The following data-returning parameters cannot be used with options=true (parameter discovery mode): ${conflictingParams.join(", ")}`,
               hint: "Remove all data-returning parameters to use discovery mode, or remove options=true to retrieve maqām data.",
             conflictingParameters: conflictingParams,
-            contextualParametersAllowed: ["tuningSystem", "startingNote", "pitchClassDataType"]
+            contextualParametersAllowed: ["tuningSystem", "startingNote", "pitchClassDataType", "centsTolerance"]
             },
             { status: 400 }
           )
@@ -794,7 +814,7 @@ export async function GET(
               ajnas,
               maqam,
               true,
-              5
+              centsTolerance
             ).map((t) => standardizeText(t.ascendingPitchClasses[0].noteName))
           : null;
 
@@ -857,6 +877,11 @@ export async function GET(
               type: "boolean",
               default: false,
               description: "Include documented performance practices (suyūr)"
+            },
+            centsTolerance: {
+              type: "number",
+              default: 5,
+              description: "Tolerance in cents for pitch matching in transposition and modulation calculations (non-negative number)"
             }
           },
           notes: {
@@ -967,7 +992,7 @@ export async function GET(
     }
 
     // Calculate transpositions
-    const transpositions = calculateMaqamTranspositions(pitchClasses, ajnas, maqam, true, 5);
+    const transpositions = calculateMaqamTranspositions(pitchClasses, ajnas, maqam, true, centsTolerance);
 
     // Find specific transposition if requested
     let selectedTransposition = transpositions[0]; // Default to first (tahlil)
@@ -1001,8 +1026,8 @@ export async function GET(
     const familyClassification = classifyMaqamFamily(tahlil);
 
     // Calculate modulations for the tahlil
-    const maqamatModulations = modulate(pitchClasses, ajnas, maqamatData, tahlil, false, 5) as MaqamatModulations;
-    const ajnasModulations = modulate(pitchClasses, ajnas, maqamatData, tahlil, true, 5) as AjnasModulations;
+    const maqamatModulations = modulate(pitchClasses, ajnas, maqamatData, tahlil, false, centsTolerance) as MaqamatModulations;
+    const ajnasModulations = modulate(pitchClasses, ajnas, maqamatData, tahlil, true, centsTolerance) as AjnasModulations;
 
     // Count total modulations
     const totalMaqamModulations = Object.values(maqamatModulations)
@@ -1125,6 +1150,7 @@ export async function GET(
       includeModulations8vb: includeModulations8vbEnabled,
       includeSuyur,
       transposeTo: transposeToNote || null,
+      centsTolerance,
     };
 
     const tuningSystemNamespace = buildEntityNamespace(
@@ -1385,8 +1411,8 @@ export async function GET(
     }
 
     if (includeModulations) {
-      const maqamatModulations = modulate(pitchClasses, ajnas, maqamatData, selectedTransposition, false, 5);
-      const ajnasModulations = modulate(pitchClasses, ajnas, maqamatData, selectedTransposition, true, 5);
+      const maqamatModulations = modulate(pitchClasses, ajnas, maqamatData, selectedTransposition, false, centsTolerance);
+      const ajnasModulations = modulate(pitchClasses, ajnas, maqamatData, selectedTransposition, true, centsTolerance);
       
       // Create lookup maps from numeric IDs to full entity data
       const maqamIdToEntity = new Map<string, any>();
