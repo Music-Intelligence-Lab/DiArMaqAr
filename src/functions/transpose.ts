@@ -67,26 +67,36 @@ function calculatePitchClassTranspositions(inputPitchClasses: PitchClass[], pitc
     // Get the last pitch class in our current sequence (to calculate intervals from)
     const lastCell = pitchClasses[pitchClasses.length - 1];
 
-    // Search loop: Test each remaining pitch class as a potential next note
+    // Get the target interval we need to match at this position
+    const cellInterval = pitchClassIntervals[intervalIndex];
+
+    // Collect every candidate within tolerance for this step. Interval matching is
+    // cents comparison within tolerance for all value types (ratio-based sources
+    // included — an exact ratio match has a cents distance of 0). The scan stops
+    // once the computed interval exceeds the target by more than the tolerance.
+    const candidates: { index: number; cell: PitchClass; deviation: number }[] = [];
     for (let i = cellIndex; i < allPitchClasses.length; i++) {
       const candidateCell = allPitchClasses[i]; // Current pitch class being tested
-
-      // Get the target interval we need to match at this position
-      const cellInterval = pitchClassIntervals[intervalIndex];
-      
-      // Calculate the actual interval between last note and candidate note
       const computedInterval = calculateInterval(lastCell, candidateCell);
+      const deviation = Math.abs(computedInterval.cents - cellInterval.cents);
 
-      // Interval matching: cents comparison within tolerance for all value types
-      // (ratio-based sources included — an exact ratio match has a cents distance of 0)
-      if (Math.abs(computedInterval.cents - cellInterval.cents) <= centsTolerance) {
-        // Match within tolerance: Recursively continue building sequence
-        buildSequences([...pitchClasses, candidateCell], i + 1, intervalIndex + 1);
-        break; // Found acceptable match, no need to continue this loop
+      if (deviation <= centsTolerance) {
+        candidates.push({ index: i, cell: candidateCell, deviation });
       } else if (Math.abs(cellInterval.cents) + centsTolerance < Math.abs(computedInterval.cents)) {
         // Early termination: We've exceeded the tolerance threshold, stop searching
         break;
       }
+    }
+
+    // Prefer the closest match (the exact note has deviation 0) and backtrack to
+    // the next-closest candidate only if that path dead-ends — a greedy first-in-
+    // pitch-order pick would commit to a near-miss neighbor and lose the whole
+    // sequence when its path fails. At most one completed sequence per branch.
+    candidates.sort((a, b) => a.deviation - b.deviation);
+    for (const candidate of candidates) {
+      const sequencesBefore = sequences.length;
+      buildSequences([...pitchClasses, candidate.cell], candidate.index + 1, intervalIndex + 1);
+      if (sequences.length > sequencesBefore) break;
     }
   }
 
@@ -615,21 +625,29 @@ export function canTransposeMaqamToNote(
     }
     
     const lastCell = pitchClasses[pitchClasses.length - 1];
+    const cellInterval = intervalPattern[intervalIndex];
 
+    // Cents comparison within tolerance for all value types (ratio-based included);
+    // collect all candidates, then try closest-first with backtracking — see
+    // calculatePitchClassTranspositions for the rationale
+    const candidates: { index: number; cell: PitchClass; deviation: number }[] = [];
     for (let i = cellIndex; i < allPitchClasses.length; i++) {
       const candidateCell = allPitchClasses[i];
-
-      const cellInterval = intervalPattern[intervalIndex];
       const computedInterval = calculateInterval(lastCell, candidateCell);
+      const deviation = Math.abs(computedInterval.cents - cellInterval.cents);
 
-      // Cents comparison within tolerance for all value types (ratio-based included)
-      if (Math.abs(computedInterval.cents - cellInterval.cents) <= centsTolerance) {
-        return buildSequence([...pitchClasses, candidateCell], i + 1, intervalIndex + 1);
+      if (deviation <= centsTolerance) {
+        candidates.push({ index: i, cell: candidateCell, deviation });
       } else if (Math.abs(cellInterval.cents) + centsTolerance < Math.abs(computedInterval.cents)) {
         break; // We've gone too far
       }
     }
-    
+
+    candidates.sort((a, b) => a.deviation - b.deviation);
+    for (const candidate of candidates) {
+      if (buildSequence([...pitchClasses, candidate.cell], candidate.index + 1, intervalIndex + 1)) return true;
+    }
+
     return false; // Couldn't find a matching interval
   }
 
