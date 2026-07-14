@@ -893,9 +893,14 @@ const MaqamTranspositions: React.FC = () => {
                       {" "}
                       ({getDisplayName(pitchClasses[0].noteName, "note")} / <span dir="ltr">{getEnglishNoteName(pitchClasses[0].noteName)}</span>)
                     </span>
-                    <span className="maqam-jins-transpositions-shared__darajat-al-istiqrar">
-                      {t("maqam.darajatAlIstiqrar")}
-                    </span>
+                    {/* Only the canonical tonic in its proper octave gets the darajat
+                        al-istiqrar label — octave-register siblings share
+                        transposition=false but are not the conventional finalis */}
+                    {pitchClasses[0].noteName === selectedMaqamData?.getAscendingNoteNames()[0] && (
+                      <span className="maqam-jins-transpositions-shared__darajat-al-istiqrar">
+                        {t("maqam.darajatAlIstiqrar")}
+                      </span>
+                    )}
                   </button>
                 ) : (
                   <button 
