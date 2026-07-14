@@ -157,6 +157,11 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
   const keyToPitchClassMapping = useMemo<Record<string, PitchClass>>(() => {
     const mapping: Record<string, PitchClass> = {};
 
+    // Octave shifts beyond the tuning system's range return empty pitch classes
+    // (noteName "", frequency "") — those keys must stay unmapped/silent
+    const isPlayable = (pitchClass: PitchClass | undefined): pitchClass is PitchClass =>
+      !!pitchClass && pitchClass.noteName !== "" && Number.isFinite(parseFloat(pitchClass.frequency));
+
     if (selectedMaqam || selectedMaqamData) {
       // const ascendingNoteNames: string[] = selectedPitchClasses.map((pc) => pc.noteName);
       const ascendingMaqamPitchClasses = selectedPitchClasses; // previous implementation where we looked at the maqam itself for hte ascending notes to map to the ASDF row
@@ -199,16 +204,16 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         const ascendingShiftedPitchClass = shiftPitchClassByOctave(allPitchClasses, ascendingPitchClass, -1);
 
         // First assign first and third row mappings (lower priority)
-        if (firstRowCodes[i] && descendingPitchClass && !mapping[firstRowCodes[i]]) {
+        if (firstRowCodes[i] && isPlayable(descendingPitchClass) && !mapping[firstRowCodes[i]]) {
           mapping[firstRowCodes[i]] = descendingPitchClass;
         }
 
-        if (thirdRowCodes[i] && ascendingShiftedPitchClass && !mapping[thirdRowCodes[i]]) {
+        if (thirdRowCodes[i] && isPlayable(ascendingShiftedPitchClass) && !mapping[thirdRowCodes[i]]) {
           mapping[thirdRowCodes[i]] = ascendingShiftedPitchClass;
         }
 
         // Then assign second row mapping (higher priority - will overwrite if there's a conflict)
-        if (secondRowCodes[i] && ascendingPitchClass) {
+        if (secondRowCodes[i] && isPlayable(ascendingPitchClass)) {
           mapping[secondRowCodes[i]] = ascendingPitchClass;
         }
       }
@@ -218,12 +223,12 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         const loweredOctavePitchClass = shiftPitchClassByOctave(allPitchClasses, pitchClass, -1);
 
         // Assign third row first (lower priority)
-        if (thirdRowCodes[i] && loweredOctavePitchClass && !mapping[thirdRowCodes[i]]) {
+        if (thirdRowCodes[i] && isPlayable(loweredOctavePitchClass) && !mapping[thirdRowCodes[i]]) {
           mapping[thirdRowCodes[i]] = loweredOctavePitchClass;
         }
 
         // Then assign second row (higher priority - will overwrite if there's a conflict)
-        if (secondRowCodes[i] && pitchClass) {
+        if (secondRowCodes[i] && isPlayable(pitchClass)) {
           mapping[secondRowCodes[i]] = pitchClass;
         }
       }
@@ -599,18 +604,20 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
   // Define noteOn/noteOff before playNote/playSequence to satisfy hook dependency ordering.
 
   const noteOn = useCallback(function noteOn(pitchClass: PitchClass, midiVelocity: number = defaultNoteVelocity) {
+    // Unplayable pitch class (empty placeholder from an out-of-range octave
+    // shift, or an unparsable frequency): stay silent instead of sounding an
+    // unrelated fallback pitch
+    const baseFrequency = parseFloat(pitchClass?.frequency);
+    if (!pitchClass?.noteName || !Number.isFinite(baseFrequency) || baseFrequency <= 0) {
+      console.warn(`Unplayable pitch class "${pitchClass?.noteName}" (frequency: "${pitchClass?.frequency}") — staying silent`);
+      return;
+    }
     setActivePitchClasses((prev) => {
       if (prev.some((c) => c.frequency === pitchClass.frequency)) return prev;
       return [...prev, pitchClass];
     });
-    const baseFrequency = parseFloat(pitchClass.frequency);
     // Apply octave shift: multiply by 2^octaveShift
-    let frequency = baseFrequency * Math.pow(2, soundSettings.octaveShift);
-    // Validate frequency is finite, fallback to 440 Hz (A4) if invalid
-    if (!Number.isFinite(frequency) || frequency <= 0) {
-      console.warn(`Invalid frequency for pitch class ${pitchClass.noteName}: ${pitchClass.frequency}, using fallback 440 Hz`);
-      frequency = 440;
-    }
+    const frequency = baseFrequency * Math.pow(2, soundSettings.octaveShift);
     if (soundSettings.outputMode === "mute") return;
 
     // Use a quadratic velocity curve for more expressive dynamics
@@ -768,6 +775,29 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     scheduleTimeout(() => noteOff(pitchClass), givenDuration * 1000);
   }, [noteOn, noteOff, scheduleTimeout, soundSettings.duration]);
 
+  // Stops the dedicated drone oscillator with a short gain release so the
+  // waveform doesn't cut mid-cycle and click
+  const stopDroneOscillator = useCallback((fadeMs: number = 30) => {
+    const drone = droneOscRef.current;
+    if (!drone) return;
+    droneOscRef.current = null;
+
+    const audioCtx = audioCtxRef.current;
+    const stopAt = audioCtx ? audioCtx.currentTime + fadeMs / 1000 : undefined;
+    try {
+      if (audioCtx && drone.gainNode) {
+        const now = audioCtx.currentTime;
+        drone.gainNode.gain.cancelScheduledValues(now);
+        drone.gainNode.gain.setValueAtTime(drone.gainNode.gain.value, now);
+        drone.gainNode.gain.linearRampToValueAtTime(0, now + fadeMs / 1000);
+      }
+      if (Array.isArray(drone.oscillator)) drone.oscillator.forEach((osc) => osc.stop(stopAt));
+      else drone.oscillator.stop(stopAt);
+    } catch (err) {
+      console.warn("Error stopping drone oscillator:", err);
+    }
+  }, []);
+
   const playSequence = useCallback((
     pitchClasses: PitchClass[],
     ascending = true,
@@ -843,24 +873,24 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
       const n = pitchClasses.length;
       let cumulativeTimeSec = 0;
 
+      // Drone plays the tonic an octave below when that register exists in the
+      // tuning system; otherwise fall back to the tonic itself. Without this,
+      // an octave-0 tonic produced an empty pitch class (NaN frequency) and the
+      // drone silently played the 440 Hz fallback — an unrelated note.
+      const octaveBelowTonic = shiftPitchClassByOctave(allPitchClasses, pitchClasses[0], -1);
+      const dronePitchClass = octaveBelowTonic.noteName ? octaveBelowTonic : pitchClasses[0];
+
       if (soundSettings.drone) {
         // If output is MIDI, keep previous behavior using MIDI velocity
         if (soundSettings.outputMode === "midi") {
           const droneVel = typeof soundSettings.droneVolume === "number" ? Math.round(soundSettings.droneVolume * 127) : defaultDroneVelocity;
-          noteOn(shiftPitchClassByOctave(allPitchClasses, pitchClasses[0], -1), droneVel);
+          noteOn(dronePitchClass, droneVel);
         } else if (soundSettings.outputMode === "waveform") {
           // Create a dedicated oscillator for the drone connected to droneGainRef
           const audioCtx = audioCtxRef.current;
           if (audioCtx && droneGainRef.current) {
             // stop existing drone if present
-            if (droneOscRef.current) {
-              try {
-                if (Array.isArray(droneOscRef.current.oscillator)) droneOscRef.current.oscillator.forEach((o) => o.stop()); else droneOscRef.current.oscillator.stop();
-              } catch (err) {
-                console.warn("Error stopping existing drone oscillator:", err);
-              }
-              droneOscRef.current = null;
-            }
+            stopDroneOscillator();
 
             const osc = audioCtx.createOscillator();
             const waveform = soundSettings.waveform;
@@ -888,16 +918,21 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
               }
             }
 
-            const tonicPc = shiftPitchClassByOctave(allPitchClasses, pitchClasses[0], -1);
-            const freq = parseFloat(tonicPc.frequency);
+            const freq = parseFloat(dronePitchClass.frequency);
             // Validate frequency is finite before setting
             const safeFreq = (Number.isFinite(freq) && freq > 0) ? freq : 440;
             const safeTime = Number.isFinite(audioCtx.currentTime) ? audioCtx.currentTime : 0;
             try { osc.frequency.setValueAtTime(safeFreq, safeTime); } catch (err) { console.warn("Could not set drone oscillator frequency:", err, freq, audioCtx.currentTime); }
 
-            osc.connect(droneGainRef.current);
+            // Per-drone gain node with a short attack/release ramp so starting
+            // and stopping doesn't click
+            const droneNoteGain = audioCtx.createGain();
+            droneNoteGain.gain.setValueAtTime(0, safeTime);
+            droneNoteGain.gain.linearRampToValueAtTime(1, safeTime + 0.03);
+            osc.connect(droneNoteGain);
+            droneNoteGain.connect(droneGainRef.current);
             osc.start();
-            droneOscRef.current = { oscillator: osc, fraction: tonicPc.fraction };
+            droneOscRef.current = { oscillator: osc, gainNode: droneNoteGain, fraction: dronePitchClass.fraction };
           } else {
             // Fallback: use noteOn which handles both waveform and MIDI in its own way
             const droneVel = typeof soundSettings.droneVolume === "number" ? Math.round(soundSettings.droneVolume * 127) : defaultDroneVelocity;
@@ -985,15 +1020,9 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         scheduleTimeout(() => {
           // stop drone oscillator if waveform
           if (soundSettings.outputMode === "waveform" && droneOscRef.current) {
-            try {
-              const d = droneOscRef.current;
-              if (Array.isArray(d.oscillator)) d.oscillator.forEach((o) => o.stop()); else d.oscillator.stop();
-            } catch (err) {
-              console.warn("Error stopping drone oscillator:", err);
-            }
-            droneOscRef.current = null;
+            stopDroneOscillator();
           } else {
-            noteOff(shiftPitchClassByOctave(allPitchClasses, pitchClasses[0], -1));
+            noteOff(dronePitchClass);
           }
         }, totalSeqMs);
       }
@@ -1002,7 +1031,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         resolve();
       }, totalSeqMs);
     });
-  }, [allPitchClasses, noteOff, noteOn, scheduleTimeout, selectedMaqam, selectedMaqamData, selectedPitchClasses, soundSettings.drone, soundSettings.selectedPattern, soundSettings.tempo]);
+  }, [allPitchClasses, noteOff, noteOn, scheduleTimeout, selectedMaqam, selectedMaqamData, selectedPitchClasses, soundSettings.drone, soundSettings.selectedPattern, soundSettings.tempo, stopDroneOscillator]);
 
 
   const stopAllSounds = useCallback(function stopAllSounds() {
@@ -1027,19 +1056,8 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     }
     activeNotesRef.current.clear();
 
-    // Stop drone oscillator if it's running
-    if (droneOscRef.current) {
-      try {
-        if (Array.isArray(droneOscRef.current.oscillator)) {
-          droneOscRef.current.oscillator.forEach((osc) => osc.stop(audioCtx ? now + FADEOUT_MS / 1000 : undefined));
-        } else {
-          droneOscRef.current.oscillator.stop(audioCtx ? now + FADEOUT_MS / 1000 : undefined);
-        }
-      } catch (err) {
-        console.warn("Error stopping drone oscillator:", err);
-      }
-      droneOscRef.current = null;
-    }
+    // Stop drone oscillator if it's running (with its own release ramp)
+    stopDroneOscillator();
 
     // Send note off for all active MIDI notes
     if (soundSettings.useMPE) {
@@ -1064,7 +1082,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     midiActiveNotesRef.current.clear();
 
     setActivePitchClasses([]);
-  }, [sendMidiMessage, soundSettings.useMPE]);
+  }, [sendMidiMessage, soundSettings.useMPE, stopDroneOscillator]);
 
   const clearHangingNotes = useCallback(function clearHangingNotes() {
     // Fade out all active voices over 5ms before stopping oscillators
