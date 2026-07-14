@@ -470,8 +470,10 @@ export default function AppClient() {
     }
 
     // Only include the modulations chain while the modulations page is active,
-    // so the shared URL restores exactly the view being looked at.
-    if (selectedMenu === "modulation" && modulationChain && modulationChain.length > 0) {
+    // so the shared URL restores exactly the view being looked at. A single-hop
+    // chain is just the selected maqam with no modulations, so it is omitted —
+    // the param's presence would otherwise force the app to the modulations page.
+    if (selectedMenu === "modulation" && modulationChain && modulationChain.length > 1) {
       const modulationsParam = createModulationsParameter(modulationChain, maqamat);
       if (modulationsParam) params.push(`modulations=${modulationsParam}`);
     }
