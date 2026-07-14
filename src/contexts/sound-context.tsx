@@ -49,12 +49,21 @@ interface MidiPortInfo {
   name: string;
 }
 
+/**
+ * A pitch class in the active (currently sounding) set. Notes triggered from the
+ * QWERTY keyboard carry the melodic direction of the row that triggered them
+ * (asdf/zxcv rows → ascending, qwerty row → descending) so the transposition
+ * tables can highlight only the matching direction. Notes from other sources
+ * (mouse, sequence playback) are untagged and highlight both directions.
+ */
+export type ActivePitchClass = PitchClass & { melodicDirection?: "ascending" | "descending" };
+
 interface SoundContextInterface {
   playNote: (pitchClass: PitchClass, duration?: number, velocity?: number) => void;
   soundSettings: SoundSettings;
   setSoundSettings: React.Dispatch<React.SetStateAction<SoundSettings>>;
-  activePitchClasses: PitchClass[];
-  setActivePitchClasses: React.Dispatch<React.SetStateAction<PitchClass[]>>;
+  activePitchClasses: ActivePitchClass[];
+  setActivePitchClasses: React.Dispatch<React.SetStateAction<ActivePitchClass[]>>;
   playSequence: (pitchClasses: PitchClass[], ascending?: boolean, ascendingPitchClasses?: PitchClass[], velocity?: number | ((noteIdx: number, patternIdx: number) => number)) => Promise<void>;
   noteOn: (pitchClass: PitchClass, velocity?: number) => void;
   noteOff: (pitchClass: PitchClass) => void;
@@ -63,7 +72,7 @@ interface SoundContextInterface {
   setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
   clearHangingNotes: () => void;
   stopAllSounds: () => void;
-  keyToPitchClassMapping: Record<string, PitchClass>;
+  keyToPitchClassMapping: Record<string, ActivePitchClass>;
   pitchClassToKeyMapping: Record<string, string>;
   midiToPitchClassMapping: Record<number, PitchClass>;
   pitchClassToMidiMapping: Record<string, number>;
@@ -113,7 +122,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     availableChannels: Array.from({ length: 14 }, (_, i) => i + 2), // channels 2-15
   });
 
-  const [activePitchClasses, setActivePitchClasses] = useState<PitchClass[]>([]);
+  const [activePitchClasses, setActivePitchClasses] = useState<ActivePitchClass[]>([]);
 
   const audioCtxRef = useRef<AudioContext | null>(null);
   const masterGainRef = useRef<GainNode | null>(null);
@@ -154,8 +163,8 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
   };
 
   // Centralized keyboard mapping: Key code -> PitchClass
-  const keyToPitchClassMapping = useMemo<Record<string, PitchClass>>(() => {
-    const mapping: Record<string, PitchClass> = {};
+  const keyToPitchClassMapping = useMemo<Record<string, ActivePitchClass>>(() => {
+    const mapping: Record<string, ActivePitchClass> = {};
 
     // Octave shifts beyond the tuning system's range return empty pitch classes
     // (noteName "", frequency "") — those keys must stay unmapped/silent
@@ -203,18 +212,20 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         const descendingPitchClass = extendedDescendingPitchClasses[i];
         const ascendingShiftedPitchClass = shiftPitchClassByOctave(allPitchClasses, ascendingPitchClass, -1);
 
-        // First assign first and third row mappings (lower priority)
+        // First assign first and third row mappings (lower priority).
+        // Rows carry their melodic direction so table highlighting can follow
+        // the row being played: qwerty row = descending, asdf/zxcv = ascending.
         if (firstRowCodes[i] && isPlayable(descendingPitchClass) && !mapping[firstRowCodes[i]]) {
-          mapping[firstRowCodes[i]] = descendingPitchClass;
+          mapping[firstRowCodes[i]] = { ...descendingPitchClass, melodicDirection: "descending" };
         }
 
         if (thirdRowCodes[i] && isPlayable(ascendingShiftedPitchClass) && !mapping[thirdRowCodes[i]]) {
-          mapping[thirdRowCodes[i]] = ascendingShiftedPitchClass;
+          mapping[thirdRowCodes[i]] = { ...ascendingShiftedPitchClass, melodicDirection: "ascending" };
         }
 
         // Then assign second row mapping (higher priority - will overwrite if there's a conflict)
         if (secondRowCodes[i] && isPlayable(ascendingPitchClass)) {
-          mapping[secondRowCodes[i]] = ascendingPitchClass;
+          mapping[secondRowCodes[i]] = { ...ascendingPitchClass, melodicDirection: "ascending" };
         }
       }
     } else {
@@ -224,12 +235,12 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
         // Assign third row first (lower priority)
         if (thirdRowCodes[i] && isPlayable(loweredOctavePitchClass) && !mapping[thirdRowCodes[i]]) {
-          mapping[thirdRowCodes[i]] = loweredOctavePitchClass;
+          mapping[thirdRowCodes[i]] = { ...loweredOctavePitchClass, melodicDirection: "ascending" };
         }
 
         // Then assign second row (higher priority - will overwrite if there's a conflict)
         if (secondRowCodes[i] && isPlayable(pitchClass)) {
-          mapping[secondRowCodes[i]] = pitchClass;
+          mapping[secondRowCodes[i]] = { ...pitchClass, melodicDirection: "ascending" };
         }
       }
     }
@@ -987,10 +998,14 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
                 noteVelocity = velocityArg;
               }
 
+              // Tag playback notes with the direction of this pass so table
+              // highlighting follows the ascending/descending row being played
+              const taggedPitchClass: ActivePitchClass = { ...pitchClassToPlay, melodicDirection: ascending ? "ascending" : "descending" };
+
               scheduleTimeout(() => {
-                playNote(pitchClassToPlay, durSec, noteVelocity);
+                playNote(taggedPitchClass, durSec, noteVelocity);
                 // schedule noteOff for waveform output
-                scheduleTimeout(() => noteOff(pitchClassToPlay), durSec * 1000);
+                scheduleTimeout(() => noteOff(taggedPitchClass), durSec * 1000);
               }, cumulativeTimeSec * 1000);
             }
 

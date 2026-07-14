@@ -611,17 +611,26 @@ export default function JinsTranspositions() {
     const numberOfFilterRows = Object.keys(filters).filter((key) => !disabledFilters.includes(key) && key !== valueType && filters[key as keyof typeof filters]).length;
 
     function renderTransposition(jins: Jins, index: number) {
-      // Helper function to check if a pitch class is currently active (with octave wrapping)
-      // Matches across all octaves - if any octave of this pitch class is active, highlight it
-      const isPitchClassActive = (pitchClass: PitchClass) => {
-        return activePitchClasses.some(
-          (ac) => ac.pitchClassIndex === pitchClass.pitchClassIndex
-        );
-      };
-
       const transposition = jins.transposition;
       // Apply sequential English name spellings for melodic sequences
       const pitchClasses = renderPitchClassSpellings(jins.jinsPitchClasses);
+
+      // Highlight logic: the jins table is an ascending sequence, so
+      // descending-tagged notes (qwerty row / descending playback) don't light
+      // it up; untagged notes (mouse, MIDI) always do. An active note whose
+      // exact register appears in the table highlights only that cell; actives
+      // beyond the table's range wrap octave-blind, cycling back from the tonic.
+      const rowActives = activePitchClasses.filter((ac) => !ac.melodicDirection || ac.melodicDirection === "ascending");
+      // Highlighting is degree-based: among same-index cells only the lowest
+      // register represents the scale degree — an octave-duplicate cell never
+      // lights on behalf of its lower sibling, and cycling wraps back to the
+      // tonic from the last jins note.
+      const isPitchClassActive = (pitchClass: PitchClass) => {
+        const sameIndexCells = pitchClasses.filter((rowPitchClass) => rowPitchClass.pitchClassIndex === pitchClass.pitchClassIndex);
+        const lowestOctave = Math.min(...sameIndexCells.map((cell) => cell.octave));
+        if (pitchClass.octave !== lowestOctave) return false;
+        return rowActives.some((ac) => ac.pitchClassIndex === pitchClass.pitchClassIndex);
+      };
       // Octave-register siblings share transposition=false but only the canonical
       // tonic in its proper octave gets the tahlil-style title (PAO name + badge)
       const isCanonicalTonic = !transposition && pitchClasses[0]?.noteName === selectedJinsData?.getNoteNames()[0];
