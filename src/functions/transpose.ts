@@ -521,10 +521,36 @@ export function calculateJinsTranspositions(allPitchClasses: PitchClass[], jinsD
       };
     });
 
-  const tahlilTransposition = jinsTranspositions.find((transposition) =>
-    sameModalDegreeSlot(transposition.jinsPitchClasses[0].noteName, jinsNoteNames[0])
-  );
-  const jinsTranspositionsWithoutTahlil = jinsTranspositions.filter((transposition) => transposition !== tahlilTransposition);
+  // The tahlil must be the transposition on the exact canonical first note
+  // (e.g. rāst → rāst/C3), not an octave sibling (qarār rāst/C2, kirdān/C4).
+  // Fall back to modal-degree slot match only if no exact match exists.
+  const canonicalFirstNote = jinsNoteNames[0];
+  const tahlilTransposition =
+    jinsTranspositions.find(
+      (transposition) => transposition.jinsPitchClasses[0].noteName === canonicalFirstNote
+    ) ??
+    jinsTranspositions.find((transposition) =>
+      sameModalDegreeSlot(transposition.jinsPitchClasses[0].noteName, canonicalFirstNote)
+    );
+  // Octave-register siblings of the tahlil (same modal degree slot, different
+  // register — e.g. qarār rāst vs rāst vs kirdān) keep transposition=false
+  // by design (register shift is not taṣwīr), but give them a distinguishing
+  // name suffix so name-based lookups in the UI (open/collapse state, scroll
+  // targets) are unambiguous — mirrors calculateMaqamTranspositions.
+  const jinsTranspositionsWithoutTahlil = jinsTranspositions
+    .filter((transposition) => transposition !== tahlilTransposition)
+    .map((transposition) => {
+      if (
+        !transposition.transposition &&
+        transposition.jinsPitchClasses[0].noteName !== canonicalFirstNote
+      ) {
+        return {
+          ...transposition,
+          name: `${jinsData.getName()} al-${transposition.jinsPitchClasses[0].noteName}`,
+        };
+      }
+      return transposition;
+    });
 
   if (withTahlil && tahlilTransposition) return [{ ...tahlilTransposition, name: jinsData.getName(), transposition: false }, ...jinsTranspositionsWithoutTahlil];
   else return jinsTranspositionsWithoutTahlil;

@@ -542,10 +542,13 @@ export default function JinsTranspositions() {
         }, URL_SCROLL_TIMEOUT_MS);
       } else {
         // Case 2: No jins is selected (tahlil case)
-        // Find and open the analysis table (where transposition is falsy)
-        const analysisTable = sortedTables.find((t) => !t.jins.transposition);
+        // Open the tahlil — first element of the unsorted list. Octave-register
+        // siblings also have transposition=false, so match by its exact name
+        // (mirrors maqam-transpositions)
+        const tahlilName = jinsTranspositions[0]?.name;
+        const analysisTable = sortedTables.find((t) => t.jins.name === tahlilName);
         if (analysisTable) {
-          const analysisIndex = sortedTables.findIndex((t) => !t.jins.transposition);
+          const analysisIndex = sortedTables.findIndex((t) => t.jins.name === tahlilName);
           setOpenTranspositions([analysisTable.jins.name]);
 
           // Ensure first batch is visible (or enough to include the analysis table)
@@ -562,7 +565,7 @@ export default function JinsTranspositions() {
         }
       }
     }
-  }, [selectedJins, sortedTables, selectedJinsData]);
+  }, [selectedJins, sortedTables, selectedJinsData, jinsTranspositions]);
 
   useEffect(() => {
     if (!sentinelRef.current) return;
@@ -609,6 +612,9 @@ export default function JinsTranspositions() {
       const transposition = jins.transposition;
       // Apply sequential English name spellings for melodic sequences
       const pitchClasses = renderPitchClassSpellings(jins.jinsPitchClasses);
+      // Octave-register siblings share transposition=false but only the canonical
+      // tonic in its proper octave gets the tahlil-style title (PAO name + badge)
+      const isCanonicalTonic = !transposition && pitchClasses[0]?.noteName === selectedJinsData?.getNoteNames()[0];
       const intervals = jins.jinsPitchClassIntervals;
       const colCount = 2 + (pitchClasses.length - 1) * 2;
       const open = openTranspositions.includes(jins.name);
@@ -626,9 +632,9 @@ export default function JinsTranspositions() {
             </td>
 
             <td className="jins-transpositions__jins-name-row" colSpan={2 + (pitchClasses.length - 1) * 2}>
-              {!transposition ? (
-                <button 
-                  className="jins-transpositions__transposition-title" 
+              {isCanonicalTonic ? (
+                <button
+                  className="jins-transpositions__transposition-title"
                   onClick={(e) => toggleShowDetails(jins.name, e)}
                 >
                   <span>
@@ -636,14 +642,9 @@ export default function JinsTranspositions() {
                     {" "}
                     ({getDisplayName(pitchClasses[0].noteName, "note")} / <span dir="ltr">{getEnglishNoteName(pitchClasses[0].noteName)}</span>)
                   </span>
-                  {/* Only the canonical tonic in its proper octave gets the darajat
-                      al-istiqrar label — octave-register siblings share
-                      transposition=false but are not the conventional finalis */}
-                  {pitchClasses[0].noteName === selectedJinsData?.getNoteNames()[0] && (
-                    <span className="jins-transpositions__darajat-al-istiqrar">
-                      {t("jins.darajatAlIstiqrar")}
-                    </span>
-                  )}
+                  <span className="jins-transpositions__darajat-al-istiqrar">
+                    {t("jins.darajatAlIstiqrar")}
+                  </span>
                 </button>
               ) : (
                 <button

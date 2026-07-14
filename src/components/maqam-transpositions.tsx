@@ -860,6 +860,9 @@ const MaqamTranspositions: React.FC = () => {
 
       const transposition = maqam.transposition;
       const pitchClasses = ascending ? ascendingTranspositionPitchClasses : descendingTranspositionPitchClasses;
+      // Octave-register siblings share transposition=false but only the canonical
+      // tonic in its proper octave gets the tahlil-style title (PAO name + badge)
+      const isCanonicalTonic = !transposition && pitchClasses[0]?.noteName === selectedMaqamData?.getAscendingNoteNames()[0];
       const oppositePitchClasses = ascending ? descendingTranspositionPitchClasses : ascendingTranspositionPitchClasses;
       const intervals = ascending ? ascendingIntervals : descendingIntervals;
       const open = openTranspositions.includes(maqam.name);
@@ -883,9 +886,9 @@ const MaqamTranspositions: React.FC = () => {
                 className="maqam-jins-transpositions-shared__title-cell"
                 colSpan={4 + (pitchClasses.length - 1) * 2}
               >
-                {!transposition ? (
-                  <button 
-                    className="maqam-jins-transpositions-shared__transposition-title" 
+                {isCanonicalTonic ? (
+                  <button
+                    className="maqam-jins-transpositions-shared__transposition-title"
                     onClick={(e) => toggleShowDetails(maqam.name, e)}
                   >
                     <span>
@@ -893,14 +896,9 @@ const MaqamTranspositions: React.FC = () => {
                       {" "}
                       ({getDisplayName(pitchClasses[0].noteName, "note")} / <span dir="ltr">{getEnglishNoteName(pitchClasses[0].noteName)}</span>)
                     </span>
-                    {/* Only the canonical tonic in its proper octave gets the darajat
-                        al-istiqrar label — octave-register siblings share
-                        transposition=false but are not the conventional finalis */}
-                    {pitchClasses[0].noteName === selectedMaqamData?.getAscendingNoteNames()[0] && (
-                      <span className="maqam-jins-transpositions-shared__darajat-al-istiqrar">
-                        {t("maqam.darajatAlIstiqrar")}
-                      </span>
-                    )}
+                    <span className="maqam-jins-transpositions-shared__darajat-al-istiqrar">
+                      {t("maqam.darajatAlIstiqrar")}
+                    </span>
                   </button>
                 ) : (
                   <button 
