@@ -218,6 +218,16 @@ export default function JinsTranspositions() {
     [isToggling, jinsTranspositions, openTranspositions]
   );
 
+  // Title buttons: text is selectable, so only clicks on the text spans toggle
+  // (the button's empty area shows a default cursor), and a click that finishes
+  // a text selection must not toggle the row
+  const handleTitleClick = (jinsName: string, e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) return;
+    const selection = typeof window !== "undefined" ? window.getSelection() : null;
+    if (selection && !selection.isCollapsed) return;
+    toggleShowDetails(jinsName, e);
+  };
+
   // Copy jins table to clipboard
   const copyJinsTableToClipboard = useCallback(
     async (jins: Jins) => {
@@ -632,10 +642,21 @@ export default function JinsTranspositions() {
             </td>
 
             <td className="jins-transpositions__jins-name-row" colSpan={2 + (pitchClasses.length - 1) * 2}>
+              {/* span[role=button] instead of <button>: browsers refuse text
+                  selection inside form controls, and these titles must be
+                  selectable/copyable */}
               {isCanonicalTonic ? (
-                <button
+                <span
                   className="jins-transpositions__transposition-title"
-                  onClick={(e) => toggleShowDetails(jins.name, e)}
+                  role="button"
+                  tabIndex={0}
+                  onClick={(e) => handleTitleClick(jins.name, e)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      toggleShowDetails(jins.name);
+                    }
+                  }}
                 >
                   <span>
                     {getDisplayName(jins.name, 'jins')}
@@ -645,11 +666,19 @@ export default function JinsTranspositions() {
                   <span className="jins-transpositions__darajat-al-istiqrar">
                     {t("jins.darajatAlIstiqrar")}
                   </span>
-                </button>
+                </span>
               ) : (
-                <button
+                <span
                   className="jins-transpositions__transposition-title"
-                  onClick={(e) => toggleShowDetails(jins.name, e)}
+                  role="button"
+                  tabIndex={0}
+                  onClick={(e) => handleTitleClick(jins.name, e)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      toggleShowDetails(jins.name);
+                    }
+                  }}
                 >
                   <span>
                     {`${getDisplayName(jins.name, "jins")}`}{" "}
@@ -657,7 +686,7 @@ export default function JinsTranspositions() {
                       {`(${getEnglishNoteName(pitchClasses[0].noteName)})`}
                     </span>
                   </span>
-                </button>
+                </span>
               )}
               <span className="jins-transpositions__buttons">
                 <button className="jins-transpositions__button--toggle" onClick={(e) => toggleShowDetails(jins.name, e)}>

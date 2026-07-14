@@ -645,7 +645,6 @@
     text-align: left;
     background-color: transparent;
     scroll-margin-top: calc($top-navbar-height + 120px);
-    cursor: pointer;
     transition: opacity 0.2s ease;
 
     &[class*="--toggling"] {
@@ -690,8 +689,17 @@
     font-family: inherit;
     color: inherit;
     text-align: left;
-    cursor: pointer;
+    cursor: default;
     width: auto;
+
+    // Title text is selectable; only the text itself advertises the
+    // expand/collapse click (clicks on the button's empty area are ignored)
+    user-select: text;
+    -webkit-user-select: text;
+
+    > span {
+      cursor: pointer;
+    }
 
     > span:first-child {
       white-space: nowrap;

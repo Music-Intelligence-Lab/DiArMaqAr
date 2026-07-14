@@ -233,6 +233,16 @@ const MaqamTranspositions: React.FC = () => {
     [isToggling, maqamTranspositions, openTranspositions]
   );
 
+  // Title buttons: text is selectable, so only clicks on the text spans toggle
+  // (the button's empty area shows a default cursor), and a click that finishes
+  // a text selection must not toggle the row
+  const handleTitleClick = (maqamName: string, e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) return;
+    const selection = typeof window !== "undefined" ? window.getSelection() : null;
+    if (selection && !selection.isCollapsed) return;
+    toggleShowDetails(maqamName, e);
+  };
+
   useEffect(() => {
     setVisibleCount(BATCH_SIZE);
     // Always open tahlil (first element) on load
@@ -886,10 +896,21 @@ const MaqamTranspositions: React.FC = () => {
                 className="maqam-jins-transpositions-shared__title-cell"
                 colSpan={4 + (pitchClasses.length - 1) * 2}
               >
+                {/* span[role=button] instead of <button>: browsers refuse text
+                    selection inside form controls, and these titles must be
+                    selectable/copyable */}
                 {isCanonicalTonic ? (
-                  <button
+                  <span
                     className="maqam-jins-transpositions-shared__transposition-title"
-                    onClick={(e) => toggleShowDetails(maqam.name, e)}
+                    role="button"
+                    tabIndex={0}
+                    onClick={(e) => handleTitleClick(maqam.name, e)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        toggleShowDetails(maqam.name);
+                      }
+                    }}
                   >
                     <span>
                       {getDisplayName(maqam.name, 'maqam')}
@@ -899,18 +920,26 @@ const MaqamTranspositions: React.FC = () => {
                     <span className="maqam-jins-transpositions-shared__darajat-al-istiqrar">
                       {t("maqam.darajatAlIstiqrar")}
                     </span>
-                  </button>
+                  </span>
                 ) : (
-                  <button 
-                    className="maqam-jins-transpositions-shared__transposition-title" 
-                    onClick={(e) => toggleShowDetails(maqam.name, e)}
+                  <span
+                    className="maqam-jins-transpositions-shared__transposition-title"
+                    role="button"
+                    tabIndex={0}
+                    onClick={(e) => handleTitleClick(maqam.name, e)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        toggleShowDetails(maqam.name);
+                      }
+                    }}
                   >
                     <span>
                       {getDisplayName(maqam.name, 'maqam')}
                       {" "}
                       (<span dir="ltr">{getEnglishNoteName(pitchClasses[0].noteName)}</span>)
                     </span>
-                  </button>
+                  </span>
                 )}
                 <span className="maqam-jins-transpositions-shared__buttons">
                   <button className="maqam-jins-transpositions-shared__button--toggle" onClick={(e) => toggleShowDetails(maqam.name, e)}>
