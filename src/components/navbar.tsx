@@ -12,6 +12,7 @@ import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import NavigationMenu from "./navigation-menu";
 import { octaveOneNoteNames } from "@/models/NoteName";
 import calculateNumberOfModulations from "@/functions/calculateNumberOfModulations";
+import useTranspositionsContext from "@/contexts/transpositions-context";
 
 export default function Navbar() {
   const { showAdminTabs, setShowAdminTabs, selectedMenu, setSelectedMenu } =
@@ -36,6 +37,20 @@ export default function Navbar() {
     selectedIndices,
     allPitchClasses,
   } = useAppContext();
+
+  const { jinsTranspositions, maqamTranspositions } = useTranspositionsContext();
+
+  // Same convention as the maqam/jins managers: octave-1 transpositions out of
+  // the tuning system's pitch classes (candidate tonic positions)
+  const numberOfPitchClasses = selectedTuningSystem ? selectedTuningSystem.getOriginalPitchClassValues().length : 0;
+  const maqamTranspositionCount = useMemo(
+    () => maqamTranspositions.filter((transposition) => transposition.ascendingPitchClasses[0]?.octave === 1).length,
+    [maqamTranspositions]
+  );
+  const jinsTranspositionCount = useMemo(
+    () => jinsTranspositions.filter((transposition) => transposition.jinsPitchClasses[0]?.octave === 1).length,
+    [jinsTranspositions]
+  );
 
   const selectedSayr: Sayr | null =
     selectedMaqamData && maqamSayrId
@@ -175,6 +190,11 @@ export default function Navbar() {
                     selectedJinsData.getNoteNames()[0]
                   )})`}
             </span>
+            {selectedJinsData && (
+              <span className="navbar__bottom-bar-item_tab-subtitle">
+                {`${t('jins.transpositions')}: ${jinsTranspositionCount}/${numberOfPitchClasses}`}
+              </span>
+            )}
           </button>
         )
       },
@@ -233,6 +253,11 @@ export default function Navbar() {
                     selectedMaqamData.getAscendingNoteNames()[0]
                   )})`}
             </span>
+            {selectedMaqamData && (
+              <span className="navbar__bottom-bar-item_tab-subtitle">
+                {`${t('maqam.transpositions')}: ${maqamTranspositionCount}/${numberOfPitchClasses}`}
+              </span>
+            )}
           </button>
         )
       },
