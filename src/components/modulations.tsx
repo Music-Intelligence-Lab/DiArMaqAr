@@ -728,38 +728,35 @@ export default function Modulations() {
                           </span>
                         ))}
                     </div>
-                    {/* Only show descending if different from ascending */}
-                    {displayAscendingNoteNames[5] !== displayDescendingNoteNames[5] && (
-                      <div className="modulations__modulations-list">
-                        <span className="modulations__header">
-                          <span className="modulations__header-text">
-                            {t('modulations.sixthDescending')}: <br />{" "}
-                          </span>
-                          {getDisplayName(displayDescendingNoteNames[5], 'note')} ({modulations?.modulationsOnSixthDegreeDesc ? modulations.modulationsOnSixthDegreeDesc.length : 0})
+                    <div className="modulations__modulations-list">
+                      <span className="modulations__header">
+                        <span className="modulations__header-text">
+                          {t('modulations.sixthDescending')}: <br />{" "}
                         </span>
-                        {[...modulations.modulationsOnSixthDegreeDesc]
-                          .sort((a, b) => a.name.localeCompare(b.name))
-                          .map((hop, index) => (
-                            <span
-                              className="modulations__modulation-item"
-                              key={index}
-                              onClick={() => {
-                                if (!modulationModes[stackIdx]) {
-                                  setCollapsedHops((prev) => {
-                                    const updated = [...prev];
-                                    updated[stackIdx] = true;
-                                    return updated;
-                                  });
-                                }
-                                handleModulationClick(hop, stackIdx);
-                              }}
-                              style={{ cursor: "pointer" }}
-                            >
-                              {getDisplayName(hop.name, modulationModes[stackIdx] ? 'jins' : 'maqam')}
-                            </span>
-                          ))}
-                      </div>
-                    )}
+                        {getDisplayName(displayDescendingNoteNames[5], 'note')} ({modulations?.modulationsOnSixthDegreeDesc ? modulations.modulationsOnSixthDegreeDesc.length : 0})
+                      </span>
+                      {[...modulations.modulationsOnSixthDegreeDesc]
+                        .sort((a, b) => a.name.localeCompare(b.name))
+                        .map((hop, index) => (
+                          <span
+                            className="modulations__modulation-item"
+                            key={index}
+                            onClick={() => {
+                              if (!modulationModes[stackIdx]) {
+                                setCollapsedHops((prev) => {
+                                  const updated = [...prev];
+                                  updated[stackIdx] = true;
+                                  return updated;
+                                });
+                              }
+                              handleModulationClick(hop, stackIdx);
+                            }}
+                            style={{ cursor: "pointer" }}
+                          >
+                            {getDisplayName(hop.name, modulationModes[stackIdx] ? 'jins' : 'maqam')}
+                          </span>
+                        ))}
+                    </div>
                   </>
                 );
               })()}
