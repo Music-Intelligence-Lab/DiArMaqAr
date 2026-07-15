@@ -211,14 +211,24 @@ export default function modulate(
 
       const currentAscendingNotes = maqamOrJins.getAscendingNoteNames();
 
+      // The source maqam on its own tonic is never a modulation option: staying
+      // put is not an intiqāl, and excluding it avoids the edge case where it
+      // would be the only "modulation" offered on the tonic degree
+      const isSourceMaqamOnSourceTonic = (transpositionTonic: string | undefined) =>
+        maqamOrJins.getId() === sourceMaqamTransposition.maqamId && transpositionTonic === sourceAscendingNotes[0];
+
       // Add original maqam if different from source
-      transpositions = JSON.stringify(currentAscendingNotes) !== JSON.stringify(sourceAscendingNotes) ? [maqamOrJins.getTahlil(allPitchClasses)] : [];
+      transpositions =
+        JSON.stringify(currentAscendingNotes) !== JSON.stringify(sourceAscendingNotes) && !isSourceMaqamOnSourceTonic(currentAscendingNotes[0])
+          ? [maqamOrJins.getTahlil(allPitchClasses)]
+          : [];
 
       // Add all valid transpositions of this maqam (from cache if provided)
       const maqamTranspositions = maqamTranspositionsCache?.get(maqamOrJins.getId())
         ?? calculateMaqamTranspositions(allPitchClasses, allAjnas, maqamOrJins, true, centsTolerance);
       maqamTranspositions.forEach((maqamTransposition: Maqam) => {
         if (JSON.stringify(currentAscendingNotes) === JSON.stringify(maqamTransposition.ascendingPitchClasses.map((pitchClass: PitchClass) => pitchClass.noteName))) return;
+        if (isSourceMaqamOnSourceTonic(maqamTransposition.ascendingPitchClasses[0]?.noteName)) return;
         transpositions.push(maqamTransposition);
       });
     }
