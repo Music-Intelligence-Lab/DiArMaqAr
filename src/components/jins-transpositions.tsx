@@ -11,6 +11,7 @@ import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReference
 import { getIpnReferenceNoteNameWithOctave } from "@/functions/getIpnReferenceNoteName";
 import { renderPitchClassSpellings } from "@/functions/renderPitchClassIpnSpellings";
 import CentsToleranceInput from "@/components/cents-tolerance-input";
+import useRotateOverflowingCells from "@/hooks/use-rotate-overflowing-cells";
 import PitchClass from "@/models/PitchClass";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import useTranspositionsContext from "@/contexts/transpositions-context";
@@ -150,6 +151,8 @@ export default function JinsTranspositions() {
 
   const [visibleCount, setVisibleCount] = useState<number>(BATCH_SIZE);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
+  const rotateOverflowContainerRef = useRef<HTMLDivElement | null>(null);
+  useRotateOverflowingCells(rotateOverflowContainerRef);
   const [targetFirstNote, setTargetFirstNote] = useState<string | null>(null);
   const scrollTimeoutRef = useRef<number | null>(null);
   const [openTranspositions, setOpenTranspositions] = useState<string[]>([]);
@@ -990,15 +993,15 @@ export default function JinsTranspositions() {
 
     return (
       <>
-        <div className="jins-transpositions maqam-jins-transpositions-shared" key={language}>
-          <div className="jins-transpositions__sticky-header">
-            <div className="jins-transpositions__title-row" dir={language === "ar" ? "rtl" : "ltr"}>
+        <div className="jins-transpositions maqam-jins-transpositions-shared" key={language} ref={rotateOverflowContainerRef}>
+          <div className="maqam-jins-transpositions-shared__sticky-header">
+            <div className="maqam-jins-transpositions-shared__title-row" dir={language === "ar" ? "rtl" : "ltr"}>
               {t("jins.analysis")}: {`${getDisplayName(selectedJinsData.getName(), "jins")}`}{" "}
               {" "}
               / {t("jins.centsTolerance")}: <CentsToleranceInput className="maqam-jins-transpositions-shared__cents-tolerance-input" />
             </div>
 
-            <div className="jins-transpositions__filter-menu">
+            <div className="maqam-jins-transpositions-shared__filter-menu">
               {/* Filter order matches table row appearance order */}
               {[
                 "pitchClass",
@@ -1033,14 +1036,14 @@ export default function JinsTranspositions() {
                   <label
                     key={filterKey}
                     htmlFor={`filter-${filterKey}`}
-                    className={`jins-transpositions__filter-item ${filters[filterKey as keyof typeof filters] ? "jins-transpositions__filter-item_active" : ""}`}
+                    className={`maqam-jins-transpositions-shared__filter-item ${filters[filterKey as keyof typeof filters] ? "maqam-jins-transpositions-shared__filter-item_active" : ""}`}
                     // prevent the drawer (or parent) click handler from firing
                     onClick={(e) => e.stopPropagation()}
                   >
                     <input
                       id={`filter-${filterKey}`}
                       type="checkbox"
-                      className="jins-transpositions__filter-checkbox"
+                      className="maqam-jins-transpositions-shared__filter-checkbox"
                       checked={filters[filterKey as keyof typeof filters]}
                       disabled={isDisabled}
                       onChange={(e) => {
@@ -1052,7 +1055,7 @@ export default function JinsTranspositions() {
                         }));
                       }}
                     />
-                    <span className="jins-transpositions__filter-label">{t(`filter.${filterKey}`)}</span>
+                    <span className="maqam-jins-transpositions-shared__filter-label">{t(`filter.${filterKey}`)}</span>
                   </label>
                 );
 
@@ -1064,13 +1067,13 @@ export default function JinsTranspositions() {
                       <label
                         key={`originalValue-${valueType}`}
                         htmlFor={`filter-${valueType}`}
-                        className={`jins-transpositions__filter-item ${filters[valueType as keyof typeof filters] ? "jins-transpositions__filter-item_active" : ""}`}
+                        className={`maqam-jins-transpositions-shared__filter-item ${filters[valueType as keyof typeof filters] ? "maqam-jins-transpositions-shared__filter-item_active" : ""}`}
                         onClick={(e) => e.stopPropagation()}
                       >
                         <input
                           id={`filter-${valueType}`}
                           type="checkbox"
-                          className="jins-transpositions__filter-checkbox"
+                          className="maqam-jins-transpositions-shared__filter-checkbox"
                           checked={filters[valueType as keyof typeof filters]}
                           onChange={(e) => {
                             e.stopPropagation();
@@ -1080,7 +1083,7 @@ export default function JinsTranspositions() {
                             }));
                           }}
                         />
-                        <span className="jins-transpositions__filter-label">{t(`filter.${valueType}`)}</span>
+                        <span className="maqam-jins-transpositions-shared__filter-label">{t(`filter.${valueType}`)}</span>
                       </label>
                     </React.Fragment>
                   );

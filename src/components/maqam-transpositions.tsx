@@ -12,6 +12,7 @@ import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReference
 import { getIpnReferenceNoteName, getIpnReferenceNoteNameWithOctave } from "@/functions/getIpnReferenceNoteName";
 import { renderPitchClassSpellings } from "@/functions/renderPitchClassIpnSpellings";
 import CentsToleranceInput from "@/components/cents-tolerance-input";
+import useRotateOverflowingCells from "@/hooks/use-rotate-overflowing-cells";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import useTranspositionsContext from "@/contexts/transpositions-context";
 import StaffNotation from "./staff-notation";
@@ -163,6 +164,8 @@ const MaqamTranspositions: React.FC = () => {
   const [visibleCount, setVisibleCount] = useState<number>(BATCH_SIZE);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const stickyHeaderSentinelRef = useRef<HTMLDivElement | null>(null);
+  const rotateOverflowContainerRef = useRef<HTMLDivElement | null>(null);
+  useRotateOverflowingCells(rotateOverflowContainerRef);
   const [isHeaderStuck, setIsHeaderStuck] = useState(false);
   const [targetFirstNote, setTargetFirstNote] = useState<string | null>(null);
   // Track pending scroll timeout so we can cancel if maqam changes
@@ -1376,7 +1379,7 @@ const MaqamTranspositions: React.FC = () => {
     }
 
     return (
-      <div className="maqam-transpositions maqam-jins-transpositions-shared" key={language}>
+      <div className="maqam-transpositions maqam-jins-transpositions-shared" key={language} ref={rotateOverflowContainerRef}>
         {maqamTranspositions.length > 0 && (
           <>
             {/* Sentinel element positioned to detect when sticky header becomes stuck */}
@@ -1508,7 +1511,8 @@ const MaqamTranspositions: React.FC = () => {
                       const totalCols = 2 + (pcCount - 1) * 2;
                       const cols: React.ReactElement[] = [];
                       cols.push(<col key={`c-0-${displayIndex}`} style={{ width: "30px" }} />);
-                      cols.push(<col key={`c-1-${displayIndex}`} style={{ width: "40px" }} />);
+                      // Direction (asc/desc arrow) column
+                      cols.push(<col key={`c-1-${displayIndex}`} style={{ width: "26px" }} />);
                       cols.push(<col key={`c-2-${displayIndex}`} style={{ minWidth: "110px", maxWidth: "110px", width: "110px" }} />);
                       for (let i = 3; i < totalCols; i++) {
                         cols.push(<col key={`c-${i}-${displayIndex}`} style={{ minWidth: "30px" }} />);

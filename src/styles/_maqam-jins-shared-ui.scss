@@ -427,7 +427,9 @@
     box-shadow: 0px 10px 20px rgba(0, 0, 0, 1);
     z-index: 10;
     margin-top: 10px;
-    padding: 10px 20px;
+    // Compact, even rhythm: 8px frame, 6px between title and filters — the
+    // sticky is a working surface and should cost as little height as possible
+    padding: 8px 20px;
 
     // Pseudo-element to fill the gap above when sticky
     &::before {
@@ -450,10 +452,12 @@
   }
 
   &__title-row {
-    font-size: 20px;
-    font-weight: 300;
+    // A working label with a step of hierarchy over the 16px table titles
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.3;
     text-align: left;
-    margin-bottom: 10px;
+    margin-bottom: 6px;
 
     // RTL support
     [dir="rtl"] & {
@@ -480,15 +484,15 @@
   &__filter-menu {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 3px 8px;
     align-items: center;
   }
 
   &__filter-item {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    padding: 5px 0px;
+    gap: 3px;
+    padding: 3px 0px;
     border-radius: 3px;
     cursor: pointer;
     font-size: 13px;
@@ -522,12 +526,11 @@
 
   &__filter-checkbox {
     cursor: pointer;
-    margin-right: 2px;
+    margin: 0;
 
     // RTL support
     [dir="rtl"] & {
-      margin-right: 0;
-      margin-left: 2px;
+      margin: 0;
     }
   }
 
@@ -560,6 +563,13 @@
       margin-right: 0;
       margin-left: 5px;
     }
+  }
+
+  // Inside play cells the icon stands alone: the 5px side margin (meant for
+  // icon-next-to-text contexts) skews horizontal centering, in both directions
+  td[data-column-type="play-button"] [class*="__play-circle-icon"].MuiSvgIcon-root {
+    margin-right: 0;
+    margin-left: 0;
   }
 
   &__export-icon.MuiSvgIcon-root {
@@ -660,11 +670,13 @@
   // -------------------------
   // Title cell (entity name)
   // -------------------------
-  [class*="__title-cell"] {
+  // Height is content-driven so the padding reads equally on all sides.
+  // th/td prefixes outrank the generic "[class*="__table"] th/td" padding rules
+  th[class*="__title-cell"],
+  td[class*="__title-cell"] {
     background-color: black;
     color: white;
     padding: 15px;
-    height: 70px;
     position: relative;
   }
 
@@ -677,8 +689,8 @@
     max-width: 60%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    height: 40px;
+    // Hug the text so the name line anchors to the top of the cell padding
+    justify-content: flex-start;
     line-height: 1.4;
     
     // Button reset styles for accessibility
@@ -752,6 +764,7 @@
   // -------------------------
   [class*="__table-cell"] {
     text-align: left;
+    vertical-align: middle;
     background-color: transparent;
 
     // RTL support
@@ -770,12 +783,33 @@
     &[class*="--scale-degree"] {
       background-color: $medium-grey;
       font-weight: 400 !important;
+
+      // Numeral cells (not the empty interval spacers): keep room for the
+      // ghammāz marker, e.g. "IV (gh)"
+      &[data-column-type="scale-degree"] {
+        min-width: 60px;
+      }
     }
 
     // Ghammāz degree cell — marked textually with "(gh)" / "(غ)" after the
     // numeral; class kept as a styling/testing hook
     &[class*="--ghammaz"] {
       white-space: nowrap;
+    }
+
+    // Numeric value cells whose content overflows horizontally get their text
+    // rotated vertically, reading bottom-to-top (class toggled by
+    // useRotateOverflowingCells, applied per table so all value cells rotate
+    // together)
+    &[class*="__cell--vertical"] {
+      writing-mode: sideways-lr;
+      white-space: nowrap;
+      vertical-align: middle;
+      // In sideways-lr the inline axis is vertical, so text-align centers the
+      // value vertically within the cell (overrides the table's left/right)
+      text-align: center !important;
+      padding-top: 6px;
+      padding-bottom: 6px;
     }
 
     &[class*="--pitch-class"] {
@@ -792,9 +826,13 @@
       }
     }
 
-    // Cells containing jins buttons should allow full height
+    // Cells containing jins buttons should allow full height.
+    // The tiny definite height lets the button's height:100% resolve against
+    // the actual row height, so every button fills its cell completely and the
+    // tallest label (e.g. a two-line jins name) sets one uniform height for
+    // all buttons in the row.
     &[data-column-type="jins"] {
-      height: 100%;
+      height: 1px;
       padding: 0;
       vertical-align: middle;
       position: relative;
@@ -808,6 +846,24 @@
         background-color: rgba($primary, 0.9);
       }
     }
+  }
+
+  // Center the degree and play-icon cells only when the table's cells are
+  // rotated (marker class applied by useRotateOverflowingCells); left/right-
+  // aligned otherwise. The th/td element selectors match the specificity of
+  // the [dir="rtl"] table alignment rules above so centering wins in Arabic.
+  [class*="__table--rotated"] th[class*="--scale-degree"],
+  [class*="__table--rotated"] td[class*="--scale-degree"],
+  [class*="__table--rotated"] td[data-column-type="play-button"] {
+    text-align: center;
+  }
+
+  // Jins-button labels anchor to the top only when a label in the row wraps
+  // to multiple lines (marker applied by useRotateOverflowingCells), so
+  // single-line labels align with the first line of wrapped neighbours;
+  // all-single-line rows stay vertically centered
+  [class*="__ajnas-row--multiline"] [class*="__jins-button"] {
+    align-items: flex-start;
   }
 
   // -------------------------
@@ -853,15 +909,23 @@
   // -------------------------
   // Ascending/Descending column
   // -------------------------
-  [class*="__asc-desc-column"] {
+  // td prefix matches the specificity of the generic "[class*="__table"] td"
+  // alignment rules so the arrow stays centered with balanced spacing, in
+  // both directions
+  td[class*="__asc-desc-column"] {
     font-family: inherit;
-    font-size: 24px;
+    font-size: 18px;
     font-weight: 400 !important;
-    padding: 0px 0px 0px 0px;
-    margin: 0px 0px 0px 0px;
+    padding: 0;
+    margin: 0;
+    width: 26px;
     text-align: center;
     vertical-align: middle !important;
     color: $text;
+
+    [dir="rtl"] & {
+      text-align: center;
+    }
   }
 
   // -------------------------
@@ -880,10 +944,14 @@
   // -------------------------
   // Name row (jins-name-row / maqam-name-row)
   // -------------------------
-  [class*="-name-row"] {
+  // th/td prefixes outrank the generic table th/td padding rules; relative
+  // positioning anchors the absolutely-centered button group
+  th[class*="-name-row"],
+  td[class*="-name-row"] {
     background-color: black;
     color: white;
     padding: 15px;
+    position: relative;
   }
 
   // -------------------------
@@ -893,14 +961,36 @@
     display: flex;
     gap: 8px;
     align-items: center;
-    justify-content: flex-end;
-    float: right;
-    height: 40px;
-    
+    // Wide layout: pinned to the trailing edge, vertically centered against
+    // the whole cell (titles can be one or two lines)
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 15px;
+
     // RTL support
     [dir="rtl"] & {
+      right: auto;
+      left: 15px;
+    }
+
+    // At narrow viewports the button row sits below the title, anchored to
+    // the reading edge — left in LTR, right in Arabic. clear makes the stack
+    // deterministic and the margin gives balanced spacing against the cell's
+    // 15px padding
+    @media (max-width: 1280px) {
+      position: static;
+      transform: none;
       float: left;
+      clear: both;
+      margin-top: 12px;
       justify-content: flex-start;
+
+      [dir="rtl"] & {
+        left: auto;
+        float: right;
+        justify-content: flex-end;
+      }
     }
   }
 
@@ -922,21 +1012,16 @@
     padding: 0px 10px;
     border-radius: 2px;
     cursor: pointer;
-    margin-right: 10px;
     font-size: 12px;
-    min-width: 120px;
+    // Spacing comes from the __buttons container gap, so every button gets the
+    // same balanced margin; the narrower floor keeps the row fitting at 1024px
+    min-width: 90px;
     width: auto;
     height: 27px;
     vertical-align: middle;
     text-align: center;
     border: none;
     display: inline-block;
-
-    // RTL support
-    [dir="rtl"] & {
-      margin-right: 0;
-      margin-left: 10px;
-    }
 
     &:focus {
       outline: transparent;
@@ -975,10 +1060,10 @@
   // -------------------------
   &__cents-tolerance-input {
     width: 4ch; // Two digits wide
-    font-size: 13px;
+    font-size: 12px;
     border: 1px solid rgba($text, 0.5);
     border-radius: 2px;
-    padding: 2px 4px;
+    padding: 1px 4px;
     text-align: center;
     background-color: rgba($medium-grey, 0.3);
     color: $text;
@@ -1164,11 +1249,11 @@
     height: 100%;
     min-height: 27px;
     vertical-align: middle;
-    text-align: center;
+    text-align: left;
     border: none;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     transition: background-color 0.2s ease;
     font-weight: 400;
     line-height: 1.4;
@@ -1191,14 +1276,27 @@
     // Active/highlighted state (similar to toggle button)
     &[class*="--active"] {
       background-color: rgba($tertiary, 0.7);
-      
+
       &:hover {
         background-color: rgba($tertiary, 1);
       }
-      
+
       &:active {
         background-color: $gold !important;
       }
     }
+
+    // Align like everything else in the table: left (LTR) / right (RTL)
+    [dir="rtl"] & {
+      text-align: right;
+      justify-content: flex-end;
+    }
+  }
+
+  // When the table's cells are rotated, center the jins-button labels to
+  // match the centered degree and play cells (both directions)
+  [class*="__table--rotated"] [class*="__jins-button"] {
+    text-align: center;
+    justify-content: center;
   }
 }

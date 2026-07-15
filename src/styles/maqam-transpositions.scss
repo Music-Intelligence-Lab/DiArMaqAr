@@ -156,10 +156,10 @@
     }
   }
 
-  // Transposition row - maqam-specific styling
+  // Transposition row - maqam-specific styling (height derives from the
+  // title cell's content + padding so spacing stays visually balanced)
   &__transposition-row {
     background-color: black;
-    height: 70px;
     padding: 15px;
   }
 

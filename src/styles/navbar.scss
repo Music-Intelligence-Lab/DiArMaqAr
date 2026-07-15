@@ -82,8 +82,10 @@
     display: flex;
     width: 100%;
     justify-content: space-between;
-    align-items: center;
-    height: $bottom-navbar-height;
+    // Stretch + min-height so multi-line tab content (title, subtitle,
+    // transposition count) expands the bar vertically instead of overflowing it
+    align-items: stretch;
+    min-height: $bottom-navbar-height;
     color: white;
     border-bottom: $grey 1px solid;
     box-shadow: 0 20px 15px rgba(0, 0, 0, 0.6);
@@ -99,7 +101,7 @@
     flex-direction: column;
     flex: 1;
     vertical-align: top;
-    height: 100%;
+    justify-content: center;
     background-color: transparent;
     color: white;
     cursor: pointer;
