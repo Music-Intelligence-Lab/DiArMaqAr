@@ -3,12 +3,14 @@
 /* Main wrapper container */
 .frequency-knob-wrapper {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0px;
+  flex-direction: row;
+  // Bottom-align the dial and its Hz box so the box sits on the same baseline
+  // as the note button and the String Length box
+  align-items: flex-end;
+  gap: 8px;
   margin: 0;
   padding: 0;
-  min-width: 80px;
+  min-width: 0;
   
   /* Reset any inherited font styles */
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
@@ -34,7 +36,7 @@
   user-select: none;
   outline: none;
   box-sizing: border-box;
-  margin-bottom: 5px;
+  flex-shrink: 0;
   padding: 0;
 
   &:hover {
@@ -74,8 +76,8 @@
   background: rgb(0, 0, 0) !important;
   background-color: rgb(0, 0, 0) !important;
   border-radius: 0px !important;
-  width: 60px !important;
-  height: 20px !important;
+  width: 42px !important;
+  height: 18px !important;
   outline: none !important;
   border: none !important;
   box-sizing: border-box !important;
@@ -94,14 +96,20 @@
   }
 }
 
-/* Container for input field with Hz label */
+/* Container for input field with Hz label — matches the display box so there
+   is no size jump between viewing and editing */
 .frequency-input-container {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 2px;
-  width: 60px;
-  height: 20px;
+  width: 68px;
+  height: 27px;
+  padding: 3px 6px;
+  border: 1px solid #888;
+  border-radius: 2px;
+  box-sizing: border-box;
+  background: #000;
 }
 
 /* Adjust input field width when in container */
@@ -119,23 +127,30 @@
   pointer-events: none;
 }
 
-/* Display field when not editing */
+/* Display field when not editing — a visible number box to the right of the
+   dial, so it reads as editable (click to type a frequency) */
 .frequency-display-field {
   font-size: 12px;
   color: #fff;
   font-weight: 400;
-  cursor: pointer;
-  padding: 0px 0px;
-  border-radius: 0px;
-  width: 60px;
-  height: 20px;
-  border: none;
+  cursor: text;
+  padding: 3px 8px;
+  border-radius: 2px;
+  width: 68px;
+  height: 27px;
+  border: 1px solid #555;
   box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: transparent;
+  white-space: nowrap;
+  background: #000;
   margin: 0 !important;
+  transition: border-color 0.15s ease;
+
+  &:hover {
+    border-color: #888;
+  }
 }
 
 /* Remove spinner arrows from number inputs in Chrome/Safari/Edge */
@@ -159,14 +174,18 @@
 /* Integration with tuning system manager */
 .tuning-system-manager__starting-note .frequency-knob-wrapper {
   margin-left: 0px;
-  align-self: flex-start;
+  align-self: flex-end;
+  min-width: 0;
 }
 
 .tuning-system-manager__starting-note-controls {
   display: flex;
-  align-items: baseline;
-  gap: 0px;
-  flex-wrap: wrap;
+  // The 30px dial is taller than the 27px control boxes; bottom-align the
+  // row's children so every Hz box sits on the same baseline as the String
+  // Length box in the next column
+  align-items: flex-end;
+  gap: 8px;
+  flex-wrap: nowrap;
 }
 
 /* Responsive adjustments */

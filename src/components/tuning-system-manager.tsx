@@ -1165,8 +1165,11 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
         {tuningSystemPitchClassesArray.length !== 0 && selectedTuningSystem && (
           <div className="tuning-system-manager__starting-note-container">
-            <div className="tuning-system-manager__starting-note-left">
-              {t("tuningSystem.startingNoteName")}
+            <div className="tuning-system-manager__options-column tuning-system-manager__options-column--notes">
+              <span className="tuning-system-manager__options-header">
+                {t("tuningSystem.startingNoteName").replace(/[:：]\s*$/, "")}
+              </span>
+              <div className="tuning-system-manager__starting-note-left">
               {[...selectedTuningSystem.getNoteNameSets()]
                 .sort(
                   (a, b) =>
@@ -1265,20 +1268,28 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                   </div>
                 </div>
               )}
-              <label htmlFor="reference-frequency-input">
-                {t("tuningSystem.stringLength")}:
-                <input
-                  type="number"
-                  id="reference-frequency-input"
-                  value={tuningSystemStringLength ?? 0}
-                  onChange={(e) => {
-                    const val = Number(e.target.value);
-                    setTuningSystemStringLength(val);
-                  }}
-                  className="tuning-system-manager__starting-note-input"
-                />
-              </label>
+              </div>
             </div>
+
+            <div className="tuning-system-manager__options-column tuning-system-manager__options-column--string-length">
+              <label
+                className="tuning-system-manager__options-header"
+                htmlFor="reference-frequency-input"
+              >
+                {t("tuningSystem.stringLength")}
+              </label>
+              <input
+                type="number"
+                id="reference-frequency-input"
+                value={tuningSystemStringLength ?? 0}
+                onChange={(e) => {
+                  const val = Number(e.target.value);
+                  setTuningSystemStringLength(val);
+                }}
+                className="tuning-system-manager__starting-note-input"
+              />
+            </div>
+
             {admin && (
               <div className="tuning-system-manager__starting-note-right">
                 <button
@@ -1300,18 +1311,18 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 </button>
               </div>
             )}
-          </div>
-        )}
 
-        {selectedTuningSystem && (
-          <div className="tuning-system-manager__export-container">
-            {t("tuningSystem.export")}
-            <button
-              className="tuning-system-manager__export-button"
-              onClick={() => setIsExportModalOpen(true)}
-            >
-              <FileDownloadIcon style={{ fontSize: 18 }} />
-            </button>
+            {selectedTuningSystem && (
+              <div className="tuning-system-manager__options-column tuning-system-manager__options-column--export">
+                <button
+                  className="tuning-system-manager__export-button"
+                  onClick={() => setIsExportModalOpen(true)}
+                >
+                  <FileDownloadIcon style={{ fontSize: 18 }} />
+                  <span>{t("tuningSystem.exportTuningSystem")}</span>
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>

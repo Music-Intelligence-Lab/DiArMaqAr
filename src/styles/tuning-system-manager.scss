@@ -242,35 +242,98 @@
   }
 
   &__starting-note-container {
-    align-items: baseline;
-    gap: 10px;
+    display: flex;
+    align-items: flex-end;
+    gap: 32px;
+    width: 100%;
+    box-sizing: border-box;
+    // Symmetric horizontal padding: the gap to the left of the Starting Note
+    // Name label equals the gap to the right of the Export button
+    padding: 0 20px;
+  }
+
+  // Each of the three control columns: header on top, content below
+  &__options-column {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  // String Length column: its 27px input sits in a 30px content band (matching
+  // the notes column's dial height) so its header lines up with the notes header
+  &__options-column--string-length {
+    .tuning-system-manager__starting-note-input {
+      align-self: flex-start;
+      margin-bottom: 0;
+      // 3px extra below the 27px box → 30px band, matching the dial column
+      margin-top: 3px;
+    }
+  }
+
+  // Shared small uppercase header above each column's content
+  &__options-header {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: $light-grey;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+
+  // Export column has no header — center its button against the other columns'
+  // content rows (which sit below their headers)
+  &__options-column--export {
+    margin-left: auto;
+    justify-content: flex-end;
+
+    [dir="rtl"] & {
+      margin-left: 0;
+      margin-right: auto;
+    }
   }
 
   &__starting-note-left {
     display: flex;
-    align-items: baseline;
-    gap: 10px;
-    margin-left: 20px;
+    // 30px content band (tallest control = the dial) with everything
+    // bottom-aligned so all number boxes share one baseline
+    align-items: flex-end;
+    min-height: 30px;
+    // Group-to-group gap is much larger than the 8px within a group, so each
+    // note's button/dial/Hz set reads as one unit
+    gap: 32px;
+    flex-wrap: wrap;
   }
 
   &__starting-note {
     display: block;
-    flex-direction: column;
-    align-items: baseline;
-    gap: 0px;
     text-align: center;
-    margin-right: 10px;
   }
 
   &__starting-note-input {
-    display: inline-block;
+    // Match the Hz frequency box for a uniform editable-field look
+    display: inline-flex;
+    align-items: center;
     box-sizing: border-box;
-    padding: 5px 10px;
-    margin-left: 10px;
-    background-color: black;
-    border-radius: 0px;
+    height: 27px;
+    padding: 3px 8px;
+    background: #000;
+    border: 1px solid #555;
+    border-radius: 2px;
     color: $text;
-    width: 70px;
+    font-size: 12px;
+    width: 90px;
+    transition: border-color 0.15s ease;
+
+    &:hover {
+      border-color: #888;
+    }
+
+    &:focus {
+      border-color: #888;
+      outline: none;
+    }
 
     // Remove default arrows in webkit browsers
     &::-webkit-outer-spin-button,
@@ -291,15 +354,20 @@
   }
 
   &__starting-note-button {
-    padding: 5px 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 27px;
+    padding: 0 16px;
     background-color: rgba($primary, 0.5);
     width: fit-content;
-    border-radius: 0px;
+    border-radius: 2px;
     color: $text;
+    font-size: 12px;
     cursor: pointer;
     transition: 0.1s;
     margin: 0px;
-    align-items: flex-start;
+    white-space: nowrap;
 
     &:hover {
       background-color: rgba($primary, 1);
@@ -319,12 +387,12 @@
 
     &_disabled {
       background-color: rgba($black, 0.5) !important;
-      color: $text;
+      color: rgba($text, 0.35);
 
       &:hover {
-        background-color: rgba($primary, 0.5);
+        background-color: rgba($black, 0.5);
         box-shadow: none;
-        color: $text;
+        color: rgba($text, 0.35);
       }
     }
 
@@ -1093,34 +1161,33 @@
     }
   }
 
-  &__export-container {
-    display: inline-flex;
-    float: right;
-    align-items: center;
-    gap: 10px;
-    margin-right: 20px;
-    margin-bottom: 0px;
-
-    // RTL support
-    [dir="rtl"] & {
-      float: left;
-      margin-right: 0;
-      margin-left: 20px;
-    }
-  }
-
   &__export-button {
-    padding-top: 5px;
-    padding-bottom: 0px;
-    width: 50px;
+    // Matches the transposition-table Copy/Export buttons
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 27px;
+    padding: 0 12px;
     background-color: rgba($primary, 0.5);
     cursor: pointer;
-    border-radius: 0px;
-    color: $text;
-    margin-left: 0px;
+    border-radius: 2px;
+    color: white;
+    font-size: 12px;
+    white-space: nowrap;
+    border: none;
+
+    svg {
+      display: block;
+      font-size: 16px !important;
+    }
 
     &:hover {
       background-color: rgba($primary, 1);
+    }
+
+    &:active {
+      background-color: $gold !important;
     }
   }
 
