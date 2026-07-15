@@ -42,7 +42,7 @@ const translations = {
     "nav.credits": "Credits",
 
     // Navbar Tabs
-    "tabs.tuningSystem": "Tanāghīm (tuning systems)",
+    "tabs.tuningSystem": "Tanāghīm",
     "tabs.ajnas": "Ajnās",
     "tabs.maqamat": "Maqāmāt",
     "tabs.suyur": "Suyūr",
@@ -742,7 +742,7 @@ const translations = {
     "nav.credits": "Crédits",
 
     // Navbar Tabs
-    "tabs.tuningSystem": "Tanāghīm (systèmes d'accord)",
+    "tabs.tuningSystem": "Tanāghīm",
     "tabs.ajnas": "Ajnās",
     "tabs.maqamat": "Maqāmāt",
     "tabs.suyur": "Suyūr",

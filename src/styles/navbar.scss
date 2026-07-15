@@ -53,6 +53,16 @@
     white-space: nowrap;
   }
 
+  // EN line reads as a subtitle beneath the larger AR title
+  &__title-line--en {
+    font-size: 0.66em;
+    color: rgba(255, 255, 255, 0.85);
+
+    @media (max-width: 480px) {
+      font-size: 0.7em;
+    }
+  }
+
   &__title-separator {
     @media (max-width: 768px) {
       display: none;
@@ -126,7 +136,6 @@
   -webkit-text-size-adjust: 100%; // prevent iOS Safari from auto-resizing text
   text-size-adjust: 100%;
   position: relative;
-
 
     &:not(:last-child) {
       border-right: 1px solid $grey;
