@@ -4,6 +4,7 @@ import { standardizeText } from "@/functions/export";
 import { addCorsHeaders, handleCorsPreflightRequest } from "@/app/api/cors";
 import { safeWriteFile } from "@/app/api/backup-utils";
 import path from "path";
+import fs from "fs";
 import { calculateMaqamTranspositions } from "@/functions/transpose";
 import { classifyMaqamFamily } from "@/functions/classifyMaqamFamily";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
@@ -417,8 +418,26 @@ export async function PUT(request: Request) {
     // Get the path to data/maqamat.json
     const dataPath = path.join(process.cwd(), "data", "maqamat.json");
 
+    // Defense in depth against silent field loss: this endpoint is a full-file
+    // rewrite, so a client built against an older field set would strip any
+    // newer fields from every maqam (this happened with ghammaz/jins-degree
+    // delineations). Merge each incoming entry over its on-disk counterpart:
+    // fields the client sends win (explicit null clears a field); fields the
+    // client doesn't know about survive. Omitting a whole entry still deletes it.
+    let mergedMaqamat = maqamat;
+    try {
+      const existing: { id?: string }[] = JSON.parse(fs.readFileSync(dataPath, "utf8"));
+      const existingById = new Map(existing.map((entry) => [entry.id, entry]));
+      mergedMaqamat = maqamat.map((incoming: { id?: string }) => {
+        const current = existingById.get(incoming.id);
+        return current ? { ...current, ...incoming } : incoming;
+      });
+    } catch {
+      // No existing file (or unreadable/invalid) — write the payload as-is
+    }
+
     // Write with backup
-    const writeResult = safeWriteFile(dataPath, maqamat, true);
+    const writeResult = safeWriteFile(dataPath, mergedMaqamat, true);
 
     if (!writeResult.success) {
       throw new Error(writeResult.error || "Failed to write file");

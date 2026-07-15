@@ -252,6 +252,12 @@ export async function updateMaqamat(newMaqamat: MaqamData[], modifiedIds?: strin
           name: m.getName(),
           ascendingNoteNames: m.getAscendingNoteNames(),
           descendingNoteNames: m.getDescendingNoteNames(),
+          // Musicological delineations — omitting these once wiped them from
+          // every maqam on save (the payload is a full-file rewrite)
+          primaryJinsDegree: m.getPrimaryJinsDegree(),
+          secondaryJinsDegree: m.getSecondaryJinsDegree(),
+          tertiaryJinsDegree: m.getTertiaryJinsDegree(),
+          ghammaz: m.getGhammaz(),
           suyur: convertSuyurSourceIdsToUrlSafe(m.getSuyur(), sources),
           commentsEnglish: m.getCommentsEnglish() || "",
           commentsArabic: m.getCommentsArabic() || "",
