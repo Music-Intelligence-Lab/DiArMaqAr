@@ -208,11 +208,50 @@
       "dūgāh",
       "rāst"
     ],
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "Sayr alshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "53",
+        "commentsEnglish": "This maqām starts on rāst ascending to nawā, then from there ascends to kurdān step by step, then to what is above the kurdān and then it descends until its qarār which is rāst",
+        "commentsArabic": "",
+        "stops": [
+          {
+            "type": "note",
+            "value": "rāst",
+            "direction": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "nawā",
+            "direction": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2025-12-10T18:46:59.797Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2025-12-10T18:46:59.797Z"
   },
   {
     "id": "6",
@@ -225,10 +264,10 @@
       "ḥijāz",
       "nawā",
       "ḥiṣār",
-      "māhūr"
+      "nīm māhūr"
     ],
     "descendingNoteNames": [
-      "māhūr",
+      "nīm māhūr",
       "ḥiṣār",
       "nawā",
       "ḥijāz",
@@ -236,11 +275,71 @@
       "dūgāh",
       "rāst"
     ],
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "Sayr alshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "52",
+        "commentsEnglish": "This maqām starts on nawā with a touch of ḥijāz to render the nagham of ḥijāz on nawā then it ascends to kurdān to render the nagham of nawā athar on kurdān, then up to jawāb al-nawā (saham/ramal tūtī) and then descends to its qarār which is rāst.",
+        "commentsArabic": "",
+        "stops": [
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "note",
+            "value": "ḥijāz"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "kurdān"
+          },
+          {
+            "type": "maqam",
+            "value": "6",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "saham/ramal tūtī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2025-12-10T18:28:28.107Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2025-10-18T19:41:17.132Z"
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "52"
+      }
+    ],
+    "version": "2025-12-10T18:28:28.107Z"
   },
   {
     "id": "7",
@@ -3604,13 +3703,13 @@
     "idName": "maqam_zanjaran",
     "name": "maqām zanjarān",
     "ascendingNoteNames": [
-      "nawā",
-      "ḥiṣār",
-      "māhūr",
-      "kurdān",
-      "muḥayyar",
-      "jawāb būselīk",
-      "māhūrān"
+      "yegāh",
+      "qarār nīm ḥiṣār",
+      "kawasht",
+      "rāst",
+      "dūgāh",
+      "būselīk/ʿushshāq",
+      "chahārgāh"
     ],
     "descendingNoteNames": [
       "chahārgāh",
@@ -3625,7 +3724,7 @@
     "commentsEnglish": "Created by Sayyed Darwīsh (see Dawr Fī Sharʿi Mīn: https://www.youtube.com/watch?v=DmEEUlWYJjo)",
     "commentsArabic": "",
     "sourcePageReferences": [],
-    "version": "2025-11-09T03:43:40.484Z"
+    "version": "2026-07-14T15:22:01.994Z"
   },
   {
     "id": "62",
@@ -3667,8 +3766,8 @@
   },
   {
     "id": "63",
-    "idName": "sunbula_nahawand",
-    "name": "sunbula nahāwand",
+    "idName": "maqam_sunbula_nahawand",
+    "name": "maqām sunbula nahāwand",
     "ascendingNoteNames": [
       "rāst",
       "dūgāh",
@@ -3695,7 +3794,61 @@
       "dūgāh",
       "rāst"
     ],
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "Sayr alshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "51",
+        "commentsEnglish": "This maqām starts from chahārgāh descending to rāst, and from there descending to render maqām ḥijāz on yegāh and then ascends to chahāṝgāh to render maqām ḥijāz on chahārgāh, and from there ascends until kurdān and what's above it, and then it descends until its qarār which is rāst.\n\nThe maqām's analysis is jins nahāqand on rāst, pentachord of ḥijāz on chahārgāh, jins ḥijāz on kurdān. During it's descent maqām kurdī on nawā, and the descent completes from nawā to rāst as maqām nahāwand. ",
+        "commentsArabic": "",
+        "stops": [
+          {
+            "type": "note",
+            "value": "chahārgāh",
+            "direction": "descending"
+          },
+          {
+            "type": "note",
+            "value": "rāst",
+            "direction": "descending"
+          },
+          {
+            "type": "maqam",
+            "value": "2",
+            "startingNote": "yegāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "maqam",
+            "value": "2",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "kurdān",
+            "direction": "ascending"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2025-12-10T17:28:47.376Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [
@@ -3704,6 +3857,6 @@
         "page": "51"
       }
     ],
-    "version": "2025-12-10T17:17:21.826Z"
+    "version": "2025-12-11T23:30:41.160Z"
   }
 ]

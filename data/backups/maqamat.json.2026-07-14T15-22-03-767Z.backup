@@ -21,6 +21,16 @@
       "dūgāh",
       "rāst"
     ],
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -124,6 +134,16 @@
       "kurdī",
       "dūgāh"
     ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [],
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -151,6 +171,16 @@
       "chahārgāh",
       "kurdī",
       "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
     ],
     "suyur": [],
     "commentsEnglish": "",
@@ -180,6 +210,16 @@
       "zīrgūleh",
       "rāst"
     ],
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [],
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -208,11 +248,60 @@
       "dūgāh",
       "rāst"
     ],
-    "suyur": [],
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "Sayr alshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "53",
+        "commentsEnglish": "This maqām starts on rāst ascending to nawā, then from there ascends to kurdān step by step, then to what is above the kurdān and then it descends until its qarār which is rāst",
+        "commentsArabic": "",
+        "stops": [
+          {
+            "type": "note",
+            "value": "rāst",
+            "direction": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "nawā",
+            "direction": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2025-12-10T18:46:59.797Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2025-12-10T18:46:59.797Z"
   },
   {
     "id": "6",
@@ -225,10 +314,10 @@
       "ḥijāz",
       "nawā",
       "ḥiṣār",
-      "māhūr"
+      "nīm māhūr"
     ],
     "descendingNoteNames": [
-      "māhūr",
+      "nīm māhūr",
       "ḥiṣār",
       "nawā",
       "ḥijāz",
@@ -236,11 +325,81 @@
       "dūgāh",
       "rāst"
     ],
-    "suyur": [],
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "Sayr alshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "52",
+        "commentsEnglish": "This maqām starts on nawā with a touch of ḥijāz to render the nagham of ḥijāz on nawā then it ascends to kurdān to render the nagham of nawā athar on kurdān, then up to jawāb al-nawā (saham/ramal tūtī) and then descends to its qarār which is rāst.",
+        "commentsArabic": "",
+        "stops": [
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "note",
+            "value": "ḥijāz"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "kurdān"
+          },
+          {
+            "type": "maqam",
+            "value": "6",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "saham/ramal tūtī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2025-12-10T18:28:28.107Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2025-10-18T19:41:17.132Z"
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "52"
+      }
+    ],
+    "version": "2025-12-10T18:28:28.107Z"
   },
   {
     "id": "7",
@@ -263,6 +422,16 @@
       "chahārgāh",
       "segāh",
       "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
     ],
     "suyur": [],
     "commentsEnglish": "TESTING VERSION TIMESTAMP",
@@ -292,6 +461,16 @@
       "segāh",
       "dūgāh"
     ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [],
     "commentsEnglish": "test",
     "commentsArabic": "تجريب",
@@ -320,6 +499,16 @@
       "kurdī",
       "dūgāh"
     ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [],
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -347,6 +536,16 @@
       "kurdī",
       "dūgāh",
       "rāst"
+    ],
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
     ],
     "suyur": [
       {
@@ -440,6 +639,16 @@
       "kurdī",
       "dūgāh",
       "rāst"
+    ],
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
     ],
     "suyur": [
       {
@@ -540,6 +749,16 @@
       "kurdī",
       "dūgāh"
     ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "ḥusaynī"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "ḥusaynī"
+    ],
     "suyur": [],
     "commentsEnglish": "TESTING VERSION TIMESTAMP",
     "commentsArabic": "",
@@ -567,6 +786,16 @@
       "chahārgāh",
       "segāh",
       "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
     ],
     "suyur": [],
     "commentsEnglish": "Also known as qārjagār",
@@ -596,6 +825,16 @@
       "tīk zīrgūleh",
       "rāst"
     ],
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [],
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -623,6 +862,16 @@
       "chahārgāh",
       "segāh",
       "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "ḥusaynī"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "ḥusaynī"
     ],
     "suyur": [],
     "commentsEnglish": "",
@@ -652,6 +901,16 @@
       "kurdī",
       "dūgāh"
     ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "ḥusaynī"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "ḥusaynī"
+    ],
     "suyur": [],
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -679,6 +938,16 @@
       "dūgāh",
       "rāst",
       "ʿajam ʿushayrān"
+    ],
+    "primaryJinsDegree": [
+      "ʿajam ʿushayrān"
+    ],
+    "secondaryJinsDegree": [
+      "chahārgāh"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "chahārgāh"
     ],
     "suyur": [],
     "commentsEnglish": "TEST",
@@ -713,6 +982,16 @@
       "dūgāh",
       "rāst"
     ],
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [],
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -740,6 +1019,16 @@
       "nawā",
       "chahārgāh",
       "segāh"
+    ],
+    "primaryJinsDegree": [
+      "segāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
     ],
     "suyur": [],
     "commentsEnglish": "",
@@ -769,6 +1058,16 @@
       "chahārgāh",
       "segāh"
     ],
+    "primaryJinsDegree": [
+      "segāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [],
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -796,6 +1095,16 @@
       "dūgāh",
       "rāst",
       "ʿirāq"
+    ],
+    "primaryJinsDegree": [
+      "ʿirāq"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
     ],
     "suyur": [
       {
@@ -909,6 +1218,16 @@
       "dūgāh",
       "rāst"
     ],
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -1006,6 +1325,16 @@
       "zīrgūleh",
       "rāst"
     ],
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [],
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -1033,6 +1362,16 @@
       "rāst",
       "ʿirāq",
       "ʿushayrān"
+    ],
+    "primaryJinsDegree": [
+      "ʿushayrān"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
     ],
     "suyur": [],
     "commentsEnglish": "",
@@ -1062,6 +1401,18 @@
       "ḥijāz",
       "segāh"
     ],
+    "primaryJinsDegree": [
+      "segāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": [
+      "ḥusaynī"
+    ],
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [],
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -1089,6 +1440,16 @@
       "dūgāh",
       "rāst",
       "ʿirāq"
+    ],
+    "primaryJinsDegree": [
+      "ʿirāq"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
     ],
     "suyur": [
       {
@@ -1169,6 +1530,16 @@
       "dūgāh",
       "rāst"
     ],
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -1248,6 +1619,16 @@
       "tīk zīrgūleh",
       "rāst"
     ],
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [],
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -1275,6 +1656,16 @@
       "ʿirāq",
       "ʿushayrān",
       "yegāh"
+    ],
+    "primaryJinsDegree": [
+      "yegāh"
+    ],
+    "secondaryJinsDegree": [
+      "dūgāh"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "dūgāh"
     ],
     "suyur": [
       {
@@ -1360,6 +1751,16 @@
       "ʿajam ʿushayrān",
       "ʿushayrān",
       "yegāh"
+    ],
+    "primaryJinsDegree": [
+      "yegāh"
+    ],
+    "secondaryJinsDegree": [
+      "rāst"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "rāst"
     ],
     "suyur": [
       {
@@ -1454,6 +1855,16 @@
       "qarār ḥiṣār",
       "yegāh"
     ],
+    "primaryJinsDegree": [
+      "yegāh"
+    ],
+    "secondaryJinsDegree": [
+      "rāst"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "rāst"
+    ],
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -1537,6 +1948,16 @@
       "ʿushayrān",
       "yegāh"
     ],
+    "primaryJinsDegree": [
+      "yegāh"
+    ],
+    "secondaryJinsDegree": [
+      "rāst"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "rāst"
+    ],
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -1601,6 +2022,16 @@
       "dūgāh",
       "rāst",
       "ʿirāq"
+    ],
+    "primaryJinsDegree": [
+      "ʿirāq"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
     ],
     "suyur": [
       {
@@ -1684,6 +2115,14 @@
       "ʿushayrān",
       "yegāh"
     ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "ḥusaynī"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -1771,6 +2210,16 @@
       "rāst",
       "ʿirāq",
       "ʿushayrān"
+    ],
+    "primaryJinsDegree": [
+      "ʿushayrān"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
     ],
     "suyur": [
       {
@@ -1878,6 +2327,16 @@
       "rāst",
       "ʿirāq",
       "ʿushayrān"
+    ],
+    "primaryJinsDegree": [
+      "ʿushayrān"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
     ],
     "suyur": [
       {
@@ -1989,6 +2448,16 @@
       "ʿirāq",
       "ʿushayrān"
     ],
+    "primaryJinsDegree": [
+      "ʿushayrān"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -2059,6 +2528,16 @@
       "zīrgūleh",
       "ʿajam ʿushayrān",
       "ʿushayrān"
+    ],
+    "primaryJinsDegree": [
+      "ʿushayrān"
+    ],
+    "secondaryJinsDegree": [
+      "dūgāh"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "dūgāh"
     ],
     "suyur": [
       {
@@ -2142,6 +2621,16 @@
       "rāst",
       "ʿajam ʿushayrān",
       "ʿushayrān"
+    ],
+    "primaryJinsDegree": [
+      "ʿushayrān"
+    ],
+    "secondaryJinsDegree": [
+      "dūgāh"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "dūgāh"
     ],
     "suyur": [
       {
@@ -2244,6 +2733,16 @@
       "ʿirāq",
       "ʿushayrān"
     ],
+    "primaryJinsDegree": [
+      "ʿushayrān"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -2343,6 +2842,16 @@
       "rāst",
       "ʿajam ʿushayrān"
     ],
+    "primaryJinsDegree": [
+      "ʿajam ʿushayrān"
+    ],
+    "secondaryJinsDegree": [
+      "chahārgāh"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "chahārgāh"
+    ],
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -2424,6 +2933,16 @@
       "rāst",
       "ʿajam ʿushayrān"
     ],
+    "primaryJinsDegree": [
+      "ʿajam ʿushayrān"
+    ],
+    "secondaryJinsDegree": [
+      "dūgāh"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "dūgāh"
+    ],
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -2502,6 +3021,16 @@
       "dūgāh",
       "rāst",
       "ʿirāq"
+    ],
+    "primaryJinsDegree": [
+      "ʿirāq"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
     ],
     "suyur": [
       {
@@ -2596,6 +3125,16 @@
       "rāst",
       "ʿirāq"
     ],
+    "primaryJinsDegree": [
+      "ʿirāq"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -2676,6 +3215,16 @@
       "rāst",
       "ʿirāq"
     ],
+    "primaryJinsDegree": [
+      "ʿirāq"
+    ],
+    "secondaryJinsDegree": [
+      "dūgāh"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "dūgāh"
+    ],
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -2737,6 +3286,16 @@
       "kurdī",
       "rāst",
       "ʿirāq"
+    ],
+    "primaryJinsDegree": [
+      "ʿirāq"
+    ],
+    "secondaryJinsDegree": [
+      "segāh"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "segāh"
     ],
     "suyur": [
       {
@@ -2831,6 +3390,16 @@
       "rāst",
       "ʿirāq"
     ],
+    "primaryJinsDegree": [
+      "ʿirāq"
+    ],
+    "secondaryJinsDegree": [
+      "segāh"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "segāh"
+    ],
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -2920,6 +3489,18 @@
       "nīm būselīk",
       "dūgāh"
     ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "ḥusaynī"
+    ],
+    "tertiaryJinsDegree": [
+      "muḥayyar"
+    ],
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [],
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -2951,6 +3532,16 @@
       "ʿajam",
       "ḥusaynī",
       "nawā",
+      "chahārgāh"
+    ],
+    "primaryJinsDegree": [
+      "chahārgāh"
+    ],
+    "secondaryJinsDegree": [
+      "chahārgāh"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
       "chahārgāh"
     ],
     "suyur": [],
@@ -2986,6 +3577,16 @@
       "nawā",
       "chahārgāh"
     ],
+    "primaryJinsDegree": [
+      "chahārgāh"
+    ],
+    "secondaryJinsDegree": [
+      "kurdān"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "kurdān"
+    ],
     "suyur": [],
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -3013,6 +3614,16 @@
       "segāh",
       "dūgāh",
       "rāst"
+    ],
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
     ],
     "suyur": [
       {
@@ -3117,6 +3728,16 @@
       "rāst",
       "ʿirāq"
     ],
+    "primaryJinsDegree": [
+      "ʿirāq"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -3184,6 +3805,16 @@
       "ʿushayrān",
       "yegāh"
     ],
+    "primaryJinsDegree": [
+      "yegāh"
+    ],
+    "secondaryJinsDegree": [
+      "dūgāh"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "dūgāh"
+    ],
     "suyur": [],
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -3212,6 +3843,16 @@
       "kurdī",
       "dūgāh"
     ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [],
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -3239,6 +3880,16 @@
       "segāh",
       "dūgāh",
       "rāst"
+    ],
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
     ],
     "suyur": [
       {
@@ -3306,6 +3957,16 @@
       "nīm būselīk",
       "kurdī",
       "rāst"
+    ],
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
     ],
     "suyur": [
       {
@@ -3397,6 +4058,16 @@
       "rāst",
       "ʿirāq"
     ],
+    "primaryJinsDegree": [
+      "ʿirāq"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [
       {
         "id": "Sayr alshawwa_1946",
@@ -3479,6 +4150,16 @@
       "kurdī",
       "dūgāh",
       "rāst"
+    ],
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
     ],
     "suyur": [
       {
@@ -3565,6 +4246,16 @@
       "ḥusaynī",
       "nawā"
     ],
+    "primaryJinsDegree": [
+      "nawā"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [],
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -3593,6 +4284,16 @@
       "tīk ḥiṣār",
       "nawā"
     ],
+    "primaryJinsDegree": [
+      "nawā"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [],
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -3604,13 +4305,13 @@
     "idName": "maqam_zanjaran",
     "name": "maqām zanjarān",
     "ascendingNoteNames": [
-      "nawā",
-      "ḥiṣār",
-      "māhūr",
-      "kurdān",
-      "muḥayyar",
-      "jawāb būselīk",
-      "māhūrān"
+      "yegāh",
+      "qarār ḥiṣār",
+      "kawasht",
+      "rāst",
+      "dūgāh",
+      "būselīk/ʿushshāq",
+      "chahārgāh"
     ],
     "descendingNoteNames": [
       "chahārgāh",
@@ -3621,11 +4322,21 @@
       "qarār ḥiṣār",
       "yegāh"
     ],
+    "primaryJinsDegree": [
+      "yegāh"
+    ],
+    "secondaryJinsDegree": [
+      "rāst"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "rāst"
+    ],
     "suyur": [],
     "commentsEnglish": "Created by Sayyed Darwīsh (see Dawr Fī Sharʿi Mīn: https://www.youtube.com/watch?v=DmEEUlWYJjo)",
     "commentsArabic": "",
     "sourcePageReferences": [],
-    "version": "2025-11-09T03:43:40.484Z"
+    "version": "2025-12-11T23:34:00.303Z"
   },
   {
     "id": "62",
@@ -3659,6 +4370,12 @@
       "qarār ḥiṣār",
       "yegāh"
     ],
+    "primaryJinsDegree": [
+      "yegāh"
+    ],
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
     "suyur": [],
     "commentsEnglish": "",
     "commentsArabic": "",
@@ -3667,8 +4384,8 @@
   },
   {
     "id": "63",
-    "idName": "sunbula_nahawand",
-    "name": "sunbula nahāwand",
+    "idName": "maqam_sunbula_nahawand",
+    "name": "maqām sunbula nahāwand",
     "ascendingNoteNames": [
       "rāst",
       "dūgāh",
@@ -3695,7 +4412,71 @@
       "dūgāh",
       "rāst"
     ],
-    "suyur": [],
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "chahārgāh"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "chahārgāh"
+    ],
+    "suyur": [
+      {
+        "id": "Sayr alshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "51",
+        "commentsEnglish": "This maqām starts from chahārgāh descending to rāst, and from there descending to render maqām ḥijāz on yegāh and then ascends to chahāṝgāh to render maqām ḥijāz on chahārgāh, and from there ascends until kurdān and what's above it, and then it descends until its qarār which is rāst.\n\nThe maqām's analysis is jins nahāqand on rāst, pentachord of ḥijāz on chahārgāh, jins ḥijāz on kurdān. During it's descent maqām kurdī on nawā, and the descent completes from nawā to rāst as maqām nahāwand. ",
+        "commentsArabic": "",
+        "stops": [
+          {
+            "type": "note",
+            "value": "chahārgāh",
+            "direction": "descending"
+          },
+          {
+            "type": "note",
+            "value": "rāst",
+            "direction": "descending"
+          },
+          {
+            "type": "maqam",
+            "value": "2",
+            "startingNote": "yegāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "maqam",
+            "value": "2",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "kurdān",
+            "direction": "ascending"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2025-12-10T17:28:47.376Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [
@@ -3704,6 +4485,6 @@
         "page": "51"
       }
     ],
-    "version": "2025-12-10T17:17:21.432Z"
+    "version": "2025-12-11T23:30:41.160Z"
   }
 ]
