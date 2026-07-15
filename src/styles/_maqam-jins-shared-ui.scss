@@ -772,6 +772,12 @@
       font-weight: 400 !important;
     }
 
+    // Ghammāz degree cell — marked textually with "(gh)" / "(غ)" after the
+    // numeral; class kept as a styling/testing hook
+    &[class*="--ghammaz"] {
+      white-space: nowrap;
+    }
+
     &[class*="--pitch-class"] {
       // Default pitch class styling
       background-color: transparent;
@@ -1140,6 +1146,13 @@
   }
 
   // 3. Ajnas buttons styling - matches main button style (maqam-specific)
+  // Conventional jins rank prefix (1° primary / 2° secondary / 3° tertiary)
+  [class*="__jins-degree-rank"] {
+    font-weight: 700;
+    margin-inline-end: 5px;
+    white-space: nowrap;
+  }
+
   [class*="__jins-button"] {
     background-color: rgba($primary, 0.5);
     color: $text;

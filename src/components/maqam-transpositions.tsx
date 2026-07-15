@@ -6,6 +6,7 @@ import useSoundContext, { defaultNoteVelocity } from "@/contexts/sound-context";
 import useFilterContext from "@/contexts/filter-context";
 import useLanguageContext from "@/contexts/language-context";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
+import NoteName, { getNoteNameIndexAndOctave } from "@/models/NoteName";
 import { standardizeText } from "@/functions/export";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
 import { getIpnReferenceNoteName, getIpnReferenceNoteNameWithOctave } from "@/functions/getIpnReferenceNoteName";
@@ -378,6 +379,31 @@ const MaqamTranspositions: React.FC = () => {
 
     const numberOfFilterRows = Object.keys(filters).filter((key) => !disabledFilters.includes(key) && key !== valueType && filters[key as keyof typeof filters]).length;
 
+    // Musicological delineations from maqamat.json, mapped from canonical note
+    // names to degree indices so they apply to every transposition row.
+    // Matching is octave-insensitive (delineations may name an adjacent-octave
+    // equivalent of the scale degree).
+    const slotIndex = (noteName: string) => getNoteNameIndexAndOctave(noteName as NoteName).index;
+    const degreeIndicesFor = (delineation: string[] | null | undefined): number[] =>
+      (delineation ?? [])
+        .map((note) => ascendingNoteNames.findIndex((canonical) => slotIndex(canonical) >= 0 && slotIndex(canonical) === slotIndex(note)))
+        .filter((index) => index >= 0);
+
+    const ghammazDegreeIndices = degreeIndicesFor(selectedMaqamData.getGhammaz());
+    // 1° primary / 2° secondary / 3° tertiary — primary wins if degrees collide
+    const jinsDegreeRankByIndex: Record<number, string> = {};
+    (
+      [
+        [selectedMaqamData.getTertiaryJinsDegree(), "3°"],
+        [selectedMaqamData.getSecondaryJinsDegree(), "2°"],
+        [selectedMaqamData.getPrimaryJinsDegree(), "1°"],
+      ] as const
+    ).forEach(([delineation, rank]) => {
+      degreeIndicesFor(delineation).forEach((index) => {
+        jinsDegreeRankByIndex[index] = rank;
+      });
+    });
+
     return {
       ascendingNoteNames,
       descendingNoteNames,
@@ -387,6 +413,8 @@ const MaqamTranspositions: React.FC = () => {
       noOctaveMaqam,
       valueType,
       numberOfFilterRows,
+      ghammazDegreeIndices,
+      jinsDegreeRankByIndex,
     };
   }, [selectedMaqamData, selectedTuningSystem, allPitchClasses, filters]);
 
@@ -773,7 +801,7 @@ const MaqamTranspositions: React.FC = () => {
   const transpositionTables = useMemo(() => {
     if (!maqamConfig) return null;
 
-    const { romanNumerals, noOctaveMaqam, valueType, numberOfFilterRows } = maqamConfig;
+    const { romanNumerals, noOctaveMaqam, valueType, numberOfFilterRows, ghammazDegreeIndices, jinsDegreeRankByIndex } = maqamConfig;
 
     function renderTranspositionRow(maqam: Maqam, ascending: boolean, rowIndex: number) {
       // Always pass the combined ascending + descending pitch classes so cross-
@@ -1002,12 +1030,24 @@ const MaqamTranspositions: React.FC = () => {
               </tr>
               <tr data-row-type="scaleDegrees">
                 <th scope="col" id={`maqam-${standardizeText(maqam.name)}-scaleDegrees-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.scaleDegrees")}</th>
-                {pitchClasses.map((_, i) => (
-                  <React.Fragment key={i}>
-                    <th scope="col" className="maqam-jins-transpositions-shared__table-cell--scale-degree" data-column-type="scale-degree">{ascending ? romanNumerals[i] : romanNumerals[romanNumerals.length - 1 - i]}</th>
-                    <th scope="col" className="maqam-jins-transpositions-shared__table-cell--scale-degree" data-column-type="empty"></th>
-                  </React.Fragment>
-                ))}
+                {pitchClasses.map((_, i) => {
+                  const degreeIndex = ascending ? i : romanNumerals.length - 1 - i;
+                  const isGhammaz = ghammazDegreeIndices.includes(degreeIndex);
+                  return (
+                    <React.Fragment key={i}>
+                      <th
+                        scope="col"
+                        className={`maqam-jins-transpositions-shared__table-cell--scale-degree${isGhammaz ? " maqam-jins-transpositions-shared__table-cell--ghammaz" : ""}`}
+                        data-column-type="scale-degree"
+                        title={isGhammaz ? "ghammāz" : undefined}
+                      >
+                        {ascending ? romanNumerals[i] : romanNumerals[romanNumerals.length - 1 - i]}
+                        {isGhammaz && ` (${language === "ar" ? "غ" : "gh"})`}
+                      </th>
+                      <th scope="col" className="maqam-jins-transpositions-shared__table-cell--scale-degree" data-column-type="empty"></th>
+                    </React.Fragment>
+                  );
+                })}
               </tr>
               <tr data-row-type="noteNames">
                 <th scope="row" id={`maqam-${standardizeText(maqam.name)}-${ascending ? 'ascending' : 'descending'}-noteNames-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.noteNames")}</th>
@@ -1251,10 +1291,13 @@ const MaqamTranspositions: React.FC = () => {
                     <th scope="row" id={`maqam-${standardizeText(maqam.name)}-${ascending ? 'ascending' : 'descending'}-ajnas-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.ajnas")}</th>
                     {jinsTranspositions.map((jinsTransposition, index) => {
                       const noteNames = jinsTransposition?.jinsPitchClasses.map((pc) => pc.noteName) || [];
-                      const isActive = highlightedNotes.index === rowIndex + (ascending ? 0 : 0.5) && 
+                      const isActive = highlightedNotes.index === rowIndex + (ascending ? 0 : 0.5) &&
                                       noteNames.every(name => highlightedNotes.noteNames.includes(name)) &&
                                       highlightedNotes.noteNames.every(name => noteNames.includes(name));
-                      
+                      // Conventional jins rank for this degree (1° primary / 2° secondary / 3° tertiary)
+                      const degreeIndex = ascending ? index : jinsTranspositions.length - 1 - index;
+                      const jinsDegreeRank = jinsDegreeRankByIndex[degreeIndex];
+
                       return (
                         <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" colSpan={2} key={index} data-column-type="jins">
                           {jinsTransposition && (
@@ -1272,7 +1315,12 @@ const MaqamTranspositions: React.FC = () => {
                                 }
                               }}
                             >
-                              {getDisplayName(jinsTransposition.name, "jins")}
+                              {/* Single inline span so the rank flows with the first line
+                                  of the name instead of centering against the whole block */}
+                              <span>
+                                {jinsDegreeRank && <span className="maqam-jins-transpositions-shared__jins-degree-rank">{jinsDegreeRank}</span>}
+                                {getDisplayName(jinsTransposition.name, "jins")}
+                              </span>
                             </button>
                           )}
                         </td>
