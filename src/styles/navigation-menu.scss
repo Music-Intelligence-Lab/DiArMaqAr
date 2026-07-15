@@ -16,7 +16,7 @@
 
 // Ensure the open button is always above the sidebar
 .navigation-menu-card {
-  font-size: 18px;
+  font-size: $font-size-xl;
   position: fixed;
   top: 0;
   left: 0;
@@ -43,7 +43,7 @@
     overflow-y: auto;
     background: $black;
     color: $text;
-    font-size: 14px;
+    font-size: $font-size-md;
       overflow-y: hidden;
 
   }
@@ -51,7 +51,7 @@
   &__link {
     text-decoration: none;
     color: $text !important;
-    font-weight: 300;
+    font-weight: $font-weight-regular;
     display: flex;
     flex-direction: column;
     justify-content: center;

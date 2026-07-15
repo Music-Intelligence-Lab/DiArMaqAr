@@ -20,7 +20,7 @@
   }
 
   &__rows {
-    font-size: 18px;
+    font-size: $font-size-xl;
   }
 
   &__selections-row {
@@ -28,7 +28,7 @@
   }
 
   &__selected-note {
-    font-size: 14px;
+    font-size: $font-size-md;
     background-color: $secondary;
     padding: 5px;
     margin: 0 3px;
@@ -44,7 +44,7 @@
   &__toggle-button {
     margin: 0 10px;
     padding: 5px 10px;
-    font-size: 16px;
+    font-size: $font-size-lg;
     border-radius: 5px;
     cursor: pointer;
     transition: 0.3s;
@@ -73,7 +73,7 @@
     padding: 0px 10px;
     border-radius: 2px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: $font-size-sm;
     min-width: 150px;
     width: auto;
     height: 30px;
@@ -118,9 +118,9 @@
     border: none;
     background: $medium-grey;
     color: $text;
-    font-size: 13px;
+    font-size: $font-size-base;
     height: 38px;
-    font-weight: 400;
+    font-weight: $font-weight-medium;
     cursor: pointer;
 
     [dir="rtl"] & {
@@ -135,7 +135,7 @@
   &__tab_active {
     border: none;
     background: $black;
-    font-weight: 400;
+    font-weight: $font-weight-medium;
 
     &:hover {
       background: $black;
@@ -253,7 +253,7 @@
     align-items: left;
     padding: 5px 10px;
     background-color: rgba($black, 0.3);
-    font-size: 14px;
+    font-size: $font-size-md;
     color: $text;
     cursor: pointer;
     transition: 0.2s;
@@ -284,10 +284,10 @@
     flex-direction: column;
     align-items: left;
     justify-content: left;
-    font-weight: 400;
+    font-weight: $font-weight-medium;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-variation-settings: "wght" 400;
+    font-variation-settings: "wght" #{$font-weight-medium};
     font-synthesis: none;
 
     [dir="rtl"] & {
@@ -295,11 +295,11 @@
     }
 
     &-transpositions {
-      font-weight: 200;
+      font-weight: $font-weight-light;
       margin-top: 3px;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-      font-variation-settings: "wght" 200;
+      font-variation-settings: "wght" #{$font-weight-light};
       font-synthesis: none;
 
       [dir="rtl"] & {
@@ -329,7 +329,7 @@
   &__create-button {
     width: fit-content;
     margin: 20px auto;
-    font-size: 20px;
+    font-size: $font-size-2xl;
     padding: 10px;
     background-color: $secondary;
     border-radius: 10px;
@@ -350,7 +350,7 @@
     align-items: flex-start;
     gap: 20px;
     padding: 20px;
-    font-size: 20px;
+    font-size: $font-size-2xl;
 
     [dir="rtl"] & {
       align-items: flex-end;
@@ -361,7 +361,7 @@
   // Name input (was __maqam-input)
   &__name-input {
     padding: 0.4rem;
-    font-size: 1rem;
+    font-size: $font-size-lg;
     border-radius: 4px;
   }
 
@@ -370,7 +370,7 @@
   &__clear-button {
     margin-right: 20px;
     padding: 10px 20px;
-    font-size: 16px;
+    font-size: $font-size-lg;
     border-radius: 5px;
     cursor: pointer;
     transition: 0.3s;
@@ -401,7 +401,7 @@
 
   &__source-add-button {
     padding: 10px 20px;
-    font-size: 16px;
+    font-size: $font-size-lg;
     border-radius: 5px;
     cursor: pointer;
   }
@@ -416,12 +416,12 @@
   &__source-select,
   &__source-input {
     padding: 5px;
-    font-size: 14px;
+    font-size: $font-size-md;
   }
 
   &__source-delete-button {
     padding: 5px;
-    font-size: 14px;
+    font-size: $font-size-md;
     border-radius: 5px;
     cursor: pointer;
     background-color: $delete;
@@ -434,7 +434,7 @@
   }
 
   &__comments-english {
-    font-size: 14px;
+    font-size: $font-size-md;
     width: 50%;
     min-height: 80px;
     direction: ltr;
@@ -446,7 +446,7 @@
   }
 
   &__comments-arabic {
-    font-size: 14px;
+    font-size: $font-size-md;
     width: 50%;
     min-height: 80px;
     text-align: right;
@@ -474,7 +474,7 @@
 
   &__label {
     margin-bottom: 0.4rem;
-    font-weight: bold;
+    font-weight: $font-weight-semibold;
 
     [dir="rtl"] & {
       text-align: right;

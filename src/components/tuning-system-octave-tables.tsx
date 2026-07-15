@@ -826,7 +826,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
               <tbody>
                 {/* Row 1: Pitch Class */}
                 {filters.pitchClass && (
-                  <tr>
+                  <tr data-row-type="pitchClass">
                     <td className="tuning-system-manager__row-header">{t('octave.pitchClass')}</td>
                     {tuningSystemPitchClassesArray.map((_, colIndex) => (
                       <td key={colIndex} className={getCellClassName(octave, colIndex)}>
@@ -837,6 +837,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                 )}
                 {/* Row 2: Note Name */}
                 <tr
+                  data-row-type="noteNames"
                   style={{
                     minHeight: "50px",
                     maxHeight: "50px",
@@ -879,7 +880,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                 </tr>
                 {/* Row 3: Abjad Name */}
                 {filters.abjadName && (
-                  <tr>
+                  <tr data-row-type="abjadName">
                     <td className="tuning-system-manager__row-header">{t('octave.abjadName')}</td>
                     {tuningSystemPitchClassesArray.map((_, colIndex) => (
                       <td
@@ -911,7 +912,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                 )}
                 {/* Row 4: English Name */}
                 {filters.englishName && (
-                  <tr>
+                  <tr data-row-type="englishName">
                     <td className="tuning-system-manager__row-header">{t('octave.englishName')}</td>
                     {(() => {
                       // Build preferred mapping from current context (maqam/jins/selection)
@@ -944,7 +945,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
 
                 {/* Row: Solfege */}
                 {filters.solfege && (
-                  <tr>
+                  <tr data-row-type="solfege">
                     <td className="tuning-system-manager__row-header">{t('octave.solfege')}</td>
                     {rowCells.map((pitchClass, colIndex) => (
                       <td key={colIndex} className={getCellClassName(octave, colIndex)}>
@@ -955,7 +956,10 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                 )}
 
                 {pitchClassType !== "unknown" && filters[pitchClassType as keyof typeof filters] && (
-                  <tr className="tuning-system-manager__octave-table__detectedPitchClassType">
+                  <tr
+                    className="tuning-system-manager__octave-table__detectedPitchClassType"
+                    data-row-type={pitchClassType === 'fraction' ? 'fractionRatio' : pitchClassType}
+                  >
                     <td className="tuning-system-manager__row-header">
                       {t(`octave.${pitchClassType === 'fraction' ? 'fractionRatio' :
                            pitchClassType === 'decimalRatio' ? 'decimalRatio' :
@@ -972,7 +976,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
 
                 {/* Row 5: Cents (¢) */}
                 {filters.cents && pitchClassType !== "cents" && (
-                  <tr>
+                  <tr data-row-type="cents">
                     <td className="tuning-system-manager__row-header">{t('octave.cents')}</td>
                     {rowCells.map((pitchClass, colIndex) => (
                       <td key={colIndex} className={getCellClassName(octave, colIndex)}>
@@ -984,7 +988,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
 
                 {/* Row 5.5: Cents +/- 12-EDO */}
                 {filters.centsDeviation && (
-                  <tr>
+                  <tr data-row-type="centsDeviation">
                     <td className="tuning-system-manager__row-header">{t('octave.centsDeviation')}</td>
                     {rowCells.map((pitchClass, colIndex) => {
                       const referenceNoteWithOctave = getIpnReferenceNoteNameWithOctave(pitchClass);
@@ -1001,7 +1005,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
 
                 {/* Row 6: Fraction Ratio */}
                 {filters.fraction && pitchClassType !== "fraction" && (
-                  <tr>
+                  <tr data-row-type="fractionRatio">
                     <td className="tuning-system-manager__row-header">{t('octave.fractionRatio')}</td>
                     {rowCells.map((pitchClass, colIndex) => (
                       <td key={colIndex} className={getCellClassName(octave, colIndex)}>
@@ -1013,7 +1017,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
 
                 {/* Row 7: String Length */}
                 {filters.stringLength && pitchClassType !== "stringLength" && (
-                  <tr>
+                  <tr data-row-type="stringLength">
                     <td className="tuning-system-manager__row-header">{t('octave.stringLength')}</td>
                     {rowCells.map((pitchClass, colIndex) => (
                       <td key={colIndex} className={getCellClassName(octave, colIndex)}>
@@ -1025,7 +1029,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
 
                 {/* Row 7.5: Fret Division */}
                 {filters.fretDivision && pitchClassType !== "fretDivision" && (
-                  <tr>
+                  <tr data-row-type="fretDivision">
                     <td className="tuning-system-manager__row-header">{t('octave.fretDivision')}</td>
                     {rowCells.map((pitchClass, colIndex) => (
                       <td key={colIndex} className={getCellClassName(octave, colIndex)}>
@@ -1037,7 +1041,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
 
                 {/* Row 8: Decimal Ratio */}
                 {filters.decimalRatio && pitchClassType !== "decimalRatio" && (
-                  <tr>
+                  <tr data-row-type="decimalRatio">
                     <td className="tuning-system-manager__row-header">{t('octave.decimalRatio')}</td>
                     {rowCells.map((pitchClass, colIndex) => (
                       <td key={colIndex} className={getCellClassName(octave, colIndex)}>
@@ -1049,7 +1053,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
 
                 {/* Row 9: Midi Note */}
                 {filters.midiNote && (
-                  <tr>
+                  <tr data-row-type="midiNote">
                     <td className="tuning-system-manager__row-header">{t('octave.midiNote')}</td>
                     {rowCells.map((pitchClass, colIndex) => (
                       <td key={colIndex} className={getCellClassName(octave, colIndex)}>
@@ -1061,7 +1065,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
 
                 {/* Row 9.5: MIDI Note Deviation */}
                 {filters.midiNoteDeviation && (
-                  <tr>
+                  <tr data-row-type="midiNoteDeviation">
                     <td className="tuning-system-manager__row-header">{t('octave.midiNoteDeviation')}</td>
                     {(() => {
                       // Build preferred mapping from current context (maqam/jins/selection)
@@ -1099,7 +1103,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
 
                 {/* Row 10: Freq (Hz) */}
                 {filters.frequency && (
-                  <tr>
+                  <tr data-row-type="frequency">
                     <td className="tuning-system-manager__row-header">{t('octave.frequency')}</td>
                     {rowCells.map((pitchClass, colIndex) => {
                       const isEditing = editingCell?.octave === octave && editingCell.index === colIndex;
@@ -1144,7 +1148,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                 )}
 
                 {/* Row 11: Play */}
-                <tr>
+                <tr data-row-type="play">
                   <td className="tuning-system-manager__row-header">{t('octave.play')}</td>
                   {rowCells.map((pitchClass, colIndex) => (
                     <td key={colIndex} className={getCellClassName(octave, colIndex)}>
@@ -1154,7 +1158,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                 </tr>
 
                 {/* Row 12: Select (checkbox) */}
-                <tr>
+                <tr data-row-type="select">
                   <td className="tuning-system-manager__row-header">{t('octave.select')}</td>
                   {tuningSystemPitchClassesArray.map((_, colIndex) => (
                     <td key={colIndex} className={getCellClassName(octave, colIndex)}>
@@ -1171,7 +1175,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
 
                 {/* Row 13: Staff Notation */}
                 {filters.staffNotation && (
-                  <tr>
+                  <tr data-row-type="staffNotation">
                     <td className="tuning-system-manager__row-header">{t('octave.staffNotation')}</td>
                     <td colSpan={tuningSystemPitchClassesArray.length} className="staff-notation-cell">
                       <StaffNotation pitchClasses={rowCells} />

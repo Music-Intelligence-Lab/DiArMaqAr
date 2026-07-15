@@ -12,7 +12,7 @@
   }
 
   &__header {
-    font-weight: 300;
+    font-weight: $font-weight-regular;
     margin-bottom: 10px;
     margin-left: 10px;
     min-height: 40px;
@@ -25,7 +25,7 @@
   }
 
   &__header-text {
-    font-weight: 400;
+    font-weight: $font-weight-regular;
   }
 
   &__wrapper-modulations-header {
@@ -36,8 +36,8 @@
 
   &__source-maqam-name {
     color: $text !important;
-    font-size: 24px;
-    font-weight: 400;
+    font-size: $font-size-3xl; // was 24px, nearest scale step (26px)
+    font-weight: $font-weight-regular;
     text-decoration: none !important;
     padding: 0px;
     margin-bottom: 20px;
@@ -52,8 +52,8 @@
   &__ajnas-count,
   &__maqamat-count {
     color: $text !important;
-    font-size: 14px;
-    font-weight: 400;
+    font-size: $font-size-md;
+    font-weight: $font-weight-regular;
     text-decoration: none !important;
     background-color: rgba($primary, 0.5);
     padding: 10px;
@@ -72,8 +72,8 @@
 
   &__octave-shift {
     color: $text !important;
-    font-size: 14px;
-    font-weight: 400;
+    font-size: $font-size-md;
+    font-weight: $font-weight-regular;
     text-decoration: none !important;
     background-color: rgba($primary, 0.5);
     padding: 10px;
@@ -92,8 +92,8 @@
 
   &__delete-hop-btn {
     color: $text !important;
-    font-size: 14px;
-    font-weight: 400;
+    font-size: $font-size-md;
+    font-weight: $font-weight-regular;
     text-decoration: none !important;
     background-color: rgba($primary, 0.5);
     padding: 10px !important;
@@ -140,8 +140,8 @@
   &__modulation-item {
     text-align: left;
     padding: 10px 10px;
-    font-size: 14px;
-    font-weight: 400;
+    font-size: $font-size-md;
+    font-weight: $font-weight-regular;
     background-color: rgba($primary, 0.3);
 
     &:hover {
@@ -194,7 +194,7 @@
     align-items: left;
     padding: 10px;
     background-color: rgba($primary, 0.5);
-    font-size: 14px;
+    font-size: $font-size-md;
     color: $text;
     cursor: pointer;
     // box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
@@ -224,13 +224,13 @@
     flex-direction: column;
     align-items: left;
     justify-content: left;
-    font-weight: 400;
+    font-weight: $font-weight-regular;
 
     &-transpositions {
       color: rgba(255, 255, 255, 1);
-      font-size: 14px;
+      font-size: $font-size-md;
       margin-top: 3px;
-      font-weight: 200;
+      font-weight: $font-weight-light;
     }
   }
 

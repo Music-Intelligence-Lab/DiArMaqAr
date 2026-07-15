@@ -27,8 +27,7 @@
   }
 
   &__title {
-    font-size: 26px;
-    font-weight: 300;
+    @include type-heading-h1;
     color: white;
     cursor: pointer;
     direction: ltr !important;
@@ -38,14 +37,13 @@
     justify-content: center;
     align-items: center;
     gap: 0.2em;
-    line-height: 1.2;
 
     @media (max-width: 768px) {
-      font-size: 24px;
+      font-size: $font-size-2xl; // was 24px, one scale step down from the 26px base
     }
 
     @media (max-width: 480px) {
-      font-size: 20px;
+      font-size: $font-size-xl; // was 20px, one more step down
     }
   }
 
@@ -70,7 +68,7 @@
   }
 
   &__subtitle {
-    font-size: 14px;
+    font-size: $font-size-md;
     color: white;
     cursor: pointer;
   }
@@ -83,7 +81,7 @@
     height: $top-navbar-height;
     color: white;
     padding: 20px;
-    font-size: 20px;
+    font-size: $font-size-2xl;
     border-bottom: $grey 1px solid;
     background-color: $background;
   }
@@ -155,8 +153,7 @@
       padding: 10px 16px;
       background-color: $secondary;
       color: white;
-      font-size: 13px;
-      font-weight: 400;
+      @include type-tooltip;
       min-width: 200px;
       max-width: 400px;
       width: max-content;
@@ -167,7 +164,6 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
       z-index: 10000;
       pointer-events: none;
-      line-height: 1.4;
     }
 
     // First child tooltip (align to left edge of viewport)
@@ -258,20 +254,20 @@
     }
 
     &_tab-title {
-      font-size: 14px;
-      font-weight: 500;
+      font-size: $font-size-md;
+      font-weight: $font-weight-semibold;
       margin-bottom: 5px;
     }
 
     &_tab-subtitle {
-      font-size: 13px;
-      font-weight: 200;
+      font-size: $font-size-base;
+      font-weight: $font-weight-light;
     }
 
     // Safari sometimes applies different scaling to the last flex child; make explicit
     &:last-child {
-      .navbar__bottom-bar-item_tab-title { font-size: 14px; }
-      .navbar__bottom-bar-item_tab-subtitle { font-size: 13px; }
+      .navbar__bottom-bar-item_tab-title { font-size: $font-size-md; }
+      .navbar__bottom-bar-item_tab-subtitle { font-size: $font-size-base; }
     }
 
   }
@@ -301,7 +297,7 @@
     background-color: rgba($primary, 0.8);
     color: $text;
     border-radius: 4px;
-    font-size: 11px;
+    font-size: $font-size-xs;
     cursor: pointer;
     transition: background-color 0.2s ease;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
@@ -354,11 +350,11 @@
     width: 100%;
     //border: 1px solid $grey;
     border-radius: 4px;
-    font-size: 11px;
+    font-size: $font-size-xs;
     cursor: pointer;
     transition: background-color 0.2s ease;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    
+
     &:hover {
       background-color: $primary;
     }
@@ -426,8 +422,8 @@
     margin: 0 auto;
     border-radius: 10px;
     color: white;
-    font-size: 20px;
-    letter-spacing: 1.5;
+    font-size: $font-size-2xl;
+    letter-spacing: $letter-spacing-tracked; // was `1.5` — unitless, invalid CSS, silently dropped by browsers
     cursor: pointer;
     transition: 0.3s;
     user-select: none;
@@ -451,7 +447,7 @@
     padding: 5px;
     margin: 0 auto;
     color: white;
-    font-size: 16px;
+    font-size: $font-size-lg;
     cursor: pointer;
     transition: 0.3s;
     user-select: none;

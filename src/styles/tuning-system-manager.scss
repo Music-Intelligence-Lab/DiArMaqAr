@@ -9,15 +9,13 @@
   //padding: 20px 10px;
 
   &__header {
-    font-size: 20px;
+    @include type-heading-h2;
     margin-left: 0;
-
-    font-weight: bold;
     display: inline;
   }
 
   &__abjad-name {
-    font-size: 13px;
+    font-size: $font-size-base;
   }
 
   &__form {
@@ -116,7 +114,7 @@
 
   &__label {
     margin-bottom: 0.4rem;
-    font-weight: bold;
+    font-weight: $font-weight-semibold;
   }
 
   &__input,
@@ -273,12 +271,8 @@
 
   // Shared small uppercase header above each column's content
   &__options-header {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
+    @include type-eyebrow;
     color: $light-grey;
-    line-height: 1.4;
     white-space: nowrap;
   }
 
@@ -993,7 +987,7 @@
     }
 
     td {
-      font-size: 12px;
+      @include type-table-label;
       padding-left: 10px;
       padding-top: 5px;
       padding-right: 10px;
@@ -1011,8 +1005,23 @@
       word-break: normal;
     }
 
+    // Numeric data-value rows (cents, ratios, string length, MIDI, frequency,
+    // etc.) — tabular figures + the reference size/weight, matching the
+    // shared maqam/jins table's data-row-type contract.
+    tr[data-row-type="cents"] td,
+    tr[data-row-type="centsDeviation"] td,
+    tr[data-row-type="fractionRatio"] td,
+    tr[data-row-type="stringLength"] td,
+    tr[data-row-type="fretDivision"] td,
+    tr[data-row-type="decimalRatio"] td,
+    tr[data-row-type="midiNote"] td,
+    tr[data-row-type="midiNoteDeviation"] td,
+    tr[data-row-type="frequency"] td {
+      @include type-data-value;
+    }
+
     &_row-header {
-      font-weight: bold;
+      font-weight: $font-weight-semibold;
       width: 120px !important;
       background-color: $medium-grey;
       text-transform: capitalize;

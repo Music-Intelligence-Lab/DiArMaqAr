@@ -155,14 +155,14 @@ export default function StatisticsPage() {
                 className={selectedRowId === row.id ? "selected-row" : ""}
                 onClick={() => setSelectedRowId(selectedRowId === row.id ? null : row.id)}
               >
-                <td>{row.label}</td>
-                <td>{`${row.possibleAjnasCount}/${row.totalAjnas}`}</td>
-                <td>{row.possibleAjnasTranspositionsCount}</td>
-                <td>{`${row.possibleMaqamatCount}/${row.totalMaqamat}`}</td>
-                <td>{row.possibleMaqamatTranspositionsCount}</td>
-                <td>{row.totalSuyur}</td>
-                <td>{row.totalAjnasModulations}</td>
-                <td>{row.totalMaqamatModulations}</td>
+                <td data-column-type="label">{row.label}</td>
+                <td data-column-type="value">{`${row.possibleAjnasCount}/${row.totalAjnas}`}</td>
+                <td data-column-type="value">{row.possibleAjnasTranspositionsCount}</td>
+                <td data-column-type="value">{`${row.possibleMaqamatCount}/${row.totalMaqamat}`}</td>
+                <td data-column-type="value">{row.possibleMaqamatTranspositionsCount}</td>
+                <td data-column-type="value">{row.totalSuyur}</td>
+                <td data-column-type="value">{row.totalAjnasModulations}</td>
+                <td data-column-type="value">{row.totalMaqamatModulations}</td>
               </tr>
             ))}
           </tbody>

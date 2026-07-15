@@ -32,6 +32,146 @@ $main-gradient: linear-gradient(0deg, $dark-grey, $dark-grey);
 $link: $gold; // Default link color
 $link-visited: color.adjust($link, $saturation: -30%);
 
+// ---------------------------------------------------------------------------
+// Typography
+// ---------------------------------------------------------------------------
+
+// Font size — rem-based (WCAG 1.4.4: respects user/browser base font-size).
+// $font-size-sm (12px) is the reference step: the smallest size dense table
+// data can use without becoming illegible. Everything else is sized relative
+// to it, not the other way around.
+$font-size-2xs:  0.625rem;  // 10px — necessarily-tiny micro-labels only (uppercase device, never body text)
+$font-size-xs:   0.6875rem; // 11px — eyebrow/caption labels, dense secondary UI text
+$font-size-sm:   0.75rem;   // 12px — REFERENCE — table cells, form inputs, buttons, most UI text
+$font-size-base: 0.8125rem; // 13px — tooltips, slightly-elevated secondary text
+$font-size-md:   0.875rem;  // 14px — settings descriptions, modal body copy, footer body text
+$font-size-lg:   1rem;      // 16px — sub-headings, card titles, modal section labels
+$font-size-xl:   1.125rem;  // 18px — H3 tier / manager panel titles
+$font-size-2xl:  1.3125rem; // 21px — H2 tier / section headers
+$font-size-3xl:  1.625rem;  // 26px — H1 tier / navbar title, page-level headers
+$font-size-4xl:  2.5rem;    // 40px — hero/display scale
+
+// Font weight — only 200/300/400/500 are loaded (see layout.tsx Readex Pro
+// config). No bold/600/700 anywhere: hierarchy comes from size and spacing,
+// not weight.
+$font-weight-light:    200; // default table weight — labels and data values both, so they read as one table
+$font-weight-regular:  300; // secondary/subtitle weight
+$font-weight-medium:   400; // reserved — 400 read too heavy for dense table data in practice
+$font-weight-semibold: 500; // sole emphasis step — replaces all former bold/600/700
+
+// Line height — unitless ratios.
+$line-height-tight:   1.2;  // headings, single-line titles
+$line-height-snug:    1.25; // table th/td, eyebrow/caption text
+$line-height-normal:  1.4;  // body text, tooltips, settings descriptions, numeric data values
+$line-height-relaxed: 1.7;  // long-form marketing prose
+
+// Letter spacing.
+$letter-spacing-normal:  normal; // explicit default so intent is visible at call sites
+$letter-spacing-tracked: 0.05em; // uppercase eyebrow/micro-label role — Latin only, zero this out under [dir="rtl"]
+$letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
+
+// Numeric/data-value role — cents, Hz, ratios, MIDI, string length, etc.
+// Distinct from generic table-cell/label text: tabular-nums keeps digit
+// columns aligned. Font family is explicit (Readex Pro, no exceptions).
+@mixin type-data-value {
+    font-family: "Readex Pro", sans-serif;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-light; // 200 — the app's default table weight
+    font-variant-numeric: tabular-nums;
+    line-height: $line-height-snug;
+}
+
+// Table th, and non-numeric td (e.g. name cells). Matches type-data-value's
+// weight so label rows and number-value rows read as one consistent table,
+// not two competing weights.
+@mixin type-table-label {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-light;
+    line-height: $line-height-snug;
+}
+
+// The "primary value" row-header th — label, not a number, but emphasized.
+@mixin type-table-label-primary {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    line-height: $line-height-snug;
+}
+
+// Uppercase micro-labels with localized text: column eyebrows ("STRING
+// LENGTH"), footer subtitle. Tracking + uppercase are Latin-script devices —
+// under [dir="rtl"] this must drop tracking (breaks Arabic letter-joining)
+// and compensate with a size step instead of case (Arabic has no case).
+@mixin type-eyebrow {
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+    letter-spacing: $letter-spacing-tracked;
+    text-transform: uppercase;
+    line-height: $line-height-normal;
+
+    [dir="rtl"] & {
+        font-size: $font-size-sm; // one step up, compensating for lost case/tracking legibility cues
+        letter-spacing: $letter-spacing-normal;
+        text-transform: none;
+    }
+}
+
+// Necessarily-tiny micro-label (e.g. QWERTY/MIDI key badge). Stays small —
+// content here is script-invariant (Latin keycaps, Western numerals), so no
+// RTL override is needed.
+@mixin type-micro-label {
+    font-size: $font-size-2xs;
+    font-weight: $font-weight-regular;
+    letter-spacing: $letter-spacing-tracked;
+    text-transform: uppercase;
+}
+
+@mixin type-tooltip {
+    font-size: $font-size-base;
+    font-weight: $font-weight-medium;
+    line-height: $line-height-normal;
+}
+
+@mixin type-button-label {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    line-height: $line-height-tight;
+}
+
+@mixin type-form-input {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+}
+
+@mixin type-modal-title {
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-semibold;
+    line-height: $line-height-tight;
+}
+
+@mixin type-settings-description {
+    font-size: $font-size-md;
+    font-weight: $font-weight-light;
+    line-height: $line-height-normal;
+}
+
+@mixin type-heading-h1 {
+    font-size: $font-size-3xl;
+    font-weight: $font-weight-regular;
+    line-height: $line-height-tight;
+}
+
+@mixin type-heading-h2 {
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-semibold;
+    line-height: $line-height-tight;
+}
+
+@mixin type-heading-h3 {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-medium;
+    line-height: $line-height-tight;
+}
+
 a {
     color: $link !important;
     text-decoration: none !important;

@@ -7,7 +7,7 @@
   width: 100%;
   color: $text;
   padding: 20px 10px;
-  font-weight: bold;
+  font-weight: $font-weight-semibold;
 
   &::-webkit-scrollbar {
     width: 12px;
@@ -25,13 +25,13 @@
   }
 
   &__title {
-    font-size: 50px;
+    font-size: $font-size-4xl; // was 50px, flagged reduction to the 40px display-scale reference
     margin-bottom: 20px;
   }
 
   &__header {
-    font-size: 26px;
-    font-weight: bold;
+    font-size: $font-size-3xl;
+    font-weight: $font-weight-semibold;
   }
 
   &__form {
@@ -73,7 +73,7 @@
 
   &__label {
     margin-bottom: 0.4rem;
-    font-weight: bold;
+    font-weight: $font-weight-semibold;
   }
 
   &__input,
@@ -106,7 +106,7 @@
     height: fit-content;
     margin-right: 20px;
     padding: 15px 20px;
-    font-size: 0.9rem;
+    font-size: $font-size-md; // was 0.9rem/14.4px, nearest scale step
     border-radius: 5px;
     cursor: pointer;
     transition: 0.3s;
@@ -130,7 +130,7 @@
   &__add-button {
     background-color: $primary;
     margin-left: 10px;
-    font-size: 0.8rem;
+    font-size: $font-size-base; // was 0.8rem/12.8px, nearest scale step
     padding: 10px 15px;
   }
 }

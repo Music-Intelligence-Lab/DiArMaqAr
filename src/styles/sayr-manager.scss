@@ -5,9 +5,9 @@
   margin-top: 20px;
 
   &__header {
-    font-size: 1.5rem;
+    font-size: $font-size-3xl; // was 1.5rem/24px, nearest scale step (26px)
     margin-bottom: 1rem;
-    font-weight: bold;
+    font-weight: $font-weight-semibold;
     display: inline;
   }
 
@@ -24,7 +24,7 @@
     margin-bottom: 1rem;
     border: 1px solid #ffeaa7;
     border-radius: 4px;
-    font-size: 0.9rem;
+    font-size: $font-size-md; // was 0.9rem/14.4px, nearest scale step
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -54,7 +54,7 @@
 
   &__label {
     margin-bottom: 0.5rem;
-    font-weight: 600;
+    font-weight: $font-weight-semibold; // was 600, unloaded weight — remapped to the sole emphasis step
 
     // RTL support
     [dir="rtl"] & {
@@ -76,7 +76,7 @@
     padding: 10px;
     background-color: rgba($primary, 0.4);
     border-radius: 5px;
-    font-size: 14px;
+    font-size: $font-size-md;
     color: $text;
     cursor: pointer;
     // box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
@@ -125,8 +125,8 @@
   }
 
   &__stops-header {
-    font-size: 14px;
-    font-weight: 400;
+    font-size: $font-size-md;
+    font-weight: $font-weight-medium;
     margin-bottom: 10px;
   }
 
@@ -179,15 +179,15 @@
     color: $text;
     padding: 10px 15px;
     border-radius: 0px;
-    font-size: 14px;
-    font-weight: 300;
+    font-size: $font-size-md;
+    font-weight: $font-weight-regular;
   }
 
   &__transition-label {
     width: max-content;
     //    text-align: center;
-    font-size: 14px;
-    font-weight: 300;
+    font-size: $font-size-md;
+    font-weight: $font-weight-regular;
     color: $text;
     //    word-wrap: break-word;
   }
@@ -195,7 +195,7 @@
   &__stop-type,
   &__stop-value {
     padding: 0.4rem;
-    font-size: 0.9rem;
+    font-size: $font-size-md; // was 0.9rem/14.4px, nearest scale step
     border: 1px solid #ccc;
     border-radius: 4px;
     max-width: 80px;
@@ -225,7 +225,7 @@
   &__save-button,
   &__delete-button {
     padding: 0.6rem 1.2rem;
-    font-size: 1rem;
+    font-size: $font-size-lg;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -255,7 +255,7 @@
   }
 
   &__summary {
-    font-size: 24px;
+    font-size: $font-size-3xl; // was 24px, nearest scale step (26px)
     margin-bottom: 10px;
     cursor: pointer;
   }
@@ -275,13 +275,13 @@
   }
 
   &__comments-english {
-    font-size: 14px;
-    font-weight: 200;
+    font-size: $font-size-md;
+    font-weight: $font-weight-light;
     margin-bottom: 20px;
 
     &_title {
-      font-size: 14px;
-      font-weight: 400;
+      font-size: $font-size-md;
+      font-weight: $font-weight-medium;
     }
   }
 }

@@ -385,7 +385,7 @@
 
   &__label {
     margin-bottom: 0.4rem;
-    font-weight: bold;
+    font-weight: $font-weight-semibold;
 
     // RTL support
     [dir="rtl"] & {
@@ -612,15 +612,14 @@
     border-collapse: collapse;
     table-layout: fixed;
     margin-bottom: 0px;
-    font-size: 12px;
-    font-weight: 200;
+    @include type-table-label;
 
     th {
       vertical-align: middle;
       text-align: left;
       padding: 8px;
       border: solid 1px $grey;
-      font-weight: 200;
+      @include type-table-label;
 
       // RTL support
       [dir="rtl"] & {
@@ -633,12 +632,27 @@
       text-align: left;
       padding: 10px;
       border: solid 1px $grey;
-      font-weight: 200;
+      @include type-table-label;
 
       // RTL support
       [dir="rtl"] & {
         text-align: right;
       }
+    }
+
+    // Numeric data-value columns (cents, ratios, string length, MIDI,
+    // frequency, etc.) — tabular figures + the reference size/weight, kept
+    // distinct from label cells above.
+    tr[data-row-type="fraction"] td,
+    tr[data-row-type="cents"] td,
+    tr[data-row-type="centsFromZero"] td,
+    tr[data-row-type="centsDeviation"] td,
+    tr[data-row-type="decimalRatio"] td,
+    tr[data-row-type="stringLength"] td,
+    tr[data-row-type="fretDivision"] td,
+    tr[data-row-type="midiNote"] td,
+    tr[data-row-type="frequency"] td {
+      @include type-data-value;
     }
   }
 
@@ -934,7 +948,7 @@
   [class*="__row-header"] {
     background-color: $medium-grey;
     text-transform: capitalize;
-    font-weight: 400 !important;
+    font-weight: $font-weight-medium;
   }
 
   [class*="__row-header--sentence-case"] {
@@ -1211,7 +1225,7 @@
       th:first-child {
         background-color: $medium-grey !important;
         border-right: 4px solid rgba($tertiary, 0.9);
-        font-weight: 500 !important;
+        font-weight: $font-weight-semibold;
       }
       
       // Enhanced hover for primary value row
@@ -1233,7 +1247,7 @@
   // 3. Ajnas buttons styling - matches main button style (maqam-specific)
   // Conventional jins rank prefix (1° primary / 2° secondary / 3° tertiary)
   [class*="__jins-degree-rank"] {
-    font-weight: 700;
+    font-weight: $font-weight-semibold;
     margin-inline-end: 5px;
     white-space: nowrap;
   }

@@ -45,7 +45,7 @@
   }
 
   button {
-    font-size: 1rem;
+    font-size: $font-size-lg;
     padding: 10px 20px;
     border-radius: 0px;
     border: none;
@@ -75,10 +75,9 @@
 
   th,
   td {
+    @include type-table-label;
     padding: 12px 16px;
     text-align: left;
-    font-size: 14px;
-    line-height: 1.4;
   }
 
   td {
@@ -86,10 +85,14 @@
     border-bottom: 1px solid $grey;
   }
 
+  td[data-column-type="value"] {
+    @include type-data-value;
+  }
+
   th {
     background: $primary;
     color: $text;
-    font-weight: 500;
+    font-weight: $font-weight-semibold;
     position: sticky;
     top: 0;
     z-index: 500; // Below navbar (1001) but above content
@@ -99,7 +102,7 @@
     cursor: pointer;
     user-select: none;
     border-bottom: 2px solid $grey;
-    
+
     &:hover {
       background: $hovered-primary;
     }
@@ -118,7 +121,7 @@
   tr.selected-row td {
     background: $secondary !important;
     color: $text;
-    font-weight: 400;
+    font-weight: $font-weight-medium;
   }
 
   tbody tr:nth-child(even) td {
@@ -133,11 +136,12 @@
     border-bottom: none;
   }
 
-  // Responsive adjustments
+  // Responsive adjustments — padding still tightens on narrower viewports;
+  // font-size stays at the 12px table reference (was 13px here, unified
+  // per the typography redesign)
   @media (max-width: 1200px) {
     th, td {
       padding: 8px 12px;
-      font-size: 13px;
     }
   }
 

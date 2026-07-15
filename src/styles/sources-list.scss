@@ -6,8 +6,8 @@
   gap: 1rem;                    // vertical gap between entries
   padding: 1.5rem;
   background-color: $background;
-  font-size: 1rem;
-  line-height: 1.6;             // more breathing room for text
+  font-size: $font-size-lg;
+  line-height: $line-height-relaxed; // was 1.6, nearest token — more breathing room for text
   color: $text;
 }
 

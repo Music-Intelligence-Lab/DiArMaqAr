@@ -53,8 +53,7 @@
 
   &__title {
     margin: 0;
-    font-size: 20px;
-    font-weight: bold;
+    @include type-modal-title;
     color: $text;
   }
 
@@ -62,7 +61,7 @@
     background: $medium-grey;
     border: 2px solid $grey;
     color: $text;
-    font-size: 20px;
+    font-size: $font-size-2xl;
     width: 35px;
     height: 35px;
     border-radius: 5px;
@@ -105,7 +104,7 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 8px;
-    font-size: 14px;
+    font-size: $font-size-md;
 
     @media (max-width: 600px) {
       flex-direction: column;
@@ -116,24 +115,24 @@
 
   &__progress-step {
     color: $text;
-    font-weight: 500;
+    font-weight: $font-weight-semibold;
     flex: 1;
 
     @media (max-width: 600px) {
-      font-size: 13px;
+      font-size: $font-size-base;
     }
   }
 
   &__progress-percentage {
     color: $primary;
-    font-weight: bold;
-    font-size: 16px;
+    font-weight: $font-weight-semibold;
+    font-size: $font-size-lg;
     min-width: 50px;
     text-align: right;
 
     @media (max-width: 600px) {
       align-self: flex-end;
-      font-size: 15px;
+      font-size: $font-size-md; // was 15px, nearest scale step
     }
   }
 
@@ -201,8 +200,8 @@
 
   &__label {
     display: block;
-    font-size: 16px;
-    font-weight: bold;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
     color: $text;
     margin-bottom: 10px;
   }
@@ -238,15 +237,15 @@
   }
 
   &__format-name {
-    font-size: 16px;
-    font-weight: bold;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
     margin-bottom: 5px;
   }
 
   &__format-description {
-    font-size: 14px;
+    font-size: $font-size-md;
     opacity: 0.8;
-    line-height: 1.4;
+    line-height: $line-height-normal;
   }
 
   &__checkbox-group {
@@ -259,7 +258,7 @@
     display: flex;
     align-items: center;
     cursor: pointer;
-    font-size: 16px;
+    font-size: $font-size-lg;
     color: $text;
     padding: 5px 5px;
     border-radius: 5px;
@@ -284,7 +283,7 @@
     padding: 10px;
     border: 2px solid $grey;
     border-radius: 5px;
-    font-size: 16px;
+    font-size: $font-size-lg;
     background: $medium-grey;
     color: $text;
     cursor: pointer;
@@ -307,7 +306,7 @@
     padding: 10px;
     border: 2px solid $grey;
     border-radius: 5px;
-    font-size: 16px;
+    font-size: $font-size-lg;
     background: $medium-grey;
     color: $text;
     transition: all 0.2s ease;
@@ -336,8 +335,8 @@
   &__button {
     padding: 10px 20px;
     border-radius: 5px;
-    font-size: 16px;
-    font-weight: bold;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
     cursor: pointer;
     transition: all 0.2s ease;
     border: 2px solid;
@@ -433,20 +432,20 @@
 
 
     .export-modal__checkbox {
-      font-weight: 500;
+      font-weight: $font-weight-semibold;
     }
   }
 
   &__option-description {
-    font-size: 14px;
+    font-size: $font-size-md;
     color: $light-grey;
-    line-height: 1.4;
+    line-height: $line-height-normal;
     margin-left: 26px; // Align with checkbox text
     opacity: 0.9;
   }
 
   &__filename-example {
-    font-size: 12px;
+    font-size: $font-size-sm;
     color: $light-grey;
     margin-top: 8px;
     padding: 8px;
@@ -466,9 +465,9 @@
   }
 
   &__info-content {
-    font-size: 14px;
+    font-size: $font-size-md;
     color: $text;
-    line-height: 1.6;
+    line-height: $line-height-relaxed; // was 1.6, nearest token
     opacity: 0.9;
 
     div {
@@ -479,7 +478,7 @@
       }
 
       &:first-child {
-        font-weight: 500;
+        font-weight: $font-weight-semibold;
         margin-bottom: 10px;
         padding-bottom: 10px;
         border-bottom: 1px solid rgba($grey, 0.3);
@@ -521,11 +520,11 @@
 
     &__option-description {
       margin-left: 22px; // Adjust for mobile
-      font-size: 13px;
+      font-size: $font-size-base;
     }
 
     &__filename-example {
-      font-size: 11px;
+      font-size: $font-size-xs;
       padding: 6px;
     }
 

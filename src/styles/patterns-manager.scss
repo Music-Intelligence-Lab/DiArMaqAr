@@ -7,7 +7,7 @@
   width: 100%;
   color: $text;
   padding: 20px 10px;
-  font-weight: bold;
+  font-weight: $font-weight-semibold;
 
   &::-webkit-scrollbar {
     width: 12px;
@@ -25,9 +25,9 @@
   }
 
   &__header {
-    font-size: 1.5rem;
+    font-size: $font-size-3xl; // was 1.5rem/24px, nearest scale step (26px)
     margin-bottom: 1rem;
-    font-weight: bold;
+    font-weight: $font-weight-semibold;
   }
 
   &__group {
@@ -49,13 +49,13 @@
 
   &__label {
     margin-bottom: 0.5rem;
-    font-weight: 300;
+    font-weight: $font-weight-regular;
   }
 
   &__input,
   &__select {
     padding: 0.4rem;
-    font-size: 0.9rem;
+    font-size: $font-size-md; // was 0.9rem/14.4px, nearest scale step
     border-radius: 0px;
     min-width: 0;
     width: fit-content;
@@ -78,7 +78,7 @@
   &__notes-header {
     display: flex;
     align-items: center;
-    font-size: 1.2rem;
+    font-size: $font-size-xl; // was 1.2rem/19.2px, nearest scale step (18px)
     margin-bottom: 0.5rem;
     gap: 10px;
   }
@@ -89,7 +89,7 @@
     color: $text;
     border: none;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: $font-size-md; // was 0.9rem/14.4px, nearest scale step
 
     &:hover {
       opacity: 0.9;
@@ -114,7 +114,7 @@
   &__note-target,
   &__note-velocity {
     padding: 0.4rem;
-    font-size: 0.9rem;
+    font-size: $font-size-md; // was 0.9rem/14.4px, nearest scale step
     border: 0px solid #ccc;
     border-radius: 0px;
   }
@@ -125,7 +125,7 @@
     color: white;
     border: none;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: $font-size-md; // was 0.9rem/14.4px, nearest scale step
 
     &:hover {
       opacity: 0.9;

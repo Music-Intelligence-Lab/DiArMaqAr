@@ -138,19 +138,19 @@ body {
     &__ar {
       display: block;
       font-size: var(--title-size);
-      font-weight: 500;
-      line-height: 1.25;
+      font-weight: $font-weight-semibold;
+      line-height: $line-height-snug; // was 1.25, nearest token
       white-space: nowrap;
       color: $text;
     }
 
     &__latin {
       display: block;
-      // 300, not 200: thin strokes erode on dark grounds (halation).
-      font-weight: 300;
+      // regular, not light: thin strokes erode on dark grounds (halation).
+      font-weight: $font-weight-regular;
       font-size: calc(var(--title-size) * var(--title-latin-ratio));
-      letter-spacing: 0.06em;
-      line-height: 1.3;
+      letter-spacing: $letter-spacing-wide;
+      line-height: $line-height-tight; // was 1.3, nearest token
       color: rgba($text, 0.85);
       margin-top: $space-xs;
     }
@@ -160,9 +160,9 @@ body {
   // only the subtitle's appearance.
   .landing-subtitle {
     max-width: 60ch;
-    font-size: clamp(0.95rem, 1.1vw, 1.05rem);
-    font-weight: 300;
-    line-height: 1.7;
+    font-size: clamp(0.95rem, 1.1vw, 1.05rem); // kept fluid, matches the hero's clamp approach
+    font-weight: $font-weight-regular;
+    line-height: $line-height-relaxed;
     text-align: center;
     color: rgba($text, 0.6);
   }
@@ -180,8 +180,8 @@ body {
 
   // Quiet expectation-setter under the button — not part of the label.
   .cta-note {
-    font-size: 0.8rem;
-    font-weight: 300;
+    font-size: $font-size-base; // was 0.8rem/12.8px, nearest scale step
+    font-weight: $font-weight-regular;
     letter-spacing: 0.01em;
     color: $accent-line;
   }
@@ -192,8 +192,8 @@ body {
     background: $primary;
     // !important counters the global `a { color: $link !important }`.
     color: $text !important;
-    font-size: 1.1rem;
-    font-weight: 400;
+    font-size: $font-size-xl; // was 1.1rem/17.6px, nearest scale step
+    font-weight: $font-weight-medium;
     letter-spacing: 0.02em;
     text-align: center;
     border-radius: 2px;
@@ -238,8 +238,8 @@ body {
     border: none;
     // !important counters the global `a { color: $link !important }`.
     color: rgba($gold, 0.85) !important;
-    font-size: 0.85rem;
-    font-weight: 400;
+    font-size: $font-size-base; // was 0.85rem/13.6px, nearest scale step
+    font-weight: $font-weight-medium;
     letter-spacing: 0.01em;
     text-decoration: underline;
     text-decoration-color: rgba($gold, 0.25);
@@ -293,8 +293,8 @@ body {
 
   h2 {
     margin-bottom: $space-md;
-    font-size: clamp(1.3rem, 1.8vw, 1.6rem);
-    font-weight: 400;
+    font-size: clamp(1.3rem, 1.8vw, 1.6rem); // kept fluid, matches the hero's clamp approach
+    font-weight: $font-weight-medium;
     letter-spacing: 0.01em;
     text-align: start;
     color: $text;
@@ -312,9 +312,9 @@ body {
   p {
     // Paragraph gap must exceed the ~29px line box or prose reads as slabs.
     margin: 0 0 $space-md;
-    font-size: 1rem;
-    font-weight: 300;
-    line-height: 1.8;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-regular;
+    line-height: 1.8; // deliberately looser than $line-height-relaxed for long-form hero prose
     text-align: start;
     color: rgba($text, 0.75);
 
@@ -409,8 +409,8 @@ body {
 
     h3 {
       margin-bottom: $space-xs;
-      font-size: 1rem;
-      font-weight: 500;
+      font-size: $font-size-lg;
+      font-weight: $font-weight-semibold;
       letter-spacing: 0.01em;
       color: $text;
 
@@ -430,8 +430,8 @@ body {
 
     p {
       margin-bottom: 0;
-      font-size: 0.9rem;
-      line-height: 1.5;
+      font-size: $font-size-md; // was 0.9rem/14.4px, nearest scale step
+      line-height: $line-height-normal; // was 1.5, nearest token
       color: rgba($text, 0.6);
     }
   }
@@ -440,8 +440,8 @@ body {
   // First paragraph set as a lede, brighter and larger.
 
   .about__inner > p:first-of-type {
-    font-size: 1.15rem;
-    line-height: 1.7;
+    font-size: $font-size-xl; // was 1.15rem/18.4px, nearest scale step
+    line-height: $line-height-relaxed;
     color: rgba($text, 0.85);
   }
 
@@ -475,18 +475,15 @@ body {
       }
 
       &__label {
-        font-size: 0.72rem;
-        font-weight: 400;
-        letter-spacing: 0.03em;
-        text-transform: uppercase;
+        @include type-eyebrow;
         color: rgba($text, 0.45);
       }
 
       &__copy {
         flex: none;
         padding: 0.25rem 0.7rem;
-        font-size: 0.72rem;
-        font-weight: 400;
+        font-size: $font-size-xs; // was 0.72rem/11.5px, nearest scale step
+        font-weight: $font-weight-medium;
         color: rgba($text, 0.7);
         background: rgba(255, 255, 255, 0.05);
         border: 1px solid rgba(255, 255, 255, 0.12);
@@ -520,8 +517,8 @@ body {
         display: block;
         padding: $space-sm;
         font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Cascadia Mono", monospace;
-        font-size: 0.78rem;
-        line-height: 1.7;
+        font-size: $font-size-sm; // was 0.78rem/12.48px, nearest scale step
+        line-height: $line-height-relaxed;
         // Follow the element's own dir attribute (ltr for a URL, rtl for the
         // Arabic prompt) rather than forcing left — start aligns to whichever.
         text-align: start;
@@ -533,7 +530,7 @@ body {
     // Orientation lede above the paste-ready prompt.
     .dev-agent-lede {
       margin-bottom: $space-sm;
-      font-size: 0.9rem;
+      font-size: $font-size-md; // was 0.9rem/14.4px, nearest scale step
       color: rgba($text, 0.6);
     }
 
@@ -545,8 +542,8 @@ body {
       gap: $space-2xs $space-lg;
 
       a {
-        font-size: 0.9rem;
-        font-weight: 300;
+        font-size: $font-size-md; // was 0.9rem/14.4px, nearest scale step
+        font-weight: $font-weight-regular;
       }
 
       @media (max-width: 560px) {
@@ -578,8 +575,8 @@ body {
 
     h2 {
       margin-bottom: $space-xs;
-      font-size: 1rem;
-      font-weight: 500;
+      font-size: $font-size-lg;
+      font-weight: $font-weight-semibold;
 
       &::after {
         content: none;
@@ -587,8 +584,8 @@ body {
     }
 
     p {
-      font-size: 0.9rem;
-      line-height: 1.7;
+      font-size: $font-size-md; // was 0.9rem/14.4px, nearest scale step
+      line-height: $line-height-relaxed;
       color: rgba($text, 0.6);
     }
   }

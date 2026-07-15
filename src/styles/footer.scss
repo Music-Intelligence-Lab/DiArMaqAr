@@ -47,30 +47,27 @@
   // Section header — identical in every column so all four header rows share
   // one baseline and everything below them aligns
   &__subtitle {
-    font-size: 0.78rem;
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+    @include type-eyebrow;
     color: $light-grey;
-    // Match a body row's box height (0.875rem * 1.4) so the header occupies one
-    // grid row and everything below it aligns across columns
-    line-height: calc(0.875rem * 1.4);
+    // Match a body row's box height ($font-size-md * $line-height-normal) so
+    // the header occupies one grid row and everything below it aligns across columns
+    line-height: calc($font-size-md * $line-height-normal);
     margin: 0;
   }
 
   &__description {
     color: $light-grey;
-    line-height: 1.4;
+    line-height: $line-height-normal;
     margin: 0;
-    font-size: 0.875rem;
+    font-size: $font-size-md;
     max-width: 34ch;
   }
 
   &__text {
     color: $light-grey;
-    line-height: 1.4;
+    line-height: $line-height-normal;
     margin: 0;
-    font-size: 0.875rem;
+    font-size: $font-size-md;
   }
 
   &__list {
@@ -84,8 +81,8 @@
 
   &__list-item {
     margin: 0;
-    font-size: 0.875rem;
-    line-height: 1.4;
+    font-size: $font-size-md;
+    line-height: $line-height-normal;
   }
 
   &__link {
@@ -143,8 +140,8 @@
   // separated by the section's 0.55rem gap) so lines align with the nav columns
   &__org {
     color: $light-grey;
-    font-size: 0.875rem;
-    line-height: 1.4;
+    font-size: $font-size-md;
+    line-height: $line-height-normal;
     margin: 0;
     // Two links as separate rows on the shared 0.55rem rhythm, matching the
     // spacing between the nav column's list items
@@ -157,8 +154,8 @@
 
   &__license-line {
     color: $light-grey;
-    font-size: 0.875rem;
-    line-height: 1.4;
+    font-size: $font-size-md;
+    line-height: $line-height-normal;
     margin: 0;
     // License text and the CC icon group sit on one line
     display: flex;
@@ -183,8 +180,8 @@
 
   &__powered {
     color: $light-grey;
-    font-size: 0.875rem;
-    line-height: 1.4;
+    font-size: $font-size-md;
+    line-height: $line-height-normal;
     // Flows on the shared grid rhythm — lands on the same row as "About"
     // (row 4) in the Quick Links column rather than pinned to the footer bottom
     margin: 0;

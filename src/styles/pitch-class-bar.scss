@@ -140,23 +140,22 @@
     word-break: break-word;
     margin: 0px;
     padding-bottom: 0px;
-    font-size: 12px;
-    font-weight: 300;
-    line-height: 16px;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-regular;
+    line-height: $line-height-tight;
     align-self: flex-start;
   }
 
   &__cell-english {
     width: 100%;
-    line-height: 12px;
+    line-height: $line-height-snug;
     padding: 0px;
-    font-size: 12px;
-    font-weight: 200;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-light;
   }
 
   &__cell-mapping {
-    font-size: 10px;
-    font-weight: 300;
+    @include type-micro-label;
     border: 1px solid rgb($text, 0.6);
     color: rgb($text, 0.8);
     width: 28px;

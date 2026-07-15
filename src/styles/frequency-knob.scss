@@ -1,3 +1,5 @@
+@use "variables" as *;
+
 /* Frequency Knob Component Styles */
 
 /* Main wrapper container */
@@ -11,16 +13,6 @@
   margin: 0;
   padding: 0;
   min-width: 0;
-  
-  /* Reset any inherited font styles */
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-  font-weight: normal !important;
-  
-  /* Ensure all children inherit clean font */
-  * {
-    font-family: inherit !important;
-    font-weight: inherit !important;
-  }
 }
 
 /* The circular knob dial */
@@ -69,9 +61,8 @@
 
 /* Input field when editing */
 .frequency-input-field {
-  font-size: 12px !important;
+  @include type-data-value;
   color: #ffffff !important;
-  font-weight: 400 !important;
   text-align: center !important;
   background: rgb(0, 0, 0) !important;
   background-color: rgb(0, 0, 0) !important;
@@ -119,10 +110,9 @@
 
 /* Hz unit label */
 .frequency-unit-label {
-  font-size: 12px;
+  @include type-data-value;
   color: #fff;
-  font-weight: 400;
-  line-height: 1;
+  line-height: 1; // tight fit for a small inline unit tag beside the number
   user-select: none;
   pointer-events: none;
 }
@@ -130,9 +120,8 @@
 /* Display field when not editing — a visible number box to the right of the
    dial, so it reads as editable (click to type a frequency) */
 .frequency-display-field {
-  font-size: 12px;
+  @include type-data-value;
   color: #fff;
-  font-weight: 400;
   cursor: text;
   padding: 3px 8px;
   border-radius: 2px;
@@ -201,7 +190,7 @@
   
   .frequency-input-field,
   .frequency-display-field {
-    font-size: 13px;
+    font-size: $font-size-base;
     padding: 0px 0px !important;
   }
   

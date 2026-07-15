@@ -12,7 +12,7 @@
 }
 
 .settings-card {
-  font-size: 18px;
+  font-size: $font-size-xl;
   position: fixed;
   top: 0;
   right: 0;
@@ -39,7 +39,7 @@
     overflow-y: auto;
     background: $black;
     color: $text;
-    font-size: 14px;
+    font-size: $font-size-md;
   }
 
   &__details {
@@ -63,8 +63,8 @@
     cursor: pointer;
     user-select: none;
     margin-bottom: 14px;
-    font-weight: 300;
-    font-size: 16px;
+    font-weight: $font-weight-regular;
+    font-size: $font-size-lg;
   }
 
   &__input-container {
@@ -158,7 +158,7 @@
     transition: 0.1s;
     color: $text;
     background-color: $black;
-    font-size: 12px;
+    font-size: $font-size-sm;
     margin: 10px 0px;
 
     &_active {
@@ -178,7 +178,7 @@
 
   &__clear-button {
     padding: 10px 20px;
-    font-size: 14px;
+    font-size: $font-size-md;
     cursor: pointer;
     transition: 0.1s;
     color: $text;
@@ -193,7 +193,7 @@
   &__select,
   &__number-input {
     padding: 5px 10px;
-    font-size: 12px;
+    font-size: $font-size-sm;
     border: none;
     width: 100%;
     border-radius: 0px;
@@ -213,7 +213,7 @@
 
   &__sound-mode-button {
     padding: 10px 10px;
-    font-size: 12px;
+    font-size: $font-size-sm;
     margin-right: 10px;
     transition: 0.1s;
     cursor: pointer;
@@ -235,7 +235,7 @@
     margin-right: 10px;
     margin-top: 5px;
     padding: 5px;
-    font-size: 12px;
+    font-size: $font-size-sm;
     background-color: $secondary;
     color: $text;
     cursor: pointer;
@@ -253,7 +253,7 @@
     color: white;
     //border: 1px solid $grey;
     border-radius: 4px;
-    font-size: 12px;
+    font-size: $font-size-sm;
     cursor: pointer;
     transition: background-color 0.2s ease;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
@@ -313,9 +313,8 @@
   }
 
   &__description {
-    font-size: 12px;
+    @include type-settings-description; // deliberate bump from 12px — prose-like helper text, not data
     color: $grey;
     margin-top: 4px;
-    line-height: 1.3;
   }
 }
