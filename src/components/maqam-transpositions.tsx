@@ -115,7 +115,7 @@ export function scrollToMaqamHeader(firstNote: string, selectedMaqamData?: any) 
 }
 import { Maqam } from "@/models/Maqam";
 import PitchClass, { calculateInterval } from "@/models/PitchClass";
-import shiftPitchClassByOctave from "@/functions/shiftPitchClassByOctave";
+import shiftPitchClassByOctave, { shiftPitchClassByOctaveExtended } from "@/functions/shiftPitchClassByOctave";
 import Link from "next/link";
 import { stringifySource } from "@/models/bibliography/Source";
 import { useLocalizedHref } from "@/hooks/use-localized-href";
@@ -405,7 +405,7 @@ const MaqamTranspositions: React.FC = () => {
 
         // Apply the same octave transformations as the UI rendering
         if (noOctaveMaqam) {
-          const shiftedFirstCell = shiftPitchClassByOctave(allPitchClasses, maqam.ascendingPitchClasses[0], 1);
+          const shiftedFirstCell = shiftPitchClassByOctaveExtended(allPitchClasses, maqam.ascendingPitchClasses[0], 1);
           const lastCell = ascending[ascending.length - 1];
 
           ascending = [...ascending, shiftedFirstCell];
@@ -425,7 +425,7 @@ const MaqamTranspositions: React.FC = () => {
         if (noOctaveMaqam && ascendingJins) {
           let octaveTransposition = ascendingJins[0];
           if (octaveTransposition) {
-            const shiftedFirstCell = shiftPitchClassByOctave(allPitchClasses, maqam.ascendingPitchClasses[0], 1);
+            const shiftedFirstCell = shiftPitchClassByOctaveExtended(allPitchClasses, maqam.ascendingPitchClasses[0], 1);
             const foundJinsData = ajnas.find((jins) => jins.getId() === octaveTransposition?.jinsId);
             if (foundJinsData) {
               octaveTransposition = {
@@ -795,7 +795,7 @@ const MaqamTranspositions: React.FC = () => {
       let jinsTranspositions = ascending ? maqam.ascendingMaqamAjnas : maqam.descendingMaqamAjnas;
 
       if (noOctaveMaqam) {
-        const shiftedFirstCell = shiftPitchClassByOctave(allPitchClasses, maqam.ascendingPitchClasses[0], 1);
+        const shiftedFirstCell = shiftPitchClassByOctaveExtended(allPitchClasses, maqam.ascendingPitchClasses[0], 1);
         const lastCell = ascendingTranspositionPitchClasses[ascendingTranspositionPitchClasses.length - 1];
 
         ascendingTranspositionPitchClasses = [...ascendingTranspositionPitchClasses, shiftedFirstCell];
