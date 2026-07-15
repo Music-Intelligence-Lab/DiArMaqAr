@@ -94,6 +94,14 @@
     &--rtl {
       flex-direction: row-reverse;
     }
+
+    // Once a tuning system is selected, tabs carry multi-line content
+    // (title / name / tonic / transpositions) — anchor every label to the
+    // top so first lines align across tabs. Centered only when nothing
+    // is selected and all tabs are single-line.
+    &--has-selection .navbar__bottom-bar-item {
+      justify-content: flex-start;
+    }
   }
 
   &__bottom-bar-item {
@@ -102,6 +110,11 @@
     flex: 1;
     vertical-align: top;
     justify-content: center;
+    // Chrome's UA stylesheet gives <button> flex containers align-items: flex-start,
+    // which shrinks each label line and pins it left; stretch keeps lines full-width
+    // so text-align centers them in every browser
+    align-items: stretch;
+    text-align: center;
     background-color: transparent;
     color: white;
     cursor: pointer;

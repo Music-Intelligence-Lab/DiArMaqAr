@@ -120,7 +120,9 @@ export default function Navbar() {
                     {language === 'ar' && selectedTuningSystem.getTitleArabic()
                     ? selectedTuningSystem.getTitleArabic()
                     : selectedTuningSystem.getTitleEnglish()
-                    }{" "}
+                    }
+                </span>
+                <span className="navbar__bottom-bar-item_tab-subtitle">
                   [{octaveOneNoteNames[selectedIndices[0]] ? getDisplayName(octaveOneNoteNames[selectedIndices[0]], 'note') : t('octave.none')}]
                 </span>
               </>
@@ -171,25 +173,28 @@ export default function Navbar() {
                   }/${ajnas.length})`
                 : t('tabs.ajnas')}
             </span>
-            <span className="navbar__bottom-bar-item_tab-subtitle">
-              {!selectedJinsData
-                ? ""
-                : selectedJins
-                ? `${getDisplayName(selectedJinsData.getName(), 'jins')} al-${getDisplayName(
-                    selectedJins.jinsPitchClasses.map(
-                      (pitchClass) => pitchClass.noteName
-                    )[0], 'note'
-                  )} (${getEnglishNoteName(
-                    selectedJins.jinsPitchClasses.map(
-                      (pitchClass) => pitchClass.noteName
-                    )[0]
-                  )})`
-                : `${getDisplayName(selectedJinsData.getName(), 'jins')} (${getDisplayName(
-                    selectedJinsData.getNoteNames()[0], 'note'
-                  )}/${getEnglishNoteName(
-                    selectedJinsData.getNoteNames()[0]
-                  )})`}
-            </span>
+            {selectedJinsData && (
+              <>
+                <span className="navbar__bottom-bar-item_tab-subtitle">
+                  {selectedJins
+                    ? `${getDisplayName(selectedJinsData.getName(), 'jins')} al-${getDisplayName(
+                        selectedJins.jinsPitchClasses[0]?.noteName, 'note'
+                      )}`
+                    : getDisplayName(selectedJinsData.getName(), 'jins')}
+                </span>
+                <span className="navbar__bottom-bar-item_tab-subtitle">
+                  {selectedJins
+                    ? `(${getEnglishNoteName(
+                        selectedJins.jinsPitchClasses[0]?.noteName
+                      )})`
+                    : `(${getDisplayName(
+                        selectedJinsData.getNoteNames()[0], 'note'
+                      )}/${getEnglishNoteName(
+                        selectedJinsData.getNoteNames()[0]
+                      )})`}
+                </span>
+              </>
+            )}
             {selectedJinsData && (
               <span className="navbar__bottom-bar-item_tab-subtitle">
                 {`${t('jins.transpositions')}: ${jinsTranspositionCount}/${numberOfPitchClasses}`}
@@ -239,20 +244,26 @@ export default function Navbar() {
                       )
                     ).length
                   }/${maqamat.length})`
-                : t('tabs.maqamat')}{" "}
-              <br />
+                : t('tabs.maqamat')}
             </span>
-            <span className="navbar__bottom-bar-item_tab-subtitle">
-              {!selectedMaqamData
-                ? ""
-                : selectedMaqam
-                ? getDisplayName(selectedMaqam.name, 'maqam')
-                : `${getDisplayName(selectedMaqamData.getName(), 'maqam')} (${getDisplayName(
-                    selectedMaqamData.getAscendingNoteNames()[0], 'note'
-                  )}/${getEnglishNoteName(
-                    selectedMaqamData.getAscendingNoteNames()[0]
-                  )})`}
-            </span>
+            {selectedMaqamData && (
+              <>
+                <span className="navbar__bottom-bar-item_tab-subtitle">
+                  {selectedMaqam
+                    ? getDisplayName(selectedMaqam.name, 'maqam')
+                    : getDisplayName(selectedMaqamData.getName(), 'maqam')}
+                </span>
+                {!selectedMaqam && (
+                  <span className="navbar__bottom-bar-item_tab-subtitle">
+                    {`(${getDisplayName(
+                      selectedMaqamData.getAscendingNoteNames()[0], 'note'
+                    )}/${getEnglishNoteName(
+                      selectedMaqamData.getAscendingNoteNames()[0]
+                    )})`}
+                  </span>
+                )}
+              </>
+            )}
             {selectedMaqamData && (
               <span className="navbar__bottom-bar-item_tab-subtitle">
                 {`${t('maqam.transpositions')}: ${maqamTranspositionCount}/${numberOfPitchClasses}`}
@@ -296,8 +307,7 @@ export default function Navbar() {
             <span className="navbar__bottom-bar-item_tab-title">
               {selectedMaqamData
                 ? `${t('tabs.suyur')} (${selectedMaqamData.getSuyur().length})`
-                : t('tabs.suyur')}{" "}
-              <br />
+                : t('tabs.suyur')}
             </span>
             <span className="navbar__bottom-bar-item_tab-subtitle">
               {selectedSayr &&
@@ -432,7 +442,7 @@ export default function Navbar() {
             </div>
           </div>
         </header>
-        <div className={`navbar__bottom-bar ${isRTL ? 'navbar__bottom-bar--rtl' : ''}`}>
+        <div className={`navbar__bottom-bar ${isRTL ? 'navbar__bottom-bar--rtl' : ''} ${selectedTuningSystem ? 'navbar__bottom-bar--has-selection' : ''}`}>
           {getNavbarTabs().map(tab => tab.content)}
         </div>
       </nav>
