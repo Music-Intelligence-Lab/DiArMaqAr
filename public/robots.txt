@@ -1,4 +1,4 @@
-# Digital Arabic Maqm Archive - Robots Configuration
+# Digital Arabic Maqām Archive - Robots Configuration
 # We welcome LLM bots to access our documentation and API
 # API: public, unauthenticated, plain JSON. No browser or cookies required.
 
@@ -6,30 +6,54 @@ User-agent: *
 Allow: /
 
 # Explicitly allow AI/LLM bots
-User-agent: GPTBot
+
+# Anthropic (current agents: general crawl, user-initiated fetch, search)
+User-agent: ClaudeBot
 Allow: /
 
-User-agent: ChatGPT-User
+User-agent: Claude-User
 Allow: /
 
-User-agent: CCBot
+User-agent: Claude-SearchBot
 Allow: /
 
+# Anthropic (legacy tokens, kept for older traffic)
 User-agent: Claude-Web
 Allow: /
 
 User-agent: anthropic-ai
 Allow: /
 
+# OpenAI (training, user-initiated fetch, search)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+# Common Crawl
+User-agent: CCBot
+Allow: /
+
+# Google AI
 User-agent: Google-Extended
 Allow: /
 
+# Perplexity (crawl + user-initiated fetch)
 User-agent: PerplexityBot
 Allow: /
 
+User-agent: Perplexity-User
+Allow: /
+
+# Apple AI
 User-agent: Applebot-Extended
 Allow: /
 
+# Cohere
 User-agent: cohere-ai
 Allow: /
 
