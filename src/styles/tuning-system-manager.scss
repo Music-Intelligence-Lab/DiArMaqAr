@@ -350,9 +350,12 @@
   }
 
   h3 {
-    font-size: 18px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: $light-grey;
     margin-bottom: 10px;
-    font-weight: 300;
   }
 
   &__comments-sources-container {
@@ -705,16 +708,45 @@
 
   &__octave-summary {
     font-size: 20px;
-    margin-bottom: 10px;
-    cursor: pointer;
     user-select: auto;
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
+    row-gap: 8px;
     gap: 10px;
+    list-style: none;
+
+    // Suppress the native disclosure marker so its line box can't throw off
+    // vertical centering of the title when the row is collapsed.
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    &::marker {
+      content: "";
+    }
+
+    // Only reserve space below the row once the octave is open (carousel
+    // content follows); collapsed rows sit flush so the title stays balanced.
+    .tuning-system-manager__octave-details[open] & {
+      margin-bottom: 10px;
+    }
   }
 
   &__octave-summary-title {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    align-self: center;
+    margin: 0;
+    // The title owns a fixed single-line band and centers its text inside it,
+    // so its vertical position no longer depends on whether the filter-menu
+    // wraps to a second line (which used to compress line 1 and shift the
+    // title up). 34.5px = the collapsed row's full single-line height; using
+    // the shorter button height (28px) would leave the single-line case with
+    // leftover slack and reintroduce the shift.
+    min-height: 34.5px;
+    color: $text;
+    line-height: 1;
     user-select: none;
     cursor: pointer;
   }
@@ -805,33 +837,36 @@
   }
 
   &__filter-menu {
-    gap: 10px;
-    margin: 0 0px;
-    float: right;
-
-    // RTL support
-    [dir="rtl"] & {
-      float: left;
-    }
+    // Full width forces flex-wrap to drop the menu onto its own row, directly
+    // under the Octave 1 title rather than floating beside it. order:1 keeps it
+    // last so the copy button stays up on the title row.
+    order: 1;
+    flex-basis: 100%;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 10px;
+    margin: 0;
   }
 
   &__filter-item {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     padding: 0px;
     // background-color: rgba(0, 0, 0, 0.3);
     border-radius: 5px;
     color: $text;
     cursor: pointer;
     transition: 0s;
-    margin-left: 10px;
+    // Spacing between items comes from the filter-menu flex gap
+    margin: 0;
     font-size: 14px;
 
     // RTL support
     [dir="rtl"] & {
-      margin-left: 0;
-      margin-right: 10px;
+      margin: 0;
     }
 
     // hover (when not disabled)

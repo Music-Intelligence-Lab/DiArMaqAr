@@ -646,26 +646,25 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
       >
         <summary
           className="tuning-system-manager__octave-summary"
-          /*  onClick={(e) => {
+          onClick={(e) => {
+            // Only the title toggles the row; suppress the native
+            // click-anywhere-on-summary behavior everywhere else.
             e.preventDefault();
-             setOpenedOctaveRows((rows) => ({
-              ...rows,
-              [octave]: !rows[octave as 0 | 1 | 2 | 3],
-            }));
-          }} */
+          }}
         >
           <span
             className="tuning-system-manager__octave-summary-title"
             onClick={(e) => {
               e.preventDefault();
-              
+              e.stopPropagation();
+
               // Toggle the octave row
               setOpenedOctaveRows((rows) => {
                 const newRows = {
                   ...rows,
                   [octave]: !rows[octave as 0 | 1 | 2 | 3],
                 };
-                
+
                 return newRows;
               });
             }}
