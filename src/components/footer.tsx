@@ -16,31 +16,51 @@ export default function Footer() {
   return (
     <footer className="footer">
       <div className="footer__content">
-        <div className="footer__section">
-          <h3 className="footer__title">
-            {language === "ar" 
-              ? "أرشيف المقام العربي الرقمي" 
+        <div className="footer__section footer__section--identity">
+          <h4 className="footer__subtitle">
+            {language === "ar"
+              ? "أرشيف المقام العربي الرقمي"
               : language === "fr"
               ? "Archive Numérique du Maqām Arabe"
               : "Digital Arabic Maqām Archive"}
-          </h3>
+          </h4>
           <p className="footer__description">
             {language === "ar"
-              ? "منصّة وواجهة برمجية ومدوّنة، متعدّدة اللغات ومفتوحة المصدر، لاستكشاف نظام المقامات العربية"
+              ? "منصّة ومدوّنة وواجهة برمجية متعدّدة اللغات ومفتوحة المصدر لنظرية المقام العربي"
               : language === "fr"
-              ? "Plateforme, API et corpus multilingues et open-source pour explorer le système des maqāmāt arabes"
-              : "Multilingual open-source platform, API and corpus for exploring the Arabic maqām system"}
+              ? "Plateforme, corpus et API multilingues et open-source pour la théorie du maqām arabe"
+              : "Multilingual, open-source platform, corpus and API for Arabic maqām theory"}
           </p>
-                    <div className="footer__logo">
-            <Image
-              src="https://www.aub.edu.lb/Style%20Library/AUB/images/American%20University%20of%20Beirut-AUB.png"
-              alt="American University of Beirut Logo"
-              width={200}
-              height={50}
-              style={{ maxHeight: "50px", width: "auto", height: "auto" }}
-            />
+          <div className="footer__logos">
+            <a
+              href="https://musicintelligencelab.com"
+              className="footer__logo footer__logo--mil"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Music Intelligence Lab"
+            >
+              <Image
+                src="/mil-mark-white.png"
+                alt="Music Intelligence Lab"
+                width={729}
+                height={916}
+              />
+            </a>
+            <a
+              href="https://www.aub.edu.lb/cams/"
+              className="footer__logo footer__logo--cams"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="AUB Center for Advanced Mathematical Sciences"
+            >
+              <Image
+                src="/cams-logo-white.png"
+                alt="AUB Center for Advanced Mathematical Sciences"
+                width={531}
+                height={159}
+              />
+            </a>
           </div>
-
         </div>
 
         <div className="footer__section">
@@ -54,11 +74,7 @@ export default function Footer() {
           <ul className="footer__list">
             <li className="footer__list-item">
               <Link href={lh("/app")} className="footer__link">
-                {language === "ar"
-                  ? "استخدام الأرشيف"
-                  : language === "fr"
-                  ? "Accéder à l'Archive"
-                  : "Access the Archive"}
+                DiArMaqAr
               </Link>
             </li>
             <li className="footer__list-item">
@@ -130,29 +146,38 @@ export default function Footer() {
           </p>
         </div>
 
-        <div className="footer__section">
-          <p className="footer__copyright">
+        <div className="footer__section footer__section--legal">
+          <h4 className="footer__subtitle">
+            {language === "ar"
+              ? "الروابط والترخيص"
+              : language === "fr"
+              ? "Liens et licence"
+              : "Links and License"}
+          </h4>
+          <p className="footer__org">
             <a href="https://musicintelligencelab.com" className="footer__link">AUB Music Intelligence Lab</a>
-            <br />
             <a href="https://www.aub.edu.lb/cams/" className="footer__link">Centre for Advanced Mathematical Sciences</a>
-            <br />
+          </p>
+          <p className="footer__license-line">
             {language === "ar"
               ? "مرخّص بموجب "
               : language === "fr"
               ? "Sous licence "
               : "Licensed under "}
             <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" className="footer__link">CC BY-NC-SA 4.0</a>
-            <br />
-            <Image src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt="" width={32} height={32} style={{ maxWidth: "1.5em", maxHeight: "1.5em", marginLeft: "0em", marginTop: "0.5em", marginBottom: "0.5em", verticalAlign: "middle" }} unoptimized />
-            <Image src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt="" width={32} height={32} style={{ maxWidth: "1.5em", maxHeight: "1.5em", marginLeft: ".2em", marginTop: "0.5em", marginBottom: "0.5em", verticalAlign: "middle" }} unoptimized />
-            <Image src="https://mirrors.creativecommons.org/presskit/icons/nc.svg" alt="" width={32} height={32} style={{ maxWidth: "1.5em", maxHeight: "1.5em", marginLeft: ".2em", marginTop: "0.5em", marginBottom: "0.5em", verticalAlign: "middle" }} unoptimized />
-            <Image src="https://mirrors.creativecommons.org/presskit/icons/sa.svg" alt="" width={32} height={32} style={{ maxWidth: "1.5em", maxHeight: "1.5em", marginLeft: ".2em", marginTop: "0.5em", marginBottom: "0.5em", verticalAlign: "middle" }} unoptimized />
-            <br />
+            <span className="footer__cc-icons">
+              <Image src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt="Creative Commons" width={16} height={16} className="footer__cc-icon" unoptimized />
+              <Image src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt="Attribution" width={16} height={16} className="footer__cc-icon" unoptimized />
+              <Image src="https://mirrors.creativecommons.org/presskit/icons/nc.svg" alt="Non-Commercial" width={16} height={16} className="footer__cc-icon" unoptimized />
+              <Image src="https://mirrors.creativecommons.org/presskit/icons/sa.svg" alt="Share-Alike" width={16} height={16} className="footer__cc-icon" unoptimized />
+            </span>
+          </p>
+          <p className="footer__powered">
             {language === "ar"
-              ? <>هذا الموقع مدعوم من <a href="https://www.netlify.com" className="footer__link">Netlify</a>.</>
+              ? <>هذا الموقع مدعوم من <a href="https://www.netlify.com" className="footer__link">Netlify</a></>
               : language === "fr"
-              ? <>Ce site est propulsé par <a href="https://www.netlify.com" className="footer__link">Netlify</a>.</>
-              : <>This site is powered by <a href="https://www.netlify.com" className="footer__link">Netlify</a>.</>}
+              ? <>Propulsé par <a href="https://www.netlify.com" className="footer__link">Netlify</a></>
+              : <>Powered by <a href="https://www.netlify.com" className="footer__link">Netlify</a></>}
           </p>
         </div>
       </div>
