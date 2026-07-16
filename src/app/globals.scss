@@ -36,8 +36,12 @@ html {
   overflow-y: auto;
 }
 
+// Suppress focus outlines app-wide with style: none. Never suppress via
+// 0-width + a visible style/colour: elements with a `transition` animate
+// outline-width from the 3px browser default down to 0 on focus, flashing
+// a gold ring (the old `0px solid gold` did exactly that on navbar tabs).
 :focus {
-  outline: 0px solid rgb(gold, 100%);
+  outline: none;
 }
 
 a {
