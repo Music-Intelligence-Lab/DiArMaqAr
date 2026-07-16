@@ -9,26 +9,30 @@
 
   &__select {
     background-color: transparent;
-    color: white;
+    color: $text;
 
-    font-size: $font-size-md;
+    // Native <select> doesn't inherit the page font — without this it
+    // renders in the system UI font, which is what read as clunky.
+    font-family: inherit;
+    font-size: $font-size-base;
+    font-weight: $font-weight-regular;
     cursor: pointer;
     transition: all 0.2s ease;
 
     &:hover {
-      border-color: rgba(255, 255, 255, 0.6);
-      background-color: rgba(255, 255, 255, 0.1);
+      border-color: rgba($text, 0.6);
+      background-color: rgba($text, 0.1);
     }
 
     &:focus {
       background-color: transparent;
-      color: white;
+      color: $text;
       outline: none;
     }
 
     option {
       background-color: transparent;
-      color: white;
+      color: $text;
     }
   }
 }
