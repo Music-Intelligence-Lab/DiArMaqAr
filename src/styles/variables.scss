@@ -33,6 +33,16 @@ $link: $gold; // Default link color
 $link-visited: color.adjust($link, $saturation: -30%);
 
 // ---------------------------------------------------------------------------
+// Spacing
+// ---------------------------------------------------------------------------
+
+// Vertical rhythm between the app's stacked page blocks (navbar → filter
+// band → carousel → pitch-class bar → tables…). One role token, not one
+// value per place: use it wherever a block meets the next, replacing
+// scattered one-off margins as they're touched.
+$space-block: 20px;
+
+// ---------------------------------------------------------------------------
 // Typography
 // ---------------------------------------------------------------------------
 
@@ -643,48 +653,239 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
 // Filter tab strip shared by the jins/maqam/tuning-system managers. The
 // __tabs container rules stay per-file (they genuinely differ: maqam wraps
 // and grows, jins pulls up with a negative margin).
-@mixin manager-tab($width: max-content, $height: null) {
-    text-align: left;
-    width: $width;
-    padding: 10px 10px;
-    border-radius: 0px;
+// ---------------------------------------------------------------------------
+// Carousel filter index — the one-row replacement for the manager-tab block
+// rows (piloted on maqam-manager; jins/tuning to adopt). Group names render
+// as a single typographic line in collection order, counts as small tabular
+// numerals, active marked by a gold underline — no boxes, so filters read as
+// navigation rather than action buttons. The line never wraps: overflow
+// scrolls horizontally behind edge fades, nudged by chevrons that share the
+// carousel arrows' glyph/hover language.
+// ---------------------------------------------------------------------------
+
+// Positioning context wrapping the rail and its overlay chevrons: the
+// chevrons live outside the layout flow, so the rail always gets the full
+// band width regardless of scroll state.
+@mixin manager-filter-rail-wrap {
+    position: relative;
+    display: flex;
+    flex: 1 1 auto;
+    min-width: 0;
+    align-self: stretch;
+}
+
+// The scrolling line itself. JS owns the scroll state and sets
+// data-fade="left|right|both" (physical sides — the RTL mapping happens
+// where scroll positions are read).
+@mixin manager-filter-rail {
+    display: flex;
+    align-items: center;
+    // Item spacing (count → next name), fixed at every viewport. The items'
+    // tab padding is tied to half this value, so the black tab always fills
+    // exactly half the gap on each side and adjacent tabs would sit flush.
+    --manager-filter-gap: 16px;
+    gap: var(--manager-filter-gap);
+    flex: 1 1 auto;
+    min-width: 0;
+    // The rail is the band's full height; items stretch through it so the
+    // active tab's black fill runs from the band's top edge into the black
+    // carousel block below.
+    height: 47px;
+    align-items: stretch;
+    // Exactly the active tab's bleed (half the gap), so the first item's
+    // black tab edge sits flush on the rail edge — which the consumer
+    // aligns with the carousel items' edge.
+    padding-inline: calc(var(--manager-filter-gap) / 2);
+    overflow-x: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    &[data-fade="left"] {
+        -webkit-mask-image: linear-gradient(to right, transparent 0, #000 28px);
+        mask-image: linear-gradient(to right, transparent 0, #000 28px);
+    }
+
+    &[data-fade="right"] {
+        -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent 100%);
+        mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent 100%);
+    }
+
+    &[data-fade="both"] {
+        -webkit-mask-image: linear-gradient(to right, transparent 0, #000 28px, #000 calc(100% - 28px), transparent 100%);
+        mask-image: linear-gradient(to right, transparent 0, #000 28px, #000 calc(100% - 28px), transparent 100%);
+    }
+}
+
+// State levels, kept simple: quiet grey at rest, the whole item (name and
+// count) brightens to white on hover, and the active item becomes a
+// full-band-height black tab that fuses with the carousel block below.
+// Items stretch through the band; horizontal padding is cancelled by
+// negative margins so state changes never shift the line.
+@mixin manager-filter-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
     border: none;
-    background: $medium-grey;
-    color: $text;
+    border-radius: 0;
+    // Horizontal padding is half the rail gap (cancelled by the negative
+    // margins), so the tab fill always meets its neighbours' midline. The
+    // 2px bottom padding is a measured optical correction: Readex Pro's
+    // ascent-heavy metrics place the 13px text ink ~1px below the true
+    // center of the stretched item; this lifts it dead-center.
+    padding: 0 calc(var(--manager-filter-gap) / 2) 2px;
+    margin: 0 calc(var(--manager-filter-gap) / -2);
     font-size: $font-size-base;
-    @if $height {
-        height: $height;
-    }
-    font-weight: $font-weight-medium;
+    font-weight: $font-weight-regular;
+    color: rgba($text, 0.62);
     cursor: pointer;
-
-    [dir="rtl"] & {
-        text-align: right;
-    }
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: color 120ms ease, background-color 120ms ease;
 
     &:hover {
-        background: color.adjust($medium-grey, $lightness: -10%);
+        color: $text;
+
+        span {
+            color: $text;
+        }
+    }
+
+    &:focus-visible {
+        outline: none;
+        color: $text;
+        text-decoration: underline dotted $gold;
+        text-underline-offset: 6px;
     }
 }
 
-@mixin manager-tab-active {
-    border: none;
+@mixin manager-filter-item-active {
+    color: white;
     background: $black;
-    font-weight: $font-weight-medium;
 
     &:hover {
+        color: white;
         background: $black;
+
+        span {
+            color: rgba(white, 0.85);
+        }
+    }
+
+    span {
+        color: rgba(white, 0.85);
     }
 }
 
-@mixin manager-tab-count {
-    font-size: 0.95em;
-    color: silver;
-    margin-left: 2px;
+// Plain small tabular numeral riding with the name; brightens with its item.
+@mixin manager-filter-count {
+    font-size: $font-size-xs;
+    font-variant-numeric: tabular-nums;
+    color: rgba($text, 0.5);
+    // Measured optical correction: flex-centering the smaller 11px line box
+    // leaves the digits' baseline 0.75px above the name's — drop them onto
+    // the shared baseline.
+    position: relative;
+    top: 1px;
+    transition: color 120ms ease;
+}
 
-    [dir="rtl"] & {
-        margin-left: 0;
-        margin-right: 2px;
+// Rail nudge chevrons — real buttons in the carousel arrows' image: 25px
+// wide (the exact carousel-button width), full band height, transparent on
+// the band surface, tertiary hover. They sit absolutely at the rail's
+// flanks, outside its scroll area.
+@mixin manager-filter-chevron {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    // 4px bottom padding is a measured optical correction: the ‹ › glyph
+    // ink renders 2.3px below center, so the content box is lifted 2px.
+    padding: 0 0 4px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    line-height: 1;
+    color: $text;
+    cursor: pointer;
+    z-index: 2;
+
+    // No RTL glyph flip: like the carousel arrows below, the ‹ › glyphs
+    // keep their direction and only the buttons' positions mirror.
+
+    &:hover {
+        color: $tertiary;
+    }
+}
+
+// -25px places each button fully outside the rail: the start button fills
+// the band's 25px side padding (its glyph centered on the same axis as the
+// carousel's ‹ below), the end button sits between rail and group-by.
+@mixin manager-filter-chevron-start {
+    inset-inline-start: -25px;
+}
+
+@mixin manager-filter-chevron-end {
+    inset-inline-end: -25px;
+}
+
+// Group-by segmented control — shows the current grouping as state (both
+// modes visible, active segment filled) instead of an action-shaped pill
+// labelled with the mode you're not in.
+@mixin manager-groupby {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+@mixin manager-groupby-label {
+    @include type-eyebrow;
+    color: silver;
+    // Single-line label in a centered flex row: a tight line box keeps the
+    // uppercase text optically centered against the 27px segments.
+    line-height: 1;
+}
+
+@mixin manager-groupby-segments {
+    display: flex;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+@mixin manager-groupby-segment {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-regular;
+    color: $text;
+    background: $medium-grey;
+    border: none;
+    height: 27px;
+    padding: 0 14px;
+    cursor: pointer;
+    transition: background-color 120ms ease;
+
+    &:hover {
+        background: color.adjust($medium-grey, $lightness: 4%);
+    }
+
+    &:focus-visible {
+        outline: 2px solid $gold;
+        outline-offset: -2px;
+    }
+}
+
+@mixin manager-groupby-segment-active {
+    background: $tertiary;
+    color: white;
+
+    &:hover {
+        background: $tertiary;
     }
 }
 

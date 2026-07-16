@@ -234,8 +234,9 @@ const translations = {
     "maqam.sources": "Sources",
     "maqam.transpositionsTitle": "Taṣāwīr (transpositions)",
     "maqam.all": "All Maqamat",
-    "maqam.groupByJins": "Group by Jins",
-    "maqam.groupByStartingNote": "Group by Starting Note",
+    "maqam.groupBy": "Group by",
+    "maqam.byTonic": "Tonic",
+    "maqam.byJins": "Jins",
     "maqam.noJins": "no jins",
 
     // Tuning System Manager
@@ -591,8 +592,9 @@ const translations = {
     "maqam.sources": "مصادر",
     "maqam.transpositionsTitle": "تصوير",
     "maqam.all": "جميع المقامات",
-    "maqam.groupByJins": "تجميع بالأجناس",
-    "maqam.groupByStartingNote": "تجميع بالنغمة الأولى",
+    "maqam.groupBy": "تجميع حسب",
+    "maqam.byTonic": "القرار",
+    "maqam.byJins": "الجنس",
     "maqam.noJins": "بلا جنس",
 
     // Tuning System Manager (Arabic translations)
@@ -948,8 +950,9 @@ const translations = {
     "maqam.sources": "Sources",
     "maqam.transpositionsTitle": "Taṣāwīr (transpositions)",
     "maqam.all": "Tous les maqāmāt",
-    "maqam.groupByJins": "Grouper par jins",
-    "maqam.groupByStartingNote": "Grouper par note de départ",
+    "maqam.groupBy": "Grouper par",
+    "maqam.byTonic": "Tonique",
+    "maqam.byJins": "Jins",
     "maqam.noJins": "sans jins",
 
     // Tuning System Manager

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
+import CarouselFilterRail from "./carousel-filter-rail";
 import useAppContext from "@/contexts/app-context";
 import useFilterContext from "@/contexts/filter-context";
 import useSoundContext from "@/contexts/sound-context";
@@ -101,6 +102,47 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
       return result;
     }
   }, [maqamat, allPitchClasses, filterMode, language, allMaqamTranspositionsMap]);
+
+  const buildFilterItems = () => {
+    return tabs.map((tab) => {
+      let count = 0;
+      if (tab === "all") {
+        count = sortedMaqamat.length;
+      } else if (filterMode === 'note') {
+        count = sortedMaqamat.filter((maqam) => maqam.getAscendingNoteNames()[0]?.toLowerCase() === tab.toLowerCase()).length;
+      } else {
+        // Jins mode
+        if (tab === 'no jins') {
+          count = sortedMaqamat.filter((maqam) => !getFirstJinsNameForMaqamData(maqam, allMaqamTranspositionsMap)).length;
+        } else {
+          count = sortedMaqamat.filter((maqam) => {
+            const firstJinsName = getFirstJinsNameForMaqamData(maqam, allMaqamTranspositionsMap);
+            if (!firstJinsName) return false;
+            const baseJinsName = getBaseJinsName(firstJinsName);
+            return baseJinsName.toLowerCase() === tab.toLowerCase();
+          }).length;
+        }
+      }
+
+      let displayName: string;
+      if (tab === "all") {
+        displayName = t('maqam.all');
+      } else if (filterMode === 'note') {
+        displayName = getDisplayName(tab, 'note');
+      } else {
+        // Jins mode
+        if (tab === 'no jins') {
+          displayName = t('maqam.noJins') || 'No Jins';
+        } else {
+          // Remove "Jins " prefix from display name to save space
+          const fullJinsName = getDisplayName(tab, 'jins');
+          displayName = fullJinsName.replace(/^(Jins\s+|جنس\s+)/i, '');
+        }
+      }
+
+      return { key: tab, label: displayName, count };
+    });
+  };
 
   // Sync local state when a different maqam is selected
   useEffect(() => {
@@ -248,72 +290,47 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
     }
   }, [sortedMaqamat, maqamatFilter, filterMode, language, allMaqamTranspositionsMap]);
 
+  // Filter-rail items: label + count per tab, in tab order (built above the
+  // sorted list's declaration, evaluated here where it exists).
+  const filterItems = useMemo(buildFilterItems, [tabs, sortedMaqamat, filterMode, allMaqamTranspositionsMap, language]);
+
   const numberOfRows = 3; // Fixed number of rows
   const numberOfColumns = Math.ceil(filteredMaqamat.length / numberOfRows); // Calculate columns dynamically
 
   return (
     <div className="maqam-manager" key={language}>
-      {/* Tabs for filtering maqamat with toggle button */}
-      <div className="maqam-manager__filter-controls">
-        <div className="maqam-manager__tabs">
-        {tabs.map((tab) => {
-          let count = 0;
-          if (tab === "all") {
-            count = sortedMaqamat.length;
-          } else if (filterMode === 'note') {
-            count = sortedMaqamat.filter((maqam) => maqam.getAscendingNoteNames()[0]?.toLowerCase() === tab.toLowerCase()).length;
-          } else {
-            // Jins mode
-            if (tab === 'no jins') {
-              count = sortedMaqamat.filter((maqam) => !getFirstJinsNameForMaqamData(maqam, allMaqamTranspositionsMap)).length;
-            } else {
-              count = sortedMaqamat.filter((maqam) => {
-                const firstJinsName = getFirstJinsNameForMaqamData(maqam, allMaqamTranspositionsMap);
-                if (!firstJinsName) return false;
-                const baseJinsName = getBaseJinsName(firstJinsName);
-                return baseJinsName.toLowerCase() === tab.toLowerCase();
-              }).length;
-            }
-          }
+      {/* Shared filter band, with the maqam group-by control as trailing content */}
+      <CarouselFilterRail items={filterItems} activeKey={maqamatFilter} onSelect={setMaqamatFilter}>
 
-          let displayName: string;
-          if (tab === "all") {
-            displayName = t('maqam.all');
-          } else if (filterMode === 'note') {
-            displayName = getDisplayName(tab, 'note');
-          } else {
-            // Jins mode
-            if (tab === 'no jins') {
-              displayName = t('maqam.noJins') || 'No Jins';
-            } else {
-              // Remove "Jins " prefix from display name to save space
-              const fullJinsName = getDisplayName(tab, 'jins');
-              displayName = fullJinsName.replace(/^(Jins\s+|جنس\s+)/i, '');
-            }
-          }
-
-          return (
-            <button key={tab} className={"maqam-manager__tab" + (maqamatFilter === tab ? " maqam-manager__tab_active" : "")} onClick={() => setMaqamatFilter(tab)}>
-              {displayName} <span className="maqam-manager__tab-count">({count})</span>
+        {/* Group-by segmented control: shows the current grouping as state */}
+        <div className="maqam-manager__groupby">
+          <span className="maqam-manager__groupby-label">{t('maqam.groupBy')}</span>
+          <div className="maqam-manager__groupby-segments" role="group">
+            <button
+              className={"maqam-manager__groupby-segment" + (filterMode === 'note' ? " maqam-manager__groupby-segment_active" : "")}
+              onClick={() => {
+                if (filterMode !== 'note') {
+                  setFilterMode('note');
+                  setMaqamatFilter('all');
+                }
+              }}
+            >
+              {t('maqam.byTonic')}
             </button>
-          );
-        })}
+            <button
+              className={"maqam-manager__groupby-segment" + (filterMode === 'jins' ? " maqam-manager__groupby-segment_active" : "")}
+              onClick={() => {
+                if (filterMode !== 'jins') {
+                  setFilterMode('jins');
+                  setMaqamatFilter('all');
+                }
+              }}
+            >
+              {t('maqam.byJins')}
+            </button>
+          </div>
         </div>
-
-        {/* Single toggle button positioned far right */}
-        <button
-          className="maqam-manager__filter-mode-toggle"
-          onClick={() => {
-            setFilterMode(filterMode === 'note' ? 'jins' : 'note');
-            setMaqamatFilter('all');
-          }}
-        >
-          {filterMode === 'note'
-            ? (t('maqam.groupByJins') || 'Group by Jins')
-            : (t('maqam.groupByStartingNote') || 'Group by Starting Note')
-          }
-        </button>
-      </div>
+      </CarouselFilterRail>
 
       <div className="maqam-manager__carousel">
         <button
