@@ -67,8 +67,18 @@
   background: rgb(0, 0, 0) !important;
   background-color: rgb(0, 0, 0) !important;
   border-radius: 0px !important;
-  width: 42px !important;
+  /* width comes from an inline style sized to the typed value (ch units on
+     tabular numerals), so the number occupies exactly the same space as the
+     display-mode text and nothing shifts when entering edit mode */
   height: 18px !important;
+
+  /* Exact shrink-wrap sizing where supported (Chromium 123+): removes the
+     ch-rounding slack around decimal points; the inline ch width above is
+     the fallback for other engines */
+  @supports (field-sizing: content) {
+    field-sizing: content;
+    width: auto !important;
+  }
   outline: none !important;
   border: none !important;
   box-sizing: border-box !important;
@@ -87,31 +97,24 @@
   }
 }
 
-/* Container for input field with Hz label — matches the display box so there
-   is no size jump between viewing and editing */
+/* Container for input field with Hz label — the shared value box (this Hz
+   box is the reference the input-value-box mixin was modeled on); identical
+   in view and edit modes so nothing jumps on focus/blur */
 .frequency-input-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  @include input-value-box;
   gap: 2px;
-  width: 68px;
-  height: 27px;
-  padding: 3px 6px;
-  border: 1px solid #888;
-  border-radius: 2px;
-  box-sizing: border-box;
-  background: #000;
+  /* values display unrounded, so the box grows past its 68px floor rather
+     than clipping unusually precise entries; view and edit match */
+  width: auto;
+  min-width: 68px;
 }
 
-/* Adjust input field width when in container */
-.frequency-input-container .frequency-input-field {
-  width: 42px !important; /* Reduced to make room for Hz label */
-}
 
 /* Hz unit label */
 .frequency-unit-label {
   @include type-data-value;
-  color: #fff;
+  // no color of its own — inherits the box's text colour, so it fades with
+  // the box in the disabled state
   line-height: 1; // tight fit for a small inline unit tag beside the number
   user-select: none;
   pointer-events: none;
@@ -120,26 +123,15 @@
 /* Display field when not editing — a visible number box to the right of the
    dial, so it reads as editable (click to type a frequency) */
 .frequency-display-field {
-  @include type-data-value;
-  color: #fff;
+  @include input-value-box;
+  gap: 2px; /* same number/Hz gap as the edit-mode container */
   cursor: text;
-  padding: 3px 8px;
-  border-radius: 2px;
-  width: 68px;
-  height: 27px;
-  border: 1px solid #555;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   white-space: nowrap;
-  background: #000;
   margin: 0 !important;
-  transition: border-color 0.15s ease;
-
-  &:hover {
-    border-color: #888;
-  }
+  /* values display unrounded, so the box grows past its 68px floor rather
+     than clipping unusually precise entries; view and edit match */
+  width: auto;
+  min-width: 68px;
 }
 
 /* Remove spinner arrows from number inputs in Chrome/Safari/Edge */
@@ -158,6 +150,26 @@
 /* Animation for smooth value changes */
 .frequency-knob-wrapper.dragging .frequency-knob-dial-indicator {
   transition: none;
+}
+
+/* Disabled starting note: the dial and Hz box go inert with the sitewide
+   disabled treatment (handlers are also guarded in the component) */
+.frequency-knob-wrapper_disabled {
+  .frequency-knob-dial {
+    opacity: 0.35; /* the system's disabled fade */
+    cursor: default;
+
+    &:hover,
+    &:active {
+      background: linear-gradient(145deg, #f0f0f0, #cacaca);
+      border-color: #ccc;
+      cursor: default;
+    }
+  }
+
+  .frequency-display-field {
+    @include interactive-disabled;
+  }
 }
 
 /* Integration with tuning system manager */

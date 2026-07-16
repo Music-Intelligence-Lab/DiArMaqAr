@@ -920,7 +920,7 @@ const MaqamTranspositions: React.FC = () => {
                     }}
                   >
                     <span>
-                      {getDisplayName(maqam.name, 'maqam')}
+                      <span className="maqam-jins-transpositions-shared__entity-name">{getDisplayName(maqam.name, 'maqam')}</span>
                       {" "}
                       ({getDisplayName(pitchClasses[0].noteName, "note")} / <span dir="ltr">{getEnglishNoteName(pitchClasses[0].noteName)}</span>)
                     </span>
@@ -942,7 +942,7 @@ const MaqamTranspositions: React.FC = () => {
                     }}
                   >
                     <span>
-                      {getDisplayName(maqam.name, 'maqam')}
+                      <span className="maqam-jins-transpositions-shared__entity-name">{getDisplayName(maqam.name, 'maqam')}</span>
                       {" "}
                       (<span dir="ltr">{getEnglishNoteName(pitchClasses[0].noteName)}</span>)
                     </span>
@@ -1393,9 +1393,9 @@ const MaqamTranspositions: React.FC = () => {
             />
             <div className={`maqam-jins-transpositions-shared__sticky-header${isHeaderStuck ? ' maqam-jins-transpositions-shared__sticky-header_stuck' : ''}`}>
               <div className="maqam-jins-transpositions-shared__title-row" dir={language === "ar" ? "rtl" : "ltr"}>
-                {t("maqam.analysis")}: {`${getDisplayName(selectedMaqamData?.getName() || "", "maqam")}`}
+                {t("maqam.analysis")}: <span className="maqam-jins-transpositions-shared__entity-name">{getDisplayName(selectedMaqamData?.getName() || "", "maqam")}</span>
                 {" "}
-                / {t("maqam.centsTolerance")}: <CentsToleranceInput className="maqam-jins-transpositions-shared__cents-tolerance-input" />
+                / {t("maqam.centsTolerance")}: <CentsToleranceInput />
               </div>
 
               <div className="maqam-jins-transpositions-shared__filter-menu">

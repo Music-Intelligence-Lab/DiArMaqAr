@@ -143,28 +143,9 @@
       background-color: rgba($secondary, 0.5);
     }
 
-    // Custom tooltip (works for all buttons with data-tooltip)
-    &[data-tooltip]:hover::after {
-      content: attr(data-tooltip);
-      position: absolute;
-      top: calc(100% + 8px);
-      left: 50%;
-      transform: translateX(-50%);
-      padding: 10px 16px;
-      background-color: $secondary;
-      color: white;
-      @include type-tooltip;
-      min-width: 200px;
-      max-width: 400px;
-      width: max-content;
-      white-space: normal;
-      word-wrap: break-word;
-      text-align: center;
-      border-radius: 6px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-      z-index: 10000;
-      pointer-events: none;
-    }
+    // The shared sitewide tooltip (bubble + arrow); the first/last-child
+    // viewport-edge variants below are navbar-specific overrides on top
+    @include hover-tooltip;
 
     // First child tooltip (align to left edge of viewport)
     &:first-child[data-tooltip]:hover::after {
@@ -182,22 +163,6 @@
       left: auto;
       right: 20px;
       transform: none;
-    }
-
-    // Tooltip arrow (works for all buttons with data-tooltip)
-    // Arrow is 6px tall, positioned to overlap bubble top by 1px for visibility
-    &[data-tooltip]:hover::before {
-      content: '';
-      position: absolute;
-      top: calc(100% - 3px);
-      left: 50%;
-      transform: translateX(-50%);
-      width: 0;
-      height: 0;
-      border: 6px solid transparent;
-      border-bottom-color: $secondary;
-      z-index: 10001;
-      pointer-events: none;
     }
 
     // First child tooltip arrow

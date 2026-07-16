@@ -25,13 +25,12 @@
   }
 
   &__title {
-    font-size: $font-size-4xl; // was 50px, flagged reduction to the 40px display-scale reference
+    @include type-heading-page-title;
     margin-bottom: 20px;
   }
 
   &__header {
-    font-size: $font-size-3xl;
-    font-weight: $font-weight-semibold;
+    @include type-heading-h2; // panel-header tier — was 26px/semibold, converged to 21px
   }
 
   &__form {
@@ -99,38 +98,17 @@
     margin-top: 1rem;
   }
 
-  &__save-button,
-  &__delete-button,
-  &__remove-button,
-  &__add-button {
-    height: fit-content;
-    margin-right: 20px;
-    padding: 15px 20px;
-    font-size: $font-size-md; // was 0.9rem/14.4px, nearest scale step
-    border-radius: 5px;
-    cursor: pointer;
-    transition: 0.3s;
-    color: white;
-
-    &:hover {
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-    }
-  }
-
   &__save-button {
-    background-color: $secondary;
+    @include manager-action-button-base($secondary, $hovered-secondary);
   }
 
   &__delete-button,
   &__remove-button {
-    background-color: $delete;
+    @include manager-action-button-base($delete, $hovered-delete);
   }
 
   &__add-button {
-    background-color: $primary;
+    @include manager-action-button-base($primary, $hovered-primary);
     margin-left: 10px;
-    font-size: $font-size-base; // was 0.8rem/12.8px, nearest scale step
-    padding: 10px 15px;
   }
 }

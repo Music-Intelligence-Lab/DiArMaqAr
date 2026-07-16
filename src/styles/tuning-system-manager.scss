@@ -46,11 +46,10 @@
   }
 
   &__source-add-button {
-    height: fit-content;
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
+    @include manager-source-add-button;
+    // pill height is fixed at 27px; alignment in the flex row comes from
+    // align-self rather than the old fit-content hack
+    align-self: flex-start;
   }
 
   &__source-item {
@@ -88,43 +87,27 @@
     font-size: 14px;
   }
 
-  &__source-delete-button {
-    padding: 5px;
-    font-size: 14px;
-    border-radius: 5px;
-    cursor: pointer;
-    background-color: $delete;
-    color: white;
-    transition: 0.1s;
-
-    &:hover {
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-    }
-  }
+  // (dead __source-delete-button removed — the TSX borrows
+  // jins-manager__source-delete-button, which carries the shared style)
 
   &__bib-title {
     font-style: italic;
   }
 
+  // manager-form-group/-label restore the [dir="rtl"] blocks jins/maqam
+  // already had — this panel was missing them (RTL regression fix).
   &__group {
-    display: flex;
-    gap: 0.5rem;
-    width: 100%;
+    @include manager-form-group;
   }
 
   &__label {
-    margin-bottom: 0.4rem;
-    font-weight: $font-weight-semibold;
+    @include manager-form-label;
   }
 
   &__input,
   &__textarea,
   &__select {
-    padding: 0.4rem;
-    // font-size: 0.9rem;
-    // border: 1px solid #ccc;
-    // border-radius: 4px;
-    resize: vertical;
+    @include manager-form-field;
   }
 
   &__select {
@@ -141,33 +124,12 @@
     margin-top: 1rem;
   }
 
-  &__save-button,
-  &__delete-button {
-    margin-right: 20px;
-    padding: 10px 20px;
-    font-size: 0.9rem;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: 0.1s;
-    color: white;
-
-    &:hover {
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-    }
-  }
-
   &__save-button {
-    background-color: $secondary;
-
-    &:disabled {
-      background-color: rgba(0, 0, 0, 0.3);
-      cursor: not-allowed;
-    }
+    @include manager-action-button-base($secondary, $hovered-secondary);
   }
 
   &__delete-button {
-    background-color: $delete;
+    @include manager-action-button-base($delete, $hovered-delete);
   }
 
   &__pitch-class-type {
@@ -294,9 +256,10 @@
     // bottom-aligned so all number boxes share one baseline
     align-items: flex-end;
     min-height: 30px;
-    // Group-to-group gap is much larger than the 8px within a group, so each
-    // note's button/dial/Hz set reads as one unit
-    gap: 32px;
+    // Group-to-group gap stays larger than the 8px within a group so each
+    // note's button/dial/Hz set reads as one unit — but tight enough that
+    // three groups fit per line at the 1024px minimum viewport
+    gap: 16px;
     flex-wrap: wrap;
   }
 
@@ -306,26 +269,10 @@
   }
 
   &__starting-note-input {
-    // Match the Hz frequency box for a uniform editable-field look
-    display: inline-flex;
-    align-items: center;
-    box-sizing: border-box;
-    height: 27px;
-    padding: 3px 8px;
-    background: #000;
-    border: 1px solid #555;
-    border-radius: 2px;
-    color: $text;
-    font-size: 12px;
-    width: 90px;
-    transition: border-color 0.15s ease;
-
-    &:hover {
-      border-color: #888;
-    }
+    // Same value box as the Hz field; wider to fit string-length values
+    @include input-value-box($width: 90px);
 
     &:focus {
-      border-color: #888;
       outline: none;
     }
 
@@ -347,29 +294,21 @@
     gap: 10px;
   }
 
+  // The shared functional pill; per ruling only the colouring differs here.
+  // Structural overrides: content-hugging width (a row of many short note
+  // names — the 90px floor would waste space) and wider side padding.
+  // Disabled comes from the system via aria-disabled (tooltip explains why).
   &__starting-note-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    height: 27px;
-    padding: 0 16px;
-    background-color: rgba($primary, 0.5);
+    @include button-functional;
+    min-width: 0;
     width: fit-content;
-    border-radius: 2px;
-    color: $text;
-    font-size: 12px;
-    cursor: pointer;
-    transition: 0.1s;
-    margin: 0px;
+    padding: 0 16px;
     white-space: nowrap;
-
-    &:hover {
-      background-color: rgba($primary, 1);
-    }
-
-    &:active {
-      background-color: $gold !important;
-    }
+    margin: 0px;
+    // Anchor for the shared hover tooltip; start-aligned so bubbles on
+    // buttons near the viewport edge don't overflow off-screen
+    position: relative;
+    @include hover-tooltip($align: start);
 
     &_selected {
       background-color: $secondary;
@@ -379,44 +318,23 @@
       }
     }
 
-    &_disabled {
-      background-color: rgba($black, 0.5) !important;
-      color: rgba($text, 0.35);
-
-      &:hover {
-        background-color: rgba($black, 0.5);
-        box-shadow: none;
-        color: rgba($text, 0.35);
-      }
-    }
-
     &_reset {
       background-color: $primary;
     }
 
     &_save {
       background-color: $secondary;
-
-      &:disabled {
-        background-color: rgba(0, 0, 0, 0.3);
-      }
     }
 
     &_delete {
       background-color: $delete;
-
-      &:disabled {
-        background-color: rgba(0, 0, 0, 0.3);
-      }
     }
   }
 
+  // Comments/Sources section labels — the app-wide section-header tier
+  // (18px light heading; ruled a header type, not an eyebrow).
   h3 {
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: $light-grey;
+    @include type-heading-h3;
     margin-bottom: 10px;
   }
 
@@ -434,14 +352,7 @@
   }
 
   &__comments-english {
-    font-size: 14px;
-    width: 60%;
-    min-height: 80px;
-    direction: ltr;
-    text-align: left;
-    vertical-align: top;
-    padding-right: 30px;
-    float: left;
+    @include manager-latin-column($width: 60%);
     margin-bottom: 0px;
     line-height: calc(20px);
 
@@ -456,25 +367,11 @@
   }
 
   &__comments-arabic {
-    font-size: 14px;
-    width: 60%;
-    min-height: 80px;
-    text-align: right;
-    direction: rtl;
-    vertical-align: top;
-    padding-left: 30px;
-    float: right;
+    @include manager-arabic-column($width: 60%);
   }
 
   &__sources-english {
-    font-size: 14px;
-    width: 40%;
-    min-height: 80px;
-    direction: ltr;
-    text-align: left;
-    vertical-align: top;
-    padding-right: 30px;
-    float: left;
+    @include manager-latin-column($width: 40%);
 
     // RTL support - when Arabic is selected, adjust layout
     [dir="rtl"] & {
@@ -487,114 +384,21 @@
   }
 
   &__sources-arabic {
-    font-size: 14px;
-    width: 40%;
-    min-height: 80px;
-    text-align: right;
-    direction: rtl;
-    vertical-align: top;
-    padding-left: 30px;
-    float: right;
+    @include manager-arabic-column($width: 40%);
   }
 
   &__list {
-    width: 100%;
-    background-color: $black;
-    display: grid;
-    grid-template-rows: repeat(3, auto);
-    grid-auto-flow: column;
-    gap: 10px;
-    height: 200px;
-    overflow-x: scroll;
-    overflow-y: hidden;
-    position: relative;
-    padding-left: 25px;
-    padding-right: 25px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-
-    // RTL support
-    [dir="rtl"] & {
-      direction: rtl;
-    }
-
-    &::-webkit-scrollbar {
-      height: 6px;
-      position: relative;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background-color: $primary;
-      cursor: pointer;
-      position: relative;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: $medium-grey;
-      cursor: pointer;
-      position: relative;
-    }
+    @include manager-item-list;
   }
 
   &__carousel {
-    display: flex;
-    align-items: center;
-    position: relative;
-    width: 100%;
+    @include manager-carousel;
 
-    // RTL support
+    // Kept local, not in the mixin: jins/maqam never set this, and folding it
+    // in would change their RTL rendering. Likely redundant (direction
+    // inherits from <html dir="rtl">) but preserved as-is.
     [dir="rtl"] & {
       direction: rtl;
-    }
-
-    .carousel-button {
-      background: none;
-      border: none;
-      font-size: 30px;
-      cursor: pointer;
-      color: $text;
-      padding: 0px;
-
-      &:hover {
-        color: $tertiary;
-        transition: background-color 0.2s ease-in-out;
-      }
-    }
-
-    .carousel-button-prev,
-    .carousel-button-next {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 1;
-      height: calc(100% - 20px);
-      width: 25px;
-      background-color: $black;
-
-      &:hover {
-        color: $tertiary;
-        transition: color 0.1s ease-in-out;
-      }
-    }
-
-    .carousel-button-prev {
-      left: 0;
-
-      // RTL support - swap positions
-      [dir="rtl"] & {
-        left: auto;
-        right: 0;
-      }
-    }
-
-    .carousel-button-next {
-      right: 0;
-
-      // RTL support - swap positions
-      [dir="rtl"] & {
-        right: auto;
-        left: 0;
-      }
     }
   }
 
@@ -675,6 +479,15 @@
     padding: 5px 10px;
     background-color: rgba($primary, 0.4);
     font-size: 14px;
+    // Shared tooltip on unavailable items; same row-aware flip as the
+    // jins/maqam item grids (3 rows per column)
+    position: relative;
+    @include hover-tooltip;
+
+    &:nth-child(3n),
+    &:nth-child(3n + 2) {
+      @include hover-tooltip-above;
+    }
     color: $text;
     cursor: pointer;
     transition: 0.2s;
@@ -824,36 +637,19 @@
   }
 
   &__octave-copy-button {
-    padding: 6px 12px;
-    background-color: rgba($primary, 0.5);
-    border-radius: 0px;
-    color: white;
-    cursor: pointer;
-    border: none;
-    font-size: 12px;
-    transition: 0.1s;
-    user-select: none;
+    @include button-functional;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 5px;
+    white-space: nowrap;
+    user-select: none;
     margin-left: auto;
 
     // RTL support
     [dir="rtl"] & {
       margin-left: 0;
       margin-right: auto;
-    }
-
-    &:hover {
-      background-color: rgba($primary, 0.8);
-    }
-
-    &:active {
-      background-color: $gold !important;
-    }
-
-    &:focus {
-      outline: transparent;
     }
   }
 
@@ -974,12 +770,6 @@
     padding: 0px;
     margin: -10px 25px 0px 25px;
 
-    th {
-      // text-align: left;
-      padding: 0px 0;
-      margin: 0px 0;
-    }
-
     tr {
       border: 0px;
       padding: 0px 0;
@@ -998,7 +788,7 @@
       min-width: 80px;
       max-width: 80px;
       height: 28px;
-      border: 1px solid rgb(86, 86, 86);
+      border: 1px solid $grey;
       margin: 0px;
       white-space: normal;
       overflow-wrap: normal;
@@ -1018,14 +808,6 @@
     tr[data-row-type="midiNoteDeviation"] td,
     tr[data-row-type="frequency"] td {
       @include type-data-value;
-    }
-
-    &_row-header {
-      font-weight: $font-weight-semibold;
-      width: 120px !important;
-      background-color: $medium-grey;
-      text-transform: capitalize;
-      text-align: left; // Default for LTR
     }
 
     &__detectedPitchClassType {
@@ -1107,7 +889,9 @@
 
     &:focus,
     &:hover {
-      color: #333 !important;
+      // was #333 — dark-grey text on a dark background, an accidental
+      // inversion; stays white like its __select-note sibling
+      color: white !important;
     }
   }
 
@@ -1155,48 +939,18 @@
 
 
 
-  &__play-sequence-button {
-    padding: 10px;
-    background-color: rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
-    color: $text;
-    cursor: pointer;
-    transition: 0.1s;
-
-    background-color: $primary;
-
-    &:disabled {
-      background-color: rgba(0, 0, 0, 0.3);
-    }
-  }
-
   &__export-button {
-    // Matches the transposition-table Copy/Export buttons
+    @include button-functional;
+    // Icon+label lockup needs flex centering; the shared pill is inline-block
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
-    height: 27px;
-    padding: 0 12px;
-    background-color: rgba($primary, 0.5);
-    cursor: pointer;
-    border-radius: 2px;
-    color: white;
-    font-size: 12px;
     white-space: nowrap;
-    border: none;
 
     svg {
       display: block;
       font-size: 16px !important;
-    }
-
-    &:hover {
-      background-color: rgba($primary, 1);
-    }
-
-    &:active {
-      background-color: $gold !important;
     }
   }
 
@@ -1224,48 +978,18 @@
     }
   }
 
+  // fit-content (vs the shared max-content) kept until the buttons pass
+  // decides a canonical; raw 13px/400 were token equivalents already.
   &__tab {
-    text-align: left;
-    width: fit-content;
-    padding: 10px 10px;
-    border-radius: 0px;
-    border: none;
-    background: $medium-grey;
-    color: $text;
-    font-weight: 400;
-    cursor: pointer;
-    font-size: 13px;
-
-    // RTL support
-    [dir="rtl"] & {
-      text-align: right;
-    }
-
-    &:hover {
-      background: color.adjust($medium-grey, $lightness: -10%);
-    }
+    @include manager-tab($width: fit-content);
   }
 
   &__tab_active {
-    border: none;
-    background: $black;
-    font-weight: 400;
-
-    &:hover {
-      background: $black;
-    }
+    @include manager-tab-active;
   }
 
   &__tab-count {
-    font-size: 0.95em;
-    color: silver;
-    margin-left: 2px;
-
-    // RTL support
-    [dir="rtl"] & {
-      margin-left: 0;
-      margin-right: 2px;
-    }
+    @include manager-tab-count;
   }
 }
 

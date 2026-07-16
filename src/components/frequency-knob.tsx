@@ -9,13 +9,15 @@ interface FrequencyKnobProps {
   onNewReferenceFrequency?: (newReferenceFrequency: number) => void; // Direct reference frequency updates for all active notes
   id?: string; // Add an ID to identify this specific knob
   noteName: string; // The note name to identify which frequency this knob controls
+  disabled?: boolean; // Inert when the related starting note is unavailable
 }
 
 export default function FrequencyKnob({
   value,
   onChange,
   onNewReferenceFrequency,
-  noteName
+  noteName,
+  disabled = false
 }: FrequencyKnobProps) {
   const { originalReferenceFrequencies, setOriginalReferenceFrequencies } = useAppContext();
   
@@ -93,10 +95,10 @@ export default function FrequencyKnob({
   
   // Value display formatting
   const valueRawRoundFn = (val: number): number => Math.round(val * 10) / 10;
-  const valueRawDisplayFn = (val: number): string => `${valueRawRoundFn(val)} Hz`;
 
   // Handle mouse/touch start
   const handlePointerDown = (e: React.MouseEvent | React.TouchEvent) => {
+    if (disabled) return;
     e.preventDefault();
     const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
     const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
@@ -173,6 +175,7 @@ export default function FrequencyKnob({
 
   // Handle double-click to reset to original value
   const handleDoubleClick = (e: React.MouseEvent) => {
+    if (disabled) return;
     e.preventDefault();
     e.stopPropagation();
     
@@ -197,6 +200,7 @@ export default function FrequencyKnob({
 
   // Handle keyboard controls
   const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (disabled) return;
     let newValue: number | null = null;
     
     // Use logarithmic steps for more musical behavior
@@ -243,8 +247,11 @@ export default function FrequencyKnob({
 
   // Handle label click to start editing
   const handleLabelClick = () => {
+    if (disabled) return;
     setIsEditing(true);
-    setEditValue(clampedValue.toFixed(1));
+    // Edit the ACTUAL stored value, never a rounded copy — rounding is for
+    // the display span only (and String() keeps "100" clean, not "100.0")
+    setEditValue(String(clampedValue));
     // Focus the input after a brief delay to ensure it's rendered
     setTimeout(() => {
       inputRef.current?.focus();
@@ -257,21 +264,22 @@ export default function FrequencyKnob({
     setEditValue(e.target.value);
   };
 
-  // Handle input submit (Enter key or blur)
+  // Handle input submit (Enter key or blur) — the typed value is committed
+  // EXACTLY as entered (validated + range-checked only); rounding happens
+  // solely in the display span.
   const handleInputSubmit = () => {
     const newValue = parseFloat(editValue);
     if (!isNaN(newValue) && newValue >= dynamicMin && newValue <= dynamicMax) {
-      const roundedValue = valueRawRoundFn(newValue);
-      setLocalValue(roundedValue);
-      setLastValue(roundedValue);
+      setLocalValue(newValue);
+      setLastValue(newValue);
       setHasBeenModified(true); // Mark as modified when user types in input
-      
+
       // Immediately update the sound
       if (onNewReferenceFrequency) {
-        onNewReferenceFrequency(roundedValue);
+        onNewReferenceFrequency(newValue);
       }
-      
-      onChange(roundedValue, true); // DO recalculate sound for direct input
+
+      onChange(newValue, true); // DO recalculate sound for direct input
     }
     setIsEditing(false);
   };
@@ -291,10 +299,11 @@ export default function FrequencyKnob({
   };
 
   return (
-    <div className="frequency-knob-wrapper">
+    <div className={`frequency-knob-wrapper${disabled ? ' frequency-knob-wrapper_disabled' : ''}`}>
       <div
         ref={knobRef}
         className={`frequency-knob-dial ${isDragging ? 'dragging' : ''}`}
+        aria-disabled={disabled || undefined}
         onMouseDown={handlePointerDown}
         onTouchStart={handlePointerDown}
         onDoubleClick={handleDoubleClick}
@@ -319,6 +328,7 @@ export default function FrequencyKnob({
           <input
             ref={inputRef}
             type="number"
+            onFocus={(e) => e.target.select()}
             value={editValue}
             onChange={handleInputChange}
             onKeyDown={handleInputKeyDown}
@@ -327,16 +337,21 @@ export default function FrequencyKnob({
             max={dynamicMax}
             step="0.1"
             className="frequency-input-field frequency-input-no-spinner"
+            style={{ width: `${Math.max(String(editValue).length, 1)}ch` }}
           />
           <span className="frequency-unit-label">Hz</span>
         </div>
       ) : (
-        <div 
+        <div
           className="frequency-display-field"
           onClick={handleLabelClick}
           title="Click to edit frequency directly"
         >
-          {valueRawDisplayFn(clampedValue)}
+          {/* same number/unit structure as edit mode, so the flex gap between
+              the value and "Hz" is identical in both states; the value is
+              shown exactly as stored — no display rounding */}
+          <span>{clampedValue}</span>
+          <span className="frequency-unit-label">Hz</span>
         </div>
       )}
     </div>

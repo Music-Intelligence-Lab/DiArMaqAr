@@ -90,13 +90,6 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
     line-height: $line-height-snug;
 }
 
-// The "primary value" row-header th — label, not a number, but emphasized.
-@mixin type-table-label-primary {
-    font-size: $font-size-sm;
-    font-weight: $font-weight-semibold;
-    line-height: $line-height-snug;
-}
-
 // Uppercase micro-labels with localized text: column eyebrows ("STRING
 // LENGTH"), footer subtitle. Tracking + uppercase are Latin-script devices —
 // under [dir="rtl"] this must drop tracking (breaks Arabic letter-joining)
@@ -170,6 +163,595 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
     font-size: $font-size-xl;
     font-weight: $font-weight-medium;
     line-height: $line-height-tight;
+}
+
+// Page-title tier — the 40px display size used by top-level page titles
+// (main app title, Sources page title). Panel headers inside pages use
+// type-heading-h2 instead; there are exactly two tiers, not six.
+@mixin type-heading-page-title {
+    font-size: $font-size-4xl;
+    font-weight: $font-weight-light; // matches the inherited body weight these titles already render at
+    line-height: $line-height-tight;
+}
+
+// ---------------------------------------------------------------------------
+// Component mixins — shared structural patterns @include'd from each panel's
+// own BEM block. type-* mixins above are text-only; these carry layout,
+// color, and interaction states too.
+// ---------------------------------------------------------------------------
+
+// Item carousel shared by the jins/maqam/tuning-system managers: an edge-to-
+// edge strip with absolutely-positioned prev/next buttons that swap sides
+// under RTL. tuning-system-manager's __octaves-carousel is a different
+// component and does not use this.
+@mixin manager-carousel {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+
+    .carousel-button {
+        background: none;
+        border: none;
+        font-size: 30px;
+        cursor: pointer;
+        color: $text;
+        padding: 0px;
+
+        &:hover {
+            color: $tertiary;
+            transition: background-color 0.2s ease-in-out;
+        }
+    }
+
+    .carousel-button-prev,
+    .carousel-button-next {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 1;
+        height: calc(100% - 20px);
+        width: 25px;
+        background-color: $black;
+
+        &:hover {
+            color: $tertiary;
+            transition: color 0.1s ease-in-out;
+        }
+    }
+
+    .carousel-button-prev {
+        left: 0;
+
+        [dir="rtl"] & {
+            left: auto;
+            right: 0;
+        }
+    }
+
+    .carousel-button-next {
+        right: 0;
+
+        [dir="rtl"] & {
+            right: auto;
+            left: 0;
+        }
+    }
+}
+
+// THE disabled state for interactive elements sitewide — one treatment.
+// Buttons in the button-functional system get this automatically via
+// :disabled / [aria-disabled="true"]; anything else @includes it in its
+// own disabled class. Quietly inert: muted surface, faded text, default
+// cursor, no hover/pressed reaction.
+@mixin interactive-disabled {
+    background-color: rgba($black, 0.5) !important;
+    color: rgba($text, 0.35);
+    cursor: default;
+
+    &:hover {
+        background-color: rgba($black, 0.5);
+        box-shadow: none;
+        color: rgba($text, 0.35);
+    }
+
+    &:active {
+        background-color: rgba($black, 0.5) !important;
+    }
+}
+
+// The app-wide functional button — canonical form is the maqamat
+// transposition-table pill (hide details / select & load / asc-desc /
+// export / copy table). One geometry and type treatment everywhere; role is
+// carried by the color parameters. Gold :active flash is the shared
+// "pressed" signal.
+@mixin button-functional($bg: rgba($primary, 0.5), $bg-hover: rgba($primary, 1)) {
+    background-color: $bg;
+    color: white;
+    padding: 0px 10px;
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: $font-size-sm;
+    // Spacing comes from the container gap; the narrow floor keeps button
+    // rows fitting at 1024px
+    min-width: 90px;
+    width: auto;
+    height: 27px;
+    vertical-align: middle;
+    text-align: center;
+    border: none;
+    display: inline-block;
+
+    &:focus {
+        outline: transparent;
+    }
+
+    &:active {
+        background-color: $gold !important;
+    }
+
+    &:hover {
+        background-color: $bg-hover;
+    }
+
+    // one disabled treatment sitewide, no per-component variants
+    &:disabled,
+    &[aria-disabled="true"] {
+        @include interactive-disabled;
+    }
+}
+
+// THE sitewide hover tooltip — one CSS for tooltips everywhere. Set a
+// data-tooltip attribute on an element (which must be position: relative)
+// and a bubble + arrow render below it on hover. CSS-only, no JS.
+// $align: center — bubble centered on the element (navbar default);
+//         start  — bubble hangs from the element's leading edge (RTL-aware),
+//                  for elements that sit near the viewport edge.
+// The navbar keeps its own first/last-child viewport-edge variants on top.
+@mixin hover-tooltip($align: center) {
+    &[data-tooltip]:hover::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        top: calc(100% + 8px);
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 10px 16px;
+        background-color: $secondary;
+        color: white;
+        @include type-tooltip;
+        min-width: 200px;
+        max-width: 400px;
+        width: max-content;
+        white-space: normal;
+        word-wrap: break-word;
+        text-align: center;
+        border-radius: 6px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        z-index: 10000;
+        pointer-events: none;
+
+        @if $align == start {
+            left: -8px;
+            transform: none;
+
+            [dir="rtl"] & {
+                left: auto;
+                right: -8px;
+            }
+        }
+    }
+
+    // Arrow is 6px tall, positioned to overlap the bubble top by 1px
+    &[data-tooltip]:hover::before {
+        content: "";
+        position: absolute;
+        top: calc(100% - 3px);
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 0;
+        border: 6px solid transparent;
+        border-bottom-color: $secondary;
+        z-index: 10001;
+        pointer-events: none;
+    }
+}
+
+// Companion to hover-tooltip: flips an already-included tooltip ABOVE the
+// element — for elements inside clipped/scrolling containers where a bubble
+// below would be cut off (e.g. bottom rows of the carousel item grids).
+@mixin hover-tooltip-above {
+    &[data-tooltip]:hover::after {
+        top: auto;
+        bottom: calc(100% + 8px);
+    }
+
+    &[data-tooltip]:hover::before {
+        top: auto;
+        bottom: calc(100% - 3px);
+        border-color: transparent;
+        border-top-color: $secondary;
+    }
+}
+
+// Compact numeric value box — the frequency-knob Hz box is the reference:
+// a 27px black borderless box, tabular numerals, unit symbols (Hz, ¢, ±)
+// living INSIDE the box, and no size or appearance change on focus/blur.
+// Used by the Hz display/edit boxes, the string-length input, and the
+// cents-tolerance control.
+@mixin input-value-box($width: 68px) {
+    @include type-data-value;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-sizing: border-box;
+    width: $width;
+    height: 27px;
+    padding: 3px 8px;
+    border: none;
+    border-radius: 2px;
+    background: $black;
+    color: $text;
+}
+
+// Manager-panel shared blocks — extracted verbatim from the byte-identical
+// jins-manager/maqam-manager rules. Values that drifted by accident between
+// the two files (transition speed, create-button radius) are parameters with
+// each consumer passing its current value, so extraction changes nothing
+// visually; the buttons unification pass collapses them to one canonical
+// value.
+
+// Selected-note chip (saved = solid, unsaved = dashed outline).
+@mixin manager-selected-note {
+    font-size: $font-size-md;
+    background-color: $secondary;
+    padding: 5px;
+    margin: 0 3px;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &_unsaved {
+        background-color: transparent;
+        border: 2px dashed $secondary;
+    }
+}
+
+// Admin action buttons (save/delete/clear rows in the manager panels) —
+// the shared functional pill in solid role colors, plus the row spacing
+// the admin forms rely on.
+@mixin manager-action-button-base($bg, $bg-hover) {
+    @include button-functional($bg: $bg, $bg-hover: $bg-hover);
+    margin-right: 20px;
+
+    [dir="rtl"] & {
+        margin-right: 0;
+        margin-left: 20px;
+    }
+}
+
+// Create-new CTA — the shared pill, centered on its own row.
+@mixin manager-create-button {
+    @include button-functional($bg: $secondary, $bg-hover: $hovered-secondary);
+    display: block;
+    width: fit-content;
+    margin: 20px auto;
+}
+
+@mixin manager-admin-form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px;
+    font-size: $font-size-2xl;
+
+    [dir="rtl"] & {
+        align-items: flex-end;
+        text-align: right;
+    }
+}
+
+@mixin manager-name-input {
+    padding: 0.4rem;
+    font-size: $font-size-lg;
+    border-radius: 4px;
+}
+
+// Source-reference editor row (add button, per-source item, select/input
+// fields, per-source delete).
+@mixin manager-source-add-button {
+    @include button-functional($bg: $secondary, $bg-hover: $hovered-secondary);
+}
+
+@mixin manager-source-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100px;
+}
+
+@mixin manager-source-field {
+    padding: 5px;
+    font-size: $font-size-md;
+}
+
+@mixin manager-source-delete-button {
+    @include button-functional($bg: $delete, $bg-hover: $hovered-delete);
+}
+
+// Admin-form field scaffolding.
+@mixin manager-input-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+@mixin manager-form-group {
+    display: flex;
+    gap: 0.5rem;
+    width: 100%;
+
+    [dir="rtl"] & {
+        flex-direction: row-reverse;
+    }
+}
+
+@mixin manager-form-label {
+    margin-bottom: 0.4rem;
+    font-weight: $font-weight-semibold;
+
+    [dir="rtl"] & {
+        text-align: right;
+    }
+}
+
+@mixin manager-form-field {
+    padding: 0.4rem;
+    resize: vertical;
+}
+
+// Scrollable 3-row item grid shared by the jins/maqam/tuning-system
+// managers. Only maqam constrains column tracks; the others let columns
+// auto-size, so $columns is optional.
+@mixin manager-item-list($columns: null) {
+    width: 100%;
+    background-color: $black;
+    display: grid;
+    @if $columns {
+        grid-template-columns: $columns;
+    }
+    grid-template-rows: repeat(3, auto);
+    grid-auto-flow: column;
+    gap: 10px;
+    height: 200px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    position: relative;
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    [dir="rtl"] & {
+        direction: rtl;
+    }
+
+    &::-webkit-scrollbar {
+        height: 6px;
+        position: relative;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: $primary;
+        cursor: pointer;
+        position: relative;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: $medium-grey;
+        cursor: pointer;
+        position: relative;
+    }
+}
+
+// List item + its name lockup for the jins/maqam manager grids. maqam
+// currently passes the invalid `left` for $align/$justify (browsers drop it,
+// falling back to stretch/normal) — preserved verbatim for now; fixing it to
+// flex-start is a deliberate, visible alignment change handled in the
+// unification pass, not silently here. tuning-system-manager's __item is a
+// different design (primary-tinted bg, disabled state) and stays its own.
+@mixin manager-item($align: flex-start) {
+    display: flex;
+    flex-direction: column;
+    align-items: $align;
+    padding: 5px 10px;
+    background-color: rgba($black, 0.3);
+    font-size: $font-size-md;
+    color: $text;
+    cursor: pointer;
+    transition: 0.2s;
+
+    // Unavailable items explain themselves via the shared tooltip. The item
+    // grid fills 3 rows per column (grid-auto-flow: column), so row 1 opens
+    // its bubble downward and rows 2-3 open upward to stay inside the
+    // scroll container's clip box.
+    position: relative;
+    @include hover-tooltip;
+
+    &:nth-child(3n),
+    &:nth-child(3n + 2) {
+        @include hover-tooltip-above;
+    }
+
+    [dir="rtl"] & {
+        text-align: right;
+    }
+
+    &_active {
+        background-color: rgba($primary, 0.4);
+
+        &:hover {
+            background-color: rgba($primary, 0.9);
+        }
+    }
+
+    &_selected {
+        background-color: $tertiary;
+
+        &:hover {
+            background-color: $tertiary;
+        }
+    }
+}
+
+@mixin manager-item-name($align: flex-start, $justify: flex-start, $transpositions-color: null, $transpositions-size: null) {
+    display: flex;
+    flex-direction: column;
+    align-items: $align;
+    justify-content: $justify;
+    font-weight: $font-weight-medium;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-variation-settings: "wght" #{$font-weight-medium};
+    font-synthesis: none;
+
+    [dir="rtl"] & {
+        text-align: right;
+    }
+
+    &-transpositions {
+        @if $transpositions-color {
+            color: $transpositions-color;
+        }
+        @if $transpositions-size {
+            font-size: $transpositions-size;
+        }
+        margin-top: 3px;
+        font-weight: $font-weight-light;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-variation-settings: "wght" #{$font-weight-light};
+        font-synthesis: none;
+
+        [dir="rtl"] & {
+            text-align: right;
+        }
+    }
+}
+
+// Filter tab strip shared by the jins/maqam/tuning-system managers. The
+// __tabs container rules stay per-file (they genuinely differ: maqam wraps
+// and grows, jins pulls up with a negative margin).
+@mixin manager-tab($width: max-content, $height: null) {
+    text-align: left;
+    width: $width;
+    padding: 10px 10px;
+    border-radius: 0px;
+    border: none;
+    background: $medium-grey;
+    color: $text;
+    font-size: $font-size-base;
+    @if $height {
+        height: $height;
+    }
+    font-weight: $font-weight-medium;
+    cursor: pointer;
+
+    [dir="rtl"] & {
+        text-align: right;
+    }
+
+    &:hover {
+        background: color.adjust($medium-grey, $lightness: -10%);
+    }
+}
+
+@mixin manager-tab-active {
+    border: none;
+    background: $black;
+    font-weight: $font-weight-medium;
+
+    &:hover {
+        background: $black;
+    }
+}
+
+@mixin manager-tab-count {
+    font-size: 0.95em;
+    color: silver;
+    margin-left: 2px;
+
+    [dir="rtl"] & {
+        margin-left: 0;
+        margin-right: 2px;
+    }
+}
+
+// Side-by-side bilingual content columns (Comments/Sources sections).
+// jins/maqam split 50/50; tuning-system deliberately splits 60/40 — width is
+// a parameter, not a forced merge. tuning-system's English columns also flip
+// under [dir="rtl"] (kept local there); jins/maqam currently don't — an RTL
+// gap flagged for the unification pass, not silently changed here.
+@mixin manager-latin-column($width: 50%) {
+    font-size: $font-size-md;
+    width: $width;
+    min-height: 80px;
+    direction: ltr;
+    text-align: left;
+    vertical-align: top;
+    padding-right: 30px;
+    float: left;
+}
+
+@mixin manager-arabic-column($width: 50%) {
+    font-size: $font-size-md;
+    width: $width;
+    min-height: 80px;
+    text-align: right;
+    direction: rtl;
+    vertical-align: top;
+    padding-left: 30px;
+    float: right;
+}
+
+// Export cluster — the jins/maqam 50px flat-block variant. tuning-system-
+// manager's __export-button is a different component (27px pill) and must
+// not use this.
+@mixin manager-export-container {
+    display: inline-flex;
+    float: right;
+    align-items: center;
+    gap: 10px;
+    margin-right: 20px;
+    margin-bottom: 0px;
+    margin-left: auto;
+
+    [dir="rtl"] & {
+        float: left;
+        margin-right: auto;
+        margin-left: 20px;
+    }
+}
+
+@mixin manager-export-button {
+    padding-top: 5px;
+    padding-bottom: 0px;
+    width: 50px;
+    background-color: rgba($primary, 0.5);
+    cursor: pointer;
+    border-radius: 0px;
+    color: $text;
+    margin-left: 0px;
+
+    [dir="rtl"] & {
+        margin-left: auto;
+        margin-right: 0px;
+    }
+
+    &:hover {
+        background-color: rgba($primary, 1);
+    }
 }
 
 a {

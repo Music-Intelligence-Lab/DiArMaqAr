@@ -671,7 +671,7 @@ export default function JinsTranspositions() {
                   }}
                 >
                   <span>
-                    {getDisplayName(jins.name, 'jins')}
+                    <span className="maqam-jins-transpositions-shared__entity-name">{getDisplayName(jins.name, 'jins')}</span>
                     {" "}
                     ({getDisplayName(pitchClasses[0].noteName, "note")} / <span dir="ltr">{getEnglishNoteName(pitchClasses[0].noteName)}</span>)
                   </span>
@@ -693,7 +693,7 @@ export default function JinsTranspositions() {
                   }}
                 >
                   <span>
-                    {`${getDisplayName(jins.name, "jins")}`}{" "}
+                    <span className="maqam-jins-transpositions-shared__entity-name">{getDisplayName(jins.name, "jins")}</span>{" "}
                     <span dir="ltr">
                       {`(${getEnglishNoteName(pitchClasses[0].noteName)})`}
                     </span>
@@ -996,9 +996,9 @@ export default function JinsTranspositions() {
         <div className="jins-transpositions maqam-jins-transpositions-shared" key={language} ref={rotateOverflowContainerRef}>
           <div className="maqam-jins-transpositions-shared__sticky-header">
             <div className="maqam-jins-transpositions-shared__title-row" dir={language === "ar" ? "rtl" : "ltr"}>
-              {t("jins.analysis")}: {`${getDisplayName(selectedJinsData.getName(), "jins")}`}{" "}
+              {t("jins.analysis")}: <span className="maqam-jins-transpositions-shared__entity-name">{getDisplayName(selectedJinsData.getName(), "jins")}</span>{" "}
               {" "}
-              / {t("jins.centsTolerance")}: <CentsToleranceInput className="maqam-jins-transpositions-shared__cents-tolerance-input" />
+              / {t("jins.centsTolerance")}: <CentsToleranceInput />
             </div>
 
             <div className="maqam-jins-transpositions-shared__filter-menu">

@@ -28,17 +28,7 @@
   }
 
   &__selected-note {
-    font-size: $font-size-md;
-    background-color: $secondary;
-    padding: 5px;
-    margin: 0 3px;
-    border-radius: 5px;
-    cursor: pointer;
-
-    &_unsaved {
-      background-color: transparent;
-      border: 2px dashed $secondary;
-    }
+    @include manager-selected-note;
   }
 
   &__toggle-button {
@@ -66,34 +56,13 @@
     vertical-align: top;
   }
 
-  // Filter mode toggle button (was __group-toggle-button)
+  // Filter mode toggle button (was __group-toggle-button) — the shared
+  // functional pill in its toggle (tertiary) coloring; wider floor because
+  // the label is long in both languages. Height converged 30px → 27px.
   &__filter-mode-toggle {
-    background-color: rgba($tertiary, 0.7);
-    color: white;
-    padding: 0px 10px;
-    border-radius: 2px;
-    cursor: pointer;
-    font-size: $font-size-sm;
+    @include button-functional($bg: rgba($tertiary, 0.7), $bg-hover: rgba($tertiary, 1));
     min-width: 150px;
-    width: auto;
-    height: 30px;
-    vertical-align: middle;
-    text-align: center;
-    border: none;
-    display: inline-block;
     flex-shrink: 0;
-
-    &:focus {
-      outline: transparent;
-    }
-
-    &:active {
-      background-color: $gold !important;
-    }
-
-    &:hover {
-      background-color: rgba($tertiary, 1);
-    }
   }
 
   &__tabs {
@@ -111,201 +80,32 @@
   }
 
   &__tab {
-    text-align: left;
-    width: max-content;
-    padding: 10px 10px;
-    border-radius: 0px;
-    border: none;
-    background: $medium-grey;
-    color: $text;
-    font-size: $font-size-base;
-    height: 38px;
-    font-weight: $font-weight-medium;
-    cursor: pointer;
-
-    [dir="rtl"] & {
-      text-align: right;
-    }
-
-    &:hover {
-      background: color.adjust($medium-grey, $lightness: -10%);
-    }
+    @include manager-tab($height: 38px);
   }
 
   &__tab_active {
-    border: none;
-    background: $black;
-    font-weight: $font-weight-medium;
-
-    &:hover {
-      background: $black;
-    }
+    @include manager-tab-active;
   }
 
   &__tab-count {
-    font-size: 0.95em;
-    color: silver;
-    margin-left: 2px;
-
-    [dir="rtl"] & {
-      margin-left: 0;
-      margin-right: 2px;
-    }
+    @include manager-tab-count;
   }
 
   &__carousel {
-    display: flex;
-    align-items: center;
-    position: relative;
-    width: 100%;
-
-    .carousel-button {
-      background: none;
-      border: none;
-      font-size: 30px;
-      cursor: pointer;
-      color: $text;
-      padding: 0px;
-
-      &:hover {
-        color: $tertiary;
-        transition: background-color 0.2s ease-in-out;
-      }
-    }
-
-    .carousel-button-prev,
-    .carousel-button-next {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 1;
-      height: calc(100% - 20px);
-      width: 25px;
-      background-color: $black;
-
-      &:hover {
-        color: $tertiary;
-        transition: color 0.1s ease-in-out;
-      }
-    }
-
-    .carousel-button-prev {
-      left: 0;
-
-      [dir="rtl"] & {
-        left: auto;
-        right: 0;
-      }
-    }
-
-    .carousel-button-next {
-      right: 0;
-
-      [dir="rtl"] & {
-        right: auto;
-        left: 0;
-      }
-    }
+    @include manager-carousel;
   }
 
   &__list {
-    width: 100%;
-    background-color: $black;
-    display: grid;
-    grid-template-columns: repeat(16, (minmax(250px, 1fr)));
-    grid-template-rows: repeat(3, auto);
-    grid-auto-flow: column;
-    gap: 10px;
-    height: 200px;
-    overflow-x: scroll;
-    overflow-y: hidden;
-    position: relative;
-    padding-left: 25px;
-    padding-right: 25px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-
-    [dir="rtl"] & {
-      direction: rtl;
-    }
-
-    &::-webkit-scrollbar {
-      height: 6px;
-      position: relative;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background-color: $primary;
-      cursor: pointer;
-      position: relative;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: $medium-grey;
-      cursor: pointer;
-      position: relative;
-    }
+    @include manager-item-list($columns: repeat(16, minmax(250px, 1fr)));
   }
 
+  // $align/$justify: left is invalid CSS preserved verbatim (see mixin note)
   &__item {
-    display: flex;
-    flex-direction: column;
-    align-items: left;
-    padding: 5px 10px;
-    background-color: rgba($black, 0.3);
-    font-size: $font-size-md;
-    color: $text;
-    cursor: pointer;
-    transition: 0.2s;
-
-    [dir="rtl"] & {
-      text-align: right;
-    }
-
-    &_active {
-      background-color: rgba($primary, 0.4);
-
-      &:hover {
-        background-color: rgba($primary, 0.9);
-      }
-    }
-
-    &_selected {
-      background-color: $tertiary;
-
-      &:hover {
-        background-color: $tertiary;
-      }
-    }
+    @include manager-item($align: left);
   }
 
   &__item-name {
-    display: flex;
-    flex-direction: column;
-    align-items: left;
-    justify-content: left;
-    font-weight: $font-weight-medium;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    font-variation-settings: "wght" #{$font-weight-medium};
-    font-synthesis: none;
-
-    [dir="rtl"] & {
-      text-align: right;
-    }
-
-    &-transpositions {
-      font-weight: $font-weight-light;
-      margin-top: 3px;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      font-variation-settings: "wght" #{$font-weight-light};
-      font-synthesis: none;
-
-      [dir="rtl"] & {
-        text-align: right;
-      }
-    }
+    @include manager-item-name($align: left, $justify: left);
   }
 
   &__play-button {
@@ -327,199 +127,70 @@
 
   // Create button (was __create-new-maqam-button)
   &__create-button {
-    width: fit-content;
-    margin: 20px auto;
-    font-size: $font-size-2xl;
-    padding: 10px;
-    background-color: $secondary;
-    border-radius: 10px;
-    color: $text;
-    cursor: pointer;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-    transition: 0.3s;
-
-    &:hover {
-      background-color: $primary;
-    }
+    @include manager-create-button;
   }
 
   // Admin form (was __maqam-form)
   &__admin-form {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 20px;
-    padding: 20px;
-    font-size: $font-size-2xl;
-
-    [dir="rtl"] & {
-      align-items: flex-end;
-      text-align: right;
-    }
+    @include manager-admin-form;
   }
 
   // Name input (was __maqam-input)
   &__name-input {
-    padding: 0.4rem;
-    font-size: $font-size-lg;
-    border-radius: 4px;
-  }
-
-  &__save-button,
-  &__delete-button,
-  &__clear-button {
-    margin-right: 20px;
-    padding: 10px 20px;
-    font-size: $font-size-lg;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: 0.3s;
-    color: white;
-
-    [dir="rtl"] & {
-      margin-right: 0;
-      margin-left: 20px;
-    }
-
-    &:hover {
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-    }
+    @include manager-name-input;
   }
 
   &__save-button {
-    background-color: $secondary;
+    @include manager-action-button-base($secondary, $hovered-secondary);
   }
 
   &__delete-button {
-    background-color: $delete;
+    @include manager-action-button-base($delete, $hovered-delete);
   }
 
   &__clear-button {
-    background-color: $primary;
+    @include manager-action-button-base($primary, $hovered-primary);
   }
 
   &__source-add-button {
-    padding: 10px 20px;
-    font-size: $font-size-lg;
-    border-radius: 5px;
-    cursor: pointer;
+    @include manager-source-add-button;
   }
 
   &__source-item {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    width: 100px;
+    @include manager-source-item;
   }
 
   &__source-select,
   &__source-input {
-    padding: 5px;
-    font-size: $font-size-md;
+    @include manager-source-field;
   }
 
   &__source-delete-button {
-    padding: 5px;
-    font-size: $font-size-md;
-    border-radius: 5px;
-    cursor: pointer;
-    background-color: $delete;
-    color: white;
-    transition: 0.1s;
-
-    &:hover {
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-    }
-  }
-
-  &__comments-english {
-    font-size: $font-size-md;
-    width: 50%;
-    min-height: 80px;
-    direction: ltr;
-    text-align: left;
-    vertical-align: top;
-    padding-right: 30px;
-    float: left;
-    margin-bottom: 40px;
-  }
-
-  &__comments-arabic {
-    font-size: $font-size-md;
-    width: 50%;
-    min-height: 80px;
-    text-align: right;
-    direction: rtl;
-    vertical-align: top;
-    padding-left: 30px;
-    float: right;
+    @include manager-source-delete-button;
   }
 
   &__input-container {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
+    @include manager-input-container;
   }
 
   &__group {
-    display: flex;
-    gap: 0.5rem;
-    width: 100%;
-
-    [dir="rtl"] & {
-      flex-direction: row-reverse;
-    }
+    @include manager-form-group;
   }
 
   &__label {
-    margin-bottom: 0.4rem;
-    font-weight: $font-weight-semibold;
-
-    [dir="rtl"] & {
-      text-align: right;
-    }
+    @include manager-form-label;
   }
 
   &__input,
   &__textarea {
-    padding: 0.4rem;
-    resize: vertical;
+    @include manager-form-field;
   }
 
   &__export-container {
-    display: inline-flex;
-    float: right;
-    align-items: center;
-    gap: 10px;
-    margin-right: 20px;
-    margin-bottom: 0px;
-    margin-left: auto;
-
-    [dir="rtl"] & {
-      float: left;
-      margin-right: auto;
-      margin-left: 20px;
-    }
+    @include manager-export-container;
   }
 
   &__export-button {
-    padding-top: 5px;
-    padding-bottom: 0px;
-    width: 50px;
-    background-color: rgba($primary, 0.5);
-    cursor: pointer;
-    border-radius: 0px;
-    color: $text;
-    margin-left: 0px;
-
-    [dir="rtl"] & {
-      margin-left: auto;
-      margin-right: 0px;
-    }
-
-    &:hover {
-      background-color: rgba($primary, 1);
-    }
+    @include manager-export-button;
   }
 }

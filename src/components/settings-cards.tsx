@@ -184,6 +184,7 @@ const SettingsCard = () => {
             </label>
             <input
               type="number"
+              onFocus={(e) => e.target.select()}
               id="tempo-input"
               value={soundSettings.tempo}
               onChange={handleTempoChange}
@@ -600,6 +601,7 @@ const SettingsCard = () => {
                 </label>
                 <input
                   type="number"
+                  onFocus={(e) => e.target.select()}
                   id="tempo-input"
                   value={soundSettings.pitchBendRange}
                   onChange={handlePitchBendRangeChange}

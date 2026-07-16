@@ -217,6 +217,7 @@ export default function PatternsManager() {
                   </select>
                   <input
                     type="number"
+                    onFocus={(e) => e.target.select()}
                     min={1}
                     max={127}
                     step={1}

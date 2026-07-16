@@ -929,6 +929,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                   className="tuning-system-manager__input"
                   id="stringLengthField"
                   type="number"
+                  onFocus={(e) => e.target.select()}
                   value={tuningSystemStringLength ?? 0}
                   onChange={(e) =>
                     setTuningSystemStringLength(Number(e.target.value))
@@ -947,6 +948,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                   className="tuning-system-manager__input"
                   id="refFreqField"
                   type="number"
+                  onFocus={(e) => e.target.select()}
                   value={defaultReferenceFrequency ?? 0}
                   onChange={(e) =>
                     setDefaultReferenceFrequency(Number(e.target.value))
@@ -1028,9 +1030,11 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
               );
               // In Arabic (RTL) mode many browsers invert the meaning of scrollLeft; to keep UX intuitive,
               // treat the "prev" button as moving visually right in RTL (positive delta) and left in LTR (negative delta).
+              // Distance and smooth behavior match the jins/maqam carousels exactly.
               if (container)
                 container.scrollBy({
-                  left: language === "ar" ? 635 : -635,
+                  left: language === "ar" ? 670 : -670,
+                  behavior: "smooth",
                 });
             }}
           >
@@ -1063,6 +1067,18 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                     (tuningSystem.getId() === selectedTuningSystem?.getId()
                       ? "tuning-system-manager__item_selected "
                       : "")
+                  }
+                  data-tooltip={
+                    isTuningSystemDisabled(
+                      tuningSystem,
+                      selectedJinsData,
+                      selectedMaqamData,
+                      selectedMaqam
+                    ).disabled
+                      ? selectedJinsData
+                        ? t("tuningSystem.tooltip.itemDisabledForJins")
+                        : t("tuningSystem.tooltip.itemDisabledForMaqam")
+                      : undefined
                   }
                   onClick={() => {
                     // Toggle functionality: if clicking the same tuning system, deselect it
@@ -1105,9 +1121,11 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 ".tuning-system-manager__list"
               );
               // Mirror logic of prev button for RTL so "next" always moves visually left in RTL and right in LTR.
+              // Distance and smooth behavior match the jins/maqam carousels exactly.
               if (container)
                 container.scrollBy({
-                  left: language === "ar" ? -635 : 635,
+                  left: language === "ar" ? -520 : 520,
+                  behavior: "smooth",
                 });
             }}
           >
@@ -1201,14 +1219,28 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                               ? "tuning-system-manager__starting-note-button_disabled "
                               : "")
                           }
-                          onClick={() =>
-                            handleStartNoteNameChange(startingNote)
+                          data-tooltip={
+                            disabled
+                              ? selectedJinsData
+                                ? t("tuningSystem.tooltip.disabledForJins")
+                                : t("tuningSystem.tooltip.disabledForMaqam")
+                              : undefined
+                          }
+                          // aria-disabled + click guard instead of the
+                          // disabled attribute: disabled buttons suppress
+                          // hover events, which would kill the tooltip
+                          aria-disabled={disabled || undefined}
+                          onClick={
+                            disabled
+                              ? undefined
+                              : () => handleStartNoteNameChange(startingNote)
                           }
                         >
                           {getDisplayName(startingNote, "note")}
                         </button>
                         <FrequencyKnob
                           key={`${selectedTuningSystem?.getId()}-${startingNote}`}
+                          disabled={disabled}
                           value={referenceFrequencies[startingNote] ?? 110}
                           onChange={(val, shouldRecalculate) => {
                             handleReferenceFrequencyChange(
@@ -1280,6 +1312,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
               </label>
               <input
                 type="number"
+                onFocus={(e) => e.target.select()}
                 id="reference-frequency-input"
                 value={tuningSystemStringLength ?? 0}
                 onChange={(e) => {
