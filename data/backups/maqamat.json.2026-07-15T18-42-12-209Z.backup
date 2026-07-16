@@ -2023,19 +2023,13 @@
       "rāst",
       "ʿirāq"
     ],
-    "primaryJinsDegree": [
-      "ʿirāq"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
-        "id": "sayralshawwa_1946",
+        "id": "Sayr alshawwa_1946",
         "creatorEnglish": "al-Shawwā, Sāmī",
         "creatorArabic": "",
         "sourceId": "alshawwa_1946",
@@ -2054,24 +2048,18 @@
             "value": "ʿirāq"
           },
           {
-            "type": "jins",
-            "value": "3",
+            "type": "direction",
+            "value": "ascending",
             "startingNote": "ʿirāq",
             "direction": "ascending"
           },
           {
-            "type": "jins",
-            "value": "3",
-            "startingNote": "ʿirāq",
-            "direction": "descending"
+            "type": "direction",
+            "value": "descending"
           },
           {
             "type": "note",
-            "value": "ʿushayrān"
-          },
-          {
-            "type": "jins",
-            "value": "2",
+            "value": "ʿushayrān",
             "startingNote": "dūgāh",
             "direction": "none"
           },
@@ -2079,19 +2067,29 @@
             "type": "jins",
             "value": "2",
             "startingNote": "dūgāh",
-            "direction": "descending"
+            "direction": ""
+          },
+          {
+            "type": "direction",
+            "value": "descending"
           },
           {
             "type": "note",
             "value": "yegāh"
           }
-        ]
+        ],
+        "version": "2026-07-15T18:24:27.689Z"
       }
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2025-10-18T19:41:17.132Z"
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "22"
+      }
+    ],
+    "version": "2026-07-15T18:27:54.406Z"
   },
   {
     "id": "34",
@@ -4306,7 +4304,7 @@
     "name": "maqām zanjarān",
     "ascendingNoteNames": [
       "yegāh",
-      "qarār ḥiṣār",
+      "qarār nīm ḥiṣār",
       "kawasht",
       "rāst",
       "dūgāh",
@@ -4319,7 +4317,7 @@
       "dūgāh",
       "rāst",
       "kawasht",
-      "qarār ḥiṣār",
+      "qarār nīm ḥiṣār",
       "yegāh"
     ],
     "primaryJinsDegree": [
@@ -4336,7 +4334,7 @@
     "commentsEnglish": "Created by Sayyed Darwīsh (see Dawr Fī Sharʿi Mīn: https://www.youtube.com/watch?v=DmEEUlWYJjo)",
     "commentsArabic": "",
     "sourcePageReferences": [],
-    "version": "2025-12-11T23:34:00.303Z"
+    "version": "2026-07-14T15:22:26.462Z"
   },
   {
     "id": "62",
