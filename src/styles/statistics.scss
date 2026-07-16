@@ -59,8 +59,7 @@
     }
 
     &:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
+      @include interactive-disabled;
     }
   }
 
@@ -154,4 +153,11 @@
       min-width: 800px;
     }
   }
+}
+
+// Analytics page filter controls (statistics-client.tsx) — previously had no
+// stylesheet rules at all (bare UA defaults on the global black reset).
+.statistics-client__select,
+.statistics-client__input {
+  padding: 0.4rem;
 }

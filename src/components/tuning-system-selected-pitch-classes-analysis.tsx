@@ -902,7 +902,7 @@ export default function SelectedPitchClassesAnalysis() {
               {t('analysis.title')}
               {" "}
               / {t('analysis.centsTolerance')}:{" "}
-              <CentsToleranceInput className="maqam-jins-transpositions-shared__input" />
+              <CentsToleranceInput />
             </div>
               <div className="maqam-jins-transpositions-shared__filter-menu">
               {/* Filter order matches table row appearance order */}

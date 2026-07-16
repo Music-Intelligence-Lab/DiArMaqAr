@@ -800,7 +800,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
             className="carousel-button carousel-button-prev"
             onClick={() => {
               const container = octaveScrollRefs[octave as 0 | 1 | 2 | 3].current;
-              if (container) container.scrollBy({ left: isRTL ? 635 : -635 });
+              if (container) container.scrollBy({ left: isRTL ? 635 : -635, behavior: "smooth" });
             }}
           >
             ‹
@@ -1119,6 +1119,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                           {isEditing ? (
                             <input
                               type="number"
+                              onFocus={(e) => e.target.select()}
                               defaultValue={pitchClass.frequency}
                               autoFocus
                               className="tuning-system-manager__freq-input"
@@ -1189,7 +1190,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
             className="carousel-button carousel-button-next"
             onClick={() => {
               const container = octaveScrollRefs[octave as 0 | 1 | 2 | 3].current;
-              if (container) container.scrollBy({ left: isRTL ? -635 : 635 });
+              if (container) container.scrollBy({ left: isRTL ? -635 : 635, behavior: "smooth" });
             }}
           >
             ›

@@ -77,9 +77,7 @@
     }
 
     &:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      background: $medium-grey;
+      @include interactive-disabled;
     }
   }
 
@@ -304,17 +302,14 @@
   &__input {
     width: 100%;
     padding: 10px;
-    border: 2px solid $grey;
+    border: none; // black borderless fields, stable on focus (design system)
     border-radius: 5px;
     font-size: $font-size-lg;
-    background: $medium-grey;
+    background: $black;
     color: $text;
-    transition: all 0.2s ease;
 
     &:focus {
       outline: none;
-      border-color: $primary;
-      box-shadow: 0 0 5px rgba(90, 37, 133, 0.3);
     }
 
     &::placeholder {
@@ -371,9 +366,7 @@
       }
 
       &:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-        background: $disabled;
+        @include interactive-disabled;
         border-color: $disabled;
         box-shadow: none;
       }

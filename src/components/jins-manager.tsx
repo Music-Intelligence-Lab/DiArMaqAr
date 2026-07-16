@@ -174,6 +174,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
                 <div
                   key={index}
                   className={"jins-manager__item " + (jinsData.getName() === selectedJinsData?.getName() ? "jins-manager__item_selected " : "") + (selectable ? "jins-manager__item_active" : "")}
+                  data-tooltip={!selectable ? t("jins.tooltip.itemNotAvailable") : undefined}
                   onClick={() => {
                     if (selectable) {
                       // Toggle functionality: if clicking the same jins, deselect it

@@ -287,6 +287,7 @@ function StatisticsClient() {
                 Cents Tolerance
                 <input
                   type="number"
+                  onFocus={(e) => e.target.select()}
                   className="statistics-client__input"
                   value={formData.centsTolerance}
                   onChange={(e) => handleFormChange("centsTolerance", parseInt(e.target.value) || 5)}

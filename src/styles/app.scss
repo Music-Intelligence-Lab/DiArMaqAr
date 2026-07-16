@@ -30,7 +30,7 @@
   }
 
   &__title {
-    font-size: $font-size-4xl; // was 50px, flagged reduction to the 40px display-scale reference
+    @include type-heading-page-title;
     margin-bottom: 0px;
   }
 }

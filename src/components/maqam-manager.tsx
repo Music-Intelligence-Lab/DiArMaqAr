@@ -338,6 +338,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
               <div
                 key={idx}
                 className={`maqam-manager__item ${maqamData.getName() === selectedMaqamData?.getName() ? "maqam-manager__item_selected " : ""}${selectable ? "maqam-manager__item_active" : ""}`}
+                data-tooltip={!selectable ? t("maqam.tooltip.itemNotAvailable") : undefined}
                 onClick={() => {
                   if (selectable) {
                     // Toggle functionality: if clicking the same maqam, deselect it

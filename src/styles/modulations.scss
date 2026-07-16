@@ -49,65 +49,27 @@
     }
   }
 
+  // Mode toggles + octave shift — the shared functional pill; active state
+  // uses the same tertiary treatment as the transposition-table toggle
+  // (replaces the old underline + hardcoded-blue inline styles).
   &__ajnas-count,
-  &__maqamat-count {
-    color: $text !important;
-    font-size: $font-size-md;
-    font-weight: $font-weight-regular;
-    text-decoration: none !important;
-    background-color: rgba($primary, 0.5);
-    padding: 10px;
-    cursor: pointer;
-
-    &:hover {
-      background-color: rgba($primary, 1);
-      outline: none;
-    }
-
-    &_active {
-      background-color: rgba($tertiary, 0.5);
-      outline: none;
-    }
-  }
-
+  &__maqamat-count,
   &__octave-shift {
-    color: $text !important;
-    font-size: $font-size-md;
-    font-weight: $font-weight-regular;
-    text-decoration: none !important;
-    background-color: rgba($primary, 0.5);
-    padding: 10px;
-    cursor: pointer;
-
-    &:hover {
-      background-color: rgba($primary, 1);
-      outline: none;
-    }
+    @include button-functional;
 
     &_active {
-      background-color: rgba($tertiary, 0.5);
-      outline: none;
+      background-color: rgba($tertiary, 0.7);
+
+      &:hover {
+        background-color: rgba($tertiary, 1);
+      }
     }
   }
 
+  // Pill geometry; color ruling pending (delete action — red like admin
+  // deletes, or stay in the functional purple family).
   &__delete-hop-btn {
-    color: $text !important;
-    font-size: $font-size-md;
-    font-weight: $font-weight-regular;
-    text-decoration: none !important;
-    background-color: rgba($primary, 0.5);
-    padding: 10px !important;
-    cursor: pointer;
-
-    &:hover {
-      background-color: rgba($primary, 1);
-      outline: none;
-    }
-
-    &_active {
-      background-color: rgba($tertiary, 0.5);
-      outline: none;
-    }
+    @include button-functional;
   }
 
   &__hops-wrapper {

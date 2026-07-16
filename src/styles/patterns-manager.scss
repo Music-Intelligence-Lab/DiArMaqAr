@@ -25,9 +25,8 @@
   }
 
   &__header {
-    font-size: $font-size-3xl; // was 1.5rem/24px, nearest scale step (26px)
+    @include type-heading-h2; // panel-header tier — was 26px/semibold, converged to 21px
     margin-bottom: 1rem;
-    font-weight: $font-weight-semibold;
   }
 
   &__group {
@@ -84,16 +83,7 @@
   }
 
   &__add-note {
-    padding: 0.4rem 0.8rem;
-    background-color: $secondary;
-    color: $text;
-    border: none;
-    cursor: pointer;
-    font-size: $font-size-md; // was 0.9rem/14.4px, nearest scale step
-
-    &:hover {
-      opacity: 0.9;
-    }
+    @include button-functional($bg: $secondary, $bg-hover: $hovered-secondary);
   }
 
   &__notes {
@@ -120,16 +110,7 @@
   }
 
   &__delete-note {
-    padding: 0.4rem 0.8rem;
-    background-color: $delete;
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size: $font-size-md; // was 0.9rem/14.4px, nearest scale step
-
-    &:hover {
-      opacity: 0.9;
-    }
+    @include button-functional($bg: $delete, $bg-hover: $hovered-delete);
   }
 
   &__buttons {
@@ -139,25 +120,15 @@
     margin-top: 1.5rem;
   }
 
-  &__save-button,
-  &__delete-button,
   &__play-button {
-    padding: 10px 20px;
-    color: $text;
-    background-color: $primary;
-
-    transition: filter 0.2s ease;
-
-    &:hover {
-      filter: brightness(0.9);
-    }
+    @include button-functional;
   }
 
   &__save-button {
-    background-color: $secondary;
+    @include button-functional($bg: $secondary, $bg-hover: $hovered-secondary);
   }
 
   &__delete-button {
-    background-color: $delete;
+    @include button-functional($bg: $delete, $bg-hover: $hovered-delete);
   }
 }

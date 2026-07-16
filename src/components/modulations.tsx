@@ -444,12 +444,6 @@ export default function Modulations() {
                     <div style={{ display: "flex", gap: "8px", marginBottom: "12px", alignItems: "center", justifyContent: "center" }}>
                       <button
                         className={"modulations__ajnas-count" + (modulationModes[stackIdx] ? " modulations__ajnas-count_active" : "")}
-                        style={{
-                          cursor: "pointer",
-                          textDecoration: modulationModes[stackIdx] ? "underline" : "none",
-                          marginRight: 12,
-                          color: modulationModes[stackIdx] ? "#0070f3" : undefined,
-                        }}
                         onClick={(e) => {
                           e.stopPropagation();
                           setModulationModes((prev) => {
@@ -463,11 +457,6 @@ export default function Modulations() {
                       </button>
                       <button
                         className={"modulations__maqamat-count" + (!modulationModes[stackIdx] ? " modulations__maqamat-count_active" : "")}
-                        style={{
-                          cursor: "pointer",
-                          textDecoration: !modulationModes[stackIdx] ? "underline" : "none",
-                          color: !modulationModes[stackIdx] ? "#0070f3" : undefined,
-                        }}
                         onClick={(e) => {
                           e.stopPropagation();
                           setModulationModes((prev) => {
@@ -492,12 +481,6 @@ export default function Modulations() {
                       {stackIdx === sourceMaqamStack.length - 1 && sourceMaqamStack.length > 1 && (
                         <button
                           className="modulations__delete-hop-btn"
-                          style={{
-                            marginLeft: 8,
-                            padding: "2px 8px",
-                            fontSize: 14,
-                            cursor: "pointer",
-                          }}
                           onClick={() => {
                             // Load previous hop's source maqam before removing
                             const prevIdx = sourceMaqamStack.length - 2;
